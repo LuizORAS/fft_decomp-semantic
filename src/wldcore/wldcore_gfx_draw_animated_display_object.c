@@ -13,11 +13,11 @@
  * frame counter. Flag 0x20 overrides the part's own blend mode with the
  * object's (flags 0xc0).
  *
- * The parts are walked back to front as raw word indices: the target spells the
- * subscript ((frame_count - i) * 2) | 1 into the cel's word array, which is the
- * part's first word, and reaches the part itself from there. Indexing a part
+ * The parts are walked back to front as raw 32-bit element indices: the target spells the
+ * subscript ((frame_count - i) * 2) | 1 into the cel's 32-bit array, which is the
+ * part's first 32-bit value, and reaches the part itself from there. Indexing a part
  * array of records instead produces a different address computation, so
- * the word index is retained.
+ * the 32-bit element index is retained.
  *
  * Both high halves are masked before the shift. The code is the same as a
  * plain shift, but it matches the target's 0x88-byte frame: CSE shares the
@@ -79,7 +79,7 @@ step_frame:
     }
     index = (sequence->frames + object->frame_index)->cel;
     cel = cels[index];
-    /* Preserve the reverse word cursor; a part array changes address computation. */
+    /* Preserve the reverse 32-bit cursor; a part array changes address computation. */
     words = (u32*)cel;
     tpage_x = cel->packed_texture_page_origin & 0xffff;
     tpage_y = (cel->packed_texture_page_origin & 0xffff0000) >> 16;
@@ -99,7 +99,7 @@ step_frame:
         }
         /* Pointer indexing reverses this address-add instruction's operands. */
         part = (world_sprite_part_t*)(index * 4 + (s32)words);
-        /* These packed word reads must stay word-wide; named byte fields shorten the code. */
+        /* These packed reads must stay 32 bits wide; named byte fields shorten the code. */
         sprite.attribute |= (words[index] & 0x07000000) >> 2;
         px = part->x_offset - 0x80;
         sprite.x = object->position.x + px;

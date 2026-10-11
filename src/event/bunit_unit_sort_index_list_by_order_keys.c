@@ -12,7 +12,7 @@ void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode) {
     s32 diff;
     s32 lhs;
     s32 rhs;
-    s16* rec; /* Native sort keys select signed halfwords within the record. */
+    s16* rec; /* Native sort keys select signed 16-bit values within the record. */
 
     for (count = g_bunit_unit_count - 1; count > 0; count--) {
         for (j = 0; j < count; j++) {

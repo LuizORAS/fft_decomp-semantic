@@ -36,7 +36,7 @@ s32 battle_ai_evaluate_self_target_origins(void) {
     ai->current_action.command.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     g_battle_ai_self_target_origin_stage = 0;
     ai->current_action.act_before_move = 1;
-    /* The first-member word view keeps this load after the phase store.
+    /* The 32-bit view of the first member keeps this load after the phase store.
      * Direct .word or whole-union assignment changes target scheduling. */
     ai->considered_unit_coords.word = *(u32*)&ai->acting_unit_coords;
 prepare_origin:

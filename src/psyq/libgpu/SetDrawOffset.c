@@ -3,7 +3,7 @@
 
 void SetDrawOffset(DR_OFFSET* packet, u16* position) {
     setlen(packet, PSYQ_GPU_PACKET_WORDS(DR_OFFSET));
-    /* GPU offsets interpret the SDK halfwords as signed coordinates. */
+    /* GPU offsets interpret the SDK 16-bit values as signed coordinates. */
     packet->code[0] = get_ofs(position[0], position[1]);
     packet->code[1] = 0;
 }

@@ -55,7 +55,7 @@ typedef struct {
 } psyq_press_ac_entry_t;
 
 extern u32 g_psyq_press_vlc_limit_halfwords;
-/* The last word aliases g_open_birthday_month_lengths[0..3] in retail. */
+/* The last 32-bit value aliases g_open_birthday_month_lengths[0..3] in retail. */
 extern psyq_press_vlc_state_t g_psyq_press_vlc_state;
 extern const psyq_press_dc_entry_t g_psyq_press_dc_luma_table[];
 extern const psyq_press_dc_entry_t g_psyq_press_dc_chroma_table[];
@@ -63,7 +63,7 @@ extern const psyq_press_ac_entry_t g_psyq_press_ac_primary_table[];
 extern const u32 g_psyq_press_ac_secondary_table[];
 
 /* The quantisation and IDCT tables DecDCTGetEnv and DecDCTPutEnv copy, each
- * behind the MDEC command word that uploads it. */
+ * behind the 32-bit MDEC command that uploads it. */
 extern u32 g_psyq_press_quant_table_command[];
 extern u32 g_psyq_press_luma_quant_table[16];
 extern u32 g_psyq_press_chroma_quant_table[16];

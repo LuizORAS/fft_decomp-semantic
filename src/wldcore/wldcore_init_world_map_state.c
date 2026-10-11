@@ -4,7 +4,7 @@
 
 /* Resets state used when entering the world map.
  *
- * The target derives each fade box's attribute word through the record base
+ * The target derives each fade box's 32-bit attribute through the record base
  * while it walks the rectangle fields separately.
  */
 
@@ -128,7 +128,7 @@ void wldcore_init_world_map_state(void) {
         wldcore_convert_date_to_zodiac_date(&month, &day);
         party = main_party_get_data_pointer(0);
         party->birthday_day = day_of_year;
-        /* The separate s32 temp keeps the `month` reload a full word: folding
+        /* The separate s32 temp keeps the `month` reload a full 32-bit value: folding
          * the expression straight into the u8 field narrows it to an lbu. */
         zodiac = ((day_of_year & 0x100) >> 8) | ((month - 1) << 4);
         party->zodiac = zodiac;

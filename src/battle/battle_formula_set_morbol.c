@@ -23,7 +23,7 @@ void battle_formula_set_morbol(void) {
         && target->character_identity >= CHARACTER_IDENTITY_GENERIC_MALE
         && target->character_identity <= CHARACTER_IDENTITY_MONSTER
         && (target->job_id < JOB_ID_MORBOL || target->job_id > JOB_ID_MORBOL_FAMILY_LAST)) {
-        /* The halfword store clears all other special-effect flags. */
+        /* The 16-bit store clears all other special-effect flags. */
         action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_MORBOL;
         action->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
         return;

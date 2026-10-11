@@ -14,14 +14,14 @@
  *
  *  - `base - (-offset)` at the two script-address computations. A plain `+`
  *    (in either order, or split into locals) canonicalises the masked
- *    halfword operand into `rs`, giving `addu v0,v0,v1` where the target has
+ *    16-bit operand into `rs`, giving `addu v0,v0,v1` where the target has
  *    `addu v1,v1,v0`. `a - (-b)` reaches fold as MINUS over NEGATE and is
  *    rewritten to a PLUS without the commutative re-canonicalisation, so the
  *    base stays in `rs`, as in the wldcore_opcode_branch_if_* handlers. The
  *    first sum also seeds the v0/v1 roles for the whole function.
  *
  *  - The `flags` temp for the two result tests keeps the target's
- *    `and v0,v1,s4` operand order: the loaded flags word in `rs`, the caller's
+ *    `and v0,v1,s4` operand order: the loaded 32-bit flags in `rs`, the caller's
  *    `action_mask` in `rt`. Reading the global directly at both tests
  *    reverses it (as for the `or rd,flags,mask` temp in
  *    suzuki_smd_set_voice_attr_flags_all_channels).

@@ -2,7 +2,7 @@
 
 /* Store sorted item IDs in a byte list.
  *
- * The halfword input ends at -1; the byte output ends at 0xff.
+ * The 16-bit input ends at -1; the byte output ends at 0xff.
  */
 void world_item_store_category_list(s32 list_index, s16* sorted_ids) {
     s32 count;

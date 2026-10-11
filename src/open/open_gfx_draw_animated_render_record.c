@@ -8,7 +8,7 @@
  * The actor names an animation in the table at g_open_gfx_record_36_animations; each animation is
  * a frame count followed by {sprite_id, duration} pairs, and a duration of
  * 0xffff holds the frame indefinitely. The named sprite in g_open_gfx_record_36_sprites is a
- * part list whose odd words carry the texture page, semi-transparency and
+ * part list whose odd 32-bit entries carry the texture page, semi-transparency and
  * palette bits and whose byte fields give the part offset, size and texture
  * coordinates. Each part consumes one DR_MODE + SPRT pair from the shared
  * 32-entry per-buffer primitive pool at g_open_gfx_sprite_primitive_pool.
@@ -58,7 +58,7 @@ loop:
 
     value = (anim->frames + actor->frame_index)->cel;
     cel = sprites[value];
-    /* Preserve the reverse word cursor; a part array changes address computation. */
+    /* Preserve the reverse 32-bit cursor; a part array changes address computation. */
     sprite = (u32*)cel;
     tpage_x = cel->packed_texture_page_origin & 0xffff;
     tpage_y = (cel->packed_texture_page_origin & 0xffff0000) >> 16;

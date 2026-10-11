@@ -683,7 +683,7 @@ typedef struct ability_ai_flags {
 typedef char ability_ai_flags_size_must_be_4[(sizeof(ability_ai_flags_t) == 4) ? 1 : -1];
 
 /* Eight-byte ability records at 0x8005ebf0. AI loaders copy the four flag
- * bytes with the generic halfword-copy helper. */
+ * bytes with the generic 16-bit-copy helper. */
 typedef struct ability_data {
     u16 jp_cost;                 /* 0x00 */
     u8 learn_rate;               /* 0x02; learn-on-hit roll out of 100 (0x8018e6b8) */
@@ -1115,7 +1115,7 @@ typedef enum item_id {
 
 #define EQUIPPABLE_ITEM_TYPE_BYTE_MASK(type) (0x80 >> ((type) & 7))
 
-/* world_formation_unit_t.equipment halfwords carry the item id in the low ten
+/* world_formation_unit_t.equipment 16-bit values carry the item id in the low ten
  * bits and flags above (bit 14 is tested by world_shop_buy_from_fitting_room
  * and the job wheel); the WORLD item tables are indexed by the masked id
  * (world_item_get_price, world_item_get_type). The range boundaries follow the
@@ -1124,7 +1124,7 @@ typedef enum item_id {
 enum {
     WORLD_ITEM_ID_MASK = 0x3ff,
     WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE = 0x4000, /* item list entries: the unit cannot equip the item */
-    WORLD_EQUIPMENT_SHOP_ITEM = 0x8000, /* equipment halfwords: an unpaid shop item tried on in the fitting room */
+    WORLD_EQUIPMENT_SHOP_ITEM = 0x8000, /* equipment 16-bit values: an unpaid shop item tried on in the fitting room */
     ITEM_ID_THROWABLE_FIRST = 0x7a,
     ITEM_ID_SHIELD_FIRST = 0x80,
     ITEM_ID_HEADGEAR_FIRST = 0x90,

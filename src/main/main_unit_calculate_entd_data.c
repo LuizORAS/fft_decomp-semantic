@@ -112,7 +112,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     year_day = birthday;
     unit->birthday.birthday = year_day;
     /* Preserve the target's explicit 16-bit normalization before packing the
-     * zodiac nibble into the birthday word. */
+     * zodiac nibble into the 16-bit birthday value. */
     zodiac = main_unit_calculate_zodiac_symbol(year_day) & 0xFFFF;
     unit->birthday.zodiac = zodiac;
     if (entd->job_id == JOB_ID_SERPENTARIUS) {

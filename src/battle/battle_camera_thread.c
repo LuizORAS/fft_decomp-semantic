@@ -15,7 +15,7 @@
  *
  * Allocation-sensitive spellings: ABS() as a conditional expression keeps the
  * target's copy-then-negate sequences; the explicit shift sign extension keeps
- * CSE from reusing a halfword copy of angle for yaw; accel is shared by the
+ * CSE from reusing a 16-bit copy of angle for yaw; accel is shared by the
  * mode 1 and late mode 2 paths while first and elapsed are block-local, which
  * gives the target's s0-s3 assignment.
  */

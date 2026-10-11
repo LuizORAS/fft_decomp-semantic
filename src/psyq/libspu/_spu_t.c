@@ -55,7 +55,7 @@ s32 _spu_t(s32 operation, ...) {
         } else {
             _spu_FsetDelayR();
         }
-        /* Reading this pointer slot as a word preserves the native transfer setup. */
+        /* Reading this pointer slot as a 32-bit value preserves the native transfer setup. */
         argument = va_arg(arguments, u32);
         g_psyq_spu_dma_buffer = (void*)argument;
         argument = va_arg(arguments, u32);

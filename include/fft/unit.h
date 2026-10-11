@@ -134,8 +134,8 @@ typedef enum battle_unit_movement_set_3 {
 
 /* action */
 /* The 20-byte action command shared by unit stats, AI candidates and menus.
- * Targeting reads coordinates as signed or unsigned halfwords. Item selection
- * reads and updates only the low byte of the item/equipment word. */
+ * Targeting reads coordinates as signed or unsigned 16-bit values. Item selection
+ * reads and updates only the low byte of the 16-bit item/equipment field. */
 typedef struct battle_action_command {
     u8 actor_id;               /* 0x00 */
     u8 skillset_id;            /* 0x01 */
@@ -179,7 +179,7 @@ typedef struct battle_action_data {
     s16 mp_healing;  /* 0x0a */
     s16 gil_change;  /* 0x0c; stolen / lost */
     s16 reaction_id; /* 0x0e */
-    /* Target readers and writers consistently access 0x10-0x11 as one halfword. */
+    /* Target readers and writers consistently access 0x10-0x11 as one 16-bit value. */
     u16 special_effect;                          /* 0x10; battle_action_special_effect_e */
     u8 sp_change;                                /* 0x12 */
     u8 ct_change;                                /* 0x13; BATTLE_ACTION_CT_CHANGE_* or an amount */
@@ -195,7 +195,7 @@ typedef struct battle_action_data {
     u16 last_received_attack;                    /* 0x26; reaction data, varies by ability */
     u8 exp_change;                               /* 0x28; Steal EXP */
     u8 jp_change;                                /* 0x29; Move-JP Up / JP stolen */
-    /* Written as a halfword everywhere (battle_formula_apply_status lhu/sh,
+    /* Written as a 16-bit value everywhere (battle_formula_apply_status lhu/sh,
      * arrow_guard_usability, battle_formula_apply_catch, force_attack_miss). */
     s16 attack_accuracy; /* 0x2a */
 } battle_action_data_t;
@@ -482,7 +482,7 @@ typedef u8 unit_learned_ability_row_t[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
 typedef char unit_learned_ability_row_size_must_be_3
     [(sizeof(unit_learned_ability_row_t) == UNIT_LEARNED_ABILITY_BYTES_PER_JOB) ? 1 : -1];
 
-/* Per-job JP supports the bytewise party serialization and halfword readers. */
+/* Per-job JP supports the bytewise party serialization and 16-bit readers. */
 typedef union unit_job_point_table {
     u16 values[UNIT_CAREER_JOB_COUNT];
     struct {

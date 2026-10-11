@@ -14,7 +14,7 @@
  *
  * The count is sign-extended into count_tmp, which the loop guard tests before
  * the copy into count; the `j < count_tmp` guard leaves an unused compare
- * pseudo whose stack slot is the target's otherwise empty frame word at 0x88,
+ * pseudo whose stack slot is the target's otherwise empty 32-bit stack slot at 0x88,
  * and taking `vertex` in the loop header numbers the vertex-base pseudo ahead
  * of it so the base spills to 0x80 as in the target. The 2-byte alignment of
  * SVECTOR makes `verts[0] = verts[2]` take GCC's unaligned block-move path

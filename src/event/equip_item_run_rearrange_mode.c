@@ -13,7 +13,7 @@ s32 equip_item_run_rearrange_mode(void) {
     s32 cursor;
     s32 picked;
     s16 id;
-    s32 value; /* the pad word for the confirm test, then an item id */
+    s32 value; /* the 32-bit pad value for the confirm test, then an item id */
     s32 frame;
     u16 tile;
     u16 tile2;

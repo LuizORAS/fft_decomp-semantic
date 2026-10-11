@@ -62,7 +62,7 @@ void option_menu_window_frame_thread(void) {
     battle_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
     texture_u = (texture.x & 0x3f) * 4;
     /* The target loads the returned rectangle's y once as a byte (lbu 0x1a(sp))
-       and reuses it for every halfword and byte store below. */
+       and reuses it for every 16-bit and byte store below. */
     texture_v = texture.y & 0xff;
     for (index = 0; index < 4; index++) {
         g_option_menu_panel_texture_windows[index].x = (texture_u + index) * 0x10;
@@ -80,7 +80,7 @@ void option_menu_window_frame_thread(void) {
     prim->sprites[0].x0 = menu->x + 8;
     prim->sprites[0].y0 = menu->y + 0x10;
     /* The subtractions go through an s32 temporary: assigning the difference
-       straight into the halfword field lets combine narrow it to HImode, where
+       straight into the 16-bit field lets combine narrow it to HImode, where
        the negative constant no longer fits an addiu and is loaded instead. */
     size = menu->w - 0x18;
     prim->sprites[0].w = size;

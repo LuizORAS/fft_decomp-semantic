@@ -8,7 +8,7 @@
 #include "psx/tmd.h"
 #include "psx/types.h"
 
-/* Command byte in the first GP0 word; packet lengths exclude the DMA tag. */
+/* Command byte in the first 32-bit GP0 command; packet lengths exclude the DMA tag. */
 typedef enum {
     PSYQ_GPU_CODE_CLEAR_CACHE = 0x01,
     PSYQ_GPU_CODE_BLOCK_FILL = 0x02,
@@ -127,7 +127,7 @@ typedef enum {
 
 /* GPU packet header: low 24 bits link to the next primitive; high 8 bits
  * contain the packet length. The SDK view continues with the first command
- * word (colour and GPU code), so it is 8 bytes; game code only uses it
+ * 32-bit value (colour and GPU code), so it is 8 bytes; game code only uses it
  * through casts of primitive pointers. */
 typedef struct {
     u32 addr : 24;
@@ -719,7 +719,7 @@ TMD_PRIM* ReadTMD(TMD_PRIM* primitive);
 typedef struct {
     u32 size_bytes;
     RECT rect;
-    u32 data[0]; /* Variable-length word payload follows the 12-byte header. */
+    u32 data[0]; /* Variable-length 32-bit payload follows the 12-byte header. */
 } psyq_tim_block_t;
 
 typedef int (*psyq_gpu_operation_t)(void*, u32);

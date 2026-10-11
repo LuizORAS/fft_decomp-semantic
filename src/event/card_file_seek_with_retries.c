@@ -5,7 +5,7 @@
  * new position, or -1 when the card is not ready or every try fails. */
 s32 card_file_seek_with_retries(s32 descriptor, s32 offset, s32 origin) {
     s32 i;
-    /* The target's unoptimized local layout retains one unreferenced word. */
+    /* The target's unoptimized local layout retains one unreferenced 32-bit value. */
     s32 unused_local;
     s32 result;
 

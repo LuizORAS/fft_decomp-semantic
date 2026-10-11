@@ -6,10 +6,9 @@
  * Phase 1 steps the picture render record (g_wldcore_active_saved_record.picture_render_index) and g_wldcore_hud_color
  * from 0x80 down to 0x60 while the screen fade box brightens, in five steps. Phase 2 runs the reverse ramp and then, if
  * g_wldcore_active_saved_record.text_id names a text, clears the image buffer for the level's render record (width *
- * height / 8 words), renders text 0x8800 + g_wldcore_active_saved_record.text_id into it, uploads it and clears script
- * variables 0x5c-0x5e; it then pops the level and resumes WORLD thread 14.
- * Phase 0 scrolls the text history with up/down, hiding the arrow window at
- * either end, and starts phase 2 once button bit 0x80 is released.
+ * height / 8 32-bit values), renders text 0x8800 + g_wldcore_active_saved_record.text_id into it, uploads it and clears
+ * script variables 0x5c-0x5e; it then pops the level and resumes WORLD thread 14. Phase 0 scrolls the text history with
+ * up/down, hiding the arrow window at either end, and starts phase 2 once button bit 0x80 is released.
  *
  * Load-bearing spellings: the nonzero phases are a switch nested under
  * `phase != 0`, matching the target's test order; each fade case holds

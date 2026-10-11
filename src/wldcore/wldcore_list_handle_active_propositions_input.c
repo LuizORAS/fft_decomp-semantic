@@ -3,7 +3,7 @@
 
 /* Input handler for the proposition list level (type 0x26).
  *
- * The level's first five words are the window/render indices that
+ * The level's first five 32-bit values are the window/render indices that
  * wldcore_window_set_layout_states consumes. The wrap-around move is spelled as
  * a subtraction of a negative step: that keeps the window's y operand first
  * in the addition, as the target's register assignment requires. */

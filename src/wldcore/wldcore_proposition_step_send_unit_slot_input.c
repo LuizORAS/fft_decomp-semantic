@@ -9,7 +9,7 @@
  * the rows, rebuilds the available-unit list and flags WORLD thread 12. Up and
  * down wrap the slot through 0..2 and move the cursor window.
  *
- * The target's frame holds two words no instruction touches, reproduced by
+ * The target's frame holds two 32-bit values no instruction touches, reproduced by
  * the unused point. */
 void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_t* level) {
     point32_t unused;

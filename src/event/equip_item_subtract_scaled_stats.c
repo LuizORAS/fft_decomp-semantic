@@ -1,7 +1,7 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* Store `base - scale * scaled` for each equipment-stat halfword of an item detail record. */
+/* Store `base - scale * scaled` for each 16-bit equipment stat of an item detail record. */
 void equip_item_subtract_scaled_stats(
     menu_item_stat_detail_t* out, menu_item_stat_detail_t* scaled, menu_item_stat_detail_t* base, s32 scale) {
     out->move_bonus = base->move_bonus - (scale * scaled->move_bonus);

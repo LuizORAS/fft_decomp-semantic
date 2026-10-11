@@ -3,7 +3,7 @@
 /* Prepare a 56-byte render record for an image that is already in VRAM.
  *
  * vram_position is the image's VRAM position and image_size its size. The source
- * rectangle keeps x within the 64-word texture page and doubles x and the width
+ * rectangle keeps x within the texture page of 64 16-bit columns and doubles x and the width
  * (4-bit texels). `clut_position` becomes the record's CLUT position and `flags` replaces
  * the 8-bit, blank and hidden bits. The WLDCORE twin
  * wldcore_window_init_vram_render_record stores a texture page id where this one

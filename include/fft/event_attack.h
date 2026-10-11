@@ -265,8 +265,8 @@ extern s16 g_attack_deploy_vram_copy_x;
 extern s16 g_attack_deploy_vram_copy_y;
 
 /* The brightness byte of g_attack_deploy_zodiac_draw_context (+4) as its own s32 symbol: the fade decrements the whole
- * word (lw/addiu/sw), which a u8 member access would not reproduce. The array form lets GCC hoist its address out of
- * the fade loop, as the target does. */
+ * 32-bit value (lw/addiu/sw), which a u8 member access would not reproduce. The array form lets GCC hoist its address
+ * out of the fade loop, as the target does. */
 extern s32 g_attack_deploy_zodiac_brightness_word[1];
 extern zodiac_draw_context_t g_attack_deploy_zodiac_draw_context;
 void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_deploy_render_buffer_t* render_buffer);
@@ -360,7 +360,7 @@ extern image_load_parameters_t g_attack_panel_sprite_cells[];
 
 /* Per-sprite first/end cell indices (interleaved pairs), the visible-entry
  * count, each entry's sprite id and fade/blink state, and a 4-byte record per
- * entry whose first halfword biases the draw point's y. */
+ * entry whose first 16-bit value biases the draw point's y. */
 extern u8 g_attack_panel_status_group_bounds[];
 extern u8 g_attack_panel_status_group_count;
 extern u8 g_attack_panel_status_group_ids[];

@@ -14,7 +14,7 @@
  * reuse that register after the measure call, which gives the base
  * priority over `text` in global allocation (s1/s2 as in the target). The
  * combined-away address pseudo of that store keeps a reload stack slot, part
- * of the target's 40-byte locals area. `box` is an aggregate so its words stay
+ * of the target's 40-byte locals area. `box` is an aggregate so its 32-bit values stay
  * in memory across wldcore_text_init_scrollable_window; `dims` is an array so
  * it is laid out in declaration order at 32(sp). `unused_point` and `unused`
  * are sized from the target frame only; their original types are unknown. */

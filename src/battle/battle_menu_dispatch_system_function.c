@@ -5,7 +5,7 @@
  * System-function dispatcher called by battle_menu_init_system_function:
  * resets the idle action menu, then maps a command (and its option,
  * parameter and command action) to the system-function thread started by
- * battle_menu_start_system_function_thread, preparing text substitution words
+ * battle_menu_start_system_function_thread, preparing 32-bit text substitution values
  * and the text id of system function 0x32 where the message needs them.
  * Command 8 may instead select event 0x190-0x193 in script variable 0x27
  * and start the current event thread (return 2); it and any command with

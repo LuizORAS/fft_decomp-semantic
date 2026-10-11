@@ -38,7 +38,7 @@ enum {
  * (g_battle_script_event_instruction_sizes, g_world_event_instruction_sizes).
  *
  * Encoding: one opcode byte, then the operand bytes the length table counts
- * for that opcode. Halfword operands are little-endian and unaligned. After a
+ * for that opcode. 16-bit operands are little-endian and unaligned. After a
  * handler returns, the interpreter steps over 1 + length bytes.
  * JUMP_FORWARD, JUMP_FORWARD_IF_ZERO and JUMP_BACK seek past their target
  * marker instead; BLOCK_START, ADD_UNIT_START and CAMERA_FUSION_START hand
@@ -47,7 +47,7 @@ enum {
  *
  * Each comment gives the encoded operand byte count, then the operands in the
  * order the handler reads them. A plain name is one unsigned byte, (s8) a
- * signed byte, (u16) or (s16) a halfword, and "unread" a byte no handler
+ * signed byte, (u16) or (s16) a 16-bit value, and "unread" a byte no handler
  * reads. A "unit id" names one unit (*_script_get_misc_id); a "unit group"
  * is a unit id, 0 for every unit, or a team selector from
  * EVENT_UNIT_GROUP_FIRST (*_unit_try_get_misc_data_by_unit_id).
@@ -268,7 +268,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_BACK_TARGET_BARRIER = 0xd9,  /* 1: unread; JUMP_BACK ignores the targets before it */
     EVENT_OPCODE_UNKNOWN_DA = 0xda,           /* 0; recognized no-op */
     EVENT_OPCODE_END = 0xdb,                  /* 0 */
-    EVENT_OPCODE_UNKNOWN_DC = 0xdc,           /* 0; stores 13 to a word nothing else reads */
+    EVENT_OPCODE_UNKNOWN_DC = 0xdc,           /* 0; stores 13 to a 32-bit value nothing else reads */
     EVENT_OPCODE_UNKNOWN_E0 = 0xe0,           /* 2: unread; recognized no-op */
     EVENT_OPCODE_UNHANDLED_E1 = 0xe1,         /* 1 */
     EVENT_OPCODE_UNHANDLED_E2 = 0xe2,         /* 1 */
@@ -328,8 +328,8 @@ typedef enum event_rotate_unit_facing {
     EVENT_ROTATE_UNIT_FACING_RESTORE = 0x14,
 } event_rotate_unit_facing_e;
 
-/* First halfword of a scenario condition record, as
- * *_script_check_scenario_condition tests it. The record's next halfwords are
+/* First 16-bit value of a scenario condition record, as
+ * *_script_check_scenario_condition tests it. The record's next 16-bit values are
  * called id and value below; the two tile conditions also read a y and an
  * elevation. Other types fail. */
 typedef enum event_scenario_condition {
@@ -387,7 +387,7 @@ typedef enum event_inflict_status {
     EVENT_INFLICT_STATUS_POISON = 0x02,
 } event_inflict_status_e;
 
-/* EVENT/TEST.EVT record. The first word is relative to the block base, not
+/* EVENT/TEST.EVT record. The first 32-bit value is relative to the block base, not
  * data[]. battle_script_load_event converts it to a text pointer, then overwrites
  * it with EVENT_TEXT_OFFSET_PROCESSED. This is not a decoded instruction
  * array or a native scheduler context. The interpreter starts at byte zero:
@@ -410,7 +410,7 @@ typedef struct event_walk_to_parameters {
 } event_walk_to_parameters_t;
 typedef char event_walk_to_parameters_size_must_be_8[sizeof(event_walk_to_parameters_t) == 8 ? 1 : -1];
 
-/* Fixed event operand records. Halfwords stay in little-endian byte arrays
+/* Fixed event operand records. 16-bit values stay in little-endian byte arrays
  * because the interpreter may address them at any byte alignment. */
 typedef struct event_background_sound_parameters {
     u8 sound_id;
@@ -657,17 +657,17 @@ typedef char
  * The calendar and location ids are also serialized into the memory-card
  * slot description by CARD 0x801c01ac. */
 typedef enum event_script_variable_id {
-    /* Result word tested by the conditional-jump opcodes. */
+    /* 32-bit result tested by the conditional-jump opcodes. */
     EVENT_SCRIPT_VAR_COMPARISON_RESULT = 0x00,
-    /* The comparison opcodes compare word 0 with this word and leave the
-     * truth value in word 0. */
+    /* The comparison opcodes compare 32-bit variable 0 with this 32-bit variable and leave the
+     * truth value in 32-bit variable 0. */
     EVENT_SCRIPT_VAR_COMPARISON_OPERAND = 0x01,
     /* Also where TEXT_STORE_VARIABLE writes until TEXT_SET_VARIABLE_BASE
      * names another variable. */
     EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION = 0x18,
-    /* A whole-word store is also copied to text substitution value 0. */
+    /* A 32-bit store is also copied to text substitution value 0. */
     EVENT_SCRIPT_VAR_TEXT_SUBSTITUTION_VALUE = 0x19,
-    /* Words 0x1a-0x20 mirror the live camera: the store and load routines copy
+    /* 32-bit variables 0x1a-0x20 mirror the live camera: the store and load routines copy
      * X -> vx, Z (height) -> vy, Y (map depth) -> vz, tilt, yaw, roll and zoom.
      * The camera opcodes take X, Z, Y and tilt (0x1a-0x1d) as one block. */
     EVENT_SCRIPT_VAR_CAMERA_X = 0x1a,
@@ -679,7 +679,7 @@ typedef enum event_script_variable_id {
     EVENT_SCRIPT_VAR_CAMERA_YAW = 0x1e,
     EVENT_SCRIPT_VAR_CAMERA_ROLL = 0x1f,
     EVENT_SCRIPT_VAR_CAMERA_ZOOM = 0x20,
-    /* Reads synthesize a fresh random value; the backing word does not retain
+    /* Reads synthesize a fresh random value; the backing 32-bit value does not retain
      * the value returned by the interpreter. */
     EVENT_SCRIPT_VAR_RANDOM_VALUE = 0x21,
     EVENT_SCRIPT_VAR_WEATHER_AND_TIME = 0x22,
@@ -905,8 +905,8 @@ enum {
     EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION = 0x5c,
 };
 
-/* Ordinary variables are whole words; the remaining script-variable domains
- * are packed as 32 one-bit values or eight four-bit values per word. */
+/* Ordinary variables are 32-bit values; the remaining script-variable domains
+ * are packed as 32 one-bit values or eight four-bit values per 32-bit value. */
 enum {
     EVENT_SCRIPT_VAR_PACKED_BIT_FIRST = 0x80,
     EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST = 0x360,

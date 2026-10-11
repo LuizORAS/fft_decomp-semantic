@@ -10,7 +10,7 @@
  * flags, texture and .screen_x/.screen_y, and the .screen_x of the next
  * entry, so the accesses are written against `index` and `index + 1`.
  *
- * The texture word packs u, v, width and height from the top byte down; a
+ * The 32-bit texture value packs u, v, width and height from the top byte down; a
  * width or height that would run past texel 255 is shortened by one. */
 
 #define WLDCORE_MAP_TILE_ROWS    12

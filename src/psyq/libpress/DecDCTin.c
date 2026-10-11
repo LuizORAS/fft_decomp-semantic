@@ -1,6 +1,6 @@
 #include "psx/libpress.h"
 
-/* Set the MDEC output-depth and mask bits of the command word from mode,
+/* Set the MDEC output-depth and mask bits of the 32-bit command from mode,
  * then start the input DMA. */
 void DecDCTin(u32* buf, s32 mode) {
     if (mode & 1) {

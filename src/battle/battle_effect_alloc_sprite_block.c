@@ -2,7 +2,7 @@
 
 /* Allocate the variable-length sprite block for one effect frame.
  *
- * The four-byte header is followed by one word per sprite. The renderer tracks
+ * The four-byte header is followed by one 32-bit value per sprite. The renderer tracks
  * both current and peak occupancy for the shared effect pool. */
 battle_effect_sprite_block_t* battle_effect_alloc_sprite_block(u8 sprite_count) {
     battle_effect_sprite_block_t* block;

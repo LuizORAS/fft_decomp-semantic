@@ -4,12 +4,12 @@
  * and one render record showing text 0xb83a in a 0x3c x 0x30 image at
  * (-0x1e, -0x18), with the windows offset inside it. Blocks every button
  * (-1), clears the fade box colour, sets fade flag 8 and clears the new
- * level's words 0x10..0x1c.
+ * level's 32-bit values 0x10..0x1c.
  *
  * The level is written through the save_confirm member of the stack-record
  * union; union field access keeps the target's per-field `$at` bases. The
  * fade state is written through a pointer, which keeps the
- * target's register base for the offset-0 flags word. The unused array
+ * target's register base for the offset-0 32-bit flags. The unused array
  * preserves the target's 0x68-byte frame. */
 void wldcore_menu_push_sound_novel_quit_level(void) {
     RECT bounds;

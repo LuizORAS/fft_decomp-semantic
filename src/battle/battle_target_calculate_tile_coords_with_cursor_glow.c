@@ -21,7 +21,7 @@ void battle_target_calculate_tile_coords_with_cursor_glow(void) {
     /* The projected z is the ordering-table depth for the cursor glow. */
     depth = primary.vz / 4;
     battle_gfx_draw_map_selection_cursor(&secondary, main_gfx_get_otag());
-    /* The polygon routine reads the same three halfwords in renderer x, z, y order. */
+    /* The polygon routine reads the same three 16-bit values in renderer x, z, y order. */
     result = battle_target_calculate_cursor_tile_polygon(&secondary, g_battle_cursor_z, &corner0);
     tile = battle_map_get_tile_data_pointer(
         secondary.vx / MAP_TILE_SIZE, secondary.vz / MAP_TILE_SIZE, g_battle_cursor_z);

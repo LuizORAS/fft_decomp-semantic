@@ -7,11 +7,11 @@
  * (wrapping to zero at count - 1); the stored position is returned either way.
  *
  * Three locals per arm rather than one are what the target's code needs:
- * `value` is the copy of the loaded halfword that the arithmetic reads (the
+ * `value` is the copy of the loaded 16-bit value that the arithmetic reads (the
  * target keeps the loaded value and the value it modifies in two registers,
  * and reorg fills the branch delay slot with that copy), and `wide` is the
  * sign-extended use that makes the first arm's load an `lh`; without it a
- * halfword compared only against zero is loaded with `lhu`.  `next` stays at
+ * 16-bit value compared only against zero is loaded with `lhu`.  `next` stays at
  * function scope because the two arms share one `sh` through cross-jumping. */
 s16 world_menu_update_wrapped_vertical_selection(u16 count, u8 index, s32 buttons) {
     s16 cur;

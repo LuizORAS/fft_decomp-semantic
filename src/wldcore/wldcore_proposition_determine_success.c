@@ -12,7 +12,7 @@
  * preferred job then gives a 61 in 100 roll to promote the result back to 0. The
  * preferred-job scan reads the party record once, with the scoring loop's
  * leftover index, as the target does. The target builds the row walk pointers
- * from the proposition_index address, which needs the arrays and that word to be
+ * from the proposition_index address, which needs the arrays and that 32-bit value to be
  * members of one object (g_wldcore_job_selection). */
 void wldcore_proposition_determine_success(void) {
     const u8* job_table_a;

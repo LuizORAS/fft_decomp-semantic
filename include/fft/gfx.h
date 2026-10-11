@@ -60,7 +60,7 @@ typedef struct point16 {
 } point16_t;
 typedef char assert_point16_size[sizeof(point16_t) == 4 ? 1 : -1];
 
-/* Two signed 32-bit coordinates, without VECTOR's z and padding words. */
+/* Two signed 32-bit coordinates, without VECTOR's 32-bit z and padding fields. */
 typedef struct point32 {
     s32 x;
     s32 y;
@@ -89,7 +89,7 @@ typedef struct vec3s16 {
 } vec3s16_t;
 typedef char assert_vec3s16_size[sizeof(vec3s16_t) == 6 ? 1 : -1];
 
-/* Three signed 32-bit components without VECTOR's trailing padding word. */
+/* Three signed 32-bit components without VECTOR's trailing 32-bit padding field. */
 typedef struct vec3s32 {
     s32 x;
     s32 y;
@@ -151,7 +151,7 @@ typedef char scaled_draw_area_pair_size_must_be_40[sizeof(scaled_draw_area_pair_
 typedef struct glyph_blit {
     RECT rect;  /* 0x00 */
     s32 stride; /* 0x08 */
-    u32 color;  /* 0x0c: colour word the decimal renderers set by value sign
+    u32 color;  /* 0x0c: 32-bit colour value the decimal renderers set by value sign
                  * (0x77777777, 0xbbbbbbbb, ...) and clear after each draw */
 } glyph_blit_t;
 typedef char glyph_blit_size_must_be_16[sizeof(glyph_blit_t) == 16 ? 1 : -1];
@@ -167,7 +167,7 @@ typedef union texture_primitive {
 
 /* Textured menu quad source for world_gfx_enqueue_textured_quad_corners (0x8012ccd0):
  * four screen points, four texture points (only the low byte of each
- * halfword is used), then the CLUT and texture page. */
+ * 16-bit value is used), then the CLUT and texture page. */
 typedef struct textured_quad_source {
     s16 x0, y0; /* 0x00 */
     s16 x1, y1; /* 0x04 */

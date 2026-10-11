@@ -4,7 +4,7 @@
 MATRIX* TransMatrix(MATRIX* matrix_address, VECTOR* vector_address) {
     MATRIX* matrix = matrix_address;
     VECTOR* vector = vector_address;
-    /* The three translation words retain the handwritten t0-t2 store order. */
+    /* The three 32-bit translation components retain the handwritten t0-t2 store order. */
     register s32 x __asm__("$8") = vector->vx; /* The library uses fixed scratch registers. */
     register s32 y __asm__("$9") = vector->vy;
     register s32 z __asm__("$10") = vector->vz;

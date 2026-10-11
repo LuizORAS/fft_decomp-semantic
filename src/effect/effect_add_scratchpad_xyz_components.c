@@ -2,7 +2,7 @@
 
 /* Stores scratchpad xyz triple group * 17 + point plus offset into output.
  *
- * The stored coordinates retain the low halfwords of each sum. */
+ * The stored coordinates retain the low 16 bits of each sum. */
 void effect_add_scratchpad_xyz_components(s32 group, s32 point, const VECTOR* offset, SVECTOR* output) {
     int point_offset = point * 3;
     int group_offset = group * 51;

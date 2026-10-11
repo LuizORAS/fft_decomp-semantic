@@ -6,14 +6,14 @@
  * This pass skips the geometry and normal vectors consumed by
  * battle_map_append_mesh_geometry, then appends UV coordinates, CLUT commands,
  * texture-page commands, and the initial state of untextured records.
- * Target 0x800f5578 reads five-halfword textured triangles and six-halfword
- * textured quads. clut words keep their low six bits (the CLUT) and gain the map CLUT row;
+ * Target 0x800f5578 reads textured triangles of five 16-bit values and textured quads
+ * of six 16-bit values. 16-bit CLUT values keep their low six bits (the CLUT) and gain the map CLUT row;
  * texture pages are copied verbatim. Destination strides are 0x28/0x34 for
  * textured triangles/quads and 0x14/0x18 for untextured triangles/quads.
  * Untextured POLY_F3/POLY_F4 packets start with colour 0/0/1.
  */
 void battle_map_init_mesh_render_records(const battle_map_mesh_geometry_t* geometry_data) {
-    /* Named count loads fold the retail four halfword cursor advances. */
+    /* Named count loads fold the retail four 16-bit cursor advances. */
     const u16* source = &geometry_data->textured_triangle_count;
     s32 polygon_index;
     s32 textured_triangle_count;

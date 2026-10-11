@@ -4,7 +4,7 @@
 /* Publish the live camera rotation, zoom, and position to the script variable
  * block.
  *
- * The three zoom components all land in the same script word; that is what the
+ * The three zoom components all land in the same 32-bit script variable; that is what the
  * target does. */
 void battle_camera_store_state_to_script_variables(void) {
     SVECTOR* rotation;

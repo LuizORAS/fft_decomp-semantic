@@ -4,7 +4,7 @@
 
 /* Upload an OPNTEX image, preceded by its CLUT when flag bit 3 is set.
  *
- * Word 1 holds the flags. Each block is a byte length (including itself), the
+ * The second 32-bit value holds the flags. Each block is a byte length (including itself), the
  * VRAM position packed as y << 16 | x, the size packed as h << 16 | w, then
  * the pixel data. The CLUT rectangle is flattened to one row of w * h
  * entries. */
@@ -14,7 +14,7 @@ void open_gfx_load_opntex_into_frame_buffer(u32* tim) {
     /* Unused; the target's frame is 16 bytes larger than rect needs. */
     s32 stack_padding[4];
 
-    /* Packed RECT word reads preserve the retail lw/lhu mix. */
+    /* Packed 32-bit RECT reads preserve the retail lw/lhu mix. */
     if (tim[1] & 8) {
         offset = (tim[2] >> 2) + 2;
         rect.x = tim[3] & 0xFFFF;

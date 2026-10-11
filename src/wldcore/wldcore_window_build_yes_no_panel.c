@@ -4,7 +4,7 @@
  * sits at origin; wldcore_proposition_handle_dispatch_confirm_input services the level.
  *
  * The origin arrives by value: the target spills a0/a1 to their home slots at
- * entry and copies both words into base_x/base_y together. The frame reserves
+ * entry and copies both 32-bit values into base_x/base_y together. The frame reserves
  * 40 bytes of locals the body never reads. */
 void wldcore_window_build_yes_no_panel(point32_t origin) {
     RECT bounds;

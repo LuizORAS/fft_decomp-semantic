@@ -13,8 +13,8 @@
  * target load the table first and keep both in $t0. The unused 32-byte local
  * reproduces the target's otherwise empty 0x20 frame, and `index` is shared by
  * both arms while each arm has its own point pointer, which fixes the
- * target's register choice for both index computations. The packed position words supply x in the low
- * halfword and y in the high halfword; the `flags` local gives the
+ * target's register choice for both index computations. The packed 32-bit position values supply x in the low
+ * 16 bits and y in the high 16 bits; the `flags` local gives the
  * target's `or` operand order. */
 s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, u32 route, s32 step) {
     s32 unused[8];

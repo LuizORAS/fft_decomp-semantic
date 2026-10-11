@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Copies a packed 24-bit RGB triple, applying the global per-channel tint
- * when bit 0 of the fade state word is set. Each channel is scaled by
+ * when bit 0 of the 32-bit fade state is set. Each channel is scaled by
  * ((c << 16) / 128) * factor >> 16, i.e. c * factor / 128, and clamped to
  * 255 with no lower clamp; with the factors at their 0x80 default the scale
  * is the identity. When the bit is clear the triple is copied verbatim,

@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* Opcode 08: move the camera to the position in the three halfwords that
+/* Opcode 08: move the camera to the position in the three 16-bit values that
  * follow (x, y, z in world units). */
 effect_script_result_e battle_effect_code_script_08_set_camera_position(effect_record_t* record) {
     VECTOR coords;

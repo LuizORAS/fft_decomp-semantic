@@ -10,7 +10,7 @@ extern s32 g_battle_ai_stay_near_destination_fixed; /* 1 after a reachable Stay 
 /* Prepare candidate destinations and reachable movement scenarios.
  *
  * Return -1 when a child suspends and 0 after all scenarios are prepared.
- * Scratch words preserve branch decisions across suspension.
+ * 32-bit scratch values preserve branch decisions across suspension.
  */
 s32 battle_ai_build_movement_scenarios(void) {
     battle_ai_unit_decision_t* decision;

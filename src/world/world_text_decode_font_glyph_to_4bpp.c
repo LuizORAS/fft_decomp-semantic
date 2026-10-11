@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Decodes glyph `glyph` from the packed 2bpp font into a 4bpp image at
- * `image`, using target x/y and w halfwords per row, adding `palette * 4`
+ * `image`, using target x/y and a row stride of w 16-bit values, adding `palette * 4`
  * to every non-zero pixel. Returns the glyph's advance width. */
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, RECT* target, s32 palette) {
     s32 row;

@@ -7,7 +7,7 @@
 
 /* Draw the visible rows of a three-column menu text layout (text 8 pixels
  * narrower than the entry). Text columns append text 0x5088 for rows whose
- * skill flag bit 0 is set while the current thread's fourth word is non-zero;
+ * skill flag bit 0 is set while the current thread's fourth 32-bit value is non-zero;
  * alternate-number columns draw a special glyph for values 0/1 without a
  * target, and text 0x509d for values of 100 and above. */
 void battle_menu_draw_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u8* buffer) {
@@ -37,7 +37,7 @@ void battle_menu_draw_text_columns_narrow(menu_entry_t* entry, s32* row_offset, 
                 if (g_battle_threads[g_battle_current_thread_id].function_parameter_4 != 0
                     && (g_battle_ai_workspace_ptr->ability_list.flags[index] & 1)) {
                     g_battle_menu_text_palette_offset = layout->text_colors[column][index];
-                    /* Full-word x and y, as above. */
+                    /* 32-bit x and y, as above. */
                     battle_menu_set_text_origin(layout->x[column] + 0x50, row * 0x10);
                     battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.pen);
                 }

@@ -24,7 +24,7 @@ void world_menu_icon_linked_entry_thread(void) {
     world_script_copy_bytes(&records[1], &records[0], sizeof(records[1]));
     parent = param->row_actions[0];
     if (parent >= 0) {
-        /* Unsigned narrowing keeps the retail halfword centering expression. */
+        /* Unsigned narrowing keeps the retail 16-bit centering expression. */
         g_world_menu_thread_menu_data[parent].window.x
             = (u16)((width >> 1) - (g_world_menu_thread_menu_data[parent].inner_width - 0x102));
         g_world_menu_thread_menu_data[parent].window.y = param->window.y + param->window.h;

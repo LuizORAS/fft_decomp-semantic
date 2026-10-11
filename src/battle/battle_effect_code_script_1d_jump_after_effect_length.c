@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Opcode 1d: jump to the offset in the second halfword once the record's
+/* Opcode 1d: jump to the offset in the second 16-bit value once the record's
  * timeline frame reaches the child timeline's duration; otherwise step over
  * the 4-byte instruction. */
 effect_script_result_e battle_effect_code_script_1d_jump_after_effect_length(effect_record_t* record) {

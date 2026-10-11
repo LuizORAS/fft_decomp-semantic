@@ -3,7 +3,7 @@
 
 /* Signed status stores retain native pointer reloads and store scheduling. */
 void StCdInterrupt(void) {
-    /* Volatile preserves the native halfword stack stores and first-response reload. */
+    /* Volatile preserves the native 16-bit stack stores and first-response reload. */
     volatile u16 response_status[3];
     CdlLOC sector_position;
     u8 response[8];
@@ -31,7 +31,7 @@ void StCdInterrupt(void) {
         return;
     }
     g_psyq_cd_stream_current_header = &g_psyq_cd_stream_ring[g_psyq_cd_stream_write_index];
-    /* The addressed halfword preserves the status load's native delay-slot scheduling. */
+    /* The addressed 16-bit field preserves the status load's native delay-slot scheduling. */
     if (*&g_psyq_cd_stream_current_header->id) {
         if (g_psyq_cd_stream_emulation_base)
             g_psyq_cd_stream_emulation_sector_index++;
@@ -66,7 +66,7 @@ void StCdInterrupt(void) {
     if (g_psyq_cd_stream_start_mask == 1) {
         u32 required_frame = g_psyq_cd_stream_start_frame;
         if (required_frame) {
-            /* The original comparison reads the low halfword of the frame word. */
+            /* The original comparison reads the low 16 bits of the 32-bit frame field. */
             frame_count = g_psyq_cd_stream_current_header->frameCount;
             if (required_frame != frame_count) {
                 *(s16*)&g_psyq_cd_stream_current_header->id = StFREE;

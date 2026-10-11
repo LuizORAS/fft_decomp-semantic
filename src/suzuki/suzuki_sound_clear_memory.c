@@ -1,6 +1,6 @@
 #include "psx/suzuki.h"
 
-/* Zeroes size bytes: 16-byte blocks, then words, then bytes. */
+/* Zeroes size bytes: 16-byte blocks, then 32-bit values, then bytes. */
 void suzuki_sound_clear_memory(void* destination, s32 size) {
     u32* words;
     u8* bytes;

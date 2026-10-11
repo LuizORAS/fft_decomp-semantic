@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Polled by a menu thread each frame; input is the frame's input word.
+/* Polled by a menu thread each frame; input is the frame's 32-bit input value.
  *
  * While input is locked or a help window is open the input is cleared and 0
  * returned. If another running thread carries the stop-request task id, the input

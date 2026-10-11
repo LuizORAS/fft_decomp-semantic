@@ -16,7 +16,7 @@
  * inner `if`. Both spellings are equivalent (the other arm overwrites it and
  * GCC drops the dead store either way), but hoisting it makes $17 look live
  * across the evade branch, and reorg then refuses to lift `message = 0x1003`
- * into the bne delay slot, swapping the two delay-slot words at +0x64/+0x6c.
+ * into the bne delay slot, swapping the two 32-bit delay-slot instructions at +0x64/+0x6c.
  * Written this way, reorg fills the bne slot with `message` and the jump slot
  * with `mode`, which is the target's order.
  */

@@ -14,7 +14,7 @@ typedef enum battle_effect_secondary_phase {
     BATTLE_SECONDARY_EFFECT_FINALIZING = 3
 } battle_effect_secondary_phase_e;
 
-/* Verified prefix only: BATTLE 0x801aa7c4 reads/writes a halfword at +6.
+/* Verified prefix only: BATTLE 0x801aa7c4 reads/writes a 16-bit value at +6.
  * Neither the full record nor the individual bit meanings are known. */
 typedef struct battle_effect_flag_prefix {
     u8 _unused_00[6];
@@ -38,7 +38,7 @@ enum {
 };
 
 /* Ten-byte target records at g_battle_effect_context.targets (0x801bad10).
- * Unit targets store a misc id at 0x02; tile targets reuse that halfword for X
+ * Unit targets store a misc id at 0x02; tile targets reuse that 16-bit value for X
  * and carry map Z/Y at 0x04/0x06. Entry BATTLE_EFFECT_CASTER_ENTRY is the
  * caster. */
 typedef struct battle_effect_target {
@@ -249,12 +249,12 @@ typedef union battle_effect_secondary_state {
 } battle_effect_secondary_state_t;
 
 /* One 0x80-byte particle channel of an effect timeline. Keyframe k lasts
- * from frame_start[k] to frame_start[k + 1]. Entering it runs its action word
+ * from frame_start[k] to frame_start[k + 1]. Entering it runs its 16-bit action value
  * (unit reactions, and binding a native handler to a callback slot); on each
  * of its frames it spawns its emitter, through the handler of the action's
  * callback slot when that is set. Keyframe 0 is passed over without spawning,
  * so emitter[0] is never read; retail channels have up to 24 keyframes, and
- * the end of keyframe 23, frame_start[24], is the halfword at 0x30. */
+ * the end of keyframe 23, frame_start[24], is the 16-bit value at 0x30. */
 typedef struct battle_effect_keyframe_table {
     u16 frame_start[0x18]; /* 0x00 */
     u8 _unused_30;         /* 0x30 */
@@ -511,7 +511,7 @@ typedef struct battle_effect_sprite_part {
     u8 v;
     u8 width;
     u8 height;
-    /* Four-byte alignment preserves the original x/y word copies. */
+    /* Four-byte alignment preserves the original x/y 32-bit copies. */
     DVECTOR corners[4] __attribute__((aligned(4))); /* 0x08 */
 } battle_effect_sprite_part_t;
 typedef char battle_effect_sprite_part_size_must_be_24[(sizeof(battle_effect_sprite_part_t) == 24) ? 1 : -1];
@@ -602,7 +602,7 @@ typedef struct battle_effect_reflect_buffer {
 } battle_effect_reflect_buffer_t;
 
 /* 21-keyframe camera table of the parent timeline's two phases. A keyframe
- * moves the tracks its command word names (BATTLE_EFFECT_CAMERA_TRACK_*)
+ * moves the tracks its 16-bit command names (BATTLE_EFFECT_CAMERA_TRACK_*)
  * toward its values, arriving at end_frame; a track takes its next keyframe
  * only once its previous move has ended. */
 typedef struct effect_camera_keyframes_21 {
@@ -688,7 +688,7 @@ typedef char battle_effect_sprite_frameset_size_must_be_4[sizeof(battle_effect_s
 /* Section table at the start of an effect file's header section: byte offsets
  * from the table itself, one per battle_effect_*_address/_pointer getter. */
 typedef struct effect_file_header {
-    s32 frame_data;          /* 0x00: the getter skips the section's leading word */
+    s32 frame_data;          /* 0x00: the getter skips the section's leading 32-bit value */
     s32 animation_sequences; /* 0x04: likewise */
     s32 script;              /* 0x08: effect script section */
     s32 particle_system;     /* 0x0c: emitter motion and control */
@@ -707,17 +707,17 @@ typedef struct battle_effect_palette_section {
     clut_t secondary_palettes; /* 0x200 */
     u8 image_size[3];          /* 0x400; little-endian bytes */
     u8 wide_image;             /* 0x403; 256-byte rows when nonzero, otherwise 128 */
-    u32 pixels[0];             /* 0x404; packed GPU image-transfer words */
+    u32 pixels[0];             /* 0x404; packed 32-bit GPU image-transfer values */
 } battle_effect_palette_section_t;
 typedef char battle_effect_palette_section_size_must_be_1028[sizeof(battle_effect_palette_section_t) == 1028 ? 1 : -1];
 
-/* An effect script instruction is a halfword, its opcode in the low nine bits
+/* An effect script instruction starts with a 16-bit header, its opcode in the low nine bits
  * (g_battle_effect_instructions holds 120 handlers; retail scripts stay below
  * 2e) and small operands in the bits above, followed by up to three operand
- * halfwords. Script offsets are bytes from the start of the script. */
+ * 16-bit values. Script offsets are bytes from the start of the script. */
 enum { EFFECT_SCRIPT_OPCODE_MASK = 0x1ff };
 
-/* Halfword-aligned instructions have a nine-bit opcode and seven selector bits. */
+/* 16-bit-aligned instructions have a nine-bit opcode and seven selector bits. */
 typedef struct battle_effect_script_header {
     u8 opcode_low;        /* 0x00 */
     u8 packed_parameters; /* 0x01: opcode bit 8 and opcode-specific selectors */
@@ -774,7 +774,7 @@ typedef struct effect_sound_channel {
 } effect_sound_channel_t;
 
 /* Effect flags section at header[0x18] of an effect file. The engine loads
- * flags as a word and tests single bits; spawn_delay_override replaces the
+ * flags as a 32-bit value and tests single bits; spawn_delay_override replaces the
  * timeline's spawn_delay only while g_battle_effect_context.math_skill_flag is
  * set. */
 typedef struct effect_flags_section {
@@ -802,7 +802,7 @@ typedef enum effect_phase {
     EFFECT_PHASE_DESTROY = 3,
 } effect_phase_e;
 
-/* Emitter spawn origin: bits 9-11 of an emitter's placement word (byte 0x03
+/* Emitter spawn origin: bits 9-11 of an emitter's 16-bit placement flags (byte 0x03
  * mask 0x0e). 0xa00 is the map centre:
  * every handler adds battle_map_store_max_coordinates() * 14 there. */
 typedef enum effect_emitter_origin {
@@ -817,7 +817,7 @@ typedef enum effect_emitter_origin {
 
 enum { EFFECT_EMITTER_ORIGIN_MASK = 0xe00 };
 
-/* Point particles home toward: bits 5-7 of the placement word (byte 0x02 mask
+/* Point particles home toward: bits 5-7 of the 16-bit placement flags (byte 0x02 mask
  * 0xe0). 0x00 and 0x20 both leave the
  * interpolated offset unchanged; 0x40 is the map centre. */
 typedef enum effect_emitter_homing {
@@ -833,7 +833,7 @@ enum { EFFECT_EMITTER_HOMING_MASK = 0xe0 };
 
 /* Initial particle velocity mode: the velocity_inward bit (byte 0x06 mask
  * 0x10) and align_to_unit_facing bit (byte 0x07 mask 0x04) of the emitter's
- * child/velocity word. OUTWARD scatters around the base angles, INWARD aims at
+ * 16-bit child/velocity flags. OUTWARD scatters around the base angles, INWARD aims at
  * the spawn point, CASTER_FACING rotates OUTWARD by the caster's facing, and
  * TOWARD_TARGET (battle_effect_spawn_particle_motion) rotates it along the
  * caster-to-target direction. */
@@ -918,7 +918,7 @@ enum { BATTLE_EFFECT_PRIMITIVE_BUFFER_SIZE = 0x8000 };
 /* Initial Z coordinate of each particle sprite's four corner vectors. */
 enum { BATTLE_EFFECT_CORNER_Z_DEFAULT = 512 };
 
-/* Word 0x06 of an emitter record (effect_geometry_entry_t.flags), copied to each particle's flags
+/* The 16-bit flags at 0x06 of an emitter record (effect_geometry_entry_t.flags), copied to each particle's flags
  * (effect_work_record_t.flags). Bits 0x410 are effect_emitter_velocity_e. A child mode of 1 or 2
  * enables the child emitter; the engine does not tell the two apart. */
 enum {
@@ -941,7 +941,7 @@ enum {
     EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE = 0x04,
 };
 
-/* Word 0x02 of an emitter record (effect_geometry_entry_t.placement_flags), copied to each
+/* The 16-bit flags at 0x02 of an emitter record (effect_geometry_entry_t.placement_flags), copied to each
  * particle's kind_flags. Bits 0x0e0 are effect_emitter_homing_e and bits 0xe00
  * effect_emitter_origin_e. The work kind says what a particle's data is: a sprite node placed one
  * of the four EFFECT_LIST_NODE_* ways, or a heap block. Retail emitters use SPRITE_WORLD and
@@ -961,7 +961,7 @@ typedef enum effect_work_kind {
     EFFECT_WORK_KIND_HEAP_BLOCK = 0x4000,
 } effect_work_kind_e;
 
-/* A particle channel keyframe's action word (battle_effect_keyframe_table_t.action), run by
+/* A particle channel keyframe's 16-bit action value (battle_effect_keyframe_table_t.action), run by
  * battle_effect_run_keyframe_actions when the keyframe is entered. Bit 7 is set in a few retail
  * files and read by nothing. */
 enum {
@@ -996,7 +996,7 @@ typedef union battle_effect_child_track_counters {
         s16 caster;
         s16 target;
         s16 screen;
-        s16 _unused_18; /* extra halfword cleared by the child reset */
+        s16 _unused_18; /* extra 16-bit value cleared by the child reset */
     } tracks;
 } battle_effect_child_track_counters_t;
 
@@ -1017,7 +1017,7 @@ typedef char
     battle_effect_child_timeline_state_size_must_be_78[sizeof(battle_effect_child_timeline_state_t) == 78 ? 1 : -1];
 
 /* Parent counters: ten particle tracks, fourteen colour/sound tracks and
- * two extra halfwords. The reset clears all 26, not just the 24 stepped tracks. */
+ * two extra 16-bit values. The reset clears all 26, not just the 24 stepped tracks. */
 typedef union battle_effect_parent_track_counters {
     s16 values[26];
     struct {
@@ -1027,7 +1027,7 @@ typedef union battle_effect_parent_track_counters {
         s16 target[2];
         s16 screen[2];
         s16 sound[3][2];
-        s16 _unused_30[2]; /* extra halfwords cleared by the parent reset */
+        s16 _unused_30[2]; /* extra 16-bit values cleared by the parent reset */
     } tracks;
 } battle_effect_parent_track_counters_t;
 
@@ -1039,7 +1039,7 @@ typedef union battle_effect_parent_track_steps {
         /* Six two-byte addresses inside the step array. Opcode 29 passes each
          * high byte to the sound helper's unused argument; no sound helper reads it. */
         u8 _unknown_24[3][2][2]; /* record +0xba; the original purpose is unknown */
-        s16 _unused_30[2];       /* extra halfwords cleared by the parent reset */
+        s16 _unused_30[2];       /* extra 16-bit values cleared by the parent reset */
     } tracks;
 } battle_effect_parent_track_steps_t;
 
@@ -1205,14 +1205,14 @@ typedef struct effect_record {
     battle_effect_callback_t file_function;              /* 0xf4: the native function script opcode 07 last called */
 } effect_record_t;
 
-/* pc is a signed byte offset into the shared, halfword-aligned script stream. */
+/* pc is a signed byte offset into the shared, 16-bit-aligned script stream. */
 static __inline__ battle_effect_script_instruction_t* battle_effect_get_current_script_instruction(
     effect_record_t* record) {
     return (battle_effect_script_instruction_t*)(record->script + record->pc);
 }
 
 static __inline__ u16 battle_effect_get_current_script_header(effect_record_t* record) {
-    /* Loading the word here preserves the retail base/offset register order. */
+    /* Loading the 16-bit value here preserves the retail base/offset register order. */
     return *(u16*)(record->script + record->pc);
 }
 
@@ -1238,7 +1238,7 @@ typedef struct battle_effect_anim_script {
  * byte pair; slot 0 is the null sentinel. g_battle_effect_active_slot_head heads the active chain
  * and g_battle_effect_slot_free_head the free chain. 0x84..0x87 has the battle_effect_sprite_block_t
  * layout (colour plus the frame byte); battle_effect_init_trap_animation resets
- * the colour and writes the halfwords at 0x88 and 0x8e. */
+ * the colour and writes the 16-bit values at 0x88 and 0x8e. */
 
 typedef struct battle_effect_slot {
     u8 next;                             /* 0x00 */
@@ -1702,7 +1702,7 @@ typedef union effect_geometry_record {
 } effect_geometry_record_t;
 typedef char assert_effect_geometry_record_size[sizeof(effect_geometry_record_t) == 196 ? 1 : -1];
 
-/* Particle-system section addressed by effect-file header word 0x0c. */
+/* Particle-system section addressed by effect-file 32-bit header value at 0x0c. */
 typedef struct effect_geometry_table {
     u16 _unused_00;        /* 2, or 1 in seven shipped files */
     u16 entry_count;       /* 0x02 */
@@ -1860,7 +1860,7 @@ extern s32
 
 extern DVECTOR g_battle_effect_charge_line_direction_offsets[];
 extern u8 g_battle_effect_charge_line_fade_levels[];
-/* Four-byte alignment preserves the original word copies into x/y. */
+/* Four-byte alignment preserves the original 32-bit copies into x/y. */
 extern SVECTOR g_battle_effect_corner_bottom_left __attribute__((aligned(4)));
 extern SVECTOR g_battle_effect_corner_bottom_right __attribute__((aligned(4)));
 extern SVECTOR g_battle_effect_corner_top_left __attribute__((aligned(4)));
@@ -1885,7 +1885,7 @@ extern s16 g_battle_effect_projectile_step_count;
 /* Six RGB byte triples, packed into both CLUT images as 15-bit colours. */
 extern rgb24_t g_battle_effect_reflect_palette_colors[6];
 
-/* Secondary-animation id per ability, indexed by the low halfword of the
+/* Secondary-animation id per ability, indexed by the low 16 bits of the
  * caller's packed argument. */
 extern u8 g_battle_effect_secondary_by_charge_animation[];
 extern u8 g_battle_effect_sound_call_counts[]; /* per-channel call counts */
@@ -1897,10 +1897,10 @@ extern s32 g_battle_effect_trajectory_source_id;
 extern VECTOR g_battle_effect_trajectory_step; /* last step's movement */
 extern s32 g_battle_effect_trajectory_tile_flags;
 
-/* Self-relative animation script table: each halfword is a byte offset from
+/* Self-relative animation script table: each 16-bit value is a byte offset from
  * the table's own base to a battle_effect_anim_script_t. Declared as bytes
  * because both uses are byte-based -- the stored pointer is the table's own
- * base plus a byte offset -- and the halfword entries are read through a cast
+ * base plus a byte offset -- and the 16-bit entries are read through a cast
  * at the use site. Declaring it `u16[]` and casting the symbol to `u8*` for
  * the address instead reserves an unused 8-byte frame in
  * battle_effect_init_trap_animation. */
@@ -1911,7 +1911,7 @@ extern u8 g_battle_effect_trap_colors[][3];
  * sprite palette (the secondary effect's parameter). */
 extern u8 g_battle_effect_zodiac_poof_animations[];
 
-/* Unsigned halfword indexes: BATTLE list traversal loads these with lhu. */
+/* Unsigned 16-bit indexes: BATTLE list traversal loads these with lhu. */
 extern s16 g_battle_effect_allocated_record_head;
 extern u16 g_battle_effect_available_record_head;
 extern s32 g_battle_effect_frame_parity;
@@ -1951,7 +1951,7 @@ void battle_effect_free_state_record(s16);
  * EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE origin: the particle update passes
  * the particle, the EFFECT overlay's particle handlers a record built on
  * their stack that holds a position, and the timeline none. The emitter index
- * arrives as a full word. The function is declared with an int result it
+ * arrives as a full 32-bit value. The function is declared with an int result it
  * never sets and no caller reads. */
 s32 battle_effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitter_index, effect_work_record_t* parent);
 

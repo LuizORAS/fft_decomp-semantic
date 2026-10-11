@@ -120,7 +120,7 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
                 if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ADD_STATUS) {
                     /* Early acceptance of a disabling effect bypasses the generic
                      * already-present/immunity filters below. Status bytes 1..4
-                     * are loaded together as an aligned word by the target. */
+                     * are loaded together as an aligned 32-bit value by the target. */
                     s32 status_mask = ai->considered_ability.parameters.words.status_tail
                         & (BATTLE_AI_STATUS_TAIL_PACKED_MASK(BATTLE_STATUS_ID_SLOW)
                             | BATTLE_AI_STATUS_TAIL_PACKED_MASK(BATTLE_STATUS_ID_STOP)

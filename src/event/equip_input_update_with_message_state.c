@@ -5,7 +5,7 @@
 /*
  * Per-frame input update of the EQUIP screen.
  *
- * Reads the pad, then clears all three input words during frames 1..3 of the
+ * Reads the pad, then clears all three 32-bit input values during frames 1..3 of the
  * screen transition and while the text thread runs. The text state goes 1 on
  * the thread's first frame (which queues the window-open sound), 2 after it
  * and 0 once it has ended, when the message and sound locks are released.

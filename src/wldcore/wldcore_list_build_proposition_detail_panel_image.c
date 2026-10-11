@@ -2,7 +2,7 @@
 
 /* Build the image of the proposition detail panel for g_main_active_propositions[proposition]:
  * the elapsed/assigned day counts and the location go into text substitution
- * words 0-2, and one 16-pixel row is drawn per participant.
+ * 32-bit values 0-2, and one 16-pixel row is drawn per participant.
  *
  * Both menu variants share the detail render index and row count.
  *

@@ -4,11 +4,11 @@
 
 /* Unpack a unit SHP file into its two frame tables.
  *
- * The file's first word is the offset of its second frame set, the submerged
+ * The file's first 32-bit value is the offset of its second frame set, the submerged
  * frames; 8 means it has only the set that starts there and both tables get
  * its frames. A set is 0x100 frame offsets, of which the first 0xd0 become
  * pointers into the frame data (-1 maps to its start), then the frame data:
- * a halfword count and that many bytes, appended at
+ * a 16-bit count and that many bytes, appended at
  * g_battle_gfx_shp_frame_data_cursor.
  */
 void battle_gfx_unpack_unit_shp_data(

@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Return the id of another running thread whose current task word equals
+/* Return the id of another running thread whose 32-bit current task value equals
    task_id, or 0 when none matches. Skips slot 0 and the caller's own thread. */
 s32 world_thread_find_running_by_task(s32 task_id) {
     s32 thread_id;

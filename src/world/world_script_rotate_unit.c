@@ -4,7 +4,7 @@
 
 /* RotateUnit event instruction: turn the addressed unit(s) to a facing.
  *
- * Parameters: 0x00 unit id (halfword), 0x02 facing code, 0x03 rotate mode,
+ * Parameters: 0x00 unit id (16-bit value), 0x02 facing code, 0x03 rotate mode,
  * 0x04 rotation speed (index into g_world_rotation_speed_frames), 0x05 delay multiplier.
  * Facing codes 0x11-0x13 are relative to the unit's current facing, 0x10 is
  * relative to the camera quadrant, 0x14 restores the saved facing, and any

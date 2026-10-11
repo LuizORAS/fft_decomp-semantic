@@ -8,7 +8,7 @@
  *
  * `data` holds the polyline table and then the polyline itself, as the target
  * keeps both in one register. The header's second endpoint is read from the
- * whole header word, as the target does. The segment differences read the
+ * whole 32-bit header value, as the target does. The segment differences read the
  * start point first: that makes the start of the point array the loop's base
  * register, from which the other three coordinates are addressed. The unused
  * local reproduces the target's frame size. */

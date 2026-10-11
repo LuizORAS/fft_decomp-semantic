@@ -13,8 +13,8 @@
  *    0x8009f2c0. Their aliases retain this initializer's absolute stores;
  *    the projection routine anchors its shared record view at rotation.
  *  - The 24-byte tile source table is reached through the pointer cell
- *    g_wldcore_map_tile_descriptors. The target indexes it by word
- *    (base + k*4, k += 6), not by record, so it is an s32* with a word index.
+ *    g_wldcore_map_tile_descriptors. The target indexes it by 32-bit value
+ *    (base + k*4, k += 6), not by record, so it is an s32* with a 32-bit element index.
  *  - Element 0 of g_wldcore_menu_stack_types (0x800d4580) receives the second
  *    window-record index; why a record index is stored there is unknown.
  *

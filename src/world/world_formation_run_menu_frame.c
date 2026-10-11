@@ -2,7 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* The six input words at 0x801aed44 are g_world_formation_menu_input_state,
+/* The six 32-bit input masks at 0x801aed44 are g_world_formation_menu_input_state,
  * but a struct global makes GCC keep a base register for the field accesses
  * (see world_input_update_event_state), so they are separate scalars here. */
 extern u32 g_world_formation_menu_current_input, g_world_formation_menu_previous_input,
@@ -10,7 +10,7 @@ extern u32 g_world_formation_menu_current_input, g_world_formation_menu_previous
     g_world_formation_menu_secondary_repeat_counter;
 
 /* Per-frame formation-menu step: loads the input timing profile selected by
- * customized-options bits 9-11, derives the edge/auto-repeat input word
+ * customized-options bits 9-11, derives the edge/auto-repeat 32-bit input mask
  * (masked by the formation entry mask and cleared while any of the six
  * g_world_formation_open_request_state.. flags is set), runs the formation/memory-card request
  * updates, publishes the input, yields once while tracking thread status

@@ -9,7 +9,7 @@
  * the record's coordinate target (resolved to render coordinates, offset by
  * the unit's secondary coordinate vector, then RotTrans'd through the battle
  * camera), and each ring's colour
- * is kept as three bytes instead of a packed word. Quads use no +0x80 x bias.
+ * is kept as three bytes instead of a packed 32-bit value. Quads use no +0x80 x bias.
  *
  * `i` doubles as the curve factor and segment index, and `j` as the curve
  * index, scalar temporary and ring counter: the target keeps each pair in one

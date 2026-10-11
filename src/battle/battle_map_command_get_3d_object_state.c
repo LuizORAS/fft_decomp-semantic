@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Animation state word of map mesh part `value` (map data command 0x81), which is
+/* 32-bit animation state of map mesh part `value` (map data command 0x81), which is
  * 0 once the part's animation has ended. Defined void:
  * battle_script_process_pending_requests reads the dispatcher's result left in
  * $v0. */

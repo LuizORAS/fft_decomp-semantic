@@ -81,7 +81,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         if (CdDataSync(1) != 0) {
             return;
         }
-        /* Each sector has a count, then packed XY/WH word pairs and image words. */
+        /* Each sector has a count, then pairs of packed 32-bit XY/WH values and 32-bit image data. */
         word = (stream->sector_index & 1) * 512;
         rect_count = ((u32*)stream->destination)[(stream->sector_index & 1) * 512];
         word++;

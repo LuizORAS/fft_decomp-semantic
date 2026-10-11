@@ -88,9 +88,9 @@ typedef enum open_movie_stream_status {
 
 /* Shared VLC/MDEC state used by OPEN.BIN's movie-stream pipeline. */
 typedef struct open_movie_mdec_stream_state {
-    u32* vlc_buffers[2];     /* 0x00; decoded run-level words */
+    u32* vlc_buffers[2];     /* 0x00; decoded run-level data in 32-bit entries */
     s32 vlc_buffer_index;    /* 0x08 */
-    u32* output_buffers[2];  /* 0x0c; decoded image words */
+    u32* output_buffers[2];  /* 0x0c; decoded image data in 32-bit entries */
     s32 output_buffer_index; /* 0x14 */
     RECT frame_rects[2];     /* 0x18 */
     s32 frame_rect_index;    /* 0x28 */
@@ -149,7 +149,7 @@ enum { OPEN_GFX_RENDER_RECORD_CAPACITY = 16 };
  * (world_render_record_flag_e): ANIMATED is a 36-byte record, IMAGE a
  * 56-byte record, and a record with BLANK or HIDDEN set is skipped.
  * Each pool holds OPEN_GFX_RENDER_RECORD_CAPACITY entries. */
-/* The render queue holds either record format; its leading flags word selects
+/* The render queue holds either record format; its leading 32-bit flags value selects
  * the concrete layout. */
 
 /* CLUT position and source rectangle at +0x24 of a 56-byte record.
@@ -202,7 +202,7 @@ typedef enum open_title_state {
     OPEN_TITLE_STATE_DEMO_MOVIE = 3, /* idle timeout: starts the next demo movie once the screen has faded */
 } open_title_state_e;
 
-/* State word of the title-exit controller (open_title_update_exit_transition). */
+/* 32-bit state of the title-exit controller (open_title_update_exit_transition). */
 typedef enum open_title_exit_state_id {
     OPEN_TITLE_EXIT_INPUT = 0,
     OPEN_TITLE_EXIT_CANCEL = 1,  /* cross: back to the title menu */
@@ -454,7 +454,7 @@ typedef enum open_script_opcode {
     OPEN_SCRIPT_OPCODE_START_OPNTEX_SEQUENCE = 0x0f,
 } open_script_opcode_e;
 
-/* The ending-script dispatcher passes a serialized halfword cursor. */
+/* The ending-script dispatcher passes a serialized 16-bit cursor. */
 typedef void (*open_script_entry_handler_t)(s16* entry);
 
 /* Byte-addressed ending-script cursor. */
@@ -512,7 +512,7 @@ extern open_script_entry_handler_t g_open_opcode_handlers[16];
 extern open_script_state_t g_open_script_state;
 extern open_font_metrics_t* g_open_script_font_metrics;
 
-/* Scalar views of g_open_script_state words. open_opcode_set_timing_step,
+/* Scalar views of 32-bit fields of g_open_script_state. open_opcode_set_timing_step,
  * open_script_update_timing_and_record_values and
  * open_gfx_update_opntex_sequence load and store each of these by absolute
  * address; the member spelling lets cse keep the address in a register. */

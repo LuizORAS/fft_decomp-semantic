@@ -3,7 +3,7 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
-/* The target compares a line's two endpoints as whole words. */
+/* The target compares a line's two endpoints as 32-bit values. */
 #define LINE_G2_XY_WORD(line, n) (*(s32*)&line->x##n)
 
 /* Secondary handler for a charge effect: phase 1 loads the animation's

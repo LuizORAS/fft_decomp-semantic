@@ -4,7 +4,7 @@
 /* Select the single object's relative sections and rewind its primitive stream. */
 s32 battle_effect_init_model_sections(psyq_tmd_header_t* resource, s32 unused_1) {
     g_battle_effect_model_object = resource->objects;
-    /* The retail lookup rounds signed offsets to whole words. */
+    /* The retail lookup rounds signed offsets to four-byte boundaries. */
     g_battle_effect_model_vertices
         = (SVECTOR*)((u8*)resource + ((s32)resource->objects[0].vertex_offset / 4 * 4 + sizeof(psyq_tmd_header_t)));
     g_battle_effect_model_normals

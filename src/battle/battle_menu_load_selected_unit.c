@@ -33,7 +33,7 @@ void battle_menu_load_selected_unit(void) {
     g_battle_active_turn_unit.job_id = unit->job_id;
     g_battle_active_turn_unit.brave = unit->brave;
     g_battle_active_turn_unit.faith = unit->faith;
-    /* The zodiac sign lives in the top nibble of the halfword at 0x008. */
+    /* The zodiac sign lives in the top nibble of the 16-bit value at 0x008. */
     g_battle_active_turn_unit.zodiac = unit->birthday.zodiac;
 
     editor->move = unit->move;

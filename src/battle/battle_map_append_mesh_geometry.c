@@ -6,7 +6,7 @@
  * for all four polygon classes, normals for textured polygons, per-polygon
  * render data, and finally terrain-tile locations for textured polygons.
  * Each position/normal vector occupies eight renderer bytes: XYZ followed by
- * a spare halfword.  The first position vector's spare halfword holds the
+ * a spare 16-bit value.  The first position vector's spare 16-bit value holds the
  * polygon's packed terrain-tile location.
  * Target 0x800f4dd4 is the geometry pass for primary and animated meshes;
  * battle_map_init_mesh_render_records performs the separate packet
@@ -17,7 +17,7 @@
 
 void battle_map_append_mesh_geometry(
     const battle_map_mesh_geometry_t* geometry_data, battle_map_mesh_part_t* metadata) {
-    /* Named count loads fold the retail four halfword cursor advances. */
+    /* Named count loads fold the retail four 16-bit cursor advances. */
     const u16* source = &geometry_data->textured_triangle_count;
     s32 i;
     s32 textured_triangle_count;

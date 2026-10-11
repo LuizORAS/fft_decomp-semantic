@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
 /* Initializes thread slot `thread_id` to run `function`: global pointer, stack at the end of its
- * 0x400-byte slot, running flag set, task id and scratch words cleared. */
+ * 0x400-byte slot, running flag set, task id and 32-bit scratch fields cleared. */
 void world_thread_start(s32 thread_id, void (*function)(void)) {
     void* global_pointer = world_thread_get_current_global_pointer();
     native_thread_t* thread = &g_world_threads[thread_id];

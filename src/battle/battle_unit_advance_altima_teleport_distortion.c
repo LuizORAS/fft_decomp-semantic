@@ -4,7 +4,7 @@
 /* Altima teleport distortion animation: advance one frame of the eight-step
  * warp-out / warp-in sequence.
  *
- * Jump table: .rodata 0x80068208, 8 words.
+ * Jump table: .rodata 0x80068208, 8 32-bit addresses.
  *
  * The return type is s32 with no value ever returned: keeping $v0 live at the
  * epilogue is what leaves the switch range check's delay slot empty, matching

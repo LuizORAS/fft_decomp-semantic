@@ -56,7 +56,7 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
 
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-    /* The summary panel's render record index lands in the row word, which is cleared below. */
+    /* The summary panel's render record index lands in the 32-bit row field, which is cleared below. */
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].choice_panel.row = index;
     location = &g_wldcore_selected_proposition_row[0].fields.name_text;
     world_text_measure_pixels(

@@ -12,7 +12,7 @@ void GsSortBoxFill(GsBOXF* bp, GsOT* otp, u16 pri) {
     attr = bp->attribute;
     if (!(attr & GsDOFF)) {
         draw_mode = (DR_TPAGE*)GsOUT_PACKET_P;
-        /* Share one DMA tag: the mode word occupies this primitive view's tag slot. */
+        /* Share one DMA tag: the 32-bit mode command occupies this primitive view's tag slot. */
         packet = (TILE*)draw_mode->code;
         hi = (attr >> 17) & 0x180;
         lo = ((attr >> 23) & 0x60) | (PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE) | 0x200);

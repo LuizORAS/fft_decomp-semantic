@@ -9,7 +9,7 @@
  * the text window's render record and returns to phase 0, which pops the level
  * back to the brave-story list once the text window has finished scrolling.
  *
- * The loading test reads g_main_file_cd_state.state (the same word as
+ * The loading test reads g_main_file_cd_state.state (the same 32-bit value as
  * g_main_file_still_loading): only a struct-member load stays behind the
  * delay store. The unused RECT reserves the 8 bytes that put the descriptor
  * at sp+0x18, and page_x keeps the target's (column + 0x280) association. */

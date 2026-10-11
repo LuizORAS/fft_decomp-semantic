@@ -4,11 +4,11 @@
 #include "psx/stddef.h"
 #include "psx/types.h"
 
-/* Numeric entry thread: edits the halfword at param->value one decimal digit
+/* Numeric entry thread: edits the 16-bit value at param->value one decimal digit
  * at a time within the range bound at param->context. Left/right move the digit cursor, up/down
  * step the value by the g_world_menu_number_entry_digit_steps step of that digit (clamped to the range),
  * and a changed value is redrawn as a signed number in the window. When the
- * cancel/confirm handlers change the input word, a -1 left in the value
+ * cancel/confirm handlers change the 32-bit input mask, a -1 left in the value
  * restores the original; otherwise the value is stored and the range's
  * on_change callback runs. */
 void world_menu_number_entry_thread(void) {

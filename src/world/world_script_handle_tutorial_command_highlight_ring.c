@@ -56,7 +56,7 @@ void world_script_handle_tutorial_command_highlight_ring(void) {
             + *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->y);
     }
 
-    /* Point copies emit word transfers; retail copies the closing sample as four halfwords. */
+    /* Point copies emit 32-bit transfers; retail copies the closing sample as four 16-bit values. */
     for (i = 0; i < 4; i++) {
         (&g_world_tutorial_highlight_corners_a[30][0].x)[i] = (&g_world_tutorial_highlight_corners_a[0][0].x)[i];
         (&g_world_tutorial_highlight_corners_b[30][0].x)[i] = (&g_world_tutorial_highlight_corners_b[0][0].x)[i];

@@ -5,8 +5,8 @@
 /*
  * Event instruction: face a unit at once and set its animation.
  *
- * Parameters: 0x00 unit id (halfword), 0x02 rotation, 0x03 animation id
- * (halfword; its high byte is also read as 0x04, the facing-update mode:
+ * Parameters: 0x00 unit id (16-bit value), 0x02 rotation, 0x03 animation id
+ * (16-bit value; its high byte is also read as 0x04, the facing-update mode:
  * 0 clears the suppression, anything else sets it).
  */
 void world_script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters) {

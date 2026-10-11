@@ -3,8 +3,8 @@
 
 /* Phase driver for a countdown object: phase 1 waits for the menu event flag
  * and plays the milestone music, phase 2 waits 180 frames and returns to the bar music, phase 3
- * pops the menu level through 0x80077174 once both busy words clear; any
- * other phase steps the countdown on a confirm press (0x20). The busy words
+ * pops the menu level through 0x80077174 once both 32-bit busy fields clear; any
+ * other phase steps the countdown on a confirm press (0x20). The 32-bit busy fields
  * are read as g_wldcore_audio_queue members, not scalars, which keeps the timer store
  * ahead of their loads as in the target. */
 void wldcore_map_step_discovery_announcement(wldcore_menu_countdown_t* countdown) {

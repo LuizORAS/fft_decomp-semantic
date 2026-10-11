@@ -4,9 +4,9 @@
 /* Menu callback: the icon descriptor of the item in list row `row`, built in
  * a shared record. */
 menu_icon_source_t* equip_menu_get_entry_item_icon_source(s32 row) {
-    /* item_t list rows are halfword entries whose low byte is the item id
+    /* item_t list rows are 16-bit entries whose low byte is the item id
      * (see equip_item_build_type_icon_source / equip_menu_get_entry_item_equipped_count). */
-    /* 6-halfword descriptor filled by equip_gfx_build_item_graphic_descriptor. */
+    /* Descriptor of six 16-bit values filled by equip_gfx_build_item_graphic_descriptor. */
     equip_gfx_build_item_graphic_descriptor(&g_equip_item_graphic_descriptor, g_equip_item_list_entries[row] & 0xff);
     return &g_equip_item_graphic_descriptor;
 }

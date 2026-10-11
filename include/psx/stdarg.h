@@ -1,7 +1,7 @@
 #ifndef PSX_STDARG_H
 #define PSX_STDARG_H
 
-/* Psy-Q GCC argument slots are rounded to whole int words. */
+/* Psy-Q GCC arguments occupy whole 32-bit int slots. */
 typedef char* va_list;
 
 #define __va_rounded_size(type) (((sizeof(type) + sizeof(int) - 1) / sizeof(int)) * sizeof(int))

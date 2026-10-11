@@ -29,7 +29,7 @@ typedef struct menu_ability_list {
  * the named detail fields. Weapon fields follow equipment-slot order. */
 
 typedef struct menu_item_stat_detail {
-    s16 move_bonus; /* Signed halfwords combined by world_item_combine_stat_details. */
+    s16 move_bonus; /* Signed 16-bit values combined by world_item_combine_stat_details. */
     s16 speed_bonus;
     s16 jump_bonus;
     s16 right_weapon_power; /* 0x06; summed per equipment slot by world_item_sum_equipment_stat_details */
@@ -182,8 +182,8 @@ typedef enum menu_status_panel_flags {
 /* Parameter block of the task-0x3b status panel threads (WORLD's formation
  * panels and the overlays' character status and numeric editor threads): the
  * panel origin, a redraw request and the frame style read by
- * *_panel_set_primitive_colors. The origin is read as whole words (lw) for the
- * draw-area offset; the halfword reads that feed the s16 draw-offset stores
+ * *_panel_set_primitive_colors. The origin is read as whole 32-bit values (lw) for the
+ * draw-area offset; the 16-bit reads that feed the s16 draw-offset stores
  * are the compiler narrowing those loads. */
 typedef struct menu_status_thread {
     s32 x;              /* 0x00 */
@@ -355,13 +355,13 @@ typedef char menu_status_panel_packet_size_must_be_472[(sizeof(menu_status_panel
 
 /* Parameter block of the editor display threads, reached through the
  * 0x400-byte battle thread table. It has the shape of menu_status_thread_t,
- * but these threads load x as a halfword. The shake offset is sign-extended
+ * but these threads load x as a 16-bit value. The shake offset is sign-extended
  * from the s16 shake tables and narrowed to the draw-offset y. Only the members the display
  * threads use are named; the record's total size is not proven. */
 typedef struct menu_status_panel_display_thread {
     u16 x;           /* 0x00 */
     u16 _padding_02; /* aligns shake_y */
-    s32 shake_y;     /* 0x04; narrowed to a draw-offset halfword when rendered */
+    s32 shake_y;     /* 0x04; narrowed to a draw-offset 16-bit value when rendered */
     s32 flags;       /* 0x08: menu_status_panel_flags_e */
     s32 work;        /* 0x0c: redraw request flags, cleared once serviced */
     s32 dimmed;      /* 0x10: nonzero forces the dimmed CLUTs and colours; bound as
@@ -651,7 +651,7 @@ typedef struct menu_entry {
      * poll (set to 1 to rebuild the text image). */
     void* context;
     void* value;           /* 0x34: thread-specific value data: s16 result cell or main-window s32 substitution pair */
-    s16 selected_index;    /* 0x38: selected row; indexes the binding's halfword table
+    s16 selected_index;    /* 0x38: selected row; indexes the binding's 16-bit table
                               (world_menu_announce_entry_value_thread) */
     s16 select_text_table; /* 0x3a: "Index for select text": row of g_world_menu_entry_text_id_tables
                               (0x11 = the binding's row_text_ids); 2 / -1 defer to the next running
@@ -660,7 +660,7 @@ typedef struct menu_entry {
 } menu_entry_t;
 typedef char menu_entry_size_must_be_60[(sizeof(menu_entry_t) == 60) ? 1 : -1];
 
-/* Numeric-entry and action-selection threads use value as a halfword result cell. */
+/* Numeric-entry and action-selection threads use value as a 16-bit result cell. */
 static inline s16* menu_entry_result(menu_entry_t* entry) {
     return entry->value;
 }
@@ -757,7 +757,7 @@ typedef struct menu_quad_piece {
 } menu_quad_piece_t;
 
 /* Provisional: the four vertex colours applied by the POLY_GT4 builder at
- * 0x800e8d6c (record at 0x801557f4; the leading word is untyped). */
+ * 0x800e8d6c (record at 0x801557f4; the leading 32-bit value is untyped). */
 typedef struct menu_quad_colors {
     u32 _unused_00;
     CVECTOR vertex[4]; /* 0x04; one colour per POLY_GT4 corner */
@@ -840,7 +840,7 @@ typedef enum battle_at_entry_flags {
 
 /* Provisional: the AT-list work area the *_menu_build_ability_preview_at_list
  * builders fill, reached through g_main_heap_companion_overlay_load_address. The five
- * parallel halfword columns become the layout's text_ids/text_colors tables,
+ * parallel 16-bit columns become the layout's text_ids/text_colors tables,
  * `text` is published through g_world_text_section_pointers[TEXT_SECTION_AT_LIST] (BATTLE:
  * g_battle_text_section_pointers[TEXT_SECTION_AT_LIST]). The main-stack preview
  * fills all 40 AT entries; the menu displays entries 1 through 39. */
@@ -1296,7 +1296,7 @@ typedef struct menu_text_state {
 
 /* options */
 /*
- * Live game-options word at 0x800473ac. The OPTION overlay unpacks these
+ * Live 32-bit game-options value at 0x800473ac. The OPTION overlay unpacks these
  * fields in menu order. Toggle settings encode On as 0 and Off as 1; the
  * paired high bit participates in the menu's Customize/Initialize state.
  */

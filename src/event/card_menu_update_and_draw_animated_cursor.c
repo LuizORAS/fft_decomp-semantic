@@ -5,7 +5,7 @@
  * horizontally, with its semi-transparent shadow. `mode` bit 0 starts the
  * reverse curve; mode 0 cancels it.
  *
- * CARD copy of bunit_menu_update_and_draw_animated_cursor. The state word
+ * CARD copy of bunit_menu_update_and_draw_animated_cursor. The 16-bit state
  * packs the reverse flag in bit 15 and a frame counter in bits 0-6; the
  * counter is scaled by the event speed before the keyframe lookup and
  * clamped to the end of the curve in use (0x24 reverse, wrapping at 0x2f

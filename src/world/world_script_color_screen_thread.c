@@ -4,7 +4,7 @@
 
 /* Fades the screen colour modulation from a start RGB to an end RGB over a duration.
  *
- * Parameters: mode byte, start RGB, end RGB, then a halfword duration in frames. The
+ * Parameters: mode byte, start RGB, end RGB, then a 16-bit duration in frames. The
  * colour advances by two frames per step and finally snaps to the end colour. */
 void world_script_color_screen_thread(void) {
     union {

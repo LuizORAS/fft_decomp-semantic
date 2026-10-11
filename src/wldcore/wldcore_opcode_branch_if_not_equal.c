@@ -2,8 +2,8 @@
 #include "psx/types.h"
 
 /* The target's sum is `addu v1,v0,v1`: rs is the
- * g_wldcore_active_saved_record.counter word, rt the sign-extended
- * counter_delta halfword. Any `+` spelling canonicalises the halfword into rs.
+ * g_wldcore_active_saved_record.32-bit counter, rt the sign-extended
+ * 16-bit counter_delta value. Any `+` spelling canonicalises the 16-bit value into rs.
  * `a - (-b)` reaches fold as MINUS_EXPR(a, NEGATE_EXPR(b)) and is rewritten to
  * a PLUS_EXPR without the commutative re-canonicalisation, which keeps the
  * target's operand order. */

@@ -10,7 +10,7 @@ void SetDrawLoad(DR_LOAD* packet, RECT* rect) {
     packet->code[0] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CLEAR_CACHE);
     setlen(packet, length);
     packet->code[1] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CPU_TO_VRAM);
-    /* Component packing replaces the retail GPU word loads with halfword loads. */
+    /* Component packing replaces the retail 32-bit GPU loads with 16-bit loads. */
     packet->code[2] = *(u32*)&rect->x;
     packet->p[0] = *(u32*)&rect->w;
 }

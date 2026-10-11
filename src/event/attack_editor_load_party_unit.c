@@ -4,7 +4,7 @@
 
 /* gauges->team_kind. Accessed through the struct, GCC keeps its address in
  * a register across the three stores (1276 vs 1280 bytes); the target
- * addresses it as a standalone halfword. */
+ * addresses it as a standalone 16-bit value. */
 
 /* ATTACK twin of require_editor_load_party_unit. Load a party roster unit into the ATTACK status/editor display.
  *

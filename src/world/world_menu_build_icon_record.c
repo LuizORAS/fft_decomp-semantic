@@ -43,7 +43,7 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
     record->base.sprites[2].u0 = 0xb8;
     record->base.sprites[2].v0 = 0;
     kind = param->header_id;
-    /* The range test below reads its own halfword copy of the kind. */
+    /* The range test below reads its own 16-bit copy of the kind. */
     index = (s16)kind;
     if (kind == 0x10) {
         const image_load_parameters_t* image_params;

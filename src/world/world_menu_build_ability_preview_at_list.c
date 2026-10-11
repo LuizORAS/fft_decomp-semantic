@@ -4,7 +4,7 @@
 
 /*
  * The layout record at 0x80153cd0 bound into menu entry 52. Its
- * head is exactly menu_text_layout_t; the halfword at +0x28 is the
+ * head is exactly menu_text_layout_t; the 16-bit value at +0x28 is the
  * scroll row this function sets and world_screen_menu_draw_text_columns receives as
  * its `row_offset` argument.
  */
@@ -14,7 +14,7 @@
  * confirm: stage the selected ability or item into the shared action record at
  * g_world_menu_preview_action, run battle_action_preview_at_list for the stored unit on the
  * main stack to obtain the previewed turn position and the descriptor list,
- * then write the name text and the four halfword columns and size menu entry
+ * then write the name text and the four 16-bit columns and size menu entry
  * 52 around them.
  *
  * WORLD twin of option_menu_init_at_list from the loop onwards. As in that
@@ -75,7 +75,7 @@ void world_menu_build_ability_preview_at_list(void) {
         g_world_menu_preview_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
     } else {
         staged_item = 1;
-        /* Item selection updates only the low byte of the command word. */
+        /* Item selection updates only the low byte of the 16-bit item/equipment field. */
         *(u8*)&g_world_menu_preview_action.item_or_equipment = text_id;
     }
     action = &g_world_menu_preview_action;

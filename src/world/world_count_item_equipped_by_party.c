@@ -3,7 +3,7 @@
 
 /* Count copies of an item equipped across the active formation records.
  *
- * The comparison uses the stored equipment halfword as-is; only the requested
+ * The comparison uses the stored 16-bit equipment value as-is; only the requested
  * ID is masked. */
 s32 world_count_item_equipped_by_party(s32 item_id) {
     s32 count;

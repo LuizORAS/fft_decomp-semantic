@@ -243,7 +243,7 @@ When a cleanup changes the bytes, look here first.
   (`sll`/`sra`: `s16` or `s8`; `andi`: `u16` or `u8`; none and a narrow read
   in the callee: the argument was already that narrow), in the prototype and
   the definition alike, and the casts at the call sites go. Where callers
-  pass full words and the callee narrows, declare the parameter `s32` and
+  pass 32-bit values and the callee narrows, declare the parameter `s32` and
   narrow at its uses (one narrow local). A callee that loads a narrow stack
   parameter (`lhu 0x10(sp)`) is the first case with the right signedness, not
   a reason for an old-style definition: none is left in the tree.
@@ -262,7 +262,7 @@ When a cleanup changes the bytes, look here first.
 - Raw offset versus field access changes scheduling (`MEM_IN_STRUCT_P`):
   re-measure after converting.
 - Two single-bit tests on one `u16` (`(f & 0x100) && !(f & 0x10)`) merge into
-  one word `lw`+`andi` test.
+  one 32-bit `lw`+`andi` test.
 - One variable in two roles across a call forces a callee-saved register;
   split or merge variables before trying priority tricks. Read conflicts
   with `cc1 -da` (`.greg`).

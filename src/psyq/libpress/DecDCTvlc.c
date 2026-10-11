@@ -204,7 +204,8 @@ dc_v2_refill_ready:
     *output = scratch;
 check_budget:
     __asm__("" : "=r"(component));
-    condition = (u32)output - (u32)output_end; /* Byte subtraction avoids a nonretail halfword rescale. */
+    condition = (u32)output
+        - (u32)output_end; /* Byte subtraction keeps the difference in bytes instead of 16-bit elements. */
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (condition >= 0)
         goto decoder_paused;

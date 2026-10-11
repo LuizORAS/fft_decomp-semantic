@@ -20,7 +20,7 @@ void battle_formula_steal_equipment(void) {
     battle_formula_apply_maintenance();
     action = g_battle_action_target_data;
     if (action->hit != 0) {
-        /* The halfword store clears all other special-effect flags. */
+        /* The 16-bit store clears all other special-effect flags. */
         action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM;
     }
 }

@@ -11,7 +11,7 @@ void GsSortLine(GsLINE* line, GsOT* ot, u16 z) {
     attr = line->attribute;
     if (!(attr & GsDOFF)) {
         draw_mode = (DR_TPAGE*)GsOUT_PACKET_P;
-        /* Share one DMA tag: the mode word occupies this primitive view's tag slot. */
+        /* Share one DMA tag: the 32-bit mode command occupies this primitive view's tag slot. */
         prim = (LINE_F2*)draw_mode->code;
         draw_mode->code[0] = ((attr >> 23) & 0x60) | (PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE) | 0x200);
         setRGB0(prim, line->r, line->g, line->b);

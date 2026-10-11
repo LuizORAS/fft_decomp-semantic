@@ -2,7 +2,7 @@
 
 /* LIBGPU, retail 0x80025c44-0x80025e5c. Selects fill or tile clearing and restores drawing state. */
 int _clr(RECT* rect, u32 color) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view removes native halfword
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view removes native 16-bit
                                                                       normalization in the bounds clamps. */
     limitRange(rect->w, 0, g_psyq_gpu_environment.vram_width - 1);
     limitRange(rect->h, 0, g_psyq_gpu_environment.vram_height - 1);
@@ -17,7 +17,7 @@ int _clr(RECT* rect, u32 color) {
         g_psyq_gpu_clear_packet.tile.draw_mask = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
         g_psyq_gpu_clear_packet.tile.tile_color
             = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_TILE) | (color & PSYQ_GPU_RGB_MASK);
-        /* Whole RECT assignment emits unaligned pairs instead of the native GPU word transfers. */
+        /* Whole RECT assignment emits unaligned pairs instead of the native 32-bit GPU transfers. */
         g_psyq_gpu_clear_packet.tile.xy = *(u32*)&rect->x;
         g_psyq_gpu_clear_packet.tile.wh = *(u32*)&rect->w;
         g_psyq_gpu_clear_restore.area.tag
@@ -34,7 +34,7 @@ int _clr(RECT* rect, u32 color) {
         g_psyq_gpu_clear_packet.fill.draw_mask = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
         g_psyq_gpu_clear_packet.fill.fill_color
             = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_BLOCK_FILL) | (color & PSYQ_GPU_RGB_MASK);
-        /* Whole RECT assignment emits unaligned pairs instead of the native GPU word transfers. */
+        /* Whole RECT assignment emits unaligned pairs instead of the native 32-bit GPU transfers. */
         g_psyq_gpu_clear_packet.fill.xy = *(u32*)&rect->x;
         g_psyq_gpu_clear_packet.fill.wh = *(u32*)&rect->w;
     }

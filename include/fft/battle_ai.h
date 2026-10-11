@@ -176,7 +176,7 @@ enum {
     BATTLE_AI_ABILITY_FLAG_3_PHYSICAL_ATTACK = 0x01,
     BATTLE_AI_ABILITY_FLAG_3_MAGICAL_ATTACK = 0x02,
     /* Four area-shape bits, tested only together: 0x20 a line from the user
-     * (BATTLE_AI_ABILITY_LINEAR_TRAJECTORY in the word view), 0x10 the eight
+     * (BATTLE_AI_ABILITY_LINEAR_TRAJECTORY in the 32-bit view), 0x10 the eight
      * breath and bracelet cones, 0x08 Triple Attack alone, 0x04 Triple Bracelet
      * alone. With any of them set the AI tries every origin tile. */
     BATTLE_AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK = 0x3c,
@@ -189,7 +189,7 @@ enum {
     BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI = 0x80,
 };
 
-/* Word flags of the considered ability. Bytes 1..3 retain the static table
+/* 32-bit flags of the considered ability. Bytes 1..3 retain the static table
  * meanings, but byte 4 is replaced by battle_ai_ability_entry_flag_e: its
  * low bit means CONSUME_EVALUATED_ORIGINS, not the static EVADE_WITH_MOTION.
  * Team preferences remain distinct from the absolute ONLY restrictions. */
@@ -243,7 +243,7 @@ typedef char battle_ai_command_size_must_be_24[sizeof(battle_ai_command_t) == 24
  * base register), a pointer assigned first is not.
  */
 /* X / map elevation / Y / zero, written in that order by transfer_unit_coordinates_to_ai
- * and read as one word for equality tests. */
+ * and read as one 32-bit value for equality tests. */
 typedef union battle_ai_coords {
     u32 word;
     struct {
@@ -254,7 +254,7 @@ typedef union battle_ai_coords {
     } bytes;
 } battle_ai_coords_t;
 
-/* Ability AI behaviour flags 1..4. Consumers read the word, two halfwords,
+/* Ability AI behaviour flags 1..4. Consumers read the 32-bit value, two 16-bit values,
  * or individual bytes; use the corresponding masks above for each view. */
 typedef union battle_ai_ability_flags {
     u32 word;
@@ -312,7 +312,7 @@ typedef char battle_ai_snapshot_hp_must_be_0x1b[((unsigned long)&((battle_ai_ext
 typedef char battle_ai_snapshot_equipment_must_be_0x36
     [((unsigned long)&((battle_ai_extended_snapshot_t*)0)->equipment == 0x36) ? 1 : -1];
 
-/* AI ability +0x04..0x0b: byte parameters and an aligned status-tail word.
+/* AI ability +0x04..0x0b: byte parameters and an aligned 32-bit status tail.
  * 0x8019e9f4 loads status bytes 1..4 together; reading only one byte would
  * silently lose the high status bits tested by the decision evaluator. */
 typedef union battle_ai_ability_parameters {
@@ -328,7 +328,7 @@ typedef union battle_ai_ability_parameters {
     } words;
 } battle_ai_ability_parameters_t;
 
-/* Pack canonical status IDs 8..39 into the aligned word covering status
+/* Pack canonical status IDs 8..39 into the aligned 32-bit value covering status
  * bytes 1..4 of battle_ai_ability_parameters_t. */
 #define BATTLE_AI_STATUS_TAIL_PACKED_MASK(id)                                                                          \
     ((u32)BATTLE_STATUS_BYTE_MASK(id) << ((BATTLE_STATUS_BYTE_INDEX(id) - 1) * 8))
@@ -389,7 +389,7 @@ typedef char battle_ai_action_command_must_be_at_offset_8[((unsigned long)&((bat
         ? 1
         : -1];
 
-/* The packed halfword combines an ability ID and a physical unit slot. */
+/* The packed 16-bit value combines an ability ID and a physical unit slot. */
 enum {
     BATTLE_AI_ABILITY_ENTRY_ABILITY_MASK = 0x03ff,
     BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT = 10,
@@ -399,7 +399,7 @@ enum {
 typedef struct battle_ai_ability_entry {
     s16 packed_id; /* bits 0..9: ability ID; bits 10..15: physical unit slot */
     /* The AI updates the flag bits with lhu/sh over both bytes, so the
-     * halfword view covers skillset and usage_flags together. */
+     * 16-bit view covers skillset and usage_flags together. */
     union {
         u16 packed; /* skillset | usage_flags << 8 */
         struct {
@@ -421,7 +421,7 @@ typedef enum battle_ai_weapon_formula_flags {
 } battle_ai_weapon_formula_flags_e;
 
 /* Per-compact-unit weapon summary. The builder at 0x8019a2f0 clears two
- * words, then merges weapon properties through the byte view. */
+ * 32-bit values, then merges weapon properties through the byte view. */
 typedef union battle_ai_weapon_data {
     u32 words[2];
     struct {
@@ -501,7 +501,7 @@ typedef char battle_ai_unit_decision_size_must_be_16[(sizeof(battle_ai_unit_deci
  * the low three bytes of target_setting_flags at +0xcb4. Loops at
  * 0x8019b184..0x8019b1b8 and 0x8019b260..0x8019b274 establish the span.
  * The CONSUME_EVALUATED_ORIGINS flag lies in the fourth byte, outside the saved array.
- * Preserve both views and word alignment; this is not a 16-byte backup. */
+ * Preserve both views and 32-bit alignment; this is not a 16-byte backup. */
 typedef union battle_ai_targetability {
     struct {
         u8 unit_active[BATTLE_UNIT_SLOT_COUNT];
@@ -575,7 +575,7 @@ typedef struct battle_ai_data {
     u8 acting_unit_team;                             /* 0x0e39 */
     u8 map_max_x;                                    /* 0x0e3a */
     u8 map_max_y;                                    /* 0x0e3b */
-    u16 team_golem[BATTLE_TEAM_COUNT];               /* 0x0e3c; halfword scoring at 0x8019d37c */
+    u16 team_golem[BATTLE_TEAM_COUNT];               /* 0x0e3c; 16-bit scoring at 0x8019d37c */
     u8 status_to_cancel[BATTLE_STATUS_BYTE_COUNT]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built
                                                       at 0x80195410 */
     /* Resumable reflected-origin search, 0x8019b7b8–0x8019bb20.

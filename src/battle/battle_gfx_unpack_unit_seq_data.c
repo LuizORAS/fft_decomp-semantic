@@ -1,14 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Unpack a unit SEQ file: its two header halfwords (the first sequence of
- * the attack set and the first of the SP2 set) become words and its 256
+/* Unpack a unit SEQ file: its two 16-bit header fields (the first sequence of
+ * the attack set and the first of the SP2 set) become 32-bit values and its 256
  * sequence offsets pointers into the sequence data, which is appended at
  * g_battle_gfx_seq_data_cursor. An offset of -1 resolves to the start of
  * that data, the first sequence.
  *
  * Near twin of battle_gfx_resolve_packed_offset_table, which resolves the
- * same record without the two header words. As there, the target keeps a
+ * same record without the two 16-bit header fields. As there, the target keeps a
  * second copy of the record pointer for the payload size (`move t2,a1`). */
 void battle_gfx_unpack_unit_seq_data(
     battle_gfx_native_unit_seq_table_t* destination, const battle_gfx_packed_seq_record_t* source) {

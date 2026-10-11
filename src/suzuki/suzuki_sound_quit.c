@@ -6,7 +6,7 @@
 /* Shuts the driver down: closes its events, releases every voice with
  * release rate 6 and turns reverb off.
  *
- * The status word is tested as signed (`lh`); a u16 test loads with `lhu`. */
+ * The 16-bit status is tested as signed (`lh`); a u16 test loads with `lhu`. */
 void suzuki_sound_quit(void) {
     s32 voice;
     s16 status;

@@ -4,7 +4,7 @@
 
 /*
  * ColorUnit event instruction: start a palette modulation on the addressed
- * unit(s). Parameters: 0x00 unit id (halfword; a group id selects several
+ * unit(s). Parameters: 0x00 unit id (16-bit value; a group id selects several
  * units), 0x02 mode, 0x03..0x05 signed red, green and blue amounts, 0x06
  * duration.
  */

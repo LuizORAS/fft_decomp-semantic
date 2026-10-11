@@ -18,7 +18,7 @@ s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id) {
         return result;
     }
     /* The typed equipment field folds 0x54 into the pointer expression and
-     * changes register scheduling. This halfword view preserves the exact
+     * changes register scheduling. This 16-bit view preserves the exact
      * target while indexing the same equip_unit_data_t.equipment array. */
     if (unit_index != 1) {
         equip_item_adjust_inventory_count(((s16*)g_equip_unit_data[unit_index])[slot + 42], 1);

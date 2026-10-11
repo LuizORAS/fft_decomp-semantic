@@ -1,6 +1,6 @@
 #include "psx/libpress.h"
 
-/* Start the MDEC output DMA of size words into buf. */
+/* Start the MDEC output DMA of size 32-bit values into buf. */
 void MDEC_out(u32* buf, u32 size) {
     MDEC_out_sync();
     *g_psyq_press_dma_dpcr |= 0x88;

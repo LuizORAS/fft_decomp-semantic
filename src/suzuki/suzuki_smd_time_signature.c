@@ -3,7 +3,7 @@
 
 /* SMD opcode 0x97 "Time Signature": numerator then denominator. They only
  * drive the music's bar and beat counters.
- * The numerator is held at halfword width: `lbu` already zero-extends it,
+ * The numerator is held as a 16-bit value: `lbu` already zero-extends it,
  * so a u8 temporary would be masked again before the 16-bit stores. */
 u8* suzuki_smd_time_signature(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     u16 numerator;

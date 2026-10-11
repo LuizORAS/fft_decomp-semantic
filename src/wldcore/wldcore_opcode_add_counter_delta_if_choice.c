@@ -1,6 +1,6 @@
 /* Script opcode handler: compares `EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION` against the opcode's
- * third byte and, on a match, adds the signed middle halfword of the
- * instruction word to g_wldcore_sound_novel_counter_delta. */
+ * third byte and, on a match, adds the signed middle 16 bits of the
+ * 32-bit instruction to g_wldcore_sound_novel_counter_delta. */
 #include "fft/wldcore.h"
 #include "psx/types.h"
 

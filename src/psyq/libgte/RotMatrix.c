@@ -2,7 +2,7 @@
 #include "psx/libgte.h"
 
 /* main 0x8001d658–0x8001d8e4: construct rotation from the packed sin/cos table.
- * Low-word unsigned products and negation before rescaling retain rounding. */
+ * The low 32 bits of unsigned products and negation before rescaling retain rounding. */
 MATRIX* RotMatrix(SVECTOR* rotation, MATRIX* output) {
     SVECTOR* angles = rotation;
     MATRIX* destination = output;
@@ -31,7 +31,7 @@ MATRIX* RotMatrix(SVECTOR* rotation, MATRIX* output) {
     packed += temporary;
     __asm__(""
         : "=r"(packed)
-        : "0"(packed)); /* Preserve packed-word fetch/extraction; removing this contracts to LH. */
+        : "0"(packed)); /* Preserve packed 32-bit fetch/extraction; removing this contracts to LH. */
     packed = *(u32*)packed;
     temporary = packed << 16;
     temporary >>= 16;
@@ -44,7 +44,7 @@ positive_x:
     packed += temporary;
     __asm__(""
         : "=r"(packed)
-        : "0"(packed)); /* Preserve packed-word fetch/extraction; removing this contracts to LH. */
+        : "0"(packed)); /* Preserve packed 32-bit fetch/extraction; removing this contracts to LH. */
     packed = *(u32*)packed;
     temporary = packed << 16;
     sine_x = temporary >> 16;
@@ -66,7 +66,7 @@ x_ready:
     packed += temporary;
     __asm__(""
         : "=r"(packed)
-        : "0"(packed)); /* Preserve packed-word fetch/extraction; removing this contracts to LH. */
+        : "0"(packed)); /* Preserve packed 32-bit fetch/extraction; removing this contracts to LH. */
     packed = *(u32*)packed;
     negative_sine_y = packed << 16;
     negative_sine_y >>= 16;
@@ -79,7 +79,7 @@ positive_y:
     packed += temporary;
     __asm__(""
         : "=r"(packed)
-        : "0"(packed)); /* Preserve packed-word fetch/extraction; removing this contracts to LH. */
+        : "0"(packed)); /* Preserve packed 32-bit fetch/extraction; removing this contracts to LH. */
     packed = *(u32*)packed;
     value = packed << 16;
     value >>= 16;
@@ -116,7 +116,7 @@ y_ready:
     packed += temporary;
     __asm__(""
         : "=r"(packed)
-        : "0"(packed)); /* Preserve packed-word fetch/extraction; removing this contracts to LH. */
+        : "0"(packed)); /* Preserve packed 32-bit fetch/extraction; removing this contracts to LH. */
     packed = *(u32*)packed;
     temporary = packed << 16;
     temporary >>= 16;
@@ -133,7 +133,7 @@ positive_z:
     packed += temporary;
     __asm__(""
         : "=r"(packed)
-        : "0"(packed)); /* Preserve packed-word fetch/extraction; removing this contracts to LH. */
+        : "0"(packed)); /* Preserve packed 32-bit fetch/extraction; removing this contracts to LH. */
     packed = *(u32*)packed;
     temporary = packed << 16;
     sine_z = temporary >> 16;

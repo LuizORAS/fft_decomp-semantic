@@ -82,7 +82,7 @@ s32 battle_ai_choose_status_action(void) {
                 if (!battle_ai_check_target_type(i))
                     ai->targetability.live.unit_targetable[i] = ai->targetability.live.unit_active[i];
             }
-            /* The aligned skillset/usage halfword preserves target LHU/SH;
+            /* The aligned skillset/usage 16-bit value preserves target LHU/SH;
              * byte-only usage accesses change the instructions. */
             target_or_count = 0;
             for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {

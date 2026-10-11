@@ -43,7 +43,7 @@ s32 battle_process_map_gns_record(s32 phase, battle_map_resource_t* record) {
              * Requested map state, packed like the file row's map_state: layout in
              * bits 0-11, weather in 12-14, time of day in 15.  The target reads
              * the record's variable id and map state as single bytes (lbu), not
-             * as the halfwords the struct declares, so those two stay byte reads.
+             * as the 16-bit values the struct declares, so those two stay byte reads.
              */
             requested_layout = battle_script_get_variable(*(u8*)&selected->command.script_variable_id) & 0xfff;
             requested_layout_and_weather

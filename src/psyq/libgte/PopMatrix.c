@@ -26,7 +26,7 @@ restore_frame:
     PSYQ_CPU_ADDRESS_HIGH(frame, g_psyq_gte_matrix_stack);
     frame = (MATRIX*)((u32)frame + offset);
     PSYQ_CPU_ADDRESS_LOW(frame, g_psyq_gte_matrix_stack);
-    /* Rotation controls transfer words; R33 includes MATRIX's alignment halfword. */
+    /* Rotation controls transfer 32-bit values; R33 includes MATRIX's 16-bit alignment field. */
     first = *(u32*)&frame->m[0][0];
     second = *(u32*)&frame->m[0][2];
     PSYQ_GTE_CTC2(PSYQ_GTE_CTRL_R11_R12, first);

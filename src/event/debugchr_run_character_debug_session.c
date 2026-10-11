@@ -106,7 +106,7 @@ void debugchr_run_character_debug_session(void) {
        enclosing loop's notes reweight the allocation of the whole body. */
 loop_outer:
     i = 0;
-    /* name_id is five halfwords before battle_id; record access changes the store displacements. */
+    /* name_id is five 16-bit values before battle_id; record access changes the store displacements. */
     selected_battle_id = &g_debugchr_panel_selected_unit_data.battle_id;
     for (;;) {
         mark = 0xE;

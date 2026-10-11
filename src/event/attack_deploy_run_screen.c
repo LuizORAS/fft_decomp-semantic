@@ -8,8 +8,8 @@
  * the scenario, then writes the deployed units' map coordinates and starts
  * the map title.
  *
- * Several globals are indexed as arrays (cursor column/row pairs, the fade
- * word at g_attack_status_display_offset_y, the selected-unit flag, the unit-state bytes): their
+ * Several globals are indexed as arrays (cursor column/row pairs, the 32-bit fade
+ * value at g_attack_status_display_offset_y, the selected-unit flag, the unit-state bytes): their
  * constant-index accesses must go through one address register so GCC hoists
  * it, which a scalar declaration does not reproduce. The per-squad unit count
  * walks rows with explicit pointers rather than nested loops: loop.c would

@@ -5,7 +5,7 @@
  * Per-frame handler for a WLDCORE brightness/fade menu level.
  *
  * The unused array reproduces the target's 0x40-byte frame. The 0x140 state-flag test is a
- * word load (`lw`) of the u16 g_wldcore_active_saved_record.state_flags in the target, so it
+ * 32-bit load (`lw`) of the u16 g_wldcore_active_saved_record.state_flags in the target, so it
  * reads the flags through an s32 cast; the u16 declaration gives `lhu`.
  */
 void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level) {

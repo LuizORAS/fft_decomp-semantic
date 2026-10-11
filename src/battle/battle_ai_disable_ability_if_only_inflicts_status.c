@@ -3,7 +3,7 @@
 /*
  * Disable an AI ability that does nothing except add one unwanted status.
  *
- * The halfword update spans skillset and usage_flags so GCC emits the target's
+ * The 16-bit value update spans skillset and usage_flags so GCC emits the target's
  * single lhu/andi/sh sequence while clearing only the usable bit. A direct
  * status_infliction pointer folds +7 into its base; byte-stepping the typed AI
  * container retains the target's base pointer and named field access.

@@ -3,7 +3,7 @@
 
 /* Resolves the queued in-between-turn event (mimic, ability cast, traps).
  *
- * The queue word's high byte selects the action type (g_battle_action_turn_event_type) and its
+ * The 32-bit queue value's second byte selects the action type (g_battle_action_turn_event_type) and its
  * low byte the unit; BATTLE_TURN_EVENT_NONE means nothing is queued. Unit- and
  * ability-ready events resolve an ability, while action-result events dispatch
  * the queued per-unit result. The meaning of 0x400 remains uncertain. */

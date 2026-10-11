@@ -2,7 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Per-frame event input update: derives the edge/auto-repeat input word,
+/* Per-frame event input update: derives the edge/auto-repeat input 32-bit value,
  * publishes it, and yields once while tracking thread status changes.
  *
  * Twin of card_input_update_event_state; BUNIT additionally latches

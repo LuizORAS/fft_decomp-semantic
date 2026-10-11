@@ -165,7 +165,7 @@ void require_apply_post_battle_unit_changes(void) {
                     require_panel_set_transition_value(1);
                     g_battle_text_substitution_values[0] = *selected_unit_index_ptr;
                     battle_text_measure_pixels(&text_width_px, &text_height_px, battle_text_find_entry(0x5006));
-                    /* The s16 sum reads the halfword directly (a second copy of the
+                    /* The s16 sum reads the 16-bit value directly (a second copy of the
                      * loaded width) while the modulo uses the widened s32 value; the
                      * narrowing also leaves the other unreferenced frame slot. */
                     text_width = text_width_px;

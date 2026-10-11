@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Unpack a weapon or effect SEQ file, which has no header words: its 256
+/* Unpack a weapon or effect SEQ file, which has no header fields: its 256
  * sequence offsets become pointers into the sequence data, which is appended
  * at g_battle_gfx_seq_data_cursor.
  *

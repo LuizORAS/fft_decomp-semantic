@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Maps a script variable id to its bit position within its storage word.
+/* Maps a script variable id to its bit position within its 32-bit storage value.
  * Ids below 0x80 have no bit slot; ids at or above 0x400 are invalid and stop
  * the calling thread. */
 s32 world_script_get_variable_bit_position(s32 variable_id) {

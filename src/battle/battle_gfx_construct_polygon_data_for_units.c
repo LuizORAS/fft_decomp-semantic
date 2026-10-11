@@ -87,7 +87,7 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
         gte_stsxy3_split(&prim->x0, &prim->x1, &prim->x2);
         gte_ldv0(&g_battle_gte_rtps_vxy0);
         gte_rtps();
-        /* The retail colour transfer combines red and green in one halfword. */
+        /* The retail colour transfer combines red and green in one 16-bit value. */
         *(u16*)&prim->r0 = *(u16*)&display->red;
         prim->b0 = display->blue;
         gte_stsxy(&prim->x3);

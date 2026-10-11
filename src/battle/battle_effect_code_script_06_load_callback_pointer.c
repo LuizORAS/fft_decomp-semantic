@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* Opcode 06: put the native function whose id is the second halfword in the
+/* Opcode 06: put the native function whose id is the second 16-bit value in the
  * callback slot named by the top six bits of the instruction's second byte.
  * A particle keyframe whose action names the slot binds it to the record. */
 effect_script_result_e battle_effect_code_script_06_load_callback_pointer(effect_record_t* record) {

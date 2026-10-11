@@ -14,8 +14,8 @@ enum {
 /*
  * Copies the candidate tile's priority into the inverted-priority scratch
  * action with its sign flipped.  tile_priority is a
- * grid of 16 columns x 18 signed halfwords per map level. The lookup reads
- * the stored halfword bits before negating them.
+ * grid of 16 columns x 18 signed 16-bit values per map level. The lookup reads
+ * the stored 16-bit pattern before negating them.
  */
 void battle_ai_invert_target_priority(void) {
     battle_ai_data_t* ai;

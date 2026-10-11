@@ -1,7 +1,7 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
-/* JOBSTTS passes one word for both outputs, under two names so that a1 and a2 are materialized
+/* JOBSTTS passes one 32-bit pointer slot for both outputs, under two names so that a1 and a2 are materialized
  * separately: the ability data pointer is overwritten by the secondary data pointer. */
 
 s32 jobstts_ability_is_non_action_learned(s32 index) {

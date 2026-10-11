@@ -6,7 +6,7 @@
  *
  * The flag reads go through local pointers so they are reloaded each
  * iteration as the target does; the columns are s16 so `index + 0x8800`
- * stays a word addition with the constant hoisted into a register.
+ * stays a 32-bit addition with the constant hoisted into a register.
  *
  * BATTLE twin of world_menu_build_unit_status_list. */
 void battle_menu_build_unit_status_list(void) {

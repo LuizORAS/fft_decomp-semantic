@@ -96,7 +96,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                             break;
                         }
                         action->skillset_id = 6;
-                        /* Auto-Potion updates only the low byte of the item/equipment word. */
+                        /* Auto-Potion updates only the low byte of the 16-bit item/equipment field. */
                         *(u8*)&action->item_or_equipment = result;
                         action->targeting_type = 5;
                         action->target_id = i;

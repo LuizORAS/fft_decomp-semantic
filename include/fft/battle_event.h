@@ -65,7 +65,7 @@ extern u32 g_battle_script_event_previous_input;
 extern u32 g_battle_script_event_repeat_counter;
 extern u32 g_battle_script_event_secondary_repeat_counter;
 /* g_main_script_variables: a variable id below EVENT_SCRIPT_VAR_PACKED_BIT_FIRST
- * (event_script_variable_id_e) is its word index. */
+ * (event_script_variable_id_e) is its index into the 32-bit array. */
 extern s32* g_battle_script_variables;
 extern u16 g_battle_scenario_music_1_id;
 extern u16 g_battle_scenario_music_2_id;
@@ -144,9 +144,9 @@ void battle_script_join_units_silently(void);
 void battle_script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void battle_script_load_event(s32 id);
 
-/* The byte-stream reader at 0x80146078 preserves signed halfwords. Some
+/* The byte-stream reader at 0x80146078 preserves signed 16-bit values. Some
  * callers forward their incoming a0 without an additional argument move.
- * unit_t lookup at 0x80133158 accepts and returns full words; narrowing is
+ * unit_t lookup at 0x80133158 accepts and returns full 32-bit values; narrowing is
  * caller-specific, not part of its interface. */
 s16 battle_script_load_halfword(const u8* data);
 s32 battle_script_load_next_event(void);
@@ -210,7 +210,7 @@ s32 battle_script_find_jump_target(s32 limit_offset, event_opcode_e target_opcod
 s32 battle_script_get_rand16(void);
 s32 battle_script_get_variable_bit_position(s32 variable_id);
 
-/* Encoded variable IDs select words, bits, or nibbles. The command runner's
+/* Encoded variable IDs select 32-bit values, bits, or nibbles. The command runner's
  * fourth argument is supplied by existing callers but is not read. */
 s32* battle_script_get_variable_word_pointer_from_id(s32 variable_id);
 void battle_script_inflict_status_thread(void);

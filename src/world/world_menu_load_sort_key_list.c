@@ -3,7 +3,7 @@
 
 /* Table of 0x8018d7ac signed-byte records; entry -1 ends a record. */
 
-/* Widen the signed-byte record selected by `index` into halfwords, storing the
+/* Widen the signed-byte record selected by `index` into 16-bit values, storing the
  * -1 terminator as well.
  *
  * The explicit `terminator` local is required: the target materialises the

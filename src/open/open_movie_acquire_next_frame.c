@@ -4,7 +4,7 @@
 
 /* Wait (up to 0x80 vertical blanks) for the next movie frame, track the
  * stream position, adopt a changed frame size (clearing the screen), and size
- * the decode rectangles: 24-bit rows take three halfwords per two pixels.
+ * the decode rectangles: 24-bit rows take three 16-bit values per two pixels.
  * Returns the frame data, or NULL on timeout. */
 u32* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
     u32* frame_data;
@@ -12,7 +12,7 @@ u32* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
     s32 attempts;
 
     attempts = 0;
-    /* The SDK word-pointer slot preserves native header reloads; a converted local folds them. */
+    /* The SDK slot for a pointer to 32-bit data preserves native header reloads; a converted local folds them. */
     while (StGetNext(&frame_data, (u32**)&header) != 0) {
         VSync(0);
         if (attempts == OPEN_MOVIE_ACQUIRE_MAX_ATTEMPTS) {

@@ -6,7 +6,7 @@
 /*
  * Labelled numeric entry thread: world_menu_number_entry_thread with a text label.
  *
- * Draws param->text_id left of the number and edits the halfword at
+ * Draws param->text_id left of the number and edits the 16-bit value at
  * param->value one decimal digit at a time within the range bound at param->context. The value is
  * written back each frame only while g_world_formation_screen_active is set. The initial label is
  * measured in pixels and each redraw in character columns (times 6).

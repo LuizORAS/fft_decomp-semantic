@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Same word as g_wldcore_sound_novel_countdown_frames; the target stores 0 through
+/* Same 32-bit value as g_wldcore_sound_novel_countdown_frames; the target stores 0 through
  * both spellings, and a single name lets GCC merge the two stores. */
 extern s32 g_wldcore_sound_novel_countdown_frames_reset;
 

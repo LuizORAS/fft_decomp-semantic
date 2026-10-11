@@ -172,7 +172,7 @@ extern fade_overlay_t g_world_screen_tint_tiles[]; /* one tint tile per packet b
 
 /* script */
 /* Operand pairs that one world_script_execute_event opcode stores together;
- * each second halfword sits off a word boundary in WORLD bss, so each pair is
+ * each second 16-bit value sits off a 32-bit alignment boundary in WORLD bss, so each pair is
  * one object. */
 typedef struct world_event_command_args {
     s16 arg1;
@@ -199,7 +199,7 @@ extern u16 g_world_script_tutorial_shift_command_bit;
 extern s16 g_world_script_tutorial_wait_time_remaining;
 extern s16 g_world_script_tutorial_wait_timer;
 /* g_main_script_variables: a variable id below EVENT_SCRIPT_VAR_PACKED_BIT_FIRST
- * (event_script_variable_id_e) is its word index. */
+ * (event_script_variable_id_e) is its 32-bit element index. */
 extern s32* g_world_script_variables;
 extern char g_world_script_pause_message[];
 extern u16 g_world_script_attack_entry_mode; /* script_attack_entry_mode_e */
@@ -736,7 +736,7 @@ typedef struct world_gfx_packet_buffer {
 typedef char world_packet_buffer_gradient_lines_offset
     [((unsigned long)&((world_gfx_packet_buffer_t*)0)->gradient_lines == 0x30) ? 1 : -1];
 
-/* Flags word that leads every display object: the WLDCORE window and render
+/* 32-bit flags that lead every display object: the WLDCORE window and render
  * records and the OPEN render records. The two kind bits select the draw
  * routine; an object with either BLANK or HIDDEN set is skipped. */
 typedef enum world_render_record_flag {
@@ -859,7 +859,7 @@ extern RECT g_world_wldface_vram_rects;
 extern RECT g_world_wldface_vram_rect_1;
 extern RECT g_world_wldface_vram_rect_2;
 extern RECT g_world_wldface_vram_rect_3;
-extern u16 g_world_portrait_clut_by_sheet_id[]; /* CLUT word per sprite-sheet id */
+extern u16 g_world_portrait_clut_by_sheet_id[]; /* 16-bit CLUT value per sprite-sheet id */
 extern RECT g_world_gfx_portrait_origin;
 extern const u16 g_world_gfx_panel_draw_area_scale_percent[12];
 extern u8 g_world_gfx_portrait_transition_offsets[];
@@ -867,7 +867,7 @@ extern rgb24_t g_world_gfx_black_tile_color;
 extern menu_status_thread_t g_world_change_banner_panel_thread_params;
 extern textured_quad_source_t g_world_vertical_cursor_quad;
 extern RECT g_world_gfx_fade_tile_rect;
-/* Sector and size pairs, read as flat words ([i * 2], [i * 2 + 1]): a record
+/* Sector and size pairs, read as flat 32-bit values ([i * 2], [i * 2 + 1]): a record
  * member access changes how the target addresses them. */
 extern s32 g_world_shop_background_tim_files[9 * 2];
 extern s32 g_world_gfx_free_rect_texels[4];
@@ -1228,7 +1228,7 @@ enum {
 
 extern s16 g_world_tutorial_categories_request_state; /* world_screen_request_state_e */
 extern world_tutorial_state_t g_world_tutorial_state;
-/* Sector and size pairs; flat word access preserves the original addressing. */
+/* Sector and size pairs; flat 32-bit value access preserves the original addressing. */
 extern s32 g_world_script_tutorial_message_files[7 * 2];
 extern s32 g_world_script_tutorial_script_files[7 * 2];
 extern point16_t g_world_tutorial_highlight_corners_a[31][2]; /* outer/middle ring samples */
@@ -1355,7 +1355,7 @@ typedef char world_formation_abilities_size_must_be_10[(sizeof(world_formation_a
  * ordered g_world_formation_unit_pointers list, not a roster-indexed array.
  * The byte fields from 0x70 on mirror the party_data_t layout above. Magical
  * shield/accessory evade are provisionally placed at 0x50/0x52, after the
- * physical fields at 0x40/0x42, to follow the halfword sequence. Other bytes
+ * physical fields at 0x40/0x42, to follow the 16-bit sequence. Other bytes
  * stay as padding.
  */
 typedef struct world_formation_unit {
@@ -1411,7 +1411,7 @@ typedef struct world_formation_unit {
     u8 proposition_status;        /* 0x11f; "Proposition Byte": world_formation_unit_proposition_e, 0 when present */
     u16 birthday;                 /* 0x120; battle_stats_t birthday & 0x1ff; egg readers split
                                      it into nibbles */
-    u16 egg_color; /* 0x122; party_data_t 0xd2; the formation sprite drawer (0x8011751c) loads it as a halfword palette
+    u16 egg_color; /* 0x122; party_data_t 0xd2; the formation sprite drawer (0x8011751c) loads it as a 16-bit palette
                       index */
     u8 support_abilities[4]; /* 0x124; copy of battle_stats_t.support_abilities, BATTLE_SUPPORT_SET_1..4_* */
 } world_formation_unit_t;
@@ -1457,7 +1457,7 @@ extern u8 g_world_formation_generic_human_graphic_index_table[];
 extern texture_source_t g_world_formation_graphic_entries[];
 extern menu_input_state_t g_world_formation_menu_input_state;
 
-/* First-word alias retained for the target's separate absolute store. */
+/* Alias for the first 32-bit field retained for the target's separate absolute store. */
 extern s32 g_world_formation_menu_new_buttons;
 extern u32* g_world_formation_ordering_table;
 /* g_main_system_flags as saved by world_formation_save_and_set_system_flags (main_system_flags_e). */
@@ -1878,10 +1878,10 @@ typedef enum world_text_section {
     WORLD_TEXT_SECTION_SHOP_DIALOGUE = 31, /* the shopkeeper's lines */
 } world_text_section_e;
 
-/* Provisional: menu text origin/stride words at 0x80153280 (the WORLD
+/* Provisional: menu text origin/stride fields at 0x80153280 (the WORLD
  * script variable region; world_menu_set_text_origin writes +0x04/+0x06).
  * The text-image builders address these through one base register, so they
- * are modelled as one aggregate; the two parameter words at 0x80153304 and
+ * are modelled as one aggregate; the two 32-bit parameters at 0x80153304 and
  * 0x80153308 schedule as plain scalars and stay separate globals. */
 
 extern text_glyph_state_t g_world_text_message_box_glyph;
@@ -1899,7 +1899,7 @@ extern s32 g_world_text_substitution_values[32];
 extern s16 g_world_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 
 /* Text substitutions $7E/$7F (0x801533d0, table index 0x7e from 0x801531d8)
- * as the four halfwords world_text_set_substitution_values_7e_7f stores. */
+ * as the four 16-bit values world_text_set_substitution_values_7e_7f stores. */
 extern RECT g_world_text_substitution_rect;
 extern char g_world_text_wait_for_allocation_message[];
 extern char g_world_text_decimal_format[];
@@ -1961,7 +1961,7 @@ extern u8 g_world_text_typewriter_column_scratch[14];       /* one-column scratc
 extern SVECTOR g_world_text_partner_screen_coords;
 extern SVECTOR g_world_text_speaker_screen_coords;
 extern menu_panel_record_t g_world_numeric_display_panel_records[2];
-extern s32 g_world_text_substitution_values_backup[32]; /* substitution words saved around the text calls */
+extern s32 g_world_text_substitution_values_backup[32]; /* 32-bit substitution values saved around the text calls */
 extern menu_list_page_t g_world_text_list_pages[2];
 
 /* The two glyph blit descriptors, filled by world_gfx_set_blit_source_rect
@@ -2050,7 +2050,7 @@ typedef struct world_menu_grid_cell {
 } world_menu_grid_cell_t;
 
 /* 0x24-byte menu thread-group record at 0x80189ecc, indexed by
- * the request word (0-3). Each group names up to three menu threads. */
+ * the 32-bit request index (0-3). Each group names up to three menu threads. */
 typedef struct world_menu_thread_group {
     void (*function[3])(void); /* 0x00; -1 when unused */
     s32 thread_id[3];          /* 0x0c; -1 when unused */
@@ -2281,7 +2281,7 @@ extern RECT g_world_menu_unit_image_rect_a;
 extern RECT g_world_menu_unit_image_rect_b;
 extern clut_t g_world_menu_common_clut_data;
 extern const u16 g_world_menu_zoom_percentages[12]; /* twelve crop percentages, indexed by step */
-extern s16* g_world_menu_entry_text_id_tables[];    /* halfword tables selected by entry select_text_table */
+extern s16* g_world_menu_entry_text_id_tables[];    /* 16-bit tables selected by entry select_text_table */
 extern s32 g_world_menu_number_entry_digit_steps[];
 extern s32 g_world_menu_indicator_packet_index[2];
 extern s32 g_world_menu_indicator_brightness[2];
@@ -3129,7 +3129,7 @@ extern s8 g_world_shop_fitting_room_item_list_open;
 extern s16 g_world_shop_fitting_room_previewed_cursor;
 
 /* Last equipment slot whose stat preview was built, -1 when none. The
- * ATTACK overlay has an unrelated halfword at this same address. */
+ * ATTACK overlay has an unrelated 16-bit value at this same address. */
 extern s8 g_world_shop_previewed_equip_slot;
 extern s16 g_world_shop_previewed_unit_index;
 extern u8 g_world_shop_checkout_complete;

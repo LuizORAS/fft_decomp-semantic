@@ -6,7 +6,7 @@
  * apart from its data addresses.
  *
  * The signed halving is written out because `v / 2` over a sign-extended
- * halfword cannot reach the target's shape. The target keeps `lhu` plus an
+ * 16-bit value cannot reach the target's shape. The target keeps `lhu` plus an
  * explicit `sll 16` / `sra 16` pair and reads the sign bit off the *shifted*
  * value (`srl 31` on the `sll` result, not on the extended one), which is only
  * possible while the `sll` result has two users. Spell the halving as `v / 2`
@@ -30,7 +30,7 @@ s32 world_script_run_scenario_conditions(void) {
         if (i != 0 && offset == 0) {
             return 0;
         }
-        /* offset / 2: the halved word index into the script area. */
+        /* offset / 2: the 16-bit element index into the script area. */
         condition = &g_main_scenario_condition_data[(offset + (s32)((u32)shifted >> 31)) >> 1];
         do {
             result = world_script_check_scenario_condition(

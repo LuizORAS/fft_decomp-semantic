@@ -9,7 +9,7 @@ s32 battle_unit_move_misc_unit_to_head(u32 misc_id) {
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
     if (unit != 0) {
-        /* The list-head word serves as a sentinel record: its previous field
+        /* The 32-bit list-head pointer serves as a sentinel record: its previous field
          * (0x000) is the head link. */
         for (iterator = (battle_unit_misc_data_t*)&g_battle_unit_misc_list_head; iterator != 0;
             iterator = iterator->previous) {

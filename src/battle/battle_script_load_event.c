@@ -4,9 +4,9 @@
  * the script event block, yielding until the load finishes, then turn the block's
  * text offset into the event-message section pointer.
  *
- * The offset word is then overwritten with EVENT_TEXT_OFFSET_PROCESSED: the
+ * The 32-bit offset is then overwritten with EVENT_TEXT_OFFSET_PROCESSED: the
  * interpreter starts at byte zero of the block and reads those four bytes as
- * one-byte NOP opcodes. A block whose first word already holds that marker leaves
+ * one-byte NOP opcodes. A block whose first 32-bit value already holds that marker leaves
  * the section pointer alone. Both the read request and the load poll run on the
  * main stack. */
 void battle_script_load_event(s32 id) {

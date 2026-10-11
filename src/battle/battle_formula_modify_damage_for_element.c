@@ -13,7 +13,7 @@ void battle_formula_modify_damage_for_element(s32 element) {
 
     if (g_battle_action_target->elemental_affinity[ELEMENTAL_AFFINITY_ABSORB] & element_mask) {
         absorb_action = g_battle_action_target_data;
-        /* The target updates the combined special-effect field as a halfword. */
+        /* The target updates the combined special-effect field as a 16-bit value. */
         absorb_action->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_ELEMENTAL_ABSORPTION;
     }
     unit = g_battle_action_target;

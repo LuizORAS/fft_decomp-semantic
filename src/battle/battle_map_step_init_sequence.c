@@ -5,7 +5,7 @@
  * next step; steps that poll a loader stay on the same step until it
  * finishes. `unused_18` reproduces the target's unreferenced frame slot at sp+0x18.
  *
- * Jump table: .rodata 0x80068260, 13 words. */
+ * Jump table: .rodata 0x80068260, 13 32-bit addresses. */
 s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
     s32 result;
     u8 unused_18[4];

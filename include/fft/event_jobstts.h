@@ -10,7 +10,7 @@ extern s16 g_jobstts_ability_category;  /* menu_ability_category_e */
 extern s16 g_jobstts_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern main_ability_secondary_pointer_t g_jobstts_selected_ability_secondary_data;
 extern ability_data_t*
-    g_jobstts_selected_ability_data; /* the same word: both outputs of the ability lookup land in it */
+    g_jobstts_selected_ability_data; /* the same 32-bit value: both outputs of the ability lookup land in it */
 extern s32 g_jobstts_ability_type;
 extern menu_instruction_t g_jobstts_ability_list_render_commands;
 extern u8 g_jobstts_ability_list_initialized;

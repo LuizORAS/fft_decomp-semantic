@@ -3,7 +3,7 @@
 
 /* FACE_UNIT and FACE_EACH_OTHER event instructions: turn two units toward each other.
  *
- * Parameters: first unit id halfword, second unit id halfword, rotate mode, speed index
+ * Parameters: first 16-bit unit id, second 16-bit unit id, rotate mode, speed index
  * into g_world_rotation_speed_frames, and a delay multiplier. Every misc record of the second unit turns
  * toward the first; unless second_only is set (FaceUnit), the first unit also turns
  * toward the second. Successive second-unit records are staggered like FaceTile.

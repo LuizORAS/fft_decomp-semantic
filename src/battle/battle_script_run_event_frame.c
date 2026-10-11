@@ -12,9 +12,9 @@
  * BATTLE twin of world_script_run_frame: returns the scenario-finish result
  * (9, 0xA, 0xB or 0x13, 0 when no finish operation is pending) once every
  * script thread has stopped, otherwise 1 (or g_battle_script_frame_result_override while it is set, or 0
- * while menu input is disabled with state 2). The three BATTLE-only halfword clears come
- * after the word clears in source; the scheduler still groups them with the
- * other halfword stores, and this order keeps the g_battle_companion_overlay_state load
+ * while menu input is disabled with state 2). The three BATTLE-only 16-bit clears come
+ * after the 32-bit clears in source; the scheduler still groups them with the
+ * other 16-bit stores, and this order keeps the g_battle_companion_overlay_state load
  * below them as in the target.
  */
 s32 battle_script_run_event_frame(u32* ot, u32 buttons) {

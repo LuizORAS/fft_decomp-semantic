@@ -42,7 +42,7 @@ typedef char battle_map_terrain_resource_size_must_be_4098[sizeof(battle_map_ter
 
 /*
  * Script variable 0x23, set by event instruction {3C} Weather.  The same
- * strength scale covers rain and snow; the map's palette-mod flag word says
+ * strength scale covers rain and snow; the map's 32-bit palette-mod flags says
  * which one is falling.  battle_map_get_effective_weather folds that flag in by
  * adding 3, so callers that compare against it see the snow values.
  */
@@ -62,13 +62,13 @@ enum {
     BATTLE_WEATHER_SNOW_OFFSET = 3,
 };
 
-/* Bits of the map weather flag word at 0x800b6698 ("weather palette mods"). */
+/* Bits of the map 32-bit weather flag value at 0x800b6698 ("weather palette mods"). */
 typedef enum battle_map_weather_flags {
     BATTLE_MAP_WEATHER_FLAG_SNOW = 0x01,
     BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER = 0x02,
 } battle_map_weather_flags_e;
 
-/* The signed palette modifier shares the word above its seven low flag bits. */
+/* The signed palette modifier shares the 32-bit value above its seven low flag bits. */
 enum {
     BATTLE_MAP_WEATHER_MODIFIER_SHIFT = 7,
     BATTLE_MAP_WEATHER_LOW_FLAGS_MASK = 0x7f,
@@ -109,7 +109,7 @@ typedef enum gns_map_state_comparison {
  * accepts the separate map_resource_apply_command_e operations below. */
 typedef enum gns_resource_type {
     GNS_RESOURCE_NONE = 0x00, /* empty record slot; also ends the command records */
-    /* Mesh-file slots use these IDs as word indices; a file row may load a whole mesh or texture. */
+    /* Mesh-file slots use these IDs as 32-bit offset-table indices; a file row may load a whole mesh or texture. */
     GNS_RESOURCE_PRIMARY_GEOMETRY = 0x10,
     GNS_RESOURCE_PALETTES = 0x11,          /* kept pending until MAP_RESOURCE_APPLY_PALETTES */
     GNS_RESOURCE_UNSUPPORTED_12 = 0x12,    /* raises exception 0x3ca */
@@ -150,7 +150,7 @@ typedef enum gns_resource_type {
 
 /* Structural bounds and the tag separating file rows from command records. */
 enum {
-    GNS_RESOURCE_TABLE_COUNT = 49, /* mesh offset words and pending/loaded resource slots */
+    GNS_RESOURCE_TABLE_COUNT = 49, /* mesh 32-bit offsets and pending/loaded resource slots */
     GNS_RECORD_COMMAND_SEPARATOR = 0x80,
 };
 
@@ -356,7 +356,7 @@ enum {
     MAP_CLUT_ROWS_Y = 480, /* VRAM line of MAP_CLUT_ROW_MAP; the rows follow one line apart */
 };
 
-/* The clut word of CLUT clut_index of a map CLUT row: the value of
+/* The 16-bit CLUT value of CLUT clut_index of a map CLUT row: the value of
  * GetClut(clut_index * 16, MAP_CLUT_ROWS_Y + clut_row), as a constant. */
 #define MAP_CLUT(clut_row, clut_index) (((MAP_CLUT_ROWS_Y + (clut_row)) << 6) | (clut_index))
 
@@ -402,7 +402,7 @@ typedef char map_palette_animation_state_size_must_be_8[(sizeof(map_palette_anim
  * an animation per CLUT, then the 256 colours of the row. Components and
  * packed_colors are runtime state/mirror, not the separate 0x200-byte-per-row
  * upload staging at 0x800e4ea4 (g_battle_map_palette_modified_colors). Palette extraction fills
- * both; 0x80092f98 uploads staging and clears the pending word at 0x800995ec. */
+ * both; 0x80092f98 uploads staging and clears the pending 32-bit value at 0x800995ec. */
 typedef struct map_clut_row_state {
     u8 enabled;
     u8 updates_disabled;
@@ -413,7 +413,7 @@ typedef struct map_clut_row_state {
 typedef char map_clut_row_state_size_must_be_2434[(sizeof(map_clut_row_state_t) == 2434) ? 1 : -1];
 
 /* Palette runtime state block at 0x800995ec: battle_map_update_animations
- * addresses the CLUT rows (0x800995f4) from this base. The upload/move words are
+ * addresses the CLUT rows (0x800995f4) from this base. The upload/move 32-bit values are
  * the pending flags battle_map_upload_clut_rows (0x80092f98) services. */
 typedef struct map_palette_state {
     s32 upload_pending;
@@ -442,7 +442,7 @@ typedef struct gns_file_record {
     u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
     u8 resource_type;        /* 0x05; gns_resource_type_e */
     u16 _padding_06;         /* 0x06; aligns disc_lba */
-    u32 disc_lba;            /* 0x08; absolute, including the high halfword at +0x0a */
+    u32 disc_lba;            /* 0x08; absolute, including the high 16 bits at +0x0a */
     u32 byte_length;         /* 0x0c; sector-rounded */
     u8 _unused_10[3];        /* 0x10 */
     u8 file_present_marker;  /* 0x13; 0x88 on disc, tested for nonzero */
@@ -467,7 +467,7 @@ typedef struct gns_command_record_prefix {
 typedef char gns_command_record_prefix_size_must_be_20[(sizeof(gns_command_record_prefix_t) == 20) ? 1 : -1];
 
 /* Serialized GNS primary/animated mesh geometry. Counts are unsigned; the
- * variable tail stores unpadded XYZ halfwords, normals, materials and terrain
+ * variable tail stores unpadded XYZ 16-bit values, normals, materials and terrain
  * coordinates. Native renderer position/normal records have different strides. */
 typedef struct battle_map_mesh_geometry {
     u16 textured_triangle_count;   /* 0x00 */
@@ -480,7 +480,7 @@ typedef char battle_map_mesh_geometry_prefix_must_be_8[sizeof(battle_map_mesh_ge
 
 /* Mesh files begin with 49 32-bit byte offsets indexed by resource ID (slot = ID * 4).
  * The dispatcher visits IDs 0x10..0x30; slots 0..0x0f and the other reserved
- * words are zero in the USA disc's mesh files. A zero offset means the chunk
+ * 32-bit offsets are zero in the USA disc's mesh files. A zero offset means the chunk
  * is absent. MAP000.5 alone has an embedded texture quarter at 0x4c. Each
  * member is named after its gns_resource_type_e id. */
 typedef struct map_mesh_file_header {
@@ -505,7 +505,7 @@ typedef struct map_mesh_file_header {
 typedef char map_mesh_file_header_size_must_be_196[(sizeof(map_mesh_file_header_t) == 196) ? 1 : -1];
 
 /* Polygon position and normal records copied from the mesh geometry block.
- * Each XYZ vector occupies eight bytes; the first position's spare halfword
+ * Each XYZ vector occupies eight bytes; the first position's spare 16-bit value
  * stores the packed terrain tile. */
 typedef struct battle_map_mesh_triangle_positions {
     s16 x0, y0, z0;
@@ -537,7 +537,7 @@ typedef struct battle_map_mesh_quad_normals {
 
 /* File-load payload at +0x06 of a GNS row. The loader compares all fourteen
  * bytes, including the fixed markers, before deciding whether to reload.
- * Word fields remain byte arrays so enclosing rows retain halfword alignment. */
+ * 32-bit fields remain byte arrays so enclosing rows retain 16-bit alignment. */
 typedef union gns_load_info {
     struct {
         u16 _unknown_00; /* 0x3333 in file rows */
@@ -550,8 +550,8 @@ typedef union gns_load_info {
 } gns_load_info_t;
 typedef char gns_load_info_size_must_be_14[sizeof(gns_load_info_t) == 14 ? 1 : -1];
 
-/* Halfword-aligned view of a 20-byte GNS record: the target copies these
- * records with lwl/lwr pairs, so the loader's type has no word member. */
+/* 16-bit-aligned view of a 20-byte GNS record: the target copies these
+ * records with lwl/lwr pairs, so the loader's type has no 32-bit member. */
 typedef struct gns_record_view {
     s16 script_variable_id;
     s16 map_state;
@@ -637,7 +637,7 @@ typedef char battle_map_mesh_part_size_must_be_152[(sizeof(battle_map_mesh_part_
 /* One 0x50-byte keyframe from a mesh animation record of type 1.
  * Keyframe ids are 1-based; entry 0 is never loaded. Each of the nine channels
  * (rotation, translation and scale of a mesh part) has a target value, a
- * start/end angle for the sine modes and a mode flag word whose bits 0 and 1
+ * start/end angle for the sine modes and a 16-bit mode flags whose bits 0 and 1
  * are TweenTo and TweenBy. */
 typedef struct battle_map_mesh_keyframe {
     SVECTOR rotation;    /* 0x00; target */
@@ -764,7 +764,7 @@ typedef enum map_mesh_animation_record_type {
     MAP_MESH_ANIMATION_RECORD_PART_PROPERTIES = 3,
 } map_mesh_animation_record_type_e;
 
-/* Record header parsed by the map-state loader at 0x800f26bc: a type word,
+/* Record header parsed by the map-state loader at 0x800f26bc: a 32-bit type,
  * an entry count and the packed entries. */
 typedef struct battle_map_state_record {
     u32 type;  /* map_mesh_animation_record_type_e */
@@ -772,7 +772,7 @@ typedef struct battle_map_state_record {
     u8 data[4];
 } battle_map_state_record_t;
 
-/* Packed lighting: two nine-halfword matrices followed by three RGB colors. */
+/* Packed lighting: two matrices of nine 16-bit entries followed by three RGB colors. */
 typedef struct battle_map_light_resource {
     s16 colour[3][3];      /* 0x00 */
     s16 direction[3][3];   /* 0x12 */
@@ -804,7 +804,7 @@ typedef union battle_map_resource {
     battle_map_state_record_t state_record;
     gns_record_view_t gns_records[150];
     gns_command_record_prefix_t command;
-    s16 command_halfwords[10]; /* Halfword view of the 20-byte command prefix. */
+    s16 command_halfwords[10]; /* 16-bit view of the 20-byte command prefix. */
     clut_t palette_colors;
     u32 texture_words[0]; /* Variable-length image data consumed by LoadImage. */
     u8 bytes[0];          /* Byte offsets in files and variable-length command payloads. */
@@ -898,7 +898,7 @@ extern gns_record_view_t g_battle_map_loaded_gns_records[GNS_RESOURCE_TABLE_COUN
 
 /* The applied background gradient pair at 0x801251c8. The copies at
  * 0x800e81d0, 0x800e8228 and 0x800e827c move each colour as an independent
- * unaligned word (lwl/lwr + swl/swr). */
+ * unaligned 32-bit value (lwl/lwr + swl/swr). */
 extern map_background_gradient_colors_t g_battle_map_background_gradient_colors;
 extern CVECTOR g_battle_map_ambient_light_color;
 extern CVECTOR g_battle_map_darkness_color;

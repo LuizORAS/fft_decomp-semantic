@@ -1,7 +1,7 @@
 #include "fft/event_attack.h"
 
 /* 0x18-byte scenario record in the ATTACK.OUT data at 0x801cf938.
- * Halfwords are stored little-endian and unaligned. */
+ * 16-bit values are stored little-endian and unaligned. */
 typedef struct attack_scenario {
     u8 id[2];            /* 0x00 */
     u8 map_id;           /* 0x02 */

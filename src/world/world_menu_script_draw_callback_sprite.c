@@ -21,7 +21,7 @@ menu_instruction_t* world_menu_script_draw_callback_sprite(menu_instruction_t* i
     if (entry != 0) {
         g_world_menu_script_sprite_command.sprite.x = instruction->callback_sprite.x;
         g_world_menu_script_sprite_command.sprite.y = instruction->callback_sprite.y;
-        /* The icon source stores halfwords; the menu script copies their low bytes. */
+        /* The icon source stores 16-bit values; the menu script copies their low bytes. */
         g_world_menu_script_sprite_command.sprite.w = entry->w;
         g_world_menu_script_sprite_command.sprite.h = entry->h;
         g_world_menu_script_sprite_command.sprite.u = entry->u;

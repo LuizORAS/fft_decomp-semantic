@@ -49,7 +49,7 @@ s32 battle_action_run_pre_formula_setup(const battle_action_command_t* source, u
         id = g_battle_action_current_ability.secondary_weapon_id;
     }
     if (action.skillset_id == SKILLSET_ID_DRAW_OUT) {
-        /* Item selection reads only the low byte of the item/equipment word. */
+        /* Item selection reads only the low byte of the 16-bit item/equipment field. */
         id = action.item_or_equipment;
     }
     if (id >= 0x80) {

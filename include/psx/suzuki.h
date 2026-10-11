@@ -175,27 +175,27 @@ typedef struct suzuki_repeat {
  * opcode that writes them. voice_attr at 0x34 is the SDK SpuVoiceAttr; the driver passes its
  * members to LIBSPU one by one.
  *
- * flags is the channel flag word (suzuki_channel_flag_e); a channel is
+ * flags holds the 16-bit channel flags (suzuki_channel_flag_e); a channel is
  * allocated while it is non-zero, and suzuki_smd_set_flags_all_channels ORs a
- * mask into every non-zero word. voice_update_flags (suzuki_voice_update_e)
+ * mask into every non-zero 16-bit value. voice_update_flags (suzuki_voice_update_e)
  * queues work for suzuki_smd_update_voices, voice_attr_flags
  * (suzuki_voice_attr_e) marks the SPU voice attributes
  * suzuki_sound_update_voice_attrs pushes, and ramp_flags (suzuki_ramp_flag_e)
  * marks the ramps stepped by suzuki_smd_update_channel_ramps.
  *
- * octave_base is written at halfword width (Octave, Raise/Lower Octave, End
+ * octave_base is written as a 16-bit value (Octave, Raise/Lower Octave, End
  * Bar) but saved into the u8 loop_octave_base by Loop and Loop Select, which
  * read it with `lbu`: GCC narrows the u16 load itself.
  *
  * sound_id is the SMD id for music and a MAIN_SOUND_ID (`resource id << 16 |
- * sound`) for sound effects; Play VFX reads the resource id half with `lh`,
- * the SFX API compares the whole word. */
+ * sound`) for sound effects; Play VFX reads the resource id from the high 16 bits with `lh`,
+ * the SFX API compares the full 32-bit value. */
 typedef struct suzuki_music_channel {
     u16 flags;              /* 0x00; suzuki_channel_flag_e */
     u16 voice_update_flags; /* 0x02; suzuki_voice_update_e */
     u16 voice_attr_flags;   /* 0x04; suzuki_voice_attr_e */
     u16 ramp_flags;         /* 0x06; suzuki_ramp_flag_e */
-    s32 sound_id;           /* 0x08; sound resource id in the high halfword, sound number in the low halfword */
+    s32 sound_id;           /* 0x08; sound resource id in the high 16 bits, sound number in the low 16 bits */
     u8 channel_number;      /* 0x0c; 0xff + channel index (SFX: the index); write-only */
     u8 priority;            /* 0x0d; SFX steal priority (channel id >> 8; stolen when <= 0x20); music: 0x10 */
     u8 _padding_00e[2];     /* 0x0e; aligns start_tick */
@@ -447,7 +447,7 @@ typedef enum suzuki_smd_opcode {
  * excludable.
  *
  * tempo is a signed 16.16 value. Scale Tempo reads its integer part; Tempo,
- * Accelerando and Tempo Ramp update the whole word. */
+ * Accelerando and Tempo Ramp update the full 32-bit value. */
 typedef struct suzuki_music {
     struct suzuki_music* next;     /* 0x00 */
     struct suzuki_music* snapshot; /* 0x04; freed by suzuki_smd_free_snapshots */
@@ -497,7 +497,7 @@ typedef struct suzuki_music {
     s32 tempo_step;                /* 0x80; per-tick tempo delta of Tempo Ramp */
     u16 tempo_step_count;          /* 0x84 */
     u16 tempo_target;              /* 0x86; tempo byte Tempo Ramp ends on */
-    suzuki_ramp_t tempo_scale;     /* 0x88; value is scale byte << 24, its high halfword the multiplier */
+    suzuki_ramp_t tempo_scale;     /* 0x88; value is scale byte << 24, its high 16 bits the multiplier */
     suzuki_ramp_t master_volume;   /* 0x94; value is volume byte << 24 */
     suzuki_ramp_t pitch_shift;     /* 0xa0 */
     suzuki_ramp_t balance_shift;   /* 0xac */

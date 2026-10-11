@@ -35,7 +35,7 @@ void battle_state_update_action_execute_mode(void) {
     battle_target_calculate_tile_coords_and_glow_from_at_list();
 
     unit = battle_unit_get_casting_misc_data();
-    /* The target reads the halfword of g_main_system_animation_speed. */
+    /* The target reads the 16-bit value of g_main_system_animation_speed. */
     unit->state_frame_counter += g_main_system_animation_speed;
     if (unit->strike.target_count != 0) {
         for (i = 0; i < unit->strike.target_count; i++) {

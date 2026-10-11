@@ -6,7 +6,7 @@
  * and open water. Other surfaces (grassland, thicket, snow, lava, rugs, furniture
  * and the like) get none.
  *
- * Nothing starts when the unit's movement word carries
+ * Nothing starts when the unit's 32-bit movement value carries
  * BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS. */
 void battle_effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;

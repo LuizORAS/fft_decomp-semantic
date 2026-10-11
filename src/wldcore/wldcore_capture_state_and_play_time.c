@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /*
- * Copies a two-word state snapshot, sets its control flags, and captures the
+ * Copies a snapshot of two 32-bit coordinates, sets its control flags, and captures the
  * current play time.
  *
  * Cache the flag and time source values before publishing their destinations;

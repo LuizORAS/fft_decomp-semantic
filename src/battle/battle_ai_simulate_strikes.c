@@ -90,7 +90,7 @@ void battle_ai_simulate_strikes(battle_action_command_t* action, s32 reaction_mo
     }
     battle_action_store_acting_unit_data(&g_battle_unit_stats[action->actor_id]);
     if (reaction_mode == 0) {
-        /* Reuse the finished loop counter's low halfword for the reaction ID. */
+        /* Reuse the finished loop counter's low 16 bits for the reaction ID. */
         while ((target_id = battle_reaction_prepare_next((s16*)&target_index)) != -1) {
             if (ai->unit_acts_before_me[target_id] == 0) {
                 battle_ai_simulate_strikes(&g_battle_unit_stats[target_id].action_command, 1);

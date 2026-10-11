@@ -3,8 +3,8 @@
 
 /* Handler of the unexplored-land detail level (type 0x19).
  *
- * Phase 1 waits for the render record the word at 0x08 names to leave its 0x100 state; no push sets
- * that word.
+ * Phase 1 waits for the render record the 32-bit value at 0x08 names to leave its 0x100 state; no push sets
+ * that 32-bit value.
  * Phase 2, once file loading finishes, uploads the land picture's TIM pixels
  * and CLUT, binds the level's render record to the VRAM image at (-116, -34)
  * and makes it the scrollable text window's extra render record (position and
@@ -15,7 +15,7 @@
  *
  * The TIM widths are read unsigned (`lhu`), as Psy-Q's GsIMAGE declares
  * pw/ph. The text window's base and image rectangle are each copied as one
- * aggregate: the target loads both words before either store. */
+ * aggregate: the target loads both 32-bit values before either store. */
 void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail_level_t* level) {
     GsIMAGE image;
     RECT bounds;

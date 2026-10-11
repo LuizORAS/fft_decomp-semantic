@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Toggle the 0x1c counter of the menu window buffer whose 0x08 field matches
- * the halfword parameter.
+ * the 16-bit parameter.
  *
  * The record index is never initialized in the target: the loop runs six
  * times over whatever slot the uninitialized local names, so the reconstruction

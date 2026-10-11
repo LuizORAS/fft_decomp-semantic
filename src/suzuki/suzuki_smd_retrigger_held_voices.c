@@ -5,7 +5,7 @@
  * SUZUKI_CHANNEL_NO_RETRIGGER for a new key-on and returns the voices of
  * those channels.
  *
- * The two single-bit tests are merged by GCC into one word-wide
+ * The two single-bit tests are merged by GCC into one 32-bit
  * `(flags & 0x101) == 0x101` test (`lw`), which the target contains; a
  * direct 0x101 mask test compiles to `lhu`. */
 u32 suzuki_smd_retrigger_held_voices(suzuki_music_t* music) {

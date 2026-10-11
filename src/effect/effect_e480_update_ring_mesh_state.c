@@ -13,7 +13,7 @@
  * `i`, `j`, `k` and `n` are shared temporaries (`i`: curve index and loop
  * index; `j`: curve factor, v scroll and loop index; `k`: row radius, colour
  * curves and brightness; `n`: row height, brightness row and quad depth): the
- * target keeps each group in one register. record_index arrives as a word and
+ * target keeps each group in one register. record_index arrives as a signed 32-bit argument and
  * is narrowed once, which is what places it in $s0. The handler returns no
  * value, but the s32 return keeps $v0 live at the exit, which leaves the phase
  * dispatch's delay slots empty as in the target. */

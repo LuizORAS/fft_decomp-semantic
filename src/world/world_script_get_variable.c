@@ -4,7 +4,7 @@
 /*
  * Read event script variable `variable_id` the way a script does, through
  * the Zero and Add variable commands, so that bit-packed and special
- * variables resolve identically. The comparison-result word those commands
+ * variables resolve identically. The comparison-32-bit result those commands
  * compute into is saved and restored around the read.
  *
  * Reading the combined weather/time variable first rebuilds it: time of day

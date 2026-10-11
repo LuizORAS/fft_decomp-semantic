@@ -10,7 +10,7 @@
  * confirm: stage the selected ability or item into the shared action record at
  * g_battle_menu_selected_action, run battle_action_preview_at_list for the selected unit on the
  * main stack to obtain the previewed turn position and the descriptor list,
- * then write the name text and the four halfword columns and size menu entry
+ * then write the name text and the four 16-bit columns and size menu entry
  * 52 around them.
  *
  * BATTLE twin of world_menu_build_ability_preview_at_list (WORLD), itself the twin of
@@ -53,7 +53,7 @@ void battle_menu_build_ability_preview_at_list(void) {
         g_battle_menu_selected_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
     } else {
         staged_item = 1;
-        /* Item selection updates only the low byte of the command word. */
+        /* Item selection updates only the low byte of the 16-bit command field. */
         *(u8*)&g_battle_menu_selected_action.item_or_equipment = text_id;
     }
     action = &g_battle_menu_selected_action;

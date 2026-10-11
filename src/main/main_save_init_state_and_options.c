@@ -1,7 +1,7 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Clear the script/save words and restore the new-game calendar, input
+/* Clear the 32-bit script/save values and restore the new-game calendar, input
  * timings and packed game options. */
 void main_save_init_state_and_options(void) {
     int remaining = 0xff;

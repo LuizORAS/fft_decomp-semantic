@@ -8,7 +8,7 @@
  * The target keeps two counters that always hold the same value: the loop
  * index addresses the descriptor table and the entry-number column, while
  * the separate accepted-entry counter addresses the value and flag columns.
- * Merging them makes the four halfword columns share one induction variable
+ * Merging them makes the four 16-bit columns share one induction variable
  * and loses the entry-number column's recomputed shift.
  *
  * The menu geometry is written per branch rather than through a shared

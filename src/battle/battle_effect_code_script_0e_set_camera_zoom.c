@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* Opcode 0e: set the camera zoom from the three halfwords that follow (ONE is
+/* Opcode 0e: set the camera zoom from the three 16-bit values that follow (ONE is
  * no zoom). */
 effect_script_result_e battle_effect_code_script_0e_set_camera_zoom(effect_record_t* record) {
     VECTOR zoom;

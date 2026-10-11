@@ -1,7 +1,7 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* Zero the HP/MP bonus halfwords of an item stat summary and the stat block of its detail record. */
+/* Zero the 16-bit HP/MP bonuses of an item stat summary and the stat block of its detail record. */
 void equip_item_clear_stat_sums(menu_unit_status_record_t* summary, menu_item_stat_detail_t* detail) {
     summary->gauges[MENU_UNIT_STATUS_GAUGE_HP].bonus = 0;
     summary->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;

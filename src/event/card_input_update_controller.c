@@ -10,8 +10,8 @@
  * event speed each idle frame) reaches 4 the lowest pressed bit wins, and a
  * d-pad press is accepted at once. A held button
  * repeats once its counter reaches the initial delay, every repeat period in
- * the primary word (which also raises bit 16 + n while repeating) and every
- * secondary period, after twice the delay, in the secondary word. All three
+ * the primary 32-bit value (which also raises bit 16 + n while repeating) and every
+ * secondary period, after twice the delay, in the secondary 32-bit value. All three
  * periods are divided by the event speed. Counter slots 4..11 are skipped;
  * those buttons use only the newly pressed mask.
  */

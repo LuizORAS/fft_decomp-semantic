@@ -7,7 +7,7 @@
  * before the digits when the value is negative. Glyphs are 0x23 bytes apart
  * in the font block at g_world_text_glyph_bitmap_data.
  *
- * `digits` arrives as a full word and only its low byte is used.
+ * `digits` arrives as a full 32-bit value and only its low byte is used.
  */
 void world_gfx_draw_signed_number(s32 value, s32 digits, u8* image, glyph_blit_t* pen) {
     s32 original;

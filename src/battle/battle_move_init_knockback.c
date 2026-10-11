@@ -3,8 +3,8 @@
 /*
  * Prepares a knocked-back unit's movement record: a one-step path, the
  * fly/float movement flags, and the direction bits (0x4000/0x8000 of the
- * packed 0x9c word) chosen by battle_move_get_direction.
- * The 0x9c word is handled as a word: it packs the path count byte with the
+ * packed 0x9c 32-bit value) chosen by battle_move_get_direction.
+ * The field at 0x9c is handled as a 32-bit value: it packs the path count byte with the
  * first path step in bits 8-15 (battle_move_step_t). The step's length, slow,
  * climb and mount bits are cleared and its higher bit (0x2000) takes the
  * destination layer.

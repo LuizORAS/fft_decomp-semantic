@@ -59,7 +59,7 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
                     }
                     /* Typed field access reassociates the 0x99 field offset
                      * with the row and demonstrably breaks the byte-exact
-                     * address calculation. Preserve the target's word-row,
+                     * address calculation. Preserve the target's row-offset,
                      * unit-base, then field-offset order. */
                     src = (u8*)((row * BATTLE_LEARN_ON_HIT_ROW_BYTES) + (u32)unit + BATTLE_LEARNED_ABILITIES_OFFSET);
                     for (k = 0; k < BATTLE_LEARN_ON_HIT_ROW_BYTES; k++) {

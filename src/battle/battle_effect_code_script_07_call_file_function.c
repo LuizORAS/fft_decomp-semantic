@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* Opcode 07: call the native function whose id is the second halfword with
+/* Opcode 07: call the native function whose id is the second 16-bit value with
  * the record index and the top six bits of the instruction's second byte as
  * its callback slot, and remember it in the record. */
 effect_script_result_e battle_effect_code_script_07_call_file_function(effect_record_t* record) {

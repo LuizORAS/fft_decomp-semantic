@@ -2,7 +2,7 @@
 #include "psx/stddef.h"
 
 /* Copy a polygon to the work area, apply the 2D offset and link it into the OT.
- * Code bits 0x04/0x08/0x10 select texture words, a fourth vertex and vertex colors. */
+ * Code bits 0x04/0x08/0x10 select 32-bit texture fields, a fourth vertex and vertex colors. */
 void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     u32* src;
     u32* dst;
@@ -21,7 +21,7 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     gouraud = code & 0x10;
     quad = code & 0x8;
     textured = code & 0x4;
-    /* The cursor skips UV/color words; POLY_F4 supplies only the coordinate layout.
+    /* The cursor skips 32-bit UV/color fields; POLY_F4 supplies only the coordinate layout.
      * Fully advancing coordinate pointers changes the original load/store offsets. */
     dst[offsetof(P_TAG, r0) / sizeof(*dst)] = src[offsetof(P_TAG, r0) / sizeof(*src)];
     source_coordinates = (POLY_F4*)src;

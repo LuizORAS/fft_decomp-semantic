@@ -5,12 +5,12 @@
  * refreshes the pending script sounds from script variables 0x5c-0x5e, then:
  *
  *   flag 0x02 (branch armed) marks the branch's saved-data bit, advances to the
- *   next section, repoints the instruction words at that section's offset in
+ *   next section, repoints the 32-bit instructions at that section's offset in
  *   the save-slot buffer, and - for the first five maps - publishes the whole
  *   record into g_main_saved_records[g_wldcore_saved_record_index];
  *
- *   flag 0x04 (fetch pending) loads the next instruction word and advances the
- *   word index, arming flag 0x10;
+ *   flag 0x04 (fetch pending) loads the next 32-bit instruction and advances the
+ *   32-bit element index, arming flag 0x10;
  *
  *   the opcode byte then selects a handler from g_wldcore_opcode_handlers.
  *

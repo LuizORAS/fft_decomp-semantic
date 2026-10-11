@@ -4,7 +4,7 @@
 /*
  * WarpUnit event instruction: move an ENTD unit to a new tile and facing.
  *
- * Parameters: 0x00 ENTD unit id (halfword), 0x02 x, 0x03 y, 0x04 higher
+ * Parameters: 0x00 ENTD unit id (16-bit value), 0x02 x, 0x03 y, 0x04 higher
  * elevation, 0x05 facing.
  */
 void battle_script_warp_unit(const event_warp_unit_parameters_t* instruction) {

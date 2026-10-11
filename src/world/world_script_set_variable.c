@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
 /* Write event script variable `variable_id` the way a script does, through
- * the Zero and Add-immediate variable commands; the comparison-result word
+ * the Zero and Add-immediate variable commands; the comparison-32-bit result
  * they use is saved and restored. The war funds are capped at 99,999,999. */
 void world_script_set_variable(s32 variable_id, s32 value) {
     s32 saved_current_variable = *g_world_script_variables;

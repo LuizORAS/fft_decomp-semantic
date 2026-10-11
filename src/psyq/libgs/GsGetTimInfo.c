@@ -1,7 +1,7 @@
 #include "psx/libgs.h"
 #include "psx/types.h"
 
-/* Word cursors retain the retail parsing steps; direct RECT fields remove seven instructions. */
+/* Parsing through 32-bit values retains the retail parsing steps; direct RECT fields remove seven instructions. */
 void GsGetTimInfo(u32* tim, GsIMAGE* im) {
     u32* image;
 

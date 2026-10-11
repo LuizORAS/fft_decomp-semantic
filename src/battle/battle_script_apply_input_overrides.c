@@ -2,9 +2,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Apply the script's input overrides to a button word in place: clear the buttons
+/* Apply the script's input overrides to a 32-bit button value in place: clear the buttons
  * named by the disabled-inputs variable and set those named by the forced-inputs
- * variable, keeping the word's high halfword. Start + Select + L1 + R1 held alone
+ * variable, keeping the 32-bit value's high 16 bits. Start + Select + L1 + R1 held alone
  * resets the game first. */
 void battle_script_apply_input_overrides(u32* input) {
     u32 high_buttons;

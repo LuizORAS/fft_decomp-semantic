@@ -7,7 +7,7 @@
  * screen position to the mount 10 units / 0xa000 lower, then finishes the
  * acting unit's move. The two position blocks are copied through local block
  * types because the target uses struct copies (four lw/sw, and lwl/lwr for
- * the halfword-aligned screen block) that per-field stores do not reproduce.
+ * the 16-bit-aligned screen block) that per-field stores do not reproduce.
  */
 
 void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* rider) {

@@ -4,7 +4,7 @@
 /*
  * Per-frame input update of the JOBSTTS screen.
  *
- * Reads the pad, then clears all three input words during frames 1..7 of the
+ * Reads the pad, then clears all three 32-bit input values during frames 1..7 of the
  * screen transition, while the text thread runs and on the frame it ends.
  * The text state goes 1 on the thread's first frame (which queues the
  * window-open sound), 2 after it and 0 once it has ended. Any repeat input

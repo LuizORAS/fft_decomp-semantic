@@ -19,7 +19,7 @@ void battle_formula_apply_catch(void) {
     if ((unit->reaction_abilities[3] & BATTLE_REACTION_SET_4_CATCH) == 0)
         return;
     chance = 0x64 - unit->brave;
-    /* The target stores the accuracy as a halfword (0x2a..0x2b). */
+    /* The target stores the accuracy as a 16-bit value (0x2a..0x2b). */
     g_battle_action_target_data->attack_accuracy = chance;
     if (chance != 0) {
         if (battle_action_calculate_chance_to_react(unit) != 0)

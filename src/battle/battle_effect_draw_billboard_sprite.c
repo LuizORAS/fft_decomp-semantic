@@ -65,7 +65,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     memcpy(&g_battle_effect_corner_top_right, &frame->parts[0].corners[1], sizeof(frame->parts[0].corners[1]));
     memcpy(&g_battle_effect_corner_bottom_left, &frame->parts[0].corners[2], sizeof(frame->parts[0].corners[2]));
     memcpy(&g_battle_effect_corner_bottom_right, &frame->parts[0].corners[3], sizeof(frame->parts[0].corners[3]));
-    /* The GTE returns each x/y pair as one packed word. */
+    /* The GTE returns each x/y pair as one packed 32-bit value. */
     RotTransPers3(&g_battle_effect_corner_top_left, &g_battle_effect_corner_top_right,
         &g_battle_effect_corner_bottom_left, (s32*)&prim->x0, (s32*)&prim->x1, (s32*)&prim->x2, &sxy, &flag);
     RotTransPers(&g_battle_effect_corner_bottom_right, (s32*)&prim->x3, &sxy, &flag);

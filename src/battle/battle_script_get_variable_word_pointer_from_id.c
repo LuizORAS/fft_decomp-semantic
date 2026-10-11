@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 
-/* Resolve a script variable id to the storage word that holds it. Ids below 0x80
- * own a whole word; 0x80..0x35f pack 32 flags per word starting at word 0x80, and
- * 0x360..0x3ff pack eight nibbles per word starting at word 0x97. Ids from 0x400
+/* Resolve a script variable id to the 32-bit storage value that holds it. Ids below 0x80
+ * own a 32-bit value; 0x80..0x35f pack 32 flags per 32-bit value starting at 32-bit variable 0x80, and
+ * 0x360..0x3ff pack eight nibbles per 32-bit value starting at 32-bit variable 0x97. Ids from 0x400
  * are invalid and stop the calling thread; the result is unset on that path. */
 s32* battle_script_get_variable_word_pointer_from_id(s32 id) {
     s32* result;

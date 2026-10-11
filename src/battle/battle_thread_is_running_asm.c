@@ -4,7 +4,7 @@
 /*
  * The hand-assembled twin of battle_thread_is_running; the menu and event code
  * call this one. Reads g_battle_threads[thread_id].is_running (thread records
- * are 0x400 bytes; the word sits at +0x48).
+ * are 0x400 bytes; the 32-bit value sits at +0x48).
  *
  * The 36-byte target is not compiler output: it loads the g_battle_threads
  * pointer through $at and contains a redundant `move at,at`, so no C form can

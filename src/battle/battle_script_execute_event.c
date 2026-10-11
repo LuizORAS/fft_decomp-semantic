@@ -15,7 +15,7 @@
  * forced-input variables.
  *
  * Each pass fetches the opcode at instruction_offset in g_battle_event_block
- * with its first four operand bytes and its first operand halfword,
+ * with its first four operand bytes and its first 16-bit operand,
  * dispatches through the else-if chain, then advances by
  * 1 + g_battle_script_event_instruction_sizes[opcode]. The jumps `continue`
  * without the length step; the Start instructions (camera fusion, block, add

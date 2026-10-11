@@ -23,7 +23,7 @@ void battle_gfx_draw_wait_direction_arrows(SVECTOR* base, u32* ot) {
     long flag;
     battle_unit_misc_data_t* unit;
     POLY_FT4* prim;
-    /* Signed halfword: the target's division emits the `bgez`/`addiu 0x3ff`
+    /* Signed 16-bit value: the target's division emits the `bgez`/`addiu 0x3ff`
      * correction, so the quadrant bits are not held in an unsigned type. */
     s16 facing_bits;
     s32 i;

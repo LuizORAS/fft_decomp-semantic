@@ -17,7 +17,7 @@ void battle_action_set_damage_display_type_based_on_ability(void) {
     misc = battle_unit_get_casting_misc_data();
     battle_action_resolve_ability_strike(misc->battle_data->misc_unit_id, &misc->strike);
     raw = misc->strike.last_attack_id;
-    /* The target reads 0x1a6 as a signed halfword. */
+    /* The target reads 0x1a6 as a signed 16-bit value. */
     target = misc->strike.reaction_id;
     ability = raw & 0xffff;
     misc->used_ability_id = raw;

@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* An 8-bit count: CARD.OUT stores it with `sb` at 0x801cc814 and reads it
- * with `lb`/`lbu`. This function reads the halfword at that address instead
+ * with `lb`/`lbu`. This function reads the 16-bit value at that address instead
  * (`lh`), so the read is spelled through an s16 lvalue rather than the
  * declaration. */
 

@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /*
- * Per-frame event input update: derives the edge/auto-repeat input word,
+ * Per-frame event input update: derives the edge/auto-repeat input 32-bit value,
  * publishes it, and yields once while tracking thread status changes.
  *
  * CARD copy of bunit_input_update_event_state without its frame_arg latch,
@@ -81,7 +81,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
     }
 
     g_battle_sound_pending_sfx_id = -1;
-    /* CARD inserts its controller pointer at +4; the six-word copy includes it. */
+    /* CARD inserts its controller pointer at +4; the copy of six 32-bit values includes it. */
     battle_script_load_event_input_state((const menu_input_state_t*)&g_card_input_event);
     if (g_card_input_event != PSX_PAD_SELECT && g_card_input_event != 0) {
         g_battle_event_input_suppression_frames = 5;

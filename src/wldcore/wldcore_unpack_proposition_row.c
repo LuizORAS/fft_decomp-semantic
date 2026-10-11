@@ -1,8 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Expand one 23-byte proposition row into halfword fields, then remap the
- * two fields at +0x08/+0x0a through the halfword table of record 1. */
+/* Expand one 23-byte proposition row into 16-bit fields, then remap the
+ * two fields at +0x08/+0x0a through the 16-bit table of record 1. */
 void wldcore_unpack_proposition_row(wldcore_proposition_fields_t* out, s32 index) {
     u8* rows;
     u16* field_lookup;

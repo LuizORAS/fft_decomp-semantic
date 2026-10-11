@@ -3,7 +3,7 @@
 /* Evaluate one scenario condition record for
  * battle_script_run_scenario_conditions.
  *
- * The record's halfwords arrive as type (event_scenario_condition_e), id and
+ * The record's 16-bit values arrive as type (event_scenario_condition_e), id and
  * value; the two tile conditions also read a y and an elevation, with value as
  * the x. Returns EVENT_SCENARIO_CONDITION_RESULT_PASS when the condition holds,
  * RESULT_RUN_EVENT for type RUN_EVENT after storing id as the current event, and

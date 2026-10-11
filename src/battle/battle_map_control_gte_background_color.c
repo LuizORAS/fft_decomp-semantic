@@ -3,7 +3,7 @@
 /* GTE back colour commands for the map's ambient colour.
  *
  * SET stores the three components and loads them into the GTE, and returns the
- * address of the stored red word; while the back colour is disabled it does
+ * address of the stored 32-bit red component; while the back colour is disabled it does
  * neither and returns 0. GET returns that address. DISABLE loads black and blocks
  * SET; RESTORE reloads the stored colour and lifts the block.
  *

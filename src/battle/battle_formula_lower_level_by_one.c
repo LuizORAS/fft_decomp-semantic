@@ -11,7 +11,7 @@ void battle_formula_lower_level_by_one(void) {
                 battle_formula_force_attack_miss();
             }
             action = g_battle_action_target_data;
-            /* The target writes the combined special-effect field as one halfword. */
+            /* The target writes the combined special-effect field as one 16-bit value. */
             action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN;
             action->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
         }

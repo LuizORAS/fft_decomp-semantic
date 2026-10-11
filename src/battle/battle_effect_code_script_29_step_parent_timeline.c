@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Opcode 29: advance the record's parent timeline by one frame. The second
- * halfword is the script offset its child records start at.
+ * 16-bit value is the script offset its child records start at.
  *
  * Before phase1_duration the phase 1 particle channels, colour tracks and
  * sound tracks run (and the time scale follows the timing curve under

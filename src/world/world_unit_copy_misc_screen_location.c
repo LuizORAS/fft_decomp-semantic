@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/* Widen a displayed unit's screen x, y and z halfwords into a word triple. */
+/* Widen a displayed unit's 16-bit screen x, y and z values into a 32-bit coordinate triple. */
 void world_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination) {
     SVECTOR* screen_data;
 

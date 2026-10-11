@@ -33,7 +33,7 @@ void wldcore_map_color_and_draw_dots(void) {
     for (i = 0; i < WORLD_LOCATION_COUNT; i++) {
         g_wldcore_map_dots[i].kind = (u8)(src[i].position_and_kind >> 16);
         g_wldcore_map_dots[i].sub_kind = (u8)(src[i].position_and_kind >> 24);
-        /* The x coordinate occupies the packed word's low halfword. */
+        /* The x coordinate occupies the packed 32-bit value's low 16 bits. */
         g_wldcore_map_dots[i].position.vx = src[i].position_and_kind;
         y = src[i].y;
         g_wldcore_map_dots[i].render.flags = WORLD_RENDER_RECORD_ANIMATED;

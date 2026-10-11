@@ -3,7 +3,7 @@
 
 /*
  * Event instruction: put the addressed unit(s) into their status idle
- * animation and wait.  Parameters: 0x00 unit id (halfword), 0x02 wait length
+ * animation and wait.  Parameters: 0x00 unit id (16-bit value), 0x02 wait length
  * in frames.  A unit id above 0xff selects a group, so the misc-state loop
  * runs over all 21 unit indices.
  */

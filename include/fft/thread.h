@@ -9,8 +9,8 @@
  * buffer. BATTLE 0x8014c8a0 and WORLD 0x800ffd70 initialize the same layout;
  * both index slots with thread_id << 10 and start SP/FP at slot + 0x3f0.
  * The parameter stores at BATTLE 0x8014ca38 and WORLD's corresponding
- * three/four-parameter helpers establish full 32-bit payload words.
- * The seven task words at 0x50 are zeroed by battle_thread_start /
+ * three/four-parameter helpers establish full 32-bit payload values.
+ * The seven 32-bit task values at 0x50 are zeroed by battle_thread_start /
  * world_thread_start; each task gives them its own meaning: menu blink/icon
  * cursor threads use [0] timer and [1] state, event unit/sprite-move threads
  * keep the misc id in [0], and DisplayMessage text threads use [2] x offset,
@@ -28,7 +28,7 @@ typedef struct native_thread {
     void (*code_pointer)(void);   /* 0x44 */
     s32 is_running;               /* 0x48 */
     s32 task_id;                  /* 0x4c: native_thread_task_e */
-    s32 task_words[7];            /* 0x50: per-task words, see above */
+    s32 task_words[7];            /* 0x50: per-task 32-bit values, see above */
     u8 _unused_06c[0x3f0 - 0x6c]; /* 0x6c: the thread's stack */
     u32 stack_top[4];             /* 0x3f0: initial SP/FP; the stack grows down from here */
 } native_thread_t;

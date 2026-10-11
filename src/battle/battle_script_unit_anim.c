@@ -3,7 +3,7 @@
 
 /*
  * UnitAnim event instruction.  Parameters: 0x00 unit id
- * (halfword), 0x02 animation id (halfword), 0x04 move-flag mode (0 unset,
+ * (16-bit value), 0x02 animation id (16-bit value), 0x04 move-flag mode (0 unset,
  * 1 flip).  A unit id above 0xff selects a group, so the misc-state loop
  * runs over all 21 unit indices.
  */

@@ -18,7 +18,7 @@ void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 contr
     volatile u32 observed_register;
     volatile u32* dma;
     u8 enabled;
-    u32 value; /* shift count, then the priority word */
+    u32 value; /* shift count, then the 32-bit priority value */
     u32 bit;
     u32 mask;
     while (CD_DMA_CHANNELS[channel].channel_control & CD_DMA_TRANSFER_ACTIVE) {

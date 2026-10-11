@@ -3,13 +3,13 @@
  * checked-division guard, which this default-profile copy lacks).
  *
  * Sprite-move worker called by battle_script_sprite_move (mode 0) and
- * battle_script_sprite_move_beta (mode 1) with the script cursor: a unit
- * halfword, three destination halfwords, an easing byte, a weight byte and a
- * halfword that is a frame count (mode 0) or a speed (mode 1). pos[0] is the
+ * battle_script_sprite_move_beta (mode 1) with the script cursor: a 16-bit
+ * unit id, three destination 16-bit values, an easing byte, a weight byte and a
+ * 16-bit value that is a frame count (mode 0) or a speed (mode 1). pos[0] is the
  * start, pos[1] the destination, pos[2] the current position and pos[3] the
  * negated previous step, re-applied each frame so the unit's coordinate is
  * rewritten rather than accumulated. The misc id is published as the current
- * thread's record word 1, which battle_script_waitspritemove_event_instruction
+ * thread's 32-bit task value 1, which battle_script_waitspritemove_event_instruction
  * polls.
  */
 #include "fft/battle.h"

@@ -1,6 +1,6 @@
 #include "psx/libpress.h"
 
-/* Send an MDEC command word and start DMA of the following size words. */
+/* Send an 32-bit MDEC command and start DMA of the following size 32-bit values. */
 void MDEC_in(u32* buf, u32 size) {
     MDEC_in_sync();
     *g_psyq_press_dma_dpcr |= 0x88;

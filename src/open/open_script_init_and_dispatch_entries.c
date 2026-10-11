@@ -5,8 +5,8 @@
  * while it runs.
  *
  * Updates the text scroll, the XA audio, the OPNTEX sequence and the picture
- * fade, then executes script entries. An entry is a row of 16-bit words at
- * data_base + byte_offset whose first word, the opcode, indexes
+ * fade, then executes script entries. An entry is a row of 16-bit values at
+ * data_base + byte_offset whose first value, the opcode, indexes
  * g_open_opcode_handlers. A handler advances byte_offset itself; one that has to
  * wait clears OPEN_SCRIPT_DISPATCH_CONTINUE to end the frame and is entered again
  * on the next, and opcode 0 clears OPEN_SCRIPT_DISPATCH_RUNNING. */

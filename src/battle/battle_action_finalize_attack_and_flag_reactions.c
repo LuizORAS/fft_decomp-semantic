@@ -10,7 +10,7 @@
  *
  * The HP/MP damage and healing fields are read signed (lh), hence the s16
  * casts on the u16 header fields. The KO test's three status-bit checks fold
- * into the target's single halfword load of current[0..1] & 0x160. */
+ * into the target's single 16-bit load of current[0..1] & 0x160. */
 s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     s32 outcome;
     s32 hp;

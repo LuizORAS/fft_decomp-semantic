@@ -6,7 +6,7 @@ void world_thread_reset_scheduler(void) {
     s32* word;
     s32 i;
 
-    /* Clear the whole 16 x 0x400 thread array, last word first. */
+    /* Clear the whole 16 x 0x400 thread array, last 32-bit value first. */
     word = (s32*)((u8*)g_world_threads + NATIVE_THREAD_LAST_WORD_OFFSET);
     i = (NATIVE_THREAD_ARRAY_BYTES / sizeof(s32)) - 1;
     do {

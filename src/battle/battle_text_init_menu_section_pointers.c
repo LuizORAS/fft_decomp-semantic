@@ -3,7 +3,7 @@
 
 /* Relocate the 31 embedded menu-text offsets into the active section table.
  *
- * The text begins after a 32-word offset header. When menu input is disabled,
+ * The text begins after a header of 32 32-bit offsets. When menu input is disabled,
  * section 0 remains bound to the event/tutorial text already in use. */
 void battle_text_init_menu_section_pointers(void) {
     s32* source;

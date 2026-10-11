@@ -4,7 +4,7 @@
 
 /* Apply pending direction and GTE projection updates to the camera state.
  *
- * The direction word is the player marker's sequence: the facing octant picks
+ * The 32-bit direction value is the player marker's sequence: the facing octant picks
  * one of eight marker sequences from a base of 0x10, or 0x18 for the alternate
  * set. The projected point is written into the marker's screen_x/screen_y by
  * RotTrans, whose input is the marker's own position. */

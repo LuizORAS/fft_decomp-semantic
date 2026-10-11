@@ -22,7 +22,7 @@ void battle_map_extract_palette_colors(const palette_t palette, s32 clut_row, s3
     upload_palette_base = g_battle_map_palette_modified_colors[0];
     upload_row = upload_palette_base + clut_row * MAP_CLUT_ROW_COLOR_COUNT;
     packed_row = g_battle_map_palette_state.clut_rows[clut_row].packed_colors;
-    /* Named color fields reload across the stores; decode each packed halfword once. */
+    /* Named color fields reload across the stores; decode each packed 16-bit value once. */
     palette_ptr = (const u16*)palette;
     do {
         /* A CLUT entry is ABBBBBGGGGGRRRRR. */

@@ -26,7 +26,7 @@ void battle_formula_raise_level_by_one_add_status_on_caster(void) {
     saved_action = g_battle_action_target_data;
     attacker = g_battle_action_attacker;
     attacker_action = g_battle_action_attacker_data;
-    /* The target writes the combined special-effect field as one halfword. */
+    /* The target writes the combined special-effect field as one 16-bit value. */
     action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP;
     g_battle_action_target = attacker;
     g_battle_action_target_data = attacker_action;

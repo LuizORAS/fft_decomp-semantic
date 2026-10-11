@@ -331,7 +331,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             frame = state->frame_bias + seq->sequences[index][pos++];
             if (advance) {
                 state->wait = seq->sequences[index][pos++] + state->wait_bias;
-                /* A bias below the wait wraps the halfword: wait one frame. */
+                /* A bias below the wait wraps the 16-bit value: wait one frame. */
                 if (state->wait > 0x100) {
                     state->wait = 1;
                 }

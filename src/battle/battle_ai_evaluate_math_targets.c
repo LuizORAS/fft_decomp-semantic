@@ -26,7 +26,7 @@ s32 battle_ai_evaluate_math_targets(void) {
             = main_ability_store_skillset_abilities(g_battle_ai_math_skillset, SKILLSET_ABILITY_FILTER_ACTION);
         for (g_battle_ai_math_ability_index = 0; g_battle_ai_math_ability_index < HUMAN_SKILLSET_ACTION_SLOT_COUNT;
             g_battle_ai_math_ability_index++) {
-            /* Math targeting reads only the low byte of each halfword ID. */
+            /* Math targeting reads only the low byte of each 16-bit ID. */
             ai->math_ability_id = g_battle_ai_math_ability_list[g_battle_ai_math_ability_index];
             if (ai->math_ability_id == 0)
                 continue;

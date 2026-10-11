@@ -6,7 +6,7 @@
 /* main 0x8001da68–0x8001dad0: replace the BIOS exception-handler prefix.
  * Critical-section/cache calls and BIOS dispatch remain actual interfaces. */
 void _patch_gte(void) {
-    /* The copy loop retains the handwritten word and template-bound registers. */
+    /* The copy loop retains the handwritten 32-bit value and template-bound registers. */
     psyq_bios_c0_table_t* table;
     u32* destination;
     register u32 word __asm__("$3");

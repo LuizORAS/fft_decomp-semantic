@@ -59,7 +59,7 @@
                      "nop;"                                                                                            \
                      ".word 0x4a280030")
 
-/* Store MAC1-MAC3 to a VECTOR's three words. */
+/* Store MAC1-MAC3 to a VECTOR's three 32-bit components. */
 #define gte_stlvnl(r0)                                                                                                 \
     __asm__ volatile("addu $12, %0, $0;"                                                                               \
                      "swc2 $25, 0($12);"                                                                               \
@@ -69,7 +69,7 @@
         : "r"(r0)                                                                                                      \
         : "$12", "memory")
 
-/* Store the FLAG control register to a word. */
+/* Store the FLAG control register to a 32-bit value. */
 #define gte_stflg(r0)                                                                                                  \
     __asm__ volatile("addu $12, %0, $0;"                                                                               \
                      "cfc2 $13, $31;"                                                                                  \
@@ -369,7 +369,7 @@
         : "r"(input), "r"(output)                                                                                      \
         : "$8", "$9", "memory")
 
-/* Retail uses MULTU for low-word products; GCC 2.6.3 lowers C products to MULT. */
+/* Retail uses MULTU for the low 32 bits of products; GCC 2.6.3 lowers C products to MULT. */
 #define PSYQ_GTE_MULTU_BEGIN(a, b) __asm__ volatile("multu %0, %1" : : "r"(a), "r"(b) : "hi", "lo", "memory")
 #define PSYQ_GTE_READ_LO(result)   __asm__ volatile("mflo %0" : "=r"(result) : : "memory")
 
@@ -459,8 +459,8 @@
 #define PSYQ_GTE_MASK_BRANCH_BEGIN(angle) __asm__ volatile(".set\tnoreorder\n\tbgez %0, 1f" : : "r"(angle))
 #define PSYQ_GTE_MASK_BRANCH_END(angle)   __asm__ volatile("1:\n\t.set\treorder" : : "r"(angle))
 
-/* The stack RA symbol is at0x8002bbd8, so its signed-low-half page is0x80030000.
- * A symbolic two-word address/store cannot fill the original branch delay. */
+/* The stack RA symbol is at0x8002bbd8, so its signed-low-16-bit page is0x80030000.
+ * A symbolic two-instruction address/store cannot fill the original branch delay. */
 #define PSYQ_GTE_MATRIX_STACK_RA_PAGE 0x80030000U
 /* The library uses its own global-RA convention for diagnostics, not O32. */
 #define PSYQ_GTE_GLOBAL_PRINTF(callee, message)                                                                        \

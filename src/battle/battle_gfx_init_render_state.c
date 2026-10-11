@@ -19,6 +19,6 @@ void battle_gfx_init_render_state(void) {
     g_battle_gfx_previous_counter = 0;
     D_800b6290 = 0;
     D_800b628c = 0;
-    /* The in-use word just past the last g_battle_unit_misc_data record. */
+    /* The in-use 32-bit value just past the last g_battle_unit_misc_data record. */
     g_battle_gfx_sprite_prim_pool = (POLY_FT4*)&g_battle_unit_misc_slot_flags[BATTLE_UNIT_MISC_SLOT_COUNT].in_use;
 }

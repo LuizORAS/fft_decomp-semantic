@@ -13,8 +13,8 @@
 /* A unit SHP frame set: primary at file +8; an optional submerged set is
  * addressed by the file header. Only the first 0xd0 offsets are installed. */
 typedef struct battle_gfx_packed_unit_shp_frame_set {
-    u8 frame_offsets[0x100][4]; /* 0x000; signed words, -1 resolves to offset zero */
-    u8 frame_data_size[2];      /* 0x400; unsigned halfword */
+    u8 frame_offsets[0x100][4]; /* 0x000; signed 32-bit values, -1 resolves to offset zero */
+    u8 frame_data_size[2];      /* 0x400; unsigned 16-bit value */
     u8 frame_data[0];           /* 0x402; variable tail */
 } battle_gfx_packed_unit_shp_frame_set_t;
 typedef char
@@ -23,8 +23,8 @@ typedef char
 
 typedef struct battle_gfx_packed_unit_shp_record {
     u8 submerged_frame_set_offset[4]; /* 0x000; 8 means both native tables share the primary set */
-    u8 first_attack_frame[2];         /* 0x004; unsigned halfword */
-    u8 first_sp2_frame[2];            /* 0x006; unsigned halfword */
+    u8 first_attack_frame[2];         /* 0x004; unsigned 16-bit value */
+    u8 first_sp2_frame[2];            /* 0x006; unsigned 16-bit value */
     battle_gfx_packed_unit_shp_frame_set_t primary_frame_set; /* 0x008 */
 } battle_gfx_packed_unit_shp_record_t;
 typedef char
@@ -32,10 +32,10 @@ typedef char
 
 /* WEP/EFF SHP has a different header and twice as many frame offsets. */
 typedef struct battle_gfx_packed_weapon_shp_record {
-    u8 _unused_000[4];          /* 0x000; loader skips this word */
+    u8 _unused_000[4];          /* 0x000; loader skips this 32-bit value */
     u8 first_frame[0x20][2];    /* 0x004; unsigned zero-frame indices by weapon type */
-    u8 frame_offsets[0x200][4]; /* 0x044; signed words, -1 resolves to offset zero */
-    u8 frame_data_size[2];      /* 0x844; unsigned halfword */
+    u8 frame_offsets[0x200][4]; /* 0x044; signed 32-bit values, -1 resolves to offset zero */
+    u8 frame_data_size[2];      /* 0x844; unsigned 16-bit value */
     u8 frame_data[0];           /* 0x846; variable tail */
 } battle_gfx_packed_weapon_shp_record_t;
 typedef char battle_gfx_packed_weapon_shp_record_size_must_be_2118[sizeof(battle_gfx_packed_weapon_shp_record_t) == 2118
@@ -44,20 +44,20 @@ typedef char battle_gfx_packed_weapon_shp_record_size_must_be_2118[sizeof(battle
 
 /* WEP/EFF SEQ stores 256 offsets followed by a variable sequence payload. */
 typedef struct battle_gfx_packed_offset_table {
-    u8 _unused_000[4];  /* 0x000; WEP/EFF loader skips the header word */
+    u8 _unused_000[4];  /* 0x000; WEP/EFF loader skips the 32-bit header value */
     u8 entry[0x100][4]; /* 0x004; signed sequence offsets, -1 resolves to zero */
-    u8 payload_size[2]; /* 0x404; unsigned halfword */
+    u8 payload_size[2]; /* 0x404; unsigned 16-bit value */
     u8 payload[0];      /* 0x406; variable sequence data */
 } battle_gfx_packed_offset_table_t;
 typedef char
     battle_gfx_packed_offset_table_size_must_be_1030[sizeof(battle_gfx_packed_offset_table_t) == 1030 ? 1 : -1];
 
 /* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
- * or widened unit-animation header words are present in the file. */
+ * or widened 32-bit unit-animation header fields are present in the file. */
 typedef struct battle_gfx_packed_evtchr_record {
-    u8 sequence_offsets[0x40][4]; /* 0x0000; signed words, -1 resolves to zero */
+    u8 sequence_offsets[0x40][4]; /* 0x0000; signed 32-bit values, -1 resolves to zero */
     u8 sequence_data[0x400];      /* 0x0100 */
-    u8 frame_offsets[0x28][4];    /* 0x0500; signed words, -1 resolves to zero */
+    u8 frame_offsets[0x28][4];    /* 0x0500; signed 32-bit values, -1 resolves to zero */
     u8 frame_data[0x1e0];         /* 0x05a0; copied into both native frame sets */
     u8 cluts[16 * 16 * 2];        /* 0x0780; 16 CLUTs, 16 little-endian colours each */
     u8 pixels[200 * 128];         /* 0x0980; 256x200, 4bpp */
@@ -304,7 +304,7 @@ enum {
  * (battle_gfx_select_unit_shp_frame). The file has 0x28 frames; their data
  * is stored twice, once for each frame table, with the same contents. */
 typedef struct battle_gfx_evtchr_shp {
-    battle_gfx_unit_shp_frame_tables_t tables; /* 0x000; header words remain unset and unread */
+    battle_gfx_unit_shp_frame_tables_t tables; /* 0x000; 32-bit header fields remain unset and unread */
     u8 data[0x1e0];                            /* 0x688 */
     u8 submerged_data[0x1e0];                  /* 0x868 */
 } battle_gfx_evtchr_shp_t;
@@ -554,7 +554,7 @@ extern u32* g_battle_gfx_sp2_data;
 /* The display rotations that the upper five bits of a frame's first byte select, ONE to the turn. */
 extern u16 g_battle_gfx_sprite_y_rotations[];
 
-/* Status flag shown by each status bubble id (0x16 words at 0x80093cb4).
+/* Status flag shown by each status bubble id (0x16 32-bit entries at 0x80093cb4).
  * Bubbles 0 (KO), 0x14 (Death Sentence) and 0x15 (casting) hold 0 and are
  * tested separately by battle_gfx_determine_status_bubble_parameters. */
 extern s32 g_battle_gfx_status_bubble_status_masks[];

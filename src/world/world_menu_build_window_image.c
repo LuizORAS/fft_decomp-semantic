@@ -19,7 +19,7 @@ u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s
     s32 words;
     s32 partial;
     s32 byte_count;
-    /* Halfword row indexing preserves the original loop induction. */
+    /* 16-bit row indexing preserves the original loop induction. */
     u16* image;
     u16* sheet;
     s32 x_offset;

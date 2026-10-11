@@ -12,7 +12,7 @@ void battle_map_update_and_store_palette_colors(
 
     battle_map_update_palette_colors(mode, clut_row, clut_index, update_all, colors_reg);
 
-    /* The packed mirror is copied with native halfword loads and stores. */
+    /* The packed mirror is copied with native 16-bit loads and stores. */
     if (update_all == 1) {
         u16* destination;
         const u16* source;

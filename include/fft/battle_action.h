@@ -80,7 +80,7 @@ typedef enum battle_action_phase {
 
 enum { BATTLE_ACTION_PHASE_COUNT = 3 };
 
-/* Pending post-action displays are queued as one little-endian word in Misc
+/* Pending post-action displays are queued as one little-endian 32-bit value in Misc
  * Unit Data 0x1b8..0x1bb.  The two dispatchers at 0x8007f5f8 and 0x800808b8
  * consume one bit at a time in ascending order. */
 typedef enum battle_action_display_flag {

@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* RelativeCamera: rewrite the next Camera instruction's seven operand halfwords
+/* RelativeCamera: rewrite the next Camera instruction's seven 16-bit operands
  * as the current camera values plus this instruction's deltas.
  *
  * src points at the seven camera script variables (x, z, y, tilt, yaw, roll,

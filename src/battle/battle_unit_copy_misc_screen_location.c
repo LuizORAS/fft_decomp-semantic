@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* Widens a unit's screen position halfwords into a word triple. A missing unit is
+/* Widens a unit's screen position 16-bit values into three 32-bit components. A missing unit is
  * not tested for: the copy then reads address 0. */
 void battle_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination) {
     SVECTOR* screen_data;

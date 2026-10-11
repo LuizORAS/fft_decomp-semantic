@@ -1,7 +1,7 @@
 #include "fft/open.h"
 
 /* New Game on the title menu. With a memory card in either slot the new-game
- * prologue starts at once. With none the frame image (0x7800 words) is saved to
+ * prologue starts at once. With none the frame image (30,720 32-bit values) is saved to
  * g_open_work_buffer_0 and blanked, animation 0x12 is shown on the black screen
  * and the title-exit controller (handler 12) is pushed: Cross returns to the
  * title menu, Circle or Start starts the prologue anyway. */

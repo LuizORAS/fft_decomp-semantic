@@ -2,7 +2,7 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Out-and-back interpolation of three words: the factor follows a whole cosine
+/* Out-and-back interpolation of three 32-bit components: the factor follows a whole cosine
  * wave over duration, so the value reaches to at half the duration and is back at
  * from when current reaches duration. */
 void battle_effect_interpolate_vector_q13_cos_q12(

@@ -1,8 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001cf78–0x8001d09c: column scaling, low-word products and word stores.
- * Word accesses preserve writes to MATRIX's alignment halfword. */
+/* main 0x8001cf78–0x8001d09c: column scaling, the low 32 bits of products and 32-bit stores.
+ * 32-bit accesses preserve writes to MATRIX's 16-bit alignment field. */
 MATRIX* ScaleMatrix(MATRIX* matrix, VECTOR* scale) {
     /* Fixed scratch registers preserve the handwritten multiply/store sequence. */
     register u32 packed __asm__("$8");
@@ -19,14 +19,14 @@ MATRIX* ScaleMatrix(MATRIX* matrix, VECTOR* scale) {
     low = (low << 16) >> 16;
     PSYQ_GTE_MULTU_BEGIN(low, scale_x);
     scale_y = scale->vy;
-    /* Keep the Y load before unpacking the high halfword. */
+    /* Keep the Y load before unpacking the high 16 bits. */
     __asm__ volatile("" : : "r"(scale_y));
     high = (s32)packed >> 16;
     scale_z = scale->vz;
-    /* Both scale loads precede the next matrix word. */
+    /* Both scale loads precede the next 32-bit matrix value. */
     __asm__ volatile("" : : "r"(scale_y), "r"(scale_z) : "memory");
     packed = *(u32*)&matrix->m[0][2];
-    /* This word loads before the result-pointer copy. */
+    /* This 32-bit value loads before the result-pointer copy. */
     __asm__ volatile("" : "=r"(matrix) : "0"(matrix), "r"(packed) : "memory");
     __asm__("" : "=r"(result) : "0"(matrix)); /* Retail copies the result before the packed stores. */
     PSYQ_GTE_READ_LO(low);

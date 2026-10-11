@@ -6,8 +6,8 @@
 /* Handler of the saved-record preview level: the phases mirror the
  * unexplored-land detail handler at 0x8007e6f4.
  *
- * Phase 1 waits for the render record the word at 0x08 names to leave its 0x100 state; no push sets
- * that word.
+ * Phase 1 waits for the render record the 32-bit value at 0x08 names to leave its 0x100 state; no push sets
+ * that 32-bit value.
  * Phase 2, once file loading finishes, uploads the preview TIM's CLUT, binds
  * the level's render record to the VRAM image with its right edge at x -0x3e
  * and centred on y 0x10, starts the progressive upload at 0x8007f998 and
@@ -19,7 +19,7 @@
  * record named by g_wldcore_treasure_sound_novel_ids[value].
  *
  * The record index is staged in `saved` before the depth store: the target
- * reloads the full word for the halfword store instead of narrowing the load.
+ * reloads the full 32-bit value for the 16-bit store instead of narrowing the load.
  * The button path's byte uses its own local; sharing `slot` changes the
  * register allocation. */
 void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_t* level) {

@@ -1,7 +1,7 @@
 #include "psx/card_abi_inline.h"
 #include "psx/libcard.h"
 
-/* main 0x800289d4–0x80028a40: swap five PAD-clear handler instruction words. */
+/* main 0x800289d4–0x80028a40: swap five PAD-clear handler 32-bit instructions. */
 void _patch_card2(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
     psyq_card_bios_b0_table_t* table;
@@ -24,7 +24,10 @@ void _patch_card2(void) {
         old_word = destination[PSYQ_CARD_PAD_DELAY_PATCH_WORD];
         replacement = *source++;
         source[-1] = old_word;
-        __asm__ volatile("" : : : "memory"); /* The swapped template word is saved before advancing the BIOS pointer. */
+        __asm__ volatile(""
+            :
+            :
+            : "memory"); /* The swapped 32-bit template value is saved before advancing the BIOS pointer. */
         destination++;
         __asm__("" : "=r"(destination) : "0"(destination)); /* Original store uses the advanced code pointer. */
         destination[PSYQ_CARD_PAD_DELAY_PATCH_WORD - 1] = replacement;

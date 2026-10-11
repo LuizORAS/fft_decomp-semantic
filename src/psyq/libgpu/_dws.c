@@ -1,8 +1,8 @@
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x80025e5c-0x800260b0. Halfword-pixel transfer with CPU remainder and 16-word DMA blocks. */
+/* LIBGPU, retail 0x80025e5c-0x800260b0. VRAM transfer in 16-bit units, with a CPU remainder and 64-byte DMA blocks. */
 int _dws(RECT* rect, u32* data) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view removes native halfword
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view removes native 16-bit
                                                                       normalization in the bounds clamps. */
     int size;
     int blocks;
@@ -26,7 +26,7 @@ int _dws(RECT* rect, u32* data) {
     *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_DMA_DIRECTION);
     *g_psyq_gpu_gp0_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CLEAR_CACHE);
     *g_psyq_gpu_gp0_port = special ? 0xb0000000 : PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CPU_TO_VRAM);
-    /* Component packing replaces the retail GPU word loads with halfword loads. */
+    /* Component packing replaces the retail 32-bit GPU loads with 16-bit loads. */
     *g_psyq_gpu_gp0_port = *(u32*)&rect->x;
     *g_psyq_gpu_gp0_port = *(u32*)&rect->w;
     while (rest--) {

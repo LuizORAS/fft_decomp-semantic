@@ -3,7 +3,7 @@
 /*
  * Count candidate tiles within the map bounds on both levels.
  *
- * Each level has 18 halfword rows, with bit 15 representing x = 0.
+ * Each level has 18 rows of 16-bit values, with bit 15 representing x = 0.
  */
 s32 battle_ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT]) {
     battle_ai_data_t* ai;

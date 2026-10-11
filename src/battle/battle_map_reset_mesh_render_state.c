@@ -6,7 +6,7 @@
  * Reset the battle map's mesh, draw-mode and per-part render state before a
  * map load.
  *
- * Clears the four polygon counts and position spare halfwords, the nine mesh
+ * Clears the four polygon counts and position spare 16-bit values, the nine mesh
  * part records (vector triples reset to zero/unit scale) and several map
  * tables. The weather flags keep only bits 0x7d.
  */

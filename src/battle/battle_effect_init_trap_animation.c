@@ -1,4 +1,4 @@
-/* The table is declared `u8[]` and cast only at the halfword read.
+/* The table is declared `u8[]` and cast only at the 16-bit read.
  *
  * The target has no stack frame. Casting an array symbol away from its
  * declared element type (e.g. `(u8*)table + offset` off a `u16[]`, or
@@ -13,7 +13,7 @@
 #include "psx/types.h"
 
 /* Start the animation script of trap group on slot: reset the colour and
- * script state and store the clut word (callers pass CLUTs of
+ * script state and store the 16-bit CLUT value (callers pass CLUTs of
  * MAP_CLUT_ROW_WEAPONS) at 0x88. */
 void battle_effect_init_trap_animation(s32 group, u16 clut, battle_effect_slot_t* slot) {
     u32 offset;

@@ -109,20 +109,20 @@ void wldcore_proposition_prepare_report(s32 job_id);
  * stepped by wldcore_script_run_until_yield. */
 typedef enum wldcore_opcode_state_flag {
     WLDCORE_OPCODE_STATE_BRANCH = 0x002,  /* a branch was taken: mark its saved-data bit and enter the next section */
-    WLDCORE_OPCODE_STATE_FETCH = 0x004,   /* the handler is done: load the next instruction word */
+    WLDCORE_OPCODE_STATE_FETCH = 0x004,   /* the handler is done: load the next 32-bit instruction */
     WLDCORE_OPCODE_STATE_YIELD = 0x008,   /* leave the interpreter until the next frame */
-    WLDCORE_OPCODE_STATE_FETCHED = 0x010, /* the instruction word was loaded this turn: the handler's first call */
+    WLDCORE_OPCODE_STATE_FETCHED = 0x010, /* the 32-bit instruction was loaded this turn: the handler's first call */
     WLDCORE_OPCODE_STATE_END = 0x020,     /* the script ended */
     WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE = 0x040,
     WLDCORE_OPCODE_STATE_VALUE_DISPLAY = 0x080, /* the numeric value display is up */
     WLDCORE_OPCODE_STATE_WHITE_OVERLAY = 0x100, /* the white full-screen overlay is up */
 } wldcore_opcode_state_flag_e;
 
-/* The world-script state from the instruction word at 0x800d4848 onwards
+/* The world-script state from the 32-bit instruction at 0x800d4848 onwards
  * (the tail of wldcore_world_script_record_t). Handlers must reach it as
  * in-struct references: the target keeps each state_flags store ahead of the
  * window/render-record updates and reloads render_index after them, which GCC
- * only does for in-struct accesses. The instruction is an encoded word;
+ * only does for in-struct accesses. The instruction is an encoded 32-bit value;
  * g_wldcore_state_flags remains a separate scalar view for handlers whose
  * flag loads need their own symbol base. */
 typedef struct wldcore_opcode_state {
@@ -190,7 +190,7 @@ typedef struct wldcore_route_path {
     s32 routes[16];
 } wldcore_route_path_t;
 
-/* A travel point: packed x/y, a heading word, and segment distance. */
+/* A travel point: packed x/y, a 32-bit heading, and segment distance. */
 typedef struct wldcore_route_point {
     u32 position;
     u32 heading;
@@ -216,7 +216,7 @@ typedef enum wldcore_audio_music_flag {
 } wldcore_audio_music_flag_e;
 
 /* sound */
-/* The music words at +0x8c: the first is both the music flags and slot 0 of
+/* The 32-bit music fields at +0x8c: the first is both the music flags and slot 0 of
  * the per-slot loaded-track table, since the target indexes the table from
  * that address. */
 typedef union wldcore_audio_music_slots {
@@ -248,7 +248,7 @@ enum { WLDCORE_AUDIO_QUEUE_CAPACITY = 16 };
 /* Audio command FIFO at 0x800d45a4, filled by
  * wldcore_sound_enqueue_audio_command and serviced by wldcore_sound_process_audio_queue, followed
  * by the music state that consumer owns. current_command and count are the
- * busy words the queue-drain waits test. */
+ * 32-bit busy fields the queue-drain waits test. */
 typedef struct wldcore_audio_queue {
     wldcore_audio_command_e commands[WLDCORE_AUDIO_QUEUE_CAPACITY];
     s32 values[WLDCORE_AUDIO_QUEUE_CAPACITY];
@@ -263,7 +263,7 @@ typedef char wldcore_audio_queue_size_must_be_160[sizeof(wldcore_audio_queue_t) 
 
 /* Rows of four sound numbers in the WLDCORE sound bank (id 0xE1), indexed by
  * a sound id from 1. Row 0 is not a sound row: 0x8009ec18 holds the eighth
- * word of g_wldcore_tutorial_event_ids (0x1a8). */
+ * 32-bit value of g_wldcore_tutorial_event_ids (0x1a8). */
 extern u8 g_wldcore_sound_quad_command_bytes[][4];
 extern s32 g_wldcore_sound_novel_script_sector_offsets[];
 extern s32 g_wldcore_sound_novel_text_sector_offsets[];
@@ -278,7 +278,7 @@ extern u32 g_wldcore_sound_novel_local_flags[];
 extern s32 g_wldcore_sound_novel_wait_counter;
 extern wldcore_audio_queue_t g_wldcore_audio_queue;
 
-/* The branch opcodes subtract this halfword sign-extended, so it is signed;
+/* The branch opcodes subtract this 16-bit value sign-extended, so it is signed;
  * the three flag-0x04 handlers reach the same storage through a u16 view. */
 /* Unsigned views of g_wldcore_active_saved_record.text_history_0..3 for the
  * two history shifters, which load them with lhu; the record keeps s16 for
@@ -406,8 +406,8 @@ typedef enum wldcore_value_display_mode {
     WLDCORE_VALUE_DISPLAY_COST_AND_FUNDS = 4, /* a labelled five-digit secondary value, then FUNDS */
 } wldcore_value_display_mode_e;
 
-/* g_wldcore_screen_fade_state.flags[]: word 0 is the screen fade and its fill
- * box, word 1 a second fill box. wldcore_fade_start_screen takes OUT,
+/* g_wldcore_screen_fade_state.flags[]: 32-bit flags[0] controls the screen fade and its fill
+ * box; flags[1] controls a second fill box. wldcore_fade_start_screen takes OUT,
  * REDRAW_MAP, STOP_MUSIC and START_MUSIC and adds RUNNING. */
 typedef enum wldcore_screen_fade_flag {
     WLDCORE_SCREEN_FADE_RUNNING = 0x01,
@@ -422,7 +422,7 @@ typedef enum wldcore_screen_fade_flag {
  * all three walk pointers from a single symbol address. */
 typedef struct wldcore_sortbox_state {
     u32 flags[2];      /* 0x00; wldcore_screen_fade_flag_e */
-    s32 priorities[2]; /* 0x08; GsSortBoxFill OT priority of each box, read as a halfword */
+    s32 priorities[2]; /* 0x08; GsSortBoxFill OT priority of each box, read as a 16-bit value */
     s32 elapsed;       /* 0x10; fade frames run, stepped by wldcore_fade_step_screen */
     s32 duration;      /* 0x14 */
     GsBOXF boxes[2];   /* 0x18; full-screen fill boxes drawn by wldcore_fade_draw_screen_overlays */
@@ -433,7 +433,7 @@ typedef char wldcore_sortbox_state_size_must_be_56[sizeof(wldcore_sortbox_state_
  * (main) and 0x800bb3c4 (auxiliary), one per display buffer. The 0x14 stride
  * is what wldcore_init_core indexes these globals with. */
 /* The ordering-table handle is libgs GsOT; see include/psx/libgs.h. */
-/* Heterogeneous display-object queues: each object's leading flags word
+/* Heterogeneous display-object queues: each object's leading 32-bit flags
  * selects the handler in wldcore_dispatch_display_object_list:
  * bit 0 an animated object (world_animated_render_record_t), bit 1 a sprite
  * (wldcore_window_render_record_t). */
@@ -450,8 +450,8 @@ extern s32 g_wldcore_background_sector_offsets[];
 /* Colour of the context-value display, tinted by wldcore_gfx_copy_color_with_tint. */
 extern CVECTOR g_wldcore_hud_color;
 
-/* HUD ordering-table priority. The sort calls read it as a halfword (lhu);
- * its three setters store a whole word. */
+/* HUD ordering-table priority. The sort calls read it as a 16-bit value (lhu);
+ * its three setters store a whole 32-bit value. */
 extern s32 g_wldcore_hud_ot_priority;
 extern s32 g_wldcore_loaded_background_set;
 
@@ -468,8 +468,8 @@ extern u32* g_wldcore_scratch_buffer;
 extern rgb24_t g_wldcore_screen_brightness_rgb;
 extern wldcore_sortbox_state_t g_wldcore_screen_fade_state;
 
-/* Word views of g_wldcore_screen_fade_state.flags[1] and priorities[0..1]:
- * the sound-novel setters store whole words where the sort reads a halfword,
+/* 32-bit views of g_wldcore_screen_fade_state.flags[1] and priorities[0..1]:
+ * the sound-novel setters store whole 32-bit values where the sort reads a 16-bit value,
  * and the sound-novel menu stores flags[1] by absolute address beside a live
  * &g_wldcore_screen_fade_state base, which the member spelling does not
  * reproduce. */
@@ -576,7 +576,7 @@ void wldcore_reset_saved_record_fields(wldcore_saved_record_t* record);
 void wldcore_reset_selected_saved_record(s32 unused);
 
 /* script */
-/* The world-conditional interpreter clears this result word before each
+/* The world-conditional interpreter clears this 32-bit result before each
  * block. Comparisons set CONDITION_FAILED when their predicate rejects the
  * block. Action opcodes set ACTION_REACHED to end the block and set an action
  * bit when a request is staged. */
@@ -618,7 +618,7 @@ typedef enum wldcore_script_request_flags {
 } wldcore_script_request_flags_e;
 
 /* WLDCORE script interpreter state; the opcode handlers read ip/data here.
- * One object through the choice/argument words:
+ * One object through the choice/argument 32-bit values:
  * wldcore_opcode_read_four_halfword_pairs reaches ip at -4 and the choice
  * values at +0x10 from its &choice_vars base. */
 typedef struct wldcore_script_state {
@@ -819,7 +819,7 @@ typedef enum wldcore_proposition_state {
 /* Records of the proposition data file (wldcore_proposition_get_data_pointer). */
 typedef enum wldcore_proposition_data_record {
     WLDCORE_PROPOSITION_DATA_ROWS = 0,                /* 23-byte proposition rows */
-    WLDCORE_PROPOSITION_DATA_FEES = 1,                /* halfwords behind the rows' two fee indices */
+    WLDCORE_PROPOSITION_DATA_FEES = 1,                /* 16-bit values behind the rows' two fee indices */
     WLDCORE_PROPOSITION_DATA_MESSAGE_ADJUSTMENTS = 2, /* by faith and bravery band */
     WLDCORE_PROPOSITION_DATA_CATEGORY_JOB_SCORES = 3,
     WLDCORE_PROPOSITION_DATA_JOB_LIST_JOB_SCORES = 4,
@@ -899,8 +899,8 @@ typedef struct wldcore_proposition_result_level {
     u8 _unused_30[0x2c];
 } wldcore_proposition_result_level_t;
 
-/* One 23-byte proposition row expanded to halfword fields by
- * wldcore_unpack_proposition_row; `fields` names the halfwords whose use is
+/* One 23-byte proposition row expanded to 16-bit fields by
+ * wldcore_unpack_proposition_row; `fields` names the 16-bit values whose use is
  * known. */
 typedef union wldcore_proposition_fields {
     u16 values[23];
@@ -1163,7 +1163,7 @@ typedef struct wldcore_map_projection_view {
 typedef char wldcore_map_projection_view_size_must_be_40[sizeof(wldcore_map_projection_view_t) == 40 ? 1 : -1];
 
 /* Packed eight-byte source row used by wldcore_map_color_and_draw_dots.
- * The low halfword of the first word is x; its high bytes select the animation. */
+ * The low 16 bits of the first 32-bit value hold x; its high bytes select the animation. */
 typedef struct wldcore_map_dot_source {
     s32 position_and_kind;
     s32 y;
@@ -1191,7 +1191,7 @@ typedef enum wldcore_projection_flags {
     WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET = 0x04, /* set while the marker travels a route */
 } wldcore_projection_flags_e;
 
-/* The world map camera projection state at 0x8009f24c: two control words
+/* The world map camera projection state at 0x8009f24c: two 32-bit control fields
  * followed by the player's own map dot. The marker's +8 base is what makes
  * the views of this address agree field for field -- the camera update
  * writes the dot's render sequence and screen position and the marker init writes
@@ -1262,7 +1262,7 @@ typedef char wldcore_projected_entry_size_must_be_24[sizeof(wldcore_projected_en
 /* map */
 /* The type-0x36 menu level pushed by wldcore_push_map_location_visibility_level
  * and stepped by wldcore_map_step_location_visibility_change; only the first
- * four words are known. */
+ * four 32-bit fields are known. */
 typedef struct wldcore_map_visibility_level {
     s32 dot_index;     /* 0x00; map dot, and script variable 0x200 + dot_index */
     s32 was_set;       /* 0x04; whether the variable was already set */
@@ -1273,14 +1273,14 @@ typedef struct wldcore_map_visibility_level {
 typedef char wldcore_map_visibility_level_size_must_be_92[sizeof(wldcore_map_visibility_level_t) == 92 ? 1 : -1];
 
 /* Provisional: the type-0x35 menu level pushed by
- * wldcore_menu_push_map_path_level, decoded from the four words it writes and
+ * wldcore_menu_push_map_path_level, decoded from the four 32-bit values it writes and
  * corroborated by its step handler at
  * 0x8006dbb8, which reads only the last two: +0x08 selects the erase
- * direction and +0x0c is the one-shot sound flag. The two leading words are
+ * direction and +0x0c is the one-shot sound flag. The two leading 32-bit fields are
  * the script's path arguments, which the caller
  * wldcore_menu_dispatch_pending_script_requests passes as g_wldcore_script_state.args[0]
  * and g_wldcore_script_state.args[1]. The record is one menu-stack slot, so the
- * view is 0x5c bytes wide and only the first four words are known. */
+ * view is 0x5c bytes wide and only the first four 32-bit fields are known. */
 typedef struct wldcore_map_path_level {
     s32 path_id;       /* 0x00; g_wldcore_script_state.args[0] */
     s32 path_id_hi;    /* 0x04; g_wldcore_script_state.args[1] */
@@ -1310,7 +1310,7 @@ extern wldcore_axis_state_t g_wldcore_map_cursor_scroll_x;
 extern wldcore_axis_state_t g_wldcore_map_cursor_scroll_y;
 
 /* Screen position of the context-value display; the sound-novel menu saves
- * and restores both words as one point32_t. */
+ * and restores both 32-bit values as one point32_t. */
 extern point32_t g_wldcore_context_value_display_position;
 extern u8 g_wldcore_map_dot_pulse_direction;
 extern u8 g_wldcore_map_dot_pulse_phase;
@@ -1426,7 +1426,7 @@ typedef enum wldcore_anim_sequence_id {
 } wldcore_anim_sequence_id_e;
 
 /* Window-layout request at the start of a layout-window menu level. The
- * first three words are what wldcore_window_apply_layout (0x8006f67c) reads. */
+ * first three 32-bit fields are what wldcore_window_apply_layout (0x8006f67c) reads. */
 typedef struct wldcore_window_layout_request {
     s32 window_index;
     s32 layout; /* 0x04; row of g_wldcore_window_layout_rows */
@@ -1438,7 +1438,7 @@ typedef struct wldcore_window_layout_request {
  * wldcore_menu_handle_layout_window_input reads the first ten bytes: a pointer
  * to the level's live counter, the base message id, and the four neighbouring
  * layout ids reached by the directional pad. wldcore_window_apply_layout reads
- * the trailing halfwords: the record's x and y extents (plus 14 and 12) and the
+ * the trailing 16-bit values: the record's x and y extents (plus 14 and 12) and the
  * kind that selects the redraw delay. */
 typedef struct wldcore_window_layout_row {
     s16* counter;     /* 0x00 */
@@ -1760,7 +1760,7 @@ typedef struct wldcore_menu_choice_panel_level {
     s32 header_window; /* 0x10 */
 } wldcore_menu_choice_panel_level_t;
 
-/* Leading words of a menu level that owns up to two window/render record
+/* Leading 32-bit fields of a menu level that owns up to two window/render record
  * pairs; wldcore_menu_close_level_and_release_records releases each index
  * that is not -1. */
 typedef struct wldcore_menu_slot_set {
@@ -1879,7 +1879,7 @@ typedef enum wldcore_menu_level_type {
 
 /* Provisional: 0x5c-byte menu-stack records at 0x800bb930, one per menu
  * level; the level's handler type in g_wldcore_menu_stack_types selects the
- * view. The leading word normally names a window; the focus-location level
+ * view. The leading 32-bit value normally names a window; the focus-location level
  * stores a map-dot index instead. g_wldcore_menu_stack_records_next is
  * the record array offset by one level, which the push routines index by the
  * current depth; spelling that as g_wldcore_menu_stack_records[depth + 1]
@@ -1986,7 +1986,7 @@ extern wldcore_window_layout_row_t g_wldcore_window_layout_rows[];
 extern s32 g_wldcore_window_render_object_count;
 
 /* Display-object queues drawn by 0x8006ae20 each frame: every entry points at
- * the leading flags word of a window record, render record or map dot, and
+ * the leading 32-bit flags of a window record, render record or map dot, and
  * wldcore_window_set_render_objects_visible toggles bit 0x08 through it. */
 extern void* g_wldcore_window_render_object_queue[];
 extern wldcore_window_render_record_t g_wldcore_window_render_records[];

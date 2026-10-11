@@ -447,10 +447,11 @@ typedef struct wldcore_saved_record {
     u32* script_words; /* 0x04 */
     u32 instruction;   /* 0x08 */
     /* 0x0c-0x37 mirror the live sound-novel state at 0x800d484c. */
-    u16 state_flags; /* 0x0c; wldcore_opcode_state_flag_e */
-    s16 section;     /* 0x0e */
-    s16 word_index;  /* 0x10; instruction word index in the section; cleared by wldcore_sound_novel_restore_saved_state
-                      */
+    u16 state_flags;          /* 0x0c; wldcore_opcode_state_flag_e */
+    s16 section;              /* 0x0e */
+    s16 word_index;           /* 0x10; index of the 32-bit instruction in the section; cleared by
+                               * wldcore_sound_novel_restore_saved_state
+                               */
     s16 counter_delta;        /* 0x12 */
     s16 text_id;              /* 0x14 */
     s16 brightness;           /* 0x16 */
@@ -476,7 +477,7 @@ extern u8 g_main_save_proposition_count;
 extern s32 g_main_saved_animation_speed;
 extern s32 g_main_saved_weather_variable;
 
-/* Word-indexed RAM bitmaps; the save serializer copies only their packed data
+/* RAM bitmaps indexed by 32-bit values; the save serializer copies only their packed data
  * bytes and omits the padding at the end of each allocation. */
 extern u32 g_main_proposition_last_attempt_date_bits[27];
 extern u32 g_main_treasure_acquisition_date_bits[14];
@@ -492,7 +493,7 @@ void main_save_init_state_and_options(void);
 
 /* script */
 extern u16 g_main_scenario_event_finish_operations[];
-/* The script variable words: whole-word variables first (event_script_variable_id_e), then the packed flags. */
+/* The script variables: 32-bit values first (event_script_variable_id_e), then the packed flags. */
 extern s32 g_main_script_variables[0x100];
 extern u8* g_main_heap_companion_overlay_load_address;
 extern u16 g_main_scenario_condition_offsets[];
@@ -521,7 +522,7 @@ typedef struct main_sound_music_slots {
 } main_sound_music_slots_t;
 
 /* The music state and slot table are one object: main_sound_open_generic_sfx
- * derives the slot words from the &state.current_smd base register, and the
+ * derives the slot pointers from the &state.current_smd base register, and the
  * tune/slot helpers reach across tune, handles and smd from single bases. */
 typedef struct main_sound_music {
     main_sound_music_state_t state; /* 0x00 0x8004d95c */
@@ -574,7 +575,7 @@ enum {
 };
 
 /* Sound resources. A sound id is MAIN_SOUND_ID(resource, sound): the id of a
- * loaded suzuki_sound_resource_t in the high halfword and the index of a
+ * loaded suzuki_sound_resource_t in the high 16 bits and the index of a
  * sound in it in the low. Each battle effect file brings a resource of its
  * own (battle_effect_load_sound_section). */
 typedef enum main_sound_resource_id {
@@ -588,7 +589,7 @@ typedef enum main_sound_resource_id {
 /* Sound-effect ids passed to main_sound_play_sfx and the module queues that
  * feed it (wldcore_sound_play_effect, world_sound_dispatch_effect and the
  * g_*_sound_*effect_id globals); every path reaches suzuki_sound_start_sfx with
- * MAIN_SOUND_RESOURCE_SYSTEM in the high halfword, so this is one id space.
+ * MAIN_SOUND_RESOURCE_SYSTEM in the high 16 bits, so this is one id space.
  * SYSTEM.SED holds MAIN_SFX_COUNT sounds; the ones named here are named
  * from their users in the code, the others are played only by event and
  * animation script data. The event frames store -1 in the pending globals
@@ -797,7 +798,7 @@ void main_status_update_unit_flags_and_ct(battle_stats_t* unit);
 s32 main_status_find_action_highest_order_effect(const battle_action_data_t* action);
 
 /* system */
-/* Bits of g_main_system_flags, the control word of the WLDCORE world-map
+/* Bits of g_main_system_flags, the 32-bit control flags of the WLDCORE world-map
  * loop: frame state, what the frame leaves out, requests left by WORLD and
  * OPENING, and the reason the loop ends. */
 typedef enum main_system_flags {
@@ -917,9 +918,9 @@ extern s32 g_main_system_animation_speed;
 extern s32 g_main_system_battle_frame_hsync_count;
 extern s32 g_main_system_battle_frame_hsync_count_max;
 
-/* The packed-word view of the options record; g_main_game_options names the
+/* The packed 32-bit view of the options record; g_main_game_options names the
  * same address under its union type. The scalar name is retained because GCC
- * otherwise coalesces the saved-word load with the following bitfield writes
+ * otherwise coalesces the saved 32-bit load with the following bitfield writes
  * and changes the target instruction order. */
 
 extern s32 g_main_boot_startup2_has_run;
@@ -930,7 +931,7 @@ extern u8* g_main_heap_world_overlay_load_address;
 /* 0x800449ec: empty (nop, jr ra). Every main loop and every blocking wait calls it once per frame. */
 void main_system_frame_stub(void);
 
-/* 0x800449f8: a return-only hook. Main and overlay callers supply two words,
+/* 0x800449f8: a return-only hook. Main and overlay callers supply two 32-bit arguments,
  * but neither their original meaning nor the hook's original name is proven. */
 void main_system_report_stub(s32 category, s32 code);
 void main_overlay_call_battle_entrypoint(void);

@@ -3,7 +3,7 @@
 #include "psx/libgpu.h"
 
 int psyq_gpu_decode_tim(u32* tim, TIM_IMAGE* image) {
-    /* One word cursor preserves the retail allocation; a separate block pointer adds a copy. */
+    /* One 32-bit cursor preserves the retail allocation; a separate block pointer adds a copy. */
     int palette_words;
     if (*tim++ != 0x10) {
         return -1;

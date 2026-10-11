@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
 /* Activates the proposition-category cursor and render record: the window takes
- * palette 10 and its render record palette 2, the window's three scratch words are
+ * palette 10 and its render record palette 2, the window's three 32-bit scratch fields are
  * cleared, and the current menu level's list content render record is hidden
  * while the transition runs. */
 void wldcore_window_begin_tint_transition(wldcore_menu_list_window_level_t* level) {

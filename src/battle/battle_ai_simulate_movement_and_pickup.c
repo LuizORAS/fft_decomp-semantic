@@ -3,7 +3,7 @@
 /*
  * Simulate movement and its crystal or treasure benefit.
  *
- * An unchanged coordinate word skips all updates. Crystal recovery clears
+ * An unchanged 32-bit coordinate value skips all updates. Crystal recovery clears
  * Critical; a noncritical pickup adds priority unless the policy is Retreat.
  */
 void battle_ai_simulate_movement_and_pickup(void) {

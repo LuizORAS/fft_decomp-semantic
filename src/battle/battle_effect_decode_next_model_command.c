@@ -7,7 +7,7 @@
  * Opcodes 0x31 and 0x39 carry three or four colors plus vertex indices; 0x35 and
  * 0x37 add five texture operands. Any other opcode is skipped by its length byte.
  *
- * The 0x35/0x37 stream uses variable-length commands, so its index is a word
+ * The 0x35/0x37 stream uses variable-length commands, so its index is a 32-bit-element
  * offset rather than a psyq_tmd_packet_t array index. Its texture operands are
  * written through a walking pointer, which keeps the last of them ahead of
  * the command-index update. */
@@ -22,7 +22,7 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_model_command
     command = (psyq_tmd_packet_t*)((u8*)g_battle_effect_model_commands + index * sizeof(u32));
     header = command->id;
     out->header.word = header;
-    /* Struct assignments use unaligned copies; memcpy preserves the word transfers. */
+    /* Struct assignments use unaligned copies; memcpy preserves the 32-bit transfers. */
     switch (header >> 24) {
     case BATTLE_EFFECT_MODEL_COMMAND_G4:
         memcpy(&out->colors[0], &command->g4.r0, sizeof(out->colors[0]));
@@ -30,7 +30,7 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_model_command
         memcpy(&out->colors[2], &command->g4.r2, sizeof(out->colors[2]));
         memcpy(&out->colors[3], &command->g4.r3, sizeof(out->colors[3]));
         memcpy(&out->vertices.pairs[0], &command->g4.v0, sizeof(out->vertices.pairs[0]));
-        /* A word load preserves the native delay-slot store; memcpy reschedules it. */
+        /* A 32-bit load preserves the native delay-slot store; memcpy reschedules it. */
         out->vertices.pairs[1] = *(u32*)&command->g4.v2;
         g_battle_effect_model_command_word_offset = index + 7;
         break;
@@ -39,7 +39,7 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_model_command
         memcpy(&out->colors[1], &command->g3.r1, sizeof(out->colors[1]));
         memcpy(&out->colors[2], &command->g3.r2, sizeof(out->colors[2]));
         memcpy(&out->vertices.pairs[0], &command->g3.v0, sizeof(out->vertices.pairs[0]));
-        /* A word load preserves the native delay-slot store; memcpy reschedules it. */
+        /* A 32-bit load preserves the native delay-slot store; memcpy reschedules it. */
         out->vertices.pairs[1] = *(u32*)&command->g3.v2;
         g_battle_effect_model_command_word_offset = index + 6;
         break;

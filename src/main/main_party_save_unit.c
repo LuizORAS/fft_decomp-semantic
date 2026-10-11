@@ -54,7 +54,7 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
         party->gender_flags = unit->unit_flags & ~(UNIT_FLAG_EGG | UNIT_FLAG_SAVE_FORMATION);
     }
 
-    /* The 0x008 halfword packs the birthday (9 bits) and zodiac (top nibble). */
+    /* The 16-bit value at 0x008 packs the birthday (9 bits) and zodiac (top nibble). */
     birthday = unit->birthday.birthday | (unit->birthday.zodiac << 12);
     party->birthday_day = birthday;
     party->zodiac = birthday >> 8;

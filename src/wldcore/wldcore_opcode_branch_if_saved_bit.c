@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Script branch on a bit of the second save-data word array selected by the
+/* Script branch on a bit of the second save-data 32-bit array selected by the
  * single operand byte: when the bit equals the expected value the branch
  * target byte is armed at 0x800d484e with state flag 0x02, otherwise only
  * flag 0x04 is raised. */

@@ -6,7 +6,7 @@
  * centres the projection on it and refreshes the camera.
  *
  * The map-dot position is copied as one SVECTOR, which reproduces the
- * target's unaligned lwl/lwr word copy. */
+ * target's unaligned lwl/lwr 32-bit transfers. */
 void wldcore_map_init_location_marker_and_camera(void) {
     VECTOR unused; /* unreferenced; reproduces the target's 0x38-byte frame */
     wldcore_map_dot_t* marker;

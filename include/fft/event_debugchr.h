@@ -48,7 +48,7 @@ extern menu_status_panel_slot_storage_t g_debugchr_editor_unit_fields;
 extern u8 g_debugchr_editor_unit_ids[];
 
 /* Views of g_debugchr_panel_selected_billboard.bars[i].value (values[3 * i])
- * and bars[i].limit (the *_maximum words): debugchr_editor_apply_values_to_battle_unit
+ * and bars[i].limit (the *_maximum 16-bit values): debugchr_editor_apply_values_to_battle_unit
  * reaches the values from their own base register and the limits by absolute
  * address, which the member spelling does not reproduce. */
 extern s16 g_debugchr_editor_values[];

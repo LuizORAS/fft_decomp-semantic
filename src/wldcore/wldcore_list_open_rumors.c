@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a panel list of the 64 entries whose location mask (word table at
+/* Opens a panel list of the 64 entries whose location mask (32-bit table at
  * g_wldcore_rumor_location_masks) includes the current location and whose script variable
  * 0x2d1 + index is set (entry values 0xc800 + index); shows up to eight rows
  * at (0x4c, 0x50) with width 0x96 and appends its record tagged 6. With no
@@ -26,7 +26,7 @@ void wldcore_list_open_rumors(void) {
     locations = g_wldcore_rumor_location_masks;
     mask = 0x4000 >> g_wldcore_map_projection_state.marker.kind;
     for (; i < EVENT_SCRIPT_VAR_RUMOR_COUNT; i++, locations++) {
-        /* A register operand keeps the loaded word first in the `and`;
+        /* A register operand keeps the loaded 32-bit value first in the `and`;
          * testing *locations directly lets expand_binop swap them. */
         entry = *locations;
         if ((entry & mask) && world_script_get_variable(i + EVENT_SCRIPT_VAR_RUMOR_FIRST) != 0) {

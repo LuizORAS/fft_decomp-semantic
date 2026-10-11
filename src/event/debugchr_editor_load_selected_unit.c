@@ -6,7 +6,7 @@
  * fields for the selected battle unit. DEBUGCHR copy of
  * battle_menu_load_selected_unit.
  *
- * The halfword fields are: 0 move, 1 speed, 2 jump, 3/4 right and left weapon
+ * The 16-bit fields are: 0 move, 1 speed, 2 jump, 3/4 right and left weapon
  * power, 5/6 right and left weapon evade, 7 set for a monster skillset, 8 set
  * when a lone weapon is held in two hands, 9 physical attack, 10 class evade,
  * 11/12 shield (the larger hand) and accessory physical evade, 14 magic
@@ -45,9 +45,9 @@ void debugchr_editor_load_selected_unit(void) {
     g_debugchr_panel_selected_unit_data.job_id = unit->job_id;
     g_debugchr_panel_selected_unit_data.brave = unit->brave;
     g_debugchr_panel_selected_unit_data.faith = unit->faith;
-    /* The zodiac sign lives in the top nibble of the halfword at 0x008. */
-    /* Direct union-member access hoists the halfword load above the faith
-     * store (1344 vs 1348 bytes); keep the typed field's aliased word view. */
+    /* The zodiac sign lives in the top nibble of the 16-bit value at 0x008. */
+    /* Direct union-member access hoists the 16-bit load above the faith
+     * store (1344 vs 1348 bytes); keep the typed field's aliased 16-bit view. */
     g_debugchr_panel_selected_unit_data.zodiac = unit->birthday.zodiac;
 
     editor->move = unit->move;

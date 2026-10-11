@@ -22,7 +22,7 @@ s32 world_formation_generate_unit(s16 unit_type) {
     }
     party = main_party_get_data_pointer(roster_slot);
     party->secondary_skillset = 0;
-    /* Byte stores are required for the exact match; halfword assignments emit SH. */
+    /* Byte stores are required for the exact match; 16-bit assignments emit SH. */
     party->reaction_ability[0] = 0;
     party->reaction_ability[1] = 0;
     party->support_ability[0] = 0;

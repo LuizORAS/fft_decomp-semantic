@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Widen `count` bytes at `src` into halfwords at `dst`. */
+/* Widen `count` bytes at `src` into 16-bit values at `dst`. */
 void battle_menu_copy_bytes_to_halfwords(u16* dst, u8* src, s32 count) {
     s32 i;
     char unused[8]; /* unreferenced; sizes the target's 8-byte frame */

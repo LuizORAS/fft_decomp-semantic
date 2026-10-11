@@ -7,13 +7,13 @@
 
 /* helpers */
 /* Scales a scratch record's colour by a 4.12 brightness and packs it with its
- * primitive code into one RGB-code word. */
+ * primitive code into one 32-bit RGB-code value. */
 #define PACK_RGB(scratch, brightness)                                                                                  \
     ((((brightness) * (scratch)->red_factor) >> 12) | (scratch)->code                                                  \
         | ((((brightness) * (scratch)->green_factor) >> 12) << 8)                                                      \
         | ((((brightness) * (scratch)->blue_factor) >> 12) << 16))
 
-/* The RGB-code word of vertex `n` of a primitive. */
+/* The 32-bit RGB-code value of vertex `n` of a primitive. */
 #define POLY_RGB(poly, n) (*(u32*)&(poly)->r##n)
 
 /* A random value in [-|x|, |x|). */
@@ -117,7 +117,7 @@ typedef struct effect_polar_mesh_scratch {
     s32 green_factor; /* 0x04 */
     s32 blue_factor;  /* 0x08 */
     u8 _unused_00c[0x04];
-    u32 rgb;  /* 0x10: packed colour word of the current ring */
+    u32 rgb;  /* 0x10: packed 32-bit colour value of the current ring */
     u32 code; /* 0x14: primitive code byte of the first quad, kept in bits 24-31 */
     u8 u0;    /* 0x18 */
     u8 u1;    /* 0x19 */
@@ -193,7 +193,7 @@ typedef struct effect_anchored_polar_mesh_scratch {
     s32 ot_depth;           /* 0x100 */
     SVECTOR position;       /* 0x104 */
     SVECTOR* unit_coords;   /* 0x10c */
-    VECTOR screen;          /* 0x110; RotTrans stores flags in the unused fourth word */
+    VECTOR screen;          /* 0x110; RotTrans stores flags in the unused fourth 32-bit value */
     point16_t points[6][5]; /* 0x120 */
 } effect_anchored_polar_mesh_scratch_t;
 
@@ -410,7 +410,7 @@ typedef struct effect_summon_mesh_work {
 } effect_summon_mesh_work_t;
 typedef char assert_effect_summon_mesh_work_size[sizeof(effect_summon_mesh_work_t) == 13340 ? 1 : -1];
 
-/* Leading flags word of the effect section at *g_battle_effect_flags_section. */
+/* Leading 32-bit flags of the effect section at *g_battle_effect_flags_section. */
 typedef struct effect_summon_mesh_effect_header {
     u32 flags; /* 0x00: bit 3 is passed as the add_depth argument */
 } effect_summon_mesh_effect_header_t;
@@ -430,7 +430,7 @@ extern u32 g_effect_summon_mesh_brightness_table[][9];
 /* The native handlers of the EFFECT/E###.BIN overlays.
  *
  * Effect script opcode 06 puts a handler in one of the callback slots, and a
- * particle keyframe whose action word names the slot binds it to the record.
+ * particle keyframe whose 16-bit action value names the slot binds it to the record.
  * While a keyframe that names the slot runs, the particle channel calls
  *     handler(record_index, callback_slot, emitter_index, frame)
  * once a frame in place of the particle emitter: emitter_index is the

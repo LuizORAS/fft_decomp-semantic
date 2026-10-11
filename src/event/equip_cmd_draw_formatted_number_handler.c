@@ -11,7 +11,7 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
     s32 arg;
     s32 y;
     s32 value;
-    /* Clear this halfword after drawing the sign to retain the store schedule. */
+    /* Clear this 16-bit value after drawing the sign to retain the store schedule. */
     s16 negative;
     s32 cell;
     s32 dash_x;

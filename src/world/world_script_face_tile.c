@@ -3,10 +3,10 @@
 
 /* FaceTile event instruction: turn every misc record of a unit toward a map tile.
  *
- * Parameters: unit id halfword, tile x, tile y, unused byte, rotate mode, speed index
+ * Parameters: 16-bit unit id, tile x, tile y, unused byte, rotate mode, speed index
  * into g_world_rotation_speed_frames, and a delay multiplier that staggers successive units by a quarter
  * of its value each. The second argument to world_process_unit_misc_state_value is
- * taken from the g_world_unit_face_slot_order halfword table rather than a local counter. */
+ * taken from the g_world_unit_face_slot_order 16-bit table rather than a local counter. */
 void world_script_face_tile(const event_face_tile_parameters_t* parameters) {
     SVECTOR position;
     SVECTOR target;

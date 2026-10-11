@@ -154,7 +154,7 @@ typedef enum {
 } psyq_cd_read_control_e;
 
 /* Resident LIBCD state, reconstructed from the original register accesses. */
-/* Driver status uses full-word storage; public status queries read its low byte. */
+/* Driver status uses 32-bit storage; public status queries read its low byte. */
 extern u32 CD_status;
 extern u8 CD_mode;
 extern u8 CD_com;
@@ -291,7 +291,7 @@ extern char g_psyq_cd_sector_error_message[];
 extern char g_psyq_cd_shell_open_message[];
 extern char g_psyq_cd_read_retry_message[];
 
-/* Streaming controller aliases, bound to original pointer words. */
+/* Streaming controller aliases, bound to original 32-bit pointer slots. */
 extern volatile u8* g_psyq_cd_stream_index_register;
 extern volatile u8* g_psyq_cd_stream_data_register;
 extern volatile u8* g_psyq_cd_stream_request_register;
@@ -321,7 +321,7 @@ typedef struct {
 extern psyq_cd_timeout_state_t g_psyq_cd_timeout;
 
 /* Original completed-location/frame record, eight bytes at 0x80032aa0.
- * Position is copied by StGetBackloc; its adjacent frame word is returned.
+ * Position is copied by StGetBackloc; its adjacent 32-bit frame field is returned.
  * Keep the old position/frame aliases for already-matched fresh-address loads.
  */
 typedef struct {

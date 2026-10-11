@@ -3,7 +3,7 @@
 
 /* Stack view of oriented_quad_t whose clut/tpage slots receive the
  * sprite query's palette and spritesheet IDs directly; the query's last two
- * halfwords extend it to 0x18 bytes. */
+ * 16-bit values extend it to 0x18 bytes. */
 typedef struct {
     s16 x;
     s16 y;

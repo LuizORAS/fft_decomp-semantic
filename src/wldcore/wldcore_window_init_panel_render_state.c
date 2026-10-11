@@ -3,7 +3,7 @@
 /* Initialize the panel renderer's shared geometry and data pointers.
  *
  * Width is rounded for its tiled image; stored origins are screen-relative.
- * Layout and origin values are loaded as full words before narrowing to s16. */
+ * Layout and origin values are loaded as full 32-bit values before narrowing to s16. */
 void wldcore_window_init_panel_render_state(
     s32 unused, s32 extent, wldcore_window_panel_layout_t* layout, point32_t* origin) {
     s32 width = layout->text_width;

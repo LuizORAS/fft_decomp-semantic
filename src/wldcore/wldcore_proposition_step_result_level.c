@@ -13,7 +13,7 @@
  * queue to drain and restarts the town music; phase 2 pops the level and hands
  * off to the countdown level or to wldcore_list_open_completed_propositions.
  *
- * The proposition, result and share words are read as g_wldcore_job_selection
+ * The proposition, result and share 32-bit fields are read as g_wldcore_job_selection
  * members: the target keeps that block's address in a register, which GCC
  * only does for an aggregate view, not for the scalar g_wldcore_job_selection.proposition_index names. */
 void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* level) {

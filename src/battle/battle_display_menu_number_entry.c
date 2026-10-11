@@ -8,7 +8,7 @@
  * cells untouched rather than zero-padding them. Digits index the same 35-byte
  * glyph records the menu text renderers use.
  *
- * The cell step goes through a local: `origin->rect.x -= 6` on the halfword
+ * The cell step goes through a local: `origin->rect.x -= 6` on the 16-bit
  * lvalue is `+ 65530` in HImode with its own constant insn, which makes the
  * loop 27 RTL insns, and `loop.c:move_movables` then leaves the div-by-10 magic
  * constant in the loop body; the target hoists it into $s2. */

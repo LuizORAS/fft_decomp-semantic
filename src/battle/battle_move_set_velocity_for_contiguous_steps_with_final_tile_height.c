@@ -12,7 +12,7 @@ enum {
  * ground stays at the unit's current height, then hands the accumulated
  * edge-to-edge delta to the velocity solver.
  *
- * The step code is copied to a halfword before the switch, as in the clamped
+ * The step code is copied to a 16-bit value before the switch, as in the clamped
  * twin: read through the byte again, cse reuses the direction test's load.
  */
 void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(

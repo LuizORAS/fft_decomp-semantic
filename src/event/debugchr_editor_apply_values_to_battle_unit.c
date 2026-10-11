@@ -3,7 +3,7 @@
 
 /* Write the editor's values back to battle unit `unit_id`: HP, MP and CT
  * (each first capped at its maximum), level, experience, Brave, Faith, the
- * zodiac sign (the top nibble of the birthday halfword), move, speed and
+ * zodiac sign (the top nibble of the birthday 16-bit value), move, speed and
  * jump. */
 void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
     battle_stats_t* unit;
@@ -23,11 +23,11 @@ void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
     unit->ct = g_debugchr_editor_values[6];
     unit->level = g_debugchr_panel_selected_billboard.level;
     unit->experience = g_debugchr_panel_selected_billboard.experience;
-    /* Halfword objects (the loader stores sh); this function reads only the
+    /* 16-bit objects (the loader stores sh); this function reads only the
      * low byte, and the lvalue form emits the target's bare lbu. */
     unit->brave = g_debugchr_panel_selected_unit_data.brave;
     unit->faith = g_debugchr_panel_selected_unit_data.faith;
-    /* Named bitfield assignment narrows the signed-halfword zodiac load
+    /* Named bitfield assignment narrows the signed 16-bit zodiac load
      * and reorders these stores. */
     zodiac = g_debugchr_panel_selected_unit_data.zodiac << 12;
     unit_flags = *(u16*)&unit->birthday & 0x0fff;

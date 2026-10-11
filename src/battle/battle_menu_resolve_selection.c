@@ -27,7 +27,7 @@ s32 battle_menu_resolve_selection(void) {
                 if (command != 0xFF) {
                     if (menu == BATTLE_MENU_ID_DEAD_UNIT) {
                         command = g_battle_dead_unit_action;
-                        /* Item selection updates only the low byte of the command word. */
+                        /* Item selection updates only the low byte of the 16-bit command field. */
                         *(u8*)&g_battle_menu_selected_action.item_or_equipment = g_battle_dead_unit_result;
                         option = 0xFFFE;
                     } else if (menu == 0x19 || menu >= 0x64) {

@@ -48,7 +48,7 @@ s32 battle_map_load_mesh_variant(s32 palette_mode) {
             battle_map_resource_t* mesh_data;
 
             mesh_data = g_battle_map_mesh_load_buffer;
-            /* Retail scales this byte offset as a word index. */
+            /* Retail scales this byte offset as a 32-bit-element index. */
             mesh_data_offset = mesh_data->mesh_file.palettes_offset * 4;
             mesh_data = (battle_map_resource_t*)(mesh_data->bytes + mesh_data_offset);
             battle_map_update_palette_colors(palette_mode, MAP_CLUT_ROW_MARKED_TILES, 0, 1, mesh_data->palette_colors);

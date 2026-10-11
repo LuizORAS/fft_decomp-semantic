@@ -4,8 +4,8 @@
 /* Battle twin of world_script_change_stats. ChangeStats event instruction: add a signed delta to one stat of each
  * resolved unit.
  *
- * Parameters: unit id halfword, stat selector (event_change_stats_e), then a
- * halfword delta. HP clamps to max HP and the other stats to 0-100. */
+ * Parameters: 16-bit unit id, stat selector (event_change_stats_e), then a
+ * 16-bit delta. HP clamps to max HP and the other stats to 0-100. */
 void battle_script_change_stats(const event_change_stats_parameters_t* parameters) {
     u16 unit_id;
     s32 misc_index;

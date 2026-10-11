@@ -102,7 +102,7 @@ typedef enum {
     PSYQ_RCNT_API_IRQ_ENABLE = 0x1000,
 } psyq_root_counter_api_mode_e;
 
-/* The hardware mode word SetRCnt builds from it. */
+/* The 16-bit hardware mode SetRCnt builds from it. */
 typedef enum {
     PSYQ_RCNT_SYNC_ENABLE = 0x1,
     PSYQ_RCNT_RESET_AT_TARGET = 0x8,

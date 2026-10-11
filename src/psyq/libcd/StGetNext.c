@@ -10,7 +10,7 @@ u32 StGetNext(u32** frame_data, u32** header) {
     }
     if (*(volatile u16*)&record->id != StCOMPLETE)
         return 1;
-    /* The addressed halfword keeps the lock store before the payload address calculation. */
+    /* The addressed 16-bit field keeps the lock store before the payload address calculation. */
     *&record->id = StLOCK;
     *frame_data = (u32*)(g_psyq_cd_stream_ring + g_psyq_cd_stream_ring_sectors)
         + g_psyq_cd_stream_read_index * PSYQ_CD_STREAM_PAYLOAD_WORDS;

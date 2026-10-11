@@ -40,7 +40,7 @@ typedef enum {
     PSYQ_PRINTF_CAPITAL_L = 128
 } psyq_printf_flag_e;
 
-/* The formatter changes flags as a word and the sign through byte one. */
+/* The formatter changes flags as a 32-bit value and the sign through byte one. */
 typedef struct {
     union {
         u32 bits;

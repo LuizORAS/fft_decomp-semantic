@@ -14,7 +14,7 @@
  * the three flying animations. In deeper water the choice is the dead, the
  * riding or one of the submerged idle animations.
  *
- * Animation 0x21 belongs to bit 0 of the status word, which no status maps
+ * Animation 0x21 belongs to bit 0 of the 32-bit status mask, which no status maps
  * to (g_battle_misc_status_mask_by_handler_index): that arm never runs.
  */
 void battle_unit_set_animation_based_on_status(battle_unit_misc_data_t* unit) {

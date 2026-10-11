@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
 /* Twin of wldcore_wait_for_file_load (0x800686c8) with the audio-queue depth
- * as the wait condition. The two busy words are read as g_wldcore_audio_queue members
+ * as the wait condition. The two 32-bit busy fields are read as g_wldcore_audio_queue members
  * rather than as separate scalars. */
 void wldcore_sound_wait_for_queue_drain(void) {
     while (g_wldcore_audio_queue.count != 0 || g_wldcore_audio_queue.current_command != WLDCORE_AUDIO_COMMAND_NONE) {

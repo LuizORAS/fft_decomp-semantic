@@ -15,7 +15,7 @@ enum {
  * battle_move_set_velocity_for_contiguous_steps_with_final_tile_height does
  * the same for the final step, where it reads the tile directly.
  *
- * The step code is copied to a halfword before the switch: read through the
+ * The step code is copied to a 16-bit value before the switch: read through the
  * byte again, cse reuses the direction test's load and the reload is lost.
  */
 void battle_move_set_velocity_for_contiguous_clamped_steps(

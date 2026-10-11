@@ -4,7 +4,7 @@
 /*
  * Per-frame input update of the formation, shop and name-entry screens.
  *
- * Reads the pad (through the tutorial input reader), then clears the input words during steps 1..3 of the
+ * Reads the pad (through the tutorial input reader), then clears the 32-bit input masks during steps 1..3 of the
  * window scale animation, while the text thread runs or a help screen is
  * open, on the frame the text ends and during a screen fade. The text phase
  * goes 1 on the first frame of a text task (which queues the window-open

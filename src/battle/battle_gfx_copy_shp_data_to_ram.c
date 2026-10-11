@@ -6,7 +6,7 @@
  * Unpack a weapon or effect SHP file into dst: after four unread bytes, the
  * first frame of each of 32 weapon types, 0x200 frame offsets that become
  * pointers into the frame data (-1 maps to its start), and the frame data
- * itself, a halfword count and that many bytes, which is appended at
+ * itself, a 16-bit count and that many bytes, which is appended at
  * g_battle_gfx_shp_frame_data_cursor.
  *
  * The header loops read through `data` while the blob copy indexes `src`;

@@ -18,7 +18,7 @@ void battle_action_check_arrow_guard_usability(void) {
     }
     target = g_battle_action_target;
     action = g_battle_action_target_data;
-    /* The accuracy field is written as a halfword (sh) here. */
+    /* The accuracy field is written as a 16-bit value (sh) here. */
     action->attack_accuracy = 100 - target->brave;
     if (battle_action_calculate_chance_to_react(g_battle_action_target) == 0
         && g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {

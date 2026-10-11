@@ -2,7 +2,7 @@
 
 /* Initialize and start a numeric panel renderer.
  *
- * The packed word supplies two displayed halfwords; their magnitude selects
+ * The packed 32-bit value supplies two displayed 16-bit values; their magnitude selects
  * a one- through four-digit panel width before the optional label is measured.
  * `width` holds the digit count first and the panel's pixel width after. */
 void wldcore_window_init_number_panel_render_thread(s32 thread_id, u32 packed_values, s32 text_id, point32_t* origin) {

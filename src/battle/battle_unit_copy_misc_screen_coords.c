@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* Copies a unit's screen position as three halfwords.
+/* Copies a unit's screen position as three 16-bit values.
  *
  * The missing-unit test compares with -1, but
  * battle_unit_get_screen_data_ptr_by_misc_id returns 0 for a missing unit, so the

@@ -4,7 +4,7 @@
 
 /* Partition each primitive pool across the two graphics contexts.
  *
- * Each pointer uses its pool's halfword capacity and the context index. */
+ * Each pointer uses its pool's 16-bit capacity and the context index. */
 void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_f3, POLY_FT3* poly_ft3,
     POLY_F4* poly_f4, POLY_FT4* textured_quads, POLY_G3* poly_g3, POLY_GT3* poly_gt3, POLY_G4* poly_g4,
     POLY_GT4* poly_gt4, LINE_F2* line_f2, LINE_F3* line_f3, LINE_F4* line_f4, LINE_G2* line_g2, LINE_G3* line_g3,

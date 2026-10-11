@@ -40,7 +40,7 @@ void GsSortFlipSprite(GsSPRITE* sp, GsOT* otp, u16 pri) {
         mode = (attr >> 5) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT);
         code = ((attr << 18) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_RAW_TEXTURE))
             | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_POLY_FT4);
-        /* GPU words preserve the retail stores; member stores narrow the writes. */
+        /* 32-bit GPU accesses preserve the retail stores; member stores narrow the writes. */
         *(u32*)&p->r0 = mode | code | (sp->b << 16) | (sp->g << 8) | sp->r;
         *(u32*)&p->x0 = (x & 0xffff) | (y << 16);
         *(u32*)&p->u0 = u0 | (v0 << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);

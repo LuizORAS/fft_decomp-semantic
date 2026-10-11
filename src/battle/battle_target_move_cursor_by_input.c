@@ -13,7 +13,7 @@
  * `direction` doubles as the level-hop flag, as the target keeps both in one
  * register. The do-while(0) weights the delay's references so that GCC
  * allocates it before `direction`; without it the two swap s0 and s1. The
- * option word is copied first so the loop note does not stop the load from
+ * 32-bit option value is copied first so the loop note does not stop the load from
  * being scheduled into the prologue. */
 s32 battle_target_move_cursor_by_input(void) {
     game_options_t options;

@@ -14,7 +14,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
     battle_map_texture_animation_t* source;
     battle_map_light_resource_t* light;
     u16* polygon_flags;
-    /* Halfword cursor of the light, camera and weather-modifier cases.
+    /* 16-bit cursor of the light, camera and weather-modifier cases.
      * Direct command payload-vector access removes four bytes from each arm. */
     s16* vector;
     u32* resource_offset;
@@ -306,7 +306,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
         break;
     case GNS_RESOURCE_PALETTE_ANIMATION_FRAMES:
         for (i = 0; i < 0x100; i++) {
-            /* Palette-bank indexing changes the native halfword copy loop. */
+            /* Palette-bank indexing changes the native 16-bit copy loop. */
             ((u16*)g_battle_map_palette_animation_frames)[i] = ((u16*)data->palette_colors)[i];
         }
         break;

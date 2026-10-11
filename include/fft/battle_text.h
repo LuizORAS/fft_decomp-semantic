@@ -16,7 +16,7 @@ typedef struct battle_menu_text_image_bounds {
 } battle_menu_text_image_bounds_t;
 
 /* Pen of the BUNIT, CARD, EQUIP and JOBSTTS *_text_render_glyph_to_4bpp_image: x in pixels (two per byte),
- * y in rows, and the image's row stride in halfwords. */
+ * y in rows, and the image's row stride in 16-bit values. */
 typedef struct battle_text_image_position {
     s16 x;          /* 0x00 */
     s16 y;          /* 0x02 */
@@ -82,7 +82,7 @@ extern u8 g_battle_text_slot_source_columns[];         /* per-slot source column
 extern s32 g_battle_text_substitution_values[32];
 
 /* Text substitutions $7E/$7F (0x801660ec, table index 0x7e from 0x80165ef4)
- * as the four halfwords battle_text_set_substitution_values_7e_7f stores. */
+ * as the four 16-bit values battle_text_set_substitution_values_7e_7f stores. */
 extern RECT g_battle_text_substitution_rect;
 
 extern u8 g_battle_text_typewriter_column_scratch[14];       /* one-column scratch used by the phase shift */

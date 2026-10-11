@@ -4,7 +4,7 @@
 
 /* Inflict Status event command thread.
  *
- * Parameters: ENTD unit id halfword, mode byte, then a wait-frame halfword.
+ * Parameters: ENTD 16-bit unit id, mode byte, then a 16-bit wait-frame value.
  * Mode 0 revives a dead unit at 1 HP with Critical (or refreshes its mounted
  * animation when it is neither dead nor critical). Mode 1 clears Dead/Critical
  * and inflicts Crystal. Mode 2 inflicts Poison with the kneeling animation. Each mode

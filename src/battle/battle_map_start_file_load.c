@@ -10,7 +10,7 @@ void* battle_map_start_file_load(
     if (load_info->fields.file_present_marker == 0) {
         result = 0;
     } else {
-        /* These words are aligned within the file row; retail loads both with lw. */
+        /* These 32-bit values are aligned within the file row; retail loads both with lw. */
         if (main_file_call_build_header(
                 *(s32*)load_info->fields.disc_lba_le, *(s32*)load_info->fields.byte_length_le, destination)
             == 0) {

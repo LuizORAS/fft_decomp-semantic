@@ -4,8 +4,8 @@
 /*
  * Select the effect file for an ability and start its charge secondary effect.
  *
- * `packed` carries the ability's charge animation set in its low halfword and
- * its element mask in its high halfword. `ability` is an ability id or, from
+ * `packed` carries the ability's charge animation set in its low 16 bits and
+ * its element mask in its high 16 bits. `ability` is an ability id or, from
  * ABILITY_ID_COUNT up, one of the effects past the abilities. A thrown ball
  * (ABILITY_ID_THROW_BALL) takes the Fire, Ice or Bolt effect by the ball's
  * element. A negative table entry means the ability has no effect file: only

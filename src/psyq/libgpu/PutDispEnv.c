@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 DISPENV* PutDispEnv(DISPENV* env) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view folds the native halfword
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view folds the native 16-bit
                                                                       address and conversion sequences. */
     int h_start;
     int v_start;
@@ -34,7 +34,7 @@ DISPENV* PutDispEnv(DISPENV* env) {
         g_psyq_gpu_dispatch->control(
             PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_VERTICAL_RANGE) | ((v_end & 0x3ff) << 10) | (v_start & 0x3ff));
     }
-    /* isinter, isrgb24 and the two pad bytes are compared as one word. */
+    /* isinter, isrgb24 and the two pad bytes are compared as one 32-bit value. */
     if (*(u32*)&g_psyq_gpu_environment.display.isinter != *(u32*)&env->isinter
         || g_psyq_gpu_environment.display.disp.x != env->disp.x || g_psyq_gpu_environment.display.disp.y != env->disp.y
         || g_psyq_gpu_environment.display.disp.w != env->disp.w

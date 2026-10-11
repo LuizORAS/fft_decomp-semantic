@@ -21,7 +21,7 @@ typedef struct {
     u8 num : 8;
 } GsOT_TAG;
 
-/* libgs ordering-table handle. Five words, 0x14 bytes; the 0x14 stride is what
+/* libgs ordering-table handle. Five 32-bit fields, 0x14 bytes; the 0x14 stride is what
  * the per-display-buffer descriptor arrays are indexed with. `org` points at
  * the OT root, `tag` at the last entry, and `offset`/`point` carry the z
  * origin and resolution the sort helpers bias against. */

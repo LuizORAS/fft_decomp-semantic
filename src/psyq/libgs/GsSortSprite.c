@@ -4,7 +4,7 @@
 #include "psx/stddef.h"
 #include "psx/types.h"
 
-/* The target compares the adjacent neutral x/y scales with one word load. */
+/* The target compares the adjacent neutral x/y scales with one 32-bit load. */
 #define GS_SPRITE_SCALE_WORD(sp) (*(s32*)&sp->scalex)
 
 /*
@@ -60,7 +60,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
         if (((attr >> 27) & 1)
             | (GS_SPRITE_SCALE_WORD(sp) == (ONE | (ONE << 16)) && sp->rotate == 0 && (attr & 0xc00000) == 0)) {
             draw_mode = packet;
-            /* Share one DMA tag: the mode word occupies this primitive view's tag slot. */
+            /* Share one DMA tag: the 32-bit mode command occupies this primitive view's tag slot. */
             sprt = (SPRT*)draw_mode->code;
             words = (u32*)sprt;
             x = sp->x + GsORGOFSX;
@@ -70,7 +70,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
             sprt_mode = (attr >> 5) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT);
             sprt_shade = (attr << 18) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_RAW_TEXTURE);
             sprt_code = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SPRT);
-            /* Word indexing preserves scheduling; direct field-address stores change it. */
+            /* 32-bit indexing preserves scheduling; direct field-address stores change it. */
             words[offsetof(SPRT, r0) / sizeof(*words)]
                 = sprt_mode | (sprt_shade | sprt_code) | (sp->b << 16) | (sp->g << 8) | sp->r;
             words[offsetof(SPRT, x0) / sizeof(*words)] = ((x - sp->mx) & 0xffff) | ((y - sp->my) << 16);
@@ -115,7 +115,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
                 v_bottom = sp->v + sp->h - 1;
             }
             poly = packet;
-            /* GPU words preserve the shared tail store; member stores change scheduling. */
+            /* 32-bit GPU accesses preserve the shared tail store; member stores change scheduling. */
             words = (u32*)poly;
             mode = (attr >> 5) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT);
             shade = (attr << 18) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_RAW_TEXTURE);

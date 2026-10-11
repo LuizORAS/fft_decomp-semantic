@@ -20,7 +20,7 @@ void battle_gfx_update_unit_palette_animation(void) {
             g_battle_unit_palette_animation_offset = 0;
         }
         if (g_battle_unit_palette_animation_offset != 0) {
-            /* Bytewise rotation retains the native stores and first-color halfword load. */
+            /* Bytewise rotation retains the native stores and first-color 16-bit load. */
             /* dst before src: the reverse order changes the copy loop registers. */
             dst = 2;
             src = g_battle_unit_palette_animation_offset * 2 + 2;

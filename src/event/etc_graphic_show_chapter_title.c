@@ -8,7 +8,7 @@
  * primitive sets (parts 2 and 0), alternating buffers by frame.
  */
 void etc_graphic_show_chapter_title(s32 graphic_id) {
-    /* The target reserves two otherwise unreferenced local words. */
+    /* The target reserves two otherwise unreferenced local 32-bit values. */
     s32 reserved_stack_words[2];
     s32 frame;
     s32 fade;

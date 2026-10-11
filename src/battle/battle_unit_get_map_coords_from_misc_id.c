@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Writes a unit's tile as three halfwords in the order x, z, y and returns 1. A
+/* Writes a unit's tile as three 16-bit values in the order x, z, y and returns 1. A
  * misc id without a record raises pointer exception 12 and returns 0. */
 s32 battle_unit_get_map_coords_from_misc_id(u32 misc_id, SVECTOR* coords) {
     battle_unit_misc_data_t* unit = g_battle_unit_misc_list_head;

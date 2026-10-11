@@ -169,7 +169,7 @@ typedef enum battle_move_post_event_flags {
 /* Shared movement work state addressed through 0x8018f4e4.
  *
  * Propagation at 0x80178ca4 and jump spreading at 0x80177c08 use the same
- * base. Coordinate halfwords have both signed and unsigned readers; cast
+ * base. Coordinate 16-bit values have both signed and unsigned readers; cast
  * explicitly for signed comparisons. This is a verified prefix, not a claim
  * about the allocation's full size.
  */
@@ -325,8 +325,7 @@ extern u8 g_battle_move_pathing_scratch;
 extern battle_move_pathfind_scratch_t* g_battle_move_config_ptr;
 
 /* The two map tiles of the step in progress, refreshed by battle_move_get_current_and_destination_tiles from
- * the unit's movement value. Callers that only forward them to the step
- * starters take them as opaque words; the geometry readers use the tile
+ * the unit's movement value. Step starters receive the tile pointers; the geometry readers use the tile
  * fields (height at 0x02, depth_half_height at 0x03, slope_type, flags). */
 extern map_tile_t* g_battle_move_current_tile;
 extern map_tile_t* g_battle_move_destination_tile;
@@ -418,8 +417,8 @@ s32 battle_move_calculate_jump_arc_velocity(const SVECTOR* from, const SVECTOR* 
 battle_walk_path_t* battle_move_calculate_walkto_pathing(
     s32 a, s32 b, s32 x, s32 y, s32 z, s32 destination_x, s32 destination_y, s32 destination_z);
 
-/* Scales the three velocity words at misc-unit offsets 0x28/0x2c/0x30; the
- * definition indexes them as a word array. */
+/* Scales the three 32-bit velocity components at misc-unit offsets 0x28/0x2c/0x30; the
+ * definition indexes them as a 32-bit array. */
 void battle_move_interpolate_partial(struct battle_unit_misc_data* unit, s32 scale);
 u32 battle_move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit);
 void battle_move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* unused_to);

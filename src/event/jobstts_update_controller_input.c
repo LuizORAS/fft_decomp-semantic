@@ -2,7 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Read pad 0 and derive JOBSTTS's primary/secondary auto-repeat input words.
+/* Read pad 0 and derive JOBSTTS's primary/secondary auto-repeat 32-bit input values.
  *
  * Port of card_input_update_controller with the event
  * speed fixed at 2; the divisor stays a variable, which is why the target

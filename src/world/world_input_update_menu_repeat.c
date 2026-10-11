@@ -2,7 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Derives the menu new-press mask from an already-read pad word.
+/* Derives the menu new-press mask from an already-read 32-bit pad value.
  *
  * Body of world_input_update_menu_state after its pad read: the same
  * initial/repeat/secondary key-repeat delays, restarted during a tutorial

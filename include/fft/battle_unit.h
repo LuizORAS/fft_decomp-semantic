@@ -205,7 +205,7 @@ enum {
     BATTLE_SEQUENCE_EVTCHR_SLOT_1 = 600,
 };
 
-/* Word-view masks for the high motion byte at misc-unit +0x83. */
+/* Masks for the 32-bit view of the high motion byte at misc-unit +0x83. */
 typedef enum battle_motion_flags {
     BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE = 0x01000000,
     BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS = 0x02000000,
@@ -390,8 +390,8 @@ typedef struct battle_unit_sprite_block {
 typedef char battle_unit_sprite_block_size_must_be_48[(sizeof(battle_unit_sprite_block_t) == 48) ? 1 : -1];
 
 /* Manual targeting and WAIT_DIRECTION reuse the AI command storage.
- * The facing word overlaps the action's item/type/target-ID bytes. Cursor
- * coordinate readers use signed halfwords over the action's target fields. */
+ * The 32-bit facing value overlaps the action's item/type/target-ID bytes. Cursor
+ * coordinate readers use signed 16-bit values over the action's target fields. */
 typedef union battle_unit_command_state {
     battle_ai_command_t ai;
     struct {
@@ -481,12 +481,12 @@ typedef struct battle_gfx_unit_sprite_file {
 typedef char battle_gfx_unit_sprite_file_size_must_be_37376[sizeof(battle_gfx_unit_sprite_file_t) == 37376 ? 1 : -1];
 
 /* Packed unit SEQ file. Values and offsets are little-endian byte
- * sequences, so this view needs no native halfword or word alignment. */
+ * sequences, so this view needs no native 16-bit or 32-bit alignment. */
 typedef struct battle_gfx_packed_seq_record {
-    u8 first_attack_sequence[2];   /* 0x000; unsigned little-endian halfword */
-    u8 first_sp2_sequence[2];      /* 0x002; unsigned little-endian halfword */
-    u8 sequence_offsets[0x100][4]; /* 0x004; signed little-endian words, -1 means offset zero */
-    u8 sequence_data_size[2];      /* 0x404; unsigned little-endian halfword */
+    u8 first_attack_sequence[2];   /* 0x000; unsigned little-endian 16-bit value */
+    u8 first_sp2_sequence[2];      /* 0x002; unsigned little-endian 16-bit value */
+    u8 sequence_offsets[0x100][4]; /* 0x004; signed little-endian 32-bit values, -1 means offset zero */
+    u8 sequence_data_size[2];      /* 0x404; unsigned little-endian 16-bit value */
     u8 sequence_data[0];           /* 0x406; variable byte tail */
 } battle_gfx_packed_seq_record_t;
 typedef char battle_gfx_packed_seq_record_size_must_be_1030[sizeof(battle_gfx_packed_seq_record_t) == 1030 ? 1 : -1];
@@ -741,12 +741,12 @@ typedef struct battle_unit_misc_data {
     u8 spritesheet_id;                      /* 0x006 */
     u8 stored_palette;                      /* 0x007; the palette of its sheet that the unit wears, 0 to 5 */
     u16 state_frame_counter;                /* 0x008; incremented while renderer action states wait */
-    u16 draw_enabled;                       /* 0x00a; set by event Draw, cleared by Erase; a halfword */
+    u16 draw_enabled;                       /* 0x00a; set by event Draw, cleared by Erase; a 16-bit value */
     u16 requested_animation;                /* 0x00c; battle_unit_animation_e + 1 to start at the next update; 0 none */
     u16 tpage;                              /* 0x00e; VRAM slot + 0x14: the sheet's texture page */
     u16 clut;                               /* 0x010 */
     /* battle_misc_display_flags_e and battle_misc_display_blend_mode_e.
-     * Read-modify-written as a halfword over
+     * Read-modify-written as a 16-bit value over
      * 0x012..0x013 (battle_gfx_update_sprite_transparency_flag). */
     u16 sprite_display_flags; /* 0x012 */
     /* 0x014; BATTLE_SEQ_OP_SET_LAYER_PRIORITY: the row of g_battle_gfx_animation_layer_priorities. */
@@ -754,9 +754,9 @@ typedef struct battle_unit_misc_data {
     u8 _padding_016[2]; /* aligns real */
     VECTOR real;        /* 0x018; vx = x, vy = height, vz = map depth */
     /* Per-frame real-coordinate velocity; the jump-start distortion animation
-     * (0x8008a35c) copies all four words as one block. */
+     * (0x8008a35c) copies all four 32-bit values as one block. */
     VECTOR velocity; /* 0x028 */
-    /* Movement interpolation speed, stored and passed as a signed word. */
+    /* Movement interpolation speed, stored and passed as a signed 32-bit value. */
     s32 walk_speed; /* 0x038 */
     s32 step_speed; /* 0x03c; interpolation speed of the current step; 0x2000 when a move/climb starts, raised by
                        jump gravity */
@@ -873,7 +873,7 @@ typedef struct battle_unit_misc_data {
     battle_gfx_sprite_display_data_t* item_display; /* 0x2d8; item_t/Equip display pointer */
     /* Status bubble (0x2dc..0x2e7);
      * battle_gfx_update_status_bubble_graphic_trigger sets the flag and clears
-     * the timer with a halfword store, so the timer is declared u16. */
+     * the timer with a 16-bit store, so the timer is declared u16. */
     u8 status_bubble_active;                                 /* 0x2dc */
     u8 status_bubble_id;                                     /* 0x2dd */
     s8 status_bubble_x;                                      /* 0x2de */
@@ -893,7 +893,7 @@ typedef struct battle_unit_misc_data {
     battle_gfx_single_part_sprite_display_t numeric_sprite_displays[3];   /* 0x3ce */
     battle_gfx_single_part_sprite_display_t status_bubble_sprite_display; /* 0x410 */
     battle_gfx_single_part_sprite_display_t item_sprite_display;          /* 0x426 */
-    u8 _unused_43c[4]; /* 0x43c; the next slot's in-use word (g_battle_unit_misc_slot_flags) */
+    u8 _unused_43c[4]; /* 0x43c; the next slot's in-use 32-bit value (g_battle_unit_misc_slot_flags) */
 } battle_unit_misc_data_t;
 typedef char battle_misc_data_size_must_be_1088[(sizeof(battle_unit_misc_data_t) == 1088) ? 1 : -1];
 typedef char
@@ -1022,7 +1022,7 @@ enum {
     BATTLE_ENTD_SLOT_NONE = 0xff,
 };
 
-/* An EVTCHR slot's fixed SEQ storage. Its header words are unset and unread;
+/* An EVTCHR slot's fixed SEQ storage. Its 32-bit header fields are unset and unread;
  * its 0x40 pointers refer into the slot's own 0x400 bytes. */
 typedef struct battle_gfx_unit_seq {
     battle_gfx_unit_seq_table_t header; /* 0x000 */
@@ -1097,8 +1097,8 @@ typedef enum battle_misc_status_flags_5_6 {
 } battle_misc_status_flags_5_6_e;
 
 /* Kept while source files migrate to the more specific type name. */
-/* In-use words at 0x800b7304, stride 0x440: each sits one word ahead of its
- * g_battle_unit_misc_data record, in the previous record's last word. */
+/* In-use 32-bit values at 0x800b7304, stride 0x440: each sits four bytes ahead of its
+ * g_battle_unit_misc_data record, in the previous record's last four bytes. */
 typedef struct battle_unit_misc_slot_flag {
     s32 in_use;
     u8 _unused_004[0x43c];

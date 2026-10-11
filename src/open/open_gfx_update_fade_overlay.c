@@ -11,7 +11,7 @@
  *
  * With a single struct, cse keeps the flags address in a register (the target's
  * `la a3`/`la a2`/`la s1`) and the stores through tiles[] serialise the x/y/w/h
- * halfword copies exactly as the target does.  Per-block locals give block 2 its
+ * 16-bit copies exactly as the target does.  Per-block locals give block 2 its
  * own a2/a1/a0/v1 registers. */
 void open_gfx_update_fade_overlay(u32* ot) {
     if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_OUT) {

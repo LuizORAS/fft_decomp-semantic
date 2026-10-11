@@ -2,7 +2,7 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Eased interpolation of three halfwords: the factor follows half a cosine wave
+/* Eased interpolation of three 16-bit values: the factor follows half a cosine wave
  * over duration, so the value leaves from slowly, and arrives at to slowly when
  * current reaches duration. */
 void battle_effect_interpolate_svector_cos(

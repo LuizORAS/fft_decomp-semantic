@@ -1,7 +1,7 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* Select the menu primitives' normal or dimmed colours from the calling thread's mode word
+/* Select the menu primitives' normal or dimmed colours from the calling thread's 32-bit mode
  * (the panel style) or the global event mode. The palette initializer receives
  * `primitives` unchanged in $a0. */
 void equip_menu_select_primitive_color_palette(

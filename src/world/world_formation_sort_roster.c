@@ -22,7 +22,7 @@ void world_formation_sort_roster(s32 index) {
     s32 first;
     s32 swap;
     s32 lhs;
-    s16* rec; /* Sort keys select signed halfwords within the unit record. */
+    s16* rec; /* Sort keys select signed 16-bit values within the unit record. */
 
     keys = g_world_sort_key_lists[index];
     for (count = g_world_formation_record_count - 1; count > 0; count--) {

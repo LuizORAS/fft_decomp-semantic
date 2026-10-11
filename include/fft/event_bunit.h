@@ -131,7 +131,7 @@ extern help_navigation_record_t* g_bunit_help_nodes;
 extern help_navigation_record_t g_bunit_help_nodes_banner_bottom[];
 extern help_navigation_record_t g_bunit_help_nodes_banner_top[];
 
-/* Same words as g_bunit_help_nodes/g_bunit_help_node_index; the target reloads them at each use
+/* Aliases of g_bunit_help_nodes/g_bunit_help_node_index; the target reloads them at each use
  * instead of reusing the cached copies, which separate symbols reproduce. */
 extern help_navigation_record_t* g_bunit_help_nodes_reload;
 extern help_navigation_record_t g_bunit_help_nodes_unit_browse[];
@@ -458,7 +458,7 @@ void bunit_gfx_update_rhombus_cursor_trail(point16_t* target);
 /* input */
 extern u8 g_bunit_input_activation_timer;
 extern u32 g_bunit_input_current;
-/* Named fields hoist the address; keep the event-word alias for scalar accesses. */
+/* Named fields hoist the address; keep the 32-bit event-input alias for scalar accesses. */
 extern menu_input_state_t g_bunit_input_event_state;
 extern u32 g_bunit_input_event;
 extern u32 g_bunit_input_initial_repeat_counter;
@@ -742,7 +742,7 @@ extern menu_draw_number_command_t g_bunit_unit_grid_stat_number;
 extern menu_entry_t g_bunit_unit_list_triangle_menu;
 extern oriented_quad_t g_bunit_unit_shadow_sprite;
 
-/* Halfword field index, per sort key, into the 0x10C-byte formation record
+/* 16-bit field index, per sort key, into the 0x10C-byte formation record
  * built by bunit_unit_build_data_list. The name is provisional. */
 extern s8 g_bunit_unit_sort_field_indices[];
 void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode);

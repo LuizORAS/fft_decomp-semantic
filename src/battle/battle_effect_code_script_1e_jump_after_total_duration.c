@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Opcode 1e: jump to the offset in the second halfword once the record's
+/* Opcode 1e: jump to the offset in the second 16-bit value once the record's
  * timeline frame reaches the end of the parent timeline (phase 1, a spawn
  * delay for each target after the first, the last child's duration and phase
  * 2); otherwise step over the 4-byte instruction. */

@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* Return the current event's finish-operation word, or 0 while no scenario event
+/* Return the current event's 16-bit finish-operation value, or 0 while no scenario event
  * is active. Bits 0-7 and 10-11 hold the next scenario id and the remaining bits
  * the after-event code. */
 s32 battle_script_get_current_scenario_finish_operation(void) {

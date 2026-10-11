@@ -12,7 +12,7 @@ void battle_unit_remove_misc(battle_unit_misc_data_t* unit) {
     shared = 0;
     battle_gfx_release_unit_sprite_display_stub(unit->animation.display);
     g_battle_unit_misc_slot_flags[unit->unit_id].in_use = 0;
-    /* The list-head word doubles as a sentinel record (previous is at 0x000);
+    /* The 32-bit list-head pointer doubles as a sentinel record (previous is at 0x000);
      * reading the first link through that view keeps the target's addressing. */
     for (it = ((battle_unit_misc_data_t*)&g_battle_unit_misc_list_head)->previous; it != 0; it = it->previous) {
         if (it->spritesheet_vram_slot == unit->spritesheet_vram_slot

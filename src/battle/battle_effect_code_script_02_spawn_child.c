@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /* Opcode 02: start a child record on this script at the offset in the second
- * halfword and keep its index in the child slot named by the high nibble of
+ * 16-bit value and keep its index in the child slot named by the high nibble of
  * the instruction's second byte (slots 4 and up keep nothing). */
 effect_script_result_e battle_effect_code_script_02_spawn_child(effect_record_t* record) {
     s16 slot;

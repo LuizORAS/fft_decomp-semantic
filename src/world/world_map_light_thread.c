@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* Thread task 7: interpolates the map light rotation (g_world_map_light_rotation) and scale
- * (g_world_map_light_scale) toward six halfword targets over the parameter's frame count,
+ * (g_world_map_light_scale) toward six 16-bit targets over the parameter's frame count,
  * rebuilding and submitting the light matrices once per frame, then stores
  * the final values back. */
 void world_map_light_thread(void) {

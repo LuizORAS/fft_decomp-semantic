@@ -13,7 +13,7 @@
  * idle) it shifts the operand history g_wldcore_sound_novel_text_history_0..66, captures the play time
  * and hands off to wldcore_menu_push_screen_transition_level with screen 0x1b.
  *
- * Every colour store rereads the fade word through a local: a direct
+ * Every colour store rereads the 32-bit fade value through a local: a direct
  * `u8 = level->fade_in` assignment narrows the reload to `lbu`, while the
  * target keeps `lw`. The target stores the -1 history marker with a signed
  * `addiu`, so it is written through an s16 view of the u16 slot. The cursor

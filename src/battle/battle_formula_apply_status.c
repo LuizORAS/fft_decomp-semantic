@@ -8,7 +8,7 @@ void battle_formula_apply_status(void) {
     u16 accuracy;
 
     miss_type = g_battle_action_target_data->miss_type;
-    /* The accuracy field is read and written as a halfword (lhu/sh). */
+    /* The accuracy field is read and written as a 16-bit value (lhu/sh). */
     accuracy = g_battle_action_target_data->attack_accuracy;
     hit = g_battle_action_target_data->hit;
     battle_formula_apply_status_to_action();

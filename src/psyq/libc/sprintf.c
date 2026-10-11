@@ -15,7 +15,7 @@ int sprintf(char* destination, const char* format, ...) {
     u8 zero;
     /* The $2 pin preserves the native allocation of the shared conversion temporary. */
     register int value __asm__("$2");
-    /* The conversion word is reused for the argument cursor and the flags. */
+    /* The 32-bit conversion value is reused for the argument cursor and the flags. */
     union {
         char* argument;
         u32 flags;

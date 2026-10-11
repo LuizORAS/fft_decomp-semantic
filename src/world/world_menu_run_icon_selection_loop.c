@@ -4,7 +4,7 @@
 
 /* Menu icon list with a wrapping cursor, run inline by its caller's thread:
  * builds the text image once, alternates two sprite records and clears their
- * 0x78 state words when they hold 0 and 2. Exits the thread afterwards only
+ * 32-bit state fields at 0x78 when they hold 0 and 2. Exits the thread afterwards only
  * when the thread's second parameter is zero. */
 void world_menu_run_icon_selection_loop(void) {
     RECT rect;

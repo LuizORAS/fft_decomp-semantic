@@ -7,7 +7,7 @@
  * fields for the selected battle unit. WORLD copy of
  * battle_menu_load_selected_unit.
  *
- * The halfword fields are: 0 move, 1 speed, 2 jump, 3/4 right and left weapon
+ * The 16-bit fields are: 0 move, 1 speed, 2 jump, 3/4 right and left weapon
  * power, 5/6 right and left weapon evade, 7 set for a monster skillset, 8 set
  * when a lone weapon is held in two hands, 9 physical attack, 10 class evade,
  * 11/12 shield (the larger hand) and accessory physical evade, 14 magic
@@ -46,7 +46,7 @@ void world_menu_load_selected_unit(void) {
     g_world_active_unit_data.job_id = unit->job_id;
     g_world_active_unit_data.brave = unit->brave;
     g_world_active_unit_data.faith = unit->faith;
-    /* The zodiac sign lives in the top nibble of the halfword at 0x008. */
+    /* The zodiac sign lives in the top nibble of the 16-bit value at 0x008. */
     g_world_active_unit_data.zodiac = unit->birthday.zodiac;
 
     editor->move = unit->move;

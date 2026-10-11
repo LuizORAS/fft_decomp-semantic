@@ -18,7 +18,7 @@ void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t*
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_effect_particle_heading_matrix);
         setVector(&direction, work->motion.velocity.x >> 3, work->motion.velocity.y >> 3, work->motion.velocity.z >> 3);
-        /* The flag word lands in the output vector's pad word; the target frame
+        /* The 32-bit flag value lands in the output vector's 32-bit pad field; the target frame
          * has no separate flag slot. */
         RotTrans(&direction, &rotated, &rotated.pad);
         work->data->screen_rotation_angle = ratan2(rotated.vy, rotated.vx);

@@ -11,7 +11,7 @@
 #include "psx/types.h"
 
 /* Advances one particle channel of the parent timeline by a frame: enters the
- * keyframes that have come due, running each one's action word for every
+ * keyframes that have come due, running each one's 16-bit action value for every
  * effect target, then spawns the current keyframe's emitter, through the
  * handler of the action's callback slot when it names one. The handler is
  * told to destroy its work on the call made with two frames of the keyframe

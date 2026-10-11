@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Each queued record starts with the shared display flags word. */
+/* Each queued record starts with the shared 32-bit display flags. */
 static inline s32* wldcore_display_object_flags(void* object) {
     return object;
 }

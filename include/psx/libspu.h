@@ -260,7 +260,7 @@ s32 SpuClearReverbWorkArea(s32 mode);
 #define PSYQ_SPU_TRANSFER_MODE_DMA_WRITE 0x20
 #define PSYQ_SPU_TRANSFER_MODE_DMA_READ  0x30
 
-/* Private DMA operation selectors and halfword register indices. */
+/* Private DMA operation selectors and 16-bit register indices. */
 typedef enum {
     PSYQ_SPU_DMA_READ = 0,
     PSYQ_SPU_DMA_WRITE = 1,
@@ -307,7 +307,7 @@ typedef struct psyq_spu_voice {
     u16 loop_address;
 } psyq_spu_voice_t;
 
-/* SPU reverb configuration halfwords at 0x1f801dc0..0x1f801dff.
+/* SPU 16-bit reverb configuration registers at 0x1f801dc0..0x1f801dff.
  * Addresses and APF delays use eight-byte SPU RAM units; volumes hold 1.15 signed bits. */
 typedef struct psyq_spu_reverb_registers {
     u16 apf1_delay;                  /* 0x00; dAPF1 */
@@ -386,7 +386,7 @@ typedef struct psyq_spu_registers {
 typedef char assert_psyq_spu_voice_size[(sizeof(psyq_spu_voice_t) == 16) ? 1 : -1];
 typedef char assert_psyq_spu_register_size[(sizeof(psyq_spu_registers_t) == 512) ? 1 : -1];
 
-/* The library addresses the block through the named layout and as raw halfword registers. */
+/* The library addresses the block through the named layout and as raw 16-bit registers. */
 typedef union psyq_spu_register_block {
     psyq_spu_registers_t rxx;
     u16 raw[0x100];

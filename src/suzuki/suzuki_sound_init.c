@@ -6,7 +6,7 @@
 
 /* Starts the Suzuki driver once (status bit 15 marks it initialised).
  *
- * flags seeds the status word. Sets up SPU RAM allocation and the driver
+ * flags seeds the 16-bit status. Sets up SPU RAM allocation and the driver
  * heap, clears the driver lists, creates the SFX music record, installs the
  * root-counter-2 tick and SPU events and the transfer callback, then applies
  * sound type 1, reverb mode 4, CD mixing and the default volumes. */

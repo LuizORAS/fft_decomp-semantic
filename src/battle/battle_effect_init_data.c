@@ -54,7 +54,7 @@ s32 battle_effect_init_data(void) {
             }
             g_battle_effect_load_state = BATTLE_EFFECT_LOAD_ENDING_SECONDARY;
             battle_effect_init_flags_section_pointer(g_battle_ability_effect_id);
-            /* An `lw` of the section's leading word, not a byte test. */
+            /* An `lw` of the section's leading 32-bit value, not a byte test. */
             if (g_battle_effect_flags_section->flags & EFFECT_FLAG_QUIET_MUSIC) {
                 main_sound_set_current_music_volume(0x40, 0xF0);
             }

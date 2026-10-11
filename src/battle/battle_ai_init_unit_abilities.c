@@ -35,7 +35,7 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
         }
         battle_ai_load_ability_entry(entry);
         ability_count++;
-        /* The target reads and updates skillset/usage as one halfword. */
+        /* The target reads and updates skillset/usage as one 16-bit value. */
         if (!(entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8))) {
             if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTED_BY_SILENCE) {
                 silence_count++;

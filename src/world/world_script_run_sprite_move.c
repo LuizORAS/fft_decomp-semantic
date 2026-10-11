@@ -1,8 +1,8 @@
 /*
  * Sprite-move worker called by world_script_sprite_move (mode 0) and
  * world_script_sprite_move_beta (mode 1) with the script cursor: a unit
- * halfword, three destination halfwords, an easing byte, a weight byte and a
- * halfword that is a frame count (mode 0) or a speed (mode 1). pos[0] is the
+ * 16-bit value, three 16-bit destination coordinates, an easing byte, a weight byte and a
+ * 16-bit value that is a frame count (mode 0) or a speed (mode 1). pos[0] is the
  * start, pos[1] the destination, pos[2] the current position and pos[3] the
  * negated previous step, re-applied each frame so the unit's coordinate is
  * rewritten rather than accumulated. Rows are 16 bytes apart in the target.

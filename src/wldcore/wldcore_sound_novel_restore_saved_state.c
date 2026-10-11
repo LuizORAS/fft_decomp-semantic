@@ -12,7 +12,7 @@
  * and the value display re-shown when their state flags say so, and the fade
  * box set to the saved
  * brightness (0x100 is stored as 0xFF). After the novel's files are loaded
- * the script resumes at the saved section's word table entry, or branches to
+ * the script resumes at the saved section's 32-bit table entry, or branches to
  * the start when the section is 0.
  */
 void wldcore_sound_novel_restore_saved_state(s32 render_record) {
@@ -99,7 +99,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     wldcore_wait_for_file_load();
     section = g_wldcore_active_saved_record.section;
     if (section != 0) {
-        /* The word view preserves register order; the named offset field swaps the index and base. */
+        /* The 32-bit view preserves register order; the named offset field swaps the index and base. */
         g_wldcore_active_saved_record.script_words
             = &((u32*)&g_main_save_slot_buffer)[((u32*)g_wldcore_active_saved_record.buffer)[section] >> 2];
         /* A struct-field store: as a scalar global the store would be
