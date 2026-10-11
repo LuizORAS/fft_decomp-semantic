@@ -33,6 +33,9 @@
 #define CdlDataEnd     0x04
 #define CdlDiskError   0x05
 
+#define btoi(b) ((b) / 16 * 10 + (b) % 16)
+#define itob(i) ((i) / 10 * 16 + (i) % 10)
+
 typedef enum {
     PSYQ_CD_SECTORS_PER_SECOND = 75,
     PSYQ_CD_SECONDS_PER_MINUTE = 60,
