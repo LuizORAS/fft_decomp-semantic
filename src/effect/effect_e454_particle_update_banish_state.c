@@ -55,9 +55,9 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
                     offset = (&g_effect_e454_particle_work_offset_scale_16)[i * 2] << 4;
                     offset += (&g_effect_e454_particle_work_offset_scale_64)[i * 2] << 6;
                     vertex = (VECTOR*)(work + offset);
-                    parent.position[0] = vertex->vx << 12;
-                    parent.position[1] = vertex->vy << 12;
-                    parent.position[2] = vertex->vz << 12;
+                    parent.motion.position[0] = vertex->vx << 12;
+                    parent.motion.position[1] = vertex->vy << 12;
+                    parent.motion.position[2] = vertex->vz << 12;
                     battle_effect_spawn_emitter_particles(
                         record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                 }
@@ -67,9 +67,9 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
                         offset = (&g_effect_e454_particle_work_offset_scale_16)[i] << 4;
                         offset += (&g_effect_e454_particle_work_offset_scale_64)[i] << 6;
                         vertex = (VECTOR*)(work + offset);
-                        parent.position[0] = vertex->vx << 12;
-                        parent.position[1] = vertex->vy << 12;
-                        parent.position[2] = vertex->vz << 12;
+                        parent.motion.position[0] = vertex->vx << 12;
+                        parent.motion.position[1] = vertex->vy << 12;
+                        parent.motion.position[2] = vertex->vz << 12;
                         battle_effect_spawn_emitter_particles(
                             record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
@@ -80,9 +80,9 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
                         offset = (&g_effect_e454_particle_work_offset_scale_16)[i] << 4;
                         offset += (&g_effect_e454_particle_work_offset_scale_64)[i] << 6;
                         vertex = (VECTOR*)(work + offset);
-                        parent.position[0] = vertex->vx << 12;
-                        parent.position[1] = vertex->vy << 12;
-                        parent.position[2] = vertex->vz << 12;
+                        parent.motion.position[0] = vertex->vx << 12;
+                        parent.motion.position[1] = vertex->vy << 12;
+                        parent.motion.position[2] = vertex->vz << 12;
                         battle_effect_spawn_emitter_particles(
                             record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }

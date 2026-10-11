@@ -2,11 +2,6 @@
 #include "psx/gte_inline.h"
 #include "psx/types.h"
 
-/* Defined in battle_effect_integrate_particle_motion.c. */
-typedef struct battle_effect_particle battle_effect_particle_t;
-
-extern void battle_effect_integrate_particle_motion(battle_effect_particle_t* list);
-
 /*
  * Effect-script opcode 0x25: update every particle on the record's work list.
  *
@@ -28,7 +23,7 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
     work = record->work_head;
     gte_SetRotMatrix(&g_battle_camera_matrix);
     gte_SetTransMatrix(&g_battle_camera_matrix);
-    battle_effect_integrate_particle_motion((battle_effect_particle_t*)record->work_head);
+    battle_effect_integrate_particle_motion(record->work_head);
 
     for (;;) {
         effect_work_record_t* node;
@@ -43,11 +38,11 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
             = (node->flags & EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_MASK) >> EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_SHIFT;
         work = node->next;
         if (threshold != 0) {
-            delta = (node->position[0] >> 12) - node->target_x;
+            delta = (node->motion.position[0] >> 12) - node->target_x;
             if (delta < threshold && -threshold < delta) {
-                delta = (node->position[1] >> 12) - node->target_y;
+                delta = (node->motion.position[1] >> 12) - node->target_y;
                 if (delta < threshold && -threshold < delta) {
-                    delta = (node->position[2] >> 12) - node->target_z;
+                    delta = (node->motion.position[2] >> 12) - node->target_z;
                     if (delta < threshold && -threshold < delta) {
                         node->lifetime = EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN;
                     }

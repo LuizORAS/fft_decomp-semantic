@@ -2420,6 +2420,14 @@ typedef union world_menu_instruction {
 } world_menu_instruction_t;
 typedef char world_menu_instruction_size_must_be_14[sizeof(world_menu_instruction_t) == 14 ? 1 : -1];
 
+/* The display opcode selects the row callback's result: an icon source
+ * for opcode 0x06, or an integer for predicates and number renderers. */
+typedef union world_menu_callback {
+    s32 (*value)(s32 row);
+    world_item_icon_source_t* (*icon)(s32 row);
+} world_menu_callback_t;
+typedef char world_menu_callback_size_must_be_4[sizeof(world_menu_callback_t) == 4 ? 1 : -1];
+
 static __inline__ world_menu_instruction_t* world_menu_next_instruction(world_menu_instruction_t* instruction) {
     return (world_menu_instruction_t*)((u8*)instruction + instruction->header.length);
 }
@@ -2495,8 +2503,7 @@ extern s32 g_world_grid_menu_id; /* menu_grid_help_id_e */
 extern s16 g_world_menu_scenario_event_started;
 extern world_menu_entry_t* g_world_menu_thread_menu_data;
 
-/* Menu-script callback slots, called as s32 (*)(s32) by the script commands. */
-extern s32 (*g_world_menu_script_callbacks[16])(s32);
+extern world_menu_callback_t g_world_menu_script_callbacks[16];
 extern menu_glyph_sheet_t* g_world_menu_glyph_sheet; /* decoded glyph page, 0x80 bytes per row */
 extern u16 g_world_menu_disabled_number_clut;
 extern menu_window_buffer_t g_world_menu_window_buffers[6]; /* 0x8019aca0 */
@@ -3270,7 +3277,7 @@ s32 world_shop_get_gil_minus_fitting_room_cost(s32 unused_row);
 s32 world_shop_get_selected_poached_item_quantity(s32 unused_row);
 void world_shop_install_callbacks_and_run(void);
 s32 world_shop_obtain_gil(s32 delta);
-s32 world_shop_get_soldier_office_entry_fee(void);
+s32 world_shop_get_soldier_office_entry_fee(s32 unused_row);
 void world_shop_return_unit_equip_to_fitting_room(s16 unit_index, s16 equipment_index);
 void world_shop_run_equip_candidate_step(void);
 /* Result of world_shop_run_fitting_room_checkout_prompt. */

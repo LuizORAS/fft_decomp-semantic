@@ -3792,62 +3792,46 @@ typedef struct effect_list_node {
 } effect_list_node_t;
 typedef char assert_effect_list_node_size[sizeof(effect_list_node_t) == 0x24 ? 1 : -1];
 
-/* 0x58-byte effect work record: one particle. battle_effect_init_record_chain
- * allocates 256 of them as one doubly linked free chain; a live one sits on
- * the work list of the effect state record that spawned it
- * (effect_record_t.work_head). Its motion state from 0x08 is a
- * battle_effect_motion_t. The emitter fills a new record through
- * effect_particle_physics_view_t, which also names the members left out here. */
+/* Motion state of an effect slot (battle_effect_slot_t +0x98) and of a
+ * particle (effect_work_record_t +0x08), stepped once a frame by
+ * battle_effect_step_motion and battle_effect_integrate_particle_motion:
+ * position gains velocity; velocity keeps (inertia -
+ * g_battle_effect_inertia_threshold) / inertia of itself, gains
+ * acceleration << 12 / inertia and gains g_battle_effect_gravity scaled by
+ * weight (4.12 fixed point); acceleration gains acceleration_step. */
+typedef struct battle_effect_motion {
+    s16 inertia;              /* 0x00 */
+    s16 weight;               /* 0x02; scales the gravity vector */
+    s32 position[3];          /* 0x04; 20.12 fixed */
+    s32 velocity[3];          /* 0x10 */
+    s32 acceleration[3];      /* 0x1c */
+    s32 acceleration_step[3]; /* 0x28 */
+} battle_effect_motion_t;
+typedef char battle_effect_motion_size_must_be_0x34[(sizeof(battle_effect_motion_t) == 0x34) ? 1 : -1];
+
+/* 0x58-byte particle on an effect record's work list. The emitter initializes
+ * its motion, homing and child-emitter state; the integrator advances it. */
 typedef struct effect_work_record {
     struct effect_work_record* prev; /* 0x00 */
     struct effect_work_record* next; /* 0x04 */
-    u8 _unused_08[0x04];             /* 0x08: inertia and weight */
-    s32 position[3];                 /* 0x0c: 20.12 fixed */
-    s32 velocity[3];                 /* 0x18 */
-    s32 acceleration[3];             /* 0x24 */
-    s32 acceleration_step[3];        /* 0x30: added to acceleration each frame */
-    s16 target_x;                    /* 0x3c: homing target */
+    battle_effect_motion_t motion;   /* 0x08 */
+    s16 target_x;                    /* 0x3c */
     s16 target_y;                    /* 0x3e */
     s16 target_z;                    /* 0x40 */
-    s16 lifetime; /* 0x42: frames left, or EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN: until its sprite sequence ends */
-    u8 _unused_44[0x02]; /* 0x44: +0x45 homing curve index */
-    u8 colour_curves[3]; /* 0x46: r/g/b animation curve indexes */
-    u8 _unused_49[0x03]; /* 0x49: +0x4a homing strength */
-    s16 kind_flags;      /* 0x4c: the emitter's word 0x02: EFFECT_EMITTER_* placement bits and EFFECT_WORK_KIND_* */
-    u16 flags;           /* 0x4e: the emitter's word 0x06: EFFECT_EMITTER_FLAG_* */
-    s16 curve_frame;     /* 0x50: frames lived, wrapped to EFFECT_ANIMATION_CURVE_FRAMES: column of the curves */
-    u8 child_emitter_on_death;     /* 0x52: emitter spawned from the particle when it dies */
-    u8 child_emitter_mid_life;     /* 0x53: emitter spawned from the particle every frame it lives */
-    struct effect_list_node* data; /* 0x54: its sprite node; a heap block for EFFECT_WORK_KIND_HEAP_BLOCK */
+    s16 lifetime;                    /* 0x42; frames or EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN */
+    u8 _unused_44;
+    u8 homing_curve_index;         /* 0x45 */
+    u8 colour_curves[3];           /* 0x46; RGB animation curves */
+    u8 _padding_49;                /* aligns homing_strength */
+    s16 homing_strength;           /* 0x4a */
+    s16 kind_flags;                /* 0x4c; EFFECT_EMITTER_* placement and EFFECT_WORK_KIND_* */
+    u16 flags;                     /* 0x4e; EFFECT_EMITTER_FLAG_* */
+    s16 curve_frame;               /* 0x50 */
+    u8 child_emitter_on_death;     /* 0x52 */
+    u8 child_emitter_mid_life;     /* 0x53 */
+    struct effect_list_node* data; /* 0x54; sprite node, or heap work for EFFECT_WORK_KIND_HEAP_BLOCK */
 } effect_work_record_t;
 typedef char assert_effect_work_record_size[sizeof(effect_work_record_t) == 0x58 ? 1 : -1];
-
-/* The view of effect_work_record_t through which
- * battle_effect_spawn_emitter_particles fills a new particle. */
-typedef struct effect_particle_physics_view {
-    u8 _unused_00[0x04];
-    struct effect_particle_physics_view* next; /* 0x04 */
-    s16 inertia;                               /* 0x08 */
-    s16 weight;                                /* 0x0a */
-    s32 position[3];                           /* 0x0c */
-    s32 velocity[3];                           /* 0x18 */
-    s32 acceleration[3];                       /* 0x24 */
-    s32 acceleration_step[3];                  /* 0x30 */
-    s16 target[3];                             /* 0x3c */
-    s16 lifetime;                              /* 0x42 */
-    u8 _unused_44;
-    u8 homing_curve_index;     /* 0x45 */
-    u8 colour_curves[3];       /* 0x46 */
-    u8 _padding_49;            /* aligns homing_strength */
-    s16 homing_strength;       /* 0x4a */
-    u16 kind_flags;            /* 0x4c */
-    u16 flags;                 /* 0x4e */
-    s16 curve_frame;           /* 0x50 */
-    u8 child_emitter_on_death; /* 0x52 */
-    u8 child_emitter_mid_life; /* 0x53 */
-    void* data;                /* 0x54 */
-} effect_particle_physics_view_t;
-typedef char assert_effect_particle_physics_view_size[sizeof(effect_particle_physics_view_t) == 0x58 ? 1 : -1];
 
 enum { EFFECT_RECORD_FLAG_ALLOCATED = 0x1 };
 
@@ -3905,23 +3889,6 @@ typedef struct battle_effect_anim_script {
     s16 count;                         /* 0x00 */
     battle_effect_anim_step_t step[1]; /* 0x02 */
 } battle_effect_anim_script_t;
-
-/* Motion state of an effect slot (battle_effect_slot_t +0x98) and of a
- * particle (effect_work_record_t +0x08), stepped once a frame by
- * battle_effect_step_motion and battle_effect_integrate_particle_motion:
- * position gains velocity; velocity keeps (inertia -
- * g_battle_effect_inertia_threshold) / inertia of itself, gains
- * acceleration << 12 / inertia and gains g_battle_effect_gravity scaled by
- * weight (4.12 fixed point); acceleration gains acceleration_step. */
-typedef struct battle_effect_motion {
-    s16 inertia;              /* 0x00 */
-    s16 weight;               /* 0x02; scales the gravity vector */
-    s32 position[3];          /* 0x04; 20.12 fixed */
-    s32 velocity[3];          /* 0x10 */
-    s32 acceleration[3];      /* 0x1c */
-    s32 acceleration_step[3]; /* 0x28 */
-} battle_effect_motion_t;
-typedef char battle_effect_motion_size_must_be_0x34[(sizeof(battle_effect_motion_t) == 0x34) ? 1 : -1];
 
 /* 0xcc-byte effect slots at 0x801b9278, chained through the leading next/prev
  * byte pair; slot 0 is the null sentinel. g_battle_effect_active_slot_head heads the active chain
@@ -4713,6 +4680,7 @@ void battle_effect_start_group(s32 group, s32 clut_index);
 void battle_effect_step_emitter_timeline(
     effect_record_t* state, battle_effect_keyframe_table_t* table, s16* index, s16* remaining, s16* step);
 
+void battle_effect_integrate_particle_motion(effect_work_record_t* list);
 void battle_effect_step_motion(battle_effect_motion_t* motion);
 void battle_effect_set_gravity(battle_effect_gravity_t* src);
 
@@ -4772,7 +4740,7 @@ void battle_effect_start_new(s32 ability_id, s32 target_mode, battle_effect_star
 void battle_effect_store_map_center_coordinates(VECTOR* destination);
 
 void battle_effect_submit_sprite_to_ordering_table(
-    battle_effect_sprite_block_t* set, s16* position, s16 angle, VECTOR* zoom, u32* ot);
+    battle_effect_sprite_block_t* set, DVECTOR* position, s16 angle, VECTOR* zoom, u32* ot);
 
 /* Steps the projectile along its trajectory, testing each obstacle. */
 s32 battle_effect_trace_projectile_path(

@@ -436,9 +436,9 @@ s32 effect_e461_update_particle_ribbons_long_state(s16 record_index, s32 callbac
                 green = 0x80;
                 red = 0x80;
             }
-            x = (parent.position[0] = slot->position.vx += slot->velocity.vx) >> 12;
-            y = (parent.position[1] = slot->position.vy += slot->velocity.vy) >> 12;
-            z = (parent.position[2] = slot->position.vz += slot->velocity.vz) >> 12;
+            x = (parent.motion.position[0] = slot->position.vx += slot->velocity.vx) >> 12;
+            y = (parent.motion.position[1] = slot->position.vy += slot->velocity.vy) >> 12;
+            z = (parent.motion.position[2] = slot->position.vz += slot->velocity.vz) >> 12;
             j = ++slot->age;
             index = j % RIBBON_POINTS;
             if (j <= slot->lifetime) {
@@ -466,9 +466,9 @@ s32 effect_e461_update_particle_ribbons_long_state(s16 record_index, s32 callbac
                 }
                 u = entry->particle_ribbon.texture_u + (RIBBON_SEGMENTS - point) * (width / RIBBON_SEGMENTS);
             }
-            parent.position[0] = slot->trail[index].x << 12;
-            parent.position[1] = slot->trail[index].y << 12;
-            parent.position[2] = slot->trail[index].z << 12;
+            parent.motion.position[0] = slot->trail[index].x << 12;
+            parent.motion.position[1] = slot->trail[index].y << 12;
+            parent.motion.position[2] = slot->trail[index].z << 12;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, slot->age, entry->particle_ribbon.child_emitter_mid_life, &parent);

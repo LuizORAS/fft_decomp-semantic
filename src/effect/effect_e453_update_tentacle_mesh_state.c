@@ -417,9 +417,9 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 red = green = blue = 0x80;
             }
 
-            emitter.position[0] = x = seg->position.vx += seg->velocity.vx;
-            emitter.position[1] = y = seg->position.vy += seg->velocity.vy;
-            emitter.position[2] = z = seg->position.vz += seg->velocity.vz;
+            emitter.motion.position[0] = x = seg->position.vx += seg->velocity.vx;
+            emitter.motion.position[1] = y = seg->position.vy += seg->velocity.vy;
+            emitter.motion.position[2] = z = seg->position.vz += seg->velocity.vz;
             index = ++seg->head;
             point_index = index % 9;
             px = x >> 12;
@@ -454,9 +454,9 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 u = entry->tentacle_mesh.texture_u + (8 - shade_index) * (width / 8);
             }
 
-            emitter.position[0] = seg->points[point_index].x << 12;
-            emitter.position[1] = seg->points[point_index].y << 12;
-            emitter.position[2] = seg->points[point_index].z << 12;
+            emitter.motion.position[0] = seg->points[point_index].x << 12;
+            emitter.motion.position[1] = seg->points[point_index].y << 12;
+            emitter.motion.position[2] = seg->points[point_index].z << 12;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, seg->head, entry->tentacle_mesh.child_emitter_mid_life, &emitter);

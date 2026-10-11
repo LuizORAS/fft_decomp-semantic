@@ -27,7 +27,7 @@ world_menu_instruction_t* world_menu_script_draw_formatted_number(world_menu_ins
     rgb24_t* color;
     u16 clut;
 
-    getter = g_world_menu_script_callbacks[instruction->number.getter];
+    getter = g_world_menu_script_callbacks[instruction->number.getter].value;
     if (g_world_menu_use_scroll_position == 0) {
         row = instruction->number.value;
         y = instruction->number.y;

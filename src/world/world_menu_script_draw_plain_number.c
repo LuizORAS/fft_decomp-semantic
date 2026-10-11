@@ -21,8 +21,8 @@ world_menu_instruction_t* world_menu_script_draw_plain_number(world_menu_instruc
     s32 y;
     s32 i;
 
-    value = g_world_menu_script_callbacks[instruction->number.getter] != 0
-        ? g_world_menu_script_callbacks[instruction->number.getter](instruction->number.value)
+    value = g_world_menu_script_callbacks[instruction->number.getter].value != 0
+        ? g_world_menu_script_callbacks[instruction->number.getter].value(instruction->number.value)
         : instruction->number.value;
     blanks = instruction->number.width - sprintf(text, "%d", value);
     value = instruction->number.width;

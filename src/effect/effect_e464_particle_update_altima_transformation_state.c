@@ -51,9 +51,9 @@ s32 effect_e464_particle_update_altima_transformation_state(
                 offset = (&g_effect_e464_particle_work_offset_scale_16)[i * 2] << 4;
                 offset += (&g_effect_e464_particle_work_offset_scale_64)[i * 2] << 6;
                 vertex = &work[offset >> 4];
-                parent.position[0] = vertex->vx << 12;
-                parent.position[1] = vertex->vy << 12;
-                parent.position[2] = vertex->vz << 12;
+                parent.motion.position[0] = vertex->vx << 12;
+                parent.motion.position[1] = vertex->vy << 12;
+                parent.motion.position[2] = vertex->vz << 12;
                 battle_effect_spawn_emitter_particles(
                     record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
             }

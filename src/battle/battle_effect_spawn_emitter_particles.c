@@ -14,8 +14,6 @@
         factor = 0;                                                                                                    \
     }
 
-/* Inline form of battle_effect_get_random_between. */
-
 /* Spawns an emitter's particles for this frame and initializes their motion.
  *
  * Emitter emitter_index of the effect's particle-system section spawns every
@@ -26,9 +24,7 @@
  * The particles belong to state record record_index and are placed for its
  * target; parent is the particle that the PARENT_PARTICLE origin spawns from.
  *
- * The records returned by battle_effect_alloc_work_record are initialized through
- * effect_particle_physics_view_t. The lerps of the pair at 0x4c are computed
- * and discarded, as is the target's facing quadrant. */
+ * The lerps of the pair at 0x4c and the target's facing quadrant are discarded. */
 s32 battle_effect_spawn_emitter_particles(
     s16 record_index, s32 frame, s32 emitter_index, effect_work_record_t* parent) {
     SVECTOR rotation;
@@ -48,7 +44,7 @@ s32 battle_effect_spawn_emitter_particles(
     SVECTOR map_max;
     SVECTOR tile_anchor;
     effect_geometry_record_t* entry;
-    effect_particle_physics_view_t* particle;
+    effect_work_record_t* particle;
     SVECTOR* unit_coords;
     s32 time;
     s32 curve;
@@ -62,7 +58,7 @@ s32 battle_effect_spawn_emitter_particles(
     s16 facing;
     u32 word;
     s32 count;
-    effect_particle_physics_view_t* head;
+    effect_work_record_t* head;
     u16 kind;
     u16 flags;
     s32 rotate;
@@ -121,8 +117,7 @@ s32 battle_effect_spawn_emitter_particles(
     CURVE_FACTOR(entry->emitter.curve_indices[1] >> 20 & 0xf);
     count = battle_effect_lerp_linear(entry->emitter.particle_count_start, entry->emitter.particle_count_end, factor);
     for (i = 0; i < count; i++) {
-        particle = (effect_particle_physics_view_t*)battle_effect_alloc_work_record(
-            record_index, (kind & EFFECT_WORK_KIND_MASK));
+        particle = battle_effect_alloc_work_record(record_index, (kind & EFFECT_WORK_KIND_MASK));
         particle->kind_flags = kind;
         particle->flags = flags;
         particle->curve_frame = 0;
@@ -156,9 +151,9 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
         if (parent != 0) {
-            spawn.vx += parent->position[0] >> 12;
-            spawn.vy += parent->position[1] >> 12;
-            spawn.vz += parent->position[2] >> 12;
+            spawn.vx += parent->motion.position[0] >> 12;
+            spawn.vy += parent->motion.position[1] >> 12;
+            spawn.vz += parent->motion.position[2] >> 12;
         }
         break;
     case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
@@ -185,9 +180,9 @@ s32 battle_effect_spawn_emitter_particles(
     particle = head;
     if (kind & EFFECT_EMITTER_BOX_SPREAD) {
         for (i = 0; i < count; i++) {
-            particle->position[0] = (spawn.vx + RANDOM_BETWEEN(spread.vx, -spread.vx)) << 12;
-            particle->position[1] = (spawn.vy + RANDOM_BETWEEN(spread.vy, -spread.vy)) << 12;
-            particle->position[2] = (spawn.vz + RANDOM_BETWEEN(spread.vz, -spread.vz)) << 12;
+            particle->motion.position[0] = (spawn.vx + RANDOM_BETWEEN(spread.vx, -spread.vx)) << 12;
+            particle->motion.position[1] = (spawn.vy + RANDOM_BETWEEN(spread.vy, -spread.vy)) << 12;
+            particle->motion.position[2] = (spawn.vz + RANDOM_BETWEEN(spread.vz, -spread.vz)) << 12;
             particle = particle->next;
         }
     } else {
@@ -203,13 +198,13 @@ s32 battle_effect_spawn_emitter_particles(
                 rotation.vz = 0;
                 rotation.vy = 0;
                 RotTrans(&rotation, &out, &out.pad);
-                particle->position[0] = ((out.vx * spread.vx) / scale + spawn.vx) << 12;
-                particle->position[1] = ((out.vy * spread.vy) / scale + spawn.vy) << 12;
-                particle->position[2] = ((out.vz * spread.vz) / scale + spawn.vz) << 12;
+                particle->motion.position[0] = ((out.vx * spread.vx) / scale + spawn.vx) << 12;
+                particle->motion.position[1] = ((out.vy * spread.vy) / scale + spawn.vy) << 12;
+                particle->motion.position[2] = ((out.vz * spread.vz) / scale + spawn.vz) << 12;
             } else {
-                particle->position[0] = spawn.vx << 12;
-                particle->position[1] = spawn.vy << 12;
-                particle->position[2] = spawn.vz << 12;
+                particle->motion.position[0] = spawn.vx << 12;
+                particle->motion.position[1] = spawn.vy << 12;
+                particle->motion.position[2] = spawn.vz << 12;
             }
             particle = particle->next;
         }
@@ -258,9 +253,9 @@ s32 battle_effect_spawn_emitter_particles(
             rotation.vx = 0;
             rotation.vy = RANDOM_BETWEEN(speed_min, speed_max);
             RotTrans(&rotation, &out, &out.pad);
-            particle->velocity[0] = out.vx << 3;
-            particle->velocity[1] = out.vy << 3;
-            particle->velocity[2] = out.vz << 3;
+            particle->motion.velocity[0] = out.vx << 3;
+            particle->motion.velocity[1] = out.vy << 3;
+            particle->motion.velocity[2] = out.vz << 3;
             particle = particle->next;
         }
         break;
@@ -280,9 +275,9 @@ s32 battle_effect_spawn_emitter_particles(
             rotation.vy = out.vy;
             rotation.vz = out.vz;
             RotTrans(&rotation, &out, &out.pad);
-            particle->velocity[0] = out.vx << 3;
-            particle->velocity[1] = out.vy << 3;
-            particle->velocity[2] = out.vz << 3;
+            particle->motion.velocity[0] = out.vx << 3;
+            particle->motion.velocity[1] = out.vy << 3;
+            particle->motion.velocity[2] = out.vz << 3;
             particle = particle->next;
         }
         break;
@@ -290,19 +285,19 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     case EFFECT_EMITTER_VELOCITY_INWARD:
         for (i = 0; i < count; i++) {
-            out.vx = spawn.vx - (particle->position[0] >> 12);
-            out.vy = spawn.vy - (particle->position[1] >> 12);
-            out.vz = spawn.vz - (particle->position[2] >> 12);
+            out.vx = spawn.vx - (particle->motion.position[0] >> 12);
+            out.vy = spawn.vy - (particle->motion.position[1] >> 12);
+            out.vz = spawn.vz - (particle->motion.position[2] >> 12);
             speed = RANDOM_BETWEEN(speed_min, speed_max);
             if (out.vx != 0 || out.vy != 0 || out.vz != 0) {
                 VectorNormal(&out, &out);
-                particle->velocity[0] = (speed * out.vx) >> 9;
-                particle->velocity[1] = (speed * out.vy) >> 9;
-                particle->velocity[2] = (speed * out.vz) >> 9;
+                particle->motion.velocity[0] = (speed * out.vx) >> 9;
+                particle->motion.velocity[1] = (speed * out.vy) >> 9;
+                particle->motion.velocity[2] = (speed * out.vz) >> 9;
             } else {
-                particle->velocity[1] = speed << 3;
-                particle->velocity[2] = 0;
-                particle->velocity[0] = 0;
+                particle->motion.velocity[1] = speed << 3;
+                particle->motion.velocity[2] = 0;
+                particle->motion.velocity[0] = 0;
             }
             particle = particle->next;
         }
@@ -358,12 +353,12 @@ s32 battle_effect_spawn_emitter_particles(
     }
     particle = head;
     for (i = 0; i < count; i++) {
-        particle->acceleration[0] = RANDOM_BETWEEN(accel_min.vx, accel_max.vx);
-        particle->acceleration[1] = RANDOM_BETWEEN(accel_min.vy, accel_max.vy);
-        particle->acceleration[2] = RANDOM_BETWEEN(accel_min.vz, accel_max.vz);
-        particle->acceleration_step[0] = RANDOM_BETWEEN(accel_step_min.vx, accel_step_max.vx);
-        particle->acceleration_step[1] = RANDOM_BETWEEN(accel_step_min.vy, accel_step_max.vy);
-        particle->acceleration_step[2] = RANDOM_BETWEEN(accel_step_min.vz, accel_step_max.vz);
+        particle->motion.acceleration[0] = RANDOM_BETWEEN(accel_min.vx, accel_max.vx);
+        particle->motion.acceleration[1] = RANDOM_BETWEEN(accel_min.vy, accel_max.vy);
+        particle->motion.acceleration[2] = RANDOM_BETWEEN(accel_min.vz, accel_max.vz);
+        particle->motion.acceleration_step[0] = RANDOM_BETWEEN(accel_step_min.vx, accel_step_max.vx);
+        particle->motion.acceleration_step[1] = RANDOM_BETWEEN(accel_step_min.vy, accel_step_max.vy);
+        particle->motion.acceleration_step[2] = RANDOM_BETWEEN(accel_step_min.vz, accel_step_max.vz);
         particle = particle->next;
     }
 
@@ -381,8 +376,8 @@ s32 battle_effect_spawn_emitter_particles(
     lifetime_max = battle_effect_lerp_linear(entry->emitter.lifetime_start[1], entry->emitter.lifetime_end[1], factor);
     particle = head;
     for (i = 0; i < count; i++) {
-        particle->inertia = RANDOM_BETWEEN(inertia_min, inertia_max);
-        particle->weight = RANDOM_BETWEEN(weight_min, weight_max);
+        particle->motion.inertia = RANDOM_BETWEEN(inertia_min, inertia_max);
+        particle->motion.weight = RANDOM_BETWEEN(weight_min, weight_max);
         particle->lifetime = RANDOM_BETWEEN(lifetime_min, lifetime_max);
         particle = particle->next;
     }
@@ -399,34 +394,34 @@ s32 battle_effect_spawn_emitter_particles(
     case EFFECT_EMITTER_HOMING_OFFSET:
     case EFFECT_EMITTER_HOMING_OFFSET_ALT:
         for (i = 0; i < count; i++) {
-            particle->target[0] = target_offset.vx;
-            particle->target[1] = target_offset.vy;
-            particle->target[2] = target_offset.vz;
+            particle->target_x = target_offset.vx;
+            particle->target_y = target_offset.vy;
+            particle->target_z = target_offset.vz;
             particle = particle->next;
         }
         break;
     case EFFECT_EMITTER_HOMING_MAP_CENTRE:
         battle_map_store_max_coordinates(&map_max);
         for (i = 0; i < count; i++) {
-            particle->target[0] = map_max.vx * 14 + target_offset.vx;
-            particle->target[2] = map_max.vz * 14 + target_offset.vz;
-            particle->target[1] = target_offset.vy;
+            particle->target_x = map_max.vx * 14 + target_offset.vx;
+            particle->target_z = map_max.vz * 14 + target_offset.vz;
+            particle->target_y = target_offset.vy;
             particle = particle->next;
         }
         break;
     case EFFECT_EMITTER_HOMING_CASTER:
         for (i = 0; i < count; i++) {
-            particle->target[0] = caster.vx + target_offset.vx;
-            particle->target[1] = caster.vy + target_offset.vy;
-            particle->target[2] = caster.vz + target_offset.vz;
+            particle->target_x = caster.vx + target_offset.vx;
+            particle->target_y = caster.vy + target_offset.vy;
+            particle->target_z = caster.vz + target_offset.vz;
             particle = particle->next;
         }
         break;
     case EFFECT_EMITTER_HOMING_TARGET:
         for (i = 0; i < count; i++) {
-            particle->target[0] = target.vx + target_offset.vx;
-            particle->target[1] = target.vy + target_offset.vy;
-            particle->target[2] = target.vz + target_offset.vz;
+            particle->target_x = target.vx + target_offset.vx;
+            particle->target_y = target.vy + target_offset.vy;
+            particle->target_z = target.vz + target_offset.vz;
             particle = particle->next;
         }
         break;
@@ -435,9 +430,9 @@ s32 battle_effect_spawn_emitter_particles(
         tile_anchor.vz = g_battle_effect_target_tile.tile_y * 28 + 14;
         tile_anchor.vy = -(tile->height * 12);
         for (i = 0; i < count; i++) {
-            particle->target[0] = tile_anchor.vx + target_offset.vx;
-            particle->target[1] = tile_anchor.vy + target_offset.vy;
-            particle->target[2] = tile_anchor.vz + target_offset.vz;
+            particle->target_x = tile_anchor.vx + target_offset.vx;
+            particle->target_y = tile_anchor.vy + target_offset.vy;
+            particle->target_z = tile_anchor.vz + target_offset.vz;
             particle = particle->next;
         }
         break;

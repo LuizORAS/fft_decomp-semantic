@@ -14,11 +14,11 @@ s32 world_menu_run_learn_job_list(void) {
     if (g_world_learn_job_list_initialized == 0) {
         world_script_set_vsync_mode_and_event_speed(2);
         world_job_build_unit_list(g_world_formation_selected_unit_index, g_world_menu_learn_unlocked_jobs, 0);
-        g_world_menu_script_callbacks[0] = world_job_calculate_current_level;
-        g_world_menu_script_callbacks[2] = world_menu_get_learn_job_jp;
-        g_world_menu_script_callbacks[5] = world_job_calculate_next_level_jp_requirement;
-        g_world_menu_script_callbacks[6] = world_job_calculate_current_total_jp;
-        g_world_menu_script_callbacks[13] = world_job_calculate_current_mastered;
+        g_world_menu_script_callbacks[0].value = world_job_calculate_current_level;
+        g_world_menu_script_callbacks[2].value = world_menu_get_learn_job_jp;
+        g_world_menu_script_callbacks[5].value = world_job_calculate_next_level_jp_requirement;
+        g_world_menu_script_callbacks[6].value = world_job_calculate_current_total_jp;
+        g_world_menu_script_callbacks[13].value = world_job_calculate_current_mastered;
         world_menu_get_selection_record(9, &x, &y, g_world_menu_learn_unlocked_jobs);
         world_menu_init_scrollable_list(
             g_world_menu_learn_unlocked_jobs, x, y, g_world_text_section_pointers[TEXT_SECTION_JOB_NAMES]);

@@ -3,8 +3,9 @@
 
 /* Execute or skip the following instruction group according to the selected
  * predicate, using a literal argument or the current scrolling row. */
-world_menu_instruction_t* world_menu_script_conditional(world_menu_instruction_t* instruction) {
-    s32 (*predicate)(s32) = g_world_menu_script_callbacks[instruction->conditional.predicate];
+world_menu_instruction_t* world_menu_script_conditional(world_menu_instruction_t* script) {
+    world_menu_instruction_t* instruction = script;
+    s32 (*predicate)(s32) = g_world_menu_script_callbacks[instruction->conditional.predicate].value;
     s32 count = instruction->conditional.count;
     s32 arg;
 

@@ -22,7 +22,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     SVECTOR unused_20;
     VECTOR output;
     s32 unused_38[6];
-    s16 position[4];
+    DVECTOR position;
     battle_effect_sprite_block_t* block;
     battle_effect_frame_record_t* frame;
     s32 op;
@@ -119,14 +119,14 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         if (depth > EFFECT_SPRITE_OT_DEPTH_MAX) {
             depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
-        position[0] = output.vx;
-        position[1] = output.vy;
-        battle_effect_submit_sprite_to_ordering_table(node->sprite_block, position, node->screen_rotation_angle,
+        position.vx = output.vx;
+        position.vy = output.vy;
+        battle_effect_submit_sprite_to_ordering_table(node->sprite_block, &position, node->screen_rotation_angle,
             &g_battle_camera_zoom, g_battle_effect_otag + depth);
         break;
     case EFFECT_LIST_NODE_SCREEN_OFFSET:
-        position[0] = node->x + node->sprite_offset_x + g_battle_camera_matrix.t[0];
-        position[1] = node->y + node->sprite_offset_y + g_battle_camera_matrix.t[1];
+        position.vx = node->x + node->sprite_offset_x + g_battle_camera_matrix.t[0];
+        position.vy = node->y + node->sprite_offset_y + g_battle_camera_matrix.t[1];
         depth = node->z;
         if (depth < 0) {
             depth = 0;
@@ -134,7 +134,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         if (depth > EFFECT_SPRITE_OT_DEPTH_MAX) {
             depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
-        battle_effect_submit_sprite_to_ordering_table(node->sprite_block, position, node->screen_rotation_angle,
+        battle_effect_submit_sprite_to_ordering_table(node->sprite_block, &position, node->screen_rotation_angle,
             &g_battle_camera_zoom, g_battle_effect_otag + depth);
         break;
     case EFFECT_LIST_NODE_WORLD_UNSCALED:
@@ -168,14 +168,14 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         if (depth > EFFECT_SPRITE_OT_DEPTH_MAX) {
             depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
-        position[0] = output.vx;
-        position[1] = output.vy;
+        position.vx = output.vx;
+        position.vy = output.vy;
         battle_effect_submit_sprite_to_ordering_table(
-            node->sprite_block, position, node->screen_rotation_angle, 0, g_battle_effect_otag + depth);
+            node->sprite_block, &position, node->screen_rotation_angle, 0, g_battle_effect_otag + depth);
         break;
     case EFFECT_LIST_NODE_SCREEN:
-        position[0] = node->x + node->sprite_offset_x;
-        position[1] = node->y + node->sprite_offset_y;
+        position.vx = node->x + node->sprite_offset_x;
+        position.vy = node->y + node->sprite_offset_y;
         depth = node->z;
         if (depth < 0) {
             depth = 0;
@@ -184,7 +184,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
             depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
         battle_effect_submit_sprite_to_ordering_table(
-            node->sprite_block, position, node->screen_rotation_angle, 0, g_battle_effect_otag + depth);
+            node->sprite_block, &position, node->screen_rotation_angle, 0, g_battle_effect_otag + depth);
         break;
     }
 }

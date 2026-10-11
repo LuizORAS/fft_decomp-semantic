@@ -4,11 +4,11 @@
 /* Ask the selected callback for the literal row's icon, or the current
  * scrolling row's icon, then draw it at the command's position. */
 world_menu_instruction_t* world_menu_script_draw_callback_sprite(world_menu_instruction_t* instruction) {
-    s32 (*handler)(s32);
+    world_item_icon_source_t* (*handler)(s32);
     world_item_icon_source_t* entry;
     s32 index;
 
-    handler = g_world_menu_script_callbacks[instruction->callback_sprite.callback_index];
+    handler = g_world_menu_script_callbacks[instruction->callback_sprite.callback_index].icon;
     if (g_world_menu_use_scroll_position == 0) {
         index = instruction->callback_sprite.row;
     } else {
@@ -17,7 +17,7 @@ world_menu_instruction_t* world_menu_script_draw_callback_sprite(world_menu_inst
             index -= 1;
         }
     }
-    entry = (world_item_icon_source_t*)handler(index);
+    entry = handler(index);
     if (entry != 0) {
         g_world_menu_script_sprite_command.sprite.x = instruction->callback_sprite.x;
         g_world_menu_script_sprite_command.sprite.y = instruction->callback_sprite.y;

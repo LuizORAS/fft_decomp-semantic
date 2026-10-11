@@ -22,13 +22,13 @@ void world_shop_handle_item_purchase_menu(void) {
         world_menu_get_selection_record(g_world_shop_item_category, &x, &y, g_world_menu_entry_ids);
         world_menu_init_scrollable_list(
             g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
-        g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
-        g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
-        g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_item_build_type_icon_source;
-        g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_menu_get_entry_item_icon_source;
-        g_world_menu_script_callbacks[4] = world_menu_get_item_price_display_value;
-        g_world_menu_script_callbacks[5] = world_item_count_selected_equipped_by_party;
-        g_world_menu_script_callbacks[6] = world_item_count_selected_owned_and_equipped;
+        g_world_menu_script_callbacks[0].value = world_menu_get_entry_item_equipped_count;
+        g_world_menu_script_callbacks[1].value = world_menu_get_entry_item_count;
+        g_world_menu_script_callbacks[2].icon = world_item_build_type_icon_source;
+        g_world_menu_script_callbacks[3].icon = world_menu_get_entry_item_icon_source;
+        g_world_menu_script_callbacks[4].value = world_menu_get_item_price_display_value;
+        g_world_menu_script_callbacks[5].value = world_item_count_selected_equipped_by_party;
+        g_world_menu_script_callbacks[6].value = world_item_count_selected_owned_and_equipped;
         g_world_shop_purchase_equip_check_pending = 0;
     }
     world_script_set_vsync_mode_and_event_speed(2);

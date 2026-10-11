@@ -4,7 +4,7 @@
 /* Execute the selected branch and skip the other by encoded instruction
  * lengths, using a literal predicate argument or the current scrolling row. */
 world_menu_instruction_t* world_menu_script_if_else(world_menu_instruction_t* instruction) {
-    s32 (*predicate)(s32) = g_world_menu_script_callbacks[instruction->if_else.predicate];
+    s32 (*predicate)(s32) = g_world_menu_script_callbacks[instruction->if_else.predicate].value;
     s32 count_true = instruction->if_else.count_true;
     s32 count_false = instruction->if_else.count_false;
     s32 arg;
