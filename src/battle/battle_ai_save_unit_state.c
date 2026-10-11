@@ -56,6 +56,6 @@ void battle_ai_save_unit_state(s32 mode) {
         }
     }
     if (mode == 0) {
-        battle_ai_transfer_byte_values(ai->team_golem.bytes, (u8*)g_battle_team_golem, 8);
+        battle_ai_transfer_byte_values(ai->team_golem, g_battle_team_golem, sizeof(ai->team_golem));
     }
 }

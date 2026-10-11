@@ -485,10 +485,7 @@ typedef struct battle_ai_data {
     u8 acting_unit_team;                             /* 0x0e39 */
     u8 map_max_x;                                    /* 0x0e3a */
     u8 map_max_y;                                    /* 0x0e3b */
-    union {
-        u8 bytes[8];
-        u16 by_team[4];
-    } team_golem;           /* 0x0e3c; halfword scoring at 0x8019d37c */
+    u16 team_golem[4];                               /* 0x0e3c; halfword scoring at 0x8019d37c */
     u8 status_to_cancel[5]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built at 0x80195410 */
     /* Resumable reflected-origin search, 0x8019b7b8–0x8019bb20.
      * Candidate x/y = 2 * reflector position - intended target position. */
@@ -793,7 +790,7 @@ void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_i
 void battle_ai_take_next_movement_origin(void);
 s32 battle_ai_take_random_tile(u16 tiles[2][18], battle_ai_coords_t* coordinates, s32 count);
 void battle_ai_transfer_ability_data_and_set_defend_flag(void);
-void battle_ai_transfer_byte_values(u8* destination, const u8* source, s32 byte_count);
+void battle_ai_transfer_byte_values(void* destination, const void* source, s32 byte_count);
 void battle_ai_transfer_halfword_values(void* destination, void* source, s32 byte_count);
 void battle_ai_transfer_unit_coordinates(s32 unit_index, battle_ai_coords_t* destination);
 void battle_ai_update_team_targeting_flags(void);

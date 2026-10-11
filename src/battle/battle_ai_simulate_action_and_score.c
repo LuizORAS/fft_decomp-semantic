@@ -255,7 +255,7 @@ score_state:
                 golem = weight_offset;
                 weight_offset <<= 7;
                 score += weight_offset / ai->present_unit_average_max_hp;
-                if (golem < ai->team_golem.by_team[(unit->team_flags >> 4) & 3])
+                if (golem < ai->team_golem[(unit->team_flags >> 4) & 3])
                     score--;
             }
             if (ai->unit_decisions[unit_index].enemy_flag)
