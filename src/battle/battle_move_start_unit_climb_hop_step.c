@@ -14,14 +14,14 @@ void battle_move_start_unit_climb_hop_step(
     battle_unit_height_data_t height_data;
     s32 rise;
     s32 frames;
-    u8* step;
+    battle_move_step_t* step;
     s32 rise_height;
     s32 height;
     u32 animation;
     u32 word;
     u8 next;
 
-    step = &unit->current_path_step.value;
+    step = &unit->current_path_step;
     if (unit->standing_on_unit_id_plus_one != 0
         && (battle_unit_calculate_height_data(&height_data, unit->standing_on_unit_id_plus_one - 1),
             (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
@@ -34,12 +34,12 @@ void battle_move_start_unit_climb_hop_step(
     rise = SquareRoot12(rise_height * g_battle_move_jump_gravity * 2);
     unit->velocity.vy = -rise;
     frames = rise / g_battle_move_jump_gravity;
-    switch (*step >> 6) {
+    switch (step->bits.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST;
         unit->facing = BATTLE_FACING_EAST;
         next = unit->map_x + 1;
-        unit->movement.bytes.destination_x = next + (*step & 3);
+        unit->movement.bytes.destination_x = next + step->bits.length;
         unit->velocity.vz = 0;
         unit->velocity.vx = 0xE000 / frames;
         break;
@@ -47,7 +47,7 @@ void battle_move_start_unit_climb_hop_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST;
         unit->facing = BATTLE_FACING_WEST;
         next = unit->map_x - 1;
-        unit->movement.bytes.destination_x = next - (*step & 3);
+        unit->movement.bytes.destination_x = next - step->bits.length;
         unit->velocity.vz = 0;
         unit->velocity.vx = -0xE000 / frames;
         break;
@@ -55,7 +55,7 @@ void battle_move_start_unit_climb_hop_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH;
         unit->facing = BATTLE_FACING_SOUTH;
         next = unit->map_y - 1;
-        unit->movement.bytes.destination_y = next - (*step & 3);
+        unit->movement.bytes.destination_y = next - step->bits.length;
         unit->velocity.vx = 0;
         unit->velocity.vz = -0xE000 / frames;
         break;
@@ -67,7 +67,7 @@ void battle_move_start_unit_climb_hop_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
         unit->facing = BATTLE_FACING_NORTH;
         next = unit->map_y + 1;
-        unit->movement.bytes.destination_y = next + (*step & 3);
+        unit->movement.bytes.destination_y = next + step->bits.length;
         unit->velocity.vx = 0;
         unit->velocity.vz = 0xE000 / frames;
         break;
@@ -79,5 +79,5 @@ void battle_move_start_unit_climb_hop_step(
     battle_unit_store_animation_facing(animation, unit->facing, unit);
     word = unit->movement.word;
     unit->movement.word = (word & ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) | ((((word >> 27) & 1) ^ 1) << 27);
-    unit->movement.bytes.destination_z = (*step >> 5) & 1;
+    unit->movement.bytes.destination_z = step->bits.higher;
 }
