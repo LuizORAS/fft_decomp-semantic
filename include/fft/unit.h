@@ -190,6 +190,9 @@ typedef enum battle_action_miss_display_flags {
 } battle_action_miss_display_flags_e;
 
 /* character identity */
+/* Who a unit is: the special characters by id, then the generic male, female and monster selectors
+ * (ENTD and party sprite_set, battle character_identity). */
+
 /*
  * ENTD/party sprite_set and battle character_identity share this byte domain.
  * main_unit_get_spritesheet_palette (0x8005e120) returns values below 0x80
@@ -388,6 +391,9 @@ typedef enum unit_equipment_slot {
 } unit_equipment_slot_e;
 
 /* job */
+/* The career data every unit record keeps: the 20 generic jobs' packed levels, the unlocked-job
+ * bitset, the learned abilities and the JP pairs (docs/mechanics/Units and Jobs.md). */
+
 /* Serialized unit-career layout shared by party records and battle stats.
  * main_unit_generate_out_of_battle (0x80059ffc) clears the 0x96-byte span,
  * while main_job_add_proposition_jp and main_unit_copy_party_record establish
@@ -423,6 +429,8 @@ enum {
 typedef char assert_unit_career_data_byte_count[UNIT_CAREER_DATA_BYTE_COUNT == 0x96 ? 1 : -1];
 
 /* zodiac */
+/* The twelve zodiac signs and Serpentarius. */
+
 enum {
     ZODIAC_SIGN_ORDINARY_COUNT = 12,
     ZODIAC_SIGN_COUNT = 13,
@@ -581,6 +589,9 @@ typedef enum unit_inflict_status_mode {
 } unit_inflict_status_mode_e;
 
 /* unit */
+/* The unit records: the battle unit (battle_stats_t), the roster record (party_data_t) and the ENTD
+ * record (entd_unit_t), with their fields' values. */
+
 /* Five 24-bit raw values serialized in HP, MP, Speed, PA, MA order. */
 typedef enum unit_raw_stat_index {
     UNIT_RAW_STAT_HP = 0,

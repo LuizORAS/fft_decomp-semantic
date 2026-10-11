@@ -1212,6 +1212,8 @@ typedef struct item_type_order_tables {
 } item_type_order_tables_t;
 
 /* job */
+/* The job records (job_data_t, 160 of them at g_main_job_data) and the job ids. */
+
 enum {
     JOB_JUMP_VALUE_MASK = 0x7f,
     JOB_JUMP_STEPPING_STONE = 0x80,
