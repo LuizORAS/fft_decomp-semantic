@@ -27,6 +27,12 @@ enum {
     SPU_VOICEONLY = 6,
 };
 
+/* SpuEnv.mask selects event queueing; the driver uses the same bit in _spu_env. */
+enum { SPU_ENV_EVENT_QUEUEING = 0x1 };
+
+/* SpuFlush deferred-operation mask. */
+enum { SPU_EVENT_KEY = 0x1 };
+
 /* SpuSetTransferMode selectors. */
 enum {
     SPU_TRANSFER_BY_DMA = 0,
@@ -406,7 +412,7 @@ extern s32 g_psyq_spu_dma_direction;     /* transfer direction: 0 to SPU, 1 from
 extern void* g_psyq_spu_dma_buffer;
 extern u32 g_psyq_spu_dma_blocks;
 extern s32 _spu_isCalled;   /* event/callback setup flag */
-extern u32 _spu_env;        /* queued operation mask */
+extern u32 _spu_env;        /* event queueing flags */
 extern s32 _spu_EVdma;      /* DMA completion BIOS event */
 extern u32 _spu_keystat;    /* keyed-on voices */
 extern s32 _spu_trans_mode; /* caller's transfer-mode value */
@@ -414,7 +420,7 @@ extern s32 _spu_rev_flag;
 extern s32 _spu_rev_reserve_wa; /* reserve reverb work RAM */
 extern u32 _spu_rev_offsetaddr; /* reverb work start, in eight-byte units */
 extern volatile u32 _spu_RQvoice;
-extern volatile u32 _spu_RQmask;
+extern volatile u32 _spu_RQmask; /* queued SPU_EVENT_* operations */
 extern volatile u16 _spu_RQ[10]; /* deferred key, LFO, noise and reverb masks */
 
 typedef struct psyq_spu_reverb_parameters {
