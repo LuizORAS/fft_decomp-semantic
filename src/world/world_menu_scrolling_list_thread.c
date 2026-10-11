@@ -328,13 +328,11 @@ void world_menu_scrolling_list_thread(void) {
             world_menu_zoom_cursor_frame(entry, frame, i * g_world_event_speed);
         }
         if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {
-            {
-                world_menu_text_layout_t* columns = entry->context;
+            world_menu_text_layout_t* columns = entry->context;
 
-                page->icons.base.sprites[1].x0 += columns->x[1];
-                columns = entry->context;
-                page->icons.base.sprites[2].x0 += columns->x[1];
-            }
+            page->icons.base.sprites[1].x0 += columns->x[1];
+            columns = entry->context;
+            page->icons.base.sprites[2].x0 += columns->x[1];
         }
         page->icons.base.sprites[1].y0 += 4;
         page->icons.base.sprites[2].y0 += 4;

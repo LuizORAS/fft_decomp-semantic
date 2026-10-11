@@ -12,6 +12,7 @@
  */
 s32 world_script_get_variable(s32 variable_id) {
     s32 saved = *g_world_script_variables;
+    s32 result;
 
     if (variable_id == EVENT_SCRIPT_VAR_WEATHER_AND_TIME) {
         s32 tod;
@@ -27,10 +28,7 @@ s32 world_script_get_variable(s32 variable_id) {
     }
     world_script_run_variable_command(EVENT_OPCODE_ZERO_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, 0, 0);
     world_script_run_variable_command(EVENT_OPCODE_ADD_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, variable_id, 0);
-    {
-        s32 val = *g_world_script_variables;
-
-        *g_world_script_variables = saved;
-        return val;
-    }
+    result = *g_world_script_variables;
+    *g_world_script_variables = saved;
+    return result;
 }

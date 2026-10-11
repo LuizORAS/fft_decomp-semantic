@@ -102,12 +102,11 @@ void world_menu_number_entry_thread(void) {
             if (*world_menu_entry_result(param) == -1) {
                 *world_menu_entry_result(param) = original;
             } else {
-                *world_menu_entry_result(param) = value;
-                {
-                    world_menu_number_range_t* current_range = param->context;
+                world_menu_number_range_t* current_range;
 
-                    current_range->on_change();
-                }
+                *world_menu_entry_result(param) = value;
+                current_range = param->context;
+                current_range->on_change();
             }
         }
         if (thread[-1].is_running == 0) {
