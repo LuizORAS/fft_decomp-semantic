@@ -21,6 +21,8 @@ s32 battle_ai_check_facing_tile(battle_ai_coords_t* source, battle_ai_coords_t* 
         return 1;
     }
     return tile->height
-        - g_battle_map_tile_data[(source->bytes.elevation << 8) + source->bytes.y * width + source->bytes.x].height
+        - g_battle_map_tile_data[(source->bytes.elevation * MAP_TILES_PER_LAYER) + source->bytes.y * width
+            + source->bytes.x]
+              .height
         >= 3;
 }

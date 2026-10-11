@@ -50,7 +50,8 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((unit_id << x) & 0x8000) {
                         if (ai->water_penalty
-                            && (depth = g_battle_map_tile_data[j * ai->map_max_x + x + (i << 8)].depth_half_height.value
+                            && (depth = g_battle_map_tile_data[j * ai->map_max_x + x + (i * MAP_TILES_PER_LAYER)]
+                                            .depth_half_height.value
                                        >> MAP_TILE_DEPTH_SHIFT)
                                 >= 2) {
                             ai->movable_tiles[i][j] ^= 0x8000 >> x;

@@ -31,9 +31,9 @@ s32 battle_ai_fill_target_distance_grid(battle_ai_coords_t* target) {
         if (suspended != 0)
             return -1;
         ai->resume_pending = 0;
-        target_remaining_range
-            = g_battle_target_panels[(target->bytes.elevation << 8) + target->bytes.y * ai->map_max_x + target->bytes.x]
-                  .remaining_range;
+        target_remaining_range = g_battle_target_panels[(target->bytes.elevation * MAP_TILES_PER_LAYER)
+            + target->bytes.y * ai->map_max_x + target->bytes.x]
+                                     .remaining_range;
     }
     for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
@@ -49,7 +49,8 @@ s32 battle_ai_fill_target_distance_grid(battle_ai_coords_t* target) {
                         distance += y_distance;
                     } else {
                         distance = target_remaining_range
-                            - g_battle_target_panels[(level << 8) + y * ai->map_max_x + x].remaining_range;
+                            - g_battle_target_panels[(level * MAP_TILES_PER_LAYER) + y * ai->map_max_x + x]
+                                  .remaining_range;
                     }
                     ai->tile_target_distance[level][y][x] = distance;
                 }

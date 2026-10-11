@@ -33,7 +33,7 @@ s32 battle_ai_calculate_ability_range(void) {
             tile++;
         } while (x < MAP_TILE_COUNT);
         g_battle_map_tile_data[ai->current_action.coords.bytes.y * ai->map_max_x + ai->current_action.coords.bytes.x
-            + (ai->current_action.coords.bytes.elevation << 8)]
+            + (ai->current_action.coords.bytes.elevation * MAP_TILES_PER_LAYER)]
             .ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;
     }
 
@@ -49,7 +49,8 @@ s32 battle_ai_calculate_ability_range(void) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     tile_mask = row << x;
                     if (tile_mask & 0x8000) {
-                        if ((g_battle_map_tile_data[y * ai->map_max_x + x + (level << 8)].ceiling_depth_and_marks.value
+                        if ((g_battle_map_tile_data[y * ai->map_max_x + x + (level * MAP_TILES_PER_LAYER)]
+                                    .ceiling_depth_and_marks.value
                                 >> MAP_TILE_FLAG_ABILITY_RANGE_SHIFT)
                             & 1) {
                             count++;

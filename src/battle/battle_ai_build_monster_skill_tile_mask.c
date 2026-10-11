@@ -33,8 +33,8 @@ void battle_ai_build_monster_skill_tile_mask(void) {
             continue;
         if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION))
             continue;
-        height = g_battle_map_tile_data[(unit->position.higher_elevation) * 256 + unit->position.y * ai->map_max_x
-            + unit->x]
+        height = g_battle_map_tile_data[unit->position.higher_elevation * MAP_TILES_PER_LAYER
+            + unit->position.y * ai->map_max_x + unit->x]
                      .height;
         for (direction = 0; direction < 4; direction++) {
             x = unit->x + g_battle_ai_facing_tile_offsets.by_direction[direction][0];
@@ -44,12 +44,14 @@ void battle_ai_build_monster_skill_tile_mask(void) {
             if (y < 0 || y >= ai->map_max_y)
                 continue;
             for (level = 0; level <= 0; level++) {
-                if ((g_battle_map_tile_data[(level << 8) + y * ai->map_max_x + x].height - height) >= -2
-                    && (g_battle_map_tile_data[(level << 8) + y * ai->map_max_x + x].height - height) <= 2) {
+                if ((g_battle_map_tile_data[(level * MAP_TILES_PER_LAYER) + y * ai->map_max_x + x].height - height)
+                        >= -2
+                    && (g_battle_map_tile_data[(level * MAP_TILES_PER_LAYER) + y * ai->map_max_x + x].height - height)
+                        <= 2) {
                     /* A typed level-row pointer folds the field offset into
                      * the induction value. Preserve the target's AI-base
                      * cursor with a member-derived displacement. */
-                    level_base = level * sizeof(u16[18]) + (u32)ai;
+                    level_base = level * sizeof(ai->targetable_tiles[0]) + (u32)ai;
                     row = (u16*)(level_base + ((u32)&ai->targetable_tiles - (u32)ai));
                     row[y] |= 0x8000 >> x;
                 }

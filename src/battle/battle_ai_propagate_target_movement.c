@@ -28,7 +28,7 @@ s32 battle_ai_propagate_target_movement(
         for (pass = BATTLE_MOVE_RECORD_COUNT - 1; pass >= 0; pass--)
             records[pass].unit_id_flags = BATTLE_MOVE_RECORD_NONE;
         battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_START_SPREAD);
-        index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
+        index = (config->high_elevation * MAP_TILES_PER_LAYER) + config->y * config->map_max_x + config->x;
         panel = &g_battle_target_panels[index];
         panel->ride_remaining_range = 0;
         panel->remaining_range = 0;
@@ -37,7 +37,7 @@ s32 battle_ai_propagate_target_movement(
         state->inner_count = 4;
         panel->remaining_range = 0;
         panel->max_height_delta = 0xff;
-        index = (target_elevation << 8) + target_y * config->map_max_x + target_x;
+        index = (target_elevation * MAP_TILES_PER_LAYER) + target_y * config->map_max_x + target_x;
         panel = &g_battle_target_panels[index];
         panel->remaining_range = BATTLE_MOVE_PATHFIND_RANGE + 1;
         frontier[index] |= FRONTIER_FLAG_QUEUED;
