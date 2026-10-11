@@ -7,7 +7,7 @@
  * slots 0..4 and clears the remaining ENTD slots. The target reloads each row
  * from g_main_unit_deployed_coords at its distinct uses.
  */
-s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s32 is_red_team_debug) {
+s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formation, s32 is_red_team_debug) {
     s32 failures = 0;
     s32 weight = 1;
     s32 i;
@@ -53,7 +53,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
                     unit->initial_team_flags = BATTLE_TEAM_RED | BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
                     unit->sprite_palette = 1;
                 }
-                if (g_main_unit_deployed_coords[i].facing_elevation_flags & 0x10) {
+                if (g_main_unit_deployed_coords[i].flags.value & 0x10) {
                     unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
                     unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
                 } else {

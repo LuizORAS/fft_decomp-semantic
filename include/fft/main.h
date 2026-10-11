@@ -17,7 +17,6 @@
 #include "psx/pad.h"
 #include "psx/suzuki.h"
 
-struct battle_deployed_coords;
 typedef struct suzuki_smd_header suzuki_smd_header_t;
 
 /* ability */
@@ -2059,14 +2058,14 @@ extern u32 g_main_tutorial_progress_masks[];
 extern u8 g_main_special_portrait_unit_id;
 extern u8 g_main_calculator_primes[CALCULATOR_PRIME_COUNT];
 extern u16 g_main_month_start_day_offsets[13];
-extern struct battle_deployed_coords* g_main_unit_deployed_coords;
+extern unit_deployment_coordinates_t* g_main_unit_deployed_coords;
 extern u8 g_main_crystal_learnable_abilities[];
 extern u8 g_main_crystal_treasure_item_id;
 extern u8 g_main_brave_story_character_ages[0x40];
 extern s32 g_main_debug_display_enabled;
 extern s32 g_main_replay_story_event_index;
 extern u8 g_main_special_portrait_wldface_id;
-extern s32 g_main_deployed_unit_map_coordinates[];
+extern unit_deployment_coordinates_t g_main_deployed_unit_map_coordinates[6];
 extern u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
 s32 main_sound_is_music_loading_stub(void);

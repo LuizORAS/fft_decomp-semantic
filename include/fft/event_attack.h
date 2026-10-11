@@ -131,22 +131,10 @@ enum {
 
 /* The roster id of a deployment tile or placement record that holds no unit
  * (g_attack_deploy_roster_id_by_tile, g_attack_deploy_units_by_squad and
- * attack_deployed_unit_coordinate_t.roster_id). */
+ * unit_deployment_coordinates_t.party_id). */
 enum {
     ATTACK_DEPLOY_ROSTER_ID_NONE = 0xff,
 };
-
-/* Four-byte placement record per deployed unit at
- * g_attack_deployed_unit_map_coordinates: party ID, X, Y, flags. */
-typedef struct attack_deployed_unit_coordinate {
-    u8 roster_id;  /* 0x00 */
-    u8 x;          /* 0x01 */
-    u8 y;          /* 0x02 */
-    u8 facing : 2; /* 0x03 */
-    u8 _unknown_03_bit2 : 3;
-    u8 _unused_03_bit5 : 2;
-    u8 upper_level : 1;
-} attack_deployed_unit_coordinate_t;
 
 /* Twelve-byte deployment-area record used by EVENT/ATTACK.OUT. The exact
  * roster-fieldability routine proves the stride, unit limit, and map ID;
@@ -220,7 +208,7 @@ extern attack_deployment_squad_data_t* g_attack_deploy_squad_data;
 extern attack_deploy_render_buffer_t g_attack_deploy_render_buffers[2];
 extern u8 g_attack_deploy_units_by_squad[4][25];
 extern u8 g_attack_deploy_valid_tiles[5][5];
-extern attack_deployed_unit_coordinate_t g_attack_deployed_unit_map_coordinates[12];
+extern unit_deployment_coordinates_t g_attack_deployed_unit_map_coordinates[12];
 extern u32 g_attack_deploy_cursor_texture_data[];
 extern s32 g_attack_deploy_active_cursor;
 extern s32 g_attack_deploy_grid_slide_x;
@@ -292,7 +280,7 @@ void attack_deploy_swap_roster_unit_tile(s32 column, s32 row, s32 roster_id);
 void attack_deploy_update_screen_graphics(void);
 void attack_init_deployment_cursor_primitives(void);
 void attack_update_deployment_cursor_primitives(s32 frame, attack_deploy_render_buffer_t* buffer);
-void* attack_deploy_get_coordinate_slots(void);
+unit_deployment_coordinates_t* attack_deploy_get_coordinate_slots(void);
 
 /* map */
 extern s32 g_attack_map_title_image_rect;

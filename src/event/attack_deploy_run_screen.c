@@ -37,7 +37,7 @@ void attack_deploy_run_screen(void) {
     u8* end;
     u8 flags;
     u32* input;
-    attack_deployed_unit_coordinate_t* slots;
+    unit_deployment_coordinates_t* slots;
     u8* tiles;
 
     first_pass = 1;
@@ -547,18 +547,18 @@ ramza_placed:
         }
     }
     battle_thread_wait_frames(0x3c);
-    g_attack_deployed_unit_map_coordinates[0].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[1].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[2].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[3].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[4].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[5].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[6].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[7].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[8].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[9].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[10].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
-    g_attack_deployed_unit_map_coordinates[11].roster_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[0].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[1].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[2].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[3].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[4].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[5].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[6].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[7].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[8].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[9].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[10].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
+    g_attack_deployed_unit_map_coordinates[11].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
     slots = g_attack_deployed_unit_map_coordinates;
     count = 0;
     for (i = 0; i < battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT); i++) {
@@ -583,12 +583,12 @@ ramza_placed:
             for (row = 0; row < 5; row++) {
                 for (column = 0; column < 5; column++) {
                     if (g_attack_deploy_units_by_squad[i][row * 5 + column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
-                        slots[count].roster_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
+                        slots[count].party_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
                         slots[count].x = g_attack_deploy_current_squad_data->center_x - column + 2;
                         slots[count].y = g_attack_deploy_current_squad_data->center_y + row - 2;
-                        slots[count].upper_level = g_attack_deploy_current_squad_data->upper_level;
-                        slots[count].facing = 0;
-                        slots[count]._unknown_03_bit2 = 0;
+                        slots[count].flags.placement.upper_level = g_attack_deploy_current_squad_data->upper_level;
+                        slots[count].flags.placement.facing = 0;
+                        slots[count].flags.placement._unknown_00_bit2 = 0;
                         count++;
                     }
                 }
@@ -597,12 +597,12 @@ ramza_placed:
             for (row = 0; row < 5; row++) {
                 for (column = 0; column < 5; column++) {
                     if (g_attack_deploy_units_by_squad[i][row * 5 + column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
-                        slots[count].roster_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
+                        slots[count].party_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
                         slots[count].x = g_attack_deploy_current_squad_data->center_x - row + 2;
                         slots[count].y = g_attack_deploy_current_squad_data->center_y - column + 2;
-                        slots[count].upper_level = g_attack_deploy_current_squad_data->upper_level;
-                        slots[count].facing = 3;
-                        slots[count]._unknown_03_bit2 = 0;
+                        slots[count].flags.placement.upper_level = g_attack_deploy_current_squad_data->upper_level;
+                        slots[count].flags.placement.facing = 3;
+                        slots[count].flags.placement._unknown_00_bit2 = 0;
                         count++;
                     }
                 }
@@ -611,12 +611,12 @@ ramza_placed:
             for (row = 0; row < 5; row++) {
                 for (column = 0; column < 5; column++) {
                     if (g_attack_deploy_units_by_squad[i][row * 5 + column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
-                        slots[count].roster_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
+                        slots[count].party_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
                         slots[count].x = g_attack_deploy_current_squad_data->center_x + column - 2;
                         slots[count].y = g_attack_deploy_current_squad_data->center_y - row + 2;
-                        slots[count].upper_level = g_attack_deploy_current_squad_data->upper_level;
-                        slots[count].facing = 2;
-                        slots[count]._unknown_03_bit2 = 0;
+                        slots[count].flags.placement.upper_level = g_attack_deploy_current_squad_data->upper_level;
+                        slots[count].flags.placement.facing = 2;
+                        slots[count].flags.placement._unknown_00_bit2 = 0;
                         count++;
                     }
                 }
@@ -625,12 +625,12 @@ ramza_placed:
             for (row = 0; row < 5; row++) {
                 for (column = 0; column < 5; column++) {
                     if (g_attack_deploy_units_by_squad[i][row * 5 + column] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
-                        slots[count].roster_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
+                        slots[count].party_id = g_attack_deploy_units_by_squad[i][row * 5 + column];
                         slots[count].x = g_attack_deploy_current_squad_data->center_x + row - 2;
                         slots[count].y = g_attack_deploy_current_squad_data->center_y + column - 2;
-                        slots[count].upper_level = g_attack_deploy_current_squad_data->upper_level;
-                        slots[count].facing = 1;
-                        slots[count]._unknown_03_bit2 = 0;
+                        slots[count].flags.placement.upper_level = g_attack_deploy_current_squad_data->upper_level;
+                        slots[count].flags.placement.facing = 1;
+                        slots[count].flags.placement._unknown_00_bit2 = 0;
                         count++;
                     }
                 }

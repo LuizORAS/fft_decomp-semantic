@@ -13,7 +13,7 @@ void battle_gfx_init_deployment_and_reset_unit_graphics_state(void) {
     g_main_gfx_unit_graphics_load_queue.count = 0;
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) == 0) {
         if (g_battle_deployment_skipped != 0) {
-            battle_unit_build_deployed_units_data((battle_deployed_coords_t*)g_main_deployed_unit_map_coordinates, 0);
+            battle_unit_build_deployed_units_data(g_main_deployed_unit_map_coordinates, 0);
             g_battle_gfx_unit_graphics_load_state.file_kind = BATTLE_GFX_UNIT_LOAD_KIND_FIRST;
             g_battle_gfx_unit_graphics_load_state.phase = BATTLE_GFX_UNIT_LOAD_PHASE_START_READ;
             g_battle_gfx_unit_graphics_load_state.index = 0;

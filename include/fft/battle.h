@@ -983,15 +983,6 @@ extern crystal_pickup_result_t* g_battle_dead_unit_context;
 extern s32 g_battle_dead_unit_result;
 
 /* deploy */
-/* Formation row read by battle_unit_init_deployed_units_data: five 4-byte
- * map coordinate rows at 0x8017f388. */
-typedef struct battle_deployed_coords {
-    u8 party_id;               /* +0: unit to deploy */
-    u8 x;                      /* +1 */
-    u8 y;                      /* +2 */
-    u8 facing_elevation_flags; /* +3; bit 0x10 marks unit absent before graphics/status setup */
-} battle_deployed_coords_t;
-
 extern const RECT g_battle_deployment_clear_rect;
 extern u16 g_battle_deployed_unit_palettes[2][16];
 extern s32 g_battle_deployment_skipped;
@@ -5192,7 +5183,7 @@ void battle_unit_update_graphics_by_misc_id_wrapper(u32 misc_id);
 void battle_unit_set_tile_position_with_mount_partner(battle_unit_misc_data_t* unit);
 void battle_unit_update_post_command_animation_display(battle_unit_misc_data_t* unit);
 void battle_unit_update_staged_status_data(u16 unit_id, u16 restore);
-s32 battle_unit_set_placement_and_validate(s32 unit_index, battle_deployed_coords_t* src);
+s32 battle_unit_set_placement_and_validate(s32 unit_index, unit_deployment_coordinates_t* src);
 s32 battle_unit_validate_placement(s32 unit_index);
 void battle_unit_view_supervisor_thread(void);
 s32 battle_unit_save_staged_status_data(s32 unit_id);
@@ -5200,7 +5191,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
 void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit);
 void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change);
 s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_display_t* display);
-s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s32 is_red_team_debug);
+s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formation, s32 is_red_team_debug);
 s32 battle_unit_set_tile_position(s32 misc_unit_id, u8 map_x, u8 map_y, u8 map_z, u8 facing);
 
 void battle_unit_set_target_animation_from_attack_type(
@@ -5210,7 +5201,7 @@ s16 battle_unit_get_camera_facing_quadrant_by_battle_id(u32 battle_id);
 void battle_unit_shift_down_or_up(battle_unit_misc_data_t* unit, s8 delta);
 s32 battle_unit_apply_level_up_down_ability(void);
 s32 battle_unit_apply_stat_increment_decrement(s32 mod, u8* stat, u8 max, u8 min);
-s32 battle_unit_build_deployed_units_data(battle_deployed_coords_t* formation, s32 unused_1);
+s32 battle_unit_build_deployed_units_data(unit_deployment_coordinates_t* formation, s32 unused_1);
 s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, battle_action_reward_display_t* rewards);
 void battle_unit_call_bow_hardcoding_by_misc_id(u16 attacker_id, u16 target_id);
 void battle_unit_call_set_animation_based_on_status(struct battle_unit_misc_data* unit);
@@ -5242,7 +5233,7 @@ s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const SVECTOR* amount);
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit);
 void battle_move_update_teleport_start(struct battle_unit_misc_data* unit);
 void battle_move_start_teleport_animation(battle_unit_misc_data_t* unit);
-void battle_unit_init_deployed_units_data_for_debug_red_team(battle_deployed_coords_t* formation, s32 unused_1);
+void battle_unit_init_deployed_units_data_for_debug_red_team(unit_deployment_coordinates_t* formation, s32 unused_1);
 
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
     s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data);
