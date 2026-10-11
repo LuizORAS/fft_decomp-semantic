@@ -1219,16 +1219,30 @@ typedef enum menu_window_frame_mode {
     MENU_WINDOW_FRAME_ALTERNATE_BUILD = 3,
 } menu_window_frame_mode_e;
 
-/* One 17-byte per-unit menu record, one per battle-unit slot (WORLD keeps its
- * 21 rows at 0x8013a750).
- * battle_menu_reset_unit_records (0x8013f8b4) proves the 17-byte stride and
- * 21 entries and marks byte 1 unset (0xFF); battle_menu_restore_selection_for_selected_unit and
- * battle_menu_record_selection_for_selected_unit (0x8014088c) treat byte 0 as
- * the unit's remembered selection for a tracked menu. */
+/* The selected row and scroll position of an ability list. */
+typedef struct menu_list_selection {
+    u8 selected_index;
+    u8 scroll_offset;
+} menu_list_selection_t;
+typedef char menu_list_selection_size_must_be_2[sizeof(menu_list_selection_t) == 2 ? 1 : -1];
+
+/* One remembered command/skillset selection per unit, followed by seven
+ * ability-list positions. Arithmeticks uses list positions 4, 5 and 6. */
 typedef struct battle_menu_record {
-    u8 bytes[17];
+    u8 command_index;               /* 0x00 */
+    u8 _unknown_01;                 /* 0x01; reset to 0xff */
+    u8 skillset_index;              /* 0x02 */
+    menu_list_selection_t lists[7]; /* 0x03 */
 } battle_menu_record_t;
 typedef char battle_menu_record_size_must_be_0x11[(sizeof(battle_menu_record_t) == 0x11) ? 1 : -1];
+
+/* Remap three remembered selections to one replacement for a menu. */
+typedef struct menu_selection_remap {
+    u8 menu_id;
+    u8 replacement;
+    u8 matches[3];
+} menu_selection_remap_t;
+typedef char menu_selection_remap_size_must_be_5[sizeof(menu_selection_remap_t) == 5 ? 1 : -1];
 
 /* One row of the 31-entry menu table at g_battle_menu_id_records; its first 12 rows are the
  * menus whose selection is remembered per unit.

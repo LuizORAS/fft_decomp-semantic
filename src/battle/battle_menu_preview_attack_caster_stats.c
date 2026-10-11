@@ -36,5 +36,5 @@ void battle_menu_preview_attack_caster_stats(void) {
     battle_thread_yield();
     battle_menu_load_selected_unit();
     battle_menu_display_hovered_unit_stats(&g_battle_menu_attack_caster_stats_display, UNIT_STATS_PANEL_ATTACK_CASTER,
-        (menu_number_entry_t*)g_battle_menu_attack_caster_stats_setup, &g_battle_menu_active_turn_banner);
+        g_battle_menu_attack_caster_stats_setup, &g_battle_menu_active_turn_banner);
 }

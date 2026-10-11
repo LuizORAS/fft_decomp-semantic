@@ -14,6 +14,6 @@ void world_menu_build_main(void) {
     row = &g_world_menu_unit_selection_rows[unit_id];
     g_world_thread_contexts[g_world_thread_current_id].function_parameter_2 = 1; /* redraw request */
     world_menu_run_icon_selection_loop();
-    row->bytes[0] = entry->selected_index;
+    row->command_index = entry->selected_index;
     world_thread_exit_current();
 }

@@ -5,7 +5,7 @@
  * induction variables (84 bytes rather than 76), so retain the byte view.
  * Use an integer countdown: decrementing an element pointer after row[0]
  * would form a pointer before the first row. */
-enum { WORLD_UNKNOWN_ROW_BYTES = 17 };
+enum { WORLD_MENU_UNIT_SELECTION_RECORD_BYTES = (s32)sizeof(battle_menu_record_t) };
 
 /* Reset the per-unit menu records, clearing each and marking byte 1 as
  * unset (0xFF). */
@@ -19,13 +19,13 @@ void world_menu_reset_unit_records(void) {
     index = 0;
     row = (u8*)g_world_menu_unit_selection_rows;
     do {
-        count = WORLD_UNKNOWN_ROW_BYTES - 1;
+        count = WORLD_MENU_UNIT_SELECTION_RECORD_BYTES - 1;
         do {
             row[count] = 0;
             count -= 1;
         } while (count >= 0);
         ((u8*)g_world_menu_unit_selection_rows)[index + 1] = fill;
-        index += WORLD_UNKNOWN_ROW_BYTES;
-        row += WORLD_UNKNOWN_ROW_BYTES;
-    } while (index < BATTLE_UNIT_SLOT_COUNT * WORLD_UNKNOWN_ROW_BYTES);
+        index += WORLD_MENU_UNIT_SELECTION_RECORD_BYTES;
+        row += WORLD_MENU_UNIT_SELECTION_RECORD_BYTES;
+    } while (index < BATTLE_UNIT_SLOT_COUNT * WORLD_MENU_UNIT_SELECTION_RECORD_BYTES);
 }

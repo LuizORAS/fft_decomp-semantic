@@ -1,43 +1,26 @@
 #include "fft/battle.h"
 
-/* Message window layout; only the fields written here are named. */
-typedef struct battle_text_message_window_layout {
-    u8 _unused_00[4];
-    s16 width_04;
-    s16 height_06;
-    s16 x; /* 0x08; centred on 0x102 */
-    u8 _unused_0a[2];
-    s16 width_0c;
-    s16 height_0e;
-    u8 _unused_10[4];
-    s16 width_14;
-    s16 height_16;
-    u8 _unused_18[4];
-    s16 text_id; /* 0x1c */
-} battle_text_message_window_layout_t;
-
 /*
  * Size a message window to its text entry.
  *
- * Measures the text, optionally widens single-line messages to eight columns
- * (reporting (8 - width) * 5 extra display frames), pads the width to a
- * multiple of 4 plus 0x18 border, and centres the window on x = 0x102.
+ * Measures the text, optionally widens a single-line entry to eight pixels
+ * and reports its text padding, adds the 0x18 border and the low two width
+ * bits, then centres the window on x = 0x102.
  */
-void battle_menu_size_entry_to_text(
-    battle_text_message_window_layout_t* window, s16* width, s16* height, s32* extra_frames, s32 pad_short) {
+void battle_menu_size_entry_to_text(world_menu_entry_t* window, s16* width, s16* height, s32* out_pad, s32 pad_short) {
     u8* text;
 
     text = battle_text_find_entry(window->text_id);
-    *extra_frames = 0;
+    *out_pad = 0;
     battle_text_measure_pixels(width, height, text);
     if (pad_short != 0 && *width < 8 && *height == 1) {
-        *extra_frames = (8 - *width) * 5;
+        *out_pad = (8 - *width) * 5;
         *width = 8;
     }
     *width += 0x18;
     *width += *width & 3;
     *height = *height * 16 + 16;
-    window->x = 0x102 - (*width >> 1);
-    window->width_0c = window->width_04 = window->width_14 = *width;
-    window->height_0e = window->height_06 = window->height_16 = *height;
+    window->window_x = 0x102 - (*width >> 1);
+    window->window_width = window->inner_width = window->text_image.width = *width;
+    window->window_height = window->inner_height = window->text_image.height = *height;
 }

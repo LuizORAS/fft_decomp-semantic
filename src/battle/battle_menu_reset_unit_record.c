@@ -10,8 +10,8 @@ void battle_menu_reset_unit_record(s32 battle_id) {
     records = g_battle_menu_unit_selection_records;
     for (i = 0; i < 17; i++) {
         if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_MANUAL) {
-            records[battle_id].bytes[i] = 0;
-            g_battle_menu_unit_selection_records[battle_id].bytes[1] = 0xFF;
+            ((u8*)&records[battle_id])[i] = 0;
+            g_battle_menu_unit_selection_records[battle_id]._unknown_01 = 0xFF;
         }
     }
 }

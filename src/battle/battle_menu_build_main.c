@@ -14,6 +14,6 @@ void battle_menu_build_main(void) {
     /* A nonzero second parameter makes the icon loop return here instead of exiting. */
     g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_2 = 1;
     battle_menu_run_icon_selection_loop();
-    record->bytes[0] = parameter->selected_index;
+    record->command_index = parameter->selected_index;
     battle_thread_exit_current();
 }

@@ -3,10 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-struct battle_text_message_window_layout;
-extern void battle_menu_size_entry_to_text(
-    struct battle_text_message_window_layout* window, s16* width, s16* height, s32* extra_frames, s32 pad_short);
-
 /* Timed menu icon thread: shows one text entry with alternating sprite
  * records until input arrives or the g_battle_text_message_duration_frames frame budget (scaled by the
  * event speed) runs out. Bit 8 of the budget suppresses cancel handling
@@ -34,7 +30,7 @@ void battle_menu_icon_timed_thread(void) {
     }
     i = 0;
     param = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
-    battle_menu_size_entry_to_text((struct battle_text_message_window_layout*)param, &width, &height, &pad, 1);
+    battle_menu_size_entry_to_text(param, &width, &height, &pad, 1);
     battle_menu_build_window_sprites(&rect, param, &records[0]);
     battle_copy_bytes(&records[1], &records[0], 0x7C);
     buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);

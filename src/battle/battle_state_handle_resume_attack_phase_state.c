@@ -1,8 +1,5 @@
 #include "fft/battle.h"
 
-struct battle_gfx_misc_data_header;
-extern void battle_gfx_invalidate_sp2_vram_slot(struct battle_gfx_misc_data_header*);
-
 /* ResumeAttackPhase game-state handler: show the remaining post-effect messages,
  * then finish the strike.
  *
@@ -41,7 +38,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
             main_heap_free(g_battle_gfx_sp2_data);
             g_battle_gfx_sp2_data = 0;
         }
-        battle_gfx_invalidate_sp2_vram_slot((struct battle_gfx_misc_data_header*)unit);
+        battle_gfx_invalidate_sp2_vram_slot(unit);
         if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_UNIT_READY
             && g_battle_action_phase == BATTLE_ACTION_PHASE_ACTING_UNIT) {
             facing = unit->facing;

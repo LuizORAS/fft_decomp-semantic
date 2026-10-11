@@ -37,10 +37,10 @@ void battle_menu_run_skillset_thread(void) {
     param = &g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_2;
     *param = param_value;
     record = &g_battle_menu_unit_selection_records[g_battle_active_turn_unit.battle_id];
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = record->bytes[2];
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = record->skillset_index;
     g_battle_menu_restore_depth = 1;
     battle_script_pulse_tutorial_wait_value(0xFC);
     battle_menu_run_icon_selection_loop();
-    record->bytes[2] = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
+    record->skillset_index = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
     battle_thread_exit_current();
 }

@@ -11,7 +11,7 @@ void battle_menu_record_selection_for_selected_unit(void) {
     records = g_battle_menu_unit_selection_records;
     for (i = 0; i < 12; i++) {
         if (g_battle_menu_current_id == g_battle_menu_id_records[i].menu_id) {
-            records[*selected].bytes[0] = g_battle_menu_thread_menu_data[g_battle_menu_current_id].selected_index;
+            records[*selected].command_index = g_battle_menu_thread_menu_data[g_battle_menu_current_id].selected_index;
         }
     }
 }

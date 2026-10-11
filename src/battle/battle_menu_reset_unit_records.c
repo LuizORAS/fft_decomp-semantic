@@ -1,17 +1,26 @@
 #include "fft/battle.h"
+#include "psx/stddef.h"
+#include "psx/types.h"
 
-/* Reset the per-unit menu records, clearing each and marking byte 1 as
- * unset (0xFF).
- *
- * Target 0x8013f8b4. */
+/* Clear whole records through a byte cursor: indexed record fields change the
+ * native loop induction. Byte 1 remains unset (0xff). */
 void battle_menu_reset_unit_records(void) {
-    s32 i;
-    s32 j;
+    s32 index;
+    u8* row;
+    s32 count;
+    u8 fill;
 
-    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        for (j = 16; j >= 0; j--) {
-            g_battle_menu_unit_selection_records[i].bytes[j] = 0;
-        }
-        g_battle_menu_unit_selection_records[i].bytes[1] = 0xFF;
-    }
+    fill = 0xFF;
+    index = 0;
+    row = (u8*)g_battle_menu_unit_selection_records;
+    do {
+        count = sizeof(battle_menu_record_t) - 1;
+        do {
+            row[count] = 0;
+            count -= 1;
+        } while (count >= 0);
+        ((u8*)g_battle_menu_unit_selection_records)[index + offsetof(battle_menu_record_t, _unknown_01)] = fill;
+        index += sizeof(battle_menu_record_t);
+        row += sizeof(battle_menu_record_t);
+    } while (index < (s32)sizeof(g_battle_menu_unit_selection_records));
 }

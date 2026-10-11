@@ -9,7 +9,7 @@ void world_menu_start_at_list_thread(void) {
 
     g_world_menu_at_list_state.select_text_table = 0x13;
     g_world_menu_thread_menu_data = list;
-    g_world_menu_at_list_state.context = g_world_menu_at_list_entry_table;
+    g_world_menu_at_list_state.context = &g_world_menu_at_list_entry_table;
     world_menu_init_at_list(list);
     world_thread_start(g_world_thread_current_id - 2, world_build_at_list);
     world_thread_set_parameters(g_world_thread_current_id - 2, (s32)list, 0, 0);
