@@ -2,8 +2,5 @@
 #include "psx/libgpu.h"
 
 void SetTile8(TILE_8* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
-
-    tag->len = PSYQ_GPU_FIXED_TILE_WORDS;
-    tag->code = PSYQ_GPU_CODE_TILE8;
+    setTile8(primitive);
 }

@@ -2,8 +2,5 @@
 #include "psx/libgpu.h"
 
 void SetLineF2(LINE_F2* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
-
-    tag->len = PSYQ_GPU_PACKET_WORDS(LINE_F2);
-    tag->code = PSYQ_GPU_CODE_LINE_F2;
+    setLineF2(primitive);
 }

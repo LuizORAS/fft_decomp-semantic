@@ -2,8 +2,5 @@
 #include "psx/libgpu.h"
 
 void SetSprt8(SPRT_8* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
-
-    tag->len = PSYQ_GPU_FIXED_SPRITE_WORDS;
-    tag->code = PSYQ_GPU_CODE_SPRT8;
+    setSprt8(primitive);
 }

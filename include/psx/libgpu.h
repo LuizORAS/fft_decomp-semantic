@@ -157,6 +157,18 @@ typedef struct {
 #define setPolyG4(p)  (setlen(p, 8), setcode(p, 0x38))
 #define setPolyGT4(p) (setlen(p, 12), setcode(p, 0x3c))
 
+#define setSprt8(p)  (setlen(p, 3), setcode(p, 0x74))
+#define setSprt16(p) (setlen(p, 3), setcode(p, 0x7c))
+#define setSprt(p)   (setlen(p, 4), setcode(p, 0x64))
+#define setTile1(p)  (setlen(p, 2), setcode(p, 0x68))
+#define setTile8(p)  (setlen(p, 2), setcode(p, 0x70))
+#define setTile16(p) (setlen(p, 2), setcode(p, 0x78))
+#define setTile(p)   (setlen(p, 3), setcode(p, 0x60))
+#define setLineF2(p) (setlen(p, 3), setcode(p, 0x40))
+#define setLineG2(p) (setlen(p, 4), setcode(p, 0x50))
+#define setLineF3(p) (setlen(p, 5), setcode(p, 0x48), (p)->pad = 0x55555555)
+#define setLineF4(p) (setlen(p, 6), setcode(p, 0x4c), (p)->pad = 0x55555555)
+
 #define setSemiTrans(p, abe) ((abe) ? setcode(p, getcode(p) | 0x02) : setcode(p, getcode(p) & ~0x02))
 #define setShadeTex(p, tge)  ((tge) ? setcode(p, getcode(p) | 0x01) : setcode(p, getcode(p) & ~0x01))
 

@@ -2,8 +2,6 @@
 #include "psx/libgpu.h"
 
 void SetBlockFill(TILE* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
-
-    tag->len = PSYQ_GPU_PACKET_WORDS(TILE);
-    tag->code = PSYQ_GPU_CODE_BLOCK_FILL;
+    setlen(primitive, PSYQ_GPU_PACKET_WORDS(TILE));
+    setcode(primitive, PSYQ_GPU_CODE_BLOCK_FILL);
 }
