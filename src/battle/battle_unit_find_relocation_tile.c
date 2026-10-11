@@ -13,7 +13,7 @@
  * The panel clear walks the byte offset itself: the target loop has no index
  * register, which an index loop keeps. Only level's destination store is an
  * assignment chain; that shape alone gives the target's register choices. */
-s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* destination) {
+s32 battle_unit_find_relocation_tile(s32 unit_index, unit_tile_coordinates_t* destination) {
     battle_stats_t* unit;
     map_tile_t* tile;
     s32 origin_x;
@@ -65,8 +65,8 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
         }
     }
     for (i = 0; i < g_battle_relocated_unit_count; i++) {
-        index = g_battle_relocated_unit_coords[i][2] * 256 + g_battle_relocated_unit_coords[i][1] * g_battle_map_max_x
-            + g_battle_relocated_unit_coords[i][0];
+        index = g_battle_relocated_unit_coords[i].elevation * 256
+            + g_battle_relocated_unit_coords[i].y * g_battle_map_max_x + g_battle_relocated_unit_coords[i].x;
         panel = &g_battle_target_panels[index];
         panel->unit_record_index = 1;
     }
@@ -123,10 +123,10 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                                 }
                             }
                             destination->x = found_x;
-                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count][0] = found_x;
-                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count][1] = destination->y = found_y;
-                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count][2] = destination->level
-                                = level;
+                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count].x = found_x;
+                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count].y = destination->y = found_y;
+                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count].elevation
+                                = destination->elevation = level;
                             g_battle_relocated_unit_count++;
                             return 0;
                         }

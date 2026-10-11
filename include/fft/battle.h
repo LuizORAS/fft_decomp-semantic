@@ -1582,18 +1582,6 @@ typedef struct battle_action_reward_display {
 } battle_action_reward_display_t;
 typedef char battle_action_reward_display_size_must_be_4[(sizeof(battle_action_reward_display_t) == 4) ? 1 : -1];
 
-/*
- * Misc unit_t Data has 16 renderer-side slots, each 0x440 bytes. This
- * declaration spans the full slot; unverified regions remain padding.
- * The record links to its simulation-side battle_stats_t at 0x134.
- */
-/* Halfword tile destination written by battle_unit_find_relocation_tile into battle_unit_misc_data_t.dismount. */
-typedef struct battle_dismount_coords {
-    s16 x;     /* 0x0 */
-    s16 level; /* 0x2 */
-    s16 y;     /* 0x4 */
-} battle_dismount_coords_t;
-
 enum {
     BATTLE_ACTION_STATUS_DISPLAY_REMOVAL = 0x80,
     BATTLE_ACTION_STATUS_DISPLAY_IMAGE_MASK = 0x7f,
@@ -1906,6 +1894,14 @@ typedef union battle_move_height_offsets {
 } battle_move_height_offsets_t;
 typedef char battle_movement_height_offsets_size_must_be_1[(sizeof(battle_move_height_offsets_t) == 1) ? 1 : -1];
 
+/* Tile coordinates stored in teleport paths and relocation reservations. */
+typedef struct battle_tile_coordinates {
+    u8 x;
+    u8 y;
+    u8 elevation;
+} battle_tile_coordinates_t;
+typedef char battle_tile_coordinates_size_must_be_3[(sizeof(battle_tile_coordinates_t) == 3) ? 1 : -1];
+
 /* Complete movement record copied from 0x8018f7f0 into misc +0x9c.
  * Count 0xfe selects the explicit teleport destination; 0xff is a failed
  * teleport. Ordinary counts select packed steps, each spanning one or more
@@ -1914,11 +1910,7 @@ typedef struct battle_walk_path {
     u8 count; /* 0x00; step count or BATTLE_MOVE_PATH_TELEPORT/TELEPORT_FAILED */
     union {
         battle_move_step_t steps[0x7c]; /* 0x01; packed direction, elevation and length */
-        struct {
-            u8 x;
-            u8 y;
-            u8 elevation;
-        } teleport;
+        battle_tile_coordinates_t teleport;
     } data;
     u8 flags;                                    /* 0x7d; battle_move_effective_flags_e */
     battle_move_height_offsets_t height_offsets; /* 0x7e; source/destination offsets */
@@ -2079,6 +2071,8 @@ typedef char battle_strike_targets_must_be_2[((unsigned long)&((battle_strike_wo
 typedef char
     battle_strike_continue_must_be_0x18[((unsigned long)&((battle_strike_work_t*)0)->continue_attack == 0x18) ? 1 : -1];
 
+/* Misc unit_t Data has 16 renderer-side slots, each 0x440 bytes.
+ * The record links to its simulation-side battle_stats_t at 0x134. */
 typedef struct battle_unit_misc_data {
     struct battle_unit_misc_data* previous; /* 0x000; previous Misc unit_t Data */
     u8 unit_id;                             /* 0x004; Misc unit_t Data ID */
@@ -2185,7 +2179,7 @@ typedef struct battle_unit_misc_data {
     /* Death-by-dismount destination (Miscellaneous unit_t Data 0x184/0x186/
      * 0x188); battle_unit_set_map_coords_after_death_dismount copies them to
      * map_x/map_z/map_y.  attack_result_animation_update passes &dismount. */
-    battle_dismount_coords_t dismount; /* 0x184 */
+    unit_tile_coordinates_t dismount; /* 0x184 */
     u8 _unused_18a[2];
     battle_strike_work_t strike; /* 0x18c..0x1b3; current action targets, result and rewards */
     u8 command_ready;            /* 0x1b4; 0x800753b8 sets 1 after AI setup completes; gates command dispatch */
@@ -3289,7 +3283,7 @@ typedef struct battle_effect_palette_section {
     clut_t secondary_palettes; /* 0x200 */
     u8 image_size[3];          /* 0x400; little-endian bytes */
     u8 wide_image;             /* 0x403; 256-byte rows when nonzero, otherwise 128 */
-    u8 pixels[0];              /* 0x404 */
+    u32 pixels[0];             /* 0x404; packed GPU image-transfer words */
 } battle_effect_palette_section_t;
 typedef char
     battle_effect_palette_section_size_must_be_0x404[sizeof(battle_effect_palette_section_t) == 0x404 ? 1 : -1];
@@ -5087,10 +5081,10 @@ extern s32 g_battle_companion_overlay_primitives;
 extern u8 g_battle_rider_status_infliction_mask[BATTLE_STATUS_BYTE_COUNT];
 extern s32 g_battle_entd_selection_mode; /* battle_entd_selection_e */
 
-/* Count and x/y/level byte triples of the tiles already handed out as dismount
+/* Count and coordinates of the tiles already handed out as dismount
  * destinations this action. */
 extern s32 g_battle_relocated_unit_count;
-extern u8 g_battle_relocated_unit_coords[][3];
+extern battle_tile_coordinates_t g_battle_relocated_unit_coords[];
 extern RECT g_battle_unit_editor_cursor_rect; /* cursor source */
 extern RECT g_battle_unit_editor_panel_rect;  /* panel box */
 extern RECT g_battle_unit_editor_text_rect_a; /* first text image */
@@ -5218,7 +5212,7 @@ s32 battle_unit_set_placement_and_validate(s32 unit_index, unit_deployment_coord
 s32 battle_unit_validate_placement(s32 unit_index);
 void battle_unit_view_supervisor_thread(void);
 s32 battle_unit_save_staged_status_data(s32 unit_id);
-s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* destination);
+s32 battle_unit_find_relocation_tile(s32 unit_index, unit_tile_coordinates_t* destination);
 void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit);
 void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change);
 s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_display_t* display);
@@ -7175,6 +7169,9 @@ s32 battle_move_check_horizontal_jump(s32, u8, u8, u8);
 
 battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, s32 target_x,
     s32 target_y, u32 target_level, s32 initialize, s32* suspended, s32 check_budget);
+
+void battle_move_calculate_pathing_time_sliced(s32 flags, s32 jump, s32 x, s32 y, s32 level, s32 target_x, s32 target_y,
+    s32 target_level, s32 initialize, s32* suspended);
 
 void battle_move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit);
 void battle_move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32 allow_height_change);

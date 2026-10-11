@@ -31,7 +31,7 @@ void battle_effect_init_palette(s16 index) {
         rect.y = 0;
         rect.w = 0x80;
         rect.h = height;
-        LoadImage(&rect, (u32*)data->pixels);
+        LoadImage(&rect, data->pixels);
     } else {
         height = size;
         height = height / 0x80;
@@ -39,6 +39,6 @@ void battle_effect_init_palette(s16 index) {
         rect.y = 0;
         rect.w = 0x40;
         rect.h = height;
-        LoadImage(&rect, (u32*)data->pixels);
+        LoadImage(&rect, data->pixels);
     }
 }
