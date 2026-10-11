@@ -1647,7 +1647,7 @@ void main_sound_free_wavesets(void);
 void main_sound_free_waveset(suzuki_waveset_t* waveset);
 suzuki_waveset_t* main_sound_find_waveset(s16 id);
 void main_sound_set_type(s32 type);
-s32 main_sound_get_type(void);
+main_sound_type_e main_sound_get_type(void);
 void main_sound_put_type(s16 level);
 void main_sound_set_reverb_mode(s32 mode, s16 depth, s32 delay, s32 feedback);
 void main_sound_set_master_volume(s16 volume, s16 time);

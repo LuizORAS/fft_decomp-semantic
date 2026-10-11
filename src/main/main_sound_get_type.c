@@ -2,8 +2,8 @@
 
 /* The sound output setting as MAIN_SOUND_TYPE_MONO, _STEREO or _WIDE, read from
  * the driver flags. The opposite-phase wide mode is reported as _WIDE. */
-s32 main_sound_get_type(void) {
-    s32 result;
+main_sound_type_e main_sound_get_type(void) {
+    main_sound_type_e result;
 
     if (g_main_sound_driver_flags
         & (MAIN_SOUND_DRIVER_WIDE_OPPOSITE | MAIN_SOUND_DRIVER_WIDE | MAIN_SOUND_DRIVER_STEREO)) {
