@@ -1,7 +1,7 @@
 #include "psx/libapi.h"
 s32 SetRCnt(u32 spec, u16 target, s32 mode) {
     s32 counter = spec & PSYQ_RCNT_SPEC_MASK;
-    s32 hardware_mode = PSYQ_RCNT_BASE_MODE;
+    u16 hardware_mode = PSYQ_RCNT_BASE_MODE;
     if (counter >= PSYQ_RCNT_HARDWARE_COUNT) {
         return 0;
     }
