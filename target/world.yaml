@@ -1269,7 +1269,7 @@ data:
   - {addr: 0x80156c40, name: g_world_menu_window_sprite_source}
   - {addr: 0x80156c50, name: g_world_menu_window_sprite_position}
   - {addr: 0x80156c60, name: g_world_option_input_timing_profiles}
-  - {addr: 0x80156c8c, name: g_world_menu_record_template}
+  - {addr: 0x80156c8c, name: g_world_option_gfx_draw_area_template}
   - {addr: 0x80156ca0, name: g_world_menu_thin_panel_texture_windows}
   - {addr: 0x80156cd8, name: g_world_menu_panel_texture_windows}
   - {addr: 0x80156d24, name: g_world_gfx_draw_area_scale_percent}

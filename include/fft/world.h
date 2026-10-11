@@ -2158,7 +2158,7 @@ extern s32 g_world_menu_panel_fade_intensity;
 extern s32 g_world_menu_panel_fade_mode; /* menu_panel_fade_mode_e */
 extern u32 g_world_menu_previous_button_input;
 extern u8 g_world_menu_prompt_active;
-extern const u8 g_world_menu_record_template[8];
+extern const RECT g_world_option_gfx_draw_area_template;
 extern u8 g_world_menu_restore_pending;
 extern s16 g_world_menu_row_height;
 extern s16 g_world_menu_screen_open_request;
