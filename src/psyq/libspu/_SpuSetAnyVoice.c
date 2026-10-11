@@ -19,7 +19,7 @@ u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_
             _spu_RXX->raw[reg_index_low] |= voice_bit;
             _spu_RXX->raw[reg_index_high] |= (voice_bit >> 16) & 0xff;
         }
-        current |= voice_bit & 0xffffff;
+        current |= voice_bit & SPU_ALLCH;
         break;
     case SPU_OFF:
         if (_spu_env & 1) {
@@ -30,8 +30,8 @@ u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_
             _spu_RXX->raw[reg_index_low] &= ~voice_bit;
             _spu_RXX->raw[reg_index_high] &= ~((voice_bit >> 16) & 0xff);
         }
-        current &= ~(voice_bit & 0xffffff);
+        current &= ~(voice_bit & SPU_ALLCH);
         break;
     }
-    return current & 0xffffff;
+    return current & SPU_ALLCH;
 }

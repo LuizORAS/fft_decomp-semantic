@@ -14,6 +14,9 @@ enum {
     SPU_ON = 1,
 };
 
+/* All 24 SPU voice channels. */
+enum { SPU_ALLCH = 0x00ffffff };
+
 /* SpuReadDecodedData capture selection. */
 enum {
     SPU_ALL = 0,

@@ -4,7 +4,7 @@
 void SpuSetKey(s32 on_off, u32 voice_bit) {
     u16 low;
     u16 high;
-    voice_bit &= 0xffffff;
+    voice_bit &= SPU_ALLCH;
     low = voice_bit;
     high = voice_bit >> 16;
     switch (on_off) {
@@ -17,8 +17,8 @@ void SpuSetKey(s32 on_off, u32 voice_bit) {
             if (_spu_RQ[2] & voice_bit) {
                 _spu_RQ[2] &= ~voice_bit;
             }
-            if (_spu_RQ[3] & (voice_bit >> 16)) {
-                _spu_RQ[3] &= ~(voice_bit >> 16);
+            if (_spu_RQ[3] & high) {
+                _spu_RQ[3] &= ~high;
             }
         } else {
             _spu_RXX->rxx.key_on_low = low;
@@ -35,8 +35,8 @@ void SpuSetKey(s32 on_off, u32 voice_bit) {
             if (_spu_RQ[0] & voice_bit) {
                 _spu_RQ[0] &= ~voice_bit;
             }
-            if (_spu_RQ[1] & (voice_bit >> 16)) {
-                _spu_RQ[1] &= ~(voice_bit >> 16);
+            if (_spu_RQ[1] & high) {
+                _spu_RQ[1] &= ~high;
             }
         } else {
             _spu_RXX->rxx.key_off_low = low;
