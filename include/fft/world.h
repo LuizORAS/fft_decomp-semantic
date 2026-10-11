@@ -713,16 +713,6 @@ typedef enum world_fade_state {
     WORLD_FADE_STATE_INCREASING = 2
 } world_fade_state_e;
 
-/* Provisional: record whose two TIM pointers at +0x1e00/+0x1e04 are filled
- * by world_script_load_tutorial_files from the 8-byte LBA/size tables at
- * 0x80193c40 and 0x80193c78. Only these fields are known. */
-typedef struct world_gfx_tim_pair_record {
-    u8 _unused_0000[0x1e00];
-    void* tim_pointers[2];
-} world_gfx_tim_pair_record_t;
-typedef char world_tim_pair_record_tims_offset_must_be_0x1e00
-    [((unsigned long)&((world_gfx_tim_pair_record_t*)0)->tim_pointers == 0x1e00) ? 1 : -1];
-
 /* Provisional: the WORLD GPU packet buffer pointed to by 0x801cd528.  Only the
  * ordering table base and the DR_MODE pool used by 0x8012d340 are named; the
  * 12-byte pool at 0x5c is consumed by the sibling 0x8012d25c; the TILE pool
@@ -878,8 +868,6 @@ extern RECT g_world_gfx_fade_tile_rect;
 /* Sector and size pairs, read as flat words ([i * 2], [i * 2 + 1]): a record
  * member access changes how the target addresses them. */
 extern s32 g_world_shop_background_tim_files[9 * 2];
-extern s32 g_world_script_tutorial_message_files[7 * 2];
-extern s32 g_world_script_tutorial_script_files[7 * 2];
 extern s32 g_world_gfx_free_rect_texels[4];
 extern s32 g_world_gfx_free_rect_grid_cells[4];
 extern RECT g_world_gfx_draw_area_template;
@@ -1045,7 +1033,6 @@ void world_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll
 s32 world_gfx_get_vsync_mode_or_one(void);
 void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 void world_gfx_load_image_and_wait(RECT* rect, void* data);
-void world_script_load_tutorial_files(s32 index, world_gfx_tim_pair_record_t* record);
 void world_gfx_load_wldface_to_frame_buffer(void);
 void world_gfx_store_image_and_wait(RECT* rect, void* dest);
 void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_otag);
@@ -1174,6 +1161,18 @@ extern world_image_location_t g_world_panel_item_icon_texture[];
 extern s16 g_world_panel_slide_down_y[];
 
 /* tutorial */
+
+/* The current game is serialized here while a tutorial runs; its message
+ * text and command stream follow the saved bytes at +0x1e00/+0x1e04. */
+typedef struct world_tutorial_state {
+    card_save_buffer_t saved_game;
+    u8* messages;
+    u8* script;
+} world_tutorial_state_t;
+typedef char world_tutorial_state_messages_offset_must_be_0x1e00
+    [((unsigned long)&((world_tutorial_state_t*)0)->messages == 0x1e00) ? 1 : -1];
+typedef char world_tutorial_state_size_must_be_0x1e08[sizeof(world_tutorial_state_t) == 0x1e08 ? 1 : -1];
+
 /*
  * WORLD.BIN tutorial command stream. Commands below 0x10 are one-byte shifts;
  * the rest are ID (1) followed by the listed parameters: 0x10 message id (2) +
@@ -1193,12 +1192,16 @@ enum {
 };
 
 extern s16 g_world_tutorial_categories_request_state; /* world_screen_request_state_e */
-extern world_gfx_tim_pair_record_t g_world_tutorial_saved_game_image;
+extern world_tutorial_state_t g_world_tutorial_state;
+/* Sector and size pairs; flat word access preserves the original addressing. */
+extern s32 g_world_script_tutorial_message_files[7 * 2];
+extern s32 g_world_script_tutorial_script_files[7 * 2];
 extern s16 g_world_tutorial_highlight_corners_a[][4];  /* first tutorial highlight quad corners */
 extern s16 g_world_tutorial_highlight_corners_b[][4];  /* second tutorial highlight quad corners */
 extern rgb24_t g_world_tutorial_highlight_colors_a[4]; /* first quad corner colours */
 extern rgb24_t g_world_tutorial_highlight_colors_b[4]; /* second quad corner colours */
 extern u8 g_world_tutorial_highlight_quad_count;
+void world_script_load_tutorial_files(s32 index, world_tutorial_state_t* record);
 
 /* input */
 extern u8 g_world_input_activation_timer;

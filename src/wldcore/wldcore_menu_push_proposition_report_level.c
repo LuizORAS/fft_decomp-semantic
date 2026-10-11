@@ -2,10 +2,7 @@
 
 /* Hides the parent level's two windows and render record, then pushes a
  * type-0x10 menu level for argument and sets WORLD thread 14's parameters.
- *
- * The subscripted lvalues keep both scalars in-struct for GCC's alias
- * classification, which holds the g_wldcore_job_selection.gate load and the ordering-table store
- * after the menu-record stores as in the target; plain scalars are hoisted. */
+ */
 void wldcore_menu_push_proposition_report_level(s32 argument) {
     s32 depth;
 
@@ -21,7 +18,7 @@ void wldcore_menu_push_proposition_report_level(s32 argument) {
     g_wldcore_menu_stack_records_next[depth].proposition_report.phase = 0;
     g_wldcore_menu_stack_records_next[depth].proposition_report.load_phase = WLDCORE_PROPOSITION_REPORT_LOAD_MESSAGES;
     g_wldcore_menu_stack_records_next[depth].proposition_report.render_index = -1;
-    (&g_wldcore_menu_ordering_table_offset)[0] = 9;
+    g_wldcore_menu_ordering_table_offset = 9;
     if (g_wldcore_job_selection.gate != 0) {
         g_wldcore_menu_stack_records_next[depth].proposition_report.state = 0x63;
     } else {

@@ -230,6 +230,7 @@ extern s32 g_wldcore_sound_novel_script_sector_offsets[];
 extern s32 g_wldcore_sound_novel_text_sector_offsets[];
 
 /* Sound resource the sound-novel menu passes to SuzukiAppendVFXSMD. */
+extern struct main_sound_resource* g_wldcore_default_sound_novel_sound_resource;
 extern struct main_sound_resource* g_wldcore_sound_novel_sound_resource;
 extern s32 g_wldcore_sound_novel_countdown_frames;
 extern s32 g_wldcore_sound_novel_countdown_section;
@@ -594,6 +595,7 @@ typedef struct wldcore_script_state {
 typedef char wldcore_script_state_size_must_be_0x30[sizeof(wldcore_script_state_t) == 0x30 ? 1 : -1];
 
 extern wldcore_save_slot_table_t* g_wldcore_script_slot_table;
+extern u16* g_wldcore_default_script_base;
 extern u16* g_wldcore_script_base;
 extern void (*g_wldcore_script_opcode_table[])(void);
 extern wldcore_script_state_t g_wldcore_script_state;

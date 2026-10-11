@@ -2100,7 +2100,7 @@ data:
   - {addr: 0x801ca75c, name: g_world_fade_tile_color}
   - {addr: 0x801ca760, name: g_world_gfx_fade_intensity}
   - {addr: 0x801ca764, name: g_world_script_tutorial_wait_time_remaining}
-  - {addr: 0x801ca768, name: g_world_tutorial_saved_game_image}
+  - {addr: 0x801ca768, name: g_world_tutorial_state}
   - {addr: 0x801cc074, name: g_world_menu_panel_buffer}
   - {addr: 0x801cc570, name: g_world_script_tutorial_command_ptr}
   - {addr: 0x801cc574, name: g_world_script_tutorial_command_active}

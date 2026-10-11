@@ -37,12 +37,10 @@ void wldcore_init_world_map_state(void) {
               & (MAIN_SYSTEM_FLAG_RESTART | MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY | MAIN_SYSTEM_FLAG_TITLE_TUTORIAL
                   | MAIN_SYSTEM_FLAG_TUTORIAL_EVENT | MAIN_SYSTEM_FLAG_UNLOCK_ALL | MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY))
         | MAIN_SYSTEM_FLAG_RUNNING;
-    /* The three pointers are republished from a table adjacent to g_wldcore_rumor_location_masks;
-     * 0x80096a54/58/5c carry no catalog name, so they are reached as indices
-     * off the catalogued neighbour rather than given invented spellings. */
-    g_wldcore_script_base = (u16*)(&g_wldcore_rumor_location_masks)[2];
-    g_wldcore_sound_novel_sound_resource = (main_sound_resource_t*)(&g_wldcore_rumor_location_masks)[3];
-    g_wldcore_picture_buffer = (u32*)(&g_wldcore_rumor_location_masks)[4];
+    g_wldcore_script_base = g_wldcore_default_script_base;
+    g_wldcore_sound_novel_sound_resource = g_wldcore_default_sound_novel_sound_resource;
+    /* Tile descriptors share the buffer later used for picture TIMs. */
+    g_wldcore_picture_buffer = (u32*)g_wldcore_map_tile_descriptors;
 
     for (i = 0; i < 2; i++) {
         g_wldcore_screen_fade_state.flags[i] = 0;

@@ -461,6 +461,8 @@ data:
   - {addr: 0x80096a48, name: g_wldcore_brave_story_birthdays}
   - {addr: 0x80096a4c, name: g_wldcore_rumor_location_masks}
   - {addr: 0x80096a50, name: g_wldcore_story_event_ids}
+  - {addr: 0x80096a54, name: g_wldcore_default_script_base}
+  - {addr: 0x80096a58, name: g_wldcore_default_sound_novel_sound_resource}
   - {addr: 0x80096a5c, name: g_wldcore_map_tile_descriptors}
   - {addr: 0x80096a60, name: g_wldcore_dissolve_band_order}
   - {addr: 0x80097028, name: g_wldcore_brave_story_birthday_table}

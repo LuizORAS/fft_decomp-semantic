@@ -253,6 +253,45 @@ typedef struct psyq_spu_voice {
     u16 loop_address;
 } psyq_spu_voice_t;
 
+/* SPU reverb configuration halfwords at 0x1f801dc0..0x1f801dff.
+ * Addresses and APF delays use eight-byte SPU RAM units; volumes hold 1.15 signed bits. */
+typedef struct psyq_spu_reverb_registers {
+    u16 apf1_delay;                  /* 0x00; dAPF1 */
+    u16 apf2_delay;                  /* 0x02; dAPF2 */
+    u16 reflection_volume1;          /* 0x04; vIIR */
+    u16 comb1_volume;                /* 0x06; vCOMB1 */
+    u16 comb2_volume;                /* 0x08; vCOMB2 */
+    u16 comb3_volume;                /* 0x0a; vCOMB3 */
+    u16 comb4_volume;                /* 0x0c; vCOMB4 */
+    u16 reflection_volume2;          /* 0x0e; vWALL */
+    u16 apf1_volume;                 /* 0x10; vAPF1 */
+    u16 apf2_volume;                 /* 0x12; vAPF2 */
+    u16 same_reflection1_left;       /* 0x14; mLSAME */
+    u16 same_reflection1_right;      /* 0x16; mRSAME */
+    u16 comb1_left;                  /* 0x18; mLCOMB1 */
+    u16 comb1_right;                 /* 0x1a; mRCOMB1 */
+    u16 comb2_left;                  /* 0x1c; mLCOMB2 */
+    u16 comb2_right;                 /* 0x1e; mRCOMB2 */
+    u16 same_reflection2_left;       /* 0x20; dLSAME */
+    u16 same_reflection2_right;      /* 0x22; dRSAME */
+    u16 different_reflection1_left;  /* 0x24; mLDIFF */
+    u16 different_reflection1_right; /* 0x26; mRDIFF */
+    u16 comb3_left;                  /* 0x28; mLCOMB3 */
+    u16 comb3_right;                 /* 0x2a; mRCOMB3 */
+    u16 comb4_left;                  /* 0x2c; mLCOMB4 */
+    u16 comb4_right;                 /* 0x2e; mRCOMB4 */
+    u16 different_reflection2_left;  /* 0x30; dLDIFF */
+    u16 different_reflection2_right; /* 0x32; dRDIFF */
+    u16 apf1_left;                   /* 0x34; mLAPF1 */
+    u16 apf1_right;                  /* 0x36; mRAPF1 */
+    u16 apf2_left;                   /* 0x38; mLAPF2 */
+    u16 apf2_right;                  /* 0x3a; mRAPF2 */
+    u16 input_volume_left;           /* 0x3c; vLIN */
+    u16 input_volume_right;          /* 0x3e; vRIN */
+} psyq_spu_reverb_registers_t;
+
+typedef char assert_psyq_spu_reverb_register_size[(sizeof(psyq_spu_reverb_registers_t) == 0x40) ? 1 : -1];
+
 typedef struct psyq_spu_registers {
     psyq_spu_voice_t voices[24]; /* 0x000 */
     u16 main_volume_left;        /* 0x180 */
@@ -287,7 +326,7 @@ typedef struct psyq_spu_registers {
     u16 current_main_volume_right;
     u16 _unknown_1bc;
     u16 _unknown_1be;
-    u16 reverb_parameters[32]; /* 0x1c0 */
+    psyq_spu_reverb_registers_t reverb; /* 0x1c0 */
 } psyq_spu_registers_t;
 
 typedef char assert_psyq_spu_voice_size[(sizeof(psyq_spu_voice_t) == 0x10) ? 1 : -1];
@@ -332,7 +371,7 @@ extern volatile u16 _spu_RQ[10]; /* deferred key, LFO, noise and reverb masks */
 
 typedef struct psyq_spu_reverb_parameters {
     u32 mask;
-    u16 values[32];
+    psyq_spu_reverb_registers_t registers;
 } psyq_spu_reverb_parameters_t;
 extern psyq_spu_reverb_parameters_t _spu_rev_param[PSYQ_SPU_REVERB_MODE_COUNT];
 void _spu_setReverbAttr(psyq_spu_reverb_parameters_t* parameters);

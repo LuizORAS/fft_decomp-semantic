@@ -69,12 +69,12 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
             _spu_rev_attr.delay = delay;
             delay_a = (delay << 13) / 127;
             delay_b = (delay << 12) / 127;
-            parameters.values[10] = delay_a - parameters.values[0];
-            parameters.values[11] = delay_b - parameters.values[1];
-            parameters.values[12] = delay_b + parameters.values[13];
-            parameters.values[16] = delay_b + parameters.values[17];
-            parameters.values[26] = delay_b + parameters.values[28];
-            parameters.values[27] = delay_b + parameters.values[29];
+            parameters.registers.same_reflection1_left = delay_a - parameters.registers.apf1_delay;
+            parameters.registers.same_reflection1_right = delay_b - parameters.registers.apf2_delay;
+            parameters.registers.comb1_left = delay_b + parameters.registers.comb1_right;
+            parameters.registers.same_reflection2_left = delay_b + parameters.registers.same_reflection2_right;
+            parameters.registers.apf1_left = delay_b + parameters.registers.apf2_left;
+            parameters.registers.apf1_right = delay_b + parameters.registers.apf2_right;
             break;
         default:
             _spu_rev_attr.delay = 0;
@@ -96,7 +96,7 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
             }
             feedback = attr->feedback;
             _spu_rev_attr.feedback = feedback;
-            parameters.values[7] = ((feedback * 129) << 8) / 127;
+            parameters.registers.reflection_volume2 = ((feedback * 129) << 8) / 127;
             break;
         default:
             _spu_rev_attr.feedback = 0;
