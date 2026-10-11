@@ -28,14 +28,14 @@ void world_menu_build_skillset_entries(void) {
     }
     /* The separator byte is materialised before the row counter in the
      * target; a hoisted constant lands after the counter's initialiser. */
-    separator = 0xfa;
+    separator = TEXT_SPACE;
     i = 5;
     do {
         rows[i].terminator = separator;
         i--;
     } while (i >= 0);
     for (i = 0; i < 6; i++) {
-        rows[i].terminator = 0xfa;
+        rows[i].terminator = TEXT_SPACE;
         if (g_world_action_menu_skillsets[i] == SKILLSET_ID_NONE) {
             break;
         }
@@ -63,7 +63,7 @@ void world_menu_build_skillset_entries(void) {
             = TEXT_ID_SKILLSET_NAME_SOURCE_BASE + ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
     }
     height = count * 16 + 16;
-    rows[count - 1].terminator = 0xff;
+    rows[count - 1].terminator = TEXT_END_AUTO_CLOSE;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].max_row_index = count - 1;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].text_image.height = height;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].window.h = height;

@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Advance past `count` line terminators in a shift-JIS style byte stream. */
+/* Advance past `count` entry terminators in the encoded menu-text stream. */
 u8* world_text_find_entry_by_index(u8* text, s16 count, s32 unused) {
     u8 code;
 
