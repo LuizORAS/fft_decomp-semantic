@@ -36,12 +36,12 @@ void SuzukiSPUInitialiser(s32 flags) {
     g_main_sound_spu_state.common.mvolmode.right = SPU_VOICE_DIRECT;
     g_main_sound_spu_state.common.mask = SPU_COMMON_MVOLMODEL | SPU_COMMON_MVOLMODER;
     EnterCriticalSection();
-    g_main_root_counter_2_event = OpenEvent(0xf2000002, 2, 0x1000, main_sound_root_counter_2_handler);
-    g_main_sound_spu_event = OpenEvent(HwSPU, 0x1000, 0x1000, main_sound_spu_event_handler);
+    g_main_root_counter_2_event = OpenEvent(RCntCNT2, EvSpINT, EvMdINTR, main_sound_root_counter_2_handler);
+    g_main_sound_spu_event = OpenEvent(HwSPU, EvSpTRAP, EvMdINTR, main_sound_spu_event_handler);
     g_main_sound_tick_count = 0;
     D_80032A34 = 0;
-    SetRCnt(0xf2000002, 0x44e8, 0x1000);
-    StartRCnt(0xf2000002);
+    SetRCnt(RCntCNT2, 0x44e8, RCntMdINTR);
+    StartRCnt(RCntCNT2);
     EnableEvent(g_main_root_counter_2_event);
     SpuSetTransferCallback(main_suzuki_spu_callback_func);
     g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT;
