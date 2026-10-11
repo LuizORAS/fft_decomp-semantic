@@ -2,16 +2,6 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* g_battle_action_current_ability.primary_weapon_id and secondary_weapon_id: the final
- * eligibility test reads the primary/secondary pair as one halfword and the
- * primary alone as a byte, off one shared base register. */
-typedef union {
-    u16 pair;
-    u8 primary;
-} battle_action_ability_weapon_ids_t;
-
-#define WEAPON_IDS (*(battle_action_ability_weapon_ids_t*)&g_battle_action_current_ability.primary_weapon_id)
-
 /*
  * Seed the per-action "strike" state from the acting unit before an attack
  * resolves: reset the strike counter, elemental and knockback scratch, clear
@@ -103,8 +93,9 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
         g_battle_action_current_ability.secondary_weapon_id = ITEM_ID_NONE;
     }
 
-    if (WEAPON_IDS.pair == 0xffff
-        || (WEAPON_IDS.primary != ITEM_ID_NONE
+    if ((g_battle_action_current_ability.primary_weapon_id == ITEM_ID_NONE
+            && g_battle_action_current_ability.secondary_weapon_id == ITEM_ID_NONE)
+        || (g_battle_action_current_ability.primary_weapon_id != ITEM_ID_NONE
             && g_battle_action_current_ability.secondary_weapon_id != ITEM_ID_NONE)) {
         if (support & 1) {
             g_battle_action_current_ability.strike_count = 2;
