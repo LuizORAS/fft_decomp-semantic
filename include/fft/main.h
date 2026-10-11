@@ -1724,8 +1724,8 @@ static inline void main_sound_flush_key_off_inline(void) {
     pending = (allowed & g_main_sound_music_key_off_voices) | g_main_sound_sfx_key_off_voices;
     if (pending != 0) {
         for (voice = 23; voice >= 0; voice--) {
-            if ((pending & (1 << voice)) != 0)
-                SpuSetVoiceRRAttr(voice, 6, 3);
+            if ((pending & SPU_VOICECH(voice)) != 0)
+                SpuSetVoiceRRAttr(voice, 6, SPU_VOICE_LINEARDecN);
         }
         g_main_sound_sfx_key_off_voices = 0;
         g_main_sound_music_key_off_voices = 0;
