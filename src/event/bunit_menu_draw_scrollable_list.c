@@ -12,6 +12,7 @@ void bunit_menu_draw_scrollable_list(u8* script) {
     s16 visible_rows;
     s16 entry_count;
     s16 selected;
+    const menu_list_record_t* list;
 
     while (script[0] != MENU_SCRIPT_OP_SCROLLABLE_LIST) {
         if (script[0] == BUNIT_CMD_END) {
@@ -20,12 +21,13 @@ void bunit_menu_draw_scrollable_list(u8* script) {
         script += script[1];
     }
 
-    g_bunit_menu_list_row_group_count = script[4];
-    g_bunit_menu_list_row_height = script[5];
-    visible_rows = script[6];
+    list = (const menu_list_record_t*)script;
+    g_bunit_menu_list_row_group_count = list->skip_count;
+    g_bunit_menu_list_row_height = list->row_height;
+    visible_rows = list->visible_rows;
     g_bunit_menu_list_visible_rows = visible_rows;
-    g_bunit_menu_list_glyph_width = script[9];
-    g_bunit_menu_list_text_columns = script[10];
+    g_bunit_menu_list_glyph_width = list->width_a;
+    g_bunit_menu_list_text_columns = list->width_b;
     g_bunit_menu_list_vram_width = (g_bunit_menu_list_glyph_width * g_bunit_menu_list_text_columns) >> 2;
 
     entry_count = g_bunit_menu_list_entry_count;

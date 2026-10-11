@@ -8,7 +8,7 @@
  *
  * This is the BUNIT.OUT twin of jobstts_cmd_draw_background_tiles_handler.
  */
-u8* bunit_cmd_draw_background_tiles_handler(u8* desc) {
+menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* desc) {
     RECT rect;
     s32 full_columns;
     s32 origin_x;
@@ -23,16 +23,16 @@ u8* bunit_cmd_draw_background_tiles_handler(u8* desc) {
     s32 row;
     s32 column;
 
-    packed_height = desc[6];
-    packed_width = desc[5];
+    packed_height = desc->window.height;
+    packed_width = desc->window.width;
     otag_index = g_bunit_gfx_otag_index;
     clut_id = g_bunit_menu_palette_clut;
     full_columns = packed_width >> 4;
     partial_width = packed_width & 0xF;
     full_rows = packed_height >> 4;
     partial_height = packed_height & 0xF;
-    origin_x = desc[3];
-    origin_y = desc[4];
+    origin_x = desc->window.x;
+    origin_y = desc->window.y;
 
     for (row = 0; row < full_rows; row++) {
         rect.x = origin_x;
@@ -68,5 +68,5 @@ u8* bunit_cmd_draw_background_tiles_handler(u8* desc) {
         }
     }
 
-    return desc + desc[1];
+    return menu_next_instruction(desc);
 }

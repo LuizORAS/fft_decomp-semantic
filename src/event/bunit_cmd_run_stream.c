@@ -3,13 +3,15 @@
 
 /* Twin of jobstts_cmd_run_stream; BUNIT's stream terminator is 0x1C. */
 void bunit_cmd_run_stream(u8* data, s32 flags) {
+    menu_instruction_t* instruction = (menu_instruction_t*)data;
+
     g_bunit_gfx_otag_index = 0;
     g_bunit_gfx_semitrans_enabled = 0;
     g_bunit_cmd_stream_input = flags;
     g_bunit_gfx_otag_index_locked = 0;
-    if (data[0] != BUNIT_CMD_END) {
+    if (instruction->header.opcode != BUNIT_CMD_END) {
         do {
-            data = g_bunit_cmd_handlers[data[0]](data);
-        } while (data[0] != BUNIT_CMD_END);
+            instruction = g_bunit_cmd_handlers[instruction->header.opcode](instruction);
+        } while (instruction->header.opcode != BUNIT_CMD_END);
     }
 }

@@ -1,19 +1,18 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* Set the sprite RGB from the command; g_bunit_menu_use_alternate_palette selects the second
- * (offset +3) colour triple. */
-u8* bunit_cmd_set_draw_color_handler(u8* data) {
+/* Select the normal or alternate sprite color. */
+menu_instruction_t* bunit_cmd_set_draw_color_handler(menu_instruction_t* data) {
     u8 blue;
     if (g_bunit_menu_use_alternate_palette != 0) {
-        g_bunit_gfx_sprite_color.r = data[5];
-        g_bunit_gfx_sprite_color.g = data[6];
-        blue = data[7];
+        g_bunit_gfx_sprite_color.r = data->sprite_color.alternate.r;
+        g_bunit_gfx_sprite_color.g = data->sprite_color.alternate.g;
+        blue = data->sprite_color.alternate.b;
     } else {
-        g_bunit_gfx_sprite_color.r = data[2];
-        g_bunit_gfx_sprite_color.g = data[3];
-        blue = data[4];
+        g_bunit_gfx_sprite_color.r = data->sprite_color.normal.r;
+        g_bunit_gfx_sprite_color.g = data->sprite_color.normal.g;
+        blue = data->sprite_color.normal.b;
     }
     g_bunit_gfx_sprite_color.b = blue;
-    return data + data[1];
+    return menu_next_instruction(data);
 }

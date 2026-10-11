@@ -3,19 +3,19 @@
 
 /* Skip a command plus, for group opcodes 1 and 2, the child commands it counts;
  * return the command that follows. */
-u8* bunit_cmd_skip_group(u8* command) {
+menu_instruction_t* bunit_cmd_skip_group(menu_instruction_t* command) {
     s32 count;
 
-    if (command[0] == MENU_SCRIPT_OP_IF_GROUP) {
-        count = command[4] + 1;
-    } else if (command[0] == MENU_SCRIPT_OP_IF_ELSE_GROUP) {
-        count = command[4] + command[5] + 1;
+    if (command->header.opcode == MENU_SCRIPT_OP_IF_GROUP) {
+        count = command->conditional.count + 1;
+    } else if (command->header.opcode == MENU_SCRIPT_OP_IF_ELSE_GROUP) {
+        count = command->if_else.count_true + command->if_else.count_false + 1;
     } else {
         count = 1;
     }
 
     while (--count != -1) {
-        command += command[1];
+        command = menu_next_instruction(command);
     }
     return command;
 }

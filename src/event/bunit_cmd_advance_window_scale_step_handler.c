@@ -2,9 +2,9 @@
 #include "psx/types.h"
 
 /* Command 0x16: step the portrait transition, then skip the one-byte command. */
-u8* bunit_cmd_advance_window_scale_step_handler(u8* data) {
+menu_instruction_t* bunit_cmd_advance_window_scale_step_handler(menu_instruction_t* data) {
     if (g_bunit_gfx_transition_frame < 4) {
         g_bunit_gfx_transition_frame++;
     }
-    return data + 1;
+    return (menu_instruction_t*)((u8*)data + 1);
 }

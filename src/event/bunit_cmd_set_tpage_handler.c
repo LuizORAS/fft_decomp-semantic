@@ -1,8 +1,8 @@
 #include "fft/event_bunit.h"
 
-/* BUNIT.OUT 001c95c8 - Compute the TPage id from a stream command and cache it,
- * returning the next command pointer. */
-const u8* bunit_cmd_set_tpage_handler(const u8* data) {
-    g_bunit_gfx_texture_page = GetTPage(data[4], data[2] >> 4, data[3] << 4, data[2] << 8);
-    return data + data[1];
+/* Select the texture page and blend rate. */
+menu_instruction_t* bunit_cmd_set_tpage_handler(menu_instruction_t* data) {
+    g_bunit_gfx_texture_page = GetTPage(data->texture_page.depth, data->texture_page.y_blend >> 4,
+        data->texture_page.x_div_16 << 4, data->texture_page.y_blend << 8);
+    return menu_next_instruction(data);
 }

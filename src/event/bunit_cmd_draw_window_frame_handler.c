@@ -8,7 +8,7 @@
  * world_menu_parse_draw_window_frame without its shared-rectangle source);
  * source 1 selects the alternate border texture coordinates. The reassigned command pointer before the return keeps its
  * reference count high enough for global allocation to place it in s5. */
-menu_window_command_t* bunit_cmd_draw_window_frame_handler(menu_window_command_t* command) {
+menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* command) {
     RECT rect;
     s32 left;
     s32 top;
@@ -29,18 +29,18 @@ menu_window_command_t* bunit_cmd_draw_window_frame_handler(menu_window_command_t
     u8 height;
 
     priority = g_bunit_gfx_otag_index;
-    left = command->x - 5;
-    top = command->y - 9;
-    width = command->width;
+    left = command->window.x - 5;
+    top = command->window.y - 9;
+    width = command->window.width;
     full_columns = width >> 4;
     partial_width = width & 15;
-    height = command->height;
+    height = command->window.height;
     full_rows = height >> 4;
     partial_height = height & 15;
     clut = g_bunit_menu_palette_clut;
-    g_bunit_cmd_window_interior_command.rectangle_source = command->rectangle_source;
-    g_bunit_menu_window_right_x = command->width + left + 5;
-    if (command->rectangle_source == 1) {
+    g_bunit_cmd_window_interior_command.rectangle_source = command->window.rectangle_source;
+    g_bunit_menu_window_right_x = command->window.width + left + 5;
+    if (command->window.rectangle_source == 1) {
         u_left = 0xDA;
         v_top = 3;
         u_middle = 0xDF;
@@ -108,11 +108,11 @@ menu_window_command_t* bunit_cmd_draw_window_frame_handler(menu_window_command_t
             &rect, 0x1A, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
     }
 
-    g_bunit_cmd_window_interior_command.x = command->x;
-    g_bunit_cmd_window_interior_command.y = command->y;
-    g_bunit_cmd_window_interior_command.width = command->width;
-    g_bunit_cmd_window_interior_command.height = command->height;
-    bunit_cmd_draw_background_tiles_handler((u8*)&g_bunit_cmd_window_interior_command);
+    g_bunit_cmd_window_interior_command.x = command->window.x;
+    g_bunit_cmd_window_interior_command.y = command->window.y;
+    g_bunit_cmd_window_interior_command.width = command->window.width;
+    g_bunit_cmd_window_interior_command.height = command->window.height;
+    bunit_cmd_draw_background_tiles_handler((menu_instruction_t*)&g_bunit_cmd_window_interior_command);
 
     top = top + 9 + partial_height + full_rows * 16;
     rect.x = left;
@@ -141,6 +141,6 @@ menu_window_command_t* bunit_cmd_draw_window_frame_handler(menu_window_command_t
     rect.h = 7;
     bunit_gfx_enqueue_textured_quad(&rect, u_right - 5, v_bottom - 7, 0, g_bunit_gfx_semitrans_enabled,
         g_bunit_text_digit_texture_page, clut, priority);
-    command = (menu_window_command_t*)((u8*)command + command->length);
+    command = menu_next_instruction(command);
     return command;
 }

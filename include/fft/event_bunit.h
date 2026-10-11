@@ -55,21 +55,38 @@ extern world_gfx_image_load_parameters_t g_bunit_character_status_layout_mode3[1
 extern RECT g_bunit_character_status_sprite_origin;
 
 /* command */
-extern u8 g_bunit_cmd_row_quad[];
-/* The opcode that ends a BUNIT menu script stream (menu_script_opcode_e
- * names the others). */
+extern menu_sprite_command_t g_bunit_cmd_row_quad;
+/* The opcode that ends a BUNIT menu display stream. */
 enum {
     BUNIT_CMD_END = 0x1c,
 };
 
-extern u8* (*g_bunit_cmd_handlers[])(u8*);
+extern menu_instruction_t* (*g_bunit_cmd_handlers[28])(menu_instruction_t* instruction);
 extern u32 g_bunit_cmd_stream_input;
 extern menu_window_command_t g_bunit_cmd_window_interior_command;
-menu_window_command_t* bunit_cmd_draw_window_frame_handler(menu_window_command_t* command);
-u8* bunit_cmd_draw_background_tiles_handler(u8* desc);
-u8* bunit_cmd_draw_textured_quad_handler(u8* cmd);
 void bunit_cmd_run_stream(u8* data, s32 flags);
-u8* bunit_cmd_skip_group(u8* command);
+menu_instruction_t* bunit_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_advance_window_scale_step_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_draw_row_callback_quad_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_draw_textured_quad_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_enqueue_draw_mode_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_release_otag_lock_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_run_if_else_group_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_run_if_group_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_set_clut_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_set_draw_color_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_set_layout_clut_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_set_otag_index_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_set_semitrans_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_set_tpage_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_set_zoomed_draw_area_handler(menu_instruction_t* instruction);
+menu_instruction_t* bunit_cmd_skip_group(menu_instruction_t* instruction);
+menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* instruction);
 
 /* comparison */
 extern u32 g_bunit_comparison_display_thread_params;
@@ -517,7 +534,6 @@ extern u16 g_bunit_menu_list_scroll_progress;
 extern s16 g_bunit_menu_list_selected_index;
 extern u8* g_bunit_menu_list_text_table;
 extern s16 g_bunit_menu_window_right_x;
-menu_draw_number_command_t* bunit_menu_script_draw_formatted_number(menu_draw_number_command_t* command);
 void bunit_menu_clear_selection_record(s32 index);
 void bunit_menu_clear_selection_records(void);
 void bunit_menu_draw_scrollable_list(u8* script);
@@ -530,7 +546,7 @@ void bunit_menu_reset_results(void);
 s32 bunit_menu_run_descriptor_thread(s32 id, world_menu_entry_t* desc);
 s32 bunit_menu_run_job_list(void);
 void bunit_menu_run_reorder_list(void);
-void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direction, u8* script);
+void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direction, menu_list_record_t* list);
 void bunit_menu_set_vsync_mode_and_event_speed(s32 speed);
 s32 bunit_menu_update_wrapped_grid_selection(s32 step, s32 count, s32 max, s32 current, s32 input);
 void bunit_menu_dispatch_with_override(u8* menu, s32 state, s32 override);

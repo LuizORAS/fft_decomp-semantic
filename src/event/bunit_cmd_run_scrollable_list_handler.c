@@ -15,7 +15,7 @@
  * spelling; its `(s16)` row-height cast adds the other 8 bytes of frame and
  * keeps the row count in a register of its own.
  */
-u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
+menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* command) {
     RECT rect;
     u8 pad0[0x10];
     RECT marker;
@@ -33,11 +33,11 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
     s32 height;
     s32 i;
     s32 j;
-    u8* row_commands;
+    menu_instruction_t* row_commands;
 
     ot_index = g_bunit_gfx_otag_index;
     if (ENTRY_COUNT <= 0) {
-        j = command[4];
+        j = command->list.skip_count;
         while (j != -1) {
             command = bunit_cmd_skip_group(command);
             j -= 1;
@@ -47,14 +47,14 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
     speed = bunit_menu_get_event_speed();
     g_bunit_menu_scroll_list_active = 1;
     if (g_bunit_menu_list_redraw_pending != 0) {
-        bunit_menu_draw_scrollable_list(command);
+        bunit_menu_draw_scrollable_list((u8*)command);
     }
     previous_selected = g_bunit_menu_list_selected_index;
     if (g_bunit_menu_list_scroll_direction == 0) {
         j = bunit_input_read_page_scroll_direction();
         if (j != 0) {
             if (j != 2) {
-                bunit_menu_scroll_list_by_page(j, command);
+                bunit_menu_scroll_list_by_page(j, &command->list);
             }
         } else {
             input = g_bunit_cmd_stream_input;
@@ -149,16 +149,16 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
     }
     if (g_bunit_menu_list_text_table != 0) {
         if (g_bunit_menu_scroll_pixel_offset != 0) {
-            rect.x = command[7];
-            rect.y = command[8] - 5;
+            rect.x = command->list.x;
+            rect.y = command->list.y - 5;
             rect.w = g_bunit_menu_list_vram_width * 4;
             rect.h = ROW_HEIGHT * g_bunit_menu_list_visible_rows + 10;
             bunit_gfx_enqueue_textured_quad(&rect, 0, g_bunit_menu_scroll_pixel_offset + 0x2b, 0,
                 g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, g_bunit_menu_window_clut,
                 g_bunit_gfx_otag_index);
         } else {
-            rect.x = command[7];
-            rect.y = command[8];
+            rect.x = command->list.x;
+            rect.y = command->list.y;
             rect.w = g_bunit_menu_list_vram_width * 4;
             rect.h = ROW_HEIGHT * g_bunit_menu_list_visible_rows;
             bunit_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_bunit_gfx_semitrans_enabled,
@@ -168,7 +168,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
     if (g_bunit_menu_use_alternate_palette == 0) {
         if (g_bunit_menu_scroll_base_index != 0) {
             rect.x = g_bunit_menu_window_right_x;
-            rect.y = command[12];
+            rect.y = command->list.arrow_up_y;
             rect.w = 8;
             rect.h = 0x10;
             bunit_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, g_bunit_gfx_semitrans_enabled,
@@ -176,16 +176,16 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
         }
         if (g_bunit_menu_scroll_base_index < ENTRY_COUNT - g_bunit_menu_list_visible_rows) {
             rect.x = g_bunit_menu_window_right_x;
-            rect.y = command[13];
+            rect.y = command->list.arrow_down_y;
             rect.w = 8;
             rect.h = 0x10;
             bunit_gfx_enqueue_textured_quad(&rect, 0xe0, 0, 0, g_bunit_gfx_semitrans_enabled,
                 g_bunit_menu_icon_texture_page, g_bunit_menu_cursor_mode0_foreground_clut, g_bunit_gfx_otag_index);
         }
         if (ENTRY_COUNT > g_bunit_menu_list_visible_rows) {
-            top = command[12];
+            top = command->list.arrow_up_y;
             offset = top + 0x14;
-            j = command[13] - offset;
+            j = command->list.arrow_down_y - offset;
             offset = j * g_bunit_menu_list_selected_index / (ENTRY_COUNT - 1);
             j = top + 0xf;
             j += offset;
@@ -197,13 +197,13 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
                 g_bunit_menu_icon_texture_page, g_bunit_menu_cursor_mode0_foreground_clut, g_bunit_gfx_otag_index);
         }
     }
-    if (command[2] != 0) {
-        marker.x = command[7] - command[11];
-        marker.y = command[8] + (g_bunit_menu_list_selected_index - g_bunit_menu_scroll_base_index) * ROW_HEIGHT;
+    if (command->list.show_cursor != 0) {
+        marker.x = command->list.x - command->list.cursor_x_offset;
+        marker.y = command->list.y + (g_bunit_menu_list_selected_index - g_bunit_menu_scroll_base_index) * ROW_HEIGHT;
         bunit_menu_update_and_draw_animated_cursor(
             (u16*)&marker, g_bunit_menu_list_cursor_anim_state, g_bunit_menu_use_alternate_palette);
     }
-    command += command[1];
+    command = menu_next_instruction(command);
     g_bunit_menu_cursor_row = 0;
     row_count = g_bunit_menu_list_visible_rows + 1;
     if (g_bunit_menu_scroll_pixel_offset == 0) {
@@ -216,7 +216,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
         }
         command = row_commands;
         for (j = 0; j < g_bunit_menu_list_row_group_count; j++) {
-            command = g_bunit_cmd_handlers[*command](command);
+            command = g_bunit_cmd_handlers[command->header.opcode](command);
         }
         g_bunit_menu_cursor_row += 1;
     }

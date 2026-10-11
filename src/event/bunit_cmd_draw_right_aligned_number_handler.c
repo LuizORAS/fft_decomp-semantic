@@ -2,9 +2,8 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* Draw record: print a callback-supplied number right-aligned in a field of
- * `cmd[4]` eight-pixel cells, then advance past the record. */
-u8* bunit_cmd_draw_right_aligned_number_handler(u8* cmd) {
+/* Draw a callback value right-aligned in eight-pixel cells. */
+menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction_t* cmd) {
     s8 digits[16];
     RECT glyph_rect;
     s32 length;
@@ -15,11 +14,12 @@ u8* bunit_cmd_draw_right_aligned_number_handler(u8* cmd) {
     s32 x;
     s32 y;
 
-    length = sprintf(digits, g_bunit_text_decimal_format, g_bunit_menu_row_callbacks[cmd[3]](cmd[9]));
-    x = cmd[7];
-    y = cmd[8];
-    blanks = cmd[4] - length;
-    count = cmd[4] - blanks;
+    length = sprintf(
+        digits, g_bunit_text_decimal_format, g_bunit_menu_row_callbacks[cmd->number.getter](cmd->number.value));
+    x = cmd->number.x;
+    y = cmd->number.y;
+    blanks = cmd->number.width - length;
+    count = cmd->number.width - blanks;
     g_bunit_gfx_blank_cell_rect.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
         g_bunit_gfx_blank_cell_rect.x = x;
@@ -36,7 +36,7 @@ u8* bunit_cmd_draw_right_aligned_number_handler(u8* cmd) {
             g_bunit_menu_icon_texture_page, 0x3ED3, g_bunit_gfx_otag_index);
         glyph_rect.x += 8;
     }
-    /* Four extra uses raise count's allocation priority above cmd's, giving it s2 as in the target. */
+    /* Removing this barrier changes count/command register allocation. */
     __asm__("" : : "r"(count), "r"(count), "r"(count), "r"(count));
-    return cmd + cmd[1];
+    return menu_next_instruction(cmd);
 }
