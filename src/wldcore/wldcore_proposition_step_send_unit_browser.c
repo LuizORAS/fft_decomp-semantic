@@ -118,8 +118,8 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_UNITS, 0);
         world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
-        g_wldcore_window_records[level->list_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_render_records[level->layout_render].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->list_frame.window_index].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_render_records[level->list_frame.render_index].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[level->frame_window_a].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[level->frame_window_b].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[level->preview_render].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;

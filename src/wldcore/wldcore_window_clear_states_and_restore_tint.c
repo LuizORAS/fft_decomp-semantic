@@ -6,7 +6,8 @@
 void wldcore_window_clear_states_and_restore_tint(wldcore_menu_send_unit_level_t* level) {
     CVECTOR* color;
 
-    g_wldcore_window_records[level->list_window].palette = g_wldcore_window_render_records[level->layout_render].palette
+    g_wldcore_window_records[level->list_frame.window_index].palette
+        = g_wldcore_window_render_records[level->list_frame.render_index].palette
         = g_wldcore_window_render_records[level->list_render].palette
         = g_wldcore_window_records[level->cursor_window].palette = 0;
     /* Each channel store reloads the level's render index. */

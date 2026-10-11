@@ -5,7 +5,7 @@
  * 0x80072a18; confirm (0x20) stores the 0x8009f2f4 + 0x8009f2f6 total, shows
  * message 0xb810 (with the total substituted) or 0xb80f when it is zero,
  * opens the yes/no panel at (0x48, 0x20), and pushes a level tagged 0xa. */
-void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t* owner) {
+void wldcore_proposition_handle_accept_input(wldcore_window_render_pair_t* owner) {
     s32 total;
     point32_t origin;
 
@@ -28,7 +28,7 @@ void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t*
         } else {
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_ACCEPT_JOB_PROMPT, 0);
         }
-        wldcore_window_set_render_state_2_from_arg_0x04((s32*)owner);
+        wldcore_window_set_render_palette_2(owner);
         origin.x = 0x48;
         origin.y = 0x20;
         wldcore_window_build_yes_no_panel(origin);

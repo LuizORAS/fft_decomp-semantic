@@ -8,7 +8,7 @@ void wldcore_window_draw_text_rows(wldcore_menu_send_unit_level_t* level) {
     s32 index;
     s32 i;
 
-    index = level->layout_render;
+    index = level->list_frame.render_index;
     world_menu_build_window_frame_image(g_wldcore_window_render_records[index].bounds.w,
         g_wldcore_window_render_records[index].bounds.h, (u16*)g_wldcore_window_image_buffer);
     point.x = 8;

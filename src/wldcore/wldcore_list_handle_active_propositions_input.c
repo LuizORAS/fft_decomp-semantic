@@ -21,7 +21,7 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
         window = level->cursor_window;
         g_wldcore_window_records[window].anim_counter = 0;
         g_wldcore_window_records[window].frame_index = 0;
-        wldcore_window_set_layout_states(&level->cursor_window);
+        wldcore_window_set_layout_states(level);
         wldcore_menu_push_message_level(0x105A, 1);
         return;
     }

@@ -138,7 +138,7 @@ functions:
   - {addr: 0x80072f38, size: 896, name: wldcore_list_handle_propositions_input, hash: 37339e7e25c99383}
   - {addr: 0x800732b8, size: 732, name: wldcore_proposition_push_detail_level, hash: 19dceafa5ab8cf80}
   - {addr: 0x80073594, size: 52, name: wldcore_window_set_render_state_0_from_arg_0x04, hash: 2b59627b9d412f6c}
-  - {addr: 0x800735c8, size: 56, name: wldcore_window_set_render_state_2_from_arg_0x04, hash: e431f3e0f46c12c5}
+  - {addr: 0x800735c8, size: 56, name: wldcore_window_set_render_palette_2, hash: e431f3e0f46c12c5}
   - {addr: 0x80073600, size: 376, name: wldcore_proposition_handle_accept_input, hash: 0fe7fa0826684fbc}
   - {addr: 0x80073778, size: 948, name: wldcore_window_build_yes_no_panel, hash: c841fa104d3e8cc2}
   - {addr: 0x80073b2c, size: 972, name: wldcore_proposition_handle_accept_confirm_input, hash: 71bf0da24cf8ba22}

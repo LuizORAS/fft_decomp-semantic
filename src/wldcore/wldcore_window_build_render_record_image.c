@@ -10,7 +10,7 @@
 void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordinate_mode, u32* image) {
     point32_t* clut;
     CVECTOR* color;
-    s32 transformed[2];
+    point32_t transformed;
 
     g_wldcore_window_render_records[index].flags
         &= ~(WLDCORE_DISPLAY_OBJECT_8BIT_CLUT | WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN);
@@ -23,8 +23,8 @@ void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordi
     clut->y = 0x1E1;
     clut->x = 0;
     g_wldcore_window_render_records[index].bounds = bounds;
-    wldcore_window_transform_point_for_mode(coordinate_mode, bounds, transformed);
-    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, transformed[0], transformed[1]) & 0xFFFF;
+    wldcore_window_transform_point_for_mode(coordinate_mode, bounds, &transformed);
+    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, transformed.x, transformed.y) & 0xFFFF;
     color = &g_wldcore_window_render_records[index].color;
     color->r = 0x80;
     color->g = 0x80;

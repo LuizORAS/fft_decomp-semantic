@@ -934,16 +934,21 @@ enum {
 };
 typedef char wldcore_proposition_fields_size_must_be_0x2e[sizeof(wldcore_proposition_fields_t) == 0x2e ? 1 : -1];
 
+/* Window and render handles passed together to the palette helper. */
+typedef struct wldcore_window_render_pair {
+    s32 window_index;
+    s32 render_index;
+} wldcore_window_render_pair_t;
+
 /* Provisional: proposition send-unit menu level. The handler at 0x80075bd8
  * selects one of three party slots and owns its portrait render records. */
 typedef struct wldcore_menu_send_unit_level {
-    s32 list_window;    /* 0x00 */
-    s32 layout_render;  /* 0x04 */
-    s32 frame_window_a; /* 0x08 */
-    s32 frame_window_b; /* 0x0c */
-    s32 preview_render; /* 0x10 */
-    s32 list_render;    /* 0x14 */
-    s32 cursor_window;  /* 0x18 */
+    wldcore_window_render_pair_t list_frame; /* 0x00 */
+    s32 frame_window_a;                      /* 0x08 */
+    s32 frame_window_b;                      /* 0x0c */
+    s32 preview_render;                      /* 0x10 */
+    s32 list_render;                         /* 0x14 */
+    s32 cursor_window;                       /* 0x18 */
     u8 _unused_1c[4];
     s32 mode;          /* 0x20; wldcore_send_unit_mode_e */
     s32 shown_preview; /* 0x24 */
@@ -1498,13 +1503,6 @@ typedef struct wldcore_menu_return_level {
     s32 pending; /* 0x04 */
 } wldcore_menu_return_level_t;
 
-/* Menu level owning a window record and a render record; 0x80088180 clears
- * both records' flag 0x10 and sets render flag 0x100 when it pops back to it. */
-typedef struct wldcore_menu_window_render_level {
-    s32 window_index;
-    s32 render_index; /* 0x04 */
-} wldcore_menu_window_render_level_t;
-
 /* Menu level owning two window records; 0x8008b8dc toggles both records' flag 0x10. */
 typedef struct wldcore_menu_window_pair_level {
     s32 first_window;
@@ -1931,7 +1929,7 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_message_level_t message;
     wldcore_menu_return_level_t return_level;
     wldcore_menu_panel_level_t panel;
-    wldcore_menu_window_render_level_t window_render;
+    wldcore_window_render_pair_t window_render;
     wldcore_menu_window_pair_level_t window_pair;
     wldcore_menu_window_pair_render_level_t window_pair_render;
     wldcore_menu_countdown_t countdown; /* pushed by 0x8007a508 */
@@ -2092,12 +2090,12 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* lev
 void wldcore_window_reset_state_and_scroll(wldcore_menu_stack_record_t* level);
 void wldcore_map_step_projection_motion_then_pop_level(wldcore_menu_stack_record_t* entry);
 void wldcore_window_set_render_objects_visible(s32 clear);
-void wldcore_window_set_render_state_2_from_arg_0x04(s32* param);
+void wldcore_window_set_render_palette_2(wldcore_window_render_pair_t* pair);
 
 void wldcore_window_start_panel_render_thread(s32 thread_id, s32 extent, point32_t* dimensions, point32_t* origin);
 
-void wldcore_window_transform_point_for_mode(s32 mode, RECT bounds, s32* output);
-void wldcore_window_set_layout_states(s32* param);
+void wldcore_window_transform_point_for_mode(s32 mode, RECT bounds, point32_t* output);
+void wldcore_window_set_layout_states(wldcore_menu_proposition_list_level_t* level);
 void wldcore_menu_push_participant_list_level(s32 proposition);
 void wldcore_menu_push_proposition_attempt_detail_level(s32 value);
 void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 param_b);
@@ -2132,7 +2130,7 @@ void wldcore_window_clear_states_and_restore_tint(wldcore_menu_send_unit_level_t
 void wldcore_window_set_states_and_blue_tint(wldcore_menu_send_unit_level_t* level);
 void wldcore_menu_push_sound_novel_quit_level(void);
 void wldcore_menu_push_sound_novel_history_level(void);
-void wldcore_window_reset_slot_state(s32* param);
+void wldcore_window_reset_slot_state(wldcore_menu_save_confirm_level_t* level);
 void wldcore_menu_push_text_window_level(s32 text, s32 reload_text);
 void wldcore_menu_push_sound_novel_level(s32 mode);
 void wldcore_menu_push_sound_novel_resume_level(s32 mode);
