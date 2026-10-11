@@ -462,7 +462,7 @@ extern u32 g_effect_summon_mesh_brightness_table[][9];
  * Effect script opcode 06 puts a handler in one of the callback slots, and a
  * particle keyframe whose action word names the slot binds it to the record.
  * While a keyframe that names the slot runs, the particle channel calls
- *     handler(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame)
+ *     handler(record_index, callback_slot, emitter_index, frame)
  * once a frame in place of the particle emitter: emitter_index is the
  * keyframe's emitter record, which the handler reads through its own view,
  * and frame counts from the start of the keyframe. The slot's phase

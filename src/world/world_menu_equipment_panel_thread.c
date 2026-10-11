@@ -118,13 +118,13 @@ void world_menu_equipment_panel_thread(void) {
         }
         screen->sprites[12].u0 = u;
         screen->sprites[13].u0 = u;
-        screen->draw_offsets[0].x = thread->x - 0x80;
+        screen->draw_offsets[0].position.x = thread->x - 0x80;
         g_world_gfx_draw_area_y = g_world_frame_arg != 0xf0 ? 0xf0 : 0;
-        screen->draw_offsets[0].y = thread->y + g_world_gfx_draw_area_y;
-        SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
-        screen->draw_offsets[1].x = -0x80;
-        screen->draw_offsets[1].y = g_world_gfx_draw_area_y;
-        SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
+        screen->draw_offsets[0].position.y = thread->y + g_world_gfx_draw_area_y;
+        SetDrawOffset(&screen->draw_offsets[0].packet, (u16*)&screen->draw_offsets[0].position);
+        screen->draw_offsets[1].position.x = -0x80;
+        screen->draw_offsets[1].position.y = g_world_gfx_draw_area_y;
+        SetDrawOffset(&screen->draw_offsets[1].packet, (u16*)&screen->draw_offsets[1].position);
         world_panel_gfx_build_scaled_draw_area_packets(
             &screen->portrait, &g_world_equipment_panel_draw_area, frame, g_world_frame_arg, thread);
         world_menu_configure_status_panel_primitive_colors(screen, thread);

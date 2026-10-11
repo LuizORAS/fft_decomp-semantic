@@ -4,7 +4,7 @@
  * seconds, the level-up animation and effect, the cursor on the unit and the job
  * level-up tune. Returns 1 after reporting one, otherwise 0. */
 s32 battle_action_report_job_level_up(battle_unit_misc_data_t* misc) {
-    if (misc->action_rewards.job_level_for_display != 0) {
+    if (misc->strike.action_rewards.job_level_for_display != 0) {
         u8 battle_id;
         battle_text_set_message_duration_frames(0xB4);
         battle_id = misc->battle_data->misc_unit_id;

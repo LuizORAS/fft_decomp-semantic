@@ -33,7 +33,7 @@ void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battl
     if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PREVENT_FACING_MASK) {
         return;
     }
-    if (unit->reaction_ability_id == ABILITY_ID_REACTION_REFLECT) {
+    if (unit->strike.reaction_ability_id == ABILITY_ID_REACTION_REFLECT) {
         return;
     }
     if (delta.vx == 0 && delta.vz == 0) {

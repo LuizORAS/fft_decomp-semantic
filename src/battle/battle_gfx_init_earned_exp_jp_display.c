@@ -15,10 +15,10 @@ void battle_gfx_init_earned_exp_jp_display(battle_unit_misc_data_t* unit) {
         display_2->tpage = BATTLE_GFX_TPAGE_FRAME;
         display_1->tpage = BATTLE_GFX_TPAGE_FRAME;
         display_0->tpage = BATTLE_GFX_TPAGE_FRAME;
-        if (unit->action_rewards.earned_experience != 0) {
+        if (unit->strike.action_rewards.earned_experience != 0) {
             unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
         }
-        if (unit->action_rewards.earned_jp != 0) {
+        if (unit->strike.action_rewards.earned_jp != 0) {
             unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP;
         }
         if (unit->numeric_display.active == 0) {

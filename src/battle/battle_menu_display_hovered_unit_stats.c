@@ -321,19 +321,19 @@ void battle_menu_display_hovered_unit_stats(
         offs = &offsets[frame & 1];
         base_y = (g_main_gfx_screen_polarity & 1) == 0 ? 0xF0 : 0;
         if (mode == UNIT_STATS_PANEL_ATTACK_TARGET || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
-            offs->a.x = slide - 0x80;
+            offs->a.position.x = slide - 0x80;
         } else {
-            offs->a.x = -0x80 - slide;
+            offs->a.position.x = -0x80 - slide;
         }
         if (g_battle_unit_status_bounce_step != 0) {
-            offs->a.y = base_y + g_battle_unit_status_bounce_offsets[g_battle_unit_status_bounce_step];
+            offs->a.position.y = base_y + g_battle_unit_status_bounce_offsets[g_battle_unit_status_bounce_step];
         } else {
-            offs->a.y = base_y;
+            offs->a.position.y = base_y;
         }
-        SetDrawOffset(&offs->a, &offs->a.x);
-        offs->b.x = -0x80;
-        offs->b.y = base_y;
-        SetDrawOffset(&offs->b, &offs->b.x);
+        SetDrawOffset(&offs->a.packet, (u16*)&offs->a.position);
+        offs->b.position.x = -0x80;
+        offs->b.position.y = base_y;
+        SetDrawOffset(&offs->b.packet, (u16*)&offs->b.position);
         battle_gfx_draw_or_append_gpu_primitive(&offs->b);
         battle_gfx_draw_or_append_gpu_primitive(&page->quads[0]);
         battle_gfx_draw_or_append_gpu_primitive(&page->quads[1]);

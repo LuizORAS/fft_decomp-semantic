@@ -1047,6 +1047,10 @@ typedef enum battle_motion_flags {
     BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE = 0x20000000, /* set with each stored animation request */
 } battle_motion_flags_e;
 
+/* Native effect handlers receive the record, callback slot, emitter and frame.
+ * Individual handlers narrow the record index or ignore unused arguments. */
+typedef s32 (*battle_effect_callback_t)(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+
 /* The effect_record_t members the keyframe-action dispatchers use. A keyframe
  * action names callback slot 1-7, so the arrays are indexed up to 6 here; the
  * record holds four slots (retail effect files use 1-4). */
@@ -1056,7 +1060,7 @@ typedef struct battle_keyframe_effect_state {
     u8 _unused_04[0x22 - 4];
     u8 callback_phase[7]; /* 0x22; effect_phase_e */
     u8 _unused_29[0xd4 - 0x29];
-    s32 callbacks[7]; /* 0xd4 */
+    battle_effect_callback_t callbacks[7]; /* 0xd4 */
 } battle_keyframe_effect_state_t;
 
 extern u8 g_battle_rotation_speed_frames[];
@@ -1150,7 +1154,8 @@ extern u16 g_battle_script_frame_result_override;
 extern VECTOR g_battle_script_light_scale;
 extern s32 g_battle_event_pending_loaded_evtchr_slot;
 extern u8 g_battle_script_light_base_direction_matrix[];
-extern void* g_battle_event_loaded_evtchr_buffer;
+struct battle_gfx_packed_evtchr_record;
+extern struct battle_gfx_packed_evtchr_record* g_battle_event_loaded_evtchr_buffer;
 extern SVECTOR g_battle_script_light_angles;
 extern u8 g_battle_script_light_base_color_matrix[];
 extern u8 g_battle_event_status_masks[BATTLE_EVENT_STATUS_MASK_COUNT][8];
@@ -2174,6 +2179,37 @@ enum {
     BATTLE_DISTORTION_ANIMATION_COUNT = 18, /* the handlers of g_battle_unit_distortion_animation_handlers */
 };
 
+/* The strike work record is embedded in Miscellaneous Unit Data at +0x18c
+ * and used as a standalone AI work record. Reaction targeting writes its
+ * redirected tile at +0x1c..+0x1e before the strike is processed. */
+typedef struct battle_strike_work {
+    u8 actor_id;
+    u8 target_count;
+    u8 target_list[16];
+    u8 skip_empty_tile_effect;
+    u8 math_skill_flag;
+    battle_unit_misc_halfword_t last_attack_id; /* 0x14; read signed by effects, unsigned by action display */
+    u8 post_action_message;
+    u8 reaction_occurred;
+    u8 continue_attack;
+    u8 current_hit_number;
+    s16 reaction_id;
+    u8 target_new_x;
+    u8 target_new_y;
+    u8 target_new_map_level;
+    u8 used_weapon_id;
+    s16 reaction_ability_id; /* 0x20; misc 0x1ac */
+    /* 0x22; misc 0x1ae. g_battle_action_current_ability.knockback_flags & 0x7f, stored with
+     * the knockback destination. */
+    u8 knockback_flags;
+    u8 can_earn_experience;
+    battle_action_reward_display_t action_rewards; /* 0x24; misc 0x1b0..0x1b3 */
+} battle_strike_work_t;
+typedef char battle_strike_work_must_be_40[sizeof(battle_strike_work_t) == 40 ? 1 : -1];
+typedef char battle_strike_targets_must_be_2[((unsigned long)&((battle_strike_work_t*)0)->target_list == 2) ? 1 : -1];
+typedef char
+    battle_strike_continue_must_be_0x18[((unsigned long)&((battle_strike_work_t*)0)->continue_attack == 0x18) ? 1 : -1];
+
 typedef struct battle_unit_misc_data {
     struct battle_unit_misc_data* previous; /* 0x000; previous Misc unit_t Data */
     u8 unit_id;                             /* 0x004; Misc unit_t Data ID */
@@ -2284,28 +2320,8 @@ typedef struct battle_unit_misc_data {
      * map_x/map_z/map_y.  attack_result_animation_update passes &dismount. */
     battle_dismount_coords_t dismount; /* 0x184 */
     u8 _unused_18a[2];
-    /* Current action data, 0x18c..0x1d7. */
-    u8 actor_id;               /* 0x18c; first byte of the strike work record: the acting unit's battle id */
-    u8 target_count;           /* 0x18d; attacker_face_targets, update_anim_display_for_all_targets */
-    u8 target_list[0x10];      /* 0x18e; misc ids, 0xff terminated */
-    u8 skip_empty_tile_effect; /* 0x19e; 1 when a strike without targets plays no effect
-                                  (ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS clear, or a knockback) */
-    u8 math_skill_flag;        /* 0x19f; 0x01 math skill */
-    u16 last_attack_id;        /* 0x1a0 */
-    u8 post_action_message;    /* 0x1a2; 6 poached, 9 trained, else 0 */
-    u8 reaction_occurred;      /* 0x1a3 */
-    u8 continue_attack;        /* 0x1a4 */
-    u8 current_hit_number;     /* 0x1a5 */
-    s16 reaction_id;         /* 0x1a6; g_battle_action_current_ability.reaction_id, the ability shown for the attack */
-    u8 target_new_x;         /* 0x1a8; post-action knockback destination (transfer_target_coordinates) */
-    u8 target_new_y;         /* 0x1a9 */
-    u8 target_new_map_level; /* 0x1aa */
-    u8 used_weapon_id;       /* 0x1ab */
-    s16 reaction_ability_id; /* 0x1ac; 0x1b8 (Reflect) suppresses auto-facing at 0x80072838 */
-    u8 knockback_flags;      /* 0x1ae; battle_strike_work_t.knockback_flags */
-    u8 can_earn_experience;  /* 0x1af */
-    battle_action_reward_display_t action_rewards; /* 0x1b0..0x1b3 */
-    u8 command_ready; /* 0x1b4; 0x800753b8 sets 1 after AI setup completes; gates command dispatch */
+    battle_strike_work_t strike; /* 0x18c..0x1b3; current action targets, result and rewards */
+    u8 command_ready;            /* 0x1b4; 0x800753b8 sets 1 after AI setup completes; gates command dispatch */
     /* 0x1b5; strikes run after the first while continue_attack is set; zeroed
      * for each new action. */
     u8 continue_attack_count;
@@ -2362,6 +2378,8 @@ typedef char
     battle_misc_step_speed_must_be_0x03c[((unsigned long)&((battle_unit_misc_data_t*)0)->step_speed == 0x03c) ? 1 : -1];
 typedef char battle_misc_distortion_target_must_be_0x090
     [((unsigned long)&((battle_unit_misc_data_t*)0)->distortion_target == 0x090) ? 1 : -1];
+typedef char
+    battle_misc_strike_must_be_0x18c[((unsigned long)&((battle_unit_misc_data_t*)0)->strike == 0x18c) ? 1 : -1];
 typedef char battle_misc_animation_frame_must_be_0x1e0
     [((unsigned long)&((battle_unit_misc_data_t*)0)->animation.frame == 0x1e0) ? 1 : -1];
 typedef char battle_misc_animation_flags_must_be_0x1f0
@@ -2804,6 +2822,7 @@ typedef struct battle_effect_secondary_init {
             u8 result_animation; /* 0x07; battle_effect_hit_result_e */
         } fields;
         battle_effect_secondary_block_t block;
+        battle_effect_target_t tile;
     } target[16]; /* 0x04; ten-byte target blocks */
     union {
         struct {
@@ -3063,6 +3082,13 @@ typedef enum battle_effect_start_target {
     BATTLE_EFFECT_START_ON_TILE = 1,
     BATTLE_EFFECT_START_ON_CASTER = 2, /* a unit that is both caster and target */
 } battle_effect_start_target_e;
+
+/* target_mode selects the unit id or the tile coordinate pointer. */
+typedef union battle_effect_start_target_data {
+    s32 misc_id;
+    const SVECTOR* tile;
+} battle_effect_start_target_data_t;
+typedef char battle_effect_start_target_data_size_must_be_4[sizeof(battle_effect_start_target_data_t) == 4 ? 1 : -1];
 
 /* An entry of g_battle_effect_ability_ids: the effect file of an ability, negative for none. */
 enum {
@@ -3901,10 +3927,10 @@ typedef struct effect_record {
      * battle_effect_temp_data_t for the child timeline, the file-local
      * battle_effect_timeline_state_t of opcode 29 for the parent timeline */
     u8 _unused_2a[0xa6];
-    effect_work_record_t* work_head; /* 0xd0: its particles */
-    s32 callbacks[4];                /* 0xd4: the native handler bound to each callback slot */
-    void* work_slots[4];             /* 0xe4: the work block each callback slot's handler allocated */
-    void* file_function;             /* 0xf4: the native function script opcode 07 last called */
+    effect_work_record_t* work_head;        /* 0xd0: its particles */
+    battle_effect_callback_t callbacks[4];  /* 0xd4: the native handler bound to each callback slot */
+    void* work_slots[4];                    /* 0xe4: the work block each callback slot's handler allocated */
+    battle_effect_callback_t file_function; /* 0xf4: the native function script opcode 07 last called */
 } effect_record_t;
 typedef char assert_effect_record_size[sizeof(effect_record_t) == 0xf8 ? 1 : -1];
 
@@ -4492,7 +4518,7 @@ extern VECTOR g_battle_effect_camera_zoom_current;
 extern VECTOR g_battle_effect_camera_zoom_saved;
 extern s32 g_battle_effect_trajectory_hit_unit_id;
 extern void* g_battle_effect_trap_frame_data_ptr;
-extern s32 g_battle_effect_callback_slots[];
+extern battle_effect_callback_t g_battle_effect_callback_slots[];
 extern u8 g_battle_effect_palette_target_misc_ids[];
 extern SVECTOR g_battle_effect_trajectory_origin;
 extern SVECTOR g_battle_effect_trajectory_destination;
@@ -4522,7 +4548,7 @@ extern u16 g_battle_effect_free_slot_head;
 extern struct battle_effect_secondary_data* g_battle_effect_current_secondary;
 extern u32 g_battle_effect_current_slot_id;
 extern effect_file_header_t* g_battle_effect_data_ptrs[];
-extern void* g_battle_effect_file_ptrs[];
+extern battle_effect_callback_t g_battle_effect_file_ptrs[];
 extern u8* g_battle_effect_frame_data;
 extern u8* g_battle_effect_frame_data_start;
 extern s32 g_battle_effect_gravity_modifier;
@@ -4796,7 +4822,7 @@ void battle_effect_run_keyframe_actions(u16 flags, u8 target, battle_keyframe_ef
 void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_effect_state_t* state);
 s32 battle_effect_set_secondary_teleport_by_misc_id(u32 misc_id);
 s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_position, s32 target_id);
-void battle_effect_start_new(s32 ability_id, s32 target_mode, u8* target_data);
+void battle_effect_start_new(s32 ability_id, s32 target_mode, battle_effect_start_target_data_t target);
 void battle_effect_store_map_center_coordinates(VECTOR* destination);
 
 void battle_effect_submit_sprite_to_ordering_table(
@@ -4834,7 +4860,7 @@ void battle_effect_free_list_node(effect_list_node_t* node);
 void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work);
 void battle_effect_free_slot(u8 id);
 void battle_effect_free_sprite_block(battle_effect_sprite_block_t* block);
-void* battle_effect_get_file_pointer(s16 effect_id);
+battle_effect_callback_t battle_effect_get_file_pointer(s16 effect_id);
 effect_work_record_t* battle_effect_get_list_node(s16 record_index, s16 requested_index);
 s32 battle_effect_get_phase(void);
 s32 battle_effect_get_prim_buffer_offset(void);
@@ -5413,6 +5439,72 @@ void battle_unit_set_screen_coords_from_real_coords(struct battle_unit_misc_data
 void battle_unit_clear_misc_units(void);
 
 /* gfx */
+/* Serialized SHP/SEQ values are little-endian byte sequences. These file
+ * views have byte alignment; their decoded RAM tables remain separate. */
+
+/* A unit SHP frame set: primary at file +8; an optional submerged set is
+ * addressed by the file header. Only the first 0xd0 offsets are installed. */
+typedef struct battle_gfx_packed_unit_shp_frame_set {
+    u8 frame_offsets[0x100][4]; /* 0x000; signed words, -1 resolves to offset zero */
+    u8 frame_data_size[2];      /* 0x400; unsigned halfword */
+    u8 frame_data[0];           /* 0x402; variable tail */
+} battle_gfx_packed_unit_shp_frame_set_t;
+typedef char battle_gfx_packed_unit_shp_frame_set_size_must_be_0x402
+    [sizeof(battle_gfx_packed_unit_shp_frame_set_t) == 0x402 ? 1 : -1];
+
+typedef struct battle_gfx_packed_unit_shp_record {
+    u8 submerged_frame_set_offset[4]; /* 0x000; 8 means both native tables share the primary set */
+    u8 first_attack_frame[2];         /* 0x004; unsigned halfword */
+    u8 first_sp2_frame[2];            /* 0x006; unsigned halfword */
+    battle_gfx_packed_unit_shp_frame_set_t primary_frame_set; /* 0x008 */
+} battle_gfx_packed_unit_shp_record_t;
+typedef char
+    battle_gfx_packed_unit_shp_record_size_must_be_0x40a[sizeof(battle_gfx_packed_unit_shp_record_t) == 0x40a ? 1 : -1];
+
+/* WEP/EFF SHP has a different header and twice as many frame offsets. */
+typedef struct battle_gfx_packed_weapon_shp_record {
+    u8 _unused_000[4];          /* 0x000; loader skips this word */
+    u8 first_frame[0x20][2];    /* 0x004; unsigned zero-frame indices by weapon type */
+    u8 frame_offsets[0x200][4]; /* 0x044; signed words, -1 resolves to offset zero */
+    u8 frame_data_size[2];      /* 0x844; unsigned halfword */
+    u8 frame_data[0];           /* 0x846; variable tail */
+} battle_gfx_packed_weapon_shp_record_t;
+typedef char
+    battle_gfx_packed_weapon_shp_record_size_must_be_0x846[sizeof(battle_gfx_packed_weapon_shp_record_t) == 0x846 ? 1
+                                                                                                                  : -1];
+
+/* WEP/EFF SEQ stores 256 offsets followed by a variable sequence payload. */
+typedef struct battle_gfx_packed_offset_table {
+    u8 _unused_000[4];  /* 0x000; WEP/EFF loader skips the header word */
+    u8 entry[0x100][4]; /* 0x004; signed sequence offsets, -1 resolves to zero */
+    u8 payload_size[2]; /* 0x404; unsigned halfword */
+    u8 payload[0];      /* 0x406; variable sequence data */
+} battle_gfx_packed_offset_table_t;
+typedef char
+    battle_gfx_packed_offset_table_size_must_be_0x406[sizeof(battle_gfx_packed_offset_table_t) == 0x406 ? 1 : -1];
+
+/* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
+ * or widened unit-animation header words are present in the file. */
+typedef struct battle_gfx_packed_evtchr_record {
+    u8 sequence_offsets[0x40][4]; /* 0x0000; signed words, -1 resolves to zero */
+    u8 sequence_data[0x400];      /* 0x0100 */
+    u8 frame_offsets[0x28][4];    /* 0x0500; signed words, -1 resolves to zero */
+    u8 frame_data[0x1e0];         /* 0x05a0; copied into both native frame sets */
+    u8 cluts[16 * 16 * 2];        /* 0x0780; 16 CLUTs, 16 little-endian colours each */
+    u8 pixels[200 * 128];         /* 0x0980; 256x200, 4bpp */
+    u8 _unused_6d80[0xa80];       /* unread tail of the 0x7800-byte block */
+} battle_gfx_packed_evtchr_record_t;
+typedef char
+    battle_gfx_packed_evtchr_record_size_must_be_0x7800[sizeof(battle_gfx_packed_evtchr_record_t) == 0x7800 ? 1 : -1];
+
+/* OTHER.SPR: the palette helper copies only the first 21 of 32 CLUTs. */
+typedef struct battle_gfx_other_sprite_archive {
+    u8 palettes[32 * 16 * 2]; /* 0x0000; 32 CLUTs, 16 little-endian colours each */
+    u8 pixels[256 * 128];     /* 0x0400; uncompressed 256x256, 4bpp */
+} battle_gfx_other_sprite_archive_t;
+typedef char
+    battle_gfx_other_sprite_archive_size_must_be_0x8400[sizeof(battle_gfx_other_sprite_archive_t) == 0x8400 ? 1 : -1];
+
 /* WEP.SPR contains three CLUT/image pairs: weapons, trails and particles. */
 typedef struct battle_gfx_weapon_sprite_archive {
     u16 weapon_palettes[16][16];   /* 0x00000 */
@@ -5949,7 +6041,8 @@ void battle_gfx_set_sprite_part_semi_transparent(
     battle_gfx_sprite_display_data_t* display, s32 part_index, s32 enabled);
 void battle_gfx_shift_and_fill_position_copies(struct battle_unit_misc_data* unit);
 void battle_gfx_store_item_display_data(struct battle_unit_misc_data* unit, u32 item_id);
-void battle_gfx_unpack_unit_shp_data(battle_gfx_unit_shp_frame_tables_t* dst, u8* src);
+void battle_gfx_unpack_unit_shp_data(
+    battle_gfx_unit_shp_frame_tables_t* dst, const battle_gfx_packed_unit_shp_record_t* src);
 void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s32 tile_effect_level, s32 final_value);
 s32 battle_gfx_prepare_post_action_display_by_misc_id(s32 misc_id);
 s32 battle_gfx_calculate_screen_z_from_misc_battle_map_data(struct battle_unit_misc_data* unit);
@@ -6024,9 +6117,8 @@ s32 battle_gfx_clear_saved_evtchr_slot(s32 slot_index);
 void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
 void battle_gfx_extract_deployed_unit_palettes(void);
 void battle_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
-struct battle_gfx_packed_offset_table;
-void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, u8* src);
-void battle_gfx_resolve_packed_offset_table(u8** entries, struct battle_gfx_packed_offset_table* record);
+void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, const battle_gfx_packed_weapon_shp_record_t* src);
+void battle_gfx_resolve_packed_offset_table(u8** entries, const battle_gfx_packed_offset_table_t* record);
 u8** battle_gfx_get_effect_seq_data(u32 unused_spritesheet_id);
 battle_gfx_weapon_shp_t* battle_gfx_get_effect_shp_data(u32 unused_spritesheet_id);
 u8** battle_gfx_get_weapon_seq_by_spritesheet_id(u32 spritesheet_id);
@@ -6057,12 +6149,12 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void);
 void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* display, s32 index, s16 x_shift,
     s16 y_shift, s16 u, s16 v, s16 width, s16 height, s16 flags);
 
-s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, u8* file);
+s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const battle_gfx_packed_evtchr_record_t* file);
 
 void battle_gfx_init_image_loading(void* primitive, const world_image_location_t* base_load, const RECT* base_screen,
     const world_gfx_image_load_parameters_t* parameters);
 
-void battle_gfx_copy_other_spr_palette_data_to_ram(u8* src);
+void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite_archive_t* archive);
 void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive);
 
 void battle_gfx_apply_misc_unit_palette_modulation(
@@ -6287,37 +6379,6 @@ typedef enum battle_action_equipment_slot_mask {
     /* Every slot bit: stored by the Steal/Break slot picker before it chooses one. */
     BATTLE_ACTION_EQUIPMENT_SLOT_ALL = 0xfe,
 } battle_action_equipment_slot_mask_e;
-
-/* The strike loader fills this 40-byte work record; it is distinct from
- * battle_stats_t.action. Reaction targeting writes redirected tile fields at
- * +0x1c..+0x1e before the strike is processed. */
-typedef struct battle_strike_work {
-    u8 actor_id;
-    u8 target_count;
-    u8 target_list[16];
-    u8 skip_empty_tile_effect;
-    u8 math_skill_flag;
-    s16 last_attack_id;
-    u8 post_action_message;
-    u8 reaction_occurred;
-    u8 continue_attack;
-    u8 current_hit_number;
-    u16 reaction_id;
-    u8 target_new_x;
-    u8 target_new_y;
-    u8 target_new_map_level;
-    u8 used_weapon_id;
-    u16 reaction_ability_id; /* 0x20; misc 0x1ac */
-    /* 0x22; misc 0x1ae. g_battle_action_current_ability.knockback_flags & 0x7f, stored with
-     * the knockback destination. */
-    u8 knockback_flags;
-    u8 can_earn_experience;
-    u8 _unused_24[4];
-} battle_strike_work_t;
-typedef char battle_strike_work_must_be_40[sizeof(battle_strike_work_t) == 40 ? 1 : -1];
-typedef char battle_strike_targets_must_be_2[((unsigned long)&((battle_strike_work_t*)0)->target_list == 2) ? 1 : -1];
-typedef char
-    battle_strike_continue_must_be_0x18[((unsigned long)&((battle_strike_work_t*)0)->continue_attack == 0x18) ? 1 : -1];
 
 /* Five-byte range/targeting work entry at 0x80192dd8, 256 entries per level.
  * Movement-cost propagation uses remaining_range as the residual budget;

@@ -15,13 +15,13 @@ void battle_action_set_damage_display_type_based_on_ability(void) {
 
     g_main_system_animation_speed = 1;
     misc = battle_unit_get_casting_misc_data();
-    battle_action_resolve_ability_strike(misc->battle_data->misc_unit_id, (battle_strike_work_t*)&misc->actor_id);
-    raw = misc->last_attack_id;
+    battle_action_resolve_ability_strike(misc->battle_data->misc_unit_id, &misc->strike);
+    raw = misc->strike.last_attack_id.u;
     /* The target reads 0x1a6 as a signed halfword. */
-    target = misc->reaction_id;
+    target = misc->strike.reaction_id;
     ability = raw & 0xffff;
     misc->used_ability_id = raw;
-    battle_gfx_set_thrown_item_graphic_palette(misc->used_weapon_id, misc);
+    battle_gfx_set_thrown_item_graphic_palette(misc->strike.used_weapon_id, misc);
     if (((target != 0) && (ability != target)) || (ability == ABILITY_ID_KNOCKBACK) || (ability == 0)
         || (battle_effect_load_ability(ability) != 0)) {
         battle_action_set_target_coords_and_attacker_anim();

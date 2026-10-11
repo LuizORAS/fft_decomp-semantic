@@ -97,11 +97,11 @@ void attack_deploy_run_render_thread(void) {
         g_attack_deploy_render_buffers[frame & 1].world_position.x = g_attack_deploy_grid_slide_x - 0x80;
         g_attack_deploy_render_buffers[frame & 1].world_position.y = g_attack_deploy_grid_slide_y + offset_y;
         SetDrawOffset(&g_attack_deploy_render_buffers[frame & 1].world_offset,
-            &g_attack_deploy_render_buffers[frame & 1].world_position);
+            (u16*)&g_attack_deploy_render_buffers[frame & 1].world_position);
         g_attack_deploy_render_buffers[frame & 1].screen_position.x = -0x80;
         g_attack_deploy_render_buffers[frame & 1].screen_position.y = offset_y;
         SetDrawOffset(&g_attack_deploy_render_buffers[frame & 1].screen_offset,
-            &g_attack_deploy_render_buffers[frame & 1].screen_position);
+            (u16*)&g_attack_deploy_render_buffers[frame & 1].screen_position);
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }

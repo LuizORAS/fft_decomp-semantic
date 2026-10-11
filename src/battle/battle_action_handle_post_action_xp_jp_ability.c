@@ -13,11 +13,11 @@ void battle_action_handle_post_action_xp_jp_ability(void) {
     battle_unit_restore_all_facings_after_attack();
     if (unit != 0) {
         stats = unit->battle_data;
-        if (stats != 0 && battle_unit_apply_action_rewards(stats->misc_unit_id, &unit->action_rewards) == -1) {
-            unit->action_rewards.job_level_for_display = 0;
-            unit->action_rewards.level_for_display = 0;
-            unit->action_rewards.earned_jp = 0;
-            unit->action_rewards.earned_experience = 0;
+        if (stats != 0 && battle_unit_apply_action_rewards(stats->misc_unit_id, &unit->strike.action_rewards) == -1) {
+            unit->strike.action_rewards.job_level_for_display = 0;
+            unit->strike.action_rewards.level_for_display = 0;
+            unit->strike.action_rewards.earned_jp = 0;
+            unit->strike.action_rewards.earned_experience = 0;
         }
     }
     battle_gfx_init_earned_exp_jp_display(unit);

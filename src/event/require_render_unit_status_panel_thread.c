@@ -228,20 +228,20 @@ void require_render_unit_status_panel_thread(void) {
             panel->portrait.b0 = 0x80;
         }
         panel_x = thread->x;
-        panel->draw_offset_a.x = panel_x - 0x80;
+        panel->draw_offset_a.position.x = panel_x - 0x80;
         g_require_gfx_draw_offset_y = ((g_main_gfx_screen_polarity * 0xF0) != 0xF0) ? 0xF0 : 0;
-        panel->draw_offset_a.y = thread->shake_y.low + g_require_gfx_draw_offset_y;
-        SetDrawOffset(&panel->draw_offset_a, &panel->draw_offset_a.x);
-        panel->draw_offset_b.x = -0x80;
-        panel->draw_offset_b.y = g_require_gfx_draw_offset_y;
-        SetDrawOffset(&panel->draw_offset_b, &panel->draw_offset_b.x);
+        panel->draw_offset_a.position.y = thread->shake_y.low + g_require_gfx_draw_offset_y;
+        SetDrawOffset(&panel->draw_offset_a.packet, (u16*)&panel->draw_offset_a.position);
+        panel->draw_offset_b.position.x = -0x80;
+        panel->draw_offset_b.position.y = g_require_gfx_draw_offset_y;
+        SetDrawOffset(&panel->draw_offset_b.packet, (u16*)&panel->draw_offset_b.position);
         editor_x = thread->x;
-        editor->draw_offset_a.x = editor_x - 0x80;
-        editor->draw_offset_a.y = thread->shake_y.low + g_require_gfx_draw_offset_y;
-        SetDrawOffset(&editor->draw_offset_a, &editor->draw_offset_a.x);
-        editor->draw_offset_b.x = -0x80;
-        editor->draw_offset_b.y = g_require_gfx_draw_offset_y;
-        SetDrawOffset(&editor->draw_offset_b, &editor->draw_offset_b.x);
+        editor->draw_offset_a.position.x = editor_x - 0x80;
+        editor->draw_offset_a.position.y = thread->shake_y.low + g_require_gfx_draw_offset_y;
+        SetDrawOffset(&editor->draw_offset_a.packet, (u16*)&editor->draw_offset_a.position);
+        editor->draw_offset_b.position.x = -0x80;
+        editor->draw_offset_b.position.y = g_require_gfx_draw_offset_y;
+        SetDrawOffset(&editor->draw_offset_b.packet, (u16*)&editor->draw_offset_b.position);
         if (anim_state >= 0xA) {
             anim_state = 0;
             prev_unit = cur_unit;

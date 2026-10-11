@@ -71,7 +71,7 @@ s32 battle_move_start_next_post_movement_step(void) {
         switch (g_battle_action_post_action_display_phase) {
         case BATTLE_POST_ACTION_DISPLAY_LEVEL_UP:
             battle_action_init_movement_ability_benefit(casting->battle_data);
-            battle_unit_build_gained_exp_jp_level_job_level(casting->battle_data, &casting->action_rewards);
+            battle_unit_build_gained_exp_jp_level_job_level(casting->battle_data, &casting->strike.action_rewards);
             battle_gfx_prepare_post_action_display(casting);
             battle_gfx_init_earned_exp_jp_display(casting);
             battle_action_report_level_up(casting);

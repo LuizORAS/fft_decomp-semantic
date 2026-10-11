@@ -111,13 +111,13 @@ void equip_panel_run_ability_list_thread(void) {
         }
         screen->sprites[12].u0 = u;
         screen->sprites[13].u0 = u;
-        screen->draw_offsets[0].x = thread->x - 0xf3;
+        screen->draw_offsets[0].position.x = thread->x - 0xf3;
         g_equip_gfx_draw_offset_y = g_main_gfx_screen_polarity * 0xf0 != 0xf0 ? 0xf0 : 0;
-        screen->draw_offsets[0].y = thread->y + g_equip_gfx_draw_offset_y;
-        SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
-        screen->draw_offsets[1].x = -0x80;
-        screen->draw_offsets[1].y = g_equip_gfx_draw_offset_y;
-        SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
+        screen->draw_offsets[0].position.y = thread->y + g_equip_gfx_draw_offset_y;
+        SetDrawOffset(&screen->draw_offsets[0].packet, (u16*)&screen->draw_offsets[0].position);
+        screen->draw_offsets[1].position.x = -0x80;
+        screen->draw_offsets[1].position.y = g_equip_gfx_draw_offset_y;
+        SetDrawOffset(&screen->draw_offsets[1].packet, (u16*)&screen->draw_offsets[1].position);
         offset.x = thread->x - 0x73;
         offset.y = thread->y;
         equip_gfx_build_scaled_draw_area_packets(&screen->portrait, &g_equip_character_status_frame_rect[2], frame,

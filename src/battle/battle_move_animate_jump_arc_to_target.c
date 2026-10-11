@@ -29,8 +29,8 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
     switch (unit->distortion_phase) {
     case 0:
         if (unit->battle_data != 0) {
-            if (unit->target_count != 0) {
-                other = battle_unit_get_misc_data_by_battle_id(unit->target_list[0]);
+            if (unit->strike.target_count != 0) {
+                other = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
                 target.coords.vx = other->screen.vx;
                 target.coords.vy
                     = other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2;

@@ -34,6 +34,7 @@ void battle_script_process_pending_requests(void) {
     u16 music_track_id;
     u32 volume_transition;
     s32 pending = 0;
+    battle_effect_start_target_data_t effect_target;
 
     battle_unit_update_facing_and_pending_animations();
     jump_out_map_id = g_battle_event_pending_map_jump_out_id;
@@ -117,10 +118,11 @@ void battle_script_process_pending_requests(void) {
     effect_id = g_battle_event_pending_effect_id;
     if (effect_id != -1) {
         if (g_battle_event_effect_target_mode == BATTLE_EFFECT_START_ON_CASTER) {
-            battle_effect_start_new(
-                effect_id, BATTLE_EFFECT_START_ON_CASTER, (u8*)g_battle_event_effect_target_misc_id);
+            effect_target.misc_id = g_battle_event_effect_target_misc_id;
+            battle_effect_start_new(effect_id, BATTLE_EFFECT_START_ON_CASTER, effect_target);
         } else {
-            battle_effect_start_new(effect_id, BATTLE_EFFECT_START_ON_UNIT, (u8*)g_battle_event_effect_target_misc_id);
+            effect_target.misc_id = g_battle_event_effect_target_misc_id;
+            battle_effect_start_new(effect_id, BATTLE_EFFECT_START_ON_UNIT, effect_target);
         }
     }
     if (g_battle_unit_graphics_load_pending != 0) {

@@ -265,24 +265,24 @@ void bunit_render_unit_status_panel_thread(void) {
         }
         px1 = thread->x;
         dx1 = g_bunit_gfx_draw_offset_y;
-        panel->draw_offset_a.x = px1 - 0x80;
+        panel->draw_offset_a.position.x = px1 - 0x80;
         pya = thread->shake_y.low;
-        panel->draw_offset_a.y = pya + dx1;
-        SetDrawOffset(&panel->draw_offset_a, &panel->draw_offset_a.x);
+        panel->draw_offset_a.position.y = pya + dx1;
+        SetDrawOffset(&panel->draw_offset_a.packet, (u16*)&panel->draw_offset_a.position);
         dx2 = g_bunit_gfx_draw_offset_y;
-        panel->draw_offset_b.x = -0x80;
-        panel->draw_offset_b.y = dx2;
-        SetDrawOffset(&panel->draw_offset_b, &panel->draw_offset_b.x);
+        panel->draw_offset_b.position.x = -0x80;
+        panel->draw_offset_b.position.y = dx2;
+        SetDrawOffset(&panel->draw_offset_b.packet, (u16*)&panel->draw_offset_b.position);
         px2 = thread->x;
         dx3 = g_bunit_gfx_draw_offset_y;
-        editor->draw_offset_a.x = px2 - 0x80;
+        editor->draw_offset_a.position.x = px2 - 0x80;
         pyb = thread->shake_y.low;
-        editor->draw_offset_a.y = pyb + dx3;
-        SetDrawOffset(&editor->draw_offset_a, &editor->draw_offset_a.x);
+        editor->draw_offset_a.position.y = pyb + dx3;
+        SetDrawOffset(&editor->draw_offset_a.packet, (u16*)&editor->draw_offset_a.position);
         dx4 = g_bunit_gfx_draw_offset_y;
-        editor->draw_offset_b.x = -0x80;
-        editor->draw_offset_b.y = dx4;
-        SetDrawOffset(&editor->draw_offset_b, &editor->draw_offset_b.x);
+        editor->draw_offset_b.position.x = -0x80;
+        editor->draw_offset_b.position.y = dx4;
+        SetDrawOffset(&editor->draw_offset_b.packet, (u16*)&editor->draw_offset_b.position);
         if (anim_state >= 0xA) {
             anim_state = 0;
             prev_unit = cur_unit;

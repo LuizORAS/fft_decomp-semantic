@@ -32,7 +32,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
     unit = battle_unit_get_casting_misc_data();
     if (g_battle_action_post_action != 0 && battle_action_resume_attack_phase_control() == 0
         && unit->numeric_display.active == 0) {
-        if (unit->continue_attack != 0) {
+        if (unit->strike.continue_attack != 0) {
             unit->continue_attack_count += 1;
             battle_action_set_damage_display_type_based_on_ability();
             return;

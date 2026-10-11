@@ -26,12 +26,12 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     u8 item;
     battle_strike_work_t* block;
 
-    init.target_count = unit->target_count;
+    init.target_count = unit->strike.target_count;
     init.caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
     init.caster.fields.caster_id = unit->unit_id;
-    save_3_u16(
-        (SVECTOR*)&init.target_tile.id.tile_x, unit->target_new_x, unit->target_new_map_level, unit->target_new_y);
-    block = (battle_strike_work_t*)&unit->actor_id;
+    save_3_u16((SVECTOR*)&init.target_tile.id.tile_x, unit->strike.target_new_x, unit->strike.target_new_map_level,
+        unit->strike.target_new_y);
+    block = &unit->strike;
     if (init.target_count != 0) {
         for (i = 0; i < init.target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(block->target_list[i]);
@@ -55,12 +55,12 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
                 }
             }
         }
-    } else if (unit->skip_empty_tile_effect == 0) {
+    } else if (unit->strike.skip_empty_tile_effect == 0) {
         init.target_count = 1;
-        init.target[0].block.values[0] = 1;
-        init.target[0].block.values[1] = unit->target_new_x;
-        init.target[0].block.values[3] = unit->target_new_y;
-        init.target[0].block.values[2] = unit->target_new_map_level;
+        init.target[0].tile.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        init.target[0].tile.id.tile_x = unit->strike.target_new_x;
+        init.target[0].tile.tile_y = unit->strike.target_new_y;
+        init.target[0].tile.map_z = unit->strike.target_new_map_level;
     }
     spectators = 0;
     for (i = 0; i < 0x10; i++) {
@@ -85,7 +85,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     init.spectator_count = spectators;
     init.math_skill_flag = block->math_skill_flag;
     init.used_weapon_id = block->used_weapon_id;
-    if (block->last_attack_id == 0 || block->reaction_occurred != 0
+    if (block->last_attack_id.s == 0 || block->reaction_occurred != 0
         || g_battle_action_phase != BATTLE_ACTION_PHASE_ACTING_UNIT
         || (unit->used_item_or_weapon_id - ITEM_ID_BLAZE_GUN) < 2U
         || (item = unit->used_item_or_weapon_id) == ITEM_ID_BLAST_GUN) {

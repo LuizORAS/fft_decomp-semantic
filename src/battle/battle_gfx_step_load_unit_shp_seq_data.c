@@ -146,7 +146,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
         case BATTLE_GFX_SHARED_LOAD_SPRITE_SHP:
             battle_gfx_unpack_unit_shp_data(
                 &g_battle_gfx_unit_shp_frame_tables[g_battle_gfx_unit_graphics_load_state[2]],
-                g_battle_gfx_unit_graphics_load_state[3]);
+                (const battle_gfx_packed_unit_shp_record_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_SPRITE_SEQ:
             battle_gfx_unpack_unit_seq_data(&g_battle_gfx_unit_seq_tables[g_battle_gfx_unit_graphics_load_state[2]],
@@ -154,27 +154,28 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
             break;
         case BATTLE_GFX_SHARED_LOAD_WEAPON_SHP:
             battle_gfx_copy_shp_data_to_ram(&g_battle_gfx_weapon_graphics[g_battle_gfx_unit_graphics_load_state[2]].shp,
-                (u8*)g_battle_gfx_unit_graphics_load_state[3]);
+                (const battle_gfx_packed_weapon_shp_record_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_WEAPON_SEQ:
             battle_gfx_resolve_packed_offset_table(
                 g_battle_gfx_weapon_graphics[g_battle_gfx_unit_graphics_load_state[2]].seq,
-                (struct battle_gfx_packed_offset_table*)g_battle_gfx_unit_graphics_load_state[3]);
+                (const battle_gfx_packed_offset_table_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_EFFECT_SHP:
             battle_gfx_copy_shp_data_to_ram(&g_battle_gfx_effect_graphics[g_battle_gfx_unit_graphics_load_state[2]].shp,
-                (u8*)g_battle_gfx_unit_graphics_load_state[3]);
+                (const battle_gfx_packed_weapon_shp_record_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_EFFECT_SEQ:
             battle_gfx_resolve_packed_offset_table(
                 g_battle_gfx_effect_graphics[g_battle_gfx_unit_graphics_load_state[2]].seq,
-                (struct battle_gfx_packed_offset_table*)g_battle_gfx_unit_graphics_load_state[3]);
+                (const battle_gfx_packed_offset_table_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_WEAPON_SPR:
             battle_gfx_load_wep_spr_data((battle_gfx_weapon_sprite_archive_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_OTHER_SPR:
-            battle_gfx_copy_other_spr_palette_data_to_ram((u8*)g_battle_gfx_unit_graphics_load_state[3]);
+            battle_gfx_copy_other_spr_palette_data_to_ram(
+                (const battle_gfx_other_sprite_archive_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         }
         {

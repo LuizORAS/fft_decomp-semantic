@@ -140,16 +140,16 @@ void world_menu_run_unit_summary_panel_thread(void) {
             }
         }
         if (g_world_unit_status_bounce_step != 0) {
-            frame_record->offset_a[1] = value + g_world_unit_status_bounce_offsets[g_world_unit_status_bounce_step];
+            frame_record->offset_a.y = value + g_world_unit_status_bounce_offsets[g_world_unit_status_bounce_step];
         } else {
-            frame_record->offset_a[1] = value;
+            frame_record->offset_a.y = value;
         }
-        frame_record->offset_a[0] = slide - 0x80;
-        SetDrawOffset(frame_record->draw_offset_a, frame_record->offset_a);
-        frame_record->offset_b[0] = -0x80;
-        frame_record->offset_b[1] = value;
-        SetDrawOffset(frame_record->draw_offset_b, frame_record->offset_b);
-        world_gfx_draw_or_append_gpu_primitive(frame_record->draw_offset_b);
+        frame_record->offset_a.x = slide - 0x80;
+        SetDrawOffset(&frame_record->draw_offset_a, (u16*)&frame_record->offset_a);
+        frame_record->offset_b.x = -0x80;
+        frame_record->offset_b.y = value;
+        SetDrawOffset(&frame_record->draw_offset_b, (u16*)&frame_record->offset_b);
+        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_b);
         value = world_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
         if (value != 0 && world_thread_is_running_asm(value - 1) == 0) {
             value = 0;
@@ -189,7 +189,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
             world_menu_init_primitive_colors_normal(frame_record->palette);
         }
         world_menu_submit_numeric_display_frame_primitives(frame_record->palette);
-        world_gfx_draw_or_append_gpu_primitive(frame_record->draw_offset_a);
+        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_a);
     }
 exit:
     world_thread_yield();

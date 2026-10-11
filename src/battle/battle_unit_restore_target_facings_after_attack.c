@@ -7,10 +7,10 @@ void battle_unit_restore_target_facings_after_attack(battle_unit_misc_data_t* un
     s32 i;
     battle_unit_misc_data_t* target;
 
-    if (unit->target_count != 0) {
+    if (unit->strike.target_count != 0) {
         i = 0;
-        while (i < unit->target_count) {
-            target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
+        while (i < unit->strike.target_count) {
+            target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
             if (target != 0) {
                 battle_unit_restore_facing_after_attack(target);
             }

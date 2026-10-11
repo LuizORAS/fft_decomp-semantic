@@ -100,12 +100,12 @@ void debugchr_editor_run_numeric_thread(void) {
         g_debugchr_gfx_draw_offset_y = -use_offset & 0xF0;
         debugchr_gfx_build_scaled_draw_area_packets(
             &buffer->portrait, &g_debugchr_editor_numeric_table.draw_area_rect, frame, field_y, thread);
-        buffer->draw_offsets[0].x = thread->x - 0x80;
-        buffer->draw_offsets[0].y = thread->y + g_debugchr_gfx_draw_offset_y;
-        SetDrawOffset(&buffer->draw_offsets[0], &buffer->draw_offsets[0].x);
-        buffer->draw_offsets[1].x = -0x80;
-        buffer->draw_offsets[1].y = g_debugchr_gfx_draw_offset_y;
-        SetDrawOffset(&buffer->draw_offsets[1], &buffer->draw_offsets[1].x);
+        buffer->draw_offsets[0].position.x = thread->x - 0x80;
+        buffer->draw_offsets[0].position.y = thread->y + g_debugchr_gfx_draw_offset_y;
+        SetDrawOffset(&buffer->draw_offsets[0].packet, (u16*)&buffer->draw_offsets[0].position);
+        buffer->draw_offsets[1].position.x = -0x80;
+        buffer->draw_offsets[1].position.y = g_debugchr_gfx_draw_offset_y;
+        SetDrawOffset(&buffer->draw_offsets[1].packet, (u16*)&buffer->draw_offsets[1].position);
         if (thread->style == 1 || g_battle_menu_input_lock_mode == 1) {
             for (i = 17; i >= 0; i--) {
                 buffer->sprites[i].clut = 0x7D3C;

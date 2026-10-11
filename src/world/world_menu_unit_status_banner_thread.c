@@ -282,20 +282,20 @@ void world_menu_unit_status_banner_thread(void) {
         }
         draw_x = display->x;
         draw_y = g_world_gfx_draw_area_y;
-        status->draw_offset_a.x = draw_x - 0x80;
-        status->draw_offset_a.y = display->shake_y.low + draw_y;
-        SetDrawOffset(&status->draw_offset_a, &status->draw_offset_a.x);
-        status->draw_offset_b.x = -0x80;
-        status->draw_offset_b.y = g_world_gfx_draw_area_y;
-        SetDrawOffset(&status->draw_offset_b, &status->draw_offset_b.x);
+        status->draw_offset_a.position.x = draw_x - 0x80;
+        status->draw_offset_a.position.y = display->shake_y.low + draw_y;
+        SetDrawOffset(&status->draw_offset_a.packet, (u16*)&status->draw_offset_a.position);
+        status->draw_offset_b.position.x = -0x80;
+        status->draw_offset_b.position.y = g_world_gfx_draw_area_y;
+        SetDrawOffset(&status->draw_offset_b.packet, (u16*)&status->draw_offset_b.position);
         draw_x = display->x;
         draw_y = g_world_gfx_draw_area_y;
-        summary->draw_offset_a.x = draw_x - 0x80;
-        summary->draw_offset_a.y = display->shake_y.low + draw_y;
-        SetDrawOffset(&summary->draw_offset_a, &summary->draw_offset_a.x);
-        summary->draw_offset_b.x = -0x80;
-        summary->draw_offset_b.y = g_world_gfx_draw_area_y;
-        SetDrawOffset(&summary->draw_offset_b, &summary->draw_offset_b.x);
+        summary->draw_offset_a.position.x = draw_x - 0x80;
+        summary->draw_offset_a.position.y = display->shake_y.low + draw_y;
+        SetDrawOffset(&summary->draw_offset_a.packet, (u16*)&summary->draw_offset_a.position);
+        summary->draw_offset_b.position.x = -0x80;
+        summary->draw_offset_b.position.y = g_world_gfx_draw_area_y;
+        SetDrawOffset(&summary->draw_offset_b.packet, (u16*)&summary->draw_offset_b.position);
         if (anim_state >= 0xA) {
             anim_state = 0;
             prev_unit = cur_unit;

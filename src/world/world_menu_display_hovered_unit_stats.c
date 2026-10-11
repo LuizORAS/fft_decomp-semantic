@@ -313,19 +313,19 @@ void world_menu_display_hovered_unit_stats(
         offs = &offsets[frame & 1];
         y = (g_main_gfx_screen_polarity & 1) == 0 ? 0xF0 : 0;
         if (mode == UNIT_STATS_PANEL_ATTACK_TARGET || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
-            offs->a.x = slide - 0x80;
+            offs->a.position.x = slide - 0x80;
         } else {
-            offs->a.x = -0x80 - slide;
+            offs->a.position.x = -0x80 - slide;
         }
         if (g_world_unit_status_bounce_step != 0) {
-            offs->a.y = y + g_world_unit_status_bounce_offsets[g_world_unit_status_bounce_step];
+            offs->a.position.y = y + g_world_unit_status_bounce_offsets[g_world_unit_status_bounce_step];
         } else {
-            offs->a.y = y;
+            offs->a.position.y = y;
         }
-        SetDrawOffset(&offs->a, &offs->a.x);
-        offs->b.x = -0x80;
-        offs->b.y = y;
-        SetDrawOffset(&offs->b, &offs->b.x);
+        SetDrawOffset(&offs->a.packet, (u16*)&offs->a.position);
+        offs->b.position.x = -0x80;
+        offs->b.position.y = y;
+        SetDrawOffset(&offs->b.packet, (u16*)&offs->b.position);
         world_gfx_draw_or_append_gpu_primitive(&offs->b);
         world_gfx_draw_or_append_gpu_primitive(&page->quads[0]);
         world_gfx_draw_or_append_gpu_primitive(&page->quads[1]);

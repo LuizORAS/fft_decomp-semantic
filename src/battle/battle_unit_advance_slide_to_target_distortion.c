@@ -21,8 +21,8 @@ void battle_unit_advance_slide_to_target_distortion(battle_unit_misc_data_t* uni
     switch (unit->distortion_phase) {
     case 0:
         if (unit->battle_data != 0) {
-            if (unit->target_count != 0) {
-                target = battle_unit_get_misc_data_by_battle_id(unit->target_list[0]);
+            if (unit->strike.target_count != 0) {
+                target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
                 velocity.vx = unit->real.vx - target->real.vx;
                 velocity.vx = (velocity.vx - velocity.vx / 8) % 0xe000;
                 velocity.vz = unit->real.vz - target->real.vz;

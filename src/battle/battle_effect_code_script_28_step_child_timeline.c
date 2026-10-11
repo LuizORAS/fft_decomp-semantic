@@ -98,8 +98,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     if (state->particle_remaining[i] == 2) {
                         record->callback_phase[slot] = EFFECT_PHASE_DESTROY;
                     }
-                    ((void (*)(s16, s32, s32, s16))record->callbacks[slot])(
-                        record->record_index, slot, index - 1, step);
+                    record->callbacks[slot](record->record_index, slot, index - 1, step);
                 } else {
                     battle_effect_spawn_emitter_particles(record->record_index, step, index - 1, 0);
                 }

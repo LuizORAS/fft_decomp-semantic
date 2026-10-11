@@ -1,15 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Unaligned record: the offset entries and the payload length are stored as
- * little-endian byte sequences, so every field is read one byte at a time. */
-typedef struct battle_gfx_packed_offset_table {
-    u8 _unused_000[4];  /* 0x000 */
-    u8 entry[0x100][4]; /* 0x004 */
-    u8 payload_size[2]; /* 0x404 */
-    u8 payload[1];      /* 0x406 */
-} battle_gfx_packed_offset_table_t;
-
 /* Unpack a weapon or effect SEQ file, which has no header words: its 256
  * sequence offsets become pointers into the sequence data, which is appended
  * at g_battle_gfx_seq_data_cursor.
@@ -22,14 +13,14 @@ typedef struct battle_gfx_packed_offset_table {
  * used for the entry base and the payload address), which only a second
  * variable reproduces; and it reserves an 8-byte frame that no instruction
  * touches, which only a declared local aggregate reproduces. */
-void battle_gfx_resolve_packed_offset_table(u8** entries, battle_gfx_packed_offset_table_t* record) {
-    u8(*entry)[4];
+void battle_gfx_resolve_packed_offset_table(u8** entries, const battle_gfx_packed_offset_table_t* record) {
+    const u8(*entry)[4];
     u32 index;
     u32 payload_size;
-    u8* payload;
+    const u8* payload;
     s32 offset;
     u8 unused_frame_pad[8];
-    battle_gfx_packed_offset_table_t* header;
+    const battle_gfx_packed_offset_table_t* header;
 
     header = record;
     entry = record->entry;

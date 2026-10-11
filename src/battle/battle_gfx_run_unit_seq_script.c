@@ -99,15 +99,15 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 /* The abilities whose hit is the weapon swing itself: a plain
                  * attack (0), the frog's, the Battle Skill breaks, the Snipe
                  * shots, Jump and Charge. */
-                attack_id = unit->last_attack_id;
+                attack_id = unit->strike.last_attack_id.u;
                 if (attack_id == 0 || attack_id == ABILITY_ID_FROG_ATTACK
                     || (attack_id >= ABILITY_ID_BATTLE_SKILL_HEAD_BREAK
                         && attack_id <= ABILITY_ID_BATTLE_SKILL_MIND_BREAK)
                     || (attack_id >= ABILITY_ID_SNIPE_LEG_AIM && attack_id <= ABILITY_ID_SNIPE_SEAL_EVIL)
                     || (attack_id >= ABILITY_ID_JUMP_FIRST && attack_id < ABILITY_ID_MATH_FIRST)) {
-                    if (unit->target_count != 0) {
-                        for (i = 0; i < unit->target_count; i++) {
-                            target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
+                    if (unit->strike.target_count != 0) {
+                        for (i = 0; i < unit->strike.target_count; i++) {
+                            target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
                             if (target != 0) {
                                 battle_unit_set_target_animation_from_attack_type(unit, target);
                                 battle_unit_set_attacker_animation_for_shield_block(unit, target);

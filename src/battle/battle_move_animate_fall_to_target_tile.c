@@ -42,7 +42,7 @@ void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
         unit->distortion_phase++;
     case 1:
         if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
-            unit->target_count = 0;
+            unit->strike.target_count = 0;
             x = unit->map_x * 28 + 14;
             unit->screen.vx = x;
             unit->real.vx = x << 12;
@@ -55,8 +55,8 @@ void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
             main_util_set_svector(&coords, unit->map_x * 28 + 14, unit->map_z, unit->map_y * 28 + 14);
             coords.vy = screen_z_from_misc_screen_data(unit, &coords);
         } else {
-            if (unit->target_count != 0) {
-                other = battle_unit_get_misc_data_by_battle_id(unit->target_list[0]);
+            if (unit->strike.target_count != 0) {
+                other = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
                 main_util_set_svector(&coords, other->map_x * 28 + 14, other->map_z, other->map_y * 28 + 14);
             } else {
                 stats = unit->battle_data;

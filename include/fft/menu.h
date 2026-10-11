@@ -114,13 +114,11 @@ typedef char menu_window_buffer_selector_must_be_0x14
 /* Battle menu status and character-editor panel records. The EVENT overlays
  * (ATTACK, BUNIT, DEBUGCHR, EQUIP, REQUIRE) each link their own copy of the
  * panel code, and the WORLD unit-editor panels reuse the packet layouts. */
-/* libgpu DR_OFFSET packet (the DR_MODE layout) followed by the x/y pair that
- * SetDrawOffset() reads back into it. */
+/* DR_OFFSET followed by signed GPU offsets, passed through the SDK u16 view.
+ * Signed storage retains the retail negative-immediate loads. */
 typedef struct battle_menu_status_panel_draw_offset {
-    u32 tag;     /* 0x00 */
-    u32 code[2]; /* 0x04 */
-    s16 x;       /* 0x0c */
-    s16 y;       /* 0x0e */
+    DR_OFFSET packet;   /* 0x00 */
+    point16_t position; /* 0x0c */
 } battle_menu_status_panel_draw_offset_t;
 typedef char battle_menu_status_panel_draw_offset_size_must_be_0x10
     [(sizeof(battle_menu_status_panel_draw_offset_t) == 0x10) ? 1 : -1];
@@ -1758,10 +1756,10 @@ typedef struct world_unit_summary_frame {
     DR_MODE draw_mode_0;                      /* 0x8c */
     DR_MODE draw_mode_1;                      /* 0x98 */
     world_menu_palette_primitives_t* palette; /* 0xa4 */
-    u32 draw_offset_a[3];                     /* 0xa8 */
-    u32 draw_offset_b[3];                     /* 0xb4 */
-    s16 offset_a[2];                          /* 0xc0 */
-    s16 offset_b[2];                          /* 0xc4 */
+    DR_OFFSET draw_offset_a;                  /* 0xa8 */
+    DR_OFFSET draw_offset_b;                  /* 0xb4 */
+    point16_t offset_a;                       /* 0xc0 */
+    point16_t offset_b;                       /* 0xc4 */
     POLY_FT4 portrait;                        /* 0xc8 */
 } world_unit_summary_frame_t;
 

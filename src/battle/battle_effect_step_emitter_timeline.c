@@ -50,8 +50,7 @@ void battle_effect_step_emitter_timeline(battle_keyframe_effect_state_t* state, 
                     if (*remaining == 2) {
                         state->callback_phase[slot] = EFFECT_PHASE_DESTROY;
                     }
-                    ((void (*)(s16, s32, s32, s16))state->callbacks[slot])(
-                        state->record_index, slot, emitter - 1, *step);
+                    state->callbacks[slot](state->record_index, slot, emitter - 1, *step);
                 } else {
                     battle_effect_spawn_emitter_particles(state->record_index, *step, emitter - 1, 0);
                 }

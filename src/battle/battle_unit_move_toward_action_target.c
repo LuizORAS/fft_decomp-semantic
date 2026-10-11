@@ -23,8 +23,8 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
                 velocity.vx = ((unit->map_x * 0x1C + 0xE) << 12) - unit->real.vx;
                 velocity.vz = ((unit->map_y * 0x1C + 0xE) << 12) - unit->real.vz;
                 velocity.vy = 0;
-            } else if (unit->target_count != 0) {
-                target = battle_unit_get_misc_data_by_battle_id(unit->target_list[0]);
+            } else if (unit->strike.target_count != 0) {
+                target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
                 velocity.vx = target->real.vx - unit->real.vx;
                 velocity.vy = target->real.vy - unit->real.vy;
                 velocity.vz = target->real.vz - unit->real.vz;

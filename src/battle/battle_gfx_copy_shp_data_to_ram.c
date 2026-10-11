@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /*
@@ -11,17 +12,18 @@
  * The header loops read through `data` while the blob copy indexes `src`;
  * using one name for both loses the target's separate copy of the argument.
  */
-void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, u8* src) {
+void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, const battle_gfx_packed_weapon_shp_record_t* src) {
     u32 i;
     u32 j;
     s32 offset;
     s32 value;
     u32 count;
-    u8* word;
-    u8* data;
+    const u8* word;
+    const u8* data;
 
-    data = src;
-    offset = 4;
+    /* Named field indexing removes the retail running-offset instructions. */
+    data = (const u8*)src;
+    offset = offsetof(battle_gfx_packed_weapon_shp_record_t, first_frame);
     for (i = 0; i < 32; i++) {
         word = data + offset;
         dst->first_frame[i] = word[0] | (word[1] << 8);
@@ -40,7 +42,7 @@ void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, u8* src) {
     offset += 2;
     count = word[0] + (word[1] << 8);
     for (j = 0; j < count; j++) {
-        g_battle_gfx_shp_frame_data_cursor[j] = src[offset++];
+        g_battle_gfx_shp_frame_data_cursor[j] = ((const u8*)src)[offset++];
     }
     g_battle_gfx_shp_frame_data_cursor += j;
 }

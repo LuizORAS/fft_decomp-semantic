@@ -14,7 +14,7 @@ void battle_sound_select_weapon_hit(battle_unit_misc_data_t* unit, s32 hit) {
     s32 weapon_type;
     s32 i;
 
-    weapon_type = main_item_get_data_pointer(unit->used_weapon_id)->type;
+    weapon_type = main_item_get_data_pointer(unit->strike.used_weapon_id)->type;
     if (weapon_type >= ITEM_TYPE_SHURIKEN) {
         weapon_type = ITEM_TYPE_KNIFE;
     }
@@ -23,8 +23,8 @@ void battle_sound_select_weapon_hit(battle_unit_misc_data_t* unit, s32 hit) {
         battle_sound_play_movement_sfx(unit, g_battle_sound_weapon_miss_sfx_ids[weapon_type]);
         break;
     case 1:
-        for (i = 0; i < unit->target_count; i++) {
-            target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
+        for (i = 0; i < unit->strike.target_count; i++) {
+            target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
             if (target == 0 || target->battle_data == 0) {
                 continue;
             }

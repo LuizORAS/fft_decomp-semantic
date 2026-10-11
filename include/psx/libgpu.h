@@ -652,7 +652,7 @@ extern DRAWENV* PutDrawEnv(DRAWENV*);
 extern DISPENV* PutDispEnv(DISPENV*);
 
 u16 LoadClut(u32* clut, s32 x, s32 y);
-void SetDrawOffset(void* destination, void* position);
+void SetDrawOffset(DR_OFFSET* destination, u16* position);
 
 void DrawPrim(void* p);
 

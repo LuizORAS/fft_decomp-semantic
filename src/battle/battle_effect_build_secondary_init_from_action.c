@@ -13,13 +13,13 @@ void battle_effect_build_secondary_init_from_action(
     battle_action_data_t* action;
     s32 i;
 
-    init->target_count = unit->target_count;
+    init->target_count = unit->strike.target_count;
     init->caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
     init->caster.fields.caster_id = unit->unit_id;
-    init->used_weapon_id = unit->used_weapon_id;
+    init->used_weapon_id = unit->strike.used_weapon_id;
     if (init->target_count != 0) {
         for (i = 0; i < init->target_count; i++) {
-            target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
+            target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
             init->target[i].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
             init->target[i].fields.target_id = target->unit_id;
             action = &target->battle_data->action;
@@ -53,9 +53,9 @@ void battle_effect_build_secondary_init_from_action(
             }
         }
     } else {
-        init->target[0].block.values[0] = 1;
-        init->target[0].block.values[1] = g_battle_cursor_x;
-        init->target[0].block.values[2] = g_battle_cursor_z;
-        init->target[0].block.values[3] = g_battle_cursor_y;
+        init->target[0].tile.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        init->target[0].tile.id.tile_x = g_battle_cursor_x;
+        init->target[0].tile.map_z = g_battle_cursor_z;
+        init->target[0].tile.tile_y = g_battle_cursor_y;
     }
 }

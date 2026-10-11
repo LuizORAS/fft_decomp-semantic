@@ -128,12 +128,12 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         g_bunit_gfx_draw_offset_y = g_bunit_frame_arg != 0xf0 ? 0xf0 : 0;
         bunit_gfx_build_scaled_draw_area_packets(
             &screen->portrait, &g_bunit_character_status_draw_area_rect, frame, g_bunit_frame_arg, thread);
-        screen->draw_offsets[0].x = thread->x - 0x80;
-        screen->draw_offsets[0].y = thread->y + g_bunit_gfx_draw_offset_y;
-        SetDrawOffset(&screen->draw_offsets[0], &screen->draw_offsets[0].x);
-        screen->draw_offsets[1].x = -0x80;
-        screen->draw_offsets[1].y = g_bunit_gfx_draw_offset_y;
-        SetDrawOffset(&screen->draw_offsets[1], &screen->draw_offsets[1].x);
+        screen->draw_offsets[0].position.x = thread->x - 0x80;
+        screen->draw_offsets[0].position.y = thread->y + g_bunit_gfx_draw_offset_y;
+        SetDrawOffset(&screen->draw_offsets[0].packet, (u16*)&screen->draw_offsets[0].position);
+        screen->draw_offsets[1].position.x = -0x80;
+        screen->draw_offsets[1].position.y = g_bunit_gfx_draw_offset_y;
+        SetDrawOffset(&screen->draw_offsets[1].packet, (u16*)&screen->draw_offsets[1].position);
         bunit_panel_set_primitive_colors(screen, thread);
         bunit_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
         if (frame < 13) {

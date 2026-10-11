@@ -183,9 +183,9 @@ typedef struct attack_deploy_render_buffer {
     DR_MODE draw_mode_9f4;     /* 0x9f4 */
     DR_MODE menu_draw_mode;    /* 0xa00 */
     DR_OFFSET world_offset;    /* 0xa0c */
-    point16_t world_position;  /* 0xa18 */
+    point16_t world_position;  /* 0xa18; SDK draw-offset input */
     DR_OFFSET screen_offset;   /* 0xa1c */
-    point16_t screen_position; /* 0xa28 */
+    point16_t screen_position; /* 0xa28; SDK draw-offset input */
 } attack_deploy_render_buffer_t;
 typedef char attack_deploy_render_buffer_size_must_be_0xa2c[(sizeof(attack_deploy_render_buffer_t) == 0xa2c) ? 1 : -1];
 
