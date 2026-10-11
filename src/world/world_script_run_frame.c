@@ -22,6 +22,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     s32 i;
     s32 op;
     u32 prims;
+    u32* ordering_table;
     s32 polarity;
 
     g_battle_ai_workspace_ptr = (event_work_t*)g_battle_ai_workspace;
@@ -112,10 +113,10 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     g_world_field_object_use_request = 0;
 
     if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_JOBSTTS) {
-        g_world_companion_overlay_prims = jobstts_entrypoint(g_world_active_unit_data.battle_id, 0);
-        if (g_world_companion_overlay_prims != 0) {
-            AddPrims(g_world_gfx_active_otag_entries, (void*)g_world_companion_overlay_prims,
-                (void*)(g_world_companion_overlay_prims + 0xFC));
+        ordering_table = jobstts_entrypoint(g_world_active_unit_data.battle_id, 0);
+        g_world_companion_overlay_prims = (s32)ordering_table;
+        if (ordering_table != 0) {
+            AddPrims(g_world_gfx_active_otag_entries, ordering_table, &ordering_table[0x3f]);
         } else {
             g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
         }

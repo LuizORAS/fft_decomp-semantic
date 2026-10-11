@@ -10,7 +10,7 @@ extern s16 g_bunit_ability_category; /* menu_ability_category_e */
 extern ability_data_t* g_bunit_selected_ability_data;
 extern main_ability_secondary_pointer_t g_bunit_selected_ability_secondary_data;
 extern s32 g_bunit_ability_type;
-extern u8 g_bunit_ability_list_menu_script[];
+extern menu_instruction_t g_bunit_ability_list_menu_script;
 extern s8 g_bunit_ability_list_confirm_prompt_state;
 extern s16 g_bunit_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern s16 g_bunit_ability_list_job_name_row[];
@@ -64,7 +64,7 @@ enum {
 extern menu_instruction_t* (*g_bunit_cmd_handlers[28])(menu_instruction_t* instruction);
 extern u32 g_bunit_cmd_stream_input;
 extern menu_window_command_t g_bunit_cmd_window_interior_command;
-void bunit_cmd_run_stream(u8* data, s32 flags);
+void bunit_cmd_run_stream(menu_instruction_t* instruction, s32 flags);
 menu_instruction_t* bunit_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_advance_window_scale_step_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* instruction);
@@ -149,7 +149,7 @@ extern s8 g_bunit_job_menu_phase; /* menu_job_list_step_e */
 extern u32 g_bunit_job_next_level_jp_requirement;
 extern s16 g_bunit_job_selected_generic_index;
 extern s16 g_bunit_job_selected_id;
-extern u8 g_bunit_job_list_menu_script[];
+extern menu_instruction_t g_bunit_job_list_menu_script;
 s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids, s32 unused_2);
 s32 bunit_job_calculate_current_jp(s32 index);
 s32 bunit_job_calculate_current_level(s32 index);
@@ -579,7 +579,7 @@ void bunit_menu_run_reorder_list(void);
 void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direction, const menu_instruction_t* list);
 void bunit_menu_set_vsync_mode_and_event_speed(s32 speed);
 s32 bunit_menu_update_wrapped_grid_selection(s32 step, s32 count, s32 max, s32 current, s32 input);
-void bunit_menu_dispatch_with_override(u8* menu, s32 state, s32 override);
+void bunit_menu_dispatch_with_override(menu_instruction_t* script, s32 state, s32 override);
 void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 busy, u16 sound_id);
 void bunit_menu_init_scrollable_list(s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table);
 void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table);
@@ -736,8 +736,8 @@ extern menu_draw_number_command_t g_bunit_unit_grid_max_stat_number;
 extern u16 g_bunit_unit_grid_mp_gauge_clut;
 extern rgb24_t g_bunit_unit_grid_mp_gauge_colors[4];
 extern rgb24_t g_bunit_unit_grid_normal_color;
-extern u8 g_bunit_unit_grid_stat_bar_script_bottom[];
-extern u8 g_bunit_unit_grid_stat_bar_script_top[];
+extern menu_instruction_t g_bunit_unit_grid_stat_bar_script_bottom;
+extern menu_instruction_t g_bunit_unit_grid_stat_bar_script_top;
 extern menu_draw_number_command_t g_bunit_unit_grid_stat_number;
 extern menu_entry_t g_bunit_unit_list_triangle_menu;
 extern oriented_quad_t g_bunit_unit_shadow_sprite;

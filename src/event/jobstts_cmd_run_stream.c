@@ -5,9 +5,7 @@
  * the end opcode, after resetting the ordering-table index, its lock and the
  * semi-transparency state; `flags` is the input the handlers see. Then
  * advances the transition frame, up to 10. */
-void jobstts_cmd_run_stream(u8* data, s32 flags) {
-    menu_instruction_t* instruction = (menu_instruction_t*)data;
-
+void jobstts_cmd_run_stream(menu_instruction_t* instruction, s32 flags) {
     g_jobstts_gfx_otag_index_locked = 0;
     g_jobstts_gfx_otag_index = 0;
     g_jobstts_gfx_semitransparency = 0;

@@ -61,7 +61,7 @@ s32 equip_menu_update_equipment(void) {
     if (g_battle_menu_input_lock_mode != 0 || battle_thread_is_running(2) != 0) {
         override = 1;
     }
-    equip_menu_dispatch_with_override(g_equip_equipment_render_commands, input, override);
+    equip_menu_dispatch_with_override(&g_equip_equipment_render_commands, input, override);
     equip_menu_draw_equipment_slot_marker(0, g_equip_selected_slot, g_battle_menu_input_lock_mode);
     if (g_equip_menu_list_entry_count != 0) {
         item_id = g_equip_item_list_entries[g_equip_menu_selected_list_index];
@@ -70,7 +70,7 @@ s32 equip_menu_update_equipment(void) {
         }
         if (g_equip_item_list_entries[g_equip_menu_selected_list_index] >= ITEM_ID_HEADGEAR_FIRST
             && g_equip_item_list_entries[g_equip_menu_selected_list_index] <= ITEM_ID_ACCESSORY_FIRST - 1) {
-            equip_menu_dispatch_with_override(g_equip_armor_bonus_render_commands, 0, 0);
+            equip_menu_dispatch_with_override(&g_equip_armor_bonus_render_commands, 0, 0);
         }
         equip_menu_draw_item_status_list(g_equip_item_list_entries[g_equip_menu_selected_list_index]);
     }

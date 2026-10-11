@@ -12,7 +12,7 @@ extern main_ability_secondary_pointer_t g_jobstts_selected_ability_secondary_dat
 extern ability_data_t*
     g_jobstts_selected_ability_data; /* the same word: both outputs of the ability lookup land in it */
 extern s32 g_jobstts_ability_type;
-extern u8 g_jobstts_ability_list_render_commands[];
+extern menu_instruction_t g_jobstts_ability_list_render_commands;
 extern u8 g_jobstts_ability_list_initialized;
 extern s16 g_jobstts_ability_list_job_name_ids[];
 
@@ -58,7 +58,7 @@ enum {
 
 extern jobstts_command_handler_t g_jobstts_cmd_handlers[22];
 extern s32 g_jobstts_cmd_stream_input;
-void jobstts_cmd_run_stream(u8* data, s32 flags);
+void jobstts_cmd_run_stream(menu_instruction_t* instruction, s32 flags);
 menu_instruction_t* jobstts_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_draw_background_tiles_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_draw_border_tiles_with_transition_clip(menu_instruction_t* instruction);
@@ -76,7 +76,7 @@ menu_instruction_t* jobstts_cmd_set_otag_index_if_unlocked_handler(menu_instruct
 menu_instruction_t* jobstts_cmd_set_semitrans_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_set_tpage_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_skip_group(menu_instruction_t* instruction);
-void jobstts_cmd_run_stream_with_mode(u8* data, s32 flags, s32 event_mode);
+void jobstts_cmd_run_stream_with_mode(menu_instruction_t* script, s32 flags, s32 event_mode);
 
 /* gfx */
 /* Per-buffer primitive-pool pointers used by JOBSTTS.OUT's renderer. */
@@ -230,7 +230,7 @@ extern s32 g_jobstts_job_current_mastered;
 extern u32 g_jobstts_job_current_total_jp;
 extern s16 g_jobstts_job_ids[];
 extern s32 g_jobstts_job_list_menu_initialized;
-extern u8 g_jobstts_job_list_render_commands[];
+extern menu_instruction_t g_jobstts_job_list_render_commands;
 extern u32 g_jobstts_job_next_level_jp_requirement;
 extern u16 g_jobstts_job_selected_id;
 s32 jobstts_job_build_unit_job_list(u8 unit_id, s16* job_ids, s32 unused);
@@ -368,6 +368,6 @@ extern s8 g_jobstts_active_page;            /* menu_job_list_step_e; each page's
 extern u8 g_jobstts_initialized;
 extern u32 g_jobstts_help_text_table[];
 extern u8 g_jobstts_previous_event_mode;
-s32 jobstts_entrypoint(s32 unit, void* unused_otag);
+u32* jobstts_entrypoint(s32 unit, void* unused_otag);
 
 #endif

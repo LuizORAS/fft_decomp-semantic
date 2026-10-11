@@ -43,7 +43,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     rgb24_t saved_color;
     s32 row;
     s32 col;
-    u8* menu;
+    menu_instruction_t* menu;
     menu_sprite_cell_t* quads;
     s16 y;
     s32 unit;
@@ -145,11 +145,11 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
         && g_bunit_status_banner_enabled != 0 && g_bunit_unit_browse_enabled == 0) {
         top = 0xF;
         if (g_bunit_status_banner_at_bottom != 0) {
-            menu = g_bunit_unit_grid_stat_bar_script_top;
+            menu = &g_bunit_unit_grid_stat_bar_script_top;
             quads = g_bunit_unit_grid_label_tiles;
         } else {
             top = 0xDB;
-            menu = g_bunit_unit_grid_stat_bar_script_bottom;
+            menu = &g_bunit_unit_grid_stat_bar_script_bottom;
             quads = g_bunit_unit_grid_label_tiles_bottom;
         }
         bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L2, 0x26, top, buttons & PSX_PAD_L2,

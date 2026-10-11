@@ -4,8 +4,8 @@
 
 /* Per-frame JOBSTTS entry: initialize on first call, run the active page,
  * and return the ordering table to draw (0 once the screen closes). */
-s32 jobstts_entrypoint(s32 unit, void* unused_otag) {
-    s32 result;
+u32* jobstts_entrypoint(s32 unit, void* unused_otag) {
+    u32* result;
 
     if (g_jobstts_initialized == 0) {
         g_jobstts_gfx_otag_length = 0x40;
@@ -41,7 +41,7 @@ s32 jobstts_entrypoint(s32 unit, void* unused_otag) {
         g_jobstts_initialized = 1;
     }
     jobstts_gfx_swap_context_and_clear_otag(0, -1);
-    result = (s32)g_jobstts_gfx_context->otag;
+    result = g_jobstts_gfx_context->otag;
     g_jobstts_previous_event_mode = g_battle_menu_input_lock_mode;
     jobstts_input_update_with_message_state();
     if (g_jobstts_input_primary_repeat & PSX_PAD_SELECT) {

@@ -37,7 +37,7 @@ extern menu_sprite_command_t g_equip_cmd_row_sprite_command;
 extern menu_entry_t g_equip_command_menu;
 extern s32 g_equip_cmd_stream_input;
 extern menu_window_command_t g_equip_cmd_window_interior_command;
-void equip_cmd_run_stream(u8* stream, s32 input);
+void equip_cmd_run_stream(menu_instruction_t* instruction, s32 input);
 menu_instruction_t* equip_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_advance_window_scale_step_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* instruction);
@@ -88,7 +88,7 @@ void equip_editor_run_numeric_thread(void);
 extern u16 g_equip_equip_item_cursor_anim[];
 extern s8 g_equip_equip_item_list_open;
 extern s8 g_equip_equip_item_list_refresh;
-extern u8 g_equip_equip_item_menu_script[];
+extern menu_instruction_t g_equip_equip_item_menu_script;
 extern s8 g_equip_equip_item_preview_active;
 extern s16 g_equip_equip_item_previewed_cursor;
 extern s8 g_equip_equip_item_slot;
@@ -98,7 +98,7 @@ extern s8 g_equip_equip_mode_initialized;
 extern u8 g_equip_equipment_panel_params[];
 extern s32 g_equip_equipment_panel_redraw;
 extern s32 g_equip_equipment_panel_style;
-extern u8 g_equip_equipment_render_commands[];
+extern menu_instruction_t g_equip_equipment_render_commands;
 
 /* gfx */
 
@@ -402,7 +402,7 @@ extern s16 g_equip_menu_selected_list_index;
 extern menu_selection_record_t g_equip_menu_selection_entries[5];
 extern s16 g_equip_menu_selection_values[4];
 extern oriented_quad_t g_equip_menu_slot_marker_rects[];
-extern u8 g_equip_menu_slot_marker_window[];
+extern menu_instruction_t g_equip_menu_slot_marker_window;
 extern u8 g_equip_menu_slot_marker_x[];
 extern s8 g_equip_menu_thread_running;
 extern clut_t g_equip_menu_palette_image;
@@ -436,7 +436,7 @@ extern s8 g_equip_menu_substate; /* menu_item_list_state_e */
 extern s16 g_equip_menu_window_right_x;
 void equip_menu_clear_selection_records(void);
 void equip_menu_clear_selection_values(void);
-void equip_menu_dispatch_with_override(u8* menu, s32 state, s32 override);
+void equip_menu_dispatch_with_override(menu_instruction_t* script, s32 state, s32 override);
 void equip_menu_draw_equipment_slot_marker(s32 unused, s32 slot, s32 override);
 void equip_menu_draw_scrollable_list(const menu_instruction_t* script);
 void equip_menu_init_and_draw_scrollable_list(
@@ -738,7 +738,7 @@ extern RECT g_equip_right_panel_frame_rect;
 extern RECT g_equip_character_status_frame_rect[];
 extern RECT g_equip_character_status_draw_area_rect;
 extern u8 g_equip_status_label_image[];
-extern u8 g_equip_armor_bonus_render_commands[];
+extern menu_instruction_t g_equip_armor_bonus_render_commands;
 extern RECT g_equip_status_label_image_rect;
 extern u32 g_equip_help_text_table[];
 extern u16 g_equip_remove_all_equipment_ids[];
