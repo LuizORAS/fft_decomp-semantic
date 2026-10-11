@@ -17,7 +17,7 @@ void world_formation_build_unit_graphic_entry(
     s16 clut_x;
 
     unit = g_world_formation_unit_pointers[formation_index];
-    job_id = unit->job_id;
+    job_id = unit->identity.job_id;
     if (job_id == JOB_ID_BYBLOS) {
         index = 0x4E;
     } else if (job_id == JOB_ID_STEEL_GIANT) {
@@ -41,8 +41,8 @@ void world_formation_build_unit_graphic_entry(
         return;
     }
     bcopy(&g_world_formation_graphic_entries[index], destination, 0xC);
-    palette
-        = (s16)world_formation_get_unit_palette_index(g_world_formation_unit_pointers[formation_index]->roster_slot);
+    palette = (s16)world_formation_get_unit_palette_index(
+        g_world_formation_unit_pointers[formation_index]->identity.roster_slot);
     clut_x = (palette % 4) * 0x10 + 0x140;
     job_id = palette / 4;
     destination->clut = GetClut(clut_x, job_id + 0xE0);

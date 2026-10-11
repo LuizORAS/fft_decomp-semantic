@@ -1,5 +1,5 @@
 #include "fft/world.h"
 
 s32 world_formation_get_unit_faith(s32 unit_id) {
-    return g_world_formation_unit_pointers[unit_id]->faith;
+    return g_world_formation_unit_pointers[unit_id]->identity.faith;
 }

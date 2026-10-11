@@ -51,12 +51,12 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
         unit->ct = 100;
     }
     unit->max_ct = 100;
-    unit->entd_slot = stats->entd_slot;
-    unit->job_id = stats->job_id;
-    unit->brave = stats->brave;
-    unit->faith = stats->faith;
-    unit->zodiac = stats->birthday.zodiac;
-    unit->formation_index = stats->formation_index;
+    unit->identity.unit_index = stats->entd_slot;
+    unit->identity.job_id = stats->job_id;
+    unit->identity.brave = stats->brave;
+    unit->identity.faith = stats->faith;
+    unit->identity.zodiac = stats->birthday.zodiac;
+    unit->identity.roster_slot = stats->formation_index;
     unit->move = stats->move;
     unit->speed = stats->attributes[UNIT_ATTRIBUTE_SPEED];
     unit->jump = stats->jump;

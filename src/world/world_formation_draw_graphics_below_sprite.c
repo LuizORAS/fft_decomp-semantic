@@ -170,7 +170,7 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_brave_number.x = num_x;
                 g_world_formation_brave_number_wide.y = g_world_formation_brave_number.y = y40;
                 g_world_formation_brave_number_wide.value = g_world_formation_brave_number.value = unit_index;
-                if (g_world_formation_unit_pointers[unit_index]->brave >= 100) {
+                if (g_world_formation_unit_pointers[unit_index]->identity.brave >= 100) {
                     g_world_formation_brave_number_wide.x = num_x - 3;
                     world_menu_script_draw_formatted_number(
                         (world_menu_instruction_t*)&g_world_formation_brave_number_wide);
@@ -184,7 +184,7 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_faith_number.x = num_x;
                 g_world_formation_faith_number_wide.y = g_world_formation_faith_number.y = num_y;
                 g_world_formation_faith_number_wide.value = g_world_formation_faith_number.value = unit_index;
-                if (g_world_formation_unit_pointers[unit_index]->faith >= 100) {
+                if (g_world_formation_unit_pointers[unit_index]->identity.faith >= 100) {
                     g_world_formation_faith_number_wide.x = num_x - 5;
                     world_menu_script_draw_formatted_number(
                         (world_menu_instruction_t*)&g_world_formation_faith_number_wide);

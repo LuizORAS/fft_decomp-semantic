@@ -25,7 +25,8 @@ void world_shop_run_hire_fee_confirm_step(void) {
         } else if (choice == 1 || choice == -1) {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf827, 0);
             g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_MENU;
-            main_party_remove_unit(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot);
+            main_party_remove_unit(
+                g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot);
             g_world_shop_hire_menu_initialized = 0;
         } else {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);

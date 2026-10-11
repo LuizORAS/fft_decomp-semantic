@@ -28,12 +28,12 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     record->max_mp = unit->max_mp < 1000 ? unit->max_mp : 999;
     record->ct = unit->ct < 101 ? unit->ct : 100;
     record->max_ct = 100;
-    *(s16*)record->name_index = unit->formation_index;
-    record->job_id = party->job_id;
-    record->brave = unit->brave;
-    record->faith = unit->faith;
-    record->zodiac = unit->birthday.zodiac;
-    record->roster_slot = unit->formation_index;
+    record->identity.unit_index = unit->formation_index;
+    record->identity.job_id = party->job_id;
+    record->identity.brave = unit->brave;
+    record->identity.faith = unit->faith;
+    record->identity.zodiac = unit->birthday.zodiac;
+    record->identity.roster_slot = unit->formation_index;
     record->move = unit->move;
     record->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
     record->jump = unit->jump;
@@ -74,7 +74,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
         }
     } else {
         record->abilities.fields.primary_skillset = unit->primary_skillset;
-        if (record->job_id != JOB_ID_MIME) {
+        if (record->identity.job_id != JOB_ID_MIME) {
             record->equipment[0] = party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
                 ? party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON]
                 : party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];

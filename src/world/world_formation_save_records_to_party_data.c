@@ -18,9 +18,9 @@ void world_formation_save_records_to_party_data(void) {
     u8 value;
 
     for (i = 0; i < g_world_formation_record_count; i++) {
-        slot = g_world_formation_unit_pointers[i]->roster_slot;
+        slot = g_world_formation_unit_pointers[i]->identity.roster_slot;
         party = main_party_get_data_pointer(slot);
-        party->job_id = g_world_formation_unit_pointers[i]->job_id;
+        party->job_id = g_world_formation_unit_pointers[i]->identity.job_id;
         party->gender_flags = g_world_formation_unit_pointers[i]->gender_flags;
         party->secondary_skillset = g_world_formation_unit_pointers[i]->abilities.fields.secondary_skillset;
         party->reaction_ability[0] = g_world_formation_unit_pointers[i]->abilities.fields.reaction_ability;

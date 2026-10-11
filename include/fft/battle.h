@@ -2355,7 +2355,7 @@ extern u16 g_battle_camera_position_locked;
 extern s32 g_battle_camera_yaw_band;
 extern s32 g_battle_camera_wrap_yaw_pending;
 extern VECTOR g_battle_camera_script_vector;
-extern void* g_battle_camera_published_coords_ptr;
+extern VECTOR* g_battle_camera_published_coords_ptr;
 extern SVECTOR g_battle_camera_script_rotation;
 extern SVECTOR* g_battle_camera_published_rotation_ptr;
 /* Maps a camera quadrant index to its map-tile camera-block direction. */

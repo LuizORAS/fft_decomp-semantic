@@ -648,8 +648,8 @@ typedef struct open_overlay_fade {
 } open_overlay_fade_t;
 
 extern POLY_FT4 g_open_gfx_fade_primitives[2];
-extern u16* volatile g_open_gfx_image_copy_destination_buffer;
-extern u16* volatile g_open_gfx_image_copy_file_pixels;
+extern u16* g_open_gfx_image_copy_destination_buffer;
+extern u16* g_open_gfx_image_copy_file_pixels;
 
 /* Volatile: open_gfx_step_image_crossfade reloads it every column. */
 extern u16* volatile g_open_gfx_image_copy_source_buffer;

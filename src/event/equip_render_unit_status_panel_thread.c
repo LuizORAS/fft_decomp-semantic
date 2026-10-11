@@ -32,7 +32,7 @@ void equip_render_unit_status_panel_thread(void) {
     u8* small_text_image;                                  /* sp98 */
     u8* name_image;                                        /* spA0 */
     battle_menu_status_panel_packet_t* panel_base;         /* spA8 */
-    s16* unit_data;                                        /* spB0 */
+    world_unit_status_identity_t* unit_data;               /* spB0 */
     battle_menu_status_panel_display_thread_t* thread;     /* spB8 */
     s32 shake;                                             /* spC0 */
     s32 dimmed;                                            /* spC8 */
@@ -73,7 +73,7 @@ void equip_render_unit_status_panel_thread(void) {
         name_image = g_equip_panel_selected_name_image;
         numeric_entries = g_equip_panel_selected_numeric_entries;
         state = &g_equip_selected_unit_stat_summary;
-        unit_data = g_equip_panel_selected_unit_data;
+        unit_data = &g_equip_panel_selected_unit_data;
         portrait_rect = &g_equip_panel_selected_portrait_rect;
         panel_base = panel;
         editor_base = editor;
@@ -86,7 +86,7 @@ void equip_render_unit_status_panel_thread(void) {
         name_image = g_equip_panel_comparison_name_image;
         numeric_entries = g_equip_panel_comparison_numeric_entries;
         state = &g_equip_panel_comparison_billboard;
-        unit_data = g_equip_panel_comparison_unit_data;
+        unit_data = &g_equip_panel_comparison_unit_data;
         portrait_rect = &g_equip_panel_comparison_portrait_rect;
         panel_base = panel;
         editor_base = editor;
@@ -387,8 +387,8 @@ void equip_render_unit_status_panel_thread(void) {
                 bar++;
             }
         }
-        panel->sprites[6].u0 = (unit_data[4] % 7) * 0x18;
-        icon_index = unit_data[4];
+        panel->sprites[6].u0 = (unit_data->zodiac % 7) * 0x18;
+        icon_index = unit_data->zodiac;
         panel->sprites[6].w = 0x18;
         panel->sprites[6].h = 0x14;
         panel->sprites[6].v0 = (icon_index / 7) * 0x14 + 0x2A;
@@ -427,23 +427,24 @@ void equip_render_unit_status_panel_thread(void) {
             battle_clear_menu_render_buffer(name_image, 0x580);
             *window_width = 0x58;
             battle_menu_set_text_origin(0, 0);
-            battle_menu_display_text_entry(unit_data[0] + TEXT_ID_UNIT_NAME_BASE, name_image, text_position);
+            battle_menu_display_text_entry(unit_data->unit_index + TEXT_ID_UNIT_NAME_BASE, name_image, text_position);
             battle_menu_set_text_origin(0, 0x10);
-            battle_menu_display_text_entry(unit_data[1] + TEXT_ID_JOB_NAME_BASE, name_image, text_position);
+            battle_menu_display_text_entry(unit_data->job_id + TEXT_ID_JOB_NAME_BASE, name_image, text_position);
             LoadImage(&rects[2], name_image);
             battle_clear_menu_render_buffer(small_text_image, 0xF0);
             *window_width = 0x10;
             battle_menu_set_text_origin(0, 0);
-            battle_text_draw_large_number_glyphs(unit_data[2], 0x202, small_text_image, text_position);
+            battle_text_draw_large_number_glyphs(unit_data->brave, 0x202, small_text_image, text_position);
             LoadImage(&rects[3], small_text_image);
             battle_menu_set_text_origin(0, 0);
             small_text_image_2 = small_text_image + 0x50;
-            battle_text_draw_large_number_glyphs(unit_data[3], 0x202, small_text_image_2, text_position);
+            battle_text_draw_large_number_glyphs(unit_data->faith, 0x202, small_text_image_2, text_position);
             LoadImage(&rects[4], small_text_image_2);
             if (g_battle_post_battle_unit_changes_active == 0) {
                 battle_menu_set_text_origin(0, 0);
                 small_text_image_3 = small_text_image + 0xA0;
-                battle_text_draw_large_number_glyphs(unit_data[5] + 1, 0x4002, small_text_image_3, text_position);
+                battle_text_draw_large_number_glyphs(
+                    unit_data->roster_slot + 1, 0x4002, small_text_image_3, text_position);
                 LoadImage(&rects[5], small_text_image_3);
             } else {
                 LoadImage(&rects[5], small_text_image + 0xA0);

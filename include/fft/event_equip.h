@@ -459,7 +459,7 @@ s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection
 s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
 /* panel */
-extern s16 g_equip_panel_selected_unit_data[];
+extern world_unit_status_identity_t g_equip_panel_selected_unit_data;
 extern world_image_location_t g_equip_panel_item_icon_texture[];
 extern RECT g_equip_panel_origin_offsets[];
 extern RECT g_equip_panel_text_upload_rect_a;
@@ -481,7 +481,7 @@ extern menu_number_entry_t g_equip_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_equip_panel_comparison_packets[2];
 extern palette_t g_equip_panel_comparison_portrait_palettes[2];
 extern RECT g_equip_panel_comparison_portrait_rect;
-extern s16 g_equip_panel_comparison_unit_data[];
+extern world_unit_status_identity_t g_equip_panel_comparison_unit_data;
 extern world_gfx_image_load_parameters_t g_equip_panel_editor_label_cells[];
 extern u16 g_equip_panel_editor_label_cluts[][2];
 extern world_gfx_image_load_parameters_t g_equip_panel_editor_mode_cell[];
@@ -628,54 +628,48 @@ void equip_thread_wait_forever(void);
  * battle_stats_t equipment-stat slot. The
  * first 0x1E bytes share the unit-status-billboard layout. */
 typedef struct equip_unit_data {
-    s16 level;                   /* 0x00; capped at 99 */
-    s16 team_kind;               /* 0x02; 1 enemy, 2 neutral */
-    s16 list_index;              /* 0x04; AT-list lookup + 1, or -1 */
-    s16 unit_count;              /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
-    s16 experience;              /* 0x08; capped at 99 */
-    s16 unit_index;              /* 0x0a; battle_stats_t.entd_slot */
-    s16 hp;                      /* 0x0c; capped at 999 */
-    s16 _unused_0e;              /* 0x0e; HP gauge bonus slot */
-    s16 max_hp;                  /* 0x10; capped at 999 */
-    s16 mp;                      /* 0x12; capped at 999 */
-    s16 _unused_14;              /* 0x14 */
-    s16 max_mp;                  /* 0x16; capped at 999 */
-    s16 ct;                      /* 0x18; 100 while the unit has its turn */
-    s16 _unused_1a;              /* 0x1a */
-    s16 max_ct;                  /* 0x1c; always 100 */
-    s16 battle_id;               /* 0x1e */
-    s16 _unused_20;              /* 0x20 */
-    s16 entd_slot;               /* 0x22 */
-    s16 job_id;                  /* 0x24 */
-    s16 brave;                   /* 0x26 */
-    s16 faith;                   /* 0x28 */
-    s16 zodiac;                  /* 0x2a; birthday high nibble */
-    s16 formation_index;         /* 0x2c */
-    s16 _unused_2e;              /* 0x2e */
-    s16 move;                    /* 0x30 */
-    s16 speed;                   /* 0x32 */
-    s16 jump;                    /* 0x34 */
-    s16 right_weapon_power;      /* 0x36 */
-    s16 left_weapon_power;       /* 0x38 */
-    s16 right_weapon_evade;      /* 0x3a */
-    s16 left_weapon_evade;       /* 0x3c */
-    s16 _unused_3e;              /* 0x3e; monster-skillset flag slot */
-    s16 two_handing;             /* 0x40; equip_unit_is_two_handing_weapon result */
-    s16 physical_attack;         /* 0x42 */
-    s16 physical_class_evade;    /* 0x44 */
-    s16 physical_shield_evade;   /* 0x46 */
-    s16 _unused_48;              /* 0x48; accessory evade slot */
-    s16 _unused_4a;              /* 0x4a */
-    s16 magic_attack;            /* 0x4c */
-    s16 magical_class_evade;     /* 0x4e; cleared (lower billboard M-C-Ev) */
-    s16 magical_shield_evade;    /* 0x50 */
-    s16 magical_accessory_evade; /* 0x52 */
-    u16 equipment[5];            /* 0x54; equip_unit_equipment_slot_e order */
-    u8 _unused_5e[0x12];         /* 0x5e; ability ids and the spare tail of the stat-detail block, left zero */
-    u8 equipment_categories[4];  /* 0x70 */
-    u8 support_abilities[4];     /* 0x74; copy of battle_stats_t.support_abilities */
-    u8 party_index;              /* 0x78; battle_stats_t.formation_index */
-    u8 _padding_79;              /* tail padding to 2-byte alignment */
+    s16 level;      /* 0x00; capped at 99 */
+    s16 team_kind;  /* 0x02; 1 enemy, 2 neutral */
+    s16 list_index; /* 0x04; AT-list lookup + 1, or -1 */
+    s16 unit_count; /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
+    s16 experience; /* 0x08; capped at 99 */
+    s16 unit_index; /* 0x0a; battle_stats_t.entd_slot */
+    s16 hp;         /* 0x0c; capped at 999 */
+    s16 _unused_0e; /* 0x0e; HP gauge bonus slot */
+    s16 max_hp;     /* 0x10; capped at 999 */
+    s16 mp;         /* 0x12; capped at 999 */
+    s16 _unused_14; /* 0x14 */
+    s16 max_mp;     /* 0x16; capped at 999 */
+    s16 ct;         /* 0x18; 100 while the unit has its turn */
+    s16 _unused_1a; /* 0x1a */
+    s16 max_ct;     /* 0x1c; always 100 */
+    s16 battle_id;  /* 0x1e */
+    s16 _unused_20; /* 0x20 */
+    world_unit_status_identity_t identity; /* 0x22 */
+    s16 move;                              /* 0x30 */
+    s16 speed;                             /* 0x32 */
+    s16 jump;                              /* 0x34 */
+    s16 right_weapon_power;                /* 0x36 */
+    s16 left_weapon_power;                 /* 0x38 */
+    s16 right_weapon_evade;                /* 0x3a */
+    s16 left_weapon_evade;                 /* 0x3c */
+    s16 _unused_3e;                        /* 0x3e; monster-skillset flag slot */
+    s16 two_handing;                       /* 0x40; equip_unit_is_two_handing_weapon result */
+    s16 physical_attack;                   /* 0x42 */
+    s16 physical_class_evade;              /* 0x44 */
+    s16 physical_shield_evade;             /* 0x46 */
+    s16 _unused_48;                        /* 0x48; accessory evade slot */
+    s16 _unused_4a;                        /* 0x4a */
+    s16 magic_attack;                      /* 0x4c */
+    s16 magical_class_evade;               /* 0x4e; cleared (lower billboard M-C-Ev) */
+    s16 magical_shield_evade;              /* 0x50 */
+    s16 magical_accessory_evade;           /* 0x52 */
+    u16 equipment[5];                      /* 0x54; equip_unit_equipment_slot_e order */
+    u8 _unused_5e[0x12];        /* 0x5e; ability ids and the spare tail of the stat-detail block, left zero */
+    u8 equipment_categories[4]; /* 0x70 */
+    u8 support_abilities[4];    /* 0x74; copy of battle_stats_t.support_abilities */
+    u8 party_index;             /* 0x78; battle_stats_t.formation_index */
+    u8 _padding_79;             /* tail padding to 2-byte alignment */
 } equip_unit_data_t;
 typedef char equip_unit_data_size_must_be_0x7a[(sizeof(equip_unit_data_t) == 0x7A) ? 1 : -1];
 

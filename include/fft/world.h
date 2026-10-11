@@ -677,21 +677,6 @@ extern u8 g_world_editor_numeric_text_a[];
 extern u8 g_world_editor_numeric_text_b[];
 
 /* comparison */
-/* Display identity of a status-panel unit (0xe bytes; g_world_selected_unit_identity
- * and g_world_comparison_unit_identity). Formation code copies it from
- * world_formation_unit_t +0x22; wldcore_unit_build_status_panel_data fills it
- * from a party member. */
-typedef struct world_unit_status_identity {
-    s16 unit_index;  /* 0x00: name text 0x4000 + value (world_menu_unit_status_banner_thread) */
-    s16 job_id;      /* 0x02: job name text 0x3000 + value */
-    s16 brave;       /* 0x04 */
-    s16 faith;       /* 0x06 */
-    s16 zodiac;      /* 0x08 */
-    s16 roster_slot; /* 0x0a: party slot (world_menu_get_party_unit_name_id); shown as value + 1 */
-    u8 _unused_0c[2];
-} world_unit_status_identity_t;
-typedef char world_unit_status_identity_size_must_be_0xe[sizeof(world_unit_status_identity_t) == 0xe ? 1 : -1];
-
 extern battle_unit_status_record_t g_world_comparison_unit_stat_summary;
 extern world_unit_status_identity_t g_world_comparison_unit_identity;
 extern menu_number_entry_t g_world_comparison_unit_number_entries[];
@@ -1326,28 +1311,22 @@ typedef struct world_formation_unit {
     s16 max_mp; /* 0x016 */
     s16 ct;     /* 0x018 */
     u8 _unused_01a[2];
-    s16 max_ct;                /* 0x01c; always 100 (world_formation_build_unit_record) */
-    u8 _unused_01e[4];         /* 0x01e; tail of the 0x22-byte status record */
-    u8 name_index[2];          /* 0x022; s16 formation index; starts the 14-byte display snapshot at WORLD 0x80114bc8 */
-    s16 job_id;                /* 0x024; "Current Job" */
-    s16 brave;                 /* 0x026 */
-    s16 faith;                 /* 0x028 */
-    s16 zodiac;                /* 0x02a; battle_stats_t birthday >> 12 (world_formation_build_unit_record) */
-    s16 roster_slot;           /* 0x02c; "Roster Slot Index" */
-    u8 _unused_02e[2];         /* 0x02e; end of the 0xe-byte identity record */
-    s16 move;                  /* 0x030 */
-    s16 speed;                 /* 0x032 */
-    s16 jump;                  /* 0x034 */
-    s16 right_weapon_power;    /* 0x036 */
-    s16 left_weapon_power;     /* 0x038 */
-    s16 right_weapon_evade;    /* 0x03a */
-    s16 left_weapon_evade;     /* 0x03c */
-    s16 uses_monster_skillset; /* 0x03e; primary skillset is in the monster range 0xb0..0xdf */
-    s16 two_handed;            /* 0x040; world_unit_is_two_handing_weapon result (WORLD 0x80115198) */
-    s16 physical_attack;       /* 0x042 */
-    s16 physical_class_evade;  /* 0x044 */
-    s16 physical_shield_evade; /* 0x046 */
-    s16 physical_accessory_evade; /* 0x048 */
+    s16 max_ct;                            /* 0x01c; always 100 (world_formation_build_unit_record) */
+    u8 _unused_01e[4];                     /* 0x01e; tail of the 0x22-byte status record */
+    world_unit_status_identity_t identity; /* 0x022 */
+    s16 move;                              /* 0x030 */
+    s16 speed;                             /* 0x032 */
+    s16 jump;                              /* 0x034 */
+    s16 right_weapon_power;                /* 0x036 */
+    s16 left_weapon_power;                 /* 0x038 */
+    s16 right_weapon_evade;                /* 0x03a */
+    s16 left_weapon_evade;                 /* 0x03c */
+    s16 uses_monster_skillset;             /* 0x03e; primary skillset is in the monster range 0xb0..0xdf */
+    s16 two_handed;                        /* 0x040; world_unit_is_two_handing_weapon result (WORLD 0x80115198) */
+    s16 physical_attack;                   /* 0x042 */
+    s16 physical_class_evade;              /* 0x044 */
+    s16 physical_shield_evade;             /* 0x046 */
+    s16 physical_accessory_evade;          /* 0x048 */
     u8 _unused_04a[2];
     s16 magical_attack;                    /* 0x04c */
     s16 magical_class_evade;               /* 0x04e */

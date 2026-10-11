@@ -35,7 +35,7 @@ void world_card_build_save_image(s32 slot) {
 
     bcopy(g_world_formation_unit_pointers[i]->name, g_world_load_work_buffer->summary.name, 0x10);
     g_world_load_work_buffer->summary.name_terminator = 0xfe;
-    g_world_load_work_buffer->summary.job_id = g_world_formation_unit_pointers[i]->job_id;
+    g_world_load_work_buffer->summary.job_id = g_world_formation_unit_pointers[i]->identity.job_id;
     g_world_load_work_buffer->summary.level = g_world_formation_unit_pointers[i]->level;
 
     script_var_2f = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);

@@ -11,13 +11,13 @@ s32 world_formation_get_unit_lock(s32 unit_id) {
         return WORLD_FORMATION_UNIT_LOCK_PROPOSITION;
     if (unit->uses_monster_skillset != 0)
         return WORLD_FORMATION_UNIT_LOCK_MONSTER;
-    if (world_job_is_special_monster(unit->job_id) != 0)
+    if (world_job_is_special_monster(unit->identity.job_id) != 0)
         return WORLD_FORMATION_UNIT_LOCK_MONSTER;
     {
         world_formation_unit_t* u2 = g_world_formation_unit_pointers[unit_id];
         if (u2->gender_flags & UNIT_FLAG_EGG)
             return WORLD_FORMATION_UNIT_LOCK_EGG;
-        if (u2->job_id == JOB_ID_MIME)
+        if (u2->identity.job_id == JOB_ID_MIME)
             return WORLD_FORMATION_UNIT_LOCK_MIME;
     }
     return WORLD_FORMATION_UNIT_UNLOCKED;

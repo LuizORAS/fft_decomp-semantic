@@ -50,6 +50,7 @@ void open_gfx_step_image_crossfade(void) {
                     destination_row_start = reverse_row * OPEN_IMAGE_ROW_STRIDE;
                     fade = g_open_gfx_image_copy_row_flags[row + 2]++;
                     do {
+                        /* An ordinary source-pointer load is hoisted and adds a saved-register frame. */
                         source_pixel = g_open_gfx_image_copy_source_buffer[source_row_start + column];
                         destination_pixel = g_open_gfx_image_copy_destination_buffer[source_row_start + column];
                         pixel = 0;

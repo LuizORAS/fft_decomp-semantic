@@ -37,7 +37,7 @@ s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list
             if (g_world_formation_unit_records[count].uses_monster_skillset != 0) {
                 continue;
             }
-            if (world_job_is_special_monster(g_world_formation_unit_records[count].job_id) != 0) {
+            if (world_job_is_special_monster(g_world_formation_unit_records[count].identity.job_id) != 0) {
                 continue;
             }
         } else if (mode == WORLD_FORMATION_RECORD_LIST_MONSTERS) {

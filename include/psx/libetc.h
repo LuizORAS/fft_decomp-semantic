@@ -9,7 +9,7 @@
 typedef void (*psyq_interrupt_callback_t)(void);
 
 extern int VSync(int);
-extern int ResetCallback(void);
+extern void ResetCallback(void);
 extern void VSyncCallback(psyq_interrupt_callback_t callback);
 extern void PadInit(int);
 extern u32 PadRead(s32);
@@ -86,11 +86,11 @@ typedef struct {
     const char* name;
     psyq_interrupt_callback_t (*dma_callback)(s32, psyq_interrupt_callback_t);
     psyq_callback_setter_t irq_callback;
-    s32 (*reset)(void);
-    void (*stop)(void);
+    psyq_interrupt_state_t* (*reset)(void);
+    psyq_interrupt_state_t* (*stop)(void);
     psyq_callback_setter_t vblank_callback;
-    s32 (*restart)(void);
-    void* state;
+    psyq_interrupt_state_t* (*restart)(void);
+    psyq_interrupt_state_t* state;
 } psyq_interrupt_dispatch_t;
 extern psyq_interrupt_dispatch_t* g_psyq_etc_dispatch;
 extern volatile u16* g_psyq_etc_irq_mask;

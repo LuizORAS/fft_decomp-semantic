@@ -86,7 +86,7 @@ s32 world_formation_run_set_ability_menu(void) {
             if (slot == 1) {
                 g_world_set_ability_entry_count
                     = world_ability_find_unit_abilities(g_world_formation_selected_unit_index,
-                        g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->job_id,
+                        g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.job_id,
                         MENU_ABILITY_CATEGORY_ACTION, g_world_menu_entry_ids, slot);
             } else {
                 g_world_set_ability_entry_count = world_ability_build_equippable_rsm_list(

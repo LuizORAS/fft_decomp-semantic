@@ -61,7 +61,7 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
                     } while (i < 5);
                     if (world_shop_obtain_gil(0) < g_world_shop_service_fee) {
                         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF823, 0);
-                        main_party_remove_unit(g_world_formation_unit_pointers[slot]->roster_slot);
+                        main_party_remove_unit(g_world_formation_unit_pointers[slot]->identity.roster_slot);
                         g_world_shop_hire_result_shown = 1;
                     } else {
                         g_world_formation_selected_unit_index = slot;

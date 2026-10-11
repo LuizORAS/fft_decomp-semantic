@@ -222,6 +222,19 @@ typedef struct battle_active_unit {
 } battle_active_unit_t;
 typedef char battle_active_unit_size_must_be_0xe[(sizeof(battle_active_unit_t) == 0xe) ? 1 : -1];
 
+/* Name, job and identity values copied into WORLD and EQUIP status panels.
+ * The last displayed value is the roster slot, distinct from a battle id. */
+typedef struct world_unit_status_identity {
+    s16 unit_index;  /* 0x00: name text 0x4000 + value (world_menu_unit_status_banner_thread) */
+    s16 job_id;      /* 0x02: job name text 0x3000 + value */
+    s16 brave;       /* 0x04 */
+    s16 faith;       /* 0x06 */
+    s16 zodiac;      /* 0x08 */
+    s16 roster_slot; /* 0x0a: party slot (world_menu_get_party_unit_name_id); shown as value + 1 */
+    u8 _unused_0c[2];
+} world_unit_status_identity_t;
+typedef char world_unit_status_identity_size_must_be_0xe[sizeof(world_unit_status_identity_t) == 0xe ? 1 : -1];
+
 /* Per-slot editor state (0x38 bytes). Both arrays are indexed by the five
  * character slots; the status threads walk them with 2-byte cursors. The
  * layout is the lower billboard record (0x801ca0e8). */

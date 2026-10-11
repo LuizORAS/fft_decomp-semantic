@@ -168,7 +168,7 @@ void world_formation_run_job_wheel_menu(void) {
             if (g_world_job_wheel_spin_progress == 0) {
                 pad = g_world_input_primary_repeat;
                 if (pad & PSX_PAD_CROSS) {
-                    i = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
+                    i = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
                     world_formation_build_record_list(
                         0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
                     g_world_formation_selected_unit_index = world_formation_find_index_by_roster_slot(i);
@@ -204,7 +204,8 @@ void world_formation_run_job_wheel_menu(void) {
                             g_world_formation_unit_cycle_mode = 0;
                             g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_CHANGE;
                         } else if ((job & WORLD_JOB_LIST_ENTRY_ID_MASK)
-                            != g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->job_id) {
+                            != g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                                ->identity.job_id) {
                             world_text_show_message_and_play_sound(
                                 world_job_get_text_index(job & WORLD_JOB_LIST_ENTRY_ID_MASK) + 0xE800,
                                 MAIN_SFX_ERROR_MESSAGE);

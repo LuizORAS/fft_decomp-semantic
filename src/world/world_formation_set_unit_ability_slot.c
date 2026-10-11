@@ -17,7 +17,7 @@ s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s3
         world_formation_remove_invalid_unit_loadout(unit_id);
         if (update_equipment != 0) {
             if (unit_id != 20) {
-                if (g_world_formation_unit_pointers[unit_id]->job_id != JOB_ID_MIME) {
+                if (g_world_formation_unit_pointers[unit_id]->identity.job_id != JOB_ID_MIME) {
                     world_unit_build_best_fit_equipment(unit_id, equipment);
                     for (i = 0; i < 5; i++) {
                         world_item_adjust_inventory_count(g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
