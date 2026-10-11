@@ -71,33 +71,27 @@ draw_panels:
         if (i == 0) {
             y = 0x23;
         }
-        prims->frame.x0 = 0x80;
-        prims->frame.y0 = y;
-        prims->frame.w = 0x100;
-        prims->frame.h = 0x32;
+        setXY0(&prims->frame, 0x80, y);
+        setWH(&prims->frame, 0x100, 0x32);
         for (j = 0; j < 9; j++) {
             SetTile(&prims->top[j]);
             setRGB0(&prims->top[j], 0, 0, 0);
             SetSemiTrans(&prims->top[j], 1);
             y = 0xa9;
-            prims->top[j].w = 0x100;
-            prims->top[j].h = 1;
+            setWH(&prims->top[j], 0x100, 1);
             if (i == 0) {
                 y = 0x1a;
             }
-            prims->top[j].x0 = 0x80;
-            prims->top[j].y0 = y + j;
+            setXY0(&prims->top[j], 0x80, y + j);
             SetTile(&prims->bottom[j]);
             setRGB0(&prims->bottom[j], 0, 0, 0);
             SetSemiTrans(&prims->bottom[j], 1);
             y = 0xe4;
-            prims->bottom[j].w = 0x100;
-            prims->bottom[j].h = 1;
+            setWH(&prims->bottom[j], 0x100, 1);
             if (i == 0) {
                 y = 0x55;
             }
-            prims->bottom[j].x0 = 0x80;
-            prims->bottom[j].y0 = y + j;
+            setXY0(&prims->bottom[j], 0x80, y + j);
         }
         if (g_debugchr_menu_indicator_state[i] == MENU_INDICATOR_STATE_HIDDEN) {
             setRGB0(&prims->frame, 0, 0, 0);
