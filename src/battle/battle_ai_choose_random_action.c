@@ -21,20 +21,20 @@ s32 battle_ai_choose_random_action(void) {
         = ai->considered_ability.parameters.bytes.item_id;
     if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] == ACTION_MENU_TYPE_ARITHMETICKS) {
         do {
-            skillset = g_battle_math_source_skillsets[rand() % 4];
+            skillset = g_battle_math_source_skillsets[rand() % BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT];
             abilities = main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ACTION);
-            index_or_count = rand() % 16;
+            index_or_count = rand() % BATTLE_AI_SKILLSET_SCAN_COUNT;
             value = abilities[index_or_count];
         } while (value == 0 || !(g_main_ability_data[value].ai_flags.flags_4 & BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI)
             || !(g_main_ability_range_data[value].flags_3 & ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE)
             || !battle_ai_load_known_ability_flag(ai->acting_unit_id, skillset, index_or_count));
         ai->current_action.command.ability_id = value;
         do {
-            value = rand() % 4;
+            value = rand() % CALCULATOR_ATTRIBUTE_ABILITY_COUNT;
         } while (!battle_ai_load_known_ability_flag(ai->acting_unit_id, ai->considered_ability.skillset, value));
         ai->current_action.command.calculator_type = value + ABILITY_ID_MATH_FIRST;
         do {
-            value = rand() % 4 + 4;
+            value = rand() % CALCULATOR_MULTIPLE_ABILITY_COUNT + CALCULATOR_ATTRIBUTE_ABILITY_COUNT;
         } while (!battle_ai_load_known_ability_flag(ai->acting_unit_id, ai->considered_ability.skillset, value));
         ai->current_action.command.calculator_multiplier = value + ABILITY_ID_MATH_FIRST;
     }
@@ -53,7 +53,7 @@ s32 battle_ai_choose_random_action(void) {
             }
         } while (ai->movable_tile_count);
     } else {
-        /* A single attempt block lets missing movement candidates exit early. */
+        /* Removing this single-attempt loop changes register allocation. */
         do {
             if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET)
                 ai->current_action.command.targeting_type = rand() % 2 + BATTLE_TARGETING_TYPE_TILE;

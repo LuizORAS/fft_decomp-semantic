@@ -16,6 +16,16 @@ enum {
     BATTLE_AI_GRID_COLUMN_COUNT = 16,
 };
 
+/* AI searches only the first 16 slots of MAIN's 24-entry skillset scratch list. */
+enum {
+    BATTLE_AI_SKILLSET_SCAN_COUNT = 16,
+};
+
+enum {
+    BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT = 4,
+    BATTLE_AI_MATH_EXTRA_KNOWN_BIT_COUNT = 10,
+};
+
 /* Scanlines since vertical blank at which each search yields. */
 enum {
     BATTLE_AI_TURN_SIMULATION_SCANLINE_LIMIT = 313,
@@ -737,7 +747,8 @@ extern s32 g_battle_ai_cowardly_movement_step;             /* battle_ai_cowardly
 extern battle_ai_data_t g_battle_ai_data_base;
 extern battle_ai_facing_tile_offsets_t g_battle_ai_facing_tile_offsets; /* 0x8019f358 */
 extern s32 g_battle_ai_math_ability_index;
-extern u8 g_battle_math_extra_known_bit_ids[10];
+extern u8 g_battle_math_source_skillsets[BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT];
+extern u8 g_battle_math_extra_known_bit_ids[BATTLE_AI_MATH_EXTRA_KNOWN_BIT_COUNT];
 extern u16* g_battle_ai_math_ability_list; /* borrowed from main's temporary skillset list */
 extern s32 g_battle_ai_math_skillset;
 extern s32 g_battle_ai_math_skillset_index;

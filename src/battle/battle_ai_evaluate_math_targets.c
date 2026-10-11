@@ -8,7 +8,7 @@
  * indices resume a suspended priority check; -1 suspends and 0 ends this pass.
  */
 s32 battle_ai_evaluate_math_targets(void) {
-    u8 special_abilities[10];
+    u8 special_abilities[BATTLE_AI_MATH_EXTRA_KNOWN_BIT_COUNT];
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
     s32 unit;
@@ -19,11 +19,12 @@ s32 battle_ai_evaluate_math_targets(void) {
     if (!battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords))
         return 0;
     g_battle_ai_data_base.current_action.act_before_move = 1;
-    for (g_battle_ai_math_skillset_index = 0; g_battle_ai_math_skillset_index < 4; g_battle_ai_math_skillset_index++) {
+    for (g_battle_ai_math_skillset_index = 0; g_battle_ai_math_skillset_index < BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT;
+        g_battle_ai_math_skillset_index++) {
         g_battle_ai_math_skillset = g_battle_math_source_skillsets[g_battle_ai_math_skillset_index];
         g_battle_ai_math_ability_list
             = main_ability_store_skillset_abilities(g_battle_ai_math_skillset, SKILLSET_ABILITY_FILTER_ACTION);
-        for (g_battle_ai_math_ability_index = 0; g_battle_ai_math_ability_index < 16;
+        for (g_battle_ai_math_ability_index = 0; g_battle_ai_math_ability_index < BATTLE_AI_SKILLSET_SCAN_COUNT;
             g_battle_ai_math_ability_index++) {
             /* Math targeting reads only the low byte of each halfword ID. */
             ai->math_ability_id = g_battle_ai_math_ability_list[g_battle_ai_math_ability_index];
@@ -36,7 +37,7 @@ s32 battle_ai_evaluate_math_targets(void) {
                     ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index))
                 continue;
             /* The extra known-bit call's result is ignored. */
-            for (i = 0; i < 10; i++) {
+            for (i = 0; i < BATTLE_AI_MATH_EXTRA_KNOWN_BIT_COUNT; i++) {
                 if (ai->math_ability_id == special_abilities[i])
                     battle_ai_load_known_ability_flag(
                         ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index + 1);
@@ -54,11 +55,12 @@ s32 battle_ai_evaluate_math_targets(void) {
                 ai->targetability.live.unit_targetable[unit] = ai->targetability.live.unit_active[unit];
             if (!battle_ai_has_any_unit_decided_to_use_ability())
                 continue;
-            for (ai->math_type_index = 0; ai->math_type_index < 4; ai->math_type_index++) {
+            for (ai->math_type_index = 0; ai->math_type_index < CALCULATOR_ATTRIBUTE_ABILITY_COUNT;
+                ai->math_type_index++) {
                 if (!battle_ai_load_known_ability_flag(
                         ai->acting_unit_id, ai->considered_ability.skillset, ai->math_type_index))
                     continue;
-                ai->math_multiplier_index = 4;
+                ai->math_multiplier_index = CALCULATOR_ATTRIBUTE_ABILITY_COUNT;
                 ai->current_action.command.calculator_type = ai->math_type_index + ABILITY_ID_MATH_FIRST;
                 do {
                     if (battle_ai_load_known_ability_flag(
@@ -70,7 +72,7 @@ s32 battle_ai_evaluate_math_targets(void) {
                             return -1;
                     }
                     ai->math_multiplier_index++;
-                } while (ai->math_multiplier_index < 8);
+                } while (ai->math_multiplier_index < CALCULATOR_ABILITY_COUNT);
             }
             battle_ai_insert_ranked_action();
         }

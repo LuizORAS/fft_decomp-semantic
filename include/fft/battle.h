@@ -1479,7 +1479,6 @@ u8* battle_menu_text_advance_cursor_with_backreferences(text_backreference_state
 /* other */
 extern s32 g_battle_destination_camera_yaw;
 extern u8 g_battle_job_level_gained_flag;
-extern u8 g_battle_math_source_skillsets[4];
 extern VECTOR g_battle_offset_screen_coords;
 extern s16 g_battle_unit_entd_spritesheet_ids[];
 extern s32 g_battle_unit_entd_spritesheet_count;
