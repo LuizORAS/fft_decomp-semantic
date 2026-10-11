@@ -4,10 +4,10 @@
 #include "psx/libetc.h"
 
 void CD_initintr(void) {
-    g_psyq_cd_ready_callback = 0;
-    g_psyq_cd_sync_callback = 0;
-    g_psyq_cd_status_detail = 0;
-    g_psyq_cd_status = 0;
+    CD_cbready = 0;
+    CD_cbsync = 0;
+    CD_status1 = 0;
+    CD_status = 0;
     ResetCallback();
     InterruptCallback(2, callback);
 }

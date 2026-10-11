@@ -1034,17 +1034,17 @@ data:
   - {addr: 0x800317e4, name: g_psyq_etc_dma_channels}
   - {addr: 0x800317e8, name: g_psyq_etc_video_mode}
   - {addr: 0x800317fc, name: g_psyq_cd_command_uses_position}
-  - {addr: 0x8003187c, name: g_psyq_cd_sync_callback}
-  - {addr: 0x80031880, name: g_psyq_cd_ready_callback}
-  - {addr: 0x80031888, name: g_psyq_cd_debug_level}
-  - {addr: 0x8003188c, name: g_psyq_cd_status}
-  - {addr: 0x80031890, name: g_psyq_cd_status_detail}
-  - {addr: 0x80031894, name: g_psyq_cd_shell_open_count}
-  - {addr: 0x80031898, name: g_psyq_cd_last_position}
-  - {addr: 0x8003189c, name: g_psyq_cd_mode}
-  - {addr: 0x8003189d, name: g_psyq_cd_last_command}
-  - {addr: 0x800318a0, name: g_psyq_cd_command_names}
-  - {addr: 0x80031920, name: g_psyq_cd_interrupt_names}
+  - {addr: 0x8003187c, name: CD_cbsync}
+  - {addr: 0x80031880, name: CD_cbready}
+  - {addr: 0x80031888, name: CD_debug}
+  - {addr: 0x8003188c, name: CD_status}
+  - {addr: 0x80031890, name: CD_status1}
+  - {addr: 0x80031894, name: CD_nopen}
+  - {addr: 0x80031898, name: CD_pos}
+  - {addr: 0x8003189c, name: CD_mode}
+  - {addr: 0x8003189d, name: CD_com}
+  - {addr: 0x800318a0, name: CD_comstr}
+  - {addr: 0x80031920, name: CD_intstr}
   - {addr: 0x80031940, name: g_psyq_cd_command_attributes}
   - {addr: 0x80031b40, name: g_psyq_cd_index_status_register}
   - {addr: 0x80031b44, name: g_psyq_cd_command_response_register}

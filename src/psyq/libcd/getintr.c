@@ -37,19 +37,18 @@ s32 getintr(void) {
     *g_psyq_cd_index_status_register = 1;
     *g_psyq_cd_request_interrupt_register = 7;
     *g_psyq_cd_parameter_data_register = 7;
-    if (interrupt != CdlAcknowledge || g_psyq_cd_command_attributes.ack_updates_status[g_psyq_cd_last_command]) {
-        if (!(g_psyq_cd_status & CdlStatShellOpen) && (response[0] & CdlStatShellOpen))
-            g_psyq_cd_shell_open_count++;
-        g_psyq_cd_status = response[0];
-        g_psyq_cd_status_detail = response[1];
-        error_flags = g_psyq_cd_status;
+    if (interrupt != CdlAcknowledge || g_psyq_cd_command_attributes.ack_updates_status[CD_com]) {
+        if (!(CD_status & CdlStatShellOpen) && (response[0] & CdlStatShellOpen))
+            CD_nopen++;
+        CD_status = response[0];
+        CD_status1 = response[1];
+        error_flags = CD_status;
         error_flags &= 0x1d;
     }
     if (interrupt == CdlDiskError) {
         puts(g_psyq_cd_disk_error_message);
-        if (g_psyq_cd_debug_level > 0)
-            printf(g_psyq_cd_disk_error_format, g_psyq_cd_command_names[g_psyq_cd_last_command], g_psyq_cd_status,
-                g_psyq_cd_status_detail);
+        if (CD_debug > 0)
+            printf(g_psyq_cd_disk_error_format, CD_comstr[CD_com], CD_status, CD_status1);
     }
     switch (interrupt) {
     case CdlAcknowledge:
@@ -58,7 +57,7 @@ s32 getintr(void) {
             cd_copy_result(g_psyq_cd_sync_result, response, 8);
             return 2;
         }
-        if (g_psyq_cd_command_attributes.waits_for_complete[g_psyq_cd_last_command]) {
+        if (g_psyq_cd_command_attributes.waits_for_complete[CD_com]) {
             g_psyq_cd_irq_state.sync = CdlAcknowledge;
             cd_copy_result(g_psyq_cd_sync_result, response, 8);
             return 1;

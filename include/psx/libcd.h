@@ -144,17 +144,17 @@ typedef enum {
 
 /* Resident LIBCD state, reconstructed from the original register accesses. */
 /* Driver status uses full-word storage; public status queries read its low byte. */
-extern u32 g_psyq_cd_status;
-extern u8 g_psyq_cd_mode;
-extern u8 g_psyq_cd_last_command;
-extern CdlLOC g_psyq_cd_last_position;
+extern u32 CD_status;
+extern u8 CD_mode;
+extern u8 CD_com;
+extern CdlLOC CD_pos;
 
-extern char* g_psyq_cd_command_names[28];
-extern char* g_psyq_cd_interrupt_names[7];
+extern char* CD_comstr[28];
+extern char* CD_intstr[7];
 extern char g_psyq_cd_unknown_name[];
-extern s32 g_psyq_cd_debug_level;
-extern CdlCB g_psyq_cd_sync_callback;
-extern CdlCB g_psyq_cd_ready_callback;
+extern s32 CD_debug;
+extern CdlCB CD_cbsync;
+extern CdlCB CD_cbready;
 extern CdlCB g_psyq_cd_read_callback;
 void def_cbsync(u8 unused_event, u8* unused_result);
 void def_cbready(u8 unused_event, u8* unused_result);
@@ -189,7 +189,7 @@ extern volatile u32* g_psyq_cd_common_delay_register;
 extern volatile psyq_spu_registers_t* g_psyq_cd_spu_registers;
 extern volatile u8* g_psyq_cd_unset_index_register;
 extern volatile u8* g_psyq_cd_unset_request_register;
-extern u32 g_psyq_cd_status_detail;
+extern u32 CD_status1;
 extern char g_psyq_cd_init_message[];
 extern char g_psyq_cd_init_address_format[];
 
@@ -239,7 +239,7 @@ typedef struct {
     s32 parameter_counts[32];
 } psyq_cd_command_attributes_t;
 extern psyq_cd_command_attributes_t g_psyq_cd_command_attributes;
-extern s32 g_psyq_cd_shell_open_count;
+extern s32 CD_nopen;
 extern u8 g_psyq_cd_second_ready_result[8];
 extern char g_psyq_cd_disk_error_message[];
 extern char g_psyq_cd_disk_error_format[];
@@ -321,22 +321,22 @@ extern psyq_cd_backloc_state_t g_psyq_cd_backloc;
 
 /* shared driver helpers */
 static __inline__ s32 psyq_cd_issue_with_retry(u8 command, const u8* parameter, u8* result, s32 asynchronous) {
-    CdlCB callback = g_psyq_cd_sync_callback;
+    CdlCB callback = CD_cbsync;
     s32 attempts = 3;
     do {
-        g_psyq_cd_sync_callback = 0;
+        CD_cbsync = 0;
         if (command != CdlNop) {
-            u8 status = g_psyq_cd_status;
+            u8 status = CD_status;
             if (status & CdlStatShellOpen)
                 CD_cw(CdlNop, 0, 0, 0);
         }
         if (!parameter || !g_psyq_cd_command_uses_position[command] || CD_cw(CdlSetloc, parameter, result, 0) == 0) {
-            g_psyq_cd_sync_callback = callback;
+            CD_cbsync = callback;
             if (CD_cw(command, parameter, result, asynchronous) == 0)
                 return 0;
         }
     } while (--attempts != -1);
-    g_psyq_cd_sync_callback = callback;
+    CD_cbsync = callback;
     return -1;
 }
 
@@ -349,8 +349,8 @@ static __inline__ void psyq_cd_set_timeout(char* description) {
 static __inline__ s32 psyq_cd_check_timeout(void) {
     if (g_psyq_cd_timeout.deadline < VSync(-1) || g_psyq_cd_timeout.counter++ > 0x3c0000) {
         puts(g_psyq_cd_timeout_message);
-        printf(g_psyq_cd_timeout_format, g_psyq_cd_timeout.description, g_psyq_cd_command_names[g_psyq_cd_last_command],
-            g_psyq_cd_interrupt_names[g_psyq_cd_irq_state.sync], g_psyq_cd_interrupt_names[g_psyq_cd_irq_state.ready]);
+        printf(g_psyq_cd_timeout_format, g_psyq_cd_timeout.description, CD_comstr[CD_com],
+            CD_intstr[g_psyq_cd_irq_state.sync], CD_intstr[g_psyq_cd_irq_state.ready]);
         CD_flush();
         return -1;
     }
@@ -380,10 +380,10 @@ static __inline__ void psyq_cd_dispatch_callbacks(void) {
     s32 events;
     u8 bank = *g_psyq_cd_index_status_register & 3;
     while ((events = getintr()) != 0) {
-        if ((events & 4) && g_psyq_cd_ready_callback)
-            g_psyq_cd_ready_callback(g_psyq_cd_irq_state.ready, g_psyq_cd_ready_result);
-        if ((events & 2) && g_psyq_cd_sync_callback)
-            g_psyq_cd_sync_callback(g_psyq_cd_irq_state.sync, g_psyq_cd_sync_result);
+        if ((events & 4) && CD_cbready)
+            CD_cbready(g_psyq_cd_irq_state.ready, g_psyq_cd_ready_result);
+        if ((events & 2) && CD_cbsync)
+            CD_cbsync(g_psyq_cd_irq_state.sync, g_psyq_cd_sync_result);
     }
     *g_psyq_cd_index_status_register = bank;
 }

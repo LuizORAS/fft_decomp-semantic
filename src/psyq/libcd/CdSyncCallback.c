@@ -1,7 +1,7 @@
 #include "psx/libcd.h"
 
 CdlCB CdSyncCallback(CdlCB callback) {
-    CdlCB previous = g_psyq_cd_sync_callback;
-    g_psyq_cd_sync_callback = callback;
+    CdlCB previous = CD_cbsync;
+    CD_cbsync = callback;
     return previous;
 }
