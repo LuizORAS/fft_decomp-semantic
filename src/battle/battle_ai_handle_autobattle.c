@@ -18,13 +18,13 @@ s32 battle_ai_handle_autobattle(void) {
         }
         break;
     case BATTLE_AI_AUTOBATTLE_RECOVERY:
-    case_e:
+    recovery_policy:
         result = battle_ai_select_recovery_action();
         if (result == -1) {
             return -1;
         }
         if (result == -2) {
-            goto case_11;
+            goto retreat_policy;
         }
         return 1;
     case BATTLE_AI_AUTOBATTLE_FADING_LIFE:
@@ -33,11 +33,11 @@ s32 battle_ai_handle_autobattle(void) {
             return -1;
         }
         if (result == -2) {
-            goto case_e;
+            goto recovery_policy;
         }
         return 1;
     case BATTLE_AI_AUTOBATTLE_RETREAT:
-    case_11:
+    retreat_policy:
         if (battle_ai_select_retreat_action() != -1) {
             return 1;
         }

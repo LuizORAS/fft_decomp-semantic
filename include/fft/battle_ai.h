@@ -413,12 +413,12 @@ typedef char battle_ai_ability_entry_must_be_4[sizeof(battle_ai_ability_entry_t)
 /* OR-combined categories gathered from both equipped weapon formulas. They
  * are flags, not ability_formula_e IDs; mixed categories bypass the builder
  * switch's single-category cases. */
-enum {
-    BATTLE_AI_WEAPON_FORMULA_NONE = 0, /* no weapon in either hand */
-    BATTLE_AI_WEAPON_FORMULA_DAMAGE = 1,
-    BATTLE_AI_WEAPON_FORMULA_ABSORB_HP = 2,
-    BATTLE_AI_WEAPON_FORMULA_HEAL = 4,
-};
+typedef enum battle_ai_weapon_formula_flags {
+    BATTLE_AI_WEAPON_FORMULA_NONE = 0x00, /* no weapon in either hand */
+    BATTLE_AI_WEAPON_FORMULA_DAMAGE = 0x01,
+    BATTLE_AI_WEAPON_FORMULA_ABSORB_HP = 0x02,
+    BATTLE_AI_WEAPON_FORMULA_HEAL = 0x04,
+} battle_ai_weapon_formula_flags_e;
 
 /* Per-compact-unit weapon summary. The builder at 0x8019a2f0 clears two
  * words, then merges weapon properties through the byte view. */

@@ -111,7 +111,8 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
                             image = g_battle_action_status_display_image_ids[i][j];
                             unit->status_display_image_list[count] = image;
                             if (image != 0) {
-                                unit->status_display_image_list[unit->status_display_image_count] |= 0x80;
+                                unit->status_display_image_list[unit->status_display_image_count]
+                                    |= BATTLE_ACTION_STATUS_DISPLAY_REMOVAL;
                                 unit->status_display_image_count++;
                             }
                         }

@@ -231,11 +231,13 @@ typedef struct battle_action_reward_display {
 } battle_action_reward_display_t;
 typedef char battle_action_reward_display_size_must_be_4[(sizeof(battle_action_reward_display_t) == 4) ? 1 : -1];
 
+/* Packed image IDs in the action-result status list. */
 enum {
-    BATTLE_ACTION_STATUS_DISPLAY_REMOVAL = 0x80,
     BATTLE_ACTION_STATUS_DISPLAY_IMAGE_MASK = 0x7f,
-    BATTLE_ACTION_STATUS_DISPLAY_CAPACITY = 0x1b,
+    BATTLE_ACTION_STATUS_DISPLAY_REMOVAL = 0x80,
 };
+
+enum { BATTLE_ACTION_STATUS_DISPLAY_CAPACITY = 27 };
 
 typedef union battle_move_destination {
     u32 word;
@@ -1137,11 +1139,6 @@ typedef struct {
     s16 graphic_height;   /* 0x04 */
     s16 graphic_y_offset; /* 0x06 */
 } battle_unit_sprite_query_t;
-
-typedef enum battle_unit_spell_quote_skillset_flags {
-    BATTLE_UNIT_SPELL_QUOTE_SECONDARY_SKILLSET = 1,
-    BATTLE_UNIT_SPELL_QUOTE_PRIMARY_SKILLSET = 2,
-} battle_unit_spell_quote_skillset_flags_e;
 
 /* Facing values shifted to position bit 8 for the evasion comparisons. */
 enum {

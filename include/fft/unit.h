@@ -776,6 +776,12 @@ typedef struct battle_unit_birthday {
 } battle_unit_birthday_t;
 typedef char battle_birthday_size_must_be_2[(sizeof(battle_unit_birthday_t) == 2) ? 1 : -1];
 
+/* Suppress random spell quotes for the matching primary or secondary skillset. */
+typedef enum unit_spell_quote_flags {
+    UNIT_SPELL_QUOTE_SUPPRESS_SECONDARY = 0x01,
+    UNIT_SPELL_QUOTE_SUPPRESS_PRIMARY = 0x02,
+} unit_spell_quote_flags_e;
+
 /*
  * Runtime Y, facing and tile-layer fields. ENTD uses the narrower facing
  * field in entd_unit_position_t below; initialization copies each group.
@@ -783,7 +789,7 @@ typedef char battle_birthday_size_must_be_2[(sizeof(battle_unit_birthday_t) == 2
 typedef struct battle_unit_position {
     u16 y : 8;
     u16 facing : 4;
-    u16 spell_quote_skillsets : 2;
+    u16 spell_quote_skillsets : 2; /* unit_spell_quote_flags_e */
     u16 stepping_stone : 1;
     u16 higher_elevation : 1;
 } battle_unit_position_t;
@@ -921,8 +927,8 @@ typedef enum battle_unit_ability_outcome {
 typedef struct entd_unit_position {
     u16 y : 8;
     u16 facing : 2;
-    u16 _unused_01 : 2; /* bits 10-11 */
-    u16 spell_quote_skillsets : 2;
+    u16 _unused_01 : 2;            /* bits 10-11 */
+    u16 spell_quote_skillsets : 2; /* unit_spell_quote_flags_e */
     u16 stepping_stone : 1;
     u16 higher_elevation : 1;
 } entd_unit_position_t;
@@ -1139,11 +1145,11 @@ typedef enum battle_formation_index {
 /* battle_stats_t.auto_battle_setting and the AI copies of it. The BATTLE and
  * WORLD auto-battle menus store it and the AI reads it. */
 typedef enum battle_ai_autobattle_mode {
-    BATTLE_AI_AUTOBATTLE_MANUAL = 0x00, /* the player gives the orders */
-    BATTLE_AI_AUTOBATTLE_TARGETED = 0x0C,
-    BATTLE_AI_AUTOBATTLE_RECOVERY = 0x0E,
-    BATTLE_AI_AUTOBATTLE_FADING_LIFE = 0x10,
-    BATTLE_AI_AUTOBATTLE_RETREAT = 0x11,
+    BATTLE_AI_AUTOBATTLE_MANUAL = 0, /* the player gives the orders */
+    BATTLE_AI_AUTOBATTLE_TARGETED = 12,
+    BATTLE_AI_AUTOBATTLE_RECOVERY = 14,
+    BATTLE_AI_AUTOBATTLE_FADING_LIFE = 16,
+    BATTLE_AI_AUTOBATTLE_RETREAT = 17,
 } battle_ai_autobattle_mode_e;
 
 enum {

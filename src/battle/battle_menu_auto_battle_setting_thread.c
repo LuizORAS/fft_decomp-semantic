@@ -10,11 +10,10 @@
 
 /* Auto-battle setting menu thread.
  *
- * The cursor starts at the attacker's auto_battle_setting (0, 0xC, 0xE,
- * 0x10 map to options 1-4 after "none" at 0). Whenever circle is pressed the
- * five option texts (0x5009-0x500D) are redrawn with the selected one
- * highlighted; choosing option 0 clears the setting and restarts the idle
- * action menu if the unit's menu id changes. */
+ * Initialize the cursor from the unit's current policy. Circle redraws the
+ * five choices; choosing manual control clears the mode and rebuilds the idle
+ * action menu if its menu id changes.
+ */
 void battle_menu_auto_battle_setting_thread(void) {
     RECT rect;
     menu_icon_record_t records[2];
