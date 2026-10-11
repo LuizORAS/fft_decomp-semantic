@@ -2,6 +2,7 @@
 #define PSX_LIBCD_H
 
 #include "psx/libapi.h"
+#include "psx/libc.h"
 #include "psx/libetc.h"
 #include "psx/libspu.h"
 
@@ -311,5 +312,64 @@ typedef struct {
     u32 frame;
 } psyq_cd_backloc_state_t;
 extern psyq_cd_backloc_state_t g_psyq_cd_backloc;
+
+/* shared driver helpers */
+static __inline__ s32 psyq_cd_issue_with_retry(u8 command, const u8* parameter, u8* result, s32 asynchronous) {
+    psyq_cd_result_callback_t callback = g_psyq_cd_sync_callback;
+    s32 attempts = 3;
+    do {
+        g_psyq_cd_sync_callback = 0;
+        if (command != CdlNop) {
+            u8 status = g_psyq_cd_status;
+            if (status & CdlStatShellOpen)
+                CD_cw(CdlNop, 0, 0, 0);
+        }
+        if (!parameter || !g_psyq_cd_command_uses_position[command] || CD_cw(CdlSetloc, parameter, result, 0) == 0) {
+            g_psyq_cd_sync_callback = callback;
+            if (CD_cw(command, parameter, result, asynchronous) == 0)
+                return 0;
+        }
+    } while (--attempts != -1);
+    g_psyq_cd_sync_callback = callback;
+    return -1;
+}
+
+static __inline__ void psyq_cd_set_timeout(char* description) {
+    g_psyq_cd_timeout.deadline = VSync(-1) + 960;
+    g_psyq_cd_timeout.counter = 0;
+    g_psyq_cd_timeout.description = description;
+}
+
+static __inline__ s32 psyq_cd_check_timeout(void) {
+    if (g_psyq_cd_timeout.deadline < VSync(-1) || g_psyq_cd_timeout.counter++ > 0x3c0000) {
+        puts(g_psyq_cd_timeout_message);
+        printf(g_psyq_cd_timeout_format, g_psyq_cd_timeout.description, g_psyq_cd_command_names[g_psyq_cd_last_command],
+            g_psyq_cd_interrupt_names[g_psyq_cd_irq_state.sync], g_psyq_cd_interrupt_names[g_psyq_cd_irq_state.ready]);
+        CD_flush();
+        return -1;
+    }
+    return 0;
+}
+
+static __inline__ void psyq_cd_copy_result(u8* destination, const u8* source, u32 size) {
+    u8* output = destination;
+    const u8* input = source;
+    if (!output)
+        return;
+    while (size--)
+        *output++ = *input++;
+}
+
+static __inline__ void psyq_cd_dispatch_callbacks(void) {
+    s32 events;
+    u8 bank = *g_psyq_cd_index_status_register & 3;
+    while ((events = getintr()) != 0) {
+        if ((events & 4) && g_psyq_cd_ready_callback)
+            g_psyq_cd_ready_callback(g_psyq_cd_irq_state.ready, g_psyq_cd_ready_result);
+        if ((events & 2) && g_psyq_cd_sync_callback)
+            g_psyq_cd_sync_callback(g_psyq_cd_irq_state.sync, g_psyq_cd_sync_result);
+    }
+    *g_psyq_cd_index_status_register = bank;
+}
 
 #endif
