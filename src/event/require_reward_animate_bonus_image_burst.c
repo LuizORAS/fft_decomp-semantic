@@ -21,19 +21,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* One 12x24 burst tile: a double-buffered flat quad plus its motion state. */
-typedef struct {
-    POLY_F4 poly[2];   /* 0x00 */
-    s32 delay;         /* 0x30 */
-    s32 radius;        /* 0x34 */
-    s32 angle;         /* 0x38 */
-    s32 x;             /* 0x3C */
-    s32 y;             /* 0x40 */
-    s32 initial_delay; /* 0x44 */
-} require_reward_burst_tile_t;
-
-extern require_reward_burst_tile_t g_require_reward_burst_tiles[12][24];
-
 void require_reward_animate_bonus_image_burst(void) {
     s32 phase;
     s32 max_delay;
@@ -63,7 +50,8 @@ void require_reward_animate_bonus_image_burst(void) {
     } else {
         require_reward_load_bonus_image(1);
     }
-    params = (u8*)battle_thread_get_current_parameter_2();
+    /* Named operand loads fold the three native cursor advances. */
+    params = battle_thread_get_current_parameter_2();
     params++;
     mode = *params;
     params++;

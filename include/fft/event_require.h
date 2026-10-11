@@ -215,6 +215,21 @@ void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 
 /* reward */
+/* One 12x24 burst tile: a double-buffered flat quad plus its motion state. */
+typedef struct require_reward_burst_tile {
+    POLY_F4 poly[2];   /* 0x00 */
+    s32 delay;         /* 0x30 */
+    s32 radius;        /* 0x34 */
+    s32 angle;         /* 0x38 */
+    s32 x;             /* 0x3C */
+    s32 y;             /* 0x40 */
+    s32 initial_delay; /* 0x44 */
+} require_reward_burst_tile_t;
+
+typedef char require_reward_burst_tile_size_must_be_0x48[sizeof(require_reward_burst_tile_t) == 0x48 ? 1 : -1];
+
+extern require_reward_burst_tile_t g_require_reward_burst_tiles[12][24];
+
 /* BONUS.BIN stores 200 rows of 64 halfword pixels, followed by the CLUT. */
 typedef struct require_reward_bonus_image_file {
     u32 pixels[200][32]; /* two pixels per word */
