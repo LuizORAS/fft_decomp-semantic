@@ -1489,7 +1489,7 @@ extern s8 g_world_formation_sort_field_indices[];
 extern world_menu_entry_t g_world_shop_hire_confirm_menu;
 extern u8 g_world_shop_hire_confirm_message_wait;
 extern u8 g_world_formation_thread_status_snapshot[16];
-extern u8 g_world_formation_view_quads[2][0x4b0];
+extern POLY_FT4 g_world_formation_view_quads[2][30];
 extern point16_t g_world_formation_cursor_target;
 /* Cursor trail position history at 0x801c8344, reset by
  * world_formation_reset_slots_and_frame_tpages; entry 7 is the newest and x is
