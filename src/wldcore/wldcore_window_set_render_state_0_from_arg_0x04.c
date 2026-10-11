@@ -1,7 +1,0 @@
-#include "fft/wldcore.h"
-#include "psx/types.h"
-
-/* Give the render record named by the level's second word palette 0. */
-void wldcore_window_set_render_state_0_from_arg_0x04(s32* param) {
-    g_wldcore_window_render_records[param[1]].palette = 0;
-}

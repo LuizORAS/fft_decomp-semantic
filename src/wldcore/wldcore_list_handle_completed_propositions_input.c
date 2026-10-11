@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Handle input for the job-report confirmation level. */
-void wldcore_list_handle_completed_propositions_input(s32* values) {
+void wldcore_list_handle_completed_propositions_input(wldcore_menu_stack_record_t* level) {
     s32 buttons;
     s32 depth;
     point32_t origin;
@@ -27,14 +27,15 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
-        wldcore_list_completed_propositions_block_all_buttons(values);
+        wldcore_list_completed_propositions_block_all_buttons(level);
         wldcore_menu_push_message_level(0x1061, 1);
         return;
     }
     if (buttons & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-        wldcore_list_completed_propositions_block_all_buttons(values);
-        wldcore_proposition_prepare_report(values[g_wldcore_window_panel_render_state.selected_index + 13]);
+        wldcore_list_completed_propositions_block_all_buttons(level);
+        wldcore_proposition_prepare_report(
+            level->proposition_list.entries[g_wldcore_window_panel_render_state.selected_index]);
         wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);
         g_world_text_substitution_values[0]
             = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
@@ -46,6 +47,6 @@ void wldcore_list_handle_completed_propositions_input(s32* values) {
         g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS_BROWSE;
         g_wldcore_menu_stack_depth = depth + 1;
         g_wldcore_menu_stack_records_next[depth].job_report_confirm.argument
-            = values[g_wldcore_window_panel_render_state.selected_index + 13];
+            = level->proposition_list.entries[g_wldcore_window_panel_render_state.selected_index];
     }
 }

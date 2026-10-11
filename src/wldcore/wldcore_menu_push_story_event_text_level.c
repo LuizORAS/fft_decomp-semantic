@@ -30,7 +30,7 @@ void wldcore_menu_push_story_event_text_level(s32 value) {
     s32 unused[2];
     s32 coordinate_mode = 1;
 
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = value;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].story_event_index = value;
     g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
     switch (coordinate_mode) {
     case 0:

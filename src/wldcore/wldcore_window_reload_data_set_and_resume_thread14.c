@@ -1,10 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Clears the pending flags for the record selected by g_wldcore_active_saved_record.picture_render_index and, when
- * g_wldcore_active_saved_record.state_flags reports flag 0x40, for the two window records named by the
- * parameter, then resumes thread 0xe. */
-void wldcore_window_reload_data_set_and_resume_thread14(s32* param) {
+/* Reload the saved background, restore the sound-novel windows when needed,
+ * and resume the message thread. */
+void wldcore_window_reload_data_set_and_resume_thread14(wldcore_menu_stack_record_t* level) {
     s16 set = g_wldcore_active_saved_record.background_set;
 
     if (set != -1) {
@@ -14,8 +13,8 @@ void wldcore_window_reload_data_set_and_resume_thread14(s32* param) {
     g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags
         &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
     if (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE) {
-        g_wldcore_window_records[param[0]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[param[1]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->sound_novel.left_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->sound_novel.right_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
     world_thread_resume(WLDCORE_THREAD_SLOT_MESSAGE);
 }

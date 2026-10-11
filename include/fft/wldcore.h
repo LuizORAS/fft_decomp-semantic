@@ -1126,7 +1126,6 @@ extern s16 g_wldcore_list_row_flags[];
 
 /* Row value column of the world list panels, read signed as `value & 0x7ff`. */
 extern s16 g_wldcore_list_entry_values[];
-void wldcore_list_completed_propositions_block_all_buttons(s32* unused);
 void wldcore_list_open_script_flags_01a4_01bb(void);
 void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t* panel);
 void wldcore_list_clamp_cursor_state(s32 index, s32 count, s32 visible);
@@ -1299,13 +1298,6 @@ typedef struct wldcore_map_path_level {
 } wldcore_map_path_level_t;
 typedef char wldcore_map_path_level_size_must_be_0x5c[sizeof(wldcore_map_path_level_t) == 0x5c ? 1 : -1];
 
-typedef struct wldcore_window_entry_52 {
-    s32 value; /* x position for the 0x800d3cd0 column */
-    s32 y;     /* second position word, read by 0x8006d928 */
-    s8 rest[44];
-} wldcore_window_entry_52_t;
-typedef char wldcore_entry_52_size_must_be_0x34[sizeof(wldcore_window_entry_52_t) == 0x34 ? 1 : -1];
-
 extern s32 g_wldcore_map_dot_count;
 extern wldcore_map_dot_t g_wldcore_map_dots[];
 extern wldcore_projection_state_t g_wldcore_map_projection_state;
@@ -1331,9 +1323,7 @@ extern point32_t g_wldcore_context_value_display_position;
 extern u8 g_wldcore_map_dot_pulse_direction;
 extern u8 g_wldcore_map_dot_pulse_phase;
 extern wldcore_slideshow_t g_wldcore_map_path_animation;
-extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_y[];
 extern s32 g_wldcore_map_window_index;
-extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_x[];
 extern wldcore_map_projection_view_t g_wldcore_map_projection_view;
 
 extern VECTOR g_wldcore_map_projection_origin;
@@ -1924,7 +1914,8 @@ typedef enum wldcore_menu_level_type {
  * 0x03c0-0x03ff variable lists). */
 typedef union wldcore_menu_stack_record {
     s32 window_index;
-    s32 focus_dot_index; /* WLDCORE_MENU_LEVEL_FOCUS_LOCATION */
+    s32 focus_dot_index;   /* WLDCORE_MENU_LEVEL_FOCUS_LOCATION */
+    s32 story_event_index; /* WLDCORE_MENU_LEVEL_STORY_EVENT_TEXT */
     wldcore_window_layout_request_t layout_window;
     wldcore_menu_message_level_t message;
     wldcore_menu_return_level_t return_level;
@@ -2051,6 +2042,22 @@ void wldcore_menu_dispatch_idle_handler(void);
 void wldcore_menu_dispatch_pending_script_requests(void);
 void wldcore_menu_dispatch_publish_handler(void);
 void wldcore_menu_dispatch_resume_handler(void);
+void wldcore_menu_handle_story_event_text_input(wldcore_menu_stack_record_t* level);
+void wldcore_list_handle_completed_propositions_input(wldcore_menu_stack_record_t* level);
+void wldcore_list_completed_propositions_block_all_buttons(wldcore_menu_stack_record_t* unused_level);
+
+/* Menu resume callbacks consume the variant selected by the level tag. */
+void wldcore_window_clear_layout_states(wldcore_menu_stack_record_t* level);
+void wldcore_window_restore_proposition_detail_palette(wldcore_menu_stack_record_t* level);
+void wldcore_window_reload_data_set_and_resume_thread14(wldcore_menu_stack_record_t* level);
+void wldcore_window_clear_pair_state(wldcore_menu_stack_record_t* level);
+void wldcore_window_clear_slot_state(wldcore_menu_stack_record_t* level);
+void wldcore_window_restore_location_list_palette(wldcore_menu_stack_record_t* level);
+void wldcore_window_clear_layout_states_and_queue_msg_b806(wldcore_menu_stack_record_t* level);
+void wldcore_window_clear_layout_states_and_queue_msg_b8dd(wldcore_menu_stack_record_t* level);
+void wldcore_window_finalize_record_and_stop_task(wldcore_menu_stack_record_t* level);
+void wldcore_menu_resume_root_level(wldcore_menu_stack_record_t* level);
+
 void wldcore_menu_display_text_entry(s32 index, s32 text_id, point32_t point, void* buffer);
 void wldcore_menu_push_message_level(s32 text, s32 reload_text);
 void wldcore_menu_push_number_panel_level_with_argument(s32 variable_id, s32 value);

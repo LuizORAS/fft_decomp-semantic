@@ -109,7 +109,7 @@ functions:
   - {addr: 0x8006f7b8, size: 8, name: wldcore_menu_publish_layout_window_level, hash: 6d64edf91449c1b1}
   - {addr: 0x8006f7c0, size: 816, name: wldcore_menu_handle_layout_window_input, hash: c1e8409fe84df98d}
   - {addr: 0x8006faf0, size: 2036, name: wldcore_menu_push_location_menu_level, hash: f4f64a730589fe4a}
-  - {addr: 0x800702e4, size: 56, name: wldcore_window_set_render_state_0_from_arg_0x10, hash: fee0e6d3cb0d88e0}
+  - {addr: 0x800702e4, size: 56, name: wldcore_window_restore_location_list_palette, hash: fee0e6d3cb0d88e0}
   - {addr: 0x8007031c, size: 60, name: wldcore_window_set_secondary_render_palette_2, hash: a2f7429843d1a51b}
   - {addr: 0x80070358, size: 1552, name: wldcore_menu_step_location_menu_level, hash: 5af1aba511f1e8d3}
   - {addr: 0x80070968, size: 320, name: wldcore_menu_close_level_and_release_records, hash: ead85974b020521a}
@@ -137,7 +137,7 @@ functions:
   - {addr: 0x80072ef4, size: 68, name: wldcore_list_propositions_close_level, hash: 12816d7d95d26605}
   - {addr: 0x80072f38, size: 896, name: wldcore_list_handle_propositions_input, hash: 37339e7e25c99383}
   - {addr: 0x800732b8, size: 732, name: wldcore_proposition_push_detail_level, hash: 19dceafa5ab8cf80}
-  - {addr: 0x80073594, size: 52, name: wldcore_window_set_render_state_0_from_arg_0x04, hash: 2b59627b9d412f6c}
+  - {addr: 0x80073594, size: 52, name: wldcore_window_restore_proposition_detail_palette, hash: 2b59627b9d412f6c}
   - {addr: 0x800735c8, size: 56, name: wldcore_window_set_render_palette_2, hash: e431f3e0f46c12c5}
   - {addr: 0x80073600, size: 376, name: wldcore_proposition_handle_accept_input, hash: 0fe7fa0826684fbc}
   - {addr: 0x80073778, size: 948, name: wldcore_window_build_yes_no_panel, hash: c841fa104d3e8cc2}
@@ -601,8 +601,6 @@ data:
   - {addr: 0x800d3c88, name: g_wldcore_saved_system_flags}
   - {addr: 0x800d3c8c, name: g_wldcore_map_zoom_motion}
   - {addr: 0x800d3ca8, name: g_wldcore_map_dots}
-  - {addr: 0x800d3cd0, name: g_wldcore_map_dot_screen_x}
-  - {addr: 0x800d3cd4, name: g_wldcore_map_dot_screen_y}
   - {addr: 0x800d4564, name: g_wldcore_sound_novel_local_flags}
   - {addr: 0x800d4568, name: g_wldcore_map_dot_count}
   - {addr: 0x800d456c, name: g_wldcore_random_battle_entd_id}

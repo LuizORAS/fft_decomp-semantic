@@ -21,8 +21,8 @@ void wldcore_proposition_submit_marker_request(GsOT* ot) {
 
     index = g_wldcore_proposition_selected_entry - 1;
     request.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
-    request.position.x = g_wldcore_map_dot_screen_x[index].value;
-    request.position.y = g_wldcore_map_dot_screen_y[index].value;
+    request.position.x = g_wldcore_map_dots[index].render.position.x;
+    request.position.y = g_wldcore_map_dots[index].render.position.y;
     shade = g_wldcore_location_marker_shade;
     request.priority = 4;
     request.palette = 0;

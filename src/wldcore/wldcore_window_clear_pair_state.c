@@ -1,10 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Reset the palette of a level's two window records. */
-void wldcore_window_clear_pair_state(s32* param) {
-    s32 first = param[1];
-    s32 second = param[0];
+/* Restore the participant detail windows' palettes. */
+void wldcore_window_clear_pair_state(wldcore_menu_stack_record_t* level) {
+    s32 first = level->participant.right_window;
+    s32 second = level->participant.left_window;
 
     g_wldcore_window_records[first].palette = 0;
     g_wldcore_window_records[second].palette = 0;
