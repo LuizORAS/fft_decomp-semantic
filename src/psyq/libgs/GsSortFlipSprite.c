@@ -37,15 +37,15 @@ void GsSortFlipSprite(GsSPRITE* sp, GsOT* otp, u16 pri) {
         }
         /* Two temporaries: folded into one expression, GCC re-associates
          * the 0x2c000000 constant onto the first term. */
-        mode = ((u32)attr >> 5) & 0x02000000;
+        mode = (attr >> 5) & 0x02000000;
         code = ((attr << 18) & 0x01000000) | 0x2c000000;
         /* GPU words preserve the retail stores; member stores narrow the writes. */
         *(u32*)&p->r0 = mode | code | (sp->b << 16) | (sp->g << 8) | sp->r;
         *(u32*)&p->x0 = (x & 0xffff) | (y << 16);
         *(u32*)&p->u0 = u0 | (v0 << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
         *(u32*)&p->x1 = ((x + sp->w) & 0xffff) | (y << 16);
-        *(u32*)&p->u1 = u1 | (v0 << 8) | ((sp->tpage & 0x1f) << 16) | (((u32)attr >> 1) & 0x01800000)
-            | (((u32)attr >> 7) & 0x600000);
+        *(u32*)&p->u1
+            = u1 | (v0 << 8) | ((sp->tpage & 0x1f) << 16) | ((attr >> 1) & 0x01800000) | ((attr >> 7) & 0x600000);
         *(u32*)&p->x2 = (x & 0xffff) | ((y + sp->h) << 16);
         *(u32*)&p->u2 = u0 | (v1 << 8);
         *(u32*)&p->x3 = ((x + sp->w) & 0xffff) | ((y + sp->h) << 16);
