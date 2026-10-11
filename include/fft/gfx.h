@@ -94,6 +94,13 @@ typedef struct urect16 {
 typedef char assert_urect16_size[sizeof(urect16_t) == 8 ? 1 : -1];
 
 /* gfx */
+/* Eight-bit texture coordinates within a PS1 texture page. */
+typedef struct uv8 {
+    u8 u;
+    u8 v;
+} uv8_t;
+typedef char assert_uv8_size[sizeof(uv8_t) == 2 ? 1 : -1];
+
 typedef enum texture_uv_flip {
     TEXTURE_UV_FLIP_NONE = 0,
     TEXTURE_UV_FLIP_X = 1,

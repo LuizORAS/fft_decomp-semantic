@@ -2749,12 +2749,7 @@ s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 
 
 /* item */
 /* Texture origins of the item-type icons. */
-typedef struct world_item_type_icon_uv {
-    u8 u;
-    u8 v;
-} world_item_type_icon_uv_t;
-
-extern world_item_type_icon_uv_t g_world_item_type_icon_origins[];
+extern uv8_t g_world_item_type_icon_origins[];
 
 extern world_oriented_quad_t g_world_item_category_tab_cursor_sprite;
 extern struct world_item_stat_detail g_world_item_preview_stat_detail;
