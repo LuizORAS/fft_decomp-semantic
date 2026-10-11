@@ -1,15 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Open the proposition-result panel for g_main_active_propositions[proposition]:
- * total the participants' rewards plus the bonus into g_wldcore_proposition_gil_amount, draw the
- * result text, participant names and per-participant rewards, start the
- * reporting unit's message on WORLD thread 14, and push a type-0x11 level.
+/* Build the proposition-result panel, total its gil reward, start the reporting
+ * unit's message, and push the result level.
  *
- * `x` keeps the first column in its own variable: its longer lifetime is what
- * lets loop.c hoist the constant into a saved register as the target does.
- * The excluded party and result words are read as g_wldcore_job_selection
- * members: the target keeps the result load behind the level-record stores,
- * which GCC 2.6.3 only does when both accesses are aggregate members. */
+ * The first-column local stays live across the text calls. Reading the result
+ * through the shared record keeps its load after the level-record stores. */
 void wldcore_proposition_push_result_level(s32 proposition) {
     RECT bounds;
     point32_t point;

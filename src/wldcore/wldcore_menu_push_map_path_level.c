@@ -1,24 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Pushes menu level type 0x35, which animates the world-map path the script
- * asked to draw or erase: wldcore_map_prepare_path_animation prepares the path, then the step
- * handler at 0x8006dbb8 walks its nodes forward, or backward when `erase` is
- * set, playing the pending sound once. The push raises system flag 0x2000 and
- * hides the parent level's window record (flag 0x10); the step handler clears
- * both on the way out.
- *
- * Structural twin of wldcore_push_map_location_visibility_level (0x8006de50,
- * type 0x36), whose spelling this follows statement for statement, with the
- * leading call and a third argument column added.
- *
- * Window: the only `jr ra` is at 0x8006dbb0 with its delay-slot nop at
- * 0x8006dbb4, and the type-0x35 step handler begins at 0x8006dbb8 -- 304
- * bytes, 76 instructions, one call and no branches.
- *
- * Profile is the module canonical gcc-2.6.3_O2_aspsx-2.21. Every menu-stack
- * and window-record store below must stay a bare-symbol reference so it keeps
- * the 2.21 four-instruction lui/addiu/addu/sw $at expansion, which the target
- * uses at all six indexed-global sites. */
+/* Start drawing or erasing a map path and hide the parent window until the
+ * animation finishes. Indexed stores keep their named globals to preserve
+ * the original address sequences. */
 void wldcore_menu_push_map_path_level(s32 path_id, s32 path_id_hi, s32 erase) {
     s32 depth;
     s32 window_index;

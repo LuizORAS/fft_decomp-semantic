@@ -1,15 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Pushes menu level type 0x36, which animates a map location becoming
- * visible: the step handler toggles script variable 0x200 + dot_index, waits
- * out the delay and flags the dot. The push raises system flag 0x2000 and
- * hides the parent level's window record (flag 0x10); the step handler clears
- * both on the way out.
- *
- * Needs aspsx 2.21: under 2.34 maspsx folds %lo into the store displacement
- * and the function is eight instructions short. Every
- * menu-stack store below must stay a bare-symbol reference so it keeps the
- * 2.21 four-instruction lui/addiu/addu/sw expansion. */
+/* Start a delayed map-location visibility change and hide the parent window
+ * until it finishes. Indexed stores keep their named globals to preserve
+ * the original address sequences. */
 void wldcore_push_map_location_visibility_level(s32 dot_index, s32 was_set) {
     s32 depth;
     s32 window_index;
