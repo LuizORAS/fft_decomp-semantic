@@ -1982,13 +1982,6 @@ enum world_menu_line_layout_offset {
 
 typedef char world_menu_line_f2_size_must_be_16[(sizeof(LINE_F2) == 16) ? 1 : -1];
 
-/* Provisional record handed to the world text character thread by
- * world_menu_start_description_text_thread; only the description text buffer at +0x38 is known. */
-typedef struct world_menu_description_record {
-    u8 _unused_00[0x38];
-    u8 description_text[1]; /* 0x38: rendered menu description text */
-} world_menu_description_record_t;
-
 /* Partial image view used by 0x801061e0. Upload rectangles determine the
  * second page's size; it begins at byte +0x8000 in both resource layouts. */
 typedef struct world_menu_image_pages {
@@ -2532,7 +2525,7 @@ void world_menu_set_transition_active_flag(void);
 void world_menu_set_window_scale_step(s8 step);
 void world_menu_start_at_list_thread(void);
 void world_menu_start_dead_unit_threads(void);
-void world_menu_start_description_text_thread(world_menu_description_record_t* record);
+void world_menu_start_description_text_thread(s32 position);
 void world_menu_open_option_dead_unit_panel(void);
 void world_menu_start_or_poll_thread(s32 thread_id, world_menu_entry_t* data);
 void world_menu_start_system_function_thread(s32 parameter);

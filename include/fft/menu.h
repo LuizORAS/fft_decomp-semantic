@@ -1250,18 +1250,6 @@ typedef struct battle_menu_id_record {
 } battle_menu_id_record_t;
 typedef char battle_menu_id_record_size_must_be_0x8[(sizeof(battle_menu_id_record_t) == 8) ? 1 : -1];
 
-/* Byte view of the pending menu selection (g_*_menu_pending_selection, four
- * halfwords) read by *_menu_resolve_selection: command and option use their
- * low bytes; item uses its full halfword. */
-typedef struct world_menu_selection_view {
-    u8 command;
-    u8 _unused_01;
-    u8 option;
-    u8 _padding_03; /* aligns item */
-    u16 item;
-    u16 _unused_06;
-} world_menu_selection_view_t;
-
 /* Menu allocator slot (16 at g_battle_menu_allocator_slot_records, WORLD
  * 0x8019b368); buffer is -1 when the slot is free. The slots hand out runs of
  * the 53 256-byte pages of g_battle_menu_buffer_arena. */
@@ -1700,6 +1688,14 @@ typedef enum dialog_box_type {
     DIALOG_BOX_TYPE_TWO_LINE = 0x40,
     DIALOG_BOX_TYPE_EIGHT_LINE = 0x50,
 } dialog_box_type_e;
+
+/* The low two dialog-type bits place the window vertically. */
+typedef enum dialog_position {
+    DIALOG_POSITION_AUTO = 0, /* portrait tail: choose above/below from projected speakers */
+    DIALOG_POSITION_TOP = 1,
+    DIALOG_POSITION_BOTTOM = 2,
+    DIALOG_POSITION_CENTER = 3,
+} dialog_position_e;
 
 /* Fields of a DisplayMessage dialog type byte
  * (world_text_dialog_record_t::dialog_type). */

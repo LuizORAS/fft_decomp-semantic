@@ -9,7 +9,6 @@
  * the command, option, and item packed into a single value.
  */
 s32 world_menu_resolve_selection(void) {
-    world_menu_selection_view_t* selection = (world_menu_selection_view_t*)g_world_menu_pending_selection;
     s32 command;
     s32 option;
     u32 item;
@@ -17,9 +16,9 @@ s32 world_menu_resolve_selection(void) {
     s32 i;
     s32 menu;
 
-    command = selection->command;
-    option = selection->option;
-    item = selection->item;
+    command = (u8)g_world_menu_pending_selection[0];
+    option = (u8)g_world_menu_pending_selection[1];
+    item = (u16)g_world_menu_pending_selection[2];
     g_world_menu_selected_command = command;
     index = option;
     if (command != 0x12 && (command & 0xFE) != 0xFE) {

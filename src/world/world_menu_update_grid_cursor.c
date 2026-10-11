@@ -30,8 +30,7 @@ extern world_menu_grid_cell_t* g_world_active_grid_menu_cells; /* active grid */
  *
  * Cross (0x40) latches the menu id as the description text and closes the
  * grid; circle (0x20) sets the cell's description text id, except for empty
- * cells 18-27. The description-thread call only latches such ids, so its
- * record argument is never dereferenced. */
+ * cells 18-27. */
 void world_menu_update_grid_cursor(s16 alternate) {
     point16_t cursor;
     s32 busy;
@@ -74,7 +73,7 @@ void world_menu_update_grid_cursor(s16 alternate) {
             if (g_world_grid_menu_selected_cell < 0x12 || g_world_grid_menu_selected_cell >= 0x1C || text_id != 0) {
                 g_world_menu_description_text_id
                     = text_id + g_world_active_grid_menu_cells[g_world_grid_menu_selected_cell].text_offset;
-                world_menu_start_description_text_thread((world_menu_description_record_t*)3);
+                world_menu_start_description_text_thread(DIALOG_POSITION_CENTER);
             }
         } else if (input & PSX_PAD_UP) {
             cell = g_world_active_grid_menu_cells[cell].next_up;

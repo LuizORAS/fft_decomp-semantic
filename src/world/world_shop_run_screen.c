@@ -121,7 +121,7 @@ void world_shop_run_screen(s32 shop_type) {
         world_menu_update_thread_7_idle_countdown();
         world_gfx_update_fade_in_tile();
         if (g_world_input_primary_repeat & PSX_PAD_SELECT) {
-            world_menu_start_description_text_thread((world_menu_description_record_t*)3);
+            world_menu_start_description_text_thread(DIALOG_POSITION_CENTER);
         }
         if (g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
             world_menu_update_grid_cursor(
