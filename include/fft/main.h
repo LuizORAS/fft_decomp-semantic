@@ -1727,9 +1727,16 @@ typedef enum main_system_flags {
     MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY = 0x20000000,
 } main_system_flags_e;
 
-/* 64 allocation tags, one per 0x800-byte block in the game arena. */
-extern u8 g_main_heap_game_allocator_table[64];
-extern u8 g_main_heap_smd_allocator_table[16];
+/* Game and music heaps allocate whole pages, tagged by these byte tables. */
+enum {
+    MAIN_HEAP_PAGE_SHIFT = 11,
+    MAIN_HEAP_PAGE_SIZE = 1 << MAIN_HEAP_PAGE_SHIFT,
+    MAIN_HEAP_GAME_PAGE_COUNT = 64,
+    MAIN_HEAP_SMD_PAGE_COUNT = 16,
+};
+
+extern u8 g_main_heap_game_allocator_table[MAIN_HEAP_GAME_PAGE_COUNT];
+extern u8 g_main_heap_smd_allocator_table[MAIN_HEAP_SMD_PAGE_COUNT];
 extern u8 g_main_heap_smd_base[];
 extern game_options_t g_main_game_options;
 extern game_options_t g_main_game_options_defaults;
