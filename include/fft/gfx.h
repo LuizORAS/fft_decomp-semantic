@@ -121,6 +121,21 @@ typedef enum texture_uv_flip {
     TEXTURE_UV_FLIP_XY = TEXTURE_UV_FLIP_X | TEXTURE_UV_FLIP_Y,
 } texture_uv_flip_e;
 
+/* event character graphics */
+/* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
+ * or widened 32-bit unit-animation headers are present in the file. */
+typedef struct evtchr_file_record {
+    u8 sequence_offsets[0x40][4]; /* 0x0000; signed 32-bit offsets, -1 resolves to zero */
+    u8 sequence_data[0x400];      /* 0x0100 */
+    u8 frame_offsets[0x28][4];    /* 0x0500; signed 32-bit offsets, -1 resolves to zero */
+    u8 frame_data[0x1e0];         /* 0x05a0; copied into both native frame sets */
+    u8 cluts[16 * 16 * 2];        /* 0x0780; 16 palettes of 16 little-endian colors */
+    u8 pixels[200 * 128];         /* 0x0980; 256x200, 4bpp */
+    u8 _unused_6d80[0xa80];       /* unread tail of the 0x7800-byte block */
+} evtchr_file_record_t;
+typedef char evtchr_file_record_size_must_be_30720[sizeof(evtchr_file_record_t) == 30720 ? 1 : -1];
+
+/* image loading */
 /* Image load parameters consumed by both *_gfx_init_image_loading routines
  * (0xc bytes; BATTLE's table at 0x80155838 holds one per menu sprite). */
 typedef struct image_load_parameters {

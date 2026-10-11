@@ -115,6 +115,17 @@ typedef char menu_window_buffer_size_must_be_280[(sizeof(menu_window_buffer_t) =
 typedef char menu_window_buffer_selector_must_be_0x14
     [((unsigned long)&((menu_window_buffer_t*)0)->dialogue_selector == 0x14) ? 1 : -1];
 
+/* portrait */
+/* One EVTFACE.BIN block: pixels followed by eight 16-color palettes. */
+typedef struct menu_portrait_image_file {
+    u32 pixels[8][48][4];  /* 0x0000; eight 32x48 4bpp portraits */
+    palette_t palettes[8]; /* 0x1800; four palettes per uploaded VRAM row */
+    u8 _unknown_1900[0x700];
+} menu_portrait_image_file_t;
+typedef char menu_portrait_image_file_size_must_be_8192[sizeof(menu_portrait_image_file_t) == 8192 ? 1 : -1];
+typedef char menu_portrait_palettes_must_be_at_offset_0x1800
+    [((unsigned long)&((menu_portrait_image_file_t*)0)->palettes == 0x1800) ? 1 : -1];
+
 /* status panels */
 /* Battle menu status and character-editor panel records. The EVENT overlays
  * (ATTACK, BUNIT, DEBUGCHR, EQUIP, REQUIRE) each link their own copy of the

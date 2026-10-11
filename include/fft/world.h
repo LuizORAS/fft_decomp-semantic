@@ -220,7 +220,7 @@ extern u32 g_world_script_tutorial_repeat_counters[16];
 extern u16 g_world_script_tutorial_previous_input;
 extern u8* g_world_script_tutorial_command_ptr;
 extern s32 g_world_event_pending_loaded_evtchr_slot;
-extern void* g_world_event_loaded_evtchr_buffer;
+extern evtchr_file_record_t* g_world_event_loaded_evtchr_buffer;
 extern s16 g_world_event_effect_target_misc_id;
 extern s16 g_world_event_effect_target_mode;
 extern u8 g_world_event_instruction_sizes[0xf4];
@@ -1786,10 +1786,10 @@ extern image_load_parameters_t g_world_unit_summary_label_sprite_params[];
 extern image_load_parameters_t g_world_unit_summary_value_sprite_params[];
 extern RECT g_world_unit_status_panel_origin;
 extern image_load_parameters_t g_world_unit_status_sprite_params[];
-extern u8 g_world_unit_status_portrait_params[];
+extern image_load_parameters_t g_world_unit_status_portrait_params;
 extern u16 g_world_unit_summary_value_cluts[4][2]; /* [row][dimmed] */
 extern u16 g_world_unit_summary_label_cluts[7][2]; /* [row][dimmed] */
-extern u8 g_world_unit_summary_mode_row_params[];
+extern image_load_parameters_t g_world_unit_summary_mode_row_params[4];
 extern RECT g_world_selected_unit_portrait_rect;
 extern menu_status_thread_t g_world_stat_preview_panel_thread_params;
 extern menu_text_binding_t g_world_selected_unit_text_binding;

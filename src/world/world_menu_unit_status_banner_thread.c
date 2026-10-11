@@ -120,10 +120,10 @@ void world_menu_unit_status_banner_thread(void) {
     }
     if (g_world_unit_join_screen_active == 0) {
         world_script_copy_bytes(&g_world_unit_summary_label_sprite_params[6],
-            g_world_unit_summary_mode_row_params + state->team_kind * 0xC, 0xC);
+            &g_world_unit_summary_mode_row_params[state->team_kind], sizeof(image_load_parameters_t));
     } else {
-        world_script_copy_bytes(
-            &g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params, 0xC);
+        world_script_copy_bytes(&g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params,
+            sizeof(image_load_parameters_t));
     }
     for (frame = 0; frame < 7; frame++) {
         world_gfx_init_image_loading((texture_primitive_t*)&summary->label_sprites[frame],
@@ -146,7 +146,7 @@ void world_menu_unit_status_banner_thread(void) {
             &g_world_unit_status_panel_origin, &g_world_unit_status_sprite_params[frame]);
     }
     world_gfx_init_image_loading((texture_primitive_t*)&status->portrait, g_world_editor_numeric_geometry,
-        &g_world_unit_status_panel_origin, (const image_load_parameters_t*)g_world_unit_status_portrait_params);
+        &g_world_unit_status_panel_origin, &g_world_unit_status_portrait_params);
     if (state->team_kind == 1) {
         status->portrait.clut = 0x7FFD;
     } else {
@@ -167,10 +167,10 @@ void world_menu_unit_status_banner_thread(void) {
         }
         if (g_world_unit_join_screen_active == 0) {
             world_script_copy_bytes(&g_world_unit_summary_label_sprite_params[6],
-                g_world_unit_summary_mode_row_params + state->team_kind * 0xC, 0xC);
+                &g_world_unit_summary_mode_row_params[state->team_kind], sizeof(image_load_parameters_t));
         } else {
-            world_script_copy_bytes(
-                &g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params, 0xC);
+            world_script_copy_bytes(&g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params,
+                sizeof(image_load_parameters_t));
         }
         world_gfx_init_image_loading((texture_primitive_t*)&summary->label_sprites[6], g_world_editor_numeric_geometry,
             &g_world_gfx_portrait_origin, &g_world_unit_summary_label_sprite_params[6]);

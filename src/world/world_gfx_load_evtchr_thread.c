@@ -2,7 +2,6 @@
 #include "psx/types.h"
 
 #define EVTCHR_BLOCK_SECTORS 15
-#define EVTCHR_BLOCK_BYTES   0x7800
 
 /*
  * Loads one 0x7800-byte block of EVTCHR.BIN into a fresh heap allocation
@@ -13,18 +12,18 @@
 void world_gfx_load_evtchr_thread(void) {
     s32 slot;
     s32 block;
-    void* buffer;
+    evtchr_file_record_t* buffer;
 
     slot = (s32)world_thread_get_current_parameter_1();
     block = world_thread_get_current_parameter_2();
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
-    buffer = main_heap_alloc(EVTCHR_BLOCK_BYTES);
+    buffer = main_heap_alloc(sizeof(*buffer));
 
     do {
         world_thread_yield();
         g_world_thread_call_target = (void (*)(void))main_file_call_build_header;
     } while (world_thread_call_on_main_stack(
-                 block * EVTCHR_BLOCK_SECTORS + DISC_SECTOR_EVENT_EVTCHR_BIN, EVTCHR_BLOCK_BYTES, buffer)
+                 block * EVTCHR_BLOCK_SECTORS + DISC_SECTOR_EVENT_EVTCHR_BIN, sizeof(*buffer), buffer)
         != 0);
 
     do {

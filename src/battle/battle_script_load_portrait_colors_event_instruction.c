@@ -5,7 +5,7 @@
 /* Uploads eight 32x48 portraits and their palettes from one EVTFACE.BIN block. */
 void battle_script_load_portrait_colors_event_instruction(s32 portrait_id) {
     RECT rect;
-    battle_menu_portrait_image_file_t* buffer;
+    menu_portrait_image_file_t* buffer;
     u32(*pixels)[48][4];
     s32 i;
     palette_t* palette;

@@ -15,7 +15,7 @@
  * The integer sum with the decayed data array keeps the target's
  * offset-plus-0x108-then-base order; a byte pointer for the palettes keeps
  * that copy an end-pointer loop like the others. */
-s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const battle_gfx_packed_evtchr_record_t* record) {
+s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const evtchr_file_record_t* record) {
     s32 i;
     s32 pos;
     s32 offset;
@@ -25,7 +25,7 @@ s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const battle_gfx_packe
 
     if (g_battle_gfx_vram_slots[index].image_buffer_state == BATTLE_GFX_VRAM_SLOT_BUFFER_FREE) {
         /* Separate named field bases fold the retail running byte position. */
-        pos = offsetof(battle_gfx_packed_evtchr_record_t, sequence_offsets);
+        pos = offsetof(evtchr_file_record_t, sequence_offsets);
         for (i = 0; i < 0x40; i++) {
             word = file + pos;
             offset = word[0] + (word[1] << 8) + (word[2] << 16) + (word[3] << 24);

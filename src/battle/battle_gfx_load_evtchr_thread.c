@@ -9,7 +9,7 @@
 void battle_gfx_load_evtchr_thread(void) {
     s32 parameter;
     s32 block;
-    battle_gfx_packed_evtchr_record_t* buffer;
+    evtchr_file_record_t* buffer;
 
     parameter = battle_thread_get_current_parameter_1();
     block = battle_thread_get_current_parameter_2();

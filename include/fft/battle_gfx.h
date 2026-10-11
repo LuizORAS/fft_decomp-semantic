@@ -52,23 +52,9 @@ typedef struct battle_gfx_packed_offset_table {
 typedef char
     battle_gfx_packed_offset_table_size_must_be_1030[sizeof(battle_gfx_packed_offset_table_t) == 1030 ? 1 : -1];
 
-/* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
- * or widened 32-bit unit-animation header fields are present in the file. */
-typedef struct battle_gfx_packed_evtchr_record {
-    u8 sequence_offsets[0x40][4]; /* 0x0000; signed 32-bit values, -1 resolves to zero */
-    u8 sequence_data[0x400];      /* 0x0100 */
-    u8 frame_offsets[0x28][4];    /* 0x0500; signed 32-bit values, -1 resolves to zero */
-    u8 frame_data[0x1e0];         /* 0x05a0; copied into both native frame sets */
-    u8 cluts[16 * 16 * 2];        /* 0x0780; 16 CLUTs, 16 little-endian colours each */
-    u8 pixels[200 * 128];         /* 0x0980; 256x200, 4bpp */
-    u8 _unused_6d80[0xa80];       /* unread tail of the 0x7800-byte block */
-} battle_gfx_packed_evtchr_record_t;
-typedef char
-    battle_gfx_packed_evtchr_record_size_must_be_30720[sizeof(battle_gfx_packed_evtchr_record_t) == 30720 ? 1 : -1];
-
-/* OTHER.SPR: the palette helper copies only the first 21 of 32 CLUTs. */
+/* OTHER.SPR: the palette helper copies only the first 21 of 32 palettes. */
 typedef struct battle_gfx_other_sprite_archive {
-    u8 palettes[32 * 16 * 2]; /* 0x0000; 32 CLUTs, 16 little-endian colours each */
+    u8 palettes[32 * 16 * 2]; /* 0x0000; 32 palettes, 16 little-endian colors each */
     u8 pixels[256 * 128];     /* 0x0400; uncompressed 256x256, 4bpp */
 } battle_gfx_other_sprite_archive_t;
 typedef char
@@ -744,7 +730,7 @@ void battle_gfx_release_unit_sprite_display_stub(battle_gfx_sprite_display_data_
 void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* display, s32 index, s16 x_shift,
     s16 y_shift, s16 u, s16 v, s16 width, s16 height, s16 flags);
 
-s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const battle_gfx_packed_evtchr_record_t* file);
+s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const evtchr_file_record_t* file);
 
 void battle_gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
     const image_load_parameters_t* parameters);

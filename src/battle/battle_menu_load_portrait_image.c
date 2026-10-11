@@ -3,7 +3,7 @@
 
 /* Load portrait sector 0x164b + 4 * portrait_id straight into VRAM. */
 void battle_menu_load_portrait_image(s32 portrait_id) {
-    battle_menu_portrait_image_file_t* buffer;
+    menu_portrait_image_file_t* buffer;
 
     buffer = battle_menu_alloc_memory(sizeof(*buffer));
     g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
