@@ -3,13 +3,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-#define DIGITS g_require_reward_money_digit_polys
-#define NEXT   g_require_reward_money_next_digit_polys
-/* Texture page (384, 0): both GPU-type encodings select page 6, but the
- * GetGraphType() calls of the type test remain in the target. */
-#define TPAGE ((GetGraphType() == 1 || GetGraphType() == 2) ? 6 : 6)
-#define X0    (0x108 - j * 13 - (5 - digits) * 13 / 2)
-#define CLUT  ((g_require_reward_bonus_palette_rect.y << 6) | ((g_require_reward_bonus_palette_rect.x >> 4) & 0x3f))
+#define X0 (0x108 - j * 13 - (5 - digits) * 13 / 2)
 
 /*
  * Post-battle gil ticker: adds the war-result money to script variable 0x2c,
@@ -19,7 +13,7 @@
  * before holding for 60 frames and fading out.
  *
  * The polygon pointers are formed as `(s32)array + offset` byte offsets, which
- * keeps the target's separate base and offset; `&DIGITS[buffer][j]` is reduced
+ * keeps the target's separate base and offset; `&g_require_reward_money_digit_polys[buffer][j]` is reduced
  * to a single pointer induction variable. `pass` doubles as the fade level,
  * which the target's register allocation reflects.
  */
@@ -73,13 +67,15 @@ void require_render_gil_reward_ticker(void) {
             POLY_FT4* pd;
             POLY_FT4* pn;
 
-            battle_gfx_init_default_poly_ft4(&DIGITS[buffer][j]);
-            battle_gfx_init_default_poly_ft4(&NEXT[buffer][j]);
-            DIGITS[buffer][j].tpage = TPAGE;
-            DIGITS[buffer][j].clut = CLUT;
-            NEXT[buffer][j].tpage = TPAGE;
-            NEXT[buffer][j].clut = CLUT;
-            pd = (POLY_FT4*)((s32)DIGITS + (j * 0x28 + buffer * 0xf0));
+            battle_gfx_init_default_poly_ft4(&g_require_reward_money_digit_polys[buffer][j]);
+            battle_gfx_init_default_poly_ft4(&g_require_reward_money_next_digit_polys[buffer][j]);
+            g_require_reward_money_digit_polys[buffer][j].tpage = getTPage(0, 0, 384, 0);
+            g_require_reward_money_digit_polys[buffer][j].clut
+                = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
+            g_require_reward_money_next_digit_polys[buffer][j].tpage = getTPage(0, 0, 384, 0);
+            g_require_reward_money_next_digit_polys[buffer][j].clut
+                = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
+            pd = (POLY_FT4*)((s32)g_require_reward_money_digit_polys + (j * 0x28 + buffer * 0xf0));
             pd->x0 = X0;
             pd->y0 = 0x80;
             pd->x1 = X0 + 13;
@@ -88,7 +84,7 @@ void require_render_gil_reward_ticker(void) {
             pd->y2 = 0x97;
             pd->x3 = X0 + 13;
             pd->y3 = 0x97;
-            pn = (POLY_FT4*)((s32)NEXT + (j * 0x28 + buffer * 0xf0));
+            pn = (POLY_FT4*)((s32)g_require_reward_money_next_digit_polys + (j * 0x28 + buffer * 0xf0));
             pn->x0 = X0;
             pn->y0 = 0x69;
             pn->x1 = X0 + 13;
@@ -98,8 +94,8 @@ void require_render_gil_reward_ticker(void) {
             pn->x3 = X0 + 13;
             pn->y3 = 0x80;
             if (j >= 3) {
-                DIGITS[buffer][j].x0 -= 8;
-                NEXT[buffer][j].x0 -= 8;
+                g_require_reward_money_digit_polys[buffer][j].x0 -= 8;
+                g_require_reward_money_next_digit_polys[buffer][j].x0 -= 8;
             }
         }
     }
@@ -111,13 +107,13 @@ void require_render_gil_reward_ticker(void) {
 
         comma_poly = &g_require_reward_money_comma_polys[i];
         battle_gfx_init_default_poly_ft4(comma_poly);
-        comma_poly->x0 = DIGITS[0][2].x0 - 10;
+        comma_poly->x0 = g_require_reward_money_digit_polys[0][2].x0 - 10;
         comma_poly->y0 = 0x8f;
-        comma_poly->x1 = DIGITS[0][2].x0 - 4;
+        comma_poly->x1 = g_require_reward_money_digit_polys[0][2].x0 - 4;
         comma_poly->y1 = 0x8f;
-        comma_poly->x2 = DIGITS[0][2].x0 - 10;
+        comma_poly->x2 = g_require_reward_money_digit_polys[0][2].x0 - 10;
         comma_poly->y2 = 0x99;
-        comma_poly->x3 = DIGITS[0][2].x0 - 4;
+        comma_poly->x3 = g_require_reward_money_digit_polys[0][2].x0 - 4;
         comma_poly->y3 = 0x99;
         comma_poly->u0 = 0x82;
         comma_poly->v0 = 0x40;
@@ -127,17 +123,18 @@ void require_render_gil_reward_ticker(void) {
         comma_poly->v2 = 0x4a;
         comma_poly->u3 = 0x88;
         comma_poly->v3 = 0x4a;
-        g_require_reward_money_comma_polys[i].tpage = TPAGE;
-        g_require_reward_money_comma_polys[i].clut = CLUT;
+        g_require_reward_money_comma_polys[i].tpage = getTPage(0, 0, 384, 0);
+        g_require_reward_money_comma_polys[i].clut
+            = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
         sign_poly = &g_require_reward_money_sign_polys[i];
         battle_gfx_init_default_poly_ft4(sign_poly);
-        sign_poly->x0 = DIGITS[0][0].x0 + 0x11;
+        sign_poly->x0 = g_require_reward_money_digit_polys[0][0].x0 + 0x11;
         sign_poly->y0 = 0x80;
-        sign_poly->x1 = DIGITS[0][0].x0 + 0x31;
+        sign_poly->x1 = g_require_reward_money_digit_polys[0][0].x0 + 0x31;
         sign_poly->y1 = 0x80;
-        sign_poly->x2 = DIGITS[0][0].x0 + 0x11;
+        sign_poly->x2 = g_require_reward_money_digit_polys[0][0].x0 + 0x11;
         sign_poly->y2 = 0x97;
-        sign_poly->x3 = DIGITS[0][0].x0 + 0x31;
+        sign_poly->x3 = g_require_reward_money_digit_polys[0][0].x0 + 0x31;
         sign_poly->y3 = 0x97;
         sign_poly->u0 = 0x88;
         sign_poly->v0 = 0x32;
@@ -147,8 +144,9 @@ void require_render_gil_reward_ticker(void) {
         sign_poly->v2 = 0x49;
         sign_poly->u3 = 0xa8;
         sign_poly->v3 = 0x49;
-        g_require_reward_money_sign_polys[i].tpage = TPAGE;
-        g_require_reward_money_sign_polys[i].clut = CLUT;
+        g_require_reward_money_sign_polys[i].tpage = getTPage(0, 0, 384, 0);
+        g_require_reward_money_sign_polys[i].clut
+            = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
     }
     if (g_main_gfx_screen_polarity == 0) {
         SetDrawArea(&areas[0], &g_require_reward_money_clip_rect_0);
@@ -174,8 +172,8 @@ void require_render_gil_reward_ticker(void) {
 
                 g_require_reward_money_digit_positions[j] += g_require_reward_money_digit_speeds[j];
                 off = j * 0x28 + buffer * 0xf0;
-                x = DIGITS[buffer][j].x0;
-                pd = (POLY_FT4*)((s32)DIGITS + off);
+                x = g_require_reward_money_digit_polys[buffer][j].x0;
+                pd = (POLY_FT4*)((s32)g_require_reward_money_digit_polys + off);
                 pd->x0 = x;
                 pd->y0 = ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x80;
                 pd->x1 = x + 13;
@@ -192,17 +190,17 @@ void require_render_gil_reward_ticker(void) {
                 pd->v2 = 0x49;
                 pd->u3 = (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13 + 13;
                 pd->v3 = 0x49;
-                x = NEXT[buffer][j].x0;
+                x = g_require_reward_money_next_digit_polys[buffer][j].x0;
                 off = j * 0x28 + buffer * 0xf0;
-                pn = (POLY_FT4*)((s32)NEXT + off);
+                pn = (POLY_FT4*)((s32)g_require_reward_money_next_digit_polys + off);
                 pn->x0 = x;
-                pn->y0 = DIGITS[buffer][j].y0 - 0x20;
+                pn->y0 = g_require_reward_money_digit_polys[buffer][j].y0 - 0x20;
                 pn->x1 = x + 13;
-                pn->y1 = DIGITS[buffer][j].y0 - 0x20;
+                pn->y1 = g_require_reward_money_digit_polys[buffer][j].y0 - 0x20;
                 pn->x2 = x;
-                pn->y2 = DIGITS[buffer][j].y0 - 9;
+                pn->y2 = g_require_reward_money_digit_polys[buffer][j].y0 - 9;
                 pn->x3 = x + 13;
-                pn->y3 = DIGITS[buffer][j].y0 - 9;
+                pn->y3 = g_require_reward_money_digit_polys[buffer][j].y0 - 9;
                 pn->u0 = ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13;
                 pn->v0 = 0x32;
                 pn->u1 = ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13 + 13;
@@ -237,8 +235,8 @@ void require_render_gil_reward_ticker(void) {
         }
         for (j = 0; j < digits; j++) {
             if (j * 16 < i) {
-                battle_gfx_draw_or_append_gpu_primitive(&DIGITS[buffer][j]);
-                battle_gfx_draw_or_append_gpu_primitive(&NEXT[buffer][j]);
+                battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_digit_polys[buffer][j]);
+                battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_next_digit_polys[buffer][j]);
             }
         }
         battle_gfx_draw_or_append_gpu_primitive(&areas[buffer]);
@@ -254,8 +252,8 @@ void require_render_gil_reward_ticker(void) {
     }
 finished:
     for (j = 0; j < digits; j++) {
-        battle_gfx_draw_or_append_gpu_primitive(&DIGITS[buffer][j]);
-        battle_gfx_draw_or_append_gpu_primitive(&NEXT[buffer][j]);
+        battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_digit_polys[buffer][j]);
+        battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_next_digit_polys[buffer][j]);
     }
     battle_gfx_draw_or_append_gpu_primitive(&areas[buffer]);
     if (digits >= 4) {
@@ -273,8 +271,8 @@ skipped:
         for (j = 0; j < digits; j++) {
             POLY_FT4* digit_quad;
 
-            x = DIGITS[buffer][j].x0;
-            digit_quad = (POLY_FT4*)((s32)DIGITS + (j * 0x28 + buffer * 0xf0));
+            x = g_require_reward_money_digit_polys[buffer][j].x0;
+            digit_quad = (POLY_FT4*)((s32)g_require_reward_money_digit_polys + (j * 0x28 + buffer * 0xf0));
             digit_quad->x0 = x;
             digit_quad->y0 = 0x80;
             digit_quad->x1 = x + 13;
@@ -291,7 +289,7 @@ skipped:
             digit_quad->v2 = 0x49;
             digit_quad->u3 = g_require_reward_money_digit_targets[j] * 13 + 13;
             digit_quad->v3 = 0x49;
-            battle_gfx_draw_or_append_gpu_primitive(&DIGITS[buffer][j]);
+            battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_digit_polys[buffer][j]);
         }
         battle_gfx_draw_or_append_gpu_primitive(&areas[buffer]);
         tick++;
@@ -314,8 +312,8 @@ skipped:
         for (j = 0; j < digits; j++) {
             POLY_FT4* digit_quad;
 
-            x = DIGITS[buffer][j].x0;
-            digit_quad = (POLY_FT4*)((s32)DIGITS + (j * 0x28 + buffer * 0xf0));
+            x = g_require_reward_money_digit_polys[buffer][j].x0;
+            digit_quad = (POLY_FT4*)((s32)g_require_reward_money_digit_polys + (j * 0x28 + buffer * 0xf0));
             digit_quad->x0 = x;
             digit_quad->y0 = 0x80;
             digit_quad->x1 = x + 13;
@@ -335,7 +333,7 @@ skipped:
             digit_quad->r0 = pass;
             digit_quad->g0 = pass;
             digit_quad->b0 = pass;
-            battle_gfx_draw_or_append_gpu_primitive(&DIGITS[buffer][j]);
+            battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_digit_polys[buffer][j]);
         }
         battle_gfx_draw_or_append_gpu_primitive(&areas[buffer]);
         /* Loading the base first keeps `la g_require_reward_money_comma_polys` above buffer * 40. */

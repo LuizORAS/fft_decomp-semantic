@@ -175,6 +175,8 @@ typedef struct {
 
 #define limitRange(x, l, h) ((x) = ((x) < (l) ? (l) : (x) > (h) ? (h) : (x)))
 
+#define getClut(x, y) (((y) << 6) | (((x) >> 4) & 0x3f))
+
 #define getTPage(tp, abr, x, y)                                                                                        \
     ((GetGraphType() == 1 || GetGraphType() == 2)                                                                      \
             ? ((((tp) & 0x3) << 9) | (((abr) & 0x3) << 7) | (((y) & 0x300) >> 3) | (((x) & 0x3ff) >> 6))               \
