@@ -64,10 +64,11 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         setRGB0(line, g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_R],
             g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_G],
             g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_B]);
-        line->x0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X0] + g_battle_unit_editor_panel_rect.x;
-        line->y0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y0] + g_battle_unit_editor_panel_rect.y;
-        line->x1 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X1] + g_battle_unit_editor_panel_rect.x;
-        line->y1 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y1] + g_battle_unit_editor_panel_rect.y;
+        setXY2(line,
+            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X0] + g_battle_unit_editor_panel_rect.x,
+            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y0] + g_battle_unit_editor_panel_rect.y,
+            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X1] + g_battle_unit_editor_panel_rect.x,
+            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y1] + g_battle_unit_editor_panel_rect.y);
         line++;
     }
     battle_menu_init_sprite_array(&frame_record->sprites[0], 0xC, 0x7D7C);

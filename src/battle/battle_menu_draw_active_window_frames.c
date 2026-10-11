@@ -79,14 +79,7 @@ void battle_menu_draw_active_window_frames(void) {
         battle_gfx_draw_or_append_gpu_primitive(&window->draw_mode);
         if (window->portrait_code != -1) {
             u = window->portrait_code << 5;
-            window->quads[1].u0 = u;
-            window->quads[1].v0 = 0xCE;
-            window->quads[1].u1 = u + 0x1F;
-            window->quads[1].v1 = 0xCE;
-            window->quads[1].u2 = u;
-            window->quads[1].v2 = 0xFE;
-            window->quads[1].u3 = u + 0x1F;
-            window->quads[1].v3 = 0xFE;
+            setUV4(&window->quads[1], u, 0xCE, u + 0x1F, 0xCE, u, 0xFE, u + 0x1F, 0xFE);
             window->quads[1].tpage = GetTPage(0, 0, 0x1C0, 0);
             window->quads[1].clut = GetClut(window->portrait_code % 4 * 16 + 0x1C0, window->portrait_code / 4 + 0xFE);
         } else {

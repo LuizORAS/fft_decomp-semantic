@@ -22,22 +22,15 @@ void battle_gfx_init_image_loading(world_texture_prim_t* primitive, const point1
 
     if (parameters->x_load >= 0) {
         primitive->ft4.tpage = GetTPage(0, 0, base_load->x, base_load->y & 0xf00);
-        primitive->ft4.u0 = parameters->x_load;
-        primitive->ft4.v0 = base_load->y + parameters->y_load;
-        primitive->ft4.u1 = parameters->x_load + parameters->width;
-        primitive->ft4.v1 = base_load->y + parameters->y_load;
-        primitive->ft4.u2 = parameters->x_load;
-        primitive->ft4.v2 = base_load->y + parameters->y_load + parameters->height;
-        primitive->ft4.u3 = parameters->x_load + parameters->width;
-        primitive->ft4.v3 = base_load->y + parameters->y_load + parameters->height;
+        setUV4(&primitive->ft4, parameters->x_load, base_load->y + parameters->y_load,
+            parameters->x_load + parameters->width, base_load->y + parameters->y_load, parameters->x_load,
+            base_load->y + parameters->y_load + parameters->height, parameters->x_load + parameters->width,
+            base_load->y + parameters->y_load + parameters->height);
     }
 
-    primitive->ft4.x0 = base_screen->x + parameters->x_screen_offset;
-    primitive->ft4.y0 = base_screen->y + parameters->y_screen_offset;
-    primitive->ft4.x1 = base_screen->x + parameters->x_screen_offset + parameters->width;
-    primitive->ft4.y1 = base_screen->y + parameters->y_screen_offset;
-    primitive->ft4.x2 = base_screen->x + parameters->x_screen_offset;
-    primitive->ft4.y2 = base_screen->y + parameters->y_screen_offset + parameters->height;
-    primitive->ft4.x3 = base_screen->x + parameters->x_screen_offset + parameters->width;
-    primitive->ft4.y3 = base_screen->y + parameters->y_screen_offset + parameters->height;
+    setXY4(&primitive->ft4, base_screen->x + parameters->x_screen_offset, base_screen->y + parameters->y_screen_offset,
+        base_screen->x + parameters->x_screen_offset + parameters->width, base_screen->y + parameters->y_screen_offset,
+        base_screen->x + parameters->x_screen_offset, base_screen->y + parameters->y_screen_offset + parameters->height,
+        base_screen->x + parameters->x_screen_offset + parameters->width,
+        base_screen->y + parameters->y_screen_offset + parameters->height);
 }

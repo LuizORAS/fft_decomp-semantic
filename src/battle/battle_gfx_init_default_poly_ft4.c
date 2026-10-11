@@ -17,14 +17,7 @@ void battle_gfx_init_default_poly_ft4(POLY_FT4* poly) {
     poly->v0 = 0;
     poly->v1 = 0;
     poly->u2 = 0;
-    poly->x0 = -0x200;
-    poly->y0 = 0;
-    poly->x1 = -0x200;
-    poly->y1 = 0;
-    poly->x2 = -0x200;
-    poly->y2 = 0;
-    poly->x3 = -0x200;
-    poly->y3 = 0;
+    setXY4(poly, -0x200, 0, -0x200, 0, -0x200, 0, -0x200, 0);
     poly->tpage = GetTPage(0, 0, 0x1C0, 0);
     poly->clut = 0x7C3C;
 }

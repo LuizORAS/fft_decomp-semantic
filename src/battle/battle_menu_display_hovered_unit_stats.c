@@ -179,14 +179,8 @@ void battle_menu_display_hovered_unit_stats(
         }
         params = g_battle_unit_status_sprite_image_params_by_mode[mode];
         if (g_battle_unit_status_bounce_step == 0) {
-            page->portrait.x0 = frame_rect->x + 2;
-            page->portrait.y0 = frame_rect->y + 2;
-            page->portrait.x1 = frame_rect->x + 0x21;
-            page->portrait.y1 = frame_rect->y + 2;
-            page->portrait.x2 = frame_rect->x + 2;
-            page->portrait.y2 = frame_rect->y + 0x32;
-            page->portrait.x3 = frame_rect->x + 0x21;
-            page->portrait.y3 = frame_rect->y + 0x32;
+            setXY4(&page->portrait, frame_rect->x + 2, frame_rect->y + 2, frame_rect->x + 0x21, frame_rect->y + 2,
+                frame_rect->x + 2, frame_rect->y + 0x32, frame_rect->x + 0x21, frame_rect->y + 0x32);
             battle_copy_bytes(&params[6], &g_battle_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
                 battle_gfx_init_image_loading(
@@ -222,14 +216,7 @@ void battle_menu_display_hovered_unit_stats(
                 width = 0x20;
             }
             row_y = extent_h + i * 0xB;
-            poly->x0 = extent_w;
-            poly->y0 = row_y;
-            poly->x1 = extent_w + width;
-            poly->y1 = row_y;
-            poly->x2 = extent_w;
-            poly->y2 = row_y + 3;
-            poly->x3 = extent_w + width;
-            poly->y3 = row_y + 3;
+            setXY4(poly, extent_w, row_y, extent_w + width, row_y, extent_w, row_y + 3, extent_w + width, row_y + 3);
             width = (gauge->bonus << 5) / gauge->max;
             if (width == 0) {
                 extent_w = 0;

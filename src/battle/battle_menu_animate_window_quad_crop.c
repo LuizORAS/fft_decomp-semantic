@@ -23,22 +23,10 @@ void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* r
         sprite.w = rect->w;
         sprite.h = rect->h;
         battle_menu_zoom_cursor_frame(source, &sprite, level);
-        buffers[g_battle_menu_packet_buffer_index].quads[0].x0 = sprite.x0;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].y0 = sprite.y0;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].x1 = sprite.x0 + (sprite.w - 2);
-        buffers[g_battle_menu_packet_buffer_index].quads[0].y1 = sprite.y0;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].x2 = sprite.x0;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].y2 = sprite.y0 + sprite.h;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].x3 = sprite.x0 + (sprite.w - 2);
-        buffers[g_battle_menu_packet_buffer_index].quads[0].y3 = sprite.y0 + sprite.h;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].u0 = sprite.u0;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].v0 = sprite.v0;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].u1 = sprite.u0 + (sprite.w - 2);
-        buffers[g_battle_menu_packet_buffer_index].quads[0].v1 = sprite.v0;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].u2 = sprite.u0;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].v2 = sprite.v0 + sprite.h;
-        buffers[g_battle_menu_packet_buffer_index].quads[0].u3 = sprite.u0 + (sprite.w - 2);
-        buffers[g_battle_menu_packet_buffer_index].quads[0].v3 = sprite.v0 + sprite.h;
+        setXY4(&buffers[g_battle_menu_packet_buffer_index].quads[0], sprite.x0, sprite.y0, sprite.x0 + (sprite.w - 2),
+            sprite.y0, sprite.x0, sprite.y0 + sprite.h, sprite.x0 + (sprite.w - 2), sprite.y0 + sprite.h);
+        setUV4(&buffers[g_battle_menu_packet_buffer_index].quads[0], sprite.u0, sprite.v0, sprite.u0 + (sprite.w - 2),
+            sprite.v0, sprite.u0, sprite.v0 + sprite.h, sprite.u0 + (sprite.w - 2), sprite.v0 + sprite.h);
         battle_thread_yield();
     }
 }

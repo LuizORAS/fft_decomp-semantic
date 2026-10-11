@@ -33,10 +33,11 @@ void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, world_menu_
     line = menu->lines;
     offset = 0;
     for (index = 0; index < 12; index++) {
-        line->x0 = ((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_X0] + bounds->x;
-        line->y0 = ((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_Y0] + bounds->y;
-        line->x1 = ((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_X1] + bounds->x;
-        line->y1 = ((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_Y1] + bounds->y;
+        setXY2(line,
+            ((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_X0] + bounds->x,
+            ((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_Y0] + bounds->y,
+            ((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_X1] + bounds->x,
+            ((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_Y1] + bounds->y);
         if (((s8*)g_battle_menu_numeric_display_frame_offsets)[offset + BATTLE_MENU_LINE_LAYOUT_ADD_W0] != 0) {
             line->x0 += bounds->w;
         }

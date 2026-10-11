@@ -76,12 +76,7 @@ void battle_map_init_weather_particles(s32 command) {
                 g_battle_render_buffers[j].ft3[i].tpage = GetTPage(0, 3, 0x3c0, 0x100);
                 prim = (POLY_FT3*)((u8*)g_battle_render_buffers[0].ft3
                     + (j * sizeof(battle_render_buffer_t) + i * sizeof(POLY_FT3)));
-                prim->u0 = 0xd8;
-                prim->v0 = 0xaf;
-                prim->u1 = 0xf7;
-                prim->v1 = 0xaf;
-                prim->u2 = 0xd8;
-                prim->v2 = 0xaf;
+                setUV3(prim, 0xd8, 0xaf, 0xf7, 0xaf, 0xd8, 0xaf);
                 SetSemiTrans(&g_battle_render_buffers[j].ft3[i + 32], 1);
                 g_battle_render_buffers[j].ft3[i + 32].r0 = 0x80;
                 g_battle_render_buffers[j].ft3[i + 32].g0 = 0x80;

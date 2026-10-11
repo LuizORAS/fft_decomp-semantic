@@ -14,14 +14,7 @@ void battle_menu_build_unit_portrait_poly(POLY_FT4* poly, u32 battle_id) {
     u8 v;
 
     if (battle_unit_get_stats_from_battle_id(battle_id)->unit_id == g_main_special_portrait_unit_id) {
-        poly->u0 = 0xe0;
-        poly->v0 = 0xcf;
-        poly->u1 = 0xff;
-        poly->v1 = 0xcf;
-        poly->u2 = 0xe0;
-        poly->v2 = 0xff;
-        poly->u3 = 0xff;
-        poly->v3 = 0xff;
+        setUV4(poly, 0xe0, 0xcf, 0xff, 0xcf, 0xe0, 0xff, 0xff, 0xff);
         poly->tpage = GetTPage(0, 0, 0x380, 0x100);
         poly->clut = GetClut(0x40, 0x1fe);
     } else {
@@ -34,14 +27,7 @@ void battle_menu_build_unit_portrait_poly(POLY_FT4* poly, u32 battle_id) {
         } else {
             poly->tpage = GetTPage(0, 0, 0x340, 0x100);
         }
-        poly->u0 = 0x80;
-        poly->v0 = v;
-        poly->u1 = 0x80;
-        poly->v1 = v + 0x20;
-        poly->u2 = 0x50;
-        poly->v2 = v;
-        poly->u3 = 0x50;
-        poly->v3 = v + 0x20;
+        setUV4(poly, 0x80, v, 0x80, v + 0x20, 0x50, v, 0x50, v + 0x20);
         poly->v1--;
         poly->v3--;
         poly->clut = GetClut((misc_id & 0xf) * 16, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_UNITS_SECOND);
