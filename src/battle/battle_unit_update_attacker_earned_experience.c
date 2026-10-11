@@ -1,10 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Record the highest EXP award produced by the current action.
- *
- * Success starts at 10; kills divide 20 by KO count. Level difference and
- * Gained EXP Up then adjust the result, which is clamped to 1 through 99. */
+/* Record the highest EXP award of the current action (in the primary action only). A hit that changed
+ * the target is worth 10, and a KO 20 divided by the target's KO count, which already counts this one
+ * (20, then 10, then 6); the target's level minus the attacker's is added, the result is at least 1,
+ * Gained EXP Up doubles it, and it stops at 99. */
 void battle_unit_update_attacker_earned_experience(s32 outcome) {
     s16 base;
     s32 signed_exp;

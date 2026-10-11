@@ -8992,7 +8992,6 @@ extern u16 g_battle_etc_graphics_enabled;
 extern u16 g_battle_field_object_use_request; /* 0x80165fe4 */
 extern u16 g_battle_field_object_wait_status; /* 0x80166070 */
 extern u8 g_main_terrain_geomancy_abilities[];
-extern job_data_t* g_main_job_data_pointer;
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
 s32 battle_map_tile_data_15_stub(void);
 s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);

@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 
-/* Apply the acting unit's pending EXP and JP rewards.
- *
- * EXP saturates at 255 before the level-up check. JP is 8 + job level * 2 +
- * level / 4, from the level and job level before this award, or 0 when the
- * action earned no EXP; monsters earn none. Gained JP Up (* 3/2) affects only
- * the actor; other battle slots receive one quarter of the unmodified JP
- * through the callee's team filter. */
+/* Apply the acting unit's EXP and JP after its action. Nothing happens when Hamedo cancelled the
+ * action (-1), the action earns nothing (0), or the unit is gone, a Crystal, Dead, Petrified or a
+ * Treasure (-1). The action's EXP award is added (capped at 255) and the unit levels up once at 100
+ * (main_unit_check_level_up). A monster earns no JP; otherwise the JP is 8 + job level * 2 + level / 4,
+ * from the level and the current job's level before this award, or 0 when the action earned no EXP.
+ * Gained JP Up raises the actor's share by half; every other unit whose starting team is the actor's
+ * current team gets a quarter of the plain amount in the same job
+ * (battle_unit_store_jp_and_calculate_unlocked_jobs skips the ones that cannot take it). display
+ * receives the EXP, the JP and any new level or job level. Returns 0. */
 s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_display_t* display) {
     s32 job_slot;
     battle_stats_t* unit;

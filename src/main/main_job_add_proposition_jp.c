@@ -1,9 +1,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Awards proposition JP to a roster unit's current generic job (special jobs
- * use slot 0), recomputes the job level nibble and the unlocked-job bitset.
- * Returns -1 when the unit or JP amount is invalid. */
+/* Give a roster unit the JP of a finished proposition, in its current job's slot (slot 0 for a
+ * special job): current and total JP each stop at 9999, and the job level and unlocked jobs are
+ * derived again. Returns -1 for a negative amount, a slot past the roster, an empty slot or a monster,
+ * else 0. wldcore_proposition_step_result_level pays each participant this way. */
 s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     s32 slot;
     party_data_t* party;

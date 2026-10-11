@@ -19,7 +19,8 @@ s32 main_unit_init_from_party_slot(battle_stats_t* unit, s32 slot, s32 use_world
         return -1;
     }
     job_levels = party_unit->job_levels;
-    main_unit_init_job_levels(party_unit->total_job_points, job_levels);
+    /* The party record keeps each job's JP as a byte pair; the reader takes them as halfwords. */
+    main_unit_init_job_levels((u16*)party_unit->total_job_points, job_levels);
     main_job_store_unlock_bitset(
         party_unit->unlocked_jobs, main_job_calculate_unlocked(job_levels, party_unit->gender_flags));
     main_unit_reset_battle_state(unit);

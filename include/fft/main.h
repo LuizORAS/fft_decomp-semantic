@@ -630,10 +630,20 @@ void main_entd_init_event_unit_data(int event_id);
 int main_entd_open_file(void);
 
 /* job */
+/* The job table and the job progression every module shares: job levels from JP, the unlock
+ * requirements, the unlocked-job bitset and proposition JP. */
+
 extern job_data_t g_main_job_data[];
+extern job_data_t* g_main_job_data_pointer; /* g_main_job_data; no code changes it */
+/* The JP that reaches job levels 1-8 (100, 200, 350, 550, 800, 1150, 1550, 2100).
+ * g_main_job_jp_requirements_by_level starts one halfword earlier, so its entry n is level n's
+ * threshold and entry 0 is 0. */
 extern const u16 g_main_job_level_jp_requirements[8];
 extern u16 g_main_job_jp_requirements_by_level[];
+/* One row per career job after Squire: the packed job levels (two jobs a byte, the first in the high
+ * nibble) that unlock it. */
 extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
+
 s32 main_job_add_proposition_jp(u32 party_index, s32 jp);
 u32 main_job_calculate_level(u16 job_jp);
 u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags);
