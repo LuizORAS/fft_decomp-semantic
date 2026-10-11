@@ -4,11 +4,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Sprite frame table 4 bytes into g_battle_effect_trap_frame_data
- * (0x801b7694): the leading halfword is the offset of the per-frame offset
- * array, and each of those offsets reaches a frame record from the same base. */
-#define SPRITE_TABLE (&g_battle_effect_trap_frame_data[4])
-
 /* Queues one effect slot's billboard sprite: projects the slot origin for its
  * ordering-table depth, builds the rotated, camera-scaled 2D matrix from the
  * slot angle, transforms the frame's four corners into the slot's
@@ -22,6 +17,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     battle_effect_quad_prim_t* prim;
     battle_effect_sprite_frame_t* frame;
     u16 offset;
+    u8* frame_group;
     s32 depth;
     s32 sine;
     s32 cosine;
@@ -58,12 +54,12 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     SetRotMatrix(&g_battle_effect_matrix);
     SetTransMatrix(&g_battle_effect_matrix);
 
-    offset = *(u16*)&SPRITE_TABLE[slot->color.frame * 2
-        + ((battle_effect_sprite_table_header_t*)SPRITE_TABLE)->offsets_offset];
+    frame_group = (u8*)g_battle_effect_trap_frame_data.groups;
+    offset = *(u16*)(frame_group + (slot->color.frame * 2 + g_battle_effect_trap_frame_data.groups[0].offsets_offset));
     prim = &slot->quads[g_battle_effect_buffer_index];
     memcpy(&prim->color, &slot->color, sizeof(prim->color));
     setPolyFT4(prim);
-    frame = (battle_effect_sprite_frame_t*)&SPRITE_TABLE[offset];
+    frame = (battle_effect_sprite_frame_t*)(frame_group + offset);
     setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);
     /* Copy x/y while retaining the GTE input's z. */
     memcpy(&g_battle_effect_corner_top_left, &frame->corners[0], sizeof(frame->corners[0]));

@@ -22,7 +22,7 @@ void battle_menu_auto_battle_setting_thread(void) {
     s32 previous;
     battle_stats_t* stats;
     world_menu_entry_t* param;
-    void* buffer;
+    u8* buffer;
     s32 i;
     s32 j;
     s32 fresh;
@@ -100,7 +100,7 @@ void battle_menu_auto_battle_setting_thread(void) {
                 battle_menu_set_text_origin(8, j * 16 + 9);
                 battle_menu_display_text_entry(j + 0x5009, buffer, &g_menu_text_state.pen);
             }
-            LoadImage(&rect, buffer);
+            LoadImage(&rect, (u32*)buffer);
             fresh = 1;
         }
         battle_thread_yield();

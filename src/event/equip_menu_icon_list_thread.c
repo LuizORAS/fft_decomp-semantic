@@ -9,7 +9,7 @@ void equip_menu_icon_list_thread(void) {
     world_menu_icon_record_t records[2];
     s32 cursor;
     world_menu_entry_t* state;
-    u32* buffer;
+    u8* buffer;
     s32 i;
     s32 fresh;
     world_menu_icon_record_t* record;
@@ -38,7 +38,7 @@ void equip_menu_icon_list_thread(void) {
             battle_menu_set_text_origin(8, 9);
             g_battle_menu_text_palette_offset = 0;
             battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.pen);
-            LoadImage(&rect, buffer);
+            LoadImage(&rect, (u32*)buffer);
         }
         record = &records[i & 1];
         battle_thread_yield();

@@ -3292,6 +3292,13 @@ typedef struct battle_effect_sprite_table_header {
     s16 offsets_offset;
 } battle_effect_sprite_table_header_t;
 
+/* Frame sections start with a group count; group offsets are relative to this table. */
+typedef struct battle_effect_sprite_section {
+    u8 group_count;                                /* 0x00 */
+    u8 _unused_01[3];                              /* 0x01; reserved header bytes */
+    battle_effect_sprite_table_header_t groups[1]; /* 0x04; variable-length group table */
+} battle_effect_sprite_section_t;
+
 typedef struct battle_effect_sprite_frame {
     u16 flags; /* 0x00; EFFECT_SPRITE_PART_*: SEMI_TRANSPARENT and the tpage mode bits */
     u8 _unused_02[6];
@@ -4388,7 +4395,7 @@ extern u8 g_battle_effect_weapon_type_extra_flags[];
 extern u32 g_battle_effect_camera_rotation_mode;
 extern u32 g_battle_effect_camera_position_mode;
 extern u32 g_battle_effect_camera_zoom_mode;
-extern u8 g_battle_effect_trap_frame_data[];
+extern battle_effect_sprite_section_t g_battle_effect_trap_frame_data;
 extern u8 g_battle_effect_ninja_ball_masks[];
 extern s32 g_battle_effect_gravity_scale;
 extern MATRIX g_battle_effect_particle_heading_matrix;
@@ -4413,7 +4420,7 @@ extern VECTOR g_battle_effect_camera_zoom_target;
 extern VECTOR g_battle_effect_camera_zoom_current;
 extern VECTOR g_battle_effect_camera_zoom_saved;
 extern s32 g_battle_effect_trajectory_hit_unit_id;
-extern void* g_battle_effect_trap_frame_data_ptr;
+extern battle_effect_sprite_section_t* g_battle_effect_trap_frame_data_ptr;
 extern battle_effect_callback_t g_battle_effect_callback_slots[];
 extern u8 g_battle_effect_palette_target_misc_ids[];
 extern SVECTOR g_battle_effect_trajectory_origin;
@@ -8610,7 +8617,7 @@ void battle_menu_display_hovered_unit_stats(
 void battle_handle_menu_cancel_input(world_menu_entry_t* menu);
 void* battle_menu_alloc_buffer(s32 bytes);
 void* battle_menu_alloc_memory(s32 size);
-void* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
+u8* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
 void battle_menu_build_idle_action_menu(s32 menu_id);
 s32 battle_menu_build_quad_pieces(s32 group, POLY_GT4* poly);
 void battle_menu_build_skillset_entries(void);
@@ -8697,7 +8704,7 @@ void battle_menu_build_and_upload_window_image(s32 width, s32 height, RECT* rect
 void battle_menu_build_sprite_page(s32 page_index, RECT* base_screen);
 s32 battle_menu_build_unit_action_menus(s32 unit_id, u8* entries, u8* empty, u8* menu_types);
 void battle_menu_build_unit_portrait_poly(POLY_FT4* poly, u32 battle_id);
-void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep);
+u8* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep);
 s32 battle_menu_call_load_charge_skillset(s32 unit_id, u8 skillset_id, s16* ability_ids);
 void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_unit);
 void battle_menu_clear_status_menu_state(void);
@@ -8715,6 +8722,7 @@ s32 battle_menu_dispatch_system_function(
 s32 battle_menu_display_item_inventory_ability(s32 unit_id, s32 skillset, u8* out_item_ids);
 s32 battle_menu_load_math_skill_attributes(s32 unit_id, s32 skillset, s16* out_ability_ids);
 
+void battle_menu_draw_stacked_glyph_pair(u8* pixels, glyph_blit_t* position);
 void battle_menu_draw_numeric_display_entries(
     u8* buffer, menu_number_entry_t* entries, glyph_blit_t* position, s32 count);
 
@@ -8768,7 +8776,7 @@ void battle_menu_clear_option_menu_open(void);
 void battle_menu_open_bunit(void);
 void battle_menu_run_bunit_transition_thread(void);
 void battle_menu_set_option_menu_open(void);
-void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos);
+void battle_draw_menu_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
 void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* text);
 
 u8* battle_menu_redraw_text_page_on_scroll_in_rect(
@@ -8916,7 +8924,7 @@ void battle_text_set_message_duration_frames(u16 frames);
 void battle_text_relocate_pointer_table(const u32* offsets);
 void battle_text_restore_section_pointers(void);
 void battle_text_save_section_pointers(void);
-void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos);
+void battle_text_draw_large_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
 void battle_text_character_handling_thread(void);
 void battle_text_configure_sprite_vram(
     RECT* rect, s16 width, s16 height, world_texture_prim_t* primitive, s32 clut_offset);
@@ -8979,7 +8987,7 @@ s32 battle_return_one(s32 unused_misc_id);
 void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);
 s32 battle_target_spread_panel_to_neighbors(s32 y, s32 x);
 s32 battle_return_zero(void);
-void blit_text_glyph(void* text, void* pixels, const glyph_blit_t* glyph, glyph_blit_t* position);
+void blit_text_glyph(const u8* source, u8* pixels, const glyph_blit_t* glyph, glyph_blit_t* position);
 
 /* unnamed */
 extern s16 D_800b628c;

@@ -48,25 +48,17 @@ enum {
     EFFECT_PARTICLE_RIBBON_LONG_POINTS = 17,
 };
 
-/* One trail point, in world units. */
-typedef struct effect_particle_ribbon_point {
-    s16 x;
-    s16 y;
-    s16 z;
-} effect_particle_ribbon_point_t;
-typedef char assert_effect_particle_ribbon_point_size[sizeof(effect_particle_ribbon_point_t) == 6 ? 1 : -1];
-
 /* One short ribbon: a particle and the double-buffered quad strip drawn along
  * its recent path, one quad per pair of adjacent trail points. */
 typedef struct effect_particle_ribbon_short {
-    SVECTOR target;                                                            /* 0x000: homing destination */
-    VECTOR velocity;                                                           /* 0x008: 20.12 fixed */
-    VECTOR position;                                                           /* 0x018: 20.12 fixed */
-    POLY_GT4 quads[2][EFFECT_PARTICLE_RIBBON_SHORT_POINTS - 1];                /* 0x028 */
-    effect_particle_ribbon_point_t trail[EFFECT_PARTICLE_RIBBON_SHORT_POINTS]; /* 0x368: ring buffer indexed by age */
-    s16 age;                                                                   /* 0x39e */
-    s16 lifetime;                                                              /* 0x3a0 */
-    s16 active;                                                                /* 0x3a2 */
+    SVECTOR target;                                             /* 0x000: homing destination */
+    VECTOR velocity;                                            /* 0x008: 20.12 fixed */
+    VECTOR position;                                            /* 0x018: 20.12 fixed */
+    POLY_GT4 quads[2][EFFECT_PARTICLE_RIBBON_SHORT_POINTS - 1]; /* 0x028 */
+    vec3s16_t trail[EFFECT_PARTICLE_RIBBON_SHORT_POINTS];       /* 0x368: ring buffer indexed by age */
+    s16 age;                                                    /* 0x39e */
+    s16 lifetime;                                               /* 0x3a0 */
+    s16 active;                                                 /* 0x3a2 */
     u8 _unused_3a4[0x02];
     s16 frame;             /* 0x3a6: texture animation frame */
     s16 frame_timer;       /* 0x3a8 */
@@ -77,14 +69,14 @@ typedef char assert_effect_particle_ribbon_short_size[sizeof(effect_particle_rib
 /* One long ribbon: the short layout with 16 quads per buffer and a 17-point
  * trail. */
 typedef struct effect_particle_ribbon_long {
-    SVECTOR target;                                                           /* 0x000: homing destination */
-    VECTOR velocity;                                                          /* 0x008: 20.12 fixed */
-    VECTOR position;                                                          /* 0x018: 20.12 fixed */
-    POLY_GT4 quads[2][EFFECT_PARTICLE_RIBBON_LONG_POINTS - 1];                /* 0x028 */
-    effect_particle_ribbon_point_t trail[EFFECT_PARTICLE_RIBBON_LONG_POINTS]; /* 0x6a8: ring buffer indexed by age */
-    s16 age;                                                                  /* 0x70e */
-    s16 lifetime;                                                             /* 0x710 */
-    s16 active;                                                               /* 0x712 */
+    SVECTOR target;                                            /* 0x000: homing destination */
+    VECTOR velocity;                                           /* 0x008: 20.12 fixed */
+    VECTOR position;                                           /* 0x018: 20.12 fixed */
+    POLY_GT4 quads[2][EFFECT_PARTICLE_RIBBON_LONG_POINTS - 1]; /* 0x028 */
+    vec3s16_t trail[EFFECT_PARTICLE_RIBBON_LONG_POINTS];       /* 0x6a8: ring buffer indexed by age */
+    s16 age;                                                   /* 0x70e */
+    s16 lifetime;                                              /* 0x710 */
+    s16 active;                                                /* 0x712 */
     u8 _unused_714[0x02];
     s16 frame;             /* 0x716: texture animation frame */
     s16 frame_timer;       /* 0x718 */
@@ -473,23 +465,16 @@ extern effect_particle_vertex_location_t g_effect_e464_particle_vertex_locations
  * trail (E077, E161, E451 and E485) that tracks up to four point trails. Both
  * read their effect_geometry_entry_t through
  * effect_tentacle_mesh_geometry_view_t. */
-/* One point of a segment's ring of trailing positions. */
-typedef struct effect_tentacle_mesh_point {
-    s16 x;
-    s16 y;
-    s16 z;
-} effect_tentacle_mesh_point_t;
-typedef char assert_effect_tentacle_mesh_point_size[sizeof(effect_tentacle_mesh_point_t) == 6 ? 1 : -1];
 
 typedef struct effect_tentacle_mesh_segment {
-    SVECTOR tip;                            /* 0x000 */
-    VECTOR velocity;                        /* 0x008: 20.12 fixed */
-    VECTOR position;                        /* 0x018: 20.12 fixed */
-    POLY_GT4 quads[4][8];                   /* 0x028: sets buffer and buffer + 2 */
-    effect_tentacle_mesh_point_t points[9]; /* 0x6a8 */
-    s16 head;                               /* 0x6de */
-    s16 length;                             /* 0x6e0 */
-    s16 active;                             /* 0x6e2 */
+    SVECTOR tip;          /* 0x000 */
+    VECTOR velocity;      /* 0x008: 20.12 fixed */
+    VECTOR position;      /* 0x018: 20.12 fixed */
+    POLY_GT4 quads[4][8]; /* 0x028: sets buffer and buffer + 2 */
+    vec3s16_t points[9];  /* 0x6a8 */
+    s16 head;             /* 0x6de */
+    s16 length;           /* 0x6e0 */
+    s16 active;           /* 0x6e2 */
     u8 _unused_6e4[0x02];
     s16 frame;             /* 0x6e6: texture animation frame */
     s16 frame_timer;       /* 0x6e8 */
@@ -509,13 +494,13 @@ typedef char assert_effect_tentacle_mesh_work_size[sizeof(effect_tentacle_mesh_w
 
 /* A 17-point particle trail; spawning seeds only points 0-8 (the target's loop bound is 9). */
 typedef struct effect_trail_segment {
-    SVECTOR tip;                             /* 0x00 */
-    VECTOR velocity;                         /* 0x08: 20.12 fixed */
-    VECTOR position;                         /* 0x18: 20.12 fixed */
-    effect_tentacle_mesh_point_t points[17]; /* 0x28 */
-    s16 head;                                /* 0x8e */
-    s16 length;                              /* 0x90 */
-    s16 active;                              /* 0x92 */
+    SVECTOR tip;          /* 0x00 */
+    VECTOR velocity;      /* 0x08: 20.12 fixed */
+    VECTOR position;      /* 0x18: 20.12 fixed */
+    vec3s16_t points[17]; /* 0x28 */
+    s16 head;             /* 0x8e */
+    s16 length;           /* 0x90 */
+    s16 active;           /* 0x92 */
     u8 _unused_94[0x04];
 } effect_trail_segment_t;
 typedef char assert_effect_trail_segment_size[sizeof(effect_trail_segment_t) == 0x98 ? 1 : -1];

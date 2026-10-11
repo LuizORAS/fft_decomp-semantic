@@ -34,7 +34,7 @@ void require_render_war_trophies(void) {
     POLY_FT4* quad;
     require_reward_war_trophy_primitives_t* buffer;
     require_reward_war_trophy_primitives_t* prims;
-    u32* image;
+    u8* image;
     s32 frame;
     s32 loaded;
     s32 timer;
@@ -110,7 +110,7 @@ void require_render_war_trophies(void) {
                 g_require_reward_war_trophy_image_rect.x = g_require_reward_war_trophy_image_rect.x / 4 + 0x1c0;
                 g_require_reward_war_trophy_image_rect.y = g_require_reward_war_trophy_image_rect.y;
                 loaded = 1;
-                LoadImage(&g_require_reward_war_trophy_image_rect, image);
+                LoadImage(&g_require_reward_war_trophy_image_rect, (u32*)image);
             }
             battle_thread_yield();
             if (loaded) {

@@ -9,7 +9,7 @@ void bunit_menu_icon_strip_thread(void) {
     world_menu_icon_record_t records[2];
     s32 input;
     world_menu_entry_t* state;
-    u32* buffer;
+    u8* buffer;
     s32 i;
     s32 fresh;
     world_menu_icon_record_t* record;
@@ -28,7 +28,7 @@ void bunit_menu_icon_strip_thread(void) {
             battle_menu_set_text_origin(8, 9);
             g_menu_text_state.pen.stride = state->inner_width;
             battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.pen);
-            LoadImage(&rect, buffer);
+            LoadImage(&rect, (u32*)buffer);
         }
         battle_thread_yield();
         if (fresh == 1) {

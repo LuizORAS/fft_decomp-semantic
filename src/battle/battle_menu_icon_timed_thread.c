@@ -18,7 +18,7 @@ void battle_menu_icon_timed_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
     world_menu_entry_t* param;
-    void* buffer;
+    u8* buffer;
     s32 i;
     s32 hold;
     world_menu_icon_record_t* record;
@@ -41,7 +41,7 @@ void battle_menu_icon_timed_thread(void) {
     g_menu_text_state.pen.stride = width;
     battle_menu_set_text_origin(pad + 8, 9);
     battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
-    LoadImage(&rect, buffer);
+    LoadImage(&rect, (u32*)buffer);
     for (;; i++) {
         battle_thread_yield();
         if (i == 0) {

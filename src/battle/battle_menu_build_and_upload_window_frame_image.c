@@ -4,14 +4,14 @@
 
 /* Builds a tiled window-frame image and optionally uploads it. Mode 2 may use
  * the fixed UI buffer at g_main_heap_companion_overlay_load_address + 0x8000. */
-void* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode) {
+u8* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode) {
     RECT upload;
     s32 first;
     s32 words;
     s32 has_partial_word;
     s32 size;
     u16* src;
-    u16* buffer;
+    u8* buffer;
     s32 i;
     s32 src_index;
     u16* row;
@@ -32,7 +32,7 @@ void* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, REC
     if (size > 0x3000 && mode == MENU_WINDOW_FRAME_UPLOAD) {
         buffer = battle_menu_alloc_memory(0x3000);
     } else if (mode == MENU_WINDOW_FRAME_ALTERNATE_UPLOAD && g_battle_menu_scroll_list_depth == 2) {
-        buffer = (u16*)(g_main_heap_companion_overlay_load_address + 0x8000);
+        buffer = g_main_heap_companion_overlay_load_address + 0x8000;
     } else {
         buffer = battle_menu_alloc_memory(size);
     }
@@ -70,7 +70,7 @@ void* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, REC
                 }
             }
         }
-        row = buffer + (i - first) * words;
+        row = (u16*)(buffer + (i - first) * words * sizeof(u16));
         row[words - 1] = src[src_index + 9];
         row[words - 2] = src[src_index + 8];
         battle_menu_build_window_image_row(src, row, words, src_index);

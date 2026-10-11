@@ -13,7 +13,7 @@ void battle_menu_run_icon_selection_loop(void) {
     world_menu_icon_record_t records[2];
     s32 cursor;
     world_menu_entry_t* param;
-    void* buffer;
+    u8* buffer;
     s32 i;
     world_menu_icon_record_t* record;
 
@@ -31,7 +31,7 @@ void battle_menu_run_icon_selection_loop(void) {
     battle_menu_set_text_origin(8, 9);
     g_battle_menu_text_palette_offset = 0;
     battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
-    LoadImage(&rect, buffer);
+    LoadImage(&rect, (u32*)buffer);
     for (i = 0;; i++) {
         battle_thread_yield();
         if (i == 0) {

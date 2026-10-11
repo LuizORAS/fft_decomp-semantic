@@ -23,7 +23,7 @@ void option_run_option_choice_menu(void) {
     s32 height;
     world_menu_entry_t* param;
     s32 width;
-    u32* buffer;
+    u8* buffer;
     s32 i;
     s32 cursor;
     world_menu_icon_record_t* record;
@@ -66,7 +66,7 @@ void option_run_option_choice_menu(void) {
     param->text_image.width -= 4;
     battle_menu_build_window_sprites(&rect, param, &g_option_picker_icon_records[0]);
     battle_copy_bytes(&g_option_picker_icon_records[1], &g_option_picker_icon_records[0], sizeof(*record));
-    LoadImage(&rect, buffer);
+    LoadImage(&rect, (u32*)buffer);
     battle_menu_free_memory(buffer);
     battle_thread_wait_frames(1);
     cursor = g_option_current_values[kind];

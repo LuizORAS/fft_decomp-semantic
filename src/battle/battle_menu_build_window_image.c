@@ -15,11 +15,12 @@
  * is freed and the result is whatever battle_menu_free_memory left in $v0;
  * the target has no return value on that path. `i` is reused for the thread
  * flag because a separate local swaps the $s0/$s1 allocation. */
-void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep) {
+u8* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep) {
     u16 kind = mode & DIALOG_TYPE_OPTIONS_MASK;
     s32 words;
     s32 partial;
     s32 byte_count;
+    /* Halfword row indexing preserves the original loop induction. */
     u16* buf;
     u16* src;
     s32 x_off;
@@ -89,14 +90,14 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
         if (width - 0x10 < g_battle_menu_window_sprite_position.rect.x) {
             g_battle_menu_window_sprite_position.rect.x = width - 0x10;
         }
-        blit_text_glyph(g_battle_menu_glyph_image->pixels, buf, &g_battle_menu_window_sprite_glyph,
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, (u8*)buf, &g_battle_menu_window_sprite_glyph,
             &g_battle_menu_window_sprite_position);
         if (i != 0) {
             battle_text_mirror_packed_nibble_region_horizontal((u8*)buf, &g_battle_menu_window_sprite_position);
         }
     }
     if (keep != 0) {
-        return buf;
+        return (u8*)buf;
     }
     LoadImage(rect, (u32*)buf);
     battle_thread_wait_frames(1);

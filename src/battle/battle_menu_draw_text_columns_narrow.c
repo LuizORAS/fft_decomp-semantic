@@ -5,8 +5,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-extern void battle_menu_draw_stacked_glyph_pair(void* buffer, glyph_blit_t* origin);
-
 /* Draw the visible rows of a three-column menu text layout (text 8 pixels
  * narrower than the entry). Text columns append text 0x5088 for rows whose
  * skill flag bit 0 is set while the current thread's fourth word is non-zero;
