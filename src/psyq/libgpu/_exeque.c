@@ -3,7 +3,8 @@
 
 /* LIBGPU, retail 0x8002675c-0x80026a58. DMA callback processes queued operations and completion. */
 int _exeque(void) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view changes the native
+                                                                      completion-store and callback-load sequence. */
     if (*g_psyq_gpu_dma_chcr & PSYQ_GPU_DMA_BUSY)
         return 1;
     g_psyq_gpu_queue_interrupt_mask = SetIntrMask(0);

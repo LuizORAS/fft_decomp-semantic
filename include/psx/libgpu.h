@@ -862,7 +862,7 @@ extern psyq_gpu_move_packet_t g_psyq_gpu_move_packet;
 u32 get_mode(int dfe, int dtd, int tpage);
 u32 get_cs(s16 x, s16 y);
 u32 get_ce(s16 x, s16 y);
-u32 get_ofs(int x, int y);
+u32 get_ofs(s16 x, s16 y);
 u32 get_tw(RECT* rect);
 int get_dx(RECT* rect);
 int get_alarm(void);

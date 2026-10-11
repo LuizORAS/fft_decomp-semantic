@@ -2,7 +2,8 @@
 
 /* LIBGPU, retail 0x80025524-0x800257c8. Builds environment and optional background commands. */
 void SetDrawEnv(DR_ENV* dr_env, DRAWENV* env) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view removes native halfword
+                                                                      normalization in the bounds clamps. */
     /* Component packing replaces the retail GPU word loads with halfword loads. */
     RECT rectangle;
     int index;

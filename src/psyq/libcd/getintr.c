@@ -3,9 +3,9 @@
 #include "psx/libcd.h"
 #include "psx/libetc.h"
 
-static __inline__ void cd_copy_result(void* destination, void* source, u32 size) {
+static __inline__ void cd_copy_result(u8* destination, const volatile u8* source, u32 size) {
     u8* output = destination;
-    u8* input = source;
+    const volatile u8* input = source;
     if (!output)
         return;
     while (size--)
@@ -15,7 +15,7 @@ static __inline__ void cd_copy_result(void* destination, void* source, u32 size)
 s32 getintr(void) {
     /* Volatile keeps the stack interrupt byte and separate status-mask calculation. */
     volatile u8 interrupt;
-    volatile char response[8];
+    volatile u8 response[8];
     s32 length;
     s32 error_flags = 0;
     *g_psyq_cd_index_status_register = 1;
@@ -55,38 +55,38 @@ s32 getintr(void) {
     case CdlAcknowledge:
         if (error_flags) {
             g_psyq_cd_irq_state.sync = CdlDiskError;
-            cd_copy_result(g_psyq_cd_sync_result, (void*)response, 8);
+            cd_copy_result(g_psyq_cd_sync_result, response, 8);
             return 2;
         }
         if (g_psyq_cd_command_waits_for_complete[g_psyq_cd_last_command]) {
             g_psyq_cd_irq_state.sync = CdlAcknowledge;
-            cd_copy_result(g_psyq_cd_sync_result, (void*)response, 8);
+            cd_copy_result(g_psyq_cd_sync_result, response, 8);
             return 1;
         }
         g_psyq_cd_irq_state.sync = CdlComplete;
-        cd_copy_result(g_psyq_cd_sync_result, (void*)response, 8);
+        cd_copy_result(g_psyq_cd_sync_result, response, 8);
         return 2;
     case CdlComplete:
         g_psyq_cd_irq_state.sync = error_flags ? CdlDiskError : CdlComplete;
-        cd_copy_result(g_psyq_cd_sync_result, (void*)response, 8);
+        cd_copy_result(g_psyq_cd_sync_result, response, 8);
         return 2;
     case CdlDataReady:
         if (error_flags && length == 1)
             error_flags = 0;
         g_psyq_cd_irq_state.ready = error_flags ? CdlDiskError : CdlDataReady;
-        cd_copy_result(g_psyq_cd_ready_result, (void*)response, 8);
+        cd_copy_result(g_psyq_cd_ready_result, response, 8);
         *g_psyq_cd_index_status_register = 0;
         *g_psyq_cd_request_interrupt_register = 0;
         return 4;
     case CdlDataEnd:
         g_psyq_cd_irq_state.ready = g_psyq_cd_irq_state.second_ready = CdlDataEnd;
-        cd_copy_result(g_psyq_cd_second_ready_result, (void*)response, 8);
-        cd_copy_result(g_psyq_cd_ready_result, (void*)response, 8);
+        cd_copy_result(g_psyq_cd_second_ready_result, response, 8);
+        cd_copy_result(g_psyq_cd_ready_result, response, 8);
         return 4;
     case CdlDiskError:
         g_psyq_cd_irq_state.sync = g_psyq_cd_irq_state.ready = CdlDiskError;
-        cd_copy_result(g_psyq_cd_sync_result, (void*)response, 8);
-        cd_copy_result(g_psyq_cd_ready_result, (void*)response, 8);
+        cd_copy_result(g_psyq_cd_sync_result, response, 8);
+        cd_copy_result(g_psyq_cd_ready_result, response, 8);
         return 6;
     default:
         puts(g_psyq_cd_unknown_interrupt_message);

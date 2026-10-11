@@ -2,7 +2,8 @@
 #include "psx/libgpu.h"
 
 DISPENV* PutDispEnv(DISPENV* env) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view folds the native halfword
+                                                                      address and conversion sequences. */
     int h_start;
     int v_start;
     int h_end;

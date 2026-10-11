@@ -2,7 +2,8 @@
 
 /* LIBGPU, retail 0x80025c44-0x80025e5c. Selects fill or tile clearing and restores drawing state. */
 int _clr(RECT* rect, u32 color) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view removes native halfword
+                                                                      normalization in the bounds clamps. */
     limitRange(rect->w, 0, g_psyq_gpu_environment.vram_width - 1);
     limitRange(rect->h, 0, g_psyq_gpu_environment.vram_height - 1);
     if ((rect->x & 63) || (rect->w & 63)) {

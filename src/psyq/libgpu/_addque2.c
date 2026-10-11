@@ -3,7 +3,8 @@
 
 /* LIBGPU, retail 0x80026478-0x8002675c. Immediate or copied/deferred GPU queue operation. */
 int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 argument) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    extern volatile psyq_gpu_environment_t
+        g_psyq_gpu_environment; /* An unqualified RAM view folds the native queue-state address sequence. */
     int i;
     set_alarm();
     while (((g_psyq_gpu_queue_head + 1) & 63) == g_psyq_gpu_queue_tail) {

@@ -2,7 +2,8 @@
 #include "psx/libgpu.h"
 
 u32 get_mode(int dfe, int dtd, int tpage) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    extern volatile psyq_gpu_environment_t
+        g_psyq_gpu_environment; /* An unqualified RAM view folds the native ADDIU/LBU address sequence. */
     if (g_psyq_gpu_environment.graph_type == 1 || g_psyq_gpu_environment.graph_type == 2)
         return PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE) | (dtd ? 0x800 : 0) | (dfe ? 0x1000 : 0)
             | (tpage & 0x27ff);

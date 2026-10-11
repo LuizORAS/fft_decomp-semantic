@@ -2,7 +2,8 @@
 
 /* LIBGPU, retail 0x800260b0-0x8002634c. Halfword-pixel transfer with CPU remainder and 16-word DMA blocks. */
 int _drs(RECT* rect, u32* data) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view removes native halfword
+                                                                      normalization in the bounds clamps. */
     int size;
     int blocks;
     int rest;

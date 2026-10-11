@@ -2,7 +2,8 @@
 #include "psx/libgpu.h"
 
 int get_dx(RECT* rect) {
-    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    extern volatile psyq_gpu_environment_t
+        g_psyq_gpu_environment; /* An unqualified RAM view folds the native graph-type address sequence. */
     switch (g_psyq_gpu_environment.graph_type) {
     case 1:
         return g_psyq_gpu_environment.reversed ? 1024 - rect->x - rect->w : rect->x;
