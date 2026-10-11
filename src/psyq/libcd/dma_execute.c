@@ -14,7 +14,7 @@ enum {
 #define CD_DMA_CHANNELS ((volatile psyq_dma_channel_t*)0x1f801080)
 void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 control, u8 enable_irq, s32 unused) {
     s32 polls = 0;
-    /* Retail stores both register readbacks in a volatile local. */
+    /* Volatile retains the native stack stores of both register readbacks. */
     volatile u32 observed_register;
     volatile u32* dma;
     u8 enabled;

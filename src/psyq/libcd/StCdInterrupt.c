@@ -3,7 +3,7 @@
 
 /* Signed status stores retain native pointer reloads and store scheduling. */
 void StCdInterrupt(void) {
-    /* Retail stores both response bytes in a volatile halfword array and reloads the first. */
+    /* Volatile preserves the native halfword stack stores and first-response reload. */
     volatile u16 response_status[3];
     CdlLOC sector_position;
     u8 response[8];
