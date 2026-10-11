@@ -16,22 +16,8 @@ void attack_init_deployment_cursor_primitives(void) {
         POLY_FT4* marker = &g_attack_deploy_render_buffers[0].cursor[i][0];
         POLY_FT4* highlight = &g_attack_deploy_render_buffers[0].cursor[i][1];
 
-        marker->u0 = 0x40;
-        marker->v0 = 0x80;
-        marker->u1 = 0x50;
-        marker->v1 = 0x80;
-        marker->u2 = 0x40;
-        marker->v2 = 0x98;
-        marker->u3 = 0x50;
-        marker->v3 = 0x98;
-        highlight->u0 = 0;
-        highlight->v0 = 0xa0;
-        highlight->u1 = 0xe;
-        highlight->v1 = 0xa0;
-        highlight->u2 = 0;
-        highlight->v2 = 0xae;
-        highlight->u3 = 0xe;
-        highlight->v3 = 0xae;
+        setUV4(marker, 0x40, 0x80, 0x50, 0x80, 0x40, 0x98, 0x50, 0x98);
+        setUV4(highlight, 0, 0xa0, 0xe, 0xa0, 0, 0xae, 0xe, 0xae);
         SetSemiTrans(marker, 1);
         SetSemiTrans(highlight, 1);
         g_attack_deploy_render_buffers[0].cursor[i][0].tpage = GetTPage(0, 2, 0x3c0, 0x100);

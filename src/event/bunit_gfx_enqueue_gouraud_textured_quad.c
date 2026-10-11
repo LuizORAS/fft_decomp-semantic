@@ -14,23 +14,11 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
 
     SetSemiTrans(poly, semitrans);
 
-    poly->x0 = rect->x + 0x80;
-    poly->y0 = rect->y;
-    poly->x1 = (rect->x + 0x80) + rect->w;
-    poly->y1 = rect->y;
-    poly->x2 = rect->x + 0x80;
-    poly->y2 = rect->y + rect->h;
-    poly->x3 = (rect->x + 0x80) + rect->w;
-    poly->y3 = rect->y + rect->h;
+    setXY4(poly, rect->x + 0x80, rect->y, (rect->x + 0x80) + rect->w, rect->y, rect->x + 0x80, rect->y + rect->h,
+        (rect->x + 0x80) + rect->w, rect->y + rect->h);
 
-    poly->u0 = rect->u;
-    poly->v0 = rect->v;
-    poly->u1 = rect->u + rect->w;
-    poly->v1 = rect->v;
-    poly->u2 = rect->u;
-    poly->v2 = rect->v + rect->h;
-    poly->u3 = rect->u + rect->w;
-    poly->v3 = rect->v + rect->h;
+    setUV4(poly, rect->u, rect->v, rect->u + rect->w, rect->v, rect->u, rect->v + rect->h, rect->u + rect->w,
+        rect->v + rect->h);
 
     setRGB0(poly, color[0].r, color[0].g, color[0].b);
     setRGB1(poly, color[1].r, color[1].g, color[1].b);

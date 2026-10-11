@@ -79,14 +79,9 @@ void etc_graphic_build_game_over_polygons(
                     primitive->v1 = ROW->v + fade + clip;
                     primitive->u3 = ROW->u;
                     primitive->v3 = ROW->v + fade + clip;
-                    primitive->x0 = ROW->y + fade_x;
-                    primitive->y0 = ROW->x + 0x80;
-                    primitive->x1 = ROW->y + fade_x + clip;
-                    primitive->y1 = ROW->x + 0x80;
-                    primitive->x2 = ROW->y + fade_x;
-                    primitive->y2 = ROW->x + (ROW->width + 0x80U);
-                    primitive->x3 = ROW->y + fade_x + clip;
-                    primitive->y3 = ROW->x + (ROW->width + 0x80U);
+                    setXY4(primitive, ROW->y + fade_x, ROW->x + 0x80, ROW->y + fade_x + clip, ROW->x + 0x80,
+                        ROW->y + fade_x, ROW->x + (ROW->width + 0x80U), ROW->y + fade_x + clip,
+                        ROW->x + (ROW->width + 0x80U));
                     setRGB0(primitive, color, color, color);
                     setRGB1(primitive, 0, 0, 0);
                     setRGB2(primitive, color, color, color);

@@ -22,14 +22,7 @@ void jobstts_gfx_enqueue_oriented_textured_quad(
 
     switch (quad_orientation & 0xff) {
     case TEXTURE_UV_FLIP_NONE:
-        poly->u0 = uv->u;
-        poly->v0 = uv->v;
-        poly->u1 = uv->u + uv->w;
-        poly->v1 = uv->v;
-        poly->u2 = uv->u;
-        poly->v2 = uv->v + uv->h;
-        poly->u3 = uv->u + uv->w;
-        poly->v3 = uv->v + uv->h;
+        setUV4(poly, uv->u, uv->v, uv->u + uv->w, uv->v, uv->u, uv->v + uv->h, uv->u + uv->w, uv->v + uv->h);
         break;
     case TEXTURE_UV_FLIP_X:
         poly->u1 = uv->u;

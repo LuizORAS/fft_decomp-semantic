@@ -43,21 +43,7 @@ void attack_update_deployment_cursor_primitives(s32 frame, attack_deploy_render_
             - i * 3;
         top = y + offset;
 
-        buffer->cursor[i][0].x0 = x - 8;
-        buffer->cursor[i][0].y0 = top;
-        buffer->cursor[i][0].x1 = x + 8;
-        buffer->cursor[i][0].y1 = top;
-        buffer->cursor[i][0].x2 = x - 8;
-        buffer->cursor[i][0].y2 = top + 0x18;
-        buffer->cursor[i][0].x3 = x + 8;
-        buffer->cursor[i][0].y3 = top + 0x18;
-        buffer->cursor[i][1].x0 = x;
-        buffer->cursor[i][1].y0 = y - 10;
-        buffer->cursor[i][1].x1 = x + 20;
-        buffer->cursor[i][1].y1 = y;
-        buffer->cursor[i][1].x2 = x - 20;
-        buffer->cursor[i][1].y2 = y;
-        buffer->cursor[i][1].x3 = x;
-        buffer->cursor[i][1].y3 = y + 10;
+        setXY4(&buffer->cursor[i][0], x - 8, top, x + 8, top, x - 8, top + 0x18, x + 8, top + 0x18);
+        setXY4(&buffer->cursor[i][1], x, y - 10, x + 20, y, x - 20, y, x, y + 10);
     }
 }

@@ -44,20 +44,9 @@ void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point
         height = -height;
 
     poly->tpage = GetTPage(1, 0, texture->x, texture->y & 0xf00);
-    poly->u0 = uv_rect->u;
-    poly->v0 = uv_rect->v;
-    poly->u1 = uv_rect->u + uv_rect->width;
-    poly->v1 = uv_rect->v;
-    poly->u2 = uv_rect->u;
-    poly->v2 = uv_rect->v + uv_rect->height;
-    poly->u3 = uv_rect->u + uv_rect->width;
-    poly->v3 = uv_rect->v + uv_rect->height;
-    poly->x0 = position->x + xoff + offset->x;
-    poly->y0 = position->y + yoff + offset->y;
-    poly->x1 = position->x + xoff + offset->x + width;
-    poly->y1 = position->y + yoff + offset->y;
-    poly->x2 = position->x + xoff + offset->x;
-    poly->y2 = position->y + yoff + offset->y + height;
-    poly->x3 = position->x + xoff + offset->x + width;
-    poly->y3 = position->y + yoff + offset->y + height;
+    setUV4(poly, uv_rect->u, uv_rect->v, uv_rect->u + uv_rect->width, uv_rect->v, uv_rect->u,
+        uv_rect->v + uv_rect->height, uv_rect->u + uv_rect->width, uv_rect->v + uv_rect->height);
+    setXY4(poly, position->x + xoff + offset->x, position->y + yoff + offset->y, position->x + xoff + offset->x + width,
+        position->y + yoff + offset->y, position->x + xoff + offset->x, position->y + yoff + offset->y + height,
+        position->x + xoff + offset->x + width, position->y + yoff + offset->y + height);
 }

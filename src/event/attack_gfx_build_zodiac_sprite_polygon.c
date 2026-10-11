@@ -51,24 +51,14 @@ void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_p
     }
 
     poly->tpage = GetTPage(1, 0, texture_page->x, texture_page->y & 0xF00);
-    poly->u0 = sprite_rect->u;
-    poly->v0 = sprite_rect->v;
-    poly->u1 = sprite_rect->u + sprite_rect->width;
-    poly->v1 = sprite_rect->v;
-    poly->u2 = sprite_rect->u;
-    poly->v2 = sprite_rect->v + sprite_rect->height;
-    poly->u3 = sprite_rect->u + sprite_rect->width;
-    poly->v3 = sprite_rect->v + sprite_rect->height;
+    setUV4(poly, sprite_rect->u, sprite_rect->v, sprite_rect->u + sprite_rect->width, sprite_rect->v, sprite_rect->u,
+        sprite_rect->v + sprite_rect->height, sprite_rect->u + sprite_rect->width,
+        sprite_rect->v + sprite_rect->height);
 
     x1 = w + 0x100;
     y1 = h + 0x78;
 
-    poly->x0 = position->x + ox + offset->x + 0x100;
-    poly->y0 = position->y + oy + offset->y + 0x78;
-    poly->x1 = position->x + ox + offset->x + x1;
-    poly->y1 = position->y + oy + offset->y + 0x78;
-    poly->x2 = position->x + ox + offset->x + 0x100;
-    poly->y2 = position->y + oy + offset->y + y1;
-    poly->x3 = position->x + ox + offset->x + x1;
-    poly->y3 = position->y + oy + offset->y + y1;
+    setXY4(poly, position->x + ox + offset->x + 0x100, position->y + oy + offset->y + 0x78,
+        position->x + ox + offset->x + x1, position->y + oy + offset->y + 0x78, position->x + ox + offset->x + 0x100,
+        position->y + oy + offset->y + y1, position->x + ox + offset->x + x1, position->y + oy + offset->y + y1);
 }

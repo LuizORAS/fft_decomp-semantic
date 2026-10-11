@@ -41,13 +41,6 @@ void debugchr_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_F
     setRGB0(poly, 8, 8, 8);
     SetSemiTrans(poly, 1);
     SetShadeTex(poly, 0);
-    poly->x0 = 0;
-    poly->y0 = 0;
-    poly->x1 = 0xff;
-    poly->y1 = 0;
-    poly->x2 = 0;
-    poly->y2 = 0xff;
-    poly->x3 = 0xff;
-    poly->y3 = 0xff;
+    setXY4(poly, 0, 0, 0xff, 0, 0, 0xff, 0xff, 0xff);
     addPrim(context->ot, poly);
 }

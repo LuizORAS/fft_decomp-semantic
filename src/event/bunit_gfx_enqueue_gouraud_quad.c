@@ -12,14 +12,8 @@ void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, rgb24_t* color, s32 s
 
     poly = &g_bunit_gfx_context->gouraud_quads[g_bunit_gfx_poly_g4_count++];
     SetSemiTrans(poly, semi);
-    poly->x0 = pts[0].x + 0x80;
-    poly->y0 = pts[0].y;
-    poly->x1 = pts[1].x + 0x80;
-    poly->y1 = pts[1].y;
-    poly->x2 = pts[2].x + 0x80;
-    poly->y2 = pts[2].y;
-    poly->x3 = pts[3].x + 0x80;
-    poly->y3 = pts[3].y;
+    setXY4(poly, pts[0].x + 0x80, pts[0].y, pts[1].x + 0x80, pts[1].y, pts[2].x + 0x80, pts[2].y, pts[3].x + 0x80,
+        pts[3].y);
     setRGB0(poly, color[0].r, color[0].g, color[0].b);
     setRGB1(poly, color[1].r, color[1].g, color[1].b);
     setRGB2(poly, color[2].r, color[2].g, color[2].b);

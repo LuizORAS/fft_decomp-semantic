@@ -76,23 +76,9 @@ void require_render_gil_reward_ticker(void) {
             g_require_reward_money_next_digit_polys[buffer][j].clut
                 = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
             pd = (POLY_FT4*)((s32)g_require_reward_money_digit_polys + (j * 0x28 + buffer * 0xf0));
-            pd->x0 = X0;
-            pd->y0 = 0x80;
-            pd->x1 = X0 + 13;
-            pd->y1 = 0x80;
-            pd->x2 = X0;
-            pd->y2 = 0x97;
-            pd->x3 = X0 + 13;
-            pd->y3 = 0x97;
+            setXY4(pd, X0, 0x80, X0 + 13, 0x80, X0, 0x97, X0 + 13, 0x97);
             pn = (POLY_FT4*)((s32)g_require_reward_money_next_digit_polys + (j * 0x28 + buffer * 0xf0));
-            pn->x0 = X0;
-            pn->y0 = 0x69;
-            pn->x1 = X0 + 13;
-            pn->y1 = 0x69;
-            pn->x2 = X0;
-            pn->y2 = 0x80;
-            pn->x3 = X0 + 13;
-            pn->y3 = 0x80;
+            setXY4(pn, X0, 0x69, X0 + 13, 0x69, X0, 0x80, X0 + 13, 0x80);
             if (j >= 3) {
                 g_require_reward_money_digit_polys[buffer][j].x0 -= 8;
                 g_require_reward_money_next_digit_polys[buffer][j].x0 -= 8;
@@ -107,43 +93,20 @@ void require_render_gil_reward_ticker(void) {
 
         comma_poly = &g_require_reward_money_comma_polys[i];
         battle_gfx_init_default_poly_ft4(comma_poly);
-        comma_poly->x0 = g_require_reward_money_digit_polys[0][2].x0 - 10;
-        comma_poly->y0 = 0x8f;
-        comma_poly->x1 = g_require_reward_money_digit_polys[0][2].x0 - 4;
-        comma_poly->y1 = 0x8f;
-        comma_poly->x2 = g_require_reward_money_digit_polys[0][2].x0 - 10;
-        comma_poly->y2 = 0x99;
-        comma_poly->x3 = g_require_reward_money_digit_polys[0][2].x0 - 4;
-        comma_poly->y3 = 0x99;
-        comma_poly->u0 = 0x82;
-        comma_poly->v0 = 0x40;
-        comma_poly->u1 = 0x88;
-        comma_poly->v1 = 0x40;
-        comma_poly->u2 = 0x82;
-        comma_poly->v2 = 0x4a;
-        comma_poly->u3 = 0x88;
-        comma_poly->v3 = 0x4a;
+        setXY4(comma_poly, g_require_reward_money_digit_polys[0][2].x0 - 10, 0x8f,
+            g_require_reward_money_digit_polys[0][2].x0 - 4, 0x8f, g_require_reward_money_digit_polys[0][2].x0 - 10,
+            0x99, g_require_reward_money_digit_polys[0][2].x0 - 4, 0x99);
+        setUV4(comma_poly, 0x82, 0x40, 0x88, 0x40, 0x82, 0x4a, 0x88, 0x4a);
         g_require_reward_money_comma_polys[i].tpage = getTPage(0, 0, 384, 0);
         g_require_reward_money_comma_polys[i].clut
             = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
         sign_poly = &g_require_reward_money_sign_polys[i];
         battle_gfx_init_default_poly_ft4(sign_poly);
-        sign_poly->x0 = g_require_reward_money_digit_polys[0][0].x0 + 0x11;
-        sign_poly->y0 = 0x80;
-        sign_poly->x1 = g_require_reward_money_digit_polys[0][0].x0 + 0x31;
-        sign_poly->y1 = 0x80;
-        sign_poly->x2 = g_require_reward_money_digit_polys[0][0].x0 + 0x11;
-        sign_poly->y2 = 0x97;
-        sign_poly->x3 = g_require_reward_money_digit_polys[0][0].x0 + 0x31;
-        sign_poly->y3 = 0x97;
-        sign_poly->u0 = 0x88;
-        sign_poly->v0 = 0x32;
-        sign_poly->u1 = 0xa8;
-        sign_poly->v1 = 0x32;
-        sign_poly->u2 = 0x88;
-        sign_poly->v2 = 0x49;
-        sign_poly->u3 = 0xa8;
-        sign_poly->v3 = 0x49;
+        setXY4(sign_poly, g_require_reward_money_digit_polys[0][0].x0 + 0x11, 0x80,
+            g_require_reward_money_digit_polys[0][0].x0 + 0x31, 0x80,
+            g_require_reward_money_digit_polys[0][0].x0 + 0x11, 0x97,
+            g_require_reward_money_digit_polys[0][0].x0 + 0x31, 0x97);
+        setUV4(sign_poly, 0x88, 0x32, 0xa8, 0x32, 0x88, 0x49, 0xa8, 0x49);
         g_require_reward_money_sign_polys[i].tpage = getTPage(0, 0, 384, 0);
         g_require_reward_money_sign_polys[i].clut
             = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
@@ -174,41 +137,25 @@ void require_render_gil_reward_ticker(void) {
                 off = j * 0x28 + buffer * 0xf0;
                 x = g_require_reward_money_digit_polys[buffer][j].x0;
                 pd = (POLY_FT4*)((s32)g_require_reward_money_digit_polys + off);
-                pd->x0 = x;
-                pd->y0 = ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x80;
-                pd->x1 = x + 13;
-                pd->y1 = ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x80;
-                pd->x2 = x;
-                pd->y2 = ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x97;
-                pd->x3 = x + 13;
-                pd->y3 = ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x97;
-                pd->u0 = (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13;
-                pd->v0 = 0x32;
-                pd->u1 = (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13 + 13;
-                pd->v1 = 0x32;
-                pd->u2 = (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13;
-                pd->v2 = 0x49;
-                pd->u3 = (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13 + 13;
-                pd->v3 = 0x49;
+                setXY4(pd, x, ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x80, x + 13,
+                    ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x80, x,
+                    ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x97, x + 13,
+                    ((g_require_reward_money_digit_positions[j] >> 8) & 0x1f) + 0x97);
+                setUV4(pd, (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13, 0x32,
+                    (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13 + 13, 0x32,
+                    (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13, 0x49,
+                    (g_require_reward_money_digit_positions[j] >> 13) % 10 * 13 + 13, 0x49);
                 x = g_require_reward_money_next_digit_polys[buffer][j].x0;
                 off = j * 0x28 + buffer * 0xf0;
                 pn = (POLY_FT4*)((s32)g_require_reward_money_next_digit_polys + off);
-                pn->x0 = x;
-                pn->y0 = g_require_reward_money_digit_polys[buffer][j].y0 - 0x20;
-                pn->x1 = x + 13;
-                pn->y1 = g_require_reward_money_digit_polys[buffer][j].y0 - 0x20;
-                pn->x2 = x;
-                pn->y2 = g_require_reward_money_digit_polys[buffer][j].y0 - 9;
-                pn->x3 = x + 13;
-                pn->y3 = g_require_reward_money_digit_polys[buffer][j].y0 - 9;
-                pn->u0 = ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13;
-                pn->v0 = 0x32;
-                pn->u1 = ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13 + 13;
-                pn->v1 = 0x32;
-                pn->u2 = ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13;
-                pn->v2 = 0x49;
-                pn->u3 = ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13 + 13;
-                pn->v3 = 0x49;
+                setXY4(pn, x, g_require_reward_money_digit_polys[buffer][j].y0 - 0x20, x + 13,
+                    g_require_reward_money_digit_polys[buffer][j].y0 - 0x20, x,
+                    g_require_reward_money_digit_polys[buffer][j].y0 - 9, x + 13,
+                    g_require_reward_money_digit_polys[buffer][j].y0 - 9);
+                setUV4(pn, ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13, 0x32,
+                    ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13 + 13, 0x32,
+                    ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13, 0x49,
+                    ((g_require_reward_money_digit_positions[j] >> 13) + 1) % 10 * 13 + 13, 0x49);
                 if (j * 32 + (digits - 1) * 16 < tick) {
                     if (((g_require_reward_money_digit_positions[j] >> 13) + 6) % 10
                         == g_require_reward_money_digit_targets[j]) {
@@ -273,22 +220,10 @@ skipped:
 
             x = g_require_reward_money_digit_polys[buffer][j].x0;
             digit_quad = (POLY_FT4*)((s32)g_require_reward_money_digit_polys + (j * 0x28 + buffer * 0xf0));
-            digit_quad->x0 = x;
-            digit_quad->y0 = 0x80;
-            digit_quad->x1 = x + 13;
-            digit_quad->y1 = 0x80;
-            digit_quad->x2 = x;
-            digit_quad->y2 = 0x97;
-            digit_quad->x3 = x + 13;
-            digit_quad->y3 = 0x97;
-            digit_quad->u0 = g_require_reward_money_digit_targets[j] * 13;
-            digit_quad->v0 = 0x32;
-            digit_quad->u1 = g_require_reward_money_digit_targets[j] * 13 + 13;
-            digit_quad->v1 = 0x32;
-            digit_quad->u2 = g_require_reward_money_digit_targets[j] * 13;
-            digit_quad->v2 = 0x49;
-            digit_quad->u3 = g_require_reward_money_digit_targets[j] * 13 + 13;
-            digit_quad->v3 = 0x49;
+            setXY4(digit_quad, x, 0x80, x + 13, 0x80, x, 0x97, x + 13, 0x97);
+            setUV4(digit_quad, g_require_reward_money_digit_targets[j] * 13, 0x32,
+                g_require_reward_money_digit_targets[j] * 13 + 13, 0x32, g_require_reward_money_digit_targets[j] * 13,
+                0x49, g_require_reward_money_digit_targets[j] * 13 + 13, 0x49);
             battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_digit_polys[buffer][j]);
         }
         battle_gfx_draw_or_append_gpu_primitive(&areas[buffer]);
@@ -314,22 +249,10 @@ skipped:
 
             x = g_require_reward_money_digit_polys[buffer][j].x0;
             digit_quad = (POLY_FT4*)((s32)g_require_reward_money_digit_polys + (j * 0x28 + buffer * 0xf0));
-            digit_quad->x0 = x;
-            digit_quad->y0 = 0x80;
-            digit_quad->x1 = x + 13;
-            digit_quad->y1 = 0x80;
-            digit_quad->x2 = x;
-            digit_quad->y2 = 0x97;
-            digit_quad->x3 = x + 13;
-            digit_quad->y3 = 0x97;
-            digit_quad->u0 = g_require_reward_money_digit_targets[j] * 13;
-            digit_quad->v0 = 0x32;
-            digit_quad->u1 = g_require_reward_money_digit_targets[j] * 13 + 13;
-            digit_quad->v1 = 0x32;
-            digit_quad->u2 = g_require_reward_money_digit_targets[j] * 13;
-            digit_quad->v2 = 0x49;
-            digit_quad->u3 = g_require_reward_money_digit_targets[j] * 13 + 13;
-            digit_quad->v3 = 0x49;
+            setXY4(digit_quad, x, 0x80, x + 13, 0x80, x, 0x97, x + 13, 0x97);
+            setUV4(digit_quad, g_require_reward_money_digit_targets[j] * 13, 0x32,
+                g_require_reward_money_digit_targets[j] * 13 + 13, 0x32, g_require_reward_money_digit_targets[j] * 13,
+                0x49, g_require_reward_money_digit_targets[j] * 13 + 13, 0x49);
             setRGB0(digit_quad, pass, pass, pass);
             battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_digit_polys[buffer][j]);
         }

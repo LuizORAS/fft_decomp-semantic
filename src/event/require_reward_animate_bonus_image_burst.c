@@ -205,14 +205,7 @@ void require_reward_animate_bonus_image_burst(void) {
             break;
         }
         SetPolyF4(&g_require_reward_burst_flash_polys[0]);
-        g_require_reward_burst_flash_polys[0].x0 = 0x80;
-        g_require_reward_burst_flash_polys[0].y0 = 0;
-        g_require_reward_burst_flash_polys[0].x1 = 0x180;
-        g_require_reward_burst_flash_polys[0].y1 = 0;
-        g_require_reward_burst_flash_polys[0].x2 = 0x80;
-        g_require_reward_burst_flash_polys[0].y2 = 0x100;
-        g_require_reward_burst_flash_polys[0].x3 = 0x180;
-        g_require_reward_burst_flash_polys[0].y3 = 0x100;
+        setXY4(&g_require_reward_burst_flash_polys[0], 0x80, 0, 0x180, 0, 0x80, 0x100, 0x180, 0x100);
         g_require_reward_burst_flash_polys[0].r0 = 0x30;
         g_require_reward_burst_flash_polys[0].g0 = 0x28;
         g_require_reward_burst_flash_polys[0].b0 = 0x10;

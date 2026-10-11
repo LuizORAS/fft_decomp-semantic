@@ -80,25 +80,13 @@ void bunit_menu_update_and_draw_bouncing_cursor(point16_t* pos, u16* state, s32 
     }
 
     bottom = offset + 0x10;
-    g_bunit_bouncing_cursor_quad.x0 = pos->x;
-    g_bunit_bouncing_cursor_quad.y0 = offset + pos->y;
-    g_bunit_bouncing_cursor_quad.x1 = pos->x + 0x10;
-    g_bunit_bouncing_cursor_quad.y1 = offset + pos->y;
-    g_bunit_bouncing_cursor_quad.x2 = pos->x;
-    g_bunit_bouncing_cursor_quad.y2 = pos->y + bottom;
-    g_bunit_bouncing_cursor_quad.x3 = pos->x + 0x10;
-    g_bunit_bouncing_cursor_quad.y3 = pos->y + bottom;
+    setXY4(&g_bunit_bouncing_cursor_quad, pos->x, offset + pos->y, pos->x + 0x10, offset + pos->y, pos->x,
+        pos->y + bottom, pos->x + 0x10, pos->y + bottom);
     g_bunit_bouncing_cursor_quad.clut = cursor_clut;
     g_bunit_bouncing_cursor_quad.tpage = g_bunit_menu_icon_texture_page;
     bunit_gfx_enqueue_textured_quad_corners(&g_bunit_bouncing_cursor_quad, 0, 0, 0x3C);
-    g_bunit_bouncing_cursor_quad.x0 = pos->x;
-    g_bunit_bouncing_cursor_quad.y0 = offset + pos->y + 2;
-    g_bunit_bouncing_cursor_quad.x1 = pos->x + 0x10;
-    g_bunit_bouncing_cursor_quad.y1 = offset + pos->y + 2;
-    g_bunit_bouncing_cursor_quad.x2 = pos->x;
-    g_bunit_bouncing_cursor_quad.y2 = pos->y + bottom + 2;
-    g_bunit_bouncing_cursor_quad.x3 = pos->x + 0x10;
-    g_bunit_bouncing_cursor_quad.y3 = pos->y + bottom + 2;
+    setXY4(&g_bunit_bouncing_cursor_quad, pos->x, offset + pos->y + 2, pos->x + 0x10, offset + pos->y + 2, pos->x,
+        pos->y + bottom + 2, pos->x + 0x10, pos->y + bottom + 2);
     g_bunit_bouncing_cursor_quad.clut = shadow_clut;
     g_bunit_bouncing_cursor_quad.tpage = 0x5F;
     bunit_gfx_enqueue_textured_quad_corners(&g_bunit_bouncing_cursor_quad, 0, 1, 0x3B);

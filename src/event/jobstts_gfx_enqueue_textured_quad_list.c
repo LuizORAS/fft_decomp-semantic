@@ -19,22 +19,10 @@ void jobstts_gfx_enqueue_textured_quad_list(
         }
         SetSemiTrans(poly, semitrans);
 
-        poly->x0 = sprites->x + 0x80;
-        poly->y0 = sprites->y;
-        poly->x1 = sprites->w + (sprites->x + 0x80);
-        poly->y1 = sprites->y;
-        poly->x2 = sprites->x + 0x80;
-        poly->y2 = sprites->y + sprites->h;
-        poly->x3 = sprites->w + (sprites->x + 0x80);
-        poly->y3 = sprites->y + sprites->h;
-        poly->u0 = sprites->u;
-        poly->v0 = sprites->v;
-        poly->u1 = sprites->u + sprites->w;
-        poly->v1 = sprites->v;
-        poly->u2 = sprites->u;
-        poly->v2 = sprites->v + sprites->h;
-        poly->u3 = sprites->u + sprites->w;
-        poly->v3 = sprites->v + sprites->h;
+        setXY4(poly, sprites->x + 0x80, sprites->y, sprites->w + (sprites->x + 0x80), sprites->y, sprites->x + 0x80,
+            sprites->y + sprites->h, sprites->w + (sprites->x + 0x80), sprites->y + sprites->h);
+        setUV4(poly, sprites->u, sprites->v, sprites->u + sprites->w, sprites->v, sprites->u, sprites->v + sprites->h,
+            sprites->u + sprites->w, sprites->v + sprites->h);
         poly->clut = clut;
         poly->tpage = tpage;
 

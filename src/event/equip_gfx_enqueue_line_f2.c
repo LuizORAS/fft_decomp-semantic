@@ -8,9 +8,6 @@ void equip_gfx_enqueue_line_f2(const RECT* rect, const rgb24_t* color, u8 semitr
     line = &g_equip_gfx_context->lines[g_equip_gfx_line_f2_count++];
     setRGB0(line, color->r, color->g, color->b);
     SetSemiTrans(line, semitrans & 0xff);
-    line->x0 = rect->x + 0x80;
-    line->y0 = rect->y;
-    line->x1 = rect->w + 0x80;
-    line->y1 = rect->h;
+    setXY2(line, rect->x + 0x80, rect->y, rect->w + 0x80, rect->h);
     addPrim(&g_equip_gfx_context->otag[otag_index], line);
 }

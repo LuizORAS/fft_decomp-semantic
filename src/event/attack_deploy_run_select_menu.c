@@ -194,14 +194,7 @@ void attack_deploy_run_select_menu(void) {
             right[buffer].v1 = 0x10;
             right[buffer].v2 = 0;
             right[buffer].v3 = 0x10;
-            left[buffer].x0 = x;
-            left[buffer].y0 = y + bob;
-            left[buffer].x1 = x + 0x10;
-            left[buffer].y1 = y + bob;
-            left[buffer].x2 = x;
-            left[buffer].y2 = y + bob + 0x10;
-            left[buffer].x3 = x + 0x10;
-            left[buffer].y3 = y + bob + 0x10;
+            setXY4(&left[buffer], x, y + bob, x + 0x10, y + bob, x, y + bob + 0x10, x + 0x10, y + bob + 0x10);
             (right + buffer)->x0 = x + 2;
             (right + buffer)->y0 = y + bob + 2;
             (right + buffer)->x1 = x + 0x12;

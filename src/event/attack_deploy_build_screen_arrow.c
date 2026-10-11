@@ -7,22 +7,8 @@ void attack_deploy_build_screen_arrow(void) {
     SetSemiTrans(&g_attack_deploy_screen_arrow.poly, 1);
     SetShadeTex(&g_attack_deploy_screen_arrow.poly, 0);
     setRGB0(&g_attack_deploy_screen_arrow.poly, 0x80, 0x80, 0x80);
-    g_attack_deploy_screen_arrow.poly.x0 = 0xAF;
-    g_attack_deploy_screen_arrow.poly.y0 = 0xB6;
-    g_attack_deploy_screen_arrow.poly.x1 = 0xEF;
-    g_attack_deploy_screen_arrow.poly.y1 = 0xB6;
-    g_attack_deploy_screen_arrow.poly.x2 = 0xAF;
-    g_attack_deploy_screen_arrow.poly.y2 = 0xDE;
-    g_attack_deploy_screen_arrow.poly.x3 = 0xEF;
-    g_attack_deploy_screen_arrow.poly.y3 = 0xDE;
-    g_attack_deploy_screen_arrow.poly.u0 = 0x58;
-    g_attack_deploy_screen_arrow.poly.v0 = 0xB8;
-    g_attack_deploy_screen_arrow.poly.u1 = 0x98;
-    g_attack_deploy_screen_arrow.poly.v1 = 0xB8;
-    g_attack_deploy_screen_arrow.poly.u2 = 0x58;
-    g_attack_deploy_screen_arrow.poly.v2 = 0xE0;
-    g_attack_deploy_screen_arrow.poly.u3 = 0x98;
-    g_attack_deploy_screen_arrow.poly.v3 = 0xE0;
+    setXY4(&g_attack_deploy_screen_arrow.poly, 0xAF, 0xB6, 0xEF, 0xB6, 0xAF, 0xDE, 0xEF, 0xDE);
+    setUV4(&g_attack_deploy_screen_arrow.poly, 0x58, 0xB8, 0x98, 0xB8, 0x58, 0xE0, 0x98, 0xE0);
     g_attack_deploy_screen_arrow.poly.tpage = GetTPage(0, 1, 0x100, 0);
     g_attack_deploy_screen_arrow.poly.clut
         = GetClut(g_attack_deploy_arrow_clut_rect.x, g_attack_deploy_arrow_clut_rect.y);

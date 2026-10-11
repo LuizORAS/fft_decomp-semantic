@@ -24,23 +24,11 @@ void equip_gfx_enqueue_textured_quad_corners(
     }
     SetSemiTrans(poly, quad_semitrans);
 
-    poly->x0 = descriptor->x0 + 0x80;
-    poly->y0 = descriptor->y0;
-    poly->x1 = descriptor->x1 + 0x80;
-    poly->y1 = descriptor->y1;
-    poly->x2 = descriptor->x2 + 0x80;
-    poly->y2 = descriptor->y2;
-    poly->x3 = descriptor->x3 + 0x80;
-    poly->y3 = descriptor->y3;
+    setXY4(poly, descriptor->x0 + 0x80, descriptor->y0, descriptor->x1 + 0x80, descriptor->y1, descriptor->x2 + 0x80,
+        descriptor->y2, descriptor->x3 + 0x80, descriptor->y3);
 
-    poly->u0 = descriptor->u0;
-    poly->v0 = descriptor->v0;
-    poly->u1 = descriptor->u1;
-    poly->v1 = descriptor->v1;
-    poly->u2 = descriptor->u2;
-    poly->v2 = descriptor->v2;
-    poly->u3 = descriptor->u3;
-    poly->v3 = descriptor->v3;
+    setUV4(poly, descriptor->u0, descriptor->v0, descriptor->u1, descriptor->v1, descriptor->u2, descriptor->v2,
+        descriptor->u3, descriptor->v3);
     poly->clut = descriptor->clut;
     poly->tpage = descriptor->tpage;
 

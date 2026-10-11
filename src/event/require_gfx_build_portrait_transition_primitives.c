@@ -22,14 +22,10 @@ void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, 
     second_rect.x += 0x10;
 
     for (i = 0; i < 4; i++) {
-        poly[i].x0 = g_require_gfx_portrait_origin.x + 2;
-        poly[i].y0 = g_require_gfx_portrait_origin.y + 2;
-        poly[i].x1 = g_require_gfx_portrait_origin.x + 0x21;
-        poly[i].y1 = g_require_gfx_portrait_origin.y + 2;
-        poly[i].x2 = g_require_gfx_portrait_origin.x + 2;
-        poly[i].y2 = g_require_gfx_portrait_origin.y + 0x32;
-        poly[i].x3 = g_require_gfx_portrait_origin.x + 0x21;
-        poly[i].y3 = g_require_gfx_portrait_origin.y + 0x32;
+        setXY4(&poly[i], g_require_gfx_portrait_origin.x + 2, g_require_gfx_portrait_origin.y + 2,
+            g_require_gfx_portrait_origin.x + 0x21, g_require_gfx_portrait_origin.y + 2,
+            g_require_gfx_portrait_origin.x + 2, g_require_gfx_portrait_origin.y + 0x32,
+            g_require_gfx_portrait_origin.x + 0x21, g_require_gfx_portrait_origin.y + 0x32);
     }
 
     if (*transition == 0) {

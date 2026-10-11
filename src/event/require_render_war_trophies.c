@@ -128,14 +128,8 @@ void require_render_war_trophies(void) {
                         = require_reward_get_war_trophy_entry_offset(i - start, g_require_reward_war_trophy_entry_count)
                         + 0x10;
                     battle_gfx_set_item_icon_sprite(&sprite, g_require_reward_war_trophy_entry_values[i]);
-                    quad->u0 = sprite.u0;
-                    quad->v0 = sprite.v0;
-                    quad->u1 = sprite.u0 + 0x10;
-                    quad->v1 = sprite.v0;
-                    quad->u2 = sprite.u0;
-                    quad->v2 = sprite.v0 + 0x10;
-                    quad->u3 = sprite.u0 + 0x10;
-                    quad->v3 = sprite.v0 + 0x10;
+                    setUV4(quad, sprite.u0, sprite.v0, sprite.u0 + 0x10, sprite.v0, sprite.u0, sprite.v0 + 0x10,
+                        sprite.u0 + 0x10, sprite.v0 + 0x10);
                     quad->clut = sprite.clut;
                     quad->tpage = GetTPage(0, 0, 0x380, 0x120);
                     battle_gfx_draw_or_append_gpu_primitive(quad);
@@ -160,14 +154,7 @@ void require_render_war_trophies(void) {
                     quad->y3
                         = require_reward_get_war_trophy_entry_offset(i - start, g_require_reward_war_trophy_entry_count)
                         + 0xc;
-                    quad->u0 = 0x76;
-                    quad->v0 = 0x10;
-                    quad->u1 = 0x88;
-                    quad->v1 = 0x10;
-                    quad->u2 = 0x76;
-                    quad->v2 = 0x18;
-                    quad->u3 = 0x88;
-                    quad->v3 = 0x18;
+                    setUV4(quad, 0x76, 0x10, 0x88, 0x10, 0x76, 0x18, 0x88, 0x18);
                     quad->clut = 0x7cbc;
                     quad->tpage = GetTPage(0, 0, 0x3c0, 0x100);
                     battle_gfx_draw_or_append_gpu_primitive(quad);

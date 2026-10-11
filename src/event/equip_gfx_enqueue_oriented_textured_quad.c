@@ -21,25 +21,15 @@ void equip_gfx_enqueue_oriented_textured_quad(
     }
     SetSemiTrans(poly, quad_semitrans);
 
-    poly->x0 = descriptor->position.x + 0x80;
-    poly->y0 = descriptor->position.y;
-    poly->x1 = descriptor->position.x + (descriptor->w + 0x80);
-    poly->y1 = descriptor->position.y;
-    poly->x2 = descriptor->position.x + 0x80;
-    poly->y2 = descriptor->position.y + descriptor->h;
-    poly->x3 = descriptor->position.x + (descriptor->w + 0x80);
-    poly->y3 = descriptor->position.y + descriptor->h;
+    setXY4(poly, descriptor->position.x + 0x80, descriptor->position.y, descriptor->position.x + (descriptor->w + 0x80),
+        descriptor->position.y, descriptor->position.x + 0x80, descriptor->position.y + descriptor->h,
+        descriptor->position.x + (descriptor->w + 0x80), descriptor->position.y + descriptor->h);
 
     switch (quad_orientation & 0xff) {
     case TEXTURE_UV_FLIP_NONE:
-        poly->u0 = descriptor->source.u;
-        poly->v0 = descriptor->source.v;
-        poly->u1 = descriptor->source.u + descriptor->source.w;
-        poly->v1 = descriptor->source.v;
-        poly->u2 = descriptor->source.u;
-        poly->v2 = descriptor->source.v + descriptor->source.h;
-        poly->u3 = descriptor->source.u + descriptor->source.w;
-        poly->v3 = descriptor->source.v + descriptor->source.h;
+        setUV4(poly, descriptor->source.u, descriptor->source.v, descriptor->source.u + descriptor->source.w,
+            descriptor->source.v, descriptor->source.u, descriptor->source.v + descriptor->source.h,
+            descriptor->source.u + descriptor->source.w, descriptor->source.v + descriptor->source.h);
         break;
     case TEXTURE_UV_FLIP_X:
         poly->u1 = descriptor->source.u;

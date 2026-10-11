@@ -48,22 +48,10 @@ void require_render_display_condition_special_cases_thread(void) {
         POLY_GT4* poly
             = &(use_small_array == 0 ? g_require_gfx_poly_gt4_array_32 : g_require_gfx_poly_gt4_array_8)[quad_index];
 
-        poly->u0 = QUAD.u;
-        poly->v0 = QUAD.v;
-        poly->u1 = QUAD.u + QUAD.width;
-        poly->v1 = QUAD.v;
-        poly->u2 = QUAD.u;
-        poly->v2 = QUAD.v + QUAD.height;
-        poly->u3 = QUAD.u + QUAD.width;
-        poly->v3 = QUAD.v + QUAD.height;
-        poly->x0 = QUAD.x + 0x100;
-        poly->y0 = QUAD.y + 0x78;
-        poly->x1 = QUAD.x + 0x100 + QUAD.width;
-        poly->y1 = QUAD.y + 0x78;
-        poly->x2 = QUAD.x + 0x100;
-        poly->y2 = QUAD.y + 0x78 + QUAD.height;
-        poly->x3 = QUAD.x + 0x100 + QUAD.width;
-        poly->y3 = QUAD.y + 0x78 + QUAD.height;
+        setUV4(poly, QUAD.u, QUAD.v, QUAD.u + QUAD.width, QUAD.v, QUAD.u, QUAD.v + QUAD.height, QUAD.u + QUAD.width,
+            QUAD.v + QUAD.height);
+        setXY4(poly, QUAD.x + 0x100, QUAD.y + 0x78, QUAD.x + 0x100 + QUAD.width, QUAD.y + 0x78, QUAD.x + 0x100,
+            QUAD.y + 0x78 + QUAD.height, QUAD.x + 0x100 + QUAD.width, QUAD.y + 0x78 + QUAD.height);
     }
     battle_copy_bytes(g_require_gfx_poly_gt4_buffers[1], g_require_gfx_poly_gt4_buffers, 40 * sizeof(POLY_GT4));
 

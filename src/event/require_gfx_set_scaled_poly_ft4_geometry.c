@@ -25,20 +25,10 @@ void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* t
     }
 
     poly->tpage = GetTPage(0, 0, texture_page->x, texture_page->y & 0xf00);
-    poly->u0 = sprite_rect->u;
-    poly->v0 = sprite_rect->v;
-    poly->u1 = sprite_rect->u + sprite_rect->width;
-    poly->v1 = sprite_rect->v;
-    poly->u2 = sprite_rect->u;
-    poly->v2 = sprite_rect->v + sprite_rect->height;
-    poly->u3 = sprite_rect->u + sprite_rect->width;
-    poly->v3 = sprite_rect->v + sprite_rect->height;
-    poly->x0 = position->x + dx + base->x;
-    poly->y0 = position->y + dy + base->y;
-    poly->x1 = position->x + dx + base->x + w;
-    poly->y1 = position->y + dy + base->y;
-    poly->x2 = position->x + dx + base->x;
-    poly->y2 = position->y + dy + base->y + h;
-    poly->x3 = position->x + dx + base->x + w;
-    poly->y3 = position->y + dy + base->y + h;
+    setUV4(poly, sprite_rect->u, sprite_rect->v, sprite_rect->u + sprite_rect->width, sprite_rect->v, sprite_rect->u,
+        sprite_rect->v + sprite_rect->height, sprite_rect->u + sprite_rect->width,
+        sprite_rect->v + sprite_rect->height);
+    setXY4(poly, position->x + dx + base->x, position->y + dy + base->y, position->x + dx + base->x + w,
+        position->y + dy + base->y, position->x + dx + base->x, position->y + dy + base->y + h,
+        position->x + dx + base->x + w, position->y + dy + base->y + h);
 }

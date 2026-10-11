@@ -21,22 +21,9 @@ void jobstts_gfx_enqueue_textured_quad_corners(
     }
     SetSemiTrans(poly, semitrans);
 
-    poly->x0 = quad->x0 + 0x80;
-    poly->y0 = quad->y0;
-    poly->x1 = quad->x1 + 0x80;
-    poly->y1 = quad->y1;
-    poly->x2 = quad->x2 + 0x80;
-    poly->y2 = quad->y2;
-    poly->x3 = quad->x3 + 0x80;
-    poly->y3 = quad->y3;
-    poly->u0 = quad->u0;
-    poly->v0 = quad->v0;
-    poly->u1 = quad->u1;
-    poly->v1 = quad->v1;
-    poly->u2 = quad->u2;
-    poly->v2 = quad->v2;
-    poly->u3 = quad->u3;
-    poly->v3 = quad->v3;
+    setXY4(poly, quad->x0 + 0x80, quad->y0, quad->x1 + 0x80, quad->y1, quad->x2 + 0x80, quad->y2, quad->x3 + 0x80,
+        quad->y3);
+    setUV4(poly, quad->u0, quad->v0, quad->u1, quad->v1, quad->u2, quad->v2, quad->u3, quad->v3);
     poly->clut = quad->clut;
     poly->tpage = quad->tpage;
 

@@ -20,22 +20,10 @@ void bunit_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads
         }
         SetSemiTrans(poly, semitrans);
 
-        poly->x0 = quads->x + 0x80;
-        poly->y0 = quads->y;
-        poly->x1 = quads->w + (quads->x + 0x80);
-        poly->y1 = quads->y;
-        poly->x2 = quads->x + 0x80;
-        poly->y2 = quads->y + quads->h;
-        poly->x3 = quads->w + (quads->x + 0x80);
-        poly->y3 = quads->y + quads->h;
-        poly->u0 = quads->u;
-        poly->v0 = quads->v;
-        poly->u1 = quads->u + quads->w;
-        poly->v1 = quads->v;
-        poly->u2 = quads->u;
-        poly->v2 = quads->v + quads->h;
-        poly->u3 = quads->u + quads->w;
-        poly->v3 = quads->v + quads->h;
+        setXY4(poly, quads->x + 0x80, quads->y, quads->w + (quads->x + 0x80), quads->y, quads->x + 0x80,
+            quads->y + quads->h, quads->w + (quads->x + 0x80), quads->y + quads->h);
+        setUV4(poly, quads->u, quads->v, quads->u + quads->w, quads->v, quads->u, quads->v + quads->h,
+            quads->u + quads->w, quads->v + quads->h);
         poly->clut = clut;
         poly->tpage = texture_page;
 
