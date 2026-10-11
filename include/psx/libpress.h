@@ -78,7 +78,7 @@ extern volatile u32* g_psyq_press_dma_in_madr;
 extern volatile u32* g_psyq_press_dma_in_bcr;
 extern volatile u32* g_psyq_press_dma_in_chcr;
 extern volatile u32* g_psyq_press_dma_out_madr;
-extern u32* g_psyq_press_dma_out_bcr;
+extern volatile u32* g_psyq_press_dma_out_bcr;
 extern volatile u32* g_psyq_press_dma_out_chcr;
 extern volatile u32* g_psyq_press_dma_dpcr;
 
