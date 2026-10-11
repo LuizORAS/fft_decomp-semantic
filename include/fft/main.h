@@ -894,9 +894,8 @@ typedef enum suzuki_smd_opcode {
  * as a sign (`lh` and `bgez`), and bit 0 there marks the reverb voices as
  * excludable.
  *
- * tempo is tempo byte << 16. It is a union because Scale Tempo (0x80016e14)
- * reads the tempo byte back with `lh 0x7e`, while Tempo, Accelerando and
- * Tempo Ramp use the whole word. */
+ * tempo is a signed 16.16 value. Scale Tempo reads its integer part; Tempo,
+ * Accelerando and Tempo Ramp update the whole word. */
 typedef struct suzuki_music {
     struct suzuki_music* next;     /* 0x00 */
     struct suzuki_music* snapshot; /* 0x04; freed by main_smd_free_snapshots */

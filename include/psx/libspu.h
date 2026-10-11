@@ -55,6 +55,29 @@ typedef enum {
     SPU_COMMON_EXTMIX = 0x2000,
 } psyq_spu_common_attribute_e;
 
+/* SpuVoiceAttr.mask. */
+typedef enum {
+    SPU_VOICE_VOLL = 0x00001,
+    SPU_VOICE_VOLR = 0x00002,
+    SPU_VOICE_VOLMODEL = 0x00004,
+    SPU_VOICE_VOLMODER = 0x00008,
+    SPU_VOICE_PITCH = 0x00010,
+    SPU_VOICE_NOTE = 0x00020,
+    SPU_VOICE_SAMPLE_NOTE = 0x00040,
+    SPU_VOICE_WDSA = 0x00080,
+    SPU_VOICE_ADSR_AMODE = 0x00100,
+    SPU_VOICE_ADSR_SMODE = 0x00200,
+    SPU_VOICE_ADSR_RMODE = 0x00400,
+    SPU_VOICE_ADSR_AR = 0x00800,
+    SPU_VOICE_ADSR_DR = 0x01000,
+    SPU_VOICE_ADSR_SR = 0x02000,
+    SPU_VOICE_ADSR_RR = 0x04000,
+    SPU_VOICE_ADSR_SL = 0x08000,
+    SPU_VOICE_LSAX = 0x10000,
+    SPU_VOICE_ADSR_ADSR1 = 0x20000,
+    SPU_VOICE_ADSR_ADSR2 = 0x40000,
+} psyq_spu_voice_attribute_e;
+
 /* SpuReverbAttr.mask; zero selects every attribute. */
 typedef enum {
     SPU_REV_MODE = 0x01,
