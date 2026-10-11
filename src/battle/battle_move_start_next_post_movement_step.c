@@ -109,7 +109,7 @@ s32 battle_move_start_next_post_movement_step(void) {
         battle_effect_set_secondary_venom_trap(source);
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_TRAP_RESULT, trap, source->battle_data->misc_unit_id, 0, 1);
-        battle_ai_record_considered_coords(casting->map_x, casting->map_z, casting->map_y);
+        battle_ai_record_triggered_trap_coords(casting->map_x, casting->map_z, casting->map_y);
         return 1;
     }
     if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL) {

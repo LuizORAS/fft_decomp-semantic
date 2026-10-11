@@ -1,10 +1,16 @@
 #include "fft/battle.h"
 
+typedef union battle_ai_direction_viability {
+    u32 word;
+    u8 by_direction[BATTLE_AI_CARDINAL_DIRECTION_COUNT];
+} battle_ai_direction_viability_t;
+
+/* Separate locals change the stack slots and coordinate byte stores. */
 typedef struct battle_ai_wait_facing_work {
     battle_ai_coords_t target_coords;
     u8 _unused_04[4];
-    u8 viable_directions[4];
-    /* Read as viable_directions[BATTLE_AI_DIRECTION_OVERLAP] and never
+    battle_ai_direction_viability_t viability;
+    /* Read as viability.by_direction[BATTLE_AI_DIRECTION_OVERLAP] and never
      * written, so it holds a leftover stack byte (QUIRKS.md). */
     u8 past_viable_directions;
 } battle_ai_wait_facing_work_t;
@@ -32,21 +38,21 @@ s32 battle_ai_choose_wait_facing(void) {
         return ai->selected_action.wait_facing_hint;
 
     battle_ai_transfer_unit_coordinates(ai->acting_unit_id, &ai->acting_unit_coords);
-    for (direction = 0; direction < 4; direction++) {
+    for (direction = 0; direction < BATTLE_AI_CARDINAL_DIRECTION_COUNT; direction++) {
         work.target_coords.bytes.x
             = ai->acting_unit_coords.bytes.x + g_battle_ai_facing_tile_offsets.by_direction[direction][0];
         work.target_coords.bytes.y
             = ai->acting_unit_coords.bytes.y + g_battle_ai_facing_tile_offsets.by_direction[direction][1];
         work.target_coords.bytes.elevation = 0;
         if (battle_ai_check_facing_tile(&ai->acting_unit_coords, &work.target_coords) != 0) {
-            work.viable_directions[direction] = 0;
+            work.viability.by_direction[direction] = 0;
         } else {
             fallback_direction = direction;
-            work.viable_directions[direction] = 1;
+            work.viability.by_direction[direction] = 1;
         }
     }
-    if (*(u32*)work.viable_directions == 0)
-        *(u32*)work.viable_directions = 0x01010101;
+    if (work.viability.word == 0)
+        work.viability.word = 0x01010101;
 
     for (target_id = 0; target_id < BATTLE_UNIT_SLOT_COUNT; target_id++) {
         ai->targetability.live.unit_targetable[target_id] = 1;
@@ -61,14 +67,14 @@ s32 battle_ai_choose_wait_facing(void) {
         }
         battle_ai_transfer_unit_coordinates(target_id, &work.target_coords);
         direction = battle_ai_find_direction_of_target(&work.target_coords, &ai->acting_unit_coords);
-        if (work.viable_directions[direction] != 0)
+        if (work.viability.by_direction[direction] != 0)
             return direction;
         if (tried_any_enemy == 0) {
             ai->targetability.live.unit_targetable[target_id] = 0;
             continue;
         }
         facing = ai->acting_unit->position.facing;
-        if (work.viable_directions[facing] == 0)
+        if (work.viability.by_direction[facing] == 0)
             return fallback_direction;
         return facing;
     }

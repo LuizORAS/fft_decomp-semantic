@@ -1623,7 +1623,7 @@ functions:
   - {addr: 0x8019abb4, size: 448, name: battle_ai_choose_wait_facing, hash: 973e56c289cb4289}
   - {addr: 0x8019ad74, size: 188, name: battle_ai_check_facing_tile, hash: 135a5e2ce5e9febf}
   - {addr: 0x8019ae30, size: 40, name: battle_ai_init_selected_action, hash: 9545f9d85017e9ff}
-  - {addr: 0x8019ae58, size: 152, name: battle_ai_record_considered_coords, hash: e691b9d21adf6ad3}
+  - {addr: 0x8019ae58, size: 152, name: battle_ai_record_triggered_trap_coords, hash: e691b9d21adf6ad3}
   - {addr: 0x8019aef0, size: 40, name: battle_ai_is_vsync_hblank_past_threshold, hash: aff84ed05931c150}
   - {addr: 0x8019af18, size: 1012, name: battle_ai_evaluate_ability_outcome, hash: 963caa337e1e1c7a, rodata: [{addr: 0x80193db0, size: 36, hash: 8a91fa7090317da7}]}
   - {addr: 0x8019b30c, size: 488, name: battle_ai_evaluate_self_target_origins, hash: 98555857b62c3032}

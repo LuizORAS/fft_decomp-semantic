@@ -12,6 +12,7 @@ enum {
     BATTLE_AI_ABILITY_LIST_COUNT = 34,
     BATTLE_AI_RANKED_ACTION_COUNT = 8,
     BATTLE_AI_MOVEMENT_SCENARIO_COUNT = 3,
+    BATTLE_AI_KNOWN_TRAP_COUNT = 4,
     BATTLE_AI_GRID_ROW_COUNT = 18,
     BATTLE_AI_GRID_COLUMN_COUNT = 16,
 };
@@ -608,9 +609,9 @@ typedef struct battle_ai_data {
     battle_ai_weapon_data_t unit_weapon_data[BATTLE_AI_COMPACT_UNIT_COUNT]; /* 0x1778 */
     battle_stats_t* acting_unit;                                            /* 0x17f8 */
     battle_ai_action_data_t selected_action;                                /* 0x17fc */
-    /* 0x8019aea0 compares/copies coordinate words; 0x80194da4 consumes
-     * x/elevation/y to clear reachable tiles. The list's broader policy is unknown. */
-    battle_ai_coords_t known_trap_coords[4];                          /* 0x181c; x == 0xff terminates the list */
+    /* Triggered trap tiles are excluded from movement choices unless
+     * the acting unit has Confusion or Berserk. */
+    battle_ai_coords_t known_trap_coords[BATTLE_AI_KNOWN_TRAP_COUNT]; /* 0x181c; x == 0xff terminates the list */
     battle_ai_unit_decision_t unit_decisions[BATTLE_UNIT_SLOT_COUNT]; /* 0x182c */
     /* 0x80195ed4 saves the complete decision before retreat; 0x80195efc
      * restores it only after the child finishes, not when it suspends. */
@@ -693,6 +694,11 @@ typedef enum battle_ai_command_build_stage {
     BATTLE_AI_COMMAND_BUILD_CHOOSE_ACTION = 2,
 } battle_ai_command_build_stage_e;
 
+/* Only the four cardinal hints index the tile-delta table. */
+enum {
+    BATTLE_AI_CARDINAL_DIRECTION_COUNT = 4,
+};
+
 typedef enum battle_ai_direction {
     BATTLE_AI_DIRECTION_SOUTH = 0,
     BATTLE_AI_DIRECTION_WEST = 1,
@@ -719,7 +725,7 @@ typedef enum battle_ai_ability_effect {
 
 /* Cardinal map-tile deltas stored as wrapping unsigned bytes. */
 typedef struct battle_ai_facing_tile_offsets {
-    u8 by_direction[4][2];
+    u8 by_direction[BATTLE_AI_CARDINAL_DIRECTION_COUNT][2];
 } battle_ai_facing_tile_offsets_t;
 
 enum {
@@ -838,7 +844,7 @@ s32 battle_ai_load_known_ability_flag(s32 unit_id, s32 skillset_id, s32 bit);
 s32 battle_ai_propagate_target_movement(
     s32 unit_id, s32 target_x, s32 target_y, s32 target_elevation, s32 initialize, s32* suspended, s32 check_budget);
 
-void battle_ai_record_considered_coords(s32 x, s32 y, s32 level);
+void battle_ai_record_triggered_trap_coords(s32 x, s32 y, s32 level);
 s32 battle_ai_refresh_unit_decision_flags(void);
 void battle_ai_reset_action_ranking_fields(battle_ai_action_data_t* action);
 void battle_ai_restore_considered_action_data(void);

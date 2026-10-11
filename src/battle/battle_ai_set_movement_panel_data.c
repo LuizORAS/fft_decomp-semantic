@@ -111,7 +111,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
             | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_BERSERK))) {
         return 0;
     }
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < BATTLE_AI_KNOWN_TRAP_COUNT; i++) {
         coords = &ai->known_trap_coords[i];
         if (coords->bytes.x == 0xff) {
             break;

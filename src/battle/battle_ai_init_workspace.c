@@ -46,7 +46,7 @@ void battle_ai_init_workspace(void) {
     }
     {
         s32 empty = 0xff;
-        for (i = 3; i >= 0; i--) {
+        for (i = BATTLE_AI_KNOWN_TRAP_COUNT - 1; i >= 0; i--) {
             ai->known_trap_coords[i].bytes.x = empty;
         }
     }
