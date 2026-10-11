@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 u16 GetTPage(int tp, int abr, int x, int y) {
-    u32 result;
+    u16 result;
     if (GetGraphType() == 1 || GetGraphType() == 2) {
         result = ((tp & 3) << 9) | ((abr & 3) << 7) | ((y & 0x300) >> 3) | ((x & 0x3ff) >> 6);
     } else {

@@ -2,8 +2,8 @@
 #include "psx/libspu.h"
 
 void SpuSetVoiceVolumeAttr(s32 v_num, s16 vol_l, s16 vol_r, s16 vol_mode_l, s16 vol_mode_r) {
-    u32 left_mode;
-    u32 right_mode;
+    u16 left_mode;
+    u16 right_mode;
     u16 right_volume;
     s32 register_index = v_num << 3;
     vol_l &= 0x7fff;
