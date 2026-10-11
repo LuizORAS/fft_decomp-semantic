@@ -567,13 +567,20 @@ void open_title_start_new_game_transition(void);
 void open_title_start_new_game_or_clear_file_buffer(void);
 
 /* gfx */
-/* Image transition script entry: a header word (bits 0-7 step count, bits
- * 8-12 the texture-page position, bits 16-23 the image operation) followed by
- * four-byte steps holding a value byte and a duration byte. */
-typedef union open_gfx_transition_entry {
+/* New-game prologue entry: a packed line count, texture-page position and
+ * image operation, followed by four-byte texture-row/width records. */
+typedef struct open_gfx_transition_line {
+    u8 texture_row;
+    u8 width;
+    u8 _unused_02[2];
+} open_gfx_transition_line_t;
+typedef char open_gfx_transition_line_size_must_be_4[sizeof(open_gfx_transition_line_t) == 4 ? 1 : -1];
+
+typedef struct open_gfx_transition_entry {
     u32 header;
-    u8 bytes[32];
+    u8 line_data[0]; /* variable number of encoded open_gfx_transition_line_t records */
 } open_gfx_transition_entry_t;
+typedef char open_gfx_transition_entry_header_size_must_be_4[sizeof(open_gfx_transition_entry_t) == 4 ? 1 : -1];
 
 /* open_gfx_transition_t.flags. */
 typedef enum open_gfx_transition_flag {
@@ -601,8 +608,8 @@ typedef struct open_gfx_transition {
     /* 0x0a */ s16 step_count;
     /* 0x0c */ s16 tpage_x; /* (header & 0xf00) >> 2; GetTPage x */
     /* 0x0e */ s16 tpage_y; /* (header >> 4) & 0x100; GetTPage y */
-    /* 0x10 */ s16 step_values[7];
-    /* 0x1e */ s16 step_durations[7];
+    /* 0x10 */ s16 line_texture_rows[7];
+    /* 0x1e */ s16 line_widths[7];
     /* 0x2c */ s16 timer;
     /* 0x2e */ s16 intensity;
     /* 0x30 */ open_gfx_transition_entry_t** entry_table;

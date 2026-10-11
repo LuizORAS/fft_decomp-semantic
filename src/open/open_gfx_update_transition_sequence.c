@@ -1,5 +1,6 @@
 #include "fft/open.h"
 #include "psx/pad.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* Advance the new-game prologue by one frame: the picture crossfade and the text
@@ -58,11 +59,11 @@ s32 open_gfx_update_transition_sequence(void) {
                 g_open_gfx_transition.flags = flags | OPEN_GFX_TRANSITION_NEXT_STEP;
                 entry = g_open_gfx_transition.entry_table[g_open_gfx_transition.current_index];
                 g_open_gfx_transition.entry = entry;
-                g_open_gfx_transition.step_count = entry->bytes[0];
+                g_open_gfx_transition.step_count = (u8)entry->header;
                 g_open_gfx_transition.tpage_x = (entry->header & 0xf00) >> 2;
                 g_open_gfx_transition.tpage_y = (entry->header >> 4) & 0x100;
                 /* Image operation: 0x10 + n prepares the crossfade to picture n, 0x20 starts it. */
-                type = entry->bytes[2];
+                type = (u8)(entry->header >> 16);
                 switch (type & 0xf0) {
                 case 0x10:
                     open_gfx_copy_file_image_to_210x180_buffer(type & 0xf);
@@ -92,11 +93,15 @@ s32 open_gfx_update_transition_sequence(void) {
             open_gfx_draw_transition_line_strips(g_open_gfx_transition.intensity);
             return 1;
         }
-        /* First line: read every line's texture row and width from the entry. */
+        /* Byte indexing preserves the retail address-add order and entry reloads. */
         if (g_open_gfx_transition.step == 0) {
             for (i = 0; i < g_open_gfx_transition.step_count; i++) {
-                g_open_gfx_transition.step_durations[i] = g_open_gfx_transition.entry->bytes[i * 4 + 5];
-                g_open_gfx_transition.step_values[i] = g_open_gfx_transition.entry->bytes[i * 4 + 4];
+                g_open_gfx_transition.line_widths[i]
+                    = g_open_gfx_transition.entry->line_data[i * sizeof(open_gfx_transition_line_t)
+                        + offsetof(open_gfx_transition_line_t, width)];
+                g_open_gfx_transition.line_texture_rows[i]
+                    = g_open_gfx_transition.entry->line_data[i * sizeof(open_gfx_transition_line_t)
+                        + offsetof(open_gfx_transition_line_t, texture_row)];
             }
         }
         {
@@ -106,7 +111,7 @@ s32 open_gfx_update_transition_sequence(void) {
             (*step)++;
         }
     }
-    if (++g_open_gfx_transition.timer == g_open_gfx_transition.step_durations[g_open_gfx_transition.step - 1]) {
+    if (++g_open_gfx_transition.timer == g_open_gfx_transition.line_widths[g_open_gfx_transition.step - 1]) {
         g_open_gfx_transition.flags |= OPEN_GFX_TRANSITION_NEXT_STEP;
     }
     if (g_open_gfx_transition.flags & OPEN_GFX_TRANSITION_SKIP) {

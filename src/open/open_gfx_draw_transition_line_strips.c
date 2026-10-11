@@ -5,8 +5,8 @@
 /* Draw the text lines of the current new-game prologue entry at the given
  * brightness.
  *
- * Each step of the entry is one line of text: step_values holds its 16-pixel row
- * in the texture page and step_durations its width in pixels. The lines are
+ * Each step of the entry is one line of text: line_texture_rows holds its 16-pixel row
+ * in the texture page and line_widths its width in pixels. The lines are
  * centred, 20 pixels apart, as a block around the middle of the screen. A
  * finished line is drawn at full width and the line in progress up to timer
  * pixels; the pass with i == step adds that line's leading edge, at most 16
@@ -40,10 +40,10 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
 
         if (i == g_open_gfx_transition.step) {
             /* Leading edge of the line in progress (line i - 1): black on its right. */
-            if (g_open_gfx_transition.step_durations[i - 1] < g_open_gfx_transition.timer) {
+            if (g_open_gfx_transition.line_widths[i - 1] < g_open_gfx_transition.timer) {
                 continue;
             }
-            width = g_open_gfx_transition.step_durations[i - 1] - g_open_gfx_transition.timer;
+            width = g_open_gfx_transition.line_widths[i - 1] - g_open_gfx_transition.timer;
             if (g_open_gfx_transition.timer < 0) {
                 width = g_open_gfx_transition.timer + 0x10;
             } else if (width >= 0x11) {
@@ -53,7 +53,7 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
             if (u < 0) {
                 u = 0;
             }
-            v = g_open_gfx_transition.step_values[i - 1] * 0x10;
+            v = g_open_gfx_transition.line_texture_rows[i - 1] * 0x10;
             prims[prim_index].r1 = 0;
             prims[prim_index].g1 = 0;
             prims[prim_index].b1 = 0;
@@ -66,20 +66,20 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
             prims[prim_index + 1].r3 = 0;
             prims[prim_index + 1].g3 = 0;
             prims[prim_index + 1].b3 = 0;
-            left = u - g_open_gfx_transition.step_durations[i - 1] / 2;
+            left = u - g_open_gfx_transition.line_widths[i - 1] / 2;
             top_y = (i - 1) * 0x14 - g_open_gfx_transition.step_count * 10;
         } else {
             /* Line i: the revealed part of the line in progress, or a whole finished line. */
             if (i == g_open_gfx_transition.step - 1) {
                 width = g_open_gfx_transition.timer;
             } else {
-                width = g_open_gfx_transition.step_durations[i];
+                width = g_open_gfx_transition.line_widths[i];
             }
             u = 0;
             if (width <= 0) {
                 continue;
             }
-            v = g_open_gfx_transition.step_values[i] * 0x10;
+            v = g_open_gfx_transition.line_texture_rows[i] * 0x10;
             prims[prim_index].r1 = intensity;
             prims[prim_index].g1 = intensity;
             prims[prim_index].b1 = intensity;
@@ -92,7 +92,7 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
             prims[prim_index + 1].r3 = intensity / 2;
             prims[prim_index + 1].g3 = intensity / 2;
             prims[prim_index + 1].b3 = intensity / 2;
-            left = -(g_open_gfx_transition.step_durations[i] / 2);
+            left = -(g_open_gfx_transition.line_widths[i] / 2);
             top_y = i * 0x14 - g_open_gfx_transition.step_count * 10;
         }
 
