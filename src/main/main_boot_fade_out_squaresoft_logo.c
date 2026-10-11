@@ -16,14 +16,7 @@ void main_boot_fade_out_squaresoft_logo(void) {
     intensity = 0;
     SetPolyF4(&polygons[0]);
     setRGB0(&polygons[0], 0, 0, 0);
-    polygons[0].x0 = 0;
-    polygons[0].y0 = 0;
-    polygons[0].x1 = 320;
-    polygons[0].y1 = 0;
-    polygons[0].x2 = 0;
-    polygons[0].y2 = 256;
-    polygons[0].x3 = 320;
-    polygons[0].y3 = 256;
+    setXY4(&polygons[0], 0, 0, 320, 0, 0, 256, 320, 256);
     SetSemiTrans(&polygons[0], 1);
     polygons[1] = polygons[0];
 

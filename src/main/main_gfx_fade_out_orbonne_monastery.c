@@ -17,14 +17,7 @@ void main_gfx_fade_out_orbonne_monastery(void) {
 
     SetPolyF4(&fade_polygons[0]);
     setRGB0(&fade_polygons[0], 0, 0, 0);
-    fade_polygons[0].x0 = 0;
-    fade_polygons[0].y0 = 0;
-    fade_polygons[0].x1 = 256;
-    fade_polygons[0].y1 = 0;
-    fade_polygons[0].x2 = 0;
-    fade_polygons[0].y2 = 256;
-    fade_polygons[0].x3 = 256;
-    fade_polygons[0].y3 = 256;
+    setXY4(&fade_polygons[0], 0, 0, 256, 0, 0, 256, 256, 256);
     SetSemiTrans(&fade_polygons[0], 1);
     fade_polygons[1] = fade_polygons[0];
 
@@ -34,22 +27,8 @@ void main_gfx_fade_out_orbonne_monastery(void) {
     ((P_TAG*)&title_polygons[0])->len = 9;
     title_polygons[0].code = 0x2c;
     setRGB0(&title_polygons[0], 128, 128, 128);
-    title_polygons[0].x0 = 0;
-    title_polygons[0].y0 = 116;
-    title_polygons[0].x1 = 255;
-    title_polygons[0].y1 = 116;
-    title_polygons[0].x2 = 0;
-    title_polygons[0].y2 = 140;
-    title_polygons[0].x3 = 255;
-    title_polygons[0].y3 = 140;
-    title_polygons[0].u0 = 0;
-    title_polygons[0].v0 = 0;
-    title_polygons[0].u1 = 255;
-    title_polygons[0].v1 = 0;
-    title_polygons[0].u2 = 0;
-    title_polygons[0].v2 = 24;
-    title_polygons[0].u3 = 255;
-    title_polygons[0].v3 = 24;
+    setXY4(&title_polygons[0], 0, 116, 255, 116, 0, 140, 255, 140);
+    setUV4(&title_polygons[0], 0, 0, 255, 0, 0, 24, 255, 24);
     SetSemiTrans(&title_polygons[0], 0);
     title_polygons[0].tpage = GetTPage(0, 0, 896, 256);
     title_polygons[0].clut = GetClut(896, 287);

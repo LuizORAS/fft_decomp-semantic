@@ -23,14 +23,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
 
     SetPolyF4(&polygons[0]);
     setRGB0(&polygons[0], 0, 0, 0);
-    polygons[0].x0 = 0;
-    polygons[0].y0 = 0;
-    polygons[0].x1 = 320;
-    polygons[0].y1 = 0;
-    polygons[0].x2 = 0;
-    polygons[0].y2 = 240;
-    polygons[0].x3 = 320;
-    polygons[0].y3 = 240;
+    setXY4(&polygons[0], 0, 0, 320, 0, 0, 240, 320, 240);
     SetSemiTrans(&polygons[0], 1);
     polygons[1] = polygons[0];
 

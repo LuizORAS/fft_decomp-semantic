@@ -62,12 +62,7 @@ void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, up
     poly->v3 = frame->v + frame->height;
     right = width + 0x100;
     bottom = height + 0x78;
-    poly->x0 = base->x + x + offset->x + 0x100;
-    poly->y0 = base->y + y + offset->y + 0x78;
-    poly->x1 = base->x + x + offset->x + right;
-    poly->y1 = base->y + y + offset->y + 0x78;
-    poly->x2 = base->x + x + offset->x + 0x100;
-    poly->y2 = base->y + y + offset->y + bottom;
-    poly->x3 = base->x + x + offset->x + right;
-    poly->y3 = base->y + y + offset->y + bottom;
+    setXY4(poly, base->x + x + offset->x + 0x100, base->y + y + offset->y + 0x78, base->x + x + offset->x + right,
+        base->y + y + offset->y + 0x78, base->x + x + offset->x + 0x100, base->y + y + offset->y + bottom,
+        base->x + x + offset->x + right, base->y + y + offset->y + bottom);
 }
