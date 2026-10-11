@@ -54,9 +54,8 @@ void open_gfx_update_fade_overlay(u32* ot) {
         g_open_gfx_overlay_fade.tiles[g_active_graphics_buffer_index].y0 = g_open_gfx_overlay_fade.rect.y;
         g_open_gfx_overlay_fade.tiles[g_active_graphics_buffer_index].w = g_open_gfx_overlay_fade.rect.w;
         g_open_gfx_overlay_fade.tiles[g_active_graphics_buffer_index].h = g_open_gfx_overlay_fade.rect.h;
-        tiles[g_active_graphics_buffer_index].r0 = g_open_gfx_overlay_fade.level;
-        tiles[g_active_graphics_buffer_index].g0 = g_open_gfx_overlay_fade.level;
-        tiles[g_active_graphics_buffer_index].b0 = g_open_gfx_overlay_fade.level;
+        setRGB0(&tiles[g_active_graphics_buffer_index], g_open_gfx_overlay_fade.level, g_open_gfx_overlay_fade.level,
+            g_open_gfx_overlay_fade.level);
         AddPrim(&ot[g_open_gfx_overlay_fade.ot_index], &tiles[g_active_graphics_buffer_index]);
         AddPrim(&ot[g_open_gfx_overlay_fade.ot_index], &g_open_gfx_overlay_fade.modes[g_active_graphics_buffer_index]);
     }

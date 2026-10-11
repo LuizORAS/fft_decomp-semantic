@@ -64,43 +64,13 @@ void open_script_init_state(void) {
         SetSemiTrans(prim, 1);
         g_open_gfx_credit_band_primitives[i].tpage = GetTPage(0, 2, 0x300, 0);
         g_open_gfx_credit_band_primitives[i].clut = GetClut(0x10, 0x1e0);
-        prim->r0 = 0x80;
-        prim->g0 = 0x80;
-        prim->b0 = 0x80;
+        setRGB0(prim, 0x80, 0x80, 0x80);
     }
 
-    g_open_gfx_credit_band_primitives[0].u0 = 0xf8;
-    g_open_gfx_credit_band_primitives[0].v0 = 0;
-    g_open_gfx_credit_band_primitives[0].u1 = 0xf9;
-    g_open_gfx_credit_band_primitives[0].v1 = 0;
-    g_open_gfx_credit_band_primitives[0].u2 = 0xf8;
-    g_open_gfx_credit_band_primitives[0].v2 = 0x30;
-    g_open_gfx_credit_band_primitives[0].u3 = 0xf9;
-    g_open_gfx_credit_band_primitives[0].v3 = 0x30;
-    g_open_gfx_credit_band_primitives[0].x0 = -0x100;
-    g_open_gfx_credit_band_primitives[0].y0 = 0x48;
-    g_open_gfx_credit_band_primitives[0].x1 = 0x100;
-    g_open_gfx_credit_band_primitives[0].y1 = 0x48;
-    g_open_gfx_credit_band_primitives[0].x2 = -0x100;
-    g_open_gfx_credit_band_primitives[0].y2 = 0x78;
-    g_open_gfx_credit_band_primitives[0].x3 = 0x100;
-    g_open_gfx_credit_band_primitives[0].y3 = 0x78;
-    g_open_gfx_credit_band_primitives[1].u0 = 0xfc;
-    g_open_gfx_credit_band_primitives[1].v0 = 0;
-    g_open_gfx_credit_band_primitives[1].u1 = 0xfd;
-    g_open_gfx_credit_band_primitives[1].v1 = 0;
-    g_open_gfx_credit_band_primitives[1].u2 = 0xfc;
-    g_open_gfx_credit_band_primitives[1].v2 = 0x30;
-    g_open_gfx_credit_band_primitives[1].u3 = 0xfd;
-    g_open_gfx_credit_band_primitives[1].v3 = 0x30;
-    g_open_gfx_credit_band_primitives[1].x0 = -0x100;
-    g_open_gfx_credit_band_primitives[1].y0 = -0x78;
-    g_open_gfx_credit_band_primitives[1].x1 = 0x100;
-    g_open_gfx_credit_band_primitives[1].y1 = -0x78;
-    g_open_gfx_credit_band_primitives[1].x2 = -0x100;
-    g_open_gfx_credit_band_primitives[1].y2 = -0x48;
-    g_open_gfx_credit_band_primitives[1].x3 = 0x100;
-    g_open_gfx_credit_band_primitives[1].y3 = -0x48;
+    setUV4(&g_open_gfx_credit_band_primitives[0], 0xf8, 0, 0xf9, 0, 0xf8, 0x30, 0xf9, 0x30);
+    setXY4(&g_open_gfx_credit_band_primitives[0], -0x100, 0x48, 0x100, 0x48, -0x100, 0x78, 0x100, 0x78);
+    setUV4(&g_open_gfx_credit_band_primitives[1], 0xfc, 0, 0xfd, 0, 0xfc, 0x30, 0xfd, 0x30);
+    setXY4(&g_open_gfx_credit_band_primitives[1], -0x100, -0x78, 0x100, -0x78, -0x100, -0x48, 0x100, -0x48);
 
     for (i = 0; i < 2; i++) {
         prim = &g_open_gfx_fade_primitives[i];
@@ -108,25 +78,9 @@ void open_script_init_state(void) {
         SetSemiTrans(prim, 1);
         g_open_gfx_fade_primitives[i].tpage = GetTPage(1, 2, 0x200, 0);
         g_open_gfx_fade_primitives[i].clut = GetClut(0, 0x1e1);
-        prim->r0 = 0;
-        prim->g0 = 0;
-        prim->b0 = 0;
-        prim->u0 = 0;
-        prim->v0 = 0;
-        prim->u1 = 0xff;
-        prim->v1 = 0;
-        prim->u2 = 0;
-        prim->v2 = 0xb4;
-        prim->u3 = 0xff;
-        prim->v3 = 0xb4;
-        prim->x0 = -0x100;
-        prim->y0 = -0x5a;
-        prim->x1 = 0x100;
-        prim->y1 = -0x5a;
-        prim->x2 = -0x100;
-        prim->y2 = 0x5a;
-        prim->x3 = 0x100;
-        prim->y3 = 0x5a;
+        setRGB0(prim, 0, 0, 0);
+        setUV4(prim, 0, 0, 0xff, 0, 0, 0xb4, 0xff, 0xb4);
+        setXY4(prim, -0x100, -0x5a, 0x100, -0x5a, -0x100, 0x5a, 0x100, 0x5a);
     }
 
     rect.x = 0x100;

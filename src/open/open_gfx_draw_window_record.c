@@ -41,12 +41,8 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
     }
     g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.clut
         = GetClut(clut.x, clut.y);
-    (&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt)->r0
-        = record->color.r;
-    (&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt)->g0
-        = record->color.g;
-    (&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt)->b0
-        = record->color.b;
+    setRGB0((&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt),
+        record->color.r, record->color.g, record->color.b);
 
     SetDrawMode(&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].mode, 1,
         0,
