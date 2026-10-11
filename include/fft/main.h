@@ -283,6 +283,7 @@ typedef enum main_file_load_state {
     MAIN_FILE_LOAD_STATE_POLL_SEEK = 4,
     MAIN_FILE_LOAD_STATE_START_READ = 5,
     MAIN_FILE_LOAD_STATE_POLL_READ = 6,
+    MAIN_FILE_LOAD_STATE_UPLOAD_VRAM = 7, /* WLDCORE image stream only */
 } main_file_load_state_e;
 
 /* Asynchronous CD read state advanced by main_file_poll_load. */

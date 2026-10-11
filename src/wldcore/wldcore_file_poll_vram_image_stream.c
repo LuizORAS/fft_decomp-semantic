@@ -77,21 +77,22 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         }
         stream->wait_frames++;
         return;
-    case 7:
+    case MAIN_FILE_LOAD_STATE_UPLOAD_VRAM:
         if (CdDataSync(1) != 0) {
             return;
         }
+        /* Each sector has a count, then packed XY/WH word pairs and image words. */
         word = (stream->sector_index & 1) * 512;
-        rect_count = *(s32*)(stream->destination + (stream->sector_index & 1) * 2048);
+        rect_count = ((u32*)stream->destination)[(stream->sector_index & 1) * 512];
         word++;
         for (n = 0; n < rect_count; n++) {
-            rect.x = *(s32*)(stream->destination + word * 4);
-            rect.y = (*(s32*)(stream->destination + word * 4) & 0xFFFF0000) >> 16;
+            rect.x = ((u32*)stream->destination)[word];
+            rect.y = (((u32*)stream->destination)[word] & 0xFFFF0000) >> 16;
             word++;
-            rect.w = *(s32*)(stream->destination + word * 4);
-            rect.h = (*(s32*)(stream->destination + word * 4) & 0xFFFF0000) >> 16;
+            rect.w = ((u32*)stream->destination)[word];
+            rect.h = (((u32*)stream->destination)[word] & 0xFFFF0000) >> 16;
             word++;
-            LoadImage(&rect, (u32*)(stream->destination + word * 4));
+            LoadImage(&rect, (u32*)stream->destination + word);
             word += rect.w * rect.h / 2;
         }
         stream->sector_index++;
