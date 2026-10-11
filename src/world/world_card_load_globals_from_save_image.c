@@ -55,7 +55,8 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
     }
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        bcopy(g_world_load_work_buffer->party_records[i], &g_main_party_data[i], 0xe0);
+        bcopy(g_world_load_work_buffer->party_records[i], &g_main_party_data[i],
+            sizeof(g_world_load_work_buffer->party_records[i]));
     }
 
     bcopy(g_world_load_work_buffer->item_quantities, g_main_item_quantities, 0x100);

@@ -54,7 +54,8 @@ void world_card_build_save_image(s32 slot) {
         slot, g_world_formation_unit_pointers[i]->level, &g_world_load_work_buffer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        bcopy(&g_main_party_data[i], g_world_load_work_buffer->party_records[i], 0xe0);
+        bcopy(&g_main_party_data[i], g_world_load_work_buffer->party_records[i],
+            sizeof(g_world_load_work_buffer->party_records[i]));
     }
 
     bcopy(g_main_item_quantities, g_world_load_work_buffer->item_quantities, 0x100);

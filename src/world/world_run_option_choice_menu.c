@@ -74,7 +74,8 @@ void world_run_option_choice_menu(void) {
     }
     param->text_image.width -= 4;
     world_menu_build_icon_record(&rect, param, &g_world_option_picker_icon_records[0]);
-    world_script_copy_bytes(&g_world_option_picker_icon_records[1], &g_world_option_picker_icon_records[0], 0x7C);
+    world_script_copy_bytes(&g_world_option_picker_icon_records[1], &g_world_option_picker_icon_records[0],
+        sizeof(g_world_option_picker_icon_records[1]));
     LoadImage(&rect, buffer);
     world_menu_free_memory(buffer);
     world_thread_wait_frames(1);

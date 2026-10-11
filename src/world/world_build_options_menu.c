@@ -154,7 +154,8 @@ void world_build_options_menu(void) {
     value_rect.y = base->title.y0;
     value_rect.w = base->title.w;
     value_rect.h = base->title.h;
-    world_script_copy_bytes(&g_world_options_menu_window_rect, &entry->window_x, 8);
+    world_script_copy_bytes(
+        &g_world_options_menu_window_rect, &entry->window_x, sizeof(g_world_options_menu_window_rect));
     world_thread_start(g_world_thread_current_id + 1, world_menu_window_frame_thread);
     g_world_options_menu_window_rect.h += 0xC;
     g_world_options_menu_window_rect.y -= 2;

@@ -23,7 +23,7 @@ void world_script_load_portrait_colors_event_instruction(s32 index) {
         g_world_thread_call_target = (void (*)(void))main_file_is_still_loading;
     } while (world_thread_call_on_main_stack() != 0);
     upper_half = buffer + 0x1800;
-    world_script_copy_bytes(&rect, &g_world_menu_portrait_pixel_rect, 8);
+    world_script_copy_bytes(&rect, &g_world_menu_portrait_pixel_rect, sizeof(rect));
     i = 0;
     source = buffer;
     rect.w = 8;

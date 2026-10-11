@@ -160,7 +160,7 @@ void world_text_message_box_thread(void) {
         to.w = 0x1F;
         to.h = 0x30;
     }
-    world_script_copy_bytes(&win[1], &win[0], 0x118);
+    world_script_copy_bytes(&win[1], &win[0], sizeof(win[1]));
     win[0].active = 1;
     win[1].active = 1;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
@@ -456,7 +456,7 @@ void world_text_message_box_thread(void) {
         from.h = 0;
         from.x = right;
         from.y = bottom;
-        world_script_copy_bytes(&to, &from, 8);
+        world_script_copy_bytes(&to, &from, sizeof(to));
         world_menu_animate_window_quads_to_rects(win, &from, &to);
     }
     win->active = 0;
