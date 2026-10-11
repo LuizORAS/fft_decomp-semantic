@@ -234,14 +234,10 @@ s32 effect_e453_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         for (quad_row = 0; quad_row < 8; quad_row++) {
             for (quad_column = 0; quad_column < 8; quad_column++) {
                 quad = &work->quads[work->buffer][quad_row * 8 + quad_column];
-                quad->x0 = scratch->points[quad_row][quad_column].x;
-                quad->y0 = scratch->points[quad_row][quad_column].y;
-                quad->x1 = scratch->points[quad_row][quad_column + 1].x;
-                quad->y1 = scratch->points[quad_row][quad_column + 1].y;
-                quad->x2 = scratch->points[quad_row + 1][quad_column].x;
-                quad->y2 = scratch->points[quad_row + 1][quad_column].y;
-                quad->x3 = scratch->points[quad_row + 1][quad_column + 1].x;
-                quad->y3 = scratch->points[quad_row + 1][quad_column + 1].y;
+                setXY4(quad, scratch->points[quad_row][quad_column].x, scratch->points[quad_row][quad_column].y,
+                    scratch->points[quad_row][quad_column + 1].x, scratch->points[quad_row][quad_column + 1].y,
+                    scratch->points[quad_row + 1][quad_column].x, scratch->points[quad_row + 1][quad_column].y,
+                    scratch->points[quad_row + 1][quad_column + 1].x, scratch->points[quad_row + 1][quad_column + 1].y);
                 u = (work->scroll_u >> 12) + work->texture_u;
                 quad->u0 = quad->u2 = u;
                 quad->u1 = quad->u3 = u + texture_width;
