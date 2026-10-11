@@ -5,7 +5,7 @@
 s32 init_ring_status(u32 first_sector, u32 sector_count) {
     u32 sector_index;
     for (sector_index = 0; sector_index < sector_count; sector_index++) {
-        /* Retail clears both halves of the descriptor's status word. */
-        *(u32*)&g_psyq_cd_stream_ring[sector_index + first_sector].status = 0;
+        /* The word store clears both id and type. */
+        *(u32*)&g_psyq_cd_stream_ring[sector_index + first_sector].id = 0;
     }
 }

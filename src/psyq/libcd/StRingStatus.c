@@ -3,13 +3,13 @@
 
 void StRingStatus(s16* free_sectors, s16* read_sectors) {
     s32 index = g_psyq_cd_stream_ring_sectors;
-    psyq_cd_ring_record_t* record;
+    StHEADER* record;
     *free_sectors = 0;
     *read_sectors = g_psyq_cd_stream_write_index - g_psyq_cd_stream_read_index;
     if (*read_sectors < 0) {
         for (index--; index >= 0; index--) {
             record = &g_psyq_cd_stream_ring[index];
-            if (record->status == StREWIND)
+            if (record->id == StREWIND)
                 break;
         }
         index++;
@@ -17,7 +17,7 @@ void StRingStatus(s16* free_sectors, s16* read_sectors) {
     }
     for (index--; index >= 0; index--) {
         record = &g_psyq_cd_stream_ring[index];
-        if (record->status == StFREE) {
+        if (record->id == StFREE) {
             (*free_sectors)++;
         }
     }

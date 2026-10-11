@@ -63,7 +63,20 @@ typedef struct {
     u8 val3;
 } CdlATV;
 
-typedef struct psyq_cd_ring_record psyq_cd_ring_record_t;
+/* CD streaming sector header. The linked driver reuses id for the StFREE/... ring state. */
+typedef struct {
+    u16 id;
+    u16 type;
+    u16 secCount;
+    u16 nSectors;
+    u32 frameCount;
+    u32 frameSize;
+    u16 width;
+    u16 height;
+    u32 dummy1;
+    u32 dummy2;
+    CdlLOC loc;
+} StHEADER;
 
 /* Event byte and result-buffer contract for command and read callbacks. */
 typedef void (*psyq_cd_result_callback_t)(u8 event, u8* result);
@@ -86,7 +99,7 @@ s32 CdMix(CdlATV* vol);
 s32 CdControlB(u8 command, const u8* parameter, u8* result);
 s32 CdRead2(s32 mode);
 s32 StGetBackloc(CdlLOC* position);
-u32 StGetNext(u32** frame_data, psyq_cd_ring_record_t** header);
+u32 StGetNext(u32** frame_data, u32** header);
 void CdFlush(void);
 CdlLOC* CdIntToPos(s32 sector, CdlLOC* position);
 s32 CdReset(s32 mode);
@@ -94,7 +107,7 @@ void StCdInterrupt(void);
 u32 StFreeRing(u32* frame_data);
 void StRingStatus(s16* free_sectors, s16* read_sectors);
 void StUnSetRing(void);
-void StSetRing(psyq_cd_ring_record_t* buffer, s32 sectors);
+void StSetRing(u32* buffer, u32 sectors);
 void StSetStream(s32 mode, s32 start_frame, s32 end_frame, psyq_interrupt_callback_t frame_callback,
     psyq_interrupt_callback_t end_callback);
 void StSetMask(s32 mask, s32 start_frame, s32 end_frame);
@@ -177,23 +190,7 @@ extern u32 g_psyq_cd_status_detail;
 extern char g_psyq_cd_init_message[];
 extern char g_psyq_cd_init_address_format[];
 
-/* Stream ring records, corroborated by StHEADER and the retail IRQ/callback accesses.
- * Retail reads and writes status through halfword pointers (volatile where the CD
- * interrupt shares it), never as a struct member: those accesses keep an explicit view. */
-struct psyq_cd_ring_record {
-    u16 status;
-    u16 type;
-    u16 sector_index;
-    u16 sector_count;
-    u32 frame_count;
-    u32 frame_size;
-    u16 width;
-    u16 height;
-    u32 dummy1;
-    u32 dummy2;
-    CdlLOC position;
-};
-extern psyq_cd_ring_record_t* g_psyq_cd_stream_ring;
+extern StHEADER* g_psyq_cd_stream_ring;
 extern u32 g_psyq_cd_stream_write_index;
 extern u32 g_psyq_cd_stream_frame_start_index;
 extern u32 g_psyq_cd_stream_read_index;
@@ -293,7 +290,7 @@ extern volatile u32* g_psyq_cd_stream_dma_control_register;
 extern s32 g_psyq_cd_stream_diagnostic_code;
 extern u32 g_psyq_cd_stream_emulation_sector_index;
 extern u32* g_psyq_cd_stream_payload;
-extern psyq_cd_ring_record_t* g_psyq_cd_stream_current_header;
+extern StHEADER* g_psyq_cd_stream_current_header;
 extern char g_psyq_cd_dma_timeout_format[];
 void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 control, u8 enable_irq, s32 unused);
 

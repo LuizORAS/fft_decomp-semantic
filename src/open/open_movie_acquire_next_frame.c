@@ -8,11 +8,12 @@
  * Returns the frame data, or NULL on timeout. */
 u32* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
     u32* frame_data;
-    psyq_cd_ring_record_t* header;
+    StHEADER* header;
     s32 attempts;
 
     attempts = 0;
-    while (StGetNext(&frame_data, &header) != 0) {
+    /* The SDK word-pointer slot preserves native header reloads; a converted local folds them. */
+    while (StGetNext(&frame_data, (u32**)&header) != 0) {
         VSync(0);
         if (attempts == OPEN_MOVIE_ACQUIRE_MAX_ATTEMPTS) {
             return 0;
@@ -20,11 +21,11 @@ u32* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
         attempts++;
     }
 
-    g_open_movie_current_frame = header->frame_count;
-    if (header->frame_count >= g_open_movie_end_frame) {
+    g_open_movie_current_frame = header->frameCount;
+    if (header->frameCount >= g_open_movie_end_frame) {
         g_open_movie_stream_status = OPEN_MOVIE_STREAM_STOP_AND_PAUSE_AUDIO;
     }
-    if (g_open_movie_video_end_frame != -1 && header->frame_count >= g_open_movie_video_end_frame) {
+    if (g_open_movie_video_end_frame != -1 && header->frameCount >= g_open_movie_video_end_frame) {
         g_open_movie_stream_status = OPEN_MOVIE_STREAM_STOP;
     }
 
