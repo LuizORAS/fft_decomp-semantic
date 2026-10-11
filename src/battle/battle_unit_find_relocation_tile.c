@@ -53,7 +53,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
             panel = &g_battle_target_panels[index];
             tile = &g_battle_map_tile_data[index];
             if (i == unit_index) {
-                height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
+                height = tile->height * 2 + tile->depth_half_height.bits.half_height;
                 low = height - 10;
                 if (low < 0) {
                     low = 0;

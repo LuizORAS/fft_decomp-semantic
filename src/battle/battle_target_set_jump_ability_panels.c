@@ -58,7 +58,7 @@ s32 battle_target_set_jump_ability_panels(const battle_action_command_t* source)
     location = battle_map_calculate_location(unit);
     tile = &g_battle_map_tile_data[location];
     tile_height = tile->height;
-    height = (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) + tile_height * 2;
+    height = tile->depth_half_height.bits.half_height + tile_height * 2;
     count = battle_menu_get_unit_skillset_ability_data(
         action.actor_id, action.skillset_id, (s16*)abilities, mp_costs, ability_ct, 0, usable, turns);
     for (i = 0; i < count; i++) {
@@ -99,7 +99,7 @@ s32 battle_target_set_jump_ability_panels(const battle_action_command_t* source)
     tile = &g_battle_map_tile_data[other_location];
     panel->remaining_range = 0;
     other_panel->remaining_range = 0;
-    other_height = (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) + tile->height * 2;
+    other_height = tile->depth_half_height.bits.half_height + tile->height * 2;
     if ((tile->flags.value & MAP_TILE_FLAG_BLOCKED) == 0 && height < other_height) {
         return 0;
     }
@@ -114,12 +114,12 @@ s32 battle_target_set_jump_ability_panels(const battle_action_command_t* source)
         if (panel->remaining_range == 0 || (lower->flags.value & MAP_TILE_FLAG_BLOCKED)) {
             lower_height = -1;
         } else {
-            lower_height = (lower->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) + lower->height * 2;
+            lower_height = lower->depth_half_height.bits.half_height + lower->height * 2;
         }
         if (other_panel->remaining_range == 0 || (upper->flags.value & MAP_TILE_FLAG_BLOCKED)) {
             upper_height = -1;
         } else {
-            upper_height = (upper->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) + upper->height * 2;
+            upper_height = upper->depth_half_height.bits.half_height + upper->height * 2;
         }
         if (lower_height < upper_height) {
             tile = lower;

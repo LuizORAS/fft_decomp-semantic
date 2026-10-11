@@ -18,16 +18,15 @@ void battle_move_start_float_climb_jump_step(
     battle_move_step_t current_step;
     s32 rise;
     s32 frames;
-    u8* step;
+    battle_move_step_t* step;
     s32 unused[6];
     s32 rise_height;
     s32 height;
     s32 apex;
     u8 next;
 
-    step = &unit->current_path_step.value;
-    height = to->height * 2 + (to->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height
-        + 2;
+    step = &unit->current_path_step;
+    height = to->height * 2 + to->depth_half_height.bits.half_height * unit->destination_edge_height + 2;
     height -= -unit->screen.vy / 6;
     current_step = unit->current_path_step;
     height += (current_step.bits.length + 1) * 2;
@@ -74,5 +73,5 @@ void battle_move_start_float_climb_jump_step(
         unit->velocity.vz = 0xE000 / frames;
         break;
     }
-    unit->movement.bytes.destination_z = (*step >> 5) & 1;
+    unit->movement.bytes.destination_z = step->bits.higher;
 }

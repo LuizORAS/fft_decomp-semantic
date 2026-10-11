@@ -19,8 +19,7 @@ void battle_move_set_unit_step_delta_center_to_edge(
     battle_unit_misc_data_t* unit, const battle_move_step_t* step, const map_tile_t* tile, s32 edge_height) {
     VECTOR direction;
 
-    direction.vy = -((edge_height - 1) * (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
-        * BATTLE_MOVE_STEP_HEIGHT_SCALE);
+    direction.vy = -((edge_height - 1) * tile->depth_half_height.bits.half_height * BATTLE_MOVE_STEP_HEIGHT_SCALE);
     switch (step->bits.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         direction.vx = MAP_TILE_SIZE;

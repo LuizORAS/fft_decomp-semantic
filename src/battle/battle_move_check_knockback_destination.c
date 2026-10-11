@@ -4,7 +4,7 @@
 /* Half-unit height of a tile edge: base height plus the slope height scaled by
  * that side's two-bit slope factor. */
 #define TILE_EDGE_HEIGHT(tile, shift)                                                                                  \
-    (tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * ((tile->slope_type >> shift) & 3))
+    (tile->height * 2 + tile->depth_half_height.bits.half_height * ((tile->slope_type >> shift) & 3))
 
 /* Checks whether the current target can be knocked back onto tile (x, y).
  *
