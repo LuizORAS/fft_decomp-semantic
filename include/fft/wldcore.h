@@ -15,8 +15,6 @@ typedef char wldcore_date_size_must_be_2[(sizeof(wldcore_date_t) == 2) ? 1 : -1]
 
 extern u8 g_wldcore_days_per_month[12]; /* 0x8009e66c; non-leap-year month lengths */
 
-/* Music/sound selection halfword at 0x800d486a: track in the low byte, slot
- * in the high byte. */
 extern s32 g_wldcore_date_display_x;
 extern s32 g_wldcore_date_display_y;
 
@@ -643,6 +641,7 @@ s32 wldcore_script_process_conditional_set(s32 location, s32 action_mask);
 void wldcore_script_read_operand_pair(s32* out_id, s32* out_value);
 void wldcore_script_read_operand_pair_and_date(s32* out_a, s32* out_b, s32* out_c, s32* out_d);
 s32 wldcore_script_run_until_yield(void);
+u32 wldcore_sound_novel_find_section_instruction(s32 section, s32 opcode);
 
 /* text */
 
@@ -1355,17 +1354,6 @@ void wldcore_map_prepare_path_animation(s32 from, s32 to);
 s32 wldcore_map_get_dot_snap_step(point32_t point, s32* step_x, s32* step_y);
 
 /* menu */
-/* Descriptor prefix read by 0x8007df84. The word-indexed text table is at
- * a record-relative offset; no fixed whole-record size is established. */
-typedef struct wldcore_window_text_table {
-    u8 _unused_00[8];
-    s32 window_index; /* 0x08; renderer 0x8008aea0 indexes 52-byte windows */
-    u8 _unused_0c[16];
-    s32 table_word_offset; /* 0x1c */
-} wldcore_window_text_table_t;
-typedef char wldcore_text_table_offset_must_be_0x1c
-    [((unsigned long)&((wldcore_window_text_table_t*)0)->table_word_offset == 0x1c) ? 1 : -1];
-
 /* Slots of g_wldcore_menu_cursor_states: the remembered row of each list. */
 typedef enum wldcore_cursor_slot {
     WLDCORE_CURSOR_SLOT_LOCATION_MENU = 0x00,
@@ -1730,8 +1718,7 @@ typedef enum wldcore_sound_novel_history_phase {
 /* Provisional: the type-0x17 history-text level pushed by
  * wldcore_menu_push_sound_novel_history_level, which stores the newest
  * history text at +0x0c, the three older ones at +0x10..+0x18, phase 1 and
- * step 0. wldcore_window_draw_indexed_text reads the same record through
- * wldcore_window_text_table_t (scroll at +0x1c). */
+ * step 0. The draw helper consumes this same history record. */
 typedef struct wldcore_menu_sound_novel_history_level {
     s32 upper_window;   /* 0x00 */
     s32 lower_window;   /* 0x04 */
@@ -2065,7 +2052,7 @@ void wldcore_window_apply_layout(wldcore_window_layout_request_t* request);
 void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordinate_mode, u32* image);
 
 void wldcore_window_draw_centered_text(s32 window_index, s32 text_id);
-void wldcore_window_draw_indexed_text(wldcore_window_text_table_t* table, s32 index);
+void wldcore_window_draw_indexed_text(wldcore_menu_sound_novel_history_level_t* level, s32 index);
 void wldcore_window_draw_text_rows(wldcore_menu_send_unit_level_t* level);
 
 void wldcore_window_init_number_panel_render_thread(s32 thread_id, u32 packed_values, s32 text_id, point32_t* origin);
@@ -2085,6 +2072,7 @@ void wldcore_list_build_proposition_detail_panel_image(
     wldcore_menu_stack_record_t* level, s32 proposition, s32 coordinate_mode);
 void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_stack_record_t* level);
 void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* level);
+void wldcore_menu_step_map_cursor_level(wldcore_menu_stack_record_t* level);
 void wldcore_window_reset_state_and_scroll(wldcore_menu_stack_record_t* level);
 void wldcore_map_step_projection_motion_then_pop_level(wldcore_menu_stack_record_t* entry);
 void wldcore_window_set_render_objects_visible(s32 clear);

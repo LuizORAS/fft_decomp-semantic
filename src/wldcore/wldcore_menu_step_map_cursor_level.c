@@ -26,7 +26,7 @@
  * stores keep each branch's scale value a single-set temporary; one variable
  * shared by both branches is multi-set, is scheduled early and changes the
  * register allocation of the interpolation. */
-void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) {
+void wldcore_menu_step_map_cursor_level(wldcore_menu_stack_record_t* level) {
     point32_t amount;
     point32_t point;
     point32_t target;
@@ -48,17 +48,17 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
         goto finish;
     }
 
-    if (level->wide_view == 0 && !(g_wldcore_previous_system_flags & MAIN_SYSTEM_FLAG_DRAW_MAP)) {
-        if (level->pending_mode != 0) {
+    if (level->map_cursor.wide_view == 0 && !(g_wldcore_previous_system_flags & MAIN_SYSTEM_FLAG_DRAW_MAP)) {
+        if (level->map_cursor.pending_mode != 0) {
             flags = g_main_system_flags;
             if (flags & MAIN_SYSTEM_FLAG_FADING) {
                 return;
             }
             g_main_system_flags = flags ^ MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-            if (level->pending_mode == 3) {
+            if (level->map_cursor.pending_mode == 3) {
                 g_main_system_flags = flags ^ (MAIN_SYSTEM_FLAG_RUNNING | MAIN_SYSTEM_FLAG_INPUT_BLOCKED);
             }
-            level->pending_mode = 0;
+            level->map_cursor.pending_mode = 0;
         }
         if (g_main_system_flags & MAIN_SYSTEM_FLAG_FADING) {
             /* Skips the zoom handling and the wide-view toggle below. */
@@ -68,7 +68,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 & (WLDCORE_PROJECTION_MOTION_ACTIVE | WLDCORE_PROJECTION_MOTION_ZOOMED_OUT))
             && g_wldcore_audio_queue.count == 0) {
             if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
-                hit = wldcore_map_find_dot_at_point(g_wldcore_window_records[level->window_index].position);
+                hit = wldcore_map_find_dot_at_point(g_wldcore_window_records[level->map_cursor.window_index].position);
                 if (hit != 0) {
                     wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
                     hit--;
@@ -80,12 +80,12 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                         = wldcore_map_build_location_menu_entries(
                             hit, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entries);
                     if (g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count != 0) {
-                        wldcore_window_reset_state_and_scroll((wldcore_menu_stack_record_t*)level);
+                        wldcore_window_reset_state_and_scroll(level);
                         wldcore_menu_push_location_menu_level(hit);
                         return;
                     }
                 } else {
-                    g_wldcore_window_records[level->window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+                    g_wldcore_window_records[level->map_cursor.window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
                     wldcore_menu_push_focus_location_level(g_wldcore_map_projection_state.marker.kind);
                     return;
                 }
@@ -93,15 +93,15 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
             buttons = g_wldcore_new_button_presses;
             if (buttons & (PSX_PAD_TRIANGLE | PSX_PAD_START)) {
                 wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-                wldcore_window_reset_state_and_scroll((wldcore_menu_stack_record_t*)level);
+                wldcore_window_reset_state_and_scroll(level);
                 wldcore_menu_push_entry_window_level();
                 return;
             }
             if (buttons & PSX_PAD_SELECT) {
-                hit = wldcore_map_find_dot_at_point(g_wldcore_window_records[level->window_index].position);
+                hit = wldcore_map_find_dot_at_point(g_wldcore_window_records[level->map_cursor.window_index].position);
                 if (hit != 0) {
                     hit--;
-                    wldcore_window_reset_state_and_scroll((wldcore_menu_stack_record_t*)level);
+                    wldcore_window_reset_state_and_scroll(level);
                     wldcore_gfx_toggle_captured_world_frame(1);
                     wldcore_menu_push_message_level(hit + 0x8000, 1);
                     return;
@@ -112,8 +112,8 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
 
     motion = g_wldcore_map_zoom_motion.flags;
     if (!(motion & WLDCORE_PROJECTION_MOTION_ACTIVE)) {
-        if (level->wide_view == 0 && (g_wldcore_new_button_presses & (PSX_PAD_L1 | PSX_PAD_R1))) {
-            g_wldcore_window_records[level->window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        if (level->map_cursor.wide_view == 0 && (g_wldcore_new_button_presses & (PSX_PAD_L1 | PSX_PAD_R1))) {
+            g_wldcore_window_records[level->map_cursor.window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_map_zoom_motion.duration = 0x20;
             g_wldcore_map_zoom_motion.frame = 0;
             g_wldcore_map_zoom_motion.flags = (g_wldcore_map_zoom_motion.flags ^ WLDCORE_PROJECTION_MOTION_ZOOMED_OUT)
@@ -121,7 +121,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
             if (g_wldcore_map_zoom_motion.flags & WLDCORE_PROJECTION_MOTION_ZOOMED_OUT) {
                 g_wldcore_map_zoom_motion.origin = g_wldcore_map_projection_view.origin;
             }
-            level->snap_hit = 0;
+            level->map_cursor.snap_hit = 0;
             if (g_wldcore_map_zoom_motion.flags & WLDCORE_PROJECTION_MOTION_ZOOMED_OUT) {
                 wldcore_sound_play_effect(MAIN_SFX_WORLD_MAP_ZOOM_OUT);
             } else {
@@ -172,17 +172,17 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
     }
 
     if (!(g_wldcore_current_button_input & PSX_PAD_SQUARE)) {
-        if (level->wide_view != 0) {
-            level->wide_view = 0;
-            g_wldcore_window_records[level->alt_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        if (level->map_cursor.wide_view != 0) {
+            level->map_cursor.wide_view = 0;
+            g_wldcore_window_records[level->map_cursor.alt_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
-        g_wldcore_window_records[level->window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    } else if (level->wide_view != 1) {
-        level->wide_view = 1;
-        g_wldcore_window_records[level->window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->alt_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_records[level->alt_window_index].anim_counter
-            = g_wldcore_window_records[level->alt_window_index].frame_index = 0;
+        g_wldcore_window_records[level->map_cursor.window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    } else if (level->map_cursor.wide_view != 1) {
+        level->map_cursor.wide_view = 1;
+        g_wldcore_window_records[level->map_cursor.window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->map_cursor.alt_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[level->map_cursor.alt_window_index].anim_counter
+            = g_wldcore_window_records[level->map_cursor.alt_window_index].frame_index = 0;
         g_wldcore_map_cursor_scroll_y.value = 0;
         g_wldcore_map_cursor_scroll_x.value = 0;
         g_wldcore_map_cursor_scroll_y.output = 0;
@@ -190,7 +190,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
     }
 
 scroll:
-    if (level->wide_view == 0) {
+    if (level->map_cursor.wide_view == 0) {
         held = g_wldcore_current_button_input;
         if (held & (PSX_PAD_RIGHT | PSX_PAD_LEFT)) {
             if (held & PSX_PAD_LEFT) {
@@ -214,13 +214,13 @@ scroll:
         amount.x = g_wldcore_map_cursor_scroll_x.output;
         amount.y = g_wldcore_map_cursor_scroll_y.output;
         if (!(g_wldcore_map_zoom_motion.flags & WLDCORE_PROJECTION_MOTION_ZOOMED_OUT)) {
-            target.x = g_wldcore_window_records[level->window_index].position.x + amount.x;
-            target.y = g_wldcore_window_records[level->window_index].position.y + amount.y;
-            level->snap_hit = wldcore_map_get_dot_snap_step(target, &step_x, &step_y);
+            target.x = g_wldcore_window_records[level->map_cursor.window_index].position.x + amount.x;
+            target.y = g_wldcore_window_records[level->map_cursor.window_index].position.y + amount.y;
+            level->map_cursor.snap_hit = wldcore_map_get_dot_snap_step(target, &step_x, &step_y);
             amount.x += step_x;
             amount.y += step_y;
-            target.x = g_wldcore_window_records[level->window_index].position.x + amount.x;
-            target.y = g_wldcore_window_records[level->window_index].position.y + amount.y;
+            target.x = g_wldcore_window_records[level->map_cursor.window_index].position.x + amount.x;
+            target.y = g_wldcore_window_records[level->map_cursor.window_index].position.y + amount.y;
             saved = g_wldcore_map_projection_view.origin;
             if ((amount.x < 0 && target.x < -0x40) || (amount.x > 0 && target.x >= 0x49)) {
                 wldcore_map_apply_clamped_horizontal_scroll(&amount.x, &g_wldcore_map_projection_view.origin.vx);
@@ -234,19 +234,19 @@ scroll:
                 g_wldcore_map_projection_state.flags |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
             }
         }
-        g_wldcore_window_records[level->window_index].position.x += amount.x;
-        g_wldcore_window_records[level->window_index].position.y += amount.y;
-        if (g_wldcore_window_records[level->window_index].position.x < -0x70) {
-            g_wldcore_window_records[level->window_index].position.x = -0x70;
+        g_wldcore_window_records[level->map_cursor.window_index].position.x += amount.x;
+        g_wldcore_window_records[level->map_cursor.window_index].position.y += amount.y;
+        if (g_wldcore_window_records[level->map_cursor.window_index].position.x < -0x70) {
+            g_wldcore_window_records[level->map_cursor.window_index].position.x = -0x70;
         }
-        if (g_wldcore_window_records[level->window_index].position.x >= 0x79) {
-            g_wldcore_window_records[level->window_index].position.x = 0x78;
+        if (g_wldcore_window_records[level->map_cursor.window_index].position.x >= 0x79) {
+            g_wldcore_window_records[level->map_cursor.window_index].position.x = 0x78;
         }
-        if (g_wldcore_window_records[level->window_index].position.y < -0x68) {
-            g_wldcore_window_records[level->window_index].position.y = -0x68;
+        if (g_wldcore_window_records[level->map_cursor.window_index].position.y < -0x68) {
+            g_wldcore_window_records[level->map_cursor.window_index].position.y = -0x68;
         }
-        if (g_wldcore_window_records[level->window_index].position.y >= 0x69) {
-            g_wldcore_window_records[level->window_index].position.y = 0x68;
+        if (g_wldcore_window_records[level->map_cursor.window_index].position.y >= 0x69) {
+            g_wldcore_window_records[level->map_cursor.window_index].position.y = 0x68;
         }
     } else {
         held = g_wldcore_current_button_input;
@@ -276,7 +276,7 @@ scroll:
     }
 
 finish:
-    if (level->wide_view == 0 && (hit = level->snap_hit) != 0) {
+    if (level->map_cursor.wide_view == 0 && (hit = level->map_cursor.snap_hit) != 0) {
         g_wldcore_proposition_selected_entry = hit;
         return;
     }

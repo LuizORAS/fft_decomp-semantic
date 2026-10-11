@@ -119,7 +119,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
         if (level->scroll < 3 && level->text_ids[level->scroll] != -1) {
-            wldcore_window_draw_indexed_text((wldcore_window_text_table_t*)level, 4);
+            wldcore_window_draw_indexed_text(level, 4);
             level->scroll = level->scroll + 1;
             if (level->scroll == 3 || level->text_ids[level->scroll] == -1) {
                 g_wldcore_window_records[level->upper_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -130,7 +130,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
         }
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0 && level->scroll != 0) {
-        wldcore_window_draw_indexed_text((wldcore_window_text_table_t*)level, 2);
+        wldcore_window_draw_indexed_text(level, 2);
         level->scroll = level->scroll - 1;
         if (level->scroll == 0) {
             g_wldcore_window_records[level->lower_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;

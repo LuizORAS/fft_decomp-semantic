@@ -284,7 +284,7 @@ functions:
   - {addr: 0x8008aba8, size: 60, name: wldcore_reset_selected_saved_record, hash: 23177777d1486fca}
   - {addr: 0x8008abe4, size: 76, name: wldcore_reset_saved_record_fields, hash: 8362564a9498299c}
   - {addr: 0x8008ac30, size: 520, name: wldcore_script_run_until_yield, hash: d58db67b16b103f2}
-  - {addr: 0x8008ae38, size: 104, name: wldcore_find_save_slot_entry_by_tag, hash: 7f2dbc1cc0cfb332}
+  - {addr: 0x8008ae38, size: 104, name: wldcore_sound_novel_find_section_instruction, hash: 7f2dbc1cc0cfb332}
   - {addr: 0x8008aea0, size: 336, name: wldcore_window_draw_centered_text, hash: fc163dab7b9ad241}
   - {addr: 0x8008aff0, size: 304, name: wldcore_sound_play_pending_script_sounds, hash: 02e5ec28fdf0e91a}
   - {addr: 0x8008b120, size: 124, name: wldcore_sound_stop_weather_sfx_and_send_quad, hash: 2853875af4bd3a7f}
