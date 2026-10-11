@@ -1,15 +1,8 @@
-/* Run the help menu over the REQUIRE screen.
- *
- * The cursor and its shadow are two POLY_FT4 pairs, one primitive per display
- * buffer. Retail reaches the shadow pair through the cursor pair in places
- * (`quad[2]`, `quads[buffer + 2]`): the two arrays are adjacent on the stack.
- */
+/* Run the help menu over the REQUIRE screen. */
 #include "fft/event_helpmenu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
-
-void battle_thread_start(s32 thread_id, void (*function)(void));
 
 void helpmenu_menu_run_require_help(void) {
     POLY_FT4 cursor[2];
@@ -189,6 +182,7 @@ void helpmenu_menu_run_require_help(void) {
             shadow_quad->v2 = 0;
             shadow_quad->v3 = 16;
             setXYWH(quad, x, y + bob, 16, 16);
+            /* The shadow follows cursor; its named pointer changes store scheduling. */
             setXYWH(&quad[2], x + 2, y + bob + 2, 16, 16);
         } else {
             POLY_FT4* quads;
@@ -199,10 +193,10 @@ void helpmenu_menu_run_require_help(void) {
             quads = cursor;
             setUV4(&quads[buffer], u, 0, u + 16, 0, 0xA8, 16, u + 16, 16);
             u += 16;
-            setUV4(&quads[buffer + 2], u, 0, u + 16, 0, 0xB8, 16, u + 16, 16);
+            setUV4(&shadow[buffer], u, 0, u + 16, 0, 0xB8, 16, u + 16, 16);
             setXYWH(&quads[buffer], x + bob, y, 16, 16);
             shadow_x = x + 2 + bob;
-            setXYWH(&quads[buffer + 2], shadow_x, y + 2, 16, 16);
+            setXYWH(&shadow[buffer], shadow_x, y + 2, 16, 16);
         }
         if (self->task_words[1] != 0) {
             cursor[buffer].clut = 0x7DFC;
