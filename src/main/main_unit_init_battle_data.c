@@ -29,9 +29,9 @@ void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party)
     birthday->birthday = value;
     birthday->zodiac = party->zodiac >> PARTY_ZODIAC_SHIFT;
     unit->secondary_skillset = party->secondary_skillset;
-    unit->reaction_ability = party->reaction_ability[0] + (party->reaction_ability[1] << 8);
-    unit->support_ability = party->support_ability[0] + (party->support_ability[1] << 8);
-    unit->movement_ability = party->movement_ability[0] + (party->movement_ability[1] << 8);
+    unit->rsm.reaction = party->reaction_ability[0] + (party->reaction_ability[1] << 8);
+    unit->rsm.support = party->support_ability[0] + (party->support_ability[1] << 8);
+    unit->rsm.movement = party->movement_ability[0] + (party->movement_ability[1] << 8);
     main_util_copy_byte_data(party->equipment, unit->equipment, UNIT_EQUIPMENT_SLOT_COUNT);
     unit->experience = party->experience;
     unit->level = party->level;

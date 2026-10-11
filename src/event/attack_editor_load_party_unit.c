@@ -127,9 +127,9 @@ void attack_editor_load_party_unit(s32 unused, s32 party_index) {
         editor->ability_ids[1] = field_value;
         if (field_value == 0)
             g_attack_editor_secondary_skillset_name[1] = 0xfe;
-        editor->ability_ids[2] = unit->reaction_ability;
-        editor->ability_ids[3] = unit->support_ability;
-        editor->ability_ids[4] = unit->movement_ability;
+        editor->ability_ids[2] = unit->rsm.reaction;
+        editor->ability_ids[3] = unit->rsm.support;
+        editor->ability_ids[4] = unit->rsm.movement;
     }
 
     item_id = 0;

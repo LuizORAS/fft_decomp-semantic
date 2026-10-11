@@ -56,7 +56,7 @@ void battle_menu_display_hovered_unit_stats(
         g_battle_menu_hovered_stats_frame_count++;
     }
     if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
-        text_id = unit->reaction_ability;
+        text_id = unit->rsm.reaction;
         if (text_id >= ABILITY_ID_COUNT) {
             text_id = 0;
         }

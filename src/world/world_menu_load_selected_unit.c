@@ -123,9 +123,9 @@ void world_menu_load_selected_unit(void) {
         editor->ability_ids[1] = field_value;
         if (field_value == 0)
             g_world_unit_editor_secondary_skillset_name[1] = 0xfe;
-        editor->ability_ids[2] = unit->reaction_ability;
-        editor->ability_ids[3] = unit->support_ability;
-        editor->ability_ids[4] = unit->movement_ability;
+        editor->ability_ids[2] = unit->rsm.reaction;
+        editor->ability_ids[3] = unit->rsm.support;
+        editor->ability_ids[4] = unit->rsm.movement;
     }
 
     for (i = 0; i < 5; i++) {

@@ -13,7 +13,7 @@ void main_unit_enable_rsm_flags(battle_stats_t* unit) {
         main_unit_set_rsm_flag(unit, unit->innate_abilities[i]);
         i += 1;
     } while (i < 4);
-    main_unit_set_rsm_flag(unit, unit->reaction_ability);
-    main_unit_set_rsm_flag(unit, unit->support_ability);
-    main_unit_set_rsm_flag(unit, unit->movement_ability);
+    main_unit_set_rsm_flag(unit, unit->rsm.reaction);
+    main_unit_set_rsm_flag(unit, unit->rsm.support);
+    main_unit_set_rsm_flag(unit, unit->rsm.movement);
 }

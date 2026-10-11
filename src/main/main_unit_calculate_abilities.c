@@ -17,7 +17,7 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
     u16 value;
 
     if (entd == 0) {
-        main_util_clear_byte_data(&unit->reaction_ability, 6);
+        main_util_clear_byte_data(&unit->rsm, sizeof(unit->rsm));
         return;
     }
 
@@ -75,7 +75,7 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
         unit->equipment_categories[i] = g_main_job_data_pointer[job_id].equipment_categories[i];
     }
 
-    unit->reaction_ability = main_unit_calculate_rsm(unit, entd->reaction_ability, RSM_ABILITY_FILTER_REACTION, entd);
-    unit->support_ability = main_unit_calculate_rsm(unit, entd->support_ability, RSM_ABILITY_FILTER_SUPPORT, entd);
-    unit->movement_ability = main_unit_calculate_rsm(unit, entd->movement_ability, RSM_ABILITY_FILTER_MOVEMENT, entd);
+    unit->rsm.reaction = main_unit_calculate_rsm(unit, entd->rsm.reaction, RSM_ABILITY_FILTER_REACTION, entd);
+    unit->rsm.support = main_unit_calculate_rsm(unit, entd->rsm.support, RSM_ABILITY_FILTER_SUPPORT, entd);
+    unit->rsm.movement = main_unit_calculate_rsm(unit, entd->rsm.movement, RSM_ABILITY_FILTER_MOVEMENT, entd);
 }
