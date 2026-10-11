@@ -109,7 +109,7 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
 void battle_camera_step_focus_toward_cursor_tile(s16 height);
 void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, SVECTOR* angles);
 void battle_camera_execute_position_command(s32 command, s32 target, s32 duration, VECTOR* offset);
-s32 battle_camera_get_input_direction(battle_camera_input_source_e source);
+s32 battle_camera_get_input_direction(s32 source);
 void battle_camera_update_effect_rotation_and_zoom(void);
 
 /* Some routines address these components as separate linker symbols. */
