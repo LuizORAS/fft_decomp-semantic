@@ -69,9 +69,7 @@ int sprintf(char* destination, const char* format, ...) {
             break;
         }
         if (character == '*') {
-            conversion_word.argument = arguments;
-            arguments = conversion_word.argument + sizeof(u32);
-            state.width = *(s32*)conversion_word.argument;
+            state.width = va_arg(arguments, s32);
             if (state.width < 0) {
                 state.width = -state.width;
                 state.flags.bits |= PSYQ_PRINTF_LEFT;
@@ -95,9 +93,7 @@ int sprintf(char* destination, const char* format, ...) {
             format = current + 1;
             character = current[1];
             if (character == '*') {
-                conversion_word.argument = arguments;
-                arguments = conversion_word.argument + sizeof(u32);
-                state.precision = *(s32*)conversion_word.argument;
+                state.precision = va_arg(arguments, s32);
                 format = current + 2;
                 character = current[2];
             } else {
@@ -266,15 +262,11 @@ int sprintf(char* destination, const char* format, ...) {
             }
             goto write_segment;
         case 'c':
-            value = (int)arguments;
-            arguments = (char*)value + sizeof(u32);
-            *--segment = *(u8*)value;
+            *--segment = va_arg(arguments, int);
             length = 1;
             goto write_segment;
         case 's':
-            value = (int)arguments;
-            arguments = (char*)value + sizeof(u32);
-            segment = *(char**)value;
+            segment = va_arg(arguments, char*);
             if (state.flags.bits & PSYQ_PRINTF_ALTERNATE) {
                 length = *segment++;
                 if ((state.flags.bits & PSYQ_PRINTF_PRECISION) && state.precision < length)
