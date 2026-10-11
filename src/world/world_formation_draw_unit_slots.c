@@ -44,8 +44,7 @@ void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
         }
         unit = g_world_formation_unit_pointers[i];
         if (unit->gender_flags & UNIT_FLAG_EGG) {
-            world_formation_draw_egg_sprite(
-                (world_oriented_quad_t*)&positions[i], unit->egg_color, 0, unit->birthday & 0xF, ot_index);
+            world_formation_draw_egg_sprite(&positions[i], unit->egg_color, 0, unit->birthday & 0xF, ot_index);
         } else {
             brightness = world_formation_cursor_distance_falloff(positions[i].x, positions[i].y, 0xC8, 0x50);
             if (brightness > 0x80) {

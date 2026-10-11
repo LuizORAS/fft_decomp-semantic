@@ -1227,19 +1227,6 @@ void world_input_update_menu_repeat(u32 buttons);
 void world_input_update_menu_state(void);
 
 /* formation */
-/* Provisional 12-byte formation portrait source rectangle.
- *
- * The builder replaces clut after copying a table entry. tpage selects the
- * VRAM x base: 0x100 for 0x64, else 0x140. */
-typedef struct world_formation_graphic_entry {
-    s16 x;     /* 0x00 */
-    u16 y;     /* 0x02 */
-    s16 w;     /* 0x04 */
-    s16 h;     /* 0x06 */
-    u16 clut;  /* 0x08 */
-    s16 tpage; /* 0x0a: GetTPage(0, 3, 0x100 or 0x140, 0), 0x64 or 0x65 */
-} world_formation_graphic_entry_t;
-typedef char world_formation_graphic_entry_size_must_be_0xc[(sizeof(world_formation_graphic_entry_t) == 0xc) ? 1 : -1];
 
 typedef enum world_monster_breed_rarity {
     WORLD_MONSTER_BREED_RARITY_NONE = 0,
@@ -1392,7 +1379,7 @@ extern s32 g_world_formation_current_menu; /* world_formation_menu_e */
 extern s32 g_world_formation_display_mode;
 extern point16_t g_world_formation_cursor_position;
 extern u8 g_world_formation_generic_human_graphic_index_table[];
-extern world_formation_graphic_entry_t g_world_formation_graphic_entries[];
+extern world_gfx_texture_source_t g_world_formation_graphic_entries[];
 extern world_menu_input_state_t g_world_formation_menu_input_state;
 
 /* First-word alias retained for the target's separate absolute store. */
@@ -1545,8 +1532,7 @@ typedef enum world_formation_record_list_mode {
 } world_formation_record_list_mode_e;
 s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list, s32 mode);
 
-void world_formation_build_unit_graphic_entry(
-    s16 formation_index, world_formation_graphic_entry_t* destination, s32 unused);
+void world_formation_build_unit_graphic_entry(s16 formation_index, world_gfx_texture_source_t* destination, s32 unused);
 
 void world_formation_build_unit_record(
     struct battle_stats* unit, struct world_formation_unit* record, struct party_data* party);
@@ -1567,7 +1553,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
 void world_formation_draw_sprite_with_shadow(world_oriented_quad_t* pos, const rgb24_t* rgb, s32 ot_index);
 
 void world_formation_draw_egg_sprite(
-    world_oriented_quad_t* pos, s32 palette, const rgb24_t* rgb, s32 hatch_countdown, s32 ot_index);
+    point16_t* pos, s32 palette, const rgb24_t* rgb, s32 hatch_countdown, s32 ot_index);
 
 void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, rgb24_t* rgb, s32 ot_index);
 s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s16 item_id);
@@ -1575,7 +1561,7 @@ s32 world_formation_find_index_by_roster_slot(s16 roster_slot);
 s32 world_formation_generate_unit(s16 unit_type);
 
 void world_formation_get_generic_human_graphic_entry(
-    s32 job_id, s16 is_female, world_formation_graphic_entry_t* destination);
+    s32 job_id, s16 is_female, world_gfx_texture_source_t* destination);
 
 s32 world_formation_get_job_wheel_cursor_job_level(s32 unused_row);
 s32 world_formation_get_unit_brave(s32 unit_id);

@@ -7,16 +7,6 @@
 #    define NULL 0
 #endif
 
-/* The slot record passed to the unit sprite and egg portrait drawers: the
- * world_oriented_quad_t layout with the quad size at +0x04/+0x06. */
-typedef struct world_formation_slot_sprite {
-    s16 x;
-    s16 y;
-    s16 w;
-    s16 h;
-    u8 _unused_08[0x14 - 0x08];
-} world_formation_slot_sprite_t;
-
 /*
  * Formation screen unit grid: handle the palette, browse and banner toggles,
  * step the grid cursor, then draw each visible unit slot and ease the cursor
@@ -29,7 +19,7 @@ typedef struct world_formation_slot_sprite {
 s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banner, s16 allow_browse, s16 input,
     s16 locked, s32 (*get_mode)(s32), s32 (*get_shade)(s32)) {
     world_oriented_quad_t unused_desc;
-    world_formation_slot_sprite_t pos;
+    world_oriented_quad_t pos;
     rgb24_t unused_rgb;
     rgb24_t rgb;
     s32 enabled;
@@ -168,8 +158,8 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             if (i >= g_world_formation_unit_count) {
                 break;
             }
-            pos.x = col * 62 + 6;
-            pos.y = y;
+            pos.position.x = col * 62 + 6;
+            pos.position.y = y;
             if (i == g_world_formation_selected_unit_index) {
                 g_world_formation_cursor_target.x = col * 62 + 0x22;
                 g_world_formation_cursor_target.y = y + 0x19;
@@ -190,14 +180,15 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 } else {
                     mode = g_world_formation_stat_display_mode;
                 }
-                world_formation_draw_graphics_below_sprite(i, mode, pos.x, pos.y, color, get_shade, 0, 8);
+                world_formation_draw_graphics_below_sprite(
+                    i, mode, pos.position.x, pos.position.y, color, get_shade, 0, 8);
             }
             value = 0x50;
             if (g_world_formation_unit_pointers[i]->proposition_status == 0) {
                 if (get_shade != NULL) {
                     value = get_shade(i);
                 } else {
-                    value = world_formation_cursor_distance_falloff(pos.x, pos.y, 0xc8, 0x50);
+                    value = world_formation_cursor_distance_falloff(pos.position.x, pos.position.y, 0xc8, 0x50);
                     if (value > 0x80) {
                         value = 0x80;
                     }
@@ -209,14 +200,13 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             rgb.r = rgb_value;
             unit = g_world_formation_unit_pointers[i];
             if (unit->gender_flags & UNIT_FLAG_EGG) {
-                world_formation_draw_egg_sprite(
-                    (world_oriented_quad_t*)&pos, unit->egg_color, &rgb, unit->birthday & 0xf, 6);
+                world_formation_draw_egg_sprite(&pos.position, unit->egg_color, &rgb, unit->birthday & 0xf, 6);
             } else {
-                world_formation_draw_unit_sprite(i, (point16_t*)&pos, &rgb, 6);
+                world_formation_draw_unit_sprite(i, &pos.position, &rgb, 6);
             }
-            g_world_formation_unit_dot_sprite.x = pos.x;
-            g_world_formation_unit_dot_sprite.y = pos.y;
-            g_world_formation_unit_dot_sprite.tpage = GetTPage(0, 1, 0x3c0, 0x100);
+            g_world_formation_unit_dot_sprite.position.x = pos.position.x;
+            g_world_formation_unit_dot_sprite.position.y = pos.position.y;
+            g_world_formation_unit_dot_sprite.source.tpage = GetTPage(0, 1, 0x3c0, 0x100);
             if (i == g_world_formation_selected_unit_index) {
                 g_world_formation_dot_glow_timer += g_world_formation_dot_glow_direction * 2;
                 if (g_world_formation_dot_glow_timer > 0x28) {

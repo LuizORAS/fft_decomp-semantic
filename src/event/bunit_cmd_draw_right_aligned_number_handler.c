@@ -20,9 +20,9 @@ menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction
     y = cmd->number.y;
     blanks = cmd->number.width - length;
     count = cmd->number.width - blanks;
-    g_bunit_gfx_blank_cell_rect.y = y + 4;
+    g_bunit_gfx_blank_cell_rect.position.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
-        g_bunit_gfx_blank_cell_rect.x = x;
+        g_bunit_gfx_blank_cell_rect.position.x = x;
         bunit_gfx_enqueue_oriented_textured_quad(
             &g_bunit_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_bunit_gfx_otag_index);
         x += 8;

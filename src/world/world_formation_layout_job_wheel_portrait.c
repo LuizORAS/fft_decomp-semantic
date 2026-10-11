@@ -6,7 +6,7 @@
  * unit's formation graphic and queue a VRAM move of that graphic to
  * (0x240, 0x130), where g_world_job_wheel_portrait_quad samples it. */
 void world_formation_layout_job_wheel_portrait(void) {
-    world_formation_graphic_entry_t entry;
+    world_gfx_texture_source_t entry;
     RECT rect;
     s16 x;
     s16 y;
@@ -20,11 +20,11 @@ void world_formation_layout_job_wheel_portrait(void) {
     g_world_job_wheel_new_portrait_quad.x = x;
     g_world_job_wheel_portrait_quad.clut = entry.clut;
     if (entry.tpage == 0x64) {
-        rect.x = (entry.x >> 2) + 0x100;
+        rect.x = (entry.u >> 2) + 0x100;
     } else {
-        rect.x = (entry.x >> 2) + 0x140;
+        rect.x = (entry.u >> 2) + 0x140;
     }
-    rect.y = entry.y;
+    rect.y = entry.v;
     rect.w = entry.w >> 2;
     rect.h = entry.h;
     world_gfx_enqueue_draw_move(&rect, 0x240, 0x130, 0);

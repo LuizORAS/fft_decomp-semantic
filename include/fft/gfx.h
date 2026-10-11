@@ -177,22 +177,25 @@ typedef struct world_gfx_textured_quad_source {
     u16 tpage;     /* 0x22 */
 } world_gfx_textured_quad_source_t;
 
-/* Sprite placement record passed to the *_gfx_enqueue_oriented_textured_quad
- * readers: screen rectangle, texture origin and extent, CLUT and texture page
- * (0x14 bytes; equip_menu_draw_equipment_slot_marker proves the stride of its
- * marker arrays). Every member is a halfword in the writers; the readers
- * narrow the texture members to their low byte. */
+/* Twelve-byte texture cell copied by the formation portrait producers and
+ * embedded in oriented menu quads. */
+typedef struct world_gfx_texture_source {
+    s16 u;     /* 0x00 */
+    u16 v;     /* 0x02 */
+    s16 w;     /* 0x04 */
+    s16 h;     /* 0x06 */
+    u16 clut;  /* 0x08 */
+    s16 tpage; /* 0x0a */
+} world_gfx_texture_source_t;
+typedef char world_gfx_texture_source_size_must_be_0xc[sizeof(world_gfx_texture_source_t) == 0xc ? 1 : -1];
+
+/* Screen rectangle and texture source, passed to the oriented-quad readers.
+ * Equipment-slot marker arrays have a 0x14-byte stride. */
 typedef struct world_oriented_quad {
-    u16 x;     /* 0x00 */
-    s16 y;     /* 0x02; the save-slot lists sign-test it */
-    u16 w;     /* 0x04 */
-    u16 h;     /* 0x06 */
-    u16 u;     /* 0x08 */
-    u16 v;     /* 0x0a */
-    s16 uw;    /* 0x0c; world_formation_draw_sprite_with_shadow compares it signed */
-    u16 vh;    /* 0x0e */
-    u16 clut;  /* 0x10 */
-    u16 tpage; /* 0x12 */
+    point16_t position;                /* 0x00 */
+    u16 w;                             /* 0x04 */
+    u16 h;                             /* 0x06 */
+    world_gfx_texture_source_t source; /* 0x08 */
 } world_oriented_quad_t;
 typedef char world_oriented_quad_size_must_be_0x14[sizeof(world_oriented_quad_t) == 0x14 ? 1 : -1];
 

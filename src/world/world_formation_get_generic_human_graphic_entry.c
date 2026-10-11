@@ -7,7 +7,7 @@
  * (0x3a, 0x3b), while Mime uses 0x3c and the others job * 2 - 0x7c, both
  * plus one for a female unit. */
 void world_formation_get_generic_human_graphic_entry(
-    s32 job_id, s16 is_female, world_formation_graphic_entry_t* destination) {
+    s32 job_id, s16 is_female, world_gfx_texture_source_t* destination) {
     s16 id = job_id;
     s16 idx;
 

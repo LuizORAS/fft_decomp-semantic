@@ -29,10 +29,10 @@ menu_instruction_t* world_menu_script_draw_plain_number(menu_instruction_t* inst
     value -= blanks;
     x = instruction->number.x;
     y = instruction->number.y;
-    g_world_menu_number_blank_sprite.y = y + 4;
+    g_world_menu_number_blank_sprite.position.y = y + 4;
     blanks -= 1;
     while (blanks != -1) {
-        g_world_menu_number_blank_sprite.x = x;
+        g_world_menu_number_blank_sprite.position.x = x;
         world_gfx_enqueue_oriented_textured_quad(
             &g_world_menu_number_blank_sprite, 0, TEXTURE_UV_FLIP_NONE, 0, g_world_menu_draw_priority);
         blanks -= 1;

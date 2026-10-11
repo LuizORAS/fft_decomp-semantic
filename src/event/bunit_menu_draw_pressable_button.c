@@ -55,19 +55,19 @@ void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 b
     }
     entry = g_bunit_menu_button_piece_starts[slot];
     count = g_bunit_menu_button_piece_starts[slot + 1] - entry;
-    desc.quad.clut = clut;
-    desc.quad.tpage = g_bunit_menu_icon_texture_page;
+    desc.quad.source.clut = clut;
+    desc.quad.source.tpage = g_bunit_menu_icon_texture_page;
     if (count > 0) {
         do {
             world_menu_button_piece_t* sprite = &g_bunit_slot_sprite_entries[entry];
-            desc.quad.x = x + sprite->x_offset;
-            desc.quad.y = y + sprite->y_offset;
+            desc.quad.position.x = x + sprite->x_offset;
+            desc.quad.position.y = y + sprite->y_offset;
             desc.quad.w = abs(g_bunit_menu_button_piece_scales[entry][0] * sprite->w) >> 12;
             desc.quad.h = abs(g_bunit_menu_button_piece_scales[entry][1] * sprite->h) >> 12;
-            desc.quad.u = sprite->u;
-            desc.quad.v = sprite->v;
-            desc.quad.uw = sprite->w;
-            desc.quad.vh = sprite->h;
+            desc.quad.source.u = sprite->u;
+            desc.quad.source.v = sprite->v;
+            desc.quad.source.w = sprite->w;
+            desc.quad.source.h = sprite->h;
             scale_x = g_bunit_menu_button_piece_scales[entry][0];
             scale_y = g_bunit_menu_button_piece_scales[entry][1];
             orientation = scale_x < 0;

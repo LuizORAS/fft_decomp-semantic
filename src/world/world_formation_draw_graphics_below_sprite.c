@@ -194,21 +194,21 @@ void world_formation_draw_graphics_below_sprite(
     if (mode == MENU_UNIT_READOUT_EQUIP_LABEL) {
         if (get_value(unit_index) < 100) {
             sprite = &g_world_formation_label_cant_equip;
-            sprite->x = x + 9;
+            sprite->position.x = x + 9;
         } else {
             sprite = &g_world_formation_label_equipping;
-            sprite->x = x + 11;
+            sprite->position.x = x + 11;
         }
     } else if (mode == MENU_UNIT_READOUT_LEAVING && enabled != 0) {
         sprite = &g_world_formation_label_leaving;
-        sprite->x = x + 6;
+        sprite->position.x = x + 6;
     } else if (mode == MENU_UNIT_READOUT_MISSING && enabled != 0) {
         sprite = &g_world_formation_label_missing;
-        sprite->x = x + 15;
+        sprite->position.x = x + 15;
     } else {
         return;
     }
-    sprite->y = y + 40;
-    sprite->tpage = GetTPage(0, 0, 0x180, 0);
+    sprite->position.y = y + 40;
+    sprite->source.tpage = GetTPage(0, 0, 0x180, 0);
     world_gfx_enqueue_oriented_textured_quad(sprite, color, TEXTURE_UV_FLIP_NONE, 0, priority);
 }

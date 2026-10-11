@@ -92,18 +92,18 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         return;
     }
-    g_bunit_unit_shadow_sprite.x = x + 0x12;
-    g_bunit_unit_shadow_sprite.y = y + base_y - 4;
-    g_bunit_unit_shadow_sprite.tpage = GetTPage(0, 2, 0x3C0, 0x100);
+    g_bunit_unit_shadow_sprite.position.x = x + 0x12;
+    g_bunit_unit_shadow_sprite.position.y = y + base_y - 4;
+    g_bunit_unit_shadow_sprite.source.tpage = GetTPage(0, 2, 0x3C0, 0x100);
     bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_shadow_sprite, 0, TEXTURE_UV_FLIP_NONE, 1, 5);
-    g_bunit_unit_dot_sprite.x = x;
-    g_bunit_unit_dot_sprite.y = y;
+    g_bunit_unit_dot_sprite.position.x = x;
+    g_bunit_unit_dot_sprite.position.y = y;
     if (g_bunit_unit_data[unit]->team_kind == 1) {
-        g_bunit_unit_dot_sprite.clut = 0x3F12;
+        g_bunit_unit_dot_sprite.source.clut = 0x3F12;
     } else {
-        g_bunit_unit_dot_sprite.clut = 0x3F13;
+        g_bunit_unit_dot_sprite.source.clut = 0x3F13;
     }
-    g_bunit_unit_dot_sprite.tpage = GetTPage(0, 1, 0x3C0, 0x100);
+    g_bunit_unit_dot_sprite.source.tpage = GetTPage(0, 1, 0x3C0, 0x100);
     if (unit == g_bunit_unit_selected_index) {
         g_bunit_unit_dot_glow_timer += g_bunit_unit_dot_glow_direction * 2;
         if (g_bunit_unit_dot_glow_timer > 0x28) {

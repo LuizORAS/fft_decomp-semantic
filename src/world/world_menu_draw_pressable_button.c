@@ -45,22 +45,22 @@ void world_menu_draw_pressable_button(s16 index, s32 x, s16 y, s16 pressed, s16 
     }
     piece_index = g_world_menu_button_piece_starts[index];
     count = g_world_menu_button_piece_starts[index + 1] - piece_index;
-    sprite.clut = clut;
-    sprite.tpage = g_world_menu_icon_tpage;
+    sprite.source.clut = clut;
+    sprite.source.tpage = g_world_menu_icon_tpage;
     for (i = 0; i < count; i++) {
         piece = &g_world_menu_button_pieces[piece_index];
-        sprite.x = x + piece->x_offset;
-        sprite.y = y + piece->y_offset;
+        sprite.position.x = x + piece->x_offset;
+        sprite.position.y = y + piece->y_offset;
         product = g_world_menu_button_piece_scales[piece_index].x * piece->w;
         w = ((product < 0) ? -product : product) >> 12;
         sprite.w = w;
         h = g_world_menu_button_piece_scales[piece_index].y * piece->h;
         h = (h < 0) ? -h : h;
         sprite.h = h >> 12;
-        sprite.u = piece->u;
-        sprite.v = piece->v;
-        sprite.uw = piece->w;
-        sprite.vh = piece->h;
+        sprite.source.u = piece->u;
+        sprite.source.v = piece->v;
+        sprite.source.w = piece->w;
+        sprite.source.h = piece->h;
         if (g_world_menu_button_piece_scales[piece_index].x >= 0x1005) {
             sprite.w = w + 2;
         }

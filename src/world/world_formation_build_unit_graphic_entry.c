@@ -9,7 +9,7 @@
  * job and gender. The third argument is retained because all known callers
  * pass it even though this function does not consume it. */
 void world_formation_build_unit_graphic_entry(
-    s16 formation_index, world_formation_graphic_entry_t* destination, s32 unused) {
+    s16 formation_index, world_gfx_texture_source_t* destination, s32 unused) {
     world_formation_unit_t* unit;
     s16 job_id;
     s32 index;
