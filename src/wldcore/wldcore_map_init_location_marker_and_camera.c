@@ -26,7 +26,7 @@ void wldcore_map_init_location_marker_and_camera(void) {
     g_wldcore_map_projection_state.flags
         = WLDCORE_PROJECTION_FLAG_UPDATE_POSITION | WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION;
     count = g_wldcore_window_render_object_count;
-    g_wldcore_window_render_object_queue[count++] = &marker->render.flags;
+    g_wldcore_window_render_object_queue[count++] = &marker->render;
     marker->render.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
     g_wldcore_map_projection_state.marker.render.priority = 0xE;
     g_wldcore_window_render_object_count = count;

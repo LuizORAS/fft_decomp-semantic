@@ -2,10 +2,10 @@
 #include "psx/types.h"
 
 /* Attach the current window record to the caller's list and reset its colour. */
-s32 wldcore_window_append_record_and_reset_color(s32** queue, s32* count) {
+s32 wldcore_window_append_record_and_reset_color(void** queue, s32* count) {
     CVECTOR* color;
 
-    queue[*count] = &g_wldcore_window_records[g_wldcore_window_record_count].flags;
+    queue[*count] = &g_wldcore_window_records[g_wldcore_window_record_count];
     /* Direct record.color access changes the column base and instruction scheduling. */
     color = &g_wldcore_window_records->color;
     g_wldcore_window_records[g_wldcore_window_record_count].palette = 0;

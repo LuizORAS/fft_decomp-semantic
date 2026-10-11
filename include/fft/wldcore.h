@@ -429,8 +429,8 @@ typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_stat
  * (main) and 0x800bb3c4 (auxiliary), one per display buffer. The 0x14 stride
  * is what wldcore_init_core indexes these globals with. */
 /* The ordering-table handle is libgs GsOT; see include/psx/libgs.h. */
-/* The display-object queues hold a pointer to each object's leading flags
- * word, which selects the handler in wldcore_dispatch_display_object_list:
+/* Heterogeneous display-object queues: each object's leading flags word
+ * selects the handler in wldcore_dispatch_display_object_list:
  * bit 0 an animated object (world_animated_render_record_t), bit 1 a sprite
  * (wldcore_window_render_record_t). */
 struct wldcore_window_render_record;
@@ -478,7 +478,7 @@ void wldcore_gfx_draw_context_value_display(GsOT* ot);
 void wldcore_gfx_draw_display_object_sprite(struct wldcore_window_render_record* object, GsOT* ot);
 void wldcore_gfx_draw_calendar_date(GsOT* ot);
 void wldcore_clear_screen_and_set_map_clip_rect(s32 mode);
-void wldcore_dispatch_display_object_list(GsOT* ot, s32** list, s32 count);
+void wldcore_dispatch_display_object_list(GsOT* ot, void** list, s32 count);
 void wldcore_fade_draw_screen_overlays(void);
 void wldcore_fade_start_screen(s32 flags, s32 duration);
 void wldcore_gfx_clear_vram_and_scratch(s32 clear_scratch);
@@ -1974,7 +1974,7 @@ extern wldcore_menu_stack_record_t g_wldcore_menu_stack_records_next[];
 extern s32 g_wldcore_menu_stack_types[];
 extern s32 g_wldcore_menu_stack_types_next[];
 extern s32 g_wldcore_window_aux_render_object_count;
-extern s32* g_wldcore_window_aux_render_object_queue[];
+extern void* g_wldcore_window_aux_render_object_queue[];
 
 /* Shared panel renderer state at 0x800bb31c, filled by
  * wldcore_window_init_panel_render_state and
@@ -1992,7 +1992,7 @@ extern s32 g_wldcore_window_render_object_count;
 /* Display-object queues drawn by 0x8006ae20 each frame: every entry points at
  * the leading flags word of a window record, render record or map dot, and
  * wldcore_window_set_render_objects_visible toggles bit 0x08 through it. */
-extern s32* g_wldcore_window_render_object_queue[];
+extern void* g_wldcore_window_render_object_queue[];
 extern wldcore_window_render_record_t g_wldcore_window_render_records[];
 extern s32 g_wldcore_window_render_record_count;
 extern wldcore_window_xy_t g_wldcore_window_record_positions[];
@@ -2042,8 +2042,8 @@ void wldcore_menu_run_world_frame(GsOT* context);
 void wldcore_menu_show_next_sequence_message(wldcore_menu_countdown_t* countdown);
 
 /* Both return the appended record's index. */
-s32 wldcore_window_append_record_and_reset_color(s32** queue, s32* count);
-s32 wldcore_window_append_render_record_and_reset_color(s32** queue, s32* count);
+s32 wldcore_window_append_record_and_reset_color(void** queue, s32* count);
+s32 wldcore_window_append_render_record_and_reset_color(void** queue, s32* count);
 void wldcore_window_apply_layout(wldcore_window_layout_request_t* request);
 
 void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordinate_mode, u32* image);
