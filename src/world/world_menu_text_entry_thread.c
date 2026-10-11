@@ -13,12 +13,10 @@ void world_menu_text_entry_thread(void) {
     u16 second;
     s32 speaker_id;
     u16 text_id;
+    world_menu_text_binding_t* prepare_binding;
 
-    {
-        world_menu_text_binding_t* prepare_binding = entry->context;
-
-        prepare_binding->prepare();
-    }
+    prepare_binding = entry->context;
+    prepare_binding->prepare();
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
     text_id = entry->text_id;
     second = entry->header_id;

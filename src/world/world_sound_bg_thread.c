@@ -9,14 +9,12 @@ void world_sound_bg_thread(void) {
     s32 handle;
     s32 volume;
     s32 resource;
-    s32 use_find_channel;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
     parameter = world_thread_get_current_parameter_1();
-    use_find_channel = parameter->find_channel;
     sound_id = parameter->sound_id;
     resource = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
-    if (use_find_channel != 0) {
+    if (parameter->find_channel != 0) {
         handle = sound_id + resource;
         main_sound_stop_sfx(handle);
         main_sound_play_sfx_find_channel(handle);

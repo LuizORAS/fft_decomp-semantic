@@ -2163,6 +2163,7 @@ extern RECT g_world_menu_portrait_pixel_rect;
 extern RECT g_world_menu_portrait_palette_rect;
 extern s32 g_world_menu_scrolling_list_depth;
 extern s32 g_world_menu_hide_numeric_values;
+extern world_menu_quad_page_t g_world_menu_selected_tile_info_pages[2];
 extern u16 g_world_menu_overlay_state;
 extern u16 g_world_menu_transition_finished;
 extern u16 g_world_menu_input_block_frames;
@@ -3168,7 +3169,6 @@ extern u16 g_world_animation_speed_forced;                             /* animat
 extern u8 g_world_rotation_speed_frames[];
 extern u8 g_world_location_names_resident[];
 extern s16 g_world_debug_variable_list_request_state;
-extern world_menu_quad_page_t world_D_80173CBC[2];
 extern s32 g_world_preview_stats_window_active;
 extern s8 g_world_dismiss_unit_prompt_running;
 extern world_menu_entry_t g_world_best_fit_confirm_menu;

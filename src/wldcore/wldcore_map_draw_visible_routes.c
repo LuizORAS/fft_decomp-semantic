@@ -5,7 +5,7 @@
 /* Draws the visible world-map routes into the auxiliary ordering table as
  * textured semi-transparent ribbons. Each route record is a run of packed
  * (x, y) pairs holding the two edges of the ribbon; every point is projected
- * through func_8001D3E8 into one of four rotating vertex slots and flagged
+ * through RotTransSV into one of four rotating vertex slots and flagged
  * in-bounds when x + 127 and y + 111 fall inside 255 x 227. Once four slots
  * are full they become one POLY_FT4 quad, emitted when either edge-leading
  * vertex was in bounds, and the last pair slides down to slots 0 and 1 so the

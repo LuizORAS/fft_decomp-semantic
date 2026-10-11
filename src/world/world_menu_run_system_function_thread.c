@@ -7,7 +7,7 @@
  */
 void world_menu_run_system_function_thread(void) {
     s32 id;
-    s32 value;
+    s32 menu_id;
     battle_system_function_t* entry;
 
     g_world_system_function_thread_busy = 1;
@@ -27,10 +27,10 @@ void world_menu_run_system_function_thread(void) {
     }
     world_camera_wait_until_idle();
     entry = &g_world_system_function_table[id];
-    value = entry->menu_id;
+    menu_id = entry->menu_id;
     g_world_menu_thread_menu_data[entry->menu_entry_index].text_id = entry->text_id;
     g_world_menu_system_function_row_actions[0] = entry->row_action;
-    g_world_menu_current_id = value;
+    g_world_menu_current_id = menu_id;
     g_world_menu_thread_menu_data[entry->menu_entry_index].thread_count = entry->thread_count;
     if (id == 0x1f) {
         world_thread_start(NATIVE_THREAD_SLOT_MENU, world_menu_open_option_dead_unit_panel);

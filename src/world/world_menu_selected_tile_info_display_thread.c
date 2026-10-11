@@ -16,7 +16,7 @@ void world_menu_selected_tile_info_display_thread(void) {
     POLY_GT4* quad;
 
     g_world_menu_hide_numeric_values = 0;
-    page = &world_D_80173CBC[0];
+    page = &g_world_menu_selected_tile_info_pages[0];
     world_gfx_set_draw_mode_for_texture_page(&page->modes[0], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_gfx_set_draw_mode_for_texture_page(&page->modes[1], MENU_TEXTURE_PAGE_FRAME);
     for (i = 0; i < 5; i++) {
@@ -34,13 +34,14 @@ void world_menu_selected_tile_info_display_thread(void) {
             &g_world_tile_info_image_location, &g_world_tile_info_image_params[i]);
     }
     world_text_configure_sprite_vram(&rect, 0x18, 0x10, (world_texture_prim_t*)&page->sprites[0], 0);
-    world_script_copy_bytes(&world_D_80173CBC[1], &world_D_80173CBC[0], sizeof(world_menu_quad_page_t));
+    world_script_copy_bytes(&g_world_menu_selected_tile_info_pages[1], &g_world_menu_selected_tile_info_pages[0],
+        sizeof(world_menu_quad_page_t));
 
     for (frame = 0;; frame++) {
         map_selected_tile_t* tile = &g_world_map_selected_tile_data;
         s16* value = &tile->depth;
 
-        page = &world_D_80173CBC[frame & 1];
+        page = &g_world_menu_selected_tile_info_pages[frame & 1];
         i = world_menu_build_quad_pieces(tile->display_height, page->quads) - 1;
         world_thread_yield();
         if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {

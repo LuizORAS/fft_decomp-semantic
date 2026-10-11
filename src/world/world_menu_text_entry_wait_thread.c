@@ -16,13 +16,11 @@ void world_menu_text_entry_wait_thread(void) {
     u16 first;
     u16 second;
     u16 third;
+    world_menu_text_binding_t* binding;
 
     param = (world_menu_entry_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
-    {
-        world_menu_text_binding_t* binding = param->context;
-
-        binding->prepare();
-    }
+    binding = param->context;
+    binding->prepare();
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
     second = param->text_id;
     task = param->context;
