@@ -137,25 +137,25 @@ void card_save_update_and_draw_slot_list(u16 input) {
             card_gfx_enqueue_oriented_textured_quad(
                 &g_card_save_slot_quads[4], card_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             card_gfx_set_otag_index(11);
-            g_card_save_slot_number_commands[0][8] = g_card_save_slot_quads[0].y;
-            g_card_save_slot_number_commands[0][9] = index + 1;
-            card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[0]);
+            g_card_save_slot_number_commands[0].number.y = g_card_save_slot_quads[0].y;
+            g_card_save_slot_number_commands[0].number.value = index + 1;
+            card_cmd_draw_decimal_number_handler(&g_card_save_slot_number_commands[0].number);
         }
         g_card_save_slot_quads[2].y = g_card_save_slot_quads[0].y;
         if (g_card_save_slot_quads[2].y >= 0 && g_card_save_slot_quads[2].y < 241) {
             card_gfx_enqueue_oriented_textured_quad(
                 &g_card_save_slot_quads[2], card_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
-            g_card_save_slot_number_commands[3][8] = g_card_save_slot_number_commands[2][8]
-                = g_card_save_slot_number_commands[1][8] = g_card_save_slot_quads[0].y;
-            g_card_save_slot_number_commands[3][9] = g_main_card_save_slot_playtimes[index][2];
-            g_card_save_slot_number_commands[2][9] = g_main_card_save_slot_playtimes[index][1];
-            g_card_save_slot_number_commands[1][9] = g_main_card_save_slot_playtimes[index][0];
-            if (g_card_save_slot_number_commands[1][9] >= 100) {
-                g_card_save_slot_number_commands[1][9] = 99;
+            g_card_save_slot_number_commands[3].number.y = g_card_save_slot_number_commands[2].number.y
+                = g_card_save_slot_number_commands[1].number.y = g_card_save_slot_quads[0].y;
+            g_card_save_slot_number_commands[3].number.value = g_main_card_save_slot_playtimes[index][2];
+            g_card_save_slot_number_commands[2].number.value = g_main_card_save_slot_playtimes[index][1];
+            g_card_save_slot_number_commands[1].number.value = g_main_card_save_slot_playtimes[index][0];
+            if (g_card_save_slot_number_commands[1].number.value >= 100) {
+                g_card_save_slot_number_commands[1].number.value = 99;
             }
-            card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[1]);
-            card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[2]);
-            card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[3]);
+            card_cmd_draw_decimal_number_handler(&g_card_save_slot_number_commands[1].number);
+            card_cmd_draw_decimal_number_handler(&g_card_save_slot_number_commands[2].number);
+            card_cmd_draw_decimal_number_handler(&g_card_save_slot_number_commands[3].number);
         }
         if (g_card_save_slot_file_states[index] == CARD_SAVE_SLOT_AVAILABLE) {
             rect.x = 0x74;

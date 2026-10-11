@@ -130,7 +130,7 @@ menu_window_command_t* card_cmd_draw_window_frame_handler(menu_window_command_t*
         g_card_cmd_window_interior_command.width = command->width;
         g_card_cmd_window_interior_command.height = command->height;
     }
-    card_cmd_draw_tiled_rectangle_handler((u8*)&g_card_cmd_window_interior_command);
+    card_cmd_draw_tiled_rectangle_handler(&g_card_cmd_window_interior_command);
 
     top = top + 9 + partial_height + full_rows * 16;
     rect.x = left;

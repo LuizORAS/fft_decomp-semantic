@@ -42,9 +42,9 @@ s32 card_io_wait_operation_result(s32 retry_limit);
 
 /* command */
 extern menu_window_command_t g_card_cmd_window_interior_command;
-u8* card_cmd_draw_decimal_number_handler(u8* command);
+menu_draw_number_command_t* card_cmd_draw_decimal_number_handler(menu_draw_number_command_t* command);
 menu_window_command_t* card_cmd_draw_window_frame_handler(menu_window_command_t* command);
-u8* card_cmd_draw_tiled_rectangle_handler(u8* command);
+menu_window_command_t* card_cmd_draw_tiled_rectangle_handler(menu_window_command_t* command);
 
 /* file */
 extern const char g_card_file_all_pattern[];
@@ -236,6 +236,13 @@ typedef struct card_save_slot_text {
     u8 data[0x50];
 } card_save_slot_text_t;
 
+/* Ten-byte number command in a 12-byte save-menu slot. */
+typedef struct card_save_slot_number_command {
+    menu_draw_number_command_t number;
+    u8 _unused_0a[2];
+} card_save_slot_number_command_t;
+typedef char card_save_slot_number_command_size_must_be_12[sizeof(card_save_slot_number_command_t) == 12 ? 1 : -1];
+
 /* 0x801ca968, running to g_card_io_open_result: 0x1e80 bytes, the 0x1e00 save image
  * (card_save_buffer_t) plus a 0x80 tail that card_save_init_menu_state clears
  * with it. */
@@ -258,7 +265,7 @@ extern u16 g_card_save_slot_cursor_animation[];
 extern u16 g_card_save_slot_cursor_position[];
 extern card_save_slot_text_t g_card_save_slot_descriptions[];
 extern s16 g_card_save_slot_index;
-extern u8 g_card_save_slot_number_commands[4][12];
+extern card_save_slot_number_command_t g_card_save_slot_number_commands[4];
 extern world_oriented_quad_t g_card_save_slot_quads[];
 extern s16 g_card_save_slot_row_y;
 
