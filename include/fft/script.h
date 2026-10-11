@@ -398,13 +398,6 @@ typedef struct event_file_block {
 } event_file_block_t;
 typedef char event_file_block_size_must_be_8192[(sizeof(event_file_block_t) == EVENT_BLOCK_BYTES) ? 1 : -1];
 
-/* A message ID operand can begin at any byte of the event stream. */
-typedef struct event_message_id_parameters {
-    s16 message_id __attribute__((packed));
-} event_message_id_parameters_t;
-typedef char event_message_id_parameters_size_must_be_2[sizeof(event_message_id_parameters_t) == 2 ? 1 : -1];
-typedef char event_message_id_parameters_alignment_must_be_1[__alignof__(event_message_id_parameters_t) == 1 ? 1 : -1];
-
 /* Eight-byte operand payload of EVENT_OPCODE_WALK_TO. Multi-byte values
  * remain byte arrays because event scripts are not guaranteed to be aligned. */
 typedef struct event_walk_to_parameters {

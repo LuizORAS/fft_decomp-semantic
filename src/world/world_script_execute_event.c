@@ -460,7 +460,7 @@ restart_event:
                 }
             }
         } else if (opcode == EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT) {
-            world_script_toggle_message_portrait_flip((const event_message_id_parameters_t*)parameters);
+            world_script_toggle_message_portrait_flip(parameters);
         } else if (opcode == EVENT_OPCODE_UNKNOWN_17) {
         }
         /* ---- Effects ---- */

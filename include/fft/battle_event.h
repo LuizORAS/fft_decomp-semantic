@@ -192,7 +192,7 @@ s32 battle_script_add_ghost_unit_event_instruction(
 void battle_script_add_unit_start_thread(void);
 void battle_script_color_screen_thread(void);
 void battle_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
-void battle_script_toggle_message_portrait_flip(const event_message_id_parameters_t* parameters);
+void battle_script_toggle_message_portrait_flip(const u8* parameters);
 void battle_script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
 void battle_script_apply_relative_camera(event_camera_values_t* parameters, s32* src);
 void battle_script_load_attack_graphics_event_instruction(void);

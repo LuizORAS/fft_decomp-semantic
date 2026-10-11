@@ -7,13 +7,13 @@
  *
  * record_index is never assigned: the target indexes with whatever $s0 holds
  * on entry and tests that one record six times. */
-void battle_script_toggle_message_portrait_flip(const event_message_id_parameters_t* parameters) {
+void battle_script_toggle_message_portrait_flip(const u8* parameters) {
     s32 i;
     s32 record_index;
     s16 record_id;
     menu_window_buffer_t* record;
 
-    record_id = battle_script_load_halfword(&parameters->message_id);
+    record_id = battle_script_load_halfword(parameters);
     for (i = 0; i < 6; i++) {
         if (g_battle_menu_window_buffers[record_index].message_id == record_id) {
             record = &g_battle_menu_window_buffers[record_index];
