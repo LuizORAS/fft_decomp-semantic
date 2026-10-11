@@ -122,6 +122,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
             thread->redraw_request = 0;
         }
         i = 0;
+        /* A SPRT cursor adds the sprite offset; retail retains the panel base. */
         cursor = (u8*)screen;
         for (; i < 5; i++) {
             world_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[19 + i],
