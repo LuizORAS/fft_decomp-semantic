@@ -256,7 +256,7 @@ extern POLY_FT4 g_attack_deploy_text_polys[2][9];
 extern s32 g_attack_deploy_text_reveal_heights[9];
 extern s32 g_attack_deploy_text_reveal_steps[9];
 extern RECT g_attack_deploy_text_screen_origin;
-extern u16 g_attack_deploy_tile_clut_buffer[0x30];
+extern rgba5551_t g_attack_deploy_tile_clut_buffer[48];
 extern const palette_t g_attack_deploy_tile_clut_data[3];
 extern RECT g_attack_deploy_tile_clut_rect;
 extern u8 g_attack_deploy_unit_fieldable[PARTY_ROSTER_SLOT_COUNT];

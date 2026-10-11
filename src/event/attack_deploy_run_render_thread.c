@@ -28,9 +28,10 @@ void attack_deploy_run_render_thread(void) {
     StoreImage(&g_attack_deploy_rect_09c, (u32*)g_attack_deploy_semitrans_clut_buffer);
     battle_thread_wait_frames(1);
     for (i = 1; i < 0x30; i++) {
-        g_attack_deploy_tile_clut_buffer[i] |= 0x8000;
+        g_attack_deploy_tile_clut_buffer[i].semi_transparent = 1;
     }
-    g_attack_deploy_tile_clut_buffer[0] = 0;
+    g_attack_deploy_tile_clut_buffer[0].red = g_attack_deploy_tile_clut_buffer[0].green
+        = g_attack_deploy_tile_clut_buffer[0].blue = g_attack_deploy_tile_clut_buffer[0].semi_transparent = 0;
     LoadImage(&g_attack_deploy_rect_0cc, (u32*)g_attack_deploy_tile_clut_buffer);
     for (i = 1; i < 0x10; i++) {
         g_attack_deploy_semitrans_clut_buffer[i].semi_transparent = 1;
