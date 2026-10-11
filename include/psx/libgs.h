@@ -151,17 +151,6 @@ void GsGetTimInfo(u32* tim, GsIMAGE* im);
 
 /* driver internals */
 
-/* DR_TPAGE and SPRT commands under one DMA tag. */
-typedef struct {
-    DR_TPAGE tpage; /* 0x00: tag and texture-page word */
-    u32 mode;       /* 0x08: r | g << 8 | b << 16 | code << 24 */
-    u32 xy;         /* 0x0c */
-    u32 uv_clut;    /* 0x10 */
-    u32 wh;         /* 0x14 */
-} psyq_gs_sprite_packet_t;
-
-typedef char psyq_gs_sprite_packet_size_must_be_0x18[(sizeof(psyq_gs_sprite_packet_t) == 0x18) ? 1 : -1];
-
 extern const char g_psyq_gs_sort_sprite_overflow_message[];
 extern TILE g_psyq_gs_clear_tile[2]; /* GsSortClear's tile for each draw buffer */
 

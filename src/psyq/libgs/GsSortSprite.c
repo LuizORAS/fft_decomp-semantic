@@ -34,7 +34,8 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
     s32 depth;
     s32 flag;
     void* packet;
-    psyq_gs_sprite_packet_t* sprt;
+    SPRT* sprt;
+    DR_TPAGE* draw_mode;
     POLY_FT4* poly;
     u32* words;
     u32 attr;
@@ -59,18 +60,24 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
         packet = GsOUT_PACKET_P;
         if (((attr >> 27) & 1)
             | (GS_SPRITE_SCALE_WORD(sp) == 0x10001000 && sp->rotate == 0 && (attr & 0xc00000) == 0)) {
-            sprt = packet;
+            draw_mode = packet;
+            /* Share one DMA tag: the mode word occupies this primitive view's tag slot. */
+            sprt = (SPRT*)draw_mode->code;
+            words = (u32*)sprt;
             x = sp->x + g_psyq_gs_offset_x;
             y = sp->y + g_psyq_gs_offset_y;
             dr_mode = 0xe1000200;
-            sprt->tpage.code[0] = (sp->tpage & 0x1f) | (((attr >> 17) & 0x180) | dr_mode) | ((attr >> 23) & 0x60);
+            draw_mode->code[0] = (sp->tpage & 0x1f) | (((attr >> 17) & 0x180) | dr_mode) | ((attr >> 23) & 0x60);
             sprt_mode = (attr >> 5) & 0x02000000;
             sprt_shade = (attr << 18) & 0x01000000;
             sprt_code = 0x64000000;
-            sprt->mode = sprt_mode | (sprt_shade | sprt_code) | (sp->b << 16) | (sp->g << 8) | sp->r;
-            sprt->xy = ((x - sp->mx) & 0xffff) | ((y - sp->my) << 16);
-            sprt->uv_clut = sp->u | (sp->v << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
-            sprt->wh = sp->w | (sp->h << 16);
+            /* Word indexing preserves scheduling; direct field-address stores change it. */
+            words[offsetof(SPRT, r0) / sizeof(*words)]
+                = sprt_mode | (sprt_shade | sprt_code) | (sp->b << 16) | (sp->g << 8) | sp->r;
+            words[offsetof(SPRT, x0) / sizeof(*words)] = ((x - sp->mx) & 0xffff) | ((y - sp->my) << 16);
+            words[offsetof(SPRT, u0) / sizeof(*words)]
+                = sp->u | (sp->v << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
+            words[offsetof(SPRT, w) / sizeof(*words)] = sp->w | (sp->h << 16);
             packet = psyq_gs_sort_sprite_bg(packet, ot, pri, 5);
         } else {
             if (sp->rotate == 0) {

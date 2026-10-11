@@ -10,7 +10,7 @@ int printf(const char* fmt, ...);
 extern char* strcat(char* destination, const char* source);
 extern char* strcpy(char* destination, const char* source);
 extern int strlen(const char* source);
-extern void* memchr(const void* source, int value, unsigned int size);
+extern void* memchr(const void* source, u8 value, int size);
 extern void* memset(void* destination, int value, unsigned int size);
 extern void* memcpy(void* destination, const void* source, unsigned int size);
 s32 strcmp(const char* left, const char* right);
