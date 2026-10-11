@@ -1,9 +1,5 @@
 #include "fft/battle.h"
 
-typedef void (*battle_distortion_animation_handler_t)(battle_unit_misc_data_t* unit);
-
-extern battle_distortion_animation_handler_t g_battle_unit_distortion_animation_handlers[];
-
 /* Step the unit's distortion animation, if it has one: a motion that a
  * sequence started with BATTLE_SEQ_OP_START_DISTORTION and that its handler
  * ends by clearing the id. */

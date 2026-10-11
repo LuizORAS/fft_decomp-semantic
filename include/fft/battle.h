@@ -5048,9 +5048,13 @@ enum {
     BATTLE_UNIT_POSITION_FACING_EAST = 0x0300,
 };
 
+typedef void (*battle_distortion_animation_handler_t)(battle_unit_misc_data_t* unit);
+
 extern const u32 g_battle_misc_status_mask_by_handler_index[BATTLE_STATUS_COUNT + 1];
 extern POLY_FT4* g_battle_gfx_sprite_prim_pool;
 extern battle_unit_misc_data_t g_battle_unit_misc_data[16];
+extern battle_distortion_animation_handler_t
+    g_battle_unit_distortion_animation_handlers[BATTLE_DISTORTION_ANIMATION_COUNT];
 extern battle_unit_misc_slot_flag_t g_battle_unit_misc_slot_flags[];
 extern unit_status_staging_t* g_battle_unit_status_staging_data;
 extern s32 g_battle_unit_palette_animation_offset;
@@ -5133,6 +5137,7 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_
 s32 battle_unit_count_crystal_misc_units(void);
 void battle_unit_decide_facing_direction(battle_unit_misc_data_t* unit, s32 facing);
 void battle_unit_dismount_rider(battle_unit_misc_data_t* unit);
+s32 battle_unit_animate_teleport_distortion(battle_unit_misc_data_t* unit);
 void battle_unit_dispatch_distortion_animation(battle_unit_misc_data_t* unit);
 void battle_unit_face_toward_cursor(battle_unit_misc_data_t* unit);
 battle_unit_misc_data_t* battle_unit_find_other_chocobo_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
