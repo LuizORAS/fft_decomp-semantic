@@ -3,5 +3,5 @@
 #include "psx/types.h"
 
 void world_menu_clear_selection_records(void) {
-    memset(g_world_menu_selection_records, 0, 0x54);
+    memset(g_world_menu_selection_records, 0, sizeof(g_world_menu_selection_records));
 }

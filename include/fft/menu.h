@@ -1188,6 +1188,15 @@ typedef enum menu_window_frame_mode {
     MENU_WINDOW_FRAME_ALTERNATE_BUILD = 3,
 } menu_window_frame_mode_e;
 
+/* A remembered list cursor, scroll base and entry id. The menu restores the
+ * cursor by entry id when the live list has changed. */
+typedef struct menu_selection_record {
+    s16 selected_index;    /* 0x00 */
+    s16 scroll_base_index; /* 0x02 */
+    s16 entry_id;          /* 0x04; low ten bits of the list entry */
+} menu_selection_record_t;
+typedef char menu_selection_record_size_must_be_6[sizeof(menu_selection_record_t) == 6 ? 1 : -1];
+
 /* The selected row and scroll position of an ability list. */
 typedef struct menu_list_selection {
     u8 selected_index;

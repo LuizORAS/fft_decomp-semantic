@@ -8412,20 +8412,6 @@ typedef struct bunit_text_image_position {
 } bunit_text_image_position_t;
 typedef char bunit_text_image_position_size_must_be_6[(sizeof(bunit_text_image_position_t) == 6) ? 1 : -1];
 
-/*
- * One remembered list position, 6 bytes per entry: 14 entries at BUNIT
- * 0x801eb22c, 5 at EQUIP 0x801e12c4 (item lists) and 5 in JOBSTTS (ability
- * lists). The *_menu_set_selection_record helpers store the cursor index, the
- * scroll base and the masked id of the entry under the cursor; the getters
- * read them back and re-find entry_id in the live list when the remembered
- * index no longer points at the same entry.
- */
-typedef struct bunit_menu_selection_record {
-    s16 selected_index;    /* 0x00 */
-    s16 scroll_base_index; /* 0x02 */
-    s16 entry_id;          /* 0x04: list entry id, low 10 bits */
-} bunit_menu_selection_record_t;
-
 extern battle_menu_allocation_t g_battle_menu_allocator_slot_records[16];
 extern u8 g_battle_menu_buffer_arena[53][0x100];
 extern u8 g_battle_menu_buffer_allocation_map[53];
@@ -8948,7 +8934,7 @@ extern s16 g_battle_preview_target_unit_id;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 
 extern u16 g_battle_team_golem[4]; /* 0x8018f5f4 */
-extern void* g_battle_formation_screen_active;
+extern s32 g_battle_formation_screen_active;
 
 /* BATTLE flag at 0x80165ff2, set by etc_graphic_open while a full-screen ETC
  * graphic is shown; BATTLE then draws primitives immediately instead of

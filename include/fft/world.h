@@ -793,17 +793,6 @@ typedef struct wldcore_window_xy {
 } wldcore_window_xy_t;
 typedef char wldcore_window_xy_size_must_be_0x24[sizeof(wldcore_window_xy_t) == 0x24 ? 1 : -1];
 
-/* One remembered list position (g_world_menu_selection_records, 14 entries / 0x54 bytes), the
- * WORLD twin of bunit_menu_selection_record_t. world_menu_set_selection_record stores the cursor
- * index, the scroll base and the masked id of the entry under the cursor;
- * world_menu_get_selection_record reads them back and re-finds entry_id in the live list when
- * the remembered index no longer points at the same entry. */
-typedef struct world_menu_selection_record {
-    s16 selected_index;    /* 0x00 */
-    s16 scroll_base_index; /* 0x02 */
-    s16 entry_id;          /* 0x04; list entry id, low 10 bits */
-} world_menu_selection_record_t;
-
 extern battle_menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
 
 /* Scenario interpreter interfaces shared by battle_script_execute_event and
@@ -821,7 +810,7 @@ extern u8 g_world_gfx_fade_increasing;
 extern s16 g_world_gfx_fade_intensity;
 extern glyph_blit_t g_world_gfx_image_blit_destination;
 extern glyph_blit_t g_world_gfx_image_blit_source;
-extern world_menu_selection_record_t g_world_menu_selection_records[];
+extern menu_selection_record_t g_world_menu_selection_records[14];
 extern RECT g_world_gfx_temporary_draw_area;
 extern u8 g_world_gfx_texture_allocation_grid[15][16];
 extern s8 g_world_gfx_vsync_mode;

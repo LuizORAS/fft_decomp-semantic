@@ -294,7 +294,7 @@ extern s8 g_jobstts_menu_list_scroll_direction; /* read with lb (jobstts_cmd_dra
 extern u16 g_jobstts_menu_list_cursor_anim_state;
 extern s16 g_jobstts_menu_list_scroll_entry_ids;
 extern u16 g_jobstts_menu_list_scroll_progress;
-extern bunit_menu_selection_record_t g_jobstts_menu_selection_records[5];
+extern menu_selection_record_t g_jobstts_menu_selection_records[5];
 
 /* Window right edge; WORLD's twin stores it to g_world_menu_window_right_x. */
 extern s16 g_jobstts_menu_window_right_x;

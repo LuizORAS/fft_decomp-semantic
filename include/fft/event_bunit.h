@@ -487,7 +487,7 @@ extern bunit_menu_row_callback_t g_bunit_menu_row_callbacks[];
 extern s16 g_bunit_menu_scroll_base_index;
 extern s16 g_bunit_menu_scroll_list_active;
 extern s16 g_bunit_menu_scroll_pixel_offset;
-extern bunit_menu_selection_record_t g_bunit_menu_selection_records[];
+extern menu_selection_record_t g_bunit_menu_selection_records[BUNIT_MENU_SELECTION_RECORD_COUNT];
 extern s16 g_bunit_menu_selection_values[];
 extern u8 g_bunit_menu_thread_running;
 /* g_bunit_menu_current_menu: what bunit_entrypoint runs. */

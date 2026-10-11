@@ -399,7 +399,7 @@ extern world_oriented_quad_t g_equip_menu_secondary_slot_marker;
 /* Signed halfword: EQUIP reads this state with lh at 0x801c4584,
  * 0x801c45bc, and 0x801c4614. */
 extern s16 g_equip_menu_selected_list_index;
-extern bunit_menu_selection_record_t g_equip_menu_selection_entries[];
+extern menu_selection_record_t g_equip_menu_selection_entries[5];
 extern s16 g_equip_menu_selection_values[4];
 extern world_oriented_quad_t g_equip_menu_slot_marker_rects[];
 extern u8 g_equip_menu_slot_marker_window[];
