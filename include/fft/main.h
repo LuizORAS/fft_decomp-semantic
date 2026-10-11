@@ -1467,7 +1467,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
 void main_sound_stop_all(void);
 
 /* Suzuki heap (0x8001423c-0x80014544) and SPU RAM wrappers. */
-void main_sound_copy_memory(void* destination, void* source, s32 size);
+void main_sound_copy_memory(void* destination, const void* source, s32 size);
 s32 main_sound_alloc_spu_ram(s32 size);
 s32 main_sound_free_spu_ram(u32 addr);
 
