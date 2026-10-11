@@ -706,7 +706,7 @@ enum {
 typedef struct battle_strike_work {
     u8 actor_id;
     u8 target_count;
-    u8 target_list[16];
+    u8 target_list[BATTLE_UNIT_MISC_SLOT_COUNT];
     u8 skip_empty_tile_effect;
     u8 math_skill_flag;
     s16 last_attack_id; /* 0x14 */
@@ -1156,7 +1156,7 @@ typedef void (*battle_distortion_animation_handler_t)(battle_unit_misc_data_t* u
 
 extern const u32 g_battle_misc_status_mask_by_handler_index[BATTLE_STATUS_COUNT + 1];
 extern POLY_FT4* g_battle_gfx_sprite_prim_pool;
-extern battle_unit_misc_data_t g_battle_unit_misc_data[16];
+extern battle_unit_misc_data_t g_battle_unit_misc_data[BATTLE_UNIT_MISC_SLOT_COUNT];
 extern battle_distortion_animation_handler_t
     g_battle_unit_distortion_animation_handlers[BATTLE_DISTORTION_ANIMATION_COUNT];
 extern battle_unit_misc_slot_flag_t g_battle_unit_misc_slot_flags[];

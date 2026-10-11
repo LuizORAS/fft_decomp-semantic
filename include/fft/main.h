@@ -2014,8 +2014,8 @@ typedef char main_gfx_unit_graphics_load_descriptor_size_must_be_20
 
 /* The 0x144-byte queue occupies 0x80049c18..0x80049d5c. */
 typedef struct main_gfx_unit_graphics_load_queue {
-    s32 count;                                                /* 0x00 */
-    main_gfx_unit_graphics_load_descriptor_t descriptors[16]; /* 0x04 */
+    s32 count;                                                                         /* 0x00 */
+    main_gfx_unit_graphics_load_descriptor_t descriptors[BATTLE_UNIT_MISC_SLOT_COUNT]; /* 0x04 */
 } main_gfx_unit_graphics_load_queue_t;
 
 typedef char

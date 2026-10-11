@@ -64,7 +64,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
         init.targets[0].data.tile.vy = unit->strike.target_new_map_level;
     }
     spectators = 0;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
         if (i != unit->unit_id) {
             spectator = battle_unit_get_misc_data_by_misc_id(i);
             if (spectator != 0) {

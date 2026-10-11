@@ -11,13 +11,13 @@
 battle_unit_misc_data_t* battle_unit_claim_misc_slot(s16 unit_id) {
     s32 i;
 
-    if (unit_id < 16) {
-        for (i = 0; i < 16; i++) {
+    if (unit_id < BATTLE_UNIT_MISC_SLOT_COUNT) {
+        for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
             if (g_battle_unit_misc_slot_flags[i].in_use != 0 && g_battle_unit_misc_data[i].unit_id == unit_id) {
                 break;
             }
         }
-        if (i < 16) {
+        if (i < BATTLE_UNIT_MISC_SLOT_COUNT) {
             return 0;
         }
         if (g_battle_unit_misc_slot_flags[unit_id].in_use != 0) {
@@ -27,7 +27,7 @@ battle_unit_misc_data_t* battle_unit_claim_misc_slot(s16 unit_id) {
         g_battle_unit_misc_data[unit_id].unit_id = unit_id;
         return &g_battle_unit_misc_data[unit_id];
     }
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
         if (g_battle_unit_misc_slot_flags[i].in_use == 0) {
             g_battle_unit_misc_slot_flags[i].in_use = 1;
             g_battle_unit_misc_data[i].unit_id = i;

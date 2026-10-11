@@ -9,7 +9,7 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
     s32 offset;
 
     g_battle_unit_misc_list_head = 0;
-    for (offset = 15 * sizeof(battle_unit_misc_slot_flag_t); offset >= 0;
+    for (offset = (BATTLE_UNIT_MISC_SLOT_COUNT - 1) * sizeof(battle_unit_misc_slot_flag_t); offset >= 0;
         offset -= sizeof(battle_unit_misc_slot_flag_t)) {
         ((battle_unit_misc_slot_flag_t*)((u8*)g_battle_unit_misc_slot_flags + offset))->in_use = 0;
     }

@@ -13,6 +13,6 @@ s32 battle_target_count_hit_by_ability(u8* out) {
             count++;
         }
         i++;
-    } while (i < 0x10);
+    } while (i < BATTLE_UNIT_MISC_SLOT_COUNT);
     return count;
 }

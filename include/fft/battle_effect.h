@@ -30,7 +30,9 @@ typedef enum battle_effect_target_type {
 } battle_effect_target_type_e;
 
 enum {
-    BATTLE_EFFECT_CASTER_ENTRY = 16, /* index of the caster's record in battle_effect_secondary_init_t.targets */
+    BATTLE_EFFECT_TARGET_COUNT_MAX = BATTLE_UNIT_MISC_SLOT_COUNT,
+    BATTLE_EFFECT_CASTER_ENTRY
+    = BATTLE_EFFECT_TARGET_COUNT_MAX, /* index of the caster's record in battle_effect_secondary_init_t.targets */
     /* the target index that makes battle_effect_resolve_target_render_coords resolve the caster */
     BATTLE_EFFECT_TARGET_INDEX_CASTER = -1,
 };
@@ -95,10 +97,10 @@ typedef char battle_secondary_effect_data_size_must_be_84[(sizeof(battle_effect_
 /* Complete 0xc8-byte effect context: built on the stack for secondary effects
  * and copied whole to g_battle_effect_context for the ability effect. */
 typedef struct battle_effect_secondary_init {
-    u16 target_count;                   /* 0x00; effect targets: one child record each, spawn_delay apart */
-    u8 spectator_count;                 /* 0x02; entries in spectator_ids */
-    u8 math_skill_flag;                 /* 0x03; enables the effect flags' spawn_delay_override */
-    battle_effect_target_t targets[17]; /* 0x04; caster at BATTLE_EFFECT_CASTER_ENTRY */
+    u16 target_count;   /* 0x00; effect targets: one child record each, spawn_delay apart */
+    u8 spectator_count; /* 0x02; entries in spectator_ids */
+    u8 math_skill_flag; /* 0x03; enables the effect flags' spawn_delay_override */
+    battle_effect_target_t targets[BATTLE_EFFECT_TARGET_COUNT_MAX + 1]; /* 0x04; caster at BATTLE_EFFECT_CASTER_ENTRY */
     /* 0xae; living units that are neither targets nor the caster; also accessed
      * through the separately bound g_battle_effect_palette_target_misc_ids. */
     u8 spectator_ids[14];

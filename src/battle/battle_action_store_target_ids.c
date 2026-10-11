@@ -8,5 +8,5 @@ void battle_action_store_target_ids(u8* src) {
         g_battle_target_ability_targets_list[i] = *src;
         i++;
         src++;
-    } while (i < 16);
+    } while (i < BATTLE_UNIT_MISC_SLOT_COUNT);
 }
