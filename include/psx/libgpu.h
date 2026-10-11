@@ -4,6 +4,7 @@
 #include "psx/libapi.h"
 #include "psx/libetc.h"
 #include "psx/libgte.h"
+#include "psx/stddef.h"
 
 #include "psx/tmd.h"
 #include "psx/types.h"
@@ -764,9 +765,15 @@ extern volatile u32* g_psyq_gpu_otc_dma_chcr;
 extern volatile u32* g_psyq_gpu_dma_dpcr;
 extern u8 g_psyq_gpu_gp1_cache[256];
 extern u32* g_psyq_gpu_tim_cursor;
-extern int g_psyq_gpu_font_window_count;
-extern int g_psyq_gpu_default_font_window;
-extern u32 g_psyq_gpu_font_asset[640];
+/* font */
+typedef struct {
+    u16 palette[16];
+    u8 _unused_020[480];
+    u32 pixels[32][16];
+} psyq_gpu_font_asset_t;
+
+typedef char assert_gpu_font_asset_pixels_offset[offsetof(psyq_gpu_font_asset_t, pixels) == 512 ? 1 : -1];
+typedef char assert_gpu_font_asset_size[sizeof(psyq_gpu_font_asset_t) == 2560 ? 1 : -1];
 
 typedef struct {
     TILE tile;
@@ -778,6 +785,9 @@ typedef struct {
     int wrap_disabled;
 } psyq_font_window_t;
 
+extern int g_psyq_gpu_font_window_count;
+extern int g_psyq_gpu_default_font_window;
+extern psyq_gpu_font_asset_t g_psyq_gpu_font_asset;
 extern psyq_font_window_t Font[FNT_MAX_ID];
 extern int g_psyq_gpu_font_allocated_characters;
 extern const char* g_psyq_gpu_font_hex_digits;

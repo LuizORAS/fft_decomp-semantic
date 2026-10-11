@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/stdarg.h"
 
-/* Addressed access retains the native cursor slot; SDK va_end adds stores absent from the return paths. */
+/* Addressed access retains the argument cursor slot; clearing it adds stores absent from the return paths. */
 #define PSYQ_GPU_FONT_VA_ARG(ap, type)                                                                                 \
     (*(char**)&(ap) += __va_rounded_size(type), *(type*)((ap) - __va_rounded_size(type)))
 
