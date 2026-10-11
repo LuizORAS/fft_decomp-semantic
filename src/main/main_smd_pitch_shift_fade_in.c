@@ -2,16 +2,18 @@
 #include "psx/types.h"
 
 /* SMD opcode 0xD7 "Vibrato Fade In": modulator 0 fade_level and its reset
- * value become 0x100 / (byte + 1), a fade-in over byte + 1 ticks. */
+ * value become 0x100 / (byte + 1). The duration wraps at 256;
+ * byte 0xff leaves both values unchanged. */
 u8* main_smd_pitch_shift_fade_in(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
-    s16 divisor;
+    u8 duration;
+    s16 step;
 
-    divisor = (note_data[0] + 1) & 0xff;
+    duration = note_data[0] + 1;
     note_data++;
-    if (divisor != 0) {
-        divisor = 0x100 / divisor;
-        channel->modulators[0].fade_step = divisor;
-        channel->modulators[0].fade_level = divisor;
+    if (duration != 0) {
+        step = 0x100 / duration;
+        channel->modulators[0].fade_step = step;
+        channel->modulators[0].fade_level = step;
     }
     return note_data;
 }

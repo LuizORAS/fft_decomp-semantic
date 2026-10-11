@@ -9,7 +9,7 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     s32 slot;
     s32 index;
     u32 unit_slot;
-    s32 kind;
+    u8 kind;
     u8 palette;
     u16 birthday;
     s32 sprite_set;
@@ -21,7 +21,7 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     index = unit->formation_index;
     unit_slot = index & 0xff;
 
-    if ((kind & 0xff) == 0 && index >= PARTY_GUEST_SLOT_FIRST && index < PARTY_ROSTER_SLOT_COUNT) {
+    if (kind == 0 && index >= PARTY_GUEST_SLOT_FIRST && index < PARTY_ROSTER_SLOT_COUNT) {
         /* A non-guest save of a unit that currently sits in a guest slot. */
         main_party_remove_unit(index);
         index = main_party_find_free_slot(0, &palette);
