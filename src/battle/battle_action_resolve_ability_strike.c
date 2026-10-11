@@ -99,7 +99,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     battle_target_set_coordinates_for_ability(attacker, work);
     if (count == 0) {
         g_battle_action_current_ability.strike_counter++;
-        work->last_attack_id.s = attacker->action_command.ability_id;
+        work->last_attack_id = attacker->action_command.ability_id;
         work->reaction_id = 0;
         if (!(flags_3 & ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS)) {
             work->skip_empty_tile_effect = 1;
@@ -115,12 +115,12 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     work->skip_empty_tile_effect = 0;
     reaction_id = g_battle_action_current_ability.reaction_id;
     if (reaction_id != 0 && g_battle_action_current_ability.weapon_proc_pending == 0) {
-        work->last_attack_id.s = reaction_id;
+        work->last_attack_id = reaction_id;
         work->reaction_occurred = 1;
     } else if (g_battle_action_current_ability.defaulted_to_attack != 0) {
-        work->last_attack_id.s = 0;
+        work->last_attack_id = 0;
     } else {
-        work->last_attack_id.s = attacker->action_command.ability_id;
+        work->last_attack_id = attacker->action_command.ability_id;
     }
     work->reaction_id = g_battle_action_current_ability.reaction_id;
     if (g_battle_action_current_ability.knockback_flags != 0) {
@@ -136,7 +136,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         if (g_battle_action_current_ability.knockback_flags != 0) {
             work->reaction_occurred = 1;
             work->skip_empty_tile_effect = 1;
-            work->last_attack_id.s = ABILITY_ID_KNOCKBACK;
+            work->last_attack_id = ABILITY_ID_KNOCKBACK;
         }
         g_battle_action_current_ability.strike_counter++;
         if (g_battle_action_current_ability.strike_counter < g_battle_action_current_ability.strike_count) {

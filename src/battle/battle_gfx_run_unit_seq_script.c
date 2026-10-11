@@ -99,7 +99,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 /* The abilities whose hit is the weapon swing itself: a plain
                  * attack (0), the frog's, the Battle Skill breaks, the Snipe
                  * shots, Jump and Charge. */
-                attack_id = unit->strike.last_attack_id.u;
+                attack_id = unit->strike.last_attack_id;
                 if (attack_id == 0 || attack_id == ABILITY_ID_FROG_ATTACK
                     || (attack_id >= ABILITY_ID_BATTLE_SKILL_HEAD_BREAK
                         && attack_id <= ABILITY_ID_BATTLE_SKILL_MIND_BREAK)

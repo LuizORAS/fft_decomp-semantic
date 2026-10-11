@@ -60,7 +60,7 @@ s32 battle_ai_choose_wait_facing(void) {
             tried_any_enemy = 1;
         }
         battle_ai_transfer_unit_coordinates(target_id, &work.target_coords);
-        direction = battle_ai_find_direction_of_target((s8*)&work.target_coords, (s8*)&ai->acting_unit_coords);
+        direction = battle_ai_find_direction_of_target(&work.target_coords, &ai->acting_unit_coords);
         if (work.viable_directions[direction] != 0)
             return direction;
         if (tried_any_enemy == 0) {

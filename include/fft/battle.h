@@ -767,7 +767,8 @@ s32 battle_ai_evaluate_target_tiles(void);
 void battle_ai_fill_foe_proximity_grid(void);
 s32 battle_ai_fill_target_distance_grid(battle_ai_coords_t* target);
 s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit);
-battle_ai_direction_e battle_ai_find_direction_of_target(const s8* target, const s8* origin);
+battle_ai_direction_e battle_ai_find_direction_of_target(
+    const battle_ai_coords_t* target, const battle_ai_coords_t* origin);
 s32 battle_ai_find_nearest_target(battle_ai_nearest_target_mode_e mode);
 s32 battle_ai_find_unit_at_coordinates(battle_ai_coords_t* coords);
 s32 battle_ai_get_movement_range(void);
@@ -1772,12 +1773,6 @@ enum {
     BATTLE_PENDING_MOUNT_SET = 0x80,
 };
 
-/* Misc unit_t Data halfword read both signed and unsigned. */
-typedef union battle_unit_misc_halfword {
-    s16 s;
-    u16 u;
-} battle_unit_misc_halfword_t;
-
 /* Unit SHP frame tables filled by battle_gfx_unpack_unit_shp_data (0x800873bc):
  * SHP header bytes 4..5 and 6..7, then two 0xd0-entry frame pointer tables,
  * each entry a battle_gfx_source_frame_t. The second table draws the same
@@ -2060,7 +2055,7 @@ typedef struct battle_strike_work {
     u8 target_list[16];
     u8 skip_empty_tile_effect;
     u8 math_skill_flag;
-    battle_unit_misc_halfword_t last_attack_id; /* 0x14; read signed by effects, unsigned by action display */
+    s16 last_attack_id; /* 0x14 */
     u8 post_action_message;
     u8 reaction_occurred;
     u8 continue_attack;
@@ -2124,12 +2119,12 @@ typedef struct battle_unit_misc_data {
      * stored at 0x80085c0c; copied from mount to rider at 0x80069174/0x80069180;
      * read as signed halfwords by battle_get_alternate_facing_quadrant_* (% 4) and
      * battle_unit_get_facing_field_0x6e_nibble_by_misc_id (% 0x10). */
-    battle_unit_misc_halfword_t camera_facing_quadrant;  /* 0x06c */
-    battle_unit_misc_halfword_t camera_facing_sixteenth; /* 0x06e */
-    s16 facing;                                          /* 0x070 */
-    s16 attack_facing;                                   /* 0x072 */
-    s16 depth_height_offset;                             /* 0x074 */
-    u16 float_bob_offset;                                /* 0x076; from the float bob table */
+    s16 camera_facing_quadrant;   /* 0x06c */
+    s16 camera_facing_sixteenth;  /* 0x06e */
+    s16 facing;                   /* 0x070 */
+    s16 attack_facing;            /* 0x072 */
+    s16 depth_height_offset;      /* 0x074 */
+    u16 float_bob_offset;         /* 0x076; from the float bob table */
     u16 float_bob_phase;          /* 0x078; advanced by g_main_system_animation_speed at 0x8007ea98 */
     u16 special_graphic_y_offset; /* 0x07a; added to the v of each part: a status sheet's rows in OTHER.SPR */
     u8 map_x;                     /* 0x07c */

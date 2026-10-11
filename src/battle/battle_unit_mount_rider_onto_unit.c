@@ -9,8 +9,8 @@ void battle_unit_mount_rider_onto_unit(battle_unit_misc_data_t* rider, battle_un
     mount->mount_state = BATTLE_MISC_MOUNT_STATE_MOUNT;
     mount->mount_partner_misc_id = rider->unit_id;
     rider->facing = mount->facing;
-    rider->camera_facing_quadrant.u = mount->camera_facing_quadrant.u;
-    rider->camera_facing_sixteenth.u = mount->camera_facing_sixteenth.u;
+    rider->camera_facing_quadrant = mount->camera_facing_quadrant;
+    rider->camera_facing_sixteenth = mount->camera_facing_sixteenth;
     rider->screen = mount->screen;
     rider->screen.vy -= 10;
     rider->real = mount->real;

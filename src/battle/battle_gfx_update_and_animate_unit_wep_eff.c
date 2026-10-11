@@ -58,8 +58,8 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                 = (*(u16*)&unit->sprite_display_flags
                       & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                 | flip_by_direction[sixteenth];
-            unit->camera_facing_quadrant.s = quadrant;
-            unit->camera_facing_sixteenth.s = sixteenth;
+            unit->camera_facing_quadrant = quadrant;
+            unit->camera_facing_sixteenth = sixteenth;
             unit->animation.script_pos = 0;
             unit->animation.wait = 0;
             unit->animation.restart_count = 0;
@@ -156,8 +156,8 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                         = (*(u16*)&unit->sprite_display_flags
                               & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                         | flip_by_quadrant[quadrant];
-                    unit->camera_facing_quadrant.s = quadrant;
-                    unit->camera_facing_sixteenth.s = sixteenth;
+                    unit->camera_facing_quadrant = quadrant;
+                    unit->camera_facing_sixteenth = sixteenth;
                     unit->animation.script_pos = 0;
                     unit->animation.wait = 0;
                     unit->animation.restart_count = 0;
@@ -197,7 +197,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             }
         }
     } else if (!(unit->movement.word & BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE)) {
-        if (sixteenth != unit->camera_facing_sixteenth.s) {
+        if (sixteenth != unit->camera_facing_sixteenth) {
             sequence_id = unit->animation.sequence_id;
             if (sequence_id < (BATTLE_UNIT_ANIMATION_IDLE << 1)) {
                 unit->animation.sequence_id = stand_by_direction[sixteenth];
@@ -212,8 +212,8 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                           & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                     | flip_by_quadrant[quadrant];
             }
-            unit->camera_facing_quadrant.s = quadrant;
-            unit->camera_facing_sixteenth.s = sixteenth;
+            unit->camera_facing_quadrant = quadrant;
+            unit->camera_facing_sixteenth = sixteenth;
             battle_gfx_run_unit_seq_script(unit, &unit->animation, 0);
         } else if (unit->animation.wait != 0) {
             for (i = 0; i < g_main_system_animation_speed; i++) {

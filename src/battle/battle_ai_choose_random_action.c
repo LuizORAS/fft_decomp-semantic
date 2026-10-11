@@ -79,7 +79,7 @@ s32 battle_ai_choose_random_action(void) {
                         ai->current_action.command.target_y = ai->considered_unit_coords.bytes.y;
                         ai->current_action.command.target_elevation = ai->considered_unit_coords.bytes.elevation;
                         ai->current_action.wait_facing_hint = battle_ai_find_direction_of_target(
-                            (s8*)&ai->considered_unit_coords, (s8*)&ai->current_action.coords);
+                            &ai->considered_unit_coords, &ai->current_action.coords);
                         if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT
                             && (ai->current_action.command.target_id
                                    = battle_ai_find_unit_at_coordinates(&ai->considered_unit_coords))

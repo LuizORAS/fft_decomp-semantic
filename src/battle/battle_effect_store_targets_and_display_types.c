@@ -86,7 +86,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     init.spectator_count = spectators;
     init.math_skill_flag = block->math_skill_flag;
     init.used_weapon_id = block->used_weapon_id;
-    if (block->last_attack_id.s == 0 || block->reaction_occurred != 0
+    if (block->last_attack_id == 0 || block->reaction_occurred != 0
         || g_battle_action_phase != BATTLE_ACTION_PHASE_ACTING_UNIT
         || (unit->used_item_or_weapon_id - ITEM_ID_BLAZE_GUN) < 2U
         || (item = unit->used_item_or_weapon_id) == ITEM_ID_BLAST_GUN) {

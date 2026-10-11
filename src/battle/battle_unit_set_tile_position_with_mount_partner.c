@@ -13,8 +13,8 @@ void battle_unit_set_tile_position_with_mount_partner(battle_unit_misc_data_t* u
         mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
         if (mounted_unit != 0) {
             mounted_unit->facing = unit->facing;
-            mounted_unit->camera_facing_quadrant.u = unit->camera_facing_quadrant.u;
-            mounted_unit->camera_facing_sixteenth.u = unit->camera_facing_sixteenth.u;
+            mounted_unit->camera_facing_quadrant = unit->camera_facing_quadrant;
+            mounted_unit->camera_facing_sixteenth = unit->camera_facing_sixteenth;
 
             battle_unit_set_tile_position(mounted_unit->battle_data->misc_unit_id, unit->map_x, unit->map_y,
                 unit->map_z, (unit->facing / BATTLE_FACING_QUARTER_TURN));
