@@ -147,9 +147,9 @@ void card_save_update_and_draw_slot_list(u16 input) {
                 &g_card_save_slot_quads[2], card_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             g_card_save_slot_number_commands[3].number.y = g_card_save_slot_number_commands[2].number.y
                 = g_card_save_slot_number_commands[1].number.y = g_card_save_slot_quads[0].position.y;
-            g_card_save_slot_number_commands[3].number.value = g_main_card_save_slot_playtimes[index][2];
-            g_card_save_slot_number_commands[2].number.value = g_main_card_save_slot_playtimes[index][1];
-            g_card_save_slot_number_commands[1].number.value = g_main_card_save_slot_playtimes[index][0];
+            g_card_save_slot_number_commands[3].number.value = g_main_card_save_slot_playtimes[index].seconds;
+            g_card_save_slot_number_commands[2].number.value = g_main_card_save_slot_playtimes[index].minutes;
+            g_card_save_slot_number_commands[1].number.value = g_main_card_save_slot_playtimes[index].hours;
             if (g_card_save_slot_number_commands[1].number.value >= 100) {
                 g_card_save_slot_number_commands[1].number.value = 99;
             }

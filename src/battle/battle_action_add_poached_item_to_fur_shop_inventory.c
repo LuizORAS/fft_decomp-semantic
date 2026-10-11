@@ -1,10 +1,5 @@
 #include "fft/battle.h"
 
-enum {
-    POACH_ITEM_COMMON = 0,
-    POACH_ITEM_RARE = 1,
-};
-
 /* Add a poached monster's item to the Fur Shop inventory: the rare one when a
  * roll of 0..255 is below 31 (31 in 256), otherwise the common one.
  *
@@ -28,9 +23,9 @@ s32 battle_action_add_poached_item_to_fur_shop_inventory(void) {
     }
     idx = unit->job_id - JOB_ID_CHOCOBO;
     if (main_util_roll_pass_fail(0x100, 0x1f) != 0) {
-        item = g_main_item_poach_table[idx][POACH_ITEM_COMMON];
+        item = g_main_item_poach_table[idx].common_item;
     } else {
-        item = g_main_item_poach_table[idx][POACH_ITEM_RARE];
+        item = g_main_item_poach_table[idx].rare_item;
     }
     count = g_main_item_poached_quantities[item];
     result = 0xff;

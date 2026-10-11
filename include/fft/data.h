@@ -1194,6 +1194,13 @@ typedef struct item_evade {
 } item_evade_t;
 typedef char item_evade_size_must_be_2[(sizeof(item_evade_t) == 2) ? 1 : -1];
 
+/* Common and rare Fur Shop items obtained by poaching one monster job. */
+typedef struct item_poach {
+    u8 common_item;
+    u8 rare_item;
+} item_poach_t;
+typedef char item_poach_size_must_be_2[(sizeof(item_poach_t) == 2) ? 1 : -1];
+
 typedef struct armor_data {
     u8 hp_bonus; /* 0x00; added to battle_stats_t.max_hp */
     u8 mp_bonus; /* 0x01; added to battle_stats_t.max_mp */

@@ -213,13 +213,21 @@ typedef char
                                                                                                                  : -1];
 typedef char card_save_buffer_size_must_be_0x1e00[(sizeof(card_save_buffer_t) == 0x1e00) ? 1 : -1];
 
+/* Hours, minutes and seconds shown for one memory-card save slot. */
+typedef struct card_save_play_time {
+    u8 hours;
+    u8 minutes;
+    u8 seconds;
+} card_save_play_time_t;
+typedef char card_save_play_time_size_must_be_3[(sizeof(card_save_play_time_t) == 3) ? 1 : -1];
+
 extern s32 g_main_card_bios_events[MAIN_CARD_EVENT_COUNT];
 extern u8 g_main_card_bios_events_opened;
 extern u8 g_main_card_save_last_used_slot; /* the save slot last loaded or written */
 extern u8 g_card_save_selected_slot;
 extern s8 g_card_save_slot_file_states[];
 extern card_save_summary_t g_main_card_save_slot_metadata[CARD_SAVE_SLOT_COUNT];
-extern u8 g_main_card_save_slot_playtimes[][3];
+extern card_save_play_time_t g_main_card_save_slot_playtimes[CARD_SAVE_SLOT_COUNT];
 void main_card_init_events(void);
 
 /* file */
@@ -378,7 +386,7 @@ extern u8 g_main_item_type_order_6[5];
 extern weapon_data_t g_main_item_weapon_data[]; /* 0x80063ab8 */
 extern u8 g_main_weapon_page_order[0x8a];
 extern u8 g_main_item_ability_item_ids[14];
-extern u8 g_main_item_poach_table[48][2];
+extern item_poach_t g_main_item_poach_table[JOB_ID_MONSTER_LAST - JOB_ID_MONSTER_FIRST + 1];
 extern item_evade_t g_main_item_accessory_data[]; /* 0x80063f58; unit accessory evade slots */
 extern armor_data_t g_main_item_helm_armor_secondary_data[];
 extern item_data_t g_main_item_primary_data[];

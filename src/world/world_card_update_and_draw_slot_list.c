@@ -187,9 +187,9 @@ void world_card_update_and_draw_slot_list(s32 input) {
                 &g_world_card_slot_quad_2, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             g_world_card_playtime_seconds_command.y = g_world_card_playtime_minutes_command.y
                 = g_world_card_playtime_hours_command.y = g_world_card_slot_quad_0.position.y;
-            g_world_card_playtime_seconds_command.value = g_main_card_save_slot_playtimes[i][2];
-            g_world_card_playtime_minutes_command.value = g_main_card_save_slot_playtimes[i][1];
-            g_world_card_playtime_hours_command.value = g_main_card_save_slot_playtimes[i][0];
+            g_world_card_playtime_seconds_command.value = g_main_card_save_slot_playtimes[i].seconds;
+            g_world_card_playtime_minutes_command.value = g_main_card_save_slot_playtimes[i].minutes;
+            g_world_card_playtime_hours_command.value = g_main_card_save_slot_playtimes[i].hours;
             if (g_world_card_playtime_hours_command.value >= 100) {
                 g_world_card_playtime_hours_command.value = 99;
             }
