@@ -508,13 +508,27 @@ enum {
     UNIT_RAW_STAT_DATA_BYTE_COUNT = UNIT_RAW_STAT_COUNT * UNIT_RAW_STAT_SERIALIZED_BYTES,
 };
 
-typedef struct unit_raw_stat_bytes {
+/* The save format stores each unsigned 24-bit value in three bytes. */
+typedef struct unit_raw_stat {
     u8 low;
     u8 middle;
     u8 high;
-} unit_raw_stat_bytes_t;
-typedef char
-    unit_raw_stat_bytes_size_must_be_3[(sizeof(unit_raw_stat_bytes_t) == UNIT_RAW_STAT_SERIALIZED_BYTES) ? 1 : -1];
+} unit_raw_stat_t;
+typedef char unit_raw_stat_size_must_be_3[(sizeof(unit_raw_stat_t) == UNIT_RAW_STAT_SERIALIZED_BYTES) ? 1 : -1];
+
+/* Saved and battle units copy this complete record. The indexed view is used
+ * by generation and level growth, which apply the same formula to each stat. */
+typedef union unit_raw_stats {
+    struct {
+        unit_raw_stat_t hp;
+        unit_raw_stat_t mp;
+        unit_raw_stat_t speed;
+        unit_raw_stat_t physical_attack;
+        unit_raw_stat_t magic_attack;
+    } fields;
+    unit_raw_stat_t values[UNIT_RAW_STAT_COUNT];
+} unit_raw_stats_t;
+typedef char unit_raw_stats_size_must_be_15[(sizeof(unit_raw_stats_t) == UNIT_RAW_STAT_DATA_BYTE_COUNT) ? 1 : -1];
 
 /* Calculated battle attributes use PA, MA, Speed order. */
 typedef enum unit_attribute_index {
@@ -578,56 +592,56 @@ typedef union battle_unit_position {
 typedef char battle_unit_position_size_must_be_2[(sizeof(battle_unit_position_t) == 2) ? 1 : -1];
 
 typedef struct battle_stats {
-    u8 character_identity;                                /* 0x000 */
-    u8 entd_slot;                                         /* 0x001; 0xff means absent */
-    u8 formation_index;                                   /* 0x002 */
-    u8 job_id;                                            /* 0x003 */
-    u8 sprite_palette;                                    /* 0x004 */
-    u8 team_flags;                                        /* 0x005 */
-    u8 unit_flags;                                        /* 0x006; mixed sex, monster, guest, and formation flags */
-    u8 death_counter;                                     /* 0x007 */
-    battle_unit_birthday_t birthday;                      /* 0x008; zodiac is the high nibble */
-    u16 innate_abilities[4];                              /* 0x00a */
-    u8 primary_skillset;                                  /* 0x012 */
-    u8 secondary_skillset;                                /* 0x013 */
-    u16 reaction_ability;                                 /* 0x014 */
-    u16 support_ability;                                  /* 0x016 */
-    u16 movement_ability;                                 /* 0x018 */
-    u8 equipment[7];                                      /* 0x01a; unit_equipment_slot_e */
-    u8 experience;                                        /* 0x021 */
-    u8 level;                                             /* 0x022 */
-    u8 original_brave;                                    /* 0x023 */
-    u8 brave;                                             /* 0x024 */
-    u8 original_faith;                                    /* 0x025 */
-    u8 faith;                                             /* 0x026 */
-    u8 transparent_removal_flag;                          /* 0x027 */
-    u16 hp;                                               /* 0x028 */
-    u16 max_hp;                                           /* 0x02a */
-    u16 mp;                                               /* 0x02c */
-    u16 max_mp;                                           /* 0x02e */
-    u8 base_attributes[3];                                /* 0x030; unit_attribute_index_e */
-    u8 equipment_attributes[3];                           /* 0x033; unit_attribute_index_e */
-    u8 attributes[3];                                     /* 0x036; unit_attribute_index_e */
-    u8 ct;                                                /* 0x039 */
-    u8 move;                                              /* 0x03a */
-    u8 jump;                                              /* 0x03b */
-    u8 equipment_stats[11];                               /* 0x03c; battle_unit_equipment_stat_index_e */
-    u8 x;                                                 /* 0x047 */
-    battle_unit_position_t position;                      /* 0x048 */
-    u8 equipment_categories[4];                           /* 0x04a */
-    battle_status_sets_t status_sets;                     /* 0x04e; innate / immunity / current */
-    u8 status_ct[16];                                     /* 0x05d */
-    u8 elemental_affinity[5];                             /* 0x06d; elemental_affinity_index_e */
-    unit_raw_stat_bytes_t raw_stats[UNIT_RAW_STAT_COUNT]; /* 0x072; unit_raw_stat_index_e */
-    u8 growths_multipliers[10];                           /* 0x081; job_data_t.growths_multipliers */
-    u8 reaction_abilities[4];                             /* 0x08b; battle_unit_reaction_set_N_e */
-    u8 support_abilities[4];                              /* 0x08f */
-    u8 movement_abilities[3];                             /* 0x093 */
-    u8 unlocked_jobs[3];                                  /* 0x096 */
-    u8 learned_abilities[57];                             /* 0x099..0x0d1; three bytes per learned-ability row */
-    u8 job_levels[10];                                    /* 0x0d2; two packed job-level nibbles per byte */
-    u16 job_points[20];                                   /* 0x0dc; SCUS party-to-battle copy at 0x8005b0d0 */
-    u16 total_job_points[20];                             /* 0x104; contiguous with current JP, through 0x12b */
+    u8 character_identity;                               /* 0x000 */
+    u8 entd_slot;                                        /* 0x001; 0xff means absent */
+    u8 formation_index;                                  /* 0x002 */
+    u8 job_id;                                           /* 0x003 */
+    u8 sprite_palette;                                   /* 0x004 */
+    u8 team_flags;                                       /* 0x005 */
+    u8 unit_flags;                                       /* 0x006; mixed sex, monster, guest, and formation flags */
+    u8 death_counter;                                    /* 0x007 */
+    battle_unit_birthday_t birthday;                     /* 0x008; zodiac is the high nibble */
+    u16 innate_abilities[4];                             /* 0x00a */
+    u8 primary_skillset;                                 /* 0x012 */
+    u8 secondary_skillset;                               /* 0x013 */
+    u16 reaction_ability;                                /* 0x014 */
+    u16 support_ability;                                 /* 0x016 */
+    u16 movement_ability;                                /* 0x018 */
+    u8 equipment[7];                                     /* 0x01a; unit_equipment_slot_e */
+    u8 experience;                                       /* 0x021 */
+    u8 level;                                            /* 0x022 */
+    u8 original_brave;                                   /* 0x023 */
+    u8 brave;                                            /* 0x024 */
+    u8 original_faith;                                   /* 0x025 */
+    u8 faith;                                            /* 0x026 */
+    u8 transparent_removal_flag;                         /* 0x027 */
+    u16 hp;                                              /* 0x028 */
+    u16 max_hp;                                          /* 0x02a */
+    u16 mp;                                              /* 0x02c */
+    u16 max_mp;                                          /* 0x02e */
+    u8 base_attributes[3];                               /* 0x030; unit_attribute_index_e */
+    u8 equipment_attributes[3];                          /* 0x033; unit_attribute_index_e */
+    u8 attributes[3];                                    /* 0x036; unit_attribute_index_e */
+    u8 ct;                                               /* 0x039 */
+    u8 move;                                             /* 0x03a */
+    u8 jump;                                             /* 0x03b */
+    u8 equipment_stats[11];                              /* 0x03c; battle_unit_equipment_stat_index_e */
+    u8 x;                                                /* 0x047 */
+    battle_unit_position_t position;                     /* 0x048 */
+    u8 equipment_categories[4];                          /* 0x04a */
+    battle_status_sets_t status_sets;                    /* 0x04e; innate / immunity / current */
+    u8 status_ct[16];                                    /* 0x05d */
+    u8 elemental_affinity[5];                            /* 0x06d; elemental_affinity_index_e */
+    unit_raw_stats_t raw_stats;                          /* 0x072 */
+    job_stat_growth_t stat_growths[UNIT_RAW_STAT_COUNT]; /* 0x081; job_data_t.stat_growths */
+    u8 reaction_abilities[4];                            /* 0x08b; battle_unit_reaction_set_N_e */
+    u8 support_abilities[4];                             /* 0x08f */
+    u8 movement_abilities[3];                            /* 0x093 */
+    u8 unlocked_jobs[3];                                 /* 0x096 */
+    u8 learned_abilities[57];                            /* 0x099..0x0d1; three bytes per learned-ability row */
+    u8 job_levels[10];                                   /* 0x0d2; two packed job-level nibbles per byte */
+    u16 job_points[20];                                  /* 0x0dc; SCUS party-to-battle copy at 0x8005b0d0 */
+    u16 total_job_points[20];                            /* 0x104; contiguous with current JP, through 0x12b */
     /* main_unit_store_character_names (0x8005c984) copies 16/16/8/8
      * bytes to these four destinations. All names use the game's encoding. */
     u8 name[16];                   /* 0x12c */
@@ -815,23 +829,23 @@ typedef struct party_data {
     u8 zodiac;             /* 0x06 */
     u8 secondary_skillset; /* 0x07 */
     /* Little-endian ability ids; every reader and writer accesses the two bytes separately. */
-    u8 reaction_ability[2];                               /* 0x08 */
-    u8 support_ability[2];                                /* 0x0a */
-    u8 movement_ability[2];                               /* 0x0c */
-    u8 equipment[7];                                      /* 0x0e; unit_equipment_slot_e */
-    u8 experience;                                        /* 0x15 */
-    u8 level;                                             /* 0x16 */
-    u8 bravery;                                           /* 0x17 */
-    u8 faith;                                             /* 0x18 */
-    unit_raw_stat_bytes_t raw_stats[UNIT_RAW_STAT_COUNT]; /* 0x19; unit_raw_stat_index_e */
-    u8 unlocked_jobs[3];                                  /* 0x28 */
-    u8 learned_abilities[57];                             /* 0x2b */
-    u8 job_levels[10];                                    /* 0x64 */
-    u8 job_points[40];                                    /* 0x6e; per-job Base Job JP */
-    u8 total_job_points[40];                              /* 0x96; per-job Total Base Job JP */
-    u8 name[16];                                          /* 0xbe */
-    u8 name_id[2];         /* 0xce; little-endian, accessed bytewise like the ability ids */
-    u8 proposition_status; /* 0xd0; nonzero while unavailable on a proposition */
+    u8 reaction_ability[2];     /* 0x08 */
+    u8 support_ability[2];      /* 0x0a */
+    u8 movement_ability[2];     /* 0x0c */
+    u8 equipment[7];            /* 0x0e; unit_equipment_slot_e */
+    u8 experience;              /* 0x15 */
+    u8 level;                   /* 0x16 */
+    u8 bravery;                 /* 0x17 */
+    u8 faith;                   /* 0x18 */
+    unit_raw_stats_t raw_stats; /* 0x19 */
+    u8 unlocked_jobs[3];        /* 0x28 */
+    u8 learned_abilities[57];   /* 0x2b */
+    u8 job_levels[10];          /* 0x64 */
+    u8 job_points[40];          /* 0x6e; per-job Base Job JP */
+    u8 total_job_points[40];    /* 0x96; per-job Total Base Job JP */
+    u8 name[16];                /* 0xbe */
+    u8 name_id[2];              /* 0xce; little-endian, accessed bytewise like the ability ids */
+    u8 proposition_status;      /* 0xd0; nonzero while unavailable on a proposition */
     u8 _unused_d1;
     u8 egg_color;        /* 0xd2; create/save/generate unit stores */
     u8 _unused_d3[0x2d]; /* 0xd3; saves and loads copy 0xe0 bytes per record, so 0xe0..0xff is not saved */

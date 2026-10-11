@@ -8,16 +8,12 @@ enum { EFFECT_SCRIPT_CHILD_SLOT_COUNT = 4 };
 s32 battle_effect_code_script_02_spawn_child(effect_record_t* record) {
     s16 slot;
     s16 child;
-    s32 pc;
-    u8* script;
-    battle_effect_script_value_instruction_t* instruction;
+    battle_effect_script_instruction_t* instruction;
 
-    pc = record->pc;
-    script = record->script;
-    instruction = (battle_effect_script_value_instruction_t*)((pc + (u32)script));
-    slot = instruction->header.bytes.packed_parameters >> 4;
+    instruction = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
+    slot = instruction->value.header.bytes.packed_parameters >> 4;
     child = battle_effect_start_script_record(
-        script, instruction->value.signed_value, g_battle_effect_current_record_index);
+        record->script, instruction->value.value.signed_value, g_battle_effect_current_record_index);
     if (slot < EFFECT_SCRIPT_CHILD_SLOT_COUNT) {
         record->child_indices[slot] = child;
     }

@@ -4,7 +4,7 @@
 /* Emits a texture-page packet and SPRT primitive for the sprite, then links
  * the packet into the ordering table. */
 void GsSortFastSprite(const GsSPRITE* sp, GsOT* ot, u16 pri) {
-    u32* packet;
+    psyq_gs_sprite_packet_t* packet;
     u32* tag;
     u32 attr;
     u32 shade;
@@ -29,22 +29,22 @@ void GsSortFastSprite(const GsSPRITE* sp, GsOT* ot, u16 pri) {
         sprite_y = sp->y;
         sprite_x = sp->x;
         tpage_value = sp->tpage & 0x1F;
-        packet[1] = tpage_value | (((attr >> 17) & 0x180) | dr_mode) | ((attr >> 23) & 0x60);
+        packet->tpage.code[0] = tpage_value | (((attr >> 17) & 0x180) | dr_mode) | ((attr >> 23) & 0x60);
         sum_x = sprite_x + *(u16*)&g_psyq_gs_offset_x;
         sum_y = sprite_y + *(u16*)&g_psyq_gs_offset_y;
         blue = sp->b;
         green = sp->g;
         red = sp->r;
-        packet[3] = (sum_x & 0xFFFF) | (sum_y << 16);
+        packet->xy = (sum_x & 0xFFFF) | (sum_y << 16);
         mode = (attr >> 5) & 0x02000000;
         shade = (attr << 18) & 0x01000000;
         sprite_code = 0x64000000;
-        packet[2] = mode | (shade | sprite_code) | (blue << 16) | (green << 8) | red;
-        packet[4] = sp->u | (sp->v << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3F0000);
-        packet[5] = sp->w | (sp->h << 16);
+        packet->mode = mode | (shade | sprite_code) | (blue << 16) | (green << 8) | red;
+        packet->uv_clut = sp->u | (sp->v << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3F0000);
+        packet->wh = sp->w | (sp->h << 16);
         tag = &ot->org[pri] - ot->offset;
-        packet[0] = *tag + 0x05000000;
+        packet->tpage.tag = *tag + 0x05000000;
         *tag = packet_addr;
-        GsOUT_PACKET_P = packet + 6;
+        GsOUT_PACKET_P = packet + 1;
     }
 }

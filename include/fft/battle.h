@@ -3416,6 +3416,22 @@ typedef struct battle_effect_script_vector_instruction {
 typedef char battle_effect_script_vector_instruction_size_must_be_8
     [(sizeof(battle_effect_script_vector_instruction_t) == 8) ? 1 : -1];
 
+/* A view of one encoded instruction. Script pointers identify the first
+ * instruction; pc selects later instructions by byte offset, never union stride. */
+typedef union battle_effect_script_instruction {
+    battle_effect_script_header_t header;
+    battle_effect_script_value_instruction_t value;
+    battle_effect_script_branch_instruction_t branch;
+    battle_effect_script_vector_instruction_t vector;
+} battle_effect_script_instruction_t;
+typedef char
+    battle_effect_script_instruction_size_must_be_8[(sizeof(battle_effect_script_instruction_t) == 8) ? 1 : -1];
+
+/* Variable-length bytecode needs byte addressing. Integer addition retains
+ * GCC 2.x's retail operand order; pointer addition exchanges the registers. */
+#define BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(script, byte_offset)                                                       \
+    ((battle_effect_script_instruction_t*)((byte_offset) + (s32)(script)))
+
 /* What an opcode handler returns to battle_effect_run_block. */
 typedef enum effect_script_result {
     EFFECT_SCRIPT_RESULT_YIELD = 0,    /* stop for this frame */
@@ -3784,12 +3800,12 @@ enum { EFFECT_RECORD_FLAG_ALLOCATED = 0x1 };
  * 02 starts a child the script keeps track of. Record 0 is the list sentinel,
  * so an index of 0 means none. */
 typedef struct effect_record {
-    s16 next_index;       /* 0x00: next record on the allocated or the available list */
-    s16 record_index;     /* 0x02: this record's array index */
-    s16 parent_index;     /* 0x04: the record that started this one; 0 for the root */
-    s16 pc;               /* 0x06: byte offset of the current instruction in script */
-    u8* script;           /* 0x08 */
-    s16 child_indices[4]; /* 0x0c: the child records script opcode 02 started, by child slot */
+    s16 next_index;                             /* 0x00: next record on the allocated or the available list */
+    s16 record_index;                           /* 0x02: this record's array index */
+    s16 parent_index;                           /* 0x04: the record that started this one; 0 for the root */
+    s16 pc;                                     /* 0x06: byte offset of the current instruction in script */
+    battle_effect_script_instruction_t* script; /* 0x08: shared script's first instruction */
+    s16 child_indices[4];                       /* 0x0c: the child records script opcode 02 started, by child slot */
     s16 counters[4];   /* 0x14: script counters; the counter opcodes select one by their second byte's top two bits */
     s16 work_count;    /* 0x1c: particles on work_head */
     u16 flags;         /* 0x1e: EFFECT_RECORD_FLAG_ALLOCATED */
@@ -4423,7 +4439,7 @@ extern s32 g_battle_effect_gravity_modifier;
 extern s32 g_battle_effect_inertia_threshold;
 extern s16 g_battle_effect_load_countdown;
 extern effect_timeline_t* g_battle_effect_timeline;
-extern u8* g_battle_effect_script;
+extern battle_effect_script_instruction_t* g_battle_effect_script;
 /* Timing-curve section of an effect file: a time scale per timeline frame,
  * packed two nibbles to the byte, low nibble first; values 1-9 are applied
  * (battle_state_set_time_scale). The parent timeline's curve comes first and
@@ -4469,7 +4485,7 @@ extern SVECTOR g_battle_effect_corner_bottom_right;
 extern SVECTOR g_battle_effect_corner_top_left;
 extern SVECTOR g_battle_effect_corner_top_right;
 extern u8 g_battle_effect_ending_secondary_function_id; /* function byte to store; 5 = nothing */
-extern s16 (*g_battle_effect_instructions[])(effect_record_t*);
+extern s32 (*g_battle_effect_instructions[120])(effect_record_t*);
 extern MATRIX g_battle_effect_matrix; /* 0x801bc09c */
 extern u32* g_battle_effect_otag;
 
@@ -4736,7 +4752,9 @@ void battle_effect_init_free_list(void);
 void battle_effect_init_record_chain(void);
 void battle_effect_init_render_state(void);
 void battle_effect_init_state_records(void);
-s16 battle_effect_start_script_record(u8* script, s16 start_pc, s16 parent_index);
+s16 battle_effect_start_script_record(battle_effect_script_instruction_t* script, s16 start_pc, s16 parent_index);
+s32 battle_effect_code_script_04_end(effect_record_t* unused_record);
+s32 battle_effect_code_script_2e_invalid(effect_record_t* unused_record);
 void battle_effect_interpolate_emitter_spawn_spread(const void* source, s32 factor, s32* out);
 s32 battle_effect_lerp_linear(s32 start, s32 end, s32 factor);
 void battle_effect_play(void);

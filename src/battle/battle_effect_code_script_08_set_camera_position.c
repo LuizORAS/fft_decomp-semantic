@@ -5,9 +5,9 @@
 s32 battle_effect_code_script_08_set_camera_position(effect_record_t* record) {
     VECTOR coords;
 
-    coords.vx = ((battle_effect_script_vector_instruction_t*)(record->pc + (s32)record->script))->x.signed_value << 12;
-    coords.vy = ((battle_effect_script_vector_instruction_t*)(record->pc + (s32)record->script))->y.signed_value << 12;
-    coords.vz = ((battle_effect_script_vector_instruction_t*)(record->pc + (s32)record->script))->z.signed_value << 12;
+    coords.vx = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc)->vector.x.signed_value << 12;
+    coords.vy = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc)->vector.y.signed_value << 12;
+    coords.vz = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc)->vector.z.signed_value << 12;
     battle_camera_set_current_real_coords(&coords);
     record->pc += 8;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

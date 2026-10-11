@@ -1159,6 +1159,14 @@ enum {
     JOB_JUMP_STEPPING_STONE = 0x80,
 };
 
+/* One pair for HP, MP, Speed, PA or MA. Unit growth uses the first byte;
+ * deriving the battle stat uses the second. */
+typedef struct job_stat_growth {
+    u8 growth;
+    u8 multiplier;
+} job_stat_growth_t;
+typedef char job_stat_growth_size_must_be_2[(sizeof(job_stat_growth_t) == 2) ? 1 : -1];
+
 /*
  * 0x30-byte job record (g_main_job_data_pointer). The named fields are those copied
  * by main_unit_copy_job_data, main_unit_calculate_abilities and
@@ -1168,7 +1176,7 @@ typedef struct job_data {
     u8 skillset;                       /* 0x00 */
     u8 innate_abilities[8];            /* 0x01; four little-endian u16 ability ids, byte-copied */
     u8 equipment_categories[4];        /* 0x09 */
-    u8 growths_multipliers[10];        /* 0x0d; copied to battle_stats_t 0x81 */
+    job_stat_growth_t stat_growths[5]; /* 0x0d; HP, MP, Speed, PA, MA; copied to battle_stats_t 0x81 */
     u8 move;                           /* 0x17 */
     u8 jump;                           /* 0x18; JOB_JUMP_* */
     u8 class_evade;                    /* 0x19; battle_stats_t equipment-stat slot 0x43 */

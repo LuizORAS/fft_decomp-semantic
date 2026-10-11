@@ -37,7 +37,7 @@ void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party)
     unit->level = party->level;
     unit->original_brave = unit->brave = party->bravery;
     unit->original_faith = unit->faith = party->faith;
-    main_util_copy_byte_data(party->raw_stats, unit->raw_stats, 0xf);
+    main_util_copy_byte_data(&party->raw_stats, &unit->raw_stats, sizeof(unit_raw_stats_t));
     for (i = 0; i < UNIT_UNLOCKED_JOB_BYTE_COUNT; i++) {
         unit->unlocked_jobs[i] = party->unlocked_jobs[i];
     }

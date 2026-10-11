@@ -5,11 +5,9 @@
 #include "psx/types.h"
 
 /* The unit panels' copy of the scaled draw-area builder (the BUNIT and EQUIP twin).
- * Callers pass different thread records; only the halfwords at offsets 0 and
- * 4 are read here. Copying the view into a local reorders the prologue's
- * saved-register moves. */
-void world_panel_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* packets, const void* geometry, s32 scale_index, s32 frame_offset, void* thread) {
+ * The panel origin is narrowed to the packet's coordinate halfwords. */
+void world_panel_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry,
+    s32 scale_index, s32 frame_offset, const world_status_thread_t* thread) {
     s32 percent;
     s32 w;
     s32 h;
@@ -22,12 +20,12 @@ void world_panel_gfx_build_scaled_draw_area_packets(
         scale_index = 11;
     }
     percent = g_world_gfx_panel_draw_area_scale_percent[scale_index];
-    world_script_copy_bytes(&packets->rects[0], geometry, 8);
+    world_script_copy_bytes(&packets->rects[0], geometry, sizeof(*geometry));
     w = packets->rects[0].w;
     h = packets->rects[0].h;
     packets->rects[0].x -= 0x80;
-    packets->rects[0].x += ((const RECT*)thread)->x;
-    packets->rects[0].y += ((const RECT*)thread)->w;
+    packets->rects[0].x += thread->x;
+    packets->rects[0].y += thread->y;
     scaled = (w * percent) / 200;
     packets->rects[0].x = w / 2 + packets->rects[0].x - scaled;
     scaled = (h * percent) / 200;

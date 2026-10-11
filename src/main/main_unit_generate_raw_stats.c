@@ -12,5 +12,5 @@ void main_unit_generate_raw_stats(battle_stats_t* unit) {
     } else {
         unit_type = MAIN_UNIT_TYPE_MONSTER;
     }
-    main_unit_generate_base_raw_stats(unit->raw_stats, unit_type);
+    main_unit_generate_base_raw_stats(&unit->raw_stats, unit_type);
 }

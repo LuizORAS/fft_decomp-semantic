@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "psx/stddef.h"
 
 typedef void (*open_script_entry_handler_t)(s16* entry);
 
@@ -15,7 +16,7 @@ extern open_script_entry_handler_t g_open_opcode_handlers[];
  * on the next, and opcode 0 clears OPEN_SCRIPT_DISPATCH_RUNNING. */
 s32 open_script_init_and_dispatch_entries(void) {
     open_script_dispatch_state_t* state;
-    s32* dispatch_arguments;
+    open_script_cursor_t* cursor;
     open_script_entry_handler_t* handlers;
     s32 result;
     s16* entry;
@@ -30,14 +31,13 @@ s32 open_script_init_and_dispatch_entries(void) {
     result = state->flags | OPEN_SCRIPT_DISPATCH_CONTINUE;
     state->flags = result;
     if (result & OPEN_SCRIPT_DISPATCH_CONTINUE) {
-        dispatch_arguments = &state->data_base;
+        cursor = &state->cursor;
         handlers = g_open_opcode_handlers;
         do {
-            entry = (s16*)open_script_add_pointer_offset(dispatch_arguments[0], dispatch_arguments[1]);
+            entry = (s16*)open_script_add_pointer_offset(cursor->data_base, cursor->byte_offset);
             handlers[*entry](entry);
-            /* Keep the data_base pointer live across the handler; a separate state base adds two instructions. */
-            flags = ((open_script_dispatch_state_t*)((u8*)dispatch_arguments - (u32)
-                         & ((open_script_dispatch_state_t*)0)->data_base))
+            /* Keeping the cursor base live matches retail; the direct state view is four bytes shorter. */
+            flags = ((open_script_dispatch_state_t*)((u8*)cursor - offsetof(open_script_dispatch_state_t, cursor)))
                         ->flags;
             if ((flags & OPEN_SCRIPT_DISPATCH_RUNNING) == 0) {
                 return 0;

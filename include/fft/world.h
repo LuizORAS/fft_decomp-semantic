@@ -947,8 +947,8 @@ void world_gfx_set_party_unit_portrait_poly_texture(s32 portrait_id, POLY_FT4* p
 void world_menu_display_text_string(u8* image, world_glyph_blit_t* origin, u8* text);
 void world_display_menu_number_entry(s32 value, u8 digit_count, void* image, world_glyph_blit_t* origin);
 
-void world_panel_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* packets, const void* geometry, s32 scale_index, s32 frame_offset, void* thread);
+void world_panel_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry,
+    s32 scale_index, s32 frame_offset, const world_status_thread_t* thread);
 
 void world_gfx_add_draw_area_primitive(RECT* rect, s32 otag_index);
 void world_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 ot_index);
@@ -2514,7 +2514,7 @@ s32 world_menu_get_learn_job_jp(s32 index);
 s32 world_job_calculate_current_level(s32 index);
 s32 world_menu_get_window_scale_step(void);
 void world_menu_copy_unit_data_to_status_billboard(struct battle_stats* unit, battle_unit_status_record_t* output);
-void world_menu_init_quad_from_record(u16* source, s16* record, POLY_FT4* poly);
+void world_menu_init_quad_from_record(RECT* out, const world_menu_entry_t* record, SPRT* primitive);
 void world_menu_reserve_high_overlay(u32 size);
 void world_menu_run_display_script(u8* script, s32 value);
 u8* world_menu_get_sprite_color(void);

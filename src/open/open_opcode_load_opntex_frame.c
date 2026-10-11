@@ -8,5 +8,5 @@
 void open_opcode_load_opntex_frame(s16* command) {
     open_gfx_load_opntex_into_frame_buffer(g_open_gfx_opntex_data + command[1] * OPEN_OPNTEX_FRAME_SECTORS * 0x800);
     g_open_script_state.opntex.fade_intensity = 0;
-    g_open_script_state.dispatch.byte_offset += 4;
+    g_open_script_state.dispatch.cursor.byte_offset += 4;
 }

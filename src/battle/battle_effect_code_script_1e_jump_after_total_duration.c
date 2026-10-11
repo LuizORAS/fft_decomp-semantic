@@ -11,8 +11,10 @@ s32 battle_effect_code_script_1e_jump_after_total_duration(effect_record_t* reco
     timing = g_battle_effect_timeline;
     if (record->timeline_frame >= (s32)(timing->phase1_duration + timing->phase2_duration
             + (g_battle_effect_coord_data.target_count - 1) * timing->spawn_delay + timing->child_duration)) {
-        record->pc
-            = ((battle_effect_script_value_instruction_t*)(record->pc + (s32)record->script))->value.unsigned_value;
+        battle_effect_script_instruction_t* instruction
+            = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
+
+        record->pc = instruction->value.value.unsigned_value;
     } else {
         record->pc += 4;
     }

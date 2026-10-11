@@ -20,8 +20,8 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
     s32 brave_flag;
     s32 divisor;
     s32 is_low;
-    u8* mult;
-    unit_raw_stat_bytes_t* raw;
+    job_stat_growth_t* mult;
+    unit_raw_stat_t* raw;
 
     cap = 100;
     max = 999;
@@ -30,14 +30,14 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
         cap = 10;
         max = 0xffff;
     }
-    mult = unit->growths_multipliers;
+    mult = unit->stat_growths;
     level = unit->level;
-    raw = unit->raw_stats;
+    raw = unit->raw_stats.values;
 
     for (i = 0; i < UNIT_RAW_STAT_COUNT; i++) {
         value = raw[i].low + (raw[i].middle << 8) + (raw[i].high << 16);
         if (mode == 0 && unit->formation_index == BATTLE_FORMATION_INDEX_GENERATED_UNIT) {
-            divisor = mult[i * 2];
+            divisor = mult[i].growth;
             divisor = divisor ? divisor : 1;
             for (j = 2; j <= level; j++) {
                 value += value / (divisor + j - 1);
@@ -51,7 +51,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
         is_low = i < UNIT_RAW_STAT_SPEED;
         raw[i].low = value;
         raw[i].high = value >> 16;
-        multiplier = mult[i * 2 + 1];
+        multiplier = mult[i].multiplier;
         if (is_low) {
             divisor = cap;
         }

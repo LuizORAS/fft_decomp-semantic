@@ -9,9 +9,9 @@
 void world_menu_load_text_1bd8_with_face(void) {
     s32 i;
     s32 value;
-    s32 base;
+    u8* base;
     s32* src;
-    s32* dst;
+    u8** dst;
 
     world_menu_init_subsystem_pointers();
     world_menu_load_common_graphics(1);
@@ -23,13 +23,14 @@ void world_menu_load_text_1bd8_with_face(void) {
     g_world_menu_thread_menu_data = g_world_menu_default_entries;
     i = 0;
     src = g_world_menu_text_file_buffer;
-    base = (s32)src + 0x80;
-    dst = (s32*)g_world_text_section_pointers;
+    base = (u8*)&src[TEXT_SECTION_COUNT];
+    dst = g_world_text_section_pointers;
     do {
         value = *src++;
-        *dst++ = value + base;
+        /* Byte-pointer addition reverses the target's final addu operands. */
+        *dst++ = (u8*)(value + (s32)base);
         i++;
-    } while (i < 0x20);
+    } while (i < TEXT_SECTION_COUNT);
     g_world_text_section_pointers[TEXT_SECTION_LOCATION_NAMES] = g_world_location_names_resident;
     world_script_set_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD, 0);
     world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);

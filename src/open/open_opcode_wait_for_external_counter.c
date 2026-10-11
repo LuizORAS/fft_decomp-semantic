@@ -17,9 +17,9 @@ void open_opcode_wait_for_external_counter(s16* entry) {
         limit = *entry;
         counter = state->external_counter;
         if (counter >= limit) {
-            offset = state->byte_offset;
+            offset = state->cursor.byte_offset;
             state->flags = flags ^ OPEN_SCRIPT_DISPATCH_WAITING;
-            state->byte_offset = offset + 4;
+            state->cursor.byte_offset = offset + 4;
         } else {
             state->flags = flags ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
         }

@@ -11,6 +11,6 @@ void SetDrawLoad(DR_LOAD* primitive, RECT* rect) {
     packet->cache_flush = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CLEAR_CACHE);
     ((P_TAG*)packet)->len = length;
     packet->command = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CPU_TO_VRAM);
-    packet->rect.words[0] = ((psyq_gpu_rect_words_t*)rect)->words[0];
-    packet->rect.words[1] = ((psyq_gpu_rect_words_t*)rect)->words[1];
+    packet->rect.packed.coordinates = ((psyq_gpu_rect_words_t*)rect)->packed.coordinates;
+    packet->rect.packed.dimensions = ((psyq_gpu_rect_words_t*)rect)->packed.dimensions;
 }

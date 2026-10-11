@@ -13,12 +13,12 @@ void open_opcode_start_xa_audio(s16* command) {
             return;
         }
         g_open_script_state.dispatch.flags = flags ^ OPEN_SCRIPT_DISPATCH_WAITING;
-        g_open_script_state.dispatch.byte_offset += 4;
+        g_open_script_state.dispatch.cursor.byte_offset += 4;
         return;
     }
     if (flags
         & (OPEN_SCRIPT_DISPATCH_XA_PLAYING | OPEN_SCRIPT_DISPATCH_XA_STOPPING | OPEN_SCRIPT_DISPATCH_XA_STARTING)) {
-        g_open_script_state.dispatch.byte_offset += 4;
+        g_open_script_state.dispatch.cursor.byte_offset += 4;
         return;
     }
     g_open_script_state.control_parameter = command[1];

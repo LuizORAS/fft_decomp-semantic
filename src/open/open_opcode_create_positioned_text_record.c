@@ -14,7 +14,7 @@ void open_opcode_create_positioned_text_record(s16* command) {
     x = *command++;
     y = *command++;
     index = open_script_build_text_record(
-        (u8*)open_script_add_pointer_offset(g_open_script_state.dispatch.data_base, *command));
+        open_script_add_pointer_offset(g_open_script_state.dispatch.cursor.data_base, *command));
     if (index != 0) {
         index--;
         if (x == -1) {
@@ -42,5 +42,5 @@ void open_opcode_create_positioned_text_record(s16* command) {
         g_open_script_state.records[index].x = x;
         g_open_script_state.records[index].y = y;
     }
-    g_open_script_state.dispatch.byte_offset += 8;
+    g_open_script_state.dispatch.cursor.byte_offset += 8;
 }

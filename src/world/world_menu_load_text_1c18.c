@@ -13,9 +13,9 @@ void world_menu_load_text_1c18(void) {
     world_menu_reset_subsystems();
     world_script_set_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE, 0);
     g_world_menu_thread_menu_data = g_world_menu_default_entries;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < TEXT_SECTION_COUNT; i++) {
         g_world_text_section_pointers[i]
-            = (u8*)(g_world_menu_text_file_buffer[i] + (s32)&g_world_menu_text_file_buffer[0x20]);
+            = g_world_menu_text_file_buffer[i] + (u8*)&g_world_menu_text_file_buffer[TEXT_SECTION_COUNT];
     }
     world_script_set_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD, 0);
     world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);

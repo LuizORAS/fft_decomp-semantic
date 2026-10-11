@@ -16,9 +16,9 @@ void open_opcode_wait_counted(s16* entry) {
         counter = state->wait_counter + 1;
         state->wait_counter = counter;
         if (counter >= *entry) {
-            offset = state->byte_offset;
+            offset = state->cursor.byte_offset;
             state->flags = flags ^ OPEN_SCRIPT_DISPATCH_WAITING;
-            state->byte_offset = offset + 4;
+            state->cursor.byte_offset = offset + 4;
         } else {
             state->flags = flags ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
         }

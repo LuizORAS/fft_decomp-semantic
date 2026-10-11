@@ -4,13 +4,11 @@
  * more particles than the second halfword says; otherwise step over the
  * 6-byte instruction. */
 s32 battle_effect_code_script_17_jump_if_work_count_greater(effect_record_t* record) {
-    s16 pc = record->pc;
-    battle_effect_script_branch_instruction_t* instruction
-        = (battle_effect_script_branch_instruction_t*)((pc + record->script));
-    if (instruction->comparison.signed_value < record->work_count) {
-        record->pc = instruction->target_offset.signed_value;
+    battle_effect_script_instruction_t* instruction = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
+    if (instruction->branch.comparison.signed_value < record->work_count) {
+        record->pc = instruction->branch.target_offset.signed_value;
     } else {
-        record->pc = pc + 6;
+        record->pc += 6;
     }
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

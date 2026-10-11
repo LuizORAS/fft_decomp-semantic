@@ -6,21 +6,23 @@ int sprintf(char* destination, const char* format, ...) {
     psyq_printf_format_t state;
     char* arguments = (char*)__builtin_next_arg(format);
     const char* digits;
-    /* Unpinning changes the variadic-cursor allocation and instruction order. */
-    register char* argument __asm__("$3");
     char* segment;
     int length;
     int count;
     unsigned int number;
     int hash;
-    int zero;
-    /* Each unpinned temporary changes the original instruction allocation. */
+    u8 zero;
+    /* Unpinning value changes its allocation and the surrounding instruction order. */
     register int value __asm__("$2");
-    register u32 flags __asm__("$3");
+    /* The conversion word is reused for the argument cursor and the flags. */
+    union {
+        char* argument;
+        u32 flags;
+    } conversion_word;
     const char* next;
     int character;
-    int minus;
     int plus;
+    int minus;
     int space;
     char* terminator;
     const char* current;
@@ -64,9 +66,9 @@ int sprintf(char* destination, const char* format, ...) {
             break;
         }
         if (character == '*') {
-            argument = arguments;
-            arguments = argument + sizeof(u32);
-            state.width = *(s32*)argument;
+            conversion_word.argument = arguments;
+            arguments = conversion_word.argument + sizeof(u32);
+            state.width = *(s32*)conversion_word.argument;
             if (state.width < 0) {
                 state.width = -state.width;
                 state.flags.bits |= PSYQ_PRINTF_LEFT;
@@ -90,9 +92,9 @@ int sprintf(char* destination, const char* format, ...) {
             format = current + 1;
             character = current[1];
             if (character == '*') {
-                argument = arguments;
-                arguments = argument + sizeof(u32);
-                state.precision = *(s32*)argument;
+                conversion_word.argument = arguments;
+                arguments = conversion_word.argument + sizeof(u32);
+                state.precision = *(s32*)conversion_word.argument;
                 format = current + 2;
                 character = current[2];
             } else {
@@ -130,25 +132,25 @@ int sprintf(char* destination, const char* format, ...) {
             goto conversion;
         case 'd':
         case 'i':
-            argument = arguments;
-            arguments = argument + sizeof(u32);
-            number = *(u32*)argument;
-            flags = state.flags.bits;
-            if (flags & PSYQ_PRINTF_SHORT)
+            conversion_word.argument = arguments;
+            arguments = conversion_word.argument + sizeof(u32);
+            number = *(u32*)conversion_word.argument;
+            conversion_word.flags = state.flags.bits;
+            if (conversion_word.flags & PSYQ_PRINTF_SHORT)
                 number = (s16)number;
             if ((s32)number < 0) {
                 number = -number;
                 state.flags.bytes.sign = minus;
             } else {
-                value = flags & PSYQ_PRINTF_PLUS;
+                value = conversion_word.flags & PSYQ_PRINTF_PLUS;
                 if (value)
                     state.flags.bytes.sign = plus;
             }
             goto decimal;
         case 'u':
-            argument = arguments;
-            arguments = argument + sizeof(u32);
-            number = *(u32*)argument;
+            conversion_word.argument = arguments;
+            arguments = conversion_word.argument + sizeof(u32);
+            number = *(u32*)conversion_word.argument;
             /* Keeps the argument load before the subsequent flags load. */
             __asm__("" : "=r"(number) : "0"(number));
             if (state.flags.bits & PSYQ_PRINTF_SHORT)
@@ -171,8 +173,6 @@ int sprintf(char* destination, const char* format, ...) {
                 length++;
             }
             if (length < state.precision) {
-                /* Prevents hoisting the zero literal into the preceding delay slot. */
-                __asm__ volatile("" : : : "$3");
                 zero = '0';
                 do {
                     *--segment = zero;
@@ -185,14 +185,14 @@ int sprintf(char* destination, const char* format, ...) {
             }
             goto write_segment;
         case 'o':
-            argument = arguments;
-            arguments = argument + sizeof(u32);
-            number = *(u32*)argument;
-            flags = state.flags.bits;
-            if (flags & PSYQ_PRINTF_SHORT)
+            conversion_word.argument = arguments;
+            arguments = conversion_word.argument + sizeof(u32);
+            number = *(u32*)conversion_word.argument;
+            conversion_word.flags = state.flags.bits;
+            if (conversion_word.flags & PSYQ_PRINTF_SHORT)
                 number = (u16)number;
-            if (!(flags & PSYQ_PRINTF_PRECISION)) {
-                value = flags & PSYQ_PRINTF_ZERO;
+            if (!(conversion_word.flags & PSYQ_PRINTF_PRECISION)) {
+                value = conversion_word.flags & PSYQ_PRINTF_ZERO;
                 if (value)
                     state.precision = state.width;
                 if (state.precision <= 0)
@@ -205,13 +205,9 @@ int sprintf(char* destination, const char* format, ...) {
                 length++;
             }
             if ((state.flags.bits & PSYQ_PRINTF_ALTERNATE) && length) {
-                value = '0';
                 zero = *segment;
-                /* Retains the second zero literal in the following delay slot. */
-                __asm__("" : "=r"(value) : "0"(value));
-                if (zero != value) {
-                    value = '0';
-                    *--segment = value;
+                if (zero != '0') {
+                    *--segment = '0';
                     length++;
                 }
             }
@@ -230,15 +226,15 @@ int sprintf(char* destination, const char* format, ...) {
         case 'x':
             digits = g_psyq_libc_lowercase_digits;
         hexadecimal:
-            argument = arguments;
-            arguments = argument + sizeof(u32);
-            number = *(u32*)argument;
-            flags = state.flags.bits;
-            if (flags & PSYQ_PRINTF_SHORT)
+            conversion_word.argument = arguments;
+            arguments = conversion_word.argument + sizeof(u32);
+            number = *(u32*)conversion_word.argument;
+            conversion_word.flags = state.flags.bits;
+            if (conversion_word.flags & PSYQ_PRINTF_SHORT)
                 number = (u16)number;
-            if (!(flags & PSYQ_PRINTF_PRECISION)) {
-                if (flags & PSYQ_PRINTF_ZERO) {
-                    value = flags & PSYQ_PRINTF_ALTERNATE;
+            if (!(conversion_word.flags & PSYQ_PRINTF_PRECISION)) {
+                if (conversion_word.flags & PSYQ_PRINTF_ZERO) {
+                    value = conversion_word.flags & PSYQ_PRINTF_ALTERNATE;
                     state.precision = state.width;
                     if (value)
                         state.precision -= 2;
@@ -253,8 +249,6 @@ int sprintf(char* destination, const char* format, ...) {
                 length++;
             }
             if (length < state.precision) {
-                /* Prevents hoisting the zero literal into the preceding delay slot. */
-                __asm__ volatile("" : : : "$3");
                 zero = '0';
                 do {
                     *--segment = zero;

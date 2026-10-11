@@ -28,7 +28,7 @@ void main_unit_copy_job_data(battle_stats_t* unit) {
     unit->primary_skillset = job->skillset;
     main_util_copy_byte_data(job->innate_abilities, unit->innate_abilities, 8);
     main_util_copy_byte_data(job->equipment_categories, unit->equipment_categories, 4);
-    main_util_copy_byte_data(job->growths_multipliers, unit->growths_multipliers, 10);
+    main_util_copy_byte_data(job->stat_growths, unit->stat_growths, 10);
     unit->move = job->move;
     unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
     if (job->jump & JOB_JUMP_STEPPING_STONE) {

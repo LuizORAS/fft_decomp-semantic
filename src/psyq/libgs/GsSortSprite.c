@@ -3,15 +3,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* DR_TPAGE + SPRT packet under one tag, as the packed words libgs writes. */
-typedef struct {
-    DR_TPAGE tpage; /* 0x00: tag and texture-page word */
-    u32 mode;       /* 0x08: r | g << 8 | b << 16 | code << 24 */
-    u32 xy;         /* 0x0c */
-    u32 uv_clut;    /* 0x10 */
-    u32 wh;         /* 0x14 */
-} psyq_gs_sprite_packet_t;
-
 /* The target tests scalex/scaley against the identity ONE/ONE (0x10001000) with a
  * single word load and compare. */
 #define GS_SPRITE_SCALE_WORD(sp) (*(s32*)&sp->scalex)

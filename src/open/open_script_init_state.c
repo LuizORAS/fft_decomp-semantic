@@ -51,8 +51,8 @@ void open_script_init_state(void) {
     g_open_script_state.dispatch.font_index = 0;
     g_open_script_state.dispatch.wide_glyphs = 0;
     g_open_script_state.dispatch.skew = 0;
-    g_open_script_state.dispatch.byte_offset = 0;
-    g_open_script_state.dispatch.data_base = g_open_script_initial_data_base;
+    g_open_script_state.dispatch.cursor.byte_offset = 0;
+    g_open_script_state.dispatch.cursor.data_base = g_open_script_initial_data_base;
     for (j = 0; j < 16; j++) {
         g_open_script_state.records[j].flags = 0;
     }

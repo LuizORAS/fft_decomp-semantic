@@ -12,6 +12,6 @@ void open_opcode_toggle_control(void) {
         *control = state ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
     } else {
         *control = state ^ OPEN_SCRIPT_DISPATCH_RUNNING;
-        g_open_script_state.dispatch.byte_offset += 2;
+        g_open_script_state.dispatch.cursor.byte_offset += 2;
     }
 }

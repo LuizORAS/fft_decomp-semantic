@@ -11,6 +11,6 @@ void open_opcode_wait_for_xa_audio_idle(void) {
         & (OPEN_SCRIPT_DISPATCH_XA_PLAYING | OPEN_SCRIPT_DISPATCH_XA_STOPPING | OPEN_SCRIPT_DISPATCH_XA_STARTING)) {
         *control = state ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
     } else {
-        g_open_script_state.dispatch.byte_offset += 2;
+        g_open_script_state.dispatch.cursor.byte_offset += 2;
     }
 }

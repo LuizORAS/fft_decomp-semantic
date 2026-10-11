@@ -690,7 +690,10 @@ typedef struct {
 
 typedef union {
     RECT rect;
-    u32 words[2];
+    struct {
+        u32 coordinates; /* x | y << 16 */
+        u32 dimensions;  /* w | h << 16 */
+    } packed;
 } psyq_gpu_rect_words_t;
 
 typedef struct {

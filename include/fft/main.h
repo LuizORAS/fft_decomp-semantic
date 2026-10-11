@@ -1318,6 +1318,18 @@ typedef struct main_sound_smd_file {
     s32 size;
 } main_sound_smd_file_t;
 
+/* SMD and WD resources store their total byte size at offset eight. */
+typedef struct suzuki_resource_prefix {
+    u8 _unknown_00[8];
+    u32 size_bytes; /* 0x08 */
+} suzuki_resource_prefix_t;
+
+/* The transfer controller indexes these records in 16-byte steps. */
+typedef struct suzuki_spu_transfer_status {
+    s16 status; /* 0x00 */
+    u8 _unknown_02[14];
+} suzuki_spu_transfer_status_t;
+
 /* Elapsed play time filled by main_smd_get_play_time. The root counter runs
  * at 240 Hz; music->ticks counts those ticks in 1/256 units. */
 typedef struct suzuki_play_time {
@@ -1351,12 +1363,12 @@ extern u16 g_main_smd_pitch_table[12 * 256];
 extern s16
     g_main_sound_sfx_channel_count; /* channels main_sound_start_sfx fills, one per stream of a sound: always 2 */
 extern main_sound_resource_t* g_main_sound_resource_list; /* 0x80032a00 */
-extern s16* g_main_sound_spu_transfer_status_records;     /* SPU transfer status records, 16 bytes each */
-extern u32 g_main_sound_music_key_off_voices;             /* voices queued for key-off by stopped music */
-extern u32 g_main_mask_exclusion;                         /* 0x80032a0c; voices reserved by SFX */
-extern u32 g_main_sound_sfx_restart_channels;             /* last SFX voice search: channel mask */
-extern u32 g_main_sound_sfx_restart_voices;               /* last SFX voice search: voice mask */
-extern s32 g_main_smd_random_state;                       /* 0x80032a18 */
+extern suzuki_spu_transfer_status_t* g_main_sound_spu_transfer_status_records;
+extern u32 g_main_sound_music_key_off_voices;      /* voices queued for key-off by stopped music */
+extern u32 g_main_mask_exclusion;                  /* 0x80032a0c; voices reserved by SFX */
+extern u32 g_main_sound_sfx_restart_channels;      /* last SFX voice search: channel mask */
+extern u32 g_main_sound_sfx_restart_voices;        /* last SFX voice search: voice mask */
+extern s32 g_main_smd_random_state;                /* 0x80032a18 */
 extern s16 g_main_sound_sfx_instrument;            /* instrument every started SFX channel begins with; always 0 */
 extern u32 g_main_sound_sfx_key_off_voices;        /* SFX voices pending key-off */
 extern u32 g_main_sound_tick_count;                /* root-counter tick count; odd ticks step the ramps */
@@ -1546,6 +1558,7 @@ void main_sound_set_vol_balance(s32 volume, SpuVolume* volume_out, u8 mode);
 void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mode);
 void main_suzuki_spu_callback_func(void);
 s32 main_sound_spu_event_handler(void);
+s32 main_sound_sum_resource_words(suzuki_resource_prefix_t* resource);
 s16 main_sound_wait_for_spu_transfer(s32 flags);
 void main_sound_replay_bg_sfx(void);
 
@@ -1904,7 +1917,7 @@ void main_unit_copy_job_data(battle_stats_t* unit);
 void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);
 void main_unit_copy_last_ability_ct(battle_stats_t* unit);
 void main_unit_enable_rsm_flags(battle_stats_t* unit);
-void main_unit_generate_base_raw_stats(unit_raw_stat_bytes_t* raw_stats, s32 unit_type);
+void main_unit_generate_base_raw_stats(unit_raw_stats_t* raw_stats, s32 unit_type);
 void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type);
 void main_unit_generate_party_base_raw_stats(party_data_t* party, s32 unit_type);
 void main_unit_generate_raw_stats(battle_stats_t* unit);

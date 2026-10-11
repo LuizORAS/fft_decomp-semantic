@@ -7,7 +7,7 @@
  * Records the treasure on the new level, loads its picture data set from
  * g_wldcore_treasure_picture_sets, appends a render record for the picture and hides it with flag
  * 0x10, decodes the acquisition date out of the packed nine-bit array at
- * g_main_treasure_acquisition_date_bits (date[0] month, date[1] day) and sets
+ * g_main_treasure_acquisition_date_bits (date.month month, date.day day) and sets
  * up the shared scrollable text window at g_wldcore_scrollable_text_window for text 0x8800 + value
  * with the month name (0xb84f + month) and the day as its two substitutions.
  * It then hides the parent list-window level's four window records and its
@@ -31,7 +31,7 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
     s32 index;
     s32 coordinate_mode = 1;
     u8 unused[8];
-    u8 date[2];
+    wldcore_date_t date;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.value = value;
     wldcore_proposition_load_picture_data_set(g_wldcore_treasure_picture_sets[value]);
@@ -39,7 +39,7 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.render_index = index;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    wldcore_read_nine_bit_record(g_main_treasure_acquisition_date_bits, value, date);
+    wldcore_read_nine_bit_record(g_main_treasure_acquisition_date_bits, value, &date);
     g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
     switch (coordinate_mode) {
     case 0:
@@ -58,8 +58,8 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
     g_wldcore_scrollable_text_window.priority = 0xa;
     g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
     g_wldcore_scrollable_text_window.extra_render_index = -1;
-    g_wldcore_scrollable_text_window.text_substitutions[0] = date[0] + WLDCORE_TEXT_ID_MONTH_NAME_BASE;
-    g_wldcore_scrollable_text_window.text_substitutions[1] = date[1];
+    g_wldcore_scrollable_text_window.text_substitutions[0] = date.month + WLDCORE_TEXT_ID_MONTH_NAME_BASE;
+    g_wldcore_scrollable_text_window.text_substitutions[1] = date.day;
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;

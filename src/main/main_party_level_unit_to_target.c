@@ -4,20 +4,20 @@
 
 /* Raises a roster unit by `level_delta` levels (capped at 99), growing each
  * 24-bit raw stat by raw / (level + growth) per level, and returns the new
- * level.  The growth table is the job's growths_multipliers pairs. */
+ * level.  The growth table is the job's stat_growths pairs. */
 u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
     u32 current_level = party_unit->level;
     u32 level = current_level + level_delta;
-    u8* growth_table;
-    unit_raw_stat_bytes_t* raw_stats;
+    job_stat_growth_t* growth_table;
+    unit_raw_stat_t* raw_stats;
     s32 levels_to_gain;
     s32 level_index;
     s32 i;
     u32 raw;
     u32 divisor;
 
-    raw_stats = party_unit->raw_stats;
-    growth_table = g_main_job_data_pointer[party_unit->job_id].growths_multipliers;
+    raw_stats = party_unit->raw_stats.values;
+    growth_table = g_main_job_data_pointer[party_unit->job_id].stat_growths;
     if (level >= 100) {
         level = 99;
     }
@@ -29,10 +29,10 @@ u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
         for (i = 0; i < UNIT_RAW_STAT_COUNT; i++) {
             level = party_unit->level;
             raw = raw_stats[i].low + (raw_stats[i].middle << 8) + (raw_stats[i].high << 16);
-            if (growth_table[i * 2] == 0) {
+            if (growth_table[i].growth == 0) {
                 divisor = level + 1;
             } else {
-                divisor = level + growth_table[i * 2];
+                divisor = level + growth_table[i].growth;
             }
             raw += raw / divisor;
             if (raw > 0xffffff) {

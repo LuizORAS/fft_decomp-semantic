@@ -1,14 +1,15 @@
 #include "fft/battle.h"
 
-/* Runs a record's script until an instruction yields (returns 1) or ends the
- * script (returns 0). */
+/* Run until yield or abort; returns 1 on yield and 0 on abort. */
 s32 battle_effect_run_block(s16 index) {
     effect_record_t* rec;
     s16 result;
 
     rec = &g_effect_state_records[index];
     for (;;) {
-        result = g_battle_effect_instructions[((battle_effect_script_header_t*)(rec->script + rec->pc))->word
+        /* Byte-pointer addition retains the retail dispatch registers here. */
+        result = g_battle_effect_instructions[((battle_effect_script_instruction_t*)((u8*)rec->script + rec->pc))
+                                                  ->header.word
             & EFFECT_SCRIPT_OPCODE_MASK](rec);
         if (result == EFFECT_SCRIPT_RESULT_ABORT) {
             return 0;

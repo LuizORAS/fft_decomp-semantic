@@ -11,7 +11,7 @@
 void wldcore_init_world_map_state(void) {
     wldcore_menu_cursor_state_t* cursor;
     party_data_t* party;
-    u8 record[2];
+    wldcore_date_t date;
     s32 day_of_year;
     s32 zodiac;
     s32 month;
@@ -103,15 +103,15 @@ void wldcore_init_world_map_state(void) {
             world_script_set_variable(EVENT_SCRIPT_VAR_STORY_EVENT_FIRST + i, 1);
 
         if (!(PadRead(0) & PSX_PAD_START)) {
-            record[0] = 1;
-            record[1] = 1;
+            date.month = 1;
+            date.day = 1;
             for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
                 world_script_set_variable(EVENT_SCRIPT_VAR_TREASURE_FIRST + i, 1);
-                wldcore_write_nine_bit_record(g_main_treasure_acquisition_date_bits, i, record);
+                wldcore_write_nine_bit_record(g_main_treasure_acquisition_date_bits, i, &date);
             }
             for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
                 world_script_set_variable(EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST + i, 1);
-                wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, i, record);
+                wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, i, &date);
             }
             for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++)
                 world_script_set_variable(EVENT_SCRIPT_VAR_PROPOSITION_FIRST + i, 4);

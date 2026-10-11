@@ -137,7 +137,7 @@ void open_movie_init_stream(s32 sector, psyq_interrupt_callback_t output_callbac
 void open_movie_pause_cd_audio(void);
 void open_movie_play_end(void);
 void open_movie_present_frame(void);
-void open_movie_start_cd_stream_read(const void* location);
+void open_movie_start_cd_stream_read(const CdlLOC* location);
 void open_movie_start_fftst_or_title_menu(s32 use_alternate);
 void open_movie_start_fftst_or_skip_controller(void);
 void open_movie_start_stream(s32 sector, s32 end_frame, s32 video_end_frame, s32 cd_mix_level);
@@ -469,6 +469,13 @@ typedef struct open_script_record {
 } open_script_record_t;
 typedef char open_script_record_size_must_be_0x164[(sizeof(open_script_record_t) == 0x164) ? 1 : -1];
 
+/* Byte-addressed ending-script cursor. */
+typedef struct open_script_cursor {
+    u8* data_base;
+    s32 byte_offset;
+} open_script_cursor_t;
+typedef char open_script_cursor_size_must_be_8[(sizeof(open_script_cursor_t) == 8) ? 1 : -1];
+
 /* OPEN script interpreter state at 0x8008e548. */
 typedef struct open_script_dispatch_state {
     /* 0x00 */ u32 flags; /* open_script_dispatch_flag_e */
@@ -481,8 +488,7 @@ typedef struct open_script_dispatch_state {
     /* 0x1c */ s32 timing_fraction;
     /* 0x20 */ s32 external_counter;
     /* 0x24 */ s32 wait_counter;
-    /* 0x28 */ s32 data_base;
-    /* 0x2c */ s32 byte_offset;
+    /* 0x28 */ open_script_cursor_t cursor;
 } open_script_dispatch_state_t;
 typedef char open_script_dispatch_state_size_must_be_0x30[(sizeof(open_script_dispatch_state_t) == 0x30) ? 1 : -1];
 
@@ -521,16 +527,16 @@ extern open_font_metrics_t* g_open_script_font_metrics;
  * open_script_update_timing_and_record_values and
  * open_gfx_update_opntex_sequence load and store each of these by absolute
  * address; the member spelling lets cse keep the address in a register. */
-extern s32 g_open_script_byte_offset;      /* dispatch.byte_offset */
+extern s32 g_open_script_byte_offset;      /* dispatch.cursor.byte_offset */
 extern s32 g_open_script_timing_fraction;  /* dispatch.timing_fraction */
 extern s32 g_open_script_external_counter; /* dispatch.external_counter */
 
 extern POLY_FT4 g_open_script_glyph_primitives[2][672];
-extern s32 g_open_script_initial_data_base;
+extern u8* g_open_script_initial_data_base;
 void open_script_init_state(void);
 void open_script_draw_text_records(u32* otag, s32 graphics_buffer_index);
 void open_script_update_xa_audio(void);
-s32 open_script_add_pointer_offset(s32 left, s32 right);
+u8* open_script_add_pointer_offset(u8* base, s32 byte_offset);
 s32 open_script_build_text_record(u8* text);
 s32 open_script_init_and_dispatch_entries(void);
 void open_script_push_controller(void);

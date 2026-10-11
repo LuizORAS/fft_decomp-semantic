@@ -6,6 +6,13 @@
 #include "fft/world.h"
 
 /* calendar */
+/* Unpacked dates stored as five day bits followed by four month bits. */
+typedef struct wldcore_date {
+    u8 month;
+    u8 day;
+} wldcore_date_t;
+typedef char wldcore_date_size_must_be_2[(sizeof(wldcore_date_t) == 2) ? 1 : -1];
+
 extern u8 g_wldcore_days_per_month[12]; /* 0x8009e66c; non-leap-year month lengths */
 
 /* Music/sound selection halfword at 0x800d486a: track in the low byte, slot
@@ -2170,9 +2177,9 @@ void wldcore_init_subsystems(void);
 void wldcore_process_frame_gate(void);
 void wldcore_day_of_year_to_month_day(s32 day_of_year, s32* output_month, s32* output_day);
 
-void wldcore_write_nine_bit_record(u32* bits, s32 record, u8* source);
+void wldcore_write_nine_bit_record(u32* bits, s32 record, wldcore_date_t* source);
 s32 wldcore_get_completion_milestone_rank(void);
-void wldcore_read_nine_bit_record(u32* bits, s32 record, u8* dest);
+void wldcore_read_nine_bit_record(u32* bits, s32 record, wldcore_date_t* dest);
 void wldcore_capture_state_and_play_time(void);
 
 #endif

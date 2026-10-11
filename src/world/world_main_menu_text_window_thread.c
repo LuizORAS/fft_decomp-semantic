@@ -83,9 +83,7 @@ void world_main_menu_text_window_thread(void) {
     } else if (entry->y < -0x78) {
         entry->y = -0x68;
     }
-    /* The callee types this RECT, record and SPRT as raw u16 and POLY_FT4 pointers. */
-    ((void (*)(RECT*, world_menu_text_window_entry_t*, SPRT*))world_menu_init_quad_from_record)(
-        &rect, entry, &record->sprite_a);
+    world_menu_init_quad_from_record(&rect, (const world_menu_entry_t*)entry, &record->sprite_a);
     SetSemiTrans(&record->sprite_a, 1);
     SetShadeTex(&record->sprite_a, 0);
     SetSemiTrans(&record->sprite_b, 1);

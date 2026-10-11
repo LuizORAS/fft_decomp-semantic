@@ -1,5 +1,5 @@
-#include "psx/types.h"
+#include "fft/open.h"
 
-s32 open_script_add_pointer_offset(s32 left, s32 right) {
-    return left + right;
+u8* open_script_add_pointer_offset(u8* base, s32 byte_offset) {
+    return base + byte_offset;
 }
