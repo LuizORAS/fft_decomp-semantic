@@ -623,7 +623,7 @@ functions:
   - {addr: 0x80026cdc, size: 52, name: set_alarm, hash: 3f471cf484934b20, source: src/psyq/libgpu/set_alarm.c}
   - {addr: 0x80026d10, size: 364, name: get_alarm, hash: cb1d01183d93cf87, source: src/psyq/libgpu/get_alarm.c}
   - {addr: 0x80026e7c, size: 220, name: psyq_gpu_detect_type, hash: 933c2c43a23848bf, source: src/psyq/libgpu/psyq_gpu_detect_type.c}
-  - {addr: 0x80026f58, size: 44, name: memset2, hash: bc4c08f514cc2afd, source: src/psyq/libgpu/memset2.c}
+  - {addr: 0x80026f58, size: 44, name: psyq_gpu_memset, hash: bc4c08f514cc2afd, source: src/psyq/libgpu/psyq_gpu_memset.c}
   - {addr: 0x80026f84, size: 12, name: GPU_cw, hash: 0a2181041688617d, source: src/psyq/libapi/GPU_cw.c}
   - {addr: 0x80026f94, size: 12, name: memcpy, hash: ad7c5bc50bc07966, source: src/psyq/libapi/memcpy.c}
   - {addr: 0x80026fa4, size: 16, name: OpenTIM, hash: b45ce3c5215a4a16, source: src/psyq/libgpu/OpenTIM.c}

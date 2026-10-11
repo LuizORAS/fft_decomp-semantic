@@ -829,7 +829,7 @@ u32 _getctl(int command);
 int _cwb(u32* commands, int count);
 void _cwc(u32* ot);
 u32 _param(int command);
-void memset2(void* destination, int value, int size);
+void psyq_gpu_memset(void* destination, int value, int size);
 int psyq_gpu_decode_tim(u32* tim, TIM_IMAGE* image);
 int _addque(psyq_gpu_operation_t operation, void* source, u32 argument);
 int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 argument);
