@@ -119,6 +119,7 @@ extern u32 g_psyq_api_root_counter_irq_masks[4];
 
 /* linked BIOS interfaces */
 void PAD_dr(void);
-void psyq_api_memcpy(void* destination, const void* source, int size);
+/* This link alias keeps the native call; standard memcpy expands into an inline loop. */
+void* psyq_api_memcpy(void* destination, const void* source, unsigned int size);
 
 #endif
