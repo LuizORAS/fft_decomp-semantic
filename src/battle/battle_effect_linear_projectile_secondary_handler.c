@@ -2,12 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
-/* Effect slot view: the double-buffered item sprite quad at 0x34. */
-typedef struct battle_effect_item_slot_view {
-    u8 _unused_00[0x34];
-    POLY_FT4 prims[2]; /* 0x34 */
-} battle_effect_item_slot_view_t;
-
 /* Secondary effect function 0x14 in g_battle_effect_secondary_handlers: a
  * projectile flying in a straight line. It runs the crossbow bolt (the arrow
  * model), the thrown stone and the thrown item animations.
@@ -44,7 +38,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
     battle_effect_arrow_buffer_t* arrow;
     battle_effect_stone_buffer_t* work12;
     battle_effect_shuriken_buffer_t* work16;
-    battle_effect_item_slot_view_t* slot;
+    battle_effect_slot_t* slot;
     s32 parameter;
     s32 item;
     s32 i;
@@ -103,20 +97,19 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             } else {
                 battle_gfx_set_item_icon_sprite(&sprite, item);
                 g_battle_effect_current_secondary->slot_ids[0] = battle_effect_alloc_slot();
-                slot = (battle_effect_item_slot_view_t*)&g_battle_effect_slots[g_battle_effect_current_secondary
-                        ->slot_ids[0]];
-                dst = &slot->prims[1];
-                SetPolyFT4(&slot->prims[0]);
-                slot->prims[0].tpage = 0x1e;
-                slot->prims[0].b0 = 0x80;
-                slot->prims[0].g0 = 0x80;
-                slot->prims[0].r0 = 0x80;
-                slot->prims[0].u0 = slot->prims[0].u2 = sprite.u0;
-                slot->prims[0].u1 = slot->prims[0].u3 = slot->prims[0].u0 + sprite.w;
-                slot->prims[0].v0 = slot->prims[0].v1 = sprite.v0;
-                slot->prims[0].v2 = slot->prims[0].v3 = slot->prims[0].v0 + sprite.h;
-                slot->prims[0].clut = sprite.clut;
-                *dst = slot->prims[0];
+                slot = &g_battle_effect_slots[g_battle_effect_current_secondary->slot_ids[0]];
+                dst = &slot->quads[1];
+                SetPolyFT4(&slot->quads[0]);
+                slot->quads[0].tpage = 0x1e;
+                slot->quads[0].b0 = 0x80;
+                slot->quads[0].g0 = 0x80;
+                slot->quads[0].r0 = 0x80;
+                slot->quads[0].u0 = slot->quads[0].u2 = sprite.u0;
+                slot->quads[0].u1 = slot->quads[0].u3 = slot->quads[0].u0 + sprite.w;
+                slot->quads[0].v0 = slot->quads[0].v1 = sprite.v0;
+                slot->quads[0].v2 = slot->quads[0].v3 = slot->quads[0].v0 + sprite.h;
+                slot->quads[0].clut = sprite.clut;
+                *dst = slot->quads[0];
             }
         }
         battle_state_set_animation_speed(1);
