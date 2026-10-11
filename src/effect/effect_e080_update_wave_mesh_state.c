@@ -54,8 +54,8 @@ s32 effect_e080_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
     u8 v;
 
     scratch = (effect_wave_mesh_scratch_t*)0x1F800000;
-    record = &g_effect_state_records[record_index];
-    geometry = &g_effect_geometry_table->entries[emitter_index];
+    record = &g_battle_effect_state_records[record_index];
+    geometry = &g_battle_effect_geometry_table->entries[emitter_index];
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {

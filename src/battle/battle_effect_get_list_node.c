@@ -4,7 +4,7 @@
  * it.  Note the retail loop walks work_count links, not requested_index, so
  * the returned node is always the same for a given record. */
 effect_work_record_t* battle_effect_get_list_node(s16 record_index, s16 requested_index) {
-    effect_record_t* record = &g_effect_state_records[record_index];
+    effect_record_t* record = &g_battle_effect_state_records[record_index];
     effect_work_record_t* node = 0;
     s16 node_count;
     s16 i;

@@ -28,8 +28,8 @@ s32 effect_e471_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
     u32 brightness;
 
     scratch = (effect_anchored_polar_mesh_scratch_t*)0x1F800000;
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index];
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index];
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -75,7 +75,7 @@ s32 effect_e471_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
         scratch->half_width = entry->polar_mesh.texture_width / 2;
         scratch->half_height = entry->polar_mesh.texture_height / 2;
 
-        scratch->target_index = g_effect_state_records[record_index].timeline.target_index;
+        scratch->target_index = g_battle_effect_state_records[record_index].timeline.target_index;
         battle_effect_resolve_target_render_coords(
             g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, scratch->target_index,
             &g_battle_effect_context, &scratch->position);

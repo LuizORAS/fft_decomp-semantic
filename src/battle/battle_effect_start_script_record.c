@@ -11,15 +11,15 @@ s16 battle_effect_start_script_record(u8* script, s16 start_pc, s16 parent_index
     if (index == 0) {
         return 0;
     }
-    record = &g_effect_state_records[index];
+    record = &g_battle_effect_state_records[index];
     record->parent_index = parent_index;
     record->script = script;
     record->pc = start_pc;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < EFFECT_SCRIPT_COUNTER_COUNT; i++) {
         record->counters[i] = 0;
         record->child_indices[i] = 0;
     }
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < EFFECT_RECORD_CALLBACK_SLOT_COUNT; i++) {
         record->callbacks[i] = 0;
         record->callback_phase[i] = EFFECT_PHASE_IDLE;
         record->work_slots[i] = 0;

@@ -66,8 +66,8 @@ s32 effect_e242_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
     u32 red;
     map_tile_t* tile;
 
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index];
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index];
     placement = entry->ring_mesh.placement_flags;
     ot = main_gfx_get_otag();
 
@@ -108,7 +108,7 @@ s32 effect_e242_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
 
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
-        target_index = g_effect_state_records[record_index].timeline.target_index;
+        target_index = g_battle_effect_state_records[record_index].timeline.target_index;
         BATTLE_EFFECT_READ_CURVE(j, i, entry->ring_mesh.scroll_curves & 0xf, frame);
         battle_effect_interpolate_emitter_spawn_position(entry, j, &origin);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {

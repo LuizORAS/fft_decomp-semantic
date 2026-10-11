@@ -41,8 +41,8 @@ s32 effect_e454_update_textured_quad_grid_4x4(s16 record_index, s32 callback_slo
     u8 u;
     u8 v;
 
-    record = &g_effect_state_records[record_index];
-    geometry = &g_effect_geometry_table->entries[emitter_index].textured_quad;
+    record = &g_battle_effect_state_records[record_index];
+    geometry = &g_battle_effect_geometry_table->entries[emitter_index].textured_quad;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {

@@ -23,7 +23,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
     VECTOR* vertex;
     VECTOR* vertex_work;
 
-    record = &g_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[record_index];
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
@@ -47,7 +47,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
         work = record->work_slots[callback_slot];
         emitter_index = 0;
         do {
-            emitter = &g_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
+            emitter = &g_battle_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             group = emitter->vertex_group;
             if (group >= 1 && group <= 12) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {

@@ -24,7 +24,7 @@ effect_script_result_e battle_effect_code_script_29_step_parent_timeline(effect_
 
             child
                 = battle_effect_start_script_record(record->script, instruction->immediate.value, record->record_index);
-            g_effect_state_records[child].timeline.target_index = timeline->state.parent.spawned_count;
+            g_battle_effect_state_records[child].timeline.target_index = timeline->state.parent.spawned_count;
             timeline->state.parent.spawned_count++;
             timeline->state.parent.spawn_countdown += g_battle_effect_timeline->spawn_delay;
         }

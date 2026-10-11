@@ -61,9 +61,9 @@ s32 battle_effect_update_stage(void) {
         g_battle_effect_otag = main_gfx_get_otag();
         battle_effect_start_render_frame();
         while (id != 0) {
-            next = g_effect_state_records[id].next_index;
+            next = g_battle_effect_state_records[id].next_index;
             g_battle_effect_current_record_index = id;
-            g_effect_state_records[id].frame_counter++;
+            g_battle_effect_state_records[id].frame_counter++;
             if (battle_effect_run_block(id) == 0) {
                 battle_effect_free_state_record(id);
             }

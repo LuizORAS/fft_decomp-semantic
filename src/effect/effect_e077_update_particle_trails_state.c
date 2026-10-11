@@ -61,8 +61,8 @@ s32 effect_e077_update_particle_trails_state(s16 record_index, s32 callback_slot
     s32 pz;
     s32 wrap;
 
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index];
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index];
     placement = entry->tentacle_mesh.placement_flags;
     flags = entry->tentacle_mesh.flags;
 

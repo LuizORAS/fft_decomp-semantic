@@ -4,7 +4,7 @@
 /* Callback handler: when its keyframe starts, sets the map's 3D objects 1-6 to
  * state 2. */
 s32 effect_e455_map_set_3d_objects_to_state_2_state(s16 record_index, s32 callback_slot) {
-    effect_record_t* record = &g_effect_state_records[record_index];
+    effect_record_t* record = &g_battle_effect_state_records[record_index];
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:

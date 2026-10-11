@@ -384,7 +384,7 @@ typedef enum battle_effect_element_index {
     BATTLE_EFFECT_ELEMENT_INDEX_LIGHTNING = 8,
 } battle_effect_element_index_e;
 
-/* g_effect_load_state: the steps of battle_effect_init_data, which loads the ability's effect file
+/* g_battle_effect_load_state: the steps of battle_effect_init_data, which loads the ability's effect file
  * while its charge secondary effect plays. */
 typedef enum battle_effect_load_state {
     BATTLE_EFFECT_LOAD_START = 0,            /* start reading the file */
@@ -1180,28 +1180,37 @@ typedef char assert_effect_work_record_size[sizeof(effect_work_record_t) == 88 ?
 
 enum { EFFECT_RECORD_FLAG_ALLOCATED = 0x1 };
 
-/* One running effect script: a 0xf8-byte record of g_effect_state_records.
+enum {
+    EFFECT_SCRIPT_CHILD_SLOT_COUNT = 4,
+    EFFECT_SCRIPT_COUNTER_COUNT = 4,
+    EFFECT_RECORD_CALLBACK_SLOT_COUNT = 4,
+    BATTLE_EFFECT_STATE_RECORD_CAPACITY = 16, /* record 0 is the list sentinel */
+    BATTLE_EFFECT_SPRITE_NODE_CAPACITY = 256, /* node 0 is the list sentinel */
+    BATTLE_EFFECT_WORK_RECORD_CAPACITY = 256,
+};
+
+/* One running effect script: a 0xf8-byte record of g_battle_effect_state_records.
  * The root record runs the effect file's script from its start; the parent
  * timeline (opcode 29) starts one child record per effect target, and opcode
  * 02 starts a child the script keeps track of. Record 0 is the list sentinel,
  * so an index of 0 means none. */
 typedef struct effect_record {
-    s16 next_index;       /* 0x00: next record on the allocated or the available list */
-    s16 record_index;     /* 0x02: this record's array index */
-    s16 parent_index;     /* 0x04: the record that started this one; 0 for the root */
-    s16 pc;               /* 0x06: byte offset of the current instruction in script */
-    u8* script;           /* 0x08: borrowed script byte stream, shared with child records */
-    s16 child_indices[4]; /* 0x0c: the child records script opcode 02 started, by child slot */
-    s16 counters[4];   /* 0x14: script counters; the counter opcodes select one by their second byte's top two bits */
-    s16 work_count;    /* 0x1c: particles on work_head */
-    u16 flags;         /* 0x1e: EFFECT_RECORD_FLAG_ALLOCATED */
+    s16 next_index;   /* 0x00: next record on the allocated or the available list */
+    s16 record_index; /* 0x02: this record's array index */
+    s16 parent_index; /* 0x04: the record that started this one; 0 for the root */
+    s16 pc;           /* 0x06: byte offset of the current instruction in script */
+    u8* script;       /* 0x08: borrowed script byte stream, shared with child records */
+    s16 child_indices[EFFECT_SCRIPT_CHILD_SLOT_COUNT]; /* 0x0c: child records started by opcode 02 */
+    s16 counters[EFFECT_SCRIPT_COUNTER_COUNT];         /* 0x14: selected by the instruction's top two parameter bits */
+    s16 work_count;                                    /* 0x1c: particles on work_head */
+    u16 flags;                                         /* 0x1e: EFFECT_RECORD_FLAG_ALLOCATED */
     s16 frame_counter; /* 0x20: frames the script has run, 0 on its first; the frame of script-spawned emitters */
-    u8 callback_phase[4];                     /* 0x22: effect_phase_e of the handler in each callback slot */
-    battle_effect_record_timeline_t timeline; /* 0x26; target, frame and timeline counters */
-    effect_work_record_t* work_head;          /* 0xd0: its particles */
-    battle_effect_callback_t callbacks[4];    /* 0xd4: the native handler bound to each callback slot */
-    void* work_slots[4];                      /* 0xe4: the work block each callback slot's handler allocated */
-    battle_effect_callback_t file_function;   /* 0xf4: the native function script opcode 07 last called */
+    u8 callback_phase[EFFECT_RECORD_CALLBACK_SLOT_COUNT]; /* 0x22: effect_phase_e of each callback handler */
+    battle_effect_record_timeline_t timeline;             /* 0x26; target, frame and timeline counters */
+    effect_work_record_t* work_head;                      /* 0xd0: its particles */
+    battle_effect_callback_t callbacks[EFFECT_RECORD_CALLBACK_SLOT_COUNT]; /* 0xd4: native callback handlers */
+    void* work_slots[EFFECT_RECORD_CALLBACK_SLOT_COUNT]; /* 0xe4: each callback handler's allocated work */
+    battle_effect_callback_t file_function;              /* 0xf4: the native function script opcode 07 last called */
 } effect_record_t;
 
 /* pc is a signed byte offset into the shared, halfword-aligned script stream. */
@@ -1746,7 +1755,7 @@ extern battle_effect_death_poof_state_t g_battle_effect_death_poof_states[];
 extern battle_secondary_effect_function_t g_battle_effect_secondary_handlers[23];
 extern battle_effect_secondary_animation_t g_battle_effect_secondary_animations[];
 extern battle_effect_secondary_data_t g_battle_effect_secondary_data[];
-extern u8 g_effect_load_state; /* battle_effect_load_state_e */
+extern u8 g_battle_effect_load_state; /* battle_effect_load_state_e */
 /* Projectile secondary animation of each weapon item type: BOW_ARROW for bows, CROSSBOW_BOLT for
  * crossbows, NONE for the rest. */
 extern u8 g_battle_effect_weapon_type_extra_flags[];
@@ -1921,9 +1930,9 @@ extern s32 g_battle_effect_prim_buffer_offset;
 extern battle_effect_slot_t g_battle_effect_slots[];
 extern s32 g_battle_effect_sprite_count;
 extern s32 g_battle_effect_sprite_count_peak;
-extern effect_geometry_table_t* g_effect_geometry_table;
+extern effect_geometry_table_t* g_battle_effect_geometry_table;
 
-extern effect_record_t g_effect_state_records[];
+extern effect_record_t g_battle_effect_state_records[BATTLE_EFFECT_STATE_RECORD_CAPACITY + 1];
 extern s16 g_battle_effect_current_record_index;
 extern s32 g_battle_effect_work_record_peak;
 extern effect_work_record_t* g_battle_effect_free_work_record_head;
@@ -1936,7 +1945,7 @@ extern s32 g_battle_effect_work_record_count;
 extern effect_work_record_t* g_battle_effect_work_records;
 extern u8 g_battle_effect_slot_free_head;
 extern u16 g_battle_effect_free_list_node_head;
-extern effect_list_node_t g_battle_effect_list_nodes[];
+extern effect_list_node_t g_battle_effect_list_nodes[BATTLE_EFFECT_SPRITE_NODE_CAPACITY + 1];
 extern u16 g_battle_effect_active_list_node_head;
 void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_secondary_init_t* source);
 s32 battle_effect_init_fall_dust_secondary(battle_effect_secondary_init_t* source, VECTOR* position);

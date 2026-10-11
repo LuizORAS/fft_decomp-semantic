@@ -58,8 +58,8 @@ s32 effect_e338_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
     u32 shade_b;
     s32 n;
 
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].summon_mesh;
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].summon_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
 
@@ -100,7 +100,7 @@ s32 effect_e338_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
         break;
 
     case EFFECT_PHASE_UPDATE:
-        target_index = g_effect_state_records[record_index].timeline.target_index;
+        target_index = g_battle_effect_state_records[record_index].timeline.target_index;
         work = record->work_slots[callback_slot];
         BATTLE_EFFECT_READ_CURVE(i, j, entry->scroll_curves & 0xF, frame);
         origin.vx = battle_effect_lerp_linear(entry->origin_start[0], entry->origin_end[0], i);

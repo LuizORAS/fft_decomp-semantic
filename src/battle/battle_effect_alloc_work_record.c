@@ -14,7 +14,7 @@ effect_work_record_t* battle_effect_alloc_work_record(s16 record_index, s16 kind
 
     work = g_battle_effect_free_work_record_head;
     g_battle_effect_work_record_count++;
-    owner = &g_effect_state_records[record_index];
+    owner = &g_battle_effect_state_records[record_index];
     if (g_battle_effect_work_record_peak < g_battle_effect_work_record_count) {
         g_battle_effect_work_record_peak = g_battle_effect_work_record_count;
     }

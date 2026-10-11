@@ -14,7 +14,7 @@ void battle_effect_init_free_list(void) {
     g_battle_effect_list_nodes[0].next = 0;
     g_battle_effect_list_nodes[0].prev = 0;
     g_battle_effect_free_list_node_head = 1;
-    for (i = 1; i < 256; i++) {
+    for (i = 1; i < BATTLE_EFFECT_SPRITE_NODE_CAPACITY; i++) {
         g_battle_effect_list_nodes[i].index = i;
         g_battle_effect_list_nodes[i].prev = i - 1;
         g_battle_effect_list_nodes[i].next = i + 1;

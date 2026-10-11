@@ -2870,7 +2870,7 @@ data:
   - {addr: 0x801bbf80, name: g_battle_effect_palette_ptr}
   - {addr: 0x801bbf84, name: g_battle_effect_timing_channels}
   - {addr: 0x801bbf84, name: g_effect_timeline_channel_base}
-  - {addr: 0x801bbf88, name: g_effect_geometry_table}
+  - {addr: 0x801bbf88, name: g_battle_effect_geometry_table}
   - {addr: 0x801bbf8c, name: g_battle_effect_animation_sequences}
   - {addr: 0x801bbf90, name: g_battle_effect_allocated_record_head}
   - {addr: 0x801bc088, name: g_battle_effect_otag}
@@ -2891,9 +2891,9 @@ data:
   - {addr: 0x801bf000, name: D_801BF000}
   - {addr: 0x801bf004, name: g_battle_effect_current_record_index}
   - {addr: 0x801bf00a, name: g_battle_effect_free_list_node_head}
-  - {addr: 0x801bf02c, name: g_effect_state_records}
+  - {addr: 0x801bf02c, name: g_battle_effect_state_records}
   - {addr: 0x801c00a4, name: g_battle_effect_list_nodes}
-  - {addr: 0x801c24c8, name: g_effect_load_state}
+  - {addr: 0x801c24c8, name: g_battle_effect_load_state}
   - {addr: 0x801c24d0, name: g_battle_ability_effect_id}
   - {addr: 0x801c24d4, name: g_battle_effect_root_record_index}
   - {addr: 0x801c24da, name: g_battle_effect_active_list_node_head}

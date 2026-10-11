@@ -19,7 +19,7 @@ s32 battle_effect_init_data(void) {
 
     destination = g_main_heap_companion_overlay_load_address + 0x3500;
     if (g_battle_ability_effect_id >= 0) {
-        switch (g_effect_load_state) {
+        switch (g_battle_effect_load_state) {
         case BATTLE_EFFECT_LOAD_START:
             if (g_battle_effect_target_id != 0) {
                 g_battle_effect_load_countdown = 60;
@@ -33,14 +33,14 @@ s32 battle_effect_init_data(void) {
             }
             result = main_file_call_build_header(lba, byte_length, destination);
             if (result == 0) {
-                g_effect_load_state = BATTLE_EFFECT_LOAD_READING;
+                g_battle_effect_load_state = BATTLE_EFFECT_LOAD_READING;
                 result = 1;
             }
             break;
         case BATTLE_EFFECT_LOAD_READING:
             result = main_file_is_still_loading();
             if (result == 0) {
-                g_effect_load_state = BATTLE_EFFECT_LOAD_COUNTDOWN;
+                g_battle_effect_load_state = BATTLE_EFFECT_LOAD_COUNTDOWN;
                 result = 1;
             }
             break;
@@ -52,7 +52,7 @@ s32 battle_effect_init_data(void) {
             if (g_battle_effect_target_id != 0) {
                 battle_effect_finalize_secondary(g_battle_effect_target_id);
             }
-            g_effect_load_state = BATTLE_EFFECT_LOAD_ENDING_SECONDARY;
+            g_battle_effect_load_state = BATTLE_EFFECT_LOAD_ENDING_SECONDARY;
             battle_effect_init_flags_section_pointer(g_battle_ability_effect_id);
             /* An `lw` of the section's leading word, not a byte test. */
             if (g_battle_effect_flags_section->flags & EFFECT_FLAG_QUIET_MUSIC) {

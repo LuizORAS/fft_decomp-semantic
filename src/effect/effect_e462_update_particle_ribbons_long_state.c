@@ -91,8 +91,8 @@ s32 effect_e462_update_particle_ribbons_long_state(s16 record_index, s32 callbac
     map_tile_t* tile;
     battle_effect_target_t* caster_target;
 
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index];
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index];
     placement = entry->particle_ribbon.placement_flags;
     flags = entry->particle_ribbon.flags;
     ot = main_gfx_get_otag();

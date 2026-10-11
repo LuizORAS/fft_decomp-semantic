@@ -5,7 +5,7 @@
 s32 effect_e480_map_step_unfreeze_state(s16 record_index, s32 callback_slot) {
     effect_record_t* record;
 
-    record = &g_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[record_index];
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
