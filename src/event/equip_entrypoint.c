@@ -5,7 +5,7 @@
 /* Run one frame of the equipment screen. Returns the frame's ordering table
  * while the screen is open, then whether the unit's equipment changed once it
  * closes. */
-s32 equip_entrypoint(s32 unit, void* otag) {
+s32 equip_entrypoint(s32 unit, u32* otag) {
     s32 result;
     s32 i;
     u8 changed;

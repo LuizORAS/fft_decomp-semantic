@@ -148,12 +148,7 @@ enum {
 typedef struct battle_ai_command {
     battle_ai_command_kind_e kind;
     union {
-        struct {
-            s16 x;
-            s16 elevation;
-            s16 y;
-            u8 _unused_06[14];
-        } move;
+        unit_tile_coordinates_t move;
         battle_action_command_t action;
     } data;
 } battle_ai_command_t;
@@ -1146,6 +1141,7 @@ void battle_script_unit_anim(const event_unit_anim_parameters_t* parameters);
 u32 battle_script_get_event_finish_operation(void);
 void battle_script_store_halfword(u8* destination, s16 value);
 void battle_script_update_event_input_state(u32 state);
+void battle_script_set_current_otag_entry_and_update_input(u32* entry, s32 input);
 void battle_script_wait_for_unit_ready(s32 misc_id);
 void battle_script_warp_unit(const event_warp_unit_parameters_t* parameters);
 void battle_script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
@@ -5225,7 +5221,7 @@ void battle_unit_copy_misc_screen_coords(u32 misc_id, SVECTOR* screen_coords);
 void battle_unit_dismount_rider_and_update_display(battle_unit_misc_data_t* rider);
 void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target);
 battle_stats_t* battle_unit_find_active_data_pointer(void);
-battle_action_command_t* battle_unit_check_party_member_exists(s32 unit_id);
+battle_action_command_t* battle_unit_get_action_command_by_battle_id(s32 unit_id);
 SVECTOR* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id);
 battle_stats_t* battle_unit_get_attacker_data_pointer(void);
 s32 battle_unit_get_facing_nibble_by_misc_id(u32 misc_id);
@@ -5235,7 +5231,7 @@ battle_unit_misc_data_t* battle_unit_find_any_misc_data_at_map_coords(s32 map_x,
 battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
     battle_unit_misc_data_t* self, s32 x, s32 y, s32 z);
 
-battle_action_command_t* battle_unit_get_target_id_ptr_by_battle_id(u32 battle_id);
+battle_action_command_t* battle_unit_get_misc_action_command_by_battle_id(u32 battle_id);
 s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* coords);
 s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const SVECTOR* amount);
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit);

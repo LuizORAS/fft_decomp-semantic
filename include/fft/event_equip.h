@@ -752,7 +752,7 @@ extern s8 g_equip_type_order_ready;
 void equip_collect_item_stat_deltas(
     s16 raw_item, battle_unit_status_record_t* summary, world_item_stat_detail_t* detail, s32 alternate);
 
-s32 equip_entrypoint(s32 unit, void* otag);
+s32 equip_entrypoint(s32 unit, u32* otag);
 
 /* unnamed */
 extern s16 D_801d86ac;

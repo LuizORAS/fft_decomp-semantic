@@ -546,7 +546,7 @@ functions:
   - {addr: 0x8008cdd0, size: 80, name: battle_unit_get_battle_index_by_misc_id, hash: a7fb8478370afbe3}
   - {addr: 0x8008ce20, size: 88, name: battle_unit_get_misc_id_by_battle_id, hash: 076e686bb291969a}
   - {addr: 0x8008ce78, size: 88, name: battle_gfx_get_spritesheet_vram_by_battle_id, hash: 2f471fd71e4e7c65}
-  - {addr: 0x8008ced0, size: 44, name: battle_unit_get_target_id_ptr_by_battle_id, hash: 9933c25c8ea3a0e5}
+  - {addr: 0x8008ced0, size: 44, name: battle_unit_get_misc_action_command_by_battle_id, hash: 9933c25c8ea3a0e5}
   - {addr: 0x8008cefc, size: 64, name: battle_move_is_unit_moving_by_misc_id, hash: 730cfc06ddfa1b67}
   - {addr: 0x8008cf3c, size: 60, name: battle_gfx_set_thrown_item_palette_by_misc_id, hash: e8eb803a892bcb87}
   - {addr: 0x8008cf78, size: 228, name: battle_script_add_ghost_unit_event_instruction, hash: 742dc31f4e52bd45}
@@ -1161,7 +1161,7 @@ functions:
   - {addr: 0x8017c3b8, size: 36, name: battle_action_call_attack_preparation, hash: d28c76d0668b4ea6}
   - {addr: 0x8017c3dc, size: 128, name: battle_action_call_attack_preparation_at_preview, hash: b1bb562d9467a48d}
   - {addr: 0x8017c45c, size: 1200, name: battle_action_prepare_attack, hash: 5545fcf3ffbe3e8f, rodata: [{addr: 0x801740e8, size: 52, hash: 52c85eebd9b06cfd}]}
-  - {addr: 0x8017c90c, size: 72, name: battle_unit_check_party_member_exists, hash: 634ad7b57bde65a1}
+  - {addr: 0x8017c90c, size: 72, name: battle_unit_get_action_command_by_battle_id, hash: 634ad7b57bde65a1}
   - {addr: 0x8017c954, size: 100, name: battle_action_decrement_player_item_quantity, hash: f8b152a038d07ca4}
   - {addr: 0x8017c9b8, size: 276, name: battle_action_init_current_data, hash: eec4d9e61a8f97e0}
   - {addr: 0x8017cacc, size: 600, name: battle_action_build_reaction_targets, hash: a29b38b099ff5c67}
