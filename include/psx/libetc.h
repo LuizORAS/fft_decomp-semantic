@@ -56,7 +56,7 @@ typedef struct {
     u16 callback_mask;
     u16 saved_mask;
     u32 saved_dma_priority;
-    u32 jump_buffer[12];
+    jmp_buf jump_buffer;
     u32 stack[1024];
 } psyq_interrupt_state_t;
 extern psyq_interrupt_state_t g_psyq_etc_interrupt_state;

@@ -3,6 +3,6 @@
 #include "psx/libapi.h"
 #include "psx/libc.h"
 
-s32 setjmp(void* jump_buffer) {
+s32 setjmp(jmp_buf jump_buffer) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_A, PSYQ_BIOS_A_SETJMP);
 }

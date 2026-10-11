@@ -2,6 +2,6 @@
 #include "psx/abi_inline.h"
 #include "psx/libapi.h"
 
-void HookEntryInt(void* jump_buffer) {
+void HookEntryInt(jmp_buf jump_buffer) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_B, PSYQ_BIOS_B_HOOK_ENTRY_INT);
 }

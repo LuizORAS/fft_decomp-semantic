@@ -1730,14 +1730,14 @@ typedef struct wldcore_menu_sound_novel_history_level {
 
 /* Provisional: location-transition menu level. The handler at 0x8008e540
  * uses the leading window index, location id, pending result, and the
- * transition-data address. */
+ * choice text ids collected when route travel ends. */
 typedef struct wldcore_menu_location_transition_level {
     s32 window_index; /* 0x00 */
     u8 _unused_04[8];
     s32 location_id; /* 0x0c */
     u8 _unused_10[0x20];
-    s32 pending_result;       /* 0x30 */
-    u8 transition_data[0x28]; /* 0x34 */
+    s32 pending_result;      /* 0x30 */
+    s32 choice_text_ids[10]; /* 0x34; retained as location_list.entries after arrival */
 } wldcore_menu_location_transition_level_t;
 typedef char wldcore_menu_location_transition_level_size_must_be_0x5c
     [sizeof(wldcore_menu_location_transition_level_t) == 0x5c ? 1 : -1];

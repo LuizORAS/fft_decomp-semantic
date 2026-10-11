@@ -2,6 +2,7 @@
 #define PSX_LIBAPI_H
 
 #include "psx/kernel.h"
+#include "psx/libc.h"
 #include "psx/types.h"
 
 /* files */
@@ -33,7 +34,7 @@ void EnterCriticalSection(void);
 void ExitCriticalSection(void);
 void ReturnFromException(void);
 void ResetEntryInt(void);
-void HookEntryInt(void* jump_buffer);
+void HookEntryInt(jmp_buf jump_buffer);
 s32 ChangeClearRCnt(s32 counter, s32 mode);
 void ChangeClearPAD(s32 val);
 

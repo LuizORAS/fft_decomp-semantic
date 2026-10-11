@@ -23,7 +23,7 @@ void wldcore_opcode_set_white_screen_overlay(void) {
     DrawSync(0);
     VSync(0);
     if ((u8)(g_wldcore_active_saved_record.instruction >> 8) == 0) {
-        u32* state = (u32*)&g_wldcore_screen_fade_state;
+        u32* state = &g_wldcore_screen_fade_state.flags[0];
 
         g_wldcore_screen_fade_state.boxes[0].r = 0xff;
         g_wldcore_screen_fade_state.boxes[0].g = 0xff;
@@ -33,7 +33,7 @@ void wldcore_opcode_set_white_screen_overlay(void) {
         g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_WHITE_OVERLAY;
         world_menu_set_brightness(0, 0, 0);
     } else {
-        u32* state = (u32*)&g_wldcore_screen_fade_state;
+        u32* state = &g_wldcore_screen_fade_state.flags[0];
 
         g_wldcore_screen_fade_state.boxes[0].r = 0;
         g_wldcore_screen_fade_state.boxes[0].g = 0;

@@ -104,8 +104,7 @@ void wldcore_map_step_route_travel(void) {
             g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level].location_transition.location_id
                 = g_wldcore_map_projection_state.marker.kind;
             result = wldcore_location_collect_choice_text_ids(g_wldcore_map_projection_state.marker.kind,
-                (s32*)g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
-                    .location_transition.transition_data);
+                g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_transition.choice_text_ids);
             if (result != -1 && result > 0) {
                 g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_transition.pending_result
                     = result;

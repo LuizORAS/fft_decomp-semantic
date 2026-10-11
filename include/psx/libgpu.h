@@ -643,7 +643,7 @@ extern int SetGraphDebug(int);
 extern int GetGraphType(void);
 extern psyq_interrupt_callback_t DrawSyncCallback(psyq_interrupt_callback_t callback);
 extern int DrawSync(int);
-extern void ClearImage(RECT*, u8, u8, u8);
+extern int ClearImage(RECT*, u8, u8, u8);
 extern u32* ClearOTag(u32*, int);
 extern u32* ClearOTagR(u32*, int);
 extern s32 LoadImage(RECT*, u32*);

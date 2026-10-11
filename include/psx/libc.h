@@ -20,7 +20,9 @@ extern int abs(int value);
 
 s32 puts(const char* text);
 
-s32 setjmp(void* jump_buffer);
+/* BIOS setjmp saves ra, sp, fp, s0-s7 and gp. */
+typedef u32 jmp_buf[12];
+s32 setjmp(jmp_buf jump_buffer);
 
 void* memmove(void* destination, const void* source, s32 count);
 
