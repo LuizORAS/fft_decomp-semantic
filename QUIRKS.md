@@ -64,6 +64,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   loop runs for level 0 only.
 - `src/battle/battle_ai_build_targetable_tile_mask.c`: radii 8–15 index past
   the 8-entry template table into the following status weights.
+- `src/battle/battle_ai_evaluate_self_target_origins.c`: suspension during the
+  first origin's target search marks the second-origin stage, so resuming skips
+  the moved-origin pass.
 - `src/battle/battle_ai_evaluate_reflected_target_origins.c`: the resume entry
   skips the reflector pointer reload and depends on the caller's `$s2`.
 - `src/battle/battle_ai_evaluate_math_targets.c`: the extra known-ability call

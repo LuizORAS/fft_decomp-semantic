@@ -48,6 +48,7 @@ prepare_origin:
     if (battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords)) {
     evaluate_targets:
         if (battle_ai_evaluate_target_tiles() == -1) {
+            /* A first-origin suspension skips the moved-origin pass on resume. */
             g_battle_ai_self_target_origin_stage = 1;
             return -1;
         }
