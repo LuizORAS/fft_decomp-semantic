@@ -147,7 +147,7 @@ s32 effect_e461_update_particle_ribbons_long_state(s16 record_index, s32 callbac
         frame %= 160;
         work = record->work_slots[callback_slot];
         wave = entry->particle_ribbon.curve_indices[1];
-        target_index = record->target_index;
+        target_index = record->timeline.target_index;
         scroll = entry->particle_ribbon.curve_indices[0];
         READ_CURVE(factor, j, (wave >> 24) & 0xf, frame);
         if (i

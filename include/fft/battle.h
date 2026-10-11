@@ -2742,26 +2742,6 @@ typedef enum battle_effect_model {
     BATTLE_EFFECT_MODEL_SHURIKEN = 3, /* drawn for the thrown items of ITEM_TYPE_SHURIKEN */
 } battle_effect_model_e;
 
-/* battle_effect_resource_t.words: offsets are bytes from words[0]. The second
- * section has an entry per vertex and is located but never read. */
-enum {
-    BATTLE_EFFECT_MODEL_WORD_VERTICES_OFFSET = 0,
-    BATTLE_EFFECT_MODEL_WORD_VERTEX_COUNT = 1,
-    BATTLE_EFFECT_MODEL_WORD_SECOND_SECTION_OFFSET = 2,
-    BATTLE_EFFECT_MODEL_WORD_SECOND_SECTION_COUNT = 3,
-    BATTLE_EFFECT_MODEL_WORD_COMMANDS_OFFSET = 4,
-    BATTLE_EFFECT_MODEL_WORD_COMMAND_COUNT = 5,
-};
-
-/* A projectile model resident in BATTLE.BIN: a twelve-byte preamble, the six
- * BATTLE_EFFECT_MODEL_WORD_* words, then the draw commands
- * (BATTLE_EFFECT_MODEL_COMMAND_*), the SVECTOR vertices and the second
- * section. */
-typedef struct battle_effect_resource {
-    u8 _unused_00[0xc];
-    s32 words[6];
-} battle_effect_resource_t;
-
 /* The inertia threshold every secondary effect handler runs its slots under, with a gravity of
  * (0, ONE, 0); an effect file's script sets its own pair (opcode 27). */
 enum { BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD = 0x230 };
@@ -3677,11 +3657,19 @@ typedef struct battle_effect_parent_timeline_state {
 } battle_effect_parent_timeline_state_t;
 
 /* Opcodes 28 and 29 interpret the same record storage differently. */
-typedef union battle_effect_record_timeline {
+typedef union battle_effect_timeline_state {
     battle_effect_child_timeline_state_t child;
     battle_effect_parent_timeline_state_t parent;
+} battle_effect_timeline_state_t;
+typedef char battle_effect_timeline_state_size_must_be_0xa6[sizeof(battle_effect_timeline_state_t) == 0xa6 ? 1 : -1];
+
+/* The target and frame travel with the counters of the active timeline. */
+typedef struct battle_effect_record_timeline {
+    s16 target_index;                     /* 0x00; index into effect-context targets */
+    s16 frame;                            /* 0x02 */
+    battle_effect_timeline_state_t state; /* 0x04; opcode 28 child or opcode 29 parent */
 } battle_effect_record_timeline_t;
-typedef char battle_effect_record_timeline_size_must_be_0xa6[sizeof(battle_effect_record_timeline_t) == 0xa6 ? 1 : -1];
+typedef char battle_effect_record_timeline_size_must_be_0xaa[sizeof(battle_effect_record_timeline_t) == 0xaa ? 1 : -1];
 
 /* effect_list_node_t.kind: how battle_effect_render_particle_sprite places the sprite, and the
  * FRAME_CHANGED bit it sets when the sequence picks another frame. */
@@ -3804,10 +3792,8 @@ typedef struct effect_record {
     s16 work_count;    /* 0x1c: particles on work_head */
     u16 flags;         /* 0x1e: EFFECT_RECORD_FLAG_ALLOCATED */
     s16 frame_counter; /* 0x20: frames the script has run, 0 on its first; the frame of script-spawned emitters */
-    u8 callback_phase[4]; /* 0x22: effect_phase_e of the handler in each callback slot */
-    s16 target_index;     /* 0x26: the effect target (g_battle_effect_context.targets) the record plays on */
-    s16 timeline_frame;   /* 0x28 */
-    battle_effect_record_timeline_t timeline; /* 0x2a */
+    u8 callback_phase[4];                     /* 0x22: effect_phase_e of the handler in each callback slot */
+    battle_effect_record_timeline_t timeline; /* 0x26; target, frame and timeline counters */
     effect_work_record_t* work_head;          /* 0xd0: its particles */
     battle_effect_callback_t callbacks[4];    /* 0xd4: the native handler bound to each callback slot */
     void* work_slots[4];                      /* 0xe4: the work block each callback slot's handler allocated */
@@ -3827,7 +3813,7 @@ static __inline__ u16 battle_effect_get_current_script_header(effect_record_t* r
 
 typedef char assert_effect_record_size[sizeof(effect_record_t) == 0xf8 ? 1 : -1];
 typedef char
-    effect_record_timeline_offset_must_be_0x2a[((unsigned long)&((effect_record_t*)0)->timeline == 0x2a) ? 1 : -1];
+    effect_record_timeline_offset_must_be_0x26[((unsigned long)&((effect_record_t*)0)->timeline == 0x26) ? 1 : -1];
 typedef char
     effect_record_work_head_offset_must_be_0xd0[((unsigned long)&((effect_record_t*)0)->work_head == 0xd0) ? 1 : -1];
 
@@ -4359,10 +4345,11 @@ extern s32 g_battle_effect_gravity_scale;
 extern MATRIX g_battle_effect_particle_heading_matrix;
 extern MATRIX g_battle_effect_emitter_matrix;
 extern MATRIX g_battle_effect_projectile_matrix;
-extern s32* g_battle_effect_model_header;
-extern s32* g_battle_effect_model_vertices;
-extern s32* g_battle_effect_model_commands;
-extern s32 g_battle_effect_model_command_index;
+extern psyq_tmd_object_t* g_battle_effect_model_object;
+extern SVECTOR* g_battle_effect_model_vertices;
+extern SVECTOR* g_battle_effect_model_normals;
+extern psyq_tmd_packet_t* g_battle_effect_model_commands;
+extern s32 g_battle_effect_model_command_word_offset;
 extern SVECTOR g_battle_effect_camera_rotation_start;
 extern SVECTOR g_battle_effect_camera_rotation_target;
 extern SVECTOR g_battle_effect_camera_rotation_current;
@@ -4393,7 +4380,7 @@ extern u8* g_battle_effect_palette_ptr;
  * handler seeds group 5's position.y with -8, then lowers it by 3 per frame. */
 extern battle_effect_emitter_values_t g_battle_effect_trap_particle_configs[17];
 extern s16 g_battle_effect_root_record_index;
-extern battle_effect_resource_t* g_battle_effect_model_data_ptrs[];
+extern psyq_tmd_header_t* g_battle_effect_model_files[];
 extern battle_file_extent_t g_battle_effect_disc_entries[];
 extern battle_effect_secondary_state_t g_battle_effect_secondary_state;
 /* Tile target of the current effect: emitter origin CURSOR_TILE, homing CURSOR_TILE and camera source
@@ -4572,7 +4559,7 @@ s32 battle_effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit)
 void battle_effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit);
 void battle_effect_start_altima_teleport_white_flash(battle_unit_misc_data_t* unit);
 void battle_effect_decode_next_model_command(battle_effect_decoded_model_command_t* out);
-s32 battle_effect_init_resource_sections(battle_effect_resource_t* resource, s32 unused_1);
+s32 battle_effect_init_model_sections(psyq_tmd_header_t* resource, s32 unused_1);
 s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, battle_effect_motion_t* motion);
 void battle_effect_add_random_vector_offsets(const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
 
@@ -8953,7 +8940,6 @@ extern u8 D_800F70B4[150][14];
 extern u8 D_800F78E8[150];
 extern u8 D_8018F4FC;
 extern u8 D_8019387C;
-extern s32* D_801B8A34;
 extern s32 D_801B8B18;
 extern s32 D_801B8B1C;
 extern s32 D_801B8B98;

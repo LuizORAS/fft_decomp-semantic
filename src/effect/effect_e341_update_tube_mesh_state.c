@@ -106,7 +106,7 @@ s32 effect_e341_update_tube_mesh_state(s16 record_index, s32 callback_slot, s32 
 
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
-        target_index = g_effect_state_records[record_index].target_index;
+        target_index = g_effect_state_records[record_index].timeline.target_index;
         READ_CURVE(j, i, entry->ring_mesh.scroll_curves & 0xf, frame);
         battle_effect_interpolate_emitter_spawn_position(entry, j, &origin);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {

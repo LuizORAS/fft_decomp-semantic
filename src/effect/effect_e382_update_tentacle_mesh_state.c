@@ -137,7 +137,7 @@ s32 effect_e382_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
         i = frame - 1;
         work = record->work_slots[callback_slot];
         curves1 = entry->tentacle_mesh.curve_indices[1];
-        target_index = record->target_index;
+        target_index = record->timeline.target_index;
         curves0 = entry->tentacle_mesh.curve_indices[0];
         frame %= 160;
         READ_CURVE(factor, index, (curves1 >> 24) & 0xF, frame);

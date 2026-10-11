@@ -36,7 +36,7 @@ void battle_effect_draw_projectile_model(
     s32 unused[2];
     MATRIX matrix;
     SVECTOR point;
-    battle_effect_resource_t* model;
+    psyq_tmd_header_t* model;
     SVECTOR* vertices;
     VECTOR* scratch;
     s32 count;
@@ -55,10 +55,10 @@ void battle_effect_draw_projectile_model(
     matrix.t[0] = 0;
     SetRotMatrix(&matrix);
     SetTransMatrix(&matrix);
-    model = g_battle_effect_model_data_ptrs[parameter & 0xff];
+    model = g_battle_effect_model_files[parameter & 0xff];
     scratch = SCRATCH;
-    vertices = (SVECTOR*)((u8*)model + (model->words[BATTLE_EFFECT_MODEL_WORD_VERTICES_OFFSET] + 0xc));
-    count = model->words[BATTLE_EFFECT_MODEL_WORD_VERTEX_COUNT];
+    vertices = (SVECTOR*)((u8*)model->objects + model->objects[0].vertex_offset);
+    count = model->objects[0].vertex_count;
     for (i = 0; i < count; i++) {
         gte_ldv0(&vertices[i]);
         gte_rtv0tr();
@@ -92,7 +92,7 @@ void battle_effect_draw_projectile_model(
         gte_stlvnl(&scratch[i]);
         gte_stflg(&scratch[i].pad);
     }
-    command_count = battle_effect_init_resource_sections(model, 0);
+    command_count = battle_effect_init_model_sections(model, 0);
     gt3_index = 0;
     g4_index = 0;
     g3_index = 0;

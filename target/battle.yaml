@@ -1796,7 +1796,7 @@ functions:
   - {addr: 0x801a8d7c, size: 120, name: battle_effect_interpolate_emitter_velocity_direction_spread, hash: cf2fa54461da7f27}
   - {addr: 0x801a8df4, size: 128, name: battle_effect_get_random_between, hash: ce6a2b2679a26feb}
   - {addr: 0x801a8e74, size: 8, name: battle_noop_801a8e74, hash: 6d64edf91449c1b1}
-  - {addr: 0x801a8e7c, size: 152, name: battle_effect_init_resource_sections, hash: 2dfb52b77b9115f8}
+  - {addr: 0x801a8e7c, size: 152, name: battle_effect_init_model_sections, hash: 2dfb52b77b9115f8}
   - {addr: 0x801a8f14, size: 444, name: battle_effect_decode_next_model_command, hash: f6312c0ce6d9ffab}
   - {addr: 0x801a90d0, size: 584, name: battle_effect_resolve_target_render_coords, hash: 439cd077defd4ff0}
   - {addr: 0x801a9318, size: 88, name: battle_effect_get_screen_location_by_battle_id, hash: c0988807e52b8411}
@@ -2758,7 +2758,7 @@ data:
   - {addr: 0x801b84c0, name: g_battle_effect_trap_colors}
   - {addr: 0x801b84dc, name: g_battle_effect_secondary_animations}
   - {addr: 0x801b8530, name: g_battle_effect_ending_secondary_function_id}
-  - {addr: 0x801b8534, name: g_battle_effect_model_data_ptrs}
+  - {addr: 0x801b8534, name: g_battle_effect_model_files}
   - {addr: 0x801b8544, name: g_battle_effect_ninja_ball_masks}
   - {addr: 0x801b8550, name: g_battle_effect_reflect_palette_colors}
   - {addr: 0x801b8564, name: g_battle_effect_trap_particle_configs}
@@ -2779,11 +2779,11 @@ data:
   - {addr: 0x801b8a04, name: g_battle_effect_prim_buffer}
   - {addr: 0x801b8a08, name: g_battle_effect_frame_parity}
   - {addr: 0x801b8a0c, name: g_battle_effect_particle_heading_matrix}
-  - {addr: 0x801b8a2c, name: g_battle_effect_model_header}
+  - {addr: 0x801b8a2c, name: g_battle_effect_model_object}
   - {addr: 0x801b8a30, name: g_battle_effect_model_vertices}
-  - {addr: 0x801b8a34, name: D_801B8A34}
+  - {addr: 0x801b8a34, name: g_battle_effect_model_normals}
   - {addr: 0x801b8a38, name: g_battle_effect_model_commands}
-  - {addr: 0x801b8a3c, name: g_battle_effect_model_command_index}
+  - {addr: 0x801b8a3c, name: g_battle_effect_model_command_word_offset}
   - {addr: 0x801b8a40, name: g_battle_effect_gravity}
   - {addr: 0x801b8a4c, name: g_battle_effect_inertia_threshold}
   - {addr: 0x801b8a50, name: g_battle_effect_saved_gravity}
