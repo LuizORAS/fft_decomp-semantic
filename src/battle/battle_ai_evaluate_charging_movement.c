@@ -15,9 +15,9 @@ s32 battle_ai_evaluate_charging_movement(void) {
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         state = g_battle_ai_data_base.charging_state;
-        if (state == 0)
+        if (state == BATTLE_AI_CHARGING_SONG_DANCE)
             goto evaluate_song_dance;
-        if (state == 1)
+        if (state == BATTLE_AI_CHARGING_WITH_CHARGE)
             goto evaluate_with_charge;
         goto evaluate_without_charge;
     }
@@ -35,7 +35,7 @@ s32 battle_ai_evaluate_charging_movement(void) {
     if (action->ability_id >= ABILITY_ID_SONG_ANGEL_SONG && action->ability_id <= ABILITY_ID_DANCE_LAST_DANCE) {
     evaluate_song_dance:
         if (battle_ai_check_set_highest_unit_priority() == -1) {
-            ai->charging_state = 0;
+            ai->charging_state = BATTLE_AI_CHARGING_SONG_DANCE;
             return -1;
         }
         battle_ai_insert_ranked_action();
@@ -43,7 +43,7 @@ s32 battle_ai_evaluate_charging_movement(void) {
     }
 evaluate_with_charge:
     if (battle_ai_simulate_action_and_score() == -1) {
-        ai->charging_state = 1;
+        ai->charging_state = BATTLE_AI_CHARGING_WITH_CHARGE;
         return -1;
     }
     battle_ai_transfer_halfword_values(&ai->selected_action, &ai->current_action, sizeof(battle_ai_action_data_t));
@@ -63,6 +63,6 @@ evaluate_without_charge:
         return battle_ai_compare_target_priority_and_hit_rate(&ai->selected_action.rank, &ai->current_action.rank)
             == BATTLE_AI_RANK_ABOVE;
     }
-    ai->charging_state = 2;
+    ai->charging_state = BATTLE_AI_CHARGING_WITHOUT_CHARGE;
     return -1;
 }

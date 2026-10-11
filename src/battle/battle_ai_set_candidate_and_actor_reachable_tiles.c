@@ -12,7 +12,7 @@ void battle_ai_set_candidate_and_actor_reachable_tiles(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 row;
 
-    for (row = 0; row < 18; row++) {
+    for (row = 0; row < BATTLE_AI_GRID_ROW_COUNT; row++) {
         u32 row_address = row * sizeof(u16);
         u32 scenario_address = (u32)ai + ai->movement_scenario * sizeof(ai->reachable_tiles[0]);
         *(u16*)(row_address + scenario_address + ((u32)&ai->reachable_tiles[0][0][0] - (u32)ai)) = 0;

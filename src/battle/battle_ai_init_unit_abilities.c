@@ -17,7 +17,7 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
     s32 evade_count;
     s32 i;
 
-    if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || ai->unit_compact_indices[unit_id] >= 16) {
+    if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || ai->unit_compact_indices[unit_id] >= BATTLE_AI_COMPACT_UNIT_COUNT) {
         return;
     }
     battle_ai_build_unit_ability_list(unit_id);
@@ -28,7 +28,7 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
     decision = &ai->unit_decisions[unit_id];
     decision->highest_mp_cost = 0;
     decision->lowest_mp_cost = 0xff;
-    for (i = 0; i < 34; i++) {
+    for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
         entry = &ai->ability_lists[ai->unit_compact_indices[unit_id]][i];
         if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
             break;

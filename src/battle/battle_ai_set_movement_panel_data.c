@@ -32,8 +32,8 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
         } else {
             g_battle_ai_data_base.water_penalty = 1;
         }
-        battle_ai_clear_words(ai->walkable_tiles, 0x48);
-        for (level = 0; level < 2; level++) {
+        battle_ai_clear_words(ai->walkable_tiles, sizeof(ai->walkable_tiles));
+        for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     tile = &g_battle_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
@@ -45,7 +45,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
             }
         }
         ai->movement_scenario = 0;
-        for (j = 0; j < 18; j++) {
+        for (j = 0; j < BATTLE_AI_GRID_ROW_COUNT; j++) {
             ai->reachable_tiles[ai->movement_scenario][0][j] = 0;
             ai->reachable_tiles[ai->movement_scenario][1][j] = 0;
         }
@@ -65,11 +65,11 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
         battle_move_set_reachable_tiles(
             i, ai->acting_unit_coords.bytes.x, ai->acting_unit_coords.bytes.y, ai->acting_unit_coords.bytes.elevation);
     }
-    if (VSync(1) > 0x1b8) {
+    if (VSync(1) >= BATTLE_AI_DECISION_SCANLINE_LIMIT) {
         return -1;
     }
     ai->resume_pending = 0;
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             for (x = 0; x < ai->map_max_x; x++) {
                 tile = &g_battle_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];

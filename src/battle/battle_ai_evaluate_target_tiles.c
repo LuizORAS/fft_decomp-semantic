@@ -27,7 +27,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
         row = ai->targetable_tiles[level][y];
         goto evaluate_priority;
     }
-    if (VSync(1) >= 441) {
+    if (VSync(1) >= BATTLE_AI_DECISION_SCANLINE_LIMIT) {
         ai->search_resume_flag = 0;
         return -1;
     }
@@ -50,7 +50,8 @@ s32 battle_ai_evaluate_target_tiles(void) {
 
     /* Field-derived level bases keep both row pointers in the target order;
      * typed level indexing adds instructions to this intersection loop. */
-    for (level = 0, level_address = (u32)ai; level < 2; level++, level_address += 18 * sizeof(u16)) {
+    for (level = 0, level_address = (u32)ai; level < MAP_TERRAIN_LAYER_COUNT;
+        level++, level_address += BATTLE_AI_GRID_ROW_COUNT * sizeof(u16)) {
         for (y = 0; y < ai->map_max_y; y++) {
             target_rows = (u16*)(level_address + ((u32)&ai->targetable_tiles - (u32)ai));
             origin_rows = (u16*)(level_address + ((u32)&ai->attack_origin_tiles - (u32)ai));
@@ -72,7 +73,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
             }
         }
     }
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             row = ai->targetable_tiles[level][y];
             if (row != 0) {

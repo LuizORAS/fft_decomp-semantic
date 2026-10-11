@@ -14,11 +14,11 @@ s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
     s32 x, y, level;
     u16 row;
 
-    for (x = 0; x < 18; x++) {
+    for (x = 0; x < BATTLE_AI_GRID_ROW_COUNT; x++) {
         ai->reachable_tiles[ai->movement_scenario][0][x] = 0;
         ai->reachable_tiles[ai->movement_scenario][1][x] = 0;
     }
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             row = ai->reachable_tiles[0][level][y];
             if (row != 0) {

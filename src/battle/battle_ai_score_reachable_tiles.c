@@ -31,7 +31,7 @@ s32 battle_ai_score_reachable_tiles(void) {
     level = 0;
     g_battle_ai_data_base.current_action.act_before_move = 0;
     g_battle_ai_data_base.current_action.command.skillset_id = 0;
-    for (; level < 2; level++) {
+    for (; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             {
                 u32 scenario_address = ai->movement_scenario * sizeof(ai->reachable_tiles[0]) + (u32)ai;

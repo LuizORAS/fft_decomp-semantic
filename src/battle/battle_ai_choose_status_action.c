@@ -16,7 +16,7 @@ s32 battle_ai_choose_status_action(void) {
     s32 status_2;
 
     if (g_battle_ai_data_base.resume_pending) {
-        if (g_battle_ai_data_base.action_selection_phase == 0)
+        if (g_battle_ai_data_base.action_selection_phase == BATTLE_AI_STATUS_SELECTION_CHICKEN)
             goto chicken;
         goto movement;
     }
@@ -26,7 +26,7 @@ s32 battle_ai_choose_status_action(void) {
     if (status_2 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN)) {
     chicken:
         if (battle_ai_score_reachable_tiles() == -1) {
-            ai->action_selection_phase = 0;
+            ai->action_selection_phase = BATTLE_AI_STATUS_SELECTION_CHICKEN;
             return -1;
         }
         battle_ai_clear_words(ai->tile_target_distance, sizeof(ai->tile_target_distance));
@@ -56,12 +56,12 @@ s32 battle_ai_choose_status_action(void) {
         }
         ai->targetability.live.unit_targetable[target_or_count] = 1;
         if (battle_ai_choose_random_action())
-            goto success;
+            return 1;
     copy_target:
         battle_ai_transfer_unit_coordinates(target_or_count, &ai->considered_unit_coords);
     movement:
         if (battle_ai_fill_target_distance_grid(&ai->considered_unit_coords) == -1) {
-            ai->action_selection_phase = 1;
+            ai->action_selection_phase = BATTLE_AI_STATUS_SELECTION_TARGET_DISTANCE;
             return -1;
         }
         battle_ai_select_destination(0x7fffffff, BATTLE_AI_DESTINATION_DISTANCE_FIRST);
@@ -84,7 +84,7 @@ s32 battle_ai_choose_status_action(void) {
             /* The aligned skillset/usage halfword preserves target LHU/SH;
              * byte-only usage accesses change the instructions. */
             target_or_count = 0;
-            for (i = 0; i < 34; i++) {
+            for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
                 entry = &ai->ability_lists[ai->acting_unit_compact_index][i];
                 if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
                     break;
@@ -96,7 +96,7 @@ s32 battle_ai_choose_status_action(void) {
                     i = rand() % target_or_count;
                     {
                         s32 n;
-                        for (n = 0; n < 34; n++) {
+                        for (n = 0; n < BATTLE_AI_ABILITY_LIST_COUNT; n++) {
                             entry = &ai->ability_lists[ai->acting_unit_compact_index][n];
                             if (entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_USABLE << 8)) {
                                 if (i == 0)
@@ -107,7 +107,7 @@ s32 battle_ai_choose_status_action(void) {
                     }
                     battle_ai_load_ability_entry(entry);
                     if (battle_ai_choose_random_action())
-                        goto success;
+                        return 1;
                     target_or_count--;
                     entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
                 } while (target_or_count);

@@ -18,7 +18,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
 
     ticks = VSync(1);
     ai = &g_battle_ai_data_base;
-    if (ticks > 440)
+    if (ticks >= BATTLE_AI_DECISION_SCANLINE_LIMIT)
         return -1;
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the suspended decision stage. */
@@ -37,12 +37,13 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
         return 0;
     }
     ai->acting_unit_id = unit_id;
-    if (ai->unit_compact_indices[unit_id] >= 16) {
+    if (ai->unit_compact_indices[unit_id] >= BATTLE_AI_COMPACT_UNIT_COUNT) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
         return 0;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE && ai->unit_compact_indices[i] >= 16) {
+        if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE
+            && ai->unit_compact_indices[i] >= BATTLE_AI_COMPACT_UNIT_COUNT) {
             command->kind = BATTLE_AI_COMMAND_END_TURN;
             return 0;
         }
@@ -105,7 +106,7 @@ preserve:
     battle_ai_move_temp_unit_to_coords(&ai->acting_unit_coords);
     history = &g_battle_ai_command_history[0];
     last_command = history + 1;
-    battle_ai_transfer_halfword_values(history, last_command, 24);
-    battle_ai_transfer_halfword_values(last_command, command, 24);
+    battle_ai_transfer_halfword_values(history, last_command, sizeof(*history));
+    battle_ai_transfer_halfword_values(last_command, command, sizeof(*last_command));
     return 0;
 }

@@ -5,7 +5,7 @@
  *
  * Each level has 18 halfword rows, with bit 15 representing x = 0.
  */
-s32 battle_ai_count_flagged_tiles_within_map_bounds(u16 rows[2][18]) {
+s32 battle_ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT]) {
     battle_ai_data_t* ai;
     s32 count;
     s32 level;
@@ -28,6 +28,6 @@ s32 battle_ai_count_flagged_tiles_within_map_bounds(u16 rows[2][18]) {
             }
         }
         level++;
-    } while (level < 2);
+    } while (level < MAP_TERRAIN_LAYER_COUNT);
     return count;
 }

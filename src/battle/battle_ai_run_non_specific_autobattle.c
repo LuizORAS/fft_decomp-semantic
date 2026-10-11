@@ -15,16 +15,16 @@ s32 battle_ai_run_non_specific_autobattle(void) {
     if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
         resume_state = g_battle_ai_data_base.autobattle_state;
-        if (resume_state == 4)
+        if (resume_state == BATTLE_AI_AUTOBATTLE_MOVEMENT)
             goto evaluate_movement;
-        if (resume_state == 2)
+        if (resume_state == BATTLE_AI_AUTOBATTLE_CHARGING)
             goto evaluate_charging;
         goto evaluate_abilities;
     }
     g_battle_ai_data_base.movement_scenario = 1;
 evaluate_movement:
     if (battle_ai_build_movement_scenarios() == -1) {
-        ai->autobattle_state = 4;
+        ai->autobattle_state = BATTLE_AI_AUTOBATTLE_MOVEMENT;
         return -1;
     }
     ai->movement_scenario = 0;
@@ -34,7 +34,7 @@ evaluate_charging:
     charging_result = battle_ai_evaluate_charging_movement();
     switch (charging_result) {
     case -1:
-        ai->autobattle_state = 2;
+        ai->autobattle_state = BATTLE_AI_AUTOBATTLE_CHARGING;
         return -1;
     case 1:
         return 0;
@@ -43,7 +43,7 @@ evaluate_charging:
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 0) != 0) {
     evaluate_abilities:
         if (battle_ai_choose_move_from_move_list() == -1) {
-            ai->autobattle_state = 7;
+            ai->autobattle_state = BATTLE_AI_AUTOBATTLE_ABILITIES;
             return -1;
         }
     }

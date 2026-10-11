@@ -44,7 +44,8 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
         if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
             mode = BATTLE_AI_TILE_MASK_EXPLICIT;
         battle_ai_build_targetable_tile_mask(mode, 0);
-        battle_ai_transfer_halfword_values(ai->attack_origin_tiles, ai->targetable_tiles, 72);
+        battle_ai_transfer_halfword_values(
+            ai->attack_origin_tiles, ai->targetable_tiles, sizeof(ai->attack_origin_tiles));
         for (ai->reflected_target_unit_index = 0; ai->reflected_target_unit_index < BATTLE_UNIT_SLOT_COUNT;
             ai->reflected_target_unit_index++) {
             if (!ai->targetability.live.unit_targetable[ai->reflected_target_unit_index])
@@ -66,7 +67,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
                 continue;
             if (ai->current_action.coords.bytes.y >= ai->map_max_y)
                 continue;
-            for (ai->reflected_candidate_level = 0; ai->reflected_candidate_level < 2;
+            for (ai->reflected_candidate_level = 0; ai->reflected_candidate_level < MAP_TERRAIN_LAYER_COUNT;
                 ai->reflected_candidate_level++) {
                 ai->current_action.coords.bytes.elevation = ai->reflected_candidate_level;
                 if ((ai->reachable_tiles[ai->movement_scenario][ai->reflected_candidate_level]

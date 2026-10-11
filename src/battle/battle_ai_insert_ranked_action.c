@@ -13,13 +13,14 @@ void battle_ai_insert_ranked_action(void) {
 
     if (battle_ai_compare_target_priority_and_hit_rate(&ai->best_action.rank, &ai->inverted_priority_action.rank)
         == BATTLE_AI_RANK_ABOVE) {
-        if (battle_ai_is_action_higher_ranked(&ai->best_action, &ai->ranked_actions[7])) {
-            for (i = 0; i < 8; i++) {
+        if (battle_ai_is_action_higher_ranked(
+                &ai->best_action, &ai->ranked_actions[BATTLE_AI_RANKED_ACTION_COUNT - 1])) {
+            for (i = 0; i < BATTLE_AI_RANKED_ACTION_COUNT; i++) {
                 if (battle_ai_is_action_higher_ranked(&ai->best_action, &ai->ranked_actions[i]))
                     break;
             }
-            if (i != 8) {
-                for (j = 7; i < j; j--)
+            if (i != BATTLE_AI_RANKED_ACTION_COUNT) {
+                for (j = BATTLE_AI_RANKED_ACTION_COUNT - 1; i < j; j--)
                     battle_ai_transfer_halfword_values(
                         &ai->ranked_actions[j], &ai->ranked_actions[j - 1], sizeof(battle_ai_action_data_t));
                 battle_ai_transfer_halfword_values(

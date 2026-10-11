@@ -38,7 +38,8 @@ s32 battle_ai_calculate_ability_range(void) {
     }
 
     level = 0;
-    for (level_address = (u32)ai; level < 2; level++, level_address += 18 * sizeof(u16)) {
+    for (level_address = (u32)ai; level < MAP_TERRAIN_LAYER_COUNT;
+        level++, level_address += BATTLE_AI_GRID_ROW_COUNT * sizeof(u16)) {
         for (y = 0; y < ai->map_max_y; y++) {
             target_rows = (u16*)(level_address + ((u32)&ai->targetable_tiles - (u32)ai));
             origin_rows = (u16*)(level_address + ((u32)&ai->attack_origin_tiles - (u32)ai));

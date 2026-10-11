@@ -39,7 +39,7 @@ s32 battle_ai_choose_random_action(void) {
         ai->current_action.command.calculator_multiplier = value + ABILITY_ID_MATH_FIRST;
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_TARGET_MAP_TILES) {
-        battle_ai_transfer_halfword_values(ai->targetable_tiles, ai->reachable_tiles[0], 72);
+        battle_ai_transfer_halfword_values(ai->targetable_tiles, ai->reachable_tiles[0], sizeof(ai->targetable_tiles));
         ai->movable_tile_count = battle_ai_count_flagged_tiles_within_map_bounds(ai->targetable_tiles);
         if (!ai->movable_tile_count)
             return 0;

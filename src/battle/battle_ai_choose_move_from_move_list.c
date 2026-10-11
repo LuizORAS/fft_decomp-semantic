@@ -23,7 +23,7 @@ s32 battle_ai_choose_move_from_move_list(void) {
             return -1;
         }
         ai->ability_counter += 1;
-        if (ai->ability_counter >= 0x22) {
+        if (ai->ability_counter >= BATTLE_AI_ABILITY_LIST_COUNT) {
             return 0;
         }
     }

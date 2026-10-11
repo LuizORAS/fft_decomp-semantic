@@ -35,7 +35,7 @@ s32 battle_ai_fill_target_distance_grid(battle_ai_coords_t* target) {
             = g_battle_target_panels[(target->bytes.elevation << 8) + target->bytes.y * ai->map_max_x + target->bytes.x]
                   .remaining_range;
     }
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             if (ai->reachable_tiles[0][level][y] != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {

@@ -18,7 +18,7 @@ s32 battle_ai_select_destination(s32 max_distance, battle_ai_destination_order_e
     u16 row;
     s32 distance, score;
 
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             {
                 u32 scenario_address = ai->movement_scenario * sizeof(ai->reachable_tiles[0]) + (u32)ai;

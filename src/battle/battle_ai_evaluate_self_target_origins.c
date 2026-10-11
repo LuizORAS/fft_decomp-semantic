@@ -44,7 +44,7 @@ prepare_origin:
     if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
         mode = BATTLE_AI_TILE_MASK_EXPLICIT;
     battle_ai_build_targetable_tile_mask(mode, 0);
-    battle_ai_transfer_halfword_values(ai->attack_origin_tiles, ai->targetable_tiles, 72);
+    battle_ai_transfer_halfword_values(ai->attack_origin_tiles, ai->targetable_tiles, sizeof(ai->attack_origin_tiles));
     if (battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords)) {
     evaluate_targets:
         if (battle_ai_evaluate_target_tiles() == -1) {

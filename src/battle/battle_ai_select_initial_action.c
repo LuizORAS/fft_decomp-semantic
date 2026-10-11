@@ -13,17 +13,17 @@ s32 battle_ai_select_initial_action(void) {
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         switch (g_battle_ai_data_base.initial_targeting_state) {
-        case 0:
+        case BATTLE_AI_INITIAL_SELECTION_STATUS:
             goto status_action;
-        case 2:
+        case BATTLE_AI_INITIAL_SELECTION_RETREAT:
             goto fallback_action;
-        case 3:
+        case BATTLE_AI_INITIAL_SELECTION_AUTOBATTLE:
             goto native_action;
         default:
             goto general_action;
         }
     }
-    for (result = 0; result < 8; result++)
+    for (result = 0; result < BATTLE_AI_RANKED_ACTION_COUNT; result++)
         battle_ai_reset_action_ranking_fields(&ai->ranked_actions[result]);
     battle_ai_reset_action_ranking_fields(&ai->current_action);
     battle_ai_reset_action_ranking_fields(&ai->best_action);
@@ -33,7 +33,7 @@ s32 battle_ai_select_initial_action(void) {
 status_action:
     result = battle_ai_choose_status_action();
     if (result == -1) {
-        ai->initial_targeting_state = 0;
+        ai->initial_targeting_state = BATTLE_AI_INITIAL_SELECTION_STATUS;
         return -1;
     }
     if (result != 0)
@@ -49,7 +49,7 @@ status_action:
     /* Resume after the save; restore the decision only when this pass ends. */
     fallback_action:
         if (battle_ai_select_retreat_action() == -1) {
-            ai->initial_targeting_state = 2;
+            ai->initial_targeting_state = BATTLE_AI_INITIAL_SELECTION_RETREAT;
             return -1;
         }
         battle_ai_transfer_halfword_values(
@@ -59,7 +59,7 @@ status_action:
 native_action:
     result = battle_ai_handle_autobattle();
     if (result == -1) {
-        ai->initial_targeting_state = 3;
+        ai->initial_targeting_state = BATTLE_AI_INITIAL_SELECTION_AUTOBATTLE;
         return -1;
     }
     if (result != 0)
@@ -67,7 +67,7 @@ native_action:
     ai->resume_pending = 0;
 general_action:
     if (battle_ai_run_non_specific_autobattle() == -1) {
-        ai->initial_targeting_state = 7;
+        ai->initial_targeting_state = BATTLE_AI_INITIAL_SELECTION_GENERAL;
         return -1;
     }
     return 0;

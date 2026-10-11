@@ -19,7 +19,7 @@ void battle_ai_build_monster_skill_tile_mask(void) {
     u16* row;
     u32 level_base;
 
-    for (level = 0; level < 18; level++) {
+    for (level = 0; level < BATTLE_AI_GRID_ROW_COUNT; level++) {
         ai->targetable_tiles[0][level] = 0;
         ai->targetable_tiles[1][level] = 0;
     }

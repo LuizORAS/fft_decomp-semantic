@@ -25,7 +25,7 @@ s32 battle_ai_build_movement_scenarios(void) {
     decision = g_battle_ai_data_base.acting_unit_decision;
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
-        if (g_battle_ai_data_base.movement_decision_state == 0)
+        if (g_battle_ai_data_base.movement_decision_state == BATTLE_AI_MOVEMENT_TARGET_DISTANCE)
             goto fill_target_distance;
         goto score_tiles;
     }
@@ -37,7 +37,7 @@ s32 battle_ai_build_movement_scenarios(void) {
     } else {
     fill_target_distance:
         if (battle_ai_fill_target_distance_grid(&decision->target) == -1) {
-            ai->movement_decision_state = 0;
+            ai->movement_decision_state = BATTLE_AI_MOVEMENT_TARGET_DISTANCE;
             return -1;
         }
         if ((decision->targeting_flags_2 & (BATTLE_AI_TARGET_HP_BELOW_HALF | BATTLE_AI_TARGET_MP_CONSTRAINED))
@@ -84,7 +84,7 @@ s32 battle_ai_build_movement_scenarios(void) {
     }
 score_tiles:
     if (battle_ai_score_reachable_tiles() == -1) {
-        ai->movement_decision_state = 1;
+        ai->movement_decision_state = BATTLE_AI_MOVEMENT_SCORE_TILES;
         return -1;
     }
     if (!g_battle_ai_stay_near_destination_fixed) {

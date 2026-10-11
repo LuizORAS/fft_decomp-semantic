@@ -13,7 +13,7 @@ void battle_ai_take_next_movement_origin(void) {
     s32 key;
     u16 row;
 
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             row = ai->movable_tiles[level][y];
             if (row != 0) {

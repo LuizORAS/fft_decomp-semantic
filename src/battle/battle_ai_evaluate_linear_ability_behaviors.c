@@ -15,12 +15,13 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
     s32 jumping;
     u8 status;
 
-    for (i = 0; i < 18; i++) {
+    for (i = 0; i < BATTLE_AI_GRID_ROW_COUNT; i++) {
         ai->attack_origin_tiles[0][i] = 0;
         ai->attack_origin_tiles[1][i] = 0;
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ARC_TRAJECTORY) {
-        battle_ai_transfer_halfword_values(ai->movable_tiles, ai->reachable_tiles[ai->movement_scenario][0], 0x48);
+        battle_ai_transfer_halfword_values(
+            ai->movable_tiles, ai->reachable_tiles[ai->movement_scenario][0], sizeof(ai->movable_tiles));
     } else {
         for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
             if (ai->targetability.live.unit_targetable[unit_id]) {
@@ -41,7 +42,7 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
             ai->attack_origin_tiles[0][i] = 0;
             ai->attack_origin_tiles[1][i] = 0;
         }
-        for (i = 0; i < 2; i++) {
+        for (i = 0; i < MAP_TERRAIN_LAYER_COUNT; i++) {
             for (j = 0; j < ai->map_max_y; j++) {
                 unit_id = ai->movable_tiles[i][j];
                 if (unit_id == 0)
@@ -101,7 +102,7 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
             }
         }
     }
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < MAP_TERRAIN_LAYER_COUNT; i++) {
         for (j = 0; j < ai->map_max_y; j++) {
             ai->attack_origin_tiles[i][j] &= ai->walkable_tiles[i][j];
         }

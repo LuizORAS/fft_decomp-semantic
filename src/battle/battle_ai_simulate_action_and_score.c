@@ -31,7 +31,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (g_battle_ai_data_base.action_simulation_phase == BATTLE_AI_SIMULATION_SCORE_STATE)
             goto score_state;
     }
-    if (VSync(1) >= 441) {
+    if (VSync(1) >= BATTLE_AI_DECISION_SCANLINE_LIMIT) {
         ai->action_simulation_phase = BATTLE_AI_SIMULATION_PREPARE_ACTION;
         return -1;
     }
@@ -86,13 +86,13 @@ s32 battle_ai_simulate_action_and_score(void) {
     ai->simulated_turn_events = 0;
     for (;;) {
     advance_turns:
-        if (VSync(1) >= 313) {
+        if (VSync(1) >= BATTLE_AI_TURN_SIMULATION_SCANLINE_LIMIT) {
             battle_ai_save_unit_state(1);
             ai->action_simulation_phase = BATTLE_AI_SIMULATION_ADVANCE_TURNS;
             return -1;
         }
         ai->simulated_turn_events++;
-        if (ai->simulated_turn_events >= 256)
+        if (ai->simulated_turn_events >= BATTLE_AI_SIMULATED_TURN_LIMIT)
             break;
         unit_index = battle_action_run_between_turn_control(BATTLE_BETWEEN_TURN_MODE_RUN);
         status = unit_index & 0xff00;
@@ -137,7 +137,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     g_battle_between_turn_resume_state = ai->saved_between_turn_resume_state;
     g_battle_turn_unit_id = ai->saved_turn_unit_id;
 score_state:
-    if (VSync(1) >= 441) {
+    if (VSync(1) >= BATTLE_AI_DECISION_SCANLINE_LIMIT) {
         battle_ai_save_unit_state(1);
         ai->action_simulation_phase = BATTLE_AI_SIMULATION_SCORE_STATE;
         return -1;

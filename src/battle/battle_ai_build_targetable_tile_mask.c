@@ -29,7 +29,7 @@ void battle_ai_build_targetable_tile_mask(battle_ai_tile_mask_mode_e mode, s32 r
         break;
     }
     if (radius >= 16) {
-        for (i = 0; i < 18; i++) {
+        for (i = 0; i < BATTLE_AI_GRID_ROW_COUNT; i++) {
             ai->targetable_tiles[0][i] = 0xffff;
             ai->targetable_tiles[1][i] = 0xffff;
         }

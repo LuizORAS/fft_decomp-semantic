@@ -67,7 +67,7 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
     ((battle_ai_ability_entry_byte_view_t*)&ai->ability_lists[list_id][count])->usage_flags
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
     count++;
-    if (count < 34) {
+    if (count < BATTLE_AI_ABILITY_LIST_COUNT) {
         ai->ability_lists[list_id][count].skillset_flags.bytes.skillset = SKILLSET_ID_NONE;
     }
 }

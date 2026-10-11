@@ -13,9 +13,9 @@ s32 battle_ai_evaluate_movement_origins(void) {
 
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
-        if (g_battle_ai_data_base.highest_priority_state == 0)
+        if (g_battle_ai_data_base.highest_priority_state == BATTLE_AI_ORIGIN_EVALUATION_PREPARE)
             goto begin_evaluation;
-        if (g_battle_ai_data_base.highest_priority_state == 1)
+        if (g_battle_ai_data_base.highest_priority_state == BATTLE_AI_ORIGIN_EVALUATION_RANKED)
             goto evaluate_ranked_origin;
         row = ai->movable_tiles[g_battle_ai_data_base.map_level_counter][g_battle_ai_data_base.y_counter];
         goto evaluate_scanned_origin;
@@ -25,8 +25,8 @@ s32 battle_ai_evaluate_movement_origins(void) {
     battle_ai_evaluate_linear_ability_behaviors();
     ai->targetability.live.unit_targetable[g_battle_ai_data_base.acting_unit_id] = row;
 begin_evaluation:
-    if (VSync(1) >= 441) {
-        ai->highest_priority_state = 0;
+    if (VSync(1) >= BATTLE_AI_DECISION_SCANLINE_LIMIT) {
+        ai->highest_priority_state = BATTLE_AI_ORIGIN_EVALUATION_PREPARE;
         return -1;
     }
     ai->resume_pending = 0;
@@ -49,7 +49,7 @@ begin_evaluation:
         evaluate_ranked_origin:
             row = battle_ai_evaluate_target_tiles();
             if (row == -1) {
-                ai->highest_priority_state = 1;
+                ai->highest_priority_state = BATTLE_AI_ORIGIN_EVALUATION_RANKED;
                 return -1;
             }
         }
@@ -67,7 +67,7 @@ begin_evaluation:
                             battle_ai_select_candidate_coords_and_check_crystal();
                         evaluate_scanned_origin:
                             if (battle_ai_evaluate_target_tiles() == -1) {
-                                ai->highest_priority_state = 2;
+                                ai->highest_priority_state = BATTLE_AI_ORIGIN_EVALUATION_SCANNED;
                                 return -1;
                             }
                         }
@@ -75,7 +75,7 @@ begin_evaluation:
                 }
             }
             ai->map_level_counter++;
-        } while (ai->map_level_counter < 2);
+        } while (ai->map_level_counter < MAP_TERRAIN_LAYER_COUNT);
     }
     battle_ai_move_temp_unit_to_coords(&ai->acting_unit_coords);
     return 0;

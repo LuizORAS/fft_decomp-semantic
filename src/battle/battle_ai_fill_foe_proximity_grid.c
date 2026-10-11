@@ -24,7 +24,7 @@ void battle_ai_fill_foe_proximity_grid(void) {
             ai->targetability.live.unit_targetable[i] = 1;
         }
     }
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         battle_stats_t* units = g_battle_unit_stats;
         s32 proximity_limit = 10;
         for (y = 0; y < ai->map_max_y; y++) {

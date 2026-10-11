@@ -51,7 +51,7 @@ charging:
     case 1:
         return 0;
     }
-    for (i = 0; i < 34; i++) {
+    for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
         entry = &ai->ability_lists[ai->acting_unit_compact_index][i];
         if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
             break;

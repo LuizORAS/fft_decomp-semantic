@@ -6,6 +6,24 @@
 #include "fft/main.h"
 
 /* ai */
+/* Fixed workspace capacities and tile-grid storage, independent of map bounds. */
+enum {
+    BATTLE_AI_COMPACT_UNIT_COUNT = 16,
+    BATTLE_AI_ABILITY_LIST_COUNT = 34,
+    BATTLE_AI_RANKED_ACTION_COUNT = 8,
+    BATTLE_AI_MOVEMENT_SCENARIO_COUNT = 3,
+    BATTLE_AI_GRID_ROW_COUNT = 18,
+    BATTLE_AI_GRID_COLUMN_COUNT = 16,
+};
+
+/* Scanlines since vertical blank at which each search yields. */
+enum {
+    BATTLE_AI_DECISION_SCANLINE_LIMIT = 441,
+    BATTLE_AI_TURN_SIMULATION_SCANLINE_LIMIT = 313,
+    BATTLE_AI_PATHFIND_SCANLINE_LIMIT = 325,
+    BATTLE_AI_SIMULATED_TURN_LIMIT = 256,
+};
+
 typedef enum battle_ai_command_kind {
     BATTLE_AI_COMMAND_MOVE = 0,
     BATTLE_AI_COMMAND_ACT = 1,
@@ -26,6 +44,72 @@ typedef enum battle_ai_command_kind {
     BATTLE_AI_COMMAND_UNRESOLVED_FE = 0xfe,
     BATTLE_AI_COMMAND_UNRESOLVED_FF = 0xff,
 } battle_ai_command_kind_e;
+
+/* Stored resume stages are byte fields; each policy has its own stage domain. */
+typedef enum battle_ai_initial_selection_stage {
+    BATTLE_AI_INITIAL_SELECTION_STATUS = 0,
+    BATTLE_AI_INITIAL_SELECTION_RETREAT = 2,
+    BATTLE_AI_INITIAL_SELECTION_AUTOBATTLE = 3,
+    BATTLE_AI_INITIAL_SELECTION_GENERAL = 7,
+} battle_ai_initial_selection_stage_e;
+
+typedef enum battle_ai_ability_evaluation_stage {
+    BATTLE_AI_ABILITY_EVALUATION_REFLECTED_TARGETS = 0,
+    BATTLE_AI_ABILITY_EVALUATION_SELF_TARGET_RANGE = 1,
+    BATTLE_AI_ABILITY_EVALUATION_UNIT_TARGETS = 2,
+    BATTLE_AI_ABILITY_EVALUATION_FIRST_CT_GROUP = 3,
+    BATTLE_AI_ABILITY_EVALUATION_SECOND_CT_GROUP = 4,
+    BATTLE_AI_ABILITY_EVALUATION_TILE_TARGETS = 5,
+    BATTLE_AI_ABILITY_EVALUATION_MATH_TARGETS = 6,
+    BATTLE_AI_ABILITY_EVALUATION_PREPARE = 7,
+    BATTLE_AI_ABILITY_EVALUATION_MAP_TARGETS = 8,
+} battle_ai_ability_evaluation_stage_e;
+
+typedef enum battle_ai_origin_evaluation_stage {
+    BATTLE_AI_ORIGIN_EVALUATION_PREPARE = 0,
+    BATTLE_AI_ORIGIN_EVALUATION_RANKED = 1,
+    BATTLE_AI_ORIGIN_EVALUATION_SCANNED = 2,
+} battle_ai_origin_evaluation_stage_e;
+
+typedef enum battle_ai_autobattle_stage {
+    BATTLE_AI_AUTOBATTLE_CHARGING = 2,
+    BATTLE_AI_AUTOBATTLE_MOVEMENT = 4,
+    BATTLE_AI_AUTOBATTLE_ABILITIES = 7,
+} battle_ai_autobattle_stage_e;
+
+typedef enum battle_ai_charging_stage {
+    BATTLE_AI_CHARGING_SONG_DANCE = 0,
+    BATTLE_AI_CHARGING_WITH_CHARGE = 1,
+    BATTLE_AI_CHARGING_WITHOUT_CHARGE = 2,
+} battle_ai_charging_stage_e;
+
+typedef enum battle_ai_movement_stage {
+    BATTLE_AI_MOVEMENT_TARGET_DISTANCE = 0,
+    BATTLE_AI_MOVEMENT_SCORE_TILES = 1,
+} battle_ai_movement_stage_e;
+
+typedef enum battle_ai_targeted_selection_stage {
+    BATTLE_AI_TARGETED_SELECTION_SCORE_TILES = 0,
+    BATTLE_AI_TARGETED_SELECTION_MOVEMENT = 1,
+    BATTLE_AI_TARGETED_SELECTION_CHARGING = 2,
+    BATTLE_AI_TARGETED_SELECTION_TARGET_ABILITIES = 3,
+    BATTLE_AI_TARGETED_SELECTION_OTHER_ABILITIES = 4,
+} battle_ai_targeted_selection_stage_e;
+
+typedef enum battle_ai_recovery_selection_stage {
+    BATTLE_AI_RECOVERY_SELECTION_SCORE_TILES = 0,
+    BATTLE_AI_RECOVERY_SELECTION_MOVEMENT = 1,
+    BATTLE_AI_RECOVERY_SELECTION_CHARGING = 2,
+    BATTLE_AI_RECOVERY_SELECTION_TARGET_ABILITIES = 3,
+    BATTLE_AI_RECOVERY_SELECTION_ENEMY_ABILITIES = 4,
+    BATTLE_AI_RECOVERY_SELECTION_ALLY_ABILITIES = 6,
+    BATTLE_AI_RECOVERY_SELECTION_CANCEL_STATUS = 7,
+} battle_ai_recovery_selection_stage_e;
+
+typedef enum battle_ai_status_selection_stage {
+    BATTLE_AI_STATUS_SELECTION_CHICKEN = 0,
+    BATTLE_AI_STATUS_SELECTION_TARGET_DISTANCE = 1,
+} battle_ai_status_selection_stage_e;
 
 typedef enum battle_ai_simulation_phase {
     BATTLE_AI_SIMULATION_PREPARE_ACTION = 0,
@@ -388,27 +472,31 @@ typedef union battle_ai_targetability {
 typedef char battle_ai_targetability_size_must_be_64[(sizeof(battle_ai_targetability_t) == 64) ? 1 : -1];
 
 typedef struct battle_ai_data {
-    battle_ai_considered_ability_t considered_ability; /* 0x0000 */
-    battle_ai_action_data_t current_action;            /* 0x0014 */
-    battle_ai_action_data_t best_action;               /* 0x0034 */
-    battle_ai_action_data_t ranked_actions[8];         /* 0x0054 */
-    battle_ai_action_data_t inverted_priority_action;  /* 0x0154 */
-    u8 tile_foe_proximity[2][18][16];                  /* 0x0174; level/y/x, strides
-                                                        * 288/16/1 at 0x80196e68..0x80196ebc */
-    u8 tile_target_distance[2][18][16];                /* 0x03b4; level/y/x, strides 288/16/1 */
-    s16 tile_priority[2][18][16];                      /* 0x05f4; level/y/x, byte strides 576/32/2 */
+    battle_ai_considered_ability_t considered_ability;                     /* 0x0000 */
+    battle_ai_action_data_t current_action;                                /* 0x0014 */
+    battle_ai_action_data_t best_action;                                   /* 0x0034 */
+    battle_ai_action_data_t ranked_actions[BATTLE_AI_RANKED_ACTION_COUNT]; /* 0x0054 */
+    battle_ai_action_data_t inverted_priority_action;                      /* 0x0154 */
+    u8 tile_foe_proximity[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT]
+                         [BATTLE_AI_GRID_COLUMN_COUNT]; /* 0x0174; level/y/x, strides
+                                                         * 288/16/1 at 0x80196e68..0x80196ebc */
+    u8 tile_target_distance[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT]
+                           [BATTLE_AI_GRID_COLUMN_COUNT]; /* 0x03b4; level/y/x, strides 288/16/1 */
+    s16 tile_priority[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT]
+                     [BATTLE_AI_GRID_COLUMN_COUNT]; /* 0x05f4; level/y/x, byte strides 576/32/2 */
     /* Scenario/level/y; row bits 15..0 represent x=0..15. */
-    u16 reachable_tiles[3][2][18];  /* 0x0a74; byte strides 72/36/2 */
-    u16 targetable_tiles[2][18];    /* 0x0b4c */
-    u16 movable_tiles[2][18];       /* 0x0b94 */
-    u16 attack_origin_tiles[2][18]; /* 0x0bdc */
-    u16 walkable_tiles[2][18];      /* 0x0c24 */
+    u16 reachable_tiles[BATTLE_AI_MOVEMENT_SCENARIO_COUNT][MAP_TERRAIN_LAYER_COUNT]
+                       [BATTLE_AI_GRID_ROW_COUNT];                              /* 0x0a74; byte strides 72/36/2 */
+    u16 targetable_tiles[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT];    /* 0x0b4c */
+    u16 movable_tiles[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT];       /* 0x0b94 */
+    u16 attack_origin_tiles[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT]; /* 0x0bdc */
+    u16 walkable_tiles[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT];      /* 0x0c24 */
     u8 _unused_0c6c;
-    u8 initial_targeting_state; /* 0x0c6d */
-    u8 action_selection_phase;  /* 0x0c6e; 0x801971b8 selects scorer/distance resume; 0x80197ff4 uses 0..4 */
+    u8 initial_targeting_state; /* 0x0c6d; battle_ai_initial_selection_stage_e */
+    u8 action_selection_phase;  /* 0x0c6e; status, targeted and recovery selection stages */
     u8 _unused_0c6f;
-    u8 outcome_evaluation_state;               /* 0x0c70 */
-    u8 movement_decision_state;                /* 0x0c71 */
+    u8 outcome_evaluation_state;               /* 0x0c70; battle_ai_ability_evaluation_stage_e */
+    u8 movement_decision_state;                /* 0x0c71; battle_ai_movement_stage_e */
     u8 search_resume_flag;                     /* 0x0c72; distance-search initialization/resume flag
                                                 * at 0x801994f8; reused as a phase flag at 0x8019cd9c. */
     u8 _padding_0c73;                          /* aligns considered_unit_coords */
@@ -423,11 +511,11 @@ typedef struct battle_ai_data {
     u8 has_mp_recovery_ability;  /* 0x0cbe; a usable ability affects MP and does not target enemies */
     u8 crystal_treasure_status;  /* 0x0cbf; 1 crystal, 2 treasure */
     u8 _unused_0cc0[4];
-    battle_ai_coords_t candidate_coords[3]; /* 0x0cc4; indexed by movement_scenario */
+    battle_ai_coords_t candidate_coords[BATTLE_AI_MOVEMENT_SCENARIO_COUNT]; /* 0x0cc4; indexed by movement_scenario */
     u8 _unused_0cd0[4];
-    battle_action_command_t unit_action_records[16]; /* 0x0cd4 */
-    u16 throw_ability_id;                            /* 0x0e14 */
-    u8 throw_weapon_id;                              /* 0x0e16 */
+    battle_action_command_t unit_action_records[BATTLE_AI_COMPACT_UNIT_COUNT]; /* 0x0cd4 */
+    u16 throw_ability_id;                                                      /* 0x0e14 */
+    u8 throw_weapon_id;                                                        /* 0x0e16 */
     /* All slots with entd_slot != 0xff, capped at 255 by 0x80199d20. */
     u8 present_unit_average_max_hp;                  /* 0x0e17 */
     u8 unit_acts_before_me[BATTLE_UNIT_SLOT_COUNT];  /* 0x0e18..0x0e2c; all slots cleared at 0x8019d408–0x8019d41c */
@@ -444,24 +532,24 @@ typedef struct battle_ai_data {
     u8 status_to_cancel[5]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built at 0x80195410 */
     /* Resumable reflected-origin search, 0x8019b7b8–0x8019bb20.
      * Candidate x/y = 2 * reflector position - intended target position. */
-    u8 reflector_unit_index;                             /* 0x0e49 */
-    u8 reflected_target_unit_index;                      /* 0x0e4a */
-    u8 reflected_candidate_level;                        /* 0x0e4b */
-    u8 ability_effect_on_self;                           /* 0x0e4c; 0 none, 1 usable, 2 adverse */
-    u8 ranked_origin_scan;                               /* 0x0e4d; consume the ranked origin tiles */
-    u8 useful_on_caster_flag;                            /* 0x0e4e */
-    u8 acting_unit_remaining_clockticks;                 /* 0x0e4f */
-    battle_ai_status_snapshot_t unit_status_records[16]; /* 0x0e50 */
-    u8 saved_ability_ct;                                 /* 0x0ed0 */
-    u8 saved_current_status;                             /* 0x0ed1 */
-    u8 saved_inflicted_status;                           /* 0x0ed2 */
+    u8 reflector_unit_index;             /* 0x0e49 */
+    u8 reflected_target_unit_index;      /* 0x0e4a */
+    u8 reflected_candidate_level;        /* 0x0e4b */
+    u8 ability_effect_on_self;           /* 0x0e4c; 0 none, 1 usable, 2 adverse */
+    u8 ranked_origin_scan;               /* 0x0e4d; consume the ranked origin tiles */
+    u8 useful_on_caster_flag;            /* 0x0e4e */
+    u8 acting_unit_remaining_clockticks; /* 0x0e4f */
+    battle_ai_status_snapshot_t unit_status_records[BATTLE_AI_COMPACT_UNIT_COUNT]; /* 0x0e50 */
+    u8 saved_ability_ct;                                                           /* 0x0ed0 */
+    u8 saved_current_status;                                                       /* 0x0ed1 */
+    u8 saved_inflicted_status;                                                     /* 0x0ed2 */
     u8 _unused_0ed3;
-    u8 main_ai_state;             /* 0x0ed4 */
-    u8 autobattle_state;          /* 0x0ed5 */
-    u8 charging_state;            /* 0x0ed6 */
+    u8 main_ai_state;             /* 0x0ed4; battle_ai_command_build_stage_e */
+    u8 autobattle_state;          /* 0x0ed5; battle_ai_autobattle_stage_e */
+    u8 charging_state;            /* 0x0ed6; battle_ai_charging_stage_e */
     u8 find_highest_target_state; /* 0x0ed7; check_if_map_allows_use_and_find_highest_target's progress variable */
     u8 reflected_origin_phase;    /* 0x0ed8; cleared at 0x8019ba40, set at 0x8019ba78 */
-    u8 highest_priority_state;    /* 0x0ed9 */
+    u8 highest_priority_state;    /* 0x0ed9; battle_ai_origin_evaluation_stage_e */
     u8 max_possibilities;         /* 0x0eda; byte-truncated combination count, then scan x at 0x8019bf2c */
     u8 y_counter;                 /* 0x0edb */
     u8 map_level_counter;         /* 0x0edc */
@@ -470,19 +558,20 @@ typedef struct battle_ai_data {
     u8 math_type_index;       /* 0x0ede; 0..3 */
     u8 math_multiplier_index; /* 0x0edf; 4..7 */
     /* Turn-controller globals saved/restored by 0x8019d37c–0x8019db80. */
-    s32 saved_between_turn_state;                      /* 0x0ee0; g_battle_between_turn_state during the simulation */
-    s32 saved_between_turn_resume_state;               /* 0x0ee4; g_battle_between_turn_resume_state */
-    s32 saved_turn_unit_id;                            /* 0x0ee8; g_battle_turn_unit_id */
-    u16 simulated_turn_events;                         /* 0x0eec; interturn loop stops at 256 */
-    u8 action_simulation_phase;                        /* 0x0eee; battle_ai_simulation_phase_e */
-    u8 _padding_0eef;                                  /* aligns ability_lists */
-    battle_ai_ability_entry_t ability_lists[16][0x22]; /* 0x0ef0; 0x88 bytes per unit */
+    s32 saved_between_turn_state;        /* 0x0ee0; g_battle_between_turn_state during the simulation */
+    s32 saved_between_turn_resume_state; /* 0x0ee4; g_battle_between_turn_resume_state */
+    s32 saved_turn_unit_id;              /* 0x0ee8; g_battle_turn_unit_id */
+    u16 simulated_turn_events;           /* 0x0eec; interturn loop stops at 256 */
+    u8 action_simulation_phase;          /* 0x0eee; battle_ai_simulation_phase_e */
+    u8 _padding_0eef;                    /* aligns ability_lists */
+    battle_ai_ability_entry_t ability_lists[BATTLE_AI_COMPACT_UNIT_COUNT]
+                                           [BATTLE_AI_ABILITY_LIST_COUNT]; /* 0x0ef0; 0x88 bytes per unit */
     /* Blood Suck/Frog IDs start without unit bits; 0x8019729c/0x80197510
      * OR the acting physical slot into bits 10..15 before loading the entry. */
-    battle_ai_ability_entry_t hardcoded_status_abilities[2]; /* 0x1770 */
-    battle_ai_weapon_data_t unit_weapon_data[16];            /* 0x1778 */
-    battle_stats_t* acting_unit;                             /* 0x17f8 */
-    battle_ai_action_data_t selected_action;                 /* 0x17fc */
+    battle_ai_ability_entry_t hardcoded_status_abilities[2];                /* 0x1770 */
+    battle_ai_weapon_data_t unit_weapon_data[BATTLE_AI_COMPACT_UNIT_COUNT]; /* 0x1778 */
+    battle_stats_t* acting_unit;                                            /* 0x17f8 */
+    battle_ai_action_data_t selected_action;                                /* 0x17fc */
     /* 0x8019aea0 compares/copies coordinate words; 0x80194da4 consumes
      * x/elevation/y to clear reachable tiles. The list's broader policy is unknown. */
     battle_ai_coords_t known_trap_coords[4];                          /* 0x181c; x == 0xff terminates the list */
@@ -676,7 +765,7 @@ void battle_ai_clear_current_action_rank_byte(void);
 battle_ai_rank_order_e battle_ai_compare_target_priority_and_hit_rate(
     battle_ai_action_rank_t* a, battle_ai_action_rank_t* b);
 
-s32 battle_ai_count_flagged_tiles_within_map_bounds(u16 rows[2][18]);
+s32 battle_ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT]);
 void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t* entry, s32 status_id);
 s32 battle_ai_evaluate_ability_outcome(void);
 s32 battle_ai_evaluate_charging_movement(void);
@@ -743,7 +832,8 @@ void battle_ai_store_considered_action_data(void);
 void battle_ai_store_main_target_id_and_focus_on_target_flag(s32 unit_id);
 void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_id, s32* flags_out);
 void battle_ai_take_next_movement_origin(void);
-s32 battle_ai_take_random_tile(u16 tiles[2][18], battle_ai_coords_t* coordinates, s32 count);
+s32 battle_ai_take_random_tile(
+    u16 tiles[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT], battle_ai_coords_t* coordinates, s32 count);
 void battle_ai_transfer_ability_data_and_set_defend_flag(void);
 void battle_ai_transfer_byte_values(void* destination, const void* source, s32 byte_count);
 void battle_ai_transfer_halfword_values(void* destination, void* source, s32 byte_count);

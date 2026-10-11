@@ -10,7 +10,7 @@
 s32 battle_ai_build_targeted_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 range;
-    u8(*distance_rows)[16];
+    u8(*distance_rows)[BATTLE_AI_GRID_COLUMN_COUNT];
     u32 distance_level_base;
     s32 limit;
     s32 distance;
@@ -29,7 +29,8 @@ s32 battle_ai_build_targeted_movement(void) {
      * at +0xbc/+0xc0. Stage only the level base; retain the real member offset
      * and typed row/column indexing for the byte-exact match. */
     distance_level_base = ai->acting_unit_coords.bytes.elevation * sizeof(ai->tile_target_distance[0]) + (u32)ai;
-    distance_rows = (u8(*)[16])(distance_level_base + (u32) & ((battle_ai_data_t*)0)->tile_target_distance);
+    distance_rows = (u8(*)[BATTLE_AI_GRID_COLUMN_COUNT])(
+        distance_level_base + (u32) & ((battle_ai_data_t*)0)->tile_target_distance);
     limit = range;
     distance = distance_rows[ai->acting_unit_coords.bytes.y][ai->acting_unit_coords.bytes.x];
     within_two_tiles = distance < 3;

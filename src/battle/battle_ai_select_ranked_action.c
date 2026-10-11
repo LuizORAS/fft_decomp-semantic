@@ -13,7 +13,7 @@ s32 battle_ai_select_ranked_action(void) {
     s32 chance;
 
     any = 0;
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < BATTLE_AI_RANKED_ACTION_COUNT; i++) {
         chance = ai->ranked_actions[i].rank.base_hit_percent;
         if (chance != 0) {
             any = 1;

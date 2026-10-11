@@ -20,17 +20,17 @@ s32 battle_ai_select_recovery_action(void) {
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: each phase re-enters the step that suspended. */
         switch (g_battle_ai_data_base.action_selection_phase) {
-        case 0:
+        case BATTLE_AI_RECOVERY_SELECTION_SCORE_TILES:
             goto score_tiles;
-        case 1:
+        case BATTLE_AI_RECOVERY_SELECTION_MOVEMENT:
             goto movement;
-        case 2:
+        case BATTLE_AI_RECOVERY_SELECTION_CHARGING:
             goto charging;
-        case 3:
+        case BATTLE_AI_RECOVERY_SELECTION_TARGET_ABILITIES:
             goto target_abilities;
-        case 4:
+        case BATTLE_AI_RECOVERY_SELECTION_ENEMY_ABILITIES:
             goto enemy_abilities;
-        case 7:
+        case BATTLE_AI_RECOVERY_SELECTION_CANCEL_STATUS:
             goto cancel_status;
         default:
             goto ally_abilities;
@@ -39,7 +39,7 @@ s32 battle_ai_select_recovery_action(void) {
     g_battle_ai_data_base.movement_scenario = 0;
 score_tiles:
     if (battle_ai_score_reachable_tiles() == -1) {
-        ai->action_selection_phase = 0;
+        ai->action_selection_phase = BATTLE_AI_RECOVERY_SELECTION_SCORE_TILES;
         return -1;
     }
     g_battle_ai_recovery_status_retry = 0;
@@ -52,7 +52,7 @@ score_tiles:
     battle_ai_store_main_target_id_and_focus_on_target_flag(target);
 movement:
     if (battle_ai_build_targeted_movement() == -1) {
-        ai->action_selection_phase = 1;
+        ai->action_selection_phase = BATTLE_AI_RECOVERY_SELECTION_MOVEMENT;
         return -1;
     }
     ai->movement_scenario = 2;
@@ -68,7 +68,7 @@ movement:
             cancel_status:
                 result = battle_ai_evaluate_status_cancellation(target, statuses[g_battle_ai_recovery_status_index]);
                 if (result == -1) {
-                    ai->action_selection_phase = 7;
+                    ai->action_selection_phase = BATTLE_AI_RECOVERY_SELECTION_CANCEL_STATUS;
                     return -1;
                 }
                 if (result == 2)
@@ -89,7 +89,7 @@ charging:
     result = battle_ai_evaluate_charging_movement();
     switch (result) {
     case -1:
-        ai->action_selection_phase = 2;
+        ai->action_selection_phase = BATTLE_AI_RECOVERY_SELECTION_CHARGING;
         return -1;
     case 1:
         return 0;
@@ -98,7 +98,7 @@ charging:
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, target)) {
     target_abilities:
         if (battle_ai_choose_move_from_move_list() == -1) {
-            ai->action_selection_phase = 3;
+            ai->action_selection_phase = BATTLE_AI_RECOVERY_SELECTION_TARGET_ABILITIES;
             return -1;
         }
         if (battle_ai_select_ranked_action())
@@ -108,7 +108,7 @@ charging:
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ENEMIES, 0)) {
     enemy_abilities:
         if (battle_ai_choose_move_from_move_list() == -1) {
-            ai->action_selection_phase = 4;
+            ai->action_selection_phase = BATTLE_AI_RECOVERY_SELECTION_ENEMY_ABILITIES;
             return -1;
         }
         if (battle_ai_select_ranked_action())
@@ -120,7 +120,7 @@ charging:
             if (battle_ai_select_ranked_action())
                 return 0;
         } else {
-            ai->action_selection_phase = 6;
+            ai->action_selection_phase = BATTLE_AI_RECOVERY_SELECTION_ALLY_ABILITIES;
             return -1;
         }
     }
