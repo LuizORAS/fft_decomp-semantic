@@ -1,8 +1,7 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-#define RSM_CANDIDATE_COUNT     480
-#define RSM_SKILLSET_SLOT_FIRST 16
+#define RSM_CANDIDATE_COUNT 480
 
 /* Picks a random reaction/support/movement ability (selected by `flags` from
  * rsm_ability_filter_e) from the abilities the unit has learned
@@ -78,7 +77,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
         if (checking) {
             known = unit->career.learned_abilities[i].bits[2];
         }
-        for (j = RSM_SKILLSET_SLOT_FIRST; j < HUMAN_SKILLSET_ABILITY_COUNT; j++) {
+        for (j = HUMAN_SKILLSET_ACTION_SLOT_COUNT; j < HUMAN_SKILLSET_ABILITY_COUNT; j++) {
             if (checking) {
                 if (!(known & (0x80 >> (j % 8)))) {
                     continue;

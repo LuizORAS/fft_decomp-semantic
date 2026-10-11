@@ -16,11 +16,6 @@ enum {
     BATTLE_AI_GRID_COLUMN_COUNT = 16,
 };
 
-/* AI searches only the first 16 slots of MAIN's 24-entry skillset scratch list. */
-enum {
-    BATTLE_AI_SKILLSET_SCAN_COUNT = 16,
-};
-
 enum {
     BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT = 4,
     BATTLE_AI_MATH_EXTRA_KNOWN_ABILITY_COUNT = 10,

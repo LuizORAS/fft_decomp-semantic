@@ -1699,9 +1699,10 @@ typedef enum status_effect_flags_2 {
 } status_effect_flags_2_e;
 
 /* other */
-/* Human skillset records contain 22 ids, monster records contain 4, and the
- * shared scratch list reserves 24 entries for either representation. */
+/* Human skillsets contain 16 action slots followed by six reaction/support/movement
+ * slots. Monster records contain four ids; the shared scratch list reserves 24. */
 enum {
+    HUMAN_SKILLSET_ACTION_SLOT_COUNT = 16,
     HUMAN_SKILLSET_ABILITY_COUNT = 22,
     MONSTER_SKILLSET_ABILITY_COUNT = 4,
     SKILLSET_ABILITY_LIST_COUNT = 24,

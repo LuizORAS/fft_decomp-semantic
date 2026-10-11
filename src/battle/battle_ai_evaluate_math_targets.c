@@ -24,7 +24,7 @@ s32 battle_ai_evaluate_math_targets(void) {
         g_battle_ai_math_skillset = g_battle_ai_math_source_skillsets[g_battle_ai_math_skillset_index];
         g_battle_ai_math_ability_list
             = main_ability_store_skillset_abilities(g_battle_ai_math_skillset, SKILLSET_ABILITY_FILTER_ACTION);
-        for (g_battle_ai_math_ability_index = 0; g_battle_ai_math_ability_index < BATTLE_AI_SKILLSET_SCAN_COUNT;
+        for (g_battle_ai_math_ability_index = 0; g_battle_ai_math_ability_index < HUMAN_SKILLSET_ACTION_SLOT_COUNT;
             g_battle_ai_math_ability_index++) {
             /* Math targeting reads only the low byte of each halfword ID. */
             ai->math_ability_id = g_battle_ai_math_ability_list[g_battle_ai_math_ability_index];

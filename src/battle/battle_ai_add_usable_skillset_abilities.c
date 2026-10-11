@@ -84,7 +84,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         }
     }
     unit = &g_battle_unit_stats[unit_id];
-    for (i = 0; i < BATTLE_AI_SKILLSET_SCAN_COUNT; i++) {
+    for (i = 0; i < HUMAN_SKILLSET_ACTION_SLOT_COUNT; i++) {
         ability_id = abilities[i];
         if (ability_id == 0) {
             continue;
