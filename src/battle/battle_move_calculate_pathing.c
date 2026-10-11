@@ -9,7 +9,7 @@
  */
 battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, s32 target_x,
     s32 target_y, u32 target_level, s32 initialize, s32* suspended, s32 check_budget) {
-    u8 frontier_snapshot[512];
+    u8 frontier_snapshot[MAP_TILE_COUNT];
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     battle_move_record_t* records = g_battle_move_records_ptr;
@@ -21,8 +21,9 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
 
     *suspended = 0;
     if (initialize) {
-        if (x < 0 || x >= g_battle_map_max_x || y < 0 || y >= g_battle_map_max_y || level >= 2 || target_x < 0
-            || target_x >= g_battle_map_max_x || target_y < 0 || target_y >= g_battle_map_max_y || target_level >= 2) {
+        if (x < 0 || x >= g_battle_map_max_x || y < 0 || y >= g_battle_map_max_y || level >= MAP_TERRAIN_LAYER_COUNT
+            || target_x < 0 || target_x >= g_battle_map_max_x || target_y < 0 || target_y >= g_battle_map_max_y
+            || target_level >= MAP_TERRAIN_LAYER_COUNT) {
             return 0;
         }
         config->ai_propagation_mode = 0;
@@ -44,7 +45,7 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
             || g_battle_map_tile_data[config->target_index].flags.bits.untargetable) {
             return 0;
         }
-        config->unit_id = 0x7F;
+        config->unit_id = BATTLE_MOVE_GENERIC_UNIT_ID;
         config->will_drown = 1;
         config->will_sink = 1;
         config->fly_or_teleport = 0;
@@ -74,12 +75,12 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
         config->jump_or_1f = g_battle_move_pathing_scratch;
         config->jump_half = g_battle_move_pathing_scratch >> 1;
         config->mountable_chocobo = 0;
-        config->move = 124;
+        config->move = BATTLE_MOVE_PATHFIND_RANGE;
         config->can_ride = 0;
         g_battle_move_pathing_team = 0;
         config->_unknown_1a = D_8018F4FC;
-        empty_flags = 0xFF;
-        for (i = 15; i >= 0; i--) {
+        empty_flags = BATTLE_MOVE_RECORD_NONE;
+        for (i = BATTLE_MOVE_RECORD_COUNT - 1; i >= 0; i--) {
             records[i].unit_id_flags = empty_flags;
         }
         g_battle_move_pathing_unit_record_count = 0;
@@ -107,8 +108,8 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
         if (g_battle_target_panels[config->target_index].remaining_range >= state->frontier_max_remaining_range) {
             break;
         }
-        for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {
-            state->level_offset = state->tile_level * 256;
+        for (state->tile_level = 0; state->tile_level < MAP_TERRAIN_LAYER_COUNT; state->tile_level++) {
+            state->level_offset = state->tile_level * MAP_TILES_PER_LAYER;
             for (state->tile_y = 0; state->tile_y < config->map_max_y; state->tile_y++) {
                 state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
                 for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {
@@ -121,8 +122,8 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
             }
         }
         state->frontier_max_remaining_range = 0;
-        for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {
-            state->level_offset = state->tile_level * 256;
+        for (state->tile_level = 0; state->tile_level < MAP_TERRAIN_LAYER_COUNT; state->tile_level++) {
+            state->level_offset = state->tile_level * MAP_TILES_PER_LAYER;
             for (state->tile_y = 0; state->tile_y < config->map_max_y; state->tile_y++) {
                 state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
                 for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {
@@ -140,9 +141,9 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
         }
         completed_pass = 1;
     }
-    for (i = 0; i < 512; i++) {
+    for (i = 0; i < MAP_TILE_COUNT; i++) {
         tile = &g_battle_map_tile_data[i];
-        tile->ceiling_depth_and_marks.value &= 0xDF;
+        tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_MOVE_DESTINATION;
         if (g_battle_target_panels[i].ride_remaining_range != 0
             || ((g_battle_map_tile_data[i].depth_half_height.bits.half_height < 3
                     || !(frontier[i] & FRONTIER_FLAG_LOW_CORNER))
@@ -165,7 +166,9 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
     state->selected_source_side_shift = 0;
     g_battle_move_pathing_tile_index
         = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-    if (!((g_battle_map_tile_data[g_battle_move_pathing_tile_index].ceiling_depth_and_marks.value >> 5) & 1)) {
+    if (!((g_battle_map_tile_data[g_battle_move_pathing_tile_index].ceiling_depth_and_marks.value
+              >> MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT)
+            & 1)) {
         return 0;
     }
     g_battle_move_pathing_frontier = frontier;
@@ -182,7 +185,7 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
     state->inner_count = 2;
     while (state->candidate_remaining_range != 0) {
         state->previous_source_side_shift = state->selected_source_side_shift;
-        state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
+        state->tile_index = state->tile_level * MAP_TILES_PER_LAYER + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
         state->current_panel = &g_battle_target_panels[state->tile_index];
         state->path_length++;

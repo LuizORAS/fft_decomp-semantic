@@ -31,7 +31,7 @@ s32 battle_ai_calculate_ability_range(void) {
             x++;
             tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_ABILITY_RANGE;
             tile++;
-        } while (x < 512);
+        } while (x < MAP_TILE_COUNT);
         g_battle_map_tile_data[ai->current_action.coords.bytes.y * ai->map_max_x + ai->current_action.coords.bytes.x
             + (ai->current_action.coords.bytes.elevation << 8)]
             .ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;

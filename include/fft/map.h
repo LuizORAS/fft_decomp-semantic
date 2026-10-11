@@ -6,6 +6,13 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* Terrain storage has two fixed-size layers, independent of the map dimensions. */
+enum {
+    MAP_TERRAIN_LAYER_COUNT = 2,
+    MAP_TILES_PER_LAYER = 256,
+    MAP_TILE_COUNT = MAP_TERRAIN_LAYER_COUNT * MAP_TILES_PER_LAYER,
+};
+
 /* Battle map ids: EVENT_SCRIPT_VAR_CURRENT_MAP and the index of
  * g_battle_map_gns_lba. Each is named as its map name text spells it
  * (TEXT_ID_MAP_NAME_BASE + id - 1); a map whose name repeats an earlier one

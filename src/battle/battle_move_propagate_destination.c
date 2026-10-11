@@ -17,7 +17,7 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
     state->work_level = candidate & 1;
     state->destination_unit_record_flag = candidate / 2;
     state->destination_tile = &g_battle_map_tile_data[state->destination_index
-        = state->work_level * 256 + state->work_y * config->map_max_x + state->work_x];
+        = state->work_level * MAP_TILES_PER_LAYER + state->work_y * config->map_max_x + state->work_x];
     state->destination_panel = &g_battle_target_panels[state->destination_index];
     state->destination_base_height_times_two = state->destination_tile->height * 2;
     state->destination_half_height = state->destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK;
@@ -74,16 +74,17 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         if (state->candidate_remaining_range <= 0)
             return 11; /* no range left to step onto the unit */
         if ((u8)state->candidate_remaining_range
-            < g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range)
+            < g_battle_target_panels[state->destination_unit_record_index + MAP_TILE_COUNT].remaining_range)
             return 12; /* the unit top is already reached with more range left */
         if ((u8)state->candidate_remaining_range
-                == g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range
+                == g_battle_target_panels[state->destination_unit_record_index + MAP_TILE_COUNT].remaining_range
             && state->height_delta
-                >= g_battle_target_panels[state->destination_unit_record_index + 512].max_height_delta)
+                >= g_battle_target_panels[state->destination_unit_record_index + MAP_TILE_COUNT].max_height_delta)
             return 13; /* same range left, and no smaller height difference */
-        g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range
+        g_battle_target_panels[state->destination_unit_record_index + MAP_TILE_COUNT].remaining_range
             = (u8)state->candidate_remaining_range;
-        g_battle_target_panels[state->destination_unit_record_index + 512].max_height_delta = state->height_delta;
+        g_battle_target_panels[state->destination_unit_record_index + MAP_TILE_COUNT].max_height_delta
+            = state->height_delta;
     } else {
         state->candidate_remaining_range = state->source_panel->remaining_range - extra_span
             - terrain_costs[state->destination_tile->surface.value & MAP_SURFACE_MASK];

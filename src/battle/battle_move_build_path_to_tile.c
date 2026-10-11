@@ -34,7 +34,7 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
     state->tile_level = config->target_level = elevation;
     battle_move_store_unit_movement_to_scratchpad(unit_id);
     index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-    if (!((g_battle_map_tile_data[index].ceiling_depth_and_marks.value >> 5) & 1)) {
+    if (!((g_battle_map_tile_data[index].ceiling_depth_and_marks.value >> MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT) & 1)) {
         return 0;
     }
     if (g_battle_move_reachable_tiles_valid == 0) {
@@ -104,7 +104,7 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
     while (state->candidate_remaining_range != 0) {
         state->previous_source_side_shift = state->selected_source_side_shift;
         pass = state->path_length + 1;
-        state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
+        state->tile_index = state->tile_level * MAP_TILES_PER_LAYER + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
         state->current_panel = &g_battle_target_panels[state->tile_index];
         state->path_length = pass;
@@ -112,7 +112,7 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
             value = state->current_panel->ride_remaining_range;
             range = state->current_panel->remaining_range;
             if (range < value) {
-                g_battle_target_panels[state->source_unit_record_index + 0x200].ride_remaining_range = pass;
+                g_battle_target_panels[state->source_unit_record_index + MAP_TILE_COUNT].ride_remaining_range = pass;
             } else {
                 value = range;
                 state->source_unit_record_flag = 0;
@@ -120,8 +120,8 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
                 state->current_panel->mark = state->path_length;
             }
         } else if (state->source_unit_record_flag != 0) {
-            value = g_battle_target_panels[state->source_unit_record_index + 0x200].remaining_range;
-            g_battle_target_panels[state->source_unit_record_index + 0x200].mark = pass;
+            value = g_battle_target_panels[state->source_unit_record_index + MAP_TILE_COUNT].remaining_range;
+            g_battle_target_panels[state->source_unit_record_index + MAP_TILE_COUNT].mark = pass;
         } else {
             value = state->current_panel->remaining_range;
             state->current_panel->mark = pass;

@@ -37,8 +37,8 @@ s32 battle_move_set_reachable_tiles(s32 unit_id, s32 unused_map_x, s32 unused_ma
                 break;
             }
             state->frontier_max_remaining_range = 0;
-            for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {
-                state->level_offset = state->tile_level * 256;
+            for (state->tile_level = 0; state->tile_level < MAP_TERRAIN_LAYER_COUNT; state->tile_level++) {
+                state->level_offset = state->tile_level * MAP_TILES_PER_LAYER;
                 for (state->tile_y = 0; state->tile_y < config->map_max_y; state->tile_y++) {
                     state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
                     for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {

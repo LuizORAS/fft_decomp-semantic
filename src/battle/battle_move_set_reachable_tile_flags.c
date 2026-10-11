@@ -1,10 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-enum {
-    MAP_TILE_COUNT = 512,
-};
-
 /* Mark every tile the acting unit can end its move on and count them.
  *
  * Teleporting units may land on any valid-destination tile and riders on

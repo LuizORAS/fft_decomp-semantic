@@ -54,7 +54,7 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     tile = &g_battle_map_tile_data[battle_map_calculate_location(g_battle_action_target)];
     height = TILE_EDGE_HEIGHT(tile, source_shift);
     index = y * g_battle_map_max_x + x;
-    upper_index = index + 0x100;
+    upper_index = index + MAP_TILES_PER_LAYER;
     lower = &g_battle_map_tile_data[index];
     upper = &g_battle_map_tile_data[upper_index];
     if (lower->flags.value & MAP_TILE_FLAG_BLOCKED) {

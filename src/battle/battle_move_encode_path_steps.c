@@ -26,26 +26,26 @@ void battle_move_encode_path_steps(void) {
 
     state->source_unit_record_index = 0;
     for (step = 0; step < state->path_length - 1; step++) {
-        state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
+        state->tile_index = state->tile_level * MAP_TILES_PER_LAYER + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
         state->current_panel = &g_battle_target_panels[state->tile_index];
         path_index = step + 1;
         target = state->path_length - path_index;
-        for (i = 0; i < 0x210; i++) {
-            if (i >= 0x200 && g_battle_target_panels[i].ride_remaining_range == (target & 0xff)) {
+        for (i = 0; i < BATTLE_MOVE_PANEL_COUNT; i++) {
+            if (i >= MAP_TILE_COUNT && g_battle_target_panels[i].ride_remaining_range == (target & 0xff)) {
                 hit = 1;
-                record = &records[i - 0x200];
+                record = &records[i - MAP_TILE_COUNT];
             } else if (g_battle_target_panels[i].mark == (target & 0xff)) {
                 hit = 0;
-                if (i < 0x200) {
+                if (i < MAP_TILE_COUNT) {
                     state->destination_unit_record_index = 0;
-                    state->work_level = (u8)(i / 256);
-                    rem = i - (i / 256) * 256;
+                    state->work_level = (u8)(i / MAP_TILES_PER_LAYER);
+                    rem = i - (i / MAP_TILES_PER_LAYER) * MAP_TILES_PER_LAYER;
                     state->work_y = (u8)(rem / config->map_max_x);
                     state->work_x = (u8)(rem % config->map_max_x);
                 } else {
                     state->destination_unit_record_index = 1;
-                    record = &records[i - 0x200];
+                    record = &records[i - MAP_TILE_COUNT];
                 }
             } else {
                 continue;
@@ -126,7 +126,7 @@ void battle_move_encode_path_steps(void) {
         }
     }
     g_battle_move_path.count = state->path_length - 1;
-    if (config->unit_id >= 0x15) {
+    if (config->unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         g_battle_move_effective_flags = 0;
     } else {
         g_battle_move_effective_flags = battle_move_get_effective_flags(&g_battle_unit_stats[config->unit_id]);

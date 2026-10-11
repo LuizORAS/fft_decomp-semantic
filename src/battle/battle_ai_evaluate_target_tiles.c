@@ -42,7 +42,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
             return 0;
     } else {
         tile = g_battle_map_tile_data;
-        for (i = 0; i < 512; i++, tile++)
+        for (i = 0; i < MAP_TILE_COUNT; i++, tile++)
             tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_ABILITY_RANGE;
         g_battle_map_tile_data[origin->bytes.y * ai->map_max_x + origin->bytes.x + (origin->bytes.elevation << 8)]
             .ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;

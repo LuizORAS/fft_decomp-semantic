@@ -15,7 +15,8 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
     state->work_level = candidate & 1;
     if (state->inner_count >= 5)
         state->work_level = config->high_elevation;
-    state->destination_index = state->work_level * 256 + state->work_y * config->map_max_x + state->work_x;
+    state->destination_index
+        = state->work_level * MAP_TILES_PER_LAYER + state->work_y * config->map_max_x + state->work_x;
     state->destination_tile = &g_battle_map_tile_data[state->destination_index];
     state->destination_panel = &g_battle_target_panels[state->destination_index];
     state->destination_base_height_times_two = state->destination_tile->height * 2;
@@ -42,7 +43,7 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
         state->destination_opposite_height = state->destination_entry_height;
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
             state->work_x, state->work_y, state->destination_side_shift, (state->destination_entry_height - 1));
-        state->destination_panel_index = state->destination_unit_record_index + 512;
+        state->destination_panel_index = state->destination_unit_record_index + MAP_TILE_COUNT;
         state->effective_destination_panel = &g_battle_target_panels[state->destination_panel_index];
     } else {
         if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_ENTERABLE))

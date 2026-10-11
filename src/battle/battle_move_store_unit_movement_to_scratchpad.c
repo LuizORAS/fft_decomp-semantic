@@ -178,13 +178,13 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     }
     team = unit->initial_team_flags;
     config->_unknown_1a = D_8018F4FC;
-    mount = 0xFF;
-    for (i = 15; i >= 0; i--) {
+    mount = BATTLE_MOVE_RECORD_NONE;
+    for (i = BATTLE_MOVE_RECORD_COUNT - 1; i >= 0; i--) {
         record[i].unit_id_flags = mount;
     }
     count = 0;
-    for (i = 0; i < 21; i++) {
-        if (count >= 16) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
+        if (count >= BATTLE_MOVE_RECORD_COUNT) {
             break;
         }
         other = &g_battle_unit_stats[i];

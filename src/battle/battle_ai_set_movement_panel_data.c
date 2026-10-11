@@ -36,7 +36,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
         for (level = 0; level < 2; level++) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {
-                    tile = &g_battle_map_tile_data[level * 256 + y * ai->map_max_x + x];
+                    tile = &g_battle_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
                     if (!(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
                         && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
                         ai->walkable_tiles[level][y] |= 0x8000 >> x;
@@ -72,7 +72,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
     for (level = 0; level < 2; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             for (x = 0; x < ai->map_max_x; x++) {
-                tile = &g_battle_map_tile_data[level * 256 + y * ai->map_max_x + x];
+                tile = &g_battle_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
                 if (ai->acting_unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_TELEPORT) {
                     if (!(ai->acting_unit->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER)) {
                         i = ai->acting_unit_coords.bytes.x - x;

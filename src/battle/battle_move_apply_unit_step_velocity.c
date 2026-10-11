@@ -34,8 +34,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     battle_unit_misc_data_t* rider;
     s32 depth;
 
-    tile[0] = (unit->real.vx + unit->velocity.vx) / 0x1C000;
-    tile[1] = (unit->real.vz + unit->velocity.vz) / 0x1C000;
+    tile[0] = (unit->real.vx + unit->velocity.vx) / (28 * ONE);
+    tile[1] = (unit->real.vz + unit->velocity.vz) / (28 * ONE);
     layer = unit->map_z;
     if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
         && unit->map_z != unit->movement.bytes.destination_z) {
@@ -69,8 +69,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     }
     unit->real.vx += unit->velocity.vx;
     unit->real.vz += unit->velocity.vz;
-    unit->screen.vx = unit->real.vx / 4096;
-    unit->screen.vz = unit->real.vz / 4096;
+    unit->screen.vx = unit->real.vx / ONE;
+    unit->screen.vz = unit->real.vz / ONE;
     ground_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
     move_ground_z = battle_gfx_calculate_screen_z_from_misc_move_data(unit);
     switch (unit->step_phase) {
@@ -80,18 +80,18 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
-        if ((-unit->real.vy / 4096) <= -ground_z) {
-            unit->real.vy = ground_z << 12;
+        if ((-unit->real.vy / ONE) <= -ground_z) {
+            unit->real.vy = ground_z * ONE;
             battle_move_set_unit_step_delta_center_to_edge(
                 unit, &unit->current_path_step, map_tile, unit->current_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed);
         } else {
-            if ((-unit->real.vy / 4096) < -ground_z + 6) {
-                unit->real.vy = ground_z << 12;
+            if ((-unit->real.vy / ONE) < -ground_z + 6) {
+                unit->real.vy = ground_z * ONE;
             } else if (unit->velocity.vy <= 0x7FFF) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
-            if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
+            if (-unit->real.vy / ONE >= -ground_z + 0x2A) {
                 unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
@@ -106,8 +106,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
-        if ((-unit->real.vy / 4096) <= -ground_z) {
-            unit->real.vy = ground_z << 12;
+        if ((-unit->real.vy / ONE) <= -ground_z) {
+            unit->real.vy = ground_z * ONE;
             if (unit->step_speed <= 0x7FFF) {
                 unit->step_speed += g_battle_move_jump_gravity;
             }
@@ -115,12 +115,12 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit, &unit->current_path_step, map_tile, unit->current_edge_height);
             battle_move_interpolate_partial(unit, unit->step_speed);
         } else {
-            if ((-unit->real.vy / 4096) < -ground_z + 6) {
-                unit->real.vy = ground_z << 12;
+            if ((-unit->real.vy / ONE) < -ground_z + 6) {
+                unit->real.vy = ground_z * ONE;
             } else if (unit->velocity.vy <= 0x7FFF) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
-            if (-unit->real.vy / 4096 >= -ground_z + 0x2A) {
+            if (-unit->real.vy / ONE >= -ground_z + 0x2A) {
                 unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
@@ -135,19 +135,19 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
-        if (-unit->real.vy / 4096 <= -ground_z) {
-            unit->real.vy = ground_z << 12;
+        if (-unit->real.vy / ONE <= -ground_z) {
+            unit->real.vy = ground_z * ONE;
             battle_move_set_unit_step_delta_edge_to_center(
                 unit, &unit->current_path_step, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed);
         }
-        if (-ground_z < (-unit->real.vy / 4096)) {
-            if ((-unit->real.vy / 4096) < -ground_z + 6) {
-                unit->real.vy = ground_z << 12;
+        if (-ground_z < (-unit->real.vy / ONE)) {
+            if ((-unit->real.vy / ONE) < -ground_z + 6) {
+                unit->real.vy = ground_z * ONE;
             } else if (unit->velocity.vy <= 0x7FFF) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
-            if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
+            if (-unit->real.vy / ONE >= -move_ground_z + 0x2A) {
                 unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
@@ -162,8 +162,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
-        if (-unit->real.vy / 4096 <= -ground_z) {
-            unit->real.vy = ground_z << 12;
+        if (-unit->real.vy / ONE <= -ground_z) {
+            unit->real.vy = ground_z * ONE;
             if (unit->step_speed <= 0x7FFF) {
                 unit->step_speed += g_battle_move_jump_gravity;
             }
@@ -171,13 +171,13 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit, &unit->current_path_step, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->step_speed);
         }
-        if ((-unit->real.vy / 4096) > -ground_z) {
-            if ((-unit->real.vy / 4096) < -ground_z + 6) {
-                unit->real.vy = ground_z << 12;
+        if ((-unit->real.vy / ONE) > -ground_z) {
+            if ((-unit->real.vy / ONE) < -ground_z + 6) {
+                unit->real.vy = ground_z * ONE;
             } else if (unit->velocity.vy <= 0x7FFF) {
                 unit->velocity.vy += g_battle_move_jump_gravity;
             }
-            if (-unit->real.vy / 4096 >= -move_ground_z + 0x2A) {
+            if (-unit->real.vy / ONE >= -move_ground_z + 0x2A) {
                 unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH;
                 if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
@@ -203,8 +203,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         }
         unit->real.vy += unit->velocity.vy;
         if (unit->velocity.vy > 0) {
-            if (-unit->real.vy / 4096 < -ground_z) {
-                unit->real.vy = ground_z << 12;
+            if (-unit->real.vy / ONE < -ground_z) {
+                unit->real.vy = ground_z * ONE;
             }
         }
         unit->shadow_dirty |= 1;
@@ -216,8 +216,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;
-        if (depth / 4096 <= -ground_z) {
-            unit->real.vy = ground_z << 12;
+        if (depth / ONE <= -ground_z) {
+            unit->real.vy = ground_z * ONE;
             battle_move_set_float_step_delta_center_to_edge(
                 unit, &unit->current_path_step, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed);
@@ -234,8 +234,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         unit->real.vy += unit->velocity.vy;
         map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;
-        if (depth / 4096 <= -ground_z) {
-            unit->real.vy = ground_z << 12;
+        if (depth / ONE <= -ground_z) {
+            unit->real.vy = ground_z * ONE;
             battle_move_set_float_step_delta_edge_to_center(
                 unit, &unit->current_path_step, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed);
@@ -255,8 +255,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
         battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
-        if (-unit->real.vy / 4096 <= -ground_z) {
-            unit->real.vy = ground_z << 12;
+        if (-unit->real.vy / ONE <= -ground_z) {
+            unit->real.vy = ground_z * ONE;
             battle_move_set_velocity_for_contiguous_clamped_steps(unit, &unit->path, &unit->current_path_step);
             battle_move_interpolate_partial(unit, unit->walk_speed);
         }
@@ -269,8 +269,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         unit->real.vy += unit->velocity.vy;
         battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;
-        if (depth / 4096 <= -ground_z) {
-            unit->real.vy = ground_z << 12;
+        if (depth / ONE <= -ground_z) {
+            unit->real.vy = ground_z * ONE;
             battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
                 unit, &unit->path, &unit->current_path_step);
             battle_move_interpolate_partial(unit, unit->walk_speed);

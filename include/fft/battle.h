@@ -5699,7 +5699,7 @@ extern s32 g_battle_distribute_target_count;
 extern s32 g_battle_unit_source_misc_id;
 extern s32 g_battle_casting_unit_id;
 extern u8 g_battle_target_ability_targets_list[16];
-extern battle_target_panel_t g_battle_target_panel_data[0x200];
+extern battle_target_panel_t g_battle_target_panel_data[MAP_TILE_COUNT];
 extern battle_current_ability_t g_battle_action_current_ability;
 extern s32 g_battle_action_hamedo_flag;
 extern s32 g_battle_script_loaded_event_id;
@@ -6078,6 +6078,18 @@ typedef enum battle_move_effective_flags {
     BATTLE_EFFECTIVE_MOVEMENT_FLOAT = 0x40,
     BATTLE_EFFECTIVE_MOVEMENT_FLY = 0x80,
 } battle_move_effective_flags_e;
+
+/* Compact movement records have auxiliary panels after the terrain panels. */
+enum {
+    BATTLE_MOVE_RECORD_COUNT = 16,
+    BATTLE_MOVE_PANEL_COUNT = MAP_TILE_COUNT + BATTLE_MOVE_RECORD_COUNT,
+};
+
+/* Generic mover and search range used by scripted and reverse pathfinding. */
+enum {
+    BATTLE_MOVE_GENERIC_UNIT_ID = 0x7f,
+    BATTLE_MOVE_PATHFIND_RANGE = 124,
+};
 
 /* Acting-unit scratch block at 0x1f800000, pointer at 0x8018f4e0.
  * Only target-proven bytes are named. */

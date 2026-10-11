@@ -9,7 +9,7 @@
  */
 s32 battle_ai_propagate_target_movement(
     s32 unit_id, s32 target_x, s32 target_y, s32 target_elevation, s32 initialize, s32* suspended, s32 check_budget) {
-    u8 frontier_snapshot[512];
+    u8 frontier_snapshot[MAP_TILE_COUNT];
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     battle_move_record_t* records = g_battle_move_records_ptr;
@@ -24,8 +24,8 @@ s32 battle_ai_propagate_target_movement(
         if (g_battle_unit_stats[unit_id].entd_slot == BATTLE_ENTD_SLOT_NONE)
             return -1;
         battle_move_store_unit_movement_to_scratchpad(unit_id);
-        config->move = 124;
-        for (pass = 15; pass >= 0; pass--)
+        config->move = BATTLE_MOVE_PATHFIND_RANGE;
+        for (pass = BATTLE_MOVE_RECORD_COUNT - 1; pass >= 0; pass--)
             records[pass].unit_id_flags = BATTLE_MOVE_RECORD_NONE;
         battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_START_SPREAD);
         index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
@@ -39,7 +39,7 @@ s32 battle_ai_propagate_target_movement(
         panel->max_height_delta = 0xff;
         index = (target_elevation << 8) + target_y * config->map_max_x + target_x;
         panel = &g_battle_target_panels[index];
-        panel->remaining_range = 125;
+        panel->remaining_range = BATTLE_MOVE_PATHFIND_RANGE + 1;
         frontier[index] |= FRONTIER_FLAG_QUEUED;
         panel->max_height_delta = 0;
         g_battle_ai_propagation_resume_pass = 0;
@@ -52,7 +52,7 @@ s32 battle_ai_propagate_target_movement(
         /* Teleport and Teleport 2 bypass propagation, not destination filtering. */
         u8 remaining_range = 1;
         battle_target_panel_t* fill_panels = g_battle_target_panels;
-        for (pass = 511; pass >= 0; pass--)
+        for (pass = MAP_TILE_COUNT - 1; pass >= 0; pass--)
             fill_panels[pass].remaining_range = remaining_range;
     } else {
         for (pass = g_battle_ai_propagation_resume_pass; pass < config->move; pass++) {
@@ -64,8 +64,8 @@ s32 battle_ai_propagate_target_movement(
             }
             if (!state->frontier_max_remaining_range)
                 break;
-            for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {
-                state->level_offset = state->tile_level * 256;
+            for (state->tile_level = 0; state->tile_level < MAP_TERRAIN_LAYER_COUNT; state->tile_level++) {
+                state->level_offset = state->tile_level * MAP_TILES_PER_LAYER;
                 for (state->tile_y = 0; state->tile_y < config->map_max_y; state->tile_y++) {
                     state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
                     for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {
@@ -78,8 +78,8 @@ s32 battle_ai_propagate_target_movement(
                 }
             }
             state->frontier_max_remaining_range = 0;
-            for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {
-                state->level_offset = state->tile_level * 256;
+            for (state->tile_level = 0; state->tile_level < MAP_TERRAIN_LAYER_COUNT; state->tile_level++) {
+                state->level_offset = state->tile_level * MAP_TILES_PER_LAYER;
                 for (state->tile_y = 0; state->tile_y < config->map_max_y; state->tile_y++) {
                     state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
                     for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {

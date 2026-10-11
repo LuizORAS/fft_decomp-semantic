@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 
-/* Rebuild the frontier flags of all 512 tiles from slope, half height, depth
+/* Rebuild the frontier flags of all terrain tiles from slope, half height, depth
  * and the tile flags, then mark the tiles under the 16 unit records. A unit of
  * another team makes its tile not enterable (a flier may still cross on top of
  * it). One of the mover's team can be mounted unless its record says
@@ -31,7 +31,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
     u8 depth;
     u8 value;
 
-    for (i = 0, frontier_cell = frontier; i < 0x210; frontier_cell++, i++) {
+    for (i = 0, frontier_cell = frontier; i < BATTLE_MOVE_PANEL_COUNT; frontier_cell++, i++) {
         panel = &g_battle_target_panels[i];
         panel->mark = 0;
         panel->unit_record_index = 0;
@@ -40,7 +40,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             panel->ride_remaining_range = 0;
             panel->max_height_delta = 0xff;
         }
-        if (i < 0x200) {
+        if (i < MAP_TILE_COUNT) {
             tile = &g_battle_map_tile_data[i];
             frontier[i] = 0;
             slope = tile->slope_type & 5;
@@ -70,7 +70,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
         }
     }
     if (mode != BATTLE_MOVE_TILE_FLAGS_MODE_TERRAIN_ONLY) {
-        for (i = 0; i < 16; i++) {
+        for (i = 0; i < BATTLE_MOVE_RECORD_COUNT; i++) {
             record = &records[i];
             flags = record->unit_id_flags;
             if (flags != BATTLE_MOVE_RECORD_NONE) {
@@ -113,7 +113,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
         panel = &g_battle_target_panels[index];
         if (frontier[index] & FRONTIER_FLAG_MOUNTABLE_UNIT) {
             state->outer_count = 0x24;
-            aux = g_battle_target_panels + 0x200 + panel->unit_record_index;
+            aux = g_battle_target_panels + MAP_TILE_COUNT + panel->unit_record_index;
             aux->remaining_range = config->move + 1;
             aux->max_height_delta = 0;
         } else {
