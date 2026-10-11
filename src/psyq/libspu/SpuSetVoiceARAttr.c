@@ -3,7 +3,7 @@
 
 void SpuSetVoiceARAttr(s32 v_num, u16 ar, s32 ar_mode) {
     /* Adding the index before the register base preserves the retail address operands. */
-    u32 mode = ar_mode == 5 ? 0x80 : 0;
+    u32 mode = ar_mode == SPU_VOICE_EXPIncN ? 0x80 : 0;
     u16 value;
     value = (v_num + _spu_RXX->rxx.voices)->adsr1;
     value &= 0xff;

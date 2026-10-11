@@ -33,8 +33,8 @@ s32 SpuClearReverbWorkArea(s32 mode) {
         _spu_transferCallback = 0;
     }
     while (more) {
-        if (remaining > 1024) {
-            count = 1024;
+        if (remaining > sizeof(_spu_zerobuf)) {
+            count = sizeof(_spu_zerobuf);
         } else {
             count = remaining;
             more = 0;
@@ -43,8 +43,8 @@ s32 SpuClearReverbWorkArea(s32 mode) {
         _spu_t(PSYQ_SPU_DMA_WRITE);
         _spu_t(PSYQ_SPU_DMA_START_TRANSFER, _spu_zerobuf, count);
         WaitEvent(_spu_EVdma);
-        remaining -= 1024;
-        address += 1024;
+        remaining -= sizeof(_spu_zerobuf);
+        address += sizeof(_spu_zerobuf);
     }
     if (changed_mode) {
         _spu_transMode = saved_mode;

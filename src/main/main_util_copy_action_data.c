@@ -1,4 +1,4 @@
-#include "psx/types.h"
+#include "fft/main.h"
 
 /* Copy a 20-byte unit or AI action command. */
 void main_util_copy_action_data(const void* source, void* destination) {
@@ -9,5 +9,5 @@ void main_util_copy_action_data(const void* source, void* destination) {
     do {
         *to++ = *from++;
         index++;
-    } while (index < 20);
+    } while (index < sizeof(battle_unit_action_command_t));
 }

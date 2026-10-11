@@ -6,13 +6,13 @@ void SpuSetVoiceSRAttr(s32 v_num, u16 sr, s32 sr_mode) {
     u32 mode = 0x100;
     u16 value;
     switch (sr_mode) {
-    case 1:
+    case SPU_VOICE_LINEARIncN:
         mode = 0;
         break;
-    case 5:
+    case SPU_VOICE_EXPIncN:
         mode = 0x200;
         break;
-    case 7:
+    case SPU_VOICE_EXPDec:
         mode = 0x300;
         break;
     }
