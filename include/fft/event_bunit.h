@@ -436,6 +436,8 @@ void bunit_gfx_update_rhombus_cursor_trail(point16_t* target);
 /* input */
 extern u8 g_bunit_input_activation_timer;
 extern u32 g_bunit_input_current;
+/* Named fields hoist the address; keep the event-word alias for scalar accesses. */
+extern menu_input_state_t g_bunit_input_event_state;
 extern u32 g_bunit_input_event;
 extern u32 g_bunit_input_initial_repeat_counter;
 extern u16 g_bunit_input_latched_button;

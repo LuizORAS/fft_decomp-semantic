@@ -1246,17 +1246,16 @@ typedef struct battle_menu_allocation {
 } battle_menu_allocation_t;
 typedef char battle_menu_allocation_size_must_be_8[(sizeof(battle_menu_allocation_t) == 8) ? 1 : -1];
 
-/* The six menu input words, in the order of the globals
- * world_script_load_event_input_state and battle_script_load_event_input_state copy
- * them to. */
-typedef struct world_menu_input_state {
-    u32 new_buttons;
-    u32 current_buttons;
-    u32 previous_buttons;
-    s32 initial_repeat_counter;
-    s32 repeat_counter;
-    s32 secondary_repeat_counter;
-} world_menu_input_state_t;
+/* Pressed, held and previous buttons, followed by the menu repeat counters. */
+typedef struct menu_input_state {
+    u32 new_buttons;              /* 0x00 */
+    u32 current_buttons;          /* 0x04 */
+    u32 previous_buttons;         /* 0x08 */
+    s32 initial_repeat_counter;   /* 0x0c */
+    s32 repeat_counter;           /* 0x10 */
+    s32 secondary_repeat_counter; /* 0x14 */
+} menu_input_state_t;
+typedef char menu_input_state_size_must_be_24[sizeof(menu_input_state_t) == 24 ? 1 : -1];
 
 /* Shared window record whose signed rectangle the window-frame and tiled
  * rectangle commands use for source 2 (pointer at 0x801cd720). */

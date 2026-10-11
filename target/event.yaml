@@ -667,6 +667,7 @@ data:
   - {addr: 0x801e3c3c, name: g_bunit_frame_arg}
   - {addr: 0x801e3c40, name: g_bunit_input_controller}
   - {addr: 0x801e3c44, name: g_bunit_input_event}
+  - {addr: 0x801e3c44, name: g_bunit_input_event_state}
   - {addr: 0x801e3c48, name: g_bunit_input_current}
   - {addr: 0x801e3c4c, name: g_bunit_previous_input}
   - {addr: 0x801e3c50, name: g_bunit_input_initial_repeat_counter}

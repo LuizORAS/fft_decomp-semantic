@@ -1964,6 +1964,7 @@ data:
   - {addr: 0x801c0520, name: g_world_frame_arg}
   - {addr: 0x801c0524, name: g_world_input_frame_controller_input}
   - {addr: 0x801c0528, name: g_world_input_frame_new}
+  - {addr: 0x801c0528, name: g_world_input_frame_state}
   - {addr: 0x801c052c, name: g_world_input_frame_current}
   - {addr: 0x801c0530, name: g_world_input_frame_previous}
   - {addr: 0x801c0534, name: g_world_input_frame_initial_repeat_counter}

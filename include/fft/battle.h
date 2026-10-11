@@ -1163,7 +1163,7 @@ void battle_script_run_sprite_move(const event_sprite_move_parameters_t* paramet
 /* Returns the event result that the battle state handlers switch on;
  * proven by 0x80078fb4 and 0x800785ac, which both consume it. */
 s32 battle_script_run_event_frame(u32* ot, u32 buttons);
-void battle_script_load_event_input_state(const world_menu_input_state_t* saved);
+void battle_script_load_event_input_state(const menu_input_state_t* saved);
 void battle_camera_clear_zoom_variable_low_bit(void);
 void battle_script_copy_matrix(MATRIX* destination, const MATRIX* source);
 s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode);

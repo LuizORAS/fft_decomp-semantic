@@ -130,7 +130,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         }
     }
 
-    world_script_load_event_input_state((world_menu_input_state_t*)&g_world_menu_new_button_input);
+    world_script_load_event_input_state((menu_input_state_t*)&g_world_menu_new_button_input);
     if (world_script_check_tutorial_event_slot() == 0 && g_world_menu_new_button_input != PSX_PAD_SELECT
         && g_world_menu_new_button_input != 0) {
         g_world_thread_change_cooldown = 5;

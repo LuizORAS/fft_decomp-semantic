@@ -75,7 +75,7 @@ void bunit_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     }
 
     g_battle_sound_pending_sfx_id = -1;
-    battle_script_load_event_input_state((world_menu_input_state_t*)&g_bunit_input_event);
+    battle_script_load_event_input_state(&g_bunit_input_event_state);
     if (g_bunit_input_event != PSX_PAD_SELECT && g_bunit_input_event != 0) {
         g_battle_event_input_suppression_frames = 5;
     }

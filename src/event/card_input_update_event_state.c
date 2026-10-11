@@ -81,7 +81,8 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
     }
 
     g_battle_sound_pending_sfx_id = -1;
-    battle_script_load_event_input_state(&g_card_input_event);
+    /* CARD inserts its controller pointer at +4; the six-word copy includes it. */
+    battle_script_load_event_input_state((const menu_input_state_t*)&g_card_input_event);
     if (g_card_input_event != PSX_PAD_SELECT && g_card_input_event != 0) {
         g_battle_event_input_suppression_frames = 5;
     }

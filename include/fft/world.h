@@ -1137,6 +1137,39 @@ extern s16 g_world_panel_slide_down_y[];
 
 /* tutorial */
 
+/* Serialized tutorial commands; opcode selects the operand record. */
+typedef struct world_tutorial_message_instruction {
+    u8 opcode;
+    u8 text_id_le[2];
+    u8 y_offset;
+} world_tutorial_message_instruction_t;
+typedef char
+    world_tutorial_message_instruction_size_must_be_4[sizeof(world_tutorial_message_instruction_t) == 4 ? 1 : -1];
+
+typedef struct world_tutorial_dialog_instruction {
+    u8 opcode;
+    u8 text_id_le[2];
+} world_tutorial_dialog_instruction_t;
+typedef char
+    world_tutorial_dialog_instruction_size_must_be_3[sizeof(world_tutorial_dialog_instruction_t) == 3 ? 1 : -1];
+
+typedef struct world_tutorial_circle_instruction {
+    u8 opcode;
+    u8 x;
+    u8 y;
+    u8 radius;
+    u8 scale_x;
+    u8 scale_y;
+} world_tutorial_circle_instruction_t;
+typedef char
+    world_tutorial_circle_instruction_size_must_be_6[sizeof(world_tutorial_circle_instruction_t) == 6 ? 1 : -1];
+
+typedef struct world_tutorial_wait_instruction {
+    u8 opcode;
+    u8 frames;
+} world_tutorial_wait_instruction_t;
+typedef char world_tutorial_wait_instruction_size_must_be_2[sizeof(world_tutorial_wait_instruction_t) == 2 ? 1 : -1];
+
 /* The current game is serialized here while a tutorial runs; its message
  * text and command stream follow the saved bytes at +0x1e00/+0x1e04. */
 typedef struct world_tutorial_state {
@@ -1162,7 +1195,7 @@ enum {
     WORLD_TUTORIAL_CMD_DRAW_CIRCLE = 0x13,
     WORLD_TUTORIAL_CMD_WAIT = 0x14,
     WORLD_TUTORIAL_CMD_WAIT_TIME = 0x15,
-    WORLD_TUTORIAL_CMD_WAIT_FOR_MESSAGE_2 = 0x16,
+    WORLD_TUTORIAL_CMD_WAIT_FOR_BUTTON = 0x16,
     WORLD_TUTORIAL_CMD_END = 0x17,
 };
 
@@ -1180,6 +1213,7 @@ void world_script_load_tutorial_files(s32 index, world_tutorial_state_t* record)
 
 /* input */
 extern u8 g_world_input_activation_timer;
+extern menu_input_state_t g_world_input_frame_state;
 extern u32 g_world_input_frame_current;
 extern u32 g_world_input_frame_initial_repeat_counter;
 extern u32 g_world_input_frame_new;
@@ -1211,7 +1245,7 @@ s32 world_input_get_tutorial_buttons(void);
 s32 world_input_read_controller(s32 unused);
 s32 world_input_read_menu_scroll_repeat(void);
 s32 world_input_read_tutorial_or_controller(s32 unused_0);
-void world_script_load_event_input_state(const world_menu_input_state_t* state);
+void world_script_load_event_input_state(const menu_input_state_t* state);
 void world_input_update_controller(void);
 void world_input_update_menu_repeat(u32 buttons);
 void world_input_update_menu_state(void);
@@ -1381,7 +1415,7 @@ extern s32 g_world_formation_display_mode;
 extern point16_t g_world_formation_cursor_position;
 extern u8 g_world_formation_generic_human_graphic_index_table[];
 extern world_gfx_texture_source_t g_world_formation_graphic_entries[];
-extern world_menu_input_state_t g_world_formation_menu_input_state;
+extern menu_input_state_t g_world_formation_menu_input_state;
 
 /* First-word alias retained for the target's separate absolute store. */
 extern s32 g_world_formation_menu_new_buttons;

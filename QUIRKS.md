@@ -537,6 +537,15 @@ written that way.
   `main_ability_calculate_pointers_and_type`, so the ability data pointer is
   overwritten by the secondary data pointer.
 
+- `card_input_update_event_state` passes six words starting at `g_card_input_event`
+  to the event input loader; CARD's controller pointer at +4 is copied as held
+  buttons, and the remaining input words are shifted by one field.
+
+- `world_input_update_menu_state` and `world_script_run_frame` pass six words
+  starting at `g_world_menu_new_button_input` to the event input loader. The
+  next five words include unrelated status-label data; the corresponding held,
+  previous and repeat globals reside elsewhere.
+
 ## Declaration leads
 
 - `include/fft/menu.h`: `world_menu_entry_t.window_x` is `u16`, but

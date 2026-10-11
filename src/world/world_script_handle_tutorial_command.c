@@ -36,7 +36,7 @@ s32 world_script_handle_tutorial_command(void) {
         world_script_handle_tutorial_command_wait();
     } else if (cmd == WORLD_TUTORIAL_CMD_WAIT_TIME) {
         world_script_handle_tutorial_command_wait_time();
-    } else if (cmd == WORLD_TUTORIAL_CMD_WAIT_FOR_MESSAGE_2) {
+    } else if (cmd == WORLD_TUTORIAL_CMD_WAIT_FOR_BUTTON) {
         world_script_handle_tutorial_command_wait_for_button();
     } else if (cmd == WORLD_TUTORIAL_CMD_END) {
         return world_script_handle_tutorial_command_end();

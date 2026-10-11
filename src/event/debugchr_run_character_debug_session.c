@@ -21,8 +21,6 @@
 /* Non-volatile view of debugchr.h's volatile array: volatile accesses change this function. */
 #define EDITOR_UNIT_IDS ((u8*)g_debugchr_editor_unit_ids)
 
-void battle_thread_start(s32 thread_id, void (*function)(void));
-
 /* `index + base`, not `base + index`: GCC canonicalises a PLUS of two
    registers, but a MINUS over a NEGATE keeps the source operand order, which
    is the target's `addu rd,index,base` at the five primitive bases. */
@@ -31,7 +29,7 @@ void battle_thread_start(s32 thread_id, void (*function)(void));
 void debugchr_run_character_debug_session(void) {
     s32 battle_id;
     help_navigation_record_t* field;
-    s32* input;
+    u32* input;
     POLY_FT4* cursor_v;
     POLY_FT4* shadow_v;
     POLY_FT4* cursor_prims;
@@ -41,9 +39,9 @@ void debugchr_run_character_debug_session(void) {
     POLY_FT4* shadow_h;
     POLY_FT4* cursor_h_edit;
     POLY_FT4* shadow_h_edit;
-    s32 buttons;
-    s32 keys;
-    s32 navkeys;
+    u32 buttons;
+    u32 keys;
+    u32 navkeys;
     s32 i;
     s32 row;
     s32 steps;

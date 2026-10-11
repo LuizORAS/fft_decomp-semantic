@@ -14,8 +14,9 @@
  * The step is 0x88 and the phase bias is 1024 (ONE / 4), i.e. a quarter
  * turn on the GTE's ONE-unit circle, so sample 0 starts at the top.
  */
+/* Address-of operand fields preserves the -O0 byte-address steps. */
 void world_script_handle_tutorial_command_highlight_ring(void) {
-    s32 center_x;
+    s32 radius;
     s32 outer_x;
     s32 outer_y;
     s32 middle_x;
@@ -29,30 +30,30 @@ void world_script_handle_tutorial_command_highlight_ring(void) {
     s32 step;
 
     step = 0x88;
-    center_x = g_world_script_tutorial_command_ptr[3];
-    scale_x = g_world_script_tutorial_command_ptr[4];
-    scale_y = g_world_script_tutorial_command_ptr[5];
+    radius = *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->radius);
+    scale_x = *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->scale_x);
+    scale_y = *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->scale_y);
     for (i = 0; i < 30; i++) {
-        outer_x = (center_x + 8) * scale_x;
-        outer_y = (center_x + 8) * scale_y;
-        middle_x = (center_x + 4) * scale_x;
-        middle_y = (center_x + 4) * scale_y;
-        inner_x = center_x * scale_x;
-        inner_y = center_x * scale_y;
-        g_world_tutorial_highlight_corners_a[i][0].x
-            = ((rcos(step * i + 1024) * outer_x) >> 19) + g_world_script_tutorial_command_ptr[1];
-        g_world_tutorial_highlight_corners_a[i][0].y
-            = ((rsin(step * i + 1024) * outer_y) >> 19) + g_world_script_tutorial_command_ptr[2];
-        g_world_tutorial_highlight_corners_a[i][1].x
-            = ((rcos(step * i + 1024) * middle_x) >> 19) + g_world_script_tutorial_command_ptr[1];
-        g_world_tutorial_highlight_corners_a[i][1].y
-            = ((rsin(step * i + 1024) * middle_y) >> 19) + g_world_script_tutorial_command_ptr[2];
+        outer_x = (radius + 8) * scale_x;
+        outer_y = (radius + 8) * scale_y;
+        middle_x = (radius + 4) * scale_x;
+        middle_y = (radius + 4) * scale_y;
+        inner_x = radius * scale_x;
+        inner_y = radius * scale_y;
+        g_world_tutorial_highlight_corners_a[i][0].x = ((rcos(step * i + 1024) * outer_x) >> 19)
+            + *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->x);
+        g_world_tutorial_highlight_corners_a[i][0].y = ((rsin(step * i + 1024) * outer_y) >> 19)
+            + *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->y);
+        g_world_tutorial_highlight_corners_a[i][1].x = ((rcos(step * i + 1024) * middle_x) >> 19)
+            + *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->x);
+        g_world_tutorial_highlight_corners_a[i][1].y = ((rsin(step * i + 1024) * middle_y) >> 19)
+            + *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->y);
         g_world_tutorial_highlight_corners_b[i][0].x = g_world_tutorial_highlight_corners_a[i][1].x;
         g_world_tutorial_highlight_corners_b[i][0].y = g_world_tutorial_highlight_corners_a[i][1].y;
-        g_world_tutorial_highlight_corners_b[i][1].x
-            = ((rcos(step * i + 1024) * inner_x) >> 19) + g_world_script_tutorial_command_ptr[1];
-        g_world_tutorial_highlight_corners_b[i][1].y
-            = ((rsin(step * i + 1024) * inner_y) >> 19) + g_world_script_tutorial_command_ptr[2];
+        g_world_tutorial_highlight_corners_b[i][1].x = ((rcos(step * i + 1024) * inner_x) >> 19)
+            + *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->x);
+        g_world_tutorial_highlight_corners_b[i][1].y = ((rsin(step * i + 1024) * inner_y) >> 19)
+            + *(&((world_tutorial_circle_instruction_t*)g_world_script_tutorial_command_ptr)->y);
     }
 
     /* Point copies emit word transfers; retail copies the closing sample as four halfwords. */
