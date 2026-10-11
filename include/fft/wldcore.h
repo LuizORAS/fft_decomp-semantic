@@ -1954,6 +1954,12 @@ typedef struct wldcore_window_render_record {
 } wldcore_window_render_record_t;
 typedef char wldcore_render_record_size_must_be_0x34[sizeof(wldcore_window_render_record_t) == 0x34 ? 1 : -1];
 
+/* Text width is in pixels; the second value counts visible list rows. */
+typedef struct wldcore_window_panel_layout {
+    s32 text_width;
+    s32 visible_rows;
+} wldcore_window_panel_layout_t;
+
 extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
 
 /* libgs sprite sorted by wldcore_draw_close_indicator_if_pending through
@@ -2048,7 +2054,8 @@ void wldcore_window_draw_text_rows(wldcore_menu_send_unit_level_t* level);
 
 void wldcore_window_init_number_panel_render_thread(s32 thread_id, u32 packed_values, s32 text_id, point32_t* origin);
 
-void wldcore_window_init_panel_render_state(s32 unused, s32 extent, point32_t* dimensions, point32_t* origin);
+void wldcore_window_init_panel_render_state(
+    s32 unused, s32 extent, wldcore_window_panel_layout_t* layout, point32_t* origin);
 
 void wldcore_window_init_record(s32 index, s32 priority, s32 sequence);
 
@@ -2069,7 +2076,8 @@ void wldcore_map_step_projection_motion_then_pop_level(wldcore_menu_stack_record
 void wldcore_window_set_render_objects_visible(s32 clear);
 void wldcore_window_set_render_palette_2(wldcore_window_render_pair_t* pair);
 
-void wldcore_window_start_panel_render_thread(s32 thread_id, s32 extent, point32_t* dimensions, point32_t* origin);
+void wldcore_window_start_panel_render_thread(
+    s32 thread_id, s32 extent, wldcore_window_panel_layout_t* layout, point32_t* origin);
 
 void wldcore_window_transform_point_for_mode(s32 mode, RECT bounds, point32_t* output);
 void wldcore_window_set_layout_states(wldcore_menu_proposition_list_level_t* level);

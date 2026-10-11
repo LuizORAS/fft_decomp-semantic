@@ -24,7 +24,7 @@
  * The list is indexed by `count` rather than `i`; indexing by `i` lets loop.c
  * fold the final count to the constant 41. */
 void wldcore_list_open_tutorial_topics(void) {
-    point32_t dimensions;
+    wldcore_window_panel_layout_t layout;
     point32_t origin;
     s32 count;
     s32 i;
@@ -41,13 +41,13 @@ void wldcore_list_open_tutorial_topics(void) {
     } else {
         visible = 8;
     }
-    dimensions.x = 0x8c;
+    layout.text_width = 0x8c;
     origin.x = 0x54;
-    dimensions.y = visible;
+    layout.visible_rows = visible;
     origin.y = 0x50;
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS, count, visible);
     wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &layout, &origin);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;

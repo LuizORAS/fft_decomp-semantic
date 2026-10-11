@@ -13,7 +13,7 @@
  * resumes the parent, shows text 0xb80d and marks the parent's content
  * published. */
 void wldcore_list_open_available_propositions(void) {
-    point32_t dimensions;
+    wldcore_window_panel_layout_t layout;
     point32_t origin;
     s32 count;
     s32 i;
@@ -64,13 +64,13 @@ void wldcore_list_open_available_propositions(void) {
         } else {
             i = 6;
         }
-        dimensions.x = 0x96;
+        layout.text_width = 0x96;
         origin.x = 0x4C;
-        dimensions.y = i;
+        layout.visible_rows = i;
         origin.y = 0x50;
         wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS, count, i);
         wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &layout, &origin);
     } else {
         wldcore_menu_dispatch_resume_handler();
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_NO_PROPOSITIONS, 0);

@@ -8,7 +8,7 @@
  * entries it resets the parent window-pair level's records and shows text
  * 0xb80a instead. */
 void wldcore_list_open_rumors(void) {
-    point32_t dimensions;
+    wldcore_window_panel_layout_t layout;
     point32_t origin;
     s16* values;
     s16* flags;
@@ -46,13 +46,13 @@ void wldcore_list_open_rumors(void) {
         } else {
             i = 8;
         }
-        dimensions.x = 0x96;
+        layout.text_width = 0x96;
         origin.x = 0x4C;
-        dimensions.y = i;
+        layout.visible_rows = i;
         origin.y = 0x50;
         wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_RUMORS, count, i);
         wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &layout, &origin);
     } else {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                      .window_pair_render.first_window]

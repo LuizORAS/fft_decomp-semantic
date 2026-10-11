@@ -20,7 +20,7 @@ extern s16 g_wldcore_menu_scroll_offset;
  * shares the index product's register, and the chained frame_index/anim_counter
  * store keeps anim_counter's base in a register as in the target. */
 void wldcore_proposition_push_send_unit_level(void) {
-    point32_t dimensions;
+    wldcore_window_panel_layout_t layout;
     point32_t origin;
     RECT bounds;
     s32 index;
@@ -32,12 +32,12 @@ void wldcore_proposition_push_send_unit_level(void) {
     g_wldcore_proposition_send_unit_count = 0;
     count = wldcore_proposition_load_send_unit_candidates(
         &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit);
-    dimensions.x = 0x6E;
-    dimensions.y = count;
+    layout.text_width = 0x6E;
+    layout.visible_rows = count;
     origin.x = 8;
     origin.y = 0x50;
     wldcore_window_init_panel_render_state(
-        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.unit_count, &dimensions, &origin);
+        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.unit_count, &layout, &origin);
     g_wldcore_window_panel_label_state.mode[1] = MENU_TEXT_COLUMN_NUMBER_GLYPHS;
     g_wldcore_window_panel_label_state.x[1] = 0x58;
     g_wldcore_window_panel_label_state.text_ids[1] = g_wldcore_proposition_candidate_levels;

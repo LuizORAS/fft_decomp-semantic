@@ -18,7 +18,7 @@
  * area. */
 void wldcore_list_open_completed_propositions(void) {
     point32_t origin;
-    point32_t dimensions;
+    wldcore_window_panel_layout_t layout;
     point32_t unused_point;
     s32 count;
     s32 i;
@@ -69,13 +69,13 @@ void wldcore_list_open_completed_propositions(void) {
         } else {
             i = 6;
         }
-        dimensions.x = 0x96;
+        layout.text_width = 0x96;
         origin.x = 0x48;
-        dimensions.y = i;
+        layout.visible_rows = i;
         origin.y = 0x50;
         wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS, count, i);
         wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count, &dimensions,
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count, &layout,
             &origin);
     } else {
         wldcore_bar_build_menu_rows(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].list_window);

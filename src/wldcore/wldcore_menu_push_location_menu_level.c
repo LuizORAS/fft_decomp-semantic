@@ -23,7 +23,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     GsIMAGE image;
     RECT bounds;
     point32_t origin;
-    point32_t dimensions;
+    wldcore_window_panel_layout_t layout;
     s16 text_width;
     s16 text_rows;
     s32 index;
@@ -133,17 +133,17 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     if (count < 4) {
         i = count;
     }
-    dimensions.x = widest;
-    dimensions.y = i;
-    origin.x = 0x80 - (((dimensions.x + 0x18) & 0xFFFC) >> 1);
+    layout.text_width = widest;
+    layout.visible_rows = i;
+    origin.x = 0x80 - (((layout.text_width + 0x18) & 0xFFFC) >> 1);
     if (g_wldcore_map_projection_state.marker.sub_kind != 0) {
         origin.y = 0x80;
     } else {
         origin.y = 0x70 - i * 8;
     }
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_LOCATION_MENU, count, i);
-    wldcore_window_init_panel_render_state(0xC,
-        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entry_count, &dimensions, &origin);
+    wldcore_window_init_panel_render_state(
+        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entry_count, &layout, &origin);
     g_wldcore_window_panel_render_state.vram_origin.x = 0x240;
     g_wldcore_window_panel_render_state.header_id = 0;
     g_wldcore_window_panel_render_state.vram_origin.y = 0x100;

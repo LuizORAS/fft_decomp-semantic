@@ -3,18 +3,18 @@
 /* Initialize the panel renderer's shared geometry and data pointers.
  *
  * Width is rounded for its tiled image; stored origins are screen-relative.
- * Each coordinate is read into an int before it is narrowed into its s16
- * field: the target loads full words. */
-void wldcore_window_init_panel_render_state(s32 unused, s32 extent, point32_t* dimensions, point32_t* origin) {
-    s32 width = dimensions->x;
-    s32 rows = dimensions->y;
+ * Layout and origin values are loaded as full words before narrowing to s16. */
+void wldcore_window_init_panel_render_state(
+    s32 unused, s32 extent, wldcore_window_panel_layout_t* layout, point32_t* origin) {
+    s32 width = layout->text_width;
+    s32 rows = layout->visible_rows;
     s32 text_width;
     s32 x;
     s32 y;
     s32 last_row;
 
     g_wldcore_window_panel_label_state.row_count = rows;
-    g_wldcore_window_panel_label_state.hidden_rows = extent - dimensions->y;
+    g_wldcore_window_panel_label_state.hidden_rows = extent - layout->visible_rows;
     g_wldcore_window_panel_label_state.x[0] = g_wldcore_window_panel_label_state.x[1] = 4;
     g_wldcore_window_panel_label_state.mode[0] = MENU_TEXT_COLUMN_TEXT;
     g_wldcore_window_panel_label_state.mode[1] = MENU_TEXT_COLUMN_HIDDEN;
@@ -39,7 +39,7 @@ void wldcore_window_init_panel_render_state(s32 unused, s32 extent, point32_t* d
     g_wldcore_window_panel_render_state.text_image.x_screen_offset = 0;
     g_wldcore_window_panel_render_state.text_image.y_screen_offset = 0;
     g_wldcore_window_panel_render_state.text_id = 0;
-    last_row = dimensions->y;
+    last_row = layout->visible_rows;
     g_wldcore_window_panel_render_state.max_row_index = last_row;
     g_wldcore_window_panel_render_state.thread_count = 0;
     g_wldcore_window_panel_render_state.row_actions = g_wldcore_panel_row_actions;
