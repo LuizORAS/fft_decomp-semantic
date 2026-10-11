@@ -1,4 +1,4 @@
-#include "psx/types.h"
+#include "fft/main.h"
 
 /* Handler of the HwSPU event SuzukiSPUInitialiser opens. It does nothing and
  * returns 0. */

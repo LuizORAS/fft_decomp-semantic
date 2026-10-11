@@ -1,4 +1,4 @@
-#include "psx/libgte.h"
+#include "fft/main.h"
 
 void main_util_set_vector(VECTOR* vector, s32 x, s32 y, s32 z) {
     vector->vx = x;

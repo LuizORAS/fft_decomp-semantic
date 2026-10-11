@@ -1,5 +1,5 @@
+#include "fft/main.h"
 #include "psx/libspu.h"
-#include "psx/types.h"
 
 /* "SpuFree with extra steps": the sound code always releases SPU RAM
  * through this wrapper, which now only forwards to the library and reports
