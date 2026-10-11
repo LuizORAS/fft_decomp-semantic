@@ -1,6 +1,7 @@
 /* SCUS_942.21 0x800212ec..0x80021c5b. */
 #include "psx/libcd.h"
 
+/* Signed status stores retain native pointer reloads and store scheduling. */
 void StCdInterrupt(void) {
     /* Retail stores both response bytes in a volatile halfword array and reloads the first. */
     volatile u16 response_status[3];
@@ -8,6 +9,8 @@ void StCdInterrupt(void) {
     u8 response[8];
     u8* position_byte;
     u32 index;
+    u16 frame_count;
+    s16 ring_status;
     u32 dma_control;
     s32 emulation_base;
     if (g_psyq_cd_stream_frame_dma_pending == 1)
@@ -64,7 +67,8 @@ void StCdInterrupt(void) {
         u32 required_frame = g_psyq_cd_stream_start_frame;
         if (required_frame) {
             /* The original comparison reads the low halfword of the frame word. */
-            if (required_frame != *(u16*)&g_psyq_cd_stream_current_header->frameCount) {
+            frame_count = g_psyq_cd_stream_current_header->frameCount;
+            if (required_frame != frame_count) {
                 *(s16*)&g_psyq_cd_stream_current_header->id = StFREE;
                 if (g_psyq_cd_stream_emulation_base)
                     g_psyq_cd_stream_emulation_sector_index++;
@@ -85,7 +89,7 @@ void StCdInterrupt(void) {
     }
     if (g_psyq_cd_stream_expected_sector_index != g_psyq_cd_stream_current_header->secCount
         || (g_psyq_cd_stream_frame_count
-            && g_psyq_cd_stream_frame_count != *(u16*)&g_psyq_cd_stream_current_header->frameCount)) {
+            && g_psyq_cd_stream_frame_count != (frame_count = g_psyq_cd_stream_current_header->frameCount))) {
         g_psyq_cd_stream_frame_count = 0;
         g_psyq_cd_stream_expected_sector_index = 0;
         init_ring_status(
@@ -98,9 +102,9 @@ void StCdInterrupt(void) {
         return;
     }
     if (g_psyq_cd_stream_current_header->secCount == 0) {
-        u16 frame = g_psyq_cd_stream_current_header->frameCount;
+        frame_count = g_psyq_cd_stream_current_header->frameCount;
         g_psyq_cd_stream_expected_sector_index = 0;
-        g_psyq_cd_stream_frame_count = frame;
+        g_psyq_cd_stream_frame_count = frame_count;
         if (g_psyq_cd_stream_end_frame && g_psyq_cd_stream_frame_count >= g_psyq_cd_stream_end_frame) {
             g_psyq_cd_stream_frame_count = 0;
             g_psyq_cd_stream_expected_sector_index = 0;
@@ -128,8 +132,8 @@ void StCdInterrupt(void) {
                 g_psyq_cd_stream_diagnostic_code = 8;
                 return;
             }
-            /* The signed lvalue retains the original LH rather than LHU. */
-            if (*(s16*)&g_psyq_cd_stream_ring[0].id) {
+            ring_status = g_psyq_cd_stream_ring[0].id;
+            if (ring_status) {
                 *(s16*)&g_psyq_cd_stream_current_header->id = StFREE;
                 if (g_psyq_cd_stream_emulation_base)
                     g_psyq_cd_stream_emulation_sector_index++;

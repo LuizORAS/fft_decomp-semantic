@@ -2,6 +2,7 @@
 #include "psx/libcd.h"
 void data_ready_callback(void) {
     StHEADER* record = &g_psyq_cd_stream_ring[g_psyq_cd_stream_frame_start_index];
+    /* This status view keeps the frame load ahead of the write-index load. */
     *(s16*)&record->id = StCOMPLETE;
     g_psyq_cd_backloc.position = record->loc;
     g_psyq_cd_backloc.frame = record->frameCount;

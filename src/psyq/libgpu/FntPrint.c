@@ -1,7 +1,7 @@
 /* LIBGPU 800235ac-8002398c; switch table 80010570-800105f4. */
 #include "psx/libgpu.h"
 
-/* Retail keeps the argument cursor in memory (as sprintf does): the SDK's va_arg reaches it through its address. */
+/* Addressed cursor access retains the native stack slot; ordinary SDK va_arg keeps it in a register. */
 typedef char* va_list;
 #define va_start(ap, last) (ap = (char*)&(last) + sizeof(last))
 #define va_arg(ap, type)   (*(char**)&(ap) += sizeof(type), *(type*)((ap) - sizeof(type)))
