@@ -1619,7 +1619,7 @@ data:
   - {addr: 0x8018d7d8, name: g_world_item_sorted_lists}
   - {addr: 0x8018d7ec, name: g_world_best_fit_slot_categories}
   - {addr: 0x8018d7f4, name: g_world_fitting_room_best_fit_slot_categories}
-  - {addr: 0x8018d7fc, name: g_world_item_type_icon_rects}
+  - {addr: 0x8018d7fc, name: g_world_item_type_icon_origins}
   - {addr: 0x8018d844, name: g_world_shop_item_availability}
   - {addr: 0x8018da44, name: g_world_formation_graphic_entries}
   - {addr: 0x8018de34, name: g_world_formation_generic_human_graphic_index_table}
