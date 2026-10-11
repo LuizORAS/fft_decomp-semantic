@@ -29,9 +29,9 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     job = &g_main_job_data_pointer[unit->job_id];
     unit->move = job->move;
     unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
-    main_util_copy_bytes(job->equipment_categories, unit->equipment_categories, 4);
-    main_util_copy_bytes(&job->status_sets, &unit->status_sets, 15);
-    main_util_copy_bytes(job->elemental_affinity, unit->elemental_affinity, 4);
+    main_util_copy_bytes(job->equipment_categories, unit->equipment_categories, sizeof(job->equipment_categories));
+    main_util_copy_bytes(&job->status_sets, &unit->status_sets, sizeof(job->status_sets));
+    main_util_copy_bytes(job->elemental_affinity, unit->elemental_affinity, sizeof(job->elemental_affinity));
     unit->elemental_affinity[ELEMENTAL_AFFINITY_STRENGTHEN] = 0;
     main_unit_enable_rsm_flags(unit);
     main_unit_calculate_move_jump(unit, 1);

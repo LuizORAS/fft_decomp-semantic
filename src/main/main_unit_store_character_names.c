@@ -75,13 +75,13 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     } else {
         text = main_party_get_data_pointer(unit->formation_index)->name;
     }
-    main_util_copy_bytes(text, unit->name, 16);
+    main_util_copy_bytes(text, unit->name, sizeof(unit->name));
     text_id = unit->job_id | TEXT_ID_JOB_NAME_BASE;
-    main_util_copy_bytes(prepare_text(text_id), unit->job_name, 16);
+    main_util_copy_bytes(prepare_text(text_id), unit->job_name, sizeof(unit->job_name));
     text_id = unit->primary_skillset | TEXT_ID_SKILLSET_NAME_BASE;
-    main_util_copy_bytes(prepare_text(text_id), unit->primary_skillset_name, 8);
+    main_util_copy_bytes(prepare_text(text_id), unit->primary_skillset_name, sizeof(unit->primary_skillset_name));
     text_id = unit->secondary_skillset | TEXT_ID_SKILLSET_NAME_BASE;
-    main_util_copy_bytes(prepare_text(text_id), unit->secondary_skillset_name, 8);
+    main_util_copy_bytes(prepare_text(text_id), unit->secondary_skillset_name, sizeof(unit->secondary_skillset_name));
     /* Clear the adjacent inflicted/removed status sets (five bytes each). */
     main_util_clear_byte_data(unit->action.status_infliction, 10);
 }

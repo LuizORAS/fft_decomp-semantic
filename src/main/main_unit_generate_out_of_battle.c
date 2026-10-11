@@ -129,7 +129,7 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     party->name_id[0] = name_id;
     party->name_id[1] = name_id_hi;
     name_flags += name_id & 0xff;
-    main_util_copy_bytes(world_text_find_entry(name_flags), party->name, 0x10);
+    main_util_copy_bytes(world_text_find_entry(name_flags), party->name, sizeof(party->name));
     party->proposition_status = 0;
     party->egg_color = 0;
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {

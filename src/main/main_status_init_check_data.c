@@ -14,7 +14,7 @@ void main_status_init_check_data(void) {
     int byte;
     u8 mask;
 
-    main_util_clear_byte_data(g_main_item_location_flags, 0x80);
+    main_util_clear_byte_data(g_main_item_location_flags, sizeof(g_main_item_location_flags));
     main_util_clear_byte_data(&g_main_status_check_sets[0][0], MAIN_STATUS_CHECK_SET_COUNT * BATTLE_STATUS_BYTE_COUNT);
     status = 0;
     do {
