@@ -53,13 +53,13 @@ extern void SetTransMatrix(MATRIX* m);
 extern s32 rsin(s32 angle);
 extern s32 rcos(s32 angle);
 extern long ratan2(long y, long x);
-extern long RotTrans(SVECTOR* input, VECTOR* output, long* flag);
+extern void RotTrans(SVECTOR* input, VECTOR* output, long* flag);
 extern long csqrt(long value);
 extern long SquareRoot0(long value);
 extern MATRIX* RotMatrix(SVECTOR* r, MATRIX* m);
 
 /* Linked libgte entries; declarations retain their retail call-site ABI. */
-void VectorNormal(VECTOR* input, VECTOR* output);
+long VectorNormal(VECTOR* input, VECTOR* output);
 long VectorNormalS(VECTOR* input, SVECTOR* output);
 long VectorNormalSS(SVECTOR* input, SVECTOR* output);
 s32 SquareRoot12(s32 value);
