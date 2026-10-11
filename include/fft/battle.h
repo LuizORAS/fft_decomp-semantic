@@ -8859,7 +8859,7 @@ extern const char g_battle_text_heap_task_format[];   /* "TASK %d %x\n" */
 
 /* Pixel width of each line measured by the last call. */
 extern s32 g_battle_text_line_widths[];
-extern void* g_battle_text_message_buffer;
+extern u8* g_battle_text_message_buffer;
 extern const char g_battle_text_min_heap_format[];     /* "MIN HEAP %x " */
 extern char g_battle_text_reading_character_message[]; /* "reading charactor%d \n" */
 extern u8 g_battle_text_slot_row_pitches[];            /* per-slot source row pitch in bytes */
