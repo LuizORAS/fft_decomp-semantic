@@ -12,7 +12,7 @@
  * choice (a1/v0) and load order.
  */
 void world_formation_sort_roster(s32 index) {
-    s8 eggs[PARTY_ROSTER_SLOT_COUNT];
+    s8 egg_indices[PARTY_ROSTER_SLOT_COUNT];
     s8* keys;
     s32 i;
     s32 j;
@@ -50,12 +50,12 @@ void world_formation_sort_roster(s32 index) {
     count = 0;
     for (i = 0; i < g_world_formation_record_count; i++) {
         if (g_world_formation_unit_records[g_world_formation_record_order[i]].gender_flags & UNIT_FLAG_EGG) {
-            eggs[count++] = g_world_formation_record_order[i];
+            egg_indices[count++] = g_world_formation_record_order[i];
         }
     }
     for (i = 0; i < count; i++) {
         j = 0;
-        swap = eggs[i];
+        swap = egg_indices[i];
         while (1) {
             if (g_world_formation_record_order[j] == swap) {
                 break;
@@ -65,19 +65,19 @@ void world_formation_sort_roster(s32 index) {
         for (; j < g_world_formation_record_count - 1; j++) {
             g_world_formation_record_order[j] = g_world_formation_record_order[j + 1];
         }
-        g_world_formation_record_order[g_world_formation_record_count - 1] = eggs[i];
+        g_world_formation_record_order[g_world_formation_record_count - 1] = egg_indices[i];
     }
     for (i = count - 1; i > 0; i--) {
         for (j = 0; j < i; j++) {
-            if (eggs[j + 1] < eggs[j]) {
-                first = eggs[j];
-                eggs[j] = eggs[j + 1];
-                eggs[j + 1] = first;
+            if (egg_indices[j + 1] < egg_indices[j]) {
+                first = egg_indices[j];
+                egg_indices[j] = egg_indices[j + 1];
+                egg_indices[j + 1] = first;
             }
         }
     }
     for (i = 0; i < count; i++) {
-        g_world_formation_record_order[g_world_formation_record_count - 1 - i] = eggs[i];
+        g_world_formation_record_order[g_world_formation_record_count - 1 - i] = egg_indices[i];
     }
     for (i = 0; i < g_world_formation_record_count; i++) {
         g_world_formation_unit_pointers[i] = &g_world_formation_unit_records[g_world_formation_record_order[i]];
