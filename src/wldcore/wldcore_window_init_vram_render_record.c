@@ -13,7 +13,7 @@ void wldcore_window_init_vram_render_record(s32 index, RECT bounds, point32_t cl
               & ~(WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
         | flags;
     g_wldcore_window_render_records[index].clut = clut;
-    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, bounds.x, bounds.y) & 0xFFFF;
+    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, bounds.x, bounds.y);
     record_bounds = &g_wldcore_window_render_records[index].bounds;
     record_bounds->x = (bounds.x & 0x3F) * 2;
     record_bounds->y = bounds.y & 0xFF;

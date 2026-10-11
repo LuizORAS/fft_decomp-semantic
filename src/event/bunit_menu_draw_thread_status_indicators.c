@@ -63,7 +63,7 @@ draw_panels:
         flip = g_bunit_menu_indicator_packet_index[i] ^ 1;
         g_bunit_menu_indicator_packet_index[i] = flip;
         prims = &g_bunit_thread_indicator_packets[i][flip];
-        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100) & 0xffff, &g_bunit_gfx_draw_area_template);
+        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_bunit_gfx_draw_area_template);
         SetTile(&prims->frame);
         setRGB0(&prims->frame, 0, 0, 0);
         SetSemiTrans(&prims->frame, 1);

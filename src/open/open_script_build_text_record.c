@@ -65,7 +65,7 @@ s32 open_script_build_text_record(u8* text) {
         } else if (ch == '^') {
             text++;
             value = open_text_decode_hex_digit(*text++);
-            g_open_script_state.dispatch.clut = GetClut(value * 16, 0x1e0) & 0xffff;
+            g_open_script_state.dispatch.clut = GetClut(value * 16, 0x1e0);
             i--;
         } else if (ch == '<') {
             text++;

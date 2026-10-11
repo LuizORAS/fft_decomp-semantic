@@ -24,7 +24,7 @@ void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordi
     clut->x = 0;
     g_wldcore_window_render_records[index].bounds = bounds;
     wldcore_window_transform_point_for_mode(coordinate_mode, bounds, &transformed);
-    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, transformed.x, transformed.y) & 0xFFFF;
+    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, transformed.x, transformed.y);
     color = &g_wldcore_window_render_records[index].color;
     color->r = 0x80;
     color->g = 0x80;

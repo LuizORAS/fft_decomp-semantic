@@ -22,7 +22,7 @@ s32 world_gfx_update_fade_out_tile(void) {
             g_world_gfx_fade_increasing = 0;
             g_world_gfx_fade_intensity = 0xFF;
         }
-        world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 2, 0x100, 0) & 0xFFFF, 0, g_world_ot_length - 2);
+        world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 2, 0x100, 0), 0, g_world_ot_length - 2);
         rgb = &g_world_fade_tile_color;
         level = g_world_gfx_fade_intensity;
         g_world_fade_tile_color.b = level;

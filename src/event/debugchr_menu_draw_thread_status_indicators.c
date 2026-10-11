@@ -63,7 +63,7 @@ draw_panels:
         flip = g_debugchr_menu_indicator_packet_index[i] ^ 1;
         g_debugchr_menu_indicator_packet_index[i] = flip;
         prims = &g_debugchr_thread_indicator_packets[i][flip];
-        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100) & 0xffff, &g_debugchr_gfx_draw_area_template);
+        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_debugchr_gfx_draw_area_template);
         SetTile(&prims->frame);
         setRGB0(&prims->frame, 0, 0, 0);
         SetSemiTrans(&prims->frame, 1);

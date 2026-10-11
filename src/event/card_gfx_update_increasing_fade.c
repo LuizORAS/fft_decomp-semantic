@@ -16,7 +16,7 @@ s32 card_gfx_update_increasing_fade(void) {
             g_card_gfx_increasing_fade_active = 0;
             g_card_gfx_fade_intensity = 0xff;
         }
-        card_gfx_set_draw_mode_and_link_ot(0, 0, GetTPage(0, 2, 0x100, 0) & 0xffff, 0, g_card_gfx_otag_length - 2);
+        card_gfx_set_draw_mode_and_link_ot(0, 0, GetTPage(0, 2, 0x100, 0), 0, g_card_gfx_otag_length - 2);
         {
             rgb24_t* color = &g_card_gfx_fade_color;
 

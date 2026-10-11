@@ -14,7 +14,7 @@ s32 bunit_gfx_update_decreasing_fade(void) {
             g_bunit_gfx_decreasing_fade_active = 0;
             ret = 0;
         }
-        bunit_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 2, 0x100, 0) & 0xFFFF, 0, g_bunit_gfx_otag_count - 2);
+        bunit_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 2, 0x100, 0), 0, g_bunit_gfx_otag_count - 2);
         {
             rgb24_t* color = &g_bunit_gfx_fade_color;
             g_bunit_gfx_fade_color.b = g_bunit_gfx_fade_intensity;
