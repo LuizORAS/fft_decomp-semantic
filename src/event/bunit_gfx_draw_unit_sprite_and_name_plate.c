@@ -16,19 +16,6 @@ typedef struct {
     battle_unit_sprite_query_t query; /* 0x10 */
 } bunit_sprite_quad_t;
 
-/* battle_gfx_source_part_t with its attributes as bit-fields: the part's
- * place, the 8x8 tile its picture starts at (32 tiles per row) and the size
- * that indexes g_bunit_sprite_cell_sizes, this overlay's copy of
- * g_battle_gfx_part_sizes in pixels. The flip bits are not read: the facing
- * quadrant alone mirrors the sprite. */
-typedef struct {
-    s8 x_shift;
-    s8 y_shift;
-    u16 tile : 10;
-    u16 size : 4;
-    u16 flip : 2;
-} bunit_sprite_cell_t;
-
 /* Draw a unit's current SHP frame at (x, y), then its two name-plate quads.
  *
  * The frame's first byte is taken whole as the part count minus one, where
@@ -45,7 +32,8 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     battle_gfx_source_frame_t* frame;
     s32 base_y;
     s32 i;
-    bunit_sprite_cell_t* cells;
+    battle_gfx_source_part_t* cells;
+    s32 tile;
     s32 dx;
     s32 orientation;
     s32 value;
@@ -58,10 +46,9 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     if (frame == (battle_gfx_source_frame_t*)-1) {
         return;
     }
-    /* Scalar attribute masks let GCC remove the target's signed tile divisions. */
-    cells = (bunit_sprite_cell_t*)frame->parts;
+    cells = frame->parts;
     for (i = 0; i <= frame->part_count_and_rotation; i++) {
-        size = cells[i].size;
+        size = (cells[i].attributes >> 10) & (BATTLE_SHP_PART_SIZE_MASK >> 10);
         quad.uw = quad.w = g_bunit_sprite_cell_sizes[size][0];
         quad.vh = quad.h = g_bunit_sprite_cell_sizes[size][1];
         value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_data[unit]->battle_id);
@@ -78,8 +65,11 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
             quad.y -= 8;
         }
-        quad.u = cells[i].tile % 32 * 8;
-        quad.v = cells[i].tile / 32 * 8 + quad.query.graphic_y_offset;
+        tile = cells[i].attributes & BATTLE_SHP_PART_TILE_MASK;
+        quad.u = tile % 32 * 8;
+        /* Both tile reads preserve the separate signed divisions. */
+        tile = cells[i].attributes & BATTLE_SHP_PART_TILE_MASK;
+        quad.v = tile / 32 * 8 + quad.query.graphic_y_offset;
         value = 7;
         if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
             value = 8;
