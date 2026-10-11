@@ -50,7 +50,6 @@ void world_menu_unit_status_banner_thread(void) {
     s32 suppress;                                    /* spD8 */
 
     s32 thread_id;
-    native_thread_t* threads;
     s32 i;
     s32 draw_x;
     s32 draw_y;
@@ -58,7 +57,6 @@ void world_menu_unit_status_banner_thread(void) {
     menu_status_panel_packet_t* status;
     menu_status_panel_editor_packet_t* summary;
     u32* input;
-    SPRT* sprites;
     u8* render_a_upper;
     u8* render_b_second;
     u8* render_b_third;
@@ -68,9 +66,8 @@ void world_menu_unit_status_banner_thread(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
     input = world_input_get_menu_controller(0);
     thread_id = g_world_thread_current_id;
-    threads = g_world_threads;
     g_world_input_frame_controller_input = input + 1;
-    display = (menu_status_panel_display_thread_t*)threads[thread_id].function_parameter_1;
+    display = (menu_status_panel_display_thread_t*)g_world_threads[thread_id].function_parameter_1;
     if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
         status = g_world_selected_unit_status_packets;
         summary = g_world_selected_unit_summary_packets;
@@ -134,10 +131,9 @@ void world_menu_unit_status_banner_thread(void) {
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_status_panel_origin, &status->numeric_frame);
-    sprites = &status->sprites[0];
-    world_menu_init_sprite_array(sprites, 7, 0x7C3C);
+    world_menu_init_sprite_array(status->sprites, 7, 0x7C3C);
     world_gfx_init_default_poly_ft4(&status->portrait);
-    world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (texture_primitive_t*)sprites, 0);
+    world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (texture_primitive_t*)status->sprites, 0);
     world_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (texture_primitive_t*)&status->sprites[1], 0);
     world_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (texture_primitive_t*)&status->sprites[2], 0);
     world_text_configure_sprite_vram(&rects[5], 0x10, 0xA, (texture_primitive_t*)&status->sprites[3], 0);
