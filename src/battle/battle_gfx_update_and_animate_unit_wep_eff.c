@@ -54,8 +54,8 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                 unit->sprite_blocks[i].trigger = 0;
             }
             unit->animation.sequence_id = stand_by_direction[sixteenth];
-            *(u16*)&unit->sprite_display_flags
-                = (*(u16*)&unit->sprite_display_flags
+            unit->sprite_display_flags
+                = (unit->sprite_display_flags
                       & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                 | flip_by_direction[sixteenth];
             unit->camera_facing_quadrant = quadrant;
@@ -152,8 +152,8 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                     } else {
                         unit->animation.sequence_id = animation * 2 + back_by_quadrant[quadrant];
                     }
-                    *(u16*)&unit->sprite_display_flags
-                        = (*(u16*)&unit->sprite_display_flags
+                    unit->sprite_display_flags
+                        = (unit->sprite_display_flags
                               & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                         | flip_by_quadrant[quadrant];
                     unit->camera_facing_quadrant = quadrant;
@@ -201,14 +201,14 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             sequence_id = unit->animation.sequence_id;
             if (sequence_id < (BATTLE_UNIT_ANIMATION_IDLE << 1)) {
                 unit->animation.sequence_id = stand_by_direction[sixteenth];
-                *(u16*)&unit->sprite_display_flags
-                    = (*(u16*)&unit->sprite_display_flags
+                unit->sprite_display_flags
+                    = (unit->sprite_display_flags
                           & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                     | flip_by_direction[sixteenth];
             } else {
                 unit->animation.sequence_id = (sequence_id & 0xfffe) + back_by_quadrant[quadrant];
-                *(u16*)&unit->sprite_display_flags
-                    = (*(u16*)&unit->sprite_display_flags
+                unit->sprite_display_flags
+                    = (unit->sprite_display_flags
                           & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                     | flip_by_quadrant[quadrant];
             }

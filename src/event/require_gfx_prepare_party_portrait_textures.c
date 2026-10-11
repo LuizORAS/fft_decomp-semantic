@@ -1,9 +1,6 @@
 #include "fft/event_require.h"
 #include "psx/libgpu.h"
 
-/* This overlay reads BATTLE's attack entry mode unsigned (lhu). */
-#define ENTRY_MODE (*(u16*)&g_battle_script_attack_entry_mode)
-
 /* Uploads the 20 party portraits (sprite and palette cells) from the 0x18ba
  * portrait sheet file to VRAM.
  *
@@ -30,7 +27,7 @@ void require_gfx_prepare_party_portrait_textures(void) {
     RECT unused[2];
 
     file = (s32)main_heap_alloc(MAIN_GFX_WLDFACE_FILE_SIZE);
-    if (ENTRY_MODE != 0) {
+    if (g_battle_script_attack_entry_mode != 0) {
         g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
         battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE, file);
     } else {

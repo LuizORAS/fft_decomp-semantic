@@ -1,8 +1,5 @@
 #include "fft/event_attack.h"
 
-/* This overlay reads BATTLE's attack entry mode unsigned (lhu). */
-#define ENTRY_MODE (*(u16*)&g_battle_script_attack_entry_mode)
-
 /* 0x18-byte scenario record in the ATTACK.OUT data at 0x801cf938.
  * Halfwords are stored little-endian and unaligned. */
 typedef struct attack_scenario {
@@ -63,7 +60,7 @@ s32 attack_load_scenario_conditionals(void) {
             g_main_system_go_straight_to_battle = 0;
         }
     }
-    if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+    if (g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
         g_main_special_portrait_wldface_id = 0;
         g_main_special_portrait_unit_id = 0;
         value = g_main_scenario_event_finish_operations[battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT)];
