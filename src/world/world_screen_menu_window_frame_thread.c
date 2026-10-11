@@ -17,7 +17,7 @@ void world_screen_menu_window_frame_thread(void) {
     world_panel_frame_t* prim = g_world_menu_panel_buffer.panel_frames;
     s32* source_stride = &g_world_text_glyph_source.stride;
     s32* dest_stride = &g_world_text_glyph_dest.stride;
-    world_menu_window_t* menu;
+    urect16_t* menu;
     u8* pixels;
     s32 texture_u;
     s32 texture_v;

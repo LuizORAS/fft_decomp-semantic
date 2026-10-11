@@ -5,7 +5,7 @@
 /* Fills one POLY_FT4 for a formation graphic entry: scales the entry's
  * offset and size by a 12-bit fixed scale (rounded to the nearest pixel,
  * size made positive) and places it at position + origin. */
-void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, upoint16_t* position,
+void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, const RECT* position,
     main_zodiac_sprite_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin) {
     s32 x_off = rect->offset_x * scale->x;
     s32 y_off = rect->offset_y * scale->y;
@@ -55,12 +55,12 @@ void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_l
     poly->v2 = rect->v + rect->height;
     poly->u3 = rect->u + rect->width;
     poly->v3 = rect->v + rect->height;
-    poly->x0 = position->x + x_off + origin->x;
-    poly->y0 = position->y + y_off + origin->y;
-    poly->x1 = position->x + x_off + origin->x + w;
-    poly->y1 = position->y + y_off + origin->y;
-    poly->x2 = position->x + x_off + origin->x;
-    poly->y2 = position->y + y_off + origin->y + h;
-    poly->x3 = position->x + x_off + origin->x + w;
-    poly->y3 = position->y + y_off + origin->y + h;
+    poly->x0 = (u16)position->x + x_off + origin->x;
+    poly->y0 = (u16)position->y + y_off + origin->y;
+    poly->x1 = (u16)position->x + x_off + origin->x + w;
+    poly->y1 = (u16)position->y + y_off + origin->y;
+    poly->x2 = (u16)position->x + x_off + origin->x;
+    poly->y2 = (u16)position->y + y_off + origin->y + h;
+    poly->x3 = (u16)position->x + x_off + origin->x + w;
+    poly->y3 = (u16)position->y + y_off + origin->y + h;
 }

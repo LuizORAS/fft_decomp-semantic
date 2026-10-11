@@ -1412,8 +1412,8 @@ extern world_image_location_t g_world_formation_view_texture_page;
 extern u32 g_world_formation_menu_allowed_buttons; /* pad mask applied to the new presses of each menu frame */
 extern s32 g_world_formation_name_string_revision;
 extern main_zodiac_sprite_frame_t g_world_formation_view_graphic_rects[];
-extern point16_t g_world_formation_view_graphic_offsets[]; /* per-entry 12-bit fixed offsets */
-extern u8 g_world_formation_view_graphic_count;            /* formation graphic entry count */
+extern point16_t g_world_formation_view_graphic_scales[]; /* per-entry signed 12-bit fixed scales */
+extern u8 g_world_formation_view_graphic_count;           /* formation graphic entry count */
 extern zodiac_draw_context_t g_world_formation_view;
 
 /* Portrait code per sprite set: low byte is the portrait index. */
@@ -1521,7 +1521,7 @@ s32 world_formation_run_item_submenu_step(void);
 s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
-void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, upoint16_t* position,
+void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, const RECT* position,
     main_zodiac_sprite_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin);
 /* The mode argument of world_formation_build_record_list: which roster units
  * it lists. */
@@ -1997,17 +1997,6 @@ typedef struct world_menu_number_range {
     s16 _unknown_04[2];      /* 0x04: -1 from wldcore_window_init_number_panel_render_thread */
     void (*on_change)(void); /* 0x08 */
 } world_menu_number_range_t;
-
-/* The menu thread's first parameter as the window frame threads read it. Only the
- * leading window rectangle is used and the record is certainly longer, so no
- * size is asserted. The fields are unsigned: every read in the target is an
- * lhu, and making them signed turns each one into an lh. */
-typedef struct world_menu_window {
-    u16 x;
-    u16 y;
-    u16 w;
-    u16 h;
-} world_menu_window_t;
 
 /* The primitive block at 0x801cc074: the dead-unit and window-frame panels
  * lay it out as two panel frames, world_menu_build_sprite_page as two sprite

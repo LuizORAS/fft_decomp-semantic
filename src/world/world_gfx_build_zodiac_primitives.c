@@ -9,7 +9,7 @@
  * into the ordering table and the quads only when the view asks for it.
  */
 void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly) {
-    upoint16_t position;
+    point16_t scale;
     s32 i;
     s32 x;
     s32 y;
@@ -22,8 +22,8 @@ void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* po
         poly->b0 = view->brightness;
         SetSemiTrans(poly, 1);
         SetShadeTex(poly, 0);
-        x = g_world_formation_view_graphic_offsets[i].x;
-        y = g_world_formation_view_graphic_offsets[i].y;
+        x = g_world_formation_view_graphic_scales[i].x;
+        y = g_world_formation_view_graphic_scales[i].y;
         x *= view->scale_x;
         y *= view->scale_y;
         if (x - (x / ONE) * ONE >= 0x800) {
@@ -34,11 +34,10 @@ void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* po
         }
         x /= ONE;
         y /= ONE;
-        position.x = x;
-        position.y = y;
+        scale.x = x;
+        scale.y = y;
         world_gfx_set_scaled_poly_ft4_geometry_and_uv(poly, &g_world_formation_view_texture_page,
-            (upoint16_t*)&g_world_gfx_full_texture_window, &g_world_formation_view_graphic_rects[i], &position,
-            &view->offset);
+            &g_world_gfx_full_texture_window, &g_world_formation_view_graphic_rects[i], &scale, &view->offset);
         if (view->link_primitives != 0) {
             addPrim(view->ot, poly);
             poly++;

@@ -1354,7 +1354,7 @@ data:
   - {addr: 0x80189f60, name: g_world_formation_menu_allowed_buttons}
   - {addr: 0x80189f6c, name: g_world_formation_name_string_revision}
   - {addr: 0x80189f70, name: g_world_formation_view_graphic_rects}
-  - {addr: 0x8018a0cc, name: g_world_formation_view_graphic_offsets}
+  - {addr: 0x8018a0cc, name: g_world_formation_view_graphic_scales}
   - {addr: 0x8018a141, name: g_world_formation_view_graphic_count}
   - {addr: 0x8018a144, name: g_world_formation_view}
   - {addr: 0x8018a168, name: g_world_formation_sprite_by_portrait}
