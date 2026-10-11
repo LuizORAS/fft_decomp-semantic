@@ -286,7 +286,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
         break;
     case GNS_RESOURCE_TEXTURE_ANIMATIONS:
         source = data->texture_animations;
-        for (i = 0; i < 32; i++) {
+        for (i = 0; i < MAP_TEXTURE_ANIMATION_COUNT; i++) {
             g_battle_map_texture_animation_handles[i] = 0;
             g_battle_map_texture_animations[i] = source[i];
             SetDrawMove(&g_battle_map_texture_animation_moves[i]);

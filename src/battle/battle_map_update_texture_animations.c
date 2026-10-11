@@ -17,7 +17,7 @@
 void battle_map_update_texture_animations(void) {
     s32 i;
 
-    for (i = 0; i < 32; i++) {
+    for (i = 0; i < MAP_TEXTURE_ANIMATION_COUNT; i++) {
         if (g_battle_map_texture_animations[i].active == 0) {
             continue;
         }

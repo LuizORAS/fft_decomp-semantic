@@ -89,29 +89,29 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
         SetDrawMode(&g_battle_render_buffers[1].overlay_modes[0], 0, 1, 0, 0);
         break;
     case MAP_DATA_COMMAND_DISABLE_ALL_TEXTURE_ANIMATIONS:
-        for (i = 0; i < 32; i++) {
+        for (i = 0; i < MAP_TEXTURE_ANIMATION_COUNT; i++) {
             g_battle_map_saved_texture_animation_modes[i] = g_battle_map_texture_animations[i].mode;
             g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_NONE;
         }
         break;
     case MAP_DATA_COMMAND_RESTORE_ALL_TEXTURE_ANIMATIONS:
-        for (i = 0; i < 32; i++) {
+        for (i = 0; i < MAP_TEXTURE_ANIMATION_COUNT; i++) {
             g_battle_map_texture_animations[i].mode = g_battle_map_saved_texture_animation_modes[i];
         }
         break;
     case MAP_DATA_COMMAND_DISABLE_TEXTURE_ANIMATION:
-        if (index < 32) {
+        if (index < MAP_TEXTURE_ANIMATION_COUNT) {
             g_battle_map_saved_texture_animation_modes[index] = g_battle_map_texture_animations[index].mode;
             g_battle_map_texture_animations[index].mode = MAP_TEXTURE_ANIMATION_MODE_NONE;
         }
         break;
     case MAP_DATA_COMMAND_RESTORE_TEXTURE_ANIMATION:
-        if (index < 32) {
+        if (index < MAP_TEXTURE_ANIMATION_COUNT) {
             g_battle_map_texture_animations[index].mode = g_battle_map_saved_texture_animation_modes[index];
         }
         break;
     case MAP_DATA_COMMAND_SET_TEXTURE_ANIMATION_DURATION:
-        if (index < 32) {
+        if (index < MAP_TEXTURE_ANIMATION_COUNT) {
             g_battle_map_texture_animations[index].duration = object_state;
             g_battle_map_texture_animations[index].timer = 0;
         }

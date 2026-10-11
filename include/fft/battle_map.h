@@ -719,6 +719,8 @@ typedef enum map_texture_animation_mode {
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_PLAYING = 130,
 } map_texture_animation_mode_e;
 
+enum { MAP_TEXTURE_ANIMATION_COUNT = 32 };
+
 /* Provisional runtime copy of one 0x14-byte map texture animation
  * instruction (32 rows).
  * UV animations move a canvas-sized frame through VRAM with the DR_MOVE
@@ -798,7 +800,7 @@ typedef union battle_map_resource {
     map_mesh_file_header_t mesh_file;
     battle_map_light_resource_t lighting;
     battle_map_terrain_resource_t terrain;
-    battle_map_texture_animation_t texture_animations[32];
+    battle_map_texture_animation_t texture_animations[MAP_TEXTURE_ANIMATION_COUNT];
     battle_map_state_record_t state_record;
     gns_record_view_t gns_records[150];
     gns_command_record_prefix_t command;
@@ -828,7 +830,7 @@ extern map_move_find_item_data_t g_battle_map_move_find_item_data[MAP_ID_COUNT];
 extern map_move_find_item_data_t g_battle_current_map_move_find_item_data;
 extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
 extern s32 g_battle_map_resource_load_state;                                 /* map_resource_load_state_e */
-extern s32 g_battle_map_texture_animation_handles[];
+extern s32 g_battle_map_texture_animation_handles[MAP_TEXTURE_ANIMATION_COUNT];
 extern map_texture_animation_state_t g_battle_map_texture_animation_states[];
 extern s32 g_battle_map_textured_quad_count;
 extern s32 g_battle_map_textured_quad_render_record_count;
@@ -906,8 +908,8 @@ extern map_color_transition_t g_battle_map_darkness_transition;
 extern battle_map_mesh_part_t g_battle_map_mesh_parts[9];
 extern battle_map_mesh_keyframe_t g_battle_map_mesh_animation_keyframes[];
 extern battle_map_mesh_instructions_t g_battle_map_mesh_animation_instructions[9];
-extern battle_map_texture_animation_t g_battle_map_texture_animations[32];
-extern DR_MOVE g_battle_map_texture_animation_moves[32];
+extern battle_map_texture_animation_t g_battle_map_texture_animations[MAP_TEXTURE_ANIMATION_COUNT];
+extern DR_MOVE g_battle_map_texture_animation_moves[MAP_TEXTURE_ANIMATION_COUNT];
 extern SVECTOR g_battle_map_camera_rotation;
 extern battle_lightning_state_t g_battle_map_lightning_state;
 extern rgb24_t g_battle_map_ambient_polygon_color;

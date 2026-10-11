@@ -61,7 +61,7 @@ void battle_map_reset_mesh_render_state(void) {
     for (i = 0; i < 256; i++) {
         g_battle_map_untextured_quad_positions[i].polygon_flags = 0;
     }
-    for (i = 0; i < 32; i++) {
+    for (i = 0; i < MAP_TEXTURE_ANIMATION_COUNT; i++) {
         g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_NONE;
         g_battle_map_texture_animations[i].active = 0;
     }
