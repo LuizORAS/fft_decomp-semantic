@@ -13,7 +13,7 @@ void equip_item_calculate_equipment_swap_stat_delta(
 
     for (i = 0; i < 5; i++) {
         equip_item_calculate_swap_stat_delta(
-            &detail_delta, &summary_delta, from_items[i] & 0x3FF, to_items[i] & 0x3FF, i);
+            &detail_delta, &summary_delta, from_items[i] & EQUIP_ITEM_ID_MASK, to_items[i] & EQUIP_ITEM_ID_MASK, i);
         equip_item_subtract_scaled_stats(detail_total, detail_total, &detail_delta, -1);
         summary_total->hp_bonus += summary_delta.hp_bonus;
         summary_total->mp_bonus += summary_delta.mp_bonus;

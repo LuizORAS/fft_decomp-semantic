@@ -31,7 +31,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
     count = 0;
     while (list[count] != -1) {
         entry = (s16*)(count * 2 + (s32)list);
-        item_a = *entry & 0x3ff;
+        item_a = *entry & EQUIP_ITEM_ID_MASK;
         if (item_a == 0 || item_a >= ITEM_ID_END) {
             while ((*entry = entry[1]) != -1) {
                 entry++;
@@ -49,8 +49,8 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
         for (j = 0; j < passes; j++) {
             k = 0;
             criterion = criteria[k];
-            item_a = list[j] & 0x3ff;
-            item_b = list[j + 1] & 0x3ff;
+            item_a = list[j] & EQUIP_ITEM_ID_MASK;
+            item_b = list[j + 1] & EQUIP_ITEM_ID_MASK;
             while (criterion >= 0) {
                 if (criterion == ITEM_SORT_KEY_TYPE) {
                     key_a = g_main_item_primary_data[item_a].type;

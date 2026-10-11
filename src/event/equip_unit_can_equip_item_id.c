@@ -5,7 +5,7 @@
  * of the "other" menu category or a type the unit cannot use. The low ten
  * bits of the entry are the item id. */
 s32 equip_unit_can_equip_item_id(s16 unit_index, s16 item_entry) {
-    s32 item_id = item_entry & 0x3FF;
+    s32 item_id = item_entry & EQUIP_ITEM_ID_MASK;
     s32 result;
 
     if (item_id == 0) {

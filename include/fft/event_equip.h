@@ -79,6 +79,9 @@ void equip_input_update_with_message_state(void);
 void equip_update_controller_input(void);
 
 /* item */
+/* EQUIP's item lists, as WORLD's (world_item_*): the owned items of each category, their sorts and
+ * orders, and the stat previews of an equipment change. */
+
 /* g_equip_menu_screen_state: the index of the screen's handler in
  * g_equip_menu_screen_state_handlers. The command menu enters its picked row
  * + EQUIP: Equip, Remove and the item list are rows 0, 2 and 3 (row 1 is
@@ -167,6 +170,9 @@ extern s32 g_equip_equipment_panel_style;
 extern u8 g_equip_equipment_render_commands[];
 
 /* slot */
+/* Which items a slot takes: the job's equippable types, the hand pairing of Two Hands and Two
+ * Swords, and the slot locks. */
+
 typedef enum equip_slot {
     EQUIP_SLOT_RIGHT_HAND = 0,
     EQUIP_SLOT_LEFT_HAND = 1,
@@ -194,6 +200,9 @@ extern s8 g_equip_slot_item_browser_previewed_index;
 extern point16_t g_equip_slot_marker_rect;
 
 /* unit */
+/* The unit being equipped and its comparison copy: built from the battle stats when the screen
+ * opens, edited slot by slot, and written back to the battle stats and party record. */
+
 /* EQUIP.OUT's 0x7A-byte unit preview, built from battle_stats_t by
  * equip_unit_build_data_from_battle_stats (0x801C6920). Field names follow
  * the battle_stats_t source; evasion_N maps to the corresponding
