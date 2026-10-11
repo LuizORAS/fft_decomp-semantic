@@ -97,7 +97,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     }
     main_util_set_svector(&position, unit->screen.vx + unit->event_offset.vx + unit->seq_offset.vx, 0,
         unit->screen.vz + unit->event_offset.vz + unit->seq_offset.vz);
-    position.vy = battle_map_calculate_slope_height(&position.vx, unit->map_z);
+    position.vy = battle_map_calculate_slope_height(&position, unit->map_z);
     if (unit->screen.vy >= position.vy) {
         packet = ot;
     } else {

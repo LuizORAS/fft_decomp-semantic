@@ -1033,13 +1033,13 @@ typedef struct world_unit_animation_state {
 } world_unit_animation_state_t;
 typedef char world_unit_animation_state_size_must_be_7[sizeof(world_unit_animation_state_t) == 7 ? 1 : -1];
 
-/* Provisional: three-halfword map tile coordinate staged for battle_unit_place_in_new_location by
- * the WarpUnit event instructions. */
-typedef struct world_unit_coordinates {
+/* Tile coordinates passed by WarpUnit and WalkTo, in x/elevation/y order. */
+typedef struct unit_tile_coordinates {
     s16 x;         /* 0x00 */
     s16 elevation; /* 0x02 */
     s16 y;         /* 0x04 */
-} world_unit_coordinates_t;
+} unit_tile_coordinates_t;
+typedef char unit_tile_coordinates_size_must_be_6[sizeof(unit_tile_coordinates_t) == 6 ? 1 : -1];
 
 /* other */
 /* Battle Stats 0x05 and Miscellaneous Unit Data 0x13d share this byte. */

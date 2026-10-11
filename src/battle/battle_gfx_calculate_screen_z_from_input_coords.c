@@ -17,12 +17,12 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* uni
     if (unit->standing_on_unit_id_plus_one != 0) {
         battle_unit_calculate_height_data(&height, unit->standing_on_unit_id_plus_one - 1);
         if (height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
-            screen_z = battle_map_calculate_slope_height(&coords->vx, coords->vy & 0xff);
+            screen_z = battle_map_calculate_slope_height(coords, coords->vy & 0xff);
         } else {
             screen_z = -height.total_height / 2 * 12;
         }
     } else {
-        screen_z = battle_map_calculate_slope_height(&coords->vx, coords->vy & 0xff);
+        screen_z = battle_map_calculate_slope_height(coords, coords->vy & 0xff);
     }
     if (unit->battle_data != 0) {
         tile = battle_map_get_tile_data_pointer(coords->vx / 28, coords->vz / 28, coords->vy);

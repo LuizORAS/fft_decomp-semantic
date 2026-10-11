@@ -1,13 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The target coordinates occupy a 16-byte frame slot, like the unreferenced
- * slot below the velocity copy in battle_move_animate_jump_start. */
-typedef struct battle_move_jump_target {
-    SVECTOR coords;
-    u8 _unused_08[8];
-} battle_move_jump_target_t;
-
 /* Distortion animation 0x06: jump along an arc toward the first target's sprite
  * centre (its screen position raised by half its spritesheet height), or to the
  * action target tile when the unit has no targets.
@@ -19,7 +12,9 @@ typedef struct battle_move_jump_target {
  * gaining g_battle_move_jump_gravity each frame, and ends the animation where the
  * arc leaves the unit. */
 void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
-    battle_move_jump_target_t target;
+    SVECTOR target;
+    /* The retail frame reserves eight bytes beyond the target vector. */
+    u8 unused_target_tail[8];
     VECTOR velocity;
     battle_unit_misc_data_t* other;
     s32 timer;
@@ -31,17 +26,16 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
         if (unit->battle_data != 0) {
             if (unit->strike.target_count != 0) {
                 other = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
-                target.coords.vx = other->screen.vx;
-                target.coords.vy
-                    = other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2;
-                target.coords.vz = other->screen.vz;
+                target.vx = other->screen.vx;
+                target.vy = other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2;
+                target.vz = other->screen.vz;
             } else {
-                target.coords.vx = unit->battle_data->action_command.target_x * 28 + 14;
-                target.coords.vz = unit->battle_data->action_command.target_y * 28 + 14;
-                target.coords.vy = battle_map_calculate_slope_height(
-                    &target.coords.vx, unit->battle_data->action_command.target_elevation);
+                target.vx = unit->battle_data->action_command.target_x * 28 + 14;
+                target.vz = unit->battle_data->action_command.target_y * 28 + 14;
+                target.vy
+                    = battle_map_calculate_slope_height(&target, unit->battle_data->action_command.target_elevation);
             }
-            timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target.coords, &velocity);
+            timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
             unit->distortion_phase++;
         } else {
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;

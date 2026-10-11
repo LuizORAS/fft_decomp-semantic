@@ -1025,6 +1025,7 @@ enum {
     BATTLE_EVENT_STATUS_MASK_COUNT = 3,
 };
 
+extern unit_tile_coordinates_t g_battle_script_warp_coords;
 extern u16 g_battle_script_attack_entry_mode; /* script_attack_entry_mode_e */
 extern s32 g_battle_script_condition_unit_battle_id;
 extern s32 g_battle_script_rand16_state;
@@ -5162,7 +5163,7 @@ void battle_unit_learn_used_ability(battle_stats_t* unit);
 void battle_unit_transform_into_morbol(battle_stats_t* unit);
 void battle_unit_mount_rider_onto_unit(battle_unit_misc_data_t* rider, battle_unit_misc_data_t* mount);
 s32 battle_unit_move_misc_unit_to_head(u32 misc_id);
-s32 battle_unit_place_in_new_location(u32 misc_id, s16* tile, s32 facing);
+s32 battle_unit_place_in_new_location(u32 misc_id, unit_tile_coordinates_t* tile, s32 facing);
 s32 battle_unit_poll_and_load_entd_units(void);
 s32 battle_unit_remove_misc_by_id(u32 misc_id);
 void battle_unit_reset_animation_states(void);
@@ -7237,7 +7238,7 @@ void battle_move_set_spreading_tile_x_and_y_coordinates(void);
 void battle_move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
 void battle_move_snap_axis_to_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
 void battle_move_spread_to_neighbors(void);
-s32 battle_move_start_unit_walk_to(s32 misc_id, s16* coordinates, s32 elevation_addend, s32 mode, s32 speed);
+s32 battle_move_start_unit_walk_to(s32 misc_id, unit_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed);
 void battle_move_step_unit_to_map_tile_center_no_height_change(battle_unit_misc_data_t* unit);
 void battle_move_step_unit_to_map_tile_center_with_height_change(battle_unit_misc_data_t* unit);
 void battle_move_transfer_tiles_height_halves_and_slope_to_scratch_pad(void);
@@ -8287,7 +8288,7 @@ void battle_map_wait_for_refresh(void);
 void battle_map_modify_palette(
     s32 command, s32 amount, s32 clut_row, s32 clut_index, s32 all_colors, s16 red, s16 green, s16 blue);
 
-s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z);
+s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z);
 s32 battle_map_resolve_rotated_offset_layer(battle_stats_t*, s32, s32, s32, s32*, s32*, s32*);
 s32 battle_map_load_data(s32 map_id, s32 command);
 void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
