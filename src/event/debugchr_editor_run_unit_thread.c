@@ -76,6 +76,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     }
 
     {
+        /* Whole-record locals fold these saved member addresses into absolute stores. */
         s32* refresh_a;
         s32* refresh_b;
         s32* refresh_c;
@@ -87,11 +88,14 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         *refresh_b = 0;
         *refresh_c = 0;
         battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, debugchr_render_unit_status_panel_thread);
-        battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (u8*)refresh_a - 0x10, 0, 0);
+        battle_thread_set_parameters(
+            NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (u8*)refresh_a - offsetof(world_status_thread_t, style), 0, 0);
         battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
-        battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - 0x10, 0, 0);
+        battle_thread_set_parameters(
+            NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - offsetof(world_status_thread_t, style), 0, 0);
         battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
-        battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (u8*)refresh_c - 0x10, 0, 0);
+        battle_thread_set_parameters(
+            NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (u8*)refresh_c - offsetof(world_status_thread_t, style), 0, 0);
     }
 
     frame = 0;
@@ -108,8 +112,9 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         g_debugchr_input_controller = battle_script_get_controller_input_pointer(0);
         {
             s32 render_offset;
-            render_offset = (frame & 1) * 0x4b0;
-            debugchr_gfx_build_status_group_primitives((void*)(render_offset + (s32)render_buffers));
+            render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);
+            /* Typed polygon indexing reverses the ADDU operands. */
+            debugchr_gfx_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
         }
 
         if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
@@ -163,8 +168,9 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                     battle_thread_yield();
                     {
                         s32 render_offset;
-                        render_offset = (frame & 1) * 0x4b0;
-                        debugchr_gfx_build_status_group_primitives((void*)(render_offset + (s32)render_buffers));
+                        render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);
+                        /* Typed polygon indexing reverses the ADDU operands. */
+                        debugchr_gfx_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
                     }
                     if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
                         break;
@@ -238,7 +244,9 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         selected_unit_ptr[0] = g_debugchr_editor_unit_ids[0];
         /* A register address keeps cse from folding this store to a direct
          * global address. */
-        comparison_ptr = selected_unit_ptr - 5;
+        comparison_ptr = selected_unit_ptr
+            - (offsetof(battle_active_unit_t, battle_id) - offsetof(battle_active_unit_t, name_id))
+                / sizeof(*selected_unit_ptr);
         *comparison_ptr = g_debugchr_editor_unit_ids[0];
         *unit_type_id_ptr = g_debugchr_editor_unit_ids[0];
         debugchr_editor_load_selected_unit();
