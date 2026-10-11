@@ -18,7 +18,7 @@ s32 main_status_find_action_highest_order_effect(const battle_action_data_t* act
     for (status_index = 0; status_index < BATTLE_STATUS_COUNT; status_index++) {
         byte_index = status_index / 8;
         mask = 0x80 >> (status_index & 7);
-        if (action->status_removal[byte_index] & mask) {
+        if (action->status_changes.removal[byte_index] & mask) {
             current_order = g_main_status_effect_data[status_index].order;
             if (current_order > highest_order) {
                 highest_order = current_order;
@@ -29,7 +29,7 @@ s32 main_status_find_action_highest_order_effect(const battle_action_data_t* act
                 }
             }
         }
-        if (action->status_infliction[byte_index] & mask) {
+        if (action->status_changes.infliction[byte_index] & mask) {
             current_order = g_main_status_effect_data[status_index].order;
             if (current_order > highest_order) {
                 highest_order = current_order;

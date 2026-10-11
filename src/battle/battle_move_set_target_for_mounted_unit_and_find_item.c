@@ -29,7 +29,7 @@ u32 battle_move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) 
         g_battle_action_target_data = &target->action;
         battle_action_clear_current_data(&target->action);
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            g_battle_action_target_data->status_removal[i]
+            g_battle_action_target_data->status_changes.removal[i]
                 = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_MOUNT_REMOVAL][i];
         }
         if (battle_status_modify_inflictions(0) != 0) {

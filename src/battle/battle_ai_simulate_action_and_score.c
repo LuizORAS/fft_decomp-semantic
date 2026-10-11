@@ -259,11 +259,11 @@ score_state:
             {
                 u32 golem;
 
-                weight_offset = g_battle_team_golem[(unit->team_flags >> 4) & 3];
+                weight_offset = g_battle_team_golem[(unit->team_flags >> BATTLE_TEAM_SHIFT) & BATTLE_TEAM_INDEX_MASK];
                 golem = weight_offset;
                 weight_offset *= BATTLE_AI_GOLEM_SCORE_SCALE;
                 score += weight_offset / ai->present_unit_average_max_hp;
-                if (golem < ai->team_golem[(unit->team_flags >> 4) & 3])
+                if (golem < ai->team_golem[(unit->team_flags >> BATTLE_TEAM_SHIFT) & BATTLE_TEAM_INDEX_MASK])
                     score--;
             }
             if (ai->unit_decisions[unit_index].enemy_flag)

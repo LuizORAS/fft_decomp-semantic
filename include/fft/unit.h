@@ -156,11 +156,17 @@ enum {
     BATTLE_ACTION_CT_CHANGE_QUICK = 0xff, /* CT filled */
 };
 
+/* The pending infliction/removal masks are copied and cleared together. */
+typedef struct unit_action_status_changes {
+    u8 infliction[BATTLE_STATUS_BYTE_COUNT];
+    u8 removal[BATTLE_STATUS_BYTE_COUNT];
+} unit_action_status_changes_t;
+typedef char unit_action_status_changes_size_must_be_10[(sizeof(unit_action_status_changes_t) == 10) ? 1 : -1];
+
 /*
  * Temporary action results, 0x2c bytes at battle_stats_t+0x18c (0x18c..0x1b7).
- * The g_target_current_action / g_attacker_current_action pointers address this
- * block directly.  status_infliction/status_removal mirror the five
- * status_sets.current bytes.
+ * The action target/attacker pointers address this block directly.
+ * status_changes.infliction/removal mirror the five status_sets.current bytes.
  */
 typedef struct battle_action_data {
     u8 hit;          /* 0x00; 1 hit, 0 miss */
@@ -174,22 +180,21 @@ typedef struct battle_action_data {
     s16 gil_change;  /* 0x0c; stolen / lost */
     s16 reaction_id; /* 0x0e */
     /* Target readers and writers consistently access 0x10-0x11 as one halfword. */
-    u16 special_effect;       /* 0x10; battle_action_special_effect_e */
-    u8 sp_change;             /* 0x12 */
-    u8 ct_change;             /* 0x13; BATTLE_ACTION_CT_CHANGE_* or an amount */
-    u8 pa_change;             /* 0x14 */
-    u8 ma_change;             /* 0x15 */
-    u8 brave_change;          /* 0x16 */
-    u8 faith_change;          /* 0x17 */
-    u8 miss_display_flags;    /* 0x18 */
-    u8 equipment_destroyed;   /* 0x19; battle_action_equipment_slot_mask_e */
-    u8 stolen_item_id;        /* 0x1a */
-    u8 status_infliction[5];  /* 0x1b */
-    u8 status_removal[5];     /* 0x20 */
-    u8 attack_type;           /* 0x25; battle_action_type_flags_e */
-    u16 last_received_attack; /* 0x26; reaction data, varies by ability */
-    u8 exp_change;            /* 0x28; Steal EXP */
-    u8 jp_change;             /* 0x29; Move-JP Up / JP stolen */
+    u16 special_effect;                          /* 0x10; battle_action_special_effect_e */
+    u8 sp_change;                                /* 0x12 */
+    u8 ct_change;                                /* 0x13; BATTLE_ACTION_CT_CHANGE_* or an amount */
+    u8 pa_change;                                /* 0x14 */
+    u8 ma_change;                                /* 0x15 */
+    u8 brave_change;                             /* 0x16 */
+    u8 faith_change;                             /* 0x17 */
+    u8 miss_display_flags;                       /* 0x18 */
+    u8 equipment_destroyed;                      /* 0x19; battle_action_equipment_slot_mask_e */
+    u8 stolen_item_id;                           /* 0x1a */
+    unit_action_status_changes_t status_changes; /* 0x1b; removal at 0x20 */
+    u8 attack_type;                              /* 0x25; battle_action_type_flags_e */
+    u16 last_received_attack;                    /* 0x26; reaction data, varies by ability */
+    u8 exp_change;                               /* 0x28; Steal EXP */
+    u8 jp_change;                                /* 0x29; Move-JP Up / JP stolen */
     /* Written as a halfword everywhere (battle_formula_apply_status lhu/sh,
      * arrow_guard_usability, battle_formula_apply_catch, force_attack_miss). */
     s16 attack_accuracy; /* 0x2a */
@@ -1088,6 +1093,13 @@ typedef struct unit_tile_coordinates {
 typedef char unit_tile_coordinates_size_must_be_6[sizeof(unit_tile_coordinates_t) == 6 ? 1 : -1];
 
 /* other */
+/* Team bits select one of four independently tracked battle teams. */
+enum {
+    BATTLE_TEAM_COUNT = 4,
+    BATTLE_TEAM_SHIFT = 4,
+    BATTLE_TEAM_INDEX_MASK = 0x03,
+};
+
 /* Battle Stats 0x05 and Miscellaneous Unit Data 0x13d share this byte. */
 typedef enum battle_team_flags {
     BATTLE_TEAM_MASK = 0x30,

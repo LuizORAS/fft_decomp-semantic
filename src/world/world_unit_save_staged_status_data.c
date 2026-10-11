@@ -42,14 +42,14 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
                     value = stats->status_sets.current[i];
                     value &= g_world_status_removal_mask_staged_monster[i];
                     st = g_world_unit_status_staging_data;
-                    stats->action.status_removal[i] = value;
+                    stats->action.status_changes.removal[i] = value;
                     st->added[unit_id][i] = value;
                     st->removed[unit_id][i] = value;
                 } else {
                     value = stats->status_sets.current[i];
                     value &= g_world_status_removal_mask_staged[i];
                     st = g_world_unit_status_staging_data;
-                    stats->action.status_removal[i] = value;
+                    stats->action.status_changes.removal[i] = value;
                     st->added[unit_id][i] = value;
                     st->removed[unit_id][i] = value;
                 }
@@ -57,7 +57,7 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
                 value = stats->status_sets.current[i];
                 value &= g_world_status_removal_mask_unstaged[i];
                 st = g_world_unit_status_staging_data;
-                stats->action.status_removal[i] = value;
+                stats->action.status_changes.removal[i] = value;
                 st->added[unit_id][i] = value;
                 st->removed[unit_id][i] = value;
             }
@@ -70,7 +70,7 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
             g_world_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_FLOAT_REMOVED;
         }
-        if (stats->action.status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
+        if (stats->action.status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)) {
             stats->team_flags = stats->initial_team_flags;
         }

@@ -9,12 +9,12 @@
  * (battle_status_inflict_by_entd_unit_id) in the middle of an action.
  */
 s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only) {
-    u8 saved[10];
+    unit_action_status_changes_t saved;
 
     if (g_battle_unit_stats[unit_id].entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    main_util_copy_byte_data(g_battle_action_target_data->status_infliction, saved, 10);
+    main_util_copy_byte_data(&g_battle_action_target_data->status_changes, &saved, sizeof(saved));
     g_battle_action_current_ability.target_id = unit_id;
     g_battle_action_target = &g_battle_unit_stats[unit_id];
     g_battle_action_target_data = &g_battle_unit_stats[unit_id].action;
@@ -31,6 +31,6 @@ s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only) {
         g_battle_action_target->charged_ability_ct = 0xFF;
     }
     battle_status_remove_control(g_battle_action_target);
-    main_util_copy_byte_data(saved, g_battle_action_target_data->status_infliction, 10);
+    main_util_copy_byte_data(&saved, &g_battle_action_target_data->status_changes, sizeof(saved));
     return 0;
 }

@@ -57,16 +57,16 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         inflict_status_mode = g_battle_unit_status_staging_data->inflict_status_mode[unit_id];
         if (inflict_status_mode != UNIT_INFLICT_STATUS_MODE_NONE) {
             if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_POISON) {
-                unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
+                unit->action.status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_POISON);
             } else if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_CRYSTAL) {
-                unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                unit->action.status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL);
             } else if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_REVIVE) {
                 unit->hp = 1;
-                unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
+                unit->action.status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
-                unit->action.status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                unit->action.status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD);
             }
             g_battle_thread_call_target = (void (*)(void))battle_status_resolve_unit_changes;

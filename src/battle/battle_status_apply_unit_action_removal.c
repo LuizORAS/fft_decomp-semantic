@@ -17,18 +17,18 @@ void battle_status_apply_unit_action_removal(battle_stats_t* unit) {
     g_battle_action_target_data = &unit->action;
     misc_unit_id = unit->misc_unit_id;
     for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-        g_battle_action_target_data->status_removal[i] &= unit->status_sets.current[i];
+        g_battle_action_target_data->status_changes.removal[i] &= unit->status_sets.current[i];
     }
     for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
         idx = i / 8;
         mask = 0x80 >> (i & 7);
-        if (g_battle_action_target_data->status_removal[idx] & mask) {
+        if (g_battle_action_target_data->status_changes.removal[idx] & mask) {
             main_status_set_ct(unit, i, 0);
             battle_status_enable_special_flags(BATTLE_STATUS_HANDLER_INDEX(i), 0, misc_unit_id);
         }
     }
     for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-        unit->status_sets.current[i] &= ~g_battle_action_target_data->status_removal[i];
-        unit->status_sets.innate[i] &= ~g_battle_action_target_data->status_removal[i];
+        unit->status_sets.current[i] &= ~g_battle_action_target_data->status_changes.removal[i];
+        unit->status_sets.innate[i] &= ~g_battle_action_target_data->status_changes.removal[i];
     }
 }

@@ -27,7 +27,7 @@ void battle_status_store_for_current_attack(s32 unit_id, s32 removal_only) {
         byte = i / 8;
         /* Signed shift (srav); BATTLE_STATUS_BYTE_MASK shifts unsigned. */
         mask = 0x80 >> (i & 7);
-        if (!(g_battle_action_target_data->status_infliction[byte] & mask)) {
+        if (!(g_battle_action_target_data->status_changes.infliction[byte] & mask)) {
             continue;
         }
         blocked = 0;
@@ -41,7 +41,7 @@ void battle_status_store_for_current_attack(s32 unit_id, s32 removal_only) {
             continue;
         }
         for (j = 0; j < BATTLE_STATUS_BYTE_COUNT; j++) {
-            g_battle_action_target_data->status_removal[j] = g_main_status_effect_data[i].cancels[j];
+            g_battle_action_target_data->status_changes.removal[j] = g_main_status_effect_data[i].cancels[j];
         }
         battle_status_modify_inflictions(removal_only);
         battle_status_set_inflicted_ct_and_transfer_last_used_ct(unit_id);

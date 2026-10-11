@@ -1042,7 +1042,7 @@ extern u8 g_battle_mimic_pending_flags[21];
 extern s16 g_battle_preview_target_unit_id;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 
-extern u16 g_battle_team_golem[4]; /* 0x8018f5f4 */
+extern u16 g_battle_team_golem[BATTLE_TEAM_COUNT]; /* 0x8018f5f4 */
 extern s32 g_battle_formation_screen_active;
 
 /* BATTLE flag at 0x80165ff2, set by etc_graphic_open while a full-screen ETC

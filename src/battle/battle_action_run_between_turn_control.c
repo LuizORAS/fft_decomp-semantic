@@ -29,7 +29,7 @@ s32 battle_action_run_between_turn_control(battle_between_turn_mode_e mode) {
     if (mode == BATTLE_BETWEEN_TURN_MODE_RESET) {
         g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_ADD_CT;
         g_battle_turn_unit_id = -1;
-        for (i = 3; i >= 0; i--) {
+        for (i = BATTLE_TEAM_COUNT - 1; i >= 0; i--) {
             g_battle_team_golem[i] = 0;
         }
         g_battle_action_current_attacker.mimic_pending = 0;

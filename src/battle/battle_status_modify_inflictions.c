@@ -24,44 +24,44 @@ s32 battle_status_modify_inflictions(s32 removal_only) {
     immortal = g_battle_action_target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL;
     if (g_battle_action_target->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            g_battle_action_target_data->status_infliction[i] &= g_battle_rider_status_infliction_mask[i];
+            g_battle_action_target_data->status_changes.infliction[i] &= g_battle_rider_status_infliction_mask[i];
         }
     }
     action = g_battle_action_target_data;
-    inflicted = action->status_infliction[2];
+    inflicted = action->status_changes.infliction[2];
     if ((inflicted & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
         && (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
         && removal_only == 0) {
-        action->status_infliction[2] = inflicted & ~BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG);
-        g_battle_action_target_data->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+        action->status_changes.infliction[2] = inflicted & ~BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG);
+        g_battle_action_target_data->status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG);
     }
     for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
         if (removal_only == 0) {
             if (i < 3) {
-                g_battle_action_target_data->status_infliction[i] &= ~(
+                g_battle_action_target_data->status_changes.infliction[i] &= ~(
                     g_battle_action_target->status_sets.immunity[i] | g_battle_action_target->status_sets.current[i]);
             } else {
-                g_battle_action_target_data->status_infliction[i] &= ~(
+                g_battle_action_target_data->status_changes.infliction[i] &= ~(
                     g_battle_action_target->status_sets.immunity[i] | g_battle_action_target->status_sets.innate[i]);
             }
             if (immortal) {
-                g_battle_action_target_data->status_infliction[i]
+                g_battle_action_target_data->status_changes.infliction[i]
                     &= ~g_main_status_check_sets[MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY][i];
             }
         }
-        g_battle_action_target_data->status_removal[i] = g_battle_action_target_data->status_removal[i]
+        g_battle_action_target_data->status_changes.removal[i] = g_battle_action_target_data->status_changes.removal[i]
             & ~g_battle_action_target->status_sets.innate[i] & g_battle_action_target->inflicted_status[i];
     }
     if (removal_only == 0) {
         for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
             byte = i / 8;
             mask = 0x80 >> (i & 7);
-            if (g_battle_action_target_data->status_infliction[byte] & mask) {
+            if (g_battle_action_target_data->status_changes.infliction[byte] & mask) {
                 for (j = 0; j < BATTLE_STATUS_BYTE_COUNT; j++) {
                     if (g_battle_action_target->status_sets.current[j] & g_main_status_effect_data[i].cant_stack[j]) {
-                        g_battle_action_target_data->status_infliction[byte] &= ~mask;
+                        g_battle_action_target_data->status_changes.infliction[byte] &= ~mask;
                     }
                 }
             }
@@ -69,16 +69,17 @@ s32 battle_status_modify_inflictions(s32 removal_only) {
         for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
             byte = i / 8;
             mask = 0x80 >> (i & 7);
-            if (g_battle_action_target_data->status_infliction[byte] & mask) {
+            if (g_battle_action_target_data->status_changes.infliction[byte] & mask) {
                 for (j = 0; j < BATTLE_STATUS_BYTE_COUNT; j++) {
-                    g_battle_action_target_data->status_infliction[j] &= ~g_main_status_effect_data[i].cancels[j];
+                    g_battle_action_target_data->status_changes.infliction[j]
+                        &= ~g_main_status_effect_data[i].cancels[j];
                 }
             }
         }
     }
     for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-        total = total + g_battle_action_target_data->status_infliction[i]
-            + g_battle_action_target_data->status_removal[i];
+        total = total + g_battle_action_target_data->status_changes.infliction[i]
+            + g_battle_action_target_data->status_changes.removal[i];
     }
     return total;
 }

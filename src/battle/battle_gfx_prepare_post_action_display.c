@@ -101,13 +101,13 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
                     count = unit->status_display_image_count;
                     bit = 0x80 >> j;
                     if (count < BATTLE_ACTION_STATUS_DISPLAY_CAPACITY) {
-                        if (action->status_infliction[i] & bit) {
+                        if (action->status_changes.infliction[i] & bit) {
                             image = g_battle_action_status_display_image_ids[i][j];
                             unit->status_display_image_list[count] = image;
                             if (image != 0) {
                                 unit->status_display_image_count++;
                             }
-                        } else if (action->status_removal[i] & bit) {
+                        } else if (action->status_changes.removal[i] & bit) {
                             image = g_battle_action_status_display_image_ids[i][j];
                             unit->status_display_image_list[count] = image;
                             if (image != 0) {

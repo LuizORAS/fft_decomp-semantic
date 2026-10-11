@@ -32,8 +32,8 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         return -1;
     }
     if ((g_battle_action_target->status_sets.current[0] & STATUS_MASK(DEAD))
-        && ((g_battle_action_target_data->status_infliction[0] & STATUS_MASK(CRYSTAL))
-            || (g_battle_action_target_data->status_infliction[1] & STATUS_MASK(TREASURE)))) {
+        && ((g_battle_action_target_data->status_changes.infliction[0] & STATUS_MASK(CRYSTAL))
+            || (g_battle_action_target_data->status_changes.infliction[1] & STATUS_MASK(TREASURE)))) {
         battle_status_resolve_unit_changes(unit_id, 0);
         return 0;
     }
@@ -51,7 +51,8 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     if (g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_GOLEM_GUARD) {
         u16* golem;
 
-        golem = &g_battle_team_golem[(g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) >> 4];
+        golem = &g_battle_team_golem[(g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK)
+            >> BATTLE_TEAM_SHIFT];
         hp = *golem - g_battle_action_target_data->hp_damage;
         if (hp < 0) {
             hp = 0;
@@ -61,7 +62,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
     }
     if (g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_SET_GOLEM) {
         outcome = 1;
-        g_battle_team_golem[(g_battle_action_target->team_flags & BATTLE_TEAM_MASK) >> 4]
+        g_battle_team_golem[(g_battle_action_target->team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT]
             = g_battle_action_target->max_hp;
     }
     battle_action_check_mp_switch_distribute_and_damage_split_usability();
@@ -124,7 +125,7 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         && !(g_battle_action_target->status_sets.current[0] & STATUS_MASK(DEAD))
         && !(g_battle_action_target->status_sets.current[1] & STATUS_MASK(TREASURE))) {
         battle_action_clear_status_changes(g_battle_action_target_data);
-        g_battle_action_target_data->status_infliction[0] = STATUS_MASK(DEAD);
+        g_battle_action_target_data->status_changes.infliction[0] = STATUS_MASK(DEAD);
         battle_status_resolve_unit_changes(unit_id, 1);
         if (g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
             g_battle_action_target->ko_count++;
@@ -133,23 +134,23 @@ s32 battle_action_finalize_attack_and_flag_reactions(s32 unit_id) {
         return -(g_battle_action_target->mount_info >> 7);
     }
     if (hp <= (g_battle_action_target->max_hp / 5)) {
-        g_battle_action_target_data->status_infliction[2] |= STATUS_MASK(CRITICAL);
+        g_battle_action_target_data->status_changes.infliction[2] |= STATUS_MASK(CRITICAL);
     } else {
-        g_battle_action_target_data->status_removal[2] |= STATUS_MASK(CRITICAL);
+        g_battle_action_target_data->status_changes.removal[2] |= STATUS_MASK(CRITICAL);
     }
     if (g_battle_action_target->brave < 10) {
-        g_battle_action_target_data->status_infliction[2] |= STATUS_MASK(CHICKEN);
+        g_battle_action_target_data->status_changes.infliction[2] |= STATUS_MASK(CHICKEN);
     } else {
-        g_battle_action_target_data->status_removal[2] |= STATUS_MASK(CHICKEN);
+        g_battle_action_target_data->status_changes.removal[2] |= STATUS_MASK(CHICKEN);
     }
     if (g_battle_action_target_data->attack_type & BATTLE_ACTION_TYPE_HP_DAMAGE) {
-        g_battle_action_target_data->status_removal[4] |= STATUS_MASK(CHARM) | STATUS_MASK(SLEEP);
-        g_battle_action_target_data->status_removal[2] |= STATUS_MASK(TRANSPARENT);
-        g_battle_action_target_data->status_removal[1] |= STATUS_MASK(CONFUSION);
+        g_battle_action_target_data->status_changes.removal[4] |= STATUS_MASK(CHARM) | STATUS_MASK(SLEEP);
+        g_battle_action_target_data->status_changes.removal[2] |= STATUS_MASK(TRANSPARENT);
+        g_battle_action_target_data->status_changes.removal[1] |= STATUS_MASK(CONFUSION);
     }
     if ((g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK)
         && battle_status_remove_charging_ability_ct(g_battle_action_target, 0) != 0) {
-        g_battle_action_target_data->status_removal[0] |= STATUS_MASK(CHARGING);
+        g_battle_action_target_data->status_changes.removal[0] |= STATUS_MASK(CHARGING);
         g_battle_action_target->charged_ability_ct = 0xff;
     }
     battle_status_modify_inflictions(0);

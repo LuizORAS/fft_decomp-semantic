@@ -20,7 +20,7 @@ void battle_formula_apply_undead_absorb_attack(void) {
         next = g_battle_action_target_data;
         action->hp_damage = 0;
         action->hp_healing = amount;
-        next->status_infliction[0] = 0;
+        next->status_changes.infliction[0] = 0;
     } else if (unit->status_sets.immunity[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
         battle_formula_force_attack_miss();

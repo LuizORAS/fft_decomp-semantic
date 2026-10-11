@@ -25,7 +25,8 @@ s32 battle_action_apply_tile_trap(battle_stats_t* unit) {
         g_battle_action_target_data->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN;
         break;
     case BATTLE_TRAP_ID_DEATHTRAP:
-        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+        g_battle_action_target_data->status_changes
+            .infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE);
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
@@ -34,7 +35,7 @@ s32 battle_action_apply_tile_trap(battle_stats_t* unit) {
         }
         break;
     case BATTLE_TRAP_ID_SLEEPING_GAS:
-        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]
+        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP);
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;

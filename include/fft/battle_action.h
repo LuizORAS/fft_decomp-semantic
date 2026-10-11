@@ -483,7 +483,7 @@ extern battle_action_display_image_rect_t g_battle_action_display_image_rects[BA
 extern const u8 g_battle_action_display_numeric_selectors[BATTLE_ACTION_DISPLAY_VALUE_COUNT];
 extern u16 g_battle_action_display_values[BATTLE_ACTION_DISPLAY_VALUE_COUNT];
 
-/* Eight per status_infliction/status_removal byte, indexed from the byte's high bit. */
+/* Eight per status_changes mask byte, indexed from the byte's high bit. */
 extern u8 g_battle_action_status_display_image_ids[BATTLE_STATUS_BYTE_COUNT][8];
 extern const palette_t g_battle_action_result_palette;
 extern s32 g_battle_action_phase;

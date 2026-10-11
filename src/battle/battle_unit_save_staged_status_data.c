@@ -41,14 +41,14 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
                     value = stats->status_sets.current[i];
                     value &= g_battle_event_status_masks[BATTLE_EVENT_STATUS_MASK_PRE_BATTLE_MONSTER_OR_UNDEAD][i];
                     st = g_battle_unit_status_staging_data;
-                    stats->action.status_removal[i] = value;
+                    stats->action.status_changes.removal[i] = value;
                     st->added[unit_id][i] = value;
                     st->removed[unit_id][i] = value;
                 } else {
                     value = stats->status_sets.current[i];
                     value &= g_battle_event_status_masks[BATTLE_EVENT_STATUS_MASK_PRE_BATTLE][i];
                     st = g_battle_unit_status_staging_data;
-                    stats->action.status_removal[i] = value;
+                    stats->action.status_changes.removal[i] = value;
                     st->added[unit_id][i] = value;
                     st->removed[unit_id][i] = value;
                 }
@@ -56,7 +56,7 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
                 value = stats->status_sets.current[i];
                 value &= g_battle_event_status_masks[BATTLE_EVENT_STATUS_MASK_BATTLE_STARTED][i];
                 st = g_battle_unit_status_staging_data;
-                stats->action.status_removal[i] = value;
+                stats->action.status_changes.removal[i] = value;
                 st->added[unit_id][i] = value;
                 st->removed[unit_id][i] = value;
             }
@@ -69,7 +69,7 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
             g_battle_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_FLOAT_REMOVED;
         }
-        if (stats->action.status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
+        if (stats->action.status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)) {
             stats->team_flags = stats->initial_team_flags;
         }

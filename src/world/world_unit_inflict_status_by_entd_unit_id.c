@@ -23,8 +23,8 @@ void world_unit_inflict_status_by_entd_unit_id(
         unit = battle_unit_get_stats_from_battle_id(battle_unit_index);
         clear_index = 0;
         do {
-            unit->action.status_infliction[clear_index] = 0;
-            unit->action.status_removal[clear_index] = 0;
+            unit->action.status_changes.infliction[clear_index] = 0;
+            unit->action.status_changes.removal[clear_index] = 0;
             clear_index++;
         } while (clear_index < BATTLE_STATUS_BYTE_COUNT);
 
@@ -34,9 +34,9 @@ void world_unit_inflict_status_by_entd_unit_id(
         status_bit_index = status_index - status_byte_index * 8;
         status_mask = 1 << status_bit_index;
         if (is_infliction != 0) {
-            unit->action.status_infliction[status_byte_index] = status_mask;
+            unit->action.status_changes.infliction[status_byte_index] = status_mask;
         } else {
-            unit->action.status_removal[status_byte_index] = status_mask;
+            unit->action.status_changes.removal[status_byte_index] = status_mask;
         }
         g_world_thread_call_target = resolve_unit_status_changes;
         world_thread_call_on_main_stack(battle_unit_index, less_strict_removal);

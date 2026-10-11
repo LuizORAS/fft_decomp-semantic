@@ -32,7 +32,7 @@ s32 battle_status_prepare_terrain_poison(battle_stats_t* unit) {
     battle_action_clear_current_data(action);
     if (g_main_terrain_status_flags[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.bits.type]
         & MAIN_TERRAIN_STATUS_FLAG_POISON) {
-        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
+        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_POISON);
         if (battle_status_modify_inflictions(0)) {
             g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;

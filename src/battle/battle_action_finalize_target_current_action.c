@@ -63,7 +63,7 @@ void battle_action_finalize_target_current_action(void) {
         battle_action_clear_knockback_flag();
         battle_formula_clear_nullify_flags();
     }
-    team = (g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) >> 4;
+    team = (g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT;
     action = g_battle_action_target_data;
     if ((action->attack_type != 0) && (action->hit != 0) && (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
         && (g_battle_team_golem[team] != 0)

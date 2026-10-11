@@ -82,6 +82,5 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     main_util_copy_bytes(prepare_text(text_id), unit->primary_skillset_name, sizeof(unit->primary_skillset_name));
     text_id = unit->secondary_skillset | TEXT_ID_SKILLSET_NAME_BASE;
     main_util_copy_bytes(prepare_text(text_id), unit->secondary_skillset_name, sizeof(unit->secondary_skillset_name));
-    /* Clear the adjacent inflicted/removed status sets (five bytes each). */
-    main_util_clear_byte_data(unit->action.status_infliction, 10);
+    main_util_clear_byte_data(&unit->action.status_changes, sizeof(unit->action.status_changes));
 }
