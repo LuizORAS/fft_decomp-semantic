@@ -2,6 +2,5 @@
 #include "psx/libgpu.h"
 
 void AddPrims(void* ot, void* first, void* last) {
-    ((P_TAG*)last)->addr = ((P_TAG*)ot)->addr;
-    ((P_TAG*)ot)->addr = (u32)first;
+    addPrims(ot, first, last);
 }

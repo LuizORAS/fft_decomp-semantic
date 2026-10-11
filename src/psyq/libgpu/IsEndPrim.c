@@ -2,5 +2,5 @@
 #include "psx/libgpu.h"
 
 int IsEndPrim(void* primitive) {
-    return getaddr(primitive) == PSYQ_GPU_DMA_END;
+    return isendprim(primitive);
 }

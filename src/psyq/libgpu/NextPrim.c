@@ -2,5 +2,5 @@
 #include "psx/libgpu.h"
 
 void* NextPrim(void* primitive) {
-    return (void*)(getaddr(primitive) | 0x80000000);
+    return nextPrim(primitive);
 }

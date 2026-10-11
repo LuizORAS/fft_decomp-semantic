@@ -2,6 +2,5 @@
 #include "psx/libgpu.h"
 
 void SetBlockFill(TILE* primitive) {
-    setlen(primitive, PSYQ_GPU_PACKET_WORDS(TILE));
-    setcode(primitive, PSYQ_GPU_CODE_BLOCK_FILL);
+    setBlockFill(primitive);
 }
