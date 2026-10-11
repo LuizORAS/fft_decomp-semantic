@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Widen `count` bytes at `src` into halfwords at `dst`. */

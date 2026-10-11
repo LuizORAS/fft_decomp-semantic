@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Reads one nibble out of a packed nibble array: odd indices take the high

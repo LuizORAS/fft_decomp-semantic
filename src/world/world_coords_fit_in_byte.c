@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Returns 1 when x and y both lie in 0..254. */

@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Returns the $gp register. Hand-written assembly in retail. */

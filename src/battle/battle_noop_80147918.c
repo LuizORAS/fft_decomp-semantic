@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* The target allocates/releases a 48-byte stack frame, then returns.

@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Fill one row of a window image from the eight pattern words at tiles[index].

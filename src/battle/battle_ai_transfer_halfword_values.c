@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Copy byte_count / 2 halfwords; an odd last byte is left alone. */

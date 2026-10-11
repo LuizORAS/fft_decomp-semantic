@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Secondary effect function 0x00 in g_battle_effect_secondary_handlers: its

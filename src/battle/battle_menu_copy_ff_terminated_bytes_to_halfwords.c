@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Widen a 0xff-terminated byte list into halfwords, without the terminator, and

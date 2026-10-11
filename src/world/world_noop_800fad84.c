@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* The retail routine creates and immediately releases a 0x30-byte frame. */

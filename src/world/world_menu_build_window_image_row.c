@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Target 0x800ffc28. Copies a 16-bit pattern row: the two leading and two

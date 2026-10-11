@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Write a halfword little-endian into a script operand, which may be unaligned. */

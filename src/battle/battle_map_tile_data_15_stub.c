@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Selector 15 of battle_map_set_tile_data_value retries this until it returns 0, which it does at

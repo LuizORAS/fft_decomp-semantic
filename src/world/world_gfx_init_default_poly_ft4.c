@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/libgpu.h"
 
 /* Initialize the fixed 4-point textured quad used by WORLD menus: a

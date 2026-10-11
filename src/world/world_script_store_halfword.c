@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Store a 16-bit value at an unaligned script address, low byte first. */

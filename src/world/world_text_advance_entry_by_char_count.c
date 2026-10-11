@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Advance over count characters of a 0xFE-terminated text entry; bytes

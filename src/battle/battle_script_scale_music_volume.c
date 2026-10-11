@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Convert a script music volume (0..0x60) to the sound driver's 0..0x7f range: 0

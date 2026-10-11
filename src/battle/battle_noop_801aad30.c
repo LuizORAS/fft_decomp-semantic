@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* The 12-byte target stores both arguments to their incoming stack home slots

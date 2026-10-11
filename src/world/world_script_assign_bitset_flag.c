@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Set or clear one bit in a word-indexed bitmap. */

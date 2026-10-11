@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* The menu-screen library's copy of world_menu_build_window_image_row (the same routine compiled twice);

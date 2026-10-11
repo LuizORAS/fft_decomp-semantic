@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Store the caller's stack pointer in *destination, for

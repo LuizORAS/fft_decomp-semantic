@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/libetc.h"
 
 /* 1 once 325 scanlines have passed since the last vertical blank: the

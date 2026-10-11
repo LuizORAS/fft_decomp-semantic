@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Map a script music volume of 0..0x60 onto the driver's 0..0x7F; values of

@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 void world_fill_16_bytes_fe(u8* buf) {

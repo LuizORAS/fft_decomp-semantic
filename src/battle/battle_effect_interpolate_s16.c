@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* t is a fraction of 0x2000: 0 gives from and 0x2000 gives to. */

@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/libgpu.h"
 
 /* Initialize the fixed sprite used by WORLD menu graphics. */

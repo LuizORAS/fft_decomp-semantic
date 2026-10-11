@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/libgpu.h"
 
 /* Set `rect` to the 16x1 VRAM strip a CLUT id names (x = low six bits * 16,
