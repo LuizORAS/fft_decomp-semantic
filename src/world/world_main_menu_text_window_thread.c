@@ -43,7 +43,7 @@ void world_main_menu_text_window_thread(void) {
     s16 height;
     world_menu_text_window_entry_t* entry;
     world_menu_text_window_record_t* record;
-    void* buffer;
+    u8* buffer;
     s32 i;
     s32 phase;
     s32 pad;

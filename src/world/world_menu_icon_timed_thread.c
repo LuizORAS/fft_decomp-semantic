@@ -12,7 +12,7 @@ void world_menu_icon_timed_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
     world_menu_entry_t* param;
-    void* buffer;
+    u8* buffer;
     s32 i;
     s32 hold;
     world_menu_icon_record_t* record;

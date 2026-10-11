@@ -8,31 +8,31 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
     s32 all = mask == 0;
     u32 mode;
     u16 control;
-    if (all || (mask & 1)) {
-        if (all || (mask & 4)) {
+    if (all || (mask & SPU_COMMON_MVOLL)) {
+        if (all || (mask & SPU_COMMON_MVOLMODEL)) {
             switch (attr->mvolmode.left) {
-            case 1:
+            case SPU_VOICE_LINEARIncN:
                 mode = 0x8000;
                 break;
-            case 2:
+            case SPU_VOICE_LINEARIncR:
                 mode = 0x9000;
                 break;
-            case 3:
+            case SPU_VOICE_LINEARDecN:
                 mode = 0xa000;
                 break;
-            case 4:
+            case SPU_VOICE_LINEARDecR:
                 mode = 0xb000;
                 break;
-            case 5:
+            case SPU_VOICE_EXPIncN:
                 mode = 0xc000;
                 break;
-            case 6:
+            case SPU_VOICE_EXPIncR:
                 mode = 0xd000;
                 break;
-            case 7:
+            case SPU_VOICE_EXPDec:
                 mode = 0xe000;
                 break;
-            case 0:
+            case SPU_VOICE_DIRECT:
                 left = attr->mvol.left;
                 mode = 0;
                 break;
@@ -56,31 +56,31 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
         }
         _spu_RXX->rxx.main_volume_left = (left & 0x7fff) | mode;
     }
-    if (all || (mask & 2)) {
-        if (all || (mask & 8)) {
+    if (all || (mask & SPU_COMMON_MVOLR)) {
+        if (all || (mask & SPU_COMMON_MVOLMODER)) {
             switch (attr->mvolmode.right) {
-            case 1:
+            case SPU_VOICE_LINEARIncN:
                 mode = 0x8000;
                 break;
-            case 2:
+            case SPU_VOICE_LINEARIncR:
                 mode = 0x9000;
                 break;
-            case 3:
+            case SPU_VOICE_LINEARDecN:
                 mode = 0xa000;
                 break;
-            case 4:
+            case SPU_VOICE_LINEARDecR:
                 mode = 0xb000;
                 break;
-            case 5:
+            case SPU_VOICE_EXPIncN:
                 mode = 0xc000;
                 break;
-            case 6:
+            case SPU_VOICE_EXPIncR:
                 mode = 0xd000;
                 break;
-            case 7:
+            case SPU_VOICE_EXPDec:
                 mode = 0xe000;
                 break;
-            case 0:
+            case SPU_VOICE_DIRECT:
                 right = attr->mvol.right;
                 mode = 0;
                 break;
@@ -104,19 +104,19 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
         }
         _spu_RXX->rxx.main_volume_right = (right & 0x7fff) | mode;
     }
-    if (all || (mask & 0x40)) {
+    if (all || (mask & SPU_COMMON_CDVOLL)) {
         _spu_RXX->rxx.cd_volume_left = attr->cd.volume.left;
     }
-    if (all || (mask & 0x80)) {
+    if (all || (mask & SPU_COMMON_CDVOLR)) {
         _spu_RXX->rxx.cd_volume_right = attr->cd.volume.right;
     }
-    if (all || (mask & 0x400)) {
+    if (all || (mask & SPU_COMMON_EXTVOLL)) {
         _spu_RXX->rxx.external_volume_left = attr->ext.volume.left;
     }
-    if (all || (mask & 0x800)) {
+    if (all || (mask & SPU_COMMON_EXTVOLR)) {
         _spu_RXX->rxx.external_volume_right = attr->ext.volume.right;
     }
-    if (all || (mask & 0x100)) {
+    if (all || (mask & SPU_COMMON_CDREV)) {
         if (attr->cd.reverb == 0) {
             control = _spu_RXX->rxx.control;
             control &= 0xfffb;
@@ -127,7 +127,7 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
             _spu_RXX->rxx.control = control;
         }
     }
-    if (all || (mask & 0x200)) {
+    if (all || (mask & SPU_COMMON_CDMIX)) {
         if (attr->cd.mix == 0) {
             control = _spu_RXX->rxx.control;
             control &= 0xfffe;
@@ -138,7 +138,7 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
             _spu_RXX->rxx.control = control;
         }
     }
-    if (all || (mask & 0x1000)) {
+    if (all || (mask & SPU_COMMON_EXTREV)) {
         if (attr->ext.reverb == 0) {
             control = _spu_RXX->rxx.control;
             control &= 0xfff7;
@@ -149,7 +149,7 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
             _spu_RXX->rxx.control = control;
         }
     }
-    if (all || (mask & 0x2000)) {
+    if (all || (mask & SPU_COMMON_EXTMIX)) {
         if (attr->ext.mix == 0) {
             control = _spu_RXX->rxx.control;
             control &= 0xfffd;

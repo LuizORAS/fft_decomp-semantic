@@ -8,6 +8,62 @@
  * layouts and signatures follow the Psy-Q library reference; the offsets
  * noted on each type are the ones the driver's callers use. */
 
+/* Psy-Q volume modes, shared by master and voice volume attributes. */
+typedef enum {
+    SPU_VOICE_DIRECT = 0,
+    SPU_VOICE_LINEARIncN = 1,
+    SPU_VOICE_LINEARIncR = 2,
+    SPU_VOICE_LINEARDecN = 3,
+    SPU_VOICE_LINEARDecR = 4,
+    SPU_VOICE_EXPIncN = 5,
+    SPU_VOICE_EXPIncR = 6,
+    SPU_VOICE_EXPDec = 7,
+} psyq_spu_volume_mode_e;
+
+/* SpuCommonAttr.mask; zero selects every supported attribute. */
+typedef enum {
+    SPU_COMMON_MVOLL = 0x0001,
+    SPU_COMMON_MVOLR = 0x0002,
+    SPU_COMMON_MVOLMODEL = 0x0004,
+    SPU_COMMON_MVOLMODER = 0x0008,
+    SPU_COMMON_CDVOLL = 0x0040,
+    SPU_COMMON_CDVOLR = 0x0080,
+    SPU_COMMON_CDREV = 0x0100,
+    SPU_COMMON_CDMIX = 0x0200,
+    SPU_COMMON_EXTVOLL = 0x0400,
+    SPU_COMMON_EXTVOLR = 0x0800,
+    SPU_COMMON_EXTREV = 0x1000,
+    SPU_COMMON_EXTMIX = 0x2000,
+} psyq_spu_common_attribute_e;
+
+/* SpuReverbAttr.mask; zero selects every attribute. */
+typedef enum {
+    SPU_REV_MODE = 0x01,
+    SPU_REV_DEPTHL = 0x02,
+    SPU_REV_DEPTHR = 0x04,
+    SPU_REV_DELAYTIME = 0x08,
+    SPU_REV_FEEDBACK = 0x10,
+} psyq_spu_reverb_attribute_e;
+
+/* SpuReverbAttr.mode selectors; the clear flag is independent of the mode. */
+typedef enum {
+    SPU_REV_MODE_OFF = 0,
+    SPU_REV_MODE_ROOM = 1,
+    SPU_REV_MODE_STUDIO_A = 2,
+    SPU_REV_MODE_STUDIO_B = 3,
+    SPU_REV_MODE_STUDIO_C = 4,
+    SPU_REV_MODE_HALL = 5,
+    SPU_REV_MODE_SPACE = 6,
+    SPU_REV_MODE_ECHO = 7,
+    SPU_REV_MODE_DELAY = 8,
+    SPU_REV_MODE_PIPE = 9,
+} psyq_spu_reverb_mode_e;
+
+enum {
+    SPU_REV_MODE_CLEAR_WA = 0x100,
+    PSYQ_SPU_REVERB_MODE_COUNT = 10,
+};
+
 /* Psy-Q SpuVolume: a left/right volume pair. */
 typedef struct {
     s16 left;  /* 0x00 */
@@ -99,7 +155,7 @@ void _SpuInit(s32 hot);
 u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_high);
 
 /* 0x800194c4-0x8001b4b0: entry points used by the Suzuki driver. */
-s32 SpuInitMalloc(s32 num, psyq_spu_heap_record_t* table);
+s32 SpuInitMalloc(s32 num, char* top);
 u32 SpuSetNoiseVoice(s32 on_off, u32 voice_bit);
 s32 SpuSetNoiseClock(s32 n_clock);
 u32 SpuRead(u8* addr, u32 size);
@@ -278,13 +334,13 @@ typedef struct psyq_spu_reverb_parameters {
     u32 mask;
     u16 values[32];
 } psyq_spu_reverb_parameters_t;
-extern psyq_spu_reverb_parameters_t _spu_rev_param[10];
+extern psyq_spu_reverb_parameters_t _spu_rev_param[PSYQ_SPU_REVERB_MODE_COUNT];
 void _spu_setReverbAttr(psyq_spu_reverb_parameters_t* parameters);
 extern s32 _spu_AllocBlockNum;
 extern s32 _spu_AllocLastNum;
 extern psyq_spu_heap_record_t* _spu_memList;
-extern u32 _spu_rev_startaddr[10]; /* reverb work starts, in eight-byte units */
-extern u8 _spu_zerobuf[0x400];     /* zero block used to clear reverb work RAM */
+extern u32 _spu_rev_startaddr[PSYQ_SPU_REVERB_MODE_COUNT]; /* reverb work starts, in eight-byte units */
+extern u8 _spu_zerobuf[0x400];                             /* zero block used to clear reverb work RAM */
 extern u16 _spu_voice_centerNote[24];
 extern const char g_psyq_spu_timeout_format[];
 extern const char g_psyq_spu_init_timeout_name[];

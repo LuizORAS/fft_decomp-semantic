@@ -31,7 +31,7 @@ void world_run_option_choice_menu(void) {
     s32 height;
     world_menu_entry_t* param;
     s32 width;
-    void* buffer;
+    u8* buffer;
     s32 i;
     s32 cursor;
     world_menu_icon_sprites_t* record;

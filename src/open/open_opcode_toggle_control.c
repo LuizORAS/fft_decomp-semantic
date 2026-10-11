@@ -4,7 +4,7 @@
 /* Opcode 0: end the script. It yields for the frame while the XA start or stop
  * sequence runs; after that it clears OPEN_SCRIPT_DISPATCH_RUNNING, which stops
  * the dispatcher. Two bytes. */
-void open_opcode_toggle_control(void) {
+void open_opcode_toggle_control(s16* unused_entry) {
     u32* control = &g_open_script_state.dispatch.flags;
     u32 state = *control;
 

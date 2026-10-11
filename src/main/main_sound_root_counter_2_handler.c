@@ -37,13 +37,13 @@ s32 main_sound_root_counter_2_handler(void) {
             main_smd_step_ramp(&g_main_sound_spu_state.music_ramp);
             g_main_sound_spu_state.music_volume = g_main_sound_spu_state.music_ramp.value >> 16;
             main_sound_set_vol_balance(g_main_sound_spu_state.music_volume, &g_main_sound_spu_state.common.mvol, 0);
-            g_main_sound_spu_state.common.mask |= 3;
+            g_main_sound_spu_state.common.mask |= SPU_COMMON_MVOLL | SPU_COMMON_MVOLR;
         }
         if (g_main_sound_spu_state.cd_ramp.count != 0) {
             main_smd_step_ramp(&g_main_sound_spu_state.cd_ramp);
             g_main_sound_spu_state.cd_volume = g_main_sound_spu_state.cd_ramp.value >> 16;
             main_sound_set_vol_balance(g_main_sound_spu_state.cd_volume, &g_main_sound_spu_state.common.cd.volume, 0);
-            g_main_sound_spu_state.common.mask |= 0xc0;
+            g_main_sound_spu_state.common.mask |= SPU_COMMON_CDVOLL | SPU_COMMON_CDVOLR;
         }
         if (g_main_sound_spu_state.common.mask != 0) {
             SpuSetCommonAttr(&g_main_sound_spu_state.common);

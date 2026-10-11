@@ -3,7 +3,7 @@
 /* Opcode 10: stop the XA audio and wait until the stop sequence of
  * open_script_update_xa_audio has finished. The opcode is skipped when XA audio
  * is neither playing nor starting. Two bytes. */
-void open_opcode_stop_xa_audio(void) {
+void open_opcode_stop_xa_audio(s16* unused_entry) {
     u32* control = &g_open_script_state.dispatch.flags;
     u32 state = *control;
 

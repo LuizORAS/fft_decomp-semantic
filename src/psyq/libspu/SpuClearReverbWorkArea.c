@@ -12,10 +12,10 @@ s32 SpuClearReverbWorkArea(s32 mode) {
     s32 count;
     s32 saved_mode;
     s32 changed_mode = 0;
-    if ((u32)mode >= 10 || _SpuIsInAllocateArea_(_spu_rev_startaddr[mode])) {
+    if ((u32)mode >= PSYQ_SPU_REVERB_MODE_COUNT || _SpuIsInAllocateArea_(_spu_rev_startaddr[mode])) {
         return -1;
     }
-    if (mode == 0) {
+    if (mode == SPU_REV_MODE_OFF) {
         remaining = 0x10 << _spu_mem_mode_plus;
         address = 0xfff0 << _spu_mem_mode_plus;
     } else {

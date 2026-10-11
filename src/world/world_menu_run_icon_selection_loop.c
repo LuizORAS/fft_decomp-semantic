@@ -11,7 +11,7 @@ void world_menu_run_icon_selection_loop(void) {
     world_menu_icon_record_t records[2];
     s32 cursor;
     world_menu_entry_t* param;
-    void* buffer;
+    u8* buffer;
     s32 i;
     world_menu_icon_record_t* record;
 

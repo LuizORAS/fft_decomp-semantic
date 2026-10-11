@@ -10,7 +10,7 @@ void world_menu_icon_linked_entry_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
     world_menu_entry_t* param;
-    void* buffer;
+    u8* buffer;
     s32 i;
     s32 parent;
     world_menu_icon_record_t* record;

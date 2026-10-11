@@ -1,10 +1,6 @@
 #include "fft/open.h"
 #include "psx/stddef.h"
 
-typedef void (*open_script_entry_handler_t)(s16* entry);
-
-extern open_script_entry_handler_t g_open_opcode_handlers[];
-
 /* Run one frame of the ending script. Returns 0 once the script has ended and 1
  * while it runs.
  *

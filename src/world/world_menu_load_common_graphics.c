@@ -24,7 +24,8 @@ void world_menu_load_common_graphics(s32 load_extra_pages) {
         main_heap_call_free(resource);
         g_main_common_menu_graphics_loaded++;
     }
-    LoadImage(&g_world_menu_common_clut_rect, g_world_menu_common_clut_data);
+    /* The SDK transfers packed colors as words. */
+    LoadImage(&g_world_menu_common_clut_rect, (u32*)&g_world_menu_common_clut_data);
     DrawSync(0);
     g_world_thread_call_target = main_file_load_checked_to_heap;
     resource = (world_menu_graphics_resource_t*)world_thread_call_on_main_stack(

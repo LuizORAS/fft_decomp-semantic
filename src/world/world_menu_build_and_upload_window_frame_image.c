@@ -5,14 +5,14 @@
 /* Builds a tiled window-frame text image for rect in a UI buffer and, for
  * modes 0 and 2, uploads it (in 96-row bands when large) and frees it. Modes
  * 2 and 3 use the alternate frame pattern at 0x36/0x436. */
-void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode) {
+u8* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode) {
     RECT upload;
     s32 first;
     s32 words;
     s32 has_partial_word;
     u16* src;
     s32 size;
-    u16* buffer;
+    u8* buffer;
     s32 i;
     s32 src_index;
     u16* row;
@@ -69,7 +69,7 @@ void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT
                 }
             }
         }
-        row = buffer + (i - first) * words;
+        row = (u16*)(buffer + (i - first) * words * sizeof(u16));
         row[words - 1] = src[src_index + 9];
         row[words - 2] = src[src_index + 8];
         world_menu_build_window_image_row(src, row, words, src_index);

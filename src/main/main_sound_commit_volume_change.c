@@ -9,6 +9,6 @@ void main_sound_commit_volume_change(void) {
     main_sound_set_vol_balance(g_main_sound_spu_state.music_volume, &g_main_sound_spu_state.common.mvol, 0);
     main_sound_set_vol_balance(g_main_sound_spu_state.cd_volume, &g_main_sound_spu_state.common.cd.volume, 0);
     main_sound_set_vol_balance(g_main_sound_spu_state.reverb_depth, &g_main_sound_reverb_attr.depth, 1);
-    g_main_sound_spu_state.common.mask |= 0xc3;
-    g_main_sound_reverb_attr.mask |= 6;
+    g_main_sound_spu_state.common.mask |= SPU_COMMON_MVOLL | SPU_COMMON_MVOLR | SPU_COMMON_CDVOLL | SPU_COMMON_CDVOLR;
+    g_main_sound_reverb_attr.mask |= SPU_REV_DEPTHL | SPU_REV_DEPTHR;
 }

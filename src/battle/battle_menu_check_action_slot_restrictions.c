@@ -72,7 +72,7 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
         mode = g_battle_menu_action_type_modes[g_battle_action_menu_row_types
                 [g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index]][0];
         if (mode < 0) {
-            g_battle_menu_action_slot_row_actions = mode;
+            g_battle_menu_action_slot_row_actions[0] = mode;
             battle_menu_confirm_action_silently(parameter);
             battle_thread_exit_current();
         }

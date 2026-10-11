@@ -1,3 +1,4 @@
+#include "fft/open.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -7,13 +8,13 @@
  * VRAM position packed as y << 16 | x, the size packed as h << 16 | w, then
  * the pixel data. The CLUT rectangle is flattened to one row of w * h
  * entries. */
-void open_gfx_load_opntex_into_frame_buffer(const void* source_data) {
-    u32* tim = (u32*)source_data;
+void open_gfx_load_opntex_into_frame_buffer(u32* tim) {
     RECT rect;
     s32 offset;
     /* Unused; the target's frame is 16 bytes larger than rect needs. */
     s32 stack_padding[4];
 
+    /* Packed RECT word reads preserve the retail lw/lhu mix. */
     if (tim[1] & 8) {
         offset = (tim[2] >> 2) + 2;
         rect.x = tim[3] & 0xFFFF;

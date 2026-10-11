@@ -8488,7 +8488,7 @@ extern u8 g_battle_menu_billboard_skillset_name[];
 extern u8 g_battle_menu_billboard_secondary_skillset_name[];
 extern u8 g_battle_menu_billboard_unit_name[];
 extern u8 g_battle_menu_billboard_job_name[];
-extern u16 g_battle_menu_ability_display_flags[20];
+extern u16 g_battle_menu_ability_display_flags[80];
 extern s32 g_battle_menu_used_skillset_id;
 extern s32 g_battle_menu_used_item_id;
 extern s32 g_battle_menu_system_function_command;
@@ -8505,7 +8505,7 @@ extern u16 g_battle_menu_status_scroll_rows;
 
 /* Row actions of the auto-battle setting menu (menu entry 0x80166b4c, +0x24). */
 extern s16 g_battle_menu_auto_battle_row_actions[8];
-extern s16 g_battle_menu_action_slot_row_actions;
+extern s16 g_battle_menu_action_slot_row_actions[6];
 extern s16 g_battle_menu_wait_row_actions[4];
 extern u16 g_battle_menu_status_list_row_actions[8];
 extern u16 g_battle_menu_system_function_row_actions[];

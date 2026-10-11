@@ -10,7 +10,7 @@
  * past the last digit. `work` holds the prefix mode and later the final cursor
  * x; sharing one variable reproduces the target's register assignment.
  */
-void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, void* pixels, glyph_blit_t* position) {
+void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels, glyph_blit_t* position) {
     glyph_blit_t* glyph;
     s32 work;
     s32 i;

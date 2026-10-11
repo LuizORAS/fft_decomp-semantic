@@ -1664,7 +1664,7 @@ typedef struct world_text_backreference_state {
  * image buffer (the window builder when box_type is 0x10), draw `text` into
  * it and upload `rect`. */
 typedef struct world_text_dialog_record {
-    void* buffer;      /* 0x00 */
+    u8* buffer;        /* 0x00 */
     u16 width;         /* 0x04 */
     u16 height;        /* 0x06 */
     RECT rect;         /* 0x08 */

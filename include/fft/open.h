@@ -451,6 +451,29 @@ typedef struct open_script_record {
 } open_script_record_t;
 typedef char open_script_record_size_must_be_0x164[(sizeof(open_script_record_t) == 0x164) ? 1 : -1];
 
+/* Serialized ending-script opcodes, in the order of g_open_opcode_handlers. */
+typedef enum open_script_opcode {
+    OPEN_SCRIPT_OPCODE_END = 0,
+    OPEN_SCRIPT_OPCODE_POSITIONED_TEXT = 1,
+    OPEN_SCRIPT_OPCODE_SCROLL_SPEED = 2,
+    OPEN_SCRIPT_OPCODE_REVEAL_SCREEN = 3,
+    OPEN_SCRIPT_OPCODE_HIDE_SCREEN = 4,
+    OPEN_SCRIPT_OPCODE_WAIT_FRAMES = 5,
+    OPEN_SCRIPT_OPCODE_WAIT_SCROLL = 6,
+    OPEN_SCRIPT_OPCODE_START_XA_AUDIO = 7,
+    OPEN_SCRIPT_OPCODE_FADE_IN_AUDIO = 8,
+    OPEN_SCRIPT_OPCODE_FADE_OUT_AUDIO = 9,
+    OPEN_SCRIPT_OPCODE_STOP_XA_AUDIO = 10,
+    OPEN_SCRIPT_OPCODE_LOAD_OPNTEX_FRAME = 11,
+    OPEN_SCRIPT_OPCODE_FADE_IN_PICTURE = 12,
+    OPEN_SCRIPT_OPCODE_FADE_OUT_PICTURE = 13,
+    OPEN_SCRIPT_OPCODE_WAIT_XA_AUDIO_IDLE = 14,
+    OPEN_SCRIPT_OPCODE_START_OPNTEX_SEQUENCE = 15,
+} open_script_opcode_e;
+
+/* The ending-script dispatcher passes a serialized halfword cursor. */
+typedef void (*open_script_entry_handler_t)(s16* entry);
+
 /* Byte-addressed ending-script cursor. */
 typedef struct open_script_cursor {
     u8* data_base;
@@ -502,10 +525,11 @@ typedef struct open_script_state {
 } open_script_state_t;
 typedef char open_script_state_size_must_be_0x16a8[(sizeof(open_script_state_t) == 0x16a8) ? 1 : -1];
 
+extern open_script_entry_handler_t g_open_opcode_handlers[16];
 extern open_script_state_t g_open_script_state;
 extern open_font_metrics_t* g_open_script_font_metrics;
 
-/* Scalar views of g_open_script_state words. open_opcode_store_s16_and_advance,
+/* Scalar views of g_open_script_state words. open_opcode_set_timing_step,
  * open_script_update_timing_and_record_values and
  * open_gfx_update_opntex_sequence load and store each of these by absolute
  * address; the member spelling lets cse keep the address in a register. */
@@ -515,6 +539,23 @@ extern s32 g_open_script_external_counter; /* dispatch.external_counter */
 
 extern POLY_FT4 g_open_script_glyph_primitives[2][672];
 extern u8* g_open_script_initial_data_base;
+void open_opcode_toggle_control(s16* unused_entry);
+void open_opcode_create_positioned_text_record(s16* command);
+void open_opcode_set_timing_step(s16* entry);
+void open_opcode_start_overlay_fade_out(s16* command);
+void open_opcode_start_overlay_fade_in(s16* command);
+void open_opcode_wait_counted(s16* entry);
+void open_opcode_wait_for_external_counter(s16* entry);
+void open_opcode_start_xa_audio(s16* command);
+void open_opcode_start_sound_fade_in(s16* command);
+void open_opcode_start_sound_fade_out(s16* command);
+void open_opcode_stop_xa_audio(s16* unused_entry);
+void open_opcode_load_opntex_frame(s16* command);
+void open_opcode_start_fade_intensity_increase(s16* command);
+void open_opcode_start_fade_intensity_decrease(s16* command);
+void open_opcode_wait_for_xa_audio_idle(s16* unused_entry);
+void open_opcode_start_opntex_sequence(s16* command);
+
 void open_script_init_state(void);
 void open_script_draw_text_records(u32* otag, s32 graphics_buffer_index);
 void open_script_update_xa_audio(void);
@@ -616,7 +657,7 @@ extern u8 g_open_gfx_image_copy_progress;
 extern u8 g_open_gfx_image_copy_row_flags[];
 extern s32 g_open_gfx_next_render_record_36;
 extern s32 g_open_gfx_next_render_record_56;
-extern u8* g_open_gfx_opntex_data;
+extern u32* g_open_gfx_opntex_data;
 extern u32 g_open_gfx_otags[2][16];
 extern s32 g_open_gfx_primitive_count;
 extern open_render_record_56_position_t g_open_gfx_record_translation[16];
@@ -648,7 +689,7 @@ void open_gfx_init_render_buffers(void);
 void open_gfx_init_screen_environments(s32 clear_first);
 void open_gfx_init_transition_request(s32 target, s32 mode, open_gfx_transition_entry_t** entry_table);
 void open_gfx_init_window_frame_record(s32 record_index, RECT quad, s32 depth, u16* image);
-void open_gfx_load_opntex_into_frame_buffer(const void* source_data);
+void open_gfx_load_opntex_into_frame_buffer(u32* tim);
 void open_gfx_hide_four_render_records(open_title_controller_t* title);
 void open_gfx_start_overlay_fade_in(u32 duration);
 void open_gfx_start_overlay_fade_out(u32 duration);

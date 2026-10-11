@@ -28,13 +28,13 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
     s32 feedback;
     u16 control;
     parameters.mask = 0;
-    if (all || (mask & 1)) {
+    if (all || (mask & SPU_REV_MODE)) {
         mode = attr->mode;
-        if (mode & 0x100) {
-            mode &= ~0x100;
+        if (mode & SPU_REV_MODE_CLEAR_WA) {
+            mode &= ~SPU_REV_MODE_CLEAR_WA;
             clear_work = 1;
         }
-        if ((u32)mode >= 10 || _SpuIsInAllocateArea_(_spu_rev_startaddr[mode])) {
+        if ((u32)mode >= PSYQ_SPU_REVERB_MODE_COUNT || _SpuIsInAllocateArea_(_spu_rev_startaddr[mode])) {
             return -1;
         }
         mode_changed = 1;
@@ -42,11 +42,11 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
         _spu_rev_offsetaddr = _spu_rev_startaddr[_spu_rev_attr.mode];
         psyq_spu_copy_reverb_parameters(&parameters, &_spu_rev_param[_spu_rev_attr.mode]);
         switch (_spu_rev_attr.mode) {
-        case 7:
+        case SPU_REV_MODE_ECHO:
             _spu_rev_attr.feedback = 127;
             _spu_rev_attr.delay = 127;
             break;
-        case 8:
+        case SPU_REV_MODE_DELAY:
             _spu_rev_attr.feedback = 0;
             _spu_rev_attr.delay = 127;
             break;
@@ -56,10 +56,10 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
             break;
         }
     }
-    if (all || (mask & 8)) {
+    if (all || (mask & SPU_REV_DELAYTIME)) {
         switch (_spu_rev_attr.mode) {
-        case 7:
-        case 8:
+        case SPU_REV_MODE_ECHO:
+        case SPU_REV_MODE_DELAY:
             delay_changed = 1;
             if (!mode_changed) {
                 psyq_spu_copy_reverb_parameters(&parameters, &_spu_rev_param[_spu_rev_attr.mode]);
@@ -81,10 +81,10 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
             break;
         }
     }
-    if (all || (mask & 0x10)) {
+    if (all || (mask & SPU_REV_FEEDBACK)) {
         switch (_spu_rev_attr.mode) {
-        case 7:
-        case 8:
+        case SPU_REV_MODE_ECHO:
+        case SPU_REV_MODE_DELAY:
             feedback_changed = 1;
             if (!mode_changed) {
                 if (!delay_changed) {
@@ -112,11 +112,11 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
         }
     }
     if (!mode_changed) {
-        if (all || (mask & 2)) {
+        if (all || (mask & SPU_REV_DEPTHL)) {
             _spu_RXX->rxx.reverb_depth_left = attr->depth.left;
             _spu_rev_attr.depth.left = attr->depth.left;
         }
-        if (all || (mask & 4)) {
+        if (all || (mask & SPU_REV_DEPTHR)) {
             _spu_RXX->rxx.reverb_depth_right = attr->depth.right;
             _spu_rev_attr.depth.right = attr->depth.right;
         }

@@ -28,7 +28,7 @@ void world_menu_run_equip_thread(void) {
         world_thread_yield();
     } while (g_world_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
     g_world_menu_thread_menu_data = g_world_menu_system_entries;
-    g_world_menu_action_slot_row_actions = -3;
+    g_world_menu_action_slot_row_actions[0] = -3;
     g_world_menu_sound_muted = 1;
     g_world_menu_new_button_input |= PSX_PAD_CIRCLE;
     if (g_world_companion_overlay_prims == 0) {

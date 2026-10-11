@@ -14,11 +14,12 @@
  * is freed and the result is whatever world_menu_free_memory left in $v0;
  * the target has no return value on that path. `i` is reused for the thread
  * flag because a separate local swaps the $s0/$s1 allocation. */
-void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep) {
+u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep) {
     u16 kind = mode & DIALOG_TYPE_OPTIONS_MASK;
     s32 words;
     s32 partial;
     s32 byte_count;
+    /* Halfword row indexing preserves the original loop induction. */
     u16* image;
     u16* sheet;
     s32 x_offset;
@@ -88,14 +89,14 @@ void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode,
         if (width - 0x10 < g_world_menu_window_sprite_position.rect.x) {
             g_world_menu_window_sprite_position.rect.x = width - 0x10;
         }
-        world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, image, &g_world_menu_window_sprite_source,
+        world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, (u8*)image, &g_world_menu_window_sprite_source,
             &g_world_menu_window_sprite_position);
         if (i != 0) {
             world_gfx_mirror_4bpp_rect((u8*)image, &g_world_menu_window_sprite_position);
         }
     }
     if (keep != 0) {
-        return image;
+        return (u8*)image;
     }
     LoadImage(rect, (u32*)image);
     world_thread_wait_frames(1);

@@ -7,6 +7,6 @@
 void main_sound_set_cd_reverb(s32 reverb, s32 mix) {
     g_main_sound_spu_state.common.cd.reverb = reverb;
     g_main_sound_spu_state.common.cd.mix = mix;
-    g_main_sound_spu_state.common.mask |= 0x300;
+    g_main_sound_spu_state.common.mask |= SPU_COMMON_CDREV | SPU_COMMON_CDMIX;
     SpuSetCommonAttr(&g_main_sound_spu_state.common);
 }

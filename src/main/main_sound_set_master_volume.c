@@ -15,7 +15,7 @@ void main_sound_set_master_volume(s16 volume, s16 time) {
         g_main_sound_spu_state.music_ramp.count = 0;
         g_main_sound_spu_state.music_volume = volume;
         main_sound_set_vol_balance(volume, &g_main_sound_spu_state.common.mvol, 0);
-        g_main_sound_spu_state.common.mask |= 3;
+        g_main_sound_spu_state.common.mask |= SPU_COMMON_MVOLL | SPU_COMMON_MVOLR;
     } else {
         difference = ((volume << 16) >> 8) - (g_main_sound_spu_state.music_ramp.value >> 8);
         if (difference != 0) {

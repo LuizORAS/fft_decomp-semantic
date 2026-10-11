@@ -24,11 +24,11 @@ void main_sound_set_reverb_mode(s32 mode, s16 depth, s32 delay, s32 feedback) {
     g_main_sound_spu_state.reverb_depth = depth;
     g_main_sound_reverb_attr.delay = delay;
     g_main_sound_reverb_attr.feedback = feedback;
-    if (mode < 10) {
-        if (current.mode != mode || mode == 0) {
+    if (mode < PSYQ_SPU_REVERB_MODE_COUNT) {
+        if (current.mode != mode || mode == SPU_REV_MODE_OFF) {
             SpuSetReverb(0);
-            g_main_sound_reverb_attr.mode = mode | 0x100;
-            g_main_sound_reverb_attr.mask |= 1;
+            g_main_sound_reverb_attr.mode = mode | SPU_REV_MODE_CLEAR_WA;
+            g_main_sound_reverb_attr.mask |= SPU_REV_MODE;
             SpuSetReverbModeParam(&g_main_sound_reverb_attr);
             g_main_sound_reverb_attr.mask = 0;
             SpuSetReverb(1);

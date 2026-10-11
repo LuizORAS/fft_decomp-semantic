@@ -16,7 +16,7 @@ void world_menu_number_entry_thread(void) {
     POLY_FT4 cursor_quads[2];
     POLY_FT4 shadow_quads[2];
     world_menu_number_range_t* range;
-    void* buffer;
+    u8* buffer;
     s16 original;
     s32 digits;
     native_thread_t* thread;

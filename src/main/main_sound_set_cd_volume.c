@@ -13,7 +13,7 @@ void main_sound_set_cd_volume(s16 volume, s16 time) {
         g_main_sound_spu_state.cd_ramp.count = 0;
         g_main_sound_spu_state.cd_volume = volume;
         main_sound_set_vol_balance(volume, &g_main_sound_spu_state.common.cd.volume, 0);
-        g_main_sound_spu_state.common.mask |= 0xc0;
+        g_main_sound_spu_state.common.mask |= SPU_COMMON_CDVOLL | SPU_COMMON_CDVOLR;
     } else {
         difference = ((volume << 16) >> 8) - (g_main_sound_spu_state.cd_ramp.value >> 8);
         if (difference != 0) {

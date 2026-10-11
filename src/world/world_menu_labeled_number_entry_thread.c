@@ -19,7 +19,7 @@ void world_menu_labeled_number_entry_thread(void) {
     POLY_FT4 shadow_quads[2];
     s16 label_size[2];
     world_menu_number_range_t* range;
-    void* buffer;
+    u8* buffer;
     s16 original;
     s32 digits;
     native_thread_t* thread;

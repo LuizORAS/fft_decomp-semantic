@@ -1,7 +1,8 @@
 /* SCUS_942.21 0x800194c4..0x80019517. */
 #include "psx/libspu.h"
 
-s32 SpuInitMalloc(s32 num, psyq_spu_heap_record_t* table) {
+s32 SpuInitMalloc(s32 num, char* top) {
+    psyq_spu_heap_record_t* table = (psyq_spu_heap_record_t*)top;
     if (num > 0) {
         table[0].address = PSYQ_SPU_HEAP_TAIL | PSYQ_SPU_HEAP_START;
         _spu_memList = table;
