@@ -11,6 +11,7 @@ int _drs(RECT* rect, u32* data) {
     limitRange(rect->w, 0, g_psyq_gpu_environment.vram_width);
     limitRange(rect->h, 0, g_psyq_gpu_environment.vram_height);
     size = (rect->w * rect->h + 1) / 2;
+    /* This overwritten value keeps the native register copy before the remainder calculation. */
     rest = size >> 4;
     if (size <= 0)
         return -1;

@@ -6,13 +6,14 @@ int _dws(RECT* rect, u32* data) {
                                                                       normalization in the bounds clamps. */
     int size;
     int blocks;
-    int special;
+    int special; /* The zero selector retains a native branch and an extra saved register. */
     int rest;
     set_alarm();
     special = 0;
     limitRange(rect->w, 0, g_psyq_gpu_environment.vram_width);
     limitRange(rect->h, 0, g_psyq_gpu_environment.vram_height);
     size = (rect->w * rect->h + 1) / 2;
+    /* This overwritten value keeps the native register copy before the remainder calculation. */
     rest = size >> 4;
     if (size <= 0)
         return -1;
