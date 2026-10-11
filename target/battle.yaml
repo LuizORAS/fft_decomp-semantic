@@ -1673,7 +1673,7 @@ functions:
   - {addr: 0x801a11cc, size: 52, name: battle_effect_set_timing_curves_pointer, hash: 6eb5ff276045c96e}
   - {addr: 0x801a1200, size: 68, name: battle_effect_get_timing_curve_value, hash: 593c1814534b2238}
   - {addr: 0x801a1244, size: 68, name: battle_effect_get_animation_timing_curve_value, hash: eb504d572534c851}
-  - {addr: 0x801a1288, size: 28, name: battle_effect_get_file_pointer, hash: 8dc94b536cc6f119}
+  - {addr: 0x801a1288, size: 28, name: battle_effect_get_file_function, hash: 8dc94b536cc6f119}
   - {addr: 0x801a12a4, size: 56, name: battle_effect_load_lba_and_size, hash: 5d4f02505ab0b9a7}
   - {addr: 0x801a12dc, size: 40, name: battle_effect_noop_return_zero, hash: 155dc8be5b11cf02}
   - {addr: 0x801a1304, size: 36, name: battle_effect_noop, hash: 64066c40b8e49544}
@@ -2739,7 +2739,7 @@ data:
   - {addr: 0x801a0e28, name: g_battle_text_heap_task_format}
   - {addr: 0x801b3500, name: g_battle_effect_file_buffer}
   - {addr: 0x801b48d0, name: g_battle_effect_data_ptrs}
-  - {addr: 0x801b50d0, name: g_battle_effect_file_ptrs}
+  - {addr: 0x801b50d0, name: g_battle_effect_file_functions}
   - {addr: 0x801b53e8, name: g_battle_effect_disc_entries}
   - {addr: 0x801b63e8, name: g_battle_effect_phase}
   - {addr: 0x801b63f0, name: g_battle_effect_ability_ids}

@@ -3,7 +3,7 @@
 
 /* main 0x8001d658–0x8001d8e4: construct rotation from the packed sin/cos table.
  * Low-word unsigned products and negation before rescaling retain rounding. */
-void RotMatrix(SVECTOR* rotation, MATRIX* output) {
+MATRIX* RotMatrix(SVECTOR* rotation, MATRIX* output) {
     SVECTOR* angles = rotation;
     MATRIX* destination = output;
     MATRIX* result;
@@ -199,8 +199,6 @@ z_ready:
     packed = value >> 12;
     value = packed - angle;
     destination->m[2][1] = value;
-    __asm__ volatile(""
-        :
-        : "r"(result)
-        : "memory"); /* Keep the pointer result and the final empty return delay slot. */
+    __asm__ volatile("" : : : "memory"); /* Keep the final empty return delay slot. */
+    return result;
 }

@@ -4548,7 +4548,7 @@ extern u16 g_battle_effect_free_slot_head;
 extern struct battle_effect_secondary_data* g_battle_effect_current_secondary;
 extern u32 g_battle_effect_current_slot_id;
 extern effect_file_header_t* g_battle_effect_data_ptrs[];
-extern battle_effect_callback_t g_battle_effect_file_ptrs[];
+extern battle_effect_callback_t g_battle_effect_file_functions[];
 extern u8* g_battle_effect_frame_data;
 extern u8* g_battle_effect_frame_data_start;
 extern s32 g_battle_effect_gravity_modifier;
@@ -4860,7 +4860,7 @@ void battle_effect_free_list_node(effect_list_node_t* node);
 void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work);
 void battle_effect_free_slot(u8 id);
 void battle_effect_free_sprite_block(battle_effect_sprite_block_t* block);
-battle_effect_callback_t battle_effect_get_file_pointer(s16 effect_id);
+battle_effect_callback_t battle_effect_get_file_function(s16 function_id);
 effect_work_record_t* battle_effect_get_list_node(s16 record_index, s16 requested_index);
 s32 battle_effect_get_phase(void);
 s32 battle_effect_get_prim_buffer_offset(void);
@@ -6151,8 +6151,8 @@ void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* disp
 
 s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const battle_gfx_packed_evtchr_record_t* file);
 
-void battle_gfx_init_image_loading(void* primitive, const world_image_location_t* base_load, const RECT* base_screen,
-    const world_gfx_image_load_parameters_t* parameters);
+void battle_gfx_init_image_loading(world_texture_prim_t* primitive, const world_image_location_t* base_load,
+    const RECT* base_screen, const world_gfx_image_load_parameters_t* parameters);
 
 void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite_archive_t* archive);
 void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive);
@@ -7954,6 +7954,18 @@ typedef struct gns_command_record_prefix {
 } gns_command_record_prefix_t;
 typedef char gns_command_record_prefix_size_must_be_0x14[(sizeof(gns_command_record_prefix_t) == 0x14) ? 1 : -1];
 
+/* Serialized GNS primary/animated mesh geometry. Counts are unsigned; the
+ * variable tail stores unpadded XYZ halfwords, normals, materials and terrain
+ * coordinates. Native renderer position/normal records have different strides. */
+typedef struct battle_map_mesh_geometry {
+    u16 textured_triangle_count;   /* 0x00 */
+    u16 textured_quad_count;       /* 0x02 */
+    u16 untextured_triangle_count; /* 0x04 */
+    u16 untextured_quad_count;     /* 0x06 */
+    u16 payload[0];                /* 0x08; count-dependent sections */
+} battle_map_mesh_geometry_t;
+typedef char battle_map_mesh_geometry_prefix_must_be_8[sizeof(battle_map_mesh_geometry_t) == 8 ? 1 : -1];
+
 /* Mesh files begin with 49 32-bit byte offsets indexed by resource ID (slot = ID * 4).
  * The dispatcher visits IDs 0x10..0x30; slots 0..0x0f and the other reserved
  * words are zero in the USA disc's mesh files. A zero offset means the chunk
@@ -8368,7 +8380,7 @@ extern s32 g_battle_map_loaded_id;
 extern MATRIX g_battle_map_local_light_matrix;
 extern s32 g_battle_map_lowest_surface_y;
 extern s32 g_battle_map_mesh_part_animation_states[];
-extern u8* g_battle_map_mesh_part_geometry[9];
+extern const battle_map_mesh_geometry_t* g_battle_map_mesh_part_geometry[9];
 extern u16 g_battle_map_palette_animation_frames[][16];
 extern s8 g_battle_map_palette_blend_steps_32[][32];
 extern s8 g_battle_map_palette_blend_steps_8[][8];
@@ -8504,7 +8516,7 @@ void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s3
 
 battle_map_state_record_t* battle_map_load_saved_state_record(battle_map_state_record_t* record);
 void* battle_map_light_state_command(s32 command, void* data);
-void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t* metadata);
+void battle_map_append_mesh_geometry(const battle_map_mesh_geometry_t* geometry_data, battle_map_mesh_part_t* metadata);
 /* A typed terrain parameter loses the first retail byte-cursor increment. */
 void battle_map_copy_xy_coords_and_tile_data(u8* data);
 map_tile_t* battle_map_get_tile_data_ptr_from_battle_id(u32 battle_id);
@@ -8512,10 +8524,10 @@ map_tile_t* battle_map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id);
 s32 battle_move_get_weather_terrain_cost(void);
 s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 deployment_running);
 s32 battle_map_load_mesh_variant(s32 palette_mode);
-void battle_map_queue_textured_quads(u32* otag, void* prims, s32 yaw, s32* count);
-void battle_map_queue_textured_triangles(u32* otag, void* prims, s32 yaw, s32* count);
-void battle_map_queue_untextured_quads(u32* otag, void* prims, s32 yaw, s32* count);
-void battle_map_queue_untextured_triangles(u32* otag, void* prims, s32 yaw, s32* count);
+void battle_map_queue_textured_quads(u32* otag, POLY_GT4* prims, s32 yaw, s32* unused_count);
+void battle_map_queue_textured_triangles(u32* otag, POLY_GT3* prims, s32 yaw, s32* unused_count);
+void battle_map_queue_untextured_quads(u32* otag, POLY_F4* prims, s32 yaw, s32* unused_count);
+void battle_map_queue_untextured_triangles(u32* otag, POLY_F3* prims, s32 yaw, s32* unused_count);
 s32 battle_map_refresh_deep_dungeon(void);
 s32 battle_map_command_set_3d_object_state(s32 value_a, s32 value_b);
 s32 battle_map_command_start_texture_animation(s32 value_a, s32 value_b);
@@ -8528,7 +8540,7 @@ void battle_map_update_palette_from_other(
     const u16* source, s32 clut_row, s32 clut_index, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
 
 void battle_map_update_texture_animations(void);
-void battle_map_init_mesh_render_records(void* geometry_data);
+void battle_map_init_mesh_render_records(const battle_map_mesh_geometry_t* geometry_data);
 void battle_map_init_weather_particles(s32 command);
 gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id);
 void battle_map_reset_mesh_render_state(void);

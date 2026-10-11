@@ -104,23 +104,28 @@ void battle_menu_display_hovered_unit_stats(
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (SPRT*)&page->quads[1], 2);
     params = g_battle_unit_status_quad_image_params_by_mode[mode];
     if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
-        battle_gfx_init_image_loading(&page->quads[4], &g_battle_menu_texture_location, frame_rect, &params[4]);
+        battle_gfx_init_image_loading(
+            (world_texture_prim_t*)&page->quads[4], &g_battle_menu_texture_location, frame_rect, &params[4]);
         for (frame = 0; frame < 2; frame++, params++) {
-            battle_gfx_init_image_loading(&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
+            battle_gfx_init_image_loading(
+                (world_texture_prim_t*)&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
             page->quads[frame].clut = 0x7CBC;
         }
         battle_menu_display_projected_action_effect(
             &page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
     } else if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         for (frame = 0; frame < 2; frame++, params++) {
-            battle_gfx_init_image_loading(&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
+            battle_gfx_init_image_loading(
+                (world_texture_prim_t*)&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
         }
         if (text_id != 0) {
-            battle_gfx_init_image_loading(&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
+            battle_gfx_init_image_loading(
+                (world_texture_prim_t*)&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
         }
     } else {
         for (frame = 0; frame < 4; frame++, params++) {
-            battle_gfx_init_image_loading(&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
+            battle_gfx_init_image_loading(
+                (world_texture_prim_t*)&page->quads[frame], &g_battle_menu_texture_location, frame_rect, params);
         }
     }
     battle_copy_bytes(&page[1], page, sizeof(world_unit_status_page_t));
@@ -194,7 +199,8 @@ void battle_menu_display_hovered_unit_stats(
             page->portrait.y3 = frame_rect->y + 0x32;
             battle_copy_bytes(&params[6], &g_battle_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
-                battle_gfx_init_image_loading(&page->sprites[i], &g_battle_menu_texture_location, frame_rect, params);
+                battle_gfx_init_image_loading(
+                    (world_texture_prim_t*)&page->sprites[i], &g_battle_menu_texture_location, frame_rect, params);
             }
         }
         if (mode != UNIT_STATS_PANEL_ATTACK_CASTER) {

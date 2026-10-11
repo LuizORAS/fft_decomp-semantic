@@ -3,7 +3,7 @@
 
 /* main 0x8001cf78–0x8001d09c: column scaling, low-word products and word stores.
  * The packed view preserves writes to the matrix alignment word. */
-void ScaleMatrix(void* camera_matrix, void* scale_pointer) {
+MATRIX* ScaleMatrix(MATRIX* camera_matrix, VECTOR* scale_pointer) {
     MATRIX* matrix = camera_matrix;
     VECTOR* scale = scale_pointer;
     /* Bindings preserve the packed-halfword multiply and store registers. */
@@ -28,8 +28,7 @@ void ScaleMatrix(void* camera_matrix, void* scale_pointer) {
     __asm__ volatile("" : : "r"(scale_y), "r"(scale_z) : "memory");
     packed = packed_matrix->words[1];
     __asm__ volatile("" : "=r"(packed_matrix) : "0"(packed_matrix), "r"(packed) : "memory");
-    __asm__("" : "=r"(result) : "0"(packed_matrix));
-    __asm__ volatile("" : : "r"(result)); /* Retail exposes the result pointer before its stores. */
+    __asm__("" : "=r"(result) : "0"(packed_matrix)); /* Retail copies the result before the packed stores. */
     PSYQ_GTE_READ_LO(low);
     low = (low >> 12) & 0xffff;
     PSYQ_GTE_MULTU_BEGIN(high, scale_y);
@@ -83,4 +82,5 @@ void ScaleMatrix(void* camera_matrix, void* scale_pointer) {
     PSYQ_GTE_READ_LO(low);
     low >>= 12;
     packed_matrix->words[4] = low;
+    return result;
 }

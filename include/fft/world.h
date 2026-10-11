@@ -1009,7 +1009,7 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
     void* unused_14, void* unused_15, TILE* tiles, void* unused_17, void* unused_18, void* unused_19, void* unused_20,
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
-void world_gfx_init_image_loading(void* prim, const void* load_origin, const void* screen_origin,
+void world_gfx_init_image_loading(void* prim, const world_image_location_t* base_load, const RECT* base_screen,
     const world_gfx_image_load_parameters_t* parameters);
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
@@ -1407,7 +1407,7 @@ extern world_menu_input_state_t g_world_formation_menu_input_state;
 
 /* First-word alias retained for the target's separate absolute store. */
 extern s32 g_world_formation_menu_new_buttons;
-extern void* g_world_formation_ordering_table;
+extern u32* g_world_formation_ordering_table;
 /* g_main_system_flags as saved by world_formation_save_and_set_system_flags (main_system_flags_e). */
 extern u32 g_world_formation_saved_system_flags;
 
@@ -1626,7 +1626,7 @@ void world_formation_save_and_set_system_flags(void);
 void world_formation_save_records_to_party_data(void);
 void world_formation_set_display_mode(s32 mode);
 void world_formation_set_menu_allowed_buttons(u32 mask);
-void world_formation_set_ordering_table_pointer(void* ordering_table);
+void world_formation_set_ordering_table_pointer(u32* ordering_table);
 s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s32 update_equipment);
 void world_formation_set_unit_name(s16 formation_index, const u8* name);
 void world_formation_stage_selected_unit(void);

@@ -519,7 +519,6 @@ data:
   - {addr: 0x8009f2c0, name: g_wldcore_map_projection_view}
   - {addr: 0x8009f2d0, name: g_wldcore_map_projection_scale}
   - {addr: 0x8009f2e0, name: g_wldcore_map_projection_rotation}
-  - {addr: 0x8009f2e0, name: g_wldcore_map_projection_rotation_bytes}
   - {addr: 0x8009f2e8, name: g_wldcore_current_button_input}
   - {addr: 0x8009f2ec, name: g_wldcore_selected_proposition_row}
   - {addr: 0x8009f31c, name: g_wldcore_gfx_world_primitive_buffers}

@@ -58,20 +58,24 @@ void require_panel_run_character_status_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_require_editor_numeric_geometry,
-                    g_require_panel_origin_offsets, &g_require_panel_label_layouts_mode0[i]);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_require_editor_numeric_geometry, g_require_panel_origin_offsets,
+                    &g_require_panel_label_layouts_mode0[i]);
             }
             if (mode == 1) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_require_editor_numeric_geometry,
-                    g_require_panel_origin_offsets, &g_require_panel_label_layouts_mode1[i]);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_require_editor_numeric_geometry, g_require_panel_origin_offsets,
+                    &g_require_panel_label_layouts_mode1[i]);
             }
             if (mode == 2) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_require_editor_numeric_geometry,
-                    g_require_panel_origin_offsets, &g_require_panel_label_layouts_mode2[i]);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_require_editor_numeric_geometry, g_require_panel_origin_offsets,
+                    &g_require_panel_label_layouts_mode2[i]);
             }
             if (mode == 3) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_require_editor_numeric_geometry,
-                    g_require_panel_origin_offsets, &g_require_panel_label_layouts_mode3[i]);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_require_editor_numeric_geometry, g_require_panel_origin_offsets,
+                    &g_require_panel_label_layouts_mode3[i]);
             }
         }
         if (state->generic_monster != 0) {
@@ -120,8 +124,8 @@ void require_panel_run_character_status_thread(void) {
             thread->redraw_request = 0;
         }
         for (i = 0; i < 5; i++) {
-            battle_gfx_init_image_loading(&screen->sprites[19 + i], g_require_panel_item_icon_texture, FRAME_RECT,
-                &g_require_panel_item_icon_layouts[i]);
+            battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[19 + i],
+                g_require_panel_item_icon_texture, FRAME_RECT, &g_require_panel_item_icon_layouts[i]);
             if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                 battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {

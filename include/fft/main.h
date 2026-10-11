@@ -1821,7 +1821,7 @@ void main_system_handle_draw_sync_callback(void);
 void main_system_handle_vsync_callback(void);
 void main_boot_build_and_draw_sceap_logo(void);
 void main_boot_build_and_draw_squaresoft_logo(void);
-int main_boot_draw_sceap_logo(void* otag, void* image);
+int main_boot_draw_sceap_logo(u32* otag, u32* image);
 int main_boot_draw_squaresoft_logo(u32* otag, u32* image);
 void main_boot_fade_out_squaresoft_logo(void);
 void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);

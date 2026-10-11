@@ -104,8 +104,8 @@ void option_build_options_menu(void) {
     base->thumb.h = 8;
     base->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&base->frame);
-    battle_gfx_init_image_loading(&base->frame, (const world_image_location_t*)entry, (const RECT*)&entry->window_x,
-        (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading((world_texture_prim_t*)&base->frame, (const world_image_location_t*)entry,
+        (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
     base->arrow_marks[0].w = 6;
     base->arrow_marks[0].h = 0xC;

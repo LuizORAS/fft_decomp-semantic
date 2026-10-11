@@ -1,11 +1,9 @@
 #include "fft/world.h"
 
 /* Fill a WORLD textured quad from load and screen placement parameters. */
-void world_gfx_init_image_loading(void* prim, const void* load_origin, const void* screen_origin,
+void world_gfx_init_image_loading(void* prim, const world_image_location_t* base_load, const RECT* base_screen,
     const world_gfx_image_load_parameters_t* parameters) {
     POLY_FT4* primitive = prim;
-    const world_image_location_t* base_load = load_origin;
-    const RECT* base_screen = screen_origin;
     int texture_column;
 
     if ((primitive->code & 0x7c) == 0x64) {

@@ -122,8 +122,8 @@ typedef struct world_glyph_blit {
 } world_glyph_blit_t;
 typedef char world_glyph_blit_size_must_be_0x10[sizeof(world_glyph_blit_t) == 0x10 ? 1 : -1];
 
-/* Texture primitive placed by world_gfx_alloc_tpage7_vram and
- * battle_gfx_alloc_tpage7_vram: a SPRT
+/* Texture primitive used by the WORLD/BATTLE image-loading and
+ * texture-page allocation helpers: a SPRT
  * (code 0x64-0x67) or a POLY_FT4. Both carry the CLUT at 0x0e, which the icon
  * slot helpers overwrite. */
 typedef union world_texture_prim {

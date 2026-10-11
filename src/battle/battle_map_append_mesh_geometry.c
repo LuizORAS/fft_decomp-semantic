@@ -15,8 +15,10 @@
  * incoming counts; the persistent totals advance at the end.
  */
 
-void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t* metadata) {
-    u16* source = geometry_data;
+void battle_map_append_mesh_geometry(
+    const battle_map_mesh_geometry_t* geometry_data, battle_map_mesh_part_t* metadata) {
+    /* Named count loads fold the retail four halfword cursor advances. */
+    const u16* source = &geometry_data->textured_triangle_count;
     s32 i;
     s32 textured_triangle_count;
     s32 textured_quad_count;

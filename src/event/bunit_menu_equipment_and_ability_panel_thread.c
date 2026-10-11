@@ -51,20 +51,24 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_bunit_editor_numeric_geometry,
-                    &g_bunit_character_status_sprite_origin, &g_bunit_character_status_layout_mode0[i]);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_bunit_editor_numeric_geometry, &g_bunit_character_status_sprite_origin,
+                    &g_bunit_character_status_layout_mode0[i]);
             }
             if (mode == 1) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_bunit_editor_numeric_geometry,
-                    &g_bunit_character_status_sprite_origin, &g_bunit_character_status_layout_mode1[i]);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_bunit_editor_numeric_geometry, &g_bunit_character_status_sprite_origin,
+                    &g_bunit_character_status_layout_mode1[i]);
             }
             if (mode == 2) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_bunit_editor_numeric_geometry,
-                    &g_bunit_character_status_sprite_origin, &g_bunit_character_status_layout_mode2[i]);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_bunit_editor_numeric_geometry, &g_bunit_character_status_sprite_origin,
+                    &g_bunit_character_status_layout_mode2[i]);
             }
             if (mode == 3) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_bunit_editor_numeric_geometry,
-                    &g_bunit_character_status_sprite_origin, &g_bunit_character_status_layout_mode3[i]);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_bunit_editor_numeric_geometry, &g_bunit_character_status_sprite_origin,
+                    &g_bunit_character_status_layout_mode3[i]);
             }
         }
         if (state->generic_monster != 0) {
@@ -115,8 +119,9 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             thread->redraw_request = 0;
         }
         for (i = 0; i < 5; i++) {
-            battle_gfx_init_image_loading(&screen->sprites[19 + i], g_bunit_panel_item_icon_texture,
-                &g_bunit_character_status_frame_rect, &g_bunit_character_status_item_icon_layout[i]);
+            battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[19 + i],
+                g_bunit_panel_item_icon_texture, &g_bunit_character_status_frame_rect,
+                &g_bunit_character_status_item_icon_layout[i]);
             if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                 battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {

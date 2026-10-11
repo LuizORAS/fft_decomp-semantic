@@ -1157,6 +1157,33 @@ void wldcore_list_build_proposition_detail_panel_image(
 void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset);
 
 /* camera */
+/* Map camera block: translation, scale and rotation are passed together. */
+typedef struct wldcore_map_projection_view {
+    VECTOR origin;    /* 0x00 */
+    VECTOR scale;     /* 0x10 */
+    SVECTOR rotation; /* 0x20 */
+} wldcore_map_projection_view_t;
+typedef char wldcore_map_projection_view_size_must_be_0x28[sizeof(wldcore_map_projection_view_t) == 0x28 ? 1 : -1];
+
+/* Packed eight-byte source row used by wldcore_map_color_and_draw_dots.
+ * The low halfword of the first word is x; its high bytes select the animation. */
+typedef union wldcore_map_dot_source_word {
+    s32 value;
+    struct {
+        s16 x;
+        u8 kind;
+        u8 sub_kind;
+    } fields;
+} wldcore_map_dot_source_word_t;
+
+typedef struct wldcore_map_dot_source {
+    wldcore_map_dot_source_word_t position_and_kind;
+    s32 y;
+} wldcore_map_dot_source_t;
+typedef char wldcore_map_dot_source_size_must_be_8[sizeof(wldcore_map_dot_source_t) == 8 ? 1 : -1];
+
+extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;
+
 /* The 52-byte world map dot records at 0x800d3ca8. */
 typedef struct wldcore_map_dot {
     s32 kind;
@@ -1173,7 +1200,7 @@ typedef struct wldcore_map_dot {
     s32 palette;
     s32 screen_x;
     s32 screen_y;
-    u8 rgb[3];
+    rgb24_t color;
     u8 _padding_33; /* tail padding to 4-byte alignment */
 } wldcore_map_dot_t;
 typedef char wldcore_map_dot_size_must_be_0x34[sizeof(wldcore_map_dot_t) == 0x34 ? 1 : -1];
@@ -1314,11 +1341,12 @@ extern wldcore_axis_state_t g_wldcore_map_cursor_scroll_y;
 extern wldcore_point32_t g_wldcore_context_value_display_position;
 extern u8 g_wldcore_map_dot_pulse_direction;
 extern u8 g_wldcore_map_dot_pulse_phase;
-extern u8 g_wldcore_map_projection_rotation_bytes[];
 extern wldcore_slideshow_t g_wldcore_map_path_animation;
 extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_y[];
 extern s32 g_wldcore_map_window_index;
 extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_x[];
+extern wldcore_map_projection_view_t g_wldcore_map_projection_view;
+
 extern VECTOR g_wldcore_map_projection_origin;
 extern SVECTOR g_wldcore_map_projection_rotation;
 extern VECTOR g_wldcore_map_projection_scale;

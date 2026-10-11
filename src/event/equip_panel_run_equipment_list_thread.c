@@ -72,20 +72,24 @@ void equip_panel_run_equipment_list_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_equip_editor_numeric_geometry,
-                    g_equip_panel_origin_offsets, g_equip_panel_label_layouts_mode0 + i);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
+                    g_equip_panel_label_layouts_mode0 + i);
             }
             if (mode == 1) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_equip_editor_numeric_geometry,
-                    g_equip_panel_origin_offsets, g_equip_panel_label_layouts_mode1 + i);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
+                    g_equip_panel_label_layouts_mode1 + i);
             }
             if (mode == 2) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_equip_editor_numeric_geometry,
-                    g_equip_panel_origin_offsets, g_equip_panel_label_layouts_mode2 + i);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
+                    g_equip_panel_label_layouts_mode2 + i);
             }
             if (mode == 3) {
-                battle_gfx_init_image_loading(&screen->sprites[i], g_equip_editor_numeric_geometry,
-                    g_equip_panel_origin_offsets, g_equip_panel_label_layouts_mode3 + i);
+                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                    g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
+                    g_equip_panel_label_layouts_mode3 + i);
             }
         }
         if (frame == 0 || thread->redraw_request == 1) {
@@ -108,8 +112,8 @@ void equip_panel_run_equipment_list_thread(void) {
         screen->sprites[13].u0 = u;
         battle_menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
         for (i = 0; i < 5; i++) {
-            battle_gfx_init_image_loading(&screen->sprites[19 + i], g_equip_panel_item_icon_texture,
-                g_equip_panel_origin_offsets, g_equip_panel_item_icon_layouts + i);
+            battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[19 + i],
+                g_equip_panel_item_icon_texture, g_equip_panel_origin_offsets, g_equip_panel_item_icon_layouts + i);
             /* Read unsigned: the target extends the id only where it is passed on. */
             id = state->equipment[i];
             if ((id & ITEM_ID_MASK) != ITEM_ID_NONE) {

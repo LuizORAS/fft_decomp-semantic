@@ -32,9 +32,9 @@ void wldcore_map_init_location_marker_and_camera(void) {
     g_wldcore_window_render_object_count = count;
     g_wldcore_map_projection_state.marker.anim_counter = 0;
     g_wldcore_map_projection_state.marker.frame_index = 0;
-    g_wldcore_map_projection_state.marker.rgb[0] = 0x80;
-    g_wldcore_map_projection_state.marker.rgb[1] = 0x80;
-    g_wldcore_map_projection_state.marker.rgb[2] = 0x80;
+    g_wldcore_map_projection_state.marker.color.r = 0x80;
+    g_wldcore_map_projection_state.marker.color.g = 0x80;
+    g_wldcore_map_projection_state.marker.color.b = 0x80;
     value = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
     g_wldcore_map_projection_state.marker.palette = 0;
     if (value == 1) {

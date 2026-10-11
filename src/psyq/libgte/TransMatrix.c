@@ -1,7 +1,7 @@
 #include "psx/libgte.h"
 
 /* main 0x8001cf48–0x8001cf6c: copy the translation vector, return matrix in v0. */
-void TransMatrix(void* matrix_address, void* vector_address) {
+MATRIX* TransMatrix(MATRIX* matrix_address, VECTOR* vector_address) {
     MATRIX* matrix = matrix_address;
     VECTOR* vector = vector_address;
     /* The three translation words retain the handwritten t0-t2 store order. */
@@ -14,5 +14,5 @@ void TransMatrix(void* matrix_address, void* vector_address) {
     matrix->t[2] = z;
     __asm__ volatile("" : : : "memory");      /* Retail completes all stores before the return copy. */
     __asm__("" : "=r"(result) : "0"(matrix)); /* Keep the return copy after the stores. */
-    __asm__ volatile("" : : "r"(result));
+    return result;
 }

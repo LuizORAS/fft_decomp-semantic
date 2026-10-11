@@ -13,7 +13,7 @@ void wldcore_map_pulse_dot_colors(void) {
     s32 dark;
     u8 state;
     s32 counter;
-    u8* color;
+    rgb24_t* color;
 
     flags = g_main_system_flags;
     if (flags & MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS) {
@@ -43,15 +43,15 @@ void wldcore_map_pulse_dot_colors(void) {
     dark = -0x20 - phase;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
         if (!(g_wldcore_map_dots[i].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
-            color = g_wldcore_map_dots[i].rgb;
+            color = &g_wldcore_map_dots[i].color;
             if (g_wldcore_map_dots[i].palette != 0) {
-                color[0] = bright;
-                color[1] = bright;
-                color[2] = bright;
+                color->r = bright;
+                color->g = bright;
+                color->b = bright;
             } else {
-                color[0] = dark;
-                color[1] = dark;
-                color[2] = dark;
+                color->r = dark;
+                color->g = dark;
+                color->b = dark;
             }
         }
     }

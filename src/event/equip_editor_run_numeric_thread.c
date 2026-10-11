@@ -60,7 +60,7 @@ void equip_editor_run_numeric_thread(void) {
     descriptor = g_equip_editor_numeric_texture;
     for (; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&buffer->sprites[i]);
-        battle_gfx_init_image_loading(&buffer->sprites[i], g_equip_editor_numeric_geometry,
+        battle_gfx_init_image_loading((world_texture_prim_t*)&buffer->sprites[i], g_equip_editor_numeric_geometry,
             &g_equip_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }

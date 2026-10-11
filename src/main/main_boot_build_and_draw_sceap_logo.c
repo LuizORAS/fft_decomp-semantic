@@ -60,7 +60,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
         g_main_gfx_screen_polarity[polygons].b0 = intensity;
         AddPrim(current_otag, &polygons[g_main_gfx_screen_polarity]);
         AddPrim(current_otag, &draw_modes[g_main_gfx_screen_polarity]);
-        main_boot_draw_sceap_logo(current_otag, g_main_heap_high_overlay_load_address);
+        main_boot_draw_sceap_logo(current_otag, (u32*)g_main_heap_high_overlay_load_address);
         intensity -= 8;
     }
 
@@ -81,7 +81,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
         g_main_gfx_screen_polarity[polygons].b0 = intensity;
         AddPrim(current_otag, &polygons[g_main_gfx_screen_polarity]);
         AddPrim(current_otag, &draw_modes[g_main_gfx_screen_polarity]);
-        main_boot_draw_sceap_logo(current_otag, g_main_heap_high_overlay_load_address);
+        main_boot_draw_sceap_logo(current_otag, (u32*)g_main_heap_high_overlay_load_address);
         intensity += 8;
     }
 

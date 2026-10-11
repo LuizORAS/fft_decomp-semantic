@@ -66,44 +66,44 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
             g_battle_map_mesh_parts[i].untextured_quad_count = 0;
             g_battle_map_mesh_part_geometry[i] = 0;
         }
-        g_battle_map_mesh_part_geometry[0] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[0]);
+        g_battle_map_mesh_part_geometry[0] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[0]);
         g_battle_map_primary_textured_triangle_count = g_battle_map_textured_triangle_count;
         g_battle_map_primary_textured_quad_count = g_battle_map_textured_quad_count;
         g_battle_map_primary_untextured_triangle_count = g_battle_map_untextured_triangle_count;
         g_battle_map_primary_untextured_quad_count = g_battle_map_untextured_quad_count;
         break;
     case GNS_RESOURCE_PART_GEOMETRY_1:
-        g_battle_map_mesh_part_geometry[1] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[1]);
+        g_battle_map_mesh_part_geometry[1] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[1]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_2:
-        g_battle_map_mesh_part_geometry[2] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[2]);
+        g_battle_map_mesh_part_geometry[2] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[2]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_3:
-        g_battle_map_mesh_part_geometry[3] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[3]);
+        g_battle_map_mesh_part_geometry[3] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[3]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_4:
-        g_battle_map_mesh_part_geometry[4] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[4]);
+        g_battle_map_mesh_part_geometry[4] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[4]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_5:
-        g_battle_map_mesh_part_geometry[5] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[5]);
+        g_battle_map_mesh_part_geometry[5] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[5]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_6:
-        g_battle_map_mesh_part_geometry[6] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[6]);
+        g_battle_map_mesh_part_geometry[6] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[6]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_7:
-        g_battle_map_mesh_part_geometry[7] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[7]);
+        g_battle_map_mesh_part_geometry[7] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[7]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_8:
-        g_battle_map_mesh_part_geometry[8] = data;
-        battle_map_append_mesh_geometry(data, &g_battle_map_mesh_parts[8]);
+        g_battle_map_mesh_part_geometry[8] = (const battle_map_mesh_geometry_t*)data;
+        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[8]);
         break;
     case GNS_RESOURCE_POLYGON_FLAGS:
         polygon_flags = (u16*)(data + 0x380);

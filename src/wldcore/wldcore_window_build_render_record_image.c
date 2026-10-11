@@ -10,7 +10,7 @@
 void wldcore_window_build_render_record_image(
     s32 index, wldcore_window_render_bounds16_t bounds, s32 coordinate_mode, u32* image) {
     wldcore_point32_t* clut;
-    u8* color;
+    CVECTOR* color;
     s32 transformed[2];
 
     g_wldcore_window_render_records[index].flags
@@ -26,11 +26,10 @@ void wldcore_window_build_render_record_image(
     g_wldcore_window_render_records[index].bounds = bounds;
     wldcore_window_transform_point_for_mode(coordinate_mode, bounds, transformed);
     g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, transformed[0], transformed[1]) & 0xFFFF;
-    /* One byte pointer for red/green/blue; three field stores change the bytes. */
-    color = &g_wldcore_window_render_records[index].color.r;
-    color[0] = 0x80;
-    color[1] = 0x80;
-    color[2] = 0x80;
+    color = &g_wldcore_window_render_records[index].color;
+    color->r = 0x80;
+    color->g = 0x80;
+    color->b = 0x80;
     g_wldcore_window_render_records[index].anim_counter = 0;
     world_menu_build_window_frame_image(bounds.dimensions.x, bounds.dimensions.y, (u16*)image);
 }

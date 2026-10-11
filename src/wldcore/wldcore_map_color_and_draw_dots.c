@@ -1,18 +1,6 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-typedef union wldcore_map_dot_source_word {
-    s32 w;
-    u8 b[4];
-} wldcore_map_dot_source_word_t;
-
-typedef struct wldcore_map_dot_source {
-    wldcore_map_dot_source_word_t a;
-    s32 y;
-} wldcore_map_dot_source_t;
-
-extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;
-
 /*
  * Builds the 43 world-map location dots and queues them for drawing.
  *
@@ -27,7 +15,7 @@ void wldcore_map_color_and_draw_dots(void) {
     wldcore_map_dot_t* dots;
     wldcore_map_dot_t* dot;
     s32* flags_base;
-    u8* color;
+    rgb24_t* color;
     s32 y;
     s32 is_castle;
     s32 queue_index;
@@ -42,18 +30,19 @@ void wldcore_map_color_and_draw_dots(void) {
     g_wldcore_map_dot_pulse_phase = 0;
     g_wldcore_map_dot_count = 0;
     for (i = 0; i < WORLD_LOCATION_COUNT; i++) {
-        g_wldcore_map_dots[i].kind = src[i].a.b[2];
-        g_wldcore_map_dots[i].sub_kind = src[i].a.b[3];
-        g_wldcore_map_dots[i].position.vx = src[i].a.w;
+        g_wldcore_map_dots[i].kind = src[i].position_and_kind.fields.kind;
+        g_wldcore_map_dots[i].sub_kind = src[i].position_and_kind.fields.sub_kind;
+        /* The original loads the packed word for x; a direct x read emits lhu. */
+        g_wldcore_map_dots[i].position.vx = src[i].position_and_kind.value;
         y = src[i].y;
         g_wldcore_map_dots[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
         g_wldcore_map_dots[i].priority = 0xf;
-        color = g_wldcore_map_dots[i].rgb;
+        color = &g_wldcore_map_dots[i].color;
         g_wldcore_map_dots[i].position.vz = 0;
         g_wldcore_map_dots[i].position.vy = y;
-        color[0] = 0x80;
-        color[1] = 0x80;
-        color[2] = 0x80;
+        color->r = 0x80;
+        color->g = 0x80;
+        color->b = 0x80;
         is_castle = g_wldcore_map_dots[i].kind == 2;
         g_wldcore_map_dots[i].sequence = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {

@@ -45,7 +45,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_menu_free_memory(buffer);
     for (i = 0; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&record->sprites[i]);
-        battle_gfx_init_image_loading(&record->sprites[i], &g_battle_menu_texture_location,
+        battle_gfx_init_image_loading((world_texture_prim_t*)&record->sprites[i], &g_battle_menu_texture_location,
             &g_battle_numeric_display_frame_rect, &g_battle_numeric_display_image_params[i]);
     }
     battle_copy_bytes(&record[1], record, sizeof(*record));

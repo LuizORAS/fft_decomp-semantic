@@ -9,11 +9,9 @@
  * zeroed, the two append calls here return records 0 and 1.
  *
  * Layout:
- *  - 0x8009f2d0 g_wldcore_map_projection_scale is a VECTOR;
- *    wldcore_map_project_and_cull_tiles reaches it as rotation - 0x10 off
- *    g_wldcore_map_projection_rotation_bytes.
- *  - g_wldcore_map_projection_rotation is the SVECTOR view of 0x8009f2e0
- *    (three `sh` stores at +0/+2/+4); the byte view keeps its own name.
+ *  - Origin, scale and rotation form g_wldcore_map_projection_view at
+ *    0x8009f2c0. Their aliases retain this initializer's absolute stores;
+ *    the projection routine anchors its shared record view at rotation.
  *  - The 24-byte tile source table is reached through the pointer cell
  *    g_wldcore_map_tile_descriptors. The target indexes it by word
  *    (base + k*4, k += 6), not by record, so it is an s32* with a word index.
