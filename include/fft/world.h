@@ -1456,7 +1456,7 @@ extern u16 g_world_formation_sprite_by_portrait[];
 /* Remaps the monster portrait indices, 0x3f and above; indexed from 0x3f. */
 extern u8 g_world_monster_formation_sprite_table[20];
 extern u8 g_world_formation_menu_text_table[];
-extern u32 g_world_formation_menu_palettes[];
+extern clut_t g_world_formation_menu_palettes;
 extern rgb24_t g_world_formation_saved_sprite_color;
 extern rgb24_t g_world_formation_dimmed_sprite_color;
 extern rgb24_t g_world_formation_normal_sprite_color;
