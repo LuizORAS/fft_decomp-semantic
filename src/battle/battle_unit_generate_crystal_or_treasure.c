@@ -2,11 +2,11 @@
 #include "psx/types.h"
 
 /* Local view of battle_stats_t with learned_abilities (0x99) as 19 rows of 3
- * bytes. The 2D indexing is what makes loop.c reduce `unit + i * 3` as the
+ * bytes. The 2D indexing is what makes loop.c reduce `unit + job_index * 3` as the
  * outer-loop giv (target `move s6,s2` / `addiu a2,s6,0x99`). */
 typedef struct {
     u8 _unused_00[0x99];
-    u8 learned_abilities[19][3];
+    u8 learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
 } battle_stats_learned_rows_t;
 
 /* Resolve a crystal or treasure pickup for the unit that moved onto its tile.
@@ -23,9 +23,9 @@ typedef struct {
  * (8 refs), so global-alloc ranks it above `mover` and gives it s1 as in the
  * target. */
 crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover) {
-    u8 gained[3];
-    u8 known[3];
-    u8 offered[3];
+    u8 gained[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
+    u8 known[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
+    u8 offered[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
     s32 learned_count;
     s32 mover_identity;
     s32 crystal_identity;
@@ -35,7 +35,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
     battle_stats_t* crystal;
     s32 crystal_index;
     s32 job_id;
-    s32 i;
+    s32 job_index;
     s32 j;
     s32 byte_index;
     s32 mask;
@@ -71,28 +71,28 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
             mover_identity = mover->character_identity;
             crystal_identity = crystal->character_identity;
             main_util_clear_byte_data(g_main_crystal_pickup_result.learned_abilities, 0x40);
-            for (i = 0; i < 19; i++) {
-                for (j = 0; j < 3; j++) {
-                    g_main_crystal_pickup_result.learned[i][j] = 0;
+            for (job_index = UNIT_CAREER_JOB_INDEX_BASE; job_index < UNIT_LEARNED_ABILITY_JOB_COUNT; job_index++) {
+                for (j = 0; j < UNIT_LEARNED_ABILITY_BYTES_PER_JOB; j++) {
+                    g_main_crystal_pickup_result.learned[job_index][j] = 0;
                     gained[j] = 0;
-                    known[j] = ((battle_stats_learned_rows_t*)mover)->learned_abilities[i][j];
-                    offered[j] = ((battle_stats_learned_rows_t*)crystal)->learned_abilities[i][j];
+                    known[j] = ((battle_stats_learned_rows_t*)mover)->learned_abilities[job_index][j];
+                    offered[j] = ((battle_stats_learned_rows_t*)crystal)->learned_abilities[job_index][j];
                 }
-                job_id = i + JOB_ID_GENERIC_FIRST;
-                if (i == 0) {
+                job_id = job_index + JOB_ID_GENERIC_FIRST;
+                if (job_index == UNIT_CAREER_JOB_INDEX_BASE) {
                     if (mover_identity != crystal_identity) {
                         continue;
                     }
                     if (mover_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                         job_id = mover_identity;
                     }
-                } else if (!(unlocked_jobs_mask & (UNIT_UNLOCKED_JOB_SQUIRE >> i))) {
+                } else if (!(unlocked_jobs_mask & (UNIT_UNLOCKED_JOB_SQUIRE >> job_index))) {
                     continue;
                 }
-                if (i == UNIT_CAREER_JOB_INDEX_BARD && (mover_flags & UNIT_FLAG_FEMALE)) {
+                if (job_index == UNIT_CAREER_JOB_INDEX_BARD && (mover_flags & UNIT_FLAG_FEMALE)) {
                     continue;
                 }
-                if (i == UNIT_CAREER_JOB_INDEX_DANCER && (mover_flags & UNIT_FLAG_MALE)) {
+                if (job_index == UNIT_CAREER_JOB_INDEX_DANCER && (mover_flags & UNIT_FLAG_MALE)) {
                     continue;
                 }
                 skillset = g_main_job_data_pointer[job_id].skillset;
@@ -113,8 +113,8 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
                         }
                     }
                 }
-                for (j = 0; j < 3; j++) {
-                    g_main_crystal_pickup_result.learned[i][j] = gained[j];
+                for (j = 0; j < UNIT_LEARNED_ABILITY_BYTES_PER_JOB; j++) {
+                    g_main_crystal_pickup_result.learned[job_index][j] = gained[j];
                 }
             }
             if (learned_count != 0) {
