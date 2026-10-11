@@ -7118,6 +7118,8 @@ typedef char battle_movement_record_size_must_be_7[(sizeof(battle_move_record_t)
 /* Contiguous result bytes returned as battle_move_find_result_data_t. Keep
  * distinct symbols: the target reloads their absolute addresses separately. */
 extern battle_move_found_item_t g_battle_move_find_display_item;
+/* The scalar first-byte alias retains the retail absolute read/write addresses. */
+extern battle_move_find_result_data_t g_battle_move_find_tile_result;
 extern u8 g_battle_move_find_result_flags;
 extern u8 g_battle_move_find_entry_index;
 extern u8 g_battle_move_find_rare_item_id;
@@ -7344,6 +7346,12 @@ typedef enum battle_map_weather_flags {
     BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER = 0x02,
 } battle_map_weather_flags_e;
 
+/* The signed palette modifier shares the word above its seven low flag bits. */
+enum {
+    BATTLE_MAP_WEATHER_MODIFIER_SHIFT = 7,
+    BATTLE_MAP_WEATHER_LOW_FLAGS_MASK = 0x7f,
+};
+
 /* Eight CLUT colour-cycle slots at 0x800911f4. Each holds a row and a colour
  * range to rotate; they are separate from the mesh's 32 texture-animation
  * instructions and their handle table. */
@@ -7368,11 +7376,6 @@ typedef struct battle_weather_particle {
      * reuses it as splash state (0/1/2) and the splash set as a countdown. */
     s16 fall_speed;
 } battle_weather_particle_t;
-
-/* Three weather sprite UV rectangles (g_battle_map_weather_drop_uv_rects). */
-typedef struct battle_weather_sprite_rects {
-    RECT rects[3];
-} battle_weather_sprite_rects_t;
 
 typedef enum gns_map_state_comparison {
     GNS_MAP_STATE_EQUAL = 1,
@@ -8144,7 +8147,8 @@ extern u8 g_battle_map_weather_primary_speed;
 extern u8 g_battle_map_rain_secondary_fall_speed;
 extern battle_render_buffer_t* g_battle_map_ambient_restored_buffer;
 extern battle_weather_particle_t g_battle_map_rain_splash_particles[32];
-extern battle_weather_sprite_rects_t g_battle_map_weather_drop_uv_rects;
+extern RECT g_battle_map_weather_drop_uv_rects[3];
+extern RECT g_battle_map_weather_splash_uv_rects[4];
 extern battle_weather_particle_t g_battle_map_weather_particles[64];
 extern u16 g_battle_map_append_state; /* 0x80165fe0 */
 

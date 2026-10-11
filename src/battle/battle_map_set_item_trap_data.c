@@ -62,5 +62,5 @@ battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, u8 y, u8 la
             }
         }
     }
-    return (battle_move_find_result_data_t*)&g_battle_move_find_result_flags;
+    return &g_battle_move_find_tile_result;
 }

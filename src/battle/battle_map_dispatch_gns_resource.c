@@ -3,16 +3,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Bit view of the map weather flag word at 0x800b6698. */
-typedef struct battle_map_weather_bits {
-    u32 snow : 1;
-    u32 ignore_weather : 1;
-    u32 _unused_00_bit2 : 5;
-    s32 modifier : 25;
-} battle_map_weather_bits_t;
-
-#define WEATHER ((battle_map_weather_bits_t*)&g_battle_map_weather_flags)
-
 /* Apply one map resource by type: mesh parts, polygon flags, palettes,
  * textures, lighting, texture animations, terrain, saved state, camera and
  * weather commands. The three mesh file types walk the file's table of chunk
@@ -353,27 +343,49 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
         g_battle_map_camera_rotation.vz = vector[2];
         battle_camera_set_focus_and_cursor_tile(&g_battle_camera_integer_coords, &g_battle_map_camera_rotation);
         break;
-    case GNS_RESOURCE_SET_INDOOR:
-        WEATHER->ignore_weather = 1;
+    /* Case-local pointers preserve the native address lifetimes. */
+    case GNS_RESOURCE_SET_INDOOR: {
+        s32* weather_flags;
+
+        weather_flags = &g_battle_map_weather_flags;
+        *weather_flags |= BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER;
         SetDrawMode(&g_battle_render_buffers[0].overlay_modes[0], 0, 0, 0, 0);
         SetDrawMode(&g_battle_render_buffers[1].overlay_modes[0], 0, 0, 0, 0);
         break;
-    case GNS_RESOURCE_SET_OUTDOOR:
-        WEATHER->ignore_weather = 0;
+    }
+    case GNS_RESOURCE_SET_OUTDOOR: {
+        s32* weather_flags;
+
+        weather_flags = &g_battle_map_weather_flags;
+        *weather_flags &= ~BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER;
         SetDrawMode(&g_battle_render_buffers[0].overlay_modes[0], 0, 1, 0, 0);
         SetDrawMode(&g_battle_render_buffers[1].overlay_modes[0], 0, 1, 0, 0);
         break;
-    case GNS_RESOURCE_CLEAR_SNOW:
-        WEATHER->snow = 0;
+    }
+    case GNS_RESOURCE_CLEAR_SNOW: {
+        s32* weather_flags;
+
+        weather_flags = &g_battle_map_weather_flags;
+        *weather_flags &= ~BATTLE_MAP_WEATHER_FLAG_SNOW;
         break;
-    case GNS_RESOURCE_SET_SNOW:
-        WEATHER->snow = 1;
+    }
+    case GNS_RESOURCE_SET_SNOW: {
+        s32* weather_flags;
+
+        weather_flags = &g_battle_map_weather_flags;
+        *weather_flags |= BATTLE_MAP_WEATHER_FLAG_SNOW;
         break;
-    case GNS_RESOURCE_SET_WEATHER_MODIFIER:
+    }
+    case GNS_RESOURCE_SET_WEATHER_MODIFIER: {
+        s32* weather_flags;
+
         vector = data->command_halfwords;
         vector += 6;
-        WEATHER->modifier = vector[0];
+        weather_flags = &g_battle_map_weather_flags;
+        *weather_flags
+            = (*weather_flags & BATTLE_MAP_WEATHER_LOW_FLAGS_MASK) | (vector[0] << BATTLE_MAP_WEATHER_MODIFIER_SHIFT);
         break;
+    }
     }
     return result;
 }

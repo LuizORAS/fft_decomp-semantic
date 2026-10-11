@@ -2668,6 +2668,7 @@ data:
   - {addr: 0x8018f89c, name: g_battle_unit_entd_spritesheet_count}
   - {addr: 0x8018f8a0, name: g_battle_map_rare_item_result}
   - {addr: 0x8018f8a8, name: g_battle_move_find_result_flags}
+  - {addr: 0x8018f8a8, name: g_battle_move_find_tile_result}
   - {addr: 0x8018f8a9, name: g_battle_move_find_entry_index}
   - {addr: 0x8018f8aa, name: g_battle_move_find_rare_item_id}
   - {addr: 0x8018f8ab, name: g_battle_move_find_common_item_id}

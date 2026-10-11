@@ -4,12 +4,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-typedef struct battle_map_weather_splash_rects {
-    RECT rects[4];
-} battle_map_weather_splash_rects_t;
-
-extern battle_map_weather_splash_rects_t g_battle_map_weather_splash_uv_rects;
-
 #define GT3(i)       (g_battle_gfx_current_render_buffer->gt3[i])
 #define GT4(i)       (g_battle_gfx_current_render_buffer->gt4[i])
 #define SAVED_GT3(i) (g_battle_target_tile_color_buffer->gt3[i])
@@ -21,8 +15,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     MATRIX light_rotation;
     MATRIX light_matrix;
     MATRIX effect_matrix;
-    battle_map_weather_splash_rects_t splash_uv;
-    battle_weather_sprite_rects_t drop_uv;
+    RECT splash_uv[4];
+    RECT drop_uv[3];
     VECTOR effect_translation;
     VECTOR unused_vector;
     VECTOR screen;
@@ -46,8 +40,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     s16 tile;
     u16 frame;
 
-    splash_uv = g_battle_map_weather_splash_uv_rects;
-    drop_uv = g_battle_map_weather_drop_uv_rects;
+    memcpy(splash_uv, g_battle_map_weather_splash_uv_rects, sizeof(splash_uv));
+    memcpy(drop_uv, g_battle_map_weather_drop_uv_rects, sizeof(drop_uv));
     unused = g_battle_map_white_cvector;
     AddPrim(g_battle_gfx_current_render_buffer->otag + 0x17F, &g_battle_gfx_current_render_buffer->overlay_modes[1]);
     AddPrim(g_battle_gfx_current_render_buffer->otag + 0x17F, &g_battle_gfx_current_render_buffer->overlay);
@@ -263,18 +257,18 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_weather_particles[i].fall_speed = 0;
                 sprite = rand() % 3;
 
-                g_battle_render_buffers[0].ft3[i].u0 = drop_uv.rects[sprite].x;
-                g_battle_render_buffers[1].ft3[i].u0 = drop_uv.rects[sprite].x;
-                g_battle_render_buffers[0].ft3[i].u1 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[1].ft3[i].u1 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[0].ft3[i].u2 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[1].ft3[i].u2 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[0].ft3[i].v0 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[1].ft3[i].v0 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[0].ft3[i].v1 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[1].ft3[i].v1 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[0].ft3[i].v2 = drop_uv.rects[sprite].y + drop_uv.rects[sprite].h;
-                g_battle_render_buffers[1].ft3[i].v2 = drop_uv.rects[sprite].y + drop_uv.rects[sprite].h;
+                g_battle_render_buffers[0].ft3[i].u0 = drop_uv[sprite].x;
+                g_battle_render_buffers[1].ft3[i].u0 = drop_uv[sprite].x;
+                g_battle_render_buffers[0].ft3[i].u1 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[1].ft3[i].u1 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[0].ft3[i].u2 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[1].ft3[i].u2 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[0].ft3[i].v0 = drop_uv[sprite].y;
+                g_battle_render_buffers[1].ft3[i].v0 = drop_uv[sprite].y;
+                g_battle_render_buffers[0].ft3[i].v1 = drop_uv[sprite].y;
+                g_battle_render_buffers[1].ft3[i].v1 = drop_uv[sprite].y;
+                g_battle_render_buffers[0].ft3[i].v2 = drop_uv[sprite].y + drop_uv[sprite].h;
+                g_battle_render_buffers[1].ft3[i].v2 = drop_uv[sprite].y + drop_uv[sprite].h;
                 g_battle_map_weather_particles[i].fall_speed = sprite + g_battle_map_weather_fall_speed;
                 if (g_battle_map_weather_scale.vx != 0) {
                     if (rand() & 1) {
@@ -368,18 +362,18 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 sprite = rand() % 3;
                 g_battle_map_weather_particles[i].fall_speed = g_battle_map_weather_fall_speed + 3 - sprite;
 
-                g_battle_render_buffers[0].ft3[i].u0 = drop_uv.rects[sprite].x;
-                g_battle_render_buffers[1].ft3[i].u0 = drop_uv.rects[sprite].x;
-                g_battle_render_buffers[0].ft3[i].u1 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[1].ft3[i].u1 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[0].ft3[i].u2 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[1].ft3[i].u2 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[0].ft3[i].v0 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[1].ft3[i].v0 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[0].ft3[i].v1 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[1].ft3[i].v1 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[0].ft3[i].v2 = drop_uv.rects[sprite].y + drop_uv.rects[sprite].h;
-                g_battle_render_buffers[1].ft3[i].v2 = drop_uv.rects[sprite].y + drop_uv.rects[sprite].h;
+                g_battle_render_buffers[0].ft3[i].u0 = drop_uv[sprite].x;
+                g_battle_render_buffers[1].ft3[i].u0 = drop_uv[sprite].x;
+                g_battle_render_buffers[0].ft3[i].u1 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[1].ft3[i].u1 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[0].ft3[i].u2 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[1].ft3[i].u2 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[0].ft3[i].v0 = drop_uv[sprite].y;
+                g_battle_render_buffers[1].ft3[i].v0 = drop_uv[sprite].y;
+                g_battle_render_buffers[0].ft3[i].v1 = drop_uv[sprite].y;
+                g_battle_render_buffers[1].ft3[i].v1 = drop_uv[sprite].y;
+                g_battle_render_buffers[0].ft3[i].v2 = drop_uv[sprite].y + drop_uv[sprite].h;
+                g_battle_render_buffers[1].ft3[i].v2 = drop_uv[sprite].y + drop_uv[sprite].h;
                 if (g_battle_map_weather_scale.vx != 0) {
                     if (rand() & 1) {
                         g_battle_map_weather_particles[i].x = rand() % (0x8C000 / g_battle_map_weather_scale.vx);
@@ -537,24 +531,24 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_rain_splash_particles[i].fall_speed--;
                 frame = g_battle_map_rain_splash_particles[i].fall_speed;
                 if ((frame & 3) == 0) {
-                    g_battle_render_buffers[0].ft3[i + 32].u0 = splash_uv.rects[(frame >> 2) & 3].x;
-                    g_battle_render_buffers[1].ft3[i + 32].u0 = splash_uv.rects[(frame >> 2) & 3].x;
+                    g_battle_render_buffers[0].ft3[i + 32].u0 = splash_uv[(frame >> 2) & 3].x;
+                    g_battle_render_buffers[1].ft3[i + 32].u0 = splash_uv[(frame >> 2) & 3].x;
                     g_battle_render_buffers[0].ft3[i + 32].u1
-                        = splash_uv.rects[(frame >> 2) & 3].x + splash_uv.rects[(frame >> 2) & 3].w;
+                        = splash_uv[(frame >> 2) & 3].x + splash_uv[(frame >> 2) & 3].w;
                     g_battle_render_buffers[1].ft3[i + 32].u1
-                        = splash_uv.rects[(frame >> 2) & 3].x + splash_uv.rects[(frame >> 2) & 3].w;
-                    g_battle_render_buffers[0].ft3[i + 32].u2 = splash_uv.rects[(frame >> 2) & 3].x;
-                    g_battle_render_buffers[1].ft3[i + 32].u2 = splash_uv.rects[(frame >> 2) & 3].x;
-                    g_battle_render_buffers[0].ft3[i + 32].v0 = splash_uv.rects[(frame >> 2) & 3].y;
-                    g_battle_render_buffers[1].ft3[i + 32].v0 = splash_uv.rects[(frame >> 2) & 3].y;
+                        = splash_uv[(frame >> 2) & 3].x + splash_uv[(frame >> 2) & 3].w;
+                    g_battle_render_buffers[0].ft3[i + 32].u2 = splash_uv[(frame >> 2) & 3].x;
+                    g_battle_render_buffers[1].ft3[i + 32].u2 = splash_uv[(frame >> 2) & 3].x;
+                    g_battle_render_buffers[0].ft3[i + 32].v0 = splash_uv[(frame >> 2) & 3].y;
+                    g_battle_render_buffers[1].ft3[i + 32].v0 = splash_uv[(frame >> 2) & 3].y;
                     g_battle_render_buffers[0].ft3[i + 32].v1
-                        = splash_uv.rects[(frame >> 2) & 3].y + splash_uv.rects[(frame >> 2) & 3].h;
+                        = splash_uv[(frame >> 2) & 3].y + splash_uv[(frame >> 2) & 3].h;
                     g_battle_render_buffers[1].ft3[i + 32].v1
-                        = splash_uv.rects[(frame >> 2) & 3].y + splash_uv.rects[(frame >> 2) & 3].h;
+                        = splash_uv[(frame >> 2) & 3].y + splash_uv[(frame >> 2) & 3].h;
                     g_battle_render_buffers[0].ft3[i + 32].v2
-                        = splash_uv.rects[(frame >> 2) & 3].y + splash_uv.rects[(frame >> 2) & 3].h;
+                        = splash_uv[(frame >> 2) & 3].y + splash_uv[(frame >> 2) & 3].h;
                     g_battle_render_buffers[1].ft3[i + 32].v2
-                        = splash_uv.rects[(frame >> 2) & 3].y + splash_uv.rects[(frame >> 2) & 3].h;
+                        = splash_uv[(frame >> 2) & 3].y + splash_uv[(frame >> 2) & 3].h;
                 }
                 if (g_battle_map_rain_splash_particles[i].fall_speed == 0) {
                     g_battle_map_weather_particles[i].fall_speed = 0;

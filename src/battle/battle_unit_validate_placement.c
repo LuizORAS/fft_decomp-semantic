@@ -1,20 +1,5 @@
 #include "fft/battle.h"
 
-/* Bitfield view of map_tile_t byte 3. Reading it as bitfields reproduces the
- * target's separate reload of the byte for each test; masking the shared
- * u8 field lets CSE merge them. */
-typedef struct battle_unit_placement_tile_bits {
-    map_tile_surface_t surface;
-    u8 _unused_01;
-    u8 _unused_02;
-    u8 slope_half_height : 5;
-    u8 depth : 3;
-    u8 slope_type;
-    u8 _unused_05;
-    map_tile_flags_t flags;
-    u8 camera_block_masks;
-} battle_unit_placement_tile_bits_t;
-
 /* Validate a unit's placement tile.
  *
  * Returns -1 when the position is off the map, the tile is unwalkable, too
@@ -23,7 +8,7 @@ typedef struct battle_unit_placement_tile_bits {
 s32 battle_unit_validate_placement(s32 unit_idx) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_idx];
     battle_stats_t* other;
-    battle_unit_placement_tile_bits_t* tile;
+    map_tile_t* tile;
     u8 x;
     u8 y;
     u8 higher_elevation;
@@ -38,18 +23,18 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
     if (y >= g_battle_map_max_y) {
         return -1;
     }
-    tile = (battle_unit_placement_tile_bits_t*)&g_battle_map_tile_data[battle_map_calculate_location(unit)];
+    tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
     if (tile->flags.value & MAP_TILE_COLLISION_MASK) {
         return -1;
     }
-    if (tile->slope_half_height >= 3) {
+    if (tile->depth_half_height.bits.half_height >= 3) {
         return -1;
     }
-    if ((unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER) && tile->depth != 0
-        && !(unit->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_FLOAT)) {
+    if ((unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER)
+        && tile->depth_half_height.bits.depth != 0 && !(unit->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_FLOAT)) {
         return -1;
     }
-    if (tile->depth >= 3
+    if (tile->depth_half_height.bits.depth >= 3
         && !(unit->movement_abilities[2]
             & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER
                 | BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER | BATTLE_MOVEMENT_SET_3_FLOAT))) {

@@ -5,10 +5,10 @@
  * target's KNOCKBACK special effect. */
 void battle_action_clear_knockback_flag(void) {
     u8* flag = &g_battle_action_current_ability.knockback_flags;
-    u16* target_data;
+    battle_action_data_t* target_data;
     if ((*flag & BATTLE_KNOCKBACK_PENDING) != 0) {
-        target_data = (u16*)g_battle_action_target_data;
+        target_data = g_battle_action_target_data;
         *flag = 0;
-        target_data[8] = target_data[8] & 0xBFFF;
+        target_data->special_effect &= ~BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK;
     }
 }
