@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 int SetGraphReverse(int mode) {
-    int old = g_psyq_gpu_environment.reversed;
+    u8 old = g_psyq_gpu_environment.reversed;
     if (g_psyq_gpu_environment.debug_level >= 2)
         g_psyq_gpu_printf(g_psyq_gpu_graph_reverse_format, mode);
     g_psyq_gpu_environment.reversed = mode;

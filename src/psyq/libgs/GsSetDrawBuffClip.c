@@ -10,9 +10,6 @@ void GsSetDrawBuffClip(void) {
 
     x = CLIP2.x + PSDBASEX[PSDIDX];
     y = CLIP2.y + PSDBASEY[PSDIDX];
-    GsDRAWENV.clip.x = x;
-    GsDRAWENV.clip.y = y;
-    GsDRAWENV.clip.w = CLIP2.w;
-    GsDRAWENV.clip.h = CLIP2.h;
+    setRECT(&GsDRAWENV.clip, x, y, CLIP2.w, CLIP2.h);
     PutDrawEnv(&GsDRAWENV);
 }

@@ -14,14 +14,8 @@ void psyq_gs_init_gpu(u16 x, u16 y, u16 intmode, u16 dither, u16 vram) {
     GsDRAWENV.dfe = 0;
     GsDRAWENV.isbg = 0;
     PutDrawEnv(&GsDRAWENV);
-    GsDISPENV.disp.x = 0;
-    GsDISPENV.disp.y = 0;
-    GsDISPENV.disp.w = x;
-    GsDISPENV.disp.h = y;
-    GsDISPENV.screen.x = 0;
-    GsDISPENV.screen.y = 0;
-    GsDISPENV.screen.w = 0;
-    GsDISPENV.screen.h = 0;
+    setRECT(&GsDISPENV.disp, 0, 0, x, y);
+    setRECT(&GsDISPENV.screen, 0, 0, 0, 0);
     if (GetVideoMode() == 1) {
         GsDISPENV.screen.y = 0x18;
         GsDISPENV.pad0 = 1;
