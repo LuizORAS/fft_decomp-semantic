@@ -231,6 +231,13 @@ extern card_save_play_time_t g_main_card_save_slot_playtimes[CARD_SAVE_SLOT_COUN
 void main_card_init_events(void);
 
 /* file */
+/* Sector and byte length of a resource read through the resident file loader. */
+typedef struct file_extent {
+    s32 sector;
+    s32 size;
+} file_extent_t;
+typedef char file_extent_size_must_be_8[(sizeof(file_extent_t) == 8) ? 1 : -1];
+
 /* First sector of each disc file the code reads at a fixed sector, named as
  * the disc directory names the file. The other files are found through
  * sector tables in the data. */
@@ -1314,12 +1321,6 @@ typedef enum main_env_sfx {
     MAIN_ENV_SFX_THUNDER_B = 0xe,
 } main_env_sfx_e;
 
-/* Sector/size pairs for scenario and permanently loaded music SMD files. */
-typedef struct main_sound_smd_file {
-    s32 sector;
-    s32 size;
-} main_sound_smd_file_t;
-
 /* SMD and WD resources store their total byte size at offset eight. */
 typedef struct suzuki_resource_prefix {
     u8 _unknown_00[8];
@@ -1391,8 +1392,8 @@ extern SpuReverbAttr g_main_sound_reverb_attr; /* 0x80037008 */
 extern suzuki_spu_state_t g_main_sound_spu_state;              /* 0x80037020 */
 extern psyq_spu_heap_record_t g_main_sound_spu_malloc_table[]; /* 0x800408e0; SpuInitMalloc(6, ...) records */
 extern main_sound_music_t g_main_sound_music;
-extern main_sound_smd_file_t g_main_sound_scenario_smd_files[];
-extern main_sound_smd_file_t g_main_sound_permanent_smd_files[5];
+extern file_extent_t g_main_sound_scenario_smd_files[];
+extern file_extent_t g_main_sound_permanent_smd_files[5];
 extern s32 g_main_sound_weather_sfx_id; /* the background sound main_sound_play_bg_sfx started, 0 for none */
 void main_sound_set_sfx_echo(int sound_id, int volume);
 void main_sound_stop_weather_sfx_music(void);

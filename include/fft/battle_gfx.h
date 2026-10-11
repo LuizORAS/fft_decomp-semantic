@@ -1,0 +1,771 @@
+#ifndef BATTLE_GFX_H
+#define BATTLE_GFX_H
+
+/* Battle rendering buffers, sprite resources and graphics helpers. */
+
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+
+/* gfx */
+/* Serialized SHP/SEQ values are little-endian byte sequences. These file
+ * views have byte alignment; their decoded RAM tables remain separate. */
+
+/* A unit SHP frame set: primary at file +8; an optional submerged set is
+ * addressed by the file header. Only the first 0xd0 offsets are installed. */
+typedef struct battle_gfx_packed_unit_shp_frame_set {
+    u8 frame_offsets[0x100][4]; /* 0x000; signed words, -1 resolves to offset zero */
+    u8 frame_data_size[2];      /* 0x400; unsigned halfword */
+    u8 frame_data[0];           /* 0x402; variable tail */
+} battle_gfx_packed_unit_shp_frame_set_t;
+typedef char battle_gfx_packed_unit_shp_frame_set_size_must_be_0x402
+    [sizeof(battle_gfx_packed_unit_shp_frame_set_t) == 0x402 ? 1 : -1];
+
+typedef struct battle_gfx_packed_unit_shp_record {
+    u8 submerged_frame_set_offset[4]; /* 0x000; 8 means both native tables share the primary set */
+    u8 first_attack_frame[2];         /* 0x004; unsigned halfword */
+    u8 first_sp2_frame[2];            /* 0x006; unsigned halfword */
+    battle_gfx_packed_unit_shp_frame_set_t primary_frame_set; /* 0x008 */
+} battle_gfx_packed_unit_shp_record_t;
+typedef char
+    battle_gfx_packed_unit_shp_record_size_must_be_0x40a[sizeof(battle_gfx_packed_unit_shp_record_t) == 0x40a ? 1 : -1];
+
+/* WEP/EFF SHP has a different header and twice as many frame offsets. */
+typedef struct battle_gfx_packed_weapon_shp_record {
+    u8 _unused_000[4];          /* 0x000; loader skips this word */
+    u8 first_frame[0x20][2];    /* 0x004; unsigned zero-frame indices by weapon type */
+    u8 frame_offsets[0x200][4]; /* 0x044; signed words, -1 resolves to offset zero */
+    u8 frame_data_size[2];      /* 0x844; unsigned halfword */
+    u8 frame_data[0];           /* 0x846; variable tail */
+} battle_gfx_packed_weapon_shp_record_t;
+typedef char
+    battle_gfx_packed_weapon_shp_record_size_must_be_0x846[sizeof(battle_gfx_packed_weapon_shp_record_t) == 0x846 ? 1
+                                                                                                                  : -1];
+
+/* WEP/EFF SEQ stores 256 offsets followed by a variable sequence payload. */
+typedef struct battle_gfx_packed_offset_table {
+    u8 _unused_000[4];  /* 0x000; WEP/EFF loader skips the header word */
+    u8 entry[0x100][4]; /* 0x004; signed sequence offsets, -1 resolves to zero */
+    u8 payload_size[2]; /* 0x404; unsigned halfword */
+    u8 payload[0];      /* 0x406; variable sequence data */
+} battle_gfx_packed_offset_table_t;
+typedef char
+    battle_gfx_packed_offset_table_size_must_be_0x406[sizeof(battle_gfx_packed_offset_table_t) == 0x406 ? 1 : -1];
+
+/* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
+ * or widened unit-animation header words are present in the file. */
+typedef struct battle_gfx_packed_evtchr_record {
+    u8 sequence_offsets[0x40][4]; /* 0x0000; signed words, -1 resolves to zero */
+    u8 sequence_data[0x400];      /* 0x0100 */
+    u8 frame_offsets[0x28][4];    /* 0x0500; signed words, -1 resolves to zero */
+    u8 frame_data[0x1e0];         /* 0x05a0; copied into both native frame sets */
+    u8 cluts[16 * 16 * 2];        /* 0x0780; 16 CLUTs, 16 little-endian colours each */
+    u8 pixels[200 * 128];         /* 0x0980; 256x200, 4bpp */
+    u8 _unused_6d80[0xa80];       /* unread tail of the 0x7800-byte block */
+} battle_gfx_packed_evtchr_record_t;
+typedef char
+    battle_gfx_packed_evtchr_record_size_must_be_0x7800[sizeof(battle_gfx_packed_evtchr_record_t) == 0x7800 ? 1 : -1];
+
+/* OTHER.SPR: the palette helper copies only the first 21 of 32 CLUTs. */
+typedef struct battle_gfx_other_sprite_archive {
+    u8 palettes[32 * 16 * 2]; /* 0x0000; 32 CLUTs, 16 little-endian colours each */
+    u8 pixels[256 * 128];     /* 0x0400; uncompressed 256x256, 4bpp */
+} battle_gfx_other_sprite_archive_t;
+typedef char
+    battle_gfx_other_sprite_archive_size_must_be_0x8400[sizeof(battle_gfx_other_sprite_archive_t) == 0x8400 ? 1 : -1];
+
+/* First 21 OTHER.SPR palettes copied together; the other three groups also
+ * retain their independently loaded symbol aliases. */
+typedef struct battle_gfx_other_palettes {
+    palette_t chicken[5];  /* 0x000 */
+    palette_t frog[5];     /* 0x0a0 */
+    palette_t crystal[6];  /* 0x140 */
+    palette_t treasure[5]; /* 0x200 */
+} battle_gfx_other_palettes_t;
+typedef char battle_gfx_other_palettes_size_must_be_0x2a0[sizeof(battle_gfx_other_palettes_t) == 0x2a0 ? 1 : -1];
+
+/* WEP.SPR contains three CLUT/image pairs: weapons, trails and particles. */
+typedef struct battle_gfx_weapon_sprite_archive {
+    clut_t weapon_palettes;       /* 0x00000 */
+    u8 weapon_pixels[256][128];   /* 0x00200; 4bpp */
+    clut_t trail_palettes;        /* 0x08200 */
+    u8 trail_pixels[256][128];    /* 0x08400; 4bpp */
+    clut_t particle_palettes;     /* 0x10400 */
+    u8 particle_pixels[144][128]; /* 0x10600; 4bpp */
+} battle_gfx_weapon_sprite_archive_t;
+
+/* Commands of 0x800e77b8, which stores RGB and controls GTE background color. */
+typedef enum battle_background_color_command {
+    BATTLE_BACKGROUND_COLOR_SET = 9,
+    BATTLE_BACKGROUND_COLOR_GET = 10,
+    BATTLE_BACKGROUND_COLOR_DISABLE = 11,
+    BATTLE_BACKGROUND_COLOR_RESTORE = 12
+} battle_background_color_command_e;
+
+/* Texture pages stored in a sprite display record's tpage. */
+enum {
+    /* The images of g_battle_gfx_vram_slots[0] and [1]. */
+    BATTLE_GFX_TPAGE_EVTCHR_SLOT_0 = 4,
+    BATTLE_GFX_TPAGE_EVTCHR_SLOT_1 = 5,
+    /* The effect and the weapon sheets of WEP.SPR. */
+    BATTLE_GFX_TPAGE_EFFECT = 8,
+    BATTLE_GFX_TPAGE_WEAPON = 9,
+    /* The sheets from BATTLE_SPRITESHEET_ID_CRYSTAL up. */
+    BATTLE_GFX_TPAGE_OTHER = 11,
+    /* Plus the unit's spritesheet slot. */
+    BATTLE_GFX_TPAGE_SPRITESHEET_SLOT_0 = 0x14,
+    BATTLE_GFX_TPAGE_ITEM = 0x1e,  /* ITEM.BIN */
+    BATTLE_GFX_TPAGE_FRAME = 0x1f, /* FRAME.BIN */
+};
+
+/* Spritesheet ids index g_battle_gfx_spritesheet_data and
+ * g_battle_gfx_spritesheet_files. An id below 0x80 is the character_identity_e
+ * value it is loaded for (main_unit_get_spritesheet_palette returns those
+ * unchanged) and has that identity's name; a numbered name loads the file of
+ * the sheet with the plain name. From 0x60 the sheets are the generic jobs',
+ * male then female: the generic selectors resolve to
+ * 0x60 + (job - JOB_ID_SQUIRE) * 2, plus one for a female unit, with Dancer
+ * and Mime moved down one job. Then comes one sheet per monster family, named
+ * by the first job whose record has it (job_data_t.spritesheet_id), and the
+ * four status sheets, which have no file of their own. */
+typedef enum battle_spritesheet_id {
+    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_1 = 0x01,
+    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_2_3 = 0x02,
+    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_4 = 0x03,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_1 = 0x04,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_2_3 = 0x05,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_4 = 0x06,
+    BATTLE_SPRITESHEET_ID_ALGUS = 0x07,
+    BATTLE_SPRITESHEET_ID_ZALBAG = 0x08,
+    BATTLE_SPRITESHEET_ID_DYCEDARG = 0x09,
+    BATTLE_SPRITESHEET_ID_LARG = 0x0a,
+    BATTLE_SPRITESHEET_ID_GOLTANA = 0x0b,
+    BATTLE_SPRITESHEET_ID_OVELIA = 0x0c,
+    BATTLE_SPRITESHEET_ID_ORLANDU = 0x0d,
+    BATTLE_SPRITESHEET_ID_FUNERAL = 0x0e,
+    BATTLE_SPRITESHEET_ID_REIS_HUMAN = 0x0f,
+    BATTLE_SPRITESHEET_ID_ZALMO = 0x10,
+    BATTLE_SPRITESHEET_ID_GAFGARION_ENEMY = 0x11,
+    BATTLE_SPRITESHEET_ID_MALAK_12 = 0x12,
+    BATTLE_SPRITESHEET_ID_SIMON = 0x13,
+    BATTLE_SPRITESHEET_ID_ALMA_BATTLE = 0x14,
+    BATTLE_SPRITESHEET_ID_OLAN = 0x15,
+    BATTLE_SPRITESHEET_ID_MUSTADIO_JOIN = 0x16,
+    BATTLE_SPRITESHEET_ID_GAFGARION_GUEST = 0x17,
+    BATTLE_SPRITESHEET_ID_DRACLAU = 0x18,
+    BATTLE_SPRITESHEET_ID_RAFA_GUEST = 0x19,
+    BATTLE_SPRITESHEET_ID_MALAK = 0x1a,
+    BATTLE_SPRITESHEET_ID_ELMDOR = 0x1b,
+    BATTLE_SPRITESHEET_ID_TETA = 0x1c,
+    BATTLE_SPRITESHEET_ID_BARINTEN = 0x1d,
+    BATTLE_SPRITESHEET_ID_AGRIAS_JOIN = 0x1e,
+    BATTLE_SPRITESHEET_ID_BEOWULF = 0x1f,
+    BATTLE_SPRITESHEET_ID_WIEGRAF_CHAPTER_1 = 0x20,
+    BATTLE_SPRITESHEET_ID_BALMAFULA = 0x21,
+    BATTLE_SPRITESHEET_ID_MUSTADIO_GUEST = 0x22,
+    BATTLE_SPRITESHEET_ID_RUDVICH = 0x23,
+    BATTLE_SPRITESHEET_ID_VORMAV = 0x24,
+    BATTLE_SPRITESHEET_ID_ROFEL = 0x25,
+    BATTLE_SPRITESHEET_ID_IZLUDE = 0x26,
+    BATTLE_SPRITESHEET_ID_KLETIAN = 0x27,
+    BATTLE_SPRITESHEET_ID_WIEGRAF_CHAPTER_2_3 = 0x28,
+    BATTLE_SPRITESHEET_ID_RAFA_JOIN = 0x29,
+    BATTLE_SPRITESHEET_ID_MELIADOUL_JOIN = 0x2a,
+    BATTLE_SPRITESHEET_ID_BALK = 0x2b,
+    BATTLE_SPRITESHEET_ID_ALMA_2C = 0x2c,
+    BATTLE_SPRITESHEET_ID_CELIA = 0x2d,
+    BATTLE_SPRITESHEET_ID_LEDE = 0x2e,
+    BATTLE_SPRITESHEET_ID_MELIADOUL_ENEMY = 0x2f,
+    BATTLE_SPRITESHEET_ID_ALMA_EVENTS = 0x30,
+    BATTLE_SPRITESHEET_ID_AJORA = 0x31,
+    BATTLE_SPRITESHEET_ID_CLOUD = 0x32,
+    BATTLE_SPRITESHEET_ID_ZALBAG_ZOMBIE = 0x33,
+    BATTLE_SPRITESHEET_ID_AGRIAS_GUEST = 0x34,
+    BATTLE_SPRITESHEET_ID_FEMALE_CHEMIST_35 = 0x35,
+    BATTLE_SPRITESHEET_ID_FEMALE_PRIEST_36 = 0x36,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD_37 = 0x37,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE_38 = 0x38,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_39 = 0x39,
+    BATTLE_SPRITESHEET_ID_CELIA_3A = 0x3a,
+    BATTLE_SPRITESHEET_ID_LEDE_3B = 0x3b,
+    BATTLE_SPRITESHEET_ID_VELIUS = 0x3c,
+    BATTLE_SPRITESHEET_ID_MALE_KNIGHT_3D = 0x3d,
+    BATTLE_SPRITESHEET_ID_ZALERA = 0x3e,
+    BATTLE_SPRITESHEET_ID_MALE_ARCHER_3F = 0x3f,
+    BATTLE_SPRITESHEET_ID_HASHMALUM = 0x40,
+    BATTLE_SPRITESHEET_ID_ALTIMA_FIRST_FORM = 0x41,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD_42 = 0x42,
+    BATTLE_SPRITESHEET_ID_QUEKLAIN = 0x43,
+    BATTLE_SPRITESHEET_ID_FEMALE_TIME_MAGE_44 = 0x44,
+    BATTLE_SPRITESHEET_ID_ADRAMELK = 0x45,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE_46 = 0x46,
+    BATTLE_SPRITESHEET_ID_FEMALE_SUMMONER_47 = 0x47,
+    BATTLE_SPRITESHEET_ID_REIS_DRAGON = 0x48,
+    BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM = 0x49,
+    BATTLE_SPRITESHEET_ID_BOY = 0x4a,
+    BATTLE_SPRITESHEET_ID_GIRL = 0x4b,
+    BATTLE_SPRITESHEET_ID_YOUNG_MAN = 0x4c,
+    BATTLE_SPRITESHEET_ID_YOUNG_WOMAN = 0x4d,
+    BATTLE_SPRITESHEET_ID_MIDDLE_AGED_MAN = 0x4e,
+    BATTLE_SPRITESHEET_ID_MIDDLE_AGED_WOMAN = 0x4f,
+    BATTLE_SPRITESHEET_ID_OLD_MAN = 0x50,
+    BATTLE_SPRITESHEET_ID_OLD_WOMAN = 0x51,
+    BATTLE_SPRITESHEET_ID_OLD_FUNERAL_MAN = 0x52,
+    BATTLE_SPRITESHEET_ID_OLD_FUNERAL_WOMAN = 0x53,
+    BATTLE_SPRITESHEET_ID_FUNERAL_MAN = 0x54,
+    BATTLE_SPRITESHEET_ID_FUNERAL_WOMAN = 0x55,
+    BATTLE_SPRITESHEET_ID_FUNERAL_PRIEST = 0x56,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_57 = 0x57,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_58 = 0x58,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_59 = 0x59,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5A = 0x5a,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5B = 0x5b,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5C = 0x5c,
+    BATTLE_SPRITESHEET_ID_DAMI = 0x5d,    /* named by its file, DAMI.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_KASANEK = 0x5e, /* named by its file, KASANEK.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_KASANEM = 0x5f, /* named by its file, KASANEM.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE = 0x60,
+    BATTLE_SPRITESHEET_ID_FEMALE_SQUIRE = 0x61,
+    BATTLE_SPRITESHEET_ID_MALE_CHEMIST = 0x62,
+    BATTLE_SPRITESHEET_ID_FEMALE_CHEMIST = 0x63,
+    BATTLE_SPRITESHEET_ID_MALE_KNIGHT = 0x64,
+    BATTLE_SPRITESHEET_ID_FEMALE_KNIGHT = 0x65,
+    BATTLE_SPRITESHEET_ID_MALE_ARCHER = 0x66,
+    BATTLE_SPRITESHEET_ID_FEMALE_ARCHER = 0x67,
+    BATTLE_SPRITESHEET_ID_MALE_MONK = 0x68,
+    BATTLE_SPRITESHEET_ID_FEMALE_MONK = 0x69,
+    BATTLE_SPRITESHEET_ID_MALE_PRIEST = 0x6a,
+    BATTLE_SPRITESHEET_ID_FEMALE_PRIEST = 0x6b,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD = 0x6c,
+    BATTLE_SPRITESHEET_ID_FEMALE_WIZARD = 0x6d,
+    BATTLE_SPRITESHEET_ID_MALE_TIME_MAGE = 0x6e,
+    BATTLE_SPRITESHEET_ID_FEMALE_TIME_MAGE = 0x6f,
+    BATTLE_SPRITESHEET_ID_MALE_SUMMONER = 0x70,
+    BATTLE_SPRITESHEET_ID_FEMALE_SUMMONER = 0x71,
+    BATTLE_SPRITESHEET_ID_MALE_THIEF = 0x72,
+    BATTLE_SPRITESHEET_ID_FEMALE_THIEF = 0x73,
+    BATTLE_SPRITESHEET_ID_MALE_MEDIATOR = 0x74,
+    BATTLE_SPRITESHEET_ID_FEMALE_MEDIATOR = 0x75,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE = 0x76,
+    BATTLE_SPRITESHEET_ID_FEMALE_ORACLE = 0x77,
+    BATTLE_SPRITESHEET_ID_MALE_GEOMANCER = 0x78,
+    BATTLE_SPRITESHEET_ID_FEMALE_GEOMANCER = 0x79,
+    BATTLE_SPRITESHEET_ID_MALE_LANCER = 0x7a,
+    BATTLE_SPRITESHEET_ID_FEMALE_LANCER = 0x7b,
+    BATTLE_SPRITESHEET_ID_MALE_SAMURAI = 0x7c,
+    BATTLE_SPRITESHEET_ID_FEMALE_SAMURAI = 0x7d,
+    BATTLE_SPRITESHEET_ID_MALE_NINJA = 0x7e,
+    BATTLE_SPRITESHEET_ID_FEMALE_NINJA = 0x7f,
+    BATTLE_SPRITESHEET_ID_MALE_CALCULATOR = 0x80,
+    BATTLE_SPRITESHEET_ID_FEMALE_CALCULATOR = 0x81,
+    BATTLE_SPRITESHEET_ID_BARD = 0x82,
+    BATTLE_SPRITESHEET_ID_DANCER = 0x83,
+    BATTLE_SPRITESHEET_ID_MALE_MIME = 0x84,
+    BATTLE_SPRITESHEET_ID_FEMALE_MIME = 0x85,
+    BATTLE_SPRITESHEET_ID_CHOCOBO = 0x86,
+    BATTLE_SPRITESHEET_ID_GOBLIN = 0x87,
+    BATTLE_SPRITESHEET_ID_BOMB = 0x88,
+    BATTLE_SPRITESHEET_ID_RED_PANTHER = 0x89,
+    BATTLE_SPRITESHEET_ID_PISCO_DEMON = 0x8a,
+    BATTLE_SPRITESHEET_ID_SKELETON = 0x8b,
+    BATTLE_SPRITESHEET_ID_GHOUL = 0x8c,
+    BATTLE_SPRITESHEET_ID_FLOTIBALL = 0x8d,
+    BATTLE_SPRITESHEET_ID_JURAVIS = 0x8e,
+    BATTLE_SPRITESHEET_ID_URIBO = 0x8f,
+    BATTLE_SPRITESHEET_ID_WOODMAN = 0x90,
+    BATTLE_SPRITESHEET_ID_BULL_DEMON = 0x91,
+    BATTLE_SPRITESHEET_ID_MORBOL = 0x92,
+    BATTLE_SPRITESHEET_ID_BEHEMOTH = 0x93,
+    BATTLE_SPRITESHEET_ID_DRAGON = 0x94, /* also Reis as a Holy Dragon */
+    BATTLE_SPRITESHEET_ID_HYUDRA = 0x95,
+    BATTLE_SPRITESHEET_ID_BYBLOS = 0x96, /* and Apanda */
+    BATTLE_SPRITESHEET_ID_SERPENTARIUS = 0x97,
+    BATTLE_SPRITESHEET_ID_DRAGON_98 = 0x98,     /* loads the Dragon file again; no job has it */
+    BATTLE_SPRITESHEET_ID_ARCHAIC_DEMON = 0x99, /* and Ultima Demon */
+    BATTLE_SPRITESHEET_ID_STEEL_GIANT = 0x9a,
+    BATTLE_SPRITESHEET_ID_CRYSTAL = 0x9b,
+    BATTLE_SPRITESHEET_ID_CHICKEN = 0x9c,
+    BATTLE_SPRITESHEET_ID_FROG = 0x9d,
+    BATTLE_SPRITESHEET_ID_TREASURE = 0x9e,
+} battle_spritesheet_id_e;
+
+enum {
+    BATTLE_SPRITESHEET_ID_RAMZA_END = 0x04,
+    BATTLE_SPRITESHEET_ID_JOB_FIRST = 0x60, /* the generic job sheets start here; the monsters' follow */
+    BATTLE_SPRITESHEET_ID_COUNT = 0x9f,
+};
+
+enum {
+    BATTLE_SHP_FRAME_EVTCHR_FIRST = 0xd2, /* frame 0 of an EVTCHR slot */
+};
+
+/* The SHP frames of an EVTCHR slot, laid out as battle_gfx_unit_shp_frame_tables_t
+ * so that frame ids from BATTLE_SHP_FRAME_EVTCHR_FIRST up index it
+ * (battle_gfx_select_unit_shp_frame). The file has 0x28 frames; their data
+ * is stored twice, once for each frame table, with the same contents. */
+typedef struct battle_gfx_evtchr_shp {
+    battle_gfx_unit_shp_frame_tables_t tables; /* 0x000; header words remain unset and unread */
+    u8 data[0x1e0];                            /* 0x688 */
+    u8 submerged_data[0x1e0];                  /* 0x868 */
+} battle_gfx_evtchr_shp_t;
+
+/*
+ * The two EVTCHR slots: each owns a 256x200 texture page (image_rect) for the
+ * pictures that do not fit a unit's spritesheet slot, and a buffer to build
+ * them in. A page shows a unit's attack image (decompressed on demand by
+ * battle_gfx_load_unit_into_evtchr_slot), a unit's SP2 file, or the image of
+ * an EVTCHR.BIN block: the event instruction LoadEVTCHR unpacks a block into
+ * seq, shp, cluts and image_data and SaveEVTCHR uploads the image. Every
+ * target access uses a 0x7564-byte stride.
+ */
+typedef struct battle_gfx_vram_slot {
+    u32 owner;                   /* 0x0000; misc id with owner flags, or battle_gfx_vram_slot_owner_marker_e marker */
+    u32 image_buffer_state;      /* 0x0004; upload countdown or battle_gfx_vram_slot_buffer_marker_e marker */
+    u32 evtchr_load_state;       /* 0x0008; set to 0 free, 1 a unit's attack image, 3 an EVTCHR block; never read */
+    RECT image_rect;             /* 0x000c */
+    battle_gfx_unit_seq_t seq;   /* 0x0014 */
+    battle_gfx_evtchr_shp_t shp; /* 0x051c */
+    clut_t cluts;                /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_misc_id */
+    u8 image_data[0x6400];       /* 0x1164 */
+} battle_gfx_vram_slot_t;
+typedef char battle_vram_slot_size_must_be_0x7564[(sizeof(battle_gfx_vram_slot_t) == 0x7564) ? 1 : -1];
+
+/* Per-slot summary written by battle_gfx_get_vram_slot_summary. */
+typedef struct battle_gfx_vram_slot_summary {
+    u8 spritesheet_id; /* 0xff free, 0xfe saved, 0xfd no unit, else owner's sheet */
+    u8 evtchr_state;   /* 0xff none, 0xfe saved, 0xfd loaded */
+} battle_gfx_vram_slot_summary_t;
+
+typedef enum battle_gfx_vram_slot_owner_marker {
+    BATTLE_GFX_VRAM_SLOT_OWNER_EVTCHR = 0xfe, /* an EVTCHR image (battle_gfx_save_evtchr_slot) */
+    BATTLE_GFX_VRAM_SLOT_OWNER_NONE = 0xff,
+} battle_gfx_vram_slot_owner_marker_e;
+
+/* Otherwise owner is a misc id combined with one of these image-kind bits. */
+typedef enum battle_gfx_vram_slot_owner_flags {
+    BATTLE_GFX_VRAM_SLOT_OWNER_SP2 = 0x40,
+    BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE = 0x80,
+} battle_gfx_vram_slot_owner_flags_e;
+
+enum { BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK = 0x1f };
+
+typedef enum battle_gfx_vram_slot_buffer_marker {
+    BATTLE_GFX_VRAM_SLOT_BUFFER_FREE = 0,
+    BATTLE_GFX_VRAM_SLOT_BUFFER_EVTCHR = 0xfe, /* an unpacked EVTCHR block, not yet saved to VRAM or cleared */
+} battle_gfx_vram_slot_buffer_marker_e;
+
+/* Other positive buffer values are upload countdowns decremented each frame. */
+enum { BATTLE_GFX_VRAM_SLOT_UPLOAD_FRAMES = 2 };
+
+/* 0x32d6-byte spritesheet VRAM slot records at 0x800c7ce8 (nine slots);
+ * g_battle_gfx_spritesheet_ids_by_vram_slot aliases the first record's byte 1. */
+typedef struct battle_gfx_spritesheet_slot {
+    u8 in_use;                          /* 0x00; cleared when no live unit uses the slot */
+    u8 spritesheet_id;                  /* 0x01 */
+    u8 compressed_attack_image[0x30d4]; /* 0x02; image data copied from SPR data +0x9200 by 0x80087704 */
+    clut_t palettes;                    /* 0x30d6; 16 CLUTs with the STP bit set (0x80087704) */
+} battle_gfx_spritesheet_slot_t;
+typedef char battle_spritesheet_slot_size_must_be_0x32d6[(sizeof(battle_gfx_spritesheet_slot_t) == 0x32d6) ? 1 : -1];
+
+/* Four-byte lookup record for the 0x9f ordinary unit spritesheets. */
+typedef struct battle_gfx_spritesheet_data {
+    u8 shp_id;         /* battle_shp_type_e */
+    u8 seq_id;         /* battle_seq_type_e */
+    u8 flying_flag;    /* nonzero: the sheet idles with the BATTLE_UNIT_ANIMATION_IDLE_FLYING animations */
+    u8 graphic_height; /* height of the standing sprite in pixels */
+} battle_gfx_spritesheet_data_t;
+typedef char battle_gfx_spritesheet_data_size_must_be_4[(sizeof(battle_gfx_spritesheet_data_t) == 4) ? 1 : -1];
+
+/* battle_gfx_spritesheet_data_t.shp_id: index of the sheet's frame table file in
+ * g_battle_gfx_sprite_shp_files (BATTLE/TYPE1.SHP ...). Id 5 has no file. */
+typedef enum battle_shp_type {
+    BATTLE_SHP_TYPE1 = 0,
+    BATTLE_SHP_TYPE2 = 1,
+    BATTLE_SHP_CYOKO = 2,
+    BATTLE_SHP_MON = 3,
+    BATTLE_SHP_OTHER = 4,
+    BATTLE_SHP_ARUTE = 6,
+    BATTLE_SHP_KANZEN = 7,
+} battle_shp_type_e;
+
+/* battle_gfx_spritesheet_data_t.seq_id: index of the sheet's animation file in
+ * g_battle_gfx_sprite_seq_files (BATTLE/TYPE1.SEQ ...). */
+typedef enum battle_seq_type {
+    BATTLE_SEQ_TYPE1 = 0,
+    BATTLE_SEQ_TYPE3 = 1,
+    BATTLE_SEQ_CYOKO = 2,
+    BATTLE_SEQ_MON = 3,
+    BATTLE_SEQ_OTHER = 4,
+    BATTLE_SEQ_RUKA = 5,
+    BATTLE_SEQ_ARUTE = 6,
+    BATTLE_SEQ_KANZEN = 7,
+} battle_seq_type_e;
+
+/* One of the two 0xee28-byte battle render buffers. The primitive pools are
+ * pre-initialised once here; the swap helper at 0x8005a0cc reads the ordering
+ * table pointer at +0xe5b4. */
+typedef struct battle_render_buffer {
+    POLY_GT3 gt3[360]; /* 0x00000 */
+    POLY_GT4 gt4[710]; /* 0x03840 */
+    POLY_F3 f3[64];    /* 0x0c878 */
+    POLY_F4 f4[256];   /* 0x0cd78 */
+    POLY_G4 overlay;   /* 0x0e578 */
+    DR_MODE overlay_modes[2] /* 0x0e59c */;
+    u32* otag;             /* 0x0e5b4 */
+    u8 _unused_e5b8[0x70]; /* 0x0e5b8 */
+    POLY_FT3 ft3[64];      /* 0x0e628 */
+} battle_render_buffer_t;
+typedef char battle_render_buffer_size_must_be_0xee28[(sizeof(battle_render_buffer_t) == 0xee28) ? 1 : -1];
+
+/* g_battle_gfx_unit_graphics_load_state.phase: the phase of the file being loaded. */
+typedef enum battle_gfx_unit_load_phase {
+    BATTLE_GFX_UNIT_LOAD_PHASE_START_READ = 0,
+    BATTLE_GFX_UNIT_LOAD_PHASE_WAIT = 1,
+    BATTLE_GFX_UNIT_LOAD_PHASE_INSTALL = 2,
+    BATTLE_GFX_UNIT_LOAD_PHASE_FINISH = 3,
+} battle_gfx_unit_load_phase_e;
+
+/* g_battle_gfx_unit_graphics_load_state.file_kind, the file kind, counts through one of two lists:
+ * battle_gfx_step_queued_unit_graphics_load loads three files per queued unit and
+ * battle_gfx_step_load_unit_shp_seq_data the shared sprite, weapon and effect files. */
+typedef enum battle_gfx_queued_load_kind {
+    BATTLE_GFX_QUEUED_LOAD_SHP = 0,
+    BATTLE_GFX_QUEUED_LOAD_SEQ = 1,
+    BATTLE_GFX_QUEUED_LOAD_SPR = 2,
+} battle_gfx_queued_load_kind_e;
+
+typedef enum battle_gfx_shared_load_kind {
+    BATTLE_GFX_SHARED_LOAD_SPRITE_SHP = 0,
+    BATTLE_GFX_SHARED_LOAD_SPRITE_SEQ = 1,
+    BATTLE_GFX_SHARED_LOAD_WEAPON_SHP = 2,
+    BATTLE_GFX_SHARED_LOAD_WEAPON_SEQ = 3,
+    BATTLE_GFX_SHARED_LOAD_EFFECT_SHP = 4,
+    BATTLE_GFX_SHARED_LOAD_EFFECT_SEQ = 5,
+    BATTLE_GFX_SHARED_LOAD_WEAPON_SPR = 6,
+    BATTLE_GFX_SHARED_LOAD_OTHER_SPR = 7,
+} battle_gfx_shared_load_kind_e;
+
+/* Both load-kind lists start at zero. */
+enum { BATTLE_GFX_UNIT_LOAD_KIND_FIRST = 0 };
+
+/* Shared by the resident-file and queued-unit loaders. The file kind selects
+ * the buffer's format, and index selects a file or a queued descriptor. */
+typedef struct battle_gfx_unit_graphics_load_state {
+    s32 file_kind; /* 0x00; battle_gfx_shared_load_kind_e or battle_gfx_queued_load_kind_e */
+    s32 phase;     /* 0x04; battle_gfx_unit_load_phase_e */
+    s32 index;     /* 0x08 */
+    void* buffer;  /* 0x0c; allocated until the FINISH phase */
+} battle_gfx_unit_graphics_load_state_t;
+typedef char
+    battle_gfx_unit_graphics_load_state_size_must_be_16[sizeof(battle_gfx_unit_graphics_load_state_t) == 16 ? 1 : -1];
+
+extern u16 g_battle_gfx_screen_color_modulation_fade_frames;
+extern palette_t g_battle_gfx_wait_direction_arrow_palette;
+extern palette_t g_battle_gfx_map_selection_cursor_palette;
+extern palette_t g_battle_gfx_shadow_palette;
+extern palette_t g_battle_gfx_status_bubble_palette;
+extern s32 g_battle_gfx_status_bubble_delay;
+extern rgb24_t g_battle_gfx_screen_color_modulation_target;
+extern u16 g_battle_gfx_screen_color_modulation_value[3];
+extern u16 g_battle_gfx_screen_color_modulation_step[3];
+extern RECT g_battle_gfx_screen_modulation_tex_window;
+
+extern battle_gfx_unit_graphics_load_state_t g_battle_gfx_unit_graphics_load_state;
+extern palette_t g_battle_gfx_cycled_deployed_palettes[2];
+extern u8 g_battle_gfx_unit_animation_data[];
+extern clut_t g_battle_gfx_item_palettes; /* the first 0x200 bytes of WEP.SPR */
+extern clut_t g_battle_gfx_eff_palettes;
+extern palette_t g_battle_gfx_frog_palettes[5];
+extern palette_t g_battle_gfx_crystal_palettes[6];
+extern palette_t g_battle_gfx_treasure_palettes[5];
+extern u8 g_battle_gfx_shp_frame_data_buffer[];
+extern POLY_F4 g_battle_gfx_screen_modulation_polygons[2];
+extern s32 g_battle_gfx_tpage7_free_rect_pixels[4];
+extern s32 g_battle_gfx_tpage7_free_rect_cells[4];
+extern MATRIX g_battle_gfx_numeric_display_matrix;
+extern SVECTOR g_battle_gte_rtps_vxy0;
+extern SVECTOR g_battle_gte_rtpt_vxy0;
+extern SVECTOR g_battle_gte_rtpt_vxy1;
+extern SVECTOR g_battle_gte_rtpt_vxy2;
+extern file_extent_t g_battle_gfx_sprite_seq_files[];
+extern file_extent_t g_battle_gfx_sprite_shp_files[];
+extern file_extent_t g_battle_gfx_weapon_seq_files[];
+extern file_extent_t g_battle_gfx_weapon_shp_files[];
+extern file_extent_t g_battle_gfx_effect_seq_files[];
+extern file_extent_t g_battle_gfx_effect_shp_files[];
+extern file_extent_t g_battle_gfx_spritesheet_files[];
+extern file_extent_t g_battle_gfx_sp2_files[];
+extern file_extent_t g_battle_gfx_worker8_sp2_files[];
+/* Sprite part width/height in 8-pixel tiles, indexed by SHP size bits. */
+extern size32_t g_battle_gfx_part_sizes[];
+extern battle_gfx_wep_eff_graphics_t g_battle_gfx_effect_graphics[1];
+extern u8* g_battle_gfx_compressed_data;
+extern s32 g_battle_gfx_compressed_nibble_phase;
+extern s32 g_battle_gfx_compressed_offset;
+extern rgb24_t g_battle_gfx_screen_color_modulation;
+extern rgb24_t g_battle_gfx_screen_color_modulation_backup;
+extern battle_gfx_native_unit_seq_table_t g_battle_gfx_unit_seq_tables[5];
+extern battle_gfx_native_unit_seq_table_t g_battle_gfx_boss_seq_tables;
+extern battle_gfx_spritesheet_data_t g_battle_gfx_spritesheet_data[BATTLE_SPRITESHEET_ID_COUNT];
+extern battle_gfx_unit_shp_frame_tables_t g_battle_gfx_boss_shp_frame_tables;
+extern u8 g_battle_gfx_spritesheet_ids_by_vram_slot[];
+extern battle_gfx_unit_shp_frame_tables_t g_battle_gfx_unit_shp_frame_tables[5];
+extern battle_gfx_wep_eff_graphics_t g_battle_gfx_weapon_graphics[2];
+extern battle_gfx_spritesheet_slot_t g_battle_gfx_spritesheet_slots[];
+extern u8 g_battle_gfx_tpage7_vram_allocation_grid[15][16];
+extern battle_gfx_vram_slot_t g_battle_gfx_vram_slots[];
+extern battle_render_buffer_t g_battle_render_buffers[2];
+
+/* The buffer being built this frame; main_gfx_swap_and_clear_otag alternates
+ * it between the two g_battle_render_buffers entries. */
+extern battle_render_buffer_t* g_battle_gfx_current_render_buffer;
+/* The 24 orders in which battle_gfx_draw_unit_sprite_layers queues a unit's
+ * four layers: 0 is the unit's own sprite, n its sprite block n - 1. */
+extern s32 g_battle_gfx_animation_layer_priorities[][4];
+
+/* Where a weapon or item graphic sits in WEP.SPR, per item graphic id. */
+typedef struct battle_gfx_item_graphic {
+    u8 palettes;    /* 0x00; g_battle_gfx_item_palettes rows: high nibble for MAP_CLUT_ROW_ITEM_A, low for _B */
+    u8 texture_row; /* 0x01; top of the graphic on its texture page, in steps of 8 pixels */
+} battle_gfx_item_graphic_t;
+
+extern battle_gfx_other_palettes_t g_battle_gfx_other_palettes;
+extern s16 g_battle_gfx_counter;
+extern u8 g_battle_gfx_fallback_seq_data[];
+extern u8 g_battle_gfx_fallback_shp_frame_data[];
+extern battle_gfx_item_graphic_t g_battle_gfx_item_graphic_data[0x92];
+extern s32 g_battle_gfx_last_loaded_seq_id;
+extern s32 g_battle_gfx_last_loaded_shp_id;
+
+/* Byte-granular bump-allocation cursors: the consuming files do raw byte
+ * arithmetic on these, so the element type must stay u8. */
+extern u8* g_battle_gfx_seq_data_cursor;
+extern u8* g_battle_gfx_shp_frame_data_cursor;
+extern s16 g_battle_gfx_previous_counter;
+extern fade_overlay_t g_battle_gfx_screen_fade_overlays[]; /* one fade overlay per packet buffer */
+
+/* Overlay draw-mode primitives, one per screen polarity. */
+extern DR_MODE g_battle_gfx_screen_modulation_draw_modes[2];
+
+/* Frame counter and frame index of the selection cursor's bob animation. */
+extern s32 g_battle_gfx_selection_cursor_bob_timer;
+extern s32 g_battle_gfx_selection_cursor_bob_frame;
+extern u32* g_battle_gfx_sp2_data;
+/* The display rotations that the upper five bits of a frame's first byte select, ONE to the turn. */
+extern u16 g_battle_gfx_sprite_y_rotations[];
+
+/* Status flag shown by each status bubble id (0x16 words at 0x80093cb4).
+ * Bubbles 0 (KO), 0x14 (Death Sentence) and 0x15 (casting) hold 0 and are
+ * tested separately by battle_gfx_determine_status_bubble_parameters. */
+extern s32 g_battle_gfx_status_bubble_status_masks[];
+/* By battle_shp_type_e: the frame a unit is left on when its sequence ends
+ * or its attack image is taken away, seen from behind and from the front. */
+extern u8 g_battle_gfx_targeted_frame_back[];
+extern u8 g_battle_gfx_targeted_frame_front[];
+
+/* Advanced by g_main_system_animation_speed once per call and sampled with bit 5 to blink
+ * the highlighted arrow. */
+extern u32 g_battle_gfx_wait_arrow_blink_timer;
+
+/* Separate triggers, command arguments, and completion status. Argument
+ * domains remain provisional: map commands 0x80/0x83, polls 0x81/0x84.
+ * The u16 requests and arguments are read with lhu by the consumer
+ * battle_script_process_pending_requests; every other access is a store. */
+extern u16 g_battle_3d_object_use_request; /* 0x80165fe2 */
+extern u16 g_battle_3d_object_wait_status; /* 0x8016606e */
+extern battle_render_buffer_t g_battle_buffer_a[2];
+void battle_display_menu_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
+s32 battle_gfx_get_vram_slot_summary(battle_gfx_vram_slot_summary_t* summary);
+void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords);
+void battle_gfx_unpack_unit_seq_data(
+    battle_gfx_native_unit_seq_table_t* destination, const battle_gfx_packed_seq_record_t* source);
+void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance);
+
+void battle_gfx_run_wep_eff_seq_script(
+    battle_unit_misc_data_t* unit, battle_unit_sprite_block_t* sprite, s32 index, s32 advance);
+
+void battle_gfx_build_cursor_tile_glow(
+    s32 palette, s32 shape, SVECTOR* v0, SVECTOR* v1, SVECTOR* v2, SVECTOR* v3, u32* ot);
+
+void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot);
+void battle_gfx_draw_wait_direction_arrows(SVECTOR* vector, u32* ot);
+s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit);
+void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t*);
+s32 battle_gfx_claim_spritesheet_slot(s16 spritesheet_id);
+void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit);
+void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit);
+void battle_menu_init_panel_fade_tiles(void);
+void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit);
+void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_misc_data_t* unit);
+void battle_gfx_update_all_unit_rotation_and_vectors(void);
+void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* unit, s32 level, s32 final_value);
+void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const SVECTOR* screen_coords);
+void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s32 tile_effect_level);
+s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t* unit);
+void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t* unit);
+void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot);
+void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit);
+u32 battle_gfx_get_unit_spritesheet_height(battle_unit_misc_data_t* unit);
+void battle_gfx_init_item_get_rendering(struct battle_unit_misc_data* unit);
+battle_gfx_sprite_display_data_t* battle_gfx_init_item_sprite_display(s32 unit_index);
+
+battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(s32 unit_index, s32 display_section);
+
+void battle_gfx_init_status_bubble(battle_unit_misc_data_t* unit);
+battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s32 unit_index);
+battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit_index, s32 display_type);
+
+void battle_gfx_load_trap_and_unit_frame_parts(
+    battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame, u16 sequence_id);
+
+void battle_gfx_load_unit_frame_parts(battle_unit_misc_data_t* unit, battle_gfx_sprite_display_data_t* display,
+    battle_gfx_source_frame_t* src, s32 tpage);
+
+void battle_gfx_load_unit_into_evtchr_slot(battle_unit_misc_data_t* unit, s32 slot, s32 image_slot);
+
+void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode, s32 clut_row, s32 clut_index,
+    s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
+
+s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, u32* destination);
+
+void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame,
+    u16 sequence_id, battle_gfx_unit_shp_frame_tables_t** out_table, battle_gfx_source_frame_t** out_frame);
+
+void battle_gfx_set_sprite_part_semi_transparent(
+    battle_gfx_sprite_display_data_t* display, s32 part_index, s32 enabled);
+void battle_gfx_shift_and_fill_position_copies(struct battle_unit_misc_data* unit);
+void battle_gfx_store_item_display_data(struct battle_unit_misc_data* unit, u32 item_id);
+void battle_gfx_invalidate_sp2_vram_slot(battle_unit_misc_data_t* unit);
+void battle_gfx_unpack_unit_shp_data(
+    battle_gfx_unit_shp_frame_tables_t* dst, const battle_gfx_packed_unit_shp_record_t* src);
+void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s32 tile_effect_level, s32 final_value);
+s32 battle_gfx_prepare_post_action_display_by_misc_id(s32 misc_id);
+s32 battle_gfx_calculate_screen_z_from_misc_battle_map_data(struct battle_unit_misc_data* unit);
+s32 battle_gfx_calculate_screen_z_from_misc_move_data(struct battle_unit_misc_data* unit);
+
+/* Returns (s16), but an s16 prototype makes callers such as
+ * battle_move_interpolate_height_toward_resting_height re-extend the result; keep s32. */
+s32 battle_gfx_calculate_screen_z_from_misc_screen_data(struct battle_unit_misc_data* unit);
+
+s32 battle_gfx_calculate_screen_z_with_caller_data(struct battle_unit_misc_data* unit, const SVECTOR* coords);
+
+void battle_gfx_init_render_buffers(void);
+void battle_gfx_append_gpu_primitive_to_secondary_otag(u32* primitive);
+
+void battle_gfx_append_unit_graphics_load_descriptor(s32 map_x, s32 map_y, s32 map_level, s16 facing,
+    s16 spritesheet_id, s16 palette_id, s16 misc_id, battle_stats_t* unit, u32 flags);
+
+s32 battle_gfx_calculate_screen_z_from_misc_map_data(struct battle_unit_misc_data* unit);
+
+void battle_gfx_check_tile_status_palette_mod(
+    struct battle_unit_misc_data* unit, s32 tile_effect_level, s32 final_value);
+
+void battle_gfx_clear_unit_graphics_load_state(s32 unused_map_id);
+s32 battle_gfx_clear_shadow_graphic_trigger_by_misc_id(u32 misc_id);
+void battle_gfx_clear_tpage7_vram_allocation_grid(void);
+void battle_gfx_configure_misc_unit_palette_modulation_1f(s32 unit_id);
+
+void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_t* display, s32 end, s32 start,
+    SVECTOR* position, s16 angle, s16 mode, SVECTOR* scale, u32* ot);
+
+void battle_gfx_decompress_attack_spritesheet(u8* source, u8* destination);
+void battle_gfx_draw_or_append_gpu_primitive(void* primitive);
+void battle_gfx_draw_screen_color_modulation_overlay(void);
+void battle_gfx_draw_wait_direction_unit(void);
+void battle_gfx_free_tpage7_vram(RECT* rect);
+u32 battle_gfx_get_spritesheet_flying_flag(u32 spritesheet_id);
+battle_gfx_unit_seq_table_t* battle_gfx_get_unit_seq_by_spritesheet_id(u32 spritesheet_id);
+battle_gfx_unit_shp_frame_tables_t* battle_gfx_get_unit_shp_by_spritesheet_id(u32 spritesheet_id);
+s32 battle_gfx_get_spritesheet_vram_by_battle_id(u32 battle_id);
+void battle_gfx_tint_all_units_by_team(void);
+void battle_gfx_init_default_poly_ft4(POLY_FT4* primitive);
+void battle_gfx_init_earned_exp_jp_display(struct battle_unit_misc_data* unit);
+s32 battle_gfx_init_evtchr_vram_slots(void);
+void battle_gfx_init_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
+void battle_gfx_init_position_vector_copies(struct battle_unit_misc_data* unit);
+void battle_gfx_init_render_frame(void);
+void battle_gfx_init_render_state(void);
+void battle_gfx_load_casting_unit_graphics(void);
+void battle_gfx_load_spritesheet_into_vram_slot(const battle_gfx_unit_sprite_file_t* data, u32 index, s32 unused,
+    struct battle_unit_misc_data* unit, s16 unused_palette);
+s32 battle_gfx_load_unit_graphics_by_battle_id(s32, s32);
+void battle_gfx_modify_palette_based_on_team(struct battle_unit_misc_data* unit, s32 amount);
+u32 battle_gfx_read_compressed_nibble(void);
+void battle_gfx_reset_jumping_unit_graphic_triggers(void);
+s32 battle_gfx_reset_unit_graphic_trigger(u32 misc_id);
+void battle_gfx_set_evtchr_palette_by_misc_id(s32 misc_id, s32 slot_index, s32 clut_index);
+s32 battle_gfx_set_shadow_graphic_trigger_by_misc_id(u32 misc_id);
+void battle_gfx_set_thrown_item_palette_by_misc_id(u32 item_id, u32 misc_id);
+void battle_gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level);
+void battle_gfx_update_screen_color_modulation_fade(void);
+void battle_gfx_update_sprite_transparency_flag(struct battle_unit_misc_data* unit);
+void battle_gfx_update_status_bubble_display(struct battle_unit_misc_data* unit);
+void battle_gfx_update_status_bubble_graphic_trigger(struct battle_unit_misc_data* unit);
+void battle_gfx_update_status_bubbles_and_graphics(void);
+void battle_gfx_update_unit_palette_animation(void);
+void battle_gfx_update_unit_palettes(void);
+void battle_gfx_alloc_tpage7_vram(RECT* rect, texture_primitive_t* prim, u32* image);
+battle_gfx_source_frame_t* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprite_query_t* out);
+void battle_gfx_apply_weather_time_tile_palette_mod_by_misc_id(u32 misc_id);
+s32 battle_gfx_clear_loaded_evtchr_slot(s32 slot_index);
+s32 battle_gfx_clear_saved_evtchr_slot(s32 slot_index);
+void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
+void battle_gfx_extract_deployed_unit_palettes(void);
+void battle_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
+void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, const battle_gfx_packed_weapon_shp_record_t* src);
+void battle_gfx_resolve_packed_offset_table(u8** entries, const battle_gfx_packed_offset_table_t* record);
+u8** battle_gfx_get_effect_seq_data(u32 unused_spritesheet_id);
+battle_gfx_weapon_shp_t* battle_gfx_get_effect_shp_data(u32 unused_spritesheet_id);
+u8** battle_gfx_get_weapon_seq_by_spritesheet_id(u32 spritesheet_id);
+battle_gfx_weapon_shp_t* battle_gfx_get_weapon_shp_by_spritesheet_id(u32 spritesheet_id);
+s32 battle_gfx_get_unit_spritesheet_height_by_misc_id(u32 misc_id);
+s32 battle_gfx_get_unit_spritesheet_height_by_unit_id(u32 unit_id);
+void battle_gfx_highlight_all_units_blue_or_red(s32 mode);
+s16 battle_gfx_increment_counter(void);
+void battle_gfx_init_deployment_and_reset_unit_graphics_state(void);
+battle_gfx_sprite_display_data_t* battle_gfx_init_unit_sprite_display(s32 unit_index);
+void battle_gfx_set_sprite_part_flip(battle_gfx_sprite_display_data_t* display, s32 part_index, u32 flags);
+s32 battle_gfx_is_spritesheet_id_loaded(s16 spritesheet_id);
+s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot);
+
+void battle_gfx_modify_vram_palette(s32 mode, const rgba5551_t* source, s32 clut_row, s32 clut_index, s32 preset,
+    s16 red, s16 green, s16 blue, s32 final_value);
+
+s32 battle_gfx_release_reserved_vram_slot(s32 slot_index);
+void battle_gfx_release_unit_vram_slot(struct battle_unit_misc_data* unit);
+void battle_gfx_reset_unit_graphics_load_state(void);
+s32 battle_gfx_save_evtchr_slot(s32 slot_index);
+void battle_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 page);
+void battle_gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin);
+void battle_gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
+void battle_gfx_start_screen_color_modulation_fade(u16 blend_mode, u16 red, u16 green, u16 blue, u16 duration);
+s32 battle_gfx_step_load_unit_shp_seq_data(void);
+
+void battle_gfx_release_unit_sprite_display_stub(battle_gfx_sprite_display_data_t* unused_display);
+
+void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* display, s32 index, s16 x_shift,
+    s16 y_shift, s16 u, s16 v, s16 width, s16 height, s16 flags);
+
+s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const battle_gfx_packed_evtchr_record_t* file);
+
+void battle_gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
+    const image_load_parameters_t* parameters);
+
+void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite_archive_t* archive);
+void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive);
+
+void battle_gfx_apply_misc_unit_palette_modulation(
+    s32 preset_color, s32 time, s32 misc_id, s16 red, s16 green, s16 blue);
+
+void battle_gfx_start_misc_unit_palette_modulation(
+    s32 preset_color, s32 time, s32 misc_id, s16 red, s16 green, s16 blue);
+
+void battle_gfx_load_evtchr_thread(void);
+
+/* 0x8008d104..0x8008d138: drains immediate loader steps (2), returns
+ * 0 when finished or 1 while work remains pending (including allocation retry). */
+s32 battle_gfx_poll_unit_graphics_load(void);
+
+/* 0x80088904: 0 finished, 1 pending/deferred, 2 immediate progress. */
+s32 battle_gfx_step_queued_unit_graphics_load(void);
+
+#endif

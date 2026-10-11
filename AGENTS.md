@@ -59,7 +59,7 @@ remain excluded. Never modify `meta/`.
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
 | `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
-| `include/fft/` | One header per module (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`) plus shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `script.h`) |
+| `include/fft/` | Module headers (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), focused `battle_<subsystem>.h` headers, and shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `script.h`) |
 | `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
 | `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
@@ -208,8 +208,9 @@ none), and prefer the profile of its neighbours.
 - One declaration per symbol, in its header. `make check-config` fails on
   conflicting declarations. Globals and prototypes go in the header of their
   name's module prefix. A type goes in the most specific module header that
-  every user can see: `battle.h` for BATTLE and its overlays (whose headers
-  include it), `world.h` for WORLD, WLDCORE and OPENING, and a shared type
+  every user can see: the owning `battle_<subsystem>.h` for BATTLE and its
+  overlays (`battle.h` includes these as the module umbrella), `world.h` for
+  WORLD, WLDCORE and OPENING, and a shared type
   header only when both families use it. Two exceptions: `main_` types stay
   in `main.h`, and MAIN-only table or unit records (item, ability, job,
   party, ENTD) sit with their siblings in `data.h` and `unit.h`. A `volatile`
@@ -219,7 +220,8 @@ none), and prefer the profile of its neighbours.
   (MAIN and WORLD code calling BATTLE functions, for example). `main.h`
   includes every shared header. Each header groups its declarations under
   short lowercase subsystem labels (`/* ai */`), types first, then globals,
-  then functions.
+  then functions. A subsystem header includes its own dependencies and compiles
+  independently; it never includes the module umbrella.
 - Comments: an optional short summary above a function, then only the
   rationale needed to read the code. State facts, not history. Record retail
   bugs and caller/callee disagreements with one line in `QUIRKS.md`.
