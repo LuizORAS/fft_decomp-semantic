@@ -11,6 +11,7 @@
  * the val0 address register with the CdMix argument. */
 void main_sound_put_type(s16 level) {
     s16 cross;
+    CdlATV* mix;
 
     g_main_sound_spu_state.cd_mix_level = level;
     if (g_main_sound_driver_flags
@@ -21,10 +22,8 @@ void main_sound_put_type(s16 level) {
         cross = level * 160 / 255;
         g_main_sound_cd_mix.val0 = g_main_sound_cd_mix.val2 = cross;
     }
-    {
-        CdlATV* mix = &g_main_sound_cd_mix;
-
-        g_main_sound_cd_mix.val1 = g_main_sound_cd_mix.val3 = cross;
-        CdMix(mix);
-    }
+    /* Assign the mix pointer before the crossfeed stores to retain their separate address bases. */
+    mix = &g_main_sound_cd_mix;
+    g_main_sound_cd_mix.val1 = g_main_sound_cd_mix.val3 = cross;
+    CdMix(mix);
 }

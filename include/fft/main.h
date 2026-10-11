@@ -1339,9 +1339,6 @@ extern u32 g_main_sound_tick_count;                /* root-counter tick count; o
 extern u16 g_main_sound_spu_transfer_status_index; /* index into g_main_sound_spu_transfer_status_records */
 extern CdlATV g_main_sound_cd_mix;                 /* 0x80032a3c; written by Put Sound Type */
 
-/* g_main_sound_cd_mix val1 (CD left to SPU right) and val3 (CD right to SPU
- * left) as their own symbols: main_sound_put_type stores them through their
- * own `lui`, which field stores of g_main_sound_cd_mix do not reproduce. */
 extern s16 g_main_sound_decoded_data_result;        /* SPU transfer controller state */
 extern suzuki_waveset_t* g_main_sound_waveset_list; /* 0x80032a44 */
 extern s32 g_main_sound_spu_event;                  /* 0x80032a48; OpenEvent handle of main_sound_spu_event_handler */
