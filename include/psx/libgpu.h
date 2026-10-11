@@ -871,7 +871,7 @@ typedef struct {
 
 extern psyq_gpu_move_packet_t g_psyq_gpu_move_packet;
 
-u32 get_mode(int dfe, int dtd, int tpage);
+u32 get_mode(int dfe, int dtd, u16 tpage);
 u32 get_cs(s16 x, s16 y);
 u32 get_ce(s16 x, s16 y);
 u32 get_ofs(s16 x, s16 y);

@@ -1,7 +1,7 @@
 /* LIBGPU 800257c8-80025824. */
 #include "psx/libgpu.h"
 
-u32 get_mode(int dfe, int dtd, int tpage) {
+u32 get_mode(int dfe, int dtd, u16 tpage) {
     extern volatile psyq_gpu_environment_t
         g_psyq_gpu_environment; /* An unqualified RAM view folds the native ADDIU/LBU address sequence. */
     if (g_psyq_gpu_environment.graph_type == 1 || g_psyq_gpu_environment.graph_type == 2)
