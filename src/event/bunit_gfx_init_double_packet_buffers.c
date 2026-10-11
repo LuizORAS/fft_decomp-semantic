@@ -77,9 +77,7 @@ void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* ota
         SetDefDrawEnv(&g_bunit_gfx_context_base[i].draw_env, 0, i * 0xf0, 0xff, 0xf0);
         SetDefDispEnv(&g_bunit_gfx_context_base[i].disp_env, 0, i == 0 ? 0xf0 : 0, 0xff, 0xf0);
         g_bunit_gfx_context_base[i].draw_env.isbg = 0;
-        g_bunit_gfx_context_base[i].draw_env.r0 = 0;
-        g_bunit_gfx_context_base[i].draw_env.g0 = 0;
-        g_bunit_gfx_context_base[i].draw_env.b0 = 0;
+        setRGB0(&g_bunit_gfx_context_base[i].draw_env, 0, 0, 0);
         g_bunit_gfx_context_base[i].draw_env.ofs[0] = -0x80;
     }
     bunit_gfx_submit_frame_and_swap_buffers(0, -1);

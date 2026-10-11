@@ -46,9 +46,7 @@ void attack_gfx_build_status_group_primitives(POLY_FT4* poly) {
                 &g_attack_panel_status_scales[index], &g_attack_panel_status_offsets[entry]);
             g_attack_gfx_draw_area_template.y -= *g_attack_panel_status_y_offsets[entry];
             if (g_attack_panel_status_animation[entry] == 0x40) {
-                poly->r0 = 0x80;
-                poly->g0 = 0x80;
-                poly->b0 = 0x80;
+                setRGB0(poly, 0x80, 0x80, 0x80);
                 g_attack_panel_status_animation[entry] = 0;
             }
             if (g_attack_panel_status_animation[entry] == 0 || g_attack_panel_status_animation[entry] >= 0x40) {
@@ -67,9 +65,7 @@ void attack_gfx_build_status_group_primitives(POLY_FT4* poly) {
             if (g_attack_panel_status_animation[entry] != 0xff) {
                 if (g_attack_panel_status_animation[entry] > 0x40) {
                     level = 0xc0 - g_attack_panel_status_animation[entry];
-                    poly->r0 = level;
-                    poly->g0 = level;
-                    poly->b0 = level;
+                    setRGB0(poly, level, level, level);
                 }
                 battle_gfx_draw_or_append_gpu_primitive(poly);
             }

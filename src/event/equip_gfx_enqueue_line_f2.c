@@ -6,9 +6,7 @@ void equip_gfx_enqueue_line_f2(const RECT* rect, const rgb24_t* color, u8 semitr
     LINE_F2* line;
 
     line = &g_equip_gfx_context->lines[g_equip_gfx_line_f2_count++];
-    line->r0 = color->r;
-    line->g0 = color->g;
-    line->b0 = color->b;
+    setRGB0(line, color->r, color->g, color->b);
     SetSemiTrans(line, semitrans & 0xff);
     line->x0 = rect->x + 0x80;
     line->y0 = rect->y;

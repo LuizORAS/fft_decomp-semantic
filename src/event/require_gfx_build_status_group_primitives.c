@@ -44,9 +44,7 @@ void require_gfx_build_status_group_primitives(POLY_FT4* poly) {
             g_require_gfx_draw_area_template.y -= g_require_panel_status_y_offsets[group * 2];
 
             if (g_require_panel_status_animation[group] == 0x40) {
-                poly->r0 = 0x80;
-                poly->g0 = 0x80;
-                poly->b0 = 0x80;
+                setRGB0(poly, 0x80, 0x80, 0x80);
                 g_require_panel_status_animation[group] = 0;
             }
 

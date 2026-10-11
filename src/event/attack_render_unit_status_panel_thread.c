@@ -184,55 +184,31 @@ void attack_render_unit_status_panel_thread(void) {
             battle_menu_init_primitive_colors_dimmed(&editor->numeric_frame);
             battle_menu_init_primitive_colors_dimmed(&panel->numeric_frame);
             if ((anim_state - 4) < 6U) {
-                editor->portrait[0].r0 = 0x20;
-                editor->portrait[0].g0 = 0x28;
-                editor->portrait[0].b0 = 0x38;
+                setRGB0(&editor->portrait[0], 0x20, 0x28, 0x38);
             } else {
-                editor->portrait[0].r0 = 0x40;
-                editor->portrait[0].g0 = 0x50;
-                editor->portrait[0].b0 = 0x70;
+                setRGB0(&editor->portrait[0], 0x40, 0x50, 0x70);
             }
-            editor->portrait[1].r0 = 0x20;
-            editor->portrait[1].g0 = 0x28;
-            editor->portrait[1].b0 = 0x38;
-            editor->portrait[2].r0 = 0x20;
-            editor->portrait[2].g0 = 0x28;
-            editor->portrait[2].b0 = 0x38;
-            editor->portrait[3].r0 = 0x20;
-            editor->portrait[3].g0 = 0x28;
-            editor->portrait[3].b0 = 0x38;
+            setRGB0(&editor->portrait[1], 0x20, 0x28, 0x38);
+            setRGB0(&editor->portrait[2], 0x20, 0x28, 0x38);
+            setRGB0(&editor->portrait[3], 0x20, 0x28, 0x38);
         } else {
             s32 shade;
             battle_menu_init_primitive_colors_normal(&editor->numeric_frame);
             battle_menu_init_primitive_colors_normal(&panel->numeric_frame);
             if ((anim_state - 4) >= 6U) {
-                editor->portrait[0].r0 = 0x80;
-                editor->portrait[0].g0 = 0x80;
-                editor->portrait[0].b0 = 0x80;
+                setRGB0(&editor->portrait[0], 0x80, 0x80, 0x80);
             } else {
-                editor->portrait[0].r0 = 0x40;
-                editor->portrait[0].g0 = 0x40;
-                editor->portrait[0].b0 = 0x40;
+                setRGB0(&editor->portrait[0], 0x40, 0x40, 0x40);
             }
             shade = 0x40;
-            editor->portrait[1].r0 = shade;
-            editor->portrait[1].g0 = shade;
-            editor->portrait[1].b0 = shade;
-            editor->portrait[2].r0 = shade;
-            editor->portrait[2].g0 = shade;
-            editor->portrait[2].b0 = shade;
-            editor->portrait[3].r0 = shade;
-            editor->portrait[3].g0 = shade;
-            editor->portrait[3].b0 = shade;
+            setRGB0(&editor->portrait[1], shade, shade, shade);
+            setRGB0(&editor->portrait[2], shade, shade, shade);
+            setRGB0(&editor->portrait[3], shade, shade, shade);
         }
         if (dimmed != 0) {
-            panel->portrait.r0 = 0x40;
-            panel->portrait.g0 = 0x40;
-            panel->portrait.b0 = 0x60;
+            setRGB0(&panel->portrait, 0x40, 0x40, 0x60);
         } else {
-            panel->portrait.r0 = 0x80;
-            panel->portrait.g0 = 0x80;
-            panel->portrait.b0 = 0x80;
+            setRGB0(&panel->portrait, 0x80, 0x80, 0x80);
         }
         g_attack_gfx_draw_offset_y = ((g_main_gfx_screen_polarity * 0xF0) != 0xF0) ? 0xF0 : 0;
         if ((thread->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
@@ -330,38 +306,22 @@ void attack_render_unit_status_panel_thread(void) {
                 editor->bars[i].x2 -= 3;
                 editor->bars[i].x3 -= 3;
                 if (dimmed != 0) {
-                    editor->bars[i].r0 = color->r >> 1;
-                    editor->bars[i].g0 = color->g >> 1;
-                    editor->bars[i].b0 = color->b;
+                    setRGB0(&editor->bars[i], color->r >> 1, color->g >> 1, color->b);
                     color++;
-                    editor->bars[i].r1 = color->r >> 1;
-                    editor->bars[i].g1 = color->g >> 1;
-                    editor->bars[i].b1 = color->b;
+                    setRGB1(&editor->bars[i], color->r >> 1, color->g >> 1, color->b);
                     color++;
-                    editor->bars[i].r2 = color->r >> 1;
-                    editor->bars[i].g2 = color->g >> 1;
-                    editor->bars[i].b2 = color->b;
+                    setRGB2(&editor->bars[i], color->r >> 1, color->g >> 1, color->b);
                     color++;
-                    editor->bars[i].r3 = color->r >> 1;
-                    editor->bars[i].g3 = color->g >> 1;
-                    editor->bars[i].b3 = color->b;
+                    setRGB3(&editor->bars[i], color->r >> 1, color->g >> 1, color->b);
                     color++;
                 } else {
-                    editor->bars[i].r0 = color->r;
-                    editor->bars[i].g0 = color->g;
-                    editor->bars[i].b0 = color->b;
+                    setRGB0(&editor->bars[i], color->r, color->g, color->b);
                     color++;
-                    editor->bars[i].r1 = color->r;
-                    editor->bars[i].g1 = color->g;
-                    editor->bars[i].b1 = color->b;
+                    setRGB1(&editor->bars[i], color->r, color->g, color->b);
                     color++;
-                    editor->bars[i].r2 = color->r;
-                    editor->bars[i].g2 = color->g;
-                    editor->bars[i].b2 = color->b;
+                    setRGB2(&editor->bars[i], color->r, color->g, color->b);
                     color++;
-                    editor->bars[i].r3 = color->r;
-                    editor->bars[i].g3 = color->g;
-                    editor->bars[i].b3 = color->b;
+                    setRGB3(&editor->bars[i], color->r, color->g, color->b);
                     color++;
                 }
             }

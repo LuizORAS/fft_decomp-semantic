@@ -11,9 +11,7 @@ void require_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT
     for (i = 0; i < g_require_gfx_scaled_sprite_count; i++) {
         SetPolyFT4(poly);
         poly->clut = GetClut(0, 0x1fd);
-        poly->r0 = context->brightness;
-        poly->g0 = context->brightness;
-        poly->b0 = context->brightness;
+        setRGB0(poly, context->brightness, context->brightness, context->brightness);
         SetSemiTrans(poly, 1);
         SetShadeTex(poly, 0);
         x = g_require_gfx_scaled_sprite_scale[i].x;
@@ -40,9 +38,7 @@ void require_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT
     /* The backdrop is built as a POLY_F4 but its vertices are stored through
      * the POLY_FT4 layout (x1 at 0x10, x2 at 0x18, x3 at 0x20), as the target does. */
     SetPolyF4((POLY_F4*)poly);
-    poly->r0 = 8;
-    poly->g0 = 8;
-    poly->b0 = 8;
+    setRGB0(poly, 8, 8, 8);
     SetSemiTrans(poly, 1);
     SetShadeTex(poly, 0);
     poly->x0 = 0;

@@ -65,9 +65,7 @@ draw_panels:
         prims = &g_equip_thread_indicator_packets[i][flip];
         SetDrawMode(&prims->mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100) & 0xffff, &g_equip_gfx_draw_area_template);
         SetTile(&prims->frame);
-        prims->frame.r0 = 0;
-        prims->frame.g0 = 0;
-        prims->frame.b0 = 0;
+        setRGB0(&prims->frame, 0, 0, 0);
         SetSemiTrans(&prims->frame, 1);
         y = 0xb2;
         if (i == 0) {
@@ -79,9 +77,7 @@ draw_panels:
         prims->frame.h = 0x32;
         for (j = 0; j < 9; j++) {
             SetTile(&prims->top[j]);
-            prims->top[j].r0 = 0;
-            prims->top[j].g0 = 0;
-            prims->top[j].b0 = 0;
+            setRGB0(&prims->top[j], 0, 0, 0);
             SetSemiTrans(&prims->top[j], 1);
             y = 0xa9;
             prims->top[j].w = 0x100;
@@ -92,9 +88,7 @@ draw_panels:
             prims->top[j].x0 = 0x80;
             prims->top[j].y0 = y + j;
             SetTile(&prims->bottom[j]);
-            prims->bottom[j].r0 = 0;
-            prims->bottom[j].g0 = 0;
-            prims->bottom[j].b0 = 0;
+            setRGB0(&prims->bottom[j], 0, 0, 0);
             SetSemiTrans(&prims->bottom[j], 1);
             y = 0xe4;
             prims->bottom[j].w = 0x100;
@@ -106,9 +100,7 @@ draw_panels:
             prims->bottom[j].y0 = y + j;
         }
         if (g_equip_menu_indicator_state[i] == MENU_INDICATOR_STATE_HIDDEN) {
-            prims->frame.r0 = 0;
-            prims->frame.g0 = 0;
-            prims->frame.b0 = 0;
+            setRGB0(&prims->frame, 0, 0, 0);
         } else {
             if (g_equip_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_IN) {
                 if (g_equip_menu_indicator_brightness[i] < 0x78) {
@@ -122,9 +114,8 @@ draw_panels:
                     g_equip_menu_indicator_state[i] = MENU_INDICATOR_STATE_HIDDEN;
                 }
             }
-            prims->frame.r0 = g_equip_menu_indicator_brightness[i];
-            prims->frame.g0 = g_equip_menu_indicator_brightness[i];
-            prims->frame.b0 = g_equip_menu_indicator_brightness[i];
+            setRGB0(&prims->frame, g_equip_menu_indicator_brightness[i], g_equip_menu_indicator_brightness[i],
+                g_equip_menu_indicator_brightness[i]);
             g_equip_menu_indicator_edge_brightness[i] = g_equip_menu_indicator_brightness[i];
             for (j = 0; j < 9; j++) {
                 if (g_equip_menu_indicator_edge_brightness[i] != 0) {
@@ -134,9 +125,8 @@ draw_panels:
                 (k + prims->top)->r0 = g_equip_menu_indicator_edge_brightness[i];
                 (k + prims->top)->g0 = g_equip_menu_indicator_edge_brightness[i];
                 (k + prims->top)->b0 = g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].r0 = g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].g0 = g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].b0 = g_equip_menu_indicator_edge_brightness[i];
+                setRGB0(&prims->bottom[j], g_equip_menu_indicator_edge_brightness[i],
+                    g_equip_menu_indicator_edge_brightness[i], g_equip_menu_indicator_edge_brightness[i]);
                 battle_gfx_draw_or_append_gpu_primitive(k + prims->top);
                 battle_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }

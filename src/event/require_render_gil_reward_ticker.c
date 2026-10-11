@@ -330,9 +330,7 @@ skipped:
             digit_quad->v2 = 0x49;
             digit_quad->u3 = g_require_reward_money_digit_targets[j] * 13 + 13;
             digit_quad->v3 = 0x49;
-            digit_quad->r0 = pass;
-            digit_quad->g0 = pass;
-            digit_quad->b0 = pass;
+            setRGB0(digit_quad, pass, pass, pass);
             battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_digit_polys[buffer][j]);
         }
         battle_gfx_draw_or_append_gpu_primitive(&areas[buffer]);
@@ -340,12 +338,8 @@ skipped:
         commas = g_require_reward_money_comma_polys;
         comma = commas + buffer;
         sign = &g_require_reward_money_sign_polys[buffer];
-        comma->r0 = pass;
-        comma->g0 = pass;
-        comma->b0 = pass;
-        sign->r0 = pass;
-        sign->g0 = pass;
-        sign->b0 = pass;
+        setRGB0(comma, pass, pass, pass);
+        setRGB0(sign, pass, pass, pass);
         if (digits >= 4) {
             battle_gfx_draw_or_append_gpu_primitive(comma);
         }

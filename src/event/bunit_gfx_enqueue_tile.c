@@ -8,9 +8,7 @@ void bunit_gfx_enqueue_tile(RECT* rect, rgb24_t* color, u8 semi, s32 idx) {
     TILE* tile;
 
     tile = &g_bunit_gfx_context->tiles[g_bunit_gfx_tile_count++];
-    tile->r0 = color->r;
-    tile->g0 = color->g;
-    tile->b0 = color->b;
+    setRGB0(tile, color->r, color->g, color->b);
     SetSemiTrans(tile, semi);
     tile->x0 = rect->x + 0x80;
     tile->y0 = rect->y;

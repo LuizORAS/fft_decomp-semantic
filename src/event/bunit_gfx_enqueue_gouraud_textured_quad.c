@@ -32,18 +32,10 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
     poly->u3 = rect->u + rect->w;
     poly->v3 = rect->v + rect->h;
 
-    poly->r0 = color[0].r;
-    poly->g0 = color[0].g;
-    poly->b0 = color[0].b;
-    poly->r1 = color[1].r;
-    poly->g1 = color[1].g;
-    poly->b1 = color[1].b;
-    poly->r2 = color[2].r;
-    poly->g2 = color[2].g;
-    poly->b2 = color[2].b;
-    poly->r3 = color[3].r;
-    poly->g3 = color[3].g;
-    poly->b3 = color[3].b;
+    setRGB0(poly, color[0].r, color[0].g, color[0].b);
+    setRGB1(poly, color[1].r, color[1].g, color[1].b);
+    setRGB2(poly, color[2].r, color[2].g, color[2].b);
+    setRGB3(poly, color[3].r, color[3].g, color[3].b);
 
     poly->clut = rect->clut;
     poly->tpage = rect->tpage;

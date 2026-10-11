@@ -169,15 +169,11 @@ void attack_deploy_run_render_thread(void) {
                 } else if (g_attack_deploy_valid_tiles[y][x] != 0) {
                     tile->u0 = 0x28;
                     tile->clut = GetClut(g_attack_deploy_tile_clut_rect.x + 0x30, g_attack_deploy_tile_clut_rect.y);
-                    tile->r0 = 0xe0;
-                    tile->g0 = 0x60;
-                    tile->b0 = 0x60;
+                    setRGB0(tile, 0xe0, 0x60, 0x60);
                 } else {
                     tile->u0 = 0;
                     tile->clut = GetClut(g_attack_deploy_tile_clut_rect.x + 0x50, g_attack_deploy_tile_clut_rect.y);
-                    tile->r0 = 0x80;
-                    tile->g0 = 0x80;
-                    tile->b0 = 0xc0;
+                    setRGB0(tile, 0x80, 0x80, 0xc0);
                 }
                 SetSemiTrans(tile, 1);
                 SetShadeTex(tile, 0);

@@ -13,9 +13,7 @@ void equip_gfx_enqueue_textured_quad_current_ot(const RECT* rect, s32 u, s32 v, 
 
     if (color != 0) {
         SetShadeTex(poly, 0);
-        poly->r0 = color->r;
-        poly->g0 = color->g;
-        poly->b0 = color->b;
+        setRGB0(poly, color->r, color->g, color->b);
     } else {
         SetShadeTex(poly, 1);
     }

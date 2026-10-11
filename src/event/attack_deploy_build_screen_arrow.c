@@ -6,9 +6,7 @@ void attack_deploy_build_screen_arrow(void) {
     SetPolyFT4(&g_attack_deploy_screen_arrow.poly);
     SetSemiTrans(&g_attack_deploy_screen_arrow.poly, 1);
     SetShadeTex(&g_attack_deploy_screen_arrow.poly, 0);
-    g_attack_deploy_screen_arrow.poly.r0 = 0x80;
-    g_attack_deploy_screen_arrow.poly.g0 = 0x80;
-    g_attack_deploy_screen_arrow.poly.b0 = 0x80;
+    setRGB0(&g_attack_deploy_screen_arrow.poly, 0x80, 0x80, 0x80);
     g_attack_deploy_screen_arrow.poly.x0 = 0xAF;
     g_attack_deploy_screen_arrow.poly.y0 = 0xB6;
     g_attack_deploy_screen_arrow.poly.x1 = 0xEF;
@@ -32,9 +30,7 @@ void attack_deploy_build_screen_arrow(void) {
     SetPolyF3(&g_attack_deploy_screen_arrow.tri[0]);
     SetSemiTrans(&g_attack_deploy_screen_arrow.tri[0], 0);
     SetShadeTex(&g_attack_deploy_screen_arrow.tri[0], 1);
-    g_attack_deploy_screen_arrow.tri[0].r0 = 0xFF;
-    g_attack_deploy_screen_arrow.tri[0].g0 = 0xFF;
-    g_attack_deploy_screen_arrow.tri[0].b0 = 0xFF;
+    setRGB0(&g_attack_deploy_screen_arrow.tri[0], 0xFF, 0xFF, 0xFF);
     if (g_attack_deploy_tiles_only_mode != 0) {
         g_attack_deploy_screen_arrow.tri[0].x0 = 0x99;
         g_attack_deploy_screen_arrow.tri[0].x1 = 0xC0;

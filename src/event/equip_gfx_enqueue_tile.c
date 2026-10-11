@@ -8,9 +8,7 @@ void equip_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semitrans
     TILE* tile;
 
     tile = &g_equip_gfx_context->tiles[g_equip_gfx_tile_count++];
-    tile->r0 = color->r;
-    tile->g0 = color->g;
-    tile->b0 = color->b;
+    setRGB0(tile, color->r, color->g, color->b);
     SetSemiTrans(tile, semitrans & 0xff);
     tile->x0 = rect->x + 0x80;
     tile->y0 = rect->y;
