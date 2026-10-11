@@ -2722,6 +2722,30 @@ typedef enum battle_effect_model {
  * (0, ONE, 0); an effect file's script sets its own pair (opcode 27). */
 enum { BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD = 0x230 };
 
+/* One 14-byte parameter row for the spell-charge secondary effect. */
+typedef struct battle_effect_charge_params {
+    s16 speed;
+    s16 spread_range;
+    s16 spread_offset;
+    s16 duration;
+    s16 radius;
+    u8 spawn_interval;
+    u8 _unused_0b;
+    u8 max_trails;
+    u8 fade_row;
+} battle_effect_charge_params_t;
+typedef char battle_effect_charge_params_size_must_be_0x0e[sizeof(battle_effect_charge_params_t) == 0x0e ? 1 : -1];
+
+/* Per-secondary-slot spawn state for the two-particle death poof. */
+typedef struct battle_effect_death_poof_state {
+    s32 count;        /* 0x00; slots started so far */
+    u16 finish_timer; /* 0x04; reaches 1 when the effect is finished */
+    u8 ids[2];        /* 0x06 */
+} battle_effect_death_poof_state_t;
+typedef char battle_effect_death_poof_state_size_must_be_8[sizeof(battle_effect_death_poof_state_t) == 8 ? 1 : -1];
+
+typedef s32 (*battle_secondary_effect_function_t)(void);
+
 /* One trail of the spell charge effect: the recent screen positions of the effect slot it follows. */
 typedef struct battle_effect_charge_trail {
     DVECTOR points[7]; /* 0x00; screen positions, newest at age % 7 */
@@ -4324,6 +4348,9 @@ typedef struct battle_file_extent {
     s32 size;
 } battle_file_extent_t;
 
+extern battle_effect_charge_params_t g_battle_effect_charge_line_params[2];
+extern battle_effect_death_poof_state_t g_battle_effect_death_poof_states[];
+extern battle_secondary_effect_function_t g_battle_effect_secondary_handlers[23];
 extern battle_effect_secondary_animation_t g_battle_effect_secondary_animations[];
 extern battle_effect_secondary_data_t g_battle_effect_secondary_data[];
 extern u8 g_effect_load_state; /* battle_effect_load_state_e */
@@ -4627,6 +4654,29 @@ s32 battle_effect_test_position_for_obstacle(
 s32 battle_effect_try_init_data(void);
 void battle_effect_update_active_slots(s32 group);
 s32 battle_effect_update_secondary_effects(void);
+s32 battle_return_zero_801b0fec(void);
+s32 battle_effect_arrow_arc_secondary_handler(void);
+s32 battle_effect_weapon_hit_secondary_handler(void);
+s32 battle_effect_golem_secondary_handler(void);
+s32 battle_effect_spell_charge_secondary_handler(void);
+s32 battle_effect_null_secondary_handler(void);
+s32 battle_effect_red_orbs_secondary_handler(void);
+s32 battle_noop_801b2968(void);
+s32 battle_effect_fall_dust_secondary_handler(void);
+s32 battle_effect_splash_secondary_handler(void);
+s32 battle_noop_801b2bfc(void);
+s32 battle_noop_801b2c04(void);
+s32 battle_effect_venom_trap_secondary_handler(void);
+s32 battle_effect_level_up_secondary_handler(void);
+s32 battle_noop_801b2e60(void);
+s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough);
+s32 battle_noop_801b3118(void);
+s32 battle_effect_zodiac_poof_secondary_handler(void);
+s32 battle_effect_reflect_secondary_handler(void);
+s32 battle_effect_teleport_secondary_handler(void);
+s32 battle_effect_linear_projectile_secondary_handler(void);
+s32 battle_effect_equip_break_secondary_handler(void);
+s32 battle_effect_summon_charge_secondary_handler(void);
 void battle_effect_add_svector_to_vector(const SVECTOR* first, const VECTOR* second, VECTOR* out);
 void battle_effect_add_svectors(const SVECTOR* first, const SVECTOR* second, SVECTOR* out);
 

@@ -528,7 +528,7 @@ written that way.
   when the read could not start), returns 0 with its 0x20000-byte load buffer
   still allocated.
 - `g_battle_effect_secondary_handlers` entries 0x07, 0x0a, 0x0b, 0x0e and 0x10
-  are empty `void` functions, although `battle_effect_update_secondary_effects`
+  set no result, although `battle_effect_update_secondary_effects`
   ends an effect on a handler result of 0. No record of
   `g_battle_effect_secondary_animations` names them.
 - `jobstts_ability_is_non_action_learned` passes one word (0x801f0050, named

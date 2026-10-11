@@ -1,9 +1,5 @@
 #include "fft/battle.h"
 
-typedef s32 (*battle_secondary_effect_function_t)(void);
-
-extern battle_secondary_effect_function_t g_battle_effect_secondary_handlers[];
-
 /* Run the handler of every active secondary effect once, newest first, and remove
  * each one whose handler returns 0. Returns 0 when none is active.
  *

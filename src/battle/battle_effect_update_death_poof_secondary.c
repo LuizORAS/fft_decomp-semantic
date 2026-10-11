@@ -1,17 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Eight-byte spawn state of one death poof (g_battle_effect_death_poof_states),
- * indexed by battle_effect_secondary_data_t::own_slot_id. It carries the same
- * roles the generic trap spawner keeps in the effect record itself. */
-typedef struct battle_effect_trap_state {
-    s32 count;        /* 0x00; slots started so far */
-    u16 finish_timer; /* 0x04; reaches 1 when the effect is finished */
-    u8 ids[2];        /* 0x06 */
-} battle_effect_trap_state_t;
-
-extern battle_effect_trap_state_t g_battle_effect_death_poof_states[];
-
 enum {
     BATTLE_EFFECT_TRAP_SLOT_COUNT = 2,
     BATTLE_EFFECT_TRAP_CLUT = MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15),
@@ -29,7 +18,7 @@ enum {
  */
 s32 battle_effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough) {
     battle_effect_secondary_data_t* effect;
-    battle_effect_trap_state_t* state;
+    battle_effect_death_poof_state_t* state;
     s32 unused[6]; /* Reserves the target's 0x58-byte frame. */
     vec3s32_t gravity;
     s32 result;

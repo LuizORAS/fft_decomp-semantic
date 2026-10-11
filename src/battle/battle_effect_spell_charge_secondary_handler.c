@@ -3,22 +3,8 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
-typedef struct battle_effect_charge_params {
-    s16 speed;
-    s16 spread_range;
-    s16 spread_offset;
-    s16 duration;
-    s16 radius;
-    u8 spawn_interval;
-    u8 _unused_0b;
-    u8 max_trails;
-    u8 fade_row;
-} battle_effect_charge_params_t;
-
 /* The target compares a line's two endpoints as whole words. */
 #define LINE_G2_XY_WORD(line, n) (*(s32*)&line->x##n)
-
-extern battle_effect_charge_params_t g_battle_effect_charge_line_params[];
 
 /* Secondary handler for a charge effect: phase 1 loads the animation's
  * parameters and primes the line primitives, phase 2 spawns trails that
