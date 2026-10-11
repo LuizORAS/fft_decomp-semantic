@@ -7,14 +7,7 @@
 #include "psx/types.h"
 
 /* Opens help for the running menu's pending request, or runs the bouncing
- * help cursor over the navigation table for that menu or the unit view.
- *
- * `help_thread_id` stays pinned: left to the allocator it takes $s4 ahead of
- * `node` (31 weighted references against 28 over nearly the same live range),
- * where the target has `node` in $s4 and the thread id in $s5. A pinned
- * register is never hoisted, so the slot offset of the wait loop is computed by
- * hand before it.
- */
+ * help cursor over the navigation table for that menu or the unit view. */
 void world_menu_run_battle_help(void) {
     POLY_FT4 cursor_quads[2];
     POLY_FT4 shadow_quads[2];
@@ -36,8 +29,8 @@ void world_menu_run_battle_help(void) {
     s32 input;
     s32 quad_index;
     s32 frame; /* first walks the thread slots looking for a help request */
+    /* Unbinding this id swaps its register with the navigation pointer. */
     register s32 help_thread_id __asm__("$21");
-    s32 help_thread_offset;
     native_thread_t* scan_thread;
     world_menu_entry_t* request;
     native_thread_t* self;
@@ -218,12 +211,11 @@ void world_menu_run_battle_help(void) {
                     world_thread_set_parameters(
                         help_thread_id - 1, 0x3B, g_world_help_topic_text_ids[request->selected_index], 0);
                 }
-                /* Wait for the text thread in the preceding slot. `offset + (s32)base`
-                   keeps the addu operand order; pointer + offset swaps it. */
-                help_thread_offset = help_thread_id << 0xA;
+                /* Wait for the text thread in the preceding slot. */
+                frame = help_thread_id;
                 do {
                     world_thread_wait_frames(1);
-                } while (((native_thread_t*)(help_thread_offset + (s32)g_world_threads))[-1].is_running != 0);
+                } while (g_world_threads[frame - 1].is_running != 0);
                 *g_world_help_controller_state_ptr = 0;
                 world_thread_wait_frames(1);
                 world_menu_close_help_menu();
@@ -368,58 +360,18 @@ void world_menu_run_battle_help(void) {
             shadow_quads[buffer].v1 = 0x10;
             shadow_quads[buffer].v2 = 0;
             shadow_quads[buffer].v3 = 0x10;
-            cursor_quads[buffer].x0 = x;
-            cursor_quads[buffer].y0 = y + bob;
-            cursor_quads[buffer].x1 = x + 0x10;
-            cursor_quads[buffer].y1 = y + bob;
-            cursor_quads[buffer].x2 = x;
-            cursor_quads[buffer].y2 = y + bob + 0x10;
-            cursor_quads[buffer].x3 = x + 0x10;
-            cursor_quads[buffer].y3 = y + bob + 0x10;
-            (shadow_quads + buffer)->x0 = x + 2;
-            (shadow_quads + buffer)->y0 = y + bob + 2;
-            (shadow_quads + buffer)->x1 = x + 0x12;
-            (shadow_quads + buffer)->y1 = y + bob + 2;
-            (shadow_quads + buffer)->x2 = x + 2;
-            (shadow_quads + buffer)->y2 = y + bob + 0x12;
-            (shadow_quads + buffer)->x3 = x + 0x12;
-            (shadow_quads + buffer)->y3 = y + bob + 0x12;
+            setXY4(&cursor_quads[buffer], x, y + bob, x + 0x10, y + bob, x, y + bob + 0x10, x + 0x10, y + bob + 0x10);
+            setXY4(shadow_quads + buffer, x + 2, y + bob + 2, x + 0x12, y + bob + 2, x + 2, y + bob + 0x12, x + 0x12,
+                y + bob + 0x12);
         } else {
             u = 0xA8;
-            (cursor_quads + buffer)->u0 = u;
-            (cursor_quads + buffer)->v0 = 0;
-            (cursor_quads + buffer)->u1 = u_mid;
-            (cursor_quads + buffer)->v1 = 0;
-            (cursor_quads + buffer)->u2 = 0xA8;
-            (cursor_quads + buffer)->v2 = 0x10;
-            (cursor_quads + buffer)->u3 = u_mid;
-            (cursor_quads + buffer)->v3 = 0x10;
+            setUV4(cursor_quads + buffer, u, 0, u_mid, 0, 0xA8, 0x10, u_mid, 0x10);
             u = 0xB8;
-            (shadow_quads + buffer)->u0 = u;
-            (shadow_quads + buffer)->v0 = 0;
-            (shadow_quads + buffer)->u1 = 0xC8;
-            (shadow_quads + buffer)->v1 = 0;
-            (shadow_quads + buffer)->u2 = u_mid;
-            (shadow_quads + buffer)->v2 = 0x10;
-            (shadow_quads + buffer)->u3 = 0xC8;
-            (shadow_quads + buffer)->v3 = 0x10;
-            (cursor_quads + buffer)->x0 = x + bob;
-            (cursor_quads + buffer)->y0 = y;
-            (cursor_quads + buffer)->x1 = x + bob + 0x10;
-            (cursor_quads + buffer)->y1 = y;
-            (cursor_quads + buffer)->x2 = x + bob;
-            (cursor_quads + buffer)->y2 = y + 0x10;
-            (cursor_quads + buffer)->x3 = x + bob + 0x10;
-            (cursor_quads + buffer)->y3 = y + 0x10;
+            setUV4(shadow_quads + buffer, u, 0, 0xC8, 0, u_mid, 0x10, 0xC8, 0x10);
+            setXY4(cursor_quads + buffer, x + bob, y, x + bob + 0x10, y, x + bob, y + 0x10, x + bob + 0x10, y + 0x10);
             shadow_offset = bob + 2;
-            (shadow_quads + buffer)->x0 = x + shadow_offset;
-            (shadow_quads + buffer)->y0 = y + 2;
-            (shadow_quads + buffer)->x1 = x + shadow_offset + 0x10;
-            (shadow_quads + buffer)->y1 = y + 2;
-            (shadow_quads + buffer)->x2 = x + shadow_offset;
-            (shadow_quads + buffer)->y2 = y + 0x12;
-            (shadow_quads + buffer)->x3 = x + shadow_offset + 0x10;
-            (shadow_quads + buffer)->y3 = y + 0x12;
+            setXY4(shadow_quads + buffer, x + shadow_offset, y + 2, x + shadow_offset + 0x10, y + 2, x + shadow_offset,
+                y + 0x12, x + shadow_offset + 0x10, y + 0x12);
         }
         if (self->task_words[1] != 0) {
             cursor_quads[buffer].clut = 0x7DFC;

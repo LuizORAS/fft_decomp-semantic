@@ -359,58 +359,18 @@ void helpmenu_menu_run_battle_help(void) {
             shadow_polys[buffer].v1 = 0x10;
             shadow_polys[buffer].v2 = 0;
             shadow_polys[buffer].v3 = 0x10;
-            cursor_polys[buffer].x0 = x;
-            cursor_polys[buffer].y0 = y + bob;
-            cursor_polys[buffer].x1 = x + 0x10;
-            cursor_polys[buffer].y1 = y + bob;
-            cursor_polys[buffer].x2 = x;
-            cursor_polys[buffer].y2 = y + bob + 0x10;
-            cursor_polys[buffer].x3 = x + 0x10;
-            cursor_polys[buffer].y3 = y + bob + 0x10;
-            (shadow_polys + buffer)->x0 = x + 2;
-            (shadow_polys + buffer)->y0 = y + bob + 2;
-            (shadow_polys + buffer)->x1 = x + 0x12;
-            (shadow_polys + buffer)->y1 = y + bob + 2;
-            (shadow_polys + buffer)->x2 = x + 2;
-            (shadow_polys + buffer)->y2 = y + bob + 0x12;
-            (shadow_polys + buffer)->x3 = x + 0x12;
-            (shadow_polys + buffer)->y3 = y + bob + 0x12;
+            setXY4(&cursor_polys[buffer], x, y + bob, x + 0x10, y + bob, x, y + bob + 0x10, x + 0x10, y + bob + 0x10);
+            setXY4(shadow_polys + buffer, x + 2, y + bob + 2, x + 0x12, y + bob + 2, x + 2, y + bob + 0x12, x + 0x12,
+                y + bob + 0x12);
         } else {
             u = 0xA8;
-            (cursor_polys + buffer)->u0 = u;
-            (cursor_polys + buffer)->v0 = 0;
-            (cursor_polys + buffer)->u1 = u_mid;
-            (cursor_polys + buffer)->v1 = 0;
-            (cursor_polys + buffer)->u2 = 0xA8;
-            (cursor_polys + buffer)->v2 = 0x10;
-            (cursor_polys + buffer)->u3 = u_mid;
-            (cursor_polys + buffer)->v3 = 0x10;
+            setUV4(cursor_polys + buffer, u, 0, u_mid, 0, 0xA8, 0x10, u_mid, 0x10);
             u = 0xB8;
-            (shadow_polys + buffer)->u0 = u;
-            (shadow_polys + buffer)->v0 = 0;
-            (shadow_polys + buffer)->u1 = 0xC8;
-            (shadow_polys + buffer)->v1 = 0;
-            (shadow_polys + buffer)->u2 = u_mid;
-            (shadow_polys + buffer)->v2 = 0x10;
-            (shadow_polys + buffer)->u3 = 0xC8;
-            (shadow_polys + buffer)->v3 = 0x10;
-            (cursor_polys + buffer)->x0 = x + bob;
-            (cursor_polys + buffer)->y0 = y;
-            (cursor_polys + buffer)->x1 = x + bob + 0x10;
-            (cursor_polys + buffer)->y1 = y;
-            (cursor_polys + buffer)->x2 = x + bob;
-            (cursor_polys + buffer)->y2 = y + 0x10;
-            (cursor_polys + buffer)->x3 = x + bob + 0x10;
-            (cursor_polys + buffer)->y3 = y + 0x10;
+            setUV4(shadow_polys + buffer, u, 0, 0xC8, 0, u_mid, 0x10, 0xC8, 0x10);
+            setXY4(cursor_polys + buffer, x + bob, y, x + bob + 0x10, y, x + bob, y + 0x10, x + bob + 0x10, y + 0x10);
             shadow_offset = bob + 2;
-            (shadow_polys + buffer)->x0 = x + shadow_offset;
-            (shadow_polys + buffer)->y0 = y + 2;
-            (shadow_polys + buffer)->x1 = x + shadow_offset + 0x10;
-            (shadow_polys + buffer)->y1 = y + 2;
-            (shadow_polys + buffer)->x2 = x + shadow_offset;
-            (shadow_polys + buffer)->y2 = y + 0x12;
-            (shadow_polys + buffer)->x3 = x + shadow_offset + 0x10;
-            (shadow_polys + buffer)->y3 = y + 0x12;
+            setXY4(shadow_polys + buffer, x + shadow_offset, y + 2, x + shadow_offset + 0x10, y + 2, x + shadow_offset,
+                y + 0x12, x + shadow_offset + 0x10, y + 0x12);
         }
         if (self_thread->task_words[1] != 0) {
             cursor_polys[buffer].clut = 0x7DFC;
