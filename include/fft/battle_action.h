@@ -8,6 +8,13 @@
 #include "fft/main.h"
 
 /* action */
+/* battle_action_run_between_turn_control modes. */
+typedef enum battle_between_turn_mode {
+    BATTLE_BETWEEN_TURN_MODE_RUN = 0,
+    BATTLE_BETWEEN_TURN_MODE_RESET = 1,
+    BATTLE_BETWEEN_TURN_MODE_FIND_ACTIVE_UNIT = 2,
+} battle_between_turn_mode_e;
+
 /* Bitset in battle_action_data_t.attack_type; one result can affect HP and MP. */
 typedef enum battle_action_type_flags {
     BATTLE_ACTION_TYPE_PSEUDO_STATUS = 0x01,
@@ -690,7 +697,7 @@ s32 battle_action_prepare_attack(battle_action_command_t* action, battle_action_
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
 void battle_action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 battle_reaction_prepare_next(s16* reaction_id);
-s32 battle_action_run_between_turn_control(s32 mode);
+s32 battle_action_run_between_turn_control(battle_between_turn_mode_e mode);
 void battle_formula_calculate_knockback(void);
 void battle_formula_apply_zodiac_compatibility(void);
 void battle_formula_store_physical_evade_values(void);

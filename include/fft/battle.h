@@ -891,13 +891,6 @@ typedef enum battle_turn_event {
     BATTLE_TURN_EVENT_NONE = 0xff00,
 } battle_turn_event_e;
 
-/* battle_action_run_between_turn_control modes. */
-typedef enum battle_between_turn_mode {
-    BATTLE_BETWEEN_TURN_MODE_RUN = 0,
-    BATTLE_BETWEEN_TURN_MODE_RESET = 1,
-    BATTLE_BETWEEN_TURN_MODE_FIND_ACTIVE_UNIT = 2,
-} battle_between_turn_mode_e;
-
 /* g_battle_between_turn_state and g_battle_between_turn_resume_state: the phases of
  * battle_action_run_between_turn_control. */
 typedef enum battle_between_turn_state {

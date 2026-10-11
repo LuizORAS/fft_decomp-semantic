@@ -11,7 +11,7 @@
  * (cross-jumped `li v0,N` tails). With no note between them the constant set
  * directly follows the loop and is hoisted with the table base, as in the
  * target (a spilled invariant rematerialised as `li a2,N`). */
-s32 battle_action_run_between_turn_control(s32 mode) {
+s32 battle_action_run_between_turn_control(battle_between_turn_mode_e mode) {
     battle_stats_t* unit;
     s32 result;
     s32 count;
@@ -33,7 +33,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             g_battle_team_golem[i] = 0;
         }
         g_battle_action_current_attacker.mimic_pending = 0;
-        for (i = 0; i < 21; i++) {
+        for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             unit = &g_battle_unit_stats[i];
             unit->ct = 0;
             unit->has_turn = 0;
@@ -44,7 +44,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
         return 0xe000;
     }
     if (mode == BATTLE_BETWEEN_TURN_MODE_FIND_ACTIVE_UNIT) {
-        for (i = 0; i < 21; i++) {
+        for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             unit = &g_battle_unit_stats[i];
             if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
                 if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
@@ -64,7 +64,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
     while (result == 0) {
         switch (g_battle_between_turn_state) {
         case BATTLE_BETWEEN_TURN_STATE_ADD_CT:
-            for (i = 0; i < 21; i++) {
+            for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
                 if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
@@ -86,7 +86,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
         case BATTLE_BETWEEN_TURN_STATE_PICK_UNIT:
             max_ct = UNIT_TURN_CT_THRESHOLD - 1;
             best = 0xff;
-            for (i = 0; i < 21; i++) {
+            for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
                 if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
@@ -151,11 +151,11 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                     }
                 }
                 /* clang-format off */
-            } while (++i < 21); g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE;
+            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE;
             /* clang-format on */
             break;
         case BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE:
-            for (i = 0; i < 21; i++) {
+            for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_status_check_unit(unit);
                 if (!(flags & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) && unit->charged_ability_ct == 0) {
@@ -183,7 +183,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                     battle_status_update_expiring(i);
                 }
                 /* clang-format off */
-            } while (++i < 21); g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS;
+            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS;
             /* clang-format on */
             break;
         case BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS:
@@ -197,11 +197,11 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                     g_battle_mimic_pending_flags[i] = unit->action.attack_type;
                 }
                 /* clang-format off */
-            } while (++i < 21); g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS;
+            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS;
             /* clang-format on */
             break;
         case BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS:
-            for (i = 0; i < 21; i++) {
+            for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 if (g_battle_mimic_pending_flags[i] != 0) {
                     g_battle_mimic_pending_flags[i] = 0;
                     result = i | BATTLE_TURN_EVENT_ACTION_RESULT;
@@ -213,7 +213,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
         case BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE:
             max_ct = 0xfe;
             best = 0xff;
-            for (i = 0; i < 21; i++) {
+            for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 flags = battle_status_check_unit(&g_battle_unit_stats[i]);
                 if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
                     if (max_ct < g_battle_unit_stats[i].ct) {
@@ -239,7 +239,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_MARK_MIMES;
             break;
         case BATTLE_BETWEEN_TURN_STATE_UNIT_TURN:
-            for (i = 0; i < 21; i++) {
+            for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 if (unit->has_turn != 0) {
                     s32 unit_status;
@@ -298,7 +298,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                         g_battle_mimic_pending_flags[i] = 1;
                     }
                     /* clang-format off */
-                } while (++i < 21); g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_RUN_MIMES;
+                } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_RUN_MIMES;
                 /* clang-format on */
             } else {
                 g_battle_between_turn_state = g_battle_between_turn_resume_state;
@@ -306,7 +306,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             break;
         case BATTLE_BETWEEN_TURN_STATE_RUN_MIMES:
             g_battle_action_current_attacker.mimic_pending = 0;
-            for (i = 0; i < 21; i++) {
+            for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 if (g_battle_mimic_pending_flags[i] != 0 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
                     g_battle_mimic_pending_flags[i] = 0;
