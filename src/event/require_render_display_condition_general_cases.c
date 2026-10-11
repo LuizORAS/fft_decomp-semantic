@@ -83,7 +83,7 @@
     poly->y3 = QUAD(index).y + ((offset) + 0x78) + (QUAD(index).height - offset)
 
 void require_render_display_condition_general_cases(s32 hold_frames) {
-    require_display_condition_quad_t* quads;
+    battle_gfx_sprite_region_t* quads;
     u8* range;
     require_display_condition_colors_t* colors;
     require_render_condition_tpage_t* tpage;

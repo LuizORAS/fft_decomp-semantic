@@ -13,7 +13,7 @@ void etc_graphic_show_chapter_title(s32 graphic_id) {
     s32 frame;
     s32 fade;
     s32 color;
-    etc_graphic_dimensions_t* dimensions;
+    battle_gfx_sprite_region_t* dimensions;
 
     dimensions = g_etc_graphics[graphic_id].dimensions;
     frame = 0;

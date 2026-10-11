@@ -9,7 +9,7 @@
  * the part already revealed by `fade`; row 1 is the 32-pixel gradient edge. */
 void etc_graphic_build_chapter_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 layer, POLY_GT4* primitives, s32 color) {
-    etc_graphic_dimensions_t* dimensions;
+    battle_gfx_sprite_region_t* dimensions;
     s32 texture_mode;
     POLY_GT4* poly;
     s32 row;

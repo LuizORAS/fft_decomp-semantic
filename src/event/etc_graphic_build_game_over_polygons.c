@@ -14,7 +14,7 @@
  * origin preserves the width/x load order. */
 void etc_graphic_build_game_over_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 reverse_order, POLY_GT4* primitives, s32 color) {
-    etc_graphic_dimensions_t* dimensions;
+    battle_gfx_sprite_region_t* dimensions;
     POLY_GT4* primitive;
     s32 texture_mode;
     s32 half;

@@ -14,7 +14,7 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     s32 frame;
     s32 fade;
     s32 color;
-    etc_graphic_dimensions_t* dimensions;
+    battle_gfx_sprite_region_t* dimensions;
 
     g_battle_thread_call_target = main_sound_unload_scenario_music_and_tunes;
     battle_thread_call_on_main_stack();

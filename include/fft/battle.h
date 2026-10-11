@@ -1620,6 +1620,17 @@ typedef struct battle_gfx_wep_eff_graphics {
 } battle_gfx_wep_eff_graphics_t;
 typedef char battle_gfx_wep_eff_graphics_size_must_be_0xc40[sizeof(battle_gfx_wep_eff_graphics_t) == 0xc40 ? 1 : -1];
 
+/* Texture rectangle and screen offset used by menu overlay graphics. */
+typedef struct battle_gfx_sprite_region {
+    s16 u;      /* 0x00 */
+    s16 v;      /* 0x02 */
+    s16 width;  /* 0x04 */
+    s16 height; /* 0x06 */
+    s16 x;      /* 0x08 */
+    s16 y;      /* 0x0a */
+} battle_gfx_sprite_region_t;
+typedef char battle_gfx_sprite_region_size_must_be_12[sizeof(battle_gfx_sprite_region_t) == 12 ? 1 : -1];
+
 /* One part of a sprite display: a rectangle of the display's texture page,
  * in pixels, and its place relative to the sprite's origin. */
 typedef struct battle_gfx_sprite_part_display_data {

@@ -23,7 +23,7 @@ void require_render_display_condition_special_cases_thread(void) {
     s32 buffer;
     s32 scale;
     s32 quad_index;
-    require_display_condition_quad_t* quads;
+    battle_gfx_sprite_region_t* quads;
     u8* table;
     require_display_condition_colors_t* color_table;
 

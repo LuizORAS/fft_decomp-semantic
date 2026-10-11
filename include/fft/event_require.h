@@ -38,16 +38,6 @@ void require_editor_load_selected_unit(void);
 void require_editor_run_numeric_thread(void);
 
 /* gfx */
-/* One display-condition sprite: texture rectangle and screen offset, shared by
- * the general- and special-case display-condition renderers. */
-typedef struct require_display_condition_quad {
-    s16 u;      /* 0x00 */
-    s16 v;      /* 0x02 */
-    s16 width;  /* 0x04 */
-    s16 height; /* 0x06 */
-    s16 x;      /* 0x08 */
-    s16 y;      /* 0x0a */
-} require_display_condition_quad_t;
 
 /* One color record per display-condition quad; the fourth byte of each
  * CVECTOR is not consumed by the banner renderer. */
@@ -129,13 +119,13 @@ void require_gfx_scale_poly_gt4_vertex_colors(
 
 /* condition */
 extern u8 g_require_condition_general_quad_ranges[];
-extern require_display_condition_quad_t g_require_condition_general_quads[];
+extern battle_gfx_sprite_region_t g_require_condition_general_quads[];
 extern require_display_condition_colors_t g_require_condition_general_vertex_colors[];
 extern require_render_condition_tpage_t g_require_condition_general_tpages[];
 
 /* Per-condition first-quad indices; entry n+1 bounds entry n. */
 extern u8 g_require_condition_special_quad_ranges[];
-extern require_display_condition_quad_t g_require_condition_special_quads[];
+extern battle_gfx_sprite_region_t g_require_condition_special_quads[];
 
 /* 0x14-byte vertex-colour records, one per quad. */
 extern require_display_condition_colors_t g_require_condition_special_vertex_colors[];

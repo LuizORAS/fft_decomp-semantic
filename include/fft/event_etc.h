@@ -5,19 +5,6 @@
 
 #include "fft/battle.h"
 
-/* EVENT/ETC.OUT tables at 0x801c0668 and 0x801c072c. The chapter builder
- * (0x801bf3e0) establishes these axes; the game-over builder (0x801bfc58)
- * swaps their screen interpretation. Both advance records by 12 bytes. */
-typedef struct etc_graphic_dimensions {
-    s16 u;      /* 0x00 */
-    s16 v;      /* 0x02 */
-    s16 width;  /* 0x04 */
-    s16 height; /* 0x06: signed clipping limit */
-    s16 x;      /* 0x08 */
-    s16 y;      /* 0x0a */
-} etc_graphic_dimensions_t;
-typedef char etc_graphic_dimensions_size_check[sizeof(etc_graphic_dimensions_t) == 12 ? 1 : -1];
-
 /* Index into g_etc_graphics, named after the image file: 0 to 6 are chapter
  * titles (CHAPTER1.BIN to CHAPTER4.BIN), 7 is GAMEOVER.BIN and 8 to 12 are
  * END1.BIN to END5.BIN. Only the ones etc_graphic_open treats specially are
@@ -29,12 +16,13 @@ typedef enum etc_graphic_id {
     ETC_GRAPHIC_END5 = 12,
 } etc_graphic_id_e;
 
+/* The game-over renderer swaps the screen axes of the chapter-title regions. */
 typedef struct etc_graphic {
     const char* path;
     s32 lba;
     s32 size;
     RECT* framebuffer_rect;
-    etc_graphic_dimensions_t* dimensions;
+    battle_gfx_sprite_region_t* dimensions;
     void* _unused_14;
     void* _unused_18;
     s32 texture_mode;
