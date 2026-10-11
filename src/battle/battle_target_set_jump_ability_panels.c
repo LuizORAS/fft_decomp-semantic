@@ -34,7 +34,7 @@ s32 battle_target_set_jump_ability_panels(const battle_action_command_t* source)
     s32 other_height;
     s32 jump_index;
     u16 ability_id;
-    battle_loader_jump_record_t* jump;
+    main_ability_jump_record_t* jump;
     s32 location;
     s32 other_location;
     s16 height;

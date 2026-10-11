@@ -22,29 +22,29 @@ typedef struct suzuki_smd_header suzuki_smd_header_t;
 /* ability */
 /* Jump ability record, 12 of them at g_main_jump_ability_data: horizontal
  * range and vertical reach. */
-typedef struct battle_loader_jump_record {
+typedef struct main_ability_jump_record {
     u8 range;    /* 0x00 */
     u8 vertical; /* 0x01 */
-} battle_loader_jump_record_t;
+} main_ability_jump_record_t;
 
 /* Charge ability record, 8 of them at g_main_charge_ability_data. */
-typedef struct battle_loader_charge_record {
+typedef struct main_ability_charge_record {
     u8 ct;    /* 0x00 */
     u8 power; /* 0x01 */
-} battle_loader_charge_record_t;
+} main_ability_charge_record_t;
 
 /* Pointer returned for ability_type_e: the record extent depends on the type. */
 typedef union main_ability_secondary_pointer {
     ability_secondary_data_t* range;
     u8* item_id;
     u8* throw_item_type;
-    battle_loader_jump_record_t* jump;
-    battle_loader_charge_record_t* charge;
+    main_ability_jump_record_t* jump;
+    main_ability_charge_record_t* charge;
     u8* math_rsm;
 } main_ability_secondary_pointer_t;
 
 typedef char main_ability_secondary_pointer_size_must_be_4[(sizeof(main_ability_secondary_pointer_t) == 4) ? 1 : -1];
-typedef char battle_loader_jump_record_size_must_be_2[(sizeof(battle_loader_jump_record_t) == 2) ? 1 : -1];
+typedef char main_ability_jump_record_size_must_be_2[(sizeof(main_ability_jump_record_t) == 2) ? 1 : -1];
 
 typedef struct main_ability_human_skillset {
     u8 high_id_bits[3];
@@ -66,8 +66,8 @@ extern u8 g_main_math_rsm_ability_data[ABILITY_ID_COUNT - ABILITY_ID_MATH_FIRST]
 
 /* The item_type_e each Throw ability throws, indexed by ability id - ABILITY_ID_THROW_FIRST. */
 extern u8 g_main_throw_ability_item_types[];
-extern battle_loader_jump_record_t g_main_jump_ability_data[12];
-extern battle_loader_charge_record_t g_main_charge_ability_data[8];
+extern main_ability_jump_record_t g_main_jump_ability_data[12];
+extern main_ability_charge_record_t g_main_charge_ability_data[8];
 extern ability_data_t g_main_ability_data[];
 
 /* Indexed by reaction ability id - ABILITY_ID_REACTION_FIRST. */
