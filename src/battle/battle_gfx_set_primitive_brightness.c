@@ -1,10 +1,7 @@
-#include "psx/types.h"
+#include "fft/battle.h"
+#include "psx/libgpu.h"
 
-/* Set the colour of a sprite or textured quad to one grey level. */
-void battle_gfx_set_primitive_brightness(void* primitive, s32 brightness) {
-    u8* color = primitive;
-
-    color[4] = brightness;
-    color[5] = brightness;
-    color[6] = brightness;
+/* Set the colour in a GPU primitive's common header to one grey level. */
+void battle_gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness) {
+    setRGB0(primitive, brightness, brightness, brightness);
 }

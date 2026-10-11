@@ -2,16 +2,16 @@
 
 /* Clears a record's child-timeline state and sets the effect target it plays
  * on. */
-void battle_effect_reset_child_timeline(battle_effect_temp_data_t* data, s16 target_index) {
+void battle_effect_reset_child_timeline(effect_record_t* record, s16 target_index) {
     s32 index;
 
     index = 0;
     do {
-        data->step[index] = 0;
-        data->remaining[index] = 0;
-        data->keyframe[index] = 0;
+        record->timeline.child.step.values[index] = 0;
+        record->timeline.child.remaining.values[index] = 0;
+        record->timeline.child.keyframe.values[index] = 0;
         index++;
     } while (index < 13);
-    data->frame = 0;
-    data->target_index = target_index;
+    record->timeline_frame.s = 0;
+    record->target_index = target_index;
 }

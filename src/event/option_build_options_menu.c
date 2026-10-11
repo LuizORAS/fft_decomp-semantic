@@ -133,7 +133,8 @@ void option_build_options_menu(void) {
     battle_gfx_init_scaled_draw_area_packets(&page->title_area);
     battle_gfx_init_scaled_draw_area_packets(&page->value_area);
     battle_menu_init_semitransparent_sprt(&base->title);
-    battle_text_configure_sprite_vram(&g_option_menu_title_image_rect, entry->inner_width, 0x2C, &base->title, 0);
+    battle_text_configure_sprite_vram(
+        &g_option_menu_title_image_rect, entry->inner_width, 0x2C, (world_texture_prim_t*)&base->title, 0);
     image = battle_menu_build_and_upload_window_frame_image(
         entry->inner_width, 0x2C, &g_option_menu_title_image_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
     base->title.x0 = entry->window_x;
@@ -155,7 +156,8 @@ void option_build_options_menu(void) {
     battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&g_option_menu_entry_panel_rect, 0, 0);
     battle_thread_yield();
     battle_menu_init_semitransparent_sprt(&base->value);
-    battle_text_configure_sprite_vram(&g_option_menu_value_image_rect, 0x3C, 0x10, &base->value, 0);
+    battle_text_configure_sprite_vram(
+        &g_option_menu_value_image_rect, 0x3C, 0x10, (world_texture_prim_t*)&base->value, 0);
     base->value.x0 = entry->window_x + 0x5C;
     base->value.y0 = entry->window_y + entry->window_height + 0xF;
     battle_clear_menu_render_buffer(buffer, 0x1E0);
@@ -306,7 +308,7 @@ void option_build_options_menu(void) {
             battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 1, 0);
         }
         battle_gfx_build_scaled_draw_area_pair_swapped(
-            &page->title_area, &entry->window_x, i, g_main_gfx_screen_polarity);
+            &page->title_area, (const RECT*)&entry->window_x, i, g_main_gfx_screen_polarity);
         battle_gfx_build_scaled_draw_area_pair_swapped(&page->value_area, &value_rect, i, g_main_gfx_screen_polarity);
         battle_gfx_draw_or_append_gpu_primitive(&page->title_area.areas[1]);
         battle_gfx_draw_or_append_gpu_primitive(&page->icon_mode);

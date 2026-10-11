@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* volatile views: the target reloads these globals at every use. */
+/* Dropping either volatile view moves the mode load past the initial ENTD store. */
 extern volatile s32 g_battle_entd_selection_mode;
 
 /* Chooses the encounter's ENTD id and starts reading its ENTD file.

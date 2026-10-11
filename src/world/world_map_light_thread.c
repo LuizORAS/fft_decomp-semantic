@@ -44,7 +44,7 @@ void world_map_light_thread(void) {
         rotation.vz = (target.vectors.rotation[2] - start.vectors.rotation[2]) * i / frames + start.vectors.rotation[2];
         RotMatrix(&rotation, &light);
         MulMatrix(&light, &g_world_map_light_base_matrix);
-        world_script_copy_32_bytes(&colour, &g_world_map_light_color_matrix);
+        world_script_copy_matrix(&colour, &g_world_map_light_color_matrix);
         scale.vx = (target.vectors.scale[0] - start.vectors.scale[0]) * i / frames + start.vectors.scale[0];
         scale.vy = (target.vectors.scale[1] - start.vectors.scale[1]) * i / frames + start.vectors.scale[1];
         scale.vz = (target.vectors.scale[2] - start.vectors.scale[2]) * i / frames + start.vectors.scale[2];

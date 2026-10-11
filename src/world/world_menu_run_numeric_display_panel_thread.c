@@ -39,7 +39,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_menu_free_memory(buffer);
     for (i = 0; i < 18; i++) {
         world_menu_init_sprite(&record->sprites[i]);
-        world_gfx_init_image_loading(&record->sprites[i], &g_world_gfx_menu_image_source,
+        world_gfx_init_image_loading((world_texture_prim_t*)&record->sprites[i], &g_world_gfx_menu_image_source,
             &g_world_numeric_display_frame_rect, &g_world_numeric_display_image_params[i]);
     }
     world_script_copy_bytes(&record[1], record, 0x1AC);

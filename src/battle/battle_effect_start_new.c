@@ -15,10 +15,10 @@ void battle_effect_start_new(s32 ability_id, s32 target_mode, battle_effect_star
         effect_data.target[0].fields.target_id = target.misc_id;
         effect_data.target[0].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
     } else if (target_mode == BATTLE_EFFECT_START_ON_TILE) {
-        effect_data.target[0].tile.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
-        effect_data.target[0].tile.id.tile_x = target.tile->vx;
-        effect_data.target[0].tile.tile_y = target.tile->vz;
-        effect_data.target[0].tile.map_z = target.tile->vy;
+        effect_data.target[0].record.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        effect_data.target[0].record.id.tile_x = target.tile->vx;
+        effect_data.target[0].record.tile_y = target.tile->vz;
+        effect_data.target[0].record.map_z = target.tile->vy;
     } else {
         effect_data.target[0].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
         effect_data.target[0].fields.target_id = target.misc_id;

@@ -1051,18 +1051,6 @@ typedef enum battle_motion_flags {
  * Individual handlers narrow the record index or ignore unused arguments. */
 typedef s32 (*battle_effect_callback_t)(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
-/* The effect_record_t members the keyframe-action dispatchers use. A keyframe
- * action names callback slot 1-7, so the arrays are indexed up to 6 here; the
- * record holds four slots (retail effect files use 1-4). */
-typedef struct battle_keyframe_effect_state {
-    u8 _unused_00[2];
-    s16 record_index; /* 0x02 */
-    u8 _unused_04[0x22 - 4];
-    u8 callback_phase[7]; /* 0x22; effect_phase_e */
-    u8 _unused_29[0xd4 - 0x29];
-    battle_effect_callback_t callbacks[7]; /* 0xd4 */
-} battle_keyframe_effect_state_t;
-
 extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
 extern s32 g_main_system_animation_speed;
@@ -1153,11 +1141,11 @@ extern s32 g_battle_next_event_id;
 extern u16 g_battle_script_frame_result_override;
 extern VECTOR g_battle_script_light_scale;
 extern s32 g_battle_event_pending_loaded_evtchr_slot;
-extern u8 g_battle_script_light_base_direction_matrix[];
+extern MATRIX g_battle_script_light_base_direction_matrix;
 struct battle_gfx_packed_evtchr_record;
 extern struct battle_gfx_packed_evtchr_record* g_battle_event_loaded_evtchr_buffer;
 extern SVECTOR g_battle_script_light_angles;
-extern u8 g_battle_script_light_base_color_matrix[];
+extern MATRIX g_battle_script_light_base_color_matrix;
 extern u8 g_battle_event_status_masks[BATTLE_EVENT_STATUS_MASK_COUNT][8];
 
 extern u8
@@ -1284,7 +1272,7 @@ void battle_script_run_sprite_move(const event_sprite_move_parameters_t* paramet
 s32 battle_script_run_event_frame(u32* ot, u32 buttons);
 void battle_script_load_event_input_state(const world_menu_input_state_t* saved);
 void battle_camera_clear_zoom_variable_low_bit(void);
-void battle_script_copy_32_bytes(void* destination, const void* source);
+void battle_script_copy_matrix(MATRIX* destination, const MATRIX* source);
 s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode);
 u32 battle_script_get_event_initial_repeat_counter(void);
 s32 battle_script_is_deployment_running(u32* ot, u32 buttons);
@@ -2822,7 +2810,7 @@ typedef struct battle_effect_secondary_init {
             u8 result_animation; /* 0x07; battle_effect_hit_result_e */
         } fields;
         battle_effect_secondary_block_t block;
-        battle_effect_target_t tile;
+        battle_effect_target_t record;
     } target[16]; /* 0x04; ten-byte target blocks */
     union {
         struct {
@@ -2830,6 +2818,7 @@ typedef struct battle_effect_secondary_init {
             u8 caster_id;    /* 0xa6 */
         } fields;
         battle_effect_secondary_block_t block;
+        battle_effect_target_t record;
     } caster; /* 0xa4 */
     /* 0xae; living units that are neither targets nor the caster; copied to
      * g_battle_effect_palette_target_misc_ids. */
@@ -3774,20 +3763,71 @@ typedef struct battle_effect_sprite_block {
     struct battle_effect_sprite_part* frames[1];
 } battle_effect_sprite_block_t;
 
-/* The child timeline's state in an effect_record_t, as
- * battle_effect_reset_child_timeline clears it: thirteen tracks (the five
- * particle channels, three sound tracks, four colour tracks and a spare),
- * each with its keyframe index, the frames left in that keyframe and the
- * frames it has run. */
-typedef struct battle_effect_temp_data {
-    u8 _unused_00[0x26];
-    s16 target_index; /* 0x26 */
-    s16 frame;        /* 0x28 */
-    s16 keyframe[13];
-    s16 remaining[13];
-    s16 step[13];
-} battle_effect_temp_data_t;
-typedef char battle_temp_effect_data_size_must_be_0x78[sizeof(battle_effect_temp_data_t) == 0x78 ? 1 : -1];
+/* Child timeline counters: twelve active tracks and one extra reset slot. */
+typedef union battle_effect_child_track_counters {
+    s16 values[13];
+    struct {
+        s16 particle[5];
+        s16 sound[3];
+        s16 color[4];
+        s16 _unused_18; /* extra halfword cleared by the child reset */
+    } tracks;
+} battle_effect_child_track_counters_t;
+
+typedef union battle_effect_child_track_steps {
+    s16 values[13];
+    struct {
+        u16 particle[5];     /* loaded unsigned by opcode 28 */
+        u8 _unused_0a[0x10]; /* remaining slots are reset but not stepped */
+    } tracks;
+} battle_effect_child_track_steps_t;
+
+typedef struct battle_effect_child_timeline_state {
+    battle_effect_child_track_counters_t keyframe;  /* 0x00; record +0x2a */
+    battle_effect_child_track_counters_t remaining; /* 0x1a; record +0x44 */
+    battle_effect_child_track_steps_t step;         /* 0x34; record +0x5e */
+} battle_effect_child_timeline_state_t;
+typedef char
+    battle_effect_child_timeline_state_size_must_be_0x4e[sizeof(battle_effect_child_timeline_state_t) == 0x4e ? 1 : -1];
+
+/* Parent counters: ten particle tracks, fourteen colour/sound tracks and
+ * two extra halfwords. The reset clears all 26, not just the 24 stepped tracks. */
+typedef union battle_effect_parent_track_counters {
+    s16 values[26];
+    struct {
+        s16 particle[2][5];
+        s16 track[7][2];   /* four colour tracks then three sound tracks, per phase */
+        s16 _unused_30[2]; /* extra halfwords cleared by the parent reset */
+    } tracks;
+} battle_effect_parent_track_counters_t;
+
+typedef union battle_effect_parent_track_steps {
+    s16 values[26];
+    struct {
+        s16 particle[2][5];
+        u8 _unused_14[0x10]; /* reset only */
+        /* Six two-byte addresses inside the step array. Opcode 29 passes each
+         * high byte to the sound helper's unused argument; no sound helper reads it. */
+        u8 _unknown_24[3][2][2]; /* record +0xba; the original purpose is unknown */
+        s16 _unused_30[2];       /* extra halfwords cleared by the parent reset */
+    } tracks;
+} battle_effect_parent_track_steps_t;
+
+typedef struct battle_effect_parent_timeline_state {
+    s16 spawn_countdown;                             /* 0x00; record +0x2a */
+    u16 spawned_count;                               /* 0x02; record +0x2c */
+    battle_effect_parent_track_counters_t keyframe;  /* 0x04; record +0x2e */
+    battle_effect_parent_track_counters_t remaining; /* 0x38; record +0x62 */
+    battle_effect_parent_track_steps_t step;         /* 0x6c; record +0x96 */
+    u8 _unused_a0[6];                                /* record +0xca..0xcf; untouched by both timeline views */
+} battle_effect_parent_timeline_state_t;
+
+/* Opcodes 28 and 29 interpret the same record storage differently. */
+typedef union battle_effect_record_timeline {
+    battle_effect_child_timeline_state_t child;
+    battle_effect_parent_timeline_state_t parent;
+} battle_effect_record_timeline_t;
+typedef char battle_effect_record_timeline_size_must_be_0xa6[sizeof(battle_effect_record_timeline_t) == 0xa6 ? 1 : -1];
 
 /* effect_list_node_t.kind: how battle_effect_render_particle_sprite places the sprite, and the
  * FRAME_CHANGED bit it sets when the sequence picks another frame. */
@@ -3922,17 +3962,18 @@ typedef struct effect_record {
     s16 frame_counter; /* 0x20: frames the script has run, 0 on its first; the frame of script-spawned emitters */
     u8 callback_phase[4]; /* 0x22: effect_phase_e of the handler in each callback slot */
     s16 target_index;     /* 0x26: the effect target (g_battle_effect_coord_data.targets) the record plays on */
-    s16 timeline_frame;   /* 0x28: frames its timeline (opcode 28 or 29) has advanced */
-    /* 0x2a: the timeline's keyframe state, laid out by the opcode that steps it:
-     * battle_effect_temp_data_t for the child timeline, the file-local
-     * battle_effect_timeline_state_t of opcode 29 for the parent timeline */
-    u8 _unused_2a[0xa6];
-    effect_work_record_t* work_head;        /* 0xd0: its particles */
-    battle_effect_callback_t callbacks[4];  /* 0xd4: the native handler bound to each callback slot */
-    void* work_slots[4];                    /* 0xe4: the work block each callback slot's handler allocated */
-    battle_effect_callback_t file_function; /* 0xf4: the native function script opcode 07 last called */
+    battle_unit_misc_halfword_t timeline_frame; /* 0x28; signed stepping, unsigned timing-curve lookup */
+    battle_effect_record_timeline_t timeline;   /* 0x2a */
+    effect_work_record_t* work_head;            /* 0xd0: its particles */
+    battle_effect_callback_t callbacks[4];      /* 0xd4: the native handler bound to each callback slot */
+    void* work_slots[4];                        /* 0xe4: the work block each callback slot's handler allocated */
+    battle_effect_callback_t file_function;     /* 0xf4: the native function script opcode 07 last called */
 } effect_record_t;
 typedef char assert_effect_record_size[sizeof(effect_record_t) == 0xf8 ? 1 : -1];
+typedef char
+    effect_record_timeline_offset_must_be_0x2a[((unsigned long)&((effect_record_t*)0)->timeline == 0x2a) ? 1 : -1];
+typedef char
+    effect_record_work_head_offset_must_be_0xd0[((unsigned long)&((effect_record_t*)0)->work_head == 0xd0) ? 1 : -1];
 
 /* One playback step of the animation script referenced by an effect slot:
  * a hold count and the frame id written to the slot. */
@@ -3989,14 +4030,6 @@ typedef struct battle_effect_slot {
     battle_effect_motion_t motion;       /* 0x98 */
 } battle_effect_slot_t;
 typedef char assert_battle_effect_slot_size[sizeof(battle_effect_slot_t) == 0xcc ? 1 : -1];
-
-/* The effect_record_t view of battle_effect_get_timing_curve_value and
- * battle_effect_get_animation_timing_curve_value: they load the record's
- * timeline frame unsigned. */
-typedef struct battle_effect_timing_entry {
-    u8 _unused_00[0x28];
-    u16 timeline_frame; /* 0x28: the nibble of the timing curve to read; an odd frame is a high nibble */
-} battle_effect_timing_entry_t;
 
 /* The spawn block at 0x14-0x4b of an emitter record, as the
  * battle_effect_interpolate_emitter_* helpers read it; the native renderers
@@ -4767,8 +4800,8 @@ void battle_effect_shift_vector_left_12(const VECTOR* src, VECTOR* dst);
 void battle_effect_shift_vector_right_12(const s32* src, s32* dst);
 void battle_effect_start_group(s32 group, s32 clut_index);
 
-void battle_effect_step_emitter_timeline(battle_keyframe_effect_state_t* state, battle_effect_keyframe_table_t* table,
-    s16* index, s16* remaining, s16* step);
+void battle_effect_step_emitter_timeline(
+    effect_record_t* state, battle_effect_keyframe_table_t* table, s16* index, s16* remaining, s16* step);
 
 void battle_effect_step_motion(battle_effect_motion_t* motion);
 void battle_effect_set_gravity(battle_effect_gravity_t* src);
@@ -4806,8 +4839,8 @@ void battle_effect_draw_projectile_model(
 
 s32 battle_effect_end_secondary_on_current_unit(void);
 void battle_effect_find_projectile_xyz_along_trajectory(const VECTOR* src, s32 total, s32 current, VECTOR* dst);
-s32 battle_effect_get_animation_timing_curve_value(battle_effect_timing_entry_t* entry);
-s32 battle_effect_get_timing_curve_value(battle_effect_timing_entry_t* entry);
+s32 battle_effect_get_animation_timing_curve_value(effect_record_t* record);
+s32 battle_effect_get_timing_curve_value(effect_record_t* record);
 s32 battle_effect_init_data(void);
 void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_group, s32 animation_index);
 void battle_effect_init_trap_animation(s32 group, u16 clut, battle_effect_slot_t* slot);
@@ -4818,8 +4851,8 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
 void battle_effect_resolve_target_render_coords(
     s32 add_depth, s32 target_index, battle_effect_coord_data_t* coord_data, SVECTOR* out);
 
-void battle_effect_run_keyframe_actions(u16 flags, u8 target, battle_keyframe_effect_state_t* state);
-void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_effect_state_t* state);
+void battle_effect_run_keyframe_actions(u16 flags, u8 target, effect_record_t* state);
+void battle_effect_run_keyframe_actions_all_targets(u16 flags, effect_record_t* state);
 s32 battle_effect_set_secondary_teleport_by_misc_id(u32 misc_id);
 s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_position, s32 target_id);
 void battle_effect_start_new(s32 ability_id, s32 target_mode, battle_effect_start_target_data_t target);
@@ -4855,7 +4888,8 @@ s32 battle_effect_alloc_slot(void);
 battle_effect_sprite_block_t* battle_effect_alloc_sprite_block(u8 sprite_count);
 s16 battle_effect_alloc_state_record(void);
 effect_work_record_t* battle_effect_alloc_work_record(s16 record_index, s16 kind);
-void battle_effect_reset_child_timeline(battle_effect_temp_data_t* data, s16 target_index);
+void battle_effect_reset_child_timeline(effect_record_t* record, s16 target_index);
+void battle_effect_reset_parent_timeline(effect_record_t* record);
 void battle_effect_free_list_node(effect_list_node_t* node);
 void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work);
 void battle_effect_free_slot(u8 id);
@@ -6142,7 +6176,7 @@ void battle_gfx_reset_unit_graphics_load_state(void);
 s32 battle_gfx_save_evtchr_slot(s32 slot_index);
 void battle_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 page);
 void battle_gfx_set_draw_mode_from_rect(DR_MODE* mode, const RECT* rect);
-void battle_gfx_set_primitive_brightness(void* primitive, s32 brightness);
+void battle_gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
 void battle_gfx_start_screen_color_modulation_fade(u16 blend_mode, u16 red, u16 green, u16 blue, u16 duration);
 s32 battle_gfx_step_load_unit_shp_seq_data(void);
 
@@ -8848,7 +8882,7 @@ void battle_menu_load_selected_unit(void);
 void battle_menu_update_panel_fade(void);
 void battle_menu_draw_active_window_frames(void);
 void battle_gfx_build_scaled_draw_area_pair_swapped(
-    world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag);
+    world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
 void battle_menu_build_ability_preview_at_list(void);
 void battle_menu_run_scrolling_ability_list_thread(void);
 void battle_menu_select_unit_action_slots_thread(void);
@@ -9083,7 +9117,8 @@ void battle_text_restore_section_pointers(void);
 void battle_text_save_section_pointers(void);
 void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
 void battle_text_character_handling_thread(void);
-void battle_text_configure_sprite_vram(RECT* rect, s16 width, s16 height, SPRT* sprite, s32 clut_offset);
+void battle_text_configure_sprite_vram(
+    RECT* rect, s16 width, s16 height, world_texture_prim_t* primitive, s32 clut_offset);
 u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 s32 battle_text_count_decimal_digits(s32 value);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);

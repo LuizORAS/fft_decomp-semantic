@@ -5,7 +5,7 @@
  * and 8-15 trigger unit reactions (bit 3 selects the caster entry), bits 0-2
  * register a callback slot.
  */
-void battle_effect_run_keyframe_actions(u16 flags, u8 target, battle_keyframe_effect_state_t* state) {
+void battle_effect_run_keyframe_actions(u16 flags, u8 target, effect_record_t* state) {
     s32 misc_id;
     u32 animation;
     u16 slot;

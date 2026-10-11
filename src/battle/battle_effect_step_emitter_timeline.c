@@ -17,8 +17,8 @@
  * told to destroy its work on the call made with two frames of the keyframe
  * left. index, remaining and step are the channel's keyframe, the frames left
  * in it and the frames it has run. */
-void battle_effect_step_emitter_timeline(battle_keyframe_effect_state_t* state, battle_effect_keyframe_table_t* table,
-    s16* index, s16* remaining, s16* step) {
+void battle_effect_step_emitter_timeline(
+    effect_record_t* state, battle_effect_keyframe_table_t* table, s16* index, s16* remaining, s16* step) {
     s16 k;
     s32 sel;
     u16* actions;

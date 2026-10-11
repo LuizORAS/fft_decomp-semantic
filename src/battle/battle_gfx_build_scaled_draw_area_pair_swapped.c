@@ -8,7 +8,7 @@
  * to the right-hand page (x + 0x80, y + 0x78); others are moved left.
  */
 void battle_gfx_build_scaled_draw_area_pair_swapped(
-    world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag) {
+    world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag) {
     s32 percent;
     s16 width;
     s16 height;
@@ -21,7 +21,7 @@ void battle_gfx_build_scaled_draw_area_pair_swapped(
         step = 11;
     }
     percent = g_battle_menu_zoom_percentages[step];
-    battle_copy_bytes(&packets->rects[0], geometry, 8);
+    battle_copy_bytes(&packets->rects[0], geometry, sizeof(*geometry));
     if (packets->rects[0].x < 0x80) {
         packets->rects[0].x += 0x80;
         packets->rects[0].y += 0x78;

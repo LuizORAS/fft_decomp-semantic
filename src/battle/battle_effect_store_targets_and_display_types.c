@@ -57,10 +57,10 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
         }
     } else if (unit->strike.skip_empty_tile_effect == 0) {
         init.target_count = 1;
-        init.target[0].tile.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
-        init.target[0].tile.id.tile_x = unit->strike.target_new_x;
-        init.target[0].tile.tile_y = unit->strike.target_new_y;
-        init.target[0].tile.map_z = unit->strike.target_new_map_level;
+        init.target[0].record.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        init.target[0].record.id.tile_x = unit->strike.target_new_x;
+        init.target[0].record.tile_y = unit->strike.target_new_y;
+        init.target[0].record.map_z = unit->strike.target_new_map_level;
     }
     spectators = 0;
     for (i = 0; i < 0x10; i++) {

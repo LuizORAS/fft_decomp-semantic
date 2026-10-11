@@ -95,27 +95,32 @@ void world_menu_display_hovered_unit_stats(
         world_gfx_init_default_poly_ft4(&page->quads[frame]);
     }
     world_gfx_init_default_poly_ft4(&page->portrait);
-    world_text_configure_sprite_vram(&rects[0], 0x28, 0x28, &page->quads[0], 2);
-    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &page->quads[1], 2);
+    world_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (world_texture_prim_t*)&page->quads[0], 2);
+    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&page->quads[1], 2);
     params = g_world_unit_status_quad_image_params_by_mode[mode];
     if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
-        world_gfx_init_image_loading(&page->quads[4], &g_world_gfx_menu_image_source, frame_rect, &params[4]);
+        world_gfx_init_image_loading(
+            (world_texture_prim_t*)&page->quads[4], &g_world_gfx_menu_image_source, frame_rect, &params[4]);
         for (frame = 0; frame < 2; frame++, params++) {
-            world_gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+            world_gfx_init_image_loading(
+                (world_texture_prim_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
             page->quads[frame].clut = 0x7CBC;
         }
         world_menu_display_projected_action_effect(
             &page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
     } else if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         for (frame = 0; frame < 2; frame++, params++) {
-            world_gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+            world_gfx_init_image_loading(
+                (world_texture_prim_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
         if (text_id != 0) {
-            world_gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+            world_gfx_init_image_loading(
+                (world_texture_prim_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
     } else {
         for (frame = 0; frame < 4; frame++, params++) {
-            world_gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+            world_gfx_init_image_loading(
+                (world_texture_prim_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
     }
     world_script_copy_bytes(&page[1], page, sizeof(world_unit_status_page_t));
@@ -190,7 +195,8 @@ void world_menu_display_hovered_unit_stats(
             world_script_copy_bytes(
                 &params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
-                world_gfx_init_image_loading(&page->sprites[i], &g_world_gfx_menu_image_source, frame_rect, params);
+                world_gfx_init_image_loading(
+                    (world_texture_prim_t*)&page->sprites[i], &g_world_gfx_menu_image_source, frame_rect, params);
             }
         }
         if (mode != UNIT_STATS_PANEL_ATTACK_CASTER) {

@@ -6,7 +6,7 @@
  * caster entry instead of the whole target list; bits 0-2 register a callback
  * slot.
  */
-void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_effect_state_t* state) {
+void battle_effect_run_keyframe_actions_all_targets(u16 flags, effect_record_t* state) {
     s32 misc_id;
     u16 animation;
     u16 slot;

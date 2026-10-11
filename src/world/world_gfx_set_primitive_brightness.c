@@ -1,9 +1,7 @@
+#include "fft/world.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
-/* Set the colour of a sprite or textured quad to one grey level. */
-void world_gfx_set_primitive_brightness(void* primitive, s32 brightness) {
-    SPRT* sprite = primitive;
-
-    setRGB0(sprite, brightness, brightness, brightness);
+/* Set the colour in a GPU primitive's common header to one grey level. */
+void world_gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness) {
+    setRGB0(primitive, brightness, brightness, brightness);
 }

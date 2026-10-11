@@ -107,11 +107,12 @@ void world_menu_unit_status_banner_thread(void) {
     for (frame = 0; frame < 4; frame++) {
         world_gfx_init_default_poly_ft4(&summary->portrait[frame]);
     }
-    world_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &summary->value_sprites[0], 2);
-    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &summary->value_sprites[1], 2);
+    world_text_configure_sprite_vram(&rects[0], 0x38, 0x28, (world_texture_prim_t*)&summary->value_sprites[0], 2);
+    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&summary->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
-        world_gfx_init_image_loading(&summary->value_sprites[frame], g_world_editor_numeric_geometry,
-            &g_world_gfx_portrait_origin, &g_world_unit_summary_value_sprite_params[frame]);
+        world_gfx_init_image_loading((world_texture_prim_t*)&summary->value_sprites[frame],
+            g_world_editor_numeric_geometry, &g_world_gfx_portrait_origin,
+            &g_world_unit_summary_value_sprite_params[frame]);
     }
     if (state->team_kind >= 4) {
         state->team_kind = 0;
@@ -124,8 +125,9 @@ void world_menu_unit_status_banner_thread(void) {
             &g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params, 0xC);
     }
     for (frame = 0; frame < 7; frame++) {
-        world_gfx_init_image_loading(&summary->label_sprites[frame], g_world_editor_numeric_geometry,
-            &g_world_gfx_portrait_origin, &g_world_unit_summary_label_sprite_params[frame]);
+        world_gfx_init_image_loading((world_texture_prim_t*)&summary->label_sprites[frame],
+            g_world_editor_numeric_geometry, &g_world_gfx_portrait_origin,
+            &g_world_unit_summary_label_sprite_params[frame]);
     }
     world_script_copy_bytes(summary + 1, summary, sizeof(battle_menu_status_panel_editor_packet_t));
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
@@ -134,15 +136,16 @@ void world_menu_unit_status_banner_thread(void) {
     cur = (u8*)&status->sprites[0];
     world_menu_init_sprite_array((SPRT*)cur, 7, 0x7C3C);
     world_gfx_init_default_poly_ft4(&status->portrait);
-    world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, cur, 0);
-    world_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &status->sprites[1], 0);
-    world_text_configure_sprite_vram(&rects[4], 0x10, 0xA, &status->sprites[2], 0);
-    world_text_configure_sprite_vram(&rects[5], 0x10, 0xA, &status->sprites[3], 0);
+    world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (world_texture_prim_t*)cur, 0);
+    world_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[1], 0);
+    world_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[2], 0);
+    world_text_configure_sprite_vram(&rects[5], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        world_gfx_init_image_loading(&status->sprites[frame], g_world_editor_numeric_geometry,
+        world_gfx_init_image_loading((world_texture_prim_t*)&status->sprites[frame], g_world_editor_numeric_geometry,
             &g_world_unit_status_panel_origin, &g_world_unit_status_sprite_params[frame]);
     }
-    world_gfx_init_image_loading(&status->portrait, g_world_editor_numeric_geometry, &g_world_unit_status_panel_origin,
+    world_gfx_init_image_loading((world_texture_prim_t*)&status->portrait, g_world_editor_numeric_geometry,
+        &g_world_unit_status_panel_origin,
         (const world_gfx_image_load_parameters_t*)g_world_unit_status_portrait_params);
     if (state->team_kind == 1) {
         status->portrait.clut = 0x7FFD;
@@ -169,7 +172,7 @@ void world_menu_unit_status_banner_thread(void) {
             world_script_copy_bytes(
                 &g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params, 0xC);
         }
-        world_gfx_init_image_loading(&summary->label_sprites[6], g_world_editor_numeric_geometry,
+        world_gfx_init_image_loading((world_texture_prim_t*)&summary->label_sprites[6], g_world_editor_numeric_geometry,
             &g_world_gfx_portrait_origin, &g_world_unit_summary_label_sprite_params[6]);
         if (state->team_kind == 1) {
             status->portrait.clut = 0x7FFD;

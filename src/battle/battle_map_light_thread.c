@@ -55,8 +55,8 @@ void battle_map_light_thread(void) {
         color.vz = (light_values.vectors.target.rotation[2] - light_values.vectors.start.rotation[2]) * step / frames
             + light_values.vectors.start.rotation[2];
         RotMatrix(&color, &rotation);
-        MulMatrix(&rotation, (MATRIX*)g_battle_script_light_base_direction_matrix);
-        battle_script_copy_32_bytes(&matrix, g_battle_script_light_base_color_matrix);
+        MulMatrix(&rotation, &g_battle_script_light_base_direction_matrix);
+        battle_script_copy_matrix(&matrix, &g_battle_script_light_base_color_matrix);
         translation.vx = (light_values.vectors.target.scale[0] - light_values.vectors.start.scale[0]) * step / frames
             + light_values.vectors.start.scale[0];
         translation.vy = (light_values.vectors.target.scale[1] - light_values.vectors.start.scale[1]) * step / frames

@@ -1,15 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Time scale of the child timeline's frame entry->timeline_frame: one of the
+/* Time scale of the child timeline's frame record->timeline_frame.u: one of the
  * 4-bit values the effect file's timing-curve section packs two to a byte, low
  * nibble first. */
-s32 battle_effect_get_animation_timing_curve_value(battle_effect_timing_entry_t* entry) {
+s32 battle_effect_get_animation_timing_curve_value(effect_record_t* record) {
     s16 packed_index;
     s32 offset;
     s32 packed_value;
 
-    packed_index = entry->timeline_frame;
+    packed_index = record->timeline_frame.u;
     offset = packed_index / 2;
     packed_value = g_battle_effect_timing_curves->child_timeline[offset];
     if (packed_index & 1) {

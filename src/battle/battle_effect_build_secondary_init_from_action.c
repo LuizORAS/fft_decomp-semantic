@@ -53,9 +53,9 @@ void battle_effect_build_secondary_init_from_action(
             }
         }
     } else {
-        init->target[0].tile.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
-        init->target[0].tile.id.tile_x = g_battle_cursor_x;
-        init->target[0].tile.map_z = g_battle_cursor_z;
-        init->target[0].tile.tile_y = g_battle_cursor_y;
+        init->target[0].record.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        init->target[0].record.id.tile_x = g_battle_cursor_x;
+        init->target[0].record.map_z = g_battle_cursor_z;
+        init->target[0].record.tile_y = g_battle_cursor_y;
     }
 }

@@ -256,7 +256,7 @@ void world_script_blue_remove_unit(s32 unit_id);
 void world_script_change_stats(const event_change_stats_parameters_t* parameters);
 void world_camera_clear_zoom_variable_low_bit(void);
 void world_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
-void world_script_copy_32_bytes(void* destination, const void* source);
+void world_script_copy_matrix(MATRIX* destination, const MATRIX* source);
 void world_script_copy_bytes(void* destination, const void* source, s32 count);
 void world_script_earthquake_start(void);
 void world_script_toggle_message_portrait_flip(const u8* parameters);
@@ -979,7 +979,7 @@ typedef enum world_text_data {
 } world_text_data_e;
 u8* world_text_bind_section_data(u32 index);
 void world_gfx_build_scaled_draw_area_pair_swapped(
-    world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag);
+    world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
 void world_menu_clear_selection_record(s32 index);
 void world_menu_clear_selection_records(void);
 void world_gfx_clear_tpage7_vram_allocation_grid(void);
@@ -1009,8 +1009,8 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
     void* unused_14, void* unused_15, TILE* tiles, void* unused_17, void* unused_18, void* unused_19, void* unused_20,
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
-void world_gfx_init_image_loading(void* prim, const world_image_location_t* base_load, const RECT* base_screen,
-    const world_gfx_image_load_parameters_t* parameters);
+void world_gfx_init_image_loading(world_texture_prim_t* primitive, const world_image_location_t* base_load,
+    const RECT* base_screen, const world_gfx_image_load_parameters_t* parameters);
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
@@ -1023,7 +1023,7 @@ void world_gfx_set_blit_dest_position(s32 x, s32 y);
 void world_gfx_set_fade_disabled(u8 disabled);
 void world_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 image_type);
 void world_gfx_set_portrait_poly_texture(POLY_FT4* poly, s32 code);
-void world_gfx_set_primitive_brightness(void* primitive, s32 brightness);
+void world_gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
 void world_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
 void world_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* frame);
 
@@ -2497,7 +2497,8 @@ s32 world_menu_get_party_unit_name_id(void);
 u8* world_menu_get_script(s32 index);
 s32 world_menu_get_selected_unit_hp_bonus(s32 unused_row);
 s32 world_menu_get_selected_unit_mp_bonus(s32 unused_row);
-void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, void* prim, s32 clut_offset);
+void world_text_configure_sprite_vram(
+    RECT* rect, s32 width, s32 height, world_texture_prim_t* primitive, s32 clut_offset);
 s32 world_menu_is_busy(s32 unused);
 void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y);
 u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
@@ -2519,7 +2520,7 @@ u8* world_menu_script_draw_sprite(u8* cmd);
 world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_number_command_t* command);
 void world_menu_scroll_list_page(s32 dir, world_menu_list_record_t* list);
 void world_menu_select_icon_cluts(world_menu_icon_sprites_t* menu);
-void world_menu_select_sprite_clut(void* prim);
+void world_menu_select_sprite_clut(world_texture_prim_t* primitive);
 void world_menu_add_gradient_line_primitive(point16_t* endpoints, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void* world_menu_alloc_buffer(s32 size);
 void* world_menu_alloc_ui_buffer(s32 size);

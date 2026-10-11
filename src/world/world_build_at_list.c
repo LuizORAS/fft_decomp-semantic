@@ -89,8 +89,8 @@ void world_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading(&page->frame, (const world_image_location_t*)entry, (const RECT*)&entry->window_x,
-        (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, (const world_image_location_t*)entry,
+        (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -273,7 +273,7 @@ void world_build_at_list(void) {
             world_gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         world_gfx_build_scaled_draw_area_pair_swapped(
-            &page->draw_areas, &entry->window_x, i, g_active_graphics_buffer_index);
+            &page->draw_areas, (const RECT*)&entry->window_x, i, g_active_graphics_buffer_index);
         world_menu_select_icon_sprite_clut(page->icons.icons[0]);
         if (entry->header_id >= 5) {
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);

@@ -8,7 +8,7 @@
  * to the right-hand page (x + 0x80, y + 0x78); others are moved left.
  */
 void world_gfx_build_scaled_draw_area_pair_swapped(
-    world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag) {
+    world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag) {
     s32 percent;
     s16 w;
     s16 h;
@@ -21,7 +21,7 @@ void world_gfx_build_scaled_draw_area_pair_swapped(
         step = 11;
     }
     percent = g_world_menu_cursor_zoom_percentages[step];
-    world_script_copy_bytes(&packets->rects[0], geometry, 8);
+    world_script_copy_bytes(&packets->rects[0], geometry, sizeof(*geometry));
     if (packets->rects[0].x < 0x80) {
         packets->rects[0].x += 0x80;
         packets->rects[0].y += 0x78;

@@ -100,8 +100,8 @@ void battle_menu_display_hovered_unit_stats(
         battle_gfx_init_default_poly_ft4(&page->quads[frame]);
     }
     battle_gfx_init_default_poly_ft4(&page->portrait);
-    battle_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (SPRT*)&page->quads[0], 2);
-    battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (SPRT*)&page->quads[1], 2);
+    battle_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (world_texture_prim_t*)&page->quads[0], 2);
+    battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&page->quads[1], 2);
     params = g_battle_unit_status_quad_image_params_by_mode[mode];
     if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
         battle_gfx_init_image_loading(

@@ -41,7 +41,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
         battle_gfx_init_image_loading((world_texture_prim_t*)&page->sprites[i], &g_battle_menu_texture_location,
             &g_battle_tile_info_image_location, &g_battle_tile_info_image_params[i]);
     }
-    battle_text_configure_sprite_vram(&rect, 0x18, 0x10, &page->sprites[0], 0);
+    battle_text_configure_sprite_vram(&rect, 0x18, 0x10, (world_texture_prim_t*)&page->sprites[0], 0);
     battle_copy_bytes(
         &g_battle_menu_height_display_pages[1], &g_battle_menu_height_display_pages[0], sizeof(world_menu_quad_page_t));
 

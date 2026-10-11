@@ -111,8 +111,8 @@ void world_build_options_menu(void) {
     base->thumb.h = 8;
     base->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&base->frame);
-    world_gfx_init_image_loading(&base->frame, (const world_image_location_t*)entry, (const RECT*)&entry->window_x,
-        (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading((world_texture_prim_t*)&base->frame, (const world_image_location_t*)entry,
+        (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
     base->arrow_marks[0].w = 6;
     base->arrow_marks[0].h = 0xC;
@@ -140,7 +140,8 @@ void world_build_options_menu(void) {
     world_gfx_init_scaled_draw_area_packets(&page->title_area);
     world_gfx_init_scaled_draw_area_packets(&page->value_area);
     world_menu_init_sprite(&base->title);
-    world_text_configure_sprite_vram(&g_world_options_menu_title_rect, entry->inner_width, 0x2C, &base->title, 0);
+    world_text_configure_sprite_vram(
+        &g_world_options_menu_title_rect, entry->inner_width, 0x2C, (world_texture_prim_t*)&base->title, 0);
     image = world_menu_build_and_upload_window_frame_image(
         entry->inner_width, 0x2C, &g_world_options_menu_title_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
     base->title.x0 = entry->window_x;
@@ -162,7 +163,8 @@ void world_build_options_menu(void) {
     world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
     world_thread_yield();
     world_menu_init_sprite(&base->value);
-    world_text_configure_sprite_vram(&g_world_options_menu_value_rect, 0x3C, 0x10, &base->value, 0);
+    world_text_configure_sprite_vram(
+        &g_world_options_menu_value_rect, 0x3C, 0x10, (world_texture_prim_t*)&base->value, 0);
     base->value.x0 = entry->window_x + 0x5C;
     base->value.y0 = entry->window_y + entry->window_height + 0xF;
     world_clear_menu_render_buffer(buffer, 0x1E0);
@@ -283,9 +285,9 @@ void world_build_options_menu(void) {
             }
         }
         page->frame.v0 = ring * 16 + accum - 2;
-        world_menu_select_sprite_clut(&page->title);
-        world_menu_select_sprite_clut(&page->value);
-        world_menu_select_sprite_clut(frame);
+        world_menu_select_sprite_clut((world_texture_prim_t*)&page->title);
+        world_menu_select_sprite_clut((world_texture_prim_t*)&page->value);
+        world_menu_select_sprite_clut((world_texture_prim_t*)frame);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
@@ -312,7 +314,7 @@ void world_build_options_menu(void) {
             world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&entry->window_x, 1, 0);
         }
         world_gfx_build_scaled_draw_area_pair_swapped(
-            &page->title_area, &entry->window_x, i, g_active_graphics_buffer_index);
+            &page->title_area, (const RECT*)&entry->window_x, i, g_active_graphics_buffer_index);
         world_gfx_build_scaled_draw_area_pair_swapped(
             &page->value_area, &value_rect, i, g_active_graphics_buffer_index);
         world_gfx_draw_or_append_gpu_primitive(&page->title_area.areas[1]);
