@@ -12,7 +12,7 @@ s32 battle_ai_select_initial_action(void) {
 
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
-        switch (g_battle_ai_data_base.initial_targeting_state) {
+        switch (g_battle_ai_data_base.initial_selection_stage) {
         case BATTLE_AI_INITIAL_SELECTION_STATUS:
             goto status_action;
         case BATTLE_AI_INITIAL_SELECTION_RETREAT:
@@ -33,7 +33,7 @@ s32 battle_ai_select_initial_action(void) {
 status_action:
     result = battle_ai_choose_status_action();
     if (result == -1) {
-        ai->initial_targeting_state = BATTLE_AI_INITIAL_SELECTION_STATUS;
+        ai->initial_selection_stage = BATTLE_AI_INITIAL_SELECTION_STATUS;
         return -1;
     }
     if (result != 0)
@@ -49,7 +49,7 @@ status_action:
     /* Resume after the save; restore the decision only when this pass ends. */
     fallback_action:
         if (battle_ai_select_retreat_action() == -1) {
-            ai->initial_targeting_state = BATTLE_AI_INITIAL_SELECTION_RETREAT;
+            ai->initial_selection_stage = BATTLE_AI_INITIAL_SELECTION_RETREAT;
             return -1;
         }
         battle_ai_transfer_halfword_values(
@@ -59,7 +59,7 @@ status_action:
 native_action:
     result = battle_ai_handle_autobattle();
     if (result == -1) {
-        ai->initial_targeting_state = BATTLE_AI_INITIAL_SELECTION_AUTOBATTLE;
+        ai->initial_selection_stage = BATTLE_AI_INITIAL_SELECTION_AUTOBATTLE;
         return -1;
     }
     if (result != 0)
@@ -67,7 +67,7 @@ native_action:
     ai->resume_pending = 0;
 general_action:
     if (battle_ai_run_non_specific_autobattle() == -1) {
-        ai->initial_targeting_state = BATTLE_AI_INITIAL_SELECTION_GENERAL;
+        ai->initial_selection_stage = BATTLE_AI_INITIAL_SELECTION_GENERAL;
         return -1;
     }
     return 0;

@@ -62,7 +62,7 @@ typedef enum battle_ai_command_kind {
 } battle_ai_command_kind_e;
 
 /* Stored resume stages are byte fields; each policy has its own stage domain. */
-/* Only 0, 2, 3 and 7 are saved; other values resume the general search. */
+/* Sparse resume tags saved when initial action selection yields. */
 typedef enum battle_ai_initial_selection_stage {
     BATTLE_AI_INITIAL_SELECTION_STATUS = 0,
     BATTLE_AI_INITIAL_SELECTION_RETREAT = 2,
@@ -529,7 +529,7 @@ typedef struct battle_ai_data {
     u16 attack_origin_tiles[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT]; /* 0x0bdc */
     u16 walkable_tiles[MAP_TERRAIN_LAYER_COUNT][BATTLE_AI_GRID_ROW_COUNT];      /* 0x0c24 */
     u8 _unused_0c6c;
-    u8 initial_targeting_state; /* 0x0c6d; battle_ai_initial_selection_stage_e */
+    u8 initial_selection_stage; /* 0x0c6d; battle_ai_initial_selection_stage_e */
     u8 action_selection_phase;  /* 0x0c6e; status, targeted and recovery selection stages */
     u8 _unused_0c6f;
     u8 outcome_evaluation_state;               /* 0x0c70; battle_ai_ability_evaluation_stage_e */
@@ -546,7 +546,7 @@ typedef struct battle_ai_data {
     u8 movable_tile_count;       /* 0x0cbc */
     u8 ability_counter;          /* 0x0cbd */
     u8 has_mp_recovery_ability;  /* 0x0cbe; a usable ability affects MP and does not target enemies */
-    u8 crystal_treasure_status;  /* 0x0cbf; 1 crystal, 2 treasure */
+    u8 tile_pickup_kind;         /* 0x0cbf; battle_ai_tile_pickup_kind_e */
     u8 _unused_0cc0[4];
     battle_ai_coords_t candidate_coords[BATTLE_AI_MOVEMENT_SCENARIO_COUNT]; /* 0x0cc4; indexed by movement_scenario */
     u8 _unused_0cd0[4];
@@ -688,6 +688,13 @@ typedef enum battle_ai_tile_mask_mode {
     BATTLE_AI_TILE_MASK_RANGE_PLUS_AOE = 2,
     BATTLE_AI_TILE_MASK_EXPLICIT = 3,
 } battle_ai_tile_mask_mode_e;
+
+/* Pickup occupant on the current action tile; treasure takes precedence. */
+typedef enum battle_ai_tile_pickup_kind {
+    BATTLE_AI_TILE_PICKUP_NONE = 0,
+    BATTLE_AI_TILE_PICKUP_CRYSTAL = 1,
+    BATTLE_AI_TILE_PICKUP_TREASURE = 2,
+} battle_ai_tile_pickup_kind_e;
 
 typedef enum battle_ai_command_build_stage {
     BATTLE_AI_COMMAND_BUILD_REFRESH = 0,
