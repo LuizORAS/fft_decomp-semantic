@@ -1,16 +1,14 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Build the centred sub-rectangle of source's w x h area for a scale mode
+/* Build the centred sub-rectangle of the source area for a scale mode
  * (20%, 50%, 80%, 90% or 100%), aligned to 4 pixels. */
 void wldcore_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, RECT* rectangle) {
     s32 scale;
-    s32 x;
-    s32 y;
-    s32 scaled_x;
-    s32 scaled_y;
-    s32 half_x;
-    s32 half_y;
+    s32 source_width;
+    s32 source_height;
+    s32 half_width;
+    s32 half_height;
     s32 width;
     s32 height;
 
@@ -32,22 +30,20 @@ void wldcore_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, 
         break;
     }
 
-    x = source->w;
-    y = source->h;
-    scaled_x = x * scale;
-    scaled_y = y * scale;
-    half_x = (x / 2) & 0xfffc;
-    half_y = (y / 2) & 0xfffc;
-    width = (scaled_x / 200) & 0xfffc;
-    height = (scaled_y / 200) & 0xfffc;
-    if (half_x < width) {
-        width = half_x;
+    source_width = source->w;
+    source_height = source->h;
+    half_width = (source_width / 2) & 0xfffc;
+    half_height = (source_height / 2) & 0xfffc;
+    width = (source_width * scale / 200) & 0xfffc;
+    height = (source_height * scale / 200) & 0xfffc;
+    if (half_width < width) {
+        width = half_width;
     }
-    if (half_y < height) {
-        height = half_y;
+    if (half_height < height) {
+        height = half_height;
     }
-    rectangle->x = half_x - width;
-    rectangle->y = half_y - height;
+    rectangle->x = half_width - width;
+    rectangle->y = half_height - height;
     rectangle->w = width * 2;
     rectangle->h = height * 2;
 }
