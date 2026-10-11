@@ -209,7 +209,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             index = (curves0 >> 28) & 0xF;
             index--;
             if (index != -1) {
-                factor = g_effect_palette_table[index].factor[frame];
+                factor = g_battle_effect_animation_curve_data->curves[index][frame];
                 speed_min = battle_effect_lerp_linear(
                     entry->tentacle_mesh.radial_speed_min_start, entry->tentacle_mesh.radial_speed_min_end, factor);
                 speed_max = battle_effect_lerp_linear(
@@ -410,10 +410,10 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 seg->frame_timer = entry->tentacle_mesh.frame_delay;
             }
             if (entry->tentacle_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-                red = g_effect_palette_table[entry->tentacle_mesh.colour_curves & 0xF].factor[seg->head];
+                red = g_battle_effect_animation_curve_data->curves[entry->tentacle_mesh.colour_curves & 0xF][seg->head];
                 factor = entry->tentacle_mesh.colour_curves & 0xFFF;
-                green = g_effect_palette_table[(factor >> 4) & 0xF].factor[seg->head];
-                blue = g_effect_palette_table[(factor >> 8) & 0xF].factor[seg->head];
+                green = g_battle_effect_animation_curve_data->curves[(factor >> 4) & 0xF][seg->head];
+                blue = g_battle_effect_animation_curve_data->curves[(factor >> 8) & 0xF][seg->head];
             } else {
                 red = green = blue = 0x80;
             }

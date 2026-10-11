@@ -4166,7 +4166,7 @@ typedef char assert_effect_ring_mesh_geometry_view_size[sizeof(effect_ring_mesh_
 
 /* This renderer's view of one effect_geometry_entry_t. The shared entry type
  * names several of these offsets for other effect kinds; the curve nibbles
- * select rows of g_effect_palette_table. */
+ * select rows of g_battle_effect_animation_curve_data. */
 typedef struct effect_summon_mesh_geometry_view {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
@@ -4321,17 +4321,17 @@ typedef struct effect_geometry_table {
 /* Frames in one animation curve: emitter and particle frame counters wrap here. */
 enum { EFFECT_ANIMATION_CURVE_FRAMES = 0xa0 };
 
-/* One animation curve of an effect file: a factor per frame, by which an
- * emitter value moves from its start to its end (battle_effect_lerp_linear)
- * or a colour channel is scaled. The section begins with a u32 curve count
- * and each curve is 0xa0 bytes, so a row's leading four bytes are that count
- * (row 0) or the last four frames of the previous row, and factor[] indexes
- * past 0x9b continue into the next row. */
-typedef struct effect_animation_curve {
-    u8 _unused_00[4];
-    u8 factor[0x9c];
-} effect_animation_curve_t;
+/* One interpolation factor per frame; curve indices select emitter and colour tracks. */
+typedef u8 effect_animation_curve_t[EFFECT_ANIMATION_CURVE_FRAMES];
 typedef char assert_effect_animation_curve_size[sizeof(effect_animation_curve_t) == 0xa0 ? 1 : -1];
+
+/* The effect file has one count followed by one 160-byte curve per entry. */
+typedef struct effect_animation_curve_table {
+    u32 count;
+    effect_animation_curve_t curves[1];
+} effect_animation_curve_table_t;
+typedef char effect_animation_curve_table_data_offset_must_be_4
+    [(unsigned long)&((effect_animation_curve_table_t*)0)->curves == 4 ? 1 : -1];
 
 /* Disc extent of a BATTLE resource file. */
 typedef struct battle_file_extent {
@@ -4397,7 +4397,7 @@ extern battle_effect_secondary_state_t g_battle_effect_secondary_state;
 extern battle_effect_target_t g_battle_effect_target_tile;
 extern battle_effect_tile_ref_t g_battle_effect_trajectory_tile;
 extern s16 g_battle_effect_ability_ids[];
-extern u8* g_battle_effect_animation_curve_data;
+extern effect_animation_curve_table_t* g_battle_effect_animation_curve_data;
 extern s16 g_battle_effect_arctan_angle_mod;
 extern s32 g_battle_effect_buffer_index;
 extern battle_effect_secondary_init_t g_battle_effect_context;
@@ -4517,8 +4517,7 @@ extern battle_effect_slot_t g_battle_effect_slots[];
 extern s32 g_battle_effect_sprite_count;
 extern s32 g_battle_effect_sprite_count_peak;
 extern effect_geometry_table_t* g_effect_geometry_table;
-extern effect_animation_curve_t*
-    g_effect_palette_table; /* the animation curves; also g_battle_effect_animation_curve_data */
+
 extern effect_record_t g_effect_state_records[];
 extern s16 g_battle_effect_current_record_index;
 extern s32 g_battle_effect_work_record_peak;

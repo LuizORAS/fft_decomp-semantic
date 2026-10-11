@@ -221,7 +221,7 @@ s32 effect_e461_update_particle_ribbons_long_state(s16 record_index, s32 callbac
             j = (scroll >> 28) & 0xf;
             j--;
             if (j != -1) {
-                factor = g_effect_palette_table[j].factor[frame];
+                factor = g_battle_effect_animation_curve_data->curves[j][frame];
                 speed_min = battle_effect_lerp_linear(
                     entry->particle_ribbon.radial_speed_min_start, entry->particle_ribbon.radial_speed_min_end, factor);
                 speed_max = battle_effect_lerp_linear(
@@ -428,9 +428,10 @@ s32 effect_e461_update_particle_ribbons_long_state(s16 record_index, s32 callbac
             }
             if (entry->particle_ribbon.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
                 factor = entry->particle_ribbon.colour_curves & 0xfff;
-                red = g_effect_palette_table[entry->particle_ribbon.colour_curves & 0xf].factor[slot->age];
-                green = g_effect_palette_table[(factor >> 4) & 0xf].factor[slot->age];
-                blue = g_effect_palette_table[(factor >> 8) & 0xf].factor[slot->age];
+                red = g_battle_effect_animation_curve_data
+                          ->curves[entry->particle_ribbon.colour_curves & 0xf][slot->age];
+                green = g_battle_effect_animation_curve_data->curves[(factor >> 4) & 0xf][slot->age];
+                blue = g_battle_effect_animation_curve_data->curves[(factor >> 8) & 0xf][slot->age];
             } else {
                 blue = 0x80;
                 green = 0x80;

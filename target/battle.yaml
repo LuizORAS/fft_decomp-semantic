@@ -2866,7 +2866,6 @@ data:
   - {addr: 0x801bbf74, name: g_battle_effect_sound_section_ptr}
   - {addr: 0x801bbf78, name: g_battle_effect_frame_data}
   - {addr: 0x801bbf7c, name: g_battle_effect_animation_curve_data}
-  - {addr: 0x801bbf7c, name: g_effect_palette_table}
   - {addr: 0x801bbf80, name: g_battle_effect_palette_ptr}
   - {addr: 0x801bbf84, name: g_battle_effect_timing_channels}
   - {addr: 0x801bbf84, name: g_effect_timeline_channel_base}

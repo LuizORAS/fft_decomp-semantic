@@ -288,10 +288,10 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
 
         n = entry->brightness_row;
         if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            red = g_effect_palette_table[entry->colour_curves & 0xF].factor[frame];
+            red = g_battle_effect_animation_curve_data->curves[entry->colour_curves & 0xF][frame];
             k = entry->colour_curves & 0xFFF;
-            green = g_effect_palette_table[(k >> 4) & 0xF].factor[frame];
-            blue = g_effect_palette_table[(k >> 8) & 0xF].factor[frame];
+            green = g_battle_effect_animation_curve_data->curves[(k >> 4) & 0xF][frame];
+            blue = g_battle_effect_animation_curve_data->curves[(k >> 8) & 0xF][frame];
         } else {
             red = green = blue = 0x80;
         }

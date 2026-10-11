@@ -396,9 +396,9 @@ s32 effect_e015_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 
         blue = 0x80;
         if (entry->ring_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             k = entry->ring_mesh.colour_curves & 0xfff;
-            red = g_effect_palette_table[k & 0xf].factor[frame];
-            green = g_effect_palette_table[(k >> 4) & 0xf].factor[frame];
-            blue = g_effect_palette_table[(k >> 8) & 0xf].factor[frame];
+            red = g_battle_effect_animation_curve_data->curves[k & 0xf][frame];
+            green = g_battle_effect_animation_curve_data->curves[(k >> 4) & 0xf][frame];
+            blue = g_battle_effect_animation_curve_data->curves[(k >> 8) & 0xf][frame];
         } else {
             green = 0x80;
             red = 0x80;

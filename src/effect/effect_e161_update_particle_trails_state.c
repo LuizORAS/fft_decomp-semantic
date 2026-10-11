@@ -163,7 +163,7 @@ s32 effect_e161_update_particle_trails_state(s16 record_index, s32 callback_slot
             index = (curves0 >> 28) & 0xF;
             index--;
             if (index != -1) {
-                factor = g_effect_palette_table[index].factor[frame];
+                factor = g_battle_effect_animation_curve_data->curves[index][frame];
                 speed_min = battle_effect_lerp_linear(
                     entry->tentacle_mesh.radial_speed_min_start, entry->tentacle_mesh.radial_speed_min_end, factor);
                 speed_max = battle_effect_lerp_linear(

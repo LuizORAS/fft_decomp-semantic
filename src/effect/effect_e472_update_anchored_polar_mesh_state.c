@@ -166,9 +166,10 @@ s32 effect_e472_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
 
         if (entry->polar_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             j = entry->polar_mesh.colour_curves & 0xFFF;
-            scratch->red_factor = g_effect_palette_table[entry->polar_mesh.colour_curves & 0xF].factor[work->frame];
-            scratch->green_factor = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
-            scratch->blue_factor = g_effect_palette_table[(j >> 8) & 0xF].factor[work->frame];
+            scratch->red_factor
+                = g_battle_effect_animation_curve_data->curves[entry->polar_mesh.colour_curves & 0xF][work->frame];
+            scratch->green_factor = g_battle_effect_animation_curve_data->curves[(j >> 4) & 0xF][work->frame];
+            scratch->blue_factor = g_battle_effect_animation_curve_data->curves[(j >> 8) & 0xF][work->frame];
         } else {
             scratch->blue_factor = 0x80;
             scratch->green_factor = 0x80;

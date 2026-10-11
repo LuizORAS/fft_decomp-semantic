@@ -107,7 +107,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = geometry->textured_quad.curve_indices[0] >> 28;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curve_data->curves[row][work->frame];
         } else {
             column = 0;
         }
@@ -117,7 +117,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = (geometry->textured_quad.curve_indices[0] >> 8) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curve_data->curves[row][work->frame];
         } else {
             column = 0;
         }
@@ -139,9 +139,9 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         }
         if (geometry->textured_quad.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = geometry->textured_quad.colour_curves & 0xfff;
-            red = g_effect_palette_table[row & 0xf].factor[work->frame];
-            green = g_effect_palette_table[(row >> 4) & 0xf].factor[work->frame];
-            blue = g_effect_palette_table[(row >> 8) & 0xf].factor[work->frame];
+            red = g_battle_effect_animation_curve_data->curves[row & 0xf][work->frame];
+            green = g_battle_effect_animation_curve_data->curves[(row >> 4) & 0xf][work->frame];
+            blue = g_battle_effect_animation_curve_data->curves[(row >> 8) & 0xf][work->frame];
         } else {
             blue = 0x80;
             green = 0x80;
@@ -153,7 +153,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = geometry->textured_quad.curve_indices[1] & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curve_data->curves[row][frame];
         } else {
             column = 0;
         }
@@ -204,7 +204,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = (geometry->textured_quad.curve_indices[0] >> 4) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curve_data->curves[row][frame];
         } else {
             column = 0;
         }
@@ -214,7 +214,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = (geometry->textured_quad.curve_indices[0] >> 12) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curve_data->curves[row][frame];
         } else {
             column = 0;
         }

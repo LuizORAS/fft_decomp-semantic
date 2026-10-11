@@ -89,7 +89,7 @@ s32 effect_e473_update_textured_quad_grid_8x8(s16 record_index, s32 callback_slo
         row = geometry->curve_indices[0] >> 28;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curve_data->curves[row][work->frame];
         } else {
             column = 0;
         }
@@ -97,7 +97,7 @@ s32 effect_e473_update_textured_quad_grid_8x8(s16 record_index, s32 callback_slo
         row = (geometry->curve_indices[0] >> 8) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curve_data->curves[row][work->frame];
         } else {
             column = 0;
         }
@@ -119,9 +119,9 @@ s32 effect_e473_update_textured_quad_grid_8x8(s16 record_index, s32 callback_slo
         blue = 0x80;
         if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = geometry->colour_curves & 0xfff;
-            red = g_effect_palette_table[row & 0xf].factor[work->frame];
-            green = g_effect_palette_table[(row >> 4) & 0xf].factor[work->frame];
-            blue = g_effect_palette_table[(row >> 8) & 0xf].factor[work->frame];
+            red = g_battle_effect_animation_curve_data->curves[row & 0xf][work->frame];
+            green = g_battle_effect_animation_curve_data->curves[(row >> 4) & 0xf][work->frame];
+            blue = g_battle_effect_animation_curve_data->curves[(row >> 8) & 0xf][work->frame];
         } else {
             green = 0x80;
             red = 0x80;

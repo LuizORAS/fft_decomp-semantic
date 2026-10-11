@@ -13,7 +13,7 @@
         index = (nibble);                                                                                              \
         index--;                                                                                                       \
         if (index != -1) {                                                                                             \
-            result = g_effect_palette_table[index].factor[frame];                                                      \
+            result = g_battle_effect_animation_curve_data->curves[index][frame];                                       \
         } else {                                                                                                       \
             result = 0;                                                                                                \
         }                                                                                                              \

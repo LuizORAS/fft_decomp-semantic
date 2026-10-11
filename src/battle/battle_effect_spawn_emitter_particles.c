@@ -9,7 +9,7 @@
     curve = nibble;                                                                                                    \
     curve--;                                                                                                           \
     if (curve != -1) {                                                                                                 \
-        factor = g_effect_palette_table[curve].factor[frame];                                                          \
+        factor = g_battle_effect_animation_curve_data->curves[curve][frame];                                           \
     } else {                                                                                                           \
         factor = 0;                                                                                                    \
     }
@@ -212,7 +212,7 @@ s32 battle_effect_spawn_emitter_particles(
     curve = entry->emitter.curve_indices[0] >> 28;
     curve--;
     if (curve != -1) {
-        factor = g_effect_palette_table[curve].factor[frame];
+        factor = g_battle_effect_animation_curve_data->curves[curve][frame];
         speed_min = battle_effect_lerp_linear(
             entry->emitter.radial_speed_start[0], entry->emitter.radial_speed_end[0], factor);
         speed_max = battle_effect_lerp_linear(
@@ -224,7 +224,7 @@ s32 battle_effect_spawn_emitter_particles(
     curve = entry->emitter.curve_indices[0] >> 12 & 0xf;
     curve--;
     if (curve != -1) {
-        factor = g_effect_palette_table[curve].factor[frame];
+        factor = g_battle_effect_animation_curve_data->curves[curve][frame];
         angle_spread.vx = battle_effect_lerp_linear(
             entry->emitter.velocity_spread_start.x, entry->emitter.velocity_spread_end.x, factor);
         angle_spread.vy = battle_effect_lerp_linear(
