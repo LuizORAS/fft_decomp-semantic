@@ -68,9 +68,7 @@ s32 world_formation_run_set_ability_menu(void) {
     }
     if (g_world_set_ability_list_open == 0) {
         slot = g_world_set_ability_slot;
-        current = ((world_formation_unit_ability_slots_t*)
-                       g_world_formation_unit_pointers[g_world_formation_selected_unit_index])
-                      ->ability_slots[slot];
+        current = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots[slot];
         g_world_formation_unit_cycle_mode = 2;
         g_world_menu_description_text_id = current;
         if (current == 0) {
@@ -126,9 +124,8 @@ s32 world_formation_run_set_ability_menu(void) {
                         g_world_set_ability_slot, selected,
                         value
                             | world_ability_is_equip_support_change(g_world_formation_selected_unit_index,
-                                ((world_formation_unit_ability_slots_t*)
-                                        g_world_formation_unit_pointers[g_world_formation_selected_unit_index])
-                                    ->ability_slots[g_world_set_ability_slot]));
+                                g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                                    ->abilities.slots[g_world_set_ability_slot]));
                     g_world_menu_sound_effect_id = MAIN_SFX_EQUIP;
                     g_world_ability_menu_slots_changed = 1;
                     g_world_set_ability_list_close_pending = 1;
@@ -149,15 +146,13 @@ s32 world_formation_run_set_ability_menu(void) {
             g_world_set_ability_cursor = cursor;
             if ((g_world_menu_entry_ids[cursor] >= ABILITY_ID_MOVEMENT_MOVE_PLUS_1
                     && g_world_menu_entry_ids[cursor] <= ABILITY_ID_MOVEMENT_JUMP_PLUS_3)
-                || (u16)((u16)((world_formation_unit_ability_slots_t*)
-                                   g_world_formation_unit_pointers[g_world_formation_selected_unit_index])
-                             ->ability_slots[g_world_set_ability_slot]
+                || (u16)((u16)g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                             ->abilities.slots[g_world_set_ability_slot]
                        - ABILITY_ID_MOVEMENT_MOVE_PLUS_1)
                     < 6) {
                 world_ability_find_stat_changes_due_to_equipped(&g_world_item_preview_stat_detail,
-                    ((world_formation_unit_ability_slots_t*)
-                            g_world_formation_unit_pointers[g_world_formation_selected_unit_index])
-                        ->ability_slots[g_world_set_ability_slot],
+                    g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                        ->abilities.slots[g_world_set_ability_slot],
                     g_world_menu_entry_ids[g_world_menu_cursor_position]);
                 g_world_preview_stats_thread_params.redraw_request = 1;
                 g_world_set_ability_show_stat_preview = 1;

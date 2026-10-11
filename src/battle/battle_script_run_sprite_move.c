@@ -18,10 +18,10 @@
 
 /* The parameters are copied into locals in this order: it is what places the
  * s0 copy before the s2 copy in the prologue. */
-void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
+void battle_script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s32 use_speed) {
     s32 pos[4][4];
     SVECTOR vec;
-    u8* parameters;
+    const u8* parameters;
     s32 mode;
     s16* coords;
     s32 misc_id;
@@ -38,15 +38,17 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
     s32 elapsed;
     s32 half;
 
-    parameters = (u8*)parameter_address;
+    parameters = (const u8*)instruction;
     mode = use_speed;
-    misc_id = battle_script_get_misc_id(battle_script_load_halfword(parameters));
+    misc_id = battle_script_get_misc_id(
+        battle_script_load_halfword(((const event_sprite_move_parameters_t*)parameters)->unit_id_le));
     if (misc_id == EVENT_MISC_ID_NONE) {
         return;
     }
     g_battle_thread_task_ids[g_battle_current_thread_id][1] = misc_id;
     coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
-    parameters += 2;
+    /* One advancing operand cursor preserves the retail register allocation. */
+    parameters = ((const event_sprite_move_parameters_t*)parameters)->destination_le[0];
     pos[0][0] = coords[0];
     pos[0][1] = coords[1];
     pos[0][2] = coords[2];
@@ -55,7 +57,7 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
     pos[3][2] = -coords[2];
     for (i = 0; i < 3; i++) {
         pos[1][i] = battle_script_load_halfword(parameters);
-        parameters += 2;
+        parameters += sizeof(instruction->destination_le[i]);
     }
     curve = *parameters++;
     weight = *parameters++;

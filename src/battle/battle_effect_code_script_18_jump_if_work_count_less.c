@@ -5,9 +5,10 @@
  * 6-byte instruction. */
 s32 battle_effect_code_script_18_jump_if_work_count_less(effect_record_t* record) {
     s16 pc = record->pc;
-    s16* instruction = (s16*)(pc + record->script);
-    if (record->work_count < instruction[1]) {
-        record->pc = *(instruction + 2);
+    battle_effect_script_branch_instruction_t* instruction
+        = (battle_effect_script_branch_instruction_t*)((pc + record->script));
+    if (record->work_count < instruction->comparison.signed_value) {
+        record->pc = instruction->target_offset.signed_value;
     } else {
         record->pc = pc + 6;
     }

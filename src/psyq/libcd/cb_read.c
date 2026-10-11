@@ -33,6 +33,5 @@ void cb_read(u8 event, u8* result) {
     CdReadyCallback(g_psyq_cd_read_state.ready_callback);
     CdControl(CdlPause, 0, 0);
     if (g_psyq_cd_read_callback)
-        ((psyq_cd_result_callback_t)g_psyq_cd_read_callback)(
-            g_psyq_cd_read_state.remaining == 0 ? CdlComplete : CdlDiskError, result);
+        g_psyq_cd_read_callback(g_psyq_cd_read_state.remaining == 0 ? CdlComplete : CdlDiskError, result);
 }

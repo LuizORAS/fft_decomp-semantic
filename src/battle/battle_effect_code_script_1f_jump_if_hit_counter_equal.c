@@ -8,9 +8,9 @@
 s32 battle_effect_code_script_1f_jump_if_hit_counter_equal(effect_record_t* record) {
     s16 pc = record->pc;
     s32 script = (s32)record->script;
-    u8* instruction = (u8*)(pc + script);
-    if (g_battle_effect_coord_data.target_count == (instruction[1] >> 2)) {
-        record->pc = *(u16*)(instruction + 2);
+    battle_effect_script_value_instruction_t* instruction = (battle_effect_script_value_instruction_t*)((pc + script));
+    if (g_battle_effect_coord_data.target_count == (instruction->header.bytes.packed_parameters >> 2)) {
+        record->pc = instruction->value.unsigned_value;
     } else {
         record->pc = pc + 4;
     }

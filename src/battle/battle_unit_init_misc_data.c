@@ -140,7 +140,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->item_display_active = 0;
     unit->item_display = battle_gfx_init_item_sprite_display(unit_id);
     unit->position_copies_active = 0;
-    unit->sprite_display_section = (battle_gfx_sprite_display_data_t*)battle_gfx_init_unit_sprite_display(unit_id);
+    unit->sprite_display_section = battle_gfx_init_unit_sprite_display(unit_id);
     sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_UNIT;
     unit->shp_data = unit->saved_shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(id);
     unit->seq_data = unit->saved_seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(id);

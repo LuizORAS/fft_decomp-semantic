@@ -87,7 +87,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
         case SKILLSET_ID_DANCE:
         default:
             unit->used_ability_id = unit->command_state.ai.data.action.ability_id;
-            result = battle_target_set_panels_for_action(&unit->command_state.ai.data.action.unit_id);
+            result = battle_target_set_panels_for_action(&unit->command_state.ai.data.action);
             unit->ability_preview_phase = result;
             switch (result) {
             case BATTLE_TARGET_PANELS_UNIT_OR_TILE:

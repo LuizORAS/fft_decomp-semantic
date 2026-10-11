@@ -38,10 +38,10 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
             if (battle_ai_calculate_clockticks_until_death_counter_expires(reflector) < ct)
                 continue;
         }
-        ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
+        ai->current_action.command.targeting_type = BATTLE_TARGETING_TYPE_TILE;
         battle_ai_transfer_unit_coordinates(ai->reflector_unit_index, &ai->considered_unit_coords);
         mode = BATTLE_AI_TILE_MASK_AOE;
-        if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
+        if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
             mode = BATTLE_AI_TILE_MASK_EXPLICIT;
         battle_ai_build_targetable_tile_mask(mode, 0);
         battle_ai_transfer_halfword_values(ai->attack_origin_tiles, ai->targetable_tiles, 72);

@@ -10,11 +10,10 @@ long csqrt(long value) {
         result = 0;
     else {
         difference = 8 - Lzc(value);
-        scale = difference >> 1;
-        if (difference >= 0)
+        if (difference >= 0) {
+            scale = difference >> 1;
             normalized = value >> (scale << 1);
-        else {
-            __asm__("" : "=r"(difference) : "0"(difference)); /* Retail recomputes the half exponent in this arm. */
+        } else {
             scale = (difference >> 1) + 1;
             normalized = value << -(scale << 1);
         }

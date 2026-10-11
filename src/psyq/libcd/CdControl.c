@@ -2,7 +2,7 @@
 #include "psx/libcd.h"
 
 static __inline__ s32 cd_issue_with_retry(u8 command, const u8* parameter, u8* result, s32 asynchronous) {
-    void* callback = g_psyq_cd_sync_callback;
+    psyq_cd_result_callback_t callback = g_psyq_cd_sync_callback;
     s32 attempts = 3;
     do {
         g_psyq_cd_sync_callback = 0;

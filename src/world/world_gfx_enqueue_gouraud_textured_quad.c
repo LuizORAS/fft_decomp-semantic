@@ -7,7 +7,7 @@
  * RGB triples, one per corner.
  */
 void world_gfx_enqueue_gouraud_textured_quad(
-    world_gfx_textured_rect_source_t* source, u8* rgb, s32 semi_trans, s32 ot_index) {
+    world_gfx_textured_rect_source_t* source, rgb24_t* colors, s32 semi_trans, s32 ot_index) {
     POLY_GT4* poly
         = &g_world_gfx_active_packet_buffer->textured_gradient_quads[g_world_gfx_textured_gradient_quad_count++];
 
@@ -28,18 +28,18 @@ void world_gfx_enqueue_gouraud_textured_quad(
     poly->v2 = source->v + source->h;
     poly->u3 = source->u + source->w;
     poly->v3 = source->v + source->h;
-    poly->r0 = rgb[0];
-    poly->g0 = rgb[1];
-    poly->b0 = rgb[2];
-    poly->r1 = rgb[3];
-    poly->g1 = rgb[4];
-    poly->b1 = rgb[5];
-    poly->r2 = rgb[6];
-    poly->g2 = rgb[7];
-    poly->b2 = rgb[8];
-    poly->r3 = rgb[9];
-    poly->g3 = rgb[10];
-    poly->b3 = rgb[11];
+    poly->r0 = colors[0].r;
+    poly->g0 = colors[0].g;
+    poly->b0 = colors[0].b;
+    poly->r1 = colors[1].r;
+    poly->g1 = colors[1].g;
+    poly->b1 = colors[1].b;
+    poly->r2 = colors[2].r;
+    poly->g2 = colors[2].g;
+    poly->b2 = colors[2].b;
+    poly->r3 = colors[3].r;
+    poly->g3 = colors[3].g;
+    poly->b3 = colors[3].b;
     poly->clut = source->clut;
     poly->tpage = source->tpage;
     addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], poly);

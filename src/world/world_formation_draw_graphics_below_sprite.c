@@ -17,13 +17,13 @@ void world_formation_draw_graphics_below_sprite(
     s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s32), s32 enabled, s32 priority) {
     RECT unused_rect;
     RECT rect;
-    s16 xy[20];
+    point16_t xy[10];
     s32 top;
     s16 label_y;
     s16 num_x;
     s16 num_y;
     u16 clut;
-    u8* rgb;
+    rgb24_t* rgb;
     world_oriented_quad_t* sprite;
 
     if (mode < 0) {
@@ -85,15 +85,15 @@ void world_formation_draw_graphics_below_sprite(
             rect.w = 0x25;
             rect.h = 3;
             world_gfx_enqueue_textured_quad(&rect, 0xD8, 0xCA, color, 0, g_world_menu_icon_tpage, clut, priority - 1);
-            xy[0] = g_world_formation_gauge_bar_offsets[0] + x;
-            xy[1] = g_world_formation_gauge_bar_offsets[1] + top + 8;
-            xy[6] = xy[2] = 0x20;
-            xy[2] += xy[0];
-            xy[3] = g_world_formation_gauge_bar_offsets[1] + top + 8;
-            xy[4] = g_world_formation_gauge_bar_offsets[2] + x;
-            xy[5] = g_world_formation_gauge_bar_offsets[3] + top + 8;
-            xy[6] += xy[4];
-            xy[7] = g_world_formation_gauge_bar_offsets[3] + top + 8;
+            xy[0].x = g_world_formation_gauge_bar_offsets[0] + x;
+            xy[0].y = g_world_formation_gauge_bar_offsets[1] + top + 8;
+            xy[3].x = xy[1].x = 0x20;
+            xy[1].x += xy[0].x;
+            xy[1].y = g_world_formation_gauge_bar_offsets[1] + top + 8;
+            xy[2].x = g_world_formation_gauge_bar_offsets[2] + x;
+            xy[2].y = g_world_formation_gauge_bar_offsets[3] + top + 8;
+            xy[3].x += xy[2].x;
+            xy[3].y = g_world_formation_gauge_bar_offsets[3] + top + 8;
             world_gfx_enqueue_gouraud_quad(xy, rgb, 0, priority);
         } else if (g_world_formation_stat_display_mode == MENU_UNIT_READOUT_LEVEL_EXP) {
             s32 y40;

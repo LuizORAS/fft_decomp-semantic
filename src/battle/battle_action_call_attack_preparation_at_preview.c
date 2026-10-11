@@ -7,13 +7,12 @@
  * An action that resolves immediately also ends the unit's Charging, Jump,
  * Defending and Performing statuses, but only in the primary action context.
  * Returns the battle_attack_preparation_e result. */
-s32 battle_action_call_attack_preparation_at_preview(u8* command) {
+s32 battle_action_call_attack_preparation_at_preview(battle_ai_command_action_t* command) {
     battle_stats_t* unit;
     s32 result;
 
-    unit = &g_battle_unit_stats[*command];
-    result = battle_action_prepare_attack(
-        (battle_ai_command_action_t*)command, (battle_ai_command_action_t*)&unit->action_command, 1);
+    unit = &g_battle_unit_stats[command->unit_id];
+    result = battle_action_prepare_attack(command, (battle_ai_command_action_t*)&unit->action_command, 1);
     if (result == BATTLE_ATTACK_PREPARATION_IMMEDIATE && g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
         battle_status_enable_disable_acting(unit);
     }

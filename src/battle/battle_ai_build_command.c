@@ -90,11 +90,12 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
             goto preserve;
         }
     }
-    if (ai->acting_unit->action_taken || !ai->selected_action.skillset) {
+    if (ai->acting_unit->action_taken || !ai->selected_action.command.skillset) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
     } else {
         command->kind = BATTLE_AI_COMMAND_ACT;
-        battle_ai_transfer_halfword_values(command->data.halfwords, &ai->selected_action.unit_id, 20);
+        battle_ai_transfer_halfword_values(
+            &command->data.action, &ai->selected_action.command, sizeof(command->data.action));
     }
 preserve:
     moved = ai->acting_unit->movement_taken;

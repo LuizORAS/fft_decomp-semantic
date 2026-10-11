@@ -15,8 +15,8 @@ extern battle_current_ability_t g_battle_action_current_ability_view;
  * status-infliction index. The fields the target addresses through a base
  * register, plus ability_id, go through g_battle_action_current_ability_view; the others
  * use g_battle_action_current_ability. */
-s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
-    battle_ai_command_action_t action;
+s32 battle_action_run_pre_formula_setup(const battle_unit_action_command_t* source, u8 target_id) {
+    battle_unit_action_command_t action;
     weapon_data_t* weapon;
     ability_secondary_data_t* ability;
     item_secondary_data_t* item;
@@ -32,11 +32,11 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     g_battle_action_target = &g_battle_unit_stats[target_id];
     g_battle_action_target_data = &g_battle_unit_stats[target_id].action;
     g_battle_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_NONE;
-    g_battle_action_current_ability_view.attacker_id = action.unit_id;
+    g_battle_action_current_ability_view.attacker_id = action.actor_id;
     g_battle_action_attacker_data = &g_battle_action_attacker_action_data;
     g_battle_action_attacker = &g_battle_unit_stats[g_battle_action_current_ability_view.attacker_id];
     if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY && battle_action_perform_reaction_ability() != 0) {
-        battle_action_store_used_weapon((battle_unit_action_command_t*)&action);
+        battle_action_store_used_weapon(&action);
         return 0;
     }
     if (g_battle_action_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING) {
@@ -50,8 +50,9 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     } else {
         id = g_battle_action_current_ability.secondary_weapon_id;
     }
-    if (action.skillset == SKILLSET_ID_DRAW_OUT) {
-        id = action.item_id;
+    if (action.skillset_id == SKILLSET_ID_DRAW_OUT) {
+        /* Item selection reads only the low byte of the item/equipment word. */
+        id = *(u8*)&action.item_or_equipment;
     }
     if (id >= 0x80) {
         id = ITEM_ID_NOTHING;
@@ -73,7 +74,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     g_battle_action_current_ability.attacker_faith = g_battle_action_attacker->faith;
     g_battle_action_current_ability.target_faith = g_battle_action_target->faith;
     battle_action_clear_data();
-    skillset = action.skillset;
+    skillset = action.skillset_id;
     g_battle_action_current_ability.skillset = skillset;
     menu_type = g_main_action_menu_types_by_skillset[skillset];
     if (g_battle_action_current_ability_view.weapon_proc_pending != 0) {
@@ -89,7 +90,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         g_battle_action_target_data->miss_display_flags += BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION;
     }
     if (menu_type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
-        action.ability_id = action.item_id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
+        action.ability_id = *(u8*)&action.item_or_equipment + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
     }
     switch (menu_type) {
     case ACTION_MENU_TYPE_ELEMENTS:
@@ -122,7 +123,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         formula = ABILITY_FORMULA_WEAPON_DAMAGE;
-        id = action.item_id;
+        id = *(u8*)&action.item_or_equipment;
         if (id >= ITEM_ID_CONSUMABLE_FIRST) {
             g_battle_action_current_ability_view.weapon_id = id;
             id += ITEM_ID_COUNT - ITEM_ID_CONSUMABLE_FIRST;

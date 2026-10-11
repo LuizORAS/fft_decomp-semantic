@@ -13,7 +13,7 @@
  * The restore arm carries its own copy of the misc_index test, which is what
  * retail does: it reloads misc_index and jumps past the absolute arm's own
  * reload, so cross-jumping merges only the branch and the loop increment. */
-void world_script_rotate_unit(const u8* parameters) {
+void world_script_rotate_unit(const event_rotate_unit_parameters_t* parameters) {
     u16 unit_id;
     s32 misc_index;
     s32 i;
@@ -23,11 +23,11 @@ void world_script_rotate_unit(const u8* parameters) {
     world_unit_animation_state_t* state;
 
     order = 1;
-    unit_id = world_script_load_halfword(parameters);
+    unit_id = world_script_load_halfword(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (i = 0; i < 21; i++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0) {
-                facing = parameters[2];
+                facing = parameters->facing;
                 if (facing >= EVENT_ROTATE_UNIT_FACING_RELATIVE_FIRST && facing < EVENT_ROTATE_UNIT_FACING_RESTORE) {
                     facing = facing & 0xF;
                     facing = battle_unit_get_facing_nibble_by_misc_id(unit_id) + facing * 4;
@@ -39,10 +39,10 @@ void world_script_rotate_unit(const u8* parameters) {
                     if (state->initial_facing != 0xFF) {
                         state->rotate_mode = UNIT_ROTATE_MODE_SHORTEST;
                         state->target_facing = state->initial_facing;
-                        state->frames_per_step = g_world_rotation_speed_frames[parameters[4]];
+                        state->frames_per_step = g_world_rotation_speed_frames[parameters->speed];
                         state->step_counter = 0;
                         state->rotating = 1;
-                        state->delay = parameters[5] * order++ / 4;
+                        state->delay = parameters->delay * order++ / 4;
                     }
                     remaining = misc_index;
                     /* Stops cross-jumping from merging this arm's setup and test
@@ -55,11 +55,11 @@ void world_script_rotate_unit(const u8* parameters) {
                 }
                 state = &g_world_unit_animation_states[unit_id];
                 state->target_facing = facing;
-                state->rotate_mode = parameters[3];
-                state->frames_per_step = g_world_rotation_speed_frames[parameters[4]];
+                state->rotate_mode = parameters->mode;
+                state->frames_per_step = g_world_rotation_speed_frames[parameters->speed];
                 state->step_counter = 0;
                 state->rotating = 1;
-                state->delay = parameters[5] * order++ / 4;
+                state->delay = parameters->delay * order++ / 4;
                 if (misc_index == 0) {
                     return;
                 }

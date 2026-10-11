@@ -69,7 +69,7 @@ s32 battle_ai_choose_status_action(void) {
         ai->selected_action.act_before_move = 0;
     save_movement:
         /* Movement-only selection leaves the other action fields unchanged. */
-        ai->selected_action.skillset = 0;
+        ai->selected_action.command.skillset = 0;
         ai->selected_action.coords = coords;
         goto success;
     }

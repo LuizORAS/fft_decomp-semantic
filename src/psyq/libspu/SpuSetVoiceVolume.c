@@ -2,9 +2,10 @@
 #include "psx/libspu.h"
 
 void SpuSetVoiceVolume(s32 v_num, s16 vol_l, s16 vol_r) {
+    /* Adding the index before the register base preserves the retail address operands. */
     vol_l &= 0x7fff;
     vol_r &= 0x7fff;
-    _spu_RXX->raw[v_num << 3] = vol_l;
-    _spu_RXX->raw[(v_num << 3) + 1] = vol_r;
+    (v_num + _spu_RXX->rxx.voices)->volume_left = vol_l;
+    (v_num + _spu_RXX->rxx.voices)->volume_right = vol_r;
     PSYQ_SPU_REGISTER_DELAY();
 }

@@ -23,9 +23,9 @@ s32 battle_ai_evaluate_target_tiles(void) {
     /* Field-derived byte stages preserve the original level/row address
      * order; flattened typed indexing changes the generated instructions. */
     if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.search_resume_flag) {
-        x = g_battle_ai_data_base.current_action.target_x;
-        level = g_battle_ai_data_base.current_action.target_elevation;
-        y = g_battle_ai_data_base.current_action.target_y;
+        x = g_battle_ai_data_base.current_action.command.target_x;
+        level = g_battle_ai_data_base.current_action.command.target_elevation;
+        y = g_battle_ai_data_base.current_action.command.target_y;
         {
             u32 scan_level_address = level * (18 * sizeof(u16)) + (u32)ai;
             u32 scan_row_address = y * sizeof(u16);
@@ -44,7 +44,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
         origin = &ai->current_action.coords;
     battle_ai_move_temp_unit_to_coords(origin);
     if (ai->considered_ability.parameters.bytes.range) {
-        if (battle_target_set_panels_for_action(&ai->current_action.unit_id) == BATTLE_TARGET_PANELS_NONE)
+        if (battle_target_set_panels_for_action(&ai->current_action.command) == BATTLE_TARGET_PANELS_NONE)
             return 0;
     } else {
         tile = g_battle_map_tile_data;
@@ -89,30 +89,30 @@ s32 battle_ai_evaluate_target_tiles(void) {
             if (row != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
-                        ai->current_action.target_x = x;
-                        ai->current_action.target_y = y;
-                        ai->current_action.target_elevation = level;
-                        if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT
+                        ai->current_action.command.target_x = x;
+                        ai->current_action.command.target_y = y;
+                        ai->current_action.command.target_elevation = level;
+                        if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT
                             || (ai->considered_ability.ai_flags.word
                                 & (BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY))) {
                             target_id = battle_ai_has_any_unit_on_target_panel();
-                            ai->current_action.target_id = target_id;
+                            ai->current_action.command.target_id = target_id;
                             if (target_id == BATTLE_UNIT_ID_NONE)
                                 goto remove_useful_origin;
                         }
                         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ARC_TRAJECTORY) {
                             if (battle_effect_check_arc_trajectory_between_units(
-                                    ai->acting_unit_id, ai->current_action.target_id)
+                                    ai->acting_unit_id, ai->current_action.command.target_id)
                                 == 0)
                                 continue;
                         } else if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_DIRECT_TRAJECTORY) {
                             if ((g_main_action_menu_types_by_skillset[ai->considered_ability.skillset]
                                         != ACTION_MENU_TYPE_ITEM_INVENTORY
                                     || battle_ai_calculate_distance_between_units(
-                                           ai->acting_unit, &g_battle_unit_stats[ai->current_action.target_id])
+                                           ai->acting_unit, &g_battle_unit_stats[ai->current_action.command.target_id])
                                         >= 2)
                                 && battle_effect_check_direct_trajectory_between_units(
-                                       ai->acting_unit_id, ai->current_action.target_id)
+                                       ai->acting_unit_id, ai->current_action.command.target_id)
                                     == 0)
                                 continue;
                         }

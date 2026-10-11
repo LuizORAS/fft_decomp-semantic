@@ -6,7 +6,8 @@
  * the 4-byte instruction. */
 s32 battle_effect_code_script_1d_jump_after_effect_length(effect_record_t* record) {
     if (record->timeline_frame >= g_battle_effect_timing_channels->duration) {
-        record->pc = *(u16*)(record->pc + (s32)record->script + 2);
+        record->pc
+            = ((battle_effect_script_value_instruction_t*)(record->pc + (s32)record->script))->value.unsigned_value;
     } else {
         record->pc = record->pc + 4;
     }

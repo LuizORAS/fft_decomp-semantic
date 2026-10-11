@@ -33,5 +33,5 @@ void battle_ai_init_acting_unit_data(void) {
         g_battle_ai_data_base.acting_unit_move = acting->move;
     }
     ai->current_action.coords.bytes.zero = 0;
-    ai->current_action.unit_id = ai->acting_unit_id;
+    ai->current_action.command.unit_id = ai->acting_unit_id;
 }

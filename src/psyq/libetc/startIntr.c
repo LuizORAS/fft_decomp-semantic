@@ -13,7 +13,7 @@ psyq_interrupt_state_t* startIntr(void) {
               .stack[sizeof(g_psyq_etc_interrupt_state.stack) / sizeof(u32) - PSYQ_ETC_INTERRUPT_STACK_RESERVED_WORDS];
     HookEntryInt(g_psyq_etc_interrupt_state.jump_buffer);
     g_psyq_etc_interrupt_state.initialized = 1;
-    g_psyq_etc_dispatch->vblank_callback = (void* (*)(s32, void*))startIntrVSync();
+    g_psyq_etc_dispatch->vblank_callback = startIntrVSync();
     {
         psyq_callback_setter_t setter = startIntrDMA();
         /* Retail loads the table pointer into a0, as if it were also passed to _96_remove; a plain store selects v1. */

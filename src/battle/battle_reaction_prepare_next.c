@@ -47,7 +47,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         || ability == ABILITY_ID_REACTION_REFLECT)
                     && ability != 0) {
                     g_battle_action_context = BATTLE_ACTION_CONTEXT_REACTION_OR_SIMULATION;
-                    main_util_copy_action_data(action, g_battle_action_saved_command);
+                    main_util_copy_action_data(action, &g_battle_action_saved_command);
                     g_battle_current_reaction_ability_id = ability;
                     action->actor_id = i;
                     action->skillset_id = 0;
@@ -103,7 +103,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         action->target_x = unit->x;
                         action->target_y = unit->position.bits.y;
                         action->target_elevation = unit->position.raw >> 15;
-                        result = battle_action_call_attack_preparation_at_preview((u8*)action);
+                        result = battle_action_call_attack_preparation_at_preview((battle_ai_command_action_t*)action);
                         outcome = BATTLE_REACTION_OUTCOME_COUNTER;
                         unit->action_command.ability_id = ABILITY_ID_REACTION_AUTO_POTION;
                         if (result == -1 || result == 2 || result == 3) {
@@ -127,7 +127,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         outcome = BATTLE_REACTION_OUTCOME_NONE;
                     }
                     if (outcome == BATTLE_REACTION_OUTCOME_NONE) {
-                        main_util_copy_action_data(g_battle_action_saved_command, action);
+                        main_util_copy_action_data(&g_battle_action_saved_command, action);
                         i++;
                         continue;
                     }

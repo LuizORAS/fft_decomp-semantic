@@ -112,7 +112,7 @@ typedef struct open_movie_mdec_stream_state {
 typedef char open_mdec_stream_state_size_must_be_0x38[(sizeof(open_movie_mdec_stream_state_t) == 0x38) ? 1 : -1];
 
 extern s32 g_open_movie_aligned_height;
-extern u8 g_open_movie_cd_stream_ring_buffer[];
+extern psyq_cd_ring_record_t g_open_movie_cd_stream_ring_buffer[];
 extern u32 g_open_movie_current_frame;
 extern u32 g_open_movie_end_frame;
 extern s32 g_open_movie_height;
@@ -133,7 +133,7 @@ void open_movie_init_and_stream_opening(s32 skip_movie);
 
 void open_movie_init_mdec_stream_state(open_movie_mdec_stream_state_t* state, s32 x0, s32 y0, s32 x1, s32 y1);
 
-void open_movie_init_stream(s32 sector, void* output_callback);
+void open_movie_init_stream(s32 sector, psyq_interrupt_callback_t output_callback);
 void open_movie_pause_cd_audio(void);
 void open_movie_play_end(void);
 void open_movie_present_frame(void);

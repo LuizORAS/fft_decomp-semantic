@@ -8,7 +8,8 @@ s32 battle_effect_code_script_19_jump_if_child_count_equal(effect_record_t* reco
     s16 count;
     s16 target;
 
-    target = *(u16*)(record->pc + (s32)record->script + 2);
+    target
+        = ((battle_effect_script_branch_instruction_t*)(record->pc + (s32)record->script))->comparison.unsigned_value;
     count = 0;
     for (i = 0; i < 4; i++) {
         if (record->child_indices[i] != 0) {
@@ -16,7 +17,8 @@ s32 battle_effect_code_script_19_jump_if_child_count_equal(effect_record_t* reco
         }
     }
     if (count == target) {
-        record->pc = *(u16*)(record->pc + (s32)record->script + 4);
+        record->pc = ((battle_effect_script_branch_instruction_t*)(record->pc + (s32)record->script))
+                         ->target_offset.unsigned_value;
     } else {
         record->pc += 6;
     }

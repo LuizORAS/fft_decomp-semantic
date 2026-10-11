@@ -72,7 +72,7 @@ void battle_state_handle_idling_action_menus_state(void) {
             misc->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
             battle_action_call_attack_preparation(&misc->command_state.ai.data.action);
             misc->used_ability_id = misc->command_state.ai.data.action.ability_id;
-            result = battle_target_set_panels_for_action((u8*)&misc->command_state.ai.data.action);
+            result = battle_target_set_panels_for_action(&misc->command_state.ai.data.action);
             misc->ability_preview_phase = result;
             switch (result) {
             case BATTLE_TARGET_PANELS_UNIT_OR_TILE:

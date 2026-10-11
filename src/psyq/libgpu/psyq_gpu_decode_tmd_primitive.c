@@ -2,8 +2,7 @@
 #include "psx/libc.h"
 #include "psx/libgpu.h"
 
-int psyq_gpu_decode_tmd_primitive(const u8* source, psyq_tmd_primitive_t* primitive) {
-    const psyq_tmd_packet_t* packet = (const psyq_tmd_packet_t*)source;
+int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, psyq_tmd_primitive_t* primitive) {
     memset(primitive, 0, sizeof(*primitive));
     primitive->id = packet->id;
     switch (primitive->id & PSYQ_TMD_PACKET_MODE_MASK) {

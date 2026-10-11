@@ -8,7 +8,7 @@
  * returns 0, -1 when it returns -1, and 0 for any other result. The target
  * reads the actor's stats pointer in $a0 as battle_action_get_elemental_ability_id's
  * argument, so it is declared with one here. */
-s32 battle_target_calculate_for_menu_types(const u8* source) {
+s32 battle_target_calculate_for_menu_types(const battle_unit_action_command_t* source) {
     battle_ai_command_action_t action;
     battle_stats_t* unit;
     u16 ability_id;
@@ -66,7 +66,7 @@ s32 battle_target_calculate_for_menu_types(const u8* source) {
         result = battle_target_set_green_panels_for_action(&action);
     }
     if (mode == 2) {
-        result = battle_target_disable_green_panel_on_all_but_target_tile((u8*)&action);
+        result = battle_target_disable_green_panel_on_all_but_target_tile(&action);
     }
     if (result == 0) {
         return 1;

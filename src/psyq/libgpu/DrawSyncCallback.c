@@ -2,8 +2,8 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
-void* DrawSyncCallback(void* callback) {
-    void* old;
+psyq_interrupt_callback_t DrawSyncCallback(psyq_interrupt_callback_t callback) {
+    psyq_interrupt_callback_t old;
     if (g_psyq_gpu_debug_level >= 2) {
         g_psyq_gpu_printf(g_psyq_gpu_draw_sync_callback_format, callback);
     }

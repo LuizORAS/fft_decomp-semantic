@@ -9,8 +9,8 @@
  * (halfword; its high byte is also read as 0x04, the facing-update mode:
  * 0 clears the suppression, anything else sets it).
  */
-void world_script_unit_animation_rotate_event_instruction(const u8* parameters) {
-    const u8* data = parameters;
+void world_script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters) {
+    const event_unit_anim_rotate_parameters_t* data = parameters;
     u8 rotation;
     s16 animation;
     s16 call_misc_id;
@@ -18,12 +18,12 @@ void world_script_unit_animation_rotate_event_instruction(const u8* parameters) 
     s32 index;
     world_unit_animation_state_t* rotation_state;
 
-    misc_id = world_script_load_halfword(data);
-    rotation = data[2];
-    animation = world_script_load_halfword(data + 3);
+    misc_id = world_script_load_halfword(data->unit_id_le);
+    rotation = data->rotation;
+    animation = world_script_load_halfword(data->animation_le);
     call_misc_id = world_script_get_misc_id(misc_id);
     misc_id = call_misc_id;
-    if (data[4] == 0) {
+    if (data->animation_le[1] == 0) {
         battle_unit_clear_facing_update_suppression(call_misc_id);
     } else {
         battle_unit_set_facing_update_suppression(call_misc_id);

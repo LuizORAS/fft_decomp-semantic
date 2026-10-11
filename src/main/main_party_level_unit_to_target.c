@@ -9,7 +9,7 @@ u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
     u32 current_level = party_unit->level;
     u32 level = current_level + level_delta;
     u8* growth_table;
-    u8* raw_stats;
+    unit_raw_stat_bytes_t* raw_stats;
     s32 levels_to_gain;
     s32 level_index;
     s32 i;
@@ -28,7 +28,7 @@ u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
     for (level_index = 0; level_index < levels_to_gain; level_index++) {
         for (i = 0; i < UNIT_RAW_STAT_COUNT; i++) {
             level = party_unit->level;
-            raw = raw_stats[i * 3] + (raw_stats[i * 3 + 1] << 8) + (raw_stats[i * 3 + 2] << 16);
+            raw = raw_stats[i].low + (raw_stats[i].middle << 8) + (raw_stats[i].high << 16);
             if (growth_table[i * 2] == 0) {
                 divisor = level + 1;
             } else {
@@ -38,9 +38,9 @@ u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
             if (raw > 0xffffff) {
                 raw = 0xffffff;
             }
-            raw_stats[i * 3] = raw;
-            raw_stats[i * 3 + 1] = raw >> 8;
-            raw_stats[i * 3 + 2] = raw >> 16;
+            raw_stats[i].low = raw;
+            raw_stats[i].middle = raw >> 8;
+            raw_stats[i].high = raw >> 16;
         }
         party_unit->level++;
     }

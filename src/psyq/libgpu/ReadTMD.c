@@ -20,7 +20,7 @@ psyq_tmd_primitive_t* ReadTMD(psyq_tmd_primitive_t* primitive) {
     primitive->n2.vx = normals[primitive->normal2].vx;
     primitive->n2.vy = normals[primitive->normal2].vy;
     primitive->n2.vz = normals[primitive->normal2].vz;
-    g_psyq_gpu_tmd_cursor += size;
+    g_psyq_gpu_tmd_cursor = (psyq_tmd_packet_t*)((u8*)g_psyq_gpu_tmd_cursor + size);
     primitive->n3.vx = normals[primitive->normal3].vx;
     primitive->n3.vy = normals[primitive->normal3].vy;
     primitive->n3.vz = normals[primitive->normal3].vz;

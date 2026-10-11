@@ -3,22 +3,19 @@
 
 /* Reset a unit's own sprite display: neutral colour, no flags on its eight
  * parts and none of them in use. */
-u8* battle_gfx_init_unit_sprite_display(s32 unit_index) {
+battle_gfx_sprite_display_data_t* battle_gfx_init_unit_sprite_display(s32 unit_index) {
     s32 body_part;
-    u8* display;
-    u8* flags;
+    battle_gfx_sprite_display_data_t* display;
 
     body_part = 7;
-    display = g_battle_unit_misc_data[unit_index].unit_sprite_display;
-    flags = display + 0x31;
-    display[2] = 0x80;
-    display[1] = 0x80;
-    display[0] = 0x80;
+    display = (battle_gfx_sprite_display_data_t*)g_battle_unit_misc_data[unit_index].unit_sprite_display;
+    display->blue = 0x80;
+    display->green = 0x80;
+    display->red = 0x80;
     do {
-        flags[0x14] = 0;
+        display->parts[body_part].flags = 0;
         body_part--;
-        flags -= 7;
     } while (body_part >= 0);
-    display[3] = 0;
+    display->part_count = 0;
     return display;
 }

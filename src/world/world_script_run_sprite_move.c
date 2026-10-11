@@ -17,10 +17,11 @@
 
 /* The parameters are copied into locals in this order: it is what places the
  * s0 copy before the s2 copy in the prologue. */
-void world_script_run_sprite_move(void* arg, s32 use_speed) {
+void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32 use_speed) {
     s32 pos[4][4];
     SVECTOR vec;
-    u8* parameters;
+    /* Indexed destination fields change allocation and shorten the target by four bytes. */
+    const u8* parameters;
     s32 mode;
     s16* coords;
     s32 misc_id;
@@ -37,7 +38,7 @@ void world_script_run_sprite_move(void* arg, s32 use_speed) {
     s32 elapsed;
     s32 half;
 
-    parameters = arg;
+    parameters = arg->unit_id_le;
     mode = use_speed;
     misc_id = world_script_get_misc_id(world_script_load_halfword(parameters));
     if (misc_id == EVENT_MISC_ID_NONE) {
@@ -45,7 +46,7 @@ void world_script_run_sprite_move(void* arg, s32 use_speed) {
     }
     g_world_thread_contexts[g_world_thread_current_id].task_words[0] = misc_id;
     coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
-    parameters += 2;
+    parameters += sizeof(arg->unit_id_le);
     pos[0][0] = coords[0];
     pos[0][1] = coords[1];
     pos[0][2] = coords[2];
@@ -54,7 +55,7 @@ void world_script_run_sprite_move(void* arg, s32 use_speed) {
     pos[3][2] = -coords[2];
     for (i = 0; i < 3; i++) {
         pos[1][i] = world_script_load_halfword(parameters);
-        parameters += 2;
+        parameters += sizeof(arg->destination_le[0]);
     }
     curve = *parameters++;
     weight = *parameters++;

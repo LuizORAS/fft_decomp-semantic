@@ -24,7 +24,7 @@
 s32 world_formation_process_job_change(s32 job) {
     union {
         world_formation_graphic_entry_t entry;
-        s16 points[6];
+        point16_t points[3];
     } scratch;
     RECT rect;
     s32 i;
@@ -91,21 +91,21 @@ s32 world_formation_process_job_change(s32 job) {
         amplitude = 240 - g_world_job_change_frame;
         offset = (g_world_job_change_frame - 220) * 8;
     }
-    scratch.points[1] = 0;
+    scratch.points[0].y = 0;
     for (i = 0; i < 64; i++) {
         n = (i * k + g_world_job_change_frame * 4) % ONE;
         line_x = ((amplitude * rcos(n)) >> 12) + 0x80;
-        scratch.points[0] = line_x;
-        scratch.points[2] = line_x;
-        scratch.points[4] = line_x;
+        scratch.points[0].x = line_x;
+        scratch.points[1].x = line_x;
+        scratch.points[2].x = line_x;
         base = offset - 146;
         line_y = ((swing * rsin(n)) >> 12) - base;
-        scratch.points[5] = scratch.points[3] = base = line_y;
+        scratch.points[2].y = scratch.points[1].y = base = line_y;
         line_y -= 64;
-        scratch.points[3] = line_y - offset;
+        scratch.points[1].y = line_y - offset;
         world_menu_add_gradient_line_primitive(&scratch.points[0], g_world_job_change_wave_colors, 1, 0x38);
-        scratch.points[3]++;
-        world_menu_add_gradient_line_primitive(&scratch.points[2], g_world_job_change_wave_colors + 3, 1, 0x38);
+        scratch.points[1].y++;
+        world_menu_add_gradient_line_primitive(&scratch.points[1], g_world_job_change_wave_colors + 1, 1, 0x38);
     }
     world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 3, 0x100, 0), 0, 0x37);
     g_world_job_change_frame++;

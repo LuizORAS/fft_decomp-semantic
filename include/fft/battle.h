@@ -377,7 +377,7 @@ enum {
     BATTLE_AI_ACTION_DECIDED = 0xff,
 };
 
-/* How an action follows its target: battle_ai_action_data_t.targeting_type and
+/* How an action follows its target: battle_ai_action_data_t.command.targeting_type and
  * its copies in the command and menu action records. */
 typedef enum battle_targeting_type {
     BATTLE_TARGETING_TYPE_TILE = 5, /* aims at target_x, target_elevation, target_y */
@@ -404,24 +404,15 @@ typedef struct battle_ai_action_data {
     u8 act_before_move;  /* 0x00; 1: act from the current tile, then move; 0: move to coords first */
     u8 reflected_action; /* 0x01; set while evaluating reflected-origin candidates */
     u8 _unused_02;
-    u8 wait_facing_hint;       /* 0x03; direction 0..3, 4 keeps current, 5 chooses during Wait */
-    battle_ai_coords_t coords; /* 0x04 */
-    u8 unit_id;                /* 0x08 */
-    u8 skillset;               /* 0x09 */
-    u16 ability_id;            /* 0x0a; stored with sh */
-    u16 calculator_type;       /* 0x0c */
-    u16 calculator_multiplier; /* 0x0e */
-    u8 item_id;                /* 0x10 */
-    u8 _unused_11;
-    u8 targeting_type;    /* 0x12; battle_targeting_type_e */
-    u8 target_id;         /* 0x13 */
-    u16 target_x;         /* 0x14; read with lhu */
-    u16 target_elevation; /* 0x16; 0 or 1 map layer */
-    u16 target_y;         /* 0x18 */
-    u8 _unused_1a[2];
-    battle_ai_action_rank_t rank; /* 0x1c */
+    u8 wait_facing_hint;                /* 0x03; direction 0..3, 4 keeps current, 5 chooses during Wait */
+    battle_ai_coords_t coords;          /* 0x04 */
+    battle_ai_command_action_t command; /* 0x08; copied as the ACT payload */
+    battle_ai_action_rank_t rank;       /* 0x1c */
 } battle_ai_action_data_t;
 typedef char battle_ai_action_data_size_must_be_0x20[(sizeof(battle_ai_action_data_t) == 0x20) ? 1 : -1];
+typedef char battle_ai_action_command_must_be_at_offset_8[((unsigned long)&((battle_ai_action_data_t*)0)->command == 8)
+        ? 1
+        : -1];
 
 /* unit_t AI ability list entry, 4 bytes, 0x22 per unit. */
 typedef struct battle_ai_ability_entry {
@@ -1072,7 +1063,7 @@ extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
 extern s32 g_main_system_animation_speed;
 void animation_exception_handler(s32 exception_id);
-void battle_script_rotate_unit(const u8* parameters);
+void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
 
 /* dead unit */
 
@@ -1239,11 +1230,11 @@ void battle_script_apply_input_overrides(u32* input);
 void battle_script_assign_bitset_flag(u32* bitset, s32 bit_index, s32 value);
 void battle_script_blue_remove_unit(s32 unit_id);
 void battle_script_blue_remove_all_enemy_units(void);
-void battle_script_change_stats(const u8* parameters);
+void battle_script_change_stats(const event_change_stats_parameters_t* parameters);
 void battle_script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum);
 void battle_script_earthquake_start(void);
-void battle_script_face_tile(u8* parameters);
-void battle_script_face_unit(const u8* parameters, s32 second_only);
+void battle_script_face_tile(const event_face_tile_parameters_t* parameters);
+void battle_script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
 void battle_script_filter_controller_input(u32* input);
 void battle_script_focus(u8* parameters);
 void battle_script_focus_speed(u8* parameters, s32* position, s32* rotation);
@@ -1261,7 +1252,7 @@ void battle_script_load_event(s32 id);
 s16 battle_script_load_halfword(const u8* data);
 s32 battle_script_load_next_event(void);
 void battle_script_map_darkness(void);
-void battle_script_march_units(u8* parameters);
+void battle_script_march_units(const event_march_parameters_t* parameters);
 void battle_script_print_debug_message(void);
 void battle_script_reset_event_state(void);
 void battle_script_run_next_event(void);
@@ -1272,16 +1263,16 @@ void battle_script_sprite_move(void);
 void battle_script_sprite_move_beta(void);
 void battle_script_start_current_event_thread(void);
 void battle_gfx_ramp_screen_overlay_intensity_to_max(void);
-void battle_script_unit_anim(u8* parameters);
+void battle_script_unit_anim(const event_unit_anim_parameters_t* parameters);
 u32 battle_script_get_event_finish_operation(void);
 void battle_script_store_halfword(u8* destination, s16 value);
 void battle_script_update_event_input_state(u32 state);
 void battle_script_wait_for_unit_ready(s32 misc_id);
-void battle_script_warp_unit(const u8* parameters);
-void battle_script_set_units_movement_effect_suppression(const u8* parameters);
+void battle_script_warp_unit(const event_warp_unit_parameters_t* parameters);
+void battle_script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
 s32 battle_script_run_scenario_conditions(void);
 s32 battle_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
-void battle_script_run_sprite_move(s32 arg, s32 use_speed);
+void battle_script_run_sprite_move(const event_sprite_move_parameters_t* parameters, s32 use_speed);
 
 /* Returns the event result that the battle state handlers switch on;
  * proven by 0x80078fb4 and 0x800785ac, which both consume it. */
@@ -1307,7 +1298,7 @@ s32 battle_script_add_ghost_unit_event_instruction(
 void battle_script_add_unit_start_thread(void);
 s32 battle_unit_is_moving(s32 misc_id);
 void battle_script_color_screen_thread(void);
-void battle_script_color_unit_event_instruction(u8* ptr);
+void battle_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void battle_script_toggle_message_portrait_flip(u8* ptr);
 void battle_script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
 void battle_script_apply_relative_camera(u8* p, s32* src);
@@ -1331,19 +1322,19 @@ s32* battle_script_get_variable_word_pointer_from_id(s32 variable_id);
 void battle_script_inflict_status_thread(void);
 s32 battle_script_is_tutorial_event_slot(void);
 void battle_script_load_portrait_colors_event_instruction(s32 portrait_id);
-void battle_script_mirrorsprite_event_instruction(u8* parameters);
+void battle_script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters);
 void battle_script_pause_event_instruction(void);
 void battle_script_play_effect_thread(void);
-void battle_script_resetpalette_event_instruction(const u8* parameters);
+void battle_script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
 void battle_script_run_condition(event_opcode_e opcode);
 void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
 void battle_script_set_event_speed(s32 speed);
 void battle_gfx_ramp_screen_overlay_intensity_to_zero(void);
 void battle_script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void battle_script_teleportout_event_instruction(s32 arg, s32 remove);
-void battle_script_unit_animation_rotate_event_instruction(const u8* parameters);
+void battle_script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters);
 void battle_script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
-void battle_script_wait_value_event_instruction(u8* parameters);
+void battle_script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters);
 void battle_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id);
 void battle_script_waitspritemove_event_instruction(s32 unit_id);
 void battle_script_waitwalk_event_instruction(s32 unit_id);
@@ -2461,7 +2452,7 @@ void battle_camera_toggle_zoom(void);
 void battle_camera_update_map_pan(void);
 
 void battle_camera_update_matrices(
-    MATRIX* camera_matrix, void* render_buffers, void* offset_screen_coords, VECTOR* camera_zoom);
+    MATRIX* camera_matrix, SVECTOR* rotation, VECTOR* screen_offset, VECTOR* camera_zoom);
 
 void battle_camera_update_offset_screen_coord_animation(void);
 void battle_camera_update_real_coord_animation(void);
@@ -3379,6 +3370,51 @@ enum {
  * 2e) and small operands in the bits above, followed by up to three operand
  * halfwords. Script offsets are bytes from the start of the script. */
 enum { EFFECT_SCRIPT_OPCODE_MASK = 0x1ff };
+
+/* Effect instructions are halfword-aligned. The header's low nine bits
+ * select the opcode; the remaining seven bits carry opcode-specific selectors.
+ * Operand views retain the signed or unsigned halfword loads of each handler. */
+typedef union battle_effect_script_header {
+    u16 word;
+    struct {
+        u8 opcode_low;        /* 0x00 */
+        u8 packed_parameters; /* 0x01; includes opcode bit 8 */
+    } bytes;
+} battle_effect_script_header_t;
+typedef char battle_effect_script_header_size_must_be_2[(sizeof(battle_effect_script_header_t) == 2) ? 1 : -1];
+
+typedef union battle_effect_script_halfword {
+    s16 signed_value;
+    u16 unsigned_value;
+} battle_effect_script_halfword_t;
+
+/* Four-byte instructions: jump offset, native function id or counter value. */
+typedef struct battle_effect_script_value_instruction {
+    battle_effect_script_header_t header;  /* 0x00 */
+    battle_effect_script_halfword_t value; /* 0x02 */
+} battle_effect_script_value_instruction_t;
+typedef char
+    battle_effect_script_value_instruction_size_must_be_4[(sizeof(battle_effect_script_value_instruction_t) == 4) ? 1
+                                                                                                                  : -1];
+
+/* Six-byte conditional branches: comparison followed by a script byte offset. */
+typedef struct battle_effect_script_branch_instruction {
+    battle_effect_script_header_t header;          /* 0x00 */
+    battle_effect_script_halfword_t comparison;    /* 0x02 */
+    battle_effect_script_halfword_t target_offset; /* 0x04 */
+} battle_effect_script_branch_instruction_t;
+typedef char battle_effect_script_branch_instruction_size_must_be_6
+    [(sizeof(battle_effect_script_branch_instruction_t) == 6) ? 1 : -1];
+
+/* Eight-byte camera instructions: position, rotation or zoom, in x/y/z order. */
+typedef struct battle_effect_script_vector_instruction {
+    battle_effect_script_header_t header; /* 0x00 */
+    battle_effect_script_halfword_t x;    /* 0x02 */
+    battle_effect_script_halfword_t y;    /* 0x04 */
+    battle_effect_script_halfword_t z;    /* 0x06 */
+} battle_effect_script_vector_instruction_t;
+typedef char battle_effect_script_vector_instruction_size_must_be_8
+    [(sizeof(battle_effect_script_vector_instruction_t) == 8) ? 1 : -1];
 
 /* What an opcode handler returns to battle_effect_run_block. */
 typedef enum effect_script_result {
@@ -5240,6 +5276,7 @@ void battle_unit_copy_misc_screen_coords(u32 misc_id, s16* screen_coords);
 void battle_unit_dismount_rider_and_update_display(battle_unit_misc_data_t* rider);
 void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target);
 battle_stats_t* battle_unit_find_active_data_pointer(void);
+battle_unit_action_command_t* battle_unit_check_party_member_exists(s32 unit_id);
 s16* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id);
 battle_stats_t* battle_unit_get_attacker_data_pointer(void);
 s32 battle_unit_get_facing_nibble_by_misc_id(u32 misc_id);
@@ -5292,7 +5329,8 @@ s32 battle_unit_store_jp_and_calculate_unlocked_jobs(s32 unit_index, s32 jp, s32
 void battle_unit_update_and_animate_units_three_times(void);
 void battle_unit_update_attack_result_animation(battle_unit_misc_data_t* unit);
 void battle_unit_update_facing_and_pending_animations(void);
-void battle_unit_start_post_attack_animation_display(s32 attacker, u8* target);
+void battle_unit_start_post_attack_animation_display(
+    battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target);
 u8 battle_unit_generate_treasure(battle_stats_t* unit);
 SVECTOR* battle_copy_misc_unit_screen_coords(u32 misc_id);
 struct battle_unit_misc_data* battle_unit_get_mount_misc_data(struct battle_unit_misc_data* unit);
@@ -5928,7 +5966,8 @@ s32 battle_gfx_get_unit_spritesheet_height_by_unit_id(u32 unit_id);
 void battle_gfx_highlight_all_units_blue_or_red(s32 mode);
 s16 battle_gfx_increment_counter(void);
 void battle_gfx_init_deployment_and_reset_unit_graphics_state(void);
-u8* battle_gfx_init_unit_sprite_display(s32 unit_index);
+battle_gfx_sprite_display_data_t* battle_gfx_init_unit_sprite_display(s32 unit_index);
+void battle_gfx_set_sprite_part_flip(battle_gfx_sprite_display_data_t* display, s32 part_index, u32 flags);
 s32 battle_gfx_is_spritesheet_id_loaded(s16 spritesheet_id);
 s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot);
 
@@ -5940,7 +5979,7 @@ void battle_gfx_release_unit_vram_slot(struct battle_unit_misc_data* unit);
 void battle_gfx_reset_unit_graphics_load_state(void);
 s32 battle_gfx_save_evtchr_slot(s32 slot_index);
 void battle_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 page);
-void battle_gfx_set_draw_mode_from_rect(void* mode, const RECT* rect);
+void battle_gfx_set_draw_mode_from_rect(DR_MODE* mode, const RECT* rect);
 void battle_gfx_set_primitive_brightness(void* primitive, s32 brightness);
 void battle_gfx_start_screen_color_modulation_fade(u16 blend_mode, u16 red, u16 green, u16 blue, u16 duration);
 s32 battle_gfx_step_load_unit_shp_seq_data(void);
@@ -5954,7 +5993,7 @@ void battle_gfx_init_image_loading(void* primitive, const world_image_location_t
     const world_gfx_image_load_parameters_t* parameters);
 
 void battle_gfx_copy_other_spr_palette_data_to_ram(u8* src);
-void battle_gfx_load_wep_spr_data(u8* data);
+void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive);
 
 void battle_gfx_apply_misc_unit_palette_modulation(
     s32 preset_color, s32 time, s32 misc_id, s16 red, s16 green, s16 blue);
@@ -6519,14 +6558,12 @@ extern battle_current_ability_t g_battle_action_current_ability;
 extern s32 g_battle_action_hamedo_flag;
 extern s32 g_battle_script_loaded_event_id;
 extern s32 g_battle_state_wait_direction_facing;
-extern u8 g_battle_action_saved_command[];
+extern battle_unit_action_command_t g_battle_action_saved_command;
 extern battle_stats_t* g_battle_action_target;
 extern battle_post_effect_msg_t g_battle_action_post_effect_msgs[];
 extern u8 g_battle_action_menu_skillsets[];
 
-/* g_battle_action_saved_command + 2: the saved action_command.ability_id.
- * The container is a byte copy of the unit's command, so this halfword
- * keeps its own name. */
+/* Separate link name for g_battle_action_saved_command.ability_id. */
 extern s16 g_battle_reaction_unit_last_ability_id;
 extern battle_current_attacker_data_t g_battle_action_current_attacker;
 extern battle_action_data_t g_battle_action_attacker_action_data;
@@ -6721,7 +6758,7 @@ void battle_formula_store_speed_and_x(void);
 void battle_formula_store_xa_plus_ya_status_damage(void);
 void battle_formula_store_xa_times_ya_damage(void);
 void battle_formula_use_hp_damage_as_action_hit_percent(void);
-s32 battle_target_set_panels_for_action(u8* action);
+s32 battle_target_set_panels_for_action(const battle_ai_command_action_t* action);
 s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids);
 void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff);
 void battle_target_calculate_aoe_vertical_tolerance(s32 x, s32 y, s32 lo, s32 hi);
@@ -6736,7 +6773,7 @@ void battle_target_can_select_tile(void);
 void battle_target_clear_panel_data(void);
 void battle_target_clear_panel_spread_flags(void);
 void battle_target_disable_green_panel_flags(void);
-s32 battle_target_disable_green_panel_on_all_but_target_tile(const u8* source);
+s32 battle_target_disable_green_panel_on_all_but_target_tile(const battle_ai_command_action_t* source);
 void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit);
 s32 battle_target_get_unit_id_if_tile_targetable(s32 a0, s32 a1, s32 a2);
 void battle_target_move_cursor_to_unit(battle_unit_misc_data_t* unit);
@@ -6767,7 +6804,7 @@ s32 battle_action_run_between_turn_control(s32 mode);
 void battle_formula_calculate_knockback(void);
 void battle_formula_apply_zodiac_compatibility(void);
 void battle_formula_store_physical_evade_values(void);
-s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id);
+s32 battle_action_run_pre_formula_setup(const battle_unit_action_command_t* source, u8 target_id);
 s32 battle_action_finalize_attack_and_flag_reactions(s32 misc_id);
 s32 battle_target_move_cursor_by_input(void);
 void battle_target_set_tile_background_color(s32 mode, s32 unused);
@@ -6781,7 +6818,7 @@ void battle_action_build_targets_post_action_message(void);
 s32 battle_action_calculate_projected_effect(
     battle_stats_t* attacker, battle_stats_t* target, battle_ai_command_action_t* command);
 
-s32 battle_action_call_attack_preparation_at_preview(u8* arg);
+s32 battle_action_call_attack_preparation_at_preview(battle_ai_command_action_t* command);
 s32 battle_action_check_at_list_for_unit_battle_id(battle_stats_t* unit);
 s32 battle_action_check_battle_outcome(void);
 void battle_action_check_mp_switch_distribute_and_damage_split_usability(void);
@@ -6793,7 +6830,7 @@ s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, u8 hit_count);
 void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount);
 s32 battle_action_perform_reaction_ability(void);
-s32 battle_action_preview_at_list(battle_stats_t* unit, u8* action, battle_at_entry_t* at_list);
+s32 battle_action_preview_at_list(battle_stats_t* unit, battle_ai_command_action_t* action, battle_at_entry_t* at_list);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_apply_jp_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
@@ -6817,17 +6854,17 @@ s32 battle_target_apply_reflect(battle_stats_t* unit);
 void battle_target_apply_vertical_fixed(s32 x, s32 y);
 void battle_target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 single_layer);
 s32 battle_target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 range);
-s32 battle_target_calculate_for_menu_types(const u8* source);
+s32 battle_target_calculate_for_menu_types(const battle_unit_action_command_t* source);
 s32 battle_target_count_hit_by_ability(u8* out);
 s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin);
 s32 battle_target_move_cursor_to_battle_id(u32 battle_id);
 void battle_target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* position, SVECTOR* raised);
 s32 battle_target_run_calculator(const battle_ai_command_action_t* source);
-s32 battle_target_set_ability_panels(const u8* source);
+s32 battle_target_set_ability_panels(const battle_ai_command_action_t* source);
 s32 battle_target_set_all_panels_targeted_if_targetable(void);
 void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out);
 s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source);
-s32 battle_target_set_jump_ability_panels(const u8* source);
+s32 battle_target_set_jump_ability_panels(const battle_ai_command_action_t* source);
 s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevation, s32 target_id);
 s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* source);
 void battle_target_build_directional_attack_panels(const void* source, u8 mode);
@@ -8331,7 +8368,7 @@ void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s3
 u8* battle_map_load_saved_state_record(battle_map_state_record_t* record);
 void* battle_map_light_state_command(s32 command, void* data);
 void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t* metadata);
-void battle_map_copy_xy_coords_and_tile_data(u8* p);
+void battle_map_copy_xy_coords_and_tile_data(u8* data);
 map_tile_t* battle_map_get_tile_data_ptr_from_battle_id(u32 battle_id);
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id);
 s32 battle_move_get_weather_terrain_cost(void);
@@ -8591,7 +8628,7 @@ extern world_menu_entry_t* g_battle_menu_thread_menu_data;
 void battle_menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, menu_number_entry_t* entries, battle_unit_status_record_t* status);
 
-void battle_handle_menu_cancel_input(void* menu);
+void battle_handle_menu_cancel_input(world_menu_entry_t* menu);
 void* battle_menu_alloc_buffer(s32 bytes);
 void* battle_menu_alloc_memory(s32 size);
 void* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
@@ -8688,7 +8725,7 @@ void battle_menu_clear_status_menu_state(void);
 s32 battle_menu_collect_calculator_abilities(s32 unit_id, u8 skillset, s16* out);
 s32 battle_menu_collect_math_skill_abilities_by_flags(s32 unit_id, u8 skillset, s16* out, u8 mask);
 s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* out, s32 unused, u8* flags_out);
-void battle_menu_confirm_action_silently(void* menu);
+void battle_menu_confirm_action_silently(world_menu_entry_t* menu);
 s32 battle_menu_copy_ff_terminated_bytes_to_halfwords(u16* dst, u8* src);
 void battle_menu_copy_palette_colors(const u8* source);
 void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output);
@@ -8762,7 +8799,7 @@ void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, REC
 void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void battle_menu_free_memory(void* buffer);
 void battle_menu_display_text_entry(s32 text_id, void* image, world_glyph_blit_t* origin);
-void battle_menu_handle_action(void* menu, s32 selected_option);
+void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option);
 void battle_menu_set_text_origin(s32 x, s32 y);
 s32 battle_menu_should_close_thread(s32* out_flag);
 void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);

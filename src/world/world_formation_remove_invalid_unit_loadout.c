@@ -36,27 +36,31 @@ void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
         g_world_formation_unit_pointers[unit_id]->equipment[1] = ITEM_ID_NOTHING;
     }
     if (g_world_formation_unit_pointers[unit_id]->job_id == JOB_ID_MIME) {
-        memset(&g_world_formation_unit_pointers[unit_id]->primary_skillset, 0, 10);
+        memset(&g_world_formation_unit_pointers[unit_id]->abilities, 0, sizeof(world_formation_abilities_t));
     }
     if (g_world_formation_unit_pointers[unit_id]->job_id == JOB_ID_CHEMIST
-        && g_world_formation_unit_pointers[unit_id]->support_ability == ABILITY_ID_SUPPORT_THROW_ITEM) {
-        g_world_formation_unit_pointers[unit_id]->support_ability = 0;
+        && g_world_formation_unit_pointers[unit_id]->abilities.fields.support_ability
+            == ABILITY_ID_SUPPORT_THROW_ITEM) {
+        g_world_formation_unit_pointers[unit_id]->abilities.fields.support_ability = 0;
     }
     if (g_world_formation_unit_pointers[unit_id]->job_id == JOB_ID_MONK
-        && g_world_formation_unit_pointers[unit_id]->support_ability == ABILITY_ID_SUPPORT_MARTIAL_ARTS) {
-        g_world_formation_unit_pointers[unit_id]->support_ability = 0;
+        && g_world_formation_unit_pointers[unit_id]->abilities.fields.support_ability
+            == ABILITY_ID_SUPPORT_MARTIAL_ARTS) {
+        g_world_formation_unit_pointers[unit_id]->abilities.fields.support_ability = 0;
     }
     if (g_world_formation_unit_pointers[unit_id]->job_id == JOB_ID_MEDIATOR
-        && g_world_formation_unit_pointers[unit_id]->support_ability == ABILITY_ID_SUPPORT_MONSTER_TALK) {
-        g_world_formation_unit_pointers[unit_id]->support_ability = 0;
+        && g_world_formation_unit_pointers[unit_id]->abilities.fields.support_ability
+            == ABILITY_ID_SUPPORT_MONSTER_TALK) {
+        g_world_formation_unit_pointers[unit_id]->abilities.fields.support_ability = 0;
     }
     if (g_world_formation_unit_pointers[unit_id]->job_id == JOB_ID_NINJA
-        && g_world_formation_unit_pointers[unit_id]->support_ability == ABILITY_ID_SUPPORT_TWO_SWORDS) {
-        g_world_formation_unit_pointers[unit_id]->support_ability = 0;
+        && g_world_formation_unit_pointers[unit_id]->abilities.fields.support_ability
+            == ABILITY_ID_SUPPORT_TWO_SWORDS) {
+        g_world_formation_unit_pointers[unit_id]->abilities.fields.support_ability = 0;
     }
-    if (g_world_formation_unit_pointers[unit_id]->primary_skillset
-        == g_world_formation_unit_pointers[unit_id]->secondary_skillset) {
-        g_world_formation_unit_pointers[unit_id]->secondary_skillset = 0;
+    if (g_world_formation_unit_pointers[unit_id]->abilities.fields.primary_skillset
+        == g_world_formation_unit_pointers[unit_id]->abilities.fields.secondary_skillset) {
+        g_world_formation_unit_pointers[unit_id]->abilities.fields.secondary_skillset = 0;
     }
     if (unit_id != 20) {
         world_formation_save_records_to_party_data();

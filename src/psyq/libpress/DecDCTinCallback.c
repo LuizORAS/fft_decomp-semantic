@@ -2,6 +2,6 @@
 #include "psx/libpress.h"
 #include "psx/types.h"
 
-void DecDCTinCallback(void* callback) {
+void DecDCTinCallback(psyq_interrupt_callback_t callback) {
     DMACallback(0, callback);
 }

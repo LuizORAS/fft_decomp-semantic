@@ -12,7 +12,7 @@
  * The restore arm carries its own copy of the misc_index test, which is what
  * retail does: it reloads misc_index and jumps past the absolute arm's own
  * reload, so cross-jumping merges only the branch and the loop increment. */
-void battle_script_rotate_unit(const u8* parameters) {
+void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters) {
     u16 unit_id;
     s32 misc_index;
     s32 i;
@@ -22,12 +22,12 @@ void battle_script_rotate_unit(const u8* parameters) {
     world_unit_animation_state_t* state;
 
     order = 1;
-    unit_id = battle_script_load_halfword(parameters);
+    unit_id = battle_script_load_halfword(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
             if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_filter_modes[i], &misc_index)
                 != 0) {
-                facing = parameters[2];
+                facing = parameters->facing;
                 if (facing >= EVENT_ROTATE_UNIT_FACING_RELATIVE_FIRST && facing < EVENT_ROTATE_UNIT_FACING_RESTORE) {
                     facing = facing & 0xF;
                     facing = battle_unit_get_facing_nibble_by_misc_id(unit_id) + facing * 4;
@@ -39,10 +39,10 @@ void battle_script_rotate_unit(const u8* parameters) {
                     if (state->initial_facing != 0xFF) {
                         state->rotate_mode = UNIT_ROTATE_MODE_SHORTEST;
                         state->target_facing = state->initial_facing;
-                        state->frames_per_step = g_battle_rotation_speed_frames[parameters[4]];
+                        state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];
                         state->step_counter = 0;
                         state->rotating = 1;
-                        state->delay = parameters[5] * order++ / 4;
+                        state->delay = parameters->delay * order++ / 4;
                     }
                     restore_misc_index = misc_index;
                     /* Keep the restore arm's stack reload before its loop exit. */
@@ -54,11 +54,11 @@ void battle_script_rotate_unit(const u8* parameters) {
                 }
                 state = &g_battle_unit_misc_rotation_data[unit_id];
                 state->target_facing = facing;
-                state->rotate_mode = parameters[3];
-                state->frames_per_step = g_battle_rotation_speed_frames[parameters[4]];
+                state->rotate_mode = parameters->mode;
+                state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];
                 state->step_counter = 0;
                 state->rotating = 1;
-                state->delay = parameters[5] * order++ / 4;
+                state->delay = parameters->delay * order++ / 4;
                 if (misc_index == 0) {
                     return;
                 }

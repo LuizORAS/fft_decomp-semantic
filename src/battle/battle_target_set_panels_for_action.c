@@ -20,7 +20,7 @@
  * weapon's range; NONE when no tile is marked; TILE_ONLY when the action cannot
  * follow a unit (always for Item, Throw, Attack, Charge and Jump); otherwise
  * UNIT_OR_TILE. */
-s32 battle_target_set_panels_for_action(u8* source) {
+s32 battle_target_set_panels_for_action(const battle_ai_command_action_t* source) {
     battle_ai_command_action_t action;
     battle_stats_t* unit;
     ability_secondary_data_t* ability;
@@ -71,7 +71,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
         flags = ABILITY_SECONDARY_FLAG_2_NO_FOLLOW_TARGET;
         break;
     case ACTION_MENU_TYPE_JUMP:
-        result = battle_target_set_jump_ability_panels((const u8*)&action);
+        result = battle_target_set_jump_ability_panels(&action);
         flags = ABILITY_SECONDARY_FLAG_2_NO_FOLLOW_TARGET;
         break;
     case ACTION_MENU_TYPE_BLANK_05:
@@ -92,7 +92,7 @@ s32 battle_target_set_panels_for_action(u8* source) {
             return BATTLE_TARGET_PANELS_NO_TARGETING;
         }
         action.ability_id = ability_id;
-        result = battle_target_set_ability_panels((const u8*)&action);
+        result = battle_target_set_ability_panels(&action);
     }
     if (mode == 2) {
         result = battle_target_calculate_ability_range_with_map_parameters(unit, range & 0xff);

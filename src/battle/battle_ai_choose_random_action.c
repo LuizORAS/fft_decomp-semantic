@@ -14,9 +14,9 @@ s32 battle_ai_choose_random_action(void) {
     s32 index_or_count;
 
     g_battle_ai_data_base.current_action.act_before_move = 0;
-    g_battle_ai_data_base.current_action.skillset = ai->considered_ability.skillset;
-    g_battle_ai_data_base.current_action.ability_id = ai->considered_ability.ability_id;
-    g_battle_ai_data_base.current_action.item_id = ai->considered_ability.parameters.bytes.item_id;
+    g_battle_ai_data_base.current_action.command.skillset = ai->considered_ability.skillset;
+    g_battle_ai_data_base.current_action.command.ability_id = ai->considered_ability.ability_id;
+    g_battle_ai_data_base.current_action.command.item_id = ai->considered_ability.parameters.bytes.item_id;
     if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] == ACTION_MENU_TYPE_ARITHMETICKS) {
         do {
             skillset = g_battle_math_source_skillsets[rand() % 4];
@@ -26,15 +26,15 @@ s32 battle_ai_choose_random_action(void) {
         } while (value == 0 || !(g_main_ability_data[value].ai_flags.bytes[3] & BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI)
             || !(g_main_ability_range_data[value].flags_3 & ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE)
             || !battle_ai_load_known_ability_flag(ai->acting_unit_id, skillset, index_or_count));
-        ai->current_action.ability_id = value;
+        ai->current_action.command.ability_id = value;
         do {
             value = rand() % 4;
         } while (!battle_ai_load_known_ability_flag(ai->acting_unit_id, ai->considered_ability.skillset, value));
-        ai->current_action.calculator_type = value + ABILITY_ID_MATH_FIRST;
+        ai->current_action.command.calculator_type = value + ABILITY_ID_MATH_FIRST;
         do {
             value = rand() % 4 + 4;
         } while (!battle_ai_load_known_ability_flag(ai->acting_unit_id, ai->considered_ability.skillset, value));
-        ai->current_action.calculator_multiplier = value + ABILITY_ID_MATH_FIRST;
+        ai->current_action.command.calculator_multiplier = value + ABILITY_ID_MATH_FIRST;
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_TARGET_MAP_TILES) {
         battle_ai_transfer_halfword_values(ai->targetable_tiles, ai->reachable_tiles[0], 72);
@@ -54,13 +54,13 @@ s32 battle_ai_choose_random_action(void) {
         /* A single attempt block lets missing movement candidates exit early. */
         do {
             if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET)
-                ai->current_action.targeting_type = rand() % 2 + BATTLE_TARGETING_TYPE_TILE;
+                ai->current_action.command.targeting_type = rand() % 2 + BATTLE_TARGETING_TYPE_TILE;
             else
-                ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
+                ai->current_action.command.targeting_type = BATTLE_TARGETING_TYPE_TILE;
             battle_ai_evaluate_linear_ability_behaviors();
             if (!ai->movable_tile_count) {
-                if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
-                    ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
+                if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
+                    ai->current_action.command.targeting_type = BATTLE_TARGETING_TYPE_TILE;
                     battle_ai_evaluate_linear_ability_behaviors();
                 }
                 if (!ai->movable_tile_count)
@@ -75,13 +75,13 @@ s32 battle_ai_choose_random_action(void) {
                 if (index_or_count) {
                     while (
                         battle_ai_take_random_tile(ai->targetable_tiles, &ai->considered_unit_coords, index_or_count)) {
-                        ai->current_action.target_x = ai->considered_unit_coords.bytes.x;
-                        ai->current_action.target_y = ai->considered_unit_coords.bytes.y;
-                        ai->current_action.target_elevation = ai->considered_unit_coords.bytes.elevation;
+                        ai->current_action.command.target_x = ai->considered_unit_coords.bytes.x;
+                        ai->current_action.command.target_y = ai->considered_unit_coords.bytes.y;
+                        ai->current_action.command.target_elevation = ai->considered_unit_coords.bytes.elevation;
                         ai->current_action.wait_facing_hint = battle_ai_find_direction_of_target(
                             (s8*)&ai->considered_unit_coords, (s8*)&ai->current_action.coords);
-                        if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT
-                            && (ai->current_action.target_id
+                        if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT
+                            && (ai->current_action.command.target_id
                                    = battle_ai_find_unit_at_coordinates(&ai->considered_unit_coords))
                                 == BATTLE_UNIT_ID_NONE)
                             continue;

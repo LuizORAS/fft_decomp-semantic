@@ -1,29 +1,24 @@
 #include "fft/main.h"
 
-/*
- * Rolls the five 24-bit raw stats (3 bytes each, little-endian) for the
- * selected unit type: generic male, generic female, Ramza, or monster.
- */
-void main_unit_generate_base_raw_stats(u8* raw_stats, int unit_type) {
-    /* Pin required: unpinned, type_index, index and base rotate among $s2/$s3/$s4. */
-    register int type_index __asm__("$20") = unit_type;
-    int index = 0;
-    u8* variance = (u8*)g_main_unit_generation_raw_stat_variance;
-    volatile u8* out = raw_stats;
-    u8* table = (u8*)g_main_unit_generation_base_data;
-    u8* base = table + type_index * 12;
+/* Roll the five little-endian 24-bit raw stats for the selected unit type. */
+void main_unit_generate_base_raw_stats(unit_raw_stat_bytes_t* raw_stats, s32 unit_type) {
+    /* Without the pin, type_index, index and base rotate among $s2/$s3/$s4. */
+    register s32 type_index __asm__("$20") = unit_type;
+    s32 index = 0;
+    main_unit_generation_raw_stat_variance_t* variance = g_main_unit_generation_raw_stat_variance;
+    unit_raw_stat_bytes_t* out = raw_stats;
+    main_unit_generation_base_data_t* table = g_main_unit_generation_base_data;
+    u8* base = table[type_index].raw_stat_seeds;
 
     do {
-        int value = base[0] << 14;
+        s32 value = base[index] << 14;
 
-        /* Keep the type-index multiplication inside the loop, as in the target. */
+        /* Retail recalculates the type stride inside the loop; plain C hoists it. */
         __asm__("" : "=r"(type_index) : "0"(type_index));
-        value += (rand() * (variance + type_index * UNIT_RAW_STAT_COUNT)[index]) / 2;
-        base++;
+        value += (rand() * variance[type_index].raw_stats[index]) / 2;
+        out[index].low = value;
+        out[index].middle = (u32)value >> 8;
+        out[index].high = value >> 16;
         index++;
-        out[0] = value;
-        out[1] = (u32)value >> 8;
-        out[2] = value >> 16;
-        out += UNIT_RAW_STAT_SERIALIZED_BYTES;
     } while (index < UNIT_RAW_STAT_COUNT);
 }

@@ -1,6 +1,7 @@
 #ifndef PSX_LIBPRESS_H
 #define PSX_LIBPRESS_H
 
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 void DecDCTReset(s32 mode);
@@ -11,8 +12,8 @@ void DecDCTin(s32* buf, s32 mode);
 void DecDCTout(u32 buf, u32 size);
 void DecDCTinSync(void);
 void DecDCToutSync(void);
-void DecDCTinCallback(void* func);
-void DecDCToutCallback(void* func);
+void DecDCTinCallback(psyq_interrupt_callback_t func);
+void DecDCToutCallback(psyq_interrupt_callback_t func);
 s32 DecDCTvlcSize(s32 words);
 void DecDCTvlc(void* frame_data, void* decode_buffer);
 

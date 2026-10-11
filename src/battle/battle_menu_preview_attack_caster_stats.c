@@ -12,7 +12,7 @@ void battle_menu_preview_attack_caster_stats(void) {
     battle_stats_t* target;
     /* Signed view of battle_ai_command_action_t for the ability id load. */
     world_unit_command_action_t* action;
-    u8* ability_data;
+    ability_data_t* ability_data;
     ability_secondary_data_t* secondary;
     s16* selected;
 

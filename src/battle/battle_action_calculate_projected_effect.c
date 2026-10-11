@@ -13,7 +13,7 @@ s32 battle_action_calculate_projected_effect(
     s32 saved_action_state;
     s32 saved_action_context;
 
-    main_util_copy_action_data(&attacker->action_command, g_battle_action_saved_command);
+    main_util_copy_action_data(&attacker->action_command, &g_battle_action_saved_command);
     main_util_copy_action_data(command, &attacker->action_command);
     battle_action_init_current_ability_strike_data(attacker);
     saved_action_state = g_battle_action_state;
@@ -29,7 +29,7 @@ s32 battle_action_calculate_projected_effect(
             target->action.hit = 0;
             target->action.attack_accuracy = 0;
             g_battle_action_state = saved_action_state;
-            main_util_copy_action_data(g_battle_action_saved_command, &attacker->action_command);
+            main_util_copy_action_data(&g_battle_action_saved_command, &attacker->action_command);
             return 0;
         }
     }
@@ -37,9 +37,9 @@ s32 battle_action_calculate_projected_effect(
     g_battle_action_current_ability.defaulted_to_attack = 0;
     g_battle_action_context = BATTLE_ACTION_CONTEXT_PRIMARY;
     target->action.reaction_id = 0;
-    battle_action_run_pre_formula_setup((u8*)&attacker->action_command, target->misc_unit_id);
+    battle_action_run_pre_formula_setup(&attacker->action_command, target->misc_unit_id);
     g_battle_action_context = saved_action_context;
     g_battle_action_state = saved_action_state;
-    main_util_copy_action_data(g_battle_action_saved_command, &attacker->action_command);
+    main_util_copy_action_data(&g_battle_action_saved_command, &attacker->action_command);
     return 0;
 }

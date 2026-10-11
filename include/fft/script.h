@@ -410,6 +410,114 @@ typedef struct event_walk_to_parameters {
 } event_walk_to_parameters_t;
 typedef char event_walk_to_parameters_size_must_be_8[sizeof(event_walk_to_parameters_t) == 8 ? 1 : -1];
 
+/* Fixed event operand records. Halfwords stay in little-endian byte arrays
+ * because the interpreter may address them at any byte alignment. */
+typedef struct event_unit_color {
+    u8 mode;
+    s8 red;
+    s8 green;
+    s8 blue;
+    u8 duration;
+} event_unit_color_t;
+
+typedef struct event_color_unit_parameters {
+    u8 unit_id_le[2];
+    event_unit_color_t color;
+} event_color_unit_parameters_t;
+typedef char event_color_unit_parameters_size_must_be_7[sizeof(event_color_unit_parameters_t) == 7 ? 1 : -1];
+
+typedef struct event_change_stats_parameters {
+    u8 unit_id_le[2];
+    u8 stat; /* event_change_stats_e */
+    u8 delta_le[2];
+} event_change_stats_parameters_t;
+typedef char event_change_stats_parameters_size_must_be_5[sizeof(event_change_stats_parameters_t) == 5 ? 1 : -1];
+
+typedef struct event_mirror_sprite_parameters {
+    u8 unit_id_le[2];
+    u8 mode;
+} event_mirror_sprite_parameters_t;
+
+typedef struct event_movement_effect_parameters {
+    u8 unit_id_le[2];
+    u8 suppressed;
+} event_movement_effect_parameters_t;
+
+typedef struct event_march_parameters {
+    u8 unit_id_le[2];
+    u8 wait_frames;
+} event_march_parameters_t;
+
+typedef struct event_unit_anim_parameters {
+    u8 unit_id_le[2];
+    u8 animation_le[2];
+    u8 facing_update_mode;
+} event_unit_anim_parameters_t;
+
+/* The animation's high byte also controls facing-update suppression. */
+typedef struct event_unit_anim_rotate_parameters {
+    u8 unit_id_le[2];
+    u8 rotation;
+    u8 animation_le[2];
+} event_unit_anim_rotate_parameters_t;
+
+typedef struct event_wait_value_parameters {
+    u8 variable_id_le[2];
+    u8 test_value_le[2];
+} event_wait_value_parameters_t;
+
+typedef struct event_rotate_unit_parameters {
+    u8 unit_id_le[2];
+    u8 facing;
+    u8 mode;
+    u8 speed;
+    u8 delay;
+} event_rotate_unit_parameters_t;
+
+typedef struct event_unit_parameters {
+    u8 unit_id_le[2];
+} event_unit_parameters_t;
+
+typedef struct event_unit_placement {
+    u8 x;
+    u8 y;
+    u8 elevation;
+    u8 facing;
+} event_unit_placement_t;
+
+typedef struct event_warp_unit_parameters {
+    u8 unit_id_le[2];
+    event_unit_placement_t placement;
+} event_warp_unit_parameters_t;
+
+typedef struct event_face_tile_parameters {
+    u8 unit_id_le[2];
+    u8 x;
+    u8 y;
+    u8 _unused_04;
+    u8 mode;
+    u8 speed;
+    u8 delay;
+} event_face_tile_parameters_t;
+
+typedef struct event_face_unit_parameters {
+    u8 first_unit_id_le[2];
+    u8 second_unit_id_le[2];
+    u8 mode;
+    u8 speed;
+    u8 delay;
+} event_face_unit_parameters_t;
+
+/* SpriteMove uses duration_or_speed_le as frames; SpriteMoveBeta as speed. */
+typedef struct event_sprite_move_parameters {
+    u8 unit_id_le[2];
+    u8 destination_le[3][2];
+    u8 curve;
+    u8 weight;
+    u8 duration_or_speed_le[2];
+} event_sprite_move_parameters_t;
+typedef char event_sprite_move_parameters_size_must_be_12[sizeof(event_sprite_move_parameters_t) == 12 ? 1 : -1];
+
 /* Operand view of the event jump instruction that
  * *_script_jump_event_instruction reads: a unit id halfword, then the two
  * byte operands. */

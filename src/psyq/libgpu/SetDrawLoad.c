@@ -1,8 +1,8 @@
 /* LIBGPU 80023f70-80023fd4. */
 #include "psx/libgpu.h"
 
-void SetDrawLoad(void* primitive, RECT* rect) {
-    psyq_draw_load_t* packet = primitive;
+void SetDrawLoad(DR_LOAD* primitive, RECT* rect) {
+    psyq_draw_load_t* packet = (psyq_draw_load_t*)primitive;
     int size = (rect->w * rect->h + 1) / 2;
     int length = size + 4;
     if (size < 1 || size > 11) {

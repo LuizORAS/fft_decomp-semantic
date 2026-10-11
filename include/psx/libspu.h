@@ -76,6 +76,11 @@ typedef struct {
     s16 voice3[0x200];
 } SpuDecodedData;
 
+typedef struct psyq_spu_heap_record {
+    u32 address;
+    u32 size;
+} psyq_spu_heap_record_t;
+
 typedef void (*SpuTransferCallbackProc)(void);
 
 extern void SpuInit(void);
@@ -94,7 +99,7 @@ void _SpuInit(s32 hot);
 u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_high);
 
 /* 0x800194c4-0x8001b4b0: entry points used by the Suzuki driver. */
-s32 SpuInitMalloc(s32 num, u8* top);
+s32 SpuInitMalloc(s32 num, psyq_spu_heap_record_t* table);
 u32 SpuSetNoiseVoice(s32 on_off, u32 voice_bit);
 s32 SpuSetNoiseClock(s32 n_clock);
 u32 SpuRead(u8* addr, u32 size);
@@ -268,11 +273,6 @@ extern u32 _spu_rev_offsetaddr; /* reverb work start, in eight-byte units */
 extern volatile u32 _spu_RQvoice;
 extern volatile u32 _spu_RQmask;
 extern volatile u16 _spu_RQ[10]; /* deferred key, LFO, noise and reverb masks */
-
-typedef struct psyq_spu_heap_record {
-    u32 address;
-    u32 size;
-} psyq_spu_heap_record_t;
 
 typedef struct psyq_spu_reverb_parameters {
     u32 mask;

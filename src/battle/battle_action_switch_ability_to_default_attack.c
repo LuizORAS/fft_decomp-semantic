@@ -22,7 +22,7 @@ void battle_action_switch_ability_to_default_attack(void) {
     u2 = g_battle_action_attacker;
     saved_ability = unit->action_command.ability_id;
     u2->action_command.ability_id = 0;
-    battle_action_run_pre_formula_setup((u8*)&u2->action_command, g_battle_action_current_ability.target_id);
+    battle_action_run_pre_formula_setup(&u2->action_command, g_battle_action_current_ability.target_id);
     u3 = g_battle_action_attacker;
     *pc3 = saved_c3;
     u3->action_command.ability_id = saved_ability;

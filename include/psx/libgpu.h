@@ -431,6 +431,15 @@ typedef struct {
     u32 code[2];
 } DR_MODE;
 
+typedef DR_MODE DR_TWIN;
+
+/* SDK upload primitive storage; SetDrawLoad fills its header only. */
+typedef struct {
+    u32 tag;
+    u32 code[3];
+    u32 p[13];
+} DR_LOAD;
+
 typedef struct {
     u32 tag;
     u32 code[2];
@@ -558,6 +567,17 @@ typedef struct {
     u16 clut;
 } SPRT_8;
 
+typedef SPRT_8 SPRT_16;
+
+typedef struct {
+    u32 tag;
+    u8 r0, g0, b0, code;
+    s16 x0, y0;
+} TILE_1;
+
+typedef TILE_1 TILE_8;
+typedef TILE_1 TILE_16;
+
 /* Resolved retail TMD record used by ReadTMD; field offsets are measured. */
 typedef struct {
     u32 id;
@@ -586,28 +606,28 @@ void AddPrims(u32* ot, void* first, void* last);
 extern void SetSemiTrans(void*, int);
 extern void SetShadeTex(void*, int);
 extern void SetPolyF3(POLY_F3*);
-extern void SetPolyFT3(void*);
-extern void SetPolyG3(void*);
-extern void SetPolyGT3(void*);
+extern void SetPolyFT3(POLY_FT3*);
+extern void SetPolyG3(POLY_G3*);
+extern void SetPolyGT3(POLY_GT3*);
 extern void SetPolyF4(POLY_F4*);
 extern void SetPolyFT4(POLY_FT4*);
-extern void SetPolyG4(void*);
-extern void SetPolyGT4(void*);
-extern void SetSprt8(void*);
-extern void SetSprt16(void*);
-extern void SetSprt(void*);
-extern void SetTile1(void*);
-extern void SetTile8(void*);
-extern void SetTile16(void*);
-extern void SetTile(void*);
-extern void SetLineF2(void*);
-extern void SetLineG2(void*);
-extern void SetLineF3(void*);
-extern void SetLineG3(void*);
-extern void SetLineF4(void*);
-extern void SetLineG4(void*);
-extern void SetBlockFill(void*);
-extern void SetDrawMove(void*);
+extern void SetPolyG4(POLY_G4*);
+extern void SetPolyGT4(POLY_GT4*);
+extern void SetSprt8(SPRT_8*);
+extern void SetSprt16(SPRT_16*);
+extern void SetSprt(SPRT*);
+extern void SetTile1(TILE_1*);
+extern void SetTile8(TILE_8*);
+extern void SetTile16(TILE_16*);
+extern void SetTile(TILE*);
+extern void SetLineF2(LINE_F2*);
+extern void SetLineG2(LINE_G2*);
+extern void SetLineF3(LINE_F3*);
+extern void SetLineG3(LINE_G3*);
+extern void SetLineF4(LINE_F4*);
+extern void SetLineG4(LINE_G4*);
+extern void SetBlockFill(TILE*);
+extern void SetDrawMove(DR_MOVE*);
 extern u16 GetTPage(int tp, int abr, int x, int y);
 extern u16 GetClut(int x, int y);
 extern DR_MODE* SetDrawMode(DR_MODE*, int, int, int, RECT*);
@@ -616,7 +636,7 @@ extern void SetDispMask(int);
 extern int ResetGraph(int);
 extern int SetGraphDebug(int);
 extern int GetGraphType(void);
-extern void* DrawSyncCallback(void*);
+extern psyq_interrupt_callback_t DrawSyncCallback(psyq_interrupt_callback_t callback);
 extern int DrawSync(int);
 extern void ClearImage(RECT*, u8, u8, u8);
 extern u32* ClearOTag(void*, int);
@@ -647,19 +667,26 @@ void SetDrawEnv(DR_ENV* packet, DRAWENV* env);
 void DrawOTagEnv(u32* ot, DRAWENV* env);
 DISPENV* GetDispEnv(DISPENV* env);
 u32 GetODE(void);
-void SetTexWindow(void* packet, RECT* window);
+void SetTexWindow(DR_TWIN* packet, RECT* window);
 void SetPriority(DR_PRIO* packet, int test_mask, int set_mask);
 void* NextPrim(void* primitive);
 int IsEndPrim(void* primitive);
 void CatPrim(void* primitive, void* next);
 void TermPrim(void* primitive);
 void SetDrawTPage(DR_TPAGE* p, int dfe, int dtd, int tpage);
-void SetDrawLoad(void* primitive, RECT* rect);
+void SetDrawLoad(DR_LOAD* primitive, RECT* rect);
 int MargePrim(void* first, void* second);
 int OpenTMD(u32* tmd, int object_index);
 psyq_tmd_primitive_t* ReadTMD(psyq_tmd_primitive_t* primitive);
 
 /* driver internals */
+
+/* TIM palette and pixel blocks carry a byte length, VRAM rectangle and payload. */
+typedef struct {
+    u32 size_bytes;
+    RECT rect;
+    u32 data[0]; /* Variable-length word payload follows the 12-byte header. */
+} psyq_tim_block_t;
 
 typedef union {
     RECT rect;
@@ -717,7 +744,7 @@ extern u8 g_psyq_gpu_debug_level;
 extern u8 g_psyq_gpu_graph_reverse;
 extern u16 g_psyq_gpu_vram_width;
 extern u16 g_psyq_gpu_vram_height;
-extern void* g_psyq_gpu_draw_sync_callback;
+extern psyq_interrupt_callback_t g_psyq_gpu_draw_sync_callback;
 extern DRAWENV g_psyq_gpu_draw_environment;
 extern DISPENV g_psyq_gpu_display_environment;
 extern volatile u32* g_psyq_gpu_gp0_port;
@@ -859,9 +886,11 @@ typedef struct {
     u32 scale;
 } psyq_tmd_object_t;
 
+typedef union psyq_tmd_packet psyq_tmd_packet_t;
+
 extern SVECTOR* g_psyq_gpu_tmd_vertices;
 extern SVECTOR* g_psyq_gpu_tmd_normals;
-extern u8* g_psyq_gpu_tmd_cursor;
+extern psyq_tmd_packet_t* g_psyq_gpu_tmd_cursor;
 extern int g_psyq_gpu_tmd_primitive_count;
 extern const char g_psyq_gpu_tmd_decode_message[];
 extern const char g_psyq_gpu_tmd_object_format[];
@@ -869,8 +898,8 @@ extern const char g_psyq_gpu_tmd_vertices_format[];
 extern const char g_psyq_gpu_tmd_normals_format[];
 extern const char g_psyq_gpu_tmd_primitives_format[];
 int psyq_gpu_open_tmd_object(
-    psyq_tmd_header_t* header, int object_index, u8** primitive, SVECTOR** vertices, SVECTOR** normals);
-int psyq_gpu_decode_tmd_primitive(const u8* source, psyq_tmd_primitive_t* primitive);
+    psyq_tmd_header_t* header, int object_index, psyq_tmd_packet_t** primitive, SVECTOR** vertices, SVECTOR** normals);
+int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, psyq_tmd_primitive_t* primitive);
 
 extern volatile psyq_gpu_operation_snapshot_t g_psyq_gpu_last_operation;
 extern const char g_psyq_gpu_timeout_state_format[];
@@ -1156,7 +1185,7 @@ typedef struct {
     u16 vertex3;
 } psyq_tmd_gt4_packet_t;
 
-typedef union {
+union psyq_tmd_packet {
     u32 id;
     psyq_tmd_f3_lit_packet_t f3_lit;
     psyq_tmd_g3_lit_packet_t g3_lit;
@@ -1174,7 +1203,7 @@ typedef union {
     psyq_tmd_g4_packet_t g4;
     psyq_tmd_ft4_packet_t ft4;
     psyq_tmd_gt4_packet_t gt4;
-} psyq_tmd_packet_t;
+};
 
 extern const char g_psyq_gpu_tmd_f3_lit_name[];
 extern const char g_psyq_gpu_tmd_g3_lit_name[];

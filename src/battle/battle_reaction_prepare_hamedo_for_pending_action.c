@@ -17,7 +17,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     battle_stats_t* unit;
     battle_stats_t* base;
     battle_stats_t* target;
-    u8* action;
+    battle_unit_action_command_t* action;
     s32 i;
     s32 count;
     s32 result;
@@ -80,13 +80,13 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     if (battle_action_calculate_chance_to_react(target) != 0) {
         return -1;
     }
-    action = (u8*)&target->action_command;
+    action = &target->action_command;
     if (battle_action_can_unit_react(target) != 0) {
         return -1;
     }
 
     g_battle_action_context = count;
-    main_util_copy_action_data(action, g_battle_action_saved_command);
+    main_util_copy_action_data(action, &g_battle_action_saved_command);
     g_battle_current_reaction_ability_id = ABILITY_ID_REACTION_HAMEDO;
     g_battle_acting_unit_id = id;
     target->action_command.actor_id = tid;
@@ -101,6 +101,6 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
         }
         return tid;
     }
-    main_util_copy_action_data(g_battle_action_saved_command, action);
+    main_util_copy_action_data(&g_battle_action_saved_command, action);
     return -1;
 }

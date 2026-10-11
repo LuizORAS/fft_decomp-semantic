@@ -30,7 +30,7 @@ s32 battle_ai_score_reachable_tiles(void) {
     }
     level = 0;
     g_battle_ai_data_base.current_action.act_before_move = 0;
-    g_battle_ai_data_base.current_action.skillset = 0;
+    g_battle_ai_data_base.current_action.command.skillset = 0;
     for (; level < 2; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             {

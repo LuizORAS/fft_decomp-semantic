@@ -11,9 +11,8 @@ s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s3
     s16 equipment[5];
     s32 i;
     if (world_formation_get_unit_lock(unit_id) == WORLD_FORMATION_UNIT_UNLOCKED) {
-        world_formation_unit_ability_slots_t* unit
-            = (world_formation_unit_ability_slots_t*)g_world_formation_unit_pointers[unit_id];
-        unit->ability_slots[slot] = ability;
+        world_formation_unit_t* unit = g_world_formation_unit_pointers[unit_id];
+        unit->abilities.slots[slot] = ability;
         world_formation_save_records_to_party_data();
         world_formation_remove_invalid_unit_loadout(unit_id);
         if (update_equipment != 0) {

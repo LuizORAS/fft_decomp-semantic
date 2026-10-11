@@ -69,11 +69,11 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
         count = 0;
         for (i = 0; i < 3; i++) {
             if (abilities[i] != 0) {
-                (&record->primary_skillset)[count++] = abilities[i];
+                record->abilities.slots[count++] = abilities[i];
             }
         }
     } else {
-        record->primary_skillset = unit->primary_skillset;
+        record->abilities.fields.primary_skillset = unit->primary_skillset;
         if (record->job_id != JOB_ID_MIME) {
             record->equipment[0] = party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
                 ? party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON]
@@ -89,10 +89,10 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
                     record->equipment[i] = ITEM_ID_NOTHING;
                 }
             }
-            record->secondary_skillset = party->secondary_skillset;
-            record->reaction_ability = party->reaction_ability[0] + (party->reaction_ability[1] << 8);
-            record->support_ability = party->support_ability[0] + (party->support_ability[1] << 8);
-            record->movement_ability = party->movement_ability[0] + (party->movement_ability[1] << 8);
+            record->abilities.fields.secondary_skillset = party->secondary_skillset;
+            record->abilities.fields.reaction_ability = party->reaction_ability[0] + (party->reaction_ability[1] << 8);
+            record->abilities.fields.support_ability = party->support_ability[0] + (party->support_ability[1] << 8);
+            record->abilities.fields.movement_ability = party->movement_ability[0] + (party->movement_ability[1] << 8);
         }
     }
 

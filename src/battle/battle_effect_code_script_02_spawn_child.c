@@ -10,13 +10,14 @@ s32 battle_effect_code_script_02_spawn_child(effect_record_t* record) {
     s16 child;
     s32 pc;
     u8* script;
-    u8* instruction;
+    battle_effect_script_value_instruction_t* instruction;
 
     pc = record->pc;
     script = record->script;
-    instruction = (u8*)(pc + (u32)script);
-    slot = instruction[1] >> 4;
-    child = battle_effect_start_script_record(script, *(s16*)(instruction + 2), g_battle_effect_current_record_index);
+    instruction = (battle_effect_script_value_instruction_t*)((pc + (u32)script));
+    slot = instruction->header.bytes.packed_parameters >> 4;
+    child = battle_effect_start_script_record(
+        script, instruction->value.signed_value, g_battle_effect_current_record_index);
     if (slot < EFFECT_SCRIPT_CHILD_SLOT_COUNT) {
         record->child_indices[slot] = child;
     }

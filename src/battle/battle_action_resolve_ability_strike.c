@@ -80,7 +80,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         target_id = targets[i];
         if (target_id != 0xff) {
             g_battle_action_current_ability.defaulted_to_attack = 0;
-            battle_action_run_pre_formula_setup((u8*)&attacker->action_command, target_id);
+            battle_action_run_pre_formula_setup(&attacker->action_command, target_id);
         }
     }
     battle_status_remove_transparent_if_jump_used(attacker);

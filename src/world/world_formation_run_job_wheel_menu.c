@@ -86,54 +86,54 @@ void world_formation_run_job_wheel_menu(void) {
             g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL;
         }
         if (g_world_job_change_anim_state == WORLD_JOB_CHANGE_ANIM_DISSOLVE) {
-            g_world_job_change_flash_colors[0][0]
-                = g_world_job_change_flash_colors[0][0] < 0xFE ? g_world_job_change_flash_colors[0][0] + 1 : 0xFF;
-            g_world_job_change_flash_colors[0][1] = g_world_job_change_flash_colors[0][0] == 0xFF
-                ? g_world_job_change_flash_colors[0][1] + 1
-                : g_world_job_change_flash_colors[0][1] - 1;
-            g_world_job_change_flash_colors[0][2] = g_world_job_change_flash_colors[0][0] == 0xFF
-                ? g_world_job_change_flash_colors[0][2] + 1
-                : g_world_job_change_flash_colors[0][2] - 1;
-            g_world_job_change_flash_colors[1][1]
-                = g_world_job_change_flash_colors[1][1] < 0xFE ? g_world_job_change_flash_colors[1][1] + 1 : 0xFF;
-            g_world_job_change_flash_colors[1][0] = g_world_job_change_flash_colors[1][1] == 0xFF
-                ? g_world_job_change_flash_colors[1][0] + 1
-                : g_world_job_change_flash_colors[1][0] - 1;
-            g_world_job_change_flash_colors[1][2] = g_world_job_change_flash_colors[1][1] == 0xFF
-                ? g_world_job_change_flash_colors[1][2] + 1
-                : g_world_job_change_flash_colors[1][2] - 1;
-            g_world_job_change_flash_colors[2][2]
-                = g_world_job_change_flash_colors[2][2] < 0xFE ? g_world_job_change_flash_colors[2][2] + 1 : 0xFF;
-            g_world_job_change_flash_colors[2][0] = g_world_job_change_flash_colors[2][2] == 0xFF
-                ? g_world_job_change_flash_colors[2][0] + 1
-                : g_world_job_change_flash_colors[2][0] - 1;
-            g_world_job_change_flash_colors[2][1] = g_world_job_change_flash_colors[2][2] == 0xFF
-                ? g_world_job_change_flash_colors[2][1] + 1
-                : g_world_job_change_flash_colors[2][1] - 1;
-            g_world_job_change_flash_colors[3][0]
-                = g_world_job_change_flash_colors[3][0] < 0xFE ? g_world_job_change_flash_colors[3][0] + 1 : 0xFF;
-            g_world_job_change_flash_colors[3][1]
-                = g_world_job_change_flash_colors[3][1] < 0xFE ? g_world_job_change_flash_colors[3][1] + 1 : 0xFF;
-            g_world_job_change_flash_colors[3][2] = g_world_job_change_flash_colors[3][0] == 0xFF
-                ? g_world_job_change_flash_colors[3][2] + 1
-                : g_world_job_change_flash_colors[3][2] - 1;
+            g_world_job_change_flash_colors[0].r
+                = g_world_job_change_flash_colors[0].r < 0xFE ? g_world_job_change_flash_colors[0].r + 1 : 0xFF;
+            g_world_job_change_flash_colors[0].g = g_world_job_change_flash_colors[0].r == 0xFF
+                ? g_world_job_change_flash_colors[0].g + 1
+                : g_world_job_change_flash_colors[0].g - 1;
+            g_world_job_change_flash_colors[0].b = g_world_job_change_flash_colors[0].r == 0xFF
+                ? g_world_job_change_flash_colors[0].b + 1
+                : g_world_job_change_flash_colors[0].b - 1;
+            g_world_job_change_flash_colors[1].g
+                = g_world_job_change_flash_colors[1].g < 0xFE ? g_world_job_change_flash_colors[1].g + 1 : 0xFF;
+            g_world_job_change_flash_colors[1].r = g_world_job_change_flash_colors[1].g == 0xFF
+                ? g_world_job_change_flash_colors[1].r + 1
+                : g_world_job_change_flash_colors[1].r - 1;
+            g_world_job_change_flash_colors[1].b = g_world_job_change_flash_colors[1].g == 0xFF
+                ? g_world_job_change_flash_colors[1].b + 1
+                : g_world_job_change_flash_colors[1].b - 1;
+            g_world_job_change_flash_colors[2].b
+                = g_world_job_change_flash_colors[2].b < 0xFE ? g_world_job_change_flash_colors[2].b + 1 : 0xFF;
+            g_world_job_change_flash_colors[2].r = g_world_job_change_flash_colors[2].b == 0xFF
+                ? g_world_job_change_flash_colors[2].r + 1
+                : g_world_job_change_flash_colors[2].r - 1;
+            g_world_job_change_flash_colors[2].g = g_world_job_change_flash_colors[2].b == 0xFF
+                ? g_world_job_change_flash_colors[2].g + 1
+                : g_world_job_change_flash_colors[2].g - 1;
+            g_world_job_change_flash_colors[3].r
+                = g_world_job_change_flash_colors[3].r < 0xFE ? g_world_job_change_flash_colors[3].r + 1 : 0xFF;
+            g_world_job_change_flash_colors[3].g
+                = g_world_job_change_flash_colors[3].g < 0xFE ? g_world_job_change_flash_colors[3].g + 1 : 0xFF;
+            g_world_job_change_flash_colors[3].b = g_world_job_change_flash_colors[3].r == 0xFF
+                ? g_world_job_change_flash_colors[3].b + 1
+                : g_world_job_change_flash_colors[3].b - 1;
         } else if (g_world_job_change_anim_state == WORLD_JOB_CHANGE_ANIM_CLOSING) {
             for (i = 0; i < 4; i++) {
-                g_world_job_change_flash_colors[i][0] = g_world_job_change_flash_colors[i][0] < 0x80
-                    ? g_world_job_change_flash_colors[i][0] + 1
-                    : g_world_job_change_flash_colors[i][0] - 1;
-                g_world_job_change_flash_colors[i][1] = g_world_job_change_flash_colors[i][1] >= 0x80
-                    ? g_world_job_change_flash_colors[i][1] - 1
-                    : g_world_job_change_flash_colors[i][1] + 1;
-                g_world_job_change_flash_colors[i][2] = g_world_job_change_flash_colors[i][2] >= 0x80
-                    ? g_world_job_change_flash_colors[i][2] - 1
-                    : g_world_job_change_flash_colors[i][2] + 1;
+                g_world_job_change_flash_colors[i].r = g_world_job_change_flash_colors[i].r < 0x80
+                    ? g_world_job_change_flash_colors[i].r + 1
+                    : g_world_job_change_flash_colors[i].r - 1;
+                g_world_job_change_flash_colors[i].g = g_world_job_change_flash_colors[i].g >= 0x80
+                    ? g_world_job_change_flash_colors[i].g - 1
+                    : g_world_job_change_flash_colors[i].g + 1;
+                g_world_job_change_flash_colors[i].b = g_world_job_change_flash_colors[i].b >= 0x80
+                    ? g_world_job_change_flash_colors[i].b - 1
+                    : g_world_job_change_flash_colors[i].b + 1;
             }
         }
         world_gfx_enqueue_gouraud_textured_quad(
-            &g_world_job_wheel_portrait_quad, g_world_job_change_flash_colors[0], 0, 0x33);
+            &g_world_job_wheel_portrait_quad, g_world_job_change_flash_colors, 0, 0x33);
         world_gfx_enqueue_gouraud_textured_quad(
-            &g_world_job_wheel_new_portrait_quad, g_world_job_change_flash_colors[0], 0, 0x33);
+            &g_world_job_wheel_new_portrait_quad, g_world_job_change_flash_colors, 0, 0x33);
         world_formation_draw_job_wheel_sprites(0, ONE, ONE);
     } else {
         banner = g_world_formation_unit_banner_enabled;
@@ -195,8 +195,8 @@ void world_formation_run_job_wheel_menu(void) {
                         if (!(job & WORLD_JOB_LIST_ENTRY_UNAVAILABLE)) {
                             g_world_job_change_confirmed = 1;
                             for (i = 0; i < 4; i++) {
-                                g_world_job_change_flash_colors[i][0] = g_world_job_change_flash_colors[i][1]
-                                    = g_world_job_change_flash_colors[i][2] = 0x80;
+                                g_world_job_change_flash_colors[i].r = g_world_job_change_flash_colors[i].g
+                                    = g_world_job_change_flash_colors[i].b = 0x80;
                             }
                             g_world_job_change_anim_state = WORLD_JOB_CHANGE_ANIM_DISSOLVE;
                             g_world_formation_saved_banner_enabled = g_world_formation_unit_banner_enabled;

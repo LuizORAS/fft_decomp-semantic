@@ -36,8 +36,9 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
     state = (battle_effect_timeline_state_t*)&record->target_index;
     if (state->frame >= g_battle_effect_timeline->phase1_duration) {
         while (state->spawn_countdown == 0 && state->spawned_count < g_battle_effect_coord_data.target_count) {
-            child = battle_effect_start_script_record(
-                record->script, *(s16*)(record->pc + (s32)record->script + 2), record->record_index);
+            child = battle_effect_start_script_record(record->script,
+                ((battle_effect_script_value_instruction_t*)(record->pc + (s32)record->script))->value.signed_value,
+                record->record_index);
             g_effect_state_records[child].target_index = state->spawned_count;
             state->spawned_count++;
             state->spawn_countdown += g_battle_effect_timeline->spawn_delay;

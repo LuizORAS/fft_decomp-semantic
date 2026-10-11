@@ -3,12 +3,10 @@
 
 /* Upload WEP.SPR's weapon, trail and particle images. Keep weapon and trail
  * CLUTs in their CPU tables; the particle CLUTs use the map palette manager. */
-void battle_gfx_load_wep_spr_data(u8* data) {
-    battle_gfx_weapon_sprite_archive_t* archive;
+void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive) {
     s32 i;
     u8* cursor;
 
-    archive = (battle_gfx_weapon_sprite_archive_t*)data;
     cursor = (u8*)archive->weapon_palettes;
     for (i = 0; i < (s32)sizeof(archive->weapon_palettes); i++) {
         ((u8*)g_battle_gfx_item_palettes)[i] = *cursor++;

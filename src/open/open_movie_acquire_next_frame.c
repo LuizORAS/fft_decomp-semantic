@@ -1,13 +1,5 @@
 #include "fft/open.h"
 
-typedef struct open_movie_frame_header {
-    u8 _unused_00[8];
-    u32 frame_number;
-    u8 _unused_0c[4];
-    u16 width;
-    u16 height;
-} open_movie_frame_header_t;
-
 #define OPEN_MOVIE_ACQUIRE_MAX_ATTEMPTS 0x80
 
 /* Wait (up to 0x80 vertical blanks) for the next movie frame, track the
@@ -16,11 +8,11 @@ typedef struct open_movie_frame_header {
  * Returns the frame data, or NULL on timeout. */
 void* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
     void* frame_data;
-    open_movie_frame_header_t* header;
+    psyq_cd_ring_record_t* header;
     s32 attempts;
 
     attempts = 0;
-    while (StGetNext(&frame_data, (void**)&header) != 0) {
+    while (StGetNext(&frame_data, &header) != 0) {
         VSync(0);
         if (attempts == OPEN_MOVIE_ACQUIRE_MAX_ATTEMPTS) {
             return 0;
@@ -28,11 +20,11 @@ void* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
         attempts++;
     }
 
-    g_open_movie_current_frame = header->frame_number;
-    if (header->frame_number >= g_open_movie_end_frame) {
+    g_open_movie_current_frame = header->frame_count;
+    if (header->frame_count >= g_open_movie_end_frame) {
         g_open_movie_stream_status = OPEN_MOVIE_STREAM_STOP_AND_PAUSE_AUDIO;
     }
-    if (g_open_movie_video_end_frame != -1 && header->frame_number >= g_open_movie_video_end_frame) {
+    if (g_open_movie_video_end_frame != -1 && header->frame_count >= g_open_movie_video_end_frame) {
         g_open_movie_stream_status = OPEN_MOVIE_STREAM_STOP;
     }
 

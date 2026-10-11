@@ -8,19 +8,20 @@
  * units), 0x02 mode, 0x03..0x05 signed red, green and blue amounts, 0x06
  * duration.
  */
-void world_script_color_unit_event_instruction(const u8* parameters) {
+void world_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters) {
     u16 unit_id;
     s32 misc_index;
     s32 unit_index;
+    const event_unit_color_t* color;
 
-    unit_id = world_script_load_halfword(parameters);
+    unit_id = world_script_load_halfword(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
-        parameters += 2;
+        color = &parameters->color;
         unit_index = 0;
         do {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 battle_gfx_start_misc_unit_palette_modulation(
-                    parameters[0], parameters[4], unit_id, (s8)parameters[1], (s8)parameters[2], (s8)parameters[3]);
+                    color->mode, color->duration, unit_id, color->red, color->green, color->blue);
                 if (misc_index == 0) {
                     break;
                 }

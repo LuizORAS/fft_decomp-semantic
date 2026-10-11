@@ -5,8 +5,9 @@
 /* WarpUnit event instruction: moves the addressed unit to the tile encoded in
  * the four parameter bytes (x, y, elevation, facing) and, when the unit is on
  * the map, teleports its renderer record and resets its rotation state. */
-s32 world_script_warp_unit(void* instruction) {
-    const u8* parameters = instruction;
+s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
+    /* Reusing the operand cursor for placement preserves the target allocation. */
+    const event_unit_placement_t* parameters = (const event_unit_placement_t*)instruction;
     world_unit_coordinates_t coordinates;
     s32 resolved_id;
     battle_stats_t* unit;
@@ -15,8 +16,8 @@ s32 world_script_warp_unit(void* instruction) {
     s32 unit_id;
     u8 facing;
 
-    unit_id = world_script_load_halfword(parameters);
-    parameters += 2;
+    unit_id = world_script_load_halfword(((const event_warp_unit_parameters_t*)parameters)->unit_id_le);
+    parameters = &((const event_warp_unit_parameters_t*)parameters)->placement;
     unit = find_unit_by_id(unit_id, &resolved_id);
     index = 0;
     if (resolved_id == -2 || resolved_id >= 0) {
@@ -25,22 +26,22 @@ s32 world_script_warp_unit(void* instruction) {
                 break;
             }
         }
-        unit->x = parameters[0];
-        unit->position.bits.y = parameters[1];
-        unit->position.bits.higher_elevation = parameters[2];
-        unit->position.bits.facing = parameters[3];
+        unit->x = parameters->x;
+        unit->position.bits.y = parameters->y;
+        unit->position.bits.higher_elevation = parameters->elevation;
+        unit->position.bits.facing = parameters->facing;
         index = battle_unit_get_misc_id_by_battle_id(index);
         if (index != -1) {
             state = &g_world_unit_animation_states[index];
             coordinates.x = unit->x;
             coordinates.elevation = unit->position.raw >> 15;
             coordinates.y = unit->position.bits.y;
-            facing = parameters[3];
+            facing = parameters->facing;
             state->delay = 0;
             state->rotating = 0;
             state->target_facing = facing * 4;
-            battle_unit_place_in_new_location(index, (s16*)&coordinates, parameters[3]);
-            world_unit_set_facing(index, parameters[3] * 4);
+            battle_unit_place_in_new_location(index, (s16*)&coordinates, parameters->facing);
+            world_unit_set_facing(index, parameters->facing * 4);
         }
     }
 }

@@ -33,7 +33,7 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
         for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
             if (ai->targetability.live.unit_targetable[unit_id]) {
                 battle_ai_transfer_unit_coordinates(unit_id, &ai->considered_unit_coords);
-                if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
+                if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
                     battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_RANGE, 0);
                 else
                     battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_RANGE_PLUS_AOE, 0);
@@ -85,7 +85,7 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
     for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
         if (ai->targetability.live.unit_targetable[unit_id]) {
             battle_ai_transfer_unit_coordinates(unit_id, &ai->considered_unit_coords);
-            if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
+            if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
                 battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_EXPLICIT, 0);
             else
                 battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_AOE, 0);
@@ -104,7 +104,7 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
                 pos = unit;
                 __asm__("" : "=r"(pos) : "0"(pos));
                 jumping = status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP);
-                if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_TILE || jumping) {
+                if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_TILE || jumping) {
                     ((battle_ai_tile_rows_view_t*)ai)
                         ->attack_origin_tiles[pos->position.bits.higher_elevation][pos->position.bits.y]
                         ^= 0x8000 >> pos->x;

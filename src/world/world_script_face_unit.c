@@ -9,7 +9,7 @@
  * toward the second. Successive second-unit records are staggered like FaceTile.
  * The angle is built in place (negate, then add) so combine cannot fold the two
  * constant additions into one. */
-void world_script_face_unit(const u8* parameters, s32 second_only) {
+void world_script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only) {
     s16 position[4];
     s16 target[4];
     u16 unit_id;
@@ -24,8 +24,8 @@ void world_script_face_unit(const u8* parameters, s32 second_only) {
     world_unit_animation_state_t* state;
 
     order = 1;
-    misc_id = world_script_load_halfword(parameters);
-    unit_id = world_script_load_halfword(parameters + 2);
+    misc_id = world_script_load_halfword(parameters->first_unit_id_le);
+    unit_id = world_script_load_halfword(parameters->second_unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         misc_id = world_script_get_misc_id(misc_id);
         if (misc_id != EVENT_MISC_ID_NONE) {
@@ -46,19 +46,19 @@ void world_script_face_unit(const u8* parameters, s32 second_only) {
                     if (second_only == 0) {
                         state = &g_world_unit_animation_states[misc_id];
                         state->target_facing = facing;
-                        state->rotate_mode = parameters[4];
-                        state->frames_per_step = g_world_rotation_speed_frames[parameters[5]];
+                        state->rotate_mode = parameters->mode;
+                        state->frames_per_step = g_world_rotation_speed_frames[parameters->speed];
                         state->step_counter = 0;
                         state->rotating = 1;
-                        state->delay = parameters[6] >> 2;
+                        state->delay = parameters->delay >> 2;
                     }
                     state = &g_world_unit_animation_states[unit_id];
                     state->target_facing = reverse;
-                    state->rotate_mode = parameters[4];
-                    state->frames_per_step = g_world_rotation_speed_frames[parameters[5]];
+                    state->rotate_mode = parameters->mode;
+                    state->frames_per_step = g_world_rotation_speed_frames[parameters->speed];
                     state->step_counter = 0;
                     state->rotating = 1;
-                    state->delay = parameters[6] * order++ / 4;
+                    state->delay = parameters->delay * order++ / 4;
                     if (misc_index == 0) {
                         break;
                     }

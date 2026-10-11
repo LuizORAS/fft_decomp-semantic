@@ -4,9 +4,9 @@
 void battle_menu_confirm_auto_battle_selection_thread(void) {
     battle_stats_t* attacker;
     s32 menu;
-    s32 parameter;
+    world_menu_entry_t* parameter;
 
-    parameter = battle_thread_get_current_parameter_1();
+    parameter = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     attacker = battle_unit_get_attacker_data_pointer();
     menu = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_AUTO_BATTLE].selected_index;
     if (menu == 3) {
@@ -15,6 +15,6 @@ void battle_menu_confirm_auto_battle_selection_thread(void) {
         attacker->auto_battle_setting = BATTLE_AI_AUTOBATTLE_RETREAT;
     }
     g_battle_menu_set_auto_battle_row_actions = -3;
-    battle_menu_confirm_action_silently((void*)parameter);
+    battle_menu_confirm_action_silently(parameter);
     battle_thread_exit_current();
 }

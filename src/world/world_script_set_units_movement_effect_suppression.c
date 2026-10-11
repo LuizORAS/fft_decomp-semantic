@@ -3,17 +3,17 @@
 #include "psx/types.h"
 
 /* Set or clear movement-effect suppression for units selected by an event operand. */
-void world_script_set_units_movement_effect_suppression(const u8* parameters) {
+void world_script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters) {
     u16 unit_id;
     s32 misc_index;
     s32 unit_index;
 
-    unit_id = world_script_load_halfword(parameters);
+    unit_id = world_script_load_halfword(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         unit_index = 0;
         do {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
-                if (parameters[2] != 0) {
+                if (parameters->suppressed != 0) {
                     battle_unit_set_movement_effect_suppression(unit_id);
                 } else {
                     battle_unit_clear_movement_effect_suppression(unit_id);

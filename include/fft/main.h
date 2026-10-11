@@ -66,7 +66,7 @@ extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
 extern u32 g_main_secondary_saved_data_bits[2];
 s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
-s32 main_ability_calculate_pointers_and_type(s32 id, u8** out_ability_data, u8** out_secondary_data);
+s32 main_ability_calculate_pointers_and_type(s32 id, ability_data_t** out_ability_data, u8** out_secondary_data);
 u32 main_ability_get_known(battle_stats_t* unit, u32 skillset_id);
 
 /* card */
@@ -1377,8 +1377,8 @@ extern s16 g_main_sound_driver_flags;
 extern s32 g_main_root_counter_2_event;        /* 0x80032a5c; OpenEvent handle of main_sound_root_counter_2_handler */
 extern suzuki_music_t* g_main_sound_sfx_music; /* 0x80032a60; eight channels on SPU voices 16-23 */
 extern SpuReverbAttr g_main_sound_reverb_attr; /* 0x80037008 */
-extern suzuki_spu_state_t g_main_sound_spu_state; /* 0x80037020 */
-extern u8 g_main_sound_spu_malloc_table[];        /* 0x800408e0; SpuInitMalloc(6, ...) records */
+extern suzuki_spu_state_t g_main_sound_spu_state;              /* 0x80037020 */
+extern psyq_spu_heap_record_t g_main_sound_spu_malloc_table[]; /* 0x800408e0; SpuInitMalloc(6, ...) records */
 extern main_sound_music_t g_main_sound_music;
 extern main_sound_smd_file_t g_main_sound_scenario_smd_files[];
 extern main_sound_smd_file_t g_main_sound_permanent_smd_files[5];
@@ -1904,7 +1904,7 @@ void main_unit_copy_job_data(battle_stats_t* unit);
 void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);
 void main_unit_copy_last_ability_ct(battle_stats_t* unit);
 void main_unit_enable_rsm_flags(battle_stats_t* unit);
-void main_unit_generate_base_raw_stats(u8* raw_stats, s32 unit_type);
+void main_unit_generate_base_raw_stats(unit_raw_stat_bytes_t* raw_stats, s32 unit_type);
 void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type);
 void main_unit_generate_party_base_raw_stats(party_data_t* party, s32 unit_type);
 void main_unit_generate_raw_stats(battle_stats_t* unit);

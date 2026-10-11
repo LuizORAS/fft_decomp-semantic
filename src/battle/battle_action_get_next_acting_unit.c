@@ -18,7 +18,7 @@ void battle_action_get_next_acting_unit(s32 at_index) {
         unit = battle_unit_get_misc_data_by_battle_id(id & 0xFF);
         if ((id & 0x100) != 0) {
             battle_target_gather_x_y_data_for_attacks(unit);
-            battle_target_calculate_for_menu_types((u8*)&unit->battle_data->action_command);
+            battle_target_calculate_for_menu_types(&unit->battle_data->action_command);
             battle_target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
         } else {
             battle_target_move_cursor_to_unit(unit);

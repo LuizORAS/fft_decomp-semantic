@@ -10,7 +10,7 @@ typedef void (*psyq_interrupt_callback_t)(void);
 
 extern int VSync(int);
 extern int ResetCallback(void);
-extern void VSyncCallback(void*);
+extern void VSyncCallback(psyq_interrupt_callback_t callback);
 extern void PadInit(int);
 extern u32 PadRead(s32);
 
@@ -19,8 +19,8 @@ void PadStop(void);
 void StopCallback(void);
 psyq_interrupt_callback_t DMACallback(s32 dma_channel, psyq_interrupt_callback_t func);
 
-void* InterruptCallback(s32 channel, psyq_interrupt_callback_t callback);
-void* VSyncCallbacks(s32 slot, void* callback);
+psyq_interrupt_callback_t InterruptCallback(s32 channel, psyq_interrupt_callback_t callback);
+psyq_interrupt_callback_t VSyncCallbacks(s32 slot, psyq_interrupt_callback_t callback);
 s32 RestartCallback(void);
 s32 CheckCallback(void);
 s32 GetIntrMask(void);
@@ -85,10 +85,10 @@ psyq_interrupt_callback_t setIntrDMA(s32 channel, psyq_interrupt_callback_t call
 typedef struct {
     const char* name;
     psyq_interrupt_callback_t (*dma_callback)(s32, psyq_interrupt_callback_t);
-    void* (*irq_callback)(s32, psyq_interrupt_callback_t);
+    psyq_callback_setter_t irq_callback;
     s32 (*reset)(void);
     void (*stop)(void);
-    void* (*vblank_callback)(s32, void*);
+    psyq_callback_setter_t vblank_callback;
     s32 (*restart)(void);
     void* state;
 } psyq_interrupt_dispatch_t;

@@ -55,9 +55,8 @@ extern map_selected_tile_t g_world_help_menu_cursor_tile;
 extern battle_unit_status_record_t g_world_help_active_banner;
 extern battle_active_unit_t g_world_help_active_unit_data;
 
-/* Copy of the 0x40-byte unit editor fields (world_menu_copy_billboard_data_out);
- * the layout is battle_menu_status_panel_slot_state_t, as in the HELPMENU twin. */
-extern battle_menu_status_panel_slot_state_t g_world_help_billboard;
+/* Saved 0x40-byte unit editor fields, including the state record and its tail. */
+extern battle_menu_status_panel_slot_storage_t g_world_help_billboard;
 extern help_navigation_record_t g_world_help_terrain_navigation[];
 extern help_navigation_record_t g_world_help_attack_preview_navigation[];
 extern help_navigation_record_t g_world_help_unit_box_navigation[];
@@ -245,7 +244,7 @@ extern map_background_gradient_colors_t g_world_event_background_colors;
 s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
 void world_script_handle_tutorial_command_highlight_ring(void);
 s32 world_script_run_scenario_conditions(void);
-void world_script_run_sprite_move(void*, s32);
+void world_script_run_sprite_move(const event_sprite_move_parameters_t* parameters, s32 use_speed);
 void world_script_set_specialized_map_destroyed(void);
 void world_menu_init_subsystem_pointers(void);
 s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode);
@@ -254,16 +253,16 @@ void world_script_advance_date_by_one_year(void);
 void world_script_advance_tutorial_highlight_brightness(void);
 void world_script_blue_remove_all_enemy_units(void);
 void world_script_blue_remove_unit(s32 unit_id);
-void world_script_change_stats(const u8* parameters);
+void world_script_change_stats(const event_change_stats_parameters_t* parameters);
 void world_camera_clear_zoom_variable_low_bit(void);
-void world_script_color_unit_event_instruction(const u8* parameters);
+void world_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void world_script_copy_32_bytes(void* destination, const void* source);
 void world_script_copy_bytes(void* destination, const void* source, s32 count);
 void world_script_earthquake_start(void);
 void world_script_toggle_message_portrait_flip(const u8* parameters);
 void world_script_apply_relative_camera(u8* source, const s32* deltas);
-void world_script_face_tile(const u8* parameters);
-void world_script_face_unit(const u8* parameters, s32 second_only);
+void world_script_face_tile(const event_face_tile_parameters_t* parameters);
+void world_script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
 void world_script_focus(u8* parameters);
 void world_script_focus_speed(u8* parameters, s32* position, s32* rotation);
 s32 world_script_get_current_scenario_finish_operation(void);
@@ -284,11 +283,11 @@ void world_script_load_attack_graphics_event_instruction(void);
 void world_script_load_event(s32 id);
 s32 world_script_load_next_event(void);
 void world_script_map_darkness(void);
-void world_script_march_units(const u8* parameters);
+void world_script_march_units(const event_march_parameters_t* parameters);
 void world_script_play_effect_and_wait(void);
 void world_script_print_debug_message(void);
 void world_script_pulse_tutorial_wait_value(s32 value);
-void world_script_unit_animation_rotate_event_instruction(const u8* parameters);
+void world_script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters);
 s32 world_script_run_frame(u32* ot, u32 buttons);
 void world_script_run_next_event(void);
 void world_script_seed_event_rng_from_vsync(void);
@@ -305,14 +304,14 @@ void world_script_store_halfword(u8* destination, s16 value);
 void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg);
 void world_gfx_ramp_screen_overlay_intensity_to_zero(void);
 void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit);
-void world_script_unit_anim(const u8* parameters);
+void world_script_unit_anim(const event_unit_anim_parameters_t* parameters);
 void world_script_update_tutorial_controller_input(void);
 void world_script_wait_for_unit_ready(s32 misc_id);
-void world_script_wait_value_event_instruction(const u8* parameters);
+void world_script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters);
 void world_script_walkto_event_instruction(const struct event_walk_to_parameters* parameters);
-s32 world_script_warp_unit(void*);
+s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction);
 s32 world_script_warp_unit_display_to_paired_unit(s32);
-void world_script_set_units_movement_effect_suppression(const u8* parameters);
+void world_script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
 void world_script_set_units_palette_update_suppression(u16 id, s32 enable);
 s32 world_script_get_variable_bit_position(s32 variable_id);
 void world_script_add_unit_start_thread(void);
@@ -328,7 +327,7 @@ s32* world_script_get_variable_word_pointer_from_id(s32 variable_id);
 void world_script_inflict_status_thread(void);
 s16 world_script_load_halfword(const u8* source);
 void world_script_load_portrait_colors_event_instruction(s32);
-void world_script_mirrorsprite_event_instruction(const u8* parameters);
+void world_script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters);
 void world_script_pause_event_instruction(void);
 void world_script_play_effect_thread(void);
 void world_script_run_condition(event_opcode_e opcode);
@@ -596,7 +595,7 @@ extern u8 g_world_set_ability_cursor;
 /* [0]: 0x0c = Learn Abilities, 0x0d = view only. */
 extern s16 g_world_ability_entries[];
 extern u8* g_world_selected_ability_secondary_data;
-extern u8* g_world_selected_ability_data;
+extern ability_data_t* g_world_selected_ability_data;
 s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32 mode);
 s32 world_ability_is_non_action_learned(s32 index);
 
@@ -961,9 +960,9 @@ void world_gfx_enqueue_textured_quad_list(
 void world_gfx_alloc_tpage7_vram(RECT* rect, world_texture_prim_t* prim, u32* image);
 void world_gfx_enqueue_textured_quad_corners(
     world_gfx_textured_quad_source_t* source, u8* rgb, s32 semi_trans, s32 ot_index);
-void world_gfx_enqueue_gouraud_quad(s16* xy, u8* rgb, s32 semi_trans, s32 ot_index);
+void world_gfx_enqueue_gouraud_quad(point16_t* xy, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_gouraud_textured_quad(
-    world_gfx_textured_rect_source_t* source, u8* rgb, s32 semi_trans, s32 ot_index);
+    world_gfx_textured_rect_source_t* source, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_tile(RECT* box, u8* rgb, u8 semi_trans, s32 ot_index);
 /* The index argument of world_text_bind_section_data: the resident text data
  * it publishes in g_world_text_section_pointers. */
@@ -990,8 +989,10 @@ void world_gfx_clear_tpage7_vram_allocation_grid(void);
  * clip_portrait_poly_from_left), _left is debugchr's clip_..._from_right. */
 void world_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 delta);
 void world_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 delta);
-void world_menu_copy_billboard_data_in(const void* source_a, const void* source_b, const void* source_c);
-void world_menu_copy_billboard_data_out(void* dest0, void* dest1, void* dest2, void* dest3);
+void world_menu_copy_billboard_data_in(const world_item_stat_summary_t* status,
+    const world_unit_status_identity_t* identity, const world_item_stat_detail_t* detail);
+void world_menu_copy_billboard_data_out(battle_unit_status_record_t* status, battle_active_unit_t* identity,
+    battle_menu_status_panel_slot_storage_t* detail, map_selected_tile_t* selected_tile);
 void world_gfx_draw_or_append_gpu_primitive(void* primitive);
 void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 intensity);
 void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, world_glyph_blit_t* pen);
@@ -1050,7 +1051,7 @@ s32 world_gfx_update_fade_in_tile(void);
 s32 world_gfx_update_fade_out_tile(void);
 void world_script_assign_bitset_flag(u32* bits, s32 index, s32 set);
 void world_gfx_load_evtchr_thread(void);
-void world_script_resetpalette_event_instruction(const u8* parameters);
+void world_script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
 
 /* job */
 
@@ -1081,7 +1082,7 @@ extern RECT g_world_job_change_old_sprite_rect;
 extern RECT g_world_job_change_new_sprite_rect;
 extern u8 g_world_job_change_active;
 extern s16 g_world_job_change_frame;
-extern u8 g_world_job_change_wave_colors[];
+extern rgb24_t g_world_job_change_wave_colors[3];
 extern u8 g_world_job_wheel_close_frame;
 extern u8 g_world_job_wheel_open_frame;
 extern u8 g_world_job_wheel_closing;
@@ -1106,7 +1107,7 @@ typedef enum world_job_change_anim {
 extern s8 g_world_job_change_anim_state; /* world_job_change_anim_e */
 extern u8 g_world_job_change_confirmed;
 extern u8 g_world_job_wheel_saved_browse_enabled;
-extern u8 g_world_job_change_flash_colors[4][3];
+extern rgb24_t g_world_job_change_flash_colors[4];
 extern s16* g_world_job_change_dissolve_order;
 extern u8* g_world_job_change_old_sprite_image;
 extern u8* g_world_job_change_new_sprite_image;
@@ -1183,10 +1184,10 @@ enum {
 
 extern s16 g_world_tutorial_categories_request_state; /* world_screen_request_state_e */
 extern world_gfx_tim_pair_record_t g_world_tutorial_saved_game_image;
-extern s16 g_world_tutorial_highlight_corners_a[][4]; /* first tutorial highlight quad corners */
-extern s16 g_world_tutorial_highlight_corners_b[][4]; /* second tutorial highlight quad corners */
-extern u8 g_world_tutorial_highlight_colors_a[4][3];  /* first quad corner colours */
-extern u8 g_world_tutorial_highlight_colors_b[4][3];  /* second quad corner colours */
+extern s16 g_world_tutorial_highlight_corners_a[][4];  /* first tutorial highlight quad corners */
+extern s16 g_world_tutorial_highlight_corners_b[][4];  /* second tutorial highlight quad corners */
+extern rgb24_t g_world_tutorial_highlight_colors_a[4]; /* first quad corner colours */
+extern rgb24_t g_world_tutorial_highlight_colors_b[4]; /* second quad corner colours */
 extern u8 g_world_tutorial_highlight_quad_count;
 
 /* input */
@@ -1273,6 +1274,21 @@ typedef enum world_formation_unit_proposition {
     WORLD_FORMATION_UNIT_PROPOSITION_MISSING = 2,
 } world_formation_unit_proposition_e;
 
+/* Formation ability slots are selected by index in the equipment menu. */
+typedef struct world_formation_ability_fields {
+    u16 primary_skillset;   /* 0x00 */
+    u16 secondary_skillset; /* 0x02 */
+    s16 reaction_ability;   /* 0x04 */
+    u16 support_ability;    /* 0x06 */
+    s16 movement_ability;   /* 0x08 */
+} world_formation_ability_fields_t;
+
+typedef union world_formation_abilities {
+    world_formation_ability_fields_t fields;
+    u16 slots[5];
+} world_formation_abilities_t;
+typedef char world_formation_abilities_size_must_be_0xa[(sizeof(world_formation_abilities_t) == 0xa) ? 1 : -1];
+
 /*
  * WORLD menu unit record, compacted after roster and menu-specific filtering.
  * Records at 0x801c8638 have stride 0x128; roster_slot preserves their roster
@@ -1320,18 +1336,14 @@ typedef struct world_formation_unit {
     s16 physical_shield_evade; /* 0x046 */
     s16 physical_accessory_evade; /* 0x048 */
     u8 _unused_04a[2];
-    s16 magical_attack;          /* 0x04c */
-    s16 magical_class_evade;     /* 0x04e */
-    s16 magical_shield_evade;    /* 0x050 */
-    s16 magical_accessory_evade; /* 0x052 */
-    u16 equipment[5];            /* 0x054; right hand, left hand, head, body, accessory */
-    u16 primary_skillset;        /* 0x05e */
-    u16 secondary_skillset;      /* 0x060 */
-    s16 reaction_ability;        /* 0x062 */
-    u16 support_ability;         /* 0x064 */
-    s16 movement_ability;        /* 0x066 */
-    u8 _unused_068[8];           /* 0x068; spare tail of the stat-detail block */
-    u8 gender_flags;             /* 0x070; unit_flags_e (fft/unit.h) */
+    s16 magical_attack;                    /* 0x04c */
+    s16 magical_class_evade;               /* 0x04e */
+    s16 magical_shield_evade;              /* 0x050 */
+    s16 magical_accessory_evade;           /* 0x052 */
+    u16 equipment[5];                      /* 0x054; right hand, left hand, head, body, accessory */
+    world_formation_abilities_t abilities; /* 0x05e */
+    u8 _unused_068[8];                     /* 0x068; spare tail of the stat-detail block */
+    u8 gender_flags;                       /* 0x070; unit_flags_e (fft/unit.h) */
     u8 _unused_071;
     u8 sprite_set;               /* 0x072; "Sprite Set ID": party_data_t.sprite_set / character identity */
     u8 equippable_item_types[4]; /* 0x073; bit per item type, read by can_unit_equip_item_id */
@@ -1352,16 +1364,6 @@ typedef struct world_formation_unit {
     u8 support_abilities[4]; /* 0x124; copy of battle_stats_t.support_abilities, BATTLE_SUPPORT_SET_1..4_* */
 } world_formation_unit_t;
 typedef char world_formation_unit_t_size_must_be_0x128[(sizeof(world_formation_unit_t) == 0x128) ? 1 : -1];
-
-/* Slot-indexed view of the five ability halfwords at 0x5e (primary skillset,
- * secondary skillset, reaction, support, movement).  The WORLD ability-slot
- * menu walks them by slot number; the bytes are the named fields above. */
-typedef struct world_formation_unit_ability_slots {
-    u8 _unused_00[0x5e];
-    u16 ability_slots[5]; /* 0x05e */
-} world_formation_unit_ability_slots_t;
-typedef char world_formation_unit_ability_slots_offset_must_be_0x5e
-    [((unsigned long)&((world_formation_unit_ability_slots_t*)0)->ability_slots == 0x5e) ? 1 : -1];
 
 extern world_oriented_quad_t g_world_formation_cursor_shadow_sprite;
 extern world_oriented_quad_t g_world_formation_cursor_sprite;
@@ -1480,9 +1482,9 @@ extern world_menu_window_command_t g_world_formation_stat_bar_window_bottom;
 /* Three consecutive sprite records at 0x8018c704 / 0x8018c718 / 0x8018c72c. */
 extern world_oriented_quad_t g_world_formation_shadow_egg_sprites[3];
 extern s8 g_world_formation_gauge_bar_offsets[4];
-extern u8 g_world_formation_hp_gauge_colors[12];
-extern u8 g_world_formation_mp_gauge_colors[12];
-extern u8 g_world_formation_ct_gauge_colors[12];
+extern rgb24_t g_world_formation_hp_gauge_colors[4];
+extern rgb24_t g_world_formation_mp_gauge_colors[4];
+extern rgb24_t g_world_formation_ct_gauge_colors[4];
 extern world_oriented_quad_t g_world_formation_label_cant_equip;
 extern world_oriented_quad_t g_world_formation_label_equipping;
 extern world_oriented_quad_t g_world_formation_label_leaving;
@@ -2460,7 +2462,7 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
 void world_menu_scroll_list_page(s32 dir, world_menu_list_record_t* list);
 void world_menu_select_icon_cluts(world_menu_icon_sprites_t* menu);
 void world_menu_select_sprite_clut(void* prim);
-void world_menu_add_gradient_line_primitive(s16* endpoints, u8* rgb, s32 semi_trans, s32 ot_index);
+void world_menu_add_gradient_line_primitive(point16_t* endpoints, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void* world_menu_alloc_buffer(s32 size);
 void* world_menu_alloc_ui_buffer(s32 size);
 void world_menu_announce_entry_value_thread(void);
@@ -3203,7 +3205,7 @@ s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets);
 s32 world_is_skillset_in_spell_quote_exception_list(s32 value);
 s16 world_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
 void world_script_process_inflict_status_commands(void);
-void world_script_rotate_unit(const u8*);
+void world_script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
 void world_script_block_start_thread(void);
 
 /* unnamed */

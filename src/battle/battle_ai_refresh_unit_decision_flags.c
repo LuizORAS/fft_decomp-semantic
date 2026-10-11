@@ -51,7 +51,7 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
                 decision->flags |= BATTLE_AI_DECISION_CONSIDERED;
         }
         ai->current_action.act_before_move = 1;
-        ai->current_action.skillset = 0;
+        ai->current_action.command.skillset = 0;
         ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_REFRESH_UNIT_STATUS_FLAGS;
     }
     if (battle_ai_simulate_action_and_score() == -1) {

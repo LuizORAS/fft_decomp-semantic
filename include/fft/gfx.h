@@ -6,6 +6,15 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Packed RGB triples used by Gouraud menu graphics. CVECTOR adds a fourth
+ * byte and cannot describe tables whose colors have a three-byte stride. */
+typedef struct rgb24 {
+    u8 r;
+    u8 g;
+    u8 b;
+} rgb24_t;
+typedef char assert_rgb24_size[sizeof(rgb24_t) == 3 ? 1 : -1];
+
 /* geometry */
 /* Neutral 2D/3D point, rectangle and colour records for shapes the Psy-Q SDK
  * does not define.

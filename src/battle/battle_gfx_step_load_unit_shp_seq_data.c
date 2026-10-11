@@ -174,7 +174,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
                 (struct battle_gfx_packed_offset_table*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_WEAPON_SPR:
-            battle_gfx_load_wep_spr_data((u8*)g_battle_gfx_unit_graphics_load_state[3]);
+            battle_gfx_load_wep_spr_data((battle_gfx_weapon_sprite_archive_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_OTHER_SPR:
             battle_gfx_copy_other_spr_palette_data_to_ram((u8*)g_battle_gfx_unit_graphics_load_state[3]);

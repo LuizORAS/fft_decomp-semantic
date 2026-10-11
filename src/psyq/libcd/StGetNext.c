@@ -1,6 +1,6 @@
 /* SCUS_942.21 0x80021208..0x800212cb. */
 #include "psx/libcd.h"
-s32 StGetNext(void** frame_data, void** header) {
+s32 StGetNext(void** frame_data, psyq_cd_ring_record_t** header) {
     psyq_cd_ring_record_t* record = &g_psyq_cd_stream_ring[g_psyq_cd_stream_read_index];
     if (*(volatile u16*)&record->status == StREWIND) {
         g_psyq_cd_stream_read_index = 0;

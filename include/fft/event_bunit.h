@@ -7,7 +7,7 @@
 
 /* ability */
 extern s16 g_bunit_ability_category; /* menu_ability_category_e */
-extern u8* g_bunit_selected_ability_data;
+extern ability_data_t* g_bunit_selected_ability_data;
 extern u8* g_bunit_selected_ability_secondary_data;
 extern s32 g_bunit_ability_type;
 extern u8 g_bunit_ability_list_menu_script[];

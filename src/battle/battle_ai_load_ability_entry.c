@@ -14,7 +14,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     s32 value;
 
     battle_ai_clear_words(&ai->considered_ability, sizeof(battle_ai_considered_ability_t));
-    battle_ai_clear_words(&ai->current_action.calculator_type, 4);
+    battle_ai_clear_words(&ai->current_action.command.calculator_type, 4);
     ai->considered_ability.skillset = entry->skillset_flags.bytes.skillset;
     ability_id = g_battle_ai_data_base.considered_ability.ability_id = entry->id.packed_id & 0x3ff;
     unit_id = entry->id.packed_id >> 10;

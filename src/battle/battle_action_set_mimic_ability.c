@@ -68,7 +68,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     action.target_id = unit_id;
     self->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = weapon_id;
     self->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = g_battle_action_current_attacker.left_hand_weapon_id;
-    result = battle_target_set_panels_for_action((u8*)&action);
+    result = battle_target_set_panels_for_action(&action);
     if (result == -1 || result == 3
         || (result < 2
             && !(g_battle_map_tile_data[saved_state = (z << 8) + (g_battle_map_max_x * y) + x]

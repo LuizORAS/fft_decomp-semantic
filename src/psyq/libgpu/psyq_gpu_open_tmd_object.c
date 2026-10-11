@@ -3,7 +3,7 @@
 
 /* LIBGPU, retail 0x80027428-0x800275c0. Offsets are relative to the object table. */
 int psyq_gpu_open_tmd_object(
-    psyq_tmd_header_t* header, int object_index, u8** primitive, SVECTOR** vertices, SVECTOR** normals) {
+    psyq_tmd_header_t* header, int object_index, psyq_tmd_packet_t** primitive, SVECTOR** vertices, SVECTOR** normals) {
     psyq_tmd_object_t* objects = (psyq_tmd_object_t*)(header + 1);
     if (GetGraphDebug() == 2)
         printf(g_psyq_gpu_tmd_decode_message);
@@ -18,6 +18,6 @@ int psyq_gpu_open_tmd_object(
             objects[object_index].primitive_count);
     *vertices = (SVECTOR*)((u8*)objects + objects[object_index].vertex_offset);
     *normals = (SVECTOR*)((u8*)objects + objects[object_index].normal_offset);
-    *primitive = (u8*)objects + objects[object_index].primitive_offset;
+    *primitive = (psyq_tmd_packet_t*)((u8*)objects + objects[object_index].primitive_offset);
     return objects[object_index].primitive_count;
 }

@@ -5,9 +5,10 @@
  * otherwise step over the 6-byte instruction. */
 s32 battle_effect_code_script_11_jump_if_counter_equal(effect_record_t* record) {
     s16 pc = record->pc;
-    u8* instruction = pc + record->script;
-    if (record->counters[instruction[1] >> 6] == *(s16*)(instruction + 2)) {
-        record->pc = *(u16*)(instruction + 4);
+    battle_effect_script_branch_instruction_t* instruction
+        = (battle_effect_script_branch_instruction_t*)(pc + record->script);
+    if (record->counters[instruction->header.bytes.packed_parameters >> 6] == instruction->comparison.signed_value) {
+        record->pc = instruction->target_offset.unsigned_value;
     } else {
         record->pc = pc + 6;
     }

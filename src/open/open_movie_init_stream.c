@@ -6,7 +6,7 @@
  * it: a one-sector read with no destination makes the file loader seek to
  * `sector` and leaves its position in g_open_file_location (the loader
  * descriptor's position field), which is then set as the read location. */
-void open_movie_init_stream(s32 sector, void* output_callback) {
+void open_movie_init_stream(s32 sector, psyq_interrupt_callback_t output_callback) {
     main_file_load_descriptor_t* header;
 
     DecDCTReset(0);

@@ -10,7 +10,7 @@
  * tile centre to pick one of 16 facings; the n-th matching unit gets
  * rotation time * n / 4.
  */
-void battle_script_face_tile(u8* parameters) {
+void battle_script_face_tile(const event_face_tile_parameters_t* parameters) {
     s16 screen[3];
     s16 tile[3];
     u16 unit_id;
@@ -23,9 +23,9 @@ void battle_script_face_tile(u8* parameters) {
     s32 dy;
 
     order = 1;
-    tile[0] = parameters[2] * 28 + 14;
-    tile[2] = parameters[3] * 28 + 14;
-    unit_id = battle_script_load_halfword(parameters);
+    tile[0] = parameters->x * 28 + 14;
+    tile[2] = parameters->y * 28 + 14;
+    unit_id = battle_script_load_halfword(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &state) == 0) {
         return;
     }
@@ -37,11 +37,11 @@ void battle_script_face_tile(u8* parameters) {
             facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;
             rotation_state = &g_battle_unit_misc_rotation_data[unit_id];
             rotation_state->target_facing = facing;
-            rotation_state->rotate_mode = parameters[5];
-            rotation_state->frames_per_step = g_battle_rotation_speed_frames[parameters[6]];
+            rotation_state->rotate_mode = parameters->mode;
+            rotation_state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];
             rotation_state->step_counter = 0;
             rotation_state->rotating = 1;
-            rotation_state->delay = (parameters[7] * order++) / 4;
+            rotation_state->delay = (parameters->delay * order++) / 4;
             if (state == 0) {
                 return;
             }

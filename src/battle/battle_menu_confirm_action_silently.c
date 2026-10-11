@@ -4,7 +4,7 @@
 
 /* Runs the menu's action handler on a simulated, silent Circle press with
  * option 0 selected, then clears the injected input. */
-void battle_menu_confirm_action_silently(void* menu) {
+void battle_menu_confirm_action_silently(world_menu_entry_t* menu) {
     g_battle_sound_suppressed = 1;
     g_battle_script_event_input = PSX_PAD_CIRCLE;
     battle_menu_handle_action(menu, 0);

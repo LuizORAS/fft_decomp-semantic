@@ -2,6 +2,7 @@
 #define PSX_LIBCD_H
 
 #include "psx/libapi.h"
+#include "psx/libetc.h"
 #include "psx/libspu.h"
 
 #include "psx/types.h"
@@ -62,11 +63,16 @@ typedef struct {
     u8 val3;
 } CdlATV;
 
+typedef struct psyq_cd_ring_record psyq_cd_ring_record_t;
+
+/* Event byte and result-buffer contract for command and read callbacks. */
+typedef void (*psyq_cd_result_callback_t)(u8 event, u8* result);
+
 extern s32 CdInit(void);
 extern int CdSetDebug(int level);
 extern void SetMem(int);
-extern void* CdReadyCallback(void* callback);
-extern void* CdReadCallback(void* callback);
+extern psyq_cd_result_callback_t CdReadyCallback(psyq_cd_result_callback_t callback);
+extern psyq_cd_result_callback_t CdReadCallback(psyq_cd_result_callback_t callback);
 extern int CdControl(u8, u8*, u8*);
 extern int CdControlF(u8, u8*);
 extern int CdSync(int, u8*);
@@ -80,7 +86,7 @@ s32 CdMix(CdlATV* vol);
 s32 CdControlB(u8 command, const u8* parameter, u8* result);
 s32 CdRead2(s32 mode);
 s32 StGetBackloc(CdlLOC* position);
-s32 StGetNext(void** frame_data, void** header);
+s32 StGetNext(void** frame_data, psyq_cd_ring_record_t** header);
 void CdFlush(void);
 CdlLOC* CdIntToPos(s32 sector, CdlLOC* position);
 s32 CdReset(s32 mode);
@@ -88,8 +94,9 @@ void StCdInterrupt(void);
 s32 StFreeRing(void* frame_data);
 void StRingStatus(s16* free_sectors, s16* read_sectors);
 void StUnSetRing(void);
-void StSetRing(void* buffer, s32 sectors);
-void StSetStream(s32 mode, s32 start_frame, s32 end_frame, void* frame_callback, void* end_callback);
+void StSetRing(psyq_cd_ring_record_t* buffer, s32 sectors);
+void StSetStream(s32 mode, s32 start_frame, s32 end_frame, psyq_interrupt_callback_t frame_callback,
+    psyq_interrupt_callback_t end_callback);
 void StSetMask(s32 mask, s32 start_frame, s32 end_frame);
 s32 CdPosToInt(CdlLOC* position);
 char* CdComstr(u8 command);
@@ -98,9 +105,9 @@ s32 CdStatus(void);
 s32 CdMode(void);
 s32 CdLastCom(void);
 CdlLOC* CdLastPos(void);
-void* CdSyncCallback(void* callback);
+psyq_cd_result_callback_t CdSyncCallback(psyq_cd_result_callback_t callback);
 
-void* CdDataCallback(void* callback);
+psyq_interrupt_callback_t CdDataCallback(psyq_interrupt_callback_t callback);
 void StClearRing(void);
 
 /* driver internals */
@@ -128,19 +135,19 @@ extern char* g_psyq_cd_command_names[28];
 extern char* g_psyq_cd_interrupt_names[7];
 extern char g_psyq_cd_unknown_name[];
 extern s32 g_psyq_cd_debug_level;
-extern void* g_psyq_cd_sync_callback;
-extern void* g_psyq_cd_ready_callback;
-extern void* g_psyq_cd_read_callback;
-void def_cbsync(void);
-void def_cbready(void);
-void def_cbread(void);
+extern psyq_cd_result_callback_t g_psyq_cd_sync_callback;
+extern psyq_cd_result_callback_t g_psyq_cd_ready_callback;
+extern psyq_cd_result_callback_t g_psyq_cd_read_callback;
+void def_cbsync(u8 unused_event, u8* unused_result);
+void def_cbready(u8 unused_event, u8* unused_result);
+void def_cbread(u8 unused_event, u8* unused_result);
 void CD_flush(void);
 s32 CD_vol(CdlATV* volume);
 s32 CD_getsector(void* destination, s32 words);
 s32 CD_datasync(s32 mode);
 s32 CD_sync(s32 mode, u8* result);
 s32 CD_ready(s32 mode, u8* result);
-void psyq_cd_stream_ready_callback(void);
+void psyq_cd_stream_ready_callback(u8 unused_event, u8* unused_result);
 
 extern s32 g_psyq_cd_stream_ring_sectors;
 extern s32 g_psyq_cd_test_parameter_count;
@@ -172,18 +179,19 @@ extern char g_psyq_cd_init_address_format[];
 /* Stream ring records, corroborated by StHEADER and the retail IRQ/callback accesses.
  * Retail reads and writes status through halfword pointers (volatile where the CD
  * interrupt shares it), never as a struct member: those accesses keep an explicit view. */
-typedef struct {
+struct psyq_cd_ring_record {
     u16 status;
     u16 type;
     u16 sector_index;
     u16 sector_count;
     u32 frame_count;
     u32 frame_size;
-    u32 dimensions;
+    u16 width;
+    u16 height;
     u32 dummy1;
     u32 dummy2;
     CdlLOC position;
-} psyq_cd_ring_record_t;
+};
 extern psyq_cd_ring_record_t* g_psyq_cd_stream_ring;
 extern u32 g_psyq_cd_stream_write_index;
 extern u32 g_psyq_cd_stream_frame_start_index;
@@ -238,8 +246,6 @@ extern char g_psyq_cd_command_trace_format[];
 extern char g_psyq_cd_missing_parameters_format[];
 extern char g_psyq_cd_command_timeout_name[];
 
-/* Every original polling copy uses this byte/byte result contract. */
-typedef void (*psyq_cd_result_callback_t)(u8 event, u8* result);
 typedef struct {
     u8 sync;
     u8 ready;
@@ -258,8 +264,8 @@ typedef struct {
     s32 sector_clock;
     s32 start_clock;
     s32 expected_sector;
-    void* sync_callback;
-    void* ready_callback;
+    psyq_cd_result_callback_t sync_callback;
+    psyq_cd_result_callback_t ready_callback;
 } psyq_cd_read_state_t;
 extern volatile psyq_cd_read_state_t g_psyq_cd_read_state;
 

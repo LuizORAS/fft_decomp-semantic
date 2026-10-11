@@ -8,7 +8,8 @@ s32 battle_effect_run_block(s16 index) {
 
     rec = &g_effect_state_records[index];
     for (;;) {
-        result = g_battle_effect_instructions[*(u16*)(rec->script + rec->pc) & EFFECT_SCRIPT_OPCODE_MASK](rec);
+        result = g_battle_effect_instructions[((battle_effect_script_header_t*)(rec->script + rec->pc))->word
+            & EFFECT_SCRIPT_OPCODE_MASK](rec);
         if (result == EFFECT_SCRIPT_RESULT_ABORT) {
             return 0;
         }

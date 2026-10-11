@@ -54,7 +54,7 @@ s32 battle_ai_evaluate_math_targets(void) {
                     .statuses,
                 5);
             ai->considered_ability.ai_flags.bytes.flags_4 = BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI;
-            ai->current_action.ability_id = ai->math_ability_id;
+            ai->current_action.command.ability_id = ai->math_ability_id;
             ai->considered_ability.element = g_main_ability_range_data[ai->math_ability_id].element;
             for (unit = 0; unit < BATTLE_UNIT_SLOT_COUNT; unit++)
                 ai->targetability.live.unit_targetable[unit] = ai->targetability.live.unit_active[unit];
@@ -65,11 +65,12 @@ s32 battle_ai_evaluate_math_targets(void) {
                         ai->acting_unit_id, ai->considered_ability.skillset, ai->math_type_index))
                     continue;
                 ai->math_multiplier_index = 4;
-                ai->current_action.calculator_type = ai->math_type_index + ABILITY_ID_MATH_FIRST;
+                ai->current_action.command.calculator_type = ai->math_type_index + ABILITY_ID_MATH_FIRST;
                 do {
                     if (battle_ai_load_known_ability_flag(
                             ai->acting_unit_id, ai->considered_ability.skillset, ai->math_multiplier_index)) {
-                        ai->current_action.calculator_multiplier = ai->math_multiplier_index + ABILITY_ID_MATH_FIRST;
+                        ai->current_action.command.calculator_multiplier
+                            = ai->math_multiplier_index + ABILITY_ID_MATH_FIRST;
                     evaluate_priority:
                         if (battle_ai_check_set_highest_unit_priority() == -1)
                             return -1;

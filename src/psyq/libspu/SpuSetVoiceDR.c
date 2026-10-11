@@ -2,6 +2,7 @@
 #include "psx/libspu.h"
 
 void SpuSetVoiceDR(s32 v_num, u16 dr) {
-    _spu_RXX->raw[(v_num << 3) + 4] = (_spu_RXX->raw[(v_num << 3) + 4] & 0xff0f) | (dr << 4);
+    /* Adding the index before the register base preserves the retail address operands. */
+    (v_num + _spu_RXX->rxx.voices)->adsr1 = ((v_num + _spu_RXX->rxx.voices)->adsr1 & 0xff0f) | (dr << 4);
     PSYQ_SPU_REGISTER_DELAY();
 }

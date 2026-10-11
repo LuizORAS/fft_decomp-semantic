@@ -6,7 +6,7 @@
  *
  * Parameters: unit id halfword, stat selector (event_change_stats_e), then a
  * halfword delta. HP clamps to max HP and the other stats to 0-100. */
-void battle_script_change_stats(const u8* parameters) {
+void battle_script_change_stats(const event_change_stats_parameters_t* parameters) {
     u16 unit_id;
     s32 misc_index;
     s32 unit_index;
@@ -16,8 +16,8 @@ void battle_script_change_stats(const u8* parameters) {
     s32 battle_unit_index;
     battle_stats_t* unit;
 
-    delta = battle_script_load_halfword(parameters + 3);
-    unit_id = battle_script_load_halfword(parameters);
+    delta = battle_script_load_halfword(parameters->delta_le);
+    unit_id = battle_script_load_halfword(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         unit_index = 0;
         do {
@@ -27,22 +27,22 @@ void battle_script_change_stats(const u8* parameters) {
                     unit = battle_unit_find_stats_by_entd_unit_id(
                         battle_unit_get_stats_from_battle_id(battle_unit_index)->unit_id, &battle_id);
                     if (battle_id >= 0) {
-                        if (parameters[2] == EVENT_CHANGE_STATS_HP) {
+                        if (parameters->stat == EVENT_CHANGE_STATS_HP) {
                             value = unit->hp + delta;
                             battle_script_clamp_s32_to_range(&value, 0, unit->max_hp);
                             unit->hp = value;
                         }
-                        if (parameters[2] == EVENT_CHANGE_STATS_CT) {
+                        if (parameters->stat == EVENT_CHANGE_STATS_CT) {
                             value = unit->ct + delta;
                             battle_script_clamp_s32_to_range(&value, 0, 100);
                             unit->ct = value;
                         }
-                        if (parameters[2] == EVENT_CHANGE_STATS_BRAVE) {
+                        if (parameters->stat == EVENT_CHANGE_STATS_BRAVE) {
                             value = unit->brave + delta;
                             battle_script_clamp_s32_to_range(&value, 0, 100);
                             unit->brave = value;
                         }
-                        if (parameters[2] == EVENT_CHANGE_STATS_FAITH) {
+                        if (parameters->stat == EVENT_CHANGE_STATS_FAITH) {
                             value = unit->faith + delta;
                             battle_script_clamp_s32_to_range(&value, 0, 100);
                             unit->faith = value;

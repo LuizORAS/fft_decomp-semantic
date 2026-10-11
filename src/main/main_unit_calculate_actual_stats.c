@@ -21,7 +21,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
     s32 divisor;
     s32 is_low;
     u8* mult;
-    u8* raw;
+    unit_raw_stat_bytes_t* raw;
 
     cap = 100;
     max = 999;
@@ -35,8 +35,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
     raw = unit->raw_stats;
 
     for (i = 0; i < UNIT_RAW_STAT_COUNT; i++) {
-        value = raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES] + (raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES + 1] << 8)
-            + (raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES + 2] << 16);
+        value = raw[i].low + (raw[i].middle << 8) + (raw[i].high << 16);
         if (mode == 0 && unit->formation_index == BATTLE_FORMATION_INDEX_GENERATED_UNIT) {
             divisor = mult[i * 2];
             divisor = divisor ? divisor : 1;
@@ -48,10 +47,10 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
         if (value > 0xffffff) {
             value = 0xffffff;
         }
-        raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES + 1] = value >> 8;
+        raw[i].middle = value >> 8;
         is_low = i < UNIT_RAW_STAT_SPEED;
-        raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES] = value;
-        raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES + 2] = value >> 16;
+        raw[i].low = value;
+        raw[i].high = value >> 16;
         multiplier = mult[i * 2 + 1];
         if (is_low) {
             divisor = cap;

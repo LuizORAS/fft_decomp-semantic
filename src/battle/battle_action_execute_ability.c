@@ -12,7 +12,7 @@ void battle_action_execute_ability(void) {
     battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
     unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
     battle_unit_face_toward_cursor(unit);
-    result = battle_action_call_attack_preparation_at_preview((u8*)&unit->command_state.ai.data);
+    result = battle_action_call_attack_preparation_at_preview(&unit->command_state.ai.data.action);
     unit->attack_phase_state = result;
     switch (result) {
     case BATTLE_ATTACK_PREPARATION_CHARGE:

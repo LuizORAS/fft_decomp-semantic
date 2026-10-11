@@ -18,7 +18,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
     unit->action_command.ability_id = ability_id;
     acting_unit = &g_battle_unit_stats[acting_unit_id];
     if (validate_target != 0) {
-        result = battle_target_set_panels_for_action((u8*)action);
+        result = battle_target_set_panels_for_action((const battle_ai_command_action_t*)action);
         if (result == -1 || result == 2 || result == 3) {
             return -1;
         }
@@ -34,7 +34,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
     action->target_y = acting_unit->position.bits.y;
     action->target_elevation = acting_unit->position.raw >> 15;
     saved_charged_ability_ct = unit->charged_ability_ct;
-    result = battle_action_call_attack_preparation_at_preview((u8*)action);
+    result = battle_action_call_attack_preparation_at_preview((battle_ai_command_action_t*)action);
     unit->charged_ability_ct = saved_charged_ability_ct;
     if (result == -1 || (preview_result = (result == 2 || result == 3), preview_result != 0)) {
         preview_result = -3;

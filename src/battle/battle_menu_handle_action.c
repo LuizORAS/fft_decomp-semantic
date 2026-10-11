@@ -2,18 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* View of the menu entry passed to the action handler: the
- * action word at 0x24 is either a small negative code (-15..-1) or a pointer
- * to one s16 action per option; 0x34 points at the halfword that receives
- * the chosen option. Same stride as world_menu_entry_t. */
-typedef struct battle_menu_action_entry {
-    u8 _unused_00[0x24];
-    s16* actions; /* 0x24 */
-    u8 _unused_28[0xC];
-    s16* selection; /* 0x34 */
-    u8 _unused_38[4];
-} battle_menu_action_entry_t;
-
 /* Act on a confirmed menu option when circle is pressed.
  *
  * An action in 0..0xff starts that idle-action menu entry's thread on the
@@ -21,8 +9,8 @@ typedef struct battle_menu_action_entry {
  * 0x4d2 records the option as -1; a negative action -n closes n menu levels
  * by setting the third parameter of the next n threads (thread 8 also saves
  * the open menus' selections). */
-void battle_menu_handle_action(void* menu, s32 selected_option) {
-    battle_menu_action_entry_t* entry;
+void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option) {
+    world_menu_entry_t* entry;
     s16* actions;
     s32 action;
     s32 silent;
@@ -43,7 +31,7 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
         g_battle_thread_contexts[g_battle_current_thread_id].task_words[1] = 2;
         g_battle_thread_contexts[g_battle_current_thread_id].task_words[0] = 0;
     }
-    actions = entry->actions;
+    actions = entry->row_actions;
     if ((s32)actions >= -15 && (s32)actions <= -1) {
         action = (s32)actions;
     } else {
@@ -88,7 +76,7 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
         }
     }
     g_battle_script_event_input = 0;
-    *entry->selection = selected_option;
+    *entry->value = selected_option;
     if (g_battle_sound_suppressed == 0 && silent == 0) {
         battle_sound_set_effect_to_confirm();
     }

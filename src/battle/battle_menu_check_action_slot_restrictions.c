@@ -25,11 +25,11 @@
 void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_unit) {
     s32 mode;
     s32 message;
-    s32 parameter;
+    world_menu_entry_t* parameter;
     battle_stats_t* unit;
 
     g_battle_active_menu = menu;
-    parameter = battle_thread_get_current_parameter_1();
+    parameter = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     mode = 0;
     message = 0;
     unit = battle_unit_get_attacker_data_pointer();
@@ -73,7 +73,7 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
                 [g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index]][0];
         if (mode < 0) {
             g_battle_menu_action_slot_row_actions = mode;
-            battle_menu_confirm_action_silently((void*)parameter);
+            battle_menu_confirm_action_silently(parameter);
             battle_thread_exit_current();
         }
     }

@@ -37,7 +37,7 @@ s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u
         || (flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) || (flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
         result = battle_target_validate_weapon_target(action);
     } else {
-        result = battle_target_calculate_for_menu_types((const u8*)action);
+        result = battle_target_calculate_for_menu_types((const battle_unit_action_command_t*)action);
         if (result != -1 && (flags_2 & ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE)
             && g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
             battle_target_select_random_tile_for_random_fire_abilities();

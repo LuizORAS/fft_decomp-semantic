@@ -46,9 +46,9 @@ s32 battle_ai_simulate_action_and_score(void) {
     ai->current_action.rank.priority = 0;
     ai->current_action.rank.base_hit_percent = 0xff;
     if (ai->current_action.act_before_move) {
-        if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
-            action = (battle_ai_command_action_t*)&ai->current_action.unit_id;
-            if (battle_action_call_attack_preparation_at_preview((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
+        if (ai->current_action.command.skillset != 0 && ai->current_action.command.skillset != SKILLSET_ID_DEFEND) {
+            action = &ai->current_action.command;
+            if (battle_action_call_attack_preparation_at_preview(action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
                 && battle_ai_call_ability_processing(action) == 0) {
                 battle_ai_restore_unit_state(0);
                 ai->resume_pending = 0;
@@ -59,9 +59,9 @@ s32 battle_ai_simulate_action_and_score(void) {
         }
     } else {
         battle_ai_simulate_movement_and_pickup();
-        if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
-            action = (battle_ai_command_action_t*)&ai->current_action.unit_id;
-            if (battle_action_call_attack_preparation_at_preview((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
+        if (ai->current_action.command.skillset != 0 && ai->current_action.command.skillset != SKILLSET_ID_DEFEND) {
+            action = &ai->current_action.command;
+            if (battle_action_call_attack_preparation_at_preview(action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
                 && battle_ai_call_ability_processing(action) == 0) {
                 battle_ai_restore_unit_state(0);
                 ai->resume_pending = 0;
@@ -70,12 +70,12 @@ s32 battle_ai_simulate_action_and_score(void) {
             ai->acting_unit->action_taken = 1;
         }
     }
-    if (ai->current_action.skillset == SKILLSET_ID_DEFEND) {
+    if (ai->current_action.command.skillset == SKILLSET_ID_DEFEND) {
         battle_status_inflict_defending_to_battle_id(ai->acting_unit_id);
         ai->current_action.rank.base_hit_percent = 100;
         ai->acting_unit->action_taken = 1;
     }
-    if (ai->current_action.skillset == 0)
+    if (ai->current_action.command.skillset == 0)
         ai->current_action.rank.base_hit_percent = 100;
     battle_action_end_turn(ai->acting_unit_id);
     ai->saved_between_turn_state = g_battle_between_turn_state;

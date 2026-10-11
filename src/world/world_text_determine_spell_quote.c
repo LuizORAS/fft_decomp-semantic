@@ -14,7 +14,7 @@ void world_text_determine_spell_quote(battle_ai_command_action_t* action, s32 un
     battle_stats_t* unit;
     s32 known;
 
-    main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, (u8**)&ability, (u8**)&secondary);
+    main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability, (u8**)&secondary);
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     if (action->skillset != 0) {
         known = world_is_skillset_in_spell_quote_exception_list(action->skillset);
