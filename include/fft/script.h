@@ -578,6 +578,18 @@ typedef struct event_sprite_move_parameters {
 } event_sprite_move_parameters_t;
 typedef char event_sprite_move_parameters_size_must_be_12[sizeof(event_sprite_move_parameters_t) == 12 ? 1 : -1];
 
+typedef enum event_camera_component {
+    EVENT_CAMERA_COMPONENT_X = 0,
+    EVENT_CAMERA_COMPONENT_Z,
+    EVENT_CAMERA_COMPONENT_Y,
+    EVENT_CAMERA_COMPONENT_TILT,
+    EVENT_CAMERA_COMPONENT_YAW,
+    EVENT_CAMERA_COMPONENT_ROLL,
+    EVENT_CAMERA_COMPONENT_ZOOM
+} event_camera_component_e;
+
+enum { EVENT_CAMERA_POSITION_COMPONENT_COUNT = 3, EVENT_CAMERA_COMPONENT_COUNT = 7 };
+
 /* Camera operands remain byte-aligned in the event stream. Positions are
  * x, z (height), y; rotations are tilt, yaw, roll. RelativeCamera has the
  * same seven values, and Camera appends a frame duration. */

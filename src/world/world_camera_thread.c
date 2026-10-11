@@ -11,8 +11,8 @@
 /* Script-variable index for each camera component, 0x801531b8. */
 
 void world_camera_thread(void) {
-    s32 target[8];
-    s32 start[7];
+    s32 target[EVENT_CAMERA_COMPONENT_COUNT + 1];
+    s32 start[EVENT_CAMERA_COMPONENT_COUNT];
     s32 i;
     s32 j;
     s32* variable;
@@ -42,7 +42,7 @@ void world_camera_thread(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
     parameters = world_thread_get_current_parameter_1();
     script = parameters->values.position_le[0];
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT + 1; i++) {
         target[i] = world_script_load_halfword(script);
         script += 2;
     }
@@ -50,7 +50,7 @@ void world_camera_thread(void) {
     if (g_world_camera_yaw_unwrap_request != 0) {
         g_world_camera_yaw_unwrap_request = 0;
         angle = world_script_get_variable(EVENT_SCRIPT_VAR_CAMERA_YAW);
-        yaw_delta = ((angle << 16) >> 16) - target[4];
+        yaw_delta = ((angle << 16) >> 16) - target[EVENT_CAMERA_COMPONENT_YAW];
         yaw = angle;
         if (ABS(yaw_delta + ONE) < ABS(yaw_delta)) {
             yaw = angle + ONE;
@@ -58,27 +58,27 @@ void world_camera_thread(void) {
         world_script_set_variable(EVENT_SCRIPT_VAR_CAMERA_YAW, yaw);
     }
 
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
         start[i] = g_world_script_variables[g_world_camera_script_variable_indices[i]];
     }
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < EVENT_CAMERA_POSITION_COMPONENT_COUNT; i++) {
         start[i] &= ~0xFFF;
         start[i] /= 4;
     }
 
-    duration = target[7];
-    for (i = 0; i < target[7]; i++) {
+    duration = target[EVENT_CAMERA_COMPONENT_COUNT];
+    for (i = 0; i < target[EVENT_CAMERA_COMPONENT_COUNT]; i++) {
         weight = 16 - ease;
         ramp = (duration - i) * i;
-        for (j = 0; j < 7; j++) {
+        for (j = 0; j < EVENT_CAMERA_COMPONENT_COUNT; j++) {
             variable = &g_world_script_variables[g_world_camera_script_variable_indices[j]];
             if (target[j] == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 continue;
             }
-            if (g_world_camera_position_locked != 0 && j < 3) {
+            if (g_world_camera_position_locked != 0 && j < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                 continue;
             }
-            if (j < 3) {
+            if (j < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                 delta = (target[j] << 8) - start[j];
                 base = start[j];
                 if (ABS(delta) < 0x600) {
@@ -91,9 +91,10 @@ void world_camera_thread(void) {
                     continue;
                 }
             }
-            if (mode == 0 || (group == 0 && j >= 3) || (group == 1 && j < 3)) {
+            if (mode == 0 || (group == 0 && j >= EVENT_CAMERA_COMPONENT_TILT)
+                || (group == 1 && j < EVENT_CAMERA_POSITION_COMPONENT_COUNT)) {
                 value = world_mul_div_64(delta, i, duration) + base;
-                if (j < 3) {
+                if (j < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                     value *= 4;
                 }
             } else if (mode == 1) {
@@ -101,7 +102,7 @@ void world_camera_thread(void) {
                 accel = delta * ease * 2;
                 first = world_mul_div_64(accel + decel + decel, i, duration * 32);
                 value = world_mul_div_64(accel, ramp, duration * duration * 32) + first + base;
-                if (j < 3) {
+                if (j < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                     value *= 4;
                 }
             } else {
@@ -111,7 +112,7 @@ void world_camera_thread(void) {
                     decel = delta * weight;
                     value = world_mul_div_64(
                         world_mul_div_64(delta * ease * 2, half, duration) + decel + decel, half, duration * 32);
-                    if (j < 3) {
+                    if (j < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                         value += base * 4;
                     } else {
                         value = value / 4 + base;
@@ -123,7 +124,7 @@ void world_camera_thread(void) {
                     value = world_mul_div_64(
                         accel + world_mul_div_64(accel, duration - elapsed, duration) + decel + decel, elapsed,
                         duration * 32);
-                    if (j < 3) {
+                    if (j < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                         value += delta;
                         value += base * 4;
                     } else {
@@ -131,7 +132,7 @@ void world_camera_thread(void) {
                     }
                 }
             }
-            if (j >= 3) {
+            if (j >= EVENT_CAMERA_COMPONENT_TILT) {
                 if (value > 0) {
                     if ((value & 0xFF) > 0x20) {
                         value += 0x40;
@@ -148,13 +149,13 @@ void world_camera_thread(void) {
     }
 
     if (g_world_camera_position_locked == 0) {
-        for (i = 0; i < 3; i++) {
+        for (i = 0; i < EVENT_CAMERA_POSITION_COMPONENT_COUNT; i++) {
             if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 g_world_script_variables[g_world_camera_script_variable_indices[i]] = target[i] << 10;
             }
         }
     }
-    for (i = 3; i < 7; i++) {
+    for (i = EVENT_CAMERA_COMPONENT_TILT; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
         if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
             g_world_script_variables[g_world_camera_script_variable_indices[i]] = target[i];
         }

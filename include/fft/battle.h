@@ -2376,7 +2376,7 @@ typedef enum battle_cursor_input_mode {
 
 extern u16 g_battle_camera_shake_z_offset;
 extern s32 g_battle_previous_camera_yaw;
-extern u16 g_battle_camera_script_variable_indices[7];
+extern u16 g_battle_camera_script_variable_indices[EVENT_CAMERA_COMPONENT_COUNT];
 extern u16 g_battle_camera_position_locked;
 extern s32 g_battle_camera_yaw_band;
 extern s32 g_battle_camera_wrap_yaw_pending;

@@ -24,9 +24,9 @@ void world_script_apply_relative_camera(event_camera_values_t* parameters, const
                           ->parameters.values.position_le[0];
     }
 
-    for (index = 0; index < 7; index++) {
+    for (index = 0; index < EVENT_CAMERA_COMPONENT_COUNT; index++) {
         delta = *deltas;
-        if (index < 3) {
+        if (index < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
             delta = delta / 1024;
         }
         if (world_script_load_halfword(source) == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {

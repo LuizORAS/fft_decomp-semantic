@@ -151,7 +151,7 @@ s32 battle_camera_step_track(battle_camera_track_t* track, s32 component) {
     }
     /* Angles and zoom round Q12 to the nearest integer; positions return in
      * the 1/1024 units of their script variables. */
-    if (component >= 3) {
+    if (component >= EVENT_CAMERA_COMPONENT_TILT) {
         if (result > 0) {
             if ((result & 0xFFF) > 0x800) {
                 result += ONE;

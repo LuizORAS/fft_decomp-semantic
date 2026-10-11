@@ -11,7 +11,7 @@
 /* camera */
 
 extern s32 g_world_camera_speed_curve;
-extern u16 g_world_camera_script_variable_indices[7];
+extern u16 g_world_camera_script_variable_indices[EVENT_CAMERA_COMPONENT_COUNT];
 extern u16 g_world_camera_position_locked;
 extern u16 g_world_camera_shake_z_offset;
 extern s32 g_world_camera_yaw_band;

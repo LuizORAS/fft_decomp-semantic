@@ -141,7 +141,7 @@ s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
             track->finished = 1;
         }
     }
-    if (component >= 3) {
+    if (component >= EVENT_CAMERA_COMPONENT_TILT) {
         if (result > 0) {
             if ((result & 0xFFF) > 0x800) {
                 result += ONE;

@@ -1,6 +1,6 @@
 /* Runs an event camera fusion: seeds one track per camera component from the
  * script's CAMERA instructions up to CAMERA_FUSION_END, then steps every track
- * each frame until track 3 finishes.
+ * each frame until the tilt track finishes.
  *
  * Instruction-for-instruction twin of battle_camera_fusion_thread
  * (0x8013db9c); only the callee and global bindings differ. The seed loop
@@ -11,17 +11,13 @@
 #include "psx/stddef.h"
 #include "psx/types.h"
 
-/* One track per camera component; 7 * 0xa4 == 0x47c, the allocation size the
- * target passes to world_menu_alloc_ui_buffer. */
-#define WORLD_CAMERA_FUSION_COMPONENT_COUNT 7
-
 void world_camera_fusion_thread(void) {
     battle_camera_track_t* tracks;
     battle_camera_track_t* track;
     battle_camera_key_t* key;
     u8* script;
     u8* cursor;
-    s32 values[WORLD_CAMERA_FUSION_COMPONENT_COUNT];
+    s32 values[EVENT_CAMERA_COMPONENT_COUNT];
     s32 key_count;
     s32 key_index;
     s32 i;
@@ -30,9 +26,9 @@ void world_camera_fusion_thread(void) {
     s32 opcode;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
-    tracks = world_menu_alloc_ui_buffer(sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    tracks = world_menu_alloc_ui_buffer(sizeof(battle_camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
     script = world_thread_get_current_parameter_1();
-    world_clear_menu_render_buffer(tracks, sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    world_clear_menu_render_buffer(tracks, sizeof(battle_camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
 
     cursor = script;
     key_count = 0;
@@ -53,11 +49,11 @@ void world_camera_fusion_thread(void) {
 
     for (key_index = 0; key_index < key_count; key_index++) {
         if (key_index == 0) {
-            for (i = 0; i < WORLD_CAMERA_FUSION_COMPONENT_COUNT; i++) {
+            for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
                 track = &tracks[i];
                 track->keys[key_index].value = g_world_script_variables[g_world_camera_script_variable_indices[i]];
                 values[i] = track->keys[key_index].value;
-                if (i < 3) {
+                if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                     track->keys[key_index].value = track->keys[key_index].value / 1024;
                 }
                 track->keys[key_index].time = 0;
@@ -70,14 +66,14 @@ void world_camera_fusion_thread(void) {
                 } else if (*cursor == EVENT_OPCODE_RELATIVE_CAMERA) {
                     world_script_apply_relative_camera((event_camera_values_t*)(cursor + 1), values);
                 } else if (*cursor == EVENT_OPCODE_FOCUS_SPEED) {
-                    world_script_focus_speed(cursor + 1, values, values + 3);
+                    world_script_focus_speed(cursor + 1, values, values + EVENT_CAMERA_COMPONENT_TILT);
                 } else if (*cursor == EVENT_OPCODE_CAMERA) {
-                    for (i = 0; i < WORLD_CAMERA_FUSION_COMPONENT_COUNT; i++) {
+                    for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
                         /* Indexed field access replaces retail's two additions with a shift. */
                         value = world_script_load_halfword(
                             cursor + i + i + offsetof(event_camera_instruction_t, parameters.values));
                         if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
-                            if (i < 3) {
+                            if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                                 value = values[i] / 1024;
                             } else {
                                 value = values[i];
@@ -90,10 +86,10 @@ void world_camera_fusion_thread(void) {
                         key->time += tracks[i].keys[key_index - 1].time;
                         component = key->value;
                         values[i] = component;
-                        if (i < 3) {
+                        if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                             values[i] = component << 10;
                         }
-                        if (i == 4) {
+                        if (i == EVENT_CAMERA_COMPONENT_YAW) {
                             world_camera_store_yaw_band(key->value);
                         }
                     }
@@ -107,18 +103,18 @@ void world_camera_fusion_thread(void) {
 
     for (;;) {
         track = tracks;
-        for (key_index = 0; key_index < 3; key_index++, track++) {
+        for (key_index = 0; key_index < EVENT_CAMERA_POSITION_COMPONENT_COUNT; key_index++, track++) {
             /* The target tests this flag with lhu; the s16 declaration gives lh. */
             if (g_world_camera_position_locked == 0) {
                 g_world_script_variables[g_world_camera_script_variable_indices[key_index]]
                     = world_camera_step_track(track, key_index);
             }
         }
-        for (key_index = 3; key_index < WORLD_CAMERA_FUSION_COMPONENT_COUNT; key_index++, track++) {
+        for (key_index = EVENT_CAMERA_COMPONENT_TILT; key_index < EVENT_CAMERA_COMPONENT_COUNT; key_index++, track++) {
             g_world_script_variables[g_world_camera_script_variable_indices[key_index]]
                 = world_camera_step_track(track, key_index);
         }
-        if (tracks[3].finished == 1) {
+        if (tracks[EVENT_CAMERA_COMPONENT_TILT].finished == 1) {
             break;
         }
         world_camera_clear_zoom_variable_low_bit();

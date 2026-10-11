@@ -24,9 +24,9 @@ void battle_script_apply_relative_camera(event_camera_values_t* operands, s32* c
         dst = ((event_camera_instruction_t*)((event_focus_speed_instruction_t*)(operands + 1) + 1))
                   ->parameters.values.position_le[0];
     }
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
         delta = *src;
-        if (i < 3) {
+        if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
             delta = delta / 1024;
         }
         if (battle_script_load_halfword(parameters) == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
