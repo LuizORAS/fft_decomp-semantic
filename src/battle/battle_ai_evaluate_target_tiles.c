@@ -20,17 +20,11 @@ s32 battle_ai_evaluate_target_tiles(void) {
     u32 level_address;
     u8 target_id;
 
-    /* Field-derived byte stages preserve the original level/row address
-     * order; flattened typed indexing changes the generated instructions. */
     if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.search_resume_flag) {
         x = g_battle_ai_data_base.current_action.command.target_x;
         level = g_battle_ai_data_base.current_action.command.target_elevation;
         y = g_battle_ai_data_base.current_action.command.target_y;
-        {
-            u32 scan_level_address = level * (18 * sizeof(u16)) + (u32)ai;
-            u32 scan_row_address = y * sizeof(u16);
-            row = *(u16*)(scan_level_address + scan_row_address + ((u32)&ai->targetable_tiles - (u32)ai));
-        }
+        row = ai->targetable_tiles[level][y];
         goto evaluate_priority;
     }
     if (VSync(1) >= 441) {
@@ -80,12 +74,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
     }
     for (level = 0; level < 2; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
-            /* Typed flattened indexing combines the level/row arithmetic. */
-            {
-                u32 scan_level_address = level * (18 * sizeof(u16)) + (u32)ai;
-                u32 scan_row_address = y * sizeof(u16);
-                row = *(u16*)(scan_level_address + scan_row_address + ((u32)&ai->targetable_tiles - (u32)ai));
-            }
+            row = ai->targetable_tiles[level][y];
             if (row != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
@@ -130,13 +119,7 @@ s32 battle_ai_evaluate_target_tiles(void) {
                             return 0;
                     remove_useful_origin:
                         if (ai->useful_on_caster_flag) {
-                            /* A typed level pointer moves the field offset before
-                             * the AI base addition; retain the target's order. */
-                            {
-                                u32 origin_address = level * (18 * sizeof(u16)) + (u32)ai;
-                                u16* origin_row = (u16*)(origin_address + ((u32)&ai->attack_origin_tiles - (u32)ai));
-                                origin_row[y] ^= 0x8000 >> x;
-                            }
+                            ai->attack_origin_tiles[level][y] ^= 0x8000 >> x;
                             ai->attack_origin_tile_count--;
                             if (ai->attack_origin_tile_count == 0)
                                 break;

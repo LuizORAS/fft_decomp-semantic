@@ -20,8 +20,8 @@ void battle_ai_build_monster_skill_tile_mask(void) {
     u32 level_base;
 
     for (level = 0; level < 18; level++) {
-        ai->targetable_tiles[level] = 0;
-        ai->targetable_tiles[level + 18] = 0;
+        ai->targetable_tiles[0][level] = 0;
+        ai->targetable_tiles[1][level] = 0;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];

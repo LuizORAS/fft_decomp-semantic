@@ -12,15 +12,10 @@ void battle_ai_take_next_movement_origin(void) {
     s32 x, y, level;
     s32 key;
     u16 row;
-    u16* movable_rows;
-    u32 mask_level_address;
 
     for (level = 0; level < 2; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
-            /* Typed indexing changes the mask-base instruction order. */
-            mask_level_address = level * (18 * sizeof(u16)) + (u32)ai;
-            movable_rows = (u16*)(mask_level_address + ((u32)&ai->movable_tiles - (u32)ai));
-            row = movable_rows[y];
+            row = ai->movable_tiles[level][y];
             if (row != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
@@ -39,11 +34,7 @@ void battle_ai_take_next_movement_origin(void) {
             }
         }
     }
-    {
-        /* Typed indexing folds the field offset before the selected level. */
-        u32 selected_level_address = ai->current_action.coords.bytes.elevation * (18 * sizeof(u16)) + (u32)ai;
-        movable_rows = (u16*)(selected_level_address + ((u32)&ai->movable_tiles - (u32)ai));
-        movable_rows[ai->current_action.coords.bytes.y] ^= 0x8000 >> ai->current_action.coords.bytes.x;
-    }
+    ai->movable_tiles[ai->current_action.coords.bytes.elevation][ai->current_action.coords.bytes.y]
+        ^= 0x8000 >> ai->current_action.coords.bytes.x;
     ai->movable_tile_count--;
 }

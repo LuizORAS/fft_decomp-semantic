@@ -465,11 +465,11 @@ typedef struct battle_ai_data {
     u8 tile_target_distance[2][18][16];                /* 0x03b4; level/y/x, strides 288/16/1 */
     s16 tile_priority[2][18][16];                      /* 0x05f4; level/y/x, byte strides 576/32/2 */
     /* Scenario/level/y; row bits 15..0 represent x=0..15. */
-    u16 reachable_tiles[3][2][18]; /* 0x0a74; byte strides 72/36/2 */
-    u16 targetable_tiles[0x24];    /* 0x0b4c */
-    u16 movable_tiles[0x24];       /* 0x0b94 */
-    u16 attack_origin_tiles[0x24]; /* 0x0bdc */
-    u16 walkable_tiles[0x24];      /* 0x0c24 */
+    u16 reachable_tiles[3][2][18];  /* 0x0a74; byte strides 72/36/2 */
+    u16 targetable_tiles[2][18];    /* 0x0b4c */
+    u16 movable_tiles[2][18];       /* 0x0b94 */
+    u16 attack_origin_tiles[2][18]; /* 0x0bdc */
+    u16 walkable_tiles[2][18];      /* 0x0c24 */
     u8 _unused_0c6c;
     u8 initial_targeting_state; /* 0x0c6d */
     u8 action_selection_phase;  /* 0x0c6e; 0x801971b8 selects scorer/distance resume; 0x80197ff4 uses 0..4 */
@@ -754,7 +754,7 @@ void battle_ai_clear_current_action_rank_byte(void);
 battle_ai_rank_order_e battle_ai_compare_target_priority_and_hit_rate(
     battle_ai_action_rank_t* a, battle_ai_action_rank_t* b);
 
-s32 battle_ai_count_flagged_tiles_within_map_bounds(u16* rows);
+s32 battle_ai_count_flagged_tiles_within_map_bounds(u16 rows[2][18]);
 void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t* entry, s32 status_id);
 s32 battle_ai_evaluate_ability_outcome(void);
 s32 battle_ai_evaluate_charging_movement(void);
@@ -821,7 +821,7 @@ void battle_ai_store_considered_action_data(void);
 void battle_ai_store_main_target_id_and_focus_on_target_flag(s32 unit_id);
 void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_id, s32* flags_out);
 void battle_ai_take_next_movement_origin(void);
-s32 battle_ai_take_random_tile(u16* tiles, battle_ai_coords_t* coordinates, s32 count);
+s32 battle_ai_take_random_tile(u16 tiles[2][18], battle_ai_coords_t* coordinates, s32 count);
 void battle_ai_transfer_ability_data_and_set_defend_flag(void);
 void battle_ai_transfer_byte_values(u8* destination, const u8* source, s32 byte_count);
 void battle_ai_transfer_halfword_values(void* destination, void* source, s32 byte_count);

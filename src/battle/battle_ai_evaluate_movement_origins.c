@@ -10,7 +10,6 @@
 s32 battle_ai_evaluate_movement_origins(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 row;
-    u32 row_base;
 
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
@@ -18,11 +17,7 @@ s32 battle_ai_evaluate_movement_origins(void) {
             goto begin_evaluation;
         if (g_battle_ai_data_base.highest_priority_state == 1)
             goto evaluate_ranked_origin;
-        /* Typed indexing combines the level and row scaling; these member-
-         * derived stages preserve the target's resume-load order. */
-        row_base = g_battle_ai_data_base.map_level_counter * sizeof(u16[18]) + (u32)ai;
-        row_base += g_battle_ai_data_base.y_counter * sizeof(u16);
-        row = *(u16*)(row_base + ((u32)&ai->movable_tiles - (u32)ai));
+        row = ai->movable_tiles[g_battle_ai_data_base.map_level_counter][g_battle_ai_data_base.y_counter];
         goto evaluate_scanned_origin;
     }
     row = ai->targetability.live.unit_targetable[g_battle_ai_data_base.acting_unit_id];
@@ -62,10 +57,7 @@ begin_evaluation:
         ai->map_level_counter = 0;
         do {
             for (ai->y_counter = 0; ai->y_counter < ai->map_max_y; ai->y_counter++) {
-                /* Preserve the same level/row address stages during scanning. */
-                row_base = ai->map_level_counter * sizeof(u16[18]) + (u32)ai;
-                row_base += ai->y_counter * sizeof(u16);
-                row = *(u16*)(row_base + ((u32)&ai->movable_tiles - (u32)ai));
+                row = ai->movable_tiles[ai->map_level_counter][ai->y_counter];
                 if (row != 0) {
                     for (ai->max_possibilities = 0; ai->max_possibilities < ai->map_max_x; ai->max_possibilities++) {
                         if ((row << ai->max_possibilities) & 0x8000) {

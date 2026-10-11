@@ -1,13 +1,5 @@
 #include "fft/battle.h"
 
-/* Local view of the battle_ai_data_t tile masks as level/y rows. */
-typedef struct battle_ai_tile_rows_view {
-    u8 _unused_000[0xb94];
-    u16 movable_tiles[2][18];       /* 0x0b94 */
-    u16 attack_origin_tiles[2][18]; /* 0x0bdc */
-    u16 walkable_tiles[2][18];      /* 0x0c24 */
-} battle_ai_tile_rows_view_t;
-
 /*
  * Build the AI's attack-origin and movable tile masks for a linear ability.
  */
@@ -24,8 +16,8 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
     u8 status;
 
     for (i = 0; i < 18; i++) {
-        ai->attack_origin_tiles[i] = 0;
-        ai->attack_origin_tiles[i + 18] = 0;
+        ai->attack_origin_tiles[0][i] = 0;
+        ai->attack_origin_tiles[1][i] = 0;
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ARC_TRAJECTORY) {
         battle_ai_transfer_halfword_values(ai->movable_tiles, ai->reachable_tiles[ai->movement_scenario][0], 0x48);
@@ -38,21 +30,20 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
                 else
                     battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_RANGE_PLUS_AOE, 0);
                 for (i = 0; i < ai->map_max_y; i++) {
-                    ai->attack_origin_tiles[i] |= ai->targetable_tiles[i];
-                    ai->attack_origin_tiles[i + 18] |= ai->targetable_tiles[i + 18];
+                    ai->attack_origin_tiles[0][i] |= ai->targetable_tiles[0][i];
+                    ai->attack_origin_tiles[1][i] |= ai->targetable_tiles[1][i];
                 }
             }
         }
         for (i = 0; i < ai->map_max_y; i++) {
-            ai->movable_tiles[i] = ai->reachable_tiles[ai->movement_scenario][0][i] & ai->attack_origin_tiles[i];
-            ai->movable_tiles[i + 18]
-                = ai->reachable_tiles[ai->movement_scenario][1][i] & ai->attack_origin_tiles[i + 18];
-            ai->attack_origin_tiles[i] = 0;
-            ai->attack_origin_tiles[i + 18] = 0;
+            ai->movable_tiles[0][i] = ai->reachable_tiles[ai->movement_scenario][0][i] & ai->attack_origin_tiles[0][i];
+            ai->movable_tiles[1][i] = ai->reachable_tiles[ai->movement_scenario][1][i] & ai->attack_origin_tiles[1][i];
+            ai->attack_origin_tiles[0][i] = 0;
+            ai->attack_origin_tiles[1][i] = 0;
         }
         for (i = 0; i < 2; i++) {
             for (j = 0; j < ai->map_max_y; j++) {
-                unit_id = ((battle_ai_tile_rows_view_t*)ai)->movable_tiles[i][j];
+                unit_id = ai->movable_tiles[i][j];
                 if (unit_id == 0)
                     continue;
                 for (x = 0; x < ai->map_max_x; x++) {
@@ -61,14 +52,14 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
                             && (depth = g_battle_map_tile_data[j * ai->map_max_x + x + (i << 8)].depth_half_height.value
                                        >> MAP_TILE_DEPTH_SHIFT)
                                 >= 2) {
-                            ((battle_ai_tile_rows_view_t*)ai)->movable_tiles[i][j] ^= 0x8000 >> x;
+                            ai->movable_tiles[i][j] ^= 0x8000 >> x;
                         } else if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset]
                             == ACTION_MENU_TYPE_ELEMENTS) {
                             ai->considered_unit_coords.bytes.x = x;
                             ai->considered_unit_coords.bytes.y = j;
                             ai->considered_unit_coords.bytes.elevation = i;
                             if (!battle_ai_can_elemental_ability_be_used(&ai->considered_unit_coords))
-                                ((battle_ai_tile_rows_view_t*)ai)->movable_tiles[i][j] ^= 0x8000 >> x;
+                                ai->movable_tiles[i][j] ^= 0x8000 >> x;
                         }
                     }
                 }
@@ -77,8 +68,8 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
         if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_REQUIRES_MONSTER_SKILL) {
             battle_ai_build_monster_skill_tile_mask();
             for (i = 0; i < ai->map_max_y; i++) {
-                ai->movable_tiles[i] &= ai->targetable_tiles[i];
-                ai->movable_tiles[i + 18] &= ai->targetable_tiles[i + 18];
+                ai->movable_tiles[0][i] &= ai->targetable_tiles[0][i];
+                ai->movable_tiles[1][i] &= ai->targetable_tiles[1][i];
             }
         }
     }
@@ -90,8 +81,8 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
             else
                 battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_AOE, 0);
             for (i = 0; i < ai->map_max_y; i++) {
-                ai->attack_origin_tiles[i] |= ai->targetable_tiles[i];
-                ai->attack_origin_tiles[i + 18] |= ai->targetable_tiles[i + 18];
+                ai->attack_origin_tiles[0][i] |= ai->targetable_tiles[0][i];
+                ai->attack_origin_tiles[1][i] |= ai->targetable_tiles[1][i];
             }
         }
     }
@@ -105,16 +96,14 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
                 __asm__("" : "=r"(pos) : "0"(pos));
                 jumping = status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP);
                 if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_TILE || jumping) {
-                    ((battle_ai_tile_rows_view_t*)ai)
-                        ->attack_origin_tiles[pos->position.higher_elevation][pos->position.y] ^= 0x8000 >> pos->x;
+                    ai->attack_origin_tiles[pos->position.higher_elevation][pos->position.y] ^= 0x8000 >> pos->x;
                 }
             }
         }
     }
     for (i = 0; i < 2; i++) {
         for (j = 0; j < ai->map_max_y; j++) {
-            ((battle_ai_tile_rows_view_t*)ai)->attack_origin_tiles[i][j]
-                &= ((battle_ai_tile_rows_view_t*)ai)->walkable_tiles[i][j];
+            ai->attack_origin_tiles[i][j] &= ai->walkable_tiles[i][j];
         }
     }
     ai->attack_origin_tile_count = battle_ai_count_flagged_tiles_within_map_bounds(ai->attack_origin_tiles);

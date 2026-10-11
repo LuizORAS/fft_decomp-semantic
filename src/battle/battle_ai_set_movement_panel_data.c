@@ -1,12 +1,6 @@
 #include "fft/battle.h"
 #include "psx/libetc.h"
 
-/* Local view of battle_ai_data_t::walkable_tiles as level/y rows. */
-typedef struct battle_ai_walkable_view {
-    u8 _unused_000[0xc24];
-    u16 walkable_tiles[2][18];
-} battle_ai_walkable_view_t;
-
 /* Build the AI walkable and reachable tile rows for the acting unit.
  *
  * A fresh decision (resume_pending 0) sets the water penalty, rebuilds the
@@ -45,7 +39,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
                     tile = &g_battle_map_tile_data[level * 256 + y * ai->map_max_x + x];
                     if (!(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
                         && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
-                        ((battle_ai_walkable_view_t*)ai)->walkable_tiles[level][y] |= 0x8000 >> x;
+                        ai->walkable_tiles[level][y] |= 0x8000 >> x;
                     }
                 }
             }

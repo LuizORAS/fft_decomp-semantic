@@ -30,43 +30,43 @@ void battle_ai_build_targetable_tile_mask(battle_ai_tile_mask_mode_e mode, s32 r
     }
     if (radius >= 16) {
         for (i = 0; i < 18; i++) {
-            ai->targetable_tiles[i] = 0xffff;
-            ai->targetable_tiles[i + 18] = 0xffff;
+            ai->targetable_tiles[0][i] = 0xffff;
+            ai->targetable_tiles[1][i] = 0xffff;
         }
         return;
     }
     for (i = 17; i >= 0; i--)
-        ai->targetable_tiles[i] = 0;
+        ai->targetable_tiles[0][i] = 0;
     y = ai->considered_unit_coords.bytes.y;
     x = ai->considered_unit_coords.bytes.x;
     for (i = 0; i <= radius; i++) {
         if (y - i < 0)
             break;
         if (x < 8)
-            ai->targetable_tiles[y - i] = g_battle_ai_range_row_masks[radius - i] << (7 - x);
+            ai->targetable_tiles[0][y - i] = g_battle_ai_range_row_masks[radius - i] << (7 - x);
         else
-            ai->targetable_tiles[y - i] = g_battle_ai_range_row_masks[radius - i] >> (x - 7);
+            ai->targetable_tiles[0][y - i] = g_battle_ai_range_row_masks[radius - i] >> (x - 7);
     }
     for (i = 1; i <= radius; i++) {
         if (y + i >= ai->map_max_y)
             break;
         if (x < 8)
-            ai->targetable_tiles[y + i] = g_battle_ai_range_row_masks[radius - i] << (7 - x);
+            ai->targetable_tiles[0][y + i] = g_battle_ai_range_row_masks[radius - i] << (7 - x);
         else
-            ai->targetable_tiles[y + i] = g_battle_ai_range_row_masks[radius - i] >> (x - 7);
+            ai->targetable_tiles[0][y + i] = g_battle_ai_range_row_masks[radius - i] >> (x - 7);
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_LINEAR_TRAJECTORY) {
         for (y = 0; y < ai->map_max_y; y++) {
-            i = ai->targetable_tiles[y];
+            i = ai->targetable_tiles[0][y];
             if (i != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((i << x) & 0x8000) {
                         if (x != ai->considered_unit_coords.bytes.x && y != ai->considered_unit_coords.bytes.y)
-                            ai->targetable_tiles[y] ^= 0x8000 >> x;
+                            ai->targetable_tiles[0][y] ^= 0x8000 >> x;
                     }
                 }
             }
         }
     }
-    battle_ai_transfer_halfword_values(&ai->targetable_tiles[18], ai->targetable_tiles, 36);
+    battle_ai_transfer_halfword_values(ai->targetable_tiles[1], ai->targetable_tiles[0], 36);
 }
