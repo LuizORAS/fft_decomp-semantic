@@ -39,7 +39,7 @@ void battle_move_start_unit_climb_hop_step(
         next = unit->map_x + 1;
         unit->movement.bytes.destination_x = next + step->bits.length;
         unit->velocity.vz = 0;
-        unit->velocity.vx = 0xE000 / frames;
+        unit->velocity.vx = (MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST;
@@ -47,7 +47,7 @@ void battle_move_start_unit_climb_hop_step(
         next = unit->map_x - 1;
         unit->movement.bytes.destination_x = next - step->bits.length;
         unit->velocity.vz = 0;
-        unit->velocity.vx = -0xE000 / frames;
+        unit->velocity.vx = -(MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH;
@@ -55,7 +55,7 @@ void battle_move_start_unit_climb_hop_step(
         next = unit->map_y - 1;
         unit->movement.bytes.destination_y = next - step->bits.length;
         unit->velocity.vx = 0;
-        unit->velocity.vz = -0xE000 / frames;
+        unit->velocity.vz = -(MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         /* Without this reorg moves this case's `li a0,0xe000` into the
@@ -67,7 +67,7 @@ void battle_move_start_unit_climb_hop_step(
         next = unit->map_y + 1;
         unit->movement.bytes.destination_y = next + step->bits.length;
         unit->velocity.vx = 0;
-        unit->velocity.vz = 0xE000 / frames;
+        unit->velocity.vz = (MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     }
     animation = BATTLE_UNIT_ANIMATION_HOP;

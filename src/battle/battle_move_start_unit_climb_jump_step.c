@@ -42,7 +42,7 @@ void battle_move_start_unit_climb_jump_step(
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_EAST, unit);
         next = unit->map_x + 1;
         unit->movement.bytes.destination_x = next + step->bits.length;
-        unit->velocity.vx = 0xe000 / time;
+        unit->velocity.vx = (MAP_TILE_SIZE * ONE / 2) / time;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
@@ -50,7 +50,7 @@ void battle_move_start_unit_climb_jump_step(
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_WEST, unit);
         next = unit->map_x - 1;
         unit->movement.bytes.destination_x = next - step->bits.length;
-        unit->velocity.vx = -0xe000 / time;
+        unit->velocity.vx = -(MAP_TILE_SIZE * ONE / 2) / time;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
@@ -58,7 +58,7 @@ void battle_move_start_unit_climb_jump_step(
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_SOUTH, unit);
         next = unit->map_y - 1;
         unit->movement.bytes.destination_y = next - step->bits.length;
-        unit->velocity.vz = -0xe000 / time;
+        unit->velocity.vz = -(MAP_TILE_SIZE * ONE / 2) / time;
         unit->velocity.vx = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
@@ -66,7 +66,7 @@ void battle_move_start_unit_climb_jump_step(
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_NORTH, unit);
         next = unit->map_y + 1;
         unit->movement.bytes.destination_y = next + step->bits.length;
-        unit->velocity.vz = 0xe000 / time;
+        unit->velocity.vz = (MAP_TILE_SIZE * ONE / 2) / time;
         unit->velocity.vx = 0;
         break;
     }

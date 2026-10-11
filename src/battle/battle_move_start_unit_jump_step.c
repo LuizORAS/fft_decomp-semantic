@@ -22,7 +22,8 @@ void battle_move_start_unit_jump_step(
 
     /* Copy the byte to retain narrow loads of the packed step fields. */
     current_step = unit->current_path_step;
-    unit->velocity.vy = -g_battle_move_jump_gravity * (((current_step.bits.length * 0x1C000) + 0xE000) / 24576);
+    unit->velocity.vy = -g_battle_move_jump_gravity
+        * (((current_step.bits.length * (MAP_TILE_SIZE * ONE)) + (MAP_TILE_SIZE * ONE / 2)) / (6 * ONE));
     step = &unit->current_path_step;
     current_step = unit->current_path_step;
     if (current_step.bits.length >= 2) {
@@ -43,26 +44,26 @@ void battle_move_start_unit_jump_step(
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         next = unit->map_x + 1;
         unit->movement.bytes.destination_x = next + step->bits.length;
-        unit->velocity.vx = 0x3000;
+        unit->velocity.vx = 3 * ONE;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         next = unit->map_x - 1;
         unit->movement.bytes.destination_x = next - step->bits.length;
-        unit->velocity.vx = -0x3000;
+        unit->velocity.vx = -3 * ONE;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         next = unit->map_y - 1;
         unit->movement.bytes.destination_y = next - step->bits.length;
         unit->velocity.vx = 0;
-        unit->velocity.vz = -0x3000;
+        unit->velocity.vz = -3 * ONE;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         next = unit->map_y + 1;
         unit->movement.bytes.destination_y = next + step->bits.length;
         unit->velocity.vx = 0;
-        unit->velocity.vz = 0x3000;
+        unit->velocity.vz = 3 * ONE;
         break;
     }
     unit->movement.bytes.destination_z = step->bits.higher;

@@ -7,8 +7,8 @@
  * half-tile steps (6 screen units each) plus two half-steps per tile of jump
  * length; a second apex term extends the frame count. The step byte's top two
  * bits pick the direction, which sets the centre-tile offset, facing, the
- * destination coordinate, and the +-0xe000 horizontal velocity spread over the
- * frame count. `from` is unused. `unused` reproduces an unreferenced 24-byte
+ * destination coordinate, and a half-tile horizontal displacement spread over
+ * the frame count. `from` is unused. `unused` reproduces an unreferenced 24-byte
  * frame slot. The separate `height -=`/`height +=` statements keep the target's
  * in-place accumulation register; `rise_height` and `apex` keep the multiplication
  * order (term * 6 or 12 before gravity) that one folded expression reassociates.
@@ -46,7 +46,7 @@ void battle_move_start_float_climb_jump_step(
         unit->velocity.vz = 0;
         next = unit->map_x + 1;
         unit->movement.bytes.destination_x = next + unit->current_path_step.bits.length;
-        unit->velocity.vx = 0xE000 / frames;
+        unit->velocity.vx = (MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_WEST;
@@ -54,7 +54,7 @@ void battle_move_start_float_climb_jump_step(
         unit->velocity.vz = 0;
         next = unit->map_x - 1;
         unit->movement.bytes.destination_x = next - unit->current_path_step.bits.length;
-        unit->velocity.vx = -0xE000 / frames;
+        unit->velocity.vx = -(MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH;
@@ -62,7 +62,7 @@ void battle_move_start_float_climb_jump_step(
         unit->velocity.vx = 0;
         next = unit->map_y - 1;
         unit->movement.bytes.destination_y = next - unit->current_path_step.bits.length;
-        unit->velocity.vz = -0xE000 / frames;
+        unit->velocity.vz = -(MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_NORTH;
@@ -70,7 +70,7 @@ void battle_move_start_float_climb_jump_step(
         unit->velocity.vx = 0;
         next = unit->map_y + 1;
         unit->movement.bytes.destination_y = next + unit->current_path_step.bits.length;
-        unit->velocity.vz = 0xE000 / frames;
+        unit->velocity.vz = (MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     }
     unit->movement.bytes.destination_z = step->bits.higher;
