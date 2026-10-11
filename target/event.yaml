@@ -90,7 +90,7 @@ functions:
   - {addr: 0x801c9ec0, size: 204, name: attack_map_load_title_graphic, hash: 75a50e555b3e77a7}
 
 data:
-  - {addr: 0x801bf000, name: attack_D_801BF000}
+  - {addr: 0x801bf000, name: g_attack_map_darkness_color}
   - {addr: 0x801c9f8c, name: g_attack_deploy_cursor_texture_data}
   - {addr: 0x801c9fac, name: g_attack_deploy_cursor_palette_source}
   - {addr: 0x801c9fec, name: g_attack_deploy_tile_clut_data}

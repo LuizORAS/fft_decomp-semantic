@@ -46,6 +46,8 @@ extern u8 g_attack_formation_sprite_staging[];
 extern u8 g_attack_formation_sprite_tall_cell[];
 
 /* gfx */
+/* Map darkness uses RGB and ignores the fourth byte. */
+extern const CVECTOR g_attack_map_darkness_color;
 extern const u16 g_attack_gfx_draw_area_scale_percent[12];
 extern POLY_FT4 g_attack_gfx_frame_ft4[];
 extern RECT g_attack_gfx_portrait_origin;

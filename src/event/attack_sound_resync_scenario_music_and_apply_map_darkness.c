@@ -1,14 +1,6 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
-/* Four unaligned bytes at the head of ATTACK.OUT; only the first three reach
- * the map darkness record through selector 0x63. */
-typedef struct attack_map_darkness {
-    u8 data[4];
-} attack_map_darkness_t;
-
-extern attack_map_darkness_t attack_D_801BF000;
-
 /* Re-syncs the two battle scenario-music slots with the pending track pair,
  * then applies the map darkness record.
  *
@@ -18,7 +10,7 @@ extern attack_map_darkness_t attack_D_801BF000;
  * `playing` is s32 rather than u16 because a u16 merge of the two lhu results
  * adds an andi 0xffff that the target does not have. */
 void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
-    attack_map_darkness_t darkness = attack_D_801BF000;
+    CVECTOR darkness = g_attack_map_darkness_color;
     s32 scenario;
     s32 playing;
     u16 replacement;
