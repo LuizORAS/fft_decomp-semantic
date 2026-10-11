@@ -354,6 +354,16 @@ static __inline__ s32 psyq_cd_check_timeout(void) {
     return 0;
 }
 
+static __inline__ void psyq_cd_apply_volume(const CdlATV* volume) {
+    *g_psyq_cd_index_status_register = 2;
+    *g_psyq_cd_parameter_data_register = volume->val0;
+    *g_psyq_cd_request_interrupt_register = volume->val1;
+    *g_psyq_cd_index_status_register = 3;
+    *g_psyq_cd_command_response_register = volume->val2;
+    *g_psyq_cd_parameter_data_register = volume->val3;
+    *g_psyq_cd_request_interrupt_register = 0x20;
+}
+
 static __inline__ void psyq_cd_copy_result(u8* destination, const u8* source, u32 size) {
     u8* output = destination;
     const u8* input = source;

@@ -13,12 +13,6 @@ s32 CD_initvol(void) {
     g_psyq_cd_spu_registers->control = 0xc001;
     volume.val0 = volume.val2 = 0x80;
     volume.val1 = volume.val3 = 0;
-    *g_psyq_cd_index_status_register = 2;
-    *g_psyq_cd_parameter_data_register = volume.val0;
-    *g_psyq_cd_request_interrupt_register = volume.val1;
-    *g_psyq_cd_index_status_register = 3;
-    *g_psyq_cd_command_response_register = volume.val2;
-    *g_psyq_cd_parameter_data_register = volume.val3;
-    *g_psyq_cd_request_interrupt_register = 0x20;
+    psyq_cd_apply_volume(&volume);
     return 0;
 }
