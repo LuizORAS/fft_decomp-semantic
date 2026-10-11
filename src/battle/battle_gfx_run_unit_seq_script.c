@@ -25,7 +25,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
     u16 i;
     s16 pos;
     s16 attack_id;
-    u16 count;
+    u16 value;
     s16 offset;
     u8 block_id;
     u8 block_sequence;
@@ -153,7 +153,8 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 }
                 break;
             case BATTLE_SEQ_OP_PLAY_SOUND:
-                battle_sound_play_movement_sfx(unit, seq->sequences[index][pos++]);
+                value = seq->sequences[index][pos++];
+                battle_sound_play_movement_sfx(unit, value);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_RL:
                 battle_unit_shift_right_or_left(unit, seq->sequences[index][pos++]);
@@ -204,14 +205,14 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 break;
             case BATTLE_SEQ_OP_REPEAT:
                 offset = (s8)seq->sequences[index][pos++];
-                count = seq->sequences[index][pos++];
+                value = seq->sequences[index][pos++];
                 if (state->repeat_count != 0) {
                     if (--state->repeat_count != 0) {
                         pos += offset - 4;
                     }
                 } else {
                     pos += offset - 4;
-                    state->repeat_count = count;
+                    state->repeat_count = value;
                 }
                 break;
             case BATTLE_SEQ_OP_MOVE_SCREEN_OFFSET:
@@ -219,14 +220,10 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 unit->screen_offset.vy += (s8)seq->sequences[index][pos++];
                 break;
             case BATTLE_SEQ_OP_SET_ROTATION:
-                /* The one-trip loop is load-bearing: flow weights register
-                 * references by loop depth, and the extra weight lets `count`
-                 * take a0 ahead of `offset` (target a0/a1 in 0xfc and 0xe5). */
-                do {
-                    count = seq->sequences[index][pos++];
-                    count |= seq->sequences[index][pos++] << 8;
-                    state->display->rotation = count;
-                } while (0);
+                value = seq->sequences[index][pos++];
+                value |= seq->sequences[index][pos++] << 8;
+                state->display->rotation = value;
+
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT:
                 battle_unit_shift_right_or_left(unit, seq->sequences[index][pos++]);

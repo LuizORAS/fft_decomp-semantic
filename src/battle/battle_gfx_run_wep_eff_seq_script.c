@@ -34,7 +34,7 @@ void battle_gfx_run_wep_eff_seq_script(
     battle_unit_sprite_block_t* block;
     battle_gfx_source_part_t* part;
     s16 offset;
-    u16 count;
+    u16 value;
     u8 block_id;
     u8 block_sequence;
     u32 parts;
@@ -107,7 +107,8 @@ void battle_gfx_run_wep_eff_seq_script(
                 }
                 break;
             case BATTLE_SEQ_OP_PLAY_SOUND:
-                battle_sound_play_movement_sfx(unit, seq[sequence_id][pos++]);
+                value = seq[sequence_id][pos++];
+                battle_sound_play_movement_sfx(unit, value);
                 break;
             case BATTLE_SEQ_OP_SET_WAIT_BIAS:
                 sprite->wait_bias = (s8)seq[sequence_id][pos++];
@@ -127,14 +128,14 @@ void battle_gfx_run_wep_eff_seq_script(
                 break;
             case BATTLE_SEQ_OP_REPEAT:
                 offset = (s8)seq[sequence_id][pos++];
-                count = seq[sequence_id][pos++];
+                value = seq[sequence_id][pos++];
                 if (sprite->repeat_count != 0) {
                     if (--sprite->repeat_count != 0) {
                         pos += offset - 4;
                     }
                 } else {
                     pos += offset - 4;
-                    sprite->repeat_count = count;
+                    sprite->repeat_count = value;
                 }
                 break;
             case BATTLE_SEQ_OP_START_BLOCK_SEQUENCE:
@@ -153,15 +154,10 @@ void battle_gfx_run_wep_eff_seq_script(
                 block->trigger = 1;
                 break;
             case BATTLE_SEQ_OP_SET_ROTATION:
-                /* The one-trip loop is load-bearing: flow weights register
-                 * references by loop depth, and the extra weight lets `count`
-                 * take a0 ahead of `offset` (target a0/a1 in 0xfc and 0xe5),
-                 * as in battle_gfx_run_unit_seq_script. */
-                do {
-                    count = seq[sequence_id][pos++];
-                    count |= seq[sequence_id][pos++] << 8;
-                    sprite->display->rotation = count;
-                } while (0);
+                value = seq[sequence_id][pos++];
+                value |= seq[sequence_id][pos++] << 8;
+                sprite->display->rotation = value;
+
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_F7:
             case BATTLE_SEQ_OP_MOVE_UNIT:
