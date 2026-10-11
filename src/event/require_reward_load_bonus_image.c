@@ -22,7 +22,9 @@ void require_reward_load_bonus_image(s32 image_id) {
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))build_operation;
-    } while (battle_thread_call_on_main_stack(image_id * 13 + DISC_SECTOR_EVENT_BONUS_BIN, 0x6800, allocation) != 0);
+    } while (
+        battle_thread_call_on_main_stack(image_id * 13 + DISC_SECTOR_EVENT_BONUS_BIN, sizeof(*allocation), allocation)
+        != 0);
 
     {
         s32 (*poll_operation)() = main_file_is_still_loading;
@@ -34,7 +36,7 @@ void require_reward_load_bonus_image(s32 image_id) {
 
     /* The 256-row upload includes the reserved suffix beyond the 0x6800-byte file. */
     LoadImage(&g_require_reward_bonus_image_rect, allocation->pixels[0]);
-    LoadImage(&g_require_reward_bonus_palette_rect, allocation->palette);
+    LoadImage(&g_require_reward_bonus_palette_rect, (u32*)allocation->palettes);
     battle_thread_yield();
     main_heap_free(allocation);
 }

@@ -231,12 +231,16 @@ typedef char require_reward_burst_tile_size_must_be_72[sizeof(require_reward_bur
 
 extern require_reward_burst_tile_t g_require_reward_burst_tiles[12][24];
 
-/* BONUS.BIN stores 200 rows of 64 halfword pixels, followed by the CLUT. */
+/* BONUS.BIN stores a 256x200 4bpp image, followed by eight 16-color palette slots. */
 typedef struct require_reward_bonus_image_file {
-    u32 pixels[200][32]; /* two pixels per word */
-    u32 palette[64];     /* 64 halfword colors in each of two rows */
+    u32 pixels[200][32];   /* 0x0000; eight 4bpp pixels per 32-bit value */
+    palette_t palettes[8]; /* 0x6400; four palettes per uploaded VRAM row */
     u8 _unknown_6500[0x300];
 } require_reward_bonus_image_file_t;
+typedef char
+    require_reward_bonus_image_file_size_must_be_26624[sizeof(require_reward_bonus_image_file_t) == 26624 ? 1 : -1];
+typedef char require_reward_bonus_palettes_must_be_at_offset_0x6400
+    [((unsigned long)&((require_reward_bonus_image_file_t*)0)->palettes == 0x6400) ? 1 : -1];
 
 /* g_require_reward_war_trophy_entry_types[]: what a war trophy entry's
  * value in g_require_reward_war_trophy_entry_values is. */

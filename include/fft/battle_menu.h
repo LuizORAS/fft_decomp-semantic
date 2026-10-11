@@ -7,12 +7,16 @@
 #include "fft/menu.h"
 
 /* menu */
-/* One EVTFACE.BIN portrait block; both GPU uploads use 64 halfword columns. */
+/* One EVTFACE.BIN block: pixels followed by eight 16-color palettes. */
 typedef struct battle_menu_portrait_image_file {
-    u32 pixels[48][32]; /* 0x0000 */
-    u32 palette[2][32]; /* 0x1800 */
+    u32 pixels[8][48][4];  /* 0x0000; eight 32x48 4bpp portraits */
+    palette_t palettes[8]; /* 0x1800; four palettes per uploaded VRAM row */
     u8 _unknown_1900[0x700];
 } battle_menu_portrait_image_file_t;
+typedef char
+    battle_menu_portrait_image_file_size_must_be_8192[sizeof(battle_menu_portrait_image_file_t) == 8192 ? 1 : -1];
+typedef char battle_menu_portrait_palettes_must_be_at_offset_0x1800
+    [((unsigned long)&((battle_menu_portrait_image_file_t*)0)->palettes == 0x1800) ? 1 : -1];
 
 /* BATTLE scratch at 0x801cc074, in the event-overlay area past BATTLE.BIN:
  * battle_menu_build_sprite_page lays it out as two sprite pages and the
