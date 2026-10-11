@@ -2392,7 +2392,7 @@ void world_menu_equipment_and_ability_panel_thread(void);
 s16 world_menu_update_wrapped_vertical_selection(u16, u8, s32);
 void world_menu_run_script_with_callback_suppressed(void);
 void world_menu_open_name_entry_key_list(void);
-void world_clear_menu_render_buffer(u8* dst, u32 count);
+void world_clear_menu_render_buffer(void* dst, u32 count);
 void world_menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step);
 void world_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, u8* buffer);

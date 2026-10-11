@@ -32,7 +32,7 @@ u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s
     words = (width >> 2) + partial;
     byte_count = (width * (kind == DIALOG_OPTIONS_NO_TAIL ? height : height + 0x10)) >> 1;
     image = world_menu_alloc_ui_buffer(byte_count);
-    world_clear_menu_render_buffer((u8*)image, byte_count);
+    world_clear_menu_render_buffer(image, byte_count);
     x_offset = 0;
     sheet = (u16*)g_world_menu_glyph_sheet->pixels;
     if (kind != DIALOG_OPTIONS_NO_TAIL) {
