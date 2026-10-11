@@ -8,7 +8,9 @@
 /* character */
 extern RECT g_require_character_status_frame_rect[];
 extern RECT g_require_character_status_draw_area_rect;
-extern s32 g_require_character_status_frame_config;
+extern world_status_thread_t g_require_character_status_frame_config;
+/* The scalar x alias preserves the retail transition-store scheduling. */
+extern s32 g_require_character_status_origin_x;
 extern s32 g_require_character_status_redraw_request;
 
 /* editor */
@@ -313,7 +315,9 @@ extern s32 g_require_text_section_offsets[32];
 extern u8 g_require_text_data[];
 extern s16 g_require_message_menu_result;
 extern s32 g_require_numeric_editor_redraw_request;
-extern s32 g_require_numeric_editor_thread_params;
+extern world_status_thread_t g_require_numeric_editor_thread_params;
+/* The scalar x alias preserves the retail transition-store scheduling. */
+extern s32 g_require_numeric_editor_origin_x;
 extern glyph_blit_t g_require_text_decimal_glyph;
 void require_text_clear_string_buffer(u8* data);
 
@@ -392,7 +396,9 @@ extern u8 g_require_saved_thread_block[];
 extern RECT g_require_special_portrait_palette_rect;
 extern RECT g_require_special_portrait_rect;
 extern s32 g_require_status_display_redraw_request;
-extern s32 g_require_status_display_thread_params;
+extern world_status_thread_t g_require_status_display_thread_params;
+/* The scalar x alias preserves the retail transition-store scheduling. */
+extern s32 g_require_status_display_origin_x;
 s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void);
 void require_apply_post_battle_unit_changes(void);
 void require_input_wait_frames_or_skip(s32 frames);

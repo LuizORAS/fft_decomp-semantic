@@ -2317,13 +2317,16 @@ data:
   - {addr: 0x801d0068, name: g_require_reward_bonus_image_rect}
   - {addr: 0x801d0070, name: g_require_reward_bonus_palette_rect}
   - {addr: 0x801d0078, name: g_require_gfx_fade_rgb}
+  - {addr: 0x801d007c, name: g_require_status_display_origin_x}
   - {addr: 0x801d007c, name: g_require_status_display_thread_params}
   - {addr: 0x801d0088, name: g_require_status_display_redraw_request}
   - {addr: 0x801d008c, name: g_require_panel_dim_a}
+  - {addr: 0x801d0090, name: g_require_numeric_editor_origin_x}
   - {addr: 0x801d0090, name: g_require_numeric_editor_thread_params}
   - {addr: 0x801d009c, name: g_require_numeric_editor_redraw_request}
   - {addr: 0x801d00a0, name: g_require_panel_dim_b}
   - {addr: 0x801d00a4, name: g_require_character_status_frame_config}
+  - {addr: 0x801d00a4, name: g_require_character_status_origin_x}
   - {addr: 0x801d00b0, name: g_require_character_status_redraw_request}
   - {addr: 0x801d00b4, name: g_require_panel_dim_c}
   - {addr: 0x801d00b8, name: g_require_gfx_scaled_sprite_texture_page}

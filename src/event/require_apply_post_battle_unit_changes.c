@@ -2,8 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void battle_thread_start(s32 thread_id, void (*function)(void));
-
 /* Applies the post-battle party changes for each affected battle unit.
  *
  * Shows each unit's status panel, lets the player choose whether to recruit
@@ -68,7 +66,7 @@ void require_apply_post_battle_unit_changes(void) {
      * flow reference count, which gives one of the target's two unreferenced
      * 8-byte frame slots. */
     if (affected_index < g_require_party_affected_unit_count) {
-        transition_c_ptr = &g_require_character_status_frame_config;
+        transition_c_ptr = &g_require_character_status_origin_x;
         unit_display_data = (battle_active_unit_t*)selected_unit_index_ptr;
         one = 1;
         menu_fields = (u8*)&menu_base->inner_width;
@@ -78,8 +76,8 @@ void require_apply_post_battle_unit_changes(void) {
         unit_index_ptr = g_require_party_affected_battle_unit_indices;
         do {
             require_panel_set_transition_value(0);
-            g_require_status_display_thread_params = -0x100;
-            g_require_numeric_editor_thread_params = -0x100;
+            g_require_status_display_origin_x = -0x100;
+            g_require_numeric_editor_origin_x = -0x100;
             *transition_c_ptr = -0x100;
             battle_menu_copy_billboard_data_in(
                 &g_require_panel_selected_billboard, &g_require_active_unit_data, &g_require_editor_unit_fields);
@@ -104,9 +102,9 @@ void require_apply_post_battle_unit_changes(void) {
                 u16 index_value;
 
                 do {
-                    g_require_status_display_thread_params = transition;
-                    g_require_numeric_editor_thread_params = transition;
-                    g_require_character_status_frame_config = transition;
+                    g_require_status_display_origin_x = transition;
+                    g_require_numeric_editor_origin_x = transition;
+                    g_require_character_status_origin_x = transition;
                     transition += 0x20;
                     battle_thread_yield();
                 } while (transition < 0x101);
@@ -128,9 +126,9 @@ void require_apply_post_battle_unit_changes(void) {
 
             transition = 0;
             do {
-                g_require_status_display_thread_params = transition - 0x100;
-                g_require_numeric_editor_thread_params = transition - 0x100;
-                g_require_character_status_frame_config = transition - 0x100;
+                g_require_status_display_origin_x = transition - 0x100;
+                g_require_numeric_editor_origin_x = transition - 0x100;
+                g_require_character_status_origin_x = transition - 0x100;
                 transition += 0x20;
                 battle_thread_yield();
             } while (transition < 0x101);
@@ -301,9 +299,9 @@ void require_apply_post_battle_unit_changes(void) {
 
     transition = 0;
     do {
-        g_require_status_display_thread_params = transition;
-        g_require_numeric_editor_thread_params = transition;
-        g_require_character_status_frame_config = transition;
+        g_require_status_display_origin_x = transition;
+        g_require_numeric_editor_origin_x = transition;
+        g_require_character_status_origin_x = transition;
         transition += 0x20;
         battle_thread_yield();
     } while (transition < 0x101);
