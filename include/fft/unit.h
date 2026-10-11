@@ -401,6 +401,31 @@ typedef enum unit_equipment_slot {
 } unit_equipment_slot_e;
 
 /* job */
+/* Career slots follow the generic jobs' order. Slot zero holds the unit's base
+ * job, including a special character's job; generic Squire has job ID 74. */
+typedef enum unit_career_job_index {
+    UNIT_CAREER_JOB_INDEX_BASE = 0,
+    UNIT_CAREER_JOB_INDEX_CHEMIST = 1,
+    UNIT_CAREER_JOB_INDEX_KNIGHT = 2,
+    UNIT_CAREER_JOB_INDEX_ARCHER = 3,
+    UNIT_CAREER_JOB_INDEX_MONK = 4,
+    UNIT_CAREER_JOB_INDEX_PRIEST = 5,
+    UNIT_CAREER_JOB_INDEX_WIZARD = 6,
+    UNIT_CAREER_JOB_INDEX_TIME_MAGE = 7,
+    UNIT_CAREER_JOB_INDEX_SUMMONER = 8,
+    UNIT_CAREER_JOB_INDEX_THIEF = 9,
+    UNIT_CAREER_JOB_INDEX_MEDIATOR = 10,
+    UNIT_CAREER_JOB_INDEX_ORACLE = 11,
+    UNIT_CAREER_JOB_INDEX_GEOMANCER = 12,
+    UNIT_CAREER_JOB_INDEX_LANCER = 13,
+    UNIT_CAREER_JOB_INDEX_SAMURAI = 14,
+    UNIT_CAREER_JOB_INDEX_NINJA = 15,
+    UNIT_CAREER_JOB_INDEX_CALCULATOR = 16,
+    UNIT_CAREER_JOB_INDEX_BARD = 17,
+    UNIT_CAREER_JOB_INDEX_DANCER = 18,
+    UNIT_CAREER_JOB_INDEX_MIME = 19,
+} unit_career_job_index_e;
+
 /* Serialized unit-career layout shared by party records and battle stats.
  * main_unit_generate_out_of_battle (0x80059ffc) clears the 0x96-byte span,
  * while main_job_add_proposition_jp and main_unit_init_battle_data establish
@@ -409,9 +434,6 @@ typedef enum unit_equipment_slot {
  * index in its low nibble. */
 enum {
     UNIT_CAREER_JOB_COUNT = JOB_ID_GENERIC_COUNT,
-    UNIT_CAREER_JOB_INDEX_BARD = JOB_ID_BARD - JOB_ID_GENERIC_FIRST,
-    UNIT_CAREER_JOB_INDEX_DANCER = JOB_ID_DANCER - JOB_ID_GENERIC_FIRST,
-    UNIT_CAREER_JOB_INDEX_MIME = JOB_ID_MIME - JOB_ID_GENERIC_FIRST,
     UNIT_UNLOCKED_JOB_BYTE_COUNT = 3,
     /* Mime has JP and a packed job level, but no learned-ability row. */
     UNIT_LEARNED_ABILITY_JOB_COUNT = UNIT_CAREER_JOB_COUNT - 1,
