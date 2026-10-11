@@ -14,7 +14,6 @@ void open_birthday_build_menu_text(open_birthday_date_state_t* menu) {
     s32 text_id;
     open_render_record_56_position_t* translation;
     s32* substitution;
-    s16 window_width;
 
     index = open_gfx_append_window_record(g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     menu->window_record_56 = index;
@@ -42,9 +41,8 @@ void open_birthday_build_menu_text(open_birthday_date_state_t* menu) {
 
     translation = g_open_gfx_record_translation;
     translation += index;
-    window_width = quad.w;
+    translation->x = -(quad.w / 2);
     translation->y = -0x10;
-    translation->x = -(window_width / 2);
     g_open_gfx_render_records_56[index].ot_layer = 4;
     g_open_gfx_render_records_56[index].flags &= ~WORLD_RENDER_RECORD_POP_IN;
 }

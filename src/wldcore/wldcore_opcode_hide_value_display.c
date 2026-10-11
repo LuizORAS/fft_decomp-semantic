@@ -5,12 +5,10 @@
  * puts it up) and fetch the next instruction. */
 void wldcore_opcode_hide_value_display(void) {
     u16* flags;
-    u32 sys;
     u16 value;
 
     flags = &g_wldcore_active_saved_record.state_flags;
-    sys = g_main_system_flags;
     value = *flags;
-    g_main_system_flags = sys | MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     *flags = (value & ~WLDCORE_OPCODE_STATE_VALUE_DISPLAY) | WLDCORE_OPCODE_STATE_FETCH;
 }

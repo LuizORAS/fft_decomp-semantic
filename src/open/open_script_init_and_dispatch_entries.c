@@ -13,7 +13,6 @@
 s32 open_script_init_and_dispatch_entries(void) {
     open_script_dispatch_state_t* state;
     open_script_cursor_t* cursor;
-    open_script_entry_handler_t* handlers;
     s32 result;
     s16* entry;
     u32 flags;
@@ -28,10 +27,9 @@ s32 open_script_init_and_dispatch_entries(void) {
     state->flags = result;
     if (result & OPEN_SCRIPT_DISPATCH_CONTINUE) {
         cursor = &state->cursor;
-        handlers = g_open_opcode_handlers;
         do {
             entry = (s16*)open_script_add_pointer_offset(cursor->data_base, cursor->byte_offset);
-            handlers[*entry](entry);
+            g_open_opcode_handlers[*entry](entry);
             /* Keeping the cursor base live matches retail; the direct state view is four bytes shorter. */
             flags = ((open_script_dispatch_state_t*)((u8*)cursor - offsetof(open_script_dispatch_state_t, cursor)))
                         ->flags;
