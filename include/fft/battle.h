@@ -667,17 +667,9 @@ typedef struct battle_ai_facing_tile_offsets {
     u8 by_direction[4][2];
 } battle_ai_facing_tile_offsets_t;
 
-/* 0x80193d70: copied to the stack at 0x801984ec, then read as unsigned
- * status IDs. Signed byte fields retain the target's three-byte copy. */
 enum {
     BATTLE_AI_RECOVERY_STATUS_COUNT = 3,
 };
-
-typedef struct battle_ai_recovery_status_list {
-    u8 ids[BATTLE_AI_RECOVERY_STATUS_COUNT];
-} battle_ai_recovery_status_list_t;
-typedef char battle_ai_recovery_status_list_must_be_3
-    [sizeof(battle_ai_recovery_status_list_t) == BATTLE_AI_RECOVERY_STATUS_COUNT ? 1 : -1];
 
 extern s32 g_battle_ai_propagation_resume_pass;
 extern u16 g_battle_ai_range_row_masks[];
@@ -695,7 +687,7 @@ extern u8 g_battle_math_extra_known_bit_ids[10];
 extern u16* g_battle_ai_math_ability_list; /* borrowed from main's temporary skillset list */
 extern s32 g_battle_ai_math_skillset;
 extern s32 g_battle_ai_math_skillset_index;
-extern battle_ai_recovery_status_list_t g_battle_ai_recovery_status_ids;
+extern u8 g_battle_ai_recovery_status_ids[BATTLE_AI_RECOVERY_STATUS_COUNT];
 extern s32 g_battle_ai_recovery_status_index; /* 0x8019f380; status-list cursor preserved for resume */
 extern s32 g_battle_ai_recovery_status_retry; /* 0x8019f37c; skip status pass after one failed attempt */
 extern s32 g_battle_ai_retreat_phase;         /* 0x8019f390; retreat child resume stage */
@@ -1255,6 +1247,12 @@ void battle_script_warp_unit_display_to_paired_unit(s32 misc_id);
 extern const u8 g_battle_status_display_image_ids[BATTLE_STATUS_COUNT];
 extern s32 g_battle_status_menu_open;
 extern SVECTOR g_battle_status_bubble_zoom;
+extern s16 g_battle_numeric_digit_0_zoom_curve[21];
+extern s16 g_battle_numeric_digit_1_zoom_curve[21];
+extern s16 g_battle_numeric_digit_2_zoom_curve[21];
+extern s16 g_battle_numeric_digit_0_critical_zoom_curve[21];
+extern s16 g_battle_numeric_digit_1_critical_zoom_curve[21];
+extern s16 g_battle_numeric_digit_2_critical_zoom_curve[21];
 
 /* Texture coordinates for the status bubble graphics, indexed by status bubble
  * id (0x800949dc/0x800949f4) and by a counter digit (0x80094a0c/0x80094a24).
@@ -8434,6 +8432,7 @@ extern u8 g_battle_menu_buffer_arena[53][0x100];
 extern u8 g_battle_menu_buffer_allocation_map[53];
 extern s32 g_battle_menu_companion_executable_loading;
 extern s32 g_battle_menu_companion_executable_request_index;
+extern u8 g_battle_menu_calculator_skillsets[4];
 extern s32 g_battle_menu_current_id; /* battle_menu_id_e */
 extern s32 g_battle_menu_help_open;
 extern s32 g_battle_menu_help_opening;

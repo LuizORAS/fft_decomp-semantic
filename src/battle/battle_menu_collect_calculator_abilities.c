@@ -1,12 +1,6 @@
 #include "fft/battle.h"
+#include "psx/libc.h"
 #include "psx/types.h"
-
-/* Four skillset IDs copied as one unaligned word. */
-typedef struct {
-    u8 ids[4];
-} battle_menu_calculator_skillsets_t;
-
-extern battle_menu_calculator_skillsets_t g_battle_menu_calculator_skillsets;
 
 /*
  * Collects the unit's Calculator-eligible abilities from the four skillsets
@@ -22,7 +16,7 @@ s32 battle_menu_collect_calculator_abilities(s32 unit_id, u8 skillset, s16* out)
     u8 charge_times[0x18];
     u8 ability_flags[0x18];
     u8 turn_counts[0x18];
-    battle_menu_calculator_skillsets_t skillsets;
+    u8 skillsets[4];
     s32 count;
     s32 ability_count;
     s32 i;
@@ -31,7 +25,7 @@ s32 battle_menu_collect_calculator_abilities(s32 unit_id, u8 skillset, s16* out)
     ability_secondary_data_t* secondary;
 
     count = 0;
-    skillsets = g_battle_menu_calculator_skillsets;
+    memcpy(skillsets, g_battle_menu_calculator_skillsets, sizeof(skillsets));
     if (battle_unit_get_existing_pointer(unit_id) == 0) {
         return 0;
     }
@@ -41,7 +35,7 @@ s32 battle_menu_collect_calculator_abilities(s32 unit_id, u8 skillset, s16* out)
     }
     for (i = 0; i < 4; i++) {
         ability_count = battle_menu_get_unit_skillset_ability_data(
-            unit_id, skillsets.ids[i], abilities, mp_costs, charge_times, 1, ability_flags, turn_counts);
+            unit_id, skillsets[i], abilities, mp_costs, charge_times, 1, ability_flags, turn_counts);
         if (ability_count != 0) {
             for (j = 0; j < ability_count; j++) {
                 ability = abilities[j];

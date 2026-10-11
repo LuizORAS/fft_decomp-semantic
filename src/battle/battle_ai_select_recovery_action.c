@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "psx/libc.h"
 
 /*
  * Select an action for the recovery-oriented AI policy.
@@ -9,11 +10,13 @@
 s32 battle_ai_select_recovery_action(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* acting = g_battle_ai_data_base.acting_unit;
-    battle_ai_recovery_status_list_t statuses = g_battle_ai_recovery_status_ids;
-    s32 target = acting->auto_battle_target;
+    u8 statuses[BATTLE_AI_RECOVERY_STATUS_COUNT];
+    s32 target;
     u32 status;
     s32 result;
 
+    memcpy(statuses, g_battle_ai_recovery_status_ids, sizeof(statuses));
+    target = acting->auto_battle_target;
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: each phase re-enters the step that suspended. */
         switch (g_battle_ai_data_base.action_selection_phase) {
@@ -59,13 +62,11 @@ movement:
         && !((ai->unit_decisions[target].targeting_flags_2 >> 6) & (BATTLE_AI_TARGET_DEAD_WITH_RERAISE >> 6))) {
         g_battle_ai_recovery_status_index = 0;
         do {
-            u32 status_flags
-                = g_battle_unit_stats[target]
-                      .status_sets.current[(status = statuses.ids[g_battle_ai_recovery_status_index]) >> 3];
+            u32 status_flags = g_battle_unit_stats[target]
+                                   .status_sets.current[(status = statuses[g_battle_ai_recovery_status_index]) >> 3];
             if (status_flags & (0x80 >> (status & 7))) {
             cancel_status:
-                result
-                    = battle_ai_evaluate_status_cancellation(target, statuses.ids[g_battle_ai_recovery_status_index]);
+                result = battle_ai_evaluate_status_cancellation(target, statuses[g_battle_ai_recovery_status_index]);
                 if (result == -1) {
                     ai->action_selection_phase = 7;
                     return -1;
