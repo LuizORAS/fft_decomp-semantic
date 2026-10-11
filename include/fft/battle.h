@@ -691,7 +691,8 @@ extern u8 g_battle_ai_current_ability_data_backup[];
 extern battle_ai_data_t g_battle_ai_data_base;
 extern battle_ai_facing_tile_offsets_t g_battle_ai_facing_tile_offsets; /* 0x8019f358 */
 extern s32 g_battle_ai_math_ability_index;
-extern u16* g_battle_ai_math_ability_list;
+extern u8 g_battle_math_extra_known_bit_ids[10];
+extern u16* g_battle_ai_math_ability_list; /* borrowed from main's temporary skillset list */
 extern s32 g_battle_ai_math_skillset;
 extern s32 g_battle_ai_math_skillset_index;
 extern battle_ai_recovery_status_list_t g_battle_ai_recovery_status_ids;
@@ -5108,6 +5109,8 @@ extern world_gfx_image_load_parameters_t g_battle_unit_summary_portrait_image_pa
 extern world_gfx_image_load_parameters_t g_battle_unit_summary_sprite_image_params[];
 extern u16 g_battle_unit_was_moving_latch[]; /* a unit with a pending animation was moving on the last update */
 extern s32 g_battle_companion_overlay_state;
+
+extern s8 g_battle_unit_float_bob_offsets[24];
 
 /* BATTLE and WORLD use the same seven-byte per-unit rotation state. */
 extern world_unit_animation_state_t g_battle_unit_misc_rotation_data[];

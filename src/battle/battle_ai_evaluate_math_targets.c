@@ -1,12 +1,5 @@
 #include "fft/battle.h"
-
-/* Copied as ten byte-aligned bytes from 0x80193dd4. */
-typedef struct battle_ai_math_ability_id_list {
-    u8 ability_ids[10];
-} battle_ai_math_ability_id_list_t;
-
-extern battle_ai_math_ability_id_list_t g_battle_math_extra_known_bit_ids;
-/* Borrowed from main's temporary skillset list, not a private AI copy. */
+#include "psx/libc.h"
 
 /*
  * Evaluate learned Math Skill ability and parameter combinations.
@@ -15,11 +8,12 @@ extern battle_ai_math_ability_id_list_t g_battle_math_extra_known_bit_ids;
  * indices resume a suspended priority check; -1 suspends and 0 ends this pass.
  */
 s32 battle_ai_evaluate_math_targets(void) {
-    battle_ai_math_ability_id_list_t special_abilities = g_battle_math_extra_known_bit_ids;
+    u8 special_abilities[10];
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
     s32 unit;
 
+    memcpy(special_abilities, g_battle_math_extra_known_bit_ids, sizeof(special_abilities));
     if (g_battle_ai_data_base.resume_pending)
         goto evaluate_priority; /* resume inside the multiplier loop */
     if (!battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords))
@@ -43,7 +37,7 @@ s32 battle_ai_evaluate_math_targets(void) {
                 continue;
             /* The extra known-bit call's result is ignored. */
             for (i = 0; i < 10; i++) {
-                if (ai->math_ability_id == special_abilities.ability_ids[i])
+                if (ai->math_ability_id == special_abilities[i])
                     battle_ai_load_known_ability_flag(
                         ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index + 1);
             }

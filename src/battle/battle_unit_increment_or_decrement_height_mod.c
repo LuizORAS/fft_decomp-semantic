@@ -1,16 +1,10 @@
 #include "fft/battle.h"
-
-/* 24 signed bob offsets copied to the stack from BATTLE rodata. */
-typedef struct battle_unit_height_wave {
-    s8 offsets[24];
-} battle_unit_height_wave_t;
+#include "psx/libc.h"
 
 /* The callee returns (s16), and this caller treats the result as a halfword
  * (sign-extending where it is widened). The shared prototype returns s32 for
  * callers that were matched against the full register. */
 typedef s16 (*battle_screen_z_halfword_fn_t)(battle_unit_misc_data_t* unit);
-
-extern battle_unit_height_wave_t g_battle_unit_float_bob_offsets;
 
 /* Raise a floating unit's height offset, or lower it back to the ground.
  *
@@ -20,11 +14,11 @@ extern battle_unit_height_wave_t g_battle_unit_float_bob_offsets;
  * of the stored and recalculated heights. Jumping units whose height is
  * controlled by their jump animation are left untouched. */
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit) {
-    battle_unit_height_wave_t wave;
+    s8 wave[24];
     s16 screen_z;
     u32 phase;
 
-    wave = g_battle_unit_float_bob_offsets;
+    memcpy(wave, g_battle_unit_float_bob_offsets, sizeof(wave));
     if (unit->status_flags_5_6 & (BATTLE_MISC_STATUS_JUMP | BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE)) {
         return;
     }
@@ -33,7 +27,7 @@ void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit
             unit->depth_height_offset += g_main_system_animation_speed;
         } else if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {
             phase = unit->float_bob_phase += g_main_system_animation_speed;
-            unit->float_bob_offset = wave.offsets[phase % 48 / 2];
+            unit->float_bob_offset = wave[phase % 48 / 2];
         } else {
             unit->float_bob_offset = 0;
         }
