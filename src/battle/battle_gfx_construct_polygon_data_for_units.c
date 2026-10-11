@@ -5,35 +5,10 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* POLY_FT4 with the colour's red/green pair addressed as one halfword. */
-typedef struct battle_gfx_part_prim {
-    u8 _unused_00[3];
-    u8 length;
-    u16 rg;
-    u8 b;
-    u8 code;
-    s32 xy0;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    s32 xy1;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    s32 xy2;
-    u8 u2;
-    u8 v2;
-    u16 _padding_1e; /* aligns xy3 */
-    s32 xy3;
-    u8 u3;
-    u8 v3;
-    u16 _padding_26; /* tail padding to 4-byte alignment */
-} battle_gfx_part_prim_t;
-
 /* Queue one POLY_FT4 per sprite part in [start, end) of a sprite display.
  *
  * The display's rotation, the caller's angle and scale, and position build
- * the GTE matrix. `mode` is battle_misc_display_flags_e for the whole sprite:
+ * the GTE matrix. `mode` supplies the whole-sprite flags and blend selector:
  * a flip bit mirrors each part's place about the sprite's origin, and its
  * picture unless the part's own flip bit is set too. Either one's
  * semi-transparent bit applies, and the blend bits of `mode` are added to
@@ -49,7 +24,7 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
     SVECTOR* position, s16 angle, s16 mode, SVECTOR* scale, u32* ot) {
     VECTOR unused;
     battle_gfx_sprite_part_display_data_t* part;
-    battle_gfx_part_prim_t* prim;
+    POLY_FT4* prim;
     s32 i;
     s16 flags;
     s16 index;
@@ -73,8 +48,8 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
         flags = part->flags;
         index = battle_gfx_increment_counter();
         flags ^= mode;
-        prim = (battle_gfx_part_prim_t*)(g_battle_gfx_sprite_prim_pool + index);
-        prim->length = 9;
+        prim = g_battle_gfx_sprite_prim_pool + index;
+        setlen(prim, 9);
         prim->code = 0x2c;
         if (mode & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) {
             x = -part->x_shift - part->width;
@@ -109,12 +84,13 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
         }
         prim->tpage = display->tpage | (mode & BATTLE_MISC_DISPLAY_BLEND_MASK);
         prim->clut = display->clut;
-        gte_stsxy3_split(&prim->xy0, &prim->xy1, &prim->xy2);
+        gte_stsxy3_split(&prim->x0, &prim->x1, &prim->x2);
         gte_ldv0(&g_battle_gte_rtps_vxy0);
         gte_rtps();
-        prim->rg = *(u16*)&display->red;
-        prim->b = display->blue;
-        gte_stsxy(&prim->xy3);
+        /* The retail colour transfer combines red and green in one halfword. */
+        *(u16*)&prim->r0 = *(u16*)&display->red;
+        prim->b0 = display->blue;
+        gte_stsxy(&prim->x3);
         prim->u0 = prim->u2 = part->u;
         prim->u1 = prim->u3 = prim->u0 + part->width;
         prim->v0 = prim->v1 = part->v;

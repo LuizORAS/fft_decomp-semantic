@@ -6,7 +6,7 @@
 s32 battle_effect_code_script_18_jump_if_work_count_less(effect_record_t* record) {
     battle_effect_script_instruction_t* instruction = battle_effect_get_current_script_instruction(record);
     if (record->work_count < instruction->branch.comparison) {
-        record->pc = (s16)instruction->branch.target_offset;
+        record->pc = instruction->branch.target_offset;
     } else {
         record->pc += 6;
     }

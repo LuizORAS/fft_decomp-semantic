@@ -11,8 +11,8 @@
  * GTE into a POLY_FT4 linked into `ot`. */
 void battle_effect_submit_sprite_to_ordering_table(
     battle_effect_sprite_block_t* set, DVECTOR* position, s16 angle, VECTOR* zoom, u32* ot) {
-    battle_effect_quad_prim_t* prim;
-    battle_effect_quad_prim_t* quad;
+    DR_MODE* draw_mode;
+    POLY_FT4* quad;
     battle_effect_sprite_part_t* frame;
     s32 i;
     s16 cosine;
@@ -21,9 +21,9 @@ void battle_effect_submit_sprite_to_ordering_table(
     s32 clut;
     s32 code;
 
-    prim = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_DR_MODE);
-    SetDrawMode((DR_MODE*)prim, 1, 1, 1, 0);
-    addPrim(ot, prim);
+    draw_mode = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_DR_MODE);
+    SetDrawMode(draw_mode, 1, 1, 1, 0);
+    addPrim(ot, draw_mode);
     g_battle_effect_matrix.t[0] = position->vx;
     g_battle_effect_matrix.t[1] = position->vy;
     cosine = rcos(angle);
@@ -53,13 +53,13 @@ void battle_effect_submit_sprite_to_ordering_table(
         gte_rtpt_split();
         memcpy(&g_battle_effect_corner_bottom_right, &frame->corners[3], sizeof(frame->corners[3]));
         quad = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_FT4);
-        memcpy(&quad->color, &set->color, sizeof(quad->color));
-        quad->length = 9;
-        quad->color.cd = code;
+        memcpy(&quad->r0, &set->color, sizeof(CVECTOR));
+        setlen(quad, 9);
+        quad->code = code;
         if (frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT) {
-            quad->color.cd = 0x2e;
+            quad->code = 0x2e;
         }
-        gte_stsxy3_split(&quad->xy0, &quad->xy1, &quad->xy2);
+        gte_stsxy3_split(&quad->x0, &quad->x1, &quad->x2);
         gte_ldv0_split(&g_battle_effect_corner_bottom_right);
         gte_rtps_split();
         quad->tpage = frame->tpage;
@@ -74,10 +74,10 @@ void battle_effect_submit_sprite_to_ordering_table(
         quad->u1 = quad->u3 = quad->u0 + frame->width;
         quad->v0 = quad->v1 = frame->v;
         quad->v2 = quad->v3 = quad->v0 + frame->height;
-        gte_stsxy_split(&quad->xy3);
+        gte_stsxy_split(&quad->x3);
         addPrim(ot, quad);
     }
-    prim = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_DR_MODE);
-    SetDrawMode((DR_MODE*)prim, 1, 0, 1, 0);
-    addPrim(ot, prim);
+    draw_mode = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_DR_MODE);
+    SetDrawMode(draw_mode, 1, 0, 1, 0);
+    addPrim(ot, draw_mode);
 }

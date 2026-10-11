@@ -9,12 +9,12 @@
  * slot angle, transforms the frame's four corners into the slot's
  * double-buffered POLY_FT4, and adds that quad between the slot's two draw-mode
  * primitives. */
-void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
+void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     SVECTOR local;
     VECTOR position;
     s32 sxy;
     s32 flag;
-    battle_effect_quad_prim_t* prim;
+    POLY_FT4* prim;
     battle_effect_sprite_frame_t* frame;
     u16 offset;
     u8* frame_group;
@@ -30,7 +30,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
 
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    setVector(&local, slot->x >> 12, slot->y >> 12, slot->z >> 12);
+    setVector(&local, slot->motion.position.x >> 12, slot->motion.position.y >> 12, slot->motion.position.z >> 12);
     RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
     if (depth < EFFECT_OT_DEPTH_MIN) {
@@ -53,10 +53,10 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     SetTransMatrix(&g_battle_effect_matrix);
 
     frame_group = (u8*)g_battle_effect_trap_frame_data.groups;
-    offset
-        = *(u16*)(frame_group + (slot->color.frame * 2 + g_battle_effect_trap_frame_data.groups[0].frame_table_offset));
+    offset = *(u16*)(frame_group + (slot->frame * 2 + g_battle_effect_trap_frame_data.groups[0].frame_table_offset));
     prim = &slot->quads[g_battle_effect_buffer_index];
-    memcpy(&prim->color, &slot->color, sizeof(prim->color));
+    /* Copy RGB and the frame byte; the packet header overwrites that last byte. */
+    memcpy(&prim->r0, &slot->red, sizeof(CVECTOR));
     setPolyFT4(prim);
     frame = (battle_effect_sprite_frame_t*)(frame_group + offset);
     setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);
@@ -65,9 +65,10 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     memcpy(&g_battle_effect_corner_top_right, &frame->corners[1], sizeof(frame->corners[1]));
     memcpy(&g_battle_effect_corner_bottom_left, &frame->corners[2], sizeof(frame->corners[2]));
     memcpy(&g_battle_effect_corner_bottom_right, &frame->corners[3], sizeof(frame->corners[3]));
+    /* The GTE returns each x/y pair as one packed word. */
     RotTransPers3(&g_battle_effect_corner_top_left, &g_battle_effect_corner_top_right,
-        &g_battle_effect_corner_bottom_left, &prim->xy0, &prim->xy1, &prim->xy2, &sxy, &flag);
-    RotTransPers(&g_battle_effect_corner_bottom_right, &prim->xy3, &sxy, &flag);
+        &g_battle_effect_corner_bottom_left, (s32*)&prim->x0, (s32*)&prim->x1, (s32*)&prim->x2, &sxy, &flag);
+    RotTransPers(&g_battle_effect_corner_bottom_right, (s32*)&prim->x3, &sxy, &flag);
     prim->tpage = (frame->flags & EFFECT_SPRITE_PART_TPAGE_MODE_MASK) | 8;
     prim->clut = slot->clut;
     corner_u = frame->u;

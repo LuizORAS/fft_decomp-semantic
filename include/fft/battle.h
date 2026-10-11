@@ -1408,7 +1408,6 @@ void battle_script_add_unit_stub(void);
 void battle_state_enter_pre_attack_animation(void);
 void* game_realloc(void*, u32);
 void battle_state_deployment_frame_stub(void);
-void battle_gfx_release_unit_sprite_display_stub(void* unused_sprite_display_section);
 void battle_menu_run_companion_overlay_stub(void);
 void battle_script_frame_after_threads_stub(void);
 void battle_script_frame_after_requests_stub(void);
@@ -3268,56 +3267,6 @@ typedef struct battle_effect_sprite_frame {
     DVECTOR corners[4] __attribute__((aligned(4))); /* 0x0c */
 } battle_effect_sprite_frame_t;
 
-/* POLY_FT4 view with the tag's length byte and packed GTE screen coordinates. */
-typedef struct battle_effect_quad_prim {
-    u8 _unused_00[3]; /* 0x00; tag address */
-    u8 length;        /* 0x03; tag word count */
-    CVECTOR color;    /* 0x04 */
-    s32 xy0;          /* 0x08 */
-    u8 u0;
-    u8 v0;
-    u16 clut; /* 0x0e */
-    s32 xy1;  /* 0x10 */
-    u8 u1;
-    u8 v1;
-    u16 tpage; /* 0x16 */
-    s32 xy2;   /* 0x18 */
-    u8 u2;
-    u8 v2;
-    u16 _padding_1e; /* aligns xy3 */
-    s32 xy3;         /* 0x20 */
-    u8 u3;
-    u8 v3;
-    u16 _padding_26; /* tail padding to 4-byte alignment */
-} battle_effect_quad_prim_t;
-
-/* The 0xcc battle_effect_slot_t, with the fields this sprite
- * path uses named. The colour word's top byte is the sprite frame index: the
- * quad's code byte overwrites it immediately after the word copy. */
-typedef struct battle_effect_sprite_slot {
-    u8 _unused_00[4];
-    DR_MODE modes[2][2];                /* 0x04; two draw modes per buffer */
-    battle_effect_quad_prim_t quads[2]; /* 0x34 */
-    struct {
-        u8 r;
-        u8 g;
-        u8 b;
-        u8 frame;
-    } color;  /* 0x84 */
-    u16 clut; /* 0x88 */
-    u8 _unused_8a[4];
-    s16 angle; /* 0x8e */
-    u8 _unused_90[0xc];
-    s32 x; /* 0x9c */
-    s32 y; /* 0xa0 */
-    s32 z; /* 0xa4 */
-    u8 _unused_a8[0x24];
-} battle_effect_sprite_slot_t;
-typedef char battle_effect_sprite_slot_size_must_be_0xcc[sizeof(battle_effect_sprite_slot_t) == 0xcc ? 1 : -1];
-
-typedef char
-    battle_effect_quad_prim_size_must_match_ft4[sizeof(battle_effect_quad_prim_t) == sizeof(POLY_FT4) ? 1 : -1];
-
 /* Section table at the start of an effect file's header section: byte offsets
  * from the table itself, one per battle_effect_*_address/_pointer getter. */
 typedef struct effect_file_header {
@@ -4808,7 +4757,7 @@ void battle_effect_add_vectors_to_svector(const VECTOR* left, const VECTOR* righ
 void battle_effect_add_vectors_to_svector_rot_y_270(const VECTOR* left, const VECTOR* right, SVECTOR* result);
 void battle_effect_add_vectors_to_svector_rot_y_180(const VECTOR* left, const VECTOR* right, SVECTOR* result);
 void battle_effect_add_vectors_to_svector_rot_y_90(const VECTOR* left, const VECTOR* right, SVECTOR* result);
-void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot);
+void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot);
 
 /* turn */
 typedef enum battle_turn_status_flags {
@@ -6099,6 +6048,8 @@ void battle_gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin
 void battle_gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
 void battle_gfx_start_screen_color_modulation_fade(u16 blend_mode, u16 red, u16 green, u16 blue, u16 duration);
 s32 battle_gfx_step_load_unit_shp_seq_data(void);
+
+void battle_gfx_release_unit_sprite_display_stub(battle_gfx_sprite_display_data_t* unused_display);
 
 void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* display, s32 index, s16 x_shift,
     s16 y_shift, s16 u, s16 v, s16 width, s16 height, s16 flags);
