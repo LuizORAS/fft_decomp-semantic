@@ -4,6 +4,7 @@
 /* Unit records shared across modules: party, ENTD and battle stats, status and identity. */
 
 #include "fft/data.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* ability flags */
@@ -144,10 +145,7 @@ typedef struct battle_action_command {
     u16 item_or_equipment;     /* 0x08 */
     u8 targeting_type;         /* 0x0a; battle_targeting_type_e */
     u8 target_id;              /* 0x0b */
-    s16 target_x;              /* 0x0c */
-    s16 target_elevation;      /* 0x0e */
-    s16 target_y;              /* 0x10 */
-    u8 _unused_12[2];
+    SVECTOR target_position;   /* 0x0c; tile x, elevation, y; padding is unread */
 } battle_action_command_t;
 typedef char battle_action_command_size_must_be_20[(sizeof(battle_action_command_t) == 20) ? 1 : -1];
 

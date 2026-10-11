@@ -8,9 +8,9 @@ void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit) {
 
     bd = unit->battle_data;
     if (bd->action_command.targeting_type == BATTLE_TARGETING_TYPE_TILE) {
-        g_battle_cursor_x = bd->action_command.target_x;
-        g_battle_cursor_z = unit->battle_data->action_command.target_elevation;
-        g_battle_cursor_y = unit->battle_data->action_command.target_y;
+        g_battle_cursor_x = bd->action_command.target_position.vx;
+        g_battle_cursor_z = unit->battle_data->action_command.target_position.vy;
+        g_battle_cursor_y = unit->battle_data->action_command.target_position.vz;
         return;
     }
     battle_target_move_cursor_to_unit(battle_unit_get_misc_data_by_battle_id(bd->action_command.target_id));

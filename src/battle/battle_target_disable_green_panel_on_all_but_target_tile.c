@@ -12,9 +12,9 @@ s32 battle_target_disable_green_panel_on_all_but_target_tile(const battle_action
 
     main_util_copy_action_data(action, &action_copy);
     /* Retail reads only the low byte of each coordinate halfword. */
-    x = (u8)action_copy.target_x;
-    y = (u8)action_copy.target_y;
-    level = (u8)action_copy.target_elevation;
+    x = (u8)action_copy.target_position.vx;
+    y = (u8)action_copy.target_position.vz;
+    level = (u8)action_copy.target_position.vy;
     if (x < g_battle_map_max_x) {
         if (y < g_battle_map_max_y) {
             if (level < 2) {

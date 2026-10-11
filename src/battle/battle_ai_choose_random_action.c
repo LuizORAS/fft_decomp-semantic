@@ -77,9 +77,9 @@ s32 battle_ai_choose_random_action(void) {
                 if (index_or_count) {
                     while (
                         battle_ai_take_random_tile(ai->targetable_tiles, &ai->considered_unit_coords, index_or_count)) {
-                        ai->current_action.command.target_x = ai->considered_unit_coords.bytes.x;
-                        ai->current_action.command.target_y = ai->considered_unit_coords.bytes.y;
-                        ai->current_action.command.target_elevation = ai->considered_unit_coords.bytes.elevation;
+                        ai->current_action.command.target_position.vx = ai->considered_unit_coords.bytes.x;
+                        ai->current_action.command.target_position.vz = ai->considered_unit_coords.bytes.y;
+                        ai->current_action.command.target_position.vy = ai->considered_unit_coords.bytes.elevation;
                         ai->current_action.wait_facing_hint = battle_ai_find_direction_of_target(
                             &ai->considered_unit_coords, &ai->current_action.coords);
                         if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT

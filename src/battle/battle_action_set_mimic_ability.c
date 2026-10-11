@@ -61,10 +61,10 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     action.actor_id = self->misc_unit_id;
     unit_id = self->misc_unit_id;
-    action.target_x = x;
-    action.target_elevation = z;
+    action.target_position.vx = x;
+    action.target_position.vy = z;
     weapon_id = g_battle_action_current_attacker.right_hand_weapon_id;
-    action.target_y = y;
+    action.target_position.vz = y;
     action.target_id = unit_id;
     self->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = weapon_id;
     self->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = g_battle_action_current_attacker.left_hand_weapon_id;

@@ -28,12 +28,14 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
                 setVector(&velocity, target->real.vx - unit->real.vx, target->real.vy - unit->real.vy,
                     target->real.vz - unit->real.vz);
             } else {
-                velocity.vx = (unit->battle_data->action_command.target_x * 0x1C + 0xE - unit->screen.vx) << 12;
-                velocity.vz = (unit->battle_data->action_command.target_y * 0x1C + 0xE - unit->screen.vz) << 12;
-                tile_center.vx = unit->battle_data->action_command.target_x * 0x1C + 0xE;
-                tile_center.vz = unit->battle_data->action_command.target_y * 0x1C + 0xE;
+                velocity.vx = (unit->battle_data->action_command.target_position.vx * 0x1C + 0xE - unit->screen.vx)
+                    << 12;
+                velocity.vz = (unit->battle_data->action_command.target_position.vz * 0x1C + 0xE - unit->screen.vz)
+                    << 12;
+                tile_center.vx = unit->battle_data->action_command.target_position.vx * 0x1C + 0xE;
+                tile_center.vz = unit->battle_data->action_command.target_position.vz * 0x1C + 0xE;
                 velocity.vy = (battle_map_calculate_slope_height(
-                                   &tile_center, unit->battle_data->action_command.target_elevation)
+                                   &tile_center, unit->battle_data->action_command.target_position.vy)
                                   - unit->screen.vy)
                     << 12;
             }

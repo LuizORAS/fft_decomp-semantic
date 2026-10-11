@@ -60,8 +60,8 @@ void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
                 main_util_set_svector(&coords, other->map_x * 28 + 14, other->map_z, other->map_y * 28 + 14);
             } else {
                 stats = unit->battle_data;
-                main_util_set_svector(&coords, stats->action_command.target_x * 28 + 14,
-                    stats->action_command.target_elevation, stats->action_command.target_y * 28 + 14);
+                main_util_set_svector(&coords, stats->action_command.target_position.vx * 28 + 14,
+                    stats->action_command.target_position.vy, stats->action_command.target_position.vz * 28 + 14);
             }
             coords.vy = battle_gfx_calculate_screen_z_with_caller_data(unit, &coords);
         }

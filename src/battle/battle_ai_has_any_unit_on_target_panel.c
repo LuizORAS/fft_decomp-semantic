@@ -15,15 +15,15 @@ s32 battle_ai_has_any_unit_on_target_panel(void) {
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             continue;
         }
-        x = ai->current_action.command.target_x;
+        x = ai->current_action.command.target_position.vx;
         if (unit->x != x) {
             continue;
         }
-        y = ai->current_action.command.target_y;
+        y = ai->current_action.command.target_position.vz;
         if (unit->position.y != y) {
             continue;
         }
-        elevation = ai->current_action.command.target_elevation;
+        elevation = ai->current_action.command.target_position.vy;
         if (unit->position.higher_elevation == elevation) {
             break;
         }

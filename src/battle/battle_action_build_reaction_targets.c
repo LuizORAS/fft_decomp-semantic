@@ -19,15 +19,15 @@ s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* wor
 
     switch (g_battle_current_reaction_ability_id) {
     case ABILITY_ID_REACTION_REFLECT: {
-        u8 target_x = actor->action_command.target_x;
+        u8 target_x = actor->action_command.target_position.vx;
         u8 target_y;
         u8 target_elevation;
         u8 mount_info;
 
         work->target_new_x = target_x;
-        target_y = actor->action_command.target_y;
+        target_y = actor->action_command.target_position.vz;
         work->target_new_y = target_y;
-        target_elevation = actor->action_command.target_elevation;
+        target_elevation = actor->action_command.target_position.vy;
         work->target_new_map_level = target_elevation;
         target_or_count = battle_target_get_unit_id_if_tile_targetable(target_x, target_y, target_elevation);
         if (target_or_count < 0) {

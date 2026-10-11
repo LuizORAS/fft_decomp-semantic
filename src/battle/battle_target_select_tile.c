@@ -19,11 +19,11 @@ void battle_target_select_tile(void) {
     unit->state_frame_counter = 0;
     if (unit->ability_preview_phase == BATTLE_TARGET_PANELS_NO_TARGETING) {
         main_util_set_svector(
-            (SVECTOR*)&unit->command_state.ai.data.action.target_x, unit->map_x, unit->map_z, unit->map_y);
+            &unit->command_state.ai.data.action.target_position, unit->map_x, unit->map_z, unit->map_y);
         unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     } else if (unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
-        main_util_set_svector((SVECTOR*)&unit->command_state.ai.data.action.target_x, g_battle_cursor_x,
-            g_battle_cursor_z, g_battle_cursor_y);
+        main_util_set_svector(&unit->command_state.ai.data.action.target_position, g_battle_cursor_x, g_battle_cursor_z,
+            g_battle_cursor_y);
         unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     }
     result = battle_target_calculate_for_menu_types(&unit->command_state.ai.data.action);

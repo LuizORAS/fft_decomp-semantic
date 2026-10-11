@@ -30,9 +30,9 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
     }
     action->targeting_type = BATTLE_TARGETING_TYPE_TILE;
     action->target_id = g_battle_acting_unit_id;
-    action->target_x = acting_unit->x;
-    action->target_y = acting_unit->position.y;
-    action->target_elevation = acting_unit->position.higher_elevation;
+    action->target_position.vx = acting_unit->x;
+    action->target_position.vz = acting_unit->position.y;
+    action->target_position.vy = acting_unit->position.higher_elevation;
     saved_charged_ability_ct = unit->charged_ability_ct;
     result = battle_action_call_attack_preparation_at_preview(action);
     unit->charged_ability_ct = saved_charged_ability_ct;

@@ -28,8 +28,8 @@ s32 battle_target_apply_reflect(battle_stats_t* unit) {
     act->targeting_type = BATTLE_TARGETING_TYPE_TILE;
     act->target_id = 0;
     act->ability_id = last_attack;
-    act->target_x = x;
-    act->target_y = y;
-    act->target_elevation = z;
+    act->target_position.vx = x;
+    act->target_position.vz = y;
+    act->target_position.vy = z;
     return 0;
 }

@@ -24,8 +24,8 @@ void battle_target_build_directional_attack_panels(const battle_action_command_t
     unit = &g_battle_unit_stats[action.actor_id];
     x = unit->x;
     y = unit->position.y;
-    target_x = action.target_x;
-    target_y = action.target_y;
+    target_x = action.target_position.vx;
+    target_y = action.target_position.vz;
     if (x < target_x) {
         battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_EAST, x, y);
         if (mode == 3) {

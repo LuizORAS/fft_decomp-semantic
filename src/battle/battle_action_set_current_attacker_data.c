@@ -21,8 +21,8 @@ void battle_action_set_current_attacker_data(battle_stats_t* unit) {
         y = target->position.y;
     } else {
         /* Only the low byte of the s16 target coordinates is read. */
-        x = unit->action_command.target_x;
-        y = unit->action_command.target_y;
+        x = unit->action_command.target_position.vx;
+        y = unit->action_command.target_position.vz;
     }
     g_battle_action_current_attacker.target_delta_x = x - unit->x;
     g_battle_action_current_attacker.target_delta_y = y - unit->position.y;

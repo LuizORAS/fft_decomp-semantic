@@ -21,9 +21,9 @@ s32 battle_ai_evaluate_target_tiles(void) {
     u8 target_id;
 
     if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.search_resume_flag) {
-        x = (u16)g_battle_ai_data_base.current_action.command.target_x;
-        level = (u16)g_battle_ai_data_base.current_action.command.target_elevation;
-        y = (u16)g_battle_ai_data_base.current_action.command.target_y;
+        x = (u16)g_battle_ai_data_base.current_action.command.target_position.vx;
+        level = (u16)g_battle_ai_data_base.current_action.command.target_position.vy;
+        y = (u16)g_battle_ai_data_base.current_action.command.target_position.vz;
         row = ai->targetable_tiles[level][y];
         goto evaluate_priority;
     }
@@ -78,9 +78,9 @@ s32 battle_ai_evaluate_target_tiles(void) {
             if (row != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
-                        ai->current_action.command.target_x = x;
-                        ai->current_action.command.target_y = y;
-                        ai->current_action.command.target_elevation = level;
+                        ai->current_action.command.target_position.vx = x;
+                        ai->current_action.command.target_position.vz = y;
+                        ai->current_action.command.target_position.vy = level;
                         if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT
                             || (ai->considered_ability.ai_flags.word
                                 & (BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY))) {

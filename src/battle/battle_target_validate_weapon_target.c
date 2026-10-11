@@ -76,22 +76,22 @@ s32 battle_target_validate_weapon_target(const battle_action_command_t* source) 
                 return -1;
             }
             target = &g_battle_unit_stats[action.target_id];
-            action.target_x = target->x;
-            action.target_y = target->position.y;
-            action.target_elevation = target->position.higher_elevation;
+            action.target_position.vx = target->x;
+            action.target_position.vz = target->position.y;
+            action.target_position.vy = target->position.higher_elevation;
         }
         flags = WEAPON_FLAG_DIRECT;
     }
-    x = unit->action_command.target_x;
-    y = unit->action_command.target_y;
-    elevation = unit->action_command.target_elevation;
+    x = unit->action_command.target_position.vx;
+    y = unit->action_command.target_position.vz;
+    elevation = unit->action_command.target_position.vy;
     target_id = battle_target_get_unit_id_if_tile_targetable(x, y, elevation);
     if (target_id < 0) {
         target_id = -1;
     }
     if (flags & WEAPON_FLAG_ARC) {
-        result = battle_effect_set_and_validate_arc_trajectory(
-            unit_id, (SVECTOR*)&unit->action_command.target_x, target_id);
+        result
+            = battle_effect_set_and_validate_arc_trajectory(unit_id, &unit->action_command.target_position, target_id);
     } else if (flags & WEAPON_FLAG_DIRECT) {
         distance_x = x - unit->x;
         if (distance_x < 0) {
@@ -106,7 +106,7 @@ s32 battle_target_validate_weapon_target(const battle_action_command_t* source) 
             result = target_id;
         } else {
             result = battle_effect_check_direct_trajectory_to_target(
-                unit_id, (SVECTOR*)&unit->action_command.target_x, target_id);
+                unit_id, &unit->action_command.target_position, target_id);
         }
     } else if (flags & WEAPON_FLAG_LUNGING) {
         result = battle_target_validate_lunging_target(unit_id, x, y, elevation, target_id);

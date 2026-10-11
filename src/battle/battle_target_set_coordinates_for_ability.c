@@ -18,8 +18,8 @@ void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_st
         out->target_new_y = target->position.y;
         out->target_new_map_level = target->position.higher_elevation;
     } else {
-        out->target_new_x = acting->action_command.target_x;
-        out->target_new_y = acting->action_command.target_y;
-        out->target_new_map_level = acting->action_command.target_elevation;
+        out->target_new_x = acting->action_command.target_position.vx;
+        out->target_new_y = acting->action_command.target_position.vz;
+        out->target_new_map_level = acting->action_command.target_position.vy;
     }
 }
