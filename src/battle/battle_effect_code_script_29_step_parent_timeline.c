@@ -37,25 +37,25 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
                 &timeline->state.parent.step.tracks.particle[0][i]);
         }
         battle_effect_advance_target_palette_track(&g_battle_effect_timeline->color_tracks[0].surroundings,
-            &timeline->state.parent.keyframe.tracks.track[0][0], &timeline->state.parent.remaining.tracks.track[0][0]);
+            &timeline->state.parent.keyframe.tracks.surroundings[0],
+            &timeline->state.parent.remaining.tracks.surroundings[0]);
         if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_effect_advance_caster_palette_track(&g_battle_effect_timeline->color_tracks[0].caster,
-                &timeline->state.parent.keyframe.tracks.track[1][0],
-                &timeline->state.parent.remaining.tracks.track[1][0],
+                &timeline->state.parent.keyframe.tracks.caster[0], &timeline->state.parent.remaining.tracks.caster[0],
                 g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id);
         }
         battle_effect_advance_coord_target_palette_track(&g_battle_effect_timeline->color_tracks[0].target,
-            &timeline->state.parent.keyframe.tracks.track[2][0], &timeline->state.parent.remaining.tracks.track[2][0]);
+            &timeline->state.parent.keyframe.tracks.target[0], &timeline->state.parent.remaining.tracks.target[0]);
         battle_effect_advance_map_background_track(&g_battle_effect_timeline->color_tracks[0].screen,
-            &timeline->state.parent.keyframe.tracks.track[3][0], &timeline->state.parent.remaining.tracks.track[3][0]);
+            &timeline->state.parent.keyframe.tracks.screen[0], &timeline->state.parent.remaining.tracks.screen[0]);
         battle_effect_update_on_hit_sound_timer(&g_battle_effect_timeline->sound_tracks[0][0],
-            &timeline->state.parent.keyframe.tracks.track[4][0], &timeline->state.parent.remaining.tracks.track[4][0],
+            &timeline->state.parent.keyframe.tracks.sound[0][0], &timeline->state.parent.remaining.tracks.sound[0][0],
             &timeline->state.parent.step.tracks._unknown_24[0][0][1]);
         battle_effect_update_on_hit_sound_timer(&g_battle_effect_timeline->sound_tracks[0][1],
-            &timeline->state.parent.keyframe.tracks.track[5][0], &timeline->state.parent.remaining.tracks.track[5][0],
+            &timeline->state.parent.keyframe.tracks.sound[1][0], &timeline->state.parent.remaining.tracks.sound[1][0],
             &timeline->state.parent.step.tracks._unknown_24[1][0][1]);
         battle_effect_update_on_hit_sound_timer(&g_battle_effect_timeline->sound_tracks[0][2],
-            &timeline->state.parent.keyframe.tracks.track[6][0], &timeline->state.parent.remaining.tracks.track[6][0],
+            &timeline->state.parent.keyframe.tracks.sound[2][0], &timeline->state.parent.remaining.tracks.sound[2][0],
             &timeline->state.parent.step.tracks._unknown_24[2][0][1]);
         if (g_battle_effect_flags_section->flags & EFFECT_FLAG_TIMING_CURVE_PHASE1) {
             battle_state_set_time_scale(battle_effect_get_timing_curve_value(record));
@@ -72,25 +72,25 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
                 &timeline->state.parent.step.tracks.particle[1][i]);
         }
         battle_effect_advance_target_palette_track(&g_battle_effect_timeline->color_tracks[1].surroundings,
-            &timeline->state.parent.keyframe.tracks.track[0][1], &timeline->state.parent.remaining.tracks.track[0][1]);
+            &timeline->state.parent.keyframe.tracks.surroundings[1],
+            &timeline->state.parent.remaining.tracks.surroundings[1]);
         if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_effect_advance_caster_palette_track(&g_battle_effect_timeline->color_tracks[1].caster,
-                &timeline->state.parent.keyframe.tracks.track[1][1],
-                &timeline->state.parent.remaining.tracks.track[1][1],
+                &timeline->state.parent.keyframe.tracks.caster[1], &timeline->state.parent.remaining.tracks.caster[1],
                 g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id);
         }
         battle_effect_advance_coord_target_palette_track(&g_battle_effect_timeline->color_tracks[1].target,
-            &timeline->state.parent.keyframe.tracks.track[2][1], &timeline->state.parent.remaining.tracks.track[2][1]);
+            &timeline->state.parent.keyframe.tracks.target[1], &timeline->state.parent.remaining.tracks.target[1]);
         battle_effect_advance_map_background_track(&g_battle_effect_timeline->color_tracks[1].screen,
-            &timeline->state.parent.keyframe.tracks.track[3][1], &timeline->state.parent.remaining.tracks.track[3][1]);
+            &timeline->state.parent.keyframe.tracks.screen[1], &timeline->state.parent.remaining.tracks.screen[1]);
         battle_effect_update_on_hit_sound_timer(&g_battle_effect_timeline->sound_tracks[1][0],
-            &timeline->state.parent.keyframe.tracks.track[4][1], &timeline->state.parent.remaining.tracks.track[4][1],
+            &timeline->state.parent.keyframe.tracks.sound[0][1], &timeline->state.parent.remaining.tracks.sound[0][1],
             &timeline->state.parent.step.tracks._unknown_24[0][1][1]);
         battle_effect_update_on_hit_sound_timer(&g_battle_effect_timeline->sound_tracks[1][1],
-            &timeline->state.parent.keyframe.tracks.track[5][1], &timeline->state.parent.remaining.tracks.track[5][1],
+            &timeline->state.parent.keyframe.tracks.sound[1][1], &timeline->state.parent.remaining.tracks.sound[1][1],
             &timeline->state.parent.step.tracks._unknown_24[1][1][1]);
         battle_effect_update_on_hit_sound_timer(&g_battle_effect_timeline->sound_tracks[1][2],
-            &timeline->state.parent.keyframe.tracks.track[6][1], &timeline->state.parent.remaining.tracks.track[6][1],
+            &timeline->state.parent.keyframe.tracks.sound[2][1], &timeline->state.parent.remaining.tracks.sound[2][1],
             &timeline->state.parent.step.tracks._unknown_24[2][1][1]);
     }
     battle_camera_advance_effect_tracks(timeline->frame);

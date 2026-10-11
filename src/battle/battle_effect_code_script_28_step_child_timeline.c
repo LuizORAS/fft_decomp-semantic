@@ -86,10 +86,10 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
         }
 
         track = &g_battle_effect_timing_channels->surroundings;
-        units_keyframe = timeline->state.child.keyframe.tracks.color[0];
+        units_keyframe = timeline->state.child.keyframe.tracks.surroundings;
         if (units_keyframe < track->count - 1) {
-            if (timeline->state.child.remaining.tracks.color[0] == 0) {
-                timeline->state.child.keyframe.tracks.color[0] = units_keyframe + 1;
+            if (timeline->state.child.remaining.tracks.surroundings == 0) {
+                timeline->state.child.keyframe.tracks.surroundings = units_keyframe + 1;
                 index = units_keyframe;
                 i = track->duration[index];
                 if (i == 0) {
@@ -97,7 +97,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 } else {
                     i *= 8;
                 }
-                timeline->state.child.remaining.tracks.color[0] = i;
+                timeline->state.child.remaining.tracks.surroundings = i;
                 preset = track->preset[index];
                 if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                     red = track->color[index][0];
@@ -115,14 +115,14 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     }
                 }
             }
-            timeline->state.child.remaining.tracks.color[0]--;
+            timeline->state.child.remaining.tracks.surroundings--;
         }
 
         track = &g_battle_effect_timing_channels->caster;
-        caster_keyframe = timeline->state.child.keyframe.tracks.color[1];
+        caster_keyframe = timeline->state.child.keyframe.tracks.caster;
         if (caster_keyframe < track->count - 1) {
-            if (timeline->state.child.remaining.tracks.color[1] == 0) {
-                timeline->state.child.keyframe.tracks.color[1] = caster_keyframe + 1;
+            if (timeline->state.child.remaining.tracks.caster == 0) {
+                timeline->state.child.keyframe.tracks.caster = caster_keyframe + 1;
                 index = caster_keyframe;
                 i = track->duration[index];
                 if (i == 0) {
@@ -130,7 +130,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 } else {
                     i *= 8;
                 }
-                timeline->state.child.remaining.tracks.color[1] = i;
+                timeline->state.child.remaining.tracks.caster = i;
                 preset = track->preset[index];
                 if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                     red = track->color[index][0];
@@ -145,14 +145,14 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     }
                 }
             }
-            timeline->state.child.remaining.tracks.color[1]--;
+            timeline->state.child.remaining.tracks.caster--;
         }
 
         track = &g_battle_effect_timing_channels->target;
-        target_keyframe = timeline->state.child.keyframe.tracks.color[2];
+        target_keyframe = timeline->state.child.keyframe.tracks.target;
         if (target_keyframe < track->count - 1) {
-            if (timeline->state.child.remaining.tracks.color[2] == 0) {
-                timeline->state.child.keyframe.tracks.color[2] = target_keyframe + 1;
+            if (timeline->state.child.remaining.tracks.target == 0) {
+                timeline->state.child.keyframe.tracks.target = target_keyframe + 1;
                 index = target_keyframe;
                 i = track->duration[index];
                 if (i == 0) {
@@ -160,7 +160,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 } else {
                     i *= 8;
                 }
-                timeline->state.child.remaining.tracks.color[2] = i;
+                timeline->state.child.remaining.tracks.target = i;
                 preset = track->preset[index];
                 if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                     red = track->color[index][0];
@@ -173,14 +173,14 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     }
                 }
             }
-            timeline->state.child.remaining.tracks.color[2]--;
+            timeline->state.child.remaining.tracks.target--;
         }
 
         screen = &g_battle_effect_timing_channels->screen;
-        screen_keyframe = timeline->state.child.keyframe.tracks.color[3];
+        screen_keyframe = timeline->state.child.keyframe.tracks.screen;
         if (screen_keyframe < screen->count - 1) {
-            if (timeline->state.child.remaining.tracks.color[3] == 0) {
-                timeline->state.child.keyframe.tracks.color[3] = screen_keyframe + 1;
+            if (timeline->state.child.remaining.tracks.screen == 0) {
+                timeline->state.child.keyframe.tracks.screen = screen_keyframe + 1;
                 index = screen_keyframe;
                 i = screen->duration[index];
                 if (i == 0) {
@@ -188,7 +188,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 } else {
                     i *= 8;
                 }
-                timeline->state.child.remaining.tracks.color[3] = i;
+                timeline->state.child.remaining.tracks.screen = i;
                 preset = screen->preset[index];
                 mode = preset & EFFECT_COLOR_KEYFRAME_MODE_MASK;
                 if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
@@ -213,7 +213,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     }
                 }
             }
-            timeline->state.child.remaining.tracks.color[3]--;
+            timeline->state.child.remaining.tracks.screen--;
         }
 
         for (i = 0; i < 3; i++) {

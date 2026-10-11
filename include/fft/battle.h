@@ -3594,7 +3594,10 @@ typedef union battle_effect_child_track_counters {
     struct {
         s16 particle[5];
         s16 sound[3];
-        s16 color[4];
+        s16 surroundings;
+        s16 caster;
+        s16 target;
+        s16 screen;
         s16 _unused_18; /* extra halfword cleared by the child reset */
     } tracks;
 } battle_effect_child_track_counters_t;
@@ -3621,7 +3624,11 @@ typedef union battle_effect_parent_track_counters {
     s16 values[26];
     struct {
         s16 particle[2][5];
-        s16 track[7][2];   /* four colour tracks then three sound tracks, per phase */
+        s16 surroundings[2];
+        s16 caster[2];
+        s16 target[2];
+        s16 screen[2];
+        s16 sound[3][2];
         s16 _unused_30[2]; /* extra halfwords cleared by the parent reset */
     } tracks;
 } battle_effect_parent_track_counters_t;
