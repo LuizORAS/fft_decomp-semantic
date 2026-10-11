@@ -55,8 +55,8 @@ void open_title_update_menu(open_controller_record_t* record) {
     }
 
     if (g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING) {
-        CdControlB(0x10, 0, loc);
-        if (CdPosToInt(loc) >= state->cd_end_position) {
+        CdControlB(CdlGetlocL, 0, loc);
+        if (CdPosToInt((CdlLOC*)loc) >= state->cd_end_position) {
             open_sound_set_cd_mix_and_volume(0, 0x20);
             state->exit_timer = 0x20;
             state->exiting = 1;

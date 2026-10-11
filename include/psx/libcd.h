@@ -14,11 +14,15 @@
 #define CdlPause      0x09
 #define CdlReset      0x0a
 #define CdlDemute     0x0c
+#define CdlSetfilter  0x0d
 #define CdlSetmode    0x0e
+#define CdlGetlocL    0x10
 #define CdlSeekL      0x15
 #define CdlReadS      0x1b
+#define CdlModeSF     0x08
 #define CdlModeSize0  0x10
 #define CdlModeSize1  0x20
+#define CdlModeRT     0x40
 #define CdlModeSpeed  0x80
 #define CdlModeStream 0x100
 
@@ -57,6 +61,13 @@ typedef struct {
     u8 sector;
     u8 track;
 } CdlLOC;
+
+/* Subheader filter for CdlSetfilter; pad is reserved by the SDK. */
+typedef struct {
+    u8 file;
+    u8 chan;
+    u16 pad;
+} CdlFILTER;
 
 /* Psy-Q CdlATV: CD audio to SPU attenuation (left to left, left to right,
  * right to right, right to left). */
