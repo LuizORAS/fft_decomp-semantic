@@ -11,8 +11,7 @@ s32 CD_init(void) {
     g_psyq_cd_ready_callback = 0;
     g_psyq_cd_sync_callback = 0;
     g_psyq_cd_status_detail = 0;
-    /* Retail resets all four status bytes with a word store. */
-    *(u32*)&g_psyq_cd_status = 0;
+    g_psyq_cd_status = 0;
     ResetCallback();
     InterruptCallback(2, callback);
     *g_psyq_cd_index_status_register = 1;
@@ -27,8 +26,7 @@ s32 CD_init(void) {
     *g_psyq_cd_request_interrupt_register = 0;
     *g_psyq_cd_common_delay_register = 0x1325;
     CD_cw(CdlNop, 0, 0, 0);
-    /* The device status is stored and tested as a full word in this routine. */
-    if (*(u32*)&g_psyq_cd_status & CdlStatShellOpen)
+    if (g_psyq_cd_status & CdlStatShellOpen)
         CD_cw(CdlNop, 0, 0, 0);
     if (CD_cw(CdlReset, 0, 0, 0))
         return -1;

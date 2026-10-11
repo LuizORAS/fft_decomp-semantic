@@ -38,19 +38,18 @@ s32 getintr(void) {
     *g_psyq_cd_request_interrupt_register = 7;
     *g_psyq_cd_parameter_data_register = 7;
     if (interrupt != CdlAcknowledge || g_psyq_cd_command_ack_updates_status[g_psyq_cd_last_command]) {
-        /* The public status byte shares a four-byte controller-state word. */
-        if (!(*(u32*)&g_psyq_cd_status & CdlStatShellOpen) && (response[0] & CdlStatShellOpen))
+        if (!(g_psyq_cd_status & CdlStatShellOpen) && (response[0] & CdlStatShellOpen))
             g_psyq_cd_shell_open_count++;
-        *(u32*)&g_psyq_cd_status = response[0];
+        g_psyq_cd_status = response[0];
         g_psyq_cd_status_detail = response[1];
-        error_flags = *(u32*)&g_psyq_cd_status;
+        error_flags = g_psyq_cd_status;
         error_flags &= 0x1d;
     }
     if (interrupt == CdlDiskError) {
         puts(g_psyq_cd_disk_error_message);
         if (g_psyq_cd_debug_level > 0)
-            printf(g_psyq_cd_disk_error_format, g_psyq_cd_command_names[g_psyq_cd_last_command],
-                *(u32*)&g_psyq_cd_status, g_psyq_cd_status_detail);
+            printf(g_psyq_cd_disk_error_format, g_psyq_cd_command_names[g_psyq_cd_last_command], g_psyq_cd_status,
+                g_psyq_cd_status_detail);
     }
     switch (interrupt) {
     case CdlAcknowledge:

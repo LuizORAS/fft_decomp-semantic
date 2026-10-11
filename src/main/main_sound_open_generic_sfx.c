@@ -23,20 +23,20 @@ void main_sound_open_generic_sfx(void) {
 
     g_main_sound_music.state.current_smd = 0;
     g_main_sound_music.slots.tune = 0;
-    g_main_sound_music.slots.handles.loading_slot = 0;
+    g_main_sound_music.slots.loading_slot = 0;
     for (i = 6; i >= 0; i--) {
-        g_main_sound_music.slots.handles.music[i + 1] = 0;
+        g_main_sound_music.slots.music[i] = 0;
     }
 
     g_main_sound_weather_sfx_id = 0;
-    g_main_sound_music.slots.smd[3]
+    g_main_sound_music.slots.smd[2]
         = main_file_get_smd(g_main_sound_permanent_smd_files[0].sector, g_main_sound_permanent_smd_files[0].size);
-    g_main_sound_music.slots.smd[4]
+    g_main_sound_music.slots.smd[3]
         = main_file_get_smd(g_main_sound_permanent_smd_files[1].sector, g_main_sound_permanent_smd_files[1].size);
-    g_main_sound_music.slots.smd[5]
+    g_main_sound_music.slots.smd[4]
         = main_file_get_smd(g_main_sound_permanent_smd_files[2].sector, g_main_sound_permanent_smd_files[2].size);
-    g_main_sound_music.slots.smd[6]
+    g_main_sound_music.slots.smd[5]
         = main_file_get_smd(g_main_sound_permanent_smd_files[3].sector, g_main_sound_permanent_smd_files[3].size);
-    g_main_sound_music.slots.smd[7]
+    g_main_sound_music.slots.smd[6]
         = main_file_get_smd(g_main_sound_permanent_smd_files[4].sector, g_main_sound_permanent_smd_files[4].size);
 }

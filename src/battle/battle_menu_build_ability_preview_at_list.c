@@ -62,10 +62,10 @@ void battle_menu_build_ability_preview_at_list(void) {
     action->unit_id = g_battle_active_turn_unit.battle_id;
     stats = battle_unit_get_attacker_data_pointer();
     g_battle_thread_call_target = (void (*)(void))battle_action_preview_at_list;
-    turn = battle_thread_call_on_main_stack(stats, action, &work->request);
+    turn = battle_thread_call_on_main_stack(stats, action, work->entries);
     if (staged_item != 0) {
-        work->descriptors[0].flags |= WORLD_AT_ACTING_UNIT;
-        work->descriptors[0].turn_value = g_battle_menu_selected_action.item_id;
+        work->entries[1].unit |= BATTLE_AT_ACTION_ENTRY;
+        work->entries[1].action_id_low = g_battle_menu_selected_action.item_id;
     }
     count = 0;
     if (turn < 0 || turn == 0xff) {
@@ -93,15 +93,15 @@ void battle_menu_build_ability_preview_at_list(void) {
         turn--;
     }
     for (index = 0; index < 39; index++) {
-        world_at_descriptor_t* slot = &work->descriptors[index];
+        battle_at_entry_t* slot = &work->entries[index + 1];
         s32 name_index;
 
-        if ((slot->flags & WORLD_AT_UNIT_ID_MASK) == WORLD_AT_END_OF_LIST) {
+        if ((slot->unit & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {
             break;
         }
         work->entry_numbers[index] = index + 1;
-        stats = battle_unit_get_stats_from_battle_id(slot->flags & WORLD_AT_UNIT_ID_MASK);
-        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
+        stats = battle_unit_get_stats_from_battle_id(slot->unit & BATTLE_AT_UNIT_ID_MASK);
+        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbe;
         }
@@ -113,31 +113,31 @@ void battle_menu_build_ability_preview_at_list(void) {
             }
             text++;
         }
-        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
+        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbf;
         }
         *text++ = 0xfe;
-        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
+        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             work->secondary_values[count] = index - 0x800;
         } else {
             work->primary_values[count] = index - 0x800;
         }
-        if ((slot->flags & WORLD_AT_ACTING_UNIT) == 0) {
+        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) == 0) {
             work->secondary_values[count] = TEXT_ID_ABILITY_NAME_BASE;
         } else {
             s32 turn_text_id;
             s32 turn_bias;
 
             bracketed = 1;
-            if ((slot->flags & WORLD_AT_SHOW_WAIT_LABEL) != 0) {
+            if ((slot->unit & BATTLE_AT_JUMP) != 0) {
                 turn_text_id = 0xb012;
             } else {
-                turn_bias = slot->turn_value;
+                turn_bias = slot->action_id_low;
                 if (index == 0 && staged_item != 0) {
                     turn_text_id = turn_bias + 0x3800;
                 } else {
-                    if ((slot->flags & WORLD_AT_TURN_VALUE_HIGH_BIT) != 0) {
+                    if ((slot->unit & BATTLE_AT_ABILITY_ID_HIGH_BIT) != 0) {
                         turn_bias += 0x100;
                     }
                     turn_text_id = turn_bias + TEXT_ID_ABILITY_NAME_BASE;

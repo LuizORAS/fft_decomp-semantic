@@ -37,7 +37,7 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
     phase_tick = g_battle_between_turn_resume_state == BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE;
     for (slot = 0; slot < 0x28; slot++) {
         list[slot].unit = 0xff;
-        list[slot].flags = 0xff;
+        list[slot].action_id_low = 0xff;
         list[slot].sort_key = 0xffff;
     }
 

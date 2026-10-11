@@ -7,20 +7,20 @@
  * pairs stops the current thread.
  *
  * BATTLE twin of world_menu_release_window_buffer_pair. */
-void battle_menu_release_window_buffer_pair(s32 buffer) {
+void battle_menu_release_window_buffer_pair(menu_window_buffer_t* buffer) {
     s32 slot;
-    s32 empty;
+    menu_window_buffer_t* empty;
 
-    if (buffer == -1) {
+    if (buffer == (menu_window_buffer_t*)-1) {
         return;
     }
 
     slot = 0;
-    empty = -1;
+    empty = (menu_window_buffer_t*)-1;
     do {
-        if ((s32)g_battle_menu_buffer_slots[slot] == buffer) {
-            g_battle_menu_buffer_slots[slot] = (void*)empty;
-            g_battle_menu_buffer_slots[slot + 1] = (void*)empty;
+        if (g_battle_menu_buffer_slots[slot] == buffer) {
+            g_battle_menu_buffer_slots[slot] = empty;
+            g_battle_menu_buffer_slots[slot + 1] = empty;
             g_battle_menu_window_buffers[slot].active = 0;
             g_battle_menu_window_buffers[slot + 1].active = 0;
             g_battle_menu_window_buffers[slot].thread_id = 0;

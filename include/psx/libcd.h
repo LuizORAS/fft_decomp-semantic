@@ -101,7 +101,7 @@ void StSetMask(s32 mask, s32 start_frame, s32 end_frame);
 s32 CdPosToInt(CdlLOC* position);
 char* CdComstr(u8 command);
 char* CdIntstr(u8 interrupt);
-s32 CdStatus(void);
+int CdStatus(void);
 s32 CdMode(void);
 s32 CdLastCom(void);
 CdlLOC* CdLastPos(void);
@@ -126,7 +126,8 @@ typedef enum {
 } psyq_cd_read_control_e;
 
 /* Resident LIBCD state, reconstructed from the original register accesses. */
-extern u8 g_psyq_cd_status;
+/* Driver status uses full-word storage; public status queries read its low byte. */
+extern u32 g_psyq_cd_status;
 extern u8 g_psyq_cd_mode;
 extern u8 g_psyq_cd_last_command;
 extern u8 g_psyq_cd_last_position[4];

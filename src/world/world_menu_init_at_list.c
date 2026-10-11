@@ -2,17 +2,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* One 4-byte slot of the unit list filled on the main stack by
- * battle_action_calculate_at_list. Bits 0-4 of `flags` hold the battle id (0x1f ends the list);
- * 0x40 marks a bracketed name, 0x20/0x80 select its sprite row. */
-typedef struct {
-    u8 flags;
-    u8 value;
-    u8 _unused_02[2];
-} world_menu_unit_list_slot_t;
-
-extern world_menu_unit_list_slot_t g_world_action_target_list_slots[];
-
 #define LAYOUT(entry) ((world_menu_text_layout_t*)(entry)->text_binding)
 
 /* Build the unit-name list menu (WORLD twin of option_menu_init_at_list):
@@ -46,12 +35,12 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         battle_stats_t* unit;
         s32 name_index;
 
-        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_UNIT_ID_MASK) == WORLD_AT_END_OF_LIST) {
+        if ((g_world_action_target_list_slots[i].unit & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {
             break;
         }
         g_world_menu_at_list_indices[i] = i + 1;
-        unit = battle_unit_get_stats_from_battle_id(g_world_action_target_list_slots[i].flags & WORLD_AT_UNIT_ID_MASK);
-        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_ACTING_UNIT) != 0) {
+        unit = battle_unit_get_stats_from_battle_id(g_world_action_target_list_slots[i].unit & BATTLE_AT_UNIT_ID_MASK);
+        if ((g_world_action_target_list_slots[i].unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xD9;
             *text++ = 0xBE;
         }
@@ -63,25 +52,25 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
             }
             text++;
         }
-        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_ACTING_UNIT) != 0) {
+        if ((g_world_action_target_list_slots[i].unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xD9;
             *text++ = 0xBF;
         }
         *text++ = 0xFE;
-        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_ACTING_UNIT) != 0) {
+        if ((g_world_action_target_list_slots[i].unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             g_world_menu_at_list_secondary_values[count] = i - 0x800;
         } else {
             g_world_menu_at_list_primary_values[count] = i - 0x800;
         }
-        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_ACTING_UNIT) == 0) {
+        if ((g_world_action_target_list_slots[i].unit & BATTLE_AT_ACTION_ENTRY) == 0) {
             g_world_menu_at_list_secondary_values[count] = TEXT_ID_ABILITY_NAME_BASE;
         } else {
             bracketed = 1;
-            if ((g_world_action_target_list_slots[i].flags & WORLD_AT_SHOW_WAIT_LABEL) != 0) {
+            if ((g_world_action_target_list_slots[i].unit & BATTLE_AT_JUMP) != 0) {
                 g_world_menu_at_list_primary_values[count] = 0xB012;
             } else {
-                s32 value = g_world_action_target_list_slots[i].value;
-                if ((g_world_action_target_list_slots[i].flags & WORLD_AT_TURN_VALUE_HIGH_BIT) != 0) {
+                s32 value = g_world_action_target_list_slots[i].action_id_low;
+                if ((g_world_action_target_list_slots[i].unit & BATTLE_AT_ABILITY_ID_HIGH_BIT) != 0) {
                     value += 0x100;
                 }
                 g_world_menu_at_list_primary_values[count] = value + TEXT_ID_ABILITY_NAME_BASE;

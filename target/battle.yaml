@@ -1544,7 +1544,7 @@ functions:
   - {addr: 0x8018ec10, size: 52, name: battle_status_resolve_unit_changes_in_preview, hash: 002f07784cca673d}
   - {addr: 0x8018ec44, size: 312, name: battle_status_apply_unit_action_removal, hash: c2817a2420e40cea}
   - {addr: 0x8018ed7c, size: 124, name: battle_target_sort_list, hash: fef366c43dc1920b}
-  - {addr: 0x8018edf8, size: 44, name: battle_action_store_ability_data, hash: dd705760435fb9b2}
+  - {addr: 0x8018edf8, size: 44, name: battle_action_store_target_ids, hash: dd705760435fb9b2}
   - {addr: 0x8018ee24, size: 68, name: battle_target_count_hit_by_ability, hash: 1f3bc2c9e57d42cf}
   - {addr: 0x8018ee68, size: 56, name: battle_action_store_8019387c_if_not_reacting, hash: 2547dcc0dde673ee}
   - {addr: 0x8018eea0, size: 56, name: battle_formula_get_random_0_7fff, hash: 37dd909945e49420}

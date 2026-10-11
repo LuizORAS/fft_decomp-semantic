@@ -33,9 +33,9 @@ void battle_gfx_unpack_unit_shp_data(
         if (value == -1) {
             value = 0;
         }
-        dst->frames[i] = g_battle_gfx_shp_frame_data_cursor + value;
+        dst->frames[i] = (battle_gfx_source_frame_t*)(g_battle_gfx_shp_frame_data_cursor + value);
         if (header == 8) {
-            dst->submerged_frames[i] = g_battle_gfx_shp_frame_data_cursor + value;
+            dst->submerged_frames[i] = (battle_gfx_source_frame_t*)(g_battle_gfx_shp_frame_data_cursor + value);
         }
         offset += 4;
     }
@@ -55,7 +55,7 @@ void battle_gfx_unpack_unit_shp_data(
             if (value == -1) {
                 value = 0;
             }
-            dst->submerged_frames[i] = g_battle_gfx_shp_frame_data_cursor + value;
+            dst->submerged_frames[i] = (battle_gfx_source_frame_t*)(g_battle_gfx_shp_frame_data_cursor + value);
             offset += 4;
         }
         for (i = 0xd0; i < 0x100; i++) {

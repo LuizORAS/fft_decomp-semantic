@@ -42,7 +42,7 @@ typedef struct {
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     rgb24_t rgb;
     bunit_sprite_quad_t quad;
-    u8* frame;
+    battle_gfx_source_frame_t* frame;
     s32 base_y;
     s32 i;
     bunit_sprite_cell_t* cells;
@@ -55,11 +55,12 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     rgb.r = rgb.g = rgb.b = i > 0x80 ? 0x80 : i;
     frame = battle_gfx_get_unit_sprite_frame_and_vram_ids(g_bunit_unit_data[unit]->misc_unit_id, &quad.query);
     base_y = (quad.query.graphic_height >> 1) + 0x16;
-    if (frame == (u8*)-1) {
+    if (frame == (battle_gfx_source_frame_t*)-1) {
         return;
     }
-    cells = (bunit_sprite_cell_t*)(frame + 2);
-    for (i = 0; i <= frame[0]; i++) {
+    /* Scalar attribute masks let GCC remove the target's signed tile divisions. */
+    cells = (bunit_sprite_cell_t*)frame->parts;
+    for (i = 0; i <= frame->part_count_and_rotation; i++) {
         size = cells[i].size;
         quad.uw = quad.w = g_bunit_sprite_cell_sizes[size][0];
         quad.vh = quad.h = g_bunit_sprite_cell_sizes[size][1];

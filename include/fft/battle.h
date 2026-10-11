@@ -1802,11 +1802,13 @@ typedef union battle_unit_misc_halfword {
  * (battle_gfx_select_unit_shp_frame); it repeats the first when the file
  * carries a single frame set (header 8). */
 typedef struct battle_gfx_unit_shp_frame_tables {
-    s32 first_attack_frame;     /* 0x000; frames from here up are drawn from the sheet's attack image */
-    s32 first_sp2_frame;        /* 0x004; set from the file and never read */
-    u8* frames[0xd0];           /* 0x008 */
-    u8* submerged_frames[0xd0]; /* 0x348 */
+    s32 first_attack_frame;                  /* 0x000; frames from here up are drawn from the sheet's attack image */
+    s32 first_sp2_frame;                     /* 0x004; set from the file and never read */
+    battle_gfx_source_frame_t* frames[0xd0]; /* 0x008 */
+    battle_gfx_source_frame_t* submerged_frames[0xd0]; /* 0x348 */
 } battle_gfx_unit_shp_frame_tables_t;
+typedef char
+    battle_gfx_unit_shp_frame_tables_size_must_be_0x688[sizeof(battle_gfx_unit_shp_frame_tables_t) == 0x688 ? 1 : -1];
 
 /* Block view of the numeric display fields at misc unit data 0x2bc..0x2cf,
  * taken as one pointer by the action result display builders
@@ -4847,15 +4849,6 @@ typedef enum battle_between_turn_state {
     BATTLE_BETWEEN_TURN_STATE_POISON_AND_REGEN = 19,
 } battle_between_turn_state_e;
 
-/* One 4-byte entry of the 40-entry AT list built by battle_action_calculate_at_list and
- * kept in key order by battle_action_sort_at_list. */
-typedef struct battle_at_entry {
-    u8 unit;      /* 0x00; unit id, biased by the entry kind */
-    u8 flags;     /* 0x01; low byte of the charging ability id */
-    u16 sort_key; /* 0x02; insertion key for battle_action_sort_at_list */
-} battle_at_entry_t;
-typedef char battle_at_entry_size_must_be_4[(sizeof(battle_at_entry_t) == 4) ? 1 : -1];
-
 extern u8 g_battle_acting_unit_elevation;
 extern u8 g_battle_acting_unit_x;
 extern u8 g_battle_acting_unit_y;
@@ -5630,11 +5623,9 @@ enum {
  * (battle_gfx_select_unit_shp_frame). The file has 0x28 frames; their data
  * is stored twice, once for each frame table, with the same contents. */
 typedef struct battle_gfx_evtchr_shp {
-    s32 header[2];              /* 0x000; unset and unread */
-    u8* frames[0xd0];           /* 0x008 */
-    u8* submerged_frames[0xd0]; /* 0x348 */
-    u8 data[0x1e0];             /* 0x688 */
-    u8 submerged_data[0x1e0];   /* 0x868 */
+    battle_gfx_unit_shp_frame_tables_t tables; /* 0x000; header words remain unset and unread */
+    u8 data[0x1e0];                            /* 0x688 */
+    u8 submerged_data[0x1e0];                  /* 0x868 */
 } battle_gfx_evtchr_shp_t;
 
 /*
@@ -5904,7 +5895,7 @@ extern u32 g_battle_gfx_wait_arrow_blink_timer;
 extern u16 g_battle_3d_object_use_request; /* 0x80165fe2 */
 extern u16 g_battle_3d_object_wait_status; /* 0x8016606e */
 extern battle_render_buffer_t g_battle_buffer_a[2];
-void battle_display_menu_number_entry(s32 value, u8 digit_count, void* image, glyph_blit_t* origin);
+void battle_display_menu_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords);
 void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance);
 
@@ -5956,7 +5947,7 @@ void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode
 s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, u32* destination);
 
 void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame,
-    u16 sequence_id, s32** out_table, s32* out_value);
+    u16 sequence_id, battle_gfx_unit_shp_frame_tables_t** out_table, battle_gfx_source_frame_t** out_frame);
 
 void battle_gfx_set_sprite_part_semi_transparent(
     battle_gfx_sprite_display_data_t* display, s32 part_index, s32 enabled);
@@ -6031,7 +6022,7 @@ void battle_gfx_update_status_bubbles_and_graphics(void);
 void battle_gfx_update_unit_palette_animation(void);
 void battle_gfx_update_unit_palettes(void);
 void battle_gfx_alloc_tpage7_vram(RECT* rect, world_texture_prim_t* prim, u32* image);
-u8* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprite_query_t* out);
+battle_gfx_source_frame_t* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprite_query_t* out);
 void battle_gfx_apply_weather_time_tile_palette_mod_by_misc_id(u32 misc_id);
 s32 battle_gfx_clear_loaded_evtchr_slot(s32 slot_index);
 s32 battle_gfx_clear_saved_evtchr_slot(s32 slot_index);
@@ -6843,7 +6834,7 @@ s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
 void battle_action_set_casting_unit_id_ff_and_init(void);
 s32 battle_action_set_mimic_ability(battle_stats_t* unit);
 s32 battle_action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_entry_t* list);
-void battle_action_store_ability_data(u8* src);
+void battle_action_store_target_ids(u8* src);
 s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
 void battle_formula_apply_poach_and_train(void);
 s32 battle_formula_calculate_dance_song_hit(void);
@@ -8564,7 +8555,7 @@ extern s16 g_battle_menu_ability_scroll_offset;
 /* row_offset of the status list's scroll layout, which starts at g_battle_menu_status_visible_rows */
 extern s16 g_battle_menu_status_scroll_offset;
 extern s16 g_battle_menu_action_type_modes[][2];
-extern void* g_battle_menu_buffer_slots[6];
+extern menu_window_buffer_t* g_battle_menu_buffer_slots[6];
 extern u16 g_battle_menu_height_display_suppressed;
 extern s32 g_battle_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
 extern world_gfx_image_load_parameters_t g_battle_menu_icon_strip_image_params[20];
@@ -8639,7 +8630,7 @@ void battle_menu_clear_entry_selections(void);
 void battle_menu_close_move_help(void);
 void battle_menu_dispatch_idle_action_menu(void);
 void battle_menu_display_triangle_selection(void);
-void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, void* buffer);
+void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, u8* buffer);
 void battle_menu_enter_status_screen_selection(void);
 void battle_menu_fade_out_thread(void);
 void battle_menu_free_high_overlay(void);
@@ -8707,7 +8698,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
 s32 battle_menu_collect_throwable_items(s32 unit_id, u8 ability, u8* items);
 void battle_menu_select_icon_cluts(struct world_menu_icon_record* frame);
 void battle_clear_menu_render_buffer(void* buffer, s32 bytes);
-void* battle_menu_alloc_window_buffer_pair(void);
+menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void);
 void battle_menu_build_ability_list(s32 mode);
 void battle_menu_build_and_upload_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset);
 void battle_menu_build_sprite_page(s32 page_index, RECT* base_screen);
@@ -8734,7 +8725,7 @@ s32 battle_menu_load_math_skill_attributes(s32 unit_id, s32 skillset, s16* out_a
 void battle_menu_draw_numeric_display_entries(
     u8* buffer, menu_number_entry_t* entries, glyph_blit_t* position, s32 count);
 
-void battle_menu_release_window_buffer_pair(s32 buffer);
+void battle_menu_release_window_buffer_pair(menu_window_buffer_t* buffer);
 s32 battle_menu_get_dead_unit_selection(s32 battle_id);
 s32 battle_unit_has_any_current_status(s32 unit_id);
 s32 battle_menu_init_attack_resources_and_threads(void);
@@ -8785,7 +8776,7 @@ void battle_menu_open_bunit(void);
 void battle_menu_run_bunit_transition_thread(void);
 void battle_menu_set_option_menu_open(void);
 void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos);
-void battle_menu_display_text(u32 text_id, void* image, glyph_blit_t* origin, u8* text);
+void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* text);
 
 u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32 unused, RECT* area);
@@ -8793,9 +8784,9 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
 void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT* to2, s32 table);
 void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void battle_menu_free_memory(void* buffer);
-void battle_menu_display_text_entry(s32 text_id, void* image, glyph_blit_t* origin);
-void battle_menu_display_text_entry_past_choice_marks(s32 text_id, void* image, glyph_blit_t* origin);
-void battle_menu_display_text_string(void* image, glyph_blit_t* origin, u8* text);
+void battle_menu_display_text_entry(s32 text_id, u8* image, glyph_blit_t* origin);
+void battle_menu_display_text_entry_past_choice_marks(s32 text_id, u8* image, glyph_blit_t* origin);
+void battle_menu_display_text_string(u8* image, glyph_blit_t* origin, u8* text);
 void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option);
 void battle_menu_set_text_origin(s32 x, s32 y);
 s32 battle_menu_should_close_thread(s32* out_flag);
@@ -8923,7 +8914,7 @@ const u8* battle_text_skip_to_entry(const u8* text_section, s32 entry_id);
 void battle_text_measure_pixels(s16* width, s16* rows, const u8* text);
 u8* battle_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
 void battle_text_render_glyph_to_4bpp_image(
-    const u8* glyph_bitmap, void* image, glyph_blit_t* origin, s32 palette_offset);
+    const u8* glyph_bitmap, u8* image, glyph_blit_t* origin, s32 palette_offset);
 void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 void battle_text_build_unit_name_list(void);
 u8* battle_text_find_entry(u32 text_id);

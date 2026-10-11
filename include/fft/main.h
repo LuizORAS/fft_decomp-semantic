@@ -1061,21 +1061,13 @@ typedef struct main_sound_music_state {
     s32 volume;                       /* 0x0c 0x8004d968 */
 } main_sound_music_state_t;
 
-/* Music slot table at 0x8004d96c. Slots are 1-based: slots 1-2 hold the
- * scenario music opened by main_sound_open_music_into_free_slot, and tune t
- * (1-5, MUSIC_45..49.SMD) lives in slot 2 + t, so smd[3..7] (0x8004d998) hold
- * the five permanent tunes that main_sound_open_generic_sfx loads. Both
- * arrays are indexed by slot, so slot 7's handle is the word smd[0].
- * Evidence: 0x80043de0 indexes handles at 0x8004d978 + 4t and smd at
- * 0x8004d994 + 4t from a 0x8004d96c base; 0x80043a90 reads smd at
- * 0x8004d98c + 4*track and the handle 0x1c bytes below it. */
+/* Music slots 1..2 hold scenario music; slots 3..7 hold the five permanent
+ * tunes. Both arrays store slot n at index n - 1. */
 typedef struct main_sound_music_slots {
-    s32 tune; /* 0x00 0x8004d96c main_sound_tune_e: pending tune (id | 0x80) or playing tune id */
-    union {
-        s32 loading_slot;         /* the word of slot 0: the slot whose SMD load is in flight */
-        suzuki_music_t* music[7]; /* the music record SuzukiPutPlaySMD returned, by slot */
-    } handles;                    /* 0x04 0x8004d970 */
-    suzuki_smd_header_t* smd[8];  /* 0x20 0x8004d98c loaded SMD data per slot */
+    s32 tune;                    /* 0x00: pending tune (id | 0x80) or playing tune id */
+    s32 loading_slot;            /* 0x04: slot whose SMD load is in flight, or zero */
+    suzuki_music_t* music[7];    /* 0x08: music records returned by SuzukiPutPlaySMD */
+    suzuki_smd_header_t* smd[7]; /* 0x24: loaded SMD data */
 } main_sound_music_slots_t;
 
 /* The music state and slot table are one object: main_sound_open_generic_sfx

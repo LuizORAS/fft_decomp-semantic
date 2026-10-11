@@ -826,7 +826,7 @@ end:
     }
     g_battle_text_awaiting_input = 0;
     win->active = 0;
-    battle_menu_release_window_buffer_pair((s32)win);
+    battle_menu_release_window_buffer_pair(win);
     battle_gfx_free_tpage7_vram(&rec.rect);
     battle_menu_release_current_thread_slot();
     battle_thread_yield();

@@ -14,7 +14,7 @@
  * Altima sheets keep theirs whole. */
 void battle_gfx_load_trap_and_unit_frame_parts(
     battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame, u16 sequence_id) {
-    s32* frame_table;
+    battle_gfx_unit_shp_frame_tables_t* frame_table;
     battle_gfx_source_frame_t* frame_data;
     battle_gfx_sprite_display_data_t* display;
     battle_gfx_source_part_t* part;
@@ -30,10 +30,10 @@ void battle_gfx_load_trap_and_unit_frame_parts(
     u32 row;
 
     y_offset = unit->special_graphic_y_offset;
-    /* The selector returns the frame pointer as a word. The unpackers never
-     * store the -1 tested here, and three bits of part count cannot pass 8. */
-    battle_gfx_select_unit_shp_frame(unit, state, frame, sequence_id, &frame_table, (s32*)&frame_data);
-    if ((s32)frame_data == -1) {
+    /* The unpackers never store the -1 tested here, and three bits
+     * of part count cannot pass 8. */
+    battle_gfx_select_unit_shp_frame(unit, state, frame, sequence_id, &frame_table, &frame_data);
+    if (frame_data == (battle_gfx_source_frame_t*)-1) {
         main_system_handle_error(MAIN_SYSTEM_ERROR_SHP_FRAME);
     }
     display = state->display;

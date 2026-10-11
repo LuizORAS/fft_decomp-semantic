@@ -832,49 +832,41 @@ typedef struct world_menu_quad_page {
 } world_menu_quad_page_t;
 typedef char world_menu_quad_page_size_must_be_0x144[sizeof(world_menu_quad_page_t) == 0x144 ? 1 : -1];
 
-/* One AT-list (turn order) descriptor. The four-byte stride is proven by the
- * index register the *_menu_build_ability_preview_at_list builders and
- * option_menu_init_at_list advance by 4 and by the +1 byte read for the turn
- * value.
- *
- * flags bits: 0x1f = battle unit id, 0x1f meaning "end of list";
- *             0x20 = fixed "wait" label instead of a turn value;
- *             0x40 = the entry is the acting/queued unit (bracketed name);
- *             0x80 = turn value biased by 0x100. */
-typedef struct world_at_descriptor {
-    u8 flags; /* world_at_descriptor_flags_e */
-    u8 turn_value;
-    u8 _unused_02;
-    u8 _unused_03;
-} world_at_descriptor_t;
+/* One 4-byte entry of the 40-entry AT list built by battle_action_calculate_at_list and
+ * kept in key order by battle_action_sort_at_list. */
+typedef struct battle_at_entry {
+    u8 unit;          /* 0x00; unit id and battle_at_entry_flags_e */
+    u8 action_id_low; /* 0x01; low byte of the ability id, or a staged item id */
+    u16 sort_key;     /* 0x02; insertion key for battle_action_sort_at_list */
+} battle_at_entry_t;
+typedef char battle_at_entry_size_must_be_4[(sizeof(battle_at_entry_t) == 4) ? 1 : -1];
 
-/* world_at_descriptor_t.flags */
-typedef enum world_at_descriptor_flags {
-    WORLD_AT_UNIT_ID_MASK = 0x1f,
-    WORLD_AT_END_OF_LIST = 0x1f, /* unit id field of the entry that ends the list */
-    WORLD_AT_SHOW_WAIT_LABEL = 0x20,
-    WORLD_AT_ACTING_UNIT = 0x40,
-    WORLD_AT_TURN_VALUE_HIGH_BIT = 0x80,
-} world_at_descriptor_flags_e;
+/* battle_at_entry_t.unit */
+typedef enum battle_at_entry_flags {
+    BATTLE_AT_UNIT_ID_MASK = 0x1f,
+    BATTLE_AT_END_OF_LIST = 0x1f, /* unit id field of the entry that ends the list */
+    BATTLE_AT_JUMP = 0x20,
+    BATTLE_AT_ACTION_ENTRY = 0x40, /* charged action or staged item preview */
+    BATTLE_AT_ABILITY_ID_HIGH_BIT = 0x80,
+} battle_at_entry_flags_e;
 
 /* Provisional: the AT-list work area the *_menu_build_ability_preview_at_list
  * builders fill, reached through g_main_heap_companion_overlay_load_address. The five
  * parallel halfword columns become the layout's text_ids/text_colors tables,
  * `text` is published through g_world_text_section_pointers[TEXT_SECTION_AT_LIST] (BATTLE:
- * g_battle_text_section_pointers[TEXT_SECTION_AT_LIST]), and `request` is the block handed to
- * the main-stack preview call, whose descriptor array follows it. */
+ * g_battle_text_section_pointers[TEXT_SECTION_AT_LIST]). The main-stack preview
+ * fills all 40 AT entries; the menu displays entries 1 through 39. */
 typedef struct world_menu_at_list_work {
-    s16 primary_values[40];                /* 0x000: turn-value column */
-    s16 secondary_values[40];              /* 0x050: unit-name column */
-    s16 entry_numbers[40];                 /* 0x0a0: ordinal column */
-    s16 primary_colors[40];                /* 0x0f0 */
-    s16 secondary_colors[40];              /* 0x140 */
-    u8 text[0x4f0];                        /* 0x190: packed 0xfe-terminated names */
-    s32 request;                           /* 0x680: preview request header */
-    world_at_descriptor_t descriptors[40]; /* 0x684 */
+    s16 primary_values[40];        /* 0x000: turn-value column */
+    s16 secondary_values[40];      /* 0x050: unit-name column */
+    s16 entry_numbers[40];         /* 0x0a0: ordinal column */
+    s16 primary_colors[40];        /* 0x0f0 */
+    s16 secondary_colors[40];      /* 0x140 */
+    u8 text[0x4f0];                /* 0x190: packed 0xfe-terminated names */
+    battle_at_entry_t entries[40]; /* 0x680; entry 0 is omitted from the menu */
 } world_menu_at_list_work_t;
-typedef char world_menu_at_list_work_descriptors_offset_must_be_0x684
-    [((unsigned long)&((world_menu_at_list_work_t*)0)->descriptors == 0x684) ? 1 : -1];
+typedef char world_menu_at_list_work_entries_offset_must_be_0x680
+    [((unsigned long)&((world_menu_at_list_work_t*)0)->entries == 0x680) ? 1 : -1];
 
 /* Provisional 0x1ac-byte double-buffered panel record at WORLD 0x801a2bd0 and
  * BATTLE 0x80172834. */

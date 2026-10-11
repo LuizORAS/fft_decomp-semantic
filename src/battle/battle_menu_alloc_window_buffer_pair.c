@@ -8,13 +8,13 @@
  * of 1, so the second record of the pair is left uninitialised.
  *
  * BATTLE twin of world_menu_alloc_window_buffer_pair. */
-void* battle_menu_alloc_window_buffer_pair(void) {
+menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void) {
     menu_window_buffer_t* buffer;
     s32 index;
     s32 i;
 
     for (index = 0; index < 6; index += 2) {
-        if (g_battle_menu_buffer_slots[index] == (void*)-1) {
+        if (g_battle_menu_buffer_slots[index] == (menu_window_buffer_t*)-1) {
             g_battle_menu_buffer_slots[index] = &g_battle_menu_window_buffers[index];
             g_battle_menu_buffer_slots[index + 1] = &g_battle_menu_window_buffers[index + 1];
             buffer = g_battle_menu_buffer_slots[index];

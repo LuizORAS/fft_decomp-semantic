@@ -74,7 +74,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         count = battle_target_list_units_on_panels(targets, attacker);
     }
     g_battle_action_current_ability.target_count = count;
-    battle_action_store_ability_data(targets);
+    battle_action_store_target_ids(targets);
     battle_action_store_used_weapon(&attacker->action_command);
     for (i = 0; i < 21; i++) {
         target_id = targets[i];

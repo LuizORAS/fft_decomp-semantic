@@ -31,7 +31,7 @@
  *   - The staged-item test is written as `index == 0 && staged_item != 0`
  *     with the biased turn value in the else arm: two jumps then reach that
  *     arm, cse starts a new block there and the 0x80 flag test reloads
- *     `slot->flags` as the target does.
+ *     `slot->unit` as the target does.
  *   - `action` is a pointer local for the shared action record. The target
  *     keeps that address in s0, stores through it in the jal delay slot and
  *     passes `move a1,s0`; storing to g_world_menu_preview_action absolutely wastes the delay
@@ -83,10 +83,10 @@ void world_menu_build_ability_preview_at_list(void) {
     action->unit_id = g_world_active_unit_data.battle_id;
     stats = world_unit_get_battle_stats_for_stored();
     g_world_thread_call_target = (void (*)(void))battle_action_preview_at_list;
-    turn = world_thread_call_on_main_stack(stats, action, &work->request);
+    turn = world_thread_call_on_main_stack(stats, action, work->entries);
     if (staged_item != 0) {
-        work->descriptors[0].flags |= WORLD_AT_ACTING_UNIT;
-        work->descriptors[0].turn_value = g_world_menu_preview_action.item_id;
+        work->entries[1].unit |= BATTLE_AT_ACTION_ENTRY;
+        work->entries[1].action_id_low = g_world_menu_preview_action.item_id;
     }
     count = 0;
     if (turn < 0 || turn == 0xff) {
@@ -116,15 +116,15 @@ void world_menu_build_ability_preview_at_list(void) {
         turn--;
     }
     for (index = 0; index < 39; index++) {
-        world_at_descriptor_t* slot = &work->descriptors[index];
+        battle_at_entry_t* slot = &work->entries[index + 1];
         s32 name_index;
 
-        if ((slot->flags & WORLD_AT_UNIT_ID_MASK) == WORLD_AT_END_OF_LIST) {
+        if ((slot->unit & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {
             break;
         }
         work->entry_numbers[index] = index + 1;
-        stats = battle_unit_get_stats_from_battle_id(slot->flags & WORLD_AT_UNIT_ID_MASK);
-        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
+        stats = battle_unit_get_stats_from_battle_id(slot->unit & BATTLE_AT_UNIT_ID_MASK);
+        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbe;
         }
@@ -136,31 +136,31 @@ void world_menu_build_ability_preview_at_list(void) {
             }
             text++;
         }
-        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
+        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbf;
         }
         *text++ = 0xfe;
-        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
+        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
             work->secondary_values[count] = index - 0x800;
         } else {
             work->primary_values[count] = index - 0x800;
         }
-        if ((slot->flags & WORLD_AT_ACTING_UNIT) == 0) {
+        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) == 0) {
             work->secondary_values[count] = TEXT_ID_ABILITY_NAME_BASE;
         } else {
             s32 value;
             s32 turn_bias;
 
             bracketed = 1;
-            if ((slot->flags & WORLD_AT_SHOW_WAIT_LABEL) != 0) {
+            if ((slot->unit & BATTLE_AT_JUMP) != 0) {
                 value = 0xb012;
             } else {
-                turn_bias = slot->turn_value;
+                turn_bias = slot->action_id_low;
                 if (index == 0 && staged_item != 0) {
                     value = turn_bias + 0x3800;
                 } else {
-                    if ((slot->flags & WORLD_AT_TURN_VALUE_HIGH_BIT) != 0) {
+                    if ((slot->unit & BATTLE_AT_ABILITY_ID_HIGH_BIT) != 0) {
                         turn_bias += 0x100;
                     }
                     value = turn_bias + TEXT_ID_ABILITY_NAME_BASE;

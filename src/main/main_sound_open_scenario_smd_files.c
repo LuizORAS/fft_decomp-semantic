@@ -9,14 +9,14 @@ int main_sound_open_scenario_smd_files(int music_id) {
     suzuki_smd_header_t* buffer;
 
     for (i = 0; i < 2; i++) {
-        if (g_main_sound_music.slots.smd[i + 1] == 0) {
+        if (g_main_sound_music.slots.smd[i] == 0) {
             buffer = main_heap_alloc_smd(g_main_sound_scenario_smd_files[music_id].size);
             if (buffer != 0) {
                 if (main_file_call_build_header(g_main_sound_scenario_smd_files[music_id].sector,
                         g_main_sound_scenario_smd_files[music_id].size, buffer)
                     == 0) {
-                    g_main_sound_music.slots.smd[i + 1] = buffer;
-                    g_main_sound_music.slots.handles.loading_slot = i + 1;
+                    g_main_sound_music.slots.smd[i] = buffer;
+                    g_main_sound_music.slots.loading_slot = i + 1;
                 } else {
                     main_system_handle_error(MAIN_SYSTEM_ERROR_SMD_LOAD);
                     return 0;

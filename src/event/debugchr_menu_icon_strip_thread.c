@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* Menu window thread without a cursor: rebuilds the text image every seventh
@@ -9,11 +10,11 @@ void debugchr_menu_icon_strip_thread(void) {
     world_menu_icon_record_t frames[2];
     world_menu_icon_record_t* frame_pair;
     world_menu_icon_record_t* frame_base;
-    s32* display_x;
+    s32* stride;
     s32 done = 0;
     s32 frame;
     s32 redraw;
-    u32* render;
+    u8* render;
     s32 frame_parity;
     world_menu_entry_t* state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
 
@@ -22,7 +23,7 @@ void debugchr_menu_icon_strip_thread(void) {
     battle_copy_bytes(&frame_pair[1], frame_pair, sizeof(*frame_pair));
     redraw = 1;
     frame = 0;
-    display_x = &g_menu_text_state.pen.stride;
+    stride = &g_menu_text_state.pen.stride;
     frame_base = frame_pair;
     for (;;) {
         if (frame == (frame / 7) * 7) {
@@ -30,9 +31,11 @@ void debugchr_menu_icon_strip_thread(void) {
             render = battle_menu_build_and_upload_window_frame_image(
                 state->inner_width, state->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             battle_menu_set_text_origin(8, 9);
-            *display_x = state->inner_width;
-            battle_menu_display_text_entry(state->text_id, render, (glyph_blit_t*)(display_x - 2));
-            LoadImage(&rect, render);
+            *stride = state->inner_width;
+            /* A pen-base local changes the store base and call argument. */
+            battle_menu_display_text_entry(
+                state->text_id, render, (glyph_blit_t*)(stride - offsetof(glyph_blit_t, stride) / sizeof(*stride)));
+            LoadImage(&rect, (u32*)render);
         }
         battle_thread_yield();
         if (redraw == 1) {

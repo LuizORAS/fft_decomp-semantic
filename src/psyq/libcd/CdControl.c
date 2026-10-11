@@ -6,8 +6,11 @@ static __inline__ s32 cd_issue_with_retry(u8 command, const u8* parameter, u8* r
     s32 attempts = 3;
     do {
         g_psyq_cd_sync_callback = 0;
-        if (command != CdlNop && (g_psyq_cd_status & CdlStatShellOpen))
-            CD_cw(CdlNop, 0, 0, 0);
+        if (command != CdlNop) {
+            u8 status = g_psyq_cd_status;
+            if (status & CdlStatShellOpen)
+                CD_cw(CdlNop, 0, 0, 0);
+        }
         if (!parameter || !g_psyq_cd_command_uses_position[command] || CD_cw(CdlSetloc, parameter, result, 0) == 0) {
             g_psyq_cd_sync_callback = callback;
             if (CD_cw(command, parameter, result, asynchronous) == 0)

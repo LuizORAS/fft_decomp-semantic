@@ -45,9 +45,10 @@ s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const battle_gfx_packe
             if (offset == -1) {
                 offset = 0;
             }
-            g_battle_gfx_vram_slots[index].shp.frames[i] = (u8*)(offset + (s32)g_battle_gfx_vram_slots[index].shp.data);
-            g_battle_gfx_vram_slots[index].shp.submerged_frames[i]
-                = (u8*)(offset + (s32)g_battle_gfx_vram_slots[index].shp.submerged_data);
+            g_battle_gfx_vram_slots[index].shp.tables.frames[i]
+                = (battle_gfx_source_frame_t*)(offset + (s32)g_battle_gfx_vram_slots[index].shp.data);
+            g_battle_gfx_vram_slots[index].shp.tables.submerged_frames[i]
+                = (battle_gfx_source_frame_t*)(offset + (s32)g_battle_gfx_vram_slots[index].shp.submerged_data);
             pos += 4;
         }
         for (i = 0; i < 0x1e0; i++) {

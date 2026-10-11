@@ -12,7 +12,7 @@ extern void battle_menu_draw_stacked_glyph_pair(void* buffer, glyph_blit_t* orig
  * skill flag bit 0 is set while the current thread's fourth word is non-zero;
  * alternate-number columns draw a special glyph for values 0/1 without a
  * target, and text 0x509d for values of 100 and above. */
-void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, void* buffer) {
+void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, u8* buffer) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     s32 row;
     s32 column;
