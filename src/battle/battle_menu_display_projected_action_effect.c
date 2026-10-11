@@ -137,12 +137,14 @@ s32 battle_menu_display_projected_action_effect(
         g_battle_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
         image = battle_thread_call_on_main_stack(g_battle_menu_preview_target_action);
         if (image > 0) {
-            if (image & 0x80) {
+            if (image & MAIN_ACTION_STATUS_RESULT_REMOVAL) {
                 extra = 0x1f;
-            } else if ((image & 0x180) == 0x180) {
+            } else if ((image & (MAIN_ACTION_STATUS_RESULT_REMOVAL | MAIN_ACTION_STATUS_RESULT_SCRIPT_FILTER_EXCLUDED))
+                == (MAIN_ACTION_STATUS_RESULT_REMOVAL | MAIN_ACTION_STATUS_RESULT_SCRIPT_FILTER_EXCLUDED)) {
+                /* Unreachable: the preceding removal test also catches these flags. */
                 extra = 0x1e;
             }
-            image &= 0x7f;
+            image &= MAIN_ACTION_STATUS_RESULT_INDEX_MASK;
             image = g_battle_status_display_image_ids[image - 1];
             /* Duplicated store: it keeps the state write in its own block
              * ahead of the label arithmetic, as in the target. */
@@ -251,12 +253,12 @@ s32 battle_menu_display_projected_action_effect(
         g_battle_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
         image = battle_thread_call_on_main_stack(g_battle_menu_preview_target_action);
         if (image > 0) {
-            if (image & 0x80) {
+            if (image & MAIN_ACTION_STATUS_RESULT_REMOVAL) {
                 setRGB0(prim, 0x30, 0x8c, 0xdc);
             } else {
                 setRGB0(prim, 0xbe, 0x28, 0xa);
             }
-            image &= 0x7f;
+            image &= MAIN_ACTION_STATUS_RESULT_INDEX_MASK;
             image = g_battle_status_display_image_ids[image - 1];
             if (image != BATTLE_ACTION_DISPLAY_IMAGE_NONE && image != BATTLE_ACTION_DISPLAY_IMAGE_INVITE) {
                 rect = &g_battle_action_display_image_rects[image];

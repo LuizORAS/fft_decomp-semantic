@@ -1736,6 +1736,13 @@ static inline void main_sound_flush_key_off_inline(void) {
 }
 
 /* status */
+/* Packed highest-order action status: a one-based index, or zero for none. */
+enum {
+    MAIN_ACTION_STATUS_RESULT_INDEX_MASK = 0x7f,
+    MAIN_ACTION_STATUS_RESULT_REMOVAL = 0x80,
+    MAIN_ACTION_STATUS_RESULT_SCRIPT_FILTER_EXCLUDED = 0x100,
+};
+
 /* main_status_change_unit, 0x8005e6cc: OR, AND-not, or replacement of
  * inflicted_status, followed by merging status_sets.innate into status_sets.current. */
 typedef enum main_status_change {
