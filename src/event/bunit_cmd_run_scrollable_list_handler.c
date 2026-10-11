@@ -18,7 +18,7 @@
 menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* command) {
     RECT rect;
     u8 pad0[0x10];
-    RECT marker;
+    point16_t marker;
     u8 pad1[0x8];
     u16 ot_index;
     u16 previous_selected;
@@ -201,7 +201,7 @@ menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* co
         marker.x = command->list.x - command->list.cursor_x_offset;
         marker.y = command->list.y + (g_bunit_menu_list_selected_index - g_bunit_menu_scroll_base_index) * ROW_HEIGHT;
         bunit_menu_update_and_draw_animated_cursor(
-            (u16*)&marker, g_bunit_menu_list_cursor_anim_state, g_bunit_menu_use_alternate_palette);
+            &marker, &g_bunit_menu_list_cursor_anim_state, g_bunit_menu_use_alternate_palette);
     }
     command = menu_next_instruction(command);
     g_bunit_menu_cursor_row = 0;

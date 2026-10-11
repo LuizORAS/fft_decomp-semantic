@@ -206,7 +206,7 @@ extern world_menu_window_rect_source_t* g_card_menu_window_rect_source;
 extern s32 g_card_menu_script_callback;
 extern s16 g_card_menu_window_right_x;
 s32 card_menu_get_event_speed(void);
-void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animation_state_arg, s32 mode);
+void card_menu_update_and_draw_animated_cursor(const point16_t* position, u16* animation_state, s32 mode);
 
 /* save */
 /* CARD save-menu dispatch at 0x801bf3b8.
@@ -261,8 +261,8 @@ extern u16 g_card_save_menu_palette_image[0x100];
 extern u8 g_card_save_menu_state; /* card_save_menu_state_e */
 extern DIRENTRY* g_card_save_menu_work_buffer;
 extern world_menu_entry_t g_card_save_no_data_prompt_descriptor[];
-extern u16 g_card_save_slot_cursor_animation[];
-extern u16 g_card_save_slot_cursor_position[];
+extern u16 g_card_save_slot_cursor_animation;
+extern point16_t g_card_save_slot_cursor_position;
 extern card_save_slot_text_t g_card_save_slot_descriptions[];
 extern s16 g_card_save_slot_index;
 extern card_save_slot_number_command_t g_card_save_slot_number_commands[4];

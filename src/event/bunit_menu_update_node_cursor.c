@@ -9,7 +9,7 @@
  * Separate linker aliases preserve those loads; volatile accesses change the
  * instruction schedule. */
 void bunit_menu_update_node_cursor(s16 mode) {
-    u16 pos[2];
+    point16_t pos;
     u32 flags;
     help_navigation_record_t* node;
     u16 x;
@@ -82,15 +82,15 @@ void bunit_menu_update_node_cursor(s16 mode) {
     }
     node = &g_bunit_help_nodes[g_bunit_help_node_index];
     x = node->x;
-    pos[0] = x;
+    pos.x = x;
     y = node->y;
-    pos[1] = y;
+    pos.y = y;
     if (node->vertical_cursor != 0) {
-        pos[1] = y + 1;
-        bunit_menu_update_and_draw_bouncing_cursor(pos, g_bunit_help_cursor_anim_state, running);
+        pos.y = y + 1;
+        bunit_menu_update_and_draw_bouncing_cursor(&pos, &g_bunit_help_cursor_anim_state, running);
     } else {
-        pos[0] = x - 2;
-        pos[1] = y + 6;
-        bunit_menu_update_and_draw_animated_cursor(pos, g_bunit_help_cursor_anim_state, running);
+        pos.x = x - 2;
+        pos.y = y + 6;
+        bunit_menu_update_and_draw_animated_cursor(&pos, &g_bunit_help_cursor_anim_state, running);
     }
 }

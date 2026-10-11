@@ -117,7 +117,7 @@ extern u8 g_bunit_editor_numeric_text_b[];
 /* help */
 extern u32 g_bunit_help_text_table[];
 extern u8 g_bunit_help_text_state;
-extern u16 g_bunit_help_cursor_anim_state[];
+extern u16 g_bunit_help_cursor_anim_state;
 extern u8 g_bunit_help_cursor_initialized;
 
 /* g_bunit_help_nodes_unit_browse[23].help_base and [24].help_base as their own symbols: as element
@@ -525,7 +525,7 @@ extern s8 g_bunit_menu_button_press_timers[];
 extern u32 g_bunit_menu_input_active_mask;
 extern u16 g_bunit_menu_input_mask;
 extern u32 g_bunit_menu_input_repeat_mask;
-extern u16 g_bunit_menu_list_cursor_anim_state[];
+extern u16 g_bunit_menu_list_cursor_anim_state;
 extern s16* g_bunit_menu_list_entries;
 extern s16 g_bunit_menu_list_entry_count;
 extern s16 g_bunit_menu_list_row_height;
@@ -558,8 +558,8 @@ s32 bunit_menu_is_active_or_transitioning(void);
 s32 bunit_menu_run_unit_list_frame(void);
 void bunit_menu_set_selection_record(s32 index, s32 field0, s32 field2, s16* lookup_table);
 s32 bunit_menu_set_selection_value(u8 index, s16 value);
-void bunit_menu_update_and_draw_animated_cursor(u16* pos, u16* state, s32 mode);
-void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode);
+void bunit_menu_update_and_draw_animated_cursor(point16_t* pos, u16* state, s32 mode);
+void bunit_menu_update_and_draw_bouncing_cursor(point16_t* pos, u16* state, s32 mode);
 void bunit_menu_update_event_thread_state(void);
 
 s32 bunit_menu_update_horizontal_selection_and_mark_change(

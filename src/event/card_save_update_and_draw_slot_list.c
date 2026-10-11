@@ -189,9 +189,9 @@ void card_save_update_and_draw_slot_list(u16 input) {
     if (value >= 4) {
         value = 3;
     }
-    g_card_save_slot_cursor_position[1] = value * 48 + 0x28;
+    g_card_save_slot_cursor_position.y = value * 48 + 0x28;
     card_menu_update_and_draw_animated_cursor(
-        g_card_save_slot_cursor_position, g_card_save_slot_cursor_animation, scrolling);
+        &g_card_save_slot_cursor_position, &g_card_save_slot_cursor_animation, scrolling);
     if (g_battle_menu_input_lock_mode != 0) {
         cursor_clut = g_card_menu_cursor_mode1_foreground_clut;
     } else {

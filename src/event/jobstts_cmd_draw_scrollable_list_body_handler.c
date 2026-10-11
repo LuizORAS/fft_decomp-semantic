@@ -18,7 +18,7 @@
 menu_instruction_t* jobstts_cmd_draw_scrollable_list_body_handler(menu_instruction_t* command) {
     RECT rect;
     u8 unused_28[16];
-    RECT marker;
+    point16_t marker;
     u8 unused_40[8];
     menu_instruction_t* start;
     s16* ids;

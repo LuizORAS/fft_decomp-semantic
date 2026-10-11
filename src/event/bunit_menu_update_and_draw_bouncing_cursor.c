@@ -7,7 +7,7 @@
  * Same state machine and curves as bunit_menu_update_and_draw_animated_cursor; the
  * curve offset moves the quad's y edges instead of its x origin.
  */
-void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode) {
+void bunit_menu_update_and_draw_bouncing_cursor(point16_t* pos, u16* state, s32 mode) {
     u16 unused[4]; /* never accessed; the sibling's rect keeps the 0x38-byte frame */
     s32 bottom;
     s32 active;
@@ -19,21 +19,21 @@ void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode) 
     u16 cursor_clut;
     u16 shadow_clut;
 
-    active_bit = state[0] >> 15;
+    active_bit = *state >> 15;
     active = active_bit;
     if (mode == 0) {
         if (active_bit != 0) {
-            state[0] = 0;
+            *state = 0;
             active = 0;
         }
     }
     active_bit = active;
     if (active_bit == 0 && (mode & 1) != 0) {
-        state[0] = 0x8000;
+        *state = 0x8000;
         active = 1;
     }
 
-    timer = state[0];
+    timer = *state;
     timer &= 0x7F;
     timer = timer * bunit_menu_get_event_speed();
     active_bit = active;
@@ -61,13 +61,13 @@ void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode) 
     active_bit = active;
     if (active_bit != 0) {
         if (timer < 0x25) {
-            state[0]++;
+            (*state)++;
         }
     } else {
         if (timer < 0x2F) {
-            state[0]++;
+            (*state)++;
         } else {
-            state[0] = 0;
+            *state = 0;
         }
     }
 
@@ -80,25 +80,25 @@ void bunit_menu_update_and_draw_bouncing_cursor(u16* pos, u16* state, s32 mode) 
     }
 
     bottom = offset + 0x10;
-    g_bunit_bouncing_cursor_quad.x0 = pos[0];
-    g_bunit_bouncing_cursor_quad.y0 = offset + pos[1];
-    g_bunit_bouncing_cursor_quad.x1 = pos[0] + 0x10;
-    g_bunit_bouncing_cursor_quad.y1 = offset + pos[1];
-    g_bunit_bouncing_cursor_quad.x2 = pos[0];
-    g_bunit_bouncing_cursor_quad.y2 = pos[1] + bottom;
-    g_bunit_bouncing_cursor_quad.x3 = pos[0] + 0x10;
-    g_bunit_bouncing_cursor_quad.y3 = pos[1] + bottom;
+    g_bunit_bouncing_cursor_quad.x0 = pos->x;
+    g_bunit_bouncing_cursor_quad.y0 = offset + pos->y;
+    g_bunit_bouncing_cursor_quad.x1 = pos->x + 0x10;
+    g_bunit_bouncing_cursor_quad.y1 = offset + pos->y;
+    g_bunit_bouncing_cursor_quad.x2 = pos->x;
+    g_bunit_bouncing_cursor_quad.y2 = pos->y + bottom;
+    g_bunit_bouncing_cursor_quad.x3 = pos->x + 0x10;
+    g_bunit_bouncing_cursor_quad.y3 = pos->y + bottom;
     g_bunit_bouncing_cursor_quad.clut = cursor_clut;
     g_bunit_bouncing_cursor_quad.tpage = g_bunit_menu_icon_texture_page;
     bunit_gfx_enqueue_textured_quad_corners(&g_bunit_bouncing_cursor_quad, 0, 0, 0x3C);
-    g_bunit_bouncing_cursor_quad.x0 = pos[0];
-    g_bunit_bouncing_cursor_quad.y0 = offset + pos[1] + 2;
-    g_bunit_bouncing_cursor_quad.x1 = pos[0] + 0x10;
-    g_bunit_bouncing_cursor_quad.y1 = offset + pos[1] + 2;
-    g_bunit_bouncing_cursor_quad.x2 = pos[0];
-    g_bunit_bouncing_cursor_quad.y2 = pos[1] + bottom + 2;
-    g_bunit_bouncing_cursor_quad.x3 = pos[0] + 0x10;
-    g_bunit_bouncing_cursor_quad.y3 = pos[1] + bottom + 2;
+    g_bunit_bouncing_cursor_quad.x0 = pos->x;
+    g_bunit_bouncing_cursor_quad.y0 = offset + pos->y + 2;
+    g_bunit_bouncing_cursor_quad.x1 = pos->x + 0x10;
+    g_bunit_bouncing_cursor_quad.y1 = offset + pos->y + 2;
+    g_bunit_bouncing_cursor_quad.x2 = pos->x;
+    g_bunit_bouncing_cursor_quad.y2 = pos->y + bottom + 2;
+    g_bunit_bouncing_cursor_quad.x3 = pos->x + 0x10;
+    g_bunit_bouncing_cursor_quad.y3 = pos->y + bottom + 2;
     g_bunit_bouncing_cursor_quad.clut = shadow_clut;
     g_bunit_bouncing_cursor_quad.tpage = 0x5F;
     bunit_gfx_enqueue_textured_quad_corners(&g_bunit_bouncing_cursor_quad, 0, 1, 0x3B);

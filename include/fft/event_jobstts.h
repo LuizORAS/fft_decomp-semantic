@@ -311,7 +311,7 @@ void jobstts_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll
 s32 jobstts_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
 void jobstts_menu_load_images_and_clear_selection(void);
 void jobstts_menu_get_selection_record(s32 index, s16* out_selected_index, s16* out_scroll_index, const s16* abilities);
-void jobstts_menu_update_and_draw_animated_cursor(RECT* anchor, u16* state, s32 mode);
+void jobstts_menu_update_and_draw_animated_cursor(point16_t* anchor, u16* state, s32 mode);
 
 /* text */
 extern rgb24_t g_jobstts_text_color;

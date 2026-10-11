@@ -10,9 +10,8 @@
  * counter is scaled by the event speed before the keyframe lookup and
  * clamped to the end of the curve in use (0x24 reverse, wrapping at 0x2f
  * forward). */
-void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animation_state_arg, s32 mode) {
+void card_menu_update_and_draw_animated_cursor(const point16_t* position, u16* animation_state, s32 mode) {
     RECT rect;
-    u16* animation_state = animation_state_arg;
     s32 reverse;
     u32 state_value;
     s32 frame;
@@ -86,8 +85,8 @@ void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animati
         background_clut = g_card_menu_cursor_mode0_background_clut;
     }
 
-    rect.x = x_offset + position[0] - 2;
-    rect.y = position[1];
+    rect.x = x_offset + position->x - 2;
+    rect.y = position->y;
     rect.w = 0x10;
     rect.h = 0x10;
     card_gfx_enqueue_textured_quad(&rect, 0xa8, 0, 0, 0, g_card_menu_cursor_texture_page, foreground_clut, 0x3c);
