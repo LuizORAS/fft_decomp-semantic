@@ -14,7 +14,7 @@ void battle_sound_bg_thread(void) {
     s32 sound;
     s32 volume;
     s32 find_channel;
-    s32 resource = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
+    s32 resource = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
     request = (event_background_sound_parameters_t*)battle_thread_get_current_parameter_1();

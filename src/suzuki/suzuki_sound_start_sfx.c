@@ -3,7 +3,7 @@
 #include "psx/suzuki.h"
 #include "psx/types.h"
 
-/* Starts SFX sound_id (a MAIN_SOUND_ID) on g_suzuki_sound_sfx_channel_count
+/* Starts SFX sound_id (a SUZUKI_SOUND_ID) on g_suzuki_sound_sfx_channel_count
  * consecutive SFX channels from channel_id & 0xff, one per stream of the
  * sound; the high byte of channel_id is the priority
  * suzuki_sound_find_sfx_channel checks before stealing a channel

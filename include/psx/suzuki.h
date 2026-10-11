@@ -187,7 +187,7 @@ typedef struct suzuki_repeat {
  * Bar) but saved into the u8 loop_octave_base by Loop and Loop Select, which
  * read it with `lbu`: GCC narrows the u16 load itself.
  *
- * sound_id is the SMD id for music and a MAIN_SOUND_ID (`resource id << 16 |
+ * sound_id is the SMD id for music and a SUZUKI_SOUND_ID (`resource id << 16 |
  * sound`) for sound effects; Play VFX reads the resource id from the high 16 bits with `lh`,
  * the SFX API compares the full 32-bit value. */
 typedef struct suzuki_music_channel {
@@ -634,6 +634,8 @@ typedef enum suzuki_sound_sfx_priority {
     = 0x60, /* suzuki_sound_play_background_sfx (main_sound_play_bg_sfx), channels 4-5 */
     SUZUKI_SOUND_SFX_PRIORITY_DIRECT = 0x80, /* suzuki_sound_play_direct_sfx (main_sound_play_sfx), channels 6-7 */
 } suzuki_sound_sfx_priority_e;
+
+#define SUZUKI_SOUND_ID(resource, sound) (((resource) << 16) | (sound))
 
 #define SUZUKI_SOUND_SFX_CHANNEL_ID(priority, channel) ((s16)(((priority) << 8) | (channel)))
 

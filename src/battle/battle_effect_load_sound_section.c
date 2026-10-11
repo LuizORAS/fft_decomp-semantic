@@ -17,7 +17,7 @@ void battle_effect_load_sound_section(s16 index) {
     if (offset != 0) {
         g_battle_effect_sound_section_ptr = (suzuki_sound_resource_t*)((u8*)base + offset);
         suzuki_sound_append_resource((suzuki_sound_resource_t*)((u8*)base + offset));
-        g_battle_effect_sound_data_base = MAIN_SOUND_ID(g_battle_effect_sound_section_ptr->id, 0);
+        g_battle_effect_sound_data_base = SUZUKI_SOUND_ID(g_battle_effect_sound_section_ptr->id, 0);
     } else {
         g_battle_effect_sound_section_ptr = 0;
         g_battle_effect_sound_data_base = 0;

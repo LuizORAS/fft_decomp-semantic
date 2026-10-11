@@ -575,7 +575,7 @@ enum {
     MAIN_SOUND_TUNE_PENDING = 0x80,
 };
 
-/* Sound resources. A sound id is MAIN_SOUND_ID(resource, sound): the id of a
+/* Sound resources. A sound id is SUZUKI_SOUND_ID(resource, sound): the id of a
  * loaded suzuki_sound_resource_t in the high 16 bits and the index of a
  * sound in it in the low. Each battle effect file brings a resource of its
  * own (battle_effect_load_sound_section). */
@@ -584,8 +584,6 @@ typedef enum main_sound_resource_id {
     MAIN_SOUND_RESOURCE_ENV = 1,           /* SOUND/ENV.SED: main_env_sfx_e */
     MAIN_SOUND_RESOURCE_SOUND_NOVEL = 225, /* g_wldcore_sound_novel_sound_resource, 81 sounds */
 } main_sound_resource_id_e;
-
-#define MAIN_SOUND_ID(resource, sound) (((resource) << 16) | (sound))
 
 /* Sound-effect ids passed to main_sound_play_sfx and the module queues that
  * feed it (wldcore_sound_play_effect, world_sound_dispatch_effect and the

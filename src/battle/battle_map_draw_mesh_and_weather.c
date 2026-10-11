@@ -53,11 +53,12 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             g_battle_map_lightning_state.timer = 60;
             if (rand() & 1) {
                 g_battle_sound_secondary_weather_sfx_id
-                    = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A);
-                main_sound_play_sfx_find_channel(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A));
+                    = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A);
+                main_sound_play_sfx_find_channel(SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A));
             } else {
-                g_battle_sound_tertiary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B);
-                main_sound_play_sfx_find_channel(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B));
+                g_battle_sound_tertiary_weather_sfx_id
+                    = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B);
+                main_sound_play_sfx_find_channel(SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B));
             }
         }
         if (g_battle_map_lightning_state.timer != 0) {

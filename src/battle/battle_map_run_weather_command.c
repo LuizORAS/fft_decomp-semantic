@@ -43,9 +43,9 @@ void battle_map_run_weather_command(s32 command) {
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_SNOW);
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             } else {
-                g_battle_sound_primary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
+                g_battle_sound_primary_weather_sfx_id = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
                 if (g_battle_sound_weather_sfx_enabled != 0) {
-                    main_sound_play_bg_sfx(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
+                    main_sound_play_bg_sfx(SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
                 }
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_RAIN);
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
@@ -60,9 +60,9 @@ void battle_map_run_weather_command(s32 command) {
                 battle_sound_stop_weather_sfx();
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_HEAVY_RAIN);
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_LIGHTNING);
-                g_battle_sound_primary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
+                g_battle_sound_primary_weather_sfx_id = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
                 if (g_battle_sound_weather_sfx_enabled != 0) {
-                    main_sound_play_bg_sfx(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
+                    main_sound_play_bg_sfx(SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
                 }
             }
         }
@@ -70,9 +70,9 @@ void battle_map_run_weather_command(s32 command) {
     case MAP_WEATHER_COMMAND_THUNDER:
         g_battle_map_lightning_mode = MAP_LIGHTNING_ONCE;
         g_battle_map_lightning_state.timer = 0x3c;
-        g_battle_sound_primary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
+        g_battle_sound_primary_weather_sfx_id = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
         if (g_battle_sound_weather_sfx_enabled != 0) {
-            main_sound_play_bg_sfx(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
+            main_sound_play_bg_sfx(SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
         }
         g_battle_map_lightning_state.color_matrices[1].m[0][0] = 0;
         g_battle_map_lightning_state.color_matrices[1].m[0][1] = 0;

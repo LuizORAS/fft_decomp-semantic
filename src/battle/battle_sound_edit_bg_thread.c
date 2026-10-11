@@ -30,7 +30,7 @@ void battle_sound_edit_bg_thread(void) {
     volume_from = request->volume_from;
     steps = request->frames;
     volume_to = request->volume_to;
-    resource = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
+    resource = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
     if (steps != 0) {
         delta = volume_to - volume_from;
         scaled = 0;
