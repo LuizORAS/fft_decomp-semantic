@@ -1953,16 +1953,6 @@ typedef struct wldcore_window_render_record {
 } wldcore_window_render_record_t;
 typedef char wldcore_render_record_size_must_be_0x34[sizeof(wldcore_window_render_record_t) == 0x34 ? 1 : -1];
 
-/* Provisional: stride-only views of 36- and 52-byte record arrays, for a
- * column that must be indexed as its own array. Field access on
- * g_wldcore_window_records/g_wldcore_window_render_records emits the same ASPSX $at
- * form, so prefer the record type where the column's type agrees. */
-typedef struct wldcore_window_entry_36 {
-    s32 value;
-    s8 rest[32];
-} wldcore_window_entry_36_t;
-typedef char wldcore_entry_36_size_must_be_0x24[sizeof(wldcore_window_entry_36_t) == 0x24 ? 1 : -1];
-
 extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
 
 /* libgs sprite sorted by wldcore_draw_close_indicator_if_pending through
