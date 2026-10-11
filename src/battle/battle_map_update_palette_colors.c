@@ -6,22 +6,22 @@
  * colours at once; another value starts a blend toward them and is kept as the
  * animation's mode (battle_map_update_palette_colors_inner). Marks the rows for
  * upload. */
-void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const u16* colors) {
+void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const palette_t* colors) {
     s32 index;
 
     if (update_all == 1) {
-        const u16* current_colors;
+        const palette_t* current_colors;
 
         index = 0;
         current_colors = colors;
         while (index < 16) {
-            battle_map_update_palette_colors_inner(mode, clut_row, index, current_colors);
+            battle_map_update_palette_colors_inner(mode, clut_row, index, *current_colors);
             index++;
-            current_colors += 16;
+            current_colors++;
         }
         g_battle_map_palette_state.upload_pending = 1;
     } else {
-        battle_map_update_palette_colors_inner(mode, clut_row, clut_index, colors);
+        battle_map_update_palette_colors_inner(mode, clut_row, clut_index, *colors);
         g_battle_map_palette_state.upload_pending = 1;
     }
 }

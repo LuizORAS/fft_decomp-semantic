@@ -12,8 +12,8 @@
  *
  * `case 4` shares the default body: the extra case node makes GCC's switch
  * tree test mode 5 first, as the target does. */
-void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s32 clut_index, s32 preset, s16 red,
-    s16 green, s16 blue, s32 final_value) {
+void battle_gfx_modify_vram_palette(s32 mode, const rgba5551_t* source, s32 clut_row, s32 clut_index, s32 preset,
+    s16 red, s16 green, s16 blue, s32 final_value) {
     s32 i;
     s32 index;
     u16 color;
@@ -28,10 +28,11 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s
     u32 semi_transparent;
     map_palette_color_components_t* component;
 
+    /* Named component reads change the masks, frame and register allocation. */
     if (preset == 1) {
         i = 0;
         do {
-            color = *source;
+            color = *(const u16*)source;
             if (*(const s16*)source != 0) {
                 switch (mode) {
                 case MAP_COLOR_MODE_BASE_HALF:
@@ -112,7 +113,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s
     } else {
         i = 0;
         do {
-            color = *source;
+            color = *(const u16*)source;
             if (*(const s16*)source != 0) {
                 switch (mode) {
                 case MAP_COLOR_MODE_BASE_HALF:

@@ -107,9 +107,8 @@ void battle_map_update_texture_animations(void) {
                 g_battle_map_texture_animations[i].frame = 0;
                 g_battle_map_texture_animations[i].column = 0;
             }
-            battle_map_load_palette_data(
-                g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
-                    + g_battle_map_texture_animations[i].column * 16,
+            battle_map_load_palette_data(g_battle_map_palette_animation_frames
+                    + g_battle_map_texture_animations[i].frame_x + g_battle_map_texture_animations[i].column,
                 MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             break;
         case MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG:
@@ -120,9 +119,8 @@ void battle_map_update_texture_animations(void) {
                 if (g_battle_map_texture_animations[i].frame == g_battle_map_texture_animations[i].frame_count - 1) {
                     g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG_BACK;
                 }
-                battle_map_load_palette_data(
-                    g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
-                        + g_battle_map_texture_animations[i].frame * 16,
+                battle_map_load_palette_data(g_battle_map_palette_animation_frames
+                        + g_battle_map_texture_animations[i].frame_x + g_battle_map_texture_animations[i].frame,
                     MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             }
             break;
@@ -134,9 +132,8 @@ void battle_map_update_texture_animations(void) {
                 if (g_battle_map_texture_animations[i].frame == 0) {
                     g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG;
                 }
-                battle_map_load_palette_data(
-                    g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
-                        + g_battle_map_texture_animations[i].frame * 16,
+                battle_map_load_palette_data(g_battle_map_palette_animation_frames
+                        + g_battle_map_texture_animations[i].frame_x + g_battle_map_texture_animations[i].frame,
                     MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             }
             break;
@@ -239,9 +236,8 @@ void battle_map_update_texture_animations(void) {
             g_battle_map_texture_animations[i].timer += g_main_system_animation_speed;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 g_battle_map_texture_animations[i].timer = 0;
-                battle_map_load_palette_data(
-                    g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
-                        + g_battle_map_texture_animations[i].frame * 16,
+                battle_map_load_palette_data(g_battle_map_palette_animation_frames
+                        + g_battle_map_texture_animations[i].frame_x + g_battle_map_texture_animations[i].frame,
                     MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
                 g_battle_map_texture_animations[i].frame++;
                 if (g_battle_map_texture_animations[i].frame == g_battle_map_texture_animations[i].frame_count) {

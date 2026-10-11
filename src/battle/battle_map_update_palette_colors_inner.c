@@ -7,7 +7,7 @@
  * components and rebuilds the upload copy while preserving each stored
  * alpha bit. Other modes store biased component deltas and arm the CLUT's
  * animation state. */
-void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_index, const u16* colors) {
+void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_index, const palette_t colors) {
     s32 index;
     s16 green_for_packing;
     u32 blue_delta;
@@ -27,7 +27,8 @@ void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_ind
 
         color_index = clut_index * 16 + index;
         component = &g_battle_map_palette_state.clut_rows[clut_row].components[color_index];
-        color = *colors;
+        /* Named component fields reverse the native mask/shift order. */
+        color = *(const u16*)colors;
         red_value = color & 0x1f;
         red_for_packing = red_value;
         red = red_for_packing;

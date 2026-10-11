@@ -5,7 +5,7 @@
 void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite_archive_t* archive) {
     s32 i = 0;
     s32 one = 1; /* held in a local: a literal changes the setup schedule */
-    u8* dst = (u8*)&g_battle_gfx_chicken_palettes[0][0];
+    u8* dst = (u8*)&g_battle_gfx_other_palettes;
     const u8* src = archive->palettes;
     do {
         u8 color_byte;

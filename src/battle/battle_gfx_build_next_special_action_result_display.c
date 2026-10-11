@@ -119,6 +119,6 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         break;
     }
 
-    battle_map_load_palette_data(g_battle_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0);
+    battle_map_load_palette_data(&g_battle_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0);
     return 1;
 }

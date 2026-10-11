@@ -984,7 +984,7 @@ extern s32 g_battle_dead_unit_result;
 
 /* deploy */
 extern const RECT g_battle_deployment_clear_rect;
-extern u16 g_battle_deployed_unit_palettes[2][16];
+extern palette_t g_battle_deployed_unit_palettes[2];
 extern s32 g_battle_deployment_skipped;
 
 /* input */
@@ -3313,13 +3313,16 @@ typedef struct effect_file_header {
 } effect_file_header_t;
 typedef char effect_file_header_size_must_be_0x28[sizeof(effect_file_header_t) == 0x28 ? 1 : -1];
 
-/* Offsets in an effect file's palette section: two 256-colour CLUT rows, then the size of the
- * texture image and the image itself (battle_effect_init_palette). */
-enum {
-    EFFECT_FILE_PALETTE_SECOND_BLOCK_OFFSET = 0x200,
-    EFFECT_FILE_PALETTE_SIZE_OFFSET = 0x400,
-    EFFECT_FILE_PALETTE_IMAGE_OFFSET = 0x404,
-};
+/* Two palette rows, then a 24-bit image size, width flag and pixel tail. */
+typedef struct battle_effect_palette_section {
+    clut_t primary_palettes;   /* 0x000 */
+    clut_t secondary_palettes; /* 0x200 */
+    u8 image_size[3];          /* 0x400; little-endian bytes */
+    u8 wide_image;             /* 0x403; 256-byte rows when nonzero, otherwise 128 */
+    u8 pixels[0];              /* 0x404 */
+} battle_effect_palette_section_t;
+typedef char
+    battle_effect_palette_section_size_must_be_0x404[sizeof(battle_effect_palette_section_t) == 0x404 ? 1 : -1];
 
 /* An effect script instruction is a halfword, its opcode in the low nine bits
  * (g_battle_effect_instructions holds 120 handlers; retail scripts stay below
@@ -4377,7 +4380,7 @@ extern u8 g_battle_effect_palette_target_misc_ids[];
 extern SVECTOR g_battle_effect_trajectory_origin;
 extern SVECTOR g_battle_effect_trajectory_destination;
 extern s32 g_battle_effect_trajectory_step_count;
-extern u8* g_battle_effect_palette_ptr;
+extern battle_effect_palette_section_t* g_battle_effect_palette_ptr;
 
 /* Per-group trap emitter records (0x801b8564, stride 0x2e). The secondary-effect
  * handlers spawn while spawn_start_frame <= timer < spawn_end_frame and finish
@@ -5362,14 +5365,24 @@ typedef struct battle_gfx_other_sprite_archive {
 typedef char
     battle_gfx_other_sprite_archive_size_must_be_0x8400[sizeof(battle_gfx_other_sprite_archive_t) == 0x8400 ? 1 : -1];
 
+/* First 21 OTHER.SPR palettes copied together; the other three groups also
+ * retain their independently loaded symbol aliases. */
+typedef struct battle_gfx_other_palettes {
+    palette_t chicken[5];  /* 0x000 */
+    palette_t frog[5];     /* 0x0a0 */
+    palette_t crystal[6];  /* 0x140 */
+    palette_t treasure[5]; /* 0x200 */
+} battle_gfx_other_palettes_t;
+typedef char battle_gfx_other_palettes_size_must_be_0x2a0[sizeof(battle_gfx_other_palettes_t) == 0x2a0 ? 1 : -1];
+
 /* WEP.SPR contains three CLUT/image pairs: weapons, trails and particles. */
 typedef struct battle_gfx_weapon_sprite_archive {
-    u16 weapon_palettes[16][16];   /* 0x00000 */
-    u8 weapon_pixels[256][128];    /* 0x00200; 4bpp */
-    u16 trail_palettes[16][16];    /* 0x08200 */
-    u8 trail_pixels[256][128];     /* 0x08400; 4bpp */
-    u16 particle_palettes[16][16]; /* 0x10400 */
-    u8 particle_pixels[144][128];  /* 0x10600; 4bpp */
+    clut_t weapon_palettes;       /* 0x00000 */
+    u8 weapon_pixels[256][128];   /* 0x00200; 4bpp */
+    clut_t trail_palettes;        /* 0x08200 */
+    u8 trail_pixels[256][128];    /* 0x08400; 4bpp */
+    clut_t particle_palettes;     /* 0x10400 */
+    u8 particle_pixels[144][128]; /* 0x10600; 4bpp */
 } battle_gfx_weapon_sprite_archive_t;
 
 /* Commands of 0x800e77b8, which stores RGB and controls GTE background color. */
@@ -5603,7 +5616,7 @@ typedef struct battle_gfx_vram_slot {
     RECT image_rect;             /* 0x000c */
     battle_gfx_unit_seq_t seq;   /* 0x0014 */
     battle_gfx_evtchr_shp_t shp; /* 0x051c */
-    u16 cluts[16][16];           /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_misc_id */
+    clut_t cluts;                /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_misc_id */
     u8 image_data[0x6400];       /* 0x1164 */
 } battle_gfx_vram_slot_t;
 typedef char battle_vram_slot_size_must_be_0x7564[(sizeof(battle_gfx_vram_slot_t) == 0x7564) ? 1 : -1];
@@ -5635,7 +5648,7 @@ typedef struct battle_gfx_spritesheet_slot {
     u8 in_use;                          /* 0x00; cleared when no live unit uses the slot */
     u8 spritesheet_id;                  /* 0x01 */
     u8 compressed_attack_image[0x30d4]; /* 0x02; image data copied from SPR data +0x9200 by 0x80087704 */
-    u16 palettes[16][16];               /* 0x30d6; 16 CLUTs with the STP bit set (0x80087704) */
+    clut_t palettes;                    /* 0x30d6; 16 CLUTs with the STP bit set (0x80087704) */
 } battle_gfx_spritesheet_slot_t;
 typedef char battle_spritesheet_slot_size_must_be_0x32d6[(sizeof(battle_gfx_spritesheet_slot_t) == 0x32d6) ? 1 : -1];
 
@@ -5738,10 +5751,10 @@ typedef char
     battle_gfx_unit_graphics_load_state_size_must_be_16[sizeof(battle_gfx_unit_graphics_load_state_t) == 16 ? 1 : -1];
 
 extern u16 g_battle_gfx_screen_color_modulation_fade_frames;
-extern u16 g_battle_gfx_wait_direction_arrow_palette[16];
-extern u16 g_battle_gfx_map_selection_cursor_palette[16];
-extern u16 g_battle_gfx_shadow_palette[16];
-extern u16 g_battle_gfx_status_bubble_palette[16];
+extern palette_t g_battle_gfx_wait_direction_arrow_palette;
+extern palette_t g_battle_gfx_map_selection_cursor_palette;
+extern palette_t g_battle_gfx_shadow_palette;
+extern palette_t g_battle_gfx_status_bubble_palette;
 extern s32 g_battle_gfx_status_bubble_delay;
 extern rgb24_t g_battle_gfx_screen_color_modulation_target;
 extern u16 g_battle_gfx_screen_color_modulation_value[3];
@@ -5749,13 +5762,13 @@ extern u16 g_battle_gfx_screen_color_modulation_step[3];
 extern RECT g_battle_gfx_screen_modulation_tex_window;
 
 extern battle_gfx_unit_graphics_load_state_t g_battle_gfx_unit_graphics_load_state;
-extern u8 g_battle_gfx_cycled_deployed_palettes[2][32];
+extern palette_t g_battle_gfx_cycled_deployed_palettes[2];
 extern u8 g_battle_gfx_unit_animation_data[];
-extern u16 g_battle_gfx_item_palettes[16][16]; /* the first 0x200 bytes of WEP.SPR */
-extern u8 g_battle_gfx_eff_palettes[0x200];
-extern u16 g_battle_gfx_frog_palettes[][16];
-extern u16 g_battle_gfx_crystal_palettes[][16];
-extern u16 g_battle_gfx_treasure_palettes[][16];
+extern clut_t g_battle_gfx_item_palettes; /* the first 0x200 bytes of WEP.SPR */
+extern clut_t g_battle_gfx_eff_palettes;
+extern palette_t g_battle_gfx_frog_palettes[5];
+extern palette_t g_battle_gfx_crystal_palettes[6];
+extern palette_t g_battle_gfx_treasure_palettes[5];
 extern u8 g_battle_gfx_shp_frame_data_buffer[];
 extern POLY_F4 g_battle_gfx_screen_modulation_polygons[2];
 extern s32 g_battle_gfx_tpage7_free_rect_pixels[4];
@@ -5807,9 +5820,7 @@ typedef struct battle_gfx_item_graphic {
     u8 texture_row; /* 0x01; top of the graphic on its texture page, in steps of 8 pixels */
 } battle_gfx_item_graphic_t;
 
-/* Fixed chicken palettes; the other three blocks are g_battle_gfx_frog_palettes,
- * g_battle_gfx_crystal_palettes and g_battle_gfx_treasure_palettes. */
-extern u16 g_battle_gfx_chicken_palettes[][16];
+extern battle_gfx_other_palettes_t g_battle_gfx_other_palettes;
 extern s16 g_battle_gfx_counter;
 extern u8 g_battle_gfx_fallback_seq_data[];
 extern u8 g_battle_gfx_fallback_shp_frame_data[];
@@ -6004,8 +6015,8 @@ void battle_gfx_set_sprite_part_flip(battle_gfx_sprite_display_data_t* display, 
 s32 battle_gfx_is_spritesheet_id_loaded(s16 spritesheet_id);
 s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot);
 
-void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s32 clut_index, s32 preset, s16 red,
-    s16 green, s16 blue, s32 final_value);
+void battle_gfx_modify_vram_palette(s32 mode, const rgba5551_t* source, s32 clut_row, s32 clut_index, s32 preset,
+    s16 red, s16 green, s16 blue, s32 final_value);
 
 s32 battle_gfx_release_reserved_vram_slot(s32 slot_index);
 void battle_gfx_release_unit_vram_slot(struct battle_unit_misc_data* unit);
@@ -6492,7 +6503,7 @@ extern u16 g_battle_action_display_values[16];
 
 /* Eight per status_infliction/status_removal byte, indexed from the byte's high bit. */
 extern u8 g_battle_action_status_display_image_ids[BATTLE_STATUS_BYTE_COUNT][8];
-extern const u16 g_battle_action_result_palette[16];
+extern const palette_t g_battle_action_result_palette;
 extern s32 g_battle_action_phase;
 extern s32 g_battle_action_post_action;
 extern s32 g_battle_action_post_action_display_phase; /* battle_post_action_display_phase_e */
@@ -8047,7 +8058,7 @@ typedef union battle_map_resource {
     gns_record_view_t gns_records[150];
     gns_command_record_prefix_t command;
     s16 command_halfwords[10]; /* Halfword view of the 20-byte command prefix. */
-    u16 palette_colors[MAP_CLUT_ROW_COLOR_COUNT];
+    clut_t palette_colors;
     u32 texture_words[0]; /* Variable-length image data consumed by LoadImage. */
     u8 bytes[0];          /* Byte offsets in files and variable-length command payloads. */
 } battle_map_resource_t;
@@ -8083,7 +8094,7 @@ extern s32 g_battle_map_untextured_quad_render_record_count;
 extern s32 g_battle_map_untextured_triangle_count;
 extern s32 g_battle_map_untextured_triangle_render_record_count;
 extern s32 g_battle_map_zoom_target;
-extern u16 g_battle_map_weather_particle_palette[];
+extern palette_t g_battle_map_weather_particle_palette;
 extern MATRIX g_battle_map_light_color_matrix;
 extern MATRIX g_battle_map_light_matrix;
 extern SVECTOR g_battle_map_light_rotation;
@@ -8177,7 +8188,7 @@ extern MATRIX g_battle_map_local_light_matrix;
 extern s32 g_battle_map_lowest_surface_y;
 extern s32 g_battle_map_mesh_part_animation_states[];
 extern const battle_map_mesh_geometry_t* g_battle_map_mesh_part_geometry[9];
-extern u16 g_battle_map_palette_animation_frames[][16];
+extern clut_t g_battle_map_palette_animation_frames;
 extern s8 g_battle_map_palette_blend_steps_32[][32];
 extern s8 g_battle_map_palette_blend_steps_8[][8];
 extern u8 g_battle_map_palette_pending;
@@ -8247,7 +8258,7 @@ void battle_map_polygon_flag_command(s32 command);
 MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration);
 void battle_map_data_load_complete_thread(void);
 s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* data);
-void battle_map_extract_palette_colors(const u16* palette, s32 clut_row, s32 clut_index);
+void battle_map_extract_palette_colors(const palette_t palette, s32 clut_row, s32 clut_index);
 s32 battle_map_get_effective_weather(void);
 map_tile_t* battle_map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
 s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);
@@ -8280,7 +8291,7 @@ s32 battle_map_resolve_rotated_offset_layer(battle_stats_t*, s32, s32, s32, s32*
 s32 battle_map_load_data(s32 map_id, s32 command);
 void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
 void battle_map_blend_ambient_light_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
-void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_index, const u16* colors);
+void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_index, const palette_t colors);
 battle_move_found_item_t* battle_map_determine_rare_common_item(battle_stats_t* unit);
 battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, u8 y, u8 layer);
 s32 battle_process_map_gns_record(s32 phase, battle_map_resource_t* record);
@@ -8302,13 +8313,17 @@ void battle_map_transition_darkness_color(s32 frame_duration, const CVECTOR* col
 /* Map data, palette and mesh interfaces implemented in the battle overlay. */
 void battle_map_init_darkness(void);
 s16 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
-void battle_map_load_palette_data(const u16* palette, s32 clut_row, s32 clut_index, s32 load_all);
+void battle_map_update_all_palettes_from_color_data(s32 mode, const clut_t color_data);
+void battle_map_update_palette_colors_by_index(s32 mode, s32 clut_index, const palette_t* color_data);
+void battle_map_update_and_store_palette_colors(
+    s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const palette_t* colors);
+void battle_map_load_palette_data(const palette_t* palettes, s32 clut_row, s32 clut_index, s32 load_all);
 void* battle_map_start_file_load(
     const char* unused_directory_path, gns_load_info_t* load_info, void* destination, s32 unused_resource_type);
 s32 battle_map_stop_texture_animations_and_weather_sfx(void);
 void battle_map_store_max_coordinates(SVECTOR* destination);
 
-void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const u16* colors);
+void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const palette_t* colors);
 
 battle_map_state_record_t* battle_map_load_saved_state_record(battle_map_state_record_t* record);
 void* battle_map_light_state_command(s32 command, void* data);
@@ -8333,7 +8348,7 @@ s32 battle_map_start_texture_animation(s32 frame_duration, s32 clut_row, s32 fir
 void battle_map_update_mesh_part_animations(void);
 
 void battle_map_update_palette_from_other(
-    const u16* source, s32 clut_row, s32 clut_index, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
+    const rgba5551_t* source, s32 clut_row, s32 clut_index, s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
 
 void battle_map_update_texture_animations(void);
 void battle_map_init_mesh_render_records(const battle_map_mesh_geometry_t* geometry_data);

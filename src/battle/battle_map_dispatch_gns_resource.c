@@ -318,7 +318,8 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
         break;
     case GNS_RESOURCE_PALETTE_ANIMATION_FRAMES:
         for (i = 0; i < 0x100; i++) {
-            g_battle_map_palette_animation_frames[0][i] = data->palette_colors[i];
+            /* Palette-bank indexing changes the native halfword copy loop. */
+            ((u16*)g_battle_map_palette_animation_frames)[i] = ((u16*)data->palette_colors)[i];
         }
         break;
     case GNS_RESOURCE_TERRAIN: {

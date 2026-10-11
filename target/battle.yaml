@@ -2091,7 +2091,7 @@ data:
   - {addr: 0x800bdf08, name: g_battle_gfx_counter}
   - {addr: 0x800bdf0c, name: g_battle_gfx_weapon_graphics}
   - {addr: 0x800bf78c, name: g_battle_gfx_shp_frame_data_cursor}
-  - {addr: 0x800bf790, name: g_battle_gfx_chicken_palettes}
+  - {addr: 0x800bf790, name: g_battle_gfx_other_palettes}
   - {addr: 0x800bf830, name: g_battle_gfx_frog_palettes}
   - {addr: 0x800bf8d0, name: g_battle_gfx_crystal_palettes}
   - {addr: 0x800bf990, name: g_battle_gfx_treasure_palettes}
