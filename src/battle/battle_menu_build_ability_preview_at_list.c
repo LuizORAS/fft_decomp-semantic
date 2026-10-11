@@ -160,18 +160,18 @@ void battle_menu_build_ability_preview_at_list(void) {
         world_menu_scroll_text_layout_t* layout = entry->context;
 
         layout->columns.row_count = 6;
-        entry->window_x = 0x8c;
-        entry->window_y = 0x30;
-        entry->window_width = 0xe8;
+        entry->window.x = 0x8c;
+        entry->window.y = 0x30;
+        entry->window.w = 0xe8;
         entry->text_image.width = 0xe8;
         entry->inner_width = 0xe8;
     } else {
         world_menu_scroll_text_layout_t* layout = entry->context;
 
         layout->columns.row_count = 6;
-        entry->window_x = 0xbe;
-        entry->window_y = 0x30;
-        entry->window_width = 0x84;
+        entry->window.x = 0xbe;
+        entry->window.y = 0x30;
+        entry->window.w = 0x84;
         entry->text_image.width = 0x84;
         entry->inner_width = 0x84;
         g_battle_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
@@ -180,7 +180,7 @@ void battle_menu_build_ability_preview_at_list(void) {
         world_menu_scroll_text_layout_t* layout;
         world_menu_scroll_text_layout_t* hidden_rows_layout;
 
-        entry->window_y = (6 - count) * 8 + 0x20;
+        entry->window.y = (6 - count) * 8 + 0x20;
         layout = entry->context;
         layout->columns.row_count = count;
         hidden_rows_layout = entry->context;

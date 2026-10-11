@@ -43,11 +43,11 @@ void wldcore_window_init_number_panel_render_thread(s32 thread_id, u32 packed_va
     g_wldcore_window_panel_render_state.inner_width = width;
     g_wldcore_window_panel_render_state.inner_height = 0x20;
     x = origin->x;
-    g_wldcore_window_panel_render_state.window_x = x;
+    g_wldcore_window_panel_render_state.window.x = x;
     y = origin->y;
-    g_wldcore_window_panel_render_state.window_y = y + 8;
-    g_wldcore_window_panel_render_state.window_width = width;
-    g_wldcore_window_panel_render_state.window_height = 0x20;
+    g_wldcore_window_panel_render_state.window.y = y + 8;
+    g_wldcore_window_panel_render_state.window.w = width;
+    g_wldcore_window_panel_render_state.window.h = 0x20;
     g_wldcore_window_panel_render_state.text_image.x_load = 0;
     g_wldcore_window_panel_render_state.text_image.y_load = 0;
     g_wldcore_window_panel_render_state.text_image.width = width;

@@ -37,10 +37,10 @@ void world_menu_update_icon_cursor_sprites(
         thread->task_words[0] += g_world_event_speed;
         x -= 12;
         y = cursor * 16 + 10;
-        record->sprites[1].x0 = param->window_x + x;
-        record->sprites[1].y0 = param->window_y + y;
-        record->sprites[2].x0 = param->window_x + x + 2;
-        record->sprites[2].y0 = param->window_y + y + 2;
+        record->sprites[1].x0 = param->window.x + x;
+        record->sprites[1].y0 = param->window.y + y;
+        record->sprites[2].x0 = param->window.x + x + 2;
+        record->sprites[2].y0 = param->window.y + y + 2;
     }
     if (g_world_event_speed == 2) {
         frame *= 2;

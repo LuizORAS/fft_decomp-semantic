@@ -20,7 +20,7 @@ void battle_menu_size_entry_to_text(world_menu_entry_t* window, s16* width, s16*
     *width += 0x18;
     *width += *width & 3;
     *height = *height * 16 + 16;
-    window->window_x = 0x102 - (*width >> 1);
-    window->window_width = window->inner_width = window->text_image.width = *width;
-    window->window_height = window->inner_height = window->text_image.height = *height;
+    window->window.x = 0x102 - (*width >> 1);
+    window->window.w = window->inner_width = window->text_image.width = *width;
+    window->window.h = window->inner_height = window->text_image.height = *height;
 }

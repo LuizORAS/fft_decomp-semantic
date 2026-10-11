@@ -107,11 +107,11 @@ void world_formation_process_frame(void) {
                 if ((input & PSX_PAD_TRIANGLE) || (input & PSX_PAD_START)
                     || g_world_formation_triangle_menu_open != 0) {
                     if (g_world_formation_unit_banner_at_bottom != 0) {
-                        g_world_formation_triangle_menu.window_y = 0x20;
+                        g_world_formation_triangle_menu.window.y = 0x20;
                     } else {
-                        g_world_formation_triangle_menu.window_y = 0x78;
+                        g_world_formation_triangle_menu.window.y = 0x78;
                     }
-                    g_world_formation_triangle_menu.window_x = ((g_world_formation_selected_unit_index % 4) < 2
+                    g_world_formation_triangle_menu.window.x = ((g_world_formation_selected_unit_index % 4) < 2
                                                                    || g_world_formation_unit_browse_enabled != 0)
                         ? 0x12C
                         : 0x8A;

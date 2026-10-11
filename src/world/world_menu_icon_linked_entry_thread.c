@@ -25,9 +25,9 @@ void world_menu_icon_linked_entry_thread(void) {
     parent = param->row_actions[0];
     if (parent >= 0) {
         /* Unsigned narrowing keeps the retail halfword centering expression. */
-        g_world_menu_thread_menu_data[parent].window_x
+        g_world_menu_thread_menu_data[parent].window.x
             = (u16)((width >> 1) - (g_world_menu_thread_menu_data[parent].inner_width - 0x102));
-        g_world_menu_thread_menu_data[parent].window_y = param->window_y + param->window_height;
+        g_world_menu_thread_menu_data[parent].window.y = param->window.y + param->window.h;
         world_thread_start(g_world_thread_current_id - 1, g_world_menu_thread_menu_data[parent].thread_entry);
         world_thread_set_parameters(g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[parent], 0, 0);
     }

@@ -15,22 +15,22 @@ void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y) {
     if (g_world_threads[NATIVE_THREAD_SLOT_MENU].is_running == 0) {
         entry = &g_world_menu_default_entries[index];
         g_world_menu_thread_menu_data = g_world_menu_default_entries;
-        entry->window_x = initial_x;
-        entry->window_y = initial_y;
-        x = entry->window_x;
+        entry->window.x = initial_x;
+        entry->window.y = initial_y;
+        x = entry->window.x;
         g_world_menu_open_entry_index = index;
-        width = entry->window_width;
+        width = entry->window.w;
         if (x + width >= 0x81) {
-            entry->window_x = 0x78 - entry->window_width;
+            entry->window.x = 0x78 - entry->window.w;
         } else if (x < -0x80) {
-            entry->window_x = -0x78;
+            entry->window.x = -0x78;
         }
-        height = entry->window_height;
-        y = entry->window_y;
+        height = entry->window.h;
+        y = entry->window.y;
         if (y + height >= 0x79) {
-            entry->window_y = 0x70 - entry->window_height;
+            entry->window.y = 0x70 - entry->window.h;
         } else if (y < -0x78) {
-            entry->window_y = -0x70;
+            entry->window.y = -0x70;
         }
         world_thread_start(NATIVE_THREAD_SLOT_MENU, g_world_menu_thread_menu_data[index].thread_entry);
         world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[index], 0, 0);

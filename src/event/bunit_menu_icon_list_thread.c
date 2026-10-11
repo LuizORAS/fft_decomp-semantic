@@ -17,7 +17,7 @@ void bunit_menu_icon_list_thread(void) {
 
     g_bunit_input_controller = battle_script_get_controller_input_pointer(0);
     state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
-    state->window_y &= ~1;
+    state->window.y &= ~1;
     cursor = state->selected_index;
     record = &records[0];
     if (cursor == -1) {

@@ -96,7 +96,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
                 g_world_card_confirm_prompt = g_world_card_load_confirm_prompt;
                 g_world_card_load_confirm_prompt[1].selected_index = 0;
             }
-            g_world_card_confirm_prompt->window_y = i;
+            g_world_card_confirm_prompt->window.y = i;
             if (g_world_card_save_mode == 0) {
                 if (g_card_save_slot_file_states[g_world_card_active_slot] == CARD_SAVE_SLOT_OCCUPIED) {
                     g_world_card_overwrite_prompt_running = 1;

@@ -11,7 +11,7 @@
  * As in the twin, the slot table is indexed by the loop index and the row
  * tables by the separate accepted-entry count, and the window geometry is
  * written per branch: the store through the layout pointer may alias the
- * entry, so the repeated window_y store is kept.
+ * entry, so the repeated window.y store is kept.
  */
 void world_menu_init_at_list(world_menu_entry_t* entry) {
     s32 count;
@@ -85,23 +85,23 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
     if (bracketed != 0) {
         world_menu_text_layout_t* layout;
 
-        entry->window_y = 0x20;
+        entry->window.y = 0x20;
         layout = entry->context;
         layout->row_count = 10;
-        entry->window_x = 0x8C;
-        entry->window_y = 0x20;
-        entry->window_width = 0xE8;
+        entry->window.x = 0x8C;
+        entry->window.y = 0x20;
+        entry->window.w = 0xE8;
         entry->text_image.width = 0xE8;
         entry->inner_width = 0xE8;
     } else {
         world_menu_text_layout_t* layout;
 
-        entry->window_y = 0x20;
+        entry->window.y = 0x20;
         layout = entry->context;
         layout->row_count = 10;
-        entry->window_x = 0xBE;
-        entry->window_y = 0x20;
-        entry->window_width = 0x84;
+        entry->window.x = 0xBE;
+        entry->window.y = 0x20;
+        entry->window.w = 0x84;
         entry->text_image.width = 0x84;
         entry->inner_width = 0x84;
     }
@@ -109,7 +109,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         world_menu_text_layout_t* layout;
         world_menu_text_layout_t* hidden_rows_layout;
 
-        entry->window_y = (10 - count) * 8 + 0x20;
+        entry->window.y = (10 - count) * 8 + 0x20;
         layout = entry->context;
         layout->row_count = count;
         hidden_rows_layout = entry->context;

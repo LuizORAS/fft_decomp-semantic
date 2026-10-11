@@ -49,20 +49,20 @@ void world_main_menu_text_window_thread(void) {
     width = x + (x & 3) + pad;
     height = height * 16 + 16;
     entry->inner_width = width;
-    entry->window_width = width;
+    entry->window.w = width;
     entry->text_image.width = width;
     entry->inner_height = height;
-    entry->window_height = height;
+    entry->window.h = height;
     entry->text_image.height = height;
-    if (entry->window_x + width > 0x80) {
-        entry->window_x = 0x78 - width;
-    } else if (entry->window_x < -0x80) {
-        entry->window_x = -0x78;
+    if (entry->window.x + width > 0x80) {
+        entry->window.x = 0x78 - width;
+    } else if (entry->window.x < -0x80) {
+        entry->window.x = -0x78;
     }
-    if (entry->window_y + height > 0x78) {
-        entry->window_y = 0x68 - height;
-    } else if (entry->window_y < -0x78) {
-        entry->window_y = -0x68;
+    if (entry->window.y + height > 0x78) {
+        entry->window.y = 0x68 - height;
+    } else if (entry->window.y < -0x78) {
+        entry->window.y = -0x68;
     }
     world_menu_init_quad_from_record(&rect, entry, &record->sprite_a);
     SetSemiTrans(&record->sprite_a, 1);
@@ -106,29 +106,29 @@ void world_main_menu_text_window_thread(void) {
         if (g_world_threads[g_world_thread_current_id].task_id == NATIVE_THREAD_TASK_MENU_GROUP_SECOND_WINDOW) {
             if (g_world_menu_main_scroll_threshold > 0x28 && target == 0) {
                 if (g_world_menu_main_scroll_direction > 0) {
-                    if (entry->window_x >= -0x3F) {
+                    if (entry->window.x >= -0x3F) {
                         target = -0x78;
                     }
-                } else if (entry->window_x < -0x3F) {
+                } else if (entry->window.x < -0x3F) {
                     target = 0x78 - width;
                 }
             }
             if (target != 0) {
-                if (entry->window_x > target) {
-                    entry->window_x -= 8;
-                    if (entry->window_x <= target) {
-                        entry->window_x = target;
+                if (entry->window.x > target) {
+                    entry->window.x -= 8;
+                    if (entry->window.x <= target) {
+                        entry->window.x = target;
                         target = 0;
                     }
-                } else if (entry->window_x < target) {
-                    entry->window_x += 8;
-                    if (entry->window_x >= target) {
-                        entry->window_x = target;
+                } else if (entry->window.x < target) {
+                    entry->window.x += 8;
+                    if (entry->window.x >= target) {
+                        entry->window.x = target;
                         target = 0;
                     }
                 }
             }
-            record->sprite_a.x0 = entry->window_x;
+            record->sprite_a.x0 = entry->window.x;
         }
         record->sprite_b.r0 = g_world_menu_color_red;
         record->sprite_b.g0 = g_world_menu_color_green;

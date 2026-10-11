@@ -54,7 +54,7 @@ void world_menu_scrolling_list_thread(void) {
     page = g_world_ability_list_pages[g_world_thread_current_id];
     entry = world_thread_get_current_parameter_1();
     layout = entry->context;
-    entry->window_height = layout->columns.row_count * 16 + 0x1C;
+    entry->window.h = layout->columns.row_count * 16 + 0x1C;
     entry->inner_height = layout->columns.row_count * 16 + 0x1C;
     row_buffer_live = 0;
     entry->text_image.height = layout->columns.row_count * 16 + 0x1C;
@@ -64,7 +64,7 @@ void world_menu_scrolling_list_thread(void) {
     window.y_screen_offset = 0xC;
     timer = 0;
     window.rect.w = entry->inner_width - 8;
-    window.rect.h = entry->window_height - 0x1A;
+    window.rect.h = entry->window.h - 0x1A;
     base = page;
     clear.x = window.rect.x / 4 + entry->vram_origin.x;
     clear.y = (entry->vram_origin.y & 0xFF00) + 0xFE;
@@ -91,9 +91,9 @@ void world_menu_scrolling_list_thread(void) {
         page->arrows[i].h = 0x10;
         page->arrows[i].u0 = arrow_u;
         page->arrows[i].v0 = 0;
-        page->arrows[i].x0 = entry->window_x + entry->window_width - 0xF;
-        arrow_y = i * (entry->window_height - 0x32) + 0x10;
-        page->arrows[i].y0 = entry->window_y + arrow_y;
+        page->arrows[i].x0 = entry->window.x + entry->window.w - 0xF;
+        arrow_y = i * (entry->window.h - 0x32) + 0x10;
+        page->arrows[i].y0 = entry->window.y + arrow_y;
         arrow_u += 8;
     }
     world_menu_init_sprite(&page->thumb);
@@ -103,8 +103,8 @@ void world_menu_scrolling_list_thread(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin,
-        (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
+        (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -323,8 +323,8 @@ void world_menu_scrolling_list_thread(void) {
         }
         frame->v0 = (ring * 16 + accum - 2) & 0x7F;
         if (i * g_world_event_speed < 12) {
-            world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin,
-                (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+            world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
+                (const world_gfx_image_load_parameters_t*)&window);
             world_menu_zoom_cursor_frame(entry, frame, i * g_world_event_speed);
         }
         if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {

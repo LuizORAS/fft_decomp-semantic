@@ -29,11 +29,11 @@ void wldcore_window_init_panel_render_state(s32 unused, s32 extent, point32_t* d
     g_wldcore_window_panel_render_state.inner_width = text_width;
     g_wldcore_window_panel_render_state.inner_height = 0;
     x = origin->x;
-    g_wldcore_window_panel_render_state.window_x = x - 0x80;
+    g_wldcore_window_panel_render_state.window.x = x - 0x80;
     y = origin->y;
-    g_wldcore_window_panel_render_state.window_y = y - 0x78;
-    g_wldcore_window_panel_render_state.window_width = text_width;
-    g_wldcore_window_panel_render_state.window_height = 0;
+    g_wldcore_window_panel_render_state.window.y = y - 0x78;
+    g_wldcore_window_panel_render_state.window.w = text_width;
+    g_wldcore_window_panel_render_state.window.h = 0;
     g_wldcore_window_panel_render_state.text_image.x_load = 0;
     g_wldcore_window_panel_render_state.text_image.y_load = 0;
     g_wldcore_window_panel_render_state.text_image.width = text_width;

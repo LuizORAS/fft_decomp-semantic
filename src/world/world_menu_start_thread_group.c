@@ -14,8 +14,8 @@ void world_menu_start_thread_group(s32 parameter, s32 location_id, s32 window_x,
         g_world_menu_location_window_x = window_x;
         g_world_menu_location_window_y = window_y;
         g_world_menu_default_entries[2].text_id = location_id + TEXT_ID_LOCATION_NAME_BASE;
-        g_world_menu_default_entries[2].window_x = window_x;
-        g_world_menu_default_entries[2].window_y = window_y;
+        g_world_menu_default_entries[2].window.x = window_x;
+        g_world_menu_default_entries[2].window.y = window_y;
         world_thread_start(WORLD_THREAD_SLOT_MENU_GROUP, world_menu_thread_group_supervisor_thread);
         world_thread_set_parameters(WORLD_THREAD_SLOT_MENU_GROUP, parameter, 0, 0);
     }

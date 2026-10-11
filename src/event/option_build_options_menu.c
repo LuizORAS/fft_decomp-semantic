@@ -55,15 +55,15 @@ void option_build_options_menu(void) {
     } while (0);
     page = g_option_menu_pages;
     layout = g_option_menu_entry_table;
-    entry->window_height = layout->row_count * 16 + 0x10;
+    entry->window.h = layout->row_count * 16 + 0x10;
     entry->inner_height = layout->row_count * 16 + 0x10;
     entry->text_image.height = layout->row_count * 16 + 0x10;
     window.x_screen_offset = 8;
     window.rect.x = 0;
     window.rect.y = 0;
     window.y_screen_offset = 0xA;
-    window.rect.w = entry->window_width - 0x20;
-    window.rect.h = entry->window_height - 0xE;
+    window.rect.w = entry->window.w - 0x20;
+    window.rect.h = entry->window.h - 0xE;
     battle_menu_build_window_sprites(&image_rect, entry, &page->icons);
     buffer = battle_menu_alloc_memory(0x1E0);
     g_option_menu_pages[0].icons.base.sprites[3].y0 -= 2;
@@ -88,9 +88,9 @@ void option_build_options_menu(void) {
         arrow[i].h = 0x10;
         arrow[i].u0 = arrow_u;
         arrow[i].v0 = 0;
-        arrow[i].x0 = entry->window_x + entry->window_width - 0xF;
-        arrow_y = i * (entry->window_height - 0x20) + 8;
-        arrow[i].y0 = entry->window_y + arrow_y;
+        arrow[i].x0 = entry->window.x + entry->window.w - 0xF;
+        arrow_y = i * (entry->window.h - 0x20) + 8;
+        arrow[i].y0 = entry->window.y + arrow_y;
         arrow_u += 8;
     }
     base = g_option_menu_pages;
@@ -102,8 +102,8 @@ void option_build_options_menu(void) {
     base->thumb.h = 8;
     base->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&base->frame);
-    battle_gfx_init_image_loading((world_texture_prim_t*)&base->frame, &entry->vram_origin,
-        (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading((world_texture_prim_t*)&base->frame, &entry->vram_origin, &entry->window,
+        (const world_gfx_image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
     base->arrow_marks[0].w = 6;
     base->arrow_marks[0].h = 0xC;
@@ -135,8 +135,8 @@ void option_build_options_menu(void) {
         &g_option_menu_title_image_rect, entry->inner_width, 0x2C, (world_texture_prim_t*)&base->title, 0);
     image = battle_menu_build_and_upload_window_frame_image(
         entry->inner_width, 0x2C, &g_option_menu_title_image_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
-    base->title.x0 = entry->window_x;
-    base->title.y0 = entry->window_y + entry->window_height + 1;
+    base->title.x0 = entry->window.x;
+    base->title.y0 = entry->window.y + entry->window.h + 1;
     g_menu_text_state.pen.stride = entry->inner_width;
     battle_menu_set_text_origin(0x18, 0xE);
     battle_menu_display_text_entry(0x502B, image, &g_menu_text_state.pen);
@@ -147,7 +147,7 @@ void option_build_options_menu(void) {
     value_rect.y = base->title.y0;
     value_rect.w = base->title.w;
     value_rect.h = base->title.h;
-    battle_copy_bytes(&g_option_menu_entry_panel_rect, &entry->window_x, 8);
+    battle_copy_bytes(&g_option_menu_entry_panel_rect, &entry->window.x, 8);
     battle_thread_start(g_battle_current_thread_id + 1, option_menu_window_frame_thread);
     g_option_menu_entry_panel_rect.h += 0xC;
     g_option_menu_entry_panel_rect.y -= 2;
@@ -156,8 +156,8 @@ void option_build_options_menu(void) {
     battle_menu_init_semitransparent_sprt(&base->value);
     battle_text_configure_sprite_vram(
         &g_option_menu_value_image_rect, 0x3C, 0x10, (world_texture_prim_t*)&base->value, 0);
-    base->value.x0 = entry->window_x + 0x5C;
-    base->value.y0 = entry->window_y + entry->window_height + 0xF;
+    base->value.x0 = entry->window.x + 0x5C;
+    base->value.y0 = entry->window.y + entry->window.h + 0xF;
     battle_clear_menu_render_buffer(buffer, 0x1E0);
     g_menu_text_state.pen.stride = 0x3C;
     battle_menu_set_text_origin(0, 0);
@@ -301,12 +301,12 @@ void option_build_options_menu(void) {
             battle_gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         if ((thread - 1)->is_running == 0) {
-            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 0, 0);
+            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window.x, 0, 0);
         } else {
-            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 1, 0);
+            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window.x, 1, 0);
         }
         battle_gfx_build_scaled_draw_area_pair_swapped(
-            &page->title_area, (const RECT*)&entry->window_x, i, g_main_gfx_screen_polarity);
+            &page->title_area, &entry->window, i, g_main_gfx_screen_polarity);
         battle_gfx_build_scaled_draw_area_pair_swapped(&page->value_area, &value_rect, i, g_main_gfx_screen_polarity);
         battle_gfx_draw_or_append_gpu_primitive(&page->title_area.areas[1]);
         battle_gfx_draw_or_append_gpu_primitive(&page->icon_mode);

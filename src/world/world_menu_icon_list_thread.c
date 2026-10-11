@@ -18,7 +18,7 @@ void world_menu_icon_list_thread(void) {
 
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
     param = world_thread_get_current_parameter_1();
-    param->window_y &= ~1;
+    param->window.y &= ~1;
     cursor = param->selected_index;
     record = &records[0];
     if (cursor == -1) {

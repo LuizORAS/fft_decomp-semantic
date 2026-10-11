@@ -42,7 +42,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
 
                 column += 2;
                 if (*label != 0) {
-                    entry->window_x = *label + 0x80;
+                    entry->window.x = *label + 0x80;
                 }
                 i += 1;
                 entry += 1;

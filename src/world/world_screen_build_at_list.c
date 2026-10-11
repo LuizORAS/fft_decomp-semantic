@@ -58,15 +58,15 @@ void world_screen_build_at_list(void) {
     cursor = 0;
     entry = world_thread_get_current_parameter_1();
     binding = entry->context;
-    entry->window_height = binding->row_count * 16 + 0x1C;
+    entry->window.h = binding->row_count * 16 + 0x1C;
     entry->inner_height = binding->row_count * 16 + 0x1C;
     entry->text_image.height = binding->row_count * 16 + 0x1C;
     window.rect.x = 0;
     window.rect.y = 0x7E;
     window.x_screen_offset = 8;
     window.y_screen_offset = 0xC;
-    window.rect.w = entry->window_width - 0x12;
-    window.rect.h = entry->window_height - 0x1A;
+    window.rect.w = entry->window.w - 0x12;
+    window.rect.h = entry->window.h - 0x1A;
     world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_FRAME);
     texture_window.x = 0;
     texture_window.y = entry->vram_origin.y & 0xFF;
@@ -88,9 +88,9 @@ void world_screen_build_at_list(void) {
         page->arrows[i].h = 0x10;
         page->arrows[i].u0 = arrow_u;
         page->arrows[i].v0 = 0;
-        page->arrows[i].x0 = entry->window_x + entry->window_width - 0xF;
-        arrow_y = i * (entry->window_height - 0x32) + 0x10;
-        page->arrows[i].y0 = entry->window_y + arrow_y;
+        page->arrows[i].x0 = entry->window.x + entry->window.w - 0xF;
+        arrow_y = i * (entry->window.h - 0x32) + 0x10;
+        page->arrows[i].y0 = entry->window.y + arrow_y;
         arrow_u += 8;
     }
     world_menu_init_sprite(&page->thumb);
@@ -100,8 +100,8 @@ void world_screen_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin,
-        (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
+        (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -119,7 +119,7 @@ void world_screen_build_at_list(void) {
     world_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
     world_thread_start(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, world_screen_menu_window_frame_thread);
-    world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
+    world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window.x, 0, 0);
     row_offset = entry->select_text_table;
     cursor = entry->selected_index - row_offset;
     world_screen_menu_draw_text_columns(entry, &row_offset, buffer);
@@ -147,9 +147,9 @@ void world_screen_build_at_list(void) {
         page = &g_world_text_list_pages[i & 1];
         frame = &page->frame;
         if (world_thread_is_previous_running() != 0 && g_world_thread_task_active == 0) {
-            world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 1, 0);
+            world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window.x, 1, 0);
         } else {
-            world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
+            world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window.x, 0, 0);
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0 && i != 0) {
             if ((*input0 & PSX_PAD_UP) && !(*input1 & PSX_PAD_SQUARE)) {
@@ -283,7 +283,7 @@ void world_screen_build_at_list(void) {
             world_gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         world_gfx_build_scaled_draw_area_pair_swapped(
-            &page->draw_areas, (const RECT*)&entry->window_x, i, g_active_graphics_buffer_index);
+            &page->draw_areas, &entry->window, i, g_active_graphics_buffer_index);
         world_menu_select_icon_sprite_clut(page->icons.icons[0]);
         if (entry->header_id >= 5) {
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);

@@ -75,7 +75,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     g_battle_menu_scroll_list_depth++;
     entry = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     layout = entry->context;
-    entry->window_height = layout->columns.row_count * 16 + 0x1C;
+    entry->window.h = layout->columns.row_count * 16 + 0x1C;
     entry->inner_height = layout->columns.row_count * 16 + 0x1C;
     entry->text_image.height = layout->columns.row_count * 16 + 0x1C;
     window.rect.x = 0x108 - entry->inner_width;
@@ -83,7 +83,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     window.x_screen_offset = 8;
     window.y_screen_offset = 0xC;
     window.rect.w = entry->inner_width - 8;
-    window.rect.h = entry->window_height - 0x1A;
+    window.rect.h = entry->window.h - 0x1A;
     clear.x = window.rect.x / 4 + entry->vram_origin.x;
     clear.y = (entry->vram_origin.y & 0xFF00) + 0xFE;
     clear.w = window.rect.w / 4;
@@ -109,9 +109,9 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         page->arrows[i].h = 0x10;
         page->arrows[i].u0 = arrow_u;
         page->arrows[i].v0 = 0;
-        page->arrows[i].x0 = entry->window_x + entry->window_width - 0xF;
-        arrow_y = i * (entry->window_height - 0x32) + 0x10;
-        page->arrows[i].y0 = entry->window_y + arrow_y;
+        page->arrows[i].x0 = entry->window.x + entry->window.w - 0xF;
+        arrow_y = i * (entry->window.h - 0x32) + 0x10;
+        page->arrows[i].y0 = entry->window.y + arrow_y;
         arrow_u += 8;
     }
     battle_menu_init_semitransparent_sprt(&page->thumb);
@@ -121,8 +121,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&page->frame);
-    battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin,
-        (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
+        (const world_gfx_image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -392,8 +392,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         }
         frame->v0 = (ring * 16 + scroll_accum - 2) & 0x7F;
         if (i * g_battle_event_speed < 12) {
-            battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin,
-                (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+            battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
+                (const world_gfx_image_load_parameters_t*)&window);
             battle_menu_zoom_cursor_frame(entry, frame, i * g_battle_event_speed);
         }
         if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {

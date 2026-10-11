@@ -15,9 +15,9 @@ void world_menu_build_layout_sprites(world_menu_entry_t* entry, SPRT* sprite, s3
     sprite->clut = 0x7D7C;
     mode = entry->header_id;
     if (mode == 1) {
-        x = entry->window_x;
+        x = entry->window.x;
         sprite->x0 = x;
-        mode = (u16)entry->window_y;
+        mode = (u16)entry->window.y;
         sprite->u0 = 0xA8;
         sprite->v0 = 0x88;
         sprite->w = 0x28;
@@ -26,9 +26,9 @@ void world_menu_build_layout_sprites(world_menu_entry_t* entry, SPRT* sprite, s3
         sprite->y0 = mode;
     } else {
         if (mode == 2) {
-            x = entry->window_x;
+            x = entry->window.x;
             sprite->x0 = x - 6;
-            mode = (u16)entry->window_y;
+            mode = (u16)entry->window.y;
             sprite->u0 = 0xA8;
             sprite->v0 = 0x78;
             sprite->w = 0x28;

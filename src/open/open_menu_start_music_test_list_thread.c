@@ -21,10 +21,10 @@ void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, point32_t*
     g_open_music_test_list_params.vram_origin.y = 0x100;
     g_open_music_test_list_params.inner_width = width;
     g_open_music_test_list_params.inner_height = 0;
-    g_open_music_test_list_params.window_x = origin->x - 0x80;
-    g_open_music_test_list_params.window_y = origin->y - 0x78;
-    g_open_music_test_list_params.window_width = width;
-    g_open_music_test_list_params.window_height = 0;
+    g_open_music_test_list_params.window.x = origin->x - 0x80;
+    g_open_music_test_list_params.window.y = origin->y - 0x78;
+    g_open_music_test_list_params.window.w = width;
+    g_open_music_test_list_params.window.h = 0;
     g_open_music_test_list_params.text_image.x_load = 0;
     g_open_music_test_list_params.text_image.y_load = 0;
     g_open_music_test_list_params.text_image.width = width;

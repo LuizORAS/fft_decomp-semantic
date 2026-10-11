@@ -66,6 +66,6 @@ void battle_menu_build_skillset_entries(void) {
     rows[count - 1].terminator = 0xff;
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].max_row_index = count - 1;
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].text_image.height = height;
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].window_height = height;
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].window.h = height;
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].inner_height = height;
 }

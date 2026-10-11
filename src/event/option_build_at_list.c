@@ -48,15 +48,15 @@ void option_build_at_list(void) {
     cursor = 0;
     entry = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     layout = entry->context;
-    entry->window_height = layout->row_count * 16 + 0x1C;
+    entry->window.h = layout->row_count * 16 + 0x1C;
     entry->inner_height = layout->row_count * 16 + 0x1C;
     entry->text_image.height = layout->row_count * 16 + 0x1C;
     window.rect.x = 0;
     window.rect.y = 0x7E;
     window.x_screen_offset = 8;
     window.y_screen_offset = 0xC;
-    window.rect.w = entry->window_width - 0x12;
-    window.rect.h = entry->window_height - 0x1A;
+    window.rect.w = entry->window.w - 0x12;
+    window.rect.h = entry->window.h - 0x1A;
     battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_FRAME);
     texture_window.x = 0;
     texture_window.y = entry->vram_origin.y & 0xff;
@@ -78,9 +78,9 @@ void option_build_at_list(void) {
         page->arrows[i].h = 0x10;
         page->arrows[i].u0 = arrow_u;
         page->arrows[i].v0 = 0;
-        page->arrows[i].x0 = entry->window_x + entry->window_width - 0xF;
-        arrow_y = i * (entry->window_height - 0x32) + 0x10;
-        page->arrows[i].y0 = entry->window_y + arrow_y;
+        page->arrows[i].x0 = entry->window.x + entry->window.w - 0xF;
+        arrow_y = i * (entry->window.h - 0x32) + 0x10;
+        page->arrows[i].y0 = entry->window.y + arrow_y;
         arrow_u += 8;
     }
     battle_menu_init_semitransparent_sprt(&page->thumb);
@@ -90,8 +90,8 @@ void option_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&page->frame);
-    battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin,
-        (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
+        (const world_gfx_image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -109,7 +109,7 @@ void option_build_at_list(void) {
     battle_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
     battle_thread_start(g_battle_current_thread_id + 1, option_menu_window_frame_thread);
-    battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 0, 0);
+    battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window.x, 0, 0);
     option_menu_draw_text_columns(entry, &row_offset, buffer);
     ring = 0;
     image_rect.w = g_menu_text_state.pen.stride >> 2;
@@ -132,9 +132,9 @@ void option_build_at_list(void) {
         page = &g_option_at_list_pages[i & 1];
         frame = &page->frame;
         if (battle_thread_is_previous_running() != 0 && g_battle_menu_input_lock_mode == 0) {
-            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 1, 0);
+            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window.x, 1, 0);
         } else {
-            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window_x, 0, 0);
+            battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&entry->window.x, 0, 0);
         }
         if (delta == 0 && battle_menu_can_accept_input() != 0 && i != 0) {
             /* Dead store (column is reinitialised before use); only the reload
@@ -272,7 +272,7 @@ void option_build_at_list(void) {
             battle_gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         battle_gfx_build_scaled_draw_area_pair_swapped(
-            &page->draw_areas, (const RECT*)&entry->window_x, i, g_main_gfx_screen_polarity);
+            &page->draw_areas, &entry->window, i, g_main_gfx_screen_polarity);
         battle_menu_select_icon_sprite_clut(page->icons.icons[0]);
         if (entry->header_id >= 5) {
             battle_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);

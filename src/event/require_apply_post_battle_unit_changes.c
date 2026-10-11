@@ -178,9 +178,9 @@ void require_apply_post_battle_unit_changes(void) {
     (*(s16*)(menu_fields + (unsigned long)&((world_menu_entry_t*)0)->field                                             \
         - (unsigned long)&((world_menu_entry_t*)0)->inner_width))
                     MENU_FIELD(text_image.width) = menu_x;
-                    MENU_FIELD(window_width) = menu_x;
+                    MENU_FIELD(window.w) = menu_x;
                     MENU_FIELD(inner_width) = menu_x;
-                    MENU_FIELD(window_x) = 0x100 - half_menu_x + menu_x % 2;
+                    MENU_FIELD(window.x) = 0x100 - half_menu_x + menu_x % 2;
 #undef MENU_FIELD
                     if (require_party_get_free_slot_status(*selected_unit_index_ptr) == 2) {
                         g_require_message_menu_result = 0;

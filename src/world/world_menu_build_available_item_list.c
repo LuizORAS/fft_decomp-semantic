@@ -40,6 +40,6 @@ void world_menu_build_available_item_list(void) {
     }
     menu = g_world_menu_thread_menu_data;
     menu[6].selected_index = selected;
-    menu[6].window_y = (7 - g_world_menu_location_list_layout.columns.row_count) * 8 - 0x48;
+    menu[6].window.y = (7 - g_world_menu_location_list_layout.columns.row_count) * 8 - 0x48;
     world_menu_scrolling_list_thread();
 }

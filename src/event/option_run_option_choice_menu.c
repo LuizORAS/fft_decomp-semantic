@@ -54,10 +54,10 @@ void option_run_option_choice_menu(void) {
     if (height <= 0) {
         cursor = 0;
     }
-    param->window_x = 0x170 - width;
-    param->window_y = 0xA0 - (height >> 1);
-    param->inner_width = param->window_width = param->text_image.width = width;
-    param->inner_height = param->window_height = param->text_image.height = height;
+    param->window.x = 0x170 - width;
+    param->window.y = 0xA0 - (height >> 1);
+    param->inner_width = param->window.w = param->text_image.width = width;
+    param->inner_height = param->window.h = param->text_image.height = height;
     param->vram_origin.x = 0x1C0;
     param->vram_origin.y = 0x100 - height;
     if (kind == GAME_OPTION_FINGER_CURSOR_REPEAT_SPEED) {

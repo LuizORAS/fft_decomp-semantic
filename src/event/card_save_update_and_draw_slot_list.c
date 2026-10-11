@@ -69,7 +69,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
                         index = 0x3a;
                         break;
                     }
-                    g_card_save_overwrite_prompt_descriptor[0].window_y = index;
+                    g_card_save_overwrite_prompt_descriptor[0].window.y = index;
                     g_card_save_overwrite_prompt_descriptor[1].selected_index = 1;
                     g_card_save_slot_index = -1;
                     g_card_save_overwrite_prompt_active = 1;

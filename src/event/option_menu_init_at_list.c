@@ -13,7 +13,7 @@
  *
  * The menu geometry is written per branch rather than through a shared
  * temporary: the store through the layout pointer may alias the menu record,
- * so the repeated window_y store is not redundant to the compiler.
+ * so the repeated window.y store is not redundant to the compiler.
  */
 void option_menu_init_at_list(world_menu_entry_t* menu) {
     s32 entry_count;
@@ -99,23 +99,23 @@ void option_menu_init_at_list(world_menu_entry_t* menu) {
     if (has_special_entry != 0) {
         world_menu_text_layout_t* layout;
 
-        menu->window_y = 0x20;
+        menu->window.y = 0x20;
         layout = menu->context;
         layout->row_count = 10;
-        menu->window_x = 0x8c;
-        menu->window_y = 0x20;
-        menu->window_width = 0xe8;
+        menu->window.x = 0x8c;
+        menu->window.y = 0x20;
+        menu->window.w = 0xe8;
         menu->text_image.width = 0xe8;
         menu->inner_width = 0xe8;
     } else {
         world_menu_text_layout_t* layout;
 
-        menu->window_y = 0x20;
+        menu->window.y = 0x20;
         layout = menu->context;
         layout->row_count = 10;
-        menu->window_x = 0xbe;
-        menu->window_y = 0x20;
-        menu->window_width = 0x84;
+        menu->window.x = 0xbe;
+        menu->window.y = 0x20;
+        menu->window.w = 0x84;
         menu->text_image.width = 0x84;
         menu->inner_width = 0x84;
     }
@@ -124,7 +124,7 @@ void option_menu_init_at_list(world_menu_entry_t* menu) {
         world_menu_text_layout_t* layout;
         world_menu_text_layout_t* resized_layout;
 
-        menu->window_y = (10 - entry_count) * 8 + 0x20;
+        menu->window.y = (10 - entry_count) * 8 + 0x20;
         layout = menu->context;
         layout->row_count = entry_count;
         resized_layout = menu->context;

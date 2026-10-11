@@ -45,9 +45,9 @@ void option_menu_start_dead_unit_threads(void) {
         }
     }
 
-    menu->window_x = 0xc8;
-    menu->window_y = 0x40;
-    menu->window_width = 0x70;
+    menu->window.x = 0xc8;
+    menu->window.y = 0x40;
+    menu->window.w = 0x70;
     menu->text_image.width = 0x70;
     menu->inner_width = 0x70;
     if (value_count < 8) {

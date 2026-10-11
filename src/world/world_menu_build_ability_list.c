@@ -182,7 +182,7 @@ void world_menu_build_ability_list(s32 mode) {
     }
 
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].inner_width = window_x;
-    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_width = window_x;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.w = window_x;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].text_image.width = window_x;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].header_id = row_mode;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].select_text_table = columns;
@@ -211,14 +211,14 @@ void world_menu_build_ability_list(s32 mode) {
         g_battle_ai_workspace_ptr->ability_list.extras[0] = 0;
         g_world_menu_ability_display_flags[0] = 4;
     }
-    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_y = 0x30;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y = 0x30;
     if (count >= 7) {
         g_world_ability_menu_layout.hidden_rows = count - 6;
         g_world_ability_menu_layout.visible_rows = 6;
     } else {
         g_world_ability_menu_layout.hidden_rows = 0;
         g_world_ability_menu_layout.visible_rows = count;
-        g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_y += (6 - count) * 8;
+        g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y += (6 - count) * 8;
     }
     /* Menu-thread parameters 2-4 request a redraw, reset the cursor and
      * request a refresh. */

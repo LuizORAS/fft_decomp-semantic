@@ -28,13 +28,13 @@ void world_menu_size_entry_to_text(world_menu_entry_t* entry, s16* width, s16* h
     padded = *width + 0x18;
     *width = padded + (padded & 3);
     *height = *height * 16 + 16;
-    entry->window_x = 0x102 - (*width >> 1);
+    entry->window.x = 0x102 - (*width >> 1);
     w = *width;
     entry->text_image.width = w;
     entry->inner_width = w;
-    entry->window_width = w;
+    entry->window.w = w;
     h = *height;
     entry->text_image.height = h;
     entry->inner_height = h;
-    entry->window_height = h;
+    entry->window.h = h;
 }

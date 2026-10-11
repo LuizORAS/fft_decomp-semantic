@@ -177,7 +177,7 @@ void battle_menu_build_ability_list(s32 mode) {
     }
 
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].inner_width = window_x;
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_width = window_x;
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.w = window_x;
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].text_image.width = window_x;
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].header_id = row_mode;
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].select_text_table = columns;
@@ -206,14 +206,14 @@ void battle_menu_build_ability_list(s32 mode) {
         g_battle_ai_workspace_ptr->ability_list.extras[0] = 0;
         g_battle_menu_ability_display_flags[0] = 4;
     }
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_y = 0x30;
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y = 0x30;
     if (count >= 7) {
         g_battle_ability_menu_layout.hidden_rows = count - 6;
         g_battle_ability_menu_layout.row_count = 6;
     } else {
         g_battle_ability_menu_layout.hidden_rows = 0;
         g_battle_ability_menu_layout.row_count = count;
-        g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window_y += (6 - count) * 8;
+        g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y += (6 - count) * 8;
     }
     /* The menu thread's redraw, cursor and refresh parameters. */
     g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_2 = 1;

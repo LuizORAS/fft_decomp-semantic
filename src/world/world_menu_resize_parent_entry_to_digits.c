@@ -21,8 +21,8 @@ void world_menu_resize_parent_entry_to_digits(void) {
         width += margin;
         old_width = entry->inner_width;
         entry->inner_width = width;
-        entry->window_width = width;
+        entry->window.w = width;
         entry->text_image.width = width;
-        entry->window_x -= width - old_width;
+        entry->window.x -= width - old_width;
     }
 }

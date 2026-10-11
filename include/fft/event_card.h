@@ -95,7 +95,7 @@ typedef char card_graphics_context_size_must_be_0xf4[(sizeof(card_graphics_conte
  * card_thread_start_managed and its delayed twin start descriptor->thread_entry
  * (+0x28). The yes/no prompts are a message record followed by a choice record
  * whose text_id is 0xd810; the choice's selected_index (+0x74 of the prompt) is
- * the default answer, and the message window_y (+0x0a) places the prompt.
+ * the default answer, and the message window.y (+0x0a) places the prompt.
  */
 
 extern card_graphics_context_t* g_card_gfx_context;
