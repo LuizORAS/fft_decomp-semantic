@@ -5,10 +5,8 @@
  * EXP/JP and the three failure messages above bit 0x01000000 are handled by
  * the following dispatcher at 0x800808b8. */
 s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
-    union {
-        battle_stats_t* stats;
-        u32 scan_flags;
-    } data;
+    battle_stats_t* stats;
+    u32 scan_flags;
     s32 flags;
     battle_action_result_display_t* display;
     battle_gfx_sprite_display_data_t* display_0;
@@ -33,38 +31,38 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     u8 status;
 
     flags = unit->action_display_flags;
-    data.stats = unit->battle_data;
+    stats = unit->battle_data;
     display = &unit->numeric_display;
 
     if ((flags & 0xffff) != 0) {
-        g_battle_action_display_values[0] = data.stats->action.hp_damage;
-        g_battle_action_display_values[1] = data.stats->action.hp_healing;
-        g_battle_action_display_values[2] = data.stats->action.mp_damage;
-        g_battle_action_display_values[3] = data.stats->action.mp_healing;
-        change = data.stats->action.sp_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
+        g_battle_action_display_values[0] = stats->action.hp_damage;
+        g_battle_action_display_values[1] = stats->action.hp_healing;
+        g_battle_action_display_values[2] = stats->action.mp_damage;
+        g_battle_action_display_values[3] = stats->action.mp_healing;
+        change = stats->action.sp_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
         g_battle_action_display_values[5] = change;
         g_battle_action_display_values[4] = change;
-        change = data.stats->action.ct_change & 0x7f;
+        change = stats->action.ct_change & 0x7f;
         g_battle_action_display_values[7] = change;
         g_battle_action_display_values[6] = change;
-        change = data.stats->action.brave_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
+        change = stats->action.brave_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
         g_battle_action_display_values[9] = change;
         g_battle_action_display_values[8] = change;
-        change = data.stats->action.faith_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
+        change = stats->action.faith_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
         g_battle_action_display_values[11] = change;
         g_battle_action_display_values[10] = change;
         flag = 1;
-        change = data.stats->action.pa_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
+        change = stats->action.pa_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
         g_battle_action_display_values[13] = change;
         g_battle_action_display_values[12] = change;
         index = 0;
-        change = data.stats->action.ma_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
+        change = stats->action.ma_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
         g_battle_action_display_values[15] = change;
         g_battle_action_display_values[14] = change;
 
-        data.scan_flags = unit->action_display_flags;
+        scan_flags = unit->action_display_flags;
         while (index < 16) {
-            if ((flag & data.scan_flags) != 0) {
+            if ((flag & scan_flags) != 0) {
                 flags = index;
                 display->value = g_battle_action_display_values[flags];
                 display->selector = g_battle_action_display_numeric_selectors[flags];
