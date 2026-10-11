@@ -38,13 +38,13 @@ void main_unit_store_character_names(battle_stats_t* unit) {
             gender = unit->unit_flags & NAME_GENDER_MASK;
             if (unit->unit_flags & UNIT_FLAG_MALE) {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
-                name_base = 0x100;
+                name_base = PARTY_NAME_CLASS_GENERIC_MALE;
             } else if (unit->unit_flags & UNIT_FLAG_FEMALE) {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_FEMALE_BASE;
-                name_base = 0x200;
+                name_base = PARTY_NAME_CLASS_GENERIC_FEMALE;
             } else {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE;
-                name_base = 0x300;
+                name_base = PARTY_NAME_CLASS_GENERIC_MONSTER;
             }
             do {
                 name_available = 1;

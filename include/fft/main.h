@@ -56,8 +56,6 @@ typedef struct main_ability_monster_skillset {
     u8 ability_ids[MONSTER_SKILLSET_ABILITY_COUNT];
 } main_ability_monster_skillset_t;
 
-extern u8 g_main_ability_aoe_data[];
-extern u8 g_main_ability_ct_data[];
 extern ability_secondary_data_t g_main_ability_range_data[];
 
 /* One secondary-data byte per ability from ABILITY_ID_MATH_FIRST on (math,

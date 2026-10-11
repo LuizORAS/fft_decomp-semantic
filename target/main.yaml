@@ -1333,8 +1333,6 @@ data:
   - {addr: 0x8005ebd0, name: g_main_reaction_behavior_flags}
   - {addr: 0x8005ebf0, name: g_main_ability_data}
   - {addr: 0x8005fbf0, name: g_main_ability_range_data}
-  - {addr: 0x8005fbf1, name: g_main_ability_aoe_data}
-  - {addr: 0x8005fbfc, name: g_main_ability_ct_data}
   - {addr: 0x80061010, name: g_main_item_ability_item_ids}
   - {addr: 0x80061020, name: g_main_throw_ability_item_types}
   - {addr: 0x8006102c, name: g_main_jump_ability_data}

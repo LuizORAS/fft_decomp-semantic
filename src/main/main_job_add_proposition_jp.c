@@ -12,6 +12,7 @@ s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     s32 level;
     s32 levels;
     u8 level_byte;
+    u16 total_jp;
 
     if (jp < 0) {
         return -1;
@@ -49,7 +50,8 @@ s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     }
     party->career.job_points.total.entries[slot].low = total;
     party->career.job_points.total.entries[slot].high = total / 256;
-    level = main_job_calculate_level(total & 0xFFFF);
+    total_jp = total;
+    level = main_job_calculate_level(total_jp);
 
     levels = party->career.job_levels[slot / 2];
     level_byte = level;

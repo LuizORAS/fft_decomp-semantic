@@ -5,10 +5,11 @@
  * ABILITY_ID_ITEM_FIRST up, which has no such record. */
 u32 main_ability_get_aoe(u32 ability_id) {
     u32 result;
+    u16 index;
 
-    ability_id &= 0xffff;
-    if (ability_id < ABILITY_ID_ITEM_FIRST) {
-        result = g_main_ability_aoe_data[ability_id * sizeof(ability_secondary_data_t)];
+    index = ability_id;
+    if (index < ABILITY_ID_ITEM_FIRST) {
+        result = g_main_ability_range_data[index].aoe;
     } else {
         result = 0;
     }
