@@ -663,11 +663,11 @@ typedef struct bunit_unit_data {
     u8 initial_team_flags;       /* 0x72 */
     u8 mount_info;               /* 0x73; battle_stats_t.mount_info */
     u8 character_identity;       /* 0x74; special character, generic male/female/monster */
-    u8 unlocked_jobs[3];         /* 0x75; bit reader consumes Squire through Mime */
+    u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT]; /* 0x75; bit reader consumes Squire through Mime */
     unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x78 */
-    u8 job_levels[10];            /* 0xb1; two packed job-level nibbles per byte */
-    u8 _padding_0bb;              /* aligns job_points */
-    unit_job_points_t job_points; /* 0xbc; current JP followed by total JP */
+    u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT]; /* 0xb1; two packed job-level nibbles per byte */
+    u8 _padding_0bb;                          /* aligns job_points */
+    unit_job_points_t job_points;             /* 0xbc; current JP followed by total JP */
 } bunit_unit_data_t;
 typedef char bunit_unit_data_size_must_be_268[(sizeof(bunit_unit_data_t) == 268) ? 1 : -1];
 typedef char bunit_unit_data_character_identity_must_be_0x74

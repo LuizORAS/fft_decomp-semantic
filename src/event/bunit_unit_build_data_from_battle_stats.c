@@ -147,11 +147,11 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     bcopy(&unit->career.job_points.current, &record->job_points.current, sizeof(record->job_points.current));
     bcopy(&unit->career.job_points.total, &record->job_points.total, sizeof(record->job_points.total));
     for (i = 0; i < 20; i++) {
-        if (record->job_points.current.values[i] >= 10000) {
-            record->job_points.current.values[i] = 9999;
+        if (record->job_points.current.values[i] > UNIT_JOB_POINT_MAX) {
+            record->job_points.current.values[i] = UNIT_JOB_POINT_MAX;
         }
-        if (record->job_points.total.values[i] >= 10000) {
-            record->job_points.total.values[i] = 9999;
+        if (record->job_points.total.values[i] > UNIT_JOB_POINT_MAX) {
+            record->job_points.total.values[i] = UNIT_JOB_POINT_MAX;
         }
     }
 }

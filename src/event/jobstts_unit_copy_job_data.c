@@ -38,11 +38,11 @@ void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* o
     bcopy(&unit->career.job_points.total, &out->job_points.total, 0x28);
 
     for (i = 0; i < 20; i++) {
-        if (out->job_points.current.values[i] >= 10000) {
-            out->job_points.current.values[i] = 9999;
+        if (out->job_points.current.values[i] > UNIT_JOB_POINT_MAX) {
+            out->job_points.current.values[i] = UNIT_JOB_POINT_MAX;
         }
-        if (out->job_points.total.values[i] >= 10000) {
-            out->job_points.total.values[i] = 9999;
+        if (out->job_points.total.values[i] > UNIT_JOB_POINT_MAX) {
+            out->job_points.total.values[i] = UNIT_JOB_POINT_MAX;
         }
     }
 }

@@ -1409,9 +1409,9 @@ typedef struct world_formation_unit {
     u8 _unused_071;
     u8 sprite_set;               /* 0x072; "Sprite Set ID": party_data_t.sprite_set / character identity */
     u8 equippable_item_types[4]; /* 0x073; bit per item type, read by can_unit_equip_item_id */
-    u8 unlocked_jobs[3];         /* 0x077 */
+    u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT];                               /* 0x077 */
     unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x07a through 0x0b2 */
-    u8 job_levels[0x0a];                                                          /* 0x0b3 */
+    u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT];                                     /* 0x0b3 */
     u8 _padding_0bd;                                                              /* aligns job_points */
     unit_job_points_t job_points; /* 0x0be; current JP followed by total JP */
     u8 name[0x10];                /* 0x10e; "unit_t Nickname" */

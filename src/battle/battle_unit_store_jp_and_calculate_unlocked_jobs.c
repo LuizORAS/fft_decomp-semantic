@@ -36,20 +36,20 @@ s32 battle_unit_store_jp_and_calculate_unlocked_jobs(s32 unit_index, s32 jp, s32
     if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != (team & 0xff)) {
         return -1;
     }
-    if (slot == JOB_ID_BARD - JOB_ID_SQUIRE && (flags & UNIT_FLAG_FEMALE)) {
+    if (slot == UNIT_CAREER_JOB_INDEX_BARD && (flags & UNIT_FLAG_FEMALE)) {
         return -1;
     }
-    if (slot == JOB_ID_DANCER - JOB_ID_SQUIRE && (flags & UNIT_FLAG_MALE)) {
+    if (slot == UNIT_CAREER_JOB_INDEX_DANCER && (flags & UNIT_FLAG_MALE)) {
         return -1;
     }
     total = unit->career.job_points.current.values[slot] + jp;
-    if (total >= 10000) {
-        total = 9999;
+    if (total > UNIT_JOB_POINT_MAX) {
+        total = UNIT_JOB_POINT_MAX;
     }
     unit->career.job_points.current.values[slot] = total;
     total = unit->career.job_points.total.values[slot] + jp;
-    if (total >= 10000) {
-        total = 9999;
+    if (total > UNIT_JOB_POINT_MAX) {
+        total = UNIT_JOB_POINT_MAX;
     }
     unit->career.job_points.total.values[slot] = total;
     level = main_job_calculate_level(total);

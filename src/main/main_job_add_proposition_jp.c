@@ -37,16 +37,16 @@ s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     /* Each serialized JP entry is a little-endian byte pair. */
     total = party->career.job_points.current.entries[slot].low
         + (party->career.job_points.current.entries[slot].high << 8) + jp;
-    if (total >= 10000) {
-        total = 9999;
+    if (total > UNIT_JOB_POINT_MAX) {
+        total = UNIT_JOB_POINT_MAX;
     }
     party->career.job_points.current.entries[slot].low = total;
     party->career.job_points.current.entries[slot].high = total / 256;
 
     total = party->career.job_points.total.entries[slot].low + (party->career.job_points.total.entries[slot].high << 8)
         + jp;
-    if (total >= 10000) {
-        total = 9999;
+    if (total > UNIT_JOB_POINT_MAX) {
+        total = UNIT_JOB_POINT_MAX;
     }
     party->career.job_points.total.entries[slot].low = total;
     party->career.job_points.total.entries[slot].high = total / 256;
