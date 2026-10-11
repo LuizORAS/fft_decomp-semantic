@@ -2,14 +2,11 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/*
- * Soldier office step that shows the generated recruit.
+/* Shop step HIRE_PREVIEW: show the generated recruit.
  *
- * Any face button dismisses the message box; once it has closed, unit
- * browsing and the status banner are turned on for the preview. A further
- * face button closes the panels and moves on to the hire confirmation
- * (message 0xF826).
- */
+ * Any face button dismisses the message box; once it has closed, unit browsing and the status banner
+ * are turned on for the preview. A further face button closes the panels and moves on to the hire
+ * confirmation (0xF826, "Add this soldier to your party?"). */
 void world_shop_run_recruit_unit_preview_step(void) {
     if (g_world_shop_recruit_preview_initialized == 0) {
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {

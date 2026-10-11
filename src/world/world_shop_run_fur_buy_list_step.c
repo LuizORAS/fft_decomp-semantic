@@ -1,10 +1,10 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/* Fur shop: the list of the shop's poached stock, bought at half price.
- *
- * Mirrors world_shop_run_buy_list_step with the half-price value and
- * the poached-stock quantity as callbacks. */
+/* Shop step FUR_BUY_LIST: the fur shop's poached stock in the current category tab, at half
+ * price, with the stock left (menu value callback 8). The controls are world_shop_run_buy_list_step's:
+ * Circle opens the quantity prompt (FUR_BUY_CONFIRM), Triangle shows who can equip the item
+ * (FUR_BUY_EQUIP; not on the items tab), X returns to the fur shop menu. */
 void world_shop_run_fur_buy_list_step(void) {
     s16 x;
     s16 y;

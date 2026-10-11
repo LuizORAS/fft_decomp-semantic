@@ -1,7 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Soldier office: the name entry keyboard for the recruit, then the fee prompt. */
+/* Shop step HIRE_NAME_ENTRY: the name keyboard for the recruit; once a name is entered, the
+ * fee prompt ("That's N gil. OK?", 0xF82A) and HIRE_FEE_CONFIRM. */
 void world_shop_run_hire_name_entry_step(void) {
     if (g_world_shop_hire_name_entry_initialized == 0) {
         g_world_formation_unit_banner_enabled = 0;

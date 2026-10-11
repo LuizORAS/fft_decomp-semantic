@@ -1,9 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Fur shop twin of world_shop_run_buy_quantity_menu: the quantity
- * prompt is capped by the 99-item inventory limit, the gil on hand at half
- * price and the poached stock. */
+/* Fur shop twin of world_shop_run_buy_quantity_menu: the quantity is capped by the 99-copy
+ * limit (equipped copies count), the gil on hand at half price and the poached stock; the refusals
+ * are 0xF834 ("You can't have anymore.") and 0xF833 ("You don't have enough gil"). */
 s32 world_shop_run_fur_buy_quantity_menu(void) {
     s32 owned;
     s32 count;

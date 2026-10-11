@@ -1,9 +1,14 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/* Soldier Office hire step: runs the hire menu and charges for the new
- * unit's starting equipment. */
-void world_shop_run_soldier_office_hire_menu_step(void) {
+/* Shop step SOLDIER_OFFICE_MENU: the Male fighter / Female fighter / Change name / Leave
+ * store menu. On entry it counts the roster's units other than guests. A fighter row generates a
+ * recruit of that type into the roster (world_formation_generate_unit) and prices it at 1000 gil plus
+ * its starting equipment; with no room (0xF822) or too little gil (0xF823, the recruit is removed
+ * again) the master says so, else the recruit is staged for HIRE_PREVIEW (0xF824). Change name lists
+ * the roster's monsters ("Change which monster's name?") or says there are none (0xF846). Leave store
+ * cashes out the excess inventory and fades out (0xF825, "Please stop by again."). */
+void world_shop_run_soldier_office_menu_step(void) {
     battle_stats_t unit;
     s32 i;
     s32 result;

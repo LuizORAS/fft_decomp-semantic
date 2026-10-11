@@ -1,8 +1,9 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/* Fur shop sibling of world_shop_run_buy_confirm_step: the party pays half
- * price and the poached stock is reduced. */
+/* Shop step FUR_BUY_CONFIRM, the fur shop twin of world_shop_run_buy_confirm_step: on "yes"
+ * the party pays half the price (rounded down) times the quantity, the items join the inventory and
+ * leave the poached stock, and the list is rebuilt (0xF837, "Thanks."); on "no" 0xF838. */
 void world_shop_run_fur_buy_confirm_step(void) {
     s32 result = 1;
 

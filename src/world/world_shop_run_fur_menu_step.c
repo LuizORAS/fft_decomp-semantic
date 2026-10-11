@@ -2,10 +2,11 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Fur shop menu step: on entry checks for a Secret Hunt unit and poached
- * stock (refusing entry with message 0xf82d when nobody has the ability),
- * then routes the selected entry to the buy list, the sell list or a
- * refusal message. */
+/* Shop step FUR_MENU: the fur shop's Buy / Sell / Leave store menu. On entry, when no roster
+ * unit has Secret Hunt the clerk turns the party away (0xF82D, "There's nothing more to sell.") and
+ * the screen fades out. Buy opens the poached stock on the first category tab, or says "Sorry, we're
+ * out of stock" (0xF82E) when there is none; Sell opens the party's items, or 0xF845 when it has none;
+ * Leave store fades out (0xF831, "Thanks, come by again."). */
 void world_shop_run_fur_menu_step(void) {
     s32 i;
 

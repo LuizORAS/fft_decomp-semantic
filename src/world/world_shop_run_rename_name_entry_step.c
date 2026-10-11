@@ -1,8 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Soldier office: the name entry keyboard of the Rename service; sibling of
- * world_shop_run_hire_name_entry_step, which goes on to the fee prompt (0xF82A). */
+/* Shop step RENAME_NAME_ENTRY: the name keyboard for the chosen monster. The entered name is
+ * stored at once (renaming costs nothing) and the office menu returns (0xF821). */
 void world_shop_run_rename_name_entry_step(void) {
     if (g_world_shop_rename_name_entry_initialized == 0) {
         g_world_formation_unit_banner_enabled = 0;

@@ -2,14 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/*
- * Menu step for the rename-unit prompt: on the first frame either leaves
- * the screen when no face button is held, or arms the prompt. Confirm
- * opens the name entry (mode 1 when a unit is already renamed) unless the
- * unit has Reis's dragon identity, which refuses with message 0x1B; cancel backs
- * out with message 0x19.
- */
-void world_shop_run_rename_unit_prompt_step(void) {
+/* Shop step RENAME_SELECT_UNIT (Change name): once any face button closes the question, the
+ * grid of the roster's monsters. Circle opens the name entry, except for Reis in dragon form, who
+ * answers "Grrr..." (0xF848); X returns to the office menu (0xF821). */
+void world_shop_run_rename_select_unit_step(void) {
     s32 mode;
     s32 input;
     s32 text_id;

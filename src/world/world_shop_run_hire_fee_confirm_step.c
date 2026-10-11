@@ -1,12 +1,9 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/*
- * Soldier office: confirm the hiring fee.
- *
- * Choice 0 pays the fee and stores the recruit's name; 1 or -1 removes the
- * recruit from the roster. Other choices return to the name entry.
- */
+/* Shop step HIRE_FEE_CONFIRM: the Yes / No / Ask name again menu. Yes pays the fee, gives the
+ * recruit its name ("Fine, we have a deal.") and, after any face button, reopens the office menu; No
+ * (or X) removes the recruit from the roster (0xF827); Ask name again returns to the name entry. */
 void world_shop_run_hire_fee_confirm_step(void) {
     s16 choice;
     g_world_menu_description_text_id = 0;

@@ -2,15 +2,14 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Fur shop: the list of the party's own inventory to sell; sibling of
- * world_shop_run_fur_buy_list_step.
+/* Shop step FUR_SELL_LIST: the party's items in the current category tab at half price, as
+ * world_shop_run_sell_list_step does (0xF840, "What do you wanna sell?", or 0xF845 when the party has
+ * nothing); its tabs switch on a fresh press only. Circle opens the quantity prompt
+ * (FUR_SELL_CONFIRM), X returns to the fur shop menu.
  *
- * The callback block is written in ascending address order (794 -> 7ac), as
- * the sibling writes it. That makes gcc materialise the two twice-used
- * addresses (count_2 in a0, count in v1) up front at 0xb0-0xbc and defer
- * their stores; the target's emission order then follows. First-use order,
- * not store order, decides this.
- */
+ * The callback block is written in ascending slot order, as the sibling writes it. That makes gcc
+ * materialise the two twice-used callback addresses up front and defer their stores; the target's
+ * emission order then follows. First-use order, not store order, decides this. */
 void world_shop_run_fur_sell_list_step(void) {
     s32 message;
 

@@ -999,15 +999,15 @@ functions:
   - {addr: 0x80137a28, size: 876, name: world_shop_run_fur_buy_list_step, hash: c941e19e101c6364}
   - {addr: 0x80137d94, size: 572, name: world_shop_run_fur_buy_confirm_step, hash: 5ed06b07187c01ba}
   - {addr: 0x80137fd0, size: 604, name: world_shop_run_fur_buy_quantity_menu, hash: e2b834949cb9e75b}
-  - {addr: 0x8013822c, size: 60, name: world_shop_run_fur_equip_purchase_step, hash: fd59dc58a1646c66}
-  - {addr: 0x80138268, size: 828, name: world_shop_run_soldier_office_hire_menu_step, hash: 59c669df532e38a5}
+  - {addr: 0x8013822c, size: 60, name: world_shop_run_fur_buy_equip_step, hash: fd59dc58a1646c66}
+  - {addr: 0x80138268, size: 828, name: world_shop_run_soldier_office_menu_step, hash: 59c669df532e38a5}
   - {addr: 0x801385a4, size: 300, name: world_shop_run_recruit_unit_preview_step, hash: b7926f9f68017e74}
   - {addr: 0x801386d0, size: 356, name: world_shop_run_hire_confirm_step, hash: 430bd6cd1b7c3751}
   - {addr: 0x80138834, size: 192, name: world_shop_run_hire_name_entry_step, hash: 94a7e89b7eed87a2}
   - {addr: 0x801388f4, size: 384, name: world_shop_run_hire_fee_confirm_step, hash: 9070786158e1fe48}
   - {addr: 0x80138a74, size: 88, name: world_shop_reopen_soldier_office_menu_step, hash: db888e392b1c17b9}
   - {addr: 0x80138acc, size: 8, name: world_shop_rename_unit_get_unit_marker, hash: d042b87232f554e5}
-  - {addr: 0x80138ad4, size: 676, name: world_shop_run_rename_unit_prompt_step, hash: fdb24ef50ba493d2}
+  - {addr: 0x80138ad4, size: 676, name: world_shop_run_rename_select_unit_step, hash: fdb24ef50ba493d2}
   - {addr: 0x80138d78, size: 252, name: world_shop_run_rename_name_entry_step, hash: d7ec4424b05551b9}
   - {addr: 0x80138e74, size: 48, name: world_shop_get_soldier_office_entry_fee, hash: 5dd62be68bf6fe37}
   - {addr: 0x80138ea4, size: 88, name: world_shop_run_soldier_office_fee_menu_script, hash: 16f54220ab033331}

@@ -1,7 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Fur shop: the quantity prompt of a sale, capped by the inventory count. */
+/* The fur shop's sale quantity prompt, world_shop_run_sell_quantity_menu with the clerk's
+ * lines: capped by the inventory count, refused with 0xF842 ("Can't buy what you equip right now")
+ * when every copy is equipped. */
 s32 world_shop_run_fur_sell_quantity_menu(void) {
     s32 count;
 

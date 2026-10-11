@@ -1,8 +1,10 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/* Fur shop: confirm a sale. The party receives half price, and the sold copies join the
- * poached stock. */
+/* Shop step FUR_SELL_CONFIRM: on "yes" the party gets half the price times the quantity, the
+ * items leave the inventory and join the poached stock (so they can be bought back), and the list is
+ * rebuilt (0xF837, "Thanks."); on "no" 0xF838. The message stays until a face button or d-pad press,
+ * which returns to the sell list (0xF841). */
 void world_shop_run_fur_sell_confirm_step(void) {
     s32 result = 1;
 

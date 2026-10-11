@@ -1,13 +1,10 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/*
- * Soldier office: confirm hiring the previewed recruit.
- *
- * Selection 1 or -1 declines and removes the recruit from the roster;
- * selection 2 returns to the preview. Any other result shows a message and
- * waits for its thread before going on to the name entry.
- */
+/* Shop step HIRE_CONFIRM: the Hire / Quit / Check status menu. Quit (or X) removes the
+ * recruit from the roster and returns to the office menu (0xF827); Check status returns to the
+ * preview; Hire says "I believe this soldier's name is..." (0xF829) and, once that message closes,
+ * opens the name entry. */
 void world_shop_run_hire_confirm_step(void) {
     s16 selection;
     if (g_world_shop_hire_confirm_message_wait != 0) {
