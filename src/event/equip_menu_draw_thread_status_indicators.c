@@ -6,16 +6,16 @@
  * Builds and submits the two translucent letterbox panels used by the event
  * dialogue overlay.
  *
- * Threads 13 and 14 running task 0x39 with a cleared first parameter request
- * a panel; parameter 2 selects which of the two opens. Each panel fades its
+ * Banner tasks in slots 13 and 14 request a panel when display->x is zero;
+ * display->y selects which of the two opens. Each panel fades its
  * gradient in by 0xc per frame up to 0x78 and back out again, alternating
  * between two primitive buffers so the previous frame stays queued.
  *
  */
 void equip_menu_draw_thread_status_indicators(void) {
     battle_menu_status_panel_indicator_prims_t* prims;
-    native_thread_t* thread;
-    native_thread_t* descriptor;
+    world_status_thread_t* display;
+    world_status_thread_t* descriptor;
     s32 active;
     s32 i;
     s32 j;
@@ -26,27 +26,28 @@ void equip_menu_draw_thread_status_indicators(void) {
     active = 0;
     if (equip_thread_is_running(EQUIP_THREAD_SLOT_UNIT_STATUS) != 0) {
         if (g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            thread = (native_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
-            active = (-(thread->function_parameter_1 == 0)) & 13;
+            display = (world_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
+            active = (-(display->x == 0)) & 13;
         }
     }
     if (equip_thread_is_running(EQUIP_THREAD_SLOT_COMPARISON_STATUS) != 0) {
         if (g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            descriptor = (native_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
-            if (descriptor->function_parameter_1 == 0) {
+            descriptor
+                = (world_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
+            if (descriptor->x == 0) {
                 active = 14;
-                thread = descriptor;
+                display = descriptor;
             }
         }
     }
     /* Both requests jump past the fade-out updates; the target shares one
      * state[1] store between them and the fall-through path. */
     if (active != 0) {
-        if ((thread->function_parameter_2 == 0x90) && !(thread->function_parameter_3 & 0x80)) {
+        if ((display->y == 0x90) && !(display->flags & MENU_STATUS_PANEL_HIDDEN)) {
             g_equip_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_OUT;
             g_equip_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_IN;
             goto draw_panels;
-        } else if ((thread->function_parameter_2 == 0) && !(thread->function_parameter_3 & 0x80)) {
+        } else if ((display->y == 0) && !(display->flags & MENU_STATUS_PANEL_HIDDEN)) {
             g_equip_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_IN;
             g_equip_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_OUT;
             goto draw_panels;
