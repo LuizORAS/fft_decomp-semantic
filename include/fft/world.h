@@ -1182,10 +1182,10 @@ extern world_tutorial_state_t g_world_tutorial_state;
 /* Sector and size pairs; flat word access preserves the original addressing. */
 extern s32 g_world_script_tutorial_message_files[7 * 2];
 extern s32 g_world_script_tutorial_script_files[7 * 2];
-extern s16 g_world_tutorial_highlight_corners_a[][4];  /* first tutorial highlight quad corners */
-extern s16 g_world_tutorial_highlight_corners_b[][4];  /* second tutorial highlight quad corners */
-extern rgb24_t g_world_tutorial_highlight_colors_a[4]; /* first quad corner colours */
-extern rgb24_t g_world_tutorial_highlight_colors_b[4]; /* second quad corner colours */
+extern point16_t g_world_tutorial_highlight_corners_a[31][2]; /* outer/middle ring samples */
+extern point16_t g_world_tutorial_highlight_corners_b[31][2]; /* middle/inner ring samples */
+extern rgb24_t g_world_tutorial_highlight_colors_a[4];        /* first quad corner colours */
+extern rgb24_t g_world_tutorial_highlight_colors_b[4];        /* second quad corner colours */
 extern u8 g_world_tutorial_highlight_quad_count;
 void world_script_load_tutorial_files(s32 index, world_tutorial_state_t* record);
 

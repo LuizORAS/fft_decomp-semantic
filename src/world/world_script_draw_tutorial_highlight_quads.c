@@ -27,8 +27,8 @@ void world_script_draw_tutorial_highlight_quads(s32 brightness) {
     g_world_tutorial_highlight_colors_b[0].b = g_world_tutorial_highlight_colors_b[2].b = brightness >> 2;
     for (i = 0; i < g_world_tutorial_highlight_quad_count; i++) {
         world_gfx_enqueue_gouraud_quad(
-            (point16_t*)g_world_tutorial_highlight_corners_a[i], g_world_tutorial_highlight_colors_a, 1, 0x3D);
+            g_world_tutorial_highlight_corners_a[i], g_world_tutorial_highlight_colors_a, 1, 0x3D);
         world_gfx_enqueue_gouraud_quad(
-            (point16_t*)g_world_tutorial_highlight_corners_b[i], g_world_tutorial_highlight_colors_b, 1, 0x3D);
+            g_world_tutorial_highlight_corners_b[i], g_world_tutorial_highlight_colors_b, 1, 0x3D);
     }
 }

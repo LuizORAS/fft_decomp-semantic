@@ -39,25 +39,26 @@ void world_script_handle_tutorial_command_highlight_ring(void) {
         middle_y = (center_x + 4) * scale_y;
         inner_x = center_x * scale_x;
         inner_y = center_x * scale_y;
-        g_world_tutorial_highlight_corners_a[i][0]
+        g_world_tutorial_highlight_corners_a[i][0].x
             = ((rcos(step * i + 1024) * outer_x) >> 19) + g_world_script_tutorial_command_ptr[1];
-        g_world_tutorial_highlight_corners_a[i][1]
+        g_world_tutorial_highlight_corners_a[i][0].y
             = ((rsin(step * i + 1024) * outer_y) >> 19) + g_world_script_tutorial_command_ptr[2];
-        g_world_tutorial_highlight_corners_a[i][2]
+        g_world_tutorial_highlight_corners_a[i][1].x
             = ((rcos(step * i + 1024) * middle_x) >> 19) + g_world_script_tutorial_command_ptr[1];
-        g_world_tutorial_highlight_corners_a[i][3]
+        g_world_tutorial_highlight_corners_a[i][1].y
             = ((rsin(step * i + 1024) * middle_y) >> 19) + g_world_script_tutorial_command_ptr[2];
-        g_world_tutorial_highlight_corners_b[i][0] = g_world_tutorial_highlight_corners_a[i][2];
-        g_world_tutorial_highlight_corners_b[i][1] = g_world_tutorial_highlight_corners_a[i][3];
-        g_world_tutorial_highlight_corners_b[i][2]
+        g_world_tutorial_highlight_corners_b[i][0].x = g_world_tutorial_highlight_corners_a[i][1].x;
+        g_world_tutorial_highlight_corners_b[i][0].y = g_world_tutorial_highlight_corners_a[i][1].y;
+        g_world_tutorial_highlight_corners_b[i][1].x
             = ((rcos(step * i + 1024) * inner_x) >> 19) + g_world_script_tutorial_command_ptr[1];
-        g_world_tutorial_highlight_corners_b[i][3]
+        g_world_tutorial_highlight_corners_b[i][1].y
             = ((rsin(step * i + 1024) * inner_y) >> 19) + g_world_script_tutorial_command_ptr[2];
     }
 
+    /* Point copies emit word transfers; retail copies the closing sample as four halfwords. */
     for (i = 0; i < 4; i++) {
-        g_world_tutorial_highlight_corners_a[30][i] = g_world_tutorial_highlight_corners_a[0][i];
-        g_world_tutorial_highlight_corners_b[30][i] = g_world_tutorial_highlight_corners_b[0][i];
+        (&g_world_tutorial_highlight_corners_a[30][0].x)[i] = (&g_world_tutorial_highlight_corners_a[0][0].x)[i];
+        (&g_world_tutorial_highlight_corners_b[30][0].x)[i] = (&g_world_tutorial_highlight_corners_b[0][0].x)[i];
     }
 
     g_world_script_tutorial_wait_timer = 2;
