@@ -18,9 +18,10 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     dst = (u32*)GsOUT_PACKET_P;
     len = PSYQ_GPU_PACKET_WORDS(POLY_F3);
     code = getcode(src);
-    gouraud = code & 0x10;
-    quad = code & 0x8;
-    textured = code & 0x4;
+    /* Byte or bitfield locals add normalization to these integer masks. */
+    gouraud = code & PSYQ_GPU_POLYGON_GOURAUD;
+    quad = code & PSYQ_GPU_POLYGON_QUAD;
+    textured = code & PSYQ_GPU_POLYGON_TEXTURED;
     /* The cursor skips 32-bit UV/color fields; POLY_F4 supplies only the coordinate layout.
      * Fully advancing coordinate pointers changes the original load/store offsets. */
     dst[offsetof(P_TAG, r0) / sizeof(*dst)] = src[offsetof(P_TAG, r0) / sizeof(*src)];

@@ -42,6 +42,13 @@ typedef enum {
     PSYQ_GPU_CODE_SEMI_TRANSPARENT = 0x02,
 } psyq_gpu_primitive_flag_e;
 
+/* Polygon command layout flags. */
+enum {
+    PSYQ_GPU_POLYGON_TEXTURED = 0x04,
+    PSYQ_GPU_POLYGON_QUAD = 0x08,
+    PSYQ_GPU_POLYGON_GOURAUD = 0x10,
+};
+
 #define PSYQ_GPU_FIXED_TILE_WORDS          2
 #define PSYQ_GPU_FIXED_SPRITE_WORDS        3
 #define PSYQ_GPU_PACKET_WORDS(packet_type) (sizeof(packet_type) / sizeof(u32) - 1)
