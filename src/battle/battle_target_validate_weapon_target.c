@@ -14,8 +14,8 @@
  * One `hand` variable carries both hands, so the right-hand load stays after
  * the left-hand mask; `target` is reused for the result unit, which keeps it a
  * global pseudo and gives the target's v1 for the copied position. */
-s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* source) {
-    battle_ai_command_action_t action;
+s32 battle_target_validate_weapon_target(const battle_action_command_t* source) {
+    battle_action_command_t action;
     s16 x;
     battle_stats_t* unit;
     battle_stats_t* target;
@@ -37,7 +37,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     s32 result;
 
     main_util_copy_action_data(source, &action);
-    unit_id = action.unit_id;
+    unit_id = action.actor_id;
     if (unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
@@ -45,7 +45,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    menu_type = g_main_action_menu_types_by_skillset[action.skillset];
+    menu_type = g_main_action_menu_types_by_skillset[action.skillset_id];
     ability_flags = 0;
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_flags = g_main_ability_range_data[(u8)action.ability_id].flags_1;

@@ -132,10 +132,10 @@ typedef enum battle_unit_movement_set_3 {
 } battle_unit_movement_set_3_e;
 
 /* action */
-/* The 20-byte command stored at battle_stats_t +0x16e. Unit accesses use
- * signed coordinates and a 16-bit item/equipment value; the AI command
- * view reads unsigned coordinates and only the low item byte. */
-typedef struct battle_unit_action_command {
+/* The 20-byte action command shared by unit stats, AI candidates and menus.
+ * Targeting reads coordinates as signed or unsigned halfwords. Item selection
+ * reads and updates only the low byte of the item/equipment word. */
+typedef struct battle_action_command {
     u8 actor_id;               /* 0x00 */
     u8 skillset_id;            /* 0x01 */
     s16 ability_id;            /* 0x02 */
@@ -148,8 +148,8 @@ typedef struct battle_unit_action_command {
     s16 target_elevation;      /* 0x0e */
     s16 target_y;              /* 0x10 */
     u8 _unused_12[2];
-} battle_unit_action_command_t;
-typedef char battle_unit_action_command_size_must_be_20[(sizeof(battle_unit_action_command_t) == 20) ? 1 : -1];
+} battle_action_command_t;
+typedef char battle_action_command_size_must_be_20[(sizeof(battle_action_command_t) == 20) ? 1 : -1];
 
 /* battle_action_data_t.ct_change values that are not an amount. Any other value is a gain when
  * bit 7 is set and a loss otherwise. */
@@ -798,31 +798,31 @@ typedef struct battle_stats {
     unit_career_data_t career;                           /* 0x096; unlocked jobs, learned abilities, levels and JP */
     /* main_unit_store_character_names (0x8005c984) copies 16/16/8/8
      * bytes to these four destinations. All names use the game's encoding. */
-    u8 name[16];                   /* 0x12c */
-    u8 job_name[16];               /* 0x13c */
-    u8 primary_skillset_name[8];   /* 0x14c */
-    u8 secondary_skillset_name[8]; /* 0x154 */
-    u8 ko_count;                   /* 0x15c */
-    u8 charged_ability_ct;         /* 0x15d */
-    u8 monster_graphic;            /* 0x15e; copied from job data and consumed by WORLD formation graphics */
-    u8 spritesheet_id;             /* 0x15f */
-    u8 job_portrait_palette;       /* 0x160 */
-    u8 unit_id;                    /* 0x161 */
-    u8 base_job_skillset;          /* 0x162 */
-    u8 war_trophy;                 /* 0x163 */
-    u8 bonus_money_modifier;       /* 0x164 */
-    u8 ai_target_x;                /* 0x165 */
-    u8 ai_target_y;                /* 0x166 */
-    u8 ai_flags;                   /* 0x167; battle_ai_decision_flags_e */
-    u8 prioritized_target;         /* 0x168 */
-    u8 ai_targeting_flags_1;       /* 0x169; copied to battle_ai_unit_decision_t +0x06 */
-    u8 ai_targeting_flags_2;       /* 0x16a; battle_ai_targeting_flags_2_e */
-    u8 ai_initial_enemy_flag;      /* 0x16b; ENTD 0x27 */
-    u16 quote_name_id;             /* 0x16c */
-    battle_unit_action_command_t action_command; /* 0x16e..0x181 */
-    u8 mount_info;                               /* 0x182 */
-    u8 existence;                                /* 0x183; battle_unit_existence_state_e */
-    u8 equipped_flags;                           /* 0x184; battle_unit_equipped_flags_e */
+    u8 name[16];                            /* 0x12c */
+    u8 job_name[16];                        /* 0x13c */
+    u8 primary_skillset_name[8];            /* 0x14c */
+    u8 secondary_skillset_name[8];          /* 0x154 */
+    u8 ko_count;                            /* 0x15c */
+    u8 charged_ability_ct;                  /* 0x15d */
+    u8 monster_graphic;                     /* 0x15e; copied from job data and consumed by WORLD formation graphics */
+    u8 spritesheet_id;                      /* 0x15f */
+    u8 job_portrait_palette;                /* 0x160 */
+    u8 unit_id;                             /* 0x161 */
+    u8 base_job_skillset;                   /* 0x162 */
+    u8 war_trophy;                          /* 0x163 */
+    u8 bonus_money_modifier;                /* 0x164 */
+    u8 ai_target_x;                         /* 0x165 */
+    u8 ai_target_y;                         /* 0x166 */
+    u8 ai_flags;                            /* 0x167; battle_ai_decision_flags_e */
+    u8 prioritized_target;                  /* 0x168 */
+    u8 ai_targeting_flags_1;                /* 0x169; copied to battle_ai_unit_decision_t +0x06 */
+    u8 ai_targeting_flags_2;                /* 0x16a; battle_ai_targeting_flags_2_e */
+    u8 ai_initial_enemy_flag;               /* 0x16b; ENTD 0x27 */
+    u16 quote_name_id;                      /* 0x16c */
+    battle_action_command_t action_command; /* 0x16e..0x181 */
+    u8 mount_info;                          /* 0x182 */
+    u8 existence;                           /* 0x183; battle_unit_existence_state_e */
+    u8 equipped_flags;                      /* 0x184; battle_unit_equipped_flags_e */
     u8 _unused_185;
     u8 has_turn;                 /* 0x186 */
     u8 movement_taken;           /* 0x187 */

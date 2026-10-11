@@ -45,7 +45,7 @@ void battle_state_handle_idling_action_menus_state(void) {
         break;
     case BATTLE_AI_COMMAND_ACT:
         battle_action_clear_at_list_id();
-        switch (command->data.action.skillset) {
+        switch (command->data.action.skillset_id) {
         case SKILLSET_ID_DEFEND:
             misc->command_state.ai = *command;
             battle_status_inflict_defending_to_battle_id(misc->battle_data->misc_unit_id);
@@ -68,7 +68,7 @@ void battle_state_handle_idling_action_menus_state(void) {
         case SKILLSET_ID_ATTACK:
         default:
             misc->command_state.ai = *command;
-            misc->command_state.ai.data.action.unit_id = misc->battle_data->misc_unit_id;
+            misc->command_state.ai.data.action.actor_id = misc->battle_data->misc_unit_id;
             misc->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
             battle_action_call_attack_preparation(&misc->command_state.ai.data.action);
             misc->used_ability_id = misc->command_state.ai.data.action.ability_id;

@@ -17,7 +17,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     battle_stats_t* unit;
     battle_stats_t* base;
     battle_stats_t* target;
-    battle_unit_action_command_t* action;
+    battle_action_command_t* action;
     s32 i;
     s32 count;
     s32 result;
@@ -58,7 +58,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_ATTACK || (menu_type & 0xff) == ACTION_MENU_TYPE_CHARGE
         || (menu_type & 0xff) == ACTION_MENU_TYPE_WEAPON_INVENTORY
         || (flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
-        result = battle_target_validate_weapon_target((battle_ai_command_action_t*)&unit->action_command);
+        result = battle_target_validate_weapon_target(&unit->action_command);
     }
     if (result == -1) {
         return -1;

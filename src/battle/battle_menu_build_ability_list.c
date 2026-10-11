@@ -33,7 +33,7 @@ void battle_menu_build_ability_list(s32 mode) {
     type = g_battle_action_menu_row_types[g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
     skillset
         = g_battle_action_menu_skillsets[g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
-    g_battle_menu_selected_action.skillset = skillset;
+    g_battle_menu_selected_action.skillset_id = skillset;
     for (i = 0; i < 0x50; i++) {
         g_battle_ai_workspace_ptr->ability_list.ids[i] = 0xFFFF;
         g_battle_ai_workspace_ptr->ability_list.mp_costs[i] = 0xFF;

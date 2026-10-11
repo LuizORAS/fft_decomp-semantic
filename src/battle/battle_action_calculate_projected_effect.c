@@ -7,7 +7,7 @@
  * restored afterwards. Without the Auto flag in the loaded ability data, the
  * target's tile must be targetable; otherwise its action data is cleared. */
 s32 battle_action_calculate_projected_effect(
-    battle_stats_t* attacker, battle_stats_t* target, battle_ai_command_action_t* command) {
+    battle_stats_t* attacker, battle_stats_t* target, battle_action_command_t* command) {
     u8 flags_3;
     s32 result;
     s32 saved_action_state;

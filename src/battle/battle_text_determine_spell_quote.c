@@ -8,7 +8,7 @@
  * (g_battle_spell_quote_last_ability_id), the unit is a Calculator or Mime, the ability is >= 0x170 or
  * lacks the spell-quote flag, status blocks it, options disable it, or
  * EVENT_SCRIPT_VAR_RANDOM_VALUE is 4 or more. Everything else uses command 7. */
-void battle_text_determine_spell_quote(battle_ai_command_action_t* action, s32 unit_id, s32 enabled) {
+void battle_text_determine_spell_quote(battle_action_command_t* action, s32 unit_id, s32 enabled) {
     ability_data_t* ability;
     main_ability_secondary_pointer_t secondary;
     battle_stats_t* unit;
@@ -16,16 +16,16 @@ void battle_text_determine_spell_quote(battle_ai_command_action_t* action, s32 u
 
     main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability, &secondary);
     unit = battle_unit_get_stats_from_battle_id(unit_id);
-    if (action->skillset != 0) {
-        known = battle_is_skillset_in_spell_quote_exception_list(action->skillset);
+    if (action->skillset_id != 0) {
+        known = battle_is_skillset_in_spell_quote_exception_list(action->skillset_id);
     } else {
         known = 1;
     }
-    if (action->skillset == unit->primary_skillset
+    if (action->skillset_id == unit->primary_skillset
         && (unit->position.spell_quote_skillsets & BATTLE_UNIT_SPELL_QUOTE_PRIMARY_SKILLSET)) {
         known = 1;
     }
-    if (action->skillset == unit->secondary_skillset
+    if (action->skillset_id == unit->secondary_skillset
         && (unit->position.spell_quote_skillsets & BATTLE_UNIT_SPELL_QUOTE_SECONDARY_SKILLSET)) {
         known = 1;
     }
@@ -41,14 +41,14 @@ void battle_text_determine_spell_quote(battle_ai_command_action_t* action, s32 u
         battle_menu_dispatch_system_function(BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE, 0, unit_id, 0, enabled, action);
         return;
     }
-    if (action->skillset != 0) {
-        known = battle_is_skillset_in_spell_quote_exception_list(action->skillset);
+    if (action->skillset_id != 0) {
+        known = battle_is_skillset_in_spell_quote_exception_list(action->skillset_id);
     } else {
         known = 0;
     }
     if ((known == 0 && (ability->type_flags & ABILITY_TYPE_FLAG_SHOW_NAME)
             && g_main_game_options.fields.ability_names == GAME_OPTION_ON)
-        || action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
+        || action->skillset_id == SKILLSET_ID_ITEM || action->skillset_id == SKILLSET_ID_THROW) {
         battle_menu_dispatch_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT, 0, unit_id, 0, enabled, action);
     } else {

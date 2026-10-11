@@ -11,8 +11,8 @@
  */
 s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     battle_stats_t* self;
-    battle_ai_command_action_t action;
-    battle_ai_command_action_t* current;
+    battle_action_command_t action;
+    battle_action_command_t* current;
     s32 x;
     s32 y;
     s32 z;
@@ -34,10 +34,10 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     if ((self->team_flags & BATTLE_TEAM_MASK) != g_battle_action_current_attacker.team) {
         return 0;
     }
-    if (self->misc_unit_id == current->unit_id) {
+    if (self->misc_unit_id == current->actor_id) {
         return 0;
     }
-    menu_type = g_main_action_menu_types_by_skillset[current->skillset];
+    menu_type = g_main_action_menu_types_by_skillset[current->skillset_id];
     /* The target loads the ability id signed (lh). */
     ability_id = g_battle_action_current_attacker.action.ability_id;
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_ARITHMETICKS
@@ -59,7 +59,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     }
     main_util_copy_action_data(current, &action);
     action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
-    action.unit_id = self->misc_unit_id;
+    action.actor_id = self->misc_unit_id;
     unit_id = self->misc_unit_id;
     action.target_x = x;
     action.target_elevation = z;
@@ -80,7 +80,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
     }
     saved_state = g_battle_action_state;
     g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;
-    result = battle_action_prepare_attack(&action, (battle_ai_command_action_t*)&self->action_command, 1);
+    result = battle_action_prepare_attack(&action, &self->action_command, 1);
     self->charged_ability_ct = 0xff;
     main_status_change_unit(self, 0,
         BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)

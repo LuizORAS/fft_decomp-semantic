@@ -16,7 +16,7 @@
 void world_menu_preview_attack_caster_stats(void) {
     battle_stats_t* stored;
     battle_stats_t* target;
-    battle_ai_command_action_t* action;
+    battle_action_command_t* action;
     ability_data_t* ability_data;
     main_ability_secondary_pointer_t secondary_data;
     s16 ability_id;
@@ -27,13 +27,13 @@ void world_menu_preview_attack_caster_stats(void) {
     /* Local pointer keeps the stored-unit address in one base register. */
     stored_unit = &g_world_active_unit_data.battle_id;
     action = battle_unit_get_target_id_ptr_by_battle_id(*stored_unit);
-    action->unit_id = *stored_unit;
+    action->actor_id = *stored_unit;
     ability_id = action->ability_id;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
         main_ability_calculate_pointers_and_type(ability_id & ABILITY_ID_MASK, &ability_data, &secondary_data);
     }
     if (((secondary_data.range->flags_3 & 4) && action->ability_id < ABILITY_ID_ITEM_FIRST)
-        || action->skillset == SKILLSET_ID_EQUIP_CHANGE) {
+        || action->skillset_id == SKILLSET_ID_EQUIP_CHANGE) {
         g_world_menu_preview_target_action = 0;
     } else {
         g_world_thread_call_target = (void (*)(void))battle_action_calculate_projected_effect;

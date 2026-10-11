@@ -10,8 +10,8 @@
  * of the location index. Direct typed indexing removes that copy and changes
  * the later register allocation; the binding emits no instructions.
  */
-s32 battle_target_set_ability_panels(const battle_ai_command_action_t* source) {
-    battle_ai_command_action_t action;
+s32 battle_target_set_ability_panels(const battle_action_command_t* source) {
+    battle_action_command_t action;
     battle_stats_t* unit;
     ability_secondary_data_t* ability;
     battle_target_panel_t* panels;
@@ -34,7 +34,7 @@ s32 battle_target_set_ability_panels(const battle_ai_command_action_t* source) {
     u8 y;
 
     main_util_copy_action_data(source, &action);
-    unit = &g_battle_unit_stats[action.unit_id];
+    unit = &g_battle_unit_stats[action.actor_id];
     ability = &g_main_ability_range_data[action.ability_id];
     range = ability->range;
     aoe = ability->aoe;

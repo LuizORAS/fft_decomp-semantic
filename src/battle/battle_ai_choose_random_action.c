@@ -14,9 +14,11 @@ s32 battle_ai_choose_random_action(void) {
     s32 index_or_count;
 
     g_battle_ai_data_base.current_action.act_before_move = 0;
-    g_battle_ai_data_base.current_action.command.skillset = ai->considered_ability.skillset;
+    g_battle_ai_data_base.current_action.command.skillset_id = ai->considered_ability.skillset;
     g_battle_ai_data_base.current_action.command.ability_id = ai->considered_ability.ability_id;
-    g_battle_ai_data_base.current_action.command.item_id = ai->considered_ability.parameters.bytes.item_id;
+    /* Item selection updates only the low byte of the command word. */
+    *(u8*)&g_battle_ai_data_base.current_action.command.item_or_equipment
+        = ai->considered_ability.parameters.bytes.item_id;
     if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] == ACTION_MENU_TYPE_ARITHMETICKS) {
         do {
             skillset = g_battle_math_source_skillsets[rand() % 4];

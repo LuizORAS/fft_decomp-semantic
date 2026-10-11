@@ -1788,7 +1788,7 @@ void main_util_clear_byte_data(void* destination, s32 count);
  * both routines do nothing for a nonpositive signed byte count. */
 void main_util_copy_byte_data(const void* source, void* destination, s32 count);
 void* game_malloc(s32 byte_length);
-void main_util_copy_action_data(const void* source, void* destination);
+void main_util_copy_action_data(const battle_action_command_t* source, battle_action_command_t* destination);
 void main_heap_clear_smd_allocator_table(void);
 void main_sound_init_stub(void);
 void main_system_enable_root_counter_2_evcb(void);

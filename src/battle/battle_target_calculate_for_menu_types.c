@@ -8,8 +8,8 @@
  * returns 0, -1 when it returns -1, and 0 for any other result. The target
  * reads the actor's stats pointer in $a0 as battle_action_get_elemental_ability_id's
  * argument, so it is declared with one here. */
-s32 battle_target_calculate_for_menu_types(const battle_unit_action_command_t* source) {
-    battle_ai_command_action_t action;
+s32 battle_target_calculate_for_menu_types(const battle_action_command_t* source) {
+    battle_action_command_t action;
     battle_stats_t* unit;
     u16 ability_id;
     s32 mode;
@@ -17,17 +17,17 @@ s32 battle_target_calculate_for_menu_types(const battle_unit_action_command_t* s
 
     main_util_copy_action_data(source, &action);
     mode = 1;
-    if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
+    if (action.actor_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
-    unit = &g_battle_unit_stats[action.unit_id];
+    unit = &g_battle_unit_stats[action.actor_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
     if (action.targeting_type == BATTLE_TARGETING_TYPE_UNIT && action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
-    switch (g_main_action_menu_types_by_skillset[action.skillset]) {
+    switch (g_main_action_menu_types_by_skillset[action.skillset_id]) {
     case ACTION_MENU_TYPE_DEFAULT:
     case ACTION_MENU_TYPE_MONSTER:
         ability_id = action.ability_id;
@@ -47,10 +47,10 @@ s32 battle_target_calculate_for_menu_types(const battle_unit_action_command_t* s
         ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        if (action.item_id < ITEM_ID_ASURA_KNIFE || action.item_id > ITEM_ID_CHIRIJIRADEN) {
+        if ((u8)action.item_or_equipment < ITEM_ID_ASURA_KNIFE || (u8)action.item_or_equipment > ITEM_ID_CHIRIJIRADEN) {
             return -1;
         }
-        ability_id = action.item_id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
+        ability_id = (u8)action.item_or_equipment + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         break;
     case ACTION_MENU_TYPE_BLANK_05:
     case ACTION_MENU_TYPE_UNKNOWN_0F:

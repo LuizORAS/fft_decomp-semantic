@@ -6,10 +6,9 @@
  * Runs the attack preparation for action in the preview state, rebuilds
  * at_list and counts the turns until the action resolves, then restores the
  * unit's action data, CT, move/act flags and statuses. */
-s32 battle_action_preview_at_list(
-    battle_stats_t* unit, battle_ai_command_action_t* action, battle_at_entry_t* at_list) {
-    battle_unit_action_command_t saved_action;
-    battle_unit_action_command_t* action_data;
+s32 battle_action_preview_at_list(battle_stats_t* unit, battle_action_command_t* action, battle_at_entry_t* at_list) {
+    battle_action_command_t saved_action;
+    battle_action_command_t* action_data;
     s32 old_state;
     s32 turns;
     u8 old_charged_ability_ct;

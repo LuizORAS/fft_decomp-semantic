@@ -21,9 +21,9 @@ s32 battle_ai_evaluate_target_tiles(void) {
     u8 target_id;
 
     if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.search_resume_flag) {
-        x = g_battle_ai_data_base.current_action.command.target_x;
-        level = g_battle_ai_data_base.current_action.command.target_elevation;
-        y = g_battle_ai_data_base.current_action.command.target_y;
+        x = (u16)g_battle_ai_data_base.current_action.command.target_x;
+        level = (u16)g_battle_ai_data_base.current_action.command.target_elevation;
+        y = (u16)g_battle_ai_data_base.current_action.command.target_y;
         row = ai->targetable_tiles[level][y];
         goto evaluate_priority;
     }

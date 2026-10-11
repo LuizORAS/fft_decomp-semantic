@@ -8,7 +8,7 @@
  * the scan.  Returns 1 once an announcement was set up, 0 when all three phases
  * had nothing pending. */
 s32 battle_state_announce_next_charged_action(void) {
-    battle_ai_command_action_t command;
+    battle_action_command_t command;
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* actor;
     s32 result;
@@ -25,7 +25,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 actor = battle_unit_get_misc_data_by_battle_id(result & 0xffff);
                 g_battle_casting_unit_id = actor->unit_id;
-                command.skillset = 0;
+                command.skillset_id = 0;
                 actor_stats = actor->battle_data;
                 battle_text_determine_spell_quote(&command, actor_stats->misc_unit_id, 1);
                 ability_id = command.ability_id;
@@ -41,8 +41,8 @@ s32 battle_state_announce_next_charged_action(void) {
             if (result == 0) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 g_battle_casting_unit_id = unit->unit_id;
-                battle_text_determine_spell_quote((battle_ai_command_action_t*)&unit->battle_data->action_command,
-                    unit->battle_data->misc_unit_id, 1);
+                battle_text_determine_spell_quote(
+                    &unit->battle_data->action_command, unit->battle_data->misc_unit_id, 1);
                 ability_id = unit->command_state.ai.data.action.ability_id;
                 unit->continue_attack_count = 0;
                 g_battle_action_post_action = 0;
@@ -65,7 +65,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 actor = battle_unit_get_misc_data_by_battle_id(result & 0xffff);
                 g_battle_casting_unit_id = actor->unit_id;
-                command.skillset = 0;
+                command.skillset_id = 0;
                 actor_stats = actor->battle_data;
                 battle_text_determine_spell_quote(&command, actor_stats->misc_unit_id, 1);
                 ability_id = command.ability_id;

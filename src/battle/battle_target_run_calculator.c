@@ -9,9 +9,9 @@
  * 5, 4 or 3. Units that are absent, crystallized, jumping, treasure, or
  * flagged 0x40 in mount_info are skipped. Returns the number of marked units,
  * or -1 when the command does not name one type and one multiplier ability. */
-s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
+s32 battle_target_run_calculator(const battle_action_command_t* source) {
     battle_unit_height_data_t height;
-    battle_ai_command_action_t action;
+    battle_action_command_t action;
     battle_stats_t* actor;
     battle_stats_t* unit;
     map_tile_t* tile;
@@ -29,9 +29,9 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
 
     count = 0;
     main_util_copy_action_data(source, &action);
-    type = action.calculator_type;
-    multiplier = action.calculator_multiplier;
-    actor = &g_battle_unit_stats[action.unit_id];
+    type = (u16)action.calculator_type;
+    multiplier = (u16)action.calculator_multiplier;
+    actor = &g_battle_unit_stats[action.actor_id];
     if (type < ABILITY_ID_MATH_FIRST || type >= ABILITY_ID_REACTION_FIRST) {
         return -1;
     }

@@ -20,8 +20,8 @@
  * weapon's range; NONE when no tile is marked; TILE_ONLY when the action cannot
  * follow a unit (always for Item, Throw, Attack, Charge and Jump); otherwise
  * UNIT_OR_TILE. */
-s32 battle_target_set_panels_for_action(const battle_ai_command_action_t* source) {
-    battle_ai_command_action_t action;
+s32 battle_target_set_panels_for_action(const battle_action_command_t* source) {
+    battle_action_command_t action;
     battle_stats_t* unit;
     ability_secondary_data_t* ability;
     s32 mode;
@@ -32,14 +32,14 @@ s32 battle_target_set_panels_for_action(const battle_ai_command_action_t* source
 
     main_util_copy_action_data(source, &action);
     mode = 0;
-    if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
+    if (action.actor_id >= BATTLE_UNIT_SLOT_COUNT) {
         return BATTLE_TARGET_PANELS_INVALID;
     }
-    unit = &g_battle_unit_stats[action.unit_id];
+    unit = &g_battle_unit_stats[action.actor_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return BATTLE_TARGET_PANELS_INVALID;
     }
-    switch (g_main_action_menu_types_by_skillset[action.skillset]) {
+    switch (g_main_action_menu_types_by_skillset[action.skillset_id]) {
     case ACTION_MENU_TYPE_DEFAULT:
     case ACTION_MENU_TYPE_MONSTER:
         ability_id = action.ability_id;
@@ -60,10 +60,10 @@ s32 battle_target_set_panels_for_action(const battle_ai_command_action_t* source
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         mode = 1;
-        if (action.item_id < ITEM_ID_ASURA_KNIFE || action.item_id > ITEM_ID_CHIRIJIRADEN) {
+        if ((u8)action.item_or_equipment < ITEM_ID_ASURA_KNIFE || (u8)action.item_or_equipment > ITEM_ID_CHIRIJIRADEN) {
             return BATTLE_TARGET_PANELS_INVALID;
         }
-        ability_id = action.item_id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
+        ability_id = (u8)action.item_or_equipment + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         break;
     case ACTION_MENU_TYPE_ATTACK:
     case ACTION_MENU_TYPE_CHARGE:

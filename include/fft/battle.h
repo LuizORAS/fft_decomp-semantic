@@ -142,23 +142,6 @@ enum {
     BATTLE_AI_ABILITY_USABLE_BY_AI = 0x80000000,
 };
 
-typedef struct battle_ai_command_action {
-    u8 unit_id;
-    u8 skillset;
-    s16 ability_id;
-    u16 calculator_type;
-    u16 calculator_multiplier;
-    u8 item_id;
-    u8 _unused_09;
-    u8 targeting_type; /* battle_targeting_type_e */
-    u8 target_id;
-    u16 target_x;
-    u16 target_elevation;
-    u16 target_y;
-    u8 _unused_12[2];
-} battle_ai_command_action_t;
-typedef char battle_ai_command_action_size_must_be_20[sizeof(battle_ai_command_action_t) == 20 ? 1 : -1];
-
 /* The setup dispatcher writes this at Misc +0x158 and copies 24 bytes into
  * each history slot. ACT copies the 20-byte payload from AI action +0x08;
  * MOVE writes only x/elevation/y, and END_TURN leaves the payload unchanged. */
@@ -171,7 +154,7 @@ typedef struct battle_ai_command {
             s16 y;
             u8 _unused_06[14];
         } move;
-        battle_ai_command_action_t action;
+        battle_action_command_t action;
     } data;
 } battle_ai_command_t;
 typedef char battle_ai_command_size_must_be_24[sizeof(battle_ai_command_t) == 24 ? 1 : -1];
@@ -321,10 +304,10 @@ typedef struct battle_ai_action_data {
     u8 act_before_move;  /* 0x00; 1: act from the current tile, then move; 0: move to coords first */
     u8 reflected_action; /* 0x01; set while evaluating reflected-origin candidates */
     u8 _unused_02;
-    u8 wait_facing_hint;                /* 0x03; direction 0..3, 4 keeps current, 5 chooses during Wait */
-    battle_ai_coords_t coords;          /* 0x04 */
-    battle_ai_command_action_t command; /* 0x08; copied as the ACT payload */
-    battle_ai_action_rank_t rank;       /* 0x1c */
+    u8 wait_facing_hint;             /* 0x03; direction 0..3, 4 keeps current, 5 chooses during Wait */
+    battle_ai_coords_t coords;       /* 0x04 */
+    battle_action_command_t command; /* 0x08; copied as the ACT payload */
+    battle_ai_action_rank_t rank;    /* 0x1c */
 } battle_ai_action_data_t;
 typedef char battle_ai_action_data_size_must_be_0x20[(sizeof(battle_ai_action_data_t) == 0x20) ? 1 : -1];
 typedef char battle_ai_action_command_must_be_at_offset_8[((unsigned long)&((battle_ai_action_data_t*)0)->command == 8)
@@ -492,9 +475,9 @@ typedef struct battle_ai_data {
     u8 _unused_0cc0[4];
     battle_ai_coords_t candidate_coords[3]; /* 0x0cc4; indexed by movement_scenario */
     u8 _unused_0cd0[4];
-    battle_unit_action_command_t unit_action_records[16]; /* 0x0cd4 */
-    u16 throw_ability_id;                                 /* 0x0e14 */
-    u8 throw_weapon_id;                                   /* 0x0e16 */
+    battle_action_command_t unit_action_records[16]; /* 0x0cd4 */
+    u16 throw_ability_id;                            /* 0x0e14 */
+    u8 throw_weapon_id;                              /* 0x0e16 */
     /* All slots with entd_slot != 0xff, capped at 255 by 0x80199d20. */
     u8 present_unit_average_max_hp;                  /* 0x0e17 */
     u8 unit_acts_before_me[BATTLE_UNIT_SLOT_COUNT];  /* 0x0e18..0x0e2c; all slots cleared at 0x8019d408–0x8019d41c */
@@ -722,7 +705,7 @@ s32 battle_ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit);
 s32 battle_ai_calculate_distance_between_units(battle_stats_t* a, battle_stats_t* b);
 s32 battle_ai_calculate_ratio_times_4(s32 divisor, s32 dividend);
 s32 battle_ai_calculate_height_difference_between_units(battle_ai_coords_t* coords, battle_stats_t* unit);
-s32 battle_ai_call_ability_processing(battle_ai_command_action_t* action);
+s32 battle_ai_call_ability_processing(battle_action_command_t* action);
 s32 battle_ai_can_elemental_ability_be_used(battle_ai_coords_t* coords);
 s32 battle_ai_should_exclude_from_imminent_enemies(s32 unit_id);
 s32 battle_ai_is_unit_untargetable(s32 unit_id);
@@ -808,7 +791,7 @@ s32 battle_ai_simulate_action_and_score(void);
 void battle_ai_set_candidate_and_actor_reachable_tiles(void);
 s32 battle_ai_exclude_enemies_acting_before_ct(void);
 void battle_ai_simulate_movement_and_pickup(void);
-void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction_mode);
+void battle_ai_simulate_strikes(battle_action_command_t* action, s32 reaction_mode);
 void battle_ai_store_considered_action_data(void);
 void battle_ai_store_main_target_id_and_focus_on_target_flag(s32 unit_id);
 void battle_ai_store_weapon_attack_data(battle_ai_weapon_data_t* out, s32 item_id, s32* flags_out);
@@ -5242,7 +5225,7 @@ void battle_unit_copy_misc_screen_coords(u32 misc_id, SVECTOR* screen_coords);
 void battle_unit_dismount_rider_and_update_display(battle_unit_misc_data_t* rider);
 void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target);
 battle_stats_t* battle_unit_find_active_data_pointer(void);
-battle_unit_action_command_t* battle_unit_check_party_member_exists(s32 unit_id);
+battle_action_command_t* battle_unit_check_party_member_exists(s32 unit_id);
 SVECTOR* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id);
 battle_stats_t* battle_unit_get_attacker_data_pointer(void);
 s32 battle_unit_get_facing_nibble_by_misc_id(u32 misc_id);
@@ -5252,7 +5235,7 @@ battle_unit_misc_data_t* battle_unit_find_any_misc_data_at_map_coords(s32 map_x,
 battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
     battle_unit_misc_data_t* self, s32 x, s32 y, s32 z);
 
-battle_ai_command_action_t* battle_unit_get_target_id_ptr_by_battle_id(u32 battle_id);
+battle_action_command_t* battle_unit_get_target_id_ptr_by_battle_id(u32 battle_id);
 s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* coords);
 s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const SVECTOR* amount);
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit);
@@ -6370,15 +6353,15 @@ typedef enum battle_post_action_message {
  * battle_action_set_mimic_ability. The AI saves and restores it whole as 30
  * bytes (battle_ai_store_considered_action_data). */
 typedef struct battle_current_attacker_data {
-    u8 facing;                         /* 0x00 */
-    u8 mimic_pending;                  /* 0x01: a non-Mime action was recorded; state 13 queues the Mimes */
-    u8 right_hand_weapon_id;           /* 0x02 */
-    u8 left_hand_weapon_id;            /* 0x03 */
-    u8 team;                           /* 0x04 */
-    u8 _padding_05;                    /* 0x05; aligns target_delta_x */
-    s16 target_delta_x;                /* 0x06 */
-    s16 target_delta_y;                /* 0x08 */
-    battle_ai_command_action_t action; /* 0x0a: copy of battle_stats_t +0x16e */
+    u8 facing;                      /* 0x00 */
+    u8 mimic_pending;               /* 0x01: a non-Mime action was recorded; state 13 queues the Mimes */
+    u8 right_hand_weapon_id;        /* 0x02 */
+    u8 left_hand_weapon_id;         /* 0x03 */
+    u8 team;                        /* 0x04 */
+    u8 _padding_05;                 /* 0x05; aligns target_delta_x */
+    s16 target_delta_x;             /* 0x06 */
+    s16 target_delta_y;             /* 0x08 */
+    battle_action_command_t action; /* 0x0a: copy of battle_stats_t +0x16e */
 } battle_current_attacker_data_t;
 typedef char battle_current_attacker_data_size_must_be_30[(sizeof(battle_current_attacker_data_t) == 30) ? 1 : -1];
 
@@ -6511,7 +6494,7 @@ extern battle_current_ability_t g_battle_action_current_ability;
 extern s32 g_battle_action_hamedo_flag;
 extern s32 g_battle_script_loaded_event_id;
 extern s32 g_battle_state_wait_direction_facing;
-extern battle_unit_action_command_t g_battle_action_saved_command;
+extern battle_action_command_t g_battle_action_saved_command;
 extern battle_stats_t* g_battle_action_target;
 extern battle_post_effect_msg_t g_battle_action_post_effect_msgs[];
 extern u8 g_battle_action_menu_skillsets[];
@@ -6546,8 +6529,8 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode);
 u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entry_t* entries);
 s32 battle_action_calculate_at_list_and_get_specific_unit_id(s32 unit_idx);
 s32 battle_action_calculate_chance_to_react(const battle_stats_t* unit);
-void battle_action_call_attack_preparation(battle_ai_command_action_t* action);
-void battle_action_store_used_weapon(battle_unit_action_command_t* action);
+void battle_action_call_attack_preparation(battle_action_command_t* action);
+void battle_action_store_used_weapon(battle_action_command_t* action);
 s32 battle_action_can_unit_react(const battle_stats_t* unit);
 
 /* Provisional: the definition falls off the end after the tail call to
@@ -6713,13 +6696,13 @@ void battle_formula_store_speed_and_x(void);
 void battle_formula_store_xa_plus_ya_status_damage(void);
 void battle_formula_store_xa_times_ya_damage(void);
 void battle_formula_use_hp_damage_as_action_hit_percent(void);
-s32 battle_target_set_panels_for_action(const battle_ai_command_action_t* action);
+s32 battle_target_set_panels_for_action(const battle_action_command_t* action);
 s32 battle_action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids);
 void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff);
 void battle_target_calculate_aoe_vertical_tolerance(s32 x, s32 y, s32 lo, s32 hi);
 void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags);
 void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y);
-s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u8* flags_3);
+s32 battle_target_calculate_map_for_action(battle_action_command_t* action, u8* flags_3);
 void battle_target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags);
 void battle_target_calculate_tile_coords_and_glow_from_at_list(void);
 void battle_target_calculate_tile_coords_with_cursor_glow(void);
@@ -6728,7 +6711,7 @@ void battle_target_can_select_tile(void);
 void battle_target_clear_panel_data(void);
 void battle_target_clear_panel_spread_flags(void);
 void battle_target_disable_green_panel_flags(void);
-s32 battle_target_disable_green_panel_on_all_but_target_tile(const battle_ai_command_action_t* source);
+s32 battle_target_disable_green_panel_on_all_but_target_tile(const battle_action_command_t* source);
 void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit);
 s32 battle_target_get_unit_id_if_tile_targetable(s32 a0, s32 a1, s32 a2);
 void battle_target_move_cursor_to_unit(battle_unit_misc_data_t* unit);
@@ -6749,9 +6732,9 @@ s32 battle_target_validate_height_overlap(
 
 void battle_action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* unit);
 s32 battle_target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECTOR* quad);
-s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action);
+s32 battle_target_set_green_panels_for_action(battle_action_command_t* action);
 s32 battle_target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_index);
-s32 battle_action_prepare_attack(battle_ai_command_action_t* action, battle_ai_command_action_t* target, s32 flag);
+s32 battle_action_prepare_attack(battle_action_command_t* action, battle_action_command_t* target, s32 flag);
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
 void battle_action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 battle_reaction_prepare_next(s16* reaction_id);
@@ -6759,7 +6742,7 @@ s32 battle_action_run_between_turn_control(s32 mode);
 void battle_formula_calculate_knockback(void);
 void battle_formula_apply_zodiac_compatibility(void);
 void battle_formula_store_physical_evade_values(void);
-s32 battle_action_run_pre_formula_setup(const battle_unit_action_command_t* source, u8 target_id);
+s32 battle_action_run_pre_formula_setup(const battle_action_command_t* source, u8 target_id);
 s32 battle_action_finalize_attack_and_flag_reactions(s32 misc_id);
 s32 battle_target_move_cursor_by_input(void);
 void battle_target_set_tile_background_color(s32 mode, s32 unused);
@@ -6772,9 +6755,9 @@ void battle_action_build_targets_post_action_message(void);
 
 /* Preview action calculation entry run on the main stack. */
 s32 battle_action_calculate_projected_effect(
-    battle_stats_t* attacker, battle_stats_t* target, battle_ai_command_action_t* command);
+    battle_stats_t* attacker, battle_stats_t* target, battle_action_command_t* command);
 
-s32 battle_action_call_attack_preparation_at_preview(battle_ai_command_action_t* command);
+s32 battle_action_call_attack_preparation_at_preview(battle_action_command_t* command);
 s32 battle_action_check_at_list_for_unit_battle_id(battle_stats_t* unit);
 s32 battle_action_check_battle_outcome(void);
 void battle_action_check_mp_switch_distribute_and_damage_split_usability(void);
@@ -6786,7 +6769,7 @@ s32 battle_action_get_elemental_ability_id(battle_stats_t* unit);
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, u8 hit_count);
 void battle_action_handle_steal_exp(battle_stats_t* unit, u8 amount);
 s32 battle_action_perform_reaction_ability(void);
-s32 battle_action_preview_at_list(battle_stats_t* unit, battle_ai_command_action_t* action, battle_at_entry_t* at_list);
+s32 battle_action_preview_at_list(battle_stats_t* unit, battle_action_command_t* action, battle_at_entry_t* at_list);
 s32 battle_action_remove_broken_or_stolen_equipment(void);
 void battle_action_apply_jp_change(battle_stats_t* unit);
 s32 battle_action_select_auto_potion_item(battle_stats_t* unit);
@@ -6810,20 +6793,20 @@ s32 battle_target_apply_reflect(battle_stats_t* unit);
 void battle_target_apply_vertical_fixed(s32 x, s32 y);
 void battle_target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 single_layer);
 s32 battle_target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 range);
-s32 battle_target_calculate_for_menu_types(const battle_unit_action_command_t* source);
+s32 battle_target_calculate_for_menu_types(const battle_action_command_t* source);
 s32 battle_target_count_hit_by_ability(u8* out);
 s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin);
 s32 battle_target_move_cursor_to_battle_id(u32 battle_id);
 void battle_target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* position, SVECTOR* raised);
-s32 battle_target_run_calculator(const battle_ai_command_action_t* source);
-s32 battle_target_set_ability_panels(const battle_ai_command_action_t* source);
+s32 battle_target_run_calculator(const battle_action_command_t* source);
+s32 battle_target_set_ability_panels(const battle_action_command_t* source);
 s32 battle_target_set_all_panels_targeted_if_targetable(void);
 void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out);
-s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source);
-s32 battle_target_set_jump_ability_panels(const battle_ai_command_action_t* source);
+s32 battle_target_set_weapon_attack_panels(battle_action_command_t* source);
+s32 battle_target_set_jump_ability_panels(const battle_action_command_t* source);
 s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevation, s32 target_id);
-s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* source);
-void battle_target_build_directional_attack_panels(const battle_ai_command_action_t* source, u8 mode);
+s32 battle_target_validate_weapon_target(const battle_action_command_t* source);
+void battle_target_build_directional_attack_panels(const battle_action_command_t* source, u8 mode);
 void battle_target_check_moldball_virus_depth(s16 ability_id);
 s32 battle_action_init_current_data(s32 unit_id);
 void battle_action_store_acting_unit_data(battle_stats_t* unit);
@@ -8560,7 +8543,7 @@ extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
 extern battle_ai_command_t g_battle_menu_selected_command;
 /* Action command staged by the battle menu and passed whole to
  * battle_action_preview_at_list; the WORLD twin is g_world_menu_preview_action. */
-extern battle_ai_command_action_t g_battle_menu_selected_action;
+extern battle_action_command_t g_battle_menu_selected_action;
 extern world_gfx_image_load_parameters_t g_battle_menu_single_icon_image_params[5];
 extern u8 g_battle_menu_skillset_disabled_flags[]; /* per-row greyed flag */
 extern battle_unit_status_record_t g_battle_menu_status_billboard;
@@ -8705,7 +8688,7 @@ void battle_menu_copy_palette_colors(const menu_palette_t* source);
 void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output);
 
 s32 battle_menu_dispatch_system_function(
-    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_ai_command_action_t* action);
+    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_action_command_t* action);
 
 s32 battle_menu_display_item_inventory_ability(s32 unit_id, s32 skillset, u8* out_item_ids);
 s32 battle_menu_load_math_skill_attributes(s32 unit_id, s32 skillset, s16* out_ability_ids);
@@ -8918,7 +8901,7 @@ void battle_text_configure_sprite_vram(
     RECT* rect, s16 width, s16 height, world_texture_prim_t* primitive, s32 clut_offset);
 u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 s32 battle_text_count_decimal_digits(s32 value);
-void battle_text_determine_spell_quote(battle_ai_command_action_t* action, s32 unit_id, s32 enabled);
+void battle_text_determine_spell_quote(battle_action_command_t* action, s32 unit_id, s32 enabled);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void battle_text_print_fnt_value_and_next(s32 value);
 s32 battle_text_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);

@@ -19,7 +19,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
         g_main_system_animation_speed = 2;
         if (!battle_ai_build_command(unit->battle_data->misc_unit_id, &unit->command_state.ai)) {
             if (unit->command_state.ai.kind == BATTLE_AI_COMMAND_ACT) {
-                unit->command_state.ai.data.action.unit_id = unit->battle_data->misc_unit_id;
+                unit->command_state.ai.data.action.actor_id = unit->battle_data->misc_unit_id;
                 battle_action_call_attack_preparation(&unit->command_state.ai.data.action);
             }
             unit->command_ready = 1;
@@ -43,7 +43,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
         battle_action_handle_move_command();
         return;
     case BATTLE_AI_COMMAND_ACT:
-        switch (unit->command_state.ai.data.action.skillset) {
+        switch (unit->command_state.ai.data.action.skillset_id) {
         case SKILLSET_ID_DEFEND:
             battle_status_inflict_defending_to_battle_id(unit->battle_data->misc_unit_id);
             unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;

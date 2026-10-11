@@ -14,8 +14,8 @@ void battle_ai_transfer_ability_data_and_set_defend_flag(void) {
     support = unit->support_ability;
     g_battle_ai_data_base.selected_action.coords.word = coords;
     if (support == ABILITY_ID_SUPPORT_DEFEND) {
-        g_battle_ai_data_base.selected_action.command.skillset = SKILLSET_ID_DEFEND;
+        g_battle_ai_data_base.selected_action.command.skillset_id = SKILLSET_ID_DEFEND;
     } else {
-        g_battle_ai_data_base.selected_action.command.skillset = 0;
+        g_battle_ai_data_base.selected_action.command.skillset_id = 0;
     }
 }

@@ -8,7 +8,7 @@
  * world_menu_init_system_function and world_text_determine_spell_quote.
  */
 s32 world_menu_dispatch_system_function(
-    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_ai_command_action_t* action) {
+    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_action_command_t* action) {
     battle_stats_t* unit;
     s32 value;
     s32 count;
@@ -194,8 +194,8 @@ s32 world_menu_dispatch_system_function(
             g_world_text_substitution_values[2] = unit->action_command.ability_id + TEXT_ID_ABILITY_NAME_BASE;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ARITHMETICKS_ANNOUNCEMENT);
         } else {
-            if (action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
-                g_world_text_substitution_values[0] = action->item_id + TEXT_ID_ITEM_NAME_BASE;
+            if (action->skillset_id == SKILLSET_ID_ITEM || action->skillset_id == SKILLSET_ID_THROW) {
+                g_world_text_substitution_values[0] = (u8)action->item_or_equipment + TEXT_ID_ITEM_NAME_BASE;
             } else {
                 value = action->ability_id & ABILITY_ID_MASK;
                 if (value >= ABILITY_ID_SUMMON_MAGIC_MOOGLE && value <= ABILITY_ID_DRAW_OUT_CHIRIJIRADEN) {

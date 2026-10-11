@@ -9,8 +9,8 @@
  * off the kept lines loses its range, and the marks that identified the lines are
  * cleared. The call also turns on nearest-first ordering of the target list
  * (g_battle_sort_targets_nearest_first). */
-void battle_target_build_directional_attack_panels(const battle_ai_command_action_t* source, u8 mode) {
-    battle_unit_action_command_t action;
+void battle_target_build_directional_attack_panels(const battle_action_command_t* source, u8 mode) {
+    battle_action_command_t action;
     battle_stats_t* unit;
     battle_target_panel_t* panel;
     s32 target_x;

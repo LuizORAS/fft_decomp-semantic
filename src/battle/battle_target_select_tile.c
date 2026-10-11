@@ -26,8 +26,7 @@ void battle_target_select_tile(void) {
             g_battle_cursor_z, g_battle_cursor_y);
         unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     }
-    result = battle_target_calculate_for_menu_types(
-        (const battle_unit_action_command_t*)&unit->command_state.ai.data.action);
+    result = battle_target_calculate_for_menu_types(&unit->command_state.ai.data.action);
     unit->target_select_result = result;
     switch (result) {
     case 0:

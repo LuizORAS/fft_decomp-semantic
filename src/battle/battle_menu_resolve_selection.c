@@ -27,7 +27,8 @@ s32 battle_menu_resolve_selection(void) {
                 if (command != 0xFF) {
                     if (menu == BATTLE_MENU_ID_DEAD_UNIT) {
                         command = g_battle_dead_unit_action;
-                        g_battle_menu_selected_action.item_id = g_battle_dead_unit_result;
+                        /* Item selection updates only the low byte of the command word. */
+                        *(u8*)&g_battle_menu_selected_action.item_or_equipment = g_battle_dead_unit_result;
                         option = 0xFFFE;
                     } else if (menu == 0x19 || menu >= 0x64) {
                         command = *(g_battle_menu_id_records[i].map + option + 1);
@@ -77,11 +78,11 @@ s32 battle_menu_resolve_selection(void) {
             } else {
                 item = g_battle_ai_workspace_ptr->ability_list.ids[item] & 0x1FF;
             }
-            g_battle_menu_selected_action.skillset = option;
+            g_battle_menu_selected_action.skillset_id = option;
             g_battle_menu_used_skillset_id = option;
             if (item != 0xFFFE) {
                 if (option == SKILLSET_ID_ITEM || option == SKILLSET_ID_DRAW_OUT || option == SKILLSET_ID_THROW) {
-                    g_battle_menu_selected_action.item_id = item;
+                    *(u8*)&g_battle_menu_selected_action.item_or_equipment = item;
                 } else {
                     g_battle_menu_selected_action.ability_id = item;
                 }

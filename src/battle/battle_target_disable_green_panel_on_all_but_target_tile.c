@@ -3,8 +3,8 @@
 
 /* Leave only the action's target tile marked as targeted. Returns 1, or -1
  * when that tile is off the map or blocked. */
-s32 battle_target_disable_green_panel_on_all_but_target_tile(const battle_ai_command_action_t* action) {
-    battle_ai_command_action_t action_copy;
+s32 battle_target_disable_green_panel_on_all_but_target_tile(const battle_action_command_t* action) {
+    battle_action_command_t action_copy;
     u8 x;
     u8 y;
     u8 level;
@@ -12,9 +12,9 @@ s32 battle_target_disable_green_panel_on_all_but_target_tile(const battle_ai_com
 
     main_util_copy_action_data(action, &action_copy);
     /* Retail reads only the low byte of each coordinate halfword. */
-    x = *(u8*)&action_copy.target_x;
-    y = *(u8*)&action_copy.target_y;
-    level = *(u8*)&action_copy.target_elevation;
+    x = (u8)action_copy.target_x;
+    y = (u8)action_copy.target_y;
+    level = (u8)action_copy.target_elevation;
     if (x < g_battle_map_max_x) {
         if (y < g_battle_map_max_y) {
             if (level < 2) {

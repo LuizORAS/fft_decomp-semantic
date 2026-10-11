@@ -7,14 +7,14 @@
  * The 0xff counter disables accounting; that path returns 1 without
  * requiring a valuable target. Counted entries are target/strike pairs.
  */
-s32 battle_ai_call_ability_processing(battle_ai_command_action_t* action) {
+s32 battle_ai_call_ability_processing(battle_action_command_t* action) {
     battle_ai_data_t* ai;
     s32 base_hit;
     s32 cnt;
 
     ai = &g_battle_ai_data_base;
     g_battle_ai_data_base.hit_counter = 0xFF;
-    if (action->unit_id == g_battle_ai_data_base.acting_unit_id) {
+    if (action->actor_id == g_battle_ai_data_base.acting_unit_id) {
         base_hit = g_battle_ai_data_base.current_action.rank.base_hit_percent;
         g_battle_ai_data_base.ability_processing_done = 1;
         if (base_hit == 0xFF) {

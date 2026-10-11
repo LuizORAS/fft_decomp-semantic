@@ -8,7 +8,7 @@
  * weapon-range actions use the weapon/direct resolver. Random-fire selection
  * runs only after successful ordinary targeting outside AI simulation.
  */
-s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u8* flags_3) {
+s32 battle_target_calculate_map_for_action(battle_action_command_t* action, u8* flags_3) {
     ability_secondary_data_t* ability;
     s32 menu_type;
     u8 flags_4;
@@ -19,7 +19,7 @@ s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u
 
     flags_4 = 0;
     flags_1 = 0;
-    menu_type = g_main_action_menu_types_by_skillset[action->skillset];
+    menu_type = g_main_action_menu_types_by_skillset[action->skillset_id];
     flags_2 = 0;
     *flags_3 = 0;
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_DEFAULT || (menu_type & 0xff) == ACTION_MENU_TYPE_MONSTER) {
@@ -37,7 +37,7 @@ s32 battle_target_calculate_map_for_action(battle_ai_command_action_t* action, u
         || (flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) || (flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
         result = battle_target_validate_weapon_target(action);
     } else {
-        result = battle_target_calculate_for_menu_types((const battle_unit_action_command_t*)action);
+        result = battle_target_calculate_for_menu_types(action);
         if (result != -1 && (flags_2 & ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE)
             && g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
             battle_target_select_random_tile_for_random_fire_abilities();

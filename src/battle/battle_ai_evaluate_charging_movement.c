@@ -9,7 +9,7 @@
 s32 battle_ai_evaluate_charging_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit = g_battle_ai_data_base.acting_unit;
-    battle_unit_action_command_t* action = &unit->action_command;
+    battle_action_command_t* action = &unit->action_command;
     s32 state;
 
     if (g_battle_ai_data_base.resume_pending) {
@@ -31,7 +31,7 @@ s32 battle_ai_evaluate_charging_movement(void) {
         battle_ai_check_unit_for_crystal_or_treasure_status();
     }
     ai->current_action.act_before_move = 0;
-    ai->current_action.command.skillset = 0;
+    ai->current_action.command.skillset_id = 0;
     if (action->ability_id >= ABILITY_ID_SONG_ANGEL_SONG && action->ability_id <= ABILITY_ID_DANCE_LAST_DANCE) {
     evaluate_song_dance:
         if (battle_ai_check_set_highest_unit_priority() == -1) {

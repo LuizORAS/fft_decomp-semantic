@@ -21,7 +21,7 @@ enum {
  */
 s32 battle_reaction_prepare_next(s16* out_ability) {
     battle_stats_t* unit;
-    battle_unit_action_command_t* action;
+    battle_action_command_t* action;
     s32 i;
     s32 outcome;
     s32 result;
@@ -103,7 +103,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         action->target_x = unit->x;
                         action->target_y = unit->position.y;
                         action->target_elevation = unit->position.higher_elevation;
-                        result = battle_action_call_attack_preparation_at_preview((battle_ai_command_action_t*)action);
+                        result = battle_action_call_attack_preparation_at_preview(action);
                         outcome = BATTLE_REACTION_OUTCOME_COUNTER;
                         unit->action_command.ability_id = ABILITY_ID_REACTION_AUTO_POTION;
                         if (result == -1 || result == 2 || result == 3) {

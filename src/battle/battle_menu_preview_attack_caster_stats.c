@@ -10,7 +10,7 @@
 void battle_menu_preview_attack_caster_stats(void) {
     battle_stats_t* attacker;
     battle_stats_t* target;
-    battle_ai_command_action_t* action;
+    battle_action_command_t* action;
     ability_data_t* ability_data;
     main_ability_secondary_pointer_t secondary;
     s16* selected;
@@ -20,12 +20,12 @@ void battle_menu_preview_attack_caster_stats(void) {
     /* One address register serves both reads, as in the target. */
     selected = &g_battle_active_turn_unit.battle_id;
     action = battle_unit_get_target_id_ptr_by_battle_id(*selected);
-    action->unit_id = *selected;
+    action->actor_id = *selected;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
         main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability_data, &secondary);
     }
     if (((secondary.range->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE) && action->ability_id < ABILITY_ID_ITEM_FIRST)
-        || action->skillset == SKILLSET_ID_EQUIP_CHANGE) {
+        || action->skillset_id == SKILLSET_ID_EQUIP_CHANGE) {
         g_battle_menu_preview_target_action = 0;
     } else {
         g_battle_thread_call_target = (void (*)(void))battle_action_calculate_projected_effect;

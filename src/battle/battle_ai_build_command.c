@@ -90,7 +90,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
             goto preserve;
         }
     }
-    if (ai->acting_unit->action_taken || !ai->selected_action.command.skillset) {
+    if (ai->acting_unit->action_taken || !ai->selected_action.command.skillset_id) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
     } else {
         command->kind = BATTLE_AI_COMMAND_ACT;

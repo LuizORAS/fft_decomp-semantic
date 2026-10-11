@@ -9,9 +9,9 @@ s32 battle_ai_has_any_unit_on_target_panel(void) {
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
-        if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->x == ai->current_action.command.target_x
-            && unit->position.y == ai->current_action.command.target_y
-            && (unit->position.higher_elevation) == ai->current_action.command.target_elevation) {
+        if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->x == (u16)ai->current_action.command.target_x
+            && unit->position.y == (u16)ai->current_action.command.target_y
+            && (unit->position.higher_elevation) == (u16)ai->current_action.command.target_elevation) {
             break;
         }
     }

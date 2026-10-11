@@ -8,8 +8,8 @@
  * index pseudo the allocation priority the target needs (a2), while keeping the
  * `(elevation * 256 + y * width) + x` operand order.
  */
-s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action) {
-    battle_ai_command_action_t action_copy;
+s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
+    battle_action_command_t action_copy;
     ability_secondary_data_t* ability;
     battle_stats_t* unit;
     battle_stats_t* target;
@@ -38,7 +38,7 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     flags_2 = ability->flags_2;
     aoe = ability->aoe;
     vertical = ability->vertical;
-    unit_id = action_copy.unit_id;
+    unit_id = action_copy.actor_id;
     unit = &g_battle_unit_stats[unit_id];
     if (ability->flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) {
         flags_1 |= ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE;

@@ -6,7 +6,7 @@
  * of it. -1 when the caster stands on the unit's tile or that tile is off the
  * map or blocked. */
 s32 battle_target_apply_reflect(battle_stats_t* unit) {
-    battle_unit_action_command_t* act;
+    battle_action_command_t* act;
     s32 x;
     s32 y;
     s32 z;

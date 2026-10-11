@@ -31,7 +31,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     world_menu_entry_t* entry;
     battle_stats_t* stats;
     u8* text;
-    battle_ai_command_action_t* action;
+    battle_action_command_t* action;
     u8* published;
     s32 turn;
     s32 count;
@@ -53,16 +53,17 @@ void battle_menu_build_ability_preview_at_list(void) {
         g_battle_menu_selected_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
     } else {
         staged_item = 1;
-        g_battle_menu_selected_action.item_id = text_id;
+        /* Item selection updates only the low byte of the command word. */
+        *(u8*)&g_battle_menu_selected_action.item_or_equipment = text_id;
     }
     action = &g_battle_menu_selected_action;
-    action->unit_id = g_battle_active_turn_unit.battle_id;
+    action->actor_id = g_battle_active_turn_unit.battle_id;
     stats = battle_unit_get_attacker_data_pointer();
     g_battle_thread_call_target = (void (*)(void))battle_action_preview_at_list;
     turn = battle_thread_call_on_main_stack(stats, action, work->entries);
     if (staged_item != 0) {
         work->entries[1].unit |= BATTLE_AT_ACTION_ENTRY;
-        work->entries[1].action_id_low = g_battle_menu_selected_action.item_id;
+        work->entries[1].action_id_low = (u8)g_battle_menu_selected_action.item_or_equipment;
     }
     count = 0;
     if (turn < 0 || turn == 0xff) {

@@ -13,13 +13,13 @@
  * t2 = t1 + 0x500). That needs `upper_panels` derived from `panels` and the
  * per-tile panel pointers taken upper layer first, because loop.c keeps its
  * giv list in reverse discovery order. */
-s32 battle_target_set_jump_ability_panels(const battle_ai_command_action_t* source) {
+s32 battle_target_set_jump_ability_panels(const battle_action_command_t* source) {
     u16 abilities[0x14];
     u8 mp_costs[0x18];
     u8 ability_ct[0x48];
     u8 usable[0x18];
     u8 turns[0x18];
-    battle_ai_command_action_t action;
+    battle_action_command_t action;
     battle_stats_t* unit;
     map_tile_t* tile;
     map_tile_t* upper;
@@ -49,7 +49,7 @@ s32 battle_target_set_jump_ability_panels(const battle_ai_command_action_t* sour
 
     range = 1;
     main_util_copy_action_data(source, &action);
-    unit = &g_battle_unit_stats[action.unit_id];
+    unit = &g_battle_unit_stats[action.actor_id];
     vertical = 2;
     if (unit->job_id == JOB_ID_MIME) {
         range = 8;
@@ -60,7 +60,7 @@ s32 battle_target_set_jump_ability_panels(const battle_ai_command_action_t* sour
     tile_height = tile->height;
     height = (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) + tile_height * 2;
     count = battle_menu_get_unit_skillset_ability_data(
-        action.unit_id, action.skillset, (s16*)abilities, mp_costs, ability_ct, 0, usable, turns);
+        action.actor_id, action.skillset_id, (s16*)abilities, mp_costs, ability_ct, 0, usable, turns);
     for (i = 0; i < count; i++) {
         ability_id = abilities[i];
         if (ability_id >= ABILITY_ID_JUMP_FIRST && ability_id < ABILITY_ID_CHARGE_FIRST) {

@@ -52,8 +52,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
         work->math_skill_flag = 1;
     }
     if (!reaction_targeted) {
-        if (battle_target_calculate_map_for_action((battle_ai_command_action_t*)&attacker->action_command, &flags_3)
-            == -1) {
+        if (battle_target_calculate_map_for_action(&attacker->action_command, &flags_3) == -1) {
             work->target_count = 0;
             work->continue_attack = 0;
             return -1;
