@@ -2740,6 +2740,9 @@ typedef enum world_shop_step {
     WORLD_SHOP_STEP_RENAME_NAME_ENTRY = 27,
 } world_shop_step_e;
 
+/* A shop step handler (g_world_shop_menu_step_handlers). */
+typedef void (*world_shop_menu_handler_t)(void);
+
 /* Result of world_shop_run_fitting_room_checkout_prompt. */
 typedef enum world_shop_checkout_result {
     WORLD_SHOP_CHECKOUT_DONE = -1,     /* bought, or left without buying: back to the shop's main menu */
@@ -2769,7 +2772,8 @@ extern s16 g_world_shop_fitting_room_items[][5];
 extern u8 g_world_shop_hire_menu_initialized;
 extern u8 g_world_shop_item_category;
 extern world_shop_item_availability_t g_world_shop_item_availability[];
-extern s16 g_world_shop_menu_step; /* world_shop_step_e */
+extern world_shop_menu_handler_t g_world_shop_menu_step_handlers[]; /* one per world_shop_step_e */
+extern s16 g_world_shop_menu_step;                                  /* world_shop_step_e */
 extern s16 g_world_shop_quantity_limit;
 extern world_menu_thread_data_t g_world_shop_quantity_menu_data;
 extern u8 g_world_shop_background_visible;

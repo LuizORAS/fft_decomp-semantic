@@ -1,15 +1,10 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
-/*
- * Builds the war-trophy entry list and pays the trophies out.
- *
- * The bonus money (when nonzero) is the first entry, followed by one entry
- * per trophy item found by battle_unit_find_war_trophies_and_bonus_money.
- * Money entries are added to the war funds. An item entry adds one to the
- * inventory, unless 99 are already held or equipped: the item is then sold
- * for a quarter of its price, rounded toward zero.
- */
+/* After a battle, list the war trophies (the bonus money when it is not 0, then each trophy item
+ * from battle_unit_find_war_trophies_and_bonus_money) and pay them: each item adds a copy to the
+ * inventory, or a quarter of its price in gil when 99 are already owned (equipped copies count), and
+ * the bonus money goes to the war funds. require_render_gil_reward_ticker pays the level money. */
 void require_reward_collect_war_trophies_and_bonus_money(void) {
     s32 i;
     s32 item_id;

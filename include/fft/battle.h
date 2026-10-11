@@ -575,6 +575,9 @@ void battle_status_store_ability_cancellations(void);
 void battle_status_update_expiring(s32 unit_id);
 
 /* item */
+/* BATTLE's item graphics (weapon attack animations, the item icon sprite) and the second link name
+ * of main_item_get_data_pointer. */
+
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
 extern u8 g_battle_weapon_attack_animations[][3];
 extern s16 g_battle_item_icon_clut_base_x;

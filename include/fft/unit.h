@@ -351,6 +351,9 @@ enum {
 };
 
 /* equipment */
+/* What a unit can equip and where: the equippable-type bitsets (the job's, plus the Equip support
+ * abilities') and the seven equipment slots of the unit records. */
+
 typedef enum battle_equipment_categories_1 {
     BATTLE_EQUIPMENT_SET_1_SWORD = 0x10,
     BATTLE_EQUIPMENT_SET_1_KATANA = 0x04,

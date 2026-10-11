@@ -692,6 +692,9 @@ typedef struct status_infliction_data {
 typedef char battle_status_infliction_record_size_must_be_6[(sizeof(status_infliction_data_t) == 6) ? 1 : -1];
 
 /* item */
+/* Item ids and records: the id ranges, types and attributes, the primary record and the weapon,
+ * shield, armor, accessory and consumable records, and the flags item lists and equipment carry. */
+
 enum {
     ITEM_ATTRIBUTE_PHYSICAL_ATTACK = 0,
     ITEM_ATTRIBUTE_MAGICAL_ATTACK = 1,

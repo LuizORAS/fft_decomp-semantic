@@ -175,6 +175,9 @@ typedef struct world_ability_list {
 } world_ability_list_t;
 
 /* item */
+/* The stat previews the item and equipment menus share (the summary and the detail records) and
+ * the scroll icons of their windows. */
+
 /* Provisional records filled by the WORLD stat-comparison helper at
  * 0x80122f9c and consumed by world_item_combine_stat_details. Armor supplies the
  * HP/MP bonuses; weapon, shield, accessory and item-attribute tables supply
