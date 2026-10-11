@@ -96,8 +96,8 @@ extern psyq_interrupt_dispatch_t* g_psyq_etc_dispatch;
 extern volatile u16* g_psyq_etc_irq_mask;
 extern u16 g_psyq_etc_in_callback;
 void psyq_etc_clear_interrupt_state_words(u32* words, s32 count);
-void psyq_etc_clear_vblank_callback_words(u32* words, s32 count);
-void psyq_etc_clear_dma_callback_words(u32* words, s32 count);
+void psyq_etc_clear_vblank_callbacks(psyq_interrupt_callback_t* callbacks, s32 count);
+void psyq_etc_clear_dma_callbacks(psyq_interrupt_callback_t* callbacks, s32 count);
 
 extern volatile u32* g_psyq_etc_gpu_status;
 extern volatile u32* g_psyq_etc_timer1_count;
