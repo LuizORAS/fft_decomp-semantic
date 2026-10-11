@@ -17,8 +17,9 @@ void attack_update_deployment_cursor_primitives(s32 frame, attack_deploy_render_
 
     thread->task_words[0] += g_battle_event_speed;
     battle_copy_bytes(
-        &g_attack_deploy_cursor_clut[1], &g_attack_deploy_cursor_palette_cycle[1 + (frame / 4) % 14], 0x1e);
-    g_attack_deploy_cursor_clut[0] = 0;
+        &g_attack_deploy_cursor_clut[1], &g_attack_deploy_cursor_palette_cycle[0][1 + (frame / 4) % 14], 0x1e);
+    g_attack_deploy_cursor_clut[0].red = g_attack_deploy_cursor_clut[0].green = g_attack_deploy_cursor_clut[0].blue
+        = g_attack_deploy_cursor_clut[0].semi_transparent = 0;
     LoadImage(&g_attack_deploy_cursor_clut_rect, (u32*)g_attack_deploy_cursor_clut);
 
     for (i = 0, tiles = g_attack_deploy_valid_tiles; i < 2; i++) {

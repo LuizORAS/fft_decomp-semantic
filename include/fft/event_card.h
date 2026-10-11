@@ -257,7 +257,7 @@ extern card_save_icon_t g_card_save_icon_records[15];
 extern world_menu_entry_t g_card_save_in_progress_thread_descriptor[];
 extern world_menu_entry_t g_card_save_initial_prompt_descriptor[];
 extern u8 g_card_save_initial_prompt_thread_state;
-extern u16 g_card_save_menu_palette_image[0x100];
+extern clut_t g_card_save_menu_palette_image;
 extern u8 g_card_save_menu_state; /* card_save_menu_state_e */
 extern DIRENTRY* g_card_save_menu_work_buffer;
 extern world_menu_entry_t g_card_save_no_data_prompt_descriptor[];

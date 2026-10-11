@@ -13,7 +13,7 @@
  */
 void card_save_init_menu_graphics(void) {
     RECT rect;
-    u16 image_data[16];
+    palette_t image_data;
 
     g_battle_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_card_text_data;
     g_battle_text_section_pointers[TEXT_SECTION_FORMATION_MESSAGES] = g_card_text_command_help;
@@ -35,7 +35,7 @@ void card_save_init_menu_graphics(void) {
     rect.w = 0x10;
     rect.h = 1;
     card_gfx_store_image_and_wait(&rect, image_data);
-    image_data[4] = 0;
+    *(u16*)&image_data[4] = 0;
 
     rect.x = 0x120;
     rect.y = 0xfe;
@@ -54,7 +54,8 @@ void card_save_init_menu_graphics(void) {
     rect.w = 0x10;
     rect.h = 1;
     card_gfx_store_image_and_wait(&rect, image_data);
-    image_data[4] = 0;
+    /* Fieldwise or aggregate clearing adds instructions under this routine's -O0 profile. */
+    *(u16*)&image_data[4] = 0;
 
     rect.x = 0x130;
     rect.y = 0xfe;

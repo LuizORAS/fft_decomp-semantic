@@ -405,7 +405,7 @@ extern world_oriented_quad_t g_equip_menu_slot_marker_rects[];
 extern u8 g_equip_menu_slot_marker_window[];
 extern u8 g_equip_menu_slot_marker_x[];
 extern s8 g_equip_menu_thread_running;
-extern u16 g_equip_menu_palette_image[];
+extern clut_t g_equip_menu_palette_image;
 extern s16 g_equip_menu_text_redraw_flag;
 extern u16 g_equip_menu_cursor_texture_page;
 extern u16 g_equip_menu_cursor_mode0_foreground_clut;

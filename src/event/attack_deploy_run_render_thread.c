@@ -23,7 +23,7 @@ void attack_deploy_run_render_thread(void) {
     attack_deploy_build_screen_arrow();
     attack_gfx_init_frame_ft4_array();
     battle_menu_init_sprite_array(g_attack_deploy_render_buffers[0].tiles[0], 0x19, 0x7ebc);
-    LoadImage(&g_attack_deploy_tile_clut_rect, g_attack_deploy_tile_clut_data);
+    LoadImage(&g_attack_deploy_tile_clut_rect, (u32*)g_attack_deploy_tile_clut_data);
     StoreImage(&g_attack_deploy_tile_clut_rect, (u32*)g_attack_deploy_tile_clut_buffer);
     StoreImage(&g_attack_deploy_rect_09c, (u32*)g_attack_deploy_semitrans_clut_buffer);
     battle_thread_wait_frames(1);
@@ -33,9 +33,10 @@ void attack_deploy_run_render_thread(void) {
     g_attack_deploy_tile_clut_buffer[0] = 0;
     LoadImage(&g_attack_deploy_rect_0cc, (u32*)g_attack_deploy_tile_clut_buffer);
     for (i = 1; i < 0x10; i++) {
-        g_attack_deploy_semitrans_clut_buffer[i] |= 0x8000;
+        g_attack_deploy_semitrans_clut_buffer[i].semi_transparent = 1;
     }
-    g_attack_deploy_semitrans_clut_buffer[0] = 0;
+    g_attack_deploy_semitrans_clut_buffer[0].red = g_attack_deploy_semitrans_clut_buffer[0].green
+        = g_attack_deploy_semitrans_clut_buffer[0].blue = g_attack_deploy_semitrans_clut_buffer[0].semi_transparent = 0;
     LoadImage(&g_attack_deploy_rect_0ac, (u32*)g_attack_deploy_semitrans_clut_buffer);
     SetDrawMode(&g_attack_deploy_render_buffers[0].draw_mode_9c4, 0, 0, GetTPage(0, 1, 0x100, 0),
         &g_attack_gfx_draw_area_template);
