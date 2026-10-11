@@ -37,13 +37,13 @@ void wldcore_list_open_propositions(void) {
                 } else {
                     row_flags[count] = 0;
                 }
-                g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entries[count] = i;
+                g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entries[count] = i;
                 count++;
             }
             i++;
         } while (i < total);
     }
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count = count;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
     if (count < 6) {
         i = count;
     } else {
@@ -55,8 +55,7 @@ void wldcore_list_open_propositions(void) {
     origin.y = 0x50;
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS, g_main_save_proposition_count, i);
     wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count, &dimensions,
-        &origin);
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     previous = g_wldcore_menu_stack_depth - 1;
     g_wldcore_menu_ordering_table_offset = 9;
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;

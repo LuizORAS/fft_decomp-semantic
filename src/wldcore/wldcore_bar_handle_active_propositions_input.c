@@ -6,11 +6,11 @@
  * finishes, a confirmed level dispatches the selected row's value through
  * 0x8007af9c.
  *
- * The target keeps each `level->confirmed` store ahead of the `li $a0,5`
+ * The target keeps each `level->panel.result` store ahead of the `li $a0,5`
  * argument of the following cursor-state call, which lands in the jal delay
  * slot; without the empty barriers GCC schedules the li first.
  */
-void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_propositions_level_t* level) {
+void wldcore_bar_handle_active_propositions_input(wldcore_menu_stack_record_t* level) {
     u32 buttons;
     s32 unused[2]; /* 8-byte frame slot the target reserves */
 
@@ -20,9 +20,9 @@ void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_proposition
         g_wldcore_menu_blocked_buttons = 0;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_menu_stack_depth--;
-        if (level->confirmed != 0) {
+        if (level->panel.result != 0) {
             wldcore_proposition_push_cancel_confirm_level(
-                level->values[g_wldcore_window_panel_render_state.selected_index]);
+                level->panel.entries[g_wldcore_window_panel_render_state.selected_index]);
         } else {
             wldcore_menu_dispatch_resume_handler();
         }
@@ -31,14 +31,14 @@ void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_proposition
     buttons = g_wldcore_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
-        level->confirmed = 0;
+        level->panel.result = 0;
         /* Scheduling barrier: keeps the store ahead of the cursor argument. */
         __asm__ volatile("");
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
     } else if (buttons & PSX_PAD_SELECT) {
-        wldcore_bar_active_propositions_block_all_buttons((wldcore_menu_panel_level_t*)level);
+        wldcore_bar_active_propositions_block_all_buttons(&level->panel);
         wldcore_menu_push_message_level(0x1062, 1);
     } else if (buttons & PSX_PAD_CIRCLE) {
         if (g_wldcore_list_row_flags[g_wldcore_window_panel_render_state.selected_index] != 0) {
@@ -46,7 +46,7 @@ void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_proposition
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_RETURN_TOMORROW, 0);
         } else {
             wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-            level->confirmed = 1;
+            level->panel.result = 1;
             /* Scheduling barrier: keeps the store ahead of the cursor argument. */
             __asm__ volatile("");
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS);

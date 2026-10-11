@@ -1014,15 +1014,6 @@ typedef enum wldcore_scroll_limits {
 } wldcore_map_scroll_limits_e;
 
 /* bar */
-/* Provisional: the bar's active-proposition list level
- * (wldcore_bar_handle_active_propositions_input); the confirmed flag and the value
- * words indexed by the selected row are the only fields read. */
-typedef struct wldcore_bar_active_propositions_level {
-    s32 confirmed;
-    u8 _unused_04[0x30];
-    s32 values[1]; /* 0x34 */
-} wldcore_bar_active_propositions_level_t;
-
 /* Panel menu levels: number panels (0x8006f294, 0x80073ef8) and list panels
  * (0x8007dfcc, 0x80084230, 0x80071aa0). */
 typedef struct wldcore_menu_panel_level {
@@ -1952,7 +1943,6 @@ typedef union wldcore_menu_stack_record {
     wldcore_proposition_report_level_t proposition_report;
     wldcore_menu_sound_novel_level_t sound_novel;
     wldcore_proposition_result_level_t proposition_result;
-    wldcore_bar_active_propositions_level_t active_propositions;
 } wldcore_menu_stack_record_t;
 typedef char wldcore_menu_stack_record_size_must_be_0x5c[sizeof(wldcore_menu_stack_record_t) == 0x5c ? 1 : -1];
 
@@ -2042,6 +2032,7 @@ void wldcore_menu_dispatch_idle_handler(void);
 void wldcore_menu_dispatch_pending_script_requests(void);
 void wldcore_menu_dispatch_publish_handler(void);
 void wldcore_menu_dispatch_resume_handler(void);
+void wldcore_bar_handle_active_propositions_input(wldcore_menu_stack_record_t* level);
 void wldcore_menu_handle_story_event_text_input(wldcore_menu_stack_record_t* level);
 void wldcore_list_handle_completed_propositions_input(wldcore_menu_stack_record_t* level);
 void wldcore_list_completed_propositions_block_all_buttons(wldcore_menu_stack_record_t* unused_level);
