@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 #define RSM_CANDIDATE_COUNT     480
-#define RSM_SKILLSET_SLOT_FIRST 0x10
+#define RSM_SKILLSET_SLOT_FIRST 16
 
 /* Picks a random reaction/support/movement ability (selected by `flags` from
  * rsm_ability_filter_e) from the abilities the unit has learned

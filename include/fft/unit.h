@@ -875,6 +875,9 @@ typedef char entd_unit_position_size_must_be_2[(sizeof(entd_unit_position_t) == 
 enum {
     ENTD_UNITS_PER_ENCOUNTER = 16,
     ENTD_ENCOUNTERS_PER_FILE = 128,
+    ENTD2_FIRST_EVENT = ENTD_ENCOUNTERS_PER_FILE,
+    ENTD3_FIRST_EVENT = 2 * ENTD_ENCOUNTERS_PER_FILE,
+    ENTD4_FIRST_EVENT = 3 * ENTD_ENCOUNTERS_PER_FILE,
 };
 
 /* The ENTD slots precede the five deployed-party slots in battle storage. */
