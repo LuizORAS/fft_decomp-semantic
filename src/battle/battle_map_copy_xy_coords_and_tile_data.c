@@ -4,6 +4,7 @@
 
 /* Load a terrain chunk (GNS_RESOURCE_TERRAIN): the map's width and depth in
  * tiles, then the 0x1000 bytes of the two 256-tile layers. */
+/* A typed terrain pointer or local cursor removes four retail bytes. */
 void battle_map_copy_xy_coords_and_tile_data(u8* data) {
     g_battle_map_max_x = *data++;
     g_battle_map_max_y = *data++;

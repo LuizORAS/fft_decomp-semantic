@@ -6,19 +6,19 @@
  * height in half-height units (height * 2 + slope half-height + depth * 2) and
  * the surface type's two bytes of g_main_terrain_tile_info_pairs. */
 void battle_map_store_selected_tile_data(void) {
-    s16 coords[3];
+    SVECTOR coords;
     s16* surface_type;
     s32 depth;
     s32 table_index;
 
-    battle_map_store_selected_tile_coordinates(coords);
+    battle_map_store_selected_tile_coordinates(&coords);
     surface_type = &g_battle_map_selected_tile_data.surface_type;
-    *surface_type = battle_map_get_tile_data_value(MAP_TILE_DATA_SURFACE_TYPE, coords[0], coords[2], coords[1]) & 0xFF;
+    *surface_type = battle_map_get_tile_data_value(MAP_TILE_DATA_SURFACE_TYPE, coords.vx, coords.vz, coords.vy) & 0xFF;
     g_battle_map_selected_tile_data.display_height
-        = battle_map_get_tile_data_value(MAP_TILE_DATA_HALF_HEIGHT, coords[0], coords[2], coords[1]) & 0xFF;
+        = battle_map_get_tile_data_value(MAP_TILE_DATA_HALF_HEIGHT, coords.vx, coords.vz, coords.vy) & 0xFF;
     g_battle_map_selected_tile_data.display_height
-        += (battle_map_get_tile_data_value(MAP_TILE_DATA_HEIGHT, coords[0], coords[2], coords[1]) & 0xFF) * 2;
-    depth = battle_map_get_tile_data_value(MAP_TILE_DATA_DEPTH, coords[0], coords[2], coords[1]) & 0xFF;
+        += (battle_map_get_tile_data_value(MAP_TILE_DATA_HEIGHT, coords.vx, coords.vz, coords.vy) & 0xFF) * 2;
+    depth = battle_map_get_tile_data_value(MAP_TILE_DATA_DEPTH, coords.vx, coords.vz, coords.vy) & 0xFF;
     g_battle_map_selected_tile_data.depth = depth;
     g_battle_map_selected_tile_data.display_height += depth * 2;
     table_index = *surface_type * 2;

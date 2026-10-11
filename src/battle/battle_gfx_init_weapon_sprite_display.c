@@ -8,8 +8,7 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit
     battle_gfx_sprite_part_display_data_t* part;
 
     weapon_part = 2;
-    display
-        = (battle_gfx_sprite_display_data_t*)g_battle_unit_misc_data[unit_index].weapon_sprite_displays[display_type];
+    display = &g_battle_unit_misc_data[unit_index].weapon_sprite_displays[display_type].header;
     part = display->parts;
     display->blue = 0x80;
     display->green = 0x80;

@@ -18,11 +18,8 @@
 void card_input_update_controller(void) {
     s16 bit;
     s32 index;
-    /* Pinned: the copies a hard-register variable costs keep the third loop above
-     * loop.c's size threshold, so the `index == 4` constant is reloaded each pass. */
-    register u32 current_input __asm__("$8");
+    u32 current_input;
     u32 filtered_input;
-    s32* counter;
     s32* counter_base;
     u32 speed, initial_delay, secondary_repeat_period, repeat_period;
     speed = card_menu_get_event_speed();
@@ -75,25 +72,24 @@ void card_input_update_controller(void) {
         }
     }
     counter_base = g_card_input_repeat_counters;
-    for (index = 0, counter = counter_base; index < 16; index++, counter++) {
+    for (index = 0; index < 16; index++) {
         if (index == 4) {
-            counter = counter_base + 12;
             index = 12;
         }
         if (current_input & (1 << index)) {
-            (*counter)++;
+            counter_base[index]++;
         } else {
-            *counter = 0;
+            counter_base[index] = 0;
         }
-        if ((*counter >= initial_delay && *counter % repeat_period != 0)
-            || (*counter >= 2 && *counter < initial_delay)) {
+        if ((counter_base[index] >= initial_delay && counter_base[index] % repeat_period != 0)
+            || (counter_base[index] >= 2 && counter_base[index] < initial_delay)) {
             current_input &= ~(1 << index);
         }
-        if (*counter >= initial_delay) {
+        if (counter_base[index] >= initial_delay) {
             current_input |= 1 << (index + 16);
         }
-        if ((*counter >= initial_delay && *counter % secondary_repeat_period != 0)
-            || (*counter >= 2 && *counter < initial_delay << 1)) {
+        if ((counter_base[index] >= initial_delay && counter_base[index] % secondary_repeat_period != 0)
+            || (counter_base[index] >= 2 && counter_base[index] < initial_delay << 1)) {
             filtered_input &= ~(1 << index);
         }
     }

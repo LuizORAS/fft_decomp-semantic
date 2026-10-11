@@ -2082,16 +2082,14 @@ data:
   - {addr: 0x800b6494, name: g_battle_gfx_eff_palettes}
   - {addr: 0x800b6694, name: g_battle_previous_camera_yaw}
   - {addr: 0x800b6698, name: g_battle_map_weather_flags}
-  - {addr: 0x800b669c, name: g_battle_gfx_effect_shp_data}
-  - {addr: 0x800b6edc, name: g_battle_gfx_effect_seq_data}
+  - {addr: 0x800b669c, name: g_battle_gfx_effect_graphics}
   - {addr: 0x800b72dc, name: g_battle_screen_fade_draw_modes}
   - {addr: 0x800b72f4, name: g_battle_camera_real_coord_delta}
   - {addr: 0x800b7304, name: g_battle_unit_misc_slot_flags}
   - {addr: 0x800b7308, name: g_battle_unit_misc_data}
   - {addr: 0x800bdf04, name: g_battle_gfx_previous_counter}
   - {addr: 0x800bdf08, name: g_battle_gfx_counter}
-  - {addr: 0x800bdf0c, name: g_battle_gfx_weapon_shp_data}
-  - {addr: 0x800be74c, name: g_battle_gfx_weapon_seq_data}
+  - {addr: 0x800bdf0c, name: g_battle_gfx_weapon_graphics}
   - {addr: 0x800bf78c, name: g_battle_gfx_shp_frame_data_cursor}
   - {addr: 0x800bf790, name: g_battle_gfx_chicken_palettes}
   - {addr: 0x800bf830, name: g_battle_gfx_frog_palettes}

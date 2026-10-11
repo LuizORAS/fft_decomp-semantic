@@ -521,10 +521,6 @@ written that way.
   compares the result with the GNS table and, when it is not the table (also
   when the read could not start), returns 0 with its 0x20000-byte load buffer
   still allocated.
-- `battle_gfx_set_thrown_item_graphic_palette` calls
-  `main_item_get_data_pointer` with no argument, through
-  `get_item_data_pointer`, a second name `target/main.yaml` gives 0x8005a884;
-  the callee takes the item id still in `$a0`.
 - `g_battle_effect_secondary_handlers` entries 0x07, 0x0a, 0x0b, 0x0e and 0x10
   are empty `void` functions, although `battle_effect_update_secondary_effects`
   ends an effect on a handler result of 0. No record of

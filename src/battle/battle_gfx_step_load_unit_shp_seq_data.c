@@ -153,23 +153,21 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
                 (const battle_gfx_packed_seq_record_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_WEAPON_SHP:
-            battle_gfx_copy_shp_data_to_ram((struct battle_gfx_shp_frame_table*)(g_battle_gfx_weapon_shp_data
-                                                + g_battle_gfx_unit_graphics_load_state[2] * 0xc40),
+            battle_gfx_copy_shp_data_to_ram(&g_battle_gfx_weapon_graphics[g_battle_gfx_unit_graphics_load_state[2]].shp,
                 (u8*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_WEAPON_SEQ:
             battle_gfx_resolve_packed_offset_table(
-                (u8**)(g_battle_gfx_weapon_seq_data + g_battle_gfx_unit_graphics_load_state[2] * 0xc40),
+                g_battle_gfx_weapon_graphics[g_battle_gfx_unit_graphics_load_state[2]].seq,
                 (struct battle_gfx_packed_offset_table*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_EFFECT_SHP:
-            battle_gfx_copy_shp_data_to_ram((struct battle_gfx_shp_frame_table*)(g_battle_gfx_effect_shp_data
-                                                + g_battle_gfx_unit_graphics_load_state[2] * 0xc40),
+            battle_gfx_copy_shp_data_to_ram(&g_battle_gfx_effect_graphics[g_battle_gfx_unit_graphics_load_state[2]].shp,
                 (u8*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_EFFECT_SEQ:
             battle_gfx_resolve_packed_offset_table(
-                (u8**)(g_battle_gfx_effect_seq_data + g_battle_gfx_unit_graphics_load_state[2] * 0xc40),
+                g_battle_gfx_effect_graphics[g_battle_gfx_unit_graphics_load_state[2]].seq,
                 (struct battle_gfx_packed_offset_table*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_WEAPON_SPR:

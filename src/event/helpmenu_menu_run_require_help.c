@@ -103,7 +103,7 @@ void helpmenu_menu_run_require_help(void) {
             if (input & PSX_PAD_CIRCLE) {
                 if (entry->value != 0) {
                     help_id = entry->help_base + *entry->value;
-                    if (entry->help_base == -0x6800 && g_helpmenu_billboard.generic_monster != 0) {
+                    if (entry->help_base == -0x6800 && g_helpmenu_billboard.state.generic_monster != 0) {
                         help_id = *entry->value | 0x7800;
                         if ((*entry->value & 0x7FF) == 0x7FF || (*entry->value & 0x7FF) == 0) {
                             *g_helpmenu_controller_state_ptr = 0;

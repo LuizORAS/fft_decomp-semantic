@@ -1,22 +1,5 @@
 #include "fft/battle.h"
 
-/* Local view of the 20-byte action record main_util_copy_action_data copies;
- * the layout of battle_stats_t +0x16e. */
-typedef struct battle_target_unit_action_copy {
-    u8 actor_id;         /* 0x00 */
-    u8 skillset_id;      /* 0x01 */
-    s16 ability_id;      /* 0x02 */
-    u16 calculator_type; /* 0x04 */
-    u16 calculator_multiplier;
-    u16 used_item;        /* 0x08 */
-    u8 target_kind;       /* 0x0a; battle_action_target_kind_e */
-    u8 target_id;         /* 0x0b */
-    s16 target_x;         /* 0x0c */
-    s16 target_elevation; /* 0x0e */
-    s16 target_y;         /* 0x10 */
-    u8 _unused_12[2];
-} battle_target_unit_action_copy_t;
-
 /* Narrow an ability's panels to the straight lines that leave the acting unit
  * toward its target: mode 1 for a linear attack, mode 3 for a three-direction
  * attack.
@@ -26,8 +9,8 @@ typedef struct battle_target_unit_action_copy {
  * off the kept lines loses its range, and the marks that identified the lines are
  * cleared. The call also turns on nearest-first ordering of the target list
  * (g_battle_sort_targets_nearest_first). */
-void battle_target_build_directional_attack_panels(const void* source, u8 mode) {
-    battle_target_unit_action_copy_t action;
+void battle_target_build_directional_attack_panels(const battle_ai_command_action_t* source, u8 mode) {
+    battle_unit_action_command_t action;
     battle_stats_t* unit;
     battle_target_panel_t* panel;
     s32 target_x;

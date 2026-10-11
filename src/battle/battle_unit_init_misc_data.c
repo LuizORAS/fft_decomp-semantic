@@ -165,12 +165,12 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         cursor.block->display = battle_gfx_init_weapon_sprite_display(unit_id, i);
         if (i == 0) {
             cursor.block->graphic_type = BATTLE_SPRITE_GRAPHIC_WEAPON;
-            cursor.block->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_weapon_shp_by_spritesheet_id(id);
-            cursor.block->seq = (u8**)battle_gfx_get_weapon_seq_by_spritesheet_id(id);
+            cursor.block->shp = battle_gfx_get_weapon_shp_by_spritesheet_id(id);
+            cursor.block->seq = battle_gfx_get_weapon_seq_by_spritesheet_id(id);
         } else {
             cursor.block->graphic_type = BATTLE_SPRITE_GRAPHIC_EFFECT;
-            cursor.block->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_effect_shp_data(id);
-            cursor.block->seq = (u8**)battle_gfx_get_effect_seq_data(id);
+            cursor.block->shp = battle_gfx_get_effect_shp_data(id);
+            cursor.block->seq = battle_gfx_get_effect_seq_data(id);
         }
         cursor.block->trigger = 0;
         cursor.block->wait = 1;

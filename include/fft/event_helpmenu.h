@@ -16,7 +16,7 @@ extern battle_unit_status_record_t g_helpmenu_active_banner;
 extern battle_active_unit_t g_helpmenu_active_unit_data;
 
 /* 0x40-byte billboard filled by battle_menu_copy_billboard_data_out; +0x0e is the monster-skillset flag. */
-extern battle_menu_status_panel_slot_state_t g_helpmenu_billboard;
+extern battle_menu_status_panel_slot_storage_t g_helpmenu_billboard;
 extern help_navigation_record_t g_helpmenu_require_navigation[];
 
 /* 0x80 bytes of saved g_battle_text_section_pointers, i.e. 32 pointers. */

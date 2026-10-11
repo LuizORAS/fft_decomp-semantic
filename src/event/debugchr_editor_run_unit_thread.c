@@ -1,5 +1,6 @@
 #include "fft/event_debugchr.h"
 #include "psx/pad.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /*
@@ -23,6 +24,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     s32 one;
     u8* animation;
     POLY_FT4* render_buffers;
+    /* A record-base cursor changes the saved address and all three retail offsets. */
     s16* selected_unit;
     u8* animation_second;
     u8* animation_third;
@@ -189,12 +191,14 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             g_debugchr_editor_selected_unit_slot = slot;
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
             *selected_unit = *chosen_unit;
-            selected_unit[-5] = *chosen_unit;
+            ((battle_active_unit_t*)((u8*)selected_unit - offsetof(battle_active_unit_t, battle_id)))->name_id
+                = *chosen_unit;
             unit_type_ptr = &g_debugchr_panel_selected_billboard.unit_index;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
-            battle_menu_copy_billboard_data_in(
-                unit_type_ptr - 5, selected_unit - 5, &g_debugchr_editor_unit_fields.state);
+            battle_menu_copy_billboard_data_in(&g_debugchr_panel_selected_billboard,
+                ((battle_active_unit_t*)((u8*)selected_unit - offsetof(battle_active_unit_t, battle_id))),
+                &g_debugchr_editor_unit_fields);
             g_debugchr_status_display_thread_params.redraw_request = one;
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
             g_debugchr_character_status_frame_config.redraw_request = one;
@@ -210,12 +214,14 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             g_debugchr_editor_selected_unit_slot = slot;
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
             *selected_unit = *chosen_unit;
-            selected_unit[-5] = *chosen_unit;
+            ((battle_active_unit_t*)((u8*)selected_unit - offsetof(battle_active_unit_t, battle_id)))->name_id
+                = *chosen_unit;
             unit_type_ptr = &g_debugchr_panel_selected_billboard.unit_index;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
-            battle_menu_copy_billboard_data_in(
-                unit_type_ptr - 5, selected_unit - 5, &g_debugchr_editor_unit_fields.state);
+            battle_menu_copy_billboard_data_in(&g_debugchr_panel_selected_billboard,
+                ((battle_active_unit_t*)((u8*)selected_unit - offsetof(battle_active_unit_t, battle_id))),
+                &g_debugchr_editor_unit_fields);
             g_debugchr_status_display_thread_params.redraw_request = 2;
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
             g_debugchr_character_status_frame_config.redraw_request = one;
@@ -237,6 +243,6 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         *unit_type_id_ptr = g_debugchr_editor_unit_ids[0];
         debugchr_editor_load_selected_unit();
         battle_menu_copy_billboard_data_in(
-            unit_type_id_ptr - 5, selected_unit_ptr - 5, &g_debugchr_editor_unit_fields.state);
+            &g_debugchr_panel_selected_billboard, &g_debugchr_panel_selected_unit_data, &g_debugchr_editor_unit_fields);
     }
 }

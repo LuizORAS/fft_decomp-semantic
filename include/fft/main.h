@@ -18,6 +18,7 @@
 #include "psx/suzuki.h"
 
 struct battle_deployed_coords;
+typedef struct suzuki_smd_header suzuki_smd_header_t;
 
 /* ability */
 /* Jump ability record, 12 of them at g_main_jump_ability_data: horizontal
@@ -32,6 +33,18 @@ typedef struct battle_loader_charge_record {
     u8 ct;    /* 0x00 */
     u8 power; /* 0x01 */
 } battle_loader_charge_record_t;
+
+/* Pointer returned for ability_type_e: the record extent depends on the type. */
+typedef union main_ability_secondary_pointer {
+    ability_secondary_data_t* range;
+    u8* item_id;
+    u8* throw_item_type;
+    battle_loader_jump_record_t* jump;
+    battle_loader_charge_record_t* charge;
+    u8* math_rsm;
+} main_ability_secondary_pointer_t;
+
+typedef char main_ability_secondary_pointer_size_must_be_4[(sizeof(main_ability_secondary_pointer_t) == 4) ? 1 : -1];
 typedef char battle_loader_jump_record_size_must_be_2[(sizeof(battle_loader_jump_record_t) == 2) ? 1 : -1];
 
 typedef struct main_ability_human_skillset {
@@ -66,7 +79,8 @@ extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
 extern u32 g_main_secondary_saved_data_bits[2];
 s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
-s32 main_ability_calculate_pointers_and_type(s32 id, ability_data_t** out_ability_data, u8** out_secondary_data);
+s32 main_ability_calculate_pointers_and_type(
+    s32 id, ability_data_t** out_ability_data, main_ability_secondary_pointer_t* out_secondary_data);
 u32 main_ability_get_known(battle_stats_t* unit, u32 skillset_id);
 
 /* card */
@@ -303,7 +317,7 @@ int main_file_build_header(
 
 void* main_file_load_checked_to_heap(int sector, int size);
 void* main_file_load_checked_to_address(int sector, int size, void* destination);
-void* main_file_get_smd(int sector, u32 size);
+suzuki_smd_header_t* main_file_get_smd(int sector, u32 size);
 void* main_file_load_to_heap(s32 sector, u32 size);
 void* main_file_load_to_address(int sector, u32 size, void* destination);
 void main_file_load_data_from_disc(int sector, int sectors, void* destination, int suppress_loading_display);
@@ -528,7 +542,7 @@ typedef struct suzuki_waveset {
  * main_smd_init_channels, main_smd_init_channel_streams and
  * main_smd_get_music_filename. The values noted as "on the disc" hold for
  * all 100 MUSIC_NN.SMD files. */
-typedef struct suzuki_smd_header {
+struct suzuki_smd_header {
     u8 magic[4];            /* 0x00; "smds" */
     u8 _unused_04[4];       /* 0x04; differs in every file */
     u32 size;               /* 0x08; file size in bytes */
@@ -547,7 +561,7 @@ typedef struct suzuki_smd_header {
     u16 filename_offset;    /* 0x1e; offset of the zero-terminated name the sequence was built from */
     u16 data_offset;        /* 0x20 */
     u16 channel_offsets[1]; /* 0x22; one stream offset per channel (0: no stream), then a zero */
-} suzuki_smd_header_t;
+};
 
 /* Suzuki sequencer modulator (0x20 bytes). Each channel has four, at
  * channel+0xe0. step is one of the g_main_smd_modulator_waveforms functions,
@@ -1462,7 +1476,7 @@ void main_smd_set_channel_mute_mask(suzuki_music_t* music, u32 mask);
 void main_smd_set_channel_select(suzuki_music_t* music, u8 value);
 void main_smd_get_play_time(suzuki_music_t* music, suzuki_play_time_t* time);
 u16* main_smd_get_min_loop_count(suzuki_music_t* music);
-u8* main_smd_get_music_filename(suzuki_music_t* music);
+char* main_smd_get_music_filename(suzuki_music_t* music);
 void main_smd_dispatch_snapshot(suzuki_music_t* music, s32 mode);
 void main_smd_discard_snapshot(suzuki_music_t* music);
 void main_smd_save_snapshot(suzuki_music_t* music);

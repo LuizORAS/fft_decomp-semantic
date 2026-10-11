@@ -3,7 +3,7 @@
 
 /* Returns the file name stored in the SMD data of a queued MUS record, or of
  * the most recently queued record when music is 0; 0 if it is not queued. */
-u8* main_smd_get_music_filename(suzuki_music_t* music) {
+char* main_smd_get_music_filename(suzuki_music_t* music) {
     suzuki_music_t* entry;
 
     entry = g_main_sound_active_music_list;
@@ -18,5 +18,5 @@ u8* main_smd_get_music_filename(suzuki_music_t* music) {
     if (entry == 0) {
         return 0;
     }
-    return (u8*)entry->smd + entry->smd->filename_offset;
+    return (char*)entry->smd + entry->smd->filename_offset;
 }

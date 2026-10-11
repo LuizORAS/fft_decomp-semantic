@@ -329,11 +329,13 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
             g_battle_map_palette_animation_frames[0][i] = ((u16*)data)[i];
         }
         break;
-    case GNS_RESOURCE_TERRAIN:
-        g_battle_map_tile_width = data[0];
-        g_battle_map_tile_depth = data[1];
+    case GNS_RESOURCE_TERRAIN: {
+        battle_map_terrain_resource_t* terrain = (battle_map_terrain_resource_t*)data;
+        g_battle_map_tile_width = terrain->width;
+        g_battle_map_tile_depth = terrain->depth;
         battle_map_copy_xy_coords_and_tile_data(data);
         break;
+    }
     case GNS_RESOURCE_STATE_RECORDS:
         cursor = (battle_map_state_record_t*)data;
         if (cursor->type != 0) {

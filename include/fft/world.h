@@ -595,7 +595,7 @@ extern u8 g_world_set_ability_cursor;
 
 /* [0]: 0x0c = Learn Abilities, 0x0d = view only. */
 extern s16 g_world_ability_entries[];
-extern u8* g_world_selected_ability_secondary_data;
+extern main_ability_secondary_pointer_t g_world_selected_ability_secondary_data;
 extern ability_data_t* g_world_selected_ability_data;
 s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32 mode);
 s32 world_ability_is_non_action_learned(s32 index);
@@ -2886,10 +2886,10 @@ extern s8 g_world_item_menu_mode; /* menu_item_list_state_e */
 /* The two item-category icon strips; the active one is kept in g_world_item_category_icon_strip. */
 extern world_menu_entry_t g_world_item_category_icon_strip_a;
 extern world_menu_entry_t g_world_item_category_icon_strip_b;
-extern s16 g_world_item_category_tabs_script;       /* window descriptor (narrow variant) */
-extern s16 g_world_item_category_tabs_wide_script;  /* window descriptor (wide variant) */
-extern s16 g_world_item_category_tab_sprites[][10]; /* 20-byte rects, one per row */
-extern u8 g_world_item_category_tab_x[];            /* per-row base x */
+extern u8 g_world_item_category_tabs_script[];                    /* menu display stream (narrow variant) */
+extern u8 g_world_item_category_tabs_wide_script[];               /* menu display stream (wide variant) */
+extern world_oriented_quad_t g_world_item_category_tab_sprites[]; /* 20-byte quads, one per row */
+extern u8 g_world_item_category_tab_x[];                          /* per-row base x */
 extern u8 g_world_item_category_input_lock;
 extern world_item_icon_source_t g_world_item_type_icon_source;
 extern u8 g_world_item_menu_saved_browse_enabled;

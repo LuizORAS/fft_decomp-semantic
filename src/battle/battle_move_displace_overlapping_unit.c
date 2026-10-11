@@ -6,8 +6,7 @@
  * The push is 3/2 of the mover's distance short of 7 pixels past the tile
  * centre along direction. It is skipped while the mover's step before last
  * carries movement flag 0x10. The case order and per-case centre temporaries
- * reproduce the target's cross-jumped tails; indexing from movement_path - 2
- * reproduces its offset-before-base address add. */
+ * reproduce the target's cross-jumped tails. */
 void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 direction) {
     battle_unit_misc_data_t* other;
     s32 dist;
@@ -19,7 +18,7 @@ void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 di
     if (unit->movement_path_offset < 2) {
         return;
     }
-    if (((unit->path.data.steps - 2)[unit->movement_path_offset].value >> 4) & 1) {
+    if ((unit->path.data.steps[unit->movement_path_offset - 2].value >> 4) & 1) {
         return;
     }
     if (other == 0) {

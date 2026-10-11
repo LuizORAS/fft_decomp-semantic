@@ -11,7 +11,7 @@ s32 jobstts_ability_get_ct_display_value(s32 index) {
     if (entry & ABILITY_LIST_ENTRY_HIDE_DETAILS) {
         result = MENU_NUMBER_VALUE_DASHES;
     } else {
-        result = ((ability_secondary_data_t*)g_jobstts_selected_ability_secondary_data)->ct;
+        result = g_jobstts_selected_ability_secondary_data.range->ct;
         result = (100 / result) + ((100 % result) != 0);
     }
     if (entry >> ABILITY_LIST_ENTRY_DISABLED_SHIFT) {

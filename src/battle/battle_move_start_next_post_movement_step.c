@@ -1,13 +1,5 @@
 #include "fft/battle.h"
 
-/* Rare/common item result copied from battle_map_determine_rare_common_item. */
-typedef struct battle_move_found_item {
-    s32 _unused_00;
-    u8 item_id; /* 0x4 */
-} battle_move_found_item_t;
-
-extern battle_move_found_item_t g_battle_move_find_display_item;
-
 /* Starts the next post-action step selected by g_battle_move_find_result.
  *
  * Handles, in priority order, the crystal/treasure pickup (bit 0x1), the
@@ -91,8 +83,7 @@ s32 battle_move_start_next_post_movement_step(void) {
         return 1;
     }
     if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_ITEM_FOUND) {
-        g_battle_move_find_display_item
-            = *(battle_move_found_item_t*)battle_map_determine_rare_common_item(casting->battle_data);
+        g_battle_move_find_display_item = *battle_map_determine_rare_common_item(casting->battle_data);
         battle_gfx_store_item_display_data(source, g_battle_move_find_display_item.item_id);
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_FOUND_ITEM, source->facing, source);
         if (!(source->team_flags & BATTLE_TEAM_MASK)) {

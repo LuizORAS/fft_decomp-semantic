@@ -41,10 +41,10 @@ void helpmenu_menu_run_battle_help(void) {
     native_thread_t* scan_thread;
     help_request_t* request;
     native_thread_t* self_thread;
-    void* banner;
-    void* unit_data;
-    void* billboard;
-    void* cursor_tile;
+    battle_unit_status_record_t* banner;
+    battle_active_unit_t* unit_data;
+    battle_menu_status_panel_slot_storage_t* billboard;
+    map_selected_tile_t* cursor_tile;
     s32 missing_value;
 
     u_mid = 0xB8;
@@ -283,7 +283,7 @@ void helpmenu_menu_run_battle_help(void) {
             if (input & PSX_PAD_CIRCLE) {
                 if (node->value != 0) {
                     help_id = node->help_base + *node->value;
-                    if (node->help_base == -0x6800 && g_helpmenu_billboard.generic_monster != 0) {
+                    if (node->help_base == -0x6800 && g_helpmenu_billboard.state.generic_monster != 0) {
                         help_id = *node->value | 0x7800;
                         if ((*node->value & 0x7FF) == 0x7FF || (*node->value & 0x7FF) == 0) {
                             *g_helpmenu_controller_state_ptr = 0;

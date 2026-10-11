@@ -5,8 +5,8 @@
  * bytes and only whole sectors are read. A full heap reports
  * MAIN_SYSTEM_ERROR_SMD_LOAD and returns 0; the loader then only seeks, because
  * it skips the read for a null destination. */
-void* main_file_get_smd(int sector, u32 size) {
-    void* buffer;
+suzuki_smd_header_t* main_file_get_smd(int sector, u32 size) {
+    suzuki_smd_header_t* buffer;
     main_file_load_descriptor_t* header;
 
     buffer = main_heap_alloc_smd(size);

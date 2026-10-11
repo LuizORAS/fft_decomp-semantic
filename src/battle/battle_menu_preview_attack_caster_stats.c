@@ -13,7 +13,7 @@ void battle_menu_preview_attack_caster_stats(void) {
     /* Signed view of battle_ai_command_action_t for the ability id load. */
     world_unit_command_action_t* action;
     ability_data_t* ability_data;
-    ability_secondary_data_t* secondary;
+    main_ability_secondary_pointer_t secondary;
     s16* selected;
 
     attacker = battle_unit_get_attacker_data_pointer();
@@ -23,9 +23,9 @@ void battle_menu_preview_attack_caster_stats(void) {
     action = (world_unit_command_action_t*)battle_unit_get_target_id_ptr_by_battle_id(*selected);
     action->unit_id = *selected;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
-        main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability_data, (u8**)&secondary);
+        main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability_data, &secondary);
     }
-    if (((secondary->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE) && action->ability_id < ABILITY_ID_ITEM_FIRST)
+    if (((secondary.range->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE) && action->ability_id < ABILITY_ID_ITEM_FIRST)
         || action->skillset == SKILLSET_ID_EQUIP_CHANGE) {
         g_battle_menu_preview_target_action = 0;
     } else {

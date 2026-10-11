@@ -18,8 +18,10 @@ DIRENTRY* firstfile(char* pattern, DIRENTRY* entry);
 DIRENTRY* nextfile(DIRENTRY* entry);
 
 /* events */
+typedef s32 (*psyq_api_event_callback_t)(void);
+
 s32 CloseEvent(s32 event);
-s32 OpenEvent(s32 desc, s32 spec, s32 mode, s32 func);
+s32 OpenEvent(u32 desc, s32 spec, s32 mode, psyq_api_event_callback_t callback);
 s32 WaitEvent(s32 event);
 s32 TestEvent(s32 event);
 s32 EnableEvent(s32 event);

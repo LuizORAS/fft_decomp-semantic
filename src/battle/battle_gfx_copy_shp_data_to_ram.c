@@ -1,12 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* battle_gfx_weapon_shp_t with all of its 0x200 frame pointers. */
-typedef struct battle_gfx_shp_frame_table {
-    s16 first_frame[32];
-    u8* frames[0x200];
-} battle_gfx_shp_frame_table_t;
-
 /*
  * Unpack a weapon or effect SHP file into dst: after four unread bytes, the
  * first frame of each of 32 weapon types, 0x200 frame offsets that become
@@ -17,7 +11,7 @@ typedef struct battle_gfx_shp_frame_table {
  * The header loops read through `data` while the blob copy indexes `src`;
  * using one name for both loses the target's separate copy of the argument.
  */
-void battle_gfx_copy_shp_data_to_ram(battle_gfx_shp_frame_table_t* dst, u8* src) {
+void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, u8* src) {
     u32 i;
     u32 j;
     s32 offset;
@@ -39,7 +33,7 @@ void battle_gfx_copy_shp_data_to_ram(battle_gfx_shp_frame_table_t* dst, u8* src)
         if (value == -1) {
             value = 0;
         }
-        dst->frames[i] = g_battle_gfx_shp_frame_data_cursor + value;
+        dst->frames[i] = (battle_gfx_source_frame_t*)(g_battle_gfx_shp_frame_data_cursor + value);
         offset += 4;
     }
     word = data + offset;
