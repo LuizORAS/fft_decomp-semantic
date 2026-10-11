@@ -31,18 +31,10 @@ s32 battle_menu_build_quad_pieces(s32 group, POLY_GT4* poly) {
         poly->v2 = piece->v - 0x78 + (piece->h - 1);
         poly->u3 = piece->u + piece->w;
         poly->v3 = piece->v - 0x78 + (piece->h - 1);
-        poly->r0 = colors->vertex[0].r;
-        poly->g0 = colors->vertex[0].g;
-        poly->b0 = colors->vertex[0].b;
-        poly->r1 = colors->vertex[1].r;
-        poly->g1 = colors->vertex[1].g;
-        poly->b1 = colors->vertex[1].b;
-        poly->r2 = colors->vertex[2].r;
-        poly->g2 = colors->vertex[2].g;
-        poly->b2 = colors->vertex[2].b;
-        poly->r3 = colors->vertex[3].r;
-        poly->g3 = colors->vertex[3].g;
-        poly->b3 = colors->vertex[3].b;
+        setRGB0(poly, colors->vertex[0].r, colors->vertex[0].g, colors->vertex[0].b);
+        setRGB1(poly, colors->vertex[1].r, colors->vertex[1].g, colors->vertex[1].b);
+        setRGB2(poly, colors->vertex[2].r, colors->vertex[2].g, colors->vertex[2].b);
+        setRGB3(poly, colors->vertex[3].r, colors->vertex[3].g, colors->vertex[3].b);
         poly++;
         piece++;
     }

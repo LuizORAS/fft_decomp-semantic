@@ -103,18 +103,10 @@ void battle_effect_draw_projectile_model(
             battle_effect_decode_next_model_command(&command);
             if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G4) {
                 quad = &work->g4[g_battle_effect_buffer_index][g4_index];
-                quad->r0 = command.colors[0].r;
-                quad->g0 = command.colors[0].g;
-                quad->b0 = command.colors[0].b;
-                quad->r1 = command.colors[1].r;
-                quad->g1 = command.colors[1].g;
-                quad->b1 = command.colors[1].b;
-                quad->r2 = command.colors[2].r;
-                quad->g2 = command.colors[2].g;
-                quad->b2 = command.colors[2].b;
-                quad->r3 = command.colors[3].r;
-                quad->g3 = command.colors[3].g;
-                quad->b3 = command.colors[3].b;
+                setRGB0(quad, command.colors[0].r, command.colors[0].g, command.colors[0].b);
+                setRGB1(quad, command.colors[1].r, command.colors[1].g, command.colors[1].b);
+                setRGB2(quad, command.colors[2].r, command.colors[2].g, command.colors[2].b);
+                setRGB3(quad, command.colors[3].r, command.colors[3].g, command.colors[3].b);
                 quad->x0 = PT(0).vx;
                 quad->y0 = PT(0).vy;
                 z = PT(0).vz;
@@ -136,15 +128,9 @@ void battle_effect_draw_projectile_model(
             i++;
             if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][g3_index];
-                tri->r0 = command.colors[0].r;
-                tri->g0 = command.colors[0].g;
-                tri->b0 = command.colors[0].b;
-                tri->r1 = command.colors[1].r;
-                tri->g1 = command.colors[1].g;
-                tri->b1 = command.colors[1].b;
-                tri->r2 = command.colors[2].r;
-                tri->g2 = command.colors[2].g;
-                tri->b2 = command.colors[2].b;
+                setRGB0(tri, command.colors[0].r, command.colors[0].g, command.colors[0].b);
+                setRGB1(tri, command.colors[1].r, command.colors[1].g, command.colors[1].b);
+                setRGB2(tri, command.colors[2].r, command.colors[2].g, command.colors[2].b);
                 tri->x0 = PT(0).vx;
                 tri->y0 = PT(0).vy;
                 z = PT(0).vz;
@@ -174,15 +160,9 @@ void battle_effect_draw_projectile_model(
             i++;
             if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
-                tri->r0 = command.colors[0].r;
-                tri->g0 = command.colors[0].g;
-                tri->b0 = command.colors[0].b;
-                tri->r1 = command.colors[1].r;
-                tri->g1 = command.colors[1].g;
-                tri->b1 = command.colors[1].b;
-                tri->r2 = command.colors[2].r;
-                tri->g2 = command.colors[2].g;
-                tri->b2 = command.colors[2].b;
+                setRGB0(tri, command.colors[0].r, command.colors[0].g, command.colors[0].b);
+                setRGB1(tri, command.colors[1].r, command.colors[1].g, command.colors[1].b);
+                setRGB2(tri, command.colors[2].r, command.colors[2].g, command.colors[2].b);
                 tri->x0 = PT(0).vx;
                 tri->y0 = PT(0).vy;
                 z = PT(0).vz;
@@ -218,15 +198,9 @@ void battle_effect_draw_projectile_model(
                 tri = &work->prims[g_battle_effect_buffer_index][gt3_index];
                 tri->tpage = 0x3f;
                 tri->clut = g_battle_effect_current_secondary->own_slot_id + 0x7eff;
-                tri->r0 = command.colors[0].r;
-                tri->g0 = command.colors[0].g;
-                tri->b0 = command.colors[0].b;
-                tri->r1 = command.colors[1].r;
-                tri->g1 = command.colors[1].g;
-                tri->b1 = command.colors[1].b;
-                tri->r2 = command.colors[2].r;
-                tri->g2 = command.colors[2].g;
-                tri->b2 = command.colors[2].b;
+                setRGB0(tri, command.colors[0].r, command.colors[0].g, command.colors[0].b);
+                setRGB1(tri, command.colors[1].r, command.colors[1].g, command.colors[1].b);
+                setRGB2(tri, command.colors[2].r, command.colors[2].g, command.colors[2].b);
                 memcpy(&tri->u0, &command.texture[2], sizeof(command.texture[2]));
                 memcpy(&tri->u1, &command.texture[3], sizeof(command.texture[3]));
                 memcpy(&tri->u2, &command.texture[4], sizeof(command.texture[4]));
@@ -260,15 +234,9 @@ void battle_effect_draw_projectile_model(
             i++;
             if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
-                tri->r0 = command.colors[0].r;
-                tri->g0 = command.colors[0].g;
-                tri->b0 = command.colors[0].b;
-                tri->r1 = command.colors[1].r;
-                tri->g1 = command.colors[1].g;
-                tri->b1 = command.colors[1].b;
-                tri->r2 = command.colors[2].r;
-                tri->g2 = command.colors[2].g;
-                tri->b2 = command.colors[2].b;
+                setRGB0(tri, command.colors[0].r, command.colors[0].g, command.colors[0].b);
+                setRGB1(tri, command.colors[1].r, command.colors[1].g, command.colors[1].b);
+                setRGB2(tri, command.colors[2].r, command.colors[2].g, command.colors[2].b);
                 tri->x0 = PT(0).vx;
                 tri->y0 = PT(0).vy;
                 z = PT(0).vz;

@@ -8,9 +8,7 @@
 void battle_gfx_init_default_poly_ft4(POLY_FT4* poly) {
     SetPolyFT4(poly);
     SetShadeTex(poly, 0);
-    poly->r0 = 0x80;
-    poly->g0 = 0x80;
-    poly->b0 = 0x80;
+    setRGB0(poly, 0x80, 0x80, 0x80);
     poly->u1 = 1;
     poly->v2 = 1;
     poly->u3 = 1;

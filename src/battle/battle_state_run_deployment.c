@@ -29,9 +29,7 @@ void battle_state_run_deployment(void) {
     g_battle_map_data_load_complete = 0;
 
     SetPolyF4(&g_battle_screen_fade_polygons[0]);
-    g_battle_screen_fade_polygons[0].r0 = 0;
-    g_battle_screen_fade_polygons[0].g0 = 0;
-    g_battle_screen_fade_polygons[0].b0 = 0;
+    setRGB0(&g_battle_screen_fade_polygons[0], 0, 0, 0);
     g_battle_screen_fade_polygons[0].x0 = 0x80;
     g_battle_screen_fade_polygons[0].y0 = 0;
     g_battle_screen_fade_polygons[0].x1 = 0x180;
@@ -51,9 +49,7 @@ void battle_state_run_deployment(void) {
 
     ((P_TAG*)&banner[0])->len = 9;
     banner[0].code = 0x2c;
-    banner[0].r0 = 0x80;
-    banner[0].g0 = 0x80;
-    banner[0].b0 = 0x80;
+    setRGB0(&banner[0], 0x80, 0x80, 0x80);
     banner[0].x0 = 0x80;
     banner[0].y0 = 0x74;
     banner[0].x1 = 0x17f;

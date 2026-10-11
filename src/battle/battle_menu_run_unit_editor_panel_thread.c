@@ -49,9 +49,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], MENU_TEXTURE_PAGE_ITEM_ICONS);
     SetTile(&frame_record->tiles[0]);
     SetSemiTrans(&frame_record->tiles[0], 1);
-    frame_record->tiles[0].r0 = 0x30;
-    frame_record->tiles[0].g0 = 0x30;
-    frame_record->tiles[0].b0 = 0x30;
+    setRGB0(&frame_record->tiles[0], 0x30, 0x30, 0x30);
     frame_record->tiles[0].w = 0x10;
     frame_record->tiles[0].h = 0x5A;
     frame_record->tiles[0].x0 = g_battle_unit_editor_panel_rect.x;
@@ -63,9 +61,9 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     for (i = 0; i < 8 * WORLD_UNIT_EDITOR_LINE_SIZE; i += WORLD_UNIT_EDITOR_LINE_SIZE) {
         SetLineF2(line);
         SetSemiTrans(line, 1);
-        line->r0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_R];
-        line->g0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_G];
-        line->b0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_B];
+        setRGB0(line, g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_R],
+            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_G],
+            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_B]);
         line->x0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X0] + g_battle_unit_editor_panel_rect.x;
         line->y0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y0] + g_battle_unit_editor_panel_rect.y;
         line->x1 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X1] + g_battle_unit_editor_panel_rect.x;

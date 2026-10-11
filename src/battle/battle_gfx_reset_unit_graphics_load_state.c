@@ -22,14 +22,8 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
         g_battle_gfx_vram_slots[i].image_buffer_state = BATTLE_GFX_VRAM_SLOT_BUFFER_FREE;
         g_battle_gfx_vram_slots[i].evtchr_load_state = 0;
     }
-    g_battle_gfx_vram_slots[0].image_rect.x = 0x100;
-    g_battle_gfx_vram_slots[0].image_rect.y = 0;
-    g_battle_gfx_vram_slots[0].image_rect.w = 0x40;
-    g_battle_gfx_vram_slots[0].image_rect.h = 0xc8;
-    g_battle_gfx_vram_slots[1].image_rect.x = 0x140;
-    g_battle_gfx_vram_slots[1].image_rect.y = 0;
-    g_battle_gfx_vram_slots[1].image_rect.w = 0x40;
-    g_battle_gfx_vram_slots[1].image_rect.h = 0xc8;
+    setRECT(&g_battle_gfx_vram_slots[0].image_rect, 0x100, 0, 0x40, 0xc8);
+    setRECT(&g_battle_gfx_vram_slots[1].image_rect, 0x140, 0, 0x40, 0xc8);
     g_battle_gfx_seq_data_cursor = g_battle_gfx_unit_animation_data;
     g_battle_gfx_unit_graphics_load_state.file_kind = BATTLE_GFX_UNIT_LOAD_KIND_FIRST;
     g_battle_gfx_unit_graphics_load_state.phase = BATTLE_GFX_UNIT_LOAD_PHASE_START_READ;

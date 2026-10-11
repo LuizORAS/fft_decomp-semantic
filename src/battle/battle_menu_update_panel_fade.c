@@ -24,9 +24,8 @@ void battle_menu_update_panel_fade(void) {
                 g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_NONE;
             }
         }
-        frame->center.r0 = g_battle_menu_panel_fade_intensity;
-        frame->center.g0 = g_battle_menu_panel_fade_intensity;
-        frame->center.b0 = g_battle_menu_panel_fade_intensity;
+        setRGB0(&frame->center, g_battle_menu_panel_fade_intensity, g_battle_menu_panel_fade_intensity,
+            g_battle_menu_panel_fade_intensity);
         intensity = g_battle_menu_panel_fade_intensity;
         for (i = 0; i < 9; i++) {
             if (intensity != 0) {
@@ -36,9 +35,7 @@ void battle_menu_update_panel_fade(void) {
             (frame->backdrop + (8 - i))->r0 = intensity;
             (frame->backdrop + (8 - i))->g0 = intensity;
             (frame->backdrop + (8 - i))->b0 = intensity;
-            frame->bar[i].r0 = intensity;
-            frame->bar[i].g0 = intensity;
-            frame->bar[i].b0 = intensity;
+            setRGB0(&frame->bar[i], intensity, intensity, intensity);
             battle_gfx_draw_or_append_gpu_primitive(&frame->backdrop[8 - i]);
             battle_gfx_draw_or_append_gpu_primitive(&frame->bar[i]);
         }

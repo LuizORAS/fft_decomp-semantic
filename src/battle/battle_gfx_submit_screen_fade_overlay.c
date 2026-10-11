@@ -19,9 +19,7 @@ void battle_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* overlay, s
         blend = 2;
         overlay->tile.w = 256;
         overlay->tile.h = 240;
-        overlay->tile.r0 = 0;
-        overlay->tile.g0 = 0;
-        overlay->tile.b0 = 0;
+        setRGB0(&overlay->tile, 0, 0, 0);
         overlay->tile.x0 = 128;
         overlay->tile.y0 = 0;
         if (level < 0) {
@@ -29,9 +27,7 @@ void battle_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* overlay, s
             level = -level;
         }
         SetDrawMode(&overlay->mode, 0, 0, GetTPage(0, blend, 0x3c0, 0x100), &g_battle_menu_disabled_texture_window);
-        overlay->tile.r0 = level;
-        overlay->tile.g0 = level;
-        overlay->tile.b0 = level;
+        setRGB0(&overlay->tile, level, level, level);
         if (g_battle_etc_graphics_enabled != 0) {
             battle_gfx_draw_or_append_gpu_primitive(&overlay->mode);
             battle_gfx_draw_or_append_gpu_primitive(&overlay->tile);

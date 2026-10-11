@@ -157,13 +157,9 @@ void battle_menu_run_unit_summary_panel_thread(void) {
             value = 0;
         }
         if (value != 0) {
-            frame_record->portrait.r0 = 0x40;
-            frame_record->portrait.g0 = 0x40;
-            frame_record->portrait.b0 = 0x60;
+            setRGB0(&frame_record->portrait, 0x40, 0x40, 0x60);
         } else {
-            frame_record->portrait.r0 = 0x80;
-            frame_record->portrait.g0 = 0x80;
-            frame_record->portrait.b0 = 0x80;
+            setRGB0(&frame_record->portrait, 0x80, 0x80, 0x80);
         }
         SetSemiTrans(&frame_record->portrait, 1);
         battle_gfx_draw_or_append_gpu_primitive(&frame_record->portrait);

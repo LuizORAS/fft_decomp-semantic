@@ -252,13 +252,9 @@ s32 battle_menu_display_projected_action_effect(
         image = battle_thread_call_on_main_stack(g_battle_menu_preview_target_action);
         if (image > 0) {
             if (image & 0x80) {
-                prim->r0 = 0x30;
-                prim->g0 = 0x8c;
-                prim->b0 = 0xdc;
+                setRGB0(prim, 0x30, 0x8c, 0xdc);
             } else {
-                prim->r0 = 0xbe;
-                prim->g0 = 0x28;
-                prim->b0 = 0xa;
+                setRGB0(prim, 0xbe, 0x28, 0xa);
             }
             image &= 0x7f;
             image = g_battle_status_display_image_ids[image - 1];
