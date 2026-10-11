@@ -19,6 +19,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
     s32 keep;
     u16 rel;
     u32 id;
+    u16 checked_id;
     s32 checking;
     u8 skillset;
     u8 secondary;
@@ -85,15 +86,16 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
             }
             keep = 0;
             id = main_ability_get_id_from_skillset(skillset, j);
-            if ((id & 0xFFFF) == ABILITY_ID_REACTION_SUNKEN_STATE)
+            checked_id = id;
+            if (checked_id == ABILITY_ID_REACTION_SUNKEN_STATE)
                 continue;
-            if ((id & 0xFFFF) == innate[0])
+            if (checked_id == innate[0])
                 continue;
-            if ((id & 0xFFFF) == innate[1])
+            if (checked_id == innate[1])
                 continue;
-            if ((id & 0xFFFF) == innate[2])
+            if (checked_id == innate[2])
                 continue;
-            if ((id & 0xFFFF) == innate[3])
+            if (checked_id == innate[3])
                 continue;
             if (flags & RSM_ABILITY_FILTER_REACTION) {
                 rel = id - ABILITY_ID_REACTION_FIRST;
@@ -106,7 +108,8 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
                 }
             }
             if (flags & RSM_ABILITY_FILTER_MOVEMENT) {
-                if ((id & 0xFFFF) >= ABILITY_ID_MOVEMENT_FIRST) {
+                u16 movement_id = id;
+                if (movement_id >= ABILITY_ID_MOVEMENT_FIRST) {
                     keep = 1;
                 }
             }

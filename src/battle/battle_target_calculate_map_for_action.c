@@ -10,7 +10,7 @@
  */
 s32 battle_target_calculate_map_for_action(battle_action_command_t* action, u8* flags_3) {
     ability_secondary_data_t* ability;
-    s32 menu_type;
+    u8 menu_type;
     u8 flags_4;
     u8 flags_1;
     u8 flags_2;
@@ -22,7 +22,7 @@ s32 battle_target_calculate_map_for_action(battle_action_command_t* action, u8* 
     menu_type = g_main_action_menu_types_by_skillset[action->skillset_id];
     flags_2 = 0;
     *flags_3 = 0;
-    if ((menu_type & 0xff) == ACTION_MENU_TYPE_DEFAULT || (menu_type & 0xff) == ACTION_MENU_TYPE_MONSTER) {
+    if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_id = action->ability_id;
         if (ability_id < ABILITY_ID_ITEM_FIRST) {
             ability = &g_main_ability_range_data[ability_id];
@@ -32,7 +32,7 @@ s32 battle_target_calculate_map_for_action(battle_action_command_t* action, u8* 
             flags_2 = ability->flags_2;
         }
     }
-    if ((menu_type & 0xff) == ACTION_MENU_TYPE_ATTACK || (menu_type & 0xff) == ACTION_MENU_TYPE_CHARGE
+    if (menu_type == ACTION_MENU_TYPE_ATTACK || menu_type == ACTION_MENU_TYPE_CHARGE
         || menu_type == ACTION_MENU_TYPE_ITEM_INVENTORY || menu_type == ACTION_MENU_TYPE_WEAPON_INVENTORY
         || (flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) || (flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
         result = battle_target_validate_weapon_target(action);
