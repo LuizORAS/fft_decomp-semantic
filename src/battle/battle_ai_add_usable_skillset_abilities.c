@@ -79,7 +79,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
     }
     if (menu == ACTION_MENU_TYPE_CHARGE) {
         i = ai->unit_weapon_data[list_id].bytes.weapon_id;
-        if (i >= 0x47 && i < 0x4d) {
+        if (i >= ITEM_ID_ROMANDA_GUN && i <= ITEM_ID_BLAST_GUN) {
             return count;
         }
     }
