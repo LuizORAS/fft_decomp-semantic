@@ -177,13 +177,16 @@ typedef struct {
     u16 adsr2;         /* 0x3c */
 } SpuVoiceAttr;
 
+#define SPU_DECODEDDATA_SIZE 0x200
+#define SPU_DECODEDATA_SIZE  SPU_DECODEDDATA_SIZE
+
 /* Psy-Q SpuDecodedData: the SPU's decoded CD and voice 1/3 capture buffers.
  * SpuReadDecodedData (0x8001ac7c) offsets voice1 by 0x800 bytes. */
 typedef struct {
-    s16 cd_left[0x200];
-    s16 cd_right[0x200];
-    s16 voice1[0x200];
-    s16 voice3[0x200];
+    s16 cd_left[SPU_DECODEDDATA_SIZE];
+    s16 cd_right[SPU_DECODEDDATA_SIZE];
+    s16 voice1[SPU_DECODEDDATA_SIZE];
+    s16 voice3[SPU_DECODEDDATA_SIZE];
 } SpuDecodedData;
 
 typedef struct psyq_spu_heap_record {
@@ -194,7 +197,6 @@ typedef struct psyq_spu_heap_record {
 typedef void (*SpuTransferCallbackProc)(void);
 
 extern void SpuInit(void);
-extern void SsUtReverbOn(void);
 
 void SpuFree(u32 addr);
 s32 SpuMalloc(s32 size);

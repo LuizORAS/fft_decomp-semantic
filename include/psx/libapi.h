@@ -48,15 +48,15 @@ s32 ResetRCnt(u32 spec);
 /* card */
 /* SDK-family names; the exact export spelling of this linked version is unverified. */
 void InitCARD(s32 val);
-void StartCARD(void);
-void StopCARD(void);
+s32 StartCARD(void);
+s32 StopCARD(void);
 s32 _card_clear(s32 port);
 void _bu_init(void);
 s32 _card_auto(s32 val);
 s32 _card_info(s32 port);
 s32 _card_load(s32 port);
 s32 _card_status(s32 slot);
-s32 _card_write(s32 port, s32 sector, const void* data);
+s32 _card_write(s32 port, s32 sector, const u8* data);
 void _new_card(void);
 void InitCARD2(s32 pad_enable);
 s32 StartCARD2(void);
@@ -67,8 +67,9 @@ void StopPAD(void);
 s32 PAD_init2(s32 type, u32* buttons);
 
 /* system */
-void InitHeap(void* arena, u32 size);
+void InitHeap(u32* arena, u32 size);
 void FlushCache(void);
+void SetMem(s32 mode);
 void _96_remove(void);
 void GPU_cw(u32 command);
 

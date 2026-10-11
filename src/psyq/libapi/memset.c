@@ -3,6 +3,6 @@
 #include "psx/libapi.h"
 #include "psx/libc.h"
 
-void* memset(void* destination, int value, unsigned int size) {
+void* memset(void* destination, u8 value, int size) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_A, PSYQ_BIOS_A_MEMSET);
 }

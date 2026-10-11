@@ -98,7 +98,6 @@ typedef void (*CdlCB)(u8 event, u8* result);
 
 extern s32 CdInit(void);
 extern int CdSetDebug(int level);
-extern void SetMem(int);
 extern CdlCB CdReadyCallback(CdlCB callback);
 extern CdlCB CdReadCallback(CdlCB callback);
 extern int CdControl(u8, u8*, u8*);
@@ -111,7 +110,7 @@ extern int CdGetSector(void*, int);
 extern int CdDataSync(int);
 
 s32 CdMix(CdlATV* vol);
-s32 CdControlB(u8 command, const u8* parameter, u8* result);
+s32 CdControlB(u8 command, u8* parameter, u8* result);
 s32 CdRead2(s32 mode);
 s32 StGetBackloc(CdlLOC* position);
 u32 StGetNext(u32** frame_data, u32** header);

@@ -1,7 +1,8 @@
 #include "psx/cpu_abi_inline.h"
 #include "psx/libcard.h"
 
-void StopCARD(void) {
+/* Leaves the return value unspecified. */
+s32 StopCARD(void) {
     StopCARD2();
     _patch_card2();
     psyq_card_restore_exception_prefix();

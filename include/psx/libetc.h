@@ -9,18 +9,18 @@
 typedef void (*psyq_interrupt_callback_t)(void);
 
 extern int VSync(int);
-extern void ResetCallback(void);
-extern void VSyncCallback(psyq_interrupt_callback_t callback);
+extern s32 ResetCallback(void);
+extern s32 VSyncCallback(psyq_interrupt_callback_t callback);
 extern void PadInit(int);
 extern u32 PadRead(s32);
 
 s32 GetVideoMode(void);
 void PadStop(void);
-void StopCallback(void);
+s32 StopCallback(void);
 psyq_interrupt_callback_t DMACallback(s32 dma_channel, psyq_interrupt_callback_t func);
 
 psyq_interrupt_callback_t InterruptCallback(s32 channel, psyq_interrupt_callback_t callback);
-psyq_interrupt_callback_t VSyncCallbacks(s32 slot, psyq_interrupt_callback_t callback);
+s32 VSyncCallbacks(s32 slot, psyq_interrupt_callback_t callback);
 s32 RestartCallback(void);
 s32 CheckCallback(void);
 s32 GetIntrMask(void);
