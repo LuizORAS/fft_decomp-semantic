@@ -23,7 +23,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     count = g_main_active_propositions[proposition].participant_count;
     g_wldcore_proposition_gil_amount = 0;
     for (i = 0; i < count; i++) {
-        g_wldcore_proposition_gil_amount += g_wldcore_job_selection.rows[2][i];
+        g_wldcore_proposition_gil_amount += g_wldcore_job_selection.participant_gil[i];
     }
     g_wldcore_proposition_gil_amount += g_wldcore_job_selection.reward_value;
     g_world_text_substitution_values[1] = g_wldcore_proposition_gil_amount;
@@ -79,7 +79,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
 
         point.x = 0xA0;
         point.y = (text_rows + row) * 0x10 + 8;
-        g_world_text_substitution_values[0] = g_wldcore_job_selection.rows[0][i];
+        g_world_text_substitution_values[0] = g_wldcore_job_selection.participant_jp[i];
         wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_FOUR_DIGIT_VALUE, point, g_wldcore_window_image_buffer);
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);
@@ -95,7 +95,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     g_world_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
     message = 0x9C;
     world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_get_party_unit_formation_sprite(*party));
-    if (g_wldcore_job_selection.gate != 0) {
+    if (g_wldcore_job_selection.recalled != 0) {
         message = 0xA2;
     }
     if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {

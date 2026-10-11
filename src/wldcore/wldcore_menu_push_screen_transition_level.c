@@ -12,14 +12,14 @@
  *   0x1d  hides the render objects, sets menu slot 4's cursor to 2, restarts
  *         music 0x220, resets the level's window, records in g_wldcore_brave_story_saved_cursor
  *         whether script variable 0x92 and any of variables 0x1a4..0x1bb are
- *         set, closes the parent list, loads chapter 4 and saves the word
- *         pair at 0x80049a10;
+ *         set, closes the parent list, loads chapter 4 and restores the
+ *         saved list cursor;
  *   0x2b  hides the render objects and restarts music 0x21a;
  *   0x2c  rebuilds the tutorial category panel image and closes the parent
  *         list frame windows;
  *   0x2d  hides the render objects, sets menu slot 4's cursor to 3, resets
- *         the level's window, reopens the tutorial categories and saves the
- *         word pair at 0x80049a10.
+ *         the level's window, reopens the tutorial categories and restores the
+ *         saved list cursor.
  * It then records the three arguments on the new level, zeroes the 0x1e000
  * scratch buffer, blacks the menu brightness out, starts WORLD thread 4 and
  * pushes the level as type 0x31 with delay = 0x14.

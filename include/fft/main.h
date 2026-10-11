@@ -474,13 +474,6 @@ typedef struct wldcore_saved_record {
 } wldcore_saved_record_t;
 typedef char wldcore_saved_record_size_must_be_56[sizeof(wldcore_saved_record_t) == 56 ? 1 : -1];
 
-/* Provisional: an adjacent word pair copied as one structure. The paired
- * type reproduces the target's two-load/two-store schedule. */
-typedef struct wldcore_word_pair {
-    s32 first;
-    s32 second;
-} wldcore_word_pair_t;
-
 extern u8 g_main_save_proposition_count;
 extern s32 g_main_saved_animation_speed;
 extern s32 g_main_saved_weather_variable;
@@ -493,7 +486,7 @@ extern u32 g_main_land_discovery_date_bits[5];
 extern u8 g_main_proposition_states[96]; /* wldcore_proposition_state_e */
 extern struct wldcore_sound_novel_script_file g_main_save_slot_buffer;
 extern u32 g_main_saved_data_bits[40];
-extern wldcore_word_pair_t g_main_saved_list_cursor_state;
+extern menu_cursor_state_t g_main_saved_list_cursor_state;
 extern wldcore_proposition_progress_t g_main_active_propositions[8];
 extern wldcore_saved_record_t g_main_saved_records[];
 void main_save_init_data_tables(void);

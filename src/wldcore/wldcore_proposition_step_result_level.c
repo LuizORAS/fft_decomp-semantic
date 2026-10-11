@@ -34,7 +34,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
                 wldcore_menu_push_countdown_level();
                 return;
             }
-            if (g_wldcore_job_selection.gate == 0) {
+            if (g_wldcore_job_selection.recalled == 0) {
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 0x10);
             }
             wldcore_list_open_completed_propositions();
@@ -44,7 +44,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     if (level->phase == WLDCORE_PROPOSITION_RESULT_PHASE_CLOSING) {
         if (g_wldcore_audio_queue.count == 0 && g_wldcore_audio_queue.current_command == WLDCORE_AUDIO_COMMAND_NONE
             && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
-            if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_job_selection.gate == 0) {
+            if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_job_selection.recalled == 0) {
                 wldcore_sound_enqueue_audio_command(
                     WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BAR));
             }
@@ -106,7 +106,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
             ->proposition_status = 0;
         main_job_add_proposition_jp(
             g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i],
-            g_wldcore_job_selection.rows[0][i]);
+            g_wldcore_job_selection.participant_jp[i]);
     }
     if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_FAILURE) {
         g_main_proposition_states[g_main_active_propositions[g_wldcore_job_selection.proposition_index].proposition_id]
@@ -120,7 +120,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
         g_main_active_propositions[i] = g_main_active_propositions[i + 1];
     }
     g_main_save_proposition_count--;
-    if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_job_selection.gate == 0) {
+    if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_job_selection.recalled == 0) {
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
     }
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);

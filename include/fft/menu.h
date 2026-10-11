@@ -1160,6 +1160,13 @@ typedef enum menu_window_frame_mode {
     MENU_WINDOW_FRAME_ALTERNATE_BUILD = 3,
 } menu_window_frame_mode_e;
 
+/* The selected row and scroll offset saved across list transitions. */
+typedef struct menu_cursor_state {
+    s32 selected_index; /* 0x00 */
+    s32 scroll_offset;  /* 0x04 */
+} menu_cursor_state_t;
+typedef char menu_cursor_state_size_must_be_8[sizeof(menu_cursor_state_t) == 8 ? 1 : -1];
+
 /* A remembered list cursor, scroll base and entry id. The menu restores the
  * cursor by entry id when the live list has changed. */
 /* menu selection */

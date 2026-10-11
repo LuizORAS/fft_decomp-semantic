@@ -19,7 +19,7 @@ void wldcore_menu_push_proposition_report_level(s32 argument) {
     g_wldcore_menu_stack_records_next[depth].proposition_report.load_phase = WLDCORE_PROPOSITION_REPORT_LOAD_MESSAGES;
     g_wldcore_menu_stack_records_next[depth].proposition_report.render_index = -1;
     g_wldcore_menu_ordering_table_offset = 9;
-    if (g_wldcore_job_selection.gate != 0) {
+    if (g_wldcore_job_selection.recalled != 0) {
         g_wldcore_menu_stack_records_next[depth].proposition_report.state = 0x63;
     } else {
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_PROPOSITION_REPORT));

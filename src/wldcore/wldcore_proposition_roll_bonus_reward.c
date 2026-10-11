@@ -8,7 +8,7 @@
  * still clear in 0x321..0x33f or 0x350..0x35f, falling back to any index;
  * otherwise field 11 == 1 rolls a three-tier random reward (60/30/10%).
  * The chosen pair from proposition data records 10/11 then adds its bonus
- * to every participant's row 0 and sets the reward value. The target places
+ * to every participant's JP award and sets the reward value. The target places
  * the random-reward branch last, hence the goto. */
 void wldcore_proposition_roll_bonus_reward(void) {
     s32 candidates[32];
@@ -67,7 +67,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
     index = (g_wldcore_selected_proposition_row[0].fields.category_index - 1) * 2;
     for (i = 0; i < participant_count; i++) {
         bonus = bonus_table[location_pairs[index + 1] - 1];
-        g_wldcore_job_selection.rows[0][i] += bonus;
+        g_wldcore_job_selection.participant_jp[i] += bonus;
     }
     g_wldcore_job_selection.reward_value = value_table[location_pairs[index] - 1];
     return;
@@ -92,7 +92,7 @@ random_reward:
     participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
     for (i = 0; i < participant_count; i++) {
         bonus = bonus_table[random_pairs[index].jp_index - 1];
-        g_wldcore_job_selection.rows[0][i] += bonus;
+        g_wldcore_job_selection.participant_jp[i] += bonus;
     }
     g_wldcore_job_selection.reward_value = value_table[random_pairs[index].gil_index - 1];
 }

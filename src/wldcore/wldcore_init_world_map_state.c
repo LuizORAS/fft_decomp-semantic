@@ -9,7 +9,7 @@
  */
 
 void wldcore_init_world_map_state(void) {
-    wldcore_menu_cursor_state_t* cursor;
+    menu_cursor_state_t* cursor;
     GsBOXF* box;
     party_data_t* party;
     wldcore_date_t date;

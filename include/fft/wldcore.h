@@ -93,9 +93,11 @@ typedef struct wldcore_job_selection {
     s32 reward_type;          /* 0x14; wldcore_proposition_reward_e */
     s32 reward_index;         /* 0x18 */
     s32 reward_value;         /* 0x1c */
-    s32 gate;                 /* 0x20; set for a dispatched proposition */
+    s32 recalled;             /* 0x20; reward calculation is skipped after a recall */
     u8 _unused_24[0x10];
-    s32 rows[3][3]; /* 0x34; per-participant score/report rows */
+    s32 participant_jp[3];     /* 0x34; JP awarded to each participant */
+    s32 participant_scores[3]; /* 0x40; success-score contribution */
+    s32 participant_gil[3];    /* 0x4c; contribution to the total gil reward */
 } wldcore_job_selection_t;
 typedef char wldcore_job_selection_size_must_be_88[sizeof(wldcore_job_selection_t) == 88 ? 1 : -1];
 
@@ -324,7 +326,7 @@ typedef struct wldcore_slideshow {
 } wldcore_slideshow_t;
 
 extern s32* g_wldcore_rumor_location_masks;
-extern wldcore_word_pair_t g_wldcore_story_events_cursor_state;
+extern menu_cursor_state_t g_wldcore_story_events_cursor_state;
 extern u8 (*g_wldcore_brave_story_birthdays)[2];
 extern u8 g_wldcore_brave_story_help_text_ids[];
 extern s32 g_wldcore_brave_story_saved_cursor[];
@@ -876,7 +878,7 @@ typedef enum wldcore_send_unit_mode {
  * +0x2c and starts WORLD thread 14, and stepped by
  * wldcore_proposition_step_report_level. */
 typedef struct wldcore_proposition_report_level {
-    s32 state; /* 0x00; step index, -1 .. 0x12; pushed as -1, or 0x63 when g_wldcore_job_selection.gate is set */
+    s32 state; /* 0x00; step index, -1 .. 0x12; pushed as -1, or 0x63 when the proposition was recalled */
     s32 phase; /* 0x04; wldcore_proposition_step_message phase; cleared at push */
     u8 _unused_08[4];
     s32 load_phase;   /* 0x0c; wldcore_proposition_report_load_e; MESSAGES at push */
@@ -1377,12 +1379,6 @@ typedef enum wldcore_cursor_slot {
 } wldcore_cursor_slot_e;
 
 enum { WLDCORE_CURSOR_SLOT_COUNT = 21 };
-
-typedef struct wldcore_menu_cursor_state {
-    s32 selected_index;
-    s32 scroll_offset;
-} wldcore_menu_cursor_state_t;
-typedef char wldcore_menu_cursor_state_size_must_be_8[sizeof(wldcore_menu_cursor_state_t) == 8 ? 1 : -1];
 
 /* Rows of g_wldcore_anim_sequence_table that the code selects: the animation
  * a window record plays. The CURSOR and *_PRESS sequences other than
@@ -1960,7 +1956,7 @@ typedef struct wldcore_window_panel_layout {
     s32 visible_rows;
 } wldcore_window_panel_layout_t;
 
-extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
+extern menu_cursor_state_t g_wldcore_menu_cursor_states[];
 
 /* libgs sprite sorted by wldcore_draw_close_indicator_if_pending through
  * GsSortSprite (0x800e0480). */
@@ -2128,7 +2124,7 @@ extern u32 g_wldcore_new_button_presses;
 extern u32 g_wldcore_polled_button_input;
 extern u32 g_wldcore_previous_button_input;
 extern s16 g_wldcore_panel_row_actions[16];
-extern wldcore_word_pair_t g_wldcore_tutorial_entries_cursor_state;
+extern menu_cursor_state_t g_wldcore_tutorial_entries_cursor_state;
 extern s32 g_wldcore_context_value_display_mode;
 
 /* Saved proposition-list cursor row. Declared as an array: GCC's alias
