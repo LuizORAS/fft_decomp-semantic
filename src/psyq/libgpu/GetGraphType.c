@@ -2,5 +2,5 @@
 #include "psx/libgpu.h"
 
 int GetGraphType(void) {
-    return g_psyq_gpu_graph_type;
+    return g_psyq_gpu_environment.graph_type;
 }

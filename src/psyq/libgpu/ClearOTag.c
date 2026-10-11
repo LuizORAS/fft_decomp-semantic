@@ -1,7 +1,7 @@
 /* LIBGPU 80024a88-80024b40. */
 #include "psx/libgpu.h"
 u32* ClearOTag(u32* ot, int count) {
-    if (g_psyq_gpu_debug_level >= 2)
+    if (g_psyq_gpu_environment.debug_level >= 2)
         g_psyq_gpu_printf(g_psyq_gpu_clear_otag_format, ot, count);
     while (--count) {
         P_TAG* entry = (P_TAG*)ot;

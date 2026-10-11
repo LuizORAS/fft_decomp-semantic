@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 void checkRECT(const char* name, RECT* rect) {
-    switch (g_psyq_gpu_debug_level) {
+    switch (g_psyq_gpu_environment.debug_level) {
     case 1:
         if (rect->w > g_psyq_gpu_environment.vram_width || rect->w + rect->x > g_psyq_gpu_environment.vram_width
             || rect->y > g_psyq_gpu_environment.vram_height || rect->y + rect->h > g_psyq_gpu_environment.vram_height

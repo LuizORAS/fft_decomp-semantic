@@ -2,6 +2,6 @@
 #include "psx/libgpu.h"
 
 DRAWENV* GetDrawEnv(DRAWENV* env) {
-    psyq_api_memcpy(env, &g_psyq_gpu_draw_environment, sizeof(DRAWENV));
+    psyq_api_memcpy(env, &g_psyq_gpu_environment.draw, sizeof(DRAWENV));
     return env;
 }
