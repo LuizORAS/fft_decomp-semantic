@@ -5,7 +5,16 @@
 
 #include "fft/battle.h"
 
+/* text */
+
+typedef struct small_text_name_section_offsets {
+    u32 unit_names;
+    u32 job_names;
+} small_text_name_section_offsets_t;
+
+extern const small_text_name_section_offsets_t g_small_text_name_section_offsets;
 extern u8 g_small_text_name_data[];
+
 void small_text_init_battle_pointers(void);
 
 #endif

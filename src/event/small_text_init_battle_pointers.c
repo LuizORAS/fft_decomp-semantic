@@ -1,12 +1,5 @@
 #include "fft/event_small.h"
 
-typedef struct small_text_name_section_offsets {
-    u32 unit_names;
-    u32 job_names;
-} small_text_name_section_offsets_t;
-
-extern const small_text_name_section_offsets_t g_small_text_name_section_offsets;
-
 /* Bind the roster and job name sections to the overlay's name data, alias
  * the skillset-name copy to the skillset names and zero the deployment unit
  * limit. */

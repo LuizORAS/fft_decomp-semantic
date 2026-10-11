@@ -2,8 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-#define FRAME_RECT g_debugchr_character_status_frame_rect
-
 /* Thread task 0x3b: the combined status panel for the selected unit. REQUIRE
  * twin of bunit_menu_equipment_and_ability_panel_thread. */
 void debugchr_panel_run_character_status_thread(void) {
@@ -25,7 +23,7 @@ void debugchr_panel_run_character_status_thread(void) {
     screen = g_debugchr_panel_frames_a;
     base = g_debugchr_panel_frames_a;
     state = &g_debugchr_editor_unit_fields.state;
-    rect = FRAME_RECT;
+    rect = g_debugchr_character_status_frame_rect;
     battle_menu_init_numeric_display_frame_primitives(rect, &screen->numeric_frame);
     debugchr_gfx_init_menu_tile_and_line_primitives(screen);
     debugchr_gfx_init_scaled_draw_area_packets(&screen->portrait);
@@ -35,7 +33,7 @@ void debugchr_panel_run_character_status_thread(void) {
     }
     i = 0;
     /* The line pass reloads the origin address instead of reusing `rect`. */
-    offsets = FRAME_RECT;
+    offsets = g_debugchr_character_status_frame_rect;
     for (; i < 8; i++) {
         screen->lines[i].x0 += offsets->x;
         screen->lines[i].y0 += offsets->y;
@@ -125,7 +123,8 @@ void debugchr_panel_run_character_status_thread(void) {
         }
         for (i = 0; i < 5; i++) {
             battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[19 + i],
-                g_debugchr_panel_item_icon_texture, FRAME_RECT, &g_debugchr_panel_item_icon_layouts[i]);
+                g_debugchr_panel_item_icon_texture, g_debugchr_character_status_frame_rect,
+                &g_debugchr_panel_item_icon_layouts[i]);
             if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                 battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {
