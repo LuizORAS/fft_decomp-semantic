@@ -149,7 +149,7 @@ typedef struct {
 
 #define setlen(p, l)  (((P_TAG*)(p))->len = (u8)(l))
 #define setcode(p, c) (((P_TAG*)(p))->code = (u8)(c))
-#define getlen(p)     (((P_TAG*)(p))->len)
+#define getlen(p)     ((u8)((P_TAG*)(p))->len)
 #define getcode(p)    (((P_TAG*)(p))->code)
 
 #define setPolyF3(p)  (setlen(p, 4), setcode(p, 0x20))
@@ -465,8 +465,8 @@ typedef DR_MODE DR_TWIN;
 /* SDK upload primitive storage; SetDrawLoad fills its header only. */
 typedef struct {
     u32 tag;
-    u32 code[3];
-    u32 p[13];
+    u32 code[4];
+    u32 p[12];
 } DR_LOAD;
 
 typedef struct {
@@ -625,6 +625,9 @@ typedef struct {
 } TMD_PRIM;
 
 typedef char assert_tmd_prim_size[sizeof(TMD_PRIM) == 120 ? 1 : -1];
+
+#define FNT_MAX_ID   8
+#define FNT_MAX_SPRT 1024
 
 extern void FntLoad(int, int);
 extern int FntOpen(int, int, int, int, int, int);
@@ -785,11 +788,11 @@ typedef struct {
     int wrap_disabled;
 } psyq_font_window_t;
 
-extern psyq_font_window_t Font[8];
+extern psyq_font_window_t Font[FNT_MAX_ID];
 extern int g_psyq_gpu_font_allocated_characters;
 extern const char* g_psyq_gpu_font_hex_digits;
-extern char g_psyq_gpu_font_text_pool[1024];
-extern SPRT_8 g_psyq_gpu_font_sprite_pool[1024];
+extern char g_psyq_gpu_font_text_pool[FNT_MAX_SPRT];
+extern SPRT_8 g_psyq_gpu_font_sprite_pool[FNT_MAX_SPRT];
 extern u16 g_psyq_gpu_font_tpage;
 extern u16 g_psyq_gpu_font_clut;
 extern int g_psyq_gpu_sync_deadline;

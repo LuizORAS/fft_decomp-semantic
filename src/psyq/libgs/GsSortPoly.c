@@ -9,7 +9,7 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     POLY_F4* source_coordinates;
     POLY_F4* destination_coordinates;
     s32 len;
-    s32 code;
+    u8 code;
     s32 gouraud;
     s32 quad;
     s32 textured;

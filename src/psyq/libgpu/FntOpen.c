@@ -5,13 +5,13 @@ int FntOpen(int x, int y, int width, int height, int background, int characters)
     RECT window;
     SPRT_8* sprite;
     int i;
-    if (g_psyq_gpu_font_window_count >= 8)
+    if (g_psyq_gpu_font_window_count >= FNT_MAX_ID)
         return -1;
     if (g_psyq_gpu_font_window_count == 0)
         g_psyq_gpu_font_allocated_characters = 0;
     Font[g_psyq_gpu_font_window_count].wrap_disabled = width == 0;
-    if (characters + g_psyq_gpu_font_allocated_characters > 1024)
-        characters = 1024 - g_psyq_gpu_font_allocated_characters;
+    if (characters + g_psyq_gpu_font_allocated_characters > FNT_MAX_SPRT)
+        characters = FNT_MAX_SPRT - g_psyq_gpu_font_allocated_characters;
     setRECT(&window, 0, 0, 256, 256);
     SetDrawMode(&Font[g_psyq_gpu_font_window_count].mode, 0, 0, g_psyq_gpu_font_tpage, &window);
     if (background) {
