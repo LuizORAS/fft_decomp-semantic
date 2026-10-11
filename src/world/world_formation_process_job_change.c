@@ -9,7 +9,7 @@
  * Run one frame of the WORLD job-change graphic dissolve; returns 1 while it
  * runs, 2 during the closing frames and 0 once finished.
  *
- * The first call changes unit 0x14 to `job`, copies the VRAM strip at
+ * The first call changes the preview record to `job`, copies the VRAM strip at
  * g_world_job_change_old_sprite_rect and the unit's new graphic into heap buffers, and shuffles a
  * 480-entry byte-index table. Each frame clears two shuffled bytes of the old
  * strip, copies the same bytes of the new graphic into an initially blank
@@ -48,8 +48,8 @@ s32 world_formation_process_job_change(s32 job) {
         world_gfx_store_image_and_wait(&g_world_job_change_old_sprite_rect, g_world_job_change_old_sprite_image);
         g_world_job_change_new_sprite_image = main_heap_alloc(0x1e0);
         memset(g_world_job_change_new_sprite_image, 0, 0x1e0);
-        world_formation_change_unit_job(0x14, job, 0);
-        world_formation_build_unit_graphic_entry(0x14, &scratch.entry, 0);
+        world_formation_change_unit_job(WORLD_FORMATION_PREVIEW_UNIT_INDEX, job, 0);
+        world_formation_build_unit_graphic_entry(WORLD_FORMATION_PREVIEW_UNIT_INDEX, &scratch.entry, 0);
         g_world_job_change_new_sprite_source = main_heap_alloc(0x1e0);
         if (scratch.entry.tpage == 100) {
             rect.x = (scratch.entry.u >> 2) + 0x100;

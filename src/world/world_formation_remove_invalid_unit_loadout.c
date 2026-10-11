@@ -6,7 +6,8 @@
  * Drop equipment and abilities a formation unit can no longer use.
  *
  * Unequippable items (status 0, -1 or -6) and a second hand weapon without
- * Two Swords are removed, returning items to inventory except for slot 20.
+ * Two Swords are removed, returning items to inventory except for the preview
+ * record.
  * Mime clears every ability slot, jobs with an innate support ability drop
  * the redundant copy, and a secondary skillset equal to the primary is
  * cleared. The loop counter and status locals are reused for the two hand
@@ -20,7 +21,7 @@ void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
         status = world_formation_can_equip_item_in_slot(
             unit_id, i, g_world_formation_unit_pointers[unit_id]->equipment[i]);
         if (status == -1 || status == 0 || status == -6) {
-            if (unit_id != 20) {
+            if (unit_id != WORLD_FORMATION_PREVIEW_UNIT_INDEX) {
                 world_item_adjust_inventory_count(g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
             }
             g_world_formation_unit_pointers[unit_id]->equipment[i] = ITEM_ID_NOTHING;
@@ -30,7 +31,7 @@ void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
     status = g_world_formation_unit_pointers[unit_id]->equipment[1];
     if (i < ITEM_ID_THROWABLE_FIRST && i != ITEM_ID_NOTHING && status < ITEM_ID_THROWABLE_FIRST
         && status != ITEM_ID_NOTHING && world_ability_has_two_swords(unit_id) == 0) {
-        if (unit_id != 20) {
+        if (unit_id != WORLD_FORMATION_PREVIEW_UNIT_INDEX) {
             world_item_adjust_inventory_count(g_world_formation_unit_pointers[unit_id]->equipment[1], 1);
         }
         g_world_formation_unit_pointers[unit_id]->equipment[1] = ITEM_ID_NOTHING;
@@ -62,7 +63,7 @@ void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
         == g_world_formation_unit_pointers[unit_id]->abilities.fields.secondary_skillset) {
         g_world_formation_unit_pointers[unit_id]->abilities.fields.secondary_skillset = 0;
     }
-    if (unit_id != 20) {
+    if (unit_id != WORLD_FORMATION_PREVIEW_UNIT_INDEX) {
         world_formation_save_records_to_party_data();
     }
 }

@@ -114,7 +114,7 @@ s32 world_menu_run_remove_item(void) {
         g_world_remove_item_previewed_slot = slot;
         preview_item = (u8)g_world_remove_item_equipment[slot];
         if (preview_item != ITEM_ID_NOTHING) {
-            world_formation_equip_item_to_unit_slot(20, slot, ITEM_ID_NOTHING);
+            world_formation_equip_item_to_unit_slot(WORLD_FORMATION_PREVIEW_UNIT_INDEX, slot, ITEM_ID_NOTHING);
             world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
                 &g_world_selected_unit_stat_summary,
                 g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,

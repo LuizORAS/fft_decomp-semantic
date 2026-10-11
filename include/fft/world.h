@@ -1279,6 +1279,11 @@ void world_input_update_menu_state(void);
 
 /* formation */
 
+enum {
+    WORLD_FORMATION_PREVIEW_UNIT_INDEX = PARTY_ROSTER_SLOT_COUNT,
+    WORLD_FORMATION_UNIT_RECORD_COUNT = WORLD_FORMATION_PREVIEW_UNIT_INDEX + 1,
+};
+
 /* Screen x and texture u of one background tile; two alternating rows of four. */
 typedef struct world_formation_background_tile {
     u16 x;
@@ -1570,11 +1575,11 @@ extern point16_t g_world_formation_cursor_trail[8];
 extern u8 g_world_formation_dismiss_step;
 extern menu_entry_t* g_world_formation_dismiss_menu_data;
 extern s16 g_world_formation_record_order[];
-extern struct world_formation_unit g_world_formation_unit_records[];
+extern struct world_formation_unit g_world_formation_unit_records[WORLD_FORMATION_UNIT_RECORD_COUNT];
 extern u8 g_world_formation_menu_text_buffer[];
 
-/* Signed count of accepted records; pointer entry 20 is a separate extra
- * record at 0x801c9d58, installed by 0x80121fac–0x80121fb8. */
+/* Signed count of accepted roster records; the sorter also installs the
+ * separate preview record at WORLD_FORMATION_PREVIEW_UNIT_INDEX. */
 extern s16 g_world_formation_record_count; /* 0x801c8634 */
 
 /* Menu callers cache the builder's return here; rebuilding the record list
@@ -1602,7 +1607,7 @@ typedef enum world_formation_record_list_mode {
     WORLD_FORMATION_RECORD_LIST_AVAILABLE_HUMANS = 1, /* no unit on a proposition, egg or monster */
     WORLD_FORMATION_RECORD_LIST_MONSTERS = 2,         /* no egg, male or female unit */
 } world_formation_record_list_mode_e;
-s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list, s32 mode);
+s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** unused_list, s32 mode);
 
 void world_formation_build_unit_graphic_entry(s16 formation_index, texture_source_t* destination, s32 unused);
 
