@@ -107,9 +107,9 @@ s32 effect_e134_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 
         case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
             tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                 g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-            origin.vx += g_battle_effect_target_tile.data.tile.vx * 28 + 14;
+            origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             origin.vy -= tile->height * 12;
-            origin.vz += g_battle_effect_target_tile.data.tile.vz * 28 + 14;
+            origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             break;
         case EFFECT_EMITTER_ORIGIN_CASTER:
             battle_effect_resolve_target_render_coords(

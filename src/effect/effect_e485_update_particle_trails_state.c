@@ -129,8 +129,8 @@ s32 effect_e485_update_particle_trails_state(s16 record_index, s32 callback_slot
             case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
                 tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-                origin.vx += g_battle_effect_target_tile.data.tile.vx * 28 + 14;
-                origin.vz += g_battle_effect_target_tile.data.tile.vz * 28 + 14;
+                origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 origin.vy -= tile->height * 12;
                 break;
             case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -207,8 +207,8 @@ s32 effect_e485_update_particle_trails_state(s16 record_index, s32 callback_slot
             case EFFECT_EMITTER_HOMING_CURSOR_TILE:
                 tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-                tip.vx += g_battle_effect_target_tile.data.tile.vx * 28 + 14;
-                tip.vz += g_battle_effect_target_tile.data.tile.vz * 28 + 14;
+                tip.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                tip.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 tip.vy -= tile->height * 12;
                 break;
             }

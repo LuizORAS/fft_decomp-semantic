@@ -11,8 +11,8 @@ s32 battle_gfx_calculate_screen_z_from_misc_map_data(battle_unit_misc_data_t* un
     s32 screen_z;
 
     mount = battle_unit_get_mount_misc_data(unit);
-    coord.vx = mount->map_x * 0x1c + 0xe;
-    coord.vz = mount->map_y * 0x1c + 0xe;
+    coord.vx = mount->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+    coord.vz = mount->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     coord.vy = mount->map_z;
     screen_z = battle_gfx_calculate_screen_z_from_input_coords(mount, &coord);
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {

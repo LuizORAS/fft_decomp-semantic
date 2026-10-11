@@ -2,7 +2,6 @@
 #include "psx/types.h"
 
 enum {
-    BATTLE_MOVE_STEP_WIDTH = 28,
     BATTLE_MOVE_STEP_HEIGHT_SCALE = 6,
 };
 
@@ -21,20 +20,20 @@ void battle_move_set_unit_step_delta_edge_to_center(
         * BATTLE_MOVE_STEP_HEIGHT_SCALE;
     switch (step->value >> 6) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
-        direction.vx = BATTLE_MOVE_STEP_WIDTH;
+        direction.vx = MAP_TILE_SIZE;
         direction.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
-        direction.vx = -BATTLE_MOVE_STEP_WIDTH;
+        direction.vx = -MAP_TILE_SIZE;
         direction.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         direction.vx = 0;
-        direction.vz = -BATTLE_MOVE_STEP_WIDTH;
+        direction.vz = -MAP_TILE_SIZE;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         direction.vx = 0;
-        direction.vz = BATTLE_MOVE_STEP_WIDTH;
+        direction.vz = MAP_TILE_SIZE;
         break;
     }
     VectorNormal(&direction, &unit->velocity);

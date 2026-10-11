@@ -24,23 +24,23 @@ void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 di
     if (other == 0) {
         return;
     }
-    x = other->map_x * 28 + 14;
-    y = other->map_y * 28 + 14;
+    x = other->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+    y = other->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     switch (direction) {
     case BATTLE_MOVE_DIRECTION_NORTH:
-        center = unit->map_y * 28 + 14;
+        center = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = unit->screen.vz - center;
         break;
     case BATTLE_MOVE_DIRECTION_SOUTH:
-        center = unit->map_y * 28 + 14;
+        center = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = center - unit->screen.vz;
         break;
     case BATTLE_MOVE_DIRECTION_WEST:
-        center = unit->map_x * 28 + 14;
+        center = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = center - unit->screen.vx;
         break;
     case BATTLE_MOVE_DIRECTION_EAST:
-        center = unit->map_x * 28 + 14;
+        center = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = unit->screen.vx - center;
         break;
     }

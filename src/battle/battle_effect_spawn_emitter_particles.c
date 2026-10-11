@@ -124,8 +124,8 @@ s32 battle_effect_spawn_emitter_particles(
     case EFFECT_EMITTER_ORIGIN_WORLD:
         break;
     case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-        spawn.vx += g_battle_effect_target_tile.data.tile.vx * 28 + 14;
-        spawn.vz += g_battle_effect_target_tile.data.tile.vz * 28 + 14;
+        spawn.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        spawn.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         spawn.vy -= tile->height * 12;
         break;
     case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -395,8 +395,8 @@ s32 battle_effect_spawn_emitter_particles(
         }
         break;
     case EFFECT_EMITTER_HOMING_CURSOR_TILE:
-        tile_anchor.vx = g_battle_effect_target_tile.data.tile.vx * 28 + 14;
-        tile_anchor.vz = g_battle_effect_target_tile.data.tile.vz * 28 + 14;
+        tile_anchor.vx = g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        tile_anchor.vz = g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         tile_anchor.vy = -(tile->height * 12);
         for (i = 0; i < count; i++) {
             particle->target.x = tile_anchor.vx + target_offset.vx;

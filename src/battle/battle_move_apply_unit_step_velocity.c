@@ -34,8 +34,8 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     battle_unit_misc_data_t* rider;
     s32 depth;
 
-    tile[0] = (unit->real.vx + unit->velocity.vx) / (28 * ONE);
-    tile[1] = (unit->real.vz + unit->velocity.vz) / (28 * ONE);
+    tile[0] = (unit->real.vx + unit->velocity.vx) / (MAP_TILE_SIZE * ONE);
+    tile[1] = (unit->real.vz + unit->velocity.vz) / (MAP_TILE_SIZE * ONE);
     layer = unit->map_z;
     if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
         && unit->map_z != unit->movement.bytes.destination_z) {

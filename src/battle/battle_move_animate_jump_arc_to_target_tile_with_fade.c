@@ -26,8 +26,8 @@ void battle_move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        target.vx = unit->map_x * 28 + 14;
-        target.vz = unit->map_y * 28 + 14;
+        target.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        target.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         target.vy = battle_gfx_calculate_screen_z_from_misc_map_data(unit);
         timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
         unit->shadow_graphic_trigger = 0;
@@ -61,7 +61,8 @@ void battle_move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data
         timer--;
         break;
     case 3:
-        main_util_set_svector(&target, unit->map_x * 28 + 14, 0, unit->map_y * 28 + 14);
+        main_util_set_svector(&target, unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), 0,
+            unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
         target.vy = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
         if (unit->screen.vy < target.vy) {
             unit->real.vy += velocity.vy;

@@ -59,8 +59,8 @@ void battle_map_init_weather_particles(s32 command) {
     case MAP_WEATHER_COMMAND_INIT_RAIN_PARTICLES:
         g_battle_map_weather_effect_mode = BATTLE_MAP_WEATHER_EFFECT_RAIN;
         for (i = 0; i < 32; i++) {
-            g_battle_map_weather_particles[i].x = rand() % (g_battle_map_tile_width * 28);
-            g_battle_map_weather_particles[i].z = rand() % (g_battle_map_tile_depth * 28);
+            g_battle_map_weather_particles[i].x = rand() % (g_battle_map_tile_width * MAP_TILE_SIZE);
+            g_battle_map_weather_particles[i].z = rand() % (g_battle_map_tile_depth * MAP_TILE_SIZE);
             g_battle_map_weather_particles[i].y = -(rand() % 384) - 384;
             g_battle_map_weather_particles[i + 32].x = g_battle_map_weather_particles[i].x;
             g_battle_map_weather_particles[i + 32].z = g_battle_map_weather_particles[i].z;

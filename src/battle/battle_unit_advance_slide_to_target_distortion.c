@@ -29,10 +29,14 @@ void battle_unit_advance_slide_to_target_distortion(battle_unit_misc_data_t* uni
                 velocity.vz = (velocity.vz - velocity.vz / 8) % 0xe000;
                 velocity.vy = 0;
             } else {
-                velocity.vx = (unit->screen.vx - (unit->battle_data->action_command.target_position.vx * 28 + 0xe))
+                velocity.vx = (unit->screen.vx
+                                  - (unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE
+                                      + (MAP_TILE_SIZE / 2)))
                     << 12;
                 velocity.vx = (velocity.vx - velocity.vx / 8) % 0xe000;
-                velocity.vz = (unit->screen.vz - (unit->battle_data->action_command.target_position.vz * 28 + 0xe))
+                velocity.vz = (unit->screen.vz
+                                  - (unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE
+                                      + (MAP_TILE_SIZE / 2)))
                     << 12;
                 velocity.vz = (velocity.vz - velocity.vz / 8) % 0xe000;
                 velocity.vy = 0;

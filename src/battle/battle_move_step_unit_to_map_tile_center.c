@@ -16,10 +16,10 @@ void battle_move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        velocity.vx = (unit->map_x * 0x1C + 0xE - unit->screen.vx) << 12;
-        velocity.vz = (unit->map_y * 0x1C + 0xE - unit->screen.vz) << 12;
-        tile_center.vx = unit->map_x * 0x1C + 0xE;
-        tile_center.vz = unit->map_y * 0x1C + 0xE;
+        velocity.vx = (unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) - unit->screen.vx) << 12;
+        velocity.vz = (unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) - unit->screen.vz) << 12;
+        tile_center.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        tile_center.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         velocity.vy = (battle_map_calculate_slope_height(&tile_center, unit->map_z) - unit->screen.vy) << 12;
         velocity.vx /= timer;
         velocity.vy /= timer;

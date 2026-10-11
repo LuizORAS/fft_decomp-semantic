@@ -6,6 +6,9 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* Horizontal X/Z extent of one terrain tile in map geometry units. */
+enum { MAP_TILE_SIZE = 28 };
+
 /* Terrain storage has two fixed-size layers, independent of the map dimensions. */
 enum {
     MAP_TERRAIN_LAYER_COUNT = 2,

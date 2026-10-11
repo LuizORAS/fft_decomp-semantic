@@ -16,11 +16,11 @@ void battle_unit_face_toward_cursor(battle_unit_misc_data_t* unit) {
         s32 tile_y;
         difference.vz = 0;
         difference.vx = 0;
-        tile_x = cursor_x * 28;
-        unit_x = unit->screen.vx - 14;
+        tile_x = cursor_x * MAP_TILE_SIZE;
+        unit_x = unit->screen.vx - MAP_TILE_SIZE / 2;
         difference.vx = tile_x - unit_x;
-        tile_y = cursor_y * 28;
-        unit_y = unit->screen.vz - 14;
+        tile_y = cursor_y * MAP_TILE_SIZE;
+        unit_y = unit->screen.vz - MAP_TILE_SIZE / 2;
         difference.vz = tile_y - unit_y;
         if (difference.vx != 0 || difference.vz != 0) {
             unit->facing = (ratan2(-difference.vz, difference.vx) - 0x200) & 0xC00;

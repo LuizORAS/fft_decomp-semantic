@@ -245,8 +245,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         half_size = g_battle_map_camera_zoom.vx * g_battle_map_weather_sprite_scale / 0x100000;
         for (i = 0; i < 64; i++) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
-            tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
-                + g_battle_map_weather_particles[i].x / 28;
+            tile = (g_battle_map_weather_particles[i].z / MAP_TILE_SIZE) * g_battle_map_tile_width
+                + g_battle_map_weather_particles[i].x / MAP_TILE_SIZE;
             ground = -((g_battle_map_tile_data_ptr[tile].height
                            + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                 * 12);
@@ -337,13 +337,13 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         half_size = g_battle_map_camera_zoom.vx * g_battle_map_weather_sprite_scale / 0x100000;
         for (i = 0; i < 64; i++) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
-            tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
-                + g_battle_map_weather_particles[i].x / 28;
+            tile = (g_battle_map_weather_particles[i].z / MAP_TILE_SIZE) * g_battle_map_tile_width
+                + g_battle_map_weather_particles[i].x / MAP_TILE_SIZE;
             ground = -((g_battle_map_tile_data_ptr[tile].height
                            + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                 * 12);
-            tile = (g_battle_map_weather_particles[i + 32].z / 28) * g_battle_map_tile_width
-                + g_battle_map_weather_particles[i + 32].x / 28;
+            tile = (g_battle_map_weather_particles[i + 32].z / MAP_TILE_SIZE) * g_battle_map_tile_width
+                + g_battle_map_weather_particles[i + 32].x / MAP_TILE_SIZE;
             ground = -((g_battle_map_tile_data_ptr[tile].height
                            + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                 * 12);
@@ -445,15 +445,15 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         half_size /= 0x2000;
         for (i = 0; i < 32; i++) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
-            tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
-                + g_battle_map_weather_particles[i].x / 28;
+            tile = (g_battle_map_weather_particles[i].z / MAP_TILE_SIZE) * g_battle_map_tile_width
+                + g_battle_map_weather_particles[i].x / MAP_TILE_SIZE;
             ground = -((g_battle_map_tile_data_ptr[tile].height
                            + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
                 * 12);
             if (ground < g_battle_map_weather_particles[i + 32].y) {
                 g_battle_map_weather_particles[i].fall_speed = 0;
-                g_battle_map_weather_particles[i].x = rand() % (g_battle_map_tile_width * 28);
-                g_battle_map_weather_particles[i].z = rand() % (g_battle_map_tile_depth * 28);
+                g_battle_map_weather_particles[i].x = rand() % (g_battle_map_tile_width * MAP_TILE_SIZE);
+                g_battle_map_weather_particles[i].z = rand() % (g_battle_map_tile_depth * MAP_TILE_SIZE);
                 spawn_y = -0x180;
                 g_battle_map_weather_particles[i].y = spawn_y;
                 g_battle_map_weather_particles[i + 32].x = g_battle_map_weather_particles[i].x;

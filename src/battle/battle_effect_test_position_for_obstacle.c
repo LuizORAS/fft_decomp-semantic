@@ -18,8 +18,8 @@ s32 battle_effect_test_position_for_obstacle(
     s32 i;
 
     *out_unit = -1;
-    tile_ref->x = position->vx / 28;
-    tile_ref->y = position->vz / 28;
+    tile_ref->x = position->vx / MAP_TILE_SIZE;
+    tile_ref->y = position->vz / MAP_TILE_SIZE;
     tile = battle_map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 0);
     if (tile->ceiling_depth_and_marks.bits.ceiling_depth == 0) {
         ceiling = tile->height;

@@ -20,20 +20,24 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
     case 0:
         if (unit->battle_data != 0) {
             if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
-                velocity.vx = ((unit->map_x * 0x1C + 0xE) << 12) - unit->real.vx;
-                velocity.vz = ((unit->map_y * 0x1C + 0xE) << 12) - unit->real.vz;
+                velocity.vx = ((unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) << 12) - unit->real.vx;
+                velocity.vz = ((unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) << 12) - unit->real.vz;
                 velocity.vy = 0;
             } else if (unit->strike.target_count != 0) {
                 target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
                 setVector(&velocity, target->real.vx - unit->real.vx, target->real.vy - unit->real.vy,
                     target->real.vz - unit->real.vz);
             } else {
-                velocity.vx = (unit->battle_data->action_command.target_position.vx * 0x1C + 0xE - unit->screen.vx)
+                velocity.vx = (unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE
+                                  + (MAP_TILE_SIZE / 2) - unit->screen.vx)
                     << 12;
-                velocity.vz = (unit->battle_data->action_command.target_position.vz * 0x1C + 0xE - unit->screen.vz)
+                velocity.vz = (unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE
+                                  + (MAP_TILE_SIZE / 2) - unit->screen.vz)
                     << 12;
-                tile_center.vx = unit->battle_data->action_command.target_position.vx * 0x1C + 0xE;
-                tile_center.vz = unit->battle_data->action_command.target_position.vz * 0x1C + 0xE;
+                tile_center.vx
+                    = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                tile_center.vz
+                    = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 velocity.vy = (battle_map_calculate_slope_height(
                                    &tile_center, unit->battle_data->action_command.target_position.vy)
                                   - unit->screen.vy)

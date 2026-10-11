@@ -28,8 +28,10 @@ void battle_effect_resolve_target_render_coords(
             tile = battle_map_get_tile_data_pointer(coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vx,
                 coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vz,
                 coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vy);
-            out->vx = coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vx * 28 + 14;
-            out->vz = coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vz * 28 + 14;
+            out->vx
+                = coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+            out->vz
+                = coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             if (add_depth != 0) {
                 out->vy = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
             } else {
@@ -50,8 +52,8 @@ void battle_effect_resolve_target_render_coords(
         } else {
             tile = battle_map_get_tile_data_pointer(coord_data->targets[target_index].data.tile.vx,
                 coord_data->targets[target_index].data.tile.vz, coord_data->targets[target_index].data.tile.vy);
-            out->vx = coord_data->targets[target_index].data.tile.vx * 28 + 14;
-            out->vz = coord_data->targets[target_index].data.tile.vz * 28 + 14;
+            out->vx = coord_data->targets[target_index].data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+            out->vz = coord_data->targets[target_index].data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             if (add_depth != 0) {
                 out->vy = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
             } else {

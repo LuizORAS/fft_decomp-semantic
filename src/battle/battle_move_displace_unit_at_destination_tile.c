@@ -32,23 +32,23 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     if (other == 0) {
         return;
     }
-    x = other->movement.bytes.destination_x * 28 + 14;
-    y = other->movement.bytes.destination_y * 28 + 14;
+    x = other->movement.bytes.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+    y = other->movement.bytes.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     switch (direction) {
     case BATTLE_MOVE_DIRECTION_NORTH:
-        center = unit->movement.bytes.destination_y * 28 + 14;
+        center = unit->movement.bytes.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = center - unit->screen.vz;
         break;
     case BATTLE_MOVE_DIRECTION_SOUTH:
-        center = unit->movement.bytes.destination_y * 28 + 14;
+        center = unit->movement.bytes.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = unit->screen.vz - center;
         break;
     case BATTLE_MOVE_DIRECTION_WEST:
-        center = unit->movement.bytes.destination_x * 28 + 14;
+        center = unit->movement.bytes.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = unit->screen.vx - center;
         break;
     case BATTLE_MOVE_DIRECTION_EAST:
-        center = unit->movement.bytes.destination_x * 28 + 14;
+        center = unit->movement.bytes.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = center - unit->screen.vx;
         break;
     }

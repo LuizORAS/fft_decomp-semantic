@@ -3,8 +3,8 @@
 
 /* Surface height for a slope rising (UP) or falling (DOWN) across the tile. */
 #define SLOPE_PRODUCT(f) ((f) * (half * 12))
-#define SLOPE_UP(f)      (base - SLOPE_PRODUCT(f) / 28)
-#define SLOPE_DOWN(f)    (base - (half * 12 - SLOPE_PRODUCT(f) / 28))
+#define SLOPE_UP(f)      (base - SLOPE_PRODUCT(f) / MAP_TILE_SIZE)
+#define SLOPE_DOWN(f)    (base - (half * 12 - SLOPE_PRODUCT(f) / MAP_TILE_SIZE))
 
 /*
  * Return the negated terrain height, in screen units, under a point.
@@ -26,8 +26,8 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
     s32 lhs;
     s32 rhs;
 
-    tile_pos[0] = coords->vx / 28;
-    tile_pos[1] = coords->vz / 28;
+    tile_pos[0] = coords->vx / MAP_TILE_SIZE;
+    tile_pos[1] = coords->vz / MAP_TILE_SIZE;
     tile = battle_map_get_tile_data_pointer(tile_pos[0], tile_pos[1], (u8)map_z);
     base = -(tile->height * 12);
     half = tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK;
@@ -35,24 +35,24 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
     if (half != 0) {
         switch (tile->slope_type) {
         case MAP_SLOPE_EDGE_EAST:
-            x = coords->vx % 28;
+            x = coords->vx % MAP_TILE_SIZE;
             result = SLOPE_UP(x);
             break;
         case MAP_SLOPE_EDGE_WEST:
-            x = coords->vx % 28;
+            x = coords->vx % MAP_TILE_SIZE;
             result = SLOPE_DOWN(x);
             break;
         case MAP_SLOPE_EDGE_SOUTH:
-            z = coords->vz % 28;
+            z = coords->vz % MAP_TILE_SIZE;
             result = SLOPE_DOWN(z);
             break;
         case MAP_SLOPE_EDGE_NORTH:
-            z = coords->vz % 28;
+            z = coords->vz % MAP_TILE_SIZE;
             result = SLOPE_UP(z);
             break;
         case MAP_SLOPE_LOW_CORNER_NORTH_EAST:
-            x = coords->vx % 28;
-            z = coords->vz % 28;
+            x = coords->vx % MAP_TILE_SIZE;
+            z = coords->vz % MAP_TILE_SIZE;
             lhs = x;
             rhs = z;
             if (lhs < rhs) {
@@ -62,10 +62,10 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_LOW_CORNER_SOUTH_EAST:
-            x = coords->vx % 28;
-            z = coords->vz % 28;
+            x = coords->vx % MAP_TILE_SIZE;
+            z = coords->vz % MAP_TILE_SIZE;
             lhs = x;
-            rhs = 28 - z;
+            rhs = MAP_TILE_SIZE - z;
             if (lhs >= rhs) {
                 result = SLOPE_DOWN(z);
             } else {
@@ -73,10 +73,10 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_LOW_CORNER_SOUTH_WEST:
-            x = coords->vx % 28;
-            z = coords->vz % 28;
-            lhs = 28 - x;
-            rhs = 28 - z;
+            x = coords->vx % MAP_TILE_SIZE;
+            z = coords->vz % MAP_TILE_SIZE;
+            lhs = MAP_TILE_SIZE - x;
+            rhs = MAP_TILE_SIZE - z;
             if (lhs >= rhs) {
                 result = SLOPE_DOWN(z);
             } else {
@@ -84,9 +84,9 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_LOW_CORNER_NORTH_WEST:
-            x = coords->vx % 28;
-            z = coords->vz % 28;
-            lhs = 28 - x;
+            x = coords->vx % MAP_TILE_SIZE;
+            z = coords->vz % MAP_TILE_SIZE;
+            lhs = MAP_TILE_SIZE - x;
             rhs = z;
             if (lhs >= rhs) {
                 result = SLOPE_UP(rhs);
@@ -95,8 +95,8 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_HIGH_CORNER_NORTH_EAST:
-            x = coords->vx % 28;
-            z = coords->vz % 28;
+            x = coords->vx % MAP_TILE_SIZE;
+            z = coords->vz % MAP_TILE_SIZE;
             lhs = x;
             rhs = z;
             if (lhs >= rhs) {
@@ -106,10 +106,10 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_HIGH_CORNER_SOUTH_EAST:
-            x = coords->vx % 28;
-            z = coords->vz % 28;
+            x = coords->vx % MAP_TILE_SIZE;
+            z = coords->vz % MAP_TILE_SIZE;
             lhs = x;
-            rhs = 28 - z;
+            rhs = MAP_TILE_SIZE - z;
             if (lhs >= rhs) {
                 result = SLOPE_UP(lhs);
             } else {
@@ -117,10 +117,10 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_HIGH_CORNER_SOUTH_WEST:
-            x = coords->vx % 28;
-            z = coords->vz % 28;
-            lhs = 28 - x;
-            rhs = 28 - z;
+            x = coords->vx % MAP_TILE_SIZE;
+            z = coords->vz % MAP_TILE_SIZE;
+            lhs = MAP_TILE_SIZE - x;
+            rhs = MAP_TILE_SIZE - z;
             if (lhs < rhs) {
                 result = SLOPE_DOWN(z);
             } else {
@@ -128,9 +128,9 @@ s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
             }
             break;
         case MAP_SLOPE_HIGH_CORNER_NORTH_WEST:
-            x = coords->vx % 28;
-            z = coords->vz % 28;
-            lhs = 28 - x;
+            x = coords->vx % MAP_TILE_SIZE;
+            z = coords->vz % MAP_TILE_SIZE;
+            lhs = MAP_TILE_SIZE - x;
             rhs = z;
             if (lhs >= rhs) {
                 result = SLOPE_DOWN(x);

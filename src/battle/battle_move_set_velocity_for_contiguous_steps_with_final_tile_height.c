@@ -2,8 +2,7 @@
 #include "psx/types.h"
 
 enum {
-    BATTLE_MOVE_STEP_WIDTH = 28,
-    BATTLE_MOVE_STEP_HALF_WIDTH = 14,
+    BATTLE_MOVE_STEP_HALF_WIDTH = MAP_TILE_SIZE / 2,
     BATTLE_MOVE_STEP_HEIGHT_SCALE = 6,
 };
 
@@ -51,23 +50,23 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
         switch (code >> 6) {
         case BATTLE_MOVE_STEP_DIRECTION_EAST:
             x += (code & 3) + 1;
-            end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_WIDTH;
-            end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
+            end_x = (x * MAP_TILE_SIZE) + MAP_TILE_SIZE;
+            end_y = (y * MAP_TILE_SIZE) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
         case BATTLE_MOVE_STEP_DIRECTION_WEST:
             x -= (code & 3) + 1;
-            end_x = x * BATTLE_MOVE_STEP_WIDTH;
-            end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
+            end_x = x * MAP_TILE_SIZE;
+            end_y = (y * MAP_TILE_SIZE) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
         case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
             y -= (code & 3) + 1;
-            end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
-            end_y = y * BATTLE_MOVE_STEP_WIDTH;
+            end_x = (x * MAP_TILE_SIZE) + BATTLE_MOVE_STEP_HALF_WIDTH;
+            end_y = y * MAP_TILE_SIZE;
             break;
         case BATTLE_MOVE_STEP_DIRECTION_NORTH:
             y += (code & 3) + 1;
-            end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
-            end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_WIDTH;
+            end_x = (x * MAP_TILE_SIZE) + BATTLE_MOVE_STEP_HALF_WIDTH;
+            end_y = (y * MAP_TILE_SIZE) + MAP_TILE_SIZE;
             break;
         }
         layer = (current->value >> 5) & 1;

@@ -35,7 +35,7 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
 
     layer = unit->map_z;
     battle_unit_copy_misc_data_xyz_values(&coords, unit);
-    tile = battle_map_get_tile_data_pointer((coords.vx / 28), (coords.vz / 28), layer);
+    tile = battle_map_get_tile_data_pointer((coords.vx / MAP_TILE_SIZE), (coords.vz / MAP_TILE_SIZE), layer);
     depth = tile->depth_half_height.value;
     height = tile->height + (depth >> MAP_TILE_DEPTH_SHIFT);
     slope_type = tile->slope_type;
@@ -55,135 +55,143 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
     }
     switch (slope_type) {
     case MAP_SLOPE_EDGE_EAST: /* edge up to east */
-        tx = coords.vx % 28;
+        tx = coords.vx % MAP_TILE_SIZE;
         rise = tx * 12;
-        quad[0].vy = quad[1].vy = quad[3].vy = quad[2].vy = quad[3].vy - rise * slope / 28;
+        quad[0].vy = quad[1].vy = quad[3].vy = quad[2].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         quad[0].vy = quad[2].vy = quad[2].vy + 6;
         quad[1].vy = quad[3].vy = quad[3].vy - 6;
         break;
     case MAP_SLOPE_EDGE_WEST: /* edge up to west */
-        tx = coords.vx % 28;
+        tx = coords.vx % MAP_TILE_SIZE;
         rise = tx * 12;
-        quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+        quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         quad[1].vy = quad[3].vy = quad[3].vy + 6;
         quad[0].vy = quad[2].vy = quad[2].vy - 6;
         break;
     case MAP_SLOPE_EDGE_SOUTH: /* edge up to south */
-        ty = coords.vz % 28;
+        ty = coords.vz % MAP_TILE_SIZE;
         rise = ty * 12;
-        quad[0].vy = quad[2].vy = quad[3].vy = quad[1].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+        quad[0].vy = quad[2].vy = quad[3].vy = quad[1].vy = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         quad[0].vy = quad[1].vy = quad[1].vy + 6;
         quad[2].vy = quad[3].vy = quad[3].vy - 6;
         break;
     case MAP_SLOPE_EDGE_NORTH: /* edge up to north */
-        ty = coords.vz % 28;
+        ty = coords.vz % MAP_TILE_SIZE;
         rise = ty * 12;
-        quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+        quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         quad[2].vy = quad[3].vy = quad[3].vy + 6;
         quad[0].vy = quad[1].vy = quad[1].vy - 6;
         break;
     case MAP_SLOPE_LOW_CORNER_NORTH_EAST: /* low corner, north-east up */
-        tx = coords.vx % 28;
-        ty = coords.vz % 28;
+        tx = coords.vx % MAP_TILE_SIZE;
+        ty = coords.vz % MAP_TILE_SIZE;
         lhs = tx;
         rhs = ty;
         if (lhs < rhs) {
             rise = lhs * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         } else {
             rise = rhs * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         }
         break;
     case MAP_SLOPE_LOW_CORNER_SOUTH_EAST: /* low corner, south-east up */
-        tx = coords.vx % 28;
-        ty = coords.vz % 28;
+        tx = coords.vx % MAP_TILE_SIZE;
+        ty = coords.vz % MAP_TILE_SIZE;
         lhs = tx;
-        rhs = 28 - ty;
+        rhs = MAP_TILE_SIZE - ty;
         if (lhs >= rhs) {
             rise = ty * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy
+                = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         } else {
             rise = lhs * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         }
         break;
     case MAP_SLOPE_LOW_CORNER_SOUTH_WEST: /* low corner, south-west up */
-        tx = coords.vx % 28;
-        ty = coords.vz % 28;
-        lhs = 28 - tx;
-        rhs = 28 - ty;
+        tx = coords.vx % MAP_TILE_SIZE;
+        ty = coords.vz % MAP_TILE_SIZE;
+        lhs = MAP_TILE_SIZE - tx;
+        rhs = MAP_TILE_SIZE - ty;
         if (lhs >= rhs) {
             rise = ty * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy
+                = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         } else {
             rise = tx * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy
+                = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         }
         break;
     case MAP_SLOPE_LOW_CORNER_NORTH_WEST: /* low corner, north-west up */
-        tx = coords.vx % 28;
-        ty = coords.vz % 28;
-        lhs = 28 - tx;
+        tx = coords.vx % MAP_TILE_SIZE;
+        ty = coords.vz % MAP_TILE_SIZE;
+        lhs = MAP_TILE_SIZE - tx;
         rhs = ty;
         if (lhs >= rhs) {
             rise = rhs * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         } else {
             rise = tx * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy
+                = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         }
         break;
     case MAP_SLOPE_HIGH_CORNER_NORTH_EAST: /* high corner, north-east up */
-        tx = coords.vx % 28;
-        ty = coords.vz % 28;
+        tx = coords.vx % MAP_TILE_SIZE;
+        ty = coords.vz % MAP_TILE_SIZE;
         lhs = tx;
         rhs = ty;
         if (lhs >= rhs) {
             rise = lhs * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         } else {
             rise = rhs * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         }
         break;
     case MAP_SLOPE_HIGH_CORNER_SOUTH_EAST: /* high corner, south-east up */
-        tx = coords.vx % 28;
-        ty = coords.vz % 28;
+        tx = coords.vx % MAP_TILE_SIZE;
+        ty = coords.vz % MAP_TILE_SIZE;
         lhs = tx;
-        rhs = 28 - ty;
+        rhs = MAP_TILE_SIZE - ty;
         if (lhs >= rhs) {
             rise = lhs * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         } else {
             rise = ty * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy
+                = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         }
         break;
     case MAP_SLOPE_HIGH_CORNER_SOUTH_WEST: /* high corner, south-west up */
-        tx = coords.vx % 28;
-        ty = coords.vz % 28;
-        lhs = 28 - tx;
-        rhs = 28 - ty;
+        tx = coords.vx % MAP_TILE_SIZE;
+        ty = coords.vz % MAP_TILE_SIZE;
+        lhs = MAP_TILE_SIZE - tx;
+        rhs = MAP_TILE_SIZE - ty;
         if (lhs < rhs) {
             rise = ty * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy
+                = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         } else {
             rise = tx * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy
+                = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         }
         break;
     case MAP_SLOPE_HIGH_CORNER_NORTH_WEST: /* high corner, north-west up */
-        tx = coords.vx % 28;
-        ty = coords.vz % 28;
-        lhs = 28 - tx;
+        tx = coords.vx % MAP_TILE_SIZE;
+        ty = coords.vz % MAP_TILE_SIZE;
+        lhs = MAP_TILE_SIZE - tx;
         rhs = ty;
         if (lhs >= rhs) {
             rise = tx * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - (slope * 12 - rise * slope / 28);
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy
+                = quad[3].vy - (slope * 12 - rise * slope / MAP_TILE_SIZE);
         } else {
             rise = rhs * 12;
-            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / 28;
+            quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = quad[3].vy - rise * slope / MAP_TILE_SIZE;
         }
         break;
     }

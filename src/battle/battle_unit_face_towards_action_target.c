@@ -21,8 +21,10 @@ void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battl
         delta.vx = target->screen.vx - unit->screen.vx;
         delta.vz = target->screen.vz - unit->screen.vz;
     } else if (unit->battle_data->action_command.targeting_type == BATTLE_TARGETING_TYPE_TILE) {
-        delta.vx = unit->battle_data->action_command.target_position.vx * 28 + 14 - unit->screen.vx;
-        delta.vz = unit->battle_data->action_command.target_position.vz * 28 + 14 - unit->screen.vz;
+        delta.vx = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
+            - unit->screen.vx;
+        delta.vz = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
+            - unit->screen.vz;
     } else {
         other = battle_unit_get_misc_data_by_battle_id(unit->battle_data->action_command.target_id);
         if (other != 0) {

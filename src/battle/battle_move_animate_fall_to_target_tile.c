@@ -43,25 +43,29 @@ void battle_move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
     case 1:
         if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
             unit->strike.target_count = 0;
-            x = unit->map_x * 28 + 14;
+            x = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             unit->screen.vx = x;
             unit->real.vx = x << 12;
-            y = unit->map_y * 28 + 14;
+            y = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             unit->screen.vz = y;
             /* Retail stores the tile-centre depth into real.vy (the height),
              * not real.vz. The first frame adds the fall speed to it and the
              * next one snaps the height to the ground. */
             unit->real.vy = y << 12;
-            main_util_set_svector(&coords, unit->map_x * 28 + 14, unit->map_z, unit->map_y * 28 + 14);
+            main_util_set_svector(&coords, unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), unit->map_z,
+                unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
             coords.vy = screen_z_from_misc_screen_data(unit, &coords);
         } else {
             if (unit->strike.target_count != 0) {
                 other = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
-                main_util_set_svector(&coords, other->map_x * 28 + 14, other->map_z, other->map_y * 28 + 14);
+                main_util_set_svector(&coords, other->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), other->map_z,
+                    other->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
             } else {
                 stats = unit->battle_data;
-                main_util_set_svector(&coords, stats->action_command.target_position.vx * 28 + 14,
-                    stats->action_command.target_position.vy, stats->action_command.target_position.vz * 28 + 14);
+                main_util_set_svector(&coords,
+                    stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2),
+                    stats->action_command.target_position.vy,
+                    stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
             }
             coords.vy = battle_gfx_calculate_screen_z_with_caller_data(unit, &coords);
         }

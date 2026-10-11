@@ -16,9 +16,9 @@ s32 battle_gfx_calculate_screen_z_from_misc_battle_map_data(battle_unit_misc_dat
 
     mount = battle_unit_get_mount_misc_data(unit);
     battle_data = mount->battle_data;
-    coord.vx = battle_data->x * 0x1c + 0xe;
+    coord.vx = battle_data->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     battle_data = mount->battle_data;
-    coord.vz = battle_data->position.y * 0x1c + 0xe;
+    coord.vz = battle_data->position.y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     coord.vy = mount->map_z;
     screen_z = battle_gfx_calculate_screen_z_from_input_coords(mount, &coord);
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {

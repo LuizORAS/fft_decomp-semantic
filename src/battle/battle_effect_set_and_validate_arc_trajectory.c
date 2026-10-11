@@ -53,8 +53,8 @@ s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_p
     g_battle_effect_trajectory_origin.vy -= query.source.height;
     if (target_id == -1) {
         tile = battle_map_get_tile_data_pointer(tile_position->vx, tile_position->vz, tile_position->vy);
-        g_battle_effect_trajectory_destination.vx = tile_position->vx * 28 + 14;
-        g_battle_effect_trajectory_destination.vz = tile_position->vz * 28 + 14;
+        g_battle_effect_trajectory_destination.vx = tile_position->vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        g_battle_effect_trajectory_destination.vz = tile_position->vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         g_battle_effect_trajectory_destination.vy
             = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
     } else {

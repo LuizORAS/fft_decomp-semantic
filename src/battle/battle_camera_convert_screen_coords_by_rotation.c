@@ -21,30 +21,30 @@ void battle_camera_convert_screen_coords_by_rotation(const SVECTOR* input, SVECT
 
     switch (yaw) {
     case 0: {
-        s32 far_edge = (input->vx / 28) * 28 + 0x1c;
+        s32 far_edge = (input->vx / MAP_TILE_SIZE) * MAP_TILE_SIZE + MAP_TILE_SIZE;
         output->vx = far_edge - offset;
     }
-        output->vz = (input->vz / 28) * 28 + offset;
+        output->vz = (input->vz / MAP_TILE_SIZE) * MAP_TILE_SIZE + offset;
         break;
     case 0x400: {
-        s32 far_edge = (input->vx / 28) * 28 + 0x1c;
+        s32 far_edge = (input->vx / MAP_TILE_SIZE) * MAP_TILE_SIZE + MAP_TILE_SIZE;
         output->vx = far_edge - offset;
     }
         {
-            s32 far_edge = (input->vz / 28) * 28 + 0x1c;
+            s32 far_edge = (input->vz / MAP_TILE_SIZE) * MAP_TILE_SIZE + MAP_TILE_SIZE;
             output->vz = far_edge - offset;
         }
         break;
     case 0x800:
-        output->vx = (input->vx / 28) * 28 + offset;
+        output->vx = (input->vx / MAP_TILE_SIZE) * MAP_TILE_SIZE + offset;
         {
-            s32 far_edge = (input->vz / 28) * 28 + 0x1c;
+            s32 far_edge = (input->vz / MAP_TILE_SIZE) * MAP_TILE_SIZE + MAP_TILE_SIZE;
             output->vz = far_edge - offset;
         }
         break;
     case 0xc00:
-        output->vx = (input->vx / 28) * 28 + offset;
-        output->vz = (input->vz / 28) * 28 + offset;
+        output->vx = (input->vx / MAP_TILE_SIZE) * MAP_TILE_SIZE + offset;
+        output->vz = (input->vz / MAP_TILE_SIZE) * MAP_TILE_SIZE + offset;
         break;
     }
 }

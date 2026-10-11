@@ -25,7 +25,7 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* uni
         screen_z = battle_map_calculate_slope_height(coords, coords->vy & 0xff);
     }
     if (unit->battle_data != 0) {
-        tile = battle_map_get_tile_data_pointer(coords->vx / 28, coords->vz / 28, coords->vy);
+        tile = battle_map_get_tile_data_pointer(coords->vx / MAP_TILE_SIZE, coords->vz / MAP_TILE_SIZE, coords->vy);
         if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
             flags = battle_move_get_effective_flags(unit->battle_data);
             sprite = unit->spritesheet_id;
