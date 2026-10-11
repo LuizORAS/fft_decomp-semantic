@@ -10,7 +10,7 @@ s32 VSync(s32 mode) {
     v_wait(mode > 0 ? g_psyq_etc_last_vblank + (mode - 1) : g_psyq_etc_last_vblank, mode > 0 ? mode - 1 : 0);
     status = *g_psyq_etc_gpu_status;
     v_wait(g_psyq_etc_vblank_count + 1, 1);
-    if ((status & PSYQ_GPU_STATUS_HEIGHT_480) && (s32)(status ^ *g_psyq_etc_gpu_status) >= 0) {
+    if ((status & PSYQ_GPU_STATUS_HEIGHT_480) && !((status ^ *g_psyq_etc_gpu_status) & PSYQ_GPU_STATUS_ODD_LINE)) {
         do { } while (!((status ^ *g_psyq_etc_gpu_status) & PSYQ_GPU_STATUS_ODD_LINE)); }
     g_psyq_etc_last_vblank = g_psyq_etc_vblank_count;
     g_psyq_etc_last_timer1_count = *g_psyq_etc_timer1_count;
