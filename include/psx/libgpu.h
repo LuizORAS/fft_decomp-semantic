@@ -920,9 +920,38 @@ extern const char g_psyq_gpu_timeout_operation_format[];
 int _exeque(void);
 int _sync(int mode);
 
-/* The clear packet (tile or block fill) and the packet that restores the draw area and offset. */
-extern u32 g_psyq_gpu_clear_packet[8];
-extern u32 g_psyq_gpu_clear_restore[4];
+/* One DMA tag covers either a block fill or a tile with drawing-state commands. */
+typedef struct {
+    u32 tag;
+    u32 draw_mask;
+    u32 fill_color;
+    u32 xy;
+    u32 wh;
+} psyq_gpu_clear_fill_packet_t;
+
+typedef struct {
+    u32 tag;
+    u32 draw_area_top_left;
+    u32 draw_area_bottom_right;
+    u32 draw_offset;
+    u32 draw_mask;
+    u32 tile_color;
+    u32 xy;
+    u32 wh;
+} psyq_gpu_clear_tile_packet_t;
+
+typedef union {
+    psyq_gpu_clear_fill_packet_t fill;
+    psyq_gpu_clear_tile_packet_t tile;
+} psyq_gpu_clear_packet_t;
+
+typedef struct {
+    DR_AREA area;
+    u32 draw_offset;
+} psyq_gpu_clear_restore_packet_t;
+
+extern psyq_gpu_clear_packet_t g_psyq_gpu_clear_packet;
+extern psyq_gpu_clear_restore_packet_t g_psyq_gpu_clear_restore;
 int _clr(RECT* rect, u32 color);
 int _dws(RECT* rect, u32* data);
 int _drs(RECT* rect, u32* data);
