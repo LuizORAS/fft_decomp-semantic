@@ -202,7 +202,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             }
         }
         unit_id++;
-    } while (unit_id < 0x15);
+    } while (unit_id < BATTLE_UNIT_SLOT_COUNT);
 
     usable = 0;
     if (lowest_unit != 0xff) {
@@ -215,7 +215,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
     decision->ally_ability_min_reach = 0xff;
     decision->enemy_ability_min_reach = 0xff;
     threshold = enemy_harmful / 8;
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
         ai->status_to_cancel[i] = 0;
     }
     for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
@@ -246,7 +246,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                     ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_HAS_HOLY_WATER;
                 }
                 if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_CANCEL_STATUS) {
-                    for (throw_id = 0; throw_id < 5; throw_id++) {
+                    for (throw_id = 0; throw_id < BATTLE_STATUS_BYTE_COUNT; throw_id++) {
                         ai->status_to_cancel[throw_id] |= ability->parameters.bytes.status_infliction[throw_id];
                     }
                 }

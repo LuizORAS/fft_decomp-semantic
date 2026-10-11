@@ -239,7 +239,7 @@ score_state:
                 score += weight;
             }
             if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
-                for (equipment_slot = 0; equipment_slot < 7; equipment_slot++) {
+                for (equipment_slot = 0; equipment_slot < UNIT_EQUIPMENT_SLOT_COUNT; equipment_slot++) {
                     if (unit->equipment[equipment_slot]
                         == g_battle_ai_unit_snapshots[ai->unit_compact_indices[unit_index]].equipment[equipment_slot])
                         score += BATTLE_AI_EQUIPMENT_SCORE;

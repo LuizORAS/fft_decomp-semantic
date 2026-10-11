@@ -268,36 +268,36 @@ typedef struct battle_ai_status_snapshot {
     u8 entd_slot;
     u8 death_counter;
     u8 death_sentence_ct; /* see 0x8019e214 */
-    u8 current_status[5];
+    u8 current_status[BATTLE_STATUS_BYTE_COUNT];
 } battle_ai_status_snapshot_t;
 typedef char battle_ai_status_snapshot_must_be_8[sizeof(battle_ai_status_snapshot_t) == 8 ? 1 : -1];
 
 /* Selected unit state saved at 0x8019e160 and restored at 0x8019e378.
  * HP occupies unaligned bytes 0x1b..0x1c; max HP/MP are not saved. */
 typedef struct battle_ai_extended_snapshot {
-    battle_ai_status_snapshot_t status; /* 0x00 */
-    u8 status_ct[16];                   /* 0x08 */
-    u8 team_flags;                      /* 0x18 */
-    u8 faith;                           /* 0x19 */
-    u8 transparent_removal_flag;        /* 0x1a */
-    u8 hp_bytes[2];                     /* 0x1b */
-    u8 _padding_1d;                     /* aligns mp */
-    u16 mp;                             /* 0x1e */
-    u8 charged_ability_ct;              /* 0x20 */
-    u8 base_attributes[3];              /* 0x21; unit_attribute_index_e */
-    u8 attributes[3];                   /* 0x24; unit_attribute_index_e */
-    u8 ct;                              /* 0x27 */
-    u8 x;                               /* 0x28 */
-    u8 position_bytes[2];               /* 0x29; packed unit position */
-    u8 has_turn;                        /* 0x2b */
+    battle_ai_status_snapshot_t status;       /* 0x00 */
+    u8 status_ct[BATTLE_TIMED_STATUS_COUNT];  /* 0x08 */
+    u8 team_flags;                            /* 0x18 */
+    u8 faith;                                 /* 0x19 */
+    u8 transparent_removal_flag;              /* 0x1a */
+    u8 hp_bytes[2];                           /* 0x1b */
+    u8 _padding_1d;                           /* aligns mp */
+    u16 mp;                                   /* 0x1e */
+    u8 charged_ability_ct;                    /* 0x20 */
+    u8 base_attributes[UNIT_ATTRIBUTE_COUNT]; /* 0x21; unit_attribute_index_e */
+    u8 attributes[UNIT_ATTRIBUTE_COUNT];      /* 0x24; unit_attribute_index_e */
+    u8 ct;                                    /* 0x27 */
+    u8 x;                                     /* 0x28 */
+    u8 position_bytes[2];                     /* 0x29; packed unit position */
+    u8 has_turn;                              /* 0x2b */
     u8 movement_taken;
     u8 action_taken;
     u8 auto_battle_setting; /* 0x2e */
     u8 auto_battle_target;
     u8 initial_team_flags;
-    u8 inflicted_status[5]; /* 0x31 */
-    u8 equipment[7];        /* 0x36 */
-    u8 brave;               /* 0x3d */
+    u8 inflicted_status[BATTLE_STATUS_BYTE_COUNT]; /* 0x31 */
+    u8 equipment[UNIT_EQUIPMENT_SLOT_COUNT];       /* 0x36 */
+    u8 brave;                                      /* 0x3d */
     u8 mount_info;
     u8 _padding_3f; /* tail padding to 2-byte alignment */
 } battle_ai_extended_snapshot_t;
@@ -316,7 +316,7 @@ typedef union battle_ai_ability_parameters {
         u8 range;
         u8 aoe;
         u8 item_id;
-        u8 status_infliction[5];
+        u8 status_infliction[BATTLE_STATUS_BYTE_COUNT];
     } bytes;
     struct {
         u32 _first;
@@ -566,7 +566,8 @@ typedef struct battle_ai_data {
     u8 map_max_x;                                    /* 0x0e3a */
     u8 map_max_y;                                    /* 0x0e3b */
     u16 team_golem[4];                               /* 0x0e3c; halfword scoring at 0x8019d37c */
-    u8 status_to_cancel[5]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built at 0x80195410 */
+    u8 status_to_cancel[BATTLE_STATUS_BYTE_COUNT]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built
+                                                      at 0x80195410 */
     /* Resumable reflected-origin search, 0x8019b7b8–0x8019bb20.
      * Candidate x/y = 2 * reflector position - intended target position. */
     u8 reflector_unit_index;             /* 0x0e49 */

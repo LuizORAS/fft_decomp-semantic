@@ -27,14 +27,15 @@ void battle_ai_restore_unit_state(battle_ai_snapshot_mode_e mode) {
         }
         unit->entd_slot = status->entd_slot;
         unit->death_counter = status->death_counter;
-        battle_ai_transfer_byte_values(unit->status_sets.current, status->current_status, 5);
+        battle_ai_transfer_byte_values(
+            unit->status_sets.current, status->current_status, sizeof(status->current_status));
         if (mode != BATTLE_AI_SNAPSHOT_BASELINE) {
             unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)] = status->death_sentence_ct;
         } else {
             snapshot = (battle_ai_extended_snapshot_t*)status;
             unit->team_flags = snapshot->team_flags;
             battle_ai_transfer_byte_values(unit->status_ct, snapshot->status_ct, BATTLE_TIMED_STATUS_COUNT);
-            battle_ai_transfer_byte_values(unit->equipment, snapshot->equipment, 7);
+            battle_ai_transfer_byte_values(unit->equipment, snapshot->equipment, sizeof(snapshot->equipment));
             unit->brave = snapshot->brave;
             battle_ai_transfer_byte_values(&unit->faith, &snapshot->faith, 4);
             unit->mp = snapshot->mp;

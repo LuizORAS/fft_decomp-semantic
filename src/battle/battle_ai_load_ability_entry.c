@@ -147,5 +147,6 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.ct = 0;
 copy_status:
     battle_ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,
-        g_main_status_infliction_data[status_id].statuses, 5);
+        g_main_status_infliction_data[status_id].statuses,
+        sizeof(ai->considered_ability.parameters.bytes.status_infliction));
 }

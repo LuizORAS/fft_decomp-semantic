@@ -14,7 +14,11 @@ void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t
     if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ADD_STATUS) == 0) {
         return;
     }
-    if ((ai->considered_ability.ai_flags.bytes.flags_1 & 0xEE) != 0) {
+    /* Only ally targeting and status addition may remain in this flag byte. */
+    if ((ai->considered_ability.ai_flags.bytes.flags_1
+            & (BATTLE_AI_ABILITY_TARGET_ENEMIES | BATTLE_AI_ABILITY_UNEQUIP | BATTLE_AI_ABILITY_AFFECTS_STATS
+                | BATTLE_AI_ABILITY_CANCEL_STATUS | BATTLE_AI_ABILITY_AFFECTS_MP | BATTLE_AI_ABILITY_AFFECTS_HP))
+        != 0) {
         return;
     }
 

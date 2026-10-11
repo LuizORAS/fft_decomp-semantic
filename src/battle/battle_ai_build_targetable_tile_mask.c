@@ -35,7 +35,7 @@ void battle_ai_build_targetable_tile_mask(battle_ai_tile_mask_mode_e mode, s32 r
         }
         return;
     }
-    for (i = 17; i >= 0; i--)
+    for (i = BATTLE_AI_GRID_ROW_COUNT - 1; i >= 0; i--)
         ai->targetable_tiles[0][i] = 0;
     y = ai->considered_unit_coords.bytes.y;
     x = ai->considered_unit_coords.bytes.x;
@@ -68,5 +68,6 @@ void battle_ai_build_targetable_tile_mask(battle_ai_tile_mask_mode_e mode, s32 r
             }
         }
     }
-    battle_ai_transfer_halfword_values(ai->targetable_tiles[1], ai->targetable_tiles[0], 36);
+    battle_ai_transfer_halfword_values(
+        ai->targetable_tiles[1], ai->targetable_tiles[0], sizeof(ai->targetable_tiles[0]));
 }

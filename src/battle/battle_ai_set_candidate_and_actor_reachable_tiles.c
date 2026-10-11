@@ -26,9 +26,12 @@ void battle_ai_set_candidate_and_actor_reachable_tiles(void) {
         u32 level_address;
         u32 row_address;
         scenario_address += (u32)&ai->reachable_tiles - (u32)ai;
-        level_address = *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].bytes.elevation - (u32)ai)) * 36
+        level_address = *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].bytes.elevation - (u32)ai))
+                * sizeof(ai->reachable_tiles[0][0])
             + scenario_address;
-        row_address = *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].bytes.y - (u32)ai)) * 2 + level_address;
+        row_address = *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].bytes.y - (u32)ai))
+                * sizeof(ai->reachable_tiles[0][0][0])
+            + level_address;
         *(u16*)row_address = 0x8000 >> *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].bytes.x - (u32)ai));
     }
     {
@@ -36,8 +39,8 @@ void battle_ai_set_candidate_and_actor_reachable_tiles(void) {
         u32 level_address;
         u32 row_address;
         scenario_address += (u32)&ai->reachable_tiles - (u32)ai;
-        level_address = ai->acting_unit_coords.bytes.elevation * 36 + scenario_address;
-        row_address = ai->acting_unit_coords.bytes.y * 2 + level_address;
+        level_address = ai->acting_unit_coords.bytes.elevation * sizeof(ai->reachable_tiles[0][0]) + scenario_address;
+        row_address = ai->acting_unit_coords.bytes.y * sizeof(ai->reachable_tiles[0][0][0]) + level_address;
         *(u16*)row_address |= 0x8000 >> ai->acting_unit_coords.bytes.x;
     }
 }
