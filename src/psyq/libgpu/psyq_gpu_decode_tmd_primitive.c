@@ -5,7 +5,7 @@
 int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, TMD_PRIM* primitive) {
     memset(primitive, 0, sizeof(*primitive));
     primitive->id = packet->id;
-    switch (primitive->id & PSYQ_TMD_PACKET_MODE_MASK) {
+    switch (primitive->id & ~PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT)) {
     case PSYQ_TMD_PACKET_F3_LIT:
         if (GetGraphDebug() == 2)
             printf(g_psyq_gpu_tmd_f3_lit_name);
@@ -229,7 +229,8 @@ int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, TMD_PRIM* pri
         setRGB3(primitive, packet->gt4.r3, packet->gt4.g3, packet->gt4.b3);
         return sizeof(packet->gt4);
     default:
-        printf(g_psyq_gpu_unsupported_tmd_format, primitive->id & PSYQ_TMD_PACKET_MODE_MASK);
+        printf(
+            g_psyq_gpu_unsupported_tmd_format, primitive->id & ~PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT));
         return -1;
     }
 }

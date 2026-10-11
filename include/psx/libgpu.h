@@ -989,7 +989,6 @@ typedef enum {
     PSYQ_TMD_PACKET_G4 = 0x39010608,
     PSYQ_TMD_PACKET_FT4 = 0x2d010709,
     PSYQ_TMD_PACKET_GT4 = 0x3d010a0c,
-    PSYQ_TMD_PACKET_MODE_MASK = 0xfdffffffU,
 } psyq_tmd_packet_id_e;
 
 union psyq_tmd_packet {
