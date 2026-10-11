@@ -9,10 +9,10 @@
  * is confirmed at once, as a silent Circle press. */
 void battle_menu_confirm_move_command_thread(void) {
     s16* stored_actions;
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
     s32 menu;
 
-    entry = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    entry = (menu_entry_t*)battle_thread_get_current_parameter_1();
     stored_actions = &g_battle_menu_confirm_stored_unit_row_actions;
     *stored_actions = -2;
     if (battle_unit_get_attacker_data_pointer()

@@ -27,7 +27,7 @@
  * constant is what reproduces the target's 0xFFFF reloads and its reload
  * register rotation. */
 void world_text_message_box_thread(void) {
-    world_text_dialog_record_t rec;
+    text_dialog_record_t rec;
     RECT from;
     RECT to;
     s32 column;
@@ -116,7 +116,7 @@ void world_text_message_box_thread(void) {
     message = world_thread_get_current_parameter_2();
     rec.rect.w = rec.width;
     rec.rect.h = rec.height;
-    world_gfx_alloc_tpage7_vram(&rec.rect, (world_texture_prim_t*)win->quads, (u32*)-1);
+    world_gfx_alloc_tpage7_vram(&rec.rect, (texture_primitive_t*)win->quads, (u32*)-1);
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         world_menu_build_and_upload_window_image(rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
     } else {

@@ -15,7 +15,7 @@
  * temporary: the store through the layout pointer may alias the menu record,
  * so the repeated window.y store is not redundant to the compiler.
  */
-void option_menu_init_at_list(world_menu_entry_t* menu) {
+void option_menu_init_at_list(menu_entry_t* menu) {
     s32 entry_count;
     s32 has_special_entry;
     s32 index;
@@ -97,7 +97,7 @@ void option_menu_init_at_list(world_menu_entry_t* menu) {
     }
 
     if (has_special_entry != 0) {
-        world_menu_text_layout_t* layout;
+        menu_text_layout_t* layout;
 
         menu->window.y = 0x20;
         layout = menu->context;
@@ -108,7 +108,7 @@ void option_menu_init_at_list(world_menu_entry_t* menu) {
         menu->text_image.width = 0xe8;
         menu->inner_width = 0xe8;
     } else {
-        world_menu_text_layout_t* layout;
+        menu_text_layout_t* layout;
 
         menu->window.y = 0x20;
         layout = menu->context;
@@ -121,8 +121,8 @@ void option_menu_init_at_list(world_menu_entry_t* menu) {
     }
 
     if (entry_count < 10) {
-        world_menu_text_layout_t* layout;
-        world_menu_text_layout_t* resized_layout;
+        menu_text_layout_t* layout;
+        menu_text_layout_t* resized_layout;
 
         menu->window.y = (10 - entry_count) * 8 + 0x20;
         layout = menu->context;
@@ -130,7 +130,7 @@ void option_menu_init_at_list(world_menu_entry_t* menu) {
         resized_layout = menu->context;
         resized_layout->hidden_rows = 0;
     } else {
-        world_menu_text_layout_t* layout;
+        menu_text_layout_t* layout;
 
         layout = menu->context;
         layout->hidden_rows = entry_count - 10;

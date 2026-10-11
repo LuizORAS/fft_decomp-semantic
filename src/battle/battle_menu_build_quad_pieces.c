@@ -6,10 +6,10 @@
  *
  * BATTLE twin of world_menu_build_quad_pieces. */
 s32 battle_menu_build_quad_pieces(s32 group, POLY_GT4* poly) {
-    world_menu_quad_piece_t* piece;
+    menu_quad_piece_t* piece;
     s32 count;
     s32 i;
-    world_menu_quad_colors_t* colors;
+    menu_quad_colors_t* colors;
 
     colors = &g_battle_menu_quad_colors;
     piece = &g_battle_menu_quad_pieces[g_battle_menu_quad_group_starts[group]];

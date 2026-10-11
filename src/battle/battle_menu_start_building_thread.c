@@ -24,7 +24,7 @@ void battle_menu_start_building_thread(void) {
     if (battle_camera_is_active() != 0) {
         return;
     }
-    if (g_battle_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE) {
+    if (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE) {
         return;
     }
     if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {

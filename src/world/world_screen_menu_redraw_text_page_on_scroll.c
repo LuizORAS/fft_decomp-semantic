@@ -9,8 +9,8 @@
  * was redrawn; the caller frees it. The menu-screen library's variant of
  * world_menu_redraw_text_page_on_scroll, which draws into a static image and only for player input. */
 u8* world_screen_menu_redraw_text_page_on_scroll(
-    world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor) {
-    world_menu_text_layout_t* layout = entry->context;
+    menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor) {
+    menu_text_layout_t* layout = entry->context;
     u32* input0;
     u32* input1;
     RECT rect;

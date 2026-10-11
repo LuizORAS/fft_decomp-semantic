@@ -10,7 +10,7 @@
 void battle_menu_run_system_function_thread(void) {
     s32 id;
     s32 value;
-    battle_system_function_t* entry;
+    menu_system_function_t* entry;
 
     g_battle_system_function_thread_busy = 1;
     battle_text_init_menu_section_pointers();

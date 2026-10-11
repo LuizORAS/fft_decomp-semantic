@@ -23,7 +23,7 @@
  */
 s32 world_formation_process_job_change(s32 job) {
     union {
-        world_gfx_texture_source_t entry;
+        texture_source_t entry;
         point16_t points[3];
     } scratch;
     RECT rect;

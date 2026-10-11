@@ -2,27 +2,27 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Same double-buffered battle_menu_status_panel_buffer_t frame as equip_panel_run_equipment_list_thread and the
+/* Same double-buffered menu_status_panel_buffer_t frame as equip_panel_run_equipment_list_thread and the
  * WORLD twin world_menu_ability_panel_thread. */
 
 /* Two-column ability panel thread (task 0x3b); EQUIP twin of WORLD
  * world_menu_ability_panel_thread. Thread 10 draws the unit editor stats into the first
  * frame pair, other threads draw g_equip_item_preview_stat_detail into the second. */
 void equip_panel_run_ability_list_thread(void) {
-    world_status_thread_t offset;
+    menu_status_thread_t offset;
     s32 u;
-    battle_menu_status_panel_buffer_t* base;
+    menu_status_panel_buffer_t* base;
     RECT* upload;
-    world_status_thread_t* thread;
+    menu_status_thread_t* thread;
     u8* text;
-    battle_menu_status_panel_buffer_t* screen;
-    world_item_stat_detail_t* state;
+    menu_status_panel_buffer_t* screen;
+    menu_item_stat_detail_t* state;
     s32 frame;
     s32 i;
     s32 id;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (menu_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_equip_input_controller = battle_script_get_controller_input_pointer(0);
     if (g_battle_current_thread_id == EQUIP_THREAD_SLOT_EQUIPMENT_LIST) {
         text = g_equip_panel_text_image_a;
@@ -57,20 +57,20 @@ void equip_panel_run_ability_list_thread(void) {
     battle_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    battle_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
+    battle_copy_bytes(&screen[1], screen, sizeof(menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {
         screen = &base[frame & 1];
         if (state->generic_monster == 0) {
             for (i = 0; i < 19; i++) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
                     g_equip_panel_label_layouts_mode0 + i);
             }
         } else {
             for (i = 0; i < 19; i++) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
                     g_equip_panel_label_layouts_mode1 + i);
             }
@@ -78,7 +78,7 @@ void equip_panel_run_ability_list_thread(void) {
         if (state->generic_monster != 0) {
             for (i = 0; i < 5; i++) {
                 u16 ability = state->ability_ids[i];
-                if (ability == BATTLE_MENU_STATUS_PANEL_LABEL_NONE || ability == 0) {
+                if (ability == MENU_STATUS_PANEL_LABEL_NONE || ability == 0) {
                     screen->sprites[7 + i].x0 -= 0x200;
                 }
             }
@@ -94,7 +94,7 @@ void equip_panel_run_ability_list_thread(void) {
                 if (state->generic_monster != 0) {
                     id = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
-                if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+                if ((u16)state->ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
                     g_menu_text_state.pen.rect.y += 0x10;
                 } else {
                     battle_menu_display_text_entry(id, text, &g_menu_text_state.pen);
@@ -102,7 +102,7 @@ void equip_panel_run_ability_list_thread(void) {
                 }
             }
             for (; i < 5; i++) {
-                if ((u16)state->ability_ids[i] != BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+                if ((u16)state->ability_ids[i] != MENU_STATUS_PANEL_LABEL_NONE) {
                     battle_menu_display_text_entry(
                         state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE, text, &g_menu_text_state.pen);
                 }

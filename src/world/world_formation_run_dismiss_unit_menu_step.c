@@ -24,7 +24,7 @@
  */
 void world_formation_run_dismiss_unit_menu_step(void) {
     world_formation_unit_t* unit;
-    world_menu_entry_t* menu;
+    menu_entry_t* menu;
     s32 i;
     s32 value;
     s32 sprite;

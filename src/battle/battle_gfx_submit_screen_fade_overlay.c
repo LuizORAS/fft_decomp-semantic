@@ -10,7 +10,7 @@
  * and after it when both are linked into the ordering table. A non-zero level
  * also clears g_battle_script_event_input, so menus see no button while the
  * screen is faded. */
-void battle_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* overlay, s32 level) {
+void battle_gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level) {
     s32 blend;
 
     if (level != 0) {

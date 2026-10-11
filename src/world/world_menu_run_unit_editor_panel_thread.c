@@ -13,9 +13,9 @@
 void world_menu_run_unit_editor_panel_thread(void) {
     /* The frame reserves 0x100 bytes for the first copy's line-box
        primitives, the stride of the palette records at 0x80195ed0. */
-    world_menu_palette_slot_t palette;
-    world_unit_editor_frame_t* records;
-    world_unit_editor_frame_t* frame_record;
+    menu_palette_slot_t palette;
+    menu_unit_editor_frame_t* records;
+    menu_unit_editor_frame_t* frame_record;
     LINE_F2* line;
     u8* buffer;
     /* One variable for the label text id and, in the frame loop, whether the
@@ -57,16 +57,16 @@ void world_menu_run_unit_editor_panel_thread(void) {
     frame_record->tiles[0].x0 += 0x12;
     frame_record->tiles[1].x0 += 0x7C;
     line = frame_record->lines;
-    for (i = 0; i < 8 * WORLD_UNIT_EDITOR_LINE_SIZE; i += WORLD_UNIT_EDITOR_LINE_SIZE) {
+    for (i = 0; i < 8 * MENU_UNIT_EDITOR_LINE_SIZE; i += MENU_UNIT_EDITOR_LINE_SIZE) {
         SetLineF2(line);
         SetSemiTrans(line, 1);
-        setRGB0(line, g_world_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_R],
-            g_world_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_G],
-            g_world_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_B]);
-        line->x0 = g_world_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X0] + g_world_unit_editor_panel_rect.x;
-        line->y0 = g_world_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y0] + g_world_unit_editor_panel_rect.y;
-        line->x1 = g_world_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X1] + g_world_unit_editor_panel_rect.x;
-        line->y1 = g_world_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y1] + g_world_unit_editor_panel_rect.y;
+        setRGB0(line, g_world_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_R],
+            g_world_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_G],
+            g_world_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_B]);
+        line->x0 = g_world_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_X0] + g_world_unit_editor_panel_rect.x;
+        line->y0 = g_world_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_Y0] + g_world_unit_editor_panel_rect.y;
+        line->x1 = g_world_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_X1] + g_world_unit_editor_panel_rect.x;
+        line->y1 = g_world_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_Y1] + g_world_unit_editor_panel_rect.y;
         line++;
     }
     world_menu_init_sprite_array(&frame_record->sprites[0], 0xC, 0x7D7C);
@@ -76,39 +76,39 @@ void world_menu_run_unit_editor_panel_thread(void) {
        common tails, leaving only the first call's table loads in the arms. */
     if (g_world_unit_editor_fields.state.two_hands != 0) {
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[2], g_world_unit_editor_row_image_params_b,
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[14],
-            &g_world_unit_editor_row_image_params_b[2], 2 * sizeof(world_gfx_image_load_parameters_t));
+            &g_world_unit_editor_row_image_params_b[2], 2 * sizeof(image_load_parameters_t));
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[2], g_world_unit_editor_row_image_params_b,
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[14],
-            &g_world_unit_editor_row_image_params_b[2], 2 * sizeof(world_gfx_image_load_parameters_t));
+            &g_world_unit_editor_row_image_params_b[2], 2 * sizeof(image_load_parameters_t));
     } else {
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[2], g_world_unit_editor_row_image_params_a,
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[14],
-            &g_world_unit_editor_row_image_params_a[2], 2 * sizeof(world_gfx_image_load_parameters_t));
+            &g_world_unit_editor_row_image_params_a[2], 2 * sizeof(image_load_parameters_t));
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[2], g_world_unit_editor_row_image_params_a,
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[14],
-            &g_world_unit_editor_row_image_params_a[2], 2 * sizeof(world_gfx_image_load_parameters_t));
+            &g_world_unit_editor_row_image_params_a[2], 2 * sizeof(image_load_parameters_t));
     }
     if (g_world_unit_editor_fields.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
-            world_gfx_init_image_loading((world_texture_prim_t*)&frame_record->sprites[i],
+            world_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i],
                 &g_world_gfx_menu_image_source, &g_world_unit_editor_panel_rect,
                 &g_world_unit_editor_sprite_image_params_a[i]);
         }
     } else {
         for (i = 0; i < 19; i++) {
-            world_gfx_init_image_loading((world_texture_prim_t*)&frame_record->sprites[i],
+            world_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i],
                 &g_world_gfx_menu_image_source, &g_world_unit_editor_panel_rect,
                 &g_world_unit_editor_sprite_image_params_b[i]);
         }
     }
     world_menu_init_sprite_array(&frame_record->sprites[19], 5, 0x7CFC);
     for (i = 0; i < 5; i++) {
-        world_gfx_init_image_loading((world_texture_prim_t*)&frame_record->sprites[19 + i],
+        world_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[19 + i],
             &g_world_item_icon_image_location, &g_world_unit_editor_panel_rect,
             &g_world_unit_editor_item_icon_image_params[i]);
         world_gfx_set_item_icon_sprite(&frame_record->sprites[19 + i], g_world_unit_editor_fields.state.equipment[i]);
@@ -137,7 +137,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         if (g_world_unit_editor_fields.state.generic_monster != 0) {
             value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
-        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
             g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
             world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
@@ -146,7 +146,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     }
     for (i = 2; i < 5; i++) {
         value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
-        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
             g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
             world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
@@ -155,7 +155,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     }
     if (g_world_unit_editor_fields.state.generic_monster != 0) {
         for (i = 0; i < 5; i++) {
-            if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+            if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
                 frame_record->sprites[7 + i].x0 -= 0x200;
             }
         }
@@ -164,7 +164,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_thread_yield();
     world_menu_free_memory(buffer);
 
-    world_script_copy_bytes(&records[1], frame_record, sizeof(world_unit_editor_frame_t));
+    world_script_copy_bytes(&records[1], frame_record, sizeof(menu_unit_editor_frame_t));
     records[0].palette = &palette.primitives;
     records[1].palette = &g_world_unit_editor_palette;
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[0].palette);

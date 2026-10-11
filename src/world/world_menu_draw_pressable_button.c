@@ -9,8 +9,8 @@
  * Compiled at -O1 like the other formation/shop sprite drawers.
  */
 void world_menu_draw_pressable_button(s16 index, s32 x, s16 y, s16 pressed, s16 disabled, u16 sound_effect_id) {
-    world_oriented_quad_t sprite;
-    world_menu_button_piece_t* piece;
+    oriented_quad_t sprite;
+    menu_button_piece_t* piece;
     s32 speed;
     s32 i;
     s32 count;

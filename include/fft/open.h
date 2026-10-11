@@ -381,8 +381,8 @@ void open_movie_start_fftst_or_skip_controller(open_controller_record_t* unused_
 void open_title_update_exit_transition(open_controller_record_t* record);
 
 extern s16 g_open_music_test_row_actions[16];
-extern world_menu_entry_t g_open_music_test_list_params;
-extern world_menu_text_layout_t g_open_music_test_list_state;
+extern menu_entry_t g_open_music_test_list_params;
+extern menu_text_layout_t g_open_music_test_list_state;
 extern s16 g_open_music_test_list_entry_flags[96];
 extern s16 g_open_music_test_list_entries[96];
 extern s16 g_open_music_test_selected_option;

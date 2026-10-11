@@ -24,7 +24,7 @@
  * thread-id load.
  */
 void battle_menu_run_scrolling_ability_list_thread(void) {
-    world_menu_text_window_t window;
+    menu_text_window_t window;
     RECT image_rect;
     RECT texture_window;
     SPRT icons0[2];
@@ -36,15 +36,15 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     s16 toggle;
     s32 ring;
     s32 cursor;
-    world_menu_list_page_t* base;
-    world_menu_scroll_text_layout_t* layout;
+    menu_list_page_t* base;
+    menu_scroll_text_layout_t* layout;
     s32 scroll_accum;
     s32 scroll_delta;
     s32 hold_time;
     s32 redraw_pending;
     s32 row_buffer_live;
-    world_menu_entry_t* entry;
-    world_menu_list_page_t* page;
+    menu_entry_t* entry;
+    menu_list_page_t* page;
     u8* buffer;
     s32 i;
     s32 column;
@@ -64,7 +64,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     hold_time = 0;
     if (g_battle_menu_scroll_list_depth != 0) {
         /* Nested list: page pair in the event overlay area, 0x1000 bytes in. */
-        page = (world_menu_list_page_t*)(g_main_heap_companion_overlay_load_address + 0x1000);
+        page = (menu_list_page_t*)(g_main_heap_companion_overlay_load_address + 0x1000);
         base = page;
     } else {
         /* Outermost list: page pair at +0x388 of the current subsystem workspace. */
@@ -73,7 +73,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     }
     toggle = 0;
     g_battle_menu_scroll_list_depth++;
-    entry = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    entry = (menu_entry_t*)battle_thread_get_current_parameter_1();
     layout = entry->context;
     entry->window.h = layout->columns.row_count * 16 + 0x1C;
     entry->inner_height = layout->columns.row_count * 16 + 0x1C;
@@ -121,8 +121,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&page->frame);
-    battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
-        (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
+        (const image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -162,7 +162,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     image_rect.w = window.rect.w / 4;
     image_rect.h = window.rect.h;
     LoadImage(&image_rect, (u32*)buffer);
-    battle_copy_bytes(&base[1], base, sizeof(world_menu_list_page_t));
+    battle_copy_bytes(&base[1], base, sizeof(menu_list_page_t));
     for (i = 0; i < 2; i++) {
         base[i].icons.icons[0] = &icons0[i];
         base[i].icons.icons[1] = &icons1[i];
@@ -392,13 +392,13 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         }
         frame->v0 = (ring * 16 + scroll_accum - 2) & 0x7F;
         if (i * g_battle_event_speed < 12) {
-            battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
-                (const world_gfx_image_load_parameters_t*)&window);
+            battle_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
+                (const image_load_parameters_t*)&window);
             battle_menu_zoom_cursor_frame(entry, frame, i * g_battle_event_speed);
         }
         if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {
             {
-                world_menu_text_layout_t* columns = entry->context;
+                menu_text_layout_t* columns = entry->context;
 
                 page->icons.base.sprites[1].x0 += columns->x[1];
                 columns = entry->context;

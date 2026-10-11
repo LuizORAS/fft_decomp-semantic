@@ -22,7 +22,7 @@ void world_menu_select_unit_action_slots_thread(void) {
     s32 i = g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
     s32 menu = g_battle_action_menu_row_types[i];
     s32 check_unit = g_battle_menu_skillset_disabled_flags[i];
-    battle_menu_record_t* row = &g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id];
+    menu_unit_selection_record_t* row = &g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id];
     menu_list_selection_t* slot;
     u8* pair;
     s32 j;
@@ -32,7 +32,7 @@ void world_menu_select_unit_action_slots_thread(void) {
     for (i = (g_world_menu_restore_pending == 0) ? 2 : 0; i >= 0; i--) {
         world_menu_check_action_slot_restrictions(menu, i, check_unit);
         if (menu == ACTION_MENU_TYPE_ARITHMETICKS) {
-            slot = (menu_list_selection_t*)((u8*)row + (i + offsetof(battle_menu_record_t, lists[4])) + i);
+            slot = (menu_list_selection_t*)((u8*)row + (i + offsetof(menu_unit_selection_record_t, lists[4])) + i);
             g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index = slot->selected_index;
             g_world_ability_menu_layout.row_offset = slot->scroll_offset;
         } else {
@@ -40,9 +40,10 @@ void world_menu_select_unit_action_slots_thread(void) {
                 + g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index
                     * sizeof(menu_list_selection_t);
             g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index
-                = pair[offsetof(battle_menu_record_t, lists[0].selected_index)];
-            g_world_ability_menu_layout.row_offset = pair[offsetof(battle_menu_record_t, lists[0].scroll_offset)];
-            slot = (menu_list_selection_t*)(pair + offsetof(battle_menu_record_t, lists));
+                = pair[offsetof(menu_unit_selection_record_t, lists[0].selected_index)];
+            g_world_ability_menu_layout.row_offset
+                = pair[offsetof(menu_unit_selection_record_t, lists[0].scroll_offset)];
+            slot = (menu_list_selection_t*)(pair + offsetof(menu_unit_selection_record_t, lists));
         }
         for (j = 0; j < 6; j++) {
             if (menu != ACTION_MENU_TYPE_ARITHMETICKS || i == 0) {

@@ -33,8 +33,8 @@ void battle_menu_free_memory(void* buffer_pointer) {
                 }
                 return;
             }
-            allocation_size += sizeof(battle_menu_allocation_t) / sizeof(*allocation_size);
-            allocation_buffer += sizeof(battle_menu_allocation_t) / sizeof(*allocation_buffer);
+            allocation_size += sizeof(menu_allocation_t) / sizeof(*allocation_size);
+            allocation_buffer += sizeof(menu_allocation_t) / sizeof(*allocation_buffer);
             if ((s32)allocation_size >= (s32)allocation_end) {
                 battle_thread_exit_current();
                 return;

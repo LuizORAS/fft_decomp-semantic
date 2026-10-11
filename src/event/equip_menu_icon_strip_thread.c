@@ -6,16 +6,16 @@
  * EQUIP twin of world_menu_icon_strip_thread. */
 void equip_menu_icon_strip_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
+    menu_icon_record_t records[2];
     u32 input;
-    world_menu_entry_t* state;
+    menu_entry_t* state;
     u8* buffer;
     s32 i;
     s32 fresh;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
 
     input = 0;
-    state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    state = (menu_entry_t*)battle_thread_get_current_parameter_1();
     record = &records[0];
     battle_menu_build_window_sprites(&rect, state, record);
     battle_copy_bytes(&records[1], record, sizeof(records[1]));

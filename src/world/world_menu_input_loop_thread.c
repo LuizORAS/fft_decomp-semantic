@@ -7,7 +7,7 @@
  * finished. It exits
  * unless thread parameter 2 is set. */
 void world_menu_input_loop_thread(void) {
-    world_menu_entry_t* parameter = world_thread_get_current_parameter_1();
+    menu_entry_t* parameter = world_thread_get_current_parameter_1();
 
     g_world_menu_sound_muted = 1;
     for (;;) {

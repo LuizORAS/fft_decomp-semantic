@@ -2,22 +2,22 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* The status buffer is battle_menu_status_panel_buffer_t and the thread record
- * world_status_thread_t, as in the WORLD twin world_menu_equipment_and_ability_panel_thread. */
+/* The status buffer is menu_status_panel_buffer_t and the thread record
+ * menu_status_thread_t, as in the WORLD twin world_menu_equipment_and_ability_panel_thread. */
 
 /* Thread task 0x3b: the combined status panel for the selected unit. BUNIT
  * twin of WORLD world_menu_equipment_and_ability_panel_thread. */
 void bunit_menu_equipment_and_ability_panel_thread(void) {
-    world_status_thread_t* thread;
-    battle_menu_status_panel_buffer_t* screen;
-    battle_menu_status_panel_buffer_t* base;
-    battle_menu_status_panel_slot_state_t* state;
+    menu_status_thread_t* thread;
+    menu_status_panel_buffer_t* screen;
+    menu_status_panel_buffer_t* base;
+    menu_status_panel_slot_state_t* state;
     s32 frame;
     s32 mode;
     s32 i;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (menu_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_bunit_input_controller = battle_script_get_controller_input_pointer(0);
     screen = g_bunit_character_status_frames;
     base = g_bunit_character_status_frames;
@@ -40,7 +40,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
     battle_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    battle_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
+    battle_copy_bytes(&screen[1], screen, sizeof(menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {
@@ -51,22 +51,22 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_bunit_editor_numeric_geometry, &g_bunit_character_status_sprite_origin,
                     &g_bunit_character_status_layout_mode0[i]);
             }
             if (mode == 1) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_bunit_editor_numeric_geometry, &g_bunit_character_status_sprite_origin,
                     &g_bunit_character_status_layout_mode1[i]);
             }
             if (mode == 2) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_bunit_editor_numeric_geometry, &g_bunit_character_status_sprite_origin,
                     &g_bunit_character_status_layout_mode2[i]);
             }
             if (mode == 3) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_bunit_editor_numeric_geometry, &g_bunit_character_status_sprite_origin,
                     &g_bunit_character_status_layout_mode3[i]);
             }
@@ -74,7 +74,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
         if (state->generic_monster != 0) {
             for (i = 0; i < 5; i++) {
                 u16 ability = state->ability_ids[i];
-                if (ability == BATTLE_MENU_STATUS_PANEL_LABEL_NONE || ability == 0) {
+                if (ability == MENU_STATUS_PANEL_LABEL_NONE || ability == 0) {
                     screen->sprites[7 + i].x0 -= 0x200;
                 }
             }
@@ -100,7 +100,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
                 if (state->generic_monster != 0) {
                     mode = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
-                if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+                if ((u16)state->ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
                     g_menu_text_state.pen.rect.y += 0x10;
                 } else {
                     battle_menu_display_text_entry(
@@ -119,7 +119,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
             thread->redraw_request = 0;
         }
         for (i = 0; i < 5; i++) {
-            battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[19 + i],
+            battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[19 + i],
                 g_bunit_panel_item_icon_texture, &g_bunit_character_status_frame_rect,
                 &g_bunit_character_status_item_icon_layout[i]);
             if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {

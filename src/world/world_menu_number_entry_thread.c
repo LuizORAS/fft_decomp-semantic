@@ -13,7 +13,7 @@
  * on_change callback runs. */
 void world_menu_number_entry_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
+    menu_icon_record_t records[2];
     POLY_FT4 cursor_quads[2];
     POLY_FT4 shadow_quads[2];
     world_menu_number_range_t* range;
@@ -22,14 +22,14 @@ void world_menu_number_entry_thread(void) {
     s32 digits;
     native_thread_t* thread;
     s32* parameter;
-    world_menu_entry_t* param;
+    menu_entry_t* param;
     s16 value;
     s32 i;
     s32 j;
     s32 digit;
     s32 redraw;
     u32 input;
-    world_menu_icon_sprites_t* record;
+    menu_icon_sprites_t* record;
     POLY_FT4* cursor_quad;
     POLY_FT4* shadow_quad;
     s32* stride;
@@ -39,10 +39,10 @@ void world_menu_number_entry_thread(void) {
     stride = &g_world_menu_text_state.pen.stride;
     thread = &g_world_threads[g_world_thread_current_id];
     parameter = &thread->function_parameter_1;
-    param = (world_menu_entry_t*)*parameter;
+    param = (menu_entry_t*)*parameter;
     range = param->context;
     digits = world_text_count_decimal_digits(range->max);
-    original = *world_menu_entry_result(param);
+    original = *menu_entry_result(param);
     value = original;
     if (value < range->min || range->max < value) {
         value = range->min;
@@ -86,7 +86,7 @@ void world_menu_number_entry_thread(void) {
     redraw = 1;
     for (i = 0;; i++) {
         record = &records[i & 1].base;
-        *world_menu_entry_result(param) = value;
+        *menu_entry_result(param) = value;
         world_thread_wait_frames(1);
         if (redraw == 1) {
             redraw = 0;
@@ -99,12 +99,12 @@ void world_menu_number_entry_thread(void) {
         world_menu_cancel_thread_group(param);
         world_menu_handle_entry_confirm(param, 0);
         if (input != *g_world_menu_list_controller_input) {
-            if (*world_menu_entry_result(param) == -1) {
-                *world_menu_entry_result(param) = original;
+            if (*menu_entry_result(param) == -1) {
+                *menu_entry_result(param) = original;
             } else {
                 world_menu_number_range_t* current_range;
 
-                *world_menu_entry_result(param) = value;
+                *menu_entry_result(param) = value;
                 current_range = param->context;
                 current_range->on_change();
             }
@@ -145,8 +145,8 @@ void world_menu_number_entry_thread(void) {
         cursor_quad = &cursor_quads[i & 1];
         shadow_quad = &shadow_quads[i & 1];
         world_menu_update_entry_cursor_quads(param, cursor_quad, shadow_quad, i, digit);
-        world_menu_select_sprite_clut((world_texture_prim_t*)cursor_quad);
-        world_menu_select_sprite_clut((world_texture_prim_t*)shadow_quad);
+        world_menu_select_sprite_clut((texture_primitive_t*)cursor_quad);
+        world_menu_select_sprite_clut((texture_primitive_t*)shadow_quad);
         if (world_thread_is_previous_running() == 0) {
             cursor_quad->clut = 0x7D7C;
             shadow_quad->clut = 0x7DBC;

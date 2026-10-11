@@ -6,7 +6,7 @@
  * the menu's selection.
  *
  * WORLD analog of battle_menu_handle_action. */
-void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
+void world_menu_handle_entry_confirm(menu_entry_t* entry, s32 row_index) {
     s32 silent;
     s32 target;
     s32 i;
@@ -58,7 +58,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
                         menu_thread_id = 8 - j;
                         if (world_thread_is_running_asm(menu_thread_id) != 0) {
                             g_world_menu_pending_selection[j]
-                                = ((world_menu_entry_t*)g_world_thread_contexts[menu_thread_id].function_parameter_1)
+                                = ((menu_entry_t*)g_world_thread_contexts[menu_thread_id].function_parameter_1)
                                       ->selected_index;
                         }
                     }
@@ -66,7 +66,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
             }
         }
         g_world_menu_new_button_input = 0;
-        *world_menu_entry_result(entry) = row_index;
+        *menu_entry_result(entry) = row_index;
         if (g_world_menu_sound_muted == 0 && silent == 0) {
             world_sound_set_effect_to_confirm();
         }

@@ -6,7 +6,7 @@
  * semi-transparent 16x90 column tiles at x 0x12 and 0x7c, the two vertical
  * edge lines on either side of each, and the draw modes for the frame, text
  * image and item icon texture pages. */
-void equip_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu) {
+void equip_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu) {
     s32 i;
 
     SetTile(&menu->tiles[0]);

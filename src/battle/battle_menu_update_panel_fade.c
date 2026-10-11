@@ -8,7 +8,7 @@
  * BATTLE twin of world_menu_update_panel_fade.
  */
 void battle_menu_update_panel_fade(void) {
-    world_fade_tile_frame_t* frame;
+    fade_tile_frame_t* frame;
     s32 i;
     s32 intensity;
 

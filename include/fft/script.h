@@ -638,17 +638,19 @@ typedef struct event_jump_parameters {
     u8 direction;
 } event_jump_parameters_t;
 
+/* work */
 /* Provisional work block at *g_battle_ai_workspace_ptr: the menus build their
  * ability list and the outermost scrolling list's packet pages in it, events
  * keep the staged-status snapshot at 0x5f0. */
-typedef struct world_event_work {
-    world_ability_list_t ability_list;    /* 0x000 */
+typedef struct event_work {
+    menu_ability_list_t ability_list;     /* 0x000 */
     u8 _padding_386[2];                   /* alignment */
-    world_menu_list_page_t list_pages[2]; /* 0x388 */
+    menu_list_page_t list_pages[2];       /* 0x388 */
     unit_status_staging_t status_staging; /* 0x5f0 */
-} world_event_work_t;
-typedef char world_event_work_status_staging_offset_must_be_0x5f0
-    [((unsigned long)&((world_event_work_t*)0)->status_staging == 0x5F0) ? 1 : -1];
+} event_work_t;
+typedef char
+    event_work_status_staging_offset_must_be_0x5f0[((unsigned long)&((event_work_t*)0)->status_staging == 0x5F0) ? 1
+                                                                                                                 : -1];
 
 /* variables */
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.

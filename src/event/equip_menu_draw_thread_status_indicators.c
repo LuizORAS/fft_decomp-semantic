@@ -13,9 +13,9 @@
  *
  */
 void equip_menu_draw_thread_status_indicators(void) {
-    battle_menu_status_panel_indicator_prims_t* prims;
-    world_status_thread_t* display;
-    world_status_thread_t* descriptor;
+    menu_status_panel_indicator_prims_t* prims;
+    menu_status_thread_t* display;
+    menu_status_thread_t* descriptor;
     s32 active;
     s32 i;
     s32 j;
@@ -26,14 +26,14 @@ void equip_menu_draw_thread_status_indicators(void) {
     active = 0;
     if (equip_thread_is_running(EQUIP_THREAD_SLOT_UNIT_STATUS) != 0) {
         if (g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            display = (world_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
+            display = (menu_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
             active = (-(display->x == 0)) & 13;
         }
     }
     if (equip_thread_is_running(EQUIP_THREAD_SLOT_COMPARISON_STATUS) != 0) {
         if (g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
             descriptor
-                = (world_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
+                = (menu_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
             if (descriptor->x == 0) {
                 active = 14;
                 display = descriptor;

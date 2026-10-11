@@ -24,7 +24,7 @@ void world_formation_draw_graphics_below_sprite(
     s16 num_y;
     u16 clut;
     rgb24_t* rgb;
-    world_oriented_quad_t* sprite;
+    oriented_quad_t* sprite;
 
     if (mode < 0) {
         return;

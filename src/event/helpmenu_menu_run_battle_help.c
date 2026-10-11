@@ -32,11 +32,11 @@ void helpmenu_menu_run_battle_help(void) {
     register s32 text_thread_id __asm__("$21");
     s32 waiting_slot;
     native_thread_t* scan_thread;
-    world_menu_entry_t* request;
+    menu_entry_t* request;
     native_thread_t* self_thread;
-    battle_unit_status_record_t* banner;
-    battle_active_unit_t* unit_data;
-    battle_menu_status_panel_slot_storage_t* billboard;
+    menu_unit_status_record_t* banner;
+    menu_active_unit_t* unit_data;
+    menu_status_panel_slot_storage_t* billboard;
     map_selected_tile_t* cursor_tile;
     s32 missing_value;
 
@@ -89,7 +89,7 @@ void helpmenu_menu_run_battle_help(void) {
         missing_value = -1;
         scan_thread = &g_battle_threads[frame];
         for (; frame < 9; frame++) {
-            request = (world_menu_entry_t*)scan_thread->function_parameter_1;
+            request = (menu_entry_t*)scan_thread->function_parameter_1;
             if (request->select_text_table != missing_value) {
                 break;
             }
@@ -102,7 +102,7 @@ void helpmenu_menu_run_battle_help(void) {
             request_kind = request->select_text_table;
             if (request_kind != 0x10) {
                 if (request_kind == 0x100) {
-                    help_id = *world_menu_entry_result(request);
+                    help_id = *menu_entry_result(request);
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
                     g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
@@ -127,7 +127,7 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_wait_frames(1);
                     helpmenu_menu_close();
                 } else if (request_kind == 5) {
-                    world_menu_text_layout_t* layout = request->context;
+                    menu_text_layout_t* layout = request->context;
                     help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
@@ -135,7 +135,7 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x11) {
-                    world_menu_text_layout_t* layout = request->context;
+                    menu_text_layout_t* layout = request->context;
                     help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     if (help_id == 0) {
@@ -148,7 +148,7 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x17) {
-                    world_menu_text_layout_t* layout = request->context;
+                    menu_text_layout_t* layout = request->context;
                     help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     if (help_id == 0) {
@@ -162,7 +162,7 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x12) {
-                    world_menu_text_layout_t* layout = request->context;
+                    menu_text_layout_t* layout = request->context;
                     /* The list stores its column toggle in the third text pointer. */
                     help_id = *layout->text_ids[2];
                     if (help_id == 0) {
@@ -181,7 +181,7 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x13) {
-                    world_menu_text_layout_t* layout = request->context;
+                    menu_text_layout_t* layout = request->context;
                     help_id = layout->text_ids[1][request->selected_index];
                     text_base = help_id & 0xF800;
                     if (text_base == TEXT_ID_ABILITY_NAME_BASE) {

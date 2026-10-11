@@ -7,7 +7,7 @@
  * that row's replacement. BATTLE twin of
  * world_menu_restore_selection_for_selected_unit. */
 void battle_menu_restore_selection_for_selected_unit(s32 menu_id) {
-    battle_menu_record_t* record;
+    menu_unit_selection_record_t* record;
     s32 i;
     s32 row;
     s32 candidate;

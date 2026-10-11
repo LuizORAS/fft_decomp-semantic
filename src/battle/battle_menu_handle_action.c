@@ -9,8 +9,8 @@
  * 0x4d2 records the option as -1; a negative action -n closes n menu levels
  * by setting the third parameter of the next n threads (thread 8 also saves
  * the open menus' selections). */
-void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option) {
-    world_menu_entry_t* entry;
+void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
+    menu_entry_t* entry;
     s16* actions;
     s32 action;
     s32 silent;
@@ -68,15 +68,14 @@ void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option) {
                 for (j = 0; j < action; j++) {
                     if (battle_thread_is_running_asm(8 - j) != 0) {
                         g_battle_menu_pending_selection[j]
-                            = ((world_menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
-                                  ->selected_index;
+                            = ((menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)->selected_index;
                     }
                 }
             }
         }
     }
     g_battle_script_event_input = 0;
-    *world_menu_entry_result(entry) = selected_option;
+    *menu_entry_result(entry) = selected_option;
     if (g_battle_sound_suppressed == 0 && silent == 0) {
         battle_sound_set_effect_to_confirm();
     }

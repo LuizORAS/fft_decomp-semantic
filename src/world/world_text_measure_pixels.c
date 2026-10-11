@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define TEXT_STATE ((world_text_backreference_state_t*)0x1F800000)
+#define TEXT_STATE ((text_backreference_state_t*)0x1F800000)
 
 /* Player name buffer substituted for text command 0xE0, 0xFE-terminated. */
 /* Pixel width of each line measured by the last call. */
@@ -18,7 +18,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
     s32 i;
     u8* fill = g_world_text_player_name_buffer;
     u8 terminator;
-    world_text_backreference_state_t* state;
+    text_backreference_state_t* state;
 
     cursor = (u8*)text;
     party = main_party_get_data_pointer(0);

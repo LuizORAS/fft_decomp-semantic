@@ -16,8 +16,8 @@
  * overlay instead of being allocated. Returns that buffer when the page was
  * redrawn. */
 u8* battle_menu_redraw_text_page_on_scroll_in_rect(
-    world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32 unused, RECT* area) {
-    world_menu_text_layout_t* layout = entry->context;
+    menu_entry_t* entry, s32* row_offset, s32* redraw, s32 unused, RECT* area) {
+    menu_text_layout_t* layout = entry->context;
     u32* input;
     u32* input2;
     RECT rect;

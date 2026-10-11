@@ -9,8 +9,7 @@
  * the phase restarts (2) while input is blocked and clears once the timer
  * reaches 27 frames. The cursor sprites follow the selected row.
  */
-void world_menu_update_icon_cursor_sprites(
-    world_menu_entry_t* param, world_menu_icon_sprites_t* record, s32 frame, s32 cursor) {
+void world_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprites_t* record, s32 frame, s32 cursor) {
     native_thread_t* thread = &g_world_threads[g_world_thread_current_id];
     s32 x;
     s32 y;

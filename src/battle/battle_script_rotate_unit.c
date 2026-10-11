@@ -19,7 +19,7 @@ void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters)
     s32 order;
     s32 facing;
     s32 restore_misc_index;
-    world_unit_animation_state_t* state;
+    unit_animation_state_t* state;
 
     order = 1;
     unit_id = battle_script_load_halfword(parameters->unit_id_le);

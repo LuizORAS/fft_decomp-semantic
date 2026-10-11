@@ -89,13 +89,13 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         *refresh_c = 0;
         battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, debugchr_render_unit_status_panel_thread);
         battle_thread_set_parameters(
-            NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (u8*)refresh_a - offsetof(world_status_thread_t, style), 0, 0);
+            NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (u8*)refresh_a - offsetof(menu_status_thread_t, style), 0, 0);
         battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
         battle_thread_set_parameters(
-            NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - offsetof(world_status_thread_t, style), 0, 0);
+            NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - offsetof(menu_status_thread_t, style), 0, 0);
         battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
         battle_thread_set_parameters(
-            NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (u8*)refresh_c - offsetof(world_status_thread_t, style), 0, 0);
+            NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (u8*)refresh_c - offsetof(menu_status_thread_t, style), 0, 0);
     }
 
     frame = 0;
@@ -197,13 +197,13 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             g_debugchr_editor_selected_unit_slot = slot;
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
             *selected_unit = *chosen_unit;
-            ((battle_active_unit_t*)((u8*)selected_unit - offsetof(battle_active_unit_t, battle_id)))->name_id
+            ((menu_active_unit_t*)((u8*)selected_unit - offsetof(menu_active_unit_t, battle_id)))->name_id
                 = *chosen_unit;
             unit_type_ptr = &g_debugchr_panel_selected_billboard.unit_index;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
             battle_menu_copy_billboard_data_in(&g_debugchr_panel_selected_billboard,
-                ((battle_active_unit_t*)((u8*)selected_unit - offsetof(battle_active_unit_t, battle_id))),
+                ((menu_active_unit_t*)((u8*)selected_unit - offsetof(menu_active_unit_t, battle_id))),
                 &g_debugchr_editor_unit_fields);
             g_debugchr_status_display_thread_params.redraw_request = one;
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
@@ -220,13 +220,13 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             g_debugchr_editor_selected_unit_slot = slot;
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
             *selected_unit = *chosen_unit;
-            ((battle_active_unit_t*)((u8*)selected_unit - offsetof(battle_active_unit_t, battle_id)))->name_id
+            ((menu_active_unit_t*)((u8*)selected_unit - offsetof(menu_active_unit_t, battle_id)))->name_id
                 = *chosen_unit;
             unit_type_ptr = &g_debugchr_panel_selected_billboard.unit_index;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
             battle_menu_copy_billboard_data_in(&g_debugchr_panel_selected_billboard,
-                ((battle_active_unit_t*)((u8*)selected_unit - offsetof(battle_active_unit_t, battle_id))),
+                ((menu_active_unit_t*)((u8*)selected_unit - offsetof(menu_active_unit_t, battle_id))),
                 &g_debugchr_editor_unit_fields);
             g_debugchr_status_display_thread_params.redraw_request = 2;
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
@@ -245,7 +245,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         /* A register address keeps cse from folding this store to a direct
          * global address. */
         comparison_ptr = selected_unit_ptr
-            - (offsetof(battle_active_unit_t, battle_id) - offsetof(battle_active_unit_t, name_id))
+            - (offsetof(menu_active_unit_t, battle_id) - offsetof(menu_active_unit_t, name_id))
                 / sizeof(*selected_unit_ptr);
         *comparison_ptr = g_debugchr_editor_unit_ids[0];
         *unit_type_id_ptr = g_debugchr_editor_unit_ids[0];

@@ -21,12 +21,12 @@ extern RECT g_attack_editor_numeric_entries_d;
 extern RECT g_attack_editor_numeric_entries_e;
 extern RECT g_attack_editor_numeric_entries_f;
 extern point16_t g_attack_editor_numeric_geometry[];
-extern battle_menu_status_panel_numeric_buffer_t g_attack_editor_numeric_state[2];
+extern menu_status_panel_numeric_buffer_t g_attack_editor_numeric_state[2];
 extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table;
 extern u8 g_attack_editor_numeric_text_a[];
 extern u8 g_attack_editor_numeric_text_b[];
-extern world_gfx_image_load_parameters_t g_attack_editor_numeric_texture[];
-extern battle_unit_status_record_t g_attack_panel_selected_billboard;
+extern image_load_parameters_t g_attack_editor_numeric_texture[];
+extern menu_unit_status_record_t g_attack_panel_selected_billboard;
 extern u8 g_attack_editor_primary_skillset_name[];
 extern u8 g_attack_editor_secondary_skillset_name[];
 
@@ -68,22 +68,22 @@ extern u8 g_attack_portrait_staging[];
 extern RECT g_attack_portrait_upload_rect;
 
 void attack_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
+    menu_palette_primitives_t* primitives, const menu_status_thread_t* thread);
 
 void attack_gfx_build_formation_sprites(void);
 void attack_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
-void attack_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
-    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
+void attack_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
+    s32 lower_half, const menu_status_thread_t* thread);
 
 void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
     main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
 void attack_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void attack_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
-void attack_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
-void attack_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* data);
+void attack_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
+void attack_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* data);
 void attack_gfx_load_portraits(void);
 void attack_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
 void attack_gfx_set_formation_icon_uv(POLY_FT4* primitive, s32 icon_id);
@@ -225,7 +225,7 @@ extern s32 g_attack_deploy_grid_slide_y;
 extern s32 g_attack_deploy_tiles_only_mode;
 extern RECT g_attack_deploy_arrow_clut_rect;
 extern point16_t g_attack_deploy_texture_location[];
-extern world_gfx_image_load_parameters_t g_attack_deploy_menu_cursor_cells[];
+extern image_load_parameters_t g_attack_deploy_menu_cursor_cells[];
 extern help_navigation_record_t g_attack_deploy_select_menu_nodes[];
 /* g_attack_scenario_table string arena, installed as TEXT_SECTION_DEPLOYMENT_UNIT_HELP */
 extern u8* g_attack_deploy_unit_text_section;
@@ -245,13 +245,13 @@ extern RECT g_attack_deploy_cursor_clut_rect;
 extern palette_t g_attack_deploy_cursor_palette_cycle[2];
 extern const palette_t g_attack_deploy_cursor_palette_source[2];
 extern s32 g_attack_deploy_deployed_unit_count;
-extern world_menu_entry_t g_attack_deploy_menu_entries[];
+extern menu_entry_t g_attack_deploy_menu_entries[];
 extern RECT g_attack_deploy_rect_09c;
 extern RECT g_attack_deploy_rect_0ac;
 extern RECT g_attack_deploy_rect_0cc;
 extern palette_t g_attack_deploy_semitrans_clut_buffer;
 extern s32 g_attack_deploy_slot_offsets[5];
-extern world_gfx_image_load_parameters_t g_attack_deploy_text_graphic_params[9];
+extern image_load_parameters_t g_attack_deploy_text_graphic_params[9];
 extern POLY_FT4 g_attack_deploy_text_polys[2][9];
 extern s32 g_attack_deploy_text_reveal_heights[9];
 extern s32 g_attack_deploy_text_reveal_steps[9];
@@ -313,50 +313,50 @@ extern s32 g_attack_menu_indicator_packet_index[2];
 extern s32 g_attack_menu_indicator_state[2];
 
 /* panel */
-extern battle_unit_status_record_t g_attack_panel_comparison_billboard;
+extern menu_unit_status_record_t g_attack_panel_comparison_billboard;
 extern point16_t g_attack_panel_item_icon_texture[];
 extern RECT g_attack_panel_origin_offsets[];
 extern RECT g_attack_panel_text_upload_rect_a;
 extern RECT g_attack_panel_text_upload_rect_b;
-extern world_gfx_image_load_parameters_t g_attack_panel_label_layouts_mode0[];
-extern world_gfx_image_load_parameters_t g_attack_panel_label_layouts_mode1[];
-extern world_gfx_image_load_parameters_t g_attack_panel_label_layouts_mode2[];
-extern world_gfx_image_load_parameters_t g_attack_panel_label_layouts_mode3[];
-extern world_gfx_image_load_parameters_t g_attack_panel_item_icon_layouts[];
+extern image_load_parameters_t g_attack_panel_label_layouts_mode0[];
+extern image_load_parameters_t g_attack_panel_label_layouts_mode1[];
+extern image_load_parameters_t g_attack_panel_label_layouts_mode2[];
+extern image_load_parameters_t g_attack_panel_label_layouts_mode3[];
+extern image_load_parameters_t g_attack_panel_item_icon_layouts[];
 extern u8 g_attack_panel_status_animation[];
-extern battle_menu_status_panel_buffer_t g_attack_panel_frames_a[];
+extern menu_status_panel_buffer_t g_attack_panel_frames_a[];
 extern u8 g_attack_panel_text_image_a[];
 extern u8 g_attack_panel_text_image_b[];
 extern u16 g_attack_panel_status_y_offsets[][2];
-extern battle_menu_status_panel_editor_packet_t g_attack_panel_comparison_editor_packets[2];
+extern menu_status_panel_editor_packet_t g_attack_panel_comparison_editor_packets[2];
 extern u8 g_attack_panel_comparison_large_number_image[];
 extern u8 g_attack_panel_comparison_name_image[];
 extern u8 g_attack_panel_comparison_number_image[];
 extern menu_number_entry_t g_attack_panel_comparison_numeric_entries[];
-extern battle_menu_status_panel_packet_t g_attack_panel_comparison_packets[2];
+extern menu_status_panel_packet_t g_attack_panel_comparison_packets[2];
 extern palette_t g_attack_panel_comparison_portrait_palettes[2];
 extern RECT g_attack_panel_comparison_portrait_rect;
-extern battle_active_unit_t g_attack_panel_comparison_unit_data;
-extern world_gfx_image_load_parameters_t g_attack_panel_editor_label_cells[];
+extern menu_active_unit_t g_attack_panel_comparison_unit_data;
+extern image_load_parameters_t g_attack_panel_editor_label_cells[];
 extern u16 g_attack_panel_editor_label_cluts[][2];
-extern world_gfx_image_load_parameters_t g_attack_panel_editor_mode_cell[];
-extern world_gfx_image_load_parameters_t g_attack_panel_editor_mode_cells[];
-extern world_gfx_image_load_parameters_t g_attack_panel_editor_value_cells[];
+extern image_load_parameters_t g_attack_panel_editor_mode_cell[];
+extern image_load_parameters_t g_attack_panel_editor_mode_cells[];
+extern image_load_parameters_t g_attack_panel_editor_value_cells[];
 extern u16 g_attack_panel_editor_value_cluts[][2];
 extern RECT g_attack_panel_frame_rect;
 extern CVECTOR g_attack_panel_gauge_bar_colors[];
-extern world_gfx_image_load_parameters_t g_attack_panel_portrait_cell[];
-extern battle_menu_status_panel_editor_packet_t g_attack_panel_selected_editor_packets[2];
+extern image_load_parameters_t g_attack_panel_portrait_cell[];
+extern menu_status_panel_editor_packet_t g_attack_panel_selected_editor_packets[2];
 extern u8 g_attack_panel_selected_large_number_image[];
 extern u8 g_attack_panel_selected_name_image[];
 extern u8 g_attack_panel_selected_number_image[];
 extern menu_number_entry_t g_attack_panel_selected_numeric_entries[];
-extern battle_menu_status_panel_packet_t g_attack_panel_selected_packets[2];
+extern menu_status_panel_packet_t g_attack_panel_selected_packets[2];
 extern palette_t g_attack_panel_selected_portrait_palettes[2];
 extern RECT g_attack_panel_selected_portrait_rect;
 extern s16 g_attack_panel_slide_down_y[];
 extern s16 g_attack_panel_slide_up_y[];
-extern world_gfx_image_load_parameters_t g_attack_panel_sprite_cells[];
+extern image_load_parameters_t g_attack_panel_sprite_cells[];
 
 /* Per-sprite first/end cell indices (interleaved pairs), the visible-entry
  * count, each entry's sprite id and fade/blink state, and a 4-byte record per
@@ -368,8 +368,7 @@ extern point16_t g_attack_panel_status_scales[];
 extern main_zodiac_draw_offset_t g_attack_panel_status_offsets[];
 extern main_zodiac_sprite_frame_t g_attack_panel_status_uv_rects[];
 
-void attack_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
+void attack_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 
 void attack_panel_run_character_status_thread(void);
 
@@ -401,17 +400,17 @@ void attack_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* 
 void attack_text_init_battle_pointers(attack_text_file_t* file);
 
 /* unit */
-extern battle_active_unit_t g_attack_panel_selected_unit_data;
+extern menu_active_unit_t g_attack_panel_selected_unit_data;
 
 /* Status editor at 0x801ca0e8 (monster-skillset and two-hands flags at +0x0e/+0x10). */
-extern battle_menu_status_panel_slot_storage_t g_attack_editor_unit_fields;
+extern menu_status_panel_slot_storage_t g_attack_editor_unit_fields;
 void attack_editor_load_party_unit(s32 mode, s32 roster_index);
 void attack_gfx_prepare_party_portrait_textures(void);
 void attack_render_unit_status_panel_thread(void);
 
 /* other */
 extern u32* g_attack_input_controller;
-extern battle_menu_status_panel_indicator_prims_t g_attack_thread_indicator_packets[2][2];
+extern menu_status_panel_indicator_prims_t g_attack_thread_indicator_packets[2][2];
 extern s32 g_attack_status_display_thread_params;
 extern RECT attack_D_801CD0A4;
 extern u8 g_attack_event_condition_blocks[];

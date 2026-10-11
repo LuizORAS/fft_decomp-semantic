@@ -8,13 +8,13 @@
  * and submits the four icon sprites of the alternating record each frame. */
 void world_menu_icon_clamped_list_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
-    world_menu_entry_t* param;
+    menu_icon_record_t records[2];
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
     s32 cursor;
-    world_menu_icon_record_t* record;
-    world_menu_icon_sprites_t* sprites;
+    menu_icon_record_t* record;
+    menu_icon_sprites_t* sprites;
 
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
     param = world_thread_get_current_parameter_1();

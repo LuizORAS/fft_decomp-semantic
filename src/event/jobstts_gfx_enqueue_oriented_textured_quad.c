@@ -2,7 +2,7 @@
 
 /* Queue a textured quad whose texture cell is mirrored by orientation. */
 void jobstts_gfx_enqueue_oriented_textured_quad(
-    RECT* rect, world_gfx_texture_source_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index) {
+    RECT* rect, texture_source_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index) {
     s32 quad_semitrans = semitrans;
     s32 quad_orientation = orientation;
     s32 quad_ot_index = ot_index;

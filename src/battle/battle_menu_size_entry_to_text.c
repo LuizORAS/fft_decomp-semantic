@@ -7,7 +7,7 @@
  * and reports its text padding, adds the 0x18 border and the low two width
  * bits, then centres the window on x = 0x102.
  */
-void battle_menu_size_entry_to_text(world_menu_entry_t* window, s16* width, s16* height, s32* out_pad, s32 pad_short) {
+void battle_menu_size_entry_to_text(menu_entry_t* window, s16* width, s16* height, s32* out_pad, s32 pad_short) {
     u8* text;
 
     text = battle_text_find_entry(window->text_id);

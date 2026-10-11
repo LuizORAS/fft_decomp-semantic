@@ -24,7 +24,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     u32 prims;
     s32 polarity;
 
-    g_battle_ai_workspace_ptr = (world_event_work_t*)g_battle_ai_workspace;
+    g_battle_ai_workspace_ptr = (event_work_t*)g_battle_ai_workspace;
     if (g_world_gfx_draw_primitives_immediately != 0) {
         DrawSync(0);
         rect.w = 0x100;
@@ -111,22 +111,22 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     g_world_3d_object_use_request = 0;
     g_world_field_object_use_request = 0;
 
-    if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS) {
+    if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_JOBSTTS) {
         g_world_companion_overlay_prims = jobstts_entrypoint(g_world_active_unit_data.battle_id, 0);
         if (g_world_companion_overlay_prims != 0) {
             AddPrims(g_world_gfx_active_otag_entries, (void*)g_world_companion_overlay_prims,
                 (void*)(g_world_companion_overlay_prims + 0xFC));
         } else {
-            g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+            g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
         }
     }
-    if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_EQUIP) {
+    if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_EQUIP) {
         prims = equip_entrypoint(g_world_active_unit_data.battle_id, g_world_gfx_active_otag_entries + 1);
         g_world_companion_overlay_prims = prims;
         if (prims >= 2) {
             AddPrims(g_world_gfx_active_otag_entries, (void*)prims, (void*)(prims + 0xFC));
         } else {
-            g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+            g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
         }
     }
 
@@ -158,21 +158,21 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         return g_world_frame_result_override;
     }
 
-    if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_STUB) {
+    if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_STUB) {
         world_menu_run_companion_overlay_stub();
-        g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
-    } else if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_BUNIT) {
+        g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
+    } else if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_BUNIT) {
         world_script_set_event_speed(1);
         i = bunit_entrypoint(0, 0);
         battle_target_move_cursor_to_battle_id(i);
         g_world_active_unit_data.battle_id = i;
-        g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
-    } else if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE) {
+        g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
+    } else if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_CARD_SAVE) {
         world_script_set_event_speed(1);
         polarity = g_main_gfx_screen_polarity;
         world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
         card_save_run_menu(0);
-        g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+        g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
         g_main_gfx_screen_polarity = polarity;
     }
     world_menu_open_companion_executable();

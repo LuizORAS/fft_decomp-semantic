@@ -34,7 +34,7 @@ extern menu_sprite_command_t g_equip_cmd_row_sprite_command;
  * (in equip_run_item_type_order_mode) the item-type order menus. Each is
  * started through equip_thread_start_managed, which makes it the current
  * g_battle_menu_thread_menu_data. */
-extern world_menu_entry_t g_equip_command_menu;
+extern menu_entry_t g_equip_command_menu;
 extern s32 g_equip_cmd_stream_input;
 extern menu_window_command_t g_equip_cmd_window_interior_command;
 void equip_cmd_run_stream(u8* stream, s32 input);
@@ -73,15 +73,15 @@ extern RECT g_equip_editor_numeric_entries_c;
 extern RECT g_equip_editor_numeric_entries_d;
 extern RECT g_equip_editor_numeric_entries_e;
 extern RECT g_equip_editor_numeric_entries_f;
-extern battle_menu_status_panel_numeric_buffer_t g_equip_editor_numeric_state_a[2];
-extern battle_menu_status_panel_numeric_buffer_t g_equip_editor_numeric_state_b[2];
+extern menu_status_panel_numeric_buffer_t g_equip_editor_numeric_state_a[2];
+extern menu_status_panel_numeric_buffer_t g_equip_editor_numeric_state_b[2];
 
 /* Per-thread-slot window rect, upload rects, sprite descriptors and number
  * entries; the first set belongs to thread 12. */
 extern battle_menu_status_panel_numeric_geometry_t g_equip_editor_numeric_table;
 extern u8 g_equip_editor_numeric_text_a[];
 extern u8 g_equip_editor_numeric_text_b[];
-extern world_gfx_image_load_parameters_t g_equip_editor_numeric_texture[];
+extern image_load_parameters_t g_equip_editor_numeric_texture[];
 void equip_editor_run_numeric_thread(void);
 
 /* equip */
@@ -225,13 +225,13 @@ extern u16 g_equip_gfx_sprite_16_count;
 /* The scratch marker rect this routine drives; uncatalogued, but the same
  * descriptor equip_menu_draw_equipment_slot_marker feeds to the oriented quad
  * enqueue. */
-extern world_oriented_quad_t g_equip_gfx_blank_cell_rect;
+extern oriented_quad_t g_equip_gfx_blank_cell_rect;
 void equip_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
+    menu_palette_primitives_t* primitives, const menu_status_thread_t* thread);
 void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
-void equip_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
-    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
+void equip_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
+    s32 lower_half, const menu_status_thread_t* thread);
 
 void equip_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void equip_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
@@ -240,7 +240,7 @@ void equip_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx)
 void equip_gfx_enqueue_line_f2(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
 
 void equip_gfx_enqueue_oriented_textured_quad(
-    const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
+    const oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
 
 void equip_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
 
@@ -253,9 +253,9 @@ void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_
 rgb24_t* equip_gfx_get_draw_color(void);
 void equip_gfx_set_draw_color(const rgb24_t* color);
 s32 equip_gfx_get_transition_frame(void);
-void equip_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
+void equip_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void equip_gfx_init_primitive_buffers(equip_gfx_context_t* context);
-void equip_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* data);
+void equip_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* data);
 void equip_gfx_load_image_and_wait(RECT* rect, void* data);
 void equip_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
 void equip_gfx_set_otag_index(s32 ot_index);
@@ -273,8 +273,8 @@ void equip_gfx_enqueue_textured_quad(
     const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 
 void equip_gfx_enqueue_textured_quad_corners(
-    const world_gfx_textured_quad_source_t* descriptor, const rgb24_t* color, s32 semitrans, s32 otag_index);
-void equip_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
+    const textured_quad_source_t* descriptor, const rgb24_t* color, s32 semitrans, s32 otag_index);
+void equip_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 otag_index, s32 count);
 
 void equip_gfx_enqueue_textured_quad_current_ot(const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans,
@@ -317,27 +317,27 @@ extern s32 g_equip_item_numeric_panel_y;
 extern s32 g_equip_item_numeric_panel_redraw;
 extern s32 g_equip_item_numeric_panel_style;
 extern s32 g_equip_item_numeric_thread_enabled;
-extern struct world_item_stat_detail g_equip_item_preview_stat_detail;
-extern world_menu_entry_t g_equip_item_action_menu;
-extern world_menu_entry_t g_equip_item_action_menu_single_item;
+extern struct menu_item_stat_detail g_equip_item_preview_stat_detail;
+extern menu_entry_t g_equip_item_action_menu;
+extern menu_entry_t g_equip_item_action_menu_single_item;
 extern s8 g_equip_item_action_menu_active;
 extern u8 g_equip_item_list_has_multiple_entries;
 extern s16 g_equip_item_type_order[];
 extern u8 g_equip_item_type_order_names[];
-extern world_menu_entry_t* g_equip_item_action_active_menu;
+extern menu_entry_t* g_equip_item_action_active_menu;
 extern menu_icon_source_t g_equip_item_row_icon_rect;
-extern world_menu_entry_t* g_equip_item_type_order_active_menu;
+extern menu_entry_t* g_equip_item_type_order_active_menu;
 extern u16 g_equip_remove_item_cursor_anim[];
 extern s16 g_equip_remove_item_equipment[];
 extern point16_t g_equip_remove_item_marker_rect;
 extern s8 g_equip_remove_item_previewed_slot;
-void equip_item_clear_stat_sums(battle_unit_status_record_t* summary, world_item_stat_detail_t* detail);
+void equip_item_clear_stat_sums(menu_unit_status_record_t* summary, menu_item_stat_detail_t* detail);
 s32 equip_item_adjust_inventory_count(s32 item_entry, s32 delta);
 void equip_item_build_inventory_totals(void);
 menu_icon_source_t* equip_item_build_type_icon_source(s32 index);
 
 void equip_item_calculate_swap_stat_delta(
-    world_item_stat_detail_t* output, battle_unit_status_record_t* out, s16 from, s16 to, s32 slot);
+    menu_item_stat_detail_t* output, menu_unit_status_record_t* out, s16 from, s16 to, s32 slot);
 
 void equip_menu_load_sort_key_list(s32 list_index, s16* destination);
 s32 equip_item_get_equipped_count(s32 item_entry);
@@ -361,7 +361,7 @@ menu_icon_source_t* equip_menu_get_entry_item_icon_source(s32 row);
 s32 equip_item_get_ranking_value(s32 item_id);
 
 void equip_item_subtract_scaled_stats(
-    world_item_stat_detail_t* out, world_item_stat_detail_t* scaled, world_item_stat_detail_t* base, s32 scale);
+    menu_item_stat_detail_t* out, menu_item_stat_detail_t* scaled, menu_item_stat_detail_t* base, s32 scale);
 
 /* menu */
 /* g_equip_menu_screen_state: the index of the screen's handler in
@@ -394,14 +394,14 @@ extern s16 g_equip_menu_list_visible_rows;
 extern u16 g_equip_menu_list_vram_width;
 extern u8 g_equip_menu_screen_state; /* equip_screen_state_e */
 extern s16 g_equip_menu_scroll_base_index;
-extern world_oriented_quad_t g_equip_menu_secondary_slot_marker;
+extern oriented_quad_t g_equip_menu_secondary_slot_marker;
 
 /* Signed halfword: EQUIP reads this state with lh at 0x801c4584,
  * 0x801c45bc, and 0x801c4614. */
 extern s16 g_equip_menu_selected_list_index;
 extern menu_selection_record_t g_equip_menu_selection_entries[5];
 extern s16 g_equip_menu_selection_values[4];
-extern world_oriented_quad_t g_equip_menu_slot_marker_rects[];
+extern oriented_quad_t g_equip_menu_slot_marker_rects[];
 extern u8 g_equip_menu_slot_marker_window[];
 extern u8 g_equip_menu_slot_marker_x[];
 extern s8 g_equip_menu_thread_running;
@@ -483,53 +483,52 @@ s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection
 s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
 /* panel */
-extern world_unit_status_identity_t g_equip_panel_selected_unit_data;
+extern menu_unit_status_identity_t g_equip_panel_selected_unit_data;
 extern point16_t g_equip_panel_item_icon_texture[];
 extern RECT g_equip_panel_origin_offsets[];
 extern RECT g_equip_panel_text_upload_rect_a;
 extern RECT g_equip_panel_text_upload_rect_b;
-extern world_gfx_image_load_parameters_t g_equip_panel_label_layouts_mode0[];
-extern world_gfx_image_load_parameters_t g_equip_panel_label_layouts_mode1[];
-extern world_gfx_image_load_parameters_t g_equip_panel_label_layouts_mode2[];
-extern world_gfx_image_load_parameters_t g_equip_panel_label_layouts_mode3[];
-extern world_gfx_image_load_parameters_t g_equip_panel_item_icon_layouts[];
-extern battle_menu_status_panel_buffer_t g_equip_panel_frames_a[];
+extern image_load_parameters_t g_equip_panel_label_layouts_mode0[];
+extern image_load_parameters_t g_equip_panel_label_layouts_mode1[];
+extern image_load_parameters_t g_equip_panel_label_layouts_mode2[];
+extern image_load_parameters_t g_equip_panel_label_layouts_mode3[];
+extern image_load_parameters_t g_equip_panel_item_icon_layouts[];
+extern menu_status_panel_buffer_t g_equip_panel_frames_a[];
 extern u8 g_equip_panel_text_image_a[];
 extern u8 g_equip_panel_text_image_b[];
-extern battle_unit_status_record_t g_equip_panel_comparison_billboard;
-extern battle_menu_status_panel_editor_packet_t g_equip_panel_comparison_editor_packets[2];
+extern menu_unit_status_record_t g_equip_panel_comparison_billboard;
+extern menu_status_panel_editor_packet_t g_equip_panel_comparison_editor_packets[2];
 extern u8 g_equip_panel_comparison_large_number_image[];
 extern u8 g_equip_panel_comparison_name_image[];
 extern u8 g_equip_panel_comparison_number_image[];
 extern menu_number_entry_t g_equip_panel_comparison_numeric_entries[];
-extern battle_menu_status_panel_packet_t g_equip_panel_comparison_packets[2];
+extern menu_status_panel_packet_t g_equip_panel_comparison_packets[2];
 extern palette_t g_equip_panel_comparison_portrait_palettes[2];
 extern RECT g_equip_panel_comparison_portrait_rect;
-extern world_unit_status_identity_t g_equip_panel_comparison_unit_data;
-extern world_gfx_image_load_parameters_t g_equip_panel_editor_label_cells[];
+extern menu_unit_status_identity_t g_equip_panel_comparison_unit_data;
+extern image_load_parameters_t g_equip_panel_editor_label_cells[];
 extern u16 g_equip_panel_editor_label_cluts[][2];
-extern world_gfx_image_load_parameters_t g_equip_panel_editor_mode_cell[];
-extern world_gfx_image_load_parameters_t g_equip_panel_editor_mode_cells[];
-extern world_gfx_image_load_parameters_t g_equip_panel_editor_value_cells[];
+extern image_load_parameters_t g_equip_panel_editor_mode_cell[];
+extern image_load_parameters_t g_equip_panel_editor_mode_cells[];
+extern image_load_parameters_t g_equip_panel_editor_value_cells[];
 extern u16 g_equip_panel_editor_value_cluts[][2];
 extern RECT g_equip_panel_frame_rect;
-extern battle_menu_status_panel_buffer_t g_equip_panel_frames_b[];
+extern menu_status_panel_buffer_t g_equip_panel_frames_b[];
 extern CVECTOR g_equip_panel_gauge_bar_colors[];
-extern world_gfx_image_load_parameters_t g_equip_panel_portrait_cell[];
-extern battle_menu_status_panel_editor_packet_t g_equip_panel_selected_editor_packets[2];
+extern image_load_parameters_t g_equip_panel_portrait_cell[];
+extern menu_status_panel_editor_packet_t g_equip_panel_selected_editor_packets[2];
 extern u8 g_equip_panel_selected_large_number_image[];
 extern u8 g_equip_panel_selected_name_image[];
 extern u8 g_equip_panel_selected_number_image[];
 extern menu_number_entry_t g_equip_panel_selected_numeric_entries[];
-extern battle_menu_status_panel_packet_t g_equip_panel_selected_packets[2];
+extern menu_status_panel_packet_t g_equip_panel_selected_packets[2];
 extern palette_t g_equip_panel_selected_portrait_palettes[2];
 extern RECT g_equip_panel_selected_portrait_rect;
 extern s16 g_equip_panel_slide_down_y[];
 extern s16 g_equip_panel_slide_up_y[];
-extern world_gfx_image_load_parameters_t g_equip_panel_sprite_cells[];
+extern image_load_parameters_t g_equip_panel_sprite_cells[];
 
-void equip_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
+void equip_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 
 void equip_panel_toggle_equipment_threads(s32 enable);
 void equip_panel_toggle_item_numeric_thread(s32 enable);
@@ -638,10 +637,10 @@ typedef enum equip_thread_slot {
 
 extern u8 g_equip_thread_idle_stop_pending;
 extern s32 g_equip_thread_state;
-extern battle_menu_status_panel_indicator_prims_t g_equip_thread_indicator_packets[2][2];
+extern menu_status_panel_indicator_prims_t g_equip_thread_indicator_packets[2][2];
 void equip_thread_request_stop(s32 id);
 void equip_text_start_character_thread_if_idle(s32 thread_id, s32 parameter_0, s32 parameter_1, s32 parameter_2);
-s32 equip_thread_start_managed(s32 thread_id, world_menu_entry_t* desc);
+s32 equip_thread_start_managed(s32 thread_id, menu_entry_t* desc);
 void equip_thread_stop_and_clear_state(s32 id);
 void equip_thread_wait_forever(void);
 
@@ -652,48 +651,48 @@ void equip_thread_wait_forever(void);
  * battle_stats_t equipment-stat slot. The
  * first 0x1E bytes share the unit-status-billboard layout. */
 typedef struct equip_unit_data {
-    s16 level;      /* 0x00; capped at 99 */
-    s16 team_kind;  /* 0x02; 1 enemy, 2 neutral */
-    s16 list_index; /* 0x04; AT-list lookup + 1, or -1 */
-    s16 unit_count; /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
-    s16 experience; /* 0x08; capped at 99 */
-    s16 unit_index; /* 0x0a; battle_stats_t.entd_slot */
-    s16 hp;         /* 0x0c; capped at 999 */
-    s16 _unused_0e; /* 0x0e; HP gauge bonus slot */
-    s16 max_hp;     /* 0x10; capped at 999 */
-    s16 mp;         /* 0x12; capped at 999 */
-    s16 _unused_14; /* 0x14 */
-    s16 max_mp;     /* 0x16; capped at 999 */
-    s16 ct;         /* 0x18; 100 while the unit has its turn */
-    s16 _unused_1a; /* 0x1a */
-    s16 max_ct;     /* 0x1c; always 100 */
-    s16 battle_id;  /* 0x1e */
-    s16 _unused_20; /* 0x20 */
-    world_unit_status_identity_t identity; /* 0x22 */
-    s16 move;                              /* 0x30 */
-    s16 speed;                             /* 0x32 */
-    s16 jump;                              /* 0x34 */
-    s16 right_weapon_power;                /* 0x36 */
-    s16 left_weapon_power;                 /* 0x38 */
-    s16 right_weapon_evade;                /* 0x3a */
-    s16 left_weapon_evade;                 /* 0x3c */
-    s16 _unused_3e;                        /* 0x3e; monster-skillset flag slot */
-    s16 two_handing;                       /* 0x40; equip_unit_is_two_handing_weapon result */
-    s16 physical_attack;                   /* 0x42 */
-    s16 physical_class_evade;              /* 0x44 */
-    s16 physical_shield_evade;             /* 0x46 */
-    s16 _unused_48;                        /* 0x48; accessory evade slot */
-    s16 _unused_4a;                        /* 0x4a */
-    s16 magic_attack;                      /* 0x4c */
-    s16 magical_class_evade;               /* 0x4e; cleared (lower billboard M-C-Ev) */
-    s16 magical_shield_evade;              /* 0x50 */
-    s16 magical_accessory_evade;           /* 0x52 */
-    u16 equipment[5];                      /* 0x54; equip_unit_equipment_slot_e order */
-    u8 _unused_5e[0x12];        /* 0x5e; ability ids and the spare tail of the stat-detail block, left zero */
-    u8 equipment_categories[4]; /* 0x70 */
-    u8 support_abilities[4];    /* 0x74; copy of battle_stats_t.support_abilities */
-    u8 party_index;             /* 0x78; battle_stats_t.formation_index */
-    u8 _padding_79;             /* tail padding to 2-byte alignment */
+    s16 level;                            /* 0x00; capped at 99 */
+    s16 team_kind;                        /* 0x02; 1 enemy, 2 neutral */
+    s16 list_index;                       /* 0x04; AT-list lookup + 1, or -1 */
+    s16 unit_count;                       /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
+    s16 experience;                       /* 0x08; capped at 99 */
+    s16 unit_index;                       /* 0x0a; battle_stats_t.entd_slot */
+    s16 hp;                               /* 0x0c; capped at 999 */
+    s16 _unused_0e;                       /* 0x0e; HP gauge bonus slot */
+    s16 max_hp;                           /* 0x10; capped at 999 */
+    s16 mp;                               /* 0x12; capped at 999 */
+    s16 _unused_14;                       /* 0x14 */
+    s16 max_mp;                           /* 0x16; capped at 999 */
+    s16 ct;                               /* 0x18; 100 while the unit has its turn */
+    s16 _unused_1a;                       /* 0x1a */
+    s16 max_ct;                           /* 0x1c; always 100 */
+    s16 battle_id;                        /* 0x1e */
+    s16 _unused_20;                       /* 0x20 */
+    menu_unit_status_identity_t identity; /* 0x22 */
+    s16 move;                             /* 0x30 */
+    s16 speed;                            /* 0x32 */
+    s16 jump;                             /* 0x34 */
+    s16 right_weapon_power;               /* 0x36 */
+    s16 left_weapon_power;                /* 0x38 */
+    s16 right_weapon_evade;               /* 0x3a */
+    s16 left_weapon_evade;                /* 0x3c */
+    s16 _unused_3e;                       /* 0x3e; monster-skillset flag slot */
+    s16 two_handing;                      /* 0x40; equip_unit_is_two_handing_weapon result */
+    s16 physical_attack;                  /* 0x42 */
+    s16 physical_class_evade;             /* 0x44 */
+    s16 physical_shield_evade;            /* 0x46 */
+    s16 _unused_48;                       /* 0x48; accessory evade slot */
+    s16 _unused_4a;                       /* 0x4a */
+    s16 magic_attack;                     /* 0x4c */
+    s16 magical_class_evade;              /* 0x4e; cleared (lower billboard M-C-Ev) */
+    s16 magical_shield_evade;             /* 0x50 */
+    s16 magical_accessory_evade;          /* 0x52 */
+    u16 equipment[5];                     /* 0x54; equip_unit_equipment_slot_e order */
+    u8 _unused_5e[0x12];                  /* 0x5e; ability ids and the spare tail of the stat-detail block, left zero */
+    u8 equipment_categories[4];           /* 0x70 */
+    u8 support_abilities[4];              /* 0x74; copy of battle_stats_t.support_abilities */
+    u8 party_index;                       /* 0x78; battle_stats_t.formation_index */
+    u8 _padding_79;                       /* tail padding to 2-byte alignment */
 } equip_unit_data_t;
 typedef char equip_unit_data_size_must_be_0x7a[(sizeof(equip_unit_data_t) == 0x7A) ? 1 : -1];
 
@@ -706,14 +705,14 @@ extern u8 g_equip_unit_status_panel_params[];
 extern s32 g_equip_unit_status_panel_flags;
 extern s32 g_equip_unit_status_panel_redraw;
 extern s8 g_equip_unit_banner_enabled;
-extern world_item_stat_detail_t g_equip_unit_editor_stats;
+extern menu_item_stat_detail_t g_equip_unit_editor_stats;
 extern s16 g_equip_unit_saved_hp;
 extern s16 g_equip_unit_saved_mp;
 extern equip_unit_data_t g_equip_unit_records[];
-extern battle_unit_status_record_t g_equip_selected_unit_stat_summary;
+extern menu_unit_status_record_t g_equip_selected_unit_stat_summary;
 
 void equip_item_calculate_equipment_swap_stat_delta(
-    world_item_stat_detail_t* detail_total, battle_unit_status_record_t* acc, u16* froms, u16* tos);
+    menu_item_stat_detail_t* detail_total, menu_unit_status_record_t* acc, u16* froms, u16* tos);
 
 s32 equip_unit_can_equip_item_id(s16 unit_index, s16 item_entry);
 s32 equip_unit_has_two_hands(s16 unit_index);
@@ -725,7 +724,7 @@ s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id);
 equip_item_slot_result_e equip_unit_validate_slot_item(s16 unit_index, s16 slot, s32 item_id);
 void equip_unit_build_data_from_battle_stats(struct battle_stats* stats, equip_unit_data_t* unit);
 void equip_unit_commit_loadout_to_battle_stats(void);
-void equip_item_sum_equipment_stat_details(world_item_stat_detail_t* total, u16* equipment);
+void equip_item_sum_equipment_stat_details(menu_item_stat_detail_t* total, u16* equipment);
 void equip_render_unit_status_panel_thread(void);
 s32 equip_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support);
 
@@ -749,12 +748,12 @@ extern s8 g_equip_remove_mode_initialized;
 /* Status image rects, the EQUIP.OUT copy of WORLD's
  * g_world_status_display_image_rects (0x8018cf68). */
 extern RECT g_equip_status_display_image_rects[];
-extern world_menu_entry_t g_equip_type_order_menu_hand_body;
-extern world_menu_entry_t g_equip_type_order_menu_other_slots;
+extern menu_entry_t g_equip_type_order_menu_hand_body;
+extern menu_entry_t g_equip_type_order_menu_other_slots;
 extern s8 g_equip_type_order_ready;
 
 void equip_collect_item_stat_deltas(
-    s16 raw_item, battle_unit_status_record_t* summary, world_item_stat_detail_t* detail, s32 alternate);
+    s16 raw_item, menu_unit_status_record_t* summary, menu_item_stat_detail_t* detail, s32 alternate);
 
 s32 equip_entrypoint(s32 unit, u32* otag);
 

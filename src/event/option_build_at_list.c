@@ -9,7 +9,7 @@
 #include "psx/types.h"
 
 void option_build_at_list(void) {
-    world_menu_text_window_t window;
+    menu_text_window_t window;
     RECT image_rect;
     RECT clear;
     RECT texture_window;
@@ -22,12 +22,12 @@ void option_build_at_list(void) {
     u32* input;
     u32* input2;
     SPRT* frame;
-    world_menu_list_page_t* page;
-    world_menu_text_layout_t* layout;
+    menu_list_page_t* page;
+    menu_text_layout_t* layout;
     s32 accum;
     s32 timer;
     s32 redraw_pending;
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
     s32 delta;
     s32 i;
     s32 column;
@@ -46,7 +46,7 @@ void option_build_at_list(void) {
     input2 = battle_script_get_controller_input_pointer(1);
     row_offset = 0;
     cursor = 0;
-    entry = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    entry = (menu_entry_t*)battle_thread_get_current_parameter_1();
     layout = entry->context;
     entry->window.h = layout->row_count * 16 + 0x1C;
     entry->inner_height = layout->row_count * 16 + 0x1C;
@@ -90,8 +90,8 @@ void option_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&page->frame);
-    battle_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
-        (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
+        (const image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -119,7 +119,7 @@ void option_build_at_list(void) {
     clear.y = ((image_rect.y - 2) & 0xFF) + (image_rect.y & 0xFF00);
     clear.w = image_rect.w;
     ClearImage(&clear, 0, 0, 0);
-    battle_copy_bytes(&g_option_at_list_pages[1], g_option_at_list_pages, sizeof(world_menu_list_page_t));
+    battle_copy_bytes(&g_option_at_list_pages[1], g_option_at_list_pages, sizeof(menu_list_page_t));
     for (i = 0; i < 2; i++) {
         g_option_at_list_pages[i].icons.icons[0] = &icons0[i];
         g_option_at_list_pages[i].icons.icons[1] = &icons1[i];

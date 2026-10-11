@@ -22,8 +22,8 @@
  * thread) is asked to stop (task 3). The entry's result cell receives -1, the
  * event input is consumed, the cancel sound is queued and event input stays
  * suppressed for 5 frames. */
-void battle_handle_menu_cancel_input(world_menu_entry_t* menu) {
-    world_menu_entry_t* ctx = menu;
+void battle_handle_menu_cancel_input(menu_entry_t* menu) {
+    menu_entry_t* ctx = menu;
     s32 count;
     s32 i;
     s32 idx;

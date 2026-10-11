@@ -8,7 +8,7 @@
 /* character */
 extern RECT g_require_character_status_frame_rect[];
 extern RECT g_require_character_status_draw_area_rect;
-extern world_status_thread_t g_require_character_status_frame_config;
+extern menu_status_thread_t g_require_character_status_frame_config;
 /* The scalar x alias preserves the retail transition-store scheduling. */
 extern s32 g_require_character_status_origin_x;
 extern s32 g_require_character_status_redraw_request;
@@ -25,14 +25,14 @@ extern RECT g_require_editor_numeric_entries_d;
 extern RECT g_require_editor_numeric_entries_e;
 extern RECT g_require_editor_numeric_entries_f;
 extern point16_t g_require_editor_numeric_geometry[];
-extern battle_menu_status_panel_numeric_buffer_t g_require_editor_numeric_state[2];
+extern menu_status_panel_numeric_buffer_t g_require_editor_numeric_state[2];
 extern battle_menu_status_panel_numeric_geometry_t g_require_editor_numeric_table;
 extern u8 g_require_editor_numeric_text_a[];
 extern u8 g_require_editor_numeric_text_b[];
-extern world_gfx_image_load_parameters_t g_require_editor_numeric_texture[];
+extern image_load_parameters_t g_require_editor_numeric_texture[];
 extern u8 g_require_editor_job_name[];
 extern u8 g_require_editor_primary_skillset_name[];
-extern battle_menu_status_panel_slot_storage_t g_require_editor_unit_fields;
+extern menu_status_panel_slot_storage_t g_require_editor_unit_fields;
 extern struct battle_stats g_require_editor_party_unit_stats;
 void require_editor_load_selected_unit(void);
 void require_editor_run_numeric_thread(void);
@@ -81,21 +81,21 @@ extern POLY_GT4 g_require_gfx_poly_gt4_buffers[2][40];
 
 /* find (BATTLE) */
 void require_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* output, const world_status_thread_t* context);
+    menu_palette_primitives_t* output, const menu_status_thread_t* context);
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
 void require_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void require_gfx_build_portrait_poly_ft4(s32 flags, POLY_FT4* output);
 
-void require_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
-    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
+void require_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
+    s32 lower_half, const menu_status_thread_t* thread);
 
 void require_gfx_build_status_group_primitives(POLY_FT4* poly);
 void require_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void require_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void require_gfx_fade_rgb_31_frames(s32 target_0, s32 target_1, s32 target_2);
-void require_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
-void require_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
+void require_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
+void require_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void require_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 
 void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
@@ -144,11 +144,11 @@ void require_menu_icon_strip_thread(void);
 void require_menu_wait_selection_threads(void);
 
 /* panel */
-extern battle_unit_status_record_t g_require_panel_comparison_billboard;
+extern menu_unit_status_record_t g_require_panel_comparison_billboard;
 extern s32 g_require_panel_dim_a;
 extern s32 g_require_panel_dim_b;
 extern s32 g_require_panel_dim_c;
-extern battle_unit_status_record_t g_require_panel_selected_billboard;
+extern menu_unit_status_record_t g_require_panel_selected_billboard;
 extern u8 g_require_panel_status_animation[];
 extern u8 g_require_panel_status_group_bounds[];
 extern u8 g_require_panel_status_group_count;
@@ -161,46 +161,45 @@ extern point16_t g_require_panel_item_icon_texture[];
 extern RECT g_require_panel_origin_offsets[];
 extern RECT g_require_panel_text_upload_rect_a;
 extern RECT g_require_panel_text_upload_rect_b;
-extern world_gfx_image_load_parameters_t g_require_panel_label_layouts_mode0[];
-extern world_gfx_image_load_parameters_t g_require_panel_label_layouts_mode1[];
-extern world_gfx_image_load_parameters_t g_require_panel_label_layouts_mode2[];
-extern world_gfx_image_load_parameters_t g_require_panel_label_layouts_mode3[];
-extern world_gfx_image_load_parameters_t g_require_panel_item_icon_layouts[];
-extern battle_menu_status_panel_buffer_t g_require_panel_frames_a[];
+extern image_load_parameters_t g_require_panel_label_layouts_mode0[];
+extern image_load_parameters_t g_require_panel_label_layouts_mode1[];
+extern image_load_parameters_t g_require_panel_label_layouts_mode2[];
+extern image_load_parameters_t g_require_panel_label_layouts_mode3[];
+extern image_load_parameters_t g_require_panel_item_icon_layouts[];
+extern menu_status_panel_buffer_t g_require_panel_frames_a[];
 extern u8 g_require_panel_text_image_a[];
 extern u8 g_require_panel_text_image_b[];
-extern battle_menu_status_panel_editor_packet_t g_require_panel_comparison_editor_packets[2];
+extern menu_status_panel_editor_packet_t g_require_panel_comparison_editor_packets[2];
 extern u8 g_require_panel_comparison_large_number_image[];
 extern u8 g_require_panel_comparison_name_image[];
 extern u8 g_require_panel_comparison_number_image[];
 extern menu_number_entry_t g_require_panel_comparison_numeric_entries[];
-extern battle_menu_status_panel_packet_t g_require_panel_comparison_packets[2];
+extern menu_status_panel_packet_t g_require_panel_comparison_packets[2];
 extern palette_t g_require_panel_comparison_portrait_palettes[2];
 extern RECT g_require_panel_comparison_portrait_rect;
-extern battle_active_unit_t g_require_panel_comparison_unit_data;
-extern world_gfx_image_load_parameters_t g_require_panel_editor_label_cells[];
+extern menu_active_unit_t g_require_panel_comparison_unit_data;
+extern image_load_parameters_t g_require_panel_editor_label_cells[];
 extern u16 g_require_panel_editor_label_cluts[][2];
-extern world_gfx_image_load_parameters_t g_require_panel_editor_mode_cell[];
-extern world_gfx_image_load_parameters_t g_require_panel_editor_mode_cells[];
-extern world_gfx_image_load_parameters_t g_require_panel_editor_value_cells[];
+extern image_load_parameters_t g_require_panel_editor_mode_cell[];
+extern image_load_parameters_t g_require_panel_editor_mode_cells[];
+extern image_load_parameters_t g_require_panel_editor_value_cells[];
 extern u16 g_require_panel_editor_value_cluts[][2];
 extern RECT g_require_panel_frame_rect;
 extern CVECTOR g_require_panel_gauge_bar_colors[];
-extern world_gfx_image_load_parameters_t g_require_panel_portrait_cell[];
-extern battle_menu_status_panel_editor_packet_t g_require_panel_selected_editor_packets[2];
+extern image_load_parameters_t g_require_panel_portrait_cell[];
+extern menu_status_panel_editor_packet_t g_require_panel_selected_editor_packets[2];
 extern u8 g_require_panel_selected_large_number_image[];
 extern u8 g_require_panel_selected_name_image[];
 extern u8 g_require_panel_selected_number_image[];
 extern menu_number_entry_t g_require_panel_selected_numeric_entries[];
-extern battle_menu_status_panel_packet_t g_require_panel_selected_packets[2];
+extern menu_status_panel_packet_t g_require_panel_selected_packets[2];
 extern palette_t g_require_panel_selected_portrait_palettes[2];
 extern RECT g_require_panel_selected_portrait_rect;
-extern world_gfx_image_load_parameters_t g_require_panel_sprite_cells[];
+extern image_load_parameters_t g_require_panel_sprite_cells[];
 extern const point16_t g_require_panel_status_texture;
-void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, battle_unit_status_record_t* output);
+void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, menu_unit_status_record_t* output);
 
-void require_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
+void require_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 
 void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
@@ -304,7 +303,7 @@ extern s32 g_require_text_section_offsets[32];
 extern u8 g_require_text_data[];
 extern s16 g_require_message_menu_result;
 extern s32 g_require_numeric_editor_redraw_request;
-extern world_status_thread_t g_require_numeric_editor_thread_params;
+extern menu_status_thread_t g_require_numeric_editor_thread_params;
 /* The scalar x alias preserves the retail transition-store scheduling. */
 extern s32 g_require_numeric_editor_origin_x;
 extern glyph_blit_t g_require_text_decimal_glyph;
@@ -329,7 +328,7 @@ typedef enum require_thread_slot {
     REQUIRE_THREAD_SLOT_TRANSITION = 10, /* require_gfx_run_suspended_thread_transition */
 } require_thread_slot_e;
 
-extern battle_menu_status_panel_indicator_prims_t g_require_thread_indicator_packets[2][2];
+extern menu_status_panel_indicator_prims_t g_require_thread_indicator_packets[2][2];
 extern s32 g_require_thread_suspended_id;
 void require_thread_exit_current(void);
 s32 require_thread_is_running(s32 thread_id);
@@ -342,7 +341,7 @@ typedef struct require_party_bio_update_record {
 } require_party_bio_update_record_t;
 
 extern require_party_bio_update_record_t g_require_party_bio_update_records[11];
-extern battle_active_unit_t g_require_active_unit_data;
+extern menu_active_unit_t g_require_active_unit_data;
 extern s32 g_require_party_affected_battle_unit_indices[];
 extern s32 g_require_party_affected_unit_count;
 extern s32 g_require_party_affected_unit_message_args[];
@@ -359,7 +358,7 @@ extern u8 g_require_party_removable_flags[];
 
 /* Six consecutive 0x3c-byte menu records; the target derives entry [4]'s
    address from entry [2], so they are one array. */
-extern world_menu_entry_t g_require_party_removal_menus[6];
+extern menu_entry_t g_require_party_removal_menus[6];
 extern s16 g_require_party_removal_result;
 void require_party_apply_permanent_brave_faith_changes(void);
 s32 require_party_find_low_brave_high_faith_departures(void);
@@ -380,12 +379,12 @@ extern char g_require_text_wait_for_file_allocation_message[];
 extern u32* g_require_input_controller;
 extern u8 g_require_work[];
 extern job_data_t* g_require_formation_job_data;
-extern world_menu_entry_t g_require_join_menu_descriptor[];
+extern menu_entry_t g_require_join_menu_descriptor[];
 extern u8 g_require_saved_thread_block[];
 extern RECT g_require_special_portrait_palette_rect;
 extern RECT g_require_special_portrait_rect;
 extern s32 g_require_status_display_redraw_request;
-extern world_status_thread_t g_require_status_display_thread_params;
+extern menu_status_thread_t g_require_status_display_thread_params;
 /* The scalar x alias preserves the retail transition-store scheduling. */
 extern s32 g_require_status_display_origin_x;
 s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void);

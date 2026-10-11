@@ -10,7 +10,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
+s32 world_camera_step_track(camera_track_t* track, s32 component) {
     s32 time[4];  /* line 0: time[0]->time[1]; line 1: time[2]->time[3] */
     s32 value[4]; /* matching values for the two sampled lines */
     s32 value_delta0;

@@ -3,7 +3,7 @@
 /* Record the current menu's selection byte for the selected unit, when that
  * menu appears in the tracked menu-id table. */
 void battle_menu_record_selection_for_selected_unit(void) {
-    battle_menu_record_t* records;
+    menu_unit_selection_record_t* records;
     s16* selected;
     s32 i;
 

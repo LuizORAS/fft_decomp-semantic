@@ -13,7 +13,7 @@
  * matters: GCC expands it to the single-insn abssi2, which keeps the entry
  * loop body one basic block as in the target. */
 void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 busy, u16 sound_id) {
-    world_oriented_quad_t desc;
+    oriented_quad_t desc;
     /* Eight untouched bytes plus descriptor alignment retain the target frame. */
     s16 unused_tail[4];
     u16 clut;
@@ -54,7 +54,7 @@ void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 b
     desc.source.tpage = g_bunit_menu_icon_texture_page;
     if (count > 0) {
         do {
-            world_menu_button_piece_t* sprite = &g_bunit_slot_sprite_entries[entry];
+            menu_button_piece_t* sprite = &g_bunit_slot_sprite_entries[entry];
             desc.position.x = x + sprite->x_offset;
             desc.position.y = y + sprite->y_offset;
             desc.w = abs(g_bunit_menu_button_piece_scales[entry][0] * sprite->w) >> 12;

@@ -10,8 +10,8 @@
  * skill flag bit 0 is set while the current thread's fourth word is non-zero;
  * alternate-number columns draw a special glyph for values 0/1 without a
  * target, and text 0x509d for values of 100 and above. */
-void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, u8* buffer) {
-    world_menu_text_layout_t* layout = entry->context;
+void battle_menu_draw_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u8* buffer) {
+    menu_text_layout_t* layout = entry->context;
     s32 row;
     s32 column;
     s32 index;

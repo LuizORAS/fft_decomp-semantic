@@ -5,8 +5,8 @@
 /* Runs the crystal/treasure result panel and its list and choice threads. */
 void world_menu_start_dead_unit_threads(void) {
     crystal_pickup_result_t* context = g_world_thread_inner_subroutine_result;
-    world_menu_entry_t* previous_menu_descriptor = g_world_menu_thread_menu_data;
-    world_menu_entry_t* menu;
+    menu_entry_t* previous_menu_descriptor = g_world_menu_thread_menu_data;
+    menu_entry_t* menu;
     s32 value_count;
     s32 byte_index;
     s32 bit_index;
@@ -51,13 +51,13 @@ void world_menu_start_dead_unit_threads(void) {
     menu->text_image.width = 0x70;
     menu->inner_width = 0x70;
     if (value_count < 8) {
-        world_menu_text_layout_t* layout;
+        menu_text_layout_t* layout;
         layout = menu->context;
         layout->row_count = value_count;
         layout = menu->context;
         layout->hidden_rows = 0;
     } else {
-        world_menu_text_layout_t* layout;
+        menu_text_layout_t* layout;
         layout = menu->context;
         layout->row_count = 8;
         layout = menu->context;

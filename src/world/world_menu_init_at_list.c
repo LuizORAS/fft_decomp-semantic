@@ -13,7 +13,7 @@
  * written per branch: the store through the layout pointer may alias the
  * entry, so the repeated window.y store is kept.
  */
-void world_menu_init_at_list(world_menu_entry_t* entry) {
+void world_menu_init_at_list(menu_entry_t* entry) {
     s32 count;
     s32 bracketed;
     s32 i;
@@ -83,7 +83,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         count = 39;
     }
     if (bracketed != 0) {
-        world_menu_text_layout_t* layout;
+        menu_text_layout_t* layout;
 
         entry->window.y = 0x20;
         layout = entry->context;
@@ -94,7 +94,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         entry->text_image.width = 0xE8;
         entry->inner_width = 0xE8;
     } else {
-        world_menu_text_layout_t* layout;
+        menu_text_layout_t* layout;
 
         entry->window.y = 0x20;
         layout = entry->context;
@@ -106,8 +106,8 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         entry->inner_width = 0x84;
     }
     if (count < 10) {
-        world_menu_text_layout_t* layout;
-        world_menu_text_layout_t* hidden_rows_layout;
+        menu_text_layout_t* layout;
+        menu_text_layout_t* hidden_rows_layout;
 
         entry->window.y = (10 - count) * 8 + 0x20;
         layout = entry->context;
@@ -115,7 +115,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         hidden_rows_layout = entry->context;
         hidden_rows_layout->hidden_rows = 0;
     } else {
-        world_menu_text_layout_t* layout = entry->context;
+        menu_text_layout_t* layout = entry->context;
 
         layout->hidden_rows = count - 10;
     }

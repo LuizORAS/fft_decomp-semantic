@@ -7,13 +7,13 @@
  * sprite records until the input check completes. */
 void world_menu_icon_list_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
+    menu_icon_record_t records[2];
     s32 cursor;
-    world_menu_entry_t* param;
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
     s32 fresh;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
     s16* redraw;
 
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);

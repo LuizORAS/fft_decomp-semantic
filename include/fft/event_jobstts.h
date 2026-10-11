@@ -180,13 +180,13 @@ void jobstts_gfx_enqueue_textured_quad(
     RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index);
 
 void jobstts_gfx_enqueue_oriented_textured_quad(
-    RECT* rect, world_gfx_texture_source_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index);
+    RECT* rect, texture_source_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad_rect(
     RECT* rect, menu_icon_source_t* tex, rgb24_t* color, s32 semitrans, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad_list(
-    battle_menu_sprite_cell_t* sprites, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index, s32 count);
+    menu_sprite_cell_t* sprites, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index, s32 count);
 void jobstts_gfx_enqueue_textured_quad_corners(
-    world_gfx_textured_quad_source_t* quad, rgb24_t* color, s32 semitrans, s32 ot_index);
+    textured_quad_source_t* quad, rgb24_t* color, s32 semitrans, s32 ot_index);
 
 s32 jobstts_gfx_get_transition_frame(void);
 

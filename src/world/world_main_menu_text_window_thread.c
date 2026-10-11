@@ -20,7 +20,7 @@ void world_main_menu_text_window_thread(void) {
     world_menu_text_window_record_t records[2];
     s16 width;
     s16 height;
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
     s32* text_values;
     world_menu_text_window_record_t* record;
     u8* buffer;

@@ -6,9 +6,9 @@
  * battle_menu_should_close_thread asks it to stop. The thread exits only when its
  * second parameter is 0. */
 void battle_menu_input_thread(void) {
-    world_menu_entry_t* menu;
+    menu_entry_t* menu;
 
-    menu = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    menu = (menu_entry_t*)battle_thread_get_current_parameter_1();
     g_battle_sound_suppressed = 1;
     while (1) {
         battle_thread_yield();

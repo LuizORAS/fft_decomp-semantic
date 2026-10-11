@@ -12,7 +12,7 @@
  * row-count loads, as in the target.
  */
 void option_build_options_menu(void) {
-    world_menu_text_window_t window;
+    menu_text_window_t window;
     RECT image_rect;
     RECT clear;
     RECT texture_window;
@@ -26,10 +26,10 @@ void option_build_options_menu(void) {
     u32* input1;
     s32 accum;
     s32 timer;
-    world_menu_entry_t* entry;
-    world_options_menu_page_t* page;
-    world_options_menu_page_t* base;
-    world_menu_text_layout_t* layout;
+    menu_entry_t* entry;
+    options_menu_page_t* page;
+    options_menu_page_t* base;
+    menu_text_layout_t* layout;
     s32 delta;
     s32 i;
     s32 column;
@@ -51,7 +51,7 @@ void option_build_options_menu(void) {
     input1 = battle_script_get_controller_input_pointer(1);
     do {
         thread = &g_battle_threads[g_battle_current_thread_id];
-        entry = (world_menu_entry_t*)thread->function_parameter_1;
+        entry = (menu_entry_t*)thread->function_parameter_1;
     } while (0);
     page = g_option_menu_pages;
     layout = g_option_menu_entry_table;
@@ -102,8 +102,8 @@ void option_build_options_menu(void) {
     base->thumb.h = 8;
     base->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&base->frame);
-    battle_gfx_init_image_loading((world_texture_prim_t*)&base->frame, &entry->vram_origin, &entry->window,
-        (const world_gfx_image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading((texture_primitive_t*)&base->frame, &entry->vram_origin, &entry->window,
+        (const image_load_parameters_t*)&window);
     battle_menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
     base->arrow_marks[0].w = 6;
     base->arrow_marks[0].h = 0xC;
@@ -132,7 +132,7 @@ void option_build_options_menu(void) {
     battle_gfx_init_scaled_draw_area_packets(&page->value_area);
     battle_menu_init_semitransparent_sprt(&base->title);
     battle_text_configure_sprite_vram(
-        &g_option_menu_title_image_rect, entry->inner_width, 0x2C, (world_texture_prim_t*)&base->title, 0);
+        &g_option_menu_title_image_rect, entry->inner_width, 0x2C, (texture_primitive_t*)&base->title, 0);
     image = battle_menu_build_and_upload_window_frame_image(
         entry->inner_width, 0x2C, &g_option_menu_title_image_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
     base->title.x0 = entry->window.x;
@@ -155,7 +155,7 @@ void option_build_options_menu(void) {
     battle_thread_yield();
     battle_menu_init_semitransparent_sprt(&base->value);
     battle_text_configure_sprite_vram(
-        &g_option_menu_value_image_rect, 0x3C, 0x10, (world_texture_prim_t*)&base->value, 0);
+        &g_option_menu_value_image_rect, 0x3C, 0x10, (texture_primitive_t*)&base->value, 0);
     base->value.x0 = entry->window.x + 0x5C;
     base->value.y0 = entry->window.y + entry->window.h + 0xF;
     battle_clear_menu_render_buffer(buffer, 0x1E0);
@@ -163,7 +163,7 @@ void option_build_options_menu(void) {
     battle_menu_set_text_origin(0, 0);
     battle_menu_display_text_entry(0x5021, buffer, &g_menu_text_state.pen);
     LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
-    battle_copy_bytes(&base[1], base, sizeof(world_options_menu_page_t));
+    battle_copy_bytes(&base[1], base, sizeof(options_menu_page_t));
     for (;;) {
         page = &g_option_menu_pages[i & 1];
         if (delta == 0 && battle_menu_can_accept_input() != 0) {

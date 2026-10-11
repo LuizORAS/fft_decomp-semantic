@@ -6,6 +6,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* color */
 /* Packed RGB triples used by Gouraud menu graphics. CVECTOR adds a fourth
  * byte and cannot describe tables whose colors have a three-byte stride. */
 typedef struct rgb24 {
@@ -115,41 +116,41 @@ typedef enum texture_uv_flip {
     TEXTURE_UV_FLIP_XY = TEXTURE_UV_FLIP_X | TEXTURE_UV_FLIP_Y,
 } texture_uv_flip_e;
 
-/* Image load parameters consumed by world_gfx_init_image_loading (0xc bytes;
- * the table at 0x80155838 holds one per menu sprite). */
-typedef struct world_gfx_image_load_parameters {
+/* Image load parameters consumed by both *_gfx_init_image_loading routines
+ * (0xc bytes; BATTLE's table at 0x80155838 holds one per menu sprite). */
+typedef struct image_load_parameters {
     s16 x_load;
     s16 y_load;
     u16 width;
     u16 height;
     u16 x_screen_offset;
     u16 y_screen_offset;
-} world_gfx_image_load_parameters_t;
+} image_load_parameters_t;
 
 /* The 0x13c-byte panel fade packet group world_menu_init_panel_fade_tiles
  * (0x800ef2fc) and battle_menu_init_panel_fade_tiles (0x8013b6e4) initialize and
  * copy to the second frame buffer: independent nine-tile strips at +0x1c and
  * +0xac, each ordered left to right. */
-typedef struct world_fade_tile_frame {
+typedef struct fade_tile_frame {
     DR_MODE draw_mode; /* 0x00 */
     TILE center;       /* 0x0c */
     TILE backdrop[9];  /* 0x1c */
     TILE bar[9];       /* 0xac */
-} world_fade_tile_frame_t;
-typedef char world_fade_tile_frame_size_must_be_0x13c[sizeof(world_fade_tile_frame_t) == 0x13c ? 1 : -1];
+} fade_tile_frame_t;
+typedef char fade_tile_frame_size_must_be_0x13c[sizeof(fade_tile_frame_t) == 0x13c ? 1 : -1];
 
-/* Draw-area pair built by world_screen_gfx_build_scaled_draw_area_packets: two DR_AREA packets whose
+/* Draw-area pair built by the menu graphics helpers: two DR_AREA packets whose
  * rectangles are scaled around their centre by a percentage from
  * g_world_menu_zoom_percentages (indexed by g_world_event_speed-adjusted step).
  * The BATTLE menus and the overlay status panels build the same pair: the
  * *_gfx_build_scaled_draw_area_packets helpers call SetDrawArea(areas[i],
  * rects[i]), the *_gfx_init_scaled_draw_area_packets helpers clear rects[0].w
  * and rects[1].h and copy the menu template into rects[1]. */
-typedef struct world_gfx_scaled_draw_area_pair {
+typedef struct scaled_draw_area_pair {
     DR_AREA areas[2]; /* 0x00 */
     RECT rects[2];    /* 0x18 */
-} world_gfx_scaled_draw_area_pair_t;
-typedef char world_scaled_draw_area_pair_size_must_be_0x28[sizeof(world_gfx_scaled_draw_area_pair_t) == 0x28 ? 1 : -1];
+} scaled_draw_area_pair_t;
+typedef char scaled_draw_area_pair_size_must_be_0x28[sizeof(scaled_draw_area_pair_t) == 0x28 ? 1 : -1];
 
 /* The 0x10-byte glyph blit descriptor used by the window frame threads and filled
  * by world_gfx_set_image_blit_source_rect / _destination_origin. The stride is
@@ -166,15 +167,15 @@ typedef char glyph_blit_size_must_be_0x10[sizeof(glyph_blit_t) == 0x10 ? 1 : -1]
  * texture-page allocation helpers: a SPRT
  * (code 0x64-0x67) or a POLY_FT4. Both carry the CLUT at 0x0e, which the icon
  * slot helpers overwrite. */
-typedef union world_texture_prim {
+typedef union texture_primitive {
     SPRT sprt;
     POLY_FT4 ft4;
-} world_texture_prim_t;
+} texture_primitive_t;
 
 /* Textured menu quad source for world_gfx_enqueue_textured_quad_corners (0x8012ccd0):
  * four screen points, four texture points (only the low byte of each
  * halfword is used), then the CLUT and texture page. */
-typedef struct world_gfx_textured_quad_source {
+typedef struct textured_quad_source {
     s16 x0, y0; /* 0x00 */
     s16 x1, y1; /* 0x04 */
     s16 x2, y2; /* 0x08 */
@@ -189,80 +190,79 @@ typedef struct world_gfx_textured_quad_source {
     u16 v3;     /* 0x1e */
     u16 clut;   /* 0x20 */
     u16 tpage;  /* 0x22 */
-} world_gfx_textured_quad_source_t;
+} textured_quad_source_t;
 
 /* Twelve-byte texture cell copied by the formation portrait producers and
  * embedded in oriented menu quads. */
-typedef struct world_gfx_texture_source {
+typedef struct texture_source {
     s16 u;     /* 0x00 */
     u16 v;     /* 0x02 */
     s16 w;     /* 0x04 */
     s16 h;     /* 0x06 */
     u16 clut;  /* 0x08 */
     s16 tpage; /* 0x0a */
-} world_gfx_texture_source_t;
-typedef char world_gfx_texture_source_size_must_be_0xc[sizeof(world_gfx_texture_source_t) == 0xc ? 1 : -1];
+} texture_source_t;
+typedef char texture_source_size_must_be_0xc[sizeof(texture_source_t) == 0xc ? 1 : -1];
 
 /* Screen rectangle and texture source, passed to the oriented-quad readers.
  * Equipment-slot marker arrays have a 0x14-byte stride. */
-typedef struct world_oriented_quad {
-    point16_t position;                /* 0x00 */
-    u16 w;                             /* 0x04 */
-    u16 h;                             /* 0x06 */
-    world_gfx_texture_source_t source; /* 0x08 */
-} world_oriented_quad_t;
-typedef char world_oriented_quad_size_must_be_0x14[sizeof(world_oriented_quad_t) == 0x14 ? 1 : -1];
+typedef struct oriented_quad {
+    point16_t position;      /* 0x00 */
+    u16 w;                   /* 0x04 */
+    u16 h;                   /* 0x06 */
+    texture_source_t source; /* 0x08 */
+} oriented_quad_t;
+typedef char oriented_quad_size_must_be_0x14[sizeof(oriented_quad_t) == 0x14 ? 1 : -1];
 
 /* Gouraud-textured rectangle source for world_gfx_enqueue_gouraud_textured_quad
  * (0x8012cfd4) and bunit_gfx_enqueue_gouraud_textured_quad: screen rectangle,
  * texture origin (only the low byte of u/v is used; the texture extent is the
  * screen extent), CLUT and texture page. The caller also passes four RGB
  * triples, one per corner. */
-typedef struct world_gfx_textured_rect_source {
+typedef struct textured_rect_source {
     s16 x, y;  /* 0x00 */
     s16 w, h;  /* 0x04 */
     s16 u;     /* 0x08 */
     u16 v;     /* 0x0a */
     u16 clut;  /* 0x0c */
     u16 tpage; /* 0x0e */
-} world_gfx_textured_rect_source_t;
-typedef char world_textured_rect_source_size_must_be_0x10[sizeof(world_gfx_textured_rect_source_t) == 0x10 ? 1 : -1];
+} textured_rect_source_t;
+typedef char textured_rect_source_size_must_be_0x10[sizeof(textured_rect_source_t) == 0x10 ? 1 : -1];
 
 /* Full-screen fade primitive pair: a TILE followed by the DR_MODE that
  * selects its texture page and window. */
-typedef struct battle_gfx_fade_overlay {
+typedef struct fade_overlay {
     TILE tile;    /* 0x00 */
     DR_MODE mode; /* 0x10 */
-} battle_gfx_fade_overlay_t;
-typedef char battle_gfx_fade_overlay_size_must_be_0x1c[(sizeof(battle_gfx_fade_overlay_t) == 0x1c) ? 1 : -1];
+} fade_overlay_t;
+typedef char fade_overlay_size_must_be_0x1c[(sizeof(fade_overlay_t) == 0x1c) ? 1 : -1];
 
-/* other */
+/* camera */
 enum {
-    BATTLE_CAMERA_PITCH_STEEP_MASK_THRESHOLD = 0x178,
-    BATTLE_CAMERA_FUSION_HOLD_SENTINEL = 0x2710,
+    CAMERA_FUSION_HOLD_SENTINEL = 0x2710,
 };
 
 /* Provisional camera interpolation key: frame time and target value. */
-typedef struct battle_camera_key {
+typedef struct camera_key {
     s32 time;  /* 0x00; cumulative frame of this key */
     s32 value; /* 0x04 */
     u8 _unused_08[8];
-} battle_camera_key_t;
+} camera_key_t;
 
 /* Provisional per-component camera fusion track (0xa4 bytes), seeded by the
  * *_camera_fusion_thread and advanced by *_camera_step_track. */
-typedef struct battle_camera_track {
-    battle_camera_key_t keys[8]; /* 0x00 */
-    s32 key_count;               /* 0x80 */
-    s32 segment;                 /* 0x84; first key of the active segment */
-    s32 frame;                   /* 0x88; frames since the track started */
-    s32 segment_frame;           /* 0x8c; frames into the active segment */
-    s32 prev_time;               /* 0x90; Q12 */
-    s32 prev_value;              /* 0x94; Q12 */
-    s32 start_value;             /* 0x98; Q12 */
-    s32 segment_duration;        /* 0x9c */
-    s32 finished;                /* 0xa0 */
-} battle_camera_track_t;
-typedef char battle_camera_track_size_must_be_0xa4[sizeof(battle_camera_track_t) == 0xa4 ? 1 : -1];
+typedef struct camera_track {
+    camera_key_t keys[8]; /* 0x00 */
+    s32 key_count;        /* 0x80 */
+    s32 segment;          /* 0x84; first key of the active segment */
+    s32 frame;            /* 0x88; frames since the track started */
+    s32 segment_frame;    /* 0x8c; frames into the active segment */
+    s32 prev_time;        /* 0x90; Q12 */
+    s32 prev_value;       /* 0x94; Q12 */
+    s32 start_value;      /* 0x98; Q12 */
+    s32 segment_duration; /* 0x9c */
+    s32 finished;         /* 0xa0 */
+} camera_track_t;
+typedef char camera_track_size_must_be_0xa4[sizeof(camera_track_t) == 0xa4 ? 1 : -1];
 
 #endif

@@ -4,11 +4,11 @@
  * 0x2e-0x33 of the idle action menu table): run the icon selection loop, then
  * remember the chosen row for the active-turn unit and exit. */
 void battle_menu_build_main(void) {
-    world_menu_entry_t* parameter;
-    battle_menu_record_t* record;
+    menu_entry_t* parameter;
+    menu_unit_selection_record_t* record;
     s32 unit_id;
 
-    parameter = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    parameter = (menu_entry_t*)battle_thread_get_current_parameter_1();
     unit_id = g_battle_active_turn_unit.battle_id;
     record = &g_battle_menu_unit_selection_records[unit_id];
     /* A nonzero second parameter makes the icon loop return here instead of exiting. */

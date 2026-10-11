@@ -9,7 +9,7 @@ void world_menu_build_available_item_list(void) {
     s32 i;
     s32 count;
     s32 selected;
-    world_menu_entry_t* menu;
+    menu_entry_t* menu;
 
     for (i = 0, count = 0; i < WORLD_LOCATION_COUNT; i++) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) != 0) {

@@ -8,12 +8,12 @@
  * thread is idle. */
 void world_menu_formation_icon_list_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
+    menu_icon_record_t records[2];
     s32 cursor;
-    world_menu_entry_t* param;
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
-    world_menu_icon_sprites_t* record;
+    menu_icon_sprites_t* record;
 
     param = world_thread_get_current_parameter_1();
     record = &records[0].base;

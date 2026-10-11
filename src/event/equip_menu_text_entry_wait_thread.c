@@ -10,17 +10,17 @@
  * thread slot and the text thread to end.
  */
 void equip_menu_text_entry_wait_thread(void) {
-    world_menu_entry_t* thread;
-    world_menu_text_binding_t* task;
+    menu_entry_t* thread;
+    menu_text_binding_t* task;
     u32* input;
     u16 text_id;
     u16 header_id;
     u16 child_id;
     u16 task_arg;
 
-    thread = (world_menu_entry_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (menu_entry_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     {
-        world_menu_text_binding_t* binding = thread->context;
+        menu_text_binding_t* binding = thread->context;
 
         binding->prepare();
     }

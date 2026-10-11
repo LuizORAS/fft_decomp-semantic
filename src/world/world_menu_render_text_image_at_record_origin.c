@@ -3,7 +3,7 @@
 
 /* Render a menu text record into a temporary image buffer at the record's
  * own origin, upload it to VRAM and release the buffer. */
-void world_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record) {
+void world_menu_render_text_image_at_record_origin(text_dialog_record_t* record) {
     if (record->box_type != DIALOG_BOX_TYPE_CENTERED) {
         if (record->box_type == DIALOG_BOX_TYPE_PORTRAIT) {
             record->buffer = world_menu_build_window_image(

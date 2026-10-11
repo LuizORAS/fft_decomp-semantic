@@ -6,7 +6,7 @@
  *
  * src points at the seven camera script variables (x, z, y, tilt, yaw, roll,
  * zoom); the three positions are divided by 1024 first. A delta of
- * BATTLE_CAMERA_FUSION_HOLD_SENTINEL (10000) is written through unchanged, which
+ * CAMERA_FUSION_HOLD_SENTINEL (10000) is written through unchanged, which
  * keeps that component. The Camera instruction is the one that follows, or the
  * one after a FocusSpeed that follows. */
 void battle_script_apply_relative_camera(event_camera_values_t* operands, s32* camera_values) {
@@ -29,8 +29,8 @@ void battle_script_apply_relative_camera(event_camera_values_t* operands, s32* c
         if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
             delta = delta / 1024;
         }
-        if (battle_script_load_halfword(parameters) == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
-            val = BATTLE_CAMERA_FUSION_HOLD_SENTINEL;
+        if (battle_script_load_halfword(parameters) == CAMERA_FUSION_HOLD_SENTINEL) {
+            val = CAMERA_FUSION_HOLD_SENTINEL;
         } else {
             val = delta + battle_script_load_halfword(parameters);
         }

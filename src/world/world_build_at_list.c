@@ -8,7 +8,7 @@
 #include "psx/types.h"
 
 void world_build_at_list(void) {
-    world_menu_text_window_t window;
+    menu_text_window_t window;
     RECT image_rect;
     RECT clear;
     RECT texture_window;
@@ -21,12 +21,12 @@ void world_build_at_list(void) {
     u32* input0;
     u32* input1;
     SPRT* frame;
-    world_menu_list_page_t* page;
-    world_menu_text_layout_t* layout;
+    menu_list_page_t* page;
+    menu_text_layout_t* layout;
     s32 accum;
     s32 timer;
     s32 redraw_pending;
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
     s32 delta;
     s32 i;
     s32 column;
@@ -89,8 +89,8 @@ void world_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
-        (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
+        (const image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -120,7 +120,7 @@ void world_build_at_list(void) {
     clear.y = ((image_rect.y - 2) & 0xFF) + (image_rect.y & 0xFF00);
     clear.w = image_rect.w;
     ClearImage(&clear, 0, 0, 0);
-    world_script_copy_bytes(&g_world_at_list_pages[1], g_world_at_list_pages, sizeof(world_menu_list_page_t));
+    world_script_copy_bytes(&g_world_at_list_pages[1], g_world_at_list_pages, sizeof(menu_list_page_t));
     for (i = 0; i < 2; i++) {
         g_world_at_list_pages[i].icons.icons[0] = &icons0[i];
         g_world_at_list_pages[i].icons.icons[1] = &icons1[i];

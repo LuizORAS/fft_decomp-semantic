@@ -13,11 +13,11 @@
  * action menu if the unit's menu id changes. */
 void world_menu_auto_battle_setting_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
+    menu_icon_record_t records[2];
     s32 cursor;
     s32 previous;
     battle_stats_t* stats;
-    world_menu_entry_t* param;
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
     s32 j;
@@ -26,7 +26,7 @@ void world_menu_auto_battle_setting_thread(void) {
     s32 after;
     s32 selected;
     s16* colour;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
 
     param = world_thread_get_current_parameter_1();
     cursor = param->selected_index;

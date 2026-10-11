@@ -5,7 +5,7 @@
 
 /* &g_world_menu_sprite_page_image_params[5]; spelled as an element (params[frame + 5]
  * or (&params[5])[frame]) GCC shares the params base and the code changes. */
-extern world_gfx_image_load_parameters_t g_world_menu_sprite_page_image_params_from_5[];
+extern image_load_parameters_t g_world_menu_sprite_page_image_params_from_5[];
 
 /*
  * Unit status panel thread body (HP/MP/CT gauges, portrait, numbers and, in
@@ -21,9 +21,9 @@ extern world_gfx_image_load_parameters_t g_world_menu_sprite_page_image_params_f
  * `extent_w`'s lifetime and swaps its register with the gauge width.
  */
 void world_menu_display_hovered_unit_stats(
-    RECT* frame_rect, s32 mode, menu_number_entry_t* entries, battle_unit_status_record_t* status) {
+    RECT* frame_rect, s32 mode, menu_number_entry_t* entries, menu_unit_status_record_t* status) {
     RECT rects[4];
-    world_unit_status_offsets_t offsets[2];
+    menu_unit_status_offsets_t offsets[2];
     u16 extent_w;
     u16 extent_h;
     u8* buffer;
@@ -35,11 +35,11 @@ void world_menu_display_hovered_unit_stats(
     s32 speed;
     s32 text_id;
     battle_stats_t* unit;
-    world_unit_status_page_t* page;
-    world_gfx_image_load_parameters_t* params;
-    world_unit_status_offsets_t* offs;
+    menu_unit_status_page_t* page;
+    image_load_parameters_t* params;
+    menu_unit_status_offsets_t* offs;
     POLY_G4* poly;
-    battle_unit_status_gauge_t* gauge;
+    menu_unit_status_gauge_t* gauge;
     CVECTOR* color;
     s32 frame;
     s32 i;
@@ -95,15 +95,15 @@ void world_menu_display_hovered_unit_stats(
         world_gfx_init_default_poly_ft4(&page->quads[frame]);
     }
     world_gfx_init_default_poly_ft4(&page->portrait);
-    world_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (world_texture_prim_t*)&page->quads[0], 2);
-    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&page->quads[1], 2);
+    world_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (texture_primitive_t*)&page->quads[0], 2);
+    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&page->quads[1], 2);
     params = g_world_unit_status_quad_image_params_by_mode[mode];
     if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
         world_gfx_init_image_loading(
-            (world_texture_prim_t*)&page->quads[4], &g_world_gfx_menu_image_source, frame_rect, &params[4]);
+            (texture_primitive_t*)&page->quads[4], &g_world_gfx_menu_image_source, frame_rect, &params[4]);
         for (frame = 0; frame < 2; frame++, params++) {
             world_gfx_init_image_loading(
-                (world_texture_prim_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+                (texture_primitive_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
             page->quads[frame].clut = 0x7CBC;
         }
         world_menu_display_projected_action_effect(
@@ -111,23 +111,23 @@ void world_menu_display_hovered_unit_stats(
     } else if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         for (frame = 0; frame < 2; frame++, params++) {
             world_gfx_init_image_loading(
-                (world_texture_prim_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+                (texture_primitive_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
         if (text_id != 0) {
             world_gfx_init_image_loading(
-                (world_texture_prim_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+                (texture_primitive_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
     } else {
         for (frame = 0; frame < 4; frame++, params++) {
             world_gfx_init_image_loading(
-                (world_texture_prim_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+                (texture_primitive_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
     }
-    world_script_copy_bytes(&page[1], page, sizeof(world_unit_status_page_t));
+    world_script_copy_bytes(&page[1], page, sizeof(menu_unit_status_page_t));
     text_loaded = 0;
     for (frame = 0;; frame++) {
-        if (status->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value > 100) {
-            status->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 100;
+        if (status->gauges[MENU_UNIT_STATUS_GAUGE_CT].value > 100) {
+            status->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 100;
         }
         if (text_loaded != 0) {
             world_menu_free_memory(buffer);
@@ -186,7 +186,7 @@ void world_menu_display_hovered_unit_stats(
                 &params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
                 world_gfx_init_image_loading(
-                    (world_texture_prim_t*)&page->sprites[i], &g_world_gfx_menu_image_source, frame_rect, params);
+                    (texture_primitive_t*)&page->sprites[i], &g_world_gfx_menu_image_source, frame_rect, params);
             }
         }
         if (mode != UNIT_STATS_PANEL_ATTACK_CASTER) {

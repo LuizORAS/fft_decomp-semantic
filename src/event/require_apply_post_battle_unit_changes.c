@@ -12,16 +12,16 @@
 void require_apply_post_battle_unit_changes(void) {
     s16 text_width_px;
     s16 text_height_px;
-    world_menu_entry_t* saved_menu_descriptor;
+    menu_entry_t* saved_menu_descriptor;
     s32 affected_index;
     s32 transition;
     s32* initial_unit_index_ptr;
     s32* unit_index_ptr;
-    battle_active_unit_t* initial_unit_data;
+    menu_active_unit_t* initial_unit_data;
     s32* selected_unit_index_ptr;
-    world_menu_entry_t* menu_base;
+    menu_entry_t* menu_base;
     u8* menu_fields;
-    battle_active_unit_t* unit_display_data;
+    menu_active_unit_t* unit_display_data;
     s32 one;
     battle_stats_t* unit;
     s32 input;
@@ -175,8 +175,7 @@ void require_apply_post_battle_unit_changes(void) {
                     /* A recovered struct pointer hoists the owner address across the call (two instructions differ).
                      * Derive each byte displacement from the named field instead. */
 #define MENU_FIELD(field)                                                                                              \
-    (*(s16*)(menu_fields + (unsigned long)&((world_menu_entry_t*)0)->field                                             \
-        - (unsigned long)&((world_menu_entry_t*)0)->inner_width))
+    (*(s16*)(menu_fields + (unsigned long)&((menu_entry_t*)0)->field - (unsigned long)&((menu_entry_t*)0)->inner_width))
                     MENU_FIELD(text_image.width) = menu_x;
                     MENU_FIELD(window.w) = menu_x;
                     MENU_FIELD(inner_width) = menu_x;
@@ -188,18 +187,18 @@ void require_apply_post_battle_unit_changes(void) {
                         g_require_menu_selection_result = 0xff;
                         battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, require_menu_icon_strip_thread);
                         battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE,
-                            (s32)(menu_fields - (unsigned long)&((world_menu_entry_t*)0)->inner_width), 0, 0);
+                            (s32)(menu_fields - (unsigned long)&((menu_entry_t*)0)->inner_width), 0, 0);
                         if (g_require_editor_unit_fields.state.generic_monster != 0) {
                             battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
                             battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU,
                                 (s32)(menu_fields + 8 * sizeof(*menu_base)
-                                    - (unsigned long)&((world_menu_entry_t*)0)->inner_width),
+                                    - (unsigned long)&((menu_entry_t*)0)->inner_width),
                                 0, 0);
                         } else {
                             battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
                             battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU,
                                 (s32)(menu_fields + sizeof(*menu_base)
-                                    - (unsigned long)&((world_menu_entry_t*)0)->inner_width),
+                                    - (unsigned long)&((menu_entry_t*)0)->inner_width),
                                 0, 0);
                         }
                     }

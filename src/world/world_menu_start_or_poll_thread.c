@@ -3,7 +3,7 @@
 
 /* Restart the menu thread with the given data, waiting 20 frames, or
  * poll the running thread's status. */
-void world_menu_start_or_poll_thread(s32 thread_id, world_menu_entry_t* data) {
+void world_menu_start_or_poll_thread(s32 thread_id, menu_entry_t* data) {
     s32 i;
     u32 unused[2];
     s32 status;

@@ -7,16 +7,16 @@
  * DEBUGCHR twin of world_menu_icon_strip_thread. */
 void debugchr_menu_icon_strip_thread(void) {
     RECT rect;
-    world_menu_icon_record_t frames[2];
-    world_menu_icon_record_t* frame_pair;
-    world_menu_icon_record_t* frame_base;
+    menu_icon_record_t frames[2];
+    menu_icon_record_t* frame_pair;
+    menu_icon_record_t* frame_base;
     s32* stride;
     u32 input = 0;
     s32 frame;
     s32 redraw;
     u8* render;
     s32 frame_parity;
-    world_menu_entry_t* state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    menu_entry_t* state = (menu_entry_t*)battle_thread_get_current_parameter_1();
 
     frame_pair = frames;
     battle_menu_build_window_sprites(&rect, state, frame_pair);

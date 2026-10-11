@@ -6,13 +6,13 @@
  * alternates between two sprite records until input arrives. */
 void world_menu_icon_strip_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
+    menu_icon_record_t records[2];
     u32 input;
-    world_menu_entry_t* param;
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
     s32 fresh;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
 
     input = 0;
     param = world_thread_get_current_parameter_1();

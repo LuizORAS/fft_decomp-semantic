@@ -8,9 +8,9 @@
  * skillset's first five abilities instead of their equipped ability set. */
 void wldcore_unit_build_status_panel_data(s32 party_index) {
     battle_stats_t* unit;
-    battle_unit_status_record_t* gauges;
-    world_unit_status_identity_t* identity;
-    world_item_stat_detail_t* detail;
+    menu_unit_status_record_t* gauges;
+    menu_unit_status_identity_t* identity;
+    menu_item_stat_detail_t* detail;
     u16* abilities;
     s32 i;
     u8 flags;
@@ -37,23 +37,23 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     gauges->unit_count = 0;
     gauges->experience = unit->experience;
     maximum_hp = unit->max_hp;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
     if (maximum_hp == 0) {
-        gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
+        gauges->gauges[MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
     }
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value = unit->hp;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_HP].bonus = 0;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_HP].value = unit->hp;
     maximum_mp = unit->max_mp;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
     if (maximum_mp == 0) {
-        gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
+        gauges->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
     }
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value = unit->mp;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = unit->ct;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = 100;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     identity->job_id = unit->job_id;
     identity->brave = unit->brave;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
     gauges->unit_index = party_index;
     identity->unit_index = party_index;
     identity->roster_slot = party_index;

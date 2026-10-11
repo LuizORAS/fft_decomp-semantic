@@ -16,7 +16,7 @@ enum {
  */
 void world_unit_view_supervisor_thread(void) {
     s32 states[16];
-    world_unit_view_thread_set_t* set;
+    menu_unit_view_thread_set_t* set;
     s32 mode;
     s32 i;
     s32 task;

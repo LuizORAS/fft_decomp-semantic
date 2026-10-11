@@ -13,7 +13,7 @@
  * constant load, so they use a bare `return;`. The caller discards the result.
  */
 s32 battle_menu_display_projected_action_effect(
-    POLY_FT4* prim, const point16_t* base_load, const RECT* base_screen, world_gfx_image_load_parameters_t* params) {
+    POLY_FT4* prim, const point16_t* base_load, const RECT* base_screen, image_load_parameters_t* params) {
     menu_number_entry_t* panel;
     u16* label_x;
     const battle_action_display_image_rect_t* rect;
@@ -221,7 +221,7 @@ s32 battle_menu_display_projected_action_effect(
         params->y_load = rect->v;
         params->width = rect->width;
         params->height = rect->height;
-        battle_gfx_init_image_loading((world_texture_prim_t*)prim, base_load, base_screen, params);
+        battle_gfx_init_image_loading((texture_primitive_t*)prim, base_load, base_screen, params);
     }
     prim->clut = 0x7d7c;
     if (image >= BATTLE_ACTION_DISPLAY_IMAGE_HP && image <= BATTLE_ACTION_DISPLAY_IMAGE_EXP) {
@@ -240,7 +240,7 @@ s32 battle_menu_display_projected_action_effect(
         params->y_load = rect->v;
         params->width = rect->width;
         params->height = rect->height;
-        battle_gfx_init_image_loading((world_texture_prim_t*)prim, base_load, base_screen, params);
+        battle_gfx_init_image_loading((texture_primitive_t*)prim, base_load, base_screen, params);
         return image;
     }
 
@@ -264,7 +264,7 @@ s32 battle_menu_display_projected_action_effect(
                 params->y_load = rect->v;
                 params->width = rect->width;
                 params->height = rect->height;
-                battle_gfx_init_image_loading((world_texture_prim_t*)prim, base_load, base_screen, params);
+                battle_gfx_init_image_loading((texture_primitive_t*)prim, base_load, base_screen, params);
                 value = prim->x1 - prim->x0;
                 if (value >= 0x18) {
                     prim->x0 += 0x18 - value;

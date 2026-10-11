@@ -1009,17 +1009,17 @@ typedef enum unit_flags {
     UNIT_FLAG_MALE = 0x80,
 } unit_flags_e;
 
-/* world_unit_animation_state_t.rotate_mode: how the facing nibble steps toward target_facing. */
+/* unit_animation_state_t.rotate_mode: how the facing nibble steps toward target_facing. */
 typedef enum unit_rotate_mode {
     UNIT_ROTATE_MODE_SHORTEST = 0,  /* the direction with fewer steps */
     UNIT_ROTATE_MODE_INCREMENT = 1, /* facing + 1 each step */
     UNIT_ROTATE_MODE_DECREMENT = 2, /* facing - 1 each step */
 } unit_rotate_mode_e;
 
-/* Per-unit facing/animation state written by world_script_unit_animation_rotate_event_instruction and
- * advanced every frame by world_unit_update_facing_and_pending_animations.
+/* Per-unit facing/animation state written by the event interpreters and
+ * advanced every frame by *_unit_update_facing_and_pending_animations.
  * Seven bytes per unit, 21 units. */
-typedef struct world_unit_animation_state {
+typedef struct unit_animation_state {
     u8 target_facing;
     u8 rotate_mode;     /* unit_rotate_mode_e */
     u8 frames_per_step; /* facing steps once step_counter reaches this */
@@ -1028,8 +1028,8 @@ typedef struct world_unit_animation_state {
     u8 initial_facing; /* facing captured by world_unit_reset_animation_states (0xff when
                           absent); RotateUnit direction 0x14 rotates back to it */
     u8 delay;          /* frames to wait before the first step */
-} world_unit_animation_state_t;
-typedef char world_unit_animation_state_size_must_be_7[sizeof(world_unit_animation_state_t) == 7 ? 1 : -1];
+} unit_animation_state_t;
+typedef char unit_animation_state_size_must_be_7[sizeof(unit_animation_state_t) == 7 ? 1 : -1];
 
 /* Tile coordinates passed by WarpUnit and WalkTo, in x/elevation/y order. */
 typedef struct unit_tile_coordinates {

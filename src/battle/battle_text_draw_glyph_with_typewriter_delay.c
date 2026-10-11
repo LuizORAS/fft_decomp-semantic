@@ -26,7 +26,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
     u8* previous;
     s32 row;
     s32 offset;
-    battle_text_glyph_state_t* request;
+    text_glyph_state_t* request;
 
     request = &g_battle_text_typewriter_glyph;
     if (g_battle_text_typewriter_glyph.mode == DIALOG_BOX_TYPE_PORTRAIT || g_battle_text_typewriter_glyph.mode == 0) {

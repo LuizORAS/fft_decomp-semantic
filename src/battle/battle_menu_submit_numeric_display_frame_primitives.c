@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Submit the twelve glyph packets and three framing packets. */
-void battle_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* display) {
+void battle_menu_submit_numeric_display_frame_primitives(menu_palette_primitives_t* display) {
     s32 index;
 
     index = 0;

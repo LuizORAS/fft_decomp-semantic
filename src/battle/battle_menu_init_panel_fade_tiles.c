@@ -4,7 +4,7 @@
 
 /* Initialize the center tile and two nine-tile scanline strips. */
 void battle_menu_init_panel_fade_tiles(void) {
-    world_fade_tile_frame_t* frame;
+    fade_tile_frame_t* frame;
     s32 i;
 
     frame = &g_battle_menu_panel_fade_frames[0];
@@ -38,5 +38,5 @@ void battle_menu_init_panel_fade_tiles(void) {
     }
 
     battle_copy_bytes(
-        &g_battle_menu_panel_fade_frames[1], &g_battle_menu_panel_fade_frames[0], sizeof(world_fade_tile_frame_t));
+        &g_battle_menu_panel_fade_frames[1], &g_battle_menu_panel_fade_frames[0], sizeof(fade_tile_frame_t));
 }

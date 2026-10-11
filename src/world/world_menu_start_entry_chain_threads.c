@@ -4,7 +4,7 @@
 /* Walks a menu entry chain upward through the parent-index table, starting
  * a thread for each entry, until a root-type thread entry is reached. */
 void world_menu_start_entry_chain_threads(u32 index, s32 thread) {
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
 
     do {
         entry = &g_world_menu_thread_menu_data[index];

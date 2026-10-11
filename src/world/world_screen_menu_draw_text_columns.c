@@ -3,8 +3,8 @@
 
 /* The menu-screen library's copy of world_menu_draw_text_columns (the same routine compiled twice):
  * the formation, world map and title lists call this one. */
-void world_screen_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, u8* buffer) {
-    world_menu_text_layout_t* layout = entry->context;
+void world_screen_menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buffer) {
+    menu_text_layout_t* layout = entry->context;
     s32 row;
     s32 column;
     s32 index;

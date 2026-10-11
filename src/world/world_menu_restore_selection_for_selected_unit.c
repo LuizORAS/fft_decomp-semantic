@@ -8,7 +8,7 @@ void world_menu_restore_selection_for_selected_unit(s32 menu_index) {
     s32 i;
     s32 k;
     s32 m;
-    battle_menu_record_t* row;
+    menu_unit_selection_record_t* row;
     menu_selection_remap_t* remap;
 
     for (i = 0; i < 12; i++) {

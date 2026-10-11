@@ -21,7 +21,7 @@
  */
 void require_editor_load_selected_unit(void) {
     battle_stats_t* unit;
-    battle_menu_status_panel_slot_state_t* editor;
+    menu_status_panel_slot_state_t* editor;
     u16* innate_items;
     item_data_t* item;
     s32 i;

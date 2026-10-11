@@ -10,14 +10,14 @@
  * BATTLE twin of world_menu_run_icon_selection_loop. */
 void battle_menu_run_icon_selection_loop(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
+    menu_icon_record_t records[2];
     s32 cursor;
-    world_menu_entry_t* param;
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
 
-    param = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    param = (menu_entry_t*)battle_thread_get_current_parameter_1();
     record = &records[0];
     cursor = param->selected_index;
     if (cursor == -1) {

@@ -12,7 +12,7 @@
  * gauge. Needs at least two jobs.
  */
 void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_y) {
-    world_oriented_quad_t sprite;
+    oriented_quad_t sprite;
     u8 unused_sprite_tail[0x10]; /* Preserve the original 0x24-byte stack allocation. */
     s32 step;
     s32 ot_index;

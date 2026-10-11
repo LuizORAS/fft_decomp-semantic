@@ -3,27 +3,27 @@
 #include "psx/types.h"
 
 /* Thread task 0x3b: numeric editor panel; twin of equip_editor_run_numeric_thread.
- * The primitive block is battle_menu_status_panel_numeric_buffer_t, double buffered at
+ * The primitive block is menu_status_panel_numeric_buffer_t, double buffered at
  * g_debugchr_editor_numeric_state_a (thread 12) or _b; the thread parameter block is
- * world_status_thread_t. */
+ * menu_status_thread_t. */
 
 void debugchr_editor_run_numeric_thread(void) {
-    world_status_thread_t* thread;
-    battle_menu_status_panel_numeric_buffer_t* buffer;
-    battle_menu_status_panel_numeric_buffer_t* buffers;
+    menu_status_thread_t* thread;
+    menu_status_panel_numeric_buffer_t* buffer;
+    menu_status_panel_numeric_buffer_t* buffers;
     u8* text_pixels;
     menu_number_entry_t* entries;
     RECT* upload_a;
     RECT* upload_b;
     RECT* upload_c;
-    const world_gfx_image_load_parameters_t* descriptor;
+    const image_load_parameters_t* descriptor;
     s32 i;
     s32 frame;
     s32 field_y;
     s32 use_offset;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (menu_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_debugchr_input_controller = battle_script_get_controller_input_pointer(0) + 1;
     if (g_battle_current_thread_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
         buffer = g_debugchr_editor_numeric_state_a;
@@ -52,7 +52,7 @@ void debugchr_editor_run_numeric_thread(void) {
     descriptor = g_debugchr_editor_numeric_texture;
     for (; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&buffer->sprites[i]);
-        battle_gfx_init_image_loading((world_texture_prim_t*)&buffer->sprites[i], g_debugchr_editor_numeric_geometry,
+        battle_gfx_init_image_loading((texture_primitive_t*)&buffer->sprites[i], g_debugchr_editor_numeric_geometry,
             &g_debugchr_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }
@@ -62,7 +62,7 @@ void debugchr_editor_run_numeric_thread(void) {
         buffer->sprites[16].v0 += 0x4C;
     }
     buffer->sprites[10].clut = 0x7D7C;
-    battle_copy_bytes(&buffer[1], buffer, sizeof(battle_menu_status_panel_numeric_buffer_t));
+    battle_copy_bytes(&buffer[1], buffer, sizeof(menu_status_panel_numeric_buffer_t));
 
     for (frame = 0;; frame++) {
         buffer = &buffers[frame & 1];

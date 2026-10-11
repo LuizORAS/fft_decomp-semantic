@@ -10,15 +10,15 @@
  * thread to end.
  */
 void world_menu_text_entry_wait_thread(void) {
-    world_menu_entry_t* param;
-    world_menu_text_binding_t* task;
+    menu_entry_t* param;
+    menu_text_binding_t* task;
     u16 thread_id;
     u16 first;
     u16 second;
     u16 third;
-    world_menu_text_binding_t* binding;
+    menu_text_binding_t* binding;
 
-    param = (world_menu_entry_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
+    param = (menu_entry_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
     binding = param->context;
     binding->prepare();
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);

@@ -5,17 +5,17 @@
  * message before ending the thread. */
 void battle_menu_validate_skill_selection_thread(void) {
     s32 skill;
-    world_menu_entry_t* parameter;
+    menu_entry_t* parameter;
     s32 ct;
     s32 entry;
     s32 mp_cost;
     s32 message;
     s32 blocked;
     battle_stats_t* unit;
-    world_ability_list_t* skill_tables;
+    menu_ability_list_t* skill_tables;
 
     skill = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;
-    parameter = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    parameter = (menu_entry_t*)battle_thread_get_current_parameter_1();
     skill_tables = &g_battle_ai_workspace_ptr->ability_list;
     ct = skill_tables->skill_ct[skill];
     entry = g_battle_ability_menu_layout.text_colors[0][skill];

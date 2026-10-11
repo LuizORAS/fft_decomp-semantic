@@ -8,7 +8,7 @@
 void world_menu_run_system_function_thread(void) {
     s32 id;
     s32 menu_id;
-    battle_system_function_t* entry;
+    menu_system_function_t* entry;
 
     g_world_system_function_thread_busy = 1;
     world_text_init_section_pointers();

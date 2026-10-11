@@ -4,7 +4,7 @@
 /* Draw rows of gouraud-textured quads whose vertex brightness falls off with
  * distance from the animated focal point. */
 void bunit_gfx_draw_falloff_shaded_rows(s32 y) {
-    world_gfx_textured_rect_source_t rect;
+    textured_rect_source_t rect;
     /* Unused local bytes and RGB alignment retain the target frame. */
     u8 unused_frame[8];
     rgb24_t rgb[4];

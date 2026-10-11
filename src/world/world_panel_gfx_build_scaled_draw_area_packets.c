@@ -6,8 +6,8 @@
 
 /* The unit panels' copy of the scaled draw-area builder (the BUNIT and EQUIP twin).
  * The panel origin is narrowed to the packet's coordinate halfwords. */
-void world_panel_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry,
-    s32 scale_index, s32 frame_offset, const world_status_thread_t* thread) {
+void world_panel_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packets, const RECT* geometry,
+    s32 scale_index, s32 frame_offset, const menu_status_thread_t* thread) {
     s32 percent;
     s32 w;
     s32 h;

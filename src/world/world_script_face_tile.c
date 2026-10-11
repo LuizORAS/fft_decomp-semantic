@@ -17,7 +17,7 @@ void world_script_face_tile(const event_face_tile_parameters_t* parameters) {
     s32 facing;
     s32 dx;
     s32 dy;
-    world_unit_animation_state_t* state;
+    unit_animation_state_t* state;
 
     order = 1;
     target.vx = parameters->x * 28 + 14;

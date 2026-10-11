@@ -4,7 +4,7 @@
 /* Advance a text cursor by one byte, entering and leaving 0xF0-0xF3
  * back-reference runs. The same routine as battle_text_advance_cursor_with_backreferences, compiled
  * again beside battle_menu_display_text, its only caller. */
-u8* battle_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* reader, u8* cursor) {
+u8* battle_menu_text_advance_cursor_with_backreferences(text_backreference_state_t* reader, u8* cursor) {
     s32 count;
     u8 character;
 

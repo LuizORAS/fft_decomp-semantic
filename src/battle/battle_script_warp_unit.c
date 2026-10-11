@@ -18,7 +18,7 @@ void battle_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     s32 result;
     s16 unit_id;
     unit_tile_coordinates_t tile;
-    world_unit_animation_state_t* rotation_state;
+    unit_animation_state_t* rotation_state;
 
     cursor.instruction = instruction;
     unit_id = battle_script_load_halfword(cursor.instruction->unit_id_le);

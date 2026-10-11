@@ -6,7 +6,7 @@
  * refresh its stats, restore HP/MP up to the new maxima and rebuild the
  * EQUIP unit record. */
 void equip_unit_commit_loadout_to_battle_stats(void) {
-    world_item_stat_detail_t bonuses;
+    menu_item_stat_detail_t bonuses;
     battle_stats_t* stats;
     s16 unit_id;
     s32 item_id;

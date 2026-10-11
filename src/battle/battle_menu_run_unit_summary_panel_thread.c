@@ -14,8 +14,8 @@
  * target keeps each of those roles in one callee-saved register. */
 void battle_menu_run_unit_summary_panel_thread(void) {
     RECT rects[4];
-    world_unit_summary_frame_t frames[2];
-    world_unit_summary_frame_t* frame_record;
+    menu_unit_summary_frame_t frames[2];
+    menu_unit_summary_frame_t* frame_record;
     battle_stats_t* unit;
     u8* buffer;
     u8* digits;
@@ -40,15 +40,15 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&frames[0].draw_mode_1, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_sprite_array(sprite, 7, 0x7C3C);
     battle_gfx_init_default_poly_ft4(&frames[0].portrait);
-    battle_text_configure_sprite_vram(&rects[0], 0x58, 0x20, (world_texture_prim_t*)&frames[0].sprites[0], 0);
-    battle_text_configure_sprite_vram(&rects[1], 0x10, 0xA, (world_texture_prim_t*)&frames[0].sprites[1], 0);
-    battle_text_configure_sprite_vram(&rects[2], 0x10, 0xA, (world_texture_prim_t*)&frames[0].sprites[2], 0);
-    battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (world_texture_prim_t*)&frames[0].sprites[3], 0);
+    battle_text_configure_sprite_vram(&rects[0], 0x58, 0x20, (texture_primitive_t*)&frames[0].sprites[0], 0);
+    battle_text_configure_sprite_vram(&rects[1], 0x10, 0xA, (texture_primitive_t*)&frames[0].sprites[1], 0);
+    battle_text_configure_sprite_vram(&rects[2], 0x10, 0xA, (texture_primitive_t*)&frames[0].sprites[2], 0);
+    battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (texture_primitive_t*)&frames[0].sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        battle_gfx_init_image_loading((world_texture_prim_t*)&frames[0].sprites[frame], &g_battle_menu_texture_location,
+        battle_gfx_init_image_loading((texture_primitive_t*)&frames[0].sprites[frame], &g_battle_menu_texture_location,
             &g_battle_unit_summary_panel_rect, &g_battle_unit_summary_sprite_image_params[frame]);
     }
-    battle_gfx_init_image_loading((world_texture_prim_t*)&frames[0].portrait, &g_battle_menu_texture_location,
+    battle_gfx_init_image_loading((texture_primitive_t*)&frames[0].portrait, &g_battle_menu_texture_location,
         &g_battle_unit_summary_panel_rect, &g_battle_unit_summary_portrait_image_params);
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         frames[0].portrait.clut = 0x7FFD;
@@ -92,7 +92,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     zodiac = g_battle_active_turn_unit.zodiac;
     frames[0].sprites[6].u0 = zodiac % 7 * 0x18;
     frames[0].sprites[6].v0 = zodiac / 7 * 0x14 + 0x2A;
-    battle_copy_bytes(&frames[1], &frames[0], sizeof(world_unit_summary_frame_t));
+    battle_copy_bytes(&frames[1], &frames[0], sizeof(menu_unit_summary_frame_t));
     frames[0].palette = &g_battle_unit_summary_palettes[0].primitives;
     frames[1].palette = &g_battle_unit_summary_palettes[1].primitives;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_summary_panel_rect, frames[0].palette);

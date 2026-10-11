@@ -13,7 +13,7 @@
  * and CT, and without the monster-skill or name-text refresh. */
 void attack_editor_load_party_unit(s32 unused, s32 party_index) {
     battle_stats_t* unit;
-    battle_menu_status_panel_slot_state_t* editor;
+    menu_status_panel_slot_state_t* editor;
     u16* innate_items;
     item_data_t* item;
     s32 i;
@@ -22,7 +22,7 @@ void attack_editor_load_party_unit(s32 unused, s32 party_index) {
     u8 field_value;
     u16 maximum_hp;
     u16 maximum_mp;
-    battle_unit_status_record_t* gauges;
+    menu_unit_status_record_t* gauges;
 
     main_unit_init_job_data(&g_attack_editor_party_unit_stats, party_index, 0);
     editor = &g_attack_editor_unit_fields.state;
@@ -48,21 +48,21 @@ void attack_editor_load_party_unit(s32 unused, s32 party_index) {
     g_attack_panel_selected_billboard.level = unit->level;
     g_attack_panel_selected_billboard.experience = unit->experience;
     maximum_hp = unit->max_hp;
-    g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
+    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
     if (maximum_hp == 0) {
-        g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
+        g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
     }
-    g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value
-        = g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max;
+    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_HP].value
+        = g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_HP].max;
     maximum_mp = unit->max_mp;
-    g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
+    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
     if (maximum_mp == 0) {
-        g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
+        g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
     }
-    g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value
-        = g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max;
-    g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
-    g_attack_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 100;
+    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_MP].value
+        = g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_MP].max;
+    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_CT].max = 100;
+    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 100;
 
     editor->move = unit->move;
     editor->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];

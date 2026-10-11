@@ -21,12 +21,12 @@ void option_run_option_choice_menu(void) {
     native_thread_t* thread;
     s32 kind;
     s32 height;
-    world_menu_entry_t* param;
+    menu_entry_t* param;
     s32 width;
     u8* buffer;
     s32 i;
     s32 cursor;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
 
     input = battle_script_get_controller_input_pointer(0);
     battle_script_get_controller_input_pointer(1);

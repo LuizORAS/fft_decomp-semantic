@@ -16,7 +16,7 @@ void option_menu_thin_window_frame_thread(void) {
        tied empty asm below breaks that equivalence. The two stride pointers are
        locals for the same reason: the target keeps each one live and re-derives
        the descriptor base from it (addiu -8) for the glyph calls. */
-    world_panel_frame_t* prim = g_option_menu_panel_frames;
+    menu_panel_frame_t* prim = g_option_menu_panel_frames;
     s32* source_stride = &g_option_text_glyph_source.stride;
     s32* dest_stride = &g_option_text_glyph_dest.stride;
     /* The menu thread's first parameter. Only its leading window rectangle is
@@ -132,7 +132,7 @@ void option_menu_thin_window_frame_thread(void) {
     prim->sprites[8].h = border_thin;
 
     battle_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
-    battle_copy_bytes(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(world_panel_frame_t));
+    battle_copy_bytes(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(menu_panel_frame_t));
 
     frame = 0;
     while (battle_thread_get_current_parameter_3() == 0) {

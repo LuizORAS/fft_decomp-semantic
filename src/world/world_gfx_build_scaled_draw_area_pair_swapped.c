@@ -8,7 +8,7 @@
  * to the right-hand page (x + 0x80, y + 0x78); others are moved left.
  */
 void world_gfx_build_scaled_draw_area_pair_swapped(
-    world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag) {
+    scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag) {
     s32 percent;
     s16 w;
     s16 h;

@@ -14,13 +14,13 @@ void battle_menu_reset_unit_records(void) {
     index = 0;
     row = (u8*)g_battle_menu_unit_selection_records;
     do {
-        count = sizeof(battle_menu_record_t) - 1;
+        count = sizeof(menu_unit_selection_record_t) - 1;
         do {
             row[count] = 0;
             count -= 1;
         } while (count >= 0);
-        ((u8*)g_battle_menu_unit_selection_records)[index + offsetof(battle_menu_record_t, _unknown_01)] = fill;
-        index += sizeof(battle_menu_record_t);
-        row += sizeof(battle_menu_record_t);
+        ((u8*)g_battle_menu_unit_selection_records)[index + offsetof(menu_unit_selection_record_t, _unknown_01)] = fill;
+        index += sizeof(menu_unit_selection_record_t);
+        row += sizeof(menu_unit_selection_record_t);
     } while (index < (s32)sizeof(g_battle_menu_unit_selection_records));
 }

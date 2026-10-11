@@ -12,8 +12,8 @@
  * rectangle is the frame buffer's own area. With `lower_half` zero both are
  * placed in the buffer at y 0xF0.
  */
-void bunit_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
-    s32 scale_index, s32 lower_half, const world_status_thread_t* thread) {
+void bunit_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
+    s32 lower_half, const menu_status_thread_t* thread) {
     s32 percent;
     s32 w;
     s32 h;

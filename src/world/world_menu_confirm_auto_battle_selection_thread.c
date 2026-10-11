@@ -4,9 +4,9 @@
 /* Applies the auto-battle choice of the menu selection (3 or 4) to the stored unit and confirms the
  * thread's menu entry without a sound. */
 void world_menu_confirm_auto_battle_selection_thread(void) {
-    world_menu_entry_t* entry = world_thread_get_current_parameter_1();
+    menu_entry_t* entry = world_thread_get_current_parameter_1();
     battle_stats_t* unit = world_unit_get_battle_stats_for_stored();
-    world_menu_entry_t* menu = g_world_menu_thread_menu_data;
+    menu_entry_t* menu = g_world_menu_thread_menu_data;
 
     if (menu[1].selected_index == 3) {
         unit->auto_battle_setting = BATTLE_AI_AUTOBATTLE_FADING_LIFE;

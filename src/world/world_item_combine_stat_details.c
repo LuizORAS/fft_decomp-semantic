@@ -7,8 +7,8 @@
  * output with before when accumulating equipment changes. Other fields remain
  * unchanged.
  */
-void world_item_combine_stat_details(world_item_stat_detail_t* output, world_item_stat_detail_t* before,
-    world_item_stat_detail_t* after, s32 multiplier) {
+void world_item_combine_stat_details(
+    menu_item_stat_detail_t* output, menu_item_stat_detail_t* before, menu_item_stat_detail_t* after, s32 multiplier) {
     output->move_bonus = after->move_bonus - multiplier * before->move_bonus;
     output->speed_bonus = after->speed_bonus - multiplier * before->speed_bonus;
     output->jump_bonus = after->jump_bonus - multiplier * before->jump_bonus;

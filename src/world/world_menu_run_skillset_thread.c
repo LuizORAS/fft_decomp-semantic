@@ -6,7 +6,7 @@
  * in the beqz delay slot ahead of the 0xFC argument. */
 void world_menu_run_skillset_thread(void) {
     s32 param_value;
-    battle_menu_record_t* row;
+    menu_unit_selection_record_t* row;
     s32* param;
 
     world_menu_check_action_restrictions();

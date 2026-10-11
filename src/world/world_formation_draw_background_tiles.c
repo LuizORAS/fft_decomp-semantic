@@ -12,7 +12,7 @@
  * hoist that product and the shade-row addresses.
  */
 void world_formation_draw_background_tiles(s32 y, s32 unused_1) {
-    world_gfx_textured_rect_source_t rect;
+    textured_rect_source_t rect;
     /* Unused local bytes and RGB alignment retain the target frame. */
     u8 unused_frame[8];
     rgb24_t rgb[4];

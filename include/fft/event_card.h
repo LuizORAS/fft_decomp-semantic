@@ -91,7 +91,7 @@ typedef char card_graphics_context_size_must_be_0xf4[(sizeof(card_graphics_conte
 
 /*
  * The g_card_save_*_descriptor menu-thread descriptors below are 0x3c-byte
- * world_menu_entry_t menu records.
+ * menu_entry_t menu records.
  * card_thread_start_managed and its delayed twin start descriptor->thread_entry
  * (+0x28). The yes/no prompts are a message record followed by a choice record
  * whose text_id is 0xd810; the choice's selected_index (+0x74 of the prompt) is
@@ -133,7 +133,7 @@ extern u16 g_card_gfx_tile_capacity;
 void card_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 
 void card_gfx_enqueue_oriented_textured_quad(
-    const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
+    const oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
 
 rgb24_t* card_gfx_get_draw_color(void);
 void card_gfx_set_draw_color(const rgb24_t* color);
@@ -155,7 +155,7 @@ s32 card_gfx_update_increasing_fade(void);
 void card_gfx_enqueue_textured_quad(
     const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 
-void card_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
+void card_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 otag_index, s32 count);
 
 void card_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, s32 semitrans, s32 otag_index);
@@ -201,7 +201,7 @@ extern const s8 g_card_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_card_menu_cursor_texture_page;
 extern s8 g_card_menu_event_speed;
 extern s16 g_card_menu_selection_index;
-extern world_menu_window_rect_source_t* g_card_menu_window_rect_source;
+extern menu_window_rect_source_t* g_card_menu_window_rect_source;
 extern s32 g_card_menu_script_callback;
 extern s16 g_card_menu_window_right_x;
 s32 card_menu_get_event_speed(void);
@@ -242,31 +242,31 @@ typedef char card_save_slot_number_command_size_must_be_12[sizeof(card_save_slot
  * with it. */
 extern card_save_buffer_t g_card_save_buffer[];
 extern card_save_buffer_t* g_card_save_buffer_pointer;
-extern world_menu_entry_t g_card_save_card_slot_selection_descriptor[];
+extern menu_entry_t g_card_save_card_slot_selection_descriptor[];
 extern s8 g_card_save_completed;
-extern world_menu_entry_t g_card_save_failure_thread_descriptor[];
+extern menu_entry_t g_card_save_failure_thread_descriptor[];
 extern const char* g_card_save_file_names[];
 extern const char g_card_save_file_pattern[];
 extern card_save_icon_t g_card_save_icon_records[15];
-extern world_menu_entry_t g_card_save_in_progress_thread_descriptor[];
-extern world_menu_entry_t g_card_save_initial_prompt_descriptor[];
+extern menu_entry_t g_card_save_in_progress_thread_descriptor[];
+extern menu_entry_t g_card_save_initial_prompt_descriptor[];
 extern u8 g_card_save_initial_prompt_thread_state;
 extern clut_t g_card_save_menu_palette_image;
 extern u8 g_card_save_menu_state; /* card_save_menu_state_e */
 extern DIRENTRY* g_card_save_menu_work_buffer;
-extern world_menu_entry_t g_card_save_no_data_prompt_descriptor[];
+extern menu_entry_t g_card_save_no_data_prompt_descriptor[];
 extern u16 g_card_save_slot_cursor_animation;
 extern point16_t g_card_save_slot_cursor_position;
 /* Two-line encoded description text, 80 bytes per memory-card slot. */
 extern u8 g_card_save_slot_descriptions[CARD_SAVE_SLOT_COUNT][0x50];
 extern s16 g_card_save_slot_index;
 extern card_save_slot_number_command_t g_card_save_slot_number_commands[4];
-extern world_oriented_quad_t g_card_save_slot_quads[];
+extern oriented_quad_t g_card_save_slot_quads[];
 extern s16 g_card_save_slot_row_y;
 
 /* A pointer cell, not a record: card_save_update_slot_scan_result clears it to
  * 0, tests it, and assigns g_card_save_no_data_prompt_descriptor into it. */
-extern world_menu_entry_t* g_card_save_slot_scan_prompt_descriptor;
+extern menu_entry_t* g_card_save_slot_scan_prompt_descriptor;
 extern u8 g_card_save_slot_selection_thread_state;
 extern s16 g_card_save_slot_text_row_ids[];
 extern u8 g_card_save_title_template[0x16];
@@ -278,16 +278,16 @@ extern s16 g_card_save_list_scroll_base_y;
 extern s16 g_card_save_list_selected_slot;
 extern s16 g_card_save_list_top_row;
 extern s16 g_card_save_initial_prompt_timer;
-extern world_menu_entry_t g_card_save_checking_message_descriptor[];
-extern world_menu_entry_t g_card_save_format_prompt_descriptor[2];
-extern world_menu_entry_t g_card_save_overwrite_prompt_descriptor[2];
-extern world_menu_entry_t g_card_save_formatting_message_descriptor[];
-extern world_menu_entry_t g_card_save_card_error_prompt_descriptor[];
+extern menu_entry_t g_card_save_checking_message_descriptor[];
+extern menu_entry_t g_card_save_format_prompt_descriptor[2];
+extern menu_entry_t g_card_save_overwrite_prompt_descriptor[2];
+extern menu_entry_t g_card_save_formatting_message_descriptor[];
+extern menu_entry_t g_card_save_card_error_prompt_descriptor[];
 extern s8 g_card_save_slot_scan_active;
 extern s8 g_card_save_format_delay_counter;
 extern s8 g_card_save_error_prompt_closing;
 extern menu_window_command_t g_card_save_slot_window_command;
-extern world_menu_window_rect_source_t g_card_save_slot_window_rect_source[];
+extern menu_window_rect_source_t g_card_save_slot_window_rect_source[];
 extern u8 g_card_save_list_input_armed;
 extern u8 g_card_save_overwrite_prompt_active;
 extern s8 g_card_save_format_prompt_active;
@@ -356,8 +356,8 @@ extern u8 g_card_thread_status_snapshot[16];
 void card_thread_request_stop(s32 id);
 void card_thread_stop_and_clear_state(s32 id);
 void card_menu_stop_thread_and_wait(s32 thread_id);
-s32 card_thread_start_managed(s32 thread_id, world_menu_entry_t* descriptor);
-void card_menu_start_or_poll_thread(s32 thread_id, world_menu_entry_t* descriptor);
+s32 card_thread_start_managed(s32 thread_id, menu_entry_t* descriptor);
+void card_menu_start_or_poll_thread(s32 thread_id, menu_entry_t* descriptor);
 
 /* other */
 extern u8 g_card_sound_queued_effect_id; /* main_sfx_e */

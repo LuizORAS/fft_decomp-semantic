@@ -18,7 +18,7 @@ void battle_menu_open_debugchr_unit_editor(void) {
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     battle_menu_set_option_menu_open();
     g_battle_menu_suspend_state = 1;
-    battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_DEBUGCHR);
+    battle_menu_request_open_companion_executable(COMPANION_OVERLAY_DEBUGCHR);
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
     battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     battle_thread_wait_for_unit_view_panels();

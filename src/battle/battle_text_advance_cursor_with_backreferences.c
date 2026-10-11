@@ -8,7 +8,7 @@
  * the run length is (byte 0 & 3) * 8 + (byte 1 >> 5) + 4 bytes, and it starts
  * (byte 1 & 0xf) * 0xfe + byte 2 bytes before the command. After the run the
  * cursor returns to the byte following the command. */
-u8* battle_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor) {
+u8* battle_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor) {
     s32 remaining;
     u8 command;
 

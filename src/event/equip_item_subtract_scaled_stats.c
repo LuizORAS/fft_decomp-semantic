@@ -3,7 +3,7 @@
 
 /* Store `base - scale * scaled` for each equipment-stat halfword of an item detail record. */
 void equip_item_subtract_scaled_stats(
-    world_item_stat_detail_t* out, world_item_stat_detail_t* scaled, world_item_stat_detail_t* base, s32 scale) {
+    menu_item_stat_detail_t* out, menu_item_stat_detail_t* scaled, menu_item_stat_detail_t* base, s32 scale) {
     out->move_bonus = base->move_bonus - (scale * scaled->move_bonus);
     out->speed_bonus = base->speed_bonus - (scale * scaled->speed_bonus);
     out->jump_bonus = base->jump_bonus - (scale * scaled->jump_bonus);

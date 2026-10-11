@@ -3,7 +3,7 @@
 
 /* Install the AT-list menu context until both builder threads finish. */
 void option_menu_start_at_list_thread(void) {
-    world_menu_entry_t* previous_menu_descriptor = g_battle_menu_thread_menu_data;
+    menu_entry_t* previous_menu_descriptor = g_battle_menu_thread_menu_data;
 
     g_option_menu_at_list_menu_type = 0x13;
     g_battle_menu_thread_menu_data = g_option_menu_at_list_state;

@@ -4,7 +4,7 @@
 /* The typed row subscript g_world_menu_unit_selection_rows[i].command_index costs
  * the match here (function offset 0x8): the target multiplies the byte offset
  * into the address before the base register is formed. Keep the byte view. */
-enum { WORLD_MENU_UNIT_SELECTION_RECORD_BYTES = (s32)sizeof(battle_menu_record_t) };
+enum { WORLD_MENU_UNIT_SELECTION_RECORD_BYTES = (s32)sizeof(menu_unit_selection_record_t) };
 
 /* Copies the selected menu entry's 0x38 byte into the stored unit's row of
  * g_world_menu_unit_selection_rows when the selection index appears in the 12-entry lookup table. */

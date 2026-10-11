@@ -16,11 +16,11 @@
 void world_menu_equipment_panel_thread(void) {
     u8* text;
     s32 u;
-    battle_menu_status_panel_buffer_t* base;
-    world_item_stat_detail_t* state;
+    menu_status_panel_buffer_t* base;
+    menu_item_stat_detail_t* state;
     RECT* upload;
-    world_status_thread_t* thread;
-    battle_menu_status_panel_buffer_t* screen;
+    menu_status_thread_t* thread;
+    menu_status_panel_buffer_t* screen;
     s32 frame;
     s32 mode;
     s32 color_bits;
@@ -28,7 +28,7 @@ void world_menu_equipment_panel_thread(void) {
     s32 i;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (world_status_thread_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
+    thread = (menu_status_thread_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
     if (g_world_thread_current_id == WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) {
         text = g_world_change_banner_text_image;
@@ -60,7 +60,7 @@ void world_menu_equipment_panel_thread(void) {
     world_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    world_script_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
+    world_script_copy_bytes(&screen[1], screen, sizeof(menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {
@@ -71,24 +71,20 @@ void world_menu_equipment_panel_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                world_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
-                    g_world_editor_numeric_geometry, &g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_0[i]);
+                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_0[i]);
             }
             if (mode == 1) {
-                world_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
-                    g_world_editor_numeric_geometry, &g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_1[i]);
+                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_1[i]);
             }
             if (mode == 2) {
-                world_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
-                    g_world_editor_numeric_geometry, &g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_2[i]);
+                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_2[i]);
             }
             if (mode == 3) {
-                world_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
-                    g_world_editor_numeric_geometry, &g_world_equipment_panel_origin,
-                    &g_world_equipment_panel_sprite_params_3[i]);
+                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                    &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_3[i]);
             }
         }
         if (frame == 0 || thread->redraw_request == 1) {
@@ -111,7 +107,7 @@ void world_menu_equipment_panel_thread(void) {
         screen->sprites[13].u0 = u;
         world_menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
         for (i = 0; i < 5; i++) {
-            world_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[19 + i],
+            world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[19 + i],
                 g_world_panel_item_icon_texture, &g_world_equipment_panel_origin,
                 &g_world_equipment_panel_icon_params[i]);
             id = state->equipment[i];

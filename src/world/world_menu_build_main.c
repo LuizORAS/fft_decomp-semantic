@@ -5,8 +5,8 @@
  * selection loop and stores the chosen row in byte 0 of the active unit's
  * menu record. */
 void world_menu_build_main(void) {
-    world_menu_entry_t* entry;
-    battle_menu_record_t* row;
+    menu_entry_t* entry;
+    menu_unit_selection_record_t* row;
 
     entry = world_thread_get_current_parameter_1();
     row = &g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id];

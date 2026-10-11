@@ -11,7 +11,7 @@
  */
 void world_menu_select_stat_gauge_level(s32 x, s32 y, s32 otag_index, s32 value) {
     s32 level;
-    world_oriented_quad_t* sprite;
+    oriented_quad_t* sprite;
 
     if (value < 0x50) {
         level = 0;

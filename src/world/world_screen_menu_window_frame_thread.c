@@ -14,7 +14,7 @@ void world_screen_menu_window_frame_thread(void) {
        and re-derives the descriptor base from it (addiu -8) for the glyph
        calls. Unlike the OPTION/WORLD twins, this copy needs no register
        bindings or tied asm to match. */
-    world_panel_frame_t* prim = g_world_menu_panel_buffer.panel_frames;
+    menu_panel_frame_t* prim = g_world_menu_panel_buffer.panel_frames;
     s32* source_stride = &g_world_text_glyph_source.stride;
     s32* dest_stride = &g_world_text_glyph_dest.stride;
     urect16_t* menu;
@@ -126,7 +126,7 @@ void world_screen_menu_window_frame_thread(void) {
 
     world_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
     world_script_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
-        sizeof(world_panel_frame_t));
+        sizeof(menu_panel_frame_t));
 
     frame = 0;
     while (world_thread_get_current_parameter_3() == 0) {

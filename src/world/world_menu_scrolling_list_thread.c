@@ -17,7 +17,7 @@
  * stack.
  */
 void world_menu_scrolling_list_thread(void) {
-    world_menu_text_window_t window;
+    menu_text_window_t window;
     RECT image_rect;
     RECT texture_window;
     SPRT icons0[2];
@@ -29,15 +29,15 @@ void world_menu_scrolling_list_thread(void) {
     s16 toggle;
     s32 ring;
     s32 cursor;
-    world_menu_list_page_t* base;
-    world_menu_scroll_text_layout_t* layout;
+    menu_list_page_t* base;
+    menu_scroll_text_layout_t* layout;
     s32 accum;
     s32 delta;
     s32 timer;
     s32 redraw_pending;
     s32 row_buffer_live;
-    world_menu_entry_t* entry;
-    world_menu_list_page_t* page;
+    menu_entry_t* entry;
+    menu_list_page_t* page;
     u8* buffer;
     s32 i;
     s32 column;
@@ -103,8 +103,8 @@ void world_menu_scrolling_list_thread(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
-        (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
+        (const image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -139,7 +139,7 @@ void world_menu_scrolling_list_thread(void) {
     image_rect.w = window.rect.w / 4;
     image_rect.h = window.rect.h;
     LoadImage(&image_rect, (u32*)buffer);
-    world_script_copy_bytes(&base[1], base, sizeof(world_menu_list_page_t));
+    world_script_copy_bytes(&base[1], base, sizeof(menu_list_page_t));
     for (i = 0; i < 2; i++) {
         base[i].icons.icons[0] = &icons0[i];
         base[i].icons.icons[1] = &icons1[i];
@@ -323,12 +323,12 @@ void world_menu_scrolling_list_thread(void) {
         }
         frame->v0 = (ring * 16 + accum - 2) & 0x7F;
         if (i * g_world_event_speed < 12) {
-            world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin, &entry->window,
-                (const world_gfx_image_load_parameters_t*)&window);
+            world_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
+                (const image_load_parameters_t*)&window);
             world_menu_zoom_cursor_frame(entry, frame, i * g_world_event_speed);
         }
         if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {
-            world_menu_text_layout_t* columns = entry->context;
+            menu_text_layout_t* columns = entry->context;
 
             page->icons.base.sprites[1].x0 += columns->x[1];
             columns = entry->context;

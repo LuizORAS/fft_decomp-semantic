@@ -6,8 +6,8 @@
  * MEM_IN_STRUCT_P reordering of the g_battle_menu_text_palette_offset load across the color
  * store. */
 
-void option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, u8* buffer) {
-    world_menu_text_layout_t* layout = entry->context;
+void option_menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buffer) {
+    menu_text_layout_t* layout = entry->context;
     s32 row;
     s32 column;
     s32 index;

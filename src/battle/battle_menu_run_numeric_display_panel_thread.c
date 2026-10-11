@@ -12,8 +12,8 @@
  * third parameter becomes non-zero. Started by
  * battle_menu_run_unit_editor_panel_thread on thread 0xA. */
 void battle_menu_run_numeric_display_panel_thread(void) {
-    world_panel_record_t* records;
-    world_panel_record_t* record;
+    menu_panel_record_t* records;
+    menu_panel_record_t* record;
     u8* buffer;
     s32 i;
     s32 frame;
@@ -44,7 +44,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_menu_free_memory(buffer);
     for (i = 0; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&record->sprites[i]);
-        battle_gfx_init_image_loading((world_texture_prim_t*)&record->sprites[i], &g_battle_menu_texture_location,
+        battle_gfx_init_image_loading((texture_primitive_t*)&record->sprites[i], &g_battle_menu_texture_location,
             &g_battle_numeric_display_frame_rect, &g_battle_numeric_display_image_params[i]);
     }
     battle_copy_bytes(&record[1], record, sizeof(*record));

@@ -12,11 +12,11 @@ extern u16* const g_helpmenu_menu_text_id_tables[23];
 void helpmenu_menu_run_require_help(void);
 void helpmenu_menu_close(void);
 
-extern battle_unit_status_record_t g_helpmenu_active_banner;
-extern battle_active_unit_t g_helpmenu_active_unit_data;
+extern menu_unit_status_record_t g_helpmenu_active_banner;
+extern menu_active_unit_t g_helpmenu_active_unit_data;
 
 /* 0x40-byte billboard filled by battle_menu_copy_billboard_data_out; +0x0e is the monster-skillset flag. */
-extern battle_menu_status_panel_slot_storage_t g_helpmenu_billboard;
+extern menu_status_panel_slot_storage_t g_helpmenu_billboard;
 extern help_navigation_record_t g_helpmenu_require_navigation[];
 
 /* 0x80 bytes of saved g_battle_text_section_pointers, i.e. 32 pointers. */

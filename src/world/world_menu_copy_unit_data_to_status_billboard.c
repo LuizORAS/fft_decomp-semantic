@@ -11,7 +11,7 @@
  * battle. A zero maximum HP or MP is stored as 1. list_index is always 1
  * here; unit_count counts the misc ids whose battle unit is the first holder
  * of a nonzero ENTD unit id. */
-void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output) {
+void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output) {
     battle_stats_t* linked_unit;
     s32 resolved_id;
     s32 count;
@@ -32,27 +32,27 @@ void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_
         output->team_kind = 3;
     output->experience = linked_unit->experience;
     value = linked_unit->max_hp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = value;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_HP].max = value;
     if (value == 0) {
         value++;
-        output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = value;
+        output->gauges[MENU_UNIT_STATUS_GAUGE_HP].max = value;
     }
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value = linked_unit->hp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_HP].value = linked_unit->hp;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_HP].bonus = 0;
     value = linked_unit->max_mp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = value;
     if (value == 0) {
         value++;
-        output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value;
+        output->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = value;
     }
     mp = linked_unit->mp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value = mp;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = 100;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = mp;
     ct = linked_unit->ct;
     output->list_index = 0;
     output->unit_count = 0;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = ct;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = ct;
     if (output->list_index >= 0)
         output->list_index++;
     output->unit_count = BATTLE_UNIT_SLOT_COUNT;

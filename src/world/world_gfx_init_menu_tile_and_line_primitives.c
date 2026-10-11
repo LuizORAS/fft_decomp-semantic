@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Initialise the two-column frame primitives of a menu record. */
-void world_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu) {
+void world_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu) {
     s32 i;
 
     SetTile(&menu->tiles[0]);

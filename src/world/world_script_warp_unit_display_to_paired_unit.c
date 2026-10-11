@@ -11,7 +11,7 @@
  */
 s32 world_script_warp_unit_display_to_paired_unit(s32 misc_id) {
     battle_stats_t* stats;
-    world_unit_animation_state_t* state;
+    unit_animation_state_t* state;
     s32 facing;
     s32 battle_id;
 

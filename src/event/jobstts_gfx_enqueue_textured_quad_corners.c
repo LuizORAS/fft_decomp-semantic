@@ -8,7 +8,7 @@
  * shaded with that color; otherwise texture shading is disabled.
  */
 void jobstts_gfx_enqueue_textured_quad_corners(
-    world_gfx_textured_quad_source_t* quad, rgb24_t* color, s32 semitrans, s32 ot_index) {
+    textured_quad_source_t* quad, rgb24_t* color, s32 semitrans, s32 ot_index) {
     POLY_FT4* poly;
 
     poly = &g_jobstts_gfx_context->textured_quads[g_jobstts_gfx_poly_ft4_count++];

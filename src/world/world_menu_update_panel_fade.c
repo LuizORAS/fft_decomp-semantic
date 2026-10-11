@@ -7,7 +7,7 @@
  * tile pairs taper away from the center in increments of 8.
  */
 void world_menu_update_panel_fade(void) {
-    world_fade_tile_frame_t* frame;
+    fade_tile_frame_t* frame;
     s32 i;
     s32 intensity;
 

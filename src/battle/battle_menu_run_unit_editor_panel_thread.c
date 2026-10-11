@@ -14,9 +14,9 @@
 void battle_menu_run_unit_editor_panel_thread(void) {
     /* The frame reserves 0x100 bytes for the first copy's line-box
        primitives, the stride of the palette records (WORLD 0x80195ed0). */
-    world_menu_palette_slot_t palette;
-    world_unit_editor_frame_t* records;
-    world_unit_editor_frame_t* frame_record;
+    menu_palette_slot_t palette;
+    menu_unit_editor_frame_t* records;
+    menu_unit_editor_frame_t* frame_record;
     LINE_F2* line;
     u8* buffer;
     /* One variable for the label text id and, in the frame loop, whether the
@@ -58,17 +58,16 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     frame_record->tiles[0].x0 += 0x12;
     frame_record->tiles[1].x0 += 0x7C;
     line = frame_record->lines;
-    for (i = 0; i < 8 * WORLD_UNIT_EDITOR_LINE_SIZE; i += WORLD_UNIT_EDITOR_LINE_SIZE) {
+    for (i = 0; i < 8 * MENU_UNIT_EDITOR_LINE_SIZE; i += MENU_UNIT_EDITOR_LINE_SIZE) {
         SetLineF2(line);
         SetSemiTrans(line, 1);
-        setRGB0(line, g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_R],
-            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_G],
-            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_B]);
-        setXY2(line,
-            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X0] + g_battle_unit_editor_panel_rect.x,
-            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y0] + g_battle_unit_editor_panel_rect.y,
-            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X1] + g_battle_unit_editor_panel_rect.x,
-            g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y1] + g_battle_unit_editor_panel_rect.y);
+        setRGB0(line, g_battle_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_R],
+            g_battle_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_G],
+            g_battle_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_B]);
+        setXY2(line, g_battle_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_X0] + g_battle_unit_editor_panel_rect.x,
+            g_battle_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_Y0] + g_battle_unit_editor_panel_rect.y,
+            g_battle_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_X1] + g_battle_unit_editor_panel_rect.x,
+            g_battle_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_Y1] + g_battle_unit_editor_panel_rect.y);
         line++;
     }
     battle_menu_init_sprite_array(&frame_record->sprites[0], 0xC, 0x7D7C);
@@ -78,40 +77,40 @@ void battle_menu_run_unit_editor_panel_thread(void) {
        common tails, leaving only the first call's table loads in the arms. */
     if (g_battle_menu_billboard_data.state.two_hands != 0) {
         battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_b,
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_a[14], &g_battle_unit_editor_row_image_params_b[2],
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_b[2], g_battle_unit_editor_row_image_params_b,
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_b[14], &g_battle_unit_editor_row_image_params_b[2],
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
     } else {
         battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_a,
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_a[14], &g_battle_unit_editor_row_image_params_a[2],
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_b[2], g_battle_unit_editor_row_image_params_a,
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
         battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_b[14], &g_battle_unit_editor_row_image_params_a[2],
-            2 * sizeof(world_gfx_image_load_parameters_t));
+            2 * sizeof(image_load_parameters_t));
     }
     /* These sprite and rectangle records share the fields read by the image loader. */
     if (g_battle_menu_billboard_data.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
-            battle_gfx_init_image_loading((world_texture_prim_t*)&frame_record->sprites[i],
+            battle_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i],
                 &g_battle_menu_texture_location, &g_battle_unit_editor_panel_rect,
                 &g_battle_unit_editor_sprite_image_params_a[i]);
         }
     } else {
         for (i = 0; i < 19; i++) {
-            battle_gfx_init_image_loading((world_texture_prim_t*)&frame_record->sprites[i],
+            battle_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i],
                 &g_battle_menu_texture_location, &g_battle_unit_editor_panel_rect,
                 &g_battle_unit_editor_sprite_image_params_b[i]);
         }
     }
     battle_menu_init_sprite_array(&frame_record->sprites[19], 5, 0x7CFC);
     for (i = 0; i < 5; i++) {
-        battle_gfx_init_image_loading((world_texture_prim_t*)&frame_record->sprites[19 + i],
+        battle_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[19 + i],
             &g_battle_item_icon_image_location, &g_battle_unit_editor_panel_rect,
             &g_battle_unit_editor_item_icon_image_params[i]);
         battle_gfx_set_item_icon_sprite(
@@ -141,7 +140,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         if (g_battle_menu_billboard_data.state.generic_monster != 0) {
             value = g_battle_menu_billboard_data.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
-        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
             g_menu_text_state.pen.rect.y += 0x10;
         } else {
             battle_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
@@ -150,7 +149,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     }
     for (i = 2; i < 5; i++) {
         value = g_battle_menu_billboard_data.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
-        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
             g_menu_text_state.pen.rect.y += 0x10;
         } else {
             battle_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
@@ -159,7 +158,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     }
     if (g_battle_menu_billboard_data.state.generic_monster != 0) {
         for (i = 0; i < 5; i++) {
-            if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+            if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
                 frame_record->sprites[7 + i].x0 -= 0x200;
             }
         }
@@ -168,7 +167,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     battle_thread_yield();
     battle_menu_free_memory(buffer);
 
-    battle_copy_bytes(&records[1], frame_record, sizeof(world_unit_editor_frame_t));
+    battle_copy_bytes(&records[1], frame_record, sizeof(menu_unit_editor_frame_t));
     records[0].palette = &palette.primitives;
     records[1].palette = &g_battle_unit_editor_palette;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_editor_panel_rect, records[0].palette);

@@ -10,17 +10,17 @@
  * BATTLE twin of world_menu_icon_linked_entry_thread. */
 void battle_menu_icon_linked_entry_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
-    world_menu_entry_t* param;
+    menu_icon_record_t records[2];
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
     s32 parent;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
     s16 width;
     s16 height;
     s32 pad;
 
-    param = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    param = (menu_entry_t*)battle_thread_get_current_parameter_1();
     battle_menu_size_entry_to_text(param, &width, &height, &pad, 0);
     battle_menu_build_window_sprites(&rect, param, &records[0]);
     battle_copy_bytes(&records[1], &records[0], 0x7C);

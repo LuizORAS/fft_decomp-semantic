@@ -6,7 +6,7 @@
 #include "psx/types.h"
 
 void world_menu_announce_entry_value_thread(void) {
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
     native_thread_t* thread;
     s32 kind;
     s32 index;
@@ -20,7 +20,7 @@ void world_menu_announce_entry_value_thread(void) {
         thread = &g_world_threads[next];
         while (1) {
             if (thread->is_running != 0) {
-                entry = (world_menu_entry_t*)thread->function_parameter_1;
+                entry = (menu_entry_t*)thread->function_parameter_1;
                 if (entry->select_text_table != -1) {
                     break;
                 }
@@ -31,7 +31,7 @@ void world_menu_announce_entry_value_thread(void) {
     }
     index = entry->selected_index;
     if (kind == 0x11) {
-        world_menu_text_binding_t* binding = entry->context;
+        menu_text_binding_t* binding = entry->context;
 
         value = binding->row_text_ids[index];
         value &= 0x7FF;

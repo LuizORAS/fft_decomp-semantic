@@ -372,7 +372,7 @@ typedef enum wldcore_thread_slot {
  * 12 and 9; each thread receives its block's address as its first
  * parameter. */
 typedef struct wldcore_thread_block {
-    s32 x; /* 0x00; panel draw x (thread 9 draws at x - 0x80); WORLD twin world_status_thread_t.x */
+    s32 x; /* 0x00; panel draw x (thread 9 draws at x - 0x80); WORLD twin menu_status_thread_t.x */
     s32 y; /* 0x04; added to the panel's draw offset; thread 8's shake offset */
     u8 _unused_08[4];
     s32 redraw_request; /* 0x0c; scroll direction for thread 8, redraw request for 12 and 9 */
@@ -1982,8 +1982,8 @@ extern s32* g_wldcore_window_aux_render_object_queue[];
  * world_screen_build_at_list. Its text binding is the label layout at 0x800bb394
  * (column mode 0 text, 2 hidden, 3 alternate number) or, for number panels,
  * g_wldcore_window_panel_number_state. */
-extern world_menu_text_layout_t g_wldcore_window_panel_label_state;
-extern world_menu_entry_t g_wldcore_window_panel_render_state;
+extern menu_text_layout_t g_wldcore_window_panel_label_state;
+extern menu_entry_t g_wldcore_window_panel_render_state;
 extern s32 g_wldcore_window_record_count;
 extern world_animated_render_record_t g_wldcore_window_records[];
 extern wldcore_window_layout_row_t g_wldcore_window_layout_rows[];

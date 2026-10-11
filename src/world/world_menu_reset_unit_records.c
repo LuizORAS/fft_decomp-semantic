@@ -5,7 +5,7 @@
  * induction variables (84 bytes rather than 76), so retain the byte view.
  * Use an integer countdown: decrementing an element pointer after row[0]
  * would form a pointer before the first row. */
-enum { WORLD_MENU_UNIT_SELECTION_RECORD_BYTES = (s32)sizeof(battle_menu_record_t) };
+enum { WORLD_MENU_UNIT_SELECTION_RECORD_BYTES = (s32)sizeof(menu_unit_selection_record_t) };
 
 /* Reset the per-unit menu records, clearing each and marking byte 1 as
  * unset (0xFF). */

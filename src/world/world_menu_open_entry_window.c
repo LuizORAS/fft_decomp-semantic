@@ -4,7 +4,7 @@
 /* Opens menu entry `index` on thread 8, first placing its window at the default
  * origin and clamping that origin so the window stays on screen. */
 void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y) {
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
     s32 x;
     s32 y;
     s32 initial_x = -0x70;

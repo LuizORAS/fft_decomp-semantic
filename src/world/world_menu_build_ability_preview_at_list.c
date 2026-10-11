@@ -4,7 +4,7 @@
 
 /*
  * The layout record at 0x80153cd0 bound into menu entry 52. Its
- * head is exactly world_menu_text_layout_t; the halfword at +0x28 is the
+ * head is exactly menu_text_layout_t; the halfword at +0x28 is the
  * scroll row this function sets and world_screen_menu_draw_text_columns receives as
  * its `row_offset` argument.
  */
@@ -49,8 +49,8 @@
  *     (`addiu s0,s5,400`) into the hard register and deletes the copy.
  */
 void world_menu_build_ability_preview_at_list(void) {
-    world_menu_at_list_work_t* work;
-    world_menu_entry_t* entry;
+    menu_at_list_work_t* work;
+    menu_entry_t* entry;
     battle_stats_t* stats;
     u8* text;
     battle_action_command_t* action;
@@ -64,7 +64,7 @@ void world_menu_build_ability_preview_at_list(void) {
     const u16* at_table;
 
     at_table = g_battle_ai_workspace_ptr->ability_list.ids;
-    work = (world_menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
+    work = (menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].select_text_table = 0x13;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].context = &g_world_menu_at_list_layout;
     text_id = at_table[g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index];
@@ -181,7 +181,7 @@ void world_menu_build_ability_preview_at_list(void) {
     g_world_menu_at_list_layout.columns.mode[1] = MENU_TEXT_COLUMN_TEXT;
     g_world_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_TEXT;
     if (bracketed != 0) {
-        world_menu_scroll_text_layout_t* layout = entry->context;
+        menu_scroll_text_layout_t* layout = entry->context;
 
         layout->columns.row_count = 6;
         entry->window.x = 0x8c;
@@ -190,7 +190,7 @@ void world_menu_build_ability_preview_at_list(void) {
         entry->text_image.width = 0xe8;
         entry->inner_width = 0xe8;
     } else {
-        world_menu_scroll_text_layout_t* layout = entry->context;
+        menu_scroll_text_layout_t* layout = entry->context;
 
         layout->columns.row_count = 6;
         entry->window.x = 0xbe;
@@ -201,8 +201,8 @@ void world_menu_build_ability_preview_at_list(void) {
         g_world_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
     }
     if (count < 6) {
-        world_menu_scroll_text_layout_t* layout;
-        world_menu_scroll_text_layout_t* hidden_rows_layout;
+        menu_scroll_text_layout_t* layout;
+        menu_scroll_text_layout_t* hidden_rows_layout;
 
         entry->window.y = (6 - count) * 8 + 0x20;
         layout = entry->context;
@@ -210,21 +210,21 @@ void world_menu_build_ability_preview_at_list(void) {
         hidden_rows_layout = entry->context;
         hidden_rows_layout->columns.hidden_rows = 0;
     } else {
-        world_menu_scroll_text_layout_t* layout = entry->context;
+        menu_scroll_text_layout_t* layout = entry->context;
 
         layout->columns.hidden_rows = count - 6;
     }
     entry->selected_index = turn;
     if (turn < 3) {
-        world_menu_scroll_text_layout_t* layout = entry->context;
+        menu_scroll_text_layout_t* layout = entry->context;
 
         layout->row_offset = 0;
     } else if (turn >= count - 6) {
-        world_menu_scroll_text_layout_t* layout = entry->context;
+        menu_scroll_text_layout_t* layout = entry->context;
 
         layout->row_offset = count - 6;
     } else {
-        world_menu_scroll_text_layout_t* layout = entry->context;
+        menu_scroll_text_layout_t* layout = entry->context;
 
         layout->row_offset = turn - 3;
     }

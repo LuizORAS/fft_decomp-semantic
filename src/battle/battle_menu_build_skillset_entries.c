@@ -5,7 +5,7 @@
  * selection rows of text entry 0x5010 for the selected unit and sizes menu
  * entry 4 to the number of rows. */
 void battle_menu_build_skillset_entries(void) {
-    world_menu_text_row_t* rows;
+    menu_text_row_t* rows;
     s32 count;
     s32 i;
     s16 height;
@@ -16,7 +16,7 @@ void battle_menu_build_skillset_entries(void) {
     g_battle_action_menu_skillsets[0] = 0;
     g_battle_menu_action_menu_build_result = battle_menu_build_unit_action_menus(g_battle_active_turn_unit.battle_id,
         g_battle_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_battle_action_menu_row_types);
-    rows = (world_menu_text_row_t*)battle_text_find_entry(0x5010);
+    rows = (menu_text_row_t*)battle_text_find_entry(0x5010);
     if (battle_unit_get_action_restriction(battle_unit_get_attacker_data_pointer())
         == BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER) {
         for (i = 0; i < 6; i++) {

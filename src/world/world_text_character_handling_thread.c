@@ -26,7 +26,7 @@
 /* Dialog text thread: opens a dialog window and draws the text entry named
  * by thread parameter 2 glyph by glyph, handling the control bytes. */
 void world_text_character_handling_thread(void) {
-    world_text_dialog_record_t rec;
+    text_dialog_record_t rec;
     RECT from;
     RECT to;
     s32 repeat;
@@ -282,7 +282,7 @@ void world_text_character_handling_thread(void) {
     rec.text = world_thread_get_current_parameter_2();
     rec.rect.w = rec.width;
     rec.rect.h = rec.height;
-    world_gfx_alloc_tpage7_vram(&rec.rect, (world_texture_prim_t*)win->quads, (u32*)-1);
+    world_gfx_alloc_tpage7_vram(&rec.rect, (texture_primitive_t*)win->quads, (u32*)-1);
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         if (text[0] == TEXT_SET_PORTRAIT) {
             win->portrait_code = text[1];
@@ -762,7 +762,7 @@ void world_text_character_handling_thread(void) {
                         value -= code * g_world_text_decimal_divisors[i];
                     }
                     {
-                        battle_text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
+                        text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
 
                         glyph->x = cursor_x;
                         glyph->y = cursor_y;
@@ -804,7 +804,7 @@ void world_text_character_handling_thread(void) {
                     code += *text;
                 }
                 {
-                    battle_text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
+                    text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
 
                     glyph->x = cursor_x;
                     glyph->y = cursor_y;

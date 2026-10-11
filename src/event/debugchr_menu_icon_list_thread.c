@@ -6,17 +6,17 @@
  * closes. The DEBUGCHR twin of world_menu_icon_list_thread. */
 void debugchr_menu_icon_list_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
+    menu_icon_record_t records[2];
     s32 cursor;
-    world_menu_entry_t* state;
+    menu_entry_t* state;
     u8* buffer;
     s32 i;
     s32 fresh;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
     s16* redraw;
 
     g_debugchr_input_controller = battle_script_get_controller_input_pointer(0);
-    state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    state = (menu_entry_t*)battle_thread_get_current_parameter_1();
     state->window.y &= ~1;
     cursor = state->selected_index;
     record = &records[0];

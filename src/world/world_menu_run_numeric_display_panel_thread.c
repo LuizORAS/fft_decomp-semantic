@@ -7,8 +7,8 @@
  * every frame (dimmed palette while thread 6 runs) until the thread's
  * third parameter becomes non-zero. */
 void world_menu_run_numeric_display_panel_thread(void) {
-    world_panel_record_t* records;
-    world_panel_record_t* record;
+    menu_panel_record_t* records;
+    menu_panel_record_t* record;
     u8* buffer;
     s32 i;
     s32 frame;
@@ -39,7 +39,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_menu_free_memory(buffer);
     for (i = 0; i < 18; i++) {
         world_menu_init_sprite(&record->sprites[i]);
-        world_gfx_init_image_loading((world_texture_prim_t*)&record->sprites[i], &g_world_gfx_menu_image_source,
+        world_gfx_init_image_loading((texture_primitive_t*)&record->sprites[i], &g_world_gfx_menu_image_source,
             &g_world_numeric_display_frame_rect, &g_world_numeric_display_image_params[i]);
     }
     world_script_copy_bytes(&record[1], record, sizeof(record[1]));

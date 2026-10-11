@@ -15,7 +15,7 @@
 void world_screen_menu_thin_window_frame_thread(void) {
     RECT texture;
     /* Keeping both stride fields live retains their descriptor bases. */
-    world_panel_frame_t* prim = g_world_menu_panel_buffer.panel_frames;
+    menu_panel_frame_t* prim = g_world_menu_panel_buffer.panel_frames;
     s32* source_stride = &g_world_text_glyph_source.stride;
     s32* dest_stride = &g_world_text_glyph_dest.stride;
     urect16_t* menu;
@@ -136,7 +136,7 @@ void world_screen_menu_thin_window_frame_thread(void) {
 
     world_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
     world_script_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
-        sizeof(world_panel_frame_t));
+        sizeof(menu_panel_frame_t));
 
     frame = 0;
     while (world_thread_get_current_parameter_3() == 0) {

@@ -4,7 +4,7 @@
 
 /* Draws a full-screen semi-transparent tile of grey level |intensity|:
  * positive values subtract (abr 2), negative values add (abr 1). */
-void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 intensity) {
+void world_gfx_submit_screen_fade_overlay(fade_overlay_t* prims, s32 intensity) {
     s32 abr;
     s32 level = intensity;
 

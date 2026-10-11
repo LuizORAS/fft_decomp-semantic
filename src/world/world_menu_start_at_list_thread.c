@@ -4,8 +4,8 @@
 /* Runs the g_world_menu_at_list_state menu on the thread two below the current one and
  * waits until that thread and the one below it have finished. */
 void world_menu_start_at_list_thread(void) {
-    world_menu_entry_t* list = &g_world_menu_at_list_state;
-    world_menu_entry_t* saved = g_world_menu_thread_menu_data;
+    menu_entry_t* list = &g_world_menu_at_list_state;
+    menu_entry_t* saved = g_world_menu_thread_menu_data;
 
     g_world_menu_at_list_state.select_text_table = 0x13;
     g_world_menu_thread_menu_data = list;

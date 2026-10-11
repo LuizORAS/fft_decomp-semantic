@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-#define TEXT_STATE ((world_text_backreference_state_t*)0x1F800000)
+#define TEXT_STATE ((text_backreference_state_t*)0x1F800000)
 
 /* BATTLE twin of world_text_measure_pixels. Measure a text entry in pixels: the widest line and the line count.
  *
@@ -15,7 +15,7 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
     s32 i;
     u8* fill = g_battle_player_name;
     u8 terminator;
-    world_text_backreference_state_t* state;
+    text_backreference_state_t* state;
 
     cursor = (u8*)text;
     party = main_party_get_data_pointer(0);

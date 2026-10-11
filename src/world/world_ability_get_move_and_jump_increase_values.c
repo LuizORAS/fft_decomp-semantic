@@ -6,8 +6,8 @@
  * IDs 0x1E6-0x1E8 grant Move +1/+2/+3; 0x1E9-0x1EB grant Jump +1/+2/+3.
  * Other abilities leave both bonuses at 0.
  */
-void world_ability_get_move_and_jump_increase_values(s16 ability, world_item_stat_detail_t* out) {
-    battle_unit_status_record_t summary;
+void world_ability_get_move_and_jump_increase_values(s16 ability, menu_item_stat_detail_t* out) {
+    menu_unit_status_record_t summary;
 
     world_formation_clear_stat_preview(&summary, out);
     if (ability >= ABILITY_ID_MOVEMENT_MOVE_PLUS_1 && ability <= ABILITY_ID_MOVEMENT_MOVE_PLUS_3) {

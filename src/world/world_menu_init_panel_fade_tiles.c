@@ -4,7 +4,7 @@
 
 /* Initialize the center tile and two nine-tile scanline strips. */
 void world_menu_init_panel_fade_tiles(void) {
-    world_fade_tile_frame_t* frame;
+    fade_tile_frame_t* frame;
     s32 i;
     u16 tpage;
 
@@ -39,5 +39,5 @@ void world_menu_init_panel_fade_tiles(void) {
     }
 
     world_script_copy_bytes(
-        &g_world_menu_panel_fade_frames[1], &g_world_menu_panel_fade_frames[0], sizeof(world_fade_tile_frame_t));
+        &g_world_menu_panel_fade_frames[1], &g_world_menu_panel_fade_frames[0], sizeof(fade_tile_frame_t));
 }

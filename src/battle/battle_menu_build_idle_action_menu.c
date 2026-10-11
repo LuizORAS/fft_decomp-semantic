@@ -21,7 +21,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
     s32 i;
     s32 column;
     u8* label_table;
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
     s16* selected_index;
 
     if (g_battle_menu_input_mode != MENU_INPUT_BLOCKED) {

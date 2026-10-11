@@ -14,7 +14,7 @@ void world_menu_start_building_thread(void) {
         }
     }
     if (g_world_thread_change_cooldown == 0 && g_world_menu_transition_active == 0 && battle_camera_is_active() == 0
-        && g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_IDLE
+        && g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_IDLE
         && world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0) {
         g_world_text_overlay_active = 1;
         world_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, world_menu_run_helpmenu_thread);

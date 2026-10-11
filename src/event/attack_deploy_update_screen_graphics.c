@@ -54,7 +54,7 @@ void attack_deploy_update_screen_graphics(void) {
             battle_gfx_init_default_poly_ft4(&g_attack_deploy_text_polys[parity][i]);
             ((POLY_FT4*)((u8*)g_attack_deploy_text_polys + off))->tpage = GetTPage(0, 0, 0x100, 0);
             ((POLY_FT4*)((u8*)g_attack_deploy_text_polys + off))->clut = 0x7d7c;
-            battle_gfx_init_image_loading((world_texture_prim_t*)&g_attack_deploy_text_polys[parity][i],
+            battle_gfx_init_image_loading((texture_primitive_t*)&g_attack_deploy_text_polys[parity][i],
                 g_attack_deploy_texture_location, &g_attack_deploy_text_screen_origin,
                 &g_attack_deploy_text_graphic_params[i]);
             if (g_attack_deploy_text_reveal_steps[i] != 0) {

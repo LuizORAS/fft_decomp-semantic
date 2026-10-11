@@ -4,7 +4,7 @@
  * `thread_id` on the entry's thread function with the entry as parameter 1
  * (unless the slot is still busy) and returns 1; later calls return whether
  * the thread is still running, 0 once it has ended. */
-s32 world_menu_run_thread(s32 thread_id, world_menu_entry_t* arg) {
+s32 world_menu_run_thread(s32 thread_id, menu_entry_t* arg) {
     s32 status;
     void (*fn)(void);
 

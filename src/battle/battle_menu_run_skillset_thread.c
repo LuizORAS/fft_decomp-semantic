@@ -11,7 +11,7 @@
  */
 void battle_menu_run_skillset_thread(void) {
     s32 param_value;
-    battle_menu_record_t* record;
+    menu_unit_selection_record_t* record;
     s32* param;
 
     battle_menu_check_action_restrictions();

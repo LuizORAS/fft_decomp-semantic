@@ -5,7 +5,7 @@
  * on the descriptor's thread function with the descriptor as parameter 1
  * (unless the slot is still busy) and returns 1; later calls return whether
  * the thread is still running, 0 once it has ended. */
-s32 equip_thread_start_managed(s32 thread_id, world_menu_entry_t* desc) {
+s32 equip_thread_start_managed(s32 thread_id, menu_entry_t* desc) {
     if (g_equip_thread_state == 0) {
         if (battle_thread_is_running(thread_id) != 0) {
             return 1;

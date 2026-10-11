@@ -8,7 +8,7 @@
 /* Unpacks the configured options into the options-menu value table, then runs
  * main-menu mode 0 (options thread in the previous slot), 1 or 2. */
 void world_menu_run_main_mode(s32 mode) {
-    world_menu_entry_t* entry;
+    menu_entry_t* entry;
     u32 options;
     s32 i;
     s32 last_mode;

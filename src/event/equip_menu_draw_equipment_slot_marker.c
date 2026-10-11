@@ -20,8 +20,8 @@ enum {
 void equip_menu_draw_equipment_slot_marker(s32 unused, s32 slot, s32 override) {
     s16 x;
     s16 width;
-    world_oriented_quad_t* marker;
-    world_oriented_quad_t* secondary;
+    oriented_quad_t* marker;
+    oriented_quad_t* secondary;
     s32 secondary_x;
 
     x = g_equip_menu_slot_marker_x[slot];

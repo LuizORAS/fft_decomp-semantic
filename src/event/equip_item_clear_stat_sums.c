@@ -2,9 +2,9 @@
 #include "psx/types.h"
 
 /* Zero the HP/MP bonus halfwords of an item stat summary and the stat block of its detail record. */
-void equip_item_clear_stat_sums(battle_unit_status_record_t* summary, world_item_stat_detail_t* detail) {
-    summary->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
-    summary->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
+void equip_item_clear_stat_sums(menu_unit_status_record_t* summary, menu_item_stat_detail_t* detail) {
+    summary->gauges[MENU_UNIT_STATUS_GAUGE_HP].bonus = 0;
+    summary->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
     detail->move_bonus = 0;
     detail->speed_bonus = 0;
     detail->jump_bonus = 0;

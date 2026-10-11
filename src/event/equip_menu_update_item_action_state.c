@@ -4,7 +4,7 @@
 
 /* Update the secondary item-action menu and return its next screen state. */
 s32 equip_menu_update_item_action_state(void) {
-    world_menu_entry_t* menu;
+    menu_entry_t* menu;
 
     if (g_equip_item_action_menu_active == 0) {
         if (g_equip_menu_list_entry_count == 0) {

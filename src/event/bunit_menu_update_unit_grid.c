@@ -44,7 +44,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     s32 row;
     s32 col;
     u8* menu;
-    battle_menu_sprite_cell_t* quads;
+    menu_sprite_cell_t* quads;
     s16 y;
     s32 unit;
     rgb24_t* color;

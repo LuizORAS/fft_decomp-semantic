@@ -8,7 +8,7 @@
  * for the loop's stats and lookup pointers ranks it ahead of `i` for $s0, and
  * reading MP directly rather than through `value` gives CT $v1 and the
  * callback address $v0 in the call block. */
-void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output) {
+void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output) {
     s32 resolved_id;
     s32 count;
     s32 i;
@@ -25,25 +25,25 @@ void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle
         output->team_kind = 3;
     output->experience = unit->experience;
     value = unit->max_hp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = value;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_HP].max = value;
     if (value == 0)
-        output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = value + 1;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value = unit->hp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
+        output->gauges[MENU_UNIT_STATUS_GAUGE_HP].max = value + 1;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_HP].value = unit->hp;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_HP].bonus = 0;
     value = unit->max_mp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = value;
     if (value == 0)
-        output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value + 1;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value = unit->mp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = unit->ct;
+        output->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = value + 1;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = 100;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     output->list_index = 0;
     output->unit_count = 0;
     g_battle_thread_call_target = (void (*)(void))battle_action_check_at_list_for_unit_battle_id;
     output->list_index = battle_thread_call_on_main_stack(unit);
     if (unit->has_turn != 0)
-        output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 100;
+        output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 100;
     if (output->list_index >= 0)
         output->list_index++;
     output->unit_count = BATTLE_UNIT_SLOT_COUNT;

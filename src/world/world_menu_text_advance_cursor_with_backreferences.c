@@ -3,7 +3,7 @@
 
 /* The same routine as world_text_advance_cursor_with_backreferences, compiled again beside
  * world_menu_display_text, its only caller. */
-u8* world_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor) {
+u8* world_menu_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor) {
     s32 remaining;
     u8 command;
 

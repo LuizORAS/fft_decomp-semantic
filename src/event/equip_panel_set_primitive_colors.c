@@ -4,8 +4,7 @@
 /* The full panel's SPRTs begin at +0x24. The CLUT walks use pointer
  * arithmetic to keep the target's base-biased pointers; SetShadeTex uses a
  * subscript to retain its separate integer offset. */
-void equip_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state) {
+void equip_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state) {
     s32 i;
     s32 clut;
 

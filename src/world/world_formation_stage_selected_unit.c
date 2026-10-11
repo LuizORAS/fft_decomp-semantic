@@ -21,7 +21,7 @@ void world_formation_stage_selected_unit(void) {
     units[index]->mp = units[index]->max_mp;
     bcopy(units[index], &g_world_selected_unit_stat_summary, 0x22);
     bcopy(&units[g_world_formation_selected_unit_index]->identity, &g_world_selected_unit_identity,
-        sizeof(world_unit_status_identity_t));
+        sizeof(menu_unit_status_identity_t));
     bcopy(&units[g_world_formation_selected_unit_index]->move, &g_world_selected_unit_stat_detail, 0x40);
     world_formation_copy_unit_to_temp(g_world_formation_selected_unit_index, 20);
     if (g_world_status_display_thread_params.flags == MENU_STATUS_PANEL_HIDDEN) {

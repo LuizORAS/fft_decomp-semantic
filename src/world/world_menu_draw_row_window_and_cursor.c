@@ -7,10 +7,10 @@ void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode) {
     /* One pointer serves the script then the quad; separate locals remove the argument copy. */
     union {
         menu_instruction_t* script;
-        world_oriented_quad_t* quad;
+        oriented_quad_t* quad;
     } drawing;
     s32 cursor_x;
-    world_oriented_quad_t* cursor;
+    oriented_quad_t* cursor;
 
     x = g_world_item_category_tab_x[row];
     if (wide != 0) {

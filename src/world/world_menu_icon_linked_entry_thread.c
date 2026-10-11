@@ -8,12 +8,12 @@
  * alternate until input completes, selecting CLUTs in the linked slot. */
 void world_menu_icon_linked_entry_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
-    world_menu_entry_t* param;
+    menu_icon_record_t records[2];
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
     s32 parent;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
     s16 width;
     s16 height;
     s32 pad;

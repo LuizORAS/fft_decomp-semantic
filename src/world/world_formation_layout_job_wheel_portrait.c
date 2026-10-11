@@ -6,7 +6,7 @@
  * unit's formation graphic and queue a VRAM move of that graphic to
  * (0x240, 0x130), where g_world_job_wheel_portrait_quad samples it. */
 void world_formation_layout_job_wheel_portrait(void) {
-    world_gfx_texture_source_t entry;
+    texture_source_t entry;
     RECT rect;
     s16 x;
     s16 y;

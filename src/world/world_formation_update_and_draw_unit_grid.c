@@ -18,8 +18,8 @@
  */
 s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banner, s16 allow_browse, s16 input,
     s16 locked, s32 (*get_mode)(s32), s32 (*get_shade)(s32)) {
-    world_oriented_quad_t unused_desc;
-    world_oriented_quad_t pos;
+    oriented_quad_t unused_desc;
+    oriented_quad_t pos;
     rgb24_t unused_rgb;
     rgb24_t rgb;
     s32 enabled;
@@ -30,7 +30,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     s32 i;
     s16 mode;
     u8 rgb_value;
-    battle_menu_sprite_cell_t* cells;
+    menu_sprite_cell_t* cells;
     menu_instruction_t* window;
     rgb24_t* color;
     world_formation_unit_t* unit;

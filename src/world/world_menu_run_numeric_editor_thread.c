@@ -5,27 +5,27 @@
 /* Thread task 0x3b: numeric editor panel, the WORLD twin of
  * attack_editor_run_numeric_thread (also in REQUIRE and DEBUGCHR). Thread 0xc
  * edits unsigned entries, other threads signed ones, each in its own
- * double-buffered battle_menu_status_panel_numeric_buffer_t. The only code difference from
+ * double-buffered menu_status_panel_numeric_buffer_t. The only code difference from
  * the event overlays is the draw offset: WORLD reads the 0/0xf0 field value
  * directly from g_world_frame_arg (lhu) where the overlays compute
  * g_main_gfx_screen_polarity * 0xf0. */
 void world_menu_run_numeric_editor_thread(void) {
-    world_status_thread_t* thread;
-    battle_menu_status_panel_numeric_buffer_t* buffer;
-    battle_menu_status_panel_numeric_buffer_t* buffers;
+    menu_status_thread_t* thread;
+    menu_status_panel_numeric_buffer_t* buffer;
+    menu_status_panel_numeric_buffer_t* buffers;
     u8* text_pixels;
     menu_number_entry_t* entries;
     RECT* upload_a;
     RECT* upload_b;
     RECT* upload_c;
-    world_gfx_image_load_parameters_t* descriptor;
+    image_load_parameters_t* descriptor;
     s32 i;
     s32 frame;
     s32 field_y;
     s32 use_offset;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (world_status_thread_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
+    thread = (menu_status_thread_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
     g_world_input_frame_controller_input = world_input_get_menu_controller(0) + 1;
     if (g_world_thread_current_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
         buffer = g_world_editor_numeric_state_a;
@@ -53,7 +53,7 @@ void world_menu_run_numeric_editor_thread(void) {
     descriptor = g_world_editor_numeric_texture;
     for (; i < 18; i++) {
         world_menu_init_sprite(&buffer->sprites[i]);
-        world_gfx_init_image_loading((world_texture_prim_t*)&buffer->sprites[i], g_world_editor_numeric_geometry,
+        world_gfx_init_image_loading((texture_primitive_t*)&buffer->sprites[i], g_world_editor_numeric_geometry,
             &g_world_editor_numeric_table[0], descriptor);
         descriptor++;
     }
@@ -63,7 +63,7 @@ void world_menu_run_numeric_editor_thread(void) {
         buffer->sprites[16].v0 += 0x4C;
     }
     buffer->sprites[10].clut = 0x7D7C;
-    world_script_copy_bytes(&buffer[1], buffer, sizeof(battle_menu_status_panel_numeric_buffer_t));
+    world_script_copy_bytes(&buffer[1], buffer, sizeof(menu_status_panel_numeric_buffer_t));
 
     for (frame = 0;; frame++) {
         buffer = &buffers[frame & 1];

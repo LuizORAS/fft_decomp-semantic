@@ -11,7 +11,7 @@
  * the second its two-pixel shadow offset.
  */
 void world_menu_update_entry_cursor_quads(
-    world_menu_entry_t* entry, POLY_FT4* quad, POLY_FT4* shadow, s32 unused, s32 cursor) {
+    menu_entry_t* entry, POLY_FT4* quad, POLY_FT4* shadow, s32 unused, s32 cursor) {
     native_thread_t* thread = &g_world_threads[g_world_thread_current_id];
     s32 x;
     s32 y;

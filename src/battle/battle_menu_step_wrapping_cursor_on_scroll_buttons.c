@@ -3,7 +3,7 @@
 
 /* While the menu may accept input, move a row cursor with Up and Down, wrapping
  * between row 0 and the entry's max_row_index, and play the cursor sound. */
-void battle_menu_step_wrapping_cursor_on_scroll_buttons(world_menu_entry_t* ctx, s32* sel) {
+void battle_menu_step_wrapping_cursor_on_scroll_buttons(menu_entry_t* ctx, s32* sel) {
     s32 selection;
     s32 max;
     s32 cur;

@@ -13,7 +13,7 @@
  * instructions early and rotates every temporary.
  */
 void world_screen_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* pair, const RECT* source, s32 step, s32 flag, const RECT* offset) {
+    scaled_draw_area_pair_t* pair, const RECT* source, s32 step, s32 flag, const RECT* offset) {
     s32 percent;
     s32 w;
     s32 h;

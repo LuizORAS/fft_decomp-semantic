@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* The frame is battle_menu_status_panel_buffer_t (0x3d8 bytes, double buffered); the
+/* The frame is menu_status_panel_buffer_t (0x3d8 bytes, double buffered); the
  * WORLD twin world_menu_equipment_panel_thread uses the same layout. */
 
 /* Equipment panel thread (task 0x3b): lists the five equipped item names and
@@ -15,12 +15,12 @@
 void equip_panel_run_equipment_list_thread(void) {
     u8* text;
     s32 u;
-    battle_menu_status_panel_buffer_t* base;
-    world_item_stat_detail_t* state;
+    menu_status_panel_buffer_t* base;
+    menu_item_stat_detail_t* state;
     RECT* upload;
     RECT* area;
-    world_status_thread_t* thread;
-    battle_menu_status_panel_buffer_t* screen;
+    menu_status_thread_t* thread;
+    menu_status_panel_buffer_t* screen;
     s32 frame;
     s32 mode;
     s32 color_bits;
@@ -28,7 +28,7 @@ void equip_panel_run_equipment_list_thread(void) {
     s32 i;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (world_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (menu_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
     g_equip_input_controller = battle_script_get_controller_input_pointer(0);
     if (g_battle_current_thread_id == EQUIP_THREAD_SLOT_EQUIPMENT_LIST) {
         text = g_equip_panel_text_image_a;
@@ -61,7 +61,7 @@ void equip_panel_run_equipment_list_thread(void) {
     battle_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    battle_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
+    battle_copy_bytes(&screen[1], screen, sizeof(menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {
@@ -72,22 +72,22 @@ void equip_panel_run_equipment_list_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
                     g_equip_panel_label_layouts_mode0 + i);
             }
             if (mode == 1) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
                     g_equip_panel_label_layouts_mode1 + i);
             }
             if (mode == 2) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
                     g_equip_panel_label_layouts_mode2 + i);
             }
             if (mode == 3) {
-                battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[i],
+                battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i],
                     g_equip_editor_numeric_geometry, g_equip_panel_origin_offsets,
                     g_equip_panel_label_layouts_mode3 + i);
             }
@@ -112,7 +112,7 @@ void equip_panel_run_equipment_list_thread(void) {
         screen->sprites[13].u0 = u;
         battle_menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
         for (i = 0; i < 5; i++) {
-            battle_gfx_init_image_loading((world_texture_prim_t*)&screen->sprites[19 + i],
+            battle_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[19 + i],
                 g_equip_panel_item_icon_texture, g_equip_panel_origin_offsets, g_equip_panel_item_icon_layouts + i);
             /* Read unsigned: the target extends the id only where it is passed on. */
             id = state->equipment[i];

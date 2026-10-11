@@ -14,17 +14,17 @@ void bunit_render_unit_status_panel_thread(void) {
     s32 prev_unit;
 
     u8* render_a;
-    battle_menu_status_panel_editor_packet_t* editor_base;
+    menu_status_panel_editor_packet_t* editor_base;
     menu_number_entry_t* env_a;
-    battle_unit_status_record_t* state;
+    menu_unit_status_record_t* state;
     s32 portrait_arg;
     const RECT* transition;
     palette_t* portrait_palettes;
     u8* render_b;
     u8* render_c;
-    battle_menu_status_panel_packet_t* panel_base;
+    menu_status_panel_packet_t* panel_base;
     s16* scroll;
-    battle_menu_status_panel_display_thread_t* thread;
+    menu_status_panel_display_thread_t* thread;
     s32 shake;
     s32 dimmed;
     s32 suppress;
@@ -43,8 +43,8 @@ void bunit_render_unit_status_panel_thread(void) {
     s32 dx4;
     s16 srow;
     glyph_blit_t* origin;
-    battle_menu_status_panel_packet_t* panel;
-    battle_menu_status_panel_editor_packet_t* editor;
+    menu_status_panel_packet_t* panel;
+    menu_status_panel_editor_packet_t* editor;
     SPRT* cur1;
     u8* cur2;
     u8* cur3;
@@ -54,7 +54,7 @@ void bunit_render_unit_status_panel_thread(void) {
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
     g_bunit_input_controller = battle_script_get_controller_input_pointer(0) + 1;
     thread_id = g_battle_current_thread_id;
-    thread = (battle_menu_status_panel_display_thread_t*)g_battle_threads[thread_id].function_parameter_1;
+    thread = (menu_status_panel_display_thread_t*)g_battle_threads[thread_id].function_parameter_1;
     if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
         panel = g_bunit_panel_selected_packets;
         editor = g_bunit_panel_selected_editor_packets;
@@ -92,10 +92,10 @@ void bunit_render_unit_status_panel_thread(void) {
     for (frame = 0; frame < 4; frame++) {
         battle_gfx_init_default_poly_ft4(&editor->portrait[frame]);
     }
-    battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, (world_texture_prim_t*)&editor->value_sprites[0], 2);
-    battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (world_texture_prim_t*)&editor->value_sprites[1], 2);
+    battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, (texture_primitive_t*)&editor->value_sprites[0], 2);
+    battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&editor->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
-        battle_gfx_init_image_loading((world_texture_prim_t*)&editor->value_sprites[frame],
+        battle_gfx_init_image_loading((texture_primitive_t*)&editor->value_sprites[frame],
             g_bunit_editor_numeric_geometry, &g_bunit_gfx_portrait_origin, &g_bunit_panel_editor_value_cells[frame]);
     }
     if (state->team_kind >= 4) {
@@ -107,25 +107,25 @@ void bunit_render_unit_status_panel_thread(void) {
         battle_copy_bytes(g_bunit_panel_editor_mode_cell, g_bunit_panel_editor_mode_cells, 0xC);
     }
     for (frame = 0; frame < 7; frame++) {
-        battle_gfx_init_image_loading((world_texture_prim_t*)&editor->label_sprites[frame],
+        battle_gfx_init_image_loading((texture_primitive_t*)&editor->label_sprites[frame],
             g_bunit_editor_numeric_geometry, &g_bunit_gfx_portrait_origin, &g_bunit_panel_editor_label_cells[frame]);
     }
-    battle_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
+    battle_copy_bytes(editor + 1, editor, sizeof(menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_numeric_display_frame_primitives(&g_bunit_panel_frame_rect, &panel->numeric_frame);
     cur1 = &panel->sprites[0];
     battle_menu_init_sprite_array(cur1, 7, 0x7C3C);
     battle_gfx_init_default_poly_ft4(&panel->portrait);
-    battle_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (world_texture_prim_t*)cur1, 0);
-    battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (world_texture_prim_t*)&panel->sprites[1], 0);
-    battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (world_texture_prim_t*)&panel->sprites[2], 0);
-    battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, (world_texture_prim_t*)&panel->sprites[3], 0);
+    battle_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (texture_primitive_t*)cur1, 0);
+    battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[1], 0);
+    battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[2], 0);
+    battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        battle_gfx_init_image_loading((world_texture_prim_t*)&panel->sprites[frame], g_bunit_editor_numeric_geometry,
+        battle_gfx_init_image_loading((texture_primitive_t*)&panel->sprites[frame], g_bunit_editor_numeric_geometry,
             &g_bunit_panel_frame_rect, &g_bunit_panel_sprite_cells[frame]);
     }
-    battle_gfx_init_image_loading((world_texture_prim_t*)&panel->portrait, g_bunit_editor_numeric_geometry,
+    battle_gfx_init_image_loading((texture_primitive_t*)&panel->portrait, g_bunit_editor_numeric_geometry,
         &g_bunit_panel_frame_rect, g_bunit_panel_portrait_cell);
     if (state->team_kind == 1) {
         panel->portrait.clut = 0x7FFD;
@@ -133,7 +133,7 @@ void bunit_render_unit_status_panel_thread(void) {
         panel->portrait.clut = 0x7FBD;
     }
     panel->portrait.tpage = GetTPage(0, 1, 0x3C0, 0x100);
-    battle_copy_bytes(panel + 1, panel, sizeof(battle_menu_status_panel_packet_t));
+    battle_copy_bytes(panel + 1, panel, sizeof(menu_status_panel_packet_t));
     frame = 0;
     anim_state = 0;
     prev_unit = state->unit_index;
@@ -142,15 +142,15 @@ void bunit_render_unit_status_panel_thread(void) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
-        if (state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value >= 0x65) {
-            state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 0x64;
+        if (state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value >= 0x65) {
+            state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
             battle_copy_bytes(g_bunit_panel_editor_mode_cell, &g_bunit_panel_editor_mode_cells[state->team_kind], 0xC);
         } else {
             battle_copy_bytes(g_bunit_panel_editor_mode_cell, g_bunit_panel_editor_mode_cells, 0xC);
         }
-        battle_gfx_init_image_loading((world_texture_prim_t*)&editor->label_sprites[6], g_bunit_editor_numeric_geometry,
+        battle_gfx_init_image_loading((texture_primitive_t*)&editor->label_sprites[6], g_bunit_editor_numeric_geometry,
             &g_bunit_gfx_portrait_origin, g_bunit_panel_editor_mode_cell);
         if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
@@ -285,7 +285,7 @@ void bunit_render_unit_status_panel_thread(void) {
             transition, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
-            battle_unit_status_gauge_t* bar;
+            menu_unit_status_gauge_t* bar;
 
             color = g_bunit_panel_gauge_bar_colors;
             bar = state->gauges;

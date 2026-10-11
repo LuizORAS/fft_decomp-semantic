@@ -2,8 +2,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, u8* buffer) {
-    world_menu_text_layout_t* layout = entry->context;
+void world_draw_menu_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u8* buffer) {
+    menu_text_layout_t* layout = entry->context;
     s32 row;
     s32 column;
     s32 index;

@@ -10,12 +10,12 @@
  * original. */
 void world_menu_icon_timed_thread(void) {
     RECT rect;
-    world_menu_icon_record_t records[2];
-    world_menu_entry_t* param;
+    menu_icon_record_t records[2];
+    menu_entry_t* param;
     u8* buffer;
     s32 i;
     s32 hold;
-    world_menu_icon_record_t* record;
+    menu_icon_record_t* record;
     s16 width;
     s16 height;
     s32 pad;

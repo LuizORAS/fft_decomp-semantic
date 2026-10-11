@@ -7,13 +7,13 @@
  * third parameter is raised. */
 void world_menu_text_entry_thread(void) {
     native_thread_t* thread = &g_world_threads[g_world_thread_current_id];
-    world_menu_entry_t* entry = (world_menu_entry_t*)thread->function_parameter_1;
-    world_menu_text_binding_t* binding;
+    menu_entry_t* entry = (menu_entry_t*)thread->function_parameter_1;
+    menu_text_binding_t* binding;
     s32 text_thread;
     u16 second;
     s32 speaker_id;
     u16 text_id;
-    world_menu_text_binding_t* prepare_binding;
+    menu_text_binding_t* prepare_binding;
 
     prepare_binding = entry->context;
     prepare_binding->prepare();

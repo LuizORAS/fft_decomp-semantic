@@ -23,13 +23,13 @@ void battle_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
     position_sum = 0;
     for (i = 0; i < 3; i++) {
         value = battle_script_load_halfword(parameters + i * 2);
-        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
+        if (value == CAMERA_FUSION_HOLD_SENTINEL) {
             position_delta[i] = 0;
         } else {
             position_delta[i] = value - position[i] / 1024;
         }
         value = battle_script_load_halfword(parameters + i * 2 + sizeof(((event_camera_values_t*)0)->position_le));
-        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
+        if (value == CAMERA_FUSION_HOLD_SENTINEL) {
             rotation_delta[i] = 0;
         } else {
             rotation_delta[i] = value - rotation[i];

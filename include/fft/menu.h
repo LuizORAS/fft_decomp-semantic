@@ -11,7 +11,7 @@
 /* ability */
 /* Provisional ability-list work buffer at *g_battle_ai_workspace_ptr (0x52 rows each).
  * WORLD twin of the BATTLE ability list. */
-typedef struct world_ability_list {
+typedef struct menu_ability_list {
     u16 ids[0x52];     /* 0x000; 0xffff terminated; the text id base of the names is ORed in */
     u16 values[0x52];  /* 0x0a4 */
     u16 extras[0x52];  /* 0x148 */
@@ -20,7 +20,7 @@ typedef struct world_ability_list {
     u8 flags[0x52];    /* 0x290; bit 1 = blocked by unit flag 0x59 & 8 */
     u8 turns[0x52];    /* 0x2e2 */
     u8 skill_ct[0x52]; /* 0x334 */
-} world_ability_list_t;
+} menu_ability_list_t;
 
 /* item */
 /* Provisional records filled by the WORLD stat-comparison helper at
@@ -28,7 +28,7 @@ typedef struct world_ability_list {
  * HP/MP bonuses; weapon, shield, accessory and item-attribute tables supply
  * the named detail fields. Weapon fields follow equipment-slot order. */
 
-typedef struct world_item_stat_detail {
+typedef struct menu_item_stat_detail {
     s16 move_bonus; /* Signed halfwords combined by world_item_combine_stat_details. */
     s16 speed_bonus;
     s16 jump_bonus;
@@ -50,21 +50,21 @@ typedef struct world_item_stat_detail {
     s16 equipment[5];            /* 0x24; world_menu_run_best_fit_equipment (0x8011b554) keeps its suggested set here */
     s16 ability_ids[5];          /* 0x2e; status panel ability rows, -1 for an empty row */
     u8 _unused_38[0x40 - 0x38];
-} world_item_stat_detail_t;
-typedef char world_stat_detail_size_must_be_0x40[(sizeof(world_item_stat_detail_t) == 0x40) ? 1 : -1];
+} menu_item_stat_detail_t;
+typedef char menu_item_stat_detail_size_must_be_0x40[(sizeof(menu_item_stat_detail_t) == 0x40) ? 1 : -1];
 
-/* menu */
+/* palette */
 /* Two sixteen-colour banks: the normal menu colours followed by their dimmed forms. */
-typedef struct menu_palette {
+typedef struct menu_palette_pair {
     rgba5551_t colors[32];
-} menu_palette_t;
-typedef char menu_palette_size_must_be_64[(sizeof(menu_palette_t) == 64) ? 1 : -1];
+} menu_palette_pair_t;
+typedef char menu_palette_pair_size_must_be_64[(sizeof(menu_palette_pair_t) == 64) ? 1 : -1];
 
 /* Shared 4bpp menu glyph sheet: 32 rows of 128 packed pixel bytes, then
  * its palette. Window-frame builders copy aligned pairs of bytes. */
 typedef struct menu_glyph_sheet {
-    u8 pixels[4096];        /* 0x0000 */
-    menu_palette_t palette; /* 0x1000 */
+    u8 pixels[4096];             /* 0x0000 */
+    menu_palette_pair_t palette; /* 0x1000 */
 } menu_glyph_sheet_t;
 typedef char menu_glyph_sheet_size_must_be_4160[(sizeof(menu_glyph_sheet_t) == 4160) ? 1 : -1];
 
@@ -115,46 +115,48 @@ typedef char menu_window_buffer_size_must_be_0x118[(sizeof(menu_window_buffer_t)
 typedef char menu_window_buffer_selector_must_be_0x14
     [((unsigned long)&((menu_window_buffer_t*)0)->dialogue_selector == 0x14) ? 1 : -1];
 
+/* status panels */
 /* Battle menu status and character-editor panel records. The EVENT overlays
  * (ATTACK, BUNIT, DEBUGCHR, EQUIP, REQUIRE) each link their own copy of the
  * panel code, and the WORLD unit-editor panels reuse the packet layouts. */
 /* DR_OFFSET followed by signed GPU offsets, passed through the SDK u16 view.
  * Signed storage retains the retail negative-immediate loads. */
-typedef struct battle_menu_status_panel_draw_offset {
+typedef struct menu_status_panel_draw_offset {
     DR_OFFSET packet;   /* 0x00 */
     point16_t position; /* 0x0c */
-} battle_menu_status_panel_draw_offset_t;
-typedef char battle_menu_status_panel_draw_offset_size_must_be_0x10
-    [(sizeof(battle_menu_status_panel_draw_offset_t) == 0x10) ? 1 : -1];
+} menu_status_panel_draw_offset_t;
+typedef char
+    menu_status_panel_draw_offset_size_must_be_0x10[(sizeof(menu_status_panel_draw_offset_t) == 0x10) ? 1 : -1];
 
 /* 0x13c primitive block of the *_menu_draw_thread_status_indicators letterbox
  * panels: draw mode, the panel frame tile, and two sets of nine one-pixel
  * scanline tiles that produce the top and bottom gradients. Each overlay
  * double-buffers one block per panel ([panel][buffer]). */
-typedef struct battle_menu_status_panel_indicator_prims {
+typedef struct menu_status_panel_indicator_prims {
     DR_MODE mode;   /* 0x00 */
     TILE frame;     /* 0x0c */
     TILE top[9];    /* 0x1c */
     TILE bottom[9]; /* 0xac */
-} battle_menu_status_panel_indicator_prims_t;
-typedef char battle_menu_status_panel_indicator_prims_size_must_be_0x13c
-    [(sizeof(battle_menu_status_panel_indicator_prims_t) == 0x13c) ? 1 : -1];
+} menu_status_panel_indicator_prims_t;
+typedef char menu_status_panel_indicator_prims_size_must_be_0x13c[(sizeof(menu_status_panel_indicator_prims_t) == 0x13c)
+        ? 1
+        : -1];
 
 /* Menu line-box layout, established by the builder at 0x800e3358: two DR_MODE
  * packets, twelve LINE_F2 packets and one SPRT whose CLUT (+0xe6)
  * *_menu_init_primitive_colors_normal and _dimmed set. */
-typedef struct world_menu_palette_primitives {
+typedef struct menu_palette_primitives {
     DR_MODE draw_mode;      /* 0x00: texture window g_world_gfx_texture_window */
     DR_MODE draw_mode_menu; /* 0x0c: texture window g_world_menu_numeric_display_texture_window */
     LINE_F2 lines[12];      /* 0x18 */
     SPRT sprite;            /* 0xd8 */
-} world_menu_palette_primitives_t;
-typedef char world_menu_palette_primitives_sprite_offset_must_be_0xd8
-    [((unsigned long)&((world_menu_palette_primitives_t*)0)->sprite == 0xd8) ? 1 : -1];
-typedef char world_menu_palette_lines_offset_must_be_0x18
-    [((unsigned long)&((world_menu_palette_primitives_t*)0)->lines == 0x18) ? 1 : -1];
-typedef char world_menu_palette_footer_offset_must_be_0xe6
-    [((unsigned long)&((world_menu_palette_primitives_t*)0)->sprite.clut == 0xe6) ? 1 : -1];
+} menu_palette_primitives_t;
+typedef char menu_palette_primitives_sprite_offset_must_be_0xd8
+    [((unsigned long)&((menu_palette_primitives_t*)0)->sprite == 0xd8) ? 1 : -1];
+typedef char
+    menu_palette_lines_offset_must_be_0x18[((unsigned long)&((menu_palette_primitives_t*)0)->lines == 0x18) ? 1 : -1];
+typedef char menu_palette_footer_offset_must_be_0xe6
+    [((unsigned long)&((menu_palette_primitives_t*)0)->sprite.clut == 0xe6) ? 1 : -1];
 
 /* Numeric editor panel buffer (0x2c0 bytes), double buffered by the
  * *_editor_run_numeric_thread routines (EQUIP equip_editor_run_numeric_thread copies it with
@@ -164,18 +166,18 @@ typedef char world_menu_palette_footer_offset_must_be_0xe6
  * battle_menu_init_numeric_display_frame_primitives and
  * *_gfx_init_scaled_draw_area_packets, and the draw offsets follow from the
  * SetDrawOffset(packet, position) pairs. */
-typedef struct battle_menu_status_panel_numeric_buffer {
-    DR_MODE draw_modes[3];                                  /* 0x000 */
-    SPRT sprites[18];                                       /* 0x024 */
-    world_menu_palette_primitives_t numeric_frame;          /* 0x18c */
-    battle_menu_status_panel_draw_offset_t draw_offsets[2]; /* 0x278 */
-    world_gfx_scaled_draw_area_pair_t portrait;             /* 0x298 */
-} battle_menu_status_panel_numeric_buffer_t;
-typedef char battle_menu_status_panel_numeric_buffer_size_must_be_0x2c0
-    [(sizeof(battle_menu_status_panel_numeric_buffer_t) == 0x2c0) ? 1 : -1];
+typedef struct menu_status_panel_numeric_buffer {
+    DR_MODE draw_modes[3];                           /* 0x000 */
+    SPRT sprites[18];                                /* 0x024 */
+    menu_palette_primitives_t numeric_frame;         /* 0x18c */
+    menu_status_panel_draw_offset_t draw_offsets[2]; /* 0x278 */
+    scaled_draw_area_pair_t portrait;                /* 0x298 */
+} menu_status_panel_numeric_buffer_t;
+typedef char
+    menu_status_panel_numeric_buffer_size_must_be_0x2c0[(sizeof(menu_status_panel_numeric_buffer_t) == 0x2c0) ? 1 : -1];
 
-/* Flags of a unit status panel (battle_menu_status_panel_display_thread_t and
- * the WORLD status display's world_status_thread_t). */
+/* Flags of a unit status panel (menu_status_panel_display_thread_t and
+ * the WORLD status display's menu_status_thread_t). */
 typedef enum menu_status_panel_flags {
     MENU_STATUS_PANEL_SLIDE_DOWN = 0x20, /* run the slide-down table once */
     MENU_STATUS_PANEL_SLIDE_UP = 0x40,   /* run the slide-up table once */
@@ -188,19 +190,19 @@ typedef enum menu_status_panel_flags {
  * *_panel_set_primitive_colors. The origin is read as whole words (lw) for the
  * draw-area offset; the halfword reads that feed the s16 draw-offset stores
  * are the compiler narrowing those loads. */
-typedef struct world_status_thread {
+typedef struct menu_status_thread {
     s32 x;              /* 0x00 */
     s32 y;              /* 0x04 */
     s32 flags;          /* 0x08: menu_status_panel_flags_e in the status display record */
     s32 redraw_request; /* 0x0c: set to 1 elsewhere to request a text/portrait rebuild; the status
                            display record also keeps the selection-slide direction here */
     s32 style;          /* 0x10: 1 selects the dimmed menu colours */
-} world_status_thread_t;
-typedef char world_status_thread_size_must_be_0x14[(sizeof(world_status_thread_t) == 0x14) ? 1 : -1];
+} menu_status_thread_t;
+typedef char menu_status_thread_size_must_be_0x14[(sizeof(menu_status_thread_t) == 0x14) ? 1 : -1];
 
-/* u16 view of the -1 stored in an empty battle_menu_status_panel_slot_state_t.ability_ids row. */
+/* u16 view of the -1 stored in an empty menu_status_panel_slot_state_t.ability_ids row. */
 enum {
-    BATTLE_MENU_STATUS_PANEL_LABEL_NONE = 0xffff,
+    MENU_STATUS_PANEL_LABEL_NONE = 0xffff,
 };
 
 /* Provisional 0xe-byte active-unit record (BATTLE 0x8014d080, WORLD
@@ -209,7 +211,7 @@ enum {
  * battle_menu_copy_billboard_data_in. The load-selected-unit routines fill
  * job_id..zodiac for the unit named by battle_id; the overlays' status panels
  * keep a second record for the comparison unit 0x10 later. */
-typedef struct battle_active_unit {
+typedef struct menu_active_unit {
     /* 0x00: unit name text id less TEXT_ID_UNIT_NAME_BASE (DEBUGCHR, REQUIRE);
      * in ATTACK the roster index, a row of the names it builds at text 0x5800 */
     s16 name_id;
@@ -219,12 +221,12 @@ typedef struct battle_active_unit {
     s16 zodiac;     /* 0x08 */
     s16 battle_id;  /* 0x0a: selected unit */
     s16 _unused_0c; /* 0x0c */
-} battle_active_unit_t;
-typedef char battle_active_unit_size_must_be_0xe[(sizeof(battle_active_unit_t) == 0xe) ? 1 : -1];
+} menu_active_unit_t;
+typedef char menu_active_unit_size_must_be_0xe[(sizeof(menu_active_unit_t) == 0xe) ? 1 : -1];
 
 /* Name, job and identity values copied into WORLD and EQUIP status panels.
  * The last displayed value is the roster slot, distinct from a battle id. */
-typedef struct world_unit_status_identity {
+typedef struct menu_unit_status_identity {
     s16 unit_index;  /* 0x00: name text 0x4000 + value (world_menu_unit_status_banner_thread) */
     s16 job_id;      /* 0x02: job name text 0x3000 + value */
     s16 brave;       /* 0x04 */
@@ -232,13 +234,13 @@ typedef struct world_unit_status_identity {
     s16 zodiac;      /* 0x08 */
     s16 roster_slot; /* 0x0a: party slot (world_menu_get_party_unit_name_id); shown as value + 1 */
     u8 _unused_0c[2];
-} world_unit_status_identity_t;
-typedef char world_unit_status_identity_size_must_be_0xe[sizeof(world_unit_status_identity_t) == 0xe ? 1 : -1];
+} menu_unit_status_identity_t;
+typedef char menu_unit_status_identity_size_must_be_0xe[sizeof(menu_unit_status_identity_t) == 0xe ? 1 : -1];
 
 /* Per-slot editor state (0x38 bytes). Both arrays are indexed by the five
  * character slots; the status threads walk them with 2-byte cursors. The
  * layout is the lower billboard record (0x801ca0e8). */
-typedef struct battle_menu_status_panel_slot_state {
+typedef struct menu_status_panel_slot_state {
     s16 move;                     /* 0x00 */
     s16 speed;                    /* 0x02 */
     s16 jump;                     /* 0x04 */
@@ -267,27 +269,25 @@ typedef struct battle_menu_status_panel_slot_state {
                                   * movement; -1 means no label; the first two rows select
                                   * the skillset-name or ability-name text section by mode,
                                   * and the remaining rows use ability names */
-} battle_menu_status_panel_slot_state_t;
-typedef char
-    battle_menu_status_panel_slot_state_size_must_be_0x38[(sizeof(battle_menu_status_panel_slot_state_t) == 0x38) ? 1
-                                                                                                                  : -1];
+} menu_status_panel_slot_state_t;
+typedef char menu_status_panel_slot_state_size_must_be_0x38[(sizeof(menu_status_panel_slot_state_t) == 0x38) ? 1 : -1];
 
 /* Editor storage is copied whole by the billboard copy routines. */
-typedef struct battle_menu_status_panel_slot_storage {
-    battle_menu_status_panel_slot_state_t state;
+typedef struct menu_status_panel_slot_storage {
+    menu_status_panel_slot_state_t state;
     u8 _unused_38[8]; /* preserves the copied 0x40-byte record */
-} battle_menu_status_panel_slot_storage_t;
-typedef char battle_menu_status_panel_slot_storage_size_must_be_0x40
-    [(sizeof(battle_menu_status_panel_slot_storage_t) == 0x40) ? 1 : -1];
+} menu_status_panel_slot_storage_t;
+typedef char
+    menu_status_panel_slot_storage_size_must_be_0x40[(sizeof(menu_status_panel_slot_storage_t) == 0x40) ? 1 : -1];
 
 /* One gauge of the unit status record: the Gouraud bar is drawn value/max
  * wide, and a zero max draws the fixed 4-pixel stub. */
-typedef struct battle_unit_status_gauge {
+typedef struct menu_unit_status_gauge {
     s16 value; /* 0x00 */
     s16 bonus; /* 0x02; equipment-preview delta (world_menu_get_selected_unit_hp_bonus_or_dashes/_2); 0 in battle */
     s16 max;   /* 0x04 */
-} battle_unit_status_gauge_t;
-typedef char battle_unit_status_gauge_size_must_be_6[(sizeof(battle_unit_status_gauge_t) == 6) ? 1 : -1];
+} menu_unit_status_gauge_t;
+typedef char menu_unit_status_gauge_size_must_be_6[(sizeof(menu_unit_status_gauge_t) == 6) ? 1 : -1];
 
 /* Provisional 0x22-byte unit status record: BATTLE's AT banner at 0x8014d038
  * and status billboard at 0x8014d05c, WORLD's selected and comparison records
@@ -298,7 +298,7 @@ typedef char battle_unit_status_gauge_size_must_be_6[(sizeof(battle_unit_status_
  * *_render_unit_status_panel_thread editors draw it, and
  * battle_menu_copy_billboard_data_out saves the banner whole as 0x22 bytes.
  * Equipment previews use the HP and MP gauges' bonus fields. */
-typedef struct battle_unit_status_record {
+typedef struct menu_unit_status_record {
     s16 level;      /* 0x00; debugchr_editor_apply_values_to_battle_unit writes it back */
     s16 team_kind;  /* 0x02: 0 ally, 1 enemy, 2 neutral, 3 auto-battle; selects the status icon,
                        the panel's 0xc-byte geometry row and its CLUT */
@@ -307,22 +307,22 @@ typedef struct battle_unit_status_record {
     s16 unit_count; /* 0x06 */
     s16 experience; /* 0x08; written back with level */
     s16 unit_index; /* 0x0a; the battle id in battle, the party index in the WORLD and WLDCORE panels */
-    battle_unit_status_gauge_t gauges[3]; /* 0x0c: BATTLE_UNIT_STATUS_GAUGE_*; CT max is always 100 */
-    s16 projected_display_value;          /* 0x1e */
-    u16 projected_hit_percent;            /* 0x20 */
-} battle_unit_status_record_t;
-typedef char battle_unit_status_record_size_must_be_0x22[(sizeof(battle_unit_status_record_t) == 0x22) ? 1 : -1];
+    menu_unit_status_gauge_t gauges[3]; /* 0x0c: MENU_UNIT_STATUS_GAUGE_*; CT max is always 100 */
+    s16 projected_display_value;        /* 0x1e */
+    u16 projected_hit_percent;          /* 0x20 */
+} menu_unit_status_record_t;
+typedef char menu_unit_status_record_size_must_be_0x22[(sizeof(menu_unit_status_record_t) == 0x22) ? 1 : -1];
 
 /* The hovered-unit status panel's two draw offsets (*_menu_display_hovered_unit_stats). */
-typedef struct world_unit_status_offsets {
-    battle_menu_status_panel_draw_offset_t a; /* 0x00 */
-    battle_menu_status_panel_draw_offset_t b; /* 0x10 */
-} world_unit_status_offsets_t;
+typedef struct menu_unit_status_offsets {
+    menu_status_panel_draw_offset_t a; /* 0x00 */
+    menu_status_panel_draw_offset_t b; /* 0x10 */
+} menu_unit_status_offsets_t;
 
 enum {
-    BATTLE_UNIT_STATUS_GAUGE_HP = 0,
-    BATTLE_UNIT_STATUS_GAUGE_MP = 1,
-    BATTLE_UNIT_STATUS_GAUGE_CT = 2,
+    MENU_UNIT_STATUS_GAUGE_HP = 0,
+    MENU_UNIT_STATUS_GAUGE_MP = 1,
+    MENU_UNIT_STATUS_GAUGE_CT = 2,
 };
 
 /* Character-editor packet block (0x30c bytes) built by the editor display
@@ -331,41 +331,40 @@ enum {
  * battle_menu_init_numeric_display_frame_primitives builds, the SPRT/POLY
  * strides come from the walks that configure and submit them, and the
  * draw-offset packets from the SetDrawOffset pairs. */
-typedef struct battle_menu_status_panel_editor_packet {
-    world_menu_palette_primitives_t numeric_frame;        /* 0x000 */
-    DR_MODE draw_mode_a;                                  /* 0x0ec */
-    DR_MODE draw_mode_b;                                  /* 0x0f8 */
-    SPRT value_sprites[4];                                /* 0x104 */
-    SPRT label_sprites[7];                                /* 0x154; [6] at 0x1cc is the mode row */
-    POLY_G4 bars[3];                                      /* 0x1e0 */
-    POLY_FT4 portrait[4];                                 /* 0x24c */
-    battle_menu_status_panel_draw_offset_t draw_offset_a; /* 0x2ec */
-    battle_menu_status_panel_draw_offset_t draw_offset_b; /* 0x2fc */
-} battle_menu_status_panel_editor_packet_t;
-typedef char battle_menu_status_panel_editor_packet_size_must_be_0x30c
-    [(sizeof(battle_menu_status_panel_editor_packet_t) == 0x30c) ? 1 : -1];
+typedef struct menu_status_panel_editor_packet {
+    menu_palette_primitives_t numeric_frame;       /* 0x000 */
+    DR_MODE draw_mode_a;                           /* 0x0ec */
+    DR_MODE draw_mode_b;                           /* 0x0f8 */
+    SPRT value_sprites[4];                         /* 0x104 */
+    SPRT label_sprites[7];                         /* 0x154; [6] at 0x1cc is the mode row */
+    POLY_G4 bars[3];                               /* 0x1e0 */
+    POLY_FT4 portrait[4];                          /* 0x24c */
+    menu_status_panel_draw_offset_t draw_offset_a; /* 0x2ec */
+    menu_status_panel_draw_offset_t draw_offset_b; /* 0x2fc */
+} menu_status_panel_editor_packet_t;
+typedef char
+    menu_status_panel_editor_packet_size_must_be_0x30c[(sizeof(menu_status_panel_editor_packet_t) == 0x30c) ? 1 : -1];
 
 /* Status-panel packet block (0x1d8 bytes), doubled the same way as the editor
  * block. sprites[6] doubles as the scroll cursor: the display threads write
  * its texture window from the scroll row/column. */
-typedef struct battle_menu_status_panel_packet {
-    world_menu_palette_primitives_t numeric_frame;        /* 0x000 */
-    SPRT sprites[7];                                      /* 0x0ec */
-    DR_MODE draw_mode_a;                                  /* 0x178 */
-    DR_MODE draw_mode_b;                                  /* 0x184 */
-    battle_menu_status_panel_draw_offset_t draw_offset_a; /* 0x190 */
-    battle_menu_status_panel_draw_offset_t draw_offset_b; /* 0x1a0 */
-    POLY_FT4 portrait;                                    /* 0x1b0 */
-} battle_menu_status_panel_packet_t;
-typedef char
-    battle_menu_status_panel_packet_size_must_be_0x1d8[(sizeof(battle_menu_status_panel_packet_t) == 0x1d8) ? 1 : -1];
+typedef struct menu_status_panel_packet {
+    menu_palette_primitives_t numeric_frame;       /* 0x000 */
+    SPRT sprites[7];                               /* 0x0ec */
+    DR_MODE draw_mode_a;                           /* 0x178 */
+    DR_MODE draw_mode_b;                           /* 0x184 */
+    menu_status_panel_draw_offset_t draw_offset_a; /* 0x190 */
+    menu_status_panel_draw_offset_t draw_offset_b; /* 0x1a0 */
+    POLY_FT4 portrait;                             /* 0x1b0 */
+} menu_status_panel_packet_t;
+typedef char menu_status_panel_packet_size_must_be_0x1d8[(sizeof(menu_status_panel_packet_t) == 0x1d8) ? 1 : -1];
 
 /* Parameter block of the editor display threads, reached through the
- * 0x400-byte battle thread table. It has the shape of world_status_thread_t,
+ * 0x400-byte battle thread table. It has the shape of menu_status_thread_t,
  * but these threads load x as a halfword. The shake offset is sign-extended
  * from the s16 shake tables and narrowed to the draw-offset y. Only the members the display
  * threads use are named; the record's total size is not proven. */
-typedef struct battle_menu_status_panel_display_thread {
+typedef struct menu_status_panel_display_thread {
     u16 x;           /* 0x00 */
     u16 _padding_02; /* aligns shake_y */
     s32 shake_y;     /* 0x04; narrowed to a draw-offset halfword when rendered */
@@ -373,7 +372,7 @@ typedef struct battle_menu_status_panel_display_thread {
     s32 work;        /* 0x0c: redraw request flags, cleared once serviced */
     s32 dimmed;      /* 0x10: nonzero forces the dimmed CLUTs and colours; bound as
                            g_bunit_status_display_dimmed and the WORLD display globals */
-} battle_menu_status_panel_display_thread_t;
+} menu_status_panel_display_thread_t;
 
 /* Per-frame character status buffer (0x3d8 bytes), double buffered by the
  * *_panel_run_character_status_thread routines, which copy the first buffer
@@ -396,18 +395,18 @@ typedef struct battle_menu_status_panel_display_thread {
  *    battle_menu_init_numeric_display_frame_primitives and the
  *    *_gfx_init_scaled_draw_area_packets / *_gfx_build_scaled_draw_area_packets
  *    pair. */
-typedef struct battle_menu_status_panel_buffer {
-    DR_MODE draw_modes[3];                                  /* 0x000 */
-    SPRT sprites[24];                                       /* 0x024 */
-    TILE tiles[2];                                          /* 0x204 */
-    LINE_F2 lines[8];                                       /* 0x224 */
-    battle_menu_status_panel_draw_offset_t draw_offsets[2]; /* 0x2a4 */
-    world_menu_palette_primitives_t numeric_frame;          /* 0x2c4 */
-    world_gfx_scaled_draw_area_pair_t portrait;             /* 0x3b0 */
-} battle_menu_status_panel_buffer_t;
-typedef char
-    battle_menu_status_panel_buffer_size_must_be_0x3d8[(sizeof(battle_menu_status_panel_buffer_t) == 0x3d8) ? 1 : -1];
+typedef struct menu_status_panel_buffer {
+    DR_MODE draw_modes[3];                           /* 0x000 */
+    SPRT sprites[24];                                /* 0x024 */
+    TILE tiles[2];                                   /* 0x204 */
+    LINE_F2 lines[8];                                /* 0x224 */
+    menu_status_panel_draw_offset_t draw_offsets[2]; /* 0x2a4 */
+    menu_palette_primitives_t numeric_frame;         /* 0x2c4 */
+    scaled_draw_area_pair_t portrait;                /* 0x3b0 */
+} menu_status_panel_buffer_t;
+typedef char menu_status_panel_buffer_size_must_be_0x3d8[(sizeof(menu_status_panel_buffer_t) == 0x3d8) ? 1 : -1];
 
+/* menu commands */
 /* Per-skillset menu behavior stored at 0x80065cb4. Values select specialized
  * inventory, targeting, and ability-loading paths; they are not menu command
  * opcodes. */
@@ -612,35 +611,37 @@ typedef struct menu_cursor_bob_entry {
 } menu_cursor_bob_entry_t;
 typedef char menu_cursor_bob_entry_size_must_be_2[sizeof(menu_cursor_bob_entry_t) == 2 ? 1 : -1];
 
+/* menu drawing */
 /* Six-byte menu sprite cell: screen rectangle and texture origin. */
-typedef struct battle_menu_sprite_cell {
+typedef struct menu_sprite_cell {
     u8 x;
     u8 y;
     u8 w;
     u8 h;
     u8 u;
     u8 v;
-} battle_menu_sprite_cell_t;
-typedef char battle_menu_sprite_cell_size_must_be_6[(sizeof(battle_menu_sprite_cell_t) == 6) ? 1 : -1];
+} menu_sprite_cell_t;
+typedef char menu_sprite_cell_size_must_be_6[(sizeof(menu_sprite_cell_t) == 6) ? 1 : -1];
 
 /* One 0x100-byte slot holding a panel's palette primitive set. */
-typedef struct world_menu_palette_slot {
-    world_menu_palette_primitives_t primitives; /* 0x00 */
-    u8 _padding_ec[0x14];                       /* preserves the 0x100-byte allocation stride */
-} world_menu_palette_slot_t;
-typedef char world_menu_palette_slot_size_must_be_0x100[(sizeof(world_menu_palette_slot_t) == 0x100) ? 1 : -1];
+typedef struct menu_palette_slot {
+    menu_palette_primitives_t primitives; /* 0x00 */
+    u8 _padding_ec[0x14];                 /* preserves the 0x100-byte allocation stride */
+} menu_palette_slot_t;
+typedef char menu_palette_slot_size_must_be_0x100[(sizeof(menu_palette_slot_t) == 0x100) ? 1 : -1];
 
-/* Provisional: record reached through world_menu_entry_t::context.
+/* menu entries */
+/* Provisional: record reached through menu_entry_t::context.
  * world_menu_text_entry_thread, world_menu_text_entry_wait_thread and the
  * overlays' *_menu_open_submenu_thread call the hook at +0 and start the text
  * thread whose id is at +6 with speaker_id as its third and fourth parameters. */
-typedef struct world_menu_text_binding {
+typedef struct menu_text_binding {
     void (*prepare)(void); /* 0x00 */
     u16 speaker_id;        /* 0x04: unit whose portrait speaks (roster slot) */
     u16 text_thread_id;    /* 0x06 */
     u8 _unused_08[8];
     s16* row_text_ids; /* 0x10: text ids indexed by entry selected_index (world_menu_announce_entry_value_thread) */
-} world_menu_text_binding_t;
+} menu_text_binding_t;
 
 /* Row actions 0..0xff open a menu entry; this flag suppresses the confirm sound. */
 enum { MENU_ROW_ACTION_SILENT = 0x1000 };
@@ -659,7 +660,7 @@ enum { MENU_ROW_ACTION_CLEAR_SELECTION = 0x4d2 };
  * image's upload rect and 0x08/0x0a as the icon origin (the scrolling icon list
  * thread clears bit 0 of 0x0a), and world_menu_step_wrapping_cursor_on_scroll_buttons
  * wraps the cursor at max_row_index. */
-typedef struct world_menu_entry {
+typedef struct menu_entry {
     point16_t vram_origin; /* 0x00: text-image VRAM origin passed to the draw-mode helpers */
     s16 inner_width;       /* 0x04: text-image width; RECT.w = inner_width >> 2 (4bpp) */
     s16 inner_height;      /* 0x06: text-image height (world_menu_size_entry_to_text) */
@@ -667,7 +668,7 @@ typedef struct world_menu_entry {
     /* 0x10: text sprite placement (0x800ec108). width/height are set with the
      * inner and window sizes; the load origin and screen offsets are cleared
      * with them. */
-    world_gfx_image_load_parameters_t text_image;
+    image_load_parameters_t text_image;
     s16 text_id;                 /* 0x1c: passed to world_text_find_entry */
     s16 max_row_index;           /* 0x1e: row count - 1 (world_menu_build_skillset_entries) */
     s16 thread_count;            /* 0x20: threads world_menu_cancel_thread_group stops, -1 when there is no thread
@@ -679,8 +680,8 @@ typedef struct world_menu_entry {
                                     icon threads read it signed as the icon kind: 0x10 arrow, 0..4 single
                                     icon, 5..15 four-piece icon (world_menu_build_icon_record) */
     u8 _padding_2e[2];           /* aligns context */
-    /* 0x30: context interpreted by the menu thread. Text threads use world_menu_text_binding_t
-     * here, the list threads a world_menu_text_layout_t, the number threads a
+    /* 0x30: context interpreted by the menu thread. Text threads use menu_text_binding_t
+     * here, the list threads a menu_text_layout_t, the number threads a
      * world_menu_number_range_t and the icon threads the s16 redraw flag they
      * poll (set to 1 to rebuild the text image). */
     void* context;
@@ -691,15 +692,16 @@ typedef struct world_menu_entry {
                               (0x11 = the binding's row_text_ids); 2 / -1 defer to the next running
                               thread's entry. The AT-list and option-list builders park their
                               scroll row offset here instead. */
-} world_menu_entry_t;
-typedef char world_menu_entry_size_must_be_0x3c[(sizeof(world_menu_entry_t) == 0x3c) ? 1 : -1];
+} menu_entry_t;
+typedef char menu_entry_size_must_be_0x3c[(sizeof(menu_entry_t) == 0x3c) ? 1 : -1];
 
 /* Numeric-entry and action-selection threads use value as a halfword result cell. */
-static inline s16* world_menu_entry_result(world_menu_entry_t* entry) {
+static inline s16* menu_entry_result(menu_entry_t* entry) {
     return entry->value;
 }
 
-/* world_menu_text_layout_t.mode[]: what a column of the layout draws. */
+/* menu text */
+/* menu_text_layout_t.mode[]: what a column of the layout draws. */
 typedef enum menu_text_column_mode {
     MENU_TEXT_COLUMN_TEXT = 0,          /* text ids, drawn by *_menu_display_text_entry */
     MENU_TEXT_COLUMN_NUMBER = 1,        /* two-digit numbers, drawn by *_display_menu_number_entry */
@@ -708,11 +710,11 @@ typedef enum menu_text_column_mode {
 } menu_text_column_mode_e;
 
 /* Provisional: three-column menu text layout walked by world_screen_menu_draw_text_columns (0x80109374) /
- * world_menu_draw_text_columns (reached through world_menu_entry_t::context when
+ * world_menu_draw_text_columns (reached through menu_entry_t::context when
  * that record is a layout rather than a binding). Column i uses x[i],
  * mode[i] (menu_text_column_mode_e), text_ids[i] and
  * text_colors[i], each indexed by row + row offset. */
-typedef struct world_menu_text_layout {
+typedef struct menu_text_layout {
     s16 row_count;       /* 0x00 */
     s16 hidden_rows;     /* 0x02: rows beyond the visible page (count - visible, 0 when
                             all fit); row_offset is clamped to it */
@@ -720,9 +722,10 @@ typedef struct world_menu_text_layout {
     s16 mode[3];         /* 0x0a: menu_text_column_mode_e */
     s16* text_ids[3];    /* 0x10 */
     s16* text_colors[3]; /* 0x1c */
-} world_menu_text_layout_t;
-typedef char world_menu_text_layout_size_must_be_0x28[sizeof(world_menu_text_layout_t) == 0x28 ? 1 : -1];
+} menu_text_layout_t;
+typedef char menu_text_layout_size_must_be_0x28[sizeof(menu_text_layout_t) == 0x28 ? 1 : -1];
 
+/* menu drawing */
 /* Provisional: one double-buffered menu sprite page (0xa0 bytes) built by
  * world_menu_build_sprite_page and its BATTLE twin battle_menu_build_sprite_page:
  * five DR_MODE texture-window packets followed by the five SPRTs they apply
@@ -734,7 +737,7 @@ typedef struct menu_sprite_page {
 typedef char menu_sprite_page_size_must_be_0xa0[(sizeof(menu_sprite_page_t) == 0xa0) ? 1 : -1];
 
 /* Provisional: per-line placement for the twelve menu box lines
- * (table at 0x80154cd0, indexed like world_menu_palette_primitives_t.lines):
+ * (table at 0x80154cd0, indexed like menu_palette_primitives_t.lines):
  * signed endpoint offsets from the box origin and, per coordinate, a flag
  * selecting whether the box width/height is added. */
 typedef struct world_menu_line_layout {
@@ -745,38 +748,39 @@ typedef struct world_menu_line_layout {
 /* Icon packet head: two DR_MODE packets at +0x00/+0x0c and four SPRT packets
  * at +0x18 (CLUT ids at +0x26/+0x3a/+0x4e/+0x62). The submitter draws all
  * six packets. */
-typedef struct world_menu_icon_sprites {
+typedef struct menu_icon_sprites {
     DR_MODE first_draw_mode;
     DR_MODE draw_mode;
     SPRT sprites[4];
-} world_menu_icon_sprites_t;
-typedef char world_menu_icon_sprites_sprites_offset_must_be_0x18
-    [((unsigned long)&((world_menu_icon_sprites_t*)0)->sprites == 0x18) ? 1 : -1];
+} menu_icon_sprites_t;
+typedef char menu_icon_sprites_sprites_offset_must_be_0x18[((unsigned long)&((menu_icon_sprites_t*)0)->sprites == 0x18)
+        ? 1
+        : -1];
 
 /* Six-byte option row selected by customized-options bits 9-11 in
  * 0x80106660. The first three bytes set the shared initial, primary and
  * secondary input-repeat timings. */
-typedef struct world_input_timing_profile {
+typedef struct menu_input_timing_profile {
     u8 initial_delay;
     u8 repeat_period;
     u8 secondary_repeat_period;
     u8 scroll_accel_delay; /* copied to g_main_menu_scroll_accel_delay */
     u8 scroll_slow_step;   /* copied to g_main_menu_scroll_slow_step */
     u8 scroll_fast_step;   /* copied to g_main_menu_scroll_fast_step */
-} world_input_timing_profile_t;
+} menu_input_timing_profile_t;
 
 /* A text layout followed by the first visible row, as bound to a scrolling
- * list's world_menu_entry_t::context (world_menu_scrolling_list_thread and the AT list
+ * list's menu_entry_t::context (world_menu_scrolling_list_thread and the AT list
  * built by world_menu_build_ability_preview_at_list). */
-typedef struct world_menu_scroll_text_layout {
-    world_menu_text_layout_t columns; /* 0x00 */
-    s16 row_offset;                   /* 0x28 */
-} world_menu_scroll_text_layout_t;
+typedef struct menu_scroll_text_layout {
+    menu_text_layout_t columns; /* 0x00 */
+    s16 row_offset;             /* 0x28 */
+} menu_scroll_text_layout_t;
 
 /* Provisional: 12-byte textured-quad piece record (table at 0x80154e20)
  * consumed by the POLY_GT4 builder at 0x800e8d6c: texture origin, size and
  * screen position relative to g_world_menu_quad_origin. */
-typedef struct world_menu_quad_piece {
+typedef struct menu_quad_piece {
     u8 u; /* 0x00 */
     u8 _unused_01;
     s8 v;           /* 0x02: texture v + 0x78 */
@@ -785,71 +789,72 @@ typedef struct world_menu_quad_piece {
     s16 h;          /* 0x06 */
     s16 x;          /* 0x08 */
     s16 y;          /* 0x0a */
-} world_menu_quad_piece_t;
+} menu_quad_piece_t;
 
 /* Provisional: the four vertex colours applied by the POLY_GT4 builder at
  * 0x800e8d6c (record at 0x801557f4; the leading word is untyped). */
-typedef struct world_menu_quad_colors {
+typedef struct menu_quad_colors {
     u32 _unused_00;
     CVECTOR vertex[4]; /* 0x04; one colour per POLY_GT4 corner */
-} world_menu_quad_colors_t;
+} menu_quad_colors_t;
 
 /* Provisional: one 5-byte row of a WORLD menu text entry as rewritten by
  * world_menu_build_skillset_entries (0x800f3d44): the style byte at +1 is
  * 4 for a greyed row, the byte at +3 is the row separator (0xfa) or the
  * list terminator (0xff). */
-typedef struct world_menu_text_row {
+typedef struct menu_text_row {
     u8 _unused_00;
     u8 style; /* 0x01 */
     u8 _unused_02;
     u8 terminator; /* 0x03: 0xfa continues, 0xff ends */
     u8 _unused_04;
-} world_menu_text_row_t;
+} menu_text_row_t;
 
 /* Provisional: the 0x7c-byte icon record world_menu_build_icon_record fills.
- * Its head is exactly world_menu_icon_sprites_t; the three borrowed icon
+ * Its head is exactly menu_icon_sprites_t; the three borrowed icon
  * sprites at +0x68 and the two counters at +0x74/+0x78 are what that builder
  * adds. */
-typedef struct world_menu_icon_record {
-    world_menu_icon_sprites_t base; /* 0x00 */
-    SPRT* icons[3];                 /* 0x68 */
-    s32 _unknown_74;                /* 0x74 */
-    s32 _unknown_78;                /* 0x78 */
-} world_menu_icon_record_t;
+typedef struct menu_icon_record {
+    menu_icon_sprites_t base; /* 0x00 */
+    SPRT* icons[3];           /* 0x68 */
+    s32 _unknown_74;          /* 0x74 */
+    s32 _unknown_78;          /* 0x78 */
+} menu_icon_record_t;
 
 /* Provisional: one of the two 0x134-byte packet pages a scrolling text list
  * alternates between frames (world_menu_scrolling_list_thread at 0x801a3d58,
  * world_build_at_list at 0x801ac6b4, world_screen_build_at_list at 0x801bfda4). */
-typedef struct world_menu_list_page {
-    SPRT frame;                                   /* 0x00: text image / cursor frame */
-    SPRT arrows[2];                               /* 0x14: scroll arrows */
-    SPRT arrow_marks[2];                          /* 0x3c */
-    SPRT thumb;                                   /* 0x64: scroll-bar thumb */
-    DR_MODE text_mode;                            /* 0x78 */
-    DR_MODE icon_mode;                            /* 0x84 */
-    world_menu_icon_record_t icons;               /* 0x90 */
-    world_gfx_scaled_draw_area_pair_t draw_areas; /* 0x10c */
-} world_menu_list_page_t;
-typedef char world_menu_list_page_size_must_be_0x134[sizeof(world_menu_list_page_t) == 0x134 ? 1 : -1];
+typedef struct menu_list_page {
+    SPRT frame;                         /* 0x00: text image / cursor frame */
+    SPRT arrows[2];                     /* 0x14: scroll arrows */
+    SPRT arrow_marks[2];                /* 0x3c */
+    SPRT thumb;                         /* 0x64: scroll-bar thumb */
+    DR_MODE text_mode;                  /* 0x78 */
+    DR_MODE icon_mode;                  /* 0x84 */
+    menu_icon_record_t icons;           /* 0x90 */
+    scaled_draw_area_pair_t draw_areas; /* 0x10c */
+} menu_list_page_t;
+typedef char menu_list_page_size_must_be_0x134[sizeof(menu_list_page_t) == 0x134 ? 1 : -1];
 
 /* Text image placement: the upload rectangle plus the screen offsets
  * world_gfx_init_image_loading reads. */
-typedef struct world_menu_text_window {
+typedef struct menu_text_window {
     RECT rect;
     s16 x_screen_offset;
     s16 y_screen_offset;
-} world_menu_text_window_t;
+} menu_text_window_t;
 
 /* Provisional: the double-buffered quad/sprite page at 0x80173cbc (0x144
  * bytes each): five Gouraud textured quads, two sprites and the two draw-mode
  * packets that select their texture windows. */
-typedef struct world_menu_quad_page {
+typedef struct menu_quad_page {
     POLY_GT4 quads[5]; /* 0x000 */
     SPRT sprites[2];   /* 0x104 */
     DR_MODE modes[2];  /* 0x12c */
-} world_menu_quad_page_t;
-typedef char world_menu_quad_page_size_must_be_0x144[sizeof(world_menu_quad_page_t) == 0x144 ? 1 : -1];
+} menu_quad_page_t;
+typedef char menu_quad_page_size_must_be_0x144[sizeof(menu_quad_page_t) == 0x144 ? 1 : -1];
 
+/* turn order */
 /* One 4-byte entry of the 40-entry AT list built by battle_action_calculate_at_list and
  * kept in key order by battle_action_sort_at_list. */
 typedef struct battle_at_entry {
@@ -874,7 +879,7 @@ typedef enum battle_at_entry_flags {
  * `text` is published through g_world_text_section_pointers[TEXT_SECTION_AT_LIST] (BATTLE:
  * g_battle_text_section_pointers[TEXT_SECTION_AT_LIST]). The main-stack preview
  * fills all 40 AT entries; the menu displays entries 1 through 39. */
-typedef struct world_menu_at_list_work {
+typedef struct menu_at_list_work {
     s16 primary_values[40];        /* 0x000: turn-value column */
     s16 secondary_values[40];      /* 0x050: unit-name column */
     s16 entry_numbers[40];         /* 0x0a0: ordinal column */
@@ -882,21 +887,22 @@ typedef struct world_menu_at_list_work {
     s16 secondary_colors[40];      /* 0x140 */
     u8 text[0x4f0];                /* 0x190: packed 0xfe-terminated names */
     battle_at_entry_t entries[40]; /* 0x680; entry 0 is omitted from the menu */
-} world_menu_at_list_work_t;
-typedef char world_menu_at_list_work_entries_offset_must_be_0x680
-    [((unsigned long)&((world_menu_at_list_work_t*)0)->entries == 0x680) ? 1 : -1];
+} menu_at_list_work_t;
+typedef char
+    menu_at_list_work_entries_offset_must_be_0x680[((unsigned long)&((menu_at_list_work_t*)0)->entries == 0x680) ? 1
+                                                                                                                 : -1];
 
 /* Provisional 0x1ac-byte double-buffered panel record at WORLD 0x801a2bd0 and
  * BATTLE 0x80172834. */
-typedef struct world_panel_record {
+typedef struct menu_panel_record {
     DR_MODE mode0; /* 0x000 */
     DR_MODE mode1; /* 0x00c */
     /* 0x018; world_gfx_init_scaled_draw_area_packets,
      * battle_gfx_init_scaled_draw_area_packets */
-    world_gfx_scaled_draw_area_pair_t draw_areas;
-    SPRT sprites[18];                         /* 0x040 */
-    world_menu_palette_primitives_t* palette; /* 0x1a8 */
-} world_panel_record_t;
+    scaled_draw_area_pair_t draw_areas;
+    SPRT sprites[18];                   /* 0x040 */
+    menu_palette_primitives_t* palette; /* 0x1a8 */
+} menu_panel_record_t;
 
 /* Provisional layout of the window frame primitive block at 0x801cc074
  * (WORLD) and OPTION's copy, which hold two identical frame records. The 0x158
@@ -907,26 +913,26 @@ typedef struct world_panel_record {
  * (0x80138adc) clears rects[0].w and installs rects[1] of the draw-area pair.
  * The block is zero-filled in the overlay image, so none of it is initialized
  * data. */
-typedef struct world_panel_frame {
-    DR_MODE modes[7];                  /* 0x000: one per texture window */
-    SPRT sprites[9];                   /* 0x054: 5 border spans then 4 corners */
-    world_texture_prim_t texture_prim; /* 0x108: tpage-7 VRAM allocation record */
+typedef struct menu_panel_frame {
+    DR_MODE modes[7];                 /* 0x000: one per texture window */
+    SPRT sprites[9];                  /* 0x054: 5 border spans then 4 corners */
+    texture_primitive_t texture_prim; /* 0x108: tpage-7 VRAM allocation record */
     /* 0x130; world_gfx_init_scaled_draw_area_packets,
      * battle_gfx_init_scaled_draw_area_packets */
-    world_gfx_scaled_draw_area_pair_t draw_areas;
-} world_panel_frame_t;
-typedef char world_panel_frame_size_must_be_0x158[sizeof(world_panel_frame_t) == 0x158 ? 1 : -1];
+    scaled_draw_area_pair_t draw_areas;
+} menu_panel_frame_t;
+typedef char menu_panel_frame_size_must_be_0x158[sizeof(menu_panel_frame_t) == 0x158 ? 1 : -1];
 
 /* 12-byte piece of a pressable button (*_menu_draw_pressable_button): source
  * rectangle, then its offset from the button origin. */
-typedef struct world_menu_button_piece {
+typedef struct menu_button_piece {
     u16 u;        /* 0x00 */
     u16 v;        /* 0x02 */
     s16 w;        /* 0x04 */
     s16 h;        /* 0x06 */
     u16 x_offset; /* 0x08 */
     u16 y_offset; /* 0x0a */
-} world_menu_button_piece_t;
+} menu_button_piece_t;
 
 /* Seven menu entries form the crystal/treasure result panel. The AT-list
  * and confirmation groups each contain a message entry followed by a choice. */
@@ -968,11 +974,12 @@ typedef struct help_navigation_record {
 } help_navigation_record_t;
 typedef char help_navigation_record_size_must_be_0x10[(sizeof(help_navigation_record_t) == 0x10) ? 1 : -1];
 
+/* menu dispatch */
 /* Provisional 0x14-byte system-function record, tables at BATTLE 0x801692c0
  * and WORLD 0x80156750 (*_menu_run_system_function_thread,
  * battle_menu_dispatch_system_function). The member comments name the BATTLE
  * globals; WORLD binds its own copies. */
-typedef struct battle_system_function {
+typedef struct menu_system_function {
     s16 menu_id;                /* 0x00; copied to g_battle_menu_current_id */
     u16 text_id;                /* 0x02; menu entry text id */
     s16 menu_entry_index;       /* 0x04; g_battle_menu_thread_menu_data index */
@@ -982,8 +989,8 @@ typedef struct battle_system_function {
     void (*thread_entry)(void); /* 0x0c; started as thread 8 */
     s16 alternate_id;           /* 0x10; replaces the id when navigation messages are not On */
     u8 _padding_12[2];          /* tail padding to 4-byte alignment */
-} battle_system_function_t;
-typedef char battle_system_function_size_must_be_0x14[(sizeof(battle_system_function_t) == 0x14) ? 1 : -1];
+} menu_system_function_t;
+typedef char menu_system_function_size_must_be_0x14[(sizeof(menu_system_function_t) == 0x14) ? 1 : -1];
 
 /* First argument of *_menu_init_system_function and
  * *_menu_dispatch_system_function; `option` selects the variant. */
@@ -1009,17 +1016,17 @@ typedef enum battle_menu_system_command {
 
 /* Result of *_menu_dispatch_system_function (and of
  * battle_menu_init_system_function, which returns it). */
-typedef enum battle_menu_system_dispatch_result {
-    BATTLE_MENU_SYSTEM_DISPATCH_UNKNOWN_COMMAND = 0, /* the CLOSE function was started instead */
-    BATTLE_MENU_SYSTEM_DISPATCH_DONE = 1,            /* a system function was started, or nothing had to run */
-    BATTLE_MENU_SYSTEM_DISPATCH_EVENT = 2,           /* SCENARIO_CHECK started an event, or queued it for option 2 */
-} battle_menu_system_dispatch_result_e;
+typedef enum menu_system_dispatch_result {
+    MENU_SYSTEM_DISPATCH_UNKNOWN_COMMAND = 0, /* the CLOSE function was started instead */
+    MENU_SYSTEM_DISPATCH_DONE = 1,            /* a system function was started, or nothing had to run */
+    MENU_SYSTEM_DISPATCH_EVENT = 2,           /* SCENARIO_CHECK started an event, or queued it for option 2 */
+} menu_system_dispatch_result_e;
 /* g_battle_menu_current_id / g_world_menu_current_id: the open battle menu,
  * and the index of its entry in g_battle_menu_idle_action_entries (WORLD:
  * g_world_menu_system_entries), which is also what a row action from 0 to
  * 0xff opens. The unit menus are picked by
  * battle_menu_get_id_based_on_mount_moveable_actable. A system function
- * (battle_system_function_t) shows its text in MESSAGE or in one of the
+ * (menu_system_function_t) shows its text in MESSAGE or in one of the
  * choice entries and sets the current id itself; ids from 0x62 exist only
  * there and have no entry.
  *
@@ -1111,25 +1118,26 @@ typedef enum battle_system_function_id {
     BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT = 0x32,
 } battle_system_function_id_e;
 
+/* companion overlays */
 /* Companion overlay requests: index into the overlay LBA, size and load offset
  * tables (g_battle_menu_companion_executable_lbas and the WORLD twins). */
-typedef enum battle_companion_overlay {
-    BATTLE_COMPANION_OVERLAY_OPTION = 1,             /* EVENT/OPTION.OUT */
-    BATTLE_COMPANION_OVERLAY_BUNIT = 2,              /* EVENT/BUNIT.OUT, first half */
-    BATTLE_COMPANION_OVERLAY_HELPMENU = 3,           /* EVENT/HELPMENU.OUT */
-    BATTLE_COMPANION_OVERLAY_EVTOOL = 4,             /* EVENT/EVTOOL.OUT; no request in retail */
-    BATTLE_COMPANION_OVERLAY_DEBUGMAP = 5,           /* EVENT/DEBUGMAP.OUT; no request in retail */
-    BATTLE_COMPANION_OVERLAY_REQUIRE = 6,            /* EVENT/REQUIRE.OUT */
-    BATTLE_COMPANION_OVERLAY_JOBSTTS = 7,            /* EVENT/JOBSTTS.OUT */
-    BATTLE_COMPANION_OVERLAY_SMALL = 8,              /* EVENT/SMALL.OUT */
-    BATTLE_COMPANION_OVERLAY_EQUIP = 9,              /* EVENT/EQUIP.OUT, first half */
-    BATTLE_COMPANION_OVERLAY_EQUIP_SECOND_HALF = 10, /* loaded above the heap reservation */
-    BATTLE_COMPANION_OVERLAY_DEBUGCHR = 11,          /* EVENT/DEBUGCHR.OUT */
-    BATTLE_COMPANION_OVERLAY_ETC = 12,               /* EVENT/ETC.OUT */
-    BATTLE_COMPANION_OVERLAY_ATTACK = 13,            /* EVENT/ATTACK.OUT */
-    BATTLE_COMPANION_OVERLAY_CARD = 14,              /* EVENT/CARD.OUT */
-    BATTLE_COMPANION_OVERLAY_BUNIT_SECOND_HALF = 15, /* loaded above the heap reservation */
-} battle_companion_overlay_e;
+typedef enum companion_overlay {
+    COMPANION_OVERLAY_OPTION = 1,             /* EVENT/OPTION.OUT */
+    COMPANION_OVERLAY_BUNIT = 2,              /* EVENT/BUNIT.OUT, first half */
+    COMPANION_OVERLAY_HELPMENU = 3,           /* EVENT/HELPMENU.OUT */
+    COMPANION_OVERLAY_EVTOOL = 4,             /* EVENT/EVTOOL.OUT; no request in retail */
+    COMPANION_OVERLAY_DEBUGMAP = 5,           /* EVENT/DEBUGMAP.OUT; no request in retail */
+    COMPANION_OVERLAY_REQUIRE = 6,            /* EVENT/REQUIRE.OUT */
+    COMPANION_OVERLAY_JOBSTTS = 7,            /* EVENT/JOBSTTS.OUT */
+    COMPANION_OVERLAY_SMALL = 8,              /* EVENT/SMALL.OUT */
+    COMPANION_OVERLAY_EQUIP = 9,              /* EVENT/EQUIP.OUT, first half */
+    COMPANION_OVERLAY_EQUIP_SECOND_HALF = 10, /* loaded above the heap reservation */
+    COMPANION_OVERLAY_DEBUGCHR = 11,          /* EVENT/DEBUGCHR.OUT */
+    COMPANION_OVERLAY_ETC = 12,               /* EVENT/ETC.OUT */
+    COMPANION_OVERLAY_ATTACK = 13,            /* EVENT/ATTACK.OUT */
+    COMPANION_OVERLAY_CARD = 14,              /* EVENT/CARD.OUT */
+    COMPANION_OVERLAY_BUNIT_SECOND_HALF = 15, /* loaded above the heap reservation */
+} companion_overlay_e;
 
 /* Companion data file requests (the second LBA and size tables). */
 typedef enum battle_companion_file {
@@ -1140,14 +1148,14 @@ typedef enum battle_companion_file {
 
 /* g_battle_companion_overlay_state / g_world_companion_overlay_state: the overlay
  * entry the frame driver calls, cleared when the overlay returns. */
-typedef enum battle_companion_overlay_state {
-    BATTLE_COMPANION_OVERLAY_STATE_IDLE = 0,
-    BATTLE_COMPANION_OVERLAY_STATE_STUB = 1,      /* an empty function */
-    BATTLE_COMPANION_OVERLAY_STATE_BUNIT = 2,     /* bunit_entrypoint */
-    BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS = 3,   /* jobstts_entrypoint */
-    BATTLE_COMPANION_OVERLAY_STATE_EQUIP = 4,     /* equip_entrypoint */
-    BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE = 5, /* card_save_run_menu */
-} battle_companion_overlay_state_e;
+typedef enum companion_overlay_state {
+    COMPANION_OVERLAY_STATE_IDLE = 0,
+    COMPANION_OVERLAY_STATE_STUB = 1,      /* an empty function */
+    COMPANION_OVERLAY_STATE_BUNIT = 2,     /* bunit_entrypoint */
+    COMPANION_OVERLAY_STATE_JOBSTTS = 3,   /* jobstts_entrypoint */
+    COMPANION_OVERLAY_STATE_EQUIP = 4,     /* equip_entrypoint */
+    COMPANION_OVERLAY_STATE_CARD_SAVE = 5, /* card_save_run_menu */
+} companion_overlay_state_e;
 
 /* g_*_menu_indicator_state[]: state of each of the two translucent panels
  * *_menu_draw_thread_status_indicators draws behind the unit status banners. */
@@ -1189,6 +1197,7 @@ typedef enum menu_window_frame_mode {
 
 /* A remembered list cursor, scroll base and entry id. The menu restores the
  * cursor by entry id when the live list has changed. */
+/* menu selection */
 typedef struct menu_selection_record {
     s16 selected_index;    /* 0x00 */
     s16 scroll_base_index; /* 0x02 */
@@ -1205,13 +1214,13 @@ typedef char menu_list_selection_size_must_be_2[sizeof(menu_list_selection_t) ==
 
 /* One remembered command/skillset selection per unit, followed by seven
  * ability-list positions. Arithmeticks uses list positions 4, 5 and 6. */
-typedef struct battle_menu_record {
+typedef struct menu_unit_selection_record {
     u8 command_index;               /* 0x00 */
     u8 _unknown_01;                 /* 0x01; reset to 0xff */
     u8 skillset_index;              /* 0x02 */
     menu_list_selection_t lists[7]; /* 0x03 */
-} battle_menu_record_t;
-typedef char battle_menu_record_size_must_be_0x11[(sizeof(battle_menu_record_t) == 0x11) ? 1 : -1];
+} menu_unit_selection_record_t;
+typedef char menu_unit_selection_record_size_must_be_0x11[(sizeof(menu_unit_selection_record_t) == 0x11) ? 1 : -1];
 
 /* Remap three remembered selections to one replacement for a menu. */
 typedef struct menu_selection_remap {
@@ -1239,11 +1248,11 @@ typedef char battle_menu_id_record_size_must_be_0x8[(sizeof(battle_menu_id_recor
 /* Menu allocator slot (16 at g_battle_menu_allocator_slot_records, WORLD
  * 0x8019b368); buffer is -1 when the slot is free. The slots hand out runs of
  * the 53 256-byte pages of g_battle_menu_buffer_arena. */
-typedef struct battle_menu_allocation {
+typedef struct menu_allocation {
     u8* buffer;     /* 0x00 */
     s32 page_count; /* 0x04 */
-} battle_menu_allocation_t;
-typedef char battle_menu_allocation_size_must_be_8[(sizeof(battle_menu_allocation_t) == 8) ? 1 : -1];
+} menu_allocation_t;
+typedef char menu_allocation_size_must_be_8[(sizeof(menu_allocation_t) == 8) ? 1 : -1];
 
 /* Pressed, held and previous buttons, followed by the menu repeat counters. */
 typedef struct menu_input_state {
@@ -1258,10 +1267,10 @@ typedef char menu_input_state_size_must_be_24[sizeof(menu_input_state_t) == 24 ?
 
 /* Shared window record whose signed rectangle the window-frame and tiled
  * rectangle commands use for source 2 (pointer at 0x801cd720). */
-typedef struct world_menu_window_rect_source {
+typedef struct menu_window_rect_source {
     u8 _unused_00[6];
     RECT rect; /* 0x06 */
-} world_menu_window_rect_source_t;
+} menu_window_rect_source_t;
 
 /* Flags a menu-script number getter (a row callback) returns above its
  * value, read by *_menu_script_draw_formatted_number and the overlays'
@@ -1322,7 +1331,7 @@ typedef struct menu_sprite_command {
     u8 opcode;
     u8 length;
     u8 _unknown_02;
-    battle_menu_sprite_cell_t sprite;
+    menu_sprite_cell_t sprite;
 } menu_sprite_command_t;
 typedef char menu_sprite_command_size_must_be_9[sizeof(menu_sprite_command_t) == 9 ? 1 : -1];
 
@@ -1630,21 +1639,21 @@ typedef char game_options_size_must_be_4[sizeof(game_options_t) == 4 ? 1 : -1];
 
 /* Provisional: one of the two 0x190-byte options-menu packet pages at WORLD
  * 0x801ae894 and OPTION 0x801cbc5c, alternated by frame. */
-typedef struct world_options_menu_page {
-    SPRT title;                                   /* 0x000: window title image */
-    SPRT value;                                   /* 0x014: selected value image */
-    world_gfx_scaled_draw_area_pair_t title_area; /* 0x028 */
-    world_gfx_scaled_draw_area_pair_t value_area; /* 0x050 */
-    DR_MODE text_mode;                            /* 0x078 */
-    DR_MODE window_mode;                          /* 0x084 */
-    DR_MODE icon_mode;                            /* 0x090 */
-    world_menu_icon_record_t icons;               /* 0x09c */
-    SPRT frame;                                   /* 0x118: cursor frame */
-    SPRT arrows[2];                               /* 0x12c: scroll arrows */
-    SPRT arrow_marks[2];                          /* 0x154 */
-    SPRT thumb;                                   /* 0x17c: scroll-bar thumb */
-} world_options_menu_page_t;
-typedef char world_options_menu_page_size_must_be_0x190[(sizeof(world_options_menu_page_t) == 0x190) ? 1 : -1];
+typedef struct options_menu_page {
+    SPRT title;                         /* 0x000: window title image */
+    SPRT value;                         /* 0x014: selected value image */
+    scaled_draw_area_pair_t title_area; /* 0x028 */
+    scaled_draw_area_pair_t value_area; /* 0x050 */
+    DR_MODE text_mode;                  /* 0x078 */
+    DR_MODE window_mode;                /* 0x084 */
+    DR_MODE icon_mode;                  /* 0x090 */
+    menu_icon_record_t icons;           /* 0x09c */
+    SPRT frame;                         /* 0x118: cursor frame */
+    SPRT arrows[2];                     /* 0x12c: scroll arrows */
+    SPRT arrow_marks[2];                /* 0x154 */
+    SPRT thumb;                         /* 0x17c: scroll-bar thumb */
+} options_menu_page_t;
+typedef char options_menu_page_size_must_be_0x190[(sizeof(options_menu_page_t) == 0x190) ? 1 : -1];
 
 /* text */
 /* The font, EVENT/FONT.BIN: 2200 glyphs of 14 rows of 10 two-bit pixels. A
@@ -1704,7 +1713,7 @@ typedef enum dialog_position {
 } dialog_position_e;
 
 /* Fields of a DisplayMessage dialog type byte
- * (world_text_dialog_record_t::dialog_type). */
+ * (text_dialog_record_t::dialog_type). */
 enum {
     DIALOG_TYPE_POSITION_MASK = 0x03,
     DIALOG_TYPE_OPTIONS_MASK = 0x0c,
@@ -1837,7 +1846,7 @@ typedef enum text_format_code {
 /* Provisional: text-stream cursor state shared by the two WORLD copies of
  * the back-reference cursor stepper (battle twin: 0x80130718). world_measure_text
  * keeps it in the scratchpad at 0x1f800000 and names the remaining fields. */
-typedef struct world_text_backreference_state {
+typedef struct text_backreference_state {
     s32 command;         /* 0x00; current text byte */
     s32 column;          /* 0x04; characters on the current line */
     s32 max_column;      /* 0x08; widest line so far */
@@ -1850,13 +1859,13 @@ typedef struct world_text_backreference_state {
     s32* value_cursor; /* 0x24; next substitution value */
     s32 pending_width; /* 0x28; explicit digit width from 0xE8, 0xFFFF when none */
     s32 glyph_page;    /* 0x2c; pending 0xDx page-prefix byte, 0 otherwise (world_measure_text_pixels) */
-} world_text_backreference_state_t;
+} text_backreference_state_t;
 
 /* Text window record of the dialog and message-box threads, rendered by the
  * BATTLE and WORLD *_menu_render_text_image_at_* functions: they build an
  * image buffer (the window builder when box_type is 0x10), draw `text` into
  * it and upload `rect`. */
-typedef struct world_text_dialog_record {
+typedef struct text_dialog_record {
     u8* buffer;        /* 0x00 */
     u16 width;         /* 0x04 */
     u16 height;        /* 0x06 */
@@ -1886,7 +1895,7 @@ typedef struct world_text_dialog_record {
     s32 arrow_offset;  /* 0x44: DisplayMessage arrow position, added to offset */
     s32 x_offset;      /* 0x48: DisplayMessage X coordinate, added to x */
     s32 y_offset;      /* 0x4c: DisplayMessage Y coordinate, added to y */
-} world_text_dialog_record_t;
+} text_dialog_record_t;
 
 /* One pending text glyph: BATTLE's dialogue renderer state at 0x8016dad4
  * (filled by battle_text_character_handling_thread, drawn by
@@ -1894,71 +1903,71 @@ typedef struct world_text_dialog_record {
  * (world_text_draw_glyph_with_typewriter_delay) and message-box glyph at
  * 0x801c3474 (world_text_message_box_thread, ..._delay_2). The menu text state
  * and the LoadImage RECT follow it in memory but are separate globals. */
-typedef struct battle_text_glyph_state {
+typedef struct text_glyph_state {
     u16 x;            /* 0x00: pen x; the low two bits select the sub-byte pixel phase */
     s16 y;            /* 0x02: pen y */
     u16 glyph;        /* 0x04: character code; 0xfa is the blank that skips the upload */
     u8 _unused_06[6]; /* 0x06 */
     s16 mode;         /* 0x0c: 0 blanks the image, 0x10 draws it; the message box also accepts 0x20 */
     s16 palette;      /* 0x0e */
-} battle_text_glyph_state_t;
-typedef char battle_text_glyph_state_size_must_be_0x10[(sizeof(battle_text_glyph_state_t) == 0x10) ? 1 : -1];
+} text_glyph_state_t;
+typedef char text_glyph_state_size_must_be_0x10[(sizeof(text_glyph_state_t) == 0x10) ? 1 : -1];
 
 /* unit */
 /* Provisional 0x2d0-byte double-buffered frame of the unit editor panel
  * (WORLD 0x801a3494, BATTLE 0x801730f8). The first 0x2a4 bytes are laid out
- * as battle_menu_status_panel_buffer_t (draw modes, sprites, tiles and lines),
- * and the trailing draw-area pair follows world_panel_frame_t. */
-typedef struct world_unit_editor_frame {
-    DR_MODE draw_modes[3];                        /* 0x000: image pages 0, 2 and 4 */
-    SPRT sprites[24];                             /* 0x024: 19 panel sprites, then 5 item icons */
-    TILE tiles[2];                                /* 0x204 */
-    LINE_F2 lines[8];                             /* 0x224 */
-    world_menu_palette_primitives_t* palette;     /* 0x2a4 */
-    world_gfx_scaled_draw_area_pair_t draw_areas; /* 0x2a8 */
-} world_unit_editor_frame_t;
-typedef char world_unit_editor_frame_size_must_be_0x2d0[sizeof(world_unit_editor_frame_t) == 0x2d0 ? 1 : -1];
+ * as menu_status_panel_buffer_t (draw modes, sprites, tiles and lines),
+ * and the trailing draw-area pair follows menu_panel_frame_t. */
+typedef struct menu_unit_editor_frame {
+    DR_MODE draw_modes[3];              /* 0x000: image pages 0, 2 and 4 */
+    SPRT sprites[24];                   /* 0x024: 19 panel sprites, then 5 item icons */
+    TILE tiles[2];                      /* 0x204 */
+    LINE_F2 lines[8];                   /* 0x224 */
+    menu_palette_primitives_t* palette; /* 0x2a4 */
+    scaled_draw_area_pair_t draw_areas; /* 0x2a8 */
+} menu_unit_editor_frame_t;
+typedef char menu_unit_editor_frame_size_must_be_0x2d0[sizeof(menu_unit_editor_frame_t) == 0x2d0 ? 1 : -1];
 
 /* Colour and endpoint offsets of the unit editor panel's eight frame lines,
  * relative to the panel box, seven bytes per line (WORLD 0x80156198, BATTLE
  * 0x80168d0c). The loop walks the table with a byte offset stepping by 7 (the
  * target's induction variable and exit test), so the fields are addressed by
  * offset, as for world_menu_line_layout_t. */
-enum world_unit_editor_line_layout_offset {
-    WORLD_UNIT_EDITOR_LINE_R = 0,
-    WORLD_UNIT_EDITOR_LINE_G = 1,
-    WORLD_UNIT_EDITOR_LINE_B = 2,
-    WORLD_UNIT_EDITOR_LINE_X0 = 3,
-    WORLD_UNIT_EDITOR_LINE_Y0 = 4,
-    WORLD_UNIT_EDITOR_LINE_X1 = 5,
-    WORLD_UNIT_EDITOR_LINE_Y1 = 6,
-    WORLD_UNIT_EDITOR_LINE_SIZE = 7
+enum menu_unit_editor_line_layout_offset {
+    MENU_UNIT_EDITOR_LINE_R = 0,
+    MENU_UNIT_EDITOR_LINE_G = 1,
+    MENU_UNIT_EDITOR_LINE_B = 2,
+    MENU_UNIT_EDITOR_LINE_X0 = 3,
+    MENU_UNIT_EDITOR_LINE_Y0 = 4,
+    MENU_UNIT_EDITOR_LINE_X1 = 5,
+    MENU_UNIT_EDITOR_LINE_Y1 = 6,
+    MENU_UNIT_EDITOR_LINE_SIZE = 7
 };
 
 /* Provisional 0x2ec-byte double-buffered page of the unit status panel
  * (pairs at 0x801a25f8, first page per mode from g_world_unit_status_first_page_by_mode). */
-typedef struct world_unit_status_page {
-    POLY_G4 bars[3];                         /* 0x000: HP/MP/CT gauges */
-    DR_MODE draw_mode_1;                     /* 0x06c */
-    DR_MODE draw_mode_0;                     /* 0x078 */
-    world_menu_palette_primitives_t palette; /* 0x084 */
-    POLY_FT4 quads[5];                       /* 0x170 */
-    SPRT sprites[7];                         /* 0x238 */
-    POLY_FT4 portrait;                       /* 0x2c4 */
-} world_unit_status_page_t;
+typedef struct menu_unit_status_page {
+    POLY_G4 bars[3];                   /* 0x000: HP/MP/CT gauges */
+    DR_MODE draw_mode_1;               /* 0x06c */
+    DR_MODE draw_mode_0;               /* 0x078 */
+    menu_palette_primitives_t palette; /* 0x084 */
+    POLY_FT4 quads[5];                 /* 0x170 */
+    SPRT sprites[7];                   /* 0x238 */
+    POLY_FT4 portrait;                 /* 0x2c4 */
+} menu_unit_status_page_t;
 
 /* Provisional 0xF0-byte double-buffered frame of the unit summary panel. */
-typedef struct world_unit_summary_frame {
-    SPRT sprites[7];                          /* 0x00: [0] name/job, [1]-[3] numbers, [6] zodiac */
-    DR_MODE draw_mode_0;                      /* 0x8c */
-    DR_MODE draw_mode_1;                      /* 0x98 */
-    world_menu_palette_primitives_t* palette; /* 0xa4 */
-    DR_OFFSET draw_offset_a;                  /* 0xa8 */
-    DR_OFFSET draw_offset_b;                  /* 0xb4 */
-    point16_t offset_a;                       /* 0xc0 */
-    point16_t offset_b;                       /* 0xc4 */
-    POLY_FT4 portrait;                        /* 0xc8 */
-} world_unit_summary_frame_t;
+typedef struct menu_unit_summary_frame {
+    SPRT sprites[7];                    /* 0x00: [0] name/job, [1]-[3] numbers, [6] zodiac */
+    DR_MODE draw_mode_0;                /* 0x8c */
+    DR_MODE draw_mode_1;                /* 0x98 */
+    menu_palette_primitives_t* palette; /* 0xa4 */
+    DR_OFFSET draw_offset_a;            /* 0xa8 */
+    DR_OFFSET draw_offset_b;            /* 0xb4 */
+    point16_t offset_a;                 /* 0xc0 */
+    point16_t offset_b;                 /* 0xc4 */
+    POLY_FT4 portrait;                  /* 0xc8 */
+} menu_unit_summary_frame_t;
 
 /* First argument of *_unit_start_view_thread and value of g_*_unit_view_mode:
  * the row of g_*_unit_view_thread_sets the supervisor keeps running. Each
@@ -1984,12 +1993,12 @@ typedef enum unit_stats_panel {
 /* Provisional: 0x30-byte unit-view thread set at 0x801564d0, indexed by the
  * view mode. Each of the four slots names a thread entry (or -1), the
  * scheduler slot it runs in, and the task id it must carry. */
-typedef struct world_unit_view_thread_set {
+typedef struct menu_unit_view_thread_set {
     void (*entries[4])(void); /* 0x00 */
     s32 thread_ids[4];        /* 0x10 */
     s32 task_ids[4];          /* 0x20 */
-} world_unit_view_thread_set_t;
-typedef char world_unit_view_thread_set_size_must_be_0x30[(sizeof(world_unit_view_thread_set_t) == 0x30) ? 1 : -1];
+} menu_unit_view_thread_set_t;
+typedef char menu_unit_view_thread_set_size_must_be_0x30[(sizeof(menu_unit_view_thread_set_t) == 0x30) ? 1 : -1];
 
 /* other */
 /* One selectable save-file icon: 16-colour CLUT plus 16x16 4bpp image. */

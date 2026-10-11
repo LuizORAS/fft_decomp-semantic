@@ -25,11 +25,11 @@
 void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_unit) {
     s32 mode;
     s32 message;
-    world_menu_entry_t* parameter;
+    menu_entry_t* parameter;
     battle_stats_t* unit;
 
     g_battle_active_menu = menu;
-    parameter = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    parameter = (menu_entry_t*)battle_thread_get_current_parameter_1();
     mode = 0;
     message = 0;
     unit = battle_unit_get_attacker_data_pointer();

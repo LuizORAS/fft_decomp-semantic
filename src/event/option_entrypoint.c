@@ -3,7 +3,7 @@
 
 /* Decode saved option fields and dispatch the requested option-menu mode. */
 void option_entrypoint(s32 menu_type) {
-    world_menu_entry_t* menu = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    menu_entry_t* menu = (menu_entry_t*)battle_thread_get_current_parameter_1();
     s32 index;
     u32 packed = g_main_game_options.value;
 

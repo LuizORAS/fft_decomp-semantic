@@ -9,7 +9,7 @@
  * Compiled at -O1; the (s16) casts keep the centring offset from being
  * reassociated onto pos. */
 void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, rgb24_t* rgb, s32 ot_index) {
-    world_oriented_quad_t sprite;
+    oriented_quad_t sprite;
     s32 scale;
     s32 w;
     s32 h;

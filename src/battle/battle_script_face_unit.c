@@ -23,7 +23,7 @@ void battle_script_face_unit(const event_face_unit_parameters_t* parameters, s32
     s32 reverse;
     s32 dx;
     s32 dy;
-    world_unit_animation_state_t* state;
+    unit_animation_state_t* state;
 
     order = 1;
     misc_id = battle_script_load_halfword(parameters->first_unit_id_le);

@@ -12,9 +12,9 @@
  * makes loop.c discover the track giv before the script-variable and values
  * givs, which gives the target's induction-increment order. */
 void battle_camera_fusion_thread(void) {
-    battle_camera_track_t* tracks;
-    battle_camera_track_t* track;
-    battle_camera_key_t* key;
+    camera_track_t* tracks;
+    camera_track_t* track;
+    camera_key_t* key;
     u8* script;
     u8* cursor;
     s32 values[EVENT_CAMERA_COMPONENT_COUNT];
@@ -26,9 +26,9 @@ void battle_camera_fusion_thread(void) {
     s32 opcode;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
-    tracks = battle_menu_alloc_memory(sizeof(battle_camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
+    tracks = battle_menu_alloc_memory(sizeof(camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
     script = (u8*)battle_thread_get_current_parameter_1();
-    battle_clear_menu_render_buffer(tracks, sizeof(battle_camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
+    battle_clear_menu_render_buffer(tracks, sizeof(camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
 
     /* One key per CAMERA instruction up to the end marker, plus the starting key. */
     cursor = script;
@@ -76,7 +76,7 @@ void battle_camera_fusion_thread(void) {
                         /* Indexed field access replaces retail's two additions with a shift. */
                         value = battle_script_load_halfword(
                             cursor + i + i + offsetof(event_camera_instruction_t, parameters.values));
-                        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
+                        if (value == CAMERA_FUSION_HOLD_SENTINEL) {
                             if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                                 value = values[i] / 1024;
                             } else {

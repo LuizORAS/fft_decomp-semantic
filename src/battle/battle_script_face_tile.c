@@ -16,7 +16,7 @@ void battle_script_face_tile(const event_face_tile_parameters_t* parameters) {
     u16 unit_id;
     s32 state;
     s32 i;
-    world_unit_animation_state_t* rotation_state;
+    unit_animation_state_t* rotation_state;
     s32 order;
     s32 facing;
     s32 dx;

@@ -18,7 +18,7 @@ enum battle_menu_line_layout_offset {
  * line primitives, and a trailing sprite. The signed layout bytes select each
  * endpoint and whether it receives the rectangle width or height.
  */
-void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, world_menu_palette_primitives_t* menu) {
+void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, menu_palette_primitives_t* menu) {
     LINE_F2* line;
     s32 index;
     s32 offset;

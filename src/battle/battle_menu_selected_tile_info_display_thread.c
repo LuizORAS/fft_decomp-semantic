@@ -14,7 +14,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
     s32 i;
     s32 j;
     s32 frame;
-    world_menu_quad_page_t* page;
+    menu_quad_page_t* page;
     POLY_GT4* quad;
 
     g_battle_menu_hide_numeric_values = 0;
@@ -32,12 +32,12 @@ void battle_menu_selected_tile_info_display_thread(void) {
     battle_menu_init_sprite_array(page->sprites, 2, 0x7CBC);
     page->sprites[1].clut = 0x7D7C;
     for (i = 0; i < 2; i++) {
-        battle_gfx_init_image_loading((world_texture_prim_t*)&page->sprites[i], &g_battle_menu_texture_location,
+        battle_gfx_init_image_loading((texture_primitive_t*)&page->sprites[i], &g_battle_menu_texture_location,
             &g_battle_tile_info_image_location, &g_battle_tile_info_image_params[i]);
     }
-    battle_text_configure_sprite_vram(&rect, 0x18, 0x10, (world_texture_prim_t*)&page->sprites[0], 0);
+    battle_text_configure_sprite_vram(&rect, 0x18, 0x10, (texture_primitive_t*)&page->sprites[0], 0);
     battle_copy_bytes(
-        &g_battle_menu_height_display_pages[1], &g_battle_menu_height_display_pages[0], sizeof(world_menu_quad_page_t));
+        &g_battle_menu_height_display_pages[1], &g_battle_menu_height_display_pages[0], sizeof(menu_quad_page_t));
 
     for (frame = 0;; frame++) {
         page = &g_battle_menu_height_display_pages[frame & 1];

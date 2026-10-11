@@ -13,13 +13,13 @@ void world_menu_run_jobstts_thread(void) {
     world_menu_set_transition_active_flag();
     world_sound_set_effect_to_confirm();
     world_menu_reserve_high_overlay(0x20000);
-    world_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_JOBSTTS);
+    world_menu_request_open_companion_executable(COMPANION_OVERLAY_JOBSTTS);
     world_thread_wait_frames(2);
-    g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS;
+    g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_JOBSTTS;
     do {
         g_world_menu_new_button_input = 0;
         world_thread_yield();
-    } while (g_world_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
+    } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
     g_world_menu_new_button_input = 0;
     world_menu_free_high_overlay();
     world_thread_wait_frames(2);

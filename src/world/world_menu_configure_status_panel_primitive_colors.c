@@ -8,7 +8,7 @@
  * variables and does not reproduce the target loop registers.
  */
 void world_menu_configure_status_panel_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state) {
+    menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state) {
     s32 i;
     s32 clut;
 

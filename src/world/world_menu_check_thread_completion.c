@@ -8,7 +8,7 @@
  * selector is nonzero. Completion waits for all other task-3 threads.
  */
 s32 world_menu_check_thread_completion(u32* input) {
-    world_menu_entry_t* parameter;
+    menu_entry_t* parameter;
     s32 i;
 
     if (g_world_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_TEXT].is_running == 0 && world_menu_is_input_allowed() != 0

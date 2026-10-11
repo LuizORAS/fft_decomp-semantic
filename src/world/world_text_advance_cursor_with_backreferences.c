@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* WORLD twin of battle_text_advance_cursor_with_backreferences (0x80130718). */
-u8* world_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor) {
+u8* world_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor) {
     s32 remaining;
     u8 command;
 
