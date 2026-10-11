@@ -19,7 +19,9 @@
 void card_save_run_menu(s32 unused) {
     TILE tile_storage[20];
     u32 otag_storage[0x80];
-    u8 context_storage[0x1f8];
+    card_graphics_context_t context_storage[2];
+    /* The retail frame reserves 16 bytes beyond the two contexts. */
+    u8 unused_context_tail[0x10];
     s32 leading_alignment;
     s32 input;
     s32 unused_local;
@@ -32,8 +34,8 @@ void card_save_run_menu(s32 unused) {
     g_card_gfx_otag_length = 0x40;
     g_card_gfx_poly_ft4_capacity = 0x258;
     g_card_gfx_tile_capacity = 10;
-    card_gfx_init_contexts((card_graphics_context_t*)context_storage, otag_storage, 0, 0, 0,
-        g_card_gfx_poly_ft4_buffers, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, tile_storage, 0, 0, 0, 0, 0, 0, 0, 0);
+    card_gfx_init_contexts(context_storage, otag_storage, 0, 0, 0, g_card_gfx_poly_ft4_buffers, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, tile_storage, 0, 0, 0, 0, 0, 0, 0, 0);
     card_save_init_menu_graphics();
     music_slot = main_sound_open_music_into_free_slot(MAIN_MUSIC_SAVE);
     while (main_sound_is_music_loading_stub() != 0) { }
