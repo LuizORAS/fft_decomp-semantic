@@ -77,7 +77,7 @@ void world_script_update_tutorial_controller_input(void) {
         }
         g_world_input_newly_pressed = filtered_input;
         for (index = 0; index < 16; index++) {
-            s32 mask = 1 << index;
+            s32 mask = 1U << index;
 
             if (mask & g_world_input_newly_pressed) {
                 if (mask & g_world_script_tutorial_previous_input) {
@@ -95,21 +95,21 @@ void world_script_update_tutorial_controller_input(void) {
             if (index == 4) {
                 index = 12;
             }
-            if (current_input & (1 << index)) {
+            if (current_input & (1U << index)) {
                 counter_base[index]++;
             } else {
                 counter_base[index] = 0;
             }
             if ((counter_base[index] >= initial_delay && counter_base[index] % repeat_period != 0)
                 || ((s32)counter_base[index] >= 2 && counter_base[index] < initial_delay)) {
-                current_input &= ~(1 << index);
+                current_input &= ~(1U << index);
             }
             if (counter_base[index] >= initial_delay) {
-                current_input |= 1 << (index + 16);
+                current_input |= 1U << (index + 16);
             }
             if ((counter_base[index] >= initial_delay && counter_base[index] % secondary_repeat_period != 0)
                 || ((s32)counter_base[index] >= 2 && counter_base[index] < initial_delay << 1)) {
-                filtered_input &= ~(1 << index);
+                filtered_input &= ~(1U << index);
             }
             index++;
         } while (index < 16);

@@ -46,7 +46,7 @@ void world_input_update_controller(void) {
             if (g_world_input_activation_timer >= 4) {
                 g_world_input_activation_timer = 0;
                 for (index = 0; index < 16; index++) {
-                    bit = 1 << index;
+                    bit = 1U << index;
                     if (current_input & bit) {
                         current_input &= bit;
                         g_world_input_latched_button = bit;
@@ -63,7 +63,7 @@ void world_input_update_controller(void) {
         }
         g_world_input_newly_pressed = filtered_input;
         for (index = 0; index < 16; index++) {
-            s32 mask = 1 << index;
+            s32 mask = 1U << index;
 
             if (mask & g_world_input_newly_pressed) {
                 if (mask & g_world_input_previous) {
@@ -80,21 +80,21 @@ void world_input_update_controller(void) {
             if (index == 4) {
                 index = 12;
             }
-            if (current_input & (1 << index)) {
+            if (current_input & (1U << index)) {
                 counter_base[index]++;
             } else {
                 counter_base[index] = 0;
             }
             if ((counter_base[index] >= initial_delay && counter_base[index] % repeat_period != 0)
                 || (counter_base[index] >= 2 && counter_base[index] < initial_delay)) {
-                current_input &= ~(1 << index);
+                current_input &= ~(1U << index);
             }
             if (counter_base[index] >= initial_delay) {
-                current_input |= 1 << (index + 16);
+                current_input |= 1U << (index + 16);
             }
             if ((counter_base[index] >= initial_delay && counter_base[index] % secondary_repeat_period != 0)
                 || (counter_base[index] >= 2 && counter_base[index] < initial_delay << 1)) {
-                filtered_input &= ~(1 << index);
+                filtered_input &= ~(1U << index);
             }
         }
         current_input &= 0xf00ff00f;
