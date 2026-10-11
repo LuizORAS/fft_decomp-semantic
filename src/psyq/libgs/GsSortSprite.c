@@ -4,8 +4,7 @@
 #include "psx/stddef.h"
 #include "psx/types.h"
 
-/* The target tests scalex/scaley against the identity ONE/ONE (0x10001000) with a
- * single word load and compare. */
+/* The target compares the adjacent neutral x/y scales with one word load. */
 #define GS_SPRITE_SCALE_WORD(sp) (*(s32*)&sp->scalex)
 
 /*
@@ -59,18 +58,18 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
     if (!(attr & GsDOFF) && sp->w != 0 && sp->h != 0) {
         packet = GsOUT_PACKET_P;
         if (((attr >> 27) & 1)
-            | (GS_SPRITE_SCALE_WORD(sp) == 0x10001000 && sp->rotate == 0 && (attr & 0xc00000) == 0)) {
+            | (GS_SPRITE_SCALE_WORD(sp) == (ONE | (ONE << 16)) && sp->rotate == 0 && (attr & 0xc00000) == 0)) {
             draw_mode = packet;
             /* Share one DMA tag: the mode word occupies this primitive view's tag slot. */
             sprt = (SPRT*)draw_mode->code;
             words = (u32*)sprt;
             x = sp->x + GsORGOFSX;
             y = sp->y + GsORGOFSY;
-            dr_mode = 0xe1000200;
+            dr_mode = (PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE) | 0x200);
             draw_mode->code[0] = (sp->tpage & 0x1f) | (((attr >> 17) & 0x180) | dr_mode) | ((attr >> 23) & 0x60);
-            sprt_mode = (attr >> 5) & 0x02000000;
-            sprt_shade = (attr << 18) & 0x01000000;
-            sprt_code = 0x64000000;
+            sprt_mode = (attr >> 5) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT);
+            sprt_shade = (attr << 18) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_RAW_TEXTURE);
+            sprt_code = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SPRT);
             /* Word indexing preserves scheduling; direct field-address stores change it. */
             words[offsetof(SPRT, r0) / sizeof(*words)]
                 = sprt_mode | (sprt_shade | sprt_code) | (sp->b << 16) | (sp->g << 8) | sp->r;
@@ -78,7 +77,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
             words[offsetof(SPRT, u0) / sizeof(*words)]
                 = sp->u | (sp->v << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3f0000);
             words[offsetof(SPRT, w) / sizeof(*words)] = sp->w | (sp->h << 16);
-            packet = psyq_gs_sort_sprite_bg(packet, ot, pri, 5);
+            packet = psyq_gs_sort_sprite_bg(packet, ot, pri, PSYQ_GPU_PACKET_WORDS(SPRT) + 1);
         } else {
             if (sp->rotate == 0) {
                 mat = GsIDMATRIX;
@@ -86,7 +85,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
                 setVector(&rot, 0, 0, sp->rotate / 360);
                 RotMatrix(&rot, &mat);
             }
-            if (GS_SPRITE_SCALE_WORD(sp) != 0x10001000) {
+            if (GS_SPRITE_SCALE_WORD(sp) != (ONE | (ONE << 16))) {
                 setVector(&vec, sp->scalex, sp->scaley, 0);
                 ScaleMatrix(&mat, &vec);
             }
@@ -118,9 +117,9 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
             poly = packet;
             /* GPU words preserve the shared tail store; member stores change scheduling. */
             words = (u32*)poly;
-            mode = (attr >> 5) & 0x02000000;
-            shade = (attr << 18) & 0x01000000;
-            code = 0x2c000000;
+            mode = (attr >> 5) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT);
+            shade = (attr << 18) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_RAW_TEXTURE);
+            code = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_POLY_FT4);
             words[offsetof(POLY_FT4, r0) / sizeof(*words)]
                 = mode | (shade | code) | (sp->b << 16) | (sp->g << 8) | sp->r;
             words[offsetof(POLY_FT4, x0) / sizeof(*words)] = sxy0;
@@ -133,7 +132,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
             words[offsetof(POLY_FT4, u2) / sizeof(*words)] = u_left | (v_bottom << 8);
             words[offsetof(POLY_FT4, x3) / sizeof(*words)] = sxy3;
             words[offsetof(POLY_FT4, u3) / sizeof(*words)] = u_right | (v_bottom << 8);
-            packet = psyq_gs_sort_sprite_bg(packet, ot, pri, 9);
+            packet = psyq_gs_sort_sprite_bg(packet, ot, pri, PSYQ_GPU_PACKET_WORDS(POLY_FT4));
         }
         GsOUT_PACKET_P = packet;
     }

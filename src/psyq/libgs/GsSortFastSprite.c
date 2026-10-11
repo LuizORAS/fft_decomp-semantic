@@ -29,8 +29,8 @@ void GsSortFastSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
         draw_mode = (DR_TPAGE*)GsOUT_PACKET_P;
         /* Share one DMA tag: the mode word occupies this primitive view's tag slot. */
         packet = (SPRT*)draw_mode->code;
-        dr_mode = 0xE1000200;
-        packet_addr = (u32)draw_mode & 0xFFFFFF;
+        dr_mode = (PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE) | 0x200);
+        packet_addr = (u32)draw_mode & PSYQ_GPU_DMA_ADDRESS_MASK;
         sprite_y = sp->y;
         sprite_x = sp->x;
         tpage_value = sp->tpage & 0x1F;
@@ -44,15 +44,15 @@ void GsSortFastSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
         red = sp->r;
         /* GPU command words retain the packed 32-bit stores. */
         *(u32*)&packet->x0 = (sum_x & 0xFFFF) | (sum_y << 16);
-        mode = (attr >> 5) & 0x02000000;
-        shade = (attr << 18) & 0x01000000;
-        sprite_code = 0x64000000;
+        mode = (attr >> 5) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT);
+        shade = (attr << 18) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_RAW_TEXTURE);
+        sprite_code = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SPRT);
         *(u32*)&packet->r0 = mode | (shade | sprite_code) | (blue << 16) | (green << 8) | red;
         *(u32*)&packet->u0 = sp->u | (sp->v << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3F0000);
         *(u32*)&packet->w = sp->w | (sp->h << 16);
         tag = &ot->org[pri] - ot->offset;
         /* Whole GPU tag transfers match; bitfield access adds masking and a read-modify-write. */
-        draw_mode->tag = *(u32*)tag + 0x05000000;
+        draw_mode->tag = *(u32*)tag + ((PSYQ_GPU_PACKET_WORDS(SPRT) + 1) << 24);
         *(u32*)tag = packet_addr;
         GsOUT_PACKET_P = (PACKET*)(packet + 1);
     }

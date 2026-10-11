@@ -37,8 +37,9 @@ void GsSortFlipSprite(GsSPRITE* sp, GsOT* otp, u16 pri) {
         }
         /* Two temporaries: folded into one expression, GCC re-associates
          * the 0x2c000000 constant onto the first term. */
-        mode = (attr >> 5) & 0x02000000;
-        code = ((attr << 18) & 0x01000000) | 0x2c000000;
+        mode = (attr >> 5) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_SEMI_TRANSPARENT);
+        code = ((attr << 18) & PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_RAW_TEXTURE))
+            | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_POLY_FT4);
         /* GPU words preserve the retail stores; member stores narrow the writes. */
         *(u32*)&p->r0 = mode | code | (sp->b << 16) | (sp->g << 8) | sp->r;
         *(u32*)&p->x0 = (x & 0xffff) | (y << 16);
@@ -50,6 +51,6 @@ void GsSortFlipSprite(GsSPRITE* sp, GsOT* otp, u16 pri) {
         *(u32*)&p->u2 = u0 | (v1 << 8);
         *(u32*)&p->x3 = ((x + sp->w) & 0xffff) | ((y + sp->h) << 16);
         *(u32*)&p->u3 = u1 | (v1 << 8);
-        GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)p, otp, pri, 9);
+        GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)p, otp, pri, PSYQ_GPU_PACKET_WORDS(POLY_FT4));
     }
 }

@@ -16,7 +16,7 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
 
     src = prim;
     dst = (u32*)GsOUT_PACKET_P;
-    len = 4;
+    len = PSYQ_GPU_PACKET_WORDS(POLY_F3);
     code = getcode(src);
     gouraud = code & 0x10;
     quad = code & 0x8;
