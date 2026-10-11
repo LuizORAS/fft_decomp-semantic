@@ -361,6 +361,9 @@ enum {
     BATTLE_EFFECT_ABILITY_FLAG_ITEM = 0x800, /* set on the Item abilities: battle_effect_is_item_ability */
 };
 
+/* One resident header and disc-table slot for each 9-bit effect file ID. */
+enum { BATTLE_EFFECT_FILE_ID_COUNT = 512 };
+
 /* The effect files the code names by number. */
 enum {
     BATTLE_EFFECT_FILE_CURE = 1, /* loaded in place of a file of no size */
@@ -1796,7 +1799,7 @@ extern battle_effect_palette_section_t* g_battle_effect_palette_ptr;
 extern battle_effect_emitter_values_t g_battle_effect_trap_particle_configs[17];
 extern s16 g_battle_effect_root_record_index;
 extern psyq_tmd_header_t* g_battle_effect_model_files[];
-extern file_extent_t g_battle_effect_disc_entries[];
+extern file_extent_t g_battle_effect_disc_entries[BATTLE_EFFECT_FILE_ID_COUNT];
 extern battle_effect_secondary_state_t g_battle_effect_secondary_state;
 /* Tile target of the current effect: emitter origin CURSOR_TILE, homing CURSOR_TILE and camera source
  * CURSOR_TILE. */
@@ -1810,7 +1813,7 @@ extern battle_effect_secondary_init_t g_battle_effect_context;
 extern u16 g_battle_effect_free_slot_head;
 extern struct battle_effect_secondary_data* g_battle_effect_current_secondary;
 extern u32 g_battle_effect_current_slot_id;
-extern effect_file_header_t* g_battle_effect_data_ptrs[];
+extern effect_file_header_t* g_battle_effect_data_ptrs[BATTLE_EFFECT_FILE_ID_COUNT];
 extern battle_effect_callback_t g_battle_effect_file_functions[];
 extern u8* g_battle_effect_frame_data;
 extern u8* g_battle_effect_frame_data_start;
