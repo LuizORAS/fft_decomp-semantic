@@ -24,7 +24,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
     unit_raw_stat_t* raw;
 
     cap = 100;
-    max = 999;
+    max = UNIT_HP_MP_MAX;
     brave_flag = mode & 1;
     if (unit->unit_flags & UNIT_FLAG_EGG) {
         cap = 10;
@@ -64,11 +64,11 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
                 value = max;
             }
         }
-        if (i == UNIT_RAW_STAT_SPEED && value >= 0x33) {
-            value = 0x32;
+        if (i == UNIT_RAW_STAT_SPEED && value > UNIT_SPEED_MAX) {
+            value = UNIT_SPEED_MAX;
         }
-        if (i >= UNIT_RAW_STAT_PHYSICAL_ATTACK && value >= 0x64) {
-            value = 0x63;
+        if (i >= UNIT_RAW_STAT_PHYSICAL_ATTACK && value > UNIT_ATTACK_STAT_MAX) {
+            value = UNIT_ATTACK_STAT_MAX;
         }
         switch (i) {
         case UNIT_RAW_STAT_HP:

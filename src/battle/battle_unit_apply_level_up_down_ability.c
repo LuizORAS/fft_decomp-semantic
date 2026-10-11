@@ -14,8 +14,8 @@ s32 battle_unit_apply_level_up_down_ability(void) {
     if (flags & BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP) {
         lv = g_battle_action_target->level + 1;
         dir = 0;
-        if (lv >= 100) {
-            lv = 99;
+        if (lv > UNIT_LEVEL_MAX) {
+            lv = UNIT_LEVEL_MAX;
         }
     } else if (flags & BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN) {
         lv = g_battle_action_target->level - 1;

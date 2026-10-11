@@ -17,8 +17,8 @@ u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
 
     raw_stats = party_unit->raw_stats.values;
     growth_table = g_main_job_data_pointer[party_unit->job_id].stat_growths;
-    if (level >= 100) {
-        level = 99;
+    if (level > UNIT_LEVEL_MAX) {
+        level = UNIT_LEVEL_MAX;
     }
     levels_to_gain = level - current_level;
     if (levels_to_gain <= 0) {

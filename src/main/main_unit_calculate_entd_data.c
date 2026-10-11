@@ -97,8 +97,8 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
         level = 1;
     }
     value = level;
-    if (value >= 100) {
-        value = 99;
+    if (value > UNIT_LEVEL_MAX) {
+        value = UNIT_LEVEL_MAX;
     }
     unit->level = value;
 
@@ -132,8 +132,8 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     unit->faith = value;
     unit->original_faith = value;
     value = entd->experience;
-    if (value >= 100) {
-        value = (100 * rand()) / 0x8000;
+    if (value >= UNIT_LEVEL_UP_EXPERIENCE) {
+        value = (UNIT_LEVEL_UP_EXPERIENCE * rand()) / 0x8000;
     }
     unit->experience = value;
     unit->quote_name_id = entd->name_id;

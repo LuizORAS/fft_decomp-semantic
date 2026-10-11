@@ -11,7 +11,7 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
     u16 capped;
 
     memset(unit, 0, sizeof(equip_unit_data_t));
-    unit->level = stats->level < 100 ? stats->level : 99;
+    unit->level = stats->level <= UNIT_LEVEL_MAX ? stats->level : UNIT_LEVEL_MAX;
     if (stats->team_flags & BATTLE_TEAM_MASK) {
         unit->team_kind = 1;
     }
@@ -24,25 +24,25 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
         value = i + 1;
     }
     unit->list_index = value;
-    unit->experience = stats->experience < 100 ? stats->experience : 99;
+    unit->experience = stats->experience < UNIT_LEVEL_UP_EXPERIENCE ? stats->experience : UNIT_LEVEL_EXPERIENCE_MAX;
     unit->unit_index = stats->entd_slot;
-    capped = 999;
-    if (stats->hp < 1000) {
+    capped = UNIT_HP_MP_MAX;
+    if (stats->hp <= UNIT_HP_MP_MAX) {
         capped = stats->hp;
     }
     unit->hp = capped;
-    capped = 999;
-    if (stats->max_hp < 1000) {
+    capped = UNIT_HP_MP_MAX;
+    if (stats->max_hp <= UNIT_HP_MP_MAX) {
         capped = stats->max_hp;
     }
     unit->max_hp = capped;
-    capped = 999;
-    if (stats->mp < 1000) {
+    capped = UNIT_HP_MP_MAX;
+    if (stats->mp <= UNIT_HP_MP_MAX) {
         capped = stats->mp;
     }
     unit->mp = capped;
-    capped = 999;
-    if (stats->max_mp < 1000) {
+    capped = UNIT_HP_MP_MAX;
+    if (stats->max_mp <= UNIT_HP_MP_MAX) {
         capped = stats->max_mp;
     }
     unit->max_mp = capped;

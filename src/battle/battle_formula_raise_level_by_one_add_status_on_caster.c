@@ -15,7 +15,7 @@ void battle_formula_raise_level_by_one_add_status_on_caster(void) {
     battle_formula_apply_full_hp_mp_heal();
     battle_formula_apply_undead_reversal();
     one = 1;
-    if (g_battle_action_target->level >= 0x63) {
+    if (g_battle_action_target->level >= UNIT_LEVEL_MAX) {
         g_battle_action_target_data->attack_type = 0;
         battle_formula_force_attack_miss();
         return;

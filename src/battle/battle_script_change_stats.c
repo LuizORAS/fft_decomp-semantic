@@ -34,17 +34,17 @@ void battle_script_change_stats(const event_change_stats_parameters_t* parameter
                         }
                         if (parameters->stat == EVENT_CHANGE_STATS_CT) {
                             value = unit->ct + delta;
-                            battle_script_clamp_s32_to_range(&value, 0, 100);
+                            battle_script_clamp_s32_to_range(&value, 0, UNIT_TURN_CT_THRESHOLD);
                             unit->ct = value;
                         }
                         if (parameters->stat == EVENT_CHANGE_STATS_BRAVE) {
                             value = unit->brave + delta;
-                            battle_script_clamp_s32_to_range(&value, 0, 100);
+                            battle_script_clamp_s32_to_range(&value, 0, UNIT_BRAVE_FAITH_MAX);
                             unit->brave = value;
                         }
                         if (parameters->stat == EVENT_CHANGE_STATS_FAITH) {
                             value = unit->faith + delta;
-                            battle_script_clamp_s32_to_range(&value, 0, 100);
+                            battle_script_clamp_s32_to_range(&value, 0, UNIT_BRAVE_FAITH_MAX);
                             unit->faith = value;
                         }
                     }

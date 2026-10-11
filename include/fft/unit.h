@@ -684,6 +684,21 @@ typedef enum unit_inflict_status_mode {
 } unit_inflict_status_mode_e;
 
 /* unit */
+/* Character progression; excess EXP is discarded on a level-up. */
+enum {
+    UNIT_LEVEL_MAX = 99,
+    UNIT_LEVEL_UP_EXPERIENCE = 100,
+    UNIT_LEVEL_EXPERIENCE_MAX = UNIT_LEVEL_UP_EXPERIENCE - 1,
+};
+
+/* Calculated stat caps; eggs use the full u16 range for HP and MP. */
+enum {
+    UNIT_HP_MP_MAX = 999,
+    UNIT_ATTACK_STAT_MAX = 99,
+    UNIT_SPEED_MAX = 50,
+    UNIT_BRAVE_FAITH_MAX = 100,
+};
+
 /* Five 24-bit raw values serialized in HP, MP, Speed, PA, MA order. */
 typedef enum unit_raw_stat_index {
     UNIT_RAW_STAT_HP = 0,

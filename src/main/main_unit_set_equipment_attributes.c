@@ -1,10 +1,6 @@
 #include "fft/battle.h"
 #include "fft/main.h"
 
-enum {
-    MAX_HP_MP_CAP = 999,
-};
-
 /* Applies equipment attribute bonuses to a unit's stats.
  *
  * Clears the equipment PA/MA/SP bonuses, recomputes the base stats, then
@@ -24,7 +20,7 @@ void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check
     u8* target;
 
     main_util_clear_byte_data(unit->equipment_attributes, sizeof(unit->equipment_attributes));
-    cap = MAX_HP_MP_CAP;
+    cap = UNIT_HP_MP_MAX;
     main_unit_calculate_actual_stats(unit, level_up_check + 1);
     unit->equipped_flags = 0;
     if ((unit->unit_flags & UNIT_FLAG_MONSTER) == 0) {
@@ -102,12 +98,12 @@ void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check
     for (j = 0; j < 3; j++) {
         value = bonus[j + 3] + bonus[j];
         if (j < 2) {
-            if (value >= 100) {
-                value = 99;
+            if (value > UNIT_ATTACK_STAT_MAX) {
+                value = UNIT_ATTACK_STAT_MAX;
             }
         } else {
-            if ((u16)value >= 51) {
-                value = 50;
+            if ((u16)value > UNIT_SPEED_MAX) {
+                value = UNIT_SPEED_MAX;
             }
         }
         bonus[j + 6] = value;

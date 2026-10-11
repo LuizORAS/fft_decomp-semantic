@@ -16,16 +16,16 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     u32 evade;
 
     memset(record, 0, sizeof(world_formation_unit_t));
-    record->level = party->level < 100 ? party->level : 99;
+    record->level = party->level <= UNIT_LEVEL_MAX ? party->level : UNIT_LEVEL_MAX;
     if (unit->formation_index >= PARTY_GUEST_SLOT_FIRST) {
         record->team_kind = 2;
     }
-    record->experience = party->experience < 100 ? party->experience : 99;
+    record->experience = party->experience < UNIT_LEVEL_UP_EXPERIENCE ? party->experience : UNIT_LEVEL_EXPERIENCE_MAX;
     record->party_index = unit->formation_index;
-    record->hp = unit->max_hp < 1000 ? unit->max_hp : 999;
-    record->max_hp = unit->max_hp < 1000 ? unit->max_hp : 999;
-    record->mp = unit->max_mp < 1000 ? unit->max_mp : 999;
-    record->max_mp = unit->max_mp < 1000 ? unit->max_mp : 999;
+    record->hp = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
+    record->max_hp = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
+    record->mp = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
+    record->max_mp = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
     record->ct = unit->ct <= UNIT_TURN_CT_THRESHOLD ? unit->ct : UNIT_TURN_CT_THRESHOLD;
     record->max_ct = UNIT_TURN_CT_THRESHOLD;
     record->identity.unit_index = unit->formation_index;

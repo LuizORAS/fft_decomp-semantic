@@ -22,7 +22,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     u32 other;
 
     memset(record, 0, sizeof(bunit_unit_data_t));
-    record->level = unit->level < 100 ? unit->level : 99;
+    record->level = unit->level <= UNIT_LEVEL_MAX ? unit->level : UNIT_LEVEL_MAX;
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         record->team_kind = 1;
     }
@@ -38,12 +38,12 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
         list_index = i + 1;
     }
     record->list_index = list_index;
-    record->experience = unit->experience < 100 ? unit->experience : 99;
+    record->experience = unit->experience < UNIT_LEVEL_UP_EXPERIENCE ? unit->experience : UNIT_LEVEL_EXPERIENCE_MAX;
     record->entd_slot = unit->entd_slot;
-    record->current_hp = unit->hp < 1000 ? unit->hp : 999;
-    record->max_hp = unit->max_hp < 1000 ? unit->max_hp : 999;
-    record->current_mp = unit->mp < 1000 ? unit->mp : 999;
-    record->max_mp = unit->max_mp < 1000 ? unit->max_mp : 999;
+    record->current_hp = unit->hp <= UNIT_HP_MP_MAX ? unit->hp : UNIT_HP_MP_MAX;
+    record->max_hp = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
+    record->current_mp = unit->mp <= UNIT_HP_MP_MAX ? unit->mp : UNIT_HP_MP_MAX;
+    record->max_mp = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
     value = UNIT_TURN_CT_THRESHOLD;
     if (unit->has_turn != 1) {
         value = unit->ct;

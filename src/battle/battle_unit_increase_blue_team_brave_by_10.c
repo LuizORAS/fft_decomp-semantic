@@ -9,8 +9,8 @@ void battle_unit_increase_blue_team_brave_by_10(void) {
         unit = battle_unit_get_stats_from_battle_id(unit_id);
         if ((unit->team_flags & BATTLE_TEAM_MASK) == BATTLE_TEAM_BLUE) {
             unit->brave += 10;
-            if (unit->brave >= 100) {
-                unit->brave = 100;
+            if (unit->brave >= UNIT_BRAVE_FAITH_MAX) {
+                unit->brave = UNIT_BRAVE_FAITH_MAX;
             }
         }
     }

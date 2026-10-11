@@ -18,8 +18,8 @@ u8 main_party_calculate_highest_level(void) {
             }
         }
     } while (i < PARTY_ROSTER_SLOT_COUNT);
-    if (highest >= 100) {
-        highest = 99;
+    if (highest > UNIT_LEVEL_MAX) {
+        highest = UNIT_LEVEL_MAX;
     }
     g_main_party_highest_level = highest;
     return highest;
