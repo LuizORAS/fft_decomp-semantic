@@ -6,7 +6,8 @@ void GsGetTimInfo(u32* tim, GsIMAGE* im) {
     u32* image;
 
     im->pmode = *tim;
-    if ((im->pmode >> 3) & 1) {
+    /* The shifted palette test retains both native bit operations. */
+    if ((im->pmode >> PSYQ_TIM_CLUT_SHIFT) & 1) {
         tim++;
         image = tim + (((psyq_tim_block_t*)tim)->size_bytes >> 2);
         tim = (u32*)&((psyq_tim_block_t*)tim)->rect;

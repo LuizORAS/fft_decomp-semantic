@@ -5,12 +5,12 @@
 int psyq_gpu_decode_tim(u32* tim, TIM_IMAGE* image) {
     /* One 32-bit cursor preserves the retail allocation; a separate block pointer adds a copy. */
     int palette_words;
-    if (*tim++ != 0x10) {
+    if (*tim++ != PSYQ_TIM_ID) {
         return -1;
     }
     image->mode = *tim++;
     if (GetGraphDebug() == 2) {
-        printf(g_psyq_gpu_tim_id_format, 0x10);
+        printf(g_psyq_gpu_tim_id_format, PSYQ_TIM_ID);
     }
     if (GetGraphDebug() == 2) {
         printf(g_psyq_gpu_tim_mode_format, image->mode);
@@ -18,7 +18,7 @@ int psyq_gpu_decode_tim(u32* tim, TIM_IMAGE* image) {
     if (GetGraphDebug() == 2) {
         printf(g_psyq_gpu_tim_address_format, tim);
     }
-    if (image->mode & 8) {
+    if (image->mode & PSYQ_TIM_HAS_CLUT) {
         palette_words = ((psyq_tim_block_t*)tim)->size_bytes >> 2;
         image->crect = &((psyq_tim_block_t*)tim)->rect;
         image->caddr = ((psyq_tim_block_t*)tim)->data;

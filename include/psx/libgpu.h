@@ -709,6 +709,11 @@ TMD_PRIM* ReadTMD(TMD_PRIM* primitive);
 
 /* driver internals */
 
+/* TIM identifier and palette-present field. */
+#define PSYQ_TIM_ID         0x10U
+#define PSYQ_TIM_HAS_CLUT   0x08U
+#define PSYQ_TIM_CLUT_SHIFT 3
+
 /* TIM palette and pixel blocks carry a byte length, VRAM rectangle and payload. */
 typedef struct {
     u32 size_bytes;
