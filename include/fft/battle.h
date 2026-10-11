@@ -4409,6 +4409,21 @@ typedef struct effect_particle_vertex_emitter_view {
 typedef char
     assert_effect_particle_vertex_emitter_view_size[sizeof(effect_particle_vertex_emitter_view_t) == 0xc4 ? 1 : -1];
 
+/* The existing 0xc4-byte geometry record, interpreted by its owning renderer.
+ * The interpolation helpers read the particle-emitter slots shared by these
+ * layouts; renderer-specific fields retain their own names. */
+typedef union effect_geometry_record {
+    effect_geometry_entry_t emitter;
+    effect_textured_quad_geometry_view_t textured_quad;
+    effect_particle_ribbon_geometry_view_t particle_ribbon;
+    effect_polar_mesh_geometry_view_t polar_mesh;
+    effect_ring_mesh_geometry_view_t ring_mesh;
+    effect_summon_mesh_geometry_view_t summon_mesh;
+    effect_tentacle_mesh_geometry_view_t tentacle_mesh;
+    effect_particle_vertex_emitter_view_t particle_vertex_emitter;
+} effect_geometry_record_t;
+typedef char assert_effect_geometry_record_size[sizeof(effect_geometry_record_t) == 0xc4 ? 1 : -1];
+
 /* Particle-system section addressed by effect-file header word 0x0c. */
 typedef struct effect_geometry_table {
     u16 _unused_00;        /* 2, or 1 in seven shipped files */
@@ -4418,16 +4433,7 @@ typedef struct effect_geometry_table {
     /* One 0xc4-byte record per emitter or mesh. The slots keep their curve
      * bindings, but each native EFFECT renderer gives them its own meanings,
      * so a record is read through the member of the renderer that owns it. */
-    union {
-        effect_geometry_entry_t emitter;
-        effect_textured_quad_geometry_view_t textured_quad;
-        effect_particle_ribbon_geometry_view_t particle_ribbon;
-        effect_polar_mesh_geometry_view_t polar_mesh;
-        effect_ring_mesh_geometry_view_t ring_mesh;
-        effect_summon_mesh_geometry_view_t summon_mesh;
-        effect_tentacle_mesh_geometry_view_t tentacle_mesh;
-        effect_particle_vertex_emitter_view_t particle_vertex_emitter;
-    } entries[1];
+    effect_geometry_record_t entries[1];
 } effect_geometry_table_t;
 
 /* Frames in one animation curve: emitter and particle frame counters wrap here. */
@@ -4839,7 +4845,7 @@ void battle_effect_init_state_records(void);
 s16 battle_effect_start_script_record(battle_effect_script_instruction_t* script, s16 start_pc, s16 parent_index);
 s32 battle_effect_code_script_04_end(effect_record_t* unused_record);
 s32 battle_effect_code_script_2e_invalid(effect_record_t* unused_record);
-void battle_effect_interpolate_emitter_spawn_spread(const void* source, s32 factor, s32* out);
+void battle_effect_interpolate_emitter_spawn_spread(const effect_geometry_record_t* source, s32 factor, s32* out);
 s32 battle_effect_lerp_linear(s32 start, s32 end, s32 factor);
 void battle_effect_play(void);
 s32 battle_effect_run_block(s16 index);
@@ -4850,9 +4856,11 @@ void battle_effect_start_render_frame(void);
 s32 battle_effect_update_cycle(void);
 s32 battle_effect_update_slot(s32 id);
 s32 battle_effect_update_stage(void);
-void battle_effect_interpolate_emitter_spawn_position(const void* source, s32 factor, s32* out);
-void battle_effect_interpolate_emitter_velocity_base_angles(const void* source, s32 factor, s32* out);
-void battle_effect_interpolate_emitter_velocity_direction_spread(const void* source, s32 factor, s32* out);
+void battle_effect_interpolate_emitter_spawn_position(const effect_geometry_record_t* source, s32 factor, s32* out);
+void battle_effect_interpolate_emitter_velocity_base_angles(
+    const effect_geometry_record_t* source, s32 factor, s32* out);
+void battle_effect_interpolate_emitter_velocity_direction_spread(
+    const effect_geometry_record_t* source, s32 factor, s32* out);
 void battle_effect_add_vectors_to_svector(const VECTOR* left, const VECTOR* right, SVECTOR* result);
 void battle_effect_add_vectors_to_svector_rot_y_270(const VECTOR* left, const VECTOR* right, SVECTOR* result);
 void battle_effect_add_vectors_to_svector_rot_y_180(const VECTOR* left, const VECTOR* right, SVECTOR* result);
@@ -5321,7 +5329,6 @@ s32 battle_unit_set_tile_position(s32 misc_unit_id, u8 map_x, u8 map_y, u8 map_z
 void battle_unit_set_target_animation_from_attack_type(
     battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target);
 
-void update_unit_action_statuses(battle_stats_t* unit, s32 action_state);
 s16 battle_unit_get_camera_facing_quadrant_by_battle_id(u32 battle_id);
 void battle_unit_shift_down_or_up(battle_unit_misc_data_t* unit, s8 delta);
 s32 battle_unit_apply_level_up_down_ability(void);

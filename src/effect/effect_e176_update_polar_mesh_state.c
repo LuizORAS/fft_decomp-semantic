@@ -16,7 +16,7 @@
 s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     effect_polar_mesh_scratch_t* scratch;
     effect_record_t* record;
-    effect_polar_mesh_geometry_view_t* entry;
+    effect_geometry_record_t* entry;
     u32* ot;
     effect_polar_mesh_work_t* work;
     POLY_GT4* quad;
@@ -28,7 +28,7 @@ s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
 
     scratch = (effect_polar_mesh_scratch_t*)0x1F800000;
     record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].polar_mesh;
+    entry = &g_effect_geometry_table->entries[emitter_index];
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -41,12 +41,12 @@ s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
         }
         work = record->work_slots[callback_slot]
             = battle_heap_alloc_block(sizeof(effect_polar_mesh_work_t), record_index);
-        if (entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
+        if (entry->polar_mesh.texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
             scratch->translucent = 0;
         } else {
             scratch->translucent = 1;
         }
-        scratch->tpage = ((entry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
+        scratch->tpage = ((entry->polar_mesh.texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         for (i = 0; i < 80; i++) {
             quad = &work->quads[0][i];
             SetPolyGT4(quad);
@@ -64,30 +64,34 @@ s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
         work->frame = 0;
         work->buffer = 0;
         work->destroy_delay = 0;
-        work->base_u = entry->texture_u;
-        work->base_v = entry->texture_v;
+        work->base_u = entry->polar_mesh.texture_u;
+        work->base_v = entry->polar_mesh.texture_v;
         record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
-        scratch->half_width = entry->texture_width / 2;
-        scratch->half_height = entry->texture_height / 2;
+        scratch->half_width = entry->polar_mesh.texture_width / 2;
+        scratch->half_height = entry->polar_mesh.texture_height / 2;
 
-        READ_CURVE(i, j, (entry->curve_indices[0] >> 4) & 0xF, work->frame);
-        scratch->radius = battle_effect_lerp_linear(entry->radius_start, entry->radius_end, i) << 12;
-        READ_CURVE(i, j, entry->curve_indices[0] >> 28, work->frame);
-        scratch->radius_step = battle_effect_lerp_linear(entry->radius_step_start, entry->radius_step_end, i) << 4;
-        READ_CURVE(i, j, entry->curve_indices[1] & 0xF, work->frame);
-        scratch->radius_step_delta
-            = battle_effect_lerp_linear(entry->radius_step_delta_start, entry->radius_step_delta_end, i) << 4;
-        READ_CURVE(i, j, (entry->curve_indices[0] >> 16) & 0xF, work->frame);
-        scratch->angle = battle_effect_lerp_linear(entry->angle_start, entry->angle_end, i) << 4;
-        READ_CURVE(i, j, (entry->curve_indices[1] >> 12) & 0xF, work->frame);
-        scratch->angle_step = battle_effect_lerp_linear(entry->angle_step_start, entry->angle_step_end, i);
-        READ_CURVE(i, j, (entry->curve_indices[1] >> 24) & 0xF, work->frame);
-        scratch->angle_step_delta
-            = battle_effect_lerp_linear(entry->angle_step_delta_start, entry->angle_step_delta_end, i);
+        READ_CURVE(i, j, (entry->polar_mesh.curve_indices[0] >> 4) & 0xF, work->frame);
+        scratch->radius = battle_effect_lerp_linear(entry->polar_mesh.radius_start, entry->polar_mesh.radius_end, i)
+            << 12;
+        READ_CURVE(i, j, entry->polar_mesh.curve_indices[0] >> 28, work->frame);
+        scratch->radius_step
+            = battle_effect_lerp_linear(entry->polar_mesh.radius_step_start, entry->polar_mesh.radius_step_end, i) << 4;
+        READ_CURVE(i, j, entry->polar_mesh.curve_indices[1] & 0xF, work->frame);
+        scratch->radius_step_delta = battle_effect_lerp_linear(entry->polar_mesh.radius_step_delta_start,
+                                         entry->polar_mesh.radius_step_delta_end, i)
+            << 4;
+        READ_CURVE(i, j, (entry->polar_mesh.curve_indices[0] >> 16) & 0xF, work->frame);
+        scratch->angle = battle_effect_lerp_linear(entry->polar_mesh.angle_start, entry->polar_mesh.angle_end, i) << 4;
+        READ_CURVE(i, j, (entry->polar_mesh.curve_indices[1] >> 12) & 0xF, work->frame);
+        scratch->angle_step
+            = battle_effect_lerp_linear(entry->polar_mesh.angle_step_start, entry->polar_mesh.angle_step_end, i);
+        READ_CURVE(i, j, (entry->polar_mesh.curve_indices[1] >> 24) & 0xF, work->frame);
+        scratch->angle_step_delta = battle_effect_lerp_linear(
+            entry->polar_mesh.angle_step_delta_start, entry->polar_mesh.angle_step_delta_end, i);
 
         for (ring = 0; ring < 6; ring++) {
             for (i = 0; i < 4; i++) {
@@ -102,26 +106,32 @@ s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
             scratch->angle_step += scratch->angle_step_delta;
         }
 
-        READ_CURVE(i, j, entry->curve_indices[0] & 0xF, work->frame);
+        READ_CURVE(i, j, entry->polar_mesh.curve_indices[0] & 0xF, work->frame);
         battle_effect_interpolate_emitter_spawn_position(entry, i, scratch->center);
 
-        READ_CURVE(i, j, (entry->curve_indices[0] >> 8) & 0xF, work->frame);
-        scratch->velocity_angle = battle_effect_lerp_linear(entry->velocity_angle_start, entry->velocity_angle_end, i)
+        READ_CURVE(i, j, (entry->polar_mesh.curve_indices[0] >> 8) & 0xF, work->frame);
+        scratch->velocity_angle
+            = battle_effect_lerp_linear(entry->polar_mesh.velocity_angle_start, entry->polar_mesh.velocity_angle_end, i)
             << 4;
-        j = battle_effect_lerp_linear(entry->velocity_speed_start, entry->velocity_speed_end, i) << 4;
+        j = battle_effect_lerp_linear(entry->polar_mesh.velocity_speed_start, entry->polar_mesh.velocity_speed_end, i)
+            << 4;
         scratch->velocity[0] = rcos(scratch->velocity_angle) * j >> 12;
         scratch->velocity[1] = rsin(scratch->velocity_angle) * j >> 12;
 
-        READ_CURVE(i, j, (entry->curve_indices[0] >> 12) & 0xF, work->frame);
-        scratch->acceleration_angle
-            = battle_effect_lerp_linear(entry->acceleration_angle_start, entry->acceleration_angle_end, i) << 4;
-        j = battle_effect_lerp_linear(entry->acceleration_speed_start, entry->acceleration_speed_end, i) << 4;
+        READ_CURVE(i, j, (entry->polar_mesh.curve_indices[0] >> 12) & 0xF, work->frame);
+        scratch->acceleration_angle = battle_effect_lerp_linear(entry->polar_mesh.acceleration_angle_start,
+                                          entry->polar_mesh.acceleration_angle_end, i)
+            << 4;
+        j = battle_effect_lerp_linear(
+                entry->polar_mesh.acceleration_speed_start, entry->polar_mesh.acceleration_speed_end, i)
+            << 4;
         scratch->acceleration[0] = rcos(scratch->acceleration_angle) * j >> 12;
         scratch->acceleration[1] = rsin(scratch->acceleration_angle) * j >> 12;
 
         /* The scroll curve alone is read at the caller's frame. */
-        READ_CURVE(i, j, (entry->curve_indices[1] >> 4) & 0xF, frame);
-        j = battle_effect_lerp_linear(entry->scroll_u_speed_start, entry->scroll_u_speed_end, i) << 4;
+        READ_CURVE(i, j, (entry->polar_mesh.curve_indices[1] >> 4) & 0xF, frame);
+        j = battle_effect_lerp_linear(entry->polar_mesh.scroll_u_speed_start, entry->polar_mesh.scroll_u_speed_end, i)
+            << 4;
         work->scroll_u += j;
         while (work->scroll_u >= scratch->half_width << 12) {
             work->scroll_u -= scratch->half_width << 12;
@@ -129,7 +139,8 @@ s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
         while (work->scroll_u < 0) {
             work->scroll_u += scratch->half_width << 12;
         }
-        j = battle_effect_lerp_linear(entry->scroll_v_speed_start, entry->scroll_v_speed_end, i) << 4;
+        j = battle_effect_lerp_linear(entry->polar_mesh.scroll_v_speed_start, entry->polar_mesh.scroll_v_speed_end, i)
+            << 4;
         work->scroll_v += j;
         while (work->scroll_v >= scratch->half_height << 12) {
             work->scroll_v -= scratch->half_height << 12;
@@ -138,9 +149,9 @@ s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
             work->scroll_v += scratch->half_height << 12;
         }
 
-        if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            j = entry->colour_curves & 0xFFF;
-            scratch->colour[0] = g_effect_palette_table[entry->colour_curves & 0xF].factor[work->frame];
+        if (entry->polar_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
+            j = entry->polar_mesh.colour_curves & 0xFFF;
+            scratch->colour[0] = g_effect_palette_table[entry->polar_mesh.colour_curves & 0xF].factor[work->frame];
             scratch->colour[1] = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
             scratch->colour[2] = g_effect_palette_table[(j >> 8) & 0xF].factor[work->frame];
         } else {
@@ -148,8 +159,8 @@ s32 effect_e176_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
             scratch->colour[1] = 0x80;
             scratch->colour[0] = 0x80;
         }
-        scratch->brightness_row = entry->brightness_row;
-        scratch->ot_depth = entry->ot_depth;
+        scratch->brightness_row = entry->polar_mesh.brightness_row;
+        scratch->ot_depth = entry->polar_mesh.ot_depth;
         if (scratch->ot_depth < EFFECT_OT_DEPTH_MIN) {
             scratch->ot_depth = EFFECT_OT_DEPTH_MIN;
         }

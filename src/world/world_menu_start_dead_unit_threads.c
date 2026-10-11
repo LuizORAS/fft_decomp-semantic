@@ -86,7 +86,7 @@ void world_menu_start_dead_unit_threads(void) {
 
     g_world_dead_unit_result = 0;
     if (context->result == 4) {
-        if (get_total_equipment_quantity(context->treasure_item, 1) == 0x63) {
+        if (main_item_get_total_equipment_quantity(context->treasure_item, 1) == 0x63) {
             g_world_text_substitution_values[0] = context->treasure_item;
             g_world_text_substitution_values[1] = context->treasure_item;
             message_id = 0x101b;

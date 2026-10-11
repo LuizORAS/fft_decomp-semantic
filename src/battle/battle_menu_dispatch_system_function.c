@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/main.h"
 
 /*
  * System-function dispatcher called by battle_menu_init_system_function:
@@ -246,7 +247,7 @@ s32 battle_menu_dispatch_system_function(
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_TRAP_RESULT) {
         battle_menu_start_system_function_thread(option + BATTLE_SYSTEM_FUNCTION_TRAP_RESULT_FIRST);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_FIND_ITEM) {
-        if (get_total_equipment_quantity(option & 0xFF, 1) == 0x63) {
+        if (main_item_get_total_equipment_quantity(option & 0xFF, 1) == 0x63) {
             main_item_get_data_pointer(option);
             g_battle_text_substitution_values[0] = option;
             g_battle_text_substitution_values[1] = option;

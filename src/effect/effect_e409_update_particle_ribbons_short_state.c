@@ -40,7 +40,7 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
     SVECTOR map_origin;
     effect_record_t* record;
     effect_particle_ribbon_short_work_t* work;
-    effect_particle_ribbon_geometry_view_t* entry;
+    effect_geometry_record_t* entry;
     s16 speed_min;
     s16 speed_max;
     s16 lifetime_min;
@@ -92,9 +92,9 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
     battle_effect_target_t* caster_target;
 
     record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].particle_ribbon;
-    placement = entry->placement_flags;
-    flags = entry->flags;
+    entry = &g_effect_geometry_table->entries[emitter_index];
+    placement = entry->particle_ribbon.placement_flags;
+    flags = entry->particle_ribbon.flags;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -107,9 +107,9 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
         }
         work = battle_heap_alloc_block(sizeof(effect_particle_ribbon_short_work_t), record_index);
         record->work_slots[callback_slot] = work;
-        abe = entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
+        abe = entry->particle_ribbon.texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
         translucent = abe == 0;
-        tpage = ((entry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
+        tpage = ((entry->particle_ribbon.texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         for (k = 0; k < RIBBON_SLOTS; k++) {
             for (i = 0; i < RIBBON_SEGMENTS; i++) {
                 quad = &work->ribbons[k].quads[0][i];
@@ -146,11 +146,14 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
         i = frame - 1;
         frame %= 160;
         work = record->work_slots[callback_slot];
-        wave = entry->curve_indices[1];
+        wave = entry->particle_ribbon.curve_indices[1];
         target_index = record->target_index;
-        scroll = entry->curve_indices[0];
+        scroll = entry->particle_ribbon.curve_indices[0];
         READ_CURVE(factor, j, (wave >> 24) & 0xf, frame);
-        if (i % battle_effect_lerp_linear(entry->spawn_interval_start, entry->spawn_interval_end, factor) == 0) {
+        if (i
+                % battle_effect_lerp_linear(
+                    entry->particle_ribbon.spawn_interval_start, entry->particle_ribbon.spawn_interval_end, factor)
+            == 0) {
             SetTransMatrix(&work->matrix);
             rotate = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
             caster_target = &g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY];
@@ -171,7 +174,8 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 &g_battle_effect_coord_data, &target);
 
             READ_CURVE(factor, j, (wave >> 20) & 0xf, frame);
-            count = battle_effect_lerp_linear(entry->particle_count_start, entry->particle_count_end, factor);
+            count = battle_effect_lerp_linear(
+                entry->particle_ribbon.particle_count_start, entry->particle_ribbon.particle_count_end, factor);
 
             READ_CURVE(factor, j, scroll & 0xf, frame);
             battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin.vx);
@@ -218,13 +222,13 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
             j--;
             if (j != -1) {
                 factor = g_effect_palette_table[j].factor[frame];
-                speed_min
-                    = battle_effect_lerp_linear(entry->radial_speed_min_start, entry->radial_speed_min_end, factor);
-                speed_max
-                    = battle_effect_lerp_linear(entry->radial_speed_max_start, entry->radial_speed_max_end, factor);
+                speed_min = battle_effect_lerp_linear(
+                    entry->particle_ribbon.radial_speed_min_start, entry->particle_ribbon.radial_speed_min_end, factor);
+                speed_max = battle_effect_lerp_linear(
+                    entry->particle_ribbon.radial_speed_max_start, entry->particle_ribbon.radial_speed_max_end, factor);
             } else {
-                speed_min = entry->radial_speed_min_start;
-                speed_max = entry->radial_speed_max_start;
+                speed_min = entry->particle_ribbon.radial_speed_min_start;
+                speed_max = entry->particle_ribbon.radial_speed_max_start;
             }
 
             READ_CURVE(factor, j, (scroll >> 12) & 0xf, frame);
@@ -233,12 +237,12 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
             battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle_base.vx);
 
             READ_CURVE(factor, j, (wave >> 12) & 0xf, frame);
-            target_base.vx
-                = battle_effect_lerp_linear(entry->target_offset_start[0], entry->target_offset_end[0], factor);
-            target_base.vy
-                = battle_effect_lerp_linear(entry->target_offset_start[1], entry->target_offset_end[1], factor);
-            target_base.vz
-                = battle_effect_lerp_linear(entry->target_offset_start[2], entry->target_offset_end[2], factor);
+            target_base.vx = battle_effect_lerp_linear(
+                entry->particle_ribbon.target_offset_start[0], entry->particle_ribbon.target_offset_end[0], factor);
+            target_base.vy = battle_effect_lerp_linear(
+                entry->particle_ribbon.target_offset_start[1], entry->particle_ribbon.target_offset_end[1], factor);
+            target_base.vz = battle_effect_lerp_linear(
+                entry->particle_ribbon.target_offset_start[2], entry->particle_ribbon.target_offset_end[2], factor);
             switch (placement & EFFECT_EMITTER_HOMING_MASK) {
             case EFFECT_EMITTER_HOMING_OFFSET:
                 break;
@@ -269,16 +273,18 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
             }
 
             READ_CURVE(factor, j, (wave >> 4) & 0xf, frame);
-            target_spread.vx
-                = battle_effect_lerp_linear(entry->target_spread_start[0], entry->target_spread_end[0], factor);
-            target_spread.vy
-                = battle_effect_lerp_linear(entry->target_spread_start[2], entry->target_spread_end[2], factor);
-            target_spread.vz
-                = battle_effect_lerp_linear(entry->target_spread_start[4], entry->target_spread_end[4], factor);
+            target_spread.vx = battle_effect_lerp_linear(
+                entry->particle_ribbon.target_spread_start[0], entry->particle_ribbon.target_spread_end[0], factor);
+            target_spread.vy = battle_effect_lerp_linear(
+                entry->particle_ribbon.target_spread_start[2], entry->particle_ribbon.target_spread_end[2], factor);
+            target_spread.vz = battle_effect_lerp_linear(
+                entry->particle_ribbon.target_spread_start[4], entry->particle_ribbon.target_spread_end[4], factor);
 
             READ_CURVE(factor, j, (wave >> 8) & 0xf, frame);
-            lifetime_min = battle_effect_lerp_linear(entry->lifetime_start[0], entry->lifetime_end[0], factor);
-            lifetime_max = battle_effect_lerp_linear(entry->lifetime_start[1], entry->lifetime_end[1], factor);
+            lifetime_min = battle_effect_lerp_linear(
+                entry->particle_ribbon.lifetime_start[0], entry->particle_ribbon.lifetime_end[0], factor);
+            lifetime_max = battle_effect_lerp_linear(
+                entry->particle_ribbon.lifetime_start[1], entry->particle_ribbon.lifetime_end[1], factor);
 
             for (i = 0; i < count; i++) {
                 if (work->count >= RIBBON_SLOTS) {
@@ -396,7 +402,7 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 slot->age = 0;
                 slot->active = 1;
                 slot->frame = 0;
-                slot->frame_timer = entry->frame_delay;
+                slot->frame_timer = entry->particle_ribbon.frame_delay;
                 vector.vx = slot->position.vx >> 12;
                 vector.vy = slot->position.vy >> 12;
                 vector.vz = slot->position.vz >> 12;
@@ -408,24 +414,24 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
             }
         }
 
-        width = entry->texture_width;
-        height = entry->texture_height;
-        depth_base = entry->ot_depth;
-        row = entry->brightness_row;
+        width = entry->particle_ribbon.texture_width;
+        height = entry->particle_ribbon.texture_height;
+        depth_base = entry->particle_ribbon.ot_depth;
+        row = entry->particle_ribbon.brightness_row;
         for (k = 0; k < RIBBON_SLOTS; k++) {
             if (work->ribbons[k].active == 0) {
                 continue;
             }
             slot = &work->ribbons[k];
             if (--slot->frame_timer == 0) {
-                if (++slot->frame > entry->frame_count - 1) {
+                if (++slot->frame > entry->particle_ribbon.frame_count - 1) {
                     slot->frame = 0;
                 }
-                slot->frame_timer = entry->frame_delay;
+                slot->frame_timer = entry->particle_ribbon.frame_delay;
             }
-            if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-                factor = entry->colour_curves & 0xfff;
-                red = g_effect_palette_table[entry->colour_curves & 0xf].factor[slot->age];
+            if (entry->particle_ribbon.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
+                factor = entry->particle_ribbon.colour_curves & 0xfff;
+                red = g_effect_palette_table[entry->particle_ribbon.colour_curves & 0xf].factor[slot->age];
                 green = g_effect_palette_table[(factor >> 4) & 0xf].factor[slot->age];
                 blue = g_effect_palette_table[(factor >> 8) & 0xf].factor[slot->age];
             } else {
@@ -447,7 +453,7 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 if (j < RIBBON_SEGMENTS) {
                     segments = j;
                 }
-                u = entry->texture_u;
+                u = entry->particle_ribbon.texture_u;
             } else {
                 slot->trail[index].x = slot->target.vx;
                 slot->trail[index].y = slot->target.vy;
@@ -461,16 +467,16 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 if (index < 0) {
                     index += RIBBON_POINTS;
                 }
-                u = entry->texture_u + (RIBBON_SEGMENTS - point) * (width / RIBBON_SEGMENTS);
+                u = entry->particle_ribbon.texture_u + (RIBBON_SEGMENTS - point) * (width / RIBBON_SEGMENTS);
             }
             parent.position[0] = slot->trail[index].x << 12;
             parent.position[1] = slot->trail[index].y << 12;
             parent.position[2] = slot->trail[index].z << 12;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
-                    record->record_index, slot->age, entry->child_emitter_mid_life, &parent);
+                    record->record_index, slot->age, entry->particle_ribbon.child_emitter_mid_life, &parent);
             }
-            v = entry->texture_v + slot->frame * height;
+            v = entry->particle_ribbon.texture_v + slot->frame * height;
             quad = &slot->quads[work->buffer][0];
             SetRotMatrix(&g_battle_camera_matrix);
             SetTransMatrix(&g_battle_camera_matrix);
@@ -567,7 +573,7 @@ s32 effect_e409_update_particle_ribbons_short_state(s16 record_index, s32 callba
             if (slot->lifetime + RIBBON_SEGMENTS == slot->age) {
                 if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
-                        record->record_index, slot->age, entry->child_emitter_on_death, &parent);
+                        record->record_index, slot->age, entry->particle_ribbon.child_emitter_on_death, &parent);
                 }
                 slot->active = 0;
                 work->count--;

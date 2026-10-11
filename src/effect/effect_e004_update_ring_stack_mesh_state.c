@@ -33,7 +33,7 @@ s32 effect_e004_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
     VECTOR unused_5c0[3]; /* frame padding */
     SVECTOR map_max;
     effect_ring_mesh_work_t* work;
-    effect_ring_mesh_geometry_view_t* entry;
+    effect_geometry_record_t* entry;
     s32 radius;
     s32 u;
     s32 v;
@@ -67,8 +67,8 @@ s32 effect_e004_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
     map_tile_t* tile;
 
     record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].ring_mesh;
-    placement = entry->placement_flags;
+    entry = &g_effect_geometry_table->entries[emitter_index];
+    placement = entry->ring_mesh.placement_flags;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -81,8 +81,8 @@ s32 effect_e004_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
         }
         work = battle_heap_alloc_block(sizeof(effect_ring_mesh_work_t), record_index);
         record->work_slots[callback_slot] = work;
-        abe = entry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
-        tpage = ((entry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
+        abe = entry->ring_mesh.texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
+        tpage = ((entry->ring_mesh.texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         translucent = abe == 0;
         for (j = 0; j < 2; j++) {
             for (i = 0; i < 64; i++) {
@@ -109,7 +109,7 @@ s32 effect_e004_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
         target_index = g_effect_state_records[record_index].target_index;
-        READ_CURVE(j, i, entry->scroll_curves & 0xf, frame);
+        READ_CURVE(j, i, entry->ring_mesh.scroll_curves & 0xf, frame);
         battle_effect_interpolate_emitter_spawn_position(entry, j, &origin.vx);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
         case EFFECT_EMITTER_ORIGIN_WORLD:
@@ -146,15 +146,15 @@ s32 effect_e004_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
             break;
         }
 
-        READ_CURVE(j, i, (entry->wave_curves >> 16) & 0xf, frame);
-        radius = battle_effect_lerp_linear(entry->radius_start, entry->radius_end, j);
+        READ_CURVE(j, i, (entry->ring_mesh.wave_curves >> 16) & 0xf, frame);
+        radius = battle_effect_lerp_linear(entry->ring_mesh.radius_start, entry->ring_mesh.radius_end, j);
 
-        READ_CURVE(j, i, (entry->scroll_curves >> 8) & 0xf, frame);
-        u = battle_effect_lerp_linear(entry->u_start, entry->u_end, j);
-        v = battle_effect_lerp_linear(entry->v_start, entry->v_end, j);
-        u_span = entry->u_span;
-        v_span = entry->v_span;
-        work->v_scroll += entry->v_scroll_speed;
+        READ_CURVE(j, i, (entry->ring_mesh.scroll_curves >> 8) & 0xf, frame);
+        u = battle_effect_lerp_linear(entry->ring_mesh.u_start, entry->ring_mesh.u_end, j);
+        v = battle_effect_lerp_linear(entry->ring_mesh.v_start, entry->ring_mesh.v_end, j);
+        u_span = entry->ring_mesh.u_span;
+        v_span = entry->ring_mesh.v_span;
+        work->v_scroll += entry->ring_mesh.v_scroll_speed;
         if (work->v_scroll > v_span << 8) {
             work->v_scroll -= v_span << 8;
         }
@@ -162,19 +162,24 @@ s32 effect_e004_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
             work->v_scroll += v_span << 8;
         }
 
-        READ_CURVE(j, i, entry->wave_curves & 0xf, frame);
-        growth.vx = battle_effect_lerp_linear(entry->growth_start, entry->growth_end, j);
-        growth.vy = battle_effect_lerp_linear(entry->height_start, entry->height_end, j);
-        growth.vz = battle_effect_lerp_linear(entry->row_radius_start, entry->row_radius_end, j);
+        READ_CURVE(j, i, entry->ring_mesh.wave_curves & 0xf, frame);
+        growth.vx = battle_effect_lerp_linear(entry->ring_mesh.growth_start, entry->ring_mesh.growth_end, j);
+        growth.vy = battle_effect_lerp_linear(entry->ring_mesh.height_start, entry->ring_mesh.height_end, j);
+        growth.vz = battle_effect_lerp_linear(entry->ring_mesh.row_radius_start, entry->ring_mesh.row_radius_end, j);
 
-        READ_CURVE(j, i, (entry->wave_curves >> 4) & 0xf, frame);
-        growth_step.vx = battle_effect_lerp_linear(entry->growth_step_start, entry->growth_step_end, j);
-        growth_step.vy = battle_effect_lerp_linear(entry->height_step_start, entry->height_step_end, j);
-        growth_step.vz = battle_effect_lerp_linear(entry->row_radius_step_start, entry->row_radius_step_end, j);
+        READ_CURVE(j, i, (entry->ring_mesh.wave_curves >> 4) & 0xf, frame);
+        growth_step.vx
+            = battle_effect_lerp_linear(entry->ring_mesh.growth_step_start, entry->ring_mesh.growth_step_end, j);
+        growth_step.vy
+            = battle_effect_lerp_linear(entry->ring_mesh.height_step_start, entry->ring_mesh.height_step_end, j);
+        growth_step.vz = battle_effect_lerp_linear(
+            entry->ring_mesh.row_radius_step_start, entry->ring_mesh.row_radius_step_end, j);
 
-        READ_CURVE(j, i, entry->scroll_curves >> 28, frame);
+        READ_CURVE(j, i, entry->ring_mesh.scroll_curves >> 28, frame);
         work->spin
-            = (work->spin + battle_effect_lerp_linear(entry->spin_speed_start, entry->spin_speed_end, j)) & 0xfff;
+            = (work->spin
+                  + battle_effect_lerp_linear(entry->ring_mesh.spin_speed_start, entry->ring_mesh.spin_speed_end, j))
+            & 0xfff;
         sin0 = rsin(work->spin);
         sin1 = rsin(work->spin + 0x200);
         cos0 = rcos(work->spin);
@@ -337,10 +342,10 @@ s32 effect_e004_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
             quad->v2 = quad->v3 = v + v_span + j;
         }
 
-        n = entry->brightness_row;
+        n = entry->ring_mesh.brightness_row;
         blue = 0x80;
-        if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            k = entry->colour_curves & 0xfff;
+        if (entry->ring_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
+            k = entry->ring_mesh.colour_curves & 0xfff;
             red = g_effect_palette_table[k & 0xf].factor[frame];
             green = g_effect_palette_table[(k >> 4) & 0xf].factor[frame];
             blue = g_effect_palette_table[(k >> 8) & 0xf].factor[frame];

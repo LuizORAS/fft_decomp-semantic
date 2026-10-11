@@ -1,12 +1,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Event instruction 0x41 EarthquakeStart thread: every parameter[1] frames add
- * parameter[0] to g_world_camera_shake_z_offset, every parameter[3] frames add parameter[2]. */
+/* Two independent frame counters apply the two shake pulses until another
+ * instruction tears the task down. */
 void world_script_earthquake_start(void) {
     s32 first_frames;
     s32 second_frames;
-    u8* parameter;
+    event_earthquake_parameters_t* parameter;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_EARTHQUAKE);
     first_frames = 0;
@@ -16,12 +16,12 @@ void world_script_earthquake_start(void) {
         first_frames++;
         world_thread_yield();
         second_frames++;
-        if (first_frames == parameter[1]) {
+        if (first_frames == parameter->pulses[0].frames) {
             first_frames = 0;
-            g_world_camera_shake_z_offset += parameter[0];
+            g_world_camera_shake_z_offset += parameter->pulses[0].z_delta;
         }
-        if (second_frames == parameter[3]) {
-            g_world_camera_shake_z_offset += parameter[2];
+        if (second_frames == parameter->pulses[1].frames) {
+            g_world_camera_shake_z_offset += parameter->pulses[1].z_delta;
             second_frames = 0;
         }
     }

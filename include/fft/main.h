@@ -475,7 +475,6 @@ extern wldcore_proposition_progress_t g_main_active_propositions[8];
 extern wldcore_saved_record_t g_main_saved_records[];
 void main_save_init_data_tables(void);
 void main_save_init_state_and_options(void);
-void save_unit_to_party(battle_stats_t* unit, u32 save_formation);
 
 /* script */
 extern u16 g_main_scenario_event_finish_operations[];
@@ -2119,7 +2118,6 @@ extern u8 g_main_special_portrait_wldface_id;
 extern s32 g_main_deployed_unit_map_coordinates[];
 extern u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
-s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
 s32 main_sound_is_music_loading_stub(void);
 
 /* unnamed */

@@ -4,7 +4,7 @@
 
 void main_gfx_load_efc_fnt(void) {
     TIM_IMAGE image;
-    void* data;
+    u32* data;
     int loaded = 0;
 
     g_fntload_clut_y_offset_immediate = 0x7f;

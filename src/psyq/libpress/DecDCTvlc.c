@@ -12,10 +12,10 @@
 #define PSYQ_PRESS_PADDING_LAST_INDEX   64
 
 /* opening 0x80073bd0–0x80073f10: software VLC expansion and resumable budget. */
-void DecDCTvlc(void* frame_data, void* decode_buffer) {
+s32 DecDCTvlc(u32* frame_data, u32* decode_buffer) {
     /* The handwritten decoder uses only caller-saved GPRs and no C ABI frame. */
-    u16* input = frame_data;
-    u16* output = decode_buffer;
+    u16* input = (u16*)frame_data;
+    u16* output = (u16*)decode_buffer;
     const psyq_press_ac_entry_t* primary;
     const u32* secondary;
     u32 window;

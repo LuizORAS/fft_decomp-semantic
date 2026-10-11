@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/main.h"
 
 /* Persist event units marked to join without opening the formation screen. */
 void battle_script_join_units_silently(void) {
@@ -17,7 +18,7 @@ void battle_script_join_units_silently(void) {
                     && first <= CHARACTER_IDENTITY_RAMZA_CHAPTER_4)) {
                 flags = unit->unit_flags;
                 if (flags & UNIT_FLAG_JOIN_AFTER_EVENT) {
-                    save_unit_to_party(unit, flags & UNIT_FLAG_SAVE_FORMATION);
+                    main_party_save_unit(unit, flags & UNIT_FLAG_SAVE_FORMATION);
                 }
             }
         }

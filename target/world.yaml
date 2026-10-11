@@ -1338,7 +1338,6 @@ data:
   - {addr: 0x80174048, name: g_battle_ai_workspace_ptr}
   - {addr: 0x8017404c, name: g_battle_action_menu_row_types}
   - {addr: 0x8017fd80, name: set_unit_cannot_exist}
-  - {addr: 0x80180c90, name: find_unit_by_id}
   - {addr: 0x80182430, name: unit_has_adjacent_monster_skill_support}
   - {addr: 0x80189c4c, name: g_world_wldface_vram_rects}
   - {addr: 0x80189c54, name: g_world_wldface_vram_rect_1}

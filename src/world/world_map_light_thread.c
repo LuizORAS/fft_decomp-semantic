@@ -8,8 +8,13 @@
  * rebuilding and submitting the light matrices once per frame, then stores
  * the final values back. */
 void world_map_light_thread(void) {
-    s32 start[6];
-    s32 target[6];
+    union {
+        struct {
+            s32 rotation[3];
+            s32 scale[3];
+        } vectors;
+        s32 values[6];
+    } start, target;
     SVECTOR rotation;
     MATRIX light;
     MATRIX colour;
@@ -19,28 +24,30 @@ void world_map_light_thread(void) {
     s32 frames;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_LIGHT);
-    params = world_thread_get_current_parameter_1();
+    params = (const u8*)(const event_map_light_parameters_t*)world_thread_get_current_parameter_1();
+    /* Indexed operand fields retain a separate base and add four bytes. */
     for (i = 0; i < 6; i++) {
-        target[i] = world_script_load_halfword(params);
+        target.values[i] = world_script_load_halfword(params);
         params += 2;
     }
+    /* The six-target scan leaves the cursor at duration_le. */
     frames = world_script_load_halfword(params);
-    start[0] = g_world_map_light_rotation[0];
-    start[1] = g_world_map_light_rotation[1];
-    start[2] = g_world_map_light_rotation[2];
-    start[3] = g_world_map_light_scale[0];
-    start[4] = g_world_map_light_scale[1];
-    start[5] = g_world_map_light_scale[2];
+    start.vectors.rotation[0] = g_world_map_light_rotation[0];
+    start.vectors.rotation[1] = g_world_map_light_rotation[1];
+    start.vectors.rotation[2] = g_world_map_light_rotation[2];
+    start.vectors.scale[0] = g_world_map_light_scale[0];
+    start.vectors.scale[1] = g_world_map_light_scale[1];
+    start.vectors.scale[2] = g_world_map_light_scale[2];
     for (i = 0; i <= frames; i++) {
-        rotation.vx = (target[0] - start[0]) * i / frames + start[0];
-        rotation.vy = (target[1] - start[1]) * i / frames + start[1];
-        rotation.vz = (target[2] - start[2]) * i / frames + start[2];
+        rotation.vx = (target.vectors.rotation[0] - start.vectors.rotation[0]) * i / frames + start.vectors.rotation[0];
+        rotation.vy = (target.vectors.rotation[1] - start.vectors.rotation[1]) * i / frames + start.vectors.rotation[1];
+        rotation.vz = (target.vectors.rotation[2] - start.vectors.rotation[2]) * i / frames + start.vectors.rotation[2];
         RotMatrix(&rotation, &light);
         MulMatrix(&light, &g_world_map_light_base_matrix);
         world_script_copy_32_bytes(&colour, &g_world_map_light_color_matrix);
-        scale.vx = (target[3] - start[3]) * i / frames + start[3];
-        scale.vy = (target[4] - start[4]) * i / frames + start[4];
-        scale.vz = (target[5] - start[5]) * i / frames + start[5];
+        scale.vx = (target.vectors.scale[0] - start.vectors.scale[0]) * i / frames + start.vectors.scale[0];
+        scale.vy = (target.vectors.scale[1] - start.vectors.scale[1]) * i / frames + start.vectors.scale[1];
+        scale.vz = (target.vectors.scale[2] - start.vectors.scale[2]) * i / frames + start.vectors.scale[2];
         ScaleMatrixL(&colour, &scale);
         battle_map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
         world_thread_wait_frames(1);

@@ -100,7 +100,7 @@ typedef enum open_movie_stream_status {
 
 /* Shared VLC/MDEC state used by OPEN.BIN's movie-stream pipeline. */
 typedef struct open_movie_mdec_stream_state {
-    void* vlc_buffers[2];    /* 0x00 */
+    u32* vlc_buffers[2];     /* 0x00; decoded run-level words */
     s32 vlc_buffer_index;    /* 0x08 */
     u32* output_buffers[2];  /* 0x0c; decoded image words */
     s32 output_buffer_index; /* 0x14 */

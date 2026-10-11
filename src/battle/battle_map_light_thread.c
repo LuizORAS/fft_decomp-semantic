@@ -9,7 +9,15 @@
  * commits the final values back to the live light state.
  */
 void battle_map_light_thread(void) {
-    s32 values[12];
+    union {
+        struct {
+            struct {
+                s32 rotation[3];
+                s32 scale[3];
+            } start, target;
+        } vectors;
+        s32 values[12];
+    } light_values;
     SVECTOR color;
     MATRIX rotation;
     MATRIX matrix;
@@ -21,32 +29,40 @@ void battle_map_light_thread(void) {
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_LIGHT);
     step = 0;
-    script = (const u8*)battle_thread_get_current_parameter_1();
-    target = values;
+    script = (const u8*)(const event_map_light_parameters_t*)battle_thread_get_current_parameter_1();
+    /* Indexed operand fields retain a separate base and add four bytes. */
+    target = light_values.values;
     do {
         target[6] = battle_script_load_halfword(script);
         script += 2;
         step++;
         target++;
     } while (step < 6);
+    /* The six-target scan leaves the cursor at duration_le. */
     frames = battle_script_load_halfword(script);
     step = 0;
-    values[0] = g_battle_script_light_angles.vx;
-    values[1] = g_battle_script_light_angles.vy;
-    values[2] = g_battle_script_light_angles.vz;
-    values[3] = g_battle_script_light_scale.vx;
-    values[4] = g_battle_script_light_scale.vy;
-    values[5] = g_battle_script_light_scale.vz;
+    light_values.vectors.start.rotation[0] = g_battle_script_light_angles.vx;
+    light_values.vectors.start.rotation[1] = g_battle_script_light_angles.vy;
+    light_values.vectors.start.rotation[2] = g_battle_script_light_angles.vz;
+    light_values.vectors.start.scale[0] = g_battle_script_light_scale.vx;
+    light_values.vectors.start.scale[1] = g_battle_script_light_scale.vy;
+    light_values.vectors.start.scale[2] = g_battle_script_light_scale.vz;
     for (; step <= frames; step++) {
-        color.vx = (values[6] - values[0]) * step / frames + values[0];
-        color.vy = (values[7] - values[1]) * step / frames + values[1];
-        color.vz = (values[8] - values[2]) * step / frames + values[2];
+        color.vx = (light_values.vectors.target.rotation[0] - light_values.vectors.start.rotation[0]) * step / frames
+            + light_values.vectors.start.rotation[0];
+        color.vy = (light_values.vectors.target.rotation[1] - light_values.vectors.start.rotation[1]) * step / frames
+            + light_values.vectors.start.rotation[1];
+        color.vz = (light_values.vectors.target.rotation[2] - light_values.vectors.start.rotation[2]) * step / frames
+            + light_values.vectors.start.rotation[2];
         RotMatrix(&color, &rotation);
         MulMatrix(&rotation, (MATRIX*)g_battle_script_light_base_direction_matrix);
         battle_script_copy_32_bytes(&matrix, g_battle_script_light_base_color_matrix);
-        translation.vx = (values[9] - values[3]) * step / frames + values[3];
-        translation.vy = (values[10] - values[4]) * step / frames + values[4];
-        translation.vz = (values[11] - values[5]) * step / frames + values[5];
+        translation.vx = (light_values.vectors.target.scale[0] - light_values.vectors.start.scale[0]) * step / frames
+            + light_values.vectors.start.scale[0];
+        translation.vy = (light_values.vectors.target.scale[1] - light_values.vectors.start.scale[1]) * step / frames
+            + light_values.vectors.start.scale[1];
+        translation.vz = (light_values.vectors.target.scale[2] - light_values.vectors.start.scale[2]) * step / frames
+            + light_values.vectors.start.scale[2];
         ScaleMatrixL(&matrix, &translation);
         battle_map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &matrix, &rotation, 0);
         battle_thread_wait_frames(1);

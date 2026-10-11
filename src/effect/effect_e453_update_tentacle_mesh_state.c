@@ -28,7 +28,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
     SVECTOR map_max;
     effect_record_t* record;
     effect_tentacle_mesh_work_t* work;
-    effect_tentacle_mesh_geometry_view_t* entry;
+    effect_geometry_record_t* entry;
     s16 speed_min;
     s16 speed_max;
     s16 length_min;
@@ -88,9 +88,9 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
     s32 wrap;
 
     record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].tentacle_mesh;
-    placement = entry->placement_flags;
-    flags = entry->flags;
+    entry = &g_effect_geometry_table->entries[emitter_index];
+    placement = entry->tentacle_mesh.placement_flags;
+    flags = entry->tentacle_mesh.flags;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -103,7 +103,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
         }
         work = record->work_slots[callback_slot]
             = battle_heap_alloc_block(sizeof(effect_tentacle_mesh_work_t), record_index);
-        texture_page_flags = entry->texture_page_flags;
+        texture_page_flags = entry->tentacle_mesh.texture_page_flags;
         abe = texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
         translucent = abe == 0;
         tpage = ((texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
@@ -136,12 +136,15 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
     case EFFECT_PHASE_UPDATE:
         i = frame - 1;
         work = record->work_slots[callback_slot];
-        curves1 = entry->curve_indices[1];
+        curves1 = entry->tentacle_mesh.curve_indices[1];
         target_index = record->target_index;
-        curves0 = entry->curve_indices[0];
+        curves0 = entry->tentacle_mesh.curve_indices[0];
         frame %= 160;
         READ_CURVE(factor, index, (curves1 >> 24) & 0xF, frame);
-        if (i % battle_effect_lerp_linear(entry->spawn_interval_start, entry->spawn_interval_end, factor) == 0) {
+        if (i
+                % battle_effect_lerp_linear(
+                    entry->tentacle_mesh.spawn_interval_start, entry->tentacle_mesh.spawn_interval_end, factor)
+            == 0) {
             SetTransMatrix(&work->matrix);
             orient = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
             caster_target = &g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY];
@@ -160,7 +163,8 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 &g_battle_effect_coord_data, &target);
 
             READ_CURVE(factor, index, (curves1 >> 20) & 0xF, frame);
-            count = battle_effect_lerp_linear(entry->particle_count_start, entry->particle_count_end, factor);
+            count = battle_effect_lerp_linear(
+                entry->tentacle_mesh.particle_count_start, entry->tentacle_mesh.particle_count_end, factor);
             READ_CURVE(factor, index, curves0 & 0xF, frame);
             battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin.vx);
             switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
@@ -205,13 +209,13 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             index--;
             if (index != -1) {
                 factor = g_effect_palette_table[index].factor[frame];
-                speed_min
-                    = battle_effect_lerp_linear(entry->radial_speed_min_start, entry->radial_speed_min_end, factor);
-                speed_max
-                    = battle_effect_lerp_linear(entry->radial_speed_max_start, entry->radial_speed_max_end, factor);
+                speed_min = battle_effect_lerp_linear(
+                    entry->tentacle_mesh.radial_speed_min_start, entry->tentacle_mesh.radial_speed_min_end, factor);
+                speed_max = battle_effect_lerp_linear(
+                    entry->tentacle_mesh.radial_speed_max_start, entry->tentacle_mesh.radial_speed_max_end, factor);
             } else {
-                speed_min = entry->radial_speed_min_start;
-                speed_max = entry->radial_speed_max_start;
+                speed_min = entry->tentacle_mesh.radial_speed_min_start;
+                speed_max = entry->tentacle_mesh.radial_speed_max_start;
             }
 
             READ_CURVE(factor, index, (curves0 >> 12) & 0xF, frame);
@@ -220,9 +224,12 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &base_angles.vx);
 
             READ_CURVE(factor, index, (curves1 >> 12) & 0xF, frame);
-            tip.vx = battle_effect_lerp_linear(entry->target_offset_start[0], entry->target_offset_end[0], factor);
-            tip.vy = battle_effect_lerp_linear(entry->target_offset_start[1], entry->target_offset_end[1], factor);
-            tip.vz = battle_effect_lerp_linear(entry->target_offset_start[2], entry->target_offset_end[2], factor);
+            tip.vx = battle_effect_lerp_linear(
+                entry->tentacle_mesh.target_offset_start[0], entry->tentacle_mesh.target_offset_end[0], factor);
+            tip.vy = battle_effect_lerp_linear(
+                entry->tentacle_mesh.target_offset_start[1], entry->tentacle_mesh.target_offset_end[1], factor);
+            tip.vz = battle_effect_lerp_linear(
+                entry->tentacle_mesh.target_offset_start[2], entry->tentacle_mesh.target_offset_end[2], factor);
             switch (placement & EFFECT_EMITTER_HOMING_MASK) {
             case EFFECT_EMITTER_HOMING_OFFSET:
             case EFFECT_EMITTER_HOMING_OFFSET_ALT:
@@ -252,13 +259,18 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             }
 
             READ_CURVE(factor, index, (curves1 >> 4) & 0xF, frame);
-            tip_spread.vx = battle_effect_lerp_linear(entry->tip_spread_start_x, entry->tip_spread_end_x, factor);
-            tip_spread.vy = battle_effect_lerp_linear(entry->tip_spread_start_y, entry->tip_spread_end_y, factor);
-            tip_spread.vz = battle_effect_lerp_linear(entry->tip_spread_start_z, entry->tip_spread_end_z, factor);
+            tip_spread.vx = battle_effect_lerp_linear(
+                entry->tentacle_mesh.tip_spread_start_x, entry->tentacle_mesh.tip_spread_end_x, factor);
+            tip_spread.vy = battle_effect_lerp_linear(
+                entry->tentacle_mesh.tip_spread_start_y, entry->tentacle_mesh.tip_spread_end_y, factor);
+            tip_spread.vz = battle_effect_lerp_linear(
+                entry->tentacle_mesh.tip_spread_start_z, entry->tentacle_mesh.tip_spread_end_z, factor);
 
             READ_CURVE(factor, index, (curves1 >> 8) & 0xF, frame);
-            length_min = battle_effect_lerp_linear(entry->lifetime_start[0], entry->lifetime_end[0], factor);
-            length_max = battle_effect_lerp_linear(entry->lifetime_start[1], entry->lifetime_end[1], factor);
+            length_min = battle_effect_lerp_linear(
+                entry->tentacle_mesh.lifetime_start[0], entry->tentacle_mesh.lifetime_end[0], factor);
+            length_max = battle_effect_lerp_linear(
+                entry->tentacle_mesh.lifetime_start[1], entry->tentacle_mesh.lifetime_end[1], factor);
 
             for (i = 0; i < count; i++) {
                 if (work->count >= 8) {
@@ -369,7 +381,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 seg->head = 0;
                 seg->active = 1;
                 seg->frame = 0;
-                seg->frame_timer = entry->frame_delay;
+                seg->frame_timer = entry->tentacle_mesh.frame_delay;
                 rotation.vx = seg->position.vx >> 12;
                 rotation.vy = seg->position.vy >> 12;
                 rotation.vz = seg->position.vz >> 12;
@@ -381,24 +393,24 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             }
         }
 
-        width = entry->texture_width;
-        height = entry->texture_height;
-        depth_bias = entry->ot_depth;
-        brightness_row = entry->brightness_row;
+        width = entry->tentacle_mesh.texture_width;
+        height = entry->tentacle_mesh.texture_height;
+        depth_bias = entry->tentacle_mesh.ot_depth;
+        brightness_row = entry->tentacle_mesh.brightness_row;
         for (j = 0; j < 8; j++) {
             if (work->segments[j].active == 0) {
                 continue;
             }
             seg = &work->segments[j];
             if (--seg->frame_timer == 0) {
-                if (++seg->frame > entry->frame_count - 1) {
+                if (++seg->frame > entry->tentacle_mesh.frame_count - 1) {
                     seg->frame = 0;
                 }
-                seg->frame_timer = entry->frame_delay;
+                seg->frame_timer = entry->tentacle_mesh.frame_delay;
             }
-            if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-                red = g_effect_palette_table[entry->colour_curves & 0xF].factor[seg->head];
-                factor = entry->colour_curves & 0xFFF;
+            if (entry->tentacle_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
+                red = g_effect_palette_table[entry->tentacle_mesh.colour_curves & 0xF].factor[seg->head];
+                factor = entry->tentacle_mesh.colour_curves & 0xFFF;
                 green = g_effect_palette_table[(factor >> 4) & 0xF].factor[seg->head];
                 blue = g_effect_palette_table[(factor >> 8) & 0xF].factor[seg->head];
             } else {
@@ -423,7 +435,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 if (index < 8) {
                     link_count = index;
                 }
-                u = entry->texture_u;
+                u = entry->tentacle_mesh.texture_u;
             } else {
                 seg->points[point_index].x = seg->tip.vx;
                 seg->points[point_index].y = seg->tip.vy;
@@ -439,7 +451,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 if (point_index < 0) {
                     point_index += 9;
                 }
-                u = entry->texture_u + (8 - shade_index) * (width / 8);
+                u = entry->tentacle_mesh.texture_u + (8 - shade_index) * (width / 8);
             }
 
             emitter.position[0] = seg->points[point_index].x << 12;
@@ -447,9 +459,9 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             emitter.position[2] = seg->points[point_index].z << 12;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
-                    record->record_index, seg->head, entry->child_emitter_mid_life, &emitter);
+                    record->record_index, seg->head, entry->tentacle_mesh.child_emitter_mid_life, &emitter);
             }
-            v = entry->texture_v + seg->frame * height;
+            v = entry->tentacle_mesh.texture_v + seg->frame * height;
             quad = &seg->quads[work->buffer][0];
             offset_quad = &seg->quads[work->buffer + 2][0];
             SetRotMatrix(&g_battle_camera_matrix);
@@ -566,7 +578,7 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             if (seg->length + 8 == seg->head) {
                 if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
-                        record->record_index, seg->head, entry->child_emitter_on_death, &emitter);
+                        record->record_index, seg->head, entry->tentacle_mesh.child_emitter_on_death, &emitter);
                 }
                 seg->active = 0;
                 work->count--;

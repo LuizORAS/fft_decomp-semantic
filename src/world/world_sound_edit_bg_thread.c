@@ -1,11 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Thread task 0x35 continuation: ramp the parameter sound's volume from
- * parameter[1] to parameter[2] over parameter[4] yields, then settle on the
- * final level and exit the thread. */
+/* Ramp the environment sound from volume_from to volume_to over frames yields,
+ * then settle on the final level and exit the thread. */
 void world_sound_edit_bg_thread(void) {
-    u8* parameter;
+    event_background_sound_parameters_t* parameter;
     s32 sound_id;
     s32 volume_from;
     s32 volume_to;
@@ -20,10 +19,10 @@ void world_sound_edit_bg_thread(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
     step = 0;
     parameter = world_thread_get_current_parameter_1();
-    sound_id = parameter[0];
-    volume_from = parameter[1];
-    steps = parameter[4];
-    volume_to = parameter[2];
+    sound_id = parameter->sound_id;
+    volume_from = parameter->volume_from;
+    steps = parameter->frames;
+    volume_to = parameter->volume_to;
     resource = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
     if (steps != 0) {
         delta = volume_to - volume_from;

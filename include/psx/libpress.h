@@ -16,15 +16,15 @@ typedef char decdctenv_size_must_be_0x100[(sizeof(DECDCTENV) == 0x100) ? 1 : -1]
 void DecDCTReset(s32 mode);
 DECDCTENV* DecDCTGetEnv(DECDCTENV* env);
 DECDCTENV* DecDCTPutEnv(DECDCTENV* env);
-s32 DecDCTBufSize(const u16* bs);
-void DecDCTin(s32* buf, s32 mode);
+s32 DecDCTBufSize(u32* bs);
+void DecDCTin(u32* buf, s32 mode);
 void DecDCTout(u32* buf, s32 size);
 void DecDCTinSync(void);
 void DecDCToutSync(void);
 void DecDCTinCallback(psyq_interrupt_callback_t func);
 void DecDCToutCallback(psyq_interrupt_callback_t func);
 s32 DecDCTvlcSize(s32 words);
-void DecDCTvlc(void* frame_data, void* decode_buffer);
+s32 DecDCTvlc(u32* frame_data, u32* decode_buffer);
 
 /* driver internals */
 

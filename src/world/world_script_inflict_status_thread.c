@@ -10,7 +10,7 @@
  * and inflicts Crystal. Mode 2 inflicts Poison with the kneeling animation. Each mode
  * records the matching staged exit mode for the later status-application pass. */
 void world_script_inflict_status_thread(void) {
-    u8* parameters;
+    event_inflict_status_parameters_t* parameters;
     s32 unit_id;
     s32 mode;
     s32 wait_frames;
@@ -21,9 +21,9 @@ void world_script_inflict_status_thread(void) {
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_INFLICT_STATUS);
     parameters = world_thread_get_current_parameter_1();
-    unit_id = world_script_load_halfword(parameters);
-    mode = parameters[2];
-    wait_frames = world_script_load_halfword(parameters + 3);
+    unit_id = world_script_load_halfword(parameters->unit_id_le);
+    mode = parameters->mode;
+    wait_frames = world_script_load_halfword(parameters->wait_frames_le);
     battle_unit_index = world_unit_get_battle_index_by_entd_unit_id(unit_id);
     misc_id = world_script_get_misc_id(unit_id);
     if (misc_id == EVENT_MISC_ID_NONE) {

@@ -12,8 +12,8 @@ int _reset(int mode) {
         *g_psyq_gpu_dma_chcr = PSYQ_GPU_DMA_MODE_LINKED_LIST | PSYQ_GPU_DMA_TO_DEVICE;
         *g_psyq_gpu_dma_dpcr |= PSYQ_GPU_DMA_GPU_ENABLE;
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_RESET);
-        memset2(g_psyq_gpu_gp1_cache, 0, 256);
-        memset2(g_psyq_gpu_operation_queue, 0, 6144);
+        memset2(g_psyq_gpu_gp1_cache, 0, sizeof(g_psyq_gpu_gp1_cache));
+        memset2(g_psyq_gpu_operation_queue, 0, sizeof(g_psyq_gpu_operation_queue));
         break;
     case 1:
         *g_psyq_gpu_dma_chcr = PSYQ_GPU_DMA_MODE_LINKED_LIST | PSYQ_GPU_DMA_TO_DEVICE;

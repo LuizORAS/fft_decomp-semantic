@@ -412,6 +412,62 @@ typedef char event_walk_to_parameters_size_must_be_8[sizeof(event_walk_to_parame
 
 /* Fixed event operand records. Halfwords stay in little-endian byte arrays
  * because the interpreter may address them at any byte alignment. */
+typedef struct event_background_sound_parameters {
+    u8 sound_id;
+    u8 volume_from;
+    u8 volume_to;
+    u8 find_channel;
+    u8 frames;
+} event_background_sound_parameters_t;
+typedef char
+    event_background_sound_parameters_size_must_be_5[sizeof(event_background_sound_parameters_t) == 5 ? 1 : -1];
+
+typedef struct event_inflict_status_parameters {
+    u8 unit_id_le[2];
+    u8 mode; /* event_inflict_status_e */
+    u8 wait_frames_le[2];
+} event_inflict_status_parameters_t;
+typedef char event_inflict_status_parameters_size_must_be_5[sizeof(event_inflict_status_parameters_t) == 5 ? 1 : -1];
+
+typedef struct event_earthquake_pulse {
+    u8 z_delta;
+    u8 frames;
+} event_earthquake_pulse_t;
+
+typedef struct event_earthquake_parameters {
+    event_earthquake_pulse_t pulses[2];
+} event_earthquake_parameters_t;
+typedef char event_earthquake_parameters_size_must_be_4[sizeof(event_earthquake_parameters_t) == 4 ? 1 : -1];
+
+typedef union event_color_screen_colors {
+    struct {
+        rgb24_t start;
+        rgb24_t end;
+    } rgb;
+    u8 values[6];
+} event_color_screen_colors_t;
+
+typedef struct event_color_screen_parameters {
+    u8 mode;
+    event_color_screen_colors_t colors;
+    u8 duration_le[2];
+} event_color_screen_parameters_t;
+typedef char event_color_screen_parameters_size_must_be_9[sizeof(event_color_screen_parameters_t) == 9 ? 1 : -1];
+
+typedef union event_map_light_targets {
+    struct {
+        u8 rotation_le[3][2];
+        u8 scale_le[3][2];
+    } vectors;
+    u8 values_le[6][2];
+} event_map_light_targets_t;
+
+typedef struct event_map_light_parameters {
+    event_map_light_targets_t targets;
+    u8 duration_le[2];
+} event_map_light_parameters_t;
+typedef char event_map_light_parameters_size_must_be_14[sizeof(event_map_light_parameters_t) == 14 ? 1 : -1];
+
 typedef struct event_unit_color {
     u8 mode;
     s8 red;
