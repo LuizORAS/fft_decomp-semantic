@@ -1,10 +1,11 @@
 /* LIBC 8002233c-80022b98; switch table 800104a4-80010558. */
 #include "psx/libc.h"
+#include "psx/stdarg.h"
 
 int sprintf(char* destination, const char* format, ...) {
     char buffer[512];
     psyq_printf_format_t state;
-    char* arguments = (char*)__builtin_next_arg(format);
+    va_list arguments;
     const char* digits;
     char* segment;
     int length;
@@ -26,6 +27,8 @@ int sprintf(char* destination, const char* format, ...) {
     int space;
     char* terminator;
     const char* current;
+    /* SDK va_end adds a cursor-slot store absent from the native return. */
+    va_start(arguments, format);
     count = 0;
     character = *format;
     if (!character)
