@@ -287,11 +287,15 @@ extern s16 g_jobstts_menu_window_right_x;
 void jobstts_menu_clear_selection_record(s32 index);
 void jobstts_menu_clear_selection_records(void);
 void jobstts_menu_clear_selection_values(void);
-void jobstts_menu_draw_scrollable_list(const u8* script);
+void jobstts_menu_draw_scrollable_list(const menu_instruction_t* script);
+void jobstts_menu_init_and_draw_scrollable_list(
+    s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table, const menu_instruction_t* script);
+void jobstts_menu_init_and_draw_scrollable_list_simple(
+    s16* entries, s32 selected_index, u8* text_table, const menu_instruction_t* script);
 s32 jobstts_menu_get_event_speed(void);
 void jobstts_menu_init_scrollable_list(s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table);
 void jobstts_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table);
-void jobstts_menu_scroll_list_by_page(jobstts_menu_page_scroll_direction_e direction, const menu_list_record_t* list);
+void jobstts_menu_scroll_list_by_page(jobstts_menu_page_scroll_direction_e direction, const menu_instruction_t* list);
 s32 jobstts_menu_update_job_list(void);
 void jobstts_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* abilities);
 s32 jobstts_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);

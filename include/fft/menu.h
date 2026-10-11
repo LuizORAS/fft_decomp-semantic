@@ -1451,6 +1451,10 @@ static __inline__ menu_instruction_t* menu_next_instruction(menu_instruction_t* 
     return (menu_instruction_t*)((u8*)instruction + instruction->header.length);
 }
 
+static __inline__ const menu_instruction_t* menu_next_const_instruction(const menu_instruction_t* instruction) {
+    return (const menu_instruction_t*)((const u8*)instruction + instruction->header.length);
+}
+
 /* Texture rectangle, CLUT and texture page returned by menu icon callbacks. */
 typedef struct menu_icon_source {
     s16 u;     /* 0x00 */

@@ -540,7 +540,11 @@ extern u8* g_bunit_menu_list_text_table;
 extern s16 g_bunit_menu_window_right_x;
 void bunit_menu_clear_selection_record(s32 index);
 void bunit_menu_clear_selection_records(void);
-void bunit_menu_draw_scrollable_list(u8* script);
+void bunit_menu_draw_scrollable_list(const menu_instruction_t* script);
+void bunit_menu_init_and_draw_scrollable_list(
+    s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table, const menu_instruction_t* script);
+void bunit_menu_init_and_draw_scrollable_list_simple(
+    s16* entries, s32 selected_index, u8* text_table, const menu_instruction_t* script);
 void bunit_menu_draw_thread_status_indicators(void);
 s32 bunit_menu_get_event_speed(void);
 void bunit_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
@@ -550,7 +554,7 @@ void bunit_menu_reset_results(void);
 s32 bunit_menu_run_descriptor_thread(s32 id, world_menu_entry_t* desc);
 s32 bunit_menu_run_job_list(void);
 void bunit_menu_run_reorder_list(void);
-void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direction, menu_list_record_t* list);
+void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direction, const menu_instruction_t* list);
 void bunit_menu_set_vsync_mode_and_event_speed(s32 speed);
 s32 bunit_menu_update_wrapped_grid_selection(s32 step, s32 count, s32 max, s32 current, s32 input);
 void bunit_menu_dispatch_with_override(u8* menu, s32 state, s32 override);

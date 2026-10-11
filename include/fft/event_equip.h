@@ -438,7 +438,11 @@ void equip_menu_clear_selection_records(void);
 void equip_menu_clear_selection_values(void);
 void equip_menu_dispatch_with_override(u8* menu, s32 state, s32 override);
 void equip_menu_draw_equipment_slot_marker(s32 unused, s32 slot, s32 override);
-void equip_menu_draw_scrollable_list(const u8* script);
+void equip_menu_draw_scrollable_list(const menu_instruction_t* script);
+void equip_menu_init_and_draw_scrollable_list(
+    s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table, const menu_instruction_t* script);
+void equip_menu_init_and_draw_scrollable_list_simple(
+    s16* entries, s32 selected_index, u8* text_table, const menu_instruction_t* script);
 void equip_menu_draw_weapon_hand_icons(s16 weapon_id);
 s32 equip_menu_get_event_speed(void);
 void equip_menu_init_screen(s32 battle_id);
@@ -452,7 +456,7 @@ void equip_menu_reset_state_flags(void);
 void equip_menu_restore_list_selection(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
 s32 equip_item_run_rearrange_mode(void);
 void equip_menu_icon_list_thread(void);
-void equip_menu_scroll_list_by_page(s32 direction, const menu_list_record_t* menu);
+void equip_menu_scroll_list_by_page(s32 direction, const menu_instruction_t* menu);
 void equip_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* items);
 s32 equip_menu_set_selection_value(u8 index, s16 value);
 s32 equip_menu_init_selection_value(u8 index, s16 value);

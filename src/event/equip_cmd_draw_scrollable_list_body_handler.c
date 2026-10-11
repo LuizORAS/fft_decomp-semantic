@@ -44,13 +44,13 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
     previous_selected = g_equip_menu_selected_list_index;
     step = 2;
     if (g_equip_menu_list_redraw_pending != 0) {
-        equip_menu_draw_scrollable_list((u8*)command);
+        equip_menu_draw_scrollable_list(command);
     }
     if (g_equip_menu_list_scroll_direction == 0) {
         j = equip_input_read_page_scroll_direction();
         if (j != 0) {
             if (j != 2) {
-                equip_menu_scroll_list_by_page(j, &command->list);
+                equip_menu_scroll_list_by_page(j, command);
             }
         } else {
             input = g_equip_cmd_stream_input;

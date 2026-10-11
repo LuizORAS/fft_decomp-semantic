@@ -47,13 +47,13 @@ menu_instruction_t* jobstts_cmd_draw_scrollable_list_body_handler(menu_instructi
     g_jobstts_menu_list_row_rendering = 1;
     previous = g_jobstts_menu_list_selected_index;
     if (g_jobstts_menu_list_redraw_pending != 0) {
-        jobstts_menu_draw_scrollable_list((u8*)command);
+        jobstts_menu_draw_scrollable_list(command);
     }
     if (g_jobstts_menu_list_scroll_direction == 0) {
         j = jobstts_input_read_page_scroll_direction();
         if (j != 0) {
             if (j != 2) {
-                jobstts_menu_scroll_list_by_page(j, &command->list);
+                jobstts_menu_scroll_list_by_page(j, command);
             }
         } else {
             input = g_jobstts_cmd_stream_input;

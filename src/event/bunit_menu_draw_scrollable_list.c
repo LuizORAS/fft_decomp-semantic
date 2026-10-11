@@ -5,7 +5,7 @@
  * The 0x10 render command supplies the list geometry; 0x1C terminates a
  * stream that has no list.
  */
-void bunit_menu_draw_scrollable_list(u8* script) {
+void bunit_menu_draw_scrollable_list(const menu_instruction_t* script) {
     RECT rect;
     s16 row_ids[20];
     s32 i;
@@ -14,14 +14,14 @@ void bunit_menu_draw_scrollable_list(u8* script) {
     s16 selected;
     const menu_list_record_t* list;
 
-    while (script[0] != MENU_SCRIPT_OP_SCROLLABLE_LIST) {
-        if (script[0] == BUNIT_CMD_END) {
+    while (script->header.opcode != MENU_SCRIPT_OP_SCROLLABLE_LIST) {
+        if (script->header.opcode == BUNIT_CMD_END) {
             return;
         }
-        script += script[1];
+        script = menu_next_const_instruction(script);
     }
 
-    list = (const menu_list_record_t*)script;
+    list = &script->list;
     g_bunit_menu_list_row_group_count = list->skip_count;
     g_bunit_menu_list_row_height = list->row_height;
     visible_rows = list->visible_rows;
