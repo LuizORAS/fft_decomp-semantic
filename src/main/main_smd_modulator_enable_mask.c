@@ -6,7 +6,7 @@
 u8* main_smd_modulator_enable_mask(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     suzuki_modulator_t* modulator;
     s32 i;
-    u32 mask;
+    u8 mask;
 
     modulator = channel->modulators;
     i = SUZUKI_MODULATOR_COUNT;
