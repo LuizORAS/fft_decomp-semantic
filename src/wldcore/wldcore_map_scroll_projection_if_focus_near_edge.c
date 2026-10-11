@@ -16,7 +16,7 @@ void wldcore_map_scroll_projection_if_focus_near_edge(point32_t* delta) {
         wldcore_map_apply_clamped_horizontal_scroll(&delta->x, &g_wldcore_map_projection_origin.vx);
     }
     if ((delta->y < 0 && position.y < -0x40) || (delta->y > 0 && position.y >= 0x41)) {
-        wldcore_map_apply_clamped_vertical_scroll(delta, (point32_t*)&g_wldcore_map_projection_origin);
+        wldcore_map_apply_clamped_vertical_scroll(delta, &g_wldcore_map_projection_origin);
     }
     if (saved.vx != g_wldcore_map_projection_origin.vx || saved.vy != g_wldcore_map_projection_origin.vy) {
         g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;

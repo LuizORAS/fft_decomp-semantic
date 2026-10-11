@@ -1,15 +1,6 @@
 #include "fft/wldcore.h"
+#include "psx/libc.h"
 #include "psx/pad.h"
-
-typedef struct wldcore_deep_dungeon_battle {
-    u8 map_id;   /* 0x00 */
-    u8 squad_id; /* 0x01: deployment zone id */
-    u8 choices[8];
-} wldcore_deep_dungeon_battle_t;
-
-extern wldcore_deep_dungeon_battle_t* g_wldcore_deep_dungeon_battles;
-
-s32 rand(void);
 
 /* Per-frame step of the location menu level: fades its two windows in, starts
  * the menu thread after the delay and handles input. A confirmed entry opens
@@ -94,13 +85,13 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                     if (wldcore_script_process_conditional_set(
                             g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY)
                         != 0) {
-                        offset = g_wldcore_script_state.args[0] * 10;
+                        offset = g_wldcore_script_state.args[0] * sizeof(wldcore_deep_dungeon_battle_t);
                         records = g_wldcore_deep_dungeon_battles;
-                        record = (wldcore_deep_dungeon_battle_t*)((u8*)records + offset);
+                        record = &records[g_wldcore_script_state.args[0]];
                         g_wldcore_next_map_id[0] = record->map_id;
-                        /* Index from the first choices array to retain the shared record-table base. */
+                        /* Direct ENTD indexing folds the table base and removes a retail addition. */
                         world_script_set_variable(
-                            EVENT_SCRIPT_VAR_CURRENT_ENTD, (&records->choices[0])[((rand() * 8) >> 15) + offset]);
+                            EVENT_SCRIPT_VAR_CURRENT_ENTD, (&records->entd_ids[0])[((rand() * 8) >> 15) + offset]);
                         world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
                         world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, record->squad_id);
                         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[1]);

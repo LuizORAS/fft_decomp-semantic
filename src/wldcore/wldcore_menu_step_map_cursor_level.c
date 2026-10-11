@@ -226,7 +226,7 @@ scroll:
                 wldcore_map_apply_clamped_horizontal_scroll(&amount.x, &g_wldcore_map_projection_view.origin.vx);
             }
             if ((amount.y < 0 && target.y < -0x40) || (amount.y > 0 && target.y >= 0x41)) {
-                wldcore_map_apply_clamped_vertical_scroll(&amount, (point32_t*)&g_wldcore_map_projection_view.origin);
+                wldcore_map_apply_clamped_vertical_scroll(&amount, &g_wldcore_map_projection_view.origin);
             }
             if (saved.vx != g_wldcore_map_projection_view.origin.vx
                 || saved.vy != g_wldcore_map_projection_view.origin.vy) {
@@ -266,7 +266,7 @@ scroll:
                 amount.y = 4;
             }
             saved = g_wldcore_map_projection_view.origin;
-            wldcore_map_apply_clamped_scroll(&amount, (point32_t*)&g_wldcore_map_projection_view.origin);
+            wldcore_map_apply_clamped_scroll(&amount, &g_wldcore_map_projection_view.origin);
             if (saved.vx != g_wldcore_map_projection_view.origin.vx
                 || saved.vy != g_wldcore_map_projection_view.origin.vy) {
                 g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;

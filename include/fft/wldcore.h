@@ -174,7 +174,14 @@ typedef struct wldcore_encounter_entry {
     u8 script_variable_id;             /* 0x17 */
 } wldcore_encounter_entry_t;
 
+typedef struct wldcore_deep_dungeon_battle {
+    u8 map_id;   /* 0x00 */
+    u8 squad_id; /* 0x01: deployment zone id */
+    u8 entd_ids[8];
+} wldcore_deep_dungeon_battle_t;
+
 extern wldcore_encounter_entry_t (*g_wldcore_random_battle_data)[3];
+extern wldcore_deep_dungeon_battle_t* g_wldcore_deep_dungeon_battles;
 
 /* route */
 /* Provisional: a 16-entry world-map route path, each entry a route id with
@@ -1345,8 +1352,8 @@ void wldcore_map_find_best_route_path(s32 from, s32 to);
 void wldcore_map_step_route_travel(void);
 s32 wldcore_map_step_projection_motion(void);
 void wldcore_map_apply_clamped_horizontal_scroll(s32* amount, s32* position);
-void wldcore_map_apply_clamped_scroll(point32_t* amount, point32_t* position);
-void wldcore_map_apply_clamped_vertical_scroll(point32_t* amount, point32_t* position);
+void wldcore_map_apply_clamped_scroll(point32_t* amount, VECTOR* position);
+void wldcore_map_apply_clamped_vertical_scroll(point32_t* amount, VECTOR* position);
 s32 wldcore_map_find_dot_at_point(point32_t point);
 void wldcore_map_init_location_marker_and_camera(void);
 s32 wldcore_map_is_point_outside_projection_bounds(const point32_t* point);
