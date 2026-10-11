@@ -416,6 +416,7 @@ extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_J
 s32 main_job_add_proposition_jp(u32 party_index, s32 jp);
 u32 main_job_calculate_level(u16 job_jp);
 u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags);
+s32 main_job_find_by_skillset(u8 skillset_id);
 job_data_t* main_job_get_data_pointer(s32 job_id);
 s32 main_job_get_random_unlocked(const battle_stats_t* unit);
 void main_job_store_unlock_bitset(u8 destination[UNIT_UNLOCKED_JOB_BYTE_COUNT], u32 unlocked_jobs);
