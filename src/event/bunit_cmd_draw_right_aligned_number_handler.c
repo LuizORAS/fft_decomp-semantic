@@ -6,7 +6,6 @@
 menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction_t* cmd) {
     s8 digits[16];
     RECT glyph_rect;
-    s32 length;
     s32 count;
     s16 blanks;
     s16 i;
@@ -14,11 +13,11 @@ menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction
     s32 x;
     s32 y;
 
-    length = sprintf(
-        digits, g_bunit_text_decimal_format, g_bunit_menu_row_callbacks[cmd->number.getter](cmd->number.value));
+    count = g_bunit_menu_row_callbacks[cmd->number.getter](cmd->number.value);
+    count = sprintf(digits, g_bunit_text_decimal_format, count);
     x = cmd->number.x;
     y = cmd->number.y;
-    blanks = cmd->number.width - length;
+    blanks = cmd->number.width - count;
     count = cmd->number.width - blanks;
     g_bunit_gfx_blank_cell_rect.position.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
@@ -36,7 +35,5 @@ menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction
             g_bunit_menu_icon_texture_page, 0x3ED3, g_bunit_gfx_otag_index);
         glyph_rect.x += 8;
     }
-    /* Removing this barrier changes count/command register allocation. */
-    __asm__("" : : "r"(count), "r"(count), "r"(count), "r"(count));
     return menu_next_instruction(cmd);
 }
