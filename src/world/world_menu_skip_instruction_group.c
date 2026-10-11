@@ -4,10 +4,10 @@
 menu_instruction_t* world_menu_skip_instruction_group(menu_instruction_t* instruction) {
     s32 count;
 
-    if (instruction->header.opcode == 1) {
+    if (instruction->header.opcode == MENU_SCRIPT_OP_IF_GROUP) {
         count = instruction->conditional.count;
         count += 1;
-    } else if (instruction->header.opcode == 2) {
+    } else if (instruction->header.opcode == MENU_SCRIPT_OP_IF_ELSE_GROUP) {
         count = instruction->if_else.count_true;
         count += instruction->if_else.count_false;
         count += 1;

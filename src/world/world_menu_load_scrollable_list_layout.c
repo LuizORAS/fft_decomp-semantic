@@ -19,8 +19,8 @@ void world_menu_load_scrollable_list_layout(menu_instruction_t* script) {
     menu_instruction_t* instruction = script;
     s32 i;
 
-    while (instruction->header.opcode != 0x10) {
-        if (instruction->header.opcode == 0x1C) {
+    while (instruction->header.opcode != MENU_SCRIPT_OP_SCROLLABLE_LIST) {
+        if (instruction->header.opcode == WORLD_MENU_SCRIPT_END) {
             return;
         }
         instruction = menu_next_instruction(instruction);

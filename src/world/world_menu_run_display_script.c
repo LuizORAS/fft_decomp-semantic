@@ -11,9 +11,9 @@ void world_menu_run_display_script(menu_instruction_t* script, s32 input) {
     g_world_menu_semi_trans = 0;
     g_world_menu_display_script_input = input;
     g_world_menu_temporary_draw_area_active = 0;
-    if (instruction->header.opcode != 0x1c) {
+    if (instruction->header.opcode != WORLD_MENU_SCRIPT_END) {
         do {
             instruction = g_world_menu_script_handlers[instruction->header.opcode](instruction);
-        } while (instruction->header.opcode != 0x1c);
+        } while (instruction->header.opcode != WORLD_MENU_SCRIPT_END);
     }
 }

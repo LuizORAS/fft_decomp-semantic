@@ -2292,7 +2292,9 @@ extern u16 g_world_menu_ct_gauge_clut;
 extern u16 g_world_menu_background_clut;
 extern u16 g_world_menu_window_clut_alt;
 extern u16 g_world_menu_window_clut_normal;
-extern menu_instruction_t* (*g_world_menu_script_handlers[28])(menu_instruction_t* instruction);
+enum { WORLD_MENU_SCRIPT_END = 0x1c };
+
+extern menu_instruction_t* (*g_world_menu_script_handlers[WORLD_MENU_SCRIPT_END])(menu_instruction_t* instruction);
 extern menu_sprite_command_t g_world_menu_script_sprite_command;
 extern menu_window_command_t g_world_menu_window_interior_command;
 extern s16 g_world_menu_window_scale_table[];
