@@ -151,7 +151,7 @@ void world_name_update_entry_cursor(void);
 
 /* options */
 extern world_input_timing_profile_t g_world_option_input_timing_profiles[];
-extern world_menu_text_binding_t g_world_option_menu_entry_table;
+extern world_menu_text_layout_t g_world_option_menu_entry_table;
 extern s32 g_world_option_menu_text_widths[];    /* option menu text-image width, per option */
 extern s32 g_world_option_menu_entry_counts[];   /* option menu entry count, per option */
 extern s32 g_world_option_menu_first_text_ids[]; /* first text id of the option's entries */
@@ -2294,7 +2294,7 @@ extern s16 g_world_menu_selected_option;
 extern s16 g_world_menu_action_slot_selected_option;
 extern battle_menu_allocation_t g_world_menu_buffer_allocations[16];
 extern u8 g_world_menu_buffer_arena[0x70][0x100];
-extern s32 g_world_menu_preview_target_action;
+extern battle_action_data_t* g_world_menu_preview_target_action;
 extern world_fade_tile_frame_t g_world_menu_panel_fade_frames[];
 extern s32 g_world_active_menu; /* active menu */
 /* Handed to the dead-unit panel thread as its second parameter. Nothing stores to it and the thread

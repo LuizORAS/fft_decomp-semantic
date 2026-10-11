@@ -61,7 +61,7 @@ void world_build_options_menu(void) {
         entry = (world_menu_entry_t*)thread->function_parameter_1;
     } while (0);
     page = g_world_options_menu_pages;
-    layout = (world_menu_text_layout_t*)&g_world_option_menu_entry_table;
+    layout = &g_world_option_menu_entry_table;
     entry->window.h = layout->row_count * 16 + 0x10;
     entry->inner_height = layout->row_count * 16 + 0x10;
     entry->text_image.height = layout->row_count * 16 + 0x10;

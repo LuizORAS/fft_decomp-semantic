@@ -38,7 +38,7 @@ void world_menu_preview_attack_caster_stats(void) {
     } else {
         g_world_thread_call_target = (void (*)(void))battle_action_calculate_projected_effect;
         world_thread_call_on_main_stack(stored, target, action);
-        g_world_menu_preview_target_action = (s32)&target->action;
+        g_world_menu_preview_target_action = &target->action;
     }
     world_thread_yield();
     world_thread_yield();
