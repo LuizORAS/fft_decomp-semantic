@@ -40,7 +40,7 @@ enum {
     BATTLE_MAP_ZOOM_OUT = 4, /* scale 0xc00 */
 };
 
-/* battle_camera_get_input_direction modes: which button state it reads. */
+/* battle_camera_get_input_direction sources: which button state it reads. */
 typedef enum battle_camera_input_source {
     BATTLE_CAMERA_INPUT_HELD = 0,
     BATTLE_CAMERA_INPUT_PRESSED = 1, /* newly pressed, repeating at the cursor repeat speed while held */
@@ -54,6 +54,9 @@ typedef enum battle_cursor_input_mode {
     BATTLE_CURSOR_INPUT_OPTION_B = 1,
     BATTLE_CURSOR_INPUT_FREE_CURSOR = 2,
 } battle_cursor_input_mode_e;
+
+extern s32 g_battle_cursor_input_mode;
+extern s32 g_battle_cursor_input_mode_saved;
 
 extern u16 g_battle_camera_shake_z_offset;
 extern s32 g_battle_previous_camera_yaw;
@@ -75,16 +78,16 @@ extern VECTOR g_battle_camera_offset_screen_coords;
 extern VECTOR g_battle_camera_offset_screen_coords_fixed;
 extern u16 g_battle_camera_real_coord_countdown;
 extern VECTOR g_battle_camera_real_coord_delta;
-extern s32 g_battle_camera_rotation_action;
+extern battle_camera_rotation_action_e g_battle_camera_rotation_action;
 extern SVECTOR g_battle_camera_rotation_backup;
 extern u16 g_battle_camera_rotation_countdown;
 extern SVECTOR g_battle_camera_rotation_delta;
 extern s32 g_battle_camera_rotation_increment;
 extern VECTOR g_battle_camera_saved_real_coords;
-extern s32 g_battle_camera_tilt_action;
+extern battle_camera_step_action_e g_battle_camera_tilt_action;
 extern s32 g_battle_camera_tilt_increment;
 extern VECTOR g_battle_camera_zoom;
-extern s32 g_battle_camera_zoom_action;
+extern battle_camera_step_action_e g_battle_camera_zoom_action;
 extern VECTOR g_battle_camera_zoom_backup;
 extern u16 g_battle_camera_zoom_countdown;
 extern VECTOR g_battle_camera_zoom_delta;
@@ -106,7 +109,7 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
 void battle_camera_step_focus_toward_cursor_tile(s16 height);
 void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, SVECTOR* angles);
 void battle_camera_execute_position_command(s32 command, s32 target, s32 duration, VECTOR* offset);
-s32 battle_camera_get_input_direction(s32 mode);
+s32 battle_camera_get_input_direction(battle_camera_input_source_e source);
 void battle_camera_update_effect_rotation_and_zoom(void);
 
 /* Some routines address these components as separate linker symbols. */

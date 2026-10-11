@@ -70,14 +70,12 @@ extern s32 g_battle_deployment_skipped;
 extern s32 g_battle_cursor_x;
 extern s32 g_battle_cursor_y;
 extern s32 g_battle_cursor_z;
-extern s32 g_battle_cursor_input_mode_saved;
 extern u16 g_battle_cursor_screen_x;
 extern s32 g_battle_cursor_previous_x;     /* cursor X before this step */
 extern s32 g_battle_cursor_previous_y;     /* cursor Y before this step */
 extern s32 g_battle_cursor_previous_z;     /* cursor level before this step */
 extern u32 g_battle_cursor_repeat_counter; /* free-cursor repeat counter */
 extern s16 g_battle_cursor_screen_y;
-extern s32 g_battle_cursor_input_mode;
 
 /* item */
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
