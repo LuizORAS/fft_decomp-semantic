@@ -492,7 +492,7 @@ restart_script:
                 }
             }
         } else if (opcode == EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT) {
-            battle_script_toggle_message_portrait_flip(parameters);
+            battle_script_toggle_message_portrait_flip((const event_message_id_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_UNKNOWN_17) {
         }
         /* ---- Effects ---- */

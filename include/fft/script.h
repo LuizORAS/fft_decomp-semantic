@@ -115,7 +115,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_UNHANDLED_34 = 0x34,           /* 2 */
     EVENT_OPCODE_UNHANDLED_35 = 0x35,           /* 4 */
     EVENT_OPCODE_UNHANDLED_36 = 0x36,           /* 2 */
-    EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT = 0x37,  /* 2: text id - 1 (u16) */
+    EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT = 0x37,  /* 2: text id - 1 (s16) */
     EVENT_OPCODE_FOCUS_SPEED = 0x38,            /* 2: speed (s16); rewrites the next CAMERA's frames */
     EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT = 0x39, /* 0 */
     EVENT_OPCODE_WAIT_FILE_LOAD = 0x3a,         /* 0 */
@@ -397,6 +397,13 @@ typedef struct event_file_block {
     u8 data[EVENT_BLOCK_BYTES - 4];
 } event_file_block_t;
 typedef char event_file_block_size_must_be_8192[(sizeof(event_file_block_t) == EVENT_BLOCK_BYTES) ? 1 : -1];
+
+/* A message ID operand can begin at any byte of the event stream. */
+typedef struct event_message_id_parameters {
+    s16 message_id __attribute__((packed));
+} event_message_id_parameters_t;
+typedef char event_message_id_parameters_size_must_be_2[sizeof(event_message_id_parameters_t) == 2 ? 1 : -1];
+typedef char event_message_id_parameters_alignment_must_be_1[__alignof__(event_message_id_parameters_t) == 1 ? 1 : -1];
 
 /* Eight-byte operand payload of EVENT_OPCODE_WALK_TO. Multi-byte values
  * remain byte arrays because event scripts are not guaranteed to be aligned. */

@@ -259,7 +259,7 @@ void world_script_color_unit_event_instruction(const event_color_unit_parameters
 void world_script_copy_matrix(MATRIX* destination, const MATRIX* source);
 void world_script_copy_bytes(void* destination, const void* source, s32 count);
 void world_script_earthquake_start(void);
-void world_script_toggle_message_portrait_flip(const u8* parameters);
+void world_script_toggle_message_portrait_flip(const event_message_id_parameters_t* parameters);
 void world_script_apply_relative_camera(event_camera_values_t* source, const s32* deltas);
 void world_script_face_tile(const event_face_tile_parameters_t* parameters);
 void world_script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
@@ -326,7 +326,7 @@ s32 world_script_find_jump_target(s32, s32, s32, s32);
 u32 world_script_get_rand16(void);
 s32* world_script_get_variable_word_pointer_from_id(s32 variable_id);
 void world_script_inflict_status_thread(void);
-s16 world_script_load_halfword(const u8* source);
+s16 world_script_load_halfword(const void* source);
 void world_script_load_portrait_colors_event_instruction(s32);
 void world_script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters);
 void world_script_pause_event_instruction(void);

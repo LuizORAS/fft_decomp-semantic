@@ -1,18 +1,14 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Toggle the 0x1c counter of the menu window buffer whose 0x08 field matches
- * the 16-bit parameter.
- *
- * The record index is never initialized in the target: the loop runs six
- * times over whatever slot the uninitialized local names, so the reconstruction
- * reproduces that uninitialized read. */
-void world_script_toggle_message_portrait_flip(const u8* parameters) {
+/* Toggle the portrait flip for the matching message. The record index is
+ * uninitialized, so the loop tests the same unspecified buffer six times. */
+void world_script_toggle_message_portrait_flip(const event_message_id_parameters_t* parameters) {
     s32 index;
     s32 i;
     s16 value;
 
-    value = world_script_load_halfword(parameters);
+    value = world_script_load_halfword(&parameters->message_id);
     for (i = 0; i < 6; i++) {
         if (g_world_menu_window_buffers[index].message_id == value) {
             g_world_menu_window_buffers[index].portrait_flipped++;
