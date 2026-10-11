@@ -76,37 +76,23 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
             if (sp->rotate == 0) {
                 mat = GsIDMATRIX;
             } else {
-                rot.vx = 0;
-                rot.vy = 0;
-                rot.vz = sp->rotate / 360;
+                setVector(&rot, 0, 0, sp->rotate / 360);
                 RotMatrix(&rot, &mat);
             }
             if (GS_SPRITE_SCALE_WORD(sp) != 0x10001000) {
-                vec.vx = sp->scalex;
-                vec.vy = sp->scaley;
-                vec.vz = 0;
+                setVector(&vec, sp->scalex, sp->scaley, 0);
                 ScaleMatrix(&mat, &vec);
             }
-            vec.vx = sp->x;
-            vec.vy = sp->y;
-            vec.vz = ReadGeomScreen();
+            setVector(&vec, sp->x, sp->y, ReadGeomScreen());
             TransMatrix(&mat, &vec);
             SetRotMatrix(&mat);
             SetTransMatrix(&mat);
             ox = -sp->mx;
             oy = -sp->my;
-            v0.vx = ox;
-            v0.vy = oy;
-            v0.vz = 0;
-            v1.vx = ox + sp->w;
-            v1.vy = oy;
-            v1.vz = 0;
-            v2.vx = ox;
-            v2.vy = oy + sp->h;
-            v2.vz = 0;
-            v3.vx = ox + sp->w;
-            v3.vy = oy + sp->h;
-            v3.vz = 0;
+            setVector(&v0, ox, oy, 0);
+            setVector(&v1, ox + sp->w, oy, 0);
+            setVector(&v2, ox, oy + sp->h, 0);
+            setVector(&v3, ox + sp->w, oy + sp->h, 0);
             RotTransPers4(&v0, &v1, &v2, &v3, &sxy0, &sxy1, &sxy2, &sxy3, &depth, &flag);
             if (attr & 0x800000) {
                 u_left = sp->u + sp->w - 1;

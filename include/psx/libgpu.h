@@ -186,6 +186,10 @@ typedef struct {
             ? (0xe1000000 | ((dtd) ? 0x0800 : 0) | ((dfe) ? 0x1000 : 0) | ((tpage) & 0x27ff))                          \
             : (0xe1000000 | ((dtd) ? 0x0200 : 0) | ((dfe) ? 0x0400 : 0) | ((tpage) & 0x9ff)))
 
+#define copyVector(v0, v1) (v0)->vx = (v1)->vx, (v0)->vy = (v1)->vy, (v0)->vz = (v1)->vz
+
+#define setVector(v, x, y, z) (v)->vx = (x), (v)->vy = (y), (v)->vz = (z)
+
 #define setRGB0(p, r, g, b) (p)->r0 = (r), (p)->g0 = (g), (p)->b0 = (b)
 #define setRGB1(p, r, g, b) (p)->r1 = (r), (p)->g1 = (g), (p)->b1 = (b)
 #define setRGB2(p, r, g, b) (p)->r2 = (r), (p)->g2 = (g), (p)->b2 = (b)
@@ -197,6 +201,8 @@ typedef struct {
 #define setUV0(p, _u0, _v0) (p)->u0 = (_u0), (p)->v0 = (_v0)
 #define setWH(p, _w, _h)    (p)->w = _w, (p)->h = _h
 
+#define setXY2(p, _x0, _y0, _x1, _y1) (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x1), (p)->y1 = (_y1)
+
 #define setXY4(p, _x0, _y0, _x1, _y1, _x2, _y2, _x3, _y3)                                                              \
     (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x1), (p)->y1 = (_y1), (p)->x2 = (_x2), (p)->y2 = (_y2),              \
     (p)->x3 = (_x3), (p)->y3 = (_y3)
@@ -204,6 +210,9 @@ typedef struct {
 #define setXYWH(p, _x0, _y0, _w, _h)                                                                                   \
     (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x0) + (_w), (p)->y1 = (_y0), (p)->x2 = (_x0),                        \
     (p)->y2 = (_y0) + (_h), (p)->x3 = (_x0) + (_w), (p)->y3 = (_y0) + (_h)
+
+#define setUV3(p, _u0, _v0, _u1, _v1, _u2, _v2)                                                                        \
+    (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u1), (p)->v1 = (_v1), (p)->u2 = (_u2), (p)->v2 = (_v2)
 
 #define setUV4(p, _u0, _v0, _u1, _v1, _u2, _v2, _u3, _v3)                                                              \
     (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u1), (p)->v1 = (_v1), (p)->u2 = (_u2), (p)->v2 = (_v2),              \
@@ -456,7 +465,7 @@ typedef struct {
 typedef struct {
     u32 tag;
     u32 code[2];
-} DR_PRIO;
+} DR_STP;
 
 /* libgpu DR_MOVE (u32 code[5]); the VRAM-to-VRAM move command words are
  * spelled out so game code can fill the source/destination halfwords. */
@@ -686,7 +695,7 @@ void DrawOTagEnv(u32* ot, DRAWENV* env);
 DISPENV* GetDispEnv(DISPENV* env);
 int GetODE(void);
 void SetTexWindow(DR_TWIN* packet, RECT* window);
-void SetPriority(DR_PRIO* packet, int test_mask, int set_mask);
+void SetPriority(DR_STP* packet, int test_mask, int set_mask);
 void* NextPrim(void* primitive);
 int IsEndPrim(void* primitive);
 void CatPrim(void* primitive, void* next);

@@ -28,10 +28,8 @@ void GsSortLine(GsLINE* line, GsOT* ot, u16 z) {
         prim->tpage.code[0] = ((attr >> 23) & 0x60) | 0xE1000200;
         setRGB0(prim, line->r, line->g, line->b);
         prim->code = ((attr >> 29) & 2) | 0x40;
-        prim->x0 = line->x0 + g_psyq_gs_offset_x;
-        prim->y0 = line->y0 + g_psyq_gs_offset_y;
-        prim->x1 = line->x1 + g_psyq_gs_offset_x;
-        prim->y1 = line->y1 + g_psyq_gs_offset_y;
+        setXY2(prim, line->x0 + g_psyq_gs_offset_x, line->y0 + g_psyq_gs_offset_y, line->x1 + g_psyq_gs_offset_x,
+            line->y1 + g_psyq_gs_offset_y);
         GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)prim, ot, z, 4);
     }
 }
