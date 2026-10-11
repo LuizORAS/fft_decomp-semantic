@@ -6,19 +6,6 @@
 #include "fft/battle.h"
 
 /* helpers */
-/* Reads animation curve `nibble` (0 = none, otherwise the curve index + 1) at `frame`. The
- * separate decrement keeps the target's compare against -1. */
-#define READ_CURVE(result, index, nibble, frame)                                                                       \
-    {                                                                                                                  \
-        index = (nibble);                                                                                              \
-        index--;                                                                                                       \
-        if (index != -1) {                                                                                             \
-            result = g_battle_effect_animation_curve_data->curves[index][frame];                                       \
-        } else {                                                                                                       \
-            result = 0;                                                                                                \
-        }                                                                                                              \
-    }
-
 /* Scales a scratch record's colour by a 4.12 brightness and packs it with its
  * primitive code into one RGB-code word. */
 #define PACK_RGB(scratch, brightness)                                                                                  \

@@ -149,7 +149,7 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 callba
         wave = entry->particle_ribbon.curve_indices[1];
         target_index = record->timeline.target_index;
         scroll = entry->particle_ribbon.curve_indices[0];
-        READ_CURVE(factor, j, (wave >> 24) & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(factor, j, (wave >> 24) & 0xf, frame);
         if (i
                 % battle_effect_lerp_linear(
                     entry->particle_ribbon.spawn_interval_start, entry->particle_ribbon.spawn_interval_end, factor)
@@ -173,11 +173,11 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
                 &g_battle_effect_context, &target);
 
-            READ_CURVE(factor, j, (wave >> 20) & 0xf, frame);
+            BATTLE_EFFECT_READ_CURVE(factor, j, (wave >> 20) & 0xf, frame);
             count = battle_effect_lerp_linear(
                 entry->particle_ribbon.particle_count_start, entry->particle_ribbon.particle_count_end, factor);
 
-            READ_CURVE(factor, j, scroll & 0xf, frame);
+            BATTLE_EFFECT_READ_CURVE(factor, j, scroll & 0xf, frame);
             battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin);
             switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
             case EFFECT_EMITTER_ORIGIN_WORLD:
@@ -208,7 +208,7 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 break;
             }
 
-            READ_CURVE(factor, j, (scroll >> 4) & 0xf, frame);
+            BATTLE_EFFECT_READ_CURVE(factor, j, (scroll >> 4) & 0xf, frame);
             battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
             if (rotate) {
                 SetRotMatrix(&facing);
@@ -231,12 +231,12 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 speed_max = entry->particle_ribbon.radial_speed_max_start;
             }
 
-            READ_CURVE(factor, j, (scroll >> 12) & 0xf, frame);
+            BATTLE_EFFECT_READ_CURVE(factor, j, (scroll >> 12) & 0xf, frame);
             battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &angle_spread);
-            READ_CURVE(factor, j, (scroll >> 8) & 0xf, frame);
+            BATTLE_EFFECT_READ_CURVE(factor, j, (scroll >> 8) & 0xf, frame);
             battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle_base);
 
-            READ_CURVE(factor, j, (wave >> 12) & 0xf, frame);
+            BATTLE_EFFECT_READ_CURVE(factor, j, (wave >> 12) & 0xf, frame);
             target_base.vx = battle_effect_lerp_linear(
                 entry->particle_ribbon.target_offset_start[0], entry->particle_ribbon.target_offset_end[0], factor);
             target_base.vy = battle_effect_lerp_linear(
@@ -272,7 +272,7 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 break;
             }
 
-            READ_CURVE(factor, j, (wave >> 4) & 0xf, frame);
+            BATTLE_EFFECT_READ_CURVE(factor, j, (wave >> 4) & 0xf, frame);
             target_spread.vx = battle_effect_lerp_linear(
                 entry->particle_ribbon.target_spread_start[0], entry->particle_ribbon.target_spread_end[0], factor);
             target_spread.vy = battle_effect_lerp_linear(
@@ -280,7 +280,7 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 callba
             target_spread.vz = battle_effect_lerp_linear(
                 entry->particle_ribbon.target_spread_start[4], entry->particle_ribbon.target_spread_end[4], factor);
 
-            READ_CURVE(factor, j, (wave >> 8) & 0xf, frame);
+            BATTLE_EFFECT_READ_CURVE(factor, j, (wave >> 8) & 0xf, frame);
             lifetime_min = battle_effect_lerp_linear(
                 entry->particle_ribbon.lifetime_start[0], entry->particle_ribbon.lifetime_end[0], factor);
             lifetime_max = battle_effect_lerp_linear(

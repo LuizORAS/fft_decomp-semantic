@@ -99,7 +99,7 @@ s32 effect_e485_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
         target_index = g_effect_state_records[record_index].timeline.target_index;
-        READ_CURVE(j, i, entry->ring_mesh.scroll_curves & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, entry->ring_mesh.scroll_curves & 0xf, frame);
         battle_effect_interpolate_emitter_spawn_position(entry, j, &origin);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
         case EFFECT_EMITTER_ORIGIN_WORLD:
@@ -136,10 +136,10 @@ s32 effect_e485_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 
             break;
         }
 
-        READ_CURVE(j, i, (entry->ring_mesh.wave_curves >> 16) & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, (entry->ring_mesh.wave_curves >> 16) & 0xf, frame);
         radius = battle_effect_lerp_linear(entry->ring_mesh.radius_start, entry->ring_mesh.radius_end, j);
 
-        READ_CURVE(j, i, (entry->ring_mesh.scroll_curves >> 8) & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, (entry->ring_mesh.scroll_curves >> 8) & 0xf, frame);
         u = battle_effect_lerp_linear(entry->ring_mesh.u_start, entry->ring_mesh.u_end, j);
         v = battle_effect_lerp_linear(entry->ring_mesh.v_start, entry->ring_mesh.v_end, j);
         u_span = entry->ring_mesh.u_span;
@@ -152,12 +152,12 @@ s32 effect_e485_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 
             work->v_scroll += v_span << 8;
         }
 
-        READ_CURVE(j, i, entry->ring_mesh.wave_curves & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, entry->ring_mesh.wave_curves & 0xf, frame);
         growth.vx = battle_effect_lerp_linear(entry->ring_mesh.growth_start, entry->ring_mesh.growth_end, j);
         growth.vy = battle_effect_lerp_linear(entry->ring_mesh.height_start, entry->ring_mesh.height_end, j) << 2;
         growth.vz = battle_effect_lerp_linear(entry->ring_mesh.row_radius_start, entry->ring_mesh.row_radius_end, j);
 
-        READ_CURVE(j, i, (entry->ring_mesh.wave_curves >> 4) & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, (entry->ring_mesh.wave_curves >> 4) & 0xf, frame);
         growth_step.vx
             = battle_effect_lerp_linear(entry->ring_mesh.growth_step_start, entry->ring_mesh.growth_step_end, j);
         growth_step.vy
@@ -165,7 +165,7 @@ s32 effect_e485_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 
         growth_step.vz = battle_effect_lerp_linear(
             entry->ring_mesh.row_radius_step_start, entry->ring_mesh.row_radius_step_end, j);
 
-        READ_CURVE(j, i, entry->ring_mesh.scroll_curves >> 28, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, entry->ring_mesh.scroll_curves >> 28, frame);
         work->spin
             = (work->spin
                   + battle_effect_lerp_linear(entry->ring_mesh.spin_speed_start, entry->ring_mesh.spin_speed_end, j))

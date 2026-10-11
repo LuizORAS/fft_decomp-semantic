@@ -1728,6 +1728,19 @@ typedef struct effect_animation_curve_table {
 typedef char effect_animation_curve_table_data_offset_must_be_4
     [(unsigned long)&((effect_animation_curve_table_t*)0)->curves == 4 ? 1 : -1];
 
+/* A zero selector disables a motion curve; other selectors are one-based.
+ * The separate decrement preserves the comparison against -1. */
+#define BATTLE_EFFECT_READ_CURVE(result, index, nibble, frame)                                                         \
+    {                                                                                                                  \
+        index = (nibble);                                                                                              \
+        index--;                                                                                                       \
+        if (index != -1) {                                                                                             \
+            result = g_battle_effect_animation_curve_data->curves[index][frame];                                       \
+        } else {                                                                                                       \
+            result = 0;                                                                                                \
+        }                                                                                                              \
+    }
+
 extern battle_effect_charge_params_t g_battle_effect_charge_line_params[2];
 extern battle_effect_death_poof_state_t g_battle_effect_death_poof_states[];
 extern battle_secondary_effect_function_t g_battle_effect_secondary_handlers[23];

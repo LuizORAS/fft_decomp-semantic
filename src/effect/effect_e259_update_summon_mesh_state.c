@@ -102,7 +102,7 @@ s32 effect_e259_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
     case EFFECT_PHASE_UPDATE:
         target_index = g_effect_state_records[record_index].timeline.target_index;
         work = record->work_slots[callback_slot];
-        READ_CURVE(i, j, entry->scroll_curves & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->scroll_curves & 0xF, frame);
         origin.vx = battle_effect_lerp_linear(entry->origin_start[0], entry->origin_end[0], i);
         origin.vy = battle_effect_lerp_linear(entry->origin_start[1], entry->origin_end[1], i);
         origin.vz = battle_effect_lerp_linear(entry->origin_start[2], entry->origin_end[2], i);
@@ -140,10 +140,10 @@ s32 effect_e259_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
             break;
         }
 
-        READ_CURVE(i, j, (entry->wave_curves >> 16) & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, (entry->wave_curves >> 16) & 0xF, frame);
         radius = battle_effect_lerp_linear(entry->radius_start, entry->radius_end, i);
 
-        READ_CURVE(i, j, (entry->scroll_curves >> 8) & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, (entry->scroll_curves >> 8) & 0xF, frame);
         u = battle_effect_lerp_linear(entry->u_start, entry->u_end, i);
         v = battle_effect_lerp_linear(entry->v_start, entry->v_end, i);
         u_span = entry->u_span;
@@ -156,15 +156,15 @@ s32 effect_e259_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
             work->v_scroll += v_span << 8;
         }
 
-        READ_CURVE(i, j, entry->wave_curves & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->wave_curves & 0xF, frame);
         growth.vx = battle_effect_lerp_linear(entry->growth_start, entry->growth_end, i);
         growth.vy = battle_effect_lerp_linear(entry->height_start, entry->height_end, i);
 
-        READ_CURVE(i, j, (entry->wave_curves >> 4) & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, (entry->wave_curves >> 4) & 0xF, frame);
         growth_step.vx = battle_effect_lerp_linear(entry->growth_step_start, entry->growth_step_end, i);
         growth_step.vy = battle_effect_lerp_linear(entry->height_step_start, entry->height_step_end, i);
 
-        READ_CURVE(i, j, entry->scroll_curves >> 28, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->scroll_curves >> 28, frame);
         work->spin
             = (work->spin + battle_effect_lerp_linear(entry->spin_speed_start, entry->spin_speed_end, i)) & 0xFFF;
 
