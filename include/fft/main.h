@@ -337,15 +337,15 @@ extern s32 g_main_input_pressed_buttons;
 extern s32 g_main_input_previous_buttons;
 extern u32 g_main_input_current_buttons;
 extern u32 g_main_input_released_buttons;
-extern u32 g_controller_pressed_copy_0;
-extern u32 g_controller_pressed_copy_1;
-extern u32 g_controller_pressed_copy_2;
-extern u32 g_controller_pressed_copy_3;
-extern u32 g_controller_previous_copy_0;
-extern u32 g_controller_previous_copy_1;
-extern u32 g_controller_previous_copy_2;
-extern u32 g_controller_previous_copy_3;
-extern u32 g_controller_stable_frames;
+extern u32 g_main_input_pressed_copy_0;
+extern u32 g_main_input_pressed_copy_1;
+extern u32 g_main_input_pressed_copy_2;
+extern u32 g_main_input_pressed_copy_3;
+extern u32 g_main_input_previous_copy_0;
+extern u32 g_main_input_previous_copy_1;
+extern u32 g_main_input_previous_copy_2;
+extern u32 g_main_input_previous_copy_3;
+extern u32 g_main_input_stable_frames;
 
 /* item */
 extern u8 g_main_item_quantities[ITEM_ID_COUNT];

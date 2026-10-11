@@ -1206,15 +1206,15 @@ data:
   - {addr: 0x80045948, name: g_main_input_previous_buttons}
   - {addr: 0x8004594c, name: g_main_input_pressed_buttons}
   - {addr: 0x80045950, name: g_main_input_released_buttons}
-  - {addr: 0x80045954, name: g_controller_previous_copy_0}
-  - {addr: 0x80045958, name: g_controller_previous_copy_1}
-  - {addr: 0x8004595c, name: g_controller_previous_copy_2}
-  - {addr: 0x80045960, name: g_controller_previous_copy_3}
-  - {addr: 0x80045964, name: g_controller_pressed_copy_0}
-  - {addr: 0x80045968, name: g_controller_pressed_copy_1}
-  - {addr: 0x8004596c, name: g_controller_pressed_copy_2}
-  - {addr: 0x80045970, name: g_controller_pressed_copy_3}
-  - {addr: 0x80045974, name: g_controller_stable_frames}
+  - {addr: 0x80045954, name: g_main_input_previous_copy_0}
+  - {addr: 0x80045958, name: g_main_input_previous_copy_1}
+  - {addr: 0x8004595c, name: g_main_input_previous_copy_2}
+  - {addr: 0x80045960, name: g_main_input_previous_copy_3}
+  - {addr: 0x80045964, name: g_main_input_pressed_copy_0}
+  - {addr: 0x80045968, name: g_main_input_pressed_copy_1}
+  - {addr: 0x8004596c, name: g_main_input_pressed_copy_2}
+  - {addr: 0x80045970, name: g_main_input_pressed_copy_3}
+  - {addr: 0x80045974, name: g_main_input_stable_frames}
   - {addr: 0x80045978, name: g_main_system_frontend_world_result}
   - {addr: 0x8004597c, name: g_main_gfx_screen_polarity}
   - {addr: 0x80045980, name: g_main_system_animation_speed}
