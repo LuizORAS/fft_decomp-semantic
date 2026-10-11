@@ -255,7 +255,8 @@ void battle_map_update_animations(void) {
                             }
                         }
 
-                        if (++g_battle_map_palette_state.clut_rows[i].animations[k].blend_step >= 0x20) {
+                        if (++g_battle_map_palette_state.clut_rows[i].animations[k].blend_step
+                            >= MAP_PALETTE_BLEND_STEP_COUNT) {
                             if (g_battle_map_palette_state.clut_rows[i].animations[k].repeat
                                 == MAP_COLOR_REPEAT_TINTED) {
                                 battle_map_modify_palette(MAP_COLOR_MODE_RESTORE,
@@ -297,7 +298,8 @@ void battle_map_update_animations(void) {
                         }
                     }
 
-                    if (++g_battle_map_palette_state.clut_rows[i].animations[k].blend_step >= 8) {
+                    if (++g_battle_map_palette_state.clut_rows[i].animations[k].blend_step
+                        >= MAP_PALETTE_FAST_BLEND_STEP_COUNT) {
                         if (g_battle_map_palette_state.clut_rows[i].animations[k].repeat == MAP_COLOR_REPEAT_TINTED) {
                             battle_map_modify_palette(MAP_COLOR_MODE_RESTORE,
                                 g_battle_map_palette_state.clut_rows[i].animations[k].mode, i, k, 0, 0, 0, 0);
@@ -343,7 +345,8 @@ void battle_map_update_animations(void) {
                         }
                     }
 
-                    if (++g_battle_map_palette_state.clut_rows[i].animations[0].blend_step >= 0x20) {
+                    if (++g_battle_map_palette_state.clut_rows[i].animations[0].blend_step
+                        >= MAP_PALETTE_BLEND_STEP_COUNT) {
                         if (g_battle_map_palette_state.clut_rows[i].animations[0].repeat == MAP_COLOR_REPEAT_TINTED) {
                             battle_map_modify_palette(MAP_COLOR_MODE_RESTORE,
                                 g_battle_map_palette_state.clut_rows[i].animations[0].mode, i, 0, 1, 0, 0, 0);
@@ -385,7 +388,8 @@ void battle_map_update_animations(void) {
                     }
                 }
 
-                if (++g_battle_map_palette_state.clut_rows[i].animations[0].blend_step >= 8) {
+                if (++g_battle_map_palette_state.clut_rows[i].animations[0].blend_step
+                    >= MAP_PALETTE_FAST_BLEND_STEP_COUNT) {
                     if (g_battle_map_palette_state.clut_rows[i].animations[0].repeat == MAP_COLOR_REPEAT_TINTED) {
                         battle_map_modify_palette(MAP_COLOR_MODE_RESTORE,
                             g_battle_map_palette_state.clut_rows[i].animations[0].mode, i, 0, 1, 0, 0, 0);

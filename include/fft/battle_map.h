@@ -368,15 +368,23 @@ enum {
     MAP_CLUT_CYCLE_SLOT_BYTE_COUNT = 10,
 };
 
+/* A signed five-bit channel delta (-31..31), biased for table indexing. */
+enum {
+    MAP_PALETTE_DELTA_BIAS = 31,
+    MAP_PALETTE_DELTA_COUNT = 63,
+    MAP_PALETTE_BLEND_STEP_COUNT = 32,
+    MAP_PALETTE_FAST_BLEND_STEP_COUNT = 8,
+};
+
 /* Expanded palette color and interpolation deltas; each component occupies one byte. */
 typedef struct map_palette_color_components {
     u8 red_5bit;
     u8 green_5bit;
     u8 blue_5bit;
     u8 semi_transparent;
-    u8 red_delta_biased;   /* target - current + 0x1f */
-    u8 green_delta_biased; /* target - current + 0x1f */
-    u8 blue_delta_biased;  /* target - current + 0x1f */
+    u8 red_delta_biased;   /* target - current + MAP_PALETTE_DELTA_BIAS */
+    u8 green_delta_biased; /* target - current + MAP_PALETTE_DELTA_BIAS */
+    u8 blue_delta_biased;  /* target - current + MAP_PALETTE_DELTA_BIAS */
 } map_palette_color_components_t;
 typedef char map_palette_color_components_size_must_be_7[(sizeof(map_palette_color_components_t) == 7) ? 1 : -1];
 
@@ -928,8 +936,8 @@ extern s32 g_battle_map_lowest_surface_y;
 extern s32 g_battle_map_mesh_part_animation_states[];
 extern const battle_map_mesh_geometry_t* g_battle_map_mesh_part_geometry[9];
 extern clut_t g_battle_map_palette_animation_frames;
-extern s8 g_battle_map_palette_blend_steps_32[][32];
-extern s8 g_battle_map_palette_blend_steps_8[][8];
+extern s8 g_battle_map_palette_blend_steps_32[MAP_PALETTE_DELTA_COUNT][MAP_PALETTE_BLEND_STEP_COUNT];
+extern s8 g_battle_map_palette_blend_steps_8[MAP_PALETTE_DELTA_COUNT][MAP_PALETTE_FAST_BLEND_STEP_COUNT];
 extern u8 g_battle_map_palette_pending;
 extern battle_map_mesh_triangle_positions_t* g_battle_map_part_textured_triangle_positions;
 extern battle_map_mesh_quad_positions_t* g_battle_map_part_textured_quad_positions;

@@ -138,9 +138,9 @@ void battle_map_modify_palette(
                     out_blue = 1;
                 }
                 if (amount != 0) {
-                    components[i].red_delta_biased = out_red - components[i].red_5bit + 0x1f;
-                    components[i].green_delta_biased = out_green - components[i].green_5bit + 0x1f;
-                    components[i].blue_delta_biased = out_blue - components[i].blue_5bit + 0x1f;
+                    components[i].red_delta_biased = out_red - components[i].red_5bit + MAP_PALETTE_DELTA_BIAS;
+                    components[i].green_delta_biased = out_green - components[i].green_5bit + MAP_PALETTE_DELTA_BIAS;
+                    components[i].blue_delta_biased = out_blue - components[i].blue_5bit + MAP_PALETTE_DELTA_BIAS;
                 } else {
                     components[i].red_5bit = out_red;
                     components[i].green_5bit = out_green;
@@ -150,7 +150,7 @@ void battle_map_modify_palette(
                 }
             } else {
                 components[i].red_delta_biased = components[i].green_delta_biased = components[i].blue_delta_biased
-                    = 0x1f;
+                    = MAP_PALETTE_DELTA_BIAS;
             }
         }
         if (amount != 0) {
@@ -319,9 +319,9 @@ void battle_map_modify_palette(
                     out_blue = 1;
                 }
                 if (amount != 0) {
-                    component->red_delta_biased = out_red - component->red_5bit + 0x1f;
-                    component->green_delta_biased = out_green - component->green_5bit + 0x1f;
-                    component->blue_delta_biased = out_blue - component->blue_5bit + 0x1f;
+                    component->red_delta_biased = out_red - component->red_5bit + MAP_PALETTE_DELTA_BIAS;
+                    component->green_delta_biased = out_green - component->green_5bit + MAP_PALETTE_DELTA_BIAS;
+                    component->blue_delta_biased = out_blue - component->blue_5bit + MAP_PALETTE_DELTA_BIAS;
                 } else {
                     component->red_5bit = out_red;
                     component->green_5bit = out_green;
@@ -330,7 +330,8 @@ void battle_map_modify_palette(
                         = out_red + (out_green << 5) + (out_blue << 10) + (component->semi_transparent << 15);
                 }
             } else {
-                component->red_delta_biased = component->green_delta_biased = component->blue_delta_biased = 0x1f;
+                component->red_delta_biased = component->green_delta_biased = component->blue_delta_biased
+                    = MAP_PALETTE_DELTA_BIAS;
             }
         }
         if (amount != 0) {
