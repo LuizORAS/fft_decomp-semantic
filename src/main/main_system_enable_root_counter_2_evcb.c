@@ -3,11 +3,8 @@
 #include "psx/types.h"
 
 void main_system_enable_root_counter_2_evcb(void) {
-    u16 flags;
-
-    flags = g_main_sound_driver_flags;
-    if ((flags & MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT) == 0) {
-        g_main_sound_driver_flags = flags | MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT;
+    if ((g_main_sound_driver_flags & MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT) == 0) {
+        g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT;
         EnableEvent(g_main_root_counter_2_event);
     }
 }
