@@ -74,6 +74,7 @@ extern u8 g_debugchr_gfx_scaled_sprite_count;
 extern point16_t g_debugchr_gfx_scaled_sprite_scale[];
 extern main_zodiac_sprite_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
 extern world_image_location_t g_debugchr_gfx_scaled_sprite_texture_page;
+void debugchr_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void debugchr_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
 void debugchr_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,

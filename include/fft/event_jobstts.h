@@ -196,7 +196,7 @@ void jobstts_gfx_enqueue_textured_quad(
 void jobstts_gfx_enqueue_oriented_textured_quad(
     RECT* rect, jobstts_oriented_uv_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad_rect(
-    RECT* rect, world_item_icon_source_t* tex, rgb24_t* color, s32 semitrans, s32 ot_index);
+    RECT* rect, menu_icon_source_t* tex, rgb24_t* color, s32 semitrans, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad_list(
     battle_menu_sprite_cell_t* sprites, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index, s32 count);
 void jobstts_gfx_enqueue_textured_quad_corners(

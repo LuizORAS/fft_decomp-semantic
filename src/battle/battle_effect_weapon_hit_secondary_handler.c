@@ -33,7 +33,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
-        if (effect->target.fields.result_animation == BATTLE_EFFECT_HIT_NO_EFFECT) {
+        if (effect->target.record.id.unit.result_animation == BATTLE_EFFECT_HIT_NO_EFFECT) {
             return 0;
         }
         if (effect->allocation != 0) {
@@ -58,17 +58,17 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         state = effect->allocation;
         group = BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B;
-        if (effect->target.fields.result_animation == BATTLE_EFFECT_HIT_MISSED) {
+        if (effect->target.record.id.unit.result_animation == BATTLE_EFFECT_HIT_MISSED) {
             group = BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B_MISSED;
         }
         if (group == BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B) {
             if (state->frame == 0) {
                 battle_gfx_start_misc_unit_palette_modulation(
-                    MAP_COLOR_MODE_BASE_HALF, 0, effect->target.fields.target_id, 0x1f, 0x1f, 0x1f);
+                    MAP_COLOR_MODE_BASE_HALF, 0, effect->target.record.id.unit.misc_id, 0x1f, 0x1f, 0x1f);
             }
             if (state->frame == group) {
-                battle_gfx_start_misc_unit_palette_modulation(
-                    MAP_COLOR_MODE_RESTORE, 2, g_battle_effect_current_secondary->target.fields.target_id, 0, 0, 0);
+                battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_RESTORE, 2,
+                    g_battle_effect_current_secondary->target.record.id.unit.misc_id, 0, 0, 0);
             }
         }
         if (state->frame < 4) {
@@ -148,7 +148,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
         }
         battle_effect_restore_inertia_threshold();
         battle_effect_restore_gravity();
-        if (g_battle_effect_current_secondary->target.fields.result_animation == BATTLE_EFFECT_HIT_CRITICAL) {
+        if (g_battle_effect_current_secondary->target.record.id.unit.result_animation == BATTLE_EFFECT_HIT_CRITICAL) {
             if (state->frame == 0) {
                 zoom.vx = zoom.vy = zoom.vz = -0x80;
                 battle_camera_execute_zoom_command(

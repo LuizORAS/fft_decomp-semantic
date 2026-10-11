@@ -5,7 +5,7 @@
  * texture page, and links it into ordering table entry ot_index. With
  * `color` the quad is shaded with it. */
 void jobstts_gfx_enqueue_textured_quad_rect(
-    RECT* rect, world_item_icon_source_t* tex, rgb24_t* color, s32 semitrans, s32 ot_index) {
+    RECT* rect, menu_icon_source_t* tex, rgb24_t* color, s32 semitrans, s32 ot_index) {
     POLY_FT4* poly;
 
     poly = &g_jobstts_gfx_context->textured_quads[g_jobstts_gfx_poly_ft4_count++];

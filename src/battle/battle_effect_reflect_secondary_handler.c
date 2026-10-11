@@ -85,8 +85,9 @@ s32 battle_effect_reflect_secondary_handler(void) {
         rect.w = 6;
         rect.h = 1;
         LoadImage(&rect, (u32*)work->clut[g_battle_effect_buffer_index]);
-        caster = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id);
-        target = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id);
+        caster = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.id.unit.misc_id);
+        target = battle_unit_get_screen_data_ptr_by_misc_id(
+            g_battle_effect_current_secondary->target.record.id.unit.misc_id);
         delta.vx = caster->vx - target->vx;
         delta.vy = caster->vy - target->vy;
         delta.vz = caster->vz - target->vz;
@@ -94,7 +95,7 @@ s32 battle_effect_reflect_secondary_handler(void) {
         position.vz = target->vz;
         position.vy = target->vy
             - (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(
-                  g_battle_effect_current_secondary->target.fields.target_id)
+                  g_battle_effect_current_secondary->target.record.id.unit.misc_id)
                 / 2;
         angles.vy = ratan2(-delta.vz, delta.vx);
         angles.vz = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;

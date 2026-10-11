@@ -4,8 +4,8 @@
 /* Ask the selected callback for the literal row's icon, or the current
  * scrolling row's icon, then draw it at the command's position. */
 menu_instruction_t* world_menu_script_draw_callback_sprite(menu_instruction_t* instruction) {
-    world_item_icon_source_t* (*handler)(s32);
-    world_item_icon_source_t* entry;
+    menu_icon_source_t* (*handler)(s32);
+    menu_icon_source_t* entry;
     s32 index;
 
     handler = g_world_menu_script_callbacks[instruction->callback_sprite.callback_index].icon;

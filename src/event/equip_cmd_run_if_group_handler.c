@@ -1,15 +1,14 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* Run the next `count` commands only if row callback command->conditional.predicate returns
- * nonzero for the row (literal command->conditional.value, or the row being drawn while a
- * list row is rendered); otherwise skip them. */
+/* Run the following group if its predicate succeeds for the literal or
+ * current list row; otherwise skip it. */
 menu_instruction_t* equip_cmd_run_if_group_handler(menu_instruction_t* command) {
     s32 (*handler)(s32);
     s32 count;
     s32 arg;
 
-    handler = g_equip_menu_list_row_callbacks[command->conditional.predicate];
+    handler = g_equip_menu_list_row_callbacks[command->conditional.predicate].value;
     count = command->conditional.count;
     if (g_equip_menu_list_row_mode == 0) {
         arg = command->conditional.value;

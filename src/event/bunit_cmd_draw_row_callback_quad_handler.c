@@ -7,11 +7,11 @@
  * icon's size, texture origin, CLUT and texture page. Returns the next
  * command. */
 u8* bunit_cmd_draw_row_callback_quad_handler(u8* cmd) {
-    world_item_icon_source_t* entry;
+    menu_icon_source_t* entry;
     s32 row;
-    world_item_icon_source_t* (*callback)(s32);
+    menu_icon_source_t* (*callback)(s32);
 
-    callback = (world_item_icon_source_t * (*)(s32)) g_bunit_menu_row_callbacks[cmd[2]];
+    callback = (menu_icon_source_t * (*)(s32)) g_bunit_menu_row_callbacks[cmd[2]];
     if (g_bunit_menu_scroll_list_active == 0) {
         row = cmd[3];
     } else {

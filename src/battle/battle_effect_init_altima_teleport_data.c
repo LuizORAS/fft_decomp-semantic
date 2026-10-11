@@ -9,12 +9,12 @@ void battle_effect_init_altima_teleport_data(
     u8 misc_id;
     u8 repeated_misc_id;
 
-    teleport_data->targets.by_role.caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+    teleport_data->targets[BATTLE_EFFECT_CASTER_ENTRY].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
     misc_id = unit->unit_id;
     teleport_data->target_count = 1;
-    teleport_data->targets.by_role.target[0].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-    teleport_data->targets.by_role.caster.fields.caster_id = misc_id;
+    teleport_data->targets[0].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+    teleport_data->targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id = misc_id;
     repeated_misc_id = unit->unit_id;
     teleport_data->spectator_count = 0;
-    teleport_data->targets.by_role.target[0].fields.target_id = repeated_misc_id;
+    teleport_data->targets[0].id.unit.misc_id = repeated_misc_id;
 }

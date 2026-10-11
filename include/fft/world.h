@@ -2254,14 +2254,6 @@ extern u16 g_world_menu_ct_gauge_clut;
 extern u16 g_world_menu_background_clut;
 extern u16 g_world_menu_window_clut_alt;
 extern u16 g_world_menu_window_clut_normal;
-/* The display opcode selects the row callback's result: an icon source
- * for opcode 0x06, or an integer for predicates and number renderers. */
-typedef union world_menu_callback {
-    s32 (*value)(s32 row);
-    world_item_icon_source_t* (*icon)(s32 row);
-} world_menu_callback_t;
-typedef char world_menu_callback_size_must_be_4[sizeof(world_menu_callback_t) == 4 ? 1 : -1];
-
 extern menu_instruction_t* (*g_world_menu_script_handlers[28])(menu_instruction_t* instruction);
 extern menu_sprite_command_t g_world_menu_script_sprite_command;
 extern menu_window_command_t g_world_menu_window_interior_command;
@@ -2302,7 +2294,7 @@ extern u8 g_world_menu_at_list_text[];
 extern battle_at_entry_t g_world_action_target_list_slots[40];
 extern s16 g_world_menu_submenu_page_row_text_ids[];
 extern u32* g_world_menu_list_controller_input;
-extern world_item_icon_source_t g_world_menu_entry_item_icon_source;
+extern menu_icon_source_t g_world_menu_entry_item_icon_source;
 extern u16 g_world_menu_scroll_repeat_timer;
 extern s32 g_world_menu_display_script_input;
 extern s16 g_world_menu_list_visible_rows;
@@ -2333,7 +2325,7 @@ extern s32 g_world_grid_menu_id; /* menu_grid_help_id_e */
 extern s16 g_world_menu_scenario_event_started;
 extern world_menu_entry_t* g_world_menu_thread_menu_data;
 
-extern world_menu_callback_t g_world_menu_script_callbacks[16];
+extern menu_callback_t g_world_menu_script_callbacks[16];
 extern menu_glyph_sheet_t* g_world_menu_glyph_sheet; /* decoded glyph page, 0x80 bytes per row */
 extern u16 g_world_menu_disabled_number_clut;
 extern menu_window_buffer_t g_world_menu_window_buffers[6]; /* 0x8019aca0 */
@@ -2483,7 +2475,7 @@ void world_menu_free_high_overlay(void);
 void world_menu_free_memory(void* buffer);
 s32 world_menu_get_entry_item_count(s32 entry_index);
 s32 world_menu_get_entry_item_equipped_count(s32 entry_index);
-world_item_icon_source_t* world_menu_get_entry_item_icon_source(s32 index);
+menu_icon_source_t* world_menu_get_entry_item_icon_source(s32 index);
 s32 world_menu_get_event_state_flag(void);
 s32 world_menu_get_item_half_price_display_value(s32 entry_index);
 s32 world_menu_get_item_price_display_value(s32 entry_index);
@@ -2797,7 +2789,7 @@ extern u8 g_world_item_category_tabs_wide_script[];               /* menu displa
 extern world_oriented_quad_t g_world_item_category_tab_sprites[]; /* 20-byte quads, one per row */
 extern u8 g_world_item_category_tab_x[];                          /* per-row base x */
 extern u8 g_world_item_category_input_lock;
-extern world_item_icon_source_t g_world_item_type_icon_source;
+extern menu_icon_source_t g_world_item_type_icon_source;
 extern u8 g_world_item_menu_saved_browse_enabled;
 extern s8 g_world_remove_item_previewed_slot;
 extern s16 g_world_remove_item_equipment[5];
@@ -2813,9 +2805,9 @@ extern u8 g_world_item_menu_category;
 void world_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
 s32 world_count_item_equipped_by_party(s32 item_id);
 s32 world_item_build_category_list(s16 unit_id, s16 sort_mode, s8 category, s16* entries, u8 mode);
-void world_gfx_build_item_graphic_descriptor(world_item_icon_source_t* source, s32 item_id);
+void world_gfx_build_item_graphic_descriptor(menu_icon_source_t* source, s32 item_id);
 void world_item_build_status_list_polygons(s16 item_id);
-world_item_icon_source_t* world_item_build_type_icon_source(s32 entry_index);
+menu_icon_source_t* world_item_build_type_icon_source(s32 entry_index);
 
 void world_item_calculate_equipment_swap_stat_delta(
     world_item_stat_detail_t* detail_total, battle_unit_status_record_t* total, u16* items_before, u16* items_after);
@@ -2845,7 +2837,7 @@ s32 world_item_get_price(s16 item_id);
 s32 world_item_get_ranking_value(s32 item_id);
 s32 world_item_get_selected_half_price(s32 unused_row);
 s32 world_item_get_type(s32 item_id);
-void world_item_get_type_icon_rect(s32 type, world_item_icon_source_t* out);
+void world_item_get_type_icon_rect(s32 type, menu_icon_source_t* out);
 item_menu_category_e world_item_get_menu_category(s16 item_id);
 s32 world_item_is_in_category_list(s32 item_id, s32 list_index);
 

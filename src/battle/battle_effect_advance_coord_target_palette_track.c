@@ -35,9 +35,9 @@ void battle_effect_advance_coord_target_palette_track(
                 green = track->color[index][1];
                 blue = track->color[index][2];
                 for (i = 0; i < g_battle_effect_context.target_count; i++) {
-                    if (g_battle_effect_context.targets.records[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+                    if (g_battle_effect_context.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                            track->duration[index], g_battle_effect_context.targets.records[i].id.misc_id, red, green,
+                            track->duration[index], g_battle_effect_context.targets[i].id.unit.misc_id, red, green,
                             blue);
                     }
                 }

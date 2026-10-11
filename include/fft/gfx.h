@@ -196,21 +196,6 @@ typedef struct world_oriented_quad {
 } world_oriented_quad_t;
 typedef char world_oriented_quad_size_must_be_0x14[sizeof(world_oriented_quad_t) == 0x14 ? 1 : -1];
 
-/* Provisional: 12-byte textured-sprite source record (texture rectangle, CLUT
- * and texture page) filled by world_gfx_build_item_graphic_descriptor,
- * world_item_build_type_icon_source and equip_item_build_type_icon_source,
- * returned through the list-row callback tables and consumed by the menu icon
- * strip at 0x801c8464 and jobstts_gfx_enqueue_textured_quad_rect. */
-typedef struct world_item_icon_source {
-    s16 u;     /* 0x00 */
-    s16 v;     /* 0x02 */
-    s16 w;     /* 0x04 */
-    s16 h;     /* 0x06 */
-    u16 clut;  /* 0x08 */
-    u16 tpage; /* 0x0a */
-} world_item_icon_source_t;
-typedef char world_item_icon_source_size_must_be_12[sizeof(world_item_icon_source_t) == 12 ? 1 : -1];
-
 /* Gouraud-textured rectangle source for world_gfx_enqueue_gouraud_textured_quad
  * (0x8012cfd4) and bunit_gfx_enqueue_gouraud_textured_quad: screen rectangle,
  * texture origin (only the low byte of u/v is used; the texture extent is the

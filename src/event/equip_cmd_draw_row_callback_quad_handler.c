@@ -1,19 +1,16 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* Stream command: ask row callback cmd->callback_sprite.callback_index for the icon of a row (literal
- * cmd->callback_sprite.row, or the row being drawn while a list row is rendered) and, when it
- * returns one, draw it as a textured quad at (cmd->callback_sprite.x, cmd->callback_sprite.y) with the
- * icon's size, texture origin, CLUT and texture page. Returns the next
- * command. */
+/* Draw the selected callback's icon for the literal or current list row,
+ * using its texture, dimensions and palette. */
 menu_instruction_t* equip_cmd_draw_row_callback_quad_handler(menu_instruction_t* cmd) {
-    equip_row_callback_t fn;
-    world_item_icon_source_t* entry;
+    menu_icon_source_t* (*fn)(s32 row);
+    menu_icon_source_t* entry;
     s32 row;
     u16 tpage;
     u16 clut;
 
-    fn = g_equip_menu_list_row_callbacks[cmd->callback_sprite.callback_index];
+    fn = g_equip_menu_list_row_callbacks[cmd->callback_sprite.callback_index].icon;
     if (g_equip_menu_list_row_mode == 0) {
         row = cmd->callback_sprite.row;
     } else {
@@ -23,7 +20,7 @@ menu_instruction_t* equip_cmd_draw_row_callback_quad_handler(menu_instruction_t*
         }
     }
 
-    entry = (world_item_icon_source_t*)fn(row);
+    entry = fn(row);
     if (entry != 0) {
         g_equip_cmd_row_sprite_command.sprite.x = cmd->callback_sprite.x;
         g_equip_cmd_row_sprite_command.sprite.y = cmd->callback_sprite.y;

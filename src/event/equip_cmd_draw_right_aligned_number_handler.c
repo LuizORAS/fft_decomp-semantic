@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Draw record: print a callback-supplied number right-aligned in a field of
- * `command->number.width` eight-pixel cells, then advance past the record. `count` holds
+ * eight-pixel cells, then advance past the record. `count` holds
  * the value, then the printed length, then the number of digit cells. */
 menu_instruction_t* equip_cmd_draw_right_aligned_number_handler(menu_instruction_t* command) {
     s8 buf[0x10];
@@ -15,7 +15,7 @@ menu_instruction_t* equip_cmd_draw_right_aligned_number_handler(menu_instruction
     s16 blanks;
     s32 j;
 
-    count = g_equip_menu_list_row_callbacks[command->number.getter](command->number.value);
+    count = g_equip_menu_list_row_callbacks[command->number.getter].value(command->number.value);
     count = sprintf(buf, g_equip_text_decimal_format, count);
     blanks = command->number.width - count;
     x = command->number.x;

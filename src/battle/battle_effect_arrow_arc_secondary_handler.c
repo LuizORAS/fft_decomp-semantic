@@ -39,7 +39,7 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         g_battle_effect_arrow_arc_yaw = ratan2(-delta.vz, delta.vx);
         result = 1;
         g_battle_effect_arrow_arc_caster_relative_yaw = g_battle_effect_arrow_arc_yaw
-            - (((battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id)
+            - (((battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_current_secondary->caster.id.unit.misc_id)
                     + 1)
                    & 3)
                 << 10);
@@ -104,12 +104,12 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         if (g_battle_effect_projectile_step_count == 2 && g_battle_effect_trajectory_hit_unit_id != -1
             && g_battle_effect_current_secondary->target_count != 0) {
-            battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
-                g_battle_effect_current_secondary->target.fields.target_id);
+            battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.id.unit.misc_id,
+                g_battle_effect_current_secondary->target.record.id.unit.misc_id);
         }
         if (--g_battle_effect_projectile_step_count == 0 || position.vy >= 0) {
             g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_FINALIZING;
-            flags = g_battle_effect_current_secondary->target.fields.result_animation;
+            flags = g_battle_effect_current_secondary->target.record.id.unit.result_animation;
             if (flags == BATTLE_EFFECT_HIT_MISSED || flags - 4 < 2U || g_battle_effect_trajectory_hit_unit_id == -1) {
                 D_801B8B98 = 0x80000000;
                 battle_effect_end_secondary_on_current_unit();

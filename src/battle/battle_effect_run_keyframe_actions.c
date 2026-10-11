@@ -12,14 +12,13 @@ void battle_effect_run_keyframe_actions(u16 flags, u8 target, effect_record_t* s
 
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
         misc_id = -1;
-        if (g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].target_type
-            == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-            misc_id = g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id;
+        if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            misc_id = g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id;
         }
     } else {
         misc_id = -1;
-        if (g_battle_effect_context.targets.records[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-            misc_id = g_battle_effect_context.targets.records[target].id.misc_id;
+        if (g_battle_effect_context.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            misc_id = g_battle_effect_context.targets[target].id.unit.misc_id;
         }
     }
     if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_POST_ACTION_DISPLAY) && misc_id != -1) {

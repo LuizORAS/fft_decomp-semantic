@@ -173,8 +173,8 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             if ((kind < ITEM_ID_FIRE_BALL || kind > ITEM_ID_LIGHTNING_BALL)
                 && (kind < ITEM_ID_POTION || kind > ITEM_ID_PHOENIX_DOWN)
                 && g_battle_effect_current_secondary->target_count != 0) {
-                battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
-                    g_battle_effect_current_secondary->target.fields.target_id);
+                battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.id.unit.misc_id,
+                    g_battle_effect_current_secondary->target.record.id.unit.misc_id);
             }
         }
         if (g_battle_effect_projectile_spin_passes > 0) {
@@ -185,16 +185,17 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 battle_effect_free_slot(g_battle_effect_current_secondary->slot_ids[0]);
                 g_battle_effect_current_secondary->slot_ids[0] = 0;
             }
-            if (g_battle_effect_current_secondary->target.fields.target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT
-                && g_battle_effect_current_secondary->target.fields.result_animation != BATTLE_EFFECT_HIT_MISSED
-                && g_battle_effect_current_secondary->target.fields.result_animation != BATTLE_EFFECT_HIT_NO_EFFECT) {
+            if (g_battle_effect_current_secondary->target.record.target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT
+                && g_battle_effect_current_secondary->target.record.id.unit.result_animation != BATTLE_EFFECT_HIT_MISSED
+                && g_battle_effect_current_secondary->target.record.id.unit.result_animation
+                    != BATTLE_EFFECT_HIT_NO_EFFECT) {
                 battle_effect_play();
                 battle_state_set_animation_speed(2);
             } else if (battle_effect_get_phase() == BATTLE_EFFECT_PHASE_REQUESTED) {
                 if (g_battle_effect_current_secondary->target_count != 0) {
                     battle_unit_call_bow_hardcoding_by_misc_id(
-                        g_battle_effect_current_secondary->caster.fields.caster_id,
-                        g_battle_effect_current_secondary->target.fields.target_id);
+                        g_battle_effect_current_secondary->caster.id.unit.misc_id,
+                        g_battle_effect_current_secondary->target.record.id.unit.misc_id);
                 }
                 battle_effect_set_phase_none();
             }

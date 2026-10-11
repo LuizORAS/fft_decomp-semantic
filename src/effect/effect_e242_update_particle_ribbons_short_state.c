@@ -156,10 +156,10 @@ s32 effect_e242_update_particle_ribbons_short_state(s16 record_index, s32 callba
             == 0) {
             SetTransMatrix(&work->matrix);
             rotate = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
-            caster_target = &g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY];
+            caster_target = &g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY];
             if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                 quadrant = battle_unit_get_facing_quadrant_by_misc_id(
-                    g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id);
+                    g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id);
                 quadrant = ((quadrant + 1) & 3) << 10;
                 vector.vz = 0;
                 vector.vx = 0;

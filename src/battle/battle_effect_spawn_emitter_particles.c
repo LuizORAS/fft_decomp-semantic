@@ -92,10 +92,9 @@ s32 battle_effect_spawn_emitter_particles(
     rotate = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
     battle_effect_resolve_target_render_coords(g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
         BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &caster);
-    if (g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].target_type
-        == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+    if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
         facing = ((battle_unit_get_facing_quadrant_by_misc_id(
-                       g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id)
+                       g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id)
                       + 1)
                      & 3)
             << 10;
@@ -106,10 +105,10 @@ s32 battle_effect_spawn_emitter_particles(
     }
     battle_effect_resolve_target_render_coords(g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
         target_index, &g_battle_effect_context, &target);
-    if (g_battle_effect_context.targets.records[target_index].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-        battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_context.targets.records[target_index].id.misc_id);
+    if (g_battle_effect_context.targets[target_index].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+        battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_context.targets[target_index].id.unit.misc_id);
         unit_coords = battle_unit_get_event_offset_ptr_by_misc_id(
-            g_battle_effect_context.targets.records[target_index].id.misc_id);
+            g_battle_effect_context.targets[target_index].id.unit.misc_id);
     }
     tile = battle_map_get_tile_data_pointer(
         g_battle_effect_target_tile.id.tile_x, g_battle_effect_target_tile.tile_y, g_battle_effect_target_tile.map_z);

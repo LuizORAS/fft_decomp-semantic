@@ -2608,11 +2608,36 @@ typedef struct battle_effect_flag_prefix {
 typedef char
     battle_effect_flag_prefix_flags_must_be_6[((unsigned long)&((battle_effect_flag_prefix_t*)0)->flags == 6) ? 1 : -1];
 
-/* Ten-byte halfword block the secondary-effect initializers copy from
- * battle_effect_secondary_init_t into battle_effect_secondary_data_t. */
-typedef struct battle_effect_secondary_block {
-    s16 values[5];
-} battle_effect_secondary_block_t;
+/* target_type of an effect target record. */
+typedef enum battle_effect_target_type {
+    BATTLE_EFFECT_TARGET_TYPE_UNIT = 0,
+    BATTLE_EFFECT_TARGET_TYPE_TILE = 1,
+} battle_effect_target_type_e;
+
+enum {
+    BATTLE_EFFECT_CASTER_ENTRY = 16, /* index of the caster's record in battle_effect_secondary_init_t.targets */
+    /* the target index that makes battle_effect_resolve_target_render_coords resolve the caster */
+    BATTLE_EFFECT_TARGET_INDEX_CASTER = -1,
+};
+
+/* Ten-byte target records at g_battle_effect_context.targets (0x801bad10).
+ * Unit targets store a misc id at 0x02; tile targets reuse that halfword for X
+ * and carry map Z/Y at 0x04/0x06. Entry BATTLE_EFFECT_CASTER_ENTRY is the
+ * caster. */
+typedef struct battle_effect_target {
+    u16 target_type; /* 0x00; battle_effect_target_type_e */
+    union {
+        struct {
+            u8 misc_id;
+            u8 result_animation; /* battle_effect_hit_result_e */
+        } unit;
+        s16 tile_x;
+    } id;             /* 0x02 */
+    s16 map_z;        /* 0x04 */
+    s16 tile_y;       /* 0x06 */
+    u8 _unused_08[2]; /* 0x08 */
+} battle_effect_target_t;
+typedef char battle_effect_target_size_must_be_0x0a[(sizeof(battle_effect_target_t) == 0x0a) ? 1 : -1];
 
 /* One running secondary effect: a 0x54-byte record of
  * g_battle_effect_secondary_data (0x801b8b9c), ids 1-16 with record 0 the
@@ -2634,26 +2659,15 @@ typedef struct battle_effect_secondary_data {
     u32 phase; /* 0x08; battle_effect_secondary_phase_e */
     s16 timer; /* 0x0c; frames the handler has run */
     u8 _unused_0e[2];
+    battle_effect_target_t caster; /* 0x10; copied from the init record's caster */
     union {
-        battle_effect_secondary_block_t block; /* from the init record's caster block */
-        struct {
-            s16 target_type;
-            u8 caster_id; /* 0x12; the caster's misc id */
-        } fields;
-    } caster; /* 0x10 */
-    union {
-        battle_effect_secondary_block_t block; /* from the init record's target block */
+        battle_effect_target_t record; /* from the init record's target */
         struct {
             s16 _unused_00;
             s16 x; /* 0x1c; fall-dust position, 1/16 of the real coordinate */
             s16 z; /* 0x1e */
             s16 y; /* 0x20 */
         } position;
-        struct {
-            u16 target_type;     /* battle_effect_target_type_e */
-            u8 target_id;        /* 0x1c; the target's misc id */
-            u8 result_animation; /* 0x1d; battle_effect_hit_result_e */
-        } fields;
     } target;           /* 0x1a */
     s32 used_weapon_id; /* 0x24; init record used_weapon_id */
     s32 target_count;   /* 0x28; init record target_count (projectile setup) */
@@ -2666,64 +2680,13 @@ typedef struct battle_effect_secondary_data {
 } battle_effect_secondary_data_t;
 typedef char battle_secondary_effect_data_size_must_be_0x54[(sizeof(battle_effect_secondary_data_t) == 0x54) ? 1 : -1];
 
-/* target_type of an effect target record. */
-typedef enum battle_effect_target_type {
-    BATTLE_EFFECT_TARGET_TYPE_UNIT = 0,
-    BATTLE_EFFECT_TARGET_TYPE_TILE = 1,
-} battle_effect_target_type_e;
-
-enum {
-    BATTLE_EFFECT_CASTER_ENTRY
-    = 16, /* index of the caster's record in battle_effect_secondary_init_t.targets.records */
-    /* the target index that makes battle_effect_resolve_target_render_coords resolve the caster */
-    BATTLE_EFFECT_TARGET_INDEX_CASTER = -1,
-};
-
-/* Ten-byte target records at g_battle_effect_context.targets.records (0x801bad10).
- * Unit targets store a misc id at 0x02; tile targets reuse that halfword for X
- * and carry map Z/Y at 0x04/0x06. Entry BATTLE_EFFECT_CASTER_ENTRY is the
- * caster. */
-typedef struct battle_effect_target {
-    u16 target_type; /* 0x00; battle_effect_target_type_e */
-    union {
-        u8 misc_id;
-        s16 tile_x;
-        u8 bytes[2];  /* bytes[1]: a unit target's battle_effect_hit_result_e */
-    } id;             /* 0x02 */
-    s16 map_z;        /* 0x04 */
-    s16 tile_y;       /* 0x06 */
-    u8 _unused_08[2]; /* 0x08 */
-} battle_effect_target_t;
-typedef char battle_effect_target_size_must_be_0x0a[(sizeof(battle_effect_target_t) == 0x0a) ? 1 : -1];
-
 /* Complete 0xc8-byte effect context: built on the stack for secondary effects
  * and copied whole to g_battle_effect_context for the ability effect. */
 typedef struct battle_effect_secondary_init {
-    u16 target_count;   /* 0x00; effect targets: one child record each, spawn_delay apart */
-    u8 spectator_count; /* 0x02; entries in spectator_ids */
-    u8 math_skill_flag; /* 0x03; enables the effect flags' spawn_delay_override */
-    union {
-        struct {
-            union {
-                struct {
-                    s16 target_type;     /* 0x00; battle_effect_target_type_e */
-                    u8 target_id;        /* 0x02; the target's misc id */
-                    u8 result_animation; /* 0x03; battle_effect_hit_result_e */
-                } fields;
-                battle_effect_secondary_block_t block;
-                battle_effect_target_t record;
-            } target[16]; /* 0x00; ten-byte target blocks */
-            union {
-                struct {
-                    s16 target_type; /* 0x00; battle_effect_target_type_e */
-                    u8 caster_id;    /* 0x02 */
-                } fields;
-                battle_effect_secondary_block_t block;
-                battle_effect_target_t record;
-            } caster; /* 0xa0; entry BATTLE_EFFECT_CASTER_ENTRY */
-        } by_role;
-        battle_effect_target_t records[17]; /* the caster follows the sixteen targets */
-    } targets;                              /* 0x04 */
+    u16 target_count;                   /* 0x00; effect targets: one child record each, spawn_delay apart */
+    u8 spectator_count;                 /* 0x02; entries in spectator_ids */
+    u8 math_skill_flag;                 /* 0x03; enables the effect flags' spawn_delay_override */
+    battle_effect_target_t targets[17]; /* 0x04; caster at BATTLE_EFFECT_CASTER_ENTRY */
     /* 0xae; living units that are neither targets nor the caster; also accessed
      * through the separately bound g_battle_effect_palette_target_misc_ids. */
     u8 spectator_ids[14];
@@ -2732,10 +2695,7 @@ typedef struct battle_effect_secondary_init {
 } battle_effect_secondary_init_t;
 typedef char battle_secondary_effect_init_size_must_be_0xc8[(sizeof(battle_effect_secondary_init_t) == 0xc8) ? 1 : -1];
 typedef char battle_secondary_effect_init_caster_offset_must_be_0xa4
-    [((unsigned long)&((battle_effect_secondary_init_t*)0)->targets.by_role.caster == 0xa4) ? 1 : -1];
-typedef char battle_secondary_effect_init_caster_record_offset_must_be_0xa4
-    [((unsigned long)&((battle_effect_secondary_init_t*)0)->targets.records[BATTLE_EFFECT_CASTER_ENTRY] == 0xa4) ? 1
-                                                                                                                 : -1];
+    [((unsigned long)&((battle_effect_secondary_init_t*)0)->targets[BATTLE_EFFECT_CASTER_ENTRY] == 0xa4) ? 1 : -1];
 
 /* result_animation of a target in an effect init record. The records built by
  * battle_effect_store_targets_and_display_types use the first four; the weapon-hit
@@ -3847,7 +3807,7 @@ typedef struct effect_record {
     u16 flags;         /* 0x1e: EFFECT_RECORD_FLAG_ALLOCATED */
     s16 frame_counter; /* 0x20: frames the script has run, 0 on its first; the frame of script-spawned emitters */
     u8 callback_phase[4]; /* 0x22: effect_phase_e of the handler in each callback slot */
-    s16 target_index;     /* 0x26: the effect target (g_battle_effect_context.targets.records) the record plays on */
+    s16 target_index;     /* 0x26: the effect target (g_battle_effect_context.targets) the record plays on */
     s16 timeline_frame;   /* 0x28 */
     battle_effect_record_timeline_t timeline; /* 0x2a */
     effect_work_record_t* work_head;          /* 0xd0: its particles */
@@ -8408,18 +8368,6 @@ typedef struct battle_menu_status_panel_numeric_geometry {
     RECT texture_rect;   /* 0x00 */
     RECT draw_area_rect; /* 0x08 */
 } battle_menu_status_panel_numeric_geometry_t;
-
-/* Item graphic load descriptor filled by *_gfx_build_item_graphic_descriptor. */
-typedef struct battle_menu_status_panel_graphic_descriptor {
-    s16 x_load_location;
-    s16 y_load_location;
-    s16 width;
-    s16 height;
-    u16 clut;
-    s16 tpage;
-} battle_menu_status_panel_graphic_descriptor_t;
-typedef char battle_menu_status_panel_graphic_descriptor_size_must_be_0xc
-    [(sizeof(battle_menu_status_panel_graphic_descriptor_t) == 0xc) ? 1 : -1];
 
 /* Origin and row geometry used by the EVENT menu text image renderers. */
 typedef struct battle_menu_text_image_bounds {

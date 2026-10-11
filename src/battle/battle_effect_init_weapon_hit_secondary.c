@@ -14,7 +14,7 @@ s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondar
     if (source->target_count != 0) {
         elements = battle_effect_get_ninja_ball(elements);
         secondary_id = battle_effect_allocate_secondary_slot();
-        switch (source->targets.by_role.target[0].fields.result_animation) {
+        switch (source->targets[0].id.unit.result_animation) {
         case BATTLE_EFFECT_HIT_NORMAL:
         case BATTLE_EFFECT_HIT_CRITICAL:
         case BATTLE_EFFECT_HIT_MISSED:
@@ -33,8 +33,8 @@ s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondar
         g_battle_effect_secondary_data[secondary_id].function_id
             = g_battle_effect_secondary_animations[g_battle_effect_secondary_data[secondary_id].animation_id]
                   .function_id;
-        g_battle_effect_secondary_data[secondary_id].caster.block = source->targets.by_role.caster.block;
-        g_battle_effect_secondary_data[secondary_id].target.block = source->targets.by_role.target[0].block;
+        g_battle_effect_secondary_data[secondary_id].caster = source->targets[BATTLE_EFFECT_CASTER_ENTRY];
+        g_battle_effect_secondary_data[secondary_id].target.record = source->targets[0];
         g_battle_effect_secondary_data[secondary_id].timer = 0;
         g_battle_effect_secondary_data[secondary_id].phase = BATTLE_SECONDARY_EFFECT_INITIALIZING;
     } else {

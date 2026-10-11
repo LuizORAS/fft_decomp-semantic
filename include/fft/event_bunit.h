@@ -356,6 +356,7 @@ void bunit_gfx_init_packet_pools(bunit_gfx_context_t* buffer);
 void bunit_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
     s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
 
+void bunit_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, s32 item_id);
 void bunit_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 s32 bunit_gfx_calculate_distance_falloff(s32 x, s32 y, s32 base_value, s32 minimum);
 void bunit_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);

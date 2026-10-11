@@ -69,6 +69,7 @@ void attack_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
 
 void attack_gfx_build_formation_sprites(void);
+void attack_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
 void attack_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,

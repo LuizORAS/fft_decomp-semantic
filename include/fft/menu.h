@@ -1463,6 +1463,25 @@ static __inline__ menu_instruction_t* menu_next_instruction(menu_instruction_t* 
     return (menu_instruction_t*)((u8*)instruction + instruction->header.length);
 }
 
+/* Texture rectangle, CLUT and texture page returned by menu icon callbacks. */
+typedef struct menu_icon_source {
+    s16 u;     /* 0x00 */
+    s16 v;     /* 0x02 */
+    s16 w;     /* 0x04 */
+    s16 h;     /* 0x06 */
+    u16 clut;  /* 0x08 */
+    u16 tpage; /* 0x0a */
+} menu_icon_source_t;
+typedef char menu_icon_source_size_must_be_12[sizeof(menu_icon_source_t) == 12 ? 1 : -1];
+
+/* The display opcode selects the row callback's result: an icon source
+ * for opcode 0x06, or an integer for predicates and number renderers. */
+typedef union menu_callback {
+    s32 (*value)(s32 row);
+    menu_icon_source_t* (*icon)(s32 row);
+} menu_callback_t;
+typedef char menu_callback_size_must_be_4[sizeof(menu_callback_t) == 4 ? 1 : -1];
+
 /* One 12-byte positioned number: a text position, a pointer to the live
  * value and the decimal format. *_menu_draw_numeric_display_entries draws
  * tables of them (kind 0 and 1 select the plain and coloured number

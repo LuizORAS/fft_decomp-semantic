@@ -39,7 +39,7 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
     s32 digit;
     u16 clut;
 
-    callback = g_equip_menu_list_row_callbacks[data->number.getter];
+    callback = g_equip_menu_list_row_callbacks[data->number.getter].value;
     negative = 0;
     if (g_equip_menu_list_row_mode == 0) {
         arg = data->number.value;

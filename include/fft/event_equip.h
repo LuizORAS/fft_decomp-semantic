@@ -262,7 +262,7 @@ void equip_gfx_set_otag_index(s32 ot_index);
 void equip_gfx_set_transition_frame(s32 value);
 void equip_gfx_store_image_and_wait(RECT* rect, void* data);
 void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
-void equip_gfx_build_item_graphic_descriptor(battle_menu_status_panel_graphic_descriptor_t* descriptor, s32 item_id);
+void equip_gfx_build_item_graphic_descriptor(menu_icon_source_t* descriptor, s32 item_id);
 
 void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
@@ -307,7 +307,7 @@ enum {
 
 /* The display order lists of the five item tabs: hands, headgear, body armor, accessories, other. */
 extern u8* g_equip_item_category_lists[];
-extern battle_menu_status_panel_graphic_descriptor_t g_equip_item_graphic_descriptor;
+extern menu_icon_source_t g_equip_item_graphic_descriptor;
 extern u8 g_equip_item_inventory_totals[];
 extern s16 g_equip_item_list_entries[];
 extern u8 g_equip_item_type_icon_coords[][2];
@@ -325,7 +325,7 @@ extern u8 g_equip_item_list_has_multiple_entries;
 extern s16 g_equip_item_type_order[];
 extern u8 g_equip_item_type_order_names[];
 extern world_menu_entry_t* g_equip_item_action_active_menu;
-extern world_item_icon_source_t g_equip_item_row_icon_rect;
+extern menu_icon_source_t g_equip_item_row_icon_rect;
 extern world_menu_entry_t* g_equip_item_type_order_active_menu;
 extern u16 g_equip_remove_item_cursor_anim[];
 extern s16 g_equip_remove_item_equipment[];
@@ -334,7 +334,7 @@ extern s8 g_equip_remove_item_previewed_slot;
 void equip_item_clear_stat_sums(battle_unit_status_record_t* summary, world_item_stat_detail_t* detail);
 s32 equip_item_adjust_inventory_count(s32 item_entry, s32 delta);
 void equip_item_build_inventory_totals(void);
-world_item_icon_source_t* equip_item_build_type_icon_source(s32 index);
+menu_icon_source_t* equip_item_build_type_icon_source(s32 index);
 
 void equip_item_calculate_swap_stat_delta(
     world_item_stat_detail_t* output, battle_unit_status_record_t* out, s16 from, s16 to, s32 slot);
@@ -346,7 +346,7 @@ item_menu_category_e equip_item_get_menu_category(s16 item_id);
 s32 equip_item_get_total_count(s16 item_id);
 s32 equip_menu_get_entry_item_count(s32 row);
 s32 equip_item_get_type(s32 item_id);
-void equip_item_get_type_icon_rect(s32 item_type, world_item_icon_source_t* output);
+void equip_item_get_type_icon_rect(s32 item_type, menu_icon_source_t* output);
 s32 equip_item_is_in_category_list(s32 item_id, s32 category_index);
 void equip_item_prepend_to_category_list(s32 item_id, s32 category_index);
 void equip_item_rebuild_category_list(s32 category);
@@ -357,7 +357,7 @@ void equip_menu_store_sort_key_list(s32 list_index, const s16* source);
 s32 equip_run_item_type_order_mode(void);
 void equip_item_sort_list_by_criteria(s32 mode, s16* list);
 s32 equip_item_build_filtered_list(s16 unit_index, s16 sort_mode, s8 category, s16* list, u8 equip_filter);
-battle_menu_status_panel_graphic_descriptor_t* equip_menu_get_entry_item_icon_source(s32 row);
+menu_icon_source_t* equip_menu_get_entry_item_icon_source(s32 row);
 s32 equip_item_get_ranking_value(s32 item_id);
 
 void equip_item_subtract_scaled_stats(
@@ -384,7 +384,7 @@ extern volatile u16 g_equip_menu_clear_all_prompt_frame;
 extern s8 g_equip_menu_event_speed;
 extern s16* g_equip_menu_list_entries;
 extern s16 g_equip_menu_list_entry_count;
-extern equip_row_callback_t g_equip_menu_list_row_callbacks[];
+extern menu_callback_t g_equip_menu_list_row_callbacks[16];
 extern s16 g_equip_menu_list_row_height;
 extern s32 g_equip_menu_list_row_index;
 extern s16 g_equip_menu_list_row_mode;

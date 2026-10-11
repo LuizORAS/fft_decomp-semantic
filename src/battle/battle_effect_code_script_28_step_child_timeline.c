@@ -56,7 +56,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
 
     target = record->target_index;
     state = (battle_effect_child_timeline_view_t*)&record->target_index;
-    if (g_battle_effect_context.targets.records[target].id.bytes[1] != BATTLE_EFFECT_HIT_REFLECTED) {
+    if (g_battle_effect_context.targets[target].id.unit.result_animation != BATTLE_EFFECT_HIT_REFLECTED) {
         for (i = 0; i < 5; i++) {
             table = &g_battle_effect_timing_channels->particle[i];
             if (state->child.remaining.tracks.particle[i] == 0) {
@@ -143,11 +143,11 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     red = track->color[index][0];
                     green = track->color[index][1];
                     blue = track->color[index][2];
-                    if (g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].target_type
+                    if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
                         == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
                             track->duration[index],
-                            g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id, red, green,
+                            g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id, red, green,
                             blue);
                     }
                 }
@@ -173,10 +173,10 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     red = track->color[index][0];
                     green = track->color[index][1];
                     blue = track->color[index][2];
-                    if (g_battle_effect_context.targets.records[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+                    if (g_battle_effect_context.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                            track->duration[index], g_battle_effect_context.targets.records[target].id.misc_id, red,
-                            green, blue);
+                            track->duration[index], g_battle_effect_context.targets[target].id.unit.misc_id, red, green,
+                            blue);
                     }
                 }
             }
@@ -250,9 +250,9 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
         }
         state->frame.s++;
     } else {
-        if (g_battle_effect_context.targets.records[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-            init.targets.by_role.caster.record = g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY];
-            init.targets.by_role.target[0].record = g_battle_effect_context.targets.records[target];
+        if (g_battle_effect_context.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            init.targets[BATTLE_EFFECT_CASTER_ENTRY] = g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY];
+            init.targets[0] = g_battle_effect_context.targets[target];
             battle_effect_init_secondary(
                 BATTLE_EFFECT_SECONDARY_ANIMATION_REFLECT, g_battle_effect_timeline->spawn_delay, &init);
         }

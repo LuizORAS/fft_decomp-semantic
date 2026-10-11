@@ -27,40 +27,40 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     battle_strike_work_t* block;
 
     init.target_count = unit->strike.target_count;
-    init.targets.by_role.caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-    init.targets.by_role.caster.fields.caster_id = unit->unit_id;
+    init.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+    init.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id = unit->unit_id;
     save_3_u16((SVECTOR*)&init.target_tile.id.tile_x, unit->strike.target_new_x, unit->strike.target_new_map_level,
         unit->strike.target_new_y);
     block = &unit->strike;
     if (init.target_count != 0) {
         for (i = 0; i < init.target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(block->target_list[i]);
-            init.targets.by_role.target[i].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-            init.targets.by_role.target[i].fields.target_id = target->unit_id;
+            init.targets[i].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+            init.targets[i].id.unit.misc_id = target->unit_id;
             {
                 battle_stats_t* target_stats;
 
                 target_stats = target->battle_data;
 
                 if (target_stats == 0) {
-                    init.targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
+                    init.targets[i].id.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 } else if (target_stats->action.critical != 0) {
-                    init.targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
+                    init.targets[i].id.unit.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
                 } else if (target_stats->action.miss_type == BATTLE_ACTION_MISS_TYPE_REFLECTED) {
-                    init.targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_REFLECTED;
+                    init.targets[i].id.unit.result_animation = BATTLE_EFFECT_HIT_REFLECTED;
                 } else if (target_stats->action.miss_type != BATTLE_ACTION_MISS_TYPE_HIT) {
-                    init.targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_MISSED;
+                    init.targets[i].id.unit.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 } else {
-                    init.targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
+                    init.targets[i].id.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 }
             }
         }
     } else if (unit->strike.skip_empty_tile_effect == 0) {
         init.target_count = 1;
-        init.targets.by_role.target[0].record.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
-        init.targets.by_role.target[0].record.id.tile_x = unit->strike.target_new_x;
-        init.targets.by_role.target[0].record.tile_y = unit->strike.target_new_y;
-        init.targets.by_role.target[0].record.map_z = unit->strike.target_new_map_level;
+        init.targets[0].target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        init.targets[0].id.tile_x = unit->strike.target_new_x;
+        init.targets[0].tile_y = unit->strike.target_new_y;
+        init.targets[0].map_z = unit->strike.target_new_map_level;
     }
     spectators = 0;
     for (i = 0; i < 0x10; i++) {

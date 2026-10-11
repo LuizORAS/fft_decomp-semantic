@@ -92,6 +92,7 @@ void require_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* output, const world_status_thread_t* context);
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
+void require_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void require_gfx_build_portrait_poly_ft4(s32 flags, POLY_FT4* output);
 
 void require_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,

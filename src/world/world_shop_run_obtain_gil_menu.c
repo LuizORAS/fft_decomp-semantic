@@ -3,7 +3,7 @@
 /* Structural twin of world_shop_run_soldier_office_fee_menu_script (0x80138ea4): install a menu value
  * callback, run the menu script, then restore the previous callback. */
 void world_shop_run_obtain_gil_menu(void) {
-    world_menu_callback_t* callback_slot;
+    menu_callback_t* callback_slot;
     s32 (*previous_callback)(s32);
 
     callback_slot = g_world_menu_script_callbacks;
