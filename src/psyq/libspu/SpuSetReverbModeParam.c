@@ -3,13 +3,12 @@
 
 /* Whole-record assignment replaces the retail byte copy with word copies. */
 static inline void psyq_spu_copy_reverb_parameters(
-    psyq_spu_reverb_parameters_t* destination, psyq_spu_reverb_parameters_t* source) {
+    psyq_spu_reverb_parameters_t* destination, const psyq_spu_reverb_parameters_t* source) {
     u8* destination_bytes = (u8*)destination;
-    u8* source_bytes = (u8*)source;
-    s32 i;
-    for (i = sizeof(*destination) - 1; i != -1; i--) {
+    const u8* source_bytes = (const u8*)source;
+    u32 size = sizeof(*destination);
+    while (size--)
         *destination_bytes++ = *source_bytes++;
-    }
 }
 
 s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
