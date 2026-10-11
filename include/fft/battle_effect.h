@@ -7,6 +7,10 @@
 #include "fft/main.h"
 
 /* effect */
+/* Native effect handlers receive the record, callback slot, emitter and frame.
+ * Individual handlers narrow the record index or ignore unused arguments. */
+typedef s32 (*battle_effect_callback_t)(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+
 typedef enum battle_effect_secondary_phase {
     BATTLE_SECONDARY_EFFECT_ENDED = 0, /* the slot is free */
     BATTLE_SECONDARY_EFFECT_INITIALIZING = 1,
@@ -70,8 +74,8 @@ typedef struct battle_effect_secondary_data {
     /* 0x06; the animation's own: the charge's element mask, then its battle_effect_element_index_e; the
      * weapon hit's element index; the caster's sprite palette; the frames a reflect shield stays */
     u16 parameter;
-    u32 phase; /* 0x08; battle_effect_secondary_phase_e */
-    s16 timer; /* 0x0c; frames the handler has run */
+    battle_effect_secondary_phase_e phase; /* 0x08 */
+    s16 timer;                             /* 0x0c; frames the handler has run */
     u8 _unused_0e[2];
     battle_effect_target_t caster; /* 0x10; copied from the init record's caster */
     union {
@@ -2043,7 +2047,7 @@ u8 battle_effect_allocate_secondary_slot(void);
 s32 battle_effect_get_ninja_ball(s32 elements);
 s32 battle_effect_get_on_hit_sound_index(s32 channel);
 s16 battle_effect_get_random_between_s16(s16 minimum, s16 maximum);
-s32 battle_effect_get_secondary_phase(u8 secondary_id);
+battle_effect_secondary_phase_e battle_effect_get_secondary_phase(u8 secondary_id);
 void battle_effect_init_flags_section_pointer(s16 effect_id);
 void battle_effect_init_camera_and_screen_data(void);
 s32 battle_effect_init_projectile_secondary(s32 animation, struct battle_effect_secondary_init* source);

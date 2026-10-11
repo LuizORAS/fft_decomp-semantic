@@ -215,10 +215,6 @@ typedef enum battle_motion_flags {
     BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE = 0x20000000, /* set with each stored animation request */
 } battle_motion_flags_e;
 
-/* Native effect handlers receive the record, callback slot, emitter and frame.
- * Individual handlers narrow the record index or ignore unused arguments. */
-typedef s32 (*battle_effect_callback_t)(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
 extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
 

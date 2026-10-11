@@ -5,6 +5,9 @@
 
 #include "fft/battle.h"
 
+/* callbacks */
+s32 effect_e000_noop(s32 unused_record_index, s32 unused_callback_slot, s32 unused_emitter_index, s32 unused_frame);
+
 /* helpers */
 /* Scales a scratch record's colour by a 4.12 brightness and packs it with its
  * primitive code into one 32-bit RGB-code value. */
