@@ -346,8 +346,7 @@ typedef struct jobstts_unit_job_data {
     u8 unlocked_jobs[3];                                                          /* 0x08 */
     unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x0B */
     u8 job_levels[10];                                                            /* 0x44 */
-    u16 job_points[20];                                                           /* 0x4E */
-    u16 total_job_points[20];                                                     /* 0x76 */
+    unit_job_points_t job_points; /* 0x4e; current JP followed by total JP */
 } jobstts_unit_job_data_t;
 typedef char jobstts_unit_job_data_size_must_be_0x9e[(sizeof(jobstts_unit_job_data_t) == 0x9E) ? 1 : -1];
 

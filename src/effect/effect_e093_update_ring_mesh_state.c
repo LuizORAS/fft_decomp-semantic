@@ -114,7 +114,7 @@ s32 effect_e093_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 
         case EFFECT_EMITTER_ORIGIN_CASTER:
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
-                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &scratch->vertex);
+                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &scratch->vertex);
             origin.vx += scratch->vertex.vx;
             origin.vy += scratch->vertex.vy;
             origin.vz += scratch->vertex.vz;
@@ -122,7 +122,7 @@ s32 effect_e093_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 
         case EFFECT_EMITTER_ORIGIN_TARGET:
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
-                &g_battle_effect_coord_data, &scratch->vertex);
+                &g_battle_effect_context, &scratch->vertex);
             origin.vx += scratch->vertex.vx;
             origin.vy += scratch->vertex.vy;
             origin.vz += scratch->vertex.vz;

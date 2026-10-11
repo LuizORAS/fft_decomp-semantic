@@ -147,7 +147,7 @@ s32 effect_e401_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             == 0) {
             SetTransMatrix(&work->matrix);
             orient = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
-            caster_target = &g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY];
+            caster_target = &g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY];
             if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                 facing_yaw = ((battle_unit_get_facing_quadrant_by_misc_id(caster_target->id.misc_id) + 1) & 3) << 10;
                 rotation.vz = 0;
@@ -157,10 +157,10 @@ s32 effect_e401_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             }
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
-                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &caster);
+                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &caster);
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
-                &g_battle_effect_coord_data, &target);
+                &g_battle_effect_context, &target);
 
             READ_CURVE(factor, index, (curves1 >> 20) & 0xF, frame);
             count = battle_effect_lerp_linear(

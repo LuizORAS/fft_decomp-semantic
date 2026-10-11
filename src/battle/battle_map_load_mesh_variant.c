@@ -45,13 +45,13 @@ s32 battle_map_load_mesh_variant(s32 palette_mode) {
     case MAP_MESH_LOAD_WAITING:
         if (main_file_is_still_loading() != 0) {
             s32 mesh_data_offset;
-            void* mesh_data;
+            battle_map_resource_t* mesh_data;
 
             mesh_data = g_battle_map_mesh_load_buffer;
             /* Retail scales this byte offset as a word index. */
-            mesh_data_offset = g_battle_map_mesh_load_buffer->palettes_offset * 4;
-            mesh_data = (u8*)mesh_data + mesh_data_offset;
-            battle_map_update_palette_colors(palette_mode, MAP_CLUT_ROW_MARKED_TILES, 0, 1, mesh_data);
+            mesh_data_offset = mesh_data->mesh_file.palettes_offset * 4;
+            mesh_data = (battle_map_resource_t*)(mesh_data->bytes + mesh_data_offset);
+            battle_map_update_palette_colors(palette_mode, MAP_CLUT_ROW_MARKED_TILES, 0, 1, mesh_data->palette_colors);
             main_heap_free(g_battle_map_mesh_load_buffer);
             g_battle_map_mesh_load_state = MAP_MESH_LOAD_IDLE;
         }

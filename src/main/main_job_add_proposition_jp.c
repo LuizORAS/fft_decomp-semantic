@@ -36,19 +36,19 @@ s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
 
     /* Each serialized JP entry is a little-endian byte pair. */
     byte_index = slot * 2;
-    total = party->job_points[byte_index] + (party->job_points[byte_index + 1] << 8) + jp;
+    total = party->job_points.current.bytes[byte_index] + (party->job_points.current.bytes[byte_index + 1] << 8) + jp;
     if (total >= 10000) {
         total = 9999;
     }
-    party->job_points[byte_index] = total;
-    party->job_points[byte_index + 1] = total / 256;
+    party->job_points.current.bytes[byte_index] = total;
+    party->job_points.current.bytes[byte_index + 1] = total / 256;
 
-    total = party->total_job_points[byte_index] + (party->total_job_points[byte_index + 1] << 8) + jp;
+    total = party->job_points.total.bytes[byte_index] + (party->job_points.total.bytes[byte_index + 1] << 8) + jp;
     if (total >= 10000) {
         total = 9999;
     }
-    party->total_job_points[byte_index] = total;
-    party->total_job_points[byte_index + 1] = total / 256;
+    party->job_points.total.bytes[byte_index] = total;
+    party->job_points.total.bytes[byte_index + 1] = total / 256;
     level = main_job_calculate_level(total & 0xFFFF);
 
     levels = party->job_levels[slot / 2];

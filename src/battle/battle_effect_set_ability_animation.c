@@ -44,8 +44,7 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
         g_battle_effect_sound_call_counts[2] = 0;
         g_battle_effect_sound_call_counts[1] = 0;
         g_battle_effect_sound_call_counts[0] = 0;
-        /* The coord data block retains a copy of the caller's secondary-init record. */
-        *(battle_effect_secondary_init_t*)&g_battle_effect_coord_data = *source;
+        g_battle_effect_context = *source;
         D_801BC0D4 = 0;
         return;
     }

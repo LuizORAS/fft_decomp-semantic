@@ -67,9 +67,10 @@ void world_formation_save_records_to_party_data(void) {
             party->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY] = value;
             bcopy(g_world_formation_unit_pointers[i]->learned_abilities, party->learned_abilities,
                 sizeof(party->learned_abilities));
-            bcopy(g_world_formation_unit_pointers[i]->job_points, party->job_points, sizeof(party->job_points));
-            bcopy(g_world_formation_unit_pointers[i]->total_job_points, party->total_job_points,
-                sizeof(party->total_job_points));
+            bcopy(&g_world_formation_unit_pointers[i]->job_points.current, &party->job_points.current,
+                sizeof(party->job_points.current));
+            bcopy(&g_world_formation_unit_pointers[i]->job_points.total, &party->job_points.total,
+                sizeof(party->job_points.total));
         }
         main_unit_init_job_data(&unit, slot, 1);
         world_formation_build_unit_record(&unit, g_world_formation_unit_pointers[i], party);

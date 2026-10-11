@@ -21,8 +21,8 @@ u8* world_screen_menu_redraw_text_page_on_scroll(
 
     input0 = world_input_get_menu_controller(0);
     input1 = world_input_get_menu_controller(1);
-    rect.x = entry->vram_x;
-    rect.y = entry->vram_y;
+    rect.x = entry->vram_origin.x;
+    rect.y = entry->vram_origin.y;
     rect.w = entry->inner_width >> 2;
     rect.h = entry->inner_height;
     changed = 0;

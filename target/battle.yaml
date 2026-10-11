@@ -24,7 +24,7 @@ functions:
   - {addr: 0x800687bc, size: 36, name: battle_effect_build_secondary_init, hash: 6364c33b2ad8bd53}
   - {addr: 0x800687e0, size: 364, name: battle_effect_build_secondary_init_from_action, hash: 59740552f17fbc57, rodata: [{addr: 0x80067000, size: 52, hash: f13dce8328c30c78}]}
   - {addr: 0x8006894c, size: 88, name: battle_effect_set_evade_type_data_and_weapon_element, hash: 7a88116319eb1ca0}
-  - {addr: 0x800689a4, size: 124, name: battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding, hash: 779337cdc09b71c1}
+  - {addr: 0x800689a4, size: 124, name: battle_effect_start_action_projectile_secondary, hash: 779337cdc09b71c1}
   - {addr: 0x80068a20, size: 84, name: battle_effect_set_secondary, hash: 5fd4e05ba5d2c87b}
   - {addr: 0x80068a74, size: 32, name: battle_effect_set_secondary_zodiac_poof, hash: 4bbadd82baf56346}
   - {addr: 0x80068a94, size: 32, name: battle_effect_set_secondary_death_smoke, hash: 74870a14edf727e3}
@@ -1047,7 +1047,7 @@ functions:
   - {addr: 0x8014a6a4, size: 40, name: battle_text_set_substitution_values_7e_7f, hash: a9c219bc5dcf7ca0}
   - {addr: 0x8014a6cc, size: 24, name: battle_menu_set_text_origin, hash: 8ba7a2a7b2adc30b}
   - {addr: 0x8014a6e4, size: 196, name: battle_gfx_set_draw_mode_for_texture_page, hash: 6872715b35eb6ca3}
-  - {addr: 0x8014a7a8, size: 116, name: battle_gfx_set_draw_mode_from_rect, hash: bcc1e098276ae84a}
+  - {addr: 0x8014a7a8, size: 116, name: battle_gfx_set_draw_mode_from_origin, hash: bcc1e098276ae84a}
   - {addr: 0x8014a81c, size: 8, name: battle_return_zero, hash: 207819bf4ebe3078}
   - {addr: 0x8014a824, size: 8, name: battle_noop_8014a824, hash: 6d64edf91449c1b1}
   - {addr: 0x8014a82c, size: 8, name: battle_script_frame_after_requests_stub, hash: 6d64edf91449c1b1}
@@ -2848,7 +2848,7 @@ data:
   - {addr: 0x801bacc8, name: g_battle_effect_flags_section}
   - {addr: 0x801baccc, name: g_battle_effect_emitter_matrix}
   - {addr: 0x801bacec, name: g_battle_effect_projectile_matrix}
-  - {addr: 0x801bad0c, name: g_battle_effect_coord_data}
+  - {addr: 0x801bad0c, name: g_battle_effect_context}
   - {addr: 0x801badba, name: g_battle_effect_palette_target_misc_ids}
   - {addr: 0x801badc8, name: g_battle_effect_target_tile}
   - {addr: 0x801badd4, name: g_battle_effect_frame_data_start}

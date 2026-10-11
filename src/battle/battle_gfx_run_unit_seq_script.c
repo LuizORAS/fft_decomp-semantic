@@ -119,7 +119,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 }
                 break;
             case BATTLE_SEQ_OP_LAUNCH_PROJECTILE:
-                battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding(unit);
+                battle_effect_start_action_projectile_secondary(unit);
             case BATTLE_SEQ_OP_UNKNOWN_C7:
             case BATTLE_SEQ_OP_UNKNOWN_C8:
             case BATTLE_SEQ_OP_UNKNOWN_C9:

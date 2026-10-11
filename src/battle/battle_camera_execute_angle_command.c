@@ -21,10 +21,11 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
 
     switch (command & BATTLE_EFFECT_CAMERA_SOURCE_MASK) {
     case BATTLE_EFFECT_CAMERA_SOURCE_TARGET:
-        if (g_battle_effect_coord_data.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-            battle_unit_get_map_coords_from_misc_id(g_battle_effect_coord_data.targets[target].id.misc_id, &coords.vx);
+        if (g_battle_effect_context.targets.records[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            battle_unit_get_map_coords_from_misc_id(
+                g_battle_effect_context.targets.records[target].id.misc_id, &coords.vx);
         } else {
-            coords = *(SVECTOR*)&g_battle_effect_coord_data.targets[target].id;
+            coords = *(SVECTOR*)&g_battle_effect_context.targets.records[target].id;
         }
         battle_camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
         if (angles) {
@@ -72,12 +73,12 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_CASTER:
-        if (g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
+        if (g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].target_type
             == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_unit_get_map_coords_from_misc_id(
-                g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id, &coords.vx);
+                g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id, &coords.vx);
         } else {
-            coords = *(SVECTOR*)&g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id;
+            coords = *(SVECTOR*)&g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id;
         }
         battle_camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
         if (angles) {

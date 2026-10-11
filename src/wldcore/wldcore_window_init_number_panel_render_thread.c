@@ -39,8 +39,8 @@ void wldcore_window_init_number_panel_render_thread(
     }
     label_width = text_width + 0x18;
     width = (width * 6 + label_width) & 0xfffc;
-    g_wldcore_window_panel_render_state.vram_x = 0x200;
-    g_wldcore_window_panel_render_state.vram_y = 0x100;
+    g_wldcore_window_panel_render_state.vram_origin.x = 0x200;
+    g_wldcore_window_panel_render_state.vram_origin.y = 0x100;
     g_wldcore_window_panel_render_state.inner_width = width;
     g_wldcore_window_panel_render_state.inner_height = 0x20;
     x = origin->x;

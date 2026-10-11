@@ -37,7 +37,7 @@ void battle_effect_advance_target_palette_track(
                 blue = track->color[index][2];
                 battle_map_color_field(
                     preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
-                for (i = 0; i < g_battle_effect_coord_data.spectator_count; i++) {
+                for (i = 0; i < g_battle_effect_context.spectator_count; i++) {
                     battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
                         track->duration[index], g_battle_effect_palette_target_misc_ids[i], red, green, blue);
                 }

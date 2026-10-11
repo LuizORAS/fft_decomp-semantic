@@ -619,10 +619,9 @@ typedef struct bunit_unit_data {
     u8 character_identity;       /* 0x74; special character, generic male/female/monster */
     u8 unlocked_jobs[3];         /* 0x75; bit reader consumes Squire through Mime */
     unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x78 */
-    u8 job_levels[10];        /* 0xb1; two packed job-level nibbles per byte */
-    u8 _padding_0bb;          /* aligns job_points */
-    u16 job_points[20];       /* 0xbc; current JP by generic job */
-    u16 total_job_points[20]; /* 0xe4; cumulative JP by generic job */
+    u8 job_levels[10];            /* 0xb1; two packed job-level nibbles per byte */
+    u8 _padding_0bb;              /* aligns job_points */
+    unit_job_points_t job_points; /* 0xbc; current JP followed by total JP */
 } bunit_unit_data_t;
 typedef char bunit_unit_data_size_must_be_0x10c[(sizeof(bunit_unit_data_t) == 0x10c) ? 1 : -1];
 typedef char bunit_unit_data_character_identity_must_be_0x74

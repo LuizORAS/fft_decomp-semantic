@@ -69,7 +69,7 @@ void option_build_options_menu(void) {
     battle_menu_build_window_sprites(&image_rect, entry, &page->icons);
     buffer = battle_menu_alloc_memory(0x1E0);
     g_option_menu_pages[0].icons.base.sprites[3].y0 -= 2;
-    clear.x = entry->vram_x;
+    clear.x = entry->vram_origin.x;
     clear.y = 0xFE;
     clear.w = window.rect.w / 4;
     clear.h = 2;
@@ -80,8 +80,8 @@ void option_build_options_menu(void) {
     texture_window.y = 0;
     texture_window.w = 0x100;
     texture_window.h = 0x100;
-    SetDrawMode(
-        &page->window_mode, 0, 0, GetTPage(0, 0, entry->vram_x & 0xFFC0, entry->vram_y & 0xFF00), &texture_window);
+    SetDrawMode(&page->window_mode, 0, 0, GetTPage(0, 0, entry->vram_origin.x & 0xFFC0, entry->vram_origin.y & 0xFF00),
+        &texture_window);
     arrow = page->arrows;
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {
         battle_menu_init_semitransparent_sprt(&arrow[i]);

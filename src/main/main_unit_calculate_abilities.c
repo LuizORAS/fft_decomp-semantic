@@ -41,8 +41,8 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
             } else {
                 value = rand() * 100 / 0x8000 + 100;
             }
-            unit->total_job_points[i * 2] = value;
-            unit->job_points[i * 2] = value;
+            unit->job_points.total.values[i * 2] = value;
+            unit->job_points.current.values[i * 2] = value;
             main_unit_learn_job_abilities(unit, i * 2 + JOB_ID_SQUIRE, entd);
 
             level = byte & 0xf;
@@ -53,8 +53,8 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
             } else {
                 value = rand() * 100 / 0x8000 + 100;
             }
-            unit->total_job_points[i * 2 + 1] = value;
-            unit->job_points[i * 2 + 1] = value;
+            unit->job_points.total.values[i * 2 + 1] = value;
+            unit->job_points.current.values[i * 2 + 1] = value;
             if (i == UNIT_JOB_LEVEL_BYTE_COUNT - 1) {
                 break; /* Mime's JP is initialized, but its learning call is skipped. */
             }

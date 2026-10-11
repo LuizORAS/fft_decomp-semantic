@@ -34,11 +34,10 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     s16 speed_max;
     s16 speed;
 
-    init.caster.block = g_battle_effect_current_secondary->caster.block;
-    battle_effect_resolve_target_render_coords(
-        0, BATTLE_EFFECT_TARGET_INDEX_CASTER, (battle_effect_coord_data_t*)&init, &origin);
-    init.target[0].block = g_battle_effect_current_secondary->target.block;
-    battle_effect_resolve_target_render_coords(0, 0, (battle_effect_coord_data_t*)&init, &target);
+    init.targets.by_role.caster.block = g_battle_effect_current_secondary->caster.block;
+    battle_effect_resolve_target_render_coords(0, BATTLE_EFFECT_TARGET_INDEX_CASTER, &init, &origin);
+    init.targets.by_role.target[0].block = g_battle_effect_current_secondary->target.block;
+    battle_effect_resolve_target_render_coords(0, 0, &init, &target);
     oriented = 0;
     SetTransMatrix(&g_battle_effect_projectile_matrix);
     if ((values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING) {

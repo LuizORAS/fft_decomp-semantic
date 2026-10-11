@@ -6,8 +6,8 @@ void battle_menu_build_window_sprites(RECT* rect, world_menu_entry_t* param, wor
     s32 index;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
-    rect->x = param->vram_x;
-    rect->y = param->vram_y;
+    rect->x = param->vram_origin.x;
+    rect->y = param->vram_origin.y;
     rect->w = param->inner_width >> 2;
     rect->h = param->inner_height;
     record->_unknown_74 = 0;
@@ -47,7 +47,7 @@ void battle_menu_build_window_sprites(RECT* rect, world_menu_entry_t* param, wor
         record->icons[1] = 0;
         record->icons[2] = 0;
     }
-    battle_gfx_set_draw_mode_from_rect(&record->base.first_draw_mode, (const RECT*)param);
+    battle_gfx_set_draw_mode_from_origin(&record->base.first_draw_mode, &param->vram_origin);
     SetDrawMode(
         &record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100) & 0xffff, &g_battle_menu_disabled_texture_window);
 }

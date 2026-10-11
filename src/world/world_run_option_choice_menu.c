@@ -67,10 +67,10 @@ void world_run_option_choice_menu(void) {
     param->window_y = 0x28 - (height >> 1);
     param->inner_width = param->window_width = param->text_image.width = width;
     param->inner_height = param->window_height = param->text_image.height = height;
-    param->vram_x = 0x600;
-    param->vram_y = 0x700 - height;
+    param->vram_origin.x = 0x600;
+    param->vram_origin.y = 0x700 - height;
     if (kind == GAME_OPTION_FINGER_CURSOR_REPEAT_SPEED) {
-        param->vram_x = 0x1AE;
+        param->vram_origin.x = 0x1AE;
     }
     param->text_image.width -= 4;
     world_menu_build_icon_record(&rect, param, &g_world_option_picker_icon_records[0]);

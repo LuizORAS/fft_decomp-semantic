@@ -44,7 +44,7 @@ void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party)
     main_util_copy_byte_data(party->learned_abilities, unit->learned_abilities, UNIT_LEARNED_ABILITY_BYTE_COUNT);
     main_util_copy_byte_data(party->job_levels, unit->job_levels, UNIT_JOB_LEVEL_BYTE_COUNT);
     /* Copy the adjacent current/total JP tables as their 80 serialized bytes. */
-    main_util_copy_byte_data(party->job_points, unit->job_points, UNIT_JOB_POINT_TABLE_PAIR_BYTE_COUNT);
+    main_util_copy_byte_data(&party->job_points, &unit->job_points, sizeof(unit->job_points));
     main_util_copy_byte_data(party->name, unit->name, 0x10);
     unit->quote_name_id = party->name_id[0] + (party->name_id[1] << 8);
     main_util_clear_byte_data(&unit->ai_target_x, 7);

@@ -621,14 +621,13 @@ typedef struct world_menu_text_binding {
  * thread clears bit 0 of 0x0a), and world_menu_step_wrapping_cursor_on_scroll_buttons
  * wraps the cursor at max_row_index. */
 typedef struct world_menu_entry {
-    s16 vram_x;        /* 0x00: text-image VRAM x (world_menu_redraw_text_page_on_scroll) */
-    s16 vram_y;        /* 0x02: text-image VRAM y */
-    s16 inner_width;   /* 0x04: text-image width; RECT.w = inner_width >> 2 (4bpp) */
-    s16 inner_height;  /* 0x06: text-image height (world_menu_size_entry_to_text) */
-    u16 window_x;      /* 0x08: screen x; shifted left as the width grows */
-    s16 window_y;      /* 0x0a: screen y; (7 - visible rows) * 8 - 0x48 in world_menu_build_available_item_list */
-    s16 window_width;  /* 0x0c: window width; scroll arrows at window_x + window_width - 0xf */
-    s16 window_height; /* 0x0e: window height; child windows open at window_y + window_height */
+    point16_t vram_origin; /* 0x00: text-image VRAM origin passed to the draw-mode helpers */
+    s16 inner_width;       /* 0x04: text-image width; RECT.w = inner_width >> 2 (4bpp) */
+    s16 inner_height;      /* 0x06: text-image height (world_menu_size_entry_to_text) */
+    u16 window_x;          /* 0x08: screen x; shifted left as the width grows */
+    s16 window_y;          /* 0x0a: screen y; (7 - visible rows) * 8 - 0x48 in world_menu_build_available_item_list */
+    s16 window_width;      /* 0x0c: window width; scroll arrows at window_x + window_width - 0xf */
+    s16 window_height;     /* 0x0e: window height; child windows open at window_y + window_height */
     /* 0x10: text sprite placement (0x800ec108). width/height are set with the
      * inner and window sizes; the load origin and screen offsets are cleared
      * with them. */

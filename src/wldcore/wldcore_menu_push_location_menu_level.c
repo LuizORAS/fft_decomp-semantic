@@ -144,9 +144,9 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_LOCATION_MENU, count, i);
     wldcore_window_init_panel_render_state(0xC,
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entry_count, &dimensions, &origin);
-    g_wldcore_window_panel_render_state.vram_x = 0x240;
+    g_wldcore_window_panel_render_state.vram_origin.x = 0x240;
     g_wldcore_window_panel_render_state.header_id = 0;
-    g_wldcore_window_panel_render_state.vram_y = 0x100;
+    g_wldcore_window_panel_render_state.vram_origin.y = 0x100;
 
     if (g_wldcore_map_projection_state.marker.sub_kind != 0) {
         s32 unused[6]; /* frame padding: the target frame is 0xb8 */

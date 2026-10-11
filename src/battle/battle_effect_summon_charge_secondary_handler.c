@@ -39,7 +39,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
         state->angle_step = 0;
         state->angle = 0;
         battle_effect_resolve_target_render_coords(
-            0, BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &state->center);
+            0, BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &state->center);
         state->brightness = 0;
         state->center.vy -= 0x18;
         for (i = 0; i < 3; i++) {

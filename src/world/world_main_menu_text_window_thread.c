@@ -15,14 +15,13 @@ typedef struct world_menu_text_window_record {
  * at 0x08/0x0a as signed halfwords (world_menu_entry_t types 0x08 as u16) and
  * reads a pointer to two text substitution words at 0x34. */
 typedef struct world_menu_text_window_entry {
-    s16 image_x;       /* 0x00 */
-    s16 image_y;       /* 0x02 */
-    s16 width;         /* 0x04 */
-    s16 height;        /* 0x06 */
-    s16 x;             /* 0x08 */
-    s16 y;             /* 0x0a */
-    s16 screen_width;  /* 0x0c */
-    s16 screen_height; /* 0x0e */
+    point16_t vram_origin; /* 0x00 */
+    s16 width;             /* 0x04 */
+    s16 height;            /* 0x06 */
+    s16 x;                 /* 0x08 */
+    s16 y;                 /* 0x0a */
+    s16 screen_width;      /* 0x0c */
+    s16 screen_height;     /* 0x0e */
     u8 _unused_10[4];
     s16 image_width;  /* 0x14 */
     s16 image_height; /* 0x16 */
@@ -53,7 +52,7 @@ void world_main_menu_text_window_thread(void) {
 
     entry = world_thread_get_current_parameter_1();
     record = records;
-    world_gfx_set_draw_mode_from_rect(&record->mode_a, (u16*)entry);
+    world_gfx_set_draw_mode_from_origin(&record->mode_a, &entry->vram_origin);
     world_gfx_set_draw_mode_for_texture_page(&record->mode_b, MENU_TEXTURE_PAGE_FRAME);
     world_menu_build_layout_sprites((world_menu_sprite_layout_t*)entry, &record->sprite_b, 0);
     world_script_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values, 0x80);

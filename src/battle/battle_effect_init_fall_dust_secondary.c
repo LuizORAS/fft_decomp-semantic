@@ -12,7 +12,7 @@ s32 battle_effect_init_fall_dust_secondary(battle_effect_secondary_init_t* sourc
     g_battle_effect_secondary_data[secondary_id].function_id
         = g_battle_effect_secondary_animations[BATTLE_EFFECT_SECONDARY_ANIMATION_FALL_DUST]
               .function_id; /* array access keeps the load after the animation store */
-    g_battle_effect_secondary_data[secondary_id].caster.block = source->caster.block;
+    g_battle_effect_secondary_data[secondary_id].caster.block = source->targets.by_role.caster.block;
     g_battle_effect_secondary_data[secondary_id].target.position.x = position->vx >> 4;
     g_battle_effect_secondary_data[secondary_id].target.position.z = position->vy >> 4;
     g_battle_effect_secondary_data[secondary_id].target.position.y = position->vz >> 4;

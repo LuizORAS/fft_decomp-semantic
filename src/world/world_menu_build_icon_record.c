@@ -22,8 +22,8 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
     u8 unused_scratch[8];
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
-    rect->x = param->vram_x;
-    rect->y = param->vram_y;
+    rect->x = param->vram_origin.x;
+    rect->y = param->vram_origin.y;
     rect->w = param->inner_width >> 2;
     rect->h = param->inner_height;
     record->_unknown_74 = 0;
@@ -84,6 +84,6 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
         }
     }
     /* Taking the draw_mode field adds an instruction; the record starts with that packet. */
-    world_gfx_set_draw_mode_from_rect((DR_MODE*)record, (u16*)param);
+    world_gfx_set_draw_mode_from_origin((DR_MODE*)record, &param->vram_origin);
     SetDrawMode(&record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
 }

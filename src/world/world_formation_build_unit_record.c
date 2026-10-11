@@ -109,14 +109,14 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     bcopy(unit->equipment_categories, record->equippable_item_types, sizeof(record->equippable_item_types));
     bcopy(party->learned_abilities, record->learned_abilities, sizeof(record->learned_abilities));
     bcopy(party->job_levels, record->job_levels, sizeof(record->job_levels));
-    bcopy(party->job_points, record->job_points, sizeof(record->job_points));
-    bcopy(party->total_job_points, record->total_job_points, sizeof(record->total_job_points));
+    bcopy(&party->job_points.current, &record->job_points.current, sizeof(record->job_points.current));
+    bcopy(&party->job_points.total, &record->job_points.total, sizeof(record->job_points.total));
     for (i = 0; i < JOB_ID_GENERIC_COUNT; i++) {
-        if (record->job_points[i] >= 10000) {
-            record->job_points[i] = 9999;
+        if (record->job_points.current.values[i] >= 10000) {
+            record->job_points.current.values[i] = 9999;
         }
-        if (record->total_job_points[i] >= 10000) {
-            record->total_job_points[i] = 9999;
+        if (record->job_points.total.values[i] >= 10000) {
+            record->job_points.total.values[i] = 9999;
         }
     }
     bcopy(party->name, record->name, sizeof(record->name));

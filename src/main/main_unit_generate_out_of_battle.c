@@ -83,8 +83,8 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
                 continue;
             }
             jp = (rand() * 100) / 0x8000 + 100;
-            party->total_job_points[i * UNIT_JOB_POINT_BYTES_PER_JOB] = jp;
-            party->job_points[i * UNIT_JOB_POINT_BYTES_PER_JOB] = jp;
+            party->job_points.total.bytes[i * UNIT_JOB_POINT_BYTES_PER_JOB] = jp;
+            party->job_points.current.bytes[i * UNIT_JOB_POINT_BYTES_PER_JOB] = jp;
             party->job_levels[i / UNIT_JOBS_PER_LEVEL_BYTE] = UNIT_JOB_LEVEL_ONE_BOTH_NIBBLES;
         }
     }

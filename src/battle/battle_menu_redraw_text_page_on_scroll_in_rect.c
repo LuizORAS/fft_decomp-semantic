@@ -28,7 +28,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
 
     input = battle_script_get_controller_input_pointer(0);
     input2 = battle_script_get_controller_input_pointer(1);
-    rect.x = (area->x / 4) + entry->vram_x;
+    rect.x = (area->x / 4) + entry->vram_origin.x;
     rect.y = 0x80;
     rect.w = area->w / 4;
     rect.h = area->h;

@@ -2,7 +2,7 @@
 
 /* Compute the packed job levels from the JP totals: one byte per pair of jobs,
  * the first job's level in the high nibble. */
-void main_unit_init_job_levels(u16* unit_job_jp, u8* unit_job_levels) {
+void main_unit_init_job_levels(unit_job_point_table_t* unit_job_jp, u8* unit_job_levels) {
     s32 i;
     u8* job_levels;
     u16* job_jp;
@@ -10,7 +10,7 @@ void main_unit_init_job_levels(u16* unit_job_jp, u8* unit_job_levels) {
 
     i = 0;
     job_levels = unit_job_levels;
-    job_jp = unit_job_jp;
+    job_jp = unit_job_jp->values;
     do {
         i += 1;
         level = main_job_calculate_level(job_jp[0]) << 4;

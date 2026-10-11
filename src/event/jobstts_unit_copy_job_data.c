@@ -34,15 +34,15 @@ void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* o
 
     bcopy(unit->learned_abilities, out->learned_abilities, 0x39);
     bcopy(unit->job_levels, out->job_levels, 0xA);
-    bcopy(unit->job_points, out->job_points, 0x28);
-    bcopy(unit->total_job_points, out->total_job_points, 0x28);
+    bcopy(&unit->job_points.current, &out->job_points.current, 0x28);
+    bcopy(&unit->job_points.total, &out->job_points.total, 0x28);
 
     for (i = 0; i < 20; i++) {
-        if (out->job_points[i] >= 10000) {
-            out->job_points[i] = 9999;
+        if (out->job_points.current.values[i] >= 10000) {
+            out->job_points.current.values[i] = 9999;
         }
-        if (out->total_job_points[i] >= 10000) {
-            out->total_job_points[i] = 9999;
+        if (out->job_points.total.values[i] >= 10000) {
+            out->job_points.total.values[i] = 9999;
         }
     }
 }

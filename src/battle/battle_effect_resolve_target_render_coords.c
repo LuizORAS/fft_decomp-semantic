@@ -8,28 +8,28 @@
  * projects the tile centre (x * 28 + 14, y * 28 + 14) and takes its height
  * from the tile record, adding the slope depth when add_depth is set. */
 void battle_effect_resolve_target_render_coords(
-    s32 add_depth, s32 target_index, battle_effect_coord_data_t* coord_data, SVECTOR* out) {
+    s32 add_depth, s32 target_index, battle_effect_secondary_init_t* coord_data, SVECTOR* out) {
     map_tile_t* tile;
 
     if (target_index == BATTLE_EFFECT_TARGET_INDEX_CASTER) {
-        if (coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+        if (coord_data->targets.records[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             *out = *battle_unit_get_screen_data_ptr_by_misc_id(
-                coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id);
+                coord_data->targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id);
             if (add_depth != 0) {
                 s32 height;
                 tile = battle_map_get_tile_data_ptr_from_misc_id(
-                    coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id);
+                    coord_data->targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id);
                 height = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
                 if (height < out->vy) {
                     out->vy = height;
                 }
             }
         } else {
-            tile = battle_map_get_tile_data_pointer(coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].id.tile_x,
-                coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].tile_y,
-                coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].map_z);
-            out->vx = coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].id.tile_x * 28 + 14;
-            out->vz = coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].tile_y * 28 + 14;
+            tile = battle_map_get_tile_data_pointer(coord_data->targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.tile_x,
+                coord_data->targets.records[BATTLE_EFFECT_CASTER_ENTRY].tile_y,
+                coord_data->targets.records[BATTLE_EFFECT_CASTER_ENTRY].map_z);
+            out->vx = coord_data->targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.tile_x * 28 + 14;
+            out->vz = coord_data->targets.records[BATTLE_EFFECT_CASTER_ENTRY].tile_y * 28 + 14;
             if (add_depth != 0) {
                 out->vy = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
             } else {
@@ -37,21 +37,21 @@ void battle_effect_resolve_target_render_coords(
             }
         }
     } else {
-        if (coord_data->targets[target_index].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-            *out = *battle_unit_get_screen_data_ptr_by_misc_id(coord_data->targets[target_index].id.misc_id);
+        if (coord_data->targets.records[target_index].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            *out = *battle_unit_get_screen_data_ptr_by_misc_id(coord_data->targets.records[target_index].id.misc_id);
             if (add_depth != 0) {
                 s32 height;
-                tile = battle_map_get_tile_data_ptr_from_misc_id(coord_data->targets[target_index].id.misc_id);
+                tile = battle_map_get_tile_data_ptr_from_misc_id(coord_data->targets.records[target_index].id.misc_id);
                 height = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
                 if (height < out->vy) {
                     out->vy = height;
                 }
             }
         } else {
-            tile = battle_map_get_tile_data_pointer(coord_data->targets[target_index].id.tile_x,
-                coord_data->targets[target_index].tile_y, coord_data->targets[target_index].map_z);
-            out->vx = coord_data->targets[target_index].id.tile_x * 28 + 14;
-            out->vz = coord_data->targets[target_index].tile_y * 28 + 14;
+            tile = battle_map_get_tile_data_pointer(coord_data->targets.records[target_index].id.tile_x,
+                coord_data->targets.records[target_index].tile_y, coord_data->targets.records[target_index].map_z);
+            out->vx = coord_data->targets.records[target_index].id.tile_x * 28 + 14;
+            out->vz = coord_data->targets.records[target_index].tile_y * 28 + 14;
             if (add_depth != 0) {
                 out->vy = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
             } else {

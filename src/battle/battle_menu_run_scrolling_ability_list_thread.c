@@ -86,8 +86,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     window.y_screen_offset = 0xC;
     window.rect.w = entry->inner_width - 8;
     window.rect.h = entry->window_height - 0x1A;
-    clear.x = window.rect.x / 4 + entry->vram_x;
-    clear.y = (entry->vram_y & 0xFF00) + 0xFE;
+    clear.x = window.rect.x / 4 + entry->vram_origin.x;
+    clear.y = (entry->vram_origin.y & 0xFF00) + 0xFE;
     clear.w = window.rect.w / 4;
     clear.h = 2;
     ClearImage(&clear, 0, 0, 0);
@@ -102,8 +102,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         battle_menu_build_window_sprites(&image_rect, entry, &base[i].icons);
     }
     SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_battle_menu_disabled_texture_window);
-    SetDrawMode(
-        &page->text_mode, 1, 0, GetTPage(0, 1, entry->vram_x & 0xFFC0, entry->vram_y & 0xFF00), &texture_window);
+    SetDrawMode(&page->text_mode, 1, 0, GetTPage(0, 1, entry->vram_origin.x & 0xFFC0, entry->vram_origin.y & 0xFF00),
+        &texture_window);
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {
         battle_menu_init_semitransparent_sprt(&page->arrows[i]);
         page->arrows[i].clut = 0x7D7C;
@@ -159,7 +159,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     battle_menu_draw_text_columns_narrow(entry, &row_offset, buffer);
     redraw_pending = 1;
     ring = 0;
-    image_rect.x = window.rect.x / 4 + entry->vram_x;
+    image_rect.x = window.rect.x / 4 + entry->vram_origin.x;
     image_rect.y = 0x80;
     image_rect.w = window.rect.w / 4;
     image_rect.h = window.rect.h;
@@ -237,9 +237,9 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
             }
             if (scroll_delta != 0) {
                 if (scroll_delta > 0) {
-                    image_rect.y = (((ring + layout->columns.row_count) * 16) & 0x7F) + entry->vram_y;
+                    image_rect.y = (((ring + layout->columns.row_count) * 16) & 0x7F) + entry->vram_origin.y;
                 } else {
-                    image_rect.y = (((ring - 1) * 16) & 0x7F) + entry->vram_y;
+                    image_rect.y = (((ring - 1) * 16) & 0x7F) + entry->vram_origin.y;
                 }
                 image_rect.h = 0x10;
                 image_rect.y += 0x80;

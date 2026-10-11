@@ -15,8 +15,8 @@ void* option_menu_redraw_text_page_on_scroll(
     layout = (world_menu_text_layout_t*)menu->text_binding;
     primary_input = battle_script_get_controller_input_pointer(0);
     secondary_input = battle_script_get_controller_input_pointer(1);
-    source.x = menu->vram_x;
-    source.y = menu->vram_y;
+    source.x = menu->vram_origin.x;
+    source.y = menu->vram_origin.y;
     source.w = menu->inner_width >> 2;
     source.h = menu->inner_height;
     changed = 0;

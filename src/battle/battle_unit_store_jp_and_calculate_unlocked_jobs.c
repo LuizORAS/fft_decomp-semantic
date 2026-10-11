@@ -42,16 +42,16 @@ s32 battle_unit_store_jp_and_calculate_unlocked_jobs(s32 unit_index, s32 jp, s32
     if (slot == JOB_ID_DANCER - JOB_ID_SQUIRE && (flags & UNIT_FLAG_MALE)) {
         return -1;
     }
-    total = unit->job_points[slot] + jp;
+    total = unit->job_points.current.values[slot] + jp;
     if (total >= 10000) {
         total = 9999;
     }
-    unit->job_points[slot] = total;
-    total = unit->total_job_points[slot] + jp;
+    unit->job_points.current.values[slot] = total;
+    total = unit->job_points.total.values[slot] + jp;
     if (total >= 10000) {
         total = 9999;
     }
-    unit->total_job_points[slot] = total;
+    unit->job_points.total.values[slot] = total;
     level = main_job_calculate_level(total);
     levels = unit->job_levels[slot / 2];
     level_byte = level;

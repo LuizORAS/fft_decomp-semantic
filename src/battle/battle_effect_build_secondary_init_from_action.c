@@ -14,21 +14,21 @@ void battle_effect_build_secondary_init_from_action(
     s32 i;
 
     init->target_count = unit->strike.target_count;
-    init->caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-    init->caster.fields.caster_id = unit->unit_id;
+    init->targets.by_role.caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+    init->targets.by_role.caster.fields.caster_id = unit->unit_id;
     init->used_weapon_id = unit->strike.used_weapon_id;
     if (init->target_count != 0) {
         for (i = 0; i < init->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
-            init->target[i].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-            init->target[i].fields.target_id = target->unit_id;
+            init->targets.by_role.target[i].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+            init->targets.by_role.target[i].fields.target_id = target->unit_id;
             action = &target->battle_data->action;
             switch (action->miss_type) {
             case BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE:
             case BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
             case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
             case BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
-                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_MISSED;
+                init->targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 break;
             case BATTLE_ACTION_MISS_TYPE_NULLIFIED:
             case BATTLE_ACTION_MISS_TYPE_ACCURACY_MISS:
@@ -36,26 +36,26 @@ void battle_effect_build_secondary_init_from_action(
             case BATTLE_ACTION_MISS_TYPE_CANCELLED:
             case BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
             case BATTLE_ACTION_MISS_TYPE_CATCH:
-                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_NO_EFFECT;
+                init->targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NO_EFFECT;
                 break;
             case BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD:
-                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_GOLEM;
+                init->targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_GOLEM;
                 break;
             default:
                 if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
-                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_BREAK;
+                    init->targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_BREAK;
                 } else if (action->critical != 0) {
-                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
+                    init->targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
                 } else {
-                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
+                    init->targets.by_role.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 }
                 break;
             }
         }
     } else {
-        init->target[0].record.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
-        init->target[0].record.id.tile_x = g_battle_cursor_x;
-        init->target[0].record.map_z = g_battle_cursor_z;
-        init->target[0].record.tile_y = g_battle_cursor_y;
+        init->targets.by_role.target[0].record.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        init->targets.by_role.target[0].record.id.tile_x = g_battle_cursor_x;
+        init->targets.by_role.target[0].record.map_z = g_battle_cursor_z;
+        init->targets.by_role.target[0].record.tile_y = g_battle_cursor_y;
     }
 }

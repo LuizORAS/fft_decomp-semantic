@@ -45,7 +45,7 @@ s32 battle_effect_update_stage(void) {
         battle_effect_load_sound_section(g_battle_ability_effect_id);
         battle_effect_init_flags_section_pointer(g_battle_ability_effect_id);
         battle_effect_set_timing_curves_pointer(g_battle_ability_effect_id);
-        if (g_battle_effect_coord_data.math_skill_flag != 0) {
+        if (g_battle_effect_context.math_skill_flag != 0) {
             if (g_battle_effect_flags_section->spawn_delay_override != 0) {
                 g_battle_effect_timeline->spawn_delay = g_battle_effect_flags_section->spawn_delay_override;
             } else {

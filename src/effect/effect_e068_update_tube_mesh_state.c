@@ -123,7 +123,7 @@ s32 effect_e068_update_tube_mesh_state(s16 record_index, s32 callback_slot, s32 
         case EFFECT_EMITTER_ORIGIN_CASTER:
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
-                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &vertex);
+                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &vertex);
             origin.vx += vertex.vx;
             origin.vy += vertex.vy;
             origin.vz += vertex.vz;
@@ -131,7 +131,7 @@ s32 effect_e068_update_tube_mesh_state(s16 record_index, s32 callback_slot, s32 
         case EFFECT_EMITTER_ORIGIN_TARGET:
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
-                &g_battle_effect_coord_data, &vertex);
+                &g_battle_effect_context, &vertex);
             origin.vx += vertex.vx;
             origin.vy += vertex.vy;
             origin.vz += vertex.vz;

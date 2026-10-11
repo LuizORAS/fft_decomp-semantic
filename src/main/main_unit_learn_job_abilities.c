@@ -67,8 +67,8 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
                 learned = 1;
             } else if (main_util_roll_pass_fail(100, scratch) == 0) {
                 u16 cost = ability->jp_cost;
-                if (unit->job_points[job_index] >= cost) {
-                    unit->job_points[job_index] -= cost;
+                if (unit->job_points.current.values[job_index] >= cost) {
+                    unit->job_points.current.values[job_index] -= cost;
                     ((unit_learned_ability_row_t*)unit->learned_abilities)[job_index].bits[i / 8] |= 0x80 >> (i % 8);
                     learned = 1;
                 }

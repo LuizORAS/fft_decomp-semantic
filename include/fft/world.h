@@ -1033,7 +1033,7 @@ void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_ota
 void world_gfx_ramp_screen_overlay_intensity_to_max(void);
 void world_gfx_set_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
 void world_gfx_set_clut_rect_from_id(RECT* rect, u16 clut_id);
-void world_gfx_set_draw_mode_from_rect(DR_MODE* mode, const u16* rect);
+void world_gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin);
 void world_gfx_set_image_blit_destination_origin(s16 x, s16 y);
 void world_gfx_set_image_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
 void world_gfx_start_decreasing_fade(void);
@@ -1342,14 +1342,13 @@ typedef struct world_formation_unit {
     unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x07a through 0x0b2 */
     u8 job_levels[0x0a];                                                          /* 0x0b3 */
     u8 _padding_0bd;                                                              /* aligns job_points */
-    u16 job_points[0x14];                                                         /* 0x0be; per-job JP */
-    u16 total_job_points[0x14];                                                   /* 0x0e6; per-job total JP */
-    u8 name[0x10];                                                                /* 0x10e; "unit_t Nickname" */
-    u8 monster_graphic;    /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82
-                              (world_formation_build_unit_graphic_entry) */
-    u8 proposition_status; /* 0x11f; "Proposition Byte": world_formation_unit_proposition_e, 0 when present */
-    u16 birthday;          /* 0x120; battle_stats_t birthday & 0x1ff; egg readers split
-                              it into nibbles */
+    unit_job_points_t job_points; /* 0x0be; current JP followed by total JP */
+    u8 name[0x10];                /* 0x10e; "unit_t Nickname" */
+    u8 monster_graphic;           /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82
+                                     (world_formation_build_unit_graphic_entry) */
+    u8 proposition_status;        /* 0x11f; "Proposition Byte": world_formation_unit_proposition_e, 0 when present */
+    u16 birthday;                 /* 0x120; battle_stats_t birthday & 0x1ff; egg readers split
+                                     it into nibbles */
     u16 egg_color; /* 0x122; party_data_t 0xd2; the formation sprite drawer (0x8011751c) loads it as a halfword palette
                       index */
     u8 support_abilities[4]; /* 0x124; copy of battle_stats_t.support_abilities, BATTLE_SUPPORT_SET_1..4_* */

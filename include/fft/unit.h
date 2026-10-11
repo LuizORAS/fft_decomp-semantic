@@ -345,6 +345,22 @@ typedef struct unit_learned_ability_row {
 typedef char unit_learned_ability_row_size_must_be_3
     [(sizeof(unit_learned_ability_row_t) == UNIT_LEARNED_ABILITY_BYTES_PER_JOB) ? 1 : -1];
 
+/* Per-job JP supports the bytewise party serialization and halfword readers. */
+typedef union unit_job_point_table {
+    u16 values[UNIT_CAREER_JOB_COUNT];
+    u8 bytes[UNIT_JOB_POINT_BYTE_COUNT];
+} unit_job_point_table_t;
+typedef char
+    unit_job_point_table_size_must_be_40[(sizeof(unit_job_point_table_t) == UNIT_JOB_POINT_BYTE_COUNT) ? 1 : -1];
+
+/* Party-to-battle initialization copies both adjacent tables as one block. */
+typedef struct unit_job_points {
+    unit_job_point_table_t current;
+    unit_job_point_table_t total;
+} unit_job_points_t;
+typedef char
+    unit_job_points_size_must_be_80[(sizeof(unit_job_points_t) == UNIT_JOB_POINT_TABLE_PAIR_BYTE_COUNT) ? 1 : -1];
+
 /* zodiac */
 enum {
     ZODIAC_SIGN_ORDINARY_COUNT = 12,
@@ -648,8 +664,7 @@ typedef struct battle_stats {
     unit_learned_ability_row_t
         learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x099..0x0d1; three bytes per learned-ability row */
     u8 job_levels[10];                                     /* 0x0d2; two packed job-level nibbles per byte */
-    u16 job_points[20];                                    /* 0x0dc; SCUS party-to-battle copy at 0x8005b0d0 */
-    u16 total_job_points[20];                              /* 0x104; contiguous with current JP, through 0x12b */
+    unit_job_points_t job_points;                          /* 0x0dc; current JP followed by total JP */
     /* main_unit_store_character_names (0x8005c984) copies 16/16/8/8
      * bytes to these four destinations. All names use the game's encoding. */
     u8 name[16];                   /* 0x12c */
@@ -849,11 +864,10 @@ typedef struct party_data {
     u8 unlocked_jobs[3];                                                          /* 0x28 */
     unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x2b */
     u8 job_levels[10];                                                            /* 0x64 */
-    u8 job_points[40];                                                            /* 0x6e; per-job Base Job JP */
-    u8 total_job_points[40];                                                      /* 0x96; per-job Total Base Job JP */
-    u8 name[16];                                                                  /* 0xbe */
-    u8 name_id[2];         /* 0xce; little-endian, accessed bytewise like the ability ids */
-    u8 proposition_status; /* 0xd0; nonzero while unavailable on a proposition */
+    unit_job_points_t job_points; /* 0x6e; current JP followed by total JP */
+    u8 name[16];                  /* 0xbe */
+    u8 name_id[2];                /* 0xce; little-endian, accessed bytewise like the ability ids */
+    u8 proposition_status;        /* 0xd0; nonzero while unavailable on a proposition */
     u8 _unused_d1;
     u8 egg_color;        /* 0xd2; create/save/generate unit stores */
     u8 _unused_d3[0x2d]; /* 0xd3; saves and loads copy 0xe0 bytes per record, so 0xe0..0xff is not saved */

@@ -106,7 +106,7 @@ s32 world_ability_run_learn_list(void) {
                     g_world_ability_entries[g_world_menu_cursor_position]);
                 category = g_main_ability_data[g_world_ability_entries[g_world_menu_cursor_position]].jp_cost;
                 g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
-                    ->job_points[g_world_learn_selected_job_index] -= category;
+                    ->job_points.current.values[g_world_learn_selected_job_index] -= category;
                 main_sound_play_sfx_find_channel(MAIN_SFX_ABILITY_LEARNED);
             } else if (g_world_menu_selection_results[5] == 1) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
