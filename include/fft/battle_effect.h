@@ -1766,7 +1766,7 @@ typedef char assert_effect_animation_curve_size[sizeof(effect_animation_curve_t)
 /* The effect file has one count followed by one 160-byte curve per entry. */
 typedef struct effect_animation_curve_table {
     u32 count;
-    effect_animation_curve_t curves[1];
+    effect_animation_curve_t curves[0];
 } effect_animation_curve_table_t;
 typedef char effect_animation_curve_table_data_offset_must_be_4
     [(unsigned long)&((effect_animation_curve_table_t*)0)->curves == 4 ? 1 : -1];
