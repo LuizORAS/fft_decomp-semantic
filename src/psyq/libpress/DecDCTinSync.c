@@ -1,5 +1,6 @@
 #include "psx/libpress.h"
 
-void DecDCTinSync(void) {
-    MDEC_in_sync();
+/* The linked wrapper always blocks; the SDK mode argument is ignored. */
+s32 DecDCTinSync(s32 unused_mode) {
+    return MDEC_in_sync();
 }

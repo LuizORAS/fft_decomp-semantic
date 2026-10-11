@@ -19,10 +19,10 @@ DECDCTENV* DecDCTPutEnv(DECDCTENV* env);
 s32 DecDCTBufSize(u32* bs);
 void DecDCTin(u32* buf, s32 mode);
 void DecDCTout(u32* buf, s32 size);
-void DecDCTinSync(void);
-void DecDCToutSync(void);
-void DecDCTinCallback(psyq_interrupt_callback_t func);
-void DecDCToutCallback(psyq_interrupt_callback_t func);
+s32 DecDCTinSync(s32 unused_mode);
+s32 DecDCToutSync(s32 unused_mode);
+s32 DecDCTinCallback(psyq_interrupt_callback_t func);
+s32 DecDCToutCallback(psyq_interrupt_callback_t func);
 s32 DecDCTvlcSize(s32 words);
 s32 DecDCTvlc(u32* frame_data, u32* decode_buffer);
 

@@ -2,6 +2,7 @@
 #include "psx/libpress.h"
 #include "psx/types.h"
 
-void DecDCToutCallback(psyq_interrupt_callback_t callback) {
-    DMACallback(1, callback);
+s32 DecDCToutCallback(psyq_interrupt_callback_t callback) {
+    /* Psy-Q returns the previous callback address through a long result. */
+    return (s32)DMACallback(1, callback);
 }
