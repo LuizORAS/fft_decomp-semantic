@@ -25,12 +25,12 @@ s32 world_script_get_misc_id(s32 unit_id) {
     original_unit_id = unit_id;
 
     if (unit_id == 0x68) {
-        for (battle_id = 0; battle_id < 16; battle_id++) {
+        for (battle_id = 0; battle_id < ENTD_UNITS_PER_ENCOUNTER; battle_id++) {
             unit = battle_unit_get_stats_from_battle_id(battle_id);
             if (unit->team_flags & BATTLE_TEAM_IMPORTANCE_MASK)
                 break;
         }
-        if (battle_id == 16) {
+        if (battle_id == ENTD_UNITS_PER_ENCOUNTER) {
             world_script_report_missing_unit_stub(original_unit_id);
             return EVENT_MISC_ID_NONE;
         }

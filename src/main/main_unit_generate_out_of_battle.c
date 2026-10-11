@@ -115,7 +115,7 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
         do {
             found = 1;
             name_id = name_modifier + (rand() * 255) / 0x8000;
-            for (i = 0; i < PARTY_GUEST_SLOT_FIRST; i++) {
+            for (i = 0; i < PARTY_MEMBER_SLOT_COUNT; i++) {
                 other = &g_main_party_data[i];
                 if (other->party_id != PARTY_ID_NONE && (other->sprite_set & -(other->sprite_set >> 7)) == generic_id
                     && (other->name_id[0] | (other->name_id[1] << 8)) == (name_id & 0xffff)) {

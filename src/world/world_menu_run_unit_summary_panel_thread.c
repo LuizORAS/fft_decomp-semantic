@@ -76,7 +76,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     if (g_main_debug_display_enabled != 0) {
         world_text_render_decimal_value_or_dashes(
             g_world_active_unit_data.battle_id, 0x4002, digits + 0xA0, &g_world_menu_text_state.pen);
-    } else if (g_world_active_unit_data.battle_id >= 0x10) {
+    } else if (g_world_active_unit_data.battle_id >= BATTLE_DEPLOYED_UNIT_SLOT_FIRST) {
         value = unit->formation_index;
         if (value == 0xFF) {
             value = 0;

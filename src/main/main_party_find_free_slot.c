@@ -21,7 +21,7 @@ s32 main_party_find_free_slot(s32 save_formation, u8* palette) {
         limit = PARTY_ROSTER_SLOT_COUNT;
     } else {
         start_index = 0;
-        limit = PARTY_GUEST_SLOT_FIRST;
+        limit = PARTY_MEMBER_SLOT_COUNT;
     }
 
     party_index = start_index;

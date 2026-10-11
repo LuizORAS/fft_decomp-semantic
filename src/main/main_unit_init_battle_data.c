@@ -19,7 +19,7 @@ void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party)
     unit->formation_index = party->party_id;
     unit->job_id = party->job_id;
     value = party->palette;
-    if (party->party_id < PARTY_GUEST_SLOT_FIRST) {
+    if (party->party_id < PARTY_MEMBER_SLOT_COUNT) {
         value = 0;
     }
     unit->sprite_palette = value;

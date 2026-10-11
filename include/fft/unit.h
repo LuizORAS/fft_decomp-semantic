@@ -866,11 +866,15 @@ enum {
     ENTD_ENCOUNTERS_PER_FILE = 128,
 };
 
+/* The ENTD slots precede the five deployed-party slots in battle storage. */
+enum { BATTLE_DEPLOYED_UNIT_SLOT_FIRST = ENTD_UNITS_PER_ENCOUNTER };
+
 /* The persistent roster at 0x80057f74 contains 16 formation slots followed
  * by four guest slots, each with the party_data_t 0x100-byte stride. */
 enum {
+    PARTY_MEMBER_SLOT_COUNT = 16,
+    PARTY_GUEST_SLOT_FIRST = PARTY_MEMBER_SLOT_COUNT,
     PARTY_ROSTER_SLOT_COUNT = 20,
-    PARTY_GUEST_SLOT_FIRST = 16,
 };
 
 /* party_data_t.party_id sentinel: `0xff` means the unit does not appear on

@@ -184,9 +184,9 @@ typedef struct card_save_buffer {
     u8 proposition_count;                        /* 0x438 */
     u8 active_propositions[8][9];                /* 0x439 */
     u8 _unused_0481[3];                          /* 0x481; serialized and parity-covered */
-    u8 party_records[20][0xe0];                  /* 0x484; party_data_t records truncated to 0xe0 bytes */
-    u8 item_quantities[ITEM_ID_COUNT];           /* 0x1604; g_main_item_quantities */
-    u8 poached_item_quantities[ITEM_ID_COUNT];   /* 0x1704; g_main_item_poached_quantities */
+    u8 party_records[PARTY_ROSTER_SLOT_COUNT][0xe0]; /* 0x484; party_data_t records truncated to 0xe0 bytes */
+    u8 item_quantities[ITEM_ID_COUNT];               /* 0x1604; g_main_item_quantities */
+    u8 poached_item_quantities[ITEM_ID_COUNT];       /* 0x1704; g_main_item_poached_quantities */
     /* 0x1804; first 0x40 bytes are Move-Find-Item flags, second half unknown. */
     u8 item_location_flags[0x80];
     s32 script_variables[0x100];   /* 0x1884 */
