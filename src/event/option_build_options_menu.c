@@ -12,7 +12,7 @@
  * row-count loads, as in the target.
  */
 void option_build_options_menu(void) {
-    menu_text_window_t window;
+    image_load_parameters_t image_parameters;
     RECT image_rect;
     RECT clear;
     RECT texture_window;
@@ -58,18 +58,18 @@ void option_build_options_menu(void) {
     entry->window.h = layout->row_count * 16 + 0x10;
     entry->inner_height = layout->row_count * 16 + 0x10;
     entry->text_image.height = layout->row_count * 16 + 0x10;
-    window.x_screen_offset = 8;
-    window.rect.x = 0;
-    window.rect.y = 0;
-    window.y_screen_offset = 0xA;
-    window.rect.w = entry->window.w - 0x20;
-    window.rect.h = entry->window.h - 0xE;
+    image_parameters.x_screen_offset = 8;
+    image_parameters.x_load = 0;
+    image_parameters.y_load = 0;
+    image_parameters.y_screen_offset = 0xA;
+    image_parameters.width = entry->window.w - 0x20;
+    image_parameters.height = entry->window.h - 0xE;
     battle_menu_build_window_sprites(&image_rect, entry, &page->icons);
     buffer = battle_menu_alloc_memory(0x1E0);
     g_option_menu_pages[0].icons.base.sprites[3].y0 -= 2;
     clear.x = entry->vram_origin.x;
     clear.y = 0xFE;
-    clear.w = window.rect.w / 4;
+    clear.w = (s16)image_parameters.width / 4;
     clear.h = 2;
     ClearImage(&clear, 0, 0, 0);
     battle_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_FRAME);
@@ -102,8 +102,8 @@ void option_build_options_menu(void) {
     base->thumb.h = 8;
     base->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&base->frame);
-    battle_gfx_init_image_loading((texture_primitive_t*)&base->frame, &entry->vram_origin, &entry->window,
-        (const image_load_parameters_t*)&window);
+    battle_gfx_init_image_loading(
+        (texture_primitive_t*)&base->frame, &entry->vram_origin, &entry->window, &image_parameters);
     battle_menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
     base->arrow_marks[0].w = 6;
     base->arrow_marks[0].h = 0xC;

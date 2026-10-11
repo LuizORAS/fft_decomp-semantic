@@ -18,7 +18,7 @@
  * the image buffer the last callee-saved register instead of the layout.
  */
 void world_screen_build_at_list(void) {
-    menu_text_window_t window;
+    image_load_parameters_t image_parameters;
     RECT image_rect;
     RECT clear;
     RECT texture_window;
@@ -61,12 +61,12 @@ void world_screen_build_at_list(void) {
     entry->window.h = binding->row_count * 16 + 0x1C;
     entry->inner_height = binding->row_count * 16 + 0x1C;
     entry->text_image.height = binding->row_count * 16 + 0x1C;
-    window.rect.x = 0;
-    window.rect.y = 0x7E;
-    window.x_screen_offset = 8;
-    window.y_screen_offset = 0xC;
-    window.rect.w = entry->window.w - 0x12;
-    window.rect.h = entry->window.h - 0x1A;
+    image_parameters.x_load = 0;
+    image_parameters.y_load = 0x7E;
+    image_parameters.x_screen_offset = 8;
+    image_parameters.y_screen_offset = 0xC;
+    image_parameters.width = entry->window.w - 0x12;
+    image_parameters.height = entry->window.h - 0x1A;
     world_gfx_set_draw_mode_for_texture_page(&page->icon_mode, MENU_TEXTURE_PAGE_FRAME);
     texture_window.x = 0;
     texture_window.y = entry->vram_origin.y & 0xFF;
@@ -100,8 +100,8 @@ void world_screen_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
-        (const image_load_parameters_t*)&window);
+    world_gfx_init_image_loading(
+        (texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window, &image_parameters);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
