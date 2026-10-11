@@ -8,15 +8,13 @@
 void wldcore_window_init_panel_render_state(s32 unused, s32 extent, point32_t* dimensions, point32_t* origin) {
     s32 width = dimensions->x;
     s32 rows = dimensions->y;
-    s32 visible_rows;
     s32 text_width;
     s32 x;
     s32 y;
     s32 last_row;
 
     g_wldcore_window_panel_label_state.row_count = rows;
-    visible_rows = dimensions->y;
-    g_wldcore_window_panel_label_state.hidden_rows = extent - visible_rows;
+    g_wldcore_window_panel_label_state.hidden_rows = extent - dimensions->y;
     g_wldcore_window_panel_label_state.x[0] = g_wldcore_window_panel_label_state.x[1] = 4;
     g_wldcore_window_panel_label_state.mode[0] = MENU_TEXT_COLUMN_TEXT;
     g_wldcore_window_panel_label_state.mode[1] = MENU_TEXT_COLUMN_HIDDEN;

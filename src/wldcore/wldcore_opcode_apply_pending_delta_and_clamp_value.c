@@ -7,13 +7,11 @@
  * handler's script opcode yet. */
 void wldcore_opcode_apply_pending_delta_and_clamp_value(void) {
     s32 delta;
-    s32 current;
     s32* value = &g_wldcore_active_saved_record.counter;
 
     delta = g_wldcore_active_saved_record.counter_delta;
     g_wldcore_active_saved_record.counter_delta = 0;
-    current = *value;
-    *value = current + delta;
+    *value += delta;
     if (*value > 0xFFFF) {
         *value = 0xFFFF;
     }

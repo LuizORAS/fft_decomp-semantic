@@ -33,7 +33,6 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
     CVECTOR color;
     s32 centre_x;
     s32 centre_y;
-    s32 stepped_x;
     s32 page;
     s32 step;
 
@@ -48,8 +47,7 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
     sprite.cy = centre_y;
     step = object->palette;
     if (step != 0) {
-        stepped_x = object->clut.x;
-        sprite.cx = stepped_x + ((step - 1) << 4);
+        sprite.cx = object->clut.x + ((step - 1) << 4);
     }
     if (object->flags & WLDCORE_DISPLAY_OBJECT_UNTINTED) {
         color = object->color;

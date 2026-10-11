@@ -7,8 +7,6 @@ void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y) {
     world_menu_entry_t* entry;
     s32 x;
     s32 y;
-    s32 width;
-    s32 height;
     s32 initial_x = -0x70;
     s32 initial_y = -0x50;
 
@@ -19,15 +17,13 @@ void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y) {
         entry->window.y = initial_y;
         x = entry->window.x;
         g_world_menu_open_entry_index = index;
-        width = entry->window.w;
-        if (x + width >= 0x81) {
+        if (x + entry->window.w >= 0x81) {
             entry->window.x = 0x78 - entry->window.w;
         } else if (x < -0x80) {
             entry->window.x = -0x78;
         }
-        height = entry->window.h;
         y = entry->window.y;
-        if (y + height >= 0x79) {
+        if (y + entry->window.h >= 0x79) {
             entry->window.y = 0x70 - entry->window.h;
         } else if (y < -0x78) {
             entry->window.y = -0x70;
