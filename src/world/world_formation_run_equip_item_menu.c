@@ -51,8 +51,8 @@ s32 world_formation_run_equip_item_menu(void) {
         return 1;
     }
     if (g_world_equip_item_list_open == 0) {
-        g_world_equip_item_slot = world_menu_update_vertical_selection_and_mark_change(
-            5, WORLD_MENU_CURSOR_EQUIP_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
+        g_world_equip_item_slot = world_menu_update_vertical_selection_and_mark_change(WORLD_EQUIPMENT_SLOT_COUNT,
+            WORLD_MENU_CURSOR_EQUIP_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
             world_item_build_category_list(g_world_formation_selected_unit_index, g_world_equip_item_slot + 1,
                 g_world_equip_item_slot, g_world_menu_entry_ids, ITEM_LIST_MODE_MARK_UNEQUIPPABLE);

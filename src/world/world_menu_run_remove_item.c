@@ -78,8 +78,8 @@ s32 world_menu_run_remove_item(void) {
         world_menu_toggle_preview_stats_window(1);
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
-    slot = world_menu_update_vertical_selection_and_mark_change(
-        5, WORLD_MENU_CURSOR_REMOVE_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
+    slot = world_menu_update_vertical_selection_and_mark_change(WORLD_EQUIPMENT_SLOT_COUNT,
+        WORLD_MENU_CURSOR_REMOVE_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
     cursor_y = &g_world_remove_item_cursor_point.y;
     index = slot;
     *cursor_y = index * 16 + 0x90;

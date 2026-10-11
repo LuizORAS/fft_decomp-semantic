@@ -71,22 +71,24 @@ void world_menu_load_selected_unit(void) {
         editor->magical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_MAGIC_EVADE];
     editor->magical_accessory_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE];
 
-    for (i = 4; i >= 0; i--)
+    for (i = WORLD_EQUIPMENT_SLOT_COUNT - 1; i >= 0; i--)
         editor->equipment[i] = 0;
 
     if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
-        editor->equipment[0] = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
+        editor->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]
+            = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
             ? unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON]
             : unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];
-        editor->equipment[1] = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
+        editor->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND]
+            = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
             ? unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON]
             : unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
-        editor->equipment[2] = unit->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
-        editor->equipment[3] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
-        editor->equipment[4] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
+        editor->equipment[WORLD_EQUIPMENT_SLOT_HEAD] = unit->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
+        editor->equipment[WORLD_EQUIPMENT_SLOT_BODY] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
+        editor->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
     }
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
         if (editor->equipment[i] == ITEM_ID_NOTHING || editor->equipment[i] == ITEM_ID_NONE)
             editor->equipment[i] = -1;
     }
@@ -136,11 +138,11 @@ void world_menu_load_selected_unit(void) {
 
     item_id = ITEM_ID_NOTHING;
     editor->two_hands = 0;
-    if (editor->equipment[0] != -1) {
-        if (editor->equipment[1] == -1)
-            item_id = editor->equipment[0];
-    } else if (editor->equipment[1] != -1) {
-        item_id = editor->equipment[1];
+    if (editor->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND] != -1) {
+        if (editor->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND] == -1)
+            item_id = editor->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
+    } else if (editor->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND] != -1) {
+        item_id = editor->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
     }
 
     if (item_id != ITEM_ID_NOTHING) {

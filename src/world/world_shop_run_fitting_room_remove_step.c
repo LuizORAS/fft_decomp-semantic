@@ -45,7 +45,7 @@ void world_shop_run_fitting_room_remove_step(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
     }
     slot = world_menu_update_vertical_selection_and_mark_change(
-        5, WORLD_MENU_CURSOR_REMOVE_SLOT, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
+        WORLD_EQUIPMENT_SLOT_COUNT, WORLD_MENU_CURSOR_REMOVE_SLOT, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
     if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[(u8)slot]
         != ITEM_ID_NOTHING) {
         value = (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[(u8)slot]

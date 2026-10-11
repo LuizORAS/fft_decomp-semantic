@@ -105,7 +105,7 @@ void world_menu_equipment_panel_thread(void) {
         }
         screen->sprites[12].u0 = u;
         screen->sprites[13].u0 = u;
-        world_menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
+        world_menu_init_sprite_array(&screen->sprites[19], WORLD_EQUIPMENT_SLOT_COUNT, 0x7cfc);
         for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
             world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[19 + i],
                 g_world_panel_item_icon_texture, &g_world_equipment_panel_origin,

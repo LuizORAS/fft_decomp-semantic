@@ -8,21 +8,21 @@
 s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support) {
     s32 result;
     s32 item_id;
-    s16 w0;
-    s16 w1;
+    s16 right_hand;
+    s16 left_hand;
     u8 flags;
 
     result = 0;
-    w0 = equipment[0];
+    right_hand = equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
     item_id = ITEM_ID_NOTHING;
-    if (w0 != ITEM_ID_NOTHING) {
-        if (equipment[1] == ITEM_ID_NOTHING) {
-            item_id = w0 & WORLD_ITEM_ID_MASK;
+    if (right_hand != ITEM_ID_NOTHING) {
+        if (equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND] == ITEM_ID_NOTHING) {
+            item_id = right_hand & WORLD_ITEM_ID_MASK;
         }
     } else {
-        w1 = equipment[1];
-        if (w1 != ITEM_ID_NOTHING) {
-            item_id = w1 & WORLD_ITEM_ID_MASK;
+        left_hand = equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
+        if (left_hand != ITEM_ID_NOTHING) {
+            item_id = left_hand & WORLD_ITEM_ID_MASK;
         }
     }
     if (item_id != ITEM_ID_NOTHING && item_id < ITEM_ID_THROWABLE_FIRST) {

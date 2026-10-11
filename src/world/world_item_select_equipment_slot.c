@@ -11,8 +11,8 @@ world_unit_equipment_slot_e world_item_select_equipment_slot(s16 unit_index, s32
     world_unit_equipment_slot_e slot;
 
     item_id &= WORLD_ITEM_ID_MASK;
-    right_hand = unit->equipment[0];
-    left_hand = unit->equipment[1];
+    right_hand = unit->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
+    left_hand = unit->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
     if (item_id < ITEM_ID_THROWABLE_FIRST) {
         if (left_hand < ITEM_ID_THROWABLE_FIRST) {
             if (right_hand >= ITEM_ID_THROWABLE_FIRST) {

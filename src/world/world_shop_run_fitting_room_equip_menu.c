@@ -38,8 +38,9 @@ void world_shop_run_fitting_room_equip_menu(void) {
         }
     } else if (g_world_shop_fitting_room_item_list_open == 0) {
         prev = g_world_shop_fitting_equip_slot;
-        g_world_shop_fitting_equip_slot = world_menu_update_vertical_selection_and_mark_change(
-            5, WORLD_MENU_CURSOR_EQUIP_SLOT, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
+        g_world_shop_fitting_equip_slot
+            = world_menu_update_vertical_selection_and_mark_change(WORLD_EQUIPMENT_SLOT_COUNT,
+                WORLD_MENU_CURSOR_EQUIP_SLOT, g_world_input_primary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (prev != g_world_shop_fitting_equip_slot) {
             g_world_menu_cursor_position = 0;
         }

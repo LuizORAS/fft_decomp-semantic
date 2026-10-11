@@ -34,7 +34,7 @@
  * The target has `move s1,v0` after world_menu_run_thread and no
  * initialisation of s1 at loop 2's head: loop 2's counter is the run_thread
  * result's allocno, so the source assigns the result to `i` and the loop is
- * written `for (; i < 4; i++)`. A fresh block-local takes a call-clobbered
+ * written `for (; i < WORLD_EQUIPMENT_SLOT_ACCESSORY; i++)`. A fresh block-local takes a call-clobbered
  * register; reusing a function-scope allocno that is already dead puts the
  * counter in the target's callee-saved s1 and decides which of the two loop
  * quantities is allocated first.
@@ -81,16 +81,17 @@ void world_shop_run_best_fit_preview_step(void) {
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, staged, sizeof(staged));
         unit_slot = &g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
         room_base = &g_world_shop_fitting_room_items[0][0];
-        reserved = room_base + g_world_formation_selected_unit_index * 5;
-        for (i = 0; i < 4; i++, reserved++) {
+        reserved = room_base + g_world_formation_selected_unit_index * WORLD_EQUIPMENT_SLOT_COUNT;
+        for (i = 0; i < WORLD_EQUIPMENT_SLOT_ACCESSORY; i++, reserved++) {
             if (((*unit_slot)->equipment[i] >> 15) != 0) {
                 (*unit_slot)->equipment[i] = *reserved;
             }
         }
         world_shop_build_fitting_room_best_fit_equipment(
             g_world_formation_selected_unit_index, g_world_shop_id, g_world_item_preview_stat_detail.equipment);
-        g_world_item_preview_stat_detail.equipment[4]
-            = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[4];
+        g_world_item_preview_stat_detail.equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY]
+            = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                  ->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY];
         bcopy(
             staged, g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, sizeof(staged));
         world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
@@ -122,7 +123,7 @@ void world_shop_run_best_fit_preview_step(void) {
         g_world_shop_best_fit_menu_open = 0;
         g_world_formation_unit_cycle_mode = 2;
         if (g_world_menu_selection_results[5] == 0) {
-            for (; i < 4; i++) {
+            for (; i < WORLD_EQUIPMENT_SLOT_ACCESSORY; i++) {
                 u16 suggested;
                 s32 shifted;
                 s32 current;

@@ -7,15 +7,17 @@ void world_shop_finalize_unit_equips_from_fitting_room(s16 formation_index, s16 
 
     g_world_formation_unit_pointers[unit_index]->equipment[equipment_index] = ITEM_ID_NOTHING;
     reserved_item = g_world_shop_fitting_room_items[unit_index][equipment_index];
-    if (equipment_index < 2) {
-        u16 right_hand = g_world_formation_unit_pointers[unit_index]->equipment[0];
-        u16 left_hand = g_world_formation_unit_pointers[unit_index]->equipment[1];
+    if (equipment_index < WORLD_EQUIPMENT_SLOT_HEAD) {
+        u16 right_hand = g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
+        u16 left_hand = g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
 
         if (right_hand == ITEM_ID_NOTHING && left_hand == ITEM_ID_NOTHING) {
-            g_world_formation_unit_pointers[unit_index]->equipment[0] = g_world_shop_fitting_room_items[unit_index][0];
-            g_world_formation_unit_pointers[unit_index]->equipment[1] = g_world_shop_fitting_room_items[unit_index][1];
-            g_world_shop_fitting_room_items[unit_index][0] = ITEM_ID_NOTHING;
-            g_world_shop_fitting_room_items[unit_index][1] = ITEM_ID_NOTHING;
+            g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]
+                = g_world_shop_fitting_room_items[unit_index][WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
+            g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND]
+                = g_world_shop_fitting_room_items[unit_index][WORLD_EQUIPMENT_SLOT_LEFT_HAND];
+            g_world_shop_fitting_room_items[unit_index][WORLD_EQUIPMENT_SLOT_RIGHT_HAND] = ITEM_ID_NOTHING;
+            g_world_shop_fitting_room_items[unit_index][WORLD_EQUIPMENT_SLOT_LEFT_HAND] = ITEM_ID_NOTHING;
             return;
         }
         if (reserved_item != ITEM_ID_NOTHING
