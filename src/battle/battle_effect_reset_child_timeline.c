@@ -12,6 +12,6 @@ void battle_effect_reset_child_timeline(effect_record_t* record, s16 target_inde
         record->timeline.child.keyframe.values[index] = 0;
         index++;
     } while (index < 13);
-    record->timeline_frame.s = 0;
+    record->timeline_frame = 0;
     record->target_index = target_index;
 }

@@ -1,8 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-extern void battle_text_determine_spell_quote(world_unit_command_action_t* action, s32 unit_id, s32 enabled);
-
 /* Announce the next unit whose charged or performing action comes due.
  *
  * Each of the three action phases is polled in turn; a phase that produces a
@@ -29,7 +27,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 g_battle_casting_unit_id = actor->unit_id;
                 command.skillset = 0;
                 actor_stats = actor->battle_data;
-                battle_text_determine_spell_quote((world_unit_command_action_t*)&command, actor_stats->misc_unit_id, 1);
+                battle_text_determine_spell_quote(&command, actor_stats->misc_unit_id, 1);
                 ability_id = command.ability_id;
                 result = 0;
                 actor->continue_attack_count = 0;
@@ -43,7 +41,7 @@ s32 battle_state_announce_next_charged_action(void) {
             if (result == 0) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 g_battle_casting_unit_id = unit->unit_id;
-                battle_text_determine_spell_quote((world_unit_command_action_t*)&unit->battle_data->action_command,
+                battle_text_determine_spell_quote((battle_ai_command_action_t*)&unit->battle_data->action_command,
                     unit->battle_data->misc_unit_id, 1);
                 ability_id = unit->command_state.ai.data.action.ability_id;
                 unit->continue_attack_count = 0;
@@ -69,7 +67,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 g_battle_casting_unit_id = actor->unit_id;
                 command.skillset = 0;
                 actor_stats = actor->battle_data;
-                battle_text_determine_spell_quote((world_unit_command_action_t*)&command, actor_stats->misc_unit_id, 1);
+                battle_text_determine_spell_quote(&command, actor_stats->misc_unit_id, 1);
                 ability_id = command.ability_id;
                 result = 0;
                 actor->continue_attack_count = 0;

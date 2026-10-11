@@ -256,7 +256,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
             battle_effect_init_secondary(
                 BATTLE_EFFECT_SECONDARY_ANIMATION_REFLECT, g_battle_effect_timeline->spawn_delay, &init);
         }
-        record->timeline_frame.u = g_battle_effect_timing_channels->duration;
+        record->timeline_frame = g_battle_effect_timing_channels->duration;
     }
     record->pc += 2;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

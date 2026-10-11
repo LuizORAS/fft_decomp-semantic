@@ -5,8 +5,6 @@
 
 #include "fft/battle.h"
 
-struct effect_timeline_header;
-
 /* helpers */
 /* Reads animation curve `nibble` (0 = none, otherwise the curve index + 1) at `frame`. The
  * separate decrement keeps the target's compare against -1. */
@@ -591,7 +589,7 @@ typedef struct effect_wide_vector {
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 4x4 grid-mesh
  * family: brightness_row selects the row, the column is the quad row. */
 extern u32 g_effect_gfx_brightness_table[][5];
-extern struct effect_timeline_header* g_effect_timeline_channel_base;
+extern battle_effect_tick_channels_t* g_effect_timeline_channel_base;
 void effect_add_scratchpad_xyz_components(s32 group, s32 point, const VECTOR* offset, SVECTOR* output);
 
 #endif

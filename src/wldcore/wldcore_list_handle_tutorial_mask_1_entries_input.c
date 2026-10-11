@@ -10,11 +10,9 @@
  * cancel (0x40) and confirm (0x20) start thread 12 and record the choice;
  * 0x100 on a non-empty list opens help message 0x108c. */
 void wldcore_list_handle_tutorial_mask_1_entries_input(wldcore_menu_panel_level_t* level) {
-    s32 state;
     s16* selected;
 
-    state = level->result;
-    if (state == 2) {
+    if (level->result == 2) {
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             selected = &g_wldcore_window_panel_render_state.selected_index;
             wldcore_set_bit_value(&g_main_tutorial_progress_masks[1], *selected, 1);
@@ -28,7 +26,7 @@ void wldcore_list_handle_tutorial_mask_1_entries_input(wldcore_menu_panel_level_
         return;
     }
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && !(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
-        if (state != 0) {
+        if (level->result != 0) {
             g_main_system_flags |= MAIN_SYSTEM_FLAG_DISPLAY_OFF;
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
             level->result = 2;

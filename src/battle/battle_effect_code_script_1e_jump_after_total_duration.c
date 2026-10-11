@@ -9,7 +9,7 @@ s32 battle_effect_code_script_1e_jump_after_total_duration(effect_record_t* reco
     effect_timeline_t* timing;
 
     timing = g_battle_effect_timeline;
-    if (record->timeline_frame.s >= (s32)(timing->phase1_duration + timing->phase2_duration
+    if (record->timeline_frame >= (s32)(timing->phase1_duration + timing->phase2_duration
             + (g_battle_effect_context.target_count - 1) * timing->spawn_delay + timing->child_duration)) {
         battle_effect_script_instruction_t* instruction = battle_effect_get_current_script_instruction(record);
 

@@ -16,7 +16,7 @@
 void world_menu_preview_attack_caster_stats(void) {
     battle_stats_t* stored;
     battle_stats_t* target;
-    world_unit_command_action_t* action;
+    battle_ai_command_action_t* action;
     ability_data_t* ability_data;
     main_ability_secondary_pointer_t secondary_data;
     s16 ability_id;
@@ -26,7 +26,7 @@ void world_menu_preview_attack_caster_stats(void) {
     target = battle_unit_get_stats_from_battle_id(g_world_unit_comparison_battle_id);
     /* Local pointer keeps the stored-unit address in one base register. */
     stored_unit = &g_world_active_unit_data.battle_id;
-    action = (world_unit_command_action_t*)battle_unit_get_target_id_ptr_by_battle_id(*stored_unit);
+    action = battle_unit_get_target_id_ptr_by_battle_id(*stored_unit);
     action->unit_id = *stored_unit;
     ability_id = action->ability_id;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {

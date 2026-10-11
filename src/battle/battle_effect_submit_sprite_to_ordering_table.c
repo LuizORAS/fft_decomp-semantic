@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -99,13 +100,14 @@ void battle_effect_submit_sprite_to_ordering_table(
     for (i = 0; i < set->color.field.sprite_count; i++) {
         frame = set->frames[i];
         code = 0x2c;
-        ((battle_effect_corner_t*)&g_battle_effect_corner_top_left)->packed = frame->corners[0];
-        ((battle_effect_corner_t*)&g_battle_effect_corner_top_right)->packed = frame->corners[1];
-        ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_left)->packed = frame->corners[2];
+        /* Copy x/y while retaining the GTE input's z. */
+        memcpy(&g_battle_effect_corner_top_left, &frame->corners[0], sizeof(frame->corners[0]));
+        memcpy(&g_battle_effect_corner_top_right, &frame->corners[1], sizeof(frame->corners[1]));
+        memcpy(&g_battle_effect_corner_bottom_left, &frame->corners[2], sizeof(frame->corners[2]));
         gte_ldv3(
             &g_battle_effect_corner_top_left, &g_battle_effect_corner_top_right, &g_battle_effect_corner_bottom_left);
         gte_rtpt();
-        ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_right)->packed = frame->corners[3];
+        memcpy(&g_battle_effect_corner_bottom_right, &frame->corners[3], sizeof(frame->corners[3]));
         quad = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_FT4);
         color = set->color.packed;
         quad->length = 9;

@@ -2824,13 +2824,10 @@ typedef struct battle_effect_charge_state {
     battle_effect_charge_trail_t trails[16]; /* 0x0f1c */
     u8 ids_a[2];                             /* 0x111c */
     u8 ids_b[14];                            /* 0x111e */
-    union {
-        struct {
-            s16 trails;
-            u8 a;
-            u8 b;
-        } n;
-        s32 all;
+    struct {
+        s16 trails;
+        u8 auxiliary_particles;
+        u8 particles;
     } count;            /* 0x112c */
     s32 angle;          /* 0x1130 */
     s32 speed;          /* 0x1134 */
@@ -3250,13 +3247,6 @@ typedef char effect_timeline_rotation_offset_must_be_0x6d4[((unsigned long)&((ef
 typedef char effect_timeline_phase1_camera_offset_must_be_0x14e6
     [((unsigned long)&((effect_timeline_t*)0)->phase1_camera == 0x14e6) ? 1 : -1];
 typedef char effect_timeline_size_must_be_0x1886[(sizeof(effect_timeline_t) == 0x1886) ? 1 : -1];
-
-/* The four GTE input corners at 0x801bbf40; only the leading x/y word of each
- * is written here, straight from the sprite frame record. */
-typedef union battle_effect_corner {
-    SVECTOR vector;
-    s32 packed;
-} battle_effect_corner_t;
 
 /* Variable-offset sprite table consumed by 0x801a5798. */
 typedef struct battle_effect_sprite_table_header {
@@ -3840,12 +3830,12 @@ typedef struct effect_record {
     s16 frame_counter; /* 0x20: frames the script has run, 0 on its first; the frame of script-spawned emitters */
     u8 callback_phase[4]; /* 0x22: effect_phase_e of the handler in each callback slot */
     s16 target_index;     /* 0x26: the effect target (g_battle_effect_context.targets.records) the record plays on */
-    battle_unit_misc_halfword_t timeline_frame; /* 0x28; signed stepping, unsigned timing-curve lookup */
-    battle_effect_record_timeline_t timeline;   /* 0x2a */
-    effect_work_record_t* work_head;            /* 0xd0: its particles */
-    battle_effect_callback_t callbacks[4];      /* 0xd4: the native handler bound to each callback slot */
-    void* work_slots[4];                        /* 0xe4: the work block each callback slot's handler allocated */
-    battle_effect_callback_t file_function;     /* 0xf4: the native function script opcode 07 last called */
+    s16 timeline_frame;   /* 0x28 */
+    battle_effect_record_timeline_t timeline; /* 0x2a */
+    effect_work_record_t* work_head;          /* 0xd0: its particles */
+    battle_effect_callback_t callbacks[4];    /* 0xd4: the native handler bound to each callback slot */
+    void* work_slots[4];                      /* 0xe4: the work block each callback slot's handler allocated */
+    battle_effect_callback_t file_function;   /* 0xf4: the native function script opcode 07 last called */
 } effect_record_t;
 
 /* pc is a signed byte offset into the shared, halfword-aligned script stream. */
@@ -4508,10 +4498,11 @@ extern s32
 
 extern DVECTOR g_battle_effect_charge_line_direction_offsets[];
 extern u8 g_battle_effect_charge_line_fade_levels[];
-extern SVECTOR g_battle_effect_corner_bottom_left;
-extern SVECTOR g_battle_effect_corner_bottom_right;
-extern SVECTOR g_battle_effect_corner_top_left;
-extern SVECTOR g_battle_effect_corner_top_right;
+/* The GTE loads these vectors as word-aligned inputs. */
+extern SVECTOR g_battle_effect_corner_bottom_left __attribute__((aligned(4)));
+extern SVECTOR g_battle_effect_corner_bottom_right __attribute__((aligned(4)));
+extern SVECTOR g_battle_effect_corner_top_left __attribute__((aligned(4)));
+extern SVECTOR g_battle_effect_corner_top_right __attribute__((aligned(4)));
 extern u8 g_battle_effect_ending_secondary_function_id; /* function byte to store; 5 = nothing */
 extern s32 (*g_battle_effect_instructions[120])(effect_record_t*);
 extern MATRIX g_battle_effect_matrix; /* 0x801bc09c */
@@ -8941,6 +8932,7 @@ void battle_text_configure_sprite_vram(
     RECT* rect, s16 width, s16 height, world_texture_prim_t* primitive, s32 clut_offset);
 u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 s32 battle_text_count_decimal_digits(s32 value);
+void battle_text_determine_spell_quote(battle_ai_command_action_t* action, s32 unit_id, s32 enabled);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void battle_text_print_fnt_value_and_next(s32 value);
 s32 battle_text_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);

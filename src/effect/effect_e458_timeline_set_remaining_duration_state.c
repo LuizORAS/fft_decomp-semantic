@@ -1,12 +1,6 @@
 /* E458.BIN is the effect of effect id 0x201, one of the ids past the abilities. */
 #include "fft/effect.h"
 
-/* The leading words of battle_effect_tick_channels_t, the child timeline. */
-typedef struct effect_timeline_header {
-    u16 _unused_00;
-    u16 duration;
-} effect_timeline_header_t;
-
 /* Callback handler: when its keyframe starts, gives map command 0x96 the
  * frames left of the record's child timeline. */
 s32 effect_e458_timeline_set_remaining_duration_state(s16 record_index, s32 callback_slot) {
@@ -16,7 +10,7 @@ s32 effect_e458_timeline_set_remaining_duration_state(s16 record_index, s32 call
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        battle_map_set_command_0x96_duration(0x96, g_effect_timeline_channel_base->duration - record->timeline_frame.s);
+        battle_map_set_command_0x96_duration(0x96, g_effect_timeline_channel_base->duration - record->timeline_frame);
         record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:

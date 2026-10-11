@@ -85,9 +85,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         for (i = 0; i < 16; i++) {
             state->trails[i].slot_id = 0;
         }
-        state->count.n.trails = 0;
-        state->count.n.a = 0;
-        state->count.n.b = 0;
+        state->count.trails = 0;
+        state->count.auxiliary_particles = 0;
+        state->count.particles = 0;
         for (i = 0; i < 2; i++) {
             state->ids_a[i] = 0;
         }
@@ -116,7 +116,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         if (g_battle_effect_secondary_state.charge.done == 0
-            && g_battle_effect_secondary_state.charge.count.n.trails < g_battle_effect_secondary_state.charge.max_trails
+            && g_battle_effect_secondary_state.charge.count.trails < g_battle_effect_secondary_state.charge.max_trails
             && rand() % g_battle_effect_secondary_state.charge.spawn_interval == 0) {
             for (i = 0; i < 16; i++) {
                 if (state->trails[i].slot_id == 0) {
@@ -124,7 +124,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                     if (j == 0) {
                         break;
                     }
-                    state->count.n.trails++;
+                    state->count.trails++;
                     k = (rand() & 0x1ff) + state->angle;
                     state->angle += 0x571;
                     g_battle_effect_slots[j].motion.position[0] = rcos(k) * state->radius + (state->x << 12);
@@ -142,7 +142,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 }
             }
         }
-        if (state->count.n.b < 14) {
+        if (state->count.particles < 14) {
             for (i = 0;
                 i < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].spawns_per_frame;
                 i++) {
@@ -160,8 +160,8 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                     &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE], &slot->motion);
                 battle_effect_init_trap_animation(
                     BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE, MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15), slot);
-                state->count.n.b++;
-                if (state->count.n.b == 14) {
+                state->count.particles++;
+                if (state->count.particles == 14) {
                     break;
                 }
             }
@@ -175,7 +175,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
             if (j != 0 && battle_effect_update_slot(j) == 0) {
                 battle_effect_free_slot(j);
                 state->ids_a[i] = 0;
-                state->count.n.a--;
+                state->count.auxiliary_particles--;
             }
         }
         for (i = 0; i < 14; i++) {
@@ -183,7 +183,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
             if (j != 0 && battle_effect_update_slot(j) == 0) {
                 battle_effect_free_slot(j);
                 state->ids_b[i] = 0;
-                state->count.n.b--;
+                state->count.particles--;
             }
         }
         red = g_battle_effect_trap_colors[state->colour][0];
@@ -251,12 +251,13 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 if (state->trails[i].age >= state->duration + 7) {
                     battle_effect_free_slot(j);
                     state->trails[i].slot_id = 0;
-                    state->count.n.trails--;
+                    state->count.trails--;
                 }
             }
         }
         AddPrim(g_battle_effect_polygon_depth_data + 1, &state->mode[g_battle_effect_buffer_index]);
-        if (g_battle_effect_current_secondary->phase == BATTLE_SECONDARY_EFFECT_EXECUTING || state->count.all != 0) {
+        if (g_battle_effect_current_secondary->phase == BATTLE_SECONDARY_EFFECT_EXECUTING
+            || (state->count.trails != 0 || state->count.auxiliary_particles != 0 || state->count.particles != 0)) {
             result = 1;
         } else {
             main_sound_stop_sfx_channels(MAIN_SFX_SPELL_CHARGE);

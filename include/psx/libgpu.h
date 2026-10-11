@@ -688,21 +688,6 @@ typedef struct {
     u32 data[0]; /* Variable-length word payload follows the 12-byte header. */
 } psyq_tim_block_t;
 
-typedef union {
-    RECT rect;
-    struct {
-        u32 coordinates; /* x | y << 16 */
-        u32 dimensions;  /* w | h << 16 */
-    } packed;
-} psyq_gpu_rect_words_t;
-
-typedef struct {
-    u32 tag;
-    u32 cache_flush;
-    u32 command;
-    psyq_gpu_rect_words_t rect;
-} psyq_draw_load_t;
-
 typedef int (*psyq_gpu_operation_t)(void*, u32);
 typedef struct {
     const char* name;

@@ -10,8 +10,7 @@
 void battle_menu_preview_attack_caster_stats(void) {
     battle_stats_t* attacker;
     battle_stats_t* target;
-    /* Signed view of battle_ai_command_action_t for the ability id load. */
-    world_unit_command_action_t* action;
+    battle_ai_command_action_t* action;
     ability_data_t* ability_data;
     main_ability_secondary_pointer_t secondary;
     s16* selected;
@@ -20,7 +19,7 @@ void battle_menu_preview_attack_caster_stats(void) {
     target = battle_unit_get_stats_from_battle_id(g_battle_preview_target_unit_id);
     /* One address register serves both reads, as in the target. */
     selected = &g_battle_active_turn_unit.battle_id;
-    action = (world_unit_command_action_t*)battle_unit_get_target_id_ptr_by_battle_id(*selected);
+    action = battle_unit_get_target_id_ptr_by_battle_id(*selected);
     action->unit_id = *selected;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
         main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability_data, &secondary);

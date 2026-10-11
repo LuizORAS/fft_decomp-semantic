@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -64,10 +65,11 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     setPolyFT4(prim);
     frame = (battle_effect_sprite_frame_t*)&SPRITE_TABLE[offset];
     setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);
-    ((battle_effect_corner_t*)&g_battle_effect_corner_top_left)->packed = frame->corners[0];
-    ((battle_effect_corner_t*)&g_battle_effect_corner_top_right)->packed = frame->corners[1];
-    ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_left)->packed = frame->corners[2];
-    ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_right)->packed = frame->corners[3];
+    /* Copy x/y while retaining the GTE input's z. */
+    memcpy(&g_battle_effect_corner_top_left, &frame->corners[0], sizeof(frame->corners[0]));
+    memcpy(&g_battle_effect_corner_top_right, &frame->corners[1], sizeof(frame->corners[1]));
+    memcpy(&g_battle_effect_corner_bottom_left, &frame->corners[2], sizeof(frame->corners[2]));
+    memcpy(&g_battle_effect_corner_bottom_right, &frame->corners[3], sizeof(frame->corners[3]));
     RotTransPers3(&g_battle_effect_corner_top_left, &g_battle_effect_corner_top_right,
         &g_battle_effect_corner_bottom_left, &prim->xy0, &prim->xy1, &prim->xy2, &sxy, &flag);
     RotTransPers(&g_battle_effect_corner_bottom_right, &prim->xy3, &sxy, &flag);

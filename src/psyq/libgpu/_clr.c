@@ -14,8 +14,9 @@ int _clr(RECT* rect, u32 color) {
         g_psyq_gpu_clear_packet[3] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_OFFSET);
         g_psyq_gpu_clear_packet[4] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
         g_psyq_gpu_clear_packet[5] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_TILE) | (color & PSYQ_GPU_RGB_MASK);
-        g_psyq_gpu_clear_packet[6] = ((psyq_gpu_rect_words_t*)rect)->packed.coordinates;
-        g_psyq_gpu_clear_packet[7] = ((psyq_gpu_rect_words_t*)rect)->packed.dimensions;
+        /* Component packing replaces the retail GPU word loads with halfword loads. */
+        g_psyq_gpu_clear_packet[6] = *(u32*)&rect->x;
+        g_psyq_gpu_clear_packet[7] = *(u32*)&rect->w;
         g_psyq_gpu_clear_restore[0] = 0x03ffffff;
         g_psyq_gpu_clear_restore[1]
             = _param(PSYQ_GPU_INFO_DRAW_AREA_TOP_LEFT) | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_AREA_TOP_LEFT);
@@ -27,8 +28,8 @@ int _clr(RECT* rect, u32 color) {
         g_psyq_gpu_clear_packet[0] = 0x04ffffff;
         g_psyq_gpu_clear_packet[1] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MASK);
         g_psyq_gpu_clear_packet[2] = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_BLOCK_FILL) | (color & PSYQ_GPU_RGB_MASK);
-        g_psyq_gpu_clear_packet[3] = ((psyq_gpu_rect_words_t*)rect)->packed.coordinates;
-        g_psyq_gpu_clear_packet[4] = ((psyq_gpu_rect_words_t*)rect)->packed.dimensions;
+        g_psyq_gpu_clear_packet[3] = *(u32*)&rect->x;
+        g_psyq_gpu_clear_packet[4] = *(u32*)&rect->w;
     }
     _cwc(g_psyq_gpu_clear_packet);
     return 0;

@@ -24,8 +24,9 @@ int _dws(RECT* rect, u32* data) {
     *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_DMA_DIRECTION);
     *g_psyq_gpu_gp0_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CLEAR_CACHE);
     *g_psyq_gpu_gp0_port = special ? 0xb0000000 : PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CPU_TO_VRAM);
-    *g_psyq_gpu_gp0_port = ((psyq_gpu_rect_words_t*)rect)->packed.coordinates;
-    *g_psyq_gpu_gp0_port = ((psyq_gpu_rect_words_t*)rect)->packed.dimensions;
+    /* Component packing replaces the retail GPU word loads with halfword loads. */
+    *g_psyq_gpu_gp0_port = *(u32*)&rect->x;
+    *g_psyq_gpu_gp0_port = *(u32*)&rect->w;
     while (rest--) {
         *g_psyq_gpu_gp0_port = *data++;
     }

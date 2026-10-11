@@ -997,15 +997,6 @@ typedef enum unit_flags {
     UNIT_FLAG_MALE = 0x80,
 } unit_flags_e;
 
-/* Provisional signed view of battle_ai_command_action_t (Misc +0x15c) as
- * returned by battle_unit_get_target_id_ptr_by_battle_id; 0x800ea068 reads the
- * ability id with a signed halfword load. */
-typedef struct world_unit_command_action {
-    u8 unit_id;     /* 0x00 */
-    u8 skillset;    /* 0x01 */
-    s16 ability_id; /* 0x02 */
-} world_unit_command_action_t;
-
 /* world_unit_animation_state_t.rotate_mode: how the facing nibble steps toward target_facing. */
 typedef enum unit_rotate_mode {
     UNIT_ROTATE_MODE_SHORTEST = 0,  /* the direction with fewer steps */
