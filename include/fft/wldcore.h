@@ -153,6 +153,29 @@ void wldcore_opcode_start_pending_value_transition(void);
 void wldcore_opcode_load_picture(void);
 void wldcore_opcode_load_background_set(void);
 
+/* random encounter */
+/* One random-encounter tier: the story-progress threshold that selects it,
+ * the chance an encounter happens (a roll of 0..99 at or below it), and the
+ * high-bit-first mask of which of the entry's eight ENTDs may be drawn. */
+typedef struct wldcore_encounter_tier {
+    u8 progress_threshold; /* 0x00 */
+    u8 encounter_chance;   /* 0x01 */
+    u8 encounter_mask;     /* 0x02 */
+} wldcore_encounter_tier_t;
+
+/* One road into a world-map location. Three per location, 19 locations
+ * (ids 24..42), reached through the pointer cell g_wldcore_random_battle_data. */
+typedef struct wldcore_encounter_entry {
+    u8 route;                          /* 0x00 */
+    u8 deployment_squad_id;            /* 0x01: deployment zone id = this + 0x200 */
+    wldcore_encounter_tier_t tiers[4]; /* 0x02 */
+    u8 entd_ids[8];                    /* 0x0e */
+    u8 battle_map_id;                  /* 0x16 */
+    u8 script_variable_id;             /* 0x17 */
+} wldcore_encounter_entry_t;
+
+extern wldcore_encounter_entry_t (*g_wldcore_random_battle_data)[3];
+
 /* route */
 /* Provisional: a 16-entry world-map route path, each entry a route id with
  * bit 8 set when the route is travelled end-to-start. */
@@ -160,14 +183,20 @@ typedef struct wldcore_route_path {
     s32 routes[16];
 } wldcore_route_path_t;
 
-/* Provisional: world-map route record header: the segment count, the two
- * endpoint location ids and the travel cost. The 12-byte route points follow
- * at +4. */
+/* A travel point: packed x/y, a heading word, and segment distance. */
+typedef struct wldcore_route_point {
+    u32 position;
+    u32 heading;
+    s32 distance;
+} wldcore_route_point_t;
+
+/* A route header followed by count travel points. */
 typedef struct wldcore_route_record {
     u8 count;
-    u8 start_location; /* 0x01; a forward route runs start_location -> end_location */
-    u8 end_location;   /* 0x02; route | 0x100 travels it end to start */
-    u8 cost;           /* 0x03; accumulated by wldcore_map_find_best_route_path */
+    u8 start_location;
+    u8 end_location;
+    u8 cost;
+    wldcore_route_point_t points[1]; /* 0x04; variable length */
 } wldcore_route_record_t;
 
 extern s32 g_wldcore_route_search_depth;
@@ -1277,7 +1306,7 @@ extern wldcore_projected_entry_t g_wldcore_map_projected_tiles[];
  * g_wldcore_map_route_tables, indexed by the same route id. */
 extern u16** g_wldcore_map_route_polylines;
 
-/* Pointer to the array of 48 route-record pointers at 0x80095000. */
+/* Pointer cell at 0x80095000; the 48 route-record pointers begin at 0x80095008. */
 extern wldcore_route_record_t** g_wldcore_map_route_tables;
 
 /* The horizontal and vertical map scroll axes. */

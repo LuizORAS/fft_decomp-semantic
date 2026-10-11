@@ -1,14 +1,5 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
-
-/* One 12-byte route point. The heading's high half is a 12-bit
- * angle. The points follow the wldcore_route_record_t header and are indexed
- * as 4-byte words from the record base, (point * 3 + 1) * 4. */
-typedef struct wldcore_route_point {
-    u32 position; /* 0x00 */
-    u32 heading;  /* 0x04 */
-    s32 distance; /* 0x08 */
-} wldcore_route_point_t;
+#include "psx/stddef.h"
 
 /* Stages one world-map route segment in the location-entry state.
  *
@@ -42,8 +33,10 @@ s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, 
     if (state->flags & WLDCORE_ROUTE_TRAVEL_REVERSED) {
         state->leg_end_location = record->start_location;
         state->leg_start_location = record->end_location;
-        index = (record->count - step - 1) * 3 + 1;
-        point_down = (wldcore_route_point_t*)(index * 4 + (s32)record);
+        /* Direct point indexing moves the header addition past the shift. */
+        index = (record->count - step - 1) * (sizeof(wldcore_route_point_t) / sizeof(u32))
+            + offsetof(wldcore_route_record_t, points) / sizeof(u32);
+        point_down = (wldcore_route_point_t*)(index * sizeof(u32) + (s32)record);
         word = point_down->position;
         state->position.vx = word;
         state->position.vy = (u16)(point_down->position >> 16);
@@ -58,8 +51,9 @@ s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, 
     } else {
         state->leg_start_location = record->start_location;
         state->leg_end_location = record->end_location;
-        index = step * 3 + 1;
-        point_up = (wldcore_route_point_t*)(index * 4 + (s32)record);
+        index = step * (sizeof(wldcore_route_point_t) / sizeof(u32))
+            + offsetof(wldcore_route_record_t, points) / sizeof(u32);
+        point_up = (wldcore_route_point_t*)(index * sizeof(u32) + (s32)record);
         word = point_up->position;
         state->position.vx = word;
         state->position.vy = (u16)(point_up->position >> 16);
