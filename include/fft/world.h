@@ -2010,22 +2010,11 @@ enum world_menu_line_layout_offset {
     WORLD_MENU_LINE_LAYOUT_SIZE = 8
 };
 
-/* Menu-script record view used while skipping conditional groups. The count
- * fields are read only for opcodes 1 and 2; records advance by their encoded
- * byte length, rather than sizeof this view. */
-typedef struct world_chained_record {
-    u8 type;
-    u8 length;
-    u8 _unused_02[2];
-    u8 count_a;
-    u8 count_b;
-} world_chained_record_t;
-
 /* Variable-length list command (0x10) in a WORLD menu script: the layout
  * world_menu_load_scrollable_list_layout reads and the placement
  * world_menu_script_draw_scrollable_list draws with. */
 typedef struct world_menu_list_record {
-    u8 type;            /* 0x00: 0x10 = list layout, 0x1c = end of stream */
+    u8 opcode;          /* 0x00: 0x10 = list layout */
     u8 length;          /* 0x01: byte length of this record */
     u8 show_cursor;     /* 0x02 */
     u8 _unused_03;      /* 0x03 */
@@ -2359,7 +2348,83 @@ typedef struct world_menu_sprite_color_command {
 } world_menu_sprite_color_command_t;
 typedef char world_menu_sprite_color_command_size_must_be_8[sizeof(world_menu_sprite_color_command_t) == 8 ? 1 : -1];
 
-extern u8* (*g_world_menu_script_handlers[])(u8* script);
+/* A view of the current byte-aligned instruction, not a fixed-stride array.
+ * Commands advance by their encoded byte length; opcode 0x16 and the 0x1c
+ * terminator are single bytes without a length operand. */
+typedef union world_menu_instruction {
+    struct {
+        u8 opcode;
+        u8 length;
+    } header;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 _unused_02;
+        u8 predicate;
+        u8 count;
+        u8 value;
+    } conditional;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 _unused_02;
+        u8 predicate;
+        u8 count_true;
+        u8 count_false;
+        u8 value;
+    } if_else;
+    world_menu_window_command_t window;
+    world_draw_number_command_t number;
+    world_menu_list_record_t list;
+    world_menu_sprite_command_t sprite;
+    world_menu_callback_sprite_command_t callback_sprite;
+    world_menu_tile_command_t tile;
+    world_menu_line_command_t line;
+    world_menu_draw_area_command_t draw_area;
+    world_menu_sprite_color_command_t sprite_color;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 y_high;
+        u8 x_div_16;
+        u8 y_low;
+    } fixed_clut;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 normal_y_high;
+        u8 normal_x_div_16;
+        u8 normal_y_low;
+        u8 alternate_y_high;
+        u8 alternate_x_div_16;
+        u8 alternate_y_low;
+    } clut;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 y_blend; /* bits 0-1: y/256; bits 4-5: blend rate */
+        u8 x_div_16;
+        u8 depth;
+    } texture_page;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 _unused_02;
+        u8 value;
+    } draw_state;
+    struct {
+        u8 opcode;
+        u8 length;
+        u8 blend_rate;
+    } blend;
+} world_menu_instruction_t;
+typedef char world_menu_instruction_size_must_be_14[sizeof(world_menu_instruction_t) == 14 ? 1 : -1];
+
+static __inline__ world_menu_instruction_t* world_menu_next_instruction(world_menu_instruction_t* instruction) {
+    return (world_menu_instruction_t*)((u8*)instruction + instruction->header.length);
+}
+
+extern world_menu_instruction_t* (*g_world_menu_script_handlers[28])(world_menu_instruction_t* instruction);
 extern world_menu_sprite_command_t g_world_menu_script_sprite_command;
 extern world_menu_window_command_t g_world_menu_window_interior_command;
 extern s16 g_world_menu_window_scale_table[];
@@ -2441,6 +2506,31 @@ extern menu_window_buffer_t g_world_menu_window_buffers[6]; /* 0x8019aca0 */
  * reconstructions.  Each module's linker table maps these names to its own
  * copy of the routine.
  */
+world_menu_instruction_t* world_menu_parse_draw_window_frame(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_conditional(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_if_else(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_draw_tile(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_draw_sprite(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_draw_callback_sprite(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_draw_line(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_set_fixed_clut(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_set_clut(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_set_sprite_color(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_set_texture_page(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_draw_formatted_number(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_set_semi_trans(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_set_draw_priority(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_draw_scrollable_list(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_parse_draw_tiled_rectangle(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_handle_window_command_with_scaled_clip(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_clear_temporary_draw_area(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_set_draw_area(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_reregister_temporary_draw_area(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_advance_window_scale_step(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_draw_plain_number(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_script_add_blend_draw_mode(world_menu_instruction_t* instruction);
+world_menu_instruction_t* world_menu_skip_instruction_group(world_menu_instruction_t* instruction);
+
 void world_menu_unit_status_banner_thread(void);
 void world_menu_equipment_panel_thread(void);
 void world_menu_ability_panel_thread(void);
@@ -2464,7 +2554,6 @@ void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_off
 void world_menu_init_panel_fade_tiles(void);
 void world_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos);
 void world_menu_labeled_number_entry_thread(void);
-world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_window_command_t* command);
 void* world_menu_alloc_window_buffer_pair(void);
 void world_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void world_menu_animate_window_quad_crop_full(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
@@ -2510,8 +2599,6 @@ void world_menu_run_equip_thread(void);
 void world_screen_menu_window_frame_thread(void);
 void world_menu_run_order_unit(void);
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames);
-u8* world_menu_script_draw_sprite(u8* cmd);
-world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_number_command_t* command);
 void world_menu_scroll_list_page(s32 dir, world_menu_list_record_t* list);
 void world_menu_select_icon_cluts(world_menu_icon_sprites_t* menu);
 void world_menu_select_sprite_clut(world_texture_prim_t* primitive);
@@ -2572,7 +2659,6 @@ void world_menu_reserve_high_overlay(u32 size);
 void world_menu_run_display_script(u8* script, s32 value);
 rgb24_t* world_menu_get_sprite_color(void);
 s32 world_menu_handle_remove_all_equipment(void);
-void world_menu_handle_window_command_with_scaled_clip(world_menu_window_command_t* command);
 s32 world_menu_has_items(s32 mode);
 void world_menu_icon_linked_entry_thread(void);
 void world_menu_icon_list_thread(void);
@@ -2595,13 +2681,11 @@ s32 world_menu_lerp_fixed12(s32 from, s32 to, s32 t);
 s32 world_screen_menu_lerp_fixed12(s32 from, s32 to, s32 t);
 void world_menu_load_common_graphics(s32 load_extra_pages);
 void world_menu_load_scrollable_list_layout(u8* script);
-world_chained_record_t* world_skip_chained_records(world_chained_record_t* record);
 void world_menu_load_text_1bd8(void);
 void world_menu_load_text_1bd8_with_face(void);
 void world_menu_load_text_1c18(void);
 void world_menu_store_sort_key_list(s32 index, s16* source);
 void world_menu_open_scrollable_list(u8* list);
-world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_window_command_t* command);
 s32 world_job_calculate_current_total_jp(s32 index);
 void world_menu_release_window_buffer_pair(menu_window_buffer_t* value);
 void world_menu_reset_subsystems(void);
@@ -2626,10 +2710,6 @@ void world_menu_run_skillset_thread(void);
 void world_menu_run_system_function_thread(void);
 s32 world_menu_run_thread(s32 thread_id, world_menu_entry_t* menu);
 void world_menu_open_debugchr_unit_editor(void);
-u8* world_menu_script_add_blend_draw_mode(u8* script);
-u8* world_menu_script_clear_temporary_draw_area(u8* script);
-u8* world_menu_script_set_draw_area(u8* script);
-u8* world_menu_script_set_sprite_color(u8* script);
 void world_menu_select_primitive_color_palette(world_menu_palette_primitives_t* menu, world_status_thread_t* input);
 void world_menu_select_stat_gauge_level(s32 x, s32 y, s32 otag_index, s32 value);
 void world_menu_select_icon_sprite_clut(SPRT* slot);

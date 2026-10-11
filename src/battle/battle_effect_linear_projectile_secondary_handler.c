@@ -2,16 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
-/* 0x2a0-byte work buffer: two sets of twelve G3 polygons. */
-typedef struct battle_effect_projectile_g3x12_work {
-    battle_effect_g3_prim_t g3[2][12];
-} battle_effect_projectile_g3x12_work_t;
-
-/* 0x380-byte work buffer: two sets of sixteen G3 polygons. */
-typedef struct battle_effect_projectile_g3x16_work {
-    battle_effect_g3_prim_t g3[2][16];
-} battle_effect_projectile_g3x16_work_t;
-
 /* Effect slot view: the double-buffered item sprite quad at 0x34. */
 typedef struct battle_effect_item_slot_view {
     u8 _unused_00[0x34];
@@ -52,8 +42,8 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
     SVECTOR spin;
     SPRT sprite;
     battle_effect_arrow_buffer_t* arrow;
-    battle_effect_projectile_g3x12_work_t* work12;
-    battle_effect_projectile_g3x16_work_t* work16;
+    battle_effect_stone_buffer_t* work12;
+    battle_effect_shuriken_buffer_t* work16;
     battle_effect_item_slot_view_t* slot;
     s32 parameter;
     s32 item;

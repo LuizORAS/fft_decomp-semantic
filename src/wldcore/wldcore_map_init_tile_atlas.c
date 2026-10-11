@@ -41,8 +41,8 @@
 
 void wldcore_map_init_tile_atlas(void) {
     s32* descriptor;
-    s32* wpos;
-    s32* wpos2;
+    point32_t* wpos;
+    point32_t* wpos2;
     world_animated_render_record_t* rec;
     world_animated_render_record_t* rec2;
     s32* pos;
@@ -108,10 +108,10 @@ void wldcore_map_init_tile_atlas(void) {
     g_wldcore_map_window_index = map_window_index;
     g_wldcore_window_records[map_window_index].sequence = WLDCORE_ANIM_SEQUENCE_MAP_FRAME;
     g_wldcore_window_records[map_window_index].priority = 13;
-    wpos = &g_wldcore_window_records[map_window_index].position.x;
+    wpos = &g_wldcore_window_records[map_window_index].position;
     rec = &g_wldcore_window_records[map_window_index];
-    wpos[0] = 0;
-    wpos[1] = 8;
+    wpos->x = 0;
+    wpos->y = 8;
     rec->anim_counter = 0;
     g_wldcore_window_records[map_window_index].frame_index = 0;
 
@@ -120,10 +120,10 @@ void wldcore_map_init_tile_atlas(void) {
     g_wldcore_menu_stack_types[0] = menu_window_index;
     g_wldcore_window_records[menu_window_index].sequence = WLDCORE_ANIM_SEQUENCE_ROOT_MENU_FRAME;
     g_wldcore_window_records[menu_window_index].priority = 13;
-    wpos2 = &g_wldcore_window_records[menu_window_index].position.x;
+    wpos2 = &g_wldcore_window_records[menu_window_index].position;
     rec2 = &g_wldcore_window_records[menu_window_index];
-    wpos2[0] = -4;
-    wpos2[1] = 8;
+    wpos2->x = -4;
+    wpos2->y = 8;
     rec2->anim_counter = 0;
     g_wldcore_window_records[menu_window_index].frame_index = 0;
 

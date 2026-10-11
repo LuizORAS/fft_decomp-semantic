@@ -4,32 +4,31 @@
 
 /* Draws the sprite described by a 9-byte command header (x, y, w, h, u, v)
  * and returns the next command. */
-u8* world_menu_script_draw_sprite(u8* cmd) {
-    world_menu_sprite_command_t* command = (world_menu_sprite_command_t*)cmd;
+world_menu_instruction_t* world_menu_script_draw_sprite(world_menu_instruction_t* instruction) {
     RECT rect;
     s32 y;
     s16 step;
     rgb24_t* color;
 
     if (g_world_menu_use_scroll_position == 0) {
-        y = command->sprite.y;
+        y = instruction->sprite.sprite.y;
     } else {
         step = g_world_menu_row_height;
-        y = step * g_world_menu_scroll_row_offset + command->sprite.y - g_world_menu_scroll_pixel_offset;
+        y = step * g_world_menu_scroll_row_offset + instruction->sprite.sprite.y - g_world_menu_scroll_pixel_offset;
         if (g_world_menu_scroll_pixel_offset < 0) {
             y -= step;
         }
     }
-    rect.x = command->sprite.x;
+    rect.x = instruction->sprite.sprite.x;
     rect.y = y;
-    rect.w = command->sprite.w;
-    rect.h = command->sprite.h;
-    if (command->opcode == 4) {
+    rect.w = instruction->sprite.sprite.w;
+    rect.h = instruction->sprite.sprite.h;
+    if (instruction->sprite.opcode == 4) {
         color = 0;
     } else {
         color = &g_world_menu_sprite_color;
     }
-    world_gfx_enqueue_textured_quad(&rect, command->sprite.u, command->sprite.v, color, g_world_menu_semi_trans,
-        g_world_menu_texture_page, g_world_menu_clut, g_world_menu_draw_priority);
-    return (u8*)command + command->length;
+    world_gfx_enqueue_textured_quad(&rect, instruction->sprite.sprite.u, instruction->sprite.sprite.v, color,
+        g_world_menu_semi_trans, g_world_menu_texture_page, g_world_menu_clut, g_world_menu_draw_priority);
+    return world_menu_next_instruction(instruction);
 }

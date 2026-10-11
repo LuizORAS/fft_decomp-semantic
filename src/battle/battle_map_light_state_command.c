@@ -49,26 +49,26 @@ void* battle_map_light_state_command(s32 command, void* data) {
         g_battle_map_back_color_blue = g_battle_map_saved_back_color_blue;
         break;
     case MAP_LIGHT_COMMAND_GET_AMBIENT_COLOR: {
-        u8* packed = g_battle_map_back_color_bytes;
+        CVECTOR* color = &g_battle_map_cached_back_color;
 
-        packed[0] = g_battle_map_back_color_red;
-        g_battle_map_back_color_bytes[1] = g_battle_map_back_color_green;
-        g_battle_map_back_color_bytes[2] = g_battle_map_back_color_blue;
-        result = packed;
+        color->r = g_battle_map_back_color_red;
+        g_battle_map_cached_back_color.g = g_battle_map_back_color_green;
+        g_battle_map_cached_back_color.b = g_battle_map_back_color_blue;
+        result = color;
         break;
     }
     case MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR:
-        g_battle_map_light_direction[0] = ((CVECTOR*)data)->r;
-        g_battle_map_light_direction[1] = ((CVECTOR*)data)->g;
-        g_battle_map_light_direction[2] = ((CVECTOR*)data)->b;
+        g_battle_map_current_darkness_color.r = ((CVECTOR*)data)->r;
+        g_battle_map_current_darkness_color.g = ((CVECTOR*)data)->g;
+        g_battle_map_current_darkness_color.b = ((CVECTOR*)data)->b;
         break;
     case MAP_LIGHT_COMMAND_RESET_DARKNESS_COLOR:
-        g_battle_map_light_direction[0] = 0;
-        g_battle_map_light_direction[1] = 0;
-        g_battle_map_light_direction[2] = 1;
+        g_battle_map_current_darkness_color.r = 0;
+        g_battle_map_current_darkness_color.g = 0;
+        g_battle_map_current_darkness_color.b = 1;
         break;
     case MAP_LIGHT_COMMAND_GET_DARKNESS_COLOR:
-        result = g_battle_map_light_direction;
+        result = &g_battle_map_current_darkness_color;
         break;
     }
     return result;

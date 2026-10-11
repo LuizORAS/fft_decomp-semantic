@@ -5,7 +5,7 @@
  *
  * Source 2 uses the signed shared rectangle; other sources use byte operands.
  */
-world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_window_command_t* command) {
+world_menu_instruction_t* world_menu_parse_draw_tiled_rectangle(world_menu_instruction_t* instruction) {
     RECT rect;
     s32 base_x;
     s32 full_rows;
@@ -20,7 +20,7 @@ world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_wi
 
     priority = g_world_menu_draw_priority;
     clut = g_world_menu_palette_clut;
-    if (command->rectangle_source == 2) {
+    if (instruction->window.rectangle_source == 2) {
         base_x = g_world_menu_window_rect.x;
         base_y = g_world_menu_window_rect.y;
         full_columns = g_world_menu_window_rect.w / 16;
@@ -30,12 +30,12 @@ world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_wi
     } else {
         u8 width;
         u8 height;
-        base_x = command->x;
-        base_y = command->y;
-        width = command->width;
+        base_x = instruction->window.x;
+        base_y = instruction->window.y;
+        width = instruction->window.width;
         full_columns = width >> 4;
         partial_width = width & 15;
-        height = command->height;
+        height = instruction->window.height;
         full_rows = height >> 4;
         partial_height = height & 15;
     }
@@ -56,7 +56,7 @@ world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_wi
         }
     }
     if (partial_height == 0) {
-        return (world_menu_window_command_t*)((u8*)command + command->length);
+        return world_menu_next_instruction(instruction);
     }
     rect.x = base_x;
     rect.y = base_y + row * 16;
@@ -71,5 +71,5 @@ world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_wi
         world_gfx_enqueue_textured_quad(
             &rect, 8, 8, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
     }
-    return (world_menu_window_command_t*)((u8*)command + command->length);
+    return world_menu_next_instruction(instruction);
 }

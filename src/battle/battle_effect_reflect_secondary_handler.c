@@ -2,17 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
-/* 0x28-byte GT3 polygon initialised by SetPolyGT3. */
-typedef struct battle_effect_reflect_prim {
-    u8 data[0x28];
-} battle_effect_reflect_prim_t;
-
-/* 0x798-byte work buffer: two 6-colour CLUT images then two 24-polygon strips. */
-typedef struct battle_effect_reflect_work {
-    u16 clut[2][6];
-    battle_effect_reflect_prim_t prims[2][24];
-} battle_effect_reflect_work_t;
-
 /* Secondary-effect handler 0x12 (Reflect). The effect's parameter is the
  * frames the shield stays, at least 26: the child timeline passes the
  * effect's spawn_delay.
@@ -33,7 +22,7 @@ s32 battle_effect_reflect_secondary_handler(void) {
     VECTOR scale;
     SVECTOR spin;
     RECT rect;
-    battle_effect_reflect_work_t* work;
+    battle_effect_reflect_buffer_t* work;
     SVECTOR* caster;
     SVECTOR* target;
     u8* rgb;

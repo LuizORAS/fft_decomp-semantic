@@ -161,7 +161,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
         world_menu_set_draw_priority(10);
         value = row != g_world_card_slot_cursor_row || busy != 0;
         world_menu_set_palette_mode(value);
-        world_menu_parse_draw_window_frame(&g_world_card_slot_window_command);
+        world_menu_parse_draw_window_frame((world_menu_instruction_t*)&g_world_card_slot_window_command);
         g_world_card_slot_quad_3.y = g_world_card_slot_quad_4.y = g_world_card_slot_quad_0.y
             = g_world_card_slot_quad_1.y = g_world_card_slot_window.rect.y - 14;
         g_world_card_slot_quad_3.y = g_world_card_slot_quad_3.y + 1;
@@ -179,7 +179,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
             world_menu_set_draw_priority(11);
             g_world_card_slot_number_command.y = g_world_card_slot_quad_0.y;
             g_world_card_slot_number_command.value = i + 1;
-            world_menu_script_draw_formatted_number(&g_world_card_slot_number_command);
+            world_menu_script_draw_formatted_number((world_menu_instruction_t*)&g_world_card_slot_number_command);
         }
         g_world_card_slot_quad_2.y = g_world_card_slot_quad_0.y;
         if (g_world_card_slot_quad_2.y >= 0 && g_world_card_slot_quad_2.y < 241) {
@@ -193,9 +193,9 @@ void world_card_update_and_draw_slot_list(s32 input) {
             if (g_world_card_playtime_hours_command.value >= 100) {
                 g_world_card_playtime_hours_command.value = 99;
             }
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_hours_command);
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_minutes_command);
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_seconds_command);
+            world_menu_script_draw_formatted_number((world_menu_instruction_t*)&g_world_card_playtime_hours_command);
+            world_menu_script_draw_formatted_number((world_menu_instruction_t*)&g_world_card_playtime_minutes_command);
+            world_menu_script_draw_formatted_number((world_menu_instruction_t*)&g_world_card_playtime_seconds_command);
         }
         if (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_AVAILABLE) {
             rect.x = 0x74;

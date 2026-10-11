@@ -794,7 +794,7 @@ functions:
   - {addr: 0x801266e8, size: 416, name: world_menu_script_if_else, hash: 3fbe8187bcee91a7, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126888, size: 224, name: world_menu_script_draw_tile, hash: 421cc7a32abed7db, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126968, size: 304, name: world_menu_script_draw_sprite, hash: 4a873d36faa2542a, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x80126a98, size: 124, name: world_menu_script_draw_menu_tile, hash: f0545118219cdcfc, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80126a98, size: 124, name: world_menu_script_draw_line, hash: f0545118219cdcfc, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126b14, size: 284, name: world_menu_script_draw_callback_sprite, hash: cb30f26ba1aafc43, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126c30, size: 2216, name: world_menu_parse_draw_window_frame, hash: 0ba3477aee89496b, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801274d8, size: 328, name: world_menu_handle_window_command_with_scaled_clip, hash: 1dc44983c009e572, profile: gcc-2.6.3_O1_aspsx-2.34}
@@ -810,7 +810,7 @@ functions:
   - {addr: 0x801280fc, size: 480, name: world_menu_script_draw_plain_number, hash: df29edddcbd20dce, profile: gcc-2.6.3_O1_aspsx-2.34, rodata: [{addr: 0x800e0094, size: 3, hash: 0b782fc3030dbdf3}]}
   - {addr: 0x801282dc, size: 704, name: world_menu_draw_animated_cursor, hash: aeed72995bce48d4, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x8012859c, size: 852, name: world_menu_draw_animated_vertical_cursor, hash: 6230546a73c5da6f, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x801288f0, size: 108, name: world_skip_chained_records, hash: 08c0e2d5768b4709}
+  - {addr: 0x801288f0, size: 108, name: world_menu_skip_instruction_group, hash: 08c0e2d5768b4709}
   - {addr: 0x8012895c, size: 800, name: world_menu_load_scrollable_list_layout, hash: 32f66838c38db246, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80128c7c, size: 48, name: world_menu_init_and_load_scrollable_list, hash: 8ca660cbdd814a3b, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80128cac, size: 52, name: world_menu_init_and_load_scrollable_list_with_scroll, hash: 63e8f995fd661aee, profile: gcc-2.6.3_O1_aspsx-2.34}

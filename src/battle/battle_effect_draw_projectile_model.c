@@ -1,60 +1,15 @@
 #include "fft/battle.h"
 #include "psx/gte_inline.h"
+#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Gouraud textured triangle (SDK POLY_GT3 layout). */
-typedef struct battle_effect_model_gt3 {
-    u32 tag;
-    u8 r0, g0, b0, code;
-    s16 x0, y0;
-    u16 uv0;
-    u16 clut;
-    u8 r1, g1, b1, pad1;
-    s16 x1, y1;
-    u16 uv1;
-    u16 tpage;
-    u8 r2, g2, b2, pad2;
-    s16 x2, y2;
-    u16 uv2;
-    u16 _padding_26; /* tail padding to 4-byte alignment */
-} battle_effect_model_gt3_t;
-
-/* Decoded model command from battle_effect_decode_next_model_command. */
-typedef struct battle_effect_decoded {
-    u8 _unused_00[3];
-    u8 opcode;       /* 0x03 */
-    u8 colors[4][4]; /* 0x04 */
-    u16 uv[5];       /* 0x14 */
-    u8 _unused_1e[0x4a];
-    u16 vertices[4]; /* 0x68 */
-} battle_effect_decoded_t;
-
-typedef struct battle_effect_arrow_work {
-    POLY_G3 g3[2][4];  /* 0x000 */
-    POLY_G4 g4[2][13]; /* 0x0e0 */
-} battle_effect_arrow_work_t;
-
-typedef struct battle_effect_stone_work {
-    POLY_G3 g3[2][12];
-} battle_effect_stone_work_t;
-
-typedef struct battle_effect_reflect_model_work {
-    u16 clut[2][6];
-    battle_effect_model_gt3_t gt3[2][24];
-} battle_effect_reflect_model_work_t;
-
-typedef struct battle_effect_shuriken_work {
-    POLY_G3 g3[2][16];
-} battle_effect_shuriken_work_t;
-
-void battle_effect_decode_next_model_command(battle_effect_decoded_t* out);
-
 /* Transformed model points live in the scratchpad as VECTORs, with the GTE
  * flag of each transform stored in `pad`. */
 #define SCRATCH ((VECTOR*)0x1f800000)
-#define PT(k)   (*(VECTOR*)((s32)scratch + (command.vertices[k] << 4)))
+/* Byte addressing preserves the original addition operand order. */
+#define PT(k) (*(VECTOR*)((u8*)scratch + (command.vertices.indices[k] << 4)))
 
 /* Draw one of the projectile models resident in BATTLE.BIN for the current
  * secondary effect: the low byte of parameter is a battle_effect_model_e.
@@ -77,7 +32,7 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_t* out);
  * not drawn. */
 void battle_effect_draw_projectile_model(
     SVECTOR* spin, VECTOR* position, SVECTOR* angles, VECTOR* scale, s32 parameter) {
-    battle_effect_decoded_t command;
+    battle_effect_decoded_model_command_t command;
     s32 unused[2];
     MATRIX matrix;
     SVECTOR point;
@@ -94,9 +49,7 @@ void battle_effect_draw_projectile_model(
     s32 z;
     u32* ot;
 
-    /* Psy-Q RotMatrix returns MATRIX*; the project-wide void declaration
-     * changes this call's schedule. */
-    ((MATRIX * (*)(SVECTOR*, MATRIX*)) RotMatrix)(spin, &matrix);
+    RotMatrix(spin, &matrix);
     matrix.t[2] = 0;
     matrix.t[1] = 0;
     matrix.t[0] = 0;
@@ -145,27 +98,27 @@ void battle_effect_draw_projectile_model(
     g3_index = 0;
     switch (parameter & 0xff) {
     case BATTLE_EFFECT_MODEL_ARROW: {
-        battle_effect_arrow_work_t* work;
+        battle_effect_arrow_buffer_t* work;
         POLY_G4* quad;
         POLY_G3* tri;
 
         work = g_battle_effect_current_secondary->allocation;
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
-            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G4) {
+            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G4) {
                 quad = &work->g4[g_battle_effect_buffer_index][g4_index];
-                quad->r0 = command.colors[0][0];
-                quad->g0 = command.colors[0][1];
-                quad->b0 = command.colors[0][2];
-                quad->r1 = command.colors[1][0];
-                quad->g1 = command.colors[1][1];
-                quad->b1 = command.colors[1][2];
-                quad->r2 = command.colors[2][0];
-                quad->g2 = command.colors[2][1];
-                quad->b2 = command.colors[2][2];
-                quad->r3 = command.colors[3][0];
-                quad->g3 = command.colors[3][1];
-                quad->b3 = command.colors[3][2];
+                quad->r0 = command.colors[0].r;
+                quad->g0 = command.colors[0].g;
+                quad->b0 = command.colors[0].b;
+                quad->r1 = command.colors[1].r;
+                quad->g1 = command.colors[1].g;
+                quad->b1 = command.colors[1].b;
+                quad->r2 = command.colors[2].r;
+                quad->g2 = command.colors[2].g;
+                quad->b2 = command.colors[2].b;
+                quad->r3 = command.colors[3].r;
+                quad->g3 = command.colors[3].g;
+                quad->b3 = command.colors[3].b;
                 quad->x0 = PT(0).vx;
                 quad->y0 = PT(0).vy;
                 z = PT(0).vz;
@@ -185,17 +138,17 @@ void battle_effect_draw_projectile_model(
                 }
             }
             i++;
-            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
+            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][g3_index];
-                tri->r0 = command.colors[0][0];
-                tri->g0 = command.colors[0][1];
-                tri->b0 = command.colors[0][2];
-                tri->r1 = command.colors[1][0];
-                tri->g1 = command.colors[1][1];
-                tri->b1 = command.colors[1][2];
-                tri->r2 = command.colors[2][0];
-                tri->g2 = command.colors[2][1];
-                tri->b2 = command.colors[2][2];
+                tri->r0 = command.colors[0].r;
+                tri->g0 = command.colors[0].g;
+                tri->b0 = command.colors[0].b;
+                tri->r1 = command.colors[1].r;
+                tri->g1 = command.colors[1].g;
+                tri->b1 = command.colors[1].b;
+                tri->r2 = command.colors[2].r;
+                tri->g2 = command.colors[2].g;
+                tri->b2 = command.colors[2].b;
                 tri->x0 = PT(0).vx;
                 tri->y0 = PT(0).vy;
                 z = PT(0).vz;
@@ -215,7 +168,7 @@ void battle_effect_draw_projectile_model(
         break;
     }
     case BATTLE_EFFECT_MODEL_STONE: {
-        battle_effect_stone_work_t* work;
+        battle_effect_stone_buffer_t* work;
         POLY_G3* tri;
 
         work = g_battle_effect_current_secondary->allocation;
@@ -223,17 +176,17 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
+            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
-                tri->r0 = command.colors[0][0];
-                tri->g0 = command.colors[0][1];
-                tri->b0 = command.colors[0][2];
-                tri->r1 = command.colors[1][0];
-                tri->g1 = command.colors[1][1];
-                tri->b1 = command.colors[1][2];
-                tri->r2 = command.colors[2][0];
-                tri->g2 = command.colors[2][1];
-                tri->b2 = command.colors[2][2];
+                tri->r0 = command.colors[0].r;
+                tri->g0 = command.colors[0].g;
+                tri->b0 = command.colors[0].b;
+                tri->r1 = command.colors[1].r;
+                tri->g1 = command.colors[1].g;
+                tri->b1 = command.colors[1].b;
+                tri->r2 = command.colors[2].r;
+                tri->g2 = command.colors[2].g;
+                tri->b2 = command.colors[2].b;
                 tri->x0 = PT(0).vx;
                 tri->y0 = PT(0).vy;
                 z = PT(0).vz;
@@ -253,8 +206,8 @@ void battle_effect_draw_projectile_model(
         break;
     }
     case BATTLE_EFFECT_MODEL_REFLECT: {
-        battle_effect_reflect_model_work_t* work;
-        battle_effect_model_gt3_t* tri;
+        battle_effect_reflect_buffer_t* work;
+        POLY_GT3* tri;
 
         work = g_battle_effect_current_secondary->allocation;
         /* g4_index is reused here as the limit on decoded commands. */
@@ -265,22 +218,22 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < g4_index;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_GT3_37) {
-                tri = &work->gt3[g_battle_effect_buffer_index][gt3_index];
+            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_GT3_37) {
+                tri = &work->prims[g_battle_effect_buffer_index][gt3_index];
                 tri->tpage = 0x3f;
                 tri->clut = g_battle_effect_current_secondary->own_slot_id + 0x7eff;
-                tri->r0 = command.colors[0][0];
-                tri->g0 = command.colors[0][1];
-                tri->b0 = command.colors[0][2];
-                tri->r1 = command.colors[1][0];
-                tri->g1 = command.colors[1][1];
-                tri->b1 = command.colors[1][2];
-                tri->r2 = command.colors[2][0];
-                tri->g2 = command.colors[2][1];
-                tri->b2 = command.colors[2][2];
-                tri->uv0 = command.uv[2];
-                tri->uv1 = command.uv[3];
-                tri->uv2 = command.uv[4];
+                tri->r0 = command.colors[0].r;
+                tri->g0 = command.colors[0].g;
+                tri->b0 = command.colors[0].b;
+                tri->r1 = command.colors[1].r;
+                tri->g1 = command.colors[1].g;
+                tri->b1 = command.colors[1].b;
+                tri->r2 = command.colors[2].r;
+                tri->g2 = command.colors[2].g;
+                tri->b2 = command.colors[2].b;
+                memcpy(&tri->u0, &command.texture[2], sizeof(command.texture[2]));
+                memcpy(&tri->u1, &command.texture[3], sizeof(command.texture[3]));
+                memcpy(&tri->u2, &command.texture[4], sizeof(command.texture[4]));
                 tri->x0 = PT(0).vx;
                 tri->y0 = PT(0).vy;
                 z = PT(0).vz;
@@ -301,7 +254,7 @@ void battle_effect_draw_projectile_model(
         break;
     }
     case BATTLE_EFFECT_MODEL_SHURIKEN: {
-        battle_effect_shuriken_work_t* work;
+        battle_effect_shuriken_buffer_t* work;
         POLY_G3* tri;
 
         work = g_battle_effect_current_secondary->allocation;
@@ -309,17 +262,17 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
+            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
-                tri->r0 = command.colors[0][0];
-                tri->g0 = command.colors[0][1];
-                tri->b0 = command.colors[0][2];
-                tri->r1 = command.colors[1][0];
-                tri->g1 = command.colors[1][1];
-                tri->b1 = command.colors[1][2];
-                tri->r2 = command.colors[2][0];
-                tri->g2 = command.colors[2][1];
-                tri->b2 = command.colors[2][2];
+                tri->r0 = command.colors[0].r;
+                tri->g0 = command.colors[0].g;
+                tri->b0 = command.colors[0].b;
+                tri->r1 = command.colors[1].r;
+                tri->g1 = command.colors[1].g;
+                tri->b1 = command.colors[1].b;
+                tri->r2 = command.colors[2].r;
+                tri->g2 = command.colors[2].g;
+                tri->b2 = command.colors[2].b;
                 tri->x0 = PT(0).vx;
                 tri->y0 = PT(0).vy;
                 z = PT(0).vz;

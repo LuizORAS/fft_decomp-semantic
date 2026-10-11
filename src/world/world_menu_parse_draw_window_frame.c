@@ -10,7 +10,7 @@
  * pointer's reference count above the draw priority's, so global allocation
  * places them in s6 and s7 like the target.
  */
-world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_window_command_t* command) {
+world_menu_instruction_t* world_menu_parse_draw_window_frame(world_menu_instruction_t* instruction) {
     RECT rect;
     s32 left;
     s32 top;
@@ -30,7 +30,7 @@ world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_windo
 
     priority = g_world_menu_draw_priority;
     clut = g_world_menu_palette_clut;
-    if (command->rectangle_source == 2) {
+    if (instruction->window.rectangle_source == 2) {
         left = g_world_menu_window_rect_source->rect.x - 5;
         top = g_world_menu_window_rect_source->rect.y - 9;
         full_columns = g_world_menu_window_rect_source->rect.w / 16;
@@ -40,19 +40,19 @@ world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_windo
     } else {
         u8 width;
         u8 height;
-        left = command->x - 5;
-        top = command->y - 9;
-        width = command->width;
+        left = instruction->window.x - 5;
+        top = instruction->window.y - 9;
+        width = instruction->window.width;
         full_columns = width >> 4;
         partial_width = width & 15;
-        height = command->height;
+        height = instruction->window.height;
         full_rows = height >> 4;
         partial_height = height & 15;
     }
-    g_world_menu_window_interior_command.rectangle_source = command->rectangle_source;
-    g_world_menu_window_right_x = command->width + left + 5;
+    g_world_menu_window_interior_command.rectangle_source = instruction->window.rectangle_source;
+    g_world_menu_window_right_x = instruction->window.width + left + 5;
     v_top = 2;
-    if (command->rectangle_source == 1) {
+    if (instruction->window.rectangle_source == 1) {
         u_left = 0xDA;
         v_top = 3;
         u_middle = 0xDF;
@@ -118,18 +118,18 @@ world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_windo
             &rect, 0x1A, 8, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
     }
 
-    if (command->rectangle_source == 2) {
+    if (instruction->window.rectangle_source == 2) {
         g_world_menu_window_rect.x = g_world_menu_window_rect_source->rect.x;
         g_world_menu_window_rect.y = g_world_menu_window_rect_source->rect.y;
         g_world_menu_window_rect.w = g_world_menu_window_rect_source->rect.w;
         g_world_menu_window_rect.h = g_world_menu_window_rect_source->rect.h;
     } else {
-        g_world_menu_window_interior_command.x = command->x;
-        g_world_menu_window_interior_command.y = command->y;
-        g_world_menu_window_interior_command.width = command->width;
-        g_world_menu_window_interior_command.height = command->height;
+        g_world_menu_window_interior_command.x = instruction->window.x;
+        g_world_menu_window_interior_command.y = instruction->window.y;
+        g_world_menu_window_interior_command.width = instruction->window.width;
+        g_world_menu_window_interior_command.height = instruction->window.height;
     }
-    world_menu_parse_draw_tiled_rectangle(&g_world_menu_window_interior_command);
+    world_menu_parse_draw_tiled_rectangle((world_menu_instruction_t*)&g_world_menu_window_interior_command);
 
     top = top + 9 + partial_height + full_rows * 16;
     rect.x = left;
@@ -158,6 +158,6 @@ world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_windo
     rect.h = 7;
     world_gfx_enqueue_textured_quad(
         &rect, u_right - 5, v_bottom - 7, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
-    command = (world_menu_window_command_t*)((u8*)command + command->length);
-    return command;
+    instruction = world_menu_next_instruction(instruction);
+    return instruction;
 }

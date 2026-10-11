@@ -44,9 +44,9 @@ void battle_map_reset_mesh_render_state(void) {
     SetDrawMode(&g_battle_render_buffers[1].overlay_modes[1], 0, 1, 0, 0);
     SetDrawMode(&g_battle_render_buffers[0].overlay_modes[0], 0, 1, 0, 0);
     SetDrawMode(&g_battle_render_buffers[1].overlay_modes[0], 0, 1, 0, 0);
-    g_battle_map_ambient_polygon_color[0] = 0x80;
-    g_battle_map_ambient_polygon_color[1] = 0x80;
-    g_battle_map_ambient_polygon_color[2] = 0x80;
+    g_battle_map_ambient_polygon_color.r = 0x80;
+    g_battle_map_ambient_polygon_color.g = 0x80;
+    g_battle_map_ambient_polygon_color.b = 0x80;
     for (i = 0; i < 360; i++) {
         g_battle_map_textured_triangle_positions[i].polygon_flags
             = (s16)(MAP_POLYGON_FLAG_LIT | MAP_POLYGON_FLAG_LIT_ACTIVE);

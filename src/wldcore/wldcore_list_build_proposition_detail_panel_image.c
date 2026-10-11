@@ -4,6 +4,8 @@
  * the elapsed/assigned day counts and the location go into text substitution
  * words 0-2, and one 16-pixel row is drawn per participant.
  *
+ * Both menu variants share the detail render index and row count.
+ *
  * The panel's row count is the measured row count of text g_wldcore_selected_proposition_row[0].fields.name_text +
  * 0xf7ff plus two, kept in the level record at +0x0c.
  *
@@ -15,7 +17,7 @@
  * both reads, as the target does. Assigning bounds.x before
  * position.y is what puts the two by-value halves in the target's registers. */
 void wldcore_list_build_proposition_detail_panel_image(
-    wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode) {
+    wldcore_menu_stack_record_t* level, s32 proposition, s32 coordinate_mode) {
     RECT bounds;
     point32_t point;
     s16 text_width;
@@ -29,11 +31,11 @@ void wldcore_list_build_proposition_detail_panel_image(
     panel_text = &g_wldcore_selected_proposition_row[0].fields.name_text;
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-    level->render_index = index;
+    level->proposition_detail_panel.render_index = index;
     world_text_measure_pixels(
         &text_width, &text_rows, world_text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
     rows = text_rows + 2;
-    level->panel_rows = rows;
+    level->proposition_detail_panel.panel_rows = rows;
     g_world_text_substitution_values[0] = g_main_active_propositions[proposition].elapsed_days;
     g_world_text_substitution_values[1] = g_main_active_propositions[proposition].assigned_days;
     g_world_text_substitution_values[2] = g_main_active_propositions[proposition].location | TEXT_ID_LOCATION_NAME_BASE;

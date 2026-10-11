@@ -1117,9 +1117,6 @@ void wldcore_list_open_set_script_variables_03c0_03ff(void);
 void wldcore_list_open_active_propositions(void);
 void wldcore_list_open_brave_story_propositions(void);
 
-void wldcore_list_build_proposition_detail_panel_image(
-    wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode);
-
 void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset);
 
 /* camera */
@@ -1533,6 +1530,42 @@ typedef struct wldcore_menu_variable_list_level {
     s32 row_count; /* 0x30 */
 } wldcore_menu_variable_list_level_t;
 
+/* Shared detail-panel outputs of menu tags 0x13 and 0x27. */
+typedef struct wldcore_menu_proposition_detail_panel {
+    u8 _unused_00[8]; /* Leading slots belong to the owning menu variant. */
+    s32 render_index; /* 0x08 */
+    s32 panel_rows;   /* 0x0c */
+} wldcore_menu_proposition_detail_panel_t;
+
+/* Proposition recall confirmation (menu tag 0x13). The detail-panel builder
+ * writes detail_render/detail_rows; the yes/no cursor uses choice_render. */
+typedef struct wldcore_menu_proposition_cancel_confirm_level {
+    s32 cursor_window; /* 0x00 */
+    s32 choice_render; /* 0x04 */
+    s32 detail_render; /* 0x08 */
+    s32 detail_rows;   /* 0x0c */
+    s32 proposition;   /* 0x10 */
+    s32 choice;        /* 0x14 */
+    s32 confirmed;     /* 0x18 */
+    u8 _unused_1c[4];
+    s32 frame_window; /* 0x20 */
+} wldcore_menu_proposition_cancel_confirm_level_t;
+
+/* Proposition participant list (menu tag 0x27). The detail-panel builder
+ * fills the render index and row count before the cursor is positioned. */
+typedef struct wldcore_menu_participant_list_level {
+    s32 cursor_window; /* 0x00 */
+    u8 _unused_04[4];
+    s32 render_index; /* 0x08 */
+    s32 panel_rows;   /* 0x0c */
+    s32 proposition;  /* 0x10 */
+    u8 _unused_14[4];
+    s32 mode;   /* 0x18; set to WLDCORE_LIST_WINDOW_MODE_BROWSE */
+    s32 cursor; /* 0x1c */
+    u8 _unused_20[0x10];
+    s32 entry_count; /* 0x30 */
+} wldcore_menu_participant_list_level_t;
+
 /* Provisional: proposition participant detail level (type 0x28) pushed by
  * 0x80086f1c with two frame windows; wldcore_unit_build_status_panel_data draws the participant
  * g_main_active_propositions[proposition].participant_indices[participant]. */
@@ -1869,6 +1902,9 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_proposition_list_level_t proposition_list;
     wldcore_menu_variable_list_level_t variable_list;
     wldcore_menu_participant_level_t participant;
+    wldcore_menu_participant_list_level_t participant_list;
+    wldcore_menu_proposition_cancel_confirm_level_t proposition_cancel_confirm;
+    wldcore_menu_proposition_detail_panel_t proposition_detail_panel;
     wldcore_menu_variable_detail_level_t variable_detail;
     wldcore_menu_event_transition_level_t event_transition;
     wldcore_menu_sound_novel_resume_level_t sound_novel_resume;
@@ -2011,6 +2047,10 @@ void wldcore_window_init_vram_render_record(s32 index, RECT bounds, point32_t cl
 void wldcore_window_load_image_record_to_vram(s32 index, u32* image);
 void wldcore_window_publish_slot_b806(wldcore_menu_list_window_level_t* level);
 void wldcore_window_publish_slot_b8dd(wldcore_menu_list_window_level_t* level);
+void wldcore_list_build_proposition_detail_panel_image(
+    wldcore_menu_stack_record_t* level, s32 proposition, s32 coordinate_mode);
+void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_stack_record_t* level);
+void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* level);
 void wldcore_window_reset_state_and_scroll(wldcore_menu_stack_record_t* level);
 void wldcore_map_step_projection_motion_then_pop_level(wldcore_menu_stack_record_t* entry);
 void wldcore_window_set_render_objects_visible(s32 clear);

@@ -19,10 +19,10 @@
  * arrows, the scrollbar thumb and the cursor, and replays the per-row record
  * group once per visible row, plus one while a scroll is in progress.
  *
- * An empty list only skips record->skip_count + 1 chained records. Returns
+ * An empty list skips the list command and its following row group. Returns
  * the record that follows the list.
  */
-u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
+world_menu_instruction_t* world_menu_script_draw_scrollable_list(world_menu_instruction_t* instruction) {
     RECT rect;
     s32 unused[4];
     point16_t point;
@@ -33,26 +33,26 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
     s32 rows;
     s32 index;
     u16 old_cursor;
-    world_menu_list_record_t* base;
+    world_menu_instruction_t* base;
 
     priority = g_world_menu_draw_priority;
     if (g_world_menu_option_count <= 0) {
-        for (j = record->skip_count; j != -1; j--) {
-            record = (world_menu_list_record_t*)world_skip_chained_records((world_chained_record_t*)record);
+        for (j = instruction->list.skip_count; j != -1; j--) {
+            instruction = world_menu_skip_instruction_group(instruction);
         }
-        return (u8*)record;
+        return instruction;
     }
     speed = world_gfx_get_vsync_mode_or_one();
     g_world_menu_use_scroll_position = 1;
     if (g_world_menu_list_layout_pending != 0) {
-        world_menu_load_scrollable_list_layout((u8*)record);
+        world_menu_load_scrollable_list_layout((u8*)instruction);
     }
     old_cursor = g_world_menu_cursor_position;
     if (g_world_menu_list_scroll_direction == 0) {
         i = world_input_read_menu_scroll_repeat();
         if (i != 0) {
             if (i != 2) {
-                world_menu_scroll_list_page(i, record);
+                world_menu_scroll_list_page(i, &instruction->list);
             }
         } else if ((g_world_menu_display_script_input & 0x10000000)
             || (g_world_menu_display_script_input & PSX_PAD_UP)) {
@@ -143,16 +143,16 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
     }
     if (g_world_menu_list_text_table != 0) {
         if (g_world_menu_scroll_pixel_offset != 0) {
-            rect.x = record->x;
-            rect.y = record->y - 5;
+            rect.x = instruction->list.x;
+            rect.y = instruction->list.y - 5;
             rect.w = g_world_menu_list_image_width * 4;
             rect.h = g_world_menu_row_height * g_world_menu_list_visible_rows + 10;
             world_gfx_enqueue_textured_quad(&rect, 0, g_world_menu_scroll_pixel_offset + 0x2B, 0,
                 g_world_menu_semi_trans, g_world_menu_window_tpage, g_world_menu_window_clut,
                 g_world_menu_draw_priority);
         } else {
-            rect.x = record->x;
-            rect.y = record->y;
+            rect.x = instruction->list.x;
+            rect.y = instruction->list.y;
             rect.w = g_world_menu_list_image_width * 4;
             rect.h = g_world_menu_row_height * g_world_menu_list_visible_rows;
             world_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_world_menu_semi_trans, g_world_menu_window_tpage,
@@ -162,7 +162,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
     if (g_world_menu_use_alternate_palette == 0) {
         if (g_world_menu_scroll_offset != 0) {
             rect.x = g_world_menu_window_right_x;
-            rect.y = record->arrow_up_y;
+            rect.y = instruction->list.arrow_up_y;
             rect.w = 8;
             rect.h = 0x10;
             world_gfx_enqueue_textured_quad(&rect, 0xD8, 0, 0, g_world_menu_semi_trans, g_world_menu_icon_tpage,
@@ -170,15 +170,15 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
         }
         if (g_world_menu_scroll_offset < g_world_menu_option_count - g_world_menu_list_visible_rows) {
             rect.x = g_world_menu_window_right_x;
-            rect.y = record->arrow_down_y;
+            rect.y = instruction->list.arrow_down_y;
             rect.w = 8;
             rect.h = 0x10;
             world_gfx_enqueue_textured_quad(&rect, 0xE0, 0, 0, g_world_menu_semi_trans, g_world_menu_icon_tpage,
                 g_world_menu_clut_front, g_world_menu_draw_priority);
         }
         if (g_world_menu_option_count > g_world_menu_list_visible_rows) {
-            i = record->arrow_up_y + 0xF;
-            j = record->arrow_down_y - (s16)(i + 5);
+            i = instruction->list.arrow_up_y + 0xF;
+            j = instruction->list.arrow_down_y - (s16)(i + 5);
             i += j * g_world_menu_cursor_position / (g_world_menu_option_count - 1);
             rect.x = g_world_menu_window_right_x;
             rect.y = i;
@@ -188,30 +188,31 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
                 g_world_menu_clut_front, g_world_menu_draw_priority);
         }
     }
-    if (record->show_cursor != 0) {
-        point.x = record->x - record->cursor_x_offset;
-        point.y = record->y + (g_world_menu_cursor_position - g_world_menu_scroll_offset) * g_world_menu_row_height;
+    if (instruction->list.show_cursor != 0) {
+        point.x = instruction->list.x - instruction->list.cursor_x_offset;
+        point.y = instruction->list.y
+            + (g_world_menu_cursor_position - g_world_menu_scroll_offset) * g_world_menu_row_height;
         world_menu_draw_animated_cursor(&point, &g_world_menu_list_cursor_anim, g_world_menu_use_alternate_palette);
     }
-    record = (world_menu_list_record_t*)((u8*)record + record->length);
+    instruction = world_menu_next_instruction(instruction);
     g_world_menu_scroll_row_offset = 0;
     rows = g_world_menu_list_visible_rows + 1;
     if (g_world_menu_scroll_pixel_offset == 0) {
         rows--;
     }
-    base = record;
+    base = instruction;
     for (i = 0; i < rows; i++, g_world_menu_scroll_row_offset++) {
         if (g_world_menu_scroll_offset + i > g_world_menu_option_count - 1 && g_world_menu_scroll_pixel_offset == 0) {
             break;
         }
-        record = base;
+        instruction = base;
         for (j = 0; j < g_world_menu_list_row_record_count; j++) {
-            record = (world_menu_list_record_t*)g_world_menu_script_handlers[record->type]((u8*)record);
+            instruction = g_world_menu_script_handlers[instruction->header.opcode](instruction);
         }
     }
     g_world_menu_use_scroll_position = 0;
     if (old_cursor != g_world_menu_cursor_position) {
         g_world_menu_sound_effect_id = MAIN_SFX_CURSOR_MOVE;
     }
-    return (u8*)record;
+    return instruction;
 }

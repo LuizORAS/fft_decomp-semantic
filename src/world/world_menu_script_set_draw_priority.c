@@ -3,7 +3,7 @@
 
 /* Menu-script opcode handler: byte 3 of the instruction sets the menu draw
    priority. Returns the address of the next instruction. */
-u8* world_menu_script_set_draw_priority(u8* script) {
-    g_world_menu_draw_priority = script[3];
-    return script + script[1];
+world_menu_instruction_t* world_menu_script_set_draw_priority(world_menu_instruction_t* instruction) {
+    g_world_menu_draw_priority = instruction->draw_state.value;
+    return world_menu_next_instruction(instruction);
 }

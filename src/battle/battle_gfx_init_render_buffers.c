@@ -24,10 +24,10 @@ void battle_gfx_init_render_buffers(void) {
         }
     }
     SetPolyF3(&prototype);
-    g_battle_map_light_direction[0] = 0;
-    g_battle_map_light_direction[1] = 0;
-    g_battle_map_light_direction[2] = 1;
-    g_battle_map_light_direction[3] = prototype.code;
+    g_battle_map_current_darkness_color.r = 0;
+    g_battle_map_current_darkness_color.g = 0;
+    g_battle_map_current_darkness_color.b = 1;
+    g_battle_map_current_darkness_color.cd = prototype.code;
     SetPolyG4(&g_battle_render_buffers[0].overlay);
     SetPolyG4(&g_battle_render_buffers[1].overlay);
     g_battle_render_buffers[0].overlay.x0 = 0;

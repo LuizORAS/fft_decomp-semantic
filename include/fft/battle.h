@@ -3180,20 +3180,57 @@ typedef struct battle_effect_tile_ref {
     s16 y;     /* 0x04 */
 } battle_effect_tile_ref_t;
 
-/* 0x1c-byte G3 polygon initialised by SetPolyG3. */
-typedef struct battle_effect_g3_prim {
-    u8 data[0x1c];
-} battle_effect_g3_prim_t;
+/* Header of one packed projectile model command. */
+typedef union battle_effect_model_command_header {
+    u32 word;
+    struct {
+        u8 _unused_00;
+        u8 word_count;
+        u8 _unused_02;
+        u8 opcode;
+    } fields;
+} battle_effect_model_command_header_t;
+
+/* Shared output of the model-command decoder and input of the projectile renderer. */
+typedef struct battle_effect_decoded_model_command {
+    battle_effect_model_command_header_t header; /* 0x00 */
+    CVECTOR colors[4];                           /* 0x04 */
+    u16 texture[5];                              /* 0x14; tpage, CLUT and three packed u/v pairs */
+    u8 _unused_1e[0x4a];
+    /* The decoder copies two packed pairs; the renderer reads four indices. */
+    union {
+        u32 pairs[2];
+        u16 indices[4];
+    } vertices; /* 0x68 */
+} battle_effect_decoded_model_command_t;
+typedef char battle_effect_decoded_model_command_size_must_be_0x70[sizeof(battle_effect_decoded_model_command_t) == 0x70
+        ? 1
+        : -1];
 
 /* 0xc88-byte arrow work buffer of the bow-arrow (0x801b0ffc) and projectile
  * (0x801b3938) secondary handlers: two sets of four G3 and thirteen G4
  * polygons. */
 typedef struct battle_effect_arrow_buffer {
-    battle_effect_g3_prim_t g3[2][4]; /* 0x000 */
-    POLY_G4 g4[2][13];                /* 0x0e0 */
+    POLY_G3 g3[2][4];  /* 0x000 */
+    POLY_G4 g4[2][13]; /* 0x0e0 */
     u8 _unused_488[0x800];
 } battle_effect_arrow_buffer_t;
 typedef char battle_effect_arrow_buffer_size_must_be_0xc88[(sizeof(battle_effect_arrow_buffer_t) == 0xc88) ? 1 : -1];
+
+/* Double-buffered polygons initialized by the secondary handler and drawn by
+ * battle_effect_draw_projectile_model. */
+typedef struct battle_effect_stone_buffer {
+    POLY_G3 g3[2][12];
+} battle_effect_stone_buffer_t;
+
+typedef struct battle_effect_shuriken_buffer {
+    POLY_G3 g3[2][16];
+} battle_effect_shuriken_buffer_t;
+
+typedef struct battle_effect_reflect_buffer {
+    u16 clut[2][6];
+    POLY_GT3 prims[2][24];
+} battle_effect_reflect_buffer_t;
 
 /* 21-keyframe camera table of the parent timeline's two phases. A keyframe
  * moves the tracks its command word names (BATTLE_EFFECT_CAMERA_TRACK_*)
@@ -4613,6 +4650,7 @@ s32 battle_effect_start_altima_teleport_arrival(battle_unit_misc_data_t* unit);
 s32 battle_effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit);
 void battle_effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit);
 void battle_effect_start_altima_teleport_white_flash(battle_unit_misc_data_t* unit);
+void battle_effect_decode_next_model_command(battle_effect_decoded_model_command_t* out);
 s32 battle_effect_init_resource_sections(battle_effect_resource_t* resource, s32 unused_1);
 s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, battle_effect_motion_t* motion);
 void battle_effect_add_random_vector_offsets(const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
@@ -7575,9 +7613,7 @@ enum {
     MAP_POLYGON_FLAG_LIT = 0x8000,
 };
 
-/* Commands of battle_map_light_state_command. The 0x63-0x65 bodies access
- * g_battle_map_light_direction, but every caller passes or reads the map
- * darkness colour there, so the commands are named for the callers. */
+/* Commands for the map's background gradient, ambient and darkness colours. */
 typedef enum map_light_command {
     MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT = 0x56,
     MAP_LIGHT_COMMAND_GET_BACKGROUND_GRADIENT = 0x57,
@@ -8195,12 +8231,12 @@ extern battle_map_texture_animation_t g_battle_map_texture_animations[32];
 extern DR_MOVE g_battle_map_texture_animation_moves[32];
 extern SVECTOR g_battle_map_camera_rotation;
 extern battle_lightning_state_t g_battle_map_lightning_state;
-extern u8 g_battle_map_ambient_polygon_color[3];
-extern u8 g_battle_map_back_color_bytes[3];
+extern rgb24_t g_battle_map_ambient_polygon_color;
+extern CVECTOR g_battle_map_cached_back_color;
 extern SVECTOR g_battle_map_command_0x96_rotation;
 extern u8 g_battle_map_gns_dispatch_held;
 extern s32 g_battle_map_gns_load_phase; /* map_gns_load_phase_e */
-extern u8 g_battle_map_light_direction[4];
+extern CVECTOR g_battle_map_current_darkness_color;
 extern u16 g_battle_map_light_transition_command;               /* pending per-frame light command, 0 when idle */
 extern u16 g_battle_map_light_transition_duration;              /* transition duration in frames */
 extern u16 g_battle_map_light_transition_frame;                 /* transition frame counter */

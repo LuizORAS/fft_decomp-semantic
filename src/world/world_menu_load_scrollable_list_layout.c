@@ -16,15 +16,16 @@ typedef struct {
 void world_menu_load_scrollable_list_layout(u8* script) {
     world_menu_scrollable_list_image_t image;
     world_menu_list_record_t* record;
+    world_menu_instruction_t* instruction = (world_menu_instruction_t*)script;
     s32 i;
 
-    while (script[0] != 0x10) {
-        if (script[0] == 0x1C) {
+    while (instruction->header.opcode != 0x10) {
+        if (instruction->header.opcode == 0x1C) {
             return;
         }
-        script += script[1];
+        instruction = world_menu_next_instruction(instruction);
     }
-    record = (world_menu_list_record_t*)script;
+    record = &instruction->list;
     g_world_menu_list_row_record_count = record->skip_count;
     g_world_menu_row_height = record->row_height;
     g_world_menu_list_visible_rows = record->visible_rows;

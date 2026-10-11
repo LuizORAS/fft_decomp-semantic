@@ -54,7 +54,7 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_gauge_max_number.x = num_x;
                 g_world_formation_gauge_max_number.y = num_y;
                 g_world_formation_gauge_max_number.value = unit_index;
-                world_menu_script_draw_formatted_number(&g_world_formation_gauge_max_number);
+                world_menu_script_draw_formatted_number((world_menu_instruction_t*)&g_world_formation_gauge_max_number);
             }
             num_x = x + 20;
             num_y = top;
@@ -62,7 +62,8 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_gauge_value_number.x = num_x;
                 g_world_formation_gauge_value_number.y = num_y;
                 g_world_formation_gauge_value_number.value = unit_index;
-                world_menu_script_draw_formatted_number(&g_world_formation_gauge_value_number);
+                world_menu_script_draw_formatted_number(
+                    (world_menu_instruction_t*)&g_world_formation_gauge_value_number);
             }
             rect.x = x + 35;
             rect.y = top + 5;
@@ -121,7 +122,7 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_level_number.x = num_x;
                 g_world_formation_level_number.y = num_y;
                 g_world_formation_level_number.value = unit_index;
-                world_menu_script_draw_formatted_number(&g_world_formation_level_number);
+                world_menu_script_draw_formatted_number((world_menu_instruction_t*)&g_world_formation_level_number);
             }
             num_x = x + 45;
             num_y = top;
@@ -129,7 +130,8 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_experience_number.x = num_x;
                 g_world_formation_experience_number.y = num_y;
                 g_world_formation_experience_number.value = unit_index;
-                world_menu_script_draw_formatted_number(&g_world_formation_experience_number);
+                world_menu_script_draw_formatted_number(
+                    (world_menu_instruction_t*)&g_world_formation_experience_number);
             }
         } else if (g_world_formation_stat_display_mode == MENU_UNIT_READOUT_BRAVE_FAITH) {
             s32 y40;
@@ -170,9 +172,10 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_brave_number_wide.value = g_world_formation_brave_number.value = unit_index;
                 if (g_world_formation_unit_pointers[unit_index]->brave >= 100) {
                     g_world_formation_brave_number_wide.x = num_x - 3;
-                    world_menu_script_draw_formatted_number(&g_world_formation_brave_number_wide);
+                    world_menu_script_draw_formatted_number(
+                        (world_menu_instruction_t*)&g_world_formation_brave_number_wide);
                 } else {
-                    world_menu_script_draw_formatted_number(&g_world_formation_brave_number);
+                    world_menu_script_draw_formatted_number((world_menu_instruction_t*)&g_world_formation_brave_number);
                 }
             }
             num_x = x + 45;
@@ -183,9 +186,10 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_faith_number_wide.value = g_world_formation_faith_number.value = unit_index;
                 if (g_world_formation_unit_pointers[unit_index]->faith >= 100) {
                     g_world_formation_faith_number_wide.x = num_x - 5;
-                    world_menu_script_draw_formatted_number(&g_world_formation_faith_number_wide);
+                    world_menu_script_draw_formatted_number(
+                        (world_menu_instruction_t*)&g_world_formation_faith_number_wide);
                 } else {
-                    world_menu_script_draw_formatted_number(&g_world_formation_faith_number);
+                    world_menu_script_draw_formatted_number((world_menu_instruction_t*)&g_world_formation_faith_number);
                 }
             }
         }
