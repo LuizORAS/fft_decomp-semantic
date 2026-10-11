@@ -2,12 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-typedef struct battle_effect_frame_record {
-    s16 _unused_00;
-    s16 count;
-    battle_effect_sprite_part_t parts[1];
-} battle_effect_frame_record_t;
-
 /* Advances a list node's frame script, rebuilds its sprite-part table when the
  * frame changes, and queues the sprite at the node position.
  *
@@ -24,7 +18,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     s32 unused_38[6];
     DVECTOR position;
     battle_effect_sprite_block_t* block;
-    battle_effect_frame_record_t* frame;
+    battle_effect_sprite_frameset_t* frame;
     s16 frame_table_offset;
     s32 op;
     s16 count;
@@ -71,8 +65,8 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     if (node->kind & EFFECT_LIST_NODE_FRAME_CHANGED) {
         frame_table_offset = ((battle_effect_sprite_group_t*)(g_battle_effect_frame_data + node->frame_group_offset))
                                  ->frame_table_offset;
-        frame = (battle_effect_frame_record_t*)(*(u16*)(g_battle_effect_frame_data
-                                                    + (node->sprite_frame_index * 2 + frame_table_offset))
+        frame = (battle_effect_sprite_frameset_t*)(*(u16*)(g_battle_effect_frame_data
+                                                       + (node->sprite_frame_index * 2 + frame_table_offset))
             + g_battle_effect_frame_data);
         count = frame->count;
         if (block->color.sprite_count != count) {

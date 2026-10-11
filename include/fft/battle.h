@@ -3045,7 +3045,7 @@ typedef struct battle_effect_emitter_values {
 } battle_effect_emitter_values_t;
 typedef char battle_effect_emitter_values_size_must_be_0x2e[(sizeof(battle_effect_emitter_values_t) == 0x2e) ? 1 : -1];
 
-/* flags of a sprite part (battle_effect_sprite_part_t, battle_effect_sprite_frame_t). */
+/* flags of a sprite part (battle_effect_sprite_part_t, battle_effect_sprite_frameset_t). */
 enum {
     EFFECT_SPRITE_PART_CLUT_MASK = 0x000f,
     EFFECT_SPRITE_PART_FLAG_SECOND_CLUT_ROW = 0x0010,  /* the CLUT is of MAP_CLUT_ROW_EFFECT_SECOND */
@@ -3237,16 +3237,13 @@ typedef struct battle_effect_sprite_section {
     battle_effect_sprite_group_t groups[1]; /* 0x04; variable-length group table */
 } battle_effect_sprite_section_t;
 
-typedef struct battle_effect_sprite_frame {
-    u16 flags; /* 0x00; EFFECT_SPRITE_PART_*: SEMI_TRANSPARENT and the tpage mode bits */
-    u8 _unused_02[6];
-    u8 u;      /* 0x08 */
-    u8 v;      /* 0x09 */
-    u8 width;  /* 0x0a */
-    u8 height; /* 0x0b */
-    /* Four-byte alignment preserves the original x/y word copies. */
-    DVECTOR corners[4] __attribute__((aligned(4))); /* 0x0c */
-} battle_effect_sprite_frame_t;
+/* One frame selected by the animation stream; its parts render together. */
+typedef struct battle_effect_sprite_frameset {
+    u16 flags;                            /* 0x00; EFFECT_SPRITE_PART_*: SEMI_TRANSPARENT and the tpage mode bits */
+    s16 count;                            /* 0x02; number of sprite parts */
+    battle_effect_sprite_part_t parts[0]; /* 0x04; variable-length part table */
+} battle_effect_sprite_frameset_t;
+typedef char battle_effect_sprite_frameset_size_must_be_4[sizeof(battle_effect_sprite_frameset_t) == 4 ? 1 : -1];
 
 /* Section table at the start of an effect file's header section: byte offsets
  * from the table itself, one per battle_effect_*_address/_pointer getter. */
