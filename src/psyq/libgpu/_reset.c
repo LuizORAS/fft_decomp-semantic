@@ -9,15 +9,15 @@ int _reset(int mode) {
     _qin = tail;
     switch (mode & 7) {
     case 0:
-        *g_psyq_gpu_dma_chcr = PSYQ_GPU_DMA_MODE_LINKED_LIST | PSYQ_GPU_DMA_TO_DEVICE;
-        *g_psyq_gpu_dma_dpcr |= PSYQ_GPU_DMA_GPU_ENABLE;
+        *g_psyq_gpu_dma_chcr = PSYQ_DMA_MODE_LINKED_LIST | PSYQ_DMA_TO_DEVICE;
+        *g_psyq_gpu_dma_dpcr |= PSYQ_DMA_GPU_ENABLE;
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_RESET);
         psyq_gpu_memset(g_psyq_gpu_gp1_cache, 0, sizeof(g_psyq_gpu_gp1_cache));
         psyq_gpu_memset(_que, 0, sizeof(_que));
         break;
     case 1:
-        *g_psyq_gpu_dma_chcr = PSYQ_GPU_DMA_MODE_LINKED_LIST | PSYQ_GPU_DMA_TO_DEVICE;
-        *g_psyq_gpu_dma_dpcr |= PSYQ_GPU_DMA_GPU_ENABLE;
+        *g_psyq_gpu_dma_chcr = PSYQ_DMA_MODE_LINKED_LIST | PSYQ_DMA_TO_DEVICE;
+        *g_psyq_gpu_dma_dpcr |= PSYQ_DMA_GPU_ENABLE;
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_ACK_IRQ);
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_RESET_BUFFER);
         break;

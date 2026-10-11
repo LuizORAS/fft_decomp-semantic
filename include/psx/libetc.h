@@ -128,6 +128,25 @@ typedef struct {
 extern psyq_dma_channel_t* g_psyq_etc_dma_channels;
 psyq_interrupt_callback_t setIntr(s32 slot, psyq_interrupt_callback_t callback);
 
+/* CPU DMA channel indices, transfer controls and priority enables. */
+enum {
+    PSYQ_DMA_MDEC_IN_CHANNEL = 0,
+    PSYQ_DMA_MDEC_OUT_CHANNEL = 1,
+    PSYQ_DMA_GPU_CHANNEL = 2,
+    PSYQ_DMA_OTC_CHANNEL = 6,
+};
+
+#define PSYQ_DMA_TO_DEVICE         0x00000001U
+#define PSYQ_DMA_ADDRESS_DECREMENT 0x00000002U
+#define PSYQ_DMA_MODE_REQUEST      0x00000200U
+#define PSYQ_DMA_MODE_LINKED_LIST  0x00000400U
+#define PSYQ_DMA_BUSY              0x01000000U
+#define PSYQ_DMA_TRIGGER           0x10000000U
+#define PSYQ_DMA_MDEC_IN_ENABLE    0x00000008U
+#define PSYQ_DMA_MDEC_OUT_ENABLE   0x00000080U
+#define PSYQ_DMA_GPU_ENABLE        0x00000800U
+#define PSYQ_DMA_OTC_ENABLE        0x08000000U
+
 /* DMA channel count, interrupt-control fields and initial priority. */
 enum {
     PSYQ_DMA_CHANNEL_COUNT = 7,

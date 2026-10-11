@@ -38,7 +38,7 @@ int _drs(RECT* rect, u32* data) {
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_DMA_DIRECTION) | PSYQ_GPU_DMA_REQUEST_READ;
         *g_psyq_gpu_dma_madr = (u32)data;
         *g_psyq_gpu_dma_bcr = (blocks << 16) | PSYQ_GPU_DMA_IMAGE_BLOCK_WORDS;
-        *g_psyq_gpu_dma_chcr = PSYQ_GPU_DMA_BUSY | PSYQ_GPU_DMA_MODE_REQUEST;
+        *g_psyq_gpu_dma_chcr = PSYQ_DMA_BUSY | PSYQ_DMA_MODE_REQUEST;
     }
     return 0;
 }

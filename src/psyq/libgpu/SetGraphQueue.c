@@ -8,7 +8,7 @@ int SetGraphQueue(int enabled) {
     if (enabled != g_psyq_gpu_environment.queue_enabled) {
         g_psyq_gpu_dispatch->reset(1);
         g_psyq_gpu_environment.queue_enabled = enabled;
-        DMACallback(PSYQ_GPU_DMA_GPU_CHANNEL, 0);
+        DMACallback(PSYQ_DMA_GPU_CHANNEL, 0);
     }
     return old;
 }

@@ -1,12 +1,11 @@
 #include "psx/libpress.h"
 #include "psx/types.h"
 
-/* Spin until the MDEC input FIFO drains, reporting a timeout through the
- * library's diagnostic dump when the counter expires. */
+/* Wait until the MDEC command finishes; dump decoder state if polling expires. */
 s32 MDEC_in_sync(void) {
-    volatile s32 count = 0x100000;
+    volatile s32 count = PSYQ_PRESS_SYNC_POLL_LIMIT;
 
-    while (*g_psyq_press_mdec_status & 0x20000000) {
+    while (*g_psyq_press_mdec_status & PSYQ_MDEC_STATUS_BUSY) {
         if (--count == -1) {
             timeout(g_psyq_press_in_sync_name);
             return -1;

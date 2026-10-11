@@ -3,6 +3,6 @@
 #include "psx/types.h"
 
 s32 DecDCTinCallback(psyq_interrupt_callback_t callback) {
-    /* Psy-Q returns the previous callback address through a long result. */
-    return (s32)DMACallback(0, callback);
+    /* Returns the previous callback address as a signed 32-bit value. */
+    return (s32)DMACallback(PSYQ_DMA_MDEC_IN_CHANNEL, callback);
 }

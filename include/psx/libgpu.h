@@ -99,20 +99,10 @@ typedef enum {
 #define PSYQ_GPU_STATUS_READY_DMA       0x10000000U
 #define PSYQ_GPU_STATUS_ODD_LINE        0x80000000U
 
-/* CPU DMA channel control and priority registers. */
-#define PSYQ_GPU_DMA_TO_DEVICE         0x00000001U
-#define PSYQ_GPU_DMA_ADDRESS_DECREMENT 0x00000002U
-#define PSYQ_GPU_DMA_MODE_REQUEST      0x00000200U
-#define PSYQ_GPU_DMA_MODE_LINKED_LIST  0x00000400U
-#define PSYQ_GPU_DMA_BUSY              0x01000000U
-#define PSYQ_GPU_DMA_TRIGGER           0x10000000U
-#define PSYQ_GPU_DMA_GPU_ENABLE        0x00000800U
-#define PSYQ_GPU_DMA_OTC_ENABLE        0x08000000U
+/* GPU DMA addresses and image-transfer policy. */
 #define PSYQ_GPU_DMA_ADDRESS_MASK      0x00ffffffU
 #define PSYQ_GPU_DMA_END               0x00ffffffU
 #define PSYQ_GPU_DMA_IMAGE_BLOCK_WORDS 16U
-#define PSYQ_GPU_DMA_GPU_CHANNEL       2
-#define PSYQ_GPU_DMA_OTC_CHANNEL       6
 
 /* GP1 display-mode payload. */
 #define PSYQ_GPU_DISPLAY_WIDTH_320  0x01U

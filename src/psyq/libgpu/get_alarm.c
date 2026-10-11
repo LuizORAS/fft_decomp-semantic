@@ -11,8 +11,8 @@ int get_alarm(void) {
         printf(g_psyq_gpu_timeout_operation_format, _qlog.operation, _qlog.source, _qlog.argument);
         g_psyq_gpu_reset_interrupt_mask = SetIntrMask(0);
         _qin = _qout = 0;
-        *g_psyq_gpu_dma_chcr = PSYQ_GPU_DMA_MODE_LINKED_LIST | PSYQ_GPU_DMA_TO_DEVICE;
-        *g_psyq_gpu_dma_dpcr |= PSYQ_GPU_DMA_GPU_ENABLE;
+        *g_psyq_gpu_dma_chcr = PSYQ_DMA_MODE_LINKED_LIST | PSYQ_DMA_TO_DEVICE;
+        *g_psyq_gpu_dma_dpcr |= PSYQ_DMA_GPU_ENABLE;
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_ACK_IRQ);
         *g_psyq_gpu_gp1_port = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_RESET_BUFFER);
         SetIntrMask(g_psyq_gpu_reset_interrupt_mask);

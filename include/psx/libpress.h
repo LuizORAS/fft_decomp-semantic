@@ -28,6 +28,22 @@ s32 DecDCTvlc(u32* frame_data, u32* decode_buffer);
 
 /* driver internals */
 
+/* Decode output mode and transfer policy. */
+enum {
+    PSYQ_PRESS_MODE_RGB24 = 0x01,
+    PSYQ_PRESS_MODE_SET_BIT15 = 0x02,
+};
+enum { PSYQ_PRESS_SYNC_POLL_LIMIT = 1048576 };
+#define PSYQ_PRESS_DMA_BLOCK_WORDS 32U
+
+/* MDEC command, status and control fields. */
+#define PSYQ_MDEC_COMMAND_RGB16     0x08000000U
+#define PSYQ_MDEC_COMMAND_SET_BIT15 0x02000000U
+#define PSYQ_MDEC_STATUS_BUSY       0x20000000U
+#define PSYQ_MDEC_CONTROL_DMA_IN    0x40000000U
+#define PSYQ_MDEC_CONTROL_DMA_OUT   0x20000000U
+#define PSYQ_MDEC_CONTROL_RESET     0x80000000U
+
 enum { PSYQ_PRESS_VLC_DEFAULT_HALFWORDS = 0x00ffffff };
 
 /* Resume(NULL) restores this handwritten VLC context; offset0x18 is untouched. */
