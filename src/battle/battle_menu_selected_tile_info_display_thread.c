@@ -2,12 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-typedef char battle_menu_quad_page_size_must_be_0x144[sizeof(world_menu_quad_page_t) == 0x144 ? 1 : -1];
-
-/* Double-buffered 0x144-byte pages at 0x80173cbc: five quads, two sprites,
- * and two draw-mode packets for their texture windows. */
-extern world_menu_quad_page_t g_battle_menu_height_display_pages[2];
-
 /* Display thread for the selected tile: draws its quad group
  * (the selected tile's display height, built by
  * battle_menu_build_quad_pieces) every frame and, when its depth is
@@ -46,8 +40,6 @@ void battle_menu_selected_tile_info_display_thread(void) {
         &g_battle_menu_height_display_pages[1], &g_battle_menu_height_display_pages[0], sizeof(world_menu_quad_page_t));
 
     for (frame = 0;; frame++) {
-        s32* stride;
-
         page = &g_battle_menu_height_display_pages[frame & 1];
         /* The target loads the display height signed (lh). */
         i = battle_menu_build_quad_pieces(g_battle_map_selected_tile_data.display_height, page->quads) - 1;
@@ -67,11 +59,9 @@ void battle_menu_selected_tile_info_display_thread(void) {
         }
         if (g_battle_map_selected_tile_data.depth != 0) {
             battle_clear_menu_render_buffer(buffer, 0x100);
-            stride = &g_menu_text_state.pen.stride;
-            *stride = 0x18;
+            g_menu_text_state.pen.stride = 0x18;
             battle_menu_set_text_origin(0x10, 0);
-            battle_draw_menu_number_glyphs(
-                g_battle_map_selected_tile_data.depth, 1, buffer, (glyph_blit_t*)((s16*)stride - 4));
+            battle_draw_menu_number_glyphs(g_battle_map_selected_tile_data.depth, 1, buffer, &g_menu_text_state.pen);
             if (g_battle_menu_height_display_suppressed == 0) {
                 LoadImage(&rect, buffer);
                 page->sprites[0].clut = 0x7CBC;

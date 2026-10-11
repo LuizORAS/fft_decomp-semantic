@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-extern world_options_menu_page_t g_option_menu_pages[2];
-
 /*
  * Options-menu thread, the OPTION twin of world_build_options_menu (same code,
  * globals and callees rebound) without its g_world_menu_thread_result stores.

@@ -2,13 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* 0x2ec-byte pages in pairs at 0x8017225c; the first page depends on the mode. */
-extern world_unit_status_page_t g_battle_unit_status_panel_pages[];
-/* g_battle_menu_sprite_page_image_params[5..7], the unscaled templates of
- * elements 0..2; bound separately because the target addresses the two
- * arrays from different bases. */
-extern world_gfx_image_load_parameters_t g_battle_menu_sprite_page_image_param_bases[];
-
 /*
  * Unit status panel thread body (HP/MP/CT gauges, portrait, numbers and, in
  * mode 2, the reaction-ability name), the BATTLE twin of world_menu_display_hovered_unit_stats.

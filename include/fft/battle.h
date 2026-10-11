@@ -1106,17 +1106,12 @@ extern u8 g_battle_script_event_instruction_sizes[0xf4];
 extern u8 g_battle_script_variable_write_guard;
 extern s32 g_battle_event_frame_counter;
 
-/* Scenario interpreter interfaces shared by battle_script_execute_event and
- * world_script_execute_event. Signatures are as the interpreters bind them;
- * unverified names stay provisional. */
 extern map_background_gradient_colors_t g_battle_event_background_colors;
 
-/* Scenario interpreter interfaces shared by battle_script_execute_event and
- * world_script_execute_event. Signatures are as the interpreters bind them;
- * unverified names stay provisional. */
 void battle_script_advance_date_by_one_year(void);
 void battle_script_apply_input_overrides(u32* input);
 void battle_script_assign_bitset_flag(u32* bitset, s32 bit_index, s32 value);
+void battle_script_block_start_thread(void);
 void battle_script_blue_remove_unit(s32 unit_id);
 void battle_script_blue_remove_all_enemy_units(void);
 void battle_script_change_stats(const event_change_stats_parameters_t* parameters);
@@ -1133,6 +1128,7 @@ s32 battle_script_get_current_scenario_finish_operation(void);
 s32 battle_script_get_variable(s32 variable_id);
 s32 battle_script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
 void battle_script_join_units_silently(void);
+void battle_script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void battle_script_load_event(s32 id);
 
 /* The byte-stream reader at 0x80146078 preserves signed halfwords. Some
@@ -1182,9 +1178,6 @@ void battle_script_dismiss_unit_event_instruction(s32 unit_id);
 s32 battle_script_add_ghost_unit_event_instruction(
     s32 map_x, s32 map_y, s32 map_level, s16 facing, s16 spritesheet_id, s32 misc_id, s32 flags);
 
-/* Scenario interpreter interfaces shared by battle_script_execute_event and
- * world_script_execute_event. Signatures are as the interpreters bind them;
- * unverified names stay provisional. */
 void battle_script_add_unit_start_thread(void);
 s32 battle_unit_is_moving(s32 misc_id);
 void battle_script_color_screen_thread(void);
@@ -1544,8 +1537,6 @@ extern s32 g_battle_thread_task_ids[][256];
  * the use site. */
 extern native_thread_t* g_battle_threads;
 void battle_thread_wait_for_unit_view_panels(void);
-void battle_script_jump_event_instruction(const event_jump_parameters_t* parameters);
-void battle_script_block_start_thread(void);
 s32 battle_thread_call_on_main_stack();
 void battle_thread_exit_current(void);
 s32 battle_thread_find_running_by_task(s32 task_id);
@@ -5061,6 +5052,7 @@ extern s32 g_battle_unit_palette_animation_offset;
 extern s32 g_battle_unit_palette_animation_timer;
 extern u16 g_battle_unit_view_started_battle_id;
 extern u16 g_battle_unit_view_started_comparison_id;
+extern world_unit_view_thread_set_t g_battle_unit_view_thread_sets[];
 extern s32 g_battle_unit_view_mode;
 extern u16 g_battle_unit_status_bounce_step;
 extern world_gfx_image_load_parameters_t g_battle_unit_editor_sprite_image_params_a[19];
@@ -5095,6 +5087,7 @@ extern u16 g_battle_unit_pending_animation_ids[];
 extern battle_stats_t g_battle_unit_stats[BATTLE_UNIT_SLOT_COUNT];
 extern u16 g_battle_unit_status_bounce_offsets[];
 extern u8 g_battle_unit_status_first_page_by_mode[];
+extern world_unit_status_page_t g_battle_unit_status_panel_pages[];
 extern CVECTOR g_battle_unit_status_gauge_colors[];
 extern world_gfx_image_load_parameters_t g_battle_unit_status_icon_image_params[];
 extern u16 g_battle_unit_status_quad_clut_pairs[][2];
@@ -8505,6 +8498,8 @@ extern u16* g_battle_menu_window_tween_easing_tables[];
 extern u16 g_battle_menu_hovered_stats_frame_count;
 extern RECT g_battle_menu_sprite_page_texture_windows[5];
 extern world_gfx_image_load_parameters_t g_battle_menu_sprite_page_image_params[30];
+/* Entries 5..7 above; a separate alias preserves the original template base. */
+extern world_gfx_image_load_parameters_t g_battle_menu_sprite_page_image_param_bases[];
 extern RECT g_battle_menu_attack_caster_stats_display;
 extern RECT g_battle_menu_attack_target_stats_display;
 extern menu_number_entry_t g_battle_menu_attack_caster_stats_setup[8];
@@ -8541,6 +8536,7 @@ extern s16 g_battle_menu_ability_scroll_offset;
 extern s16 g_battle_menu_status_scroll_offset;
 extern s16 g_battle_menu_action_type_modes[][2];
 extern menu_window_buffer_t* g_battle_menu_buffer_slots[6];
+extern world_menu_quad_page_t g_battle_menu_height_display_pages[2];
 extern u16 g_battle_menu_height_display_suppressed;
 extern s32 g_battle_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
 extern world_gfx_image_load_parameters_t g_battle_menu_icon_strip_image_params[20];

@@ -8,9 +8,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* OPTION's pair of list pages, alternated per frame. */
-extern world_menu_list_page_t g_option_at_list_pages[2];
-
 void option_build_at_list(void) {
     world_menu_text_window_t window;
     RECT image_rect;

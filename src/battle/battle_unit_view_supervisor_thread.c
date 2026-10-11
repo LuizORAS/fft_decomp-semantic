@@ -1,17 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-typedef char battle_unit_view_thread_set_size_must_be_0x30[(sizeof(world_unit_view_thread_set_t) == 0x30) ? 1 : -1];
-
 enum {
     BATTLE_UNIT_VIEW_SLOT_IDLE = 0,
     BATTLE_UNIT_VIEW_SLOT_RESTART = 1,
     BATTLE_UNIT_VIEW_SLOT_STARTED = 2,
 };
-
-/* The 0x30-byte sets at 0x80169040 are indexed by view mode. Each slot names
- * a thread entry (or -1), scheduler slot, and required task id. */
-extern world_unit_view_thread_set_t g_battle_unit_view_thread_sets[];
 
 /*
  * Battle twin of world_unit_view_supervisor_thread; started by

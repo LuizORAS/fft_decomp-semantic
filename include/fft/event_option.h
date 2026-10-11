@@ -35,6 +35,8 @@ extern world_menu_entry_t g_option_menu_at_list_state[1];
 extern u8 g_option_menu_at_list_text[];
 extern battle_at_entry_t g_option_menu_at_list_descriptors[40];
 extern world_menu_text_layout_t g_option_menu_entry_table[1];
+extern world_options_menu_page_t g_option_menu_pages[2];
+extern world_menu_list_page_t g_option_at_list_pages[2];
 extern world_panel_frame_t g_option_menu_panel_frames[2];
 extern u8 g_option_menu_panel_pixels[];
 
