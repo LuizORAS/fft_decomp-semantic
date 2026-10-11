@@ -3,11 +3,13 @@
 
 u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_high) {
     u32 current;
+    u8 high_voices;
     if (_spu_env & SPU_ENV_EVENT_QUEUEING) {
-        current = ((_spu_RQ[reg_index_high - PSYQ_SPU_REG_KEY_ON_LOW] & 0xff) << 16)
-            | _spu_RQ[reg_index_low - PSYQ_SPU_REG_KEY_ON_LOW];
+        high_voices = _spu_RQ[reg_index_high - PSYQ_SPU_REG_KEY_ON_LOW];
+        current = (high_voices << 16) | _spu_RQ[reg_index_low - PSYQ_SPU_REG_KEY_ON_LOW];
     } else {
-        current = ((_spu_RXX->raw[reg_index_high] & 0xff) << 16) | _spu_RXX->raw[reg_index_low];
+        high_voices = _spu_RXX->raw[reg_index_high];
+        current = (high_voices << 16) | _spu_RXX->raw[reg_index_low];
     }
     switch (on_off) {
     case SPU_ON:
