@@ -22,23 +22,12 @@
  * own locals keeps the target's x + byte operand order and v0/v1 allocation.
  */
 
-/* One sprite part: its first word also carries the texture/palette flag bits
- * read as sprite[t]; the part list is walked two words at a time. */
-typedef struct open_gfx_sprite_part {
-    /* 0x00 */ u8 x_offset;    /* biased by 0x80 */
-    /* 0x01 */ u8 y_offset;    /* biased by 0x80 */
-    /* 0x02 */ u16 attributes; /* texture page, semi-transparency and palette bits */
-    /* 0x04 */ u8 h;
-    /* 0x05 */ u8 w;
-    /* 0x06 */ u8 v;
-    /* 0x07 */ u8 u;
-} open_gfx_sprite_part_t;
-
-#define PART(index) ((open_gfx_sprite_part_t*)&sprite[index])
+#define PART(index) ((world_sprite_part_t*)&sprite[index])
 
 void open_gfx_draw_animated_render_record(world_animated_render_record_t* actor, u32* ot) {
-    u32** sprites;
+    world_sprite_cel_header_t** sprites;
     wldcore_anim_sequence_t* anim;
+    world_sprite_cel_header_t* cel;
     u32* sprite;
     s32 value;
     s32 i;
@@ -68,12 +57,14 @@ loop:
     }
 
     value = (anim->frames + actor->frame_index)->cel;
-    sprite = sprites[value];
-    tpage_x = sprite[1] & 0xffff;
-    tpage_y = (sprite[1] & 0xffff0000) >> 16;
-    part_count = sprite[0];
-    clut_x = sprite[2] & 0xffff;
-    clut_y = (sprite[2] & 0xffff0000) >> 16;
+    cel = sprites[value];
+    /* Preserve the reverse word cursor; a part array changes address computation. */
+    sprite = (u32*)cel;
+    tpage_x = cel->packed_texture_page_origin & 0xffff;
+    tpage_y = (cel->packed_texture_page_origin & 0xffff0000) >> 16;
+    part_count = cel->part_count;
+    clut_x = cel->packed_clut_origin & 0xffff;
+    clut_y = (cel->packed_clut_origin & 0xffff0000) >> 16;
 
     for (i = 0; i < part_count; i++) {
         if (g_open_gfx_primitive_count >= 0x20) {
@@ -101,9 +92,9 @@ loop:
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.v0
             = PART(value)->v;
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.w
-            = PART(value)->w;
+            = PART(value)->width;
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.h
-            = PART(value)->h;
+            = PART(value)->height;
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.clut
             = GetClut(clut_x
                     + ((actor->palette == 0 || (sprite[value] & 0x08000000)) ? ((sprite[value] >> 12) & 0xf0)

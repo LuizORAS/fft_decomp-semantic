@@ -4,12 +4,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* One sprite part of a cel, two packed words. */
-typedef struct wldcore_sprite_part {
-    u32 flags;
-    u32 texture;
-} wldcore_sprite_part_t;
-
 /* Draw one animated display object: advance its sequence, then convert every
  * part of the current cel into a libgs sprite primitive and sort it into the
  * ordering table.
@@ -21,7 +15,7 @@ typedef struct wldcore_sprite_part {
  *
  * The parts are walked back to front as raw word indices: the target spells the
  * subscript ((frame_count - i) * 2) | 1 into the cel's word array, which is the
- * part's second word, and reaches the part itself from there. Indexing a part
+ * part's first word, and reaches the part itself from there. Indexing a part
  * array of records instead produces a different address computation, so
  * the word index is retained.
  *
@@ -36,17 +30,18 @@ void wldcore_gfx_draw_animated_display_object(world_animated_render_record_t* ob
     GsSPRITE sprite;
     CVECTOR color;
     wldcore_anim_sequence_t* sequence;
-    wldcore_sprite_part_t* part;
-    u32** cels;
+    world_sprite_part_t* part;
+    world_sprite_cel_header_t** cels;
+    world_sprite_cel_header_t* cel;
     u32* words;
     s32 count;
     s32 i;
     s32 index;
     s32 mode;
+    s32 tpage_x;
+    s32 tpage_y;
     s32 clut_x;
     s32 clut_y;
-    s32 cx_base;
-    s32 cy;
     s32 palette;
     s32 px;
 
@@ -83,12 +78,14 @@ step_frame:
         goto step_frame;
     }
     index = (sequence->frames + object->frame_index)->cel;
-    words = cels[index];
-    clut_x = words[1] & 0xffff;
-    clut_y = (words[1] & 0xffff0000) >> 16;
-    cx_base = words[2] & 0xffff;
-    count = words[0];
-    cy = (words[2] & 0xffff0000) >> 16;
+    cel = cels[index];
+    /* Preserve the reverse word cursor; a part array changes address computation. */
+    words = (u32*)cel;
+    tpage_x = cel->packed_texture_page_origin & 0xffff;
+    tpage_y = (cel->packed_texture_page_origin & 0xffff0000) >> 16;
+    clut_x = cel->packed_clut_origin & 0xffff;
+    count = cel->part_count;
+    clut_y = (cel->packed_clut_origin & 0xffff0000) >> 16;
     for (i = 0; i < count; i++) {
         index = ((count - i) * 2) | 1;
         sprite.attribute = words[index] & 0x80000000;
@@ -100,24 +97,26 @@ step_frame:
             sprite.attribute |= words[index] & 0x70000000;
             mode = (words[index] >> 28) & 3;
         }
-        part = (wldcore_sprite_part_t*)(index * 4 + (s32)words);
-        sprite.attribute |= (part->flags & 0x07000000) >> 2;
-        px = (u8)part->flags - 0x80;
+        /* Pointer indexing reverses this address-add instruction's operands. */
+        part = (world_sprite_part_t*)(index * 4 + (s32)words);
+        /* These packed word reads must stay word-wide; named byte fields shorten the code. */
+        sprite.attribute |= (words[index] & 0x07000000) >> 2;
+        px = part->x_offset - 0x80;
         sprite.x = object->position.x + px;
-        px = (u8)(part->flags >> 8) - 0x80;
+        px = part->y_offset - 0x80;
         sprite.y = object->position.y + px;
-        sprite.w = (u8)(part->texture >> 8);
-        sprite.h = (u8)part->texture;
-        sprite.tpage = GetTPage(0, mode, clut_x, clut_y);
-        sprite.u = (u8)(part->texture >> 24);
-        sprite.v = (part->texture & 0xff0000) >> 16;
+        sprite.w = part->width;
+        sprite.h = part->height;
+        sprite.tpage = GetTPage(0, mode, tpage_x, tpage_y);
+        sprite.u = part->u;
+        sprite.v = (words[index + 1] & 0xff0000) >> 16;
         palette = object->palette;
-        if (palette == 0 || (part->flags & 0x08000000)) {
-            sprite.cx = (cx_base + (part->flags & 0xff0000)) >> 12;
+        if (palette == 0 || (words[index] & 0x08000000)) {
+            sprite.cx = (clut_x + (words[index] & 0xff0000)) >> 12;
         } else {
-            sprite.cx = cx_base + ((palette - 1) << 4);
+            sprite.cx = clut_x + ((palette - 1) << 4);
         }
-        sprite.cy = cy;
+        sprite.cy = clut_y;
         if (sprite.attribute & 0x800000) {
             sprite.u = sprite.u + 1;
         }

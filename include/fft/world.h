@@ -759,6 +759,33 @@ typedef struct wldcore_anim_sequence {
     wldcore_anim_frame_t frames[1]; /* 0x04 */
 } wldcore_anim_sequence_t;
 
+/* Serialized cel header, followed by part_count eight-byte sprite parts.
+ * Origins pack the x coordinate in the low half and y in the high half. */
+typedef struct world_sprite_cel_header {
+    u32 part_count;
+    u32 packed_texture_page_origin;
+    u32 packed_clut_origin;
+} world_sprite_cel_header_t;
+typedef char world_sprite_cel_header_size_must_be_0xc[sizeof(world_sprite_cel_header_t) == 0xc ? 1 : -1];
+
+/* One serialized cel part. Offsets are biased by 0x80; texture_flags
+ * selects vertical/horizontal UV flips and eight-bit texture depth. */
+typedef struct world_sprite_part {
+    u32 x_offset : 8;
+    u32 y_offset : 8;
+    u32 palette_index : 8;
+    u32 texture_flags : 3;
+    u32 use_part_palette : 1;
+    u32 blend_rate : 2;
+    u32 semi_transparent : 1;
+    u32 hidden : 1;
+    u8 height;
+    u8 width;
+    u8 v;
+    u8 u;
+} world_sprite_part_t;
+typedef char world_sprite_part_size_must_be_8[sizeof(world_sprite_part_t) == 8 ? 1 : -1];
+
 /* Animated display objects used by WLDCORE and OPEN. sequence selects a row
  * of the module's animation table; a zero palette keeps each sprite part's CLUT. */
 typedef struct world_animated_render_record {
