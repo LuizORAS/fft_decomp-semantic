@@ -36,7 +36,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
         if (g_main_unit_deployed_coords[i].party_id != PARTY_ID_NONE) {
             unit->entd_slot = battle_id;
             unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
-            if (main_unit_init_job_data(unit, g_main_unit_deployed_coords[i].party_id, 0) != 0) {
+            if (main_unit_init_from_party_slot(unit, g_main_unit_deployed_coords[i].party_id, 0) != 0) {
                 main_system_handle_battle_load_exception(battle_id + 0x1f4);
             } else if (battle_unit_set_placement_and_validate(battle_id, &g_main_unit_deployed_coords[i]) != 0) {
                 main_system_handle_battle_load_exception(battle_id + 0x190);

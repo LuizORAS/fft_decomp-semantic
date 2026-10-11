@@ -2,16 +2,15 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Load a battle unit's job-derived fields from its job record: skillsets, innate
- * abilities, equippable types, growths and multipliers, Move, Jump, the innate,
- * immunity and starting status sets, elemental affinities and graphics ids.
+/* Load a battle unit's job-derived fields from its job record: primary skillset, innate abilities,
+ * equippable types, growths and multipliers, Move, Jump, the innate, immunity and starting status
+ * sets, elemental affinities and graphics ids.
  *
- * base_job_skillset is the skillset of the job whose id equals a special
- * character's identity, and 0 for a generic unit. The job's stepping-stone bit
- * moves from the Jump byte to the unit's position byte. An immortal unit that
- * also has a save- or load-formation flag gains the immunity check sets 5 and 6;
- * the tests inside that loop repeat the outer condition. The strengthened
- * elements are cleared. */
+ * base_job_skillset is the skillset of the job whose id equals a special character's identity, and 0
+ * for a generic unit. The job's stepping-stone bit moves from the Jump byte to the unit's position
+ * byte. An immortal unit that also has a save- or load-formation flag gains the immortal and the
+ * formation immunity check sets; the tests inside that loop repeat the outer condition. The
+ * strengthened elements are cleared. */
 void main_unit_copy_job_data(battle_stats_t* unit) {
     job_data_t* job;
     s32 i;

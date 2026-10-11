@@ -1,9 +1,7 @@
 #include "fft/main.h"
 
-/* Mark an R/S/M ability active and select reaction abilities.
- *
- * IDs 0x1a6..0x1fd map contiguously into the unit's MSB-first active flags.
- * A reaction ID also becomes the unit's currently equipped reaction ability. */
+/* Set the active bit of an R/S/M ability (ids 0x1a6-0x1fd map MSB first from reaction_abilities); a
+ * reaction also becomes the unit's reaction_ability. */
 void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id) {
     u16 index;
     u16 original_ability_id;

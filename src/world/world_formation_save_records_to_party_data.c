@@ -71,7 +71,7 @@ void world_formation_save_records_to_party_data(void) {
             bcopy(g_world_formation_unit_pointers[i]->total_job_points, party->total_job_points,
                 sizeof(party->total_job_points));
         }
-        main_unit_init_job_data(&unit, slot, 1);
+        main_unit_init_from_party_slot(&unit, slot, 1);
         world_formation_build_unit_record(&unit, g_world_formation_unit_pointers[i], party);
     }
 }

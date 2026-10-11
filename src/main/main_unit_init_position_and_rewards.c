@@ -1,5 +1,7 @@
 #include "fft/main.h"
 
+/* Place a unit as its ENTD record says (x, y, layer, facing and the spell-quote skillset bits) and
+ * take the record's war trophy and bonus money modifier. */
 void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd) {
     unit->x = entd->x;
     unit->position.bits.y = entd->position.bits.y;

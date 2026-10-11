@@ -24,7 +24,7 @@ void battle_unit_transform_into_morbol(battle_stats_t* unit) {
     higher_elevation = unit->position.bits.higher_elevation;
     facing = unit->position.bits.facing;
     unit->formation_index = BATTLE_FORMATION_INDEX_GENERATED_UNIT;
-    main_unit_init_for_battle(unit, 0, 0, 0x82);
+    main_unit_init_from_entd(unit, 0, 0, JOB_ID_MORBOL);
     unit->x = x;
     unit->position.bits.y = y;
     unit->formation_index = formation_index;

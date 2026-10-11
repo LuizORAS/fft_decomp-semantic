@@ -1,17 +1,19 @@
 #include "fft/main.h"
 
-/*
- * Fills an in-battle unit record from its persistent party record.
- */
-void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party) {
+/* Copy a party record into a battle unit: identity, party slot, job, sex flags, birthday and zodiac,
+ * secondary skillset, R/S/M abilities, equipment, EXP, level, Brave and Faith (with their originals),
+ * raw stats, unlocked jobs, learned abilities, job levels, JP and the name. The unit joins the
+ * player's team, controlled, Ramza at the top importance; a roster unit takes palette 0 and a guest
+ * its own. The ENTD AI bytes are cleared. */
+void main_unit_copy_party_record(battle_stats_t* unit, const party_data_t* party) {
     s32 team;
     s32 i;
     s32 value;
     battle_unit_birthday_t* birthday;
 
-    team = 8;
+    team = BATTLE_TEAM_BLUE | BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
     if (party->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
-        team = 0xb;
+        team = BATTLE_TEAM_BLUE | BATTLE_TEAM_FLAG_PLAYER_CONTROLLED | BATTLE_TEAM_IMPORTANCE_MASK;
     }
     unit->team_flags = team;
     unit->initial_team_flags = team;

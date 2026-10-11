@@ -1,8 +1,15 @@
 #include "fft/battle.h"
 #include "fft/main.h"
 
-/* Initialize packed job levels, unlocked jobs, and ENTD skillset overrides. */
-
+/* Set a unit's job levels, unlocked jobs, job and skillsets from its ENTD record and load the job's
+ * data (main_unit_copy_job_data). A human whose record names a career job (job_unlock below 20) gets
+ * that job's unlock requirements as job levels, job_level as the job's own level, and at least level 1
+ * in every job but the one its sex cannot take (Bard, Dancer); any other unit unlocks no job. A
+ * primary skillset in the record (not 0 or 0xff) replaces the job's and sets ability_outcome to 0xff,
+ * which the turn clock clears before the first turn. The secondary skillset is the record's, or for
+ * ENTD_VALUE_RANDOM the skillset of a random unlocked job (none for a monster, or when it is the
+ * primary). With no ENTD record (the Morbol transformation) the unit becomes a monster of its current
+ * job with no secondary skillset. */
 void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, const entd_unit_t* entd) {
     s32 i;
     u32 unlocked;

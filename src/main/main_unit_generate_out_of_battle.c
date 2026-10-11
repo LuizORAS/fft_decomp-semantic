@@ -2,14 +2,14 @@
 #include "fft/world.h"
 #include "psx/libc.h"
 
-/* Fills a fresh party record for a generic male (0), generic female (1),
- * monster (3) or Ramza (anything else, forced to 2).
+/* Fill a fresh party record for a generic male (0), generic female (1), monster (3) or Ramza
+ * (anything else, forced to 2).
  *
- * The birthday is a random day 1..365. Brave and Faith are each rolled in
- * 40..70; Ramza gets 70 and 70. The unit starts at level 1 with 0 EXP, and a
- * human gets 100..199 JP and job level 1 in every job but the one its sex
- * cannot take (Bard, Dancer). The name is drawn until no party member of the
- * same kind has it. */
+ * The birthday is a random day 1..365. Brave and Faith are each rolled in 40..70; Ramza gets 70 and
+ * 70. The unit starts as a Squire (Ramza in his Chapter 1 Squire job) at level 1 with 0 EXP, the
+ * generation table's equipment and its base job unlocked; a human gets 100..199 JP and job level 1 in
+ * every job but the one its sex cannot take (Bard, Dancer), and Ramza knows Wish. The name is drawn
+ * until no party member of the same kind has it. */
 void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     s32 name_flags;
     u32 name_modifier;

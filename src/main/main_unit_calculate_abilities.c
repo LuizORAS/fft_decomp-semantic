@@ -2,13 +2,16 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Fills a unit's ability data from its ENTD entry: primary skillset, random
- * JP and learned abilities for each generic job (humans only), the job's
- * innate abilities and equipment categories, and the R/S/M abilities.
+/* Fill a unit's abilities from its ENTD record: the primary skillset (the record's, or else the
+ * job's); for a human, JP in every job (current and total alike) and the abilities
+ * main_unit_learn_job_abilities buys with it, with every ability of the base job's row learned when
+ * the record names a primary skillset; the job's innate abilities and equippable types; and the
+ * reaction, support and movement abilities (main_unit_calculate_rsm). A male gets no Dancer JP and a
+ * female no Bard JP, and Mime gets JP but learns nothing. With no ENTD record (the Morbol
+ * transformation) it only clears the three R/S/M abilities.
  *
- * Random JP for a job level: g_main_job_jp_requirements_by_level[level] (the
- * JP needed to reach it; 0x80066182, entry 0 is 0) plus rand(0..99), or
- * 100 + rand(0..99) for level 0. */
+ * Random JP for a job level: g_main_job_jp_requirements_by_level[level] (the JP needed to reach it;
+ * 0x80066182, entry 0 is 0) plus rand(0..99), or 100 + rand(0..99) for level 0. */
 void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
     u8 job_id = unit->job_id;
     u8 gender = unit->unit_flags;

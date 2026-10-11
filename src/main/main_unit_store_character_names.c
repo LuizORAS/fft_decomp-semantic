@@ -7,9 +7,11 @@ enum {
     NAME_GENDER_MASK = UNIT_FLAG_MALE | UNIT_FLAG_FEMALE | UNIT_FLAG_MONSTER,
 };
 
-/* Copies the unit's name, job name and skillset names into its battle
- * record.  Units without a party slot get a random unused generic name for
- * their gender. */
+/* Copy a unit's name, job name and primary and secondary skillset names into its record, from
+ * BATTLE's or WORLD's text (g_main_unit_name_uses_world_text). A unit with a party slot takes its
+ * party name; another its ENTD name, or for name id 0xff a random generic name of its kind that no
+ * roster member or battle unit of that kind has. It also clears the action's status infliction and
+ * removal sets. */
 void main_unit_store_character_names(battle_stats_t* unit) {
     u8 unused[0x100];
     u8* (*prepare_text)(u32 text_id);

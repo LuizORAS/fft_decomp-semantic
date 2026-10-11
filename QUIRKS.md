@@ -868,6 +868,10 @@ translation unit. Share their types and constants through headers.
 - `main_unit_copy_job_data` adds the immortal and formation immunity sets
   only to a unit that is both immortal and flagged save- or load-formation;
   the per-flag tests inside the loop are then always true.
+  In the retail ENTD files 46 units are both. The other 119 immortal units
+  resist, beyond their job's immunities, only the formation set, which
+  `battle_status_modify_inflictions` applies to every immortal target, so
+  they can still be Confused, put to Sleep or given Don't Act.
 - `battle_formula_apply_status_to_action`: the
   `BATTLE_ACTION_STATE_PREVIEW` test in the separate-status loop cannot pass;
   any state but EXECUTE was switched to all-or-nothing above it.

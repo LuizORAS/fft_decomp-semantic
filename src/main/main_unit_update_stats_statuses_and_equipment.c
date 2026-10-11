@@ -2,11 +2,14 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Re-derives the job-dependent stats (move/jump, equippable categories,
- * innate/immune/starting statuses, elemental affinity, R/S/M flags and
- * equipment bonuses), then reconciles the status bits.  `skip_status_check`
- * leaves the critical/status notifications alone; `initializing` seeds the
- * inflicted statuses from the current ones and clears their CTs. */
+/* Derive a unit's job and equipment data again, keeping its inflicted statuses: Move and Jump, the
+ * equippable types, the job's innate, immunity and starting status sets, elemental affinities
+ * (Strengthen cleared), R/S/M flags, equipment stats and bonuses (base Speed, PA and MA kept), then
+ * the current statuses. Unless skip_status_check is set, Critical follows HP (on at max HP / 5 or
+ * less) and each status that changed queues its graphics change
+ * (battle_status_queue_graphics_change_if_executing). With initializing the starting statuses (job
+ * and equipment) become the inflicted ones, every status counts as changed, and each one present gets
+ * CT 0. */
 void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing) {
     u8 saved_inflicted[BATTLE_STATUS_BYTE_COUNT];
     u8 saved_current[BATTLE_STATUS_BYTE_COUNT];

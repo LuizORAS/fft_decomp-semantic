@@ -20,7 +20,7 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
     u16 maximum_mp;
     battle_unit_status_record_t* gauges;
 
-    main_unit_init_job_data(&g_require_editor_party_unit_stats, party_index, 0);
+    main_unit_init_from_party_slot(&g_require_editor_party_unit_stats, party_index, 0);
     editor = g_require_editor_unit_fields.halfwords;
     unit = &g_require_editor_party_unit_stats;
     gauges = &g_require_panel_selected_billboard;

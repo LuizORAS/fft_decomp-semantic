@@ -49,7 +49,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
 
         unit->entd_slot = battle_id;
         unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
-        status = main_unit_init_for_battle(unit, g_main_entd_current_unit, 0, 0);
+        status = main_unit_init_from_entd(unit, g_main_entd_current_unit, 0, 0);
         if (status != 0) {
             main_system_handle_battle_load_exception(battle_id + 600);
         }

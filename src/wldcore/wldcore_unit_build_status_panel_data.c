@@ -17,7 +17,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     u16 maximum_hp;
     u16 maximum_mp;
 
-    if (main_unit_init_job_data(&g_wldcore_status_unit, party_index, 1) == -1) {
+    if (main_unit_init_from_party_slot(&g_wldcore_status_unit, party_index, 1) == -1) {
         return;
     }
     unit = &g_wldcore_status_unit;

@@ -760,7 +760,7 @@ functions:
   - {addr: 0x80059ac0, size: 8, name: main_noop_80059ac0, hash: 6d64edf91449c1b1}
   - {addr: 0x80059ac8, size: 40, name: main_party_clear_all, hash: a26cc5df81715e07}
   - {addr: 0x80059af0, size: 40, name: main_party_get_data_pointer, hash: 1d19410c46f4c04e}
-  - {addr: 0x80059b18, size: 152, name: main_unit_init, hash: 1462a0da6719f387}
+  - {addr: 0x80059b18, size: 152, name: main_unit_save_entd_unit_to_party, hash: 1462a0da6719f387}
   - {addr: 0x80059bb0, size: 428, name: main_party_save_unit, hash: 3462bca0bc65c7dd}
   - {addr: 0x80059d5c, size: 188, name: main_party_find_free_slot, hash: c3e5d4aff4ee2bd5}
   - {addr: 0x80059e18, size: 188, name: main_party_create_monster_egg, hash: cb42f8827ff55f42}
@@ -777,13 +777,13 @@ functions:
   - {addr: 0x8005a72c, size: 344, name: main_ability_calculate_pointers_and_type, hash: efb4851817eeef88}
   - {addr: 0x8005a884, size: 32, name: main_item_get_data_pointer, hash: bf988aefe1ea3d13}
   - {addr: 0x8005a8a4, size: 48, name: main_job_get_data_pointer, hash: 510f01261d300e5f}
-  - {addr: 0x8005a8d4, size: 224, name: main_unit_init_job_data, hash: ae487841a96c8018}
-  - {addr: 0x8005a9b4, size: 332, name: main_unit_init_for_battle, hash: cf0a846da8422d88}
+  - {addr: 0x8005a8d4, size: 224, name: main_unit_init_from_party_slot, hash: ae487841a96c8018}
+  - {addr: 0x8005a9b4, size: 332, name: main_unit_init_from_entd, hash: cf0a846da8422d88}
   - {addr: 0x8005ab00, size: 72, name: main_unit_apply_equipment_move_jump_and_name, hash: 8c7f887045198aea}
   - {addr: 0x8005ab48, size: 212, name: main_unit_store_ramza_name_birthday_zodiac, hash: bcd6fe831cbd8c6e}
   - {addr: 0x8005ac1c, size: 1052, name: main_unit_calculate_entd_data, hash: 3d79228140d99399}
-  - {addr: 0x8005b038, size: 152, name: main_unit_init_job_data_from_entd, hash: eea8ec3957bb934a}
-  - {addr: 0x8005b0d0, size: 484, name: main_unit_init_battle_data, hash: 557d774ff311c66c}
+  - {addr: 0x8005b038, size: 152, name: main_unit_init_from_entd_party_member, hash: eea8ec3957bb934a}
+  - {addr: 0x8005b0d0, size: 484, name: main_unit_copy_party_record, hash: 557d774ff311c66c}
   - {addr: 0x8005b2b4, size: 588, name: main_unit_calculate_jobs_and_skillsets_from_entd, hash: 82aa3022b3183bb2}
   - {addr: 0x8005b500, size: 220, name: main_job_get_random_unlocked, hash: b6d4c187979987c2}
   - {addr: 0x8005b5dc, size: 452, name: main_unit_copy_job_data, hash: 1bcef74070bd921e}

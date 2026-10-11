@@ -22,7 +22,7 @@ s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list
     count = 0;
     id = item_id & WORLD_ITEM_ID_MASK;
     for (; slot < PARTY_ROSTER_SLOT_COUNT; slot++) {
-        if (main_unit_init_job_data(&unit, slot, 1) != 0) {
+        if (main_unit_init_from_party_slot(&unit, slot, 1) != 0) {
             continue;
         }
         world_formation_build_unit_record(

@@ -509,6 +509,10 @@ void main_save_init_state_and_options(void);
 void save_unit_to_party(battle_stats_t* unit, u32 save_formation);
 
 /* unit */
+/* Battle unit records (battle_stats_t) built from an ENTD record or a party record: identity, jobs,
+ * learned abilities, raw stats and their growth, equipment and its bonuses, R/S/M flags and names;
+ * also a new recruit's party record and the casualty count. */
+
 /* Selects rows in the base-data (0x8005e90c) and variance (0x8005e93c)
  * tables; these are not job IDs or gender bit flags. */
 typedef enum main_unit_generation_type {
@@ -549,7 +553,6 @@ extern u8 g_main_party_highest_level;
 extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
 extern main_unit_generation_raw_stat_variance_t g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT];
 extern u32 g_main_unit_name_uses_world_text;
-void main_unit_update_formation_stats(battle_stats_t* unit);
 
 void main_unit_apply_equipment_move_jump_and_name(battle_stats_t* unit);
 void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down);
@@ -558,18 +561,17 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode);
 s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd);
 void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd);
 void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, const entd_unit_t* entd);
-void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_position);
+void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_hp_mp);
 u8 main_unit_calculate_palette_spritesheet(battle_stats_t* unit, u8* palette);
-
 s32 main_unit_calculate_random_equipment(
     battle_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type);
-
 u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd);
 s32 main_unit_calculate_zodiac_symbol(u16 birthday);
 s32 main_unit_check_level_up(battle_stats_t* unit);
 void main_unit_copy_job_data(battle_stats_t* unit);
 void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);
 void main_unit_copy_last_ability_ct(battle_stats_t* unit);
+void main_unit_copy_party_record(battle_stats_t* unit, const party_data_t* party_unit);
 void main_unit_enable_rsm_flags(battle_stats_t* unit);
 void main_unit_generate_base_raw_stats(u8* raw_stats, s32 unit_type);
 void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type);
@@ -577,30 +579,26 @@ void main_unit_generate_party_base_raw_stats(party_data_t* party, s32 unit_type)
 void main_unit_generate_raw_stats(battle_stats_t* unit);
 u8 main_unit_get_spritesheet_palette(battle_stats_t* unit, u8* palette);
 s32 main_unit_has_status_in_set(const battle_stats_t* unit, main_status_check_set_e status_set);
-s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initialize_for_battle);
-void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party_unit);
-s32 main_unit_init_for_battle(battle_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 kind);
-s32 main_unit_init_job_data(battle_stats_t* unit, s32 slot, s32 use_world_text);
-s32 main_unit_init_job_data_from_entd(battle_stats_t* unit, entd_unit_t* entd);
+void main_unit_increase_casualty_counters(battle_stats_t* unit);
+s32 main_unit_init_from_entd(battle_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 transform_job);
+s32 main_unit_init_from_entd_party_member(battle_stats_t* unit, entd_unit_t* entd);
+s32 main_unit_init_from_party_slot(battle_stats_t* unit, s32 slot, s32 use_world_text);
 void main_unit_init_job_levels(u16* unit_job_jp, u8* unit_job_levels);
+void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd);
 void main_unit_init_status_and_rewards(battle_stats_t* unit, s32 clear_rewards);
 void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_unit_t* entd);
 void main_unit_refresh_stats_and_statuses(battle_stats_t* unit);
 void main_unit_reset_battle_state(battle_stats_t* unit);
-void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check);
-
-/* SCUS_942.21 unit equipment/name pipeline, 0x8005ab00 and
- * 0x8005c398..0x8005cbd0. Signatures are shared with the matching definitions. */
+s32 main_unit_save_entd_unit_to_party(entd_encounter_t* entd, s32 unit_id, s32 allow_guest, s32 use_world_text);
+void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 reset_base_attributes);
 void main_unit_set_equipment_stats(battle_stats_t* unit);
 void main_unit_set_equippable_items(battle_stats_t* unit);
 void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id);
 void main_unit_store_character_names(battle_stats_t* unit);
 void main_unit_store_monster_equipment(battle_stats_t* unit, const entd_unit_t* entd);
 void main_unit_store_ramza_name_birthday_zodiac(battle_stats_t* unit);
+void main_unit_update_formation_stats(battle_stats_t* unit);
 void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing);
-
-void main_unit_increase_casualty_counters(battle_stats_t* unit);
-void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd);
 
 /* party */
 extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];

@@ -2,17 +2,21 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Initialize the ENTD-controlled portion of a runtime unit.
+/* Fill a unit's identity from its ENTD record: palette, team and the AI bytes; then, unless the
+ * record loads a party member, the unit flags, level, birthday and zodiac sign (Serpentarius for the
+ * Serpentarius job), Brave, Faith, EXP and name id. A load-formation record, and a Ramza record
+ * (identity below CHARACTER_IDENTITY_RAMZA_END) with no birthday, take the party member instead
+ * (main_unit_init_from_entd_party_member) and return its result: 0, or -1 when the roster has none.
+ * For Ramza the roster record first takes this record's identity, the identity's job while he is in
+ * his Chapter 1 or 2-3 Squire job, and the identity's skillset as secondary if it held one of
+ * Ramza's three. Returns 0 otherwise.
  *
- * Formation-loading entries reuse their persistent party unit; other entries
- * derive identity, level, birthday, position, rewards, and AI fields from the
- * encounter definition. The AI-byte copy intentionally uses the global current
- * ENTD pointer, matching the target even if it differs from entd.
+ * The AI-byte copy intentionally uses the global current ENTD pointer, matching the target even if it
+ * differs from entd.
  *
- * Level 0 or 0xfe is random in [L - L / 8, L] for the highest party level L,
- * and 100 or more means L + (level - 100); the result is kept within 1..99. A
- * birthday whose month is outside 1..12 or day outside 1..31 becomes a random
- * day of the year. Brave and Faith above 100 are rolled in 45..74, and
+ * Level 0 or 0xfe is random in [L - L / 8, L] for the highest party level L, and 100 or more means
+ * L + (level - 100); the result is kept within 1..99. A birthday whose month is outside 1..12 or day
+ * outside 1..31 becomes a random day of the year. Brave and Faith above 100 are rolled in 45..74, and
  * experience of 100 or more in 0..99. */
 s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     const job_data_t* ramza_jobs;
@@ -43,7 +47,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
 
     value = entd->unit_flags;
     if (value & UNIT_FLAG_LOAD_FORMATION) {
-        party_slot = main_unit_init_job_data_from_entd(unit, entd);
+        party_slot = main_unit_init_from_entd_party_member(unit, entd);
     } else if (entd->sprite_set < CHARACTER_IDENTITY_RAMZA_END && entd->birthday[0] == 0) {
         for (party_index = 0, ramza_jobs = &g_main_job_data[1]; party_index < 20; party_index++) {
             party_unit = main_party_get_data_pointer(party_index);
@@ -63,7 +67,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
                 || skillset == ramza_jobs[2].skillset) {
                 party_unit->secondary_skillset = g_main_job_data[entd->sprite_set].skillset;
             }
-            party_slot = main_unit_init_job_data_from_entd(unit, entd);
+            party_slot = main_unit_init_from_entd_party_member(unit, entd);
             value = UNIT_FLAG_LOAD_FORMATION;
         }
     }

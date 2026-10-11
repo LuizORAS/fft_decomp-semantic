@@ -5,9 +5,12 @@
 #define RSM_CANDIDATE_COUNT     480
 #define RSM_SKILLSET_SLOT_FIRST 0x10
 
-/* Picks a random reaction/support/movement ability (selected by `flags` from
- * rsm_ability_filter_e) from the abilities the unit has learned
- * across its unlocked jobs, or returns `ability_id` when it is not random. */
+/* Resolve an ENTD reaction, support or movement ability: an id below ABILITY_ID_RANDOM_FIRST is kept,
+ * and a monster gets 0. Otherwise one is drawn from the R/S/M slots, of the kinds `flags` selects
+ * (rsm_ability_filter_e), that the unit has learned in each career job, leaving out Sunken State and
+ * the unit's innate abilities; 0 when there is none. Row 0 uses a special character's own job, or the
+ * ENTD primary skillset when the record names one, and every R/S/M slot of the secondary skillset
+ * counts, learned or not, when no job supplied it. */
 u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd) {
     u16 candidates[RSM_CANDIDATE_COUNT];
     u16 innate[4];

@@ -21,7 +21,7 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
         g_world_formation_unit_banner_enabled = 0;
         g_world_shop_party_unit_count = 0;
         do {
-            result = main_unit_init_job_data(&unit, i, 1);
+            result = main_unit_init_from_party_slot(&unit, i, 1);
             i++;
             if (result == 0 && unit.formation_index < PARTY_GUEST_SLOT_FIRST) {
                 g_world_shop_party_unit_count++;

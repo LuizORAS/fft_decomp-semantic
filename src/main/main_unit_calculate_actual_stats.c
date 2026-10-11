@@ -17,7 +17,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
     s32 i;
     s32 j;
     u8 level;
-    s32 brave_flag;
+    s32 keep_base_attributes;
     s32 divisor;
     s32 is_low;
     u8* mult;
@@ -25,7 +25,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
 
     cap = 100;
     max = 999;
-    brave_flag = mode & 1;
+    keep_base_attributes = mode & 1;
     if (unit->unit_flags & UNIT_FLAG_EGG) {
         cap = 10;
         max = 0xffff;
@@ -85,17 +85,17 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
             }
             break;
         case UNIT_RAW_STAT_SPEED:
-            if (brave_flag == 0) {
+            if (keep_base_attributes == 0) {
                 unit->base_attributes[UNIT_ATTRIBUTE_SPEED] = value;
             }
             break;
         case UNIT_RAW_STAT_PHYSICAL_ATTACK:
-            if (brave_flag == 0) {
+            if (keep_base_attributes == 0) {
                 unit->base_attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK] = value;
             }
             break;
         case UNIT_RAW_STAT_MAGIC_ATTACK:
-            if (brave_flag == 0) {
+            if (keep_base_attributes == 0) {
                 unit->base_attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK] = value;
             }
             break;

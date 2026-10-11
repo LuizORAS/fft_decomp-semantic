@@ -20,7 +20,7 @@ void world_formation_recalculate_selected_unit_stats(void) {
 
     g_world_formation_selected_unit_index_latch = g_world_formation_selected_unit_index;
     roster_slot = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
-    main_unit_init_job_data(&unit, roster_slot, 1);
+    main_unit_init_from_party_slot(&unit, roster_slot, 1);
     for (i = 0; i < 7; i++) {
         unit.equipment[i] = ITEM_ID_NONE;
     }

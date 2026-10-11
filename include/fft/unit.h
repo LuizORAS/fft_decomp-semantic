@@ -390,7 +390,7 @@ typedef enum unit_equipment_slot {
 /* job */
 /* Serialized unit-career layout shared by party records and battle stats.
  * main_unit_generate_out_of_battle (0x80059ffc) clears the 0x96-byte span,
- * while main_job_add_proposition_jp and main_unit_init_battle_data establish
+ * while main_job_add_proposition_jp and main_unit_copy_party_record establish
  * the little-endian byte order of each serialized JP value. Each packed level
  * byte stores the even career index in its high nibble and the following odd
  * index in its low nibble. */
@@ -860,20 +860,20 @@ typedef enum entd_equipment_slot {
 } entd_equipment_slot_e;
 
 typedef struct entd_unit {
-    u8 sprite_set;                           /* 0x00 */
-    u8 unit_flags;                           /* 0x01; unit_flags_e */
-    u8 name_id;                              /* 0x02 */
-    u8 level;                                /* 0x03; 0 or 0xfe: L - rnd(0..L/8); 100 + n: L + n; L: top party level */
-    u8 birthday[2];                          /* 0x04; month, day (read bytewise); out of range: a random day */
-    u8 bravery;                              /* 0x06; above 100: random 45..74 */
-    u8 faith;                                /* 0x07; above 100: random 45..74 */
-    u8 job_unlock;                           /* 0x08 */
-    u8 job_level;                            /* 0x09 */
-    u8 job_id;                               /* 0x0a */
-    u8 secondary_skillset;                   /* 0x0b */
-    u16 reaction_ability;                    /* 0x0c */
-    u16 support_ability;                     /* 0x0e */
-    u16 movement_ability;                    /* 0x10 */
+    u8 sprite_set;         /* 0x00 */
+    u8 unit_flags;         /* 0x01; unit_flags_e */
+    u8 name_id;            /* 0x02 */
+    u8 level;              /* 0x03; 0 or 0xfe: L - rnd(0..L/8); 100 + n: L + n; L: top party level */
+    u8 birthday[2];        /* 0x04; month, day (read bytewise); out of range: a random day */
+    u8 bravery;            /* 0x06; above 100: random 45..74 */
+    u8 faith;              /* 0x07; above 100: random 45..74 */
+    u8 job_unlock;         /* 0x08; career job (0-19) whose unlock requirements a human gets as job levels */
+    u8 job_level;          /* 0x09; that job's own level (low nibble) */
+    u8 job_id;             /* 0x0a */
+    u8 secondary_skillset; /* 0x0b */
+    u16 reaction_ability;  /* 0x0c */
+    u16 support_ability;   /* 0x0e */
+    u16 movement_ability;  /* 0x10 */
     u8 equipment[ENTD_EQUIPMENT_SLOT_COUNT]; /* 0x12 */
     u8 palette;                              /* 0x17 */
     u8 team_flags;                           /* 0x18 */
@@ -881,9 +881,9 @@ typedef struct entd_unit {
     entd_unit_position_t position;           /* 0x1a */
     u8 experience;                           /* 0x1c; 100 and above: random 0..99 */
     u8 primary_skillset;                     /* 0x1d; 0 or 0xff: the job's own */
-    u8 war_trophy;                           /* 0x1e; 0x8005e478 copies to battle +0x163 */
-    u8 bonus_money_modifier;                 /* 0x1f; same initializer copies to battle +0x164 */
-    u8 unit_id;                              /* 0x20 */
+    u8 war_trophy;           /* 0x1e; main_unit_init_position_and_rewards copies it to the battle unit */
+    u8 bonus_money_modifier; /* 0x1f; copied with war_trophy */
+    u8 unit_id;              /* 0x20 */
     /* 0x21-0x27 are copied as seven bytes to battle_stats_t ai_target_x onward
      * by a loop that indexes ai_target_xy, so nothing names the members after it. */
     u8 ai_target_xy[2];       /* 0x21; AI "stay near" X, Y */

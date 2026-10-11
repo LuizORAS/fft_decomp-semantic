@@ -5,12 +5,14 @@ enum {
     MAX_HP_MP_CAP = 999,
 };
 
-/* Applies equipment attribute bonuses to a unit's stats.
- *
- * Clears the equipment PA/MA/SP bonuses, recomputes the base stats, then
- * folds in each equipped item's attribute record and head/body HP/MP bonuses.
- * Actual PA/MA cap at 99 and Speed at 50. */
-void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check) {
+/* Apply the equipped items' attribute records to a unit. The stats are derived again first
+ * (main_unit_calculate_actual_stats; with reset_base_attributes also base Speed, PA and MA); then
+ * each item adds its PA, MA and Speed bonuses (cleared first, totals at most 255), Move (at most
+ * 253), Jump (at most 7), its innate, immunity and starting statuses, its elemental affinities and,
+ * for headgear and body armor, its HP and MP bonuses (at most 999); the equipped flags note the
+ * Materia Blade and any sword or knight sword. A monster takes no equipment. HP and MP are cut to the
+ * new maxima, and the actual PA and MA (at most 99) and Speed (at most 50) are base plus bonus. */
+void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 reset_base_attributes) {
     s32 i;
     s32 j;
     u32 value;
@@ -27,7 +29,7 @@ void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check
     bonus_base = unit->equipment_attributes;
     main_util_clear_byte_data(bonus_base, 3);
     cap = MAX_HP_MP_CAP;
-    main_unit_calculate_actual_stats(unit, level_up_check + 1);
+    main_unit_calculate_actual_stats(unit, reset_base_attributes + 1);
     unit->equipped_flags = 0;
     if ((unit->unit_flags & UNIT_FLAG_MONSTER) == 0) {
         bonus = unit->equipment_attributes;

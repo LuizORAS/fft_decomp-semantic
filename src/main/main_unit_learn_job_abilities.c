@@ -9,13 +9,15 @@ typedef struct unit_learned_ability_row {
     u8 bits[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
 } unit_learned_ability_row_t;
 
-/* Learns abilities for one job of a unit.
- * job_id 0x4a (Squire) stands for the unit's base job.  With an ENTD primary
- * skillset of 0 every ability of the unit's own job is learned; otherwise
- * each ability is rolled against its learn chance and bought with job JP.
- * The original reuses two scratch variables: `i` doubles as the unlocked-job
- * mask and `scratch` holds both the unlocked-job bits and the learn chance;
- * separate locals change the register allocation. */
+/* Learn the abilities of one job for a unit built from ENTD, paying with that job's JP. job_id
+ * JOB_ID_SQUIRE stands for the base job: a special character's own job, or a monster's current job.
+ * Any other job must be unlocked, and a female skips Bard and a male Dancer. In the unit's current
+ * job, when the record's primary skillset is 0, every ability of its primary skillset is learned;
+ * otherwise each ability passes its learn rate (in 100) and is bought when the job's JP covers its
+ * cost.
+ *
+ * The original reuses two scratch variables: `i` doubles as the unlocked-job mask and `scratch` holds
+ * both the unlocked-job bits and the learn chance; separate locals change the register allocation. */
 void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_unit_t* entd) {
     s32 job_index;
     s32 skillset;
