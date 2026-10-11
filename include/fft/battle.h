@@ -2902,7 +2902,7 @@ typedef struct battle_effect_tick_sound_track {
  * effect_timeline_t names the section's other parts. */
 typedef struct battle_effect_tick_channels {
     u16 _unused_000;
-    u16 duration;                               /* 0x002; frames: effect_timeline_t.child_duration */
+    u16 duration;                               /* 0x002; frames: effect_timeline_t.child.duration */
     battle_effect_keyframe_table_t particle[5]; /* 0x004 */
     battle_effect_tick_sound_track_t sound[3];  /* 0x284 */
     battle_effect_palette_track_t surroundings; /* 0x326 */
@@ -2910,6 +2910,7 @@ typedef struct battle_effect_tick_channels {
     battle_effect_palette_track_t target;       /* 0x4b6 */
     battle_effect_background_track_t screen;    /* 0x57e */
 } battle_effect_tick_channels_t;
+typedef char battle_effect_tick_channels_size_must_be_0x6aa[sizeof(battle_effect_tick_channels_t) == 0x6aa ? 1 : -1];
 
 /* target_mode of battle_effect_start_new. */
 typedef enum battle_effect_start_target {
@@ -3207,7 +3208,7 @@ typedef struct battle_effect_sound_track {
  * A script that spawns children (opcode 29) runs the parent timeline in three
  * stages: phase 1 for phase1_duration frames; then one child record per
  * effect target, spawn_delay frames apart, each running the child timeline
- * for child_duration frames; then phase 2, which starts when the last child's
+ * for child.duration frames; then phase 2, which starts when the last child's
  * timeline ends, for phase2_duration frames. A script without children
  * (opcode 28 on the root record) runs only the child timeline, once.
  *
@@ -3218,24 +3219,23 @@ typedef struct battle_effect_sound_track {
  * and a 21-keyframe camera table. */
 typedef struct effect_timeline {
     u16 _unused_0000;
-    u16 phase2_duration; /* 0x002 */
-    u16 phase1_duration; /* 0x004 */
-    u16 spawn_delay;     /* 0x006; frames between child spawns (see effect_flags_section_t) */
-    u8 _unused_0008[2];
-    u16 child_duration;      /* 0x00a; frames one child timeline runs: battle_effect_tick_channels_t.duration */
-    u8 _unused_000c[0x6a6];  /* 0x00c; the child timeline's particle channels, sound tracks and colour tracks */
-    s16 end_frame[17];       /* 0x6b2; child camera table: frame each keyframe's moves arrive */
-    vec3s16_t rotation[17];  /* 0x6d4 */
-    vec3s16_t position[17];  /* 0x73a */
-    vec3s16_t zoom[17];      /* 0x7a0 */
-    s16 command[17];         /* 0x806; as effect_camera_keyframes_21_t.command */
-    s16 last_keyframe_index; /* 0x828; highest valid keyframe index */
+    u16 phase2_duration;                 /* 0x002 */
+    u16 phase1_duration;                 /* 0x004 */
+    u16 spawn_delay;                     /* 0x006; frames between child spawns (see effect_flags_section_t) */
+    battle_effect_tick_channels_t child; /* 0x008; child duration, particle, sound and colour tracks */
+    s16 end_frame[17];                   /* 0x6b2; child camera table: frame each keyframe's moves arrive */
+    vec3s16_t rotation[17];              /* 0x6d4 */
+    vec3s16_t position[17];              /* 0x73a */
+    vec3s16_t zoom[17];                  /* 0x7a0 */
+    s16 command[17];                     /* 0x806; as effect_camera_keyframes_21_t.command */
+    s16 last_keyframe_index;             /* 0x828; highest valid keyframe index */
     battle_effect_keyframe_table_t particle_channels[2][5]; /* 0x82a; [phase][channel] */
     battle_effect_sound_track_t sound_tracks[2][3];         /* 0xd2a; [phase][track] */
     effect_timeline_color_tracks_t color_tracks[2];         /* 0xdde */
     effect_camera_keyframes_21_t phase1_camera;             /* 0x14e6 */
     effect_camera_keyframes_21_t phase2_camera;             /* 0x16b6 */
 } effect_timeline_t;
+typedef char effect_timeline_child_offset_must_be_8[((unsigned long)&((effect_timeline_t*)0)->child == 8) ? 1 : -1];
 typedef char
     effect_timeline_command_offset_must_be_0x806[((unsigned long)&((effect_timeline_t*)0)->command == 0x806) ? 1 : -1];
 typedef char effect_timeline_rotation_offset_must_be_0x6d4[((unsigned long)&((effect_timeline_t*)0)->rotation == 0x6d4)

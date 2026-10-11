@@ -23,7 +23,7 @@ s32 battle_camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32*
 
     phase1 = g_battle_effect_timeline->phase1_duration;
     spawn_delay = g_battle_effect_context.target_count != 0 ? g_battle_effect_timeline->spawn_delay : 0;
-    child_duration = g_battle_effect_context.target_count != 0 ? g_battle_effect_timeline->child_duration : 0;
+    child_duration = g_battle_effect_context.target_count != 0 ? g_battle_effect_timeline->child.duration : 0;
 
     if (frame < phase1) {
         for (i = 0; i <= g_battle_effect_timeline->phase1_camera.last_keyframe_index; i++) {

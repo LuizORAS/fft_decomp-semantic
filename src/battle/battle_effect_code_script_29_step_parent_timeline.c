@@ -69,7 +69,7 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
     }
     i = g_battle_effect_timeline->phase1_duration
         + (g_battle_effect_context.target_count - 1) * g_battle_effect_timeline->spawn_delay
-        + g_battle_effect_timeline->child_duration;
+        + g_battle_effect_timeline->child.duration;
     if (state->frame.s >= i) {
         for (i = 0; i < 5; i++) {
             battle_effect_step_emitter_timeline(record, &g_battle_effect_timeline->particle_channels[1][i],
