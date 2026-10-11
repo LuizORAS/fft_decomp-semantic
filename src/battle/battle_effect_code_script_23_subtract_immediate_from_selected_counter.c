@@ -7,7 +7,7 @@ effect_script_result_e battle_effect_code_script_23_subtract_immediate_from_sele
     u16 amount;
 
     instruction = battle_effect_get_current_script_instruction(record);
-    amount = (u16)instruction->immediate.value;
+    amount = instruction->immediate.value;
     record->counters[instruction->header.packed_parameters >> 6] -= amount;
     record->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

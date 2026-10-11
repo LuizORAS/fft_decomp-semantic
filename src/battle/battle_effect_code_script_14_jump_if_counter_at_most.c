@@ -4,10 +4,9 @@
  * selected by the top two bits of the second byte is at most the second
  * 16-bit value; otherwise step over the 6-byte instruction. */
 effect_script_result_e battle_effect_code_script_14_jump_if_counter_at_most(effect_record_t* record) {
-    battle_effect_script_instruction_t* cur = battle_effect_get_current_script_instruction(record);
-    s16* counter = &record->counters[cur->header.packed_parameters >> 6];
-    if (*counter <= cur->branch.comparison) {
-        record->pc = cur->branch.target_offset;
+    battle_effect_script_instruction_t* instruction = battle_effect_get_current_script_instruction(record);
+    if (record->counters[instruction->header.packed_parameters >> 6] <= instruction->branch.comparison) {
+        record->pc = instruction->branch.target_offset;
     } else {
         record->pc += 6;
     }
