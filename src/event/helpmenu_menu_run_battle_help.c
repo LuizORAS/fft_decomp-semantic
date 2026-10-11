@@ -6,12 +6,6 @@
 /* Run the battle help menu thread: open the help text for the running menu's
  * pending request, or move the bouncing help cursor over the navigation table
  * of that menu or of the unit view.
- *
- * `text_thread_id` stays pinned: left to the allocator it takes $s4 ahead of
- * `node` (31 weighted references against 28 over nearly the same live range),
- * where the target has `node` in $s4 and the thread id in $s5. A pinned
- * register is never hoisted, so the slot offset of the wait loop is computed by
- * hand before it.
  */
 void helpmenu_menu_run_battle_help(void) {
     POLY_FT4 cursor_polys[2];
@@ -34,8 +28,9 @@ void helpmenu_menu_run_battle_help(void) {
     s32 input;
     s32 poly_index;
     s32 frame; /* first walks the thread slots looking for a help request */
+    /* Unbinding this id swaps its register with the navigation pointer. */
     register s32 text_thread_id __asm__("$21");
-    s32 wait_slot_offset;
+    s32 waiting_slot;
     native_thread_t* scan_thread;
     world_menu_entry_t* request;
     native_thread_t* self_thread;
@@ -216,12 +211,10 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_set_parameters(
                         text_thread_id - 1, 0x3B, g_helpmenu_current_text_ids[request->selected_index], 0);
                 }
-                /* Wait for the text thread in the preceding slot. `offset + (s32)base`
-                   keeps the addu operand order; pointer + offset swaps it. */
-                wait_slot_offset = text_thread_id << 0xA;
+                waiting_slot = text_thread_id;
                 do {
                     battle_thread_wait_frames(1);
-                } while (((native_thread_t*)(wait_slot_offset + (s32)g_battle_threads))[-1].is_running != 0);
+                } while (g_battle_threads[waiting_slot - 1].is_running != 0);
                 *g_helpmenu_controller_state_ptr = 0;
                 battle_thread_wait_frames(1);
                 helpmenu_menu_close();
