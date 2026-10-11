@@ -75,8 +75,8 @@ loop:
         SetSprt(&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt);
         value = ((part_count - i) * 2) | 1;
         SetDrawMode(&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].mode,
-            1, 0, GetTPage((sprite[value] >> 26) & 1, (sprite[value] >> 28) & 3, tpage_x, tpage_y), 0);
-        if (sprite[value] & 0x40000000) {
+            1, 0, GetTPage(PART(value)->texture_flags >> 2, PART(value)->blend_rate, tpage_x, tpage_y), 0);
+        if (PART(value)->semi_transparent) {
             SetSemiTrans(
                 &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt, 1);
         } else {
@@ -95,10 +95,11 @@ loop:
             = PART(value)->width;
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.h
             = PART(value)->height;
+        /* A byte-field palette read shortens the native 32-bit flags load. */
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.clut
             = GetClut(clut_x
-                    + ((actor->palette == 0 || (sprite[value] & 0x08000000)) ? ((sprite[value] >> 12) & 0xf0)
-                                                                             : ((actor->palette - 1) * 0x10)),
+                    + ((actor->palette == 0 || (PART(value)->use_part_palette)) ? ((sprite[value] >> 12) & 0xf0)
+                                                                                : ((actor->palette - 1) * 0x10)),
                 clut_y);
         AddPrim(&ot[actor->priority],
             &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt);
