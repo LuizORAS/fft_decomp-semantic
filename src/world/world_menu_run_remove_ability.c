@@ -27,7 +27,8 @@ s32 world_menu_run_remove_ability(void) {
         g_world_remove_ability_unit_index = (u8)g_world_formation_selected_unit_index;
     }
     if (g_world_remove_ability_initialized == 0) {
-        bcopy(g_world_formation_unit_pointers[unit_index]->abilities.slots, g_world_remove_ability_slots, 10);
+        bcopy(g_world_formation_unit_pointers[unit_index]->abilities.slots, g_world_remove_ability_slots,
+            sizeof(g_world_remove_ability_slots));
         g_world_remove_ability_cursor = -1;
         g_world_formation_unit_cycle_mode = 2;
         g_world_clear_abilities_prompt_active = 0;
@@ -57,7 +58,7 @@ s32 world_menu_run_remove_ability(void) {
         if (g_world_clear_abilities_prompt_active == 0) {
             g_world_remove_ability_cursor = -1;
             bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots,
-                g_world_remove_ability_slots, 10);
+                g_world_remove_ability_slots, sizeof(g_world_remove_ability_slots));
             return 1;
         }
         return 1;

@@ -40,7 +40,7 @@ void world_formation_build_unit_graphic_entry(
         world_formation_get_generic_human_graphic_entry(job_id, unit->gender_flags & UNIT_FLAG_FEMALE, destination);
         return;
     }
-    bcopy(&g_world_formation_graphic_entries[index], destination, 0xC);
+    bcopy(&g_world_formation_graphic_entries[index], destination, sizeof(*destination));
     palette = (s16)world_formation_get_unit_palette_index(
         g_world_formation_unit_pointers[formation_index]->identity.roster_slot);
     clut_x = (palette % 4) * 0x10 + 0x140;

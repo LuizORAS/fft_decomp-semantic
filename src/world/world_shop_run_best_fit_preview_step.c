@@ -77,7 +77,8 @@ void world_shop_run_best_fit_preview_step(void) {
         s16* reserved;
 
         g_world_shop_best_fit_menu.selected_index = 0;
-        bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, staged, 8);
+        bcopy(
+            g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, staged, sizeof(staged));
         unit_slot = &g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
         room_base = &g_world_shop_fitting_room_items[0][0];
         reserved = room_base + g_world_formation_selected_unit_index * 5;
@@ -90,7 +91,8 @@ void world_shop_run_best_fit_preview_step(void) {
             g_world_formation_selected_unit_index, g_world_shop_id, g_world_item_preview_stat_detail.equipment);
         g_world_item_preview_stat_detail.equipment[4]
             = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[4];
-        bcopy(staged, g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, 8);
+        bcopy(
+            staged, g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, sizeof(staged));
         world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
             &g_world_selected_unit_stat_summary,
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
