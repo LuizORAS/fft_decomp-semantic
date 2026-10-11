@@ -101,7 +101,7 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     party->career.unlocked_jobs[0] = 0x80;
     /* Keep sprite sets 0x80+ for the name-uniqueness comparison; collapse
      * other identities to zero. */
-    generic_id &= -(generic_id >> 7);
+    generic_id = generic_id >= CHARACTER_IDENTITY_SELECTOR_FIRST ? generic_id : 0;
     for (i = 0; i < UNIT_EQUIPMENT_SLOT_COUNT; i++) {
         party->equipment[i] = base->equipment[i];
     }

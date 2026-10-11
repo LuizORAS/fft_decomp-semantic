@@ -11,12 +11,14 @@ enum {
  * record.  Units without a party slot get a random unused generic name for
  * their gender. */
 void main_unit_store_character_names(battle_stats_t* unit) {
+    /* Removing this unused array reduces the native stack frame by 0x100. */
     u8 unused[0x100];
     u8* (*prepare_text)(u32 text_id);
     u32 text_id;
     u32 name_base;
     u8 gender;
     u16 name_id;
+    u8 name_index;
     s32 name_available;
     s32 i;
     u8* text;
@@ -30,7 +32,8 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     }
     if (unit->formation_index == PARTY_ID_NONE) {
         text_id = TEXT_ID_UNIT_NAME_SPECIAL_BASE;
-        name_id = unit->quote_name_id & 0xFF;
+        name_index = unit->quote_name_id;
+        name_id = name_index;
         if (name_id == 0xff) {
             gender = unit->unit_flags & NAME_GENDER_MASK;
             if (unit->unit_flags & UNIT_FLAG_MALE) {
@@ -66,7 +69,8 @@ void main_unit_store_character_names(battle_stats_t* unit) {
             } while (name_available == 0);
             unit->quote_name_id = name_id;
         }
-        text_id += name_id & 0xff;
+        name_index = name_id;
+        text_id += name_index;
         text = prepare_text(text_id);
     } else {
         text = main_party_get_data_pointer(unit->formation_index)->name;

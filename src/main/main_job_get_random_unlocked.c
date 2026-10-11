@@ -33,12 +33,12 @@ s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
 
     if (candidate_count != 0) {
         s32 scaled_random = rand() * candidate_count;
-        u32 candidate_index = (u32)scaled_random >> 15;
+        u8 candidate_index = (u32)scaled_random >> 15;
 
         if (scaled_random < 0) {
             candidate_index = (u32)(scaled_random + 0x7fff) >> 15;
         }
-        return candidates[candidate_index & 0xff];
+        return candidates[candidate_index];
     }
     return 0;
 }
