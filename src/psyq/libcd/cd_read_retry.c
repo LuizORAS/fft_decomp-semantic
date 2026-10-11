@@ -4,7 +4,7 @@
 #include "psx/libetc.h"
 s32 cd_read_retry(s32 retry) {
     u8 mode;
-    s32 saved_mode;
+    u8 saved_mode;
     CdSyncCallback(0);
     CdReadyCallback(0);
     if (CdStatus() & CdlStatShellOpen) {
@@ -25,7 +25,7 @@ s32 cd_read_retry(s32 retry) {
     CdFlush();
     saved_mode = g_psyq_cd_read_state.mode;
     mode = saved_mode;
-    if ((u8)saved_mode != CdMode() || retry) {
+    if (saved_mode != CdMode() || retry) {
         if (!CdControl(CdlSetmode, &mode, 0)) {
             g_psyq_cd_read_state.remaining = -1;
             return g_psyq_cd_read_state.remaining;
