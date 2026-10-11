@@ -11,8 +11,7 @@ void main_smd_save_snapshot(suzuki_music_t* music) {
 
     DisableEvent(g_main_root_counter_2_event);
     music->status |= SUZUKI_MUSIC_STATUS_SNAPSHOT;
-    size = music->channel_count * sizeof(suzuki_music_channel_t)
-        + (sizeof(suzuki_music_t) - sizeof(suzuki_music_channel_t));
+    size = music->channel_count * sizeof(suzuki_music_channel_t) + sizeof(suzuki_music_t);
     if (music->snapshot == 0) {
         music->snapshot = main_sound_alloc(size);
     }

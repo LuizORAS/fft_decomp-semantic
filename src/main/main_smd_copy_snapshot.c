@@ -9,9 +9,8 @@ void main_smd_copy_snapshot(suzuki_music_t* music, suzuki_music_t* snapshot) {
 
     next = music->next;
     chain = music->snapshot;
-    main_sound_copy_memory(music, snapshot,
-        music->channel_count * sizeof(suzuki_music_channel_t)
-            + (sizeof(suzuki_music_t) - sizeof(suzuki_music_channel_t)));
+    main_sound_copy_memory(
+        music, snapshot, music->channel_count * sizeof(suzuki_music_channel_t) + sizeof(suzuki_music_t));
     music->next = next;
     music->snapshot = chain;
 }

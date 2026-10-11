@@ -521,7 +521,7 @@ typedef struct suzuki_waveset {
     u8 _unused_22[6];                   /* 0x22 */
     u32 spu_address;                    /* 0x28; SpuMalloc result, freed by main_sound_free_waveset */
     struct suzuki_waveset* next;        /* 0x2c */
-    suzuki_instrument_t instruments[1]; /* 0x30 */
+    suzuki_instrument_t instruments[0]; /* 0x30 */
 } suzuki_waveset_t;
 
 /* SMD music sequence header ("smds"), read by main_smd_transfer_music_data,
@@ -546,7 +546,7 @@ struct suzuki_smd_header {
     u8 reverb_feedback;     /* 0x1d */
     u16 filename_offset;    /* 0x1e; offset of the zero-terminated name the sequence was built from */
     u16 data_offset;        /* 0x20 */
-    u16 channel_offsets[1]; /* 0x22; one stream offset per channel (0: no stream), then a zero */
+    u16 channel_offsets[0]; /* 0x22; one stream offset per channel (0: no stream), then a zero */
 };
 
 /* Suzuki sequencer modulator (0x20 bytes). Each channel has four, at
@@ -949,9 +949,9 @@ typedef struct suzuki_music {
     suzuki_ramp_t master_volume;   /* 0x94; value is volume byte << 24 */
     suzuki_ramp_t pitch_shift;     /* 0xa0 */
     suzuki_ramp_t balance_shift;   /* 0xac */
-    suzuki_music_channel_t channels[1]; /* 0xb8; channel_count entries */
+    suzuki_music_channel_t channels[0]; /* 0xb8; channel_count entries */
 } suzuki_music_t;
-typedef char suzuki_music_channels_must_be_at_0xb8[(sizeof(suzuki_music_t) == 0xb8 + 0x160) ? 1 : -1];
+typedef char suzuki_music_header_size_must_be_0xb8[(sizeof(suzuki_music_t) == 0xb8) ? 1 : -1];
 
 /* suzuki_music_t.status. */
 typedef enum suzuki_music_status {
@@ -978,7 +978,7 @@ typedef struct main_sound_resource {
     u16 volume_offset;                /* 0x0c; offset of the per-sound u8 volume table (0x80 = full) */
     u8 _padding_0e[2];                /* 0x0e; aligns next */
     struct main_sound_resource* next; /* 0x10 */
-    u16 channel_offsets[1];           /* 0x14; two stream offsets per sound, 0 for no stream */
+    u16 channel_offsets[0];           /* 0x14; two stream offsets per sound, 0 for no stream */
 } main_sound_resource_t;
 
 /* Driver SPU state at 0x80037020: the common attributes passed to LIBSPU,
