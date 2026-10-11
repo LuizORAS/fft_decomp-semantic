@@ -1,7 +1,7 @@
 /* SCUS_942.21 0x80021084..0x8002110b. */
 #include "psx/libcd.h"
 
-void StSetStream(s32 mode, s32 start_frame, s32 end_frame, psyq_interrupt_callback_t frame_callback,
+void StSetStream(u32 mode, u32 start_frame, u32 end_frame, psyq_interrupt_callback_t frame_callback,
     psyq_interrupt_callback_t end_callback) {
     StSetMask(1, start_frame, end_frame);
     g_psyq_cd_stream_emulation_base = 0;

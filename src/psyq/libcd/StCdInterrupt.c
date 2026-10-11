@@ -61,7 +61,7 @@ void StCdInterrupt(void) {
     *g_psyq_cd_stream_access_delay_register = 0x20843;
     *g_psyq_cd_stream_common_delay_register = 0x1325;
     if (g_psyq_cd_stream_start_mask == 1) {
-        s32 required_frame = g_psyq_cd_stream_start_frame;
+        u32 required_frame = g_psyq_cd_stream_start_frame;
         if (required_frame) {
             /* The original comparison reads the low halfword of the frame word. */
             if (required_frame != *(u16*)&g_psyq_cd_stream_current_header->frameCount) {
@@ -101,7 +101,7 @@ void StCdInterrupt(void) {
         u16 frame = g_psyq_cd_stream_current_header->frameCount;
         g_psyq_cd_stream_expected_sector_index = 0;
         g_psyq_cd_stream_frame_count = frame;
-        if (g_psyq_cd_stream_end_frame && g_psyq_cd_stream_frame_count >= (u32)g_psyq_cd_stream_end_frame) {
+        if (g_psyq_cd_stream_end_frame && g_psyq_cd_stream_frame_count >= g_psyq_cd_stream_end_frame) {
             g_psyq_cd_stream_frame_count = 0;
             g_psyq_cd_stream_expected_sector_index = 0;
             init_ring_status(

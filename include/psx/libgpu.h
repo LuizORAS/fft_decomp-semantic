@@ -607,7 +607,7 @@ extern TIM_IMAGE* ReadTIM(TIM_IMAGE*);
 extern u16 LoadTPage(u32*, int, int, int, int, int, int);
 extern u16 LoadClut2(u32*, int, int);
 extern void AddPrim(void*, void*);
-void AddPrims(u32* ot, void* first, void* last);
+void AddPrims(void* ot, void* first, void* last);
 extern void SetSemiTrans(void*, int);
 extern void SetShadeTex(void*, int);
 extern void SetPolyF3(POLY_F3*);
