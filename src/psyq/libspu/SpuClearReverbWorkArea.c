@@ -4,7 +4,7 @@
 #include "psx/libapi.h"
 
 s32 SpuClearReverbWorkArea(s32 mode) {
-    /* Retail keeps the saved callback in a volatile stack slot and reloads it for each use. */
+    /* Volatile preserves the native stack slot and separate callback test/restore reloads. */
     volatile SpuTransferCallbackProc callback = 0;
     u32 remaining;
     u32 address;

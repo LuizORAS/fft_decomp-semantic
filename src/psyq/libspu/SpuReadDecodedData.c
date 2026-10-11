@@ -2,7 +2,7 @@
 #include "psx/libspu.h"
 
 s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
-    void* destination = d_data;
+    s16* destination = d_data->cd_left;
     u16 address;
     u32 blocks;
     u32 status;
