@@ -1,9 +1,5 @@
 #include "fft/battle.h"
 
-/* The target reads the AI flag word as two halfwords (lhu +0x0c/+0x0e). */
-#define AI_FLAGS_LO(a) (((u16*)&a->ai_flags)[0])
-#define AI_FLAGS_HI(a) (((u16*)&a->ai_flags)[1])
-
 /* Mark each unit's usable abilities and derive the acting unit's AI hints.
  *
  * For every AI-considered unit, abilities blocked by Don't Act, Silence,
@@ -93,11 +89,11 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 if (battle_ai_is_status_active_through_delay(delay, unit, BATTLE_STATUS_ID_DONT_ACT)) {
                     continue;
                 }
-                if ((AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_AFFECTED_BY_SILENCE)
+                if ((ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_AFFECTED_BY_SILENCE)
                     && battle_ai_is_status_active_through_delay(threshold, unit, BATTLE_STATUS_ID_SILENCE)) {
                     continue;
                 }
-                if ((AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_AFFECTED_BY_FAITH)
+                if ((ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_AFFECTED_BY_FAITH)
                     && battle_ai_is_status_active_through_delay(threshold, unit, BATTLE_STATUS_ID_INNOCENT)) {
                     continue;
                 }
@@ -151,15 +147,17 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
                 if (!(entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8))) {
                     if (decision->enemy_flag) {
-                        if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
+                        if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
                             enemy_harmful++;
-                            if (AI_FLAGS_HI(ability) & (BATTLE_AI_ABILITY_MAGICAL_ATTACK >> 16)) {
+                            if (ability->ai_flags.halfwords.trajectory_usage_flags
+                                & (BATTLE_AI_ABILITY_MAGICAL_ATTACK >> 16)) {
                                 enemy_magical++;
                             }
-                            if (AI_FLAGS_HI(ability) & (BATTLE_AI_ABILITY_PHYSICAL_ATTACK >> 16)) {
+                            if (ability->ai_flags.halfwords.trajectory_usage_flags
+                                & (BATTLE_AI_ABILITY_PHYSICAL_ATTACK >> 16)) {
                                 enemy_physical++;
                             }
-                            if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_REFLECTABLE) {
+                            if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_REFLECTABLE) {
                                 enemy_reflectable++;
                             }
                             if (ability->element & BATTLE_ELEMENT_EARTH) {
@@ -167,18 +165,19 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                             }
                         }
                     }
-                    if ((AI_FLAGS_LO(ability) & (BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_TARGET_ALLIES))
+                    if ((ability->ai_flags.halfwords.target_effect_flags
+                            & (BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_TARGET_ALLIES))
                         == (BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_TARGET_ALLIES)) {
                         decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES;
                     }
-                    if (AI_FLAGS_HI(ability)
+                    if (ability->ai_flags.halfwords.trajectory_usage_flags
                         & ((BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY) >> 16)) {
                         decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY;
                     }
-                    if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
+                    if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
                         unit_harmful++;
                     }
-                    if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ALLIES) {
+                    if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_TARGET_ALLIES) {
                         unit_helpful++;
                     }
                 }
@@ -239,27 +238,28 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             }
             if (entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_USABLE << 8)) {
                 usable++;
-                if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_RANDOM_USE) {
+                if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_RANDOM_USE) {
                     random_use++;
                 }
                 if (ability->ability_id == ABILITY_ID_ITEM_HOLY_WATER) {
                     ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_HAS_HOLY_WATER;
                 }
-                if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_CANCEL_STATUS) {
+                if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_CANCEL_STATUS) {
                     for (throw_id = 0; throw_id < BATTLE_STATUS_BYTE_COUNT; throw_id++) {
                         ai->status_to_cancel[throw_id] |= ability->parameters.bytes.status_infliction[throw_id];
                     }
                 }
-                if ((AI_FLAGS_LO(ability) & (BATTLE_AI_ABILITY_AFFECTS_MP | BATTLE_AI_ABILITY_TARGET_ENEMIES))
+                if ((ability->ai_flags.halfwords.target_effect_flags
+                        & (BATTLE_AI_ABILITY_AFFECTS_MP | BATTLE_AI_ABILITY_TARGET_ENEMIES))
                     == BATTLE_AI_ABILITY_AFFECTS_MP) {
                     ai->has_mp_recovery_ability = 1;
                 }
                 range = ability->parameters.bytes.range + ability->parameters.bytes.aoe;
-                if ((AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ENEMIES)
+                if ((ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_TARGET_ENEMIES)
                     && range < decision->enemy_ability_min_reach) {
                     decision->enemy_ability_min_reach = range;
                 }
-                if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ALLIES) {
+                if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_TARGET_ALLIES) {
                     if (g_main_action_menu_types_by_skillset[ability->skillset] == ACTION_MENU_TYPE_ITEM_INVENTORY) {
                         range = (range + 1) / 2;
                     }

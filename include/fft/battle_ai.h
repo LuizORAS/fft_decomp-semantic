@@ -254,11 +254,15 @@ typedef union battle_ai_coords {
     } bytes;
 } battle_ai_coords_t;
 
-/* Ability AI behaviour flags 1..4. Consumers read both the full word and its
- * constituent bytes; use the corresponding masks above for each view. */
+/* Ability AI behaviour flags 1..4. Consumers read the word, two halfwords,
+ * or individual bytes; use the corresponding masks above for each view. */
 typedef union battle_ai_ability_flags {
     u32 word;
     ability_ai_flags_t bytes;
+    struct {
+        u16 target_effect_flags;    /* bytes 1..2 */
+        u16 trajectory_usage_flags; /* bytes 3..4 */
+    } halfwords;
 } battle_ai_ability_flags_t;
 
 /* Shared prefix of the baseline and suspended AI unit snapshots.
