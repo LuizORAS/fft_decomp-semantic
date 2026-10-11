@@ -4,11 +4,13 @@
  * selected by the second byte's top two bits differs from the second
  * 16-bit value; otherwise step over the 6-byte instruction. */
 effect_script_result_e battle_effect_code_script_1c_jump_if_counter_not_equal(effect_record_t* record) {
+    battle_effect_script_parameters_t parameters;
     battle_effect_script_instruction_t* instruction;
     u32 slot;
 
     instruction = battle_effect_get_current_script_instruction(record);
-    slot = instruction->header.packed_parameters >> 6;
+    parameters = instruction->header.parameters;
+    slot = parameters.counter.slot;
     if (record->counters[slot] != instruction->branch.comparison) {
         record->pc = instruction->branch.target_offset;
     } else {

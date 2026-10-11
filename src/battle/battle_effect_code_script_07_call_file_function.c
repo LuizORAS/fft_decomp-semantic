@@ -5,7 +5,8 @@
  * its callback slot, and remember it in the record. */
 effect_script_result_e battle_effect_code_script_07_call_file_function(effect_record_t* record) {
     battle_effect_script_instruction_t* command = battle_effect_get_current_script_instruction(record);
-    u32 slot = command->header.packed_parameters >> 2;
+    battle_effect_script_parameters_t parameters = command->header.parameters;
+    u32 slot = parameters.callback.slot;
     battle_effect_callback_t handler = battle_effect_get_file_function(command->immediate.value);
     record->file_function = handler;
     handler(record->record_index, slot, 0, 0);

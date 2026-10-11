@@ -1726,7 +1726,7 @@ functions:
   - {addr: 0x801a2bc8, size: 96, name: battle_effect_code_script_1c_jump_if_counter_not_equal, hash: a095f3c61366dd0c}
   - {addr: 0x801a2c28, size: 84, name: battle_effect_code_script_1d_jump_after_effect_length, hash: 660d7b1ff3cc4dfd}
   - {addr: 0x801a2c7c, size: 128, name: battle_effect_code_script_1e_jump_after_total_duration, hash: f89316001a9e7ecd}
-  - {addr: 0x801a2cfc, size: 76, name: battle_effect_code_script_1f_jump_if_hit_counter_equal, hash: eac3f542ce4dd0e9}
+  - {addr: 0x801a2cfc, size: 76, name: battle_effect_code_script_1f_jump_if_target_count_equal, hash: eac3f542ce4dd0e9}
   - {addr: 0x801a2d48, size: 76, name: battle_effect_code_script_20_increment_selected_counter, hash: c4a8680d0e5222e9}
   - {addr: 0x801a2d94, size: 76, name: battle_effect_code_script_21_decrement_selected_counter, hash: 4bac17979fd57fe0}
   - {addr: 0x801a2de0, size: 76, name: battle_effect_code_script_22_add_immediate_to_selected_counter, hash: 579270f3a7a2958b}

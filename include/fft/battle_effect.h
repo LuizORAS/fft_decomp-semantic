@@ -720,18 +720,59 @@ typedef char battle_effect_palette_section_size_must_be_1028[sizeof(battle_effec
  * 16-bit values. Script offsets are bytes from the start of the script. */
 enum { EFFECT_SCRIPT_OPCODE_MASK = 0x1ff };
 
+/* Each opcode interprets the selector byte differently. Unnamed bits are ignored
+ * by that view. Copy the byte before reading bit fields to retain byte loads. */
+typedef union battle_effect_script_parameters {
+    u8 packed;
+    struct {
+        u8 : 4;
+        u8 slot : 4;
+    } child;
+    struct {
+        u8 : 4;
+        u8 slot : 2;
+        u8 : 2;
+    } free_child;
+    struct {
+        u8 : 6;
+        u8 slot : 2;
+    } counter;
+    struct {
+        u8 : 2;
+        u8 slot : 6;
+    } callback;
+    struct {
+        u8 : 2;
+        u8 count : 6;
+    } targets;
+} battle_effect_script_parameters_t;
+typedef char battle_effect_script_parameters_size_must_be_1[sizeof(battle_effect_script_parameters_t) == 1 ? 1 : -1];
+
 /* 16-bit-aligned instructions have a nine-bit opcode and seven selector bits. */
 typedef struct battle_effect_script_header {
-    u8 opcode_low;        /* 0x00 */
-    u8 packed_parameters; /* 0x01: opcode bit 8 and opcode-specific selectors */
+    u8 opcode_low;                                /* 0x00 */
+    battle_effect_script_parameters_t parameters; /* 0x01: opcode bit 8 and opcode-specific selectors */
 } battle_effect_script_header_t;
 typedef char battle_effect_script_header_size_must_be_2[(sizeof(battle_effect_script_header_t) == 2) ? 1 : -1];
+
+/* Opcode 26 reads its emitter selector from the complete 16-bit header. */
+typedef union battle_effect_script_emitter_header {
+    u16 packed;
+    struct {
+        u16 : 10;
+        u16 emitter_index : 4;
+        u16 : 2;
+    } fields;
+} battle_effect_script_emitter_header_t;
+typedef char
+    battle_effect_script_emitter_header_size_must_be_2[sizeof(battle_effect_script_emitter_header_t) == 2 ? 1 : -1];
 
 /* A view at one instruction boundary in a variable-length byte stream.
  * Immediate, branch and camera instructions occupy 4, 6 and 8 bytes respectively;
  * two-byte instructions contain only the header. No array uses this union's stride. */
 typedef union battle_effect_script_instruction {
     battle_effect_script_header_t header;
+    battle_effect_script_emitter_header_t emitter;
     struct {
         battle_effect_script_header_t header; /* 0x00 */
         s16 value;                            /* 0x02 */
