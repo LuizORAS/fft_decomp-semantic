@@ -1,8 +1,7 @@
 /* LIBGPU 80025460-800254a4. */
 #include "psx/libgpu.h"
 
-void SetDrawOffset(DR_OFFSET* destination, u16* position) {
-    DR_OFFSET* packet = destination;
+void SetDrawOffset(DR_OFFSET* packet, u16* position) {
     setlen(packet, PSYQ_GPU_PACKET_WORDS(DR_OFFSET));
     /* GPU offsets interpret the SDK halfwords as signed coordinates. */
     packet->code[0] = get_ofs(position[0], position[1]);
