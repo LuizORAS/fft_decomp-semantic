@@ -449,7 +449,7 @@ void equip_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* 
 void equip_menu_load_images_and_reset_lists(void);
 void equip_menu_reset_selection_indices(void);
 void equip_menu_reset_state_flags(void);
-void equip_menu_restore_list_selection(s32 idx, s16* p1, s16* p2, s16* list);
+void equip_menu_restore_list_selection(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
 s32 equip_item_run_rearrange_mode(void);
 void equip_menu_icon_list_thread(void);
 void equip_menu_scroll_list_by_page(s32 direction, const menu_list_record_t* menu);

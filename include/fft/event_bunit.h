@@ -541,7 +541,7 @@ void bunit_menu_clear_selection_records(void);
 void bunit_menu_draw_scrollable_list(u8* script);
 void bunit_menu_draw_thread_status_indicators(void);
 s32 bunit_menu_get_event_speed(void);
-void bunit_menu_get_selection_record(s32 index, s16* out_index, s16* out_b, s16* list);
+void bunit_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
 s32 bunit_menu_is_selected_unit_in_upper_rows(s32 page_offset);
 s32 bunit_menu_is_unit_list_scroll_needed(void);
 void bunit_menu_reset_results(void);
@@ -558,7 +558,7 @@ void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* 
 void bunit_menu_init_unit_list(s32 unused_selected_index);
 s32 bunit_menu_is_active_or_transitioning(void);
 s32 bunit_menu_run_unit_list_frame(void);
-void bunit_menu_set_selection_record(s32 index, s32 field0, s32 field2, s16* lookup_table);
+void bunit_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
 s32 bunit_menu_set_selection_value(u8 index, s16 value);
 void bunit_menu_update_and_draw_animated_cursor(point16_t* pos, u16* state, s32 mode);
 void bunit_menu_update_and_draw_bouncing_cursor(point16_t* pos, u16* state, s32 mode);

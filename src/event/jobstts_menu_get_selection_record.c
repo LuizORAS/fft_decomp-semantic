@@ -19,16 +19,11 @@ void jobstts_menu_get_selection_record(
     *out_scroll_index = g_jobstts_menu_selection_records[index].scroll_base_index;
     ability_id = g_jobstts_menu_selection_records[index].entry_id;
     if (ability_id != abilities[*out_selected_index]) {
-        i = 0;
-        if (*abilities != -1) {
-            do {
-                if ((*abilities & 0x3ff) == ability_id) {
-                    *out_selected_index = i;
-                    return;
-                }
-                abilities++;
-                i++;
-            } while (*abilities != -1);
+        for (i = 0; abilities[i] != -1; i++) {
+            if ((abilities[i] & 0x3ff) == ability_id) {
+                *out_selected_index = i;
+                return;
+            }
         }
         *out_selected_index = 0;
         *out_scroll_index = 0;
