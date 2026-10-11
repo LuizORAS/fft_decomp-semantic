@@ -1,11 +1,9 @@
 #include "fft/open.h"
 
-/* Show the four 36-byte records whose indices are words 1 to 4 of a controller
- * record. The caller passes the title menu's record, where they are the four menu
- * entries. */
-void open_gfx_show_four_render_records(open_birthday_render_record_indices_t* group) {
-    g_open_gfx_render_records_36[group->indices[0]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_open_gfx_render_records_36[group->indices[1]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_open_gfx_render_records_36[group->indices[2]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_open_gfx_render_records_36[group->indices[3]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+/* Show the four title menu entries. */
+void open_gfx_show_four_render_records(open_title_controller_t* title) {
+    g_open_gfx_render_records_36[title->records_36[1]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_open_gfx_render_records_36[title->records_36[2]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_open_gfx_render_records_36[title->records_36[3]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_open_gfx_render_records_36[title->records_36[4]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
 }

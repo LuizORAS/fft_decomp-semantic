@@ -103,8 +103,8 @@ void world_menu_run_battle_help(void) {
             scan_thread++;
         }
         if (frame != 9) {
-            if (g_world_help_text_id_tables_ptr == missing_value) {
-                g_world_help_text_id_tables_ptr = (s32)g_world_help_menu_text_id_tables;
+            if (g_world_help_active_text_id_tables == (u16* const*)missing_value) {
+                g_world_help_active_text_id_tables = g_world_help_menu_text_id_tables;
             }
             request_kind = request->kind;
             if (request_kind != 0x10) {
@@ -207,7 +207,7 @@ void world_menu_run_battle_help(void) {
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else {
                     g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
-                    g_world_help_topic_text_ids = (u16*)((s32*)g_world_help_text_id_tables_ptr)[request_kind];
+                    g_world_help_topic_text_ids = g_world_help_active_text_id_tables[request_kind];
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(
                         help_thread_id - 1, 0x3B, g_world_help_topic_text_ids[request->selected_index], 0);

@@ -10,7 +10,7 @@ s32 battle_effect_level_up_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
     battle_effect_secondary_data_t* current;
     s32 unused[6]; /* Reserves the target's 0x48-byte frame. */
-    battle_effect_gravity_t gravity;
+    vec3s32_t gravity;
     s32 result;
     s16 finish_timer;
 

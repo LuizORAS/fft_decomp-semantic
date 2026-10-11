@@ -17,7 +17,8 @@ typedef struct open_title_party_name_block {
  *
  * Step 5 unloads the music and starts the music test controller. Nothing in
  * OPEN.BIN stores 5 in step. */
-void open_title_step_new_game_start(open_title_new_game_state_t* state) {
+void open_title_step_new_game_start(open_controller_record_t* record) {
+    open_title_new_game_state_t* state = &record->new_game;
     RECT rect;
     open_title_party_name_block_t* name;
     party_data_t* party;

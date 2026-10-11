@@ -104,9 +104,9 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     vector.vz = 0;
     vector.vy = 0;
     RotTrans(&vector, &direction, &direction.pad);
-    motion->position[0] = ((direction.vx * spread.vx) / scale + position.vx) << 12;
-    motion->position[1] = ((direction.vy * spread.vy) / scale + position.vy) << 12;
-    motion->position[2] = ((direction.vz * spread.vz) / scale + position.vz) << 12;
+    motion->position.x = ((direction.vx * spread.vx) / scale + position.vx) << 12;
+    motion->position.y = ((direction.vy * spread.vy) / scale + position.vy) << 12;
+    motion->position.z = ((direction.vz * spread.vz) / scale + position.vz) << 12;
 
     speed_min = values->speed_min;
     speed_max = values->speed_max;
@@ -136,29 +136,29 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
             SetRotMatrix(&anchor_matrix);
             RotTrans(&vector, &direction, &direction.pad);
         }
-        motion->velocity[0] = direction.vx << 3;
-        motion->velocity[1] = direction.vy << 3;
-        motion->velocity[2] = direction.vz << 3;
+        motion->velocity.x = direction.vx << 3;
+        motion->velocity.y = direction.vy << 3;
+        motion->velocity.z = direction.vz << 3;
         break;
     case EFFECT_EMITTER_VELOCITY_INWARD:
-        direction.vx = position.vx - (motion->position[0] >> 12);
-        direction.vy = position.vy - (motion->position[1] >> 12);
-        direction.vz = position.vz - (motion->position[2] >> 12);
+        direction.vx = position.vx - (motion->position.x >> 12);
+        direction.vy = position.vy - (motion->position.y >> 12);
+        direction.vz = position.vz - (motion->position.z >> 12);
         speed = battle_effect_get_random_between(speed_min, speed_max);
         if (direction.vx != 0 || direction.vy != 0 || direction.vz != 0) {
             VectorNormal(&direction, &direction);
-            motion->velocity[0] = (speed * direction.vx) >> 9;
-            motion->velocity[1] = (speed * direction.vy) >> 9;
-            motion->velocity[2] = (speed * direction.vz) >> 9;
+            motion->velocity.x = (speed * direction.vx) >> 9;
+            motion->velocity.y = (speed * direction.vy) >> 9;
+            motion->velocity.z = (speed * direction.vz) >> 9;
         } else {
-            motion->velocity[1] = speed << 3;
-            motion->velocity[2] = 0;
-            motion->velocity[0] = 0;
+            motion->velocity.y = speed << 3;
+            motion->velocity.z = 0;
+            motion->velocity.x = 0;
         }
         break;
     }
-    motion->acceleration[0] = motion->acceleration[1] = motion->acceleration[2] = motion->acceleration_step[0]
-        = motion->acceleration_step[1] = motion->acceleration_step[2] = 0;
+    motion->acceleration.x = motion->acceleration.y = motion->acceleration.z = motion->acceleration_step.x
+        = motion->acceleration_step.y = motion->acceleration_step.z = 0;
     motion->inertia = ONE;
     motion->weight = battle_effect_get_random_between(values->weight_min, values->weight_max);
     return battle_effect_get_random_between(values->lifetime_min, values->lifetime_max);

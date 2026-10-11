@@ -7,7 +7,8 @@
  * the controller is replaced by the title menu. The menu is given the sector just
  * past the stream, from the record's start sector and length, as the place to
  * stop the CD audio. */
-void open_movie_finish_stream_controller_if_ready_or_skipped(const open_movie_stream_controller_state_t* state) {
+void open_movie_finish_stream_controller_if_ready_or_skipped(open_controller_record_t* record) {
+    const open_movie_stream_controller_state_t* state = &record->movie;
     if (g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_MOVIE_STREAMING) {
         if (!(g_open_input_new_button_presses & PSX_PAD_START)) {
             return;

@@ -110,9 +110,9 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
                 id = g_battle_effect_current_secondary->slot_ids[i * 10 + j];
                 if (id != 0) {
                     slot = &g_battle_effect_slots[id];
-                    slot->motion.position[0] = (state->center.vx + state->points[i][k].vx) << 12;
-                    slot->motion.position[1] = (state->center.vy + state->points[i][k].vy) << 12;
-                    slot->motion.position[2] = (state->center.vz + state->points[i][k].vz) << 12;
+                    slot->motion.position.x = (state->center.vx + state->points[i][k].vx) << 12;
+                    slot->motion.position.y = (state->center.vy + state->points[i][k].vy) << 12;
+                    slot->motion.position.z = (state->center.vz + state->points[i][k].vz) << 12;
                     battle_effect_update_slot(g_battle_effect_current_secondary->slot_ids[i * 10 + j]);
                 }
                 k++;

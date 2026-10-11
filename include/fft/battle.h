@@ -2809,16 +2809,6 @@ typedef struct battle_effect_resource {
  * (0, ONE, 0); an effect file's script sets its own pair (opcode 27). */
 enum { BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD = 0x230 };
 
-/* Twelve-byte gravity vector at g_battle_effect_gravity (0x801b8a40), added to every
- * effect particle's velocity, with a saved copy at g_battle_effect_saved_gravity (0x801b8a50). The
- * secondary-effect handlers store (0, 0x1000, 0) before stepping the effect
- * slots; effect script 0x27 copies it from the particle-system data. */
-typedef struct battle_effect_gravity {
-    s32 x;
-    s32 y;
-    s32 z;
-} battle_effect_gravity_t;
-
 /* One trail of the spell charge effect: the recent screen positions of the effect slot it follows. */
 typedef struct battle_effect_charge_trail {
     DVECTOR points[7]; /* 0x00; screen positions, newest at age % 7 */
@@ -3800,12 +3790,12 @@ typedef char assert_effect_list_node_size[sizeof(effect_list_node_t) == 0x24 ? 1
  * acceleration << 12 / inertia and gains g_battle_effect_gravity scaled by
  * weight (4.12 fixed point); acceleration gains acceleration_step. */
 typedef struct battle_effect_motion {
-    s16 inertia;              /* 0x00 */
-    s16 weight;               /* 0x02; scales the gravity vector */
-    s32 position[3];          /* 0x04; 20.12 fixed */
-    s32 velocity[3];          /* 0x10 */
-    s32 acceleration[3];      /* 0x1c */
-    s32 acceleration_step[3]; /* 0x28 */
+    s16 inertia;                 /* 0x00 */
+    s16 weight;                  /* 0x02; scales the gravity vector */
+    vec3s32_t position;          /* 0x04; 20.12 fixed */
+    vec3s32_t velocity;          /* 0x10 */
+    vec3s32_t acceleration;      /* 0x1c */
+    vec3s32_t acceleration_step; /* 0x28 */
 } battle_effect_motion_t;
 typedef char battle_effect_motion_size_must_be_0x34[(sizeof(battle_effect_motion_t) == 0x34) ? 1 : -1];
 
@@ -4362,7 +4352,7 @@ typedef char assert_effect_geometry_record_size[sizeof(effect_geometry_record_t)
 typedef struct effect_geometry_table {
     u16 _unused_00;        /* 2, or 1 in seven shipped files */
     u16 entry_count;       /* 0x02 */
-    s32 gravity[3];        /* 0x04: copied to g_battle_effect_gravity by effect script opcode 0x27 */
+    vec3s32_t gravity;     /* 0x04: copied to g_battle_effect_gravity by effect script opcode 0x27 */
     s32 inertia_threshold; /* 0x10: passed to battle_effect_set_inertia_threshold by opcode 0x27 */
     /* One 0xc4-byte record per emitter or mesh. The slots keep their curve
      * bindings, but each native EFFECT renderer gives them its own meanings,
@@ -4485,8 +4475,9 @@ extern s32 g_battle_effect_sound_data_base;
 extern struct main_sound_resource* g_battle_effect_sound_section_ptr;
 extern u8 g_battle_effect_target_id; /* id of the charge secondary effect started with the ability; 0 none */
 extern effect_flags_section_t* g_battle_effect_flags_section;
-extern battle_effect_gravity_t g_battle_effect_gravity;
-extern battle_effect_gravity_t g_battle_effect_saved_gravity;
+/* Particle gravity; secondary handlers save it while using (0, ONE, 0). */
+extern vec3s32_t g_battle_effect_gravity;
+extern vec3s32_t g_battle_effect_saved_gravity;
 extern s32 g_battle_effect_arc_trajectory_height;
 extern s16 g_battle_effect_arrow_arc_caster_relative_yaw;
 extern s32 g_battle_effect_arrow_arc_distance;
@@ -4682,7 +4673,7 @@ void battle_effect_step_emitter_timeline(
 
 void battle_effect_integrate_particle_motion(effect_work_record_t* list);
 void battle_effect_step_motion(battle_effect_motion_t* motion);
-void battle_effect_set_gravity(battle_effect_gravity_t* src);
+void battle_effect_set_gravity(vec3s32_t* src);
 
 s32 battle_effect_trace_arc_trajectory_path(
     SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, battle_effect_obstacle_unit_list_t* obstacles);

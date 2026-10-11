@@ -16,7 +16,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
     battle_effect_trap_state_24_t* state;
     battle_effect_slot_t* slot;
     s32 unused[6]; /* Reserves the target's 0x58-byte frame. */
-    battle_effect_gravity_t gravity;
+    vec3s32_t gravity;
     s32 result;
     s32 spawned;
     s32 i;

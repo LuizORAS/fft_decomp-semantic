@@ -5,7 +5,8 @@
  *
  * Confirming the selected date stores Ramza's birthday and zodiac data before starting the opening transition.
  */
-void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t* menu) {
+void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
+    open_birthday_confirmation_state_t* menu = &record->birthday_confirmation;
     s32 month;
     s32 day;
     s32 value;

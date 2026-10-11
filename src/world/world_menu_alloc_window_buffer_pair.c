@@ -7,7 +7,7 @@
  * is free the current thread is stopped.  The record loop
  * runs once: the target's `blez` exit test only reproduces with a bound
  * of 1, so the second record of the pair is left uninitialised. */
-void* world_menu_alloc_window_buffer_pair(void) {
+menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void) {
     menu_window_buffer_t* buffer;
     s32 index;
     s32 i;

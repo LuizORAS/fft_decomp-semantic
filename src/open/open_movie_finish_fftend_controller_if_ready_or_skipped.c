@@ -5,7 +5,7 @@
 /* Handler 9, the FFTEND.STR ending movie: Start stops the stream. Once the stream
  * has stopped, by itself or on the update after Start, the display is blanked and
  * the controller is replaced by the ending script. */
-void open_movie_finish_fftend_controller_if_ready_or_skipped(void) {
+void open_movie_finish_fftend_controller_if_ready_or_skipped(open_controller_record_t* unused_record) {
     u32 flags;
     s32 controller;
 

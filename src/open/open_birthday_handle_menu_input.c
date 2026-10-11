@@ -17,7 +17,8 @@
  *
  * February has 28 days in g_open_birthday_month_lengths, so 29 February cannot be
  * entered. */
-void open_birthday_handle_menu_input(open_birthday_date_state_t* menu) {
+void open_birthday_handle_menu_input(open_controller_record_t* record) {
+    open_birthday_date_state_t* menu = &record->birthday_date;
     if (g_open_gfx_render_records_56[menu->window_record_56].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }

@@ -74,7 +74,7 @@ void wldcore_gfx_draw_animated_display_object(world_animated_render_record_t* ob
     /* A goto loop: as a for/while loop, GCC's loop pass hoists the 0xffff
      * constant into a register, which the target does not. */
 step_frame:
-    index = ((wldcore_anim_frame_t*)sequence)[object->frame_index + 1].duration;
+    index = (sequence->frames + object->frame_index)->duration;
     if (index == object->anim_counter && index != 0xffff) {
         object->anim_counter = 0;
         object->frame_index = object->frame_index + 1;
@@ -84,7 +84,7 @@ step_frame:
         }
         goto step_frame;
     }
-    index = ((wldcore_anim_frame_t*)sequence)[object->frame_index + 1].cel;
+    index = (sequence->frames + object->frame_index)->cel;
     words = cels[index];
     clut_x = words[1] & 0xffff;
     clut_y = (words[1] & 0xffff0000) >> 16;

@@ -2307,7 +2307,7 @@ data:
   - {addr: 0x801cd838, name: g_world_input_newly_pressed}
   - {addr: 0x801cd83c, name: GsLIGHT_MODE}
   - {addr: 0x801cd840, name: g_world_gfx_poly_f3_capacity}
-  - {addr: 0x801cd844, name: g_world_help_text_id_tables_ptr}
+  - {addr: 0x801cd844, name: g_world_help_active_text_id_tables}
   - {addr: 0x801cd848, name: g_world_gfx_poly_g3_capacity}
   - {addr: 0x801cd84c, name: g_world_gfx_poly_f4_capacity}
   - {addr: 0x801cd850, name: g_world_gfx_gradient_quad_capacity}

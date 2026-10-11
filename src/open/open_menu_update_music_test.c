@@ -12,7 +12,8 @@
  * release. Up and Down are withheld from the list for ten frames after each
  * selection.
  */
-void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
+void open_menu_update_music_test(open_controller_record_t* record) {
+    open_menu_sound_test_state_t* state = &record->music_test;
     point32_t extent;
     point32_t origin;
     s32 buttons;

@@ -33,17 +33,17 @@ void battle_effect_integrate_particle_motion(effect_work_record_t* list) {
         list = node->next;
         motion = &node->motion;
 
-        motion->position[0] += motion->velocity[0];
-        motion->position[1] += motion->velocity[1];
-        motion->position[2] += motion->velocity[2];
+        motion->position.x += motion->velocity.x;
+        motion->position.y += motion->velocity.y;
+        motion->position.z += motion->velocity.z;
 
         weight = motion->inertia - threshold;
 
-        motion->velocity[0] = (weight * motion->velocity[0] + (motion->acceleration[0] << 12)) / motion->inertia
+        motion->velocity.x = (weight * motion->velocity.x + (motion->acceleration.x << 12)) / motion->inertia
             + ((gravity_x * motion->weight) >> 12);
-        motion->velocity[1] = (weight * motion->velocity[1] + (motion->acceleration[1] << 12)) / motion->inertia
+        motion->velocity.y = (weight * motion->velocity.y + (motion->acceleration.y << 12)) / motion->inertia
             + ((gravity_y * motion->weight) >> 12);
-        motion->velocity[2] = (weight * motion->velocity[2] + (motion->acceleration[2] << 12)) / motion->inertia
+        motion->velocity.z = (weight * motion->velocity.z + (motion->acceleration.z << 12)) / motion->inertia
             + ((gravity_z * motion->weight) >> 12);
 
         weight = node->homing_strength;
@@ -58,9 +58,9 @@ void battle_effect_integrate_particle_motion(effect_work_record_t* list) {
                 strength = -0x80;
             }
 
-            delta.vx = node->target_x - (motion->position[0] >> 12);
-            delta.vy = node->target_y - (motion->position[1] >> 12);
-            delta.vz = node->target_z - (motion->position[2] >> 12);
+            delta.vx = node->target_x - (motion->position.x >> 12);
+            delta.vy = node->target_y - (motion->position.y >> 12);
+            delta.vz = node->target_z - (motion->position.z >> 12);
             if (delta.vx != 0 || delta.vy != 0 || delta.vz != 0) {
                 VectorNormal(&delta, &delta);
                 delta.vx = (weight * delta.vx) >> 12;
@@ -68,13 +68,13 @@ void battle_effect_integrate_particle_motion(effect_work_record_t* list) {
                 delta.vz = (weight * delta.vz) >> 12;
             }
 
-            motion->acceleration[0] += ((motion->acceleration_step[0] - delta.vx) * strength) / 127 + delta.vx;
-            motion->acceleration[1] += ((motion->acceleration_step[1] - delta.vy) * strength) / 127 + delta.vy;
-            motion->acceleration[2] += ((motion->acceleration_step[2] - delta.vz) * strength) / 127 + delta.vz;
+            motion->acceleration.x += ((motion->acceleration_step.x - delta.vx) * strength) / 127 + delta.vx;
+            motion->acceleration.y += ((motion->acceleration_step.y - delta.vy) * strength) / 127 + delta.vy;
+            motion->acceleration.z += ((motion->acceleration_step.z - delta.vz) * strength) / 127 + delta.vz;
         } else {
-            motion->acceleration[0] += motion->acceleration_step[0];
-            motion->acceleration[1] += motion->acceleration_step[1];
-            motion->acceleration[2] += motion->acceleration_step[2];
+            motion->acceleration.x += motion->acceleration_step.x;
+            motion->acceleration.y += motion->acceleration_step.y;
+            motion->acceleration.z += motion->acceleration_step.z;
         }
         node = list;
     }

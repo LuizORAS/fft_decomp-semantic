@@ -576,16 +576,6 @@ extern u32 g_effect_wave_mesh_brightness_table[][9];
 
 /* other */
 
-/* Low halfwords of a VECTOR's components, as effect_add_scratchpad_xyz_components
- * reads them (lhu at +0, +4 and +8). */
-typedef struct effect_wide_vector {
-    u16 x;
-    u16 pad_x;
-    u16 y;
-    u16 pad_y;
-    u16 z;
-} effect_wide_vector_t;
-
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 4x4 grid-mesh
  * family: brightness_row selects the row, the column is the quad row. */
 extern u32 g_effect_gfx_brightness_table[][5];

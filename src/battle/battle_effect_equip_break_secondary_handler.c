@@ -9,7 +9,7 @@
 s32 battle_effect_equip_break_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
     battle_effect_secondary_data_t* current;
-    battle_effect_gravity_t gravity;
+    vec3s32_t gravity;
     s32 group;
     s32 result;
     s16 finish_timer;

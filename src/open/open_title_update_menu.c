@@ -12,7 +12,8 @@
  * out and dispatches on the cursor (new game, continue, options), and the
  * directional helpers move the highlight between the four entries.
  */
-void open_title_update_menu(open_title_controller_t* state) {
+void open_title_update_menu(open_controller_record_t* record) {
+    open_title_controller_t* state = &record->title;
     u8 loc[8];
     s32 status;
     s32 remaining;
@@ -103,7 +104,7 @@ void open_title_update_menu(open_title_controller_t* state) {
 
     if (state->state == OPEN_TITLE_STATE_SOUND_MENU) {
         state->state = OPEN_TITLE_STATE_MENU;
-        open_gfx_hide_four_render_records((open_birthday_render_record_indices_t*)state);
+        open_gfx_hide_four_render_records(state);
         open_menu_push_sound_type_controller();
         return;
     }

@@ -65,11 +65,8 @@ typedef struct open_controller_birthday {
     u8 _unused_08[0x64 - 8];
 } open_controller_birthday_t;
 
-typedef void (*open_controller_handler_t)(void* record);
-
 extern open_controller_birthday_t g_open_controller_birthdays[];
 extern s32 g_open_controller_handler_indices[]; /* open_controller_handler_e */
-extern open_controller_handler_t g_open_controller_handlers[];
 extern u32 g_open_input_current_buttons;
 extern s32 g_open_input_left_repeat_counter;
 extern s32 g_open_input_right_repeat_counter;
@@ -139,7 +136,6 @@ void open_movie_play_end(void);
 void open_movie_present_frame(void);
 void open_movie_start_cd_stream_read(const CdlLOC* location);
 void open_movie_start_fftst_or_title_menu(s32 use_alternate);
-void open_movie_start_fftst_or_skip_controller(void);
 void open_movie_start_stream(s32 sector, s32 end_frame, s32 video_end_frame, s32 cd_mix_level);
 void open_movie_stop_stream(s32 pause_cd_audio);
 void open_movie_stream_fftop_and_push_controller(s32 start_sector, s32 unused_stream_length, s32 end_frame);
@@ -202,12 +198,6 @@ typedef struct open_render_record_56_position {
 } open_render_record_56_position_t;
 
 /* birthday */
-/* Birthday-menu controller record containing four render-record indices. */
-typedef struct open_birthday_render_record_indices {
-    s32 _unused_00;
-    s32 indices[4];
-} open_birthday_render_record_indices_t;
-
 /* open_title_controller_t.cursor: the four title menu entries. */
 typedef enum open_title_menu_entry {
     OPEN_TITLE_MENU_NEW_GAME = 0,
@@ -299,7 +289,6 @@ void open_birthday_convert_to_zodiac_position(s32* month, s32* day);
 
 void open_birthday_draw_menu_text_entry(s32 record_index, s32 combined_text_index, point32_t position, void* image);
 
-void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t* menu);
 void open_birthday_load_window_image(s32 record_index, u32* image);
 void open_birthday_push_confirmation_controller(void);
 
@@ -378,12 +367,27 @@ typedef union open_controller_record {
     open_menu_sound_test_state_t music_test;
     open_controller_thread_completion_t text_message;
     open_title_exit_state_t title_exit;
-    u8 bytes[0x64];
 } open_controller_record_t;
 typedef char open_controller_record_size_must_be_0x64[(sizeof(open_controller_record_t) == 0x64) ? 1 : -1];
 
+typedef void (*open_controller_handler_t)(open_controller_record_t* record);
+extern open_controller_handler_t g_open_controller_handlers[];
 extern open_controller_record_t g_open_controller_records[];
 extern open_controller_record_t g_open_controller_records_next[];
+
+void open_movie_finish_stream_controller_if_ready_or_skipped(open_controller_record_t* record);
+void open_movie_finish_fftop_controller_if_ready_or_skipped(open_controller_record_t* unused_record);
+void open_title_update_menu(open_controller_record_t* record);
+void open_menu_handle_sound_type_input(open_controller_record_t* record);
+void open_title_step_new_game_start(open_controller_record_t* record);
+void open_birthday_handle_menu_input(open_controller_record_t* record);
+void open_birthday_handle_confirmation_input(open_controller_record_t* record);
+void open_menu_update_music_test(open_controller_record_t* record);
+void open_controller_wait_text_message(open_controller_record_t* record);
+void open_movie_finish_fftend_controller_if_ready_or_skipped(open_controller_record_t* unused_record);
+void open_script_update_controller(open_controller_record_t* unused_record);
+void open_movie_start_fftst_or_skip_controller(open_controller_record_t* unused_record);
+void open_title_update_exit_transition(open_controller_record_t* record);
 
 extern s16 g_open_music_test_row_actions[16];
 extern world_menu_entry_t g_open_music_test_list_params;
@@ -518,7 +522,6 @@ u8* open_script_add_pointer_offset(u8* base, s32 byte_offset);
 s32 open_script_build_text_record(u8* text);
 s32 open_script_init_and_dispatch_entries(void);
 void open_script_push_controller(void);
-void open_script_update_controller(void);
 void open_script_update_screen_fade(void);
 void open_script_update_timing_and_record_values(void);
 
@@ -640,13 +643,13 @@ void open_gfx_clear_and_draw_current_frame(void);
 void open_gfx_clear_current_otag(void);
 void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index);
 void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** records, s32 count);
-void open_gfx_show_four_render_records(open_birthday_render_record_indices_t* group);
+void open_gfx_show_four_render_records(open_title_controller_t* title);
 void open_gfx_init_render_buffers(void);
 void open_gfx_init_screen_environments(s32 clear_first);
 void open_gfx_init_transition_request(s32 target, s32 mode, open_gfx_transition_entry_t** entry_table);
 void open_gfx_init_window_frame_record(s32 record_index, RECT quad, s32 depth, u16* image);
 void open_gfx_load_opntex_into_frame_buffer(const void* source_data);
-void open_gfx_hide_four_render_records(open_birthday_render_record_indices_t* group);
+void open_gfx_hide_four_render_records(open_title_controller_t* title);
 void open_gfx_start_overlay_fade_in(u32 duration);
 void open_gfx_start_overlay_fade_out(u32 duration);
 void open_gfx_step_image_crossfade(void);

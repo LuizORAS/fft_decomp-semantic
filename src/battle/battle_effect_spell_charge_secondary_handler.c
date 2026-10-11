@@ -127,15 +127,15 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                     state->count.trails++;
                     k = (rand() & 0x1ff) + state->angle;
                     state->angle += 0x571;
-                    g_battle_effect_slots[j].motion.position[0] = rcos(k) * state->radius + (state->x << 12);
-                    g_battle_effect_slots[j].motion.position[1] = rsin(k) * state->radius + (state->y << 12);
+                    g_battle_effect_slots[j].motion.position.x = rcos(k) * state->radius + (state->x << 12);
+                    g_battle_effect_slots[j].motion.position.y = rsin(k) * state->radius + (state->y << 12);
                     k = k + rand() % state->spread_range - state->spread_offset - 0x800;
-                    g_battle_effect_slots[j].motion.velocity[0] = rcos(k) * state->speed;
-                    g_battle_effect_slots[j].motion.velocity[1] = rsin(k) * state->speed;
+                    g_battle_effect_slots[j].motion.velocity.x = rcos(k) * state->speed;
+                    g_battle_effect_slots[j].motion.velocity.y = rsin(k) * state->speed;
                     g_battle_effect_slots[j].life = 1;
                     for (k = 0; k < 7; k++) {
-                        state->trails[i].points[k].vx = g_battle_effect_slots[j].motion.position[0] >> 12;
-                        state->trails[i].points[k].vy = g_battle_effect_slots[j].motion.position[1] >> 12;
+                        state->trails[i].points[k].vx = g_battle_effect_slots[j].motion.position.x >> 12;
+                        state->trails[i].points[k].vy = g_battle_effect_slots[j].motion.position.y >> 12;
                     }
                     state->trails[i].age = 0;
                     break;
@@ -195,10 +195,10 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
             j = state->trails[i].slot_id;
             if (j != 0) {
                 work = &g_battle_effect_slots[j];
-                work->motion.position[0] = x
-                    = g_battle_effect_slots[j].motion.position[0] + g_battle_effect_slots[j].motion.velocity[0];
-                work->motion.position[1] = y
-                    = g_battle_effect_slots[j].motion.position[1] + g_battle_effect_slots[j].motion.velocity[1];
+                work->motion.position.x = x
+                    = g_battle_effect_slots[j].motion.position.x + g_battle_effect_slots[j].motion.velocity.x;
+                work->motion.position.y = y
+                    = g_battle_effect_slots[j].motion.position.y + g_battle_effect_slots[j].motion.velocity.y;
                 age = ++state->trails[i].age;
                 head = age % 7;
                 if (age <= state->duration) {

@@ -68,6 +68,14 @@ typedef struct vec3s16 {
 } vec3s16_t;
 typedef char assert_vec3s16_size[sizeof(vec3s16_t) == 6 ? 1 : -1];
 
+/* Three signed 32-bit components without VECTOR's trailing padding word. */
+typedef struct vec3s32 {
+    s32 x;
+    s32 y;
+    s32 z;
+} vec3s32_t;
+typedef char assert_vec3s32_size[sizeof(vec3s32_t) == 12 ? 1 : -1];
+
 /* RECT layout with unsigned fields, for rectangles the target reads with lhu. */
 typedef struct urect16 {
     u16 x;

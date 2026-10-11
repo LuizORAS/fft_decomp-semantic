@@ -61,7 +61,7 @@ extern help_navigation_record_t g_world_help_terrain_navigation[];
 extern help_navigation_record_t g_world_help_attack_preview_navigation[];
 extern help_navigation_record_t g_world_help_unit_box_navigation[];
 extern help_navigation_record_t g_world_help_require_navigation[];
-extern u8 g_world_help_menu_text_id_tables[];
+extern u16* const g_world_help_menu_text_id_tables[23];
 
 /* Help-file offsets of the text sections the help menus rebind, added to
  * g_world_help_data_base (HELPMENU twin at 0x801e0b30). */
@@ -69,7 +69,7 @@ extern s32 g_world_help_text_section_offsets[32];
 extern u8 g_world_help_data_base[];
 extern u32* g_world_help_controller_state_ptr;
 extern u16* g_world_help_topic_text_ids;
-extern s32 g_world_help_text_id_tables_ptr;
+extern u16* const* g_world_help_active_text_id_tables;
 
 /* map */
 extern u16 g_world_map_append_state;
@@ -2561,7 +2561,7 @@ void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_off
 void world_menu_init_panel_fade_tiles(void);
 void world_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos);
 void world_menu_labeled_number_entry_thread(void);
-void* world_menu_alloc_window_buffer_pair(void);
+menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void);
 void world_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void world_menu_animate_window_quad_crop_full(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void world_menu_animate_window_quads_to_rects(menu_window_buffer_t* buffers, RECT* to_main, RECT* to_icon);
@@ -2809,7 +2809,7 @@ extern u8 g_world_card_save_title_template[0x16];
 extern u8 g_world_card_selected_slot;
 extern u8 g_world_card_slot_cursor_row;
 extern s16 g_world_card_menu_request_state; /* world_screen_request_state_e */
-extern void* g_world_card_save_file_names[];
+extern const char* g_world_card_save_file_names[15];
 
 /* Encoded captions addressed directly by world_card_build_save_slot_description,
  * immediately after the 15 save-file pointers at g_world_card_save_file_names. */
@@ -2891,7 +2891,7 @@ s32 world_card_count_free_blocks(struct DIRENTRY* entries, s32 count);
 s32 world_card_count_save_files(struct DIRENTRY* dir, s32 all);
 s32 world_card_count_selectable_save_slots(void);
 s32 world_card_create_new_with_retries(s32 port, s32 retry_limit);
-s32 world_card_delete_file(char* name);
+s32 world_card_delete_file(const char* name);
 void world_card_draw_slot_text(s32 slot);
 s32 world_card_format_selected_slot(void);
 s32 world_card_get_selected_slot(void);

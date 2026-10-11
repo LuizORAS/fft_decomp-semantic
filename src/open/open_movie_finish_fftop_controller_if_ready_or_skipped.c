@@ -4,7 +4,7 @@
 
 /* OPEN_CONTROLLER_FFTOP_MOVIE: Start stops the opening movie; once it has stopped the controller
  * pops, blanks the display and ends OPENING with result 0. */
-void open_movie_finish_fftop_controller_if_ready_or_skipped(void) {
+void open_movie_finish_fftop_controller_if_ready_or_skipped(open_controller_record_t* unused_record) {
     u32 flags;
     s32 controller;
 

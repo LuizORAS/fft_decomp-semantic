@@ -19,7 +19,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
     battle_effect_burst_state_t* state;
     battle_effect_slot_t* slot;
     s32 unused[8];
-    battle_effect_gravity_t gravity;
+    vec3s32_t gravity;
     VECTOR zoom;
     VECTOR offset;
     s32 result;

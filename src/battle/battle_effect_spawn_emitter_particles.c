@@ -151,9 +151,9 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
         if (parent != 0) {
-            spawn.vx += parent->motion.position[0] >> 12;
-            spawn.vy += parent->motion.position[1] >> 12;
-            spawn.vz += parent->motion.position[2] >> 12;
+            spawn.vx += parent->motion.position.x >> 12;
+            spawn.vy += parent->motion.position.y >> 12;
+            spawn.vz += parent->motion.position.z >> 12;
         }
         break;
     case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
@@ -180,9 +180,9 @@ s32 battle_effect_spawn_emitter_particles(
     particle = head;
     if (kind & EFFECT_EMITTER_BOX_SPREAD) {
         for (i = 0; i < count; i++) {
-            particle->motion.position[0] = (spawn.vx + RANDOM_BETWEEN(spread.vx, -spread.vx)) << 12;
-            particle->motion.position[1] = (spawn.vy + RANDOM_BETWEEN(spread.vy, -spread.vy)) << 12;
-            particle->motion.position[2] = (spawn.vz + RANDOM_BETWEEN(spread.vz, -spread.vz)) << 12;
+            particle->motion.position.x = (spawn.vx + RANDOM_BETWEEN(spread.vx, -spread.vx)) << 12;
+            particle->motion.position.y = (spawn.vy + RANDOM_BETWEEN(spread.vy, -spread.vy)) << 12;
+            particle->motion.position.z = (spawn.vz + RANDOM_BETWEEN(spread.vz, -spread.vz)) << 12;
             particle = particle->next;
         }
     } else {
@@ -198,13 +198,13 @@ s32 battle_effect_spawn_emitter_particles(
                 rotation.vz = 0;
                 rotation.vy = 0;
                 RotTrans(&rotation, &out, &out.pad);
-                particle->motion.position[0] = ((out.vx * spread.vx) / scale + spawn.vx) << 12;
-                particle->motion.position[1] = ((out.vy * spread.vy) / scale + spawn.vy) << 12;
-                particle->motion.position[2] = ((out.vz * spread.vz) / scale + spawn.vz) << 12;
+                particle->motion.position.x = ((out.vx * spread.vx) / scale + spawn.vx) << 12;
+                particle->motion.position.y = ((out.vy * spread.vy) / scale + spawn.vy) << 12;
+                particle->motion.position.z = ((out.vz * spread.vz) / scale + spawn.vz) << 12;
             } else {
-                particle->motion.position[0] = spawn.vx << 12;
-                particle->motion.position[1] = spawn.vy << 12;
-                particle->motion.position[2] = spawn.vz << 12;
+                particle->motion.position.x = spawn.vx << 12;
+                particle->motion.position.y = spawn.vy << 12;
+                particle->motion.position.z = spawn.vz << 12;
             }
             particle = particle->next;
         }
@@ -253,9 +253,9 @@ s32 battle_effect_spawn_emitter_particles(
             rotation.vx = 0;
             rotation.vy = RANDOM_BETWEEN(speed_min, speed_max);
             RotTrans(&rotation, &out, &out.pad);
-            particle->motion.velocity[0] = out.vx << 3;
-            particle->motion.velocity[1] = out.vy << 3;
-            particle->motion.velocity[2] = out.vz << 3;
+            particle->motion.velocity.x = out.vx << 3;
+            particle->motion.velocity.y = out.vy << 3;
+            particle->motion.velocity.z = out.vz << 3;
             particle = particle->next;
         }
         break;
@@ -275,9 +275,9 @@ s32 battle_effect_spawn_emitter_particles(
             rotation.vy = out.vy;
             rotation.vz = out.vz;
             RotTrans(&rotation, &out, &out.pad);
-            particle->motion.velocity[0] = out.vx << 3;
-            particle->motion.velocity[1] = out.vy << 3;
-            particle->motion.velocity[2] = out.vz << 3;
+            particle->motion.velocity.x = out.vx << 3;
+            particle->motion.velocity.y = out.vy << 3;
+            particle->motion.velocity.z = out.vz << 3;
             particle = particle->next;
         }
         break;
@@ -285,19 +285,19 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     case EFFECT_EMITTER_VELOCITY_INWARD:
         for (i = 0; i < count; i++) {
-            out.vx = spawn.vx - (particle->motion.position[0] >> 12);
-            out.vy = spawn.vy - (particle->motion.position[1] >> 12);
-            out.vz = spawn.vz - (particle->motion.position[2] >> 12);
+            out.vx = spawn.vx - (particle->motion.position.x >> 12);
+            out.vy = spawn.vy - (particle->motion.position.y >> 12);
+            out.vz = spawn.vz - (particle->motion.position.z >> 12);
             speed = RANDOM_BETWEEN(speed_min, speed_max);
             if (out.vx != 0 || out.vy != 0 || out.vz != 0) {
                 VectorNormal(&out, &out);
-                particle->motion.velocity[0] = (speed * out.vx) >> 9;
-                particle->motion.velocity[1] = (speed * out.vy) >> 9;
-                particle->motion.velocity[2] = (speed * out.vz) >> 9;
+                particle->motion.velocity.x = (speed * out.vx) >> 9;
+                particle->motion.velocity.y = (speed * out.vy) >> 9;
+                particle->motion.velocity.z = (speed * out.vz) >> 9;
             } else {
-                particle->motion.velocity[1] = speed << 3;
-                particle->motion.velocity[2] = 0;
-                particle->motion.velocity[0] = 0;
+                particle->motion.velocity.y = speed << 3;
+                particle->motion.velocity.z = 0;
+                particle->motion.velocity.x = 0;
             }
             particle = particle->next;
         }
@@ -353,12 +353,12 @@ s32 battle_effect_spawn_emitter_particles(
     }
     particle = head;
     for (i = 0; i < count; i++) {
-        particle->motion.acceleration[0] = RANDOM_BETWEEN(accel_min.vx, accel_max.vx);
-        particle->motion.acceleration[1] = RANDOM_BETWEEN(accel_min.vy, accel_max.vy);
-        particle->motion.acceleration[2] = RANDOM_BETWEEN(accel_min.vz, accel_max.vz);
-        particle->motion.acceleration_step[0] = RANDOM_BETWEEN(accel_step_min.vx, accel_step_max.vx);
-        particle->motion.acceleration_step[1] = RANDOM_BETWEEN(accel_step_min.vy, accel_step_max.vy);
-        particle->motion.acceleration_step[2] = RANDOM_BETWEEN(accel_step_min.vz, accel_step_max.vz);
+        particle->motion.acceleration.x = RANDOM_BETWEEN(accel_min.vx, accel_max.vx);
+        particle->motion.acceleration.y = RANDOM_BETWEEN(accel_min.vy, accel_max.vy);
+        particle->motion.acceleration.z = RANDOM_BETWEEN(accel_min.vz, accel_max.vz);
+        particle->motion.acceleration_step.x = RANDOM_BETWEEN(accel_step_min.vx, accel_step_max.vx);
+        particle->motion.acceleration_step.y = RANDOM_BETWEEN(accel_step_min.vy, accel_step_max.vy);
+        particle->motion.acceleration_step.z = RANDOM_BETWEEN(accel_step_min.vz, accel_step_max.vz);
         particle = particle->next;
     }
 
