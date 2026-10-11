@@ -16,7 +16,7 @@ void world_shop_run_fitting_room_step(void) {
             return;
         }
         world_formation_init_cursor_and_scroll_state(0);
-        memset(g_world_shop_fitting_room_items, 0, 0xC8);
+        memset(g_world_shop_fitting_room_items, 0, sizeof(g_world_shop_fitting_room_items));
         world_shop_add_fitting_room_cost(-world_shop_add_fitting_room_cost(0));
         g_world_shop_fitting_room_unit_chosen = 0;
         g_world_shop_cost_window_visible = 0;

@@ -75,16 +75,18 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     } else {
         record->abilities.fields.primary_skillset = unit->primary_skillset;
         if (record->identity.job_id != JOB_ID_MIME) {
-            record->equipment[0] = party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
+            record->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]
+                = party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
                 ? party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON]
                 : party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];
-            record->equipment[1] = party->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
+            record->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND]
+                = party->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
                 ? party->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON]
                 : party->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
-            record->equipment[2] = party->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
-            record->equipment[3] = party->equipment[UNIT_EQUIPMENT_SLOT_BODY];
-            record->equipment[4] = party->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
-            for (i = 0; i < 5; i++) {
+            record->equipment[WORLD_EQUIPMENT_SLOT_HEAD] = party->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
+            record->equipment[WORLD_EQUIPMENT_SLOT_BODY] = party->equipment[UNIT_EQUIPMENT_SLOT_BODY];
+            record->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY] = party->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
+            for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
                 if (record->equipment[i] >= ITEM_ID_END) {
                     record->equipment[i] = ITEM_ID_NOTHING;
                 }

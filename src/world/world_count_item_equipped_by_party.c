@@ -15,7 +15,7 @@ s32 world_count_item_equipped_by_party(s32 item_id) {
     item_id &= WORLD_ITEM_ID_MASK;
     for (unit_index = 0; unit_index < g_world_formation_record_count; unit_index++) {
         unit = g_world_formation_unit_pointers[unit_index];
-        for (slot = 0; slot < 5; slot++) {
+        for (slot = 0; slot < WORLD_EQUIPMENT_SLOT_COUNT; slot++) {
             if (unit->equipment[slot] == item_id) {
                 count++;
             }

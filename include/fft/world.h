@@ -641,7 +641,7 @@ extern image_load_parameters_t g_world_equipment_panel_sprite_params_0[19];
 extern image_load_parameters_t g_world_equipment_panel_sprite_params_1[19];
 extern image_load_parameters_t g_world_equipment_panel_sprite_params_2[19];
 extern image_load_parameters_t g_world_equipment_panel_sprite_params_3[19];
-extern image_load_parameters_t g_world_equipment_panel_icon_params[5];
+extern image_load_parameters_t g_world_equipment_panel_icon_params[WORLD_EQUIPMENT_SLOT_COUNT];
 extern menu_status_thread_t g_world_equipment_ability_panel_thread_params;
 extern s8 g_world_equip_menu_initialized;
 extern menu_instruction_t g_world_equip_item_menu_script;
@@ -650,7 +650,7 @@ extern s8 g_world_equip_item_list_refresh;
 extern s8 g_world_equip_item_preview_active;
 extern u16 g_world_equip_item_cursor_anim;
 extern point16_t g_world_equip_item_cursor_point;
-extern u16 g_world_remove_all_equipment_ids[5];
+extern u16 g_world_remove_all_equipment_ids[WORLD_EQUIPMENT_SLOT_COUNT];
 extern point16_t g_world_remove_all_equipment_cursor_point;
 extern s8 g_world_equip_item_list_open;
 extern s16 g_world_equip_item_previewed_cursor;
@@ -1389,14 +1389,14 @@ typedef struct world_formation_unit {
     s16 physical_shield_evade;            /* 0x046 */
     s16 physical_accessory_evade;         /* 0x048 */
     u8 _unused_04a[2];
-    s16 magical_attack;                    /* 0x04c */
-    s16 magical_class_evade;               /* 0x04e */
-    s16 magical_shield_evade;              /* 0x050 */
-    s16 magical_accessory_evade;           /* 0x052 */
-    u16 equipment[5];                      /* 0x054; right hand, left hand, head, body, accessory */
-    world_formation_abilities_t abilities; /* 0x05e */
-    u8 _unused_068[8];                     /* 0x068; spare tail of the stat-detail block */
-    u8 gender_flags;                       /* 0x070; unit_flags_e (fft/unit.h) */
+    s16 magical_attack;                        /* 0x04c */
+    s16 magical_class_evade;                   /* 0x04e */
+    s16 magical_shield_evade;                  /* 0x050 */
+    s16 magical_accessory_evade;               /* 0x052 */
+    u16 equipment[WORLD_EQUIPMENT_SLOT_COUNT]; /* 0x054; right hand, left hand, head, body, accessory */
+    world_formation_abilities_t abilities;     /* 0x05e */
+    u8 _unused_068[8];                         /* 0x068; spare tail of the stat-detail block */
+    u8 gender_flags;                           /* 0x070; unit_flags_e (fft/unit.h) */
     u8 _unused_071;
     u8 sprite_set;               /* 0x072; "Sprite Set ID": party_data_t.sprite_set / character identity */
     u8 equippable_item_types[4]; /* 0x073; bit per item type, read by can_unit_equip_item_id */
@@ -1773,7 +1773,7 @@ extern image_load_parameters_t g_world_unit_editor_sprite_image_params_a[19];
 extern image_load_parameters_t g_world_unit_editor_sprite_image_params_b[19];
 extern image_load_parameters_t g_world_unit_editor_row_image_params_a[4];
 extern image_load_parameters_t g_world_unit_editor_row_image_params_b[4];
-extern image_load_parameters_t g_world_unit_editor_item_icon_image_params[5];
+extern image_load_parameters_t g_world_unit_editor_item_icon_image_params[WORLD_EQUIPMENT_SLOT_COUNT];
 extern u8 g_world_unit_editor_line_colors[8 * MENU_UNIT_EDITOR_LINE_SIZE];
 extern u16 g_world_unit_editor_sprite_clut_pairs[19][2];
 extern menu_unit_view_thread_set_t g_world_unit_view_thread_sets[];
@@ -2853,7 +2853,7 @@ extern u8 g_world_item_category_input_lock;
 extern menu_icon_source_t g_world_item_type_icon_source;
 extern u8 g_world_item_menu_saved_browse_enabled;
 extern s8 g_world_remove_item_previewed_slot;
-extern s16 g_world_remove_item_equipment[5];
+extern s16 g_world_remove_item_equipment[WORLD_EQUIPMENT_SLOT_COUNT];
 extern s8 g_world_item_category_previewed_cursor;
 extern s16 g_world_item_rearrange_picked_cursor;   /* cursor position of the picked-up item */
 extern u16 g_world_item_rearrange_picked_scroll;   /* scroll offset when picked up */
@@ -3000,7 +3000,7 @@ typedef struct world_shop_roster_count_menu_script {
 typedef char world_shop_roster_count_value_must_be_0x29
     [((unsigned long)&((world_shop_roster_count_menu_script_t*)0)->unit_count.value == 0x29) ? 1 : -1];
 
-extern s16 g_world_shop_fitting_room_items[][5];
+extern s16 g_world_shop_fitting_room_items[PARTY_ROSTER_SLOT_COUNT][WORLD_EQUIPMENT_SLOT_COUNT];
 extern u8 g_world_shop_hire_menu_initialized;
 extern u8 g_world_shop_item_category;
 extern world_shop_item_availability_t g_world_shop_item_availability[];
@@ -3216,10 +3216,10 @@ extern s8 g_world_dismiss_unit_prompt_running;
 extern menu_entry_t g_world_best_fit_confirm_menu;
 extern menu_entry_t g_world_order_unit_menu;
 extern s8* g_world_sort_key_lists[];
-extern u8 g_world_best_fit_slot_categories[5];
+extern u8 g_world_best_fit_slot_categories[WORLD_EQUIPMENT_SLOT_COUNT];
 
 /* Second slot-category table of world_shop_build_fitting_room_best_fit_equipment. */
-extern u8 g_world_fitting_room_best_fit_slot_categories[5];
+extern u8 g_world_fitting_room_best_fit_slot_categories[WORLD_EQUIPMENT_SLOT_COUNT];
 extern game_options_t g_world_saved_game_options;
 extern s32 g_world_finish_operation_event_id;
 extern u8 g_world_order_unit_saved_browse_enabled;

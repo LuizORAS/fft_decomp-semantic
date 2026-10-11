@@ -17,7 +17,7 @@ void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
     s32 i;
     s32 status;
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
         status = world_formation_can_equip_item_in_slot(
             unit_id, i, g_world_formation_unit_pointers[unit_id]->equipment[i]);
         if (status == -1 || status == 0 || status == -6) {

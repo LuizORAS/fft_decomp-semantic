@@ -56,7 +56,7 @@ void world_shop_run_equip_candidate_step(void) {
             i = 0;
             equipped = 0;
             g_world_shop_equip_candidate_last_unit = g_world_formation_selected_unit_index;
-            for (; i < 5; i++) {
+            for (; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
                 if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i]
                     == g_world_shop_equip_candidate_item) {
                     equipped = 1;

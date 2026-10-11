@@ -46,11 +46,11 @@ s32 world_menu_run_best_fit_equipment(void) {
         g_world_status_display_thread_params.redraw_request = 1;
         g_world_formation_unit_cycle_mode = 2;
         if (*choice == 0) {
-            for (i = 0; i < 5; i++) {
+            for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
                 world_item_adjust_inventory_count(
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i], 1);
             }
-            for (i = 0; i < 5; i++) {
+            for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
                 g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i]
                     = g_world_item_preview_stat_detail.equipment[i];
                 world_item_adjust_inventory_count(g_world_item_preview_stat_detail.equipment[i], -1);

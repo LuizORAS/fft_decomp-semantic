@@ -8,7 +8,7 @@ s32 world_item_get_equip_candidate_marker(s32 unit_index) {
     s32 result;
     s32 i;
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
         if (unit->equipment[i] == g_world_shop_equip_candidate_item) {
             return MENU_UNIT_READOUT_EQUIP_LABEL;
         }

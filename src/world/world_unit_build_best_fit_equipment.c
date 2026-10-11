@@ -55,7 +55,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
             held_weapon = left_hand;
     }
 
-    for (slot = 0; slot < 5; slot++) {
+    for (slot = 0; slot < WORLD_EQUIPMENT_SLOT_COUNT; slot++) {
         category = g_world_best_fit_slot_categories[slot];
         count = world_item_build_category_list(
             unit_index, 7, g_world_best_fit_slot_categories[slot], list, ITEM_LIST_MODE_EQUIPPABLE_IN_INVENTORY);

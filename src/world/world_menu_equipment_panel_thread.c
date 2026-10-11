@@ -91,7 +91,7 @@ void world_menu_equipment_panel_thread(void) {
             world_clear_menu_render_buffer(text, 0xc80);
             g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
-            for (i = 0; i < 5; i++) {
+            for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
                 if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                     color_bits = state->equipment[i] & 0xc000;
                     g_world_menu_text_color = color_bits >> 12;
@@ -106,7 +106,7 @@ void world_menu_equipment_panel_thread(void) {
         screen->sprites[12].u0 = u;
         screen->sprites[13].u0 = u;
         world_menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
             world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[19 + i],
                 g_world_panel_item_icon_texture, &g_world_equipment_panel_origin,
                 &g_world_equipment_panel_icon_params[i]);
@@ -142,7 +142,7 @@ void world_menu_equipment_panel_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[0]);
         world_gfx_draw_or_append_gpu_primitive(&screen->sprites[12]);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[1]);
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
             world_gfx_draw_or_append_gpu_primitive(&screen->sprites[19 + i]);
         }
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[2]);

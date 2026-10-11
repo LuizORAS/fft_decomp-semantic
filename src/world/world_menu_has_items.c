@@ -19,7 +19,7 @@ s32 world_menu_has_items(s32 mode) {
         }
     }
     for (i = 0; i < g_world_formation_record_count; i++) {
-        for (slot = 0; slot < 5; slot++) {
+        for (slot = 0; slot < WORLD_EQUIPMENT_SLOT_COUNT; slot++) {
             if (g_world_formation_unit_pointers[i]->equipment[slot]) {
                 has_equipment = 1;
                 break;

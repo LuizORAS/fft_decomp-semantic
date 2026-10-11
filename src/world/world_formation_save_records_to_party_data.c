@@ -30,7 +30,7 @@ void world_formation_save_records_to_party_data(void) {
         party->movement_ability[0] = g_world_formation_unit_pointers[i]->abilities.fields.movement_ability;
         party->movement_ability[1] = g_world_formation_unit_pointers[i]->abilities.fields.movement_ability >> 8;
         if (g_world_formation_unit_pointers[i]->uses_monster_skillset == 0) {
-            item = g_world_formation_unit_pointers[i]->equipment[0];
+            item = g_world_formation_unit_pointers[i]->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
             party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
             party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD] = ITEM_ID_NONE;
             if (item != ITEM_ID_NOTHING) {
@@ -40,7 +40,7 @@ void world_formation_save_records_to_party_data(void) {
                     party->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = item;
                 }
             }
-            item = g_world_formation_unit_pointers[i]->equipment[1];
+            item = g_world_formation_unit_pointers[i]->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
             party->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
             party->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD] = ITEM_ID_NONE;
             if (item != ITEM_ID_NOTHING) {
@@ -51,18 +51,18 @@ void world_formation_save_records_to_party_data(void) {
                 }
             }
             value = ITEM_ID_NONE;
-            if (g_world_formation_unit_pointers[i]->equipment[2] != ITEM_ID_NOTHING) {
-                value = g_world_formation_unit_pointers[i]->equipment[2];
+            if (g_world_formation_unit_pointers[i]->equipment[WORLD_EQUIPMENT_SLOT_HEAD] != ITEM_ID_NOTHING) {
+                value = g_world_formation_unit_pointers[i]->equipment[WORLD_EQUIPMENT_SLOT_HEAD];
             }
             party->equipment[UNIT_EQUIPMENT_SLOT_HEAD] = value;
             value = ITEM_ID_NONE;
-            if (g_world_formation_unit_pointers[i]->equipment[3] != ITEM_ID_NOTHING) {
-                value = g_world_formation_unit_pointers[i]->equipment[3];
+            if (g_world_formation_unit_pointers[i]->equipment[WORLD_EQUIPMENT_SLOT_BODY] != ITEM_ID_NOTHING) {
+                value = g_world_formation_unit_pointers[i]->equipment[WORLD_EQUIPMENT_SLOT_BODY];
             }
             party->equipment[UNIT_EQUIPMENT_SLOT_BODY] = value;
             value = ITEM_ID_NONE;
-            if (g_world_formation_unit_pointers[i]->equipment[4] != ITEM_ID_NOTHING) {
-                value = g_world_formation_unit_pointers[i]->equipment[4];
+            if (g_world_formation_unit_pointers[i]->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY] != ITEM_ID_NOTHING) {
+                value = g_world_formation_unit_pointers[i]->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY];
             }
             party->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY] = value;
             bcopy(g_world_formation_unit_pointers[i]->learned_abilities, party->career.learned_abilities,
