@@ -63,7 +63,6 @@ s32 battle_target_move_cursor_by_input(void) {
         g_battle_cursor_previous_x = g_battle_cursor_x;
         g_battle_cursor_previous_z = g_battle_cursor_z;
         g_battle_cursor_previous_y = g_battle_cursor_y;
-        /* The target passes only the mode; the definition's second parameter is a matching device. */
         direction = battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_PRESSED);
         switch (direction) {
         case BATTLE_FACING_NORTH:
