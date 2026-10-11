@@ -2,6 +2,6 @@
 #include "psx/libgpu.h"
 
 DISPENV* GetDispEnv(DISPENV* env) {
-    psyq_api_memcpy(env, &g_psyq_gpu_display_environment, 20);
+    psyq_api_memcpy(env, &g_psyq_gpu_display_environment, sizeof(DISPENV));
     return env;
 }
