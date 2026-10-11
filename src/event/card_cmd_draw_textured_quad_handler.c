@@ -6,7 +6,7 @@
  * current sprite colour or, for MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. Returns the next command. */
 u8* card_cmd_draw_textured_quad_handler(u8* command) {
     RECT rect;
-    const u8* color;
+    const rgb24_t* color;
     s32 x;
     s32 y;
 
@@ -16,7 +16,7 @@ u8* card_cmd_draw_textured_quad_handler(u8* command) {
     rect.y = y;
     rect.w = command[5];
     rect.h = command[6];
-    color = g_card_text_color;
+    color = &g_card_text_color;
     if (command[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     }

@@ -28,8 +28,8 @@ void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit
     unit->special_graphic_y_offset = 0;
     unit->spritesheet_id = BATTLE_SPRITESHEET_ID_MORBOL;
     unit->spritesheet_vram_slot = battle_gfx_claim_spritesheet_slot(BATTLE_SPRITESHEET_ID_MORBOL);
-    unit->shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(BATTLE_SPRITESHEET_ID_MORBOL);
-    unit->seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(BATTLE_SPRITESHEET_ID_MORBOL);
+    unit->animation.shp = battle_gfx_get_unit_shp_by_spritesheet_id(BATTLE_SPRITESHEET_ID_MORBOL);
+    unit->animation.seq = battle_gfx_get_unit_seq_by_spritesheet_id(BATTLE_SPRITESHEET_ID_MORBOL);
     unit->stored_palette = 0;
     unit->tpage = unit->spritesheet_vram_slot + BATTLE_GFX_TPAGE_SPRITESHEET_SLOT_0;
     tile = battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);

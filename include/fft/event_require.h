@@ -47,6 +47,22 @@ typedef struct require_display_condition_quad {
     s16 y;      /* 0x0a */
 } require_display_condition_quad_t;
 
+/* One color record per display-condition quad; the fourth byte of each
+ * CVECTOR is not consumed by the banner renderer. */
+typedef struct require_display_condition_colors {
+    u8 _unused_00[4];    /* 0x00 */
+    CVECTOR vertices[4]; /* 0x04 */
+} require_display_condition_colors_t;
+typedef char
+    require_display_condition_colors_size_must_be_0x14[sizeof(require_display_condition_colors_t) == 0x14 ? 1 : -1];
+
+typedef struct require_render_condition_tpage {
+    u8 _unused_00;
+    u8 _unused_01;
+    u8 page; /* Bits 5 and 6 select the texture page. */
+    u8 _unused_03;
+} require_render_condition_tpage_t;
+
 extern const u16 g_require_gfx_draw_area_scale_percent[12];
 extern RECT g_require_gfx_draw_area_template;
 extern s16 g_require_gfx_draw_offset_y;
@@ -106,19 +122,21 @@ void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, 
 void require_gfx_init_poly_gt4_array_32(s32 x, s32 y);
 void require_gfx_init_poly_gt4_array_8(s32 x, s32 y);
 void require_gfx_run_suspended_thread_transition(void);
-void require_gfx_scale_poly_gt4_vertex_colors(const u8* vertex_colors, s32 scale, POLY_GT4* poly);
+void require_gfx_scale_poly_gt4_vertex_colors(
+    const require_display_condition_colors_t* colors, s32 scale, POLY_GT4* poly);
 
 /* condition */
 extern u8 g_require_condition_general_quad_ranges[];
 extern require_display_condition_quad_t g_require_condition_general_quads[];
-extern u8 g_require_condition_general_vertex_colors[];
+extern require_display_condition_colors_t g_require_condition_general_vertex_colors[];
+extern require_render_condition_tpage_t g_require_condition_general_tpages[];
 
 /* Per-condition first-quad indices; entry n+1 bounds entry n. */
 extern u8 g_require_condition_special_quad_ranges[];
 extern require_display_condition_quad_t g_require_condition_special_quads[];
 
 /* 0x14-byte vertex-colour records, one per quad. */
-extern u8 g_require_condition_special_vertex_colors[];
+extern require_display_condition_colors_t g_require_condition_special_vertex_colors[];
 void require_condition_show_ready_bugged(void);
 
 /* REQUIRE 0x801cafd4, invoked by both BATTLE and WORLD event dispatch. */

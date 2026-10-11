@@ -207,7 +207,8 @@ typedef char world_textured_rect_source_size_must_be_0x10[sizeof(world_gfx_textu
 typedef struct world_formation_background_draw_state {
     world_gfx_textured_rect_source_t rect; /* 0x00 */
     u8 _unused_10[8];                      /* 0x10; reserved in the frame, never read */
-    u8 rgb[16];                            /* 0x18 */
+    rgb24_t rgb[4];                        /* 0x18 */
+    u8 _unused_24[4];                      /* reserved in the frame */
     u8 shades[16][5];                      /* 0x28 */
 } world_formation_background_draw_state_t;
 

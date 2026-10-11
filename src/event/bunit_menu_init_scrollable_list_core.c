@@ -21,9 +21,9 @@ void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* 
     if (selected_index == 0) {
         g_bunit_menu_scroll_base_index = 0;
     }
-    g_bunit_gfx_sprite_color[0] = 0x80;
-    g_bunit_gfx_sprite_color[1] = 0x80;
-    g_bunit_gfx_sprite_color[2] = 0x80;
+    g_bunit_gfx_sprite_color.r = 0x80;
+    g_bunit_gfx_sprite_color.g = 0x80;
+    g_bunit_gfx_sprite_color.b = 0x80;
     g_bunit_gfx_otag_index = 0;
     g_bunit_menu_scroll_list_active = 0;
     g_bunit_menu_scroll_pixel_offset = 0;

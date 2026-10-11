@@ -58,13 +58,13 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
         if ((battle_move_get_water_depth(unit) & 0xff) >= 2) {
             if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
                 battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_DEAD, unit->facing, unit);
-                unit->sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
-                unit->animation_wait = 0;
+                unit->animation.sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
+                unit->animation.wait = 0;
             } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
                 battle_unit_store_animation_facing_movement_data(
                     BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE, unit->facing, unit);
-                unit->sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
-                unit->animation_wait = 0;
+                unit->animation.sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
+                unit->animation.wait = 0;
             }
         }
     } else if ((battle_move_get_water_depth(unit) & 0xff) < 2) {
@@ -75,11 +75,11 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
         }
     } else if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_DEAD, unit->facing, unit);
-        unit->sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
-        unit->animation_wait = 0;
+        unit->animation.sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
+        unit->animation.wait = 0;
     } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE, unit->facing, unit);
-        unit->sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
-        unit->animation_wait = 0;
+        unit->animation.sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
+        unit->animation.wait = 0;
     }
 }

@@ -7,7 +7,7 @@
  * RGB triples, one per corner.
  */
 void bunit_gfx_enqueue_gouraud_textured_quad(
-    const world_gfx_textured_rect_source_t* rect, const u8* color, s32 semitrans, s32 otag_index) {
+    const world_gfx_textured_rect_source_t* rect, const rgb24_t* color, s32 semitrans, s32 otag_index) {
     POLY_GT4* poly;
 
     poly = &g_bunit_gfx_context->gouraud_textured_quads[g_bunit_gfx_poly_gt4_count++];
@@ -32,18 +32,18 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
     poly->u3 = rect->u + rect->w;
     poly->v3 = rect->v + rect->h;
 
-    poly->r0 = color[0];
-    poly->g0 = color[1];
-    poly->b0 = color[2];
-    poly->r1 = color[3];
-    poly->g1 = color[4];
-    poly->b1 = color[5];
-    poly->r2 = color[6];
-    poly->g2 = color[7];
-    poly->b2 = color[8];
-    poly->r3 = color[9];
-    poly->g3 = color[10];
-    poly->b3 = color[11];
+    poly->r0 = color[0].r;
+    poly->g0 = color[0].g;
+    poly->b0 = color[0].b;
+    poly->r1 = color[1].r;
+    poly->g1 = color[1].g;
+    poly->b1 = color[1].b;
+    poly->r2 = color[2].r;
+    poly->g2 = color[2].g;
+    poly->b2 = color[2].b;
+    poly->r3 = color[3].r;
+    poly->g3 = color[3].g;
+    poly->b3 = color[3].b;
 
     poly->clut = rect->clut;
     poly->tpage = rect->tpage;

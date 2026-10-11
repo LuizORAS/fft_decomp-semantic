@@ -518,6 +518,50 @@ typedef struct event_sprite_move_parameters {
 } event_sprite_move_parameters_t;
 typedef char event_sprite_move_parameters_size_must_be_12[sizeof(event_sprite_move_parameters_t) == 12 ? 1 : -1];
 
+/* Camera operands remain byte-aligned in the event stream. Positions are
+ * x, z (height), y; rotations are tilt, yaw, roll. RelativeCamera has the
+ * same seven values, and Camera appends a frame duration. */
+typedef union event_camera_values {
+    struct {
+        u8 position_le[3][2];
+        u8 rotation_le[3][2];
+        u8 zoom_le[2];
+    } fields;
+    u8 values_le[7][2];
+} event_camera_values_t;
+typedef char event_camera_values_size_must_be_14[sizeof(event_camera_values_t) == 14 ? 1 : -1];
+
+typedef struct event_camera_parameters {
+    event_camera_values_t values;
+    u8 duration_le[2];
+} event_camera_parameters_t;
+typedef char event_camera_parameters_size_must_be_16[sizeof(event_camera_parameters_t) == 16 ? 1 : -1];
+
+typedef struct event_camera_instruction {
+    u8 opcode;
+    event_camera_parameters_t parameters;
+} event_camera_instruction_t;
+typedef char event_camera_instruction_size_must_be_17[sizeof(event_camera_instruction_t) == 17 ? 1 : -1];
+
+/* Focus scans subsequent instructions for the Camera that it rewrites. */
+typedef struct event_focus_parameters {
+    u8 first_unit_id_le[2];
+    u8 second_unit_id_le[2];
+    u8 keep_angle;
+} event_focus_parameters_t;
+typedef char event_focus_parameters_size_must_be_5[sizeof(event_focus_parameters_t) == 5 ? 1 : -1];
+
+/* FocusSpeed rewrites the immediately following Camera's duration. */
+typedef struct event_focus_speed_parameters {
+    u8 speed_le[2];
+} event_focus_speed_parameters_t;
+
+typedef struct event_focus_speed_instruction {
+    u8 opcode;
+    event_focus_speed_parameters_t parameters;
+} event_focus_speed_instruction_t;
+typedef char event_focus_speed_instruction_size_must_be_3[sizeof(event_focus_speed_instruction_t) == 3 ? 1 : -1];
+
 /* Operand view of the event jump instruction that
  * *_script_jump_event_instruction reads: a unit id halfword, then the two
  * byte operands. */

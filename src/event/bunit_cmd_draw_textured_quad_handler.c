@@ -7,9 +7,9 @@
  * a list row is rendered, y is offset by the row's position and the scroll
  * offset. Returns the next command. */
 u8* bunit_cmd_draw_textured_quad_handler(u8* cmd) {
-    s16 params[4];
+    RECT rect;
     s32 index;
-    u8* table;
+    rgb24_t* table;
 
     if (g_bunit_menu_scroll_list_active == 0) {
         index = cmd[4];
@@ -20,17 +20,17 @@ u8* bunit_cmd_draw_textured_quad_handler(u8* cmd) {
         }
     }
 
-    params[0] = cmd[3];
-    params[1] = index;
-    params[2] = cmd[5];
-    params[3] = cmd[6];
+    rect.x = cmd[3];
+    rect.y = index;
+    rect.w = cmd[5];
+    rect.h = cmd[6];
 
-    table = g_bunit_gfx_sprite_color;
+    table = &g_bunit_gfx_sprite_color;
     if (cmd[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         table = 0;
     }
 
-    bunit_gfx_enqueue_textured_quad((const RECT*)params, cmd[7], cmd[8], table, g_bunit_gfx_semitrans_enabled,
+    bunit_gfx_enqueue_textured_quad(&rect, cmd[7], cmd[8], table, g_bunit_gfx_semitrans_enabled,
         g_bunit_gfx_texture_page, g_bunit_gfx_clut_id, g_bunit_gfx_otag_index);
     return cmd + cmd[1];
 }

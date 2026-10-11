@@ -6,14 +6,14 @@
 u8* equip_cmd_set_draw_color_handler(u8* cmd) {
     u8 blue;
     if (g_equip_menu_use_alternate_palette != 0) {
-        g_equip_gfx_sprite_color[0] = cmd[5];
-        g_equip_gfx_sprite_color[1] = cmd[6];
+        g_equip_gfx_sprite_color.r = cmd[5];
+        g_equip_gfx_sprite_color.g = cmd[6];
         blue = cmd[7];
     } else {
-        g_equip_gfx_sprite_color[0] = cmd[2];
-        g_equip_gfx_sprite_color[1] = cmd[3];
+        g_equip_gfx_sprite_color.r = cmd[2];
+        g_equip_gfx_sprite_color.g = cmd[3];
         blue = cmd[4];
     }
-    g_equip_gfx_sprite_color[2] = blue;
+    g_equip_gfx_sprite_color.b = blue;
     return cmd + cmd[1];
 }

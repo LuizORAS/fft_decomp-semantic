@@ -21,20 +21,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Four-byte record per general-case quad; only bit 5/6 of `page` is consumed,
- * shifted left by two for the 24bpp graph types. */
-typedef struct require_render_condition_tpage {
-    u8 _unused_00;
-    u8 _unused_01;
-    u8 page;
-    u8 _unused_03;
-} require_render_condition_tpage_t;
-
-extern require_render_condition_tpage_t g_require_condition_general_tpages[];
-
 #define QUAD(index) (quads + parameters[0])[index]
 
-#define VERTEX_COLORS(index) (&colors[(parameters[0] + index) * 0x14])
+#define VERTEX_COLORS(index) (&colors[parameters[0] + index])
 
 /* Full, unanimated quad: the reveal offset is not yet applied. */
 #define STORE_QUAD_FULL(poly, index)                                                                                   \
@@ -96,7 +85,7 @@ extern require_render_condition_tpage_t g_require_condition_general_tpages[];
 void require_render_display_condition_general_cases(s32 hold_frames) {
     require_display_condition_quad_t* quads;
     u8* range;
-    u8* colors;
+    require_display_condition_colors_t* colors;
     require_render_condition_tpage_t* tpage;
     s32 condition;
     s32 frame;

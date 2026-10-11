@@ -303,7 +303,7 @@ extern u8 g_bunit_gfx_decreasing_fade_active;
 extern RECT g_bunit_gfx_draw_area;
 extern const u16 g_bunit_gfx_draw_area_scale_percent[12];
 extern u16 g_bunit_gfx_draw_move_count;
-extern u8 g_bunit_gfx_fade_color[3];
+extern rgb24_t g_bunit_gfx_fade_color;
 extern s16 g_bunit_gfx_fade_intensity;
 extern RECT g_bunit_gfx_fade_rect[];
 extern u8 g_bunit_gfx_increasing_fade_active;
@@ -345,7 +345,7 @@ extern s16 g_bunit_gfx_poly_g3_count;
 extern s16 g_bunit_gfx_poly_gt3_count;
 extern s16 g_bunit_gfx_sprite_16_count;
 extern s16 g_bunit_gfx_sprite_8_count;
-extern u8 g_bunit_gfx_sprite_color[3];
+extern rgb24_t g_bunit_gfx_sprite_color;
 extern s16 g_bunit_gfx_sprite_count;
 extern s16 g_bunit_gfx_tile_16_count;
 extern s16 g_bunit_gfx_tile_1_count;
@@ -363,20 +363,20 @@ void bunit_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void bunit_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 
 void bunit_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
+    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 
 void bunit_gfx_enqueue_gouraud_textured_quad(
-    const world_gfx_textured_rect_source_t* rect, const u8* color, s32 semitrans, s32 otag_index);
+    const world_gfx_textured_rect_source_t* rect, const rgb24_t* color, s32 semitrans, s32 otag_index);
 
 void bunit_gfx_enqueue_oriented_textured_quad(
-    const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
+    const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
 
-void bunit_gfx_enqueue_textured_quad_corners(world_gfx_textured_quad_source_t* src, u8* color, s32 semi, s32 idx);
+void bunit_gfx_enqueue_textured_quad_corners(world_gfx_textured_quad_source_t* src, rgb24_t* color, s32 semi, s32 idx);
 
-void bunit_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const u8* color, s32 semitrans,
+void bunit_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 otag_index, s32 count);
 
-void bunit_gfx_enqueue_tile(RECT* rect, u8* color, u8 semi, s32 idx);
+void bunit_gfx_enqueue_tile(RECT* rect, rgb24_t* color, u8 semi, s32 idx);
 s32 bunit_gfx_get_fade_state(void);
 void bunit_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
 void bunit_gfx_init_rhombus_cursor_tpages(void);
@@ -397,8 +397,8 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);
 void bunit_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 void bunit_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
 void bunit_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
-void bunit_gfx_enqueue_gouraud_quad(u16* pts, u8* color, s32 semi, s32 idx);
-u8* bunit_gfx_get_draw_color(void);
+void bunit_gfx_enqueue_gouraud_quad(u16* pts, rgb24_t* color, s32 semi, s32 idx);
+rgb24_t* bunit_gfx_get_draw_color(void);
 void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
     POLY_GT3* gouraud_textured_triangles, POLY_G4* gouraud_quads, POLY_GT4* gouraud_textured_quads, LINE_F2* flat_lines,
@@ -408,7 +408,7 @@ void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* ota
 void bunit_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 void bunit_gfx_init_vram_and_start_fade(void);
 void bunit_gfx_load_image_and_wait(RECT* rect, void* data);
-void bunit_gfx_set_draw_color(const u8* color);
+void bunit_gfx_set_draw_color(const rgb24_t* color);
 void bunit_gfx_set_otag_index(s16 value);
 void bunit_gfx_store_image_and_wait(RECT* rect, void* data);
 void bunit_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag);
@@ -675,22 +675,22 @@ extern world_oriented_quad_t g_bunit_unit_dot_sprite;
 extern world_draw_number_command_t g_bunit_unit_grid_brave_number;
 extern world_draw_number_command_t g_bunit_unit_grid_brave_number_wide;
 extern u16 g_bunit_unit_grid_ct_gauge_clut;
-extern u8 g_bunit_unit_grid_ct_gauge_colors[];
+extern rgb24_t g_bunit_unit_grid_ct_gauge_colors[4];
 extern point16_t g_bunit_unit_grid_cursor_target;
-extern u8 g_bunit_unit_grid_dimmed_color[];
+extern rgb24_t g_bunit_unit_grid_dimmed_color;
 extern world_draw_number_command_t g_bunit_unit_grid_experience_number;
 extern world_draw_number_command_t g_bunit_unit_grid_faith_number;
 extern world_draw_number_command_t g_bunit_unit_grid_faith_number_wide;
 extern s8 g_bunit_unit_grid_gauge_offsets[];
 extern u16 g_bunit_unit_grid_hp_gauge_clut;
-extern u8 g_bunit_unit_grid_hp_gauge_colors[];
+extern rgb24_t g_bunit_unit_grid_hp_gauge_colors[4];
 extern battle_menu_sprite_cell_t g_bunit_unit_grid_label_tiles[];
 extern battle_menu_sprite_cell_t g_bunit_unit_grid_label_tiles_bottom[];
 extern world_draw_number_command_t g_bunit_unit_grid_level_number;
 extern world_draw_number_command_t g_bunit_unit_grid_max_stat_number;
 extern u16 g_bunit_unit_grid_mp_gauge_clut;
-extern u8 g_bunit_unit_grid_mp_gauge_colors[];
-extern u8 g_bunit_unit_grid_normal_color[];
+extern rgb24_t g_bunit_unit_grid_mp_gauge_colors[4];
+extern rgb24_t g_bunit_unit_grid_normal_color;
 extern u8 g_bunit_unit_grid_stat_bar_script_bottom[];
 extern u8 g_bunit_unit_grid_stat_bar_script_top[];
 extern world_draw_number_command_t g_bunit_unit_grid_stat_number;

@@ -7,7 +7,7 @@ s32 battle_gfx_reset_unit_graphic_trigger(u32 misc_id) {
 
     if (unit != 0) {
         unit->draw_enabled = 0;
-        unit->sprite_graphic_trigger = 0;
+        unit->animation.trigger = 0;
         return 1;
     }
     return 0;

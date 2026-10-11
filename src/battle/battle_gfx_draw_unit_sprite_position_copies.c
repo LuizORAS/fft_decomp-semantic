@@ -32,7 +32,7 @@ void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) 
         zoom.vx = g_battle_camera_zoom.vx;
         zoom.vy = g_battle_camera_zoom.vy;
         zoom.vz = g_battle_camera_zoom.vz;
-        display = unit->sprite_display_section;
+        display = unit->animation.display;
         battle_gfx_construct_polygon_data_for_units(
             display, display->part_count, 0, &position, 0, flags, &zoom, main_gfx_get_otag() + depth);
     }

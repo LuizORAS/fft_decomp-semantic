@@ -21,7 +21,7 @@ void battle_unit_mount_rider_onto_unit(battle_unit_misc_data_t* rider, battle_un
     rider->map_z = mount->map_z;
     rider->status_flags_1_4 |= BATTLE_MISC_STATUS_MOUNTED;
     battle_unit_set_animation_based_on_status(rider);
-    rider->animation_script_pos = mount->animation_script_pos;
+    rider->animation.script_pos = mount->animation.script_pos;
     battle_unit_update_display_by_misc_id(rider->unit_id);
     battle_unit_update_display_by_misc_id(mount->unit_id);
 }

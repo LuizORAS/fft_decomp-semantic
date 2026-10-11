@@ -78,7 +78,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                 STATUS_BUBBLE_Y(unit) = -0x78;
                 break;
             case BATTLE_SHP_OTHER:
-                animation = unit->sequence_id >> 1;
+                animation = unit->animation.sequence_id >> 1;
                 if (animation == BATTLE_UNIT_ANIMATION_DEAD || animation == BATTLE_UNIT_ANIMATION_DEATH) {
                     STATUS_BUBBLE_X(unit) = -5;
                     STATUS_BUBBLE_Y(unit) = -0x19;
@@ -91,7 +91,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
             case BATTLE_SHP_TYPE2:
                 if (battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z)->depth_half_height.value
                     & MAP_TILE_DEPTH_MASK) {
-                    switch (unit->sequence_id >> 1) {
+                    switch (unit->animation.sequence_id >> 1) {
                     case BATTLE_UNIT_ANIMATION_DEAD:
                     case BATTLE_UNIT_ANIMATION_DEATH:
                         STATUS_BUBBLE_X(unit) = -5;
@@ -107,7 +107,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                         break;
                     }
                 } else {
-                    switch (unit->sequence_id >> 1) {
+                    switch (unit->animation.sequence_id >> 1) {
                     case BATTLE_UNIT_ANIMATION_DEAD:
                     case BATTLE_UNIT_ANIMATION_DEATH:
                         STATUS_BUBBLE_X(unit) = -5;
@@ -125,7 +125,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                 }
                 break;
             default:
-                animation = unit->sequence_id >> 1;
+                animation = unit->animation.sequence_id >> 1;
                 if (animation == BATTLE_UNIT_ANIMATION_DEAD || animation == BATTLE_UNIT_ANIMATION_DEATH) {
                     STATUS_BUBBLE_X(unit) = -5;
                     STATUS_BUBBLE_Y(unit) = -0x1E;

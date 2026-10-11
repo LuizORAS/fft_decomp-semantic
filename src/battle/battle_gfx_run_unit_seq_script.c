@@ -16,7 +16,7 @@
  * unpackers resolve a missing sequence to the start of the sequence data,
  * never to -1, so the MAIN_SYSTEM_ERROR_SEQ_ANIMATION test cannot fire. */
 void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance) {
-    battle_gfx_unit_seq_t* seq;
+    battle_gfx_unit_seq_table_t* seq;
     battle_unit_sprite_block_t* block;
     battle_unit_misc_data_t* target;
     u16 sequence_id;
@@ -38,9 +38,9 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
         seq = state->seq;
     } else if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_1) {
         index = sequence_id - BATTLE_SEQUENCE_EVTCHR_SLOT_0;
-        seq = &g_battle_gfx_vram_slots[0].seq;
+        seq = &g_battle_gfx_vram_slots[0].seq.header;
     } else {
-        seq = &g_battle_gfx_vram_slots[1].seq;
+        seq = &g_battle_gfx_vram_slots[1].seq.header;
         index = sequence_id - BATTLE_SEQUENCE_EVTCHR_SLOT_1;
     }
     if (!advance) {

@@ -5,7 +5,7 @@
 /* The target re-reads the first-quad index for every field. */
 #define QUAD (quads + parameters[0])[quad_index]
 
-#define VERTEX_COLORS (&color_table[(parameters[0] + quad_index) * 0x14])
+#define VERTEX_COLORS (&color_table[parameters[0] + quad_index])
 
 /* Fade a condition's sprites in over the two primitive buffers, hold them until
  * thread parameter 3 becomes 2, then fade them out.
@@ -25,7 +25,7 @@ void require_render_display_condition_special_cases_thread(void) {
     s32 quad_index;
     require_display_condition_quad_t* quads;
     u8* table;
-    u8* color_table;
+    require_display_condition_colors_t* color_table;
 
     table = g_require_condition_special_quad_ranges;
     color_table = g_require_condition_special_vertex_colors;
@@ -82,7 +82,7 @@ void require_render_display_condition_special_cases_thread(void) {
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
             POLY_GT4* polys = &g_require_gfx_poly_gt4_buffers[buffer][32];
             u8* parameters = &table[parameter_index];
-            const u8* vertex_colors = VERTEX_COLORS;
+            const require_display_condition_colors_t* vertex_colors = VERTEX_COLORS;
 
             if (use_small_array == 0) {
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];
@@ -110,7 +110,7 @@ void require_render_display_condition_special_cases_thread(void) {
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
             POLY_GT4* polys = &g_require_gfx_poly_gt4_buffers[buffer][32];
             u8* parameters = &table[parameter_index];
-            const u8* vertex_colors = VERTEX_COLORS;
+            const require_display_condition_colors_t* vertex_colors = VERTEX_COLORS;
 
             if (use_small_array == 0) {
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];
@@ -136,7 +136,7 @@ fade_out:
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
             POLY_GT4* polys = &g_require_gfx_poly_gt4_buffers[buffer][32];
             u8* parameters = &table[parameter_index];
-            const u8* vertex_colors = VERTEX_COLORS;
+            const require_display_condition_colors_t* vertex_colors = VERTEX_COLORS;
 
             if (use_small_array == 0) {
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];

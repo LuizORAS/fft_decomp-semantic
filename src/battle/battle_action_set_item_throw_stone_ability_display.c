@@ -44,7 +44,7 @@ void battle_action_set_item_throw_stone_ability_display(void) {
         return;
     }
     if ((battle_effect_is_item_ability(ability) == 0)
-        || ((unit->sequence_id >> 1) == BATTLE_UNIT_ANIMATION_HOLD_ITEM)) {
+        || ((unit->animation.sequence_id >> 1) == BATTLE_UNIT_ANIMATION_HOLD_ITEM)) {
         battle_effect_play();
     }
     main_sound_pause_tracked_sfx();

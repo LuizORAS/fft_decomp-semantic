@@ -15,10 +15,10 @@ void world_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
     s32 position_sum;
     s32 rotation_sum;
 
-    speed = world_script_load_halfword(parameters);
-    /* Skip the speed halfword and the byte after it. */
-    parameters += 2;
-    parameters++;
+    /* A separate typed Camera cursor reorders the original argument saves. */
+    speed = world_script_load_halfword(((event_focus_speed_parameters_t*)parameters)->speed_le);
+    parameters += sizeof(event_focus_speed_parameters_t);
+    parameters = ((event_camera_instruction_t*)parameters)->parameters.values.fields.position_le[0];
     position_sum = 0;
     for (i = 0; i < 3; i++) {
         value = world_script_load_halfword(parameters + i * 2);
@@ -27,7 +27,8 @@ void world_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
         } else {
             position_delta[i] = value - position[i] / 1024;
         }
-        value = world_script_load_halfword(parameters + i * 2 + 6);
+        value
+            = world_script_load_halfword(parameters + i * 2 + sizeof(((event_camera_values_t*)0)->fields.position_le));
         if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
             rotation_delta[i] = 0;
         } else {
@@ -43,5 +44,5 @@ void world_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
     if (position_sum == 0) {
         position_sum = 1;
     }
-    world_script_store_halfword(parameters + 14, position_sum);
+    world_script_store_halfword(((event_camera_parameters_t*)parameters)->duration_le, position_sum);
 }

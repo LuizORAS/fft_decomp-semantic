@@ -40,7 +40,7 @@ typedef struct {
  * in the loop counter and OT-index registers (the falloff result in `i`, the
  * facing quadrant in `value`), so the source reuses those variables. */
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
-    u8 rgb[3];
+    rgb24_t rgb;
     bunit_sprite_quad_t quad;
     u8* frame;
     s32 base_y;
@@ -52,7 +52,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     s32 size;
 
     i = bunit_gfx_calculate_distance_falloff(x, y, 0xC8, 0x50);
-    rgb[0] = rgb[1] = rgb[2] = i > 0x80 ? 0x80 : i;
+    rgb.r = rgb.g = rgb.b = i > 0x80 ? 0x80 : i;
     frame = battle_gfx_get_unit_sprite_frame_and_vram_ids(g_bunit_unit_data[unit]->misc_unit_id, &quad.query);
     base_y = (quad.query.graphic_height >> 1) + 0x16;
     if (frame == (u8*)-1) {
@@ -86,7 +86,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
                 value = 6;
             }
         }
-        bunit_gfx_enqueue_oriented_textured_quad((world_oriented_quad_t*)&quad, rgb, orientation, 0, value);
+        bunit_gfx_enqueue_oriented_textured_quad((world_oriented_quad_t*)&quad, &rgb, orientation, 0, value);
     }
     if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         return;
@@ -111,9 +111,9 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         if (g_bunit_unit_dot_glow_timer < -0x28) {
             g_bunit_unit_dot_glow_direction = 1;
         }
-        rgb[0] += g_bunit_unit_dot_glow_timer;
-        rgb[1] += g_bunit_unit_dot_glow_timer;
-        rgb[2] += g_bunit_unit_dot_glow_timer;
+        rgb.r += g_bunit_unit_dot_glow_timer;
+        rgb.g += g_bunit_unit_dot_glow_timer;
+        rgb.b += g_bunit_unit_dot_glow_timer;
     }
-    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
+    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, &rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
 }

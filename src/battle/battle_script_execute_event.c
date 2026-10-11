@@ -524,13 +524,14 @@ restart_script:
         /* ---- Camera ---- */
         else if (opcode == EVENT_OPCODE_FOCUS) {
             battle_camera_store_yaw_band(g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW]);
-            battle_script_focus(parameters);
+            battle_script_focus((event_focus_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_FOCUS_SPEED) {
             script_variables = g_battle_script_variables;
             battle_script_focus_speed(parameters, &script_variables[EVENT_SCRIPT_VAR_CAMERA_X],
                 &script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT]);
         } else if (opcode == EVENT_OPCODE_RELATIVE_CAMERA) {
-            battle_script_apply_relative_camera(parameters, &g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_X]);
+            battle_script_apply_relative_camera(
+                (event_camera_values_t*)parameters, &g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_X]);
         } else if (opcode == EVENT_OPCODE_CAMERA) {
             operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_camera_thread);

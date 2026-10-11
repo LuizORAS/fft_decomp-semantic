@@ -6,7 +6,7 @@
  * `color` modulates the texture with that RGB triple; the screen x is offset
  * by 0x80. */
 void card_gfx_enqueue_oriented_textured_quad(
-    const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index) {
+    const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index) {
     s32 quad_semitrans = semitrans;
     s32 quad_orientation = orientation;
     POLY_FT4* poly;
@@ -15,9 +15,9 @@ void card_gfx_enqueue_oriented_textured_quad(
 
     if (color != 0) {
         SetShadeTex(poly, 0);
-        poly->r0 = color[0];
-        poly->g0 = color[1];
-        poly->b0 = color[2];
+        poly->r0 = color->r;
+        poly->g0 = color->g;
+        poly->b0 = color->b;
     } else {
         SetShadeTex(poly, 1);
     }

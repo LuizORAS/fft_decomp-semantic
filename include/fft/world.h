@@ -260,10 +260,11 @@ void world_script_copy_32_bytes(void* destination, const void* source);
 void world_script_copy_bytes(void* destination, const void* source, s32 count);
 void world_script_earthquake_start(void);
 void world_script_toggle_message_portrait_flip(const u8* parameters);
-void world_script_apply_relative_camera(u8* source, const s32* deltas);
+void world_script_apply_relative_camera(event_camera_values_t* source, const s32* deltas);
 void world_script_face_tile(const event_face_tile_parameters_t* parameters);
 void world_script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
-void world_script_focus(u8* parameters);
+void world_script_focus(event_focus_parameters_t* parameters);
+/* A typed operand plus a local Camera cursor reorders the original argument saves. */
 void world_script_focus_speed(u8* parameters, s32* position, s32* rotation);
 s32 world_script_get_current_scenario_finish_operation(void);
 

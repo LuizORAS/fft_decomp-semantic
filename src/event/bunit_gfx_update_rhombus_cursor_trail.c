@@ -11,13 +11,13 @@
  * abs() matters: GCC expands it to the single-insn abssi2, which keeps each
  * loop body one basic block as in the target. */
 void bunit_gfx_update_rhombus_cursor_trail(point16_t* target) {
-    u8 rgb[3];
+    rgb24_t rgb;
     s32 i;
     s32 last;
     s32 sum;
     s16 x;
     s16 x2;
-    u8* color;
+    rgb24_t* color;
 
     for (i = 0; i < 7;) {
         s32 j = i + 1;
@@ -44,7 +44,7 @@ void bunit_gfx_update_rhombus_cursor_trail(point16_t* target) {
     }
     last = 1000;
     for (i = 7; i >= 0; i--) {
-        rgb[0] = rgb[1] = rgb[2] = g_bunit_cursor_trail_brightness[i];
+        rgb.r = rgb.g = rgb.b = g_bunit_cursor_trail_brightness[i];
         x = g_bunit_cursor_trail_points[i].x;
         sum = x + g_bunit_cursor_trail_points[i].y;
         if (abs(sum - last) < 5) {
@@ -53,7 +53,7 @@ void bunit_gfx_update_rhombus_cursor_trail(point16_t* target) {
         last = sum;
         color = 0;
         if (i != 7) {
-            color = rgb;
+            color = &rgb;
         }
         if (x == -1) {
             continue;

@@ -149,8 +149,7 @@ s32 battle_gfx_step_load_unit_shp_seq_data(void) {
                 g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_SPRITE_SEQ:
-            battle_gfx_unpack_unit_seq_data(
-                g_battle_gfx_unit_seq_tables + g_battle_gfx_unit_graphics_load_state[2] * 0x408,
+            battle_gfx_unpack_unit_seq_data(&g_battle_gfx_unit_seq_tables[g_battle_gfx_unit_graphics_load_state[2]],
                 g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_SHARED_LOAD_WEAPON_SHP:

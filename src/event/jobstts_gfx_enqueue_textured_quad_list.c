@@ -5,7 +5,7 @@
  * table entry ot_index. With `color` the quads are shaded with that
  * colour. */
 void jobstts_gfx_enqueue_textured_quad_list(
-    battle_menu_sprite_cell_t* sprites, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index, s32 count) {
+    battle_menu_sprite_cell_t* sprites, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index, s32 count) {
     POLY_FT4* poly;
 
     for (count -= 1; count >= 0; count--) {
@@ -13,9 +13,9 @@ void jobstts_gfx_enqueue_textured_quad_list(
 
         if (color != 0) {
             SetShadeTex(poly, 0);
-            poly->r0 = color[0];
-            poly->g0 = color[1];
-            poly->b0 = color[2];
+            poly->r0 = color->r;
+            poly->g0 = color->g;
+            poly->b0 = color->b;
         } else {
             SetShadeTex(poly, 1);
         }

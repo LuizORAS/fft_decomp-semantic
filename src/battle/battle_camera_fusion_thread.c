@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* One track per camera component; 7 * 0xa4 == 0x47c, the allocation size the
@@ -70,14 +71,16 @@ void battle_camera_fusion_thread(void) {
         } else {
             for (;;) {
                 if (*cursor == EVENT_OPCODE_FOCUS) {
-                    battle_script_focus(cursor + 1);
+                    battle_script_focus((event_focus_parameters_t*)(cursor + 1));
                 } else if (*cursor == EVENT_OPCODE_RELATIVE_CAMERA) {
-                    battle_script_apply_relative_camera(cursor + 1, values);
+                    battle_script_apply_relative_camera((event_camera_values_t*)(cursor + 1), values);
                 } else if (*cursor == EVENT_OPCODE_FOCUS_SPEED) {
                     battle_script_focus_speed(cursor + 1, values, values + 3);
                 } else if (*cursor == EVENT_OPCODE_CAMERA) {
                     for (i = 0; i < BATTLE_CAMERA_FUSION_COMPONENT_COUNT; i++) {
-                        value = battle_script_load_halfword(cursor + i + i + 1);
+                        /* Indexed field access replaces retail's two additions with a shift. */
+                        value = battle_script_load_halfword(
+                            cursor + i + i + offsetof(event_camera_instruction_t, parameters.values));
                         if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                             if (i < 3) {
                                 value = values[i] / 1024;
@@ -87,7 +90,8 @@ void battle_camera_fusion_thread(void) {
                         }
                         key = &tracks[i].keys[key_index];
                         key->value = value;
-                        key->time = battle_script_load_halfword(cursor + 15);
+                        key->time = battle_script_load_halfword(
+                            ((event_camera_instruction_t*)cursor)->parameters.duration_le);
                         key->time += tracks[i].keys[key_index - 1].time;
                         component = key->value;
                         values[i] = component;

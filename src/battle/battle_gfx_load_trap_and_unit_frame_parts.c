@@ -68,7 +68,7 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                         | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13));
             }
         }
-    } else if (frame < (u32)state->shp[0]) {
+    } else if (frame < (u32)state->shp->first_attack_frame) {
         display->tpage = unit->tpage | (flags & BATTLE_MISC_DISPLAY_BLEND_MASK);
         display->clut = unit->clut;
         i = 0;

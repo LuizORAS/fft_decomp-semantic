@@ -50,7 +50,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     zoom.vz = g_battle_camera_zoom.vz;
     flags = unit->horizontal_flip_flag ^ unit->sprite_display_flags.half;
     row = unit->layer_priority;
-    if (unit->sprite_graphic_trigger == 0) {
+    if (unit->animation.trigger == 0) {
         return;
     }
     if (unit->item_display_active) {
@@ -69,7 +69,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                     battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
                         flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
                 } else {
-                    display = unit->sprite_display_section;
+                    display = unit->animation.display;
                     battle_gfx_construct_polygon_data_for_units(
                         display, 3, 0, &position, angle, flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
                     rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
@@ -89,7 +89,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                                     &rider_position, angle, rider_flags, &zoom,
                                     main_gfx_get_otag() + unit->otag_depth_index);
                             } else {
-                                rider_display = rider->sprite_display_section;
+                                rider_display = rider->animation.display;
                                 battle_gfx_construct_polygon_data_for_units(rider_display, rider_display->part_count, 0,
                                     &rider_position, angle, rider_flags, &zoom,
                                     main_gfx_get_otag() + unit->otag_depth_index);
@@ -115,9 +115,9 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                 battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle, flags,
                     &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             } else {
-                display = unit->sprite_display_section;
+                display = unit->animation.display;
                 battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
-                    flags ^ unit->animation_flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                    flags ^ unit->animation.flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             }
         }
         if (unit->shadow_graphic_trigger) {

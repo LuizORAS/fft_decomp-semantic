@@ -49,7 +49,7 @@ void card_save_run_menu(s32 unused) {
         card_gfx_submit_frame_and_swap_buffers(0, 0);
         card_input_update_suppressed_during_fade();
         card_gfx_update_decreasing_fade();
-        card_gfx_enqueue_tile(&g_card_gfx_fullscreen_fade_rect, g_card_gfx_fade_overlay_color, 0, 0);
+        card_gfx_enqueue_tile(&g_card_gfx_fullscreen_fade_rect, &g_card_gfx_fade_overlay_color, 0, 0);
 
         menu_input = g_card_save_menu_state == CARD_SAVE_MENU_SELECT_SAVE
                 && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0

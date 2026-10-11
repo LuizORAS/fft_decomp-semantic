@@ -8,15 +8,20 @@
  * first). The first three deltas (the position) are divided by 1024; a
  * halfword holding the "hold" sentinel is passed through unchanged.
  */
-void world_script_apply_relative_camera(u8* source, const s32* deltas) {
+void world_script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values) {
+    u8* source;
+    const s32* deltas;
     u8* destination;
     s32 index;
     s32 delta;
     s32 value;
 
-    destination = source + 15;
-    if (source[14] == EVENT_OPCODE_FOCUS_SPEED) {
-        destination = source + 18;
+    source = parameters->values_le[0];
+    deltas = camera_values;
+    destination = ((event_camera_instruction_t*)(parameters + 1))->parameters.values.values_le[0];
+    if (((event_camera_instruction_t*)(parameters + 1))->opcode == EVENT_OPCODE_FOCUS_SPEED) {
+        destination = ((event_camera_instruction_t*)((event_focus_speed_instruction_t*)(parameters + 1) + 1))
+                          ->parameters.values.values_le[0];
     }
 
     for (index = 0; index < 7; index++) {

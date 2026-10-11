@@ -42,13 +42,15 @@ void battle_camera_thread(void) {
     s32 angle;
     s16 yaw;
     s32 yaw_delta;
+    const event_camera_parameters_t* parameters;
     const u8* script;
 
     mode = g_battle_camera_speed_curve & 3;
     group = (g_battle_camera_speed_curve & 0xC) >> 2;
     ease = (g_battle_camera_speed_curve & 0xF0) >> 4;
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
-    script = (const u8*)battle_thread_get_current_parameter_1();
+    parameters = (const event_camera_parameters_t*)battle_thread_get_current_parameter_1();
+    script = parameters->values.values_le[0];
     for (i = 0; i < 8; i++) {
         target[i] = battle_script_load_halfword(script);
         script += 2;

@@ -66,7 +66,7 @@ void battle_state_handle_crystal_learn_state(void) {
             g_battle_move_find_result &= ~BATTLE_MOVE_POST_EVENT_MOVEMENT_BENEFIT;
         }
     } else if (g_battle_move_find_result & BATTLE_MOVE_POST_EVENT_ITEM_FOUND) {
-        if ((source->animation_wait != 0) && ((source->sequence_id >> 1) >= 0xc)) {
+        if ((source->animation.wait != 0) && ((source->animation.sequence_id >> 1) >= 0xc)) {
             return;
         }
         source->item_display_active = 0;

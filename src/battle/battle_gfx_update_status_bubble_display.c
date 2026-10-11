@@ -28,7 +28,7 @@ void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
     if ((unit->otag_depth_index - 1) >= 0x17f) {
         return;
     }
-    if (unit->sprite_graphic_trigger == 0) {
+    if (unit->animation.trigger == 0) {
         return;
     }
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {

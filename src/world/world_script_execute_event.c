@@ -487,13 +487,14 @@ restart_event:
         /* ---- Camera ---- */
         else if (opcode == EVENT_OPCODE_FOCUS) {
             world_camera_store_yaw_band(g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW]);
-            world_script_focus(parameters);
+            world_script_focus((event_focus_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_FOCUS_SPEED) {
             event_words = g_world_script_variables;
             world_script_focus_speed(
                 parameters, event_words + EVENT_SCRIPT_VAR_CAMERA_X, event_words + EVENT_SCRIPT_VAR_CAMERA_TILT);
         } else if (opcode == EVENT_OPCODE_RELATIVE_CAMERA) {
-            world_script_apply_relative_camera(parameters, g_world_script_variables + EVENT_SCRIPT_VAR_CAMERA_X);
+            world_script_apply_relative_camera(
+                (event_camera_values_t*)parameters, g_world_script_variables + EVENT_SCRIPT_VAR_CAMERA_X);
         } else if (opcode == EVENT_OPCODE_CAMERA) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, world_camera_thread);

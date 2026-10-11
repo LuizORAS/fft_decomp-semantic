@@ -8,6 +8,7 @@
  * makes loop.c discover the track giv before the script-variable and values
  * givs, which gives the target's induction-increment order. */
 #include "fft/world.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* One track per camera component; 7 * 0xa4 == 0x47c, the allocation size the
@@ -66,14 +67,16 @@ void world_camera_fusion_thread(void) {
         } else {
             for (;;) {
                 if (*cursor == EVENT_OPCODE_FOCUS) {
-                    world_script_focus(cursor + 1);
+                    world_script_focus((event_focus_parameters_t*)(cursor + 1));
                 } else if (*cursor == EVENT_OPCODE_RELATIVE_CAMERA) {
-                    world_script_apply_relative_camera(cursor + 1, values);
+                    world_script_apply_relative_camera((event_camera_values_t*)(cursor + 1), values);
                 } else if (*cursor == EVENT_OPCODE_FOCUS_SPEED) {
                     world_script_focus_speed(cursor + 1, values, values + 3);
                 } else if (*cursor == EVENT_OPCODE_CAMERA) {
                     for (i = 0; i < WORLD_CAMERA_FUSION_COMPONENT_COUNT; i++) {
-                        value = world_script_load_halfword(cursor + i + i + 1);
+                        /* Indexed field access replaces retail's two additions with a shift. */
+                        value = world_script_load_halfword(
+                            cursor + i + i + offsetof(event_camera_instruction_t, parameters.values));
                         if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                             if (i < 3) {
                                 value = values[i] / 1024;
@@ -83,7 +86,8 @@ void world_camera_fusion_thread(void) {
                         }
                         key = &tracks[i].keys[key_index];
                         key->value = value;
-                        key->time = world_script_load_halfword(cursor + 15);
+                        key->time
+                            = world_script_load_halfword(((event_camera_instruction_t*)cursor)->parameters.duration_le);
                         key->time += tracks[i].keys[key_index - 1].time;
                         component = key->value;
                         values[i] = component;

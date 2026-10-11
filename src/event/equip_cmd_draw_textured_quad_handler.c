@@ -9,7 +9,7 @@
 u8* equip_cmd_draw_textured_quad_handler(u8* cmd) {
     RECT rect;
     s32 y;
-    u8* color;
+    rgb24_t* color;
 
     if (g_equip_menu_list_row_mode == 0) {
         y = cmd[4];
@@ -25,7 +25,7 @@ u8* equip_cmd_draw_textured_quad_handler(u8* cmd) {
     rect.w = cmd[5];
     rect.h = cmd[6];
 
-    color = g_equip_gfx_sprite_color;
+    color = &g_equip_gfx_sprite_color;
     if (cmd[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     }

@@ -27,7 +27,7 @@ u8* card_cmd_draw_decimal_number_handler(u8* command) {
     s32 digit;
     s32 i;
     u16 clut;
-    const u8* color;
+    const rgb24_t* color;
 
     value = command[9];
     y = command[8];
@@ -38,7 +38,7 @@ u8* card_cmd_draw_decimal_number_handler(u8* command) {
     glyph.h = 0xB;
     pad = command[4] - sprintf(text, g_card_text_decimal_format, value);
     pos = 0;
-    color = g_card_text_color;
+    color = &g_card_text_color;
     for (i = 0; i < command[4]; i++) {
         glyph.rect.x = command[7] + (i * command[5]);
         glyph.rect.y = y;

@@ -10,6 +10,6 @@ void battle_gfx_load_casting_unit_graphics(void) {
         /* The sprite data block starts at the graphic trigger; 0x1e0 is the
          * current frame. */
         battle_gfx_load_trap_and_unit_frame_parts(
-            unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->sequence_id);
+            unit, &unit->animation, unit->animation.frame, unit->animation.sequence_id);
     }
 }

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /*
@@ -12,7 +13,7 @@
  * first/second hold each unit id and are then reused for its misc id; the
  * target keeps both in the same callee-saved registers.
  */
-void battle_script_focus(u8* parameters) {
+void battle_script_focus(event_focus_parameters_t* parameters) {
     s32 coords[2][4];
     s32 unit_a;
     s32 unit_b;
@@ -20,23 +21,26 @@ void battle_script_focus(u8* parameters) {
     s16 second;
     u8 keep_angle;
     s32 i;
+    u8* cursor;
 
-    first = battle_script_load_halfword(parameters);
-    parameters += 2;
-    second = battle_script_load_halfword(parameters);
-    parameters += 2;
-    keep_angle = *parameters;
-    parameters++;
-    while (*parameters != EVENT_OPCODE_CAMERA) {
-        parameters += g_battle_script_event_instruction_sizes[*parameters] + 1;
+    cursor = parameters->first_unit_id_le;
+    first = battle_script_load_halfword(cursor);
+    cursor += sizeof(parameters->first_unit_id_le);
+    second = battle_script_load_halfword(cursor);
+    cursor += sizeof(parameters->second_unit_id_le);
+    keep_angle = *cursor;
+    cursor++;
+    while (*cursor != EVENT_OPCODE_CAMERA) {
+        cursor += g_battle_script_event_instruction_sizes[*cursor] + 1;
     }
-    parameters++;
+    cursor = ((event_camera_instruction_t*)cursor)->parameters.values.fields.position_le[0];
     unit_a = first;
     unit_b = second;
     first = battle_script_get_misc_id(unit_a);
     second = battle_script_get_misc_id(unit_b);
     if (first == EVENT_MISC_ID_NONE || second == EVENT_MISC_ID_NONE) {
-        parameters[-1] = EVENT_OPCODE_CAMERA_DISABLED;
+        ((event_camera_instruction_t*)(cursor - offsetof(event_camera_instruction_t, parameters)))->opcode
+            = EVENT_OPCODE_CAMERA_DISABLED;
         main_system_handle_malloc_exception(7, 0);
         return;
     }
@@ -54,11 +58,11 @@ void battle_script_focus(u8* parameters) {
     }
     for (i = 0; i < 3; i++) {
         coords[0][i] = (coords[0][i] + coords[1][i]) * 2;
-        battle_script_store_halfword(parameters, coords[0][i]);
-        parameters += 2;
+        battle_script_store_halfword(cursor, coords[0][i]);
+        cursor += sizeof(((event_camera_values_t*)0)->values_le[0]);
     }
     if (keep_angle == 0) {
-        parameters += 2;
-        battle_script_store_halfword(parameters, battle_camera_pick_nearest_unblocked_yaw(first, second));
+        cursor += sizeof(((event_camera_values_t*)0)->values_le[0]);
+        battle_script_store_halfword(cursor, battle_camera_pick_nearest_unblocked_yaw(first, second));
     }
 }

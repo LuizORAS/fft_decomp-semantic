@@ -36,10 +36,10 @@ void bunit_gfx_draw_falloff_shaded_rows(s32 y) {
                 work.rect.x = g_bunit_gfx_background_tile_layout[row % 2][col * 2];
                 u = g_bunit_gfx_background_tile_layout[row % 2][col * 2 + 1];
                 work.rect.u = u;
-                work.rgb[0] = work.rgb[1] = work.rgb[2] = work.shades[row][col];
-                work.rgb[3] = work.rgb[4] = work.rgb[5] = work.shades[row][col + 1];
-                work.rgb[6] = work.rgb[7] = work.rgb[8] = work.shades[row + 1][col];
-                work.rgb[9] = work.rgb[10] = work.rgb[11] = work.shades[row + 1][col + 1];
+                work.rgb[0].r = work.rgb[0].g = work.rgb[0].b = work.shades[row][col];
+                work.rgb[1].r = work.rgb[1].g = work.rgb[1].b = work.shades[row][col + 1];
+                work.rgb[2].r = work.rgb[2].g = work.rgb[2].b = work.shades[row + 1][col];
+                work.rgb[3].r = work.rgb[3].g = work.rgb[3].b = work.shades[row + 1][col + 1];
                 bunit_gfx_enqueue_gouraud_textured_quad(&work.rect, work.rgb, 0, u == 0x58);
             }
         }

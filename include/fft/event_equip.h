@@ -141,7 +141,7 @@ extern u16 g_equip_gfx_poly_ft4_count;
 extern RECT g_equip_gfx_portrait_origin;
 extern u8 g_equip_gfx_portrait_transition_offsets[];
 extern s16 g_equip_gfx_semitransparency;
-extern u8 g_equip_gfx_sprite_color[3];
+extern rgb24_t g_equip_gfx_sprite_color;
 extern s16 g_equip_gfx_sprite_ot_index;
 extern u16 g_equip_gfx_texture_page;
 extern u16 g_equip_gfx_tile_capacity;
@@ -217,12 +217,12 @@ void equip_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void equip_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void equip_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 void equip_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
-void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, u8 semitrans, s32 otag_index);
+void equip_gfx_enqueue_line_f2(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
 
 void equip_gfx_enqueue_oriented_textured_quad(
-    const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
+    const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
 
-void equip_gfx_enqueue_tile(const RECT* rect, const u8* color, u8 semitrans, s32 otag_index);
+void equip_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
 
 void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_f3, POLY_FT3* poly_ft3,
     POLY_F4* poly_f4, POLY_FT4* textured_quads, POLY_G3* poly_g3, POLY_GT3* poly_gt3, POLY_G4* poly_g4,
@@ -230,7 +230,8 @@ void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_
     LINE_G4* line_g4, TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc], SPRT* sprites,
     SPRT_8* sprites_8, u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
-u8* equip_gfx_get_draw_color(void);
+rgb24_t* equip_gfx_get_draw_color(void);
+void equip_gfx_set_draw_color(const rgb24_t* color);
 s32 equip_gfx_get_transition_frame(void);
 void equip_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
 void equip_gfx_init_primitive_buffers(equip_gfx_context_t* context);
@@ -249,10 +250,15 @@ void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
 void equip_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 
 void equip_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
+    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 
-void equip_gfx_enqueue_textured_quad_current_ot(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 unused_priority);
+void equip_gfx_enqueue_textured_quad_corners(
+    const world_gfx_textured_quad_source_t* descriptor, const rgb24_t* color, s32 semitrans, s32 otag_index);
+void equip_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
+    u16 texture_page, u16 clut, s32 otag_index, s32 count);
+
+void equip_gfx_enqueue_textured_quad_current_ot(const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans,
+    u16 texture_page, u16 clut, s32 unused_priority);
 
 /* input */
 extern u8 g_equip_input_activation_timer;

@@ -1236,7 +1236,8 @@ void battle_script_earthquake_start(void);
 void battle_script_face_tile(const event_face_tile_parameters_t* parameters);
 void battle_script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
 void battle_script_filter_controller_input(u32* input);
-void battle_script_focus(u8* parameters);
+void battle_script_focus(event_focus_parameters_t* parameters);
+/* A typed operand plus a local Camera cursor reorders the original argument saves. */
 void battle_script_focus_speed(u8* parameters, s32* position, s32* rotation);
 u32* battle_script_get_controller_input_pointer(s32 use_current);
 s32 battle_script_get_current_scenario_finish_operation(void);
@@ -1301,7 +1302,7 @@ void battle_script_color_screen_thread(void);
 void battle_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void battle_script_toggle_message_portrait_flip(u8* ptr);
 void battle_script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
-void battle_script_apply_relative_camera(u8* p, s32* src);
+void battle_script_apply_relative_camera(event_camera_values_t* parameters, s32* src);
 void battle_script_load_attack_graphics_event_instruction(void);
 void battle_script_execute_display_conditions_instruction(void);
 
@@ -1910,6 +1911,61 @@ typedef struct battle_gfx_unit_shp_frame_tables {
     u8* submerged_frames[0xd0]; /* 0x348 */
 } battle_gfx_unit_shp_frame_tables_t;
 
+/* Common header of an unpacked unit SEQ table. The pointer tail has 0x100
+ * entries in a native table and 0x40 in an EVTCHR slot. */
+typedef struct battle_gfx_unit_seq_table {
+    s32 first_attack_sequence; /* 0x00; sequences from here use the attack image */
+    s32 first_sp2_sequence;    /* 0x04; sequences from here use the SP2 file */
+    u8* sequences[0];          /* 0x08; variable pointer tail */
+} battle_gfx_unit_seq_table_t;
+typedef char battle_gfx_unit_seq_table_size_must_be_8[sizeof(battle_gfx_unit_seq_table_t) == 8 ? 1 : -1];
+
+/* Native table storage: five resident tables and the separate boss table.
+ * Their sequences live in the shared sequence-data buffer. */
+typedef struct battle_gfx_native_unit_seq_table {
+    battle_gfx_unit_seq_table_t header; /* 0x000 */
+    u8* sequences[0x100];               /* 0x008 */
+} battle_gfx_native_unit_seq_table_t;
+typedef char
+    battle_gfx_native_unit_seq_table_size_must_be_0x408[sizeof(battle_gfx_native_unit_seq_table_t) == 0x408 ? 1 : -1];
+
+/* Unit sprite animation state passed to the sequence and frame renderers.
+ * Weapon/effect sprite blocks share its first 0x1c bytes, with distinct tails. */
+typedef struct battle_unit_anim_state {
+    u16 trigger;      /* 0x00; nonzero while the sprite is drawn */
+    u16 graphic_type; /* 0x02; battle_sprite_graphic_type_e */
+    /* 0x04; index of the sequence in the SEQ table. A unit's is its
+     * battle_unit_animation_e * 2, + 1 when it faces away from the camera;
+     * from BATTLE_SEQUENCE_EVTCHR_SLOT_0 up it is a sequence of an EVTCHR slot. */
+    u16 sequence_id;
+    u16 script_pos;        /* 0x06; offset of the next byte to read in the sequence */
+    u16 frame;             /* 0x08; SHP frame on display */
+    u16 wait;              /* 0x0a; frames until the sequence is read again; 0 when it has stopped */
+    u16 restart_count;     /* 0x0c; BATTLE_SEQ_OP_RESTART commands run since the sequence started */
+    u16 saved_sequence_id; /* 0x0e; where BATTLE_SEQ_OP_RETURN resumes */
+    u16 saved_script_pos;  /* 0x10 */
+    u16 wait_bias;         /* 0x12; BATTLE_SEQ_OP_SET_WAIT_BIAS: added to each wait read */
+    u16 frame_bias;        /* 0x14; BATTLE_SEQ_OP_SET_FRAME_BIAS: added to each frame id read */
+    u16 repeat_count;      /* 0x16; jumps the BATTLE_SEQ_OP_REPEAT in progress has left; 0 when none is */
+    u16 flags;             /* 0x18; the flip bits of battle_misc_display_flags_e that the sequence toggled */
+    u8 _padding_1a[2];     /* 0x1a; aligns shp */
+    battle_gfx_unit_shp_frame_tables_t* shp;       /* 0x1c */
+    battle_gfx_unit_seq_table_t* seq;              /* 0x20 */
+    battle_gfx_unit_shp_frame_tables_t* saved_shp; /* 0x24; the sheet's own tables while a status sheet replaces them */
+    battle_gfx_unit_seq_table_t* saved_seq;        /* 0x28 */
+    battle_gfx_sprite_display_data_t* display;     /* 0x2c */
+} battle_unit_anim_state_t;
+typedef char battle_unit_anim_state_size_must_be_0x30[sizeof(battle_unit_anim_state_t) == 0x30 ? 1 : -1];
+typedef char
+    battle_unit_anim_state_frame_must_be_0x08[((unsigned long)&((battle_unit_anim_state_t*)0)->frame == 0x08) ? 1 : -1];
+typedef char
+    battle_unit_anim_state_flags_must_be_0x18[((unsigned long)&((battle_unit_anim_state_t*)0)->flags == 0x18) ? 1 : -1];
+typedef char
+    battle_unit_anim_state_shp_must_be_0x1c[((unsigned long)&((battle_unit_anim_state_t*)0)->shp == 0x1c) ? 1 : -1];
+typedef char
+    battle_unit_anim_state_display_must_be_0x2c[((unsigned long)&((battle_unit_anim_state_t*)0)->display == 0x2c) ? 1
+                                                                                                                  : -1];
+
 /* One movement step: a path element, the unit's current step and the step
  * the movement code is working on. */
 typedef union battle_move_step {
@@ -2199,33 +2255,10 @@ typedef struct battle_unit_misc_data {
     /* Action-display image IDs, not canonical status IDs.  Bit 0x80 marks a
      * removal; the dispatcher consumes entries from the end. */
     u8 status_display_image_list[BATTLE_ACTION_STATUS_DISPLAY_CAPACITY]; /* 0x1bc..0x1d6 */
-    u8 _padding_1d7;                                                     /* aligns sprite_graphic_trigger */
-    /* 0x1d8..0x207 is the unit's battle_unit_anim_state_t, spelled out here:
-     * that type has each member's meaning. The trigger is written as a
-     * halfword by animate_and_set_enemy_level_data_by_misc_id. */
-    u16 sprite_graphic_trigger;  /* 0x1d8; anim state trigger */
-    u16 sprite_graphic_type;     /* 0x1da; BATTLE_SPRITE_GRAPHIC_UNIT */
-    u16 sequence_id;             /* 0x1dc; the sequence playing: battle_unit_animation_e * 2, + 1 seen from behind */
-    u16 animation_script_pos;    /* 0x1de; anim state script_pos */
-    u16 animation_frame;         /* 0x1e0; anim state frame */
-    u16 animation_wait;          /* 0x1e2; anim state wait: 0 once the sequence has stopped */
-    u16 animation_restart_count; /* 0x1e4; anim state restart_count */
-    u16 saved_sequence_id;       /* 0x1e6 */
-    u16 saved_script_pos;        /* 0x1e8 */
-    u16 animation_wait_bias;     /* 0x1ea; anim state wait_bias */
-    u16 animation_frame_bias;    /* 0x1ec; anim state frame_bias */
-    u16 animation_repeat_count;  /* 0x1ee; anim state repeat_count */
-    u16 animation_flags;         /* 0x1f0; anim state flags */
-    u8 _padding_1f2[2];          /* 0x1f2; aligns shp_data */
-    /* The sheet's SHP frame tables and SEQ table (0x1f4/0x1f8); a status
-     * sheet and the Morbol transformation replace both. */
-    battle_gfx_unit_shp_frame_tables_t* shp_data;             /* 0x1f4 */
-    u8* seq_data;                                             /* 0x1f8 */
-    battle_gfx_unit_shp_frame_tables_t* saved_shp_data;       /* 0x1fc; pre-transformation SHP pointer (0x8008363c) */
-    u8* saved_seq_data;                                       /* 0x200; pre-transformation SEQ pointer */
-    battle_gfx_sprite_display_data_t* sprite_display_section; /* 0x204 */
-    battle_unit_sprite_block_t sprite_blocks[3];              /* 0x208..0x297 */
-    u8 shadow_graphic_trigger;                                /* 0x298; nonzero: draw the unit's shadow */
+    u8 _padding_1d7;                                                     /* aligns animation */
+    battle_unit_anim_state_t animation;                                  /* 0x1d8..0x207 */
+    battle_unit_sprite_block_t sprite_blocks[3];                         /* 0x208..0x297 */
+    u8 shadow_graphic_trigger;                                           /* 0x298; nonzero: draw the unit's shadow */
     u8 shadow_dirty;        /* 0x299; bit 0 set when a step lands, cleared on shadow redraw */
     u8 shadow_counter;      /* 0x29a; shadow animation counter (battle_gfx_draw_unit_shadow) */
     u8 _padding_29b;        /* aligns shadow_quad */
@@ -2280,9 +2313,9 @@ typedef char
 typedef char battle_misc_distortion_target_must_be_0x090
     [((unsigned long)&((battle_unit_misc_data_t*)0)->distortion_target == 0x090) ? 1 : -1];
 typedef char battle_misc_animation_frame_must_be_0x1e0
-    [((unsigned long)&((battle_unit_misc_data_t*)0)->animation_frame == 0x1e0) ? 1 : -1];
+    [((unsigned long)&((battle_unit_misc_data_t*)0)->animation.frame == 0x1e0) ? 1 : -1];
 typedef char battle_misc_animation_flags_must_be_0x1f0
-    [((unsigned long)&((battle_unit_misc_data_t*)0)->animation_flags == 0x1f0) ? 1 : -1];
+    [((unsigned long)&((battle_unit_misc_data_t*)0)->animation.flags == 0x1f0) ? 1 : -1];
 typedef char battle_misc_sprite_blocks_must_be_0x208
     [((unsigned long)&((battle_unit_misc_data_t*)0)->sprite_blocks == 0x208) ? 1 : -1];
 typedef char
@@ -2603,7 +2636,7 @@ void battle_sound_set_effect_to_invalid(void);
 void battle_sound_start_weather_sfx(void);
 s32 battle_sound_stop_weather_sfx(void);
 void battle_sound_wait_for_music_stub(void);
-void battle_gfx_unpack_unit_seq_data(u32* destination, const u8* source);
+void battle_gfx_unpack_unit_seq_data(battle_gfx_native_unit_seq_table_t* destination, const u8* source);
 void battle_sound_bg_thread(void);
 void battle_sound_edit_bg_thread(void);
 
@@ -4919,50 +4952,14 @@ enum {
     BATTLE_ENTD_SLOT_NONE = 0xff,
 };
 
-/* A unit SEQ table as battle_gfx_run_unit_seq_script reads it: two header
- * words, then a pointer to each sequence. The tables unpacked from the SEQ
- * files have 0x100 pointers into the shared sequence buffer
- * (battle_gfx_unpack_unit_seq_data). An EVTCHR slot holds this one: 0x40
- * pointers into its own 0x400 bytes, with the header words unset and unread
- * (battle_gfx_unpack_evtchr_file_to_vram_slot). */
+/* An EVTCHR slot's fixed SEQ storage. Its header words are unset and unread;
+ * its 0x40 pointers refer into the slot's own 0x400 bytes. */
 typedef struct battle_gfx_unit_seq {
-    s32 first_attack_sequence; /* 0x000; sequences from here up use frames of the sheet's attack image */
-    s32 first_sp2_sequence;    /* 0x004; sequences from here up use frames of the sheet's SP2 file */
-    u8* sequences[0x40];       /* 0x008 */
-    u8 sequence_data[0x400];   /* 0x108 */
+    battle_gfx_unit_seq_table_t header; /* 0x000 */
+    u8* sequences[0x40];                /* 0x008 */
+    u8 sequence_data[0x400];            /* 0x108 */
 } battle_gfx_unit_seq_t;
-
-/* One 0x30-byte sprite animation state: the sequence of a SEQ table that a
- * sprite is playing and where it stands in it. Misc unit data holds four
- * from 0x1d8: the unit sprite's own state (spelled out field by field in
- * battle_unit_misc_data_t, under longer names) and three weapon/effect
- * battle_unit_sprite_block_t records. The first 0x1c bytes mean the same in
- * both; the unit state keeps its saved SHP/SEQ pointers at 0x24/0x28 and its
- * display pointer at 0x2c. */
-typedef struct battle_unit_anim_state {
-    u16 trigger;      /* 0x00; nonzero while the sprite is drawn */
-    u16 graphic_type; /* 0x02; battle_sprite_graphic_type_e */
-    /* 0x04; index of the sequence in the SEQ table. A unit's is its
-     * battle_unit_animation_e * 2, + 1 when it faces away from the camera;
-     * from BATTLE_SEQUENCE_EVTCHR_SLOT_0 up it is a sequence of an EVTCHR slot. */
-    u16 sequence_id;
-    u16 script_pos;                  /* 0x06; offset of the next byte to read in the sequence */
-    u16 frame;                       /* 0x08; SHP frame on display */
-    u16 wait;                        /* 0x0a; frames until the sequence is read again; 0 when it has stopped */
-    u16 restart_count;               /* 0x0c; BATTLE_SEQ_OP_RESTART commands run since the sequence started */
-    u16 saved_sequence_id;           /* 0x0e; where BATTLE_SEQ_OP_RETURN resumes */
-    u16 saved_script_pos;            /* 0x10 */
-    u16 wait_bias;                   /* 0x12; BATTLE_SEQ_OP_SET_WAIT_BIAS: added to each wait read */
-    u16 frame_bias;                  /* 0x14; BATTLE_SEQ_OP_SET_FRAME_BIAS: added to each frame id read */
-    u16 repeat_count;                /* 0x16; jumps the BATTLE_SEQ_OP_REPEAT in progress has left; 0 when none is */
-    u16 flags;                       /* 0x18; the flip bits of battle_misc_display_flags_e that the sequence toggled */
-    u8 _padding_1a[2];               /* 0x1a; aligns shp */
-    s32* shp;                        /* 0x1c; battle_gfx_unit_shp_frame_tables_t as words */
-    struct battle_gfx_unit_seq* seq; /* 0x20 */
-    u8* saved_shp;                   /* 0x24; the sheet's own tables while a status sheet replaces them */
-    u8* saved_seq;                   /* 0x28 */
-    battle_gfx_sprite_display_data_t* display; /* 0x2c */
-} battle_unit_anim_state_t;
+typedef char battle_gfx_unit_seq_size_must_be_0x508[sizeof(battle_gfx_unit_seq_t) == 0x508 ? 1 : -1];
 
 /* Renderer-side Misc-unit status mirror. These packed masks do not use the
  * canonical battle_status_id_e byte order. */
@@ -5765,8 +5762,8 @@ extern s32 g_battle_gfx_compressed_nibble_phase;
 extern s32 g_battle_gfx_compressed_offset;
 extern u8 g_battle_gfx_screen_color_modulation[3];
 extern u8 g_battle_gfx_screen_color_modulation_backup[3];
-extern u8 g_battle_gfx_unit_seq_tables[];
-extern u8 g_battle_gfx_boss_seq_tables[];
+extern battle_gfx_native_unit_seq_table_t g_battle_gfx_unit_seq_tables[5];
+extern battle_gfx_native_unit_seq_table_t g_battle_gfx_boss_seq_tables;
 extern battle_gfx_spritesheet_data_t g_battle_gfx_spritesheet_data[BATTLE_SPRITESHEET_ID_COUNT];
 extern battle_gfx_unit_shp_frame_tables_t g_battle_gfx_boss_shp_frame_tables;
 extern u8 g_battle_gfx_spritesheet_ids_by_vram_slot[];
@@ -5933,7 +5930,7 @@ void battle_gfx_draw_screen_color_modulation_overlay(void);
 void battle_gfx_draw_wait_direction_unit(void);
 void battle_gfx_free_tpage7_vram(RECT* rect);
 u32 battle_gfx_get_spritesheet_flying_flag(u32 spritesheet_id);
-u8* battle_gfx_get_unit_seq_by_spritesheet_id(u32 spritesheet_id);
+battle_gfx_unit_seq_table_t* battle_gfx_get_unit_seq_by_spritesheet_id(u32 spritesheet_id);
 battle_gfx_unit_shp_frame_tables_t* battle_gfx_get_unit_shp_by_spritesheet_id(u32 spritesheet_id);
 s32 battle_gfx_get_spritesheet_vram_by_battle_id(u32 battle_id);
 void battle_gfx_tint_all_units_by_team(void);
@@ -7914,6 +7911,21 @@ typedef struct battle_map_mesh_quad_normals {
     SVECTOR vertex[4];
 } battle_map_mesh_quad_normals_t;
 
+/* File-load payload at +0x06 of a GNS row. The loader compares all fourteen
+ * bytes, including the fixed markers, before deciding whether to reload.
+ * Word fields remain byte arrays so enclosing rows retain halfword alignment. */
+typedef union gns_load_info {
+    struct {
+        u16 _unknown_00; /* 0x3333 in file rows */
+        u8 disc_lba_le[4];
+        u8 byte_length_le[4];
+        u8 _unknown_0a[3];      /* 55 66 77 in file rows */
+        u8 file_present_marker; /* 0x88 in file rows; zero means no file */
+    } fields;
+    u8 bytes[14];
+} gns_load_info_t;
+typedef char gns_load_info_size_must_be_14[sizeof(gns_load_info_t) == 14 ? 1 : -1];
+
 /* Halfword-aligned view of a 20-byte GNS record: the target copies these
  * records with lwl/lwr pairs, so the loader's type has no word member. */
 typedef struct gns_record_view {
@@ -7921,7 +7933,7 @@ typedef struct gns_record_view {
     s16 map_state;
     u8 map_state_comparison;
     u8 resource_type;
-    u8 load_info[14];
+    gns_load_info_t load_info;
 } gns_record_view_t;
 typedef char gns_record_view_size_must_be_0x14[(sizeof(gns_record_view_t) == 0x14) ? 1 : -1];
 
@@ -8377,7 +8389,8 @@ void battle_map_transition_darkness_color(s32 frame_duration, const map_color_t*
 void battle_map_init_darkness(void);
 s16 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
 void battle_map_load_palette_data(const u16* palette, s32 clut_row, s32 clut_index, s32 load_all);
-s32 battle_map_start_file_load(void* unused_directory_path, u8* load_info, s32 destination, s32 unused_resource_type);
+s32 battle_map_start_file_load(
+    void* unused_directory_path, gns_load_info_t* load_info, s32 destination, s32 unused_resource_type);
 s32 battle_map_stop_texture_animations_and_weather_sfx(void);
 void battle_map_store_max_coordinates(SVECTOR* destination);
 

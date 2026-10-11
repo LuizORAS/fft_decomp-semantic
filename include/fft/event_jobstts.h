@@ -65,6 +65,20 @@ void jobstts_cmd_run_stream_with_mode(u8* data, s32 flags, s32 event_mode);
 u8* jobstts_cmd_skip_group(u8* data);
 
 /* gfx */
+/* Texture cell read by the oriented-quad renderer. */
+typedef struct jobstts_oriented_uv {
+    u8 u; /* 0x00 */
+    u8 _unused_01;
+    u8 v; /* 0x02 */
+    u8 _unused_03;
+    u8 uw; /* 0x04 */
+    u8 _unused_05;
+    u8 vh;          /* 0x06 */
+    u8 _padding_07; /* 0x07; aligns clut */
+    u16 clut;       /* 0x08 */
+    u16 tpage;      /* 0x0a */
+} jobstts_oriented_uv_t;
+
 /* Per-buffer primitive-pool pointers used by JOBSTTS.OUT's renderer. */
 typedef struct jobstts_gfx_context {
     u32* otag;                /* 0x00 */
@@ -163,7 +177,16 @@ extern s16 g_jobstts_gfx_sprite_16_count;
 void jobstts_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 
 void jobstts_gfx_enqueue_textured_quad(
-    RECT* rect, s32 u, s32 v, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index);
+    RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index);
+
+void jobstts_gfx_enqueue_oriented_textured_quad(
+    RECT* rect, jobstts_oriented_uv_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index);
+void jobstts_gfx_enqueue_textured_quad_rect(
+    RECT* rect, world_item_icon_source_t* tex, rgb24_t* color, s32 semitrans, s32 ot_index);
+void jobstts_gfx_enqueue_textured_quad_list(
+    battle_menu_sprite_cell_t* sprites, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index, s32 count);
+void jobstts_gfx_enqueue_textured_quad_corners(
+    world_gfx_textured_quad_source_t* quad, rgb24_t* color, s32 semitrans, s32 ot_index);
 
 s32 jobstts_gfx_get_transition_frame(void);
 
@@ -277,7 +300,7 @@ void jobstts_menu_get_selection_record(s32 index, s16* out_selected_index, s16* 
 void jobstts_menu_update_and_draw_animated_cursor(RECT* anchor, u16* state, s32 mode);
 
 /* text */
-extern u8 g_jobstts_text_color[3];
+extern rgb24_t g_jobstts_text_color;
 extern u8 g_jobstts_text_thread_running_state;
 extern u16 g_jobstts_text_clut_2_mode0;
 extern u16 g_jobstts_text_clut_2_mode1;

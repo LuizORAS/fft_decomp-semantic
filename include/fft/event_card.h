@@ -105,9 +105,9 @@ extern RECT g_card_gfx_draw_area_template;
 extern u16 g_card_gfx_draw_clut;
 extern s16 g_card_gfx_draw_semitrans;
 extern u16 g_card_gfx_drawenv_y;
-extern u8 g_card_gfx_fade_color[3];
+extern rgb24_t g_card_gfx_fade_color;
 extern s16 g_card_gfx_fade_intensity;
-extern u8 g_card_gfx_fade_overlay_color[3];
+extern rgb24_t g_card_gfx_fade_overlay_color;
 extern RECT g_card_gfx_fade_rect;
 extern RECT g_card_gfx_fullscreen_fade_rect;
 extern u8 g_card_gfx_increasing_fade_active;
@@ -133,9 +133,10 @@ extern u16 g_card_gfx_tile_capacity;
 void card_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 
 void card_gfx_enqueue_oriented_textured_quad(
-    const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index);
+    const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
 
-u8* card_gfx_get_draw_color(void);
+rgb24_t* card_gfx_get_draw_color(void);
+void card_gfx_set_draw_color(const rgb24_t* color);
 s32 card_gfx_get_fade_state(void);
 void card_gfx_set_draw_mode_and_link_ot(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 otag_index);
 void card_gfx_set_otag_index(s32 value);
@@ -153,9 +154,12 @@ s32 card_gfx_update_decreasing_fade(void);
 s32 card_gfx_update_increasing_fade(void);
 
 void card_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
+    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 
-void card_gfx_enqueue_tile(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index);
+void card_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
+    u16 texture_page, u16 clut, s32 otag_index, s32 count);
+
+void card_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, s32 semitrans, s32 otag_index);
 
 void card_gfx_init_contexts(card_graphics_context_t* contexts, u32* otags, s32 unused_2, s32 unused_3, s32 unused_4,
     POLY_FT4* polygons, s32 unused_6, s32 unused_7, s32 unused_8, s32 unused_9, s32 unused_10, s32 unused_11,
@@ -309,7 +313,7 @@ void card_save_run_menu(s32 unused);
 
 /* text */
 
-extern u8 g_card_text_color[3];
+extern rgb24_t g_card_text_color;
 extern const u8 g_card_text_command_help[];
 extern u8 g_card_text_data[];
 extern const char g_card_text_decimal_format[];

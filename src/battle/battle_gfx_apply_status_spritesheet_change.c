@@ -35,26 +35,26 @@ void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s
         }
         if (unit->spritesheet_id != spritesheet_id) {
             if (unit->spritesheet_id < BATTLE_SPRITESHEET_ID_CRYSTAL) {
-                unit->saved_shp_data = unit->shp_data;
-                unit->saved_seq_data = unit->seq_data;
+                unit->animation.saved_shp = unit->animation.shp;
+                unit->animation.saved_seq = unit->animation.seq;
             }
-            unit->shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(spritesheet_id);
-            unit->seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(spritesheet_id);
+            unit->animation.shp = battle_gfx_get_unit_shp_by_spritesheet_id(spritesheet_id);
+            unit->animation.seq = battle_gfx_get_unit_seq_by_spritesheet_id(spritesheet_id);
             unit->spritesheet_id = spritesheet_id;
             battle_gfx_tint_unit_palette_for_weather_and_tile(unit, tile_effect_level, 1);
             battle_unit_set_animation_based_on_status(unit);
-            battle_gfx_load_trap_and_unit_frame_parts(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger,
-                unit->animation_frame, unit->sequence_id);
+            battle_gfx_load_trap_and_unit_frame_parts(
+                unit, &unit->animation, unit->animation.frame, unit->animation.sequence_id);
         }
     } else if (unit->spritesheet_id != g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].spritesheet_id) {
         unit->special_graphic_y_offset = 0;
         original_id = g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].spritesheet_id;
-        unit->shp_data = unit->saved_shp_data;
-        unit->seq_data = unit->saved_seq_data;
+        unit->animation.shp = unit->animation.saved_shp;
+        unit->animation.seq = unit->animation.saved_seq;
         unit->spritesheet_id = original_id;
         battle_gfx_check_tile_status_palette_mod(unit, tile_effect_level, 1);
         battle_unit_set_animation_based_on_status(unit);
         battle_gfx_load_trap_and_unit_frame_parts(
-            unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->sequence_id);
+            unit, &unit->animation, unit->animation.frame, unit->animation.sequence_id);
     }
 }

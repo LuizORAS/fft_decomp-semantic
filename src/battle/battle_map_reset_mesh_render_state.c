@@ -33,7 +33,7 @@ void battle_map_reset_mesh_render_state(void) {
         D_800F78E8[i] = 0;
     }
     for (i = 0; i < 49; i++) {
-        bzero(g_battle_map_loaded_gns_records[i].load_info, 14);
+        bzero(g_battle_map_loaded_gns_records[i].load_info.bytes, sizeof(gns_load_info_t));
         bzero(&g_battle_map_pending_gns_records[i].resource_type, 14);
     }
     battle_map_run_weather_command(MAP_WEATHER_COMMAND_CLEAR);

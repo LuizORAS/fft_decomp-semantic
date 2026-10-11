@@ -1,13 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Header words of the unit SEQ table at misc unit data 0x1f8, as
- * battle_gfx_unit_seq_t has them but compared unsigned. */
-typedef struct battle_unit_seq_header {
-    u32 first_attack_sequence; /* 0x00 */
-    u32 first_sp2_sequence;    /* 0x04 */
-} battle_unit_seq_header_t;
-
 /* Update one unit's sprite animation for the frame.
  *
  * The unit's facing relative to the camera yaw gives the quadrant and the
@@ -35,7 +28,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
     s16 flip_by_direction[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 0 };
     s16 stand_by_direction[16] = { 1, 2, 2, 3, 3, 4, 4, 5, 5, 4, 4, 3, 3, 2, 2, 1 };
     battle_unit_misc_data_t* other;
-    battle_unit_seq_header_t* seq;
+    battle_gfx_unit_seq_table_t* seq;
     s32 direction;
     s16 quadrant;
     s16 sixteenth;
@@ -60,41 +53,41 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             for (i = 0; i < 3; i++) {
                 unit->sprite_blocks[i].trigger = 0;
             }
-            unit->sequence_id = stand_by_direction[sixteenth];
+            unit->animation.sequence_id = stand_by_direction[sixteenth];
             *(u16*)&unit->sprite_display_flags
                 = (*(u16*)&unit->sprite_display_flags
                       & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                 | flip_by_direction[sixteenth];
             unit->camera_facing_quadrant.s = quadrant;
             unit->camera_facing_sixteenth.s = sixteenth;
-            unit->animation_script_pos = 0;
-            unit->animation_wait = 0;
-            unit->animation_restart_count = 0;
+            unit->animation.script_pos = 0;
+            unit->animation.wait = 0;
+            unit->animation.restart_count = 0;
             unit->seq_offset.vz = 0;
             unit->seq_offset.vy = 0;
             unit->seq_offset.vx = 0;
             unit->screen_offset.vz = 0;
             unit->screen_offset.vy = 0;
             unit->screen_offset.vx = 0;
-            unit->animation_wait_bias = 0;
-            unit->animation_frame_bias = 0;
-            unit->animation_repeat_count = 0;
-            unit->animation_flags = 0;
-            battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 1);
+            unit->animation.wait_bias = 0;
+            unit->animation.frame_bias = 0;
+            unit->animation.repeat_count = 0;
+            unit->animation.flags = 0;
+            battle_gfx_run_unit_seq_script(unit, &unit->animation, 1);
             unit->requested_animation = 0;
             battle_gfx_release_unit_vram_slot(unit);
         } else if (unit->requested_animation >= 12 || (unit->unit_id & 3) == g_battle_frame_counter % 4
             || (unit->movement.word & BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE)) {
             /* An animation below 11 waits for the unit's frame in four. */
             ok = 1;
-            if ((unit->requested_animation - 1) * 2 + back_by_quadrant[quadrant] != unit->sequence_id
-                || unit->animation_wait == 0 || (unit->movement.word & BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE)) {
+            if ((unit->requested_animation - 1) * 2 + back_by_quadrant[quadrant] != unit->animation.sequence_id
+                || unit->animation.wait == 0 || (unit->movement.word & BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE)) {
                 animation = unit->requested_animation - 1;
                 if (animation < BATTLE_SEQUENCE_EVTCHR_SLOT_0) {
-                    seq = (battle_unit_seq_header_t*)unit->seq_data;
+                    seq = unit->animation.seq;
                     index = animation * 2 + back_by_quadrant[quadrant];
-                    if (index < seq->first_sp2_sequence) {
-                        if (index >= seq->first_attack_sequence) {
+                    if (index < (u32)seq->first_sp2_sequence) {
+                        if (index >= (u32)seq->first_attack_sequence) {
                             for (i = 0; i < 2; i++) {
                                 if ((g_battle_gfx_vram_slots[i].owner & BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK)
                                     == unit->unit_id) {
@@ -125,21 +118,20 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                                         other = battle_unit_get_misc_data_by_misc_id(
                                             g_battle_gfx_vram_slots[1].owner & BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK);
                                         if (other != 0) {
-                                            if (other->sequence_id & 1) {
-                                                other->animation_frame = g_battle_gfx_targeted_frame_back
+                                            if (other->animation.sequence_id & 1) {
+                                                other->animation.frame = g_battle_gfx_targeted_frame_back
                                                     [g_battle_gfx_spritesheet_data[other->spritesheet_id].shp_id];
                                             } else {
-                                                other->animation_frame = g_battle_gfx_targeted_frame_front
+                                                other->animation.frame = g_battle_gfx_targeted_frame_front
                                                     [g_battle_gfx_spritesheet_data[other->spritesheet_id].shp_id];
                                             }
                                             other->seq_offset.vz = 0;
                                             other->seq_offset.vy = 0;
                                             other->seq_offset.vx = 0;
-                                            battle_gfx_load_trap_and_unit_frame_parts(other,
-                                                (battle_unit_anim_state_t*)&other->sprite_graphic_trigger,
-                                                other->animation_frame, other->sequence_id);
+                                            battle_gfx_load_trap_and_unit_frame_parts(other, &other->animation,
+                                                other->animation.frame, other->animation.sequence_id);
                                             ok = 1;
-                                            unit->animation_wait = 0;
+                                            unit->animation.wait = 0;
                                             battle_gfx_load_unit_into_evtchr_slot(unit, 1, 1);
                                         }
                                     }
@@ -156,9 +148,9 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                     }
                     animation = unit->requested_animation - 1;
                     if (animation >= BATTLE_SEQUENCE_EVTCHR_SLOT_0) {
-                        unit->sequence_id = unit->requested_animation - 1;
+                        unit->animation.sequence_id = unit->requested_animation - 1;
                     } else {
-                        unit->sequence_id = animation * 2 + back_by_quadrant[quadrant];
+                        unit->animation.sequence_id = animation * 2 + back_by_quadrant[quadrant];
                     }
                     *(u16*)&unit->sprite_display_flags
                         = (*(u16*)&unit->sprite_display_flags
@@ -166,38 +158,36 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                         | flip_by_quadrant[quadrant];
                     unit->camera_facing_quadrant.s = quadrant;
                     unit->camera_facing_sixteenth.s = sixteenth;
-                    unit->animation_script_pos = 0;
-                    unit->animation_wait = 0;
-                    unit->animation_restart_count = 0;
+                    unit->animation.script_pos = 0;
+                    unit->animation.wait = 0;
+                    unit->animation.restart_count = 0;
                     unit->seq_offset.vz = 0;
                     unit->seq_offset.vy = 0;
                     unit->seq_offset.vx = 0;
                     unit->screen_offset.vz = 0;
                     unit->screen_offset.vy = 0;
                     unit->screen_offset.vx = 0;
-                    unit->animation_wait_bias = 0;
-                    unit->animation_frame_bias = 0;
-                    unit->animation_repeat_count = 0;
-                    unit->animation_flags = 0;
-                    battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 1);
+                    unit->animation.wait_bias = 0;
+                    unit->animation.frame_bias = 0;
+                    unit->animation.repeat_count = 0;
+                    unit->animation.flags = 0;
+                    battle_gfx_run_unit_seq_script(unit, &unit->animation, 1);
                     unit->movement.word &= ~BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
                     unit->requested_animation = 0;
                     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
                         other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
                         if (other != 0) {
-                            other->animation_script_pos = 0;
-                            other->animation_wait = 0;
-                            battle_gfx_run_unit_seq_script(
-                                other, (battle_unit_anim_state_t*)&other->sprite_graphic_trigger, 1);
+                            other->animation.script_pos = 0;
+                            other->animation.wait = 0;
+                            battle_gfx_run_unit_seq_script(other, &other->animation, 1);
                         }
                     }
-                } else if (unit->animation_wait != 0) {
+                } else if (unit->animation.wait != 0) {
                     for (i = 0; i < g_main_system_animation_speed; i++) {
-                        if (unit->animation_wait != 0) {
-                            unit->animation_wait--;
-                            if (unit->animation_wait == 0) {
-                                battle_gfx_run_unit_seq_script(
-                                    unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 1);
+                        if (unit->animation.wait != 0) {
+                            unit->animation.wait--;
+                            if (unit->animation.wait == 0) {
+                                battle_gfx_run_unit_seq_script(unit, &unit->animation, 1);
                             }
                         }
                     }
@@ -208,15 +198,15 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
         }
     } else if (!(unit->movement.word & BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE)) {
         if (sixteenth != unit->camera_facing_sixteenth.s) {
-            sequence_id = unit->sequence_id;
+            sequence_id = unit->animation.sequence_id;
             if (sequence_id < (BATTLE_UNIT_ANIMATION_IDLE << 1)) {
-                unit->sequence_id = stand_by_direction[sixteenth];
+                unit->animation.sequence_id = stand_by_direction[sixteenth];
                 *(u16*)&unit->sprite_display_flags
                     = (*(u16*)&unit->sprite_display_flags
                           & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
                     | flip_by_direction[sixteenth];
             } else {
-                unit->sequence_id = (sequence_id & 0xfffe) + back_by_quadrant[quadrant];
+                unit->animation.sequence_id = (sequence_id & 0xfffe) + back_by_quadrant[quadrant];
                 *(u16*)&unit->sprite_display_flags
                     = (*(u16*)&unit->sprite_display_flags
                           & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
@@ -224,25 +214,24 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             }
             unit->camera_facing_quadrant.s = quadrant;
             unit->camera_facing_sixteenth.s = sixteenth;
-            battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 0);
-        } else if (unit->animation_wait != 0) {
+            battle_gfx_run_unit_seq_script(unit, &unit->animation, 0);
+        } else if (unit->animation.wait != 0) {
             for (i = 0; i < g_main_system_animation_speed; i++) {
-                if (unit->animation_wait != 0) {
-                    unit->animation_wait--;
-                    if (unit->animation_wait == 0) {
-                        battle_gfx_run_unit_seq_script(
-                            unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 1);
+                if (unit->animation.wait != 0) {
+                    unit->animation.wait--;
+                    if (unit->animation.wait == 0) {
+                        battle_gfx_run_unit_seq_script(unit, &unit->animation, 1);
                     }
                 }
                 battle_unit_dispatch_distortion_animation(unit);
             }
         }
-    } else if (unit->animation_wait != 0) {
+    } else if (unit->animation.wait != 0) {
         for (i = 0; i < g_main_system_animation_speed; i++) {
-            if (unit->animation_wait != 0) {
-                unit->animation_wait--;
-                if (unit->animation_wait == 0) {
-                    battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, 1);
+            if (unit->animation.wait != 0) {
+                unit->animation.wait--;
+                if (unit->animation.wait == 0) {
+                    battle_gfx_run_unit_seq_script(unit, &unit->animation, 1);
                 }
             }
             battle_unit_dispatch_distortion_animation(unit);

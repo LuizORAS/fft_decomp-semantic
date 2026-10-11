@@ -5,7 +5,7 @@
  * at (x + 0x80, y) with texture origin (u, v), and links it into ordering
  * table entry otag_index. With `color` the quads are shaded with that
  * colour. */
-void equip_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const u8* color, s32 semitrans,
+void equip_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 otag_index, s32 count) {
     POLY_FT4* poly;
 
@@ -14,9 +14,9 @@ void equip_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads
 
         if (color != 0) {
             SetShadeTex(poly, 0);
-            poly->r0 = color[0];
-            poly->g0 = color[1];
-            poly->b0 = color[2];
+            poly->r0 = color->r;
+            poly->g0 = color->g;
+            poly->b0 = color->b;
         } else {
             SetShadeTex(poly, 1);
         }

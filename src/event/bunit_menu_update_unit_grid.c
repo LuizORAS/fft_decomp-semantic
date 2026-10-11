@@ -40,14 +40,14 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     RECT rect;
     u16 bar_points[8];
     RECT unused2;
-    u8 saved_color[3];
+    rgb24_t saved_color;
     s32 row;
     s32 col;
     u8* menu;
     battle_menu_sprite_cell_t* quads;
     s16 y;
     s32 unit;
-    u8* color;
+    rgb24_t* color;
     s32 unit_index;
     s32 cell_y;
     s32 top;
@@ -56,7 +56,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     u32 mode;
     u16 width;
     u16 clut;
-    u8* gradient;
+    rgb24_t* gradient;
     s16 lower_y4;
     u8 number_y;
     u8 number_y3;
@@ -183,9 +183,9 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     bunit_gfx_set_otag_index(8);
     unit = 0;
     color = bunit_gfx_get_draw_color();
-    saved_color[0] = color[0];
-    saved_color[1] = color[1];
-    saved_color[2] = color[2];
+    saved_color.r = color->r;
+    saved_color.g = color->g;
+    saved_color.b = color->b;
     for (; row < 5; row++, y += 0x3C) {
         top = 0;
         if (g_bunit_status_banner_enabled != 0) {
@@ -195,7 +195,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                 top = 1;
             }
         }
-        bunit_gfx_set_draw_color(top ? g_bunit_unit_grid_dimmed_color : g_bunit_unit_grid_normal_color);
+        bunit_gfx_set_draw_color(top ? &g_bunit_unit_grid_dimmed_color : &g_bunit_unit_grid_normal_color);
         for (col = 0; col < 4; col++, unit++) {
             if (unit >= g_bunit_unit_reorderable_count)
                 break;
@@ -352,7 +352,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
             }
         }
     }
-    bunit_gfx_set_draw_color(saved_color);
+    bunit_gfx_set_draw_color(&saved_color);
     bunit_gfx_update_rhombus_cursor_trail(&g_bunit_unit_grid_cursor_target);
     focus = &g_bunit_gfx_falloff_focus_x;
     cursor_x = g_bunit_unit_grid_cursor_target.x;

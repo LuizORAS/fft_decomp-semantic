@@ -24,8 +24,8 @@ u8* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprit
     out->graphic_y_offset = unit->special_graphic_y_offset;
 
     if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {
-        return unit->shp_data->frames[unit->animation_frame];
+        return unit->animation.shp->frames[unit->animation.frame];
     } else {
-        return unit->shp_data->submerged_frames[unit->animation_frame];
+        return unit->animation.shp->submerged_frames[unit->animation.frame];
     }
 }

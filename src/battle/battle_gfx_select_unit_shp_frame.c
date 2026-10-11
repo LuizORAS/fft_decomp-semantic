@@ -22,7 +22,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
 
     tile = battle_map_get_tile_data_pointer((unit->screen.vx / 28), (unit->screen.vz / 28), unit->map_z);
     if (frame < BATTLE_SHP_FRAME_EVTCHR_FIRST) {
-        table = state->shp;
+        table = (s32*)state->shp;
         if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
             if (unit->status_flags_5_6 & (BATTLE_MISC_STATUS_JUMP | BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE)) {
                 value = table[frame + 2];

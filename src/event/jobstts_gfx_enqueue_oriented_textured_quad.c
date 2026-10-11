@@ -1,22 +1,8 @@
 #include "fft/event_jobstts.h"
 
-/* Texture cell for jobstts_gfx_enqueue_oriented_textured_quad; the same layout
- * as the tail of EQUIP/BUNIT's oriented-quad descriptors. */
-typedef struct jobstts_oriented_uv {
-    u8 u;
-    u8 _unused_01;
-    u8 v;
-    u8 _unused_03;
-    u8 uw;
-    u8 _unused_05;
-    u8 vh;
-    u16 clut;  /* 0x08 */
-    u16 tpage; /* 0x0a */
-} jobstts_oriented_uv_t;
-
 /* Queue a textured quad whose texture cell is mirrored by orientation. */
 void jobstts_gfx_enqueue_oriented_textured_quad(
-    RECT* rect, jobstts_oriented_uv_t* uv, u8* color, s32 orientation, s32 semitrans, s32 ot_index) {
+    RECT* rect, jobstts_oriented_uv_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index) {
     s32 quad_semitrans = semitrans;
     s32 quad_orientation = orientation;
     s32 quad_ot_index = ot_index;
@@ -26,9 +12,9 @@ void jobstts_gfx_enqueue_oriented_textured_quad(
 
     if (color != 0) {
         SetShadeTex(poly, 0);
-        poly->r0 = color[0];
-        poly->g0 = color[1];
-        poly->b0 = color[2];
+        poly->r0 = color->r;
+        poly->g0 = color->g;
+        poly->b0 = color->b;
     } else {
         SetShadeTex(poly, 1);
     }

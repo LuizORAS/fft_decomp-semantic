@@ -4,13 +4,13 @@
 /* Takes the next TILE packet from the pool, fills it from the rectangle
  * (x offset by 0x80) and the RGB triple and links it into ordering-table
  * entry idx. */
-void bunit_gfx_enqueue_tile(RECT* rect, u8* color, u8 semi, s32 idx) {
+void bunit_gfx_enqueue_tile(RECT* rect, rgb24_t* color, u8 semi, s32 idx) {
     TILE* tile;
 
     tile = &g_bunit_gfx_context->tiles[g_bunit_gfx_tile_count++];
-    tile->r0 = color[0];
-    tile->g0 = color[1];
-    tile->b0 = color[2];
+    tile->r0 = color->r;
+    tile->g0 = color->g;
+    tile->b0 = color->b;
     SetSemiTrans(tile, semi);
     tile->x0 = rect->x + 0x80;
     tile->y0 = rect->y;

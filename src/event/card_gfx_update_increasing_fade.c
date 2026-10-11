@@ -18,11 +18,11 @@ s32 card_gfx_update_increasing_fade(void) {
         }
         card_gfx_set_draw_mode_and_link_ot(0, 0, GetTPage(0, 2, 0x100, 0) & 0xffff, 0, g_card_gfx_otag_length - 2);
         {
-            u8* color = g_card_gfx_fade_color;
+            rgb24_t* color = &g_card_gfx_fade_color;
 
-            g_card_gfx_fade_color[2] = g_card_gfx_fade_intensity;
-            g_card_gfx_fade_color[1] = g_card_gfx_fade_intensity;
-            *color = g_card_gfx_fade_intensity;
+            g_card_gfx_fade_color.b = g_card_gfx_fade_intensity;
+            g_card_gfx_fade_color.g = g_card_gfx_fade_intensity;
+            color->r = g_card_gfx_fade_intensity;
             card_gfx_enqueue_tile(&g_card_gfx_fade_rect, color, 1, g_card_gfx_otag_length - 1);
         }
     }

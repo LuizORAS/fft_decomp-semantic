@@ -10,15 +10,16 @@
  * fp. The unit block pointer is assigned after the call to
  * battle_unit_set_move_and_screen_coords: because it lives across calls,
  * sched1 still hoists it to the join, just after that call's argument copy.
- * Reusing `sprite` for the loop blocks keeps both in s3, so it first views
- * the unit's own anim state at 0x1d8 through the prefix the two block types
- * share.
+ * The animation and weapon/effect roles share one cursor, keeping both in s3.
  * The contradictory weapon range test (<0x86, <0x3c, >=0x4a, !=0x5d) is
  * literally what the target branches encode (the call is dead code). */
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
     s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, u8* data) {
     battle_unit_misc_data_t* unit;
-    battle_unit_sprite_block_t* sprite;
+    union {
+        battle_unit_anim_state_t* animation;
+        battle_unit_sprite_block_t* block;
+    } cursor;
     map_tile_t* tile;
     s32 unit_id;
     s32 slot;
@@ -62,10 +63,10 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->tpage = slot + BATTLE_GFX_TPAGE_SPRITESHEET_SLOT_0;
     if (flags == 0) {
         unit->draw_enabled = 1;
-        unit->sprite_graphic_trigger = 1;
+        unit->animation.trigger = 1;
     } else {
         unit->draw_enabled = 0;
-        unit->sprite_graphic_trigger = 0;
+        unit->animation.trigger = 0;
     }
     unit->standing_on_unit_id_plus_one = 0;
     unit->battle_data = stats;
@@ -100,7 +101,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->movement.bytes.destination_y = tile_y;
     unit->movement.bytes.destination_z = tile_z;
     battle_unit_set_move_and_screen_coords(unit);
-    sprite = (battle_unit_sprite_block_t*)&unit->sprite_graphic_trigger;
+    cursor.animation = &unit->animation;
     unit->velocity.vz = 0;
     unit->velocity.vy = 0;
     unit->velocity.vx = 0;
@@ -140,48 +141,48 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->item_display_active = 0;
     unit->item_display = battle_gfx_init_item_sprite_display(unit_id);
     unit->position_copies_active = 0;
-    unit->sprite_display_section = battle_gfx_init_unit_sprite_display(unit_id);
-    sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_UNIT;
-    unit->shp_data = unit->saved_shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(id);
-    unit->seq_data = unit->saved_seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(id);
-    sprite->wait = 1;
-    sprite->restart_count = 0;
-    sprite->script_pos = 0;
-    sprite->sequence_id = BATTLE_UNIT_ANIMATION_IDLE << 1;
-    sprite->frame = 0;
-    sprite->flags = 0;
-    sprite->wait_bias = 0;
-    sprite->frame_bias = 0;
-    sprite->repeat_count = 0;
-    unit->sprite_display_section->scale_x = ONE;
-    unit->sprite_display_section->scale_y = ONE;
-    unit->sprite_display_section->rotation = 0;
+    unit->animation.display = battle_gfx_init_unit_sprite_display(unit_id);
+    cursor.animation->graphic_type = BATTLE_SPRITE_GRAPHIC_UNIT;
+    unit->animation.shp = unit->animation.saved_shp = battle_gfx_get_unit_shp_by_spritesheet_id(id);
+    unit->animation.seq = unit->animation.saved_seq = battle_gfx_get_unit_seq_by_spritesheet_id(id);
+    cursor.animation->wait = 1;
+    cursor.animation->restart_count = 0;
+    cursor.animation->script_pos = 0;
+    cursor.animation->sequence_id = BATTLE_UNIT_ANIMATION_IDLE << 1;
+    cursor.animation->frame = 0;
+    cursor.animation->flags = 0;
+    cursor.animation->wait_bias = 0;
+    cursor.animation->frame_bias = 0;
+    cursor.animation->repeat_count = 0;
+    unit->animation.display->scale_x = ONE;
+    unit->animation.display->scale_y = ONE;
+    unit->animation.display->rotation = 0;
     battle_unit_set_animation_based_on_status(unit);
-    battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)sprite, 1);
+    battle_gfx_run_unit_seq_script(unit, cursor.animation, 1);
     for (i = 0; i < 3; i++) {
-        sprite = &unit->sprite_blocks[i];
-        sprite->display = battle_gfx_init_weapon_sprite_display(unit_id, i);
+        cursor.block = &unit->sprite_blocks[i];
+        cursor.block->display = battle_gfx_init_weapon_sprite_display(unit_id, i);
         if (i == 0) {
-            sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_WEAPON;
-            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_weapon_shp_by_spritesheet_id(id);
-            sprite->seq = (u8**)battle_gfx_get_weapon_seq_by_spritesheet_id(id);
+            cursor.block->graphic_type = BATTLE_SPRITE_GRAPHIC_WEAPON;
+            cursor.block->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_weapon_shp_by_spritesheet_id(id);
+            cursor.block->seq = (u8**)battle_gfx_get_weapon_seq_by_spritesheet_id(id);
         } else {
-            sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_EFFECT;
-            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_effect_shp_data(id);
-            sprite->seq = (u8**)battle_gfx_get_effect_seq_data(id);
+            cursor.block->graphic_type = BATTLE_SPRITE_GRAPHIC_EFFECT;
+            cursor.block->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_effect_shp_data(id);
+            cursor.block->seq = (u8**)battle_gfx_get_effect_seq_data(id);
         }
-        sprite->trigger = 0;
-        sprite->wait = 1;
-        sprite->script_pos = 0;
-        sprite->sequence_id = 0;
-        sprite->frame = 0;
-        sprite->flags = 0;
-        sprite->wait_bias = 0;
-        sprite->frame_bias = 0;
-        sprite->repeat_count = 0;
-        sprite->display->scale_x = ONE;
-        sprite->display->scale_y = ONE;
-        sprite->display->rotation = 0;
+        cursor.block->trigger = 0;
+        cursor.block->wait = 1;
+        cursor.block->script_pos = 0;
+        cursor.block->sequence_id = 0;
+        cursor.block->frame = 0;
+        cursor.block->flags = 0;
+        cursor.block->wait_bias = 0;
+        cursor.block->frame_bias = 0;
+        cursor.block->repeat_count = 0;
+        cursor.block->display->scale_x = ONE;
+        cursor.block->display->scale_y = ONE;
+        cursor.block->display->rotation = 0;
         if ((s16)id < BATTLE_SPRITESHEET_ID_CHOCOBO && (s16)id < BATTLE_SPRITESHEET_ID_VELIUS
             && (s16)id >= BATTLE_SPRITESHEET_ID_BOY && (s16)id != BATTLE_SPRITESHEET_ID_DAMI) {
             battle_gfx_run_wep_eff_seq_script(unit, &unit->sprite_blocks[i], i, 1);

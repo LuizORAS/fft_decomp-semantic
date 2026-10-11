@@ -28,7 +28,7 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
     s32 text_index;
     s32 i;
     s8 negative;
-    u8* color;
+    rgb24_t* color;
     u16 clut;
     s32 x;
     s32 next_remaining;
@@ -58,7 +58,7 @@ world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_
     }
     opcode = command->opcode;
     if (opcode == MENU_SCRIPT_OP_NUMBER_TINTED || opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
-        color = g_bunit_gfx_sprite_color;
+        color = &g_bunit_gfx_sprite_color;
     } else {
         color = 0;
     }
