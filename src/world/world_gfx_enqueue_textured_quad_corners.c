@@ -12,29 +12,14 @@ void world_gfx_enqueue_textured_quad_corners(
     POLY_FT4* poly = &g_world_gfx_active_packet_buffer->textured_quads[g_world_gfx_textured_quad_count++];
     if (rgb != 0) {
         SetShadeTex(poly, 0);
-        poly->r0 = rgb->r;
-        poly->g0 = rgb->g;
-        poly->b0 = rgb->b;
+        setRGB0(poly, rgb->r, rgb->g, rgb->b);
     } else {
         SetShadeTex(poly, 1);
     }
     SetSemiTrans(poly, semi_trans);
-    poly->x0 = source->x0 + 0x80;
-    poly->y0 = source->y0;
-    poly->x1 = source->x1 + 0x80;
-    poly->y1 = source->y1;
-    poly->x2 = source->x2 + 0x80;
-    poly->y2 = source->y2;
-    poly->x3 = source->x3 + 0x80;
-    poly->y3 = source->y3;
-    poly->u0 = source->u0;
-    poly->v0 = source->v0;
-    poly->u1 = source->u1;
-    poly->v1 = source->v1;
-    poly->u2 = source->u2;
-    poly->v2 = source->v2;
-    poly->u3 = source->u3;
-    poly->v3 = source->v3;
+    setXY4(poly, source->x0 + 0x80, source->y0, source->x1 + 0x80, source->y1, source->x2 + 0x80, source->y2,
+        source->x3 + 0x80, source->y3);
+    setUV4(poly, source->u0, source->v0, source->u1, source->v1, source->u2, source->v2, source->u3, source->v3);
     poly->clut = source->clut;
     poly->tpage = source->tpage;
     addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], poly);

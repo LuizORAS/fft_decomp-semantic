@@ -8,9 +8,7 @@
 void world_gfx_enqueue_tile(RECT* box, rgb24_t* rgb, u8 semi_trans, s32 ot_index) {
     TILE* tile = &g_world_gfx_active_packet_buffer->tiles[g_world_gfx_tile_count++];
 
-    tile->r0 = rgb->r;
-    tile->g0 = rgb->g;
-    tile->b0 = rgb->b;
+    setRGB0(tile, rgb->r, rgb->g, rgb->b);
     SetSemiTrans(tile, semi_trans);
     tile->x0 = box->x + 0x80;
     tile->y0 = box->y;

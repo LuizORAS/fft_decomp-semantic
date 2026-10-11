@@ -14,9 +14,7 @@ void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 
         abr = 2;
         prims->tile.w = 0x100;
         prims->tile.h = 0xF0;
-        prims->tile.r0 = 0;
-        prims->tile.g0 = 0;
-        prims->tile.b0 = 0;
+        setRGB0(&prims->tile, 0, 0, 0);
         prims->tile.x0 = 0x80;
         prims->tile.y0 = 0;
         if (level < 0) {
@@ -24,9 +22,7 @@ void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 
             level = -level;
         }
         SetDrawMode(&prims->mode, 0, 0, GetTPage(0, abr, 0x3C0, 0x100), &g_world_gfx_texture_window);
-        prims->tile.r0 = level;
-        prims->tile.g0 = level;
-        prims->tile.b0 = level;
+        setRGB0(&prims->tile, level, level, level);
         if (g_world_gfx_draw_primitives_immediately != 0) {
             world_gfx_draw_or_append_gpu_primitive(&prims->mode);
             world_gfx_draw_or_append_gpu_primitive(&prims->tile);

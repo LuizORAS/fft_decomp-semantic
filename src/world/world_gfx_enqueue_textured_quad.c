@@ -13,29 +13,14 @@ void world_gfx_enqueue_textured_quad(
     poly = &g_world_gfx_active_packet_buffer->textured_quads[g_world_gfx_textured_quad_count++];
     if (rgb != 0) {
         SetShadeTex(poly, 0);
-        poly->r0 = rgb->r;
-        poly->g0 = rgb->g;
-        poly->b0 = rgb->b;
+        setRGB0(poly, rgb->r, rgb->g, rgb->b);
     } else {
         SetShadeTex(poly, 1);
     }
     SetSemiTrans(poly, semi_trans);
-    poly->x0 = rect->x + 0x80;
-    poly->y0 = rect->y;
-    poly->x1 = rect->x + 0x80 + rect->w;
-    poly->y1 = rect->y;
-    poly->x2 = rect->x + 0x80;
-    poly->y2 = rect->y + rect->h;
-    poly->x3 = rect->x + 0x80 + rect->w;
-    poly->y3 = rect->y + rect->h;
-    poly->u0 = u;
-    poly->v0 = v;
-    poly->u1 = u + rect->w;
-    poly->v1 = v;
-    poly->u2 = u;
-    poly->v2 = v + rect->h;
-    poly->u3 = u + rect->w;
-    poly->v3 = v + rect->h;
+    setXY4(poly, rect->x + 0x80, rect->y, rect->x + 0x80 + rect->w, rect->y, rect->x + 0x80, rect->y + rect->h,
+        rect->x + 0x80 + rect->w, rect->y + rect->h);
+    setUV4(poly, u, v, u + rect->w, v, u, v + rect->h, u + rect->w, v + rect->h);
     poly->clut = clut;
     poly->tpage = texture_page;
     addPrim(&g_world_gfx_active_packet_buffer->otag[priority], poly);

@@ -12,34 +12,14 @@ void world_gfx_enqueue_gouraud_textured_quad(
         = &g_world_gfx_active_packet_buffer->textured_gradient_quads[g_world_gfx_textured_gradient_quad_count++];
 
     SetSemiTrans(poly, semi_trans);
-    poly->x0 = source->x + 0x80;
-    poly->y0 = source->y;
-    poly->x1 = (source->x + 0x80) + source->w;
-    poly->y1 = source->y;
-    poly->x2 = source->x + 0x80;
-    poly->y2 = source->y + source->h;
-    poly->x3 = (source->x + 0x80) + source->w;
-    poly->y3 = source->y + source->h;
-    poly->u0 = source->u;
-    poly->v0 = source->v;
-    poly->u1 = source->u + source->w;
-    poly->v1 = source->v;
-    poly->u2 = source->u;
-    poly->v2 = source->v + source->h;
-    poly->u3 = source->u + source->w;
-    poly->v3 = source->v + source->h;
-    poly->r0 = colors[0].r;
-    poly->g0 = colors[0].g;
-    poly->b0 = colors[0].b;
-    poly->r1 = colors[1].r;
-    poly->g1 = colors[1].g;
-    poly->b1 = colors[1].b;
-    poly->r2 = colors[2].r;
-    poly->g2 = colors[2].g;
-    poly->b2 = colors[2].b;
-    poly->r3 = colors[3].r;
-    poly->g3 = colors[3].g;
-    poly->b3 = colors[3].b;
+    setXY4(poly, source->x + 0x80, source->y, (source->x + 0x80) + source->w, source->y, source->x + 0x80,
+        source->y + source->h, (source->x + 0x80) + source->w, source->y + source->h);
+    setUV4(poly, source->u, source->v, source->u + source->w, source->v, source->u, source->v + source->h,
+        source->u + source->w, source->v + source->h);
+    setRGB0(poly, colors[0].r, colors[0].g, colors[0].b);
+    setRGB1(poly, colors[1].r, colors[1].g, colors[1].b);
+    setRGB2(poly, colors[2].r, colors[2].g, colors[2].b);
+    setRGB3(poly, colors[3].r, colors[3].g, colors[3].b);
     poly->clut = source->clut;
     poly->tpage = source->tpage;
     addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], poly);

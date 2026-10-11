@@ -7,9 +7,7 @@
 void world_gfx_enqueue_line_f2(RECT* rect, rgb24_t* rgb, u8 semi_trans, s32 ot_index) {
     LINE_F2* line = &g_world_gfx_active_packet_buffer->flat_lines[g_world_gfx_flat_line_count++];
 
-    line->r0 = rgb->r;
-    line->g0 = rgb->g;
-    line->b0 = rgb->b;
+    setRGB0(line, rgb->r, rgb->g, rgb->b);
     SetSemiTrans(line, semi_trans);
     line->x0 = rect->x + 0x80;
     line->y0 = rect->y;

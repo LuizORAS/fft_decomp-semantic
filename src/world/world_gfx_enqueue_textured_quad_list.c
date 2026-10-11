@@ -14,29 +14,15 @@ void world_gfx_enqueue_textured_quad_list(
         poly = &g_world_gfx_active_packet_buffer->textured_quads[g_world_gfx_textured_quad_count++];
         if (rgb != 0) {
             SetShadeTex(poly, 0);
-            poly->r0 = rgb->r;
-            poly->g0 = rgb->g;
-            poly->b0 = rgb->b;
+            setRGB0(poly, rgb->r, rgb->g, rgb->b);
         } else {
             SetShadeTex(poly, 1);
         }
         SetSemiTrans(poly, semi_trans);
-        poly->x0 = cell->x + 0x80;
-        poly->y0 = cell->y;
-        poly->x1 = cell->w + (cell->x + 0x80);
-        poly->y1 = cell->y;
-        poly->x2 = cell->x + 0x80;
-        poly->y2 = cell->y + cell->h;
-        poly->x3 = cell->w + (cell->x + 0x80);
-        poly->y3 = cell->y + cell->h;
-        poly->u0 = cell->u;
-        poly->v0 = cell->v;
-        poly->u1 = cell->u + cell->w;
-        poly->v1 = cell->v;
-        poly->u2 = cell->u;
-        poly->v2 = cell->v + cell->h;
-        poly->u3 = cell->u + cell->w;
-        poly->v3 = cell->v + cell->h;
+        setXY4(poly, cell->x + 0x80, cell->y, cell->w + (cell->x + 0x80), cell->y, cell->x + 0x80, cell->y + cell->h,
+            cell->w + (cell->x + 0x80), cell->y + cell->h);
+        setUV4(poly, cell->u, cell->v, cell->u + cell->w, cell->v, cell->u, cell->v + cell->h, cell->u + cell->w,
+            cell->v + cell->h);
         poly->clut = clut;
         poly->tpage = tpage;
         count--;

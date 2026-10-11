@@ -18,9 +18,7 @@ void world_gfx_enqueue_oriented_textured_quad(
 
     if (color != 0) {
         SetShadeTex(poly, 0);
-        poly->r0 = color->r;
-        poly->g0 = color->g;
-        poly->b0 = color->b;
+        setRGB0(poly, color->r, color->g, color->b);
     } else {
         SetShadeTex(poly, 1);
     }
@@ -52,14 +50,9 @@ void world_gfx_enqueue_oriented_textured_quad(
 
         switch (orientation_index) {
         case TEXTURE_UV_FLIP_NONE:
-            poly->u0 = descriptor->source.u;
-            poly->v0 = descriptor->source.v;
-            poly->u1 = descriptor->source.u + descriptor->source.w;
-            poly->v1 = descriptor->source.v;
-            poly->u2 = descriptor->source.u;
-            poly->v2 = descriptor->source.v + descriptor->source.h;
-            poly->u3 = descriptor->source.u + descriptor->source.w;
-            poly->v3 = descriptor->source.v + descriptor->source.h;
+            setUV4(poly, descriptor->source.u, descriptor->source.v, descriptor->source.u + descriptor->source.w,
+                descriptor->source.v, descriptor->source.u, descriptor->source.v + descriptor->source.h,
+                descriptor->source.u + descriptor->source.w, descriptor->source.v + descriptor->source.h);
             break;
         case TEXTURE_UV_FLIP_X:
             poly->u1 = descriptor->source.u;
