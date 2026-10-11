@@ -1796,12 +1796,12 @@ typedef struct battle_gfx_native_unit_seq_table {
 typedef char
     battle_gfx_native_unit_seq_table_size_must_be_0x408[sizeof(battle_gfx_native_unit_seq_table_t) == 0x408 ? 1 : -1];
 
-/* Unit SPR file: 16 CLUTs, two uncompressed 4bpp image blocks, then
+/* Unit SPR file: 16 palettes, two uncompressed 4bpp image blocks, then
  * a variable-length compressed attack-image stream. */
 typedef struct battle_gfx_unit_sprite_file {
-    u8 palettes[0x200];                   /* 0x0000; little-endian CLUT bytes */
-    u32 pixels[256][32];                  /* 0x0200; 256 x 256 pixels */
-    u32 portrait_and_body_pixels[32][32]; /* 0x8200; 256 x 32 pixels */
+    u8 palettes[0x200];                   /* 0x0000; little-endian color bytes */
+    u8 pixels[256][128];                  /* 0x0200; 256 x 256 pixels, two per byte */
+    u8 portrait_and_body_pixels[32][128]; /* 0x8200; 256 x 32 pixels, two per byte */
     u8 compressed_attack_image[0];        /* 0x9200; variable byte tail */
 } battle_gfx_unit_sprite_file_t;
 typedef char battle_gfx_unit_sprite_file_size_must_be_0x9200[sizeof(battle_gfx_unit_sprite_file_t) == 0x9200 ? 1 : -1];
