@@ -799,6 +799,87 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
 void battle_ai_clear_words(void* destination, s32 byte_count);
 
 /* animation */
+/* SEQ sequence bytes, as battle_gfx_run_unit_seq_script (unit sheets) and
+ * battle_gfx_run_wep_eff_seq_script (weapon and effect sheets) read them.
+ * A sequence is a run of two-byte frame instructions (an SHP frame, then the
+ * frames to wait; a wait of 0 holds the frame for good) and of commands:
+ * BATTLE_SEQ_OP_PREFIX, an opcode and its operand bytes. A jump offset is a
+ * signed byte counted from the command's own prefix byte, so -2 repeats the
+ * frame instruction before it. UNKNOWN_XX commands only skip their operands. */
+enum {
+    BATTLE_SEQ_OP_PREFIX = 0xff,
+};
+
+typedef enum battle_seq_opcode {
+    /* 0xbe-0xd2 and 0xd4 are unit commands: a weapon or effect sequence that uses one is an error. */
+    BATTLE_SEQ_OP_STOP_POSITION_COPIES = 0xbe,
+    BATTLE_SEQ_OP_START_POSITION_COPIES = 0xbf, /* the trail of battle_gfx_draw_unit_sprite_position_copies */
+    BATTLE_SEQ_OP_WAIT_FOR_DISTORTION = 0xc0,   /* offset: jump while a distortion animation runs */
+    BATTLE_SEQ_OP_START_DISTORTION = 0xc1,      /* distortion animation id - 2, timer */
+    BATTLE_SEQ_OP_NOP = 0xc2,
+    BATTLE_SEQ_OP_HIDE_ITEM = 0xc3,
+    BATTLE_SEQ_OP_SET_ITEM_POSITION = 0xc4, /* x, y: signed offsets of the item sprite from the unit */
+    BATTLE_SEQ_OP_SHOW_ITEM = 0xc5,         /* draw the unit's item display (battle_gfx_init_item_get_rendering) */
+    BATTLE_SEQ_OP_WAIT_FOR_INPUT = 0xc6,    /* offset: jump while g_battle_action_post_action is 0 */
+    BATTLE_SEQ_OP_UNKNOWN_C7 = 0xc7,        /* two operands */
+    BATTLE_SEQ_OP_UNKNOWN_C8 = 0xc8,        /* two operands */
+    BATTLE_SEQ_OP_UNKNOWN_C9 = 0xc9,        /* two operands */
+    BATTLE_SEQ_OP_UNKNOWN_CA = 0xca,        /* one operand */
+    BATTLE_SEQ_OP_MOVE_UP_2 = 0xcb,         /* 0xcb-0xd2 shift the sprite by one or two units of seq_offset */
+    BATTLE_SEQ_OP_MOVE_UP_1 = 0xcc,
+    BATTLE_SEQ_OP_MOVE_BACKWARD_2 = 0xcd,
+    BATTLE_SEQ_OP_MOVE_BACKWARD_1 = 0xce,
+    BATTLE_SEQ_OP_MOVE_DOWN_2 = 0xcf,
+    BATTLE_SEQ_OP_MOVE_DOWN_1 = 0xd0,
+    BATTLE_SEQ_OP_MOVE_FORWARD_2 = 0xd1,
+    BATTLE_SEQ_OP_MOVE_FORWARD_1 = 0xd2,
+    BATTLE_SEQ_OP_WAIT_FOR_EFFECT_LOAD = 0xd3, /* offset: jump while g_battle_state_animation_continue_check is 1 */
+    BATTLE_SEQ_OP_PLAY_WEAPON_SOUND = 0xd4,    /* 0 swing, 1 hit: battle_sound_select_weapon_hit */
+    BATTLE_SEQ_OP_RESTART = 0xd5,              /* back to the sequence's first byte, counting the restart */
+    BATTLE_SEQ_OP_WAIT_FOR_EFFECT = 0xd6,      /* offset: jump while g_battle_state_animation_continue_check is not 0 */
+    BATTLE_SEQ_OP_UNKNOWN_D7 = 0xd7,           /* one operand; the sequences of death and revival start with it */
+    BATTLE_SEQ_OP_SET_FRAME_BIAS = 0xd8,       /* signed; added to every later frame id */
+    BATTLE_SEQ_OP_LAUNCH_PROJECTILE = 0xd9,    /* two unread operands: the thrown item, stone or arrow of the action */
+    BATTLE_SEQ_OP_UNDEFINED_DA = 0xda,         /* no handler: MAIN_SYSTEM_ERROR_SEQ_OPCODE like any other value */
+    BATTLE_SEQ_OP_SET_WAIT_BIAS = 0xdb,        /* signed; added to every later wait */
+    BATTLE_SEQ_OP_RETURN = 0xdc,               /* resume the sequence BATTLE_SEQ_OP_CALL_SEQUENCE left */
+    BATTLE_SEQ_OP_CALL_SEQUENCE = 0xdd,        /* sequence id: run it from its start; one level deep */
+    BATTLE_SEQ_OP_STRIKE_TARGETS = 0xde,       /* the blow of a weapon-like ability lands: its targets react */
+    BATTLE_SEQ_OP_CLEAR_ROTATION = 0xdf,
+    BATTLE_SEQ_OP_HIDE_SHADOW = 0xe0,
+    BATTLE_SEQ_OP_SHOW_SHADOW = 0xe1,
+    BATTLE_SEQ_OP_SET_LAYER_PRIORITY = 0xe2, /* row of g_battle_gfx_animation_layer_priorities */
+    BATTLE_SEQ_OP_UNKNOWN_E3 = 0xe3,         /* one operand */
+    BATTLE_SEQ_OP_UNKNOWN_E4 = 0xe4,         /* one operand */
+    BATTLE_SEQ_OP_SET_ROTATION = 0xe5,       /* low byte, high byte: the display's rotation, ONE to the turn */
+    BATTLE_SEQ_OP_UNKNOWN_E6 = 0xe6,         /* two operands */
+    BATTLE_SEQ_OP_UNKNOWN_E7 = 0xe7,         /* two operands */
+    BATTLE_SEQ_OP_UNKNOWN_E8 = 0xe8,         /* two operands */
+    BATTLE_SEQ_OP_UNKNOWN_E9 = 0xe9,         /* one operand */
+    BATTLE_SEQ_OP_UNKNOWN_EA = 0xea,         /* two operands */
+    BATTLE_SEQ_OP_FLIP_VERTICAL = 0xeb,
+    BATTLE_SEQ_OP_FLIP_HORIZONTAL = 0xec,
+    BATTLE_SEQ_OP_UNKNOWN_ED = 0xed,           /* one operand */
+    BATTLE_SEQ_OP_MOVE_UNIT_FB = 0xee,         /* signed: forward (+) or backward; 0xee-0xf0 and 0xfa move units only */
+    BATTLE_SEQ_OP_MOVE_UNIT_DU = 0xef,         /* signed: down (+) or up */
+    BATTLE_SEQ_OP_MOVE_UNIT_RL = 0xf0,         /* signed: right (+) or left */
+    BATTLE_SEQ_OP_UNKNOWN_F1 = 0xf1,           /* two operands */
+    BATTLE_SEQ_OP_START_BLOCK_SEQUENCE = 0xf2, /* sprite block 1-3, sequence id: show the weapon or effect sprite */
+    BATTLE_SEQ_OP_UNKNOWN_F3 = 0xf3,           /* one operand */
+    BATTLE_SEQ_OP_UNKNOWN_F4 = 0xf4,           /* one operand */
+    BATTLE_SEQ_OP_UNKNOWN_F5 = 0xf5,           /* one operand */
+    BATTLE_SEQ_OP_PLAY_SOUND = 0xf6,           /* main_sfx_e */
+    BATTLE_SEQ_OP_UNKNOWN_F7 = 0xf7,           /* three operands */
+    BATTLE_SEQ_OP_UNKNOWN_F8 = 0xf8,           /* two operands */
+    BATTLE_SEQ_OP_MOVE_SCREEN_OFFSET = 0xf9,   /* signed x, y: added to the unit's screen_offset */
+    BATTLE_SEQ_OP_MOVE_UNIT = 0xfa,            /* right, down, forward: the operands of 0xf0, 0xef and 0xee */
+    BATTLE_SEQ_OP_UNKNOWN_FB = 0xfb,           /* two operands */
+    BATTLE_SEQ_OP_REPEAT = 0xfc,               /* offset, count: jump count times, then go on */
+    BATTLE_SEQ_OP_JUMP = 0xfd,                 /* offset */
+    BATTLE_SEQ_OP_END_ANIMATION = 0xfe,        /* stop; a weapon or effect sprite is hidden too */
+    BATTLE_SEQ_OP_PAUSE_ANIMATION = 0xff, /* stop; either one puts a unit in its g_battle_gfx_targeted_frame_* pose */
+} battle_seq_opcode_e;
+
 /* A facing is an angle with 0x1000 to the turn. Units rest on the four
  * cardinals; the diagonals are the boundaries a free angle is snapped at. */
 typedef enum battle_unit_facing {
@@ -2434,87 +2515,6 @@ void battle_camera_wait_until_idle(void);
 void battle_camera_thread(void);
 
 /* sound */
-/* SEQ sequence bytes, as battle_gfx_run_unit_seq_script (unit sheets) and
- * battle_gfx_run_wep_eff_seq_script (weapon and effect sheets) read them.
- * A sequence is a run of two-byte frame instructions (an SHP frame, then the
- * frames to wait; a wait of 0 holds the frame for good) and of commands:
- * BATTLE_SEQ_OP_PREFIX, an opcode and its operand bytes. A jump offset is a
- * signed byte counted from the command's own prefix byte, so -2 repeats the
- * frame instruction before it. UNKNOWN_XX commands only skip their operands. */
-enum {
-    BATTLE_SEQ_OP_PREFIX = 0xff,
-};
-
-typedef enum battle_seq_opcode {
-    /* 0xbe-0xd2 and 0xd4 are unit commands: a weapon or effect sequence that uses one is an error. */
-    BATTLE_SEQ_OP_STOP_POSITION_COPIES = 0xbe,
-    BATTLE_SEQ_OP_START_POSITION_COPIES = 0xbf, /* the trail of battle_gfx_draw_unit_sprite_position_copies */
-    BATTLE_SEQ_OP_WAIT_FOR_DISTORTION = 0xc0,   /* offset: jump while a distortion animation runs */
-    BATTLE_SEQ_OP_START_DISTORTION = 0xc1,      /* distortion animation id - 2, timer */
-    BATTLE_SEQ_OP_NOP = 0xc2,
-    BATTLE_SEQ_OP_HIDE_ITEM = 0xc3,
-    BATTLE_SEQ_OP_SET_ITEM_POSITION = 0xc4, /* x, y: signed offsets of the item sprite from the unit */
-    BATTLE_SEQ_OP_SHOW_ITEM = 0xc5,         /* draw the unit's item display (battle_gfx_init_item_get_rendering) */
-    BATTLE_SEQ_OP_WAIT_FOR_INPUT = 0xc6,    /* offset: jump while g_battle_action_post_action is 0 */
-    BATTLE_SEQ_OP_UNKNOWN_C7 = 0xc7,        /* two operands */
-    BATTLE_SEQ_OP_UNKNOWN_C8 = 0xc8,        /* two operands */
-    BATTLE_SEQ_OP_UNKNOWN_C9 = 0xc9,        /* two operands */
-    BATTLE_SEQ_OP_UNKNOWN_CA = 0xca,        /* one operand */
-    BATTLE_SEQ_OP_MOVE_UP_2 = 0xcb,         /* 0xcb-0xd2 shift the sprite by one or two units of seq_offset */
-    BATTLE_SEQ_OP_MOVE_UP_1 = 0xcc,
-    BATTLE_SEQ_OP_MOVE_BACKWARD_2 = 0xcd,
-    BATTLE_SEQ_OP_MOVE_BACKWARD_1 = 0xce,
-    BATTLE_SEQ_OP_MOVE_DOWN_2 = 0xcf,
-    BATTLE_SEQ_OP_MOVE_DOWN_1 = 0xd0,
-    BATTLE_SEQ_OP_MOVE_FORWARD_2 = 0xd1,
-    BATTLE_SEQ_OP_MOVE_FORWARD_1 = 0xd2,
-    BATTLE_SEQ_OP_WAIT_FOR_EFFECT_LOAD = 0xd3, /* offset: jump while g_battle_state_animation_continue_check is 1 */
-    BATTLE_SEQ_OP_PLAY_WEAPON_SOUND = 0xd4,    /* 0 swing, 1 hit: battle_sound_select_weapon_hit */
-    BATTLE_SEQ_OP_RESTART = 0xd5,              /* back to the sequence's first byte, counting the restart */
-    BATTLE_SEQ_OP_WAIT_FOR_EFFECT = 0xd6,      /* offset: jump while g_battle_state_animation_continue_check is not 0 */
-    BATTLE_SEQ_OP_UNKNOWN_D7 = 0xd7,           /* one operand; the sequences of death and revival start with it */
-    BATTLE_SEQ_OP_SET_FRAME_BIAS = 0xd8,       /* signed; added to every later frame id */
-    BATTLE_SEQ_OP_LAUNCH_PROJECTILE = 0xd9,    /* two unread operands: the thrown item, stone or arrow of the action */
-    BATTLE_SEQ_OP_UNDEFINED_DA = 0xda,         /* no handler: MAIN_SYSTEM_ERROR_SEQ_OPCODE like any other value */
-    BATTLE_SEQ_OP_SET_WAIT_BIAS = 0xdb,        /* signed; added to every later wait */
-    BATTLE_SEQ_OP_RETURN = 0xdc,               /* resume the sequence BATTLE_SEQ_OP_CALL_SEQUENCE left */
-    BATTLE_SEQ_OP_CALL_SEQUENCE = 0xdd,        /* sequence id: run it from its start; one level deep */
-    BATTLE_SEQ_OP_STRIKE_TARGETS = 0xde,       /* the blow of a weapon-like ability lands: its targets react */
-    BATTLE_SEQ_OP_CLEAR_ROTATION = 0xdf,
-    BATTLE_SEQ_OP_HIDE_SHADOW = 0xe0,
-    BATTLE_SEQ_OP_SHOW_SHADOW = 0xe1,
-    BATTLE_SEQ_OP_SET_LAYER_PRIORITY = 0xe2, /* row of g_battle_gfx_animation_layer_priorities */
-    BATTLE_SEQ_OP_UNKNOWN_E3 = 0xe3,         /* one operand */
-    BATTLE_SEQ_OP_UNKNOWN_E4 = 0xe4,         /* one operand */
-    BATTLE_SEQ_OP_SET_ROTATION = 0xe5,       /* low byte, high byte: the display's rotation, ONE to the turn */
-    BATTLE_SEQ_OP_UNKNOWN_E6 = 0xe6,         /* two operands */
-    BATTLE_SEQ_OP_UNKNOWN_E7 = 0xe7,         /* two operands */
-    BATTLE_SEQ_OP_UNKNOWN_E8 = 0xe8,         /* two operands */
-    BATTLE_SEQ_OP_UNKNOWN_E9 = 0xe9,         /* one operand */
-    BATTLE_SEQ_OP_UNKNOWN_EA = 0xea,         /* two operands */
-    BATTLE_SEQ_OP_FLIP_VERTICAL = 0xeb,
-    BATTLE_SEQ_OP_FLIP_HORIZONTAL = 0xec,
-    BATTLE_SEQ_OP_UNKNOWN_ED = 0xed,           /* one operand */
-    BATTLE_SEQ_OP_MOVE_UNIT_FB = 0xee,         /* signed: forward (+) or backward; 0xee-0xf0 and 0xfa move units only */
-    BATTLE_SEQ_OP_MOVE_UNIT_DU = 0xef,         /* signed: down (+) or up */
-    BATTLE_SEQ_OP_MOVE_UNIT_RL = 0xf0,         /* signed: right (+) or left */
-    BATTLE_SEQ_OP_UNKNOWN_F1 = 0xf1,           /* two operands */
-    BATTLE_SEQ_OP_START_BLOCK_SEQUENCE = 0xf2, /* sprite block 1-3, sequence id: show the weapon or effect sprite */
-    BATTLE_SEQ_OP_UNKNOWN_F3 = 0xf3,           /* one operand */
-    BATTLE_SEQ_OP_UNKNOWN_F4 = 0xf4,           /* one operand */
-    BATTLE_SEQ_OP_UNKNOWN_F5 = 0xf5,           /* one operand */
-    BATTLE_SEQ_OP_PLAY_SOUND = 0xf6,           /* main_sfx_e */
-    BATTLE_SEQ_OP_UNKNOWN_F7 = 0xf7,           /* three operands */
-    BATTLE_SEQ_OP_UNKNOWN_F8 = 0xf8,           /* two operands */
-    BATTLE_SEQ_OP_MOVE_SCREEN_OFFSET = 0xf9,   /* signed x, y: added to the unit's screen_offset */
-    BATTLE_SEQ_OP_MOVE_UNIT = 0xfa,            /* right, down, forward: the operands of 0xf0, 0xef and 0xee */
-    BATTLE_SEQ_OP_UNKNOWN_FB = 0xfb,           /* two operands */
-    BATTLE_SEQ_OP_REPEAT = 0xfc,               /* offset, count: jump count times, then go on */
-    BATTLE_SEQ_OP_JUMP = 0xfd,                 /* offset */
-    BATTLE_SEQ_OP_END_ANIMATION = 0xfe,        /* stop; a weapon or effect sprite is hidden too */
-    BATTLE_SEQ_OP_PAUSE_ANIMATION = 0xff, /* stop; either one puts a unit in its g_battle_gfx_targeted_frame_* pose */
-} battle_seq_opcode_e;
-
 extern s32 g_battle_sound_primary_weather_sfx_id;
 extern s32 g_battle_sound_secondary_weather_sfx_id;
 extern s32 g_battle_sound_suppressed;
@@ -2554,8 +2554,6 @@ void battle_sound_set_effect_to_invalid(void);
 void battle_sound_start_weather_sfx(void);
 s32 battle_sound_stop_weather_sfx(void);
 void battle_sound_wait_for_music_stub(void);
-void battle_gfx_unpack_unit_seq_data(
-    battle_gfx_native_unit_seq_table_t* destination, const battle_gfx_packed_seq_record_t* source);
 void battle_sound_bg_thread(void);
 void battle_sound_edit_bg_thread(void);
 
@@ -5860,6 +5858,8 @@ extern battle_render_buffer_t g_battle_buffer_a[2];
 void battle_display_menu_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
 s32 battle_gfx_get_vram_slot_summary(battle_gfx_vram_slot_summary_t* summary);
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords);
+void battle_gfx_unpack_unit_seq_data(
+    battle_gfx_native_unit_seq_table_t* destination, const battle_gfx_packed_seq_record_t* source);
 void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance);
 
 void battle_gfx_run_wep_eff_seq_script(
