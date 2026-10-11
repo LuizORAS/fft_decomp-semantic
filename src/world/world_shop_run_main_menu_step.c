@@ -1,8 +1,9 @@
 #include "fft/world.h"
 
-/* Shop main menu step: runs the Buy / Sell / Fitting Room menu and, when it
- * closes, moves to the chosen step (rows 0..2; the fitting room also sets its
- * message), or to the exit fade with its message for anything else. */
+/* Shop step MAIN_MENU: the outfitter's Buy / Sell / Fitting room / Leave store menu. When it
+ * closes, Buy opens the buy list on the first category tab, Sell the sell list, Fitting room the unit
+ * choice (0xF818, "Who wants to try it on?", with the first unit staged), and Leave store or cancel
+ * the exit fade (0xF803, "Thank you"). */
 void world_shop_run_main_menu_step(void) {
     u8 running;
 
@@ -29,5 +30,5 @@ void world_shop_run_main_menu_step(void) {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF803, 0);
         }
     }
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
 }

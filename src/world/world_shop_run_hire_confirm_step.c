@@ -33,7 +33,7 @@ void world_shop_run_hire_confirm_step(void) {
             g_world_shop_hire_confirm_message_wait = 1;
         }
     }
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
     world_shop_run_soldier_office_fee_menu_script();
     world_menu_run_script_with_callback_suppressed();
 }

@@ -2,11 +2,11 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Item-list shop menu step: on first entry prompts 0xF80B (0xF80C when the
- * player already holds items), rebuilds the item list and installs the seven
- * column callbacks, then handles cancel (0x40) and confirm (0x20).
- */
-void world_shop_run_item_sell_list_step(void) {
+/* Shop step SELL_LIST: the party's items in the current category tab, with half their price
+ * and the copies equipped and in the inventory (0xF80C, "Which would ya like to sell?", or 0xF80B
+ * when the party has nothing). Circle opens the quantity prompt (SELL_CONFIRM), X returns to the
+ * main menu. */
+void world_shop_run_sell_list_step(void) {
     if (g_world_shop_sell_list_initialized == 0) {
         world_thread_set_parameters(
             NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, world_menu_has_items(0) != 0 ? 0xF80C : 0xF80B, 0);
@@ -43,5 +43,5 @@ void world_shop_run_item_sell_list_step(void) {
     world_menu_switch_item_category(g_world_input_secondary_repeat);
     world_menu_run_script_with_palette_mode(
         g_world_shop_sell_list_menu_script, g_world_input_primary_repeat, g_world_thread_task_active);
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
 }

@@ -709,7 +709,7 @@ functions:
   - {addr: 0x801200f8, size: 516, name: world_menu_run_order_unit, hash: 24cee9db023f5ff9}
   - {addr: 0x801202fc, size: 72, name: world_menu_text_entry_wait_thread_for_selected_unit, hash: 87509880874a444e}
   - {addr: 0x80120344, size: 1144, name: world_formation_run_dismiss_unit_menu_step, hash: e8f12998c30fd953}
-  - {addr: 0x801207bc, size: 96, name: world_shop_obtain_gil, hash: 1ac112ec838ff086}
+  - {addr: 0x801207bc, size: 96, name: world_shop_add_gil, hash: 1ac112ec838ff086}
   - {addr: 0x8012081c, size: 156, name: world_item_cash_out_excess_inventory, hash: 74a71c4a7ac89e68}
   - {addr: 0x801208b8, size: 64, name: world_item_adjust_inventory_count, hash: 06c575284b115ff1}
   - {addr: 0x801208f8, size: 56, name: world_formation_can_dismiss_unit, hash: 2db977178bb41048}
@@ -957,38 +957,38 @@ functions:
   - {addr: 0x80133478, size: 1952, name: world_shop_run_screen, hash: 5736dcb2cff8e5e1}
   - {addr: 0x80133c18, size: 8, name: world_shop_menu_noop_callback, hash: 6d64edf91449c1b1}
   - {addr: 0x80133c20, size: 272, name: world_shop_run_main_menu_step, hash: 1e59afdc0b2e03d6}
-  - {addr: 0x80133d30, size: 236, name: world_menu_run_exit_fade_step, hash: 5741a6a30bfb40dd}
-  - {addr: 0x80133e1c, size: 88, name: world_shop_run_obtain_gil_menu, hash: 8dcd752c73f0f7ef}
+  - {addr: 0x80133d30, size: 236, name: world_shop_run_exit_fade_step, hash: 5741a6a30bfb40dd}
+  - {addr: 0x80133e1c, size: 88, name: world_shop_run_gil_menu_script, hash: 8dcd752c73f0f7ef}
   - {addr: 0x80133e74, size: 84, name: world_item_count_selected_owned_and_equipped, hash: 4410c9fd9c72d4d6}
   - {addr: 0x80133ec8, size: 84, name: world_item_count_selected_equipped_by_party, hash: ff64ee7a3c53a1a2}
   - {addr: 0x80133f1c, size: 92, name: world_menu_get_item_price_display_value, hash: 13c476ab0dd0117f}
   - {addr: 0x80133f78, size: 468, name: world_menu_switch_item_category, hash: 697db618563dd5ea}
-  - {addr: 0x8013414c, size: 868, name: world_shop_handle_item_purchase_menu, hash: 8a88562d1d5306b6}
-  - {addr: 0x801344b0, size: 416, name: world_menu_confirm_item_purchase, hash: 8896a67396b71d09}
-  - {addr: 0x80134650, size: 576, name: world_shop_run_item_purchase_quantity_menu, hash: 8a575587d25b72e2}
+  - {addr: 0x8013414c, size: 868, name: world_shop_run_buy_list_step, hash: 8a88562d1d5306b6}
+  - {addr: 0x801344b0, size: 416, name: world_shop_run_buy_confirm_step, hash: 8896a67396b71d09}
+  - {addr: 0x80134650, size: 576, name: world_shop_run_buy_quantity_menu, hash: 8a575587d25b72e2}
   - {addr: 0x80134890, size: 132, name: world_item_get_equip_candidate_marker, hash: 30489305b4bcd7cf}
   - {addr: 0x80134914, size: 64, name: world_item_get_equip_candidate_brightness, hash: e4b0b408bfbc47fa}
   - {addr: 0x80134954, size: 968, name: world_shop_run_equip_candidate_step, hash: 45a56800f3cda5cf}
   - {addr: 0x80134d1c, size: 80, name: world_item_get_selected_half_price, hash: b3f82d3424b2ab1d}
-  - {addr: 0x80134d6c, size: 528, name: world_shop_run_item_sell_list_step, hash: b2007a2698dc6687}
-  - {addr: 0x80134f7c, size: 512, name: world_shop_run_item_sell_confirm_step, hash: 282a1458fcc1b1cd}
-  - {addr: 0x8013517c, size: 484, name: world_shop_run_item_sell_menu, hash: d1ed310210b60d19}
+  - {addr: 0x80134d6c, size: 528, name: world_shop_run_sell_list_step, hash: b2007a2698dc6687}
+  - {addr: 0x80134f7c, size: 512, name: world_shop_run_sell_confirm_step, hash: 282a1458fcc1b1cd}
+  - {addr: 0x8013517c, size: 484, name: world_shop_run_sell_quantity_menu, hash: d1ed310210b60d19}
   - {addr: 0x80135360, size: 32, name: world_shop_add_fitting_room_cost, hash: 738bd874cfb153ca}
   - {addr: 0x80135380, size: 8, name: world_shop_fitting_room_get_unit_marker, hash: d042b87232f554e5}
   - {addr: 0x80135388, size: 808, name: world_shop_run_fitting_room_step, hash: 85765de3d53a0499}
   - {addr: 0x801356b0, size: 1544, name: world_shop_run_fitting_room_equip_menu, hash: cf0c9c69df25c597}
   - {addr: 0x80135cb8, size: 56, name: world_shop_get_gil_minus_fitting_room_cost, hash: 8a527af3d6748b9e}
   - {addr: 0x80135cf0, size: 72, name: world_menu_is_busy, hash: 9808218111bd7a36}
-  - {addr: 0x80135d38, size: 104, name: world_shop_install_callbacks_and_run, hash: 0fa3bcf0751fee22}
+  - {addr: 0x80135d38, size: 104, name: world_shop_run_fitting_cost_menu_script, hash: 0fa3bcf0751fee22}
   - {addr: 0x80135da0, size: 788, name: world_shop_run_fitting_room_remove_step, hash: 0b645c2c2da08ae1}
   - {addr: 0x801360b4, size: 244, name: world_shop_run_fitting_room_checkout_step, hash: 7f90134186a19260}
   - {addr: 0x801361a8, size: 756, name: world_shop_run_fitting_room_checkout_prompt, hash: 2acae558347c6ad5}
-  - {addr: 0x8013649c, size: 172, name: world_shop_apply_fitting_room_items_to_all_units, hash: 679647ad20b2f548}
+  - {addr: 0x8013649c, size: 172, name: world_shop_undo_fitting_room, hash: 679647ad20b2f548}
   - {addr: 0x80136548, size: 916, name: world_shop_run_best_fit_preview_step, hash: f6f1805d7c975657}
-  - {addr: 0x801368dc, size: 916, name: world_shop_run_sell_equipped_item_menu, hash: 1ab7fabf179f2347}
-  - {addr: 0x80136c70, size: 388, name: world_shop_run_sell_menu_subflow_step, hash: 1944f51cf039ad40}
+  - {addr: 0x801368dc, size: 916, name: world_shop_run_fitting_room_sell_equipped_step, hash: 1ab7fabf179f2347}
+  - {addr: 0x80136c70, size: 388, name: world_shop_run_fitting_room_sell_step, hash: 1944f51cf039ad40}
   - {addr: 0x80136df4, size: 188, name: world_shop_return_unit_equip_to_fitting_room, hash: f5b6d25866fa6472}
-  - {addr: 0x80136eb0, size: 380, name: world_shop_finalize_unit_equips_from_fitting_room, hash: 6fcbea08f09b460d}
+  - {addr: 0x80136eb0, size: 380, name: world_shop_take_off_tried_on_item, hash: 6fcbea08f09b460d}
   - {addr: 0x8013702c, size: 208, name: world_shop_buy_from_fitting_room, hash: 55f25e1a3ba9af3a}
   - {addr: 0x801370fc, size: 636, name: world_shop_run_fur_menu_step, hash: 825ee82e8fe74737}
   - {addr: 0x80137378, size: 80, name: world_shop_get_selected_poached_item_quantity, hash: ba51994016fdf9d4}
@@ -1619,7 +1619,7 @@ data:
   - {addr: 0x8018d7cc, name: g_world_formation_sort_field_indices}
   - {addr: 0x8018d7d8, name: g_world_item_sorted_lists}
   - {addr: 0x8018d7ec, name: g_world_best_fit_slot_categories}
-  - {addr: 0x8018d7f4, name: g_world_fitting_room_best_fit_slot_categories}
+  - {addr: 0x8018d7f4, name: g_world_shop_best_fit_slot_categories}
   - {addr: 0x8018d7fc, name: g_world_item_type_icon_rects}
   - {addr: 0x8018d844, name: g_world_shop_item_availability}
   - {addr: 0x8018da44, name: g_world_formation_graphic_entries}
@@ -1773,7 +1773,7 @@ data:
   - {addr: 0x801952d4, name: g_world_shop_main_menu_running}
   - {addr: 0x801952d5, name: g_world_shop_exit_fade_started}
   - {addr: 0x801952d6, name: g_world_shop_exit_step_initialized}
-  - {addr: 0x801952d8, name: g_world_shop_obtain_gil_menu_script}
+  - {addr: 0x801952d8, name: g_world_shop_gil_menu_script}
   - {addr: 0x801952fc, name: g_world_shop_purchase_menu_script}
   - {addr: 0x801953df, name: g_world_shop_purchase_list_initialized}
   - {addr: 0x801953e0, name: g_world_shop_purchase_equip_check_pending}
@@ -1798,7 +1798,7 @@ data:
   - {addr: 0x801956e4, name: g_world_shop_equip_slot_cursor_anim}
   - {addr: 0x801956ec, name: g_world_shop_equip_slot_cursor_point}
   - {addr: 0x801956f0, name: g_world_shop_checkout_confirm_menu}
-  - {addr: 0x8019572c, name: g_world_shop_checkout_short_gil_menu}
+  - {addr: 0x8019572c, name: g_world_shop_checkout_quit_menu}
   - {addr: 0x80195768, name: g_world_shop_checkout_prompt_initialized}
   - {addr: 0x8019576c, name: g_world_shop_best_fit_menu}
   - {addr: 0x801957a8, name: g_world_shop_best_fit_menu_open}

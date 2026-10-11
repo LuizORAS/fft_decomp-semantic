@@ -66,5 +66,5 @@ void world_shop_run_fur_menu_step(void) {
             g_world_shop_fur_opened = 0;
         }
     }
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
 }

@@ -1,12 +1,12 @@
 #include "fft/world.h"
 
-/* Build the item list offered by a normal or poachers' den shop.
- *
- * A normal shop selects items whose big-endian availability mask contains the
- * requested shop bit and whose required progression does not exceed script
- * variable 0x6f. Values of 100 or greater select the poached-item inventory.
- * Entries the selected unit cannot equip are hidden or marked with 0x4000,
- * according to mode and the Show Unequippable Items option.
+/* Fill entries with the items a shop offers in one category filter, sorted (sort mode 6) and
+ * ended by -1, and return their count. A town's outfitter (shop_id below WORLD_SHOP_ID_FUR_SHOP)
+ * offers each item whose g_world_shop_item_availability bit for that town is set and whose
+ * shop_availability is at most EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY; the fur shop offers its
+ * poached stock. ITEM_LIST_MODE_EQUIPPABLE leaves out what unit_id cannot equip, and
+ * ITEM_LIST_MODE_MARK_UNEQUIPPABLE flags it WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE (or leaves it out when
+ * the Show Unequippable Items option is off).
  *
  * Three constructs are load-bearing:
  *   - The tied launder on primary_category at the top of loop 1. The `(u16)`
@@ -23,8 +23,7 @@
  *     pinning it kills strength reduction.
  *   - `entry = item_id | 0x4000;` rather than `entry |= 0x4000;`. The target
  *     computes `ori s0,s2,0x4000` with distinct source and destination; the
- *     compound form makes the destination self-referencing (`ori s0,s0`).
- */
+ *     compound form makes the destination self-referencing (`ori s0,s0`). */
 s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entries, s32 mode) {
     s32 count;
     s32 item_id;

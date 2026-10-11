@@ -3,15 +3,12 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/*
- * Run one frame of the shop's "who can equip" unit browser for the item
- * under the list cursor.
+/* Shop step BUY_EQUIP: one frame of the "who can equip" unit browser for the item under the
+ * buy list's cursor.
  *
- * Moving onto a unit that can equip the item stages it in the temporary
- * formation record (WORLD_FORMATION_PREVIEW_RECORD) and shows the stat preview; slots
- * already holding the item are flagged in g_world_selected_unit_stat_detail.equipment. Cancel returns to shop
- * step 1.
- */
+ * Moving onto a unit that can equip the item stages it in the temporary formation record
+ * (WORLD_FORMATION_PREVIEW_RECORD) and shows the stat preview; slots already holding the item are
+ * flagged in g_world_selected_unit_stat_detail.equipment. X returns to the buy list. */
 void world_shop_run_equip_candidate_step(void) {
     s32 unused[16];
     s32 input;

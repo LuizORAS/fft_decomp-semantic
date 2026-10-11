@@ -22,23 +22,19 @@ typedef struct world_shop_screen_packets {
 
 extern world_shop_menu_handler_t g_world_shop_menu_step_handlers[];
 
-/*
- * Run the WORLD shop screen until g_world_shop_menu_step becomes -1.
+/* Run the shop screen until the step becomes WORLD_SHOP_STEP_EXIT. shop_type
+ * WORLD_SHOP_ID_FUR_SHOP and WORLD_SHOP_ID_SOLDIER_OFFICE open those two; any other value opens the
+ * outfitter of the current town (g_world_shop_id = the location). Each kind has its first step,
+ * opening line, music and three background images (one picked by EVENT_SCRIPT_VAR_TOWN_BACKGROUND).
+ * Each frame runs the step's handler from g_world_shop_menu_step_handlers, and L1/R1 change the
+ * selected unit while the shop or the fur shop shows one. On exit the formation records go back to
+ * the roster, the music is unloaded and the borrowed VRAM is restored.
  *
- * shop_type 0x64 and 0x65 select fixed shop variants; any other value takes
- * the shop from script variable 0x31. The routine saves the VRAM area under
- * the shop TIM, binds both packet buffers onto a stack-resident pool block,
- * then steps the shop menu handler once per frame and restores the VRAM area
- * on exit.
- *
- * buttons, ot_index and disabled also carry the TIM table base, music
- * scenario and thread parameter before the loop; the shared pseudos give the
- * target's $s1/$s3/$s4 allocation. The ot_index choice must be an if/else
- * (a then-block of its own keeps sched from hoisting the 0x3c store above
- * world_menu_draw_active_window_frames), and tile_box is a never-modified
- * local rematerialised at its use; without it the loop is one insn too long
- * for loop.c to hoist the constant 6 into $s7.
- */
+ * buttons, ot_index and disabled also carry the TIM table base, music scenario and thread parameter
+ * before the loop; the shared pseudos give the target's $s1/$s3/$s4 allocation. The ot_index choice
+ * must be an if/else (a then-block of its own keeps sched from hoisting the 0x3c store above
+ * world_menu_draw_active_window_frames), and tile_box is a never-modified local rematerialised at its
+ * use; without it the loop is one insn too long for loop.c to hoist the constant 6 into $s7. */
 void world_shop_run_screen(s32 shop_type) {
     world_shop_screen_packets_t packets;
     u32* tim;

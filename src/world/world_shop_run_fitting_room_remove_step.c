@@ -2,19 +2,17 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Fitting-room counterpart of world_menu_run_remove_item: takes one equipment
- * slot off the selected unit, refunding a shop item's price from the fitting
- * room cost, and previews the stat change of the slot under the cursor
- * against the unit's own item held in the fitting room.
+/* Shop step FITTING_ROOM_REMOVE (Quit fitting): Circle on a slot holding a tried-on item
+ * takes it off, refunds its price and puts the unit's own item back (world_shop_take_off_tried_on_item);
+ * an item the unit owns cannot be taken off here. Moving the cursor previews the change of a tried-on
+ * item against the kept item; X returns to FITTING_ROOM.
  *
- * The prologue's $a0 is not an argument register here. The callee at
- * 0x80114d4c is world_shop_update_unit_selection, which takes no
- * arguments; $a0 simply holds the copy of the selected-unit index that the
- * store to g_world_shop_previewed_unit_index consumes, while the compare keeps the load in $v1.
- * A one-argument prototype would pull the load pseudo into $a0 and push the
- * copy into $v1; pins and launders cannot compensate, because the target's
- * copy sits in the beq's delay slot and a tied asm is never a delay-slot
- * candidate. */
+ * The prologue's $a0 is not an argument register here. The callee,
+ * world_shop_update_unit_selection, takes no arguments; $a0 simply holds the copy of the
+ * selected-unit index that the store to g_world_shop_previewed_unit_index consumes, while the compare
+ * keeps the load in $v1. A one-argument prototype would pull the load pseudo into $a0 and push the
+ * copy into $v1; pins and launders cannot compensate, because the target's copy sits in the beq's
+ * delay slot and a tied asm is never a delay-slot candidate. */
 void world_shop_run_fitting_room_remove_step(void) {
     /* The target reserves 64 local bytes whose contents are not accessed;
      * saved registers sit at 0x60..0x70 under a -0x78 frame. */
@@ -66,7 +64,7 @@ void world_shop_run_fitting_room_remove_step(void) {
             g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
         } else {
             world_shop_add_fitting_room_cost(-world_item_get_price(equipped_item & WORLD_ITEM_ID_MASK));
-            world_shop_finalize_unit_equips_from_fitting_room(g_world_formation_selected_unit_index, slot & 0xFF);
+            world_shop_take_off_tried_on_item(g_world_formation_selected_unit_index, slot & 0xFF);
             world_formation_recalculate_selected_unit_stats();
             g_world_menu_sound_effect_id = MAIN_SFX_UNEQUIP;
             g_world_shop_previewed_equip_slot = -1;
@@ -87,6 +85,6 @@ void world_shop_run_fitting_room_remove_step(void) {
         g_world_status_display_thread_params.redraw_request = 1;
     }
     if (g_world_shop_cost_window_visible != 0) {
-        world_shop_install_callbacks_and_run();
+        world_shop_run_fitting_cost_menu_script();
     }
 }

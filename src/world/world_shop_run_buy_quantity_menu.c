@@ -1,12 +1,12 @@
 #include "fft/world.h"
 
-/* Runs the shop purchase-quantity menu for the highlighted item.
- *
- * On entry, caps the selectable quantity at min(gil / price, 99 - owned) and
- * returns -2 when the stack is already full or -1 when no unit is
- * affordable. Afterwards it returns the quantity menu thread state, updating
- * the total-price prompt while the confirmation sub-thread is running. */
-s32 world_shop_run_item_purchase_quantity_menu(void) {
+/* The buy quantity prompt for the highlighted item. On entry it caps the quantity at
+ * min(gil / price, 99 - owned), where owned counts equipped copies too, and refuses with
+ * WORLD_SHOP_QUANTITY_HOLDING_MAX (0xF807, "You can't hold any more") when 99 are owned or
+ * WORLD_SHOP_QUANTITY_CANNOT_AFFORD (0xF806, "short of gil") when not one is affordable. Afterwards it
+ * returns the quantity menu thread's state, showing the total price (0xF809) while the confirmation
+ * runs. */
+s32 world_shop_run_buy_quantity_menu(void) {
     s32 owned;
     s32 count;
     s32 limit;
@@ -20,7 +20,7 @@ s32 world_shop_run_item_purchase_quantity_menu(void) {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF807, 0);
             return WORLD_SHOP_QUANTITY_HOLDING_MAX;
         }
-        count = world_shop_obtain_gil(0);
+        count = world_shop_add_gil(0);
         g_world_shop_purchase_unit_price = world_item_get_price(g_world_shop_purchase_item);
         count /= g_world_shop_purchase_unit_price;
         limit = 99 - owned;

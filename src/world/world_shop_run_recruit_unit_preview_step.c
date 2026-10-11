@@ -23,7 +23,7 @@ void world_shop_run_recruit_unit_preview_step(void) {
             g_world_menu_description_text_id = MENU_GRID_HELP_RECRUIT_PREVIEW;
             g_world_shop_recruit_preview_initialized = 1;
         }
-        world_shop_run_obtain_gil_menu();
+        world_shop_run_gil_menu_script();
         world_shop_run_soldier_office_fee_menu_script();
         world_menu_run_script_with_callback_suppressed();
     } else if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {

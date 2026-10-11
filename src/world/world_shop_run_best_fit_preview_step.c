@@ -2,18 +2,18 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/*
- * Shop "best fit / fitting room" preview step, entry 8 of the shop callback
- * table at 0x8019525c.
+/* Shop step FITTING_ROOM_BEST_FIT: preview the shop's Best fit for the selected unit and
+ * apply it on O K.
  *
- * On entry it stages the selected unit's four weapon/armour slots, fills any
- * slot already taken from the shop with that slot's fitting-room reservation,
- * asks 0x80123dd8 for a suggested set, restores the staged slots and previews
- * the resulting stat delta. It then runs the confirmation menu; on confirm it
- * commits the suggested set slot by slot, returning each displaced item to the
- * fitting room or refunding a shop item's price, and returns to shop step 6.
+ * On entry it stages the unit's four weapon and armour slots, puts the unit's own (kept) item back in
+ * every slot holding a tried-on item, asks world_shop_build_fitting_room_best_fit_equipment for a
+ * suggested set, restores the staged slots and previews the stat change. It then runs the O K / N O
+ * menu; on O K it commits the suggested set slot by slot: a shop pick (or an empty slot) returns the
+ * current item to the fitting room and adds the pick's price, and one of the unit's own items takes
+ * the place of a tried-on item, refunding its price and dropping the kept item. Then back to
+ * FITTING_ROOM.
  *
- * The gate at 0x801957a8 is `s8`, not `u8` (the target sign-loads it, `lb`).
+ * g_world_shop_best_fit_menu_open is `s8`, not `u8` (the target sign-loads it, `lb`).
  * Loop 2 computes both the suggested item and the unit's own slot at the
  * dominator; deferring either load into an arm costs a duplicate load and the
  * hoist of the selected-unit index.
@@ -59,8 +59,7 @@
  *
  * The confirmation result g_world_menu_selection_results[5] is read directly
  * each time. Its address stays in one register across the calls and the last
- * read is scheduled ahead of the two byte stores that precede it in source.
- */
+ * read is scheduled ahead of the two byte stores that precede it in source. */
 void world_shop_run_best_fit_preview_step(void) {
     /* The target reserves vars the code never touches: args 16 + vars 88 +
      * 6 saves 24 = the frame of 128, while only the 8-byte staging buffer at
@@ -151,6 +150,6 @@ void world_shop_run_best_fit_preview_step(void) {
         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
     }
     if (g_world_shop_cost_window_visible != 0) {
-        world_shop_install_callbacks_and_run();
+        world_shop_run_fitting_cost_menu_script();
     }
 }

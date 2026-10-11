@@ -59,7 +59,7 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
                         g_world_shop_service_fee
                             += world_item_get_price(g_world_formation_unit_pointers[slot]->equipment[i++]);
                     } while (i < 5);
-                    if (world_shop_obtain_gil(0) < g_world_shop_service_fee) {
+                    if (world_shop_add_gil(0) < g_world_shop_service_fee) {
                         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF823, 0);
                         main_party_remove_unit(g_world_formation_unit_pointers[slot]->roster_slot);
                         g_world_shop_hire_result_shown = 1;
@@ -78,7 +78,7 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
             }
         }
     }
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
     world_shop_run_soldier_office_fee_menu_script();
     world_menu_run_script_with_callback_suppressed();
 }

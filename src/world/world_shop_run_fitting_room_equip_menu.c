@@ -2,15 +2,15 @@
 #include "psx/libc.h"
 #include "psx/pad.h"
 
-/* Shop fitting-room equipment step, the shop twin of world_formation_run_equip_item_menu.
+/* Shop step FITTING_ROOM_EQUIP (Try it on), the shop twin of
+ * world_formation_run_equip_item_menu.
  *
- * With the slot list active, steps the equipment-slot cursor and shows the
- * equipped item's description; confirming opens the shop item list for the
- * slot. In the item list, confirming an equippable item returns the unit's
- * current item to the fitting room, equips the shop item (bit 15 marks it as
- * unpaid), adds its price to the fitting-room cost and recalculates stats,
- * while moving the cursor previews the stat change. Cancel leaves the list,
- * or the step (g_world_shop_menu_step = 6) from the slot list. */
+ * With the slot list active, steps the equipment-slot cursor and shows the equipped item's
+ * description; confirming opens the shop's item list for the slot, marking what the unit cannot
+ * equip. In the item list, confirming an equippable item returns the unit's current item to the
+ * fitting room, equips the shop item (flagged WORLD_EQUIPMENT_SHOP_ITEM: unpaid), adds its price to
+ * the fitting room's cost and recalculates stats, while moving the cursor previews the stat change.
+ * X leaves the list, or the step (back to FITTING_ROOM) from the slot list. */
 void world_shop_run_fitting_room_equip_menu(void) {
     s16 x;
     s16 y;
@@ -150,6 +150,6 @@ void world_shop_run_fitting_room_equip_menu(void) {
     world_menu_draw_animated_cursor(&g_world_shop_fitting_slot_cursor_point, &g_world_shop_fitting_slot_cursor_anim,
         g_world_shop_fitting_room_item_list_open != 0 || g_world_thread_task_active != 0);
     if (g_world_shop_cost_window_visible != 0) {
-        world_shop_install_callbacks_and_run();
+        world_shop_run_fitting_cost_menu_script();
     }
 }

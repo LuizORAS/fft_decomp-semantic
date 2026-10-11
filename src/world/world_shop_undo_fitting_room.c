@@ -1,9 +1,8 @@
 #include "fft/world.h"
 
-/* Move every reserved fitting-room item onto its formation unit and clear
- * the reservation. Equipment slots flagged in bit 14 are overwritten even
- * when no item was reserved. */
-void world_shop_apply_fitting_room_items_to_all_units(void) {
+/* Leave the fitting room without buying: every slot holding a tried-on item, or with an item
+ * kept aside, gets the kept item back (nothing when none was kept), and the kept items are cleared. */
+void world_shop_undo_fitting_room(void) {
     s32 i;
     s32 j;
 

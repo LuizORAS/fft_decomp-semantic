@@ -512,7 +512,6 @@ extern world_gfx_textured_quad_source_t g_world_vertical_cursor_quad;
 extern RECT g_world_gfx_fade_tile_rect;
 /* Sector and size pairs, read as flat words ([i * 2], [i * 2 + 1]): a record
  * member access changes how the target addresses them. */
-extern s32 g_world_shop_background_tim_files[9 * 2];
 extern s32 g_world_script_tutorial_message_files[7 * 2];
 extern s32 g_world_script_tutorial_script_files[7 * 2];
 
@@ -646,7 +645,6 @@ void world_gfx_init_image_loading(void* prim, const void* load_origin, const voi
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
-u32* world_shop_load_background_tim(s32 index);
 void world_gfx_mirror_4bpp_rect(u8* pixels, world_glyph_blit_t* rect);
 void world_gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
 void world_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
@@ -1293,8 +1291,6 @@ extern s16 g_world_formation_dismiss_prompt_text_id;
 extern s16 g_world_formation_dismiss_prompt_kind;
 extern s16 g_world_formation_dismiss_anim_timer;
 extern s8 g_world_formation_sort_field_indices[];
-extern world_menu_entry_t g_world_shop_hire_confirm_menu;
-extern u8 g_world_shop_hire_confirm_message_wait;
 extern u8 g_world_formation_thread_status_snapshot[16];
 extern u8 g_world_formation_view_quads[2][0x4b0];
 extern point16_t g_world_formation_cursor_target;
@@ -2698,6 +2694,10 @@ void world_item_sort_id_list(s32 mode, s16* list);
 void world_item_sum_equipment_stat_details(struct world_item_stat_detail* total, u16* equipment);
 
 /* shop */
+/* The shop screen (world_shop_run_screen) and its steps: the town outfitters (buy, sell and the
+ * fitting room, where units try on shop items before paying), the fur shop (poached items) and the
+ * soldier office (hiring and renaming monsters). */
+
 /* Two-byte shop availability mask, stored most significant byte first: bit
  * 0x8000 >> location id is set when that town's outfitter sells the item. */
 typedef struct world_shop_item_availability {
@@ -2747,7 +2747,7 @@ typedef enum world_shop_checkout_result {
     WORLD_SHOP_CHECKOUT_PROMPT_OPEN = 1,
 } world_shop_checkout_result_e;
 
-/* Refusals of world_shop_run_item_purchase_quantity_menu and
+/* Refusals of world_shop_run_buy_quantity_menu and
  * world_shop_run_fur_buy_quantity_menu; otherwise they return whether the
  * quantity prompt is still open. */
 enum {
@@ -2755,6 +2755,16 @@ enum {
     WORLD_SHOP_QUANTITY_CANNOT_AFFORD = -1,
 };
 
+/* Sector and size of the nine background images (three each for the outfitter, the fur shop and
+ * the soldier office), read as flat words ([i * 2], [i * 2 + 1]): a record member access changes
+ * how the target addresses them. */
+extern s32 g_world_shop_background_tim_files[9 * 2];
+
+/* The fitting room's copy of g_world_best_fit_slot_categories (the same five bytes);
+ * world_shop_build_fitting_room_best_fit_equipment sets its slot 1. */
+extern u8 g_world_shop_best_fit_slot_categories[5];
+
+/* Per formation unit and slot: the item the unit owns, set aside while it tries on a shop item. */
 extern s16 g_world_shop_fitting_room_items[][5];
 extern u8 g_world_shop_hire_menu_initialized;
 extern u8 g_world_shop_item_category;
@@ -2776,7 +2786,7 @@ extern RECT g_world_shop_vram_backup_rect;
 extern u8 g_world_shop_main_menu_running;     /* menu open flag */
 extern u8 g_world_shop_exit_fade_started;     /* fade-out started */
 extern u8 g_world_shop_exit_step_initialized; /* state initialised */
-extern u8 g_world_shop_obtain_gil_menu_script[];
+extern u8 g_world_shop_gil_menu_script[];
 extern s16 g_world_shop_purchase_menu_script[];
 extern s8 g_world_shop_purchase_list_initialized;
 extern s8 g_world_shop_purchase_equip_check_pending;
@@ -2804,7 +2814,7 @@ extern s8 g_world_shop_equip_slot_preview_initialized;
 extern u16 g_world_shop_equip_slot_cursor_anim;
 extern point16_t g_world_shop_equip_slot_cursor_point;
 extern world_menu_entry_t g_world_shop_checkout_confirm_menu;
-extern world_menu_entry_t g_world_shop_checkout_short_gil_menu;
+extern world_menu_entry_t g_world_shop_checkout_quit_menu;
 extern u8 g_world_shop_checkout_prompt_initialized;
 
 /* The best-fit confirmation menu entry, followed directly by its open/closed
@@ -2826,6 +2836,8 @@ extern s8 g_world_shop_fur_purchase_list_initialized;
 extern s8 g_world_shop_fur_equip_check_pending;
 extern s16 g_world_shop_fur_purchase_message_wait;
 extern u8 g_world_shop_fur_purchase_result; /* quantity-menu thread result */
+extern world_menu_entry_t g_world_shop_hire_confirm_menu;
+extern u8 g_world_shop_hire_confirm_message_wait;
 extern world_menu_entry_t g_world_shop_hire_fee_confirm_menu;
 extern u8 g_world_shop_recruit_preview_initialized;
 extern u8 g_world_shop_hire_name_entry_initialized;
@@ -2878,33 +2890,34 @@ extern const u8* g_world_shop_entered_unit_name;
 extern u32 g_world_shop_service_fee;
 extern s16 g_world_shop_id;
 extern u8 g_world_shop_cost_window_visible;
-void world_shop_run_item_sell_list_step(void);
-void world_shop_run_item_sell_confirm_step(void);
-s32 world_shop_rename_unit_get_unit_marker(s32 unused_unit_index);
 s32 world_shop_add_fitting_room_cost(s32 delta);
+s32 world_shop_add_gil(s32 delta);
 s32 world_shop_adjust_poached_item_quantity(s16 item_id, s32 delta);
-void world_shop_apply_fitting_room_items_to_all_units(void);
 void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_id, s16* out);
 s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entries, s32 mode);
 void world_shop_buy_from_fitting_room(void);
-void world_shop_finalize_unit_equips_from_fitting_room(s16 formation_index, s16 equipment_index);
 s32 world_shop_fitting_room_get_unit_marker(s32 unused_unit_index);
 s32 world_shop_get_gil_minus_fitting_room_cost(s32 unused_row);
 s32 world_shop_get_selected_poached_item_quantity(s32 unused_row);
-void world_shop_install_callbacks_and_run(void);
-s32 world_shop_obtain_gil(s32 delta);
 s32 world_shop_get_soldier_office_entry_fee(void);
+u32* world_shop_load_background_tim(s32 index);
+s32 world_shop_rename_unit_get_unit_marker(s32 unused_unit_index);
 void world_shop_return_unit_equip_to_fitting_room(s16 unit_index, s16 equipment_index);
+s32 world_shop_run_buy_quantity_menu(void);
 void world_shop_run_equip_candidate_step(void);
+void world_shop_run_fitting_cost_menu_script(void);
 s32 world_shop_run_fitting_room_checkout_prompt(void);
-s32 world_shop_run_item_purchase_quantity_menu(void);
 s32 world_shop_run_fur_buy_quantity_menu(void);
-s32 world_shop_run_item_sell_menu(void);
 s32 world_shop_run_fur_sell_quantity_menu(void);
-void world_shop_run_obtain_gil_menu(void);
-void world_shop_run_soldier_office_fee_menu_script(void);
-void world_shop_update_unit_selection(void);
+void world_shop_run_gil_menu_script(void);
 void world_shop_run_screen(s32 shop_type);
+void world_shop_run_sell_confirm_step(void);
+void world_shop_run_sell_list_step(void);
+s32 world_shop_run_sell_quantity_menu(void);
+void world_shop_run_soldier_office_fee_menu_script(void);
+void world_shop_take_off_tried_on_item(s16 formation_index, s16 equipment_index);
+void world_shop_undo_fitting_room(void);
+void world_shop_update_unit_selection(void);
 
 /* card */
 /* Partial card-file header: WORLD 0x8013300c puts byte +3 into the upper
@@ -3249,9 +3262,6 @@ extern s8* g_world_sort_key_lists[];
 /* Item-list filter per equipment slot (right hand, left hand, head, body, accessory); Best Fit sets
  * slot 1 to ITEM_LIST_FILTER_WEAPON for a Two Swords user, else ITEM_LIST_FILTER_SHIELD. */
 extern u8 g_world_best_fit_slot_categories[5];
-
-/* Second slot-category table of world_shop_build_fitting_room_best_fit_equipment. */
-extern u8 g_world_fitting_room_best_fit_slot_categories[5];
 extern game_options_t g_world_saved_game_options;
 extern s32 g_world_finish_operation_event_id;
 extern u8 g_world_order_unit_saved_browse_enabled;

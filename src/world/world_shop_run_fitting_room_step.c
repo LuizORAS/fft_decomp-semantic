@@ -3,16 +3,18 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Fitting-room menu step: on entry clear the trial equipment and its cost;
- * then either browse the formation (confirm opens the fitting menu, cancel
- * returns to shop step 0xC) or run the fitting menu thread and dispatch its
- * selection to the next shop step. */
+/* Shop step FITTING_ROOM. On entry (after any button) it clears the fitting room: no tried-on
+ * item, no kept item, a cost of 0. Then the unit grid: Circle or Triangle picks a unit and opens the
+ * fitting menu, X goes to the checkout (FITTING_ROOM_CHECKOUT). The fitting menu's rows go to Try it
+ * on (FITTING_ROOM_EQUIP), Best fit, Quit fitting (FITTING_ROOM_REMOVE), Sell (then Sell equip or
+ * Stock) and Fitting over (the checkout); cancel returns to the unit grid. The cost window shows while
+ * a unit is chosen. */
 void world_shop_run_fitting_room_step(void) {
     s32 busy;
 
     if (g_world_shop_fitting_room_initialized == 0) {
         if (g_world_input_newly_pressed == 0) {
-            world_shop_run_obtain_gil_menu();
+            world_shop_run_gil_menu_script();
             return;
         }
         world_formation_init_cursor_and_scroll_state(0);
@@ -85,6 +87,6 @@ void world_shop_run_fitting_room_step(void) {
         }
     }
     if (g_world_shop_cost_window_visible != 0) {
-        world_shop_install_callbacks_and_run();
+        world_shop_run_fitting_cost_menu_script();
     }
 }

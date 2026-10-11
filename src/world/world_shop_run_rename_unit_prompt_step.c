@@ -16,7 +16,7 @@ void world_shop_run_rename_unit_prompt_step(void) {
 
     if (g_world_shop_rename_prompt_initialized == 0) {
         if (!(g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE))) {
-            world_shop_run_obtain_gil_menu();
+            world_shop_run_gil_menu_script();
             world_shop_run_soldier_office_fee_menu_script();
             world_menu_run_script_with_callback_suppressed();
             return;

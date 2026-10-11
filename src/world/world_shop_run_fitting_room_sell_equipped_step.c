@@ -1,15 +1,11 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/*
- * Run one frame of the shop's sell-equipped-item menu.
- *
- * The cursor walks the selected unit's five equipment slots; confirming a
- * slot the unit owns (non-empty, not taken from the shop) opens a sale prompt
- * for half the item's price and, on acceptance, credits the gil and clears
- * the slot. Triangle returns to shop step 6.
- */
-void world_shop_run_sell_equipped_item_menu(void) {
+/* Shop step FITTING_ROOM_SELL_EQUIPPED (Sell, then Sell equip): the cursor walks the selected
+ * unit's five equipment slots; Circle on an item the unit owns (not empty, not tried on) offers half
+ * its price, and Yes credits the gil, empties the slot and recalculates the unit's stats. X returns to
+ * FITTING_ROOM. */
+void world_shop_run_fitting_room_sell_equipped_step(void) {
     s32 close;
     u32 item;
     s32 text_id;
@@ -69,7 +65,7 @@ void world_shop_run_sell_equipped_item_menu(void) {
             if (g_world_shop_sell_equipped_prompt_active == 0) {
                 if (g_world_menu_selection_results[WORLD_MENU_SELECTION_PROMPT_RESULT] == 0) {
                     world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf811, 0);
-                    world_shop_obtain_gil(g_world_text_substitution_values[0]);
+                    world_shop_add_gil(g_world_text_substitution_values[0]);
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
                         ->equipment[g_world_shop_sell_equipped_slot] = ITEM_ID_NOTHING;
                     world_formation_recalculate_selected_unit_stats();
@@ -95,5 +91,5 @@ void world_shop_run_sell_equipped_item_menu(void) {
         world_menu_draw_animated_cursor(&g_world_shop_sell_equipped_cursor_point,
             &g_world_shop_sell_equipped_cursor_anim, world_thread_is_task_active(0));
     }
-    world_shop_install_callbacks_and_run();
+    world_shop_run_fitting_cost_menu_script();
 }

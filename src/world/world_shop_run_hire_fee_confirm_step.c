@@ -19,7 +19,7 @@ void world_shop_run_hire_fee_confirm_step(void) {
         choice = g_world_menu_selection_results[WORLD_MENU_SELECTION_PROMPT_RESULT];
         if (choice == 0) {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf82b, 0);
-            world_shop_obtain_gil(-g_world_shop_service_fee);
+            world_shop_add_gil(-g_world_shop_service_fee);
             world_formation_set_unit_name(g_world_formation_selected_unit_index, g_world_shop_entered_unit_name);
             g_world_shop_hire_fee_message_wait = 1;
         } else if (choice == 1 || choice == -1) {
@@ -33,7 +33,7 @@ void world_shop_run_hire_fee_confirm_step(void) {
             g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_NAME_ENTRY;
         }
     }
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
     world_shop_run_soldier_office_fee_menu_script();
     world_menu_run_script_with_callback_suppressed();
 }

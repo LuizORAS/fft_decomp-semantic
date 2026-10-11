@@ -1,12 +1,11 @@
 #include "fft/world.h"
 
-/*
- * Run the menu's state-4/state-5 subflow through thread 2.
- *
- * State 0 closes the subflow and hands control back as state 6; otherwise
- * the updated state is retained for the next call. The menu role is unverified.
- */
-void world_shop_run_sell_menu_subflow_step(void) {
+/* Shop step FITTING_ROOM_SELL (Sell, then Stock): run the shop's SELL_LIST and SELL_CONFIRM
+ * steps inside the fitting room. On entry it opens the message box, hides the unit browser and banner
+ * and clears selection records 5-9. Each frame it runs the remembered sub-step with
+ * g_world_shop_menu_step set to it, keeps the step it moves to in g_world_shop_sell_subflow_step and
+ * stays at FITTING_ROOM_SELL, until the sell list's exit to MAIN_MENU sends it back to FITTING_ROOM. */
+void world_shop_run_fitting_room_sell_step(void) {
     if (g_world_shop_sell_subflow_initialized == 0) {
         if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) != 0) {
             return;
@@ -26,12 +25,12 @@ void world_shop_run_sell_menu_subflow_step(void) {
     }
     g_world_shop_menu_step = g_world_shop_sell_subflow_step;
     if (g_world_shop_sell_subflow_step == WORLD_SHOP_STEP_SELL_LIST) {
-        world_shop_run_item_sell_list_step();
+        world_shop_run_sell_list_step();
         if (g_world_shop_sell_subflow_step != g_world_shop_menu_step) {
             world_menu_reset_selection_results();
         }
     } else if (g_world_shop_sell_subflow_step == WORLD_SHOP_STEP_SELL_CONFIRM) {
-        world_shop_run_item_sell_confirm_step();
+        world_shop_run_sell_confirm_step();
     }
     if (g_world_shop_menu_step == WORLD_SHOP_STEP_MAIN_MENU) {
         g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;

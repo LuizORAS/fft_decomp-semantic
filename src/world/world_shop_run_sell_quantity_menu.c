@@ -1,15 +1,15 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Shop: the quantity prompt of a sale, capped by the inventory count.
+/* The sale quantity prompt for the highlighted item, capped by its inventory count (equipped
+ * copies are not sold here).
  *
- * The first call returns -1 with message 0xF80E when none of the highlighted
- * item is in the inventory. Otherwise it returns the quantity menu's thread
- * state, showing the total (half price times quantity, message 0xF810) while
- * the confirmation child runs and the plain prompt (0xF80F) otherwise. The
- * final frame queues the transaction sound for "yes" and the confirm sound
+ * The first call returns -1 with message 0xF80E ("They're all equipped") when none of the item is in
+ * the inventory. Otherwise it returns the quantity menu's thread state, showing the total (half
+ * price times quantity, message 0xF810) while the confirmation child runs and the plain prompt
+ * (0xF80F) otherwise. The final frame queues the transaction sound for "yes" and the confirm sound
  * for "no". */
-s32 world_shop_run_item_sell_menu(void) {
+s32 world_shop_run_sell_quantity_menu(void) {
     s32 count;
 
     if (g_world_shop_sell_result == 0) {

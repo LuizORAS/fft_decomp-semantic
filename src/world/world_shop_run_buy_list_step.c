@@ -1,9 +1,12 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/* Handle item selection and purchase-menu transitions.
- */
-void world_shop_handle_item_purchase_menu(void) {
+/* Shop step BUY_LIST: the items the outfitter sells in the current category tab (weapons and
+ * shields, headgear, body armor, accessories, items), with each one's price and the copies the party
+ * has equipped and holds. Circle opens the quantity prompt (BUY_CONFIRM), Triangle shows who can
+ * equip the item once the message box closes (BUY_EQUIP; not on the items tab), X returns to the main
+ * menu. */
+void world_shop_run_buy_list_step(void) {
     s16 x;
     s16 y;
     s32 input;
@@ -71,5 +74,5 @@ void world_shop_handle_item_purchase_menu(void) {
     }
     world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_SHOP_LIST_TRIANGLE, 0xBA, 0x4C,
         g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, MAIN_SFX_CONFIRM);
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
 }

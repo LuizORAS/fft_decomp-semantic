@@ -1,8 +1,8 @@
 #include "fft/world.h"
 
-/* Complete a fitting-room purchase: every tried-on item (entry bits 14-15
- * set) becomes the unit's own, and the equipment it displaced, kept in
- * g_world_shop_fitting_room_items, goes back to the inventory. */
+/* Complete a fitting room purchase: every tried-on item (WORLD_EQUIPMENT_SHOP_ITEM) becomes
+ * the unit's own, and the equipment it displaced, kept in g_world_shop_fitting_room_items, goes to the
+ * inventory. */
 void world_shop_buy_from_fitting_room(void) {
     s32 i;
     s32 j;

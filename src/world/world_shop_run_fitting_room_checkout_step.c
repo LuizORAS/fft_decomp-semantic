@@ -2,13 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/*
- * Fitting room step that prices the tried-on equipment.
- *
- * Runs the checkout prompt: done returns to the shop's main menu (message
- * 0xf802); cancelled shows message 0xf818 until any face button, which
- * returns to the fitting room with the unit's stats recalculated.
- */
+/* Shop step FITTING_ROOM_CHECKOUT (Fitting over, or X on the unit grid): run the checkout
+ * prompt. Done (paid, or left without buying) returns to the main menu (0xF802, "Anything else I can
+ * do for you?") and resets the fitting room; cancelled shows 0xF818 ("Who wants to try it on?") until
+ * any face button, which returns to the unit grid with the unit's stats recalculated. */
 void world_shop_run_fitting_room_checkout_step(void) {
     s32 result;
 
@@ -32,5 +29,5 @@ void world_shop_run_fitting_room_checkout_step(void) {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf818, 0);
         }
     }
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
 }

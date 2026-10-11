@@ -2,10 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Menu screen step: on the first frame reset the fade flag; once any of the
- * face buttons (0xf0) is pressed start the fade-out with a music fade, then
- * wait for the fade to complete before releasing the screen (g_world_shop_menu_step = -1). */
-void world_menu_run_exit_fade_step(void) {
+/* Shop step EXIT_FADE: once the goodbye line shows, any face button starts the screen and
+ * music fade-out; when the fade ends the step becomes WORLD_SHOP_STEP_EXIT, which ends
+ * world_shop_run_screen. The gil window (and the soldier office's fee window) stays drawn. */
+void world_shop_run_exit_fade_step(void) {
     if (g_world_shop_exit_step_initialized == 0) {
         g_world_shop_exit_fade_started = 0;
         g_world_shop_exit_step_initialized = 1;
@@ -21,7 +21,7 @@ void world_menu_run_exit_fade_step(void) {
         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         g_world_shop_exit_fade_started = 1;
     }
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
     if (g_world_shop_id == WORLD_SHOP_ID_SOLDIER_OFFICE) {
         world_shop_run_soldier_office_fee_menu_script();
         world_menu_run_script_with_callback_suppressed();

@@ -19,7 +19,7 @@ void world_item_cash_out_excess_inventory(void) {
         if (excess >= 100) {
             price = world_item_get_half_price(item_id);
             excess -= 99;
-            world_shop_obtain_gil(price * excess);
+            world_shop_add_gil(price * excess);
             *quantity -= excess;
         }
         quantity++;

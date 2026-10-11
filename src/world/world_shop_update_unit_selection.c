@@ -2,18 +2,18 @@
 #include "psx/libc.h"
 #include "psx/pad.h"
 
-/*
- * Restage the formation unit when the selection changes and step the unit
- * banner slide.
+/* Restage the selected formation unit when L1/R1 or a browser changed it, and step the unit
+ * banner slide. In the fitting room steps (FITTING_ROOM to FITTING_ROOM_CHECKOUT) the unit's stats are
+ * recalculated with what it is trying on; elsewhere the unit is staged again.
  *
  * On a change, the previous unit's display snapshot is kept for the slide
  * (g_world_comparison_unit_stat_summary/g_world_comparison_unit_identity, the second slot after
- * world_formation_stage_selected_unit's copies) and g_world_status_display_thread_params.redraw_request records the
- * direction: 1 for 0x2000/0x8 input or a forward move, 2 otherwise. g_world_formation_banner_slide_step counts the
- * 16-frame banner slide in either direction, driving the banner y positions in
- * g_world_status_display_thread_params.y/g_world_comparison_display_thread_params.y. Compiled at -O1; the flag update
- * goes through a pointer so each branch materialises the address like the target.
- */
+ * world_formation_stage_selected_unit's copies) and g_world_status_display_thread_params.redraw_request
+ * records the direction: 1 for Right or R1 (with neither held, a move to a higher index), 2 for Left,
+ * L1 or a lower index. g_world_formation_banner_slide_step counts the 16-frame banner slide in either
+ * direction, driving the banner y positions in g_world_status_display_thread_params.y and
+ * g_world_comparison_display_thread_params.y. Compiled at -O1; the flag update goes through a pointer
+ * so each branch materialises the address like the target. */
 void world_shop_update_unit_selection(void) {
     s32 previous;
     s32 enable;

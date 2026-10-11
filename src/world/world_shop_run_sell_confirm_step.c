@@ -2,10 +2,12 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Item sell confirmation step: pays half price times the quantity, removes the
- * items, prompts 0xF811 and rebuilds the list (0xF80A when nothing to sell).
- */
-void world_shop_run_item_sell_confirm_step(void) {
+/* Shop step SELL_CONFIRM: run the sale quantity prompt (world_shop_run_sell_quantity_menu);
+ * on "yes" the party gets half the price times the quantity, the items leave the inventory, 0xF811
+ * ("Thank you") is shown and the list is rebuilt; on "no" 0xF80A. That message, or the prompt's
+ * refusal, stays until a face button or d-pad press, which returns to the sell list (0xF80D, "Have
+ * anything else to sell?"). */
+void world_shop_run_sell_confirm_step(void) {
     s32 result = 1;
 
     if (g_world_shop_sell_message_wait != 0) {
@@ -17,11 +19,11 @@ void world_shop_run_item_sell_confirm_step(void) {
             g_world_menu_prompt_active = 0;
         }
     } else {
-        result = world_shop_run_item_sell_menu();
+        result = world_shop_run_sell_quantity_menu();
     }
     if (result == 0) {
         if (g_world_menu_selection_results[WORLD_MENU_SELECTION_PROMPT_RESULT] == 0) {
-            world_shop_obtain_gil(world_item_get_half_price(g_world_menu_entry_ids[g_world_menu_cursor_position])
+            world_shop_add_gil(world_item_get_half_price(g_world_menu_entry_ids[g_world_menu_cursor_position])
                 * g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY]);
             world_item_adjust_inventory_count(g_world_menu_entry_ids[g_world_menu_cursor_position],
                 -g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY]);
@@ -43,5 +45,5 @@ void world_shop_run_item_sell_confirm_step(void) {
     world_menu_switch_item_category(0);
     world_menu_run_script_with_palette_mode(
         g_world_shop_sell_list_menu_script, 0, world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT));
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
 }

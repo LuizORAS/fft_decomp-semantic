@@ -1,7 +1,10 @@
 #include "fft/world.h"
 
-/* Finalize a unit's equipment from the Fitting Room. */
-void world_shop_finalize_unit_equips_from_fitting_room(s16 formation_index, s16 equipment_index) {
+/* Take a tried-on item off one equipment slot of formation unit formation_index and put back
+ * the item the fitting room kept for that slot. For a hand, the kept item returns only when the unit
+ * can hold it there with the other hand's item, and when both hands are now empty both kept hand items
+ * return. The caller refunds the price. */
+void world_shop_take_off_tried_on_item(s16 formation_index, s16 equipment_index) {
     u16 reserved_item;
     s16 unit_index = formation_index;
 

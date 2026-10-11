@@ -1,8 +1,8 @@
 #include "fft/world.h"
 
-/* Clears one equipment slot of a formation unit.  An item the unit owned goes
- * back to the fitting room reserve; an item taken from the shop (bit 15 set)
- * is refunded from the fitting room cost instead. */
+/* Clear one equipment slot of a formation unit. An item the unit owns is kept aside in
+ * g_world_shop_fitting_room_items (it comes back if the fitting is undone); a tried-on shop item
+ * (WORLD_EQUIPMENT_SHOP_ITEM) is taken off the fitting room's cost instead. */
 void world_shop_return_unit_equip_to_fitting_room(s16 unit_index, s16 equipment_index) {
     s32 equipped_item = g_world_formation_unit_pointers[unit_index]->equipment[equipment_index];
 

@@ -3,7 +3,7 @@
 
 /* Fur shop: the list of the shop's poached stock, bought at half price.
  *
- * Mirrors world_shop_handle_item_purchase_menu with the half-price value and
+ * Mirrors world_shop_run_buy_list_step with the half-price value and
  * the poached-stock quantity as callbacks. */
 void world_shop_run_fur_buy_list_step(void) {
     s16 x;
@@ -74,5 +74,5 @@ void world_shop_run_fur_buy_list_step(void) {
     }
     world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_SHOP_LIST_TRIANGLE, 0xBA, 0x4C,
         g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, MAIN_SFX_CONFIRM);
-    world_shop_run_obtain_gil_menu();
+    world_shop_run_gil_menu_script();
 }
