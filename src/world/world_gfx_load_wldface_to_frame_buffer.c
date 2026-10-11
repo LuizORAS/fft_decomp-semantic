@@ -14,10 +14,10 @@ void world_gfx_load_wldface_to_frame_buffer(void) {
     g_world_thread_call_target = main_file_load_checked_to_heap;
     sheets = (main_gfx_wldface_sheet_t*)world_thread_call_on_main_stack(
         DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE);
-    LoadImage(&g_world_wldface_vram_rects, sheets[0].pixels);
-    LoadImage(&g_world_wldface_vram_rect_1, sheets[1].pixels);
-    LoadImage(&g_world_wldface_vram_rect_2, sheets[2].pixels);
-    LoadImage(&g_world_wldface_vram_rect_3, sheets[3].pixels);
+    LoadImage(&g_world_wldface_vram_rects, (u32*)sheets[0].pixels);
+    LoadImage(&g_world_wldface_vram_rect_1, (u32*)sheets[1].pixels);
+    LoadImage(&g_world_wldface_vram_rect_2, (u32*)sheets[2].pixels);
+    LoadImage(&g_world_wldface_vram_rect_3, (u32*)sheets[3].pixels);
     DrawSync(0);
     main_heap_call_free(sheets);
 }

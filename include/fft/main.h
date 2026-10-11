@@ -1957,12 +1957,12 @@ typedef struct main_gfx_frame_bin {
 typedef char main_gfx_frame_bin_size_must_be_0x9800[(sizeof(main_gfx_frame_bin_t) == 0x9800) ? 1 : -1];
 
 /* EVENT/WLDFACE.BIN is four of these sheets: forty 32x48 portraits at 4 bits
- * per pixel, eight across and five down, then sixteen rows of four CLUTs.
- * CLUT n is portrait n's; rows 10-15 hold the other palettes of the monster
+ * per pixel, eight across and five down, then sixteen rows of four palettes.
+ * Palette n is portrait n's; rows 10-15 hold the other palettes of the monster
  * portraits, one row per monster with the palette number as the column. */
 typedef struct main_gfx_wldface_sheet {
-    u32 pixels[0x7800 / sizeof(u32)]; /* 0x0000 */
-    u32 cluts[0x800 / sizeof(u32)];   /* 0x7800 */
+    u8 pixels[240][128];       /* 0x0000; 4bpp, 256 pixels per row */
+    palette_t palettes[16][4]; /* 0x7800; four 16-color palettes per row */
 } main_gfx_wldface_sheet_t;
 
 enum {

@@ -10,7 +10,7 @@
  * adds one reference to `j`, raising its global-allocation priority above the
  * source pointer's so the counter gets $a3 as in the target. */
 void attack_gfx_prepare_party_portrait_textures(void) {
-    s32 file;
+    main_gfx_wldface_sheet_t* file;
     s32 offset;
     s32 pal_offset;
     s32 i;
@@ -27,7 +27,7 @@ void attack_gfx_prepare_party_portrait_textures(void) {
     u8* src;
     RECT unused[2];
 
-    file = (s32)main_heap_alloc(MAIN_GFX_WLDFACE_FILE_SIZE);
+    file = main_heap_alloc(MAIN_GFX_WLDFACE_FILE_SIZE);
     if (g_battle_script_attack_entry_mode != 0) {
         if (g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
             attack_file_load_sync(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE, file);
@@ -36,10 +36,10 @@ void attack_gfx_prepare_party_portrait_textures(void) {
             battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE, file);
         }
     } else {
-        StoreImage(&g_attack_portrait_sheet_rect_0, (u32*)file);
-        StoreImage(&g_attack_portrait_sheet_rect_1, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE));
-        StoreImage(&g_attack_portrait_sheet_rect_2, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE * 2));
-        StoreImage(&g_attack_portrait_sheet_rect_3, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE * 3));
+        StoreImage(&g_attack_portrait_sheet_rect_0, (u32*)file[0].pixels);
+        StoreImage(&g_attack_portrait_sheet_rect_1, (u32*)file[1].pixels);
+        StoreImage(&g_attack_portrait_sheet_rect_2, (u32*)file[2].pixels);
+        StoreImage(&g_attack_portrait_sheet_rect_3, (u32*)file[3].pixels);
         DrawSync(0);
     }
     for (i = 0; i < 0x15; i++) {
@@ -101,7 +101,8 @@ void attack_gfx_prepare_party_portrait_textures(void) {
         offset <<= 12;
         offset += col * 0x20;
         offset >>= 1;
-        src = (u8*)(sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + file + offset);
+        /* Ordinary sheet indexing reverses the native ADDU operands. */
+        src = (u8*)(sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + (s32)file + offset);
         for (; j < 0x30; j++) {
             for (col = 0; col < 0x10; col++) {
                 g_attack_portrait_staging[j * 0x10 + col] = src[col];
@@ -129,12 +130,11 @@ void attack_gfx_prepare_party_portrait_textures(void) {
             value = row + MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW;
         }
         pal_offset = value * 0x100 + 0xf000 + col * 0x40 >> 1;
+        /* Palette member indexing changes the native offset calculation and allocation. */
         if (i == 20) {
-            LoadImage(&g_attack_special_portrait_palette_rect,
-                (u32*)(file + sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + pal_offset));
+            LoadImage(&g_attack_special_portrait_palette_rect, (u32*)((u8*)&file[sheet] + pal_offset));
         } else {
-            LoadImage(&g_attack_portrait_palette_upload_rect,
-                (u32*)(file + sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + pal_offset));
+            LoadImage(&g_attack_portrait_palette_upload_rect, (u32*)((u8*)&file[sheet] + pal_offset));
         }
         if (g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
             battle_thread_yield();
@@ -142,5 +142,5 @@ void attack_gfx_prepare_party_portrait_textures(void) {
             DrawSync(0);
         }
     }
-    main_heap_call_free((void*)file);
+    main_heap_call_free(file);
 }
