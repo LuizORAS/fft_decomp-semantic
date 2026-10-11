@@ -14,7 +14,7 @@ void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mod
     g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_TRANSFER;
     SpuSetTransferMode(SPU_TRANSFER_BY_DMA);
     SpuSetTransferStartAddr(spu_address);
-    switch (mode & 0xf) {
+    switch (mode & MAIN_SOUND_SPU_TRANSFER_MODE_MASK) {
     case MAIN_SOUND_SPU_TRANSFER_WRITE:
         g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_WRITE | MAIN_SOUND_DRIVER_SPU_TRANSFER;
         SpuWrite(data, size);

@@ -9,10 +9,10 @@ s32 main_file_build_header(
     if (header->state != MAIN_FILE_LOAD_STATE_IDLE) {
         return 1;
     }
-    if (loading_display_mode != 1) {
+    if (loading_display_mode != MAIN_FILE_LOADING_DISPLAY_PRESERVE) {
         g_main_gfx_loading_display_frame_counter = loading_display_mode;
     }
-    if (loading_display_mode == 0) {
+    if (loading_display_mode == MAIN_FILE_LOADING_DISPLAY_INIT) {
         SetDispMask(0);
         main_gfx_build_now_loading(1, 0, 0);
         rect.x = 0;

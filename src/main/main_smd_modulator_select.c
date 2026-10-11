@@ -12,9 +12,9 @@ u8* main_smd_modulator_select(u8* note_data, suzuki_music_t* music, suzuki_music
     channel->modulator_index = note_data[0];
     modulator = &channel->modulators[channel->modulator_index];
     param = note_data[1];
-    modulator->waveform = param & 0xf;
+    modulator->waveform = param & SUZUKI_MODULATOR_INPUT_WAVEFORM_MASK;
     modulator->step = g_main_smd_modulator_waveforms[modulator->waveform];
-    if ((param & 0x10) == 0) {
+    if ((param & SUZUKI_MODULATOR_INPUT_NO_KEY_ON_RESTART) == 0) {
         modulator->flags = SUZUKI_MODULATOR_RESTART_ON_KEY_ON;
     } else {
         modulator->flags = 0;

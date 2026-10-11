@@ -282,6 +282,13 @@ typedef enum disc_sector {
     DISC_SECTOR_OPEN_ENDING_XA = 0x2f551,
 } disc_sector_e;
 
+/* Loading-display mode passed to the shared file-header builder. */
+typedef enum main_file_loading_display_mode {
+    MAIN_FILE_LOADING_DISPLAY_OFF = -1,
+    MAIN_FILE_LOADING_DISPLAY_INIT = 0,
+    MAIN_FILE_LOADING_DISPLAY_PRESERVE = 1,
+} main_file_loading_display_mode_e;
+
 /* One poll advances at most one phase; recoverable CD errors restart setup. */
 typedef enum main_file_load_state {
     MAIN_FILE_LOAD_STATE_IDLE = 0,
@@ -328,7 +335,7 @@ void* main_file_load_checked_to_address(int sector, int size, void* destination)
 suzuki_smd_header_t* main_file_get_smd(int sector, u32 size);
 void* main_file_load_to_heap(s32 sector, u32 size);
 void* main_file_load_to_address(int sector, u32 size, void* destination);
-void main_file_load_data_from_disc(int sector, int sectors, void* destination, int suppress_loading_display);
+void main_file_load_data_from_disc(int sector, int sectors, void* destination, int loading_display_mode);
 void main_file_poll_load(main_file_load_descriptor_t* state);
 void main_file_reset_pause_cdrom(main_file_load_descriptor_t* state);
 
@@ -619,6 +626,12 @@ typedef enum suzuki_modulator_waveform {
     SUZUKI_MODULATOR_WAVEFORM_RANDOM_BIPOLAR = 7,    /* main_smd_modulator_step_random_bipolar */
     SUZUKI_MODULATOR_WAVEFORM_OFF = 8,               /* main_smd_modulator_deactivate, as are 9-15 */
 } suzuki_modulator_waveform_e;
+
+/* Encoded waveform byte of the D9, E5, ED and F0 SMD opcodes. */
+enum {
+    SUZUKI_MODULATOR_INPUT_WAVEFORM_MASK = 0x0f,
+    SUZUKI_MODULATOR_INPUT_NO_KEY_ON_RESTART = 0x10,
+};
 
 /* suzuki_modulator_t.flags. */
 typedef enum suzuki_modulator_flag {
@@ -1053,11 +1066,14 @@ typedef enum main_sound_spu_transfer {
     MAIN_SOUND_SPU_TRANSFER_READ_DECODED = 3,    /* SpuReadDecodedData, every buffer */
     MAIN_SOUND_SPU_TRANSFER_READ_DECODED_CD = 4, /* SpuReadDecodedData, CD buffers only */
     MAIN_SOUND_SPU_TRANSFER_NONE = 5,
-    /* Flag of main_sound_wait_for_spu_transfer: wait for the running transfer
-     * to end. main_sound_load_waveset also sets it in its transfer mode,
-     * where only the low nibble is read. */
-    MAIN_SOUND_SPU_TRANSFER_WAIT = 0x10,
 } main_sound_spu_transfer_e;
+
+enum {
+    MAIN_SOUND_SPU_TRANSFER_MODE_MASK = 0x0f,
+    /* Flag of main_sound_wait_for_spu_transfer. It is also accepted in a
+     * transfer mode, whose low nibble alone selects the operation. */
+    MAIN_SOUND_SPU_TRANSFER_WAIT = 0x10,
+};
 
 /* Mode argument of main_smd_dispatch_snapshot. */
 typedef enum suzuki_snapshot_mode {

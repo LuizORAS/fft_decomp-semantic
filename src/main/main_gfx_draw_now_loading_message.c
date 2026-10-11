@@ -9,7 +9,7 @@ void main_gfx_draw_now_loading_message(void) {
     u32* otag;
 
     frame = g_main_gfx_loading_display_frame_counter;
-    if (frame != -1) {
+    if (frame != MAIN_FILE_LOADING_DISPLAY_OFF) {
         frame++;
         g_main_gfx_loading_display_frame_counter = frame;
         if (frame >= 0x40) {

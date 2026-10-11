@@ -22,8 +22,8 @@ u8* main_smd_pan_lfo_waveform(u8* note_data, suzuki_music_t* music, suzuki_music
     speed = note_data[0];
     if (depth != 0 && speed != 0) {
         modulator = &channel->modulators[2];
-        flags = ((param & 0x10) == 0) << 1;
-        param &= 0xf;
+        flags = (param & SUZUKI_MODULATOR_INPUT_NO_KEY_ON_RESTART) ? 0 : SUZUKI_MODULATOR_RESTART_ON_KEY_ON;
+        param &= SUZUKI_MODULATOR_INPUT_WAVEFORM_MASK;
         depth <<= 24;
         modulator->amplitude = main_smd_modulator_calculate_step(depth, speed, param);
         modulator->timer_reset = speed;
@@ -32,7 +32,7 @@ u8* main_smd_pan_lfo_waveform(u8* note_data, suzuki_music_t* music, suzuki_music
         modulator->step = g_main_smd_modulator_waveforms[param];
         modulator->waveform = param;
         modulator->target = SUZUKI_MODULATOR_TARGET_BALANCE;
-        modulator->flags = flags + 1;
+        modulator->flags = flags + SUZUKI_MODULATOR_ACTIVE;
         main_smd_modulator_reset(modulator);
     }
     return note_data + 3;
