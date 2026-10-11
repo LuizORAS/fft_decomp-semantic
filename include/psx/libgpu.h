@@ -805,8 +805,13 @@ typedef struct {
 typedef char assert_gpu_operation_snapshot_size[sizeof(psyq_gpu_operation_snapshot_t) == 12 ? 1 : -1];
 typedef char assert_gpu_queue_entry_size[sizeof(psyq_gpu_queue_entry_t) == 96 ? 1 : -1];
 
+enum {
+    PSYQ_GPU_QUEUE_CAPACITY = 64,
+    PSYQ_GPU_QUEUE_INDEX_MASK = PSYQ_GPU_QUEUE_CAPACITY - 1,
+};
+
 /* The DMA interrupt callback (_exeque) and the foreground share the queue. */
-extern volatile psyq_gpu_queue_entry_t g_psyq_gpu_operation_queue[64];
+extern volatile psyq_gpu_queue_entry_t g_psyq_gpu_operation_queue[PSYQ_GPU_QUEUE_CAPACITY];
 extern int g_psyq_gpu_enqueue_interrupt_mask;
 extern int g_psyq_gpu_queue_interrupt_mask;
 

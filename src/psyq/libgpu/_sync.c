@@ -16,7 +16,7 @@ int _sync(int mode) {
         }
         return 0;
     }
-    count = (g_psyq_gpu_queue_head - g_psyq_gpu_queue_tail) & 63;
+    count = (g_psyq_gpu_queue_head - g_psyq_gpu_queue_tail) & PSYQ_GPU_QUEUE_INDEX_MASK;
     if (count)
         _exeque();
     if ((*g_psyq_gpu_dma_chcr & PSYQ_GPU_DMA_BUSY) || !(*g_psyq_gpu_gp1_port & PSYQ_GPU_STATUS_READY_COMMAND)) {

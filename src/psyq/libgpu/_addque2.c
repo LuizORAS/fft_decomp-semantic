@@ -7,7 +7,7 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
         g_psyq_gpu_environment; /* An unqualified RAM view folds the native queue-state address sequence. */
     int i;
     set_alarm();
-    while (((g_psyq_gpu_queue_head + 1) & 63) == g_psyq_gpu_queue_tail) {
+    while (((g_psyq_gpu_queue_head + 1) & PSYQ_GPU_QUEUE_INDEX_MASK) == g_psyq_gpu_queue_tail) {
         if (get_alarm())
             return -1;
         _exeque();
@@ -36,8 +36,8 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
         g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.source = source;
     g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.argument = argument;
     g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.operation = operation;
-    g_psyq_gpu_queue_head = (g_psyq_gpu_queue_head + 1) & 63;
+    g_psyq_gpu_queue_head = (g_psyq_gpu_queue_head + 1) & PSYQ_GPU_QUEUE_INDEX_MASK;
     SetIntrMask(g_psyq_gpu_enqueue_interrupt_mask);
     _exeque();
-    return (g_psyq_gpu_queue_head - g_psyq_gpu_queue_tail) & 63;
+    return (g_psyq_gpu_queue_head - g_psyq_gpu_queue_tail) & PSYQ_GPU_QUEUE_INDEX_MASK;
 }
