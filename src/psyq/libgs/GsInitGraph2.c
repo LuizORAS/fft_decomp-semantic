@@ -12,8 +12,8 @@ void GsInitGraph2(u16 x, u16 y, u16 intmode, u16 dither, u16 vram) {
     GsDRAWENV.dtd = dither;
     GsDRAWENV.dfe = 0;
     GsDRAWENV.isbg = 0;
-    GsDISPENV.isinter = intmode & 1;
-    PSDGPU = intmode & 4;
+    GsDISPENV.isinter = intmode & GsINTER;
+    PSDGPU = intmode & GsOFSGPU;
     GsDISPENV.isrgb24 = vram;
     psyq_gs_reset_screen_state(x, y);
 }

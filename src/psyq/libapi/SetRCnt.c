@@ -7,8 +7,7 @@ s32 SetRCnt(u32 spec, u16 target, s32 mode) {
     }
     g_psyq_api_root_counters[counter].mode = 0;
     g_psyq_api_root_counters[counter].target = target;
-    /* The unsigned comparison preserves the original SLTIU. */
-    if ((u32)counter < 2) {
+    if (counter == 0 || counter == 1) {
         if (mode & PSYQ_RCNT_API_SYNC_ENABLE) {
             hardware_mode |= PSYQ_RCNT_SYNC_ENABLE;
         }
