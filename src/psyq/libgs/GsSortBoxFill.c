@@ -28,14 +28,10 @@ void GsSortBoxFill(GsBOXF* bp, GsOT* otp, u16 pri) {
         hi = (attr >> 17) & 0x180;
         lo = ((attr >> 23) & 0x60) | 0xE1000200;
         packet->tpage.code[0] = hi | lo;
-        packet->r0 = bp->r;
-        packet->g0 = bp->g;
-        packet->b0 = bp->b;
+        setRGB0(packet, bp->r, bp->g, bp->b);
         packet->code = ((attr >> 29) & 2) | 0x60;
-        packet->x0 = bp->x + g_psyq_gs_offset_x;
-        packet->y0 = bp->y + g_psyq_gs_offset_y;
-        packet->w = bp->w;
-        packet->h = bp->h;
+        setXY0(packet, bp->x + g_psyq_gs_offset_x, bp->y + g_psyq_gs_offset_y);
+        setWH(packet, bp->w, bp->h);
         GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)packet, otp, pri, 4);
     }
 }

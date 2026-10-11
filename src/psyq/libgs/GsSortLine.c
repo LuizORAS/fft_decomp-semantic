@@ -17,30 +17,17 @@ typedef struct {
     s16 y1;         /* 0x12 */
 } psyq_gs_line_packet_t;
 
-/* Build a flat-shaded LINE_F2 packet for the line and link
- * it into the ordering table.
- *
- * `blue` has to be read out of the
- * GsLINE before the `prim->code` store. sched2 cannot prove that a load from
- * `line` does not alias a store to `prim`, so with `prim->b0 = line->b;`
- * written after the code store the blue load is pinned below it and the
- * load-delay slot fills with a nop; reading it into a local first lets the
- * scheduler put it between the `andi` and the `ori`, which is where the target
- * has it. */
+/* Build and link the flat-shaded line packet. */
 void GsSortLine(GsLINE* line, GsOT* ot, u16 z) {
     psyq_gs_line_packet_t* prim;
     s32 attr;
-    u8 blue;
 
     attr = line->attribute;
     if (attr >= 0) {
         prim = (psyq_gs_line_packet_t*)GsOUT_PACKET_P;
         prim->tpage.code[0] = ((attr >> 23) & 0x60) | 0xE1000200;
-        prim->r0 = line->r;
-        prim->g0 = line->g;
-        blue = line->b;
+        setRGB0(prim, line->r, line->g, line->b);
         prim->code = ((attr >> 29) & 2) | 0x40;
-        prim->b0 = blue;
         prim->x0 = line->x0 + g_psyq_gs_offset_x;
         prim->y0 = line->y0 + g_psyq_gs_offset_y;
         prim->x1 = line->x1 + g_psyq_gs_offset_x;
