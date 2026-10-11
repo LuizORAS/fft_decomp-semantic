@@ -1,64 +1,9 @@
 #include "fft/battle.h"
+#include "psx/gte_inline_split.h"
 #include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
-
-/* Psy-Q GTE macros in the form this routine was compiled with. The bytes are
- * the DMPSX sequences of include/psx/gte_inline.h, but each instruction is its
- * own asm statement: the three operand copies of ldv3/stsxy3 each reuse one
- * input register ($8, then $2), which one multi-operand statement cannot do,
- * and the per-instruction statement count sets the live lengths that make
- * global allocation give `zoom` $s3 ahead of `ot` ($s4). */
-#define gte_ldv0(r0)                                                                                                   \
-    {                                                                                                                  \
-        __asm__ volatile("addu $12, %0, $0" : : "r"(r0) : "$12");                                                      \
-        __asm__ volatile("lwc2 $0, 0($12)");                                                                           \
-        __asm__ volatile("lwc2 $1, 4($12)");                                                                           \
-    }
-
-#define gte_ldv3(r0, r1, r2)                                                                                           \
-    {                                                                                                                  \
-        __asm__ volatile("addu $12, %0, $0" : : "r"(r0) : "$12");                                                      \
-        __asm__ volatile("addu $13, %0, $0" : : "r"(r1) : "$13");                                                      \
-        __asm__ volatile("addu $14, %0, $0" : : "r"(r2) : "$14");                                                      \
-        __asm__ volatile("lwc2 $0, 0($12)");                                                                           \
-        __asm__ volatile("lwc2 $1, 4($12)");                                                                           \
-        __asm__ volatile("lwc2 $2, 0($13)");                                                                           \
-        __asm__ volatile("lwc2 $3, 4($13)");                                                                           \
-        __asm__ volatile("lwc2 $4, 0($14)");                                                                           \
-        __asm__ volatile("lwc2 $5, 4($14)");                                                                           \
-    }
-
-#define gte_rtps()                                                                                                     \
-    {                                                                                                                  \
-        __asm__ volatile("nop");                                                                                       \
-        __asm__ volatile("nop");                                                                                       \
-        __asm__ volatile(".word 0x4a180001");                                                                          \
-    }
-
-#define gte_rtpt()                                                                                                     \
-    {                                                                                                                  \
-        __asm__ volatile("nop");                                                                                       \
-        __asm__ volatile("nop");                                                                                       \
-        __asm__ volatile(".word 0x4a280030");                                                                          \
-    }
-
-#define gte_stsxy(r0)                                                                                                  \
-    {                                                                                                                  \
-        __asm__ volatile("addu $12, %0, $0" : : "r"(r0) : "$12");                                                      \
-        __asm__ volatile("swc2 $14, 0($12)" : : : "memory");                                                           \
-    }
-
-#define gte_stsxy3(r0, r1, r2)                                                                                         \
-    {                                                                                                                  \
-        __asm__ volatile("addu $12, %0, $0" : : "r"(r0) : "$12");                                                      \
-        __asm__ volatile("addu $13, %0, $0" : : "r"(r1) : "$13");                                                      \
-        __asm__ volatile("addu $14, %0, $0" : : "r"(r2) : "$14");                                                      \
-        __asm__ volatile("swc2 $12, 0($12)" : : : "memory");                                                           \
-        __asm__ volatile("swc2 $13, 0($13)" : : : "memory");                                                           \
-        __asm__ volatile("swc2 $14, 0($14)" : : : "memory");                                                           \
-    }
 
 /* Queues a multi-part effect sprite at a screen position: brackets the parts
  * with two draw-mode primitives, builds the 2D rotation (optionally scaled by
@@ -103,9 +48,9 @@ void battle_effect_submit_sprite_to_ordering_table(
         memcpy(&g_battle_effect_corner_top_left, &frame->corners[0], sizeof(frame->corners[0]));
         memcpy(&g_battle_effect_corner_top_right, &frame->corners[1], sizeof(frame->corners[1]));
         memcpy(&g_battle_effect_corner_bottom_left, &frame->corners[2], sizeof(frame->corners[2]));
-        gte_ldv3(
+        gte_ldv3_split(
             &g_battle_effect_corner_top_left, &g_battle_effect_corner_top_right, &g_battle_effect_corner_bottom_left);
-        gte_rtpt();
+        gte_rtpt_split();
         memcpy(&g_battle_effect_corner_bottom_right, &frame->corners[3], sizeof(frame->corners[3]));
         quad = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_FT4);
         memcpy(&quad->color, &set->color, sizeof(quad->color));
@@ -114,9 +59,9 @@ void battle_effect_submit_sprite_to_ordering_table(
         if (frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT) {
             quad->color.cd = 0x2e;
         }
-        gte_stsxy3(&quad->xy0, &quad->xy1, &quad->xy2);
-        gte_ldv0(&g_battle_effect_corner_bottom_right);
-        gte_rtps();
+        gte_stsxy3_split(&quad->xy0, &quad->xy1, &quad->xy2);
+        gte_ldv0_split(&g_battle_effect_corner_bottom_right);
+        gte_rtps_split();
         quad->tpage = frame->tpage;
         value = frame->flags & EFFECT_SPRITE_PART_CLUT_MASK;
         if (frame->flags & EFFECT_SPRITE_PART_FLAG_SECOND_CLUT_ROW) {
@@ -129,7 +74,7 @@ void battle_effect_submit_sprite_to_ordering_table(
         quad->u1 = quad->u3 = quad->u0 + frame->width;
         quad->v0 = quad->v1 = frame->v;
         quad->v2 = quad->v3 = quad->v0 + frame->height;
-        gte_stsxy(&quad->xy3);
+        gte_stsxy_split(&quad->xy3);
         addPrim(ot, quad);
     }
     prim = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_DR_MODE);

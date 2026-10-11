@@ -1,34 +1,9 @@
 #include "fft/battle.h"
 #include "psx/gte_inline.h"
+#include "psx/gte_inline_split.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
-
-/* LDV3 and STSXY3 as this routine issues them: all three operand copies
- * ($12-$14) precede the transfers, and each copy is its own statement so the
- * three addresses reuse one input register, as in the target. */
-#define gte_ldv3_split(r0, r1, r2)                                                                                     \
-    {                                                                                                                  \
-        __asm__ volatile("addu $12, %0, $0" : : "r"(r0) : "$12");                                                      \
-        __asm__ volatile("addu $13, %0, $0" : : "r"(r1) : "$13");                                                      \
-        __asm__ volatile("addu $14, %0, $0" : : "r"(r2) : "$14");                                                      \
-        __asm__ volatile("lwc2 $0, 0($12)");                                                                           \
-        __asm__ volatile("lwc2 $1, 4($12)");                                                                           \
-        __asm__ volatile("lwc2 $2, 0($13)");                                                                           \
-        __asm__ volatile("lwc2 $3, 4($13)");                                                                           \
-        __asm__ volatile("lwc2 $4, 0($14)");                                                                           \
-        __asm__ volatile("lwc2 $5, 4($14)");                                                                           \
-    }
-
-#define gte_stsxy3_split(r0, r1, r2)                                                                                   \
-    {                                                                                                                  \
-        __asm__ volatile("addu $12, %0, $0" : : "r"(r0) : "$12");                                                      \
-        __asm__ volatile("addu $13, %0, $0" : : "r"(r1) : "$13");                                                      \
-        __asm__ volatile("addu $14, %0, $0" : : "r"(r2) : "$14");                                                      \
-        __asm__ volatile("swc2 $12, 0($12)" : : : "memory");                                                           \
-        __asm__ volatile("swc2 $13, 0($13)" : : : "memory");                                                           \
-        __asm__ volatile("swc2 $14, 0($14)" : : : "memory");                                                           \
-    }
 
 /* POLY_FT4 with the colour's red/green pair addressed as one halfword. */
 typedef struct battle_gfx_part_prim {
