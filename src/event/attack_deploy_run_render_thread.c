@@ -61,33 +61,33 @@ void attack_deploy_run_render_thread(void) {
         battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9c4);
         if (g_attack_deploy_tiles_only_mode != 0) {
             if (g_attack_deploy_arrow_position_mode == 0) {
-                g_attack_deploy_render_buffers[frame & 1].arrow.x0 = 0xb9;
-                g_attack_deploy_render_buffers[frame & 1].arrow.x1 = 0xe0;
-                g_attack_deploy_render_buffers[frame & 1].arrow.x2 = 0xc2;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y0 = 0x7e;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y1 = 0x91;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y2 = 0x90;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x0 = 0xb9;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x1 = 0xe0;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x2 = 0xc2;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y0 = 0x7e;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y1 = 0x91;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y2 = 0x90;
             } else if (g_attack_deploy_arrow_position_mode == 1) {
-                g_attack_deploy_render_buffers[frame & 1].arrow.x0 = 0x140;
-                g_attack_deploy_render_buffers[frame & 1].arrow.x1 = 0x119;
-                g_attack_deploy_render_buffers[frame & 1].arrow.x2 = 0x137;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y0 = 0x7e;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y1 = 0x91;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y2 = 0x90;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x0 = 0x140;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x1 = 0x119;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x2 = 0x137;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y0 = 0x7e;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y1 = 0x91;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y2 = 0x90;
             } else if (g_attack_deploy_arrow_position_mode == 2) {
-                g_attack_deploy_render_buffers[frame & 1].arrow.x0 = 0x140;
-                g_attack_deploy_render_buffers[frame & 1].arrow.x1 = 0x119;
-                g_attack_deploy_render_buffers[frame & 1].arrow.x2 = 0x137;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y0 = 0x5e;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y1 = 0x4b;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y2 = 0x4c;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x0 = 0x140;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x1 = 0x119;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x2 = 0x137;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y0 = 0x5e;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y1 = 0x4b;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y2 = 0x4c;
             } else {
-                g_attack_deploy_render_buffers[frame & 1].arrow.x0 = 0xb9;
-                g_attack_deploy_render_buffers[frame & 1].arrow.x1 = 0xe0;
-                g_attack_deploy_render_buffers[frame & 1].arrow.x2 = 0xc2;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y0 = 0x5c;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y1 = 0x49;
-                g_attack_deploy_render_buffers[frame & 1].arrow.y2 = 0x4a;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x0 = 0xb9;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x1 = 0xe0;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x2 = 0xc2;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y0 = 0x5c;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y1 = 0x49;
+                g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].y2 = 0x4a;
             }
             attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[frame & 1].tiles[0]);
             offset_y = g_main_gfx_screen_polarity == 0 ? 0xf0 : 0;
@@ -112,7 +112,7 @@ void attack_deploy_run_render_thread(void) {
         battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].screen_offset);
         attack_update_deployment_cursor_primitives(frame, &g_attack_deploy_render_buffers[frame & 1]);
         if (g_attack_deploy_tiles_only_mode == 0) {
-            battle_gfx_draw_or_append_gpu_primitive(g_attack_deploy_render_buffers[frame & 1]._unknown_834);
+            battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].screen_arrow.poly);
         }
         count = 0;
         tile = g_attack_deploy_render_buffers[frame & 1].tiles[0];

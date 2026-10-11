@@ -1,12 +1,5 @@
 #include "fft/event_attack.h"
 
-typedef struct {
-    POLY_FT4 poly;
-    POLY_F3 tri[2];
-} attack_deploy_arrow_gfx_t;
-
-extern attack_deploy_arrow_gfx_t g_attack_deploy_screen_arrow;
-
 /* Build the textured deployment banner and its two arrowhead triangles.
  * The banner fields are written in libgpu setRGB0/setXY4/setUV4 order. */
 void attack_deploy_build_screen_arrow(void) {

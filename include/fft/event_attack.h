@@ -151,33 +151,40 @@ typedef struct attack_deployment_squad_data {
 } attack_deployment_squad_data_t;
 typedef char attack_squad_data_size_must_be_0x0c[(sizeof(attack_deployment_squad_data_t) == 0x0c) ? 1 : -1];
 
+/* Textured deployment banner followed by its two triangle packets. */
+typedef struct attack_deploy_arrow_gfx {
+    POLY_FT4 poly;  /* 0x00 */
+    POLY_F3 tri[2]; /* 0x28 */
+} attack_deploy_arrow_gfx_t;
+typedef char attack_deploy_arrow_gfx_size_must_be_0x50[sizeof(attack_deploy_arrow_gfx_t) == 0x50 ? 1 : -1];
+
 /* One 0xa2c-byte half of the double-buffered deployment-screen primitive
  * block at 0x801db650 (g_attack_deploy_render_buffers). The 5-by-5 valid-tile
  * sprites occupy its head; the two cursors each own a marker quad ([n][0],
  * bobbing above the tile) and a tile-highlight diamond ([n][1]), positioned
  * from g_attack_deploy_cursor_row/column[n]. */
 typedef struct attack_deploy_render_buffer {
-    SPRT tiles[5][5];          /* 0x000 */
-    POLY_FT4 portraits[10];    /* 0x1f4 */
-    POLY_FT4 status[30];       /* 0x384 */
-    u8 _unknown_834[0x28];     /* 0x834 */
-    POLY_F3 arrow;             /* 0x85c */
-    u8 _unused_870[0x14];      /* 0x870 */
-    POLY_FT4 menu_cursor[4];   /* 0x884 */
-    POLY_FT4 cursor[2][2];     /* 0x924 */
-    DR_MODE draw_mode_9c4;     /* 0x9c4 */
-    DR_MODE draw_mode_9d0;     /* 0x9d0 */
-    DR_MODE draw_mode_9dc;     /* 0x9dc */
-    DR_MODE draw_mode_9e8;     /* 0x9e8 */
-    DR_MODE draw_mode_9f4;     /* 0x9f4 */
-    DR_MODE menu_draw_mode;    /* 0xa00 */
-    DR_OFFSET world_offset;    /* 0xa0c */
-    point16_t world_position;  /* 0xa18; SDK draw-offset input */
-    DR_OFFSET screen_offset;   /* 0xa1c */
-    point16_t screen_position; /* 0xa28; SDK draw-offset input */
+    SPRT tiles[5][5];                       /* 0x000 */
+    POLY_FT4 portraits[10];                 /* 0x1f4 */
+    POLY_FT4 status[30];                    /* 0x384 */
+    attack_deploy_arrow_gfx_t screen_arrow; /* 0x834 */
+    POLY_FT4 menu_cursor[4];                /* 0x884 */
+    POLY_FT4 cursor[2][2];                  /* 0x924 */
+    DR_MODE draw_mode_9c4;                  /* 0x9c4 */
+    DR_MODE draw_mode_9d0;                  /* 0x9d0 */
+    DR_MODE draw_mode_9dc;                  /* 0x9dc */
+    DR_MODE draw_mode_9e8;                  /* 0x9e8 */
+    DR_MODE draw_mode_9f4;                  /* 0x9f4 */
+    DR_MODE menu_draw_mode;                 /* 0xa00 */
+    DR_OFFSET world_offset;                 /* 0xa0c */
+    point16_t world_position;               /* 0xa18; SDK draw-offset input */
+    DR_OFFSET screen_offset;                /* 0xa1c */
+    point16_t screen_position;              /* 0xa28; SDK draw-offset input */
 } attack_deploy_render_buffer_t;
 typedef char attack_deploy_render_buffer_size_must_be_0xa2c[(sizeof(attack_deploy_render_buffer_t) == 0xa2c) ? 1 : -1];
 
+/* Alias of render_buffers[0].screen_arrow, addressed separately by the constructor. */
+extern attack_deploy_arrow_gfx_t g_attack_deploy_screen_arrow;
 extern s32 g_attack_deploy_arrow_position_mode;
 extern s32 g_attack_deploy_current_squad;
 extern s32 g_attack_deploy_current_squad_id;
