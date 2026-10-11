@@ -60,7 +60,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     }
     count = 0;
     jp = g_world_formation_unit_pointers[unit]->job_points.current.values[generic];
-    world_bit_cursor_set_primary(g_world_formation_unit_pointers[unit]->learned_abilities[generic].bits);
+    world_bit_cursor_set_primary(g_world_formation_unit_pointers[unit]->learned_abilities[generic]);
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
         if (world_job_is_special_monster(g_world_formation_unit_pointers[unit]->identity.job_id) != 0) {
             learned = 1;

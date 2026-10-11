@@ -1,14 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Local view of battle_stats_t with learned_abilities (0x99) as 19 rows of 3
- * bytes. The 2D indexing is what makes loop.c reduce `unit + job_index * 3` as the
- * outer-loop giv (target `move s6,s2` / `addiu a2,s6,0x99`). */
-typedef struct {
-    u8 _unused_00[0x99];
-    u8 learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
-} battle_stats_learned_rows_t;
-
 /* Resolve a crystal or treasure pickup for the unit that moved onto its tile.
  *
  * A treasure gives one item (result 4). A crystal (result 2) offers a human
@@ -75,8 +67,8 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
                 for (j = 0; j < UNIT_LEARNED_ABILITY_BYTES_PER_JOB; j++) {
                     g_main_crystal_pickup_result.learned[job_index][j] = 0;
                     gained[j] = 0;
-                    known[j] = ((battle_stats_learned_rows_t*)mover)->learned_abilities[job_index][j];
-                    offered[j] = ((battle_stats_learned_rows_t*)crystal)->learned_abilities[job_index][j];
+                    known[j] = mover->career.learned_abilities[job_index][j];
+                    offered[j] = crystal->career.learned_abilities[job_index][j];
                 }
                 job_id = job_index + JOB_ID_GENERIC_FIRST;
                 if (job_index == UNIT_CAREER_JOB_INDEX_BASE) {

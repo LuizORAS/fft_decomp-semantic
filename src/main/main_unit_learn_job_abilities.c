@@ -56,7 +56,6 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
     } else {
         skillset = g_main_job_data_pointer[job_id].skillset;
     }
-    /* The row cast keeps the field offset in the loop-invariant address. */
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
         learned = 0;
         ability_id = main_ability_get_id_from_skillset(skillset, i);
@@ -69,13 +68,12 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
                 u16 cost = ability->jp_cost;
                 if (unit->career.job_points.current.values[job_index] >= cost) {
                     unit->career.job_points.current.values[job_index] -= cost;
-                    ((unit_learned_ability_row_t*)unit->career.learned_abilities)[job_index].bits[i / 8]
-                        |= 0x80 >> (i % 8);
+                    unit->career.learned_abilities[job_index][i / 8] |= 0x80 >> (i % 8);
                     learned = 1;
                 }
             }
             if (learned != 0) {
-                ((unit_learned_ability_row_t*)unit->career.learned_abilities)[job_index].bits[i / 8] |= 0x80 >> (i % 8);
+                unit->career.learned_abilities[job_index][i / 8] |= 0x80 >> (i % 8);
             }
         }
     }

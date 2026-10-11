@@ -61,9 +61,9 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
         }
 
         if (entd->primary_skillset != 0 && entd->primary_skillset != SKILLSET_ID_NONE) {
-            unit->career.learned_abilities[0].bits[0] = 0xff;
-            unit->career.learned_abilities[0].bits[1] = 0xff;
-            unit->career.learned_abilities[0].bits[2] = 0xff;
+            unit->career.learned_abilities[0][0] = 0xff;
+            unit->career.learned_abilities[0][1] = 0xff;
+            unit->career.learned_abilities[0][2] = 0xff;
         }
     }
 

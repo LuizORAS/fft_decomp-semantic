@@ -468,9 +468,7 @@ enum {
 };
 
 /* One job's 24 learned-ability bits, MSB-first within each byte. */
-typedef struct unit_learned_ability_row {
-    u8 bits[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
-} unit_learned_ability_row_t;
+typedef u8 unit_learned_ability_row_t[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
 typedef char unit_learned_ability_row_size_must_be_3
     [(sizeof(unit_learned_ability_row_t) == UNIT_LEARNED_ABILITY_BYTES_PER_JOB) ? 1 : -1];
 
