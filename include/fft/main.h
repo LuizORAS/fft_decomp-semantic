@@ -2058,6 +2058,7 @@ extern u8 g_main_calculator_primes[CALCULATOR_PRIME_COUNT];
 extern u16 g_main_month_start_day_offsets[13];
 extern unit_deployment_coordinates_t* g_main_unit_deployed_coords;
 extern u8 g_main_crystal_learnable_abilities[];
+extern crystal_pickup_result_t g_main_crystal_pickup_result;
 extern u8 g_main_crystal_treasure_item_id;
 extern u8 g_main_brave_story_character_ages[0x40];
 extern s32 g_main_debug_display_enabled;

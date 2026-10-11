@@ -5,13 +5,6 @@
 #    define NULL 0
 #endif
 
-typedef struct battle_script_weather_environment {
-    u8 environment_id;
-    u8 _unused_01;
-} battle_script_weather_environment_t;
-
-extern battle_script_weather_environment_t g_battle_event_weather_commands[];
-
 /* Advances asynchronous battle-script, map, effect, and graphics requests. */
 void battle_script_process_pending_requests(void) {
     s16 destruction_state;

@@ -206,6 +206,7 @@ typedef struct wldcore_route_record {
 
 extern s32 g_wldcore_route_search_depth;
 extern s32 g_wldcore_route_search_cost;
+extern wldcore_route_path_t g_wldcore_route_search_path;
 
 /* wldcore_audio_music_slots_t.flags. */
 typedef enum wldcore_audio_music_flag {

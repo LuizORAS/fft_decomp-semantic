@@ -11,11 +11,11 @@
  * selects the block; each occupies 15 sectors from 0x1d4c.
  */
 void world_gfx_load_evtchr_thread(void) {
-    void* param;
+    s32 slot;
     s32 block;
     void* buffer;
 
-    param = world_thread_get_current_parameter_1();
+    slot = (s32)world_thread_get_current_parameter_1();
     block = world_thread_get_current_parameter_2();
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
     buffer = main_heap_alloc(EVTCHR_BLOCK_BYTES);
@@ -32,7 +32,7 @@ void world_gfx_load_evtchr_thread(void) {
         g_world_thread_call_target = main_file_is_still_loading;
     } while (world_thread_call_on_main_stack() != 0);
 
-    g_world_event_pending_loaded_evtchr_slot = param;
+    g_world_event_pending_loaded_evtchr_slot = slot;
     g_world_event_loaded_evtchr_buffer = buffer;
     world_thread_yield();
     main_heap_free(buffer);

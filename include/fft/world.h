@@ -161,6 +161,7 @@ extern world_menu_entry_t g_world_option_menu_icon_thread_param;
 extern RECT g_world_options_menu_window_rect;
 extern RECT g_world_options_menu_title_rect;
 extern RECT g_world_options_menu_value_rect;
+extern world_options_menu_page_t g_world_options_menu_pages[2];
 extern world_menu_icon_record_t g_world_option_picker_icon_records[2];
 void world_build_options_menu(void);
 void world_run_option_choice_menu(void);
@@ -220,7 +221,7 @@ extern u32 g_world_event_random_seed;
 extern u32 g_world_script_tutorial_repeat_counters[16];
 extern u16 g_world_script_tutorial_previous_input;
 extern u8* g_world_script_tutorial_command_ptr;
-extern void* g_world_event_pending_loaded_evtchr_slot;
+extern s32 g_world_event_pending_loaded_evtchr_slot;
 extern void* g_world_event_loaded_evtchr_buffer;
 extern s16 g_world_event_effect_target_misc_id;
 extern s16 g_world_event_effect_target_mode;
@@ -1252,6 +1253,13 @@ void world_input_update_menu_state(void);
 
 /* formation */
 
+/* Screen x and texture u of one background tile; two alternating rows of four. */
+typedef struct world_formation_background_tile {
+    u16 x;
+    u16 u;
+} world_formation_background_tile_t;
+typedef char world_formation_background_tile_size_must_be_4[(sizeof(world_formation_background_tile_t) == 4) ? 1 : -1];
+
 /*
  * The sprite-set -> script-variable table walked by the
  * dismissal tail, terminated by sprite_set == -1. The four-byte stride is
@@ -1379,6 +1387,7 @@ typedef struct world_formation_unit {
 typedef char world_formation_unit_t_size_must_be_0x128[(sizeof(world_formation_unit_t) == 0x128) ? 1 : -1];
 
 extern world_oriented_quad_t g_world_formation_cursor_shadow_sprite;
+extern world_formation_background_tile_t g_world_formation_background_tiles[2][4];
 extern world_oriented_quad_t g_world_formation_cursor_sprite;
 /* The formation screen's state: the index of its handler in
  * g_world_formation_menu_handlers. */
@@ -1839,15 +1848,6 @@ typedef enum world_text_section {
     WORLD_TEXT_SECTION_SHOP_DIALOGUE = 31, /* the shopkeeper's lines */
 } world_text_section_e;
 
-/* Provisional: destination placement for the packed-font glyph decoder at
- * 0x80129e4c.  x is a 4bpp pixel column (bit 0 selects the odd nibble),
- * y a row, and stride the destination row pitch in halfwords. */
-typedef struct world_text_glyph_target {
-    s16 x;      /* 0x00 */
-    s16 y;      /* 0x02 */
-    s16 stride; /* 0x04: halfwords per row */
-} world_text_glyph_target_t;
-
 /* Provisional: menu text origin/stride words at 0x80153280 (the WORLD
  * script variable region; world_menu_set_text_origin writes +0x04/+0x06).
  * The text-image builders address these through one base register, so they
@@ -1855,6 +1855,7 @@ typedef struct world_text_glyph_target {
  * 0x80153308 schedule as plain scalars and stay separate globals. */
 
 extern battle_text_glyph_state_t g_world_text_message_box_glyph;
+extern glyph_blit_t g_world_text_message_box_state;
 extern u8 g_world_numeric_display_palette_indices[12];
 extern u8 g_world_text_glyph_widths[];
 extern s32 g_world_text_line_widths[];
@@ -1952,7 +1953,7 @@ extern u8* g_world_text_glyph_bitmap_data;
 extern u8* g_world_text_section_pointers[TEXT_SECTION_COUNT];
 void world_text_message_box_thread(void);
 void world_text_blit_font_glyph_to_4bpp(const u8* glyph, u8* image, glyph_blit_t* origin, s32 palette);
-s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_target_t* target, s32 palette);
+s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, RECT* target, s32 palette);
 void world_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 u8* world_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
 void world_text_blit_glyph(const u8* source, u8* image, glyph_blit_t* source_rect, glyph_blit_t* position);

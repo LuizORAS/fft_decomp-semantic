@@ -1008,6 +1008,13 @@ extern world_image_location_t g_battle_item_icon_image_location;
 void battle_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
 
 /* script */
+typedef struct battle_script_weather_environment {
+    u8 environment_id;
+    u8 _unused_01;
+} battle_script_weather_environment_t;
+typedef char
+    battle_script_weather_environment_size_must_be_2[(sizeof(battle_script_weather_environment_t) == 2) ? 1 : -1];
+
 /* Per-byte status removal masks applied while an event stages a unit: three
  * eight-byte sets, of which the first BATTLE_STATUS_BYTE_COUNT bytes are used
  * (0x80169758). */
@@ -1097,6 +1104,7 @@ extern s16 g_battle_event_unit_slots[4];
 
 /* 0x80173f68: packed weather flags; consumer replaces it with a table index. */
 extern s16 g_battle_event_weather_request;
+extern battle_script_weather_environment_t g_battle_event_weather_commands[];
 
 /* Operand-byte counts, excluding the opcode; not per-operand width schemas.
  * BATTLE 0x8014d170, WORLD 0x8013a454. The tables end after opcode 0xf3. */
@@ -8477,6 +8485,7 @@ extern world_menu_entry_t g_battle_menu_idle_action_entries[];
 extern u16 g_battle_menu_input_mode; /* menu_input_mode_e */
 extern u8 g_battle_menu_numeric_display_frame_offsets[12][8];
 extern u8 g_battle_menu_numeric_display_palette_indices[12];
+extern world_panel_record_t g_battle_menu_numeric_display_panel_records[2];
 extern RECT g_battle_menu_numeric_display_texture_window;
 extern s32 g_battle_menu_packet_buffer_index;
 extern menu_palette_t g_battle_menu_palette_colors;

@@ -1,8 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-extern crystal_pickup_result_t g_main_crystal_pickup_result;
-
 /* Local view of battle_stats_t with learned_abilities (0x99) as 19 rows of 3
  * bytes. The 2D indexing is what makes loop.c reduce `unit + i * 3` as the
  * outer-loop giv (target `move s6,s2` / `addiu a2,s6,0x99`). */

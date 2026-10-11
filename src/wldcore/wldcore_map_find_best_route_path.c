@@ -2,10 +2,6 @@
 #include "psx/libetc.h"
 #include "psx/types.h"
 
-/* Search path under construction; g_wldcore_route_search_depth is its length and g_wldcore_route_search_cost
- * its accumulated cost. */
-extern wldcore_route_path_t g_wldcore_route_search_path;
-
 /* Depth-first search for the cheapest route path between two locations.
  *
  * Tries every unlocked route (script variable 0x22c + route) not already on

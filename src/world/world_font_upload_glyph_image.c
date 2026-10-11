@@ -24,7 +24,7 @@ void world_font_upload_glyph_image(u16 code, s32 x, s32 y, s32 style) {
         }
         glyph = code;
     }
-    world_text_decode_font_glyph_to_4bpp(glyph, image, (world_text_glyph_target_t*)&rect, style);
+    world_text_decode_font_glyph_to_4bpp(glyph, image, &rect, style);
     rect.x = x;
     rect.y = y;
     LoadImage(&rect, image);

@@ -101,7 +101,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     g_world_event_pending_map_state = -1;
     g_world_event_pending_map_jump_out_2_id = -1;
     g_world_event_pending_effect_id = -1;
-    g_world_event_pending_loaded_evtchr_slot = (void*)-1;
+    g_world_event_pending_loaded_evtchr_slot = -1;
     g_world_event_pending_evtchr_save_slot = -1;
     g_world_event_pending_saved_evtchr_clear_slot = -1;
     g_world_event_pending_loaded_evtchr_clear_slot = -1;

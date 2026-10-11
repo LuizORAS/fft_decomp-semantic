@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-extern world_options_menu_page_t g_world_options_menu_pages[2];
-
 /*
  * Options-menu thread started by world_menu_run_main_mode (mode 0) with
  * entry->context = &g_world_option_menu_entry_table.

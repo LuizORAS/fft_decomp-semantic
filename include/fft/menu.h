@@ -1251,9 +1251,9 @@ typedef struct menu_input_state {
     u32 new_buttons;              /* 0x00 */
     u32 current_buttons;          /* 0x04 */
     u32 previous_buttons;         /* 0x08 */
-    s32 initial_repeat_counter;   /* 0x0c */
-    s32 repeat_counter;           /* 0x10 */
-    s32 secondary_repeat_counter; /* 0x14 */
+    u32 initial_repeat_counter;   /* 0x0c */
+    u32 repeat_counter;           /* 0x10 */
+    u32 secondary_repeat_counter; /* 0x14 */
 } menu_input_state_t;
 typedef char menu_input_state_size_must_be_24[sizeof(menu_input_state_t) == 24 ? 1 : -1];
 
