@@ -676,7 +676,6 @@ extern u16 g_battle_ai_range_row_masks[];
 extern s32 g_battle_ai_self_target_origin_stage;
 extern battle_ai_command_t g_battle_ai_command_history[2]; /* 0x801a0d94, 0x801a0dac */
 extern s32 g_battle_ai_cowardly_movement_step;
-extern u8 g_battle_ai_current_ability_data_backup[];
 
 /* One shared AI workspace at 0x8019f3c4, not a separate record per candidate.
  * Preserve resume-state writes before returning -1. */
@@ -4471,7 +4470,7 @@ extern s16 g_battle_effect_projectile_spin_passes;
 extern s16 g_battle_effect_projectile_step_count;
 
 /* Six RGB byte triples, packed into both CLUT images as 15-bit colours. */
-extern u8 g_battle_effect_reflect_palette_colors[];
+extern rgb24_t g_battle_effect_reflect_palette_colors[6];
 
 /* Secondary-animation id per ability, indexed by the low halfword of the
  * caller's packed argument. */
@@ -6537,6 +6536,7 @@ extern u8 g_battle_action_menu_skillsets[];
 /* Separate link name for g_battle_action_saved_command.ability_id. */
 extern s16 g_battle_reaction_unit_last_ability_id;
 extern battle_current_attacker_data_t g_battle_action_current_attacker;
+extern battle_current_attacker_data_t g_battle_ai_current_attacker_backup;
 extern battle_action_data_t g_battle_action_attacker_action_data;
 extern battle_stats_t* g_battle_action_attacker;
 extern u8 g_battle_action_menu_row_types[]; /* per-row skillset kind; 13 keeps the row active */
@@ -8441,7 +8441,7 @@ extern u8 g_battle_menu_calculator_skillsets[4];
 extern s32 g_battle_menu_current_id; /* battle_menu_id_e */
 extern s32 g_battle_menu_help_open;
 extern s32 g_battle_menu_help_opening;
-extern s16 g_battle_menu_hovered_unit_display_mode;
+extern menu_number_entry_t g_battle_menu_hovered_unit_stats_setup[10];
 extern RECT g_battle_menu_hovered_unit_stats_display;
 extern world_menu_entry_t g_battle_menu_idle_action_entries[];
 extern u16 g_battle_menu_input_mode; /* menu_input_mode_e */
@@ -8455,7 +8455,7 @@ extern s32 g_battle_menu_panel_fade_mode; /* menu_panel_fade_mode_e */
 extern RECT g_battle_menu_portrait_palette_rect;
 extern RECT g_battle_menu_portrait_pixel_rect;
 extern u8 g_battle_menu_restore_pending;
-extern s16 g_battle_menu_right_unit_display_mode;
+extern menu_number_entry_t g_battle_menu_right_unit_stats_setup[10];
 extern RECT g_battle_menu_right_unit_stats_display;
 extern s32 g_battle_menu_companion_data_file_request_index;
 extern s32 g_battle_menu_selected_skill_ct;

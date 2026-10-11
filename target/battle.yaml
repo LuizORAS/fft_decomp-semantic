@@ -2449,8 +2449,8 @@ data:
   - {addr: 0x80168650, name: g_battle_menu_attack_caster_stats_display}
   - {addr: 0x80168658, name: g_battle_menu_attack_target_stats_display}
   - {addr: 0x80168660, name: g_battle_menu_right_unit_stats_display}
-  - {addr: 0x801686b8, name: g_battle_menu_hovered_unit_display_mode}
-  - {addr: 0x80168730, name: g_battle_menu_right_unit_display_mode}
+  - {addr: 0x80168668, name: g_battle_menu_hovered_unit_stats_setup}
+  - {addr: 0x801686e0, name: g_battle_menu_right_unit_stats_setup}
   - {addr: 0x80168758, name: g_battle_menu_attack_caster_stats_setup}
   - {addr: 0x801687a0, name: g_battle_menu_projected_value_panel}
   - {addr: 0x801687b8, name: g_battle_menu_attack_target_stats_setup}
@@ -2705,7 +2705,7 @@ data:
   - {addr: 0x80193910, name: g_battle_current_map_move_find_item_data}
   - {addr: 0x80193920, name: g_battle_highest_enemy_level}
   - {addr: 0x80193924, name: g_battle_ai_unit_snapshot_storage}
-  - {addr: 0x80193d24, name: g_battle_ai_current_ability_data_backup}
+  - {addr: 0x80193d24, name: g_battle_ai_current_attacker_backup}
   - {addr: 0x80193d44, name: g_battle_acting_unit_used_ability_id}
   - {addr: 0x80193d70, name: g_battle_ai_recovery_status_ids}
   - {addr: 0x80193dd4, name: g_battle_math_extra_known_bit_ids}

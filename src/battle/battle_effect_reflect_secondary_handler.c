@@ -25,10 +25,10 @@ s32 battle_effect_reflect_secondary_handler(void) {
     battle_effect_reflect_buffer_t* work;
     SVECTOR* caster;
     SVECTOR* target;
-    u8* rgb;
-    u8* red;
-    u8* green;
+    rgb24_t* colors;
     u8* blue;
+    u8* green;
+    u8* red;
     s32 span;
     s32 timer;
     s32 lit;
@@ -56,13 +56,15 @@ s32 battle_effect_reflect_secondary_handler(void) {
                 SetSemiTrans(&work->prims[i][j], 1);
             }
         }
+        /* Separate channel pointers retain the target's three stride bases. */
         for (i = 0; i < 2; i++) {
-            rgb = g_battle_effect_reflect_palette_colors;
-            blue = rgb;
-            green = rgb + 1;
-            red = rgb + 2;
+            colors = g_battle_effect_reflect_palette_colors;
+            red = &colors->r;
+            green = &colors->g;
+            blue = &colors->b;
             for (j = 0; j < 6; j++) {
-                work->clut[i][j] = blue[j * 3] | (green[j * 3] << 5) | (red[j * 3] << 10) | 0x8000;
+                work->clut[i][j] = red[j * sizeof(*colors)] | (green[j * sizeof(*colors)] << 5)
+                    | (blue[j * sizeof(*colors)] << 10) | 0x8000;
             }
         }
         result = 1;
