@@ -50,12 +50,8 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
             if (!(flags & BATTLE_AI_ABILITY_CANCEL_STATUS))
                 continue;
 
-            status_byte = status_id;
-            if (status_id < 0)
-                status_byte = status_id + 7;
-            status_byte >>= 3;
-            if (!(ai->considered_ability.parameters.bytes.status_infliction[status_byte]
-                    & (0x80 >> (status_id - status_byte * 8))))
+            status_byte = status_id / 8;
+            if (!(ai->considered_ability.parameters.bytes.status_infliction[status_byte] & (0x80 >> (status_id % 8))))
                 continue;
             if ((flags & BATTLE_AI_ABILITY_AFFECTED_BY_FAITH)
                 && (unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INNOCENT)]

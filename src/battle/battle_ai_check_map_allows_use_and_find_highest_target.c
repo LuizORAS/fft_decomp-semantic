@@ -11,13 +11,13 @@ s32 battle_ai_check_map_allows_use_and_find_highest_target(void) {
     if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
         if (g_battle_ai_data_base.find_highest_target_state != BATTLE_AI_CAST_ORIGIN_ACT_BEFORE_MOVE) {
-            goto second;
+            goto score_move_before_act;
         }
-        goto first;
+        goto score_act_before_move;
     }
     if (battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords) != 0) {
         g_battle_ai_data_base.current_action.act_before_move = 1;
-    first:
+    score_act_before_move:
         if (battle_ai_check_set_highest_unit_priority() == -1) {
             ai->find_highest_target_state = BATTLE_AI_CAST_ORIGIN_ACT_BEFORE_MOVE;
             return -1;
@@ -30,7 +30,7 @@ s32 battle_ai_check_map_allows_use_and_find_highest_target(void) {
         return 0;
     }
     ai->current_action.act_before_move = 0;
-second:
+score_move_before_act:
     if (battle_ai_check_set_highest_unit_priority() != -1) {
         return 0;
     }

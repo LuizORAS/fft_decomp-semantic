@@ -16,9 +16,9 @@ s32 battle_ai_select_initial_action(void) {
         case BATTLE_AI_INITIAL_SELECTION_STATUS:
             goto status_action;
         case BATTLE_AI_INITIAL_SELECTION_RETREAT:
-            goto fallback_action;
+            goto retreat_action;
         case BATTLE_AI_INITIAL_SELECTION_AUTOBATTLE:
-            goto native_action;
+            goto autobattle_action;
         default:
             goto general_action;
         }
@@ -47,7 +47,7 @@ status_action:
         battle_ai_transfer_halfword_values(
             &ai->saved_acting_unit_decision, ai->acting_unit_decision, sizeof(battle_ai_unit_decision_t));
     /* Resume after the save; restore the decision only when this pass ends. */
-    fallback_action:
+    retreat_action:
         if (battle_ai_select_retreat_action() == -1) {
             ai->initial_selection_stage = BATTLE_AI_INITIAL_SELECTION_RETREAT;
             return -1;
@@ -56,7 +56,7 @@ status_action:
             ai->acting_unit_decision, &ai->saved_acting_unit_decision, sizeof(battle_ai_unit_decision_t));
         return 0;
     }
-native_action:
+autobattle_action:
     result = battle_ai_handle_autobattle();
     if (result == -1) {
         ai->initial_selection_stage = BATTLE_AI_INITIAL_SELECTION_AUTOBATTLE;
