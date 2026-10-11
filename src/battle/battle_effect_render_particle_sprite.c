@@ -25,6 +25,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     DVECTOR position;
     battle_effect_sprite_block_t* block;
     battle_effect_frame_record_t* frame;
+    s16 frame_table_offset;
     s32 op;
     s16 count;
     s16 i;
@@ -68,11 +69,11 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         }
     }
     if (node->kind & EFFECT_LIST_NODE_FRAME_CHANGED) {
-        frame
-            = (battle_effect_frame_record_t*)(*(u16*)(g_battle_effect_frame_data
-                                                  + (node->sprite_frame_index * 2
-                                                      + *(s16*)(g_battle_effect_frame_data + node->frame_group_offset)))
-                + g_battle_effect_frame_data);
+        frame_table_offset = ((battle_effect_sprite_group_t*)(g_battle_effect_frame_data + node->frame_group_offset))
+                                 ->frame_table_offset;
+        frame = (battle_effect_frame_record_t*)(*(u16*)(g_battle_effect_frame_data
+                                                    + (node->sprite_frame_index * 2 + frame_table_offset))
+            + g_battle_effect_frame_data);
         count = frame->count;
         if (block->color.sprite_count != count) {
             battle_effect_free_sprite_block(block);

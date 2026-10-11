@@ -55,7 +55,8 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     SetTransMatrix(&g_battle_effect_matrix);
 
     frame_group = (u8*)g_battle_effect_trap_frame_data.groups;
-    offset = *(u16*)(frame_group + (slot->color.frame * 2 + g_battle_effect_trap_frame_data.groups[0].offsets_offset));
+    offset
+        = *(u16*)(frame_group + (slot->color.frame * 2 + g_battle_effect_trap_frame_data.groups[0].frame_table_offset));
     prim = &slot->quads[g_battle_effect_buffer_index];
     memcpy(&prim->color, &slot->color, sizeof(prim->color));
     setPolyFT4(prim);

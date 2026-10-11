@@ -3224,16 +3224,16 @@ typedef char effect_timeline_phase1_camera_offset_must_be_0x14e6
     [((unsigned long)&((effect_timeline_t*)0)->phase1_camera == 0x14e6) ? 1 : -1];
 typedef char effect_timeline_size_must_be_0x1886[(sizeof(effect_timeline_t) == 0x1886) ? 1 : -1];
 
-/* Variable-offset sprite table consumed by 0x801a5798. */
-typedef struct battle_effect_sprite_table_header {
-    s16 offsets_offset;
-} battle_effect_sprite_table_header_t;
+/* Byte offset to a group's frame-offset table, relative to the group-table base. */
+typedef struct battle_effect_sprite_group {
+    s16 frame_table_offset;
+} battle_effect_sprite_group_t;
 
 /* Frame sections start with a group count; group offsets are relative to this table. */
 typedef struct battle_effect_sprite_section {
-    u8 group_count;                                /* 0x00 */
-    u8 _unused_01[3];                              /* 0x01; reserved header bytes */
-    battle_effect_sprite_table_header_t groups[1]; /* 0x04; variable-length group table */
+    u8 group_count;                         /* 0x00 */
+    u8 _unused_01[3];                       /* 0x01; reserved header bytes */
+    battle_effect_sprite_group_t groups[1]; /* 0x04; variable-length group table */
 } battle_effect_sprite_section_t;
 
 typedef struct battle_effect_sprite_frame {
