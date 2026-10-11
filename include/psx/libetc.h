@@ -37,18 +37,26 @@ extern s32 g_psyq_etc_video_mode;
 
 typedef psyq_interrupt_callback_t (*psyq_callback_setter_t)(s32, psyq_interrupt_callback_t);
 
+/* Interrupt-source indices used by InterruptCallback and the IRQ dispatcher. */
 typedef enum {
     PSYQ_IRQ_VBLANK = 0,
     PSYQ_IRQ_DMA = 3,
+    PSYQ_IRQ_TIMER0 = 4,
+    PSYQ_IRQ_TIMER1 = 5,
+    PSYQ_IRQ_TIMER2 = 6,
+} psyq_interrupt_source_e;
+
+/* Callback storage, timer configuration and diagnostic limits. */
+enum {
+    PSYQ_IRQ_SOURCES = 11,
     PSYQ_ETC_CALLBACK_SLOTS = 8,
     PSYQ_ETC_VBLANK_COUNTER_MODE = 0x107,
-    PSYQ_DMA_IRQ_MASTER_ENABLE = 0x00800000,
-    PSYQ_DMA_IRQ_CONTROL_MASK = 0x00ffffff,
-    PSYQ_DMA_IRQ_CHANNEL_ENABLE_SHIFT = 16,
-    PSYQ_DMA_DEFAULT_PRIORITY = 0x33333333,
     PSYQ_ETC_INTERRUPT_STACK_RESERVED_WORDS = 20,
     PSYQ_ETC_VSYNC_TIMEOUT_SHIFT = 15,
-} psyq_interrupt_control_e;
+    PSYQ_ETC_UNHANDLED_IRQ_LIMIT = 2048,
+    PSYQ_ETC_VBLANK_ROOT_COUNTER = 3,
+};
+
 typedef struct {
     u16 initialized;
     u16 in_callback;
@@ -122,16 +130,15 @@ typedef struct {
 extern psyq_dma_channel_t* g_psyq_etc_dma_channels;
 psyq_interrupt_callback_t setIntr(s32 slot, psyq_interrupt_callback_t callback);
 
-typedef enum {
-    PSYQ_IRQ_TIMER0 = 4,
-    PSYQ_IRQ_TIMER1 = 5,
-    PSYQ_IRQ_TIMER2 = 6,
-    PSYQ_IRQ_SOURCES = 11,
-    PSYQ_ETC_UNHANDLED_IRQ_LIMIT = 2048,
-    PSYQ_ETC_VBLANK_ROOT_COUNTER = 3,
+/* DMA channel count, interrupt-control fields and initial priority. */
+enum {
     PSYQ_DMA_CHANNEL_COUNT = 7,
-    PSYQ_DMA_IRQ_FLAG_SHIFT = 24
-} psyq_interrupt_handler_control_e;
+    PSYQ_DMA_IRQ_MASTER_ENABLE = 0x00800000,
+    PSYQ_DMA_IRQ_CONTROL_MASK = 0x00ffffff,
+    PSYQ_DMA_IRQ_CHANNEL_ENABLE_SHIFT = 16,
+    PSYQ_DMA_IRQ_FLAG_SHIFT = 24,
+    PSYQ_DMA_DEFAULT_PRIORITY = 0x33333333,
+};
 
 #define PSYQ_DMA_IRQ_CHANNEL_MASK 0x0000007fU
 #define PSYQ_DMA_IRQ_FLAGS_MASK   0xff000000U
