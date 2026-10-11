@@ -171,7 +171,7 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                     }
                     channel->previous_key = channel->key;
                     modulator = channel->modulators;
-                    for (i = 4; i != 0; i--) {
+                    for (i = SUZUKI_MODULATOR_COUNT; i != 0; i--) {
                         mod_flags = modulator->flags;
                         if (mod_flags & SUZUKI_MODULATOR_ACTIVE) {
                             if (mod_flags & SUZUKI_MODULATOR_RESTART_ON_KEY_ON) {

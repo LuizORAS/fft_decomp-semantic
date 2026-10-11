@@ -98,7 +98,7 @@ void main_smd_init_channels(suzuki_music_t* music) {
                     channel->voice_attr.voice = 0;
                     channel->voice_attr.mask = 0;
                 }
-                for (i = 3; i >= 0; i--) {
+                for (i = SUZUKI_MODULATOR_COUNT - 1; i >= 0; i--) {
                     channel->modulators[i].flags = 0;
                 }
                 channel->waveset = waveset;

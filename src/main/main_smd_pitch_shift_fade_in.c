@@ -12,8 +12,8 @@ u8* main_smd_pitch_shift_fade_in(u8* note_data, suzuki_music_t* music, suzuki_mu
     note_data++;
     if (duration != 0) {
         step = 0x100 / duration;
-        channel->modulators[0].fade_step = step;
-        channel->modulators[0].fade_level = step;
+        channel->modulators[SUZUKI_MODULATOR_SLOT_VIBRATO].fade_step = step;
+        channel->modulators[SUZUKI_MODULATOR_SLOT_VIBRATO].fade_level = step;
     }
     return note_data;
 }

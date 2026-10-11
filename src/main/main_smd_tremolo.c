@@ -12,7 +12,7 @@ u8* main_smd_tremolo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_
     depth = note_data[1];
     speed = note_data[0];
     if (depth != 0 && speed != 0) {
-        modulator = &channel->modulators[1];
+        modulator = &channel->modulators[SUZUKI_MODULATOR_SLOT_TREMOLO];
         modulator->amplitude
             = main_smd_modulator_calculate_step(-depth << 24, speed, SUZUKI_MODULATOR_WAVEFORM_TRIANGLE);
         modulator->timer_reset = speed;

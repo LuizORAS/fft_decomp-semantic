@@ -20,7 +20,7 @@ void main_smd_update_modulators(suzuki_music_t* music, suzuki_music_channel_t* c
     channel = channels;
     do {
         if (channel->flags != 0) {
-            for (i = 4, modulator = channel->modulators; i != 0; modulator++, i--) {
+            for (i = SUZUKI_MODULATOR_COUNT, modulator = channel->modulators; i != 0; modulator++, i--) {
                 if ((modulator->flags & SUZUKI_MODULATOR_ACTIVE) == 0)
                     continue;
                 if (modulator->delay != 0) {

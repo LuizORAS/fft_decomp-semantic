@@ -19,7 +19,7 @@ u8* main_smd_tremolo_waveform(u8* note_data, suzuki_music_t* music, suzuki_music
     depth = note_data[1];
     speed = note_data[0];
     if (depth != 0 && speed != 0) {
-        modulator = &channel->modulators[1];
+        modulator = &channel->modulators[SUZUKI_MODULATOR_SLOT_TREMOLO];
         flags = (waveform & SUZUKI_MODULATOR_INPUT_NO_KEY_ON_RESTART) ? 0 : SUZUKI_MODULATOR_RESTART_ON_KEY_ON;
         waveform &= SUZUKI_MODULATOR_INPUT_WAVEFORM_MASK;
         modulator->amplitude = main_smd_modulator_calculate_step(-depth << 24, speed, waveform);

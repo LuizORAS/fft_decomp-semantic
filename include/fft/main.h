@@ -608,6 +608,16 @@ typedef struct suzuki_modulator {
 } suzuki_modulator_t;
 typedef char suzuki_modulator_size_must_be_32[(sizeof(suzuki_modulator_t) == 32) ? 1 : -1];
 
+/* Dedicated vibrato, tremolo and pan-LFO opcodes use these slots. Modulator
+ * Select can configure any slot with a different output target. */
+enum {
+    SUZUKI_MODULATOR_SLOT_VIBRATO = 0,
+    SUZUKI_MODULATOR_SLOT_TREMOLO = 1,
+    SUZUKI_MODULATOR_SLOT_PAN_LFO = 2,
+};
+
+enum { SUZUKI_MODULATOR_COUNT = 4 };
+
 /* suzuki_modulator_t.target: the channel output main_smd_update_modulators
  * adds the modulator to. */
 typedef enum suzuki_modulator_target {
@@ -731,8 +741,8 @@ typedef struct suzuki_music_channel {
     u16 balance_step_count; /* 0xaa */
     u16 repeat_depth;       /* 0xac; -1 when the repeat stack is empty */
     u16 modulator_index;    /* 0xae; modulator selected by Modulator Select */
-    suzuki_repeat_t repeats[4];       /* 0xb0 */
-    suzuki_modulator_t modulators[4]; /* 0xe0 */
+    suzuki_repeat_t repeats[4];                            /* 0xb0 */
+    suzuki_modulator_t modulators[SUZUKI_MODULATOR_COUNT]; /* 0xe0 */
 } suzuki_music_channel_t;
 typedef char suzuki_music_channel_size_must_be_352[(sizeof(suzuki_music_channel_t) == 352) ? 1 : -1];
 typedef char suzuki_channel_voice_attr_must_be_at_offset_0x34

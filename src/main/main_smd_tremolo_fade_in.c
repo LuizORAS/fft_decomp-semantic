@@ -12,8 +12,8 @@ u8* main_smd_tremolo_fade_in(u8* note_data, suzuki_music_t* music, suzuki_music_
     note_data++;
     if (duration != 0) {
         step = 0x100 / duration;
-        channel->modulators[1].fade_step = step;
-        channel->modulators[1].fade_level = step;
+        channel->modulators[SUZUKI_MODULATOR_SLOT_TREMOLO].fade_step = step;
+        channel->modulators[SUZUKI_MODULATOR_SLOT_TREMOLO].fade_level = step;
     }
     return note_data;
 }

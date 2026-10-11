@@ -24,7 +24,7 @@ u8* main_smd_pitch_shift_waveform(u8* note_data, suzuki_music_t* music, suzuki_m
         } else {
             depth = depth * depth;
         }
-        modulator = &channel->modulators[0];
+        modulator = &channel->modulators[SUZUKI_MODULATOR_SLOT_VIBRATO];
         flags = (waveform & SUZUKI_MODULATOR_INPUT_NO_KEY_ON_RESTART) ? 0 : SUZUKI_MODULATOR_RESTART_ON_KEY_ON;
         waveform &= SUZUKI_MODULATOR_INPUT_WAVEFORM_MASK;
         modulator->amplitude = main_smd_modulator_calculate_step(depth << 14, speed, waveform);

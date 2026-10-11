@@ -15,7 +15,7 @@ u8* main_smd_pan_lfo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_
     depth = note_data[1];
     speed = note_data[0];
     if (depth != 0 && speed != 0) {
-        modulator = &channel->modulators[2];
+        modulator = &channel->modulators[SUZUKI_MODULATOR_SLOT_PAN_LFO];
         modulator->amplitude
             = main_smd_modulator_calculate_step(depth << 24, speed, SUZUKI_MODULATOR_WAVEFORM_TRIANGLE_CENTERED);
         modulator->timer_reset = speed;

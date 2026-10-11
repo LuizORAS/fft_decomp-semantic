@@ -9,7 +9,7 @@ u8* main_smd_modulator_enable_mask(u8* note_data, suzuki_music_t* music, suzuki_
     u32 mask;
 
     modulator = channel->modulators;
-    i = 4;
+    i = SUZUKI_MODULATOR_COUNT;
     mask = *note_data++;
     do {
         if (mask & 1) {

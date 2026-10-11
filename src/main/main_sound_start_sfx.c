@@ -72,7 +72,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
         channel->start_tick = g_main_sound_tick_count;
         channel->priority = priority;
         if (*offsets != 0) {
-            i = 3;
+            i = SUZUKI_MODULATOR_COUNT - 1;
             started |= bit;
             voices |= channel->voice_attr.voice;
             flags = SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_SFX | SUZUKI_CHANNEL_IN_USE;
