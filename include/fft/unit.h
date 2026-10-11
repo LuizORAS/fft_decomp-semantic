@@ -1089,14 +1089,6 @@ typedef struct unit_animation_state {
 } unit_animation_state_t;
 typedef char unit_animation_state_size_must_be_7[sizeof(unit_animation_state_t) == 7 ? 1 : -1];
 
-/* Tile coordinates passed by WarpUnit and WalkTo, in x/elevation/y order. */
-typedef struct unit_tile_coordinates {
-    s16 x;         /* 0x00 */
-    s16 elevation; /* 0x02 */
-    s16 y;         /* 0x04 */
-} unit_tile_coordinates_t;
-typedef char unit_tile_coordinates_size_must_be_6[sizeof(unit_tile_coordinates_t) == 6 ? 1 : -1];
-
 /* other */
 /* Team bits select one of four independently tracked battle teams. */
 enum {

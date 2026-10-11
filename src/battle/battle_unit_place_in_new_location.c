@@ -7,7 +7,7 @@
  * Clears the effect vectors, sets both the current and destination tile, and
  * recomputes the screen and fixed-point world positions from the tile.
  */
-s32 battle_unit_place_in_new_location(u32 misc_id, unit_tile_coordinates_t* tile, s32 facing) {
+s32 battle_unit_place_in_new_location(u32 misc_id, map_tile_coordinates_t* tile, s32 facing) {
     battle_unit_misc_data_t* unit;
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xFFFF);
@@ -23,7 +23,7 @@ s32 battle_unit_place_in_new_location(u32 misc_id, unit_tile_coordinates_t* tile
         unit->screen_offset.vx = 0;
         unit->map_x = unit->movement.bytes.destination_x = tile->x;
         unit->map_y = unit->movement.bytes.destination_y = tile->y;
-        unit->map_z = unit->movement.bytes.destination_z = tile->elevation;
+        unit->map_z = unit->movement.bytes.destination_z = tile->layer;
         unit->facing = facing << 10;
         unit->screen.vx = tile->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         unit->screen.vz = tile->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);

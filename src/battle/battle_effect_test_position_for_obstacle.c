@@ -10,7 +10,7 @@
  * `out_unit`, which is otherwise left at -1.
  */
 s32 battle_effect_test_position_for_obstacle(
-    battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, battle_effect_tile_ref_t* tile_ref) {
+    battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, map_tile_coordinates_t* tile_ref) {
     map_tile_t* tile;
     s32 ceiling;
     s32 height;

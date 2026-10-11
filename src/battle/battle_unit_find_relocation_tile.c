@@ -13,7 +13,7 @@
  * The panel clear walks the byte offset itself: the target loop has no index
  * register, which an index loop keeps. Only level's destination store is an
  * assignment chain; that shape alone gives the target's register choices. */
-s32 battle_unit_find_relocation_tile(s32 unit_index, unit_tile_coordinates_t* destination) {
+s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* destination) {
     battle_stats_t* unit;
     map_tile_t* tile;
     s32 origin_x;
@@ -125,8 +125,8 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, unit_tile_coordinates_t* de
                             destination->x = found_x;
                             g_battle_relocated_unit_coords[g_battle_relocated_unit_count].x = found_x;
                             g_battle_relocated_unit_coords[g_battle_relocated_unit_count].y = destination->y = found_y;
-                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count].elevation
-                                = destination->elevation = level;
+                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count].elevation = destination->layer
+                                = level;
                             g_battle_relocated_unit_count++;
                             return 0;
                         }

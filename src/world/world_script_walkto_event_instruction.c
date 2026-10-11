@@ -6,7 +6,7 @@
  * Only the block thread calls this, through the main-stack callback bridge:
  * world_script_execute_event recognizes the opcode and does nothing. */
 void world_script_walkto_event_instruction(const event_walk_to_parameters_t* parameters) {
-    unit_tile_coordinates_t coords;
+    map_tile_coordinates_t coords;
     s32 misc_id;
 
     misc_id = world_script_load_halfword(parameters->unit_id_le);
@@ -14,7 +14,7 @@ void world_script_walkto_event_instruction(const event_walk_to_parameters_t* par
     if (misc_id != EVENT_MISC_ID_NONE) {
         coords.x = parameters->x;
         coords.y = parameters->y;
-        coords.elevation = parameters->elevation;
+        coords.layer = parameters->elevation;
         battle_move_start_unit_walk_to(misc_id, &coords,
             BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST
                 - parameters->terrain_cost_flag * BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST,

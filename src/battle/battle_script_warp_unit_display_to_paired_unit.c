@@ -24,7 +24,7 @@ void battle_script_warp_unit_display_to_paired_unit(s32 misc_id) {
     misc_id = battle_unit_get_misc_id_by_battle_id(battle_id);
     if (misc_id != -1) {
         g_battle_script_warp_coords.x = unit->x;
-        g_battle_script_warp_coords.elevation = unit->position.higher_elevation;
+        g_battle_script_warp_coords.layer = unit->position.higher_elevation;
         g_battle_script_warp_coords.y = unit->position.y;
         facing = unit->position.facing << 2;
         state = &g_battle_unit_misc_rotation_data[misc_id];

@@ -8,7 +8,7 @@
 s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     /* Reusing the operand cursor for placement preserves the target allocation. */
     const event_unit_placement_t* parameters = (const event_unit_placement_t*)instruction;
-    unit_tile_coordinates_t coordinates;
+    map_tile_coordinates_t coordinates;
     s32 resolved_id;
     battle_stats_t* unit;
     unit_animation_state_t* state;
@@ -34,7 +34,7 @@ s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
         if (index != -1) {
             state = &g_world_unit_animation_states[index];
             coordinates.x = unit->x;
-            coordinates.elevation = unit->position.higher_elevation;
+            coordinates.layer = unit->position.higher_elevation;
             coordinates.y = unit->position.y;
             facing = parameters->facing;
             state->delay = 0;

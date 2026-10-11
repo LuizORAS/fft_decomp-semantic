@@ -214,7 +214,7 @@ extern s32 g_world_script_saved_event_input;
 extern s16 g_world_event_map_jump_in_request;
 extern s16 g_world_event_finish_check_pending;
 extern u8 g_world_event_thread_status_snapshot[]; /* per-thread running flags sampled before the yield, indexed 1..15 */
-extern unit_tile_coordinates_t g_world_script_warp_unit_coords;
+extern map_tile_coordinates_t g_world_script_warp_unit_coords;
 extern u32 g_world_event_random_seed;
 extern u32 g_world_script_tutorial_repeat_counters[16];
 extern u16 g_world_script_tutorial_previous_input;

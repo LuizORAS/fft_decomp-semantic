@@ -87,7 +87,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
             command->kind = BATTLE_AI_COMMAND_MOVE;
             command->data.move.x = ai->selected_action.coords.bytes.x;
             command->data.move.y = ai->selected_action.coords.bytes.y;
-            command->data.move.elevation = ai->selected_action.coords.bytes.elevation;
+            command->data.move.layer = ai->selected_action.coords.bytes.elevation;
             goto preserve;
         }
     }

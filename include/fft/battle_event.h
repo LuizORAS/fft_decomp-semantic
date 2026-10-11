@@ -28,7 +28,7 @@ typedef enum battle_event_status_mask_set {
 
 enum { BATTLE_EVENT_STATUS_MASK_COUNT = 3 };
 
-extern unit_tile_coordinates_t g_battle_script_warp_coords;
+extern map_tile_coordinates_t g_battle_script_warp_coords;
 extern u16 g_battle_script_attack_entry_mode; /* script_attack_entry_mode_e */
 extern s32 g_battle_script_condition_unit_battle_id;
 extern s32 g_battle_script_rand16_state;

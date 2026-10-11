@@ -25,7 +25,7 @@ s32 world_script_warp_unit_display_to_paired_unit(s32 misc_id) {
     misc_id = battle_unit_get_misc_id_by_battle_id(battle_id);
     if (misc_id != -1) {
         g_world_script_warp_unit_coords.x = stats->x;
-        g_world_script_warp_unit_coords.elevation = stats->position.higher_elevation;
+        g_world_script_warp_unit_coords.layer = stats->position.higher_elevation;
         g_world_script_warp_unit_coords.y = stats->position.y;
         facing = stats->position.facing << 2;
         state = &g_world_unit_animation_states[misc_id];

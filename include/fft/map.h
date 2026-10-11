@@ -16,6 +16,14 @@ enum {
     MAP_TILE_COUNT = MAP_TERRAIN_LAYER_COUNT * MAP_TILES_PER_LAYER,
 };
 
+/* Map x, terrain layer and map y, shared by unit placement and obstacle tests. */
+typedef struct map_tile_coordinates {
+    s16 x;     /* 0x00 */
+    s16 layer; /* 0x02 */
+    s16 y;     /* 0x04 */
+} map_tile_coordinates_t;
+typedef char map_tile_coordinates_size_must_be_6[sizeof(map_tile_coordinates_t) == 6 ? 1 : -1];
+
 /* Battle map ids: EVENT_SCRIPT_VAR_CURRENT_MAP and the index of
  * g_battle_map_gns_lba. Each is named as its map name text spells it
  * (TEXT_ID_MAP_NAME_BASE + id - 1); a map whose name repeats an earlier one

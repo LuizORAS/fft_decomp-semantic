@@ -60,11 +60,11 @@ void battle_state_handle_close_move_help_state(void) {
         return;
     }
     path = battle_move_build_path_to_tile(casting->battle_data->misc_unit_id, source->command_state.ai.data.move.x,
-        source->command_state.ai.data.move.y, source->command_state.ai.data.move.elevation);
+        source->command_state.ai.data.move.y, source->command_state.ai.data.move.layer);
     battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
     if (path != 0) {
         x = source->command_state.ai.data.move.x;
-        elevation = source->command_state.ai.data.move.elevation;
+        elevation = source->command_state.ai.data.move.layer;
         y = source->command_state.ai.data.move.y;
         g_battle_cursor_x = x;
         g_battle_cursor_z = elevation;

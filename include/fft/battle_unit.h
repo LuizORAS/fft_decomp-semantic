@@ -838,7 +838,7 @@ typedef struct battle_unit_misc_data {
     /* Death-by-dismount destination (Miscellaneous unit_t Data 0x184/0x186/
      * 0x188); battle_unit_set_map_coords_after_death_dismount copies them to
      * map_x/map_z/map_y.  attack_result_animation_update passes &dismount. */
-    unit_tile_coordinates_t dismount; /* 0x184 */
+    map_tile_coordinates_t dismount; /* 0x184 */
     u8 _unused_18a[2];
     battle_strike_work_t strike; /* 0x18c..0x1b3; current action targets, result and rewards */
     u8 command_ready;            /* 0x1b4; 0x800753b8 sets 1 after AI setup completes; gates command dispatch */
@@ -1273,7 +1273,7 @@ void battle_unit_learn_used_ability(battle_stats_t* unit);
 void battle_unit_transform_into_morbol(battle_stats_t* unit);
 void battle_unit_mount_rider_onto_unit(battle_unit_misc_data_t* rider, battle_unit_misc_data_t* mount);
 s32 battle_unit_move_misc_unit_to_head(u32 misc_id);
-s32 battle_unit_place_in_new_location(u32 misc_id, unit_tile_coordinates_t* tile, s32 facing);
+s32 battle_unit_place_in_new_location(u32 misc_id, map_tile_coordinates_t* tile, s32 facing);
 s32 battle_unit_poll_and_load_entd_units(void);
 s32 battle_unit_remove_misc_by_id(u32 misc_id);
 void battle_unit_reset_animation_states(void);
@@ -1311,7 +1311,7 @@ s32 battle_unit_set_placement_and_validate(s32 unit_index, unit_deployment_coord
 s32 battle_unit_validate_placement(s32 unit_index);
 void battle_unit_view_supervisor_thread(void);
 s32 battle_unit_save_staged_status_data(s32 unit_id);
-s32 battle_unit_find_relocation_tile(s32 unit_index, unit_tile_coordinates_t* destination);
+s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* destination);
 void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit);
 void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change);
 s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_display_t* display);

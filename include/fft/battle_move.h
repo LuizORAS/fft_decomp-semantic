@@ -435,7 +435,7 @@ void battle_move_set_spreading_tile_x_and_y_coordinates(void);
 void battle_move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
 void battle_move_snap_axis_to_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
 void battle_move_spread_to_neighbors(void);
-s32 battle_move_start_unit_walk_to(s32 misc_id, unit_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed);
+s32 battle_move_start_unit_walk_to(s32 misc_id, map_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed);
 void battle_move_step_unit_to_map_tile_center_no_height_change(battle_unit_misc_data_t* unit);
 void battle_move_step_unit_to_map_tile_center_with_height_change(battle_unit_misc_data_t* unit);
 void battle_move_transfer_tiles_height_halves_and_slope_to_scratch_pad(void);

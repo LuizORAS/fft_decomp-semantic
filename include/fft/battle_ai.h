@@ -225,11 +225,11 @@ enum {
 
 /* The setup dispatcher writes this at Misc +0x158 and copies 24 bytes into
  * each history slot. ACT copies the 20-byte payload from AI action +0x08;
- * MOVE writes only x/elevation/y, and END_TURN leaves the payload unchanged. */
+ * MOVE writes only x/layer/y, and END_TURN leaves the payload unchanged. */
 typedef struct battle_ai_command {
     battle_ai_command_kind_e kind;
     union {
-        unit_tile_coordinates_t move;
+        map_tile_coordinates_t move;
         battle_action_command_t action;
     } data;
 } battle_ai_command_t;

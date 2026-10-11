@@ -550,14 +550,6 @@ typedef struct battle_effect_obstacle_unit_list {
     s32 sprite_heights[BATTLE_UNIT_SLOT_COUNT]; /* 0xc4 */
 } battle_effect_obstacle_unit_list_t;
 
-/* The tile reference g_battle_effect_trajectory_tile (0x801b8b68)
- * that battle_effect_test_position_for_obstacle fills in. */
-typedef struct battle_effect_tile_ref {
-    s16 x;     /* 0x00 */
-    s16 layer; /* 0x02 */
-    s16 y;     /* 0x04 */
-} battle_effect_tile_ref_t;
-
 /* Header of one packed projectile model command. */
 typedef union battle_effect_model_command_header {
     u32 word;
@@ -1809,7 +1801,7 @@ extern battle_effect_secondary_state_t g_battle_effect_secondary_state;
 /* Tile target of the current effect: emitter origin CURSOR_TILE, homing CURSOR_TILE and camera source
  * CURSOR_TILE. */
 extern battle_effect_target_t g_battle_effect_target_tile;
-extern battle_effect_tile_ref_t g_battle_effect_trajectory_tile;
+extern map_tile_coordinates_t g_battle_effect_trajectory_tile;
 extern s16 g_battle_effect_ability_ids[];
 extern effect_animation_curve_table_t* g_battle_effect_animation_curve_data;
 extern s16 g_battle_effect_arctan_angle_mod;
@@ -2050,7 +2042,7 @@ s32 battle_effect_trace_arc_trajectory_path(
     SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, battle_effect_obstacle_unit_list_t* obstacles);
 
 s32 battle_effect_test_position_for_obstacle(
-    battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, battle_effect_tile_ref_t* tile_ref);
+    battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, map_tile_coordinates_t* tile_ref);
 
 s32 battle_effect_try_init_data(void);
 void battle_effect_update_active_slots(s32 group);

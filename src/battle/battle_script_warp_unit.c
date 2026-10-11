@@ -17,7 +17,7 @@ void battle_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     s32 misc_id;
     s32 result;
     s16 unit_id;
-    unit_tile_coordinates_t tile;
+    map_tile_coordinates_t tile;
     unit_animation_state_t* rotation_state;
 
     cursor.instruction = instruction;
@@ -42,7 +42,7 @@ void battle_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
         return;
     }
     tile.x = unit->x;
-    tile.elevation = unit->position.higher_elevation;
+    tile.layer = unit->position.higher_elevation;
     tile.y = unit->position.y;
     rotation_state = &g_battle_unit_misc_rotation_data[misc_id];
     rotation_state->target_facing = cursor.placement->facing * 4;
