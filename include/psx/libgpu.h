@@ -5,6 +5,7 @@
 #include "psx/libetc.h"
 #include "psx/libgte.h"
 
+#include "psx/tmd.h"
 #include "psx/types.h"
 
 /* Command byte in the first GP0 word; packet lengths exclude the DMA tag. */
@@ -938,274 +939,24 @@ typedef enum {
     PSYQ_TMD_PACKET_MODE_MASK = 0xfdffffffU,
 } psyq_tmd_packet_id_e;
 
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 normal0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-} psyq_tmd_f3_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 normal0;
-    u16 vertex0;
-    u16 normal1;
-    u16 vertex1;
-    u16 normal2;
-    u16 vertex2;
-} psyq_tmd_g3_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u16 normal0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-} psyq_tmd_ft3_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u16 normal0;
-    u16 vertex0;
-    u16 normal1;
-    u16 vertex1;
-    u16 normal2;
-    u16 vertex2;
-} psyq_tmd_gt3_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u8 _unknown_0e[2];
-} psyq_tmd_f3_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    CVECTOR color1;
-    CVECTOR color2;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u8 _unknown_16[2];
-} psyq_tmd_g3_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    CVECTOR color0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u8 _unknown_1a[2];
-} psyq_tmd_ft3_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    CVECTOR color0;
-    CVECTOR color1;
-    CVECTOR color2;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u8 _unknown_22[2];
-} psyq_tmd_gt3_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 normal0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-    u8 _unknown_12[2];
-} psyq_tmd_f4_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 normal0;
-    u16 vertex0;
-    u16 normal1;
-    u16 vertex1;
-    u16 normal2;
-    u16 vertex2;
-    u16 normal3;
-    u16 vertex3;
-} psyq_tmd_g4_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u8 u3;
-    u8 v3;
-    u8 _unknown_12[2];
-    u16 normal0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-    u8 _unknown_1e[2];
-} psyq_tmd_ft4_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u8 u3;
-    u8 v3;
-    u8 _unknown_12[2];
-    u16 normal0;
-    u16 vertex0;
-    u16 normal1;
-    u16 vertex1;
-    u16 normal2;
-    u16 vertex2;
-    u16 normal3;
-    u16 vertex3;
-} psyq_tmd_gt4_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-} psyq_tmd_f4_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    CVECTOR color1;
-    CVECTOR color2;
-    CVECTOR color3;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-} psyq_tmd_g4_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u8 u3;
-    u8 v3;
-    u8 _unknown_12[2];
-    CVECTOR color0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-} psyq_tmd_ft4_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u8 u3;
-    u8 v3;
-    u8 _unknown_12[2];
-    CVECTOR color0;
-    CVECTOR color1;
-    CVECTOR color2;
-    CVECTOR color3;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-} psyq_tmd_gt4_packet_t;
-
 union psyq_tmd_packet {
     u32 id;
-    psyq_tmd_f3_lit_packet_t f3_lit;
-    psyq_tmd_g3_lit_packet_t g3_lit;
-    psyq_tmd_ft3_lit_packet_t ft3_lit;
-    psyq_tmd_gt3_lit_packet_t gt3_lit;
-    psyq_tmd_f3_packet_t f3;
-    psyq_tmd_g3_packet_t g3;
-    psyq_tmd_ft3_packet_t ft3;
-    psyq_tmd_gt3_packet_t gt3;
-    psyq_tmd_f4_lit_packet_t f4_lit;
-    psyq_tmd_g4_lit_packet_t g4_lit;
-    psyq_tmd_ft4_lit_packet_t ft4_lit;
-    psyq_tmd_gt4_lit_packet_t gt4_lit;
-    psyq_tmd_f4_packet_t f4;
-    psyq_tmd_g4_packet_t g4;
-    psyq_tmd_ft4_packet_t ft4;
-    psyq_tmd_gt4_packet_t gt4;
+    TMD_P_F3 f3_lit;
+    TMD_P_G3 g3_lit;
+    TMD_P_TF3 ft3_lit;
+    TMD_P_TG3 gt3_lit;
+    TMD_P_NF3 f3;
+    TMD_P_NG3 g3;
+    TMD_P_TNF3 ft3;
+    TMD_P_TNG3 gt3;
+    TMD_P_F4 f4_lit;
+    TMD_P_G4 g4_lit;
+    TMD_P_TF4 ft4_lit;
+    TMD_P_TG4 gt4_lit;
+    TMD_P_NF4 f4;
+    TMD_P_NG4 g4;
+    TMD_P_TNF4 ft4;
+    TMD_P_TNG4 gt4;
 };
 
 extern const char g_psyq_gpu_tmd_f3_lit_name[];

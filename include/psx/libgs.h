@@ -3,6 +3,7 @@
 
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
+#include "psx/tmd.h"
 #include "psx/types.h"
 
 /* Psy-Q packet work areas are byte buffers holding variable GPU packet layouts. */
