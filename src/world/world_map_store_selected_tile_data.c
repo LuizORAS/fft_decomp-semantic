@@ -7,7 +7,6 @@ void world_map_store_selected_tile_data(void) {
     SVECTOR coords;
     s16* selected;
     s32 depth;
-    s32 surface_offset;
 
     battle_map_store_selected_tile_coordinates(&coords);
     selected = &g_world_map_selected_tile_data.surface_type;
@@ -19,7 +18,6 @@ void world_map_store_selected_tile_data(void) {
     depth = battle_map_get_tile_data_value(MAP_TILE_DATA_DEPTH, coords.vx, coords.vz, coords.vy) & 0xFF;
     g_world_map_selected_tile_data.depth = depth;
     g_world_map_selected_tile_data.display_height += depth * 2;
-    surface_offset = *selected * 2;
-    g_world_map_selected_tile_data._unknown_02 = g_main_terrain_tile_info_pairs[surface_offset];
-    g_world_map_selected_tile_data._unknown_04 = g_main_terrain_tile_info_pairs[surface_offset + 1];
+    g_world_map_selected_tile_data._unknown_02 = g_main_terrain_tile_info_pairs[*selected][0];
+    g_world_map_selected_tile_data._unknown_04 = g_main_terrain_tile_info_pairs[*selected][1];
 }
