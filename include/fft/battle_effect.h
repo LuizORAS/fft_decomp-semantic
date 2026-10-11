@@ -1330,12 +1330,12 @@ typedef char assert_effect_emitter_geometry_view_size[sizeof(effect_emitter_geom
  *
  * A value given as a start and an end is lerped between them by an animation
  * curve; a min, max pair is the range of the random value each new particle
- * draws. Each curve nibble of curve_indices selects the curve (0 = none,
+ * draws. Each curve nibble of curve_selectors selects the curve (0 = none,
  * otherwise the curve index + 1) of one such value:
- *   curve_indices[0]: 0 spawn position, 1 spawn spread, 2 velocity base angle,
+ *   curve_selectors[0]: 0 spawn position, 1 spawn spread, 2 velocity base angle,
  *     3 velocity spread, 4 inertia, 5 the pair at 0x4c (lerped and discarded),
  *     6 weight, 7 radial speed;
- *   curve_indices[1]: 0 acceleration, 1 acceleration step, 2 lifetime,
+ *   curve_selectors[1]: 0 acceleration, 1 acceleration step, 2 lifetime,
  *     3 target offset, 4 unread, 5 particle count, 6 spawn interval,
  *     bits 28-29 homing strength; bits 30-31 are the particle's homing curve. */
 typedef struct effect_geometry_entry {
@@ -1345,7 +1345,7 @@ typedef struct effect_geometry_entry {
     u8 animation_frame_group; /* 0x04: frame group of that sequence's frames */
     u8 _padding_05;           /* aligns flags */
     u16 flags;                /* 0x06: EFFECT_EMITTER_FLAG_* and effect_emitter_velocity_e; the particle's flags */
-    u32 curve_indices[2];     /* 0x08 */
+    u32 curve_selectors[2];   /* 0x08 */
     u32 colour_curves;        /* 0x10: nibbles 0-2 = r/g/b curve indexes, used raw */
     vec3s16_t spawn_position_start;      /* 0x14: offset from the origin effect_emitter_origin_e names */
     vec3s16_t spawn_position_end;        /* 0x1a */
@@ -1385,18 +1385,18 @@ typedef struct effect_geometry_entry {
 typedef char assert_effect_geometry_entry_size[sizeof(effect_geometry_entry_t) == 196 ? 1 : -1];
 
 /* The scrolling textured quad grids' (2x2, 4x4 and 8x8) and the wave mesh's
- * view of one emitter record. Curve nibbles: curve_indices[0] 2 scroll angle
- * and 7 scroll speed; the wave mesh adds curve_indices[0] 1 and 3, the phase
+ * view of one emitter record. Curve nibbles: curve_selectors[0] 2 scroll angle
+ * and 7 scroll speed; the wave mesh adds curve_selectors[0] 1 and 3, the phase
  * speeds of its vertical and horizontal waves (the vertical pair is the
  * emitter's spawn spread at 0x20, read through the emitter helper), and
- * curve_indices[1] 0, the waves' shape. */
+ * curve_selectors[1] 0, the waves' shape. */
 typedef struct effect_textured_quad_geometry_view {
     u8 _unused_00[0x06];
-    u16 flags;            /* 0x06: EFFECT_EMITTER_FLAG_COLOUR_CURVES */
-    u32 curve_indices[2]; /* 0x08 */
-    u32 colour_curves;    /* 0x10: nibbles 0-2 = r/g/b */
-    u16 texture_u;        /* 0x14 */
-    u16 texture_v;        /* 0x16 */
+    u16 flags;              /* 0x06: EFFECT_EMITTER_FLAG_COLOUR_CURVES */
+    u32 curve_selectors[2]; /* 0x08 */
+    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
+    u16 texture_u;          /* 0x14 */
+    u16 texture_v;          /* 0x16 */
     u8 _unused_18[0x16];
     s16 scroll_angle_start; /* 0x2e */
     u8 _unused_30[0x04];
@@ -1433,7 +1433,7 @@ typedef struct effect_particle_ribbon_geometry_view {
     u16 placement_flags; /* 0x02 */
     u8 _unused_04[0x02];
     u16 flags;                              /* 0x06 */
-    u32 curve_indices[2];                   /* 0x08 */
+    u32 curve_selectors[2];                 /* 0x08 */
     u32 colour_curves;                      /* 0x10 */
     effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
     u16 texture_page_flags;                 /* 0x4c */
@@ -1476,13 +1476,13 @@ typedef char
 /* This renderer's view of one effect_geometry_entry_t. It keeps the particle
  * emitter's slot-to-curve bindings but gives the slots its own meanings; each
  * field notes the emitter slot it occupies, and offsets it never reads stay
- * unknown. Curve nibbles: curve_indices[0] 0 centre, 1 radius, 2 velocity,
- * 3 acceleration, 4 angle, 7 radius step; curve_indices[1] 0 radius step
+ * unknown. Curve nibbles: curve_selectors[0] 0 centre, 1 radius, 2 velocity,
+ * 3 acceleration, 4 angle, 7 radius step; curve_selectors[1] 0 radius step
  * delta, 1 scroll, 3 angle step, 6 angle step delta. */
 typedef struct effect_polar_mesh_geometry_view {
     u8 _unused_00[0x06];
     u16 flags;              /* 0x06: bit 6 = per-channel colour curves */
-    u32 curve_indices[2];   /* 0x08 */
+    u32 curve_selectors[2]; /* 0x08 */
     u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
     vec3s16_t center_start; /* 0x14: spawn position, read by battle_effect_interpolate_emitter_spawn_position */
     vec3s16_t center_end;   /* 0x1a */
@@ -1656,9 +1656,9 @@ typedef char assert_effect_summon_mesh_geometry_view_size[sizeof(effect_summon_m
 
 /* These renderers' view of one effect_geometry_entry_t. They spawn segments as
  * the BATTLE particle emitter spawns particles, so the fields they share with
- * it keep its names and curve nibbles: curve_indices[0] nibbles 0 spawn
+ * it keep its names and curve nibbles: curve_selectors[0] nibbles 0 spawn
  * position, 1 spawn spread, 2 velocity base angle, 3 velocity spread and
- * 7 radial speed; curve_indices[1] nibbles 1 tip spread, 2 lifetime, 3 target
+ * 7 radial speed; curve_selectors[1] nibbles 1 tip spread, 2 lifetime, 3 target
  * offset, 5 particle count and 6 spawn interval. The remaining named fields
  * are renderer-specific. */
 typedef struct effect_tentacle_mesh_geometry_view {
@@ -1666,7 +1666,7 @@ typedef struct effect_tentacle_mesh_geometry_view {
     u16 placement_flags; /* 0x02: bits 9-11 place the spawn origin, bits 5-7 the tip */
     u8 _unused_04[0x02];
     u16 flags;                              /* 0x06: bits 0-1 and 2-3 enable death and mid-life children */
-    u32 curve_indices[2];                   /* 0x08 */
+    u32 curve_selectors[2];                 /* 0x08 */
     u32 colour_curves;                      /* 0x10 */
     effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
     u16 texture_page_flags;                 /* 0x4c */
@@ -1773,12 +1773,12 @@ typedef char effect_animation_curve_table_data_offset_must_be_4
 
 /* A zero selector disables a motion curve; other selectors are one-based.
  * The separate decrement preserves the comparison against -1. */
-#define BATTLE_EFFECT_READ_CURVE(result, index, nibble, frame)                                                         \
+#define BATTLE_EFFECT_READ_CURVE(table, index, result, selector, frame)                                                \
     {                                                                                                                  \
-        index = (nibble);                                                                                              \
+        index = (selector);                                                                                            \
         index--;                                                                                                       \
         if (index != -1) {                                                                                             \
-            result = g_battle_effect_animation_curve_data->curves[index][frame];                                       \
+            result = (table)->curves[index][frame];                                                                    \
         } else {                                                                                                       \
             result = 0;                                                                                                \
         }                                                                                                              \

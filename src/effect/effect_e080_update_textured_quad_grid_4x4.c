@@ -91,22 +91,11 @@ s32 effect_e080_update_textured_quad_grid_4x4(s16 record_index, s32 callback_slo
         work = record->work_slots[callback_slot];
         texture_width = geometry->texture_width / 2;
         texture_height = geometry->texture_height / 2;
-        /* Two statements keep the target's li -1 / beq compare. */
-        row = geometry->curve_indices[0] >> 28;
-        row -= 1;
-        if (row != -1) {
-            column = g_battle_effect_animation_curve_data->curves[row][work->frame];
-        } else {
-            column = 0;
-        }
+        BATTLE_EFFECT_READ_CURVE(
+            g_battle_effect_animation_curve_data, row, column, geometry->curve_selectors[0] >> 28, work->frame);
         speed = battle_effect_lerp_linear(geometry->scroll_speed_start, geometry->scroll_speed_end, column) << 4;
-        row = (geometry->curve_indices[0] >> 8) & 0xf;
-        row -= 1;
-        if (row != -1) {
-            column = g_battle_effect_animation_curve_data->curves[row][work->frame];
-        } else {
-            column = 0;
-        }
+        BATTLE_EFFECT_READ_CURVE(
+            g_battle_effect_animation_curve_data, row, column, (geometry->curve_selectors[0] >> 8) & 0xf, work->frame);
         angle = battle_effect_lerp_linear(geometry->scroll_angle_start, geometry->scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
         while (work->scroll_u >= texture_width << 12) {

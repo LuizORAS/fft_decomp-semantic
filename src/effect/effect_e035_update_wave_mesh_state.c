@@ -104,23 +104,13 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         work = record->work_slots[callback_slot];
         texture_width = geometry->textured_quad.texture_width / 2;
         texture_height = geometry->textured_quad.texture_height / 2;
-        row = geometry->textured_quad.curve_indices[0] >> 28;
-        row -= 1;
-        if (row != -1) {
-            column = g_battle_effect_animation_curve_data->curves[row][work->frame];
-        } else {
-            column = 0;
-        }
+        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, row, column,
+            geometry->textured_quad.curve_selectors[0] >> 28, work->frame);
         speed = battle_effect_lerp_linear(
                     geometry->textured_quad.scroll_speed_start, geometry->textured_quad.scroll_speed_end, column)
             << 4;
-        row = (geometry->textured_quad.curve_indices[0] >> 8) & 0xf;
-        row -= 1;
-        if (row != -1) {
-            column = g_battle_effect_animation_curve_data->curves[row][work->frame];
-        } else {
-            column = 0;
-        }
+        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, row, column,
+            (geometry->textured_quad.curve_selectors[0] >> 8) & 0xf, work->frame);
         angle = battle_effect_lerp_linear(
             geometry->textured_quad.scroll_angle_start, geometry->textured_quad.scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
@@ -150,7 +140,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
 
         phase = work->wave_y_phase;
         amplitude_phase = work->wave_y_amplitude_phase;
-        row = geometry->textured_quad.curve_indices[1] & 0xf;
+        row = geometry->textured_quad.curve_selectors[1] & 0xf;
         row -= 1;
         if (row != -1) {
             column = g_battle_effect_animation_curve_data->curves[row][frame];
@@ -201,7 +191,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
             amplitude_phase += amplitude_step;
         }
 
-        row = (geometry->textured_quad.curve_indices[0] >> 4) & 0xf;
+        row = (geometry->textured_quad.curve_selectors[0] >> 4) & 0xf;
         row -= 1;
         if (row != -1) {
             column = g_battle_effect_animation_curve_data->curves[row][frame];
@@ -211,7 +201,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         battle_effect_interpolate_emitter_spawn_spread(geometry, column, &spread);
         work->wave_y_phase += spread.vx;
         work->wave_y_amplitude_phase += spread.vy;
-        row = (geometry->textured_quad.curve_indices[0] >> 12) & 0xf;
+        row = (geometry->textured_quad.curve_selectors[0] >> 12) & 0xf;
         row -= 1;
         if (row != -1) {
             column = g_battle_effect_animation_curve_data->curves[row][frame];

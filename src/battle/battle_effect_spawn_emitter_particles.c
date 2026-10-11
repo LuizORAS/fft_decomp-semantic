@@ -7,7 +7,7 @@
  * Emitter emitter_index of the effect's particle-system section spawns every
  * spawn_interval frames of `frame`, which also picks the column of the
  * animation curves, modulo EFFECT_ANIMATION_CURVE_FRAMES. Each start/end pair
- * is lerped by the curve that its curve_indices nibble selects, and the
+ * is lerped by the curve that its curve_selectors nibble selects, and the
  * per-particle values are drawn between the resulting minimum and maximum.
  * The particles belong to state record record_index and are placed for its
  * target; parent is the particle that the PARENT_PARTICLE origin spawns from.
@@ -69,7 +69,8 @@ s32 battle_effect_spawn_emitter_particles(
     frame = frame % EFFECT_ANIMATION_CURVE_FRAMES;
     kind = entry->emitter.placement_flags;
     flags = entry->emitter.flags;
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[1] >> 24 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] >> 24 & 0xf, frame);
     if (time % battle_effect_lerp_linear(entry->emitter.spawn_interval_start, entry->emitter.spawn_interval_end, factor)
         != 0) {
         return;
@@ -101,7 +102,8 @@ s32 battle_effect_spawn_emitter_particles(
     tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
         g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
 
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[1] >> 20 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] >> 20 & 0xf, frame);
     count = battle_effect_lerp_linear(entry->emitter.particle_count_start, entry->emitter.particle_count_end, factor);
     for (i = 0; i < count; i++) {
         particle = battle_effect_alloc_work_record(record_index, (kind & EFFECT_WORK_KIND_MASK));
@@ -113,7 +115,8 @@ s32 battle_effect_spawn_emitter_particles(
     }
     head = particle;
 
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[0] & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] & 0xf, frame);
     battle_effect_interpolate_emitter_spawn_position(entry, factor, &spawn);
     if (rotate) {
         SetRotMatrix(&matrix);
@@ -153,7 +156,8 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     }
 
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[0] >> 4 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] >> 4 & 0xf, frame);
     battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
     if (rotate) {
         SetRotMatrix(&matrix);
@@ -191,7 +195,7 @@ s32 battle_effect_spawn_emitter_particles(
         }
     }
 
-    curve = entry->emitter.curve_indices[0] >> 28;
+    curve = entry->emitter.curve_selectors[0] >> 28;
     curve--;
     if (curve != -1) {
         factor = g_battle_effect_animation_curve_data->curves[curve][frame];
@@ -203,7 +207,7 @@ s32 battle_effect_spawn_emitter_particles(
         speed_min = entry->emitter.radial_speed_start[0];
         speed_max = entry->emitter.radial_speed_start[1];
     }
-    curve = entry->emitter.curve_indices[0] >> 12 & 0xf;
+    curve = entry->emitter.curve_selectors[0] >> 12 & 0xf;
     curve--;
     if (curve != -1) {
         factor = g_battle_effect_animation_curve_data->curves[curve][frame];
@@ -217,7 +221,8 @@ s32 battle_effect_spawn_emitter_particles(
         setVector(&angle_spread, entry->emitter.velocity_spread_start.x / 2, entry->emitter.velocity_spread_start.y / 2,
             entry->emitter.velocity_spread_start.z / 2);
     }
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[0] >> 8 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] >> 8 & 0xf, frame);
     battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle);
 
     particle = head;
@@ -281,7 +286,8 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     }
 
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[1] & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] & 0xf, frame);
     accel_min.vx
         = battle_effect_lerp_linear(entry->emitter.acceleration_start[0], entry->emitter.acceleration_end[0], factor);
     accel_max.vx
@@ -301,7 +307,8 @@ s32 battle_effect_spawn_emitter_particles(
         RotTrans(&accel_max, &out, &out.pad);
         copyVector(&accel_max, &out);
     }
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[1] >> 4 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] >> 4 & 0xf, frame);
     accel_step_min.vx = battle_effect_lerp_linear(
         entry->emitter.acceleration_step_start[0], entry->emitter.acceleration_step_end[0], factor);
     accel_step_max.vx = battle_effect_lerp_linear(
@@ -331,16 +338,20 @@ s32 battle_effect_spawn_emitter_particles(
         particle = particle->next;
     }
 
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[0] >> 16 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] >> 16 & 0xf, frame);
     inertia_min = battle_effect_lerp_linear(entry->emitter.inertia_start[0], entry->emitter.inertia_end[0], factor);
     inertia_max = battle_effect_lerp_linear(entry->emitter.inertia_start[1], entry->emitter.inertia_end[1], factor);
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[0] >> 20 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] >> 20 & 0xf, frame);
     battle_effect_lerp_linear(entry->emitter._unknown_4c[0], entry->emitter._unknown_50[0], factor);
     battle_effect_lerp_linear(entry->emitter._unknown_4c[1], entry->emitter._unknown_50[1], factor);
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[0] >> 24 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] >> 24 & 0xf, frame);
     weight_min = battle_effect_lerp_linear(entry->emitter.weight_start[0], entry->emitter.weight_end[0], factor);
     weight_max = battle_effect_lerp_linear(entry->emitter.weight_start[1], entry->emitter.weight_end[1], factor);
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[1] >> 8 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] >> 8 & 0xf, frame);
     lifetime_min = battle_effect_lerp_linear(entry->emitter.lifetime_start[0], entry->emitter.lifetime_end[0], factor);
     lifetime_max = battle_effect_lerp_linear(entry->emitter.lifetime_start[1], entry->emitter.lifetime_end[1], factor);
     particle = head;
@@ -351,7 +362,8 @@ s32 battle_effect_spawn_emitter_particles(
         particle = particle->next;
     }
 
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[1] >> 12 & 0xf, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] >> 12 & 0xf, frame);
     target_offset.vx
         = battle_effect_lerp_linear(entry->emitter.target_offset_start[0], entry->emitter.target_offset_end[0], factor);
     target_offset.vy
@@ -407,7 +419,8 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     }
 
-    BATTLE_EFFECT_READ_CURVE(factor, curve, entry->emitter.curve_indices[1] >> 28 & 3, frame);
+    BATTLE_EFFECT_READ_CURVE(
+        g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] >> 28 & 3, frame);
     /* The lerp results pass through curve: that reassignment keeps CSE from
      * sign-extending the call results instead of homing_min/max. */
     curve = battle_effect_lerp_linear(
@@ -418,7 +431,7 @@ s32 battle_effect_spawn_emitter_particles(
     homing_max = curve;
     /* The dead test on word is required for the match: it keeps the word live
      * past the shift and splits the block before the loop setup. */
-    word = entry->emitter.curve_indices[1];
+    word = entry->emitter.curve_selectors[1];
     blend = word >> 30;
     if (word != 0) {
         curve = word >> 28 & 3;

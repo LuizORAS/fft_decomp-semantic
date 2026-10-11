@@ -136,11 +136,11 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
     case EFFECT_PHASE_UPDATE:
         i = frame - 1;
         work = record->work_slots[callback_slot];
-        curves1 = entry->tentacle_mesh.curve_indices[1];
+        curves1 = entry->tentacle_mesh.curve_selectors[1];
         target_index = record->timeline.target_index;
-        curves0 = entry->tentacle_mesh.curve_indices[0];
+        curves0 = entry->tentacle_mesh.curve_selectors[0];
         frame %= 160;
-        BATTLE_EFFECT_READ_CURVE(factor, index, (curves1 >> 24) & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 24) & 0xF, frame);
         if (i
                 % battle_effect_lerp_linear(
                     entry->tentacle_mesh.spawn_interval_start, entry->tentacle_mesh.spawn_interval_end, factor)
@@ -163,10 +163,10 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
                 &g_battle_effect_context, &target);
 
-            BATTLE_EFFECT_READ_CURVE(factor, index, (curves1 >> 20) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 20) & 0xF, frame);
             count = battle_effect_lerp_linear(
                 entry->tentacle_mesh.particle_count_start, entry->tentacle_mesh.particle_count_end, factor);
-            BATTLE_EFFECT_READ_CURVE(factor, index, curves0 & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, curves0 & 0xF, frame);
             battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin);
             switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
             case EFFECT_EMITTER_ORIGIN_WORLD:
@@ -196,7 +196,7 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 break;
             }
 
-            BATTLE_EFFECT_READ_CURVE(factor, index, (curves0 >> 4) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves0 >> 4) & 0xF, frame);
             battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
             if (orient) {
                 SetRotMatrix(&facing);
@@ -219,12 +219,12 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 speed_max = entry->tentacle_mesh.radial_speed_max_start;
             }
 
-            BATTLE_EFFECT_READ_CURVE(factor, index, (curves0 >> 12) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves0 >> 12) & 0xF, frame);
             battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &direction_spread);
-            BATTLE_EFFECT_READ_CURVE(factor, index, (curves0 >> 8) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves0 >> 8) & 0xF, frame);
             battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &base_angles);
 
-            BATTLE_EFFECT_READ_CURVE(factor, index, (curves1 >> 12) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 12) & 0xF, frame);
             tip.vx = battle_effect_lerp_linear(
                 entry->tentacle_mesh.target_offset_start[0], entry->tentacle_mesh.target_offset_end[0], factor);
             tip.vy = battle_effect_lerp_linear(
@@ -259,7 +259,7 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 break;
             }
 
-            BATTLE_EFFECT_READ_CURVE(factor, index, (curves1 >> 4) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 4) & 0xF, frame);
             tip_spread.vx = battle_effect_lerp_linear(
                 entry->tentacle_mesh.tip_spread_start_x, entry->tentacle_mesh.tip_spread_end_x, factor);
             tip_spread.vy = battle_effect_lerp_linear(
@@ -267,7 +267,7 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             tip_spread.vz = battle_effect_lerp_linear(
                 entry->tentacle_mesh.tip_spread_start_z, entry->tentacle_mesh.tip_spread_end_z, factor);
 
-            BATTLE_EFFECT_READ_CURVE(factor, index, (curves1 >> 8) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 8) & 0xF, frame);
             length_min = battle_effect_lerp_linear(
                 entry->tentacle_mesh.lifetime_start[0], entry->tentacle_mesh.lifetime_end[0], factor);
             length_max = battle_effect_lerp_linear(
