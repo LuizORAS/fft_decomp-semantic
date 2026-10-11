@@ -59,7 +59,7 @@ remain excluded. Never modify `meta/`.
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
 | `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
-| `include/fft/` | Module headers (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), focused `battle_<subsystem>.h` headers, and shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `script.h`) |
+| `include/fft/` | Module headers (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), focused `battle_<subsystem>.h` headers, and shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `menu_script.h`, `script.h`) |
 | `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
 | `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
