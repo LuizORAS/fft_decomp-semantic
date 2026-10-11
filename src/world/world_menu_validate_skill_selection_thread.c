@@ -26,7 +26,7 @@ void world_menu_validate_skill_selection_thread(void) {
     }
     message = 0;
     blocked = skill_tables->flags[skill] & 2;
-    unit = world_unit_get_battle_stats_for_stored();
+    unit = world_unit_get_active_turn_unit_stats();
     if (g_world_active_menu == ACTION_MENU_TYPE_DEFAULT && unit->mp - mp_cost < 0) {
         message = 0x800A;
         if (ct == 0) {

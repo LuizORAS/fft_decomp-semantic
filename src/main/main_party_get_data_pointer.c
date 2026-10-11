@@ -1,5 +1,7 @@
 #include "fft/main.h"
 
+/* Return roster slot party_index's record, or NULL past the 20 slots (a negative index is not
+ * checked). */
 party_data_t* main_party_get_data_pointer(s32 party_index) {
     party_data_t* party_data;
 

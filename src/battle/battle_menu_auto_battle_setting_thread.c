@@ -34,7 +34,7 @@ void battle_menu_auto_battle_setting_thread(void) {
 
     param = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     cursor = param->selected_index;
-    stats = battle_unit_get_attacker_data_pointer();
+    stats = battle_unit_get_active_turn_unit_stats();
     if (stats->auto_battle_setting == BATTLE_AUTO_BATTLE_MANUAL) {
         cursor = 0;
     } else if (stats->auto_battle_setting == BATTLE_AUTO_BATTLE_FIGHT_FOR_LIFE) {

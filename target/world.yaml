@@ -57,7 +57,7 @@ functions:
   - {addr: 0x800e1f58, size: 36, name: world_camera_init_yaw_angle, hash: 4b9b57139167c4c5}
   - {addr: 0x800e1f7c, size: 292, name: world_camera_init_tilt_and_zoom, hash: b488293686882dcf}
   - {addr: 0x800e20a0, size: 52, name: world_camera_wrap_yaw_angle, hash: 2f0e82c3ed1fb39e}
-  - {addr: 0x800e20d4, size: 40, name: world_unit_get_battle_stats_for_stored, hash: d8b03fa45f1ad5c5}
+  - {addr: 0x800e20d4, size: 40, name: world_unit_get_active_turn_unit_stats, hash: d8b03fa45f1ad5c5}
   - {addr: 0x800e20fc, size: 48, name: world_script_clamp_s32_to_range, hash: a979e7abbcee5781}
   - {addr: 0x800e212c, size: 612, name: world_input_update_menu_repeat, hash: ec1118bb42efe382, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e2390, size: 8, name: world_menu_init_stub, hash: 6d64edf91449c1b1}
@@ -1041,7 +1041,7 @@ data:
   - {addr: 0x8013a310, name: g_world_map_selected_tile_data}
   - {addr: 0x8013a31c, name: g_world_unit_selected_status_billboard}
   - {addr: 0x8013a340, name: g_world_unit_comparison_status_billboard}
-  - {addr: 0x8013a364, name: g_world_active_unit_data}
+  - {addr: 0x8013a364, name: g_world_active_turn_unit}
   - {addr: 0x8013a37e, name: g_world_unit_comparison_battle_id}
   - {addr: 0x8013a384, name: g_world_unit_editor_fields}
   - {addr: 0x8013a3c4, name: g_world_unit_comparison_editor_fields}

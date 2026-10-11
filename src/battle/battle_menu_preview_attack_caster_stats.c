@@ -16,7 +16,7 @@ void battle_menu_preview_attack_caster_stats(void) {
     ability_secondary_data_t* secondary;
     s16* selected;
 
-    attacker = battle_unit_get_attacker_data_pointer();
+    attacker = battle_unit_get_active_turn_unit_stats();
     target = battle_unit_get_stats_from_battle_id(g_battle_preview_target_unit_id);
     /* One address register serves both reads, as in the target. */
     selected = &g_battle_active_turn_unit.battle_id;

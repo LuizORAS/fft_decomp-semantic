@@ -7,7 +7,7 @@ void battle_menu_confirm_auto_battle_selection_thread(void) {
     s32 parameter;
 
     parameter = battle_thread_get_current_parameter_1();
-    attacker = battle_unit_get_attacker_data_pointer();
+    attacker = battle_unit_get_active_turn_unit_stats();
     menu = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_AUTO_BATTLE].selected_index;
     if (menu == 3) {
         attacker->auto_battle_setting = BATTLE_AUTO_BATTLE_SAVE_FADING_LIFE;

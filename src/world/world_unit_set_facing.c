@@ -2,8 +2,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Face a unit, and its mount when one is linked, in the given direction.
-   Script variable 0x1FD suppresses the mount update. */
+/* Face a unit in the given direction, and its mount or rider too once the battle has started
+ * (EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED clear). */
 void world_unit_set_facing(s32 misc_id, s32 facing) {
     s32 battle_id;
     battle_stats_t* stats;

@@ -18,10 +18,10 @@ void world_menu_preview_attack_target_stats(void) {
     }
     world_thread_yield();
     world_thread_yield();
-    saved = g_world_active_unit_data.battle_id;
-    g_world_active_unit_data.battle_id = g_world_unit_comparison_battle_id;
+    saved = g_world_active_turn_unit.battle_id;
+    g_world_active_turn_unit.battle_id = g_world_unit_comparison_battle_id;
     world_menu_load_selected_unit();
-    g_world_active_unit_data.battle_id = saved;
+    g_world_active_turn_unit.battle_id = saved;
     g_world_unit_comparison_editor_fields.state.generic_monster = g_world_unit_editor_fields.state.generic_monster;
     g_world_unit_comparison_editor_fields.state.ability_ids[2] = g_world_unit_editor_fields.state.ability_ids[2];
     world_menu_load_selected_unit();

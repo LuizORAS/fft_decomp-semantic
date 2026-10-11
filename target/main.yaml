@@ -812,7 +812,7 @@ functions:
   - {addr: 0x8005d604, size: 36, name: main_unit_init_stats_and_statuses, hash: e0f928bf1cec31ac}
   - {addr: 0x8005d628, size: 600, name: main_unit_update_stats_statuses_and_equipment, hash: 63ba1bc2ff5c9565}
   - {addr: 0x8005d880, size: 124, name: main_unit_check_level_up, hash: c9c4daab4f1dc60b}
-  - {addr: 0x8005d8fc, size: 276, name: main_party_level_unit_to_target, hash: f2ed58f59a7b8e9c}
+  - {addr: 0x8005d8fc, size: 276, name: main_party_raise_unit_level, hash: f2ed58f59a7b8e9c}
   - {addr: 0x8005da10, size: 352, name: main_unit_apply_level_growth, hash: ad37ee1e81a8715a}
   - {addr: 0x8005db70, size: 164, name: main_status_set_ct, hash: 43eec0cb2cc1750b}
   - {addr: 0x8005dc14, size: 308, name: main_job_calculate_unlocked, hash: 95e581bd15bc029e}
@@ -1350,7 +1350,6 @@ data:
   - {addr: 0x800596e0, name: g_main_item_quantities}
   - {addr: 0x800597e0, name: g_main_card_save_slot_playtimes}
   - {addr: 0x80059810, name: g_main_secondary_saved_data_bits}
-  - {addr: 0x80059bb0, name: save_unit_to_party}
   - {addr: 0x8005a884, name: get_item_data_pointer}
   - {addr: 0x8005e288, name: get_total_equipment_quantity}
   - {addr: 0x8005e90c, name: g_main_unit_generation_base_data}

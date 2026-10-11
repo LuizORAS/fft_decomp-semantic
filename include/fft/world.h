@@ -1418,6 +1418,10 @@ void world_formation_sort_roster(s32 index);
 s32 world_get_formation_unit_stat_by_mode(s32 unit_index);
 
 /* unit */
+/* WORLD's unit helpers: the event-script unit operations it shares with BATTLE (status snapshots,
+ * facing and animations, screen positions), the unit view panels and editor, Best Fit and the
+ * equipment checks, monster breeding and the zodiac sign of a date. */
+
 /* Provisional: one 4-byte breeding entry per monster job from 0x5e
  * (0x8018debc): the hatch-day range and the three offspring jobs by rarity
  * class (world_unit_update_monster_breeding). */
@@ -1472,7 +1476,7 @@ extern u16 g_world_unit_graphics_load_pending;
 extern const world_unit_monster_breed_entry_t g_world_unit_monster_breed_table[WORLD_MONSTER_BREED_ENTRY_COUNT];
 extern unit_status_staging_t* g_world_unit_status_staging_data;
 
-extern battle_active_unit_t g_world_active_unit_data;
+extern battle_active_unit_t g_world_active_turn_unit;
 
 extern u8 g_world_unit_editor_primary_skillset_name[];   /* primary skillset name text window */
 extern u8 g_world_unit_editor_secondary_skillset_name[]; /* secondary skillset name text window */
@@ -1553,40 +1557,40 @@ struct battle_stats* find_unit_by_id(s32 unit_id, s32* out_index);
 s32 world_get_party_unit_formation_sprite(s32 party_index);
 void resolve_unit_status_changes(void);
 s32 unit_has_adjacent_monster_skill_support(struct battle_stats* unit);
+s32 world_formation_get_unit_palette_index(s32 roster_slot);
+void world_script_join_units_silently(void);
+void world_menu_load_selected_unit(void);
+s32 world_script_get_misc_id(s32 unit_id);
+
 void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id);
-void world_unit_queue_current_status_graphics(s32 battle_unit_index, s32 enabled);
 void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment);
 s32 world_unit_can_equip_item_id(s16 unit_index, s16 item_id);
 s32 world_unit_check_facing_relative_to_camera(s32 unit_id);
 void world_unit_clear_status_staging_data(void);
-void world_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
 void world_unit_copy_misc_screen_coords(s32 misc_id, s16* out);
-struct battle_stats* world_unit_get_battle_stats_for_stored(void);
+void world_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
+struct battle_stats* world_unit_get_active_turn_unit_stats(void);
+s32 world_unit_get_battle_index_by_entd_unit_id(s32 entd_unit_id);
 struct battle_stats* world_unit_get_by_unit_id(s32 unit_id);
 s32 world_unit_get_map_coords_from_misc_id(s32 misc_id, s16* out);
-s32 world_formation_get_unit_palette_index(s32 roster_slot);
 s32 world_unit_get_zodiac_for_date(s32 month, s32 day);
 s32 world_unit_has_any_current_status(s32 unit_id);
 void world_unit_increase_blue_team_brave_by_10(void);
-
 void world_unit_inflict_status_by_entd_unit_id(
     s32 entd_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal);
-
 s32 world_unit_is_moving(s32 id);
-void world_script_join_units_silently(void);
-void world_menu_load_selected_unit(void);
+s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support);
 void world_unit_project_misc_to_screen(s32 misc_id, s16* screen_coords);
+void world_unit_queue_current_status_graphics(s32 battle_unit_index, s32 enabled);
 void world_unit_reset_animation_states(void);
+s32 world_unit_save_staged_status_data(s32 unit_id);
 void world_unit_set_animation(s32 misc_id, u32 animation);
-void world_unit_set_facing(s32 misc_id, s32 rotation);
+void world_unit_set_facing(s32 misc_id, s32 facing);
 void world_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 s32 world_unit_try_get_misc_data_by_unit_id(u16* unit_id, s32* misc_index);
+void world_unit_update_monster_breeding(s32 unused);
 void world_unit_update_staged_status_data(u16 unit_id, u16 restore);
 void world_unit_view_supervisor_thread(void);
-s32 world_unit_save_staged_status_data(s32);
-s32 world_script_get_misc_id(s32 unit_id);
-s32 world_unit_get_battle_index_by_entd_unit_id(s32 entd_unit_id);
-void world_unit_update_monster_breeding(s32 unused);
 
 /* tutorial */
 /*
@@ -2651,7 +2655,6 @@ s32 world_item_adjust_inventory_count(s16 item_id, s32 delta);
 void world_item_combine_stat_details(world_item_stat_detail_t* output, world_item_stat_detail_t* before,
     world_item_stat_detail_t* after, s32 multiplier);
 
-s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support);
 s32 world_item_count_owned_and_equipped(s16 item_id);
 s32 world_item_count_selected_equipped_by_party(s32 unused_row);
 s32 world_item_count_selected_owned_and_equipped(s32 unused_row);
@@ -3235,6 +3238,8 @@ extern s8 g_world_dismiss_unit_prompt_running;
 extern world_menu_entry_t g_world_best_fit_confirm_menu;
 extern u8 g_world_order_unit_menu[];
 extern s8* g_world_sort_key_lists[];
+/* Item-list filter per equipment slot (right hand, left hand, head, body, accessory); Best Fit sets
+ * slot 1 to ITEM_LIST_FILTER_WEAPON for a Two Swords user, else ITEM_LIST_FILTER_SHIELD. */
 extern u8 g_world_best_fit_slot_categories[5];
 
 /* Second slot-category table of world_shop_build_fitting_room_best_fit_equipment. */

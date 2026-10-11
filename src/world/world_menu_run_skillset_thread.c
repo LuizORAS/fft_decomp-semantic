@@ -33,7 +33,7 @@ void world_menu_run_skillset_thread(void) {
     }
     param = &g_world_thread_contexts[g_world_thread_current_id].function_parameter_2;
     *param = param_value;
-    row = g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id].bytes;
+    row = g_world_menu_unit_selection_rows[g_world_active_turn_unit.battle_id].bytes;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = row[2];
     g_world_menu_restore_depth = 1;
     world_script_pulse_tutorial_wait_value(0xFC);

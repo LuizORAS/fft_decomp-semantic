@@ -2,10 +2,11 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Raises a roster unit by `level_delta` levels (capped at 99), growing each
- * 24-bit raw stat by raw / (level + growth) per level, and returns the new
- * level.  The growth table is the job's growths_multipliers pairs. */
-u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
+/* Raise a roster unit by level_delta levels (up to 99), growing each 24-bit raw stat by
+ * raw / (level + growth) per level with its job's growths, a zero growth counting as 1, as
+ * main_unit_apply_level_growth does in battle. Returns the new level (the capped target itself when
+ * it is not above the current one). The breeding code raises a new egg to a roster member's level. */
+u32 main_party_raise_unit_level(party_data_t* party_unit, s32 level_delta) {
     u32 current_level = party_unit->level;
     u32 level = current_level + level_delta;
     u8* growth_table;

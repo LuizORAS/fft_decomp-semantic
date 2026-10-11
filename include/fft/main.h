@@ -506,7 +506,6 @@ extern wldcore_saved_record_t g_main_saved_records[];
 extern u8 D_80057b1c; /* 0xc5 at boot; saved at image offset 0x1c88 and restored on load, nothing else uses it */
 void main_save_init_data_tables(void);
 void main_save_init_state_and_options(void);
-void save_unit_to_party(battle_stats_t* unit, u32 save_formation);
 
 /* unit */
 /* Battle unit records (battle_stats_t) built from an ENTD record or a party record: identity, jobs,
@@ -547,8 +546,6 @@ typedef enum main_unit_action_state {
     MAIN_UNIT_ACTION_STATE_PERFORMING = 8,
     MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING = 0xff
 } main_unit_action_state_e;
-
-extern u8 g_main_party_highest_level;
 
 extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
 extern main_unit_generation_raw_stat_variance_t g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT];
@@ -601,33 +598,36 @@ void main_unit_update_formation_stats(battle_stats_t* unit);
 void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing);
 
 /* party */
+/* The persistent roster (g_main_party_data: 16 ordinary slots, then 4 guest slots): new recruits
+ * and monster eggs, saving a battle unit into it, the lookups and the highest level. */
+
+extern u8 g_main_party_highest_level;
 extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
 
+u8 main_party_calculate_highest_level(void);
 void main_party_clear_all(void);
 s32 main_party_create_monster_egg(s32 monster_job, s32 egg_modifier, s32 egg_color);
 s32 main_party_find_free_slot(s32 save_formation, u8* palette);
 s32 main_party_find_slot_by_sprite_set(s32 sprite_set);
-
-/* Out-of-battle generation normalizes every value except male, female and
- * monster to Ramza. The raw-stat generator indexes the tables directly. */
 s32 main_party_generate_unit(s32 unit_type);
 party_data_t* main_party_get_data_pointer(s32 party_index);
 void main_party_init_new_game(s32 mode);
-u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta);
+u32 main_party_raise_unit_level(party_data_t* party_unit, s32 level_delta);
 void main_party_remove_unit(u32 index);
 s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest);
 
-u8 main_party_calculate_highest_level(void);
-
 /* entd */
+/* The ENTD files (BATTLE/ENTD1-4.ENT, 128 encounters of 16 unit records each): loading the one that
+ * holds an event's encounter, and saving an event's units as the roster. */
+
 extern s32 g_main_entd_current_event_id;
 extern entd_file_t* g_main_entd_set;
 
 /* Current encounter, NULL while loading, or (entd_encounter_t *)-1 when
  * no encounter is selected. */
 entd_encounter_t* main_entd_get_encounter(void);
-int main_entd_open_file(void);
 void main_entd_init_event_unit_data(int event_id);
+int main_entd_open_file(void);
 
 /* job */
 extern job_data_t g_main_job_data[];

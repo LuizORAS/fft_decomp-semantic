@@ -1,9 +1,14 @@
 #include "fft/main.h"
 
-/*
- * Copies an in-battle unit record into its persistent party slot.
- * Returns 0 on success and -1 when no free party slot exists.
- */
+/* Copy a battle unit into the party roster, in its own slot when it has one. A unit with no roster
+ * slot (formation index 21 and up) takes the first free one: a guest slot (16-19) for a special
+ * character flagged save-formation when allow_guest is set, else an ordinary slot (0-15); a unit in a
+ * guest slot saved without that moves to a free ordinary slot. A guest slot keeps the unit's palette
+ * and save-formation flag, an ordinary one takes palette 0 and drops the flag, and the Egg flag goes.
+ * The record takes the identity, job, birthday and zodiac, secondary skillset, R/S/M abilities,
+ * equipment, EXP, level, the original Brave and Faith, raw stats, unlocked jobs, learned abilities,
+ * job levels, JP and name, and its proposition status and egg color are cleared. Returns -1 when no
+ * slot is free, else 0. */
 s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     party_data_t* party;
     s32 slot;

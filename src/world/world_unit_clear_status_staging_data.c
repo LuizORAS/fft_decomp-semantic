@@ -1,5 +1,6 @@
 #include "fft/world.h"
 
+/* Clear every battle slot's event status snapshot: none saved and no staged infliction pending. */
 void world_unit_clear_status_staging_data(void) {
     s32 unit_index;
 

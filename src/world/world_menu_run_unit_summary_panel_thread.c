@@ -30,7 +30,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     slide = 0x84;
     digits = g_world_unit_summary_digit_images;
     world_menu_load_selected_unit();
-    unit = world_unit_get_battle_stats_for_stored();
+    unit = world_unit_get_active_turn_unit_stats();
     g_world_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
     sprite = frames[0].sprites;
     world_gfx_set_draw_mode_for_texture_page(&frames[0].draw_mode_0, MENU_TEXTURE_PAGE_FRAME);
@@ -66,17 +66,17 @@ void world_menu_run_unit_summary_panel_thread(void) {
     g_world_menu_text_state.pen.stride = 0x10;
     world_menu_set_text_origin(0, 0);
     world_text_render_decimal_value_or_dashes(
-        g_world_active_unit_data.brave, 0x202, digits, &g_world_menu_text_state.pen);
+        g_world_active_turn_unit.brave, 0x202, digits, &g_world_menu_text_state.pen);
     LoadImage(&rects[1], (u32*)digits);
     world_menu_set_text_origin(0, 0);
     world_text_render_decimal_value_or_dashes(
-        g_world_active_unit_data.faith, 0x202, digits + 0x50, &g_world_menu_text_state.pen);
+        g_world_active_turn_unit.faith, 0x202, digits + 0x50, &g_world_menu_text_state.pen);
     LoadImage(&rects[2], (u32*)(digits + 0x50));
     world_menu_set_text_origin(0, 0);
     if (g_main_debug_display_enabled != 0) {
         world_text_render_decimal_value_or_dashes(
-            g_world_active_unit_data.battle_id, 0x4002, digits + 0xA0, &g_world_menu_text_state.pen);
-    } else if (g_world_active_unit_data.battle_id >= 0x10) {
+            g_world_active_turn_unit.battle_id, 0x4002, digits + 0xA0, &g_world_menu_text_state.pen);
+    } else if (g_world_active_turn_unit.battle_id >= 0x10) {
         value = unit->formation_index;
         if (value == 0xFF) {
             value = 0;
@@ -87,7 +87,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     frames[0].sprites[6].clut = 0x7C3C;
     frames[0].sprites[6].w = 0x18;
     frames[0].sprites[6].h = 0x14;
-    zodiac = g_world_active_unit_data.zodiac;
+    zodiac = g_world_active_turn_unit.zodiac;
     frames[0].sprites[6].u0 = zodiac % 7 * 0x18;
     frames[0].sprites[6].v0 = zodiac / 7 * 0x14 + 0x2A;
     world_script_copy_bytes(&frames[1], &frames[0], sizeof(world_unit_summary_frame_t));
@@ -98,7 +98,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
 
     for (frame = 0;; frame++) {
         world_thread_yield();
-        g_world_menu_hide_numeric_values = world_unit_get_battle_stats_for_stored()->unit_flags & UNIT_FLAG_EGG;
+        g_world_menu_hide_numeric_values = world_unit_get_active_turn_unit_stats()->unit_flags & UNIT_FLAG_EGG;
         frame_record = &frames[frame & 1];
         if (frame == 0) {
             world_menu_free_memory(buffer);

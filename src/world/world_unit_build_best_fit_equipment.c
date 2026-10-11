@@ -1,3 +1,5 @@
+#include "fft/world.h"
+
 /* Best Fit: fills equipment[5] (right hand, left hand,
  * head, body, accessory) with the best-ranked held items for formation unit
  * `unit_index`; called by world_menu_run_best_fit_equipment. Each slot's list
@@ -7,11 +9,6 @@
  * hand (owned count >= 2 or different from the right-hand pick), falling back
  * to the shield category. Throwable items and later IDs are never re-offered
  * as weapons. Martial Arts clears both hands so the unit remains unarmed. */
-#include "fft/world.h"
-
-/* Item-menu category per equipment slot (right hand, left hand, head, body,
- * accessory); slot 1 is 5 (weapon) for a two-swords user, else 6 (shield). */
-
 void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
     s16 list[0x90];
     s32 right_hand;

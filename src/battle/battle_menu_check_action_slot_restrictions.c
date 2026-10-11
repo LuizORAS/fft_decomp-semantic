@@ -32,7 +32,7 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
     parameter = battle_thread_get_current_parameter_1();
     mode = 0;
     message = 0;
-    unit = battle_unit_get_attacker_data_pointer();
+    unit = battle_unit_get_active_turn_unit_stats();
     if (check_unit != 0) {
         if (battle_unit_get_action_block(unit) == BATTLE_UNIT_ACTION_BLOCK_SUBMERGED) {
             message = 0x1003;

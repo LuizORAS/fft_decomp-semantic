@@ -110,7 +110,7 @@ void world_text_character_handling_thread(void) {
             thread->function_parameter_2 = i | 0xA000;
             rec.box_type = DIALOG_BOX_TYPE_PORTRAIT;
             rec.options = DIALOG_OPTIONS_NO_TAIL;
-            rec.portrait = g_world_active_unit_data.battle_id;
+            rec.portrait = g_world_active_turn_unit.battle_id;
         }
     }
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 1) {

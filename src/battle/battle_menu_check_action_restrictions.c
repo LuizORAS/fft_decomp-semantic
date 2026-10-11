@@ -17,7 +17,7 @@ void battle_menu_check_action_restrictions(void) {
     s32 result;
     s32 mode;
 
-    unit = battle_unit_get_attacker_data_pointer();
+    unit = battle_unit_get_active_turn_unit_stats();
     menu = g_battle_menu_current_id;
     if (menu == BATTLE_MENU_ID_TURN_ACTED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED
         || menu == BATTLE_MENU_ID_RIDER_TURN_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED) {

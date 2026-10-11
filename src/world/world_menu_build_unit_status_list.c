@@ -29,7 +29,7 @@ void world_menu_build_unit_status_list(void) {
             g_world_menu_status_list_row_actions[i] = BATTLE_MENU_ROW_ACTION_SILENT | BATTLE_MENU_ID_JOBSTTS;
         }
     }
-    unit = battle_unit_get_stats_from_battle_id(g_world_active_unit_data.battle_id);
+    unit = battle_unit_get_stats_from_battle_id(g_world_active_turn_unit.battle_id);
     for (i = 0; i < 20; i++) {
         g_world_menu_status_left_text_ids[i] = TEXT_ID_ABILITY_NAME_BASE;
         g_world_menu_status_right_text_ids[i] = TEXT_ID_ABILITY_NAME_BASE;

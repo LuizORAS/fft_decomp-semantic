@@ -11,7 +11,7 @@ enum { WORLD_UNKNOWN_ROW_BYTES = 17 };
 void world_menu_record_selection_for_selected_unit(void) {
     s32 i;
     /* Local pointer keeps the row-index address hoisted out of the loop. */
-    s16* stored_unit = &g_world_active_unit_data.battle_id;
+    s16* stored_unit = &g_world_active_turn_unit.battle_id;
 
     for (i = 0; i < 12; i++) {
         if (g_world_menu_current_id == g_world_menu_command_maps[i].menu_id) {

@@ -21,7 +21,7 @@ void world_menu_select_unit_action_slots_thread(void) {
     s32 i = g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
     s32 menu = g_battle_action_menu_row_types[i];
     s32 check_unit = g_battle_menu_skillset_disabled_flags[i];
-    battle_menu_record_t* row = &g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id];
+    battle_menu_record_t* row = &g_world_menu_unit_selection_rows[g_world_active_turn_unit.battle_id];
     u8* slot;
     u8* pair;
     s32 j;

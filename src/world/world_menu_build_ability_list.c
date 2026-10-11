@@ -30,8 +30,8 @@ void world_menu_build_ability_list(s32 mode) {
     g_world_ability_menu_layout.ids = g_battle_ai_workspace_ptr->ability_list.ids;
     g_world_ability_menu_layout.values = g_battle_ai_workspace_ptr->ability_list.values;
     g_world_ability_menu_layout.extras = g_battle_ai_workspace_ptr->ability_list.extras;
-    unit_index = g_world_active_unit_data.battle_id;
-    unit = world_unit_get_battle_stats_for_stored();
+    unit_index = g_world_active_turn_unit.battle_id;
+    unit = world_unit_get_active_turn_unit_stats();
     type = g_battle_action_menu_row_types[g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
     skillset
         = g_world_action_menu_skillsets[g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];

@@ -80,8 +80,8 @@ void world_menu_build_ability_preview_at_list(void) {
         g_world_menu_preview_action.item_id = text_id;
     }
     action = &g_world_menu_preview_action;
-    action->unit_id = g_world_active_unit_data.battle_id;
-    stats = world_unit_get_battle_stats_for_stored();
+    action->unit_id = g_world_active_turn_unit.battle_id;
+    stats = world_unit_get_active_turn_unit_stats();
     g_world_thread_call_target = (void (*)(void))battle_turn_preview_at_list;
     turn = world_thread_call_on_main_stack(stats, action, &work->request);
     if (staged_item != 0) {

@@ -60,7 +60,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     }
     action = &g_battle_menu_selected_action;
     action->unit_id = g_battle_active_turn_unit.battle_id;
-    stats = battle_unit_get_attacker_data_pointer();
+    stats = battle_unit_get_active_turn_unit_stats();
     g_battle_thread_call_target = (void (*)(void))battle_turn_preview_at_list;
     turn = battle_thread_call_on_main_stack(stats, action, &work->request);
     if (staged_item != 0) {

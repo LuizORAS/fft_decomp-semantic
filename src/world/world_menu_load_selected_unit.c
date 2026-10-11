@@ -39,18 +39,18 @@ void world_menu_load_selected_unit(void) {
         world_menu_copy_unit_data_to_status_billboard(unit, &g_world_unit_comparison_status_billboard);
     }
 
-    unit = battle_unit_get_stats_from_battle_id(g_world_active_unit_data.battle_id);
+    unit = battle_unit_get_stats_from_battle_id(g_world_active_turn_unit.battle_id);
     if (unit == 0)
         return;
     world_menu_copy_unit_data_to_status_billboard(unit, &g_world_unit_selected_status_billboard);
 
-    g_world_active_unit_data.job_id = unit->job_id;
-    g_world_active_unit_data.brave = unit->brave;
-    g_world_active_unit_data.faith = unit->faith;
+    g_world_active_turn_unit.job_id = unit->job_id;
+    g_world_active_turn_unit.brave = unit->brave;
+    g_world_active_turn_unit.faith = unit->faith;
     /* The zodiac sign lives in the top nibble of the halfword at 0x008. */
     /* Direct union-member access hoists the halfword load above the faith
      * store (1344 vs 1348 bytes); keep the typed field's aliased word view. */
-    g_world_active_unit_data.zodiac = *(u16*)&unit->birthday >> 12;
+    g_world_active_turn_unit.zodiac = *(u16*)&unit->birthday >> 12;
 
     editor[0] = unit->move;
     editor[1] = unit->attributes[UNIT_ATTRIBUTE_SPEED];

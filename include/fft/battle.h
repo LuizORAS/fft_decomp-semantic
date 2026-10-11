@@ -2856,7 +2856,7 @@ void battle_unit_dismount_rider_and_update_display(battle_unit_misc_data_t* ride
 void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target);
 battle_stats_t* battle_unit_find_active_data_pointer(void);
 s16* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id);
-battle_stats_t* battle_unit_get_attacker_data_pointer(void);
+battle_stats_t* battle_unit_get_active_turn_unit_stats(void);
 s32 battle_unit_get_facing_nibble_by_misc_id(u32 misc_id);
 s32 battle_unit_get_map_coords_from_misc_id(u32 misc_id, s16* coords);
 battle_unit_misc_data_t* battle_unit_find_any_misc_data_at_map_coords(s32 map_x, s32 map_y, s32 map_z);

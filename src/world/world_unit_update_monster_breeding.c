@@ -2,13 +2,15 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* Advance egg hatch counters, then make the daily monster-breeding roll.
+/* Advance egg hatch counters, then make the day's monster-breeding roll (wldcore_advance_calendar_day).
  *
- * A counter that reaches 0 hatches as a monster born on the current date.
- * A successful roll selects a random roster monster and one of the three
- * offspring jobs in its Chocobo-based breeding-table entry. The new egg's
- * hatch range comes from its offspring entry, and its level is based on a
- * random non-egg roster member. */
+ * An egg's counter is the low nibble of its birthday; at 0 it hatches as a monster born on the
+ * current date. The roll, reseeded from the play time, needs a monster in the roster (eggs do not
+ * count): a random byte below 6 breeds a rare offspring, below 0x10 an uncommon one and below 0x20 a
+ * common one, so 32 in 256 days breed. The offspring job comes from a random roster monster's entry
+ * in the breeding table (indexed from the Chocobo); the egg hatches in 2 to hatch_range days, takes a
+ * random egg color and a monster name, and is raised to the level of a random non-egg roster
+ * member. */
 void world_unit_update_monster_breeding(s32 unused) {
     u8 monsters[0x18];
     u8 levels[0x18];
@@ -88,6 +90,6 @@ void world_unit_update_monster_breeding(s32 unused) {
     *name_buffer = (u8*)value;
     if (n != -1) {
         unit = main_party_get_data_pointer(n);
-        main_party_level_unit_to_target(unit, levels[rand() % unit_count] - 1);
+        main_party_raise_unit_level(unit, levels[rand() % unit_count] - 1);
     }
 }

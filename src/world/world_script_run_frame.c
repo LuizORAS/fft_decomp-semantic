@@ -112,7 +112,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     g_world_field_object_use_request = 0;
 
     if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS) {
-        g_world_companion_overlay_prims = jobstts_entrypoint(g_world_active_unit_data.battle_id, 0);
+        g_world_companion_overlay_prims = jobstts_entrypoint(g_world_active_turn_unit.battle_id, 0);
         if (g_world_companion_overlay_prims != 0) {
             AddPrims(g_world_gfx_active_otag_entries, (void*)g_world_companion_overlay_prims,
                 (void*)(g_world_companion_overlay_prims + 0xFC));
@@ -121,7 +121,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         }
     }
     if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_EQUIP) {
-        prims = equip_entrypoint(g_world_active_unit_data.battle_id, g_world_gfx_active_otag_entries + 1);
+        prims = equip_entrypoint(g_world_active_turn_unit.battle_id, g_world_gfx_active_otag_entries + 1);
         g_world_companion_overlay_prims = prims;
         if (prims >= 2) {
             AddPrims(g_world_gfx_active_otag_entries, (void*)prims, (void*)(prims + 0xFC));
@@ -165,7 +165,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         world_script_set_event_speed(1);
         i = bunit_entrypoint(0, 0);
         battle_target_move_cursor_to_battle_id(i);
-        g_world_active_unit_data.battle_id = i;
+        g_world_active_turn_unit.battle_id = i;
         g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
     } else if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE) {
         world_script_set_event_speed(1);

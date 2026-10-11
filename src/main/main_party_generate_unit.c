@@ -12,7 +12,7 @@ s32 main_party_generate_unit(s32 unit_type) {
         party_data[party_index] = main_party_get_data_pointer(party_index);
     }
 
-    for (party_index = 0; party_index < 16; party_index++) {
+    for (party_index = 0; party_index < PARTY_GUEST_SLOT_FIRST; party_index++) {
         if (party_data[party_index]->party_id == PARTY_ID_NONE) {
             party_data[party_index]->party_id = party_index;
             party_data[party_index]->palette = palette;

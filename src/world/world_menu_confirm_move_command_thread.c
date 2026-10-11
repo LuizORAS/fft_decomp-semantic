@@ -14,7 +14,7 @@ void world_menu_confirm_move_command_thread(void) {
     s16* result = &g_world_menu_confirm_stored_unit_row_actions;
 
     *result = -2;
-    if (world_unit_get_battle_stats_for_stored()
+    if (world_unit_get_active_turn_unit_stats()
             ->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_MOVE)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE)) {
         *result = -1;
