@@ -13,7 +13,7 @@ void main_unit_generate_base_raw_stats(unit_raw_stats_t* raw_stats, s32 unit_typ
     do {
         s32 value = base[index] << 14;
 
-        /* Retail recalculates the type stride inside the loop; plain C hoists it. */
+        /* Removing the tied use changes the prologue schedule. */
         __asm__("" : "=r"(type_index) : "0"(type_index));
         value += (rand() * variance[type_index].raw_stats[index]) / 2;
         out[index].low = value;
