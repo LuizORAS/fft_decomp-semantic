@@ -44,7 +44,7 @@ void battle_move_check_occupied_tile_standing_height(s32 record_index, s32 extra
     }
     top = state->destination_base_height_times_two
         + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3)
-        + (state->destination_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
+        + state->destination_tile->depth_half_height.bits.depth * 2;
     value = records[height].standing_height;
     limit = records[height].standing_height + records[height].body_height;
     if (value < top) {

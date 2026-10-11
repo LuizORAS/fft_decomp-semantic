@@ -47,9 +47,9 @@ s32 battle_move_init_source_panel(s32 direction) {
             state->tile_x, state->tile_y, state->source_side_shift, state->source_exit_height);
         if (state->source_side_height_delta >= 0 && (frontier[state->tile_index] & FRONTIER_FLAG_STEEP))
             return 3;
-        if ((state->current_tile->depth_half_height.value & MAP_TILE_DEPTH_MASK)
+        if (state->current_tile->depth_half_height.bits.depth
             && (config->movement_set_3 & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER))) {
-            state->source_exit_height += (state->current_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
+            state->source_exit_height += state->current_tile->depth_half_height.bits.depth * 2;
             if (config->movement_set_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER)
                 state->source_exit_height -= 2;
         }
