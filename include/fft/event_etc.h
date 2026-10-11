@@ -5,27 +5,16 @@
 
 #include "fft/battle.h"
 
-/* ETC uses byte loads for texture coordinates and halfword loads for screen
- * geometry. Preserve both views of each little-endian dimension component. */
-typedef union etc_graphic_dimension_component {
-    u16 value;
-    s16 signed_value;
-    struct {
-        u8 low;
-        u8 high;
-    } bytes;
-} etc_graphic_dimension_component_t;
-
 /* EVENT/ETC.OUT tables at 0x801c0668 and 0x801c072c. The chapter builder
  * (0x801bf3e0) establishes these axes; the game-over builder (0x801bfc58)
  * swaps their screen interpretation. Both advance records by 12 bytes. */
 typedef struct etc_graphic_dimensions {
-    etc_graphic_dimension_component_t u;      /* 0x00 */
-    etc_graphic_dimension_component_t v;      /* 0x02 */
-    etc_graphic_dimension_component_t width;  /* 0x04 */
-    etc_graphic_dimension_component_t height; /* 0x06: signed clipping limit */
-    etc_graphic_dimension_component_t x;      /* 0x08 */
-    etc_graphic_dimension_component_t y;      /* 0x0a */
+    s16 u;      /* 0x00 */
+    s16 v;      /* 0x02 */
+    s16 width;  /* 0x04 */
+    s16 height; /* 0x06: signed clipping limit */
+    s16 x;      /* 0x08 */
+    s16 y;      /* 0x0a */
 } etc_graphic_dimensions_t;
 typedef char etc_graphic_dimensions_size_check[sizeof(etc_graphic_dimensions_t) == 12 ? 1 : -1];
 

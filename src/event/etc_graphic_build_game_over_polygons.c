@@ -10,7 +10,8 @@
  * pixels, followed by a gradient edge of up to 32 pixels.
  *
  * The graphic is always 8-bit (texture mode 1). Retail keeps the first
- * half's right edge in the dead `graphic_id` argument. */
+ * half's right edge in the dead `graphic_id` argument. The unsigned vertical
+ * origin preserves the width/x load order. */
 void etc_graphic_build_game_over_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 reverse_order, POLY_GT4* primitives, s32 color) {
     etc_graphic_dimensions_t* dimensions;
@@ -44,48 +45,48 @@ void etc_graphic_build_game_over_polygons(
 
             if (half == 0) {
                 if (reverse_order == 0) {
-                    primitive->u0 = ROW->u.value + ROW->width.value;
-                    primitive->v0 = ROW->v.value;
-                    primitive->u2 = ROW->u.value;
-                    primitive->v2 = ROW->v.value;
-                    primitive->u1 = ROW->u.value + ROW->width.value;
-                    primitive->v1 = ROW->v.value + fade;
-                    primitive->u3 = ROW->u.value;
-                    primitive->v3 = ROW->v.value + fade;
-                    primitive->x0 = ROW->y.value + 0x100;
-                    primitive->y0 = ROW->x.value + 0x80;
+                    primitive->u0 = ROW->u + ROW->width;
+                    primitive->v0 = ROW->v;
+                    primitive->u2 = ROW->u;
+                    primitive->v2 = ROW->v;
+                    primitive->u1 = ROW->u + ROW->width;
+                    primitive->v1 = ROW->v + fade;
+                    primitive->u3 = ROW->u;
+                    primitive->v3 = ROW->v + fade;
+                    primitive->x0 = ROW->y + 0x100;
+                    primitive->y0 = ROW->x + 0x80;
                     graphic_id = fade + 0x100;
-                    primitive->x1 = ROW->y.value + graphic_id;
-                    primitive->y1 = ROW->x.value + 0x80;
-                    primitive->x2 = ROW->y.value + 0x100;
-                    primitive->y2 = ROW->x.value + (ROW->width.value + 0x80);
-                    primitive->x3 = ROW->y.value + graphic_id;
-                    primitive->y3 = ROW->x.value + (ROW->width.value + 0x80);
+                    primitive->x1 = ROW->y + graphic_id;
+                    primitive->y1 = ROW->x + 0x80;
+                    primitive->x2 = ROW->y + 0x100;
+                    primitive->y2 = ROW->x + (ROW->width + 0x80U);
+                    primitive->x3 = ROW->y + graphic_id;
+                    primitive->y3 = ROW->x + (ROW->width + 0x80U);
                     setRGB0(primitive, color, color, color);
                     setRGB1(primitive, color, color, color);
                     setRGB2(primitive, color, color, color);
                     setRGB3(primitive, color, color, color);
                 }
             } else if (half == 1) {
-                clip = ROW->height.signed_value < fade + 0x20 ? ROW->height.signed_value - fade : 0x20;
+                clip = ROW->height < fade + 0x20 ? ROW->height - fade : 0x20;
                 if (reverse_order == 0) {
                     fade_x = fade + 0x100;
-                    primitive->u0 = ROW->u.value + ROW->width.value;
-                    primitive->v0 = ROW->v.value + fade;
-                    primitive->u2 = ROW->u.value;
-                    primitive->v2 = ROW->v.value + fade;
-                    primitive->u1 = ROW->u.value + ROW->width.value;
-                    primitive->v1 = ROW->v.value + fade + clip;
-                    primitive->u3 = ROW->u.value;
-                    primitive->v3 = ROW->v.value + fade + clip;
-                    primitive->x0 = ROW->y.value + fade_x;
-                    primitive->y0 = ROW->x.value + 0x80;
-                    primitive->x1 = ROW->y.value + fade_x + clip;
-                    primitive->y1 = ROW->x.value + 0x80;
-                    primitive->x2 = ROW->y.value + fade_x;
-                    primitive->y2 = ROW->x.value + (ROW->width.value + 0x80);
-                    primitive->x3 = ROW->y.value + fade_x + clip;
-                    primitive->y3 = ROW->x.value + (ROW->width.value + 0x80);
+                    primitive->u0 = ROW->u + ROW->width;
+                    primitive->v0 = ROW->v + fade;
+                    primitive->u2 = ROW->u;
+                    primitive->v2 = ROW->v + fade;
+                    primitive->u1 = ROW->u + ROW->width;
+                    primitive->v1 = ROW->v + fade + clip;
+                    primitive->u3 = ROW->u;
+                    primitive->v3 = ROW->v + fade + clip;
+                    primitive->x0 = ROW->y + fade_x;
+                    primitive->y0 = ROW->x + 0x80;
+                    primitive->x1 = ROW->y + fade_x + clip;
+                    primitive->y1 = ROW->x + 0x80;
+                    primitive->x2 = ROW->y + fade_x;
+                    primitive->y2 = ROW->x + (ROW->width + 0x80U);
+                    primitive->x3 = ROW->y + fade_x + clip;
+                    primitive->y3 = ROW->x + (ROW->width + 0x80U);
                     setRGB0(primitive, color, color, color);
                     setRGB1(primitive, 0, 0, 0);
                     setRGB2(primitive, color, color, color);

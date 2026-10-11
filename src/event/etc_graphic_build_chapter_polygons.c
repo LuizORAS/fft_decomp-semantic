@@ -38,48 +38,37 @@ void etc_graphic_build_chapter_polygons(
             }
             if (row == 0) {
                 if (layer != 0) {
-                    setUV4(poly, DIM.u.signed_value + DIM.width.signed_value - fade, DIM.v.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value, DIM.v.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value - fade,
-                        DIM.v.signed_value + DIM.height.signed_value, DIM.u.signed_value + DIM.width.signed_value,
-                        DIM.v.signed_value + DIM.height.signed_value);
-                    setXY4(poly, DIM.x.signed_value + DIM.width.signed_value - fade + 0x100, DIM.y.signed_value + 0x80,
-                        DIM.x.signed_value + DIM.width.signed_value + 0x100, DIM.y.signed_value + 0x80,
-                        DIM.x.signed_value + DIM.width.signed_value - fade + 0x100,
-                        DIM.y.signed_value + 0x80 + DIM.height.signed_value,
-                        DIM.x.signed_value + DIM.width.signed_value + 0x100,
-                        DIM.y.signed_value + 0x80 + DIM.height.signed_value);
+                    setUV4(poly, DIM.u + DIM.width - fade, DIM.v, DIM.u + DIM.width, DIM.v, DIM.u + DIM.width - fade,
+                        DIM.v + DIM.height, DIM.u + DIM.width, DIM.v + DIM.height);
+                    setXY4(poly, DIM.x + DIM.width - fade + 0x100, DIM.y + 0x80, DIM.x + DIM.width + 0x100,
+                        DIM.y + 0x80, DIM.x + DIM.width - fade + 0x100, DIM.y + 0x80 + DIM.height,
+                        DIM.x + DIM.width + 0x100, DIM.y + 0x80 + DIM.height);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, color, color, color);
                     setRGB3(poly, color, color, color);
                 } else {
-                    setUVWH(poly, DIM.u.signed_value, DIM.v.signed_value, fade, DIM.height.signed_value);
-                    setXYWH(poly, DIM.x.signed_value + 0x100, DIM.y.signed_value + 0x80, fade, DIM.height.signed_value);
+                    setUVWH(poly, DIM.u, DIM.v, fade, DIM.height);
+                    setXYWH(poly, DIM.x + 0x100, DIM.y + 0x80, fade, DIM.height);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, color, color, color);
                     setRGB3(poly, color, color, color);
                 }
             } else if (row == 1) {
-                clip = (DIM.width.signed_value < fade + 0x20) ? DIM.width.signed_value - fade : 0x20;
+                clip = (DIM.width < fade + 0x20) ? DIM.width - fade : 0x20;
                 if (layer != 0) {
-                    setUV4(poly, DIM.u.signed_value + DIM.width.signed_value - fade - clip, DIM.v.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value - fade, DIM.v.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value - fade - clip,
-                        DIM.v.signed_value + DIM.height.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value - fade,
-                        DIM.v.signed_value + DIM.height.signed_value);
-                    setXYWH(poly, DIM.x.signed_value + DIM.width.signed_value - fade + 0x100 - clip,
-                        DIM.y.signed_value + 0x80, clip, DIM.height.signed_value);
+                    setUV4(poly, DIM.u + DIM.width - fade - clip, DIM.v, DIM.u + DIM.width - fade, DIM.v,
+                        DIM.u + DIM.width - fade - clip, DIM.v + DIM.height, DIM.u + DIM.width - fade,
+                        DIM.v + DIM.height);
+                    setXYWH(poly, DIM.x + DIM.width - fade + 0x100 - clip, DIM.y + 0x80, clip, DIM.height);
                     setRGB0(poly, 0, 0, 0);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, 0, 0, 0);
                     setRGB3(poly, color, color, color);
                 } else {
-                    setUVWH(poly, DIM.u.signed_value + fade, DIM.v.signed_value, clip, DIM.height.signed_value);
-                    setXYWH(poly, DIM.x.signed_value + fade + 0x100, DIM.y.signed_value + 0x80, clip,
-                        DIM.height.signed_value);
+                    setUVWH(poly, DIM.u + fade, DIM.v, clip, DIM.height);
+                    setXYWH(poly, DIM.x + fade + 0x100, DIM.y + 0x80, clip, DIM.height);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, 0, 0, 0);
                     setRGB2(poly, color, color, color);

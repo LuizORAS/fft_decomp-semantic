@@ -30,20 +30,20 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     dimensions = g_etc_graphics[graphic_id].dimensions;
     frame = 0;
     fade = 0;
-    if (dimensions[2].height.signed_value > 0) {
+    if (dimensions[2].height > 0) {
         do {
             etc_graphic_build_game_over_polygons(
                 graphic_id, fade, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], 0x80);
             frame++;
             battle_thread_yield();
             fade += g_battle_event_speed;
-        } while (fade < dimensions[2].height.signed_value);
+        } while (fade < dimensions[2].height);
     }
 
     fade = 0;
     do {
         etc_graphic_build_game_over_polygons(
-            graphic_id, dimensions[2].height.signed_value, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], 0x80);
+            graphic_id, dimensions[2].height, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], 0x80);
         frame++;
         battle_thread_yield();
         fade += g_battle_event_speed;
@@ -53,7 +53,7 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     fade = 0;
     do {
         etc_graphic_build_game_over_polygons(
-            graphic_id, dimensions[2].height.signed_value, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], color);
+            graphic_id, dimensions[2].height, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], color);
         color -= g_battle_event_speed;
         battle_thread_yield();
         fade += g_battle_event_speed;
