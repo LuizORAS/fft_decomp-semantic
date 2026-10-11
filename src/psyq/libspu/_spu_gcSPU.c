@@ -6,11 +6,9 @@ void _spu_gcSPU(void) {
     s32 successor;
     for (index = 0; index <= _spu_AllocLastNum;) {
         if (_spu_memList[index].address & PSYQ_SPU_HEAP_FREE) {
-            psyq_spu_heap_record_t* scan;
             successor = index + 1;
-            scan = &_spu_memList[successor];
             while (1) {
-                if ((scan++)->address != PSYQ_SPU_HEAP_DELETED)
+                if (_spu_memList[successor].address != PSYQ_SPU_HEAP_DELETED)
                     break;
                 successor++;
             }

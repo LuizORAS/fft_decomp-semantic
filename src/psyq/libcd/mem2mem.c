@@ -4,5 +4,5 @@
 void mem2mem(u32* destination, u32* source, u32 words, s32 unused_frame_complete) {
     u32 word_index;
     for (word_index = 0; word_index < words; word_index++)
-        *destination++ = *source++;
+        destination[word_index] = source[word_index];
 }

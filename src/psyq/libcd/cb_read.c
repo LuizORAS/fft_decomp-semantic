@@ -16,7 +16,7 @@ void cb_read(u8 event, u8* result) {
             CdGetSector(g_psyq_cd_read_state.next_buffer, g_psyq_cd_read_state.words);
             g_psyq_cd_read_state.next_buffer += g_psyq_cd_read_state.words;
             g_psyq_cd_read_state.remaining--;
-            /* The retail read-state record observes the postincrement as volatile. */
+            /* The volatile view preserves the native unused reload after the increment. */
             g_psyq_cd_read_state.expected_sector++;
         }
     } else {
