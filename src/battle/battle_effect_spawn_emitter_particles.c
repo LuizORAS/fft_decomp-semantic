@@ -143,10 +143,10 @@ s32 battle_effect_spawn_emitter_particles(
         spawn.vy -= tile->height * 12;
         break;
     case EFFECT_EMITTER_ORIGIN_CASTER:
-        battle_effect_add_svector_to_vector(&caster.vx, &spawn.vx, &spawn.vx);
+        battle_effect_add_svector_to_vector(&caster, &spawn, &spawn);
         break;
     case EFFECT_EMITTER_ORIGIN_TARGET:
-        battle_effect_add_svector_to_vector(&target.vx, &spawn.vx, &spawn.vx);
+        battle_effect_add_svector_to_vector(&target, &spawn, &spawn);
         break;
     case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
         if (parent != 0) {

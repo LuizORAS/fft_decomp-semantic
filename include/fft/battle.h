@@ -3185,10 +3185,10 @@ typedef struct battle_effect_reflect_buffer {
  * toward its values, arriving at end_frame; a track takes its next keyframe
  * only once its previous move has ended. */
 typedef struct effect_camera_keyframes_21 {
-    s16 end_frame[21];   /* frame the keyframe's moves arrive, counted from the start of the table's phase */
-    s16 rotation[21][3]; /* pitch, yaw, roll */
-    s16 position[21][3];
-    s16 zoom[21][3];
+    s16 end_frame[21];      /* frame the keyframe's moves arrive, counted from the start of the table's phase */
+    vec3s16_t rotation[21]; /* pitch, yaw, roll */
+    vec3s16_t position[21];
+    vec3s16_t zoom[21];
     s16 command[21]; /* BATTLE_EFFECT_CAMERA_TRACK_* | battle_effect_camera_source_e | battle_effect_camera_mode_e */
     s16 last_keyframe_index;
 } effect_camera_keyframes_21_t;
@@ -3225,9 +3225,9 @@ typedef struct effect_timeline {
     u16 child_duration;      /* 0x00a; frames one child timeline runs: battle_effect_tick_channels_t.duration */
     u8 _unused_000c[0x6a6];  /* 0x00c; the child timeline's particle channels, sound tracks and colour tracks */
     s16 end_frame[17];       /* 0x6b2; child camera table: frame each keyframe's moves arrive */
-    s16 rotation[17][3];     /* 0x6d4 */
-    s16 position[17][3];     /* 0x73a */
-    s16 zoom[17][3];         /* 0x7a0 */
+    vec3s16_t rotation[17];  /* 0x6d4 */
+    vec3s16_t position[17];  /* 0x73a */
+    vec3s16_t zoom[17];      /* 0x7a0 */
     s16 command[17];         /* 0x806; as effect_camera_keyframes_21_t.command */
     s16 last_keyframe_index; /* 0x828; highest valid keyframe index */
     battle_effect_keyframe_table_t particle_channels[2][5]; /* 0x82a; [phase][channel] */
@@ -4579,7 +4579,7 @@ void battle_effect_add_random_vector_offsets(const VECTOR* source, const VECTOR*
 void battle_effect_add_random_vector_offsets_and_store_q12(
     const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
 
-void battle_effect_add_vectors(const s32* first, const s32* second, s32* out);
+void battle_effect_add_vectors(const VECTOR* first, const VECTOR* second, VECTOR* out);
 
 void battle_effect_advance_map_background_track(
     battle_effect_background_track_t* track, s16* keyframe, s16* remaining_frames);
@@ -4607,12 +4607,12 @@ s32 battle_effect_init_projectile_secondary(s32 animation, struct battle_effect_
 s32 battle_effect_init_secondary(s32 animation_id, s32 parameter, struct battle_effect_secondary_init* source);
 void battle_effect_init_system(void);
 void battle_effect_interpolate_s16(s16 from, s16 to, s32 t, s16* out);
-void battle_effect_interpolate_svector(const s16* from, const s16* to, s32 t, s16* out);
-void battle_effect_interpolate_vector_q13(const s32* from, const s32* to, s32 t, s32* out);
+void battle_effect_interpolate_svector(const SVECTOR* from, const SVECTOR* to, s32 t, SVECTOR* out);
+void battle_effect_interpolate_vector_q13(const VECTOR* from, const VECTOR* to, s32 t, VECTOR* out);
 s32 battle_effect_lerp_and_store(s32 start, s32 end, s32 factor, s32* out);
 void battle_effect_lerp_component_q13(s32 from, s32 to, s32 t, s32* out);
 void battle_effect_list_valid_unit_targeting_data(s32 first, s32 second, battle_effect_obstacle_unit_list_t** out);
-void battle_effect_mask_vector_low_12_bits(const s16* src, s16* dst);
+void battle_effect_mask_vector_low_12_bits(const SVECTOR* src, SVECTOR* dst);
 void battle_effect_load_lba_and_size(s32 effect_id, s32* lba, s32* byte_length);
 void battle_script_play_effect_and_wait(void);
 void battle_effect_remove_secondary(u8 id);
@@ -4628,7 +4628,7 @@ void battle_effect_set_secondary_level_up(struct battle_unit_misc_data* unit);
 void battle_effect_set_secondary_splash(struct battle_unit_misc_data* unit);
 void battle_effect_set_secondary_teleport(struct battle_unit_misc_data* unit);
 void battle_effect_shift_vector_left_12(const VECTOR* src, VECTOR* dst);
-void battle_effect_shift_vector_right_12(const s32* src, s32* dst);
+void battle_effect_shift_vector_right_12(const VECTOR* src, VECTOR* dst);
 void battle_effect_start_group(s32 group, s32 clut_index);
 
 void battle_effect_step_emitter_timeline(
@@ -4647,7 +4647,7 @@ s32 battle_effect_test_position_for_obstacle(
 s32 battle_effect_try_init_data(void);
 void battle_effect_update_active_slots(s32 group);
 s32 battle_effect_update_secondary_effects(void);
-void battle_effect_add_svector_to_vector(const s16* first, const s32* second, s32* out);
+void battle_effect_add_svector_to_vector(const SVECTOR* first, const VECTOR* second, VECTOR* out);
 void battle_effect_add_svectors(const SVECTOR* first, const SVECTOR* second, SVECTOR* out);
 
 void battle_effect_advance_coord_target_palette_track(
@@ -4660,10 +4660,10 @@ s32 battle_effect_calculate_launch_velocity(void);
 s32 battle_effect_calculate_arc_trajectory_term(s32 a, s32 b);
 s32 battle_effect_check_arc_trajectory_between_units(u8 source_id, u8 target_id);
 s32 battle_effect_check_direct_trajectory_between_units(u8 source_id, u8 target_id);
-void battle_effect_convert_svector_to_vector(s16* src, VECTOR* dst);
+void battle_effect_load_vector(vec3s16_t* src, VECTOR* dst);
 void battle_effect_convert_tile_coords_to_world_coords(SVECTOR* in, VECTOR* out);
 void battle_effect_copy_misc_unit_screen_location(u32 misc_id, VECTOR* destination);
-void battle_effect_copy_svector(s16* src, SVECTOR* dst);
+void battle_effect_load_svector(vec3s16_t* src, SVECTOR* dst);
 void battle_effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle);
 
 void battle_effect_draw_projectile_model(
@@ -4701,14 +4701,20 @@ s32 battle_effect_trace_projectile_path(
     VECTOR* delta, SVECTOR* origin, s32* distance, battle_effect_obstacle_unit_list_t* obstacles);
 void battle_effect_update_on_hit_sound_timer(
     battle_effect_sound_track_t* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state);
-void battle_effect_add_vector_and_store_q12(const s32* delta, s32* value, s32* out);
+void battle_effect_add_vector_and_store_q12(const VECTOR* delta, VECTOR* value, VECTOR* out);
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b);
-void battle_effect_interpolate_svector_cos(const s16* from, const s16* to, s32 duration, s32 current, s16* out);
-void battle_effect_interpolate_svector_cos_q12(const s16* from, const s16* to, s32 duration, s32 current, s16* out);
-void battle_effect_interpolate_svector_linear(const s16* from, const s16* to, s32 duration, s32 current, s16* out);
-void battle_effect_interpolate_vector_q13_cos(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
-void battle_effect_interpolate_vector_q13_cos_q12(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
-void battle_effect_interpolate_vector_q13_linear(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
+void battle_effect_interpolate_svector_cos(
+    const SVECTOR* from, const SVECTOR* to, s32 duration, s32 current, SVECTOR* out);
+void battle_effect_interpolate_svector_cos_q12(
+    const SVECTOR* from, const SVECTOR* to, s32 duration, s32 current, SVECTOR* out);
+void battle_effect_interpolate_svector_linear(
+    const SVECTOR* from, const SVECTOR* to, s32 duration, s32 current, SVECTOR* out);
+void battle_effect_interpolate_vector_q13_cos(
+    const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
+void battle_effect_interpolate_vector_q13_cos_q12(
+    const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
+void battle_effect_interpolate_vector_q13_linear(
+    const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
 
 void battle_effect_add_random_rotation_offsets(const SVECTOR* source, const SVECTOR* ranges, SVECTOR* destination);
 

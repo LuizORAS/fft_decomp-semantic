@@ -25,10 +25,10 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
                 &g_battle_effect_context.targets[target].data.tile, &g_battle_effect_camera_position_target);
         }
         coords = battle_camera_get_current_real_coords();
-        battle_effect_shift_vector_right_12(&coords->vx, &g_battle_effect_camera_position_start.vx);
+        battle_effect_shift_vector_right_12(coords, &g_battle_effect_camera_position_start);
         if (offset) {
             battle_effect_add_vectors(
-                &offset->vx, &g_battle_effect_camera_position_target.vx, &g_battle_effect_camera_position_target.vx);
+                offset, &g_battle_effect_camera_position_target, &g_battle_effect_camera_position_target);
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_GIVEN:
@@ -38,7 +38,7 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
         battle_effect_store_map_center_coordinates(&g_battle_effect_camera_position_target);
         if (offset) {
             battle_effect_add_vectors(
-                &offset->vx, &g_battle_effect_camera_position_target.vx, &g_battle_effect_camera_position_target.vx);
+                offset, &g_battle_effect_camera_position_target, &g_battle_effect_camera_position_target);
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT:
@@ -48,14 +48,14 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
         g_battle_effect_camera_position_target.vz = coords->vz >> 12;
         if (offset) {
             battle_effect_add_vectors(
-                &offset->vx, &g_battle_effect_camera_position_target.vx, &g_battle_effect_camera_position_target.vx);
+                offset, &g_battle_effect_camera_position_target, &g_battle_effect_camera_position_target);
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_SAVED:
         g_battle_effect_camera_position_target = g_battle_effect_camera_position_saved;
         if (offset) {
             battle_effect_add_vectors(
-                &offset->vx, &g_battle_effect_camera_position_target.vx, &g_battle_effect_camera_position_target.vx);
+                offset, &g_battle_effect_camera_position_target, &g_battle_effect_camera_position_target);
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_CASTER:
@@ -70,7 +70,7 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
         }
         if (offset) {
             battle_effect_add_vectors(
-                &offset->vx, &g_battle_effect_camera_position_target.vx, &g_battle_effect_camera_position_target.vx);
+                offset, &g_battle_effect_camera_position_target, &g_battle_effect_camera_position_target);
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_TARGET_AVERAGE:
@@ -90,7 +90,7 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
         sum.vy /= i;
         sum.vz /= i;
         if (offset) {
-            battle_effect_add_vectors(&offset->vx, &sum.vx, &g_battle_effect_camera_position_target.vx);
+            battle_effect_add_vectors(offset, &sum, &g_battle_effect_camera_position_target);
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_CURSOR_TILE:
@@ -98,7 +98,7 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
             &g_battle_effect_target_tile.data.tile, &g_battle_effect_camera_position_target);
         if (offset) {
             battle_effect_add_vectors(
-                &offset->vx, &g_battle_effect_camera_position_target.vx, &g_battle_effect_camera_position_target.vx);
+                offset, &g_battle_effect_camera_position_target, &g_battle_effect_camera_position_target);
         }
         break;
     default:

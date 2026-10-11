@@ -1800,8 +1800,8 @@ functions:
   - {addr: 0x801a8f14, size: 444, name: battle_effect_decode_next_model_command, hash: f6312c0ce6d9ffab}
   - {addr: 0x801a90d0, size: 584, name: battle_effect_resolve_target_render_coords, hash: 439cd077defd4ff0}
   - {addr: 0x801a9318, size: 88, name: battle_effect_get_screen_location_by_battle_id, hash: c0988807e52b8411}
-  - {addr: 0x801a9370, size: 36, name: battle_effect_convert_svector_to_vector, hash: 2416e989ca774a48}
-  - {addr: 0x801a9394, size: 36, name: battle_effect_copy_svector, hash: ee22450393aed3d1}
+  - {addr: 0x801a9370, size: 36, name: battle_effect_load_vector, hash: 2416e989ca774a48}
+  - {addr: 0x801a9394, size: 36, name: battle_effect_load_svector, hash: ee22450393aed3d1}
   - {addr: 0x801a93b8, size: 52, name: battle_effect_shift_vector_right_12, hash: 7b7525bebbd2b3f0}
   - {addr: 0x801a93ec, size: 52, name: battle_effect_shift_vector_left_12, hash: ad8e4cedc8f9a32d}
   - {addr: 0x801a9420, size: 52, name: battle_effect_mask_vector_low_12_bits, hash: 7351866c85f1a40f}

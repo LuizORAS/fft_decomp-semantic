@@ -19,15 +19,13 @@ void battle_camera_execute_zoom_command(s32 command, s32 unused, s32 duration, V
     case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT:
         g_battle_effect_camera_zoom_target = *battle_camera_get_zoom();
         if (zoom) {
-            battle_effect_add_vectors(
-                &zoom->vx, &g_battle_effect_camera_zoom_target.vx, &g_battle_effect_camera_zoom_target.vx);
+            battle_effect_add_vectors(zoom, &g_battle_effect_camera_zoom_target, &g_battle_effect_camera_zoom_target);
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_SAVED:
         g_battle_effect_camera_zoom_target = g_battle_effect_camera_zoom_saved;
         if (zoom) {
-            battle_effect_add_vectors(
-                &zoom->vx, &g_battle_effect_camera_zoom_target.vx, &g_battle_effect_camera_zoom_target.vx);
+            battle_effect_add_vectors(zoom, &g_battle_effect_camera_zoom_target, &g_battle_effect_camera_zoom_target);
         }
         break;
     default:
