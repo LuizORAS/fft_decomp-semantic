@@ -2,6 +2,6 @@
 #include "psx/abi_inline.h"
 #include "psx/libapi.h"
 
-void DeliverEvent(s32 desc, s32 spec) {
+void DeliverEvent(u32 desc, u32 spec) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_B, PSYQ_BIOS_B_DELIVER_EVENT);
 }

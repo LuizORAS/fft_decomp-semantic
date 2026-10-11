@@ -9,7 +9,7 @@
 s32 close(s32 descriptor);
 /* BIOS error code for this file descriptor. */
 s32 _get_error(s32 descriptor);
-s32 open(const char* path, s32 mode);
+s32 open(const char* path, u32 mode);
 s32 read(s32 descriptor, void* destination, s32 size);
 s32 lseek(s32 descriptor, s32 offset, s32 origin);
 s32 write(s32 descriptor, const void* source, s32 size);
@@ -27,7 +27,7 @@ s32 WaitEvent(s32 event);
 s32 TestEvent(s32 event);
 s32 EnableEvent(s32 event);
 s32 DisableEvent(s32 event);
-void DeliverEvent(s32 desc, s32 spec);
+void DeliverEvent(u32 desc, u32 spec);
 
 /* interrupts */
 void EnterCriticalSection(void);
@@ -52,7 +52,7 @@ void StartCARD(void);
 void StopCARD(void);
 s32 _card_clear(s32 port);
 void _bu_init(void);
-void _card_auto(s32 val);
+s32 _card_auto(s32 val);
 s32 _card_info(s32 port);
 s32 _card_load(s32 port);
 s32 _card_status(s32 slot);

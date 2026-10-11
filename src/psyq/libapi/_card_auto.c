@@ -2,6 +2,6 @@
 #include "psx/abi_inline.h"
 #include "psx/libapi.h"
 
-void _card_auto(s32 mode) {
+s32 _card_auto(s32 mode) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_A, PSYQ_BIOS_A_CARD_AUTO);
 }

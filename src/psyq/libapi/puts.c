@@ -3,6 +3,6 @@
 #include "psx/libapi.h"
 #include "psx/libc.h"
 
-s32 puts(const char* text) {
+void puts(const char* text) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_B, PSYQ_BIOS_B_PUTS);
 }

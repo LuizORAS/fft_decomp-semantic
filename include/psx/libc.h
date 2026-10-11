@@ -18,7 +18,7 @@ extern void bcopy(const void* source, void* destination, int size);
 void* bzero(void* destination, s32 byte_length);
 extern int abs(int value);
 
-s32 puts(const char* text);
+void puts(const char* text);
 
 /* BIOS setjmp saves ra, sp, fp, s0-s7 and gp. */
 #define JB_SIZE 12
