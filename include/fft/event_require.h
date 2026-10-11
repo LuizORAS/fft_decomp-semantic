@@ -342,6 +342,13 @@ void require_thread_exit_current(void);
 s32 require_thread_is_running(s32 thread_id);
 
 /* unit */
+/* Three unit ids whose presence selects the event variable at +6. */
+typedef struct require_party_bio_update_record {
+    u16 unit_ids[3];
+    u16 variable;
+} require_party_bio_update_record_t;
+
+extern require_party_bio_update_record_t g_require_party_bio_update_records[11];
 extern battle_active_unit_t g_require_active_unit_data;
 extern s32 g_require_party_affected_battle_unit_indices[];
 extern s32 g_require_party_affected_unit_count;

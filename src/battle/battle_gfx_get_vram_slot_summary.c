@@ -1,11 +1,5 @@
 #include "fft/battle.h"
 
-/* Per-slot summary written by battle_gfx_get_vram_slot_summary. */
-typedef struct battle_gfx_vram_slot_summary {
-    u8 spritesheet_id; /* 0xff free, 0xfe saved, 0xfd no unit, else owner's sheet */
-    u8 evtchr_state;   /* 0xff none, 0xfe saved, 0xfd loaded */
-} battle_gfx_vram_slot_summary_t;
-
 /*
  * Describe both battle VRAM slots: the owning unit's spritesheet (or the
  * free/saved marker) and the EVTCHR load marker, collapsed to 0xfd..0xff.

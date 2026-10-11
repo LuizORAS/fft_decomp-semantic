@@ -5622,6 +5622,12 @@ typedef struct battle_gfx_vram_slot {
 } battle_gfx_vram_slot_t;
 typedef char battle_vram_slot_size_must_be_0x7564[(sizeof(battle_gfx_vram_slot_t) == 0x7564) ? 1 : -1];
 
+/* Per-slot summary written by battle_gfx_get_vram_slot_summary. */
+typedef struct battle_gfx_vram_slot_summary {
+    u8 spritesheet_id; /* 0xff free, 0xfe saved, 0xfd no unit, else owner's sheet */
+    u8 evtchr_state;   /* 0xff none, 0xfe saved, 0xfd loaded */
+} battle_gfx_vram_slot_summary_t;
+
 typedef enum battle_gfx_vram_slot_owner_marker {
     BATTLE_GFX_VRAM_SLOT_OWNER_EVTCHR = 0xfe, /* an EVTCHR image (battle_gfx_save_evtchr_slot) */
     BATTLE_GFX_VRAM_SLOT_OWNER_NONE = 0xff,
@@ -5867,6 +5873,7 @@ extern u16 g_battle_3d_object_use_request; /* 0x80165fe2 */
 extern u16 g_battle_3d_object_wait_status; /* 0x8016606e */
 extern battle_render_buffer_t g_battle_buffer_a[2];
 void battle_display_menu_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
+s32 battle_gfx_get_vram_slot_summary(battle_gfx_vram_slot_summary_t* summary);
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords);
 void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance);
 
