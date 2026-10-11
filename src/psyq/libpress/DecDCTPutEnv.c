@@ -8,19 +8,20 @@ DECDCTENV* DecDCTPutEnv(DECDCTENV* env) {
 
     src = (u32*)env->iq_y;
     dst = g_psyq_press_luma_quant_table;
-    i = 15;
+    i = sizeof(g_psyq_press_luma_quant_table) / sizeof(u32) - 1;
     do {
         *dst++ = *src++;
     } while (--i != -1);
 
     dst = g_psyq_press_chroma_quant_table;
     src = (u32*)env->iq_c;
-    i = 15;
+    i = sizeof(g_psyq_press_chroma_quant_table) / sizeof(u32) - 1;
     do {
         *dst++ = *src++;
     } while (--i != -1);
 
-    MDEC_in(g_psyq_press_quant_table_command, 0x20);
-    MDEC_in(g_psyq_press_scale_table_command, 0x20);
+    MDEC_in(g_psyq_press_quant_table_command,
+        (sizeof(g_psyq_press_luma_quant_table) + sizeof(g_psyq_press_chroma_quant_table)) / sizeof(u32));
+    MDEC_in(g_psyq_press_scale_table_command, sizeof(g_psyq_press_scale_table) / sizeof(u32));
     return env;
 }

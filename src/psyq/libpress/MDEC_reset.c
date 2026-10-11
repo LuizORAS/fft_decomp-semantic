@@ -11,8 +11,9 @@ void MDEC_reset(s32 mode) {
         *g_psyq_press_dma_in_chcr = 0;
         *g_psyq_press_dma_out_chcr = 0;
         *g_psyq_press_mdec_status = 0x60000000;
-        MDEC_in(g_psyq_press_quant_table_command, 0x20);
-        MDEC_in(g_psyq_press_scale_table_command, 0x20);
+        MDEC_in(g_psyq_press_quant_table_command,
+            (sizeof(g_psyq_press_luma_quant_table) + sizeof(g_psyq_press_chroma_quant_table)) / sizeof(u32));
+        MDEC_in(g_psyq_press_scale_table_command, sizeof(g_psyq_press_scale_table) / sizeof(u32));
         break;
     case 1:
         *g_psyq_press_mdec_status = 0x80000000;

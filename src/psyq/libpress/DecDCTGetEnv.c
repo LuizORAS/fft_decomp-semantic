@@ -10,21 +10,21 @@ DECDCTENV* DecDCTGetEnv(DECDCTENV* env) {
 
     dst = (u32*)env->iq_y;
     src = g_psyq_press_luma_quant_table;
-    i = 15;
+    i = sizeof(g_psyq_press_luma_quant_table) / sizeof(u32) - 1;
     do {
         *dst++ = *src++;
     } while (--i != -1);
 
     dst = (u32*)env->iq_c;
     src = g_psyq_press_chroma_quant_table;
-    i = 15;
+    i = sizeof(g_psyq_press_chroma_quant_table) / sizeof(u32) - 1;
     do {
         *dst++ = *src++;
     } while (--i != -1);
 
     dst = (u32*)env->dct;
     src = g_psyq_press_scale_table;
-    i = 31;
+    i = sizeof(g_psyq_press_scale_table) / sizeof(u32) - 1;
     do {
         *dst++ = *src++;
     } while (--i != -1);
