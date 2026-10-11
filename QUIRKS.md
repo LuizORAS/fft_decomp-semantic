@@ -498,16 +498,19 @@ written that way.
   left in `$v0`.
 - `battle_effect_spawn_emitter_particles` has an `s32` result it never sets
   and no caller reads.
+- `battle_unit_animate_teleport_distortion` and
+  `battle_unit_advance_altima_teleport_distortion` fall through without an
+  `s32` result; the animation dispatcher ignores their results.
 - `battle_thread_resolve_id` and `battle_thread_resolve_id_after_current` fall
   off their end after `battle_thread_exit_current()`, like the WORLD twins.
 - `battle_ai_calculate_clockticks_until_death_counter_expires` is defined
   with three parameters and both callers pass one; the other two are scratch
   it assigns before reading.
 - `battle_map_calculate_slope_height` masks its level to a byte; two callers
-  pass the 16-bit `action_target_elevation` unmasked.
+  pass the 16-bit `action_command.target_elevation` unmasked.
 - WLDCORE passes its 8-byte records by value:
   `wldcore_window_render_bounds16_t` to the three render-record builders and
-  `wldcore_point32_t` to `wldcore_window_build_yes_no_panel`.
+  `point32_t` to `wldcore_window_build_yes_no_panel`.
 - `battle_script_filter_unit_id_by_mode` and
   `world_script_filter_unit_id_by_mode` read `in_id` as a halfword; most
   callers pass the address of an `int` loop counter (BATTLE through a
