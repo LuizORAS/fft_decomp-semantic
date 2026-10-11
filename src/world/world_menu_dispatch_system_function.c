@@ -16,7 +16,6 @@ s32 world_menu_dispatch_system_function(
     item_data_t* item;
     battle_system_function_t* entry;
     s32 flags;
-    u8 item_id;
 
     g_world_menu_thread_menu_data = g_world_menu_system_entries;
     g_world_menu_current_id = BATTLE_MENU_ID_NONE;
@@ -196,8 +195,7 @@ s32 world_menu_dispatch_system_function(
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ARITHMETICKS_ANNOUNCEMENT);
         } else {
             if (action->skillset_id == SKILLSET_ID_ITEM || action->skillset_id == SKILLSET_ID_THROW) {
-                item_id = action->item_or_equipment;
-                g_world_text_substitution_values[0] = item_id + TEXT_ID_ITEM_NAME_BASE;
+                g_world_text_substitution_values[0] = (u8)action->item_or_equipment + TEXT_ID_ITEM_NAME_BASE;
             } else {
                 value = action->ability_id & ABILITY_ID_MASK;
                 if (value >= ABILITY_ID_SUMMON_MAGIC_MOOGLE && value <= ABILITY_ID_DRAW_OUT_CHIRIJIRADEN) {

@@ -11,7 +11,6 @@ void wldcore_opcode_branch_if_equal(void) {
     s32 value;
     s32 operand;
     u32 word;
-    u16 flags;
 
     value = g_wldcore_active_saved_record.counter - (-g_wldcore_active_saved_record.counter_delta);
     if (0xffff < value) {
@@ -23,9 +22,8 @@ void wldcore_opcode_branch_if_equal(void) {
     word = g_wldcore_opcode_state.instruction;
     operand = (word >> 8) & 0xffff;
     if (value == operand) {
-        flags = g_wldcore_active_saved_record.state_flags;
         g_wldcore_active_saved_record.section = word >> 24;
-        g_wldcore_active_saved_record.state_flags = flags | WLDCORE_OPCODE_STATE_BRANCH;
+        g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_BRANCH;
     } else {
         g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
     }

@@ -7,11 +7,9 @@
 void world_menu_build_main(void) {
     world_menu_entry_t* entry;
     battle_menu_record_t* row;
-    s32 unit_id;
 
     entry = world_thread_get_current_parameter_1();
-    unit_id = g_world_active_unit_data.battle_id;
-    row = &g_world_menu_unit_selection_rows[unit_id];
+    row = &g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id];
     g_world_thread_contexts[g_world_thread_current_id].function_parameter_2 = 1; /* redraw request */
     world_menu_run_icon_selection_loop();
     row->command_index = entry->selected_index;
