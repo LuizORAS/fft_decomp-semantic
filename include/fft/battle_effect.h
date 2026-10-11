@@ -252,16 +252,14 @@ typedef union battle_effect_secondary_state {
  * from frame_start[k] to frame_start[k + 1]. Entering it runs its 16-bit action value
  * (unit reactions, and binding a native handler to a callback slot); on each
  * of its frames it spawns its emitter, through the handler of the action's
- * callback slot when that is set. Keyframe 0 is passed over without spawning,
- * so emitter[0] is never read; retail channels have up to 24 keyframes, and
- * the end of keyframe 23, frame_start[24], is the 16-bit value at 0x30. */
+ * callback slot when that is set. Keyframe 0 is passed over without spawning;
+ * emitter[k - 1] belongs to keyframe k. Retail channels have up to 24 keyframes. */
 typedef struct battle_effect_keyframe_table {
-    u16 frame_start[0x18]; /* 0x00 */
-    u8 _unused_30;         /* 0x30 */
-    u8 emitter[0x19];      /* 0x31; emitter index + 1, 0 for none */
-    u16 action[0x18];      /* 0x4a; EFFECT_KEYFRAME_ACTION_* */
-    u8 _unused_7a[4];      /* 0x7a */
-    s16 last_index;        /* 0x7e; highest valid keyframe index */
+    u16 frame_start[25]; /* 0x00: keyframe boundaries */
+    u8 emitter[24];      /* 0x32: keyframe 1 starts at element 0; emitter index + 1, 0 for none */
+    u16 action[25];      /* 0x4a: EFFECT_KEYFRAME_ACTION_*, including the final transition */
+    u8 _unused_7c[2];    /* 0x7c */
+    s16 last_index;      /* 0x7e; highest valid keyframe index */
 } battle_effect_keyframe_table_t;
 typedef char battle_effect_keyframe_table_size_must_be_128[(sizeof(battle_effect_keyframe_table_t) == 128) ? 1 : -1];
 

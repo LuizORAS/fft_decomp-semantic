@@ -50,7 +50,7 @@ effect_script_result_e battle_effect_code_script_25_update_all_particles(effect_
             }
         }
 
-        g_battle_effect_particle_render_handlers[(node->kind_flags >> 12) & 0xf](record, node);
+        g_battle_effect_particle_render_handlers[(u16)node->kind_flags >> 12](record, node);
 
         if ((node->flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) == EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_1
             || (node->flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) == EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_2) {

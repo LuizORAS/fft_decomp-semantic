@@ -67,7 +67,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
                     battle_effect_run_keyframe_actions(table->action[k + 1], target, record);
                 }
             }
-            index = table->emitter[timeline->state.child.keyframe.tracks.particle[i]];
+            index = table->emitter[timeline->state.child.keyframe.tracks.particle[i] - 1];
             if (index != 0) {
                 step = timeline->state.child.step.tracks.particle[i]++;
                 actions = table->action;

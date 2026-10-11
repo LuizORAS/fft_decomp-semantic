@@ -41,7 +41,7 @@ void battle_effect_step_emitter_timeline(
             }
         }
         if (table->last_index >= *index) {
-            emitter = table->emitter[*index];
+            emitter = table->emitter[*index - 1];
             if (emitter != 0) {
                 actions = table->action;
                 sel = actions[*index] & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK;
