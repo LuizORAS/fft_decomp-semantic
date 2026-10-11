@@ -11,7 +11,7 @@
 
 PACKET* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, s32 len) {
     u8 packet_length = len;
-    u32* slot;
+    GsOT_TAG* slot;
     s32 idx;
 
     idx = z - ot->offset;
@@ -19,9 +19,10 @@ PACKET* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, s32 len) {
         printf(g_psyq_gs_sort_sprite_overflow_message);
     }
     slot = ot->org + idx;
-    *tag = *slot;
+    /* Whole GPU tag transfers match; bitfield updates add masking and read-modify-write instructions. */
+    *tag = *(u32*)slot;
     setlen(tag, packet_length);
-    *slot = (u32)tag;
-    setlen(slot, 0);
+    *(u32*)slot = (u32)tag;
+    slot->num = 0;
     return (PACKET*)(tag + (packet_length + 1));
 }

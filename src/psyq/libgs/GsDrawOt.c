@@ -3,5 +3,5 @@
 #include "psx/types.h"
 
 void GsDrawOt(GsOT* ot) {
-    DrawOTag(ot->tag);
+    DrawOTag((u32*)ot->tag);
 }

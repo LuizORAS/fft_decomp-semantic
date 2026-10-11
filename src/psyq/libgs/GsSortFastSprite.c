@@ -5,7 +5,7 @@
  * the packet into the ordering table. */
 void GsSortFastSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
     psyq_gs_sprite_packet_t* packet;
-    u32* tag;
+    GsOT_TAG* tag;
     u32 attr;
     u32 shade;
     u32 sprite_code;
@@ -43,8 +43,9 @@ void GsSortFastSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
         packet->uv_clut = sp->u | (sp->v << 8) | (sp->cy << 22) | ((sp->cx << 12) & 0x3F0000);
         packet->wh = sp->w | (sp->h << 16);
         tag = &ot->org[pri] - ot->offset;
-        packet->tpage.tag = *tag + 0x05000000;
-        *tag = packet_addr;
+        /* Whole GPU tag transfers match; bitfield access adds masking and a read-modify-write. */
+        packet->tpage.tag = *(u32*)tag + 0x05000000;
+        *(u32*)tag = packet_addr;
         GsOUT_PACKET_P = (PACKET*)(packet + 1);
     }
 }

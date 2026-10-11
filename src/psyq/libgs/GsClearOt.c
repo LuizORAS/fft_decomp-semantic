@@ -5,5 +5,5 @@ void GsClearOt(u16 x, u16 y, GsOT* ot) {
     ot->offset = x;
     ot->point = y;
     ot->tag = ot->org + (1 << ot->length) - 1;
-    ClearOTagR(ot->org, 1 << ot->length);
+    ClearOTagR((u32*)ot->org, 1 << ot->length);
 }

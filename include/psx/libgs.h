@@ -9,16 +9,22 @@
 /* Psy-Q packet work areas are byte buffers holding variable GPU packet layouts. */
 typedef u8 PACKET;
 
+/* Psy-Q ordering-table tag: a 24-bit link and eight-bit packet length. */
+typedef struct {
+    u32 p : 24;
+    u8 num : 8;
+} GsOT_TAG;
+
 /* libgs ordering-table handle. Five words, 0x14 bytes; the 0x14 stride is what
  * the per-display-buffer descriptor arrays are indexed with. `org` points at
  * the OT root, `tag` at the last entry, and `offset`/`point` carry the z
  * origin and resolution the sort helpers bias against. */
 typedef struct {
-    u32 length; /* 0x00; number of ordering-table entries is 1 << length */
-    u32* org;   /* 0x04 */
-    u32 offset; /* 0x08 */
-    u32 point;  /* 0x0C */
-    u32* tag;   /* 0x10 */
+    u32 length;    /* 0x00; number of ordering-table entries is 1 << length */
+    GsOT_TAG* org; /* 0x04 */
+    u32 offset;    /* 0x08 */
+    u32 point;     /* 0x0C */
+    GsOT_TAG* tag; /* 0x10 */
 } GsOT;
 
 typedef char gs_ot_size_must_be_0x14[(sizeof(GsOT) == 0x14) ? 1 : -1];

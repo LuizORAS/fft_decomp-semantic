@@ -434,9 +434,9 @@ typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_stat
  * (wldcore_window_render_record_t). */
 struct wldcore_window_render_record;
 
-extern u32 g_wldcore_gfx_aux_ot_tags[2][4];
+extern GsOT_TAG g_wldcore_gfx_aux_ot_tags[2][4];
 extern GsOT g_wldcore_gfx_aux_ordering_tables[2];
-extern u32 g_wldcore_gfx_ot_tags[2][16];
+extern GsOT_TAG g_wldcore_gfx_ot_tags[2][16];
 extern GsOT g_wldcore_gfx_ordering_tables[2];
 extern PACKET g_wldcore_gfx_world_primitive_buffers[];
 extern s32 g_wldcore_picture_sector_offsets[];
