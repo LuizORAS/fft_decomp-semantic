@@ -1,9 +1,7 @@
 #include "psx/libgte.h"
 
 /* main 0x8001cf48–0x8001cf6c: copy the translation vector, return matrix in v0. */
-MATRIX* TransMatrix(MATRIX* matrix_address, VECTOR* vector_address) {
-    MATRIX* matrix = matrix_address;
-    VECTOR* vector = vector_address;
+MATRIX* TransMatrix(MATRIX* matrix, VECTOR* vector) {
     /* The three 32-bit translation components retain the handwritten t0-t2 store order. */
     register s32 x __asm__("$8") = vector->vx; /* The library uses fixed scratch registers. */
     register s32 y __asm__("$9") = vector->vy;

@@ -4,8 +4,6 @@
 /* main 0x8001d658–0x8001d8e4: construct rotation from the packed sin/cos table.
  * The low 32 bits of unsigned products and negation before rescaling retain rounding. */
 MATRIX* RotMatrix(SVECTOR* rotation, MATRIX* output) {
-    SVECTOR* angles = rotation;
-    MATRIX* destination = output;
     MATRIX* result;
     register s32 cosine_x __asm__("$8");
     register s32 cosine_y __asm__("$9");
@@ -17,8 +15,8 @@ MATRIX* RotMatrix(SVECTOR* rotation, MATRIX* output) {
     register s32 angle __asm__("$15");
     register s32 temporary __asm__("$24");
     register s32 packed __asm__("$25");
-    angle = angles->vx;
-    result = destination;
+    angle = rotation->vx;
+    result = output;
     packed = angle & 0xfff;
     if (angle >= 0)
         goto positive_x;
@@ -53,7 +51,7 @@ positive_x:
         : "=r"(cosine_x)
         : "0"(cosine_x)); /* Keep the signed-angle arms separate; negative-arm cosine fills its jump delay. */
 x_ready:
-    angle = angles->vy;
+    angle = rotation->vy;
     packed = angle & 0xfff;
     if (angle >= 0)
         goto positive_y;
@@ -90,19 +88,19 @@ positive_y:
         : "0"(cosine_y)); /* Keep the signed-angle arms separate; negative-arm cosine fills its jump delay. */
 y_ready:
     PSYQ_GTE_MULTU_BEGIN(cosine_y, sine_x);
-    angle = angles->vz;
-    destination->m[0][2] = value;
+    angle = rotation->vz;
+    output->m[0][2] = value;
     PSYQ_GTE_READ_LO(temporary);
     packed = 0U - temporary;
     value = packed >> 12;
     PSYQ_GTE_MULTU_BEGIN(cosine_y, cosine_x);
-    destination->m[1][2] = value;
+    output->m[1][2] = value;
     packed = angle & 0xfff;
     if (angle >= 0)
         goto positive_z;
     PSYQ_GTE_READ_LO(temporary);
     value = temporary >> 12;
-    destination->m[2][2] = value;
+    output->m[2][2] = value;
     __asm__ volatile(""
         : "=r"(angle)
         : "0"(angle)
@@ -126,7 +124,7 @@ y_ready:
 positive_z:
     PSYQ_GTE_READ_LO(angle);
     value = angle >> 12;
-    destination->m[2][2] = value;
+    output->m[2][2] = value;
     __asm__ volatile("" : : : "memory"); /* Finish the store before the paired table relocation sequence. */
     temporary = packed << 2;
     PSYQ_GTE_TABLE_HIGH_PAIRED(packed, g_psyq_gte_sin_cos_table);
@@ -145,13 +143,13 @@ z_ready:
     PSYQ_GTE_MULTU_BEGIN(cosine_z, cosine_y);
     PSYQ_GTE_READ_LO_WAIT2(angle);
     value = angle >> 12;
-    destination->m[0][0] = value;
+    output->m[0][0] = value;
     PSYQ_GTE_MULTU_BEGIN(sine_z, cosine_y);
     PSYQ_GTE_READ_LO_WAIT2(angle);
     value = 0U - angle;
     angle = value >> 12;
     PSYQ_GTE_MULTU_BEGIN(cosine_z, negative_sine_y);
-    destination->m[0][1] = angle;
+    output->m[0][1] = angle;
     PSYQ_GTE_MULTIPLY_WAIT();
     PSYQ_GTE_READ_LO(angle);
     temporary = angle >> 12;
@@ -165,7 +163,7 @@ z_ready:
     packed = angle >> 12;
     angle = packed - value;
     PSYQ_GTE_MULTU_BEGIN(temporary, cosine_x);
-    destination->m[1][0] = angle;
+    output->m[1][0] = angle;
     PSYQ_GTE_MULTIPLY_WAIT();
     PSYQ_GTE_READ_LO(value);
     angle = value >> 12;
@@ -175,7 +173,7 @@ z_ready:
     packed = value >> 12;
     value = packed + angle;
     PSYQ_GTE_MULTU_BEGIN(sine_z, negative_sine_y);
-    destination->m[2][0] = value;
+    output->m[2][0] = value;
     PSYQ_GTE_MULTIPLY_WAIT();
     PSYQ_GTE_READ_LO(angle);
     temporary = angle >> 12;
@@ -189,7 +187,7 @@ z_ready:
     packed = angle >> 12;
     angle = packed + value;
     PSYQ_GTE_MULTU_BEGIN(temporary, cosine_x);
-    destination->m[1][1] = angle;
+    output->m[1][1] = angle;
     PSYQ_GTE_MULTIPLY_WAIT();
     PSYQ_GTE_READ_LO(value);
     angle = value >> 12;
@@ -198,7 +196,7 @@ z_ready:
     PSYQ_GTE_READ_LO_WAIT2(value);
     packed = value >> 12;
     value = packed - angle;
-    destination->m[2][1] = value;
+    output->m[2][1] = value;
     __asm__ volatile("" : : : "memory"); /* Keep the final empty return delay slot. */
     return result;
 }
