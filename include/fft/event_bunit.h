@@ -414,7 +414,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);
 void bunit_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 void bunit_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
 void bunit_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
-void bunit_gfx_enqueue_gouraud_quad(u16* pts, rgb24_t* color, s32 semi, s32 idx);
+void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, rgb24_t* color, s32 semi, s32 idx);
 rgb24_t* bunit_gfx_get_draw_color(void);
 void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,

@@ -7,19 +7,19 @@
  * `pts` holds the four corners as x, y pairs and `color` four RGB triples.
  * Screen x coordinates use the menu's +0x80 origin.
  */
-void bunit_gfx_enqueue_gouraud_quad(u16* pts, rgb24_t* color, s32 semi, s32 idx) {
+void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, rgb24_t* color, s32 semi, s32 idx) {
     POLY_G4* poly;
 
     poly = &g_bunit_gfx_context->gouraud_quads[g_bunit_gfx_poly_g4_count++];
     SetSemiTrans(poly, semi);
-    poly->x0 = pts[0] + 0x80;
-    poly->y0 = pts[1];
-    poly->x1 = pts[2] + 0x80;
-    poly->y1 = pts[3];
-    poly->x2 = pts[4] + 0x80;
-    poly->y2 = pts[5];
-    poly->x3 = pts[6] + 0x80;
-    poly->y3 = pts[7];
+    poly->x0 = pts[0].x + 0x80;
+    poly->y0 = pts[0].y;
+    poly->x1 = pts[1].x + 0x80;
+    poly->y1 = pts[1].y;
+    poly->x2 = pts[2].x + 0x80;
+    poly->y2 = pts[2].y;
+    poly->x3 = pts[3].x + 0x80;
+    poly->y3 = pts[3].y;
     poly->r0 = color[0].r;
     poly->g0 = color[0].g;
     poly->b0 = color[0].b;

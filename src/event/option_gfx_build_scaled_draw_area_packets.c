@@ -12,7 +12,7 @@
  * rectangle is the frame buffer's own area. With `lower_half` zero both are
  * placed in the buffer at y 0xF0.
  */
-void option_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const void* source,
+void option_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
     s32 scale_index, s32 lower_half, const world_status_thread_t* thread) {
     s32 percent;
     s32 w;
@@ -26,7 +26,7 @@ void option_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t
         scale_index = 11;
     }
     percent = g_option_gfx_draw_area_scale_percent[scale_index];
-    battle_copy_bytes(&packet->rects[0], source, 8);
+    battle_copy_bytes(&packet->rects[0], source, sizeof(*source));
     w = packet->rects[0].w;
     h = packet->rects[0].h;
     packet->rects[0].x -= 0x80;

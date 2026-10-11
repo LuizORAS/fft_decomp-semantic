@@ -38,7 +38,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     RECT unused[3];
     RECT cell;
     RECT rect;
-    u16 bar_points[8];
+    upoint16_t bar_points[4];
     RECT unused2;
     rgb24_t saved_color;
     s32 row;
@@ -251,20 +251,20 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     rect.h = 3;
                     bunit_gfx_enqueue_textured_quad(
                         &rect, 0xD8, 0xCA, color, 0, g_bunit_menu_icon_texture_page, clut, 7);
-                    bar_points[0] = g_bunit_unit_grid_gauge_offsets[0] + cell.x;
-                    bar_points[1] = g_bunit_unit_grid_gauge_offsets[1] + top + 8;
+                    bar_points[0].x = g_bunit_unit_grid_gauge_offsets[0] + cell.x;
+                    bar_points[0].y = g_bunit_unit_grid_gauge_offsets[1] + top + 8;
                     if (g_bunit_unit_max_stat_value != 0) {
                         width = (g_bunit_unit_current_stat_value << 5) / g_bunit_unit_max_stat_value;
                     } else {
                         width = 0;
                     }
-                    bar_points[6] = bar_points[2] = width;
-                    bar_points[2] += bar_points[0];
-                    bar_points[3] = g_bunit_unit_grid_gauge_offsets[1] + top + 8;
-                    bar_points[4] = g_bunit_unit_grid_gauge_offsets[2] + cell.x;
-                    bar_points[5] = g_bunit_unit_grid_gauge_offsets[3] + top + 8;
-                    bar_points[6] += bar_points[4];
-                    bar_points[7] = g_bunit_unit_grid_gauge_offsets[3] + top + 8;
+                    bar_points[3].x = bar_points[1].x = width;
+                    bar_points[1].x += bar_points[0].x;
+                    bar_points[1].y = g_bunit_unit_grid_gauge_offsets[1] + top + 8;
+                    bar_points[2].x = g_bunit_unit_grid_gauge_offsets[2] + cell.x;
+                    bar_points[2].y = g_bunit_unit_grid_gauge_offsets[3] + top + 8;
+                    bar_points[3].x += bar_points[2].x;
+                    bar_points[3].y = g_bunit_unit_grid_gauge_offsets[3] + top + 8;
                     bunit_gfx_enqueue_gouraud_quad(bar_points, gradient, 0, 8);
                 } else if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_LEVEL_EXP) {
                     top = cell_y + 45;

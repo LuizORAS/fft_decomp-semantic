@@ -230,7 +230,7 @@ void equip_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
 void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
-void equip_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const void* source,
+void equip_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
     s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
 
 void equip_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
