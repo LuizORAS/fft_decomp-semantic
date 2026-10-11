@@ -17,6 +17,7 @@ void require_apply_post_battle_unit_changes(void) {
     s32 transition;
     s32* initial_unit_index_ptr;
     s32* unit_index_ptr;
+    battle_active_unit_t* initial_unit_data;
     s32* selected_unit_index_ptr;
     world_menu_entry_t* menu_base;
     u8* menu_fields;
@@ -54,10 +55,10 @@ void require_apply_post_battle_unit_changes(void) {
     affected_index = 0;
     require_text_build_battle_nicknames();
     initial_unit_index_ptr = g_require_party_affected_battle_unit_indices;
-    selected_unit_index_ptr = (s32*)&g_require_active_unit_data;
+    initial_unit_data = &g_require_active_unit_data;
     battle_unit_get_stats_from_battle_id(*initial_unit_index_ptr);
     g_require_active_unit_data.battle_id = *initial_unit_index_ptr;
-    *(u16*)selected_unit_index_ptr = *initial_unit_index_ptr;
+    initial_unit_data->name_id = *initial_unit_index_ptr;
     require_editor_load_selected_unit();
     g_require_panel_selected_billboard.unit_index = *initial_unit_index_ptr;
 
@@ -67,7 +68,7 @@ void require_apply_post_battle_unit_changes(void) {
      * 8-byte frame slots. */
     if (affected_index < g_require_party_affected_unit_count) {
         transition_c_ptr = &g_require_character_status_origin_x;
-        unit_display_data = (battle_active_unit_t*)selected_unit_index_ptr;
+        unit_display_data = initial_unit_data;
         one = 1;
         menu_fields = (u8*)&menu_base->inner_width;
         /* Hide the constants from local-alloc, or the s3-s5 assignment rotates. */
