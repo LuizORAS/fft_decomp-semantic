@@ -364,9 +364,7 @@ s32 effect_e317_update_tube_mesh_state(s16 record_index, s32 callback_slot, s32 
         shade_b = (k * blue) >> 12;
         for (i = 0; i < 8; i++) {
             quad = &work->quads[work->buffer][i];
-            quad->r2 = quad->r3 = shade_r;
-            quad->g2 = quad->g3 = shade_g;
-            quad->b2 = quad->b3 = shade_b;
+            setRGB2(quad, quad->r3 = shade_r, quad->g3 = shade_g, quad->b3 = shade_b);
         }
         for (j = 0; j < 7; j++) {
             k = g_effect_e317_tube_mesh_brightness_table[n][j + 1];
@@ -376,9 +374,8 @@ s32 effect_e317_update_tube_mesh_state(s16 record_index, s32 callback_slot, s32 
             for (i = 0; i < 8; i++) {
                 quad = &work->quads[work->buffer][j * 8 + i];
                 other = &work->quads[work->buffer][(j + 1) * 8 + i];
-                quad->r0 = quad->r1 = other->r2 = other->r3 = shade_r;
-                quad->g0 = quad->g1 = other->g2 = other->g3 = shade_g;
-                quad->b0 = quad->b1 = other->b2 = other->b3 = shade_b;
+                setRGB0(quad, quad->r1 = other->r2 = other->r3 = shade_r, quad->g1 = other->g2 = other->g3 = shade_g,
+                    quad->b1 = other->b2 = other->b3 = shade_b);
             }
         }
         k = g_effect_e317_tube_mesh_brightness_table[n][8];
@@ -387,9 +384,7 @@ s32 effect_e317_update_tube_mesh_state(s16 record_index, s32 callback_slot, s32 
         shade_b = (k * blue) >> 12;
         for (i = 0; i < 8; i++) {
             quad = &work->quads[work->buffer][56 + i];
-            quad->r0 = quad->r1 = shade_r;
-            quad->g0 = quad->g1 = shade_g;
-            quad->b0 = quad->b1 = shade_b;
+            setRGB0(quad, quad->r1 = shade_r, quad->g1 = shade_g, quad->b1 = shade_b);
         }
 
         for (j = 0; j < 8; j++) {

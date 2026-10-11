@@ -150,13 +150,11 @@ s32 effect_e067_update_textured_quad_grid_4x4(s16 record_index, s32 callback_slo
                 quad->v0 = quad->v1 = v;
                 quad->v2 = quad->v3 = v + texture_height;
                 row = g_effect_gfx_brightness_table[brightness_row][quad_row];
-                quad->r0 = quad->r1 = (row * red) >> 12;
-                quad->g0 = quad->g1 = (row * green) >> 12;
-                quad->b0 = quad->b1 = (row * blue) >> 12;
+                setRGB0(
+                    quad, quad->r1 = (row * red) >> 12, quad->g1 = (row * green) >> 12, quad->b1 = (row * blue) >> 12);
                 row = g_effect_gfx_brightness_table[brightness_row][quad_row + 1];
-                quad->r2 = quad->r3 = (row * red) >> 12;
-                quad->g2 = quad->g3 = (row * green) >> 12;
-                quad->b2 = quad->b3 = (row * blue) >> 12;
+                setRGB2(
+                    quad, quad->r3 = (row * red) >> 12, quad->g3 = (row * green) >> 12, quad->b3 = (row * blue) >> 12);
                 AddPrim(ot + depth, quad);
             }
         }

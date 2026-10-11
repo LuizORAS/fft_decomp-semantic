@@ -496,9 +496,9 @@ s32 effect_e401_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             offset_quad->v2 = quad->v2 = v + height;
             scratch = g_effect_tentacle_mesh_brightness_table[brightness_row][shade_index];
             shade_index--;
-            offset_quad->r0 = offset_quad->r2 = quad->r0 = quad->r2 = (scratch * red) >> 12;
-            offset_quad->g0 = offset_quad->g2 = quad->g0 = quad->g2 = (scratch * green) >> 12;
-            offset_quad->b0 = offset_quad->b2 = quad->b0 = quad->b2 = (scratch * blue) >> 12;
+            setRGB0(offset_quad, offset_quad->r2 = quad->r0 = quad->r2 = (scratch * red) >> 12,
+                offset_quad->g2 = quad->g0 = quad->g2 = (scratch * green) >> 12,
+                offset_quad->b2 = quad->b0 = quad->b2 = (scratch * blue) >> 12);
 
             for (index = 1; index < link_count; index++) {
                 point_index--;
@@ -564,9 +564,9 @@ s32 effect_e401_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             offset_quad->v1 = quad->v1 = v;
             offset_quad->v3 = quad->v3 = v + height;
             scratch = g_effect_tentacle_mesh_brightness_table[brightness_row][shade_index];
-            offset_quad->r1 = offset_quad->r3 = quad->r1 = quad->r3 = (scratch * red) >> 12;
-            offset_quad->g1 = offset_quad->g3 = quad->g1 = quad->g3 = (scratch * green) >> 12;
-            offset_quad->b1 = offset_quad->b3 = quad->b1 = quad->b3 = (scratch * blue) >> 12;
+            setRGB1(offset_quad, offset_quad->r3 = quad->r1 = quad->r3 = (scratch * red) >> 12,
+                offset_quad->g3 = quad->g1 = quad->g3 = (scratch * green) >> 12,
+                offset_quad->b3 = quad->b1 = quad->b3 = (scratch * blue) >> 12);
             if (depth < EFFECT_OT_DEPTH_MIN) {
                 depth = EFFECT_OT_DEPTH_MIN;
             }

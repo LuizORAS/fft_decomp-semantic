@@ -208,9 +208,7 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
             quad->u1 = quad->u3 = scratch->u1;
             quad->v0 = quad->v1 = scratch->v0;
             quad->v2 = quad->v3 = scratch->v1;
-            quad->r0 = quad->r1 = scratch->r;
-            quad->g0 = quad->g1 = scratch->g;
-            quad->b0 = quad->b1 = scratch->b;
+            setRGB0(quad, quad->r1 = scratch->r, quad->g1 = scratch->g, quad->b1 = scratch->b);
 
             quad = &work->quads[work->buffer][i + 40];
             quad->x0 = scratch->center.vx - scratch->points[0][i].x;
@@ -221,9 +219,7 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
             quad->u1 = quad->u3 = scratch->u1;
             quad->v0 = quad->v1 = scratch->v0;
             quad->v2 = quad->v3 = scratch->v1;
-            quad->r0 = quad->r1 = scratch->r;
-            quad->g0 = quad->g1 = scratch->g;
-            quad->b0 = quad->b1 = scratch->b;
+            setRGB0(quad, quad->r1 = scratch->r, quad->g1 = scratch->g, quad->b1 = scratch->b);
 
             quad = &work->quads[work->buffer][i + 60];
             quad->x0 = scratch->center.vx + scratch->points[0][i].y;
@@ -234,9 +230,7 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
             quad->u1 = quad->u3 = scratch->u1;
             quad->v0 = quad->v1 = scratch->v0;
             quad->v2 = quad->v3 = scratch->v1;
-            quad->r0 = quad->r1 = scratch->r;
-            quad->g0 = quad->g1 = scratch->g;
-            quad->b0 = quad->b1 = scratch->b;
+            setRGB0(quad, quad->r1 = scratch->r, quad->g1 = scratch->g, quad->b1 = scratch->b);
         }
 
         for (j = 0; j < 4; j++) {
@@ -267,9 +261,8 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
                 quad->y0 = inner->y2 = scratch->center.vy + scratch->points[j + 1][i].x;
                 quad->x1 = inner->x3 = scratch->center.vx - scratch->points[j + 1][i + 1].y;
                 quad->y1 = inner->y3 = scratch->center.vy + scratch->points[j + 1][i + 1].x;
-                quad->r0 = quad->r1 = inner->r2 = inner->r3 = scratch->r;
-                quad->g0 = quad->g1 = inner->g2 = inner->g3 = scratch->g;
-                quad->b0 = quad->b1 = inner->b2 = inner->b3 = scratch->b;
+                setRGB0(quad, quad->r1 = inner->r2 = inner->r3 = scratch->r,
+                    quad->g1 = inner->g2 = inner->g3 = scratch->g, quad->b1 = inner->b2 = inner->b3 = scratch->b);
                 AddPrim(ot + scratch->ot_depth, inner);
                 quad->u0 = quad->u2 = scratch->u0;
                 quad->u1 = quad->u3 = scratch->u1;
@@ -282,9 +275,8 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
                 quad->y0 = inner->y2 = scratch->center.vy - scratch->points[j + 1][i].y;
                 quad->x1 = inner->x3 = scratch->center.vx - scratch->points[j + 1][i + 1].x;
                 quad->y1 = inner->y3 = scratch->center.vy - scratch->points[j + 1][i + 1].y;
-                quad->r0 = quad->r1 = inner->r2 = inner->r3 = scratch->r;
-                quad->g0 = quad->g1 = inner->g2 = inner->g3 = scratch->g;
-                quad->b0 = quad->b1 = inner->b2 = inner->b3 = scratch->b;
+                setRGB0(quad, quad->r1 = inner->r2 = inner->r3 = scratch->r,
+                    quad->g1 = inner->g2 = inner->g3 = scratch->g, quad->b1 = inner->b2 = inner->b3 = scratch->b);
                 AddPrim(ot + scratch->ot_depth, inner);
                 quad->u0 = quad->u2 = scratch->u0;
                 quad->u1 = quad->u3 = scratch->u1;
@@ -297,9 +289,8 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
                 quad->y0 = inner->y2 = scratch->center.vy - scratch->points[j + 1][i].x;
                 quad->x1 = inner->x3 = scratch->center.vx + scratch->points[j + 1][i + 1].y;
                 quad->y1 = inner->y3 = scratch->center.vy - scratch->points[j + 1][i + 1].x;
-                quad->r0 = quad->r1 = inner->r2 = inner->r3 = scratch->r;
-                quad->g0 = quad->g1 = inner->g2 = inner->g3 = scratch->g;
-                quad->b0 = quad->b1 = inner->b2 = inner->b3 = scratch->b;
+                setRGB0(quad, quad->r1 = inner->r2 = inner->r3 = scratch->r,
+                    quad->g1 = inner->g2 = inner->g3 = scratch->g, quad->b1 = inner->b2 = inner->b3 = scratch->b);
                 AddPrim(ot + scratch->ot_depth, inner);
                 quad->u0 = quad->u2 = scratch->u0;
                 quad->u1 = quad->u3 = scratch->u1;
@@ -329,9 +320,7 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
             quad->y2 = scratch->center.vy + scratch->points[5][i].x;
             quad->x3 = scratch->center.vx - scratch->points[5][i + 1].y;
             quad->y3 = scratch->center.vy + scratch->points[5][i + 1].x;
-            quad->r2 = quad->r3 = scratch->r;
-            quad->g2 = quad->g3 = scratch->g;
-            quad->b2 = quad->b3 = scratch->b;
+            setRGB2(quad, quad->r3 = scratch->r, quad->g3 = scratch->g, quad->b3 = scratch->b);
             AddPrim(ot + scratch->ot_depth, quad);
 
             quad = &work->quads[work->buffer][i + 16 + 40];
@@ -339,9 +328,7 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
             quad->y2 = scratch->center.vy - scratch->points[5][i].y;
             quad->x3 = scratch->center.vx - scratch->points[5][i + 1].x;
             quad->y3 = scratch->center.vy - scratch->points[5][i + 1].y;
-            quad->r2 = quad->r3 = scratch->r;
-            quad->g2 = quad->g3 = scratch->g;
-            quad->b2 = quad->b3 = scratch->b;
+            setRGB2(quad, quad->r3 = scratch->r, quad->g3 = scratch->g, quad->b3 = scratch->b);
             AddPrim(ot + scratch->ot_depth, quad);
 
             quad = &work->quads[work->buffer][i + 16 + 60];
@@ -349,9 +336,7 @@ s32 effect_e469_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
             quad->y2 = scratch->center.vy - scratch->points[5][i].x;
             quad->x3 = scratch->center.vx + scratch->points[5][i + 1].y;
             quad->y3 = scratch->center.vy - scratch->points[5][i + 1].x;
-            quad->r2 = quad->r3 = scratch->r;
-            quad->g2 = quad->g3 = scratch->g;
-            quad->b2 = quad->b3 = scratch->b;
+            setRGB2(quad, quad->r3 = scratch->r, quad->g3 = scratch->g, quad->b3 = scratch->b);
             AddPrim(ot + scratch->ot_depth, quad);
         }
         work->frame++;

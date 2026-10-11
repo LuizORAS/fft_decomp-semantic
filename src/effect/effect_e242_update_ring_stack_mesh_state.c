@@ -368,9 +368,9 @@ s32 effect_e242_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
             for (i = 0; i < 8; i++) {
                 quad = &work->quads[buffer][j * 8 + i];
                 other = &work->quads[buffer][(j + 1) * 8 + i];
-                quad->r0 = quad->r1 = other->r2 = other->r3 = (k * red) >> 12;
-                quad->g0 = quad->g1 = other->g2 = other->g3 = (k * green) >> 12;
-                quad->b0 = quad->b1 = other->b2 = other->b3 = (k * blue) >> 12;
+                setRGB0(quad, quad->r1 = other->r2 = other->r3 = (k * red) >> 12,
+                    quad->g1 = other->g2 = other->g3 = (k * green) >> 12,
+                    quad->b1 = other->b2 = other->b3 = (k * blue) >> 12);
             }
         }
         k = g_effect_e242_ring_stack_mesh_brightness_table[n][8];

@@ -505,9 +505,8 @@ s32 effect_e317_update_particle_ribbons_short_state(s16 record_index, s32 callba
             quad->v0 = v;
             quad->v2 = v + height;
             factor = g_effect_e317_particle_ribbon_short_brightness_table[row][point];
-            quad->r0 = quad->r2 = factor * red >> 12;
-            quad->g0 = quad->g2 = factor * green >> 12;
-            quad->b0 = quad->b2 = factor * blue >> 12;
+            setRGB0(
+                quad, quad->r2 = factor * red >> 12, quad->g2 = factor * green >> 12, quad->b2 = factor * blue >> 12);
             point--;
             for (j = 1; j < segments; j++) {
                 index--;
@@ -537,9 +536,9 @@ s32 effect_e317_update_particle_ribbons_short_state(s16 record_index, s32 callba
                 prev->v1 = quad->v0 = v;
                 prev->v3 = quad->v2 = v + height;
                 factor = g_effect_e317_particle_ribbon_short_brightness_table[row][point];
-                prev->r1 = prev->r3 = quad->r0 = quad->r2 = factor * red >> 12;
-                prev->g1 = prev->g3 = quad->g0 = quad->g2 = factor * green >> 12;
-                prev->b1 = prev->b3 = quad->b0 = quad->b2 = factor * blue >> 12;
+                setRGB1(prev, prev->r3 = quad->r0 = quad->r2 = factor * red >> 12,
+                    prev->g3 = quad->g0 = quad->g2 = factor * green >> 12,
+                    prev->b3 = quad->b0 = quad->b2 = factor * blue >> 12);
                 point--;
                 if (depth < EFFECT_OT_DEPTH_MIN) {
                     depth = EFFECT_OT_DEPTH_MIN;
@@ -561,9 +560,8 @@ s32 effect_e317_update_particle_ribbons_short_state(s16 record_index, s32 callba
             quad->v1 = v;
             quad->v3 = v + height;
             factor = g_effect_e317_particle_ribbon_short_brightness_table[row][point];
-            quad->r1 = quad->r3 = factor * red >> 12;
-            quad->g1 = quad->g3 = factor * green >> 12;
-            quad->b1 = quad->b3 = factor * blue >> 12;
+            setRGB1(
+                quad, quad->r3 = factor * red >> 12, quad->g3 = factor * green >> 12, quad->b3 = factor * blue >> 12);
             if (depth < EFFECT_OT_DEPTH_MIN) {
                 depth = EFFECT_OT_DEPTH_MIN;
             }
