@@ -30,9 +30,9 @@ void world_menu_load_common_graphics(s32 load_extra_pages) {
     g_world_thread_call_target = main_file_load_checked_to_heap;
     resource = (world_menu_graphics_resource_t*)world_thread_call_on_main_stack(
         DISC_SECTOR_EVENT_FRAME_BIN, sizeof(main_gfx_frame_bin_t));
-    LoadImage(&g_world_menu_frame_image_rect, resource->frame.pixels);
-    LoadImage(&g_world_menu_frame_palette_rect, resource->frame.cluts);
-    LoadImage(&g_world_menu_frame_palette_tail_rect, resource->frame.cluts_tail);
+    LoadImage(&g_world_menu_frame_image_rect, (u32*)resource->frame.pixels[32]);
+    LoadImage(&g_world_menu_frame_palette_rect, (u32*)resource->frame.clut);
+    LoadImage(&g_world_menu_frame_palette_tail_rect, (u32*)resource->frame.palette_tail);
     world_menu_set_palette_colors(&g_world_menu_glyph_sheet->palette);
     DrawSync(0);
     main_heap_call_free(resource);

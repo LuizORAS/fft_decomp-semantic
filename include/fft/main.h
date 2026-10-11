@@ -1944,15 +1944,13 @@ extern POLY_FT4 g_main_zodiac_primitives[2][30];
 
 /* gfx */
 
-/* EVENT/FRAME.BIN as loaded: 0x92c0 bytes of file in a sector-rounded
- * 0x9800-byte buffer. Its loaders upload the three regions after the first
- * 0x1000 bytes; the arrays are words for LoadImage. */
+/* EVENT/FRAME.BIN: 256x288 pixels at 4bpp and 22 palettes, sector rounded.
+ * The loaders upload rows 32..287 and the two palette blocks. */
 typedef struct main_gfx_frame_bin {
-    u8 _unused_0000[0x1000];            /* 0x0000; not uploaded */
-    u32 pixels[0x8000 / sizeof(u32)];   /* 0x1000; 256x256 at 4 bits per pixel */
-    u32 cluts[0x200 / sizeof(u32)];     /* 0x9000; 16 CLUTs */
-    u32 cluts_tail[0xc0 / sizeof(u32)]; /* 0x9200; 6 CLUTs */
-    u8 _padding_92c0[0x540];            /* 0x92c0; past the end of the file, to the sector boundary */
+    u8 pixels[288][128];       /* 0x0000; two 4bpp pixels per byte */
+    clut_t clut;               /* 0x9000; first 16 palettes */
+    palette_t palette_tail[6]; /* 0x9200; remaining six palettes */
+    u8 _padding_92c0[0x540];   /* 0x92c0; past the end of the file, to the sector boundary */
 } main_gfx_frame_bin_t;
 typedef char main_gfx_frame_bin_size_must_be_0x9800[(sizeof(main_gfx_frame_bin_t) == 0x9800) ? 1 : -1];
 
