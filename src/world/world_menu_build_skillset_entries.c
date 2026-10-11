@@ -41,10 +41,10 @@ void world_menu_build_skillset_entries(void) {
         }
         if (g_battle_menu_skillset_disabled_flags[i] != 0) {
             rows[i].style = 4;
-            g_world_menu_skillset_row_actions[i] = 0x1003;
+            g_world_menu_skillset_row_actions[i] = MENU_ROW_ACTION_SILENT | BATTLE_MENU_ID_ABILITY_LIST;
         } else {
             rows[i].style = 0;
-            g_world_menu_skillset_row_actions[i] = 3;
+            g_world_menu_skillset_row_actions[i] = BATTLE_MENU_ID_ABILITY_LIST;
         }
         if (g_world_menu_monster_skillset_flag != 0) {
             g_world_text_substitution_values[count] = TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -56,7 +56,7 @@ void world_menu_build_skillset_entries(void) {
     }
     if (world_script_get_variable(EVENT_SCRIPT_VAR_ANYTHING_ACTION_ENABLED) != 0 && i < 6) {
         rows[i].style = 0;
-        g_world_menu_skillset_row_actions[i] = 0x16;
+        g_world_menu_skillset_row_actions[i] = BATTLE_MENU_ID_PROMPT_16;
         g_world_action_menu_skillsets[i] = ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
         g_world_action_menu_skillsets[i + 1] = SKILLSET_ID_NONE;
         g_world_text_substitution_values[count++]

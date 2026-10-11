@@ -2165,7 +2165,7 @@ extern world_menu_scroll_text_layout_t g_world_menu_status_list_layout;
 extern world_menu_scroll_text_layout_t g_world_menu_at_list_layout;
 extern s16 g_world_menu_auto_battle_row_actions[8];
 extern s16 g_world_menu_action_slot_row_actions[6];
-extern s16 g_world_menu_skillset_row_actions[]; /* per-row message id */
+extern s16 g_world_menu_skillset_row_actions[]; /* row actions of BATTLE_MENU_ID_SKILLSET_LIST */
 extern s16 g_world_menu_wait_row_actions[4];
 extern u16 g_world_menu_status_list_row_actions[8];
 extern u16 g_world_menu_system_function_row_actions[];
