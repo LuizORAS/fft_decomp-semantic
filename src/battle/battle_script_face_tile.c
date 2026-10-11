@@ -30,7 +30,7 @@ void battle_script_face_tile(const event_face_tile_parameters_t* parameters) {
         return;
     }
     for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
-        if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_filter_modes[i], &state) != 0) {
+        if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_face_slot_order[i], &state) != 0) {
             battle_unit_copy_misc_screen_coords(unit_id, &screen);
             dx = tile.vx - screen.vx;
             dy = tile.vz - screen.vz;

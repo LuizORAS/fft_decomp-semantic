@@ -2510,7 +2510,7 @@ data:
   - {addr: 0x801696fc, name: g_battle_script_loaded_event_id}
   - {addr: 0x80169700, name: g_battle_script_map_darkness_durations}
   - {addr: 0x80169718, name: g_battle_camera_diagonal_yaws}
-  - {addr: 0x80169720, name: g_battle_script_unit_filter_modes}
+  - {addr: 0x80169720, name: g_battle_script_unit_face_slot_order}
   - {addr: 0x80169750, name: g_battle_rotation_speed_frames}
   - {addr: 0x80169758, name: g_battle_event_status_masks}
   - {addr: 0x80169770, name: g_battle_menu_number_glyph_rect}

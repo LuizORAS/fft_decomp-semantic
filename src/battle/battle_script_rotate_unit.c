@@ -9,23 +9,23 @@
  * relative to the camera quadrant, 0x14 restores the saved facing, and any
  * other value is absolute. Matching records are staggered by delay * n / 4.
  *
- * The restore arm carries its own copy of the misc_index test, which is what
- * retail does: it reloads misc_index and jumps past the absolute arm's own
+ * The restore arm carries its own copy of the filter_mode test, which is what
+ * retail does: it reloads filter_mode and jumps past the absolute arm's own
  * reload, so cross-jumping merges only the branch and the loop increment. */
 void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters) {
     u16 unit_id;
-    s32 misc_index;
+    s32 filter_mode;
     s32 i;
     s32 order;
     s32 facing;
-    s32 restore_misc_index;
+    s32 saved_filter_mode;
     unit_animation_state_t* state;
 
     order = 1;
     unit_id = battle_script_load_halfword(parameters->unit_id_le);
-    if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
+    if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &filter_mode) != 0) {
         for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
-            if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_filter_modes[i], &misc_index)
+            if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_face_slot_order[i], &filter_mode)
                 != 0) {
                 facing = parameters->facing;
                 if (facing >= EVENT_ROTATE_UNIT_FACING_RELATIVE_FIRST && facing < EVENT_ROTATE_UNIT_FACING_RESTORE) {
@@ -44,10 +44,10 @@ void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters)
                         state->rotating = 1;
                         state->delay = parameters->delay * order++ / 4;
                     }
-                    restore_misc_index = misc_index;
+                    saved_filter_mode = filter_mode;
                     /* Keep the restore arm's stack reload before its loop exit. */
-                    __asm__("" : "=r"(restore_misc_index) : "0"(restore_misc_index));
-                    if (restore_misc_index == 0) {
+                    __asm__("" : "=r"(saved_filter_mode) : "0"(saved_filter_mode));
+                    if (saved_filter_mode == 0) {
                         return;
                     }
                     continue;
@@ -59,7 +59,7 @@ void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters)
                 state->step_counter = 0;
                 state->rotating = 1;
                 state->delay = parameters->delay * order++ / 4;
-                if (misc_index == 0) {
+                if (filter_mode == 0) {
                     return;
                 }
             }

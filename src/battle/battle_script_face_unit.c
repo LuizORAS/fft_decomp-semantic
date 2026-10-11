@@ -32,7 +32,8 @@ void battle_script_face_unit(const event_face_unit_parameters_t* parameters, s32
         misc_id = battle_script_get_misc_id(misc_id);
         if (misc_id != EVENT_MISC_ID_NONE) {
             for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
-                if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_filter_modes[i], &misc_index)
+                if (battle_script_filter_unit_id_by_mode(
+                        &unit_id, &g_battle_script_unit_face_slot_order[i], &misc_index)
                         != 0
                     && misc_id != unit_id) {
                     battle_unit_copy_misc_screen_coords(misc_id, &position);

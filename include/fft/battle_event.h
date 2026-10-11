@@ -39,7 +39,7 @@ extern s16 g_battle_event_effect_target_x;
 extern s16 g_battle_event_effect_target_y;
 extern u8 g_battle_script_condition_param_lengths[];
 extern u16 g_battle_script_map_darkness_durations[];
-extern u16 g_battle_script_unit_filter_modes[];
+extern u16 g_battle_script_unit_face_slot_order[];
 extern u32 g_battle_script_event_input;
 extern u32 g_battle_script_saved_event_input;
 extern s16 g_battle_event_map_jump_in_request;
