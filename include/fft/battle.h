@@ -3131,7 +3131,8 @@ typedef struct battle_effect_sprite_part {
     u8 v;
     u8 width;
     u8 height;
-    s32 corners[4]; /* 0x08; packed x/y of the four quad corners */
+    /* Four-byte alignment preserves the original x/y word copies. */
+    DVECTOR corners[4] __attribute__((aligned(4))); /* 0x08 */
 } battle_effect_sprite_part_t;
 typedef char battle_effect_sprite_part_size_must_be_0x18[(sizeof(battle_effect_sprite_part_t) == 0x18) ? 1 : -1];
 
@@ -3265,24 +3266,20 @@ typedef struct battle_effect_sprite_table_header {
 typedef struct battle_effect_sprite_frame {
     u16 flags; /* 0x00; EFFECT_SPRITE_PART_*: SEMI_TRANSPARENT and the tpage mode bits */
     u8 _unused_02[6];
-    u8 u;           /* 0x08 */
-    u8 v;           /* 0x09 */
-    u8 width;       /* 0x0a */
-    u8 height;      /* 0x0b */
-    s32 corners[4]; /* 0x0c; packed x/y pairs for the four quad corners */
+    u8 u;      /* 0x08 */
+    u8 v;      /* 0x09 */
+    u8 width;  /* 0x0a */
+    u8 height; /* 0x0b */
+    /* Four-byte alignment preserves the original x/y word copies. */
+    DVECTOR corners[4] __attribute__((aligned(4))); /* 0x0c */
 } battle_effect_sprite_frame_t;
 
-/* The POLY_FT4 the slot double-buffers. include/psx/libgpu.h spells the tag as one
- * word and the colour as four bytes; this routine writes the tag's length byte
- * and copies the colour as a word, so both are named here. */
+/* POLY_FT4 view with the tag's length byte and packed GTE screen coordinates. */
 typedef struct battle_effect_quad_prim {
     u8 _unused_00[3]; /* 0x00; tag address */
     u8 length;        /* 0x03; tag word count */
-    union {
-        u32 packed;
-        CVECTOR field;
-    } color; /* 0x04 */
-    s32 xy0; /* 0x08 */
+    CVECTOR color;    /* 0x04 */
+    s32 xy0;          /* 0x08 */
     u8 u0;
     u8 v0;
     u16 clut; /* 0x0e */
@@ -3307,14 +3304,11 @@ typedef struct battle_effect_sprite_slot {
     u8 _unused_00[4];
     DR_MODE modes[2][2];                /* 0x04; two draw modes per buffer */
     battle_effect_quad_prim_t quads[2]; /* 0x34 */
-    union {
-        u32 packed;
-        struct {
-            u8 r;
-            u8 g;
-            u8 b;
-            u8 frame;
-        } field;
+    struct {
+        u8 r;
+        u8 g;
+        u8 b;
+        u8 frame;
     } color;  /* 0x84 */
     u16 clut; /* 0x88 */
     u8 _unused_8a[4];
@@ -3619,14 +3613,11 @@ enum {
 
 /* Color and count header followed by one pointer for each sprite part. */
 typedef struct battle_effect_sprite_block {
-    union {
-        u32 packed;
-        struct {
-            u8 red;
-            u8 green;
-            u8 blue;
-            u8 sprite_count;
-        } field;
+    struct {
+        u8 red;
+        u8 green;
+        u8 blue;
+        u8 sprite_count;
     } color;
     u8 _unused_04[4];
     struct battle_effect_sprite_part* frames[1];
@@ -4507,7 +4498,7 @@ extern s32
 
 extern DVECTOR g_battle_effect_charge_line_direction_offsets[];
 extern u8 g_battle_effect_charge_line_fade_levels[];
-/* The GTE loads these vectors as word-aligned inputs. */
+/* Four-byte alignment preserves the original word copies into x/y. */
 extern SVECTOR g_battle_effect_corner_bottom_left __attribute__((aligned(4)));
 extern SVECTOR g_battle_effect_corner_bottom_right __attribute__((aligned(4)));
 extern SVECTOR g_battle_effect_corner_top_left __attribute__((aligned(4)));
@@ -5913,7 +5904,7 @@ extern u32 g_battle_gfx_wait_arrow_blink_timer;
 extern u16 g_battle_3d_object_use_request; /* 0x80165fe2 */
 extern u16 g_battle_3d_object_wait_status; /* 0x8016606e */
 extern battle_render_buffer_t g_battle_buffer_a[2];
-void battle_display_menu_number_entry(s32 value, u8 digit_count, s32 image, glyph_blit_t* origin);
+void battle_display_menu_number_entry(s32 value, u8 digit_count, void* image, glyph_blit_t* origin);
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords);
 void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance);
 
@@ -8794,7 +8785,7 @@ void battle_menu_open_bunit(void);
 void battle_menu_run_bunit_transition_thread(void);
 void battle_menu_set_option_menu_open(void);
 void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos);
-void battle_menu_display_text(u32 text_id, s32 image, glyph_blit_t* origin, u8* text);
+void battle_menu_display_text(u32 text_id, void* image, glyph_blit_t* origin, u8* text);
 
 u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32 unused, RECT* area);
@@ -8803,6 +8794,8 @@ void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, REC
 void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void battle_menu_free_memory(void* buffer);
 void battle_menu_display_text_entry(s32 text_id, void* image, glyph_blit_t* origin);
+void battle_menu_display_text_entry_past_choice_marks(s32 text_id, void* image, glyph_blit_t* origin);
+void battle_menu_display_text_string(void* image, glyph_blit_t* origin, u8* text);
 void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option);
 void battle_menu_set_text_origin(s32 x, s32 y);
 s32 battle_menu_should_close_thread(s32* out_flag);
@@ -8930,7 +8923,7 @@ const u8* battle_text_skip_to_entry(const u8* text_section, s32 entry_id);
 void battle_text_measure_pixels(s16* width, s16* rows, const u8* text);
 u8* battle_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
 void battle_text_render_glyph_to_4bpp_image(
-    const u8* glyph_bitmap, s32 image, glyph_blit_t* origin, s32 palette_offset);
+    const u8* glyph_bitmap, void* image, glyph_blit_t* origin, s32 palette_offset);
 void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 void battle_text_build_unit_name_list(void);
 u8* battle_text_find_entry(u32 text_id);
@@ -9003,7 +8996,6 @@ void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 va
 s32 battle_target_spread_panel_to_neighbors(s32 y, s32 x);
 s32 battle_return_zero(void);
 void blit_text_glyph(void* text, void* pixels, const glyph_blit_t* glyph, glyph_blit_t* position);
-void battle_menu_display_text_string(s32 buffer, s32 position, s32 text);
 
 /* unnamed */
 extern s16 D_800b628c;

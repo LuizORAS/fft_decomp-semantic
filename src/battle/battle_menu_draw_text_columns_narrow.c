@@ -44,8 +44,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
                     battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.pen);
                 }
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
-                battle_display_menu_number_entry(
-                    layout->text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
+                battle_display_menu_number_entry(layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                 if ((column == 2 || (column == 1 && layout->mode[2] == MENU_TEXT_COLUMN_HIDDEN))
                     && layout->text_ids[column][index] >= 0 && layout->text_ids[column][index] < 2

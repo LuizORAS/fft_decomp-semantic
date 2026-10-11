@@ -45,7 +45,8 @@ void battle_menu_display_hovered_unit_stats(
     POLY_G4* poly;
     battle_unit_status_gauge_t* gauge;
     CVECTOR* color;
-    s32* inner_width;
+    glyph_blit_t* origin;
+    s32* stride;
     s32 frame;
     s32 i;
     s32 hide_values;
@@ -300,26 +301,24 @@ void battle_menu_display_hovered_unit_stats(
         if (frame == 0) {
             buffer = battle_menu_alloc_buffer(0x700);
             battle_clear_menu_render_buffer(buffer, 0x700);
-            inner_width = &g_menu_text_state.pen.stride;
-            *inner_width = 0x28;
-            battle_menu_draw_numeric_display_entries(buffer, entries, (glyph_blit_t*)(inner_width - 2), 6);
+            stride = &g_menu_text_state.pen.stride;
+            origin = &g_menu_text_state.pen;
+            *stride = 0x28;
+            battle_menu_draw_numeric_display_entries(buffer, entries, origin, 6);
             LoadImage(&rects[0], (u32*)buffer);
             i = g_battle_menu_hide_numeric_values;
-            *inner_width = 0x60;
+            *stride = 0x60;
             g_battle_menu_hide_numeric_values = 0;
             if (mode == UNIT_STATS_PANEL_HOVERED_UNIT || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
-                battle_menu_draw_numeric_display_entries(
-                    buffer + 0x400, entries + 6, (glyph_blit_t*)(inner_width - 2), 2);
+                battle_menu_draw_numeric_display_entries(buffer + 0x400, entries + 6, origin, 2);
                 g_battle_menu_hide_numeric_values = i;
-                battle_menu_draw_numeric_display_entries(
-                    buffer + 0x400, entries + 8, (glyph_blit_t*)(inner_width - 2), 2);
+                battle_menu_draw_numeric_display_entries(buffer + 0x400, entries + 8, origin, 2);
             } else if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
-                battle_menu_draw_numeric_display_entries(
-                    buffer + 0x400, entries + 6, (glyph_blit_t*)(inner_width - 2), 2);
+                battle_menu_draw_numeric_display_entries(buffer + 0x400, entries + 6, origin, 2);
                 g_battle_menu_hide_numeric_values = i;
             } else if (text_id != 0) {
                 battle_menu_set_text_origin(2, 0);
-                battle_menu_display_text_string((s32)(buffer + 0x400), (s32)(inner_width - 2), (s32)text);
+                battle_menu_display_text_string(buffer + 0x400, origin, text);
             }
             LoadImage(&rects[1], (u32*)(buffer + 0x400));
             text_loaded = 1;

@@ -12,7 +12,7 @@
  * lvalue is `+ 65530` in HImode with its own constant insn, which makes the
  * loop 27 RTL insns, and `loop.c:move_movables` then leaves the div-by-10 magic
  * constant in the loop body; the target hoists it into $s2. */
-void battle_display_menu_number_entry(s32 value, u8 digit_count, s32 image, glyph_blit_t* origin) {
+void battle_display_menu_number_entry(s32 value, u8 digit_count, void* image, glyph_blit_t* origin) {
     s16 cell;
 
     origin->rect.x += (digit_count - 1) * 6;

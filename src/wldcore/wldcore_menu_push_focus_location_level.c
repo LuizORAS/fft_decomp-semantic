@@ -8,7 +8,7 @@ void wldcore_menu_push_focus_location_level(s32 dot_index) {
     world_animated_render_record_t* render;
 
     render = &g_wldcore_map_dots[dot_index].render;
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = dot_index;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].focus_dot_index = dot_index;
     wldcore_map_start_projection_motion_if_outside_bounds(&render->position, &g_wldcore_map_dots[dot_index].position);
     if (g_wldcore_map_projection_motion.flags & WLDCORE_PROJECTION_MOTION_ACTIVE) {
         g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;

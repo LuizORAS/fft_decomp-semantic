@@ -268,7 +268,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                         }
                     } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                         battle_display_menu_number_entry(
-                            layout->columns.text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
+                            layout->columns.text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
                     } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == MENU_TEXT_COLUMN_HIDDEN))
                             && layout->columns.text_ids[column][index] >= 0

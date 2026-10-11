@@ -22,7 +22,7 @@ extern s32 g_wldcore_date_display_y;
 
 /* Twelve {month, day} pairs: the calendar date each zodiac sign starts on,
  * Aries (3/21) first. */
-extern u8 g_wldcore_zodiac_start_dates[12][2];
+extern wldcore_date_t g_wldcore_zodiac_start_dates[ZODIAC_SIGN_ORDINARY_COUNT];
 void wldcore_advance_calendar_day(void);
 void wldcore_convert_date_to_zodiac_date(s32* month, s32* day);
 void wldcore_advance_calendar_days(s32 days);
@@ -1844,8 +1844,8 @@ typedef enum wldcore_menu_level_type {
 
 /* Provisional: 0x5c-byte menu-stack records at 0x800bb930, one per menu
  * level; the level's handler type in g_wldcore_menu_stack_types selects the
- * view. The leading word is the level's window index wherever a generic
- * reader (0x8006c844, 0x8006d928, 0x8006c350) consumes it. g_wldcore_menu_stack_records_next is
+ * view. The leading word normally names a window; the focus-location level
+ * stores a map-dot index instead. g_wldcore_menu_stack_records_next is
  * the record array offset by one level, which the push routines index by the
  * current depth; spelling that as g_wldcore_menu_stack_records[depth + 1]
  * changes their address arithmetic. g_wldcore_menu_stack_types_next is the
@@ -1854,6 +1854,7 @@ typedef enum wldcore_menu_level_type {
  * 0x03c0-0x03ff variable lists). */
 typedef union wldcore_menu_stack_record {
     s32 window_index;
+    s32 focus_dot_index; /* WLDCORE_MENU_LEVEL_FOCUS_LOCATION */
     wldcore_window_layout_request_t layout_window;
     wldcore_menu_message_level_t message;
     wldcore_menu_return_level_t return_level;
@@ -2010,6 +2011,7 @@ void wldcore_window_load_image_record_to_vram(s32 index, u32* image);
 void wldcore_window_publish_slot_b806(wldcore_menu_list_window_level_t* level);
 void wldcore_window_publish_slot_b8dd(wldcore_menu_list_window_level_t* level);
 void wldcore_window_reset_state_and_scroll(wldcore_menu_stack_record_t* level);
+void wldcore_map_step_projection_motion_then_pop_level(wldcore_menu_stack_record_t* entry);
 void wldcore_window_set_render_objects_visible(s32 clear);
 void wldcore_window_set_render_state_2_from_arg_0x04(s32* param);
 

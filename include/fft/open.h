@@ -318,6 +318,8 @@ void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, point32_t*
 void open_menu_start_music_test_controller(void);
 void open_menu_update_world_formation(void);
 void open_menu_push_sound_type_controller(void);
+void open_menu_init_render_record_fields(
+    s32 record_index, point16_t vram_position, point16_t image_size, point32_t clut_position, u32 flags);
 
 /* sound */
 /* Sound-type menu controller state (handler 3). */

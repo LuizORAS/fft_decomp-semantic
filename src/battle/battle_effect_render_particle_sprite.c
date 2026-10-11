@@ -74,7 +74,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
                                                       + *(s16*)(g_battle_effect_frame_data + node->frame_group_index)))
                 + g_battle_effect_frame_data);
         count = frame->count;
-        if (block->color.field.sprite_count != count) {
+        if (block->color.sprite_count != count) {
             battle_effect_free_sprite_block(block);
             block = battle_effect_alloc_sprite_block(count);
             node->sprite_block = block;
@@ -84,9 +84,9 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         }
         node->kind &= ~EFFECT_LIST_NODE_FRAME_CHANGED;
     }
-    block->color.field.red = red;
-    block->color.field.green = green;
-    block->color.field.blue = blue;
+    block->color.red = red;
+    block->color.green = green;
+    block->color.blue = blue;
     switch (node->kind & EFFECT_LIST_NODE_PLACEMENT_MASK) {
     case EFFECT_LIST_NODE_WORLD:
         SetRotMatrix(&g_battle_camera_matrix);

@@ -58,10 +58,10 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     SetRotMatrix(&g_battle_effect_matrix);
     SetTransMatrix(&g_battle_effect_matrix);
 
-    offset = *(u16*)&SPRITE_TABLE[slot->color.field.frame * 2
+    offset = *(u16*)&SPRITE_TABLE[slot->color.frame * 2
         + ((battle_effect_sprite_table_header_t*)SPRITE_TABLE)->offsets_offset];
     prim = &slot->quads[g_battle_effect_buffer_index];
-    prim->color.packed = slot->color.packed;
+    memcpy(&prim->color, &slot->color, sizeof(prim->color));
     setPolyFT4(prim);
     frame = (battle_effect_sprite_frame_t*)&SPRITE_TABLE[offset];
     setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);

@@ -216,7 +216,7 @@ void option_build_options_menu(void) {
                                 layout->text_ids[column][index], image, &g_menu_text_state.pen);
                         } else {
                             battle_display_menu_number_entry(
-                                layout->text_ids[column][index], 2, (s32)image, &g_menu_text_state.pen);
+                                layout->text_ids[column][index], 2, image, &g_menu_text_state.pen);
                         }
                     }
                 }

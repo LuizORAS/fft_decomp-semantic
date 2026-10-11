@@ -74,7 +74,6 @@ void battle_effect_submit_sprite_to_ordering_table(
     s16 sine;
     s32 value;
     s32 clut;
-    u32 color;
     s32 code;
 
     prim = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_DR_MODE);
@@ -97,7 +96,7 @@ void battle_effect_submit_sprite_to_ordering_table(
     }
     SetRotMatrix(&g_battle_effect_matrix);
     SetTransMatrix(&g_battle_effect_matrix);
-    for (i = 0; i < set->color.field.sprite_count; i++) {
+    for (i = 0; i < set->color.sprite_count; i++) {
         frame = set->frames[i];
         code = 0x2c;
         /* Copy x/y while retaining the GTE input's z. */
@@ -109,12 +108,11 @@ void battle_effect_submit_sprite_to_ordering_table(
         gte_rtpt();
         memcpy(&g_battle_effect_corner_bottom_right, &frame->corners[3], sizeof(frame->corners[3]));
         quad = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_FT4);
-        color = set->color.packed;
+        memcpy(&quad->color, &set->color, sizeof(quad->color));
         quad->length = 9;
-        quad->color.packed = color;
-        quad->color.field.cd = code;
+        quad->color.cd = code;
         if (frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT) {
-            quad->color.field.cd = 0x2e;
+            quad->color.cd = 0x2e;
         }
         gte_stsxy3(&quad->xy0, &quad->xy1, &quad->xy2);
         gte_ldv0(&g_battle_effect_corner_bottom_right);

@@ -199,7 +199,7 @@ void option_build_at_list(void) {
                                 layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
                         } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                             battle_display_menu_number_entry(
-                                layout->text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
+                                layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
                         } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                             battle_draw_menu_number_glyphs(
                                 layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);

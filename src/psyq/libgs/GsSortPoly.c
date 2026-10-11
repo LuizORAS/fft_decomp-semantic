@@ -6,8 +6,8 @@
 void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     u32* src;
     u32* dst;
-    DVECTOR* source_point;
-    DVECTOR* destination_point;
+    POLY_F4* source_coordinates;
+    POLY_F4* destination_coordinates;
     s32 len;
     s32 code;
     s32 gouraud;
@@ -21,13 +21,13 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     gouraud = code & 0x10;
     quad = code & 0x8;
     textured = code & 0x4;
-    /* POLY_F4 supplies the bare corner positions; optional words shift these bases.
-     * A fully advancing cursor changes the original constant coordinate offsets. */
-    dst[offsetof(POLY_F4, r0) / sizeof(*dst)] = src[offsetof(POLY_F4, r0) / sizeof(*src)];
-    source_point = (DVECTOR*)&src[offsetof(POLY_F4, x0) / sizeof(u32)];
-    destination_point = (DVECTOR*)&dst[offsetof(POLY_F4, x0) / sizeof(u32)];
-    destination_point->vx = source_point->vx + g_psyq_gs_offset_x;
-    destination_point->vy = source_point->vy + g_psyq_gs_offset_y;
+    /* The cursor skips UV/color words; POLY_F4 supplies only the coordinate layout.
+     * Fully advancing coordinate pointers changes the original load/store offsets. */
+    dst[offsetof(P_TAG, r0) / sizeof(*dst)] = src[offsetof(P_TAG, r0) / sizeof(*src)];
+    source_coordinates = (POLY_F4*)src;
+    destination_coordinates = (POLY_F4*)dst;
+    destination_coordinates->x0 = source_coordinates->x0 + g_psyq_gs_offset_x;
+    destination_coordinates->y0 = source_coordinates->y0 + g_psyq_gs_offset_y;
     if (textured) {
         dst[offsetof(POLY_F4, x1) / sizeof(u32)] = src[offsetof(POLY_F4, x1) / sizeof(u32)];
         src++;
@@ -40,10 +40,10 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
         dst++;
         len++;
     }
-    source_point = (DVECTOR*)&src[offsetof(POLY_F4, x1) / sizeof(u32)];
-    destination_point = (DVECTOR*)&dst[offsetof(POLY_F4, x1) / sizeof(u32)];
-    destination_point->vx = source_point->vx + g_psyq_gs_offset_x;
-    destination_point->vy = source_point->vy + g_psyq_gs_offset_y;
+    source_coordinates = (POLY_F4*)src;
+    destination_coordinates = (POLY_F4*)dst;
+    destination_coordinates->x1 = source_coordinates->x1 + g_psyq_gs_offset_x;
+    destination_coordinates->y1 = source_coordinates->y1 + g_psyq_gs_offset_y;
     if (textured) {
         dst[offsetof(POLY_F4, x2) / sizeof(u32)] = src[offsetof(POLY_F4, x2) / sizeof(u32)];
         src++;
@@ -56,10 +56,10 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
         dst++;
         len++;
     }
-    source_point = (DVECTOR*)&src[offsetof(POLY_F4, x2) / sizeof(u32)];
-    destination_point = (DVECTOR*)&dst[offsetof(POLY_F4, x2) / sizeof(u32)];
-    destination_point->vx = source_point->vx + g_psyq_gs_offset_x;
-    destination_point->vy = source_point->vy + g_psyq_gs_offset_y;
+    source_coordinates = (POLY_F4*)src;
+    destination_coordinates = (POLY_F4*)dst;
+    destination_coordinates->x2 = source_coordinates->x2 + g_psyq_gs_offset_x;
+    destination_coordinates->y2 = source_coordinates->y2 + g_psyq_gs_offset_y;
     if (textured) {
         dst[offsetof(POLY_F4, x3) / sizeof(u32)] = src[offsetof(POLY_F4, x3) / sizeof(u32)];
         src++;
@@ -73,10 +73,10 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
             dst++;
             len++;
         }
-        source_point = (DVECTOR*)&src[offsetof(POLY_F4, x3) / sizeof(u32)];
-        destination_point = (DVECTOR*)&dst[offsetof(POLY_F4, x3) / sizeof(u32)];
-        destination_point->vx = source_point->vx + g_psyq_gs_offset_x;
-        destination_point->vy = source_point->vy + g_psyq_gs_offset_y;
+        source_coordinates = (POLY_F4*)src;
+        destination_coordinates = (POLY_F4*)dst;
+        destination_coordinates->x3 = source_coordinates->x3 + g_psyq_gs_offset_x;
+        destination_coordinates->y3 = source_coordinates->y3 + g_psyq_gs_offset_y;
         len++;
         if (textured) {
             dst[sizeof(POLY_F4) / sizeof(*dst)] = src[sizeof(POLY_F4) / sizeof(*src)];
