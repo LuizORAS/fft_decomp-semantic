@@ -23,7 +23,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     world_animated_render_record_t* records;
     point32_t* positions;
     point32_t* position;
-    s32* anchor;
+    s32* text_id;
     s32 index;
     point32_t box;
     point32_t unused_point;
@@ -52,10 +52,10 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
         dims[1] = 3;
     }
 
-    anchor = &g_wldcore_scrollable_text_window.text_id;
-    window = (wldcore_text_scrollable_window_t*)(anchor - 13);
+    text_id = &g_wldcore_scrollable_text_window.text_id;
+    window = &g_wldcore_scrollable_text_window;
 
-    window->text_id = text;
+    *text_id = text;
     window->image_x = 0;
     g_wldcore_scrollable_text_window.image_y = 0xC0;
     box.x = (dims[0] + 24) & 0xFFFC;

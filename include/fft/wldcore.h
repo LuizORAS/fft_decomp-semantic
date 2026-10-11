@@ -1388,6 +1388,8 @@ typedef enum wldcore_cursor_slot {
     WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB = 0x14,
 } wldcore_cursor_slot_e;
 
+enum { WLDCORE_CURSOR_SLOT_COUNT = 21 };
+
 typedef struct wldcore_menu_cursor_state {
     s32 selected_index;
     s32 scroll_offset;

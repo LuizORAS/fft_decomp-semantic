@@ -17,7 +17,6 @@ void wldcore_init_world_map_state(void) {
     s32 month;
     s32 day;
     s32 i;
-    s32 offset;
 
     g_wldcore_scratch_buffer = (u32*)0x801d0000;
     g_wldcore_loaded_message_block = -1;
@@ -58,9 +57,9 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_screen_fade_state.flags[0] = WLDCORE_SCREEN_FADE_OUT;
 
     cursor = g_wldcore_menu_cursor_states;
-    for (offset = 0; offset < 0xa8; offset += 8) {
+    for (i = 0; i < WLDCORE_CURSOR_SLOT_COUNT; i++) {
         cursor->scroll_offset = 0;
-        ((wldcore_menu_cursor_state_t*)((u8*)g_wldcore_menu_cursor_states + offset))->selected_index = 0;
+        g_wldcore_menu_cursor_states[i].selected_index = 0;
         cursor++;
     }
 
