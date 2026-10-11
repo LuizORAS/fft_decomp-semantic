@@ -236,7 +236,7 @@ extern s16 g_world_event_pending_map_state;
 extern s32 g_world_event_pending_reserved_vram_release_slot;
 extern s32 g_world_event_pending_saved_evtchr_clear_slot;
 extern s32 g_world_event_pending_unit_vram_copy;
-extern const u8* g_world_event_script;
+extern u8* g_world_event_script;
 extern s16 g_world_event_unit_slots[4];
 extern u8 g_world_event_variable_write_guard; /* WORLD counterpart: 0x80153387 */
 extern s16 g_world_event_weather_request;

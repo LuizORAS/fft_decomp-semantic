@@ -43,7 +43,7 @@ void world_script_execute_event(void) {
     u32 operand_3;
     s32 operand_4;
     s32 operand_1;
-    void* position_instruction;
+    u8* position_instruction;
     u8* dialogue_instruction;
     s32* event_words;
     u8* parameters;
@@ -51,8 +51,8 @@ void world_script_execute_event(void) {
      * separate ones per handler change the saved-register allocation. */
     battle_stats_t* unit;
     u8* instruction;
-    void* ghost_operands;
-    void* tile;
+    u8* ghost_operands;
+    map_tile_t* tile;
     battle_stats_t* copy_destination;
     u8* focus_instruction;
     native_thread_t* thread;
@@ -94,7 +94,7 @@ restart_event:
         }
     }
     for (;;) {
-        instruction = (u8*)g_world_event_script;
+        instruction = g_world_event_script;
         instruction += instruction_offset;
         parameters = instruction + 1;
         operand_1 = instruction[1];
@@ -345,7 +345,7 @@ restart_event:
                 instruction_offset, operand_2, &g_world_thread_contexts[operand_1].task_words[6]);
             g_world_thread_contexts[operand_1].function_parameter_1 = operand_2;
             g_world_thread_contexts[operand_1].function_parameter_2 = ((operand_4 << 8) + operand_3) - 1;
-            dialogue_instruction = (u8*)g_world_event_script;
+            dialogue_instruction = g_world_event_script;
             dialogue_instruction += instruction_offset;
             operand_4 = dialogue_instruction[6];
             operand_3 = dialogue_instruction[5];
@@ -468,7 +468,7 @@ restart_event:
             g_world_event_pending_effect_id = first_halfword;
             g_world_event_effect_target_misc_id
                 = world_script_get_misc_id((((g_world_event_script) + instruction_offset))[3]);
-            focus_instruction = (u8*)g_world_event_script;
+            focus_instruction = g_world_event_script;
             focus_instruction += instruction_offset;
             g_world_event_effect_target_x = focus_instruction[4];
             g_world_event_effect_target_y = focus_instruction[5];
@@ -621,13 +621,12 @@ restart_event:
                 MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, parameters[0], parameters[1], parameters[2], parameters[3]);
         } else if (opcode == EVENT_OPCODE_SET_TILE_HEIGHT) {
             tile = battle_map_get_tile_data_pointer(parameters[0], parameters[1], parameters[2]);
-            if ((((map_tile_t*)tile)->surface.bits.type - MAP_SURFACE_GRASSLAND) >= 2U) {
-                ((map_tile_t*)tile)->surface.value
-                    = (((map_tile_t*)tile)->surface.value & ~MAP_SURFACE_MASK) | MAP_SURFACE_STONE_FLOOR;
+            if ((tile->surface.bits.type - MAP_SURFACE_GRASSLAND) >= 2U) {
+                tile->surface.value = (tile->surface.value & ~MAP_SURFACE_MASK) | MAP_SURFACE_STONE_FLOOR;
             }
-            ((map_tile_t*)tile)->height = parameters[3];
-            ((map_tile_t*)tile)->flags.bits.untargetable = parameters[4];
-            ((map_tile_t*)tile)->flags.bits.blocked = 0;
+            tile->height = parameters[3];
+            tile->flags.bits.untargetable = parameters[4];
+            tile->flags.bits.blocked = 0;
         }
         /* ---- Event speed, dark screen, conditions, and graphics ---- */
         else if (opcode == EVENT_OPCODE_EVENT_SPEED) {
@@ -741,21 +740,20 @@ restart_event:
                 battle_gfx_reset_unit_graphic_trigger(erased_misc_id);
             }
         } else if (opcode == EVENT_OPCODE_ADD_GHOST_UNIT) {
-            ghost_operands = instruction_offset + ((u32)g_world_event_script) + 3;
+            ghost_operands = g_world_event_script + instruction_offset + 3;
             ghost_misc_id = 3;
             do {
                 --ghost_misc_id;
             } while (ghost_misc_id >= 0);
             for (ghost_misc_id = 0; ghost_misc_id < EVENT_UNIT_SLOT_COUNT; ghost_misc_id++) {
                 if (battle_unit_has_misc_id(ghost_misc_id) == 0) {
-                    g_world_event_unit_slots[((u8*)ghost_operands)[0]] = ghost_misc_id;
+                    g_world_event_unit_slots[ghost_operands[0]] = ghost_misc_id;
                     break;
                 }
             }
             if (ghost_misc_id != EVENT_UNIT_SLOT_COUNT) {
-                battle_script_add_ghost_unit_event_instruction(((u8*)ghost_operands)[1], ((u8*)ghost_operands)[2],
-                    ((u8*)ghost_operands)[3], ((u8*)ghost_operands)[4], first_halfword,
-                    g_world_event_unit_slots[((u8*)ghost_operands)[0]], ((u8*)ghost_operands)[5]);
+                battle_script_add_ghost_unit_event_instruction(ghost_operands[1], ghost_operands[2], ghost_operands[3],
+                    ghost_operands[4], first_halfword, g_world_event_unit_slots[ghost_operands[0]], ghost_operands[5]);
                 g_world_unit_graphics_load_pending = 1U;
             } else {
                 continue;
@@ -790,11 +788,11 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_UNKNOWN_61) {
         } else if (opcode == EVENT_OPCODE_SET_BATTLE_UNIT_POSITION) {
             unit = battle_unit_get_stats_from_battle_id(operand_1);
-            position_instruction = instruction_offset + ((u32)g_world_event_script);
-            unit->x = ((u8*)position_instruction)[3];
-            unit->position.y = ((u8*)position_instruction)[4];
-            unit->position.higher_elevation = ((u8*)position_instruction)[5];
-            unit->position.facing = ((u8*)position_instruction)[6];
+            position_instruction = g_world_event_script + instruction_offset;
+            unit->x = position_instruction[3];
+            unit->position.y = position_instruction[4];
+            unit->position.higher_elevation = position_instruction[5];
+            unit->position.facing = position_instruction[6];
         } else if (opcode == EVENT_OPCODE_WAIT_ADD_UNIT) {
             do {
                 world_thread_yield();
