@@ -8,7 +8,8 @@
  * note-data pointer, the MUS record and the channel; this one only touches
  * the MUS record.
  * `volatile` keeps the redundant `andi 0xff` after the `lbu`. */
-u8* main_smd_tempo(volatile u8* note_data, suzuki_music_t* music) {
+u8* main_smd_tempo(u8* data, suzuki_music_t* music, suzuki_music_channel_t* unused_channel) {
+    volatile u8* note_data = data;
     u8 tempo;
 
     tempo = note_data[0] & 0xff;

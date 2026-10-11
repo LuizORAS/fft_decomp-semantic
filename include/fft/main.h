@@ -1088,10 +1088,8 @@ typedef enum suzuki_snapshot_mode {
     SUZUKI_SNAPSHOT_RESTORE = 2,
 } suzuki_snapshot_mode_e;
 
-/* SMD opcode handler, called through g_main_smd_opcode_handlers by
- * main_smd_read_instructions with the byte after the opcode; it returns the
- * next read position. Handlers that ignore an argument may declare it
- * void*; the ABI is the same. */
+/* SMD opcode handler, called through g_main_smd_opcode_handlers with the
+ * byte after the opcode; it returns the next read position. */
 typedef u8* (*suzuki_smd_handler_t)(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
 
 /* Scenario-music playback state at 0x8004d95c (SCUS_942.21). current_music
@@ -1547,6 +1545,100 @@ s32 main_smd_random(void);
 void main_smd_set_instrument(s16 instrument, suzuki_music_channel_t* channel);
 void main_smd_set_voice_update_flags_all_channels(u16 mask, suzuki_music_t* music);
 void main_smd_set_voice_attr_flags_all_channels(suzuki_music_t* music, u16 mask);
+
+/* SMD opcode handlers; return the next position in the byte stream. */
+u8* main_smd_no_instruction(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_rest(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_fermata(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_opcode_8a(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_loop_point_if_selected(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_opcode_8e(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_opcode_8f(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_end_bar(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_loop(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_octave(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_raise_octave(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_lower_octave(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_time_signature(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_opcode_a4(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_opcode_a5(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_repeat(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_coda(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_to_coda(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_play_sfx(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_stop_sfx(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_play_vfx(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_tempo(u8* data, suzuki_music_t* music, suzuki_music_channel_t* unused_channel);
+u8* main_smd_accelerando(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* unused_channel);
+u8* main_smd_tempo_ramp(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_master_volume(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_master_volume_ramp(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_gate_time(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_set_voice(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_instrument(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_length_adjust(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_opcode_ae(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_opcode_af(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_slur_on(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_slur_off(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_enable_lfo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_disable_lfo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_enable_noise(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_increase_noise(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_turn_on_noise(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_disable_noise(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_acoustics(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_enable_reverb(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_disable_reverb(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_naturale(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_envelope_shape(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_attack_time(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_decay_time(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_sustain_time(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_release(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_sustain_level(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_envelope_tail(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_attack_mode(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_sustain_mode(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_release_mode(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pitch_offset(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_add_pitch_offset_coarse(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_add_pitch_offset_fine(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_add_pitch_offset_wide(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pitch_slide(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_toggle_pitch_slide_hold(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pitch_slide_off(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_portamento(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pitch_shift(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pitch_shift_waveform(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pitch_shift_fade_in(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pitch_shift_on(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pitch_shift_off(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_dynamic(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_crescendo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_fermata_ramp(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_tremolo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_tremolo_waveform(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_tremolo_fade_in(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_tremolo_on(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_tremolo_off(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_balance(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_shift_balance(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_balance_ramp(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pan_lfo_fade_in(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pan_lfo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pan_lfo_waveform(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pan_lfo_on(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_pan_lfo_off(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_modulator_select(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_modulator_set_depth(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_modulator_set_fade_in(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_modulator_enable_mask(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_modulator_enable(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_modulator_disable(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_scale_tempo(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_select_sound_font(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
+u8* main_smd_end_track(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel);
 
 /* Driver set-up, wavesets, volume and SPU transfers (0x80017920-0x800186c4). */
 void main_sound_quit(void);
