@@ -76,7 +76,7 @@ void SetLightMatrix(MATRIX* m);
 void SetColorMatrix(MATRIX* m);
 void SetBackColor(s32, s32, s32);
 void SetFarColor(s32, s32, s32);
-/* RotTransPers-like by argument shape. */
+/* Short-vector output variant of RotTrans. */
 void RotTransSV(SVECTOR* in, SVECTOR* out, s32* flag);
 s32 RotTransPers(SVECTOR* v0, s32* sxy0, s32* p, s32* flag);
 s32 RotTransPers4(
