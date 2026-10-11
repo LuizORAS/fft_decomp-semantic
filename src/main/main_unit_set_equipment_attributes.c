@@ -19,13 +19,11 @@ void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check
     u32 second_id;
     item_data_t* item;
     item_attribute_t* attribute;
-    u8* bonus_base;
     u8* bonus; /* equipment bonuses, later reused to walk the base/actual stats */
     u8* source;
     u8* target;
 
-    bonus_base = unit->equipment_attributes;
-    main_util_clear_byte_data(bonus_base, 3);
+    main_util_clear_byte_data(unit->equipment_attributes, sizeof(unit->equipment_attributes));
     cap = MAX_HP_MP_CAP;
     main_unit_calculate_actual_stats(unit, level_up_check + 1);
     unit->equipped_flags = 0;
