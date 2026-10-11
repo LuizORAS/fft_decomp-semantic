@@ -431,6 +431,11 @@ typedef enum unit_career_job_index {
     UNIT_CAREER_JOB_INDEX_MIME = 19,
 } unit_career_job_index_e;
 
+/* Highest job level derived from JP; ENTD nibbles can encode higher levels. */
+enum {
+    UNIT_JOB_LEVEL_MAX = 8,
+};
+
 /* Serialized unit-career layout shared by party records and battle stats.
  * main_unit_generate_out_of_battle (0x80059ffc) clears the 0x96-byte span,
  * while main_job_add_proposition_jp and main_unit_init_battle_data establish

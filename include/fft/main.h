@@ -412,7 +412,7 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle);
 /* job */
 extern job_data_t g_main_job_data[];
 extern job_data_t* g_main_job_data_pointer;
-extern const u16 g_main_job_level_jp_requirements[8];
+extern const u16 g_main_job_level_jp_requirements[UNIT_JOB_LEVEL_MAX];
 extern u16 g_main_job_jp_requirements_by_level[];
 extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
 s32 main_job_add_proposition_jp(u32 party_index, s32 jp);
