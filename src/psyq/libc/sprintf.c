@@ -13,7 +13,7 @@ int sprintf(char* destination, const char* format, ...) {
     unsigned int number;
     int hash;
     u8 zero;
-    /* Unpinning value changes its allocation and the surrounding instruction order. */
+    /* The $2 pin preserves the native allocation of the shared conversion temporary. */
     register int value __asm__("$2");
     /* The conversion word is reused for the argument cursor and the flags. */
     union {
