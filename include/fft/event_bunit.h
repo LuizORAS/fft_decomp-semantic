@@ -368,6 +368,7 @@ extern s16 g_bunit_gfx_tile_1_count;
 extern s16 g_bunit_gfx_tile_8_count;
 extern s8 g_bunit_gfx_transition_frame;
 extern u8 g_bunit_sprite_cell_sizes[][2];
+extern clut_t g_bunit_menu_clut;
 void bunit_gfx_init_packet_pools(bunit_gfx_context_t* buffer);
 
 void bunit_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,

@@ -1,11 +1,6 @@
 #include "fft/event_bunit.h"
+#include "psx/libc.h"
 #include "psx/types.h"
-
-typedef struct {
-    u8 data[0x200];
-} bunit_block_200_t;
-
-extern bunit_block_200_t bunit_D_801BF000;
 
 /*
  * Load the BUNIT screen's VRAM images and start the fade-in.
@@ -23,7 +18,9 @@ void bunit_gfx_init_vram_and_start_fade(void) {
     RECT rect;
     u16 buf1[4];
     u16 buf2[12];
-    bunit_block_200_t block = bunit_D_801BF000;
+    clut_t block;
+
+    memcpy(block, g_bunit_menu_clut, sizeof(block));
 
     bunit_menu_set_vsync_mode_and_event_speed(0);
     g_battle_text_section_pointers[TEXT_SECTION_EVENT_MESSAGES] = g_bunit_text_menu_section;
@@ -69,7 +66,7 @@ void bunit_gfx_init_vram_and_start_fade(void) {
     rect.y = 0xFA;
     rect.w = 0x40;
     rect.h = 4;
-    bunit_gfx_load_image_and_wait(&rect, &block);
+    bunit_gfx_load_image_and_wait(&rect, block);
     g_bunit_text_selection_id = 0;
     g_bunit_help_screen_id = MENU_GRID_HELP_NONE;
     bunit_gfx_start_decreasing_fade();
