@@ -13,8 +13,8 @@ void wldcore_proposition_calculate_base_jp_and_gil(void) {
     s32 value;
 
     if (g_wldcore_job_selection.gate == 0) {
-        jp_rewards = (const u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JP_AMOUNTS);
-        gil_rewards = (const u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS);
+        jp_rewards = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JP_AMOUNTS);
+        gil_rewards = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS);
         count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
         value = 0;
 

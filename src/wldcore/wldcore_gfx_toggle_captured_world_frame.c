@@ -48,7 +48,7 @@ void wldcore_gfx_toggle_captured_world_frame(s32 capture) {
     GsDrawOt(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     GsDrawOt(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     DrawSync(0);
-    wldcore_gfx_set_display_rect(g_active_graphics_buffer_index, &display_rect.x);
+    wldcore_gfx_set_display_rect(g_active_graphics_buffer_index, &display_rect);
     StoreImage(&display_rect, g_wldcore_scratch_buffer);
     DrawSync(0);
     g_wldcore_loaded_background_set = -1;

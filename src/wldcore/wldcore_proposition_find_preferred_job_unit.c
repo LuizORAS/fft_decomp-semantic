@@ -6,8 +6,7 @@
  * the preheader and the inner add uses two registers. The slot test is
  * written `slots[0] > slots[1]`; the reversed spelling swaps the slots[] load
  * pair and costs instructions.
- *
- * The empty asm statement is explained where it stands. */
+ */
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -20,11 +19,11 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
     s32 participant_count;
     s32 party_index;
     s32 base;
-    const wldcore_proposition_data_t* messages;
+    const u8* jobs;
     party_data_t* unit;
 
     participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
-    messages = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LISTS);
+    jobs = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LISTS);
     count = 0;
 
     if (g_wldcore_selected_proposition_row[0].fields.preferred_job != 0) {
@@ -54,7 +53,7 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
         if (party_index != g_wldcore_job_selection.excluded_party_index) {
             unit = wldcore_get_party_data_pointer(party_index);
             for (k = 0; k < 9; k++) {
-                if (messages->message_adjustments[base + k] == unit->job_id) {
+                if (jobs[base + k] == unit->job_id) {
                     candidates[count] = party_index;
                     slots[count] = k;
                     count++;

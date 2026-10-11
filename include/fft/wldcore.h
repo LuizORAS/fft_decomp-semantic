@@ -449,7 +449,7 @@ void wldcore_gfx_clear_vram_and_scratch(s32 clear_scratch);
 void wldcore_gfx_copy_color_with_tint(CVECTOR* source, CVECTOR* out);
 void wldcore_gfx_draw_world_frame(void);
 void wldcore_gfx_init_subsystem(void);
-void wldcore_gfx_set_display_rect(s32 buffer_index, s16* rect);
+void wldcore_gfx_set_display_rect(s32 buffer_index, RECT* rect);
 void wldcore_start_core_background_threads(s32 party_index);
 void wldcore_gfx_draw_number_digits(s32 value, s32 digits, GsSPRITE* sprite, GsOT* ot);
 void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* sprite, GsOT* ot, s32 zero_pad);
@@ -755,12 +755,6 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state);
 
 /* proposition */
-/* Only the nine-byte message-adjustment prefix used from proposition record 2
- * is established. Other proposition records may extend this layout. */
-typedef struct wldcore_proposition_data {
-    u8 message_adjustments[9];
-} wldcore_proposition_data_t;
-
 /* wldcore_proposition_progress_t.flags of an active proposition. */
 typedef enum wldcore_proposition_progress_flag {
     WLDCORE_PROPOSITION_PROGRESS_DISPATCHED = 0x01,
@@ -800,6 +794,12 @@ typedef enum wldcore_proposition_data_record {
     WLDCORE_PROPOSITION_DATA_EXTRA_DAY_GIL_SCALES = 13,
     WLDCORE_PROPOSITION_DATA_JOB_LISTS = 14, /* nine job ids per job list */
 } wldcore_proposition_data_record_e;
+
+/* Records 10 and 11 select one entry from each reward-amount table. */
+typedef struct wldcore_proposition_reward_pair {
+    u8 gil_index;
+    u8 jp_index;
+} wldcore_proposition_reward_pair_t;
 
 /* wldcore_proposition_report_level_t.load_phase. */
 typedef enum wldcore_proposition_report_load {
@@ -944,7 +944,8 @@ s32 wldcore_proposition_load_send_unit_candidates(wldcore_menu_send_unit_level_t
 s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index);
 void wldcore_proposition_advance_daily_counters(void);
 s32 wldcore_proposition_count_completed(s32 location);
-wldcore_proposition_data_t* wldcore_proposition_get_data_pointer(s32 record);
+/* File records have different layouts; the selected record determines the table type. */
+void* wldcore_proposition_get_data_pointer(wldcore_proposition_data_record_e record);
 s32 wldcore_proposition_load_picture(s32 index);
 void wldcore_proposition_load_picture_data_set(s32 value);
 s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, s32 message);

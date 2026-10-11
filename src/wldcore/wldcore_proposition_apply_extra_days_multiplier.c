@@ -17,8 +17,8 @@ void wldcore_proposition_apply_extra_days_multiplier(void) {
     if (g_wldcore_job_selection.gate != 0) {
         return;
     }
-    reward_scale = (const u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_EXTRA_DAY_JP_SCALES);
-    bonus_scale = (const u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_EXTRA_DAY_GIL_SCALES);
+    reward_scale = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_EXTRA_DAY_JP_SCALES);
+    bonus_scale = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_EXTRA_DAY_GIL_SCALES);
     record = g_wldcore_job_selection.proposition_index;
     day = g_main_active_propositions[record].elapsed_days - g_wldcore_selected_proposition_row[0].fields.min_days;
     count = g_main_active_propositions[record].participant_count;

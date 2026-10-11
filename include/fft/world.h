@@ -969,8 +969,8 @@ void world_gfx_enqueue_gouraud_textured_quad(
     world_gfx_textured_rect_source_t* source, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_tile(RECT* box, rgb24_t* rgb, u8 semi_trans, s32 ot_index);
 void world_gfx_append_poly_f4_to_otag(point16_t* xy, rgb24_t* rgb, s32 semi_trans, s32 ot_index);
-/* The index argument of world_text_bind_section_data: the resident text data
- * it publishes in g_world_text_section_pointers. */
+/* Resident text resource indices, used by world_text_get_resident_data and
+ * world_text_bind_section_data. */
 typedef enum world_text_data {
     WORLD_TEXT_DATA_SKILLSET_NAMES = 0,
     WORLD_TEXT_DATA_JOB_NAMES = 1,
@@ -981,6 +981,8 @@ typedef enum world_text_data {
     WORLD_TEXT_DATA_NAME_ENTRY_KEYBOARD = 7,
     WORLD_TEXT_DATA_SHOP_DIALOGUE = 8, /* WORLD_TEXT_SECTION_SHOP_DIALOGUE */
 } world_text_data_e;
+extern u8* g_world_text_resident_data[9];
+u8* world_text_get_resident_data(world_text_data_e index);
 u8* world_text_bind_section_data(u32 index);
 void world_gfx_build_scaled_draw_area_pair_swapped(
     world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
@@ -2149,7 +2151,6 @@ extern const u8 g_world_menu_record_template[8];
 extern u8 g_world_menu_restore_pending;
 extern s16 g_world_menu_row_height;
 extern s16 g_world_menu_screen_open_request;
-extern u8* g_world_menu_scripts[];
 extern s16 g_world_menu_scroll_offset;
 extern s16 g_world_menu_scroll_pixel_offset;
 extern s32 g_world_menu_scroll_row_offset;
@@ -2488,7 +2489,6 @@ void world_screen_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_off
 s32 world_menu_get_selected_unit_hp_bonus_or_dashes(s32 unused_row);
 s32 world_menu_get_selected_unit_mp_bonus_or_dashes(s32 unused_row);
 s32 world_menu_get_party_unit_name_id(void);
-u8* world_menu_get_script(s32 index);
 s32 world_menu_get_selected_unit_hp_bonus(s32 unused_row);
 s32 world_menu_get_selected_unit_mp_bonus(s32 unused_row);
 void world_text_configure_sprite_vram(

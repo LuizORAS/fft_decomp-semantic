@@ -891,7 +891,7 @@ functions:
   - {addr: 0x8012d73c, size: 60, name: world_gfx_move_image_and_wait, hash: 2dee44c691484772}
   - {addr: 0x8012d778, size: 60, name: world_shop_load_background_tim, hash: 2c98e2ae629f4d9d}
   - {addr: 0x8012d7b4, size: 228, name: world_text_bind_section_data, hash: bac08e2afcfd4691, rodata: [{addr: 0x800e0098, size: 36, hash: a977859d014238a6}]}
-  - {addr: 0x8012d898, size: 24, name: world_menu_get_script, hash: b8566ba587064bee}
+  - {addr: 0x8012d898, size: 24, name: world_text_get_resident_data, hash: b8566ba587064bee}
   - {addr: 0x8012d8b0, size: 124, name: world_script_load_tutorial_files, hash: 1f5e443f076a0f99}
   - {addr: 0x8012d92c, size: 56, name: world_input_get_tutorial_buttons, hash: 4e036e1b8eec629f, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x8012d964, size: 380, name: world_script_start_tutorial, hash: da06ff25c5a65781, profile: gcc-2.6.3_O0_aspsx-2.34}
@@ -1699,7 +1699,7 @@ data:
   - {addr: 0x80191550, name: g_world_text_job_descriptions_data}
   - {addr: 0x80192f90, name: g_world_text_name_entry_keyboard_data}
   - {addr: 0x801930a4, name: g_world_text_shop_dialogue_data}
-  - {addr: 0x80193c1c, name: g_world_menu_scripts}
+  - {addr: 0x80193c1c, name: g_world_text_resident_data}
   - {addr: 0x80193c40, name: g_world_script_tutorial_message_files}
   - {addr: 0x80193c78, name: g_world_script_tutorial_script_files}
   - {addr: 0x80193cb0, name: g_world_script_tutorial_wait_timer}

@@ -28,11 +28,11 @@ void wldcore_proposition_determine_success(void) {
     s32 i;
 
     participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
-    job_table_a = (const u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_CATEGORY_JOB_SCORES);
-    job_table_b = (const u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LIST_JOB_SCORES);
-    tier_table_a = (const u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_BRAVERY_LEVEL_SCORES);
+    job_table_a = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_CATEGORY_JOB_SCORES);
+    job_table_b = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LIST_JOB_SCORES);
+    tier_table_a = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_BRAVERY_LEVEL_SCORES);
     total = 0;
-    tier_table_b = (const u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_FAITH_SCORES);
+    tier_table_b = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_FAITH_SCORES);
 
     if (g_main_active_propositions[g_wldcore_job_selection.proposition_index].flags
         & WLDCORE_PROPOSITION_PROGRESS_RECALLED) {

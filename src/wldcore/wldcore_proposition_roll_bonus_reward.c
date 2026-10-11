@@ -14,8 +14,9 @@ void wldcore_proposition_roll_bonus_reward(void) {
     s32 candidates[32];
     u16* bonus_table;
     u16* value_table;
+    /* Discovery-row indexing adds two instructions; retain its byte index. */
     u8* location_pairs;
-    u8* random_pairs;
+    wldcore_proposition_reward_pair_t* random_pairs;
     s32 count;
     s32 i;
     s32 index;
@@ -23,10 +24,10 @@ void wldcore_proposition_roll_bonus_reward(void) {
     u16 discovery_kind;
     s32 bonus;
 
-    bonus_table = (u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JP_AMOUNTS);
-    value_table = (u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS);
-    location_pairs = (u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_DISCOVERY_REWARDS);
-    random_pairs = (u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_RANDOM_REWARDS);
+    bonus_table = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JP_AMOUNTS);
+    value_table = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS);
+    location_pairs = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_DISCOVERY_REWARDS);
+    random_pairs = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_RANDOM_REWARDS);
     g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_NONE;
     g_wldcore_job_selection.reward_value = 0;
     if (g_wldcore_job_selection.result != WLDCORE_PROPOSITION_RESULT_SUCCESS) {
@@ -90,8 +91,8 @@ random_reward:
     g_wldcore_job_selection.reward_index = index;
     participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
     for (i = 0; i < participant_count; i++) {
-        bonus = bonus_table[random_pairs[index * 2 + 1] - 1];
+        bonus = bonus_table[random_pairs[index].jp_index - 1];
         g_wldcore_job_selection.rows[0][i] += bonus;
     }
-    g_wldcore_job_selection.reward_value = value_table[random_pairs[index * 2] - 1];
+    g_wldcore_job_selection.reward_value = value_table[random_pairs[index].gil_index - 1];
 }
