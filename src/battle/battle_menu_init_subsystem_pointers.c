@@ -10,7 +10,7 @@ void battle_menu_init_subsystem_pointers(void) {
     g_battle_event_block = g_main_script_event_block;
     g_battle_script_variables = g_main_script_variables;
     g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
-    g_battle_help_text_id_tables_ptr = -1;
+    g_battle_help_active_text_id_tables = (u16* const*)-1;
     g_battle_unit_graphics_load_pending = 0;
     g_battle_script_threads_idle = 0;
     g_battle_script_frame_result_override = 0;

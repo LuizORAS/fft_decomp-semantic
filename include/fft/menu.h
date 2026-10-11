@@ -950,28 +950,6 @@ typedef struct crystal_pickup_result {
     u8 learned_abilities[0x40]; /* 0x53 */
 } crystal_pickup_result_t;
 
-/* Menu descriptor for a pending help request. It is reached through the
- * native thread record's first function-parameter word, so its offsets are
- * its own and do not overlap native_thread_t. The HELPMENU overlay and WORLD's
- * help menu share the layout. */
-typedef struct help_request_table {
-    u8 _unused_00[0x10];
-    s16* primary_ids;   /* 0x10 */
-    s16* secondary_ids; /* 0x14 */
-    s16* mode_flag;     /* 0x18 */
-} help_request_table_t;
-typedef char help_request_table_mode_flag_offset_must_be_0x18
-    [((unsigned long)&((help_request_table_t*)0)->mode_flag == 0x18) ? 1 : -1];
-
-typedef struct help_request {
-    u8 _unused_00[0x30];
-    help_request_table_t* table; /* 0x30 */
-    s16* value;                  /* 0x34 */
-    s16 selected_index;          /* 0x38 */
-    s16 kind;                    /* 0x3a */
-} help_request_t;
-typedef char help_request_kind_offset_must_be_0x3a[((unsigned long)&((help_request_t*)0)->kind == 0x3a) ? 1 : -1];
-
 /* One cursor-navigation node of the HELPMENU, BUNIT, ATTACK deployment and
  * DEBUGCHR editor screens (WORLD's help_navigation_record_t has the same
  * layout): the value or text id it refers to, its help-text base, the node

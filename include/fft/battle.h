@@ -8523,7 +8523,7 @@ extern s16 g_battle_menu_selected_option;
 extern battle_action_data_t* g_battle_menu_preview_target_action;
 extern world_fade_tile_frame_t g_battle_menu_panel_fade_frames[];
 extern battle_menu_scratch_buffer_t g_battle_menu_scratch_buffer;
-extern s32 g_battle_help_text_id_tables_ptr;
+extern u16* const* g_battle_help_active_text_id_tables;
 extern u16 g_battle_menu_anything_ability_id;
 extern s16 g_battle_menu_action_slot_selected_option;
 extern s32 g_battle_active_menu; /* active menu */

@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void battle_thread_start(s32 thread_id, void (*function)(void));
-
 /* Run the battle help menu thread: open the help text for the running menu's
  * pending request, or move the bouncing help cursor over the navigation table
  * of that menu or of the unit view.
@@ -39,7 +37,7 @@ void helpmenu_menu_run_battle_help(void) {
     register s32 text_thread_id __asm__("$21");
     s32 wait_slot_offset;
     native_thread_t* scan_thread;
-    help_request_t* request;
+    world_menu_entry_t* request;
     native_thread_t* self_thread;
     battle_unit_status_record_t* banner;
     battle_active_unit_t* unit_data;
@@ -96,20 +94,20 @@ void helpmenu_menu_run_battle_help(void) {
         missing_value = -1;
         scan_thread = &g_battle_threads[frame];
         for (; frame < 9; frame++) {
-            request = (help_request_t*)scan_thread->function_parameter_1;
-            if (request->kind != missing_value) {
+            request = (world_menu_entry_t*)scan_thread->function_parameter_1;
+            if (request->select_text_table != missing_value) {
                 break;
             }
             scan_thread++;
         }
         if (frame != 9) {
-            if (g_battle_help_text_id_tables_ptr == missing_value) {
-                g_battle_help_text_id_tables_ptr = (s32)g_helpmenu_menu_text_id_tables;
+            if (g_battle_help_active_text_id_tables == (u16* const*)missing_value) {
+                g_battle_help_active_text_id_tables = g_helpmenu_menu_text_id_tables;
             }
-            request_kind = request->kind;
+            request_kind = request->select_text_table;
             if (request_kind != 0x10) {
                 if (request_kind == 0x100) {
-                    help_id = *request->value;
+                    help_id = *world_menu_entry_result(request);
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
                     g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
@@ -134,14 +132,16 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_wait_frames(1);
                     helpmenu_menu_close();
                 } else if (request_kind == 5) {
-                    help_id = request->table->primary_ids[request->selected_index];
+                    world_menu_text_layout_t* layout = request->context;
+                    help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
                     g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x11) {
-                    help_id = request->table->primary_ids[request->selected_index];
+                    world_menu_text_layout_t* layout = request->context;
+                    help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_helpmenu_controller_state_ptr = 0;
@@ -153,7 +153,8 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x17) {
-                    help_id = request->table->primary_ids[request->selected_index];
+                    world_menu_text_layout_t* layout = request->context;
+                    help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_helpmenu_controller_state_ptr = 0;
@@ -166,11 +167,13 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x12) {
-                    help_id = *request->table->mode_flag;
+                    world_menu_text_layout_t* layout = request->context;
+                    /* The list stores its column toggle in the third text pointer. */
+                    help_id = *layout->text_ids[2];
                     if (help_id == 0) {
-                        help_id = request->table->primary_ids[request->selected_index];
+                        help_id = layout->text_ids[0][request->selected_index];
                     } else {
-                        help_id = request->table->secondary_ids[request->selected_index];
+                        help_id = layout->text_ids[1][request->selected_index];
                     }
                     help_id &= 0x7FF;
                     if (help_id == 0) {
@@ -183,7 +186,8 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x13) {
-                    help_id = request->table->secondary_ids[request->selected_index];
+                    world_menu_text_layout_t* layout = request->context;
+                    help_id = layout->text_ids[1][request->selected_index];
                     text_base = help_id & 0xF800;
                     if (text_base == TEXT_ID_ABILITY_NAME_BASE) {
                         help_id &= 0x7FF;
@@ -207,7 +211,7 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else {
                     g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    g_helpmenu_current_text_ids = (u16*)((s32*)g_battle_help_text_id_tables_ptr)[request_kind];
+                    g_helpmenu_current_text_ids = g_battle_help_active_text_id_tables[request_kind];
                     battle_thread_start(text_thread_id - 1, battle_text_character_handling_thread);
                     battle_thread_set_parameters(
                         text_thread_id - 1, 0x3B, g_helpmenu_current_text_ids[request->selected_index], 0);

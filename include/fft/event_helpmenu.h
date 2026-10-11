@@ -8,7 +8,7 @@
 /* Saved copies of four BATTLE records (battle_menu_copy_billboard_data_out);
  * a second, unused slot follows the banner and the unit record. */
 extern map_selected_tile_t g_helpmenu_menu_cursor_tile;
-extern u8 g_helpmenu_menu_text_id_tables[];
+extern u16* const g_helpmenu_menu_text_id_tables[23];
 void helpmenu_menu_run_require_help(void);
 void helpmenu_menu_close(void);
 

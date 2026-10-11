@@ -39,7 +39,7 @@ void world_menu_run_battle_help(void) {
     register s32 help_thread_id __asm__("$21");
     s32 help_thread_offset;
     native_thread_t* scan_thread;
-    help_request_t* request;
+    world_menu_entry_t* request;
     native_thread_t* self;
     battle_unit_status_record_t* setup_banner;
     battle_active_unit_t* setup_unit_data;
@@ -96,8 +96,8 @@ void world_menu_run_battle_help(void) {
         missing_value = -1;
         scan_thread = &g_world_threads[frame];
         for (; frame < 9; frame++) {
-            request = (help_request_t*)scan_thread->function_parameter_1;
-            if (request->kind != missing_value) {
+            request = (world_menu_entry_t*)scan_thread->function_parameter_1;
+            if (request->select_text_table != missing_value) {
                 break;
             }
             scan_thread++;
@@ -106,10 +106,10 @@ void world_menu_run_battle_help(void) {
             if (g_world_help_active_text_id_tables == (u16* const*)missing_value) {
                 g_world_help_active_text_id_tables = g_world_help_menu_text_id_tables;
             }
-            request_kind = request->kind;
+            request_kind = request->select_text_table;
             if (request_kind != 0x10) {
                 if (request_kind == 0x100) {
-                    help_id = *request->value;
+                    help_id = *world_menu_entry_result(request);
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
                     g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
@@ -134,14 +134,16 @@ void world_menu_run_battle_help(void) {
                     world_thread_wait_frames(1);
                     world_menu_close_help_menu();
                 } else if (request_kind == 5) {
-                    help_id = request->table->primary_ids[request->selected_index];
+                    world_menu_text_layout_t* layout = request->context;
+                    help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
                     g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x11) {
-                    help_id = request->table->primary_ids[request->selected_index];
+                    world_menu_text_layout_t* layout = request->context;
+                    help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_world_help_controller_state_ptr = 0;
@@ -153,7 +155,8 @@ void world_menu_run_battle_help(void) {
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x17) {
-                    help_id = request->table->primary_ids[request->selected_index];
+                    world_menu_text_layout_t* layout = request->context;
+                    help_id = layout->text_ids[0][request->selected_index];
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_world_help_controller_state_ptr = 0;
@@ -166,11 +169,13 @@ void world_menu_run_battle_help(void) {
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x12) {
-                    help_id = *request->table->mode_flag;
+                    world_menu_text_layout_t* layout = request->context;
+                    /* The list stores its column toggle in the third text pointer. */
+                    help_id = *layout->text_ids[2];
                     if (help_id == 0) {
-                        help_id = request->table->primary_ids[request->selected_index];
+                        help_id = layout->text_ids[0][request->selected_index];
                     } else {
-                        help_id = request->table->secondary_ids[request->selected_index];
+                        help_id = layout->text_ids[1][request->selected_index];
                     }
                     help_id &= 0x7FF;
                     if (help_id == 0) {
@@ -183,7 +188,8 @@ void world_menu_run_battle_help(void) {
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x13) {
-                    help_id = request->table->secondary_ids[request->selected_index];
+                    world_menu_text_layout_t* layout = request->context;
+                    help_id = layout->text_ids[1][request->selected_index];
                     text_section = help_id & 0xF800;
                     if (text_section == TEXT_ID_ABILITY_NAME_BASE) {
                         help_id &= 0x7FF;
