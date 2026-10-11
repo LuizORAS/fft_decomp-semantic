@@ -90,6 +90,10 @@ s32 bunit_create_ability_list(s16 unit_index, s16 job_id, s32 ability_category, 
 s32 bunit_run_ability_list_menu(void);
 
 /* job */
+/* The job list of BUNIT's unit screen: a unit's selectable jobs and the numbers its rows show (job
+ * level, JP, total JP, JP to the next level, mastered), which the job list caches for the cursor job
+ * and the ability list reads back. */
+
 extern u32 g_bunit_job_current_jp;
 extern s32 g_bunit_job_current_level;
 extern s32 g_bunit_job_current_mastered;
@@ -108,16 +112,16 @@ s32 bunit_job_calculate_current_level(s32 index);
 s32 bunit_job_calculate_current_mastered(s32 index);
 s32 bunit_job_calculate_current_total_jp(s32 index);
 s32 bunit_job_calculate_next_level_jp_requirement(s32 index);
+s32 bunit_job_find_first_for_skillset(s32 skillset_id);
 s32 bunit_job_get_base(s16 unit_id);
 s32 bunit_job_get_current_jp(s32 unused_row);
 s32 bunit_job_get_current_level(s32 unused_row);
 s32 bunit_job_get_current_total_jp(s32 unused_row);
 s32 bunit_job_get_generic_index(s32 job_id);
 s32 bunit_job_get_next_level_jp_requirement(s32 unused_row);
+s32 bunit_job_get_skillset(s32 job_id);
 s32 bunit_job_is_current_mastered(s32 unused_row);
 s32 bunit_job_is_special_monster(s32 job_id);
-s32 bunit_job_find_first_for_skillset(s32 skillset_id);
-s32 bunit_job_get_skillset(s32 job_id);
 
 /* status */
 extern u8 g_bunit_status_banner_enabled;

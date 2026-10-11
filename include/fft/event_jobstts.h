@@ -107,6 +107,8 @@ s32 jobstts_ability_is_support_tab(s32 unused_row);
 s32 jobstts_update_ability_list_menu(void);
 
 /* job */
+/* The job list of JOBSTTS's screen, as BUNIT's (bunit_job_*) for the one unit the screen shows. */
+
 extern u32 g_jobstts_job_current_jp;
 extern s32 g_jobstts_job_current_level;
 extern s32 g_jobstts_job_current_mastered;

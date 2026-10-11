@@ -797,6 +797,9 @@ s32 world_ability_build_equippable_rsm_list(s16 unit_index, s32 slot, s16* out);
 s32 world_ability_run_learn_list(void);
 
 /* job */
+/* The formation's job screens: the job wheel and the job change, the Learn Abilities job list and its
+ * cached numbers, and the job lookups the ability lists use. */
+
 /* Result of world_formation_process_job_change, kept in
  * g_world_job_change_anim_state: the phase of the job-change dissolve. */
 typedef enum world_job_change_anim {
@@ -882,23 +885,27 @@ extern s16 g_world_learn_selected_job;
 extern s16 g_world_learn_selected_job_index;
 s32 world_job_build_unit_list(u8 unit_index, s16* jobs, s32 mode);
 s32 world_job_find_first_for_skillset(s32 skillset);
+s32 world_job_get_base(s16 formation_idx);
 
 /* Job id -> generic job index 0..0x13, else 0. */
 s32 world_job_get_generic_index(s32 job_id);
 s32 world_job_get_skillset(s32 job_id);
 s32 world_job_get_text_index(s16 job_id);
+s32 world_job_is_locked_for_all_units(s16 job_id);
 s32 world_job_is_special_monster(s32 job_id);
 
-/* Menu script callbacks: only ever address-taken and cast to
- * menu_script_callback_t by world_ability_run_view_list. */
-s32 world_job_get_base(s16 formation_idx);
+/* Menu script callbacks (g_world_menu_script_callbacks): the Learn Abilities job list sets the
+ * calculate_* ones, which cache the cursor job's numbers, and the ability lists the get_* ones,
+ * which return that cache or the chosen job's JP. */
+s32 world_job_calculate_current_level(s32 index);
+s32 world_job_calculate_current_mastered(s32 index);
+s32 world_job_calculate_current_total_jp(s32 index);
+s32 world_job_calculate_next_level_jp_requirement(s32 index);
 s32 world_job_get_cached_level(s32 unused_row);
 s32 world_job_get_cached_level_jp_requirement(s32 unused_row);
 s32 world_job_get_cached_skillset_empty_flag(s32 unused_row);
 s32 world_job_get_cached_total_jp(s32 unused_row);
 s32 world_job_get_selected_unit_job_points_entry(s32 unused_row);
-s32 world_job_calculate_next_level_jp_requirement(s32 index);
-s32 world_job_is_locked_for_all_units(s16 job_id);
 
 /* equipment */
 typedef enum world_equipment_slot {
@@ -2316,7 +2323,6 @@ u8* world_screen_menu_redraw_text_page_on_scroll(
 u8* world_menu_redraw_text_page_on_scroll_in_rect(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused, RECT* area);
 
-s32 world_job_calculate_current_mastered(s32 index);
 void world_script_apply_input_overrides(u32* state);
 void world_menu_render_text_image_at_fixed_origin(world_text_dialog_record_t* record);
 void world_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record);
@@ -2378,7 +2384,6 @@ s32 world_menu_get_event_state_flag(void);
 s32 world_menu_get_item_half_price_display_value(s32 entry_index);
 s32 world_menu_get_item_price_display_value(s32 entry_index);
 s32 world_menu_get_learn_job_jp(s32 index);
-s32 world_job_calculate_current_level(s32 index);
 s32 world_menu_get_window_scale_step(void);
 void world_menu_copy_unit_data_to_status_billboard(struct battle_stats* unit, battle_unit_status_record_t* output);
 void world_menu_init_quad_from_record(u16* source, s16* record, POLY_FT4* poly);
@@ -2413,7 +2418,6 @@ void world_menu_load_text_1c18(void);
 void world_menu_store_sort_key_list(s32 index, s16* source);
 void world_menu_open_scrollable_list(u8* list);
 world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_window_command_t* command);
-s32 world_job_calculate_current_total_jp(s32 index);
 void world_menu_release_window_buffer_pair(menu_window_buffer_t* value);
 void world_menu_reset_subsystems(void);
 void world_menu_reset_selection_results(void);
