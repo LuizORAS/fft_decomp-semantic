@@ -231,11 +231,6 @@ enum {
     CARD_SAVE_PARITY_BLOCK_BYTES = 0x80,
 };
 
-/* One save slot's rendered description string, 0x50 bytes per slot. */
-typedef struct card_save_slot_text {
-    u8 data[0x50];
-} card_save_slot_text_t;
-
 /* Ten-byte number command in a 12-byte save-menu slot. */
 typedef struct card_save_slot_number_command {
     menu_draw_number_command_t number;
@@ -263,7 +258,8 @@ extern DIRENTRY* g_card_save_menu_work_buffer;
 extern world_menu_entry_t g_card_save_no_data_prompt_descriptor[];
 extern u16 g_card_save_slot_cursor_animation;
 extern point16_t g_card_save_slot_cursor_position;
-extern card_save_slot_text_t g_card_save_slot_descriptions[];
+/* Two-line encoded description text, 80 bytes per memory-card slot. */
+extern u8 g_card_save_slot_descriptions[CARD_SAVE_SLOT_COUNT][0x50];
 extern s16 g_card_save_slot_index;
 extern card_save_slot_number_command_t g_card_save_slot_number_commands[4];
 extern world_oriented_quad_t g_card_save_slot_quads[];

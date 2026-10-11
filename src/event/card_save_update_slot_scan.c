@@ -48,7 +48,7 @@ void card_save_update_slot_scan(void) {
                         bcopy(&g_main_card_save_slot_metadata[g_card_save_slot_scan_index],
                             &g_card_save_buffer_pointer->summary, sizeof(card_save_summary_t));
                         card_save_build_slot_description(g_card_save_slot_file_states[g_card_save_slot_scan_index],
-                            g_card_save_slot_descriptions[g_card_save_slot_scan_index].data);
+                            g_card_save_slot_descriptions[g_card_save_slot_scan_index]);
                         card_save_render_slot_text(g_card_save_slot_scan_index);
                     }
                     g_card_save_slot_scan_index++;
@@ -209,7 +209,7 @@ void card_save_update_slot_scan(void) {
             }
             if (g_card_save_slot_file_states[g_card_save_slot_scan_index] >= 0) {
                 card_save_build_slot_description(g_card_save_slot_file_states[g_card_save_slot_scan_index],
-                    g_card_save_slot_descriptions[g_card_save_slot_scan_index].data);
+                    g_card_save_slot_descriptions[g_card_save_slot_scan_index]);
                 bcopy(&g_card_save_buffer_pointer->summary,
                     &g_main_card_save_slot_metadata[g_card_save_slot_scan_index], sizeof(card_save_summary_t));
                 card_save_update_slot_playtime(g_card_save_slot_scan_index);
