@@ -20,7 +20,7 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
     s32 feedback_changed = 0;
     u32 mask = attr->mask;
     s32 all = mask == 0;
-    s32 mode;
+    u32 mode;
     s32 delay;
     s32 delay_a;
     s32 delay_b;
@@ -33,7 +33,7 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
             mode &= ~SPU_REV_MODE_CLEAR_WA;
             clear_work = 1;
         }
-        if ((u32)mode >= PSYQ_SPU_REVERB_MODE_COUNT || _SpuIsInAllocateArea_(_spu_rev_startaddr[mode])) {
+        if (mode >= PSYQ_SPU_REVERB_MODE_COUNT || _SpuIsInAllocateArea_(_spu_rev_startaddr[mode])) {
             return -1;
         }
         mode_changed = 1;
