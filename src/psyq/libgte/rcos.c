@@ -5,17 +5,17 @@ s32 rcos(s32 angle) {
     s32 result;
     if (angle < 0)
         angle = -angle;
-    angle &= 0xfff;
-    if (angle <= 2048) {
-        if (angle <= 1024)
-            result = g_psyq_gte_sine_quarter_table[1024 - angle];
+    angle &= (ONE - 1);
+    if (angle <= (ONE / 2)) {
+        if (angle <= (ONE / 4))
+            result = g_psyq_gte_sine_quarter_table[(ONE / 4) - angle];
         else
-            result = -g_psyq_gte_sine_quarter_table[angle - 1024];
+            result = -g_psyq_gte_sine_quarter_table[angle - (ONE / 4)];
     } else {
-        if (angle > 3072)
-            result = g_psyq_gte_sine_quarter_table[angle - 3072];
+        if (angle > (3 * ONE / 4))
+            result = g_psyq_gte_sine_quarter_table[angle - (3 * ONE / 4)];
         else
-            result = -g_psyq_gte_sine_quarter_table[3072 - angle];
+            result = -g_psyq_gte_sine_quarter_table[(3 * ONE / 4) - angle];
     }
     return result;
 }

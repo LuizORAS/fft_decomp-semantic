@@ -26,10 +26,10 @@ long ratan2(long y, long x) {
             y = x / (y >> 10);
         else
             y = (x << 10) / y;
-        result = 1024 - g_psyq_gte_atan_ratio_table[y];
+        result = ONE / 4 - g_psyq_gte_atan_ratio_table[y];
     }
     if (negative_x)
-        result = 2048 - result;
+        result = ONE / 2 - result;
     if (negative_y)
         result = -result;
     return result;
