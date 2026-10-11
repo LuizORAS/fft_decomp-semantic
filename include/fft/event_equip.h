@@ -121,12 +121,12 @@ typedef struct equip_gfx_context {
     LINE_G3* line_g3;         /* 0x34 */
     LINE_G4* line_g4;         /* 0x38 */
     TILE* tiles;              /* 0x3c */
-    u8 (*tiles_1)[0xc];       /* 0x40: TILE_1 */
-    u8 (*tiles_8)[0xc];       /* 0x44: TILE_8 */
-    u8 (*tiles_16)[0xc];      /* 0x48: TILE_16 */
+    TILE_1* tiles_1;          /* 0x40 */
+    TILE_8* tiles_8;          /* 0x44 */
+    TILE_16* tiles_16;        /* 0x48 */
     SPRT* sprites;            /* 0x4c */
     SPRT_8* sprites_8;        /* 0x50 */
-    u8 (*sprites_16)[0x10];   /* 0x54: SPRT_16 */
+    SPRT_16* sprites_16;      /* 0x54 */
     DR_MOVE* moves;           /* 0x58 */
     DR_AREA* draw_areas;      /* 0x5c */
     DR_MODE* draw_modes;      /* 0x60 */
@@ -247,8 +247,8 @@ void equip_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semitrans
 void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_f3, POLY_FT3* poly_ft3,
     POLY_F4* poly_f4, POLY_FT4* textured_quads, POLY_G3* poly_g3, POLY_GT3* poly_gt3, POLY_G4* poly_g4,
     POLY_GT4* poly_gt4, LINE_F2* line_f2, LINE_F3* line_f3, LINE_F4* line_f4, LINE_G2* line_g2, LINE_G3* line_g3,
-    LINE_G4* line_g4, TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc], SPRT* sprites,
-    SPRT_8* sprites_8, u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
+    LINE_G4* line_g4, TILE* tiles, TILE_1* tiles_1, TILE_8* tiles_8, TILE_16* tiles_16, SPRT* sprites,
+    SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
 rgb24_t* equip_gfx_get_draw_color(void);
 void equip_gfx_set_draw_color(const rgb24_t* color);

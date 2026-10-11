@@ -2,34 +2,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Per-buffer pool capacities, one per pointer above, set by
- * bunit_entrypoint before it calls the initializer. Volatile: the target
- * reads (and its caller writes) them strictly in field order, which only
- * volatile accesses keep the scheduler from interleaving. */
-extern u16 g_bunit_gfx_poly_f3_capacity;
-extern u16 g_bunit_gfx_poly_ft3_capacity;
-extern u16 g_bunit_gfx_poly_f4_capacity;
-extern u16 g_bunit_gfx_poly_ft4_capacity;
-extern u16 g_bunit_gfx_poly_g3_capacity;
-extern u16 g_bunit_gfx_poly_gt3_capacity;
-extern u16 g_bunit_gfx_poly_g4_capacity;
-extern u16 g_bunit_gfx_poly_gt4_capacity;
-extern u16 g_bunit_gfx_line_f2_capacity;
-extern u16 g_bunit_gfx_line_f3_capacity;
-extern u16 g_bunit_gfx_line_f4_capacity;
+/* Plain reads of these two capacities change the load scheduling. */
 extern volatile u16 g_bunit_gfx_line_g2_capacity;
 extern volatile u16 g_bunit_gfx_line_g3_capacity;
-extern u16 g_bunit_gfx_line_g4_capacity;
-extern u16 g_bunit_gfx_tile_capacity;
-extern u16 g_bunit_gfx_tile_1_capacity;
-extern u16 g_bunit_gfx_tile_8_capacity;
-extern u16 g_bunit_gfx_tile_16_capacity;
-extern u16 g_bunit_gfx_sprite_capacity;
-extern u16 g_bunit_gfx_sprite_8_capacity;
-extern u16 g_bunit_gfx_sprite_16_capacity;
-extern u16 g_bunit_gfx_draw_move_capacity;
-extern u16 g_bunit_gfx_draw_area_capacity;
-extern u16 g_bunit_gfx_draw_mode_capacity;
 
 /* Bind both frame buffers' primitive pools, set up their draw/display
  * environments and present twice to establish the active pair.
@@ -40,8 +15,8 @@ void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* ota
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
     POLY_GT3* gouraud_textured_triangles, POLY_G4* gouraud_quads, POLY_GT4* gouraud_textured_quads, LINE_F2* flat_lines,
     LINE_F3* flat_lines_3, LINE_F4* flat_lines_4, LINE_G2* gouraud_lines, LINE_G3* gouraud_lines_3,
-    LINE_G4* gouraud_lines_4, TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc], SPRT* sprites,
-    SPRT_8* sprites_8, u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes) {
+    LINE_G4* gouraud_lines_4, TILE* tiles, TILE_1* tiles_1, TILE_8* tiles_8, TILE_16* tiles_16, SPRT* sprites,
+    SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes) {
     s32 i;
 
     g_bunit_gfx_context_base = buffers;

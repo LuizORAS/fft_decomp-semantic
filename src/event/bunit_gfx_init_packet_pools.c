@@ -2,30 +2,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Per-buffer pool capacities, one per pointer above, set by
- * bunit_entrypoint before it calls the initializer. */
-extern u16 g_bunit_gfx_poly_f3_capacity;
-extern u16 g_bunit_gfx_poly_ft3_capacity;
-extern u16 g_bunit_gfx_poly_f4_capacity;
-extern u16 g_bunit_gfx_poly_ft4_capacity;
-extern u16 g_bunit_gfx_poly_g3_capacity;
-extern u16 g_bunit_gfx_poly_gt3_capacity;
-extern u16 g_bunit_gfx_poly_g4_capacity;
-extern u16 g_bunit_gfx_poly_gt4_capacity;
-extern u16 g_bunit_gfx_line_f2_capacity;
-extern u16 g_bunit_gfx_line_f3_capacity;
-extern u16 g_bunit_gfx_line_f4_capacity;
+/* The double-buffer binder uses a volatile view of these two capacities. */
 extern u16 g_bunit_gfx_line_g2_capacity;
 extern u16 g_bunit_gfx_line_g3_capacity;
-extern u16 g_bunit_gfx_line_g4_capacity;
-extern u16 g_bunit_gfx_tile_capacity;
-extern u16 g_bunit_gfx_tile_1_capacity;
-extern u16 g_bunit_gfx_tile_8_capacity;
-extern u16 g_bunit_gfx_tile_16_capacity;
-extern u16 g_bunit_gfx_sprite_capacity;
-extern u16 g_bunit_gfx_sprite_8_capacity;
-extern u16 g_bunit_gfx_sprite_16_capacity;
-extern u16 g_bunit_gfx_draw_move_capacity;
 
 /* Initializes every primitive pool of one frame buffer with its libgpu
  * constructor; polygons additionally get texture shading enabled.

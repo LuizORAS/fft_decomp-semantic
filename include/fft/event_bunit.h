@@ -286,12 +286,12 @@ typedef struct bunit_gfx_context {
     LINE_G3* gouraud_lines_3;             /* 0x34 */
     LINE_G4* gouraud_lines_4;             /* 0x38 */
     TILE* tiles;                          /* 0x3c */
-    u8 (*tiles_1)[0xc];                   /* 0x40: TILE_1 */
-    u8 (*tiles_8)[0xc];                   /* 0x44: TILE_8 */
-    u8 (*tiles_16)[0xc];                  /* 0x48: TILE_16 */
+    TILE_1* tiles_1;                      /* 0x40 */
+    TILE_8* tiles_8;                      /* 0x44 */
+    TILE_16* tiles_16;                    /* 0x48 */
     SPRT* sprites;                        /* 0x4c */
     SPRT_8* sprites_8;                    /* 0x50 */
-    u8 (*sprites_16)[0x10];               /* 0x54: SPRT_16 */
+    SPRT_16* sprites_16;                  /* 0x54 */
     DR_MOVE* draw_moves;                  /* 0x58 */
     DR_AREA* draw_areas;                  /* 0x5c */
     DR_MODE* draw_modes;                  /* 0x60 */
@@ -324,6 +324,28 @@ extern s16 g_bunit_gfx_fade_intensity;
 extern RECT g_bunit_gfx_fade_rect[];
 extern u8 g_bunit_gfx_increasing_fade_active;
 extern u16 g_bunit_gfx_otag_count;
+extern u16 g_bunit_gfx_poly_f3_capacity;
+extern u16 g_bunit_gfx_poly_ft3_capacity;
+extern u16 g_bunit_gfx_poly_f4_capacity;
+extern u16 g_bunit_gfx_poly_ft4_capacity;
+extern u16 g_bunit_gfx_poly_g3_capacity;
+extern u16 g_bunit_gfx_poly_gt3_capacity;
+extern u16 g_bunit_gfx_poly_g4_capacity;
+extern u16 g_bunit_gfx_poly_gt4_capacity;
+extern u16 g_bunit_gfx_line_f2_capacity;
+extern u16 g_bunit_gfx_line_f3_capacity;
+extern u16 g_bunit_gfx_line_f4_capacity;
+extern u16 g_bunit_gfx_line_g4_capacity;
+extern u16 g_bunit_gfx_tile_capacity;
+extern u16 g_bunit_gfx_tile_1_capacity;
+extern u16 g_bunit_gfx_tile_8_capacity;
+extern u16 g_bunit_gfx_tile_16_capacity;
+extern u16 g_bunit_gfx_sprite_capacity;
+extern u16 g_bunit_gfx_sprite_8_capacity;
+extern u16 g_bunit_gfx_sprite_16_capacity;
+extern u16 g_bunit_gfx_draw_move_capacity;
+extern u16 g_bunit_gfx_draw_area_capacity;
+extern u16 g_bunit_gfx_draw_mode_capacity;
 extern s16 g_bunit_gfx_otag_index;
 extern u16 g_bunit_gfx_poly_ft4_count;
 extern u16 g_bunit_gfx_poly_gt4_count;
@@ -421,8 +443,8 @@ void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* ota
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
     POLY_GT3* gouraud_textured_triangles, POLY_G4* gouraud_quads, POLY_GT4* gouraud_textured_quads, LINE_F2* flat_lines,
     LINE_F3* flat_lines_3, LINE_F4* flat_lines_4, LINE_G2* gouraud_lines, LINE_G3* gouraud_lines_3,
-    LINE_G4* gouraud_lines_4, TILE* tiles, u8 (*tiles_1)[0xc], u8 (*tiles_8)[0xc], u8 (*tiles_16)[0xc], SPRT* sprites,
-    SPRT_8* sprites_8, u8 (*sprites_16)[0x10], DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
+    LINE_G4* gouraud_lines_4, TILE* tiles, TILE_1* tiles_1, TILE_8* tiles_8, TILE_16* tiles_16, SPRT* sprites,
+    SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 void bunit_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 void bunit_gfx_init_vram_and_start_fade(void);
 void bunit_gfx_load_image_and_wait(RECT* rect, void* data);

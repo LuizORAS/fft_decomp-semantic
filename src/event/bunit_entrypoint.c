@@ -13,33 +13,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Plain view of the pool capacities; the packet-pool initializers read them volatile. */
-extern u16 g_bunit_gfx_poly_f3_capacity;
-extern u16 g_bunit_gfx_poly_ft3_capacity;
-extern u16 g_bunit_gfx_poly_f4_capacity;
-extern u16 g_bunit_gfx_poly_ft4_capacity;
-extern u16 g_bunit_gfx_poly_g3_capacity;
-extern u16 g_bunit_gfx_poly_gt3_capacity;
-extern u16 g_bunit_gfx_poly_g4_capacity;
-extern u16 g_bunit_gfx_poly_gt4_capacity;
-extern u16 g_bunit_gfx_line_f2_capacity;
-extern u16 g_bunit_gfx_line_f3_capacity;
-extern u16 g_bunit_gfx_line_f4_capacity;
+/* The double-buffer binder uses a volatile view of these two capacities. */
 extern u16 g_bunit_gfx_line_g2_capacity;
 extern u16 g_bunit_gfx_line_g3_capacity;
-extern u16 g_bunit_gfx_line_g4_capacity;
-extern u16 g_bunit_gfx_tile_capacity;
-extern u16 g_bunit_gfx_tile_1_capacity;
-extern u16 g_bunit_gfx_tile_8_capacity;
-extern u16 g_bunit_gfx_tile_16_capacity;
-extern u16 g_bunit_gfx_sprite_capacity;
-extern u16 g_bunit_gfx_sprite_8_capacity;
-extern u16 g_bunit_gfx_sprite_16_capacity;
-extern u16 g_bunit_gfx_draw_move_capacity;
-extern u16 g_bunit_gfx_draw_area_capacity;
-extern u16 g_bunit_gfx_draw_mode_capacity;
-
-typedef struct bunit_gfx_frame_buffer bunit_gfx_frame_buffer_t;
 
 s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     POLY_FT4 textured_quads[1000];
