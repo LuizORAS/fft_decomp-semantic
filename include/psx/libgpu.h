@@ -747,8 +747,6 @@ extern u8 g_psyq_gpu_graph_type;
 extern u8 g_psyq_gpu_queue_enabled;
 extern u8 g_psyq_gpu_debug_level;
 extern u8 g_psyq_gpu_graph_reverse;
-extern u16 g_psyq_gpu_vram_width;
-extern u16 g_psyq_gpu_vram_height;
 extern psyq_interrupt_callback_t g_psyq_gpu_draw_sync_callback;
 extern DRAWENV g_psyq_gpu_draw_environment;
 extern DISPENV g_psyq_gpu_display_environment;

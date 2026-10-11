@@ -1096,8 +1096,6 @@ data:
   - {addr: 0x80032895, name: g_psyq_gpu_queue_enabled}
   - {addr: 0x80032896, name: g_psyq_gpu_debug_level}
   - {addr: 0x80032897, name: g_psyq_gpu_graph_reverse}
-  - {addr: 0x80032898, name: g_psyq_gpu_vram_width}
-  - {addr: 0x8003289a, name: g_psyq_gpu_vram_height}
   - {addr: 0x800328a0, name: g_psyq_gpu_draw_sync_callback}
   - {addr: 0x800328a4, name: g_psyq_gpu_draw_environment}
   - {addr: 0x80032900, name: g_psyq_gpu_display_environment}
