@@ -508,7 +508,6 @@ data:
   - {addr: 0x8009f1ec, name: g_wldcore_job_selection}
   - {addr: 0x8009f244, name: g_wldcore_window_render_record_count}
   - {addr: 0x8009f248, name: g_wldcore_random_battle_squad_id}
-  - {addr: 0x8009f24c, name: g_wldcore_location_view}
   - {addr: 0x8009f24c, name: g_wldcore_map_projection_state}
   - {addr: 0x8009f288, name: g_wldcore_menu_indicator_sprite}
   - {addr: 0x8009f2ac, name: g_wldcore_hud_color}

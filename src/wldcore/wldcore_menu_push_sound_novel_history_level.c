@@ -26,7 +26,7 @@
 void wldcore_menu_push_sound_novel_history_level(void) {
     RECT bounds;
     u8 unused[8];
-    wldcore_window_record_t* windows;
+    world_animated_render_record_t* windows;
     wldcore_window_xy_t* positions;
     point32_t* position;
     CVECTOR* colors;

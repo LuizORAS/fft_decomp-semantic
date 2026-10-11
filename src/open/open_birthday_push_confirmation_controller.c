@@ -20,17 +20,17 @@ void open_birthday_push_confirmation_controller(void) {
     record = open_gfx_append_animated_render_record(
         g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     g_open_controller_records_next[g_open_current_controller_index].birthday_confirmation.cursor_record_36 = record;
-    g_open_gfx_render_records_36[record].anim_id = 2;
-    g_open_gfx_render_records_36[record].ot_layer = 3;
-    g_open_gfx_render_records_36[record].frame_timer = 0;
+    g_open_gfx_render_records_36[record].sequence = 2;
+    g_open_gfx_render_records_36[record].priority = 3;
+    g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
 
     record = open_gfx_append_animated_render_record(
         g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     g_open_controller_records_next[g_open_current_controller_index].birthday_confirmation.label_record = record;
-    g_open_gfx_render_records_36[record].anim_id = 0xE;
-    g_open_gfx_render_records_36[record].ot_layer = 3;
-    g_open_gfx_render_records_36[record].frame_timer = 0;
+    g_open_gfx_render_records_36[record].sequence = 0xE;
+    g_open_gfx_render_records_36[record].priority = 3;
+    g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
 
     record = open_gfx_append_window_record(g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
@@ -47,15 +47,15 @@ void open_birthday_push_confirmation_controller(void) {
     position->y = 0x28;
     g_open_gfx_render_records_56[record].ot_layer = 3;
 
-    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_confirmation.cursor_record_36].x
-        = g_open_gfx_render_records_56[record].x + 4;
-    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_confirmation.cursor_record_36].y
-        = g_open_gfx_render_records_56[record].y + 0xC;
-    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_confirmation.label_record].x
-        = g_open_gfx_render_records_56[record].x + 2;
+    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_confirmation.cursor_record_36]
+        .position.x = g_open_gfx_render_records_56[record].x + 4;
+    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_confirmation.cursor_record_36]
+        .position.y = g_open_gfx_render_records_56[record].y + 0xC;
+    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_confirmation.label_record]
+        .position.x = g_open_gfx_render_records_56[record].x + 2;
     g_open_current_controller_index = controller + 1;
-    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_confirmation.label_record].y
-        = g_open_gfx_render_records_56[record].y - 2;
+    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_confirmation.label_record]
+        .position.y = g_open_gfx_render_records_56[record].y - 2;
     g_open_controller_records_next[controller].birthday_confirmation.selected_option = 0;
     g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_BIRTHDAY_CONFIRMATION;
 }

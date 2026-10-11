@@ -65,7 +65,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         || open_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
         menu->selected_option ^= 1;
         /* Adding 12 before the option offset keeps the target's (option * 16 + 12) + y evaluation. */
-        g_open_gfx_render_records_36[menu->cursor_record_36].y
+        g_open_gfx_render_records_36[menu->cursor_record_36].position.y
             = g_open_gfx_render_records_56[menu->menu_record_56].y + 12 + menu->selected_option * 16;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }

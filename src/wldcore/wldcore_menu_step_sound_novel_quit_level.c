@@ -27,7 +27,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
     s32 fade;
     s32 base;
     s32 offset;
-    wldcore_window_record_t* record;
+    world_animated_render_record_t* record;
     s32 window;
     u16 first;
 

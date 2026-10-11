@@ -5,7 +5,7 @@
 /* Push a map-dot focus level and hide its parent window during the projection move.
  * Keeping the render pointer as the base preserves the two related call addresses. */
 void wldcore_menu_push_focus_location_level(s32 dot_index) {
-    wldcore_window_record_t* render;
+    world_animated_render_record_t* render;
 
     render = &g_wldcore_map_dots[dot_index].render;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = dot_index;

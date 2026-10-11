@@ -11,7 +11,7 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
     s32 layout;
     s16* counter;
     s16 message;
-    wldcore_window_record_t* record;
+    world_animated_render_record_t* record;
     s32 window;
 
     if ((g_wldcore_new_button_presses & PSX_PAD_CROSS) != 0) {

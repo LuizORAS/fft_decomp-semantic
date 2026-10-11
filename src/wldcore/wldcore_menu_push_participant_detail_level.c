@@ -10,8 +10,8 @@
  */
 void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant) {
     RECT rect;
-    wldcore_window_record_t* window1;
-    wldcore_window_record_t* window2;
+    world_animated_render_record_t* window1;
+    world_animated_render_record_t* window2;
     point32_t* pos1;
     point32_t* pos2;
     s32 index;

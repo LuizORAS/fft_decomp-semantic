@@ -35,10 +35,10 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     open_gfx_start_overlay_fade_out(0x10);
     record = open_gfx_append_animated_render_record(
         g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
-    g_open_gfx_render_records_36[record].anim_id = 0x12;
-    g_open_gfx_render_records_36[record].frame_timer = 0;
+    g_open_gfx_render_records_36[record].sequence = 0x12;
+    g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
-    position = &g_open_gfx_render_records_36[record].x;
+    position = &g_open_gfx_render_records_36[record].position.x;
     controller = g_open_current_controller_index;
     position[0] = -4;
     position[1] = -16;

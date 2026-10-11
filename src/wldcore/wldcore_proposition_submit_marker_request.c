@@ -7,7 +7,7 @@
  * channels and tinted in place by 0x80069718. sequence is written after that
  * call because the target reloads 0x800d0bb4 there. */
 void wldcore_proposition_submit_marker_request(GsOT* ot) {
-    wldcore_window_record_t request;
+    world_animated_render_record_t request;
     CVECTOR color;
     s32 index;
     s32 shade;

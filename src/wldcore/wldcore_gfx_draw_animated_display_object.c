@@ -34,7 +34,7 @@ extern wldcore_anim_sequence_t** g_wldcore_anim_sequence_table;
  * as a USE-only pseudo. That pseudo and the part loop's folded entry test
  * (combine turns it into `blez count`, keeps `i = 0`, and leaves the slt
  * pseudo only a USE) get the unreferenced reload slots at 0x50 and 0x58. */
-void wldcore_gfx_draw_animated_display_object(wldcore_window_record_t* object, GsOT* ot) {
+void wldcore_gfx_draw_animated_display_object(world_animated_render_record_t* object, GsOT* ot) {
     GsSPRITE sprite;
     CVECTOR color;
     wldcore_anim_sequence_t* sequence;

@@ -79,13 +79,13 @@ void open_birthday_handle_menu_input(open_birthday_date_state_t* menu) {
 
     if ((g_open_input_new_button_presses & PSX_PAD_LEFT) && menu->selecting_month == 0) {
         menu->selecting_month = 1;
-        g_open_gfx_render_records_36[menu->cursor_record_36].x -= OPEN_BIRTHDAY_CURSOR_STEP;
+        g_open_gfx_render_records_36[menu->cursor_record_36].position.x -= OPEN_BIRTHDAY_CURSOR_STEP;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 
     if ((g_open_input_new_button_presses & PSX_PAD_RIGHT) && menu->selecting_month != 0) {
         menu->selecting_month = 0;
-        g_open_gfx_render_records_36[menu->cursor_record_36].x += OPEN_BIRTHDAY_CURSOR_STEP;
+        g_open_gfx_render_records_36[menu->cursor_record_36].position.x += OPEN_BIRTHDAY_CURSOR_STEP;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 }

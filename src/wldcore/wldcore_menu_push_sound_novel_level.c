@@ -17,9 +17,9 @@
 void wldcore_menu_push_sound_novel_level(s32 argument) {
     RECT bounds;
     point32_t origin;
-    wldcore_window_record_t* window1;
-    wldcore_window_record_t* window2;
-    wldcore_window_record_t* window4;
+    world_animated_render_record_t* window1;
+    world_animated_render_record_t* window2;
+    world_animated_render_record_t* window4;
     s32 bar_render;
     s32 index;
     point32_t* pos1;

@@ -18,7 +18,7 @@ void wldcore_list_open_available_propositions(void) {
     s32 count;
     s32 i;
     s32 index;
-    wldcore_window_record_t* record;
+    world_animated_render_record_t* record;
     s32 record_index;
 
     if (g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]

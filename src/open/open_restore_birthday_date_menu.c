@@ -11,10 +11,10 @@ void open_restore_birthday_date_menu(open_birthday_date_state_t* menu) {
     open_render_record_56_t* window;
     open_render_record_56_t* title;
 
-    g_open_gfx_render_records_36[menu->cursor_record_36].anim_id = 12;
+    g_open_gfx_render_records_36[menu->cursor_record_36].sequence = 12;
 
     cursor = menu->cursor_record_36;
-    g_open_gfx_render_records_36[cursor].frame_timer = 0;
+    g_open_gfx_render_records_36[cursor].anim_counter = 0;
     g_open_gfx_render_records_36[cursor].frame_index = 0;
 
     g_open_gfx_render_records_36[menu->label_record].color.r = 0x80;

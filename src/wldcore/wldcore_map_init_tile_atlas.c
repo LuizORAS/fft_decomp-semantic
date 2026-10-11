@@ -43,8 +43,8 @@ void wldcore_map_init_tile_atlas(void) {
     s32* descriptor;
     s32* wpos;
     s32* wpos2;
-    wldcore_window_record_t* rec;
-    wldcore_window_record_t* rec2;
+    world_animated_render_record_t* rec;
+    world_animated_render_record_t* rec2;
     s32* pos;
     s32 map_window_index;
     s32 menu_window_index;

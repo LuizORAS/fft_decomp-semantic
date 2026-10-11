@@ -16,7 +16,7 @@ void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
     s32 depth;
     s32 parent;
     s32 slot;
-    wldcore_window_record_t* record;
+    world_animated_render_record_t* record;
     u32 buttons;
 
     if (level->result != 0 && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {

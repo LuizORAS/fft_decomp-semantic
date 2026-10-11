@@ -17,7 +17,7 @@ void wldcore_dispatch_display_object_list(GsOT* ot, s32** list, s32 count) {
             continue;
         }
         if (*object & WLDCORE_DISPLAY_OBJECT_ANIMATED) {
-            wldcore_gfx_draw_animated_display_object((wldcore_window_record_t*)object, ot);
+            wldcore_gfx_draw_animated_display_object((world_animated_render_record_t*)object, ot);
         } else if (*object & WLDCORE_DISPLAY_OBJECT_IMAGE) {
             wldcore_gfx_draw_display_object_sprite((wldcore_window_render_record_t*)object, ot);
         }

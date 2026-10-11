@@ -395,9 +395,8 @@ typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_stat
 /* The ordering-table handle is libgs GsOT; see include/psx/libgs.h. */
 /* The display-object queues hold a pointer to each object's leading flags
  * word, which selects the handler in wldcore_dispatch_display_object_list:
- * bit 0 an animated object (wldcore_window_record_t), bit 1 a sprite
+ * bit 0 an animated object (world_animated_render_record_t), bit 1 a sprite
  * (wldcore_window_render_record_t). */
-struct wldcore_window_record;
 struct wldcore_window_render_record;
 
 extern u32 g_wldcore_gfx_aux_ot_tags[2][4];
@@ -438,7 +437,7 @@ void wldcore_gfx_draw_world_frame_with_map(void);
 s32 wldcore_fade_step_screen(void);
 void wldcore_gfx_toggle_captured_world_frame(s32 capture);
 void wldcore_gfx_draw_projected_map_tiles(GsOT* ot);
-void wldcore_gfx_draw_animated_display_object(struct wldcore_window_record* object, GsOT* ot);
+void wldcore_gfx_draw_animated_display_object(world_animated_render_record_t* object, GsOT* ot);
 void wldcore_gfx_draw_context_value_display(GsOT* ot);
 void wldcore_gfx_draw_display_object_sprite(struct wldcore_window_render_record* object, GsOT* ot);
 void wldcore_gfx_draw_calendar_date(GsOT* ot);
@@ -511,25 +510,9 @@ typedef struct wldcore_location_entry_state {
 } wldcore_location_entry_state_t;
 typedef char wldcore_location_entry_state_size_must_be_0x94[sizeof(wldcore_location_entry_state_t) == 0x94 ? 1 : -1];
 
-/* Provisional: view of g_wldcore_map_projection_state at 0x8009f24c used by
- * the location-entry routines. Like wldcore_map_dot_t it holds the marker's
- * position as one SVECTOR, which the route interpolation assigns whole (a block
- * move); its screen point mirrors .marker.render.position. */
-typedef struct wldcore_location_view {
-    s32 projection_state; /* 0x00; g_wldcore_map_projection_state.flags */
-    s32 angle;            /* 0x04; .angle */
-    s32 location_id;      /* 0x08; .marker.kind */
-    s32 picture_id;       /* 0x0c; .marker.sub_kind */
-    SVECTOR coordinates;  /* 0x10; marker x/y/z */
-    u8 _unused_18[0x18];
-    point32_t point; /* 0x30; marker screen_x/screen_y */
-} wldcore_location_view_t;
-typedef char wldcore_location_view_size_must_be_0x38[sizeof(wldcore_location_view_t) == 0x38 ? 1 : -1];
-
 extern wldcore_location_entry_state_t g_wldcore_location_entry_state;
 extern wldcore_state_record_t* g_wldcore_location_records;
 extern s32 g_wldcore_location_marker_shade;
-extern wldcore_location_view_t g_wldcore_location_view;
 extern u32* g_wldcore_location_frame_tim;
 s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, u32 value, s32 step);
 s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out);
@@ -1157,26 +1140,6 @@ typedef char wldcore_map_dot_source_size_must_be_8[sizeof(wldcore_map_dot_source
 
 extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;
 
-/* 36-byte window records at 0x800bb504: animated display objects. The pool
- * init 0x8006ad28 sets flags = 1, so the display-object dispatcher 0x8006ae20
- * hands them to wldcore_gfx_draw_animated_display_object (0x8006aed0), which
- * reads the priority as a halfword. 0x8009036c initialises a record
- * (flags |= 0x810, sequence/priority from arguments, frame_index and
- * anim_counter cleared); 0x80090a28 toggles flag 0x10 by record index. */
-typedef struct wldcore_window_record {
-    s32 flags;        /* 0x00; wldcore_display_object_flag_e */
-    s32 sequence;     /* 0x04; wldcore_anim_sequence_id_e; second argument of 0x8009036c */
-    s32 priority;     /* 0x08; OT priority passed to the sprite sort; first argument of 0x8009036c */
-    s32 frame_index;  /* 0x0c; frame within the sequence, cleared with anim_counter on every sequence change */
-    s32 anim_counter; /* 0x10; frames spent on the current frame */
-    /* 0x14; CLUT selector: 0 keeps the part's CLUT, otherwise cx = cx_base + (palette - 1) << 4. The
-     * window-state routines at 0x80076744/0x8007688c store 0, 6 or 10. */
-    s32 palette;
-    point32_t position; /* 0x18 */
-    CVECTOR color;      /* 0x20; rgb tint, 0x80 grey from the pool init and the append routines */
-} wldcore_window_record_t;
-typedef char wldcore_window_record_size_must_be_0x24[sizeof(wldcore_window_record_t) == 0x24 ? 1 : -1];
-
 /* The 52-byte world map dot records at 0x800d3ca8. */
 typedef struct wldcore_map_dot {
     s32 kind;
@@ -1184,7 +1147,7 @@ typedef struct wldcore_map_dot {
     SVECTOR position; /* 0x08; world-map position, RotTrans input */
     /* 0x10; enqueued whole for the animated display-object renderer. Its palette
      * is 0, 2 or 3 for the player's marker, from EVENT_SCRIPT_VAR_TOWN_BACKGROUND. */
-    wldcore_window_record_t render;
+    world_animated_render_record_t render;
 } wldcore_map_dot_t;
 typedef char wldcore_map_dot_size_must_be_0x34[sizeof(wldcore_map_dot_t) == 0x34 ? 1 : -1];
 
@@ -1983,7 +1946,7 @@ extern s32* g_wldcore_window_aux_render_object_queue[];
 extern world_menu_text_layout_t g_wldcore_window_panel_label_state;
 extern world_menu_entry_t g_wldcore_window_panel_render_state;
 extern s32 g_wldcore_window_record_count;
-extern wldcore_window_record_t g_wldcore_window_records[];
+extern world_animated_render_record_t g_wldcore_window_records[];
 extern wldcore_window_layout_row_t g_wldcore_window_layout_rows[];
 extern s32 g_wldcore_window_render_object_count;
 

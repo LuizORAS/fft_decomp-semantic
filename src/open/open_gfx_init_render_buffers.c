@@ -13,7 +13,7 @@ void open_gfx_init_render_buffers(void) {
 
     for (i = 0; i < 16; i++) {
         g_open_gfx_render_records_36[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
-        g_open_gfx_render_records_36[i].ot_layer = 8;
+        g_open_gfx_render_records_36[i].priority = 8;
         color = &g_open_gfx_render_records_36[i].color;
         color->r = 0x80;
         color->g = 0x80;

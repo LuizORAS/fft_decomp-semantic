@@ -154,7 +154,7 @@ void open_movie_update_stream_frame(void);
 void open_movie_wait_for_mdec_output(open_movie_mdec_stream_state_t* state, s32 unused);
 
 /* render record */
-/* open_render_record_36_t.palette of the selected menu entry. */
+/* world_animated_render_record_t.palette of the selected menu entry. */
 enum { OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE = 9 };
 
 /* Render records. open_gfx_draw_render_record_pointer_list dispatches on flags
@@ -162,19 +162,6 @@ enum { OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE = 9 };
  * 56-byte record, and a record with BLANK or HIDDEN set is skipped.
  * Both pools hold 16 entries, allocated by the open_append_render_record_*
  * counters. */
-typedef struct open_render_record_36 {
-    /* 0x00 */ u32 flags;
-    /* 0x04 */ s32 anim_id;
-    /* 0x08 */ s32 ot_layer;
-    /* 0x0c */ s32 frame_index;
-    /* 0x10 */ s32 frame_timer;
-    /* 0x14 */ s32 palette; /* 0 keeps the sprite's own; OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE on the selected entry */
-    /* 0x18 */ s32 x;
-    /* 0x1c */ s32 y;
-    /* 0x20 */ CVECTOR color;
-} open_render_record_36_t;
-typedef char open_render_record_36_size_must_be_0x24[(sizeof(open_render_record_36_t) == 0x24) ? 1 : -1];
-
 /* Common prefix used to dispatch either render-record layout. */
 typedef struct open_render_record {
     u32 flags;
@@ -630,7 +617,7 @@ extern s32 g_open_gfx_primitive_count;
 extern open_render_record_56_position_t g_open_gfx_record_translation[16];
 extern s32 g_open_gfx_render_record_pointer_count;
 extern open_render_record_t* g_open_gfx_render_record_pointers[16];
-extern open_render_record_36_t g_open_gfx_render_records_36[16];
+extern world_animated_render_record_t g_open_gfx_render_records_36[16];
 extern open_render_record_56_t g_open_gfx_render_records_56[16];
 extern open_screen_environment_t g_open_gfx_screen_environments[2];
 extern open_overlay_fade_t g_open_gfx_overlay_fade;
@@ -639,7 +626,7 @@ extern open_sprite_prim_t g_open_gfx_sprite_primitive_pool[2][32];
 extern POLY_FT4 g_open_gfx_credit_band_primitives[2];
 extern u32** g_open_gfx_record_36_sprites;
 extern POLY_GT4 g_open_gfx_transition_line_primitives[2][14];
-void open_gfx_draw_animated_render_record(open_render_record_36_t* actor, u32* ot);
+void open_gfx_draw_animated_render_record(world_animated_render_record_t* actor, u32* ot);
 void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot);
 s32 open_gfx_update_transition_sequence(void);
 void open_gfx_draw_transition_line_strips(s32 intensity);

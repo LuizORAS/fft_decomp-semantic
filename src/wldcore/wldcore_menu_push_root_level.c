@@ -9,7 +9,7 @@
  * the window-level depth local changes the register allocation. */
 void wldcore_menu_push_root_level(void) {
     wldcore_window_xy_t* xy;
-    wldcore_window_record_t* records;
+    world_animated_render_record_t* records;
     s32 window_index;
     s32 depth;
     s32 level;

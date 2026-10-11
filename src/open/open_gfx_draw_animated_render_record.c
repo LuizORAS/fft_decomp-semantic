@@ -38,7 +38,7 @@ typedef struct open_gfx_sprite_part {
 
 extern wldcore_anim_sequence_t** g_open_gfx_record_36_animations;
 
-void open_gfx_draw_animated_render_record(open_render_record_36_t* actor, u32* ot) {
+void open_gfx_draw_animated_render_record(world_animated_render_record_t* actor, u32* ot) {
     u32** sprites;
     wldcore_anim_sequence_t* anim;
     u32* sprite;
@@ -53,14 +53,14 @@ void open_gfx_draw_animated_render_record(open_render_record_36_t* actor, u32* o
     s32 y;
 
     sprites = g_open_gfx_record_36_sprites;
-    anim = g_open_gfx_record_36_animations[actor->anim_id];
-    actor->frame_timer++;
+    anim = g_open_gfx_record_36_animations[actor->sequence];
+    actor->anim_counter++;
     /* A goto loop: as a for/while loop, GCC's loop pass hoists the 0xffff
      * constant into a register, which the target does not. */
 loop:
     value = (anim->frames + actor->frame_index)->duration;
-    if (value == actor->frame_timer && value != 0xffff) {
-        actor->frame_timer = 0;
+    if (value == actor->anim_counter && value != 0xffff) {
+        actor->anim_counter = 0;
         actor->frame_index++;
         value = anim->frame_count;
         if (value == actor->frame_index) {
@@ -99,9 +99,9 @@ loop:
                 &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt, 0);
         }
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.x0
-            = (x = actor->x, x + PART(value)->x_offset - 0x80);
+            = (x = actor->position.x, x + PART(value)->x_offset - 0x80);
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.y0
-            = (y = actor->y, y + PART(value)->y_offset - 0x80);
+            = (y = actor->position.y, y + PART(value)->y_offset - 0x80);
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.u0
             = PART(value)->u;
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.v0
@@ -115,9 +115,9 @@ loop:
                     + ((actor->palette == 0 || (sprite[value] & 0x08000000)) ? ((sprite[value] >> 12) & 0xf0)
                                                                              : ((actor->palette - 1) * 0x10)),
                 clut_y);
-        AddPrim(&ot[actor->ot_layer],
+        AddPrim(&ot[actor->priority],
             &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt);
-        AddPrim(&ot[actor->ot_layer],
+        AddPrim(&ot[actor->priority],
             &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].mode);
         g_open_gfx_primitive_count++;
     }

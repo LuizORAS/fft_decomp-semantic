@@ -6,7 +6,7 @@
  * its right, in the tinted HUD colour. Nothing is drawn while
  * MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE is set. */
 void wldcore_gfx_draw_calendar_date(GsOT* ot) {
-    wldcore_window_record_t request;
+    world_animated_render_record_t request;
     CVECTOR color;
     s32 first;
     s32 second;

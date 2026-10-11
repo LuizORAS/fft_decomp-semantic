@@ -20,7 +20,7 @@
  * are sized from the target frame only; their original types are unknown. */
 void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     wldcore_text_scrollable_window_t* window;
-    wldcore_window_record_t* records;
+    world_animated_render_record_t* records;
     point32_t* positions;
     point32_t* position;
     s32* anchor;
@@ -75,7 +75,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     positions = &records[0].position;
     /* This byte-view stride retains the target addiu of &records[0].x;
      * &records[index].x removes it and breaks the exact match. */
-    position = (point32_t*)((u8*)positions + index * sizeof(wldcore_window_record_t));
+    position = (point32_t*)((u8*)positions + index * sizeof(world_animated_render_record_t));
     position->x = -(box.x / 2) + 2;
     position->y = -(box.y / 2) - 2;
     wldcore_sound_play_effect(MAIN_SFX_WINDOW_OPEN);

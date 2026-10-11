@@ -785,6 +785,20 @@ typedef struct wldcore_anim_sequence {
     wldcore_anim_frame_t frames[1]; /* 0x04 */
 } wldcore_anim_sequence_t;
 
+/* Animated display objects used by WLDCORE and OPEN. sequence selects a row
+ * of the module's animation table; a zero palette keeps each sprite part's CLUT. */
+typedef struct world_animated_render_record {
+    s32 flags;          /* 0x00; wldcore_display_object_flag_e */
+    s32 sequence;       /* 0x04 */
+    s32 priority;       /* 0x08; ordering-table priority */
+    s32 frame_index;    /* 0x0c; current sequence frame */
+    s32 anim_counter;   /* 0x10; frames spent on the current frame */
+    s32 palette;        /* 0x14 */
+    point32_t position; /* 0x18; screen coordinates */
+    CVECTOR color;      /* 0x20; RGB tint */
+} world_animated_render_record_t;
+typedef char world_animated_render_record_size_must_be_0x24[sizeof(world_animated_render_record_t) == 0x24 ? 1 : -1];
+
 /* Padded pixel size of a text image (wldcore_text_get_padded_dimensions,
  * open_text_measure_menu_image). */
 typedef struct wldcore_text_dimensions {

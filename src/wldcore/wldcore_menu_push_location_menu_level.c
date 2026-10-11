@@ -35,7 +35,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     u32 flags;
     s32 i;
     CVECTOR* color;
-    wldcore_window_record_t* records;
+    world_animated_render_record_t* records;
     wldcore_location_list_level_t* level;
     point32_t* base;
     wldcore_window_xy_t* position;
