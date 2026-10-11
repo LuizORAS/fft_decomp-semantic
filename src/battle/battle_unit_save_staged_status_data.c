@@ -39,7 +39,7 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
                     || stats->job_id == JOB_ID_WIZARD_UNDEAD || stats->job_id == JOB_ID_TIME_MAGE_UNDEAD
                     || stats->job_id == JOB_ID_ORACLE_UNDEAD || stats->job_id == JOB_ID_SUMMONER_UNDEAD) {
                     value = stats->status_sets.current[i];
-                    value &= g_battle_event_status_masks[BATTLE_EVENT_STATUS_MASK_PRE_BATTLE_UNDEAD][i];
+                    value &= g_battle_event_status_masks[BATTLE_EVENT_STATUS_MASK_PRE_BATTLE_MONSTER_OR_UNDEAD][i];
                     st = g_battle_unit_status_staging_data;
                     stats->action.status_removal[i] = value;
                     st->added[unit_id][i] = value;

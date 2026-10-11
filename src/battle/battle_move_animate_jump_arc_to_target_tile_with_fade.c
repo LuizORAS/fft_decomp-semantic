@@ -5,7 +5,7 @@
  * map tile, darkened for the first part of the flight.
  *
  * Phase 0 computes the arc as battle_move_animate_jump_arc_to_own_tile does,
- * hides the shadow, sets the sprite's blend and semi-transparency bits and starts
+ * hides the shadow, selects quarter-add blending and starts
  * a palette modulation of -31 on each colour component. Phase 1 flies until 4
  * frames remain (the threshold kept in distortion_target), then restores the
  * palette. Phase 2 flies the remaining frames and stops the horizontal motion.
@@ -31,7 +31,7 @@ void battle_move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data
         target.vy = battle_gfx_calculate_screen_z_from_misc_map_data(unit);
         timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
         unit->shadow_graphic_trigger = 0;
-        unit->sprite_display_flags |= BATTLE_MISC_DISPLAY_BLEND_MASK | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
+        unit->sprite_display_flags |= BATTLE_MISC_DISPLAY_BLEND_ADD_QUARTER | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 1, unit->unit_id, -31, -31, -31);
         threshold = 4;
         unit->distortion_phase++;

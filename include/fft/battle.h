@@ -1018,12 +1018,14 @@ typedef char
 /* Per-byte status removal masks applied while an event stages a unit: three
  * eight-byte sets, of which the first BATTLE_STATUS_BYTE_COUNT bytes are used
  * (0x80169758). */
-enum {
+typedef enum battle_event_status_mask_set {
     BATTLE_EVENT_STATUS_MASK_BATTLE_STARTED = 0,
     BATTLE_EVENT_STATUS_MASK_PRE_BATTLE = 1,
-    BATTLE_EVENT_STATUS_MASK_PRE_BATTLE_UNDEAD = 2,
-    BATTLE_EVENT_STATUS_MASK_COUNT = 3,
-};
+    /* Monster skillsets, both Altima forms and the six undead jobs. */
+    BATTLE_EVENT_STATUS_MASK_PRE_BATTLE_MONSTER_OR_UNDEAD = 2,
+} battle_event_status_mask_set_e;
+
+enum { BATTLE_EVENT_STATUS_MASK_COUNT = 3 };
 
 extern unit_tile_coordinates_t g_battle_script_warp_coords;
 extern u16 g_battle_script_attack_entry_mode; /* script_attack_entry_mode_e */
@@ -1614,14 +1616,15 @@ typedef union battle_move_destination {
 typedef struct battle_gfx_source_part {
     s8 x_shift; /* pixels from the sprite's origin to the part's left and top edges */
     s8 y_shift;
-    u16 attributes; /* battle_shp_part_attributes_e */
+    u16 attributes; /* BATTLE_SHP_PART_* masks */
 } battle_gfx_source_part_t;
 
-typedef enum battle_shp_part_attributes {
+/* Encoded fields of battle_gfx_source_part_t.attributes. */
+enum {
     BATTLE_SHP_PART_TILE_MASK = 0x03ff, /* the picture's place in the sheet in 8-pixel tiles: bits 0-4 u, 5-9 v */
     BATTLE_SHP_PART_SIZE_MASK = 0x3c00, /* bits 10-13: index of g_battle_gfx_part_sizes */
     BATTLE_SHP_PART_FLIP_MASK = 0xc000, /* shifted down 13: BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP and _VERTICAL_FLIP */
-} battle_shp_part_attributes_e;
+};
 
 /* The part size that a unit sheet draws as two 48x24 halves, the upper one nearer the camera. */
 enum {
@@ -1660,7 +1663,7 @@ typedef struct battle_gfx_sprite_part_display_data {
     u8 height;
     u8 u;
     u8 v;
-    u8 flags; /* battle_misc_display_flags_e */
+    u8 flags; /* battle_misc_display_flags_e and battle_misc_display_blend_mode_e */
 } battle_gfx_sprite_part_display_data_t;
 typedef char
     battle_sprite_part_display_data_size_must_be_7[(sizeof(battle_gfx_sprite_part_display_data_t) == 7) ? 1 : -1];
@@ -1673,7 +1676,7 @@ typedef struct battle_gfx_sprite_display_data {
     u8 green;      /* 0x01 */
     u8 blue;       /* 0x02 */
     u8 part_count; /* 0x03; parts in use */
-    s16 tpage;     /* 0x04; BATTLE_GFX_TPAGE_*, with the blend bits of battle_misc_display_flags_e */
+    s16 tpage;     /* 0x04; BATTLE_GFX_TPAGE_*, with battle_misc_display_blend_mode_e */
     u16 clut;      /* 0x06 */
     u16 scale_x;   /* 0x08; ONE is neutral scale */
     u16 scale_y;   /* 0x0a; ONE is neutral scale */
@@ -2088,7 +2091,8 @@ typedef struct battle_unit_misc_data {
     u16 requested_animation;                /* 0x00c; battle_unit_animation_e + 1 to start at the next update; 0 none */
     u16 tpage;                              /* 0x00e; VRAM slot + 0x14: the sheet's texture page */
     u16 clut;                               /* 0x010 */
-    /* battle_misc_display_flags_e. Read-modify-written as a halfword over
+    /* battle_misc_display_flags_e and battle_misc_display_blend_mode_e.
+     * Read-modify-written as a halfword over
      * 0x012..0x013 (battle_gfx_update_sprite_transparency_flag). */
     u16 sprite_display_flags; /* 0x012 */
     /* 0x014; BATTLE_SEQ_OP_SET_LAYER_PRIORITY: the row of g_battle_gfx_animation_layer_priorities. */
@@ -4905,13 +4909,19 @@ typedef enum battle_misc_display_flags {
     BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT = 0x01,
     BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP = 0x02,
     BATTLE_MISC_DISPLAY_VERTICAL_FLIP = 0x04,
-    /* Bits 5-6 are ORed into the texture page: the PS1 blend rate. */
-    BATTLE_MISC_DISPLAY_BLEND_ADD = 0x20,
-    BATTLE_MISC_DISPLAY_BLEND_SUBTRACT = 0x40,
-    BATTLE_MISC_DISPLAY_BLEND_MASK = 0x60,
     /* A part's flags only: queued nearer the camera than the rest by its pitch and zoom. */
     BATTLE_MISC_DISPLAY_NEARER = 0x80,
 } battle_misc_display_flags_e;
+
+/* Two-bit selector in sprite flags and tpage, already shifted to bits 5-6. */
+typedef enum battle_misc_display_blend_mode {
+    BATTLE_MISC_DISPLAY_BLEND_AVERAGE = 0x00,
+    BATTLE_MISC_DISPLAY_BLEND_ADD = 0x20,
+    BATTLE_MISC_DISPLAY_BLEND_SUBTRACT = 0x40,
+    BATTLE_MISC_DISPLAY_BLEND_ADD_QUARTER = 0x60,
+} battle_misc_display_blend_mode_e;
+
+enum { BATTLE_MISC_DISPLAY_BLEND_MASK = 0x60 };
 
 typedef enum battle_unit_equipped_flags {
     BATTLE_UNIT_EQUIPPED_FLAG_MATERIA_BLADE = 0x04,
@@ -6440,29 +6450,6 @@ typedef enum battle_reaction_behavior_flag {
     BATTLE_REACTION_BEHAVIOR_FLAG_ACTIVE = 0x20,
 } battle_reaction_behavior_flag_e;
 
-typedef enum map_move_find_item_entry_flags {
-    MAP_MOVE_FIND_ENTRY_TRAP_DEGENERATOR = 0x01,
-    MAP_MOVE_FIND_ENTRY_TRAP_DEATHTRAP = 0x02,
-    MAP_MOVE_FIND_ENTRY_TRAP_SLEEPING_GAS = 0x04,
-    MAP_MOVE_FIND_ENTRY_TRAP_STEEL_NEEDLE = 0x08,
-    MAP_MOVE_FIND_ENTRY_NO_TRAP = 0x10,
-    MAP_MOVE_FIND_ENTRY_NO_ITEM = 0x20,
-    MAP_MOVE_FIND_ENTRY_UPPER_LAYER = 0x80,
-} map_move_find_item_entry_flags_e;
-
-typedef struct map_move_find_item_entry {
-    u8 position; /* X in the high nibble, Y in the low nibble. */
-    u8 flags;    /* map_move_find_item_entry_flags_e */
-    u8 rare_item_id;
-    u8 common_item_id;
-} map_move_find_item_entry_t;
-typedef char map_move_find_item_entry_size_must_be_4[(sizeof(map_move_find_item_entry_t) == 4) ? 1 : -1];
-
-typedef struct map_move_find_item_data {
-    map_move_find_item_entry_t entries[4];
-} map_move_find_item_data_t;
-typedef char map_move_find_item_data_size_must_be_16[(sizeof(map_move_find_item_data_t) == 16) ? 1 : -1];
-
 /* battle_action_calculate_at_list modes. */
 typedef enum battle_at_list_mode {
     BATTLE_AT_LIST_MODE_ALL = 0,
@@ -6573,7 +6560,6 @@ extern s16 g_battle_current_reaction_ability_id;
 extern s32 g_battle_distribute_target_count;
 extern s32 g_battle_unit_source_misc_id;
 extern s32 g_battle_casting_unit_id;
-extern map_move_find_item_data_t g_battle_current_map_move_find_item_data;
 extern u8 g_battle_target_ability_targets_list[16];
 extern battle_target_panel_t g_battle_target_panel_data[0x200];
 extern battle_current_ability_t g_battle_action_current_ability;
@@ -7363,6 +7349,30 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
 s32 battle_move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer);
 
 /* map */
+/* Four serialized move-find item/trap entries per map. */
+typedef enum map_move_find_item_entry_flags {
+    MAP_MOVE_FIND_ENTRY_TRAP_DEGENERATOR = 0x01,
+    MAP_MOVE_FIND_ENTRY_TRAP_DEATHTRAP = 0x02,
+    MAP_MOVE_FIND_ENTRY_TRAP_SLEEPING_GAS = 0x04,
+    MAP_MOVE_FIND_ENTRY_TRAP_STEEL_NEEDLE = 0x08,
+    MAP_MOVE_FIND_ENTRY_NO_TRAP = 0x10,
+    MAP_MOVE_FIND_ENTRY_NO_ITEM = 0x20,
+    MAP_MOVE_FIND_ENTRY_UPPER_LAYER = 0x80,
+} map_move_find_item_entry_flags_e;
+
+typedef struct map_move_find_item_entry {
+    u8 position; /* X in the high nibble, Y in the low nibble. */
+    u8 flags;    /* map_move_find_item_entry_flags_e */
+    u8 rare_item_id;
+    u8 common_item_id;
+} map_move_find_item_entry_t;
+typedef char map_move_find_item_entry_size_must_be_4[(sizeof(map_move_find_item_entry_t) == 4) ? 1 : -1];
+
+typedef struct map_move_find_item_data {
+    map_move_find_item_entry_t entries[4];
+} map_move_find_item_data_t;
+typedef char map_move_find_item_data_size_must_be_16[(sizeof(map_move_find_item_data_t) == 16) ? 1 : -1];
+
 /* Terrain chunk: two dimensions followed by two fixed 256-tile layers. */
 typedef struct battle_map_terrain_resource {
     u8 width;                   /* 0x0000; map x dimension */
@@ -8151,6 +8161,7 @@ extern battle_render_buffer_t* g_battle_map_mesh_last_render_buffer;
 extern battle_map_resource_t* g_battle_map_mesh_load_buffer;
 extern s32 g_battle_map_mesh_load_state;
 extern map_move_find_item_data_t g_battle_map_move_find_item_data[MAP_ID_COUNT];
+extern map_move_find_item_data_t g_battle_current_map_move_find_item_data;
 extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
 extern s32 g_battle_map_resource_load_state;                                 /* map_resource_load_state_e */
 extern s32 g_battle_map_texture_animation_handles[];
