@@ -13,8 +13,8 @@ void battle_target_mark_unit_panels_by_team(battle_stats_t* unit, s32 flags) {
     s16 team_diff_copy;
     s32 team;
 
-    mark_allies = flags & ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES;
-    mark_enemies = flags & ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES;
+    mark_allies = flags & ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS;
+    mark_enemies = flags & ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS;
     team = unit->team_flags;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {

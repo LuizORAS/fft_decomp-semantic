@@ -11,6 +11,6 @@ u8* world_menu_script_draw_menu_line(u8* script) {
     rect.y = script[3];
     rect.w = script[4];
     rect.h = script[5];
-    world_menu_add_flat_line_primitive(&rect, script + 6, (u8)g_world_menu_semi_trans, g_world_menu_draw_priority);
+    world_gfx_enqueue_line_f2(&rect, script + 6, g_world_menu_semi_trans, g_world_menu_draw_priority);
     return script + script[1];
 }

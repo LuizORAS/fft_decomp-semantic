@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Return to the source unit's action menus: set the AT-list-active flag, run the
+ * scenario check, and unless it starts an event enter the open-action-menus state
+ * and turn the camera when the casting unit's tile is hidden. */
 void battle_menu_set_next_script_action_menus(void) {
     battle_unit_misc_data_t* casting_unit;
     battle_unit_misc_data_t* unit;
@@ -9,7 +12,7 @@ void battle_menu_set_next_script_action_menus(void) {
     unit = battle_unit_get_source_misc_data();
     battle_target_show_cursor();
     battle_unit_store_entd_flags_without_control_flag(casting_unit);
-    if (battle_menu_init_action_menu(unit) == 0) {
+    if (battle_state_try_enter_scenario_event(unit) == 0) {
         g_battle_game_state = BATTLE_GAME_STATE_OPEN_ACTION_MENUS;
         g_battle_action_post_action = 0;
         battle_camera_rotate_when_unit_tile_not_visible(casting_unit);

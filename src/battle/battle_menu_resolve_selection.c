@@ -1,15 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Command and option use their s16 slots' low bytes; item uses its full halfword. */
-typedef struct {
-    u8 command;
-    u8 _unused_01;
-    u8 option;
-    u8 _padding_03; /* aligns item */
-    u16 item;
-} battle_menu_selection_t;
-
 /**
  * Resolve the pending action-menu command, option, and item selection.
  *
@@ -23,11 +14,11 @@ s32 battle_menu_resolve_selection(void) {
     s32 index;
     s32 i;
     s32 menu;
-    const battle_menu_selection_t* selection;
+    const world_menu_selection_view_t* selection;
 
     /* The object is four halfwords; command and option use their slots'
      * low bytes and item uses the full halfword at slot 2. */
-    selection = (const battle_menu_selection_t*)g_battle_menu_pending_selection;
+    selection = (const world_menu_selection_view_t*)g_battle_menu_pending_selection;
     command = selection->command;
     option = selection->option;
     item = selection->item;
@@ -38,9 +29,9 @@ s32 battle_menu_resolve_selection(void) {
         for (i = 0; i < 31; i++) {
             if (menu == g_battle_menu_id_records[i].menu_id) {
                 if (command != 0xFF) {
-                    if (menu == 0x69) {
-                        command = g_dead_unit_action;
-                        g_battle_menu_selected_action.item_id = (u8)g_dead_unit_result;
+                    if (menu == BATTLE_MENU_ID_DEAD_UNIT) {
+                        command = g_battle_dead_unit_action;
+                        g_battle_menu_selected_action.item_id = g_battle_dead_unit_result;
                         option = MENU_SELECTION_NONE;
                     } else if (menu == 0x19 || menu >= 0x64) {
                         command = *(g_battle_menu_id_records[i].map + option + 1);
@@ -59,7 +50,7 @@ s32 battle_menu_resolve_selection(void) {
         }
         if (i < 16) {
             g_battle_menu_resolved_command = command;
-        } else if ((u32)(command - 5) < 2) {
+        } else if (command == 5 || command == 6) {
             g_battle_menu_selected_action.targeting_type = command;
         }
         if (command == 1) {
@@ -82,8 +73,8 @@ s32 battle_menu_resolve_selection(void) {
         if ((option & 0xFE) != 0xFE) {
             option = g_battle_action_menu_skillsets[index];
             /* Attack/Defend, Equip Change/0x04 and Elemental/Jump take no list entry. */
-            if ((u32)(option - SKILLSET_ID_ATTACK) < 2 || (u32)(option - SKILLSET_ID_EQUIP_CHANGE) < 2
-                || (u32)(option - SKILLSET_ID_ELEMENTAL) < 2) {
+            if (option == SKILLSET_ID_ATTACK || option == SKILLSET_ID_DEFEND || option == SKILLSET_ID_EQUIP_CHANGE
+                || option == SKILLSET_ID_BLANK_04 || option == SKILLSET_ID_ELEMENTAL || option == SKILLSET_ID_JUMP) {
                 g_battle_menu_selected_action.ability_id = 0;
                 item = MENU_SELECTION_NONE;
             } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_battle_menu_action_menu_build_result == 0) {
@@ -94,8 +85,7 @@ s32 battle_menu_resolve_selection(void) {
             g_battle_menu_selected_action.skillset = option;
             g_battle_menu_used_skillset_id = option;
             if (item != MENU_SELECTION_NONE) {
-                /* Item, Draw Out and Throw select an item. */
-                if (option == SKILLSET_ID_ITEM || (u32)(option - SKILLSET_ID_DRAW_OUT) < 2) {
+                if (option == SKILLSET_ID_ITEM || option == SKILLSET_ID_DRAW_OUT || option == SKILLSET_ID_THROW) {
                     g_battle_menu_selected_action.item_id = item;
                 } else {
                     g_battle_menu_selected_action.ability_id = item;

@@ -15,8 +15,8 @@ s32 main_unit_init_job_data_from_entd(battle_stats_t* unit, entd_unit_t* entd_un
          * controls from the ENTD definition. */
         unit->unit_flags &= ~(UNIT_FLAG_JOIN_AFTER_EVENT | UNIT_FLAG_SAVE_FORMATION);
         unit->unit_flags |= entd_unit->unit_flags & (UNIT_FLAG_JOIN_AFTER_EVENT | UNIT_FLAG_SAVE_FORMATION);
-        unit->team_flags = entd_unit->battle_flags;
-        unit->initial_team_flags = entd_unit->battle_flags;
+        unit->team_flags = entd_unit->team_flags;
+        unit->initial_team_flags = entd_unit->team_flags;
         return 0;
     }
     return -1;

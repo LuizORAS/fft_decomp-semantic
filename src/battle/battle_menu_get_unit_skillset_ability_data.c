@@ -45,7 +45,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
         return 0;
     }
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) { /* Frog */
         frog = 1;
     }
     if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
@@ -56,7 +56,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
     } else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_SHORT_CHARGE) {
         charge = 1;
     }
-    battle_turn_build_at_list(at_list, 0);
+    battle_turn_build_at_list(at_list, BATTLE_AT_LIST_MODE_ALL);
     if (unit->equipped_flags & BATTLE_UNIT_EQUIPPED_FLAG_MATERIA_BLADE) {
         materia_blade = 1;
     }
@@ -118,7 +118,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
             flags_out[count] = kind;
             turns_out[count] = turns;
         } else if (ability >= ABILITY_ID_CHARGE_FIRST && ability < ABILITY_ID_MATH_FIRST) {
-            ct = g_main_jump_charge_ability_data_by_ability_id[ability * 2];
+            ct = (g_main_charge_ability_data - ABILITY_ID_CHARGE_FIRST)[ability].ct;
             turns = battle_turn_count_entries_before_action(unit_id, ct, at_list);
             mp_out[count] = 0;
             ct_out[count] = ct;

@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Mark the tiles an action hits, by the menu type of its skillset: an ability's area
- * (battle_target_mark_ability_area, with the ability Geomancy or Draw Out picks), the units that pass
+ * (battle_target_mark_ability_area, with the ability Elemental or Draw Out picks), the units that pass
  * an Arithmeticks test (battle_target_run_calculator), and only the target tile for items, weapons
  * and Jump (battle_target_mark_only_target_tile).
  *
@@ -26,7 +26,7 @@ s32 battle_target_mark_action_area(const u8* source) {
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    if (action.targeting_type == BATTLE_ACTION_TARGET_UNIT && action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
+    if (action.targeting_type == BATTLE_TARGETING_TYPE_UNIT && action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
     switch (g_main_action_menu_types_by_skillset[action.skillset]) {
@@ -49,10 +49,10 @@ s32 battle_target_mark_action_area(const u8* source) {
         ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        if ((u32)(action.item_id - 0x26) >= 10) {
+        if (action.item_id < ITEM_ID_ASURA_KNIFE || action.item_id > ITEM_ID_CHIRIJIRADEN) {
             return -1;
         }
-        ability_id = action.item_id + 0x26;
+        ability_id = action.item_id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         break;
     case ACTION_MENU_TYPE_BLANK_05:
     case ACTION_MENU_TYPE_UNKNOWN_0F:

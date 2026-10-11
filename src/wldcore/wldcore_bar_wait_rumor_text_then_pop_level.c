@@ -6,18 +6,18 @@
  * level's two windows and render record, pops the stack and marks the render
  * record 0x100 before wldcore_list_open_rumors redraws. */
 void wldcore_bar_wait_rumor_text_then_pop_level(wldcore_menu_rumor_detail_level_t* level) {
-    s32* index = &g_wldcore_scroll_text_render_record_index;
+    s32* index = &g_wldcore_scrollable_text_window.render_record_index;
 
-    if (g_wldcore_window_render_records[*index].flags & 0x100) {
+    if (g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (wldcore_text_is_window_finished((wldcore_text_scrollable_window_t*)((u8*)index - 0x44)) != 0) {
         return;
     }
-    g_wldcore_window_records[level->first_window].flags ^= 0x10;
-    g_wldcore_window_records[level->second_window].flags ^= 0x10;
-    g_wldcore_window_render_records[level->render_index].flags ^= 0x10;
+    g_wldcore_window_records[level->first_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[level->second_window].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_render_records[level->render_index].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_depth--;
-    g_wldcore_window_render_records[level->render_index].flags |= 0x100;
+    g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     wldcore_list_open_rumors();
 }

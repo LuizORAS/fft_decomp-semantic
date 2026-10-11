@@ -34,18 +34,18 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
         || (ability_count = battle_menu_get_unit_skillset_ability_data(
                 unit_id, SKILLSET_ID_THROW, (s16*)abilities, mp_costs, charge_times, 0, ability_flags, turn_counts))
             == 0) {
-        *out = 0xff;
+        *out = ITEM_ID_NONE;
         return 0;
     }
     for (i = 0; i < ability_count; i++) {
-        if ((u16)(abilities[i] - ABILITY_ID_THROW_FIRST) < (ABILITY_ID_JUMP_FIRST - ABILITY_ID_THROW_FIRST)) {
+        if (abilities[i] >= ABILITY_ID_THROW_FIRST && abilities[i] < ABILITY_ID_JUMP_FIRST) {
             type_table = g_main_throw_ability_item_types;
             throw_index = abilities[i];
             throw_index = throw_index - ABILITY_ID_THROW_FIRST;
             item_types[i] = type_table[throw_index];
         }
     }
-    for (i = 0; i < 0x100; i++) {
+    for (i = 0; i < ITEM_ID_COUNT; i++) {
         item = &g_main_item_primary_data[i];
         type = item->type;
         found = 0;
@@ -65,6 +65,6 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
             }
         }
     }
-    *out = 0xff;
+    *out = ITEM_ID_NONE;
     return count + 0x100;
 }

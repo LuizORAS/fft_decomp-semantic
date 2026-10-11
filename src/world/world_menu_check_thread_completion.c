@@ -7,16 +7,17 @@
  * Input bit 0x100 opens the entry's auxiliary text thread when its table
  * selector is nonzero. Completion waits for all other task-3 threads.
  */
-s32 world_menu_check_thread_completion(s32* input) {
+s32 world_menu_check_thread_completion(u32* input) {
     world_menu_entry_t* parameter;
     s32 i;
 
-    if (g_world_thread_contexts[1].is_running == 0 && world_menu_is_input_allowed() != 0 && (*input & PSX_PAD_SELECT)) {
+    if (g_world_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_TEXT].is_running == 0 && world_menu_is_input_allowed() != 0
+        && (*input & PSX_PAD_SELECT)) {
         parameter = world_thread_get_current_parameter_1();
         if (parameter->select_text_table != 0) {
             if (g_world_thread_change_cooldown == 0) {
-                world_thread_start(1, world_menu_announce_entry_value_thread);
-                world_thread_set_parameters(1, (s32)parameter, 0, 0);
+                world_thread_start(NATIVE_SCREEN_THREAD_SLOT_TEXT, world_menu_announce_entry_value_thread);
+                world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_TEXT, (s32)parameter, 0, 0);
                 g_world_thread_task_active = 1;
             }
             *input = 0;
@@ -27,7 +28,7 @@ s32 world_menu_check_thread_completion(s32* input) {
         return 0;
     }
     for (i = 0; i < 17; i++) {
-        if (i != g_world_thread_current_id && world_thread_is_running_2(i) != 0
+        if (i != g_world_thread_current_id && world_thread_is_running_asm(i) != 0
             && g_world_thread_contexts[i].task_id == NATIVE_THREAD_TASK_STOP_REQUEST) {
             *input = 0;
             break;

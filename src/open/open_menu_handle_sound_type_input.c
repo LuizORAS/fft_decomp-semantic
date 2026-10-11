@@ -1,8 +1,14 @@
 #include "fft/open.h"
 #include "psx/pad.h"
 
-#define OPEN_SOUND_MENU_ENTRY_HIGHLIGHTED 9
-
+/* Per-frame handler of the sound type menu (handler 3).
+ *
+ * Circle or Start applies the highlighted mode (mono, stereo or wide) with
+ * main_sound_set_type and stores it in the game options; Cross leaves the mode as
+ * it is. Both set step 2, and the next update releases the three option records,
+ * pops the controller, shows the title menu's four entries again and zeroes the
+ * title controller's idle timer. Up, and Down or Select, move the highlight and
+ * wrap around. */
 void open_menu_handle_sound_type_input(open_sound_menu_state_t* menu) {
     s32 record;
 
@@ -10,10 +16,11 @@ void open_menu_handle_sound_type_input(open_sound_menu_state_t* menu) {
         g_open_gfx_next_render_record_36 -= 3;
         g_open_gfx_render_record_pointer_count -= 3;
         g_open_current_controller_index -= 1;
-        open_gfx_hide_four_render_records(
-            (const open_birthday_render_record_indices_t*)&g_open_controller_records[g_open_current_controller_index]);
-        /* The title menu regains control: restart its idle (attract) timer. */
-        g_open_controller_stream_start[g_open_current_controller_index - 1].title.idle_timer = 0;
+        open_gfx_show_four_render_records(
+            (open_birthday_render_record_indices_t*)&g_open_controller_records[g_open_current_controller_index]);
+        /* The title menu underneath, addressed from the pushed-record base, regains control: restart
+         * its idle (attract) timer. */
+        g_open_controller_records_next[g_open_current_controller_index - 1].title.idle_timer = 0;
         return;
     }
 
@@ -38,7 +45,7 @@ void open_menu_handle_sound_type_input(open_sound_menu_state_t* menu) {
             menu->sound_mode_selection = GAME_SOUND_MODE_WIDE;
         }
         record = menu->render_records[menu->sound_mode_selection];
-        g_open_gfx_render_records_36[record].palette = OPEN_SOUND_MENU_ENTRY_HIGHLIGHTED;
+        g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 
@@ -51,7 +58,7 @@ void open_menu_handle_sound_type_input(open_sound_menu_state_t* menu) {
             menu->sound_mode_selection = GAME_SOUND_MODE_MONO;
         }
         record = menu->render_records[menu->sound_mode_selection];
-        g_open_gfx_render_records_36[record].palette = OPEN_SOUND_MENU_ENTRY_HIGHLIGHTED;
+        g_open_gfx_render_records_36[record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 }

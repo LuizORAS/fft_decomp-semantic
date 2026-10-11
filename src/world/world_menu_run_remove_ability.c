@@ -18,7 +18,7 @@ s32 world_menu_run_remove_ability(void) {
     s16* saved_slot;
     s16* saved_slots;
     s16* cursor_y;
-    u16 movement_ability;
+    s16 movement_ability;
     s32 preview;
 
     unit_index = g_world_formation_selected_unit_index;
@@ -42,8 +42,8 @@ s32 world_menu_run_remove_ability(void) {
         g_world_remove_ability_unit_index = -1;
         return 0;
     }
-    lock_state = world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index);
-    if (lock_state == 1) {
+    lock_state = world_formation_get_unit_lock(g_world_formation_selected_unit_index);
+    if (lock_state == WORLD_FORMATION_UNIT_UNLOCKED) {
         lock_state = 0;
     }
     if (lock_state != 0) {
@@ -74,7 +74,9 @@ s32 world_menu_run_remove_ability(void) {
         g_world_preview_stats_thread_params.redraw_request = 1;
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
-    slot = world_menu_step_cursor_with_sound(4, 5, g_world_input_secondary_repeat, 6) + 1;
+    slot = world_menu_update_vertical_selection_and_mark_change(
+               4, WORLD_MENU_CURSOR_REMOVE_ABILITY_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH)
+        + 1;
     cursor_y = &g_world_remove_ability_cursor_point.y;
     slot_index = slot;
     *cursor_y = slot_index * 16 + 0x90;
@@ -101,8 +103,8 @@ s32 world_menu_run_remove_ability(void) {
         } else {
             world_formation_set_unit_ability_slot(g_world_formation_selected_unit_index, slot, 0,
                 world_ability_is_equip_support_change(g_world_formation_selected_unit_index,
-                    (s16)((world_formation_unit_ability_slots_t*)
-                              g_world_formation_unit_pointers[g_world_formation_selected_unit_index])
+                    ((world_formation_unit_ability_slots_t*)
+                            g_world_formation_unit_pointers[g_world_formation_selected_unit_index])
                         ->ability_slots[slot]));
             g_world_ability_menu_slots_changed = 1;
             *saved_slot = 0;
@@ -117,9 +119,9 @@ s32 world_menu_run_remove_ability(void) {
         preview = 0;
         if (slot == 4) {
             movement_ability = g_world_remove_ability_slots[4];
-            if ((u32)(movement_ability - ABILITY_ID_MOVEMENT_MOVE_PLUS_1) < 6) {
-                world_ability_find_stat_changes_due_to_equipped(
-                    &g_world_item_preview_stat_detail, (s16)movement_ability, 0);
+            if (movement_ability >= ABILITY_ID_MOVEMENT_MOVE_PLUS_1
+                && movement_ability <= ABILITY_ID_MOVEMENT_JUMP_PLUS_3) {
+                world_ability_find_stat_changes_due_to_equipped(&g_world_item_preview_stat_detail, movement_ability, 0);
                 g_world_preview_stats_thread_params.redraw_request = 1;
                 preview = 1;
             }

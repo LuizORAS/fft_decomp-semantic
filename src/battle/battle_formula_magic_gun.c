@@ -10,10 +10,10 @@ void battle_formula_magic_gun(void) {
     u16 ability_y;
 
     battle_formula_select_magic_gun_ability();
-    weapon_power = g_current_ability.weapon_data.power;
-    ability_y = g_current_ability.range_data.y;
-    g_current_ability.xa = weapon_power;
-    g_current_ability.ya = ability_y;
+    weapon_power = g_battle_action_current_ability.weapon_data.power;
+    ability_y = g_battle_action_current_ability.range_data.y;
+    g_battle_action_current_ability.xa = weapon_power;
+    g_battle_action_current_ability.ya = ability_y;
     battle_formula_apply_charge();
     battle_formula_apply_weapon_element_strengthen();
     battle_formula_apply_magical_xa_modifiers();

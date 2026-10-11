@@ -72,7 +72,7 @@ innate ones of its job.
   player picks the secondary. Each skillset's action menu type
   ([[g_main_action_menu_types_by_skillset]]) decides what its menu lists:
   abilities, items (Item), throwable weapons (Throw), Math Skill's sets, the
-  one Geomancy ability of the unit's tile, katanas (Draw Out), Charge, Jump
+  one Elemental ability of the unit's tile, katanas (Draw Out), Charge, Jump
   or a monster's abilities.
 - **Learning.** A unit learns abilities per job. Each job keeps three bytes
   of learned bits (one per skillset slot) and its own JP.
@@ -124,10 +124,10 @@ innate ones of its job.
 - **The class data**, as in the table above: [[g_main_ability_range_data]]
   with [[ability_secondary_flags_1_e]] to [[ability_secondary_flags_4_e]];
   [[g_main_item_ability_item_ids]], [[g_main_throw_ability_item_types]],
-  [[g_main_jump_ability_data]], [[g_main_jump_charge_ability_data_by_ability_id]],
-  [[g_main_math_rsm_ability_data_by_ability_id]] and
-  [[g_main_reaction_behavior_flags_by_ability_id]]. The `_by_ability_id`
-  names are biased so the raw id indexes them.
+  [[g_main_jump_ability_data]], [[g_main_charge_ability_data]],
+  [[g_main_math_rsm_ability_data]] and
+  [[g_main_reaction_behavior_flags]]. Each table is indexed
+  from the first id of its class.
 - **Skillsets** ([[skillset_id_e]]): human skillsets 0x00-0xaf
   ([[g_main_ability_human_skillset_abilities]], `0x80064a94`, 25 bytes: three
   bytes of ninth id bits, then 22 ids) and monster skillsets 0xb0-0xdf
@@ -199,7 +199,7 @@ need a Brave roll first; the [[Action]] page says when each one is checked.
 | 0x1af-0x1b2 | HP Restore, MP Restore, Critical Quick, Meatbone Slash | While Critical: full HP, full MP, a full CT, an Attack for the unit's max HP | [[battle_reaction_check_after_result]], [[battle_reaction_prepare_next]] |
 | 0x1b3 | Counter Magic | Casts back the spell it was hit by | [[battle_reaction_check_when_targeted]] |
 | 0x1b4 | Counter Tackle | Answers with Dash | the same |
-| 0x1b5 | Counter Flood | Answers with the Geomancy of its own tile | the same |
+| 0x1b5 | Counter Flood | Answers with the Elemental ability of its own tile | the same |
 | 0x1b6 | Absorb Used MP | Gains the MP the action cost | the same |
 | 0x1b7 | Gilgame Heart | Gains the damage as gil | [[battle_reaction_check_after_result]] |
 | 0x1b8 | Reflect | The id the Reflect status reacts with | [[battle_reaction_mark_reflected]], [[battle_target_apply_reflect]] |

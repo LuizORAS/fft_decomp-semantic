@@ -16,8 +16,8 @@
  * `hit` is deliberately left uninitialised: the target reads $s6 after a
  * zero-step loop without ever writing it.
  */
-s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* distance, battle_effect_arc_t* arc,
-    battle_effect_obstacle_unit_list_t* obstacles) {
+s32 battle_effect_trace_arc_trajectory_path(
+    SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, battle_effect_obstacle_unit_list_t* obstacles) {
     SVECTOR rotation;
     SVECTOR step;
     VECTOR position;
@@ -33,12 +33,12 @@ s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* d
     s32 i;
 
     angle = ratan2(*height, ONE);
-    arc->pitch = angle;
+    arc->vz = angle;
     g_battle_effect_arctan_angle_mod = angle;
     progress = 0;
     /* The definition returns void; this site consumes the returned impulse. */
     velocity = battle_effect_calculate_launch_velocity() >> 8;
-    advance = (rcos(arc->pitch) * velocity) >> 4;
+    advance = (rcos(arc->vz) * velocity) >> 4;
     if (advance != 0) {
         steps = ((advance + *distance) - 1) / advance;
     } else {
@@ -48,7 +48,7 @@ s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* d
 
     rotation.vz = 0;
     rotation.vx = 0;
-    rotation.vy = arc->yaw;
+    rotation.vy = arc->vy;
     RotMatrix(&rotation, &matrix);
     position.vx = matrix.t[0] = origin->vx;
     i = 0;
@@ -63,7 +63,7 @@ s32 battle_effect_trace_arc_trajectory_path(SVECTOR* origin, s32* height, s32* d
         term = battle_effect_calculate_arc_trajectory_term(*height, progress);
         step.vx = progress >> 12;
         step.vy = -term >> 12;
-        RotTrans(&step, &position, (long*)&position.pad);
+        RotTrans(&step, &position, &position.pad);
         hit = battle_effect_test_position_for_obstacle(
             obstacles, &position, &g_battle_effect_trajectory_hit_unit_id, &g_battle_effect_trajectory_tile);
         if (hit != 0) {

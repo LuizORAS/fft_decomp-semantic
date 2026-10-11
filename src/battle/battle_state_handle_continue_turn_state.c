@@ -9,19 +9,22 @@ void battle_state_handle_continue_turn_state(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     unit = battle_unit_get_source_misc_data();
     if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) != 0) {
         return;
     }
-    if (g_battle_camera_rotation_action != 0) {
+    if (g_battle_camera_rotation_action != BATTLE_CAMERA_ROTATION_NONE) {
         return;
     }
     if (g_battle_turn_event == BATTLE_TURN_EVENT_ABILITY_READY) {
-        if (battle_menu_init_system_function(8, 2, unit->battle_data->misc_unit_id, 0, 1) == 2
+        if (battle_menu_init_system_function(
+                BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->misc_unit_id, 0, 1)
+                == 2
             && battle_script_get_event_finish_operation() != 0) {
-            g_previous_battle_game_state = g_battle_game_state;
-            battle_menu_init_system_function(8, 0, unit->battle_data->misc_unit_id, 0, 1);
+            g_battle_previous_game_state = g_battle_game_state;
+            battle_menu_init_system_function(
+                BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 0, unit->battle_data->misc_unit_id, 0, 1);
             battle_state_enter_event();
             return;
         }
@@ -32,8 +35,8 @@ void battle_state_handle_continue_turn_state(void) {
         /* battle_stats_t +0x16e holds the same 20-byte command payload. */
         unit->command_state.ai.data.action = *(battle_ai_command_action_t*)&unit->battle_data->action_actor_id;
         unit->used_ability_id = unit->battle_data->last_ability_id;
-        if (unit->attack_phase_state == 3) {
-            unit->attack_phase_state = 0;
+        if (unit->attack_phase_state == BATTLE_ATTACK_PREPARATION_JUMP) {
+            unit->attack_phase_state = BATTLE_ATTACK_PREPARATION_CHARGE;
             battle_gfx_reset_unit_graphic_trigger(unit->unit_id);
             battle_turn_advance();
             return;

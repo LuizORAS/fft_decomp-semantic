@@ -4,7 +4,7 @@
 #include "psx/libc.h"
 
 enum {
-    NAME_GENDER_MASK = 0xe0,
+    NAME_GENDER_MASK = UNIT_FLAG_MALE | UNIT_FLAG_FEMALE | UNIT_FLAG_MONSTER,
 };
 
 /* Copies the unit's name, job name and skillset names into its battle
@@ -16,22 +16,21 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     u32 name_flags;
     u32 name_mod;
     u8 gender;
-    u32 name_id;
+    u16 name_id;
     s32 unused_name;
     s32 i;
     u8* text;
     party_data_t* party;
-    party_data_t* party_base;
     battle_stats_t* other;
     u8* name_bytes;
 
-    prepare_text = battle_text_init_entry;
+    prepare_text = battle_text_find_entry;
     if (g_main_unit_name_uses_world_text != 0) {
         prepare_text = world_text_find_entry;
     }
     if (unit->formation_index == PARTY_ID_NONE) {
-        name_flags = TEXT_ID_UNIT_NAME_SPECIAL_BASE;
-        name_id = (u8)unit->quote_name_id;
+        name_flags = TEXT_ID_UNIT_NAME_BASE;
+        name_id = unit->quote_name_id & 0xFF;
         if (name_id == 0xff) {
             gender = unit->unit_flags & NAME_GENDER_MASK;
             if (unit->unit_flags & UNIT_FLAG_MALE) {
@@ -55,7 +54,7 @@ void main_unit_store_character_names(battle_stats_t* unit) {
                     party = &g_main_party_data[i];
                     if (party->party_id != PARTY_ID_NONE && gender == (party->gender_flags & NAME_GENDER_MASK)) {
                         name_bytes = party->name_id;
-                        if ((name_bytes[0] | (name_bytes[1] << 8)) == (u16)name_id) {
+                        if ((name_bytes[0] | (name_bytes[1] << 8)) == name_id) {
                             unused_name = 0;
                             break;
                         }
@@ -63,7 +62,7 @@ void main_unit_store_character_names(battle_stats_t* unit) {
                 }
                 for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                     other = &g_battle_unit_stats[i];
-                    if (gender == (other->unit_flags & NAME_GENDER_MASK) && other->quote_name_id == (u16)name_id) {
+                    if (gender == (other->unit_flags & NAME_GENDER_MASK) && other->quote_name_id == name_id) {
                         unused_name = 0;
                         break;
                     }

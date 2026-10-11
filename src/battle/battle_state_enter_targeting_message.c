@@ -9,12 +9,12 @@ void battle_state_enter_targeting_message(void) {
     battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGETING_MESSAGE;
     unit = battle_unit_get_source_misc_data();
-    if (unit->ability_preview_phase == 3)
-        battle_menu_init_system_function(
-            1, 1, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+    if (unit->ability_preview_phase == BATTLE_TARGET_PANELS_NONE)
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGETING_PROMPT, 1,
+            unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
     else
-        battle_menu_init_system_function(
-            1, 0, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGETING_PROMPT, 0,
+            unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
     if (unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED)
         battle_target_show_cursor();
     else

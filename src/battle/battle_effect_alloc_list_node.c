@@ -1,5 +1,12 @@
 #include "fft/battle.h"
 
+/* Take a sprite node from the free list, push it on the head of the active list
+ * and give it a one-sprite block; kind is an EFFECT_LIST_NODE_* value and the
+ * animation fields start at 0.
+ *
+ * The free list is not tested for exhaustion: with none free the sentinel node 0
+ * would be handed out. There are as many nodes as work records, and
+ * battle_effect_alloc_work_record is the only caller. */
 effect_list_node_t* battle_effect_alloc_list_node(s16 kind) {
     u16* free_head = &g_battle_effect_free_list_node_head;
     u16* list_head = &g_battle_effect_active_list_node_head;

@@ -3,15 +3,15 @@
 
 /* Store where the strike lands in the strike work (target_new_x, target_new_y,
  * target_new_map_level, which a knockback reads): the Random Fire tile, the target unit's square for
- * a unit target, else the target tile. Also clears animate_on_miss_flag. */
+ * a unit target, else the target tile. Also clears skip_empty_tile_effect. */
 void battle_target_store_strike_destination(battle_stats_t* acting, battle_strike_work_t* out) {
     battle_stats_t* target;
 
-    out->animate_on_miss_flag = 0;
-    if (g_current_ability.random_fire_flag != 0) {
-        out->target_new_x = g_current_ability.target_x;
-        out->target_new_y = g_current_ability.target_y;
-        out->target_new_map_level = g_current_ability.target_elevation;
+    out->skip_empty_tile_effect = 0;
+    if (g_battle_action_current_ability.random_fire_flag != 0) {
+        out->target_new_x = g_battle_action_current_ability.target_new_x;
+        out->target_new_y = g_battle_action_current_ability.target_new_y;
+        out->target_new_map_level = g_battle_action_current_ability.target_new_elevation;
     } else if (acting->action_target_kind == BATTLE_ACTION_TARGET_UNIT) {
         target = &g_battle_unit_stats[acting->action_target_id];
         out->target_new_x = target->x;

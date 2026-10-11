@@ -24,7 +24,7 @@ void open_movie_handle_mdec_output_slice(void) {
         size = g_open_movie_mdec_stream_state.output_rect.w;
         size *= g_open_movie_mdec_stream_state.output_rect.h;
         size /= 2;
-        open_bin_decdctout(
+        DecDCTout(
             g_open_movie_mdec_stream_state.output_buffers[g_open_movie_mdec_stream_state.output_buffer_index], size);
     } else {
         g_open_movie_mdec_stream_state.output_ready = 1;

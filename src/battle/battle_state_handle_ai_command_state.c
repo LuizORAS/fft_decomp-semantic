@@ -12,17 +12,17 @@ void battle_state_handle_ai_command_state(void) {
     u16 frame;
 
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     unit = battle_unit_get_source_misc_data();
     if (unit->state_frame_counter >= 31 && !unit->command_ready) {
-        g_battle_state_vsync_interval = 2;
+        g_main_system_vsync_interval = 2;
         if (!battle_ai_build_command(unit->battle_data->misc_unit_id, &unit->command_state.ai)) {
             if (unit->command_state.ai.kind == BATTLE_AI_COMMAND_ACT) {
                 unit->command_state.ai.data.action.unit_id = unit->battle_data->misc_unit_id;
                 battle_action_resolve_command_ability(&unit->command_state.ai.data.action);
             }
             unit->command_ready = 1;
-            g_battle_state_vsync_interval = 1;
+            g_main_system_vsync_interval = 1;
         }
     }
     frame = unit->state_frame_counter++;
@@ -37,21 +37,21 @@ void battle_state_handle_ai_command_state(void) {
             return;
         }
         /* fallthrough */
-    case 0x19:
-        g_battle_casting_unit_id = g_battle_casting_misc_id;
+    case BATTLE_AI_COMMAND_MOVE_SELF:
+        g_battle_casting_unit_id = g_battle_unit_source_misc_id;
         battle_state_enter_unit_move();
         return;
     case BATTLE_AI_COMMAND_ACT:
         switch (unit->command_state.ai.data.action.skillset) {
         case SKILLSET_ID_DEFEND:
             battle_status_inflict_defending_to_battle_id(unit->battle_data->misc_unit_id);
-            unit->ability_ct_resolved |= 2;
+            unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
             battle_unit_update_display_by_misc_id(unit->unit_id);
             battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
             battle_state_enter_after_command();
             return;
         case SKILLSET_ID_EQUIP_CHANGE:
-            unit->ability_ct_resolved |= 2;
+            unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
             battle_status_clear_action_state(unit->battle_data);
             battle_ai_init_unit_abilities(unit->battle_data->misc_unit_id);
             battle_unit_update_display_by_misc_id(unit->unit_id);
@@ -89,12 +89,12 @@ void battle_state_handle_ai_command_state(void) {
             result = battle_target_set_panels_for_action(&unit->command_state.ai.data.action.unit_id);
             unit->ability_preview_phase = result;
             switch (result) {
-            case 0:
-            case 1:
-            case 3:
+            case BATTLE_TARGET_PANELS_UNIT_OR_TILE:
+            case BATTLE_TARGET_PANELS_TILE_ONLY:
+            case BATTLE_TARGET_PANELS_NONE:
                 battle_state_enter_targeting_message();
                 return;
-            case 2:
+            case BATTLE_TARGET_PANELS_NO_TARGETING:
             default:
                 battle_target_select_tile();
                 return;
@@ -105,7 +105,7 @@ void battle_state_handle_ai_command_state(void) {
     default:
         return;
     }
-    unit->ability_ct_resolved |= 3;
+    unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_MOVED | BATTLE_MISC_TURN_ACTION_ACTED;
     battle_turn_end(unit->battle_data->misc_unit_id);
     battle_state_enter_after_command();
 }

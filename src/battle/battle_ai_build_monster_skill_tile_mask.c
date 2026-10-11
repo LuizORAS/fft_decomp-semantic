@@ -41,7 +41,8 @@ void battle_ai_build_monster_skill_tile_mask(void) {
             if (y < 0 || y >= ai->map_max_y)
                 continue;
             for (level = 0; level <= 0; level++) {
-                if ((u32)(g_battle_map_tile_data[(level << 8) + y * ai->map_max_x + x].height - height + 2) < 5) {
+                if ((g_battle_map_tile_data[(level << 8) + y * ai->map_max_x + x].height - height) >= -2
+                    && (g_battle_map_tile_data[(level << 8) + y * ai->map_max_x + x].height - height) <= 2) {
                     /* A typed level-row pointer folds the field offset into
                      * the induction value. Preserve the target's AI-base
                      * cursor with a member-derived displacement. */

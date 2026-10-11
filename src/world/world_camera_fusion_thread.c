@@ -14,13 +14,10 @@
  * target passes to world_menu_alloc_ui_buffer. */
 #define WORLD_CAMERA_FUSION_COMPONENT_COUNT 7
 
-/* Sentinel operand meaning "keep the component's current value". */
-#define WORLD_CAMERA_FUSION_HOLD 10000
-
 void world_camera_fusion_thread(void) {
-    world_camera_track_t* tracks;
-    world_camera_track_t* track;
-    world_camera_key_t* key;
+    battle_camera_track_t* tracks;
+    battle_camera_track_t* track;
+    battle_camera_key_t* key;
     u8* script;
     u8* cursor;
     s32 values[WORLD_CAMERA_FUSION_COMPONENT_COUNT];
@@ -32,10 +29,10 @@ void world_camera_fusion_thread(void) {
     s32 opcode;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
-    tracks = (world_camera_track_t*)world_menu_alloc_ui_buffer(
-        sizeof(world_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
-    script = (u8*)world_thread_get_current_parameter_1();
-    world_clear_menu_render_buffer((u8*)tracks, sizeof(world_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    tracks = (battle_camera_track_t*)world_menu_alloc_ui_buffer(
+        sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    script = world_thread_get_current_parameter_1();
+    world_clear_menu_render_buffer((u8*)tracks, sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
 
     cursor = script;
     key_count = 0;
@@ -70,14 +67,14 @@ void world_camera_fusion_thread(void) {
             for (;;) {
                 if (*cursor == EVENT_OPCODE_FOCUS) {
                     world_script_focus(cursor + 1);
-                } else if (*cursor == EVENT_OPCODE_UNKNOWN_73) {
+                } else if (*cursor == EVENT_OPCODE_RELATIVE_CAMERA) {
                     world_script_apply_relative_camera(cursor + 1, values);
                 } else if (*cursor == EVENT_OPCODE_FOCUS_SPEED) {
                     world_script_focus_speed(cursor + 1, values, values + 3);
                 } else if (*cursor == EVENT_OPCODE_CAMERA) {
                     for (i = 0; i < WORLD_CAMERA_FUSION_COMPONENT_COUNT; i++) {
                         value = world_script_load_halfword(cursor + i + i + 1);
-                        if (value == WORLD_CAMERA_FUSION_HOLD) {
+                        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                             if (i < 3) {
                                 value = values[i] / 1024;
                             } else {
@@ -109,7 +106,7 @@ void world_camera_fusion_thread(void) {
         track = tracks;
         for (key_index = 0; key_index < 3; key_index++, track++) {
             /* The target tests this flag with lhu; the s16 declaration gives lh. */
-            if (*(u16*)&g_world_camera_position_locked == 0) {
+            if (g_world_camera_position_locked == 0) {
                 g_world_script_variables[g_world_camera_script_variable_indices[key_index]]
                     = world_camera_step_track(track, key_index);
             }
@@ -121,7 +118,7 @@ void world_camera_fusion_thread(void) {
         if (tracks[3].finished == 1) {
             break;
         }
-        world_script_clear_current_event_word_bit_0();
+        world_camera_clear_zoom_variable_low_bit();
         world_thread_yield();
     }
 

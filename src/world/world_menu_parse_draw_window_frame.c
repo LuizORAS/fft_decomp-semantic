@@ -34,9 +34,9 @@ world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_windo
         left = g_world_menu_window_rect_source->rect.x - 5;
         top = g_world_menu_window_rect_source->rect.y - 9;
         full_columns = g_world_menu_window_rect_source->rect.w / 16;
-        partial_width = (s16)(g_world_menu_window_rect_source->rect.w % 16);
+        partial_width = g_world_menu_window_rect_source->rect.w % 16;
         full_rows = g_world_menu_window_rect_source->rect.h / 16;
-        partial_height = (s16)(g_world_menu_window_rect_source->rect.h % 16);
+        partial_height = g_world_menu_window_rect_source->rect.h % 16;
     } else {
         u8 width;
         u8 height;

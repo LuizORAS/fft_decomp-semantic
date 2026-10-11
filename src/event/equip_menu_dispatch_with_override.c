@@ -2,14 +2,13 @@
 #include "psx/types.h"
 
 /* Run the menu command stream `menu` with `state`, forcing state 0 whenever `override` is set. */
-/* Port debt (QUIRKS.md): menu is a menu-record pointer passed as s32. */
-void equip_menu_dispatch_with_override(s32 menu, s32 state, s32 override) {
+void equip_menu_dispatch_with_override(u8* menu, s32 state, s32 override) {
     s32 effective_state;
 
     effective_state = state;
     if (override != 0) {
         effective_state = 0;
     }
-    equip_text_set_palette_and_metrics(override);
-    equip_cmd_run_stream((u8*)menu, effective_state);
+    equip_menu_set_palette_mode(override);
+    equip_cmd_run_stream(menu, effective_state);
 }

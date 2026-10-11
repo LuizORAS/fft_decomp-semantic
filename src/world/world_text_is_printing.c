@@ -1,5 +1,6 @@
 #include "fft/world.h"
 
+/* Returns 1 while the text thread's task id is RESUME. */
 s32 world_text_is_printing(s32 thread_id) {
     native_thread_t* thread = &g_world_threads[thread_id];
 

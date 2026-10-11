@@ -13,9 +13,9 @@ void battle_gfx_init_render_buffers(void) {
     s32 primitive_index;
     s32 buffer_index;
 
-    g_battle_data = &g_battle_render_buffers[0];
-    g_battle_render_buffers[0].otag = g_battle_otags[0];
-    g_battle_render_buffers[1].otag = g_battle_otags[1];
+    g_battle_gfx_current_render_buffer = &g_battle_render_buffers[0];
+    g_battle_render_buffers[0].otag = g_main_gfx_battle_otags[0];
+    g_battle_render_buffers[1].otag = g_main_gfx_battle_otags[1];
     {
         for (buffer_index = 0; buffer_index < 2; buffer_index++) {
             for (primitive_index = 0; primitive_index < 64; primitive_index++) {
@@ -80,5 +80,5 @@ void battle_gfx_init_render_buffers(void) {
     }
     g_battle_sound_primary_weather_sfx_id = 0;
     g_battle_sound_weather_sfx_enabled = 0;
-    g_current_effect_work = 0;
+    g_battle_effect_current_work = 0;
 }

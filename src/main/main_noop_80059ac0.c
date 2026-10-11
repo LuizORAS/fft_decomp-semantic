@@ -1,4 +1,5 @@
-/* Target 0x80059ac0..0x80059ac7 is jr ra; nop, not a missing body.
- * Its original purpose is unknown; adjacency does not establish a role. */
+/* An empty routine (jr ra; nop in the original) between
+ * main_status_init_check_data and main_party_clear_all. No function in the tree
+ * calls it. */
 void main_noop_80059ac0(void) {
 }

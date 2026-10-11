@@ -15,7 +15,7 @@ every clock tick adds a unit's Speed to its CT, and the first past 99 gets a
 turn. On its turn a unit may move once and act once, in either order, then
 chooses a facing; a unit the player does not control decides through the AI.
 Abilities with a charge time resolve later, when their own counter runs out.
-Reactions answer an action, and a First Strike can cancel it. Between turns,
+Reactions answer an action, and a Hamedo can cancel it. Between turns,
 timed statuses run out and event scripts can play. An event script also ends
 the battle: on to the world map, the next battle, a reset or the ending.
 
@@ -24,12 +24,12 @@ the battle: on to the world map, the next battle, a reset or the ending.
 - **The state machine.** [[g_battle_game_state]] holds a
   [[battle_game_state_e]] value, and [[battle_state_run_game_loop]] runs its
   handler once a frame (the table below). Effects and map changes save it in
-  [[g_previous_battle_game_state]] and return to it.
-- **Frame rate.** [[g_battle_state_vsync_interval]] is 1 (60 fps) or 2
+  [[g_battle_previous_game_state]] and return to it.
+- **Frame rate.** [[g_main_system_vsync_interval]] is 1 (60 fps) or 2
   (30 fps), and animation counters advance by it, so they keep real time at
   both rates. A slow effect frame starts a slowdown
-  ([[g_battle_state_slowdown_frames]]); effect scripts can ask for a minimum
-  ([[g_battle_state_min_vsync_interval]]).
+  ([[g_main_system_slowdown_frames]]); effect scripts can ask for a minimum
+  ([[g_main_system_min_vsync_interval]]).
 - **Turn order.** Each unit's [[battle_stats_t]] holds `ct`, `has_turn`,
   `movement_taken`, `action_taken` and `charged_ability_ct` (0xff when nothing
   is charging). The clock's phase is [[g_battle_turn_clock_state]],
@@ -46,7 +46,7 @@ the battle: on to the world map, the next battle, a reset or the ending.
   finished.
 - **The action.** The acting unit's command sits in its
   [[battle_unit_misc_data_t]] (`command_state`), and [[g_battle_action_phase]]
-  steps through a First Strike (0), the action itself (1) and the reactions
+  steps through a Hamedo (0), the action itself (1) and the reactions
   (2).
 
 ## Main flow
@@ -180,7 +180,7 @@ the other names come from what each state's code does.
 - **What ends a turn:** [[battle_turn_should_end]] and [[battle_turn_is_over]];
   which statuses stop turns or CT: [[battle_turn_get_status_flags]].
 - **Undoing a move:** [[battle_state_handle_move_confirm_menu_state]].
-- **The order of First Strike, the action and reactions:**
+- **The order of Hamedo, the action and reactions:**
   [[battle_state_announce_next_ability]] and
   [[battle_state_handle_resume_attack_phase_state]].
 - **How long AI units pause (31 frames):** the AI branches of

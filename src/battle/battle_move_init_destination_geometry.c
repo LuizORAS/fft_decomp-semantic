@@ -15,17 +15,17 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
     state->work_level = candidate & 1;
     if (state->inner_count >= 5)
         state->work_level = config->high_elevation;
-    state->destination_index = state->work_level * 256 + state->work_y * config->map_max_x + (u16)state->work_x;
+    state->destination_index = state->work_level * 256 + state->work_y * config->map_max_x + state->work_x;
     state->destination_tile = &g_battle_map_tile_data[state->destination_index];
     state->destination_panel = &g_battle_target_panels[state->destination_index];
     state->destination_base_height_times_two = state->destination_tile->height * 2;
-    state->destination_half_height = state->destination_tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK;
+    state->destination_half_height = state->destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK;
     state->destination_slope = state->destination_tile->slope_type;
     if (state->inner_count >= 5 || state->destination_unit_record_flag != 0) {
         state->destination_unit_record_index = state->destination_panel->unit_record_index;
         if (state->inner_count >= 5) {
             state->destination_unit_record_flag = 1;
-            if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_VALID_DESTINATION))
+            if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_MOUNTABLE_UNIT))
                 return 1;
             state->destination_entry_height = records[state->destination_unit_record_index].standing_height
                 + g_battle_move_height_offsets[candidate];
@@ -34,18 +34,18 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
             if (state->destination_entry_height < state->work_height)
                 return 2;
         } else {
-            if (!(tile_flags[state->destination_index] & 8))
+            if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_STAND_ON_UNIT))
                 return 3;
             state->destination_entry_height = records[state->destination_unit_record_index].top_height;
         }
         state->destination_side_height_delta = 0;
         state->destination_opposite_height = state->destination_entry_height;
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
-            state->work_x, state->work_y, state->destination_side_shift, (u8)(state->destination_entry_height - 1));
+            state->work_x, state->work_y, state->destination_side_shift, (state->destination_entry_height - 1));
         state->destination_panel_index = state->destination_unit_record_index + 512;
         state->effective_destination_panel = &g_battle_target_panels[state->destination_panel_index];
     } else {
-        if (!(tile_flags[state->destination_index] & 0x10))
+        if (!(tile_flags[state->destination_index] & FRONTIER_FLAG_ENTERABLE))
             return 4;
         state->destination_entry_height = state->destination_base_height_times_two
             + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3);
@@ -54,12 +54,14 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
         state->destination_side_height_delta = state->destination_entry_height - state->destination_opposite_height;
         state->destination_ceiling_height = battle_move_calculate_tile_ceiling(
             state->work_x, state->work_y, state->destination_side_shift, state->destination_entry_height);
-        if (state->destination_side_height_delta >= 0 && (tile_flags[state->destination_index] & 0x40))
+        if (state->destination_side_height_delta >= 0 && (tile_flags[state->destination_index] & FRONTIER_FLAG_STEEP))
             return 5;
         state->clearance_height = state->source_exit_height;
-        if ((state->destination_tile->depth_half_height & MAP_TILE_DEPTH_MASK) && (config->movement_set_3 & 0xc0)) {
-            state->destination_entry_height += (state->destination_tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 2;
-            if (config->movement_set_3 & 0x40)
+        if ((state->destination_tile->depth_half_height.value & MAP_TILE_DEPTH_MASK)
+            && (config->movement_set_3 & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER))) {
+            state->destination_entry_height
+                += (state->destination_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
+            if (config->movement_set_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER)
                 state->destination_entry_height -= 2;
         }
         state->destination_panel_index = state->destination_index;

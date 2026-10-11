@@ -1,5 +1,7 @@
 #include "fft/main.h"
 
+/* Roll the unit's raw stats by its sex flags; a unit with neither flag is rolled
+ * as a monster. */
 void main_unit_generate_raw_stats(battle_stats_t* unit) {
     s32 unit_type;
 

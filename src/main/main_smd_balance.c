@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xE8 "Balance". */
+/* SMD opcode 0xE8 "Balance": 0 is left, 0x40 the centre, 0x7f right. */
 u8* main_smd_balance(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     channel->balance = note_data[0] << 8;
-    channel->note_flags2 |= 0x100;
+    channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME;
     return note_data + 1;
 }

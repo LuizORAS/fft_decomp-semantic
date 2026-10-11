@@ -31,9 +31,9 @@ s32 battle_ai_build_reachable_tiles(s32 movement_taken) {
     s32 j;
     battle_ai_coords_t* coords;
 
-    if (g_battle_ai_data_base.decision_state == 0) {
+    if (g_battle_ai_data_base.resume_pending == 0) {
         if ((g_battle_ai_data_base.acting_unit->movement_abilities[2]
-                & (BATTLE_MOVEMENT_SET_3_WALK_ON_WATER | BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER
+                & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER
                     | BATTLE_MOVEMENT_SET_3_FLOAT))
             || (g_battle_ai_data_base.acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))) {
@@ -41,13 +41,12 @@ s32 battle_ai_build_reachable_tiles(s32 movement_taken) {
         } else {
             g_battle_ai_data_base.water_penalty = 1;
         }
-        battle_ai_clear_words((s32*)((battle_ai_walkable_view_t*)ai)->walkable_tiles,
-            sizeof(((battle_ai_walkable_view_t*)ai)->walkable_tiles));
+        battle_ai_clear_words(ai->walkable_tiles, 0x48);
         for (level = 0; level < 2; level++) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     tile = &g_battle_map_tile_data[level * 256 + y * ai->map_max_x + x];
-                    if (!(tile->flags_06.value & MAP_TILE_FLAG_BLOCKED)
+                    if (!(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
                         && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
                         ((battle_ai_walkable_view_t*)ai)->walkable_tiles[level][y] |= 0x8000 >> x;
                     }
@@ -78,7 +77,7 @@ s32 battle_ai_build_reachable_tiles(s32 movement_taken) {
     if (VSync(1) > 0x1b8) {
         return -1;
     }
-    ai->decision_state = 0;
+    ai->resume_pending = 0;
     for (level = 0; level < 2; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             for (x = 0; x < ai->map_max_x; x++) {
@@ -98,7 +97,7 @@ s32 battle_ai_build_reachable_tiles(s32 movement_taken) {
                         }
                     }
                 }
-                if (tile->ceiling_depth_and_marks & MAP_TILE_FLAG_MOVE_DESTINATION) {
+                if (tile->ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
                     ai->reachable_tiles[0][level][y] |= 0x8000 >> x;
                 }
             }
@@ -107,9 +106,10 @@ s32 battle_ai_build_reachable_tiles(s32 movement_taken) {
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && i != ai->acting_unit_id
-            && !(*(u16*)&unit->status_sets.current[0]
-                & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRYSTAL)
-                    | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_TREASURE)))) {
+            && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
+            && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
             ai->reachable_tiles[0][unit->position.bits.higher_elevation][unit->position.bits.y] &= ~(0x8000 >> unit->x);
         }
     }

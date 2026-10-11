@@ -19,7 +19,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
     s32 j;
     s32 keep;
     u16 rel;
-    s32 id;
+    u32 id;
     s32 checking;
     u8 skillset;
     u8 secondary;
@@ -70,7 +70,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
             if (job_id == 0) {
                 continue;
             }
-            skillset = g_job_data_pointer[job_id].skillset;
+            skillset = g_main_job_data_pointer[job_id].skillset;
         }
         if (skillset == secondary) {
             secondary_unchecked = 0;
@@ -98,16 +98,16 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
                 continue;
             if (flags & RSM_ABILITY_FILTER_REACTION) {
                 rel = id - ABILITY_ID_REACTION_FIRST;
-                keep = rel < 0x20;
+                keep = rel < ABILITY_ID_SUPPORT_FIRST - ABILITY_ID_REACTION_FIRST;
             }
             if (flags & RSM_ABILITY_FILTER_SUPPORT) {
                 rel = id - ABILITY_ID_SUPPORT_FIRST;
-                if (rel < 0x20) {
+                if (rel < ABILITY_ID_MOVEMENT_FIRST - ABILITY_ID_SUPPORT_FIRST) {
                     keep = 1;
                 }
             }
             if (flags & RSM_ABILITY_FILTER_MOVEMENT) {
-                if ((u32)(id & 0xFFFF) >= ABILITY_ID_MOVEMENT_FIRST) {
+                if ((id & 0xFFFF) >= ABILITY_ID_MOVEMENT_FIRST) {
                     keep = 1;
                 }
             }

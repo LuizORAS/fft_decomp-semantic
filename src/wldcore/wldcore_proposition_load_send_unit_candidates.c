@@ -36,7 +36,7 @@ s32 wldcore_proposition_load_send_unit_candidates(wldcore_menu_send_unit_level_t
         } else {
             g_wldcore_list_row_flags[level->unit_count] = 0;
         }
-        g_wldcore_list_entry_values[level->unit_count] = i + TEXT_ID_UNIT_NAME_BASE;
+        g_wldcore_list_entry_values[level->unit_count] = i + TEXT_ID_UNIT_NAME_SPECIAL_BASE;
         g_wldcore_proposition_candidate_levels[level->unit_count] = unit->level;
         level->unit_count = level->unit_count + 1;
     }

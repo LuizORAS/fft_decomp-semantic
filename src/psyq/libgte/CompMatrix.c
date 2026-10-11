@@ -23,9 +23,6 @@ MATRIX* CompMatrix(MATRIX* left, MATRIX* right, MATRIX* output) {
     left_x = left_operand->t[0];
     left_y = left_operand->t[1];
     left_z = left_operand->t[2];
-    __asm__ volatile(""
-        :
-        : "r"(left_x), "r"(left_y), "r"(left_z)); /* Finish all input loads before the trapping sums. */
     PSYQ_CPU_TRAP_ADD(x, x, left_x);
     PSYQ_CPU_TRAP_ADD(y, y, left_y);
     PSYQ_CPU_TRAP_ADD(z, z, left_z);

@@ -5,8 +5,8 @@
  * Set the texture page, CLUT and UVs of a unit's portrait quad.
  *
  * The unit whose ID equals g_main_special_portrait_unit_id uses the fixed 0x380/0x100 page; others
- * select a 32-line band of the spritesheet VRAM slot's page and a CLUT row
- * indexed by the low nibble of the Misc unit_t Data ID.
+ * select a 32-line band of the spritesheet VRAM slot's page and the CLUT of
+ * MAP_CLUT_ROW_UNITS_SECOND indexed by the low nibble of the Misc unit_t Data ID.
  */
 void battle_menu_build_unit_portrait_poly(POLY_FT4* poly, u32 battle_id) {
     s32 vram_slot;
@@ -44,6 +44,6 @@ void battle_menu_build_unit_portrait_poly(POLY_FT4* poly, u32 battle_id) {
         poly->v3 = v + 0x20;
         poly->v1--;
         poly->v3--;
-        poly->clut = GetClut((misc_id & 0xf) * 16, 0x1ea);
+        poly->clut = GetClut((misc_id & 0xf) * 16, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_UNITS_SECOND);
     }
 }

@@ -5,11 +5,11 @@
 void battle_script_route_event_input(void) {
     s32 thread;
 
-    if (g_battle_menu_input_disabled != 2) {
+    if (g_battle_menu_input_mode != MENU_INPUT_TUTORIAL) {
         return;
     }
     thread = g_battle_thread_current_id;
-    if (thread == 0) {
+    if (thread == NATIVE_THREAD_SLOT_MAIN) {
         return;
     }
     if (g_battle_script_event_input == 0) {

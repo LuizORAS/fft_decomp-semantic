@@ -6,7 +6,7 @@
 /* Scrolls a three-column text page by a row window on L1/R1 (or on the
  * running thread's redraw request), redraws the page into g_world_menu_text_page_image and
  * uploads it. Returns the image buffer when the page was redrawn. */
-u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw) {
+u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     u32* input;
     u32* input2;
@@ -22,7 +22,7 @@ u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_of
     rect.w = entry->inner_width >> 2;
     rect.h = entry->inner_height;
     changed = 0;
-    if (g_world_menu_input_disabled != 0) {
+    if (g_world_menu_input_mode != MENU_INPUT_PLAYER) {
         return 0;
     }
     if (!(*input2 & PSX_PAD_SQUARE) && g_world_threads[g_world_thread_current_id].task_words[4] == 0) {
@@ -52,7 +52,7 @@ u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_of
         return 0;
     }
     world_clear_menu_render_buffer(g_world_menu_text_page_image, entry->inner_width * entry->inner_height / 2);
-    world_menu_draw_text_columns_2(entry, row_offset, g_world_menu_text_page_image);
+    world_menu_draw_text_columns(entry, row_offset, g_world_menu_text_page_image);
     *redraw = 0;
     LoadImage(&rect, g_world_menu_text_page_image);
     world_script_copy_bytes(&clear, &rect, 8);

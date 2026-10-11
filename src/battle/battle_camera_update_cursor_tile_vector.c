@@ -12,8 +12,8 @@ void battle_camera_update_cursor_tile_vector(void) {
     battle_unit_misc_data_t* unit;
     s32 height;
 
-    if (g_battle_camera_zoom_action == 0 && g_battle_camera_tilt_action == 0 && g_battle_camera_rotation_action == 0
-        && g_battle_state_camera_pan_enabled == 0) {
+    if (g_battle_camera_zoom_action == BATTLE_CAMERA_STEP_NONE && g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_NONE
+        && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE && g_battle_state_camera_pan_enabled == 0) {
         unit = battle_unit_get_selectable_misc_data_at_map_coords(
             g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         height = 0;

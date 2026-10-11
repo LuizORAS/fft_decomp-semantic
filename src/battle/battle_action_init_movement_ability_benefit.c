@@ -14,7 +14,7 @@ s32 battle_action_init_movement_ability_benefit(battle_stats_t* unit) {
     unit_id = unit->misc_unit_id;
     g_battle_action_target = unit;
     g_battle_action_target_data = &unit->action;
-    g_current_ability.target_id = unit_id;
+    g_battle_action_current_ability.target_id = unit_id;
     battle_action_clear_current_data(&unit->action);
     if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION))
         return -1;

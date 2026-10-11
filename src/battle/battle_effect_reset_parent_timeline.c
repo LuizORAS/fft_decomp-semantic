@@ -1,14 +1,15 @@
 #include "psx/types.h"
 
+/* The parent timeline's state in an effect_record_t, as this function clears
+ * it: battle_effect_timeline_state_t of opcode 29 lays out the 26 tracks. */
 typedef struct battle_effect_parent_timeline_state {
     u8 _unused_00[0x28];
-    /* Effect state layout, pattern 1. */
     s16 frame;           /* 0x28 */
-    s16 spawn_countdown; /* 0x2a */
-    s16 spawned_count;   /* 0x2c */
-    s16 values_2e[26];
-    s16 values_62[26];
-    s16 values_96[26];
+    s16 spawn_countdown; /* 0x2a: frames until the next child record starts */
+    s16 spawned_count;   /* 0x2c: child records started so far */
+    s16 keyframe[26];    /* 0x2e: per track and phase: the keyframe index */
+    s16 remaining[26];   /* 0x62: frames left in that keyframe */
+    s16 step[26];        /* 0x96: frames it has run */
 } battle_effect_parent_timeline_state_t;
 
 void battle_effect_reset_parent_timeline(battle_effect_parent_timeline_state_t* data) {
@@ -16,9 +17,9 @@ void battle_effect_reset_parent_timeline(battle_effect_parent_timeline_state_t* 
 
     index = 0;
     do {
-        data->values_96[index] = 0;
-        data->values_62[index] = 0;
-        data->values_2e[index] = 0;
+        data->step[index] = 0;
+        data->remaining[index] = 0;
+        data->keyframe[index] = 0;
         index++;
     } while (index < 26);
     data->spawn_countdown = 0;

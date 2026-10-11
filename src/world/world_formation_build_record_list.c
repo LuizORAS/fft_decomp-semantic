@@ -27,7 +27,7 @@ s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list
         }
         world_formation_build_unit_record(
             &unit, &g_world_formation_unit_records[count], main_party_get_data_pointer(slot));
-        if (mode == 1) {
+        if (mode == WORLD_FORMATION_RECORD_LIST_AVAILABLE_HUMANS) {
             if (g_world_formation_unit_records[count].proposition_status != 0) {
                 continue;
             }
@@ -40,7 +40,7 @@ s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list
             if (world_job_is_special_monster(g_world_formation_unit_records[count].job_id) != 0) {
                 continue;
             }
-        } else if (mode == 2) {
+        } else if (mode == WORLD_FORMATION_RECORD_LIST_MONSTERS) {
             if (g_world_formation_unit_records[count].gender_flags & UNIT_FLAG_EGG) {
                 continue;
             }

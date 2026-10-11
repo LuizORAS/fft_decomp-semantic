@@ -10,17 +10,17 @@ void battle_text_init_menu_section_pointers(void) {
     u8** destination;
     /* These two assignments fill the target load delay before the loop. */
     s32* text;
-    s32 menu_input_disabled;
+    s32 menu_input_mode;
     s32 index;
     s32 offset;
 
     source = g_battle_menu_text_section_offsets;
     index = 0;
-    menu_input_disabled = g_battle_menu_input_disabled;
+    menu_input_mode = g_battle_menu_input_mode;
     text = source + 32;
     destination = g_battle_text_section_pointers;
     do {
-        if (menu_input_disabled == 0 || index != 0) {
+        if (menu_input_mode == MENU_INPUT_PLAYER || index != TEXT_SECTION_EVENT_MESSAGES) {
             offset = *source;
             offset += (s32)text;
             *destination = (u8*)offset;

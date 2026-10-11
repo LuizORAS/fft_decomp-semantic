@@ -1,8 +1,8 @@
 /* Loads file 0x166b (0x10000 bytes) via the entry-mode load paths, uploads its
  * second half, then for the 16 formation slots derives each unit's portrait
- * (inlined world_unit_get_portrait_index logic), copies a 0x18x0x30 cell into
+ * (inlined world_formation_get_unit_palette_index logic), copies a 0x18x0x30 cell into
  * the g_attack_formation_sprite_staging staging buffer, uploads it to g_attack_portrait_upload_rect and uploads the
- * 16x1 palette row to g_attack_portrait_palette_upload_rect; g_attack_formation_sprite_tall_cell[slot] records the cell
+ * 16x1 CLUT to g_attack_portrait_palette_upload_rect; g_attack_formation_sprite_tall_cell[slot] records the cell
  * layout.
  *
  * Load-bearing shapes: the nested else routes the remainder<8 and (code-8)/5
@@ -45,11 +45,11 @@ void attack_gfx_prepare_formation_sprites(void) {
 
     buffer = main_heap_alloc(0x10000);
     if (ENTRY_MODE != 0) {
-        if (ENTRY_MODE == 2) {
-            attack_file_load_sync(0x166B, 0x10000, buffer);
+        if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+            attack_file_load_sync(DISC_SECTOR_EVENT_UNIT_BIN, 0x10000, buffer);
         } else {
             g_battle_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
-            battle_thread_call_on_main_stack(0x166B, 0x10000, buffer);
+            battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_UNIT_BIN, 0x10000, buffer);
         }
     } else {
         StoreImage(&g_attack_formation_sheet_rect, (u32*)buffer);
@@ -57,7 +57,7 @@ void attack_gfx_prepare_formation_sprites(void) {
         DrawSync(0);
     }
     LoadImage(&g_attack_formation_sheet_rect, (u32*)(buffer + 0x8000));
-    if (ENTRY_MODE == 2) {
+    if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
         battle_thread_yield();
     } else {
         DrawSync(0);
@@ -102,7 +102,7 @@ void attack_gfx_prepare_formation_sprites(void) {
             portrait = -1;
             code = 0x4C;
         } else if (code >= 0x3F) {
-            code = g_attack_monster_formation_sprite_table[code];
+            code = g_attack_monster_formation_sprite_table[code - 0x3F];
             portrait = code;
         } else {
             portrait = code;
@@ -181,7 +181,7 @@ void attack_gfx_prepare_formation_sprites(void) {
         g_attack_portrait_palette_upload_rect.w = 0x10;
         g_attack_portrait_palette_upload_rect.h = 1;
         LoadImage(&g_attack_portrait_palette_upload_rect, (u32*)(buffer + offset));
-        if (ENTRY_MODE == 2) {
+        if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
             battle_thread_yield();
         } else {
             DrawSync(0);

@@ -1,13 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Advance the target palette track one frame.
+/* Advance the surroundings colour track one frame.
  *
- * The target-side counterpart of battle_effect_advance_caster_palette_track: when a
- * keyframe with preset bit 7 starts, its colour is applied to the field, to
- * every effect target's unit palette and, unless weather flag 2 is set, to the
- * scaled map palette. The loop counter reuses the frame-count variable, which
- * keeps both in $s0 as in the target. */
+ * When an APPLY keyframe starts, its colour is applied to the field, to the
+ * palette of every spectator unit (those that are neither a target nor the
+ * caster) and, unless weather flag 2 is set, to the scaled map palette. The
+ * loop counter reuses the frame-count variable, which keeps both in $s0 as in
+ * the target. */
 void battle_effect_advance_target_palette_track(
     battle_effect_palette_track_t* track, s16* keyframe, s16* remaining_frames) {
     s16 current;
@@ -31,18 +31,19 @@ void battle_effect_advance_target_palette_track(
             }
             *remaining_frames = i;
             preset = track->preset[index];
-            if (preset & 0x80) {
+            if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                 red = track->color[index][0];
                 green = track->color[index][1];
                 blue = track->color[index][2];
-                battle_map_color_field(preset & 0x7f, track->duration[index], red, green, blue);
-                for (i = 0; i < g_battle_effect_coord_data.palette_target_count; i++) {
-                    battle_gfx_start_misc_unit_palette_modulation(preset & 0x7f, track->duration[index],
-                        g_battle_effect_palette_target_misc_ids[i], red, green, blue);
+                battle_map_color_field(
+                    preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
+                for (i = 0; i < g_battle_effect_coord_data.spectator_count; i++) {
+                    battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                        track->duration[index], g_battle_effect_palette_target_misc_ids[i], red, green, blue);
                 }
-                if (!(g_battle_map_weather_flags & 2)) {
+                if (!(g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
                     battle_map_start_darkness_blend(
-                        preset & 0x7f, track->duration[index], red * 8, green * 8, blue * 8);
+                        preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red * 8, green * 8, blue * 8);
                 }
             }
         }

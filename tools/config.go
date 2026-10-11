@@ -47,7 +47,7 @@ var compilerProfiles = map[string]compilerProfile{
 		name: "gcc-2.6.3_O2_aspsx-2.21_divcheck", compilerPath: "/opt/old-gcc/2.6.3-psx/cc1",
 		optimization: "-O2", aspsxVersion: "2.21", expandDiv: true,
 	},
-	// GCC 2.7 (some WLDCORE and OPEN functions): a separate `mfhi` in constant
+	// GCC 2.7 (WLDCORE and OPEN): a separate `mfhi` in constant
 	// divisions, and no delay-slot fill from past an if-body join label.
 	"gcc-2.7.2_O2_aspsx-2.21": {
 		name: "gcc-2.7.2_O2_aspsx-2.21", compilerPath: "/opt/old-gcc/2.7.2-psx/cc1",

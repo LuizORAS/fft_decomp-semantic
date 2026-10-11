@@ -1,9 +1,8 @@
 #include "fft/battle.h"
 
-/* Copied as ten byte-aligned bytes from 0x80193dd4; the target uses signed
- * byte loads for the final two bytes and unsigned loads while scanning. */
+/* Copied as ten byte-aligned bytes from 0x80193dd4. */
 typedef struct battle_ai_math_ability_id_list {
-    s8 ability_ids[10];
+    u8 ability_ids[10];
 } battle_ai_math_ability_id_list_t;
 
 extern battle_ai_math_ability_id_list_t g_battle_math_extra_known_bit_ids;
@@ -19,10 +18,10 @@ extern battle_ai_math_ability_id_list_t g_battle_math_extra_known_bit_ids;
 s32 battle_ai_evaluate_math_targets(void) {
     battle_ai_math_ability_id_list_t special_abilities = g_battle_math_extra_known_bit_ids;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
-    u8* special;
+    s32 i;
     s32 unit;
 
-    if (g_battle_ai_data_base.decision_state)
+    if (g_battle_ai_data_base.resume_pending)
         goto evaluate_priority; /* resume inside the multiplier loop */
     if (!battle_ai_can_use_ability_at_coords(&ai->acting_unit_coords))
         return 0;
@@ -34,7 +33,7 @@ s32 battle_ai_evaluate_math_targets(void) {
         for (g_battle_ai_math_ability_index = 0; g_battle_ai_math_ability_index < 16;
             g_battle_ai_math_ability_index++) {
             /* Math targeting reads only the low byte of each halfword ID. */
-            ai->math_ability_id = (u8)g_battle_ai_math_ability_list[g_battle_ai_math_ability_index];
+            ai->math_ability_id = g_battle_ai_math_ability_list[g_battle_ai_math_ability_index];
             if (ai->math_ability_id == 0)
                 continue;
             if (!(g_main_ability_range_data[ai->math_ability_id].flags_3
@@ -43,16 +42,14 @@ s32 battle_ai_evaluate_math_targets(void) {
             if (!battle_ai_load_known_ability_flag(
                     ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index))
                 continue;
-            /* The extra known-bit call's result is ignored. The loop uses
-             * the target's signed address comparison (SLT). */
-            special = (u8*)special_abilities.ability_ids;
-            do {
-                if (ai->math_ability_id == *special++)
+            /* The extra known-bit call's result is ignored. */
+            for (i = 0; i < 10; i++) {
+                if (ai->math_ability_id == special_abilities.ability_ids[i])
                     battle_ai_load_known_ability_flag(
                         ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index + 1);
-            } while ((s32)special < (s32)&special_abilities.ability_ids[10]);
+            }
             battle_ai_transfer_halfword_values(
-                (u16*)&ai->considered_ability.ai_flags, g_main_ability_data[ai->math_ability_id].ai_flags.halfwords, 4);
+                &ai->considered_ability.ai_flags, g_main_ability_data[ai->math_ability_id].ai_flags.halfwords, 4);
             battle_ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,
                 g_main_status_infliction_data[g_main_ability_range_data[ai->math_ability_id].status_infliction_id]
                     .statuses,

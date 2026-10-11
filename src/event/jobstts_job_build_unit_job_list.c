@@ -1,7 +1,16 @@
 #include "fft/event_jobstts.h"
 
+/*
+ * Writes a unit's selectable jobs to a -1-terminated list and returns their
+ * count. JOBSTTS copy of world_job_build_unit_list without its list modes.
+ *
+ * The base job comes first, followed by the generic jobs whose unlocked bit
+ * is set (Bard excluded for female units, Dancer for male units); special
+ * monsters and units with the monster identity get only the base job. The
+ * third argument is not read.
+ */
 s32 jobstts_job_build_unit_job_list(u8 unit_id, s16* job_ids, s32 unused) {
-    u32 unit_index = (u8)unit_id;
+    u32 unit_index = unit_id;
     jobstts_unit_job_data_t** unit_table = g_jobstts_unit_data;
     s16* out;
     s32 count;

@@ -29,9 +29,9 @@ s32 battle_effect_check_direct_trajectory_between_units(u8 source_id, u8 target_
     }
     battle_effect_list_valid_unit_targeting_data(
         source_id, target_id, (struct battle_effect_obstacle_unit_list**)&obstacles);
-    battle_unit_get_tile_center_and_height_by_battle_id(source_id, (battle_screen_coords_t*)&origin);
+    battle_unit_get_tile_center_and_height_by_battle_id(source_id, &origin);
     origin.vy -= source_height;
-    battle_unit_get_tile_center_and_height_by_battle_id(target_id, (battle_screen_coords_t*)&destination);
+    battle_unit_get_tile_center_and_height_by_battle_id(target_id, &destination);
     destination.vy -= target_height;
     delta.vx = destination.vx - origin.vx;
     delta.vy = destination.vy - origin.vy;

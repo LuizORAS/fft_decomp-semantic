@@ -1,34 +1,22 @@
 #include "fft/battle.h"
 
-s32 battle_map_start_texture_animation(s32 frame_duration, s32 polygon_group, s32 first_polygon, s32 last_polygon) {
+/* Claim a free colour rotation slot: the colours first_color..last_color of a
+ * CLUT row rotate one place every frame_duration frames. Returns the slot index +
+ * 1 as the handle, or 0 when all eight slots are in use. */
+s32 battle_map_start_texture_animation(s32 frame_duration, s32 clut_row, s32 first_color, s32 last_color) {
     s32 index;
-    s32 active;
-    s32 result;
     map_texture_animation_state_t* state;
 
-    index = 0;
-    active = 1;
-    state = g_battle_map_texture_animation_states;
-
-    /* Goto loop: for/while/do forms engage the loop optimizer, which splits
-     * the slot pointer into extra induction variables the target lacks. */
-loop:
-    if (state->active != 0) {
-        goto occupied;
-    }
-    result = index + 1;
-    state->active = active;
-    state->polygon_group = polygon_group;
-    state->first_polygon = first_polygon;
-    state->last_polygon = last_polygon;
-    state->frame_duration = frame_duration;
-    return result;
-
-occupied:
-    index++;
-    if (index < MAP_TEXTURE_ANIMATION_CAPACITY) {
-        state++;
-        goto loop;
+    for (index = 0; index < MAP_TEXTURE_ANIMATION_CAPACITY; index++) {
+        state = &g_battle_map_texture_animation_states[index];
+        if (state->active == 0) {
+            state->active = 1;
+            state->clut_row = clut_row;
+            state->first_color = first_color;
+            state->last_color = last_color;
+            state->frame_duration = frame_duration;
+            return index + 1;
+        }
     }
     return 0;
 }

@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 /* Select the menu's node table, handle directional/confirm/cancel input, and
@@ -29,47 +30,44 @@ void bunit_menu_update_node_cursor(s16 mode) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         g_bunit_help_cursor_initialized = 1;
         g_bunit_help_node_index = 0;
-        if (g_bunit_help_screen_id == 0x20000) {
+        if (g_bunit_help_screen_id == MENU_GRID_HELP_BANNER_TOP) {
             g_bunit_help_nodes = g_bunit_help_nodes_banner_top;
-        } else if (g_bunit_help_screen_id == 0x20001) {
+        } else if (g_bunit_help_screen_id == MENU_GRID_HELP_BANNER_BOTTOM) {
             g_bunit_help_nodes = g_bunit_help_nodes_banner_bottom;
         } else {
             g_bunit_help_nodes = g_bunit_help_nodes_unit_browse;
         }
     }
-    running = battle_thread_is_running(1);
+    running = battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
     if (running == 0) {
         flags = g_bunit_input_primary_repeat;
         node_index = g_bunit_help_node_index;
-        if (flags & 0x40) {
+        if (flags & PSX_PAD_CROSS) {
             g_bunit_text_selection_id = g_bunit_help_screen_id;
-            g_bunit_help_screen_id = 0;
+            g_bunit_help_screen_id = MENU_GRID_HELP_NONE;
             g_bunit_sound_queued_effect_id = MAIN_SFX_CANCEL;
             g_bunit_help_cursor_initialized = 0;
-        } else if (flags & 0x20) {
+        } else if (flags & PSX_PAD_CIRCLE) {
             text_id = 0;
             if (g_bunit_help_nodes[node_index].value != 0) {
                 text_id = g_bunit_help_nodes[node_index].value[0];
             }
-            if ((u32)(g_bunit_help_node_index_reload - 0x12) >= 0xAU || text_id != 0) {
+            if ((g_bunit_help_node_index_reload - 0x12) >= 0xAU || text_id != 0) {
                 /* The target zero-extends help_base here (lhu): a -0x6800 base adds 0x9800. */
                 g_bunit_text_selection_id
                     = text_id + (u16)g_bunit_help_nodes_reload[g_bunit_help_node_index_reload_2].help_base;
-                /* This call site supplies literal 3 and leaves the text ID in
-                 * a1; preserve that target ABI despite the callee's single
-                 * parameter. */
-                ((void (*)(s32, s32))bunit_text_start_selection_thread)(3, text_id);
+                bunit_text_start_selection_thread(3);
             }
-        } else if (flags & 0x1000) {
+        } else if (flags & PSX_PAD_UP) {
             node_index = g_bunit_help_nodes[node_index].destination[0];
-        } else if (flags & 0x4000) {
+        } else if (flags & PSX_PAD_DOWN) {
             node_index = g_bunit_help_nodes[node_index].destination[1];
-        } else if (flags & 0x2000) {
+        } else if (flags & PSX_PAD_RIGHT) {
             node_index = g_bunit_help_nodes[node_index].destination[2];
-        } else if (flags & 0x8000) {
+        } else if (flags & PSX_PAD_LEFT) {
             node_index = g_bunit_help_nodes[node_index].destination[3];
         }
-        if (g_bunit_panel_selected_billboard.mode != 0) {
+        if (g_bunit_panel_selected_billboard.team_kind != 0) {
             if (g_bunit_help_node_index == 2 && node_index == 6) {
                 node_index = 7;
             }

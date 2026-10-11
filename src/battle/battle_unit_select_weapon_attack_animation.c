@@ -1,15 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Provisional: weapon attack animations, three per weapon type (low, level,
- * high). Bows index their row by battle_effect_get_bow_shot_angle. */
-
-/* Choose the attacker's weapon swing animation from the target's height.
+/* Choose the attacker's weapon attack animation from the target's height.
  *
- * The target treats spritesheet IDs at or above the Crystal sheet as always
- * using the level swing. Other units compare the vertical centres of both
- * sprites: more than 11 pixels apart selects the low or high swing. Golem
- * Guard and Blade Grasp targets are always swung at low. */
+ * g_battle_weapon_attack_animations has three animations for each item type:
+ * at a higher target, a level one and a lower one. A bow indexes its row by
+ * battle_effect_get_bow_shot_angle. Other weapons compare the vertical
+ * centres of the two sprites: a target 12 or more above the attacker takes
+ * the first animation and one 12 or more below the third. A Golem or Blade
+ * Grasp guard always takes the first, and the sheets from the crystal up
+ * always play the unarmed level attack. */
 void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
     s32 miss_type;
     s16 attacker_centre;
@@ -46,8 +46,8 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
         }
         /* The target loads the attacker's screen_z zero-extended (lhu). */
         attacker_centre
-            = (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - (u16)attacker->screen.vy;
-        target_centre = (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
+            = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - attacker->screen.vy;
+        target_centre = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
         difference = attacker_centre - target_centre;
         if (difference < -11) {
             battle_unit_store_animation_facing_movement_data(

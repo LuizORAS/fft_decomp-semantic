@@ -8,7 +8,7 @@ void main_smd_get_play_time(suzuki_music_t* music, suzuki_play_time_t* time) {
 
     ticks = music->ticks >> 8;
     seconds = ticks / 240;
-    time->tick_24 = music->tick_24;
+    time->sequence_ticks = music->sequence_ticks;
     time->fraction = ticks % 240;
     time->seconds = seconds % 60;
     time->minutes = seconds / 60;

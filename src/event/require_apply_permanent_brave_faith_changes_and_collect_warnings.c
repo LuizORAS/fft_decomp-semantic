@@ -3,6 +3,10 @@
 
 /* Apply permanent Brave/Faith changes and collect party-leaving warnings.
  *
+ * Each unit keeps a quarter of the battle's change (delta * 250 / 100 / 10,
+ * each division truncating). A unit then at Brave 6..15 or Faith 85..94 gets a
+ * warning; guests, Ramza and unit ids 1..3 are exempt.
+ *
  * The staged multiplication and divisions preserve the target's two signed
  * constant-division sequences. */
 s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
@@ -25,7 +29,7 @@ s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
     g_require_party_affected_unit_count = 0;
     for (battle_index = 0; battle_index < BATTLE_UNIT_SLOT_COUNT; battle_index++) {
         battle_unit = battle_unit_get_stats_from_battle_id(battle_index);
-        unit = battle_find_unit_data_pointer_for_entd_unit_id(battle_unit->unit_id, &found_battle_index);
+        unit = battle_unit_find_stats_by_entd_unit_id(battle_unit->unit_id, &found_battle_index);
         if (found_battle_index < 0 || battle_index != found_battle_index
             || unit->formation_index == BATTLE_FORMATION_INDEX_NONE || unit->unit_id == 0) {
             continue;
@@ -57,7 +61,7 @@ s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
             continue;
         }
 
-        if ((u32)(brave - 6) < 10) {
+        if (brave >= 6 && brave <= 15) {
             if (unit->character_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                 s32 column;
 
@@ -86,14 +90,14 @@ s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
                 value2 = g_require_party_affected_unit_count;
                 g_require_party_affected_unit_message_args[value2] = unit->unit_id;
                 g_require_party_affected_unit_message_ids[value2]
-                    = (unit->character_identity - 0x80) * 4 + (battle_index & 3) + 0x800;
+                    = (unit->character_identity - CHARACTER_IDENTITY_SELECTOR_FIRST) * 4 + (battle_index & 3) + 0x800;
                 g_require_party_affected_battle_unit_indices[value2] = battle_index;
                 g_require_party_affected_unit_count = value2 + 1;
             }
             warning_count++;
         }
 
-        if ((u32)(faith - 0x55) < 10) {
+        if (faith >= 0x55 && faith <= 0x5e) {
             if (unit->character_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                 s32 group_index;
                 s32 column;
@@ -123,7 +127,7 @@ s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void) {
                 value4 = g_require_party_affected_unit_count;
                 g_require_party_affected_unit_message_args[value4] = unit->unit_id;
                 g_require_party_affected_unit_message_ids[value4]
-                    = (unit->character_identity - 0x80) * 4 + (battle_index & 3) + 0x80c;
+                    = (unit->character_identity - CHARACTER_IDENTITY_SELECTOR_FIRST) * 4 + (battle_index & 3) + 0x80c;
                 g_require_party_affected_battle_unit_indices[value4] = battle_index;
                 g_require_party_affected_unit_count = value4 + 1;
             }

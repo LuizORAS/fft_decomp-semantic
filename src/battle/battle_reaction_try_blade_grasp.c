@@ -8,12 +8,12 @@ void battle_reaction_try_blade_grasp(void) {
     battle_stats_t* attacker;
     battle_action_data_t* target;
 
-    if ((g_current_ability.range_data.flags_4 & ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE) == 0)
+    if ((g_battle_action_current_ability.range_data.flags_4 & ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE) == 0)
         return;
     attacker = g_battle_action_target;
     target = g_battle_action_target_data;
     /* Halfword store covers attack_accuracy and the pad byte after it. */
-    target->attack_accuracy = (s16)(100 - attacker->brave);
+    target->attack_accuracy = 0x64 - attacker->brave;
     if (battle_reaction_fails_brave_roll(attacker) != 0)
         return;
     if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE)

@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* battle_effect_init_data as a 0 or 1 result: the event script's EffectStart
+ * instruction calls it on the main stack each frame until it returns 0. */
 s32 battle_effect_try_init_data(void) {
     /* The target loads no argument; the parameter is the $a0 value unhandled states return. */
-    return ((s32 (*)(void))battle_effect_init_data)() != 0;
+    return battle_effect_init_data() != 0;
 }

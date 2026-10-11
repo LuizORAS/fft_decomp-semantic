@@ -1,3 +1,4 @@
+/* E454.BIN is the effect of effect id 0x219, one of the ids past the abilities. */
 #include "fft/effect.h"
 
 #define NULL ((void*)0)
@@ -10,7 +11,7 @@
  * at 0x801c48dc lists (slot, row) byte pairs for emitter groups 1-12, and
  * groups 13 and 14 walk pairs 0-3 and 4-11. The loops step the byte index by
  * 2, which keeps loop.c from reducing the table address to a pointer. */
-s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, s32 entry_index, s32 frame) {
+s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame) {
     effect_record_t* record;
     u8* work;
     effect_work_record_t parent;
@@ -24,31 +25,31 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
 
     record = &g_effect_state_records[record_index];
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != NULL) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != NULL) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
         vertex_work = battle_heap_alloc_block(0x200, record_index);
-        record->work_slots[byte_offset] = vertex_work;
-        g_current_effect_work = vertex_work;
+        record->work_slots[callback_slot] = vertex_work;
+        g_battle_effect_current_work = vertex_work;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 1, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 2, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 3, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 4, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 5, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 6, 1, 1);
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         emitter_index = 0;
         do {
-            emitter = (effect_particle_vertex_emitter_view_t*)&g_effect_geometry_table->entries[emitter_index];
+            emitter = &g_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             group = emitter->vertex_group;
-            if ((u32)(group - 1) < 12) {
+            if (group >= 1 && group <= 12) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
                     i = group - 1;
                     offset = (&g_effect_e454_particle_work_offset_scale_16)[i * 2] << 4;
@@ -58,7 +59,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
                     parent.position[1] = vertex->vy << 12;
                     parent.position[2] = vertex->vz << 12;
                     battle_effect_spawn_emitter_particles(
-                        record->record_index, record->emitter_index - emitter->start_frame, emitter_index, &parent);
+                        record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                 }
             } else if (group == 13) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
@@ -70,7 +71,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
                         parent.position[1] = vertex->vy << 12;
                         parent.position[2] = vertex->vz << 12;
                         battle_effect_spawn_emitter_particles(
-                            record->record_index, record->emitter_index - emitter->start_frame, emitter_index, &parent);
+                            record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
                 }
             } else if (group == 14) {
@@ -83,7 +84,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
                         parent.position[1] = vertex->vy << 12;
                         parent.position[2] = vertex->vz << 12;
                         battle_effect_spawn_emitter_particles(
-                            record->record_index, record->emitter_index - emitter->start_frame, emitter_index, &parent);
+                            record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
                 }
             }
@@ -91,12 +92,12 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 byte_offset, 
         } while (emitter_index < 16);
         break;
     case EFFECT_PHASE_DESTROY:
-        if (record->work_slots[byte_offset] != NULL) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
-            record->work_slots[byte_offset] = NULL;
-            g_current_effect_work = NULL;
+        if (record->work_slots[callback_slot] != NULL) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
+            record->work_slots[callback_slot] = NULL;
+            g_battle_effect_current_work = NULL;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
     }
 }

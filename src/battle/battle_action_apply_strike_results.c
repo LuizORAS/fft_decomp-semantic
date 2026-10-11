@@ -3,14 +3,14 @@
 
 /* Blaze Gun, Glacier Gun and Blast Gun (item ids 0x4a..0x4c) play the weapon
  * strike even when an ability is used. */
-#define IS_ELEMENTAL_GUN(id) (((id) == 0x4a || (id) == 0x4b) || (id) == 0x4c)
+#define IS_ELEMENTAL_GUN(id) ((id == ITEM_ID_BLAZE_GUN || id == ITEM_ID_GLACIER_GUN) || id == ITEM_ID_BLAST_GUN)
 
 /* Apply a strike's results and pick the actor's animation, entering START_ACTION_EXECUTE at 60 fps.
  * The first strike turns the actor toward its target. Each target's pending result applies
  * (battle_action_apply_target_result), and a target whose result is -1 (death) gets a
  * relocation tile (battle_unit_find_relocation_tile). In the action phase an ability (not an
  * elemental gun) shown without a reaction plays its ability animation, and a plain attack or an
- * elemental gun the weapon strike. In the other phases (First Strike, reactions) a knockback strike
+ * elemental gun the weapon strike. In the other phases (Hamedo, reactions) a knockback strike
  * moves its targets to the knockback tile, and otherwise the same choice applies to the first strike,
  * except after Reflect. */
 void battle_action_apply_strike_results(void) {
@@ -19,14 +19,14 @@ void battle_action_apply_strike_results(void) {
     battle_strike_work_t* action;
     s32 i;
 
-    g_battle_state_vsync_interval = 1;
+    g_main_system_vsync_interval = 1;
     g_battle_game_state = BATTLE_GAME_STATE_START_ACTION_EXECUTE;
     unit = battle_unit_get_casting_misc_data();
     unit->state_frame_counter = 0;
     if (unit->continue_attack_count == 0) {
         battle_unit_face_towards_action_target(unit, 0);
     }
-    action = (battle_strike_work_t*)&unit->action_18c;
+    action = (battle_strike_work_t*)&unit->actor_id;
     if (action->target_count != 0) {
         for (i = 0; i < action->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);
@@ -39,7 +39,7 @@ void battle_action_apply_strike_results(void) {
         }
     }
 
-    if (g_battle_action_phase == 1) {
+    if (g_battle_action_phase == BATTLE_ACTION_PHASE_ACTING_UNIT) {
         if (unit->used_ability_id != 0 && !IS_ELEMENTAL_GUN(unit->used_item_or_weapon_id)
             && action->reaction_occurred == 0) {
             battle_unit_select_attack_animation_for_ability(

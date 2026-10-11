@@ -1,5 +1,7 @@
 #include "fft/main.h"
 
+/* Return the highest level in the roster, capped at 99, and store it in
+ * g_main_party_highest_level. */
 u8 main_party_calculate_highest_level(void) {
     u8 highest;
     s32 i;
@@ -19,6 +21,6 @@ u8 main_party_calculate_highest_level(void) {
     if (highest >= 100) {
         highest = 99;
     }
-    g_highest_party_level = (u8)highest;
-    return (u8)highest;
+    g_main_party_highest_level = highest;
+    return highest;
 }

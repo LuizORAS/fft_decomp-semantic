@@ -10,7 +10,7 @@ void battle_script_mirrorsprite_event_instruction(u8* parameters) {
 
     unit_id = battle_script_load_halfword(parameters);
     mirror = parameters[2];
-    misc_id = battle_get_misc_id(unit_id);
+    misc_id = battle_script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
         if (mirror == 1) {
             battle_unit_set_horizontal_flip_flag(misc_id);

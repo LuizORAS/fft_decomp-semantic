@@ -2,8 +2,9 @@
 #include "psx/pad.h"
 
 /* WAIT_DIRECTION: under player control the d-pad turns the unit (and its mount) with a sound,
- * Circle ends the turn and checks the between-turn events, and Cross goes back to
- * AFTER_COMMAND; an AI unit turns to its facing hint and ends its turn after 31 frames. */
+ * Circle ends the turn and checks the between-turn events, and Cross goes back to AFTER_COMMAND;
+ * an AI unit turns to its facing hint (0-3, in quarter turns) and ends its turn after 31 frames.
+ * Ending the turn (battle_turn_end) also re-registers the unit's tile with its mount partner. */
 void battle_state_handle_wait_direction_state(void) {
     s32 facing;
     s32 facing_hint;
@@ -20,26 +21,26 @@ void battle_state_handle_wait_direction_state(void) {
         battle_gfx_draw_wait_direction_unit();
     }
     battle_gfx_update_status_bubbles_and_graphics();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         battle_camera_handle_rotation_input();
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
-        if ((g_controller_input_pressed & PSX_PAD_CIRCLE) != 0) {
+        if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             if (unit->battle_data != 0) {
                 battle_turn_end(unit->battle_data->misc_unit_id);
-                battle_unit_update_mount_animation_display(unit);
+                battle_unit_set_tile_position_with_mount_partner(unit);
             }
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
             battle_turn_advance();
-        } else if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
+        } else if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             battle_state_enter_after_command();
         }
         /* The target passes only the mode; the definition's second parameter is a matching device. */
-        facing = ((s32 (*)(s32))battle_camera_get_input_direction)(1);
-        if (facing != -1 && facing != g_current_facing_direction) {
+        facing = battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_PRESSED);
+        if (facing != -1 && facing != g_battle_state_wait_direction_facing) {
             main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
-            g_current_facing_direction = facing;
+            g_battle_state_wait_direction_facing = facing;
         }
         battle_unit_decide_facing_direction(unit, facing);
         if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
@@ -63,7 +64,7 @@ void battle_state_handle_wait_direction_state(void) {
         if (frame_data >= 0x1f) {
             if (unit->battle_data != 0) {
                 battle_turn_end(unit->battle_data->misc_unit_id);
-                battle_unit_update_mount_animation_display(unit);
+                battle_unit_set_tile_position_with_mount_partner(unit);
             }
             battle_turn_advance();
         }

@@ -12,11 +12,11 @@ void battle_menu_build_skillset_entries(void) {
     u8 separator;
 
     count = 0;
-    g_battle_menu_selected_skill_target = 0;
+    g_battle_menu_selected_skill_ct = 0;
     g_battle_action_menu_skillsets[0] = 0;
     g_battle_menu_action_menu_build_result = battle_menu_build_unit_action_menus(g_battle_active_turn_unit.battle_id,
         g_battle_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_battle_action_menu_row_types);
-    rows = (world_menu_text_row_t*)battle_text_init_entry(0x5010);
+    rows = (world_menu_text_row_t*)battle_text_find_entry(0x5010);
     if (battle_unit_get_action_block(battle_unit_get_attacker_data_pointer()) == BATTLE_UNIT_ACTION_BLOCK_SUBMERGED) {
         for (i = 0; i < 6; i++) {
             g_battle_menu_skillset_disabled_flags[i] = 1;
@@ -35,7 +35,7 @@ void battle_menu_build_skillset_entries(void) {
     } while (i >= 0);
     for (i = 0; i < 6; i++) {
         rows[i].terminator = 0xfa;
-        if (g_battle_action_menu_skillsets[i] == 0xff) {
+        if (g_battle_action_menu_skillsets[i] == SKILLSET_ID_NONE) {
             break;
         }
         if (g_battle_menu_skillset_disabled_flags[i] != 0) {
@@ -46,9 +46,10 @@ void battle_menu_build_skillset_entries(void) {
             g_battle_menu_row_message_ids[i] = 3;
         }
         if (g_battle_menu_action_menu_build_result != 0) {
-            g_battle_text_substitution_values[count] = 0xb000;
+            g_battle_text_substitution_values[count] = TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
         } else {
-            g_battle_text_substitution_values[count] = g_battle_action_menu_skillsets[i] + 0xb000;
+            g_battle_text_substitution_values[count]
+                = g_battle_action_menu_skillsets[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
         }
         count++;
     }
@@ -56,13 +57,14 @@ void battle_menu_build_skillset_entries(void) {
         rows[i].style = 0;
         g_battle_menu_row_message_ids[i] = 0x16;
         g_battle_action_menu_skillsets[i] = ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
-        g_battle_action_menu_skillsets[i + 1] = 0xff;
-        g_battle_text_substitution_values[count++] = 0xb000 + ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
+        g_battle_action_menu_skillsets[i + 1] = SKILLSET_ID_NONE;
+        g_battle_text_substitution_values[count++]
+            = TEXT_ID_SKILLSET_NAME_SOURCE_BASE + ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
     }
     height = count * 16 + 16;
     rows[count - 1].terminator = 0xff;
-    g_battle_menu_thread_menu_data[4].max_row_index = count - 1;
-    g_battle_menu_thread_menu_data[4].overall_height = height;
-    g_battle_menu_thread_menu_data[4].window_height = height;
-    g_battle_menu_thread_menu_data[4].inner_height = height;
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].max_row_index = count - 1;
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].text_image.height = height;
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].window_height = height;
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].inner_height = height;
 }

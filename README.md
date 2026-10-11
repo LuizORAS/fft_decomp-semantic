@@ -7,7 +7,7 @@
 A fork of [adamrt/fft_decomp](https://github.com/adamrt/fft_decomp) that makes
 the source readable, modifiable and portable without reverse-engineering it
 again. The rule is the same as upstream: every commit still builds the
-original disc byte for byte, checked with `make validate`. `master` mirrors
+original disc byte for byte, checked with `make check`. `master` mirrors
 upstream.
 
 - **Build 1** (tag `build-1`, branch `semantic-cleanup`): names for what was
@@ -32,7 +32,7 @@ The game is 100% completely decompiled, but there are plenty of semantic changes
 and cleanup to be done. Variable and function names, correcting types, improving
 enum usage/naming, etc.
 
-Each time a change is made `make validate` will ensure the changes still match
+Each time a change is made `make check` will ensure the changes still match
 byte-for-byte.
 
 ## Getting started
@@ -48,7 +48,7 @@ Then run:
 make bootstrap
 
 # Then use one of the following (make help for more):
-make validate  # verify all code against checksums (without BIN)
+make check     # verify all code against checksums (without BIN)
 make build     # build every module and a byte-matching disc (needs the BIN)
 ```
 
@@ -57,7 +57,7 @@ make build     # build every module and a byte-matching disc (needs the BIN)
 ## Thanks
 
 This project is an ode to the [FFHacktics](https://ffhacktics.com/wiki/)
-community. This project would not be possible without it. ❤️
+community. ❤️
 
 And thanks to Adam ([@adamrt](https://github.com/adamrt)) for the decompilation
 this fork builds on, and for the go-ahead to fork it. 🙏⚔️✨

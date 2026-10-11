@@ -9,7 +9,7 @@ s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source) {
     battle_stats_t* unit;
     s32 idx;
 
-    main_util_copy_action_data((const u8*)source, action);
+    main_util_copy_action_data(source, action);
     unit = &g_battle_unit_stats[action[0]];
     idx = unit->position.bits.y * g_battle_map_max_x + unit->x;
     battle_target_clear_panel_data();
@@ -21,8 +21,6 @@ s32 battle_target_set_weapon_attack_panels(battle_ai_command_action_t* source) {
         p2 = &g_battle_target_panels[idx + 0x100];
         p1->remaining_range = 0;
         p2->remaining_range = 0;
-        /* The target passes p1 to the argument-less callee and returns its
-         * count of targetable panels. */
-        return ((s32 (*)(battle_target_panel_t*))battle_target_set_ability_range_flags)(p1);
+        return battle_target_set_ability_range_flags();
     }
 }

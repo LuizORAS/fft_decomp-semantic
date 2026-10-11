@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Reset the formation screen to its initial state: every submenu's
+ * "initialized" latch, the panel thread styles, the selected unit and the
+ * banner and browse settings, then the menu display and the unit list. */
 void world_formation_init_menu_state(void) {
     g_world_formation_main_menu_initialized = 0;
     g_world_item_menu_initialized = 0;
@@ -36,14 +39,14 @@ void world_formation_init_menu_state(void) {
     g_world_numeric_editor_thread_params.style = 0;
     g_world_preview_stats_thread_params.style = 0;
     g_world_preview_stats_thread_params.y = 2;
-    g_world_formation_triangle_menu.cursor = 0;
-    g_world_formation_current_menu = 0;
+    g_world_formation_triangle_menu.selected_index = 0;
+    g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
     g_world_formation_selected_unit_index = 0;
     g_world_formation_selected_unit_index_latch = 0;
     g_world_formation_unit_cycle_mode = 1;
     g_world_formation_unit_banner_enabled = 1;
-    g_world_formation_scroll_enabled_latch = 1;
-    g_world_formation_scroll_enabled = 1;
+    g_world_formation_unit_banner_at_bottom_latch = 1;
+    g_world_formation_unit_banner_at_bottom = 1;
     g_world_formation_unit_browse_enabled = 0;
     g_world_formation_cursor_ot_override = 0;
     g_world_formation_triangle_menu_open = 0;

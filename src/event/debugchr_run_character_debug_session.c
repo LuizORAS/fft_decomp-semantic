@@ -21,18 +21,6 @@
 /* Non-volatile view of debugchr.h's volatile array: volatile accesses change this function. */
 #define EDITOR_UNIT_IDS ((u8*)g_debugchr_editor_unit_ids)
 
-typedef struct {
-    s32 _unused_00; /* 0x00 */
-    s32 _unused_04; /* 0x04 */
-    s32 _unused_08; /* 0x08 */
-    s32 redraw;     /* 0x0C */
-    s32 counter;    /* 0x10 */
-} debug_thread_t;   /* 0x14 */
-
-extern debug_thread_t g_debugchr_status_display_thread_params;
-extern debug_thread_t g_debugchr_numeric_editor_thread_params;
-extern debug_thread_t g_debugchr_character_status_frame_config;
-
 void battle_thread_start(s32 thread_id, void (*function)(void));
 
 /* `index + base`, not `base + index`: GCC canonicalises a PLUS of two
@@ -96,7 +84,7 @@ void debugchr_run_character_debug_session(void) {
     g_debugchr_editor_active = 1;
     g_debugchr_panel_status_group_count = 2;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        battle_find_unit_data_pointer_for_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &battle_id);
+        battle_unit_find_stats_by_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &battle_id);
         if ((battle_id >= 0) && (i == battle_id)) {
             EDITOR_UNIT_IDS[i] = 1;
         } else {
@@ -105,9 +93,9 @@ void debugchr_run_character_debug_session(void) {
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         if (EDITOR_UNIT_IDS[i] != 0) {
-            g_debugchr_panel_selected_unit_data[5] = i;
-            g_debugchr_panel_selected_unit_data[0] = i;
-            g_debugchr_panel_selected_billboard.unit = i;
+            g_debugchr_panel_selected_unit_data.battle_id = i;
+            g_debugchr_panel_selected_unit_data.name_id = i;
+            g_debugchr_panel_selected_billboard.unit_index = i;
             debugchr_editor_load_selected_unit();
             g_debugchr_editor_selected_unit_slot = i;
             break;
@@ -115,25 +103,25 @@ void debugchr_run_character_debug_session(void) {
     }
     debugchr_editor_load_selected_unit();
     g_debugchr_editor_selected_unit_slot = 0;
-    if (g_debugchr_editor_display_mode != 0) {
+    if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
         battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
+        g_debugchr_editor_fields[15].destination[0] = 0xE;
     } else {
         battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
+        g_debugchr_editor_fields[15].destination[0] = 0xE;
     }
-    g_debugchr_editor_fields[15].destination[0] = 0xE;
-    /* Same ordering constraint as debugchr_editor_run_unit_thread: without
-     * the barrier GCC sinks this byte store past the thread-record address
-     * setup. */
-    __asm__ volatile("" : : : "memory");
-    g_debugchr_status_display_thread_params.counter = 0;
-    g_debugchr_numeric_editor_thread_params.counter = 0;
-    g_debugchr_character_status_frame_config.counter = 0;
-    battle_thread_start(8, debugchr_render_unit_status_panel_thread);
-    battle_thread_set_parameters(8, (s32)&g_debugchr_status_display_thread_params, 0, 0);
-    battle_thread_start(0xC, debugchr_editor_run_numeric_thread);
-    battle_thread_set_parameters(0xC, (s32)&g_debugchr_numeric_editor_thread_params, 0, 0);
-    battle_thread_start(9, debugchr_panel_run_character_status_thread);
-    battle_thread_set_parameters(9, (s32)&g_debugchr_character_status_frame_config, 0, 0);
+    g_debugchr_status_display_thread_params.style = 0;
+    g_debugchr_numeric_editor_thread_params.style = 0;
+    g_debugchr_character_status_frame_config.style = 0;
+    battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, debugchr_render_unit_status_panel_thread);
+    battle_thread_set_parameters(
+        NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_debugchr_status_display_thread_params, 0, 0);
+    battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
+    battle_thread_set_parameters(
+        NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_debugchr_numeric_editor_thread_params, 0, 0);
+    battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
+    battle_thread_set_parameters(
+        NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)&g_debugchr_character_status_frame_config, 0, 0);
     row = 0;
     /* The unit menu and the field editor re-enter each other by label: an
        enclosing loop's notes reweight the allocation of the whole body. */
@@ -146,15 +134,15 @@ loop_outer:
      * it is not a movable at all, so loop.c still hoists exactly mark and the
      * constant 1, and this address is emitted into the preheader ahead of
      * them -- the target's emission order. */
-    menu_state = &g_debugchr_panel_selected_unit_data[5];
+    menu_state = &g_debugchr_panel_selected_unit_data.battle_id;
     for (;;) {
         mark = 0xE;
         /* Tied launder: it invalidates cse's constant equivalence for
-         * `mark`, which puts `mark` in $s1 and the hoisted `&g_debugchr_panel_selected_unit_data[5]`
+         * `mark`, which puts `mark` in $s1 and the hoisted `&g_debugchr_panel_selected_unit_data.battle_id`
          * in $s3, as the target has them. */
         __asm__("" : "=r"(mark) : "0"(mark));
         battle_thread_yield();
-        debugchr_gfx_build_status_group_primitives((POLY_FT4*)g_debugchr_gfx_render_buffers[i & 1]);
+        debugchr_gfx_build_status_group_primitives(g_debugchr_gfx_render_buffers[i & 1]);
         input = battle_script_get_controller_input_pointer(0);
         g_debugchr_input_controller = input;
         buttons = *input;
@@ -162,9 +150,9 @@ loop_outer:
             goto editor;
         }
         if (buttons & PSX_PAD_CROSS) {
-            battle_thread_set_parameters(8, 0, 0, 1);
-            battle_thread_set_parameters(0xC, 0, 0, 1);
-            battle_thread_set_parameters(9, 0, 0, 1);
+            battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+            battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+            battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
             return;
         }
         if (buttons & PSX_PAD_R1) {
@@ -181,17 +169,17 @@ loop_outer:
             unit_index = g_debugchr_editor_selected_unit_slot;
             menu_state[0] = unit_index;
             menu_state[-5] = unit_index;
-            g_debugchr_panel_selected_billboard.unit = unit_index;
+            g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
-            if (g_debugchr_editor_display_mode != 0) {
+            if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
             }
             g_debugchr_editor_fields[15].destination[0] = mark;
-            g_debugchr_status_display_thread_params.redraw = 1;
-            g_debugchr_numeric_editor_thread_params.redraw = 1;
-            g_debugchr_character_status_frame_config.redraw = 1;
+            g_debugchr_status_display_thread_params.redraw_request = 1;
+            g_debugchr_numeric_editor_thread_params.redraw_request = 1;
+            g_debugchr_character_status_frame_config.redraw_request = 1;
         }
         if (*g_debugchr_input_controller & PSX_PAD_L1) {
             g_debugchr_panel_status_animation[0] = 7;
@@ -206,9 +194,9 @@ loop_outer:
             unit_index = g_debugchr_editor_selected_unit_slot;
             menu_state[0] = unit_index;
             menu_state[-5] = unit_index;
-            g_debugchr_panel_selected_billboard.unit = unit_index;
+            g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
-            if (g_debugchr_editor_display_mode != 0) {
+            if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
                 battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
@@ -216,9 +204,9 @@ loop_outer:
             g_debugchr_editor_fields[15].destination[0] = mark;
             /* Keeps the `li v0,2` for the redraw store below the byte store. */
             __asm__ volatile("");
-            g_debugchr_status_display_thread_params.redraw = 2;
-            g_debugchr_numeric_editor_thread_params.redraw = 1;
-            g_debugchr_character_status_frame_config.redraw = 1;
+            g_debugchr_status_display_thread_params.redraw_request = 2;
+            g_debugchr_numeric_editor_thread_params.redraw_request = 1;
+            g_debugchr_character_status_frame_config.redraw_request = 1;
         }
         i++;
     }
@@ -259,14 +247,14 @@ editor:
                 g_debugchr_editor_field_edit_active = 1;
             }
         }
-        if ((g_debugchr_editor_field_edit_active != 0) && ((u32)(row - 9) < 5U)
+        if ((g_debugchr_editor_field_edit_active != 0) && ((row - 9) < 5U)
             && (*g_debugchr_input_controller & PSX_PAD_TRIANGLE)) {
             *g_debugchr_editor_current_field->value = 0;
             debugchr_editor_apply_values_to_battle_unit(g_debugchr_editor_selected_unit_slot);
             debugchr_editor_load_selected_unit();
-            g_debugchr_status_display_thread_params.redraw = 1;
-            g_debugchr_numeric_editor_thread_params.redraw = 1;
-            g_debugchr_character_status_frame_config.redraw = 1;
+            g_debugchr_status_display_thread_params.redraw_request = 1;
+            g_debugchr_numeric_editor_thread_params.redraw_request = 1;
+            g_debugchr_character_status_frame_config.redraw_request = 1;
         }
         navkeys = *g_debugchr_input_controller;
         if (navkeys & PSX_PAD_DPAD_MASK) {
@@ -309,7 +297,7 @@ editor:
                         up_clamp = &g_debugchr_editor_template[row].hi;
                         *value = *up_clamp - 1;
                     }
-                    if (PadRead(1) & 4) {
+                    if (PadRead(1) & PSX_PAD_L1) {
                         steps = 0xA;
                     } else {
                         steps = 1;
@@ -317,7 +305,7 @@ editor:
                     for (i = 0; i < steps; i++) {
                         hi_limit = &g_debugchr_editor_template[row].hi;
                         span = row - 9;
-                        clearable = (u32)span < 5U;
+                        clearable = span < 5U;
                         /* The target hoists this clear-to-zero range test into
                          * the preheader and never reads the result; the empty
                          * "r" operand keeps the use alive without emitting an
@@ -350,7 +338,7 @@ editor:
                     clamp_lo:
                         *down_value = *dn_lo + 1;
                     }
-                    if (PadRead(1) & 4) {
+                    if (PadRead(1) & PSX_PAD_L1) {
                         steps = 0xA;
                     } else {
                         steps = 1;
@@ -358,7 +346,7 @@ editor:
                     for (i = 0; i < steps; i++) {
                         lo_limit = &g_debugchr_editor_template[row].lo;
                         span = row - 9;
-                        clearable = (u32)span < 5U;
+                        clearable = span < 5U;
                         /* The target hoists this clear-to-zero range test into
                          * the preheader and never reads the result; the empty
                          * "r" operand keeps the use alive without emitting an
@@ -380,9 +368,9 @@ editor:
                         }
                     }
                 }
-                g_debugchr_status_display_thread_params.redraw = 1;
-                g_debugchr_numeric_editor_thread_params.redraw = 1;
-                g_debugchr_character_status_frame_config.redraw = 1;
+                g_debugchr_status_display_thread_params.redraw_request = 1;
+                g_debugchr_numeric_editor_thread_params.redraw_request = 1;
+                g_debugchr_character_status_frame_config.redraw_request = 1;
             }
         }
         buffer = i & 1;

@@ -8,40 +8,40 @@
  */
 void world_shop_run_sell_menu_subflow_step(void) {
     if (g_world_shop_sell_subflow_initialized == 0) {
-        if (world_thread_is_running(2) != 0) {
+        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
-        world_thread_start(2, world_text_message_box_thread);
+        world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         g_world_formation_unit_browse_enabled = 0;
         g_world_formation_unit_banner_enabled = 0;
         world_formation_stop_menu_threads();
         g_world_formation_unit_cycle_mode = 0;
-        g_world_shop_sell_subflow_step = 4;
-        world_gfx_clear_sprite_slot(5);
-        world_gfx_clear_sprite_slot(6);
-        world_gfx_clear_sprite_slot(7);
-        world_gfx_clear_sprite_slot(8);
-        world_gfx_clear_sprite_slot(9);
+        g_world_shop_sell_subflow_step = WORLD_SHOP_STEP_SELL_LIST;
+        world_menu_clear_selection_record(5);
+        world_menu_clear_selection_record(6);
+        world_menu_clear_selection_record(7);
+        world_menu_clear_selection_record(8);
+        world_menu_clear_selection_record(9);
         g_world_shop_sell_subflow_initialized = 1;
     }
     g_world_shop_menu_step = g_world_shop_sell_subflow_step;
-    if (g_world_shop_sell_subflow_step == 4) {
+    if (g_world_shop_sell_subflow_step == WORLD_SHOP_STEP_SELL_LIST) {
         world_shop_run_item_sell_list_step();
         if (g_world_shop_sell_subflow_step != g_world_shop_menu_step) {
             world_menu_reset_selection_results();
         }
-    } else if (g_world_shop_sell_subflow_step == 5) {
+    } else if (g_world_shop_sell_subflow_step == WORLD_SHOP_STEP_SELL_CONFIRM) {
         world_shop_run_item_sell_confirm_step();
     }
-    if (g_world_shop_menu_step == 0) {
-        g_world_shop_menu_step = 6;
+    if (g_world_shop_menu_step == WORLD_SHOP_STEP_MAIN_MENU) {
+        g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;
         g_world_formation_unit_cycle_mode = 2;
         g_world_shop_sell_subflow_initialized = 0;
         g_world_formation_unit_browse_enabled = 1;
         world_script_set_vsync_mode_and_event_speed(2);
-        world_thread_set_parameters(2, 0x19, -1, 0);
+        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         return;
     }
     g_world_shop_sell_subflow_step = g_world_shop_menu_step;
-    g_world_shop_menu_step = 11;
+    g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM_SELL;
 }

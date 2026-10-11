@@ -10,28 +10,28 @@
  * the transfer callback clears them. The empty case 5 is part of the
  * target's five-entry jump table. */
 void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mode) {
-    main_sound_wait_for_spu_transfer(0x10);
-    g_main_sound_driver_flags |= 0x10;
+    main_sound_wait_for_spu_transfer(MAIN_SOUND_SPU_TRANSFER_WAIT);
+    g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_TRANSFER;
     SpuSetTransferMode(0);
     SpuSetTransferStartAddr(spu_address);
     switch (mode & 0xf) {
-    case 1:
-        g_main_sound_driver_flags |= 0x30;
+    case MAIN_SOUND_SPU_TRANSFER_WRITE:
+        g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_WRITE | MAIN_SOUND_DRIVER_SPU_TRANSFER;
         SpuWrite(data, size);
         break;
-    case 2:
-        g_main_sound_driver_flags |= 0x50;
+    case MAIN_SOUND_SPU_TRANSFER_READ:
+        g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_READ | MAIN_SOUND_DRIVER_SPU_TRANSFER;
         SpuRead(data, size);
         break;
-    case 3:
-        g_main_sound_driver_flags |= 0x50;
+    case MAIN_SOUND_SPU_TRANSFER_READ_DECODED:
+        g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_READ | MAIN_SOUND_DRIVER_SPU_TRANSFER;
         g_main_sound_decoded_data_result = SpuReadDecodedData(data, 0);
         break;
-    case 4:
-        g_main_sound_driver_flags |= 0x50;
+    case MAIN_SOUND_SPU_TRANSFER_READ_DECODED_CD:
+        g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_READ | MAIN_SOUND_DRIVER_SPU_TRANSFER;
         g_main_sound_decoded_data_result = SpuReadDecodedData(data, 5);
         break;
-    case 5:
+    case MAIN_SOUND_SPU_TRANSFER_NONE:
         break;
     }
 }

@@ -5,7 +5,7 @@
  * above X misses (battle_formula_set_accuracy_miss). Returns 1 on a miss; an estimate always hits. */
 s32 battle_formula_calculate_dance_song_hit(void) {
     battle_action_data_t* action = g_battle_action_target_data;
-    u8 hit_percent = g_current_ability.range_data.x;
+    u8 hit_percent = g_battle_action_current_ability.range_data.x;
     s32 action_state = g_battle_action_state;
 
     action->attack_accuracy = action->attack_accuracy * hit_percent / 100;

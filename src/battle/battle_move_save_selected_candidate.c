@@ -4,7 +4,6 @@
  *
  * Every attempt clears budget_matches; accepted candidates replace the saved
  * coordinates, selectors and predecessor budget, then set candidate_saved.
- * The Fly acceptance label preserves the target's branch layout.
  */
 void battle_move_save_selected_candidate(s32 direction, s32 candidate, s32 extra_span) {
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
@@ -17,16 +16,14 @@ void battle_move_save_selected_candidate(s32 direction, s32 candidate, s32 extra
         state->work_height = state->effective_destination_panel->max_height_delta;
         if (g_battle_move_config_ptr->move_type == BATTLE_MOVEMENT_CLASS_FLY) {
             if (state->best_fly_height_delta != 0xff) {
-                if (state->selected_source_side_shift == state->previous_source_side_shift) {
-                    if (state->source_side_shift != state->previous_source_side_shift)
-                        return;
-                } else if (state->source_side_shift == state->previous_source_side_shift) {
-                    goto accept_height;
-                }
-                if (state->best_fly_height_delta <= state->height_delta)
+                if (state->selected_source_side_shift == state->previous_source_side_shift
+                    && state->source_side_shift != state->previous_source_side_shift)
+                    return;
+                if ((state->selected_source_side_shift == state->previous_source_side_shift
+                        || state->source_side_shift != state->previous_source_side_shift)
+                    && state->best_fly_height_delta <= state->height_delta)
                     return;
             }
-        accept_height:
             height_delta = state->height_delta;
             state->height_delta = 0;
             state->best_fly_height_delta = height_delta;

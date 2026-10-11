@@ -44,6 +44,6 @@ void battle_map_transition_ambient_light_color(s32 frame_duration, const map_col
         current.red = channels->red / 0x10000;
         current.green = channels->green / 0x10000;
         current.blue = channels->blue / 0x10000;
-        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_AMBIENT_COLOR, (u8*)&current);
+        battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_AMBIENT_COLOR, &current);
     }
 }

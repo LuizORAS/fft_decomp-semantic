@@ -27,7 +27,8 @@ s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* o
     if (unit == 0) {
         return 0;
     }
-    if (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
         frog = 1;
     }
     if (g_main_action_menu_types_by_skillset[skillset] != ACTION_MENU_TYPE_MONSTER) {
@@ -45,8 +46,7 @@ s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* o
     for (i = 0; i < count; i++) {
         id = main_ability_get_id_from_skillset(skillset, i);
         ability = id;
-        if ((frog == 0 || id == ABILITY_ID_BLACK_MAGIC_FROG) && id != 0
-            && (u16)(id - 1) < (ABILITY_ID_ITEM_FIRST - 1)) {
+        if ((frog == 0 || id == ABILITY_ID_BLACK_MAGIC_FROG) && id != 0 && id >= 1 && id < ABILITY_ID_ITEM_FIRST) {
             flags = g_main_ability_range_data[id].flags_3;
             *flags_out++ = (flags >> 7) | ((flags & ABILITY_SECONDARY_FLAG_3_AFFECTED_BY_SILENCE) >> 4);
             *out = ability;

@@ -23,30 +23,30 @@ void wldcore_proposition_roll_bonus_reward(void) {
     u16 discovery_kind;
     s32 bonus;
 
-    bonus_table = (u16*)wldcore_proposition_get_data_pointer(8);
-    value_table = (u16*)wldcore_proposition_get_data_pointer(9);
-    location_pairs = (u8*)wldcore_proposition_get_data_pointer(10);
-    random_pairs = (u8*)wldcore_proposition_get_data_pointer(11);
-    g_wldcore_job_selection.reward_type = 0;
+    bonus_table = (u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JP_AMOUNTS);
+    value_table = (u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS);
+    location_pairs = (u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_DISCOVERY_REWARDS);
+    random_pairs = (u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_RANDOM_REWARDS);
+    g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_NONE;
     g_wldcore_job_selection.reward_value = 0;
-    if (g_wldcore_job_selection.result != 0) {
+    if (g_wldcore_job_selection.result != WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         return;
     }
     discovery_kind = g_wldcore_selected_proposition_row[0].fields.discovery_kind;
-    if (discovery_kind == 1) {
-        g_wldcore_job_selection.reward_type = 1;
+    if (discovery_kind == WLDCORE_PROPOSITION_REWARD_TREASURE) {
+        g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_TREASURE;
         count = 0;
         for (i = 0; i < 31; i++) {
-            if (world_script_get_variable(i + 0x321) == 0) {
+            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) == 0) {
                 candidates[count] = i;
                 count++;
             }
         }
-    } else if (discovery_kind == 2) {
+    } else if (discovery_kind == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
         count = 0;
         g_wldcore_job_selection.reward_type = discovery_kind;
         for (i = 0; i < 16; i++) {
-            if (world_script_get_variable(i + 0x350) == 0) {
+            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) == 0) {
                 candidates[count] = i;
                 count++;
             }
@@ -57,7 +57,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
     if (count != 0) {
         index = (rand() * count) >> 15;
         g_wldcore_job_selection.reward_index = candidates[index];
-    } else if (g_wldcore_job_selection.reward_type == 1) {
+    } else if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
         g_wldcore_job_selection.reward_index = (rand() * 31) >> 15;
     } else {
         g_wldcore_job_selection.reward_index = (rand() * 16) >> 15;
@@ -75,7 +75,7 @@ random_reward:
     if (g_wldcore_selected_proposition_row[0].fields.random_bonus != 1) {
         return;
     }
-    g_wldcore_job_selection.reward_type = 3;
+    g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS;
     index = (rand() * 100) >> 15;
     if (index < 40) {
         if (index < 10) {

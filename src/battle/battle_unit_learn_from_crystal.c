@@ -17,17 +17,17 @@ s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
     battle_action_clear_current_data(&unit->action);
     unit->action.miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
     unit->action.hit = 0;
-    if (flags & 4) {
+    if (flags & BATTLE_CRYSTAL_TAKE_TREASURE) {
         return battle_action_add_party_item(unit, g_main_crystal_pickup_result.treasure_item);
     }
-    if (flags & 2) {
+    if (flags & BATTLE_CRYSTAL_RESTORE_HP_MP) {
         unit->action.hit = 1;
         unit->action.attack_type = BATTLE_ACTION_TYPE_HP_HEALING | BATTLE_ACTION_TYPE_MP_HEALING;
         unit->action.miss_type = BATTLE_ACTION_MISS_TYPE_HIT;
         unit->action.hp_healing = unit->max_hp - unit->hp;
         unit->action.mp_healing = unit->max_mp - unit->mp;
     }
-    if (flags & 1) {
+    if (flags & BATTLE_CRYSTAL_LEARN_ABILITIES) {
         /* OR the crystal's ability bits into learned_abilities, three bytes
          * per job for 19 jobs; walked as raw bytes to keep the biased pointers. */
         i = 0;

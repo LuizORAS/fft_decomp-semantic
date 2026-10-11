@@ -1,5 +1,20 @@
 #include "fft/battle.h"
 
+/* Apply one command record that follows the resource rows of a map's GNS file and
+ * step g_battle_map_gns_record_cursor past it.
+ *
+ * The indoor, outdoor, snow, 0x8a and weather-modifier commands always run. Any
+ * other command runs only when the requested map state compares with the record's
+ * map state as its comparison asks. The requested state is the low 12 bits of the
+ * script variable the record names (the layout) packed with the script's weather
+ * and time of day. Only the low byte of the record's variable id and of its map
+ * state is read.
+ *
+ * Rows are applied in file order, so the last row of a kind wins; type 0x87 has
+ * no dispatcher case.
+ *
+ * Only phase 2 does anything, and it is the only phase the map loader passes.
+ * Always returns 0. */
 s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record) {
     char unused_zeroes[8] = { 0 };
     s32 unused_sizes[4] = { 0x1000, 0x1000, 0x1000, 0 };
@@ -33,11 +48,9 @@ s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record
             requested_layout = battle_script_get_variable(((u8*)selected)[0]) & 0xfff;
             requested_layout_and_weather
                 = requested_layout | ((battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12);
-            if ((battle_map_is_gns_record_matching_state(selected->map_state_comparison, ((u8*)selected)[2],
-                     requested_layout_and_weather
-                         | ((battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15))
-                    << 16)
-                != 0) {
+            if (battle_map_is_gns_record_matching_state(selected->map_state_comparison, ((u8*)selected)[2],
+                    requested_layout_and_weather
+                        | ((battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15))) {
                 battle_map_dispatch_gns_resource(selected->resource_type, (u8*)selected);
             }
         }

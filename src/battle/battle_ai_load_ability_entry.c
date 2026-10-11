@@ -1,13 +1,5 @@
 #include "fft/battle.h"
 
-typedef struct battle_ai_loader_charge_record {
-    u8 ct;
-    u8 _unused_01;
-} battle_ai_loader_charge_record_t;
-typedef char battle_ai_loader_charge_record_must_be_2[sizeof(battle_ai_loader_charge_record_t) == 2 ? 1 : -1];
-
-extern battle_ai_loader_charge_record_t g_main_charge_ability_data[8];
-
 /* Load an AI ability-list entry into the considered ability (g_battle_ai_data_base.considered_ability):
  * skillset, id and owner (entry bits 10-15), CT, range, area, element, MP cost, statuses and AI flags.
  * Attack and Charge take the owner's weapon summary (Charge adds its CT); Jump does too, with its range,
@@ -25,18 +17,18 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     ability_secondary_data_t* secondary;
     s32 value;
 
-    battle_ai_clear_words((s32*)&ai->considered_ability, sizeof(battle_ai_considered_ability_t));
-    battle_ai_clear_words((s32*)&ai->current_action.calculator_type, 4);
+    battle_ai_clear_words(&ai->considered_ability, sizeof(battle_ai_considered_ability_t));
+    battle_ai_clear_words(&ai->current_action.calculator_type, 4);
     ai->considered_ability.skillset = entry->skillset_flags.bytes.skillset;
     ability_id = g_battle_ai_data_base.considered_ability.ability_id = entry->id.packed_id & 0x3ff;
-    unit_id = (s16)entry->id.packed_id >> 10;
+    unit_id = entry->id.packed_id >> 10;
     unit = &g_battle_unit_stats[unit_id];
     menu = g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset];
     status_id = 0;
     switch (menu) {
     case ACTION_MENU_TYPE_ATTACK:
     attack:
-        weapon = &ai->unit_weapon_data[ai->unit_battle_ids[unit_id]];
+        weapon = &ai->unit_weapon_data[ai->unit_compact_indices[unit_id]];
         ai->considered_ability.parameters.bytes.range = weapon->bytes.range;
         ai->considered_ability.element = weapon->bytes.element;
     weapon_flags:
@@ -49,7 +41,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
             ai->considered_ability.ai_flags.word
                 = (ai->considered_ability.ai_flags.word | BATTLE_AI_ABILITY_TARGET_ENEMIES)
                 & ~BATTLE_AI_ABILITY_TARGET_ALLIES;
-        break;
+        return;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         status_id = g_main_item_secondary_data[ability_id - ABILITY_ID_ITEM_FIRST].status_infliction_id;
         if (unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM)
@@ -59,30 +51,27 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.parameters.bytes.aoe = 0;
         ai->considered_ability.parameters.bytes.item_id
             = g_main_item_ability_item_ids[ability_id - ABILITY_ID_ITEM_FIRST];
-        goto common;
+        break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        ai->considered_ability.parameters.bytes.item_id = ability_id - ABILITY_ID_DRAW_OUT_ITEM_OFFSET;
-        goto common;
-    case ACTION_MENU_TYPE_WEAPON_INVENTORY: {
-        s32 thrown_ability_id;
-        if ((u32)(ability_id - ITEM_ID_SHURIKEN) < 3)
-            thrown_ability_id = ABILITY_ID_THROW_SHURIKEN;
-        else if ((u32)(ability_id - ITEM_ID_FIRE_BALL) < 3)
-            thrown_ability_id = ABILITY_ID_THROW_BALL;
-        else
-            goto ordinary_throw;
-        ai->considered_ability.ability_id = thrown_ability_id;
-        ai->considered_ability.parameters.bytes.item_id = ability_id;
-        ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
-        goto throw_range;
-    ordinary_throw:
-        ai->considered_ability.ability_id = ai->throw_ability_id;
-        ai->considered_ability.parameters.bytes.item_id = ai->throw_weapon_id;
-    throw_range:
+        ai->considered_ability.parameters.bytes.item_id
+            = ability_id - (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
+        break;
+    case ACTION_MENU_TYPE_WEAPON_INVENTORY:
+        if (ability_id >= ITEM_ID_SHURIKEN && ability_id <= ITEM_ID_YAGYU_DARKNESS) {
+            ai->considered_ability.ability_id = ABILITY_ID_THROW_SHURIKEN;
+            ai->considered_ability.parameters.bytes.item_id = ability_id;
+            ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
+        } else if (ability_id >= ITEM_ID_FIRE_BALL && ability_id <= ITEM_ID_LIGHTNING_BALL) {
+            ai->considered_ability.ability_id = ABILITY_ID_THROW_BALL;
+            ai->considered_ability.parameters.bytes.item_id = ability_id;
+            ai->considered_ability.element = g_main_item_weapon_data[ability_id].element;
+        } else {
+            ai->considered_ability.ability_id = ai->throw_ability_id;
+            ai->considered_ability.parameters.bytes.item_id = ai->throw_weapon_id;
+        }
         ai->considered_ability.parameters.bytes.range = unit->move;
         ability_id = ai->considered_ability.ability_id;
-        goto common;
-    }
+        break;
     case ACTION_MENU_TYPE_JUMP:
         if (unit_id == ai->acting_unit_id)
             ai->considered_ability.ct
@@ -103,7 +92,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         else
             ai->considered_ability.parameters.bytes.range
                 = g_main_jump_ability_data[ability_id - ABILITY_ID_JUMP_FIRST].range;
-        weapon = &ai->unit_weapon_data[ai->unit_battle_ids[unit_id]];
+        weapon = &ai->unit_weapon_data[ai->unit_compact_indices[unit_id]];
         goto weapon_flags;
     case ACTION_MENU_TYPE_CHARGE:
         ai->considered_ability.ct = g_main_charge_ability_data[ability_id - ABILITY_ID_CHARGE_FIRST].ct;
@@ -126,43 +115,41 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
             | BATTLE_AI_ABILITY_UNEQUIP;
         ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
         ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_TARGET_MAP_TILES;
-        break;
+        return;
     }
-    default:
-    common:
-        battle_ai_transfer_halfword_values(
-            (u16*)&ai->considered_ability.ai_flags, g_main_ability_data[ability_id].ai_flags.halfwords, 4);
-        if ((u32)(menu - ACTION_MENU_TYPE_ITEM_INVENTORY) < 2)
-            ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_DIRECT_TRAJECTORY;
-        ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
-        if (ability_id < ABILITY_ID_ITEM_FIRST) {
-            s32 ct;
-            secondary = &g_main_ability_range_data[ability_id];
-            ct = secondary->ct;
-            status_id = secondary->status_infliction_id;
-            ai->considered_ability.ct = ct;
-            ai->considered_ability.element = secondary->element;
-            ai->considered_ability.mp_cost = secondary->mp_cost;
-            if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
-                ai->considered_ability.mp_cost >>= 1;
-            if (secondary->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) {
-                ai->considered_ability.parameters.bytes.range
-                    = ai->unit_weapon_data[ai->unit_battle_ids[unit_id]].bytes.range;
-                ai->considered_ability.parameters.bytes.aoe = 0;
-            } else {
-                ai->considered_ability.parameters.bytes.range = secondary->range;
-                ai->considered_ability.parameters.bytes.aoe = secondary->aoe;
-            }
-            if (secondary->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE)
-                goto copy_status;
+    }
+    battle_ai_transfer_halfword_values(
+        &ai->considered_ability.ai_flags, g_main_ability_data[ability_id].ai_flags.halfwords, 4);
+    if (menu == ACTION_MENU_TYPE_ITEM_INVENTORY || menu == ACTION_MENU_TYPE_WEAPON_INVENTORY)
+        ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_DIRECT_TRAJECTORY;
+    ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
+    if (ability_id < ABILITY_ID_ITEM_FIRST) {
+        s32 ct;
+        secondary = &g_main_ability_range_data[ability_id];
+        ct = secondary->ct;
+        status_id = secondary->status_infliction_id;
+        ai->considered_ability.ct = ct;
+        ai->considered_ability.element = secondary->element;
+        ai->considered_ability.mp_cost = secondary->mp_cost;
+        if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
+            ai->considered_ability.mp_cost >>= 1;
+        if (secondary->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) {
+            ai->considered_ability.parameters.bytes.range
+                = ai->unit_weapon_data[ai->unit_compact_indices[unit_id]].bytes.range;
+            ai->considered_ability.parameters.bytes.aoe = 0;
+        } else {
+            ai->considered_ability.parameters.bytes.range = secondary->range;
+            ai->considered_ability.parameters.bytes.aoe = secondary->aoe;
         }
-        /* Preserve the native support-byte masks, including their CT quirk. */
-        if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL)
-            ai->considered_ability.ct >>= 1;
-        else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_DEFEND)
-            ai->considered_ability.ct = 0;
-    copy_status:
-        battle_ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,
-            g_main_status_infliction_data[status_id].statuses, 5);
+        if (secondary->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE)
+            goto copy_status;
     }
+    /* Preserve the native support-byte masks, including their CT quirk. */
+    if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL)
+        ai->considered_ability.ct >>= 1;
+    else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_DEFEND)
+        ai->considered_ability.ct = 0;
+copy_status:
+    battle_ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,
+        g_main_status_infliction_data[status_id].statuses, 5);
 }

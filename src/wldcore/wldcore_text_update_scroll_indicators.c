@@ -6,38 +6,29 @@
  * hide the arrows that are not usable at the current scroll position.
  */
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state) {
-    wldcore_text_scrollable_window_t* state_a2 = state;
     s32 top;
     s32 bottom;
-    s32 product;
-    /* Pins: unpinned, page_start_row and the quotient take a3 and v1 instead of the target's shared a1. */
-    register s32 quotient __asm__("$5");
 
-    {
-        register s32 page_start_row __asm__("$5") = state_a2->page_start_row;
-
-        if (page_start_row == 0) {
-            g_wldcore_window_records[state_a2->middle_window_index].flags |= 0x10;
-            g_wldcore_window_records[state_a2->right_window_index].flags |= 0x10;
-            g_wldcore_window_records[state_a2->lower_window_index].flags |= 0x10;
-            return;
-        }
+    if (state->page_start_row == 0) {
+        g_wldcore_window_records[state->middle_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[state->right_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[state->lower_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        return;
     }
 
-    top = g_wldcore_window_records[state_a2->right_window_index].y;
-    bottom = g_wldcore_window_records[state_a2->middle_window_index].y;
-    product = (top - bottom - 0x12) * state_a2->scroll_row;
-    quotient = product / state_a2->page_start_row;
-    g_wldcore_window_records[state_a2->lower_window_index].y = bottom + quotient + 0x12;
-    g_wldcore_window_records[state_a2->lower_window_index].flags &= ~0x10;
-    if (state_a2->scroll_row != 0) {
-        g_wldcore_window_records[state_a2->middle_window_index].flags &= ~0x10;
+    top = g_wldcore_window_records[state->right_window_index].position.y;
+    bottom = g_wldcore_window_records[state->middle_window_index].position.y;
+    g_wldcore_window_records[state->lower_window_index].position.y
+        = bottom + (top - bottom - 0x12) * state->scroll_row / state->page_start_row + 0x12;
+    g_wldcore_window_records[state->lower_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    if (state->scroll_row != 0) {
+        g_wldcore_window_records[state->middle_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     } else {
-        g_wldcore_window_records[state_a2->middle_window_index].flags |= 0x10;
+        g_wldcore_window_records[state->middle_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
-    if (state_a2->scroll_row != state_a2->page_start_row) {
-        g_wldcore_window_records[state_a2->right_window_index].flags &= ~0x10;
+    if (state->scroll_row != state->page_start_row) {
+        g_wldcore_window_records[state->right_window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     } else {
-        g_wldcore_window_records[state_a2->right_window_index].flags |= 0x10;
+        g_wldcore_window_records[state->right_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
 }

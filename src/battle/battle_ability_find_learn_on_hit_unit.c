@@ -28,7 +28,7 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     s32 k;
     u8 skillset;
 
-    if (g_battle_reaction_first_strike_cancels != 0) {
+    if (g_battle_reaction_hamedo_cancels != 0) {
         return -1;
     }
     if (g_battle_acting_unit_used_ability_id == 0) {
@@ -45,8 +45,8 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     do {
         if (attacker_id != i) {
             unit = &g_battle_unit_stats[i];
-            if (unit->ability_outcome & 2) {
-                unit->ability_outcome = 4;
+            if (unit->ability_outcome & BATTLE_ABILITY_OUTCOME_AFFECTED) {
+                unit->ability_outcome = BATTLE_ABILITY_OUTCOME_LEARN_CHECKED;
                 if (!(unit->unit_flags & UNIT_FLAG_MONSTER)
                     && main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION) == 0) {
                     skillset = unit->primary_skillset;
@@ -60,8 +60,7 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
                      * with the row and demonstrably breaks the byte-exact
                      * address calculation. Preserve the target's word-row,
                      * unit-base, then field-offset order. */
-                    src = (u8*)((u32)(row * BATTLE_LEARN_ON_HIT_ROW_BYTES) + (u32)unit
-                        + BATTLE_LEARNED_ABILITIES_OFFSET);
+                    src = (u8*)((row * BATTLE_LEARN_ON_HIT_ROW_BYTES) + (u32)unit + BATTLE_LEARNED_ABILITIES_OFFSET);
                     for (k = 0; k < BATTLE_LEARN_ON_HIT_ROW_BYTES; k++) {
                         scratch[k] = src[k];
                     }

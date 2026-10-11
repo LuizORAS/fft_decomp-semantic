@@ -13,11 +13,11 @@ void battle_action_start_strike(void) {
     s32 ability;
     s32 target;
 
-    g_battle_state_vsync_interval = 1;
+    g_main_system_vsync_interval = 1;
     misc = battle_unit_get_casting_misc_data();
-    battle_action_resolve_ability_strike(misc->battle_data->misc_unit_id, (battle_strike_work_t*)&misc->action_18c);
+    battle_action_resolve_ability_strike(misc->battle_data->misc_unit_id, (battle_strike_work_t*)&misc->actor_id);
     raw = misc->last_attack_id;
-    target = misc->reaction_id_1a6;
+    target = misc->reaction_id;
     ability = raw & 0xffff;
     misc->used_ability_id = raw;
     battle_gfx_set_thrown_item_graphic_palette(misc->used_weapon_id, misc);

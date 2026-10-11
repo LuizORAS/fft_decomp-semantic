@@ -51,8 +51,8 @@ void world_unit_update_monster_breeding(s32 unused) {
                 }
             } else {
                 levels[unit_count++] = unit->level;
-                if ((u32)(world_job_get_skillset(unit->job_id) - SKILLSET_ID_MONSTER_FIRST)
-                    < SKILLSET_ID_END - SKILLSET_ID_MONSTER_FIRST) {
+                value = world_job_get_skillset(unit->job_id);
+                if (value >= SKILLSET_ID_MONSTER_FIRST && value < SKILLSET_ID_END) {
                     monsters[monster_count++] = i;
                 }
             }
@@ -81,9 +81,9 @@ void world_unit_update_monster_breeding(s32 unused) {
     if (i < 2) {
         i = 2;
     }
-    name_buffer = &g_world_text_roster_unit_names;
+    name_buffer = &g_world_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     value = (s32)*name_buffer;
-    *name_buffer = g_world_text_unit_names;
+    *name_buffer = g_world_text_section_pointers[TEXT_SECTION_UNIT_NAMES];
     n = main_party_create_monster_egg(n, i + i * 0x10, rand() % 4);
     *name_buffer = (u8*)value;
     if (n != -1) {

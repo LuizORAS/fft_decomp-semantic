@@ -22,7 +22,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
     s32 k;
     s16 item_a;
     s16 item_b;
-    u8* criteria;
+    s8* criteria;
     s16 criterion;
     s32 key_a;
     s32 key_b;
@@ -48,20 +48,20 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
     for (; passes > 0; passes--) {
         for (j = 0; j < passes; j++) {
             k = 0;
-            criterion = (s8)criteria[k];
+            criterion = criteria[k];
             item_a = list[j] & 0x3ff;
             item_b = list[j + 1] & 0x3ff;
             while (criterion >= 0) {
-                if (criterion == 0) {
+                if (criterion == ITEM_SORT_KEY_TYPE) {
                     key_a = g_main_item_primary_data[item_a].type;
                     if (key_a == 0x13) {
                         key_a = 100;
                     }
-                } else if (criterion == 1) {
+                } else if (criterion == ITEM_SORT_KEY_PRICE) {
                     key_a = g_main_item_primary_data[item_a].price;
-                } else if (criterion == 2) {
+                } else if (criterion == ITEM_SORT_KEY_RANKING) {
                     key_a = equip_item_get_ranking_value(item_a);
-                } else if (criterion == 3) {
+                } else if (criterion == ITEM_SORT_KEY_PHYSICAL_EVADE) {
                     if (item_a < ITEM_ID_THROWABLE_FIRST) {
                         key_a = g_main_item_weapon_data[g_main_item_primary_data[item_a].secondary_data_id].evade;
                     } else if (item_a < ITEM_ID_HEADGEAR_FIRST) {
@@ -73,7 +73,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                     } else {
                         key_a = 0;
                     }
-                } else if (criterion == 4) {
+                } else if (criterion == ITEM_SORT_KEY_MAGIC_EVADE) {
                     if (item_a < ITEM_ID_THROWABLE_FIRST) {
                         key_a = 0;
                     } else if (item_a < ITEM_ID_HEADGEAR_FIRST) {
@@ -84,19 +84,19 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                     } else {
                         key_a = 0;
                     }
-                } else if (criterion == 5) {
+                } else if (criterion == ITEM_SORT_KEY_HELD_COUNT) {
                     key_a = equip_item_get_total_count(item_a);
                 }
-                if (criterion == 0) {
+                if (criterion == ITEM_SORT_KEY_TYPE) {
                     key_b = g_main_item_primary_data[item_b].type;
                     if (key_b == 0x13) {
                         key_b = 100;
                     }
-                } else if (criterion == 1) {
+                } else if (criterion == ITEM_SORT_KEY_PRICE) {
                     key_b = g_main_item_primary_data[item_b].price;
-                } else if (criterion == 2) {
+                } else if (criterion == ITEM_SORT_KEY_RANKING) {
                     key_b = equip_item_get_ranking_value(item_b);
-                } else if (criterion == 3) {
+                } else if (criterion == ITEM_SORT_KEY_PHYSICAL_EVADE) {
                     if (item_b < ITEM_ID_THROWABLE_FIRST) {
                         key_b = g_main_item_weapon_data[g_main_item_primary_data[item_b].secondary_data_id].evade;
                     } else if (item_b < ITEM_ID_HEADGEAR_FIRST) {
@@ -108,7 +108,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                     } else {
                         key_b = 0;
                     }
-                } else if (criterion == 4) {
+                } else if (criterion == ITEM_SORT_KEY_MAGIC_EVADE) {
                     if (item_b < ITEM_ID_THROWABLE_FIRST) {
                         key_b = g_main_item_weapon_data[g_main_item_primary_data[item_b].secondary_data_id].evade;
                     } else if (item_b < ITEM_ID_HEADGEAR_FIRST) {
@@ -123,7 +123,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                     key_b = equip_item_get_total_count(item_b);
                 }
                 k++;
-                if (criterion == 2) {
+                if (criterion == ITEM_SORT_KEY_RANKING) {
                     diff = 0;
                     if (item_a >= ITEM_ID_THROWABLE_FIRST && item_a < ITEM_ID_HEADGEAR_FIRST) {
                         diff = 1;
@@ -142,9 +142,9 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list) {
                 if (diff != 0) {
                     break;
                 }
-                criterion = (s8)criteria[k];
+                criterion = criteria[k];
             }
-            if (criterion == 0) {
+            if (criterion == ITEM_SORT_KEY_TYPE) {
                 diff *= -1;
             }
             if (diff >= 0) {

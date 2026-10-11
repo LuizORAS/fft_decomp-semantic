@@ -12,27 +12,27 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
 
     switch (step) {
     case 0:
-        /* Called without its sound id argument. */
-        ((void (*)(void))main_sound_stop_sfx)();
+        /* No sound id is loaded: the callee receives map_id, still in $a0. */
+        main_sound_stop_sfx(map_id);
         step++;
         battle_camera_init_defaults();
         battle_map_init_palette_state();
-        battle_map_load_palette_data(g_battle_map_weather_particle_palette, 2, 0, 0);
-        g_unit_graphics_load_count = 0;
-        battle_menu_request_companion_executable_8();
+        battle_map_load_palette_data(g_battle_map_weather_particle_palette, MAP_CLUT_ROW_SPRITES, 0, 0);
+        g_main_gfx_unit_graphics_load_queue.count = 0;
+        battle_menu_request_open_small();
         break;
     case 1:
-        if (battle_poll_companion_executable_request() == 0) {
+        if (battle_menu_poll_small_load() == 0) {
             step++;
         }
         break;
     case 2:
-        if (battle_map_load_data(map_id, 0x75) != 0) {
+        if (battle_map_load_data(map_id, MAP_LOAD_COMMAND_START) != 0) {
             step++;
         }
         break;
     case 3:
-        if (battle_map_load_data(map_id, 0x76) == 0) {
+        if (battle_map_load_data(map_id, MAP_LOAD_COMMAND_POLL) == 0) {
             step++;
         }
         break;
@@ -47,7 +47,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         }
         break;
     case 6:
-        battle_gfx_clear_four_state_words();
+        battle_gfx_clear_four_state_words(map_id);
         step++;
         break;
     case 7:
@@ -59,8 +59,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         }
         break;
     case 8:
-        /* The target passes a second argument (0) the one-parameter callee ignores. */
-        ((void (*)(s32*, s32))battle_unit_build_deployed_units_data)(g_main_deployed_unit_map_coordinates, 0);
+        battle_unit_build_deployed_units_data((battle_deployed_coords_t*)g_main_deployed_unit_map_coordinates, 0);
         step++;
         break;
     case 9:
@@ -71,7 +70,8 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         if (g_main_system_frontend_world_result == 1
             || battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
             main_sound_unload_current_scenario_music();
-            /* Called without its sound id argument. */
+            /* Called with no argument: the sound id is whatever
+             * main_sound_unload_current_scenario_music left in $a0. */
             ((void (*)(void))main_sound_stop_sfx)();
             main_sound_set_current_music_track(g_battle_random_battle_music_tracks[rand() / 0x2000]);
         }
@@ -79,12 +79,12 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         break;
     case 12:
         battle_sound_start_weather_sfx();
-        /* The target calls these three-parameter initializers without loading arguments. */
-        ((void (*)(void))battle_map_init_background_gradient)();
-        ((void (*)(void))battle_map_init_ambient_light)();
-        ((void (*)(void))battle_map_init_darkness)();
-        battle_map_update_lighting();
-        battle_turn_run_clock(1);
+        /* Seed the three colour fades from the colours the loaded map set. */
+        battle_map_init_background_gradient();
+        battle_map_init_ambient_light();
+        battle_map_init_darkness();
+        battle_map_upload_clut_rows();
+        battle_turn_run_clock(BATTLE_BETWEEN_TURN_MODE_RESET);
         battle_ai_init_workspace();
         step++;
         break;

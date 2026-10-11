@@ -21,6 +21,5 @@ void world_gfx_append_poly_f4_to_otag(s16* xy, u8* rgb, s32 semi_trans, s32 ot_i
     poly->y2 = xy[5];
     poly->x3 = xy[6] + 0x80;
     poly->y3 = xy[7];
-    setaddr(poly, getaddr(&g_world_gfx_active_packet_buffer->otag[ot_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[ot_index], poly);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], poly);
 }

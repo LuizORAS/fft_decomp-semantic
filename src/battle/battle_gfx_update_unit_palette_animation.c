@@ -1,13 +1,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Cycles the colours of the two deployed-unit palettes (sprite CLUTs 1 and 2).
+ *
+ * Every fourth animation tick the offset advances through 0..14 and the palettes
+ * are uploaded again with colours 1..15 rotated down by that many places; colour
+ * 0 stays in place, and offset 0 uploads the palettes as stored. */
 void battle_gfx_update_unit_palette_animation(void) {
     s32 dst;
     s32 src;
     u8* palette;
-    s32 unused[2];
+    RECT rect; /* never used; retail reserves its 8 bytes */
 
-    g_battle_unit_palette_animation_timer += g_battle_state_vsync_interval;
+    g_battle_unit_palette_animation_timer += g_main_system_vsync_interval;
     if (g_battle_unit_palette_animation_timer >= 4) {
         g_battle_unit_palette_animation_timer = 0;
         g_battle_unit_palette_animation_offset++;
@@ -20,8 +25,9 @@ void battle_gfx_update_unit_palette_animation(void) {
             src = g_battle_unit_palette_animation_offset * 2 + 2;
             g_battle_gfx_cycled_deployed_palettes[0][0] = ((u8*)g_battle_deployed_unit_palettes)[0];
             g_battle_gfx_cycled_deployed_palettes[0][1] = ((u8*)g_battle_deployed_unit_palettes)[1];
-            g_battle_gfx_cycled_deployed_palettes[1][0] = ((u8*)g_battle_deployed_unit_palettes[1])[0];
+            g_battle_gfx_cycled_deployed_palettes[1][0] = g_battle_deployed_unit_palettes[1][0];
             g_battle_gfx_cycled_deployed_palettes[1][1] = ((u8*)g_battle_deployed_unit_palettes[1])[1];
+            /* Colours offset + 1..15 move down to 1.., and colours 1..offset wrap to the top. */
             for (; src < 32; src++, dst++) {
                 g_battle_gfx_cycled_deployed_palettes[0][dst] = ((u8*)g_battle_deployed_unit_palettes)[src];
                 g_battle_gfx_cycled_deployed_palettes[1][dst] = ((u8*)g_battle_deployed_unit_palettes[1])[src];
@@ -35,8 +41,7 @@ void battle_gfx_update_unit_palette_animation(void) {
         } else {
             palette = (u8*)g_battle_deployed_unit_palettes;
         }
-        battle_map_load_palette_data((const u16*)palette, 2, 1, 0);
-        battle_map_load_palette_data((const u16*)(palette + 32), 2, 2, 0);
-        (void)&unused;
+        battle_map_load_palette_data((const u16*)palette, MAP_CLUT_ROW_SPRITES, 1, 0);
+        battle_map_load_palette_data((const u16*)(palette + 32), MAP_CLUT_ROW_SPRITES, 2, 0);
     }
 }

@@ -5,12 +5,12 @@
  * Otherwise focus on the target battle_ai_select_peril_target left (the most hurt non-supporter) and
  * run the general search. Returns -1 to suspend, else 0. */
 s32 battle_ai_select_save_fading_life_action(void) {
-    if (g_battle_ai_data_base.decision_state == 0) {
+    if (g_battle_ai_data_base.resume_pending == 0) {
         if (battle_ai_select_peril_target() != 0) {
             g_battle_ai_data_base.autobattle_setting = BATTLE_AUTO_BATTLE_PROTECT_ALLIES;
             return -2;
         }
-        battle_ai_store_main_target_id_and_focus_on_target_flag(g_battle_ai_temp_unit_data->auto_battle_target);
+        battle_ai_store_main_target_id_and_focus_on_target_flag(g_battle_ai_data_base.acting_unit->auto_battle_target);
     }
     return -(~battle_ai_select_general_action() == 0);
 }

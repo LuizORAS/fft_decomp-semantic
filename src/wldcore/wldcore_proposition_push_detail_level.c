@@ -19,18 +19,19 @@ void wldcore_proposition_push_detail_level(s32 value) {
     wldcore_point32_t* base;
 
     state = g_main_proposition_states[value];
-    chance = (state & 0x40) ? 0x14 : 0;
-    if (state & 0x80) {
+    chance = (state & WLDCORE_PROPOSITION_STATE_FAILURE) ? 0x14 : 0;
+    if (state & WLDCORE_PROPOSITION_STATE_BAD_FAILURE) {
         chance = 0x28;
     }
-    if (!(state & 0xC0)) {
+    if (!(state & (WLDCORE_PROPOSITION_STATE_FAILURE | WLDCORE_PROPOSITION_STATE_BAD_FAILURE))) {
         chance = 0xA;
     }
     if ((rand() * 100 >> 15) < chance) {
-        world_thread_set_parameters(0xE, 0x19, value + 0xB879, 0);
+        world_thread_set_parameters(
+            WLDCORE_THREAD_SLOT_MESSAGE, 0x19, value + WLDCORE_TEXT_ID_PROPOSITION_HINT_FIRST, 0);
     } else {
-        g_world_text_substitution_values[0] = value + 0xD000;
-        world_thread_set_parameters(0xE, 0x19, 0xB80C, 0);
+        g_world_text_substitution_values[0] = value + TEXT_ID_PROPOSITION_NAME_BASE;
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITION_ABOUT, 0);
     }
     wldcore_unpack_proposition_row(g_wldcore_selected_proposition_row, value);
     index = wldcore_window_append_render_record_and_reset_color(
@@ -41,18 +42,18 @@ void wldcore_proposition_push_detail_level(s32 value) {
     bounds.dimensions.y = 0x80;
     bounds.position.x = 0;
     wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, value + 0x8800, g_wldcore_window_image_buffer);
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+        index, bounds, 0, value + TEXT_ID_WORLD_MESSAGE_BASE, g_wldcore_window_image_buffer);
+    base = &g_wldcore_window_render_records[index].base;
     g_wldcore_window_render_records[index].priority = 9;
     depth = g_wldcore_menu_stack_depth;
     base->x = -0x7A;
     base->y = -0x28;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.first_window].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.second_window].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 1].window_pair_render.render_index].flags
-        |= 0x10;
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_depth = depth + 1;
     g_wldcore_menu_stack_types_next[depth] = WLDCORE_MENU_LEVEL_PROPOSITION_DETAIL;
 }

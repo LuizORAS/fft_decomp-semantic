@@ -19,7 +19,7 @@ void battle_script_warp_unit(const u8* parameters) {
     unit_id = battle_script_load_halfword(parameters);
     /* Remaining operands: x, y, higher elevation, facing. */
     parameters += 2;
-    unit = battle_find_unit_data_pointer_for_entd_unit_id(unit_id, &result);
+    unit = battle_unit_find_stats_by_entd_unit_id(unit_id, &result);
     battle_id = 0;
     if (result != -2 && result < 0) {
         return;
@@ -45,5 +45,5 @@ void battle_script_warp_unit(const u8* parameters) {
     rotation_state->delay = 0;
     rotation_state->rotating = 0;
     battle_unit_place_in_new_location(misc_id, tile, parameters[3]);
-    battle_unit_init_for_store_anim_facing_move(misc_id, parameters[3] * 4);
+    battle_unit_set_facing(misc_id, parameters[3] * 4);
 }

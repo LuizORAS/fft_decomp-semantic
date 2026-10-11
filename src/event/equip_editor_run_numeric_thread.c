@@ -4,14 +4,11 @@
 
 /* The primitive block is battle_menu_status_panel_numeric_buffer_t, double buffered
  * (g_equip_editor_numeric_state_a for thread 12, g_equip_editor_numeric_state_b otherwise); the thread parameter
- * block is battle_menu_status_panel_frame_config_t. */
-
-struct menu_number_entry;
-struct menu_number_position;
+ * block is world_status_thread_t. */
 
 /* Thread task 0x3b: numeric editor panel.
  *
- * Twin of attack_editor_run_numeric_thread / bunit_run_numeric_editor_thread
+ * Twin of attack_editor_run_numeric_thread / bunit_menu_run_numeric_editor_thread
  * with EQUIP's own draw-mode setup. Builds the primitive block once, copies it
  * into the second buffer, then each frame re-renders the three text images when
  * requested, rescales the draw area, recolours the sprites for the thread
@@ -19,11 +16,11 @@ struct menu_number_position;
  * `buffers` is assigned in each branch (not after the if) so the spilled store
  * precedes upload_c's at the join, as in the target. */
 void equip_editor_run_numeric_thread(void) {
-    battle_menu_status_panel_frame_config_t* thread;
+    world_status_thread_t* thread;
     battle_menu_status_panel_numeric_buffer_t* buffer;
     battle_menu_status_panel_numeric_buffer_t* buffers;
     u8* text_pixels;
-    u8* entries;
+    menu_number_entry_t* entries;
     RECT* upload_a;
     RECT* upload_b;
     RECT* upload_c;
@@ -34,10 +31,9 @@ void equip_editor_run_numeric_thread(void) {
     s32 use_offset;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread
-        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_thread_current_id].function_parameter_1;
+    thread = (world_status_thread_t*)g_battle_threads[g_battle_thread_current_id].function_parameter_1;
     g_equip_input_controller = battle_script_get_controller_input_pointer(0) + 1;
-    if (g_battle_thread_current_id == 12) {
+    if (g_battle_thread_current_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
         buffer = g_equip_editor_numeric_state_a;
         buffers = buffer;
         text_pixels = g_equip_editor_numeric_text_a;
@@ -54,21 +50,21 @@ void equip_editor_run_numeric_thread(void) {
         upload_c = &g_equip_editor_numeric_entries_f;
         entries = g_equip_editor_numeric_descriptor_b;
     }
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], 0);
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], 2);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
     SetDrawMode(&buffer->draw_modes[2], 0, 0, GetTPage(0, 2, 0x140, 0), &g_equip_gfx_draw_area_template);
     battle_menu_init_numeric_display_frame_primitives(
-        &g_equip_editor_numeric_table.source.texture_rect, &buffer->numeric_frame);
+        &g_equip_editor_numeric_table.texture_rect, &buffer->numeric_frame);
     equip_gfx_init_scaled_draw_area_packets(&buffer->portrait);
     i = 0;
-    descriptor = (const world_gfx_image_load_parameters_t*)g_equip_editor_numeric_texture;
+    descriptor = g_equip_editor_numeric_texture;
     for (; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&buffer->sprites[i]);
         battle_gfx_init_image_loading(&buffer->sprites[i], g_equip_editor_numeric_geometry,
-            &g_equip_editor_numeric_table.source.texture_origin, descriptor);
+            &g_equip_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }
-    if (g_battle_thread_current_id != 12) {
+    if (g_battle_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
         buffer->sprites[14].v0 = 0x6C;
         buffer->sprites[15].v0 = 0x6C;
         buffer->sprites[16].v0 = 0x6C;
@@ -80,34 +76,26 @@ void equip_editor_run_numeric_thread(void) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
             battle_clear_menu_render_buffer(text_pixels, 0x918);
-            g_menu_text_state.stride = 0x14;
+            g_menu_text_state.pen.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_thread_current_id != 12) {
-                equip_text_render_signed_decimal_entries(
-                    text_pixels, (equip_stat_entry_t*)entries, (equip_stat_out_t*)&g_menu_text_state.origin_x, 3);
+            if (g_battle_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+                equip_text_render_signed_decimal_entries(text_pixels, entries, &g_menu_text_state.pen, 3);
             } else {
-                battle_menu_draw_numeric_display_entries(text_pixels, (struct menu_number_entry*)entries,
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
+                battle_menu_draw_numeric_display_entries(text_pixels, entries, &g_menu_text_state.pen, 3);
             }
-            g_menu_text_state.stride = 0x40;
+            g_menu_text_state.pen.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_thread_current_id != 12) {
-                equip_text_render_signed_decimal_entries(text_pixels + 0x168, (equip_stat_entry_t*)(entries + 0x24),
-                    (equip_stat_out_t*)&g_menu_text_state.origin_x, 4);
+            if (g_battle_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+                equip_text_render_signed_decimal_entries(text_pixels + 0x168, entries + 3, &g_menu_text_state.pen, 4);
             } else {
-                battle_menu_draw_numeric_display_entries((text_pixels + 0x168),
-                    (struct menu_number_entry*)(entries + 0x24),
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 4);
+                battle_menu_draw_numeric_display_entries(text_pixels + 0x168, entries + 3, &g_menu_text_state.pen, 4);
             }
-            g_menu_text_state.stride = 0x64;
+            g_menu_text_state.pen.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_thread_current_id != 12) {
-                equip_text_render_signed_decimal_entries(text_pixels + 0x468, (equip_stat_entry_t*)(entries + 0x54),
-                    (equip_stat_out_t*)&g_menu_text_state.origin_x, 8);
+            if (g_battle_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+                equip_text_render_signed_decimal_entries(text_pixels + 0x468, entries + 7, &g_menu_text_state.pen, 8);
             } else {
-                battle_menu_draw_numeric_display_entries((text_pixels + 0x468),
-                    (struct menu_number_entry*)(entries + 0x54),
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 8);
+                battle_menu_draw_numeric_display_entries(text_pixels + 0x468, entries + 7, &g_menu_text_state.pen, 8);
             }
             LoadImage(upload_a, (u32*)text_pixels);
             LoadImage(upload_b, (u32*)(text_pixels + 0x168));
@@ -117,14 +105,14 @@ void equip_editor_run_numeric_thread(void) {
         use_offset = field_y != 0xF0;
         g_equip_gfx_draw_offset_y = -use_offset & 0xF0;
         equip_gfx_build_scaled_draw_area_packets(
-            &buffer->portrait, &g_equip_editor_numeric_table.draw_area_rect, frame, field_y, (s16*)thread);
-        buffer->draw_offsets[0].x = thread->origin_x - 0x80;
-        buffer->draw_offsets[0].y = thread->origin_y + g_equip_gfx_draw_offset_y;
+            &buffer->portrait, &g_equip_editor_numeric_table.draw_area_rect, frame, field_y, thread);
+        buffer->draw_offsets[0].x = thread->x - 0x80;
+        buffer->draw_offsets[0].y = thread->y + g_equip_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[0], &buffer->draw_offsets[0].x);
         buffer->draw_offsets[1].x = -0x80;
         buffer->draw_offsets[1].y = g_equip_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[1], &buffer->draw_offsets[1].x);
-        if (thread->style == 1 || g_event_mode == 1) {
+        if (thread->style == 1 || g_battle_menu_input_lock_mode == 1) {
             for (i = 17; i >= 0; i--) {
                 buffer->sprites[i].clut = 0x7D3C;
             }
@@ -141,7 +129,7 @@ void equip_editor_run_numeric_thread(void) {
             buffer->sprites[15].clut = 0x7FFC;
             buffer->sprites[16].clut = 0x7FFC;
         }
-        equip_gfx_apply_menu_palette_for_mode(&buffer->numeric_frame, (s32*)thread);
+        equip_menu_select_primitive_color_palette(&buffer->numeric_frame, thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
         }
@@ -154,7 +142,7 @@ void equip_editor_run_numeric_thread(void) {
         for (; i < 17; i++) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->sprites[i]);
         }
-        if (g_battle_thread_current_id == 12) {
+        if (g_battle_thread_current_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[1]);
         } else {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[2]);

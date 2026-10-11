@@ -68,24 +68,25 @@ void wldcore_advance_calendar_days(s32 days) {
     world_script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
     world_script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
     for (i = 0; i < g_main_save_proposition_count; i++) {
-        if (!(g_main_active_propositions[i].flags & 4)) {
+        if (!(g_main_active_propositions[i].flags & WLDCORE_PROPOSITION_PROGRESS_RETURNED)) {
             if (g_main_active_propositions[i].elapsed_days + days >= g_main_active_propositions[i].assigned_days) {
                 g_main_active_propositions[i].elapsed_days = g_main_active_propositions[i].assigned_days;
-                g_main_active_propositions[i].flags |= 4;
-            } else if (g_main_active_propositions[i].flags & 2) {
+                g_main_active_propositions[i].flags |= WLDCORE_PROPOSITION_PROGRESS_RETURNED;
+            } else if (g_main_active_propositions[i].flags & WLDCORE_PROPOSITION_PROGRESS_RECALLED) {
                 g_main_active_propositions[i].elapsed_days++;
-                g_main_active_propositions[i].flags |= 4;
+                g_main_active_propositions[i].flags |= WLDCORE_PROPOSITION_PROGRESS_RETURNED;
             }
         }
     }
     counter = g_main_proposition_states;
     do {
-        if (*counter & 0x3f) {
-            day = (*counter & 0x3f) - days;
+        if (*counter & WLDCORE_PROPOSITION_STATE_DAYS_MASK) {
+            day = (*counter & WLDCORE_PROPOSITION_STATE_DAYS_MASK) - days;
             if (day < 0) {
                 day = 0;
             }
-            *counter = (*counter & 0xc0) | (day & 0x3f);
+            *counter = (*counter & (WLDCORE_PROPOSITION_STATE_FAILURE | WLDCORE_PROPOSITION_STATE_BAD_FAILURE))
+                | (day & WLDCORE_PROPOSITION_STATE_DAYS_MASK);
         }
         counter++;
     } while ((s32)counter < (s32)(g_main_proposition_states + 96)); /* Target uses signed SLT. */

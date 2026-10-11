@@ -11,7 +11,7 @@ s32 battle_ai_select_retreat_action(void) {
     battle_ai_ability_entry_t* entry;
     s32 i, result;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         switch (g_battle_ai_retreat_phase) {
         case 0:
@@ -52,13 +52,13 @@ charging:
         return 0;
     }
     for (i = 0; i < BATTLE_AI_ABILITY_LIST_LENGTH; i++) {
-        entry = &ai->ability_lists[ai->acting_unit_battle_id][i];
+        entry = &ai->ability_lists[ai->acting_unit_compact_index][i];
         if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
             break;
         battle_ai_load_ability_entry(entry);
         /* The aligned skillset/usage pair preserves the target's LHU/SH. */
         if (g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset] == ACTION_MENU_TYPE_CHARGE)
-            entry->skillset_flags.packed &= (u16) ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
+            entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
     }
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 255)) {
     other_abilities:

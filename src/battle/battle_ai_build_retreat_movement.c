@@ -8,7 +8,7 @@ s32 battle_ai_build_retreat_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 state;
 
-    if (g_battle_ai_data_base.decision_state != 0) {
+    if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
         state = g_battle_ai_retreat_movement_step;
         if (state == 0) {

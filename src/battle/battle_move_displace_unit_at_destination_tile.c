@@ -30,7 +30,7 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     if (unit->movement_path_offset == 0) {
         return;
     }
-    if (((unit->movement_path - 1)[unit->movement_path_offset] >> 4) & 1) {
+    if (((unit->movement_path - 1)[unit->movement_path_offset].value >> 4) & 1) {
         return;
     }
     if (other == 0) {
@@ -39,19 +39,19 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     x = other->movement.bytes.destination_x * 28 + 14;
     y = other->movement.bytes.destination_y * 28 + 14;
     switch (direction) {
-    case 2:
+    case BATTLE_MOVE_DIRECTION_NORTH:
         center = unit->movement.bytes.destination_y * 28 + 14;
         dist = center - unit->screen.vz;
         break;
-    case 0:
+    case BATTLE_MOVE_DIRECTION_SOUTH:
         center = unit->movement.bytes.destination_y * 28 + 14;
         dist = unit->screen.vz - center;
         break;
-    case 3:
+    case BATTLE_MOVE_DIRECTION_WEST:
         center = unit->movement.bytes.destination_x * 28 + 14;
         dist = unit->screen.vx - center;
         break;
-    case 1:
+    case BATTLE_MOVE_DIRECTION_EAST:
         center = unit->movement.bytes.destination_x * 28 + 14;
         dist = center - unit->screen.vx;
         break;
@@ -61,18 +61,18 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     }
     dist -= 7;
     dist = -dist * 3 / 2;
-    switch (*(unit->movement_path_offset + unit->movement_path) >> 6) {
-    case 0:
-        next = 1;
+    switch ((unit->movement_path_offset + unit->movement_path)->value >> 6) {
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
+        next = BATTLE_MOVE_DIRECTION_EAST;
         break;
-    case 1:
-        next = 3;
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
+        next = BATTLE_MOVE_DIRECTION_WEST;
         break;
-    case 2:
-        next = 0;
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
+        next = BATTLE_MOVE_DIRECTION_SOUTH;
         break;
-    case 3:
-        next = 2;
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
+        next = BATTLE_MOVE_DIRECTION_NORTH;
         break;
     }
     for (g_battle_move_displacement_direction = 0; g_battle_move_displacement_direction < 4;

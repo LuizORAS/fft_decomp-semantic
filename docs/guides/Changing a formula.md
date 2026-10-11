@@ -42,7 +42,7 @@ the weapon's formula for Attack and Charge).
   steers the AI. Their random rolls take the middle value
   ([[battle_formula_get_random_0_7fff]]), and the 19% added effect counts in
   a preview but never for the AI.
-- **Formula ids tested elsewhere** ([[battle_formula_id_e]]): formula 0x07
+- **Formula ids tested elsewhere** ([[ability_formula_e]]): formula 0x07
   provokes no reactions (the `battle_reaction_check_*` functions); formulas
   below 0x07 check Poach and Train; 0x1e, 0x1f and 0x5e set how many strikes
   an action makes ([[battle_action_init_current_ability_strike_data]]);
@@ -60,7 +60,7 @@ the weapon's formula for Attack and Charge).
 
 ## What can be done today
 
-Nothing that changes a byte: `make validate` compares every function with its
+Nothing that changes a byte: `make check` compares every function with its
 original hash, so a new step in a handler or a different constant fails until
 the build accepts different code (the shiftable build, then build 3). Formula
 ids, X, Y and Z are disc data, which the repository does not hold. To try an

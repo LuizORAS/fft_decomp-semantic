@@ -6,10 +6,11 @@
  * Faiths; the status must change something unless the target is undead; then damage of Y% of max
  * HP, which an undead target takes as healing (battle_formula_apply_undead_absorb_attack). */
 void battle_formula_damage_hp_percent_hit_faith_ma_x_percent(void) {
-    if (g_battle_action_target->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
-        g_current_ability.target_is_undead = 1;
+    if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
+        g_battle_action_current_ability.target_is_undead = 1;
     } else {
-        g_current_ability.target_is_undead = 0;
+        g_battle_action_current_ability.target_is_undead = 0;
         if (battle_formula_calculate_magical_evade() != 0) {
             return;
         }
@@ -17,7 +18,7 @@ void battle_formula_damage_hp_percent_hit_faith_ma_x_percent(void) {
     battle_formula_store_ma_and_x();
     battle_formula_apply_ability_element_strengthen();
     battle_formula_apply_magic_attack_up();
-    if (g_current_ability.target_is_undead == 0) {
+    if (g_battle_action_current_ability.target_is_undead == 0) {
         battle_formula_apply_magic_defense_up();
         battle_formula_apply_target_magical_status_xa_modifiers();
     }

@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* No retail code calls it. */
 void battle_camera_restore_offset_screen_coords(void) {
     g_battle_offset_screen_coords.vx = g_battle_camera_offset_screen_coords.vx;
     g_battle_offset_screen_coords.vy = g_battle_camera_offset_screen_coords.vy;

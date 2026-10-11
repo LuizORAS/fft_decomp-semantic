@@ -10,12 +10,12 @@ s32 world_ability_get_mp_cost_display_value(s32 index) {
     s32 entry = g_world_ability_entries[index];
 
     if (entry & ABILITY_LIST_ENTRY_HIDE_DETAILS) {
-        result = 0x20000000;
+        result = MENU_NUMBER_VALUE_DASHES;
     } else {
         result = g_world_selected_ability_secondary_data[0xd];
     }
     if (entry >> ABILITY_LIST_ENTRY_DISABLED_SHIFT) {
-        result |= 0x40000000;
+        result |= MENU_NUMBER_VALUE_DISABLED;
     }
     return result;
 }

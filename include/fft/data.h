@@ -24,7 +24,6 @@ enum {
     ABILITY_ID_THROW_FIRST = 0x17e,
     ABILITY_ID_JUMP_FIRST = 0x18a,
     /* Vertical Jump2..8; 0x18a-0x18e are the Level Jumps. */
-    ABILITY_ID_JUMP_VERTICAL_FIRST = 0x18f,
     ABILITY_ID_CHARGE_FIRST = 0x196,
     ABILITY_ID_MATH_FIRST = 0x19e,
     ABILITY_ID_REACTION_FIRST = 0x1a6,
@@ -38,7 +37,6 @@ enum {
      * the targets to their knockback destination and has no effect file. An
      * earlier source comment called it "Fall"; the name follows its only
      * producer, the knockback branch of battle_action_resolve_ability_strike. */
-    ABILITY_ID_KNOCKBACK = 0x200,
     /* A Draw Out ability's id is its katana's item id plus this (Asura Knife 0x26, Asura 0x4c). */
     ABILITY_ID_DRAW_OUT_ITEM_OFFSET = 0x26,
 };
@@ -85,10 +83,89 @@ typedef enum ability_list_entry_flag {
  * 0x1e5 have blank names in the game's text and no code tests them, and 0x1f1 is
  * BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER (FFTPatcher's "(Cannot enter water)"). */
 typedef enum ability_id {
+    ABILITY_ID_WHITE_MAGIC_CURE = 0x01,
+    ABILITY_ID_WHITE_MAGIC_CURE_2 = 0x02,
+    ABILITY_ID_WHITE_MAGIC_CURE_3 = 0x03,
+    ABILITY_ID_WHITE_MAGIC_CURE_4 = 0x04,
+    ABILITY_ID_WHITE_MAGIC_RAISE = 0x05,
+    ABILITY_ID_WHITE_MAGIC_RAISE_2 = 0x06,
+    ABILITY_ID_WHITE_MAGIC_RERAISE = 0x07,
+    ABILITY_ID_WHITE_MAGIC_REGEN = 0x08,
+    ABILITY_ID_WHITE_MAGIC_PROTECT = 0x09,
+    ABILITY_ID_WHITE_MAGIC_PROTECT_2 = 0x0a,
+    ABILITY_ID_WHITE_MAGIC_SHELL = 0x0b,
+    ABILITY_ID_WHITE_MAGIC_SHELL_2 = 0x0c,
+    ABILITY_ID_WHITE_MAGIC_WALL = 0x0d,
+    ABILITY_ID_WHITE_MAGIC_ESUNA = 0x0e,
+    ABILITY_ID_WHITE_MAGIC_HOLY = 0x0f,
+    ABILITY_ID_BLACK_MAGIC_FIRE = 0x10,
+    ABILITY_ID_BLACK_MAGIC_FIRE_2 = 0x11,
+    ABILITY_ID_BLACK_MAGIC_FIRE_3 = 0x12,
+    ABILITY_ID_BLACK_MAGIC_FIRE_4 = 0x13,
+    ABILITY_ID_BLACK_MAGIC_BOLT = 0x14,
+    ABILITY_ID_BLACK_MAGIC_BOLT_2 = 0x15,
+    ABILITY_ID_BLACK_MAGIC_BOLT_3 = 0x16,
+    ABILITY_ID_BLACK_MAGIC_BOLT_4 = 0x17,
+    ABILITY_ID_BLACK_MAGIC_ICE = 0x18,
+    ABILITY_ID_BLACK_MAGIC_ICE_2 = 0x19,
+    ABILITY_ID_BLACK_MAGIC_ICE_3 = 0x1a,
+    ABILITY_ID_BLACK_MAGIC_ICE_4 = 0x1b,
+    ABILITY_ID_BLACK_MAGIC_POISON = 0x1c,
     ABILITY_ID_BLACK_MAGIC_FROG = 0x1d,
+    ABILITY_ID_BLACK_MAGIC_DEATH = 0x1e,
+    ABILITY_ID_BLACK_MAGIC_FLARE = 0x1f,
+    ABILITY_ID_TIME_MAGIC_HASTE = 0x20,
+    ABILITY_ID_TIME_MAGIC_HASTE_2 = 0x21,
+    ABILITY_ID_TIME_MAGIC_SLOW = 0x22,
+    ABILITY_ID_TIME_MAGIC_SLOW_2 = 0x23,
+    ABILITY_ID_TIME_MAGIC_STOP = 0x24,
+    ABILITY_ID_TIME_MAGIC_DONT_MOVE = 0x25,
+    ABILITY_ID_TIME_MAGIC_FLOAT = 0x26,
+    ABILITY_ID_TIME_MAGIC_REFLECT = 0x27,
+    ABILITY_ID_ALTIMA_ARCH_ANGEL_TELEPORT_ARRIVAL = 0x28, /* no name text; Altima's second form arriving */
+    ABILITY_ID_TIME_MAGIC_QUICK = 0x29,
+    ABILITY_ID_TIME_MAGIC_DEMI = 0x2a,
+    ABILITY_ID_TIME_MAGIC_DEMI_2 = 0x2b,
+    ABILITY_ID_TIME_MAGIC_METEOR = 0x2c,
+    ABILITY_ID_YIN_YANG_MAGIC_BLIND = 0x2e,
+    ABILITY_ID_YIN_YANG_MAGIC_SPELL_ABSORB = 0x2f,
+    ABILITY_ID_YIN_YANG_MAGIC_LIFE_DRAIN = 0x30,
+    ABILITY_ID_YIN_YANG_MAGIC_PRAY_FAITH = 0x31,
+    ABILITY_ID_YIN_YANG_MAGIC_DOUBT_FAITH = 0x32,
+    ABILITY_ID_YIN_YANG_MAGIC_ZOMBIE = 0x33,
+    ABILITY_ID_YIN_YANG_MAGIC_SILENCE_SONG = 0x34,
+    ABILITY_ID_YIN_YANG_MAGIC_BLIND_RAGE = 0x35,
+    ABILITY_ID_YIN_YANG_MAGIC_FOXBIRD = 0x36,
+    ABILITY_ID_YIN_YANG_MAGIC_CONFUSION_SONG = 0x37,
+    ABILITY_ID_YIN_YANG_MAGIC_DISPEL_MAGIC = 0x38,
+    ABILITY_ID_YIN_YANG_MAGIC_PARALYZE = 0x39,
+    ABILITY_ID_YIN_YANG_MAGIC_SLEEP = 0x3a,
+    ABILITY_ID_YIN_YANG_MAGIC_PETRIFY = 0x3b,
     ABILITY_ID_SUMMON_MAGIC_MOOGLE = 0x3c,
+    ABILITY_ID_SUMMON_MAGIC_SHIVA = 0x3d,
+    ABILITY_ID_SUMMON_MAGIC_RAMUH = 0x3e,
+    ABILITY_ID_SUMMON_MAGIC_IFRIT = 0x3f,
+    ABILITY_ID_SUMMON_MAGIC_TITAN = 0x40,
     ABILITY_ID_SUMMON_MAGIC_GOLEM = 0x41,
+    ABILITY_ID_SUMMON_MAGIC_CARBUNKLE = 0x42,
+    ABILITY_ID_SUMMON_MAGIC_BAHAMUT = 0x43,
+    ABILITY_ID_SUMMON_MAGIC_ODIN = 0x44,
+    ABILITY_ID_SUMMON_MAGIC_LEVIATHAN = 0x45,
+    ABILITY_ID_SUMMON_MAGIC_SALAMANDER = 0x46,
+    ABILITY_ID_SUMMON_MAGIC_SILF = 0x47,
+    ABILITY_ID_SUMMON_MAGIC_FAIRY = 0x48,
+    ABILITY_ID_SUMMON_MAGIC_LICH = 0x49,
+    ABILITY_ID_SUMMON_MAGIC_CYCLOPS = 0x4a,
+    ABILITY_ID_SUMMON_MAGIC_ZODIAC = 0x4b,
     ABILITY_ID_DRAW_OUT_ASURA = 0x4c,
+    ABILITY_ID_DRAW_OUT_KOUTETSU = 0x4d,
+    ABILITY_ID_DRAW_OUT_BIZEN_BOAT = 0x4e,
+    ABILITY_ID_DRAW_OUT_MURASAME = 0x4f,
+    ABILITY_ID_DRAW_OUT_HEAVENS_CLOUD = 0x50,
+    ABILITY_ID_DRAW_OUT_KIYOMORI = 0x51,
+    ABILITY_ID_DRAW_OUT_MURAMASA = 0x52,
+    ABILITY_ID_DRAW_OUT_KIKUICHIMOJI = 0x53,
+    ABILITY_ID_DRAW_OUT_MASAMUNE = 0x54,
     ABILITY_ID_DRAW_OUT_CHIRIJIRADEN = 0x55,
     ABILITY_ID_SONG_ANGEL_SONG = 0x56,
     ABILITY_ID_SONG_LIFE_SONG = 0x57,
@@ -104,11 +181,23 @@ typedef enum ability_id {
     ABILITY_ID_DANCE_DISILLUSION = 0x61,
     ABILITY_ID_DANCE_NAMELESS_DANCE = 0x62,
     ABILITY_ID_DANCE_LAST_DANCE = 0x63,
+    ABILITY_ID_PUNCH_ART_SPIN_FIST = 0x64,
+    ABILITY_ID_PUNCH_ART_REPEATING_FIST = 0x65,
+    ABILITY_ID_PUNCH_ART_WAVE_FIST = 0x66,
+    ABILITY_ID_PUNCH_ART_EARTH_SLASH = 0x67,
+    ABILITY_ID_PUNCH_ART_SECRET_FIST = 0x68,
+    ABILITY_ID_PUNCH_ART_STIGMA_MAGIC = 0x69,
+    ABILITY_ID_PUNCH_ART_CHAKRA = 0x6a,
+    ABILITY_ID_PUNCH_ART_REVIVE = 0x6b,
+    ABILITY_ID_STEAL_GIL_TAKING = 0x6c,
+    ABILITY_ID_STEAL_HEART = 0x6d,
     ABILITY_ID_STEAL_HELMET = 0x6e,
     ABILITY_ID_STEAL_ARMOR = 0x6f,
     ABILITY_ID_STEAL_SHIELD = 0x70,
     ABILITY_ID_STEAL_WEAPON = 0x71,
-    ABILITY_ID_STEAL_ACCESSORY = 0x72,
+    ABILITY_ID_STEAL_ACCESSORY = 0x72, /* "Steal Accessry" in the name text */
+    ABILITY_ID_STEAL_EXP = 0x73,
+    ABILITY_ID_TALK_INVITATION = 0x74,
     ABILITY_ID_TALK_PERSUADE = 0x75,
     ABILITY_ID_TALK_PRAISE = 0x76,
     ABILITY_ID_TALK_THREATEN = 0x77,
@@ -116,37 +205,295 @@ typedef enum ability_id {
     ABILITY_ID_TALK_SOLUTION = 0x79,
     ABILITY_ID_TALK_DEATH_SENTENCE = 0x7a,
     ABILITY_ID_TALK_NEGOTIATE = 0x7b,
+    ABILITY_ID_TALK_INSULT = 0x7c,
+    ABILITY_ID_TALK_MIMIC_DARAVON = 0x7d,
+    ABILITY_ID_ELEMENTAL_PITFALL = 0x7e,
+    ABILITY_ID_ELEMENTAL_WATER_BALL = 0x7f,
+    ABILITY_ID_ELEMENTAL_HELL_IVY = 0x80,
+    ABILITY_ID_ELEMENTAL_CARVE_MODEL = 0x81,
+    ABILITY_ID_ELEMENTAL_LOCAL_QUAKE = 0x82,
+    ABILITY_ID_ELEMENTAL_KAMAITACHI = 0x83,
+    ABILITY_ID_ELEMENTAL_DEMON_FIRE = 0x84,
+    ABILITY_ID_ELEMENTAL_QUICKSAND = 0x85,
+    ABILITY_ID_ELEMENTAL_SAND_STORM = 0x86,
+    ABILITY_ID_ELEMENTAL_BLIZZARD = 0x87,
+    ABILITY_ID_ELEMENTAL_GUSTY_WIND = 0x88,
+    ABILITY_ID_ELEMENTAL_LAVA_BALL = 0x89,
     ABILITY_ID_BATTLE_SKILL_HEAD_BREAK = 0x8a,
     ABILITY_ID_BATTLE_SKILL_ARMOR_BREAK = 0x8b,
     ABILITY_ID_BATTLE_SKILL_SHIELD_BREAK = 0x8c,
     ABILITY_ID_BATTLE_SKILL_WEAPON_BREAK = 0x8d,
+    ABILITY_ID_BATTLE_SKILL_MAGIC_BREAK = 0x8e,
     ABILITY_ID_BATTLE_SKILL_SPEED_BREAK = 0x8f,
     ABILITY_ID_BATTLE_SKILL_POWER_BREAK = 0x90,
     ABILITY_ID_BATTLE_SKILL_MIND_BREAK = 0x91,
     ABILITY_ID_BASIC_SKILL_ACCUMULATE = 0x92,
     ABILITY_ID_BASIC_SKILL_DASH = 0x93,
     ABILITY_ID_BASIC_SKILL_THROW_STONE = 0x94,
-    ABILITY_ID_BASIC_SKILL_YELL = 0x96,
-    ABILITY_ID_MIGHT_SWORD_SHELLBUST_STAB = 0xa0,
-    ABILITY_ID_MIGHT_SWORD_BLASTAR_PUNCH = 0xa1,
-    ABILITY_ID_MIGHT_SWORD_HELLCRY_PUNCH = 0xa2,
-    ABILITY_ID_MIGHT_SWORD_ICEWOLF_BITE = 0xa3,
-    ABILITY_ID_MONSTER_SKILL_SPEED_RUIN = 0xc5,
-    ABILITY_ID_MONSTER_SKILL_POWER_RUIN = 0xc6,
-    ABILITY_ID_MONSTER_SKILL_MIND_RUIN = 0xc7,
-    ABILITY_ID_ELMDOR_BLOOD_SUCK = 0xc8,
+    ABILITY_ID_BASIC_SKILL_HEAL = 0x95,
+    ABILITY_ID_GUTS_YELL = 0x96,
+    ABILITY_ID_GUTS_CHEER_UP = 0x97,
+    ABILITY_ID_GUTS_WISH = 0x98,
+    ABILITY_ID_GUTS_SCREAM = 0x99,
+    ABILITY_ID_GUTS_ULTIMA = 0x9a,
+    ABILITY_ID_HOLY_SWORD_STASIS_SWORD = 0x9b,
+    ABILITY_ID_HOLY_SWORD_SPLIT_PUNCH = 0x9c,
+    ABILITY_ID_HOLY_SWORD_CRUSH_PUNCH = 0x9d,
+    ABILITY_ID_HOLY_SWORD_LIGHTNING_STAB = 0x9e,
+    ABILITY_ID_HOLY_SWORD_HOLY_EXPLOSION = 0x9f,
+    ABILITY_ID_MIGHTY_SWORD_SHELLBUST_STAB = 0xa0,
+    ABILITY_ID_MIGHTY_SWORD_BLASTAR_PUNCH = 0xa1,
+    ABILITY_ID_MIGHTY_SWORD_HELLCRY_PUNCH = 0xa2,
+    ABILITY_ID_MIGHTY_SWORD_ICEWOLF_BITE = 0xa3,
+    ABILITY_ID_DARK_SWORD = 0xa4,
+    ABILITY_ID_DARK_SWORD_NIGHT_SWORD = 0xa5,
+    ABILITY_ID_ALL_MAGIC_DARK_HOLY = 0xa6,
+    ABILITY_ID_HOLY_MAGIC_DEATHSPELL_2 = 0xa7,
+    ABILITY_ID_STARRY_HEAVEN_GALAXY_STOP = 0xa8,
+    ABILITY_ID_TRUTH_HEAVEN_THUNDER = 0xa9,
+    ABILITY_ID_TRUTH_ASURA = 0xaa,
+    ABILITY_ID_TRUTH_DIAMOND_SWORD = 0xab,
+    ABILITY_ID_TRUTH_HYDRAGON_PIT = 0xac,
+    ABILITY_ID_TRUTH_SPACE_STORAGE = 0xad,
+    ABILITY_ID_TRUTH_SKY_DEMON = 0xae,
+    ABILITY_ID_UN_TRUTH_HEAVEN_BOLTBACK = 0xaf, /* "Heaven Bltback" in the name text */
+    ABILITY_ID_UN_TRUTH_ASURA_BACK = 0xb0,
+    ABILITY_ID_UN_TRUTH_DIAMOND_SWORD_BACK = 0xb1, /* "Dia Swrd Back" in the name text */
+    ABILITY_ID_UN_TRUTH_DRAGON_PIT_BACK = 0xb2,    /* "Dragn Pit Back" in the name text */
+    ABILITY_ID_UN_TRUTH_SPACE_STORAGE_BACK = 0xb3, /* "Space Str Back" in the name text */
+    ABILITY_ID_UN_TRUTH_SKY_DEMON_BACK = 0xb4,
+    ABILITY_ID_USE_HAND_SEAL = 0xb5,
+    ABILITY_ID_USE_HAND_SHADOW_STITCH = 0xb6,
+    ABILITY_ID_USE_HAND_STOP_BRACELET = 0xb7,
+    ABILITY_ID_ALTIMA_HOLY_ANGEL_TELEPORT_ARRIVAL = 0xb8, /* no name text; Altima's first form arriving */
+    ABILITY_ID_BYBLOS_SHOCK = 0xb9,
+    ABILITY_ID_BYBLOS_DIFFERENCE = 0xba,
+    ABILITY_ID_FEAR_SEAL = 0xbb,
+    ABILITY_ID_FEAR_CHICKEN_RACE = 0xbc,
+    ABILITY_ID_HOLD_TIGHT = 0xbd, /* listed only by the unnamed skillset 0x87 */
+    ABILITY_ID_FEAR_DARKNESS = 0xbe,
+    ABILITY_ID_FEAR_LOSE_VOICE = 0xbf,
+    ABILITY_ID_FEAR_LOSS = 0xc0,
+    ABILITY_ID_FEAR_SPELL = 0xc1,
+    ABILITY_ID_FEAR_NIGHTMARE = 0xc2,
+    ABILITY_ID_FEAR_DEATH_COLD = 0xc3,
+    ABILITY_ID_DESTROY_SWORD_MAGIC_RUIN = 0xc4,
+    ABILITY_ID_DESTROY_SWORD_SPEED_RUIN = 0xc5,
+    ABILITY_ID_DESTROY_SWORD_POWER_RUIN = 0xc6,
+    ABILITY_ID_DESTROY_SWORD_MIND_RUIN = 0xc7,
+    ABILITY_ID_BLOOD_SUCK = 0xc8,
+    ABILITY_ID_USE_HAND_ALLURE = 0xc9,
+    ABILITY_ID_IMPURE_BIO_DARKNESS = 0xca,
+    ABILITY_ID_IMPURE_BIO_POISON = 0xcb,
+    ABILITY_ID_IMPURE_BIO_OIL = 0xcc,
+    ABILITY_ID_IMPURE_BIO_2_FROG = 0xcd,
+    ABILITY_ID_IMPURE_BIO_2_SLOW = 0xce,
+    ABILITY_ID_IMPURE_BIO_2_SILENCE = 0xcf,
+    ABILITY_ID_IMPURE_BIO_2_PETRIFY = 0xd0,
+    ABILITY_ID_IMPURE_BIO_3_UNDEAD = 0xd1,
+    ABILITY_ID_ALL_MAGIC_BIO_3_DEAD = 0xd2,
+    ABILITY_ID_IMPURE_BIO_3_PETRIFY = 0xd3,
+    ABILITY_ID_HOLY_MAGIC_MBARRIER = 0xd4,
     ABILITY_ID_SNIPE_LEG_AIM = 0xd5,
+    ABILITY_ID_SNIPE_ARM_AIM = 0xd6,
     ABILITY_ID_SNIPE_SEAL_EVIL = 0xd7,
-    ABILITY_ID_MONSTER_SKILL_MOLDBALL_VIRUS = 0x149,
+    ABILITY_ID_DIMENSION_MAGIC_MELT = 0xd8,
+    ABILITY_ID_DIMENSION_MAGIC_TORNADO = 0xd9,
+    ABILITY_ID_ALL_MAGIC_QUAKE = 0xda,
+    ABILITY_ID_ALTIMA_HOLY_ANGEL_TELEPORT_DEPARTURE = 0xdb, /* no name text; Altima's first form leaving */
+    ABILITY_ID_ALTIMA_ARCH_ANGEL_TELEPORT_DEPARTURE = 0xdc, /* no name text; Altima's second form leaving */
+    ABILITY_ID_JA_MAGIC_TOAD_2 = 0xdd,
+    ABILITY_ID_JA_MAGIC_GRAVI_2 = 0xde,
+    ABILITY_ID_JA_MAGIC_FLARE_2 = 0xdf,
+    ABILITY_ID_JA_MAGIC_BLIND_2 = 0xe0,
+    ABILITY_ID_MONSTER_GRENADE_SMALL_BOMB = 0xe1,
+    ABILITY_ID_MONSTER_EXPLOSIVE_SMALL_BOMB = 0xe2,
+    ABILITY_ID_JA_MAGIC_CONFUSE_2 = 0xe3,
+    ABILITY_ID_JA_MAGIC_SLEEP_2 = 0xe4,
+    ABILITY_ID_ULTIMATE_MAGIC_ULTIMA = 0xe5,
+    ABILITY_ID_COMPLETE_MAGIC_ALL_ULTIMA = 0xe6,
+    ABILITY_ID_SATURATION_MUTE = 0xe7,
+    ABILITY_ID_SATURATION_DESPAIR_2 = 0xe8,
+    ABILITY_ID_SATURATION_RETURN_2 = 0xe9,
+    ABILITY_ID_MAGIC_SWORD_BLIND = 0xea,
+    ABILITY_ID_MAGIC_SWORD_ASPEL = 0xeb,
+    ABILITY_ID_WHITE_AID_DRAIN = 0xec,
+    ABILITY_ID_MAGIC_SWORD_FAITH = 0xed,
+    ABILITY_ID_MAGIC_SWORD_INNOCENT = 0xee,
+    ABILITY_ID_MAGIC_SWORD_ZOMBIE = 0xef,
+    ABILITY_ID_WHITE_AID_SILENCE = 0xf0,
+    ABILITY_ID_MAGIC_SWORD_BERSERK = 0xf1,
+    ABILITY_ID_MAGIC_SWORD_CHICKEN = 0xf2,
+    ABILITY_ID_WHITE_AID_CONFUSE = 0xf3,
+    ABILITY_ID_MAGIC_SWORD_DESPAIR = 0xf4,
+    ABILITY_ID_WHITE_AID_DONT_ACT = 0xf5,
+    ABILITY_ID_WHITE_AID_SLEEP = 0xf6,
+    ABILITY_ID_MAGIC_SWORD_BREAK = 0xf7,
+    ABILITY_ID_DRAGON_ICE_BRACELET = 0xf8,
+    ABILITY_ID_DRAGON_FIRE_BRACELET = 0xf9,
+    ABILITY_ID_DRAGON_THUNDER_BRACELET = 0xfa, /* "Thnder Brcelet" in the name text */
+    ABILITY_ID_DRAGON_TAME = 0xfb,
+    ABILITY_ID_DRAGON_CARE = 0xfc,
+    ABILITY_ID_DRAGON_POWER_UP = 0xfd,
+    ABILITY_ID_DRAGON_LEVEL_UP = 0xfe,
+    ABILITY_ID_DRAGON_HOLY_BRACELET = 0xff,
+    ABILITY_ID_MAGIC_SWORD_SHOCK = 0x100,
+    ABILITY_ID_LIMIT_BRAVER = 0x101,
+    ABILITY_ID_LIMIT_CROSS_SLASH = 0x102,
+    ABILITY_ID_LIMIT_BLADE_BEAM = 0x103,
+    ABILITY_ID_LIMIT_CLIMHAZZARD = 0x104,
+    ABILITY_ID_LIMIT_METEORAIN = 0x105,
+    ABILITY_ID_LIMIT_FINISH_TOUCH = 0x106,
+    ABILITY_ID_LIMIT_OMNISLASH = 0x107,
+    ABILITY_ID_LIMIT_CHERRY_BLOSSOM = 0x108,
+    ABILITY_ID_MONSTER_CHOCOBO_CHOCO_ATTACK = 0x109,
+    ABILITY_ID_MONSTER_BLACK_CHOCOBO_CHOCO_BALL = 0x10a,
+    ABILITY_ID_MONSTER_BLACK_CHOCOBO_CHOCO_METEOR = 0x10b,
+    ABILITY_ID_MONSTER_CHOCOBO_CHOCO_ESUNA = 0x10c,
+    ABILITY_ID_MONSTER_CHOCOBO_CHOCO_CURE = 0x10d,
+    ABILITY_ID_MONSTER_GOBLIN_TACKLE = 0x10e,
+    ABILITY_ID_MONSTER_GOBLIN_PUNCH = 0x10f,
+    ABILITY_ID_MONSTER_BLACK_GOBLIN_TURN_PUNCH = 0x110,
+    ABILITY_ID_MONSTER_GOBLIN_EYE_GOUGE = 0x111,
+    ABILITY_ID_MONSTER_GOBBLEDEGUCK_MUTILATE = 0x112,
+    ABILITY_ID_MONSTER_BOMB_BITE = 0x113,
+    ABILITY_ID_MONSTER_BOMB_SMALL_BOMB = 0x114,
+    ABILITY_ID_MONSTER_BOMB_SELF_DESTRUCT = 0x115,
+    ABILITY_ID_MONSTER_GRENADE_FLAME_ATTACK = 0x116,
+    ABILITY_ID_MONSTER_EXPLOSIVE_SPARK = 0x117,
+    ABILITY_ID_MONSTER_RED_PANTHER_SCRATCH = 0x118,
+    ABILITY_ID_MONSTER_RED_PANTHER_CAT_KICK = 0x119,
+    ABILITY_ID_MONSTER_CUAR_BLASTER = 0x11a,
+    ABILITY_ID_MONSTER_RED_PANTHER_POISON_NAIL = 0x11b,
+    ABILITY_ID_MONSTER_VAMPIRE_BLOOD_SUCK = 0x11c,
+    ABILITY_ID_MONSTER_PISCO_DEMON_TENTACLE = 0x11d,
+    ABILITY_ID_MONSTER_PISCO_DEMON_BLACK_INK = 0x11e,
+    ABILITY_ID_MONSTER_SQUIDLARKIN_ODD_SOUNDWAVE = 0x11f,
+    ABILITY_ID_MONSTER_SQUIDLARKIN_MIND_BLAST = 0x120,
+    ABILITY_ID_MONSTER_MINDFLARE_LEVEL_BLAST = 0x121,
+    ABILITY_ID_MONSTER_SKELETON_KNIFE_HAND = 0x122,
+    ABILITY_ID_MONSTER_SKELETON_THUNDER_SOUL = 0x123,
+    ABILITY_ID_MONSTER_SKELETON_AQUA_SOUL = 0x124,
+    ABILITY_ID_MONSTER_BONE_SNATCH_ICE_SOUL = 0x125,
+    ABILITY_ID_MONSTER_LIVING_BONE_WIND_SOUL = 0x126,
+    ABILITY_ID_MONSTER_GHOUL_THROW_SPIRIT = 0x127,
+    ABILITY_ID_MONSTER_REVNANT_ZOMBIE_TOUCH = 0x128,
+    ABILITY_ID_MONSTER_GHOUL_SLEEP_TOUCH = 0x129,
+    ABILITY_ID_MONSTER_GUST_DRAIN_TOUCH = 0x12a,
+    ABILITY_ID_MONSTER_GHOUL_GREASE_TOUCH = 0x12b,
+    ABILITY_ID_MONSTER_FLOTIBALL_WING_ATTACK = 0x12c,
+    ABILITY_ID_MONSTER_AHRIMAN_LOOK_OF_DEVIL = 0x12d,
+    ABILITY_ID_MONSTER_FLOTIBALL_LOOK_OF_FRIGHT = 0x12e,
+    ABILITY_ID_MONSTER_PLAGUE_CIRCLE = 0x12f,
+    ABILITY_ID_MONSTER_AHRIMAN_DEATH_SENTENCE = 0x130,
+    ABILITY_ID_MONSTER_JURAVIS_SCRATCH_UP = 0x131,
+    ABILITY_ID_MONSTER_STEEL_HAWK_BEAK = 0x132,
+    ABILITY_ID_MONSTER_STEEL_HAWK_SHINE_LOVER = 0x133,
+    ABILITY_ID_MONSTER_JURAVIS_FEATHER_BOMB = 0x134,
+    ABILITY_ID_MONSTER_COCATORIS_BEAKING = 0x135,
+    ABILITY_ID_MONSTER_URIBO_STRAIGHT_DASH = 0x136,
+    ABILITY_ID_MONSTER_PORKY_NOSE_BRACELET = 0x137,
+    ABILITY_ID_MONSTER_URIBO_OINK = 0x138,
+    ABILITY_ID_MONSTER_PORKY_POOH = 0x139,
+    ABILITY_ID_MONSTER_WILDBOW_PLEASE_EAT = 0x13a,
+    ABILITY_ID_MONSTER_WOODMAN_LEAF_DANCE = 0x13b,
+    ABILITY_ID_MONSTER_WOODMAN_PROTECT_SPIRIT = 0x13c,
+    ABILITY_ID_MONSTER_TRENT_CLAM_SPIRIT = 0x13d,
+    ABILITY_ID_MONSTER_TRENT_SPIRIT_OF_LIFE = 0x13e,
+    ABILITY_ID_MONSTER_TAIJU_MAGIC_SPIRIT = 0x13f,
+    ABILITY_ID_MONSTER_BULL_DEMON_SHAKE_OFF = 0x140,
+    ABILITY_ID_MONSTER_MINITAURUS_WAVE_AROUND = 0x141,
+    ABILITY_ID_MONSTER_SACRED_MIMIC_TITAN = 0x142,
+    ABILITY_ID_MONSTER_BULL_DEMON_GATHER_POWER = 0x143,
+    ABILITY_ID_MONSTER_MINITAURUS_BLOW_FIRE = 0x144,
+    ABILITY_ID_MONSTER_MORBOL_TENTACLE = 0x145,
+    ABILITY_ID_MONSTER_MORBOL_LICK = 0x146,
+    ABILITY_ID_MONSTER_OCHU_GOO = 0x147,
+    ABILITY_ID_MONSTER_MORBOL_BAD_BRACELET = 0x148,
+    ABILITY_ID_MONSTER_GREAT_MORBOL_MOLDBALL_VIRUS = 0x149,
+    ABILITY_ID_MONSTER_BEHEMOTH_STAB_UP = 0x14a,
+    ABILITY_ID_MONSTER_BEHEMOTH_SUDDEN_CRY = 0x14b,
+    ABILITY_ID_NIGHT_MAGIC_HURRICANE = 0x14c,
+    ABILITY_ID_NIGHT_MAGIC_ULMAGUEST = 0x14d,
+    ABILITY_ID_DARK_MAGIC_GIGA_FLARE = 0x14e,
+    ABILITY_ID_MONSTER_DRAGON_DASH = 0x14f,
+    ABILITY_ID_MONSTER_DRAGON_TAIL_SWING = 0x150,
+    ABILITY_ID_BREATH_ICE_BRACELET = 0x151,
+    ABILITY_ID_BREATH_FIRE_BRACELET = 0x152,
+    ABILITY_ID_BREATH_THUNDER_BRACELET = 0x153, /* "Thnder Brcelet" in the name text */
+    ABILITY_ID_MONSTER_HYUDRA_TRIPLE_ATTACK = 0x154,
+    ABILITY_ID_MONSTER_HYUDRA_TRIPLE_BRACELET = 0x155, /* "Triple Brcelet" in the name text */
+    ABILITY_ID_MONSTER_HYDRA_TRIPLE_THUNDER = 0x156,
+    ABILITY_ID_MONSTER_HYDRA_TRIPLE_FLAME = 0x157,
+    ABILITY_ID_MONSTER_TIAMAT_DARK_WHISPER = 0x158,
+    ABILITY_ID_DARK_CLOUD_SNAKE_CARRIER = 0x159,
+    ABILITY_ID_DARK_CLOUD_POISON_FROG = 0x15a,
+    ABILITY_ID_PHANTOM_MIDGAR_SWARM = 0x15b,
+    ABILITY_ID_DARK_MAGIC_LIFEBREAK = 0x15c,
+    ABILITY_ID_NIGHT_MAGIC_NANOFLARE = 0x15d,
+    ABILITY_ID_CHAOS_GRAND_CROSS = 0x15e,
+    ABILITY_ID_WORK_DESTROY = 0x15f,
+    ABILITY_ID_WORK_COMPRESS = 0x160,
+    ABILITY_ID_WORK_DISPOSE = 0x161,
+    ABILITY_ID_WORK_CRUSH = 0x162,
+    ABILITY_ID_BYBLOS_ENERGY = 0x163,
+    ABILITY_ID_BYBLOS_PARASITE = 0x164,
     ABILITY_ID_FROG_ATTACK = 0x16f, /* "Attack" in the game's ability names */
+    ABILITY_ID_ITEM_POTION = 0x170,
+    ABILITY_ID_ITEM_HI_POTION = 0x171,
+    ABILITY_ID_ITEM_X_POTION = 0x172,
+    ABILITY_ID_ITEM_ETHER = 0x173,
+    ABILITY_ID_ITEM_HI_ETHER = 0x174,
+    ABILITY_ID_ITEM_ELIXIR = 0x175,
+    ABILITY_ID_ITEM_ANTIDOTE = 0x176,
+    ABILITY_ID_ITEM_EYE_DROP = 0x177,
+    ABILITY_ID_ITEM_ECHO_GRASS = 0x178,
+    ABILITY_ID_ITEM_MAIDENS_KISS = 0x179,
+    ABILITY_ID_ITEM_SOFT = 0x17a,
     ABILITY_ID_ITEM_HOLY_WATER = 0x17b,
+    ABILITY_ID_ITEM_REMEDY = 0x17c,
+    ABILITY_ID_ITEM_PHOENIX_DOWN = 0x17d,
     ABILITY_ID_THROW_SHURIKEN = 0x17e,
     ABILITY_ID_THROW_KNIFE = 0x17f,
+    ABILITY_ID_THROW_SWORD = 0x180,
+    ABILITY_ID_THROW_HAMMER = 0x181,
+    ABILITY_ID_THROW_KATANA = 0x182,
+    ABILITY_ID_THROW_NINJA_SWORD = 0x183,
+    ABILITY_ID_THROW_AXE = 0x184,
+    ABILITY_ID_THROW_SPEAR = 0x185,
+    ABILITY_ID_THROW_STICK = 0x186,
+    ABILITY_ID_THROW_KNIGHT_SWORD = 0x187,
+    ABILITY_ID_THROW_DICTIONARY = 0x188,
     ABILITY_ID_THROW_BALL = 0x189,
+    ABILITY_ID_JUMP_LEVEL_2 = 0x18a,
+    ABILITY_ID_JUMP_LEVEL_3 = 0x18b,
+    ABILITY_ID_JUMP_LEVEL_4 = 0x18c,
+    ABILITY_ID_JUMP_LEVEL_5 = 0x18d,
+    ABILITY_ID_JUMP_LEVEL_8 = 0x18e,
+    ABILITY_ID_JUMP_VERTICAL_2 = 0x18f,
+    ABILITY_ID_JUMP_VERTICAL_3 = 0x190,
+    ABILITY_ID_JUMP_VERTICAL_4 = 0x191,
+    ABILITY_ID_JUMP_VERTICAL_5 = 0x192,
+    ABILITY_ID_JUMP_VERTICAL_6 = 0x193,
+    ABILITY_ID_JUMP_VERTICAL_7 = 0x194,
     ABILITY_ID_JUMP_VERTICAL_8 = 0x195,
     ABILITY_ID_CHARGE_PLUS_1 = 0x196,
+    ABILITY_ID_CHARGE_PLUS_2 = 0x197,
+    ABILITY_ID_CHARGE_PLUS_3 = 0x198,
+    ABILITY_ID_CHARGE_PLUS_4 = 0x199,
+    ABILITY_ID_CHARGE_PLUS_5 = 0x19a,
+    ABILITY_ID_CHARGE_PLUS_7 = 0x19b,
+    ABILITY_ID_CHARGE_PLUS_10 = 0x19c,
     ABILITY_ID_CHARGE_PLUS_20 = 0x19d,
-    ABILITY_ID_REACTION_PA_SAVE = 0x1a6,
+    ABILITY_ID_MATH_CT = 0x19e,
+    ABILITY_ID_MATH_LEVEL = 0x19f,
+    ABILITY_ID_MATH_EXP = 0x1a0,
+    ABILITY_ID_MATH_HEIGHT = 0x1a1,
+    ABILITY_ID_MATH_PRIME_NUMBER = 0x1a2,
+    ABILITY_ID_MATH_5 = 0x1a3,
+    ABILITY_ID_MATH_4 = 0x1a4,
+    ABILITY_ID_MATH_3 = 0x1a5,
+    ABILITY_ID_REACTION_PA_SAVE = 0x1a6, /* "A Save" in the name text */
     ABILITY_ID_REACTION_MA_SAVE = 0x1a7,
     ABILITY_ID_REACTION_SPEED_SAVE = 0x1a8,
     ABILITY_ID_REACTION_SUNKEN_STATE = 0x1a9,
@@ -154,7 +501,7 @@ typedef enum ability_id {
     ABILITY_ID_REACTION_DRAGON_SPIRIT = 0x1ab,
     ABILITY_ID_REACTION_REGENERATOR = 0x1ac,
     ABILITY_ID_REACTION_BRAVE_UP = 0x1ad,
-    ABILITY_ID_REACTION_FAITH_UP = 0x1ae,
+    ABILITY_ID_REACTION_FAITH_UP = 0x1ae, /* "Face Up" in the name text */
     ABILITY_ID_REACTION_HP_RESTORE = 0x1af,
     ABILITY_ID_REACTION_MP_RESTORE = 0x1b0,
     ABILITY_ID_REACTION_CRITICAL_QUICK = 0x1b1,
@@ -228,11 +575,12 @@ typedef enum ability_id {
     ABILITY_ID_MOVEMENT_MOVE_IN_WATER = 0x1f6,
     ABILITY_ID_MOVEMENT_WALK_ON_WATER = 0x1f7,
     ABILITY_ID_MOVEMENT_MOVE_ON_LAVA = 0x1f8,
-    ABILITY_ID_MOVEMENT_MOVE_UNDERWATER = 0x1f9,
+    ABILITY_ID_MOVEMENT_MOVE_UNDERWATER = 0x1f9, /* "Move undrwater" in the name text */
     ABILITY_ID_MOVEMENT_FLOAT = 0x1fa,
     ABILITY_ID_MOVEMENT_FLY = 0x1fb,
     ABILITY_ID_MOVEMENT_SILENT_WALK = 0x1fc,
     ABILITY_ID_MOVEMENT_MOVE_FIND_ITEM = 0x1fd,
+    ABILITY_ID_KNOCKBACK = 0x200, /* past the id space: the strike that resolves a knockback */
 } ability_id_e;
 
 /* Behavior flags in the four secondary bytes of a default ability record.
@@ -244,8 +592,8 @@ typedef enum ability_secondary_flags_1 {
     ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE = 0x08,
     ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED = 0x10,
     ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE = 0x20,
-    ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES = 0x40, /* no retail ability sets it */
-    ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES = 0x80,  /* no retail ability sets it */
+    ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS = 0x40, /* no retail ability sets it */
+    ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS = 0x80,  /* no retail ability sets it */
 } ability_secondary_flags_1_e;
 
 typedef enum ability_secondary_flags_2 {
@@ -254,13 +602,14 @@ typedef enum ability_secondary_flags_2 {
     ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK = 0x04,
     ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE = 0x08,
     ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET = 0x10, /* the action keeps the tile, not the unit on it */
-    ABILITY_SECONDARY_FLAG_2_UPPER_LAYER_ONLY = 0x20,     /* the area's height window ignores the lower layer */
+    ABILITY_SECONDARY_FLAG_2_TOP_DOWN = 0x20,             /* the area's height window ignores the lower layer */
     /* With either of these, the other team's units drop out of the area. */
     ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES = 0x40,
     ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES = 0x80,
 } ability_secondary_flags_2_e;
 
 typedef enum ability_secondary_flags_3 {
+    ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS = 0x01, /* a strike that reaches no unit still plays on the target tile */
     ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE = 0x02,
     ABILITY_SECONDARY_FLAG_3_PERSEVERE = 0x04,
     ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM = 0x08,
@@ -294,7 +643,7 @@ typedef struct ability_secondary_data {
     u8 flags_3;              /* 0x05; ability_secondary_flags_3_e */
     u8 flags_4;              /* 0x06; ability_secondary_flags_4_e */
     u8 element;              /* 0x07 */
-    u8 formula;              /* 0x08 */
+    u8 formula;              /* 0x08; ability_formula_e */
     u8 x;                    /* 0x09; multi-hit formulas take the hit count from it */
     u8 y;                    /* 0x0a */
     u8 status_infliction_id; /* 0x0b; selects the six-byte status record at 0x8019bd78 */
@@ -350,42 +699,47 @@ enum {
 };
 
 /* Item categories stored in item_data_t.type and in the four-byte job/unit
- * equippable-type set.  The table layout starts at 0x80062eb8. */
+ * equippable-type set.  The table layout starts at 0x80062eb8. A name is the
+ * type word that ends the help text of the type's items ("Ninja sword",
+ * "Hammer", "Dictionary", "Spear", "Stick", "Clothes", "Gauntlet", "Mantle",
+ * "Women's ribbon"; INSTRUMENT is "Mus inst" there) or, for the two thrown
+ * types, the name of the Throw ability that g_main_throw_ability_item_types
+ * maps to it. */
 typedef enum item_type {
     ITEM_TYPE_UNARMED = 0x00,
     ITEM_TYPE_KNIFE = 0x01,
-    ITEM_TYPE_NINJA_BLADE = 0x02,
+    ITEM_TYPE_NINJA_SWORD = 0x02,
     ITEM_TYPE_SWORD = 0x03,
     ITEM_TYPE_KNIGHT_SWORD = 0x04,
     ITEM_TYPE_KATANA = 0x05,
     ITEM_TYPE_AXE = 0x06,
     ITEM_TYPE_ROD = 0x07,
     ITEM_TYPE_STAFF = 0x08,
-    ITEM_TYPE_FLAIL = 0x09,
+    ITEM_TYPE_HAMMER = 0x09,
     ITEM_TYPE_GUN = 0x0a,
     ITEM_TYPE_CROSSBOW = 0x0b,
     ITEM_TYPE_BOW = 0x0c,
     ITEM_TYPE_INSTRUMENT = 0x0d,
-    ITEM_TYPE_BOOK = 0x0e,
-    ITEM_TYPE_POLEARM = 0x0f,
-    ITEM_TYPE_POLE = 0x10,
+    ITEM_TYPE_DICTIONARY = 0x0e,
+    ITEM_TYPE_SPEAR = 0x0f,
+    ITEM_TYPE_STICK = 0x10,
     ITEM_TYPE_BAG = 0x11,
     ITEM_TYPE_CLOTH = 0x12,
     ITEM_TYPE_SHIELD = 0x13,
     ITEM_TYPE_HELMET = 0x14,
     ITEM_TYPE_HAT = 0x15,
-    ITEM_TYPE_HAIR_ADORNMENT = 0x16,
+    ITEM_TYPE_RIBBON = 0x16,
     ITEM_TYPE_ARMOR = 0x17,
-    ITEM_TYPE_CLOTHING = 0x18,
+    ITEM_TYPE_CLOTHES = 0x18,
     ITEM_TYPE_ROBE = 0x19,
     ITEM_TYPE_SHOES = 0x1a,
-    ITEM_TYPE_ARMGUARD = 0x1b,
+    ITEM_TYPE_GAUNTLET = 0x1b,
     ITEM_TYPE_RING = 0x1c,
     ITEM_TYPE_ARMLET = 0x1d,
-    ITEM_TYPE_CLOAK = 0x1e,
+    ITEM_TYPE_MANTLE = 0x1e,
     ITEM_TYPE_PERFUME = 0x1f,
-    ITEM_TYPE_THROWING = 0x20,
-    ITEM_TYPE_BOMB = 0x21,
+    ITEM_TYPE_SHURIKEN = 0x20,
+    ITEM_TYPE_BALL = 0x21,
     ITEM_TYPE_CONSUMABLE = 0x22,
     ITEM_TYPE_COUNT = 0x23,
 } item_type_e;
@@ -412,18 +766,285 @@ typedef enum weapon_flag {
     WEAPON_FLAG_STRIKING = 0x80,
 } weapon_flag_e;
 
-/* Item IDs index the 256-row primary item table at 0x80062eb8. Only IDs used
- * as named boundaries or fixed inventory entries are listed here. Item 0 is
+/* Item ids index the 256-row primary item table at 0x80062eb8. A name is the
+ * item's name in the game's text; the second Javelin and the second
+ * Escutcheon, which repeat a name and are never sold, end in _RARE. Item 0 is
  * Nothing, the unarmed item record. Rows 0xfe and 0xff otherwise contain zero
- * data but retain ITEM_TYPE_FLAG_RARE; ENTD uses them for Random and None,
- * while the random selector also uses 0xff as an Any-type filter. */
+ * data but retain ITEM_TYPE_FLAG_RARE; ENTD uses them for Random
+ * (ENTD_VALUE_RANDOM) and None, while the random selector also uses 0xff as an
+ * Any-type filter. */
 typedef enum item_id {
     ITEM_ID_NOTHING = 0x00,
+    /* ITEM_TYPE_KNIFE */
     ITEM_ID_DAGGER = 0x01,
+    ITEM_ID_MYTHRIL_KNIFE = 0x02,
+    ITEM_ID_BLIND_KNIFE = 0x03,
+    ITEM_ID_MAGE_MASHER = 0x04,
+    ITEM_ID_PLATINA_DAGGER = 0x05,
+    ITEM_ID_MAIN_GAUCHE = 0x06,
+    ITEM_ID_ORICHALCUM = 0x07,
+    ITEM_ID_ASSASSIN_DAGGER = 0x08,
+    ITEM_ID_AIR_KNIFE = 0x09,
+    ITEM_ID_ZORLIN_SHAPE = 0x0a,
+    /* ITEM_TYPE_NINJA_SWORD */
+    ITEM_ID_HIDDEN_KNIFE = 0x0b,
+    ITEM_ID_NINJA_KNIFE = 0x0c,
+    ITEM_ID_SHORT_EDGE = 0x0d,
+    ITEM_ID_NINJA_EDGE = 0x0e,
+    ITEM_ID_SPELL_EDGE = 0x0f,
+    ITEM_ID_SASUKE_KNIFE = 0x10,
+    ITEM_ID_IGA_KNIFE = 0x11,
+    ITEM_ID_KOGA_KNIFE = 0x12,
+    /* ITEM_TYPE_SWORD */
+    ITEM_ID_BROAD_SWORD = 0x13,
+    ITEM_ID_LONG_SWORD = 0x14,
+    ITEM_ID_IRON_SWORD = 0x15,
+    ITEM_ID_MYTHRIL_SWORD = 0x16,
+    ITEM_ID_BLOOD_SWORD = 0x17,
+    ITEM_ID_CORAL_SWORD = 0x18,
+    ITEM_ID_ANCIENT_SWORD = 0x19,
+    ITEM_ID_SLEEP_SWORD = 0x1a,
+    ITEM_ID_PLATINUM_SWORD = 0x1b,
+    ITEM_ID_DIAMOND_SWORD = 0x1c,
+    ITEM_ID_ICE_BRAND = 0x1d,
+    ITEM_ID_RUNE_BLADE = 0x1e,
+    ITEM_ID_NAGRAROCK = 0x1f,
+    ITEM_ID_MATERIA_BLADE = 0x20,
+    /* ITEM_TYPE_KNIGHT_SWORD */
+    ITEM_ID_DEFENDER = 0x21,
+    ITEM_ID_SAVE_THE_QUEEN = 0x22,
+    ITEM_ID_EXCALIBUR = 0x23,
+    ITEM_ID_RAGNAROK = 0x24,
+    ITEM_ID_CHAOS_BLADE = 0x25,
+    /* ITEM_TYPE_KATANA */
+    ITEM_ID_ASURA_KNIFE = 0x26,
+    ITEM_ID_KOUTETSU_KNIFE = 0x27,
+    ITEM_ID_BIZEN_BOAT = 0x28,
+    ITEM_ID_MURASAME = 0x29,
+    ITEM_ID_HEAVENS_CLOUD = 0x2a,
+    ITEM_ID_KIYOMORI = 0x2b,
+    ITEM_ID_MURAMASA = 0x2c,
+    ITEM_ID_KIKUICHIMOJI = 0x2d,
+    ITEM_ID_MASAMUNE = 0x2e,
+    ITEM_ID_CHIRIJIRADEN = 0x2f,
+    /* ITEM_TYPE_AXE */
+    ITEM_ID_BATTLE_AXE = 0x30,
+    ITEM_ID_GIANT_AXE = 0x31,
+    ITEM_ID_SLASHER = 0x32,
+    /* ITEM_TYPE_ROD */
+    ITEM_ID_ROD = 0x33,
+    ITEM_ID_THUNDER_ROD = 0x34,
+    ITEM_ID_FLAME_ROD = 0x35,
+    ITEM_ID_ICE_ROD = 0x36,
+    ITEM_ID_POISON_ROD = 0x37,
+    ITEM_ID_WIZARD_ROD = 0x38,
+    ITEM_ID_DRAGON_ROD = 0x39,
+    ITEM_ID_FAITH_ROD = 0x3a,
+    /* ITEM_TYPE_STAFF */
+    ITEM_ID_OAK_STAFF = 0x3b,
+    ITEM_ID_WHITE_STAFF = 0x3c,
+    ITEM_ID_HEALING_STAFF = 0x3d,
+    ITEM_ID_RAINBOW_STAFF = 0x3e,
+    ITEM_ID_WIZARD_STAFF = 0x3f,
+    ITEM_ID_GOLD_STAFF = 0x40,
+    ITEM_ID_MACE_OF_ZEUS = 0x41,
+    ITEM_ID_SAGE_STAFF = 0x42,
+    /* ITEM_TYPE_HAMMER */
+    ITEM_ID_FLAIL = 0x43,
+    ITEM_ID_FLAME_WHIP = 0x44,
+    ITEM_ID_MORNING_STAR = 0x45,
+    ITEM_ID_SCORPION_TAIL = 0x46,
     ITEM_ID_ROMANDA_GUN = 0x47, /* the guns run to Blast Gun */
+    ITEM_ID_MYTHRIL_GUN = 0x48,
+    ITEM_ID_STONE_GUN = 0x49,
+    ITEM_ID_BLAZE_GUN = 0x4a,
+    ITEM_ID_GLACIER_GUN = 0x4b,
     ITEM_ID_BLAST_GUN = 0x4c,
-    ITEM_ID_SHURIKEN = 0x7a,  /* then Magic Shuriken and Yagyu Darkness */
+    /* ITEM_TYPE_CROSSBOW */
+    ITEM_ID_BOW_GUN = 0x4d,
+    ITEM_ID_NIGHT_KILLER = 0x4e,
+    ITEM_ID_CROSS_BOW = 0x4f,
+    ITEM_ID_POISON_BOW = 0x50,
+    ITEM_ID_HUNTING_BOW = 0x51,
+    ITEM_ID_GASTRAFITIS = 0x52,
+    /* ITEM_TYPE_BOW */
+    ITEM_ID_LONG_BOW = 0x53,
+    ITEM_ID_SILVER_BOW = 0x54,
+    ITEM_ID_ICE_BOW = 0x55,
+    ITEM_ID_LIGHTNING_BOW = 0x56,
+    ITEM_ID_WINDSLASH_BOW = 0x57,
+    ITEM_ID_MYTHRIL_BOW = 0x58,
+    ITEM_ID_ULTIMUS_BOW = 0x59,
+    ITEM_ID_YOICHI_BOW = 0x5a,
+    ITEM_ID_PERSEUS_BOW = 0x5b,
+    /* ITEM_TYPE_INSTRUMENT */
+    ITEM_ID_RAMIA_HARP = 0x5c,
+    ITEM_ID_BLOODY_STRINGS = 0x5d,
+    ITEM_ID_FAIRY_HARP = 0x5e,
+    /* ITEM_TYPE_DICTIONARY */
+    ITEM_ID_BATTLE_DICT = 0x5f,
+    ITEM_ID_MONSTER_DICT = 0x60,
+    ITEM_ID_PAPYRUS_PLATE = 0x61,
+    ITEM_ID_MADLEMGEN = 0x62,
+    /* ITEM_TYPE_SPEAR */
+    ITEM_ID_JAVELIN = 0x63,
+    ITEM_ID_SPEAR = 0x64,
+    ITEM_ID_MYTHRIL_SPEAR = 0x65,
+    ITEM_ID_PARTISAN = 0x66,
+    ITEM_ID_OBERISK = 0x67,
+    ITEM_ID_HOLY_LANCE = 0x68,
+    ITEM_ID_DRAGON_WHISKER = 0x69,
+    ITEM_ID_JAVELIN_RARE = 0x6a, /* the second "Javelin" of the name text, never sold */
+    /* ITEM_TYPE_STICK */
+    ITEM_ID_CYPRESS_ROD = 0x6b,
+    ITEM_ID_BATTLE_BAMBOO = 0x6c,
+    ITEM_ID_MUSK_ROD = 0x6d,
+    ITEM_ID_IRON_FAN = 0x6e,
+    ITEM_ID_GOKUU_ROD = 0x6f,
+    ITEM_ID_IVORY_ROD = 0x70,
+    ITEM_ID_OCTAGON_ROD = 0x71,
+    ITEM_ID_WHALE_WHISKER = 0x72,
+    /* ITEM_TYPE_BAG */
+    ITEM_ID_C_BAG = 0x73,
+    ITEM_ID_FS_BAG = 0x74,
+    ITEM_ID_P_BAG = 0x75,
+    ITEM_ID_H_BAG = 0x76,
+    /* ITEM_TYPE_CLOTH */
+    ITEM_ID_PERSIA = 0x77,
+    ITEM_ID_CASHMERE = 0x78,
+    ITEM_ID_RYOZAN_SILK = 0x79,
+    ITEM_ID_SHURIKEN = 0x7a, /* then Magic Shuriken and Yagyu Darkness */
+    ITEM_ID_MAGIC_SHURIKEN = 0x7b,
+    ITEM_ID_YAGYU_DARKNESS = 0x7c,
     ITEM_ID_FIRE_BALL = 0x7d, /* then Water Ball and Lightning Ball */
+    ITEM_ID_WATER_BALL = 0x7e,
+    ITEM_ID_LIGHTNING_BALL = 0x7f,
+    /* ITEM_TYPE_SHIELD */
+    ITEM_ID_ESCUTCHEON = 0x80,
+    ITEM_ID_BUCKLER = 0x81,
+    ITEM_ID_BRONZE_SHIELD = 0x82,
+    ITEM_ID_ROUND_SHIELD = 0x83,
+    ITEM_ID_MYTHRIL_SHIELD = 0x84,
+    ITEM_ID_GOLD_SHIELD = 0x85,
+    ITEM_ID_ICE_SHIELD = 0x86,
+    ITEM_ID_FLAME_SHIELD = 0x87,
+    ITEM_ID_AEGIS_SHIELD = 0x88,
+    ITEM_ID_DIAMOND_SHIELD = 0x89,
+    ITEM_ID_PLATINA_SHIELD = 0x8a,
+    ITEM_ID_CRYSTAL_SHIELD = 0x8b,
+    ITEM_ID_GENJI_SHIELD = 0x8c,
+    ITEM_ID_KAISER_PLATE = 0x8d,
+    ITEM_ID_VENETIAN_SHIELD = 0x8e,
+    ITEM_ID_ESCUTCHEON_RARE = 0x8f, /* the second "Escutcheon" of the name text, never sold */
+    /* ITEM_TYPE_HELMET */
+    ITEM_ID_LEATHER_HELMET = 0x90,
+    ITEM_ID_BRONZE_HELMET = 0x91,
+    ITEM_ID_IRON_HELMET = 0x92,
+    ITEM_ID_BARBUTA = 0x93,
+    ITEM_ID_MYTHRIL_HELMET = 0x94,
+    ITEM_ID_GOLD_HELMET = 0x95,
+    ITEM_ID_CROSS_HELMET = 0x96,
+    ITEM_ID_DIAMOND_HELMET = 0x97,
+    ITEM_ID_PLATINA_HELMET = 0x98,
+    ITEM_ID_CIRCLET = 0x99,
+    ITEM_ID_CRYSTAL_HELMET = 0x9a,
+    ITEM_ID_GENJI_HELMET = 0x9b,
+    ITEM_ID_GRAND_HELMET = 0x9c,
+    /* ITEM_TYPE_HAT */
+    ITEM_ID_LEATHER_HAT = 0x9d,
+    ITEM_ID_FEATHER_HAT = 0x9e,
+    ITEM_ID_RED_HOOD = 0x9f,
+    ITEM_ID_HEADGEAR = 0xa0,
+    ITEM_ID_TRIANGLE_HAT = 0xa1,
+    ITEM_ID_GREEN_BERET = 0xa2,
+    ITEM_ID_TWIST_HEADBAND = 0xa3,
+    ITEM_ID_HOLY_MITER = 0xa4,
+    ITEM_ID_BLACK_HOOD = 0xa5,
+    ITEM_ID_GOLDEN_HAIRPIN = 0xa6,
+    ITEM_ID_FLASH_HAT = 0xa7,
+    ITEM_ID_THIEF_HAT = 0xa8,
+    /* ITEM_TYPE_RIBBON */
+    ITEM_ID_CACHUSHA = 0xa9,
+    ITEM_ID_BARETTE = 0xaa,
+    ITEM_ID_RIBBON = 0xab,
+    /* ITEM_TYPE_ARMOR */
+    ITEM_ID_LEATHER_ARMOR = 0xac,
+    ITEM_ID_LINEN_CUIRASS = 0xad,
+    ITEM_ID_BRONZE_ARMOR = 0xae,
+    ITEM_ID_CHAIN_MAIL = 0xaf,
+    ITEM_ID_MYTHRIL_ARMOR = 0xb0,
+    ITEM_ID_PLATE_MAIL = 0xb1,
+    ITEM_ID_GOLD_ARMOR = 0xb2,
+    ITEM_ID_DIAMOND_ARMOR = 0xb3,
+    ITEM_ID_PLATINA_ARMOR = 0xb4,
+    ITEM_ID_CARABINI_MAIL = 0xb5,
+    ITEM_ID_CRYSTAL_MAIL = 0xb6,
+    ITEM_ID_GENJI_ARMOR = 0xb7,
+    ITEM_ID_REFLECT_MAIL = 0xb8,
+    ITEM_ID_MAXIMILLIAN = 0xb9,
+    /* ITEM_TYPE_CLOTHES */
+    ITEM_ID_CLOTHES = 0xba,
+    ITEM_ID_LEATHER_OUTFIT = 0xbb,
+    ITEM_ID_LEATHER_VEST = 0xbc,
+    ITEM_ID_CHAIN_VEST = 0xbd,
+    ITEM_ID_MYTHRIL_VEST = 0xbe,
+    ITEM_ID_ADAMAN_VEST = 0xbf,
+    ITEM_ID_WIZARD_OUTFIT = 0xc0,
+    ITEM_ID_BRIGANDINE = 0xc1,
+    ITEM_ID_JUDO_OUTFIT = 0xc2,
+    ITEM_ID_POWER_SLEEVE = 0xc3,
+    ITEM_ID_EARTH_CLOTHES = 0xc4,
+    ITEM_ID_SECRET_CLOTHES = 0xc5,
+    ITEM_ID_BLACK_COSTUME = 0xc6,
+    ITEM_ID_RUBBER_COSTUME = 0xc7,
+    /* ITEM_TYPE_ROBE */
+    ITEM_ID_LINEN_ROBE = 0xc8,
+    ITEM_ID_SILK_ROBE = 0xc9,
+    ITEM_ID_WIZARD_ROBE = 0xca,
+    ITEM_ID_CHAMELEON_ROBE = 0xcb,
+    ITEM_ID_WHITE_ROBE = 0xcc,
+    ITEM_ID_BLACK_ROBE = 0xcd,
+    ITEM_ID_LIGHT_ROBE = 0xce,
+    ITEM_ID_ROBE_OF_LORDS = 0xcf,
+    /* ITEM_TYPE_SHOES */
+    ITEM_ID_BATTLE_BOOTS = 0xd0,
+    ITEM_ID_SPIKE_SHOES = 0xd1,
+    ITEM_ID_GERMINAS_BOOTS = 0xd2,
+    ITEM_ID_RUBBER_SHOES = 0xd3,
+    ITEM_ID_FEATHER_BOOTS = 0xd4,
+    ITEM_ID_SPRINT_SHOES = 0xd5,
+    ITEM_ID_RED_SHOES = 0xd6,
+    /* ITEM_TYPE_GAUNTLET */
+    ITEM_ID_POWER_WRIST = 0xd7,
+    ITEM_ID_GENJI_GAUNTLET = 0xd8,
+    ITEM_ID_MAGIC_GAUNTLET = 0xd9,
+    ITEM_ID_BRACER = 0xda,
+    /* ITEM_TYPE_RING */
+    ITEM_ID_REFLECT_RING = 0xdb,
+    ITEM_ID_DEFENSE_RING = 0xdc,
+    ITEM_ID_MAGIC_RING = 0xdd,
+    ITEM_ID_CURSED_RING = 0xde,
+    ITEM_ID_ANGEL_RING = 0xdf,
+    /* ITEM_TYPE_ARMLET */
+    ITEM_ID_DIAMOND_ARMLET = 0xe0,
+    ITEM_ID_JADE_ARMLET = 0xe1,
+    ITEM_ID_108_GEMS = 0xe2,
+    ITEM_ID_N_KAI_ARMLET = 0xe3,
+    ITEM_ID_DEFENSE_ARMLET = 0xe4,
+    /* ITEM_TYPE_MANTLE */
+    ITEM_ID_SMALL_MANTLE = 0xe5,
+    ITEM_ID_LEATHER_MANTLE = 0xe6,
+    ITEM_ID_WIZARD_MANTLE = 0xe7,
+    ITEM_ID_ELF_MANTLE = 0xe8,
+    ITEM_ID_DRACULA_MANTLE = 0xe9,
+    ITEM_ID_FEATHER_MANTLE = 0xea,
+    ITEM_ID_VANISH_MANTLE = 0xeb,
+    /* ITEM_TYPE_PERFUME */
+    ITEM_ID_CHANTAGE = 0xec,
+    ITEM_ID_CHERCHE = 0xed,
+    ITEM_ID_SETIEMSON = 0xee,
+    ITEM_ID_SALTY_RAGE = 0xef,
+    /* ITEM_TYPE_CONSUMABLE */
     ITEM_ID_POTION = 0xf0,
     ITEM_ID_HI_POTION = 0xf1,
     ITEM_ID_X_POTION = 0xf2,
@@ -455,17 +1076,15 @@ typedef enum item_id {
  * shields, headgear, body armor, accessories, and consumables. */
 enum {
     WORLD_ITEM_ID_MASK = 0x3ff,
+    WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE = 0x4000, /* item list entries: the unit cannot equip the item */
+    WORLD_EQUIPMENT_SHOP_ITEM = 0x8000, /* equipment halfwords: an unpaid shop item tried on in the fitting room */
     ITEM_ID_THROWABLE_FIRST = 0x7a,
     ITEM_ID_SHIELD_FIRST = 0x80,
     ITEM_ID_HEADGEAR_FIRST = 0x90,
     ITEM_ID_BODY_ARMOR_FIRST = 0xac,
     ITEM_ID_ACCESSORY_FIRST = 0xd0,
     ITEM_ID_CONSUMABLE_FIRST = 0xf0,
-    /* Item-table loops (inventory, shops, sorts, treasure) stop here: real
-     * items end with Phoenix Down (0xfd). 0xfe is a blank record (FFTPatcher
-     * "<Nothing>") that all of them skip, and 0xff is ITEM_ID_NONE, so an
-     * item added at 0xfe stays out of those lists until this bound moves. */
-    ITEM_ID_END = 0xfe,
+    ITEM_ID_END = 0xfe, /* one past the last item; ENTD's Random and None follow */
 };
 
 /* Broad item categories shared by the WORLD and EQUIP menu classifiers.
@@ -501,7 +1120,7 @@ typedef char item_data_size_must_be_12[(sizeof(item_data_t) == 12) ? 1 : -1];
 typedef struct weapon_data {
     u8 range;      /* 0x00 */
     u8 flags;      /* 0x01; weapon_flag_e */
-    u8 formula;    /* 0x02 */
+    u8 formula;    /* 0x02; ability_formula_e */
     u8 _unused_03; /* 0x03 */
     u8 power;      /* 0x04; copied to battle_stats_t equipment-stat slots 0x3c/0x3d */
     u8 evade;      /* 0x05; copied to battle_stats_t 0x3e/0x3f */
@@ -523,20 +1142,20 @@ typedef char item_secondary_data_size_must_be_3[(sizeof(item_secondary_data_t) =
 /* Shield records at 0x80063eb8 (g_main_item_shield_data), indexed by
  * item_data_t.secondary_data_id for items with type flag 0x40. */
 typedef struct shield_data {
-    u8 physical_evade; /* 0x00; battle_stats_t 0x40 */
-    u8 magic_evade;    /* 0x01; battle_stats_t 0x44 */
+    u8 physical_evade; /* 0x00; battle_stats_t 0x41 (right hand) / 0x42 (left hand) */
+    u8 magic_evade;    /* 0x01; battle_stats_t 0x45 (right hand) / 0x46 (left hand) */
 } shield_data_t;
 
 /* Accessory records at 0x80063f58 (g_main_item_accessory_data), indexed by
  * item_data_t.secondary_data_id for items with type flag 0x08. */
 typedef struct accessory_data {
-    u8 physical_evade;
-    u8 magic_evade;
+    u8 physical_evade; /* 0x00; battle_stats_t 0x40 */
+    u8 magic_evade;    /* 0x01; battle_stats_t 0x44 */
 } accessory_data_t;
 
 typedef struct armor_data {
-    u8 hp_bonus; /* 0x00; battle_stats_t 0x41/0x42 */
-    u8 mp_bonus; /* 0x01; battle_stats_t 0x45/0x46 */
+    u8 hp_bonus; /* 0x00; added to battle_stats_t.max_hp */
+    u8 mp_bonus; /* 0x01; added to battle_stats_t.max_mp */
 } armor_data_t;
 
 /* Static innate, immunity and starting-status masks embedded in item and job
@@ -599,7 +1218,7 @@ enum {
 };
 
 /*
- * 0x30-byte job record (g_job_data_pointer). The named fields are those copied
+ * 0x30-byte job record (g_main_job_data_pointer). The named fields are those copied
  * by main_unit_copy_job_data, main_unit_calculate_abilities and
  * main_unit_set_equipment_stats into battle_stats_t.
  */
@@ -615,15 +1234,22 @@ typedef struct job_data {
     u8 elemental_affinity[4];          /* 0x29; affinity indices 0 through 3 */
     u8 spritesheet_id;                 /* 0x2d */
     u8 job_portrait_palette;           /* 0x2e */
-    u8 graphic_variant;                /* 0x2f; copied to battle_stats_t 0x15e */
+    u8 monster_graphic;                /* 0x2f; copied to battle_stats_t 0x15e */
 } job_data_t;
 typedef char job_data_size_must_be_48[(sizeof(job_data_t) == 48) ? 1 : -1];
 
-/* PSX job-table IDs. Use PSX names, not the parenthesized PSP translations.
- * Unnamed table slots are deliberately omitted; neither a blank label nor
- * "None" proves a sentinel. Character/variant suffixes distinguish separate
- * records with the same job. The PSP-only additions beginning at 0xa0 are not
- * part of this target. */
+/* Job ids index the 160 records of g_main_job_data. A name is the job's name
+ * in the game's text. Where records share a name, a suffix names the
+ * character: the unit name the game's text has at the same index, which is
+ * also the name the ENTD gives the job's units. Two records of one character
+ * are told apart by the chapter, by the role the ENTD gives the unit (GUEST,
+ * JOIN, ENEMY) or by the record's status sets (UNDEAD, INNATE_KO and
+ * STARTING_KO are its innate and starting statuses). A numbered suffix marks a
+ * record that repeats a
+ * name with nothing but its id to name it: 0x35-0x38 repeat four generic jobs
+ * for ENTD units that can equip every item type, and 0x98 is an empty second
+ * Holy Dragon. Records without name text (0x00, 0x39-0x3b, 0x9b-0x9f) and
+ * those the text calls "None" (0x8e, 0x8f, 0x92-0x95) have no enumerator. */
 typedef enum job_id {
     JOB_ID_SQUIRE_RAMZA_CHAPTER_1 = 0x01,
     JOB_ID_SQUIRE_RAMZA_CHAPTER_2_3 = 0x02,
@@ -663,7 +1289,7 @@ typedef enum job_id {
     JOB_ID_DIVINE_KNIGHT_VORMAV = 0x24,
     JOB_ID_DIVINE_KNIGHT_ROFEL = 0x25,
     JOB_ID_KNIGHT_BLADE_IZLUDE = 0x26,
-    JOB_ID_SORCERER_KLETIAN = 0x27,
+    JOB_ID_SORCERER_KLETIAN = 0x27, /* "Sorceror" in the name text */
     JOB_ID_WHITE_KNIGHT_WIEGRAF_CHAPTER_3 = 0x28,
     JOB_ID_HEAVEN_KNIGHT_RAFA_JOIN = 0x29,
     JOB_ID_DIVINE_KNIGHT_MELIADOUL_JOIN = 0x2a,
@@ -681,7 +1307,6 @@ typedef enum job_id {
     JOB_ID_PRIEST_36 = 0x36,
     JOB_ID_WIZARD_37 = 0x37,
     JOB_ID_ORACLE_38 = 0x38,
-    JOB_ID_ORACLE_39 = 0x39,
 
     JOB_ID_WARLOCK_VELIUS = 0x3c,
     JOB_ID_KNIGHT_UNDEAD = 0x3d,
@@ -829,9 +1454,139 @@ typedef enum skillset_id {
     SKILLSET_ID_SING = 0x16,
     SKILLSET_ID_DANCE = 0x17,
     SKILLSET_ID_MIMIC = 0x18,
-    SKILLSET_ID_ELMDOR_BLOOD_SUCK = 0xa7,
-    SKILLSET_ID_FROG_ATTACK = 0xa9,
-    SKILLSET_ID_NONE = 0xff, /* empty ENTD skillset and AI ability-list terminator */
+    SKILLSET_ID_GUTS_RAMZA_CHAPTER_1 = 0x19,
+    SKILLSET_ID_GUTS_RAMZA_CHAPTER_2_3 = 0x1a,
+    SKILLSET_ID_GUTS_RAMZA_CHAPTER_4 = 0x1b,
+    SKILLSET_ID_GUTS_DELITA = 0x1c,
+    SKILLSET_ID_HOLY_SWORD_DELITA = 0x1d,
+    SKILLSET_ID_MIGHTY_SWORD_DELITA = 0x1e,
+    SKILLSET_ID_BASIC_SKILL_ALGUS = 0x1f,
+    SKILLSET_ID_DARK_SWORD_GAFGARION_GUEST = 0x20,
+    SKILLSET_ID_HOLY_SWORD_AGRIAS_GUEST = 0x21,
+    SKILLSET_ID_HOLY_SWORD_WIEGRAF_CHAPTER_1 = 0x22,
+    SKILLSET_ID_MAGIC = 0x23, /* JOB_ID_DELITAS_SIS_TETA */
+    SKILLSET_ID_HOLY_MAGIC_OVELIA = 0x24,
+    SKILLSET_ID_SNIPE_MUSTADIO_GUEST = 0x25,
+    SKILLSET_ID_SNIPE_MUSTADIO_JOIN = 0x26,
+    SKILLSET_ID_DARK_SWORD_GAFGARION_ENEMY = 0x27,
+    SKILLSET_ID_HOLY_SWORD_AGRIAS_JOIN = 0x28,
+    SKILLSET_ID_LIMIT = 0x29, /* JOB_ID_SOLDIER_CLOUD */
+    SKILLSET_ID_WHITE_AID = 0x2a,
+    SKILLSET_ID_DRAGON = 0x2b,
+    SKILLSET_ID_BREATH = 0x2c,
+    SKILLSET_ID_TRUTH_RAFA_GUEST = 0x2d,
+    SKILLSET_ID_UN_TRUTH = 0x2e, /* both Malak jobs */
+    SKILLSET_ID_STARRY_HEAVEN = 0x2f,
+    SKILLSET_ID_HOLY_SWORD_WIEGRAF_CHAPTER_3 = 0x30,
+    SKILLSET_ID_HOLY_MAGIC_ALMA = 0x31,
+    SKILLSET_ID_TRUTH_RAFA_JOIN = 0x32,
+    SKILLSET_ID_BATTLE_SKILL_IZLUDE = 0x33,
+    SKILLSET_ID_JUMP_IZLUDE = 0x34, /* ENTD second skillset */
+    SKILLSET_ID_PUNCH_SKILL = 0x35, /* Wiegraf's ENTD second skillset */
+    SKILLSET_ID_USE_HAND_CELIA = 0x36,
+    SKILLSET_ID_USE_HAND_LEDE = 0x37,
+    SKILLSET_ID_THROW_CELIA = 0x38,                       /* ENTD second skillset */
+    SKILLSET_ID_THROW_LEDE = 0x39,                        /* ENTD second skillset */
+    SKILLSET_ID_HOLY_SWORD_WIEGRAF_LIGHTNING_STAB = 0x3a, /* ENTD: Wiegraf, beside PUNCH_SKILL; Lightning Stab alone */
+    SKILLSET_ID_SWORD_SPIRIT_ELMDOR = 0x3b,
+    SKILLSET_ID_MIGHTY_SWORD_ROFEL = 0x3c,
+    SKILLSET_ID_ALL_MAGIC_ROFEL = 0x3d,                  /* ENTD second skillset */
+    SKILLSET_ID_SWORD_SPIRIT_ELMDOR_CHIRIJIRADEN = 0x3e, /* ENTD: Elmdor, beside BLOOD_SUCK; two more swords */
+    SKILLSET_ID_BLOOD_SUCK = 0x3f,                       /* ENTD second skillset of Elmdor and the vampire Zalbag */
+    SKILLSET_ID_MIGHTY_SWORD_VORMAV = 0x40,
+    SKILLSET_ID_ALL_MAGIC_VORMAV = 0x41, /* ENTD second skillset */
+    SKILLSET_ID_MIGHTY_SWORD_MELIADOUL_ENEMY = 0x42,
+    SKILLSET_ID_MIGHTY_SWORD_MELIADOUL_JOIN = 0x43,
+    SKILLSET_ID_SNIPE_BALK = 0x44,
+    SKILLSET_ID_MAGIC_SWORD = 0x45,
+    SKILLSET_ID_SWORD_SKILL_DYCEDARG = 0x46,
+    SKILLSET_ID_ALL_MAGIC_DYCEDARG = 0x47, /* ENTD second skillset */
+    SKILLSET_ID_ALL_MAGIC_KLETIAN = 0x48,
+    SKILLSET_ID_PHANTOM = 0x49, /* Kletian's ENTD second skillset */
+    SKILLSET_ID_ALL_SWORDSKILL = 0x4a,
+    SKILLSET_ID_DESTROY_SWORD = 0x4b,          /* both Zalbag jobs */
+    SKILLSET_ID_HOLY_MAGIC_ALMA_ULTIMA = 0x4c, /* the two _KO Alma jobs; adds Ultima */
+    SKILLSET_ID_FEAR_VELIUS = 0x67,
+    SKILLSET_ID_WARLOCK_SUMMON = 0x68, /* Velius's ENTD second skillset */
+    SKILLSET_ID_FEAR_ZALERA = 0x6b,
+    SKILLSET_ID_JA_MAGIC = 0x6c, /* Zalera's ENTD second skillset */
+    SKILLSET_ID_FEAR_HASHMALUM = 0x6f,
+    SKILLSET_ID_DIMENSION_MAGIC = 0x70, /* "Dimension Magc" in the name text */
+    SKILLSET_ID_FEAR_QUEKLAIN = 0x73,
+    SKILLSET_ID_IMPURE = 0x74, /* Queklain's ENTD second skillset */
+    SKILLSET_ID_FEAR_ADRAMELK = 0x77,
+    SKILLSET_ID_ALL_MAGIC_ADRAMELK = 0x78, /* ENTD second skillset */
+    SKILLSET_ID_ULTIMATE_MAGIC = 0x7b,     /* ENTD: Holy Angel Altima, whose job has the empty 0x59 */
+    SKILLSET_ID_CHAOS = 0x7c,              /* ENTD second skillset of Holy Angel Altima */
+    SKILLSET_ID_COMPLETE_MAGIC = 0x7d,     /* JOB_ID_ARCH_ANGEL_ALTIMA */
+    SKILLSET_ID_SATURATION = 0x7e,         /* ENTD second skillset of Arch Angel Altima */
+    SKILLSET_ID_SWORD_SKILL_UNDEAD = 0x9b,
+    SKILLSET_ID_CHARGE_UNDEAD = 0x9c,
+    SKILLSET_ID_BLACK_MAGIC_UNDEAD = 0x9d,
+    SKILLSET_ID_TIME_MAGIC_UNDEAD = 0x9e,
+    SKILLSET_ID_YIN_YANG_MAGIC_UNDEAD = 0x9f,
+    SKILLSET_ID_SUMMON_MAGIC_UNDEAD = 0xa0,
+    SKILLSET_ID_ITEM_NO_RSM = 0xa1,           /* the ITEM abilities with no R/S/M */
+    SKILLSET_ID_WHITE_MAGIC_NO_RSM = 0xa2,    /* ENTD first skillset of JOB_ID_PRIEST_36 */
+    SKILLSET_ID_BLACK_MAGIC_NO_RSM = 0xa3,    /* ENTD first skillset of JOB_ID_WIZARD_37; four spells */
+    SKILLSET_ID_YIN_YANG_MAGIC_NO_RSM = 0xa4, /* ENTD first skillset of JOB_ID_ORACLE_38 */
+    SKILLSET_ID_BLOOD_SUCK_STATUS = 0xa7,     /* no name text; AI: a unit under the Blood Suck status */
+    SKILLSET_ID_FROG_ATTACK = 0xa9,           /* no name text, empty; AI: ABILITY_ID_FROG_ATTACK */
+    SKILLSET_ID_BYBLOS = 0xaa,
+    SKILLSET_ID_WORK = 0xab,
+    SKILLSET_ID_BIO = 0xac,
+    SKILLSET_ID_DARK_CLOUD = 0xad,
+    SKILLSET_ID_DARK_MAGIC = 0xae,
+    SKILLSET_ID_NIGHT_MAGIC = 0xaf,
+    SKILLSET_ID_MONSTER_CHOCOBO = 0xb0,
+    SKILLSET_ID_MONSTER_BLACK_CHOCOBO = 0xb1,
+    SKILLSET_ID_MONSTER_RED_CHOCOBO = 0xb2,
+    SKILLSET_ID_MONSTER_GOBLIN = 0xb3,
+    SKILLSET_ID_MONSTER_BLACK_GOBLIN = 0xb4,
+    SKILLSET_ID_MONSTER_GOBBLEDEGUCK = 0xb5,
+    SKILLSET_ID_MONSTER_BOMB = 0xb6,
+    SKILLSET_ID_MONSTER_GRENADE = 0xb7,
+    SKILLSET_ID_MONSTER_EXPLOSIVE = 0xb8,
+    SKILLSET_ID_MONSTER_RED_PANTHER = 0xb9,
+    SKILLSET_ID_MONSTER_CUAR = 0xba,
+    SKILLSET_ID_MONSTER_VAMPIRE = 0xbb,
+    SKILLSET_ID_MONSTER_PISCO_DEMON = 0xbc,
+    SKILLSET_ID_MONSTER_SQUIDLARKIN = 0xbd,
+    SKILLSET_ID_MONSTER_MINDFLARE = 0xbe,
+    SKILLSET_ID_MONSTER_SKELETON = 0xbf,
+    SKILLSET_ID_MONSTER_BONE_SNATCH = 0xc0,
+    SKILLSET_ID_MONSTER_LIVING_BONE = 0xc1,
+    SKILLSET_ID_MONSTER_GHOUL = 0xc2,
+    SKILLSET_ID_MONSTER_GUST = 0xc3,
+    SKILLSET_ID_MONSTER_REVNANT = 0xc4,
+    SKILLSET_ID_MONSTER_FLOTIBALL = 0xc5,
+    SKILLSET_ID_MONSTER_AHRIMAN = 0xc6,
+    SKILLSET_ID_MONSTER_PLAGUE = 0xc7,
+    SKILLSET_ID_MONSTER_JURAVIS = 0xc8,
+    SKILLSET_ID_MONSTER_STEEL_HAWK = 0xc9,
+    SKILLSET_ID_MONSTER_COCATORIS = 0xca,
+    SKILLSET_ID_MONSTER_URIBO = 0xcb,
+    SKILLSET_ID_MONSTER_PORKY = 0xcc,
+    SKILLSET_ID_MONSTER_WILDBOW = 0xcd,
+    SKILLSET_ID_MONSTER_WOODMAN = 0xce,
+    SKILLSET_ID_MONSTER_TRENT = 0xcf,
+    SKILLSET_ID_MONSTER_TAIJU = 0xd0,
+    SKILLSET_ID_MONSTER_BULL_DEMON = 0xd1,
+    SKILLSET_ID_MONSTER_MINITAURUS = 0xd2,
+    SKILLSET_ID_MONSTER_SACRED = 0xd3,
+    SKILLSET_ID_MONSTER_MORBOL = 0xd4,
+    SKILLSET_ID_MONSTER_OCHU = 0xd5,
+    SKILLSET_ID_MONSTER_GREAT_MORBOL = 0xd6,
+    SKILLSET_ID_MONSTER_BEHEMOTH = 0xd7,
+    SKILLSET_ID_MONSTER_KING_BEHEMOTH = 0xd8,
+    SKILLSET_ID_MONSTER_DARK_BEHEMOTH = 0xd9,
+    SKILLSET_ID_MONSTER_DRAGON = 0xda,
+    SKILLSET_ID_MONSTER_BLUE_DRAGON = 0xdb,
+    SKILLSET_ID_MONSTER_RED_DRAGON = 0xdc,
+    SKILLSET_ID_MONSTER_HYUDRA = 0xdd,
+    SKILLSET_ID_MONSTER_HYDRA = 0xde,
+    SKILLSET_ID_MONSTER_TIAMAT = 0xdf,
+    SKILLSET_ID_NONE = 0xff, /* empty ENTD skillset; ends a skillset or AI ability list */
 } skillset_id_e;
 
 enum {
@@ -874,8 +1629,8 @@ typedef char status_effect_data_size_must_be_0x10[(sizeof(status_effect_data_t) 
  * code reads. */
 typedef enum status_effect_flags_1 {
     STATUS_EFFECT_FLAG_1_KO = 0x01,
-    STATUS_EFFECT_FLAG_1_LOST = 0x02,
-    STATUS_EFFECT_FLAG_1_UNUSED_SET_2 = 0x04,
+    STATUS_EFFECT_FLAG_1_UNIT_LOST = 0x02,
+    STATUS_EFFECT_FLAG_1_CHECK_SET_2 = 0x04,
     STATUS_EFFECT_FLAG_1_FREEZE_CT = 0x80,
 } status_effect_flags_1_e;
 
@@ -884,8 +1639,8 @@ typedef enum status_effect_flags_1 {
 typedef enum status_effect_flags_2 {
     STATUS_EFFECT_FLAG_2_IMMORTAL_IMMUNITY = 0x01,
     STATUS_EFFECT_FLAG_2_FORMATION_IMMUNITY = 0x02,
-    STATUS_EFFECT_FLAG_2_UNUSED_SET_7 = 0x04,
-    STATUS_EFFECT_FLAG_2_EVENT_EXCLUDED = 0x08,
+    STATUS_EFFECT_FLAG_2_CHECK_SET_7 = 0x04,
+    STATUS_EFFECT_FLAG_2_SCRIPT_FILTER_EXCLUDED = 0x08,
     STATUS_EFFECT_FLAG_2_MOUNT_REMOVAL = 0x10,
     STATUS_EFFECT_FLAG_2_IGNORE_ATTACKS = 0x20,
     STATUS_EFFECT_FLAG_2_PREVENT_REACTION = 0x80,

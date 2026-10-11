@@ -12,7 +12,7 @@ typedef struct world_menu_grid_cell {
     u8 next_down;
     u8 next_right;
     u8 next_left;
-    world_menu_point_t cursor;
+    point16_t cursor;
     s16 vertical;
 } world_menu_grid_cell_t;
 
@@ -33,7 +33,7 @@ extern world_menu_grid_cell_t* g_world_active_grid_menu_cells; /* active grid */
  * cells 18-27. The description-thread call only latches such ids, so its
  * record argument is never dereferenced. */
 void world_menu_update_grid_cursor(s16 alternate) {
-    world_menu_point_t cursor;
+    point16_t cursor;
     s32 busy;
     s32 cell;
     s32 text_id;
@@ -50,21 +50,21 @@ void world_menu_update_grid_cursor(s16 alternate) {
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
         g_world_grid_menu_initialized = 1;
         g_world_grid_menu_selected_cell = 0;
-        if (g_world_grid_menu_id == 0x20000) {
+        if (g_world_grid_menu_id == MENU_GRID_HELP_BANNER_TOP) {
             g_world_active_grid_menu_cells = g_world_grid_menu_shop_cells;
-        } else if (g_world_grid_menu_id == 0x20001) {
+        } else if (g_world_grid_menu_id == MENU_GRID_HELP_BANNER_BOTTOM) {
             g_world_active_grid_menu_cells = g_world_grid_menu_shop_scrolled_cells;
         } else {
             g_world_active_grid_menu_cells = g_world_grid_menu_default_cells;
         }
     }
-    busy = world_thread_is_running(1);
+    busy = world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
     if (busy == 0) {
         input = g_world_input_primary_repeat_latched;
         cell = g_world_grid_menu_selected_cell;
         if (input & PSX_PAD_CROSS) {
             s32 menu_id = g_world_grid_menu_id;
-            g_world_grid_menu_id = 0;
+            g_world_grid_menu_id = MENU_GRID_HELP_NONE;
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
             g_world_grid_menu_initialized = 0;
             g_world_menu_description_text_id = menu_id;
@@ -85,7 +85,7 @@ void world_menu_update_grid_cursor(s16 alternate) {
         } else if (input & PSX_PAD_LEFT) {
             cell = g_world_active_grid_menu_cells[cell].next_left;
         }
-        if (g_world_grid_menu_id == 0x20003) {
+        if (g_world_grid_menu_id == MENU_GRID_HELP_RECRUIT_PREVIEW) {
             if (g_world_grid_menu_selected_cell == 6 && cell == 7) {
                 cell = 8;
             }

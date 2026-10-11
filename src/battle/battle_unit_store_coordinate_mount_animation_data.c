@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Settles a unit on its map tile when its knockback or path move ends, or once it
+ * has mounted: the battle stats take the tile and facing, the record is snapped
+ * to the tile, the cursor moves to it, the movement path is emptied and the
+ * status animation restarts.
+ *
+ * For a mounted pair the partner lookup uses the unit's own unit_id, so the
+ * second battle_unit_set_tile_position call repeats the first for the same unit. */
 void battle_unit_store_coordinate_mount_animation_data(battle_unit_misc_data_t* unit) {
     battle_stats_t* data;
     battle_unit_misc_data_t* mount;

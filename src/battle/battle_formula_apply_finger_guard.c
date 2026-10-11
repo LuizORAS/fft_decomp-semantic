@@ -13,7 +13,7 @@ void battle_formula_apply_finger_guard(void) {
         return;
     chance = 0x64 - unit->brave;
     /* The target stores the accuracy as a halfword (0x2a..0x2b). */
-    g_battle_action_target_data->attack_accuracy = (s16)chance;
+    g_battle_action_target_data->attack_accuracy = chance;
     if (chance != 0) {
         if (battle_reaction_fails_brave_roll(unit) != 0)
             return;

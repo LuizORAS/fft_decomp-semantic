@@ -15,7 +15,7 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_
 
     if (rider->battle_data != 0) {
         battle_unit_set_tile_position(
-            rider->battle_data->misc_unit_id, rider->map_x, rider->map_y, rider->map_z, (u8)(rider->facing / 1024));
+            rider->battle_data->misc_unit_id, rider->map_x, rider->map_y, rider->map_z, (rider->facing / 1024));
         if (rider->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
             mount = battle_unit_get_misc_data_by_misc_id(rider->mount_partner_misc_id);
             if (mount != 0) {
@@ -26,12 +26,12 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_
                 mount->screen = rider->screen;
                 mount->screen.vy -= 10;
                 mount->real.vy -= 0xa000;
-                battle_unit_set_tile_position(mount->battle_data->misc_unit_id, rider->map_x, rider->map_y,
-                    rider->map_z, (u8)(rider->facing / 1024));
+                battle_unit_set_tile_position(
+                    mount->battle_data->misc_unit_id, rider->map_x, rider->map_y, rider->map_z, (rider->facing / 1024));
             }
         }
     }
-    unit->ability_ct_resolved |= 1;
+    unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_MOVED;
     battle_action_set_only_movement_taken(unit->battle_data->misc_unit_id);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED)
         && !(unit->movement_flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT)) {

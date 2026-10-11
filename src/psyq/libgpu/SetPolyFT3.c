@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 void SetPolyFT3(void* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
+    P_TAG* tag = primitive;
 
     tag->len = PSYQ_GPU_PACKET_WORDS(POLY_FT3);
     tag->code = PSYQ_GPU_CODE_POLY_FT3;

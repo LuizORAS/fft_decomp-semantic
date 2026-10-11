@@ -13,6 +13,12 @@ typedef char assert_battle_menu_selection_remap_size[sizeof(battle_menu_selectio
 
 extern battle_menu_selection_remap_t g_battle_menu_selection_remaps[8];
 
+/* Put the row the active-turn unit last chose back into a menu entry.
+ *
+ * Only the first 12 menu ids of g_battle_menu_id_records are tracked. A stored
+ * row that one of the eight remap rows lists for this menu is first replaced by
+ * that row's replacement. BATTLE twin of
+ * world_menu_restore_selection_for_selected_unit. */
 void battle_menu_restore_selection_for_selected_unit(s32 menu_id) {
     battle_menu_record_t* record;
     s32 i;

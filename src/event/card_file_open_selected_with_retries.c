@@ -1,6 +1,15 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/*
+ * Open `filename` on the selected memory card slot with the BIOS `mode`,
+ * closing any file this module still holds open first.
+ *
+ * Tries up to 40 times, waiting for the card to be ready before each try.
+ * Returns the descriptor (also kept in g_card_file_open_descriptor), -1 when
+ * every open failed, or -2 when the previous file would not close or the
+ * card did not become ready.
+ */
 s32 card_file_open_selected_with_retries(const char* filename, s32 mode) {
     s32 i;
     s32 result;

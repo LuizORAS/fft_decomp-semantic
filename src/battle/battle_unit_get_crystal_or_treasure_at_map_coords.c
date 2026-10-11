@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /* Return the misc record of a crystal or chest on a tile (a unit still in the battle under
- * Crystal or Treasure), preferring the casting unit's own (g_casting_unit_misc_id) when several share
+ * Crystal or Treasure), preferring the casting unit's own (g_battle_unit_source_misc_id) when several share
  * it; NULL when there is none. The unit-move setup, the post-move events and the CRYSTAL_LEARN state
  * use it. */
 battle_unit_misc_data_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z) {
@@ -22,7 +22,7 @@ battle_unit_misc_data_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 m
     }
     if (count != 0) {
         for (index = 0; index < count; index++) {
-            if (matches[index]->unit_id == g_casting_unit_misc_id) {
+            if (matches[index]->unit_id == g_battle_unit_source_misc_id) {
                 return matches[index];
             }
         }

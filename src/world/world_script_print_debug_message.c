@@ -2,6 +2,8 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Print the script pause message, yield one frame and set the debug-paused
+ * flag. */
 void world_script_print_debug_message(void) {
     FntPrint(g_world_script_pause_message);
     world_thread_yield();

@@ -1,120 +1,96 @@
 /* LIBGPU 800235ac-8002398c; switch table 80010570-800105f4. */
 #include "psx/libgpu.h"
 
-/* first is either a window handle encoded as a pointer or the format string. */
+/* Retail keeps the argument cursor in memory (as sprintf does): the SDK's va_arg reaches it through its address. */
+typedef char* va_list;
+#define va_start(ap, last) (ap = (char*)&(last) + sizeof(last))
+#define va_arg(ap, type)   (*(char**)&(ap) += sizeof(type), *(type*)((ap) - sizeof(type)))
+
+/* first is either a window handle or, when it is not a valid handle, the format string itself. */
 int FntPrint(char* first, ...) {
     char buffer[512];
-    char* arguments = (char*)__builtin_next_arg(first);
+    va_list ap;
     psyq_font_window_t* window;
     char* format;
-    char* segment;
+    char* p;
     int width;
     int length;
-    int character;
-    char* argument;
+    int c;
     u8 zero_pad;
-    /* The shared v0 temporary preserves width-parser and character-argument scheduling. */
-    register int value __asm__("$2");
-    int percent;
-    int selected;
-    char* selected_text;
     unsigned int number;
     int sign;
-    /* Address-taking stores preserve the retail parameter and cursor stack homes. */
+    va_start(ap, first);
     if ((int)first < 0 || (int)first >= g_psyq_gpu_font_window_count) {
-        selected = g_psyq_gpu_default_font_window;
-        selected_text = g_psyq_gpu_font_windows[selected].text;
-
         format = first;
-        *(&first) = (char*)selected;
-        if (!selected_text)
+        first = (char*)g_psyq_gpu_default_font_window;
+        if (!g_psyq_gpu_font_windows[(int)first].text)
             return -1;
-    } else {
-        *(&arguments) = (char*)__builtin_next_arg(first) + sizeof(u32);
-        format = *(char**)((char*)__builtin_next_arg(first));
-    }
+    } else
+        format = va_arg(ap, char*);
     window = &g_psyq_gpu_font_windows[(int)first];
     if (window->text_count > window->character_limit)
         return -1;
-    if (!(character = *format))
-        goto finished;
-    percent = '%';
-    do {
-        if (character != percent || (character = *++format) == percent) {
-            window->text[window->text_count++] = character;
-            if (window->text_count <= window->character_limit) {
-                format++;
-                continue;
-            }
-            return -1;
+    for (; (c = *format) != 0; format++) {
+        if (c != '%') {
+            window->text[window->text_count++] = c;
+            if (window->text_count > window->character_limit)
+                return -1;
+            continue;
+        }
+        if ((c = *++format) == '%') {
+            window->text[window->text_count++] = c;
+            if (window->text_count > window->character_limit)
+                return -1;
+            continue;
         }
         width = 0;
-        value = character == '0';
-
-        zero_pad = value;
-        while ((unsigned)(character - '0') < 10) {
-            value = width * 10;
-            value -= '0';
-
-            width = value + character;
-            character = *++format;
+        zero_pad = c == '0';
+        while (c >= '0' && c <= '9') {
+            width = width * 10 + (c - '0');
+            c = *++format;
         }
         if (width <= 0)
             width = 1;
-        segment = buffer + sizeof(buffer);
-        /* No default: unsupported conversions leave length undefined in the retail. */
-        switch (character) {
+        p = buffer + sizeof(buffer);
+        /* No default: an unsupported conversion leaves length unset. */
+        switch (c) {
         case 'd':
-            argument = arguments;
-            arguments = argument + sizeof(u32);
-            number = *(unsigned int*)argument;
+            number = va_arg(ap, int);
             sign = 0;
             if ((int)number < 0) {
                 number = -number;
                 sign = '-';
             }
-            length = 0;
-            while (!length || number) {
-                *--segment = number % 10 + '0';
+            for (length = 0; length == 0 || number; length++) {
+                *--p = number % 10 + '0';
                 number /= 10;
-                length++;
             }
             if (sign) {
-                *--segment = sign;
+                *--p = sign;
                 length++;
             }
             break;
         case 'x':
         case 'X':
-            argument = arguments;
-            arguments = argument + sizeof(u32);
-            number = *(unsigned int*)argument;
-            length = 0;
-            while (!length || number) {
-                *--segment = g_psyq_gpu_font_hex_digits[number & 15];
+            number = va_arg(ap, unsigned int);
+            for (length = 0; length == 0 || number; length++) {
+                *--p = g_psyq_gpu_font_hex_digits[number & 15];
                 number >>= 4;
-                length++;
             }
-            value = zero_pad;
-
-            if (value) {
+            if (zero_pad) {
                 while (length < width) {
-                    *--segment = '0';
+                    *--p = '0';
                     length++;
                 }
             }
             break;
         case 'c':
-            value = (int)arguments;
-            arguments = (char*)value + sizeof(u32);
-            *--segment = *(u8*)value;
+            *--p = va_arg(ap, int);
             length = 1;
             break;
         case 's':
-            argument = arguments;
-            arguments = argument + sizeof(u32);
-            segment = *(char**)argument;
-            length = strlen(segment);
+            p = va_arg(ap, char*);
+            length = strlen(p);
             break;
         }
         while (length < width) {
@@ -123,14 +99,12 @@ int FntPrint(char* first, ...) {
                 return -1;
             width--;
         }
-        while (--length != -1) {
-            window->text[window->text_count++] = *segment++;
+        while (length--) {
+            window->text[window->text_count++] = *p++;
             if (window->text_count > window->character_limit)
                 return -1;
         }
-        format++;
-    } while ((character = *format));
-finished:
+    }
     window->text[window->text_count] = 0;
     return window->text_count;
 }

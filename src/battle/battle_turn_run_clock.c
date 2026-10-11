@@ -33,13 +33,13 @@ s32 battle_turn_run_clock(s32 mode) {
 
     result = 0;
     count = 0;
-    if (mode == 1) {
-        g_battle_turn_clock_state = 0;
+    if (mode == BATTLE_BETWEEN_TURN_MODE_RESET) {
+        g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_ADD_CT;
         g_battle_turn_unit_id = -1;
         for (i = 3; i >= 0; i--) {
             g_battle_team_golem[i] = 0;
         }
-        g_current_ability_attacker.mimic_pending = 0;
+        g_battle_action_current_attacker.mimic_pending = 0;
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             unit = &g_battle_unit_stats[i];
             unit->ct = 0;
@@ -50,12 +50,17 @@ s32 battle_turn_run_clock(s32 mode) {
         battle_ai_end_simulation();
         return 0xe000;
     }
-    if (mode == 2) {
+    if (mode == BATTLE_BETWEEN_TURN_MODE_FIND_ACTIVE_UNIT) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             unit = &g_battle_unit_stats[i];
             if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-                if (!(unit->status_sets.current[0] & 0x64)) {
-                    if (!(unit->status_sets.current[1] & 0x81)) {
+                if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                        & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL)
+                            | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)
+                            | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)))) {
+                    if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+                            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY)
+                                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))) {
                         return i | 0xd000;
                     }
                 }
@@ -65,7 +70,7 @@ s32 battle_turn_run_clock(s32 mode) {
     }
     while (result == 0) {
         switch (g_battle_turn_clock_state) {
-        case 0:
+        case BATTLE_BETWEEN_TURN_STATE_ADD_CT:
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_turn_get_status_flags(unit);
@@ -83,9 +88,9 @@ s32 battle_turn_run_clock(s32 mode) {
                     unit->ct = ct;
                 }
             }
-            g_battle_turn_clock_state = 1;
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_PICK_UNIT;
             break;
-        case 1:
+        case BATTLE_BETWEEN_TURN_STATE_PICK_UNIT:
             max_ct = 99;
             best = 0xff;
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
@@ -133,21 +138,19 @@ s32 battle_turn_run_clock(s32 mode) {
                     }
                     g_battle_turn_clock_resume_state = g_battle_turn_clock_state;
                     g_battle_turn_unit_id = best;
-                    g_battle_turn_clock_state = 10;
+                    g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_UNIT_TURN;
                     return result;
                 }
                 continue;
             }
-            g_battle_turn_clock_state = 2;
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_TICK_CHARGES;
             break;
-        case 2:
+        case BATTLE_BETWEEN_TURN_STATE_TICK_CHARGES:
             i = 0;
             do {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_turn_get_status_flags(unit);
-                if (!(flags
-                        & (BATTLE_TURN_STATUS_CT_FROZEN | BATTLE_TURN_STATUS_INCAPACITATED | BATTLE_TURN_STATUS_DEAD
-                            | BATTLE_TURN_STATUS_SLEEP))) {
+                if (!(flags & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK)) {
                     value = unit->charged_ability_ct;
                     if (value != 0xff && value != 0) {
                         value--;
@@ -155,31 +158,29 @@ s32 battle_turn_run_clock(s32 mode) {
                     }
                 }
                 /* clang-format off */
-            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_turn_clock_state = 3;
+            } while (++i < 21); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE;
             /* clang-format on */
             break;
-        case 3:
+        case BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE:
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 flags = battle_turn_get_status_flags(unit);
-                if (!(flags
-                        & (BATTLE_TURN_STATUS_CT_FROZEN | BATTLE_TURN_STATUS_INCAPACITATED | BATTLE_TURN_STATUS_DEAD
-                            | BATTLE_TURN_STATUS_SLEEP))
-                    && unit->charged_ability_ct == 0) {
-                    if (unit->status_sets.current[0] & 1) {
+                if (!(flags & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) && unit->charged_ability_ct == 0) {
+                    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
                         main_unit_copy_last_ability_ct(unit);
                         unit->charged_ability_ct = unit->ability_ct;
                     } else {
                         unit->charged_ability_ct = 0xff;
                     }
-                    g_battle_turn_clock_state = 9;
+                    g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE;
                     result = i | BATTLE_TURN_EVENT_ABILITY_READY;
                     return result;
                 }
             }
-            g_battle_turn_clock_state = 4;
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_EXPIRE_STATUSES;
             break;
-        case 4:
+        case BATTLE_BETWEEN_TURN_STATE_EXPIRE_STATUSES:
             i = 0;
             do {
                 unit = &g_battle_unit_stats[i];
@@ -189,10 +190,10 @@ s32 battle_turn_run_clock(s32 mode) {
                     battle_status_update_expiring(i);
                 }
                 /* clang-format off */
-            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_turn_clock_state = 5;
+            } while (++i < 21); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS;
             /* clang-format on */
             break;
-        case 5:
+        case BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS:
             i = 0;
             do {
                 unit = &g_battle_unit_stats[i];
@@ -203,10 +204,10 @@ s32 battle_turn_run_clock(s32 mode) {
                     g_battle_turn_pending_flags[i] = unit->action.attack_type;
                 }
                 /* clang-format off */
-            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_turn_clock_state = 6;
+            } while (++i < 21); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS;
             /* clang-format on */
             break;
-        case 6:
+        case BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS:
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 if (g_battle_turn_pending_flags[i] != 0) {
                     g_battle_turn_pending_flags[i] = 0;
@@ -214,9 +215,9 @@ s32 battle_turn_run_clock(s32 mode) {
                     return result;
                 }
             }
-            g_battle_turn_clock_state = 0;
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_ADD_CT;
             break;
-        case 9:
+        case BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE:
             max_ct = 0xfe;
             best = 0xff;
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
@@ -235,16 +236,16 @@ s32 battle_turn_run_clock(s32 mode) {
                 unit->ct = 0;
                 unit->movement_taken = 0;
                 unit->action_taken = 0;
-                g_battle_turn_clock_resume_state = 9;
+                g_battle_turn_clock_resume_state = BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE;
                 g_battle_turn_unit_id = best;
-                g_battle_turn_clock_state = 10;
+                g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_UNIT_TURN;
                 result = best | BATTLE_TURN_EVENT_UNIT_READY;
                 return result;
             }
-            g_battle_turn_clock_resume_state = 3;
-            g_battle_turn_clock_state = 13;
+            g_battle_turn_clock_resume_state = BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE;
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_MARK_MIMES;
             break;
-        case 10:
+        case BATTLE_BETWEEN_TURN_STATE_UNIT_TURN:
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 if (unit->has_turn != 0) {
@@ -262,10 +263,10 @@ s32 battle_turn_run_clock(s32 mode) {
                     }
                 }
             }
-            g_battle_turn_clock_state = 19;
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_POISON_AND_REGEN;
             break;
-        case 19:
-            g_battle_turn_clock_state = 15;
+        case BATTLE_BETWEEN_TURN_STATE_POISON_AND_REGEN:
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_TERRAIN_POISON;
             if (g_battle_turn_unit_id != -1) {
                 unit = &g_battle_unit_stats[g_battle_turn_unit_id];
                 if (battle_status_apply_poison_and_regen(unit)) {
@@ -274,18 +275,18 @@ s32 battle_turn_run_clock(s32 mode) {
                 }
             }
             break;
-        case 15:
-            g_battle_turn_clock_state = 17;
+        case BATTLE_BETWEEN_TURN_STATE_TERRAIN_POISON:
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_REMOVE_TRANSPARENT;
             if (g_battle_turn_unit_id != -1) {
                 unit = &g_battle_unit_stats[g_battle_turn_unit_id];
-                if (battle_prepare_terrain_poison(unit)) {
+                if (battle_status_prepare_terrain_poison(unit)) {
                     result = g_battle_turn_unit_id | BATTLE_TURN_EVENT_ACTION_RESULT;
                     return result;
                 }
             }
             break;
-        case 17:
-            g_battle_turn_clock_state = 13;
+        case BATTLE_BETWEEN_TURN_STATE_REMOVE_TRANSPARENT:
+            g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_MARK_MIMES;
             if (g_battle_turn_unit_id != -1) {
                 unit = &g_battle_unit_stats[g_battle_turn_unit_id];
                 if (battle_status_remove_transparent(unit)) {
@@ -294,8 +295,8 @@ s32 battle_turn_run_clock(s32 mode) {
                 }
             }
             break;
-        case 13:
-            if (g_current_ability_attacker.mimic_pending != 0) {
+        case BATTLE_BETWEEN_TURN_STATE_MARK_MIMES:
+            if (g_battle_action_current_attacker.mimic_pending != 0) {
                 i = 0;
                 do {
                     unit = &g_battle_unit_stats[i];
@@ -304,14 +305,14 @@ s32 battle_turn_run_clock(s32 mode) {
                         g_battle_turn_pending_flags[i] = 1;
                     }
                     /* clang-format off */
-                } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_turn_clock_state = 14;
+                } while (++i < 21); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RUN_MIMES;
                 /* clang-format on */
             } else {
                 g_battle_turn_clock_state = g_battle_turn_clock_resume_state;
             }
             break;
-        case 14:
-            g_current_ability_attacker.mimic_pending = 0;
+        case BATTLE_BETWEEN_TURN_STATE_RUN_MIMES:
+            g_battle_action_current_attacker.mimic_pending = 0;
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
                 if (g_battle_turn_pending_flags[i] != 0 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {

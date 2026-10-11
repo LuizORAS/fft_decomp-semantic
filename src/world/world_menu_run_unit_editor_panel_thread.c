@@ -13,10 +13,7 @@
 void world_menu_run_unit_editor_panel_thread(void) {
     /* The frame reserves 0x100 bytes for the first copy's line-box
        primitives, the stride of the palette records at 0x80195ed0. */
-    union {
-        world_menu_palette_primitives_t primitives;
-        u8 storage[0x100];
-    } palette;
+    world_menu_palette_slot_t palette;
     world_unit_editor_frame_t* records;
     world_unit_editor_frame_t* frame_record;
     LINE_F2* line;
@@ -27,14 +24,14 @@ void world_menu_run_unit_editor_panel_thread(void) {
     s32 frame;
     s32 i;
 
-    world_menu_run_unit_debug_editor_thread();
+    world_menu_open_debugchr_unit_editor();
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
     battle_menu_enter_status_screen_selection();
     g_world_menu_overlay_state = 1;
-    g_world_menu_panel_fade_mode = 2;
-    world_thread_set_parameters(0xA, 0, 0, 1);
-    world_thread_set_parameters(8, 0, 0, 1);
-    world_menu_store_value_for_stored_unit();
+    g_world_menu_panel_fade_mode = MENU_PANEL_FADE_OUT;
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
+    world_menu_record_selection_for_selected_unit();
     world_menu_set_transition_active_flag();
     do {
         world_thread_yield();
@@ -43,12 +40,12 @@ void world_menu_run_unit_editor_panel_thread(void) {
 
     frame_record = g_world_unit_editor_frames;
     records = frame_record;
-    world_gfx_reset_record_texture_window(&frame_record->cursor_mode);
+    world_gfx_init_scaled_draw_area_packets(&frame_record->draw_areas);
     g_world_menu_hovered_unit_stats_display.y = 0x1A;
     g_world_unit_summary_panel_rect.y = 0x1A;
-    world_gfx_set_image_draw_mode(&frame_record->draw_modes[0], 0);
-    world_gfx_set_image_draw_mode(&frame_record->draw_modes[1], 2);
-    world_gfx_set_image_draw_mode(&frame_record->draw_modes[2], 4);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
+    world_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], MENU_TEXTURE_PAGE_ITEM_ICONS);
     SetTile(&frame_record->tiles[0]);
     SetSemiTrans(&frame_record->tiles[0], 1);
     frame_record->tiles[0].r0 = 0x30;
@@ -79,7 +76,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
 
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
-    if (g_world_unit_editor_panel_data.layout != 0) {
+    if (g_world_unit_editor_fields.state.two_hands != 0) {
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[2], g_world_unit_editor_row_image_params_b,
             2 * sizeof(world_gfx_image_load_parameters_t));
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[14],
@@ -98,70 +95,66 @@ void world_menu_run_unit_editor_panel_thread(void) {
         world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[14],
             &g_world_unit_editor_row_image_params_a[2], 2 * sizeof(world_gfx_image_load_parameters_t));
     }
-    if (g_world_unit_editor_panel_data.flag == 0) {
+    if (g_world_unit_editor_fields.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
-            world_gfx_init_image_loading((POLY_FT4*)&frame_record->sprites[i], &g_world_gfx_menu_image_source,
-                (const world_image_location_t*)&g_world_unit_editor_panel_rect,
-                &g_world_unit_editor_sprite_image_params_a[i]);
+            world_gfx_init_image_loading(&frame_record->sprites[i], &g_world_gfx_menu_image_source,
+                &g_world_unit_editor_panel_rect, &g_world_unit_editor_sprite_image_params_a[i]);
         }
     } else {
         for (i = 0; i < 19; i++) {
-            world_gfx_init_image_loading((POLY_FT4*)&frame_record->sprites[i], &g_world_gfx_menu_image_source,
-                (const world_image_location_t*)&g_world_unit_editor_panel_rect,
-                &g_world_unit_editor_sprite_image_params_b[i]);
+            world_gfx_init_image_loading(&frame_record->sprites[i], &g_world_gfx_menu_image_source,
+                &g_world_unit_editor_panel_rect, &g_world_unit_editor_sprite_image_params_b[i]);
         }
     }
     world_menu_init_sprite_array(&frame_record->sprites[19], 5, 0x7CFC);
     for (i = 0; i < 5; i++) {
-        world_gfx_init_image_loading((POLY_FT4*)&frame_record->sprites[19 + i],
-            (const world_image_location_t*)&g_world_item_icon_image_location,
-            (const world_image_location_t*)&g_world_unit_editor_panel_rect,
-            &g_world_unit_editor_item_icon_image_params[i]);
-        world_build_item_icon_sprite(&frame_record->sprites[19 + i], g_world_unit_editor_panel_data.item_ids[i]);
+        world_gfx_init_image_loading(&frame_record->sprites[19 + i], &g_world_item_icon_image_location,
+            &g_world_unit_editor_panel_rect, &g_world_unit_editor_item_icon_image_params[i]);
+        world_gfx_set_item_icon_sprite(&frame_record->sprites[19 + i], g_world_unit_editor_fields.state.equipment[i]);
     }
 
     buffer = world_menu_alloc_buffer(0xC80);
     world_clear_menu_render_buffer(buffer, 0xC80);
-    g_world_menu_text_state.stride = 0x50;
+    g_world_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 5; i++) {
-        value = g_world_unit_editor_panel_data.item_ids[i] + TEXT_ID_ITEM_NAME_BASE;
-        if ((u16)g_world_unit_editor_panel_data.item_ids[i] == 0xFFFF) {
-            g_world_menu_text_state.origin_y += 0x10;
+        value = g_world_unit_editor_fields.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
+        if ((u16)g_world_unit_editor_fields.state.equipment[i] == 0xFFFF) {
+            g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
-            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.origin_x);
-            g_world_menu_text_state.origin_y += 0x10;
+            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
+            g_world_menu_text_state.pen.rect.y += 0x10;
         }
     }
     LoadImage(&g_world_unit_editor_text_rect_a, (u32*)buffer);
     world_thread_yield();
     world_clear_menu_render_buffer(buffer, 0xC80);
-    g_world_menu_text_state.stride = 0x50;
+    g_world_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 2; i++) {
-        value = g_world_unit_editor_panel_data.label_text_ids[i] + 0xB000;
-        if (g_world_unit_editor_panel_data.flag != 0) {
-            value = g_world_unit_editor_panel_data.label_text_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
+        value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
+        if (g_world_unit_editor_fields.state.generic_monster != 0) {
+            value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
-        if ((u16)g_world_unit_editor_panel_data.label_text_ids[i] == 0xFFFF) {
-            g_world_menu_text_state.origin_y += 0x10;
+        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+            g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
-            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.origin_x);
-            g_world_menu_text_state.origin_y += 0x10;
+            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
+            g_world_menu_text_state.pen.rect.y += 0x10;
         }
     }
     for (i = 2; i < 5; i++) {
-        value = g_world_unit_editor_panel_data.label_text_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
-        if ((u16)g_world_unit_editor_panel_data.label_text_ids[i] == 0xFFFF) {
-            g_world_menu_text_state.origin_y += 0x10;
+        value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
+        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+            g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
-            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.origin_x);
-            g_world_menu_text_state.origin_y += 0x10;
+            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
+            g_world_menu_text_state.pen.rect.y += 0x10;
         }
     }
-    if (g_world_unit_editor_panel_data.flag != 0) {
+    if (g_world_unit_editor_fields.state.generic_monster != 0) {
         for (i = 0; i < 5; i++) {
-            if ((u16)g_world_unit_editor_panel_data.label_text_ids[i] == 0xFFFF) {
+            if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
                 frame_record->sprites[7 + i].x0 -= 0x200;
             }
         }
@@ -173,10 +166,10 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_script_copy_bytes(&records[1], frame_record, sizeof(world_unit_editor_frame_t));
     records[0].palette = &palette.primitives;
     records[1].palette = &g_world_unit_editor_palette;
-    world_menu_build_line_box(&g_world_unit_editor_panel_rect, records[0].palette);
-    world_menu_build_line_box(&g_world_unit_editor_panel_rect, records[1].palette);
-    world_thread_start(0xA, world_menu_run_numeric_display_panel_thread);
-    world_thread_set_parameters(0xA, 0, 0, 0);
+    world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[0].palette);
+    world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[1].palette);
+    world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_run_numeric_display_panel_thread);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
     world_thread_yield();
 
     frame = 0;
@@ -184,12 +177,12 @@ void world_menu_run_unit_editor_panel_thread(void) {
         world_thread_yield();
         frame_record = &records[frame & 1];
         world_gfx_build_scaled_draw_area_pair_swapped(
-            &frame_record->cursor_mode, &g_world_unit_editor_cursor_rect, frame, g_main_gfx_screen_polarity);
+            &frame_record->draw_areas, &g_world_unit_editor_cursor_rect, frame, g_main_gfx_screen_polarity);
         if (g_world_thread_task_active == 0 && g_world_text_overlay_active == 0
             && world_thread_get_current_parameter_3() != 0) {
             break;
         }
-        value = world_thread_is_running_2(g_world_thread_current_id - 1);
+        value = world_thread_is_running_asm(g_world_thread_current_id - 1);
         for (i = 0; i < 19; i++) {
             frame_record->sprites[i].clut = g_world_unit_editor_sprite_clut_pairs[i][value];
         }
@@ -207,25 +200,26 @@ void world_menu_run_unit_editor_panel_thread(void) {
             }
         }
         if (value == 0) {
-            world_menu_init_primitive_colors_palette_bank_0(frame_record->palette);
+            world_menu_init_primitive_colors_normal(frame_record->palette);
         } else {
-            world_menu_init_primitive_colors_palette_bank_1(frame_record->palette);
+            world_menu_init_primitive_colors_dimmed(frame_record->palette);
         }
         if (world_menu_is_input_allowed() != 0) {
             if (g_world_menu_new_button_input & PSX_PAD_CROSS) {
-                world_thread_set_parameters(0xA, 0, 0, 1);
+                world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
                 break;
             }
-            if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE) && world_thread_is_running_2(3) == 0
-                && (world_unit_has_any_current_status(g_world_unit_view_battle_id) != 0
-                    || (g_world_unit_editor_panel_data.flag == 0
-                        && g_world_unit_selected_status_billboard.status_icon != 1))) {
+            if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE)
+                && world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
+                && (world_unit_has_any_current_status(g_world_active_unit_data.battle_id) != 0
+                    || (g_world_unit_editor_fields.state.generic_monster == 0
+                        && g_world_unit_selected_status_billboard.team_kind != 1))) {
                 world_thread_start(g_world_thread_current_id - 1, world_menu_build_unit_status_list);
-                world_thread_set_parameters(
-                    g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[8], 0, 0);
+                world_thread_set_parameters(g_world_thread_current_id - 1,
+                    (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
             }
         }
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->cursor);
+        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[1]);
         for (i = 0; i < 12; i++) {
             world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
         }
@@ -237,7 +231,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[13]);
         world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[1]);
         for (i = 0; i < 5; i++) {
-            if ((u16)g_world_unit_editor_panel_data.item_ids[i] != 0xFFFF) {
+            if ((u16)g_world_unit_editor_fields.state.equipment[i] != 0xFFFF) {
                 world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[19 + i]);
             }
         }
@@ -248,23 +242,22 @@ void world_menu_run_unit_editor_panel_thread(void) {
             world_gfx_draw_or_append_gpu_primitive(&frame_record->lines[i]);
         }
         frame++;
-        world_gfx_submit_primitive_group((world_primitive_group_t*)frame_record->palette);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->cursor_mode);
+        world_menu_submit_numeric_display_frame_primitives(frame_record->palette);
+        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[0]);
     }
     g_world_menu_hovered_unit_stats_display.y = 0xAA;
     g_world_unit_summary_panel_rect.y = 0xAA;
-    g_world_menu_panel_fade_mode = 1;
+    g_world_menu_panel_fade_mode = MENU_PANEL_FADE_IN;
     g_world_unit_status_bounce_step = 6;
     world_sound_set_effect_to_cancel();
     do {
         world_thread_yield();
     } while (g_world_unit_status_bounce_step != 0);
-    world_thread_start(0xA, world_map_draw_selected_tile_info_thread);
-    world_thread_set_parameters(0xA, 0, 0, 0);
-    g_world_thread_contexts[10].task_id = 0x10;
+    world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_selected_tile_info_display_thread);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
+    g_world_thread_contexts[NATIVE_THREAD_SLOT_TILE_INFO_PANEL].task_id = NATIVE_THREAD_TASK_TILE_INFO_PANEL;
     g_world_menu_overlay_state = 0;
     battle_menu_leave_status_screen_selection();
-    /* The target passes a0 to this argument-less stub. */
-    ((void (*)(s32))world_menu_build_idle_action_stub)(g_world_menu_current_id);
+    world_menu_build_idle_action_stub(g_world_menu_current_id);
     world_thread_exit_current();
 }

@@ -14,10 +14,10 @@ void world_item_cash_out_excess_inventory(void) {
     quantity = g_main_item_quantities;
     /* Stops before Phoenix Down: consumables are never equipped, so returned
      * equipment cannot push them past 99. */
-    for (; item_id < ITEM_ID_PHOENIX_DOWN; item_id++) {
-        excess = world_item_count_owned_and_equipped((s16)item_id);
+    for (; item_id < ITEM_ID_END - 1; item_id++) {
+        excess = world_item_count_owned_and_equipped(item_id);
         if (excess >= 100) {
-            price = world_item_get_half_price((s16)item_id);
+            price = world_item_get_half_price(item_id);
             excess -= 99;
             world_shop_obtain_gil(price * excess);
             *quantity -= excess;

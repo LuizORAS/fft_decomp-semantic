@@ -2,51 +2,39 @@
 #include "psx/types.h"
 
 /* Ally-only and enemy-only abilities (CAN_TARGET_ALLIES, CAN_TARGET_ENEMIES): take out of the area
- * the tiles of units whose team is not allowed, and mark the allowed units' tiles.
+ * the tiles of units whose team is not allow_allies, and mark the allow_allies units' tiles.
  *
  * The low byte of `raw_unit_id` selects the acting unit, which is treated as same-team even if its
  * initial and live team fields differ. `allow_allies` and `allow_enemies` are raw nonzero flag
  * values. Unless the ability AoE is `0xff`, every nonempty panel left after filtering is marked
  * selected. */
 void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff) {
-    /* Retain the team comparison value in $v0 until the actor override. */
-    register s32 relation __asm__("$2");
-    s32 relation_out;
-    s32 actor_id;
-    s32 team_flags;
-    s32 allowed;
+    s32 relation;
+    u8 team_flags;
     s32 panel_index;
     battle_target_panel_t* panel;
     s32 i;
-    s32 actor_index;
-    /* Keep the selected-panel marker live through the first pass. */
-    register s32 mark __asm__("$18");
-    /* The team mask stays in $v0. */
-    register s32 mask __asm__("$2");
-    s32 mark_all;
+    s32 actor_id;
 
-    actor_index = raw_unit_id & 0xff;
-    team_flags = g_battle_unit_stats[actor_index].team_flags;
-    actor_id = actor_index;
-    for (i = 0, mark = 1; i < BATTLE_UNIT_SLOT_COUNT; i++) {
+    raw_unit_id &= 0xff;
+    team_flags = g_battle_unit_stats[raw_unit_id].team_flags;
+    actor_id = raw_unit_id;
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         if (battle_target_is_unit_untargetable_and_store_tile(i, &panel_index) == 0) {
             relation = team_flags ^ g_battle_unit_stats[i].initial_team_flags;
-            /* Keep the xor ahead of the acting-unit branch. */
-            __asm__("" : "=r"(relation) : "0"(relation));
-            relation_out = relation;
             if (actor_id == i) {
-                relation_out = 0;
+                relation = 0;
             }
             panel = &g_battle_target_panels[panel_index];
             if (panel->remaining_range != 0) {
-                mask = relation_out & BATTLE_TEAM_MASK;
-                if (mask) {
-                    allowed = allow_enemies;
-                } else {
-                    allowed = allow_allies;
-                }
-                if (allowed != 0) {
-                    panel->mark = mark;
+                if (relation & BATTLE_TEAM_MASK) {
+                    if (allow_enemies == 0) {
+                        panel->remaining_range = 0;
+                    } else {
+                        panel->mark = 1;
+                    }
+                } else if (allow_allies != 0) {
+                    panel->mark = 1;
                 } else {
                     panel->remaining_range = 0;
                 }
@@ -54,11 +42,11 @@ void battle_target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies,
         }
     }
     if (!aoe_is_0xff) {
-        for (i = 0, mark_all = 1, panel = g_battle_target_panels; i < MAP_TILE_SLOT_COUNT; i++) {
+        for (i = 0; i < 0x200; i++) {
+            panel = &g_battle_target_panels[i];
             if (panel->remaining_range != 0) {
-                panel->mark = mark_all;
+                panel->mark = 1;
             }
-            panel++;
         }
     }
 }

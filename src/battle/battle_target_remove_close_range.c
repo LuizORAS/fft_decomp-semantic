@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Take every tile within `range` steps of (x, y) out of range, on both layers: direct weapons
- * cannot hit within 2 steps. */
+/* Take every tile within range steps (Manhattan distance) of (x, y) out of range, on both
+ * layers: direct weapons cannot hit within 2 steps. */
 void battle_target_remove_close_range(s32 x, s32 y, s32 range) {
     s32 i;
     s32 j;

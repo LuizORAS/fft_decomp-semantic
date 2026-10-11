@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Poll the hardware card event until it reports a result. A poll that finds
+ * nothing while bit 0 of _card_status is set ends the wait with
+ * CARD_IO_RESULT_TIMEOUT. */
 s32 card_io_wait_hardware_event_result(void) {
     s32 result;
     s32 ready;

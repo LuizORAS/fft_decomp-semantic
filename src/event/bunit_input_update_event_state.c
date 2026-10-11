@@ -2,10 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-struct battle_event_input_state;
-
-extern u16 g_battle_menu_input_block_frames;
-
 /* Per-frame event input update: derives the edge/auto-repeat input word,
  * publishes it, and yields once while tracking thread status changes.
  *
@@ -13,7 +9,7 @@ extern u16 g_battle_menu_input_block_frames;
  * `frame_arg`, clears g_battle_menu_hide_numeric_values, and calls bunit_menu_draw_thread_status_indicators after the
  * yield. Needs the _divcheck profile for the three repeat-period divisions.
  */
-void bunit_input_update_event_state(u32* otag, u32 input, s16 frame_arg) {
+void bunit_input_update_event_state(void* otag, u32 input, s32 frame_arg) {
     u32 filtered_input;
     s32 initial_delay;
     s32 repeat_delay;
@@ -23,7 +19,7 @@ void bunit_input_update_event_state(u32* otag, u32 input, s16 frame_arg) {
     s32 thread_id;
     s32 status;
 
-    g_current_otag_entry = otag;
+    g_battle_gfx_current_otag_entry = otag;
     g_bunit_frame_arg = frame_arg;
     g_bunit_input_controller = battle_script_get_controller_input_pointer(0);
     g_battle_menu_hide_numeric_values = 0;
@@ -78,15 +74,15 @@ void bunit_input_update_event_state(u32* otag, u32 input, s16 frame_arg) {
         }
     }
 
-    g_sound_effect_id_to_play = -1;
-    battle_script_load_event_input_state((struct battle_event_input_state*)&g_bunit_input_event);
+    g_battle_sound_pending_sfx_id = -1;
+    battle_script_load_event_input_state((world_menu_input_state_t*)&g_bunit_input_event);
     if (g_bunit_input_event != PSX_PAD_SELECT && g_bunit_input_event != 0) {
-        g_event_input_suppression_frames = 5;
+        g_battle_event_input_suppression_frames = 5;
     }
 
     thread_id = 1;
     do {
-        g_bunit_thread_status_snapshot[thread_id] = battle_thread_is_running_2(thread_id);
+        g_bunit_thread_status_snapshot[thread_id] = battle_thread_is_running_asm(thread_id);
         thread_id++;
     } while (thread_id < 16);
 
@@ -94,14 +90,14 @@ void bunit_input_update_event_state(u32* otag, u32 input, s16 frame_arg) {
     thread_id = 1;
     do {
         status = g_bunit_thread_status_snapshot[thread_id];
-        if (status != battle_thread_is_running_2(thread_id)) {
-            g_event_input_suppression_frames = 5;
+        if (status != battle_thread_is_running_asm(thread_id)) {
+            g_battle_event_input_suppression_frames = 5;
         }
         thread_id++;
     } while (thread_id < 16);
 
-    if (g_event_input_suppression_frames != 0) {
-        g_event_input_suppression_frames--;
+    if (g_battle_event_input_suppression_frames != 0) {
+        g_battle_event_input_suppression_frames--;
     }
     bunit_menu_draw_thread_status_indicators();
     g_battle_event_frame_counter++;

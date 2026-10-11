@@ -24,7 +24,7 @@ jobs:
       - uses: docker/setup-buildx-action@v3
 
       # Loaded under the Makefile's image tag, so no target rebuilds it. This
-      # job alone exports the layer cache the validate shards import.
+      # job alone exports the layer cache the check shards import.
       - uses: docker/build-push-action@v6
         with:
           context: .
@@ -47,7 +47,7 @@ jobs:
       - run: make test
       - run: make map
 
-  validate:
+  check:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -57,7 +57,7 @@ jobs:
           - { name: world, modules: world }
           - { name: wldcore-main-event, modules: wldcore main event }
           - { name: opening-effect, modules: opening effect }
-    name: validate (${{ matrix.shard.name }})
+    name: check (${{ matrix.shard.name }})
     steps:
       - uses: actions/checkout@v4
 
@@ -77,9 +77,9 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: build/cache
-          key: validate-${{ matrix.shard.name }}-${{ hashFiles('Dockerfile', 'tools/**') }}-${{ github.sha }}
+          key: check-${{ matrix.shard.name }}-${{ hashFiles('Dockerfile', 'tools/**') }}-${{ github.sha }}
           restore-keys: |
-            validate-${{ matrix.shard.name }}-${{ hashFiles('Dockerfile', 'tools/**') }}-
-            validate-${{ matrix.shard.name }}-
+            check-${{ matrix.shard.name }}-${{ hashFiles('Dockerfile', 'tools/**') }}-
+            check-${{ matrix.shard.name }}-
 
-      - run: make validate MODULE="${{ matrix.shard.modules }}"
+      - run: make check MODULE="${{ matrix.shard.modules }}"

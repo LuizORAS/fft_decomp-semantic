@@ -4,6 +4,15 @@ typedef void (*open_script_entry_handler_t)(s16* entry);
 
 extern open_script_entry_handler_t g_open_opcode_handlers[];
 
+/* Run one frame of the ending script. Returns 0 once the script has ended and 1
+ * while it runs.
+ *
+ * Updates the text scroll, the XA audio, the OPNTEX sequence and the picture
+ * fade, then executes script entries. An entry is a row of 16-bit words at
+ * data_base + byte_offset whose first word, the opcode, indexes
+ * g_open_opcode_handlers. A handler advances byte_offset itself; one that has to
+ * wait clears OPEN_SCRIPT_DISPATCH_CONTINUE to end the frame and is entered again
+ * on the next, and opcode 0 clears OPEN_SCRIPT_DISPATCH_RUNNING. */
 s32 open_script_init_and_dispatch_entries(void) {
     open_script_dispatch_state_t* state;
     s32* dispatch_arguments;
@@ -18,9 +27,9 @@ s32 open_script_init_and_dispatch_entries(void) {
     open_script_update_screen_fade();
 
     state = &g_open_script_state.dispatch;
-    result = state->flags | 2;
+    result = state->flags | OPEN_SCRIPT_DISPATCH_CONTINUE;
     state->flags = result;
-    if (result & 2) {
+    if (result & OPEN_SCRIPT_DISPATCH_CONTINUE) {
         dispatch_arguments = &state->data_base;
         handlers = g_open_opcode_handlers;
         do {
@@ -30,10 +39,10 @@ s32 open_script_init_and_dispatch_entries(void) {
              * handler call and reads flags at -0x28 from it; `state->flags`
              * allocates a separate base register. */
             flags = *(u32*)((u8*)dispatch_arguments - 0x28);
-            if ((flags & 1) == 0) {
+            if ((flags & OPEN_SCRIPT_DISPATCH_RUNNING) == 0) {
                 return 0;
             }
-        } while (flags & 2);
+        } while (flags & OPEN_SCRIPT_DISPATCH_CONTINUE);
     }
     return 1;
 }

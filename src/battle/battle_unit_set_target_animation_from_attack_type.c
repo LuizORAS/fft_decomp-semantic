@@ -10,59 +10,59 @@ void battle_unit_set_target_animation_from_attack_type(
     battle_action_data_t* action;
     s32 animation;
     s32 delta;
-    s32 attacker_height;
-    s32 target_height;
-    u32 float_fly;
+    s16 attacker_height;
+    s16 target_height;
+    u32 water_depth;
 
     if (attacker == target) {
         return;
     }
-    if ((target->encoded_animation >> 1) == 0x1a) {
+    if ((target->sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEAD) {
         return;
     }
-    if ((target->encoded_animation >> 1) == 0x34) {
+    if ((target->sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEATH) {
         return;
     }
-    float_fly = (u8)battle_move_get_water_animation_mode(target);
-    animation = 9;
-    if (float_fly < 2) {
+    water_depth = battle_move_get_water_animation_mode(target);
+    animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
+    if (water_depth < 2) {
         stats = target->battle_data;
         if (stats != 0) {
             action = &stats->action;
-            animation = 2;
+            animation = BATTLE_UNIT_ANIMATION_STAND;
             switch (action->miss_type) {
             case BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
             case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
                 battle_unit_face_towards_action_target(target, attacker);
                 battle_gfx_set_thrown_item_graphic_palette(action->item_lost, target);
-                attacker_height = (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2
-                    - (u16)attacker->screen.vy;
-                target_height = (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2
-                    - (u16)target->screen.vy;
-                delta = (s16)attacker_height - (s16)target_height;
+                attacker_height
+                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - attacker->screen.vy;
+                target_height
+                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
+                delta = attacker_height - target_height;
                 if (delta < -0xb) {
-                    animation = 0x5a;
+                    animation = BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW;
                 } else {
-                    animation = 0x59;
+                    animation = BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LEVEL;
                     if (delta >= 0xc) {
-                        animation = 0x58;
+                        animation = BATTLE_UNIT_ANIMATION_WEAPON_GUARD_HIGH;
                     }
                 }
                 break;
-            case 1:
+            case BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE:
             case BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
             case BATTLE_ACTION_MISS_TYPE_NULLIFIED:
             case BATTLE_ACTION_MISS_TYPE_ACCURACY_MISS:
             case BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE:
-                if (action->status_change & 0x80) {
+                if (action->miss_display_flags & BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION) {
                     battle_unit_face_towards_action_target(target, attacker);
-                    animation = 0x18;
+                    animation = BATTLE_UNIT_ANIMATION_DODGE;
                 }
                 break;
             case BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
             case BATTLE_ACTION_MISS_TYPE_CATCH:
                 battle_unit_face_towards_action_target(target, attacker);
-                animation = 0x1b;
+                animation = BATTLE_UNIT_ANIMATION_RAISE_HANDS;
                 break;
             case BATTLE_ACTION_MISS_TYPE_CANCELLED:
             case BATTLE_ACTION_MISS_TYPE_REFLECTED:
@@ -71,19 +71,20 @@ void battle_unit_set_target_animation_from_attack_type(
             default:
                 if (action->hit != 0) {
                     if ((action->hp_damage != 0) || (action->mp_damage != 0)) {
-                        animation = 0x19;
+                        animation = BATTLE_UNIT_ANIMATION_HURT;
                     } else if ((action->hp_healing != 0) || (action->mp_healing != 0)) {
-                        animation = 0x1b;
+                        animation = BATTLE_UNIT_ANIMATION_RAISE_HANDS;
                     }
                 }
                 break;
             }
 
             if (animation != 0) {
-                if (target->spritesheet_id < 0x9b) {
+                if (target->spritesheet_id < BATTLE_SPRITESHEET_ID_CRYSTAL) {
                     battle_unit_store_animation_facing_movement_data(animation, target->facing, target);
-                } else if (animation == 0x19) {
-                    battle_unit_store_animation_facing_movement_data(0x19, target->facing, target);
+                } else if (animation == BATTLE_UNIT_ANIMATION_HURT) {
+                    battle_unit_store_animation_facing_movement_data(
+                        BATTLE_UNIT_ANIMATION_HURT, target->facing, target);
                 }
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK) {
@@ -103,7 +104,7 @@ void battle_unit_set_target_animation_from_attack_type(
             }
             return;
         }
-        animation = 0x19;
+        animation = BATTLE_UNIT_ANIMATION_HURT;
     }
     battle_unit_store_animation_facing(animation, target->facing, target);
 }

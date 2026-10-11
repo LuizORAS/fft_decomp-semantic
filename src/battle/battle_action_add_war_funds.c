@@ -2,8 +2,9 @@
 #include "psx/types.h"
 
 /* Add total gil to the war funds (script variable EVENT_SCRIPT_VAR_WAR_FUNDS, kept in
- * 0..99,999,999) while executing, for a blue unit only; an item id other than ITEM_ID_NOTHING adds its
- * price / 4. Returns the amount added. */
+ * 0..99,999,999) while executing, for a blue unit only; an item id other than ITEM_ID_NOTHING
+ * adds its price / 4 (battle_action_add_party_item passes the item it cannot stock when the
+ * party already holds 99). Returns the amount added. */
 s32 battle_action_add_war_funds(battle_stats_t* unit, s32 total, u8 item_id) {
     s32 value;
 

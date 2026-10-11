@@ -5,10 +5,6 @@
 /* Flat view of item_attribute_t. The target addresses `starting` as
  * attribute * 25 + (base + 15), rebuilt from the live base + 5 register;
  * the nested status_sets member instead reuses the innate address + 10. */
-/* The callee ignores the trailing priority argument the caller still passes. */
-#define EQUIP_QUAD                                                                                                     \
-    ((void (*)(const RECT*, s32, s32, const u8*, s32, u16, u16, s32))equip_gfx_enqueue_textured_quad_current_ot)
-
 #define ITEM_ATTRIBUTES_FLAT ((main_item_attribute_flat_t*)g_main_item_attributes)
 
 /* Draw the item detail panel's status column: immunity icons, then the
@@ -50,7 +46,7 @@ void equip_menu_draw_item_status_list(s16 item_id) {
         count = 12;
     }
     bit = 0xC2;
-    if (g_equip_selected_slot == 3) {
+    if (g_equip_selected_slot == EQUIP_SLOT_BODY) {
         bit = 0xDA;
     }
     y = bit - count * 9;
@@ -68,13 +64,13 @@ void equip_menu_draw_item_status_list(s16 item_id) {
             rect.y = y + 1;
             rect.w = 8;
             rect.h = 8;
-            EQUIP_QUAD(&rect, 0xA9, 0xF5, 0, 0, tpage, 0x3FD9, 8);
+            equip_gfx_enqueue_textured_quad_current_ot(&rect, 0xA9, 0xF5, 0, 0, tpage, 0x3FD9, 8);
             rect.x = x;
             rect.y = y;
             rect.w = g_equip_status_display_image_rects[i].w;
             rect.h = g_equip_status_display_image_rects[i].h;
-            EQUIP_QUAD(&rect, g_equip_status_display_image_rects[i].x, g_equip_status_display_image_rects[i].y, 0, 0,
-                icon_tpage, 0x3FD9, 8);
+            equip_gfx_enqueue_textured_quad_current_ot(&rect, g_equip_status_display_image_rects[i].x,
+                g_equip_status_display_image_rects[i].y, 0, 0, icon_tpage, 0x3FD9, 8);
             y += 9;
             drawn++;
         }
@@ -92,13 +88,13 @@ void equip_menu_draw_item_status_list(s16 item_id) {
             rect.y = y + 1;
             rect.w = 8;
             rect.h = 8;
-            EQUIP_QUAD(&rect, 0xA0, 0xF5, 0, 0, tpage, 0x3FD8, 8);
+            equip_gfx_enqueue_textured_quad_current_ot(&rect, 0xA0, 0xF5, 0, 0, tpage, 0x3FD8, 8);
             rect.x = x;
             rect.y = y;
             rect.w = g_equip_status_display_image_rects[i].w;
             rect.h = g_equip_status_display_image_rects[i].h;
-            EQUIP_QUAD(&rect, g_equip_status_display_image_rects[i].x, g_equip_status_display_image_rects[i].y, 0, 0,
-                icon_tpage, 0x3FD8, 8);
+            equip_gfx_enqueue_textured_quad_current_ot(&rect, g_equip_status_display_image_rects[i].x,
+                g_equip_status_display_image_rects[i].y, 0, 0, icon_tpage, 0x3FD8, 8);
             y += 9;
             drawn++;
         }

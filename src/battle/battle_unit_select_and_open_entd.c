@@ -3,8 +3,12 @@
 
 /* volatile views: the target reloads these globals at every use. */
 extern volatile s32 g_battle_entd_selection_mode;
-extern volatile s32 g_main_entd_current_event_id;
 
+/* Chooses the encounter's ENTD id and starts reading its ENTD file.
+ *
+ * The id is script variable EVENT_SCRIPT_VAR_CURRENT_ENTD unless
+ * g_battle_entd_selection_mode overrides it: 250, a random id 75..79, a random id
+ * 1..59, or the map id when that is not 0. Returns main_entd_open_file's result. */
 s32 battle_unit_select_and_open_entd(void) {
     volatile s32* current_event_id;
     s32 event_id;
@@ -15,13 +19,13 @@ s32 battle_unit_select_and_open_entd(void) {
     current_event_id = &g_main_entd_current_event_id;
     *current_event_id = event_id;
 
-    if (selection_mode == 1) {
+    if (selection_mode == BATTLE_ENTD_SELECTION_ENTD_250) {
         *current_event_id = 250;
-    } else if (selection_mode == 2) {
+    } else if (selection_mode == BATTLE_ENTD_SELECTION_RANDOM_75_TO_79) {
         *current_event_id = (rand() * 5) / 0x8000 + 75;
-    } else if (selection_mode == 3) {
+    } else if (selection_mode == BATTLE_ENTD_SELECTION_RANDOM_1_TO_59) {
         *current_event_id = (rand() * 59) / 0x8000 + 1;
-    } else if ((selection_mode == 4) && (g_battle_map_id != 0)) {
+    } else if ((selection_mode == BATTLE_ENTD_SELECTION_MAP_ID) && (g_battle_map_id != 0)) {
         *current_event_id = g_battle_map_id;
     }
 

@@ -6,7 +6,7 @@ void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode) {
     s16 width;
     s16* rect;
     s32 cursor_x;
-    world_oriented_sprite_t* cursor;
+    world_oriented_quad_t* cursor;
 
     x = g_world_item_category_tab_x[row];
     if (wide != 0) {
@@ -24,7 +24,7 @@ void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode) {
     rect[0] = x;
     rect[1] = width - (row == 0);
     world_gfx_enqueue_oriented_textured_quad(
-        (const world_oriented_quad_t*)rect, (const u8*)world_menu_get_sprite_color(), 0, 0, 0x2C);
+        (const world_oriented_quad_t*)rect, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 0x2C);
     cursor = &g_world_item_category_tab_cursor_sprite;
     cursor_x = x + 9;
     if (row == 3) {
@@ -32,5 +32,5 @@ void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode) {
     }
     cursor->x = cursor_x;
     g_world_item_category_tab_cursor_sprite.y = width + 10;
-    world_gfx_enqueue_oriented_textured_quad((const world_oriented_quad_t*)cursor, 0, 0, 0, 0x2D);
+    world_gfx_enqueue_oriented_textured_quad(cursor, 0, TEXTURE_UV_FLIP_NONE, 0, 0x2D);
 }

@@ -2,7 +2,7 @@
 
 /* Distortion 2 (BATTLE_DISTORTION_RISE): raise the unit 36 screen units (three height levels) at a
  * constant speed over the queued frames, then end. Monster SEQ animations pair it with
- * battle_unit_animate_descent_to_ground. */
+ * battle_move_animate_descent_to_ground. */
 void battle_move_animate_fixed_rise(battle_unit_misc_data_t* misc) {
     s32 step;
     s32 target;
@@ -20,7 +20,7 @@ void battle_move_animate_fixed_rise(battle_unit_misc_data_t* misc) {
             misc->real.vy = step + misc->real.vy;
         } else {
             misc->real.vy = target;
-            misc->distortion_animation_id = 0;
+            misc->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         height = misc->real.vy;
         misc->screen.vy = height / ONE;

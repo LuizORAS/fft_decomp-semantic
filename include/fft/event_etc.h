@@ -30,6 +30,17 @@ typedef struct etc_graphic_dimensions {
 } etc_graphic_dimensions_t;
 typedef char etc_graphic_dimensions_size_check[sizeof(etc_graphic_dimensions_t) == 12 ? 1 : -1];
 
+/* Index into g_etc_graphics, named after the image file: 0 to 6 are chapter
+ * titles (CHAPTER1.BIN to CHAPTER4.BIN), 7 is GAMEOVER.BIN and 8 to 12 are
+ * END1.BIN to END5.BIN. Only the ones etc_graphic_open treats specially are
+ * named. */
+typedef enum etc_graphic_id {
+    ETC_GRAPHIC_END1 = 8, /* g_battle_screen_fade rises from -0xff; for the others it falls from 0xff */
+    ETC_GRAPHIC_END3 = 10,
+    ETC_GRAPHIC_END4 = 11,
+    ETC_GRAPHIC_END5 = 12,
+} etc_graphic_id_e;
+
 typedef struct etc_graphic {
     const char* path;
     s32 lba;
@@ -48,7 +59,7 @@ extern RECT g_etc_graphic_game_over_palette_rect;
 extern etc_graphic_t g_etc_graphics[13];
 
 void etc_graphic_build_chapter_polygons(
-    s32 graphic_id, s32 fade, s32 dimension_set, s32 layer, volatile s32 primitives, s32 color);
+    s32 graphic_id, s32 fade, s32 dimension_set, s32 layer, POLY_GT4* primitives, s32 color);
 
 void etc_graphic_build_game_over_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 reverse_order, POLY_GT4* primitives, s32 color);

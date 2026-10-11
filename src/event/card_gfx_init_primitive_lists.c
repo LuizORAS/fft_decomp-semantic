@@ -2,7 +2,8 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void card_gfx_init_primitive_lists(card_primitive_lists_t* lists) {
+/* Initialize the POLY_FT4 and TILE primitive headers of one graphics context. */
+void card_gfx_init_primitive_lists(card_graphics_context_t* lists) {
     s32 i;
 
     for (i = 0; i < g_card_gfx_poly_ft4_capacity; i++) {

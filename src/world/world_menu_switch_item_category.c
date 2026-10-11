@@ -9,27 +9,30 @@ void world_menu_switch_item_category(s32 input) {
     s16 item;
     s32 description;
 
-    category = world_menu_step_cursor_with_sound_2(5, 0, input, 6);
+    category = world_menu_update_horizontal_selection_and_mark_change(
+        5, WORLD_MENU_CURSOR_SHOP_ITEM_TAB, input, MAIN_SFX_PAGE_SWITCH);
     cursor_slot = g_world_shop_item_category;
     if (cursor_slot != category) {
-        if (g_world_shop_menu_step != 1 && g_world_shop_menu_step != 15) {
+        if (g_world_shop_menu_step != WORLD_SHOP_STEP_BUY_LIST
+            && g_world_shop_menu_step != WORLD_SHOP_STEP_FUR_BUY_LIST) {
             cursor_slot += 5;
         }
-        world_gfx_set_sprite_slot(
-            cursor_slot, g_world_menu_cursor_position, g_world_menu_scroll_offset, (u16*)g_world_menu_entry_ids);
+        world_menu_set_selection_record(
+            cursor_slot, g_world_menu_cursor_position, g_world_menu_scroll_offset, g_world_menu_entry_ids);
         g_world_shop_item_category = category;
-        if (g_world_shop_menu_step == 1 || g_world_shop_menu_step == 15) {
-            world_shop_build_item_list(-1, g_world_shop_id, category != 4 ? (s16)(category + 1) : 7,
-                (world_item_list_entry_t*)g_world_menu_entry_ids, 0);
+        if (g_world_shop_menu_step == WORLD_SHOP_STEP_BUY_LIST
+            || g_world_shop_menu_step == WORLD_SHOP_STEP_FUR_BUY_LIST) {
+            world_shop_build_item_list(-1, g_world_shop_id, category != 4 ? (category + 1) : ITEM_LIST_FILTER_OTHER,
+                g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
             cursor_slot = g_world_shop_item_category;
         } else {
-            /* The definition's u16/s8/u8 parameter conversions would change this call's codegen. */
-            ((void (*)(s32, s32, s8, s16*, s32))world_item_build_category_list)(
-                -1, g_world_shop_item_category + 1, category != 4 ? (s8)(category + 1) : 7, g_world_menu_entry_ids, 0);
+            world_item_build_category_list(-1, g_world_shop_item_category + 1,
+                category != 4 ? category + 1 : ITEM_LIST_FILTER_OTHER, g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
             cursor_slot = g_world_shop_item_category + 5;
         }
-        world_gfx_get_sprite_slot(cursor_slot, &x, &y, g_world_menu_entry_ids);
-        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
+        world_menu_get_selection_record(cursor_slot, &x, &y, g_world_menu_entry_ids);
+        world_menu_init_scrollable_list(
+            g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         world_menu_set_window_scale_step(10);
     }
     world_menu_draw_row_window_and_cursor(1, g_world_shop_item_category, g_world_thread_task_active);

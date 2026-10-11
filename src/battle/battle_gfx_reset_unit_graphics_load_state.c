@@ -8,7 +8,7 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
     s32 i;
     s32 offset;
 
-    g_battle_misc_unit_list_head = 0;
+    g_battle_unit_misc_list_head = 0;
     for (offset = 15 * 0x440; offset >= 0; offset -= 0x440) {
         *(s32*)&((u8*)g_battle_unit_misc_slot_flags)[offset] = 0;
     }
@@ -16,8 +16,8 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
         ((u8*)g_battle_gfx_spritesheet_slots)[offset] = 0;
     }
     for (i = 0; i < 2; i++) {
-        g_battle_gfx_vram_slots[i].owner = 0xff;
-        g_battle_gfx_vram_slots[i].evtchr_load_marker = 0;
+        g_battle_gfx_vram_slots[i].owner = BATTLE_GFX_VRAM_SLOT_OWNER_NONE;
+        g_battle_gfx_vram_slots[i].image_buffer_state = BATTLE_GFX_VRAM_SLOT_BUFFER_FREE;
         g_battle_gfx_vram_slots[i].evtchr_load_state = 0;
     }
     g_battle_gfx_vram_slots[0].image_rect.x = 0x100;
@@ -28,10 +28,10 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
     g_battle_gfx_vram_slots[1].image_rect.y = 0;
     g_battle_gfx_vram_slots[1].image_rect.w = 0x40;
     g_battle_gfx_vram_slots[1].image_rect.h = 0xc8;
-    g_battle_gfx_load_data_cursor = (u8*)&g_battle_gfx_unit_animation_data;
-    g_battle_gfx_state_words[0] = 0;
-    g_battle_gfx_state_words[1] = 0;
-    g_battle_gfx_state_words[2] = 0;
-    g_battle_gfx_state_words[3] = 0;
-    g_battle_gfx_shp_frame_data_cursor = (u8*)&g_battle_gfx_shp_frame_data_buffer;
+    g_battle_gfx_seq_data_cursor = g_battle_gfx_unit_animation_data;
+    g_battle_gfx_unit_graphics_load_state[0] = BATTLE_GFX_UNIT_LOAD_KIND_FIRST;
+    g_battle_gfx_unit_graphics_load_state[1] = BATTLE_GFX_UNIT_LOAD_PHASE_START_READ;
+    g_battle_gfx_unit_graphics_load_state[2] = 0;
+    g_battle_gfx_unit_graphics_load_state[3] = 0;
+    g_battle_gfx_shp_frame_data_cursor = g_battle_gfx_shp_frame_data_buffer;
 }

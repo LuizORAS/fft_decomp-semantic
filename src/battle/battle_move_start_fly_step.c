@@ -13,37 +13,42 @@ void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile,
     s32 facing;
     u8* step;
     battle_unit_misc_data_t* rider;
+    u8 next;
 
     battle_unit_dismount_rider(unit);
-    step = &unit->movement_value;
-    switch (unit->movement_value >> 6) {
-    case 0:
-        facing = 0xC00;
-        unit->step_phase = 0x24;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value & 3);
+    step = &unit->current_path_step.value;
+    switch (unit->current_path_step.value >> 6) {
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
+        facing = BATTLE_FACING_EAST;
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_EAST;
+        next = unit->map_x + 1;
+        unit->movement.bytes.destination_x = next + (unit->current_path_step.value & 3);
         break;
-    case 1:
-        facing = 0x400;
-        unit->step_phase = 0x28;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value & 3);
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
+        facing = BATTLE_FACING_WEST;
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_WEST;
+        next = unit->map_x - 1;
+        unit->movement.bytes.destination_x = next - (unit->current_path_step.value & 3);
         break;
-    case 2:
-        facing = 0;
-        unit->step_phase = 0x22;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value & 3);
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
+        facing = BATTLE_FACING_SOUTH;
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_SOUTH;
+        next = unit->map_y - 1;
+        unit->movement.bytes.destination_y = next - (unit->current_path_step.value & 3);
         break;
-    case 3:
-        facing = 0x800;
-        unit->step_phase = 0x26;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value & 3);
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
+        facing = BATTLE_FACING_NORTH;
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH;
+        next = unit->map_y + 1;
+        unit->movement.bytes.destination_y = next + (unit->current_path_step.value & 3);
         break;
     }
 
-    battle_unit_store_animation_facing(0x12, facing, unit);
+    battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FLY, facing, unit);
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
         rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
         if (rider != 0) {
-            battle_unit_store_animation_facing(0x32, unit->facing, rider);
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, rider);
         }
     }
     battle_move_set_velocity_for_contiguous_clamped_steps(unit, &unit->movement_path_count, step);

@@ -13,8 +13,8 @@ void bunit_menu_draw_scrollable_list(u8* script) {
     s16 entry_count;
     s16 selected;
 
-    while (script[0] != 0x10) {
-        if (script[0] == 0x1c) {
+    while (script[0] != MENU_SCRIPT_OP_SCROLLABLE_LIST) {
+        if (script[0] == BUNIT_CMD_END) {
             return;
         }
         script += script[1];
@@ -28,7 +28,7 @@ void bunit_menu_draw_scrollable_list(u8* script) {
     g_bunit_menu_list_text_columns = script[10];
     g_bunit_menu_list_vram_width = (g_bunit_menu_list_glyph_width * g_bunit_menu_list_text_columns) >> 2;
 
-    entry_count = (s16)g_bunit_menu_list_entry_count;
+    entry_count = g_bunit_menu_list_entry_count;
     if (g_bunit_menu_list_selected_index >= entry_count) {
         g_bunit_menu_list_selected_index = entry_count - 1;
     }
@@ -45,15 +45,15 @@ void bunit_menu_draw_scrollable_list(u8* script) {
         g_bunit_menu_scroll_base_index = entry_count - visible_rows;
     }
 
-    if (g_bunit_menu_list_selected_index >= (s16)g_bunit_menu_list_entry_count) {
-        g_bunit_menu_list_selected_index = (s16)g_bunit_menu_list_entry_count - 1;
+    if (g_bunit_menu_list_selected_index >= g_bunit_menu_list_entry_count) {
+        g_bunit_menu_list_selected_index = g_bunit_menu_list_entry_count - 1;
     }
 
     if (g_bunit_menu_list_text_table != 0) {
         rect.x = 0x100;
         rect.y = 0x30;
         rect.w = g_bunit_menu_list_vram_width;
-        rect.h = (s32)g_bunit_menu_list_visible_rows * 16;
+        rect.h = g_bunit_menu_list_visible_rows * 16;
         ClearImage(&rect, 0, 0, 0);
         for (i = 0; i < g_bunit_menu_list_visible_rows; i++) {
             row_ids[i] = g_bunit_menu_list_entries[i + g_bunit_menu_scroll_base_index];
@@ -63,7 +63,7 @@ void bunit_menu_draw_scrollable_list(u8* script) {
         rect.y = 0x30;
         rect.w = g_bunit_menu_list_vram_width;
         rect.h = g_bunit_menu_list_row_height;
-        bunit_text_render_id_rows_to_vram((s32)g_bunit_menu_list_text_table, (u16*)row_ids, &rect, 0);
+        bunit_text_render_id_rows_to_vram(g_bunit_menu_list_text_table, row_ids, &rect, 0);
     }
 
     g_bunit_menu_list_scroll_direction = 0;

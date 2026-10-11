@@ -15,12 +15,10 @@ void battle_unit_update_facing_and_pending_animations(void) {
     state = g_battle_unit_misc_rotation_data;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++, state++) {
         if (battle_unit_has_misc_id(i) != 0) {
-            /* Both tables are read unsigned (lhu) here. */
-            if (((u16*)g_battle_unit_pending_animation_ids)[i] != 0) {
+            if (g_battle_unit_pending_animation_ids[i] != 0) {
                 moving = battle_move_is_unit_moving_by_misc_id(i);
-                if (moving == 0 && ((u16*)g_battle_unit_was_moving_latch)[i] != 0) {
-                    battle_unit_set_specific_animation_value_on_battle_init(
-                        i, ((u16*)g_battle_unit_pending_animation_ids)[i]);
+                if (moving == 0 && g_battle_unit_was_moving_latch[i] != 0) {
+                    battle_unit_set_animation(i, g_battle_unit_pending_animation_ids[i]);
                     g_battle_unit_pending_animation_ids[i] = 0;
                 }
                 g_battle_unit_was_moving_latch[i] = moving;
@@ -42,7 +40,7 @@ void battle_unit_update_facing_and_pending_animations(void) {
                 continue;
             }
             state->step_counter = 0;
-            if (state->rotate_mode == 0) {
+            if (state->rotate_mode == UNIT_ROTATE_MODE_SHORTEST) {
                 moving = state->target_facing - current + 0x10;
                 facing = current - state->target_facing + 0x10;
                 moving &= 0xF;
@@ -53,12 +51,12 @@ void battle_unit_update_facing_and_pending_animations(void) {
                     next = current + 1;
                 }
                 facing = next & 0xF;
-            } else if (state->rotate_mode == 1) {
+            } else if (state->rotate_mode == UNIT_ROTATE_MODE_INCREMENT) {
                 facing = (current + 1) & 0xF;
-            } else if (state->rotate_mode == 2) {
+            } else if (state->rotate_mode == UNIT_ROTATE_MODE_DECREMENT) {
                 facing = (current + 0xF) & 0xF;
             }
-            battle_unit_init_for_store_anim_facing_move(i, facing);
+            battle_unit_set_facing(i, facing);
         } else {
             g_battle_unit_was_moving_latch[i] = 0;
             g_battle_unit_pending_animation_ids[i] = 0;

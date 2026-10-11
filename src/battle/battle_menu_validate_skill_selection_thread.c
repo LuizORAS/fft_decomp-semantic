@@ -6,49 +6,51 @@
 void battle_menu_validate_skill_selection_thread(void) {
     s32 skill;
     void* parameter;
-    s32 target;
+    s32 ct;
     s32 entry;
     s32 mp_cost;
     s32 message;
     s32 blocked;
     battle_stats_t* unit;
-    world_ability_skill_use_tables_t* skill_tables;
+    world_ability_list_t* skill_tables;
 
-    skill = g_battle_menu_thread_menu_data[3].selected_index;
+    skill = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;
     parameter = (void*)battle_thread_get_current_parameter_1();
-    skill_tables = &g_battle_ai_workspace_ptr->skill_use;
-    target = skill_tables->target[skill];
-    entry = g_battle_menu_ability_display_flags_ptr[skill];
-    mp_cost = skill_tables->mp_cost[skill];
-    if (target == 0xFF) {
-        target = 0;
+    skill_tables = &g_battle_ai_workspace_ptr->ability_list;
+    ct = skill_tables->skill_ct[skill];
+    entry = g_battle_ability_menu_layout.text_colors[0][skill];
+    mp_cost = skill_tables->mp_costs[skill];
+    if (ct == 0xFF) {
+        ct = 0;
     }
     message = 0;
     blocked = skill_tables->flags[skill] & 2;
     unit = battle_unit_get_attacker_data_pointer();
-    if (g_battle_active_menu == 0 && unit->mp - mp_cost < 0) {
+    if (g_battle_active_menu == ACTION_MENU_TYPE_DEFAULT && unit->mp - mp_cost < 0) {
         message = 0x800A;
-        if (target == 0) {
+        if (ct == 0) {
             message = 0x1008;
         }
     }
-    g_battle_menu_selected_skill_target = target;
-    if ((g_battle_active_menu == 6 || g_battle_active_menu == 0) && blocked != 0
-        && (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
+    g_battle_menu_selected_skill_ct = ct;
+    if ((g_battle_active_menu == ACTION_MENU_TYPE_MONSTER || g_battle_active_menu == ACTION_MENU_TYPE_DEFAULT)
+        && blocked != 0
+        && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
         message = 0x8013;
-        if (target == 0) {
+        if (ct == 0) {
             message = 0x1009;
         }
     }
-    if (g_battle_active_menu == 1) {
+    if (g_battle_active_menu == ACTION_MENU_TYPE_ITEM_INVENTORY) {
         if (entry != 0) {
             message = 0x100B;
         }
     }
-    if (g_battle_active_menu == 2 && entry != 0) {
+    if (g_battle_active_menu == ACTION_MENU_TYPE_WEAPON_INVENTORY && entry != 0) {
         message = 0x100C;
     }
-    if (g_battle_active_menu == 7) {
+    if (g_battle_active_menu == ACTION_MENU_TYPE_KATANA_INVENTORY) {
         if (entry != 0) {
             message = 0x100D;
         }
@@ -60,10 +62,10 @@ void battle_menu_validate_skill_selection_thread(void) {
         } else {
             g_option_menu_open = 1;
             g_battle_menu_selected_option = 0;
-            g_battle_menu_thread_menu_data[35].text_id = message;
+            g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             battle_thread_start(g_battle_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
-            battle_thread_set_parameters(
-                g_battle_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[35], 0, 0);
+            battle_thread_set_parameters(g_battle_thread_current_id - 1,
+                (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
             battle_sound_set_effect_to_invalid();
             battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
             g_option_menu_open = 0;

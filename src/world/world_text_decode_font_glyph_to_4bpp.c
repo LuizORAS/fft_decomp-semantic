@@ -13,18 +13,18 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_
     u8 byte;
 
     font = g_world_text_glyph_bitmap_data;
-    world_bit_cursor_set_primary(font + glyph * 0x23);
+    world_bit_cursor_set_primary(font + glyph * TEXT_GLYPH_BYTES);
     row = 0;
     if ((target->x & 1) == 0) {
         for (; row < 14; row++) {
-            dst = image + (target->stride << 1) * (target->y + row) + ((s16)target->x >> 1);
+            dst = image + (target->stride << 1) * (target->y + row) + (target->x >> 1);
             for (col = 0; col < 5; col++) {
-                pixel = world_bit_cursor_read_primary(2);
+                pixel = world_bits_read_primary(2);
                 if (pixel != 0) {
                     pixel += palette * 4;
                 }
                 byte = pixel;
-                pixel = world_bit_cursor_read_primary(2);
+                pixel = world_bits_read_primary(2);
                 if (pixel != 0) {
                     pixel += palette * 4;
                 }
@@ -34,27 +34,27 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_
         }
     } else {
         for (; row < 14; row++) {
-            dst = image + (target->stride << 1) * (target->y + row) + ((s16)target->x >> 1);
-            pixel = world_bit_cursor_read_primary(2);
+            dst = image + (target->stride << 1) * (target->y + row) + (target->x >> 1);
+            pixel = world_bits_read_primary(2);
             if (pixel != 0) {
                 pixel += palette * 4;
             }
             byte = (*dst & 0xF) | (pixel << 4);
             *dst++ = byte;
             for (col = 0; col < 4; col++) {
-                pixel = world_bit_cursor_read_primary(2);
+                pixel = world_bits_read_primary(2);
                 if (pixel != 0) {
                     pixel += palette * 4;
                 }
                 byte = pixel;
-                pixel = world_bit_cursor_read_primary(2);
+                pixel = world_bits_read_primary(2);
                 if (pixel != 0) {
                     pixel += palette * 4;
                 }
                 byte |= pixel << 4;
                 *dst++ = byte;
             }
-            pixel = world_bit_cursor_read_primary(2);
+            pixel = world_bits_read_primary(2);
             if (pixel != 0) {
                 pixel += palette * 4;
             }

@@ -17,7 +17,8 @@ s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu) {
     u8 turns[0x18];
     s32 result;
 
-    if ((g_battle_unit_stats[unit_id].status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
+    if ((g_battle_unit_stats[unit_id].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
         && menu != ACTION_MENU_TYPE_DEFAULT && menu != ACTION_MENU_TYPE_MONSTER && menu != ACTION_MENU_TYPE_ATTACK
         && menu != ACTION_MENU_TYPE_BLANK_05) {
         return 0;
@@ -40,7 +41,7 @@ s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu) {
         }
         return result;
     case ACTION_MENU_TYPE_ELEMENTS:
-        return (u16)battle_menu_load_elemental_abilities(unit_id, skillset);
+        return battle_menu_load_elemental_abilities(unit_id, skillset);
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         return battle_menu_collect_draw_out_katanas(unit_id, skillset, items);
     case ACTION_MENU_TYPE_CHARGE:

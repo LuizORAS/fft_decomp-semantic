@@ -1,0 +1,47 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
+/* Play the landing sound for the surface of the tile a unit's step ends on:
+ * MAIN_SFX_LAND_SOFT for grassland, thicket and rug, MAIN_SFX_LAND_WATER for the
+ * water and marsh surfaces, MAIN_SFX_LAND_WOOD for wooden floor, tree and box,
+ * and MAIN_SFX_LAND_DEFAULT otherwise. Nothing plays for a unit whose motion
+ * flags suppress landing effects, or when the destination tile does not exist. */
+void battle_sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit) {
+    map_tile_t* tile;
+    s32 surface;
+    s32 sfx;
+
+    if (unit->movement.word & BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS)
+        return;
+    tile = battle_map_get_tile_data_pointer(
+        unit->movement.bytes.destination_x, unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
+    if (tile == 0)
+        return;
+    surface = tile->surface.value & MAP_SURFACE_MASK;
+    switch (surface) {
+    case MAP_SURFACE_GRASSLAND:
+    case MAP_SURFACE_THICKET:
+    case MAP_SURFACE_RUG:
+        sfx = MAIN_SFX_LAND_SOFT;
+        break;
+    case MAP_SURFACE_SWAMP:
+    case MAP_SURFACE_MARSH:
+    case MAP_SURFACE_POISONED_MARSH:
+    case MAP_SURFACE_WATERWAY:
+    case MAP_SURFACE_RIVER:
+    case MAP_SURFACE_LAKE:
+    case MAP_SURFACE_SEA:
+    case MAP_SURFACE_WATERFALL:
+        sfx = MAIN_SFX_LAND_WATER;
+        break;
+    case MAP_SURFACE_WOODEN_FLOOR:
+    case MAP_SURFACE_TREE:
+    case MAP_SURFACE_BOX:
+        sfx = MAIN_SFX_LAND_WOOD;
+        break;
+    default:
+        sfx = MAIN_SFX_LAND_DEFAULT;
+        break;
+    }
+    main_sound_play_sfx_find_channel(sfx);
+}

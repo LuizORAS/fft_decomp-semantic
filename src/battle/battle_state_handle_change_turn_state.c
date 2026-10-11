@@ -9,7 +9,7 @@ void battle_state_handle_change_turn_state(void) {
     s32 type;
 
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     command = *battle_menu_get_selected_command_address();
     if (command >= 7) {
         if (command < 9) {
@@ -20,7 +20,7 @@ void battle_state_handle_change_turn_state(void) {
     }
     if (g_battle_action_post_action != 0) {
         if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0) {
-            if (g_battle_camera_rotation_action == 0) {
+            if (g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE) {
                 battle_unit_get_source_misc_data();
                 type = g_battle_turn_event;
                 if (type == BATTLE_TURN_EVENT_ABILITY_READY) {

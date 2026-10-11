@@ -32,10 +32,9 @@ s32 battle_ai_simulate_action_and_score(void) {
     s32 weight_offset;
     s32 weight;
     s32 score;
-    u32 product;
     u32 below_cost;
 
-    if (g_battle_ai_data_base.decision_state && g_battle_ai_data_base.action_simulation_phase) {
+    if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.action_simulation_phase) {
         battle_ai_restore_unit_state(1);
         /* Resume: re-enter the suspended turn-advance or scoring phase. */
         if (g_battle_ai_data_base.action_simulation_phase == BATTLE_AI_SIMULATION_ADVANCE_TURNS)
@@ -55,15 +54,15 @@ s32 battle_ai_simulate_action_and_score(void) {
         unit_index >= 0; unit_index--, clear_cursor = (battle_ai_data_t*)((u8*)clear_cursor - 1)) {
         clear_cursor->unit_acts_before_me[0] = 0;
     }
-    ai->current_action.priority = 0;
-    ai->current_action.base_hit_percent = 0xff;
+    ai->current_action.rank.priority = 0;
+    ai->current_action.rank.base_hit_percent = 0xff;
     if (ai->current_action.act_before_move) {
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
-            if (battle_action_commit_command((u8*)action) == 1
+            if (battle_action_commit_command((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
                 && battle_ai_simulate_ability_use((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
-                ai->decision_state = 0;
+                ai->resume_pending = 0;
                 return 0;
             }
             ai->acting_unit->action_taken = 1;
@@ -73,10 +72,10 @@ s32 battle_ai_simulate_action_and_score(void) {
         battle_ai_simulate_movement_and_pickup();
         if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
             action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
-            if (battle_action_commit_command((u8*)action) == 1
+            if (battle_action_commit_command((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
                 && battle_ai_simulate_ability_use((battle_ai_command_action_t*)action) == 0) {
                 battle_ai_restore_unit_state(0);
-                ai->decision_state = 0;
+                ai->resume_pending = 0;
                 return 0;
             }
             ai->acting_unit->action_taken = 1;
@@ -84,15 +83,15 @@ s32 battle_ai_simulate_action_and_score(void) {
     }
     if (ai->current_action.skillset == SKILLSET_ID_DEFEND) {
         battle_status_inflict_defending_to_battle_id(ai->acting_unit_id);
-        ai->current_action.base_hit_percent = 100;
+        ai->current_action.rank.base_hit_percent = 100;
         ai->acting_unit->action_taken = 1;
     }
     if (ai->current_action.skillset == 0)
-        ai->current_action.base_hit_percent = 100;
+        ai->current_action.rank.base_hit_percent = 100;
     battle_turn_end(ai->acting_unit_id);
-    ai->saved_turn_state_0 = g_battle_turn_clock_state;
-    ai->saved_turn_state_1 = g_battle_turn_clock_resume_state;
-    ai->saved_turn_state_2 = g_battle_turn_unit_id;
+    ai->saved_between_turn_state = g_battle_turn_clock_state;
+    ai->saved_between_turn_resume_state = g_battle_turn_clock_resume_state;
+    ai->saved_turn_unit_id = g_battle_turn_unit_id;
     ai->simulated_turn_events = 0;
     for (;;) {
     advance_turns:
@@ -104,7 +103,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         ai->simulated_turn_events++;
         if (ai->simulated_turn_events >= 256)
             break;
-        unit_index = battle_turn_run_clock(0);
+        unit_index = battle_turn_run_clock(BATTLE_BETWEEN_TURN_MODE_RUN);
         status = unit_index & 0xff00;
         unit_index &= 0xff;
         unit = &g_battle_unit_stats[unit_index];
@@ -114,17 +113,19 @@ s32 battle_ai_simulate_action_and_score(void) {
             battle_action_apply_target_result(unit_index);
         } else if (status == BATTLE_TURN_EVENT_ABILITY_READY) {
             if (battle_ai_simulate_ability_use((battle_ai_command_action_t*)&unit->action_actor_id) == 0) {
-                g_battle_turn_clock_state = ai->saved_turn_state_0;
-                g_battle_turn_clock_resume_state = ai->saved_turn_state_1;
-                g_battle_turn_unit_id = ai->saved_turn_state_2;
+                g_battle_turn_clock_state = ai->saved_between_turn_state;
+                g_battle_turn_clock_resume_state = ai->saved_between_turn_resume_state;
+                g_battle_turn_unit_id = ai->saved_turn_unit_id;
                 /* An early return duplicates this shared cleanup tail. */
                 goto finish_without_scoring;
             }
             unit->charged_ability_ct = 0xff;
-            unit->status_sets.current[0] &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
-            unit->inflicted_status[0] &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
+            unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
+                &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
+                    | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
+            unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
+                &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
+                    | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
         } else if (status == BATTLE_TURN_EVENT_UNIT_READY) {
             if (battle_ai_can_unit_move_within(0, unit_index))
                 ai->unit_acts_before_me[unit_index] = 1;
@@ -133,7 +134,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             unit = &g_battle_unit_stats[unit_index];
             if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
-                && (unit->status_sets.current[0]
+                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
                     & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
                         | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING))))
                 break;
@@ -141,9 +142,9 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (unit_index == BATTLE_UNIT_ID_NONE)
             break;
     }
-    g_battle_turn_clock_state = ai->saved_turn_state_0;
-    g_battle_turn_clock_resume_state = ai->saved_turn_state_1;
-    g_battle_turn_unit_id = ai->saved_turn_state_2;
+    g_battle_turn_clock_state = ai->saved_between_turn_state;
+    g_battle_turn_clock_resume_state = ai->saved_between_turn_resume_state;
+    g_battle_turn_unit_id = ai->saved_turn_unit_id;
 score_state:
     if (VSync(1) >= 441) {
         battle_ai_save_unit_state(1);
@@ -156,24 +157,32 @@ score_state:
             unit = &g_battle_unit_stats[unit_index];
             decision->flags &= ~(
                 BATTLE_AI_DECISION_DEAD_WITHOUT_RERAISE | BATTLE_AI_DECISION_PETRIFIED | BATTLE_AI_DECISION_JUMPING);
-            if ((unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-                && !(unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
+            if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
                 decision->flags |= BATTLE_AI_DECISION_DEAD_WITHOUT_RERAISE;
-            if (unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
                 decision->flags |= BATTLE_AI_DECISION_PETRIFIED;
-            if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))
+            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))
                 decision->flags |= BATTLE_AI_DECISION_JUMPING;
             if (!(decision->flags & BATTLE_AI_DECISION_WORTH_TARGETING)
-                && !(unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
-                && (!(unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-                    || (unit->status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
-                && !(unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+                && (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+                    || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
                 decision->flags |= BATTLE_AI_DECISION_WORTH_TARGETING;
         }
     } else {
-        battle_ai_clear_current_action_plan_chosen();
+        battle_ai_clear_current_action_decided();
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
-            status = ai->unit_battle_ids[unit_index];
+            status = ai->unit_compact_indices[unit_index];
             if (status == 0xff)
                 continue;
             unit = &g_battle_unit_stats[unit_index];
@@ -189,10 +198,11 @@ score_state:
                     continue;
                 /* Indexing the s16 table changes register allocation; retain the byte cursor. */
                 weight = *(s16*)((u8*)g_battle_ai_status_priority_weights + weight_offset);
-                if (((unit->status_sets.current[1]
+                if (((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
                          & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)
                              | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)))
-                        || (unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
+                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
+                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
                     && weight >= 0)
                     continue;
                 switch (status) {
@@ -205,10 +215,10 @@ score_state:
                 case BATTLE_STATUS_ID_CONFUSION:
                 case BATTLE_STATUS_ID_BLOOD_SUCK:
                 case BATTLE_STATUS_ID_CHARM:
-                    if ((unit->status_sets.current[3]
+                    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLOW)]
                             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLOW)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_STOP)))
-                        || (unit->status_sets.current[4]
+                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]
                             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))))
@@ -219,10 +229,11 @@ score_state:
                 case BATTLE_STATUS_ID_SLEEP:
                 case BATTLE_STATUS_ID_DONT_MOVE:
                 case BATTLE_STATUS_ID_DONT_ACT:
-                    if ((unit->status_sets.current[1]
+                    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
                             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)
                                 | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)))
-                        || (unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
+                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
+                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
                         continue;
                     break;
                 }
@@ -231,7 +242,7 @@ score_state:
             if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
                 for (equipment_slot = 0; equipment_slot < 7; equipment_slot++) {
                     if (unit->equipment[equipment_slot]
-                        == g_battle_ai_unit_snapshots[ai->unit_battle_ids[unit_index]].equipment[equipment_slot])
+                        == g_battle_ai_unit_snapshots[ai->unit_compact_indices[unit_index]].equipment[equipment_slot])
                         score += 51;
                 }
             }
@@ -243,34 +254,33 @@ score_state:
                 weight_offset /= unit->max_mp;
                 if (below_cost)
                     weight_offset = (u32)weight_offset >> 1;
-                product = weight_offset * ai->unit_decisions[unit_index].mp_ability_mod;
-                weight_offset = (s32)product / 4;
+                weight_offset = weight_offset * ai->unit_decisions[unit_index].mp_ability_mod / 4;
                 score += weight_offset;
             }
             {
-                s32 golem;
+                u32 golem;
 
                 weight_offset = g_battle_team_golem[(unit->team_flags >> 4) & 3];
                 golem = weight_offset;
                 weight_offset <<= 7;
                 score += weight_offset / ai->present_unit_average_max_hp;
-                if ((u32)golem < ai->team_golem.by_team[(unit->team_flags >> 4) & 3])
+                if (golem < ai->team_golem.by_team[(unit->team_flags >> 4) & 3])
                     score--;
             }
             if (ai->unit_decisions[unit_index].enemy_flag)
                 score = -score;
-            ai->current_action.priority += score;
+            ai->current_action.rank.priority += score;
         }
         if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] == ACTION_MENU_TYPE_WEAPON_INVENTORY
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_SHURIKEN
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_BALL)
-            ai->current_action.base_hit_percent >>= 1;
+            ai->current_action.rank.base_hit_percent >>= 1;
         battle_ai_restore_unit_state(0);
-        ai->decision_state = 0;
+        ai->resume_pending = 0;
         return 1;
     }
 finish_without_scoring:
     battle_ai_restore_unit_state(0);
-    ai->decision_state = 0;
+    ai->resume_pending = 0;
     return 0;
 }

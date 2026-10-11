@@ -1,5 +1,13 @@
 #include "fft/battle.h"
 
+/* Carries out a pending Poached or Morbol display flag (status_flags_5_6) and
+ * clears it; Poached is tested first and only one is handled per call.
+ *
+ * Poached configures the unit's palette modulation
+ * (battle_gfx_configure_misc_unit_palette_modulation_1f). Morbol swaps the sprite
+ * for the Morbol spritesheet (VRAM slot, SHP, SEQ, texture page), refreshes the
+ * tile palette and the idle animation, then rewrites the battle stats as a Morbol
+ * and reinitialises the unit's AI ability data. */
 void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit) {
     u32 flags;
     map_tile_t* tile;
@@ -20,13 +28,13 @@ void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit
     unit->special_graphic_y_offset = 0;
     unit->spritesheet_id = BATTLE_SPRITESHEET_ID_MORBOL;
     unit->spritesheet_vram_slot = battle_gfx_claim_spritesheet_slot(BATTLE_SPRITESHEET_ID_MORBOL);
-    unit->shp_data = battle_gfx_get_spritesheet_shp_data_address(BATTLE_SPRITESHEET_ID_MORBOL);
-    unit->seq_data = battle_gfx_get_spritesheet_seq_data_address(BATTLE_SPRITESHEET_ID_MORBOL);
+    unit->shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(BATTLE_SPRITESHEET_ID_MORBOL);
+    unit->seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(BATTLE_SPRITESHEET_ID_MORBOL);
     unit->stored_palette = 0;
-    unit->vram_spritesheet_id = unit->spritesheet_vram_slot + 0x14;
+    unit->tpage = unit->spritesheet_vram_slot + BATTLE_GFX_TPAGE_SPRITESHEET_SLOT_0;
     tile = battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
-    battle_gfx_check_tile_status_palette_mod(unit, tile->flags_06.bits.shadow_mode, 1);
-    battle_unit_store_animation_facing_movement_data(3, unit->facing, unit);
-    battle_unit_modify_entd_unit(unit->battle_data);
+    battle_gfx_check_tile_status_palette_mod(unit, tile->flags.bits.shadow_mode, 1);
+    battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_IDLE, unit->facing, unit);
+    battle_unit_transform_into_morbol(unit->battle_data);
     battle_ai_init_unit_abilities(unit->battle_data->misc_unit_id);
 }

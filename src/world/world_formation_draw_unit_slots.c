@@ -3,8 +3,8 @@
 
 /* Draw the formation units and the backdrop or egg decoration for each
  * visible slot. */
-void world_formation_draw_unit_slots(world_menu_point_t* positions, s32 shade) {
-    s8 sprite_rgb[3];
+void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
+    u8 sprite_rgb[3];
     u8 backdrop_rgb[3];
     s32 i;
     s32 ot_index;
@@ -22,14 +22,15 @@ void world_formation_draw_unit_slots(world_menu_point_t* positions, s32 shade) {
             continue;
         }
         if (i != g_world_formation_selected_unit_index) {
-            if (g_world_formation_unit_pointers[i]->proposition_status & 1) {
-                palette = 9;
+            if (g_world_formation_unit_pointers[i]->proposition_status & WORLD_FORMATION_UNIT_PROPOSITION_LEAVING) {
+                palette = MENU_UNIT_READOUT_LEAVING;
             } else {
                 if (g_world_formation_unit_pointers[i]->gender_flags & UNIT_FLAG_EGG) {
-                    palette = 10;
+                    palette = MENU_UNIT_READOUT_EGG;
                 } else {
-                    if (g_world_formation_unit_pointers[i]->proposition_status & 2) {
-                        palette = 11;
+                    if (g_world_formation_unit_pointers[i]->proposition_status
+                        & WORLD_FORMATION_UNIT_PROPOSITION_MISSING) {
+                        palette = MENU_UNIT_READOUT_MISSING;
                     } else {
                         palette = g_world_formation_stat_display_mode;
                     }
@@ -43,8 +44,8 @@ void world_formation_draw_unit_slots(world_menu_point_t* positions, s32 shade) {
         }
         unit = g_world_formation_unit_pointers[i];
         if (unit->gender_flags & UNIT_FLAG_EGG) {
-            world_formation_draw_unit_portrait_frame(
-                (world_gfx_sprite_desc_t*)&positions[i], unit->egg_color, 0, unit->birthday & 0xF, ot_index);
+            world_formation_draw_egg_sprite(
+                (world_oriented_quad_t*)&positions[i], unit->egg_color, 0, unit->birthday & 0xF, ot_index);
         } else {
             brightness = world_formation_cursor_distance_falloff(positions[i].x, positions[i].y, 0xC8, 0x50);
             if (brightness > 0x80) {

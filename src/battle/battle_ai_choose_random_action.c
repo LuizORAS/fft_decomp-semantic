@@ -38,8 +38,7 @@ s32 battle_ai_choose_random_action(void) {
         ai->current_action.calculator_multiplier = value + ABILITY_ID_MATH_FIRST;
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_TARGET_MAP_TILES) {
-        battle_ai_transfer_halfword_values(
-            ai->targetable_tiles, (u16*)ai->reachable_tiles[0], sizeof(ai->targetable_tiles));
+        battle_ai_transfer_halfword_values(ai->targetable_tiles, ai->reachable_tiles[0], 72);
         ai->origin_tile_count = battle_ai_count_flagged_tiles_within_map_bounds(ai->targetable_tiles);
         if (!ai->origin_tile_count)
             return 0;
@@ -56,13 +55,13 @@ s32 battle_ai_choose_random_action(void) {
         /* A single attempt block lets missing movement candidates exit early. */
         do {
             if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET)
-                ai->current_action.targeting_type = rand() % 2 + BATTLE_ACTION_TARGET_TILE;
+                ai->current_action.targeting_type = rand() % 2 + BATTLE_TARGETING_TYPE_TILE;
             else
-                ai->current_action.targeting_type = BATTLE_ACTION_TARGET_TILE;
+                ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
             battle_ai_build_origin_and_target_tiles();
             if (!ai->origin_tile_count) {
-                if (ai->current_action.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
-                    ai->current_action.targeting_type = BATTLE_ACTION_TARGET_TILE;
+                if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
+                    ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
                     battle_ai_build_origin_and_target_tiles();
                 }
                 if (!ai->origin_tile_count)
@@ -75,29 +74,26 @@ s32 battle_ai_choose_random_action(void) {
                 /* Keep the original count even when a rejected target bit is removed. */
                 index_or_count = battle_ai_count_target_tiles_in_range();
                 if (index_or_count) {
-                    do {
-                        if (!battle_ai_take_random_tile(
-                                ai->targetable_tiles, &ai->considered_unit_coords, index_or_count))
-                            goto next_origin; /* continue the outer origin loop */
+                    while (
+                        battle_ai_take_random_tile(ai->targetable_tiles, &ai->considered_unit_coords, index_or_count)) {
                         ai->current_action.target_x = ai->considered_unit_coords.bytes.x;
                         ai->current_action.target_y = ai->considered_unit_coords.bytes.y;
                         ai->current_action.target_elevation = ai->considered_unit_coords.bytes.elevation;
                         ai->current_action.wait_facing_hint = battle_ai_find_direction_of_target(
                             (s8*)&ai->considered_unit_coords, (s8*)&ai->current_action.coords);
-                        if (ai->current_action.targeting_type != BATTLE_ACTION_TARGET_UNIT)
-                            goto selected;
-                    } while (
-                        (ai->current_action.target_id = battle_ai_find_unit_at_coordinates(&ai->considered_unit_coords))
-                        == BATTLE_UNIT_ID_NONE);
-                    goto selected;
+                        if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT
+                            && (ai->current_action.target_id
+                                   = battle_ai_find_unit_at_coordinates(&ai->considered_unit_coords))
+                                == BATTLE_UNIT_ID_NONE)
+                            continue;
+                        goto selected;
+                    }
                 }
-            next_origin:;
             } while (ai->origin_tile_count);
         } while (0);
     }
     return 0;
 selected: /* shared success tail */
-    battle_ai_transfer_halfword_values(
-        (u16*)&ai->selected_action, (u16*)&ai->current_action, sizeof(battle_ai_action_data_t));
+    battle_ai_transfer_halfword_values(&ai->selected_action, &ai->current_action, sizeof(battle_ai_action_data_t));
     return 1;
 }

@@ -1,11 +1,20 @@
 #include "fft/event_bunit.h"
 
+/*
+ * Build the primitives of the status banner's portrait cross-fade. BUNIT
+ * copy of world_gfx_build_portrait_transition_primitives.
+ *
+ * *transition counts the steps: 0 shows the first portrait, 1 the second,
+ * 2-3 capture both CLUTs, 4-9 wipe between the two portraits with two opaque
+ * and two semi-transparent quads; from step 2 on it advances by the event
+ * speed. `direction` 1 brings the first portrait in from the right as the
+ * second leaves to the left; anything else mirrors that. `i` serves the
+ * vertex loop, the CLUT loops and the wipe step alike.
+ */
 void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u8* image, POLY_FT4* poly, s32 direction) {
+    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction) {
     RECT second_rect;
     RECT first_rect;
-    POLY_FT4* quad;
-    u16* pixel;
     s32 i;
 
     battle_copy_bytes(&first_rect, texture_rect, sizeof(first_rect));
@@ -13,14 +22,14 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
     second_rect.x += 0x10;
 
     for (i = 0; i < 4; i++) {
-        poly[i].x0 = g_bunit_gfx_portrait_origin.coordinates[0] + 2;
-        poly[i].y0 = g_bunit_gfx_portrait_origin.coordinates[1] + 2;
-        poly[i].x1 = g_bunit_gfx_portrait_origin.coordinates[0] + 0x21;
-        poly[i].y1 = g_bunit_gfx_portrait_origin.coordinates[1] + 2;
-        poly[i].x2 = g_bunit_gfx_portrait_origin.coordinates[0] + 2;
-        poly[i].y2 = g_bunit_gfx_portrait_origin.coordinates[1] + 0x32;
-        poly[i].x3 = g_bunit_gfx_portrait_origin.coordinates[0] + 0x21;
-        poly[i].y3 = g_bunit_gfx_portrait_origin.coordinates[1] + 0x32;
+        poly[i].x0 = g_bunit_gfx_portrait_origin.x + 2;
+        poly[i].y0 = g_bunit_gfx_portrait_origin.y + 2;
+        poly[i].x1 = g_bunit_gfx_portrait_origin.x + 0x21;
+        poly[i].y1 = g_bunit_gfx_portrait_origin.y + 2;
+        poly[i].x2 = g_bunit_gfx_portrait_origin.x + 2;
+        poly[i].y2 = g_bunit_gfx_portrait_origin.y + 0x32;
+        poly[i].x3 = g_bunit_gfx_portrait_origin.x + 0x21;
+        poly[i].y3 = g_bunit_gfx_portrait_origin.y + 0x32;
     }
 
     if (*transition == 0) {
@@ -39,18 +48,18 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         bunit_gfx_build_portrait_poly_ft4(*first_portrait, poly);
         bunit_gfx_set_clut_rect_from_id(&first_rect, poly->clut);
         StoreImage(&first_rect, (u32*)image);
-        StoreImage(&second_rect, (u32*)(image + 0x20));
+        StoreImage(&second_rect, (u32*)(image + 16));
         *transition += g_battle_event_speed;
     } else if (*transition < 10) {
         if (*transition == 4) {
             for (i = 0; i < 0x10; i++) {
-                ((u16*)image)[i] |= 0x8000;
+                image[i] |= 0x8000;
             }
             for (i = 0; i < 0x10; i++) {
-                ((u16*)image)[i + 16] |= 0x8000;
+                image[i + 16] |= 0x8000;
             }
             LoadImage(&first_rect, (u32*)image);
-            LoadImage(&second_rect, (u32*)(image + 0x20));
+            LoadImage(&second_rect, (u32*)(image + 16));
         }
 
         i = *transition - 4;

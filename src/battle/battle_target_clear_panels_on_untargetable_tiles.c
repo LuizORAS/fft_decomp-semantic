@@ -12,7 +12,7 @@ void battle_target_clear_panels_on_untargetable_tiles(void) {
     dst = g_battle_target_panels;
     src = g_battle_map_tile_data;
     do {
-        if (src->flags_06.value & MAP_TILE_FLAG_UNTARGETABLE) {
+        if (src->flags.value & MAP_TILE_FLAG_UNTARGETABLE) {
             dst->remaining_range = 0;
             dst->mark = 0;
         }

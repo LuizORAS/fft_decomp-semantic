@@ -46,7 +46,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                     if (battle_ai_is_unit_untargetable(target_id) != 0) {
                         continue;
                     }
-                    if (action->targeting_type == BATTLE_ACTION_TARGET_UNIT
+                    if (action->targeting_type == BATTLE_TARGETING_TYPE_UNIT
                         && ai->unit_acts_before_me[action->target_id] != 0) {
                         if (action->target_id != target_id) {
                             continue;
@@ -63,12 +63,12 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                 if (((behavior[0] & BATTLE_AI_ABILITY_TARGET_ENEMIES) && ai->unit_decisions[target_id].enemy_flag != 0)
                     || ((behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_decisions[target_id].enemy_flag == 0)) {
-                    ai->current_action.priority += positive;
+                    ai->current_action.rank.priority += positive;
                 } else if (((behavior[0] & BATTLE_AI_ABILITY_TARGET_ENEMIES)
                                && ai->unit_decisions[target_id].enemy_flag == 0)
                     || ((behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_decisions[target_id].enemy_flag != 0)) {
-                    ai->current_action.priority -= negative;
+                    ai->current_action.rank.priority -= negative;
                 }
                 ai->hit_counter++;
                 ai->total_hit_percent += result->attack_accuracy;
@@ -83,16 +83,16 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
         battle_action_apply_actor_result(action->unit_id);
     } while (work.continue_attack != 0);
     if (ai->hit_counter != 0xff && ai->ranked_origin_search != 0) {
-        if (ai->ability_effect_on_self == 1 && self_hit != 0) {
+        if (ai->ability_effect_on_self == BATTLE_AI_ABILITY_EFFECT_USEFUL && self_hit != 0) {
             ai->target_tile_settled = 1;
-        } else if (ai->ability_effect_on_self == 2 && self_hit == 0) {
+        } else if (ai->ability_effect_on_self == BATTLE_AI_ABILITY_EFFECT_ADVERSE && self_hit == 0) {
             ai->target_tile_settled = 1;
         }
     }
     battle_action_store_acting_unit_data(&g_battle_unit_stats[action->unit_id]);
     if (reaction_mode == 0) {
         /* Reuse the finished loop counter's low halfword for the reaction ID. */
-        while ((target_id = battle_reaction_prepare_next((u16*)&target_index)) != -1) {
+        while ((target_id = battle_reaction_prepare_next((s16*)&target_index)) != -1) {
             if (ai->unit_acts_before_me[target_id] == 0) {
                 battle_ai_simulate_strikes(
                     (battle_ai_command_action_t*)&g_battle_unit_stats[target_id].action_actor_id, 1);

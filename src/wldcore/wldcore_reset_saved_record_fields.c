@@ -1,5 +1,7 @@
 #include "fft/wldcore.h"
 
+/* Reset a sound-novel record to the start of a reading: no text history, no
+ * picture or background, no sound, section 0 and brightness 0x30. */
 void wldcore_reset_saved_record_fields(wldcore_saved_record_t* record) {
     record->text_history_3 = -1;
     record->text_history_2 = -1;

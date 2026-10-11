@@ -2,17 +2,7 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* 12-byte sprite entry: texture uv, source size, offset from the anchor. */
-typedef struct {
-    u16 u;
-    u16 v;
-    u16 w;
-    u16 h;
-    u16 dx;
-    u16 dy;
-} bunit_menu_button_sprite_entry_t;
-
-extern bunit_menu_button_sprite_entry_t g_bunit_slot_sprite_entries[];
+extern world_menu_button_piece_t g_bunit_slot_sprite_entries[];
 
 /* Draw one slot's span of g_bunit_slot_sprite_entries sprite entries at (x, y).
  *
@@ -24,11 +14,11 @@ extern bunit_menu_button_sprite_entry_t g_bunit_slot_sprite_entries[];
  * active the sprite is drawn one pixel lower with CLUT g_bunit_menu_button_clut. abs()
  * matters: GCC expands it to the single-insn abssi2, which keeps the entry
  * loop body one basic block as in the target. */
-void bunit_menu_draw_pressable_button(s16 slot, s16 x, s32 y, s16 pressed, s16 busy, u16 sound_id) {
+void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 busy, u16 sound_id) {
     /* The target frame reserves 0x20 bytes for the descriptor; the tail is
      * never accessed. */
     struct {
-        bunit_oriented_quad_t quad;
+        world_oriented_quad_t quad;
         s16 _unused_14[6];
     } desc;
     u16 clut;
@@ -69,11 +59,11 @@ void bunit_menu_draw_pressable_button(s16 slot, s16 x, s32 y, s16 pressed, s16 b
     desc.quad.tpage = g_bunit_menu_icon_texture_page;
     if (count > 0) {
         do {
-            bunit_menu_button_sprite_entry_t* sprite = &g_bunit_slot_sprite_entries[entry];
-            desc.quad.x = x + sprite->dx;
-            desc.quad.y = y + sprite->dy;
-            desc.quad.w = abs(g_bunit_menu_button_piece_scales[entry][0] * (s16)sprite->w) >> 12;
-            desc.quad.h = abs(g_bunit_menu_button_piece_scales[entry][1] * (s16)sprite->h) >> 12;
+            world_menu_button_piece_t* sprite = &g_bunit_slot_sprite_entries[entry];
+            desc.quad.x = x + sprite->x_offset;
+            desc.quad.y = y + sprite->y_offset;
+            desc.quad.w = abs(g_bunit_menu_button_piece_scales[entry][0] * sprite->w) >> 12;
+            desc.quad.h = abs(g_bunit_menu_button_piece_scales[entry][1] * sprite->h) >> 12;
             desc.quad.u = sprite->u;
             desc.quad.v = sprite->v;
             desc.quad.uw = sprite->w;

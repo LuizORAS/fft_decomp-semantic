@@ -11,7 +11,7 @@ typedef struct battle_ai_tile_rows_view {
 /* Build and count the considered ability's origin and target tiles for the current scenario. Origins
  * are the scenario's reachable tiles with a targetable unit within range (range plus area when aimed
  * at tiles; every reachable tile for an arc ability), minus, for a unit with the water penalty, water
- * 2 or more deep, for Geomancy the tiles whose terrain gives another ability, and for an ability that
+ * 2 or more deep, for Elemental the tiles whose terrain gives another ability, and for an ability that
  * needs Monster Skill the tiles not next to a holder (battle_ai_build_monster_skill_tile_mask).
  * Target tiles are walkable: the targetable units' tiles when aimed at units, or the tiles within
  * area of one when aimed at tiles. A follow-target ability leaves the units' own tiles to its
@@ -39,7 +39,7 @@ void battle_ai_build_origin_and_target_tiles(void) {
         for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
             if (ai->targetability.live.unit_targetable[unit_id]) {
                 battle_ai_transfer_unit_coordinates(unit_id, &ai->considered_unit_coords);
-                if (ai->current_action.targeting_type == BATTLE_ACTION_TARGET_UNIT)
+                if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
                     battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_RANGE, 0);
                 else
                     battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_RANGE_PLUS_AOE, 0);
@@ -63,7 +63,7 @@ void battle_ai_build_origin_and_target_tiles(void) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((unit_id << x) & 0x8000) {
                         if (ai->water_penalty
-                            && (depth = g_battle_map_tile_data[j * ai->map_max_x + x + (i << 8)].depth_half_height
+                            && (depth = g_battle_map_tile_data[j * ai->map_max_x + x + (i << 8)].depth_half_height.value
                                        >> MAP_TILE_DEPTH_SHIFT)
                                 >= 2) {
                             ((battle_ai_tile_rows_view_t*)ai)->origin_tiles[i][j] ^= 0x8000 >> x;
@@ -90,7 +90,7 @@ void battle_ai_build_origin_and_target_tiles(void) {
     for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
         if (ai->targetability.live.unit_targetable[unit_id]) {
             battle_ai_transfer_unit_coordinates(unit_id, &ai->considered_unit_coords);
-            if (ai->current_action.targeting_type == BATTLE_ACTION_TARGET_UNIT)
+            if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
                 battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_EXPLICIT, 0);
             else
                 battle_ai_build_targetable_tile_mask(BATTLE_AI_TILE_MASK_AOE, 0);
@@ -109,7 +109,7 @@ void battle_ai_build_origin_and_target_tiles(void) {
                 pos = unit;
                 __asm__("" : "=r"(pos) : "0"(pos));
                 jumping = status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP);
-                if (ai->current_action.targeting_type == BATTLE_ACTION_TARGET_TILE || jumping) {
+                if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_TILE || jumping) {
                     ((battle_ai_tile_rows_view_t*)ai)
                         ->target_tiles[pos->position.bits.higher_elevation][pos->position.bits.y] ^= 0x8000 >> pos->x;
                 }

@@ -5,13 +5,13 @@
 s32 world_thread_resolve_id(s32 requested_thread_id) {
     s32 index;
 
-    if (requested_thread_id < 16) {
+    if (requested_thread_id < NATIVE_THREAD_SLOT_COUNT) {
         return requested_thread_id;
     }
 
     index = 1;
     do {
-        if (world_thread_is_running_2(index) == 0) {
+        if (world_thread_is_running_asm(index) == 0) {
             return index;
         }
         index++;

@@ -8,14 +8,14 @@
  *
  * The local alias for the current location id reproduces the target's
  * saved-register base for its two loads. */
-void wldcore_menu_run_shop_and_rebuild_screen(s32 file_slot) {
+void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id) {
     s32* selected;
-    s32* clear;
+    u32* clear;
     s32 i;
 
     world_menu_set_brightness(0x80, 0x80, 0x80);
     wldcore_sound_wait_for_queue_drain();
-    world_shop_run_screen(file_slot);
+    world_shop_run_screen(shop_id);
     g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]);
     selected = &g_wldcore_map_projection_state.marker.kind;
@@ -23,7 +23,7 @@ void wldcore_menu_run_shop_and_rebuild_screen(s32 file_slot) {
         = wldcore_map_build_location_menu_entries(
             *selected, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entries);
     wldcore_menu_push_location_menu_level(*selected);
-    wldcore_fade_start_screen(4, 0x10);
+    wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
     wldcore_clear_screen_and_set_map_clip_rect(0);
     i = 0x77FF;
     clear = &g_wldcore_scratch_buffer[0x77FF];
@@ -31,5 +31,5 @@ void wldcore_menu_run_shop_and_rebuild_screen(s32 file_slot) {
         *clear = 0;
         clear--;
     }
-    wldcore_sound_enqueue_music_start(0x11B);
+    wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
 }

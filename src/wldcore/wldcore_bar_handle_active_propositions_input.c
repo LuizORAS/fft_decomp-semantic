@@ -14,10 +14,11 @@ void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_proposition
     u32 buttons;
     s32 unused[2]; /* 8-byte frame slot the target reserves */
 
-    if ((g_main_system_flags & 4) && world_thread_is_running(0xC) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
+        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_ordering_table_offset = 1;
-        g_wldcore_menu_result = 0;
-        g_main_system_flags ^= 4;
+        g_wldcore_menu_blocked_buttons = 0;
+        g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_menu_stack_depth--;
         if (level->confirmed != 0) {
             wldcore_proposition_push_cancel_confirm_level(
@@ -33,24 +34,24 @@ void wldcore_bar_handle_active_propositions_input(wldcore_bar_active_proposition
         level->confirmed = 0;
         /* Scheduling barrier: keeps the store ahead of the cursor argument. */
         __asm__ volatile("");
-        wldcore_list_clear_cursor_state(5);
-        g_main_system_flags |= 4;
-        world_thread_set_parameters(0xC, 0, 0, 1);
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
     } else if (buttons & PSX_PAD_SELECT) {
-        wldcore_bar_active_propositions_clear_result((wldcore_menu_panel_level_t*)level);
+        wldcore_bar_active_propositions_block_all_buttons((wldcore_menu_panel_level_t*)level);
         wldcore_menu_push_message_level(0x1062, 1);
     } else if (buttons & PSX_PAD_CIRCLE) {
         if (g_wldcore_list_row_flags[g_wldcore_window_panel_render_state.selected_index] != 0) {
             wldcore_sound_play_effect(MAIN_SFX_INVALID);
-            world_thread_set_parameters(0xE, 0x19, 0xB81C, 0);
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_RETURN_TOMORROW, 0);
         } else {
             wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
             level->confirmed = 1;
             /* Scheduling barrier: keeps the store ahead of the cursor argument. */
             __asm__ volatile("");
-            wldcore_list_store_cursor_state(5);
-            g_main_system_flags |= 4;
-            world_thread_set_parameters(0xC, 0, 0, 1);
+            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS);
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
+            world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         }
     }
 }

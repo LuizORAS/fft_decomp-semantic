@@ -15,13 +15,13 @@ void battle_menu_open_non_active_unit_idle_action_menu(void) {
     battle_state_disable_camera_pan();
     unit = misc->battle_data;
     g_battle_game_state = BATTLE_GAME_STATE_IDLING_ACTION_MENUS;
-    battle_menu_store_unit_names_and_event_block_data(3, unit->misc_unit_id, 0);
+    battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, unit->misc_unit_id, 0);
     menu_id = battle_menu_get_id_based_on_mount_moveable_actable(misc->battle_data->misc_unit_id);
     if (g_battle_status_menu_open != 0) {
-        if (menu_id == 0xF) {
-            menu_id = 0x11;
-        } else if (menu_id == 0x10) {
-            menu_id = 0x12;
+        if (menu_id == BATTLE_MENU_ID_PLAYER_UNIT) {
+            menu_id = BATTLE_MENU_ID_PLAYER_UNIT_INSPECT;
+        } else if (menu_id == BATTLE_MENU_ID_OTHER_UNIT) {
+            menu_id = BATTLE_MENU_ID_OTHER_UNIT_INSPECT;
         }
     }
     battle_menu_build_idle_action_menu(menu_id);

@@ -8,10 +8,11 @@ void battle_reaction_try_arrow_guard(void) {
     battle_stats_t* target;
     battle_action_data_t* action;
 
-    if ((g_current_ability.range_data.flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) == 0) {
+    if ((g_battle_action_current_ability.range_data.flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) == 0) {
         return;
     }
-    if ((u32)(g_main_item_primary_data[g_current_ability.weapon_id].type - ITEM_TYPE_CROSSBOW) >= 2) {
+    if (g_main_item_primary_data[g_battle_action_current_ability.weapon_id].type != ITEM_TYPE_CROSSBOW
+        && g_main_item_primary_data[g_battle_action_current_ability.weapon_id].type != ITEM_TYPE_BOW) {
         return;
     }
     target = g_battle_action_target;

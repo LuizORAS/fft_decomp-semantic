@@ -10,7 +10,7 @@ void battle_reaction_try_damage_split(void) {
     hp = g_battle_action_target_data->hp_damage;
     if (hp != 0 && battle_reaction_fails_brave_roll(g_battle_action_target) == 0) {
         hp++;
-        hp = ((u16)hp) >> 1;
+        hp = hp >> 1;
         action = g_battle_action_target_data;
         action->last_received_attack = hp;
         action->reaction_id = ABILITY_ID_REACTION_DAMAGE_SPLIT;

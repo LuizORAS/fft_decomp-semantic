@@ -19,7 +19,7 @@
  * s0 copy before the s2 copy in the prologue. */
 void world_script_run_sprite_move(u8* arg, s32 use_speed) {
     s32 pos[4][4];
-    battle_screen_coords_t vec;
+    SVECTOR vec;
     u8* parameters;
     s32 mode;
     s16* coords;
@@ -39,7 +39,7 @@ void world_script_run_sprite_move(u8* arg, s32 use_speed) {
 
     parameters = arg;
     mode = use_speed;
-    misc_id = world_get_misc_id(world_script_load_halfword(parameters));
+    misc_id = world_script_get_misc_id(world_script_load_halfword(parameters));
     if (misc_id == EVENT_MISC_ID_NONE) {
         return;
     }
@@ -112,28 +112,28 @@ void world_script_run_sprite_move(u8* arg, s32 use_speed) {
         if (battle_unit_has_misc_id(misc_id) == 0) {
             world_thread_exit_current();
         }
-        vec.x = pos[3][0];
-        vec.z = pos[3][1];
-        vec.y = pos[3][2];
+        vec.vx = pos[3][0];
+        vec.vy = pos[3][1];
+        vec.vz = pos[3][2];
         battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
-        vec.x = pos[2][0] / 256;
-        vec.z = pos[2][1] / 256;
-        vec.y = pos[2][2] / 256;
+        vec.vx = pos[2][0] / 256;
+        vec.vy = pos[2][1] / 256;
+        vec.vz = pos[2][2] / 256;
         battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
-        pos[3][0] = -vec.x;
-        pos[3][1] = -vec.z;
-        pos[3][2] = -vec.y;
+        pos[3][0] = -vec.vx;
+        pos[3][1] = -vec.vy;
+        pos[3][2] = -vec.vz;
     }
     if (battle_unit_has_misc_id(misc_id) == 0) {
         world_thread_exit_current();
     }
-    vec.x = pos[3][0];
-    vec.z = pos[3][1];
-    vec.y = pos[3][2];
+    vec.vx = pos[3][0];
+    vec.vy = pos[3][1];
+    vec.vz = pos[3][2];
     battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
-    vec.x = pos[1][0] / 256;
-    vec.z = pos[1][1] / 256;
-    vec.y = pos[1][2] / 256;
+    vec.vx = pos[1][0] / 256;
+    vec.vy = pos[1][1] / 256;
+    vec.vz = pos[1][2] / 256;
     battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
     if (total == 1) {
         world_thread_yield();

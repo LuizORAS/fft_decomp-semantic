@@ -1,7 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* ORs a mask into the note flag word of every channel that already has one. */
+/* ORs a mask of suzuki_channel_flag_e bits into the flags of every channel
+ * that is in use. No caller is known. */
 void main_smd_set_flags_all_channels(u16 mask, suzuki_music_t* music) {
     suzuki_music_channel_t* channel;
     s32 count;
@@ -9,8 +10,8 @@ void main_smd_set_flags_all_channels(u16 mask, suzuki_music_t* music) {
     channel = music->channels;
     count = music->channel_count;
     do {
-        if (channel->active != 0)
-            channel->active |= mask;
+        if (channel->flags != 0)
+            channel->flags |= mask;
         channel++;
     } while (--count != 0);
 }

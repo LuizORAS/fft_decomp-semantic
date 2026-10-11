@@ -1,3 +1,8 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
+#define ABS(x) (x < 0 ? -(x) : x)
+
 /*
  * The event CAMERA instruction (0x19) thread.
  * Instruction-for-instruction twin of world_camera_thread (0x800f9438).
@@ -14,16 +19,6 @@
  * mode 1 and late mode 2 paths while first and elapsed are block-local, which
  * gives the target's s0-s3 assignment.
  */
-#include "fft/battle.h"
-#include "psx/types.h"
-
-#define ABS(x) ((x) < 0 ? -(x) : (x))
-
-/* Target operand meaning "keep the component's current value". */
-#define BATTLE_CAMERA_HOLD 10000
-
-/* Script-variable index for each camera component, 0x80165ed4. */
-
 void battle_camera_thread(void) {
     s32 target[8];
     s32 start[7];
@@ -84,10 +79,10 @@ void battle_camera_thread(void) {
         ramp = (duration - i) * i;
         for (j = 0; j < 7; j++) {
             variable = &g_battle_script_variables[g_battle_camera_script_variable_indices[j]];
-            if (target[j] == BATTLE_CAMERA_HOLD) {
+            if (target[j] == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 continue;
             }
-            if (*(u16*)&g_battle_camera_position_locked != 0 && j < 3) {
+            if (g_battle_camera_position_locked != 0 && j < 3) {
                 continue;
             }
             if (j < 3) {
@@ -155,23 +150,23 @@ void battle_camera_thread(void) {
             }
             *variable = value;
         }
-        battle_script_clear_indexed_variable_bit0();
+        battle_camera_clear_zoom_variable_low_bit();
         battle_thread_yield();
     }
 
-    if (*(u16*)&g_battle_camera_position_locked == 0) {
+    if (g_battle_camera_position_locked == 0) {
         for (i = 0; i < 3; i++) {
-            if (target[i] != BATTLE_CAMERA_HOLD) {
+            if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 g_battle_script_variables[g_battle_camera_script_variable_indices[i]] = target[i] << 10;
             }
         }
     }
     for (i = 3; i < 7; i++) {
-        if (target[i] != BATTLE_CAMERA_HOLD) {
+        if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
             g_battle_script_variables[g_battle_camera_script_variable_indices[i]] = target[i];
         }
     }
-    battle_script_clear_indexed_variable_bit0();
+    battle_camera_clear_zoom_variable_low_bit();
     battle_thread_yield();
     battle_thread_exit_current();
 }

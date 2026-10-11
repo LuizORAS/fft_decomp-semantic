@@ -22,8 +22,8 @@ scope:
   - battle_unit_clear_status_staging_data()
   - battle_unit_apply_staged_status_data()
   - battle_unit_update_staged_status_data()
-  - battle_update_unit_status_and_staged_status_data()
-  - battle_process_inflict_status_commands()
+  - battle_unit_save_staged_status_data()
+  - battle_script_process_inflict_status_commands()
   - battle_script_inflict_status_thread()
 ---
 
@@ -120,7 +120,7 @@ events, and leave when something removes them or their count runs out.
 | `UNUSED_7` | Darkness, Confusion, Silence, Transparent, Berserk, Chicken, Frog, Stop, Charm, Sleep, Don't Move, Don't Act | nothing |
 | `EVENT_EXCLUDED` | Crystal, Dead, Undead, Jump, Petrify, Invite, Treasure, Critical | event commands aimed at a whole team skip these units ([[battle_script_filter_unit_id_by_mode]]) |
 | `MOUNT_REMOVAL` | Confusion, Berserk, Poison, Stop, Sleep, Don't Move, Don't Act, Death Sentence | the post-move events ([[battle_move_get_post_move_events]]) |
-| `UNMOUNTABLE` | Crystal, Dead, Petrify, Blood Suck, Treasure, Berserk, Chicken, Frog, Charm (fixed in code) | riding a chocobo ([[battle_unit_check_chocobo]]) |
+| `UNMOUNTABLE` | Crystal, Dead, Petrify, Blood Suck, Treasure, Berserk, Chicken, Frog, Charm (fixed in code) | riding a chocobo ([[battle_unit_get_chocobo_mount_state]]) |
 
 - **The rider list** ([[g_battle_rider_status_infliction_mask]], the
   FFHacktics wiki's "Rider Allowed Status Inflictions"): a unit riding a
@@ -160,7 +160,7 @@ events, and leave when something removes them or their count runs out.
 3. **The clock.** [[battle_turn_run_clock]] calls
    [[battle_status_build_upkeep_action]] when a unit's turn comes,
    [[battle_status_update_expiring]] every clock tick,
-   [[battle_status_apply_poison_and_regen]], [[battle_prepare_terrain_poison]]
+   [[battle_status_apply_poison_and_regen]], [[battle_status_prepare_terrain_poison]]
    and [[battle_status_remove_transparent]] after the turn. Each change goes
    through the action record like an action's, so it shows as an action
    result.
@@ -168,10 +168,10 @@ events, and leave when something removes them or their count runs out.
    ([[battle_unit_clear_status_staging_data]]). With script variable 0x1fd
    set it stages every unit at once
    ([[battle_unit_update_staged_status_data]]); otherwise
-   [[battle_process_inflict_status_commands]] first runs the Inflict Status
+   [[battle_script_process_inflict_status_commands]] first runs the Inflict Status
    commands of floating or jumping units, and units are staged one by one,
    by an Inflict Status command or when the event adds them. Staging
-   ([[battle_update_unit_status_and_staged_status_data]]) saves the unit and
+   ([[battle_unit_save_staged_status_data]]) saves the unit and
    hides statuses: with the variable set, all but Crystal, Dead, Invite,
    Cursed, Treasure and Critical (monsters, Altima and the undead jobs keep
    Undead and Float); with it clear, Undead, Jump, Petrify, Darkness,
@@ -266,7 +266,7 @@ by" counts the retail abilities, weapons and items whose status set adds it
   [[battle_action_apply_target_result]].
 - **Who controls an affected unit:** [[battle_status_remove_control]].
 - **What events hide:** [[g_battle_event_status_masks]] and
-  [[battle_update_unit_status_and_staged_status_data]].
+  [[battle_unit_save_staged_status_data]].
 - **How a status looks:** [[g_battle_misc_status_mask_by_handler_index]] and
   [[battle_status_queue_misc_graphics_flag_change]], the bubbles
   ([[g_battle_gfx_status_bubble_status_masks]]), the palette

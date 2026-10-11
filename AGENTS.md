@@ -11,8 +11,11 @@ Linked Psy-Q, runtime/startup and Suzuki library reconstructions are normal
 repository source. Keep public SDK entry-point names, use `include/psx/`, and
 put one reconstructed function per file under `src/psyq/<library>/`. Register
 it in the original module's `target/` configuration with an explicit `source:`
-path. Existing LIBGS, LIBPRESS and Suzuki functions stay in their current
-module directories unless a separate change moves them coherently.
+path. A routine or global with no established SDK name is `psyq_<lib>_…` or
+`g_psyq_<lib>_…`. LIBGS (WORLD) is `src/psyq/libgs/` and LIBPRESS (OPENING)
+`src/psyq/libpress/`. The Suzuki sound driver is in `src/main/` under `main_`
+and `Suzuki` names, apart from its four heap routines in `src/psyq/suzuki/`;
+it stays there unless a separate change moves it coherently.
 
 Library C has the same byte-exact requirements as game C. Every completed
 function must match all original bytes; unmatched drafts stay in ignored
@@ -87,7 +90,7 @@ authoritative for each function's source, address, size, profile and hash.
 
 ```sh
 make bootstrap             # build the Docker image (extracts the BIN if present)
-make validate [MODULE=x]   # compile and compare with target/ hashes; no BIN needed
+make check [MODULE=x]      # compile and compare with target/ hashes; no BIN needed
 make build [MODULE=x]      # full byte-exact build and disc (needs the BIN)
 make extract               # extract the BIN (build/checksums/diff do it on demand)
 make checksums             # refresh hashes from the ORIGINAL bytes only
@@ -101,7 +104,7 @@ make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
 make test                  # vet and test the Go tooling
 make map                   # write the codebase map (Obsidian vault) to build/map and the upstream rename table to docs/upstream-renames.tsv; ARGS=--pull-docs copies docs edited in the vault back
 make warnings              # list cc1 -Wall warnings per function in build/warnings [MODULE=x]
-make check                 # fmt-check, check-config and validate
+make verify                # fmt-check, check-config and check
 make fmt                   # clang-format src/ and include/ in place
 make fmt-check             # fail on any formatting drift
 make shell                 # interactive shell in the image
@@ -110,10 +113,10 @@ make compile-commands      # editor compile_commands.json (host clang)
 ```
 
 `MODULE` takes an id (`battle`, `event-attack`) or an alias (`attack`,
-`bunit`, `equip`, `jobstts`); for `validate` it may be a list, and `event` or
+`bunit`, `equip`, `jobstts`); for `check` it may be a list, and `event` or
 `effect` selects every such module. `diff` and `permute` need it only when
-several modules define `FUNC`. Both compile exactly as `validate` does. Every change
-ends with `make validate` passing. Before handing off, also run `make build`
+several modules define `FUNC`. Both compile exactly as `check` does. Every change
+ends with `make check` passing. Before handing off, also run `make build`
 (disc exact), `make check-config` and `make fmt-check`.
 
 Every target runs in a fresh `docker run --rm` container of the pinned
@@ -123,8 +126,9 @@ layer proves every tool runs) and rebuilt by `make bootstrap`. It holds the
 old GCC `cc1` binaries (native on x86-64, through `qemu-i386` elsewhere), maspsx, mipsel binutils and
 `cpp`, mkpsxiso, asm-differ (`make diff` listings), decomp-permuter, Go and
 clang-format 22.1.8. CI (`.github/workflows/check.yml`) runs `fmt-check`,
-`check-config`, `test` and `map` in one job and `validate` in four module shards,
-without the BIN. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
+`check-config`, `test` and `map` in one job and `check` in four module shards,
+without the BIN; `check-config` fails unless the shards' module lists cover
+every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
 `REPORT_ALL=1`, `DURATION` (see the Makefile).
 
 ## target/*.yaml
@@ -148,27 +152,31 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 
 To add a function: write `src/<module>/<name>.c`, add its `functions` row and
 any new `data` rows, then `make config-fmt`, `make checksums`,
-`make validate MODULE=…`, `make build`. Rename with `make symbols` so sources,
+`make check MODULE=…`, `make build`. Rename with `make symbols` so sources,
 headers, `target/` and the file name change together.
 
 ## Compiler profiles
 
-Default: GCC 2.6.3 `-O2 -G0`, soft-float R3000, ASPSX 2.34 via maspsx. Other
-profiles are used only where a function matches no other way:
+Default: GCC 2.6.3 `-O2 -G0`, soft-float R3000, ASPSX 2.34 via maspsx. A
+module's `profile` is the toolchain its translation units were built with; a
+function carries its own `profile` only where it differs:
 
+- WLDCORE and OPENING are GCC 2.7.2 with ASPSX 2.21 and checked division
+  (`gcc-2.7.2_O2_aspsx-2.21_divcheck`): a separate `mfhi` in constant
+  divisions, no delay-slot fill from past an if-body join, `lui/addiu/addu`
+  for an indexed global, and the zero/overflow `break` checks around each
+  division. No function there needs another profile. A load through a
+  `const` pointee is never reloaded after a store under this compiler, so a
+  parameter or table retail reloads is not `const`.
 - `-O1` and `-O0`: parts of WORLD and the CARD screen.
-- ASPSX 2.21: WLDCORE (its module default), about 60 OPENING functions and a
-  few in BATTLE and MAIN.
-- `gcc-2.7.2_O2_aspsx-2.21`: WLDCORE and OPENING functions that need GCC 2.7
-  code: the separate `mfhi` in constant divisions, or a `lw ra` epilogue with
-  its delay slot filled.
-- `_divcheck`: division with the zero/overflow `break` checks.
+- ASPSX 2.21 and `_divcheck`: a few functions in BATTLE, WORLD and MAIN.
 - `gcc-2.6.3_O2_G8_aspsx-2.34`: the four Suzuki CPU heap routines require
   `$gp`-relative small data with `$gp = 0x800329bc`. The measured assembler
   load-delay correction applies only to this profile; the default remains G0.
 
-Never add a profile or move a function between profiles without a specific
-function that matches only that way.
+Translation units were contiguous, so profiles come in address runs. Move a
+function to another profile only when it then matches with fewer levers (or
+none), and prefer the profile of its neighbours.
 
 ## Code rules
 
@@ -218,9 +226,10 @@ function that matches only that way.
   short lowercase subsystem labels (`/* ai */`), types first, then globals,
   then functions.
 - Comments: a short summary above every function (what it does, in a line or
-  two), then only the rationale needed to read the code. State facts, not history. Record retail
-  bugs and caller/callee disagreements with one line in `QUIRKS.md`.
-- Run `make fmt` after editing C or headers, then `make validate`: cc1 emits
+  two), then only the rationale needed to read the code. State facts, not
+  history. Record retail bugs and caller/callee disagreements with one line in
+  `QUIRKS.md`.
+- Run `make fmt` after editing C or headers, then `make check`: cc1 emits
   line notes, so formatting can change the bytes.
 
 ## Matching levers
@@ -231,7 +240,24 @@ When a cleanup changes the bytes, look here first.
   get `lh` from a `u16` (or `lhu` from an `s16`), cast the lvalue
   (`*(s16*)&g`), not the value.
 - A narrow prototype adds `andi` or `sll`/`sra` at callers; widening removes
-  them. Function-pointer casts emit nothing.
+  them. Give a parameter the type whose conversion the callers show
+  (`sll`/`sra`: `s16` or `s8`; `andi`: `u16` or `u8`; none and a narrow read
+  in the callee: the argument was already that narrow), in the prototype and
+  the definition alike, and the casts at the call sites go. Where callers
+  pass full words and the callee narrows, declare the parameter `s32` and
+  narrow at its uses (one narrow local). A callee that loads a narrow stack
+  parameter (`lhu 0x10(sp)`) is the first case with the right signedness, not
+  a reason for an old-style definition: none is left in the tree.
+- Callers and callees agree in the source. An argument every caller passes and
+  the callee never reads is an `unused_` parameter; a parameter no caller
+  passes is a local. A function-pointer cast at a call site is the last
+  resort: try the plain call first (an "extra argument" is often only a
+  register the cast forced), and state the retail fact in one line if the
+  cast stays.
+- A register read before any write is a local the source never assigned on
+  that path: a `switch` without `default`, an early exit, a call with too few
+  arguments. Declare it and leave it unset (`T x;`), with a `QUIRKS.md` line,
+  rather than pinning a register or adding an `"=r"` barrier.
 - A fresh `lui` for each neighbouring global means separate symbols. A struct
   view gives GCC one base register and reshapes the body; keep the aliases.
 - Raw offset versus field access changes scheduling (`MEM_IN_STRUCT_P`):
@@ -265,7 +291,59 @@ When a cleanup changes the bytes, look here first.
 - Two stores sharing one `la` base (`sw 0(v1)` / `sw -4(v1)`) point to `-O1`:
   `-O2`'s second CSE pass folds them back to absolute stores.
 - A frame bigger than its spills means unused locals in the original;
-  declaration order sets slot order.
+  declaration order sets slot order. Eight untouched bytes are more often a
+  compiler ghost: an `s16` local read both sign-extended and as 16 bits, or
+  a `for` whose entry test folded away.
+
+### Reading residue
+
+A pin, barrier, `volatile` or `goto` usually stands for something the source
+said plainly. What each has turned out to be, most common first:
+
+- Narrower locals (`u8 mask`, `s16 code`, `u16 value`): a temp plus a copy
+  plus a barrier, a pinned "copy in `$v1`", a reload after a store.
+- One variable where the code has two, or two where it has one: two pins on
+  one register are one variable reused (`i` holding an id before it counts);
+  a `thread_id = id - 1` pinned in a callee-saved register is no variable.
+  In a long function, one function-scope variable per role (one `unit`, one
+  index) instead of one per block.
+- Indexed access written out: `for (i = 0; a[i] != END; i++)`, `g[i].f`,
+  the global named in every arm. Pointer walkers, "base + offset" cursors and
+  reversed scans are strength reduction's output, not source.
+- A global read directly in each argument or test instead of a local copy
+  ("memory" barriers, reloads). A range written as two comparisons
+  (`x < A || x > B`) reloads where a folded range test does not.
+- Chained assignment `a.x = a.y = b.z = v;` for same-value stores that come
+  out in reverse order or keep one base register; the same store written in
+  both arms of an `if` where a fence kept it early; `p = base; p += n;` as
+  two statements where a cursor keeps its own register.
+- Statement and declaration order: a tied barrier after a call is the
+  mask/or written before the call; exact allocation ties go to the earlier
+  declaration.
+- Return shapes: `if (a && b) return 1; return 0;` (a `$2` pin zeroed before
+  the tests); a `?:` inside the returned expression (a temp pinned to `$2`);
+  the failure `return` last; `if (c) { ...; return 0; } return 0;` (a
+  constant load sitting last); a callee declared `int` that returns nothing
+  (`li v0` in a delay slot after a call).
+- Bit-field members and struct-typed globals: separate loads of one packed
+  byte, a load kept after a struct store.
+- SDK macros (`setXY4`, `setRGB0`, `setSemiTrans`, `getTPage`, `addPrim` in
+  `psx/libgpu.h`): several stores on one source line.
+- A `do { } while (0)` wrapper is itself a lever (a loop note doubles
+  reference weights and fences scheduling); remove it with the pins it
+  caused.
+- `goto`: a shared `return` tail is `return` written at each place; a
+  backward jump is a loop; a jump past the next block is the same condition
+  tested again; bound tests to one label are case ranges; `default: common:`
+  is code after the `switch`. The AI's resume dispatch
+  (`switch (phase) { case N: goto stage_n; }`) is real.
+
+When only registers differ, compute instead of permuting: `cc1 -da` writes
+`.lreg`/`.greg`; local-alloc and global-alloc rank pseudos by
+`floor_log2(refs) * refs / live_length` with references doubled per loop
+depth, and loop.c hoists an invariant while `threshold * uses * lifetime >=
+loop length` (threshold 26 with a call in the loop, 52 without, minus 3 per
+value already moved).
 
 Tolerated residue (zero-instruction only, each with a comment): the tied
 operand barrier `__asm__("" : "=r"(x) : "0"(x))`, an empty `asm volatile`, a
@@ -275,14 +353,16 @@ only if removal changes the bytes.
 
 ## Improving the code
 
-Useful work, each step verified with `make validate`:
+Useful work, each step verified with `make check`:
 
 - Name the remaining `D_` globals, `func_` functions and `_unknown_`
   members from what the code does with them, and examine `_unused_` members
   (they may still be touched by whole-struct copies or another view).
 - Remove register pins, asm barriers, casts and raw offsets where a natural
-  spelling matches (about 180 files still pin a register).
-- Replace `goto` (about 300 remain) with the loops, `if`/`else` and `switch`
+  spelling matches. Most pins stand for something the source said another
+  way: an unset local, one variable where the code has two (or two where it
+  has one), a narrower local, an unused parameter, another statement order.
+- Replace artificial `goto` with the loops, `if`/`else` and `switch`
   the compiler actually produced.
 - Fold adjacent globals the code proves are one record; keep separate
   symbols where the original reloads each address.

@@ -19,8 +19,8 @@ void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
     wldcore_window_record_t* record;
     u32 buttons;
 
-    if (level->result != 0 && world_thread_is_running(0xC) == 0) {
-        g_wldcore_menu_result = 0;
+    if (level->result != 0 && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        g_wldcore_menu_blocked_buttons = 0;
         g_wldcore_menu_ordering_table_offset = 1;
         depth = g_wldcore_menu_stack_depth - 1;
         g_wldcore_menu_stack_depth = depth;
@@ -28,7 +28,8 @@ void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
             wldcore_menu_render_debug_variable_list(&g_wldcore_menu_stack_records[depth].variable_list);
         }
         parent = g_wldcore_menu_stack_depth - 1;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[parent].window_render.window_index].sequence = 2;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[parent].window_render.window_index].sequence
+            = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
         slot = g_wldcore_menu_stack_records_next[parent].window_render.window_index;
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[parent].window_render.render_index].palette
             = 0;
@@ -48,5 +49,5 @@ void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
     } else {
         return;
     }
-    world_thread_set_parameters(0xC, 0, 0, 1);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
 }

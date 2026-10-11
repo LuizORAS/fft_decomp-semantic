@@ -7,14 +7,6 @@ typedef struct world_formation_background_tile {
     u16 u;
 } world_formation_background_tile_t;
 
-/* Local working set: the tile rectangle, its four corner RGB triples and the
- * per-grid-point shade table (rows 32 pixels apart, columns 64). */
-typedef struct world_formation_background_draw_state {
-    world_gfx_textured_rect_source_t rect; /* 0x00 */
-    u8 rgb[16];                            /* 0x18 */
-    u8 shades[16][5];                      /* 0x28 */
-} world_formation_background_draw_state_t;
-
 extern world_formation_background_tile_t g_world_formation_background_tiles[2][4];
 
 /*
@@ -27,7 +19,7 @@ extern world_formation_background_tile_t g_world_formation_background_tiles[2][4
  * optimizer never treats a hard register as invariant, while a pseudo lets it
  * hoist that product and the shade-row addresses.
  */
-void world_formation_draw_background_tiles(s32 y) {
+void world_formation_draw_background_tiles(s32 y, s32 unused_1) {
     world_formation_background_draw_state_t st;
     s32 row;
     s32 col;
@@ -52,9 +44,9 @@ void world_formation_draw_background_tiles(s32 y) {
     }
     st.rect.clut = g_world_menu_background_clut;
     st.rect.tpage = g_world_menu_icon_tpage;
-    for (; (s16)(u16)st.rect.y < 0xF0; draw_row++) {
+    for (; st.rect.y < 0xF0; draw_row++) {
         tiles = g_world_formation_background_tiles;
-        if ((s16)(u16)st.rect.y >= -0x20) {
+        if (st.rect.y >= -0x20) {
             col = 0;
             tile = tiles[draw_row % 2];
             for (; col < 4; col++) {
@@ -64,7 +56,7 @@ void world_formation_draw_background_tiles(s32 y) {
                 st.rgb[3] = st.rgb[4] = st.rgb[5] = st.shades[draw_row][col + 1];
                 st.rgb[6] = st.rgb[7] = st.rgb[8] = st.shades[draw_row + 1][col];
                 st.rgb[9] = st.rgb[10] = st.rgb[11] = st.shades[draw_row + 1][col + 1];
-                world_gfx_append_poly_gt4_to_otag(&st.rect, st.rgb, 0, (s16)st.rect.u == 0x58);
+                world_gfx_enqueue_gouraud_textured_quad(&st.rect, st.rgb, 0, st.rect.u == 0x58);
             }
         }
         st.rect.y += 0x20;

@@ -16,6 +16,6 @@ void battle_action_apply_jp_change(battle_stats_t* unit) {
     battle_unit_store_jp_and_calculate_unlocked_jobs(
         misc_unit_id, unit->action.jp_change, unit->initial_team_flags & BATTLE_TEAM_MASK, jp);
     if (battle_unit_load_job_level(unit, job, &jp) != initial_level) {
-        g_current_ability.job_level_gained_flag = 1;
+        g_battle_action_current_ability.job_level_gained_flag = 1;
     }
 }

@@ -1,15 +1,19 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Rebuild the formation unit list for the screen in use: every unit on the
+ * formation screen, the monsters at the soldier office and the available
+ * humans in the other shops. Also reconciles the five item category lists
+ * and resets the cursor and scroll. */
 void world_formation_rebuild_unit_list(void) {
     s32 mode;
 
-    if (g_world_shop_id == -1) {
-        mode = 0;
+    if (g_world_shop_id == WORLD_SHOP_ID_FORMATION) {
+        mode = WORLD_FORMATION_RECORD_LIST_ALL;
     } else {
-        mode = 2;
-        if (g_world_shop_id != 0x65) {
-            mode = 1;
+        mode = WORLD_FORMATION_RECORD_LIST_MONSTERS;
+        if (g_world_shop_id != WORLD_SHOP_ID_SOLDIER_OFFICE) {
+            mode = WORLD_FORMATION_RECORD_LIST_AVAILABLE_HUMANS;
         }
     }
     g_world_formation_unit_count = world_formation_build_record_list(0, g_world_formation_unit_pointers, mode);

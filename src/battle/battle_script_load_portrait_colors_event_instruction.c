@@ -17,7 +17,7 @@ void battle_script_load_portrait_colors_event_instruction(s32 portrait_id) {
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))main_file_request_read_bytes;
-    } while (battle_thread_call_on_main_stack(portrait_id * 4 + 0x164B, 0x2000, buffer) != 0);
+    } while (battle_thread_call_on_main_stack(portrait_id * 4 + DISC_SECTOR_EVENT_EVTFACE_BIN, 0x2000, buffer) != 0);
     do {
         battle_thread_yield();
         g_battle_thread_call_target = main_file_is_still_loading;

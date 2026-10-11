@@ -3,7 +3,7 @@
 /* Classify an item ID into the WORLD equipment menu's broad list category.
  *
  * Throwable weapons and consumables share category 5. */
-item_menu_category_e world_item_get_menu_category(s32 item_id) {
+item_menu_category_e world_item_get_menu_category(s16 item_id) {
     s32 category;
 
     item_id &= WORLD_ITEM_ID_MASK;

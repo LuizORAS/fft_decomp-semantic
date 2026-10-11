@@ -12,8 +12,8 @@
  *
  * The real (s32 unit_id, s32 removal_only) prototype in fft/battle.h is reached through a
  * function-pointer cast at the call, so the header can be included here. */
-void battle_status_resolve_unit_changes_in_preview(void) {
+void battle_status_resolve_unit_changes_in_preview(s32 unit_id, s32 removal_only) {
     g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;
-    ((void (*)(void))battle_status_resolve_unit_changes)();
+    battle_status_resolve_unit_changes(unit_id, removal_only);
     g_battle_action_state = BATTLE_ACTION_STATE_EXECUTE;
 }

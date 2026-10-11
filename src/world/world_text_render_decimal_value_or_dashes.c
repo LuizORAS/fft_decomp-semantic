@@ -66,7 +66,7 @@ void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, void* pixel
         glyph->rect.h = 0xA;
     }
     position->rect.x += ((flags & 0xFF) - 1) * 5;
-    work = (s16)position->rect.x + 5;
+    work = position->rect.x + 5;
     for (i = 0; i < (flags & 0xFF); i++) {
         glyph->rect.x = value % 10 * 6 + 0x78;
         if (flags & 0x800) {

@@ -30,22 +30,23 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     battle_effect_secondary_init_t init;
     s32 oriented;
     s16 scale;
-    u16 speed_min;
-    u16 speed_max;
+    s16 speed_min;
+    s16 speed_max;
     s16 speed;
 
-    init.caster.block = g_battle_effect_current_secondary->caster_block;
-    battle_effect_resolve_target_render_coords(0, -1, (battle_effect_coord_data_t*)&init, &origin);
-    init.target.block = g_battle_effect_current_secondary->target.block;
+    init.caster.block = g_battle_effect_current_secondary->caster.block;
+    battle_effect_resolve_target_render_coords(
+        0, BATTLE_EFFECT_TARGET_INDEX_CASTER, (battle_effect_coord_data_t*)&init, &origin);
+    init.target[0].block = g_battle_effect_current_secondary->target.block;
     battle_effect_resolve_target_render_coords(0, 0, (battle_effect_coord_data_t*)&init, &target);
     oriented = 0;
     SetTransMatrix(&g_battle_effect_projectile_matrix);
     if ((values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING) {
         oriented = 1;
-        anchor_angle.vy = ((battle_unit_get_facing_quadrant_by_misc_id(
-                                (u8)g_battle_effect_current_secondary->caster_block.values[1])
-                               + 1)
-                              & 3)
+        anchor_angle.vy
+            = ((battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id)
+                   + 1)
+                  & 3)
             << 10;
         anchor_angle.vz = 0;
         anchor_angle.vx = 0;
@@ -70,7 +71,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         vector.vx = position.vx;
         vector.vy = position.vy;
         vector.vz = position.vz;
-        RotTrans(&vector, &position, (long*)&direction.pad);
+        RotTrans(&vector, &position, &direction.pad);
     }
     switch (values->anchor_flags & EFFECT_EMITTER_ORIGIN_MASK) {
     case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -92,7 +93,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         vector.vx = spread.vx;
         vector.vy = spread.vy;
         vector.vz = spread.vz;
-        RotTrans(&vector, &spread, (long*)&direction.pad);
+        RotTrans(&vector, &spread, &direction.pad);
     }
     scale = battle_effect_select_largest_magnitude_s16(spread.vx, spread.vy, spread.vz);
     vector.vx = rand();
@@ -103,7 +104,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     vector.vx = scale;
     vector.vz = 0;
     vector.vy = 0;
-    RotTrans(&vector, &direction, (long*)&direction.pad);
+    RotTrans(&vector, &direction, &direction.pad);
     motion->position[0] = ((direction.vx * spread.vx) / scale + position.vx) << 12;
     motion->position[1] = ((direction.vy * spread.vy) / scale + position.vy) << 12;
     motion->position[2] = ((direction.vz * spread.vz) / scale + position.vz) << 12;
@@ -113,9 +114,9 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     angle.vx = values->angle[0];
     angle.vy = values->angle[1];
     angle.vz = values->angle[2];
-    half_spread.vx = (s16)values->angle_spread[0] / 2;
-    half_spread.vy = (s16)values->angle_spread[1] / 2;
-    half_spread.vz = (s16)values->angle_spread[2] / 2;
+    half_spread.vx = values->angle_spread[0] / 2;
+    half_spread.vy = values->angle_spread[1] / 2;
+    half_spread.vz = values->angle_spread[2] / 2;
     switch (values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) {
     case EFFECT_EMITTER_VELOCITY_OUTWARD:
     case EFFECT_EMITTER_VELOCITY_TOWARD_TARGET:
@@ -127,14 +128,14 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         SetRotMatrix(&rotation);
         vector.vz = 0;
         vector.vx = 0;
-        vector.vy = battle_effect_get_random_between((s16)speed_min, (s16)speed_max);
-        RotTrans(&vector, &direction, (long*)&direction.pad);
+        vector.vy = battle_effect_get_random_between(speed_min, speed_max);
+        RotTrans(&vector, &direction, &direction.pad);
         if (oriented) {
             vector.vx = direction.vx;
             vector.vy = direction.vy;
             vector.vz = direction.vz;
             SetRotMatrix(&anchor_matrix);
-            RotTrans(&vector, &direction, (long*)&direction.pad);
+            RotTrans(&vector, &direction, &direction.pad);
         }
         motion->velocity[0] = direction.vx << 3;
         motion->velocity[1] = direction.vy << 3;
@@ -144,7 +145,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         direction.vx = position.vx - (motion->position[0] >> 12);
         direction.vy = position.vy - (motion->position[1] >> 12);
         direction.vz = position.vz - (motion->position[2] >> 12);
-        speed = battle_effect_get_random_between((s16)speed_min, (s16)speed_max);
+        speed = battle_effect_get_random_between(speed_min, speed_max);
         if (direction.vx != 0 || direction.vy != 0 || direction.vz != 0) {
             VectorNormal(&direction, &direction);
             motion->velocity[0] = (speed * direction.vx) >> 9;
@@ -157,9 +158,9 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         }
         break;
     }
-    motion->force[0] = motion->force[1] = motion->force[2] = motion->force_step[0] = motion->force_step[1]
-        = motion->force_step[2] = 0;
-    motion->mass = ONE;
-    motion->on_hit_weight = battle_effect_get_random_between(values->weight_min, values->weight_max);
+    motion->acceleration[0] = motion->acceleration[1] = motion->acceleration[2] = motion->acceleration_step[0]
+        = motion->acceleration_step[1] = motion->acceleration_step[2] = 0;
+    motion->inertia = ONE;
+    motion->weight = battle_effect_get_random_between(values->weight_min, values->weight_max);
     return battle_effect_get_random_between(values->lifetime_min, values->lifetime_max);
 }

@@ -53,7 +53,7 @@ void bunit_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag) {
     PutDrawEnv(&g_bunit_gfx_context->draw_env);
     g_bunit_gfx_drawenv_y = g_bunit_gfx_context->draw_env.clip.y;
     if (draw_otag != -1) {
-        DrawOTag((u32)(previous_otag + draw_otag));
+        DrawOTag((previous_otag + draw_otag));
     }
     ClearOTag(g_bunit_gfx_context->otag + first_otag, g_bunit_gfx_otag_count - first_otag);
 }

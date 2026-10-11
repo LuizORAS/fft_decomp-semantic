@@ -13,8 +13,8 @@ void equip_menu_draw_scrollable_list(const u8* script) {
     s16 entry_count;
     s16 selected;
 
-    while (script[0] != 0x10) {
-        if (script[0] == 0x19) {
+    while (script[0] != MENU_SCRIPT_OP_SCROLLABLE_LIST) {
+        if (script[0] == EQUIP_CMD_END) {
             return;
         }
         script += script[1];
@@ -29,10 +29,10 @@ void equip_menu_draw_scrollable_list(const u8* script) {
     g_equip_menu_list_vram_width = (g_equip_menu_list_glyph_width * g_equip_menu_list_text_columns) >> 2;
 
     entry_count = g_equip_menu_list_entry_count;
-    if ((s16)g_equip_menu_selected_list_index >= entry_count) {
+    if (g_equip_menu_selected_list_index >= entry_count) {
         g_equip_menu_selected_list_index = entry_count - 1;
     }
-    selected = (s16)g_equip_menu_selected_list_index;
+    selected = g_equip_menu_selected_list_index;
     if (selected - g_equip_menu_scroll_base_index >= visible_rows) {
         g_equip_menu_scroll_base_index = selected;
     }
@@ -45,7 +45,7 @@ void equip_menu_draw_scrollable_list(const u8* script) {
         g_equip_menu_scroll_base_index = entry_count - visible_rows;
     }
 
-    if ((s16)g_equip_menu_selected_list_index >= g_equip_menu_list_entry_count) {
+    if (g_equip_menu_selected_list_index >= g_equip_menu_list_entry_count) {
         g_equip_menu_selected_list_index = g_equip_menu_list_entry_count - 1;
     }
 
@@ -53,7 +53,7 @@ void equip_menu_draw_scrollable_list(const u8* script) {
         rect.x = 0x100;
         rect.y = 0x30;
         rect.w = g_equip_menu_list_vram_width;
-        rect.h = (s32)g_equip_menu_list_visible_rows * 16;
+        rect.h = g_equip_menu_list_visible_rows * 16;
         ClearImage(&rect, 0, 0, 0);
         for (i = 0; i < g_equip_menu_list_visible_rows; i++) {
             row_ids[i] = g_equip_menu_list_entries[i + g_equip_menu_scroll_base_index];
@@ -62,7 +62,7 @@ void equip_menu_draw_scrollable_list(const u8* script) {
         rect.x = 0x100;
         rect.y = 0x30;
         rect.w = g_equip_menu_list_vram_width;
-        rect.h = (u16)g_equip_menu_list_row_height;
+        rect.h = g_equip_menu_list_row_height;
         equip_text_render_id_rows_to_vram(g_equip_menu_list_text_table, row_ids, &rect, 0);
     }
 

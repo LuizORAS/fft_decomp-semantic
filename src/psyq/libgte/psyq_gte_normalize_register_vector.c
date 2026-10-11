@@ -19,7 +19,6 @@ void psyq_gte_normalize_register_vector(void) {
     register s32 factor __asm__("$13");
     register u32 table_base __asm__("$13");
     register s32 zero __asm__("$0");
-    __asm__("" : "=r"(x), "=r"(y), "=r"(z), "=r"(zero));
     PSYQ_GTE_NORMALIZE_SQUARE(x, y, z, square_x, square_y, square_z);
     PSYQ_CPU_TRAP_ADD(square_x, square_x, square_y);
     PSYQ_CPU_TRAP_ADD(sum, square_x, square_z);
@@ -31,7 +30,7 @@ void psyq_gte_normalize_register_vector(void) {
     PSYQ_CPU_TRAP_ADDI(difference, leading, -24);
     exponent >>= 1;
     if (difference >= 0) {
-        normalized = (u32)sum << difference;
+        normalized = sum << difference;
         if (zero == 0)
             goto normalized_ready;
     }

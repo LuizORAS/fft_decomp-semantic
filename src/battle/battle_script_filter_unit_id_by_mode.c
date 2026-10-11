@@ -7,7 +7,7 @@
  *   0  the id is always accepted
  *   1  the unit exists
  *   2  the unit is on the blue team
- *   3  blue team and free of the MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED statuses
+ *   3  blue team and free of the MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED statuses
  *   4  the unit is on a non-blue team
  *   5  non-blue team and free of those statuses except Undead (0x10 in the
  *      first status byte)
@@ -15,8 +15,8 @@
  * The switch has no default: an unknown mode falls off the end and returns the
  * 5 left in $v0 by the last comparison, which is what the target does.
  *
- * The first status scan retains its check byte in $a1 while its masked status
- * value is in $v0; the scoped `masked` local reproduces that without emitting
+ * The first status scan retains its check byte in $a1 while its status status
+ * value is in $v0; the scoped `status` local reproduces that without emitting
  * instructions. */
 s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
     battle_stats_t* unit;
@@ -25,7 +25,6 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
     s32 blocked;
     s32 query;
     /* The status queries return this zero from $v0 for the shared epilogue. */
-    register s32 zero_result __asm__("$2");
     u8 first;
 
     if (*mode == 0) {
@@ -49,55 +48,51 @@ s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
         if (index == -1) {
             return 1;
         }
-        return (unit->team_flags & 0x30) == 0;
+        return (unit->team_flags & BATTLE_TEAM_MASK) == BATTLE_TEAM_BLUE;
     }
     if (query == 3) {
         if (index == -1) {
             return 1;
         }
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            if ((unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][i])
+            if ((unit->status_sets.current[i]
+                    & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED][i])
                 != 0) {
                 break;
             }
         }
-        zero_result = 0;
-        if (unit->team_flags & 0x30) {
-            return zero_result;
+        if ((unit->team_flags & BATTLE_TEAM_MASK) == BATTLE_TEAM_BLUE && i == BATTLE_STATUS_BYTE_COUNT) {
+            return 1;
         }
-        return i == BATTLE_STATUS_BYTE_COUNT;
+        return 0;
     }
     if (query == 4) {
         if (index == -1) {
             return 0;
         }
-        return (unit->team_flags & 0x30) != 0;
+        return (unit->team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE;
     }
     if (query == 5) {
         if (index == -1) {
             return 0;
         }
-        first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][0];
+        first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED][0];
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (i == 0) {
-                s32 masked;
+                s32 status = unit->status_sets.current[0] & (0xff ^ BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD));
 
-                blocked = unit->status_sets.current[0];
-                blocked &= 0xef;
-                masked = blocked;
-                blocked = first & masked;
+                blocked = first & status;
             } else {
-                blocked
-                    = unit->status_sets.current[i] & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_EVENT_EXCLUDED][i];
+                blocked = unit->status_sets.current[i]
+                    & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED][i];
             }
             if (blocked != 0) {
                 break;
             }
         }
-        zero_result = 0;
-        if (!(unit->team_flags & 0x30)) {
-            return zero_result;
+        if ((unit->team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE && i == BATTLE_STATUS_BYTE_COUNT) {
+            return 1;
         }
-        return i == BATTLE_STATUS_BYTE_COUNT;
+        return 0;
     }
 }

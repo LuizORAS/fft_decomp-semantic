@@ -19,13 +19,13 @@ void battle_state_handle_select_move_tile_state(void) {
     source = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    if (source->team_flags & 8) {
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
+    if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
         battle_target_move_cursor_by_input();
         battle_camera_handle_rotation_input();
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
-        buttons = g_controller_input_pressed;
+        buttons = g_main_input_pressed_buttons;
         if (buttons & PSX_PAD_CIRCLE) {
             path = battle_move_build_path_to_tile(
                 casting->battle_data->misc_unit_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
@@ -33,7 +33,7 @@ void battle_state_handle_select_move_tile_state(void) {
                 /* Copy the 0x80-byte movement block in the renderer-side Misc record. */
                 *(battle_walk_path_t*)&casting->movement_path_count = *(battle_walk_path_t*)path;
                 casting->walk_speed.word = 0x2000;
-                battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 1);
+                battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 1);
                 main_sound_play_sfx(MAIN_SFX_CONFIRM);
                 battle_state_enter_unit_moving_setup();
                 return;
@@ -42,7 +42,7 @@ void battle_state_handle_select_move_tile_state(void) {
             return;
         }
         if (buttons & PSX_PAD_CROSS) {
-            battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 1);
+            battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 1);
             battle_target_move_cursor_to_unit(source);
             battle_menu_open_active_unit_idle_action_menu();
             return;
@@ -58,14 +58,13 @@ void battle_state_handle_select_move_tile_state(void) {
     if (frame < 0x1f) {
         return;
     }
-    path = battle_move_build_path_to_tile(casting->battle_data->misc_unit_id,
-        *(s16*)&source->command_state.ai.data.move.x, *(s16*)&source->command_state.ai.data.move.y,
-        *(s16*)&source->command_state.ai.data.move.elevation);
-    battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 1);
+    path = battle_move_build_path_to_tile(casting->battle_data->misc_unit_id, source->command_state.ai.data.move.x,
+        source->command_state.ai.data.move.y, source->command_state.ai.data.move.elevation);
+    battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 1);
     if (path != 0) {
-        x = *(s16*)&source->command_state.ai.data.move.x;
-        elevation = *(s16*)&source->command_state.ai.data.move.elevation;
-        y = *(s16*)&source->command_state.ai.data.move.y;
+        x = source->command_state.ai.data.move.x;
+        elevation = source->command_state.ai.data.move.elevation;
+        y = source->command_state.ai.data.move.y;
         g_battle_cursor_x = x;
         g_battle_cursor_z = elevation;
         g_battle_cursor_y = y;

@@ -10,8 +10,7 @@ void battle_unit_remove_misc(battle_unit_misc_data_t* unit) {
     s32 shared;
 
     shared = 0;
-    /* The target passes the display section to the argument-less no-op. */
-    ((void (*)(void*))battle_noop_8007aecc)(unit->sprite_display_section);
+    battle_gfx_release_unit_sprite_display_stub(unit->sprite_display_section);
     g_battle_unit_misc_slot_flags[unit->unit_id].in_use = 0;
     /* The list-head word doubles as a sentinel record (previous is at 0x000);
      * reading the first link through that view keeps the target's addressing. */

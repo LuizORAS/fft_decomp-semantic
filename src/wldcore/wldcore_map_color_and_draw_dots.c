@@ -2,29 +2,26 @@
 #include "psx/types.h"
 
 typedef union wldcore_map_dot_source_word {
-    volatile s32 w;
-    volatile u8 b[4];
+    s32 w;
+    u8 b[4];
 } wldcore_map_dot_source_word_t;
 
 typedef struct wldcore_map_dot_source {
     wldcore_map_dot_source_word_t a;
-    volatile s32 y;
+    s32 y;
 } wldcore_map_dot_source_t;
 
 extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;
 
-/* Flags-only view of g_wldcore_map_dots (0x800d3ca8). The hidden-flag update is a
- * volatile access in the target: reorg does not pull the loop-tail `dot++`
- * into the preceding branch delay slot across it, which the target leaves as
- * a nop. */
-typedef struct wldcore_map_dot_hidden_view {
-    u8 _unused_00[0x10];
-    volatile s32 flags;
-    u8 _unused_14[0x20];
-} wldcore_map_dot_hidden_view_t;
-
-extern wldcore_map_dot_hidden_view_t g_wldcore_map_dots_view[];
-
+/*
+ * Builds the 43 world-map location dots and queues them for drawing.
+ *
+ * Each dot takes its kind, sub-kind and map position from
+ * g_wldcore_map_dot_sources; kind 2 uses the second dot sequence. A location
+ * whose colour script variable is set gets palette 0xc (locations 0..23) or
+ * 0x10 (the rest), any other the default palette, and one whose visibility
+ * variable is 0 is hidden. Resets the pulse state and projects the dots.
+ */
 void wldcore_map_color_and_draw_dots(void) {
     wldcore_map_dot_source_t* src;
     wldcore_map_dot_t* dots;
@@ -44,12 +41,12 @@ void wldcore_map_color_and_draw_dots(void) {
     g_wldcore_map_dot_pulse_direction = 0;
     g_wldcore_map_dot_pulse_phase = 0;
     g_wldcore_map_dot_count = 0;
-    for (i = 0; i < 0x2b; i++) {
+    for (i = 0; i < WORLD_LOCATION_COUNT; i++) {
         g_wldcore_map_dots[i].kind = src[i].a.b[2];
         g_wldcore_map_dots[i].sub_kind = src[i].a.b[3];
         g_wldcore_map_dots[i].position.vx = src[i].a.w;
         y = src[i].y;
-        g_wldcore_map_dots[i].flags = 1;
+        g_wldcore_map_dots[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
         g_wldcore_map_dots[i].priority = 0xf;
         color = g_wldcore_map_dots[i].rgb;
         g_wldcore_map_dots[i].position.vz = 0;
@@ -58,9 +55,9 @@ void wldcore_map_color_and_draw_dots(void) {
         color[1] = 0x80;
         color[2] = 0x80;
         is_castle = g_wldcore_map_dots[i].kind == 2;
-        g_wldcore_map_dots[i].sprite_id = is_castle + 0x6a;
-        if (world_script_get_variable(i + 0x267) != 0) {
-            if (i < 0x18) {
+        g_wldcore_map_dots[i].sequence = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
+            if (i < WORLD_LOCATION_FIELD_FIRST) {
                 g_wldcore_map_dots[i].palette = 0xc;
             } else {
                 g_wldcore_map_dots[i].palette = 0x10;
@@ -70,14 +67,14 @@ void wldcore_map_color_and_draw_dots(void) {
         }
         dot->anim_counter = 0;
         g_wldcore_map_dots[i].frame_index = 0;
-        if (world_script_get_variable(i + 0x200) == 0) {
-            g_wldcore_map_dots_view[i].flags |= 0x10;
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
+            g_wldcore_map_dots[i].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
         dot++;
         queue_index = g_wldcore_window_render_object_count;
-        g_wldcore_window_render_object_queue[queue_index] = (u32*)(i * sizeof(wldcore_map_dot_t) + (s32)flags_base);
+        g_wldcore_window_render_object_queue[queue_index] = (s32*)(i * sizeof(wldcore_map_dot_t) + (s32)flags_base);
         g_wldcore_window_render_object_count = queue_index + 1;
     }
-    g_wldcore_map_dot_count = 0x2b;
+    g_wldcore_map_dot_count = WORLD_LOCATION_COUNT;
     wldcore_map_project_and_cull_dots();
 }

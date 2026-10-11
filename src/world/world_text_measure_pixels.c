@@ -82,13 +82,14 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
                 state->column += state->pending_width * 6;
                 state->pending_width = 0xFFFF;
             }
-        } else if ((u32)(state->command - TEXT_SET_GLYPH_COLOR) < 2
-            || (u32)(state->command - TEXT_SET_VARIABLE_BASE) < 2 || state->command == TEXT_SET_PORTRAIT) {
+        } else if (state->command == TEXT_SET_GLYPH_DELAY || state->command == TEXT_SET_PALETTE
+            || state->command == TEXT_SET_VARIABLE_BASE || state->command == TEXT_STORE_VARIABLE
+            || state->command == TEXT_SET_PORTRAIT) {
             cursor = world_text_advance_cursor_with_backreferences(
                 state, world_text_advance_cursor_with_backreferences(state, cursor));
             continue;
         }
-        state->value = world_text_adjust_value_for_event_code(state->command, *state->value_cursor);
+        state->value = world_text_resolve_format_string_id(state->command, *state->value_cursor);
         if (state->value != -1) {
             state->return_cursor = cursor + 1;
             if (state->command == TEXT_FORMAT_RAMZA_NAME) {
@@ -99,7 +100,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             state->value_cursor++;
             continue;
         }
-        if ((state->command & 0xF0) == 0xF0 && (state->command & 0xF) < 4) {
+        if ((state->command & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (state->command & 0xF) < 4) {
             state->return_cursor = cursor + 3;
             state->scratch = (cursor[0] & 3) * 8;
             state->remaining_bytes = cursor[1] >> 5;
@@ -109,14 +110,15 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             cursor -= state->scratch;
             continue;
         }
-        if ((state->command & 0xF0) >= 0xD0) {
-            if ((state->command & 0xF0) == 0xD0) {
+        if ((state->command & 0xF0) >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
+            if ((state->command & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                 state->glyph_page = state->command;
             } else {
                 state->glyph_page = 0;
             }
         } else {
-            state->column += g_world_text_glyph_widths[(state->glyph_page & 0xF) * 0xD0 + state->command];
+            state->column
+                += g_world_text_glyph_widths[(state->glyph_page & 0xF) * TEXT_GLYPHS_PER_PREFIX + state->command];
             state->glyph_page = 0;
         }
         cursor = world_text_advance_cursor_with_backreferences(state, cursor);

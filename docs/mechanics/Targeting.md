@@ -52,7 +52,7 @@ hit (its area) and a preview, and the player confirms.
   `ceiling_depth_and_marks`: `MAP_TILE_FLAG_MOVE_DESTINATION`,
   `MAP_TILE_FLAG_ABILITY_RANGE` and `MAP_TILE_FLAG_TARGETED`. The map shows
   them as tinted polygons ([[battle_target_tint_marked_tiles]],
-  [[battle_target_tile_tint_e]], [[g_battle_target_tile_mark_modes]]).
+  [[battle_tile_mark_mode_e]], [[g_battle_target_tile_mark_modes]]).
 - **Ability and weapon data** (MAIN): [[ability_secondary_data_t]] in
   [[g_main_ability_range_data]] (range, aoe, vertical and the
   [[ability_secondary_flags_1_e]], [[ability_secondary_flags_2_e]] and
@@ -76,7 +76,7 @@ hit (its area) and a preview, and the player confirms.
 
 | Command | Range | Routine |
 |---|---|---|
-| Ability (Geomancy: the surface's ability; Draw Out: the katana's) | `range` steps, then the filters | [[battle_target_set_ability_panels]] |
+| Ability (Elemental: the surface's ability; Draw Out: the katana's) | `range` steps, then the filters | [[battle_target_set_ability_panels]] |
 | Attack, Charge | The weapon's shape | [[battle_target_set_weapon_attack_panels]], [[battle_target_calculate_weapon_range]] |
 | Jump | The best learned Jump | [[battle_target_set_jump_ability_panels]] |
 | Item | 1, or 4 with Throw Item or for a Mime | [[battle_target_set_item_range_panels]] |

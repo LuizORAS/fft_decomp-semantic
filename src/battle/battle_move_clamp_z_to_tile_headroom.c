@@ -16,7 +16,7 @@ s32 battle_move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer) {
 
     tile = battle_map_get_tile_data_pointer(x, y, layer);
     clearance = battle_move_calculate_tile_layer_step_offset(x, y, layer);
-    sub = tile->depth_half_height;
+    sub = tile->depth_half_height.value;
     height = ((tile->height + (sub >> MAP_TILE_DEPTH_SHIFT)) * 2) + (sub & MAP_TILE_HALF_HEIGHT_MASK);
     lo = -(height + clearance) * 6;
     if (value < lo) {

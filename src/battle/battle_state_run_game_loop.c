@@ -4,7 +4,7 @@
  * read the pad, draw the map, run the handler of g_battle_game_state, update the camera, map
  * animations and music, poll the disc and present the frame, until the state is CLOSE_BATTLE;
  * another battle follows while g_main_system_game_flow_state stays 0. A slow frame during
- * effects or action execution slows the next ones (g_battle_state_slowdown_frames). */
+ * effects or action execution slows the next ones (g_main_system_slowdown_frames). */
 void battle_state_run_game_loop(void) {
     battle_gfx_vram_slot_t* timer_field;
     SVECTOR* camera_integer;
@@ -33,7 +33,7 @@ void battle_state_run_game_loop(void) {
     do {
         battle_state_run_battle_setup();
         g_battle_menu_status_enabled = 0;
-        g_battle_controller_input = g_main_game_options.fields.cursor_movement;
+        g_battle_cursor_input_mode = g_main_game_options.fields.cursor_movement;
 
         for (;;) {
             battle_state_update_controller_input();
@@ -257,22 +257,22 @@ void battle_state_run_game_loop(void) {
             main_file_poll_load(&g_main_file_cd_state);
             g_main_gfx_screen_polarity = !g_main_gfx_screen_polarity;
             g_battle_frame_counter++;
-            battle_map_update_lighting();
+            battle_map_upload_clut_rows();
             frame_measurement = battle_state_sync_frame(main_gfx_get_otag() + 0x17f);
-            g_battle_frame_measurement = frame_measurement;
+            g_main_system_battle_frame_hsync_count = frame_measurement;
             i = 0;
-            if (g_battle_frame_measurement_max < frame_measurement) {
-                g_battle_frame_measurement_max = frame_measurement;
+            if (g_main_system_battle_frame_hsync_count_max < frame_measurement) {
+                g_main_system_battle_frame_hsync_count_max = frame_measurement;
             }
-            empty_timer = 0xfe;
+            empty_timer = BATTLE_GFX_VRAM_SLOT_BUFFER_EVTCHR;
             timer_field = g_battle_gfx_vram_slots;
             timer_offset = 0;
             do {
                 /* The byte offset preserves the target's separate indexed load. */
-                timer = ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + timer_offset))->evtchr_load_marker;
+                timer = ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + timer_offset))->image_buffer_state;
                 timer_offset += sizeof(*timer_field);
                 if (timer != 0 && timer != empty_timer) {
-                    timer_field->evtchr_load_marker = timer - 1;
+                    timer_field->image_buffer_state = timer - 1;
                 }
                 i++;
                 timer_field++;
@@ -280,23 +280,24 @@ void battle_state_run_game_loop(void) {
 
             if (g_battle_game_state == BATTLE_GAME_STATE_EFFECT
                 || g_battle_game_state == BATTLE_GAME_STATE_ACTION_EXECUTE) {
-                if (g_battle_state_vsync_interval == 1) {
-                    g_battle_state_slowdown_frames = 0;
-                } else if (g_battle_state_slowdown_suppressed == 0) {
-                    if (g_battle_frame_measurement >= 0x301) {
-                        g_battle_state_slowdown_frames = 0x1e;
-                    } else if (g_battle_frame_measurement >= 0x201 && g_battle_state_slowdown_frames < 0x0f) {
-                        g_battle_state_slowdown_frames = 0x0f;
+                if (g_main_system_vsync_interval == 1) {
+                    g_main_system_slowdown_frames = 0;
+                } else if (g_main_system_slowdown_suppressed == 0) {
+                    if (g_main_system_battle_frame_hsync_count >= 0x301) {
+                        g_main_system_slowdown_frames = 0x1e;
+                    } else if (g_main_system_battle_frame_hsync_count >= 0x201
+                        && g_main_system_slowdown_frames < 0x0f) {
+                        g_main_system_slowdown_frames = 0x0f;
                     }
                 }
             }
-            g_battle_state_slowdown_suppressed = 0;
+            g_main_system_slowdown_suppressed = 0;
             main_system_frame_hook();
         }
 
         battle_state_stop_map_animations();
         battle_unit_clear_misc_units();
-    } while (g_main_system_game_flow_state == 0);
+    } while (g_main_system_game_flow_state == MAIN_GAME_FLOW_BATTLE);
 
     DrawSync(0);
     VSync(0);

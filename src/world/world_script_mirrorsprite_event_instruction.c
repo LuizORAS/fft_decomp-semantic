@@ -13,7 +13,7 @@ void world_script_mirrorsprite_event_instruction(const u8* parameters) {
 
     unit_id = world_script_load_halfword(parameters);
     mode = parameters[2];
-    misc_id = world_get_misc_id(unit_id);
+    misc_id = world_script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
         if (mode == 1) {
             battle_unit_set_horizontal_flip_flag(misc_id);

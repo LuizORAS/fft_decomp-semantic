@@ -7,7 +7,7 @@ void battle_state_handle_action_cast_state(void) {
     s32 command;
 
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     command = *battle_menu_get_selected_command_address();
     /* Selections 7, 8 and 0xff are the ones ACTION_EXECUTE_SETUP handles;
      * they mark the action as finished (same test as the
@@ -17,7 +17,7 @@ void battle_state_handle_action_cast_state(void) {
     }
     /* Wait for the camera to settle before handing the action data over. */
     if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0
-        && g_battle_camera_rotation_action == 0 && g_battle_action_post_action != 0) {
+        && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE && g_battle_action_post_action != 0) {
         battle_state_enter_commence_attack_phase();
     }
 }

@@ -1,9 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Enter UNIT_MOVING_SETUP and open the move confirmation window, with variants for a mounted
- * unit, a crystal on the destination tile and a path count of 0xfe or 0xff (another window
- * when navigation messages are on). */
+/* Enter UNIT_MOVING_SETUP and open the window that precedes the casting unit's move, addressed
+ * to the source unit: move feedback 1 for a pending mount; for a teleport path (count
+ * BATTLE_MOVE_PATH_TELEPORT or _FAILED) the move confirmation when navigation messages are on,
+ * else feedback 0; for a walked path feedback 4 when a crystal lies on the cursor tile, else 0. */
 void battle_state_enter_unit_moving_setup(void) {
     battle_unit_misc_data_t* src;
     battle_unit_misc_data_t* cast;
@@ -15,31 +16,31 @@ void battle_state_enter_unit_moving_setup(void) {
     src = battle_unit_get_source_misc_data();
     cast = battle_unit_get_casting_misc_data();
 
-    if (cast->mount_byte & 0x80) {
-        battle_menu_init_system_function(
-            2, 1, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+    if (cast->pending_mount & BATTLE_PENDING_MOUNT_SET) {
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 1, src->battle_data->misc_unit_id, 0,
+            src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         return;
     }
     path_count = cast->movement_path_count + 2;
     if (path_count < 2) {
         if (g_main_game_options.fields.navigation_messages != GAME_OPTION_ON) {
-            battle_menu_init_system_function(
-                2, 0, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 0,
+                src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
             return;
         }
-        battle_menu_init_system_function(
-            0xD, 0, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM, 0, src->battle_data->misc_unit_id, 0,
+            src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         return;
     }
     at_tile
         = battle_unit_get_crystal_or_treasure_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (at_tile != 0) {
         if (at_tile->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
-            battle_menu_init_system_function(
-                2, 4, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 4,
+                src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
             return;
         }
     }
-    battle_menu_init_system_function(
-        2, 0, src->battle_data->misc_unit_id, 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+    battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 0, src->battle_data->misc_unit_id, 0,
+        src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
 }

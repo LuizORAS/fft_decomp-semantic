@@ -18,8 +18,8 @@ void battle_state_enter_commence_attack_phase(void) {
     memcpy(&unit->command_state.ai.data.action, &stats->action_actor_id, 0x10);
     memcpy(&unit->command_state.ai.data.action.target_y, &stats->action_target_y, 4);
     /* last_ability_id is s16 in the header; the target loads it with lhu. */
-    unit->used_ability_id = *(u16*)&(*stats_pointer)->last_ability_id;
-    unit->ability_ct_resolved |= 2;
+    unit->used_ability_id = (*stats_pointer)->last_ability_id;
+    unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
     if (unit->used_ability_id != 0) {
         battle_unit_start_ability_charging_animation(unit);
     }

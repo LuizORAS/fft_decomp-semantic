@@ -12,30 +12,29 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Type debt (QUIRKS.md): a view of world_menu_entry_t (count is its
- * cancel_thread_count, cursor its value cell); callers pass three different views
- * of that record, so the parameter stays void*. */
-typedef struct battle_menu_cancel_context {
-    u8 _unused_00[0x20];
-    s16 count; /* 0x20 */
-    u8 _unused_22[0x12];
-    s16* cursor; /* 0x34 */
-} battle_menu_cancel_context_t;
-
+/* On the cancel button, while the menu may accept input, close a menu entry and
+ * its thread group.
+ *
+ * When the entry has a thread group (cancel_thread_count is not -1), each of its
+ * threads, counted from the current thread, gets thread parameter 3 set to 1,
+ * after which battle_menu_can_accept_input refuses it input; thread 8 also clears
+ * the four pending selections. Every thread whose task is 1 (a running text
+ * thread) is asked to stop (task 3). The entry's result cell receives -1, the
+ * event input is consumed, the cancel sound is queued and event input stays
+ * suppressed for 5 frames. */
 void battle_handle_menu_cancel_input(void* menu) {
-    battle_menu_cancel_context_t* ctx = (battle_menu_cancel_context_t*)menu;
+    world_menu_entry_t* ctx = menu;
     s32 count;
     s32 i;
     s32 idx;
     s32 j;
     s16* pending;
-    s32* unused_ptr;
     s16* cur;
     s32 thread;
     char unused[8];
 
     if ((g_battle_script_event_input & PSX_PAD_CROSS) && battle_menu_can_accept_input() != 0) {
-        count = ctx->count;
+        count = ctx->cancel_thread_count;
         if (count != -1) {
             /* The counter is zeroed ahead of the guard, not inside the arm.
                That is what puts `move a0,zero` immediately before the `blez`,
@@ -73,10 +72,10 @@ void battle_handle_menu_cancel_input(void* menu) {
                 j++;
             } while (i < 0x10);
         }
-        cur = ctx->cursor;
+        cur = ctx->value;
         g_battle_script_event_input = 0;
         *cur = -1;
         battle_sound_set_effect_to_cancel();
-        g_event_input_suppression_frames = 5;
+        g_battle_event_input_suppression_frames = 5;
     }
 }

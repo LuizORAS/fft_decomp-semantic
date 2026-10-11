@@ -3,10 +3,12 @@
 #include "psx/libetc.h"
 #include "psx/types.h"
 
-/* Starts SFX sound_id (resource id << 16 | sound index) on
- * g_main_sound_sfx_channel_count consecutive SFX channels from channel & 0xff; the high byte of
- * channel is the priority main_sound_find_sfx_voice checks before stealing
- * a channel. Channels whose stream offset is 0 are stopped instead. The
+/* Starts SFX sound_id (a MAIN_SOUND_ID) on g_main_sound_sfx_channel_count
+ * consecutive SFX channels from channel_id & 0xff, one per stream of the
+ * sound; the high byte of channel_id is the priority
+ * main_sound_find_sfx_channel checks before stealing a channel
+ * (MAIN_SOUND_SFX_CHANNEL_ID). Channels whose stream offset is 0 are stopped
+ * instead. A sound id whose resource is not loaded does nothing. The
  * volume is scaled by the resource's per-sound volume byte, then the SFX
  * voices are claimed in the SFX music and in g_main_mask_exclusion, and
  * music channels on those voices are marked for a full voice update.
@@ -73,11 +75,11 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
             i = 3;
             started |= bit;
             voices |= channel->voice_mask;
-            flags = 0x409;
-            channel->active = flags;
-            flags = 0x100;
-            channel->note_flags2 = flags;
-            channel->flags_06 = 0;
+            flags = SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_SFX | SUZUKI_CHANNEL_IN_USE;
+            channel->flags = flags;
+            flags = SUZUKI_VOICE_UPDATE_VOLUME;
+            channel->voice_update_flags = flags;
+            channel->ramp_flags = 0;
             data = (u8*)resource + *offsets;
             channel->octave_base = 0x3c;
             channel->gate_time = 0xf;
@@ -85,7 +87,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
             channel->_unknown_024 = 0;
             channel->loop_count = 0;
             channel->_unknown_02a = 0;
-            channel->rest_length = 0;
+            channel->event_ticks = 0;
             channel->length_adjust = 0;
             channel->pitch_offset = 0;
             channel->previous_key = 0;
@@ -109,10 +111,10 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
                 main_smd_set_instrument(g_main_sound_sfx_instrument, channel);
             }
         } else {
-            if (channel->active & 1) {
+            if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
                 stopped |= channel->voice_mask;
             }
-            channel->active = 0;
+            channel->flags = 0;
         }
         offsets++;
         bit <<= 1;
@@ -130,18 +132,19 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
     music->reverb_voice_mask &= ~stopped;
     g_main_sound_sfx_restart_channels = 0;
     g_main_sound_sfx_restart_voices = 0;
-    g_main_sound_voice_update_requests |= 7;
-    music->status |= 0x8000;
+    g_main_sound_voice_update_requests
+        |= SUZUKI_VOICE_MASK_REQUEST_PITCH_LFO | SUZUKI_VOICE_MASK_REQUEST_NOISE | SUZUKI_VOICE_MASK_REQUEST_REVERB;
+    music->status |= SUZUKI_MUSIC_STATUS_PLAYING;
     if (voices != 0) {
         for (music = g_main_sound_active_music_list; music != 0; music = music->next) {
-            /* The playing bit is tested as a sign (`lh`), as elsewhere in the driver. */
-            if ((music->status & 1) && (s16)music->status < 0) {
+            /* The playing bit (15) is the sign. */
+            if ((music->status & SUZUKI_MUSIC_STATUS_SMD) && music->status < 0) {
                 channel = music->channels;
                 count = music->channel_count;
                 do {
-                    if (channel->active & 1) {
+                    if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
                         if (voices & channel->voice_mask) {
-                            channel->func_flags |= 0x71ff;
+                            channel->voice_attr_flags |= 0x7000 | SUZUKI_VOICE_ATTR_ALL;
                         }
                     }
                     channel++;

@@ -18,7 +18,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
     battle_ai_tile_mask_mode_e mode;
     s32 ct;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: the target jumps into the middle of the origin loop. */
         goto evaluate_targets;
     }
@@ -40,10 +40,10 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
             if (battle_ai_calculate_clockticks_until_death_counter_expires(reflector) < ct)
                 continue;
         }
-        ai->current_action.targeting_type = BATTLE_ACTION_TARGET_TILE;
+        ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
         battle_ai_transfer_unit_coordinates(ai->reflector_unit_index, &ai->considered_unit_coords);
         mode = BATTLE_AI_TILE_MASK_AOE;
-        if (ai->current_action.targeting_type == BATTLE_ACTION_TARGET_UNIT)
+        if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
             mode = BATTLE_AI_TILE_MASK_EXPLICIT;
         battle_ai_build_targetable_tile_mask(mode, 0);
         battle_ai_transfer_halfword_values(ai->target_tiles, ai->targetable_tiles, 72);

@@ -17,10 +17,10 @@ void battle_formula_apply_status_to_action(void) {
     s32 selected_status;
     s32 byte;
     s32 mask;
-    s32 any;
+    u8 any;
     battle_action_data_t* action;
 
-    type = g_current_ability.status_infliction.type;
+    type = g_battle_action_current_ability.status_infliction.type;
     if (type & BATTLE_STATUS_INFLICTION_TYPE_SEPARATE) {
         g_battle_action_target_data->attack_accuracy /= 4;
     }
@@ -34,14 +34,14 @@ void battle_formula_apply_status_to_action(void) {
         status = 0;
         do {
             g_battle_action_target_data->status_infliction[status]
-                |= g_current_ability.status_infliction.statuses[status];
+                |= g_battle_action_current_ability.status_infliction.statuses[status];
             status++;
         } while (status < BATTLE_STATUS_BYTE_COUNT);
     } else if (type & BATTLE_STATUS_INFLICTION_TYPE_RANDOM_ONE) {
         count = 0;
         status = 0;
         do {
-            if (g_current_ability.status_infliction.statuses[status / 8] & (0x80 >> (status & 7))) {
+            if (g_battle_action_current_ability.status_infliction.statuses[status / 8] & (0x80 >> (status & 7))) {
                 status_ids[count] = status;
                 count++;
             }
@@ -54,9 +54,9 @@ void battle_formula_apply_status_to_action(void) {
         status = 0;
         do {
             byte = status / 8;
-            if (g_current_ability.status_infliction.statuses[byte] & (mask = 0x80 >> (status & 7))) {
+            if (g_battle_action_current_ability.status_infliction.statuses[byte] & (mask = 0x80 >> (status & 7))) {
                 if (main_util_roll_pass_fail(100, 24) != 0 || g_battle_action_state == BATTLE_ACTION_STATE_PREVIEW) {
-                    g_current_ability.status_infliction.statuses[byte] ^= mask;
+                    g_battle_action_current_ability.status_infliction.statuses[byte] ^= mask;
                 }
             }
             status++;
@@ -65,13 +65,14 @@ void battle_formula_apply_status_to_action(void) {
         status = 0;
         do {
             g_battle_action_target_data->status_infliction[status]
-                |= g_current_ability.status_infliction.statuses[status];
+                |= g_battle_action_current_ability.status_infliction.statuses[status];
             status++;
         } while (status < BATTLE_STATUS_BYTE_COUNT);
     } else if (type & BATTLE_STATUS_INFLICTION_TYPE_CANCEL) {
         status = 0;
         do {
-            g_battle_action_target_data->status_removal[status] |= g_current_ability.status_infliction.statuses[status];
+            g_battle_action_target_data->status_removal[status]
+                |= g_battle_action_current_ability.status_infliction.statuses[status];
             status++;
         } while (status < BATTLE_STATUS_BYTE_COUNT);
     }
@@ -84,13 +85,14 @@ void battle_formula_apply_status_to_action(void) {
         status++;
     } while (status < BATTLE_STATUS_BYTE_COUNT);
 
-    if ((u8)any == 0 || battle_status_modify_inflictions(0) == 0) {
+    if (any == 0 || battle_status_modify_inflictions(0) == 0) {
         battle_formula_force_attack_miss();
         return;
     }
 
     g_battle_action_target_data->attack_type |= BATTLE_ACTION_TYPE_STATUS_CHANGE;
-    if (g_battle_action_target_data->status_infliction[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)) {
+    if (g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)) {
         g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_TEAM_CHANGE;
     }
 }

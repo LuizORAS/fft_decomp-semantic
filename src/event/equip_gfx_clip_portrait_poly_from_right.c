@@ -1,6 +1,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Trim `amount` from a portrait quad's right edge and advance its left-hand
+ * texture coordinates by the same amount: u when the texture runs along u,
+ * otherwise v. */
 void equip_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount) {
     if (poly->u0 != poly->u1) {
         poly->u0 += amount;
@@ -10,6 +13,6 @@ void equip_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount) {
         poly->v2 += amount;
     }
     /* x1/x3 are s16 in POLY_FT4 but the target loads them lhu. */
-    *(u16*)&poly->x1 -= amount;
-    *(u16*)&poly->x3 -= amount;
+    poly->x1 -= amount;
+    poly->x3 -= amount;
 }

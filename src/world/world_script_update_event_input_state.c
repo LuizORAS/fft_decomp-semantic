@@ -13,11 +13,10 @@ void world_script_update_event_input_state(void) {
     u32 previous_input;
     u32 counter;
 
-    if (g_world_thread_current_id != 0x10) {
+    if (g_world_thread_current_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {
         return;
     }
-    /* The definition's s16 return conversion would change this call's codegen. */
-    input = ((s32 (*)(void))world_input_get_tutorial_buttons)();
+    input = world_input_get_tutorial_buttons();
     if (input == 0) {
         g_world_event_initial_repeat_counter = 0;
         g_world_event_repeat_counter = 0;

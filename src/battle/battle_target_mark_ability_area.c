@@ -36,7 +36,7 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     u8 aoe;
     u8 vertical;
 
-    main_util_copy_action_data((const u8*)action, (u8*)&action_copy);
+    main_util_copy_action_data(action, &action_copy);
     ability = &g_main_ability_range_data[action_copy.ability_id];
     flags_1 = ability->flags_1;
     flags_2 = ability->flags_2;
@@ -46,14 +46,14 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     unit = &g_battle_unit_stats[unit_id];
     if (ability->flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) {
         flags_1 |= ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE;
-        flags_2 &= (u8) ~(ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS | ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK
-            | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES);
+        flags_2 &= ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER | ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE
+            | ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET | ABILITY_SECONDARY_FLAG_2_TOP_DOWN;
     }
     if (flags_2 & (ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS | ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK)) {
         x = unit->x;
         y = unit->position.bits.y;
         elevation = unit->position.bits.higher_elevation;
-    } else if (action_copy.targeting_type != BATTLE_ACTION_TARGET_UNIT) {
+    } else if (action_copy.targeting_type != BATTLE_TARGETING_TYPE_UNIT) {
         x = (u8)action_copy.target_x;
         y = (u8)action_copy.target_y;
         elevation = (u8)action_copy.target_elevation;
@@ -73,10 +73,11 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     index = location;
     index = elevation * 256 + y * g_battle_map_max_x + location;
     tile = &g_battle_map_tile_data[index];
-    if (tile->flags_06.value & MAP_TILE_FLAG_BLOCKED) {
+    if (tile->flags.value & MAP_TILE_FLAG_BLOCKED) {
         return -1;
     }
-    height = tile->height * 2 + (tile->depth_half_height & 0x1f) + (tile->depth_half_height >> 5) * 2;
+    height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
+        + (tile->depth_half_height.value >> 5) * 2;
     if (aoe == 0xff) {
         cursor = g_battle_target_panels;
         for (i = 0; i < 0x200; i++) {
@@ -104,7 +105,8 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
             other_panel->remaining_range = aoe + 1;
             battle_target_spread_panels(aoe, 0);
             /* UPPER_LAYER_ONLY, as 0 or 1. */
-            battle_target_apply_vertical_tolerance(height, vertical, (flags_2 >> 5) & 1);
+            battle_target_apply_vertical_tolerance(
+                height, vertical, (flags_2 & ABILITY_SECONDARY_FLAG_2_TOP_DOWN) != 0);
             battle_target_check_moldball_virus_depth(action_copy.ability_id);
         }
     }
@@ -118,19 +120,19 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     if (flags_2 & ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS) {
         battle_target_build_directional_attack_panels(&action_copy, 3);
     }
-    if (flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES)) {
+    if (flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES)) {
         battle_target_apply_unit_team_eligibility(unit_id, flags_2 & ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES,
             flags_2 & ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES, aoe == 0xff);
     }
     count = 0;
-    if (!(flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES))) {
+    if (!(flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES))) {
         tile = g_battle_map_tile_data;
         for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
-            if (marked->remaining_range != 0 && !(tile[i].flags_06.value & MAP_TILE_COLLISION_MASK)) {
+            if (marked->remaining_range != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
                 count++;
-                tile[i].ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
+                tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
             } else {
-                tile[i].ceiling_depth_and_marks &= ~MAP_TILE_FLAG_TARGETED;
+                tile[i].ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_TARGETED;
             }
             marked++;
         }
@@ -138,11 +140,11 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     }
     tile = g_battle_map_tile_data;
     for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
-        if (marked->mark != 0 && !(tile[i].flags_06.value & MAP_TILE_COLLISION_MASK)) {
+        if (marked->mark != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
             count++;
-            tile[i].ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
+            tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
         } else {
-            tile[i].ceiling_depth_and_marks &= ~MAP_TILE_FLAG_TARGETED;
+            tile[i].ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_TARGETED;
         }
         marked++;
     }

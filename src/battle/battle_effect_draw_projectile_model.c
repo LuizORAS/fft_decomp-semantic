@@ -45,9 +45,9 @@ typedef struct battle_effect_reflect_model_work {
     battle_effect_model_gt3_t gt3[2][24];
 } battle_effect_reflect_model_work_t;
 
-typedef struct battle_effect_model3_work {
+typedef struct battle_effect_shuriken_work {
     POLY_G3 g3[2][16];
-} battle_effect_model3_work_t;
+} battle_effect_shuriken_work_t;
 
 void battle_effect_decode_next_model_command(battle_effect_decoded_t* out);
 
@@ -56,8 +56,27 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_t* out);
 #define SCRATCH ((VECTOR*)0x1f800000)
 #define PT(k)   (*(VECTOR*)((s32)scratch + (command.vertices[k] << 4)))
 
-void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, VECTOR* position,
-    battle_effect_rotation_vector_t* angles, VECTOR* scale, s32 parameter) {
+/* Draw one of the projectile models resident in BATTLE.BIN for the current
+ * secondary effect: the low byte of parameter is a battle_effect_model_e.
+ *
+ * The model's vertices go through three transforms in the scratchpad: the spin
+ * rotation, then the angles rotation with scale and position, then the camera
+ * matrix. The model's draw commands are then decoded one by one into the effect's
+ * work buffer for the current frame buffer and linked into the effect ordering
+ * table:
+ * - ARROW: G4 and G3 commands, at a quarter of the corners' average z (their sum
+ *   over 16 or 12).
+ * - STONE and SHURIKEN: G3 commands only, at the same depth.
+ * - REFLECT: only the first timer * 3 commands, so the shield grows by three
+ *   triangles a frame. Its GT3 commands use texture page 0x3f and the CLUT at
+ *   0x7eff plus the effect's own slot id. The depth is the last corner's z over
+ *   12, and every triangle is linked at ordering table entry 0, not at its
+ *   depth.
+ *
+ * A polygon whose depth is not between 1 and EFFECT_OT_DEPTH_MAX - 1 is built but
+ * not drawn. */
+void battle_effect_draw_projectile_model(
+    SVECTOR* spin, VECTOR* position, SVECTOR* angles, VECTOR* scale, s32 parameter) {
     battle_effect_decoded_t command;
     s32 unused[2];
     MATRIX matrix;
@@ -77,7 +96,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
 
     /* Psy-Q RotMatrix returns MATRIX*; the project-wide void declaration
      * changes this call's schedule. */
-    ((MATRIX * (*)(SVECTOR*, MATRIX*)) RotMatrix)((SVECTOR*)spin, &matrix);
+    ((MATRIX * (*)(SVECTOR*, MATRIX*)) RotMatrix)(spin, &matrix);
     matrix.t[2] = 0;
     matrix.t[1] = 0;
     matrix.t[0] = 0;
@@ -85,15 +104,15 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
     SetTransMatrix(&matrix);
     model = g_battle_effect_model_data_ptrs[parameter & 0xff];
     scratch = SCRATCH;
-    vertices = (SVECTOR*)((u8*)model + (model->words[0] + 0xc));
-    count = model->words[1];
+    vertices = (SVECTOR*)((u8*)model + (model->words[BATTLE_EFFECT_MODEL_WORD_VERTICES_OFFSET] + 0xc));
+    count = model->words[BATTLE_EFFECT_MODEL_WORD_VERTEX_COUNT];
     for (i = 0; i < count; i++) {
         gte_ldv0(&vertices[i]);
         gte_rtv0tr();
         gte_stlvnl(&scratch[i]);
         gte_stflg(&scratch[i].pad);
     }
-    RotMatrix((SVECTOR*)angles, &matrix);
+    RotMatrix(angles, &matrix);
     ScaleMatrixL(&matrix, scale);
     matrix.t[0] = position->vx;
     matrix.t[1] = position->vy;
@@ -120,13 +139,12 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         gte_stlvnl(&scratch[i]);
         gte_stflg(&scratch[i].pad);
     }
-    /* The target passes a second argument the one-parameter callee ignores. */
-    command_count = ((s32 (*)(battle_effect_resource_t*, s32))battle_effect_init_resource_sections)(model, 0);
+    command_count = battle_effect_init_resource_sections(model, 0);
     gt3_index = 0;
     g4_index = 0;
     g3_index = 0;
     switch (parameter & 0xff) {
-    case 0: {
+    case BATTLE_EFFECT_MODEL_ARROW: {
         battle_effect_arrow_work_t* work;
         POLY_G4* quad;
         POLY_G3* tri;
@@ -134,7 +152,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         work = g_battle_effect_current_secondary->allocation;
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
-            if (command.opcode == 0x39) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G4) {
                 quad = &work->g4[g_battle_effect_buffer_index][g4_index];
                 quad->r0 = command.colors[0][0];
                 quad->g0 = command.colors[0][1];
@@ -167,7 +185,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
                 }
             }
             i++;
-            if (command.opcode == 0x31) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][g3_index];
                 tri->r0 = command.colors[0][0];
                 tri->g0 = command.colors[0][1];
@@ -196,7 +214,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         }
         break;
     }
-    case 1: {
+    case BATTLE_EFFECT_MODEL_STONE: {
         battle_effect_stone_work_t* work;
         POLY_G3* tri;
 
@@ -205,7 +223,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == 0x31) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
                 tri->r0 = command.colors[0][0];
                 tri->g0 = command.colors[0][1];
@@ -234,7 +252,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         }
         break;
     }
-    case 2: {
+    case BATTLE_EFFECT_MODEL_REFLECT: {
         battle_effect_reflect_model_work_t* work;
         battle_effect_model_gt3_t* tri;
 
@@ -247,7 +265,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         for (i = 0; i < g4_index;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == 0x37) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_GT3_37) {
                 tri = &work->gt3[g_battle_effect_buffer_index][gt3_index];
                 tri->tpage = 0x3f;
                 tri->clut = g_battle_effect_current_secondary->own_slot_id + 0x7eff;
@@ -282,8 +300,8 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         }
         break;
     }
-    case 3: {
-        battle_effect_model3_work_t* work;
+    case BATTLE_EFFECT_MODEL_SHURIKEN: {
+        battle_effect_shuriken_work_t* work;
         POLY_G3* tri;
 
         work = g_battle_effect_current_secondary->allocation;
@@ -291,7 +309,7 @@ void battle_effect_draw_projectile_model(battle_effect_rotation_vector_t* spin, 
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.opcode == 0x31) {
+            if (command.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
                 tri->r0 = command.colors[0][0];
                 tri->g0 = command.colors[0][1];

@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /* Set up the AI workspace (battle setup and the event state): number the present units in slot order
- * (unit_battle_ids; only 0-15 get an ability list, battle_ai_init_unit_abilities), store their average
+ * (unit_compact_indices; only 0-15 get an ability list, battle_ai_init_unit_abilities), store their average
  * max HP (at most 255), install the fixed Blood Suck and Frog Attack entries, empty the sprung-trap list
  * and default the generic Throw entry to Knife with a Dagger. */
 void battle_ai_init_workspace(void) {
@@ -12,11 +12,11 @@ void battle_ai_init_workspace(void) {
 
     g_battle_ai_workspace = ai;
     g_battle_ai_unit_snapshots = g_battle_ai_unit_snapshot_storage;
-    ai->decision_state = 0;
-    ai->selected_action.plan_chosen = 0;
+    ai->resume_pending = 0;
+    ai->selected_action.rank.decided = 0;
     ai->selected_action.coords.bytes.zero = 0;
-    ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_ELMDOR_BLOOD_SUCK;
-    ai->hardcoded_status_abilities[0].id.packed_id = ABILITY_ID_ELMDOR_BLOOD_SUCK;
+    ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_BLOOD_SUCK_STATUS;
+    ai->hardcoded_status_abilities[0].id.packed_id = ABILITY_ID_BLOOD_SUCK;
     ai->hardcoded_status_abilities[0].skillset_flags.bytes.usage_flags
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
     ai->hardcoded_status_abilities[1].skillset_flags.bytes.skillset = SKILLSET_ID_FROG_ATTACK;
@@ -27,9 +27,9 @@ void battle_ai_init_workspace(void) {
     ai->map_max_x = g_battle_map_max_x;
     ai->map_max_y = g_battle_map_max_y;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        ai->unit_battle_ids[i] = 0xff;
+        ai->unit_compact_indices[i] = 0xff;
         if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE) {
-            ai->unit_battle_ids[i] = present_count;
+            ai->unit_compact_indices[i] = present_count;
             battle_ai_init_unit_abilities(i);
             present_count++;
             total_max_hp += g_battle_unit_stats[i].max_hp;
@@ -50,5 +50,5 @@ void battle_ai_init_workspace(void) {
         }
     }
     ai->throw_ability_id = ABILITY_ID_THROW_KNIFE;
-    ai->throw_weapon_id = 1;
+    ai->throw_weapon_id = ITEM_ID_DAGGER;
 }

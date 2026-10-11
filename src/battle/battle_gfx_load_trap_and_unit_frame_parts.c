@@ -1,15 +1,19 @@
 #include "fft/battle.h"
 
-/* s16 view of battle_gfx_store_sprite_display_data: the target sign-extends
- * u, v, width and height, which its u16 prototype would andi 0xffff. */
-#define STORE_PART                                                                                                     \
-    ((void (*)(battle_gfx_sprite_display_data_t*, s32, s16, s16, s16, s16, s16, s16,                                   \
-        s32))battle_gfx_store_sprite_display_data)
-
-/* Build a unit's sprite-part records for one SHP frame, including trap sheets
- * (id >= 0x9b) and Altima's split parts. */
+/* Expand one SHP frame into the parts of a unit's sprite display.
+ *
+ * Where the frame's pictures are decides the texture page: the OTHER page
+ * for the crystal, chicken, frog and treasure sheets; the unit's spritesheet
+ * slot for frames below the SHP's first attack frame; above that, the EVTCHR
+ * slot that holds the unit's attack image (no slot, no parts). Frames from
+ * BATTLE_SHP_FRAME_EVTCHR_FIRST up belong to an EVTCHR slot's own SHP and
+ * the sequence id says which slot.
+ *
+ * A 48x48 part from a spritesheet slot ends the frame: it is stored as two
+ * 48x24 halves, the upper one flagged to draw nearer the camera. The two
+ * Altima sheets keep theirs whole. */
 void battle_gfx_load_trap_and_unit_frame_parts(
-    battle_unit_misc_data_t* unit, battle_unit_anim_state_t* sprite, u16 frame, u16 animation) {
+    battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame, u16 sequence_id) {
     s32* frame_table;
     battle_gfx_source_frame_t* frame_data;
     battle_gfx_sprite_display_data_t* display;
@@ -22,31 +26,31 @@ void battle_gfx_load_trap_and_unit_frame_parts(
     u16 size;
     s32 u;
     u32 tile_index;
-    u32 part_flags;
+    s16 part_flags;
     u32 row;
-    u32 mask;
 
-    y_offset = (u16)unit->special_graphic_y_offset;
-    /* The selector returns a raw SHP pointer or the -1 sentinel. */
-    battle_gfx_select_unit_shp_frame(unit, sprite, frame, animation, &frame_table, (s32*)&frame_data);
+    y_offset = unit->special_graphic_y_offset;
+    /* The selector returns the frame pointer as a word. The unpackers never
+     * store the -1 tested here, and three bits of part count cannot pass 8. */
+    battle_gfx_select_unit_shp_frame(unit, state, frame, sequence_id, &frame_table, (s32*)&frame_data);
     if ((s32)frame_data == -1) {
-        main_system_handle_animation_exception(8);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_SHP_FRAME);
     }
-    display = sprite->display;
+    display = state->display;
     count = display->part_count = (frame_data->part_count_and_rotation & 7) + 1;
-    display->y_rotation = g_battle_gfx_sprite_y_rotations[frame_data->part_count_and_rotation >> 3];
+    display->rotation = g_battle_gfx_sprite_y_rotations[frame_data->part_count_and_rotation >> 3];
     if (count > 8) {
         count = 8;
-        main_system_handle_animation_exception(10);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_FRAME_PART_COUNT);
     }
     flags = frame_data->flags;
-    if (unit->spritesheet_id >= 0x9b) {
-        display->spritesheet_id = (flags & 0x60) | 0xb;
-        display->clut = unit->vram_palette_id;
+    if (unit->spritesheet_id >= BATTLE_SPRITESHEET_ID_CRYSTAL) {
+        display->tpage = (flags & BATTLE_MISC_DISPLAY_BLEND_MASK) | BATTLE_GFX_TPAGE_OTHER;
+        display->clut = unit->clut;
         for (i = 0; i < count; i++) {
             part = &frame_data->parts[i];
             attr = part->attributes;
-            size = (attr & 0x3c00) >> 10;
+            size = (attr & BATTLE_SHP_PART_SIZE_MASK) >> 10;
             {
                 u32 tile;
                 s32 part_u;
@@ -55,27 +59,25 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                 s32 height;
                 width = g_battle_gfx_part_sizes[size].width;
                 height = g_battle_gfx_part_sizes[size].height;
-                tile = attr & 0x3ff;
+                tile = attr & BATTLE_SHP_PART_TILE_MASK;
                 part_u = (tile & 0x1f) * 8;
                 part_v = y_offset + (tile >> 5) * 8;
-                STORE_PART(display, i, part->x_shift, part->y_shift, part_u, part_v, width * 8, height * 8,
-                    (flags & 0x61) | ((attr & 0xc000) >> 13));
+                battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
+                    width * 8, height * 8,
+                    (flags & (BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT | BATTLE_MISC_DISPLAY_BLEND_MASK))
+                        | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13));
             }
         }
-    } else if (frame < (u32)sprite->shp[0]) {
-        display->spritesheet_id = unit->vram_spritesheet_id | (flags & 0x60);
-        display->clut = unit->vram_palette_id;
+    } else if (frame < (u32)state->shp[0]) {
+        display->tpage = unit->tpage | (flags & BATTLE_MISC_DISPLAY_BLEND_MASK);
+        display->clut = unit->clut;
         i = 0;
         if (count != 0) {
-            mask = flags & 0x61;
-            /* Emits nothing; keeps the target's separate `andi 0xff` of the
-             * hoisted mask, which combine would fold into the `andi 0x61`. */
-            __asm__("" : "=r"(mask) : "0"(mask));
             do {
                 part = &frame_data->parts[i];
                 attr = part->attributes;
-                size = (attr & 0x3c00) >> 10;
-                if (size == 0xe) {
+                size = (attr & BATTLE_SHP_PART_SIZE_MASK) >> 10;
+                if (size == BATTLE_SHP_PART_SIZE_48X48) {
                     if (unit->spritesheet_id == BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM
                         || unit->spritesheet_id == BATTLE_SPRITESHEET_ID_ALTIMA_FIRST_FORM) {
                         u32 tile;
@@ -83,22 +85,25 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                         s16 part_v;
                         s32 width;
                         s32 height;
-                        tile = attr & 0x3ff;
+                        tile = attr & BATTLE_SHP_PART_TILE_MASK;
                         part_u = (tile & 0x1f) * 8;
                         part_v = y_offset + (tile >> 5) * 8;
                         width = g_battle_gfx_part_sizes[size].width;
                         height = g_battle_gfx_part_sizes[size].height;
-                        STORE_PART(display, i, part->x_shift, part->y_shift, part_u, part_v, width * 8, height * 8,
-                            (u8)mask | ((attr & 0xc000) >> 13));
+                        battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
+                            width * 8, height * 8,
+                            (flags & (BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT | BATTLE_MISC_DISPLAY_BLEND_MASK))
+                                | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13));
                     } else {
-                        tile_index = attr & 0x3ff;
+                        tile_index = attr & BATTLE_SHP_PART_TILE_MASK;
                         u = (tile_index & 0x1f) * 8;
                         row = tile_index >> 5;
-                        part_flags = (u8)mask | ((attr & 0xc000) >> 13);
-                        STORE_PART(display, i, part->x_shift, (s8)part->y_shift + 0x18, u, row * 8 + 0x18, 0x30, 0x18,
-                            part_flags);
-                        STORE_PART(
-                            display, i + 1, part->x_shift, part->y_shift, u, row * 8, 0x30, 0x18, part_flags | 0x80);
+                        part_flags = (flags & (BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT | BATTLE_MISC_DISPLAY_BLEND_MASK))
+                            | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13);
+                        battle_gfx_store_sprite_display_data(
+                            display, i, part->x_shift, part->y_shift + 0x18, u, row * 8 + 0x18, 0x30, 0x18, part_flags);
+                        battle_gfx_store_sprite_display_data(display, i + 1, part->x_shift, part->y_shift, u, row * 8,
+                            0x30, 0x18, part_flags | BATTLE_MISC_DISPLAY_NEARER);
                         display->part_count++;
                         return;
                     }
@@ -110,23 +115,25 @@ void battle_gfx_load_trap_and_unit_frame_parts(
                     s32 height;
                     width = g_battle_gfx_part_sizes[size].width;
                     height = g_battle_gfx_part_sizes[size].height;
-                    tile = attr & 0x3ff;
+                    tile = attr & BATTLE_SHP_PART_TILE_MASK;
                     part_u = (tile & 0x1f) * 8;
                     part_v = y_offset + (tile >> 5) * 8;
-                    STORE_PART(display, i, part->x_shift, part->y_shift, part_u, part_v, width * 8, height * 8,
-                        (u8)mask | ((attr & 0xc000) >> 13));
+                    battle_gfx_store_sprite_display_data(display, i, part->x_shift, part->y_shift, part_u, part_v,
+                        width * 8, height * 8,
+                        (flags & (BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT | BATTLE_MISC_DISPLAY_BLEND_MASK))
+                            | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13));
                 }
             } while (++i < count);
         }
-    } else if (frame < 0xd2) {
-        if ((g_battle_gfx_vram_slots[0].owner & 0x1f) == unit->unit_id) {
-            battle_gfx_load_unit_frame_parts(unit, display, frame_data, 4);
-        } else if ((g_battle_gfx_vram_slots[1].owner & 0x1f) == unit->unit_id) {
-            battle_gfx_load_unit_frame_parts(unit, display, frame_data, 5);
+    } else if (frame < BATTLE_SHP_FRAME_EVTCHR_FIRST) {
+        if ((g_battle_gfx_vram_slots[0].owner & BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK) == unit->unit_id) {
+            battle_gfx_load_unit_frame_parts(unit, display, frame_data, BATTLE_GFX_TPAGE_EVTCHR_SLOT_0);
+        } else if ((g_battle_gfx_vram_slots[1].owner & BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK) == unit->unit_id) {
+            battle_gfx_load_unit_frame_parts(unit, display, frame_data, BATTLE_GFX_TPAGE_EVTCHR_SLOT_1);
         }
-    } else if (animation < 600) {
-        battle_gfx_load_unit_frame_parts(unit, display, frame_data, 4);
+    } else if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_1) {
+        battle_gfx_load_unit_frame_parts(unit, display, frame_data, BATTLE_GFX_TPAGE_EVTCHR_SLOT_0);
     } else {
-        battle_gfx_load_unit_frame_parts(unit, display, frame_data, 5);
+        battle_gfx_load_unit_frame_parts(unit, display, frame_data, BATTLE_GFX_TPAGE_EVTCHR_SLOT_1);
     }
 }

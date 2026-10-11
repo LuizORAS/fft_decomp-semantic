@@ -11,7 +11,7 @@ s32 battle_ai_select_general_action(void) {
     s32 charging_result;
     s32 resume_state;
 
-    if (g_battle_ai_data_base.decision_state != 0) {
+    if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
         resume_state = g_battle_ai_data_base.autobattle_state;
         if (resume_state == 4)

@@ -17,7 +17,7 @@ void battle_script_unit_animation_rotate_event_instruction(const u8* parameters)
     misc_id = battle_script_load_halfword(data);
     rotation = data[2];
     animation = battle_script_load_halfword(data + 3);
-    call_misc_id = battle_get_misc_id(misc_id);
+    call_misc_id = battle_script_get_misc_id(misc_id);
     misc_id = call_misc_id;
     if (data[4] == 0) {
         battle_unit_clear_facing_update_suppression(call_misc_id);
@@ -29,6 +29,6 @@ void battle_script_unit_animation_rotate_event_instruction(const u8* parameters)
     rotation_state->target_facing = rotation;
     rotation_state->delay = 0;
     rotation_state->rotating = 0;
-    battle_unit_init_for_store_anim_facing_move(index, rotation);
-    battle_unit_set_specific_animation_value_on_battle_init(index, animation);
+    battle_unit_set_facing(index, rotation);
+    battle_unit_set_animation(index, animation);
 }

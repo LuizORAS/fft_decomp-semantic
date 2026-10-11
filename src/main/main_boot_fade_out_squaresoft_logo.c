@@ -1,6 +1,7 @@
 #include "fft/main.h"
 
-/* Fade the Squaresoft logo out to black, then clear its 256x480 VRAM area. */
+/* Fade the Squaresoft logo out to black (the subtractive quad steps from 0 to 255 over 32
+ * frames), then clear its 256x480 VRAM area. */
 void main_boot_fade_out_squaresoft_logo(void) {
     POLY_F4 polygons[2];
     DR_MODE draw_modes[2];

@@ -10,7 +10,7 @@
  * quads per cursor layer, faded by g_bunit_cursor_trail_brightness except for the newest point.
  * abs() matters: GCC expands it to the single-insn abssi2, which keeps each
  * loop body one basic block as in the target. */
-void bunit_gfx_update_rhombus_cursor_trail(bunit_cursor_trail_point_t* target) {
+void bunit_gfx_update_rhombus_cursor_trail(point16_t* target) {
     u8 rgb[3];
     s32 i;
     s32 last;
@@ -63,23 +63,23 @@ void bunit_gfx_update_rhombus_cursor_trail(bunit_cursor_trail_point_t* target) {
             = g_bunit_cursor_shadow_sprite.vh = 0x10;
         g_bunit_cursor_shadow_sprite.y = g_bunit_cursor_trail_points[i].y;
         g_bunit_cursor_sprite.y = g_bunit_cursor_trail_points[i].y - 1;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, 0, 1, 3);
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, 0, 1, 4);
+        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_NONE, 1, 3);
+        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_NONE, 1, 4);
         g_bunit_cursor_shadow_sprite.x += 0x1F;
         g_bunit_cursor_sprite.x += 0x1F;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, 1, 1, 3);
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, 1, 1, 4);
+        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_X, 1, 3);
+        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_X, 1, 4);
         x2 = g_bunit_cursor_trail_points[i].x;
         g_bunit_cursor_sprite.h = g_bunit_cursor_sprite.vh = g_bunit_cursor_shadow_sprite.h
             = g_bunit_cursor_shadow_sprite.vh = 0xF;
         g_bunit_cursor_sprite.x = g_bunit_cursor_shadow_sprite.x = x2;
         g_bunit_cursor_shadow_sprite.y = g_bunit_cursor_trail_points[i].y + 0x10;
         g_bunit_cursor_sprite.y = g_bunit_cursor_trail_points[i].y + 0xF;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, 2, 1, 3);
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, 2, 1, 4);
+        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_Y, 1, 3);
+        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_Y, 1, 4);
         g_bunit_cursor_shadow_sprite.x += 0x1F;
         g_bunit_cursor_sprite.x += 0x1F;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, 3, 1, 3);
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, 3, 1, 4);
+        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_XY, 1, 3);
+        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_XY, 1, 4);
     }
 }

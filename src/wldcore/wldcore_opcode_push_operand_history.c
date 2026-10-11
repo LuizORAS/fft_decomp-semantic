@@ -19,5 +19,5 @@ void wldcore_opcode_push_operand_history(void) {
     g_wldcore_sound_novel_text_history_1 = history_2;
     g_wldcore_sound_novel_text_history_2 = history_3;
     g_wldcore_sound_novel_text_history_3 = new_entry;
-    g_wldcore_state_flags |= 4;
+    g_wldcore_state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

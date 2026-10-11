@@ -1,6 +1,8 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
+/* A second copy of main_set_display_draw, statement for statement. Its only
+ * caller is main_gfx_fade_in_orbonne_monastery. */
 void main_set_display_draw_new_game(int width, int height, int projection, u8 red, u8 green, u8 blue) {
     RECT image_rect = { 0, 0, 1024, 512 };
     int second_y = height == 480 ? 0 : 240;

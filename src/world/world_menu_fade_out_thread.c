@@ -1,6 +1,14 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Thread body that closes the unit list (BUNIT) opened from a WORLD menu.
+ *
+ * Waits for the menu's grandchild thread to end, hands the frame loop the
+ * BUNIT overlay state and waits until it is idle again, frees the overlay,
+ * asks threads 2..14 to stop, fades the screen in over 32 frames and restarts
+ * the hovered-unit view.
+ */
 void world_menu_fade_out_thread(void) {
     s32 i;
     s32 unused[2]; /* keeps the original 0x28 frame */
@@ -8,13 +16,13 @@ void world_menu_fade_out_thread(void) {
     g_world_menu_transition_timeout = 4;
     do {
         world_thread_yield();
-    } while (world_thread_is_running_2(6) != 0);
+    } while (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0);
 
-    g_world_companion_overlay_state = 2;
+    g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_BUNIT;
     g_world_text_overlay_active = 0;
     do {
         world_thread_wait_frames(1);
-    } while (g_world_companion_overlay_state != 0);
+    } while (g_world_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
 
     world_menu_free_high_overlay();
     for (i = 2; i < 15; i++) {
@@ -28,6 +36,6 @@ void world_menu_fade_out_thread(void) {
     g_world_menu_overlay_state = 0;
     g_world_screen_fade = 0;
     g_world_menu_transition_timeout = 0;
-    world_unit_start_view_thread(2, g_world_unit_view_battle_id, 0xFF);
+    world_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, g_world_active_unit_data.battle_id, 0xFF);
     world_thread_exit_current();
 }

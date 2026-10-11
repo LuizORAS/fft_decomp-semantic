@@ -25,7 +25,7 @@ void ScaleMatrixL(MATRIX* matrix, VECTOR* scale) {
     __asm__ volatile("" : : "r"(scale_y), "r"(scale_z) : "memory");
     packed = packed_matrix->words[1];
     __asm__ volatile("" : "=r"(packed_matrix) : "0"(packed_matrix), "r"(packed) : "memory");
-    __asm__("" : "=r"(result) : "0"((MATRIX*)packed_matrix));
+    __asm__("" : "=r"(result) : "0"(packed_matrix));
     __asm__ volatile("" : : "r"(result)); /* Retail exposes the result pointer before its stores. */
     PSYQ_GTE_READ_LO(low);
     low = (low >> 12) & 0xffff;

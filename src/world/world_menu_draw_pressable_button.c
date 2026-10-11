@@ -1,31 +1,5 @@
 #include "fft/world.h"
 
-/* Destination rectangle followed by the source rectangle, CLUT and tpage
- * consumed by world_gfx_enqueue_oriented_textured_quad (clut/tpage at 0x10/0x12, as in
- * world_gfx_sprite_desc_t). */
-typedef struct world_menu_button_sprite {
-    s16 x;     /* 0x00 */
-    s16 y;     /* 0x02 */
-    s16 w;     /* 0x04 */
-    s16 h;     /* 0x06 */
-    u16 u;     /* 0x08 */
-    u16 v;     /* 0x0a */
-    u16 u_w;   /* 0x0c */
-    u16 v_h;   /* 0x0e */
-    u16 clut;  /* 0x10 */
-    u16 tpage; /* 0x12 */
-} world_menu_button_sprite_t;
-
-/* 12-byte button piece: source rectangle, then its offset from the button origin. */
-typedef struct world_menu_button_piece {
-    u16 u;        /* 0x00 */
-    u16 v;        /* 0x02 */
-    s16 w;        /* 0x04 */
-    s16 h;        /* 0x06 */
-    u16 x_offset; /* 0x08 */
-    u16 y_offset; /* 0x0a */
-} world_menu_button_piece_t;
-
 extern world_menu_button_piece_t g_world_menu_button_pieces[];
 
 /*
@@ -36,8 +10,8 @@ extern world_menu_button_piece_t g_world_menu_button_pieces[];
  * g_world_menu_button_piece_starts[index]..g_world_menu_button_piece_starts[index + 1] are drawn at OT depth 50 upward.
  * Compiled at -O1 like the other formation/shop sprite drawers.
  */
-void world_menu_draw_pressable_button(s16 index, s32 x, s32 y, s16 pressed, u16 disabled, u16 sound_effect_id) {
-    world_menu_button_sprite_t sprite;
+void world_menu_draw_pressable_button(s16 index, s32 x, s16 y, s16 pressed, s16 disabled, u16 sound_effect_id) {
+    world_oriented_quad_t sprite;
     world_menu_button_piece_t* piece;
     s32 speed;
     s32 i;
@@ -85,8 +59,8 @@ void world_menu_draw_pressable_button(s16 index, s32 x, s32 y, s16 pressed, u16 
         sprite.h = h >> 12;
         sprite.u = piece->u;
         sprite.v = piece->v;
-        sprite.u_w = piece->w;
-        sprite.v_h = piece->h;
+        sprite.uw = piece->w;
+        sprite.vh = piece->h;
         if (g_world_menu_button_piece_scales[piece_index].x >= 0x1005) {
             sprite.w = w + 2;
         }
@@ -94,7 +68,7 @@ void world_menu_draw_pressable_button(s16 index, s32 x, s32 y, s16 pressed, u16 
         if (g_world_menu_button_piece_scales[piece_index].y < 0) {
             flip += 2;
         }
-        world_gfx_enqueue_oriented_textured_quad((const world_oriented_quad_t*)&sprite, 0, flip, 0, i + 50);
+        world_gfx_enqueue_oriented_textured_quad(&sprite, 0, flip, 0, i + 50);
         piece_index++;
     }
 }

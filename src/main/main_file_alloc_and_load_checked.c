@@ -6,7 +6,7 @@ void* main_file_alloc_and_load_checked(int sector, int size) {
     void* result = main_file_alloc_and_load(sector, size);
 
     if (result == 0) {
-        main_system_handle_animation_exception(2);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_FILE_LOAD);
     }
     return result;
 }

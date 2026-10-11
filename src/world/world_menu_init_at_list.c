@@ -2,7 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Provisional: one 4-byte slot of the unit list filled on the main stack by
+/* One 4-byte slot of the unit list filled on the main stack by
  * battle_turn_build_at_list. Bits 0-4 of `flags` hold the battle id (0x1f ends the list);
  * 0x40 marks a bracketed name, 0x20/0x80 select its sprite row. */
 typedef struct {
@@ -38,7 +38,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         g_world_dead_unit_menu_flags[i] = 0;
         g_world_menu_at_list_flags[i] = 0;
     }
-    g_world_text_section_pointers[31] = g_world_menu_at_list_text;
+    g_world_text_section_pointers[TEXT_SECTION_AT_LIST] = g_world_menu_at_list_text;
     count = 0;
     bracketed = 0;
     text = g_world_menu_at_list_text;
@@ -46,12 +46,12 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         battle_stats_t* unit;
         s32 name_index;
 
-        if ((g_world_action_target_list_slots[i].flags & 0x1F) == 0x1F) {
+        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_UNIT_ID_MASK) == WORLD_AT_END_OF_LIST) {
             break;
         }
         g_world_menu_at_list_indices[i] = i + 1;
-        unit = battle_unit_get_stats_from_battle_id(g_world_action_target_list_slots[i].flags & 0x1F);
-        if ((g_world_action_target_list_slots[i].flags & 0x40) != 0) {
+        unit = battle_unit_get_stats_from_battle_id(g_world_action_target_list_slots[i].flags & WORLD_AT_UNIT_ID_MASK);
+        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_ACTING_UNIT) != 0) {
             *text++ = 0xD9;
             *text++ = 0xBE;
         }
@@ -63,31 +63,31 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
             }
             text++;
         }
-        if ((g_world_action_target_list_slots[i].flags & 0x40) != 0) {
+        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_ACTING_UNIT) != 0) {
             *text++ = 0xD9;
             *text++ = 0xBF;
         }
         *text++ = 0xFE;
-        if ((g_world_action_target_list_slots[i].flags & 0x40) != 0) {
+        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_ACTING_UNIT) != 0) {
             g_world_menu_at_list_secondary_values[count] = i - 0x800;
         } else {
             g_world_menu_at_list_primary_values[count] = i - 0x800;
         }
-        if ((g_world_action_target_list_slots[i].flags & 0x40) == 0) {
+        if ((g_world_action_target_list_slots[i].flags & WORLD_AT_ACTING_UNIT) == 0) {
             g_world_menu_at_list_secondary_values[count] = TEXT_ID_ABILITY_NAME_BASE;
         } else {
             bracketed = 1;
-            if ((g_world_action_target_list_slots[i].flags & 0x20) != 0) {
-                g_world_menu_at_list_primary_values[count] = (s16)0xB012;
+            if ((g_world_action_target_list_slots[i].flags & WORLD_AT_SHOW_WAIT_LABEL) != 0) {
+                g_world_menu_at_list_primary_values[count] = 0xB012;
             } else {
                 s32 value = g_world_action_target_list_slots[i].value;
-                if ((g_world_action_target_list_slots[i].flags & 0x80) != 0) {
+                if ((g_world_action_target_list_slots[i].flags & WORLD_AT_TURN_VALUE_HIGH_BIT) != 0) {
                     value += 0x100;
                 }
                 g_world_menu_at_list_primary_values[count] = value + TEXT_ID_ABILITY_NAME_BASE;
             }
         }
-        if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != 0) {
+        if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE) {
             g_world_menu_at_list_flags[count] = 8;
         }
         count++;
@@ -101,7 +101,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         entry->window_x = 0x8C;
         entry->window_y = 0x20;
         entry->window_width = 0xE8;
-        entry->overall_width = 0xE8;
+        entry->text_image.width = 0xE8;
         entry->inner_width = 0xE8;
     } else {
         entry->window_y = 0x20;
@@ -109,7 +109,7 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         entry->window_x = 0xBE;
         entry->window_y = 0x20;
         entry->window_width = 0x84;
-        entry->overall_width = 0x84;
+        entry->text_image.width = 0x84;
         entry->inner_width = 0x84;
     }
     if (count < 10) {

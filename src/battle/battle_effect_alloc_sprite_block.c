@@ -8,7 +8,7 @@ battle_effect_sprite_block_t* battle_effect_alloc_sprite_block(u8 sprite_count) 
     battle_effect_sprite_block_t* block;
     s32 total_count;
 
-    block = battle_heap_alloc_block(((u32)sprite_count * 4) + 8, 0);
+    block = battle_heap_alloc_block((sprite_count * 4) + 8, 0);
     block->color.field.sprite_count = sprite_count;
     block->color.field.blue = 0x80;
     block->color.field.green = 0x80;

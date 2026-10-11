@@ -11,7 +11,8 @@ suzuki_waveset_t* main_sound_load_waveset(suzuki_waveset_t* file) {
     suzuki_waveset_t** link;
 
     spu_address = main_sound_alloc_spu_ram(file->wave_size);
-    main_sound_transfer_spu_data(spu_address, (u8*)file + file->wave_offset, file->wave_size, 0x11);
+    main_sound_transfer_spu_data(spu_address, (u8*)file + file->wave_offset, file->wave_size,
+        MAIN_SOUND_SPU_TRANSFER_WAIT | MAIN_SOUND_SPU_TRANSFER_WRITE);
     waveset = main_sound_alloc(file->header_size);
     main_sound_copy_memory(waveset, file, file->header_size);
     waveset->spu_address = spu_address;
@@ -23,6 +24,6 @@ suzuki_waveset_t* main_sound_load_waveset(suzuki_waveset_t* file) {
     }
     *link = waveset;
     waveset->next = 0;
-    main_sound_wait_for_spu_transfer(0x10);
+    main_sound_wait_for_spu_transfer(MAIN_SOUND_SPU_TRANSFER_WAIT);
     return waveset;
 }

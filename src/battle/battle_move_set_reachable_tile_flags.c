@@ -30,17 +30,17 @@ void battle_move_set_reachable_tile_flags(void) {
     spread = g_battle_move_scratch_pad_ptr;
     flags = g_battle_move_frontier_flags_ptr;
     self = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
-    battle_move_clear_reachable_flags_under_dead_or_jumping_units();
+    battle_move_clear_enterable_flags_under_dead_or_jumping_units();
     for (i = 0; i < MAP_TILE_COUNT; i++) {
         tile = &g_battle_map_tile_data[i];
-        tile->ceiling_depth_and_marks &= ~MAP_TILE_FLAG_MOVE_DESTINATION;
+        tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_MOVE_DESTINATION;
         panel = &g_battle_target_panels[i];
         if (i == self) {
             continue;
         }
-        if (!((config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) && (flags[i] & FRONTIER_FLAG_VALID_DESTINATION))
+        if (!((config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) && (flags[i] & FRONTIER_FLAG_MOUNTABLE_UNIT))
             && !((panel->ride_remaining_range != 0) && (config->can_ride != 0))) {
-            depth = tile->depth_half_height;
+            depth = tile->depth_half_height.value;
             half_height = depth & MAP_TILE_HALF_HEIGHT_MASK;
             if ((half_height >= 3) && (flags[i] & FRONTIER_FLAG_LOW_CORNER)) {
                 continue;
@@ -51,7 +51,7 @@ void battle_move_set_reachable_tile_flags(void) {
             if (half_height >= 4) {
                 continue;
             }
-            tile_flags = tile->flags_06.value;
+            tile_flags = tile->flags.value;
             if (tile_flags & MAP_TILE_FLAG_CANNOT_STOP) {
                 continue;
             }
@@ -59,14 +59,14 @@ void battle_move_set_reachable_tile_flags(void) {
             if (surface == MAP_SURFACE_OBSTACLE) {
                 continue;
             }
-            depth_bits = tile->depth_half_height & MAP_TILE_DEPTH_MASK;
+            depth_bits = tile->depth_half_height.value & MAP_TILE_DEPTH_MASK;
             if ((depth_bits != 0) && (config->cannot_stay_on_water != 0)) {
                 continue;
             }
             if ((depth_bits == 0x60) && (config->will_drown != 0)) {
                 continue;
             }
-            if (((s32)(depth >> MAP_TILE_DEPTH_SHIFT) >= 4) && (config->will_sink != 0)) {
+            if ((tile->depth_half_height.bits.depth >= 4) && (config->will_sink != 0)) {
                 continue;
             }
             if ((surface == MAP_SURFACE_LAVA) && (config->can_pass_lava == 0)) {
@@ -76,16 +76,16 @@ void battle_move_set_reachable_tile_flags(void) {
                 continue;
             }
             frontier = flags[i];
-            if (!(frontier & FRONTIER_FLAG_REACHABLE)) {
+            if (!(frontier & FRONTIER_FLAG_ENTERABLE)) {
                 continue;
             }
             if (frontier & FRONTIER_FLAG_UNIT_ON_TILE) {
-                if (!(frontier & FRONTIER_FLAG_VALID_DESTINATION) || (config->can_ride == 0)) {
+                if (!(frontier & FRONTIER_FLAG_MOUNTABLE_UNIT) || (config->can_ride == 0)) {
                     continue;
                 }
             }
         }
         spread->reachable_count++;
-        tile->ceiling_depth_and_marks |= MAP_TILE_FLAG_MOVE_DESTINATION;
+        tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_MOVE_DESTINATION;
     }
 }

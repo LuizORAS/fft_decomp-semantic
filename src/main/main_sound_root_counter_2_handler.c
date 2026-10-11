@@ -8,7 +8,7 @@
  * sequencer ticks as its tempo accumulator (tempo_accumulator, less tempo * scale per
  * call, plus 0x10000 per tick) allows, and finally commits the key-offs.
  *
- * bar/beat count bars and beats (beat_ticks_36 ticks per beat); the record
+ * bar/beat count bars and beats (beat_ticks_remaining ticks per beat); the record
  * is stopped when its master volume fades to zero or its bar count reaches
  * stop_bar, and stops playing once no channel is running.
  *
@@ -23,11 +23,11 @@ s32 main_sound_root_counter_2_handler(void) {
 
     main_sound_update_voice_attrs();
     requests = g_main_sound_voice_update_requests;
-    if ((requests & 1) != 0)
+    if ((requests & SUZUKI_VOICE_MASK_REQUEST_PITCH_LFO) != 0)
         main_sound_calculate_pitch_lfo_voices();
-    if ((requests & 2) != 0)
+    if ((requests & SUZUKI_VOICE_MASK_REQUEST_NOISE) != 0)
         main_sound_calculate_noise_voices();
-    if ((requests & 4) != 0)
+    if ((requests & SUZUKI_VOICE_MASK_REQUEST_REVERB) != 0)
         main_sound_calculate_reverb_voices();
     g_main_sound_voice_update_requests = 0;
     main_sound_flush_key_on_inline();
@@ -53,9 +53,9 @@ s32 main_sound_root_counter_2_handler(void) {
 
     music = g_main_sound_active_music_list;
     while (music != 0) {
-        /* The playing bit is tested as a sign (`lh`, `bgez`). */
-        if ((s16)music->status < 0) {
-            if (music->tick_2c != 0 && music->tick_24 >= music->tick_2c)
+        /* The playing bit (15) is the sign. */
+        if (music->status < 0) {
+            if (music->snapshot_restore_tick != 0 && music->sequence_ticks >= music->snapshot_restore_tick)
                 main_smd_restore_snapshot(music);
             if (music->tempo_scale.count != 0) {
                 main_smd_step_ramp(&music->tempo_scale);
@@ -63,23 +63,23 @@ s32 main_sound_root_counter_2_handler(void) {
             }
             if (music->master_volume.count != 0) {
                 main_smd_step_ramp(&music->master_volume);
-                main_smd_set_note_flags2_all_channels(0x100, music);
+                main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_VOLUME, music);
             }
             if (music->pitch_shift.count != 0) {
                 main_smd_step_ramp(&music->pitch_shift);
-                main_smd_set_note_flags2_all_channels(0x200, music);
+                main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_PITCH, music);
             }
             if (music->balance_shift.count != 0) {
                 main_smd_step_ramp(&music->balance_shift);
-                main_smd_set_note_flags2_all_channels(0x100, music);
+                main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_VOLUME, music);
             }
-            music->tick_20++;
+            music->timer_ticks++;
             music->ticks += music->tempo_scale.value >> 16;
             music->tempo_accumulator -= music->scaled_tempo;
             while (music->tempo_accumulator < 0) {
                 music->tempo_accumulator += 0x10000;
-                if (--music->beat_ticks_36 == 0) {
-                    music->beat_ticks_36 = music->ticks_per_beat;
+                if (--music->beat_ticks_remaining == 0) {
+                    music->beat_ticks_remaining = music->ticks_per_beat;
                     if (++music->beat > music->beats_per_bar) {
                         music->beat = 1;
                         music->bar++;
@@ -93,15 +93,15 @@ s32 main_sound_root_counter_2_handler(void) {
                     main_smd_update_voices(music, music->channels, count);
                 }
                 if (music->channel_mask != 0) {
-                    music->tick_24++;
+                    music->sequence_ticks++;
                     if (music->master_volume.value == 0) {
                         SuzukiDeallocateMUSChannels(music);
-                        music->status |= 0x4100;
+                        music->status |= (SUZUKI_MUSIC_STATUS_PAUSED | SUZUKI_MUSIC_STATUS_FULL_VOICE_UPDATE);
                     }
                     if (music->bar == music->stop_bar)
                         SuzukiDeallocateMUSChannels(music);
                 } else {
-                    music->status &= 0x7fff;
+                    music->status &= ~SUZUKI_MUSIC_STATUS_PLAYING;
                     break;
                 }
             }

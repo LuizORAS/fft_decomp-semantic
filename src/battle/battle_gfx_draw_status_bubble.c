@@ -75,9 +75,9 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
 
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    main_util_set_svector(&base, unit->screen.vx + unit->effect_vector_2.vx,
-        unit->screen.vy + unit->effect_vector_2.vy + unit->status_bubble_y, unit->screen.vz + unit->effect_vector_2.vz);
-    RotTrans(&base, &transformed, &unit->status_bubble_gte_flag);
+    main_util_set_svector(&base, unit->screen.vx + unit->event_offset.vx,
+        unit->screen.vy + unit->event_offset.vy + unit->status_bubble_y, unit->screen.vz + unit->event_offset.vz);
+    RotTrans(&base, &transformed, &unit->gte_flag);
     position.vx = unit->status_bubble_x + (transformed.vx + unit->screen_offset.vx);
     y = transformed.vy + unit->screen_offset.vy;
     position.vy = y;
@@ -90,6 +90,5 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
     display = unit->status_bubble_display;
     otag = main_gfx_get_otag();
     depth = transformed.vz / 4;
-    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display, display->part_count, 0,
-        (s16*)&position, 0, 0, (s16*)&zoom, otag + depth);
+    battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, 0, 0, &zoom, otag + depth);
 }

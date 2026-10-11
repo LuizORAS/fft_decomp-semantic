@@ -1,17 +1,22 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define EVTCHR_ARCHIVE_START_SECTOR 0x1D4C
-#define EVTCHR_BLOCK_SECTORS        15
-#define EVTCHR_BLOCK_BYTES          0x7800
+#define EVTCHR_BLOCK_SECTORS 15
+#define EVTCHR_BLOCK_BYTES   0x7800
 
+/*
+ * Loads one 0x7800-byte block of EVTCHR.BIN into a fresh heap allocation
+ * (the read runs on the main stack), publishing it through g_world_event_pending_loaded_evtchr_slot
+ * and g_world_event_loaded_evtchr_buffer before releasing it. Parameter 2
+ * selects the block; each occupies 15 sectors from 0x1d4c.
+ */
 void world_gfx_load_evtchr_thread(void) {
     void* param;
-    s32 id;
+    s32 block;
     void* buffer;
 
     param = world_thread_get_current_parameter_1();
-    id = world_thread_get_current_parameter_2();
+    block = world_thread_get_current_parameter_2();
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
     buffer = main_heap_alloc(EVTCHR_BLOCK_BYTES);
 
@@ -19,7 +24,7 @@ void world_gfx_load_evtchr_thread(void) {
         world_thread_yield();
         g_world_thread_call_target = (void (*)(void))main_file_request_read_bytes;
     } while (world_thread_call_on_main_stack(
-                 id * EVTCHR_BLOCK_SECTORS + EVTCHR_ARCHIVE_START_SECTOR, EVTCHR_BLOCK_BYTES, buffer)
+                 block * EVTCHR_BLOCK_SECTORS + DISC_SECTOR_EVENT_EVTCHR_BIN, EVTCHR_BLOCK_BYTES, buffer)
         != 0);
 
     do {

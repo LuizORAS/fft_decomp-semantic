@@ -1,20 +1,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-enum {
-    MAP_PALETTE_ANIMATION_COUNT = 16,
-};
-
-void battle_map_stop_palette_animation(s32 mesh_index, s32 animation_index, s32 stop_all) {
+/* Stop the blend of CLUT clut_index of a row, or of all sixteen when stop_all is
+ * 1. The colours stay as blended so far. */
+void battle_map_stop_palette_animation(s32 clut_row, s32 clut_index, s32 stop_all) {
     s32 index;
 
     if (stop_all == 1) {
-        index = MAP_PALETTE_ANIMATION_COUNT - 1;
+        index = MAP_CLUTS_PER_ROW - 1;
         do {
-            g_battle_map_palette_state.banks[mesh_index].animations[index].active = 0;
+            g_battle_map_palette_state.clut_rows[clut_row].animations[index].active = 0;
             index--;
         } while (index >= 0);
     } else {
-        g_battle_map_palette_state.banks[mesh_index].animations[animation_index].active = 0;
+        g_battle_map_palette_state.clut_rows[clut_row].animations[clut_index].active = 0;
     }
 }

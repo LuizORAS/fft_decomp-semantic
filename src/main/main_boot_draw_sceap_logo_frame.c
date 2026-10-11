@@ -2,8 +2,9 @@
 #include "psx/libgpu.h"
 
 /* Present one SCEA logo frame: flip the display buffers, wait for the GPU and VSync, upload the
- * logo into the new buffer and draw otag. Returns VSync(0)'s value. */
-int main_boot_draw_sceap_logo_frame(void* otag, u32* image) {
+ * 320x32 logo strip at line 104 of the new draw buffer and draw otag (the caller's fade quad)
+ * over it. Returns VSync(0)'s value. */
+int main_boot_draw_sceap_logo_frame(void* otag, void* image) {
     RECT destination;
     int elapsed;
 

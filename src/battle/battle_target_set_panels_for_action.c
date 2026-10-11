@@ -2,15 +2,17 @@
 #include "psx/types.h"
 
 /* Mark the tiles an action can target, by the menu type of its skillset (the
- * battle_ai_command_action_t in `source`): an ability's own range (battle_target_set_ability_panels;
- * Geomancy takes the ability of the unit's surface type, Draw Out the katana's), Attack and Charge
- * the weapon's (battle_target_set_weapon_attack_panels), Jump the learned Jumps'
+ * battle_ai_command_action_t in source): an ability's own range
+ * (battle_target_set_ability_panels; Elemental takes the ability of the unit's surface type,
+ * Draw Out the katana's), Attack and Charge the weapon's
+ * (battle_target_set_weapon_attack_panels), Jump the learned Jumps'
  * (battle_target_set_jump_ability_panels), and Item and Throw a plain range
- * (battle_target_set_item_range_panels: 1, or 4 with Throw Item or for a Mime; Throw reaches Move
- * tiles, not the unit's own). Returns 1 or 0 when the player picks a tile (1 when flags_2 bit 0x10
- * is set, and for weapons, Jump and items), 2 when there is nothing to pick (other menu types, or an
- * Auto ability without range), 3 when no tile is in range, and -1 for an invalid unit, menu or
- * ability.
+ * (battle_target_set_item_range_panels: 1, or 4 with Throw Item or for a Mime; Throw reaches
+ * Move tiles, not the unit's own). Returns a battle_target_panels_e: UNIT_OR_TILE or TILE_ONLY
+ * when the player picks a tile (TILE_ONLY when flags_2 has CANNOT_FOLLOW_TARGET, and for
+ * weapons, Jump and items), NO_TARGETING when there is nothing to pick (other menu types, or an
+ * Auto ability without range), NONE when no tile is in range, and INVALID for an invalid unit,
+ * menu or ability.
  *
  * The .ld places .rodata at 0x80174068 so the switch's jump table lands on the target's table. */
 s32 battle_target_set_panels_for_action(u8* source) {
@@ -23,14 +25,14 @@ s32 battle_target_set_panels_for_action(u8* source) {
     u8 flags;
     u16 ability_id;
 
-    main_util_copy_action_data(source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     mode = 0;
     if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
-        return -1;
+        return BATTLE_TARGET_PANELS_INVALID;
     }
     unit = &g_battle_unit_stats[action.unit_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
-        return -1;
+        return BATTLE_TARGET_PANELS_INVALID;
     }
     switch (g_main_action_menu_types_by_skillset[action.skillset]) {
     case ACTION_MENU_TYPE_DEFAULT:
@@ -47,17 +49,16 @@ s32 battle_target_set_panels_for_action(u8* source) {
         range = unit->move | 0x80;
         break;
     case ACTION_MENU_TYPE_ELEMENTS:
-        ability_id
-            = g_geomancy_terrain_ability_table[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value
-                & 0x3f];
+        ability_id = g_main_terrain_geomancy_abilities
+            [g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value & MAP_SURFACE_MASK];
         mode = 1;
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         mode = 1;
-        if ((u32)(action.item_id - 0x26) >= 0xa) {
-            return -1;
+        if (action.item_id < ITEM_ID_ASURA_KNIFE || action.item_id > ITEM_ID_CHIRIJIRADEN) {
+            return BATTLE_TARGET_PANELS_INVALID;
         }
-        ability_id = action.item_id + 0x26;
+        ability_id = action.item_id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         break;
     case ACTION_MENU_TYPE_ATTACK:
     case ACTION_MENU_TYPE_CHARGE:
@@ -70,20 +71,20 @@ s32 battle_target_set_panels_for_action(u8* source) {
         break;
     case ACTION_MENU_TYPE_BLANK_05:
     case ACTION_MENU_TYPE_UNKNOWN_0F:
-        return -1;
+        return BATTLE_TARGET_PANELS_INVALID;
     default:
-        return 2;
+        return BATTLE_TARGET_PANELS_NO_TARGETING;
     }
     if (mode == 1) {
         if (ability_id >= ABILITY_ID_ITEM_FIRST) {
-            return -1;
+            return BATTLE_TARGET_PANELS_INVALID;
         }
         ability = &g_main_ability_range_data[ability_id];
         range = ability->range;
         flags = ability->flags_2;
         if ((ability->flags_1 & ABILITY_SECONDARY_FLAG_1_AUTO) && range == 0
             && !(ability->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
-            return 2;
+            return BATTLE_TARGET_PANELS_NO_TARGETING;
         }
         action.ability_id = ability_id;
         result = battle_target_set_ability_panels((const u8*)&action);
@@ -98,5 +99,5 @@ s32 battle_target_set_panels_for_action(u8* source) {
 
         return flag_result != 0;
     }
-    return 3;
+    return BATTLE_TARGET_PANELS_NONE;
 }

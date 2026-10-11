@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Snaps a unit to its map tile: the movement destination becomes the tile and the
+ * screen position its centre (28 units per tile) at the tile's height. */
 void battle_unit_set_move_and_screen_coords(battle_unit_misc_data_t* unit) {
     unit->movement.bytes.destination_x = unit->map_x;
     unit->movement.bytes.destination_y = unit->map_y;

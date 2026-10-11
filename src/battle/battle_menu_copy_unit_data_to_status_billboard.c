@@ -4,7 +4,7 @@
 /* Fills a status billboard (level, team kind, AT position, HP/MP/CT and the
  * live-unit count) from a battle unit.
  *
- * BATTLE twin of debugchr_panel_copy_unit_data_to_billboard. Reusing `unit`
+ * BATTLE twin of debugchr_menu_copy_unit_data_to_status_billboard. Reusing `unit`
  * for the loop's stats and lookup pointers ranks it ahead of `i` for $s0, and
  * reading MP directly rather than through `value` gives CT $v1 and the
  * callback address $v0 in the call block. */
@@ -21,7 +21,7 @@ void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle
         output->team_kind = 1;
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK))
         output->team_kind = 2;
-    if (unit->auto_battle_setting != 0)
+    if (unit->auto_battle_setting != BATTLE_AUTO_BATTLE_MANUAL)
         output->team_kind = 3;
     output->experience = unit->experience;
     value = unit->max_hp;
@@ -29,13 +29,13 @@ void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle
     if (value == 0)
         output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = value + 1;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value = unit->hp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value2 = 0;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
     value = unit->max_mp;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value;
     if (value == 0)
         output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = value + 1;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value = unit->mp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value2 = 0;
+    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
     output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     output->list_index = 0;
@@ -52,7 +52,7 @@ void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle
         if (battle_unit_has_misc_id(i) != 0) {
             unit_id = battle_unit_get_battle_index_by_misc_id(i);
             unit = battle_unit_get_stats_from_battle_id(unit_id);
-            unit = battle_find_unit_data_pointer_for_entd_unit_id(unit->unit_id, &resolved_id);
+            unit = battle_unit_find_stats_by_entd_unit_id(unit->unit_id, &resolved_id);
             if (resolved_id >= 0 && unit_id == resolved_id && unit->unit_id != 0) {
                 count++;
             }

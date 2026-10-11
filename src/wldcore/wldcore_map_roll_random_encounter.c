@@ -1,8 +1,8 @@
 #include "fft/wldcore.h"
 
 /* One random-encounter tier: the story-progress threshold that selects it,
- * the percentage chance an encounter happens, and the high-bit-first mask of
- * which of the entry's eight ENTDs may be drawn. */
+ * the chance an encounter happens (a roll of 0..99 at or below it), and the
+ * high-bit-first mask of which of the entry's eight ENTDs may be drawn. */
 typedef struct wldcore_encounter_tier {
     u8 progress_threshold; /* 0x00 */
     u8 encounter_chance;   /* 0x01 */
@@ -25,6 +25,14 @@ extern wldcore_encounter_entry_t (*g_wldcore_random_battle_data)[3];
 #define ENTRY_AT(byte_offset)   ((wldcore_encounter_entry_t*)((byte_offset) + (s32)base))
 #define ENTRY_BASE(byte_offset) ((wldcore_encounter_entry_t*)((s32)base + (byte_offset)))
 
+/* Roll for a random battle on one road into world-map location 24..42.
+ *
+ * The tier is the first of the road's four whose progress threshold is at or
+ * above the road's script variable. A tier chance of 0 never triggers;
+ * otherwise a battle happens when a roll of 0..99 is at or below the chance,
+ * which is chance + 1 in 100. One of the ENTDs enabled in the tier's mask is
+ * then drawn evenly. Returns 1 with the ENTD and map ids set; the squad id is
+ * set as soon as the road is found. */
 s32 wldcore_map_roll_random_encounter(s32 location, s32 route) {
     wldcore_encounter_entry_t(*base)[3];
     s32 offset;
@@ -36,8 +44,8 @@ s32 wldcore_map_roll_random_encounter(s32 location, s32 route) {
     s32 count;
     s32 pick;
 
-    location -= 24;
-    if ((u32)location >= 19) {
+    location -= WORLD_LOCATION_FIELD_FIRST;
+    if (location < 0 || location >= WORLD_LOCATION_FIELD_COUNT) {
         return 0;
     }
     base = g_wldcore_random_battle_data;

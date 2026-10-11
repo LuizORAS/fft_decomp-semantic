@@ -18,34 +18,33 @@ void card_save_build_buffer(s32 slot) {
     s32 unused_28;
     u8* block;
     u8 parity;
-    s32 unused_34;
     s32 unused_38[0x40];
     s32 unused_138;
     party_data_t* unit;
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         unit = main_party_get_data_pointer(i);
-        if (unit->party_id != PARTY_ID_NONE && unit->sprite_set < 4) {
+        if (unit->party_id != PARTY_ID_NONE && unit->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
             break;
         }
     }
 
-    bcopy(unit->name, g_card_save_buffer_pointer->name, sizeof(unit->name));
-    g_card_save_buffer_pointer->name_terminator = 0xfe;
-    g_card_save_buffer_pointer->job_id = unit->job_id;
-    g_card_save_buffer_pointer->level = unit->level;
+    bcopy(unit->name, g_card_save_buffer_pointer->summary.name, sizeof(unit->name));
+    g_card_save_buffer_pointer->summary.name_terminator = 0xfe;
+    g_card_save_buffer_pointer->summary.job_id = unit->job_id;
+    g_card_save_buffer_pointer->summary.level = unit->level;
 
     day = battle_script_get_variable(EVENT_SCRIPT_VAR_DAY);
     month = battle_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    g_card_save_buffer_pointer->day = day;
-    g_card_save_buffer_pointer->month = month;
-    g_card_save_buffer_pointer->location = battle_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
-    g_card_save_buffer_pointer->slot = 0xff;
+    g_card_save_buffer_pointer->summary.day = day;
+    g_card_save_buffer_pointer->summary.month = month;
+    g_card_save_buffer_pointer->summary.location = battle_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
+    g_card_save_buffer_pointer->summary.slot = 0xff;
     g_card_save_buffer_pointer->elapsed_seconds
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;
-    g_card_save_buffer_pointer->format_version = 4;
+    g_card_save_buffer_pointer->summary.format_version = 4;
 
-    card_build_save_file_header(slot, unit->level, (card_save_header_t*)g_card_save_buffer_pointer);
+    card_build_save_file_header(slot, unit->level, &g_card_save_buffer_pointer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         bcopy(&g_main_party_data[i], g_card_save_buffer_pointer->party_records[i],
@@ -60,7 +59,7 @@ void card_save_build_buffer(s32 slot) {
         sizeof(g_card_save_buffer_pointer->item_location_flags));
     g_card_save_buffer_pointer->_unknown_1c88 = D_80057b1c;
     bcopy(g_main_script_variables, g_card_save_buffer_pointer->script_variables, sizeof(g_main_script_variables));
-    bcopy(&g_main_game_options, g_card_save_buffer_pointer->game_options, 4);
+    bcopy(&g_main_game_options, &g_card_save_buffer_pointer->options, 4);
     bcopy(g_main_item_type_order_tables.order_0, g_card_save_buffer_pointer->item_type_order_0, 0xc);
     bcopy(g_main_item_type_order_tables.order_1, g_card_save_buffer_pointer->item_type_order_1, 8);
     bcopy(g_main_item_type_order_tables.order_2, g_card_save_buffer_pointer->item_type_order_2, 7);

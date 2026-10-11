@@ -30,13 +30,13 @@ void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT
     words = (width >> 2) + has_partial_word;
     src = (u16*)g_world_menu_glyph_sheet;
     size = (width * height) >> 1;
-    if (size > 0x3000 && mode == 0) {
+    if (size > 0x3000 && mode == MENU_WINDOW_FRAME_UPLOAD) {
         buffer = world_menu_alloc_ui_buffer(0x3000);
     } else {
         buffer = world_menu_alloc_ui_buffer(size);
     }
     for (i = 0; i < height; i++) {
-        if (size >= 0x3000 && mode == 0 && (i & 0x5F) == 0) {
+        if (size >= 0x3000 && mode == MENU_WINDOW_FRAME_UPLOAD && (i & 0x5F) == 0) {
             if (i == 0) {
                 upload.h = 0x60;
             } else {
@@ -51,7 +51,7 @@ void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT
                 first += 0x60;
             }
         }
-        if (mode == 2 || mode == 3) {
+        if (mode == MENU_WINDOW_FRAME_ALTERNATE_UPLOAD || mode == MENU_WINDOW_FRAME_ALTERNATE_BUILD) {
             if (i < 0x10) {
                 src_index = (i << 6) + 0x36;
             } else if (i >= height - 0x10) {
@@ -72,9 +72,9 @@ void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT
         row = buffer + (i - first) * words;
         row[words - 1] = src[src_index + 9];
         row[words - 2] = src[src_index + 8];
-        world_menu_fill_pattern_row(src, row, words, src_index);
+        world_menu_build_window_image_row(src, row, words, src_index);
     }
-    if (mode == 0 || mode == 2) {
+    if (mode == MENU_WINDOW_FRAME_UPLOAD || mode == MENU_WINDOW_FRAME_ALTERNATE_UPLOAD) {
         LoadImage(&upload, (u32*)buffer);
         world_thread_wait_frames(1);
         world_menu_free_memory(buffer);

@@ -54,7 +54,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
             }
         } else {
             input = g_equip_cmd_stream_input;
-            if ((input & 0x10000000) || (input & PSX_PAD_UP)) {
+            if ((input & (PSX_PAD_UP << 16)) || (input & PSX_PAD_UP)) {
                 scroll_base = g_equip_menu_scroll_base_index;
                 if (scroll_base == g_equip_menu_selected_list_index) {
                     if (scroll_base > 0) {
@@ -73,7 +73,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
                 } else if (input & PSX_PAD_UP) {
                     g_equip_menu_selected_list_index--;
                 }
-            } else if ((input & 0x40000000) || (input & PSX_PAD_DOWN)) {
+            } else if ((input & (PSX_PAD_DOWN << 16)) || (input & PSX_PAD_DOWN)) {
                 if (g_equip_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1
                     == g_equip_menu_selected_list_index) {
                     if (g_equip_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1
@@ -86,7 +86,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
                             entry_ids = &g_equip_menu_list_scroll_entry_ids;
                             *entry_ids = g_equip_menu_list_entries[j + 1];
                             rect.x = 0x100;
-                            rect.y = g_equip_menu_list_visible_rows * (s16)g_equip_menu_list_row_height + 0x30;
+                            rect.y = g_equip_menu_list_visible_rows * g_equip_menu_list_row_height + 0x30;
                             rect.w = g_equip_menu_list_vram_width;
                             rect.h = g_equip_menu_list_row_height;
                             equip_text_render_id_rows_to_vram(g_equip_menu_list_text_table, entry_ids, &rect, 0);
@@ -152,7 +152,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
             rect.w = g_equip_menu_list_vram_width * 4;
             rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows + 10;
             equip_gfx_enqueue_textured_quad(&rect, 0, g_equip_menu_list_scroll_offset + 0x2b, 0,
-                g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, g_equip_text_metric_0,
+                g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, g_equip_menu_window_clut,
                 g_equip_gfx_sprite_ot_index);
         } else {
             rect.x = command[7];
@@ -160,10 +160,10 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
             rect.w = g_equip_menu_list_vram_width * 4;
             rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows;
             equip_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_equip_gfx_semitransparency,
-                g_equip_text_digit_texture_page, g_equip_text_metric_0, g_equip_gfx_sprite_ot_index);
+                g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
         }
     }
-    if (g_equip_text_compact_layout == 0) {
+    if (g_equip_menu_use_alternate_palette == 0) {
         if (g_equip_menu_scroll_base_index != 0) {
             rect.x = g_equip_menu_window_right_x;
             rect.y = command[12];
@@ -202,8 +202,8 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
         marker.x = command[7] - command[11];
         marker.y = command[8]
             + (g_equip_menu_selected_list_index - g_equip_menu_scroll_base_index) * g_equip_menu_list_row_height;
-        equip_menu_update_and_draw_animated_marker(
-            &marker, g_equip_menu_list_cursor_anim_state, g_equip_text_compact_layout);
+        equip_menu_update_and_draw_animated_cursor(
+            &marker, g_equip_menu_list_cursor_anim_state, g_equip_menu_use_alternate_palette);
     }
     command += command[1];
     g_equip_menu_list_row_index = 0;
@@ -224,7 +224,7 @@ u8* equip_cmd_draw_scrollable_list_body_handler(u8* command) {
         g_equip_menu_list_row_index += 1;
     }
     g_equip_menu_list_row_mode = 0;
-    if (previous_selected != (u16)g_equip_menu_selected_list_index) {
+    if (previous_selected != g_equip_menu_selected_list_index) {
         g_equip_sound_queued_effect_id = MAIN_SFX_CURSOR_MOVE;
     }
     return command;

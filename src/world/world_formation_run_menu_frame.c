@@ -4,7 +4,7 @@
 
 /* The six input words at 0x801aed44 are g_world_formation_menu_input_state,
  * but a struct global makes GCC keep a base register for the field accesses
- * (see world_script_update_event_frame_input), so they are separate scalars here. */
+ * (see world_input_update_event_state), so they are separate scalars here. */
 extern u32 g_world_formation_menu_current_input, g_world_formation_menu_previous_input,
     g_world_formation_menu_initial_repeat_counter, g_world_formation_menu_repeat_counter,
     g_world_formation_menu_secondary_repeat_counter;
@@ -15,7 +15,7 @@ extern u32 g_world_formation_menu_current_input, g_world_formation_menu_previous
  * g_world_formation_open_request_state.. flags is set), runs the formation/memory-card request
  * updates, publishes the input, yields once while tracking thread status
  * changes and returns the menu result slot g_world_menu_pending_selection[0] (-2 while pending).
- * Formation-menu sibling of world_script_update_event_frame_input. */
+ * Formation-menu sibling of world_input_update_event_state. */
 s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     s32 profile;
     u32 previous_input;
@@ -83,20 +83,20 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
         }
     }
 
-    g_world_formation_menu_new_buttons &= g_world_formation_menu_entry_mask;
-    if (g_world_formation_open_request_state != 0) {
+    g_world_formation_menu_new_buttons &= g_world_formation_menu_allowed_buttons;
+    if (g_world_formation_open_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }
-    if (g_world_tutorial_categories_request_state != 0) {
+    if (g_world_tutorial_categories_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }
     if (g_world_debug_variable_list_request_state != 0) {
         g_world_formation_menu_new_buttons = 0;
     }
-    if (g_world_card_menu_request_state != 0) {
+    if (g_world_card_menu_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }
-    if (g_world_map_root_request_state != 0) {
+    if (g_world_map_root_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_formation_menu_new_buttons = 0;
     }
     if (g_world_fixed_number_panel_request_state != 0) {
@@ -113,14 +113,14 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     g_world_gfx_active_otag_entries = otag;
     g_world_sound_effect_id_to_play = -1;
     world_menu_draw_active_window_frames();
-    world_input_store_menu_state((const world_menu_input_state_t*)&g_world_formation_menu_new_buttons);
+    world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_formation_menu_new_buttons);
     if (g_world_formation_menu_new_buttons != 0x100 && g_world_formation_menu_new_buttons != 0) {
         g_world_thread_change_cooldown = 5;
     }
 
     thread_id = 1;
     do {
-        g_world_formation_thread_status_snapshot[thread_id] = world_thread_is_running_2(thread_id);
+        g_world_formation_thread_status_snapshot[thread_id] = world_thread_is_running_asm(thread_id);
         thread_id++;
     } while (thread_id < 16);
 
@@ -128,7 +128,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     thread_id = 1;
     do {
         status = g_world_formation_thread_status_snapshot[thread_id];
-        if (status != world_thread_is_running_2(thread_id)) {
+        if (status != world_thread_is_running_asm(thread_id)) {
             g_world_thread_change_cooldown = 5;
         }
         thread_id++;
@@ -146,7 +146,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     }
     if (g_world_menu_pending_selection[0] == 0) {
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_world_menu_pending_selection[1]);
-        g_main_system_flags |= 0x4000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_DESTINATION;
     }
     if (g_world_menu_input_block_frames != 0) {
         g_world_menu_input_block_frames--;

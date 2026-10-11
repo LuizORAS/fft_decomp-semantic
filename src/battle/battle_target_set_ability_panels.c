@@ -35,7 +35,7 @@ s32 battle_target_set_ability_panels(const u8* source) {
     s32 x;
     u8 y;
 
-    main_util_copy_action_data(source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     unit = &g_battle_unit_stats[action.unit_id];
     ability = &g_main_ability_range_data[action.ability_id];
     range = ability->range;
@@ -47,7 +47,8 @@ s32 battle_target_set_ability_panels(const u8* source) {
     y = unit->position.bits.y;
     location = battle_map_calculate_location(unit);
     tile = &g_battle_map_tile_data[location];
-    elevation = tile->height * 2 + (tile->depth_half_height & 0x1f) + (tile->depth_half_height >> 5) * 2;
+    elevation = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
+        + (tile->depth_half_height.value >> 5) * 2;
     panels = g_battle_target_panels;
     origin_offset = location * sizeof(battle_target_panel_t);
     origin = (battle_target_panel_t*)((s32)panels + origin_offset);
@@ -88,12 +89,12 @@ s32 battle_target_set_ability_panels(const u8* source) {
     if (aoe == 0 || (flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING)) {
         battle_target_clear_panels_on_untargetable_tiles();
     }
-    if (flags_1 & (ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES | ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES)) {
+    if (flags_1 & (ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS | ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS)) {
         battle_target_mark_unit_panels_by_team(unit, flags_1);
     }
     if (flags_1
-        & (ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_TILES | ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_TILES
-            | ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED)) {
+        & (ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED | ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS
+            | ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS)) {
         return battle_target_set_ability_range_flags_from_marks();
     }
     return battle_target_set_ability_range_flags();

@@ -5,25 +5,21 @@
 #include "psx/libetc.h"
 
 void _spu_FiDMA(void) {
-    /* Volatile local alias keeps the retail callback reload with symbolic addressing. */
-    extern void (*volatile callback)(void) __asm__("_spu_transferCallback");
     u32 wait;
-    volatile psyq_spu_registers_t* registers;
     if (g_psyq_spu_dma_direction == 0) {
         _spu_Fw1ts();
         _spu_Fw1ts();
         _spu_Fw1ts();
     }
+    _spu_RXX->rxx.control &= 0xffcf;
     wait = 0;
-    registers = _spu_RXX;
-    registers->control &= 0xffcf;
-    while (registers->control & 0x30) {
+    while (_spu_RXX->rxx.control & 0x30) {
         if (++wait > 3840) {
             break;
         }
     }
     if (_spu_transferCallback != 0) {
-        callback();
+        _spu_transferCallback();
     } else {
         DeliverEvent(HwSPU, EvSpCOMP);
     }

@@ -10,11 +10,11 @@ void battle_formula_break_equipped_hit_pa_wp_y_percent(void) {
     battle_action_data_t* action;
 
     if (battle_formula_select_target_equipment() != 0) {
-        g_current_ability.defaulted_to_attack = 1;
+        g_battle_action_current_ability.defaulted_to_attack = 1;
         battle_action_switch_ability_to_default_attack();
         return;
     }
-    g_current_ability.defaulted_to_attack = 0;
+    g_battle_action_current_ability.defaulted_to_attack = 0;
     if (battle_formula_calculate_physical_evade() != 0) {
         return;
     }

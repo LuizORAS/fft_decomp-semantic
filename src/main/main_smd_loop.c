@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0x91 "Loop": marks the loop point, saving the
- * note-data position and the current octave base. */
+/* SMD opcode 0x91 "Loop": marks the loop point End Bar (0x90) jumps to,
+ * saving the note-data position and the current octave base. */
 u8* main_smd_loop(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     u8 octave_base;
 

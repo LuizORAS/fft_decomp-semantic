@@ -53,7 +53,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
             panel = &g_battle_target_panels[index];
             tile = &g_battle_map_tile_data[index];
             if (i == unit_index) {
-                height = tile->height * 2 + (tile->depth_half_height & 0x1f);
+                height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
                 low = height - 10;
                 if (low < 0) {
                     low = 0;
@@ -94,15 +94,15 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                         for (level = 0; level < 2; level++) {
                             index = level * 256 + g_battle_map_max_x * y + x;
                             tile = &g_battle_map_tile_data[index];
-                            depth = tile->depth_half_height;
-                            if ((s32)(depth >> 5) >= 3) {
+                            depth = tile->depth_half_height.value;
+                            if (tile->depth_half_height.bits.depth >= 3) {
                                 continue;
                             }
-                            height = depth & 0x1f;
+                            height = depth & MAP_TILE_HALF_HEIGHT_MASK;
                             if (height >= 3) {
                                 continue;
                             }
-                            flags = tile->flags_06.value;
+                            flags = tile->flags.value;
                             if (flags & MAP_TILE_FLAG_BLOCKED) {
                                 continue;
                             }
@@ -112,7 +112,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                             if (g_battle_target_panels[index].unit_record_index != 0) {
                                 continue;
                             }
-                            surface = tile->surface.value & 0x3f;
+                            surface = tile->surface.value & MAP_SURFACE_MASK;
                             if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {
                                 continue;
                             }

@@ -2,13 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Flags word of the projection-motion record described in
- * src/wldcore/wldcore_map_start_projection_motion_if_outside_bounds.c. */
-
-enum {
-    WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
-};
-
 /* The dot record's +0x10 render view. The target anchors the argument pair on
  * g_wldcore_map_dots + 0x10 and reaches screen_x as that anchor + 0x18, rather than
  * folding the offset into the global symbol. This local view retains that
@@ -17,7 +10,7 @@ enum {
  */
 typedef struct wldcore_map_dot_render {
     s32 flags;      /* dot +0x10 */
-    s32 sprite_id;  /* dot +0x14 */
+    s32 sequence;   /* dot +0x14 */
     s32 priority;   /* dot +0x18 */
     s32 _unused_0c; /* dot +0x1c */
     s32 _unused_10; /* dot +0x20 */
@@ -51,9 +44,9 @@ void wldcore_menu_push_focus_location_level(s32 dot_index) {
     wldcore_map_start_projection_motion_if_outside_bounds(
         (wldcore_point32_t*)&render->screen_x, &g_wldcore_map_dots[dot_index].position.vx);
     if (g_wldcore_map_projection_motion.flags & WLDCORE_PROJECTION_MOTION_ACTIVE) {
-        g_main_system_flags |= 0x2000;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_index].flags
-            |= 0x10;
+            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_FOCUS_LOCATION;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;

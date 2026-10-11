@@ -4,7 +4,7 @@
 void battle_state_enter_continue_turn(void) {
     battle_unit_misc_data_t* unit;
 
-    g_battle_state_vsync_interval = 1;
+    g_main_system_vsync_interval = 1;
     g_battle_game_state = BATTLE_GAME_STATE_CONTINUE_TURN;
     unit = battle_unit_get_source_misc_data();
     if (unit != 0) {

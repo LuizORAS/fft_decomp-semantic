@@ -10,12 +10,12 @@ void battle_formula_apply_damage_and_knockback(void) {
     s32 roll;
     s32 state;
 
-    damage
-        = (((battle_formula_get_random_0_7fff() * g_current_ability.range_data.y) / 32768) + 1) * g_current_ability.xa;
+    damage = (((battle_formula_get_random_0_7fff() * g_battle_action_current_ability.range_data.y) / 32768) + 1)
+        * (u16)g_battle_action_current_ability.xa;
     action = g_battle_action_target_data;
     action->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
     state = g_battle_action_state;
-    action->hp_damage = (s16)damage;
+    action->hp_damage = damage;
     if (state != BATTLE_ACTION_STATE_EXECUTE) {
         return;
     }

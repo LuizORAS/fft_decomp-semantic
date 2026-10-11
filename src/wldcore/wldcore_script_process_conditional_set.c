@@ -6,12 +6,9 @@
  * and returns 1 for the first script that both succeeded (result bit 0x01) and
  * carries one of the caller's requested action flags.
  *
- * The block at 0x800d4644 is addressed as one record rather than as four
- * separate externs: target/wldcore.yaml names three of its members
- * independently -- g_wldcore_script_flags (+0x00), g_wldcore_script_data_ptr
- * (+0x08) and g_wldcore_script_ip (+0x0c) -- and the target materialises the
- * +0x04 address once and reaches +0x08 and +0x0c as `addiu` displacements off
- * it, which only the record view reproduces.
+ * The block at 0x800d4644 is addressed as one record: the target materialises
+ * the +0x04 address once and reaches data (+0x08) and ip (+0x0c) as `addiu`
+ * displacements off it, which only the record view reproduces.
  *
  * Two operand-order devices:
  *
@@ -27,7 +24,7 @@
  *    `and v0,v1,s4` operand order: the loaded flags word in `rs`, the caller's
  *    `action_mask` in `rt`. Reading the global directly at both tests
  *    reverses it (as for the `or rd,flags,mask` temp in
- *    main_smd_force_channel_func).
+ *    main_smd_set_voice_attr_flags_all_channels).
  *
  * The do/while condition deliberately reads the global rather than the temp:
  * the target reloads it there, after the dispatched call. */
@@ -49,9 +46,11 @@ s32 wldcore_script_process_conditional_set(s32 location, s32 action_mask) {
             u16 op = g_wldcore_script_state.data[ip];
             g_wldcore_script_state.ip = ip + 1;
             g_wldcore_script_opcode_table[op]();
-        } while ((g_wldcore_script_state.flags & 3) == 0);
+        } while ((g_wldcore_script_state.flags
+                     & (WLDCORE_SCRIPT_RESULT_ACTION_REACHED | WLDCORE_SCRIPT_RESULT_CONDITION_FAILED))
+            == 0);
         flags = g_wldcore_script_state.flags;
-        if (flags & 1) {
+        if (flags & WLDCORE_SCRIPT_RESULT_ACTION_REACHED) {
             if (flags & action_mask) {
                 return 1;
             }

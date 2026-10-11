@@ -1,8 +1,15 @@
 #include "fft/world.h"
 
-/* L1 + R1 + Select + Start restarts the game. */
-#define TUTORIAL_RESET_BUTTONS 0x90C
-
+/*
+ * Per-frame step of the tutorial script. Returns 1 while no tutorial runs or
+ * the current one continues, and the END command's result when it ends.
+ *
+ * Reads pad 0 as the tutorial's own button input (the soft-reset combination
+ * resets the game), advances the highlight brightness while a wait is timed,
+ * and dispatches the command byte at g_world_script_tutorial_command_ptr:
+ * values below WORLD_TUTORIAL_CMD_SHIFT_LIMIT are pad-input commands, the
+ * rest display a message, draw the highlight ring, wait or end.
+ */
 s32 world_script_handle_tutorial_command(void) {
     s32 pad;
     u8 cmd;
@@ -11,7 +18,7 @@ s32 world_script_handle_tutorial_command(void) {
         return 1;
     }
     g_world_script_tutorial_button_input = PadRead(0);
-    if (g_world_script_tutorial_button_input == TUTORIAL_RESET_BUTTONS) {
+    if (g_world_script_tutorial_button_input == MAIN_INPUT_RESET_BUTTONS) {
         world_game_reset();
     }
     g_world_script_tutorial_buttons = g_world_script_tutorial_button_input;

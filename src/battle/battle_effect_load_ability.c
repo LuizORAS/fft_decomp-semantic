@@ -6,16 +6,14 @@
  * starts at Vertical Jump8 rather than Charge +1. */
 u32 battle_effect_load_ability(s32 ability_id) {
     u32 result;
-    s32 effect_id;
 
-    if ((u32)(ability_id - ABILITY_ID_JUMP_VERTICAL_8) < (ABILITY_ID_MATH_FIRST - ABILITY_ID_JUMP_VERTICAL_8)) {
+    if (ability_id >= ABILITY_ID_JUMP_VERTICAL_8 && ability_id < ABILITY_ID_MATH_FIRST) {
         return 0;
     }
     if (ability_id == ABILITY_ID_BASIC_SKILL_ACCUMULATE) {
         result = 0;
     } else {
-        effect_id = g_battle_effect_ability_ids[ability_id];
-        result = (u32)effect_id >> 31;
+        result = g_battle_effect_ability_ids[ability_id] < 0;
     }
     return result;
 }

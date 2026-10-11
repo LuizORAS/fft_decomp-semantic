@@ -17,7 +17,6 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     s32 current_bit;
     s32 misc_unit_id;
     s32 saved_bit;
-    s32 enabled;
     u8 formation_index;
     job_data_t* job;
 
@@ -27,9 +26,9 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
         saved_current[i] = unit->status_sets.current[i];
         saved_inflicted[i] = unit->inflicted_status[i];
     }
-    job = &g_job_data_pointer[unit->job_id];
+    job = &g_main_job_data_pointer[unit->job_id];
     unit->move = job->move;
-    unit->jump = job->jump & 0x7F;
+    unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
     main_util_copy_bytes(job->equipment_categories, unit->equipment_categories, 4);
     main_util_copy_bytes(&job->status_sets, &unit->status_sets, 15);
     main_util_copy_bytes(job->elemental_affinity, unit->elemental_affinity, 4);
@@ -57,7 +56,7 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     if (skip_status_check != 0) {
         return;
     }
-    if ((u16)(unit->max_hp / 5) >= unit->hp) {
+    if ((unit->max_hp / 5) >= unit->hp) {
         unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
     } else {

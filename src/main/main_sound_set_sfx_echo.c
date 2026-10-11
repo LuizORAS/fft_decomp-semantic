@@ -1,9 +1,12 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-void main_sound_set_sfx_echo(int sound_id, int echo) {
-    if (g_main_sound_weather_sfx_id == sound_id && echo == 0) {
+/* Sets the volume of the SFX channels playing sound_id: volume is the new
+ * channel velocity, and 0 stops them (and forgets a remembered background
+ * sound). */
+void main_sound_set_sfx_echo(int sound_id, int volume) {
+    if (g_main_sound_weather_sfx_id == sound_id && volume == 0) {
         g_main_sound_weather_sfx_id = 0;
     }
-    SuzukiSetSfxEcho(sound_id, echo);
+    SuzukiSetSfxEcho(sound_id, volume);
 }

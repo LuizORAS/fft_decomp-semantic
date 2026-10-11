@@ -13,7 +13,6 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     u8 palette;
     u16 birthday;
     s32 sprite_set;
-    volatile battle_stats_t* volatile_unit;
 
     kind = unit->unit_flags & UNIT_FLAG_SAVE_FORMATION;
     if (unit->character_identity >= CHARACTER_IDENTITY_SELECTOR_FIRST || allow_guest == 0) {
@@ -22,8 +21,7 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     index = unit->formation_index;
     unit_slot = index & 0xff;
 
-    if ((kind & 0xff) == 0
-        && (u32)(index - PARTY_GUEST_SLOT_FIRST) < PARTY_ROSTER_SLOT_COUNT - PARTY_GUEST_SLOT_FIRST) {
+    if ((kind & 0xff) == 0 && index >= PARTY_GUEST_SLOT_FIRST && index < PARTY_ROSTER_SLOT_COUNT) {
         /* A non-guest save of a unit that currently sits in a guest slot. */
         main_party_remove_unit(index);
         index = main_party_find_free_slot(0, &palette);
@@ -56,10 +54,8 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
         party->gender_flags = unit->unit_flags & ~(UNIT_FLAG_EGG | UNIT_FLAG_SAVE_FORMATION);
     }
 
-    /* The 0x008 halfword packs the birthday (9 bits) and zodiac (top nibble);
-     * the target reads it twice, which only a volatile access reproduces. */
-    volatile_unit = unit;
-    birthday = (volatile_unit->birthday.value & 0x1ff) | (volatile_unit->birthday.value & 0xf000);
+    /* The 0x008 halfword packs the birthday (9 bits) and zodiac (top nibble). */
+    birthday = unit->birthday.fields.birthday | (unit->birthday.fields.zodiac << 12);
     party->birthday_day = birthday;
     party->zodiac = birthday >> 8;
     main_util_copy_byte_data(&unit->secondary_skillset, &party->secondary_skillset, 0x10);
@@ -68,7 +64,7 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     main_util_copy_byte_data(unit->raw_stats, party->raw_stats, 0xf);
     main_util_copy_byte_data(unit->unlocked_jobs, party->unlocked_jobs, 0xa6);
     /* name_id is stored as two byte writes (lbu / lhu+srl), not one sh. */
-    party->name_id[0] = (u8)unit->quote_name_id;
+    party->name_id[0] = unit->quote_name_id;
     party->name_id[1] = unit->quote_name_id >> 8;
     party->proposition_status = 0;
     party->egg_color = 0;

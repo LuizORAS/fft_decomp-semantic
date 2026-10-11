@@ -8,9 +8,6 @@
  * position is inside that tile's solid column (either map layer) or inside a
  * listed unit's sprite box; the blocking unit's battle id is reported through
  * `out_unit`, which is otherwise left at -1.
- *
- * The ceiling-depth byte is read through a volatile lvalue: the target reloads
- * it in each arm of the depth selection instead of reusing the tested value.
  */
 s32 battle_effect_test_position_for_obstacle(
     battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, battle_effect_tile_ref_t* tile_ref) {
@@ -24,29 +21,29 @@ s32 battle_effect_test_position_for_obstacle(
     tile_ref->x = position->vx / 28;
     tile_ref->y = position->vz / 28;
     tile = battle_map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 0);
-    if (((*(volatile u8*)&tile->ceiling_depth_and_marks) & MAP_TILE_CEILING_DEPTH_MASK) == 0) {
+    if (tile->ceiling_depth_and_marks.bits.ceiling_depth == 0) {
         ceiling = tile->height;
     } else {
-        ceiling = (*(volatile u8*)&tile->ceiling_depth_and_marks) & MAP_TILE_CEILING_DEPTH_MASK;
+        ceiling = tile->ceiling_depth_and_marks.bits.ceiling_depth;
     }
     height = tile->height;
     y = position->vy;
     if (y >= -(height * 12) && y < -((height - ceiling) * 12)) {
         tile_ref->layer = 0;
-        g_battle_effect_trajectory_tile_flags = tile->flags_06.bits._unknown_00_bit4;
+        g_battle_effect_trajectory_tile_flags = tile->flags.bits._unknown_00_bit4;
         return 1;
     }
 
     tile = battle_map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 1);
     ceiling = 1;
-    if (((*(volatile u8*)&tile->ceiling_depth_and_marks) & MAP_TILE_CEILING_DEPTH_MASK) != 0) {
-        ceiling = (*(volatile u8*)&tile->ceiling_depth_and_marks) & MAP_TILE_CEILING_DEPTH_MASK;
+    if (tile->ceiling_depth_and_marks.bits.ceiling_depth != 0) {
+        ceiling = tile->ceiling_depth_and_marks.bits.ceiling_depth;
     }
     height = tile->height;
     y = position->vy;
     if (y >= -(height * 12) && y < -((height - ceiling) * 12)) {
         tile_ref->layer = 1;
-        g_battle_effect_trajectory_tile_flags = tile->flags_06.bits._unknown_00_bit4;
+        g_battle_effect_trajectory_tile_flags = tile->flags.bits._unknown_00_bit4;
         return 1;
     }
 

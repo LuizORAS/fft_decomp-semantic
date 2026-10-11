@@ -1,13 +1,16 @@
 #include "fft/battle.h"
 
 /* Reset the GPU and set up both display buffers for a width x height screen with the given
- * background colour and GTE projection; the draw area extends 128 pixels left of the screen.
- * Loads the debug font when g_font_print_enabled is set. */
+ * background colour and GTE projection: the second buffer lies at y 0xf0 unless the height is
+ * 0x1e0, the draw area extends 128 pixels left of the screen, dithering is on and the automatic
+ * clear off, and g_battle_deployment_clear_rect is cleared to black. Loads the debug font when
+ * g_main_font_print_enabled is set. battle_state_run_battle_setup calls it with 256 x 240 and
+ * projection 0x200. */
 void battle_state_init_display(s32 width, s32 height, s32 projection, u8 red, u8 green, u8 blue) {
     RECT clear_rect;
     s32 second_y;
 
-    clear_rect = g_deployment_clear_rect;
+    clear_rect = g_battle_deployment_clear_rect;
     second_y = -(height != 0x1e0) & 0xf0;
 
     SetDispMask(0);
@@ -31,7 +34,7 @@ void battle_state_init_display(s32 width, s32 height, s32 projection, u8 red, u8
 
     ClearImage(&clear_rect, 0, 0, 0);
     DrawSync(0);
-    if (g_font_print_enabled != 0) {
+    if (g_main_font_print_enabled != 0) {
         main_gfx_load_efc_fnt();
     }
     PutDispEnv(&g_main_gfx_display_envs[g_main_gfx_screen_polarity]);

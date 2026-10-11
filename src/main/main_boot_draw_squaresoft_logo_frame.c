@@ -1,7 +1,8 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
-/* Present one Squaresoft logo frame, as main_boot_draw_sceap_logo_frame does for the SCEA logo. */
+/* Present one Squaresoft logo frame, as main_boot_draw_sceap_logo_frame does for the SCEA logo;
+ * the 180x16 logo goes to (70, 112) of the new draw buffer. */
 int main_boot_draw_squaresoft_logo_frame(u32* otag, u32* image) {
     RECT destination;
     int elapsed;

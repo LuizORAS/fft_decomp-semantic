@@ -22,10 +22,10 @@ void wldcore_opcode_branch_if_savedata_bit(s32 expected) {
     __asm__("" : "=r"(instruction) : "0"(instruction));
 
     if (wldcore_test_bit(g_main_saved_data_bits, (instruction->operand_0 << 8) | instruction->operand_1) == expected) {
-        flags = g_wldcore_active_saved_record.state_flags | 2;
+        flags = g_wldcore_active_saved_record.state_flags | WLDCORE_OPCODE_STATE_BRANCH;
         g_wldcore_active_saved_record.section = instruction->operand_2;
     } else {
-        flags = g_wldcore_active_saved_record.state_flags | 4;
+        flags = g_wldcore_active_saved_record.state_flags | WLDCORE_OPCODE_STATE_FETCH;
     }
     g_wldcore_active_saved_record.state_flags = flags;
 }

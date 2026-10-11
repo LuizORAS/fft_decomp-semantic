@@ -14,7 +14,7 @@ void battle_ai_save_unit_state(s32 mode) {
     s32 id;
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        id = ai->unit_battle_ids[i];
+        id = ai->unit_compact_indices[i];
         if (id == 0xff) {
             continue;
         }
@@ -50,7 +50,7 @@ void battle_ai_save_unit_state(s32 mode) {
             battle_ai_transfer_byte_values(&snapshot->has_turn, &unit->has_turn, 3);
             snapshot->mount_info = unit->mount_info;
             battle_ai_transfer_byte_values(&snapshot->auto_battle_setting, &unit->auto_battle_setting, 8);
-            battle_ai_transfer_halfword_values((u16*)ai->unit_action_records[id], (u16*)&unit->action_actor_id, 20);
+            battle_ai_transfer_halfword_values(ai->unit_action_records[id], &unit->action_actor_id, 20);
         }
     }
     if (mode == 0) {

@@ -3,7 +3,8 @@
 
 /* Return the unit's BATTLE_TURN_STATUS flags: CT frozen without an ENTD slot, under a
  * CT-freezing status or as a ridden mount; dead (also incapacitated); otherwise asleep (also
- * incapacitated), Haste and Slow. */
+ * incapacitated), Haste and Slow. The retail status data puts Sleep in the CT-freezing set, so
+ * the asleep result is never returned. */
 s32 battle_turn_get_status_flags(battle_stats_t* unit) {
     s32 status1;
     s32 status4;
@@ -25,7 +26,7 @@ s32 battle_turn_get_status_flags(battle_stats_t* unit) {
     if ((status1 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) != 0) {
         return BATTLE_TURN_STATUS_INCAPACITATED | BATTLE_TURN_STATUS_DEAD;
     }
-    flags = -(s32)((status5 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP)) != 0)
+    flags = -((status5 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP)) != 0)
         & (BATTLE_TURN_STATUS_INCAPACITATED | BATTLE_TURN_STATUS_SLEEP);
     if ((status4 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_HASTE)) != 0) {
         flags |= BATTLE_TURN_STATUS_HASTE;

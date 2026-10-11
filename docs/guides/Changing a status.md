@@ -48,7 +48,7 @@ them; some older code tests the raw byte and mask instead.
   [[g_battle_event_status_masks]]; a new status that should not show in a
   cutscene needs its bit there.
 - **WORLD and the menus.** WORLD has its own copies of the event staging
-  (`world_unit_apply_staged_status`, `world_script_inflict_status_thread`),
+  (`world_unit_apply_staged_status_data`, `world_script_inflict_status_thread`),
   and the unit status lists of BATTLE, WORLD and the menu overlays name the
   statuses by bit.
 - **Help text and names** are game text, separate from the code.
@@ -57,7 +57,7 @@ them; some older code tests the raw byte and mask instead.
 
 ## What can be done today
 
-Nothing that changes a byte: `make validate` compares every function with its
+Nothing that changes a byte: `make check` compares every function with its
 original hash, and the status data and infliction records are disc data,
 which the repository does not hold. To try an idea, change the game's memory
 in an emulator: `make run` launches PCSX-Redux, and `make map` writes the

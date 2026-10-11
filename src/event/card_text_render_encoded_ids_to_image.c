@@ -1,85 +1,73 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
-/* The trailing unused_style word is never read, exactly as in the EQUIP twin
- * equip_text_render_encoded_ids_to_image, whose ninth parameter carries the
- * same unused style value; card_text_render_id_rows_to_vram passes it. */
-void card_text_render_encoded_ids_to_image(u8* image, const battle_menu_text_image_bounds_t* bounds, s32 glyph_spacing,
-    s32 line_width, const void* glyph_data, const u16* text_ids, s32 max_glyphs, s32 terminator, s32 unused_style) {
-    card_text_image_position_t position;
-    s32 row;
-    s32 remaining_glyphs = max_glyphs;
-    s32 packed_terminator;
-    s32 glyph_index;
-    const u16* text_id_cursor;
+/* Renders a -1 terminated list of text ids into a 4bpp image, one entry per
+ * line of `rect` (x, y, width, line height). Bit 13 of an id draws eight
+ * copies of `glyph` instead of a text entry; bits 14-15 select the style.
+ * Control bytes: 0xF8 starts a new line, 0xFA adds a 4-pixel space, 0xE3 sets
+ * a style override, 0xE7 sets the x position, 0xFE/0xFF end the entry.
+ * `col` is only assigned by the glyph-copy branch; the text branch compares
+ * whatever it last held against `max_chars`, which reproduces the target.
+ * `colors` and `colors2` are distinct copies of &ids[k]: one shared local
+ * changes the register assignment. The caller also passes its row flags as a
+ * ninth argument, which is never read. */
+void card_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
+    u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags) {
+    bunit_text_image_position_t position;
+    s32 line;
+    s32 col;
+    s32 style;
+    s32 k;
+    const u8* text;
+    s32 code;
+    s16* colors;
+    s16* colors2;
 
-    (void)glyph_spacing;
-    position.row_stride = bounds->row_stride;
-
-    row = 0;
-    if (((s16)(*text_ids)) != (-1)) {
-        packed_terminator = terminator << 16;
-        text_id_cursor = text_ids;
-        do {
-            u16 text_id;
-            s32 style;
-
-            if (remaining_glyphs == 0) {
-                break;
+    line = 0;
+    position.row_stride = rect->row_stride;
+    for (k = 0; ids[k] != -1; k++) {
+        if (count == 0) {
+            return;
+        }
+        position.x = rect->x;
+        position.y = rect->y + line * rect->line_height;
+        style = 0;
+        if (ids[k] & 0x2000) {
+            col = 0;
+            colors2 = &ids[k];
+            for (; col < 8; col++) {
+                position.x += card_text_render_glyph_to_4bpp_image(glyph, image, &position, (*colors2 >> 14) | style);
             }
-
-            position.x = bounds->x;
-            position.y = bounds->y + (row * bounds->line_height);
-            text_id = *text_id_cursor;
-            style = 0;
-
-            if ((text_id & 0x2000) != 0) {
-                const u16* current_text_id;
-
-                glyph_index = 0;
-                current_text_id = text_id_cursor;
+        } else {
+            text = card_text_find_entry_by_index(font, ids[k] & 0xFFF, 2);
+            code = *text++;
+            if (code < 0xFE) {
+                colors = &ids[k];
                 do {
-                    glyph_index++;
-                    position.x += card_text_render_glyph_to_4bpp_image(packed_terminator >> 16, image, &position,
-                        (((s32)(((u32)(*current_text_id)) << 16)) >> 30) | style);
-                } while (glyph_index < 8);
-            } else {
-                const u8* encoded = ((const u8* (*)(const void*, s32, s32))card_text_skip_encoded_segments)(
-                    glyph_data, text_id & 0x0fff, 2);
-                s32 code = *(encoded++);
-
-                if (code < 0xfe) {
-                    const u16* current_text_id = text_id_cursor;
-
-                    do {
-                        if ((code == TEXT_NEWLINE) || (glyph_index >= line_width)) {
-                            position.x = bounds->x;
-                            row++;
-                            position.y = bounds->y + (row * bounds->line_height);
+                    if (code == TEXT_NEWLINE || col >= max_chars) {
+                        position.x = rect->x;
+                        line++;
+                        position.y = rect->y + line * rect->line_height;
+                    }
+                    if (code < TEXT_FORMAT_FIRST) {
+                        if (code >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
+                            code &= 0xF;
+                            code = code * TEXT_GLYPHS_PER_PREFIX + *text++;
                         }
-
-                        if (code < TEXT_FORMAT_FIRST) {
-                            if (code >= 0xd0) {
-                                code &= 0x0f;
-                                code = (code * 0xd0) + (*(encoded++));
-                            }
-                            position.x += card_text_render_glyph_to_4bpp_image(
-                                code, image, &position, (((s32)(((u32)(*current_text_id)) << 16)) >> 30) | style);
-                        } else if (code == TEXT_SPACE) {
-                            position.x += 4;
-                        } else if (code == TEXT_SET_X_POSITION) {
-                            position.x = bounds->x + (*(encoded++));
-                        } else if (code == TEXT_SET_PALETTE) {
-                            style = (*(encoded++)) >> 2;
-                        }
-                        code = *(encoded++);
-                    } while (code < 0xfe);
-                }
+                        position.x
+                            += card_text_render_glyph_to_4bpp_image(code, image, &position, (*colors >> 14) | style);
+                    } else if (code == TEXT_SPACE) {
+                        position.x += 4;
+                    } else if (code == TEXT_SET_X_POSITION) {
+                        position.x = rect->x + *text++;
+                    } else if (code == TEXT_SET_PALETTE) {
+                        style = *text++ >> 2;
+                    }
+                    code = *text++;
+                } while (code < 0xFE);
             }
-            row++;
-
-            text_id_cursor++;
-            remaining_glyphs--;
-        } while (((s16)(*text_id_cursor)) != (-1));
+        }
+        line++;
+        count--;
     }
 }

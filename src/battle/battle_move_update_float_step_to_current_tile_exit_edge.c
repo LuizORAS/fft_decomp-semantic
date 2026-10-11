@@ -18,10 +18,11 @@ void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_da
     if (battle_move_has_reached_current_tile_exit_edge(direction, unit) != 0) {
         battle_move_snap_axis_to_current_tile_exit_edge(direction, unit);
         g_battle_move_current_edge_height = g_battle_move_current_tile->height * 2
-            + (g_battle_move_current_tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK) * unit->current_edge_height;
-        unit->current_unit_id_plus_one = 0;
+            + (g_battle_move_current_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
+                * unit->current_edge_height;
+        unit->standing_on_unit_id_plus_one = 0;
         g_battle_move_destination_edge_height = g_battle_move_destination_tile->height * 2
-            + (g_battle_move_destination_tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK)
+            + (g_battle_move_destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
                 * unit->destination_edge_height;
         if (g_battle_move_current_edge_height + 1 >= g_battle_move_destination_edge_height) {
             battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);

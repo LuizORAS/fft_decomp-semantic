@@ -28,8 +28,8 @@ u8 battle_unit_generate_treasure(battle_stats_t* unit) {
     }
 
     if (count == 0) {
-        buf[0] = ((rand() * 13) / 0x8000) - 0x10;
-        if (buf[0] >= 0xF5) {
+        buf[0] = ((rand() * 13) / 0x8000) - (ITEM_ID_COUNT - ITEM_ID_CONSUMABLE_FIRST);
+        if (buf[0] >= ITEM_ID_ELIXIR) {
             buf[0] = buf[0] + 1;
         }
         count = 1;

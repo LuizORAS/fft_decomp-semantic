@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /*
- * Shares battle_menu_copy_cursor_frame_data's (source, frame, step) shape:
+ * Shares battle_gfx_copy_sprite_position_uv_and_size's (source, frame, step) shape:
  * scales a cursor SPRT to g_battle_menu_zoom_percentages[step] percent about its centre, keeping
  * position and texture coordinates even. Writing the half extent first in
  * each sum (`w / 2 + x0`) is required; the reverse order reschedules the

@@ -1,10 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The target passes the misc unit id in $a3 although the three-parameter
- * callee never reads it. */
-typedef void (*battle_gfx_tint_4_fn)(battle_unit_misc_data_t*, s32, s32, s32);
-
 /* Tint a unit's palette for its first tinting status, unless a palette modifier is already
  * active: Petrify, Blood Suck, Berserk (red), Poison (green), Regen (blue), Oil (darker), Cursed
  * (darker still) or Undead (not on the Skeleton and Ghoul spritesheets), in that order, through
@@ -14,35 +10,41 @@ void battle_gfx_update_misc_unit_status_palette(battle_unit_misc_data_t* misc, s
     u32 status;
     s32 unit_id;
 
-    if (misc->palette_modifier != 0) {
+    if (misc->fade_out_phase != BATTLE_MISC_FADE_OUT_NONE) {
         return;
     }
     status = misc->status_flags_1_4;
     unit_id = misc->unit_id;
     if (status & BATTLE_MISC_STATUS_PALETTE_MOD_MASK) {
         if (status & BATTLE_MISC_STATUS_PETRIFY) {
-            battle_gfx_modify_misc_unit_palette(misc, 6, 3, unit_id, 0, 0, 0, 0, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_GREY, MAP_CLUT_ROW_UNITS, unit_id, 0, 0, 0, 0, final_value);
         } else if (status & BATTLE_MISC_STATUS_BLOOD_SUCK) {
-            battle_gfx_modify_misc_unit_palette(misc, 6, 3, unit_id, 0, 3, -1, 8, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_GREY, MAP_CLUT_ROW_UNITS, unit_id, 0, 3, -1, 8, final_value);
         } else if (status & BATTLE_MISC_STATUS_BERSERK) {
-            battle_gfx_modify_misc_unit_palette(misc, 4, 3, unit_id, 0, 8, 0, 0, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE, MAP_CLUT_ROW_UNITS, unit_id, 0, 8, 0, 0, final_value);
         } else if (status & BATTLE_MISC_STATUS_POISON) {
-            battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, 0, 8, 0, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_HALF, MAP_CLUT_ROW_UNITS, unit_id, 0, 0, 8, 0, final_value);
         } else if (status & BATTLE_MISC_STATUS_REGEN) {
-            battle_gfx_modify_misc_unit_palette(misc, 4, 3, unit_id, 0, 0, 0, 8, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE, MAP_CLUT_ROW_UNITS, unit_id, 0, 0, 0, 8, final_value);
         } else if (status & BATTLE_MISC_STATUS_OIL) {
-            battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, -4, -4, -4, final_value);
-        } else if (status & BATTLE_MISC_STATUS_CURSED) {
-            battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, -8, -8, -8, final_value);
-        } else if ((status & BATTLE_MISC_STATUS_UNDEAD)
-            && (u8)(misc->spritesheet_id - BATTLE_SPRITESHEET_ID_SKELETON) >= 2) {
-            battle_gfx_modify_misc_unit_palette(misc, 5, 3, unit_id, 0, 4, 0, 5, final_value);
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_HALF, MAP_CLUT_ROW_UNITS, unit_id, 0, -4, -4, -4, final_value);
+        } else if (status & BATTLE_MISC_STATUS_UNNAMED_0E) {
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_HALF, MAP_CLUT_ROW_UNITS, unit_id, 0, -8, -8, -8, final_value);
+        } else if ((status & BATTLE_MISC_STATUS_UNDEAD) && misc->spritesheet_id != BATTLE_SPRITESHEET_ID_SKELETON
+            && misc->spritesheet_id != BATTLE_SPRITESHEET_ID_GHOUL) {
+            battle_gfx_modify_misc_unit_palette(
+                misc, MAP_COLOR_MODE_BASE_HALF, MAP_CLUT_ROW_UNITS, unit_id, 0, 4, 0, 5, final_value);
         } else {
-            ((battle_gfx_tint_4_fn)battle_gfx_tint_unit_palette_for_weather_and_tile)(
-                misc, tile_effect_level, final_value, unit_id);
+            battle_gfx_tint_unit_palette_for_weather_and_tile(misc, tile_effect_level, final_value);
         }
         return;
     }
-    ((battle_gfx_tint_4_fn)battle_gfx_tint_unit_palette_for_weather_and_tile)(
-        misc, tile_effect_level, final_value, unit_id);
+    battle_gfx_tint_unit_palette_for_weather_and_tile(misc, tile_effect_level, final_value);
 }

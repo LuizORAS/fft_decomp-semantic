@@ -11,7 +11,7 @@ s16 world_text_get_encoded_char_at_position(u8* table, s16 index, s32 position) 
 
     cursor = world_text_advance_entry_by_char_count(world_text_find_entry_by_index(table, index, 2), position);
     code = *cursor++;
-    if ((u32)(code - 0xD0) < 0x10) {
+    if (code >= 0xD0 && code <= 0xDF) {
         code = *cursor | (code << 8);
     }
     return code;

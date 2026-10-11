@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Animate-tick state overlaid on effect_record_t from 0x26. */
+/* The child timeline's state in an effect_record_t, from 0x26. */
 typedef struct battle_effect_tick_state {
     u16 target_index;          /* 0x00 (record 0x26) */
     s16 frame;                 /* 0x02 */
@@ -21,14 +21,17 @@ typedef struct battle_effect_tick_record_view {
     u16 frame; /* 0x28 */
 } battle_effect_tick_record_view_t;
 
-/* Advance a single-phase effect timeline by one frame (script opcode 0x28).
+/* Opcode 28: advance the record's child timeline by one frame, for the
+ * record's target.
  *
- * The five particle channels dispatch keyframe actions and spawn emitters,
- * the four colour tracks recolour the affected units, the caster, the current
- * target and the screen, and the three sound channels play on-hit sounds; a
- * root effect then moves the camera and, under effect flag 0x40, follows the
- * timing curve. A target whose record byte 0x03 is 2 instead starts the
- * secondary effect 10 and jumps to the timeline's end frame.
+ * The five particle channels run keyframe actions and spawn emitters, the
+ * four colour tracks recolour the other units, the caster, the target and the
+ * screen, and the three sound tracks play the effect's sounds; a root record
+ * then starts the child camera table's moves and, under
+ * EFFECT_FLAG_TIMING_CURVE_CHILD, the time scale follows the animation
+ * timing curve. A target that reflected the effect instead starts the
+ * reflect secondary effect, lasting spawn_delay frames, and jumps the
+ * timeline to its end.
  *
  * The body inlines the logic of battle_effect_step_emitter_timeline and the
  * palette/background/sound track helpers. Each track keeps its own keyframe
@@ -52,7 +55,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
     s32 index;
     s32 preset;
     s32 sel;
-    u16* selectors;
+    u16* actions;
     u16 slot;
     s16 step;
     s16 red;
@@ -65,7 +68,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
 
     target = record->target_index;
     state = (battle_effect_tick_state_t*)&record->target_index;
-    if (g_battle_effect_targets[target].id.bytes[1] != 2) {
+    if (g_battle_effect_coord_data.targets[target].id.bytes[1] != BATTLE_EFFECT_HIT_REFLECTED) {
         for (i = 0; i < 5; i++) {
             table = &g_battle_effect_timing_channels->particle[i];
             if (state->particle_remaining[i] == 0) {
@@ -74,7 +77,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     state->particle_step[i] = 0;
                     state->particle_keyframe[i]++;
                     battle_effect_run_keyframe_actions(
-                        table->selector[1], target, (battle_keyframe_effect_state_t*)record);
+                        table->action[1], target, (battle_keyframe_effect_state_t*)record);
                 }
                 while (state->particle_remaining[i] == 0) {
                     k = state->particle_keyframe[i];
@@ -82,20 +85,20 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     state->particle_remaining[i] = table->frame_start[k + 1] - table->frame_start[k];
                     state->particle_step[i] = 0;
                     battle_effect_run_keyframe_actions(
-                        table->selector[k + 1], target, (battle_keyframe_effect_state_t*)record);
+                        table->action[k + 1], target, (battle_keyframe_effect_state_t*)record);
                 }
             }
-            index = table->action[state->particle_keyframe[i]];
+            index = table->emitter[state->particle_keyframe[i]];
             if (index != 0) {
                 step = state->particle_step[i]++;
-                selectors = table->selector;
-                sel = selectors[state->particle_keyframe[i]] & 7;
+                actions = table->action;
+                sel = actions[state->particle_keyframe[i]] & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK;
                 if (sel != 0) {
                     slot = sel - 1;
                     if (state->particle_remaining[i] == 2) {
-                        record->phase[slot] = EFFECT_PHASE_DESTROY;
+                        record->callback_phase[slot] = EFFECT_PHASE_DESTROY;
                     }
-                    ((void (*)(s16, s32, s32, s16))record->values_d4[slot])(
+                    ((void (*)(s16, s32, s32, s16))record->callbacks[slot])(
                         record->record_index, slot, index - 1, step);
                 } else {
                     battle_effect_spawn_emitter_particles(record->record_index, step, index - 1, 0);
@@ -104,7 +107,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
             state->particle_remaining[i]--;
         }
 
-        track = &g_battle_effect_timing_channels->affected_units;
+        track = &g_battle_effect_timing_channels->surroundings;
         units_keyframe = state->color_keyframe[0];
         if (units_keyframe < track->count - 1) {
             if (state->color_remaining[0] == 0) {
@@ -118,18 +121,19 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 }
                 state->color_remaining[0] = i;
                 preset = track->preset[index];
-                if (preset & 0x80) {
+                if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                     red = track->color[index][0];
                     green = track->color[index][1];
                     blue = track->color[index][2];
-                    battle_map_color_field(preset & 0x7f, track->duration[index], red, green, blue);
-                    for (i = 0; i < g_battle_effect_coord_data.palette_target_count; i++) {
-                        battle_gfx_start_misc_unit_palette_modulation(preset & 0x7f, track->duration[index],
-                            g_battle_effect_palette_target_misc_ids[i], red, green, blue);
+                    battle_map_color_field(
+                        preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
+                    for (i = 0; i < g_battle_effect_coord_data.spectator_count; i++) {
+                        battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index], g_battle_effect_palette_target_misc_ids[i], red, green, blue);
                     }
-                    if (!(g_battle_map_weather_flags & 2)) {
-                        battle_map_start_darkness_blend(
-                            preset & 0x7f, track->duration[index], red * 8, green * 8, blue * 8);
+                    if (!(g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
+                        battle_map_start_darkness_blend(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index], red * 8, green * 8, blue * 8);
                     }
                 }
             }
@@ -150,13 +154,16 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 }
                 state->color_remaining[1] = i;
                 preset = track->preset[index];
-                if (preset & 0x80) {
+                if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                     red = track->color[index][0];
                     green = track->color[index][1];
                     blue = track->color[index][2];
-                    if (g_battle_effect_targets[16].target_type == 0) {
-                        battle_gfx_start_misc_unit_palette_modulation(preset & 0x7f, track->duration[index],
-                            g_battle_effect_targets[16].id.misc_id, red, green, blue);
+                    if (g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
+                        == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+                        battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index],
+                            g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id, red, green,
+                            blue);
                     }
                 }
             }
@@ -177,13 +184,14 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 }
                 state->color_remaining[2] = i;
                 preset = track->preset[index];
-                if (preset & 0x80) {
+                if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                     red = track->color[index][0];
                     green = track->color[index][1];
                     blue = track->color[index][2];
-                    if (g_battle_effect_targets[target].target_type == 0) {
-                        battle_gfx_start_misc_unit_palette_modulation(preset & 0x7f, track->duration[index],
-                            g_battle_effect_targets[target].id.misc_id, red, green, blue);
+                    if (g_battle_effect_coord_data.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+                        battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index], g_battle_effect_coord_data.targets[target].id.misc_id, red, green,
+                            blue);
                     }
                 }
             }
@@ -204,13 +212,13 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 }
                 state->color_remaining[3] = i;
                 preset = screen->preset[index];
-                mode = preset & 0x7f;
-                if (preset & 0x80) {
+                mode = preset & EFFECT_COLOR_KEYFRAME_MODE_MASK;
+                if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                     red = screen->color[index][0] * 2;
                     green = screen->color[index][1] * 2;
                     blue = screen->color[index][2] * 2;
                     battle_map_modify_background_gradient(mode, screen->duration[index], red, green, blue);
-                    if (g_battle_map_weather_flags & 2) {
+                    if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
                         battle_map_start_darkness_blend(mode, screen->duration[index], red, green, blue);
                     }
                 } else {
@@ -221,7 +229,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     colors.second.green = screen->second_color[index][1];
                     colors.second.blue = screen->second_color[index][2];
                     battle_map_set_background_gradient(screen->duration[index], &colors);
-                    if (g_battle_map_weather_flags & 2) {
+                    if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
                         battle_map_set_darkness_color(screen->duration[index], &colors.first);
                     }
                 }
@@ -237,7 +245,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     state->sound_keyframe[i] = sound_keyframe + 1;
                     index = sound_keyframe;
                     state->sound_remaining[i] = sound->duration[index];
-                    kind = sound->kind[index];
+                    kind = sound->channel[index];
                     if (kind >= 2) {
                         sound_index = battle_effect_get_on_hit_sound_index(kind - 2);
                         if (sound_index != 0) {
@@ -251,19 +259,21 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
         if (record->parent_index == 0) {
             battle_camera_start_effect_keyframe_moves(state->frame);
         }
-        if (g_battle_effect_flags_section->flags & EFFECT_FLAG_TIMING_CURVE_PHASE2) {
+        if (g_battle_effect_flags_section->flags & EFFECT_FLAG_TIMING_CURVE_CHILD) {
             battle_state_set_min_vsync_interval(
                 battle_effect_get_animation_timing_curve_value((battle_effect_timing_entry_t*)record));
         }
         state->frame++;
     } else {
-        if (g_battle_effect_targets[target].target_type == 0) {
-            init.caster.block = *(battle_effect_secondary_block_t*)&g_battle_effect_targets[16];
-            init.target.block = *(battle_effect_secondary_block_t*)&g_battle_effect_targets[target];
-            battle_effect_init_secondary(10, g_battle_effect_misc_data->spawn_delay, &init);
+        if (g_battle_effect_coord_data.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            init.caster.block
+                = *(battle_effect_secondary_block_t*)&g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY];
+            init.target[0].block = *(battle_effect_secondary_block_t*)&g_battle_effect_coord_data.targets[target];
+            battle_effect_init_secondary(
+                BATTLE_EFFECT_SECONDARY_ANIMATION_REFLECT, g_battle_effect_timeline->spawn_delay, &init);
         }
         ((battle_effect_tick_record_view_t*)record)->frame = g_battle_effect_timing_channels->duration;
     }
     record->pc += 2;
-    return 1;
+    return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

@@ -1,8 +1,11 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* Twin of jobstts_cmd_release_otag_lock_handler (BUNIT does not
- * advance the OT index here). */
+/* Stream command closing a zoomed window: when the zoom transition queued a
+ * cropped draw area, queue the full draw area again at the next
+ * ordering-table entry and clear the lock. Unlike
+ * jobstts_cmd_release_otag_lock_handler, BUNIT does not advance the
+ * ordering-table index here. */
 u8* bunit_cmd_release_otag_lock_handler(u8* data) {
     if (g_bunit_gfx_otag_index_locked != 0) {
         g_bunit_gfx_draw_area.y = 0;

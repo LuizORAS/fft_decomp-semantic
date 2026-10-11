@@ -7,16 +7,14 @@
  * (QUIRKS.md). */
 s32 battle_ai_handle_autobattle(void) {
     s32 result;
-    /* Pin: unpinned, GCC routes the result through $a0 and loses the $v0 delay-slot fills (4 bytes larger). */
-    register s32 direct_result __asm__("$2");
 
     /* A -2 result falls back to another policy's case; those jumps stay gotos. */
     switch (g_battle_ai_data_base.autobattle_setting) {
     case BATTLE_AUTO_BATTLE_FIGHT_FOR_LIFE:
-        direct_result = battle_ai_select_fight_for_life_action();
-        if (direct_result != -1)
+        if (battle_ai_select_fight_for_life_action() != -1) {
             return 1;
-        return -1;
+        }
+        break;
     case BATTLE_AUTO_BATTLE_PROTECT_ALLIES:
     protect_allies:
         result = battle_ai_select_protect_allies_action();
@@ -38,11 +36,12 @@ s32 battle_ai_handle_autobattle(void) {
         return 1;
     case BATTLE_AUTO_BATTLE_RUN_LIKE_A_RABBIT:
     run_like_a_rabbit:
-        direct_result = battle_ai_select_retreat_action();
-        if (direct_result != -1)
+        if (battle_ai_select_retreat_action() != -1) {
             return 1;
-        return -1;
+        }
+        break;
     default:
         return 0;
     }
+    return -1;
 }

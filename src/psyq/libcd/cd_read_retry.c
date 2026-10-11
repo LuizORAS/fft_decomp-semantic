@@ -32,7 +32,7 @@ s32 cd_read_retry(s32 retry) {
         }
     }
     g_psyq_cd_read_state.expected_sector = CdPosToInt(CdLastPos());
-    CdReadyCallback((void*)cb_read);
+    CdReadyCallback(cb_read);
     g_psyq_cd_read_state.next_buffer = g_psyq_cd_read_state.first_buffer;
     CdControlF(CdlReadN, 0);
     g_psyq_cd_read_state.remaining = g_psyq_cd_read_state.sectors;

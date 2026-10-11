@@ -17,17 +17,9 @@ static __inline__ s32 cd_issue_with_retry(u8 command, const u8* parameter, u8* r
     g_psyq_cd_sync_callback = callback;
     return -1;
 }
-s32 CdControlB(s32 command, const u8* parameter, u8* result) {
-    /* Without this pin the retry constant is saved before the promoted command. */
-    register s32 saved_command __asm__("$20") = command;
-    u8 issued_command;
-    s32 succeeded;
-    /* Removing this tied use moves the retry constant above the promoted command. */
-    __asm__("" : "=r"(saved_command) : "0"(saved_command));
-    issued_command = saved_command;
-    if (cd_issue_with_retry(issued_command, parameter, result, 0) == 0)
-        succeeded = CD_sync(0, result) == CdlComplete;
-    else
-        succeeded = 0;
-    return succeeded;
+s32 CdControlB(u8 command, const u8* parameter, u8* result) {
+    if (cd_issue_with_retry(command, parameter, result, 0) != 0) {
+        return 0;
+    }
+    return CD_sync(0, result) == CdlComplete;
 }

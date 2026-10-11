@@ -24,7 +24,7 @@ it provokes and the rewards.
 - **Refusals.** When the action starts it can be refused: the unit cannot
   act, Silence stops a silence-affected ability, the MP is short (Half of MP
   halves the cost), or a Frog uses anything but Attack, Frog Attack and the
-  Frog spell. A First Strike (Hamedo) from the target cancels it.
+  Frog spell. A Hamedo from the target cancels it.
 - **Strikes.** An action strikes once; twice with Two Swords (Attack, Charge
   and abilities that use the weapon's range, with weapons in both hands or in
   neither); 1 to X times at random (formulas 0x1e and 0x1f) or X + 1 times
@@ -62,8 +62,8 @@ it provokes and the rewards.
   the attack type ([[battle_action_type_e]]), EXP and JP changes and the
   accuracy shown. [[g_battle_action_target_data]] and
   [[g_battle_action_attacker_data]] point at the target's and at the actor's
-  own ([[g_current_action_data]]).
-- **The strike.** [[g_current_ability]] ([[battle_current_ability_t]]): the
+  own ([[g_battle_action_attacker_action_data]]).
+- **The strike.** [[g_battle_action_current_ability]] ([[battle_current_ability_t]]): the
   attacker and target, the strike count and counter, the two weapons, a
   pending weapon spell (`weapon_spell_pending`) or knockback
   ([[battle_knockback_flags_e]]), the formula's inputs and copies of the
@@ -72,16 +72,16 @@ it provokes and the rewards.
   carries the targets and `continue_attack` to the display.
 - **Context.** [[g_battle_action_state]] (executing, AI simulation or
   preview), [[g_battle_action_context]] (the primary action, or a reaction or
-  simulation) and [[g_battle_action_phase]] (0 First Strike, 1 the action,
+  simulation) and [[g_battle_action_phase]] (0 Hamedo, 1 the action,
   2 reactions).
 - **Reactions.** The four `reaction_abilities` bytes
   ([[battle_unit_reaction_set_1_e]] to [[battle_unit_reaction_set_4_e]]), the
-  behaviour flags ([[g_main_reaction_behavior_flags_by_ability_id]],
+  behaviour flags ([[g_main_reaction_behavior_flags]],
   [[battle_reaction_behavior_flag_e]]) and the reaction being resolved
   ([[g_battle_reaction_ability_id]]).
 - **Effect messages.** [[g_battle_action_post_effect_msgs]], up to 16
   records of message code, unit and value.
-- **Mime.** [[g_current_ability_attacker]]
+- **Mime.** [[g_battle_action_current_attacker]]
   ([[battle_current_attacker_data_t]]): the last action, its offset to the
   target, the actor's facing, team and weapons, and `mimic_pending`.
 
@@ -96,7 +96,7 @@ it provokes and the rewards.
    and 3 jumps (COMMENCE_ATTACK_PHASE). The Move, Wait and Execute? windows
    are `battle_state_enter_*` states ([[Battle flow]]).
 2. **The phases.** [[battle_state_announce_next_ability]] runs phase 0, a
-   First Strike ([[battle_reaction_prepare_hamedo_for_pending_action]]);
+   Hamedo ([[battle_reaction_prepare_hamedo_for_pending_action]]);
    phase 1, the action ([[battle_action_begin]]: the refusals, the strike
    data); and phase 2, the reactions ([[battle_reaction_prepare_next]], one
    reacting unit at a time).
@@ -137,7 +137,7 @@ Brave).
 In phase 2 a queued reaction becomes an action of its own: Counter and
 Meatbone Slash answer with Attack and Counter Tackle with Dash, each only
 within range; Counter Magic casts the spell it was hit by and Counter Flood the
-Geomancy of its own tile; Auto Potion drinks the first potion the party has
+Elemental ability of its own tile; Auto Potion drinks the first potion the party has
 (Potion, then Hi-Potion, then X-Potion); Reflect sends the spell on
 ([[battle_target_apply_reflect]]). The others apply their own effect
 ([[battle_reaction_apply_effect]]): the saves +1, Brave Up and Faith Up +3,
@@ -171,7 +171,7 @@ reacts.
 - **A reaction's trigger:** its `battle_reaction_try_*` function and the
   `battle_reaction_check_*` function of its moment; its effect,
   [[battle_reaction_apply_effect]]; the counters,
-  [[battle_reaction_prepare_next]]; First Strike,
+  [[battle_reaction_prepare_next]]; Hamedo,
   [[battle_reaction_prepare_hamedo_for_pending_action]].
 - **Mime:** [[battle_action_prepare_mimic]].
 - **Effect messages:** [[battle_action_queue_unit_effect_messages]].

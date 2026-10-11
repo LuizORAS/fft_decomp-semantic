@@ -1,8 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Allocate size bytes from the SMD heap, 16 cells of 2 KB at g_main_heap_smd_base, the same
- * way main_heap_alloc does. Music and sound effect files live there. */
+/* Allocate size bytes from the SMD heap, 16 cells of 2 KB at g_main_heap_smd_base tagged in
+ * g_main_heap_smd_allocator_table, the same way main_heap_alloc does; returns 0 when nothing
+ * fits. Music and sound effect files live there. */
 void* main_heap_alloc_smd(u32 size) {
     u32 run = 0;
     u32 needed = size >> 11;

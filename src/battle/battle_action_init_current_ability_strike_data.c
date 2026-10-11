@@ -2,7 +2,7 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* g_current_ability.primary_weapon_id and secondary_weapon_id: the final
+/* g_battle_action_current_ability.primary_weapon_id and secondary_weapon_id: the final
  * eligibility test reads the primary/secondary pair as one halfword and the
  * primary alone as a byte, off one shared base register. */
 typedef union {
@@ -10,7 +10,7 @@ typedef union {
     u8 primary;
 } battle_action_ability_weapon_ids_t;
 
-#define WEAPON_IDS (*(battle_action_ability_weapon_ids_t*)&g_current_ability.primary_weapon_id)
+#define WEAPON_IDS (*(battle_action_ability_weapon_ids_t*)&g_battle_action_current_ability.primary_weapon_id)
 
 /* Set up the strike data of the unit's action: one strike, counter 0, no pending weapon spell or
  * knockback; in a primary action the EXP/JP and level-up flags are cleared too. The two weapon hands
@@ -20,7 +20,7 @@ typedef union {
  * with Two Swords when both hands hold weapons or both are empty; a Frog or a monster fights
  * bare-handed.
  *
- * The `ability_id >= 0 || ability_id < 0x170` guard is the target's own: the
+ * The `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST` guard is the target's own: the
  * second arm is unreachable, so the table read is never actually skipped.
  *
  * `left_hand` is load-bearing: the target issues the equipment[5] reload
@@ -37,30 +37,30 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
     u8 support;
     u8 left_hand;
 
-    g_current_ability.strike_count = 1;
-    g_current_ability.strike_counter = 0;
-    g_current_ability.weapon_spell_pending = 0;
-    g_current_ability.knockback_flags = 0;
+    g_battle_action_current_ability.strike_count = 1;
+    g_battle_action_current_ability.strike_counter = 0;
+    g_battle_action_current_ability.weapon_spell_pending = 0;
+    g_battle_action_current_ability.knockback_flags = 0;
     formula = 0;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
-        g_current_ability.can_earn_exp_jp = 0;
-        g_current_ability.earned_experience = 0;
-        g_current_ability.level_gained_flag = 0;
-        g_current_ability.job_level_gained_flag = 0;
+        g_battle_action_current_ability.can_earn_exp_jp = 0;
+        g_battle_action_current_ability.earned_experience = 0;
+        g_battle_action_current_ability.level_gained_flag = 0;
+        g_battle_action_current_ability.job_level_gained_flag = 0;
     }
 
     menu_type = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
     g_battle_loaded_ability_flags_1 = 0;
-    g_current_ability.primary_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
-    g_current_ability.secondary_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
-    if (g_current_ability.primary_weapon_id == ITEM_ID_NONE) {
+    g_battle_action_current_ability.primary_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
+    g_battle_action_current_ability.secondary_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
+    if (g_battle_action_current_ability.primary_weapon_id == ITEM_ID_NONE) {
         left_hand = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
-        g_current_ability.secondary_weapon_id = ITEM_ID_NONE;
-        g_current_ability.primary_weapon_id = left_hand;
+        g_battle_action_current_ability.secondary_weapon_id = ITEM_ID_NONE;
+        g_battle_action_current_ability.primary_weapon_id = left_hand;
     }
 
     if (menu_type == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
-        g_current_ability.primary_weapon_id = unit->used_item_or_equipment;
+        g_battle_action_current_ability.primary_weapon_id = unit->used_item_or_equipment;
         return;
     }
 
@@ -72,14 +72,14 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
             chance = data->x;
             formula = data->formula;
         }
-        if (formula == BATTLE_FORMULA_TRUTH || formula == BATTLE_FORMULA_UNTRUTH) {
+        if (formula == ABILITY_FORMULA_MULTIHIT_TRUTH_MAGIC || formula == ABILITY_FORMULA_UNFAITH_MAGICAL_DAMAGE) {
             if (g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
-                g_current_ability.strike_count = ((chance * rand()) / 32768) + 1;
+                g_battle_action_current_ability.strike_count = ((chance * rand()) / 32768) + 1;
                 return;
             }
         }
-        if (formula == BATTLE_FORMULA_REPEATED_MAGIC) {
-            g_current_ability.strike_count = chance + 1;
+        if (formula == ABILITY_FORMULA_DAMAGE_MA_PLUS_Y_HALF_TIMES_MA) {
+            g_battle_action_current_ability.strike_count = chance + 1;
             return;
         }
     }
@@ -97,14 +97,15 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
         || (unit->unit_flags & UNIT_FLAG_MONSTER)) {
-        g_current_ability.primary_weapon_id = ITEM_ID_NONE;
-        g_current_ability.secondary_weapon_id = ITEM_ID_NONE;
+        g_battle_action_current_ability.primary_weapon_id = ITEM_ID_NONE;
+        g_battle_action_current_ability.secondary_weapon_id = ITEM_ID_NONE;
     }
 
     if (WEAPON_IDS.pair == 0xffff
-        || (WEAPON_IDS.primary != ITEM_ID_NONE && g_current_ability.secondary_weapon_id != ITEM_ID_NONE)) {
+        || (WEAPON_IDS.primary != ITEM_ID_NONE
+            && g_battle_action_current_ability.secondary_weapon_id != ITEM_ID_NONE)) {
         if (support & BATTLE_SUPPORT_SET_3_TWO_SWORDS) {
-            g_current_ability.strike_count = 2;
+            g_battle_action_current_ability.strike_count = 2;
         }
     }
 }

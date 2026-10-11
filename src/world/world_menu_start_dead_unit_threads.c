@@ -20,7 +20,7 @@
 void world_menu_start_dead_unit_threads(void) {
     main_crystal_pickup_result_t* context = g_world_thread_inner_subroutine_result;
     world_menu_entry_t* previous_menu_descriptor = g_world_menu_thread_menu_data;
-    world_dead_unit_menu_t* menu;
+    dead_unit_menu_t* menu;
     s32 value_count;
     s32 byte_index;
     s32 bit_index;
@@ -39,7 +39,7 @@ void world_menu_start_dead_unit_threads(void) {
     value_count = 0;
     for (byte_index = 0; byte_index < 0x40; byte_index++) {
         s32 mask = 1;
-        /* A pointer local, not `context->learned_abilities[byte_index]` in the test: the
+        /* A pointer local, not `context->flags[byte_index]` in the test: the
          * indexed form folds 0x53 into the load displacement, while the
          * target biases the index and loads at 0(reg). */
         u8* flag_byte = &context->learned_abilities[byte_index];
@@ -72,10 +72,10 @@ void world_menu_start_dead_unit_threads(void) {
 
     if (context->result == 0) {
         message_id = 0x183c;
-        ((world_dead_unit_menu_t*)g_world_menu_thread_menu_data)->message_id = message_id;
+        ((dead_unit_menu_t*)g_world_menu_thread_menu_data)->message_id = message_id;
         world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
-        world_thread_set_parameters(g_world_thread_current_id - 1,
-            (s32)((world_dead_unit_menu_t*)g_world_menu_thread_menu_data)->message_menu, 0, 0);
+        world_thread_set_parameters(
+            g_world_thread_current_id - 1, (s32)((dead_unit_menu_t*)g_world_menu_thread_menu_data)->message_menu, 0, 0);
         world_thread_wait_until_inactive(g_world_thread_current_id - 1);
         world_thread_wait_frames(2);
         g_world_dead_unit_action = 0;
@@ -97,10 +97,10 @@ void world_menu_start_dead_unit_threads(void) {
             g_world_text_substitution_values[0] = context->treasure_item;
             g_world_dead_unit_result = context->treasure_item;
         }
-        ((world_dead_unit_menu_t*)g_world_menu_thread_menu_data)->message_id = message_id;
+        ((dead_unit_menu_t*)g_world_menu_thread_menu_data)->message_id = message_id;
         world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
-        world_thread_set_parameters(g_world_thread_current_id - 1,
-            (s32)((world_dead_unit_menu_t*)g_world_menu_thread_menu_data)->message_menu, 0, 0);
+        world_thread_set_parameters(
+            g_world_thread_current_id - 1, (s32)((dead_unit_menu_t*)g_world_menu_thread_menu_data)->message_menu, 0, 0);
         world_thread_wait_until_inactive(g_world_thread_current_id - 1);
         world_thread_wait_frames(2);
         g_world_dead_unit_action = 4;
@@ -109,22 +109,21 @@ void world_menu_start_dead_unit_threads(void) {
         world_thread_exit_current();
     }
 
-    world_thread_set_parameters(10, 0, 0, 1);
-    world_thread_set_parameters(11, 0, 0, 1);
-    world_thread_set_parameters(12, 0, 0, 1);
-    world_thread_set_parameters(13, 0, 0, 1);
-    world_thread_wait_until_inactive(10);
-    world_thread_wait_until_inactive(11);
-    world_thread_wait_until_inactive(12);
-    world_thread_wait_until_inactive(13);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
+    world_thread_set_parameters(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS, 0, 0, 1);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
+    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS);
 
     for (;;) {
         if (context->result == 3) {
-        restart_move_menu:
             g_world_dead_unit_move_result = 0xff;
             world_thread_start(g_world_thread_current_id - 1, world_menu_run_icon_selection_loop);
             world_thread_set_parameters(g_world_thread_current_id - 1,
-                (s32)((world_dead_unit_menu_t*)g_world_menu_thread_menu_data)->move_menu, 0, 0);
+                (s32)((dead_unit_menu_t*)g_world_menu_thread_menu_data)->move_menu, 0, 0);
             world_thread_wait_until_inactive(g_world_thread_current_id - 1);
         }
 
@@ -132,28 +131,28 @@ void world_menu_start_dead_unit_threads(void) {
         if ((context->result == 3 && g_world_dead_unit_move_result == 0) || context->result == 1) {
             world_thread_start(g_world_thread_current_id - 2, world_build_at_list);
             world_thread_set_parameters(g_world_thread_current_id - 2, (s32)g_world_menu_thread_menu_data, 0, 0);
-            world_thread_start(10, world_menu_icon_linked_entry_thread);
-            world_thread_set_parameters(
-                10, (s32)((world_dead_unit_menu_t*)g_world_menu_thread_menu_data)->at_list_menu, 0, 0);
+            world_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, world_menu_icon_linked_entry_thread);
+            world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,
+                (s32)((dead_unit_menu_t*)g_world_menu_thread_menu_data)->at_list_menu, 0, 0);
             for (;;) {
                 world_thread_yield();
-                if (world_thread_is_running_2(g_world_thread_current_id - 3) != 0) {
-                    world_thread_start(9, world_thread_yield_forever);
+                if (world_thread_is_running_asm(g_world_thread_current_id - 3) != 0) {
+                    world_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD, world_thread_yield_forever);
                 } else {
-                    world_thread_suspend(9);
+                    world_thread_suspend(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD);
                 }
-                if (world_thread_is_running_2(g_world_thread_current_id - 1) == 0) {
+                if (world_thread_is_running_asm(g_world_thread_current_id - 1) == 0) {
                     break;
                 }
                 g_world_dead_unit_controller_input = world_input_get_menu_controller(0);
                 if ((*g_world_dead_unit_controller_input & PSX_PAD_SELECT) != 0) {
-                    world_text_try_start_overlay_thread();
+                    world_menu_start_building_thread();
                 }
             }
 
             world_thread_wait_until_inactive(g_world_thread_current_id - 1);
-            world_thread_set_parameters(10, 0, 0, 1);
-            world_thread_suspend(9);
+            world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, 0, 0, 1);
+            world_thread_suspend(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD);
             if (g_world_dead_unit_menu_result == 0) {
                 g_world_dead_unit_action = 1;
                 break;
@@ -161,7 +160,7 @@ void world_menu_start_dead_unit_threads(void) {
             if (g_world_dead_unit_menu_result == 1 || (g_world_dead_unit_menu_result & 0xff) == 0xff) {
                 if (context->result == 3) {
                     /* Re-enters the move menu without re-testing the kind. */
-                    goto restart_move_menu;
+                    continue;
                 }
             }
         }
@@ -170,7 +169,7 @@ void world_menu_start_dead_unit_threads(void) {
             g_world_dead_unit_menu_result = 0xff;
             world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
             world_thread_set_parameters(g_world_thread_current_id - 1,
-                (s32)((world_dead_unit_menu_t*)g_world_menu_thread_menu_data)->confirm_menu, 0, 0);
+                (s32)((dead_unit_menu_t*)g_world_menu_thread_menu_data)->confirm_menu, 0, 0);
             world_thread_wait_until_inactive(g_world_thread_current_id - 1);
             if (g_world_dead_unit_menu_result == 0) {
                 g_world_dead_unit_action = 2;

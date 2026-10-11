@@ -25,9 +25,9 @@ battle_move_effective_flags_e battle_move_get_effective_flags(const battle_stats
         & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
         movement_abilities_3 &= (u8)~BATTLE_MOVEMENT_SET_3_FLY;
     }
-    if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
+    if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
         flags = BATTLE_EFFECTIVE_MOVEMENT_ON_WATER;
-    } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
+    } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
         flags = BATTLE_EFFECTIVE_MOVEMENT_IN_WATER;
     }
     if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_SILENT_WALK) {
@@ -53,9 +53,9 @@ battle_move_effective_flags_e battle_move_get_effective_flags(const battle_stats
     } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_FLOAT) {
         /* The target preserves Silent Walk and undefined bit 0x04 here. */
         flags = (flags & 0x06) | BATTLE_EFFECTIVE_MOVEMENT_FLOAT;
-    } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
-        flags |= BATTLE_EFFECTIVE_MOVEMENT_ON_WATER;
     } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
+        flags |= BATTLE_EFFECTIVE_MOVEMENT_ON_WATER;
+    } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
         flags |= BATTLE_EFFECTIVE_MOVEMENT_IN_WATER;
     }
     return flags;

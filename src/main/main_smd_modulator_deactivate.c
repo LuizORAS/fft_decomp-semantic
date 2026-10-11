@@ -3,5 +3,5 @@
 
 /* Deactivates a modulator. */
 void main_smd_modulator_deactivate(suzuki_modulator_t* modulator) {
-    modulator->flags &= ~1;
+    modulator->flags &= ~SUZUKI_MODULATOR_ACTIVE;
 }

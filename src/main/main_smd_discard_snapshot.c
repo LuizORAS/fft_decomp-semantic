@@ -5,8 +5,8 @@ void main_smd_discard_snapshot(suzuki_music_t* music) {
     u16 status;
 
     status = music->status;
-    if ((status & 0x10) != 0) {
-        music->status = status & ~0x10;
+    if ((status & SUZUKI_MUSIC_STATUS_SNAPSHOT) != 0) {
+        music->status = status & ~SUZUKI_MUSIC_STATUS_SNAPSHOT;
         main_smd_free_snapshots(music);
     }
 }

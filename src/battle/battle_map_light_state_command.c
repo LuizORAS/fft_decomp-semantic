@@ -7,8 +7,8 @@
  *
  * Only the GET arms assign `result`; the others return it uninitialized, as
  * the target does. */
-u8* battle_map_light_state_command(s32 command, u8* data) {
-    u8* result;
+void* battle_map_light_state_command(s32 command, void* data) {
+    void* result;
 
     switch (command) {
     case MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT:
@@ -16,7 +16,7 @@ u8* battle_map_light_state_command(s32 command, u8* data) {
         g_battle_map_background_gradient_colors.second = ((map_color_t*)data)[1];
         break;
     case MAP_LIGHT_COMMAND_GET_BACKGROUND_GRADIENT:
-        result = (u8*)&g_battle_map_background_gradient_colors;
+        result = &g_battle_map_background_gradient_colors;
         break;
     case MAP_LIGHT_COMMAND_SAVE_BACKGROUND_GRADIENT:
         g_battle_map_saved_background_gradient_first = g_battle_map_background_gradient_colors.first;
@@ -27,9 +27,9 @@ u8* battle_map_light_state_command(s32 command, u8* data) {
         g_battle_map_background_gradient_colors.second = g_battle_map_saved_background_gradient_second;
         break;
     case MAP_LIGHT_COMMAND_SET_AMBIENT_COLOR:
-        g_battle_map_back_color_red = data[0];
-        g_battle_map_back_color_green = data[1];
-        g_battle_map_back_color_blue = data[2];
+        g_battle_map_back_color_red = ((map_color_t*)data)->red;
+        g_battle_map_back_color_green = ((map_color_t*)data)->green;
+        g_battle_map_back_color_blue = ((map_color_t*)data)->blue;
         SetBackColor(g_battle_map_back_color_red, g_battle_map_back_color_green, g_battle_map_back_color_blue);
         break;
     case MAP_LIGHT_COMMAND_SAVE_AMBIENT_COLOR:
@@ -52,9 +52,9 @@ u8* battle_map_light_state_command(s32 command, u8* data) {
         break;
     }
     case MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR:
-        g_battle_map_light_direction[0] = data[0];
-        g_battle_map_light_direction[1] = data[1];
-        g_battle_map_light_direction[2] = data[2];
+        g_battle_map_light_direction[0] = ((map_color_t*)data)->red;
+        g_battle_map_light_direction[1] = ((map_color_t*)data)->green;
+        g_battle_map_light_direction[2] = ((map_color_t*)data)->blue;
         break;
     case MAP_LIGHT_COMMAND_RESET_DARKNESS_COLOR:
         g_battle_map_light_direction[0] = 0;

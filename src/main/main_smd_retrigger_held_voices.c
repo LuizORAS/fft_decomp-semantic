@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Marks every in-use channel that holds a fermata and is not muted or
- * flagged 0x10 for retriggering (note_flags2 bit 0) and returns the voices
- * of those channels.
+/* Marks every in-use channel that is sounding and is not muted or flagged
+ * SUZUKI_CHANNEL_NO_RETRIGGER for a new key-on and returns the voices of
+ * those channels.
  *
  * The two single-bit tests are merged by GCC into one word-wide
  * `(flags & 0x101) == 0x101` test (`lw`), which the target contains; a
@@ -17,10 +17,10 @@ u32 main_smd_retrigger_held_voices(suzuki_music_t* music) {
     channel = music->channels;
     voices = 0;
     do {
-        if ((channel->active & 1) && (channel->active & 0x100)) {
-            if ((channel->active & 0x30) == 0) {
+        if ((channel->flags & SUZUKI_CHANNEL_IN_USE) && (channel->flags & SUZUKI_CHANNEL_SOUNDING)) {
+            if ((channel->flags & (SUZUKI_CHANNEL_MUTED | SUZUKI_CHANNEL_NO_RETRIGGER)) == 0) {
                 voices |= channel->voice_mask;
-                channel->note_flags2 |= 1;
+                channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_KEY_ON;
             }
         }
         count--;

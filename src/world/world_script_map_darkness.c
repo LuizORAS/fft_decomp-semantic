@@ -2,6 +2,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Thread body of the map darkness event instruction: start the ambient
+ * light blend from the five parameter bytes (mode, signed RGB amounts,
+ * speed) and wait the number of frames the table gives for that speed. */
 void world_script_map_darkness(void) {
     u8* parameter;
 

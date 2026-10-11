@@ -34,31 +34,34 @@ void require_apply_post_battle_unit_changes(void) {
     s32* transition_c_ptr;
     s32 screen_fade_max;
 
-    if (require_party_find_join_candidates() == 0) {
+    if (require_party_save_battle_units_and_find_join_candidates() == 0) {
         battle_thread_exit_current();
     }
     g_battle_post_battle_unit_changes_active = 1;
-    battle_thread_suspend(1);
-    battle_copy_bytes(g_require_saved_thread_block, &g_battle_threads[1], 0x400);
+    battle_thread_suspend(NATIVE_THREAD_SLOT_EVENT);
+    battle_copy_bytes(g_require_saved_thread_block, &g_battle_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
-    g_battle_text_section_pointers[1] = text_data + g_require_text_section_offsets[1];
-    g_battle_text_section_pointers[2] = text_data + g_require_text_section_offsets[2];
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
+        = text_data + g_require_text_section_offsets[1];
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
+        = text_data + g_require_text_section_offsets[2];
     saved_menu_descriptor = g_battle_menu_thread_menu_data;
     menu_base = g_require_join_menu_descriptor;
     g_battle_menu_thread_menu_data = (world_menu_entry_t*)menu_base;
-    g_battle_text_section_pointers[3] = text_data + g_require_text_section_offsets[3];
-    g_battle_text_section_pointers[6] = text_data + g_require_text_section_offsets[4];
+    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES]
+        = text_data + g_require_text_section_offsets[3];
+    g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = text_data + g_require_text_section_offsets[4];
 
     affected_index = 0;
     require_text_build_battle_nicknames();
     initial_unit_index_ptr = g_require_party_affected_battle_unit_indices;
-    selected_unit_index_ptr = (s32*)g_require_active_unit_data;
+    selected_unit_index_ptr = (s32*)&g_require_active_unit_data;
     battle_unit_get_stats_from_battle_id(*initial_unit_index_ptr);
-    *(u16*)(g_require_panel_active_unit_banner + 0x52) = *(u16*)initial_unit_index_ptr;
-    *(u16*)selected_unit_index_ptr = *(u16*)initial_unit_index_ptr;
+    g_require_active_unit_data.battle_id = *initial_unit_index_ptr;
+    *(u16*)selected_unit_index_ptr = *initial_unit_index_ptr;
     require_editor_load_selected_unit();
-    *(u16*)(g_require_panel_active_unit_banner + 0xa) = *(u16*)initial_unit_index_ptr;
+    g_require_panel_selected_billboard.unit_index = *initial_unit_index_ptr;
 
     /* `affected_index < count` (not `count > 0`): combine folds the known
      * zero into a `blez` and leaves the eliminated compare pseudo with a
@@ -79,7 +82,7 @@ void require_apply_post_battle_unit_changes(void) {
             g_require_numeric_editor_thread_params = -0x100;
             *transition_c_ptr = -0x100;
             battle_menu_set_active_turn_panels(
-                g_require_panel_active_unit_banner, g_require_active_unit_data, g_require_panel_billboard_data);
+                &g_require_panel_selected_billboard, &g_require_active_unit_data, &g_require_editor_unit_fields);
 
             /* This zero feeds the else-arm fade and fills the `bnez` delay
              * slot; the separate zero before the second fade is copied into
@@ -88,12 +91,15 @@ void require_apply_post_battle_unit_changes(void) {
              * call slot on reorg's second pass. */
             transition = 0;
             if (affected_index == 0) {
-                battle_thread_start(8, require_render_unit_status_panel_thread);
-                battle_thread_set_parameters(8, (s32)&g_require_status_display_thread_params, 0, 0);
-                battle_thread_start(12, require_editor_run_numeric_thread);
-                battle_thread_set_parameters(12, (s32)&g_require_numeric_editor_thread_params, 0, 0);
-                battle_thread_start(9, require_panel_run_character_status_thread);
-                battle_thread_set_parameters(9, (s32)transition_c_ptr, 0, 0);
+                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, require_render_unit_status_panel_thread);
+                battle_thread_set_parameters(
+                    NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_require_status_display_thread_params, 0, 0);
+                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);
+                battle_thread_set_parameters(
+                    NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_require_numeric_editor_thread_params, 0, 0);
+                battle_thread_start(
+                    NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, require_panel_run_character_status_thread);
+                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)transition_c_ptr, 0, 0);
             } else {
                 u16 index_value;
 
@@ -106,17 +112,17 @@ void require_apply_post_battle_unit_changes(void) {
                 } while (transition < 0x101);
 
                 battle_unit_get_stats_from_battle_id(*unit_index_ptr);
-                index_value = *(u16*)unit_index_ptr;
+                index_value = *unit_index_ptr;
                 *(u16*)(unit_display_data + 0x0a) = index_value;
                 *(u16*)(unit_display_data + 0) = index_value;
                 require_editor_load_selected_unit();
                 battle_menu_set_active_turn_panels(
-                    g_require_panel_active_unit_banner, unit_display_data, g_require_panel_billboard_data);
-                index_value = *(u16*)unit_index_ptr;
+                    &g_require_panel_selected_billboard, unit_display_data, &g_require_editor_unit_fields);
+                index_value = *unit_index_ptr;
                 g_require_status_display_redraw_request = one;
                 g_require_numeric_editor_redraw_request = one;
                 g_require_character_status_redraw_request = one;
-                *(u16*)(g_require_panel_active_unit_banner + 0xa) = index_value;
+                g_require_panel_selected_billboard.unit_index = index_value;
                 battle_thread_yield();
             }
 
@@ -132,7 +138,7 @@ void require_apply_post_battle_unit_changes(void) {
             /* The removal retry re-enters the selection loop and the
              * not-joining retry re-enters the removal loop from outside, so
              * loop.c treats both loops as having multiple entries and hoists
-             * nothing out of them (the g_require_panel_active_unit_banner + 0xa address stays in the
+             * nothing out of them (the g_require_panel_selected_billboard.unit_index address stays in the
              * remove path), while flow still weights their references by
              * depth. The not-joining retry repeats the selected-unit
              * assignment; jump2 cross-jumps it into this one, so the
@@ -151,7 +157,7 @@ void require_apply_post_battle_unit_changes(void) {
                             break;
                         }
                         if (input & PSX_PAD_SELECT) {
-                            thread_id = battle_thread_resolve_id(16);
+                            thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
                             battle_thread_start(thread_id, require_overlay_run_helpmenu);
                             battle_thread_wait_until_inactive(thread_id);
                         }
@@ -159,7 +165,7 @@ void require_apply_post_battle_unit_changes(void) {
 
                     require_panel_set_transition_value(1);
                     g_battle_text_substitution_values[0] = *selected_unit_index_ptr;
-                    battle_text_measure_pixels(&text_width_px, &text_height_px, battle_text_init_entry(0x5006));
+                    battle_text_measure_pixels(&text_width_px, &text_height_px, battle_text_find_entry(0x5006));
                     /* The s16 sum reads the halfword directly (a second copy of the
                      * loaded width) while the modulo uses the widened s32 value; the
                      * narrowing also leaves the other unreferenced frame slot. */
@@ -175,14 +181,14 @@ void require_apply_post_battle_unit_changes(void) {
                         g_require_message_menu_result = 0;
                     } else {
                         g_require_menu_selection_result = 0xff;
-                        battle_thread_start(7, require_menu_run_simple_selection_thread);
-                        battle_thread_set_parameters(7, (s32)(menu_fields - 4), 0, 0);
+                        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, require_menu_icon_strip_thread);
+                        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, (s32)(menu_fields - 4), 0, 0);
                         if (g_require_editor_unit_fields.state.generic_monster != 0) {
-                            battle_thread_start(5, battle_menu_run_icon_selection_loop);
-                            battle_thread_set_parameters(5, (s32)(menu_fields + 0x1dc), 0, 0);
+                            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
+                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)(menu_fields + 0x1dc), 0, 0);
                         } else {
-                            battle_thread_start(5, battle_menu_run_icon_selection_loop);
-                            battle_thread_set_parameters(5, (s32)(menu_fields + 0x38), 0, 0);
+                            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
+                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)(menu_fields + 0x38), 0, 0);
                         }
                     }
 
@@ -225,20 +231,20 @@ void require_apply_post_battle_unit_changes(void) {
                     /* The target reads the index into v0 here and reloads it
                      * into v1 after the call; one shared local is one allocno
                      * and takes v1 at both sites. */
-                    display_index = *(u16*)selected_unit_index_ptr;
+                    display_index = *selected_unit_index_ptr;
                     *(u16*)(unit_display_data + 0x0a) = display_index;
                     *(u16*)(unit_display_data + 0) = display_index;
                     require_editor_load_selected_unit();
-                    index_value = *(u16*)selected_unit_index_ptr;
+                    index_value = *selected_unit_index_ptr;
                     g_require_status_display_redraw_request = one;
                     g_require_numeric_editor_redraw_request = one;
                     g_require_character_status_redraw_request = one;
-                    *(u16*)(g_require_panel_active_unit_banner + 0xa) = index_value;
+                    g_require_panel_selected_billboard.unit_index = index_value;
                     if (g_require_party_removal_result == 0) {
                         require_panel_set_transition_value(1);
                     }
                     battle_menu_set_active_turn_panels(
-                        g_require_panel_active_unit_banner, unit_display_data, g_require_panel_billboard_data);
+                        &g_require_panel_selected_billboard, unit_display_data, &g_require_editor_unit_fields);
                     g_battle_screen_fade = screen_fade_max;
                     do {
                         battle_thread_yield();
@@ -248,21 +254,21 @@ void require_apply_post_battle_unit_changes(void) {
                 }
             } while (g_require_party_removal_result != 0);
             if (require_party_sell_equipment_over_limit(*selected_unit_index_ptr) != 0) {
-                battle_thread_start(5, battle_menu_icon_linked_entry_thread);
-                battle_thread_set_parameters(5, (s32)&g_require_party_removal_menus[5], 0, 0);
-                battle_thread_wait_until_inactive(5);
+                battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_icon_linked_entry_thread);
+                battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[5], 0, 0);
+                battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
             }
             battle_thread_wait_frames(20);
-            battle_thread_start(5, require_render_display_condition_special_cases_thread);
-            battle_thread_set_parameters(5, 10, 0, 0);
+            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, require_render_display_condition_special_cases_thread);
+            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 10, 0, 0);
             require_input_wait_frames_or_skip(60);
-            battle_thread_set_parameters(5, 0, 0, 2);
-            battle_thread_wait_until_inactive(5);
+            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 0, 0, 2);
+            battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
             require_panel_set_transition_value(0);
 
             unit = battle_unit_get_stats_from_battle_id(*selected_unit_index_ptr);
             unit_index_ptr++;
-            main_party_save_unit(unit, unit->unit_flags & 1);
+            main_party_save_unit(unit, unit->unit_flags & UNIT_FLAG_SAVE_FORMATION);
             battle_thread_wait_frames(20);
             goto next_unit;
         not_joining:
@@ -288,16 +294,16 @@ void require_apply_post_battle_unit_changes(void) {
         transition += 0x20;
         battle_thread_yield();
     } while (transition < 0x101);
-    battle_thread_set_parameters(8, 0, 0, 1);
-    battle_thread_set_parameters(12, 0, 0, 1);
-    battle_thread_set_parameters(9, 0, 0, 1);
-    battle_thread_wait_until_inactive(8);
-    battle_thread_wait_until_inactive(12);
-    battle_thread_wait_until_inactive(9);
+    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
+    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
-    battle_copy_bytes(&g_battle_threads[1], g_require_saved_thread_block, 0x400);
+    battle_copy_bytes(&g_battle_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;
-    battle_thread_resume(1);
+    battle_thread_resume(NATIVE_THREAD_SLOT_EVENT);
     battle_thread_yield();
     battle_thread_exit_current();
 }

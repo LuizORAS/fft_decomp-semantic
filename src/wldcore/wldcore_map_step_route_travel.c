@@ -19,60 +19,66 @@ void wldcore_map_step_route_travel(void) {
     s32 dy;
     s32 result;
 
-    if (!(g_wldcore_location_entry_state.flags & 1)) {
+    if (!(g_wldcore_location_entry_state.flags & WLDCORE_ROUTE_TRAVEL_ACTIVE)) {
         return;
     }
-    if (g_wldcore_map_projection_motion.flags & 1) {
+    if (g_wldcore_map_projection_motion.flags & WLDCORE_PROJECTION_MOTION_ACTIVE) {
         if (wldcore_map_step_projection_motion() == 0) {
-            g_wldcore_location_view.projection_state |= 6;
+            g_wldcore_location_view.projection_state
+                |= WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION | WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;
         }
-        g_wldcore_location_view.projection_state |= 1;
+        g_wldcore_location_view.projection_state |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
         return;
     }
     if (g_wldcore_location_entry_state.segment_frame >= g_wldcore_location_entry_state.segment_frames) {
         if (++g_wldcore_location_entry_state.segment_index >= g_wldcore_location_entry_state.segment_count) {
             wldcore_advance_calendar_day();
             g_wldcore_location_view.coordinates = g_wldcore_location_entry_state.target_position;
-            g_wldcore_location_view.projection_state |= 3;
+            g_wldcore_location_view.projection_state
+                |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION | WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION;
             g_wldcore_location_view.location_id = g_wldcore_location_entry_state.leg_end_location;
             world_script_set_variable(EVENT_SCRIPT_VAR_LOCATION, g_wldcore_location_entry_state.leg_end_location);
             g_wldcore_location_entry_state.route_index++;
-            if (wldcore_script_process_conditional_set(g_wldcore_location_view.location_id, 8) != 0) {
+            if (wldcore_script_process_conditional_set(
+                    g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_LOAD_EVENT)
+                != 0) {
                 g_wldcore_next_map_id[0] = 0;
                 world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[0]);
                 wldcore_menu_push_event_transition_level(g_wldcore_script_state.args[1]);
                 g_wldcore_location_view.angle = 0;
-                g_wldcore_location_view.projection_state &= ~4;
-                g_wldcore_location_entry_state.flags &= ~3;
+                g_wldcore_location_view.projection_state &= ~WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;
+                g_wldcore_location_entry_state.flags &= ~(WLDCORE_ROUTE_TRAVEL_ACTIVE | WLDCORE_ROUTE_TRAVEL_REVERSED);
                 g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                     .location_transition.location_id = g_wldcore_location_view.location_id;
                 return;
             }
-            if (wldcore_script_process_conditional_set(g_wldcore_location_view.location_id, 0x40) != 0) {
+            if (wldcore_script_process_conditional_set(
+                    g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_SET_VAR_2)
+                != 0) {
                 world_script_set_variable(g_wldcore_script_state.args[0], g_wldcore_script_state.args[1]);
             }
             if (wldcore_map_roll_random_encounter(g_wldcore_location_entry_state.leg_end_location,
                     g_wldcore_location_entry_state.route_path.routes[g_wldcore_location_entry_state.route_index - 1]
                         & 0xFF)
                 != 0) {
-                g_main_system_flags |= 0x8000;
+                g_main_system_flags |= MAIN_SYSTEM_FLAG_RANDOM_BATTLE;
                 g_wldcore_next_map_id[0] = g_wldcore_random_battle_map_id;
                 world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, g_wldcore_random_battle_entd_id);
                 world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
                 world_script_set_variable(
                     EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, g_wldcore_random_battle_squad_id);
                 world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
-                wldcore_menu_push_event_transition_level(0);
+                wldcore_menu_push_event_transition_level(WLDCORE_EVENT_TRANSITION_MODE_SPIN);
                 g_wldcore_location_view.angle = 0;
-                g_wldcore_location_view.projection_state &= ~4;
-                g_wldcore_location_entry_state.flags &= ~3;
+                g_wldcore_location_view.projection_state &= ~WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;
+                g_wldcore_location_entry_state.flags &= ~(WLDCORE_ROUTE_TRAVEL_ACTIVE | WLDCORE_ROUTE_TRAVEL_REVERSED);
                 g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                     .location_transition.location_id = g_wldcore_location_view.location_id;
                 return;
             }
-            wldcore_sound_play_effect(0x43);
+            wldcore_sound_play_effect(MAIN_SFX_WORLD_MAP_ARRIVE);
             if (g_wldcore_location_entry_state.route_index < g_wldcore_location_entry_state.best_path_length) {
-                g_wldcore_location_entry_state.flags &= ~2;
+                g_wldcore_location_entry_state.flags &= ~WLDCORE_ROUTE_TRAVEL_REVERSED;
                 g_wldcore_location_entry_state.segment_count = wldcore_location_begin_route_segment(
                     &g_wldcore_location_entry_state,
                     g_wldcore_location_entry_state.route_path.routes[g_wldcore_location_entry_state.route_index], 0);
@@ -82,19 +88,19 @@ void wldcore_map_step_route_travel(void) {
             }
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                                          .location_transition.window_index]
-                .flags ^= 0x10;
+                .flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                                          .location_transition.window_index]
-                .x = g_wldcore_location_view.point.x;
+                .position.x = g_wldcore_location_view.point.x;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level]
                                          .location_transition.window_index]
-                .y = g_wldcore_location_view.point.y - 4;
-            g_main_system_flags &= ~0x2000;
+                .position.y = g_wldcore_location_view.point.y - 4;
+            g_main_system_flags &= ~MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
             g_wldcore_location_entry_state.arrival_location = g_wldcore_location_view.location_id + 1;
             wldcore_wait_for_file_load();
             g_wldcore_location_view.angle = 0;
-            g_wldcore_location_view.projection_state &= ~4;
-            g_wldcore_location_entry_state.flags &= ~3;
+            g_wldcore_location_view.projection_state &= ~WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;
+            g_wldcore_location_entry_state.flags &= ~(WLDCORE_ROUTE_TRAVEL_ACTIVE | WLDCORE_ROUTE_TRAVEL_REVERSED);
             g_wldcore_menu_stack_records_next[g_wldcore_location_entry_state.menu_level].location_transition.location_id
                 = g_wldcore_location_view.location_id;
             result = wldcore_location_collect_choice_text_ids(g_wldcore_location_view.location_id,
@@ -111,7 +117,7 @@ void wldcore_map_step_route_travel(void) {
             wldcore_location_begin_route_segment(&g_wldcore_location_entry_state,
                 g_wldcore_location_entry_state.route_id, g_wldcore_location_entry_state.segment_index);
             g_wldcore_location_view.angle = g_wldcore_location_entry_state.heading;
-            g_wldcore_location_view.projection_state |= 2;
+            g_wldcore_location_view.projection_state |= WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION;
         }
     } else {
         g_wldcore_location_entry_state.segment_frame++;
@@ -128,5 +134,5 @@ void wldcore_map_step_route_travel(void) {
     delta.x -= previous.vx;
     delta.y -= previous.vy;
     wldcore_map_scroll_projection_if_focus_near_edge(&delta);
-    g_wldcore_location_view.projection_state |= 1;
+    g_wldcore_location_view.projection_state |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION;
 }

@@ -8,7 +8,7 @@
  * counting; otherwise 0. */
 s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing) {
     battle_stats_t* stats = unit;
-    s32 ct_index;
+    u32 ct_index;
     s32 stored_index;
 
     if (status_id == BATTLE_STATUS_ID_DEAD) {
@@ -21,7 +21,7 @@ s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing) {
     }
 
     ct_index = BATTLE_STATUS_CT_INDEX(status_id);
-    if ((u32)ct_index >= BATTLE_TIMED_STATUS_COUNT) {
+    if (ct_index >= BATTLE_TIMED_STATUS_COUNT) {
         return 0;
     }
     stored_index = ct_index;

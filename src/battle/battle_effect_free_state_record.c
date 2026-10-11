@@ -19,7 +19,7 @@ void battle_effect_free_state_record(s16 record_index) {
     particle = work = g_effect_state_records[record_index].work_head;
     head = g_battle_effect_allocated_record_head;
     while (work != 0) {
-        battle_effect_free_particle(record_index, particle);
+        battle_effect_free_work_record(record_index, particle);
         particle = work = work->next;
     }
     for (i = 0; i < 4; i++) {
@@ -27,13 +27,13 @@ void battle_effect_free_state_record(s16 record_index) {
             battle_heap_free_block(g_effect_state_records[record_index].work_slots[i]);
             g_effect_state_records[record_index].work_slots[i] = 0;
         }
-        g_effect_state_records[record_index].values_d4[i] = 0;
+        g_effect_state_records[record_index].callbacks[i] = 0;
     }
     parent = g_effect_state_records[record_index].parent_index;
-    if (parent != 0 && (g_effect_state_records[parent].flags & 1)) {
+    if (parent != 0 && (g_effect_state_records[parent].flags & EFFECT_RECORD_FLAG_ALLOCATED)) {
         for (i = 0; i < 4; i++) {
-            if (g_effect_state_records[parent].phase_ids[i] == record_index) {
-                g_effect_state_records[parent].phase_ids[i] = 0;
+            if (g_effect_state_records[parent].child_indices[i] == record_index) {
+                g_effect_state_records[parent].child_indices[i] = 0;
             }
         }
     }
@@ -55,5 +55,5 @@ void battle_effect_free_state_record(s16 record_index) {
         g_effect_state_records[cur].next_index = *available_after_unlink;
         *available_after_unlink = cur;
     }
-    g_effect_state_records[record_index].flags &= ~1;
+    g_effect_state_records[record_index].flags &= ~EFFECT_RECORD_FLAG_ALLOCATED;
 }

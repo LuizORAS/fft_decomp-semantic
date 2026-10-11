@@ -39,12 +39,8 @@ void DecDCTvlc(void* frame_data, void* decode_buffer) {
     register const psyq_press_dc_entry_t* dc_base __asm__("$1");
     register s32 zero __asm__("$0");
     register s32 other_zero __asm__("$0");
-    /* Shared-delay scopes preserve the handwritten machine slots. Empty register
-     * captures read the values those slots supplied on either architectural path;
-     * tied captures additionally retain C liveness across a continuation. */
     limit = &g_psyq_press_vlc_limit_halfwords;
     primary = g_psyq_press_ac_primary_table;
-    __asm__ volatile("" : "=r"(primary) : "0"(primary) : "memory");
     secondary = g_psyq_press_ac_secondary_table;
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (input != 0)
@@ -69,7 +65,6 @@ void DecDCTvlc(void* frame_data, void* decode_buffer) {
     PSYQ_CPU_TRAP_ADD(output_end, output, first);
     PSYQ_CPU_SHARED_DELAY_END();
 fresh_frame:
-    __asm__("" : "=r"(first)); /* Limit loaded in the initial branch delay. */
     PSYQ_CPU_TRAP_ADD(component, zero, zero);
     PSYQ_CPU_TRAP_ADD(predictor_cr, zero, zero);
     PSYQ_CPU_TRAP_ADD(predictor_cb, zero, zero);
@@ -165,17 +160,14 @@ dc_refill_ready:
     PSYQ_CPU_TRAP_ADD(predictor_cr, predictor_cr, scratch);
     PSYQ_CPU_SHARED_DELAY_END();
 dc_update_cb:
-    __asm__("" : "=r"(first));
     PSYQ_CPU_SHARED_DELAY_BEGIN();
     if (zero >= 0)
         goto dc_predictor_ready;
     PSYQ_CPU_TRAP_ADD(predictor_cb, predictor_cb, scratch);
     PSYQ_CPU_SHARED_DELAY_END();
 dc_update_y:
-    __asm__("" : "=r"(first));
     PSYQ_CPU_TRAP_ADD(predictor_y, predictor_y, scratch);
 dc_predictor_ready:
-    __asm__("" : "=r"(predictor_cr), "=r"(predictor_cb));
     first <<= 2;
     __asm__("" : "=r"(first) : "0"(first)); /* Preserve the retail 0x3ff mask after SLL. */
     first &= 0x3ff;

@@ -5,7 +5,7 @@ void SetDrawLoad(void* primitive, RECT* rect) {
     psyq_draw_load_t* packet = primitive;
     int size = (rect->w * rect->h + 1) / 2;
     int length = size + 4;
-    if ((u32)(size - 1) >= 11) {
+    if (size < 1 || size > 11) {
         length = 0;
     }
     packet->cache_flush = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_CLEAR_CACHE);

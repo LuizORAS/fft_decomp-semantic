@@ -18,56 +18,62 @@ void battle_move_start_unit_climb_hop_step(
     s32 height;
     u32 animation;
     u32 word;
+    u8 next;
 
-    step = &unit->movement_value;
-    if (unit->current_unit_id_plus_one != 0
-        && (battle_calculate_unit_height_data(&height_data, unit->current_unit_id_plus_one - 1),
+    step = &unit->current_path_step.value;
+    if (unit->standing_on_unit_id_plus_one != 0
+        && (battle_unit_calculate_height_data(&height_data, unit->standing_on_unit_id_plus_one - 1),
             (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
         height = height_data.total_height;
     } else {
-        height = to->height * 2 + (to->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height;
+        height = to->height * 2
+            + (to->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height;
     }
     rise_height = (height - -unit->screen.vy / 6) * 6 + 1;
     rise = SquareRoot12(rise_height * g_battle_move_jump_gravity * 2);
     unit->velocity.vy = -rise;
     frames = rise / g_battle_move_jump_gravity;
     switch (*step >> 6) {
-    case 0:
-        unit->step_phase = 0x16;
-        unit->facing = 0xC00;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (*step & 3);
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST;
+        unit->facing = BATTLE_FACING_EAST;
+        next = unit->map_x + 1;
+        unit->movement.bytes.destination_x = next + (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = 0xE000 / frames;
         break;
-    case 1:
-        unit->step_phase = 0x1E;
-        unit->facing = 0x400;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (*step & 3);
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST;
+        unit->facing = BATTLE_FACING_WEST;
+        next = unit->map_x - 1;
+        unit->movement.bytes.destination_x = next - (*step & 3);
         unit->velocity.vz = 0;
         unit->velocity.vx = -0xE000 / frames;
         break;
-    case 2:
-        unit->step_phase = 0x12;
-        unit->facing = 0;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (*step & 3);
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH;
+        unit->facing = BATTLE_FACING_SOUTH;
+        next = unit->map_y - 1;
+        unit->movement.bytes.destination_y = next - (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = -0xE000 / frames;
         break;
-    case 3:
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         /* Without this reorg moves this case's `li a0,0xe000` into the
          * `beq a1,3` delay slot, where the target keeps a nop; an asm insn
          * stops fill_slots_from_thread's scan (stop_search_p). */
         __asm__ volatile("");
-        unit->step_phase = 0x1A;
-        unit->facing = 0x800;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (*step & 3);
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
+        unit->facing = BATTLE_FACING_NORTH;
+        next = unit->map_y + 1;
+        unit->movement.bytes.destination_y = next + (*step & 3);
         unit->velocity.vx = 0;
         unit->velocity.vz = 0xE000 / frames;
         break;
     }
-    animation = 0x30;
+    animation = BATTLE_UNIT_ANIMATION_HOP;
     if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {
-        animation = 0x31;
+        animation = BATTLE_UNIT_ANIMATION_HOP_ALTERNATE;
     }
     battle_unit_store_animation_facing(animation, unit->facing, unit);
     word = unit->movement.word;

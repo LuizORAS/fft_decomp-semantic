@@ -1,5 +1,7 @@
 #include "fft/world.h"
 
+/* Start the fade from intensity 0 up to full (the screen fades out), unless
+ * fades are disabled. */
 /* Target 0x8012d48c. */
 void world_gfx_start_increasing_fade(void) {
     if (g_world_gfx_fade_disabled == 0) {

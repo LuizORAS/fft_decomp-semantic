@@ -23,8 +23,8 @@ void battle_reaction_try_mp_switch(void) {
     }
     action = g_battle_action_target_data;
     action->mp_damage = action->mp_damage + action->hp_damage;
-    if (action->mp_damage >= 1000) {
-        action->mp_damage = 999;
+    if (action->mp_damage >= 0x3E8) {
+        action->mp_damage = 0x3E7;
     }
     action2 = g_battle_action_target_data;
     action2->attack_type &= ~BATTLE_ACTION_TYPE_HP_DAMAGE;

@@ -7,13 +7,13 @@ void battle_unit_snap_all_facings_to_quadrants(void) {
     unit = g_battle_unit_misc_list_head;
     while (unit != 0) {
         facing = unit->facing & BATTLE_FACING_MASK;
-        if (facing < 0x200) {
+        if (facing < BATTLE_FACING_SOUTH_WEST) {
             unit->facing = BATTLE_FACING_SOUTH;
-        } else if (facing < 0x600) {
+        } else if (facing < BATTLE_FACING_NORTH_WEST) {
             unit->facing = BATTLE_FACING_WEST;
-        } else if (facing < 0xa00) {
+        } else if (facing < BATTLE_FACING_NORTH_EAST) {
             unit->facing = BATTLE_FACING_NORTH;
-        } else if (facing < 0xe00) {
+        } else if (facing < BATTLE_FACING_SOUTH_EAST) {
             unit->facing = BATTLE_FACING_EAST;
         } else {
             unit->facing = BATTLE_FACING_SOUTH;

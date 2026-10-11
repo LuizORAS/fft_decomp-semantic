@@ -9,25 +9,28 @@
 void battle_state_enter_battle_message_display(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
+    battle_ability_animation_data_t* animation;
     s32 message;
     s32 i;
 
     g_battle_game_state = BATTLE_GAME_STATE_BATTLE_MESSAGE_DISPLAY;
-    g_battle_state_vsync_interval = 1;
+    g_main_system_vsync_interval = 1;
     g_battle_action_post_action = 0;
     unit = battle_unit_get_casting_misc_data();
     battle_action_queue_target_effect_messages();
     battle_unit_update_attack_result_animation(unit);
-    unit->item_ability_display = 0;
+    unit->item_display_active = 0;
     battle_text_set_message_duration_frames(0x3c);
-    switch (unit->ability_formula) {
-    case 6:
-        main_sound_play_tune(2);
-        battle_menu_init_system_function(0xa, 0x1838, unit->battle_data->misc_unit_id, 0, 1);
+    switch (unit->post_action_message) {
+    case BATTLE_POST_ACTION_MESSAGE_POACHED:
+        main_sound_play_tune(MAIN_SOUND_TUNE_ITEM_FOUND);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x1838, unit->battle_data->misc_unit_id, 0, 1);
         return;
-    case 9:
-        main_sound_play_tune(2);
-        battle_menu_init_system_function(0xa, 0x1828, unit->battle_data->misc_unit_id, 0, 1);
+    case BATTLE_POST_ACTION_MESSAGE_TRAINED:
+        main_sound_play_tune(MAIN_SOUND_TUNE_ITEM_FOUND);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x1828, unit->battle_data->misc_unit_id, 0, 1);
         return;
     }
 
@@ -36,25 +39,28 @@ void battle_state_enter_battle_message_display(void) {
         target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
         if (target != 0 && target->battle_data != 0 && target->battle_data->action.hit != 0) {
             battle_text_set_message_duration_frames(0x3c);
-            message = g_battle_ability_animation_data[unit->sp2_ability_id].text_display;
+            /* Taking the row first keeps this loop above loop.c's size limit
+             * for hoisting the constant 6 into a saved register. */
+            animation = &g_battle_ability_animation_data[unit->sp2_ability_id];
+            message = animation->text_display;
             if (message == 0) {
                 break;
             }
             if (message == 6) {
-                /* Clobbers $v0 so the constant 6 is reloaded, not kept in $s4 across the call. */
-                __asm__ volatile("" : : : "$2");
-                main_sound_play_tune(2);
+                main_sound_play_tune(MAIN_SOUND_TUNE_ITEM_FOUND);
             }
             break;
         }
     }
 
     if (message == 6 || message == 0x2b) {
-        battle_menu_init_system_function(
-            0xa, message | 0x1800, unit->battle_data->misc_unit_id, target->battle_data->misc_unit_id, 1);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, message | 0x1800,
+            unit->battle_data->misc_unit_id, target->battle_data->misc_unit_id, 1);
     } else if (message != 0) {
-        battle_menu_init_system_function(0xa, message | 0x1800, unit->battle_data->misc_unit_id, 0, 1);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, message | 0x1800, unit->battle_data->misc_unit_id, 0, 1);
     } else {
-        battle_menu_init_system_function(0xa, 0, unit->battle_data->misc_unit_id, 0, 0);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->misc_unit_id, 0, 0);
     }
 }

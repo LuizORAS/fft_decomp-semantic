@@ -34,7 +34,7 @@
  *   RECTs reproduce the locals area.
  */
 s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 show_stat_panel, s16 allow_stat_cycle,
-    u16 stat_mode, u16 buttons, s16 locked) {
+    s16 stat_mode, s16 buttons, s16 locked) {
     RECT unused[3];
     RECT cell;
     RECT rect;
@@ -43,7 +43,6 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     u8 saved_color[3];
     s32 row;
     s32 col;
-    u16 input;
     u8* menu;
     battle_menu_sprite_cell_t* quads;
     s16 y;
@@ -67,19 +66,21 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     s16* focus;
     s16 cursor_y;
 
-    input = buttons;
     if (locked != 0) {
-        input = 0;
+        buttons = 0;
     }
     if (allow_stat_cycle != 0) {
         if (g_bunit_unit_browse_enabled == 0) {
-            if (input & PSX_PAD_L2) {
-                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == 0 ? 4 : g_bunit_unit_stat_mode - 1;
-                input &= ~2;
+            if (buttons & PSX_PAD_L2) {
+                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == MENU_UNIT_READOUT_HP ? MENU_UNIT_READOUT_BRAVE_FAITH
+                                                                                        : g_bunit_unit_stat_mode - 1;
+                buttons &= ~PSX_PAD_R2;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
-            if (input & PSX_PAD_R2) {
-                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == 4 ? 0 : g_bunit_unit_stat_mode + 1;
+            if (buttons & PSX_PAD_R2) {
+                g_bunit_unit_stat_mode = g_bunit_unit_stat_mode == MENU_UNIT_READOUT_BRAVE_FAITH
+                    ? MENU_UNIT_READOUT_HP
+                    : g_bunit_unit_stat_mode + 1;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
             }
         }
@@ -88,15 +89,17 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
         g_bunit_unit_stat_mode = stat_mode;
     }
     unit = 1;
-    if (allow_browse != 0 && bunit_input_get_lock_timer() == 0 && battle_thread_is_running(7) == 0
-        && !(g_bunit_status_display_flags & 0x60) && g_bunit_status_banner_slide_step == 0
-        && g_bunit_unit_list_scroll_step == 0) {
-        if (input & PSX_PAD_CIRCLE) {
-            if (g_bunit_unit_browse_enabled == 0 && battle_thread_is_running(9) == 0) {
+    if (allow_browse != 0 && bunit_input_get_lock_timer() == 0
+        && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0
+        && !(g_bunit_status_display_flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP))
+        && g_bunit_status_banner_slide_step == 0 && g_bunit_unit_list_scroll_step == 0) {
+        if (buttons & PSX_PAD_CIRCLE) {
+            if (g_bunit_unit_browse_enabled == 0
+                && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0) {
                 g_bunit_unit_browse_enabled = 1;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
             }
-        } else if (input & PSX_PAD_CROSS) {
+        } else if (buttons & PSX_PAD_CROSS) {
             if (g_bunit_unit_browse_enabled != 0) {
                 unit = 0;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_CANCEL;
@@ -105,33 +108,38 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
         }
     }
     if (g_bunit_unit_browse_enabled != 0) {
-        input &= 0xFFF;
+        buttons &= 0xFFF;
     }
-    if (allow_banner_toggle != 0 && g_bunit_unit_browse_enabled == 0 && (input & PSX_PAD_SQUARE)
-        && bunit_menu_is_unit_list_scroll_needed() == 0 && battle_thread_is_running(9) == 0
-        && battle_thread_is_running(7) == 0 && !(g_bunit_status_display_flags & 0x60)) {
+    if (allow_banner_toggle != 0 && g_bunit_unit_browse_enabled == 0 && (buttons & PSX_PAD_SQUARE)
+        && bunit_menu_is_unit_list_scroll_needed() == 0
+        && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
+        && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0
+        && !(g_bunit_status_display_flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP))) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
         g_bunit_status_banner_enabled = g_bunit_status_banner_enabled == 0;
     }
-    if (battle_thread_is_running(9) == 0 && g_bunit_help_screen_id == 0 && bunit_gfx_get_fade_state() == 0) {
+    if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
+        && g_bunit_help_screen_id == MENU_GRID_HELP_NONE && bunit_gfx_get_fade_state() == 0) {
         g_bunit_unit_grid_selected_cell = bunit_menu_update_wrapped_grid_selection(
-            4, 5, (u8)g_bunit_unit_reorderable_count - 1, g_bunit_unit_grid_selected_cell, (s16)input);
-        g_bunit_unit_selected_index = (u8)g_bunit_unit_reorderable_indices[g_bunit_unit_grid_selected_cell];
+            4, 5, g_bunit_unit_reorderable_count - 1, g_bunit_unit_grid_selected_cell, buttons);
+        g_bunit_unit_selected_index = g_bunit_unit_reorderable_indices[g_bunit_unit_grid_selected_cell];
     }
     bunit_menu_update_unit_list_scroll(&g_bunit_unit_list_scroll_step, &g_bunit_unit_list_page_offset);
     if (g_bunit_unit_browse_enabled != 0) {
-        if (input & PSX_PAD_L1) {
+        if (buttons & PSX_PAD_L1) {
             g_bunit_unit_selected_index
                 = g_bunit_unit_selected_index == 0 ? g_bunit_unit_list_count - 1 : g_bunit_unit_selected_index - 1;
-        } else if (input & PSX_PAD_R1) {
+        } else if (buttons & PSX_PAD_R1) {
             g_bunit_unit_selected_index
                 = g_bunit_unit_selected_index != g_bunit_unit_list_count - 1 ? g_bunit_unit_selected_index + 1 : 0;
         }
         g_bunit_unit_grid_selected_cell = g_bunit_unit_list_index_map[g_bunit_unit_selected_index];
-        bunit_menu_draw_pressable_button(0, 0xC, 0xE, input & PSX_PAD_L1,
-            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
-        bunit_menu_draw_pressable_button(1, 0xE0, 0xE, input & PSX_PAD_R1,
-            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L1, 0xC, 0xE, buttons & PSX_PAD_L1,
+            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
+            MAIN_SFX_PAGE_SWITCH);
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R1, 0xE0, 0xE, buttons & PSX_PAD_R1,
+            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
+            MAIN_SFX_PAGE_SWITCH);
     }
     if (g_bunit_status_banner_slide_step == 0 && bunit_input_get_lock_timer() == 0 && unit != 0 && show_stat_panel != 0
         && g_bunit_status_banner_enabled != 0 && g_bunit_unit_browse_enabled == 0) {
@@ -144,21 +152,23 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
             menu = g_bunit_unit_grid_stat_bar_script_bottom;
             quads = g_bunit_unit_grid_label_tiles_bottom;
         }
-        bunit_menu_draw_pressable_button(4, 0x26, (s16)top, input & PSX_PAD_L2,
-            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
-        bunit_menu_draw_pressable_button(5, 0xC2, (s16)top, input & PSX_PAD_R2,
-            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != 0, 6);
-        bunit_menu_dispatch_with_override((s32)menu, 0, 0);
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L2, 0x26, top, buttons & PSX_PAD_L2,
+            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
+            MAIN_SFX_PAGE_SWITCH);
+        bunit_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R2, 0xC2, top, buttons & PSX_PAD_R2,
+            bunit_menu_is_active_or_transitioning() != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE,
+            MAIN_SFX_PAGE_SWITCH);
+        bunit_menu_dispatch_with_override(menu, 0, 0);
         bunit_gfx_enqueue_textured_quad_list(
             quads, 0, 0, g_bunit_menu_icon_texture_page, g_bunit_text_clut_2_mode0, 0xB, 8);
         mode = g_bunit_unit_stat_mode;
         if (mode < 3) {
             row = mode;
             col = 1;
-        } else if (mode == 3) {
+        } else if (mode == MENU_UNIT_READOUT_LEVEL_EXP) {
             row = 3;
             col = 2;
-        } else if (mode == 4) {
+        } else if (mode == MENU_UNIT_READOUT_BRAVE_FAITH) {
             row = 5;
             col = 3;
         }
@@ -166,7 +176,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
             quads + row, 0, 0, g_bunit_menu_icon_texture_page, g_bunit_text_clut_1_mode0, 0xC, col);
     }
     row = 0;
-    g_bunit_status_banner_at_bottom = bunit_menu_is_unit_list_row_visible(g_bunit_unit_list_page_offset);
+    g_bunit_status_banner_at_bottom = bunit_menu_is_selected_unit_in_upper_rows(g_bunit_unit_list_page_offset);
     y = 0x24 + g_bunit_unit_list_page_offset + g_bunit_unit_list_scroll_step;
     cell.w = 0x38;
     cell.h = 0x30;
@@ -187,7 +197,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
         }
         bunit_gfx_set_draw_color(top ? g_bunit_unit_grid_dimmed_color : g_bunit_unit_grid_normal_color);
         for (col = 0; col < 4; col++, unit++) {
-            if (unit >= (u8)g_bunit_unit_reorderable_count)
+            if (unit >= g_bunit_unit_reorderable_count)
                 break;
             cell.x = col * 62 + 6;
             cell.y = y;
@@ -198,7 +208,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
             if (y < -0x3C || y >= 0xF0)
                 continue;
             cell_y = cell.y;
-            unit_index = (u8)g_bunit_unit_reorderable_indices[unit];
+            unit_index = g_bunit_unit_reorderable_indices[unit];
             top = cell_y + 40;
             if (g_bunit_unit_browse_enabled == 0 && top < 240) {
                 if (g_bunit_unit_stat_mode < 3) {
@@ -210,7 +220,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     bunit_gfx_enqueue_textured_quad(&rect,
                         ((u8*)g_bunit_unit_grid_label_tiles)[g_bunit_unit_stat_mode * 6 + 4],
                         ((u8*)g_bunit_unit_grid_label_tiles)[g_bunit_unit_stat_mode * 6 + 5], color, 0,
-                        g_bunit_menu_icon_texture_page, g_bunit_text_metric_1, 8);
+                        g_bunit_menu_icon_texture_page, g_bunit_menu_alternate_number_clut, 8);
                     g_bunit_unit_grid_max_stat_number.x = cell.x + 40;
                     g_bunit_unit_grid_max_stat_number.y = cell_y + 45;
                     g_bunit_unit_grid_max_stat_number.value = unit_index;
@@ -223,12 +233,12 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     rect.y = top + 5;
                     rect.w = 6;
                     rect.h = 11;
-                    bunit_gfx_enqueue_textured_quad(
-                        &rect, 0xB4, 0x10, color, 0, g_bunit_text_digit_texture_page, g_bunit_text_metric_1, 8);
-                    if (g_bunit_unit_stat_mode == 0) {
+                    bunit_gfx_enqueue_textured_quad(&rect, 0xB4, 0x10, color, 0, g_bunit_text_digit_texture_page,
+                        g_bunit_menu_alternate_number_clut, 8);
+                    if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_HP) {
                         clut = g_bunit_unit_grid_hp_gauge_clut;
                         gradient = g_bunit_unit_grid_hp_gauge_colors;
-                    } else if (g_bunit_unit_stat_mode == 1) {
+                    } else if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_MP) {
                         clut = g_bunit_unit_grid_mp_gauge_clut;
                         gradient = g_bunit_unit_grid_mp_gauge_colors;
                     } else {
@@ -256,7 +266,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     bar_points[6] += bar_points[4];
                     bar_points[7] = g_bunit_unit_grid_gauge_offsets[3] + top + 8;
                     bunit_gfx_enqueue_gouraud_quad(bar_points, gradient, 0, 8);
-                } else if (g_bunit_unit_stat_mode == 3) {
+                } else if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_LEVEL_EXP) {
                     top = cell_y + 45;
                     rect.x = cell.x - 1;
                     label_y3 = top;
@@ -267,14 +277,14 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     rect.h = g_bunit_unit_grid_label_tiles[3].h + 1;
                     bunit_gfx_enqueue_textured_quad(&rect, g_bunit_unit_grid_label_tiles[3].u,
                         g_bunit_unit_grid_label_tiles[3].v, color, 0, g_bunit_menu_icon_texture_page,
-                        g_bunit_text_metric_1, 8);
+                        g_bunit_menu_alternate_number_clut, 8);
                     rect.x = cell.x + 26;
                     rect.y = label_y3;
                     rect.w = g_bunit_unit_grid_label_tiles[4].w + 2;
                     rect.h = g_bunit_unit_grid_label_tiles[4].h;
                     bunit_gfx_enqueue_textured_quad(&rect, g_bunit_unit_grid_label_tiles[4].u,
                         g_bunit_unit_grid_label_tiles[4].v, color, 0, g_bunit_menu_icon_texture_page,
-                        g_bunit_text_metric_1, 8);
+                        g_bunit_menu_alternate_number_clut, 8);
                     g_bunit_unit_grid_level_number.x = cell.x + 13;
                     g_bunit_unit_grid_level_number.y = upper_y3;
                     g_bunit_unit_grid_level_number.value = unit_index;
@@ -283,7 +293,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     g_bunit_unit_grid_experience_number.y = number_y3;
                     g_bunit_unit_grid_experience_number.value = unit_index;
                     bunit_menu_script_draw_formatted_number(&g_bunit_unit_grid_experience_number);
-                } else if (g_bunit_unit_stat_mode == 4) {
+                } else if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_BRAVE_FAITH) {
                     top = cell_y + 45;
                     rect.x = cell.x - 1;
                     label_y4 = top;
@@ -293,26 +303,26 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     rect.h = g_bunit_unit_grid_label_tiles[5].h;
                     bunit_gfx_enqueue_textured_quad(&rect, g_bunit_unit_grid_label_tiles[5].u,
                         g_bunit_unit_grid_label_tiles[5].v, color, 0, g_bunit_menu_icon_texture_page,
-                        g_bunit_text_metric_1, 8);
+                        g_bunit_menu_alternate_number_clut, 8);
                     rect.x += rect.w - 2;
                     rect.y += 5;
                     rect.w = 3;
                     rect.h = 3;
-                    bunit_gfx_enqueue_textured_quad(
-                        &rect, 0x3B, 0x15, color, 0, g_bunit_menu_icon_texture_page, g_bunit_text_metric_1, 8);
+                    bunit_gfx_enqueue_textured_quad(&rect, 0x3B, 0x15, color, 0, g_bunit_menu_icon_texture_page,
+                        g_bunit_menu_alternate_number_clut, 8);
                     rect.x = cell.x + 26;
                     rect.y = label_y4;
                     rect.w = g_bunit_unit_grid_label_tiles[7].w;
                     rect.h = g_bunit_unit_grid_label_tiles[7].h;
                     bunit_gfx_enqueue_textured_quad(&rect, g_bunit_unit_grid_label_tiles[7].u,
                         g_bunit_unit_grid_label_tiles[7].v, color, 0, g_bunit_menu_icon_texture_page,
-                        g_bunit_text_metric_1, 8);
+                        g_bunit_menu_alternate_number_clut, 8);
                     rect.x += rect.w;
                     rect.y += 5;
                     rect.w = 3;
                     rect.h = 3;
-                    bunit_gfx_enqueue_textured_quad(
-                        &rect, 0x3B, 0x15, color, 0, g_bunit_menu_icon_texture_page, g_bunit_text_metric_1, 8);
+                    bunit_gfx_enqueue_textured_quad(&rect, 0x3B, 0x15, color, 0, g_bunit_menu_icon_texture_page,
+                        g_bunit_menu_alternate_number_clut, 8);
                     g_bunit_unit_grid_brave_number.x = cell.x + 13;
                     g_bunit_unit_grid_brave_number_wide.y = g_bunit_unit_grid_brave_number.y = upper_y4;
                     g_bunit_unit_grid_brave_number_wide.value = g_bunit_unit_grid_brave_number.value = unit_index;
@@ -332,12 +342,12 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                         bunit_menu_script_draw_formatted_number(&g_bunit_unit_grid_faith_number);
                 }
             }
-            bunit_gfx_draw_unit_sprite_and_name_plate((u8)g_bunit_unit_reorderable_indices[unit], cell.x, cell.y);
-            if (g_bunit_unit_data[(u8)g_bunit_unit_reorderable_indices[unit]]->formation_order_key & 0x80) {
+            bunit_gfx_draw_unit_sprite_and_name_plate(g_bunit_unit_reorderable_indices[unit], cell.x, cell.y);
+            if (g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
                 bunit_gfx_draw_unit_sprite_and_name_plate(
-                    bunit_unit_find_index_by_roster_id(
-                        (s16)(g_bunit_unit_data[(u8)g_bunit_unit_reorderable_indices[unit]]->formation_order_key
-                            - 0x80)),
+                    bunit_unit_find_index_by_battle_id(
+                        g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info
+                        - BATTLE_MOUNT_INFO_FLAG_RIDER),
                     cell.x, cell.y);
             }
         }

@@ -7,12 +7,14 @@ void world_menu_start_equipment_and_ability_panel_thread(s32 enabled) {
         return;
     }
     enabled = 1;
-    if (g_world_status_display_thread_params.flags & 0x60) {
+    if (g_world_status_display_thread_params.flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP)) {
         return;
     }
-    if (world_thread_is_running(9) == 0 && world_thread_is_running(10) == 0) {
-        world_thread_start(9, world_menu_equipment_and_ability_panel_thread);
-        world_thread_set_parameters(9, (s32)&g_world_equipment_ability_panel_thread_params, 0, 0);
+    if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
+        && world_thread_is_running(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) == 0) {
+        world_thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, world_menu_equipment_and_ability_panel_thread);
+        world_thread_set_parameters(
+            NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)&g_world_equipment_ability_panel_thread_params, 0, 0);
     }
     world_menu_toggle_numeric_editor_thread(enabled);
 }

@@ -1,8 +1,10 @@
 #include "fft/battle.h"
 
-/* Allocate size bytes plus an 8-byte header from the battle heap: first fit from the rover,
- * splitting the end off a larger free block, then link the block into owner's list. There is
- * no out-of-memory exit: when no free block fits, it walks the free ring forever. */
+/* Allocate size bytes plus an 8-byte header from the battle heap for owner's list: first fit in
+ * 8-byte units along the free ring from the rover; an exact fit is unlinked, a larger free block
+ * gives up its end. The block goes to the head of the owner's list and the address past its
+ * header is returned. There is no out-of-memory exit: when no free block fits, it walks the free
+ * ring forever. */
 void* battle_heap_alloc_block(u32 size, s32 owner) {
     battle_heap_node_t* prev;
     battle_heap_node_t* node;

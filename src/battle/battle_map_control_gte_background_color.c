@@ -1,9 +1,16 @@
 #include "fft/battle.h"
 
+/* GTE back colour commands for the map's ambient colour.
+ *
+ * SET stores the three components and loads them into the GTE, and returns the
+ * address of the stored red word; while the back colour is disabled it does
+ * neither and returns 0. GET returns that address. DISABLE loads black and blocks
+ * SET; RESTORE reloads the stored colour and lifts the block.
+ *
+ * DISABLE, RESTORE and a command with no case return the unset `result`. Every
+ * caller issues SET and ignores the result. */
 s32* battle_map_control_gte_background_color(s32 command, s32 value_1, s32 value_2, s32 value_3) {
-    /* Matching limitation: commands 11/12 and the default path return this
-     * uninitialized local. The target has no defined result on those paths;
-     * this C expression remains undefined even when callers ignore it. */
+    /* Left unset on the DISABLE, RESTORE and default paths. */
     s32* result;
 
     switch (command) {

@@ -2,7 +2,9 @@
 #include "psx/types.h"
 
 /* Move the map cursor to the selected unit, or else to the tile in the unit's command
- * (command_state.cursor.target_panel), and refresh the status panels when it moved. */
+ * (command_state.cursor.target_panel), and when it moved refresh the panel for the state: the
+ * cursor unit's in FREE_CURSOR, SELECT_MOVE_TILE and TARGET_SELECT, the preview target's in
+ * TARGETING_RANGE. */
 void battle_target_move_cursor_to_selection(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* selected_unit) {
     s32 old_x;
     s32 old_z;

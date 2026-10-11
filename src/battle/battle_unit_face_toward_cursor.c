@@ -23,7 +23,7 @@ void battle_unit_face_toward_cursor(battle_unit_misc_data_t* unit) {
         unit_y = unit->screen.vz - 14;
         difference.vz = tile_y - unit_y;
         if (difference.vx != 0 || difference.vz != 0) {
-            unit->facing = (s16)((ratan2(-difference.vz, difference.vx) - 0x200) & 0xC00);
+            unit->facing = (ratan2(-difference.vz, difference.vx) - 0x200) & 0xC00;
         }
     }
 }

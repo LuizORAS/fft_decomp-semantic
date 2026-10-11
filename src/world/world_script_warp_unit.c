@@ -5,7 +5,7 @@
 /* WarpUnit event instruction: moves the addressed unit to the tile encoded in
  * the four parameter bytes (x, y, elevation, facing) and, when the unit is on
  * the map, teleports its renderer record and resets its rotation state. */
-s32 world_script_warp_unit(u8* instruction) {
+s32 world_script_warp_unit(void* instruction) {
     const u8* parameters = instruction;
     world_unit_coordinates_t coordinates;
     s32 resolved_id;

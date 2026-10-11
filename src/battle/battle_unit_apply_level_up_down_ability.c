@@ -1,5 +1,10 @@
 #include "fft/battle.h"
 
+/* Apply a level-up or level-down special effect: level + 1 (99 at most) or
+ * level - 1 (1 at least), then one level of growth or its inverse. The new
+ * level is stored before the growth runs, so the growth divides by growth +
+ * new level. The unit changes only when executing; returns 1 when the action
+ * carries either effect. */
 s32 battle_unit_apply_level_up_down_ability(void) {
     s32 lv;
     s32 dir;

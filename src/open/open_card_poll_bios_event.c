@@ -1,6 +1,8 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Poll the four BIOS card events and report which one fired, or pending when none
+ * fired. A fired event is consumed along with the rest of the set. */
 s32 open_card_poll_bios_event(void) {
     s32 result = CARD_IO_RESULT_PENDING;
 

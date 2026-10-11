@@ -23,11 +23,10 @@ void world_script_face_tile(const u8* parameters) {
     target[0] = parameters[2] * 28 + 14;
     target[2] = parameters[3] * 28 + 14;
     unit_id = world_script_load_halfword(parameters);
-    if (world_unit_try_get_misc_data_by_id(&unit_id, &misc_index) != 0) {
+    if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-            if (world_script_filter_unit_id_by_mode(&unit_id, (u16*)&g_world_unit_face_slot_order[i], &misc_index)
-                != 0) {
-                world_unit_copy_screen_data_by_misc_id(unit_id, position);
+            if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0) {
+                world_unit_copy_misc_screen_coords(unit_id, position);
                 dx = target[0] - position[0];
                 dy = target[2] - position[2];
                 facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;

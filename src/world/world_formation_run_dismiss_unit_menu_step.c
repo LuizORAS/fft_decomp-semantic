@@ -3,19 +3,10 @@
 #include "psx/types.h"
 
 /*
- * The Soldier Office "dismiss unit" menu step. Three phases:
- *   - the dismissal animation timer (g_world_formation_dismiss_anim_timer) counting to 0x11, after
- *     which the roster slot is released and the script variables tied to the
- *     unit's sprite set are set;
- *   - first entry, which picks the prompt text and menu record; and
- *   - the per-frame poll of the prompt/menu thread.
- */
-
-/*
- * Provisional. The sprite-set -> script-variable table walked by the
+ * The sprite-set -> script-variable table walked by the
  * dismissal tail, terminated by sprite_set == -1. The four-byte stride is
  * proved by the target advancing both its record pointer and its byte-offset
- * index by 4 per iteration. Proposed for include/fft/world.h.
+ * index by 4 per iteration.
  */
 typedef struct world_formation_dismiss_entry {
     s16 sprite_set;  /* 0x00 */
@@ -23,10 +14,9 @@ typedef struct world_formation_dismiss_entry {
 } world_formation_dismiss_entry_t;
 
 /*
- * Provisional. The menu record handed to world_menu_run_thread for the
- * dismissal prompt. Offsets 0x74 is world_menu_thread_data_t.selection; the
- * other two fields are established here only. Proposed as an extension of
- * world_menu_thread_data_t in include/fft/world.h.
+ * The menu record handed to world_menu_run_thread for the
+ * dismissal prompt. Offset 0x74 is world_menu_thread_data_t.selection; the
+ * other two fields are written only here.
  */
 typedef struct world_formation_dismiss_menu {
     u8 _unused_00[0x74];
@@ -41,24 +31,31 @@ extern world_formation_dismiss_entry_t g_world_formation_dismiss_entries[];
 extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu;
 extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scrolled;
 
+/*
+ * Per-frame step of the "dismiss unit" menu
+ * (WORLD_FORMATION_MENU_DISMISS_UNIT), called by world_formation_process_frame.
+ * Three phases: first entry, which picks the prompt text and menu record;
+ * the per-frame poll of the prompt or menu thread; and the dismissal timer.
+ *
+ * On entry a unit that is away on a proposition only gets message 0xC012.
+ * Otherwise g_world_formation_dismiss_step takes
+ * world_formation_can_dismiss_unit's answer: 0 shows the unit's refusal line
+ * and returns to the grid, nonzero runs the yes/no confirmation. The line
+ * comes from the dismiss-reply text (0xE800 + n): a generic unit (sprite set
+ * 0x4B and up) draws one of eight lines for its gender or monster kind with
+ * rand(); a special unit uses its sprite set, + 0x17 for the farewell and
+ * + 0x61 for the refusal, with sprite set 0x48 sharing 0x49's lines.
+ *
+ * Confirming plays the dismiss sound and starts a 16-frame timer (the unit
+ * index is carried in its high byte); when it runs out every
+ * g_world_formation_dismiss_entries row matching the unit's sprite set has
+ * its script variable set to 0xC and the unit is removed.
+ */
 void world_formation_run_dismiss_unit_menu_step(void) {
-    world_formation_unit_t** units;
-    /* The target keeps the unit-pointer base in s2 for the dismissal loop and
-     * s0 for the first-entry block. One C variable is one pseudo, so those
-     * are two variables. */
-    world_formation_unit_t** units2;
     world_formation_unit_t* unit;
-    world_formation_dismiss_entry_t* entry;
     world_formation_dismiss_menu_t* menu;
-    s32 offset;
-    /* Pinned: every assignment is an immediate, so the pin is free. It puts
-     * the sentinel in v0, which leaves v1 for the guard load below and is
-     * what the target does (li v0,-1 / lh v1,-0x2894(v1)). */
-    register s32 sentinel __asm__("$2");
+    s32 i;
     s32 value;
-    /* Split from `value`: the target holds the prompt text id in a1 and this
-     * 0/1 flag in v0, so they cannot be one pseudo. */
-    s32 flag;
     s32 sprite;
     s32 flags;
     s32 step;
@@ -75,67 +72,43 @@ void world_formation_run_dismiss_unit_menu_step(void) {
     s8 running;
 
     if (g_world_formation_dismiss_anim_timer != 0) {
-        /* Pre-increment, not a named load plus `+ 1`: the idiom forces the
-         * expander to materialise the incremented value in its own pseudo,
-         * which is what keeps the target's `move v1,v0` at +0x20 alive. With
-         * a named temporary `cse` value-numbers both names into one pseudo
-         * and deletes the copy; a two-variable tie, a self-tie launder or a
-         * keepalive on the load still emits no move. */
-        value = ++g_world_formation_dismiss_anim_timer;
-        if ((value & 0xFF) < 0x11) {
+        g_world_formation_dismiss_anim_timer++;
+        if ((g_world_formation_dismiss_anim_timer & 0xFF) < 0x11) {
             return;
         }
-        /* The sentinel is set twice so loop.c sees it vary and leaves it in
-         * the body, where the target rematerialises it into the `lh` shadow
-         * rather than paying a fourth callee-saved register for the hoist. */
-        sentinel = -1;
-        offset = 0;
-        if (g_world_formation_dismiss_entries[0].sprite_set != sentinel) {
-            units = g_world_formation_unit_pointers;
-            /* Two-variable tie (output `entry`, input the array symbol): keeps
-             * the guard load and this walker from sharing one base register.
-             * Without it cc1 emits `la $4,SYM; lh $2,0($4)` then `move s0,$4`;
-             * the target folds %lo into the guard `lh` and materialises the
-             * address again in s0. */
-            __asm__("" : "=r"(entry) : "0"(g_world_formation_dismiss_entries));
-            do {
-                if (units[g_world_formation_selected_unit_index]->sprite_set == entry->sprite_set) {
-                    /* Read through the separate byte-offset index, not entry (see the table note). */
-                    world_script_set_variable(
-                        *(s16*)((u8*)&g_world_formation_dismiss_entries[0].variable_id + offset), 0xC);
-                }
-                entry++;
-                offset += 4;
-                sentinel = -1;
-            } while (entry->sprite_set != sentinel);
+        for (i = 0; g_world_formation_dismiss_entries[i].sprite_set != -1; i++) {
+            if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
+                == g_world_formation_dismiss_entries[i].sprite_set) {
+                world_script_set_variable(g_world_formation_dismiss_entries[i].variable_id, 0xC);
+            }
         }
         world_formation_dismiss_unit(g_world_formation_selected_unit_index);
         g_world_menu_sound_muted = 0;
-        g_world_formation_current_menu = 0;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
         return;
     }
 
-    if (*(s8*)&g_world_dismiss_unit_prompt_running == 0) {
+    if (g_world_dismiss_unit_prompt_running == 0) {
         sprite = g_world_formation_selected_unit_index;
-        units2 = g_world_formation_unit_pointers;
         if (g_world_formation_unit_pointers[sprite]->proposition_status != 0) {
-            world_text_show_message_and_play_sound(0xC012, 0x30);
+            world_text_show_message_and_play_sound(0xC012, MAIN_SFX_ERROR_MESSAGE);
             g_world_formation_dismiss_step = 2;
-            flag = 1;
+            g_world_dismiss_unit_prompt_running = 1;
         } else {
-            g_world_formation_dismiss_step = world_formation_can_dismiss_unit((s16)sprite);
-            world_gfx_bind_data_pointer(4);
+            g_world_formation_dismiss_step = world_formation_can_dismiss_unit(sprite);
+            world_text_bind_section_data(WORLD_TEXT_DATA_DISMISS_UNIT_REPLIES);
             if (g_world_formation_unit_browse_enabled != 0) {
                 g_world_formation_unit_cycle_mode = 1;
             }
-            g_world_text_substitution_values[0] = units2[g_world_formation_selected_unit_index]->roster_slot;
-            unit = units2[g_world_formation_selected_unit_index];
+            g_world_text_substitution_values[0]
+                = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
+            unit = g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
             sprite = unit->sprite_set;
             if (sprite >= 0x4B) {
                 flags = unit->gender_flags;
-                if (flags & 0x80) {
+                if (flags & UNIT_FLAG_MALE) {
                     value = rand() % 8;
-                } else if (flags & 0x40) {
+                } else if (flags & UNIT_FLAG_FEMALE) {
                     value = rand() % 8 + 8;
                 } else {
                     value = rand() % 8 + 0x10;
@@ -154,7 +127,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             if (g_world_formation_dismiss_step == 0) {
                 g_world_menu_sound_muted = 1;
                 g_world_formation_dismiss_menu_data = g_world_formation_dismiss_prompt;
-                if (g_world_formation_scroll_enabled != 0) {
+                if (g_world_formation_unit_banner_at_bottom != 0) {
                     value = 0x19;
                 } else {
                     value = 0x1A;
@@ -163,7 +136,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
                 g_world_formation_dismiss_prompt_text_id = text_id;
             } else {
                 menu = &g_world_formation_dismiss_confirm_menu;
-                if (g_world_formation_scroll_enabled != 0) {
+                if (g_world_formation_unit_banner_at_bottom != 0) {
                     menu = &g_world_formation_dismiss_confirm_menu_scrolled;
                 }
                 g_world_formation_dismiss_menu_data = (u8*)menu;
@@ -171,25 +144,24 @@ void world_formation_run_dismiss_unit_menu_step(void) {
                 menu->entry3_selected_index = 0;
                 menu->prompt_text_id = text_id;
             }
-            flag = 1;
+            g_world_dismiss_unit_prompt_running = 1;
         }
-        *(s8*)&g_world_dismiss_unit_prompt_running = flag;
         g_world_menu_description_text_id = -1;
     }
 
     if (g_world_formation_dismiss_step == 2) {
-        running = world_thread_is_running(1);
-        *(s8*)&g_world_dismiss_unit_prompt_running = running;
+        running = world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
+        g_world_dismiss_unit_prompt_running = running;
         if (running != 0) {
             return;
         }
-        g_world_formation_current_menu = 0;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
         return;
     }
 
-    running = world_menu_run_thread(6, g_world_formation_dismiss_menu_data);
+    running = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_formation_dismiss_menu_data);
     step = g_world_formation_dismiss_step;
-    *(s8*)&g_world_dismiss_unit_prompt_running = running;
+    g_world_dismiss_unit_prompt_running = running;
     if (step != 0) {
         if (world_thread_is_running(3) != 0) {
             step = g_world_formation_dismiss_step;
@@ -208,26 +180,26 @@ void world_formation_run_dismiss_unit_menu_step(void) {
                  * branch sense and orders the two `li`s the other way, which
                  * also costs the store's register. */
                 step = 1;
-                if (g_world_menu_sound_effect_id != 0) {
+                if (g_world_menu_sound_effect_id != MAIN_SFX_NONE) {
                     step = 0x64;
                 }
                 g_world_formation_dismiss_step = step;
             }
         }
-        if (*(s8*)&g_world_dismiss_unit_prompt_running != 0) {
+        if (g_world_dismiss_unit_prompt_running != 0) {
             return;
         }
         if (g_world_menu_selection_results[10] != 0) {
             g_world_menu_sound_muted = 0;
-            g_world_formation_current_menu = 0;
+            g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
             return;
         }
-        g_world_formation_dismiss_anim_timer = (*(u16*)&g_world_formation_selected_unit_index << 8) + 1;
+        g_world_formation_dismiss_anim_timer = (g_world_formation_selected_unit_index << 8) + 1;
         return;
     }
     if (running != 0) {
         return;
     }
     g_world_menu_sound_muted = 0;
-    g_world_formation_current_menu = 0;
+    g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
 }

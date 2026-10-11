@@ -11,11 +11,11 @@ s32 battle_action_apply_tile_trap(battle_stats_t* unit) {
     u8 trap;
     battle_action_data_t* action;
 
-    trap = battle_map_get_move_find_result(unit->x, (u8)unit->position.raw, (u32)unit->position.raw >> 15)->trap_id;
+    trap = battle_map_get_move_find_result(unit->x, unit->position.raw, unit->position.raw >> 15)->trap_id;
     if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         unit = &g_battle_unit_stats[unit->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK];
     }
-    g_current_ability.target_id = unit->misc_unit_id;
+    g_battle_action_current_ability.target_id = unit->misc_unit_id;
     g_battle_action_target = unit;
     g_battle_action_target_data = &unit->action;
     battle_action_clear_current_data(&unit->action);

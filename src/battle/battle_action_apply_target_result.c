@@ -41,7 +41,7 @@ s32 battle_action_apply_target_result(s32 unit_id) {
     if (unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
-    g_current_ability.target_id = unit_id;
+    g_battle_action_current_ability.target_id = unit_id;
     g_battle_action_target = &g_battle_unit_stats[unit_id];
     g_battle_action_target_data = &g_battle_unit_stats[unit_id].action;
     if (g_battle_action_target->entd_slot == BATTLE_ENTD_SLOT_NONE) {
@@ -54,11 +54,11 @@ s32 battle_action_apply_target_result(s32 unit_id) {
         return 0;
     }
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) {
-        g_battle_action_target->ability_outcome = 1;
+        g_battle_action_target->ability_outcome = BATTLE_ABILITY_OUTCOME_TARGETED;
     }
     battle_reaction_check_when_targeted();
     if (g_battle_action_target_data->reaction_id == ABILITY_ID_REACTION_CATCH) {
-        battle_action_add_party_item(g_battle_action_target, (u8)g_battle_action_target_data->last_received_attack);
+        battle_action_add_party_item(g_battle_action_target, g_battle_action_target_data->last_received_attack);
     }
     if (g_battle_action_target_data->hit == 0) {
         return 0;
@@ -116,12 +116,12 @@ s32 battle_action_apply_target_result(s32 unit_id) {
         g_battle_action_target_data->faith_change, &g_battle_action_target->faith, 100, 0);
     outcome |= battle_action_remove_broken_or_stolen_equipment();
     if (g_battle_action_target_data->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_NOT_BROKEN) {
-        battle_action_add_party_item(g_battle_action_target, (u8)g_battle_action_target->used_item_or_equipment);
+        battle_action_add_party_item(g_battle_action_target, g_battle_action_target->used_item_or_equipment);
     }
     if (g_battle_action_target_data->gil_change != 0 || g_battle_action_target_data->exp_change != 0) {
         outcome |= 1;
     }
-    battle_action_add_war_funds(g_battle_action_target, g_battle_action_target_data->gil_change, 0);
+    battle_action_add_war_funds(g_battle_action_target, g_battle_action_target_data->gil_change, ITEM_ID_NOTHING);
     battle_action_apply_exp_change(g_battle_action_target, g_battle_action_target_data->exp_change);
     if (g_battle_action_target_data->jp_change != 0) {
         battle_action_apply_jp_change(g_battle_action_target);
@@ -146,7 +146,7 @@ s32 battle_action_apply_target_result(s32 unit_id) {
         battle_unit_update_attacker_earned_experience(2);
         return -(g_battle_action_target->mount_info >> 7);
     }
-    if (hp <= (u16)(g_battle_action_target->max_hp / 5)) {
+    if (hp <= (g_battle_action_target->max_hp / 5)) {
         g_battle_action_target_data->status_infliction[2] |= STATUS_MASK(CRITICAL);
     } else {
         g_battle_action_target_data->status_removal[2] |= STATUS_MASK(CRITICAL);
@@ -195,7 +195,7 @@ s32 battle_action_apply_target_result(s32 unit_id) {
     }
     battle_unit_update_attacker_earned_experience(outcome);
     if (outcome != 0) {
-        g_battle_action_target->ability_outcome = 2;
+        g_battle_action_target->ability_outcome = BATTLE_ABILITY_OUTCOME_AFFECTED;
     }
     battle_reaction_check_after_result();
     if (g_battle_action_target->status_sets.current[0] & (STATUS_MASK(CRYSTAL) | STATUS_MASK(DEAD))) {

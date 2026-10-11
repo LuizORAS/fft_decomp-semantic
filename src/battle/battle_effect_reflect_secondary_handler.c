@@ -7,18 +7,20 @@ typedef struct battle_effect_reflect_prim {
     u8 data[0x28];
 } battle_effect_reflect_prim_t;
 
-/* 0x798-byte work buffer: two 6-entry CLUT rows then two 24-polygon strips. */
+/* 0x798-byte work buffer: two 6-colour CLUT images then two 24-polygon strips. */
 typedef struct battle_effect_reflect_work {
     u16 clut[2][6];
     battle_effect_reflect_prim_t prims[2][24];
 } battle_effect_reflect_work_t;
 
-/* Secondary-effect handler 0x12 (Reflect).
+/* Secondary-effect handler 0x12 (Reflect). The effect's parameter is the
+ * frames the shield stays, at least 26: the child timeline passes the
+ * effect's spawn_delay.
  *
  * Phase 1 allocates and initialises the work buffer; phase 2 advances a
  * two-entry CLUT wipe near the end of the effect, uploads the CLUT, aims the
  * shield from the target's centre toward the caster and hands the transform
- * to 0x801ae340; phase 3 finishes. The wipe indices are assigned inside the
+ * to battle_effect_draw_projectile_model; phase 3 finishes. The wipe indices are assigned inside the
  * subscript, each to its own variable: a separate statement or a folded
  * `timer - 1 - span` changes the order and association of the index
  * arithmetic. spin_timer keeps the timer load at full width (lh). */
@@ -27,13 +29,13 @@ s32 battle_effect_reflect_secondary_handler(void) {
     s32 unused[2];
     VECTOR delta;
     VECTOR position;
-    battle_effect_rotation_vector_t angles;
+    SVECTOR angles;
     VECTOR scale;
-    battle_effect_rotation_vector_t spin;
+    SVECTOR spin;
     RECT rect;
     battle_effect_reflect_work_t* work;
-    battle_screen_coords_t* caster;
-    battle_screen_coords_t* target;
+    SVECTOR* caster;
+    SVECTOR* target;
     u8* rgb;
     u8* red;
     u8* green;
@@ -48,11 +50,11 @@ s32 battle_effect_reflect_secondary_handler(void) {
     s32 j;
     s32 result;
 
-    span = (u16)g_battle_effect_current_secondary->parameter;
+    span = g_battle_effect_current_secondary->parameter;
     if (span < 0x1a) {
         span = 0x1a;
     }
-    switch ((u32)g_battle_effect_current_secondary->phase) {
+    switch (g_battle_effect_current_secondary->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         if (g_battle_effect_current_secondary->allocation != 0) {
             main_heap_free(g_battle_effect_current_secondary->allocation);
@@ -94,29 +96,28 @@ s32 battle_effect_reflect_secondary_handler(void) {
         rect.w = 6;
         rect.h = 1;
         LoadImage(&rect, (u32*)work->clut[g_battle_effect_buffer_index]);
-        caster
-            = battle_unit_get_screen_data_ptr_by_misc_id((u8)g_battle_effect_current_secondary->caster_block.values[1]);
+        caster = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id);
         target = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id);
-        delta.vx = caster->x - target->x;
-        delta.vy = caster->z - target->z;
-        delta.vz = caster->y - target->y;
-        position.vx = target->x;
-        position.vz = target->y;
-        position.vy = target->z
+        delta.vx = caster->vx - target->vx;
+        delta.vy = caster->vy - target->vy;
+        delta.vz = caster->vz - target->vz;
+        position.vx = target->vx;
+        position.vz = target->vz;
+        position.vy = target->vy
             - (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(
                   g_battle_effect_current_secondary->target.fields.target_id)
                 / 2;
-        angles.y = ratan2(-delta.vz, delta.vx);
-        angles.z = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
-        angles.x = 0;
+        angles.vy = ratan2(-delta.vz, delta.vx);
+        angles.vz = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
+        angles.vx = 0;
         scale.vz = 0x140;
         scale.vy = 0x140;
         scale.vx = 0x140;
         parameter = g_battle_effect_secondary_animations[g_battle_effect_current_secondary->animation_id].parameter;
-        spin.z = 0;
-        spin.x = 0;
+        spin.vz = 0;
+        spin.vx = 0;
         spin_timer = g_battle_effect_current_secondary->timer;
-        spin.z = spin_timer << 7;
+        spin.vz = spin_timer << 7;
         battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         effect = g_battle_effect_current_secondary;
         effect->timer++;

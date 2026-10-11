@@ -5,8 +5,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-struct battle_menu_text_position;
-extern void battle_menu_draw_stacked_glyph_pair(void* buffer, struct battle_menu_text_position* origin);
+extern void battle_menu_draw_stacked_glyph_pair(void* buffer, world_glyph_blit_t* origin);
 
 /* Draw the visible rows of a three-column menu text layout (text 8 pixels
  * narrower than the entry). Text columns append text 0x5088 for rows whose
@@ -18,59 +17,57 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
     s32 row;
     s32 column;
     s32 index;
-    s32 value;
+    s16 value;
 
     for (row = 0; row < layout->row_count; row++) {
-        g_menu_text_state.stride = entry->inner_width - 8;
+        g_menu_text_state.pen.stride = entry->inner_width - 8;
         for (column = 0; column < 3; column++) {
             index = row + *row_offset;
-            if (layout->mode[column] == 2) {
+            if (layout->mode[column] == MENU_TEXT_COLUMN_HIDDEN) {
                 continue;
             }
-            /* The target passes x and y as full words; the s16 prototype narrows them. */
-            ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->x[column], row * 0x10);
-            if (layout->mode[column] != 2) {
-                g_menu_text_palette_offset = layout->text_colors[column][index];
+            battle_menu_set_text_origin(layout->x[column], row * 0x10);
+            if (layout->mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
+                g_battle_menu_text_palette_offset = layout->text_colors[column][index];
             }
-            g_menu_text_state.color = 0;
-            if (g_menu_text_palette_offset == 4) {
-                g_menu_text_state.color = 0x44444444;
+            g_menu_text_state.pen.color = 0;
+            if (g_battle_menu_text_palette_offset == 4) {
+                g_menu_text_state.pen.color = 0x44444444;
             }
-            if (layout->mode[column] == 0) {
-                battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.origin_x);
+            if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
+                battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
                 if (g_battle_threads[g_battle_thread_current_id].function_parameter_4 != 0
-                    && (g_battle_ai_workspace_ptr->skill_use.flags[index] & 1)) {
-                    g_menu_text_palette_offset = layout->text_colors[column][index];
+                    && (g_battle_ai_workspace_ptr->ability_list.flags[index] & 1)) {
+                    g_battle_menu_text_palette_offset = layout->text_colors[column][index];
                     /* Full-word x and y, as above. */
-                    ((void (*)(s32, s32))battle_menu_set_text_origin)(layout->x[column] + 0x50, row * 0x10);
-                    battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.origin_x);
+                    battle_menu_set_text_origin(layout->x[column] + 0x50, row * 0x10);
+                    battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.pen);
                 }
-            } else if (layout->mode[column] == 1) {
+            } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                 battle_display_menu_number_entry(
-                    layout->text_ids[column][index], 2, (s32)buffer, (u16*)&g_menu_text_state.origin_x);
-            } else if (layout->mode[column] == 3) {
-                if ((column == 2 || (column == 1 && layout->mode[2] == 2)) && (u16)layout->text_ids[column][index] < 2
-                    && (g_battle_ai_workspace_ptr->skill_use.target[index] == 0xFF
-                        || g_battle_ai_workspace_ptr->skill_use.target[index] == 0)) {
-                    g_menu_text_state.origin_y += 2;
-                    battle_menu_draw_stacked_glyph_pair(
-                        buffer, (struct battle_menu_text_position*)&g_menu_text_state.origin_x);
+                    layout->text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
+            } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
+                if ((column == 2 || (column == 1 && layout->mode[2] == MENU_TEXT_COLUMN_HIDDEN))
+                    && layout->text_ids[column][index] >= 0 && layout->text_ids[column][index] < 2
+                    && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
+                        || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
+                    g_menu_text_state.pen.rect.y += 2;
+                    battle_menu_draw_stacked_glyph_pair(buffer, &g_menu_text_state.pen);
                 } else {
-                    value = (u16)layout->text_ids[column][index];
+                    value = layout->text_ids[column][index];
                     if (value & 0x7FF) {
                         if ((value & 0x7FF) >= 100) {
-                            g_menu_text_palette_offset = 0;
-                            g_menu_text_state.origin_x += 3;
-                            battle_menu_display_text_entry(0x509D, buffer, &g_menu_text_state.origin_x);
+                            g_battle_menu_text_palette_offset = 0;
+                            g_menu_text_state.pen.rect.x += 3;
+                            battle_menu_display_text_entry(0x509D, buffer, &g_menu_text_state.pen);
                         } else {
-                            battle_draw_menu_number_glyphs(
-                                (s16)value, 2, buffer, (battle_rect_t*)&g_menu_text_state.origin_x);
+                            battle_draw_menu_number_glyphs(value, 2, buffer, &g_menu_text_state.pen);
                         }
                     }
                 }
             }
-            g_menu_text_palette_offset = 0;
-            g_menu_text_state.color = 0;
+            g_battle_menu_text_palette_offset = 0;
+            g_menu_text_state.pen.color = 0;
         }
     }
 }

@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* The effect system's frame: the effect file, the secondary effects and the
+ * effect camera moves. Returns 1 while an effect of either kind runs. */
 s32 battle_effect_update_cycle(void) {
     s32 stage_result;
     s32 related_result;

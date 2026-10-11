@@ -17,12 +17,13 @@ s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
         ai->targetability.live.unit_active[i] = 0;
         if (decision->targeting_flags_2 & BATTLE_AI_TARGET_UNTARGETABLE)
             continue;
-        if (!(g_battle_unit_stats[i].status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
+        if (!(g_battle_unit_stats[i].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
             && !(decision->flags & BATTLE_AI_DECISION_WORTH_TARGETING))
             continue;
         if (i == ai->acting_unit_id && target_id == 0xff)
             continue;
-        /* Target dispatch uses a signed comparison, including unknown modes. */
+        /* Target dispatch uses a signed comparison, including values outside the enum. */
         switch ((s32)mode) {
         case BATTLE_AI_UNIT_FILTER_SPECIFIC:
             if (i != target_id)
@@ -43,7 +44,8 @@ s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
                     & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_DEAD)
                         | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY)
                         | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRITICAL)))
-                && !(unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
                 continue;
             break;
         }

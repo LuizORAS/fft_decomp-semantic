@@ -18,13 +18,38 @@ typedef struct battle_effect_item_slot_view {
     POLY_FT4 prims[2]; /* 0x34 */
 } battle_effect_item_slot_view_t;
 
+/* Secondary effect function 0x14 in g_battle_effect_secondary_handlers: a
+ * projectile flying in a straight line. It runs the crossbow bolt (the arrow
+ * model), the thrown stone and the thrown item animations.
+ *
+ * Initializing measures the trajectory, takes the flight time from
+ * g_battle_effect_trajectory_step_count and allocates what the projectile draws
+ * with: the polygon buffer of the arrow or stone model, or for a thrown item the
+ * shuriken model's buffer (items ITEM_ID_SHURIKEN to ITEM_ID_YAGYU_DARKNESS) or
+ * else an effect slot holding the item's icon as a quad. Executing moves 0x8000
+ * (8 units in Q12) along the line each frame, aims the model along it and draws
+ * it: the arrow at scale 0x40, the stone and the shuriken at 0xc0 and spinning by
+ * the frames left, any other item as its icon sprite.
+ *
+ * With two frames left and a unit hit by the trajectory
+ * (g_battle_effect_trajectory_hit_unit_id), the target's hit reaction
+ * (battle_unit_call_bow_hardcoding_by_misc_id) starts, unless the item is one of
+ * the balls or a consumable (ITEM_ID_POTION to ITEM_ID_PHOENIX_DOWN). When the
+ * count runs out the icon slot is freed; a unit target whose result is neither
+ * MISSED nor NO_EFFECT releases the requested ability effect at animation speed
+ * 2, and otherwise a requested effect is dropped after the hit reaction. The
+ * handler then enters Finalizing, whose return of 0 removes it.
+ *
+ * g_battle_effect_projectile_spin_passes is the count of frames left. result is
+ * unset for a phase outside 1-3, and scale and spin for a model other than the
+ * arrow or the stone. */
 s32 battle_effect_linear_projectile_secondary_handler(void) {
     s32 unused[2];
     VECTOR delta;
     VECTOR position;
-    battle_effect_rotation_vector_t angles;
+    SVECTOR angles;
     VECTOR scale;
-    battle_effect_rotation_vector_t spin;
+    SVECTOR spin;
     SPRT sprite;
     battle_effect_arrow_buffer_t* arrow;
     battle_effect_projectile_g3x12_work_t* work12;
@@ -38,7 +63,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
     s32 kind;
     POLY_FT4* dst;
 
-    switch ((u32)g_battle_effect_current_secondary->phase) {
+    switch (g_battle_effect_current_secondary->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
         delta.vy = g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy;
@@ -54,7 +79,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             main_heap_free(g_battle_effect_current_secondary->allocation);
         }
         parameter = g_battle_effect_secondary_animations[g_battle_effect_current_secondary->animation_id].parameter;
-        if ((parameter & 0xff) == 0) {
+        if ((parameter & 0xff) == BATTLE_EFFECT_MODEL_ARROW) {
             arrow = main_heap_alloc(0xc88);
             g_battle_effect_current_secondary->allocation = arrow;
             for (i = 0; i < 2; i++) {
@@ -66,7 +91,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 }
             }
         }
-        if ((parameter & 0xff) == 1) {
+        if ((parameter & 0xff) == BATTLE_EFFECT_MODEL_STONE) {
             work12 = main_heap_alloc(0x2a0);
             g_battle_effect_current_secondary->allocation = work12;
             for (i = 0; i < 2; i++) {
@@ -75,9 +100,9 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 }
             }
         }
-        if (parameter == -1) {
+        if (parameter == BATTLE_EFFECT_SECONDARY_PARAMETER_ITEM_GRAPHIC) {
             item = g_battle_effect_current_secondary->used_weapon_id;
-            if ((u32)(item - 0x7a) < 3) {
+            if (item >= ITEM_ID_SHURIKEN && item <= ITEM_ID_YAGYU_DARKNESS) {
                 work16 = main_heap_alloc(0x380);
                 g_battle_effect_current_secondary->allocation = work16;
                 for (i = 0; i < 2; i++) {
@@ -86,7 +111,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                     }
                 }
             } else {
-                battle_get_item_graphic_data(&sprite, item);
+                battle_gfx_set_item_icon_sprite(&sprite, item);
                 g_battle_effect_current_secondary->slot_ids[0] = battle_effect_alloc_slot();
                 slot = (battle_effect_item_slot_view_t*)&g_battle_effect_slots[g_battle_effect_current_secondary
                         ->slot_ids[0]];
@@ -117,48 +142,48 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
         delta.vz = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
         delta.vy = g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy;
-        angles.y = ratan2(-delta.vz, delta.vx);
-        angles.z = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
-        angles.x = 0;
+        angles.vy = ratan2(-delta.vz, delta.vx);
+        angles.vz = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
+        angles.vx = 0;
         parameter = g_battle_effect_secondary_animations[g_battle_effect_current_secondary->animation_id].parameter;
         i = parameter & 0xff;
-        if (parameter != -1) {
-            if (i == 0) {
+        if (parameter != BATTLE_EFFECT_SECONDARY_PARAMETER_ITEM_GRAPHIC) {
+            if (i == BATTLE_EFFECT_MODEL_ARROW) {
                 scale.vz = 0x40;
                 scale.vy = 0x40;
                 scale.vx = 0x40;
-                spin.z = 0;
-                spin.y = 0;
-                spin.x = 0;
-            } else if (i == 1) {
+                spin.vz = 0;
+                spin.vy = 0;
+                spin.vx = 0;
+            } else if (i == BATTLE_EFFECT_MODEL_STONE) {
                 scale.vz = 0xc0;
                 scale.vy = 0xc0;
                 scale.vx = 0xc0;
-                spin.x = 0;
-                spin.y = g_battle_effect_projectile_spin_passes * 256;
-                spin.z = g_battle_effect_projectile_spin_passes * 128;
+                spin.vx = 0;
+                spin.vy = g_battle_effect_projectile_spin_passes * 256;
+                spin.vz = g_battle_effect_projectile_spin_passes * 128;
             }
             battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         } else {
             item = g_battle_effect_current_secondary->used_weapon_id;
-            if ((u32)(item - 0x7a) < 3) {
+            if (item >= ITEM_ID_SHURIKEN && item <= ITEM_ID_YAGYU_DARKNESS) {
                 scale.vz = 0xc0;
                 scale.vy = 0xc0;
                 scale.vx = 0xc0;
-                spin.y = 0;
-                spin.x = 0;
-                spin.z = -(g_battle_effect_projectile_spin_passes * 256);
-                battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, 3);
+                spin.vy = 0;
+                spin.vx = 0;
+                spin.vz = -(g_battle_effect_projectile_spin_passes * 256);
+                battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, BATTLE_EFFECT_MODEL_SHURIKEN);
             } else {
                 battle_effect_draw_item_drop_sprite(&position, item, 0);
             }
         }
         if (g_battle_effect_projectile_spin_passes == 2 && g_battle_effect_trajectory_hit_unit_id != -1) {
             kind = g_battle_effect_current_secondary->used_weapon_id;
-            if ((u32)(kind - 0x7d) >= 3 && (u32)(kind - 0xf0) >= 0xe
+            if ((kind < ITEM_ID_FIRE_BALL || kind > ITEM_ID_LIGHTNING_BALL)
+                && (kind < ITEM_ID_POTION || kind > ITEM_ID_PHOENIX_DOWN)
                 && g_battle_effect_current_secondary->target_count != 0) {
-                battle_unit_call_bow_hardcoding_by_misc_id(
-                    (u8)g_battle_effect_current_secondary->caster_block.values[1],
+                battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
                     g_battle_effect_current_secondary->target.fields.target_id);
             }
         }
@@ -170,14 +195,15 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 battle_effect_free_slot(g_battle_effect_current_secondary->slot_ids[0]);
                 g_battle_effect_current_secondary->slot_ids[0] = 0;
             }
-            if (*(u16*)&g_battle_effect_current_secondary->target.fields.target_type == 0
-                && (u32)(g_battle_effect_current_secondary->target.fields.target_byte_1d - 3) >= 2) {
+            if (g_battle_effect_current_secondary->target.fields.target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT
+                && g_battle_effect_current_secondary->target.fields.result_animation != BATTLE_EFFECT_HIT_MISSED
+                && g_battle_effect_current_secondary->target.fields.result_animation != BATTLE_EFFECT_HIT_NO_EFFECT) {
                 battle_effect_play();
                 battle_state_set_vsync_interval(2);
-            } else if (battle_effect_get_phase() == 1) {
+            } else if (battle_effect_get_phase() == BATTLE_EFFECT_PHASE_REQUESTED) {
                 if (g_battle_effect_current_secondary->target_count != 0) {
                     battle_unit_call_bow_hardcoding_by_misc_id(
-                        (u8)g_battle_effect_current_secondary->caster_block.values[1],
+                        g_battle_effect_current_secondary->caster.fields.caster_id,
                         g_battle_effect_current_secondary->target.fields.target_id);
                 }
                 battle_effect_set_phase_none();

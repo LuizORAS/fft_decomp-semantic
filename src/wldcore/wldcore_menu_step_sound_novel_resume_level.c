@@ -10,47 +10,33 @@
  * system-flag-4 path; up and down toggle cursor_row, which moves the owned
  * window record down by 16.
  *
- * wldcore_reset_selected_saved_record takes no argument but the target still
- * loads g_wldcore_saved_record_index into a0, so the call is made through a
- * cast prototype.
- *
- * The system-flag test reads g_main_system_flags_alias, a second link name for
- * g_main_system_flags: the target re-loads the word for the `^= 4` instead of
- * reusing the tested value, and one symbol cannot produce both loads (a
- * `volatile` cast forces an unfolded `addiu` for the address and costs an
- * instruction).
- *
- * The window pointer and the base_y local give the final `addu` its operand
- * order (base first) while keeping the window index computed before the
- * render-record index. */
+ * wldcore_reset_selected_saved_record ignores its argument; retail still
+ * passes g_wldcore_saved_record_index. */
 void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_level_t* level) {
     GsIMAGE image;
     s32 toggle;
-    s32 index;
     s32 buttons;
-    s32 base;
-    wldcore_window_record_t* window;
 
-    if (g_wldcore_window_render_records[level->message_render].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->message_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (level->dissolve_step != 0) {
-        world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+        GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
         if (wldcore_gfx_step_dissolve_image_upload(&image, level->dissolve_step) == 0) {
             level->dissolve_step = 0;
             return;
         }
-        level->dissolve_step = level->dissolve_step + 1;
+        level->dissolve_step++;
         return;
     }
-    if ((g_main_system_flags_alias & 0xc) == 4) {
-        g_main_system_flags ^= 4;
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && !(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
+        g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_window_record_count--;
         g_wldcore_window_render_record_count -= 3;
         g_wldcore_window_render_object_count -= 4;
         g_wldcore_menu_stack_depth--;
         if (level->cursor_row != 0) {
-            wldcore_reset_selected_saved_record((s16)g_wldcore_saved_record_index);
+            wldcore_reset_selected_saved_record(g_wldcore_saved_record_index);
         }
         wldcore_menu_push_sound_novel_level(level->mode);
         return;
@@ -61,19 +47,18 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         g_wldcore_window_render_record_count -= 3;
         g_wldcore_window_render_object_count -= 4;
         g_wldcore_menu_stack_depth--;
-        world_thread_start(0xe, world_text_message_box_thread);
-        world_thread_set_parameters(0xe, 0x19, 0xb848, 0);
+        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         wldcore_menu_push_treasure_detail_level(level->mode);
         return;
     }
     if (buttons & PSX_PAD_CIRCLE) {
-        g_wldcore_window_records[level->cursor_window].sequence = 1;
-        index = level->cursor_window;
-        g_wldcore_window_records[index].anim_counter = 0;
-        g_wldcore_window_records[index].frame_index = 0;
-        wldcore_fade_start_screen(2, 0x10);
-        g_main_system_flags |= 4;
+        g_wldcore_window_records[level->cursor_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
+        g_wldcore_window_records[level->cursor_window].frame_index
+            = g_wldcore_window_records[level->cursor_window].anim_counter = 0;
+        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         return;
     }
@@ -81,10 +66,9 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         && wldcore_input_check_repeating_directional(PSX_PAD_DOWN) == 0) {
         return;
     }
-    toggle = level->cursor_row ^ 1;
-    level->cursor_row = toggle;
-    window = &g_wldcore_window_records[level->cursor_window];
-    base = g_wldcore_window_render_records[level->option_render].base_y;
-    window->y = base + 0x3c + toggle * 0x10;
+    level->cursor_row ^= 1;
+    toggle = level->cursor_row;
+    g_wldcore_window_records[level->cursor_window].position.y
+        = g_wldcore_window_render_records[level->option_render].base.y + 0x3c + toggle * 0x10;
     wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
 }

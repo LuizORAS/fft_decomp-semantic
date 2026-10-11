@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Returns the battle_effect_element_index_e of an element mask: 0 for no
+ * element, otherwise the position of the first table mask it meets (9 when it
+ * meets none). */
 s32 battle_effect_get_ninja_ball(s32 elements) {
     s32 i;
 

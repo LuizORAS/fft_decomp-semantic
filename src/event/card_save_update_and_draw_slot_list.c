@@ -27,14 +27,15 @@ void card_save_update_and_draw_slot_list(u16 input) {
         row = card_io_poll_operation_result();
         if (row > CARD_IO_RESULT_COMPLETE) {
             if (card_io_wait_operation_result(3) != CARD_IO_RESULT_COMPLETE) {
-                card_thread_wait_and_clear_state(6);
-                card_thread_wait_and_clear_state(5);
+                card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
+                card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD);
                 g_card_save_overwrite_prompt_active = 0;
                 g_card_save_menu_state = CARD_SAVE_MENU_SCANNING;
-                g_card_save_last_written_slot = 0xff;
+                g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }
         } else if (g_card_save_overwrite_prompt_active != 0) {
-            g_card_save_overwrite_prompt_active = card_thread_start_managed(6, g_card_save_overwrite_prompt_descriptor);
+            g_card_save_overwrite_prompt_active
+                = card_thread_start_managed(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_overwrite_prompt_descriptor);
             if (g_card_save_overwrite_prompt_active == 0 && g_card_save_slot_index == 0) {
                 g_card_save_menu_state = CARD_SAVE_MENU_WRITING;
             }
@@ -113,14 +114,13 @@ void card_save_update_and_draw_slot_list(u16 input) {
         if (index >= CARD_SAVE_SLOT_COUNT) {
             break;
         }
-        g_card_save_slot_row_y
-            = (u16)g_card_save_list_scroll_base_y + (u16)g_card_save_list_scroll_anim_offset + row * 48 + 12;
+        g_card_save_slot_row_y = g_card_save_list_scroll_base_y + g_card_save_list_scroll_anim_offset + row * 48 + 12;
         if (g_card_save_slot_row_y < -48 || g_card_save_slot_row_y >= 241) {
             continue;
         }
         card_gfx_set_otag_index(10);
         value = row != g_card_save_list_cursor_index || scrolling != 0;
-        card_text_set_palette_and_metrics(value);
+        card_menu_set_palette_mode(value);
         card_cmd_draw_window_frame_handler(&g_card_save_slot_window_command);
         g_card_save_slot_quads[3].y = g_card_save_slot_quads[4].y = g_card_save_slot_quads[0].y
             = g_card_save_slot_quads[1].y = g_card_save_slot_row_y - 14;
@@ -128,23 +128,28 @@ void card_save_update_and_draw_slot_list(u16 input) {
         g_card_save_slot_quads[4].y = g_card_save_slot_quads[4].y + 1;
         g_card_save_slot_quads[1].y++;
         if (g_card_save_slot_quads[0].y >= 0 && g_card_save_slot_quads[0].y < 241) {
-            card_gfx_enqueue_oriented_textured_quad(&g_card_save_slot_quads[0], card_gfx_get_draw_color(), 0, 0, 11);
-            card_gfx_enqueue_oriented_textured_quad(&g_card_save_slot_quads[1], card_gfx_get_draw_color(), 0, 0, 11);
-            card_gfx_enqueue_oriented_textured_quad(&g_card_save_slot_quads[3], card_gfx_get_draw_color(), 0, 0, 11);
-            card_gfx_enqueue_oriented_textured_quad(&g_card_save_slot_quads[4], card_gfx_get_draw_color(), 0, 0, 11);
+            card_gfx_enqueue_oriented_textured_quad(
+                &g_card_save_slot_quads[0], card_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
+            card_gfx_enqueue_oriented_textured_quad(
+                &g_card_save_slot_quads[1], card_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
+            card_gfx_enqueue_oriented_textured_quad(
+                &g_card_save_slot_quads[3], card_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
+            card_gfx_enqueue_oriented_textured_quad(
+                &g_card_save_slot_quads[4], card_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             card_gfx_set_otag_index(11);
             g_card_save_slot_number_commands[0][8] = g_card_save_slot_quads[0].y;
-            g_card_save_slot_number_commands[0][9] = (u8)index + 1;
+            g_card_save_slot_number_commands[0][9] = index + 1;
             card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[0]);
         }
         g_card_save_slot_quads[2].y = g_card_save_slot_quads[0].y;
         if (g_card_save_slot_quads[2].y >= 0 && g_card_save_slot_quads[2].y < 241) {
-            card_gfx_enqueue_oriented_textured_quad(&g_card_save_slot_quads[2], card_gfx_get_draw_color(), 0, 0, 11);
+            card_gfx_enqueue_oriented_textured_quad(
+                &g_card_save_slot_quads[2], card_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             g_card_save_slot_number_commands[3][8] = g_card_save_slot_number_commands[2][8]
                 = g_card_save_slot_number_commands[1][8] = g_card_save_slot_quads[0].y;
-            g_card_save_slot_number_commands[3][9] = g_card_save_slot_playtimes[index][2];
-            g_card_save_slot_number_commands[2][9] = g_card_save_slot_playtimes[index][1];
-            g_card_save_slot_number_commands[1][9] = g_card_save_slot_playtimes[index][0];
+            g_card_save_slot_number_commands[3][9] = g_main_card_save_slot_playtimes[index][2];
+            g_card_save_slot_number_commands[2][9] = g_main_card_save_slot_playtimes[index][1];
+            g_card_save_slot_number_commands[1][9] = g_main_card_save_slot_playtimes[index][0];
             if (g_card_save_slot_number_commands[1][9] >= 100) {
                 g_card_save_slot_number_commands[1][9] = 99;
             }
@@ -173,7 +178,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
             texture_page = GetTPage(0, 0, 0x180, 0);
             source_v = (index - 11) * 0x20 + 0x60;
         }
-        card_gfx_enqueue_textured_quad(&rect, 0, source_v, 0, 0, texture_page, g_card_text_metric_0, 11);
+        card_gfx_enqueue_textured_quad(&rect, 0, source_v, 0, 0, texture_page, g_card_menu_window_clut, 11);
     }
 
     card_gfx_set_otag_index(15);
@@ -187,7 +192,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
     g_card_save_slot_cursor_position[1] = value * 48 + 0x28;
     card_menu_update_and_draw_animated_cursor(
         g_card_save_slot_cursor_position, g_card_save_slot_cursor_animation, scrolling);
-    if (g_event_mode != 0) {
+    if (g_battle_menu_input_lock_mode != 0) {
         cursor_clut = g_card_menu_cursor_mode1_foreground_clut;
     } else {
         cursor_clut = g_card_menu_cursor_mode0_foreground_clut;

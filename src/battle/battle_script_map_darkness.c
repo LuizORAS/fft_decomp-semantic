@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Thread body of MapDarkness: start the ambient-light blend described by the
+ * operands (blend mode, red, green, blue as s8, duration index), then keep the
+ * thread alive under the MapDarkness task id for
+ * g_battle_script_map_darkness_durations[duration index] frames (1 to 256). */
 void battle_script_map_darkness(void) {
     u8* parameters;
 

@@ -53,7 +53,7 @@ The [[AI]] page explains the whole decision. Each lever sits in one place:
 
 ## What can be done today
 
-Nothing that changes a byte: `make validate` compares every function with its
+Nothing that changes a byte: `make check` compares every function with its
 original hash, and the weight and ability tables are disc data, which the
 repository does not hold. To try an idea, change the game's memory in an
 emulator during a battle: `make run` launches PCSX-Redux, and `make map`

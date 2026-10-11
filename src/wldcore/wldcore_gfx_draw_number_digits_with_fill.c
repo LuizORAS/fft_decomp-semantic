@@ -2,6 +2,10 @@
 #include "psx/libgs.h"
 #include "psx/types.h"
 
+/* Draws value right-aligned in `digits` columns like
+ * wldcore_gfx_draw_number_digits, but also draws the columns ahead of the
+ * first significant digit: a zero glyph when `zero_pad` is set, otherwise the
+ * 8x8 filler glyph at (0xd0, 0x28). */
 void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* sprite, GsOT* ot, s32 zero_pad) {
     s32 divisor;
     s32 y;
@@ -11,7 +15,7 @@ void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* s
     divisor = 1;
     i = 0;
     sprite->w = 8;
-    y = (s16)sprite->y;
+    y = sprite->y;
     sprite->h = 0x10;
     for (; i < digits - 1; i++) {
         divisor *= 10;
@@ -31,7 +35,7 @@ void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* s
                 sprite->h = 0xF;
                 sprite->y += 1;
             }
-            world_gs_sortfastsprite(sprite, ot, g_wldcore_hud_ot_priority);
+            GsSortFastSprite(sprite, ot, g_wldcore_hud_ot_priority);
             sprite->y = y;
         } else {
             if (zero_pad != 0) {
@@ -47,7 +51,7 @@ void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* s
                 sprite->h = 8;
                 sprite->y += 4;
             }
-            world_gs_sortfastsprite(sprite, ot, g_wldcore_hud_ot_priority);
+            GsSortFastSprite(sprite, ot, g_wldcore_hud_ot_priority);
             sprite->y = y;
         }
         sprite->x += 8;

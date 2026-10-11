@@ -1,6 +1,13 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/*
+ * Writes the parameters of the camera instruction that follows a relative
+ * camera instruction: each of the seven halfwords at `source` plus its
+ * delta, stored 15 bytes on (18 when a focus-speed instruction comes
+ * first). The first three deltas (the position) are divided by 1024; a
+ * halfword holding the "hold" sentinel is passed through unchanged.
+ */
 void world_script_apply_relative_camera(u8* source, const s32* deltas) {
     u8* destination;
     s32 index;
@@ -8,7 +15,7 @@ void world_script_apply_relative_camera(u8* source, const s32* deltas) {
     s32 value;
 
     destination = source + 15;
-    if (source[14] == 0x38) {
+    if (source[14] == EVENT_OPCODE_FOCUS_SPEED) {
         destination = source + 18;
     }
 
@@ -22,8 +29,7 @@ void world_script_apply_relative_camera(u8* source, const s32* deltas) {
         } else {
             value = delta + world_script_load_halfword(source);
         }
-        /* The target sign-extends the value; the definition's u16 parameter would zero-extend it. */
-        ((void (*)(u8*, s16))world_script_store_halfword)(destination, value);
+        world_script_store_halfword(destination, value);
         source += 2;
         destination += 2;
         deltas++;

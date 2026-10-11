@@ -38,7 +38,7 @@ void battle_unit_animate_slide_back_from_target(battle_unit_misc_data_t* unit) {
             velocity.vz /= timer;
             unit->distortion_phase++;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
             break;
         }
     case 1:
@@ -46,7 +46,7 @@ void battle_unit_animate_slide_back_from_target(battle_unit_misc_data_t* unit) {
             unit->real.vx += velocity.vx;
             unit->real.vz += velocity.vz;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         timer--;
         break;

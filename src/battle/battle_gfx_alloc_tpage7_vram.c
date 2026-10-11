@@ -1,20 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* A texture primitive is either a SPRT (code 0x64-0x67) or a POLY_FT4. */
-typedef union battle_texture_prim {
-    SPRT sprt;
-    POLY_FT4 ft4;
-} battle_texture_prim_t;
-
 /* Allocate a texture rectangle in the 16-column VRAM allocation grid.
  *
  * The rect size rounds up to 16-pixel cells. The first free position whose
  * cells are all unclaimed is marked 0xff, the primitive UVs/CLUT (and TPage
  * for POLY_FT4) are pointed at it, and rect is rewritten to the 4bpp VRAM
  * area at x 0x1c0 before image (unless -1) is uploaded. A full grid stops
- * this thread. Counterpart of battle_gfx_free_tpage7_vram; WORLD twin world_gfx_alloc_texture_grid_rect. */
-void battle_gfx_alloc_tpage7_vram(RECT* rect, battle_texture_prim_t* prim, u32* image) {
+ * this thread. Counterpart of battle_gfx_free_tpage7_vram; WORLD twin world_gfx_alloc_tpage7_vram. */
+void battle_gfx_alloc_tpage7_vram(RECT* rect, world_texture_prim_t* prim, u32* image) {
     s16 width;
     s16 height;
     s32 width_cells;

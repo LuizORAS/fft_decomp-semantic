@@ -11,7 +11,7 @@ s32 battle_ai_select_action(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 result;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         switch (g_battle_ai_data_base.initial_targeting_state) {
         case 0:
@@ -39,13 +39,14 @@ status_action:
     }
     if (result != 0)
         return 0;
-    if (((ai->acting_unit->status_sets.current[2]
+    if (((ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
              & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)))
             && (ai->targetability.live.target_setting_flags & BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE))
-        || ((ai->acting_unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
+        || ((ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
             && (ai->acting_unit_decision->flags & BATTLE_AI_DECISION_FOCUS_TARGET))) {
         battle_ai_transfer_halfword_values(
-            (u16*)&ai->saved_acting_unit_decision, (u16*)ai->acting_unit_decision, sizeof(battle_ai_unit_decision_t));
+            &ai->saved_acting_unit_decision, ai->acting_unit_decision, sizeof(battle_ai_unit_decision_t));
     /* Resume after the save; restore the decision only when this pass ends. */
     fallback_action:
         if (battle_ai_select_retreat_action() == -1) {
@@ -53,7 +54,7 @@ status_action:
             return -1;
         }
         battle_ai_transfer_halfword_values(
-            (u16*)ai->acting_unit_decision, (u16*)&ai->saved_acting_unit_decision, sizeof(battle_ai_unit_decision_t));
+            ai->acting_unit_decision, &ai->saved_acting_unit_decision, sizeof(battle_ai_unit_decision_t));
         return 0;
     }
 native_action:
@@ -64,7 +65,7 @@ native_action:
     }
     if (result != 0)
         return 0;
-    ai->decision_state = 0;
+    ai->resume_pending = 0;
 general_action:
     if (battle_ai_select_general_action() == -1) {
         ai->initial_targeting_state = 7;

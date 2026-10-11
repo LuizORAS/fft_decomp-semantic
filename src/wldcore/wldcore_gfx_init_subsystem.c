@@ -13,9 +13,9 @@
 
 void wldcore_gfx_init_subsystem(void) {
     SetDispMask(0);
-    world_gs_set_display_mode(256, 240, 4, 0, 0);
-    world_gs_set_draw_offsets(0, 0, 0, 240);
-    world_gs_init3d();
+    GsInitGraph2(256, 240, 4, 0, 0);
+    GsDefDispBuff(0, 0, 0, 240);
+    GsInit3D();
     SetGeomOffset(0, 0);
     wldcore_clear_screen_and_set_map_clip_rect(0);
 

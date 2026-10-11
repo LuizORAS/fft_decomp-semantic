@@ -25,7 +25,7 @@ void wldcore_map_prepare_path_animation(s32 from, s32 to) {
 
     records = g_wldcore_map_route_tables;
     g_wldcore_map_path_animation.flags = 0;
-    for (i = 0; i < 48; i++) {
+    for (i = 0; i < WLDCORE_ROUTE_COUNT; i++) {
         record = *records;
         first = record->start_location;
         second = (*(u32*)record & 0xFF0000) >> 16;
@@ -35,7 +35,7 @@ void wldcore_map_prepare_path_animation(s32 from, s32 to) {
         }
         if (second == from && first == to) {
             g_wldcore_map_path_animation.script_variable = i;
-            g_wldcore_map_path_animation.flags |= 2;
+            g_wldcore_map_path_animation.flags |= WLDCORE_SLIDESHOW_REVERSED;
             break;
         }
         records++;
@@ -43,7 +43,7 @@ void wldcore_map_prepare_path_animation(s32 from, s32 to) {
     if (i == 48) {
         return;
     }
-    g_wldcore_map_path_animation.flags |= 1;
+    g_wldcore_map_path_animation.flags |= WLDCORE_SLIDESHOW_RUNNING;
     first = record->count - 1;
     g_wldcore_map_path_animation.frame_timer = 0;
     g_wldcore_map_path_animation.page_index = 0;
@@ -53,7 +53,7 @@ void wldcore_map_prepare_path_animation(s32 from, s32 to) {
     g_wldcore_map_path_animation.point_count = *data;
     data++;
     for (i = 0; i < g_wldcore_map_path_animation.point_count; i++) {
-        if (g_wldcore_map_path_animation.flags & 2) {
+        if (g_wldcore_map_path_animation.flags & WLDCORE_SLIDESHOW_REVERSED) {
             g_wldcore_map_path_animation.coords[i * 2] = data[(g_wldcore_map_path_animation.point_count - i - 1) * 2];
             g_wldcore_map_path_animation.coords[i * 2 + 1]
                 = data[(g_wldcore_map_path_animation.point_count - i - 1) * 2 + 1];

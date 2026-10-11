@@ -5,9 +5,7 @@
  *
  * Source 2 uses the signed shared rectangle; other sources use byte operands.
  */
-world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_window_command_t* input) {
-    /* Preserve the command in s7 so draw priority retains its reload slot. */
-    register world_menu_window_command_t* command __asm__("$23") = input;
+world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_window_command_t* command) {
     RECT rect;
     s32 base_x;
     s32 full_rows;
@@ -26,9 +24,9 @@ world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_wi
         base_x = g_world_menu_window_rect.x;
         base_y = g_world_menu_window_rect.y;
         full_columns = g_world_menu_window_rect.w / 16;
-        partial_width = (s16)(g_world_menu_window_rect.w % 16);
+        partial_width = g_world_menu_window_rect.w % 16;
         full_rows = g_world_menu_window_rect.h / 16;
-        partial_height = (s16)(g_world_menu_window_rect.h % 16);
+        partial_height = g_world_menu_window_rect.h % 16;
     } else {
         u8 width;
         u8 height;
@@ -57,21 +55,21 @@ world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_wi
                 &rect, 8, 8, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
         }
     }
-    if (partial_height != 0) {
-        rect.x = base_x;
+    if (partial_height == 0) {
+        return (world_menu_window_command_t*)((u8*)command + command->length);
+    }
+    rect.x = base_x;
+    rect.y = base_y + row * 16;
+    rect.w = partial_width;
+    rect.h = partial_height;
+    world_gfx_enqueue_textured_quad(&rect, 8, 8, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
+    for (column = 0; column < full_columns; column++) {
+        rect.x = base_x + partial_width + column * 16;
         rect.y = base_y + row * 16;
-        rect.w = partial_width;
+        rect.w = 16;
         rect.h = partial_height;
         world_gfx_enqueue_textured_quad(
             &rect, 8, 8, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
-        for (column = 0; column < full_columns; column++) {
-            rect.x = base_x + partial_width + column * 16;
-            rect.y = base_y + row * 16;
-            rect.w = 16;
-            rect.h = partial_height;
-            world_gfx_enqueue_textured_quad(
-                &rect, 8, 8, 0, g_world_menu_semi_trans, g_world_menu_window_tpage, clut, priority);
-        }
     }
     return (world_menu_window_command_t*)((u8*)command + command->length);
 }

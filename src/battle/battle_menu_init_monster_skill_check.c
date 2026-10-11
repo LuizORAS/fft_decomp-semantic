@@ -15,7 +15,7 @@ s32 battle_menu_init_monster_skill_check(battle_stats_t* unit) {
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return 0;
     }
-    battle_calculate_unit_height_data(&height_data, unit->misc_unit_id);
+    battle_unit_calculate_height_data(&height_data, unit->misc_unit_id);
     team = unit->team_flags;
     x = unit->x;
     y = unit->position.bits.y;

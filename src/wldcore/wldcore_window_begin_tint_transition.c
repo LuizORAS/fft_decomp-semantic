@@ -7,11 +7,11 @@
 void wldcore_window_begin_tint_transition(wldcore_window_tint_request_t* request) {
     g_wldcore_window_records[request->window_a].palette = 10;
     g_wldcore_window_render_records[request->render_a].palette = 2;
-    g_wldcore_window_records[request->window_a].sequence = 0;
+    g_wldcore_window_records[request->window_a].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_STILL;
     g_wldcore_window_records[request->window_a].frame_index = g_wldcore_window_records[request->window_a].anim_counter
         = 0;
-    g_main_system_flags |= 0x800;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 2]
                                         .list_window.content_render]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
 }

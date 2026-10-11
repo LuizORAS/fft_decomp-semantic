@@ -61,9 +61,9 @@ runs that id's handler once per target and strike.
 ## Data and structures
 
 - **The handler table.** [[g_battle_formula_handlers]] (BATTLE `0x8018f610`)
-  holds the handlers for ids 0x01-0x64. [[battle_formula_id_e]] names the ids
+  holds the handlers for ids 0x01-0x64. [[ability_formula_e]] names the ids
   the engine tests itself.
-- **The formula's inputs.** [[g_current_ability]]
+- **The formula's inputs.** [[g_battle_action_current_ability]]
   ([[battle_current_ability_t]]): `xa` and `ya`, the base hit and the four
   evades, both Faiths, copies of the ability's range data (X, Y, element,
   status id), of the weapon's data (power, element, formula, added status or
@@ -73,7 +73,7 @@ runs that id's handler once per target and strike.
   ([[g_battle_action_target_data]]) and for the actor
   ([[g_battle_action_attacker_data]]): hit, miss type, HP and MP damage and
   healing, stat changes ([[battle_action_stat_change_e]], CT
-  [[battle_action_ct_change_e]]), special effects
+  `BATTLE_ACTION_CT_CHANGE_*`), special effects
   ([[battle_action_special_effect_e]]), statuses to add and remove, and the
   result type ([[battle_action_type_e]]). While the hit chance is built,
   `hp_damage` holds it.
@@ -141,11 +141,11 @@ retail abilities, weapons, consumables or commands that select the formula.
 | 0x13 | [[battle_formula_13_unused]] | None | Nothing |
 | 0x14 | [[battle_formula_set_golem]] | Golem | Hit from the caster's MA + X and Faith; the Golem guard |
 | 0x15 | [[battle_formula_set_ct_zero]] | Return 2 | Hit MA + X with Faith; CT 0 |
-| 0x16 | [[battle_formula_damage_target_mp]] | Mute | Hit MA + X with Faith; all MP lost |
+| 0x16 | [[battle_formula_damage_mp_target_current_mp]] | Mute | Hit MA + X with Faith; all MP lost |
 | 0x17 | [[battle_formula_damage_target_hp_minus_one]] | Gravi 2 | Hit MA + X with Faith; damage of current HP - 1 |
 | 0x18 | [[battle_formula_18_unused]] | None | Nothing |
 | 0x19 | [[battle_formula_19_unused]] | None | Nothing |
-| 0x1a | [[battle_formula_lower_stat_x_hit_faith_ma_y_percent]] | Speed Ruin, Power Ruin, Mind Ruin | Hit MA + Y with Faith; Speed, PA or MA - X |
+| 0x1a | [[battle_formula_magical_stat_reduction]] | Speed Ruin, Power Ruin, Mind Ruin | Hit MA + Y with Faith; Speed, PA or MA - X |
 | 0x1b | [[battle_formula_damage_mp_percent]] | Magic Ruin | Hit MA + X with Faith; Y% of max MP |
 | 0x1c | [[battle_formula_song]] | The Bard's songs | X% hit; MA + Y effects |
 | 0x1d | [[battle_formula_dance]] | The Dancer's dances | X% hit; effects from the dancer's weapon |
@@ -155,14 +155,14 @@ retail abilities, weapons, consumables or commands that select the formula.
 | 0x21 | [[battle_formula_draw_out_mp_damage]] | Bizen Boat | Katana break roll; MA * Y MP damage |
 | 0x22 | [[battle_formula_draw_out_status]] | Kiyomori, Masamune | Katana break roll; status |
 | 0x23 | [[battle_formula_draw_out_heal]] | Murasame | Katana break roll; MA * Y healing |
-| 0x24 | [[battle_formula_ma_pa_half_damage]] | Geomancy | Magic evade; MA * (PA + Y) / 2 without Faith |
+| 0x24 | [[battle_formula_ma_pa_half_damage]] | Elemental | Magic evade; MA * (PA + Y) / 2 without Faith |
 | 0x25 | [[battle_formula_break_equipped_hit_pa_wp_y_percent]] | Head, Armor, Shield and Weapon Break | Hit PA + WP + Y; breaks the piece; nothing to break makes it an Attack |
 | 0x26 | [[battle_formula_steal_equipment]] | Steal Helmet, Armor, Shield, Weapon, Accessory | Hit Speed + X; steals the piece |
 | 0x27 | [[battle_formula_steal_gil]] | Gil Taking, Shine Lover | Hit Speed + X; Speed * Level gil |
 | 0x28 | [[battle_formula_steal_exp_hit_sp_x_percent]] | Steal Exp | Hit Speed + X; Speed + Y EXP |
 | 0x29 | [[battle_formula_opposite_sex_hit_ma_x_percent]] | Steal Heart, Allure, Nose Bracelet | Hit MA + X; fails on the same sex |
 | 0x2a | [[battle_formula_talk_skill_hit_ma_x_percent]] | Talk Skill | Monster Talk; Finger Guard; hit MA + X; the talk's effect |
-| 0x2b | [[battle_formula_lower_stat_x_hit_pa_y_percent]] | Speed Break, Power Break, Mind Break | Hit PA + Y; Speed, PA or MA - X |
+| 0x2b | [[battle_formula_physical_stat_reduction]] | Speed Break, Power Break, Mind Break | Hit PA + Y; Speed, PA or MA - X |
 | 0x2c | [[battle_formula_physical_mp_percent_damage]] | Magic Break | Hit PA + Y; Y% of max MP |
 | 0x2d | [[battle_formula_damage_pa_times_wp_plus_y_status]] | Holy Sword | PA * (WP + Y), the weapon's element; status on every hit |
 | 0x2e | [[battle_formula_break_equipped_damage_pa_times_wp]] | Might Sword | PA * WP; breaks the piece; fails with nothing to break |
@@ -180,14 +180,14 @@ retail abilities, weapons, consumables or commands that select the formula.
 | 0x3a | [[battle_formula_add_brave_y]] | Cheer Up | Brave + Y |
 | 0x3b | [[battle_formula_add_brave_x_stats_y]] | Scream | Brave + X; PA, MA and Speed + Y |
 | 0x3c | [[battle_formula_3c_damage_caster_max_hp_one_fifth_heal_target_two_fifths]] | Wish, Energy | The caster loses a fifth of its max HP; the target heals twice that |
-| 0x3d | [[battle_formula_3d_hit_ma_x_percent]] | Blaster, Mind Blast, Death Sentence (monster) | Magic evade; hit MA + X; status |
-| 0x3e | [[battle_formula_3e_damage_target_hp_minus_one]] | None | Damage of current HP - 1, no checks |
+| 0x3d | [[battle_formula_hit_ma_x_percent_magical_evade]] | Blaster, Mind Blast, Death Sentence (monster) | Magic evade; hit MA + X; status |
+| 0x3e | [[battle_formula_damage_target_hp_minus_one_always_hit]] | None | Damage of current HP - 1, no checks |
 | 0x3f | [[battle_formula_hit_sp_x_percent]] | Leg Aim, Arm Aim | Hit Speed + X; status |
 | 0x40 | [[battle_formula_undead_hit_sp_x_percent]] | Seal Evil | As 0x3f, undead targets only |
-| 0x41 | [[battle_formula_41_hit_ma_x_percent_other_sign]] | Galaxy Stop | Hit MA + X; fails on the caster's zodiac sign |
+| 0x41 | [[battle_formula_hit_ma_x_percent_miss_same_zodiac]] | Galaxy Stop | Hit MA + X; fails on the caster's zodiac sign |
 | 0x42 | [[battle_formula_damage_pa_times_y_damage_caster_pa_times_y_over_x]] | Destroy, Compress, Dispose, Crush | PA * Y; the caster takes a 1/X share |
 | 0x43 | [[battle_formula_43_damage_caster_missing_hp]] | Shock, Blade Beam, Ulmaguest, Lifebreak | The caster's max HP - HP |
-| 0x44 | [[battle_formula_damage_target_current_mp]] | Difference | The target's current MP as damage |
+| 0x44 | [[battle_formula_damage_hp_target_current_mp]] | Difference | The target's current MP as damage |
 | 0x45 | [[battle_formula_damage_target_missing_hp]] | Climhazzard | The target's max HP - HP |
 | 0x46 | [[battle_formula_46_unused]] | None | Nothing |
 | 0x47 | [[battle_formula_absorb_hp_y_percent_status]] | Blood Suck | Y% of max HP drained; status |
@@ -199,8 +199,8 @@ retail abilities, weapons, consumables or commands that select the formula.
 | 0x4d | [[battle_formula_absorb_hp_y_percent_hit_ma_x_percent]] | Mutilate, Drain Touch | Hit MA + X; Y% of max HP drained |
 | 0x4e | [[battle_formula_damage_ma_times_y]] | 25 abilities: Cloud's limits, the Bracelets, monster attacks | Magic evade; MA * Y without Faith |
 | 0x4f | [[battle_formula_damage_caster_missing_hp_hit_ma_x_percent]] | Goblin Punch | Hit MA + X; the caster's max HP - HP |
-| 0x50 | [[battle_formula_hit_ma_x_percent]] | Secret Fist and monster touches | Physical evade; hit MA + X; status |
-| 0x51 | [[battle_formula_51_hit_ma_x_percent]] | Choco Esuna, Protect Spirit, Clam Spirit | Hit MA + X; status |
+| 0x50 | [[battle_formula_hit_ma_x_percent_physical_evade]] | Secret Fist and monster touches | Physical evade; hit MA + X; status |
+| 0x51 | [[battle_formula_hit_ma_x_percent_no_evade]] | Choco Esuna, Protect Spirit, Clam Spirit | Hit MA + X; status |
 | 0x52 | [[battle_formula_damage_caster_missing_hp_self_sacrifice]] | Self Destruct | The caster's max HP - HP and status; the caster takes its own HP |
 | 0x53 | [[battle_formula_damage_y_percent_hit_ma_x_percent]] | Hurricane, Triple Bracelet | Hit MA + X; Y% of max HP |
 | 0x54 | [[battle_formula_heal_mp_ma_times_y]] | Magic Spirit | MA * Y MP |

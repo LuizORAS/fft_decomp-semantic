@@ -34,7 +34,7 @@ void battle_move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32
             unit->real.vz += velocity.vz;
         } else {
             battle_unit_set_real_coords_from_map_coords(unit);
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         timer--;
         break;

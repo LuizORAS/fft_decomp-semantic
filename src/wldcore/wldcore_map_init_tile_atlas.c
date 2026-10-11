@@ -74,7 +74,7 @@ void wldcore_map_init_tile_atlas(void) {
     g_wldcore_map_projection_rotation.vz = 0;
 
     descriptor = g_wldcore_map_tile_descriptors;
-    if (!(g_main_system_flags & 0x10000)) {
+    if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_RESTART)) {
         y = -192;
         k = 0;
         i = 0;
@@ -95,7 +95,7 @@ void wldcore_map_init_tile_atlas(void) {
                     g_wldcore_map_projected_tiles[i].texture
                         = ((clut_x & 0xff) << 24) | ((clut_y & 0xff) << 16) | ((width & 0xff) << 8) | (height & 0xff);
                 } else {
-                    g_wldcore_map_projected_tiles[i].flags = 0x200;
+                    g_wldcore_map_projected_tiles[i].flags = WLDCORE_MAP_TILE_EMPTY;
                 }
                 i++;
                 x += width;
@@ -108,9 +108,9 @@ void wldcore_map_init_tile_atlas(void) {
     map_window_index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_map_window_index = map_window_index;
-    g_wldcore_window_records[map_window_index].sequence = 5;
+    g_wldcore_window_records[map_window_index].sequence = WLDCORE_ANIM_SEQUENCE_MAP_FRAME;
     g_wldcore_window_records[map_window_index].priority = 13;
-    wpos = &g_wldcore_window_records[map_window_index].x;
+    wpos = &g_wldcore_window_records[map_window_index].position.x;
     rec = &g_wldcore_window_records[map_window_index];
     wpos[0] = 0;
     wpos[1] = 8;
@@ -120,9 +120,9 @@ void wldcore_map_init_tile_atlas(void) {
     menu_window_index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_types[0] = menu_window_index;
-    g_wldcore_window_records[menu_window_index].sequence = 6;
+    g_wldcore_window_records[menu_window_index].sequence = WLDCORE_ANIM_SEQUENCE_ROOT_MENU_FRAME;
     g_wldcore_window_records[menu_window_index].priority = 13;
-    wpos2 = &g_wldcore_window_records[menu_window_index].x;
+    wpos2 = &g_wldcore_window_records[menu_window_index].position.x;
     rec2 = &g_wldcore_window_records[menu_window_index];
     wpos2[0] = -4;
     wpos2[1] = 8;

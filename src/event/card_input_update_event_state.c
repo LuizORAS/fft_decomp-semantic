@@ -2,8 +2,19 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-extern u16 g_battle_menu_input_block_frames;
-
+/*
+ * Per-frame event input update: derives the edge/auto-repeat input word,
+ * publishes it, and yields once while tracking thread status changes.
+ *
+ * CARD copy of bunit_input_update_event_state without its frame_arg latch,
+ * the numeric-value flag and the thread status indicators; CARD instead sets
+ * g_main_gfx_screen_polarity when `count_frame` is nonzero. A held direction
+ * or L1/R1 repeats after g_main_input_repeat_initial_delay frames and then
+ * every repeat period (directions) or secondary repeat period (L1/R1), all
+ * divided by the event speed; holding Square restricts the fast repeat to
+ * Left/Right and adds Up/Down to the slow one. Any input other than Select, or a thread starting or stopping across
+ * the yield, sets five frames of event input suppression.
+ */
 void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
     u32 filtered_input;
     s32 initial_delay;
@@ -17,7 +28,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
     if (count_frame != 0) {
         g_main_gfx_screen_polarity = 1;
     }
-    g_current_otag_entry = otag;
+    g_battle_gfx_current_otag_entry = otag;
     g_card_input_controller = battle_script_get_controller_input_pointer(0);
     if (input == 0) {
         g_card_input_initial_repeat_counter = 0;
@@ -69,15 +80,15 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         }
     }
 
-    g_sound_effect_id_to_play = -1;
+    g_battle_sound_pending_sfx_id = -1;
     battle_script_load_event_input_state(&g_card_input_event);
     if (g_card_input_event != PSX_PAD_SELECT && g_card_input_event != 0) {
-        g_event_input_suppression_frames = 5;
+        g_battle_event_input_suppression_frames = 5;
     }
 
     thread_id = 1;
     do {
-        g_card_thread_status_snapshot[thread_id] = battle_thread_is_running_2(thread_id);
+        g_card_thread_status_snapshot[thread_id] = battle_thread_is_running_asm(thread_id);
         thread_id++;
     } while (thread_id < 16);
 
@@ -85,14 +96,14 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
     thread_id = 1;
     do {
         status = g_card_thread_status_snapshot[thread_id];
-        if (status != battle_thread_is_running_2(thread_id)) {
-            g_event_input_suppression_frames = 5;
+        if (status != battle_thread_is_running_asm(thread_id)) {
+            g_battle_event_input_suppression_frames = 5;
         }
         thread_id++;
     } while (thread_id < 16);
 
-    if (g_event_input_suppression_frames != 0) {
-        g_event_input_suppression_frames--;
+    if (g_battle_event_input_suppression_frames != 0) {
+        g_battle_event_input_suppression_frames--;
     }
     g_battle_event_frame_counter++;
     g_battle_menu_packet_buffer_index = (g_battle_menu_packet_buffer_index + 1) & 1;

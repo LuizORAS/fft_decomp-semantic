@@ -1,14 +1,25 @@
-/* Builds two overlapping POLY_GT4 strips per transition step.
- *
- * Matching notes: the coordinates are written in setXY4 order (x0, y0, x1,
- * y1, ...) per primitive; the colour-halving is spelled once as `/ 2` and once
- * as an explicit shift so loop.c does not merge the two computations; and
- * width + 1 goes through its own variable (the target adds left afterwards).
- */
 #include "fft/open.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Draw the text lines of the current new-game prologue entry at the given
+ * brightness.
+ *
+ * Each step of the entry is one line of text: step_values holds its 16-pixel row
+ * in the texture page and step_durations its width in pixels. The lines are
+ * centred, 20 pixels apart, as a block around the middle of the screen. A
+ * finished line is drawn at full width and the line in progress up to timer
+ * pixels; the pass with i == step adds that line's leading edge, at most 16
+ * pixels whose right-hand corners are black, so the text fades in as it is
+ * revealed.
+ *
+ * Every piece is two POLY_GT4s: the text, added to the picture at intensity in
+ * ordering-table entry mode, and a copy one pixel down and right, subtracted at
+ * half intensity in entry mode + 1.
+ *
+ * The coordinates are written in setXY4 order (x0, y0, x1, y1, ...) per
+ * primitive, and width + 1 goes through its own variable (the target adds left
+ * afterwards). */
 void open_gfx_draw_transition_line_strips(s32 intensity) {
     POLY_GT4* prims;
     s32 i;
@@ -28,6 +39,7 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
         SetPolyGT4(&prims[prim_index + 1]);
 
         if (i == g_open_gfx_transition.step) {
+            /* Leading edge of the line in progress (line i - 1): black on its right. */
             if (g_open_gfx_transition.step_durations[i - 1] < g_open_gfx_transition.timer) {
                 continue;
             }
@@ -57,6 +69,7 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
             left = u - g_open_gfx_transition.step_durations[i - 1] / 2;
             top_y = (i - 1) * 0x14 - g_open_gfx_transition.step_count * 10;
         } else {
+            /* Line i: the revealed part of the line in progress, or a whole finished line. */
             if (i == g_open_gfx_transition.step - 1) {
                 width = g_open_gfx_transition.timer;
             } else {
@@ -86,15 +99,15 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
         prims[prim_index].r0 = intensity;
         prims[prim_index].g0 = intensity;
         prims[prim_index].b0 = intensity;
-        prims[prim_index + 1].r0 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
-        prims[prim_index + 1].g0 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
-        prims[prim_index + 1].b0 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
+        prims[prim_index + 1].r0 = intensity / 2;
+        prims[prim_index + 1].g0 = intensity / 2;
+        prims[prim_index + 1].b0 = intensity / 2;
         prims[prim_index].r2 = intensity;
         prims[prim_index].g2 = intensity;
         prims[prim_index].b2 = intensity;
-        prims[prim_index + 1].r2 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
-        prims[prim_index + 1].g2 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
-        prims[prim_index + 1].b2 = ((s32)(intensity + ((u32)intensity >> 31)) >> 1);
+        prims[prim_index + 1].r2 = intensity / 2;
+        prims[prim_index + 1].g2 = intensity / 2;
+        prims[prim_index + 1].b2 = intensity / 2;
 
         clut = GetClut(0, 0x1e3);
         prims[prim_index + 1].clut = clut;

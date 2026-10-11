@@ -3,11 +3,11 @@
 #include "psx/types.h"
 
 /* Render each text id of the -1 terminated `list` as one 16-pixel row in VRAM at `rect`. */
-void equip_text_render_id_rows_to_vram(void* text_table, s16* list, RECT* rect, s32 style) {
-    u32 buf[0x200];
+void equip_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style) {
+    u8 buf[0x800];
     battle_menu_text_image_bounds_t clear_rect;
     RECT dest_rect;
-    s16 text[4];
+    s16 text[2];
 
     clear_rect.x = 0;
     clear_rect.y = 0;
@@ -24,7 +24,7 @@ void equip_text_render_id_rows_to_vram(void* text_table, s16* list, RECT* rect, 
         text[1] = -1;
         memset(buf, 0, 0x800);
         equip_text_render_encoded_ids_to_image(
-            buf, &clear_rect, 0xa, 0x64, text_table, (const u16*)text, 0x64, TEXT_FORMAT_EXPLICIT_ID, style);
+            buf, &clear_rect, 0xa, 0x64, text_table, text, 0x64, TEXT_FORMAT_EXPLICIT_ID, style);
         equip_gfx_load_image_and_wait(&dest_rect, buf);
         dest_rect.y += 0x10;
         list++;

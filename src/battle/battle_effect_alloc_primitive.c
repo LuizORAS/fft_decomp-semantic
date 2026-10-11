@@ -1,9 +1,5 @@
 #include "fft/battle.h"
 
-enum {
-    BATTLE_EFFECT_PRIMITIVE_BUFFER_SIZE = 0x8000,
-};
-
 /* Allocate one typed primitive from the effect renderer's circular arena.
  *
  * The original renderer wraps before an allocation that would cross the

@@ -2,16 +2,16 @@
 #include "psx/types.h"
 
 /* Render gauge values with an explicit sign, colored by sign, and a zero placeholder. */
-void require_text_render_decimal_entry_list(void* pixels, battle_menu_status_panel_gauge_entry_t* entries,
-    battle_menu_status_panel_text_position_t* output, s32 count) {
+void require_text_render_decimal_entry_list(
+    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count) {
     s32 i;
 
     for (i = 0; i < count; entries++, i++, output->color = 0) {
         s32 value = *entries->value;
         s32 flags;
-        output->x = entries->x;
-        output->y = entries->y;
-        flags = entries->flags;
+        output->rect.x = entries->x;
+        output->rect.y = entries->y;
+        flags = entries->format;
         flags &= MENU_DECIMAL_SIGN_CLEAR_MASK;
         if (value < 0) {
             value = -value;

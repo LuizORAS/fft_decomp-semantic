@@ -6,7 +6,7 @@
 u32 main_ability_get_known(battle_stats_t* unit, u32 job_row) {
     u32 learned_ability_offset = job_row * UNIT_LEARNED_ABILITY_BYTES_PER_JOB;
 
-    return ((u32)unit->learned_abilities[learned_ability_offset] << 16)
-        + ((u32)unit->learned_abilities[learned_ability_offset + 1] << 8)
+    return (unit->learned_abilities[learned_ability_offset] << 16)
+        + (unit->learned_abilities[learned_ability_offset + 1] << 8)
         | unit->learned_abilities[learned_ability_offset + 2];
 }

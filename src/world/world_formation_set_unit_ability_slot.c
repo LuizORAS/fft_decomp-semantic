@@ -8,9 +8,9 @@
  * replacement set. Return 1 on success and -2 when the unit cannot change.
  */
 s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s32 update_equipment) {
-    u16 equipment[5];
+    s16 equipment[5];
     s32 i;
-    if (world_formation_lock_equipment_and_abilities(unit_id) == 1) {
+    if (world_formation_get_unit_lock(unit_id) == WORLD_FORMATION_UNIT_UNLOCKED) {
         world_formation_unit_ability_slots_t* unit
             = (world_formation_unit_ability_slots_t*)g_world_formation_unit_pointers[unit_id];
         unit->ability_slots[slot] = ability;
@@ -19,14 +19,13 @@ s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s3
         if (update_equipment != 0) {
             if (unit_id != WORLD_FORMATION_PREVIEW_RECORD) {
                 if (g_world_formation_unit_pointers[unit_id]->job_id != JOB_ID_MIME) {
-                    world_unit_build_best_fit_equipment(unit_id, (s16*)equipment);
+                    world_unit_build_best_fit_equipment(unit_id, equipment);
                     for (i = 0; i < 5; i++) {
-                        world_item_change_quantity_on_equip(
-                            (s16)g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
+                        world_item_adjust_inventory_count(g_world_formation_unit_pointers[unit_id]->equipment[i], 1);
                     }
                     for (i = 0; i < 5; i++) {
                         g_world_formation_unit_pointers[unit_id]->equipment[i] = equipment[i];
-                        world_item_change_quantity_on_equip((s16)equipment[i], -1);
+                        world_item_adjust_inventory_count(equipment[i], -1);
                     }
                     world_formation_save_records_to_party_data();
                     world_menu_run_unit_status_banner_countdown(0xD811, 0x1E);

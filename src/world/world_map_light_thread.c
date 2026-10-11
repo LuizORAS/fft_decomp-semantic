@@ -42,7 +42,7 @@ void world_map_light_thread(void) {
         scale.vy = (target[4] - start[4]) * i / frames + start[4];
         scale.vz = (target[5] - start[5]) * i / frames + start[5];
         ScaleMatrixL(&colour, &scale);
-        battle_map_light_matrix_command(0x5E, &colour, &light, 0);
+        battle_map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
         world_thread_wait_frames(1);
     }
     world_script_copy_bytes(g_world_map_light_rotation, &rotation, 8);

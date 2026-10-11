@@ -25,13 +25,13 @@ s32 battle_unit_animate_teleport_to_destination(battle_unit_misc_data_t* unit) {
         break;
     case 1:
         /* The target passes no argument here. */
-        if (((s32 (*)(void))battle_effect_init_data)() == 0 && battle_camera_is_active() == 0) {
+        if (battle_effect_init_data() == 0 && battle_camera_is_active() == 0) {
             battle_effect_start_teleport_white_flash(unit);
         }
         break;
     case 2:
         if (unit->distortion_timer >= 0x11) {
-            battle_gfx_start_misc_unit_palette_modulation(4, 4, unit->unit_id, -31, -31, -31);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->unit_id, -31, -31, -31);
             unit->distortion_timer = 0;
             unit->distortion_phase++;
         }
@@ -50,27 +50,27 @@ s32 battle_unit_animate_teleport_to_destination(battle_unit_misc_data_t* unit) {
         }
         break;
     case 4:
-        if (((s32 (*)(void))battle_effect_init_data)() == 0 && battle_camera_is_active() == 0) {
+        if (battle_effect_init_data() == 0 && battle_camera_is_active() == 0) {
             battle_effect_start_teleport_fade_out(unit);
         }
         break;
     case 5:
         if (unit->distortion_timer >= 0x11) {
-            battle_gfx_start_misc_unit_palette_modulation(4, 4, unit->unit_id, 31, 31, 31);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->unit_id, 31, 31, 31);
             unit->distortion_phase++;
         }
         break;
     case 6:
         if (unit->distortion_timer >= 0x21) {
-            battle_gfx_start_misc_unit_palette_modulation(8, 2, unit->unit_id, 0, 0, 0);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_RESTORE, 2, unit->unit_id, 0, 0, 0);
             unit->distortion_timer = 0;
             unit->distortion_phase++;
         }
         break;
     case 7:
         if (g_battle_state_animation_continue_check == 0) {
-            unit->distortion_animation_id = 0;
-            unit->sprite_display_flags.half &= 0xfffe;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
+            unit->sprite_display_flags.half &= ~BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         }
         break;
     }

@@ -23,9 +23,9 @@ void battle_formula_set_morbol(void) {
         return;
     target = g_battle_action_target;
     if (!(target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL) && target->mount_info == 0
-        && (u32)((target->character_identity - CHARACTER_IDENTITY_SELECTOR_FIRST) & 0xFF)
-            < CHARACTER_IDENTITY_SELECTOR_COUNT
-        && (u32)((target->job_id + (0x100 - JOB_ID_MORBOL)) & 0xFF) >= JOB_ID_MORBOL_FAMILY_COUNT) {
+        && target->character_identity >= CHARACTER_IDENTITY_GENERIC_MALE
+        && target->character_identity <= CHARACTER_IDENTITY_MONSTER
+        && (target->job_id < JOB_ID_MORBOL || target->job_id > JOB_ID_MORBOL_FAMILY_LAST)) {
         /* The halfword store clears all other special-effect flags. */
         action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_MORBOL;
         action->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;

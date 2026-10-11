@@ -2,10 +2,10 @@
 #include "psx/libspu.h"
 
 void SpuSetVoiceSL(s32 v_num, u16 sl) {
-    volatile psyq_spu_voice_t* voice = &_spu_RXX->voices[v_num];
-    u16 value = voice->adsr1;
+    u16 value;
+    value = _spu_RXX->raw[(v_num << 3) + 4];
     value &= 0xfff0;
     value |= sl;
-    voice->adsr1 = value;
+    _spu_RXX->raw[(v_num << 3) + 4] = value;
     PSYQ_SPU_REGISTER_DELAY();
 }

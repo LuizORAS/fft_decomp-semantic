@@ -39,29 +39,28 @@ s32 world_formation_process_job_change(s32 job) {
     s32 line_x;
 
     if (g_world_job_change_active == 0) {
-        main_sound_play_tune(5);
+        main_sound_play_tune(MAIN_SOUND_TUNE_JOB_CHANGE);
         g_world_job_change_active = 1;
         g_world_job_change_frame = 0;
         g_world_job_change_skip_requested = 0;
         world_input_clear_state();
         g_world_job_change_old_sprite_image = main_heap_alloc(0x1e0);
-        world_gfx_move_image_to_ram_from_vram_and_wait(
-            &g_world_job_change_old_sprite_rect, (u32*)g_world_job_change_old_sprite_image);
+        world_gfx_store_image_and_wait(&g_world_job_change_old_sprite_rect, g_world_job_change_old_sprite_image);
         g_world_job_change_new_sprite_image = main_heap_alloc(0x1e0);
         memset(g_world_job_change_new_sprite_image, 0, 0x1e0);
         world_formation_change_unit_job(0x14, job, 0);
         world_formation_build_unit_graphic_entry(0x14, &scratch.entry, 0);
         g_world_job_change_new_sprite_source = main_heap_alloc(0x1e0);
         if (scratch.entry.tpage == 100) {
-            rect.x = ((s16)scratch.entry.x >> 2) + 0x100;
+            rect.x = (scratch.entry.x >> 2) + 0x100;
         } else {
-            rect.x = ((s16)scratch.entry.x >> 2) + 0x140;
+            rect.x = (scratch.entry.x >> 2) + 0x140;
         }
         rect.y = scratch.entry.y;
-        rect.w = (s16)scratch.entry.w >> 2;
+        rect.w = scratch.entry.w >> 2;
         rect.h = scratch.entry.h;
         g_world_job_wheel_new_portrait_quad.clut = scratch.entry.clut;
-        world_gfx_move_image_to_ram_from_vram_and_wait(&rect, (u32*)g_world_job_change_new_sprite_source);
+        world_gfx_store_image_and_wait(&rect, g_world_job_change_new_sprite_source);
         g_world_job_change_dissolve_order = main_heap_alloc(0x3c0);
         for (i = 479; i >= 0; i--) {
             g_world_job_change_dissolve_order[i] = i;
@@ -108,7 +107,7 @@ s32 world_formation_process_job_change(s32 job) {
         scratch.points[3]++;
         world_menu_add_gradient_line_primitive(&scratch.points[2], g_world_job_change_wave_colors + 3, 1, 0x38);
     }
-    world_gfx_add_draw_mode_primitive(0, 0, GetTPage(0, 3, 0x100, 0), 0, 0x37);
+    world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 3, 0x100, 0), 0, 0x37);
     g_world_job_change_frame++;
     if (g_world_job_change_skip_requested != 0) {
         if (g_world_job_change_frame >= 40 && g_world_job_change_frame <= 220) {
@@ -119,15 +118,15 @@ s32 world_formation_process_job_change(s32 job) {
         g_world_job_change_skip_requested = 1;
     }
     if (g_world_job_change_frame < 220) {
-        return 1;
+        return WORLD_JOB_CHANGE_ANIM_DISSOLVE;
     }
     if (g_world_job_change_frame < 240) {
-        return 2;
+        return WORLD_JOB_CHANGE_ANIM_CLOSING;
     }
     main_heap_free(g_world_job_change_old_sprite_image);
     main_heap_free(g_world_job_change_new_sprite_image);
     main_heap_free(g_world_job_change_new_sprite_source);
     main_heap_free(g_world_job_change_dissolve_order);
     g_world_job_change_active = 0;
-    return 0;
+    return WORLD_JOB_CHANGE_ANIM_DONE;
 }

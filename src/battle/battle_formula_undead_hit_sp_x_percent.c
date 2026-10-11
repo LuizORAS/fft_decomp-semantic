@@ -9,7 +9,9 @@ void battle_formula_undead_hit_sp_x_percent(void) {
     battle_formula_store_hit_chance();
     battle_formula_roll_hit_chance();
     if (g_battle_action_target_data->hit != 0) {
-        if ((g_battle_action_target->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) == 0) {
+        if ((g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))
+            == 0) {
             battle_formula_force_attack_miss();
         } else {
             battle_formula_apply_status_to_action();

@@ -1,8 +1,8 @@
 #include "fft/main.h"
 
-/* Read size bytes from sector into destination and wait, without the Now Loading message:
- * retry the request while the shared descriptor is busy, then poll once per frame. Returns
- * destination. */
+/* Read size bytes from sector into destination (whole sectors only, size >> 11) and wait,
+ * without the Now Loading message: retry the request while the shared descriptor is busy, then
+ * poll once per frame. Returns destination. */
 void* main_file_load_to_address(int sector, unsigned int size, void* destination) {
     main_file_load_descriptor_t* descriptor;
 

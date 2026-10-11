@@ -12,6 +12,7 @@ void battle_action_start_effect_messages(void) {
         g_battle_action_post_effect_msg_counter = 0;
     }
     if (battle_action_show_next_effect_message() == 0) {
-        battle_menu_init_system_function(0xA, 0, unit->battle_data->misc_unit_id, 0, 0);
+        battle_menu_init_system_function(
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->misc_unit_id, 0, 0);
     }
 }

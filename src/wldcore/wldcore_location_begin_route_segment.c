@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Provisional: a route word read whole (lw, stored as its low half) or as its
+/* A route word read whole (lw, stored as its low half) or as its
  * high half (lhu at +2). */
 typedef union wldcore_route_word {
     s32 word;
@@ -11,7 +11,7 @@ typedef union wldcore_route_word {
     } halves;
 } wldcore_route_word_t;
 
-/* Provisional: one 12-byte route point. The heading's high half is a 12-bit
+/* One 12-byte route point. The heading's high half is a 12-bit
  * angle. The points follow the wldcore_route_record_t header and are indexed
  * as 4-byte words from the record base, (point * 3 + 1) * 4. */
 typedef struct wldcore_route_point {
@@ -36,7 +36,7 @@ typedef struct wldcore_route_point {
  * word through `word` keeps the target's whole-word lw (a direct narrowing
  * store is expanded as lhu), and the `flags` local gives its `or` operand
  * order. */
-s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, s32 route, s32 step) {
+s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, u32 route, s32 step) {
     s32 unused[8];
     wldcore_route_record_t* record;
     s32 index;
@@ -48,9 +48,9 @@ s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, 
     record = (wldcore_route_record_t*)g_wldcore_map_route_tables;
     state->route_id = route & 0xff;
     flags = state->flags;
-    state->flags = flags | (((u32)route >> 7) & 2);
+    state->flags = flags | ((route >> 7) & WLDCORE_ROUTE_TRAVEL_REVERSED);
     record = ((wldcore_route_record_t**)record)[state->route_id];
-    if (state->flags & 2) {
+    if (state->flags & WLDCORE_ROUTE_TRAVEL_REVERSED) {
         state->leg_end_location = record->start_location;
         state->leg_start_location = record->end_location;
         index = (record->count - step - 1) * 3 + 1;

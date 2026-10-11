@@ -2,10 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional view of the menu entry passed to the action handler: the
+/* View of the menu entry passed to the action handler: the
  * action word at 0x24 is either a small negative code (-15..-1) or a pointer
  * to one s16 action per option; 0x34 points at the halfword that receives
- * the chosen option. Same stride as battle_menu_idle_action_entry_t. */
+ * the chosen option. Same stride as world_menu_entry_t. */
 typedef struct battle_menu_action_entry {
     u8 _unused_00[0x24];
     s16* actions; /* 0x24 */
@@ -31,7 +31,7 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
     s32 thread_id;
 
     entry = menu;
-    if (g_battle_menu_input_disabled == 2
+    if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL
         && ((battle_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> selected_option) & 1)) {
         return;
     }
@@ -44,18 +44,18 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
         g_battle_thread_contexts[g_battle_thread_current_id].task_words[0] = 0;
     }
     actions = entry->actions;
-    if ((u32)((s32)actions + 15) < 15) {
+    if ((s32)actions >= -15 && (s32)actions <= -1) {
         action = (s32)actions;
     } else {
         action = actions[selected_option];
     }
     if (action >= 0) {
-        if (action & 0x1000) {
+        if (action & BATTLE_MENU_ROW_ACTION_SILENT) {
             silent = 1;
             /* Zero-instruction use: raises silent's allocation priority so it
                takes $s6 and selected_option keeps $s7, as in the target. */
             __asm__("" : : "r"(silent), "r"(silent));
-            action -= 0x1000;
+            action -= BATTLE_MENU_ROW_ACTION_SILENT;
         }
     }
     if (action >= 0) {
@@ -78,9 +78,9 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
             g_battle_thread_contexts[thread_id].function_parameter_3 = 1;
             if (thread_id == 8) {
                 for (j = 0; j < action; j++) {
-                    if (battle_thread_is_running_2(8 - j) != 0) {
+                    if (battle_thread_is_running_asm(8 - j) != 0) {
                         g_battle_menu_pending_selection[j]
-                            = ((battle_menu_idle_action_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
+                            = ((world_menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
                                   ->selected_index;
                     }
                 }

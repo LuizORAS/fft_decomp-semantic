@@ -7,7 +7,7 @@ void battle_state_enter_pre_attack_animation(void) {
     battle_unit_misc_data_t* unit;
     u16 ability;
 
-    battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 2);
+    battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 2);
     g_battle_game_state = BATTLE_GAME_STATE_PRE_ATTACK_ANIMATION;
     unit = battle_unit_get_source_misc_data();
     ability = unit->used_ability_id;
@@ -15,7 +15,7 @@ void battle_state_enter_pre_attack_animation(void) {
     if (g_battle_ability_animation_data[ability].charge_animation_set_id != 0) {
         battle_unit_start_ability_pre_attack_animation(unit);
     } else {
-        battle_unit_store_animation_facing(2, unit->facing, unit);
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_STAND, unit->facing, unit);
     }
     battle_target_hide_cursor();
 }

@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xD9: like Pitch Shift (0xD8), but the
- * third byte selects the waveform (low nibble) instead of the delay, which
- * is cleared; flags bit 1 is set when bit 4 of that byte is clear.
+/* SMD opcode 0xD9 "Vibrato Waveform": like Vibrato (0xD8), but the third
+ * byte selects the waveform (low nibble) instead of the delay, which is
+ * cleared; the modulator restarts on key-on unless bit 4 of that byte is set.
  *
  * Taking the modulator pointer before the step calculation call keeps it a
  * separate pseudo (combine does not merge across the call), which places
@@ -29,11 +29,11 @@ u8* main_smd_pitch_shift_waveform(u8* note_data, suzuki_music_t* music, suzuki_m
         waveform &= 0xf;
         modulator->amplitude = main_smd_modulator_calculate_step(depth << 14, speed, waveform);
         modulator->timer_reset = speed;
-        modulator->counter_14_reset = 0;
-        modulator->counter_18_reset = 0x100;
+        modulator->delay_reset = 0;
+        modulator->fade_step = 0x100;
         modulator->step = g_main_smd_modulator_waveforms[waveform];
         modulator->waveform = waveform;
-        modulator->target = 0;
+        modulator->target = SUZUKI_MODULATOR_TARGET_PITCH;
         modulator->flags = flags + 1;
         main_smd_modulator_reset(modulator);
     }

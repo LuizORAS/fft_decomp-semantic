@@ -33,7 +33,7 @@ battle_unit_misc_data_t* battle_unit_find_other_chocobo_at_map_coords(s32 x, s32
         for (index = 0; index < count; index++) {
             result = list[index];
             id = result->unit_id;
-            if (id != g_battle_casting_misc_id && id != g_battle_casting_unit_id) {
+            if (id != g_battle_unit_source_misc_id && id != g_battle_casting_unit_id) {
                 return result;
             }
         }

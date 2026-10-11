@@ -23,20 +23,19 @@ void wldcore_opcode_load_picture(void) {
     g_wldcore_opcode_state.y = y;
     wldcore_proposition_load_picture_data_set(picture);
     wldcore_wait_for_file_load();
-    g_wldcore_window_render_records[g_wldcore_opcode_state.render_index].base_x = x - 0x80;
-    g_wldcore_window_render_records[g_wldcore_opcode_state.render_index].base_y = y - 0x78;
-    world_gs_gettiminfo(g_wldcore_picture_buffer + 1, &image);
+    g_wldcore_window_render_records[g_wldcore_opcode_state.render_index].base.x = x - 0x80;
+    g_wldcore_window_render_records[g_wldcore_opcode_state.render_index].base.y = y - 0x78;
+    GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
     bounds.position.x = image.px;
     bounds.position.y = image.py;
     bounds.dimensions.x = image.pw;
     bounds.dimensions.y = image.ph;
     clut_position.x = image.cx;
     clut_position.y = image.cy;
-    LoadTPage(image.pixel, 0, 0, (s16)bounds.position.x, (s16)bounds.position.y, (s16)bounds.dimensions.x * 4,
-        (s16)bounds.dimensions.y);
+    LoadTPage(image.pixel, 0, 0, bounds.position.x, bounds.position.y, bounds.dimensions.x * 4, bounds.dimensions.y);
     LoadClut(image.clut, clut_position.x, clut_position.y);
     wldcore_window_init_vram_render_record(
-        g_wldcore_opcode_state.render_index, bounds.position, bounds.dimensions, clut_position, 4);
+        g_wldcore_opcode_state.render_index, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
     g_wldcore_window_render_records[g_wldcore_opcode_state.render_index].anim_counter = 0;
-    g_wldcore_opcode_state.state_flags |= 4;
+    g_wldcore_opcode_state.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

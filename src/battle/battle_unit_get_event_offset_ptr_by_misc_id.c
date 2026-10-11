@@ -7,5 +7,5 @@ s16* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id) {
         main_system_handle_pointer_exception(12);
         return 0;
     }
-    return &unit->effect_vector_2.vx;
+    return &unit->event_offset.vx;
 }

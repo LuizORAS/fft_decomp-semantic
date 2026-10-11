@@ -5,27 +5,24 @@ void* main_sound_alloc(u32 size) {
     suzuki_heap_block_t* block = g_main_sound_heap_blocks;
     suzuki_heap_block_t* allocated;
     u8* payload;
-    /* The unpinned final heap limit swaps the original v1/v0 loads. */
-    register u8* heap_end __asm__("$3");
-    /* The unpinned final gap remains in v1 instead of the retail v0. */
-    register u32 final_gap __asm__("$2");
+    u8* limit;
     u32 required = ((size + 15) & ~15) + sizeof(suzuki_heap_block_t);
     while (block->next != 0) {
-        if ((u32)((u8*)block->next - block->end) >= required) {
+        limit = (u8*)block->next;
+        if ((limit - block->end) >= required) {
             goto found;
         }
         block = block->next;
     }
-    heap_end = g_main_sound_heap_end;
-    final_gap = heap_end - block->end;
-    if (final_gap >= required) {
+    limit = g_main_sound_heap_end;
+    if ((limit - block->end) >= required) {
     found:
         allocated = (suzuki_heap_block_t*)(((u32)block->end + 15) & ~15);
         payload = (u8*)(allocated + 1);
         allocated->end = payload + size;
         allocated->next = 0;
         allocated->_unknown_04 = 0;
-        allocated->flags = 2;
+        allocated->flags = SUZUKI_HEAP_BLOCK_ALLOCATED;
         allocated->_unknown_02 = 0;
         allocated->next = block->next;
         block->next = allocated;

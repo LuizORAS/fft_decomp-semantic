@@ -8,7 +8,7 @@
  * g_world_name_entry_special_to_char_column/g_world_name_entry_char_to_special_column. Left/right wrap within the row,
  * and a column change requests cursor sound 3. */
 void world_name_update_entry_cursor(void) {
-    world_menu_point_t cursor;
+    point16_t cursor;
     s32 previous;
     u32 input;
 

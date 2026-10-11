@@ -9,7 +9,7 @@ void battle_move_update_all_walking_units(void) {
 
     i = 0;
     do {
-        unit = battle_unit_get_misc_data_by_misc_id((u16)i);
+        unit = battle_unit_get_misc_data_by_misc_id(i);
         if (unit != 0) {
             if (unit->movement_path_count != 0) {
                 battle_move_update_path_step(unit);

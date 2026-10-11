@@ -6,16 +6,15 @@
 void battle_state_handle_free_cursor_state(void) {
     battle_unit_misc_data_t* unit;
     s32 input;
-    s32 unused[2]; /* dead 8-byte local; keeps the target's 0x20 frame */
+    RECT rect; /* never used; retail reserves its 8 bytes */
 
     battle_camera_handle_rotation_input();
     battle_camera_call_zoom_map();
     battle_camera_call_toggle_tilt();
     battle_target_move_cursor_by_input();
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    input = g_controller_input_pressed;
-    (void)&unused;
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
+    input = g_main_input_pressed_buttons;
     if (input & PSX_PAD_SELECT) {
         battle_turn_clear_at_list_index();
         battle_menu_open_free_cursor_help();
@@ -23,7 +22,7 @@ void battle_state_handle_free_cursor_state(void) {
         battle_turn_clear_at_list_index();
         battle_state_enter_highlight_units_by_team();
     } else if (input & PSX_PAD_CIRCLE) {
-        battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 0);
+        battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 0);
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
         if (battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
             != 0) {

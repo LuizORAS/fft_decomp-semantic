@@ -1,5 +1,5 @@
 /*
- * WORLD copy of the EVENT OPTION dead-unit panel (option_menu_run_dead_unit_panel_a,
+ * WORLD copy of the EVENT OPTION window frame thread (option_menu_window_frame_thread,
  * byte-identical apart from addresses). Layout notes below are the OPTION
  * twin's; the WORLD helpers are the same routines.
  */
@@ -28,7 +28,7 @@ void world_menu_window_frame_thread(void) {
     /* The two border thicknesses feed both the primitive fields and the
        argument registers throughout, even though the callee at 0x80138adc
        takes only the primitive pointer:
-       world_gfx_reset_record_texture_window reads none of them. */
+       world_gfx_init_scaled_draw_area_packets reads none of them. */
     s32 border_wide;
     s32 border_thin;
     s32 span;
@@ -40,7 +40,7 @@ void world_menu_window_frame_thread(void) {
     world_clear_menu_render_buffer(g_world_menu_window_frame_image, 0x400);
     texture.w = 0x80;
     texture.h = 0x10;
-    world_gfx_alloc_texture_grid_rect(&texture, &prim->texture_prim, (u32*)-1);
+    world_gfx_alloc_tpage7_vram(&texture, &prim->texture_prim, (u32*)-1);
     *source_stride = 0x100;
     *dest_stride = 0x80;
 
@@ -66,7 +66,7 @@ void world_menu_window_frame_thread(void) {
     texture_u = (texture.x & 0x3f) * 4;
     /* The target loads the returned rectangle's y once as a byte (lbu 0x1a(sp))
        and reuses it for every halfword and byte store below. */
-    texture_v = (u8)texture.y;
+    texture_v = texture.y & 0xFF;
     for (index = 0; index < 4; index++) {
         g_world_menu_panel_texture_windows[index].x = (texture_u + index) * 0x10;
         g_world_menu_panel_texture_windows[index].y = texture_v;
@@ -135,14 +135,14 @@ void world_menu_window_frame_thread(void) {
     prim->sprites[8].w = border_thin;
     prim->sprites[8].h = border_wide;
 
-    world_gfx_reset_record_texture_window(&prim->cursor_mode);
+    world_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
     world_script_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
         sizeof(world_panel_frame_t));
 
     frame = 0;
     while (world_thread_get_current_parameter_3() == 0) {
         prim = &g_world_menu_panel_buffer.panel_frames[frame & 1];
-        world_gfx_build_scaled_draw_area_pair_swapped(&prim->cursor_mode, menu, frame, g_active_graphics_buffer_index);
+        world_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_active_graphics_buffer_index);
         /* The CLUT id the nine border sprites are drawn with this frame, which
            the target keeps in this variable's register once the texture column
            is dead. A separate local is allocated a different callee-saved
@@ -154,7 +154,7 @@ void world_menu_window_frame_thread(void) {
         for (index = 8; index >= 0; index--) {
             prim->sprites[index].clut = texture_u;
         }
-        world_gfx_draw_or_append_gpu_primitive(&prim->cursor);
+        world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
         world_gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
         for (index = 0; index < 5; index++) {
             world_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
@@ -164,11 +164,11 @@ void world_menu_window_frame_thread(void) {
             world_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
         }
         world_gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
-        world_gfx_draw_or_append_gpu_primitive(&prim->cursor_mode);
+        world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
         frame++;
         world_thread_yield();
     }
     world_thread_yield();
-    world_gfx_free_texture_grid_rect(&texture);
+    world_gfx_free_tpage7_vram(&texture);
     world_thread_exit_current();
 }

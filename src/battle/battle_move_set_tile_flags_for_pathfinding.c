@@ -1,10 +1,12 @@
 #include "fft/battle.h"
 
-/* Prepare a spread: clear the 528 panels (with mode bit 0, also their ranges) and build each
- * tile's frontier flags from its slope, water depth and blocking; unless mode is 3, mark the
- * other units' tiles (an enemy's cannot be entered, a mountable ally's can be ridden onto;
- * Altima's second form blocks its tile). Mode 1 also queues the unit's own tile with Move + 1
- * range. */
+/* Prepare a spread: clear the 528 panels (with mode bit 0, also their ranges and the reachable
+ * count) and build each tile's frontier flags from its slope, half height, water depth and
+ * blocking. Unless mode is TERRAIN_ONLY, mark the tiles of the 16 unit records: another team's
+ * unit cannot be entered; an ally can be ridden onto unless its record says otherwise, and stood
+ * on when it is a stepping stone and the mover is not; Altima's second form blocks its tile.
+ * START_SPREAD also queues the unit's own tile with Move + 1 range, and a mount there with it,
+ * which widens the spread to 0x24 sources (battle_move_spread_to_adjacent_tiles). */
 void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
@@ -40,58 +42,60 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             slope = tile->slope_type & 5;
             if (slope == 1 || slope == 4) {
                 *frontier_cell |= FRONTIER_FLAG_LOW_CORNER;
-                if (((s8)tile->depth_half_height & 0x1f) >= 3) {
+                if (tile->depth_half_height.bits.half_height >= 3) {
                     *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             } else {
-                if (((s8)tile->depth_half_height & 0x1f) > config->jump_or_1f) {
+                if (tile->depth_half_height.bits.half_height > config->jump_or_1f) {
                     *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             }
-            if ((tile->flags_06.bits.blocked | tile->flags_06.bits.untargetable) == 0) {
-                depth = tile->depth_half_height >> 5;
+            if ((tile->flags.bits.blocked | tile->flags.bits.untargetable) == 0) {
+                depth = tile->depth_half_height.value >> 5;
                 if ((depth == 0 || !config->cannot_enter_water) && (depth < 4 || !config->will_sink)) {
-                    *frontier_cell |= FRONTIER_FLAG_REACHABLE;
+                    *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
                 }
             }
-            tile_flags = tile->flags_06.value;
-            if (tile_flags & 1) {
-                *frontier_cell |= 0x80;
-            } else if (!config->move_type && (tile_flags & 2) && (tile->surface.value & 0x3f) != 0x3f) {
-                *frontier_cell |= FRONTIER_FLAG_REACHABLE;
+            tile_flags = tile->flags.value;
+            if (tile_flags & MAP_TILE_FLAG_BLOCKED) {
+                *frontier_cell |= FRONTIER_FLAG_BLOCKED;
+            } else if (!config->move_type && (tile_flags & MAP_TILE_FLAG_UNTARGETABLE)
+                && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
+                *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
             }
         }
     }
-    if (mode != 3) {
+    if (mode != BATTLE_MOVE_TILE_FLAGS_MODE_TERRAIN_ONLY) {
         for (i = 0; i < 16; i++) {
             record = &records[i];
             flags = record->unit_id_flags;
-            if (flags != 0xff) {
+            if (flags != BATTLE_MOVE_RECORD_NONE) {
                 index = (record->higher_elevation << 8) + record->y * config->map_max_x + record->x;
-                if (g_battle_unit_stats[flags & 0x1f].character_identity == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM) {
-                    frontier[index] = (frontier[index] | 0x80) & 0xef;
+                if (g_battle_unit_stats[flags & BATTLE_MOVE_RECORD_UNIT_ID_MASK].character_identity
+                    == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM) {
+                    frontier[index] = (frontier[index] | FRONTIER_FLAG_BLOCKED) & ~FRONTIER_FLAG_ENTERABLE;
                 }
                 g_battle_target_panels[index].unit_record_index = i;
                 unit_cell = &frontier[index];
                 *unit_cell |= FRONTIER_FLAG_UNIT_ON_TILE;
-                if (!(flags & 0x40)) {
+                if (!(flags & BATTLE_MOVE_RECORD_FLAG_OTHER_TEAM)) {
                     if (!config->stepping_stone) {
                         height = record->stepping_stone << 3;
-                        *unit_cell = (*unit_cell & 0xf7) | height;
+                        *unit_cell = (*unit_cell & ~FRONTIER_FLAG_STAND_ON_UNIT) | height;
                     } else {
-                        *unit_cell &= 0xf7;
+                        *unit_cell &= ~FRONTIER_FLAG_STAND_ON_UNIT;
                     }
-                    if (!(flags & 0x20)) {
-                        frontier[index] |= FRONTIER_FLAG_VALID_DESTINATION;
+                    if (!(flags & BATTLE_MOVE_RECORD_FLAG_NOT_MOUNTABLE)) {
+                        frontier[index] |= FRONTIER_FLAG_MOUNTABLE_UNIT;
                     } else {
-                        frontier[index] &= 0xdf;
+                        frontier[index] &= ~FRONTIER_FLAG_MOUNTABLE_UNIT;
                     }
                 } else {
-                    *unit_cell &= 0xcf;
+                    *unit_cell &= ~(FRONTIER_FLAG_ENTERABLE | FRONTIER_FLAG_MOUNTABLE_UNIT);
                     if (!config->move_type) {
-                        *unit_cell |= 8;
+                        *unit_cell |= FRONTIER_FLAG_STAND_ON_UNIT;
                     } else {
-                        *unit_cell &= 0xf7;
+                        *unit_cell &= ~FRONTIER_FLAG_STAND_ON_UNIT;
                     }
                 }
             }
@@ -101,9 +105,9 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
         state->reachable_count = 0;
         index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
     }
-    if (mode == 1) {
+    if (mode == BATTLE_MOVE_TILE_FLAGS_MODE_START_SPREAD) {
         panel = &g_battle_target_panels[index];
-        if (frontier[index] & 0x20) {
+        if (frontier[index] & FRONTIER_FLAG_MOUNTABLE_UNIT) {
             state->outer_count = 0x24;
             aux = g_battle_target_panels + 0x200 + panel->unit_record_index;
             aux->remaining_range = config->move + 1;

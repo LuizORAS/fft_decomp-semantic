@@ -2,7 +2,6 @@
 #include "psx/libspu.h"
 
 void SpuSetVoicePitch(s32 v_num, u16 pitch) {
-    volatile psyq_spu_voice_t* voice = &_spu_RXX->voices[v_num];
-    voice->pitch = pitch;
+    _spu_RXX->raw[(v_num << 3) + 2] = pitch;
     PSYQ_SPU_REGISTER_DELAY();
 }

@@ -16,7 +16,7 @@ typedef struct battle_effect_charge_params {
 } battle_effect_charge_params_t;
 
 /* The target compares a line's two endpoints as whole words. */
-#define LINE_G2_XY_WORD(line, n) (*(s32*)&(line)->x##n)
+#define LINE_G2_XY_WORD(line, n) (*(s32*)&line->x##n)
 
 extern battle_effect_charge_params_t g_battle_effect_charge_line_params[];
 
@@ -35,7 +35,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
     s32 unused[4];
     VECTOR out;
     LINE_G2* line;
-    battle_screen_coords_t* screen;
+    SVECTOR* screen;
     battle_effect_slot_t* slot;
     u32* ot;
     s16* offsets;
@@ -60,10 +60,10 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
 
     effect = g_battle_effect_current_secondary;
     state = &g_battle_effect_secondary_state.charge;
-    switch ((u32)effect->phase) {
+    switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         index = g_battle_effect_secondary_animations[effect->animation_id].parameter;
-        g_battle_effect_current_secondary->parameter = battle_effect_get_ninja_ball((u16)effect->parameter);
+        g_battle_effect_current_secondary->parameter = battle_effect_get_ninja_ball(effect->parameter);
         g_battle_effect_secondary_state.charge.speed = g_battle_effect_charge_line_params[index].speed;
         g_battle_effect_secondary_state.charge.spread_range = g_battle_effect_charge_line_params[index].spread_range;
         g_battle_effect_secondary_state.charge.spread_offset = g_battle_effect_charge_line_params[index].spread_offset;
@@ -71,7 +71,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         g_battle_effect_secondary_state.charge.radius = g_battle_effect_charge_line_params[index].radius;
         g_battle_effect_secondary_state.charge.spawn_interval
             = g_battle_effect_charge_line_params[index].spawn_interval;
-        g_battle_effect_secondary_state.charge.colour = (u16)g_battle_effect_current_secondary->parameter;
+        g_battle_effect_secondary_state.charge.colour = g_battle_effect_current_secondary->parameter;
         g_battle_effect_secondary_state.charge.max_trails = g_battle_effect_charge_line_params[index].max_trails;
         g_battle_effect_secondary_state.charge.fade_row = g_battle_effect_charge_line_params[index].fade_row;
         SetDrawMode(&state->mode[0], 1, 1, 0x20, 0);
@@ -94,23 +94,23 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         for (i = 0; i < 14; i++) {
             state->ids_b[i] = 0;
         }
-        screen
-            = battle_unit_get_screen_data_ptr_by_misc_id((u8)g_battle_effect_current_secondary->caster_block.values[1]);
+        screen = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id);
         i = battle_gfx_get_unit_spritesheet_height_by_misc_id(
-                (u8)g_battle_effect_current_secondary->caster_block.values[1])
+                g_battle_effect_current_secondary->caster.fields.caster_id)
             + 8;
-        g_battle_effect_groups[12].position_y = g_battle_effect_groups[13].position_y = -i;
-        in.vx = screen->x;
-        in.vz = screen->y;
-        in.vy = screen->z - i;
+        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].position[1]
+            = g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE_13].position[1] = -i;
+        in.vx = screen->vx;
+        in.vz = screen->vz;
+        in.vy = screen->vy - i;
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
-        RotTrans(&in, &out, (long*)&out.pad);
+        RotTrans(&in, &out, &out.pad);
         state->angle = 0;
         state->done = 0;
         state->x = out.vx;
         state->y = out.vy;
-        SuzukiPlaySoundFindChannel(0x1f);
+        SuzukiPlaySoundFindChannel(MAIN_SFX_SPELL_CHARGE);
         result = 1;
         g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
         break;
@@ -143,7 +143,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
             }
         }
         if (state->count.n.b < 14) {
-            for (i = 0; i < g_battle_effect_groups[12].spawns_per_frame; i++) {
+            for (i = 0;
+                i < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].spawns_per_frame;
+                i++) {
                 for (j = 0; j < 14; j++) {
                     if (state->ids_b[j] == 0) {
                         break;
@@ -155,8 +157,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 }
                 slot = &g_battle_effect_slots[state->ids_b[j]];
                 slot->life = battle_effect_spawn_particle_motion(
-                    (battle_effect_emitter_values_t*)((u8*)&g_battle_effect_groups[12] - 2), &slot->motion);
-                battle_effect_init_trap_animation(0xc, 0x7acf, slot);
+                    &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE], &slot->motion);
+                battle_effect_init_trap_animation(
+                    BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE, MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15), slot);
                 state->count.n.b++;
                 if (state->count.n.b == 14) {
                     break;
@@ -166,7 +169,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         for (i = 0; i < 2; i++) {
             j = state->ids_a[i];
             if (j != 0 && battle_effect_update_slot(j) == 0) {
@@ -256,7 +259,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         if (g_battle_effect_current_secondary->phase == BATTLE_SECONDARY_EFFECT_EXECUTING || state->count.all != 0) {
             result = 1;
         } else {
-            main_sound_stop_sfx_channels(0x1f);
+            main_sound_stop_sfx_channels(MAIN_SFX_SPELL_CHARGE);
             result = 0;
         }
         break;

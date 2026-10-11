@@ -12,14 +12,13 @@ void world_card_build_save_file_header(s32 slot, s32 level, card_save_header_t* 
     s32 digit;
     s32 divisor;
     s32 pos;
-    s32 unused;
     card_save_icon_t* records;
     card_save_icon_t* record;
 
-    header->magic0 = 0x53;
-    header->magic1 = 0x43;
-    header->icon_flags = 0x11;
-    header->block_count = 1;
+    header->magic0 = CARD_SAVE_HEADER_MAGIC_S;
+    header->magic1 = CARD_SAVE_HEADER_MAGIC_C;
+    header->icon_flags = CARD_SAVE_HEADER_ICON_ONE_FRAME;
+    header->block_count = CARD_SAVE_HEADER_BLOCK_COUNT_ONE;
     memset(header->reserved, 0, 0x1C);
     slot++;
     bcopy(g_world_card_save_title_template, header->title, 0x16);

@@ -9,7 +9,7 @@ typedef struct equip_number_glyph {
     RECT rect;
     s16 u;
     s16 v;
-    u16 w;
+    s16 w;
     u16 h;
     RECT minus_rect;
 } equip_number_glyph_t;
@@ -17,7 +17,7 @@ typedef struct equip_number_glyph {
 /* Render command that draws the decimal value returned by one of the list-row
  * callbacks as a row of digit tiles.
  *
- * Twin of JOBSTTS jobstts_menu_script_draw_formatted_number, extended with a
+ * Twin of JOBSTTS jobstts_cmd_draw_formatted_number_handler, extended with a
  * leading minus sign and three glyph styles (data[2]); style 2 uses the
  * two-row digit strip with its own CLUT. `negative` is s16: the target copies
  * the promoted halfword into a scratch register before each test. Clearing it
@@ -58,13 +58,13 @@ u8* equip_cmd_draw_formatted_number_handler(u8* data) {
         negative = 1;
     }
     if (data[6] != 0) {
-        clut = g_equip_text_metric_1;
+        clut = g_equip_menu_alternate_number_clut;
     } else {
-        clut = g_equip_text_metric_2;
+        clut = g_equip_menu_palette_clut;
     }
-    if (value & 0x40000000) {
-        clut = g_equip_text_metric_3;
-        value &= ~0x40000000;
+    if (value & MENU_NUMBER_VALUE_DISABLED) {
+        clut = g_equip_menu_disabled_number_clut;
+        value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
     if (data[2] == 1) {
         glyph.u = 0x78;
@@ -82,7 +82,7 @@ u8* equip_cmd_draw_formatted_number_handler(u8* data) {
         glyph.w = 0xA;
         glyph.h = 0x10;
     }
-    if (value & 0x20000000) {
+    if (value & MENU_NUMBER_VALUE_DASHES) {
         value = data[4];
         while (value > 0) {
             cell = value - 1;
@@ -97,7 +97,7 @@ u8* equip_cmd_draw_formatted_number_handler(u8* data) {
         }
         return data + data[1];
     }
-    pad = data[4] - sprintf((char*)text, g_equip_text_decimal_format, value) - negative;
+    pad = data[4] - sprintf(text, g_equip_text_decimal_format, value) - negative;
     pos = 0;
     for (i = 0; i < data[4]; i++) {
         cell_x = data[7] + (i * data[5]);
@@ -122,18 +122,18 @@ u8* equip_cmd_draw_formatted_number_handler(u8* data) {
                 pos += 1;
             }
             if (data[2] < 2) {
-                equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + ((s16)glyph.w * digit), glyph.v, 0,
+                equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, 0,
                     g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
             } else {
                 if (digit < 8) {
                     glyph.v = 0;
-                    glyph.u = (s16)glyph.w * digit + 0x20;
+                    glyph.u = glyph.w * digit + 0x20;
                 } else {
                     glyph.v = 0x10;
-                    glyph.u = (s16)glyph.w * (digit - 8) + 0x20;
+                    glyph.u = glyph.w * (digit - 8) + 0x20;
                 }
                 equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u, glyph.v, 0, g_equip_gfx_semitransparency,
-                    g_equip_text_digit_texture_page, g_equip_text_metric_0, g_equip_gfx_sprite_ot_index);
+                    g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
             }
         }
     }

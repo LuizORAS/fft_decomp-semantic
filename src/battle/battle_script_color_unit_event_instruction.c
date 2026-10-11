@@ -1,6 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* ColorUnit: start a palette modulation on a unit or a unit group.
+ *
+ * Operands: unit id or group (halfword), blend mode, red, green, blue (s8 each)
+ * and a time. A plain unit id colours that one unit; id 0 and the group ids from
+ * EVENT_UNIT_GROUP_FIRST run all 21 misc ids through
+ * battle_script_filter_unit_id_by_mode. Nothing happens when a plain unit id does
+ * not resolve. */
 void battle_script_color_unit_event_instruction(u8* ptr) {
     u16 unit_id;
     s32 out;

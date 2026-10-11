@@ -18,9 +18,9 @@ s32 battle_target_mark_only_target_tile(const u8* action) {
         if (y < g_battle_map_max_y) {
             if (level < 2) {
                 tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
-                if ((tile->flags_06.value & MAP_TILE_FLAG_BLOCKED) == 0) {
+                if ((tile->flags.value & MAP_TILE_FLAG_BLOCKED) == 0) {
                     battle_target_clear_targeted_flags();
-                    tile->ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
+                    tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
                     return 1;
                 }
             }

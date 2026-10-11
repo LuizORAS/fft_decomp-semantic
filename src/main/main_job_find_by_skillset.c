@@ -3,15 +3,15 @@
 #include "psx/types.h"
 
 /* Return the first job (below JOB_ID_COUNT - 1) whose job data names skillset_id, or 0 when none
- * does. Referenced nowhere on the disc; WORLD's world_job_find_by_skillset does the same job for the
+ * does. Referenced nowhere on the disc; WORLD's world_job_find_first_for_skillset does the same job for the
  * formation's ability lists. */
 s32 main_job_find_by_skillset(s32 skillset_id) {
-    s32 job_id;
+    u32 job_id;
     s32 result;
     job_data_t* job_data;
 
     job_id = 0;
-    job_data = g_job_data_pointer;
+    job_data = g_main_job_data_pointer;
     skillset_id &= 0xff;
 
     do {
@@ -22,7 +22,7 @@ s32 main_job_find_by_skillset(s32 skillset_id) {
             break;
         }
         job_id++;
-        result = (u32)(job_id & 0xff) < (JOB_ID_COUNT - 1);
+        result = (job_id & 0xff) < (JOB_ID_COUNT - 1);
     } while (result != 0);
     return result;
 }

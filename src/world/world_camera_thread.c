@@ -6,10 +6,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define ABS(x) ((x) < 0 ? -(x) : (x))
-
-/* Target operand meaning "keep the component's current value". */
-#define WORLD_CAMERA_HOLD 10000
+#define ABS(x) (x < 0 ? -(x) : x)
 
 /* Script-variable index for each camera component, 0x801531b8. */
 
@@ -42,7 +39,7 @@ void world_camera_thread(void) {
     group = (g_world_camera_speed_curve & 0xC) >> 2;
     ease = (g_world_camera_speed_curve & 0xF0) >> 4;
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
-    script = (const u8*)world_thread_get_current_parameter_1();
+    script = world_thread_get_current_parameter_1();
     for (i = 0; i < 8; i++) {
         target[i] = world_script_load_halfword(script);
         script += 2;
@@ -73,10 +70,10 @@ void world_camera_thread(void) {
         ramp = (duration - i) * i;
         for (j = 0; j < 7; j++) {
             variable = &g_world_script_variables[g_world_camera_script_variable_indices[j]];
-            if (target[j] == WORLD_CAMERA_HOLD) {
+            if (target[j] == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 continue;
             }
-            if (*(u16*)&g_world_camera_position_locked != 0 && j < 3) {
+            if (g_world_camera_position_locked != 0 && j < 3) {
                 continue;
             }
             if (j < 3) {
@@ -144,23 +141,23 @@ void world_camera_thread(void) {
             }
             *variable = value;
         }
-        world_script_clear_current_event_word_bit_0();
+        world_camera_clear_zoom_variable_low_bit();
         world_thread_yield();
     }
 
-    if (*(u16*)&g_world_camera_position_locked == 0) {
+    if (g_world_camera_position_locked == 0) {
         for (i = 0; i < 3; i++) {
-            if (target[i] != WORLD_CAMERA_HOLD) {
+            if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                 g_world_script_variables[g_world_camera_script_variable_indices[i]] = target[i] << 10;
             }
         }
     }
     for (i = 3; i < 7; i++) {
-        if (target[i] != WORLD_CAMERA_HOLD) {
+        if (target[i] != BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
             g_world_script_variables[g_world_camera_script_variable_indices[i]] = target[i];
         }
     }
-    world_script_clear_current_event_word_bit_0();
+    world_camera_clear_zoom_variable_low_bit();
     world_thread_yield();
     world_thread_exit_current();
 }

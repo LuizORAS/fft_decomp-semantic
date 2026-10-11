@@ -1,10 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* As battle_map_try_start_deep_dungeon_mesh_load, entering the mesh-finish state
+ * instead: the crystal count check made when a unit's post-movement steps end. */
 s32 battle_map_refresh_deep_dungeon(void) {
     if (battle_map_check_deep_dungeon_crystal_and_init_state()) {
         g_battle_game_state = BATTLE_GAME_STATE_DEEP_DUNGEON_MESH_FINISH;
-        g_battle_state_vsync_interval = 1;
+        g_main_system_vsync_interval = 1;
         return 1;
     }
     return 0;

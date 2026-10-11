@@ -1,5 +1,8 @@
 #include "fft/world.h"
 
+/* Run the soldier office's fee display script with
+ * world_shop_get_soldier_office_entry_fee installed as menu value callback 0,
+ * then restore the previous callback. */
 void world_shop_run_soldier_office_fee_menu_script(void) {
     void (**callback_slot)(void);
     void (*previous_callback)(void);

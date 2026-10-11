@@ -15,7 +15,7 @@ void battle_status_apply_pending_removals(s32 unit_idx) {
         idx = i / 8;
         mask = 0x80 >> (i & 7);
         if (unit->action.status_removal[idx] & mask) {
-            unit->inflicted_status[idx] = (u8)(unit->inflicted_status[idx] & ~mask);
+            unit->inflicted_status[idx] = unit->inflicted_status[idx] & ~mask;
             if (main_status_set_ct(unit, i, 1) == 0) {
                 battle_status_queue_graphics_change_if_executing(BATTLE_STATUS_HANDLER_INDEX(i), 0, unit_idx);
             }

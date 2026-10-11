@@ -30,40 +30,43 @@ void wldcore_list_build_proposition_detail_panel_image(
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     level->render_index = index;
-    world_text_measure_pixels(&text_width, &text_rows, world_text_find_entry(*panel_text + 0xF7FF));
+    world_text_measure_pixels(
+        &text_width, &text_rows, world_text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
     rows = text_rows + 2;
     level->panel_rows = rows;
     g_world_text_substitution_values[0] = g_main_active_propositions[proposition].elapsed_days;
     g_world_text_substitution_values[1] = g_main_active_propositions[proposition].assigned_days;
-    g_world_text_substitution_values[2] = g_main_active_propositions[proposition].location | TEXT_ID_SECTION_9000_BASE;
+    g_world_text_substitution_values[2] = g_main_active_propositions[proposition].location | TEXT_ID_LOCATION_NAME_BASE;
     bounds.position.x = 0;
     bounds.position.y = 0x60;
     bounds.dimensions.x = 0xF4;
     bounds.dimensions.y = (g_main_active_propositions[proposition].participant_count + rows) * 0x10 + 0x10;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, coordinate_mode, g_wldcore_proposition_detail_image_buffer);
+    wldcore_window_build_render_record_image(index, bounds, coordinate_mode, g_wldcore_proposition_detail_image_buffer);
     point.x = 8;
     point.y = text_rows * 0x10 + 8;
-    wldcore_menu_display_text_entry(index, 0xB821, point, g_wldcore_proposition_detail_image_buffer);
+    wldcore_menu_display_text_entry(
+        index, WLDCORE_TEXT_ID_JOB_CONDITION_LABELS, point, g_wldcore_proposition_detail_image_buffer);
     point.x = 8;
     point.y = 8;
-    wldcore_menu_display_text_entry(index, 0xB84E, point, g_wldcore_proposition_detail_image_buffer);
+    wldcore_menu_display_text_entry(
+        index, WLDCORE_TEXT_ID_JOB_CONTENTS_LABEL, point, g_wldcore_proposition_detail_image_buffer);
     point.x = 0x44;
     point.y = 8;
-    wldcore_menu_display_text_entry(index, *panel_text + 0xF7FF, point, g_wldcore_proposition_detail_image_buffer);
+    wldcore_menu_display_text_entry(index, *panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1), point,
+        g_wldcore_proposition_detail_image_buffer);
     for (i = 0; i < g_main_active_propositions[proposition].participant_count; i++) {
         s32 row = i + 2;
 
         point.x = 0x3C;
         point.y = (text_rows + row) * 0x10 + 8;
         wldcore_menu_display_text_entry(index,
-            g_main_active_propositions[proposition].participant_indices[i] | TEXT_ID_UNIT_NAME_BASE, point,
+            g_main_active_propositions[proposition].participant_indices[i] | TEXT_ID_UNIT_NAME_SPECIAL_BASE, point,
             g_wldcore_proposition_detail_image_buffer);
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_proposition_detail_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
-    g_wldcore_window_render_records[index].flags |= 0x100;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x7A;
     base->y = -0x28;
 }

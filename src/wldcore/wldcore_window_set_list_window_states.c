@@ -13,15 +13,15 @@ void wldcore_window_set_list_window_states(wldcore_menu_list_window_level_t* sta
     g_wldcore_window_render_records[state->frame_render].palette = 2;
     g_wldcore_window_records[state->upper_window].palette = 5;
     g_wldcore_window_records[state->lower_window].palette = 5;
-    g_wldcore_window_records[state->main_window].sequence = 1;
+    g_wldcore_window_records[state->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
     g_wldcore_window_records[state->main_window].frame_index = g_wldcore_window_records[state->main_window].anim_counter
         = 0;
-    if (state->mode == 2) {
+    if (state->mode == WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP) {
         g_wldcore_window_render_records[state->content_render].palette = 2;
         return;
     }
-    if (state->entries[state->selected_entry] != 2) {
-        g_main_system_flags |= 0x800;
-        g_wldcore_window_render_records[state->content_render].flags |= 0x10;
+    if (state->entries[state->selected_entry] != WLDCORE_BRAVE_STORY_ROW_SET_SCRIPT_VARIABLES_03C0_03FF) {
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
+        g_wldcore_window_render_records[state->content_render].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
 }

@@ -11,19 +11,17 @@ s32 equip_entrypoint(s32 unit, void* otag) {
     u8 changed;
     s32 message_idle;
     battle_stats_t* stats;
-    s16* saved;
-    u8* equipment;
 
-    if (g_equip_menu_screen_state == 0) {
+    if (g_equip_menu_screen_state == EQUIP_SCREEN_STATE_INIT) {
         equip_menu_init_screen(unit);
         bcopy(g_equip_unit_data[0]->equipment, g_equip_unit_initial_equipment, 0xA);
-        g_equip_menu_screen_state = 1;
+        g_equip_menu_screen_state = EQUIP_SCREEN_STATE_COMMAND_MENU;
     }
-    g_equip_gfx_render_otag = otag;
+    g_equip_gfx_current_ot = otag;
     equip_gfx_swap_context_and_clear_otag(0, -1);
     result = (s32)g_equip_gfx_context->otag;
     changed = 0;
-    if (g_event_mode != 0) {
+    if (g_battle_menu_input_lock_mode != 0) {
         message_idle = g_equip_text_message_thread_active == 0;
         changed = message_idle;
     }
@@ -33,31 +31,26 @@ s32 equip_entrypoint(s32 unit, void* otag) {
         equip_text_start_help_thread(3);
     }
     if (g_equip_text_restore_pending != 0) {
-        if (g_event_mode == 0) {
-            battle_text_restore_pointer_table();
+        if (g_battle_menu_input_lock_mode == 0) {
+            battle_text_restore_section_pointers();
         }
     }
-    equip_text_set_palette_and_metrics(g_event_mode);
+    equip_menu_set_palette_mode(g_battle_menu_input_lock_mode);
     g_equip_menu_screen_state_handlers[g_equip_menu_screen_state]();
     if (g_equip_sound_suppress_queued != 0) {
-        g_equip_sound_queued_effect_id = 0;
+        g_equip_sound_queued_effect_id = MAIN_SFX_NONE;
     }
-    if (g_equip_sound_queued_effect_id != 0) {
-        g_sound_effect_id_to_play = g_equip_sound_queued_effect_id;
+    if (g_equip_sound_queued_effect_id != MAIN_SFX_NONE) {
+        g_battle_sound_pending_sfx_id = g_equip_sound_queued_effect_id;
     }
-    g_equip_sound_queued_effect_id = 0;
-    if (g_equip_menu_screen_state != 0xFF) {
+    g_equip_sound_queued_effect_id = MAIN_SFX_NONE;
+    if (g_equip_menu_screen_state != EQUIP_SCREEN_STATE_CLOSED) {
         return result;
     }
-    i = 0;
-    saved = g_equip_unit_initial_equipment;
-    equipment = (u8*)g_equip_unit_data[0];
-    for (; i < 5; i++) {
-        if (*(u16*)(equipment + 0x54) != *saved) {
+    for (i = 0; i < 5; i++) {
+        if (g_equip_unit_data[0]->equipment[i] != g_equip_unit_initial_equipment[i]) {
             break;
         }
-        saved++;
-        equipment += 2;
     }
     stats = battle_unit_get_stats_from_battle_id(unit);
     if (stats->max_hp < stats->hp) {
@@ -66,8 +59,6 @@ s32 equip_entrypoint(s32 unit, void* otag) {
     if (stats->max_mp < stats->mp) {
         stats->mp = stats->max_mp;
     }
-    /* The target loads no argument for this one-argument callee: $a0 still
-     * holds stats from the lookup above. */
-    ((void (*)(void))main_unit_refresh_stats_and_statuses)();
+    main_unit_refresh_stats_and_statuses(stats);
     return i < 5;
 }

@@ -9,7 +9,7 @@ void wldcore_menu_push_entry_window_level(void) {
     s32 depth;
     s32* counter;
 
-    g_wldcore_menu_result = -1;
+    g_wldcore_menu_blocked_buttons = -1;
     world_menu_open_entry_window(4, -0x30, -0x38);
     one = 1;
     g_wldcore_context_value_display_mode = one;
@@ -18,9 +18,9 @@ void wldcore_menu_push_entry_window_level(void) {
     flags = g_main_system_flags;
     g_wldcore_menu_stack_records_next[depth].return_level.delay = 3;
     g_wldcore_menu_stack_records_next[depth].return_level.pending = 0;
-    g_main_system_flags = flags & 0xFBFFFFFF;
-    if ((flags & 8) != 0) {
-        g_main_system_flags = (flags & 0xFBFFFFFF) | 0x08000000;
+    g_main_system_flags = flags & ~MAIN_SYSTEM_FLAG_SCREEN_CLEARED;
+    if ((flags & MAIN_SYSTEM_FLAG_FADING) != 0) {
+        g_main_system_flags = (flags & ~MAIN_SYSTEM_FLAG_SCREEN_CLEARED) | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;
         counter = &g_wldcore_screen_fade_state.elapsed;
         *counter = *counter - 4;
     }

@@ -32,7 +32,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
     s32 scaled_y;
     s32 theta;
     s16 job;
-    s8* rgb;
+    u8* rgb;
     s16 next;
 
     if (g_world_job_wheel_job_count < 2) {
@@ -41,7 +41,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
     step = ONE / g_world_job_wheel_job_count;
     g_world_job_wheel_animation_counter++;
     ot_index = 30;
-    index = *(u16*)&g_world_job_wheel_cursor_index;
+    index = g_world_job_wheel_cursor_index;
     sprite.w = sprite.source.w = 0x18;
     sprite.h = sprite.source.h = 0x28;
     g_world_job_wheel_animation_counter = g_world_job_wheel_animation_counter % 102;
@@ -59,19 +59,19 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
             ot_index++;
         }
         job = index;
-        world_formation_get_generic_human_graphic_entry(g_world_job_wheel_jobs[job] & 0x3FF,
+        world_formation_get_generic_human_graphic_entry(g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_ID_MASK,
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_FEMALE,
             &sprite.source);
         sprite.x = g_world_job_wheel_center_x + ((scaled_x * rcos(theta)) >> 12) - 8;
         sprite.y = g_world_job_wheel_center_y + ((scaled_y * rsin(theta)) >> 12) - 0x14;
         rgb = 0;
-        if (g_world_job_wheel_jobs[job] & 0x4000) {
+        if (g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_UNAVAILABLE) {
             rgb = g_world_formation_dimmed_sprite_color;
         }
         if (g_world_job_wheel_mastered_jobs[job] != 0) {
             world_menu_select_stat_gauge_level(sprite.x, sprite.y, ot_index, g_world_job_wheel_animation_counter);
         }
-        world_formation_draw_sprite_with_shadow((world_gfx_sprite_desc_t*)&sprite, rgb, ot_index);
+        world_formation_draw_sprite_with_shadow((world_oriented_quad_t*)&sprite, rgb, ot_index);
         if (job == 0) {
             next = g_world_job_wheel_job_count - 1;
         } else {

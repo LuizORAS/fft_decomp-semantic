@@ -45,8 +45,8 @@ s32 world_menu_run_remove_item(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
         return 0;
     }
-    locked = world_formation_lock_equipment_and_abilities(g_world_formation_selected_unit_index);
-    if (locked == 1) {
+    locked = world_formation_get_unit_lock(g_world_formation_selected_unit_index);
+    if (locked == WORLD_FORMATION_UNIT_UNLOCKED) {
         locked = 0;
     }
     if (locked != 0) {
@@ -73,12 +73,13 @@ s32 world_menu_run_remove_item(void) {
             &g_world_selected_unit_stat_summary,
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
             g_world_remove_all_equipment_ids);
-        g_world_formation_panel_windows[0].enabled = 1;
+        g_world_status_display_thread_params.redraw_request = 1;
         g_world_preview_stats_thread_params.redraw_request = 1;
         world_menu_toggle_preview_stats_window(1);
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
-    slot = world_menu_step_cursor_with_sound(5, 3, g_world_input_secondary_repeat, 6);
+    slot = world_menu_update_vertical_selection_and_mark_change(
+        5, WORLD_MENU_CURSOR_REMOVE_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
     cursor_y = &g_world_remove_item_cursor_point.y;
     index = slot;
     *cursor_y = index * 16 + 0x90;
@@ -107,7 +108,7 @@ s32 world_menu_run_remove_item(void) {
     previous = g_world_remove_item_previewed_slot;
     if (previous != slot) {
         if (previous != -1) {
-            g_world_formation_panel_windows[0].enabled = 1;
+            g_world_status_display_thread_params.redraw_request = 1;
         }
         g_world_remove_item_previewed_slot = slot;
         preview_item = g_world_remove_item_equipment[slot].bytes[0];

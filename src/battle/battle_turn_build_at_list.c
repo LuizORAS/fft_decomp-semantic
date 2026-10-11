@@ -1,11 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The target masks each AT key itself (andi 0xff00 / 0xffff) and passes it as
- * a full word; calling through the u16 prototype makes GCC emit its own
- * widening and a different sequence. */
-#define SORT_AT_LIST ((s32 (*)(s32, s32, s32, battle_at_entry_t*))battle_turn_insert_at_entry)
-
 /* Rebuild the 40-entry AT list, each entry keyed by the tick it comes due, for every unit able
  * to take part: the active unit first (not in mode 2), then charged and performing actions
  * (not in mode 1), then each unit's next turns simulated tick by tick under Stop, Sleep, Slow
@@ -40,14 +35,14 @@ s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
     u32 key;
 
     placed = 0;
-    phase_tick = g_battle_turn_clock_resume_state == 9;
+    phase_tick = g_battle_turn_clock_resume_state == BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE;
     for (slot = 0; slot < 0x28; slot++) {
         list[slot].unit = 0xff;
         list[slot].flags = 0xff;
         list[slot].sort_key = 0xffff;
     }
 
-    if (mode != 2) {
+    if (mode != BATTLE_AT_LIST_MODE_ACTIONS_ONLY) {
         unit = battle_unit_find_active_data_pointer();
         if (unit != 0) {
             battle_turn_insert_at_entry(unit->misc_unit_id, 0, 0, list);
@@ -74,12 +69,12 @@ s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
         }
 
         value = unit->charged_ability_ct;
-        if (value != 0xff && mode != 1) {
+        if (value != 0xff && mode != BATTLE_AT_LIST_MODE_TURNS_ONLY) {
             tick = value + wait;
-            if (value != 0 || unit->has_turn == 0 || mode != 3) {
+            if (value != 0 || unit->has_turn == 0 || mode != BATTLE_AT_LIST_MODE_PREVIEW) {
                 tick += phase_tick;
             }
-            placed += SORT_AT_LIST(slot, 1, (tick << 8) & 0xff00, list);
+            placed += battle_turn_insert_at_entry(slot, 1, (tick << 8) & 0xff00, list);
             if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
                 main_unit_copy_last_ability_ct(unit);
@@ -90,12 +85,12 @@ s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
                         break;
                     }
                     key <<= 8;
-                    placed += SORT_AT_LIST(slot, 1, key & 0xff00, list);
+                    placed += battle_turn_insert_at_entry(slot, 1, key & 0xff00, list);
                 }
             }
         }
 
-        if (mode == 2) {
+        if (mode == BATTLE_AT_LIST_MODE_ACTIONS_ONLY) {
             continue;
         }
 
@@ -158,7 +153,7 @@ s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
             remainder = ct;
             remainder %= 100;
             ct = remainder;
-            added = SORT_AT_LIST(slot, 0, ((tick << 8) + (100 - remainder)) & 0xffff, list);
+            added = battle_turn_insert_at_entry(slot, 0, ((tick << 8) + (100 - remainder)) & 0xffff, list);
             if (added == 0) {
                 break;
             }

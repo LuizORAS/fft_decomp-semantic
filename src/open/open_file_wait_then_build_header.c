@@ -1,5 +1,7 @@
 #include "fft/open.h"
 
+/* Start an asynchronous read of sector_count sectors at `sector` into
+ * destination, once any read still pending has finished. */
 void open_file_wait_then_build_header(
     main_file_load_descriptor_t* header, s32 sector, s32 sector_count, void* destination) {
     open_file_wait_for_pending();

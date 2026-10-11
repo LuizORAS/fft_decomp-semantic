@@ -8,7 +8,7 @@ void battle_formula_apply_weather_elemental_effects(void) {
     u8 element;
     s32 weather;
 
-    element = g_current_ability.range_data.element;
+    element = g_battle_action_current_ability.range_data.element;
     weather = battle_map_get_effective_weather();
     if (weather == BATTLE_WEATHER_STORM || weather == BATTLE_WEATHER_STRONG_STORM) {
         if (element & BATTLE_ELEMENT_FIRE) {

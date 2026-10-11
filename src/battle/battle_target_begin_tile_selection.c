@@ -11,11 +11,11 @@ s32 battle_target_begin_tile_selection(void) {
     unit = battle_unit_get_source_misc_data();
     unit->state_frame_counter = 0;
     switch (unit->ability_preview_phase) {
-    case 0:
-    case 1:
+    case BATTLE_TARGET_PANELS_UNIT_OR_TILE:
+    case BATTLE_TARGET_PANELS_TILE_ONLY:
         battle_state_disable_camera_pan();
         g_battle_game_state = BATTLE_GAME_STATE_TARGETING_RANGE;
-        battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_ABILITY_RANGE, 2);
+        battle_target_tint_marked_tiles(BATTLE_TILE_MARK_SHOW_RANGE, 2);
         battle_target_show_cursor_target_panel();
         if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
             battle_target_show_cursor();
@@ -23,13 +23,13 @@ s32 battle_target_begin_tile_selection(void) {
             battle_target_hide_cursor();
         }
         break;
-    case 2:
+    case BATTLE_TARGET_PANELS_NO_TARGETING:
         battle_state_disable_camera_pan();
         battle_target_select_tile();
         battle_target_show_cursor_target_panel();
         break;
-    case -1:
-    case 3:
+    case BATTLE_TARGET_PANELS_INVALID:
+    case BATTLE_TARGET_PANELS_NONE:
         battle_menu_dispatch_idle_action_menu();
         break;
     }

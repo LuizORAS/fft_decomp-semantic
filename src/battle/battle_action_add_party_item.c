@@ -5,13 +5,13 @@
  * one (Catch), a Draw Out katana that did not break, or a picked-up treasure's item. Nothing and an empty
  * slot are skipped. With 99 already owned (equipped ones counted), the item becomes its price / 4 in
  * war funds instead. */
-s32 battle_action_add_party_item(battle_stats_t* unit, s32 item) {
+s32 battle_action_add_party_item(battle_stats_t* unit, u8 item) {
     s32 item_id;
 
     if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {
         return 0;
     }
-    if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != 0) {
+    if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE) {
         return 0;
     }
     item_id = item & 0xFF;

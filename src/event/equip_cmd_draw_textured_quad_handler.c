@@ -1,6 +1,11 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Stream command: draw a textured quad of size (cmd[5], cmd[6]) at
+ * (cmd[3], cmd[4]) with texture origin (cmd[7], cmd[8]), in the
+ * current sprite colour or, for MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. While
+ * a list row is rendered, y is offset by the row's position and the scroll
+ * offset. Returns the next command. */
 u8* equip_cmd_draw_textured_quad_handler(u8* cmd) {
     RECT rect;
     s32 y;
@@ -21,7 +26,7 @@ u8* equip_cmd_draw_textured_quad_handler(u8* cmd) {
     rect.h = cmd[6];
 
     color = g_equip_gfx_sprite_color;
-    if (cmd[0] == 4) {
+    if (cmd[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     }
 

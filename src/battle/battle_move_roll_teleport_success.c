@@ -16,8 +16,7 @@ s32 battle_move_roll_teleport_success(void) {
         dx = -dx;
     if (dy < 0)
         dy = -dy;
-    /* The target passes ctx as a third argument the two-parameter callee ignores. */
-    return ((s32 (*)(s32, s32, void*))main_util_roll_pass_fail)(0x64, ((dx + dy) - ctx->move) * 10, ctx);
+    return main_util_roll_pass_fail(0x64, ((dx + dy) - ctx->move) * 10);
 }
 
 /* padding */

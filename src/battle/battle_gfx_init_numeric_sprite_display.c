@@ -1,20 +1,21 @@
 #include "fft/battle.h"
 
-battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(
-    s32 unit_index, s32 display_section, battle_gfx_sprite_display_data_t* default_display) {
+/* Resets one of a unit's three numeric sprite displays to neutral colour and no
+ * parts. A display_section outside 0..2 leaves `display` unset; the only caller
+ * passes 0, 1 and 2. */
+battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(s32 unit_index, s32 display_section) {
     battle_gfx_sprite_display_data_t* display;
     s32 i;
 
-    display = default_display;
     switch (display_section) {
     case 0:
-        display = (battle_gfx_sprite_display_data_t*)&g_battle_gfx_numeric_sprite_display_0[unit_index * 0x440];
+        display = &g_battle_unit_misc_data[unit_index].numeric_sprite_displays[0];
         break;
     case 1:
-        display = (battle_gfx_sprite_display_data_t*)&g_battle_gfx_numeric_sprite_display_1[unit_index * 0x440];
+        display = &g_battle_unit_misc_data[unit_index].numeric_sprite_displays[1];
         break;
     case 2:
-        display = (battle_gfx_sprite_display_data_t*)&g_battle_gfx_numeric_sprite_display_2[unit_index * 0x440];
+        display = &g_battle_unit_misc_data[unit_index].numeric_sprite_displays[2];
         break;
     }
 

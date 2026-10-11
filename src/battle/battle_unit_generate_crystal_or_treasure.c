@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+extern main_crystal_pickup_result_t g_main_crystal_pickup_result;
+
 /* Local view of battle_stats_t with learned_abilities (0x99) as 19 rows of 3
  * bytes. The 2D indexing is what makes loop.c reduce `unit + i * 3` as the
  * outer-loop giv (target `move s6,s2` / `addiu a2,s6,0x99`). */
@@ -76,7 +78,7 @@ main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_st
                     known[j] = ((battle_stats_learned_rows_t*)mover)->learned_abilities[i][j];
                     offered[j] = ((battle_stats_learned_rows_t*)crystal)->learned_abilities[i][j];
                 }
-                job_id = i + JOB_ID_SQUIRE;
+                job_id = i + JOB_ID_GENERIC_FIRST;
                 if (i == 0) {
                     if (mover_identity != crystal_identity) {
                         continue;
@@ -87,13 +89,13 @@ main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_st
                 } else if (!(unlocked_jobs_mask & (0x800000 >> i))) {
                     continue;
                 }
-                if (i == JOB_ID_BARD - JOB_ID_SQUIRE && (mover_flags & UNIT_FLAG_FEMALE)) {
+                if (i == 0x11 && (mover_flags & UNIT_FLAG_FEMALE)) {
                     continue;
                 }
-                if (i == JOB_ID_DANCER - JOB_ID_SQUIRE && (mover_flags & UNIT_FLAG_MALE)) {
+                if (i == 0x12 && (mover_flags & UNIT_FLAG_MALE)) {
                     continue;
                 }
-                skillset = g_job_data_pointer[job_id].skillset;
+                skillset = g_main_job_data_pointer[job_id].skillset;
                 for (j = 0; j < SKILLSET_ABILITY_LIST_COUNT; j++) {
                     byte_index = j / 8;
                     mask = 0x80 >> (j - byte_index * 8);

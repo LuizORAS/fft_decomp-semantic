@@ -1,7 +1,7 @@
 #include "fft/main.h"
 
-/* VSync callback: advance rand once per frame, count the play time (hours stop at 1000) and the
- * free-running frame timer. */
+/* VSync callback: advance rand once per frame, count the play time at 60 frames a second (hours
+ * stop at 1000) and the free-running g_main_system_frame_timer. */
 void main_system_handle_vsync_callback(void) {
     rand();
 

@@ -1,18 +1,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Pick the weapon the current strike uses (g_current_ability.weapon_id): the first strike's hand,
- * then the second's. An ordinary, Math Skill, Geomancy or monster ability that neither uses the
+/* Pick the weapon the current strike uses (g_battle_action_current_ability.weapon_id): the first strike's hand,
+ * then the second's. An ordinary, Math Skill, Elemental or monster ability that neither uses the
  * weapon's range nor strikes with it uses none; Item and Draw Out use the command's item; Jump and
  * menu type 0x0f use none. An empty hand counts as ITEM_ID_NOTHING. */
 void battle_action_store_used_weapon(const battle_ai_command_action_t* action) {
     u8 weapon;
     s16 ability_id;
 
-    if (g_current_ability.strike_counter == 0) {
-        weapon = g_current_ability.primary_weapon_id;
+    if (g_battle_action_current_ability.strike_counter == 0) {
+        weapon = g_battle_action_current_ability.primary_weapon_id;
     } else {
-        weapon = g_current_ability.secondary_weapon_id;
+        weapon = g_battle_action_current_ability.secondary_weapon_id;
     }
     switch (g_main_action_menu_types_by_skillset[action->skillset]) {
     case ACTION_MENU_TYPE_DEFAULT:
@@ -40,5 +40,5 @@ void battle_action_store_used_weapon(const battle_ai_command_action_t* action) {
     if (weapon == ITEM_ID_NONE) {
         weapon = ITEM_ID_NOTHING;
     }
-    g_current_ability.weapon_id = weapon;
+    g_battle_action_current_ability.weapon_id = weapon;
 }

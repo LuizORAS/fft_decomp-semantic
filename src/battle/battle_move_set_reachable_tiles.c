@@ -24,7 +24,7 @@ s32 battle_move_set_reachable_tiles(s32 unit_id, s32 unused_map_x, s32 unused_ma
         return -1;
     }
     battle_move_store_unit_movement_to_scratchpad(unit_id);
-    battle_move_set_tile_flags_for_pathfinding(1);
+    battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_START_SPREAD);
     if (config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) {
         u8 remaining_range = 1;
         battle_target_panel_t* fill_panels = g_battle_target_panels;
@@ -39,14 +39,14 @@ s32 battle_move_set_reachable_tiles(s32 unit_id, s32 unused_map_x, s32 unused_ma
             state->frontier_max_remaining_range = 0;
             for (state->tile_level = 0; state->tile_level < 2; state->tile_level++) {
                 state->level_offset = state->tile_level * 256;
-                for (state->tile_y = 0; (s16)state->tile_y < config->map_max_y; state->tile_y++) {
-                    state->row_offset = state->level_offset + (s16)state->tile_y * config->map_max_x;
-                    for (state->tile_x = 0; (s16)state->tile_x < config->map_max_x; state->tile_x++) {
+                for (state->tile_y = 0; state->tile_y < config->map_max_y; state->tile_y++) {
+                    state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
+                    for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {
                         state->tile_index = state->row_offset + state->tile_x;
                         state->current_tile = &g_battle_map_tile_data[state->tile_index];
                         state->current_panel = &g_battle_target_panels[state->tile_index];
                         if (frontier[state->tile_index] & FRONTIER_FLAG_QUEUED) {
-                            frontier[state->tile_index] &= 0xfe;
+                            frontier[state->tile_index] &= ~FRONTIER_FLAG_QUEUED;
                             battle_move_spread_to_adjacent_tiles();
                             if (!config->fly_or_teleport) {
                                 battle_move_spread_horizontal_jump();

@@ -19,10 +19,10 @@ s32 battle_script_load_next_event(void) {
     } while (task_id != 15);
 
     event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-    if (event_id == g_current_battle_event_id) {
+    if (event_id == g_battle_script_loaded_event_id) {
         return 0;
     }
     battle_script_load_event(event_id);
-    g_current_battle_event_id = event_id;
+    g_battle_script_loaded_event_id = event_id;
     return 1;
 }

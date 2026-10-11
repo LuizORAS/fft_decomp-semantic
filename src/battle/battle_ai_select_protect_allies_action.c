@@ -9,14 +9,14 @@
  * target, then on enemies, then on allies, taking the first pass's ranked action; with none, it only
  * moves (and Defends when Defend is its support ability). Returns -1 to suspend, else 0. */
 s32 battle_ai_select_protect_allies_action(void) {
-    battle_stats_t* acting = g_battle_ai_temp_unit_data;
+    battle_ai_data_t* ai = &g_battle_ai_data_base;
+    battle_stats_t* acting = g_battle_ai_data_base.acting_unit;
     battle_ai_recovery_status_list_t statuses = g_battle_ai_recovery_status_ids;
     s32 target = acting->auto_battle_target;
-    battle_ai_data_t* ai = &g_battle_ai_data_base;
     u32 status;
     s32 result;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: each phase re-enters the step that suspended. */
         switch (g_battle_ai_data_base.action_selection_phase) {
         case 0:
@@ -63,11 +63,11 @@ movement:
         do {
             u32 status_flags
                 = g_battle_unit_stats[target]
-                      .status_sets.current[(status = ((u8*)statuses.ids)[g_battle_ai_recovery_status_index]) >> 3];
+                      .status_sets.current[(status = statuses.ids[g_battle_ai_recovery_status_index]) >> 3];
             if (status_flags & (0x80 >> (status & 7))) {
             cancel_status:
-                result = battle_ai_evaluate_status_cancellation(
-                    target, ((u8*)statuses.ids)[g_battle_ai_recovery_status_index]);
+                result
+                    = battle_ai_evaluate_status_cancellation(target, statuses.ids[g_battle_ai_recovery_status_index]);
                 if (result == -1) {
                     ai->action_selection_phase = 7;
                     return -1;

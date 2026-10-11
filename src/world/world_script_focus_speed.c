@@ -22,13 +22,13 @@ void world_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
     position_sum = 0;
     for (i = 0; i < 3; i++) {
         value = world_script_load_halfword(parameters + i * 2);
-        if (value == 10000) {
+        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
             position_delta[i] = 0;
         } else {
             position_delta[i] = value - position[i] / 1024;
         }
         value = world_script_load_halfword(parameters + i * 2 + 6);
-        if (value == 10000) {
+        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
             rotation_delta[i] = 0;
         } else {
             rotation_delta[i] = value - rotation[i];
@@ -43,6 +43,5 @@ void world_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
     if (position_sum == 0) {
         position_sum = 1;
     }
-    /* The target sign-extends the value; the definition's u16 parameter would zero-extend it. */
-    ((void (*)(u8*, s16))world_script_store_halfword)(parameters + 14, position_sum);
+    world_script_store_halfword(parameters + 14, position_sum);
 }

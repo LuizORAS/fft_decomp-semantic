@@ -10,11 +10,11 @@
  * directly from g_world_frame_arg (lhu) where the overlays compute
  * g_main_gfx_screen_polarity * 0xf0. */
 void world_menu_run_numeric_editor_thread(void) {
-    battle_menu_status_panel_frame_config_t* thread;
+    world_status_thread_t* thread;
     battle_menu_status_panel_numeric_buffer_t* buffer;
     battle_menu_status_panel_numeric_buffer_t* buffers;
     u8* text_pixels;
-    world_menu_number_entry_t* entries;
+    menu_number_entry_t* entries;
     RECT* upload_a;
     RECT* upload_b;
     RECT* upload_c;
@@ -25,9 +25,9 @@ void world_menu_run_numeric_editor_thread(void) {
     s32 use_offset;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (battle_menu_status_panel_frame_config_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
+    thread = (world_status_thread_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
     g_world_input_frame_controller_input = world_input_get_menu_controller(0) + 1;
-    if (g_world_thread_current_id == 12) {
+    if (g_world_thread_current_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
         buffer = g_world_editor_numeric_state_a;
         buffers = buffer;
         text_pixels = g_world_editor_numeric_text_a;
@@ -44,21 +44,20 @@ void world_menu_run_numeric_editor_thread(void) {
         upload_c = g_world_editor_numeric_entries_f;
         entries = g_world_editor_numeric_descriptor_b;
     }
-    world_gfx_set_image_draw_mode(&buffer->draw_modes[0], 0);
-    world_gfx_set_image_draw_mode(&buffer->draw_modes[1], 2);
-    world_gfx_set_image_draw_mode(&buffer->draw_modes[2], 1);
-    world_menu_build_line_box(&g_world_editor_numeric_table[0], &buffer->numeric_frame);
-    world_gfx_reset_record_texture_window_3(&buffer->portrait);
+    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
+    world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
+    world_menu_init_numeric_display_frame_primitives(&g_world_editor_numeric_table[0], &buffer->numeric_frame);
+    world_panel_gfx_init_scaled_draw_area_packets(&buffer->portrait);
     i = 0;
     descriptor = g_world_editor_numeric_texture;
     for (; i < 18; i++) {
         world_menu_init_sprite(&buffer->sprites[i]);
-        world_gfx_init_image_loading((POLY_FT4*)&buffer->sprites[i],
-            (const world_image_location_t*)g_world_editor_numeric_geometry,
-            (const world_image_location_t*)&g_world_editor_numeric_table[0], descriptor);
+        world_gfx_init_image_loading(
+            &buffer->sprites[i], g_world_editor_numeric_geometry, &g_world_editor_numeric_table[0], descriptor);
         descriptor++;
     }
-    if (g_world_thread_current_id != 12) {
+    if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
         buffer->sprites[14].v0 += 0x4C;
         buffer->sprites[15].v0 += 0x4C;
         buffer->sprites[16].v0 += 0x4C;
@@ -70,44 +69,42 @@ void world_menu_run_numeric_editor_thread(void) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
             world_clear_menu_render_buffer(text_pixels, 0x918);
-            g_world_menu_text_state.stride = 0x14;
+            g_world_menu_text_state.pen.stride = 0x14;
             world_menu_set_text_origin(0, 0);
-            if (g_world_thread_current_id != 12) {
-                world_text_render_signed_gauge_entry_list(
-                    text_pixels, entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
+            if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+                world_text_render_signed_decimal_entries(text_pixels, entries, &g_world_menu_text_state.pen, 3);
             } else {
-                world_menu_draw_numeric_display_entries(
-                    text_pixels, entries, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 3);
+                world_menu_draw_numeric_display_entries(text_pixels, entries, &g_world_menu_text_state.pen, 3);
             }
-            g_world_menu_text_state.stride = 0x40;
+            g_world_menu_text_state.pen.stride = 0x40;
             world_menu_set_text_origin(0, 0);
-            if (g_world_thread_current_id != 12) {
-                world_text_render_signed_gauge_entry_list(
-                    (text_pixels + 0x168), entries + 3, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
+            if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+                world_text_render_signed_decimal_entries(
+                    text_pixels + 0x168, entries + 3, &g_world_menu_text_state.pen, 4);
             } else {
                 world_menu_draw_numeric_display_entries(
-                    (text_pixels + 0x168), entries + 3, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 4);
+                    text_pixels + 0x168, entries + 3, &g_world_menu_text_state.pen, 4);
             }
-            g_world_menu_text_state.stride = 0x64;
+            g_world_menu_text_state.pen.stride = 0x64;
             world_menu_set_text_origin(0, 0);
-            if (g_world_thread_current_id != 12) {
-                world_text_render_signed_gauge_entry_list(
-                    (text_pixels + 0x468), entries + 7, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
+            if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+                world_text_render_signed_decimal_entries(
+                    text_pixels + 0x468, entries + 7, &g_world_menu_text_state.pen, 8);
             } else {
                 world_menu_draw_numeric_display_entries(
-                    (text_pixels + 0x468), entries + 7, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x, 8);
+                    text_pixels + 0x468, entries + 7, &g_world_menu_text_state.pen, 8);
             }
             LoadImage(upload_a, (u32*)text_pixels);
             LoadImage(upload_b, (u32*)(text_pixels + 0x168));
             LoadImage(upload_c, (u32*)(text_pixels + 0x468));
         }
-        field_y = (u16)g_world_frame_arg;
+        field_y = g_world_frame_arg;
         use_offset = field_y != 0xF0;
         g_world_gfx_draw_area_y = -use_offset & 0xF0;
-        world_gfx_build_scaled_draw_area_pair_at_offset(
+        world_panel_gfx_build_scaled_draw_area_packets(
             &buffer->portrait, &g_world_editor_numeric_table[1], frame, field_y, thread);
-        buffer->draw_offsets[0].x = thread->origin_x - 0x80;
-        buffer->draw_offsets[0].y = thread->origin_y + g_world_gfx_draw_area_y;
+        buffer->draw_offsets[0].x = thread->x - 0x80;
+        buffer->draw_offsets[0].y = thread->y + g_world_gfx_draw_area_y;
         SetDrawOffset(&buffer->draw_offsets[0], &buffer->draw_offsets[0].x);
         buffer->draw_offsets[1].x = -0x80;
         buffer->draw_offsets[1].y = g_world_gfx_draw_area_y;
@@ -129,7 +126,7 @@ void world_menu_run_numeric_editor_thread(void) {
             buffer->sprites[15].clut = 0x7FFC;
             buffer->sprites[16].clut = 0x7FFC;
         }
-        world_menu_select_primitive_color_palette(&buffer->numeric_frame, (world_menu_color_input_t*)thread);
+        world_menu_select_primitive_color_palette(&buffer->numeric_frame, thread);
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
         }
@@ -142,12 +139,12 @@ void world_menu_run_numeric_editor_thread(void) {
         for (; i < 17; i++) {
             world_gfx_draw_or_append_gpu_primitive(&buffer->sprites[i]);
         }
-        if (g_world_thread_current_id == 12) {
+        if (g_world_thread_current_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
             world_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[1]);
         } else {
             world_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[2]);
         }
-        world_gfx_submit_primitive_group((world_primitive_group_t*)&buffer->numeric_frame);
+        world_menu_submit_numeric_display_frame_primitives(&buffer->numeric_frame);
         world_gfx_draw_or_append_gpu_primitive(&buffer->draw_offsets[0]);
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&buffer->portrait);

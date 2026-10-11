@@ -21,7 +21,8 @@ s32 battle_turn_end(s32 unit_id) {
     status4 = unit->status_sets.current[4];
     movement_check = unit->movement_taken | (status4 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE));
     action_check = (status4 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT)) | unit->action_taken
-        | (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
+        | (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
     if (movement_check == 0) {
         ct += 0x14;
     }

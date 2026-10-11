@@ -10,14 +10,15 @@ void battle_reaction_check_before_formula(void) {
     if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY) {
         return;
     }
-    if (g_current_ability.formula == BATTLE_FORMULA_WEAPON_HEAL) {
+    if (g_battle_action_current_ability.formula == ABILITY_FORMULA_WEAPON_HEAL) {
         return;
     }
     if (battle_reaction_get_pending(g_battle_action_target) == 1) {
         return;
     }
-    if ((g_battle_action_target->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REFLECT))
-        && g_current_ability.reaction_id == 0) {
+    if ((g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REFLECT)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REFLECT))
+        && g_battle_action_current_ability.reaction_id == 0) {
         battle_reaction_mark_reflected();
     }
     if (g_battle_action_target_data->reaction_id != 0) {
@@ -26,7 +27,7 @@ void battle_reaction_check_before_formula(void) {
     if (battle_reaction_is_prevented(g_battle_action_target) != 0) {
         return;
     }
-    if (battle_unit_get_action_block(g_battle_action_target) != 0) {
+    if (battle_unit_get_action_block(g_battle_action_target) != BATTLE_UNIT_ACTION_BLOCK_NONE) {
         return;
     }
     reaction_flags = g_battle_action_target->reaction_abilities[3];

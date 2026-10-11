@@ -13,6 +13,5 @@ void world_gfx_add_draw_area_primitive(RECT* rect, s32 ot_index) {
     }
     area = &g_world_gfx_active_packet_buffer->draw_areas[g_world_gfx_draw_area_count++];
     SetDrawArea(area, rect);
-    setaddr(area, getaddr(&g_world_gfx_active_packet_buffer->otag[ot_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[ot_index], area);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], area);
 }

@@ -14,6 +14,6 @@ void battle_thread_reset_scheduler(void) {
         index -= 1;
         word -= 1;
     } while (index >= 0);
-    g_battle_thread_current_id = 0;
-    g_battle_threads[0].is_running = 1;
+    g_battle_thread_current_id = NATIVE_THREAD_SLOT_MAIN;
+    g_battle_threads[NATIVE_THREAD_SLOT_MAIN].is_running = 1;
 }

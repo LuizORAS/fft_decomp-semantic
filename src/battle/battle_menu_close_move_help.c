@@ -1,6 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Return to choosing a move destination: recompute the source unit's reachable
+ * tiles, show them and enter the close-move-help state with the cursor unit's
+ * panel. With no reachable tile the move-range exception state is entered
+ * instead. The AT-list-active flag follows whether the player controls the unit. */
 void battle_menu_close_move_help(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* casting;
@@ -17,7 +21,7 @@ void battle_menu_close_move_help(void) {
     if (battle_move_set_reachable_tiles(
             casting->battle_data->misc_unit_id, casting->map_x, casting->map_y, casting->map_z)
         > 0) {
-        battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_MOVE_RANGE, 1);
+        battle_target_tint_marked_tiles(BATTLE_TILE_MARK_SHOW_MOVE, 1);
         g_battle_game_state = BATTLE_GAME_STATE_SELECT_MOVE_TILE;
         casting->state_frame_counter = 0;
         battle_target_show_cursor_unit_panel();

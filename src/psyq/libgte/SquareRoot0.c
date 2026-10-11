@@ -30,12 +30,9 @@ long SquareRoot0(long value) {
     PSYQ_CPU_TRAP_SUB(exponent, exponent, even_leading);
     exponent >>= 1;
     PSYQ_CPU_TRAP_ADDI(difference, even_leading, -24);
-    __asm__(""
-        : "=r"(difference), "=r"(exponent)
-        : "0"(difference), "1"(exponent)); /* Keep the retail arithmetic order. */
     if (difference >= 0) {
         __asm__ volatile("" : : : "memory"); /* Preserve the empty BLTZ delay slot. */
-        normalized = (u32)value << difference;
+        normalized = value << difference;
         PSYQ_CPU_SHARED_DELAY_BEGIN();
         if (zero == 0)
             goto normalized_ready;
@@ -43,7 +40,7 @@ long SquareRoot0(long value) {
     difference = zero + 24;
     PSYQ_CPU_SHARED_DELAY_END();
     PSYQ_CPU_TRAP_SUB(difference, difference, even_leading);
-    normalized = (s32)value >> difference;
+    normalized = value >> difference;
 normalized_ready:
     PSYQ_CPU_TRAP_ADDI(normalized, normalized, -64);
     normalized <<= 1;
@@ -51,7 +48,7 @@ normalized_ready:
     table_base += normalized;
     __asm__("" : "=r"(table_base) : "0"(table_base)); /* Keep the low-half table load as the relocation target. */
     factor = *(s16*)table_base;                       /* Retail splits this symbol relocation across LUI and LH. */
-    factor = (u32)factor << exponent;
+    factor = factor << exponent;
     psyq_cpu_return_value = (u32)factor >> 12;
     __asm__ volatile("" : : "r"(psyq_cpu_return_value));
     goto* psyq_cpu_return_address;

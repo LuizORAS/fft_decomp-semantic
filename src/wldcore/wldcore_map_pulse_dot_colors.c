@@ -16,10 +16,10 @@ void wldcore_map_pulse_dot_colors(void) {
     u8* color;
 
     flags = g_main_system_flags;
-    if (flags & 0x400) {
+    if (flags & MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS) {
         return;
     }
-    if (!(flags & 0x8000000)) {
+    if (!(flags & MAIN_SYSTEM_FLAG_FREEZE_ANIMATION)) {
         state = g_wldcore_map_dot_pulse_direction;
         flags = 0x40;
         if (state == 0) {
@@ -42,7 +42,7 @@ void wldcore_map_pulse_dot_colors(void) {
     bright = phase + 0x60;
     dark = -0x20 - phase;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
-        if (!(g_wldcore_map_dots[i].flags & 0x10)) {
+        if (!(g_wldcore_map_dots[i].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
             color = g_wldcore_map_dots[i].rgb;
             if (g_wldcore_map_dots[i].palette != 0) {
                 color[0] = bright;

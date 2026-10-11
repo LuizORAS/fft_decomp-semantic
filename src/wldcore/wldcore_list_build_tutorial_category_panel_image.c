@@ -17,17 +17,17 @@ void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t*
     bounds.position.y = 0;
     bounds.dimensions.x = 0x44;
     bounds.dimensions.y = panel->row_count * 0x10 + 0x10;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, g_wldcore_window_image_buffer);
+    wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
-    g_wldcore_window_render_records[index].flags |= 0x100;
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
+    base = &g_wldcore_window_render_records[index].base;
     base->x = -0x78;
     base->y = -0x28;
     point.x = 8;
     point.y = 8;
     for (i = 0; i < panel->row_count; i++) {
-        wldcore_menu_display_text_entry(index, panel->text_ids[i] + 0xB8D9, point, g_wldcore_window_image_buffer);
+        wldcore_menu_display_text_entry(index, panel->text_ids[i] + WLDCORE_TEXT_ID_TUTORIAL_CATEGORY_ROW_FIRST, point,
+            g_wldcore_window_image_buffer);
         point.y += 0x10;
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);

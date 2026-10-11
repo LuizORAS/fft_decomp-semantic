@@ -5,11 +5,11 @@
  * arithmetic to keep the target's base-biased pointers; SetShadeTex uses a
  * subscript to retain its separate integer offset. */
 void require_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const battle_menu_status_panel_frame_config_t* state) {
+    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state) {
     s32 i;
     s32 clut;
 
-    if (state->style == 1 || g_event_mode == 1) {
+    if (state->style == 1 || g_battle_menu_input_lock_mode == 1) {
         clut = 0x7dfc;
         for (i = 11; i >= 0; i--) {
             (primitives->sprites + i)->clut = clut;

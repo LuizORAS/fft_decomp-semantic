@@ -7,7 +7,6 @@
 void battle_state_enter_confirm_action(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
-    s32 mode;
 
     battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_CONFIRM_ACTION;
@@ -15,36 +14,36 @@ void battle_state_enter_confirm_action(void) {
     target
         = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     switch (unit->ability_preview_phase) {
-    case 0:
+    case BATTLE_TARGET_PANELS_UNIT_OR_TILE:
         if (target != 0) {
-            battle_menu_init_system_function(
-                4, 1, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM, 1,
+                unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         } else {
-            battle_menu_init_system_function(
-                4, 2, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM, 2,
+                unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         }
         break;
-    case 1:
+    case BATTLE_TARGET_PANELS_TILE_ONLY:
         if (target != 0) {
-            battle_menu_init_system_function(
-                4, 4, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM, 4,
+                unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         } else {
-            battle_menu_init_system_function(
-                4, 2, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM, 2,
+                unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         }
         break;
-    case 2:
+    case BATTLE_TARGET_PANELS_NO_TARGETING:
         if (target != 0) {
-            battle_menu_init_system_function(
-                4, 3, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM, 3,
+                unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         } else {
-            battle_menu_init_system_function(
-                4, 2, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM, 2,
+                unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         }
         break;
     default:
-        battle_menu_init_system_function(
-            4, 0, unit->battle_data->misc_unit_id, 0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM, 0, unit->battle_data->misc_unit_id,
+            0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         break;
     }
 }

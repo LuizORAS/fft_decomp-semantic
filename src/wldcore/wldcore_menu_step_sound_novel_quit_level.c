@@ -50,8 +50,8 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         fade = level->fade_out;
         g_wldcore_screen_fade_state.boxes[0].b = fade;
         if (level->fade_out <= 0) {
-            g_wldcore_menu_result = 0x1C0;
-            g_wldcore_screen_fade_state.flags[0] ^= 8;
+            g_wldcore_menu_blocked_buttons = PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
+            g_wldcore_screen_fade_state.flags[0] ^= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count--;
             g_wldcore_window_render_object_count -= 3;
@@ -61,15 +61,15 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         return;
     }
 
-    if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     flags = g_main_system_flags;
-    if (flags & 8) {
+    if (flags & MAIN_SYSTEM_FLAG_FADING) {
         return;
     }
 
-    if (flags & 4) {
+    if (flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) {
         if (level->fade_in < 0xFF) {
             level->fade_in += 8;
             if (level->fade_in >= 0x100) {
@@ -83,31 +83,31 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
             g_wldcore_screen_fade_state.boxes[0].b = fade;
             return;
         }
-        if (world_thread_is_running(0xE) != 0) {
+        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         g_wldcore_screen_brightness_rgb[0] = 0;
         g_wldcore_screen_brightness_rgb[1] = 0;
         g_wldcore_screen_brightness_rgb[2] = 0;
-        g_wldcore_screen_fade_state.flags[0] |= 2;
+        g_wldcore_screen_fade_state.flags[0] |= WLDCORE_SCREEN_FADE_OUT;
         first = g_wldcore_sound_novel_text_history_0;
-        *(s16*)&g_wldcore_sound_novel_text_history_0 = -1;
-        g_wldcore_menu_result = 0;
+        g_wldcore_sound_novel_text_history_0 = -1;
+        g_wldcore_menu_blocked_buttons = 0;
         g_wldcore_sound_novel_countdown_frames = 0;
-        g_main_system_flags ^= 4;
+        g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_sound_novel_text_history_3 = g_wldcore_sound_novel_text_history_2;
         g_wldcore_sound_novel_text_history_2 = g_wldcore_sound_novel_text_history_1;
         g_wldcore_sound_novel_text_history_1 = first;
         wldcore_capture_state_and_play_time();
-        *(s32*)&g_wldcore_screen_fade_state.priorities[0] = 0xF;
+        g_wldcore_screen_fade_state.priorities[0] = 0xF;
         g_wldcore_screen_fade_state.flags[1] = 0;
         g_wldcore_window_record_count -= 3;
         g_wldcore_window_render_record_count -= 2;
         g_wldcore_window_render_object_count -= 5;
         g_wldcore_menu_stack_depth -= 2;
         main_sound_remove_vfx_resource(g_wldcore_sound_novel_sound_resource);
-        wldcore_menu_push_screen_transition_level(
-            0x1B, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.selected_entry, 0);
+        wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TREASURE_DETAIL,
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.selected_entry, 0);
         return;
     }
 
@@ -126,25 +126,25 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         value = level->choice ^ 1;
         level->choice = value;
         record = &g_wldcore_window_records[level->cursor_window];
-        base = g_wldcore_window_render_records[level->render_index].base_y;
+        base = g_wldcore_window_render_records[level->render_index].base.y;
         offset = value * 0x10 + 0xE;
-        record->y = base + offset;
+        record->position.y = base + offset;
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
-        g_wldcore_window_records[level->cursor_window].sequence = 1;
+        g_wldcore_window_records[level->cursor_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         window = level->cursor_window;
         g_wldcore_window_records[window].anim_counter = 0;
         g_wldcore_window_records[window].frame_index = 0;
         if (level->choice == 0) {
-            g_main_system_flags |= 4;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count--;
             g_wldcore_window_render_object_count -= 3;
-            if (world_thread_is_running(0xE) != 0) {
-                world_thread_request_stop(0xE);
+            if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+                world_thread_request_stop(WLDCORE_THREAD_SLOT_MESSAGE);
             }
-            wldcore_sound_enqueue_audio_command(2, 0x20);
+            wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x20);
             main_sound_stop_weather_sfx_music();
             wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
             return;

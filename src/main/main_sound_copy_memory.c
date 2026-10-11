@@ -31,7 +31,7 @@ void main_sound_copy_memory(void* destination, void* source, s32 size) {
         *dst++ = *src++;
     }
     for (count = size & 3; count != 0; count--) {
-        *(u8*)dst = *(u8*)src;
+        *(u8*)dst = *src;
         dst = (u32*)((u8*)dst + 1);
         src = (u32*)((u8*)src + 1);
     }

@@ -20,7 +20,7 @@ void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 di
     if (unit->movement_path_offset < 2) {
         return;
     }
-    if (((unit->movement_path - 2)[unit->movement_path_offset] >> 4) & 1) {
+    if (((unit->movement_path - 2)[unit->movement_path_offset].value >> 4) & 1) {
         return;
     }
     if (other == 0) {
@@ -29,19 +29,19 @@ void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 di
     x = other->map_x * 28 + 14;
     y = other->map_y * 28 + 14;
     switch (direction) {
-    case 2:
+    case BATTLE_MOVE_DIRECTION_NORTH:
         center = unit->map_y * 28 + 14;
         dist = unit->screen.vz - center;
         break;
-    case 0:
+    case BATTLE_MOVE_DIRECTION_SOUTH:
         center = unit->map_y * 28 + 14;
         dist = center - unit->screen.vz;
         break;
-    case 3:
+    case BATTLE_MOVE_DIRECTION_WEST:
         center = unit->map_x * 28 + 14;
         dist = center - unit->screen.vx;
         break;
-    case 1:
+    case BATTLE_MOVE_DIRECTION_EAST:
         center = unit->map_x * 28 + 14;
         dist = unit->screen.vx - center;
         break;

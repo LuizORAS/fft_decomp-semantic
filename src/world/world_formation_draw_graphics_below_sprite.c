@@ -1,8 +1,6 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
-extern world_draw_number_command_t* world_menu_script_draw_formatted_number();
-
 /*
  * Draw the stat readout below a formation-screen unit sprite.
  *
@@ -16,7 +14,7 @@ extern world_draw_number_command_t* world_menu_script_draw_formatted_number();
  * for y + 45 in layouts 3 and 4 so it shares s4 as in the target.
  */
 void world_formation_draw_graphics_below_sprite(
-    s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s16), s32 enabled, s32 priority) {
+    s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s32), s32 enabled, s32 priority) {
     RECT unused_rect;
     RECT rect;
     s16 xy[20];
@@ -26,14 +24,13 @@ void world_formation_draw_graphics_below_sprite(
     s16 num_y;
     u16 clut;
     u8* rgb;
-    world_gfx_sprite_desc_t* sprite;
+    world_oriented_quad_t* sprite;
 
     if (mode < 0) {
         return;
     }
     do {
-        /* Called through an unprototyped view: the target passes priority without the s16 truncation. */
-        ((void (*)())world_menu_set_draw_priority)(priority);
+        world_menu_set_draw_priority(priority);
     } while (0);
     world_menu_set_sprite_color(color);
     if (mode < 7) {
@@ -73,10 +70,10 @@ void world_formation_draw_graphics_below_sprite(
             rect.h = 11;
             world_gfx_enqueue_textured_quad(
                 &rect, 0xB4, 0x10, color, 0, g_world_menu_window_tpage, g_world_menu_alternate_number_clut, priority);
-            if (mode == 0) {
+            if (mode == MENU_UNIT_READOUT_HP) {
                 clut = g_world_menu_hp_gauge_clut;
                 rgb = g_world_formation_hp_gauge_colors;
-            } else if (mode == 1) {
+            } else if (mode == MENU_UNIT_READOUT_MP) {
                 clut = g_world_menu_mp_gauge_clut;
                 rgb = g_world_formation_mp_gauge_colors;
             } else {
@@ -88,17 +85,17 @@ void world_formation_draw_graphics_below_sprite(
             rect.w = 0x25;
             rect.h = 3;
             world_gfx_enqueue_textured_quad(&rect, 0xD8, 0xCA, color, 0, g_world_menu_icon_tpage, clut, priority - 1);
-            xy[0] = (s8)g_world_formation_gauge_bar_offsets[0] + x;
-            xy[1] = (s8)g_world_formation_gauge_bar_offsets[1] + top + 8;
+            xy[0] = g_world_formation_gauge_bar_offsets[0] + x;
+            xy[1] = g_world_formation_gauge_bar_offsets[1] + top + 8;
             xy[6] = xy[2] = 0x20;
             xy[2] += xy[0];
-            xy[3] = (s8)g_world_formation_gauge_bar_offsets[1] + top + 8;
-            xy[4] = (s8)g_world_formation_gauge_bar_offsets[2] + x;
-            xy[5] = (s8)g_world_formation_gauge_bar_offsets[3] + top + 8;
+            xy[3] = g_world_formation_gauge_bar_offsets[1] + top + 8;
+            xy[4] = g_world_formation_gauge_bar_offsets[2] + x;
+            xy[5] = g_world_formation_gauge_bar_offsets[3] + top + 8;
             xy[6] += xy[4];
-            xy[7] = (s8)g_world_formation_gauge_bar_offsets[3] + top + 8;
-            world_gfx_append_poly_g4_to_otag(xy, rgb, 0, priority);
-        } else if (g_world_formation_stat_display_mode == 3) {
+            xy[7] = g_world_formation_gauge_bar_offsets[3] + top + 8;
+            world_gfx_enqueue_gouraud_quad(xy, rgb, 0, priority);
+        } else if (g_world_formation_stat_display_mode == MENU_UNIT_READOUT_LEVEL_EXP) {
             s32 y40;
 
             top = y + 45;
@@ -134,7 +131,7 @@ void world_formation_draw_graphics_below_sprite(
                 g_world_formation_experience_number.value = unit_index;
                 world_menu_script_draw_formatted_number(&g_world_formation_experience_number);
             }
-        } else if (g_world_formation_stat_display_mode == 4) {
+        } else if (g_world_formation_stat_display_mode == MENU_UNIT_READOUT_BRAVE_FAITH) {
             s32 y40;
 
             top = y + 45;
@@ -194,7 +191,7 @@ void world_formation_draw_graphics_below_sprite(
         }
         return;
     }
-    if (mode == 8) {
+    if (mode == MENU_UNIT_READOUT_EQUIP_LABEL) {
         if (get_value(unit_index) < 100) {
             sprite = &g_world_formation_label_cant_equip;
             sprite->x = x + 9;
@@ -202,10 +199,10 @@ void world_formation_draw_graphics_below_sprite(
             sprite = &g_world_formation_label_equipping;
             sprite->x = x + 11;
         }
-    } else if (mode == 9 && enabled != 0) {
+    } else if (mode == MENU_UNIT_READOUT_LEAVING && enabled != 0) {
         sprite = &g_world_formation_label_leaving;
         sprite->x = x + 6;
-    } else if (mode == 11 && enabled != 0) {
+    } else if (mode == MENU_UNIT_READOUT_MISSING && enabled != 0) {
         sprite = &g_world_formation_label_missing;
         sprite->x = x + 15;
     } else {
@@ -213,5 +210,5 @@ void world_formation_draw_graphics_below_sprite(
     }
     sprite->y = y + 40;
     sprite->tpage = GetTPage(0, 0, 0x180, 0);
-    world_gfx_enqueue_oriented_textured_quad((const world_oriented_quad_t*)sprite, color, 0, 0, priority);
+    world_gfx_enqueue_oriented_textured_quad(sprite, color, TEXTURE_UV_FLIP_NONE, 0, priority);
 }

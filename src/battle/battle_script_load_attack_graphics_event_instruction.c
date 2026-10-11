@@ -7,8 +7,8 @@
  * formation-sprite, and portrait entry points. */
 void battle_script_load_attack_graphics_event_instruction(void) {
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
-        g_battle_script_attack_entry_mode = 2;
-        battle_menu_request_open_companion_executable(0xD);
+        g_battle_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOADED;
+        battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_ATTACK);
         battle_thread_yield();
         attack_load_scenario_conditionals();
         attack_gfx_build_formation_sprites();

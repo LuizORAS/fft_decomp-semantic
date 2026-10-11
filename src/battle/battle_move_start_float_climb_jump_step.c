@@ -22,44 +22,50 @@ void battle_move_start_float_climb_jump_step(
     s32 rise_height;
     s32 height;
     s32 apex;
+    u8 next;
 
-    step = &unit->movement_value;
-    height = to->height * 2 + (to->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height + 2;
+    step = &unit->current_path_step.value;
+    height = to->height * 2 + (to->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * unit->destination_edge_height
+        + 2;
     height -= -unit->screen.vy / 6;
-    height += ((unit->movement_value & 3) + 1) * 2;
+    height += ((unit->current_path_step.value & 3) + 1) * 2;
     rise_height = height * 6;
     rise = SquareRoot12(rise_height * g_battle_move_jump_gravity * 2);
     frames = rise / g_battle_move_jump_gravity;
     unit->velocity.vy = -rise;
-    apex = ((unit->movement_value & 3) + 1) * 12;
+    apex = ((unit->current_path_step.value & 3) + 1) * 12;
     frames += SquareRoot12(apex * g_battle_move_jump_gravity * 2) / g_battle_move_jump_gravity;
-    switch (unit->movement_value >> 6) {
-    case 0:
-        unit->step_phase = 0x31;
-        unit->facing = 0xC00;
+    switch (unit->current_path_step.value >> 6) {
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_EAST;
+        unit->facing = BATTLE_FACING_EAST;
         unit->velocity.vz = 0;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value & 3);
+        next = unit->map_x + 1;
+        unit->movement.bytes.destination_x = next + (unit->current_path_step.value & 3);
         unit->velocity.vx = 0xE000 / frames;
         break;
-    case 1:
-        unit->step_phase = 0x39;
-        unit->facing = 0x400;
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_WEST;
+        unit->facing = BATTLE_FACING_WEST;
         unit->velocity.vz = 0;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value & 3);
+        next = unit->map_x - 1;
+        unit->movement.bytes.destination_x = next - (unit->current_path_step.value & 3);
         unit->velocity.vx = -0xE000 / frames;
         break;
-    case 2:
-        unit->step_phase = 0x2D;
-        unit->facing = 0;
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH;
+        unit->facing = BATTLE_FACING_SOUTH;
         unit->velocity.vx = 0;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value & 3);
+        next = unit->map_y - 1;
+        unit->movement.bytes.destination_y = next - (unit->current_path_step.value & 3);
         unit->velocity.vz = -0xE000 / frames;
         break;
-    case 3:
-        unit->step_phase = 0x35;
-        unit->facing = 0x800;
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_NORTH;
+        unit->facing = BATTLE_FACING_NORTH;
         unit->velocity.vx = 0;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value & 3);
+        next = unit->map_y + 1;
+        unit->movement.bytes.destination_y = next + (unit->current_path_step.value & 3);
         unit->velocity.vz = 0xE000 / frames;
         break;
     }

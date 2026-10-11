@@ -12,7 +12,7 @@ void wldcore_init_subsystems(void) {
     wldcore_map_init_tile_atlas();
     wldcore_load_formation_unit_name_and_face();
     wldcore_map_color_and_draw_dots();
-    wldcore_noop_8008d514();
+    wldcore_init_stub();
     wldcore_map_init_location_marker_and_camera();
     wldcore_menu_reset_window_list_and_store_origin();
     wldcore_init_runtime_state();

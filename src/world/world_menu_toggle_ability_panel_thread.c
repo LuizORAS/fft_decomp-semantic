@@ -8,14 +8,16 @@ void world_menu_toggle_ability_panel_thread(s32 enable) {
 
     if (state != 0) {
         state = 1;
-        if (world_thread_is_running(10) == 0 && world_thread_is_running(9) == 0) {
-            world_thread_start(10, world_menu_ability_panel_thread);
-            world_thread_set_parameters(10, (s32)&g_world_ability_panel_thread_params, 0, 0);
+        if (world_thread_is_running(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) == 0
+            && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0) {
+            world_thread_start(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL, world_menu_ability_panel_thread);
+            world_thread_set_parameters(
+                WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL, (s32)&g_world_ability_panel_thread_params, 0, 0);
         }
         g_world_formation_unit_banner_enabled = 1;
         world_menu_toggle_numeric_editor_thread(state);
     } else {
-        world_menu_stop_unit_status_banner_thread(10);
-        world_menu_stop_unit_status_banner_thread(12);
+        world_menu_stop_unit_status_banner_thread(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL);
+        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
     }
 }

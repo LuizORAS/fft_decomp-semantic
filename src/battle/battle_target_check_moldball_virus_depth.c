@@ -7,13 +7,13 @@ void battle_target_check_moldball_virus_depth(s16 ability_id) {
     battle_target_panel_t* panel;
     s32 i;
 
-    if (ability_id != ABILITY_ID_MONSTER_SKILL_MOLDBALL_VIRUS)
+    if (ability_id != ABILITY_ID_MONSTER_GREAT_MORBOL_MOLDBALL_VIRUS)
         return;
     i = 0;
     panel = g_battle_target_panels;
     tile = g_battle_map_tile_data;
     do {
-        if (tile->depth_half_height & MAP_TILE_DEPTH_MASK) {
+        if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
             panel->remaining_range = 0;
         }
         tile++;

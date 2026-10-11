@@ -6,12 +6,12 @@ scope:
   - battle_unit_dispatch_distortion_animation()
   - battle_unit_animate_no_distortion()
   - battle_unit_animate_squeeze_out()
-  - battle_unit_animate_descent_to_ground()
+  - battle_move_animate_descent_to_ground()
   - battle_unit_animate_teleport_to_destination()
   - battle_unit_animate_slide_back_from_target()
   - battle_unit_move_toward_action_target()
-  - battle_unit_clear_distortion_animation()
-  - battle_unit_clear_distortion_animation_2()
+  - battle_unit_clear_distortion_animation_id_10()
+  - battle_unit_clear_distortion_animation_id_11()
   - battle_map_calculate_location()
   - battle_map_copy_size_and_tile_data()
   - battle_map_get_tile_data_pointer()
@@ -26,7 +26,7 @@ scope:
   - battle_map_calculate_move_find_item_flag()
   - battle_map_get_weather()
   - battle_map_get_effective_weather()
-  - battle_map_get_weather_severity()
+  - battle_move_get_weather_terrain_cost()
 ---
 
 # Movement
@@ -96,7 +96,7 @@ along scripted paths that ignore the other units.
   ([[g_battle_current_map_move_find_item_data]]), whose found items stay in
   [[g_main_item_location_flags]]; [[battle_map_get_move_find_result]] reports
   a tile as a [[battle_move_find_result_data_t]].
-- **Knockback.** `g_current_ability.knockback_flags` (0x80 pending; kind 1
+- **Knockback.** `g_battle_action_current_ability.knockback_flags` (0x80 pending; kind 1
   ground, 2 flier) and `knockback_fall_height` (in half levels).
 
 ## Main flow
@@ -128,7 +128,7 @@ along scripted paths that ignore the other units.
 | 0x11–0x20 | Jumps, four per direction: crouch, rise, fall, landing | [[battle_move_update_path_step]], [[battle_move_update_airborne_ascent_phase]], [[battle_move_finish_unit_step_at_tile_edge]], [[battle_move_update_landing_phase]] |
 | 0x22–0x29 | Fly: even to the exit edge, odd to the centre | [[battle_move_update_fly_step_to_exit_edge]], [[battle_move_update_fly_step_to_center]] |
 | 0x2b–0x39 | Float, four per direction: to the exit edge, to the centre, climb jump | [[battle_move_update_float_step_to_current_tile_exit_edge]], [[battle_move_update_float_step_to_destination_tile_center]], [[battle_move_update_float_jump_to_entry_edge]] |
-| 0x3b | Reset the coordinates | `battle_unit_init_coordinates` |
+| 0x3b | Reset the coordinates | `battle_move_update_teleport_start` |
 | 0x3c | End of the walk | [[battle_move_finalize_path_after_animation]] |
 
    At each tile edge [[battle_move_update_walking_step_at_tile_edge]] chooses a
@@ -161,14 +161,14 @@ along scripted paths that ignore the other units.
 | 0 | None (skipped) | [[battle_unit_animate_no_distortion]] |
 | 1 | Squeeze out (no SEQ uses it) | [[battle_unit_animate_squeeze_out]] |
 | 2 | Rise three levels | [[battle_move_animate_fixed_rise]] |
-| 3 | Descend to the ground | [[battle_unit_animate_descent_to_ground]] |
+| 3 | Descend to the ground | [[battle_move_animate_descent_to_ground]] |
 | 4 | Glide to the action target | [[battle_move_glide_to_action_target_with_height_change]] |
 | 5 | Return to the unit's tile | [[battle_move_step_unit_to_map_tile_center_with_height_change]] |
 | 6 | Jump toward the target | [[battle_move_animate_jump_arc_to_target]] |
 | 7 | Jump back to the unit's tile | [[battle_move_animate_jump_arc_to_own_tile]] |
 | 8 | Glide to the action target, level | [[battle_move_glide_to_action_target_no_height_change]] |
 | 9 | Return to the tile, level (no SEQ uses it) | [[battle_move_step_unit_to_map_tile_center_no_height_change]] |
-| 0xa, 0xb | Stop (no SEQ uses them) | [[battle_unit_clear_distortion_animation]], [[battle_unit_clear_distortion_animation_2]] |
+| 0xa, 0xb | Stop (no SEQ uses them) | [[battle_unit_clear_distortion_animation_id_10]], [[battle_unit_clear_distortion_animation_id_11]] |
 | 0xc | Jump up | [[battle_move_animate_jump_start]] |
 | 0xd | Fall onto the target tile | [[battle_move_animate_fall_to_target_tile]] |
 | 0xe | Teleport | [[battle_unit_animate_teleport_to_destination]] |
@@ -184,7 +184,7 @@ along scripted paths that ignore the other units.
   [[battle_move_get_effective_flags]]. The [[Movement rules]] guide lists
   each rule.
 - **Terrain costs:** the rows of [[g_main_terrain_movement_cost_tables]] (data
-  in MAIN); the weather's share, [[battle_map_get_weather_severity]].
+  in MAIN); the weather's share, [[battle_move_get_weather_terrain_cost]].
 - **Height, ceilings and gaps:** [[battle_move_update_candidate]] and
   [[battle_move_propagate_destination]] (Jump against the edge heights, the
   unit's height against the ceilings), [[battle_move_check_horizontal_jump]]

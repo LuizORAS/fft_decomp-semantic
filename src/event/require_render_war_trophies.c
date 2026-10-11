@@ -13,6 +13,18 @@ typedef struct require_reward_war_trophy_primitives {
 
 extern require_reward_war_trophy_primitives_t g_require_reward_war_trophy_primitives[2];
 
+/*
+ * Thread body of the post-battle "war trophies" list.
+ *
+ * Collects the entries (require_reward_collect_war_trophies_and_bonus_money)
+ * and exits at once when there are none. Otherwise it starts the banner
+ * thread and reveals the entries eight to a page: a new entry appears every
+ * 0x1f frames or on Circle, and the last entry of a page stays for 0x79
+ * frames before the page is cleared. Fewer than five entries form one column,
+ * more form two. An item entry is its 16x16 icon and name; any other entry is
+ * a number followed by an 18x8 label glyph. Each new line of text is uploaded to
+ * VRAM and its buffer freed on the following frame.
+ */
 void require_render_war_trophies(void) {
     SPRT sprite;
     s32 start;
@@ -34,7 +46,7 @@ void require_render_war_trophies(void) {
         battle_thread_exit_current();
     }
     prims = g_require_reward_war_trophy_primitives;
-    thread = battle_thread_resolve_id(0x10);
+    thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     last = 0;
     battle_thread_start(thread, require_render_display_condition_special_cases_thread);
     battle_thread_set_parameters(thread, 4, 0, 0);
@@ -43,7 +55,7 @@ void require_render_war_trophies(void) {
         ClearImage(&g_require_reward_war_trophy_clear_rect, 0, 0, 0);
         battle_thread_yield();
         buffer = g_require_reward_war_trophy_primitives;
-        battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_mode, 1);
+        battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_mode, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
         for (i = 0; i < 16; i++) {
             battle_gfx_init_default_poly_ft4(&buffer->quads[i]);
         }
@@ -73,19 +85,20 @@ void require_render_war_trophies(void) {
                     break;
                 }
                 image = battle_menu_build_and_upload_window_frame_image(
-                    0x50, 0x10, &g_require_reward_war_trophy_image_rect, 1);
+                    0x50, 0x10, &g_require_reward_war_trophy_image_rect, MENU_WINDOW_FRAME_BUILD);
                 battle_clear_menu_render_buffer(image, 0x280);
-                g_menu_text_state.stride = 0x50;
+                g_menu_text_state.pen.stride = 0x50;
                 timer = 0;
-                if (g_require_reward_war_trophy_entry_types[last] == 0) {
+                if (g_require_reward_war_trophy_entry_types[last] == REQUIRE_WAR_TROPHY_ENTRY_ITEM) {
                     battle_menu_set_text_origin(0, 0);
                     battle_menu_display_text_entry(
-                        g_require_reward_war_trophy_entry_values[last] + 0x3800, image, &g_menu_text_state.origin_x);
+                        g_require_reward_war_trophy_entry_values[last] + TEXT_ID_ITEM_NAME_BASE, image,
+                        &g_menu_text_state.pen);
                 } else {
                     battle_menu_set_text_origin(0, 0);
                     battle_draw_menu_number_glyphs(g_require_reward_war_trophy_entry_values[last],
                         battle_text_count_decimal_digits(g_require_reward_war_trophy_entry_values[last]), image,
-                        (battle_rect_t*)&g_menu_text_state.origin_x);
+                        &g_menu_text_state.pen);
                 }
                 if (g_require_reward_war_trophy_entry_count < 5) {
                     g_require_reward_war_trophy_image_rect.x = 0x60;
@@ -106,7 +119,7 @@ void require_render_war_trophies(void) {
             }
             for (i = start; i <= last; i++) {
                 quad = &buffer->quads[i];
-                if (g_require_reward_war_trophy_entry_types[i] == 0) {
+                if (g_require_reward_war_trophy_entry_types[i] == REQUIRE_WAR_TROPHY_ENTRY_ITEM) {
                     quad->x0 = require_reward_get_war_trophy_column_x(i, g_require_reward_war_trophy_entry_count);
                     quad->y0 = require_reward_get_war_trophy_entry_offset(
                         i - start, g_require_reward_war_trophy_entry_count);
@@ -123,7 +136,7 @@ void require_render_war_trophies(void) {
                     quad->y3
                         = require_reward_get_war_trophy_entry_offset(i - start, g_require_reward_war_trophy_entry_count)
                         + 0x10;
-                    battle_get_item_graphic_data(&sprite, g_require_reward_war_trophy_entry_values[i]);
+                    battle_gfx_set_item_icon_sprite(&sprite, g_require_reward_war_trophy_entry_values[i]);
                     quad->u0 = sprite.u0;
                     quad->v0 = sprite.v0;
                     quad->u1 = sprite.u0 + 0x10;

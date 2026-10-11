@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 #include "psx/types.h"
 
 /* Resets state used when entering the world map.
@@ -18,7 +19,7 @@ void wldcore_init_world_map_state(void) {
     s32 i;
     s32 offset;
 
-    g_wldcore_scratch_buffer = (s32*)0x801d0000;
+    g_wldcore_scratch_buffer = (u32*)0x801d0000;
     g_wldcore_loaded_message_block = -1;
     g_wldcore_loaded_picture_set = -1;
     g_wldcore_menu_ordering_table_offset = 1;
@@ -30,8 +31,12 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_map_zoom_motion.flags = 0;
     g_wldcore_random_battle_squad_id = 0;
     g_wldcore_random_battle_entd_id = 0;
-    g_wldcore_menu_result = 0;
-    g_main_system_flags = (g_main_system_flags & 0x206d0000) | 1;
+    g_wldcore_menu_blocked_buttons = 0;
+    g_main_system_flags
+        = (g_main_system_flags
+              & (MAIN_SYSTEM_FLAG_RESTART | MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY | MAIN_SYSTEM_FLAG_TITLE_TUTORIAL
+                  | MAIN_SYSTEM_FLAG_TUTORIAL_EVENT | MAIN_SYSTEM_FLAG_UNLOCK_ALL | MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY))
+        | MAIN_SYSTEM_FLAG_RUNNING;
     /* The three pointers are republished from a table adjacent to g_wldcore_rumor_location_masks;
      * 0x80096a54/58/5c carry no catalog name, so they are reached as indices
      * off the catalogued neighbour rather than given invented spellings. */
@@ -41,7 +46,7 @@ void wldcore_init_world_map_state(void) {
 
     for (i = 0; i < 2; i++) {
         g_wldcore_screen_fade_state.flags[i] = 0;
-        *(s32*)&g_wldcore_screen_fade_state.priorities[i] = 0xf;
+        g_wldcore_screen_fade_state.priorities[i] = 0xf;
         /* A typed attribute store folds the address and loses five target
          * instructions; this indexed offset preserves the verified output.
          * The rectangle stores index through a decayed pointer: plain
@@ -55,7 +60,7 @@ void wldcore_init_world_map_state(void) {
         ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].g = 0;
         ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].b = 0;
     }
-    g_wldcore_screen_fade_state.flags[0] = 2;
+    g_wldcore_screen_fade_state.flags[0] = WLDCORE_SCREEN_FADE_OUT;
 
     cursor = g_wldcore_menu_cursor_states;
     for (offset = 0; offset < 0xa8; offset += 8) {
@@ -72,48 +77,47 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_location_marker_shade = 0x80;
     g_wldcore_proposition_selected_entry = 0;
 
-    if (!(g_main_system_flags & 0x200000)) {
+    if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_TUTORIAL_EVENT)) {
         main_sound_unload_scenario_music_and_tunes();
     }
 
     g_wldcore_audio_queue.volume = 0x7f;
     g_wldcore_context_value_display_position.x = 0x30;
     g_wldcore_context_value_display_position.y = 0x54;
-    /* The target stores the whole word (sw), not the u16 the sorts read. */
-    *(s32*)&g_wldcore_hud_ot_priority = 4;
+    g_wldcore_hud_ot_priority = 4;
     g_wldcore_audio_queue.count = 0;
     g_wldcore_audio_queue.music.flags = 0;
     g_wldcore_audio_queue.music.tracks[2] = 0;
     g_wldcore_audio_queue.music.tracks[1] = 0;
-    g_wldcore_audio_queue.current_command = 0;
+    g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
     g_wldcore_sound_novel_countdown_frames = 0;
     g_wldcore_location_entry_state.flags = 0;
 
-    if (g_main_system_flags & 0x400000) {
-        for (i = 0; i < 0x40; i++)
-            world_script_set_variable(0x3c0 + i, 1);
-        for (i = 0; i < 0x40; i++)
-            world_script_set_variable(0x2d1 + i, 1);
-        for (i = 0; i < 0x30; i++)
-            world_script_set_variable(0x22c + i, 1);
-        for (i = 0; i < 0x2b; i++)
-            world_script_set_variable(0x200 + i, 1);
-        for (i = 0; i < 0x40; i++)
-            world_script_set_variable(0x1bc + i, 1);
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNLOCK_ALL) {
+        for (i = 0; i < EVENT_SCRIPT_VAR_PERSON_PROFILE_COUNT; i++)
+            world_script_set_variable(EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST + i, 1);
+        for (i = 0; i < EVENT_SCRIPT_VAR_RUMOR_COUNT; i++)
+            world_script_set_variable(EVENT_SCRIPT_VAR_RUMOR_FIRST + i, 1);
+        for (i = 0; i < WLDCORE_ROUTE_COUNT; i++)
+            world_script_set_variable(EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST + i, 1);
+        for (i = 0; i < WORLD_LOCATION_COUNT; i++)
+            world_script_set_variable(EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST + i, 1);
+        for (i = 0; i < EVENT_SCRIPT_VAR_STORY_EVENT_COUNT; i++)
+            world_script_set_variable(EVENT_SCRIPT_VAR_STORY_EVENT_FIRST + i, 1);
 
-        if (!(PadRead(0) & 0x800)) {
+        if (!(PadRead(0) & PSX_PAD_START)) {
             record[0] = 1;
             record[1] = 1;
-            for (i = 0; i < 0x2f; i++) {
-                world_script_set_variable(0x321 + i, 1);
+            for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
+                world_script_set_variable(EVENT_SCRIPT_VAR_TREASURE_FIRST + i, 1);
                 wldcore_write_nine_bit_record(g_main_treasure_acquisition_date_bits, i, record);
             }
-            for (i = 0; i < 0x10; i++) {
-                world_script_set_variable(0x350 + i, 1);
+            for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
+                world_script_set_variable(EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST + i, 1);
                 wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, i, record);
             }
-            for (i = 0; i < 0x60; i++)
-                world_script_set_variable(0x360 + i, 4);
+            for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++)
+                world_script_set_variable(EVENT_SCRIPT_VAR_PROPOSITION_FIRST + i, 4);
         }
 
         world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, 0x7530);

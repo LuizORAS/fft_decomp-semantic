@@ -18,10 +18,10 @@ void battle_menu_run_system_function_thread(void) {
     if (g_main_game_options.fields.navigation_messages != GAME_OPTION_ON) {
         id = g_battle_system_function_table[id].alternate_id;
     }
-    battle_thread_wait_until_inactive(8);
-    if (g_battle_menu_input_disabled == 0) {
-        while (battle_thread_is_running_2(1) != 0) {
-            if (g_battle_thread_contexts[1].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
+    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
+    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
+        while (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) != 0) {
+            if (g_battle_thread_contexts[NATIVE_THREAD_SLOT_EVENT].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 battle_thread_exit_current();
             }
             battle_thread_yield();
@@ -29,21 +29,22 @@ void battle_menu_run_system_function_thread(void) {
     }
     battle_camera_wait_until_idle();
     entry = &g_battle_system_function_table[id];
-    value = entry->value_00;
+    value = entry->menu_id;
     g_battle_menu_thread_menu_data[entry->menu_entry_index].text_id = entry->text_id;
-    g_battle_menu_system_function_row_actions[0] = entry->value_06;
+    g_battle_menu_system_function_row_actions[0] = entry->row_action;
     g_battle_menu_current_id = value;
-    g_battle_menu_thread_menu_data[entry->menu_entry_index].cancel_thread_count = entry->value_08;
+    g_battle_menu_thread_menu_data[entry->menu_entry_index].cancel_thread_count = entry->cancel_thread_count;
     if (id == 0x1f) {
-        battle_thread_start(8, battle_menu_open_option_menu_2);
-        battle_thread_set_parameters(8, 0, D_80173C70, 0);
+        battle_thread_start(NATIVE_THREAD_SLOT_MENU, battle_menu_open_option_dead_unit_panel);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, g_battle_menu_dead_unit_panel_parameter, 0);
         battle_thread_exit_current();
     }
     if (id != 8) {
         battle_script_pulse_tutorial_wait_value(id);
     }
-    battle_thread_start(8, entry->thread_entry);
-    battle_thread_set_parameters_4(8, (s32)&g_battle_menu_thread_menu_data[entry->menu_entry_index], 0, 0, 0);
+    battle_thread_start(NATIVE_THREAD_SLOT_MENU, entry->thread_entry);
+    battle_thread_set_four_parameters(
+        NATIVE_THREAD_SLOT_MENU, (s32)&g_battle_menu_thread_menu_data[entry->menu_entry_index], 0, 0, 0);
     g_battle_system_function_thread_busy = 0;
     battle_thread_exit_current();
 }

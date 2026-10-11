@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* start + (end - start) * factor / 256, stored in out and returned: factor is a
+ * fraction of 256. */
 s32 battle_effect_lerp_and_store(s32 start, s32 end, s32 factor, s32* out) {
     s32 result;
 

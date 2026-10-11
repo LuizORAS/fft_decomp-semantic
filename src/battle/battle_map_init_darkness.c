@@ -1,16 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Port debt (QUIRKS.md): map_id travels through a u8* parameter. */
-void battle_map_init_darkness(s32 unused_0, s32 unused_1, s32 map_id) {
-    /* Pin: the target copies the record pointer into $a2 (`move a2,v0`);
-     * unpinned GCC uses $v0 directly, and reusing the map_id
-     * parameter for it does not produce the copy either. */
-    register map_color_t* color asm("$6");
+/* Seed the darkness fade from the map's current darkness colour: the base colour
+ * and the 16.16 transition channels.
+ *
+ * The unset `color` is passed as the command's data argument, which the GET
+ * command does not read, and then receives the result. */
+void battle_map_init_darkness(void) {
+    map_color_t* color;
 
-    color = (map_color_t*)battle_map_light_state_command(MAP_LIGHT_COMMAND_GET_DARKNESS_COLOR, (u8*)map_id);
-    /* Copies the result into the pinned $a2 before the colour copy uses it. */
-    asm volatile("" : "=r"(color) : "0"(color));
+    color = battle_map_light_state_command(MAP_LIGHT_COMMAND_GET_DARKNESS_COLOR, color);
     g_battle_map_darkness_color = *color;
     g_battle_map_darkness_transition.channels.red = color->red << 16;
     g_battle_map_darkness_transition.channels.green = color->green << 16;

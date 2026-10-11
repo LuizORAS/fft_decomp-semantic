@@ -4,8 +4,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Provisional: three-column layout with the saved first visible row. */
-
 /*
  * Scrolling three-column ability list thread (the WORLD twin of BATTLE
  * battle_menu_run_scrolling_ability_list_thread, reached from world_menu_preview_ability_turn_at_list).
@@ -44,7 +42,7 @@ void world_menu_scrolling_list_thread(void) {
     s32 i;
     s32 column;
     s32 index;
-    s32 value;
+    s16 value;
     s32 step;
     s32 top;
     s32 arrow_u;
@@ -59,7 +57,7 @@ void world_menu_scrolling_list_thread(void) {
     entry->window_height = layout->columns.row_count * 16 + 0x1C;
     entry->inner_height = layout->columns.row_count * 16 + 0x1C;
     row_buffer_live = 0;
-    entry->overall_height = layout->columns.row_count * 16 + 0x1C;
+    entry->text_image.height = layout->columns.row_count * 16 + 0x1C;
     window.rect.x = 0x108 - entry->inner_width;
     window.rect.y = 0xFE;
     window.x_screen_offset = 8;
@@ -81,7 +79,7 @@ void world_menu_scrolling_list_thread(void) {
         page[i].icons.icons[0] = &icons0[i];
         page[i].icons.icons[1] = &icons1[i];
         page[i].icons.icons[2] = &icons2[i];
-        world_menu_build_icon_record(&image_rect, (world_menu_icon_thread_param_t*)entry, &page[i].icons);
+        world_menu_build_icon_record(&image_rect, entry, &page[i].icons);
     }
     SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_world_gfx_texture_window);
     SetDrawMode(
@@ -105,8 +103,8 @@ void world_menu_scrolling_list_thread(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((POLY_FT4*)&page->frame, (const world_image_location_t*)entry,
-        (const world_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+    world_gfx_init_image_loading(
+        &page->frame, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
@@ -120,7 +118,8 @@ void world_menu_scrolling_list_thread(void) {
     page->arrow_marks[1].v0 = 0xC;
     page->arrow_marks[1].x0 = page->arrows[1].x0;
     page->arrow_marks[1].y0 = page->arrows[1].y0 + 0xE;
-    world_menu_build_and_upload_window_frame_image(entry->inner_width, entry->inner_height, &image_rect, 2);
+    world_menu_build_and_upload_window_frame_image(
+        entry->inner_width, entry->inner_height, &image_rect, MENU_WINDOW_FRAME_ALTERNATE_UPLOAD);
     buffer = world_menu_alloc_ui_buffer(entry->inner_width * entry->inner_height / 2);
     world_clear_menu_render_buffer(buffer, window.rect.w * window.rect.h / 2);
     row_offset = layout->row_offset;
@@ -154,14 +153,15 @@ void world_menu_scrolling_list_thread(void) {
         frame = &page->frame;
         SetSemiTrans(&frame, 1);
         if (delta == 0 && world_menu_is_input_allowed() != 0 && i != 0) {
-            if (layout->columns.mode[0] == 0 && layout->columns.mode[1] == 0) {
+            if (layout->columns.mode[0] == MENU_TEXT_COLUMN_TEXT && layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT) {
                 if (g_world_menu_new_button_input & (PSX_PAD_RIGHT | PSX_PAD_LEFT)) {
                     toggle ^= 1;
                 }
                 layout->columns.text_ids[2] = &toggle;
             }
             if ((g_world_menu_new_button_input & PSX_PAD_UP)
-                && (!(g_world_menu_current_button_input & PSX_PAD_SQUARE) || g_world_menu_input_disabled != 0)) {
+                && (!(g_world_menu_current_button_input & PSX_PAD_SQUARE)
+                    || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
                     world_sound_set_scroll_effect();
@@ -173,7 +173,8 @@ void world_menu_scrolling_list_thread(void) {
                     world_sound_set_scroll_effect();
                 }
             } else if ((g_world_menu_new_button_input & PSX_PAD_DOWN)
-                && (!(g_world_menu_current_button_input & PSX_PAD_SQUARE) || g_world_menu_input_disabled != 0)) {
+                && (!(g_world_menu_current_button_input & PSX_PAD_SQUARE)
+                    || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->columns.row_count - 1) {
                     cursor++;
                     world_sound_set_scroll_effect();
@@ -198,54 +199,53 @@ void world_menu_scrolling_list_thread(void) {
                 row_buffer_live = 1;
                 buffer = world_menu_alloc_ui_buffer(window.rect.w * 8);
                 world_clear_menu_render_buffer(buffer, window.rect.w * 8);
-                g_world_menu_text_state.stride = window.rect.w;
+                g_world_menu_text_state.pen.stride = window.rect.w;
                 for (column = 0; column < 3; column++) {
                     index = cursor + row_offset + delta;
                     world_menu_set_text_origin(layout->columns.x[column], 0);
-                    if (layout->columns.mode[column] != 2) {
+                    if (layout->columns.mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
                     }
-                    g_world_menu_text_state.color = 0;
+                    g_world_menu_text_state.pen.color = 0;
                     if (g_world_menu_text_color == 4) {
-                        g_world_menu_text_state.color = 0x44444444;
+                        g_world_menu_text_state.pen.color = 0x44444444;
                     }
-                    if (layout->columns.mode[column] == 0) {
+                    if (layout->columns.mode[column] == MENU_TEXT_COLUMN_TEXT) {
                         world_menu_display_text_entry(
-                            layout->columns.text_ids[column][index], buffer, &g_world_menu_text_state.origin_x);
+                            layout->columns.text_ids[column][index], buffer, &g_world_menu_text_state.pen);
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
                         if (g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 != 0
-                            && (g_battle_ai_workspace_ptr->skill_use.flags[index] & 1)) {
-                            /* The target passes both coordinates without the s16 sign extension. */
-                            ((void (*)(s32, s32))world_menu_set_text_origin)(layout->columns.x[column] + 0x50, 0);
-                            world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.origin_x);
+                            && (g_battle_ai_workspace_ptr->ability_list.flags[index] & 1)) {
+                            world_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
+                            world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.pen);
                         }
-                    } else if (layout->columns.mode[column] == 1) {
-                        world_display_menu_number_entry(layout->columns.text_ids[column][index], 2, buffer,
-                            (u16*)&g_world_menu_text_state.origin_x);
-                    } else if (layout->columns.mode[column] == 3) {
-                        if ((column == 2 || (column == 1 && layout->columns.mode[2] == 2))
-                            && (u16)layout->columns.text_ids[column][index] < 2
-                            && (g_battle_ai_workspace_ptr->skill_use.target[index] == 0xFF
-                                || g_battle_ai_workspace_ptr->skill_use.target[index] == 0)) {
-                            g_world_menu_text_state.origin_y += 2;
-                            world_text_draw_shadowed(buffer, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
+                    } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER) {
+                        world_display_menu_number_entry(
+                            layout->columns.text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
+                    } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
+                        if ((column == 2 || (column == 1 && layout->columns.mode[2] == MENU_TEXT_COLUMN_HIDDEN))
+                            && layout->columns.text_ids[column][index] >= 0
+                            && layout->columns.text_ids[column][index] < 2
+                            && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
+                                || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
+                            g_world_menu_text_state.pen.rect.y += 2;
+                            world_menu_draw_stacked_glyph_pair(buffer, &g_world_menu_text_state.pen);
                         } else {
-                            value = (u16)layout->columns.text_ids[column][index];
+                            value = layout->columns.text_ids[column][index];
                             if (value & 0x7FF) {
                                 if ((value & 0x7FF) >= 100) {
                                     g_world_menu_text_color = 0;
-                                    g_world_menu_text_state.origin_x += 3;
-                                    world_menu_display_text_entry(0x509D, buffer, &g_world_menu_text_state.origin_x);
+                                    g_world_menu_text_state.pen.rect.x += 3;
+                                    world_menu_display_text_entry(0x509D, buffer, &g_world_menu_text_state.pen);
                                 } else {
-                                    world_draw_menu_number_glyphs(
-                                        (s16)value, 2, buffer, (world_glyph_blit_t*)&g_world_menu_text_state.origin_x);
+                                    world_draw_menu_number_glyphs(value, 2, buffer, &g_world_menu_text_state.pen);
                                 }
                             }
                         }
                     }
                 }
                 g_world_menu_text_color = 0;
-                g_world_menu_text_state.color = 0;
+                g_world_menu_text_state.pen.color = 0;
                 LoadImage(&image_rect, (u32*)buffer);
                 clear.h = 2;
                 clear.x = image_rect.x;
@@ -270,15 +270,15 @@ void world_menu_scrolling_list_thread(void) {
             break;
         }
         world_menu_select_icon_cluts(&page->icons.base);
-        world_menu_select_task_icon_tile_2(page->icons.icons[0]);
-        world_menu_select_task_icon_tile_2(page->icons.icons[1]);
-        world_menu_select_task_icon_tile_2(page->icons.icons[2]);
+        world_menu_select_icon_sprite_clut(page->icons.icons[0]);
+        world_menu_select_icon_sprite_clut(page->icons.icons[1]);
+        world_menu_select_icon_sprite_clut(page->icons.icons[2]);
         if (world_thread_is_previous_running() != 0 || g_world_thread_task_active == 1) {
             frame->clut = 0x7F7D;
         } else {
             frame->clut = 0x7FFC;
         }
-        world_menu_update_icon_cursor_sprites((world_menu_icon_thread_param_t*)entry, &page->icons.base, i, cursor);
+        world_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         if (layout->columns.hidden_rows != 0 && world_thread_is_previous_running() == 0) {
             if (row_offset != 0) {
                 world_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
@@ -299,7 +299,7 @@ void world_menu_scrolling_list_thread(void) {
         if (g_world_menu_scrolling_list_depth < 2 && delta == 0) {
             world_menu_handle_entry_confirm(entry, cursor);
         }
-        world_menu_cancel_thread_group((world_menu_cancel_context_t*)entry);
+        world_menu_cancel_thread_group(entry);
         if ((g_world_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_world_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step;
@@ -309,7 +309,7 @@ void world_menu_scrolling_list_thread(void) {
             accum += delta * (step << 1);
         }
         timer += g_world_event_speed;
-        if ((u32)(accum + 0xF) >= 0x1F) {
+        if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
             repeat = world_input_get_menu_repeat_counter();
@@ -323,17 +323,17 @@ void world_menu_scrolling_list_thread(void) {
         }
         frame->v0 = (ring * 16 + accum - 2) & 0x7F;
         if (i * g_world_event_speed < 12) {
-            world_gfx_init_image_loading((POLY_FT4*)page, (const world_image_location_t*)entry,
-                (const world_image_location_t*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
+            world_gfx_init_image_loading(
+                page, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
             world_menu_zoom_cursor_frame(entry, frame, i * g_world_event_speed);
         }
-        if (layout->columns.mode[1] == 0 && toggle == 1) {
+        if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {
             page->icons.base.sprites[1].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
             page->icons.base.sprites[2].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
         }
         page->icons.base.sprites[1].y0 += 4;
         page->icons.base.sprites[2].y0 += 4;
-        if ((s16)entry->header_id >= 5) {
+        if (entry->header_id >= 5) {
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[1]);
             if (g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 != 0) {

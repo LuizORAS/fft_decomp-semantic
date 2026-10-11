@@ -14,10 +14,8 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     battle_ai_ability_entry_t* entry;
     s32 flags;
     s32 status_byte;
-    /* Pin: unpinned, GCC builds the result in $v1 and copies it to $v0 at the returns (4 bytes larger). */
-    register s32 result __asm__("$2");
 
-    if (g_battle_ai_data_base.decision_state != 0) {
+    if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: the target jumps into the middle of the ability loop. */
         goto evaluate_ability;
     }
@@ -44,7 +42,7 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
 
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, unit_id) != 0) {
         for (ai->ability_counter = 0; ai->ability_counter < BATTLE_AI_ABILITY_LIST_LENGTH; ai->ability_counter++) {
-            entry = &ai->ability_lists[ai->acting_unit_battle_id][ai->ability_counter];
+            entry = &ai->ability_lists[ai->acting_unit_compact_index][ai->ability_counter];
             if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
                 break;
             battle_ai_load_ability_entry(entry);
@@ -60,13 +58,16 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
                     & (0x80 >> (status_id - status_byte * 8))))
                 continue;
             if ((flags & BATTLE_AI_ABILITY_AFFECTED_BY_FAITH)
-                && (unit->status_sets.innate[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT)))
+                && (unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INNOCENT)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT)))
                 continue;
             if ((flags & BATTLE_AI_ABILITY_REFLECTABLE)
-                && (unit->status_sets.innate[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REFLECT)))
+                && (unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REFLECT)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REFLECT)))
                 continue;
             if ((flags & BATTLE_AI_ABILITY_AFFECTED_BY_SILENCE)
-                && (ai->acting_unit->status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE)))
+                && (ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE)))
                 continue;
 
             if (ai->acting_unit->mp < ai->considered_ability.mp_cost)
@@ -81,15 +82,15 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
         }
     }
 
-    if (ai->ranked_actions[0].base_hit_percent != 0) {
+    if (ai->ranked_actions[0].rank.base_hit_percent != 0) {
         battle_ai_transfer_halfword_values(
-            (u16*)&ai->selected_action, (u16*)&ai->ranked_actions[0], sizeof(battle_ai_action_data_t));
+            &ai->selected_action, &ai->ranked_actions[0], sizeof(battle_ai_action_data_t));
         return 2;
     }
     if (g_battle_ai_status_candidate_count == 0)
         return 0;
-    result = 1;
-    if (g_battle_ai_status_insufficient_mp != 0 && ai->has_mp_recovery_ability == 0)
-        result = g_battle_ai_status_sufficient_mp != 0;
-    return result;
+    if (g_battle_ai_status_insufficient_mp != 0 && ai->has_mp_recovery_ability == 0
+        && g_battle_ai_status_sufficient_mp == 0)
+        return 0;
+    return 1;
 }

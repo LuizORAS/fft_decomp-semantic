@@ -29,7 +29,7 @@ equip_item_slot_result_e equip_unit_validate_slot_item(s16 unit, s16 slot, s32 i
     if (g_main_item_primary_data[g_equip_unit_data[unit]->equipment[slot]].type_flags & ITEM_TYPE_FLAG_UNREMOVABLE) {
         return EQUIP_SLOT_ITEM_CURRENT_LOCKED;
     }
-    result = equip_unit_can_equip_item(unit, id);
+    result = equip_unit_can_equip_item_id(unit, id);
     if (slot < EQUIP_SLOT_HAND_COUNT && result == EQUIP_SLOT_ITEM_ALLOWED) {
         is_nonstandard_weapon = id >= ITEM_ID_THROWABLE_FIRST;
         if (is_nonstandard_weapon) {

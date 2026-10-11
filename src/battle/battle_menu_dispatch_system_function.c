@@ -12,9 +12,7 @@
  * Returns 1 when a function was started, 0 for an unknown command; handled
  * commands record themselves in g_battle_menu_system_function_command/g_battle_menu_system_function_option.
  *
- * The one-operand keep-alive on unit_id raises its allocation priority so
- * it takes $s6 ahead of action ($s7), as in the target; without it the two
- * callee-saved registers swap. Twin of world_menu_dispatch_system_function.
+ * Twin of world_menu_dispatch_system_function.
  */
 s32 battle_menu_dispatch_system_function(
     s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_ai_command_action_t* action) {
@@ -27,71 +25,70 @@ s32 battle_menu_dispatch_system_function(
     s32 flags;
 
     g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
-    g_battle_menu_current_id = -1;
+    g_battle_menu_current_id = BATTLE_MENU_ID_NONE;
     g_battle_menu_restore_pending = 0;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
-    __asm__("" : : "r"(unit_id));
-    if (command == 8) {
+    if (command == BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK) {
         value = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
-        if ((u32)(value - 0x19A) < 0x10) {
+        if (value >= EVENT_ID_TUTORIAL_FIRST && value <= EVENT_ID_TUTORIAL_LAST) {
             if (option != 2) {
-                battle_menu_start_system_function_thread(8);
+                battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
             }
-            return 1;
-        } else if (g_battle_menu_input_disabled != 0) {
+            return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
+        } else if (g_battle_menu_input_mode != MENU_INPUT_PLAYER) {
             if (option != 2) {
-                battle_menu_start_system_function_thread(8);
+                battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
             }
-            return 1;
+            return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
         } else if (option != 1) {
-            if (battle_thread_is_running_2(1) != 0) {
+            if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) != 0) {
                 main_system_report_error_2(7, 3);
                 if (option != 2) {
-                    battle_menu_start_system_function_thread(8);
+                    battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
                 }
-                return 1;
+                return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
             } else {
                 count = 0;
                 g_battle_script_condition_unit_battle_id = unit_id;
                 /* Any Ramza form crystallised or turned to treasure. */
-                for (i = 0; i < CHARACTER_IDENTITY_RAMZA_END - CHARACTER_IDENTITY_RAMZA_CHAPTER_1; i++) {
-                    if (battle_classify_character_identity_slot(i + CHARACTER_IDENTITY_RAMZA_CHAPTER_1) == -3) {
+                for (i = 0; i < 3; i++) {
+                    if (battle_unit_find_slot_by_character_identity(i + 1) == BATTLE_CHARACTER_SLOT_UNAVAILABLE) {
                         count++;
                     }
                 }
                 if ((battle_action_check_battle_outcome() < 0 || count != 0)
-                    && battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) == 0) {
+                    && battle_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0) {
                     if (option != 2) {
-                        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_GAME_OVER_ON_DEFEAT);
-                        battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
-                        g_option_menu_submenu_state = 1;
+                        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_GAME_OVER);
+                        battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
+                        g_battle_menu_suspend_state = 1;
                         g_battle_scenario_event_active = 1;
                         battle_script_start_current_event_thread();
                     } else {
-                        g_battle_next_event_id = EVENT_ID_GAME_OVER_ON_DEFEAT;
+                        g_battle_next_event_id = EVENT_ID_GAME_OVER;
                     }
-                    return 2;
+                    return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 }
                 if (g_battle_scenario_event_active != 0) {
                     if (battle_script_run_scenario_conditions() != 0) {
                         if (option != 2) {
-                            battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
-                            g_option_menu_submenu_state = 1;
+                            battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
+                            g_battle_menu_suspend_state = 1;
                             battle_script_start_current_event_thread();
                         } else {
                             g_battle_next_event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
                             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, value);
                         }
-                        return 2;
+                        return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                     }
                     if (option != 2) {
-                        battle_menu_start_system_function_thread(8);
+                        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
                     }
-                    return 1;
-                } else if (battle_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) != 0) {
+                    return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
+                } else if (battle_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
                     if (option != 2) {
-                        battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
-                        g_option_menu_submenu_state = 1;
+                        battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
+                        g_battle_menu_suspend_state = 1;
                         if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
                             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_DEBUG_BATTLE_INITIATE);
                         } else {
@@ -101,34 +98,34 @@ s32 battle_menu_dispatch_system_function(
                     } else {
                         g_battle_next_event_id = EVENT_ID_RANDOM_BATTLE_INITIATE;
                     }
-                    return 2;
+                    return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 } else if (battle_action_check_battle_outcome() == 0) {
                     if (option != 2) {
-                        battle_menu_store_unit_names_and_event_block_data(0, 0xFF, 0xFF);
-                        g_option_menu_submenu_state = 1;
+                        battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
+                        g_battle_menu_suspend_state = 1;
                         battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_RANDOM_BATTLE_VICTORY);
                         g_battle_scenario_event_active = 1;
                         battle_script_start_current_event_thread();
                     } else {
                         g_battle_next_event_id = EVENT_ID_RANDOM_BATTLE_VICTORY;
                     }
-                    return 2;
+                    return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 } else {
                     if (option != 2) {
-                        battle_menu_start_system_function_thread(8);
+                        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
                     }
-                    return 1;
+                    return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
                 }
             }
         }
-        battle_menu_start_system_function_thread(8);
-        return 1;
+        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
+        return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
     }
     if (enabled == 0) {
-        battle_menu_start_system_function_thread(8);
-        return 1;
+        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
+        return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
     }
-    if (command == 1) {
+    if (command == BATTLE_MENU_SYSTEM_COMMAND_TARGETING_PROMPT) {
         value = 8;
         if (g_battle_menu_resolved_command == 0 || g_battle_menu_resolved_command == 0x19) {
             value = 7;
@@ -149,10 +146,10 @@ s32 battle_menu_dispatch_system_function(
             value = 0x1C;
         }
         battle_menu_start_system_function_thread(value);
-    } else if (command == 2) {
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK) {
         battle_sound_set_effect_to_confirm();
         if (option == 0) {
-            battle_menu_start_system_function_thread(8);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         } else if (option == 1) {
             battle_menu_start_system_function_thread(0);
         } else if (option == 4) {
@@ -161,25 +158,26 @@ s32 battle_menu_dispatch_system_function(
             battle_sound_set_effect_to_invalid();
             battle_menu_start_system_function_thread(option + 0xD);
         }
-    } else if (command == 3) {
-        if (g_battle_menu_system_function_command == 2 && g_battle_menu_system_function_option == 1) {
-            battle_menu_start_system_function_thread(8);
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_WAIT_MENU) {
+        if (g_battle_menu_system_function_command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK
+            && g_battle_menu_system_function_option == 1) {
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         } else {
-            battle_menu_start_system_function_thread(1);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_WAIT_MENU);
         }
-    } else if (command == 4) {
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ACTION_CONFIRM) {
         value = 0x2F;
         if (option != 5) {
             value = 0xB;
             if (option != 1) {
                 if (option == 2 || option == 4) {
-                    if (g_battle_menu_used_item_id == MENU_SELECTION_NONE || g_battle_menu_selected_skill_target == 0) {
+                    if (g_battle_menu_used_item_id == MENU_SELECTION_NONE || g_battle_menu_selected_skill_ct == 0) {
                         value = 0x2D;
                     } else {
                         value = 0xC;
                     }
                 } else {
-                    if (g_battle_menu_used_item_id != MENU_SELECTION_NONE || g_battle_menu_selected_skill_target == 0) {
+                    if (g_battle_menu_used_item_id != MENU_SELECTION_NONE || g_battle_menu_selected_skill_ct == 0) {
                         value = 0x2E;
                     } else {
                         value = 0xD;
@@ -191,33 +189,32 @@ s32 battle_menu_dispatch_system_function(
         battle_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE) {
         g_battle_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;
-        battle_thread_start(4, battle_text_run_unit_message_thread);
-        battle_thread_set_parameters(4, unit_id, g_battle_spell_quote_last_ability_id, 0);
+        battle_thread_start(NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, battle_text_run_spell_quote_thread);
+        battle_thread_set_parameters(
+            NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, unit_id, g_battle_spell_quote_last_ability_id, 0);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
         battle_text_set_message_duration_frames(0x3C);
         if (g_main_action_menu_types_by_skillset[unit->last_skillset_id] == ACTION_MENU_TYPE_ARITHMETICKS) {
-            g_battle_text_substitution_values[1] = (s16)unit->calculator_multiplier_ability + TEXT_ID_ABILITY_NAME_BASE;
-            g_battle_text_substitution_values[0] = (s16)unit->calculator_type_ability + TEXT_ID_ABILITY_NAME_BASE;
+            g_battle_text_substitution_values[1] = unit->calculator_multiplier_ability + TEXT_ID_ABILITY_NAME_BASE;
+            g_battle_text_substitution_values[0] = unit->calculator_type_ability + TEXT_ID_ABILITY_NAME_BASE;
             g_battle_text_substitution_values[2] = unit->last_ability_id + TEXT_ID_ABILITY_NAME_BASE;
-            battle_menu_start_system_function_thread(0x2C);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ARITHMETICKS_ANNOUNCEMENT);
         } else {
             if (action->skillset == SKILLSET_ID_ITEM || action->skillset == SKILLSET_ID_THROW) {
                 g_battle_text_substitution_values[0] = action->item_id + TEXT_ID_ITEM_NAME_BASE;
             } else {
                 value = action->ability_id & ABILITY_ID_MASK;
-                if ((u32)(value - ABILITY_ID_SUMMON_MAGIC_MOOGLE)
-                    <= (ABILITY_ID_DRAW_OUT_CHIRIJIRADEN - ABILITY_ID_SUMMON_MAGIC_MOOGLE)) {
-                    g_battle_text_substitution_values[0]
-                        = value - ABILITY_ID_SUMMON_MAGIC_MOOGLE + TEXT_ID_SECTION_B800_BASE;
+                if (value >= ABILITY_ID_SUMMON_MAGIC_MOOGLE && value <= ABILITY_ID_DRAW_OUT_CHIRIJIRADEN) {
+                    g_battle_text_substitution_values[0] = value + 0xB7C4;
                 } else {
                     g_battle_text_substitution_values[0] = value + TEXT_ID_ABILITY_NAME_BASE;
                 }
             }
-            battle_menu_start_system_function_thread(0xA);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ABILITY_ANNOUNCEMENT);
         }
-    } else if (command == 6) {
-        battle_menu_start_system_function_thread(8);
-    } else if (command == 9) {
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_CLOSE) {
+        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM) {
         value = 8;
         if (option == 1) {
             value = 0x16;
@@ -231,24 +228,24 @@ s32 battle_menu_dispatch_system_function(
             value = 0x1B;
         }
         battle_menu_start_system_function_thread(value);
-    } else if (command == 0xA) {
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE) {
         if (g_main_game_options.fields.effect_messages != GAME_OPTION_ON) {
-            battle_menu_start_system_function_thread(8);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         } else {
-            g_battle_system_function_table[0x1d].text_id = option;
+            g_battle_system_function_table[BATTLE_SYSTEM_FUNCTION_EFFECT_MESSAGE].text_id = option;
             g_battle_text_substitution_values[0] = parameter & 0xFF;
-            battle_menu_start_system_function_thread(0x1D);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_EFFECT_MESSAGE);
         }
-    } else if (command == 0xB) {
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_LEARNED) {
         g_battle_text_substitution_values[0] = option + TEXT_ID_ABILITY_NAME_BASE;
-        battle_menu_start_system_function_thread(0x1E);
-    } else if (command == 0xC) {
-        battle_menu_start_system_function_thread(0x1F);
-    } else if (command == 0xD) {
-        battle_menu_start_system_function_thread(0x21);
-    } else if (command == 0xE) {
-        battle_menu_start_system_function_thread(option + 0x22);
-    } else if (command == 0xF) {
+        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ABILITY_LEARNED);
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE) {
+        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CRYSTAL_OR_TREASURE);
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM) {
+        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_MOVE_CONFIRM);
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_TRAP_RESULT) {
+        battle_menu_start_system_function_thread(option + BATTLE_SYSTEM_FUNCTION_TRAP_RESULT_FIRST);
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_FIND_ITEM) {
         if (get_total_equipment_quantity(option & 0xFF, 1) == 0x63) {
             main_item_get_data_pointer(option);
             g_battle_text_substitution_values[0] = option;
@@ -257,70 +254,70 @@ s32 battle_menu_dispatch_system_function(
             g_battle_text_substitution_values[2] = item->price >> 2;
             battle_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS,
                 (item->price >> 2) + battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS));
-            battle_menu_start_system_function_thread(0x26);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_MOVE_FIND_ITEM_SOLD);
         } else {
             main_item_get_data_pointer(option);
             g_battle_text_substitution_values[0] = option;
             g_main_item_quantities[option]++;
-            battle_menu_start_system_function_thread(0x27);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_MOVE_FIND_ITEM);
         }
-    } else if (command == 0x10) {
-        battle_menu_start_system_function_thread(0x28);
-    } else if (command == 0x11) {
-        entry = &g_battle_system_function_table[0x32];
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM_SILENT) {
+        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_MOVE_CONFIRM_SILENT);
+    } else if (command == BATTLE_MENU_SYSTEM_COMMAND_POST_ACTION_RESULT) {
+        entry = &g_battle_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT];
         flags = parameter;
-        if ((u32)(option - 0x27) < 7) {
-            g_battle_text_substitution_values[1] = option + 0x506B;
+        if (option >= BATTLE_ACTION_DISPLAY_IMAGE_CT && option <= BATTLE_ACTION_DISPLAY_IMAGE_LEVEL) {
             g_battle_text_substitution_values[0] = unit_id;
-            if (option == 0x2D) {
+            g_battle_text_substitution_values[1] = option + 0x506B;
+            if (option == BATTLE_ACTION_DISPLAY_IMAGE_LEVEL) {
                 flags = 1;
-                if (parameter & 0x80) {
-                    flags = 0x81;
+                if (parameter & BATTLE_ACTION_STAT_CHANGE_INCREASE) {
+                    flags = 1 | BATTLE_ACTION_STAT_CHANGE_INCREASE;
                 }
             }
             g_battle_text_substitution_values[2] = flags;
-            if (flags & 0x80) {
-                g_battle_text_substitution_values[2] = flags & 0x7F;
+            if (flags & BATTLE_ACTION_STAT_CHANGE_INCREASE) {
+                g_battle_text_substitution_values[2] = flags & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
                 entry->text_id = 0x508C;
             } else {
                 entry->text_id = 0x508D;
             }
-            if (option == 0x27) {
+            if (option == BATTLE_ACTION_DISPLAY_IMAGE_CT) {
                 if (flags == 0xFF) {
                     entry->text_id = 0x509A;
                 } else if (flags == 0x7F) {
                     entry->text_id = 0x5099;
                 }
             }
-            battle_menu_start_system_function_thread(0x32);
-        } else if (option == 0x2E) {
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
+        } else if (option == BATTLE_ACTION_DISPLAY_IMAGE_GIL) {
             g_battle_text_substitution_values[0] = parameter < 0 ? -parameter : parameter;
-            g_battle_system_function_table[0x32].text_id = 0x508F;
-            battle_menu_start_system_function_thread(0x32);
-        } else if (option == 0x2F) {
+            g_battle_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x508F;
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
+        } else if (option == BATTLE_ACTION_DISPLAY_IMAGE_EXP) {
             g_battle_text_substitution_values[0] = parameter & 0x7F;
-            g_battle_system_function_table[0x32].text_id = 0x508E;
-            battle_menu_start_system_function_thread(0x32);
-        } else if ((u32)(option - 0x1C) < 2) {
+            g_battle_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x508E;
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
+        } else if (option == BATTLE_ACTION_DISPLAY_IMAGE_STOLEN || option == BATTLE_ACTION_DISPLAY_IMAGE_BROKEN) {
             if (parameter & 0x8000) {
                 g_battle_text_substitution_values[0] = (parameter & 0xFF) + TEXT_ID_ITEM_NAME_BASE;
-                g_battle_system_function_table[0x32].text_id = 0x509B;
+                g_battle_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x509B;
             } else {
                 g_battle_text_substitution_values[0] = parameter + TEXT_ID_ITEM_NAME_BASE;
-                g_battle_system_function_table[0x32].text_id = option + 0x5074;
+                g_battle_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = option + 0x5074;
             }
-            battle_menu_start_system_function_thread(0x32);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
         } else {
-            battle_menu_start_system_function_thread(8);
+            battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         }
     } else {
         main_system_report_error_2(7, 5);
-        battle_menu_start_system_function_thread(8);
+        battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         g_battle_menu_system_function_command = command;
         g_battle_menu_system_function_option = option;
-        return 0;
+        return BATTLE_MENU_SYSTEM_DISPATCH_UNKNOWN_COMMAND;
     }
     g_battle_menu_system_function_command = command;
     g_battle_menu_system_function_option = option;
-    return 1;
+    return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
 }

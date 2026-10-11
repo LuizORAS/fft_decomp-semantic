@@ -14,10 +14,10 @@ void battle_turn_show_next_at_entry(void) {
             if ((id & 0x100) != 0) {
                 battle_target_move_cursor_to_action_target(unit);
                 battle_target_mark_action_area(&unit->battle_data->action_actor_id);
-                battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_TARGETED, 3);
+                battle_target_tint_marked_tiles(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
             } else {
                 battle_target_move_cursor_to_unit(unit);
-                battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 0);
+                battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 0);
             }
             break;
         }

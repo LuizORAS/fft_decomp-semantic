@@ -19,8 +19,8 @@ void battle_formula_damage_random_x_times_pa_plus_pa_plus_y_half(void) {
     battle_formula_calculate_critical_hit();
     battle_formula_store_hit_chance();
     rnd = battle_formula_get_random_0_7fff();
-    mult = &g_current_ability.random_damage_factor;
-    *mult = (s32)(rnd * g_current_ability.range_data.x) / 32768 + 1;
+    mult = &g_battle_action_current_ability.random_damage_factor;
+    *mult = (rnd * g_battle_action_current_ability.range_data.x) / 32768 + 1;
     action = g_battle_action_target_data;
     action->hp_damage = action->hp_damage * (*mult);
     action->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;

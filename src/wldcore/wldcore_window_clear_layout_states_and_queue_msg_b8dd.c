@@ -22,9 +22,9 @@ void wldcore_window_clear_layout_states_and_queue_msg_b8dd(s32* param) {
     g_wldcore_window_records[second].palette = 0;
     g_wldcore_window_records[index].palette = 0;
     slot = param[0];
-    g_wldcore_window_records[slot].sequence = 2;
+    g_wldcore_window_records[slot].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     slot = param[0];
     g_wldcore_window_records[slot].anim_counter = 0;
     g_wldcore_window_records[slot].frame_index = 0;
-    world_thread_set_parameters(14, 0x19, 0xB8DD, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_WELCOME, 0);
 }

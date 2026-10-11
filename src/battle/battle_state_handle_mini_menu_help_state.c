@@ -7,5 +7,5 @@ void battle_state_handle_mini_menu_help_state(void) {
         battle_menu_open_free_cursor_mini_menu();
     }
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
 }

@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Free the eight colour rotation slots (map_texture_animation_state_t) by
+ * clearing their active bytes. The 32 texture animation rows of the map are not
+ * touched. */
 void battle_map_reset_texture_animations(void) {
     s32 offset;
 

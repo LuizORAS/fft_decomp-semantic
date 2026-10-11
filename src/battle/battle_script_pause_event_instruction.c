@@ -2,6 +2,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Pause: yield until Select, Cross or Circle is pressed, or until the thread's
+ * task id becomes the stop request. */
 void battle_script_pause_event_instruction(void) {
     do {
         battle_thread_yield();

@@ -11,13 +11,13 @@ void world_script_unlockdate_event_instruction(u32* bits, s32 record, s32 month,
     base = record * 9;
     mask = 1;
     for (i = 0; i < 5; i++) {
-        world_set_bitmap_bit(bits, base + i, day & mask);
+        world_script_assign_bitset_flag(bits, base + i, day & mask);
         mask <<= 1;
     }
     mask = 1;
     for (i = 0; i < 4; i++) {
         s32 bit = i + 5;
-        world_set_bitmap_bit(bits, base + bit, month & mask);
+        world_script_assign_bitset_flag(bits, base + bit, month & mask);
         mask <<= 1;
     }
 }

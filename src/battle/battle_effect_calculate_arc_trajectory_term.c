@@ -5,9 +5,13 @@
  * Evaluate the arcing-weapon trajectory term a * b - (1 + a^2) * b^2 /
  * (2 * g_battle_effect_gravity_modifier) in 20.12 fixed point.
  *
+ * This is the height of a ballistic arc after a horizontal distance b
+ * (`progress`), where a (`height`) is the tangent of the launch pitch in Q12:
+ * the callers take the pitch itself as ratan2(height, ONE).
+ *
  * Both operands are pre-shifted by range so the squares stay within 32 bits.
  * g_battle_effect_gravity_modifier is the trajectory gravity modifier
- * (0xa8000). The operand meanings are not yet verified, so they keep neutral names.
+ * (0xa8000).
  */
 s32 battle_effect_calculate_arc_trajectory_term(s32 height, s32 progress) {
     s32 divisor;
@@ -16,9 +20,9 @@ s32 battle_effect_calculate_arc_trajectory_term(s32 height, s32 progress) {
     s32 linear;
 
     divisor = (g_battle_effect_gravity_modifier * 2) >> 12;
-    if ((u32)(height + 0x7fff) <= 0xfffe) {
+    if (height >= -0x7fff && height <= 0x7fff) {
         height_sq = (height * height) >> 12;
-        if ((u32)(progress + 0xfffff) <= 0x1ffffe) {
+        if (progress >= -0xfffff && progress <= 0xfffff) {
             progress_sq = (progress >> 5) * (progress >> 5);
             progress_sq >>= 2;
             linear = (height * (progress >> 5)) >> 7;
@@ -30,7 +34,7 @@ s32 battle_effect_calculate_arc_trajectory_term(s32 height, s32 progress) {
     } else {
         height >>= 4;
         height_sq = (height * height) >> 4;
-        if ((u32)(progress + 0xfffff) <= 0x1ffffe) {
+        if (progress >= -0xfffff && progress <= 0xfffff) {
             progress_sq = (progress >> 5) * (progress >> 5);
             progress_sq >>= 2;
             linear = (height * (progress >> 5)) >> 3;

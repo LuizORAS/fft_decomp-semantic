@@ -1,7 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_script_filter_controller_input(s32* src) {
+/* Keep a copy of the raw controller word, then apply the script's input
+ * overrides to it in place. */
+void world_script_filter_controller_input(u32* src) {
     g_world_input_unfiltered_controller = *src;
-    world_menu_refresh_state_from_script_variables(src);
+    world_script_apply_input_overrides(src);
 }

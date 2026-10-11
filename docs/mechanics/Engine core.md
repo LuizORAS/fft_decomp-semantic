@@ -34,7 +34,7 @@ words at the start of MAIN's data (`0x80010000`) hold the load addresses.
 | `0x80010000`– | MAIN (`SCUS_942.21`), with the SMD heap for sound files at `0x8004eb18` (16 cells of 2 KB) |
 | `0x80067000`– | OPEN, WLDCORE or BATTLE, one at a time ([[g_main_heap_low_overlay_load_address]]) |
 | `0x800e0000`– | WORLD, beside WLDCORE ([[g_main_heap_world_overlay_load_address]]) |
-| `0x801bf000`– | EVENT and EFFECT overlays, beside BATTLE ([[g_event_overlay_load_address]]) |
+| `0x801bf000`– | EVENT and EFFECT overlays, beside BATTLE ([[g_main_heap_companion_overlay_load_address]]) |
 | up to `0x801df000` | the battle heap, from the effect palette buffer ([[g_battle_heap_end_address]]) |
 | `0x801df000`–`0x801ff000` | the game heap, 64 cells of 2 KB ([[g_main_heap_high_overlay_load_address]]); companion overlays load over it after reserving it |
 | `0x801ff000`– | the main stack, which a deep WORLD frame can push into the heap's top cells |

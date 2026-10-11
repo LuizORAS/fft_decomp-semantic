@@ -1,9 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_gfx_clear_four_state_words(void) {
-    g_battle_gfx_state_words[0] = 0;
-    g_battle_gfx_state_words[1] = 0;
-    g_battle_gfx_state_words[2] = 0;
-    g_battle_gfx_state_words[3] = 0;
+/* Rewinds the unit graphics loader (g_battle_gfx_unit_graphics_load_state) to its
+ * first file kind, the start-read phase, index 0 and no buffer. The argument is
+ * not read. */
+void battle_gfx_clear_four_state_words(s32 unused_map_id) {
+    g_battle_gfx_unit_graphics_load_state[0] = BATTLE_GFX_UNIT_LOAD_KIND_FIRST;
+    g_battle_gfx_unit_graphics_load_state[1] = BATTLE_GFX_UNIT_LOAD_PHASE_START_READ;
+    g_battle_gfx_unit_graphics_load_state[2] = 0;
+    g_battle_gfx_unit_graphics_load_state[3] = 0;
 }

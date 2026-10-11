@@ -6,15 +6,7 @@
  * every page up to page_index is projected from its four outline points, and
  * the current page's far edge is interpolated by frame_timer / page_frames so
  * it unrolls over the page's display time. A negative page_index or one equal
- * to page_count stops the slideshow instead.
- *
- * The x and y columns are read through two pointers set at the top of each
- * page, which loop optimisation hoists into their own registers; page_index is
- * read into `page` first so it keeps its own base register. The projection
- * loop is a goto loop, so nothing in it is strength-reduced, inside a
- * `do ... while (0)` whose loop notes weight its references for register
- * allocation as the target's (the column pointers then outrank `ot`, which is
- * spilled). */
+ * to page_count stops the slideshow instead. */
 void wldcore_map_draw_path_animation(GsOT* ot) {
     SVECTOR verts[4];
     SVECTOR in;
@@ -22,14 +14,9 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
     s32 projected;
     s32 i;
     s32 j;
-    s32 k;
     s32 frames;
-    s32 length;
-    s32 page;
-    s16* xs;
-    s16* ys;
 
-    if (!(g_wldcore_map_path_animation.flags & 1)) {
+    if (!(g_wldcore_map_path_animation.flags & WLDCORE_SLIDESHOW_RUNNING)) {
         return;
     }
     SetPolyFT4(&poly);
@@ -49,35 +36,24 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
     poly.clut = GetClut(0x10, 0x1E8);
     if (g_wldcore_map_path_animation.page_index < 0
         || g_wldcore_map_path_animation.page_index == g_wldcore_map_path_animation.page_count) {
-        g_wldcore_map_path_animation.flags &= ~1;
+        g_wldcore_map_path_animation.flags &= ~WLDCORE_SLIDESHOW_RUNNING;
         return;
     }
     for (i = 0; i < g_wldcore_map_path_animation.page_index + 1; i++) {
-        page = g_wldcore_map_path_animation.page_index;
-        xs = g_wldcore_map_path_animation.coords;
-        ys = g_wldcore_map_path_animation.coords + 1;
-        if (i == page) {
-            frames = (s16)g_wldcore_map_path_animation.frame_timer;
+        if (i == g_wldcore_map_path_animation.page_index) {
+            frames = g_wldcore_map_path_animation.frame_timer;
         } else {
             frames = g_wldcore_map_path_animation.page_frames[i];
         }
-        do {
-            j = 0;
-            k = i * 4;
-        loop:
-            in.vx = xs[k];
-            in.vy = ys[k];
+        for (j = 0; j < 4; j++) {
+            in.vx = g_wldcore_map_path_animation.coords[i * 4 + j * 2];
+            in.vy = g_wldcore_map_path_animation.coords[i * 4 + j * 2 + 1];
             in.vz = 0;
             RotTransSV(&in, &verts[j], &projected);
-            k += 2;
-            j++;
-            if (j < 4) {
-                goto loop;
-            }
-        } while (0);
-        length = g_wldcore_map_path_animation.page_frames[i];
-        if (frames != length) {
-            verts[2].vx = verts[0].vx + (verts[2].vx - verts[0].vx) * frames / length;
+        }
+        if (frames != g_wldcore_map_path_animation.page_frames[i]) {
+            verts[2].vx
+                = verts[0].vx + (verts[2].vx - verts[0].vx) * frames / g_wldcore_map_path_animation.page_frames[i];
             verts[2].vy
                 = verts[0].vy + (verts[2].vy - verts[0].vy) * frames / g_wldcore_map_path_animation.page_frames[i];
             verts[3].vx
@@ -93,6 +69,6 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
         poly.y2 = verts[2].vy;
         poly.x3 = verts[3].vx;
         poly.y3 = verts[3].vy;
-        world_gs_sortpoly(&poly, ot, 1);
+        GsSortPoly(&poly, ot, 1);
     }
 }

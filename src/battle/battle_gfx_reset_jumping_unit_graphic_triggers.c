@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 
+/* Hides every unit that has the Jump status. */
 void battle_gfx_reset_jumping_unit_graphic_triggers(void) {
-    battle_unit_misc_data_t* unit = g_battle_unit_last_misc_data;
+    battle_unit_misc_data_t* unit = g_battle_unit_misc_list_head;
 
     while (unit != 0) {
         if ((unit->status_flags_5_6 & BATTLE_MISC_STATUS_JUMP) != 0) {

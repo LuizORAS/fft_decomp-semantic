@@ -1,7 +1,7 @@
 package main
 
 // library-diff measures an unregistered library reconstruction with the same
-// compiler/linker pipeline as validate. It writes only ignored scratch output;
+// compiler/linker pipeline as check. It writes only ignored scratch output;
 // accepting a candidate still requires normal target registration and checks.
 
 import (

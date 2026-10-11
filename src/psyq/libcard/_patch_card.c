@@ -4,7 +4,7 @@
 /* main 0x8002891c–0x800289a4: install the interrupt-tail jump and continuation. */
 void _patch_card(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
-    psyq_card_bios_c0_table_t* table;
+    psyq_bios_c0_table_t* table;
     register u32* destination __asm__("$2");
     u32 word;
     register u32 first __asm__("$9");

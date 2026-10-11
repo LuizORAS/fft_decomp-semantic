@@ -23,17 +23,17 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
     s32 value;
     s32 page_x;
     urect16_t* bounds;
-    rgb8_t* color;
+    CVECTOR* color;
     wldcore_point32_t* base;
 
     switch (level->phase) {
-    case 1:
+    case WLDCORE_DETAIL_PHASE_LOAD:
         level->timer = level->timer + 1;
-        if (g_main_file_cd_state.state == 0) {
+        if (g_main_file_cd_state.state == MAIN_FILE_LOAD_STATE_IDLE) {
             level->phase = level->phase + 1;
         }
         return;
-    case 2:
+    case WLDCORE_DETAIL_PHASE_BUILD:
         if (level->timer < 8 || world_menu_get_event_state_flag() == 0) {
             level->timer = level->timer + 1;
             return;
@@ -49,7 +49,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
         g_wldcore_scrollable_text_window.image_x = 0;
         g_wldcore_scrollable_text_window.image_coordinate_mode = 1;
         character = entry >> 4;
-        g_wldcore_scrollable_text_window.text_id = (entry & 0xFF) | 0x8800;
+        g_wldcore_scrollable_text_window.text_id = (entry & 0xFF) | TEXT_ID_WORLD_MESSAGE_BASE;
         if (character == 0) {
             g_wldcore_scrollable_text_window.text_substitutions[0] = g_world_text_substitution_values[0];
             g_wldcore_scrollable_text_window.text_substitutions[1] = g_main_brave_story_character_ages[0];
@@ -64,58 +64,59 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
         if (value != 0xFF) {
             world_gfx_set_portrait_poly_texture(&portrait, value);
             page_x = 0x280;
-            g_wldcore_window_render_records[render_index].clut_x = ((value / 40) << 6) + ((value % 4) * 0x10 + page_x);
-            g_wldcore_window_render_records[render_index].clut_y = ((value % 40) / 4) + 0x1F0;
+            g_wldcore_window_render_records[render_index].clut.x = ((value / 40) << 6) + ((value % 4) * 0x10 + page_x);
+            g_wldcore_window_render_records[render_index].clut.y = ((value % 40) / 4) + 0x1F0;
             g_wldcore_window_render_records[render_index].tpage = portrait.tpage;
             /* The rectangle at +0x28 and the colour triple at +0x30 are written
              * through their own addresses; the rectangle and the base point are
              * then copied as blocks into the text window's extra-record fields. */
-            bounds = (urect16_t*)&g_wldcore_window_render_records[render_index].x;
+            bounds = (urect16_t*)&g_wldcore_window_render_records[render_index].bounds;
             bounds->x = portrait.u0;
             bounds->y = portrait.v0;
             bounds->w = portrait.u1 - portrait.u0;
             bounds->h = portrait.v2 - portrait.v0;
-            color = (rgb8_t*)&g_wldcore_window_render_records[render_index].red;
+            color = &g_wldcore_window_render_records[render_index].color;
             color->r = 0x80;
             color->g = 0x80;
             color->b = 0x80;
             g_wldcore_window_render_records[render_index].anim_counter = 0;
-            base = (wldcore_point32_t*)&g_wldcore_window_render_records[render_index].base_x;
+            base = &g_wldcore_window_render_records[render_index].base;
             base->x = -0x72;
             base->y = -0x22;
             g_wldcore_window_render_records[render_index].priority = 9;
             g_wldcore_scrollable_text_window.extra_render_index = render_index;
-            *(wldcore_point32_t*)&g_wldcore_scrollable_text_window.extra_base_x = *base;
-            *(urect16_t*)&g_wldcore_scrollable_text_window.extra_x = *bounds;
+            g_wldcore_scrollable_text_window.extra_base = *base;
+            g_wldcore_scrollable_text_window.extra_bounds = g_wldcore_window_render_records[render_index].bounds;
         } else {
-            g_wldcore_window_render_records[render_index].flags |= 8;
+            g_wldcore_window_render_records[render_index].flags |= WLDCORE_DISPLAY_OBJECT_BLANK;
         }
         level->phase = level->phase + 1;
         return;
-    case 3:
-        if (!(g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags & 0x100)) {
-            g_wldcore_window_render_records[level->render_index].flags &= ~0x10;
-            level->phase = 0;
+    case WLDCORE_DETAIL_PHASE_POP_IN:
+        if (!(g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags
+                & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+            g_wldcore_window_render_records[level->render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            level->phase = WLDCORE_DETAIL_PHASE_SHOWN;
         }
         return;
     default:
         if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) == 0) {
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-                |= 0x100;
+                |= WLDCORE_DISPLAY_OBJECT_POP_IN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.main_window].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.side_window].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.frame_render].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_menu_stack_depth = depth - 1;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.upper_window].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_render_record_count = g_wldcore_window_render_record_count - 1;
             g_wldcore_window_render_object_count = g_wldcore_window_render_object_count - 1;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.lower_window].flags
-                &= ~0x10;
+                &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             wldcore_list_open_set_script_variables_03c0_03ff();
         }
     }

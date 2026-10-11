@@ -8,14 +8,14 @@
  * volume in from 0 and marks the record playing again. */
 void main_smd_reset_music(suzuki_music_t* music, s16 volume, s16 fade) {
     if (music != 0) {
-        music->status &= 0x7fff;
+        music->status &= ~SUZUKI_MUSIC_STATUS_PLAYING;
         DisableEvent(g_main_root_counter_2_event);
         main_smd_transfer_music_data(music);
         main_smd_init_channels(music);
         music->master_volume.value = 0;
         SuzukiCalcMusVolChange(music, volume, fade);
-        main_smd_force_channel_func(music, 0x7000);
-        music->status |= 0x8000;
+        main_smd_set_voice_attr_flags_all_channels(music, 0x7000);
+        music->status |= SUZUKI_MUSIC_STATUS_PLAYING;
         EnableEvent(g_main_root_counter_2_event);
     }
 }

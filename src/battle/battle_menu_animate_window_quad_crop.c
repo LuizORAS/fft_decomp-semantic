@@ -7,7 +7,7 @@
  * percentage and copies the cropped bounds into the quad's corners.
  * WORLD twin: world_menu_animate_window_quad_crop.
  */
-void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect) {
+void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to) {
     SPRT sprite;
     void* source; /* never assigned; the target passes an uninitialised $s5 */
     s32 level;

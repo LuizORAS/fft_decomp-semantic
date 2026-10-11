@@ -2,8 +2,18 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void debugchr_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portrait_primitive_tail_t* packet,
-    const RECT* source, s32 scale_index, s32 lower_half, const s16* offset) {
+/*
+ * Build the double-buffered draw-area pair of a window's open/close zoom.
+ *
+ * The first rectangle is `source` moved left one page (0x80), shifted by the
+ * thread's x and y, and cropped about its centre to
+ * g_debugchr_gfx_draw_area_scale_percent[scale_index] percent of its size;
+ * scale_index is doubled at event speed 2 and capped at 11. The second
+ * rectangle is the frame buffer's own area. With `lower_half` zero both are
+ * placed in the buffer at y 0xF0.
+ */
+void debugchr_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
+    s32 scale_index, s32 lower_half, const world_status_thread_t* thread) {
     s32 percent;
     s32 w;
     s32 h;
@@ -20,8 +30,8 @@ void debugchr_gfx_build_scaled_draw_area_packets(battle_menu_status_panel_portra
     w = packet->rects[0].w;
     h = packet->rects[0].h;
     packet->rects[0].x -= 0x80;
-    packet->rects[0].x += offset[0];
-    packet->rects[0].y += offset[2];
+    packet->rects[0].x += thread->x;
+    packet->rects[0].y += thread->y;
     scaled = (w * percent) / 200;
     packet->rects[0].x = w / 2 + packet->rects[0].x - scaled;
     scaled = (h * percent) / 200;

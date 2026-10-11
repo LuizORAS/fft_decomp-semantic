@@ -13,7 +13,7 @@ s32 battle_ai_score_reachable_tiles(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     u32 row;
 
-    if (g_battle_ai_data_base.decision_state != 0) {
+    if (g_battle_ai_data_base.resume_pending != 0) {
         x = g_battle_ai_data_base.current_action.coords.bytes.x;
         y = g_battle_ai_data_base.current_action.coords.bytes.y;
         level = g_battle_ai_data_base.current_action.coords.bytes.elevation;
@@ -62,7 +62,7 @@ s32 battle_ai_score_reachable_tiles(void) {
                             level_address += (u32)&ai->tile_priority - (u32)ai;
                             row_address = y * 32 + level_address;
                             tile_address = x * 2 + row_address;
-                            *(u16*)tile_address = -ai->current_action.priority;
+                            *(u16*)tile_address = -ai->current_action.rank.priority;
                         }
                     }
                 }

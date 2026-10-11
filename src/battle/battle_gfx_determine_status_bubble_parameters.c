@@ -1,11 +1,17 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Advance one unit's status bubble by g_battle_state_vsync_interval frames. Every 16 timer ticks the
- * bubble moves on to the next of the unit's 22 possible bubbles, wrapping at 0x16: each id stands for
- * a status (g_battle_gfx_status_bubble_status_masks), 0 shows the death counter, 20 Death Sentence's
- * count and 21 marks the unit of the current turn event; with none left the bubble turns off. Bubble
- * 9 blinks twice as fast. The x/y offsets come from the unit's SHP type and animation.
+/* The bubble offsets are signed pixel offsets; storing them through a u8
+ * field makes GCC materialise positive constants (li 0xba) where the target
+ * uses the sign-extended form (li -0x46). */
+#define STATUS_BUBBLE_X(unit) (*(s8*)&unit->status_bubble_x)
+#define STATUS_BUBBLE_Y(unit) (*(s8*)&unit->status_bubble_y)
+
+/* Advances one unit's status bubble by g_main_system_vsync_interval frames.
+ *
+ * Every 16 timer ticks the bubble id walks forward to the next status the unit
+ * carries, wrapping at 0x16, and the bubble's x/y offsets are chosen from the
+ * unit's SHP type and animation.
  *
  * The block-scoped bubble_mask keeps GCC from rotating the loop's leading exit tests to the bottom,
  * and indexing g_battle_gfx_status_bubble_status_masks inside the loop lets loop.c strength-reduce it
@@ -16,7 +22,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
     u32 status_flags;
     s32 animation;
 
-    for (frame = 0; frame < g_battle_state_vsync_interval; frame++) {
+    for (frame = 0; frame < g_main_system_vsync_interval; frame++) {
         bubble = unit->status_bubble_id;
         if (bubble == 9) {
             unit->status_bubble_alternate_row = (unit->status_bubble_timer & 8) >> 3;
@@ -26,7 +32,8 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
 
         if ((unit->status_bubble_timer & 0xF) == 0) {
             status_flags = unit->status_flags_1_4;
-            if (((status_flags & BATTLE_MISC_STATUS_BUBBLE_MASK) == 0) && (unit->unit_id != g_battle_casting_misc_id)) {
+            if (((status_flags & BATTLE_MISC_STATUS_BUBBLE_MASK) == 0)
+                && (unit->unit_id != g_battle_unit_source_misc_id)) {
                 unit->status_bubble_active = 0;
                 return;
             }
@@ -55,24 +62,24 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                     if (status_flags & bubble_mask) {
                         break;
                     }
-                } else if (unit->unit_id == g_battle_casting_misc_id) {
+                } else if (unit->unit_id == g_battle_unit_source_misc_id) {
                     break;
                 }
             }
             unit->status_bubble_id = bubble;
 
             switch (g_battle_gfx_spritesheet_data[unit->spritesheet_id].shp_id) {
-            case 6:
+            case BATTLE_SHP_ARUTE:
                 unit->status_bubble_x = 0;
                 unit->status_bubble_y = -0x46;
                 break;
-            case 7:
+            case BATTLE_SHP_KANZEN:
                 unit->status_bubble_x = 0;
                 unit->status_bubble_y = -0x78;
                 break;
-            case 4:
-                animation = unit->encoded_animation >> 1;
-                if (animation == 0x1A || animation == 0x34) {
+            case BATTLE_SHP_OTHER:
+                animation = unit->sequence_id >> 1;
+                if (animation == BATTLE_UNIT_ANIMATION_DEAD || animation == BATTLE_UNIT_ANIMATION_DEATH) {
                     unit->status_bubble_x = -5;
                     unit->status_bubble_y = -0x19;
                 } else {
@@ -80,17 +87,17 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                     unit->status_bubble_y = -0x19;
                 }
                 break;
-            case 0:
-            case 1:
-                if (battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z)->depth_half_height
+            case BATTLE_SHP_TYPE1:
+            case BATTLE_SHP_TYPE2:
+                if (battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z)->depth_half_height.value
                     & MAP_TILE_DEPTH_MASK) {
-                    switch (unit->encoded_animation >> 1) {
-                    case 0x1A:
-                    case 0x34:
+                    switch (unit->sequence_id >> 1) {
+                    case BATTLE_UNIT_ANIMATION_DEAD:
+                    case BATTLE_UNIT_ANIMATION_DEATH:
                         unit->status_bubble_x = -5;
                         unit->status_bubble_y = -0x23;
                         break;
-                    case 0x24:
+                    case BATTLE_UNIT_ANIMATION_SLEEP:
                         unit->status_bubble_x = 0;
                         unit->status_bubble_y = -0x1E;
                         break;
@@ -100,13 +107,13 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                         break;
                     }
                 } else {
-                    switch (unit->encoded_animation >> 1) {
-                    case 0x1A:
-                    case 0x34:
+                    switch (unit->sequence_id >> 1) {
+                    case BATTLE_UNIT_ANIMATION_DEAD:
+                    case BATTLE_UNIT_ANIMATION_DEATH:
                         unit->status_bubble_x = -5;
                         unit->status_bubble_y = -0x19;
                         break;
-                    case 0x24:
+                    case BATTLE_UNIT_ANIMATION_SLEEP:
                         unit->status_bubble_x = 0;
                         unit->status_bubble_y = -0x1E;
                         break;
@@ -118,8 +125,8 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                 }
                 break;
             default:
-                animation = unit->encoded_animation >> 1;
-                if (animation == 0x1A || animation == 0x34) {
+                animation = unit->sequence_id >> 1;
+                if (animation == BATTLE_UNIT_ANIMATION_DEAD || animation == BATTLE_UNIT_ANIMATION_DEATH) {
                     unit->status_bubble_x = -5;
                     unit->status_bubble_y = -0x1E;
                 } else {

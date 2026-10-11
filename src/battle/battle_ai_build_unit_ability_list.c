@@ -20,7 +20,7 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_ai_weapon_data_t* weapon;
-    s32 list_id = ai->unit_battle_ids[unit_id];
+    s32 list_id = ai->unit_compact_indices[unit_id];
     s32 count = 0;
     s32 weapon_kinds;
 
@@ -32,8 +32,8 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
         weapon->words[1] = 0;
         weapon->bytes.flags_1 |= BATTLE_AI_ABILITY_FLAG_1_AFFECTS_HP;
         weapon->bytes.flags_2 |= BATTLE_AI_ABILITY_FLAG_2_EVADEABLE;
-        weapon->bytes.flags_3 |= BATTLE_AI_ABILITY_FLAG_3_PHYSICAL;
-        weapon_kinds = BATTLE_AI_WEAPON_KIND_NONE;
+        weapon->bytes.flags_3 |= BATTLE_AI_ABILITY_FLAG_3_PHYSICAL_ATTACK;
+        weapon_kinds = BATTLE_AI_WEAPON_FORMULA_NONE;
         if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
             battle_ai_store_weapon_attack_data(
                 weapon, unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], &weapon_kinds);
@@ -42,17 +42,17 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
         }
         /* Two different kinds (QUIRKS.md) match no case and leave both team flags clear. */
         switch (weapon_kinds) {
-        case BATTLE_AI_WEAPON_KIND_NONE:
+        case BATTLE_AI_WEAPON_FORMULA_NONE:
             weapon->bytes.range = 1;
             /* Fall through to normal enemy targeting. */
-        case BATTLE_AI_WEAPON_KIND_DAMAGE:
+        case BATTLE_AI_WEAPON_FORMULA_DAMAGE:
             weapon->bytes.flags_1 |= BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES;
             break;
-        case BATTLE_AI_WEAPON_KIND_ABSORB:
+        case BATTLE_AI_WEAPON_FORMULA_ABSORB_HP:
             weapon->bytes.flags_1 |= BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES;
             weapon->bytes.flags_2 |= BATTLE_AI_ABILITY_FLAG_2_UNDEAD_REVERSE;
             break;
-        case BATTLE_AI_WEAPON_KIND_HEAL:
+        case BATTLE_AI_WEAPON_FORMULA_HEAL:
             weapon->bytes.flags_1 |= BATTLE_AI_ABILITY_FLAG_1_TARGET_ALLIES;
             weapon->bytes.flags_2 |= BATTLE_AI_ABILITY_FLAG_2_UNDEAD_REVERSE;
             break;

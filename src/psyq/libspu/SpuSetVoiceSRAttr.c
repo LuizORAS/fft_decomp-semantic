@@ -2,10 +2,9 @@
 #include "psx/libspu.h"
 
 void SpuSetVoiceSRAttr(s32 v_num, u16 sr, s32 sr_mode) {
-    volatile psyq_spu_voice_t* voice;
-    /* The unpinned halfword index swaps v1 and a0 in the retail register allocation. */
-    register s32 register_index __asm__("$3") = v_num << 3;
+    s32 index = v_num << 3;
     u32 mode = 0x100;
+    u16 value;
     switch (sr_mode) {
     case 1:
         mode = 0;
@@ -17,8 +16,9 @@ void SpuSetVoiceSRAttr(s32 v_num, u16 sr, s32 sr_mode) {
         mode = 0x300;
         break;
     }
-    /* A halfword index preserves the retail split address calculation. */
-    voice = (psyq_spu_voice_t*)((u16*)_spu_RXX + register_index);
-    voice->adsr2 = (voice->adsr2 & 0x3f) | ((sr | mode) << 6);
+    value = _spu_RXX->raw[index + 5];
+    value &= 0x3f;
+    value |= (sr | mode) << 6;
+    _spu_RXX->raw[index + 5] = value;
     PSYQ_SPU_REGISTER_DELAY();
 }

@@ -1,6 +1,6 @@
 // build.go compiles configured functions and verifies them: against the
 // original module images (`build`), against the configured hashes without
-// the disc (`validate`), and records those hashes from the original bytes
+// the disc (`check`), and records those hashes from the original bytes
 // (`checksums`).
 package main
 
@@ -528,16 +528,16 @@ func (p project) buildDisc() error {
 	return nil
 }
 
-// validateCommand compiles functions and compares their bytes with the
+// checkCommand compiles functions and compares their bytes with the
 // configured hashes. It never reads the disc or the extracted files.
-func (p project) validateCommand(args []string) error {
-	flags := flag.NewFlagSet("validate", flag.ContinueOnError)
-	moduleName := flags.String("module", "", "modules to validate (ids, short names, event or effect)")
+func (p project) checkCommand(args []string) error {
+	flags := flag.NewFlagSet("check", flag.ContinueOnError)
+	moduleName := flags.String("module", "", "modules to check (ids, short names, event or effect)")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
 	if flags.NArg() != 0 {
-		return errors.New("usage: tools validate [--module=MODULES]")
+		return errors.New("usage: tools check [--module=MODULES]")
 	}
 	config, err := p.loadCheckedConfig()
 	if err != nil {
@@ -553,7 +553,7 @@ func (p project) validateCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	p.progress = newCompileProgress("validate", modules)
+	p.progress = newCompileProgress("check", modules)
 	jobs, err := toolJobs()
 	if err != nil {
 		return err
@@ -611,9 +611,9 @@ func (p project) validateCommand(args []string) error {
 		for _, problem := range problems {
 			fmt.Fprintf(os.Stderr, "MISMATCH %s\n", problem)
 		}
-		return fmt.Errorf("validate: %d of %d functions differ from their configured hashes", len(problems), functions)
+		return fmt.Errorf("check: %d of %d functions differ from their configured hashes", len(problems), functions)
 	}
-	fmt.Printf("validate: %d functions in %d modules match their hashes (%d bytes)\n", functions, len(modules), bytesChecked)
+	fmt.Printf("check: %d functions in %d modules match their hashes (%d bytes)\n", functions, len(modules), bytesChecked)
 	return nil
 }
 

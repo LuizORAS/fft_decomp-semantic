@@ -2,8 +2,8 @@
 
 /* Pushes the type-0x16 menu level: two window records (sequences 2 and 4)
  * and one render record showing text 0xb83a in a 0x3c x 0x30 image at
- * (-0x1e, -0x18), with the windows offset inside it. Resets the menu result
- * to -1, clears the fade box colour, sets fade flag 8 and clears the new
+ * (-0x1e, -0x18), with the windows offset inside it. Blocks every button
+ * (-1), clears the fade box colour, sets fade flag 8 and clears the new
  * level's words 0x10..0x1c.
  *
  * The level is written through the save_confirm member of the stack-record
@@ -22,14 +22,14 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].save_confirm.cursor_window = index;
-    g_wldcore_window_records[index].sequence = 2;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[index].priority = 8;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].save_confirm.second_window = index;
-    g_wldcore_window_records[index].sequence = 4;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_LIST_SIDE_LABEL;
     g_wldcore_window_records[index].priority = 8;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -41,27 +41,27 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
     bounds.dimensions.y = 0x30;
     bounds.position.y = 0;
     wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, 0xB83A, g_wldcore_window_image_buffer);
-    base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+        index, bounds, 0, WLDCORE_TEXT_ID_QUIT_CONTINUE, g_wldcore_window_image_buffer);
+    base = &g_wldcore_window_render_records[index].base;
     g_wldcore_window_render_records[index].priority = 8;
     depth = g_wldcore_menu_stack_depth;
-    base->x = -((s16)bounds.dimensions.x / 2);
+    base->x = -(bounds.dimensions.x / 2);
     base->y = -0x18;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.cursor_window].x
-        = g_wldcore_window_render_records[index].base_x + 6;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.cursor_window].y
-        = g_wldcore_window_render_records[index].base_y + 0xE;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.second_window].x
-        = g_wldcore_window_render_records[index].base_x + 4;
-    g_wldcore_menu_result = -1;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.second_window].y
-        = g_wldcore_window_render_records[index].base_y - 2;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.cursor_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 6;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.cursor_window].position.y
+        = g_wldcore_window_render_records[index].base.y + 0xE;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.second_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 4;
+    g_wldcore_menu_blocked_buttons = -1;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.second_window].position.y
+        = g_wldcore_window_render_records[index].base.y - 2;
     g_wldcore_menu_stack_depth = depth + 1;
     fade = &g_wldcore_screen_fade_state;
     fade->boxes[0].r = 0;
     fade->boxes[0].g = 0;
     fade->boxes[0].b = 0;
-    fade->flags[0] |= 8;
+    fade->flags[0] |= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
     g_wldcore_menu_stack_records_next[depth].save_confirm.choice = 0;
     g_wldcore_menu_stack_records_next[depth].save_confirm._unknown_18 = 0;
     g_wldcore_menu_stack_records_next[depth].save_confirm.fade_in = 0;

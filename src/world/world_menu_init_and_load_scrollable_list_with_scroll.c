@@ -4,7 +4,7 @@
  * neighbouring menu-script handlers. */
 
 void world_menu_init_and_load_scrollable_list_with_scroll(
-    s16* values, s32 value, s32 selected, s32 state, world_menu_list_record_t* list_record) {
-    world_menu_init_scrollable_list(values, value, selected, state);
+    const s16* values, s32 value, s32 selected, u8* text_table, world_menu_list_record_t* list_record) {
+    world_menu_init_scrollable_list(values, value, selected, text_table);
     world_menu_load_scrollable_list_layout(list_record);
 }

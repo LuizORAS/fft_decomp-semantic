@@ -11,7 +11,7 @@ void wldcore_map_apply_clamped_horizontal_scroll(s32* amount, s32* position) {
     delta = -(*amount);
     (*amount) = delta;
     if (delta < 0) {
-        old_position = (*position);
+        old_position = *position;
         value = old_position + delta;
         if (value < WLDCORE_SCROLL_MIN_X) {
             value = WLDCORE_SCROLL_MIN_X;
@@ -21,7 +21,7 @@ void wldcore_map_apply_clamped_horizontal_scroll(s32* amount, s32* position) {
     }
 
     if ((*amount) > 0) {
-        old_position = (*position);
+        old_position = *position;
         value = old_position + (*amount);
         if (value >= (WLDCORE_SCROLL_MAX_X + 1)) {
             value = WLDCORE_SCROLL_MAX_X;

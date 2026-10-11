@@ -10,7 +10,7 @@ void wldcore_window_set_states_and_blue_tint(wldcore_window_tint_request_t* para
     g_wldcore_window_render_records[param->render_a].palette = 2;
     g_wldcore_window_render_records[param->render_b].palette = 2;
     g_wldcore_window_records[param->window_b].palette = 10;
-    g_wldcore_window_render_records[param->render_color].red = 0x40;
-    g_wldcore_window_render_records[param->render_color].green = 0x50;
-    g_wldcore_window_render_records[param->render_color].blue = 0x70;
+    g_wldcore_window_render_records[param->render_color].color.r = 0x40;
+    g_wldcore_window_render_records[param->render_color].color.g = 0x50;
+    g_wldcore_window_render_records[param->render_color].color.b = 0x70;
 }

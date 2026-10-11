@@ -3,11 +3,11 @@
 
 /*
  * Focus event instruction: patches the parameters of the next camera
- * instruction (0x19) with twice the midpoint of the two units' positions,
+ * instruction with twice the midpoint of the two units' positions,
  * raised by 0x20 (lowered for Altima's second and first forms), and, unless
  * the flag byte is set, the camera angle
  * battle_camera_pick_nearest_unblocked_yaw picks for the pair.
- * An absent unit disables that camera instruction (opcode 0xc0) instead.
+ * An absent unit turns that camera instruction into CAMERA_DISABLED instead.
  *
  * first/second hold each unit id and are then reused for its misc id; the
  * target keeps both in the same callee-saved registers.
@@ -27,16 +27,16 @@ void battle_script_focus(u8* parameters) {
     parameters += 2;
     keep_angle = *parameters;
     parameters++;
-    while (*parameters != 0x19) {
+    while (*parameters != EVENT_OPCODE_CAMERA) {
         parameters += g_battle_script_event_instruction_sizes[*parameters] + 1;
     }
     parameters++;
     unit_a = first;
     unit_b = second;
-    first = battle_get_misc_id(unit_a);
-    second = battle_get_misc_id(unit_b);
+    first = battle_script_get_misc_id(unit_a);
+    second = battle_script_get_misc_id(unit_b);
     if (first == EVENT_MISC_ID_NONE || second == EVENT_MISC_ID_NONE) {
-        parameters[-1] = 0xc0;
+        parameters[-1] = EVENT_OPCODE_CAMERA_DISABLED;
         main_system_report_error(7, 0);
         return;
     }

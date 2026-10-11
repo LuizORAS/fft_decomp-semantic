@@ -21,7 +21,7 @@ s32 battle_ai_count_target_tiles_in_range(void) {
     battle_ai_move_temp_unit_to_coords(&ai->current_action.coords);
     count = 0;
     if (ai->considered_ability.parameters.bytes.range != 0) {
-        if (battle_target_set_panels_for_action(&ai->current_action.unit_id) == 3) {
+        if (battle_target_set_panels_for_action(&ai->current_action.unit_id) == BATTLE_TARGET_PANELS_NONE) {
             battle_ai_move_temp_unit_to_coords(&ai->acting_unit_coords);
             return 0;
         }
@@ -30,12 +30,12 @@ s32 battle_ai_count_target_tiles_in_range(void) {
         tile = g_battle_map_tile_data;
         do {
             x++;
-            tile->ceiling_depth_and_marks &= ~MAP_TILE_FLAG_ABILITY_RANGE;
+            tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_ABILITY_RANGE;
             tile++;
         } while (x < 512);
         g_battle_map_tile_data[ai->current_action.coords.bytes.y * ai->map_max_x + ai->current_action.coords.bytes.x
             + (ai->current_action.coords.bytes.elevation << 8)]
-            .ceiling_depth_and_marks |= MAP_TILE_FLAG_ABILITY_RANGE;
+            .ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;
     }
 
     level = 0;
@@ -49,7 +49,7 @@ s32 battle_ai_count_target_tiles_in_range(void) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     tile_mask = row << x;
                     if (tile_mask & 0x8000) {
-                        if ((g_battle_map_tile_data[y * ai->map_max_x + x + (level << 8)].ceiling_depth_and_marks
+                        if ((g_battle_map_tile_data[y * ai->map_max_x + x + (level << 8)].ceiling_depth_and_marks.value
                                 >> MAP_TILE_FLAG_ABILITY_RANGE_SHIFT)
                             & 1) {
                             count++;

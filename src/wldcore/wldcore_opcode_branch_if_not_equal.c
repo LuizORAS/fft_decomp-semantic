@@ -25,8 +25,8 @@ void wldcore_opcode_branch_if_not_equal(void) {
     if (value != operand) {
         flags = g_wldcore_active_saved_record.state_flags;
         g_wldcore_active_saved_record.section = word >> 24;
-        g_wldcore_active_saved_record.state_flags = flags | 2;
+        g_wldcore_active_saved_record.state_flags = flags | WLDCORE_OPCODE_STATE_BRANCH;
     } else {
-        g_wldcore_active_saved_record.state_flags |= 4;
+        g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
     }
 }

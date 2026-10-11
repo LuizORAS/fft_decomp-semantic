@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 
 /* The target reads the AI flag word as two halfwords (lhu +0x0c/+0x0e). */
-#define AI_FLAGS_LO(a) (((u16*)&(a)->ai_flags)[0])
-#define AI_FLAGS_HI(a) (((u16*)&(a)->ai_flags)[1])
+#define AI_FLAGS_LO(a) (((u16*)&a->ai_flags)[0])
+#define AI_FLAGS_HI(a) (((u16*)&a->ai_flags)[1])
 
 enum {
     /* Helpful abilities out of 128 that make a non-enemy a supporter. */
@@ -62,7 +62,6 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
     s32 random_use;
     s32 range;
     u16 flags;
-    s32 j;
 
     enemy_harmful = 0;
     enemy_magical = 0;
@@ -86,10 +85,10 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 delay = battle_ai_calculate_clockticks_until_unit_acts(unit);
             }
             decision->targeting_flags_1
-                &= (u8) ~(BATTLE_AI_TARGETING_FLAG_1_RANGED_ABILITY | BATTLE_AI_TARGETING_FLAG_1_HEALER);
-            for (i = 0; i < BATTLE_AI_ABILITY_LIST_LENGTH; i++) {
-                entry = &ai->ability_lists[ai->unit_battle_ids[unit_id]][i];
-                entry->skillset_flags.packed &= (u16) ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
+                &= ~(BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY | BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES);
+            for (i = 0; i < 0x22; i++) {
+                entry = &ai->ability_lists[ai->unit_compact_indices[unit_id]][i];
+                entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
                 if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
                     break;
                 }
@@ -137,7 +136,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                     for (throw_id = ABILITY_ID_THROW_KNIFE, type_index = 1; throw_id < ABILITY_ID_THROW_BALL;
                         throw_id++, type_index++) {
                         if (battle_ai_load_known_ability_flag(
-                                unit_id, ability->skillset, throw_id - ABILITY_ID_THROW_FIRST + 1)) {
+                                unit_id, ability->skillset, throw_id - (ABILITY_ID_THROW_KNIFE - 2))) {
                             item_type = g_main_throw_ability_item_types[type_index];
                             for (item_id = 0; item_id < ITEM_ID_COUNT; item_id++) {
                                 if (g_main_item_primary_data[item_id].type == item_type) {
@@ -162,15 +161,15 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                         continue;
                     }
                 }
-                entry->skillset_flags.packed |= BATTLE_AI_ABILITY_ENTRY_USABLE << 8;
+                entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
                 if (!(entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8))) {
                     if (decision->enemy_flag) {
                         if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
                             enemy_harmful++;
-                            if (AI_FLAGS_HI(ability) & (BATTLE_AI_ABILITY_MAGICAL >> 16)) {
+                            if (AI_FLAGS_HI(ability) & (BATTLE_AI_ABILITY_MAGICAL_ATTACK >> 16)) {
                                 enemy_magical++;
                             }
-                            if (AI_FLAGS_HI(ability) & (BATTLE_AI_ABILITY_PHYSICAL >> 16)) {
+                            if (AI_FLAGS_HI(ability) & (BATTLE_AI_ABILITY_PHYSICAL_ATTACK >> 16)) {
                                 enemy_physical++;
                             }
                             if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_REFLECTABLE) {
@@ -183,11 +182,11 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                     }
                     if ((AI_FLAGS_LO(ability) & (BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_TARGET_ALLIES))
                         == (BATTLE_AI_ABILITY_AFFECTS_HP | BATTLE_AI_ABILITY_TARGET_ALLIES)) {
-                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_HEALER;
+                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES;
                     }
                     if (AI_FLAGS_HI(ability)
-                        & ((BATTLE_AI_ABILITY_ARC_TRAJECTORY | BATTLE_AI_ABILITY_DIRECT_TRAJECTORY) >> 16)) {
-                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_RANGED_ABILITY;
+                        & ((BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY) >> 16)) {
+                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY;
                     }
                     if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
                         unit_harmful++;
@@ -200,13 +199,13 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             if (decision->enemy_flag == 0) {
                 total = unit_helpful + unit_harmful;
                 if (total == 0) {
-                    decision->targeting_flags_1 &= (u8)~BATTLE_AI_TARGETING_FLAG_1_SUPPORTER;
+                    decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
                 } else {
                     ratio = (unit_helpful << 7) / total;
-                    if (ratio >= BATTLE_AI_SUPPORTER_RATIO_MIN) {
-                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_SUPPORTER;
+                    if (ratio >= 0x4d) {
+                        decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
                     } else {
-                        decision->targeting_flags_1 &= (u8)~BATTLE_AI_TARGETING_FLAG_1_SUPPORTER;
+                        decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
                     }
                     if (ratio < lowest_ratio) {
                         lowest_unit = unit_id;
@@ -220,12 +219,12 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
 
     usable = 0;
     if (lowest_unit != 0xff) {
-        ai->unit_decisions[lowest_unit].targeting_flags_1 &= (u8)~BATTLE_AI_TARGETING_FLAG_1_SUPPORTER;
+        ai->unit_decisions[lowest_unit].targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
     }
     random_use = 0;
     decision = g_battle_ai_data_base.acting_unit_decision;
     ai->has_mp_recovery_ability = 0;
-    ai->targetability.live.target_setting_flags &= ~BATTLE_AI_TARGET_SETTING_HOLY_WATER_USABLE;
+    ai->targetability.live.target_setting_flags &= ~BATTLE_AI_TARGET_SETTING_HAS_HOLY_WATER;
     decision->ally_reach = 0xff;
     decision->enemy_reach = 0xff;
     threshold = enemy_harmful / 8;
@@ -233,12 +232,12 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
         ai->status_to_cancel[i] = 0;
     }
     for (i = 0; i < BATTLE_AI_ABILITY_LIST_LENGTH; i++) {
-        entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_battle_id][i];
+        entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_compact_index][i];
         if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
             break;
         }
         battle_ai_load_ability_entry(entry);
-        if (entry->skillset_flags.packed & 0x8000) {
+        if (entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_USABLE << 8)) {
             if (threshold >= enemy_magical) {
                 battle_ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_SHELL);
             }
@@ -251,13 +250,13 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             if (enemy_earth <= 0) {
                 battle_ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_FLOAT);
             }
-            if (entry->skillset_flags.packed & 0x8000) {
+            if (entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_USABLE << 8)) {
                 usable++;
                 if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_RANDOM_USE) {
                     random_use++;
                 }
                 if (ability->ability_id == ABILITY_ID_ITEM_HOLY_WATER) {
-                    ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_HOLY_WATER_USABLE;
+                    ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_HAS_HOLY_WATER;
                 }
                 if (AI_FLAGS_LO(ability) & BATTLE_AI_ABILITY_CANCEL_STATUS) {
                     for (throw_id = 0; throw_id < 5; throw_id++) {
@@ -284,15 +283,16 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 if (flags & (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_TARGET_TILES << 8)) {
                     entry->skillset_flags.packed = flags | (BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES << 8);
                 } else if (!(flags & (BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN << 8))) {
-                    if (ability->ct >= g_battle_ai_acting_unit_remaining_clockticks
-                        || battle_ai_classify_ability_effect(g_battle_ai_data_base.acting_unit_id, 1) == 0) {
-                        entry->skillset_flags.packed |= BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES << 8;
+                    if (ability->ct >= g_battle_ai_data_base.acting_unit_remaining_clockticks
+                        || battle_ai_classify_ability_effect(g_battle_ai_data_base.acting_unit_id, 1)
+                            == BATTLE_AI_ABILITY_EFFECT_NONE) {
+                        entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES << 8);
                     } else {
-                        entry->skillset_flags.packed &= (u16) ~(BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES << 8);
+                        entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_CONSUME_TARGET_TILES << 8);
                     }
                 }
                 if (action_taken != 0) {
-                    entry->skillset_flags.packed &= (u16) ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
+                    entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
                 }
             }
         }

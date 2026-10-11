@@ -1,16 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The ability -> effect id tables. The target reads both with `lhu`, so the
- * elements are unsigned; include/fft/battle.h declares the 0x801b63f0
- * table as s16, so the unsigned view is bound here under its own name rather
- * than by redeclaring the catalogued one. The 0x801b637c table serves ability
- * ids from 0x200 up and overlaps the other table's tail. */
-extern u16 g_battle_effect_ability_ids_unsigned[]; /* 0x801b63f0 */
-extern u16 g_battle_effect_event_effect_ids_biased[];
-
 /*
- * Select the effect file for an ability and arm its secondary animation.
+ * Select the effect file for an ability and start its charge secondary effect.
  *
  * `packed` carries the ability instance in its low halfword and the sprite
  * palette in its high halfword. Ninja balls (0x189) pick their effect from the
@@ -19,26 +11,27 @@ extern u16 g_battle_effect_event_effect_ids_biased[];
  * ranges are started, and nothing is retained.
  */
 void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
-    g_effect_load_state = 0;
+    g_effect_load_state = BATTLE_EFFECT_LOAD_START;
     if (ability < ABILITY_ID_COUNT) {
         if (ability == ABILITY_ID_THROW_BALL) {
             s32 ball = battle_effect_get_ninja_ball(packed >> 16);
-            if (ball == 1)
-                g_ability_effect_id = 0x10;
-            else if (ball == 2)
-                g_ability_effect_id = 0x18;
-            else if (ball == 8)
-                g_ability_effect_id = 0x14;
+            if (ball == BATTLE_EFFECT_ELEMENT_INDEX_FIRE)
+                g_battle_ability_effect_id = BATTLE_EFFECT_FILE_FIRE;
+            else if (ball == BATTLE_EFFECT_ELEMENT_INDEX_WATER)
+                g_battle_ability_effect_id = BATTLE_EFFECT_FILE_ICE;
+            else if (ball == BATTLE_EFFECT_ELEMENT_INDEX_LIGHTNING)
+                g_battle_ability_effect_id = BATTLE_EFFECT_FILE_BOLT;
         } else {
-            g_ability_effect_id = g_battle_effect_ability_ids_unsigned[ability];
+            g_battle_ability_effect_id = g_battle_effect_ability_ids[ability];
         }
     } else {
-        g_ability_effect_id = g_battle_effect_event_effect_ids_biased[ability];
+        /* Ids from 0x200 up continue the table after the action abilities. */
+        g_battle_ability_effect_id = g_battle_effect_ability_ids[ability - ABILITY_ID_COUNT + ABILITY_ID_SUPPORT_FIRST];
     }
 
-    if (g_ability_effect_id >= 0) {
-        g_ability_effect_id &= 0x1ff;
-        g_battle_effect_phase = 1;
+    if (g_battle_ability_effect_id >= 0) {
+        g_battle_ability_effect_id &= BATTLE_EFFECT_ABILITY_FILE_MASK;
+        g_battle_effect_phase = BATTLE_EFFECT_PHASE_REQUESTED;
         if (g_battle_effect_secondary_by_charge_animation[packed & 0xffff] != 0) {
             g_battle_effect_target_id = battle_effect_init_secondary(
                 g_battle_effect_secondary_by_charge_animation[packed & 0xffff], packed >> 16, source);
@@ -55,10 +48,9 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
         return;
     }
 
-    if ((u32)(ability - ABILITY_ID_BATTLE_SKILL_HEAD_BREAK)
-        <= (ABILITY_ID_BATTLE_SKILL_MIND_BREAK - ABILITY_ID_BATTLE_SKILL_HEAD_BREAK))
-        battle_effect_init_secondary(0x12, 0, source);
-    if ((u32)(ability - ABILITY_ID_CHARGE_FIRST) < (ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST)
+    if (ability >= ABILITY_ID_BATTLE_SKILL_HEAD_BREAK && ability <= ABILITY_ID_BATTLE_SKILL_MIND_BREAK)
+        battle_effect_init_secondary(BATTLE_EFFECT_SECONDARY_ANIMATION_EQUIP_BREAK, 0, source);
+    if ((ability >= ABILITY_ID_CHARGE_FIRST && ability < ABILITY_ID_MATH_FIRST)
         || ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
-        battle_effect_init_secondary(0x11, 0, source);
+        battle_effect_init_secondary(BATTLE_EFFECT_SECONDARY_ANIMATION_RED_ORBS, 0, source);
 }

@@ -15,14 +15,14 @@ void battle_target_select_tile(void) {
 
     unit = battle_unit_get_source_misc_data();
     unit->state_frame_counter = 0;
-    if (unit->ability_preview_phase == 2) {
+    if (unit->ability_preview_phase == BATTLE_TARGET_PANELS_NO_TARGETING) {
         main_util_set_svector(
             (SVECTOR*)&unit->command_state.ai.data.action.target_x, unit->map_x, unit->map_z, unit->map_y);
-        unit->command_state.ai.data.action.targeting_type = BATTLE_ACTION_TARGET_TILE;
+        unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     } else if (unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
         main_util_set_svector((SVECTOR*)&unit->command_state.ai.data.action.target_x, g_battle_cursor_x,
             g_battle_cursor_z, g_battle_cursor_y);
-        unit->command_state.ai.data.action.targeting_type = BATTLE_ACTION_TARGET_TILE;
+        unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     }
     result = battle_target_mark_action_area(&unit->command_state.ai.data.action.unit_id);
     unit->target_select_result = result;
@@ -30,11 +30,11 @@ void battle_target_select_tile(void) {
     case 0:
     case 1:
         battle_state_enable_camera_pan();
-        prev = g_battle_controller_input;
+        prev = g_battle_cursor_input_mode;
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
-        g_battle_controller_input = 2;
-        g_controller_input_copy_12 = prev;
-        battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_TARGETED, 3);
+        g_battle_cursor_input_mode = BATTLE_CURSOR_INPUT_FREE_CURSOR;
+        g_battle_cursor_input_mode_saved = prev;
+        battle_target_tint_marked_tiles(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
         battle_target_show_actor_and_target_panels();
         if (g_main_game_options.fields.target_flashing == GAME_OPTION_ON) {
             battle_gfx_tint_all_units_by_team();

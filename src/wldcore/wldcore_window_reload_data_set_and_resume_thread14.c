@@ -8,13 +8,14 @@ void wldcore_window_reload_data_set_and_resume_thread14(s32* param) {
     s16 set = g_wldcore_active_saved_record.background_set;
 
     if (set != -1) {
-        wldcore_load_data_set_into_scratch_buffer(set);
+        wldcore_gfx_load_background_set(set);
         wldcore_wait_for_file_load();
     }
-    g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags &= ~8;
-    if (g_wldcore_active_saved_record.state_flags & 0x40) {
-        g_wldcore_window_records[param[0]].flags &= ~0x10;
-        g_wldcore_window_records[param[1]].flags &= ~0x10;
+    g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags
+        &= ~WLDCORE_DISPLAY_OBJECT_BLANK;
+    if (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE) {
+        g_wldcore_window_records[param[0]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_records[param[1]].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
-    world_thread_resume(0xe);
+    world_thread_resume(WLDCORE_THREAD_SLOT_MESSAGE);
 }

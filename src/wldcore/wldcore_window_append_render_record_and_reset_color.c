@@ -5,12 +5,13 @@
  *
  * Sibling of wldcore_window_append_record_and_reset_color, which performs the same append for the 36-byte
  * window records. */
-s32 wldcore_window_append_render_record_and_reset_color(u32** queue, s32* count) {
+s32 wldcore_window_append_render_record_and_reset_color(s32** queue, s32* count) {
     wldcore_window_entry_52_rgb_t* color;
 
-    queue[*count] = (u32*)&g_wldcore_window_render_records[g_wldcore_window_render_record_count].flags;
-    color = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->red;
-    g_wldcore_window_render_records[g_wldcore_window_render_record_count].flags &= ~0x418;
+    queue[*count] = &g_wldcore_window_render_records[g_wldcore_window_render_record_count].flags;
+    color = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->color;
+    g_wldcore_window_render_records[g_wldcore_window_render_record_count].flags
+        &= ~(WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN | WLDCORE_DISPLAY_OBJECT_UNTINTED);
     color[g_wldcore_window_render_record_count].red = 0x80;
     color[g_wldcore_window_render_record_count].green = 0x80;
     color[g_wldcore_window_render_record_count].blue = 0x80;

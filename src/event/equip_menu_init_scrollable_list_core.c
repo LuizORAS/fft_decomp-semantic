@@ -4,9 +4,9 @@
 /* Point the scrollable list menu at a new -1 terminated entry list and reset
    its render state. Type debt (QUIRKS.md): text_table is a u8* text section
    read as halfwords. */
-void equip_menu_init_scrollable_list_core(s16* entries, s32 selected_index, const void* text_table) {
-    g_equip_menu_list_entries = (u16*)entries;
-    g_equip_menu_list_text_table = (u16*)text_table;
+void equip_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table) {
+    g_equip_menu_list_entries = entries;
+    g_equip_menu_list_text_table = text_table;
 
     if (entries != 0) {
         g_equip_menu_list_entry_count = 0;

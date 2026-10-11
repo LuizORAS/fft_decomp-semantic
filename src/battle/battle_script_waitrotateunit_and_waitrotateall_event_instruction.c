@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* WaitRotateUnit and WaitRotateAll: yield until the named unit, or every misc
+ * unit when the id is -1, has finished rotating. Both forms yield at least once;
+ * a unit id that does not resolve returns at once. */
 void battle_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id) {
     s32 i;
     s32 index;
@@ -15,8 +18,8 @@ void battle_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_i
             }
         } while (i != EVENT_UNIT_SLOT_COUNT);
     } else {
-        index = battle_get_misc_id(unit_id);
-        if (index != 0x7D0) {
+        index = battle_script_get_misc_id(unit_id);
+        if (index != EVENT_MISC_ID_NONE) {
             do {
                 battle_thread_yield();
             } while (g_battle_unit_misc_rotation_data[index].rotating != 0);

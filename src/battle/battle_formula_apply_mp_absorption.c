@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Drain MP: the stored amount becomes MP damage on the target; once its result is finalized
+/* Drain MP: the stored HP damage becomes MP damage on the target; once its result is finalized
  * (battle_action_finalize_target_current_action), a hit target loses that MP and the attacker
  * restores the same. Unlike battle_formula_apply_hp_absorption, an undead target does not reverse
  * it. */

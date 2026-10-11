@@ -4,7 +4,7 @@
 /* main 0x80028a64–0x80028acc: restore three exception-handler instruction words. */
 void psyq_card_restore_exception_prefix(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
-    psyq_card_bios_c0_table_t* table;
+    psyq_bios_c0_table_t* table;
     u32* destination;
     register u32 word __asm__("$3");
     register u32* source __asm__("$10");
@@ -20,7 +20,7 @@ void psyq_card_restore_exception_prefix(void) {
     do {
         word = *source++;
         destination++;
-        destination[PSYQ_CARD_EXCEPTION_RESTORE_WORD - 1] = word;
+        destination[PSYQ_CARD_EXCEPTION_ADDRESS_HIGH_WORD - 1] = word;
     } while (source != end);
     PSYQ_CPU_GLOBAL_CALL(FlushCache);
     PSYQ_CPU_GLOBAL_CALL(ExitCriticalSection);

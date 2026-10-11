@@ -35,7 +35,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     s32 distance;
     s32 result;
 
-    main_util_copy_action_data((u8*)source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     unit_id = action.unit_id;
     if (unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
@@ -53,24 +53,24 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
         || (ability_flags & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
         /* An empty left hand contributes 0; an equipped right hand wins. */
         hand = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
-        mask = -(hand != 0xff);
+        mask = -(hand != ITEM_ID_NONE);
         weapon = hand & mask;
         hand = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
-        if (hand != 0xff) {
+        if (hand != ITEM_ID_NONE) {
             weapon = hand;
         }
         if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
-            || (unit->unit_flags & UNIT_FLAG_MONSTER) || weapon == 0xff) {
+            || (unit->unit_flags & UNIT_FLAG_MONSTER) || weapon == ITEM_ID_NONE) {
             weapon = 0;
         }
         weapon_id = weapon;
-        if (weapon_id >= 0x80) {
+        if (weapon_id >= ITEM_ID_SHIELD_FIRST) {
             return -1;
         }
         flags = g_main_item_weapon_data[weapon_id].flags;
     } else {
-        if (action.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
+        if (action.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
             if (action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
                 return -1;
             }
@@ -112,10 +112,10 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
         result = battle_target_validate_height_overlap(unit_id, x, y, elevation, target_id);
     }
     battle_target_clear_targeted_flags();
-    if ((u32)result < BATTLE_UNIT_SLOT_COUNT) {
+    if (result >= 0 && result < BATTLE_UNIT_SLOT_COUNT) {
         target = &g_battle_unit_stats[result];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(target)];
-        tile->ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
+        tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
     }
     return 0;
 }

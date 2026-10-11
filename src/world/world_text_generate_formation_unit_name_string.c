@@ -1,5 +1,9 @@
 #include "fft/world.h"
 
+/* Rebuild the roster name text section from the party data: one 0xFE
+ * terminated name per roster slot, empty for a vacant slot, with a terminator
+ * appended to a name that fills all 16 bytes. Bumps the name string
+ * revision. */
 void world_text_generate_formation_unit_name_string(void) {
     u8* out;
     party_data_t* unit;
@@ -7,7 +11,7 @@ void world_text_generate_formation_unit_name_string(void) {
     s32 j;
     u8 character;
 
-    out = g_world_text_roster_unit_names;
+    out = g_world_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         unit = main_party_get_data_pointer(i);
         if (unit->party_id == PARTY_ID_NONE) {

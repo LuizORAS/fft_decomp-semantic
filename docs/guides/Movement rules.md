@@ -26,7 +26,7 @@ Each rule below names the code that applies it.
 | Jump | Between two tiles the edges may rise or drop by at most Jump levels; a gap of up to Jump / 2 tiles (Jump counted up to 7) can be jumped across; Jump+1 to +3 are already in `jump` | [[battle_move_update_candidate]], [[battle_move_spread_horizontal_jump]] |
 | Height of the unit | 6 half levels (3 levels), 4 for Frog and Chicken, 2 more with the Float ability or a rider on top; a tile whose ceiling leaves less room cannot be entered | [[battle_move_store_unit_movement_to_scratchpad]], [[battle_move_update_candidate]] |
 | Terrain | Each surface type costs the value in the movement class's row of [[g_main_terrain_movement_cost_tables]]: 0 means the weather severity, 0xff cannot be entered | [[battle_move_store_unit_movement_to_scratchpad]] |
-| Weather | Severity 1 for clear, rain or snow, 2 for a storm or snowstorm, 3 for a strong one; maps that ignore the weather count as clear | [[battle_map_get_weather_severity]], [[battle_map_get_effective_weather]] |
+| Weather | Severity 1 for clear, rain or snow, 2 for a storm or snowstorm, 3 for a strong one; maps that ignore the weather count as clear | [[battle_move_get_weather_terrain_cost]], [[battle_map_get_effective_weather]] |
 | Ignore Height | No height limit (Jump becomes 0x1f) | [[battle_move_store_unit_movement_to_scratchpad]] |
 | Fly | Class Fly, cost row 1 (1 on every surface but the last); no height limit | [[battle_move_store_unit_movement_to_scratchpad]] |
 | Teleport, Teleport 2 | The whole map is in range; Teleport fails beyond Move on a roll under 10 per extra tile, Teleport 2 never fails | [[battle_move_set_reachable_tiles]], [[battle_move_roll_teleport_success]] |
@@ -65,7 +65,7 @@ Move on Lava, Walk on Water, Move in Water, Move Underwater, and normal.
 
 ## What can be done today
 
-Nothing that changes a byte: `make validate` compares every function with its
+Nothing that changes a byte: `make check` compares every function with its
 original hash, so even a one-constant change (a new teleport chance, another
 Move cap) fails until the build accepts different code (the shiftable build,
 then build 3). The terrain cost table and the Move-Find tiles are disc data,

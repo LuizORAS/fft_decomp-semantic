@@ -21,11 +21,11 @@ void wldcore_opcode_map_focus_location(void) {
         != 0) {
         s32* flags = &g_wldcore_script_state.flags;
 
-        *flags |= 0x200;
+        *flags |= WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION;
     }
     {
         s32* flags = &g_wldcore_script_state.flags;
 
-        *flags |= 1;
+        *flags |= WLDCORE_SCRIPT_RESULT_ACTION_REACHED;
     }
 }

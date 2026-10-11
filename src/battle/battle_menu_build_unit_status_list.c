@@ -22,12 +22,12 @@ void battle_menu_build_unit_status_list(void) {
     s16* flag_b;
 
     for (i = 0; i < 8; i++) {
-        flag_a = &g_battle_menu_billboard_data[7];
+        flag_a = &g_battle_menu_billboard_data.state.generic_monster;
         flag_b = &g_battle_menu_active_turn_banner.team_kind;
         if (*flag_a != 0 || *flag_b == 1) {
             g_battle_menu_status_list_row_actions[i] = 0x7D0;
         } else {
-            g_battle_menu_status_list_row_actions[i] = 0x1015;
+            g_battle_menu_status_list_row_actions[i] = BATTLE_MENU_ROW_ACTION_SILENT | BATTLE_MENU_ID_JOBSTTS;
         }
     }
     unit = battle_unit_get_stats_from_battle_id(g_battle_active_turn_unit.battle_id);
@@ -54,7 +54,7 @@ void battle_menu_build_unit_status_list(void) {
     }
     battle_sound_set_effect_to_confirm();
     if (count == 0) {
-        battle_menu_option_menu_thread();
+        battle_menu_run_jobstts_thread();
     }
     odd = count & 1;
     half = count / 2;

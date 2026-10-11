@@ -13,13 +13,13 @@ void battle_state_handle_crystal_learn_state(void) {
     u16 counter;
 
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     choice = battle_menu_get_selected_command_address();
     source = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
     switch (*choice) {
     case 2:
-        battle_unit_learn_from_crystal(source->battle_data, 2);
+        battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_RESTORE_HP_MP);
         g_battle_action_post_action = 1;
         battle_action_apply_target_result(source->battle_data->misc_unit_id);
         battle_gfx_prepare_post_action_display(source);
@@ -68,10 +68,10 @@ void battle_state_handle_crystal_learn_state(void) {
             g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_MOVEMENT_BENEFIT;
         }
     } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_ITEM_FOUND) {
-        if ((source->animation_countdown != 0) && ((u32)(source->encoded_animation >> 1) >= 0xc)) {
+        if ((source->animation_wait != 0) && ((source->sequence_id >> 1) >= 0xc)) {
             return;
         }
-        source->item_ability_display = 0;
+        source->item_display_active = 0;
         g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_ITEM_FOUND;
     } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED) {
         g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED;

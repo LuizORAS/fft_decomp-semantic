@@ -1,10 +1,14 @@
 #include "fft/battle.h"
 #include "fft/main.h"
 
+/* Build a battle unit from one ENTD unit slot on the stack and save it into the
+ * party roster. Returns -2 for an empty ENTD slot, otherwise
+ * main_party_save_unit's result (0, or -1 when the roster is full). guest_id is
+ * passed on as that function's allow_guest flag. */
 s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initialize_for_battle) {
     entd_unit_t* entd_unit = &entd->units[unit_id];
 
-    g_current_entd_unit = entd_unit;
+    g_main_entd_current_unit = entd_unit;
     if (entd_unit->sprite_set == CHARACTER_IDENTITY_ENTD_NONE) {
         return -2;
     }

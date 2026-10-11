@@ -2,8 +2,8 @@
 #include "psx/types.h"
 
 /* Render each text id of the -1 terminated `list` as one 16-pixel row in VRAM at `rect`. */
-void jobstts_text_render_id_rows_to_vram(void* text_table, s16* list, RECT* rect, s32 style) {
-    u32 buffer[0x200];
+void jobstts_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style) {
+    u8 buffer[0x800];
     battle_menu_text_image_bounds_t clear_rect;
     RECT dest_rect;
     s16 ids[2];
@@ -20,8 +20,7 @@ void jobstts_text_render_id_rows_to_vram(void* text_table, s16* list, RECT* rect
         ids[0] = *list;
         ids[1] = -1;
         memset(buffer, 0, 0x800);
-        jobstts_text_render_encoded_ids_to_image(
-            (u8*)buffer, &clear_rect, 0xA, 0x64, text_table, (const u16*)ids, 0x64, 0xE7, style);
+        jobstts_text_render_encoded_ids_to_image(buffer, &clear_rect, 0xA, 0x64, text_table, ids, 0x64, 0xE7, style);
         jobstts_gfx_load_image_and_wait(&dest_rect, buffer);
         list += 1;
         dest_rect.y += 0x10;

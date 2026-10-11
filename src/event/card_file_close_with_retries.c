@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Close a memory card file, trying up to ten times, and forget the open
+ * descriptor. Returns 1 when the close that succeeded followed a completed
+ * card wait, 0 otherwise. */
 s32 card_file_close_with_retries(s32 descriptor) {
     s32 i;
     s32 wait_success;

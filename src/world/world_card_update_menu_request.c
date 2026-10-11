@@ -8,22 +8,22 @@ void world_card_update_menu_request(void) {
     s32 result;
     s32 i;
 
-    if (state == 0) {
+    if (state == WORLD_SCREEN_REQUEST_IDLE) {
         return;
     }
-    if (state == 1) {
+    if (state == WORLD_SCREEN_REQUEST_START_FADE_OUT) {
         g_world_menu_screen_open_request = 1;
         wldcore_fade_start_screen(0x12, 0x10);
         g_world_card_menu_request_state++;
         return;
     }
-    if (state == 2) {
-        if (!(g_main_system_flags & 8)) {
+    if (state == WORLD_SCREEN_REQUEST_WAIT_FADE_OUT) {
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
             g_world_card_menu_request_state = state + 1;
         }
         return;
     }
-    if (state == 3) {
+    if (state == WORLD_SCREEN_REQUEST_RUN) {
         world_formation_reset_menu_context();
         world_menu_set_brightness(0x80, 0x80, 0x80);
         result = world_card_run_menu_screen(1);
@@ -32,8 +32,8 @@ void world_card_update_menu_request(void) {
         g_world_menu_thread_menu_data = g_world_menu_default_entries;
         world_formation_save_and_set_system_flags();
         if (result == 1) {
-            g_world_card_menu_request_state = 0;
-            g_main_system_flags |= 0x10000;
+            g_world_card_menu_request_state = WORLD_SCREEN_REQUEST_IDLE;
+            g_main_system_flags |= MAIN_SYSTEM_FLAG_RESTART;
             return;
         }
         world_menu_start_thread_group(g_world_menu_thread_group_parameter, g_world_menu_location_id,
@@ -51,15 +51,15 @@ void world_card_update_menu_request(void) {
         g_world_card_menu_request_state = state + 1;
         return;
     }
-    if (state == 8) {
+    if (state == WORLD_SCREEN_REQUEST_START_FADE_IN) {
         world_formation_restore_saved_system_flags();
         wldcore_fade_start_screen(0x24, 0x10);
         g_world_card_menu_request_state++;
         return;
     }
-    if (state == 9) {
-        if (!(g_main_system_flags & 8)) {
-            g_world_card_menu_request_state = 0;
+    if (state == WORLD_SCREEN_REQUEST_WAIT_FADE_IN) {
+        if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_FADING)) {
+            g_world_card_menu_request_state = WORLD_SCREEN_REQUEST_IDLE;
         }
     }
 }

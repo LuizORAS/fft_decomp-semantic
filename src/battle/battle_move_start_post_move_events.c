@@ -14,7 +14,7 @@ void battle_move_start_post_move_events(void) {
     } else {
         g_battle_move_post_move_events = 0;
     }
-    g_battle_action_post_action_display_phase = 0;
+    g_battle_action_post_action_display_phase = BATTLE_POST_ACTION_DISPLAY_LEVEL_UP;
     battle_move_start_next_post_move_event();
     if (g_battle_move_post_move_events != 0) {
         battle_target_hide_cursor();

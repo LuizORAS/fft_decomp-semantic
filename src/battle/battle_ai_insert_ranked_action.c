@@ -10,8 +10,7 @@ void battle_ai_insert_ranked_action(void) {
     s32 i;
     s32 j;
 
-    if (battle_ai_compare_action_rank((battle_ai_action_rank_t*)&ai->best_action.plan_chosen,
-            (battle_ai_action_rank_t*)&ai->movement_baseline_action.plan_chosen)
+    if (battle_ai_compare_action_rank(&ai->best_action.rank.decided, &ai->movement_baseline_action.rank.decided)
         == BATTLE_AI_RANK_ABOVE) {
         if (battle_ai_is_action_higher_ranked(&ai->best_action, &ai->ranked_actions[7])) {
             for (i = 0; i < 8; i++) {
@@ -20,10 +19,10 @@ void battle_ai_insert_ranked_action(void) {
             }
             if (i != 8) {
                 for (j = 7; i < j; j--)
-                    battle_ai_transfer_halfword_values((u16*)&ai->ranked_actions[j], (u16*)&ai->ranked_actions[j - 1],
-                        sizeof(battle_ai_action_data_t));
+                    battle_ai_transfer_halfword_values(
+                        &ai->ranked_actions[j], &ai->ranked_actions[j - 1], sizeof(battle_ai_action_data_t));
                 battle_ai_transfer_halfword_values(
-                    (u16*)&ai->ranked_actions[j], (u16*)&ai->best_action, sizeof(battle_ai_action_data_t));
+                    &ai->ranked_actions[j], &ai->best_action, sizeof(battle_ai_action_data_t));
             }
         }
     }

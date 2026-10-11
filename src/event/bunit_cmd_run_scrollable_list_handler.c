@@ -24,8 +24,8 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
     u16 previous_selected;
     s32 row_count;
     u16 speed;
-    u16* row_ids;
-    u16 text_id;
+    s16* row_ids;
+    s16 text_id;
     s32 input;
     s32 top;
     s32 offset;
@@ -58,7 +58,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
             }
         } else {
             input = g_bunit_cmd_stream_input;
-            if ((input & 0x10000000) || (input & PSX_PAD_UP)) {
+            if ((input & (PSX_PAD_UP << 16)) || (input & PSX_PAD_UP)) {
                 scroll_base = g_bunit_menu_scroll_base_index;
                 if (scroll_base == g_bunit_menu_list_selected_index) {
                     if (scroll_base > 0) {
@@ -71,28 +71,28 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
                             rect.w = g_bunit_menu_list_vram_width;
                             rect.h = ROW_HEIGHT;
                             *row_ids = text_id;
-                            bunit_text_render_id_rows_to_vram((s32)g_bunit_menu_list_text_table, row_ids, &rect, 0);
+                            bunit_text_render_id_rows_to_vram(g_bunit_menu_list_text_table, row_ids, &rect, 0);
                         }
                     }
                 } else if (input & PSX_PAD_UP) {
                     g_bunit_menu_list_selected_index--;
                 }
-            } else if ((input & 0x40000000) || (input & PSX_PAD_DOWN)) {
+            } else if ((input & (PSX_PAD_DOWN << 16)) || (input & PSX_PAD_DOWN)) {
                 if (g_bunit_menu_scroll_base_index + g_bunit_menu_list_visible_rows - 1
                     == g_bunit_menu_list_selected_index) {
                     if (g_bunit_menu_scroll_base_index + g_bunit_menu_list_visible_rows - 1 < ENTRY_COUNT - 1) {
                         g_bunit_menu_list_scroll_direction = 1;
                         if (g_bunit_menu_list_text_table != 0) {
-                            u16* entry_ids;
+                            s16* entry_ids;
 
                             j = g_bunit_menu_scroll_base_index + g_bunit_menu_list_visible_rows - 1;
                             entry_ids = &g_bunit_menu_list_scroll_entry_ids[0];
                             *entry_ids = g_bunit_menu_list_entries[j + 1];
                             rect.x = 0x100;
-                            rect.y = g_bunit_menu_list_visible_rows * (s16)ROW_HEIGHT + 0x30;
+                            rect.y = g_bunit_menu_list_visible_rows * ROW_HEIGHT + 0x30;
                             rect.w = g_bunit_menu_list_vram_width;
                             rect.h = ROW_HEIGHT;
-                            bunit_text_render_id_rows_to_vram((s32)g_bunit_menu_list_text_table, entry_ids, &rect, 0);
+                            bunit_text_render_id_rows_to_vram(g_bunit_menu_list_text_table, entry_ids, &rect, 0);
                         }
                     }
                 } else if (g_bunit_menu_list_selected_index < ENTRY_COUNT - 1 && (input & PSX_PAD_DOWN)) {
@@ -154,7 +154,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
             rect.w = g_bunit_menu_list_vram_width * 4;
             rect.h = ROW_HEIGHT * g_bunit_menu_list_visible_rows + 10;
             bunit_gfx_enqueue_textured_quad(&rect, 0, g_bunit_menu_scroll_pixel_offset + 0x2b, 0,
-                g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, g_bunit_text_metric_0,
+                g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, g_bunit_menu_window_clut,
                 g_bunit_gfx_otag_index);
         } else {
             rect.x = command[7];
@@ -162,10 +162,10 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
             rect.w = g_bunit_menu_list_vram_width * 4;
             rect.h = ROW_HEIGHT * g_bunit_menu_list_visible_rows;
             bunit_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_bunit_gfx_semitrans_enabled,
-                g_bunit_text_digit_texture_page, g_bunit_text_metric_0, g_bunit_gfx_otag_index);
+                g_bunit_text_digit_texture_page, g_bunit_menu_window_clut, g_bunit_gfx_otag_index);
         }
     }
-    if (g_bunit_text_layout_mode == 0) {
+    if (g_bunit_menu_use_alternate_palette == 0) {
         if (g_bunit_menu_scroll_base_index != 0) {
             rect.x = g_bunit_menu_window_right_x;
             rect.y = command[12];
@@ -201,7 +201,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
         marker.x = command[7] - command[11];
         marker.y = command[8] + (g_bunit_menu_list_selected_index - g_bunit_menu_scroll_base_index) * ROW_HEIGHT;
         bunit_menu_update_and_draw_animated_cursor(
-            (u16*)&marker, g_bunit_menu_list_cursor_anim_state, g_bunit_text_layout_mode);
+            (u16*)&marker, g_bunit_menu_list_cursor_anim_state, g_bunit_menu_use_alternate_palette);
     }
     command += command[1];
     g_bunit_menu_cursor_row = 0;
@@ -221,7 +221,7 @@ u8* bunit_cmd_run_scrollable_list_handler(u8* command) {
         g_bunit_menu_cursor_row += 1;
     }
     g_bunit_menu_scroll_list_active = 0;
-    if (previous_selected != (u16)g_bunit_menu_list_selected_index) {
+    if (previous_selected != g_bunit_menu_list_selected_index) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_CURSOR_MOVE;
     }
     return command;

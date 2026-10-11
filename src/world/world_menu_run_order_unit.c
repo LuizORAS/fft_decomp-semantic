@@ -1,12 +1,21 @@
 #include "fft/world.h"
 
+/*
+ * Per-frame handler of the formation screen's "order" (sort) menu.
+ *
+ * The menu lists the seven sort keys in their current priority order.
+ * Choosing a row moves that key to the front, shifting the rows above it
+ * down one, stores the order back and re-sorts the roster. While the menu is
+ * open the unit banner, unit browsing and the two detail panels are off; the
+ * handler returns to the unit grid when the menu thread ends.
+ */
 void world_menu_run_order_unit(void) {
     s16 option_ids[12]; /* seven entries plus terminator; sized for the retail frame */
     s32 index;
     s32 selected_entry;
 
     if (g_world_menu_order_unit_open == 0) {
-        world_menu_widen_byte_record_to_halfwords(0, g_world_menu_order_unit_entries);
+        world_menu_load_sort_key_list(0, g_world_menu_order_unit_entries);
         for (index = 0; index < 7; index++) {
             option_ids[index] = g_world_menu_order_unit_entries[index] + 14;
         }
@@ -16,15 +25,15 @@ void world_menu_run_order_unit(void) {
         g_world_formation_unit_banner_enabled = 0;
         g_world_order_unit_saved_browse_enabled = g_world_formation_unit_browse_enabled;
         g_world_formation_unit_browse_enabled = 0;
-        world_menu_stop_unit_status_banner_thread(9);
-        world_menu_stop_unit_status_banner_thread(12);
+        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
         g_world_menu_order_unit_cursor = 0;
         g_world_menu_order_unit_open = 1;
     }
 
-    if (world_menu_run_thread(15, g_world_order_unit_menu) == 0) {
+    if (world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, g_world_order_unit_menu) == 0) {
         g_world_menu_order_unit_open = 0;
-        g_world_formation_current_menu = 0;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
         g_world_formation_unit_browse_enabled = g_world_order_unit_saved_browse_enabled;
     }
 
@@ -46,7 +55,7 @@ void world_menu_run_order_unit(void) {
         world_text_concatenate_entries(
             g_world_formation_menu_text_table, g_world_formation_menu_text_buffer, option_ids, 1);
         g_world_menu_text_redraw_request = 1;
-        world_menu_narrow_halfwords_to_byte_record(0, g_world_menu_order_unit_entries);
+        world_menu_store_sort_key_list(0, g_world_menu_order_unit_entries);
         world_formation_sort_roster(0);
     }
 }

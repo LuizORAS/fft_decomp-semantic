@@ -1,8 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Enter ACTIVE_TURN to show the AT list entry chosen in the mini menu: the cursor on a unit's
- * turn, or the target panels of a charged action; then show the map cursor. */
+/* Enter ACTIVE_TURN to show the AT list entry chosen in the mini menu: for a charged action (bit
+ * 0x100) the cursor goes to its target and the tiles it will hit are marked; for a unit's turn
+ * the cursor goes to the unit and the marks are cleared; an empty entry leaves the cursor alone.
+ * Then show the map cursor. */
 void battle_turn_show_at_entry(s32 at_index) {
     s32 id;
     battle_unit_misc_data_t* unit;
@@ -15,10 +17,10 @@ void battle_turn_show_at_entry(s32 at_index) {
         if ((id & 0x100) != 0) {
             battle_target_move_cursor_to_action_target(unit);
             battle_target_mark_action_area(&unit->battle_data->action_actor_id);
-            battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_TARGETED, 3);
+            battle_target_tint_marked_tiles(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
         } else {
             battle_target_move_cursor_to_unit(unit);
-            battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 0);
+            battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 0);
         }
     }
     battle_target_show_cursor_unit_panel();

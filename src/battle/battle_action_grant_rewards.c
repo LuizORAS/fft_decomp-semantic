@@ -10,7 +10,7 @@ void battle_action_grant_rewards(void) {
     battle_stats_t* stats;
 
     unit = battle_unit_get_source_misc_data();
-    battle_unit_sync_all_rider_mount_positions();
+    battle_unit_restore_all_facings_after_attack();
     if (unit != 0) {
         stats = unit->battle_data;
         if (stats != 0 && battle_unit_apply_action_rewards(stats->misc_unit_id, &unit->action_rewards) == -1) {
@@ -21,7 +21,7 @@ void battle_action_grant_rewards(void) {
         }
     }
     battle_gfx_init_earned_exp_jp_display(unit);
-    g_battle_action_post_action_display_phase = 0;
+    g_battle_action_post_action_display_phase = BATTLE_POST_ACTION_DISPLAY_LEVEL_UP;
     battle_target_move_cursor_to_unit(unit);
     battle_action_init_learn_ability_on_hit();
     g_battle_action_post_action = 0;

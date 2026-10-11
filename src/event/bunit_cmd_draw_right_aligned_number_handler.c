@@ -15,7 +15,7 @@ u8* bunit_cmd_draw_right_aligned_number_handler(u8* cmd) {
     s32 x;
     s32 y;
 
-    length = sprintf((char*)digits, g_bunit_text_decimal_format, g_bunit_menu_row_callbacks[cmd[3]](cmd[9]));
+    length = sprintf(digits, g_bunit_text_decimal_format, g_bunit_menu_row_callbacks[cmd[3]](cmd[9]));
     x = cmd[7];
     y = cmd[8];
     blanks = cmd[4] - length;
@@ -23,7 +23,8 @@ u8* bunit_cmd_draw_right_aligned_number_handler(u8* cmd) {
     g_bunit_gfx_blank_cell_rect.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
         g_bunit_gfx_blank_cell_rect.x = x;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_gfx_blank_cell_rect, 0, 0, 0, g_bunit_gfx_otag_index);
+        bunit_gfx_enqueue_oriented_textured_quad(
+            &g_bunit_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_bunit_gfx_otag_index);
         x += 8;
     }
     glyph_rect.x = x;

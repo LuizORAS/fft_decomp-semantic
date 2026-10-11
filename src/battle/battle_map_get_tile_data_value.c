@@ -15,27 +15,27 @@ s32 battle_map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer) {
     case MAP_TILE_DATA_HEIGHT:
         return tile->height;
     case MAP_TILE_DATA_HALF_HEIGHT:
-        return tile->depth_half_height & MAP_TILE_HALF_HEIGHT_MASK;
+        return tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK;
     case MAP_TILE_DATA_DEPTH:
-        return tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT;
+        return tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
     case MAP_TILE_DATA_SLOPE_TYPE:
         return tile->slope_type;
     case MAP_TILE_DATA_CEILING_DEPTH:
-        return tile->ceiling_depth_and_marks & MAP_TILE_CEILING_DEPTH_MASK;
+        return tile->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK;
     case MAP_TILE_DATA_BLOCKED:
-        return tile->flags_06.value & MAP_TILE_FLAG_BLOCKED;
+        return tile->flags.value & MAP_TILE_FLAG_BLOCKED;
     case MAP_TILE_DATA_UNTARGETABLE:
-        return (tile->flags_06.value >> MAP_TILE_FLAG_UNTARGETABLE_SHIFT) & 1;
+        return (tile->flags.value >> MAP_TILE_FLAG_UNTARGETABLE_SHIFT) & 1;
     case MAP_TILE_DATA_SHADOW_MODE:
-        return (tile->flags_06.value >> MAP_TILE_SHADOW_MODE_SHIFT) & MAP_TILE_SHADOW_MODE_VALUE_MASK;
+        return (tile->flags.value >> MAP_TILE_SHADOW_MODE_SHIFT) & MAP_TILE_SHADOW_MODE_VALUE_MASK;
     case MAP_TILE_DATA_UNKNOWN_FLAGS_4_6:
-        return (tile->flags_06.value >> 4) & 7;
+        return (tile->flags.value >> 4) & 7;
     case MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK:
         return tile->camera_block_masks & MAP_TILE_CAMERA_BLOCK_DIRECTION_MASK;
     case MAP_TILE_DATA_MOVE_DESTINATION_MARK:
-        return (tile->ceiling_depth_and_marks >> MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT) & 1;
+        return (tile->ceiling_depth_and_marks.value >> MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT) & 1;
     case MAP_TILE_DATA_ABILITY_RANGE_MARK:
-        return (tile->ceiling_depth_and_marks >> MAP_TILE_FLAG_ABILITY_RANGE_SHIFT) & 1;
+        return (tile->ceiling_depth_and_marks.value >> MAP_TILE_FLAG_ABILITY_RANGE_SHIFT) & 1;
     }
     return 0xFF;
 }

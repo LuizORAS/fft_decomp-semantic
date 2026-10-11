@@ -15,7 +15,7 @@ s32 battle_ai_evaluate_origins(void) {
     s32 row;
     u32 row_base;
 
-    if (g_battle_ai_data_base.decision_state) {
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         if (g_battle_ai_data_base.origin_search_state == 0)
             goto begin_evaluation;
@@ -37,7 +37,7 @@ begin_evaluation:
         ai->origin_search_state = 0;
         return -1;
     }
-    ai->decision_state = 0;
+    ai->resume_pending = 0;
     ai->ranked_origin_search = 0;
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_EXHAUSTIVE_ORIGIN_SCAN) {
         ai->targetability.live.target_setting_flags &= ~BATTLE_AI_TARGET_SETTING_CONSUME_TARGET_TILES;

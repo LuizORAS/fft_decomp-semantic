@@ -14,19 +14,19 @@ void battle_state_handle_ability_preview_state(void) {
         battle_camera_handle_rotation_input();
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
-        if ((g_controller_input_pressed & PSX_PAD_CIRCLE) != 0) {
-            g_battle_controller_input = g_controller_input_copy_12;
+        if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
+            g_battle_cursor_input_mode = g_battle_cursor_input_mode_saved;
             battle_gfx_update_unit_palettes();
             battle_state_enter_confirm_action();
-        } else if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
-            g_battle_controller_input = g_controller_input_copy_12;
-            battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_CLEAR_TARGETED, 3);
-            if (unit->ability_preview_phase == 2) {
-                battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 3);
+        } else if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
+            g_battle_cursor_input_mode = g_battle_cursor_input_mode_saved;
+            battle_target_tint_marked_tiles(BATTLE_TILE_MARK_HIDE_TARGETS, 3);
+            if (unit->ability_preview_phase == BATTLE_TARGET_PANELS_NO_TARGETING) {
+                battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 3);
                 battle_gfx_update_unit_palettes();
                 battle_menu_open_active_unit_idle_action_menu();
             } else {
-                battle_target_tint_marked_tiles(BATTLE_TARGET_TINT_RESET, 3);
+                battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 3);
                 battle_gfx_update_unit_palettes();
                 battle_target_begin_tile_selection();
             }
@@ -35,11 +35,11 @@ void battle_state_handle_ability_preview_state(void) {
         frame_data = unit->state_frame_counter;
         unit->state_frame_counter = frame_data + 1;
         if (frame_data >= 0x1f) {
-            g_battle_controller_input = g_controller_input_copy_12;
+            g_battle_cursor_input_mode = g_battle_cursor_input_mode_saved;
             battle_gfx_update_unit_palettes();
             battle_state_enter_confirm_action();
         }
     }
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
 }

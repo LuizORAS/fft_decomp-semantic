@@ -2,6 +2,10 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Initialise the frame primitives of a status panel buffer: two
+ * semi-transparent 16x90 column tiles at x 0x12 and 0x7c, the two vertical
+ * edge lines on either side of each, and the draw modes for the frame, text
+ * image and item icon texture pages. */
 void debugchr_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu) {
     s32 i;
 
@@ -83,7 +87,7 @@ void debugchr_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_bu
     menu->lines[7].y0 = 1;
     menu->lines[7].x1 = 0x8d;
     menu->lines[7].y1 = 0x5a;
-    battle_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[0], 0);
-    battle_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[1], 2);
-    battle_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[2], 4);
+    battle_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
+    battle_gfx_set_draw_mode_for_texture_page(&menu->draw_modes[2], MENU_TEXTURE_PAGE_ITEM_ICONS);
 }

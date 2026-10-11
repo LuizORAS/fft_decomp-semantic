@@ -5,7 +5,7 @@
  * time. The command is copied from source to dest with the resolved ability_id; -1 rejects a missing
  * unit or unit target and an invalid choice. By the skillset's menu type: Item uses the item ability
  * (item id + 0x80) and Throw the Throw ability for the item's type, both acting at once; Math Skill
- * and Attack (ability 0) act at once; Geomancy takes the ability of the unit's terrain and Draw Out
+ * and Attack (ability 0) act at once; Elemental takes the ability of the unit's terrain and Draw Out
  * the katana's (item id + 0x26); Jump's CT is 50 / Speed (at least 1) and it returns 3; Charge takes
  * its CT from the Charge table, unaffected by Short Charge and Non-Charge; Defend returns 0 and
  * Change Equipment 2, storing nothing. Any other ability takes its table CT, halved (rounding up) by
@@ -36,98 +36,98 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
     u16 multiplier;
     u8 support;
 
-    main_util_copy_action_data((u8*)source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
-        return -1;
+        return BATTLE_ATTACK_PREPARATION_INVALID;
     }
     unit = &g_battle_unit_stats[action.unit_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
-        return -1;
+        return BATTLE_ATTACK_PREPARATION_INVALID;
     }
     skip = 0;
-    if (action.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
+    if (action.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
         if (action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         if (g_battle_unit_stats[action.target_id].entd_slot == BATTLE_ENTD_SLOT_NONE) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
     }
     switch (g_main_action_menu_types_by_skillset[action.skillset]) {
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         item = action.item_id;
         if (g_main_item_primary_data[item & 0xff].type != ITEM_TYPE_CONSUMABLE) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
-        ability = item + 0x80;
+        main_util_copy_action_data(&action, dest);
+        ability = item + (ABILITY_ID_ITEM_FIRST - ITEM_ID_CONSUMABLE_FIRST);
         dest->ability_id = ability;
         if (phase != 0 && (phase & 1)) {
             battle_action_decrement_player_item_quantity(unit, item & 0xff, 1);
             unit->action_taken = 1;
         }
-        return 1;
+        return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
         ability = ABILITY_ID_THROW_FIRST;
         item = action.item_id;
-        table = g_main_throw_ability_item_types_by_ability_id;
+        table = g_main_throw_ability_item_types - ABILITY_ID_THROW_FIRST;
         for (; ability < ABILITY_ID_JUMP_FIRST; ability++) {
-            /* The index+base integer spelling is byte-required. */
+            /* The index+base integer spelling of the biased table is byte-required. */
             if (*(u8*)(ability + (s32)table) == g_main_item_primary_data[item].type) {
                 break;
             }
         }
         if (ability == ABILITY_ID_JUMP_FIRST) {
-            return -1;
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         dest->ability_id = ability;
         if (phase != 0 && (phase & 1)) {
             battle_action_decrement_player_item_quantity(unit, item, 1);
             unit->action_taken = 1;
         }
-        return 1;
+        return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_ARITHMETICKS:
         ability = action.ability_id;
         type = action.calculator_type;
         multiplier = action.calculator_multiplier;
-        if ((u16)(type - ABILITY_ID_MATH_FIRST) >= 8) {
-            return -1;
+        if (type < ABILITY_ID_MATH_FIRST || type >= ABILITY_ID_REACTION_FIRST) {
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        if ((u16)(multiplier - ABILITY_ID_MATH_FIRST) >= 8) {
-            return -1;
+        if (multiplier < ABILITY_ID_MATH_FIRST || multiplier >= ABILITY_ID_REACTION_FIRST) {
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
-            return -1;
+        if (ability < 0 || ability >= ABILITY_ID_ITEM_FIRST) {
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         if (phase != 0 && (phase & 1)) {
             unit->action_taken = 1;
         }
-        return 1;
+        return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_ELEMENTS:
         action.ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         item = action.item_id;
-        if ((u32)(item - 0x26) >= 10) {
-            return -1;
+        if (item < ITEM_ID_ASURA_KNIFE || item > ITEM_ID_CHIRIJIRADEN) {
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        ability = item + 0x26;
+        ability = item + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         action.ability_id = ability;
         if (phase & 1) {
             battle_action_decrement_player_item_quantity(unit, item, 1);
         }
         break;
     case ACTION_MENU_TYPE_ATTACK:
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         if (phase != 0 && (phase & 1)) {
             unit->action_taken = 1;
         }
         dest->ability_id = 0;
-        return 1;
+        return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_JUMP:
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         if (phase != 0) {
             ct = 50 / unit->attributes[UNIT_ATTRIBUTE_SPEED];
             if (ct == 0) {
@@ -143,14 +143,14 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             }
         }
         dest->ability_id = ABILITY_ID_JUMP_FIRST;
-        return 3;
+        return BATTLE_ATTACK_PREPARATION_JUMP;
     case ACTION_MENU_TYPE_CHARGE:
         ability = action.ability_id;
-        if ((u16)(ability - ABILITY_ID_CHARGE_FIRST) >= 8) {
-            return -1;
+        if (ability < ABILITY_ID_CHARGE_FIRST || ability >= ABILITY_ID_MATH_FIRST) {
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
-        ct = g_main_jump_charge_ability_data_by_ability_id[ability * 2];
+        main_util_copy_action_data(&action, dest);
+        ct = g_main_charge_ability_data[ability - ABILITY_ID_CHARGE_FIRST].ct;
         do {
             skip = 1;
         } while (0);
@@ -160,21 +160,21 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         persevere = 0;
         break;
     case ACTION_MENU_TYPE_DEFEND:
-        return 0;
+        return BATTLE_ATTACK_PREPARATION_CHARGE;
     case ACTION_MENU_TYPE_CHANGE_EQUIPMENT:
-        return 2;
+        return BATTLE_ATTACK_PREPARATION_CHANGE_EQUIPMENT;
     case ACTION_MENU_TYPE_DEFAULT:
     case ACTION_MENU_TYPE_MONSTER:
         break;
     default:
-        return -1;
+        return BATTLE_ATTACK_PREPARATION_INVALID;
     }
     if (!skip) {
         ability = action.ability_id;
-        if ((u16)ability >= ABILITY_ID_ITEM_FIRST) {
-            return -1;
+        if (ability < 0 || ability >= ABILITY_ID_ITEM_FIRST) {
+            return BATTLE_ATTACK_PREPARATION_INVALID;
         }
-        main_util_copy_action_data((u8*)&action, (u8*)dest);
+        main_util_copy_action_data(&action, dest);
         entry = &g_main_ability_range_data[ability];
         ct = entry->ct & 0x7f;
         persevere = entry->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE;

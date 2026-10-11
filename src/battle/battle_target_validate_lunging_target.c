@@ -73,13 +73,13 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
         return -1;
     }
 
-    battle_calculate_unit_height_data(&height, target_id);
+    battle_unit_calculate_height_data(&height, target_id);
     if (height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
         target_id = -1;
     }
     target_total = height.total_height;
     target_walking = height.walking_height;
-    battle_calculate_unit_height_data(&height, unit_id);
+    battle_unit_calculate_height_data(&height, unit_id);
     if (height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
         return -1;
     }
@@ -108,14 +108,14 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
         lower = &g_battle_map_tile_data[index];
         upper_index = index + 0x100;
         upper = &g_battle_map_tile_data[upper_index];
-        lower_height = lower->height * 2 + (lower->depth_half_height & 0x1f);
-        upper_height = upper->height * 2 + (upper->depth_half_height & 0x1f);
+        lower_height = lower->height * 2 + (lower->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
+        upper_height = upper->height * 2 + (upper->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
         lower_id = battle_target_get_unit_at_tile(mid_x, mid_y, 0);
         upper_id = battle_target_get_unit_at_tile(mid_x, mid_y, 1);
-        if (lower->flags_06.bits.blocked) {
+        if (lower->flags.bits.blocked) {
             lower_height = 0xff;
         }
-        if (upper->flags_06.bits.blocked) {
+        if (upper->flags.bits.blocked) {
             upper_height = 0xff;
         }
         if (lower_height > upper_height) {
@@ -127,7 +127,7 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
             lower_id = swap_id;
         }
         if (lower_height != 0xff) {
-            battle_calculate_unit_height_data(&height, lower_id);
+            battle_unit_calculate_height_data(&height, lower_id);
             if (!(height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE)) {
                 lower_height = height.total_height;
             }
@@ -139,7 +139,7 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
             }
         }
         if (upper_height != 0xff) {
-            battle_calculate_unit_height_data(&height, upper_id);
+            battle_unit_calculate_height_data(&height, upper_id);
             if (!(height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE)) {
                 total = height.total_height;
                 if (low >= upper_height && total >= high) {
@@ -155,7 +155,7 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
     middle = (u32)(unit_walking + unit_total) >> 1;
     for (layer = 0; layer < 2; layer++) {
         target_id = battle_target_get_unit_at_tile(mid_x, mid_y, layer);
-        battle_calculate_unit_height_data(&height, target_id);
+        battle_unit_calculate_height_data(&height, target_id);
         if (!(height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE)) {
             target_walking = height.walking_height;
             target_total = height.total_height;

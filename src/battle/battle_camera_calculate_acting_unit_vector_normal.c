@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Aims the camera step vector from the camera position at the acting unit: the
+ * unit-length direction (ONE) with its height component multiplied by four. */
 void battle_camera_calculate_acting_unit_vector_normal(void) {
     VECTOR delta;
     battle_unit_misc_data_t* unit;

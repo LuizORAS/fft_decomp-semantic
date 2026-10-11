@@ -1,3 +1,4 @@
+/* E451.BIN is the effect of effect id 0x21d, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 #include "psx/libc.h"
@@ -5,7 +6,12 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-s32 effect_e451_update_particle_trails_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+/* Runs up to four unseen particles from the emitter's spawn volume towards a
+ * tip, keeping a 17-point trail of each, and spawns the emitter's children
+ * from the trail's far end: the mid-life child every frame and the death
+ * child when the trail has run out. The tentacle mesh renderer without its
+ * mesh. */
+s32 effect_e451_update_particle_trails_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     SVECTOR tip;
     SVECTOR tip_spread;
     VECTOR origin;
@@ -56,19 +62,19 @@ s32 effect_e451_update_particle_trails_state(s16 record_index, s32 byte_offset, 
     s32 wrap;
 
     record = &g_effect_state_records[record_index];
-    entry = (effect_tentacle_mesh_geometry_view_t*)&g_effect_geometry_table->entries[geometry_index];
+    entry = &g_effect_geometry_table->entries[emitter_index].tentacle_mesh;
     placement = entry->placement_flags;
     flags = entry->flags;
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
 
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != 0) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != 0) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = record->work_slots[byte_offset] = battle_heap_alloc_block(sizeof(effect_trail_work_t), record_index);
+        work = record->work_slots[callback_slot] = battle_heap_alloc_block(sizeof(effect_trail_work_t), record_index);
         for (index = 3; index >= 0; index--) {
             work->segments[index].active = 0;
         }
@@ -78,22 +84,22 @@ s32 effect_e451_update_particle_trails_state(s16 record_index, s32 byte_offset, 
         work->matrix.t[2] = 0;
         work->matrix.t[1] = 0;
         work->matrix.t[0] = 0;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
         i = frame - 1;
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         curves1 = entry->curve_indices[1];
-        target_index = *(s16*)&record->target_index;
+        target_index = record->target_index;
         curves0 = entry->curve_indices[0];
         frame %= 160;
         READ_CURVE(factor, index, (curves1 >> 24) & 0xF, frame);
         if (i % battle_effect_lerp_linear(entry->spawn_interval_start, entry->spawn_interval_end, factor) == 0) {
             SetTransMatrix(&work->matrix);
             orient = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
-            caster_target = &g_battle_effect_coord_data.targets[16];
-            if (caster_target->target_type == 0) {
+            caster_target = &g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY];
+            if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                 facing_yaw = ((battle_unit_get_facing_quadrant_by_misc_id(caster_target->id.misc_id) + 1) & 3) << 10;
                 rotation.vz = 0;
                 rotation.vx = 0;
@@ -101,8 +107,8 @@ s32 effect_e451_update_particle_trails_state(s16 record_index, s32 byte_offset, 
                 RotMatrix(&rotation, &facing);
             }
             battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, -1,
-                &g_battle_effect_coord_data, &caster);
+                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &caster);
             battle_effect_resolve_target_render_coords(
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
                 &g_battle_effect_coord_data, &target);
@@ -149,7 +155,7 @@ s32 effect_e451_update_particle_trails_state(s16 record_index, s32 byte_offset, 
                 RotTrans(&rotation, &spread, &out.pad);
             }
 
-            index = (u32)curves0 >> 28;
+            index = (curves0 >> 28) & 0xF;
             index--;
             if (index != -1) {
                 factor = g_effect_palette_table[index].factor[frame];
@@ -362,12 +368,12 @@ s32 effect_e451_update_particle_trails_state(s16 record_index, s32 byte_offset, 
             emitter.position[0] = seg->points[point].x << 12;
             emitter.position[1] = seg->points[point].y << 12;
             emitter.position[2] = seg->points[point].z << 12;
-            if (flags & 0xC) {
+            if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, seg->head, entry->child_emitter_mid_life, &emitter);
             }
             if (seg->length + 16 == seg->head) {
-                if (flags & 3) {
+                if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
                         record->record_index, seg->head, entry->child_emitter_on_death, &emitter);
                 }
@@ -379,16 +385,16 @@ s32 effect_e451_update_particle_trails_state(s16 record_index, s32 byte_offset, 
         break;
 
     case EFFECT_PHASE_DESTROY:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
             break;
         }
         if (work != 0) {
             battle_heap_free_block(work);
-            record->work_slots[byte_offset] = 0;
+            record->work_slots[callback_slot] = 0;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
     }
 }

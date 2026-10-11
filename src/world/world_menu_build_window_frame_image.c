@@ -32,6 +32,6 @@ s32 world_menu_build_window_frame_image(s32 w, s32 h, u16* dst) {
         row = base + (i - first) * words;
         row[words - 1] = src[src_index + 9];
         row[words - 2] = src[src_index + 8];
-        world_menu_fill_pattern_row_2(src, row, words, src_index);
+        world_screen_menu_build_window_image_row(src, row, words, src_index);
     }
 }

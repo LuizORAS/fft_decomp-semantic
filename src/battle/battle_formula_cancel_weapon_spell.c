@@ -9,10 +9,10 @@ void battle_formula_cancel_weapon_spell(void) {
     u16* pflag;
     battle_action_data_t* action;
     u16* special_effect;
-    pflag = &g_current_ability.weapon_spell_pending;
+    pflag = &g_battle_action_current_ability.weapon_spell_pending;
     if (*pflag != 0) {
         action = g_battle_action_target_data;
-        g_current_ability.reaction_id = 0;
+        g_battle_action_current_ability.reaction_id = 0;
         *pflag = 0;
         /* Clear the proc bit (0x0200).  Reading the field through a
          * second pointer keeps the lhu below the two scalar global stores;

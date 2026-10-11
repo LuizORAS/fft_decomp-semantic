@@ -2,9 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-#define WLDCORE_ROUTE_COUNT           48
-#define SCRIPT_VAR_ROUTE_VISIBLE_BASE 556
-
 /* Draws the visible world-map routes into the auxiliary ordering table as
  * textured semi-transparent ribbons. Each route record is a run of packed
  * (x, y) pairs holding the two edges of the ribbon; every point is projected
@@ -35,10 +32,10 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     s32 j;
     s16 slot;
     SVECTOR* vertex;
-    u16 raw;
+    s16 raw;
     s32 count_tmp;
 
-    if (g_main_system_flags & 0x20) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES) {
         return;
     }
 
@@ -60,13 +57,13 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     poly.clut = GetClut(0x10, 0x1E8);
 
     for (i = 0, vertex = verts; i < WLDCORE_ROUTE_COUNT; i++) {
-        if (world_script_get_variable(i + SCRIPT_VAR_ROUTE_VISIBLE_BASE) == 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST) == 0) {
             continue;
         }
         slot = 0;
         points = table[i];
         raw = *points++;
-        count_tmp = (s16)raw;
+        count_tmp = raw;
         in.vz = 0;
         j = 0;
         if (j < count_tmp) {
@@ -75,7 +72,8 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
                 in.vx = *points++;
                 in.vy = *points++;
                 RotTransSV(&in, &vertex[slot], &projected);
-                if ((u16)(vertex[slot].vx + 127) < 255 && (u16)(vertex[slot].vy + 111) < 227) {
+                if (vertex[slot].vx >= -127 && vertex[slot].vx <= 127 && vertex[slot].vy >= -111
+                    && vertex[slot].vy <= 115) {
                     flags[slot] = 1;
                 } else {
                     flags[slot] = 0;
@@ -94,7 +92,7 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
                     verts[0] = verts[2];
                     verts[1] = verts[3];
                     if (flags[0] != 0 || flags[2] != 0) {
-                        world_gs_sortpoly(&poly, ot, 1);
+                        GsSortPoly(&poly, ot, 1);
                     }
                     flags[0] = flags[2];
                     flags[1] = flags[3];

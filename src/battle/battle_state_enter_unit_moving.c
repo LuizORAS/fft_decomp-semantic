@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Enter UNIT_MOVING: save the unit's state (and its mount's) for an undo, set the walk speed,
- * start at the path's first step and hide the map cursor. */
+/* Enter UNIT_MOVING: save the unit's state (and its mount's) for an undo, set the step speed to
+ * 0x2000, start at the path's first step and hide the map cursor. */
 void battle_state_enter_unit_moving(void) {
     battle_unit_misc_data_t* unit;
 

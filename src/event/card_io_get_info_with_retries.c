@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Run _card_info on `port` until the BIOS event reports completion, trying
+ * up to `retry_limit` times. Returns the last result (a rejected call counts
+ * as a timeout). */
 s32 card_io_get_info_with_retries(s32 port, s32 retry_limit) {
     s32 i;
     s32 result;

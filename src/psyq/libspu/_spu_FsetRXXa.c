@@ -14,7 +14,7 @@ u32 _spu_FsetRXXa(s32 reg_index, u32 address) {
     case PSYQ_SPU_ADDRESS_ALIGNED_BYTES:
         return address;
     default:
-        ((volatile u16*)_spu_RXX)[reg_index] = units;
+        _spu_RXX->raw[reg_index] = units;
         return address;
     }
 }

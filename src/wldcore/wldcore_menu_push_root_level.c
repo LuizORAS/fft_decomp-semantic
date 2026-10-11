@@ -19,12 +19,12 @@ void wldcore_menu_push_root_level(void) {
 
     /* Taken from the record array: naming g_wldcore_window_record_positions here changes the
      * target's address form. */
-    xy = (wldcore_window_xy_t*)&g_wldcore_window_records[0].x;
+    xy = (wldcore_window_xy_t*)&g_wldcore_window_records[0].position.x;
     records = g_wldcore_window_records;
 
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[depth].window_pair.first_window = window_index;
-    g_wldcore_window_records[window_index].sequence = 0;
+    g_wldcore_window_records[window_index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_STILL;
     g_wldcore_window_records[window_index].priority = 12;
     xy[window_index].x = 0;
     xy[window_index].y = 0;
@@ -34,11 +34,11 @@ void wldcore_menu_push_root_level(void) {
     window_index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     depth = g_wldcore_menu_stack_depth;
-    g_wldcore_context_value_display_mode = 1;
+    g_wldcore_context_value_display_mode = WLDCORE_VALUE_DISPLAY_FUNDS;
     g_wldcore_menu_stack_records_next[depth].window_pair.second_window = window_index;
-    g_wldcore_window_records[window_index].sequence = 13;
+    g_wldcore_window_records[window_index].sequence = WLDCORE_ANIM_SEQUENCE_MAP_EDGE_ARROWS;
     g_wldcore_window_records[window_index].priority = 12;
-    g_wldcore_window_records[window_index].flags |= 0x10;
+    g_wldcore_window_records[window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     xy[window_index].x = 0;
     xy[window_index].y = 0;
     records[window_index].anim_counter = 0;

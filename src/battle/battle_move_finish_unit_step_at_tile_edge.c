@@ -14,7 +14,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;
 
     battle_gfx_load_trap_and_unit_frame_parts(
-        unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->encoded_animation);
+        unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->sequence_id);
     direction = battle_move_get_direction(unit);
     battle_move_apply_unit_step_velocity(unit);
     if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {
@@ -30,62 +30,56 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     if (unit->screen.vy < target_z) {
         return;
     }
-    if ((u32)((unit->encoded_animation >> 1) - 0x30) < 2U) {
+    if (((unit->sequence_id >> 1) - BATTLE_UNIT_ANIMATION_HOP) < 2U) {
         if (unit->velocity.vy < 0x6000) {
             unit->velocity.vy = 0;
-            /* Keeps the g_battle_move_step_value load below this store. */
-            __asm__ volatile("");
-            switch ((g_battle_move_step_value >> 3) & 1) {
+            switch (g_battle_move_step_value.bits.climb) {
             case 0:
-                /* The target passes the destination tile where the callee declares facing. */
-                ((void (*)(battle_unit_misc_data_t*, const map_tile_t*, const map_tile_t*))battle_move_start_unit_step)(
-                    unit, g_battle_move_current_tile, g_battle_move_destination_tile);
+                battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                 unit->step_phase = g_battle_move_walk_to_centre_phases[direction];
                 break;
             case 1:
-                /* The target also passes the destination tile to this two-parameter callee. */
-                ((void (*)(battle_unit_misc_data_t*, const map_tile_t*,
-                    const map_tile_t*))battle_move_start_unit_step_at_climb_speed)(
+                battle_move_start_unit_step_at_climb_speed(
                     unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                 unit->step_phase = g_battle_move_climb_to_centre_phases[direction];
                 break;
             }
             tile = battle_map_get_tile_data_pointer(unit->movement.bytes.destination_x,
                 unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
-            if ((tile->depth_half_height & MAP_TILE_DEPTH_MASK) == 0) {
+            if ((tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) == 0) {
                 return;
             }
-            if (-unit->screen.vy >= (tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12) {
+            if (-unit->screen.vy >= (tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12) {
                 return;
             }
-            battle_play_landing_sfx_by_tile_type(unit);
-            battle_set_landing_secondary_effect_by_tile_type(unit);
+            battle_sound_play_landing_sfx_by_surface_type(unit);
+            battle_effect_set_landing_secondary_by_surface_type(unit);
             return;
         }
         unit->velocity.vy = 0;
         unit->state_frame_counter = 2;
-        unit->step_phase = g_battle_move_landing_phases[direction];
+        unit->step_phase = g_battle_move_jump_landing_phases[direction];
         if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-            battle_unit_store_animation_facing(0x20, unit->facing, unit);
+            battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
         }
-        if (g_battle_move_step_value & 0x10) {
-            battle_sound_play_movement_sfx(unit, 0x28);
+        if (g_battle_move_step_value.bits.mount) {
+            battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
             return;
         }
-        battle_play_landing_sfx_by_tile_type(unit);
-        battle_set_landing_secondary_effect_by_tile_type(unit);
+        battle_sound_play_landing_sfx_by_surface_type(unit);
+        battle_effect_set_landing_secondary_by_surface_type(unit);
         return;
     }
     unit->velocity.vy = 0;
     unit->state_frame_counter = 2;
-    unit->step_phase = g_battle_move_landing_phases[direction];
+    unit->step_phase = g_battle_move_jump_landing_phases[direction];
     if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
-        battle_unit_store_animation_facing(0x20, unit->facing, unit);
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
     }
-    if (g_battle_move_step_value & 0x10) {
-        battle_sound_play_movement_sfx(unit, 0x28);
+    if (g_battle_move_step_value.bits.mount) {
+        battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
         return;
     }
-    battle_play_landing_sfx_by_tile_type(unit);
-    battle_set_landing_secondary_effect_by_tile_type(unit);
+    battle_sound_play_landing_sfx_by_surface_type(unit);
+    battle_effect_set_landing_secondary_by_surface_type(unit);
 }

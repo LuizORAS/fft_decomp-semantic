@@ -17,31 +17,32 @@ void battle_action_play_ability_effect(void) {
     battle_target_move_cursor_to_action_target(unit);
 
     if ((ability == 0) || (ability == ABILITY_ID_KNOCKBACK)) {
-        g_battle_state_vsync_interval = 1;
+        g_main_system_vsync_interval = 1;
         battle_target_hide_cursor();
         return;
     }
     if (battle_effect_load_ability(ability) != 0) {
-        g_battle_state_vsync_interval = 1;
+        g_main_system_vsync_interval = 1;
         battle_target_hide_cursor();
         return;
     }
     if ((ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
-        || ((u32)(ability - ABILITY_ID_CHARGE_FIRST) < (ABILITY_ID_MATH_FIRST - ABILITY_ID_CHARGE_FIRST))) {
+        || (ability >= ABILITY_ID_CHARGE_FIRST && ability < ABILITY_ID_MATH_FIRST)) {
         if (battle_effect_is_item_ability(ability) != 0) {
-            g_battle_state_vsync_interval = 1;
+            g_main_system_vsync_interval = 1;
             battle_target_hide_cursor();
             return;
         }
         battle_effect_play();
-        g_battle_state_vsync_interval = 1;
+        g_main_system_vsync_interval = 1;
         battle_target_hide_cursor();
         return;
     }
-    if ((battle_effect_is_item_ability(ability) == 0) || ((unit->encoded_animation >> 1) == 0x39)) {
+    if ((battle_effect_is_item_ability(ability) == 0)
+        || ((unit->sequence_id >> 1) == BATTLE_UNIT_ANIMATION_HOLD_ITEM)) {
         battle_effect_play();
     }
     main_sound_pause_tracked_sfx();
-    g_battle_state_vsync_interval = 2;
+    g_main_system_vsync_interval = 2;
     battle_target_hide_cursor();
 }

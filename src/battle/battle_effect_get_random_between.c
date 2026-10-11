@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Random integer between the two arguments, given in either order: at least the
+ * smaller and less than the larger. Equal arguments return that value without
+ * drawing a random number. */
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b) {
     s32 first;
     s32 second;

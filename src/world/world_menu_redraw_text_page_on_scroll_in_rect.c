@@ -3,7 +3,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Sibling of world_menu_redraw_text_page_on_scroll_2 that draws through
+/* Sibling of world_screen_menu_redraw_text_page_on_scroll that draws through
  * world_draw_menu_text_columns_narrow and takes the image rectangle from a caller-supplied
  * RECT (x and w in framebuffer pixels, divided by four; the image row is
  * fixed at y = 0x80). Scrolls the row window on L1/R1 (or on the running
@@ -27,7 +27,7 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
     rect.w = area->w / 4;
     rect.h = area->h;
     changed = 0;
-    if (g_world_menu_input_disabled != 0) {
+    if (g_world_menu_input_mode != MENU_INPUT_PLAYER) {
         return 0;
     }
     if (!(*input1 & PSX_PAD_SQUARE) && g_world_threads[g_world_thread_current_id].task_words[4] == 0) {

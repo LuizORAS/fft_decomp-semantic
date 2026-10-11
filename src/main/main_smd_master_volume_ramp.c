@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xA7: ramps the MUS master volume to a
- * target byte over 32 steps per unit of the count byte. */
+/* SMD opcode 0xA7 "Master Volume Ramp": ramps the MUS master volume to a
+ * target byte over 32 root-counter ticks per unit of the count byte. */
 u8* main_smd_master_volume_ramp(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     s16 steps;
     u8 target;

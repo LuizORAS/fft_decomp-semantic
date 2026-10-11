@@ -11,8 +11,7 @@ s32 battle_ai_is_action_higher_ranked(battle_ai_action_data_t* first, battle_ai_
     s32 proximity_b;
     s32 value;
 
-    comparison = battle_ai_compare_action_rank(
-        (battle_ai_action_rank_t*)&first->plan_chosen, (battle_ai_action_rank_t*)&second->plan_chosen);
+    comparison = battle_ai_compare_action_rank(&first->rank.decided, &second->rank.decided);
     value = 1;
     if (comparison == BATTLE_AI_RANK_ABOVE)
         return value;

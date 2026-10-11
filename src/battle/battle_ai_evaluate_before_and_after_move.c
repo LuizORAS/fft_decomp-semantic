@@ -9,7 +9,7 @@ s32 battle_ai_evaluate_before_and_after_move(void) {
     battle_ai_data_t* ai;
 
     ai = &g_battle_ai_data_base;
-    if (g_battle_ai_data_base.decision_state != 0) {
+    if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
         if (g_battle_ai_data_base.before_after_move_state != 0) {
             goto second;

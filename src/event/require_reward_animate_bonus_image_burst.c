@@ -37,7 +37,7 @@ extern require_reward_burst_tile_t g_require_reward_burst_tiles[12][24];
 void require_reward_animate_bonus_image_burst(void) {
     s32 phase;
     s32 max_delay;
-    s32 divisor;
+    u32 divisor;
     s32 angle_step;
     s32 radius_step;
     s32 done;
@@ -56,7 +56,8 @@ void require_reward_animate_bonus_image_burst(void) {
     POLY_F4* poly;
 
     g_require_thread_suspended_id = g_battle_thread_current_id;
-    g_battle_text_section_pointers[21] = g_battle_text_section_pointers[2];
+    g_battle_text_section_pointers[TEXT_SECTION_UNIT_MESSAGE]
+        = g_battle_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES_COPY];
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY) {
         require_reward_load_bonus_image(0);
     } else {
@@ -79,15 +80,15 @@ void require_reward_animate_bonus_image_burst(void) {
             if (col & 1) {
                 tile->y = row * 24 - 24;
             }
-            if (mode == 0) {
+            if (mode == REQUIRE_REWARD_BURST_FROM_CENTRE) {
                 dx = tile->x - 0x80;
                 dy = tile->y - 0x80;
                 dist = SquareRoot0(dx * dx + dy * dy);
-            } else if (mode == 1) {
+            } else if (mode == REQUIRE_REWARD_BURST_FROM_ORIGIN) {
                 dx = tile->x;
                 dy = tile->y;
                 dist = SquareRoot0(dx * dx + dy * dy);
-            } else if (mode == 2) {
+            } else if (mode == REQUIRE_REWARD_BURST_HORIZONTAL) {
                 dx = tile->x;
                 dist = SquareRoot0(dx * dx);
             } else {
@@ -104,7 +105,7 @@ void require_reward_animate_bonus_image_burst(void) {
                     &g_require_reward_burst_rotated_offset);
                 dist = abs(g_require_reward_burst_rotated_offset.vx / ONE);
             }
-            dist = (u32)(dist * dist) / (u32)(divisor << 8);
+            dist = (dist * dist) / (divisor << 8);
             tile->delay = dist;
             tile->angle = 0;
             tile->radius = 0;

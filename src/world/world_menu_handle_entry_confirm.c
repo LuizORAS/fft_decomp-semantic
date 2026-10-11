@@ -13,9 +13,9 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
     s32 j;
     s32 thread_id;
     s32 menu_thread_id;
-    s16* parent_indices;
+    s16* row_actions;
 
-    if (g_world_menu_input_disabled == 2
+    if (g_world_menu_input_mode == MENU_INPUT_TUTORIAL
         && ((world_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> row_index) & 1)) {
         return;
     }
@@ -25,8 +25,8 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
             g_world_thread_contexts[g_world_thread_current_id].task_words[1] = 2;
             g_world_thread_contexts[g_world_thread_current_id].task_words[0] = 0;
         }
-        parent_indices = entry->parent_indices;
-        target = ((u32)((s32)parent_indices + 0xf) < 0xf) ? (s32)parent_indices : parent_indices[row_index];
+        row_actions = entry->row_actions;
+        target = ((s32)row_actions >= -0xf && (s32)row_actions <= -1) ? (s32)row_actions : row_actions[row_index];
         if (target >= 0) {
             if (target & 0x1000) {
                 silent = 1;
@@ -56,7 +56,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
                 if (thread_id == 8) {
                     for (j = 0; j < target; j++) {
                         menu_thread_id = 8 - j;
-                        if (world_thread_is_running_2(menu_thread_id) != 0) {
+                        if (world_thread_is_running_asm(menu_thread_id) != 0) {
                             g_world_menu_pending_selection[j]
                                 = ((world_menu_entry_t*)g_world_thread_contexts[menu_thread_id].function_parameter_1)
                                       ->selected_index;

@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* The first unit whose has_turn is set (the unit taking its turn), or 0. */
 battle_stats_t* battle_unit_find_active_data_pointer(void) {
     s32 i = 0;
     battle_stats_t* unit = g_battle_unit_stats;
@@ -11,5 +12,5 @@ battle_stats_t* battle_unit_find_active_data_pointer(void) {
         i++;
         unit++;
     } while (i < BATTLE_UNIT_SLOT_COUNT);
-    return (battle_stats_t*)0;
+    return 0;
 }

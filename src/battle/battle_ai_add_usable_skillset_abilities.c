@@ -37,7 +37,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
     jump_found = 0;
     abilities = main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ACTION);
     menu = g_main_action_menu_types_by_skillset[skillset];
-    list_id = ai->unit_battle_ids[unit_id];
+    list_id = ai->unit_compact_indices[unit_id];
     if (menu == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
         if (battle_ai_load_known_ability_flag(unit_id, skillset, 0)) {
             unit_bits = unit_id << 10;
@@ -120,7 +120,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         }
         if (skillset >= SKILLSET_ID_MONSTER_FIRST) {
             if (i == 3) {
-                entry->skillset_flags.packed |= BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8;
+                entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8);
             } else {
                 entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8);
             }
@@ -128,7 +128,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         entry->skillset_flags.bytes.skillset = skillset;
         entry->id.packed_id = ability_id;
         if (menu == ACTION_MENU_TYPE_JUMP) {
-            if (ability_id >= ABILITY_ID_JUMP_VERTICAL_FIRST) {
+            if (ability_id >= ABILITY_ID_JUMP_VERTICAL_2) {
                 continue;
             }
             if (jump_found == 1) {

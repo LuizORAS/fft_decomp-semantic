@@ -15,8 +15,6 @@ void wldcore_read_nine_bit_record(u32* bits, s32 record, u8* dest) {
     for (i = 0; i < 5; i++) {
         if (wldcore_test_bit(bits, base + i)) {
             dest[1] |= mask;
-            /* Keeps i++ at the branch target; reorg otherwise moves it into the delay slot. */
-            __asm__ volatile("");
         }
         mask <<= 1;
     }
@@ -27,8 +25,6 @@ void wldcore_read_nine_bit_record(u32* bits, s32 record, u8* dest) {
 
         if (wldcore_test_bit(bits, base + index)) {
             dest[0] |= mask;
-            /* As above. */
-            __asm__ volatile("");
         }
         mask <<= 1;
     }

@@ -1,36 +1,37 @@
 #include "fft/battle.h"
 
+/* Turn a unit to one of the four cardinal facings and restart its animation.
+ * A diagonal or any other angle leaves it as it is. */
 void battle_unit_decide_facing_direction(battle_unit_misc_data_t* unit, s32 facing) {
-    s16* cur = &unit->facing;
-
     switch (facing) {
-    case 0x800:
-        if (*cur == facing) {
+    case BATTLE_FACING_NORTH:
+        if (unit->facing == BATTLE_FACING_NORTH) {
             return;
         }
-        *cur = 0x800;
+        unit->facing = BATTLE_FACING_NORTH;
         break;
-    case 0x000:
-        if (*cur == 0) {
+    case BATTLE_FACING_SOUTH:
+        if (unit->facing == BATTLE_FACING_SOUTH) {
             return;
         }
-        *cur = 0;
+        unit->facing = BATTLE_FACING_SOUTH;
         break;
-    case 0x400:
-        if (*cur == facing) {
+    case BATTLE_FACING_WEST:
+        if (unit->facing == BATTLE_FACING_WEST) {
             return;
         }
-        *cur = 0x400;
+        unit->facing = BATTLE_FACING_WEST;
         break;
-    case 0xC00:
-        if (*cur == facing) {
+    case BATTLE_FACING_EAST:
+        if (unit->facing == BATTLE_FACING_EAST) {
             return;
         }
-        *cur = 0xC00;
+        unit->facing = BATTLE_FACING_EAST;
         break;
-    case 0x200:
-    case 0x600:
-    case 0xA00:
+    case BATTLE_FACING_SOUTH_WEST:
+    case BATTLE_FACING_NORTH_WEST:
+    case BATTLE_FACING_NORTH_EAST:
+    case BATTLE_FACING_SOUTH_EAST:
     default:
         return;
     }

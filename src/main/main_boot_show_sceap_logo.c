@@ -1,7 +1,8 @@
 #include "fft/main.h"
 
-/* Show the SCEA logo from SCEAP.DAT (sector 198, 320x32): fade it in through a subtractive black
- * quad, hold it 180 frames, fade it out and clear VRAM. */
+/* Show the SCEA logo: load SCEAP.DAT (sector 198, a 320x32 image) to the high overlay address on
+ * a 320x240 display, fade it in through a subtractive black quad over 32 frames, hold it 180
+ * frames, fade it out over 32 and clear the 320x480 VRAM area (before and after). */
 void main_boot_show_sceap_logo(void) {
     POLY_F4 polygons[2];
     DR_MODE draw_modes[2];
@@ -13,7 +14,7 @@ void main_boot_show_sceap_logo(void) {
     int frame;
 
     main_set_display_draw(320, 240, 512, 0, 0, 0);
-    main_file_load_to_address_checked(198, 0x5000, g_main_heap_high_overlay_load_address);
+    main_file_load_to_address_checked(DISC_SECTOR_SCEAP_DAT, 0x5000, g_main_heap_high_overlay_load_address);
     frame = 0;
 
     SetPolyF4(&polygons[0]);

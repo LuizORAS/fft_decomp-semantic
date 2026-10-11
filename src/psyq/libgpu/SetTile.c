@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 void SetTile(void* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
+    P_TAG* tag = primitive;
 
     tag->len = PSYQ_GPU_PACKET_WORDS(TILE);
     tag->code = PSYQ_GPU_CODE_TILE;

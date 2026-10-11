@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Reload the map when the number of crystals on the field has changed.
+ *
+ * Only in a battle entered with world result 4, and not while such a reload is
+ * running: the crystal count, capped at 4, is compared with script variable
+ * EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT, the map state that GNS rows of
+ * those maps select on. A new count is stored and a map data load started; the
+ * old count is put back when the load cannot start. Returns whether a reload is
+ * in progress. */
 s32 battle_map_check_deep_dungeon_crystal_and_init_state(void) {
     s32 crystal_count;
     s32 previous_count;
@@ -14,7 +22,7 @@ s32 battle_map_check_deep_dungeon_crystal_and_init_state(void) {
             previous_count = battle_script_get_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT);
             if (crystal_count != previous_count) {
                 battle_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT, crystal_count);
-                if (battle_map_load_data_stage_0x75() != 0) {
+                if (battle_map_start_data_load() != 0) {
                     g_battle_map_deep_dungeon_load_in_progress = 1;
                 } else {
                     battle_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT, previous_count);

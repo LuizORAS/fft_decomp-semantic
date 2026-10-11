@@ -1,6 +1,10 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Clear the "new card" state of `port` with _card_clear, trying up to
+ * `retry_limit` times. Returns CARD_IO_RESULT_COMPLETE once the hardware
+ * event or a follow-up info request reports completion, otherwise the last
+ * failure (a rejected call counts as a timeout). */
 s32 card_io_create_new_with_retries(s32 port, s32 retry_limit) {
     s32 i;
     s32 result;

@@ -113,7 +113,6 @@ void MatrixNormal(MATRIX* input, MATRIX* output);
 MATRIX* CompMatrix(MATRIX* left, MATRIX* right, MATRIX* output);
 
 /* driver internals */
-
 typedef union {
     MATRIX matrix;
     u32 words[8];

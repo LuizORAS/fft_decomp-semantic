@@ -3,9 +3,6 @@
 
 #define TEXT_STATE ((world_text_backreference_state_t*)0x1F800000)
 
-struct battle_text_backreference_state;
-u8* battle_text_advance_cursor_with_backreferences(struct battle_text_backreference_state* state, u8* cursor);
-
 /* BATTLE twin of world_text_measure_pixels. Measure a text entry in pixels: the widest line and the line count.
  *
  * Pixel-width sibling of battle_text_measure. Spaces (0xFA) are 4 pixels,
@@ -62,8 +59,7 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
         } else if (state->command == TEXT_SPACE) {
             state->column += 4;
         } else if (state->command == TEXT_SET_NUMBER_WIDTH) {
-            cursor = battle_text_advance_cursor_with_backreferences(
-                (struct battle_text_backreference_state*)state, cursor);
+            cursor = battle_text_advance_cursor_with_backreferences(state, cursor);
             state->pending_width = *cursor;
         } else if (state->command == TEXT_PRINT_NEXT_VALUE) {
             state->value = *state->value_cursor;
@@ -75,8 +71,7 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             }
             state->value_cursor++;
         } else if (state->command == TEXT_PRINT_INDEXED_VALUE) {
-            cursor = battle_text_advance_cursor_with_backreferences(
-                (struct battle_text_backreference_state*)state, cursor);
+            cursor = battle_text_advance_cursor_with_backreferences(state, cursor);
             state->value = g_battle_text_substitution_values[*cursor];
             if (state->pending_width == 0xFFFF) {
                 state->column += battle_text_count_decimal_digits(state->value) * 6;
@@ -84,10 +79,11 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
                 state->column += state->pending_width * 6;
                 state->pending_width = 0xFFFF;
             }
-        } else if ((u32)(state->command - TEXT_SET_GLYPH_COLOR) < 2
-            || (u32)(state->command - TEXT_SET_VARIABLE_BASE) < 2 || state->command == TEXT_SET_PORTRAIT) {
-            cursor = battle_text_advance_cursor_with_backreferences((struct battle_text_backreference_state*)state,
-                battle_text_advance_cursor_with_backreferences((struct battle_text_backreference_state*)state, cursor));
+        } else if (state->command == TEXT_SET_GLYPH_DELAY || state->command == TEXT_SET_PALETTE
+            || state->command == TEXT_SET_VARIABLE_BASE || state->command == TEXT_STORE_VARIABLE
+            || state->command == TEXT_SET_PORTRAIT) {
+            cursor = battle_text_advance_cursor_with_backreferences(
+                state, battle_text_advance_cursor_with_backreferences(state, cursor));
             continue;
         }
         state->value = battle_text_resolve_format_string_id(state->command, *state->value_cursor);
@@ -96,12 +92,12 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             if (state->command == TEXT_FORMAT_RAMZA_NAME) {
                 cursor = g_battle_player_name;
             } else {
-                cursor = battle_text_init_entry(state->value);
+                cursor = battle_text_find_entry(state->value);
             }
             state->value_cursor++;
             continue;
         }
-        if ((state->command & 0xF0) == 0xF0 && (state->command & 0xF) < 4) {
+        if ((state->command & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (state->command & 0xF) < 4) {
             state->return_cursor = cursor + 3;
             state->scratch = (cursor[0] & 3) * 8;
             state->remaining_bytes = cursor[1] >> 5;
@@ -111,17 +107,17 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             cursor -= state->scratch;
             continue;
         }
-        if ((state->command & 0xF0) >= 0xD0) {
-            if ((state->command & 0xF0) == 0xD0) {
+        if ((state->command & 0xF0) >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
+            if ((state->command & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                 state->glyph_page = state->command;
             } else {
                 state->glyph_page = 0;
             }
         } else {
-            state->column += g_text_glyph_widths[(state->glyph_page & 0xF) * 0xD0 + state->command];
+            state->column += g_text_glyph_widths[(state->glyph_page & 0xF) * TEXT_GLYPHS_PER_PREFIX + state->command];
             state->glyph_page = 0;
         }
-        cursor = battle_text_advance_cursor_with_backreferences((struct battle_text_backreference_state*)state, cursor);
+        cursor = battle_text_advance_cursor_with_backreferences(state, cursor);
     }
     *width = state->max_column;
     *rows = state->row;

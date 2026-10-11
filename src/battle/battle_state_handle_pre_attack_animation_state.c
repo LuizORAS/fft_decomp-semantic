@@ -7,11 +7,11 @@ void battle_state_handle_pre_attack_animation_state(void) {
     battle_unit_misc_data_t* unit;
 
     battle_state_update_units();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     unit = battle_unit_get_source_misc_data();
-    if ((unit->animation_countdown == 0 || unit->secondary_animation_state != 0 || unit->state_frame_counter >= 0x3d)
+    if ((unit->animation_wait == 0 || unit->animation_restart_count != 0 || unit->state_frame_counter >= 0x3d)
         && (g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0
-        && g_battle_camera_rotation_action == 0) {
+        && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE) {
         battle_action_execute_ability();
     }
 }

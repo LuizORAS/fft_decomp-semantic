@@ -1,5 +1,6 @@
 #include "psx/types.h"
 
+/* Fill a 16-byte text field with the terminator byte 0xfe. */
 void battle_text_fill_field_with_terminators(u8* text) {
     s32 index;
     u8* cursor = text;

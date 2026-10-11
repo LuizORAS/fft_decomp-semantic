@@ -1,11 +1,5 @@
 #include "fft/battle.h"
 
-/* Status display image IDs, eight per status_infliction/status_removal byte,
- * indexed from the byte's high bit: a non-const [5][8] view of
- * g_battle_action_status_display_image_ids, whose flat const declaration
- * changes this function's code. */
-extern u8 g_battle_action_status_display_image_ids_view[5][8];
-
 /* Queues the post-action displays for a unit's resolved action.
  *
  * A hit sets one action_display_flags bit per HP/MP, stat, level, steal and
@@ -22,8 +16,8 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
     u8 image;
     u8 miss;
 
-    unit->numeric_displays[0]->spritesheet_id = unit->numeric_displays[1]->spritesheet_id
-        = unit->numeric_displays[2]->spritesheet_id = 0x1f;
+    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage
+        = BATTLE_GFX_TPAGE_FRAME;
     stats = unit->battle_data;
     action = &stats->action;
     if (action->hit != 0) {
@@ -108,13 +102,13 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
                     bit = 0x80 >> j;
                     if (count < BATTLE_ACTION_STATUS_DISPLAY_CAPACITY) {
                         if (action->status_infliction[i] & bit) {
-                            image = g_battle_action_status_display_image_ids_view[i][j];
+                            image = g_battle_action_status_display_image_ids[i][j];
                             unit->status_display_image_list[count] = image;
                             if (image != 0) {
                                 unit->status_display_image_count++;
                             }
                         } else if (action->status_removal[i] & bit) {
-                            image = g_battle_action_status_display_image_ids_view[i][j];
+                            image = g_battle_action_status_display_image_ids[i][j];
                             unit->status_display_image_list[count] = image;
                             if (image != 0) {
                                 unit->status_display_image_list[unit->status_display_image_count] |= 0x80;
@@ -131,14 +125,14 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
             if ((u32)(action->miss_type - 1) < 2 || miss == BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE
                 || miss == BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE
                 || miss == BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD) {
-                if ((action->status_change & 3) == 1) {
+                if ((action->miss_display_flags & BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK) == 1) {
                     unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MISSED;
                 } else {
                     unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_GUARDED;
                 }
             } else if (miss == BATTLE_ACTION_MISS_TYPE_CATCH) {
                 unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_CAUGHT;
-            } else if (miss != BATTLE_ACTION_MISS_TYPE_CANCELLED && miss != 0
+            } else if (miss != BATTLE_ACTION_MISS_TYPE_CANCELLED && miss != BATTLE_ACTION_MISS_TYPE_HIT
                 && miss != BATTLE_ACTION_MISS_TYPE_REFLECTED) {
                 unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MISSED;
             }

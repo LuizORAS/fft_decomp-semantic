@@ -1,12 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* The -31 colour deltas are passed as sign-extended words; the u16 prototype
- * would zero-extend them, so this caller uses an all-s32 view.
- * The definition itself only matches with u16 colour parameters (s16 or s32
- * ones change its code), so the two views stay. */
-#define MODIFY_PALETTE_WORDS ((void (*)(s32, s32, s32, s32, s32, s32, s32, s32))battle_map_modify_palette)
-
 /* Per-frame zoom curves for the three numeric display digits, indexed by
  * display progress (0x80067bac..0x80067cb3, six 0x2c-byte records). */
 typedef struct battle_gfx_numeric_scale_table {
@@ -50,7 +44,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     display_0 = unit->numeric_displays[0];
     display_1 = unit->numeric_displays[1];
     display_2 = unit->numeric_displays[2];
-    progress = unit->numeric_display_progress + g_battle_state_vsync_interval;
+    progress = unit->numeric_display_progress + g_main_system_vsync_interval;
     display = (battle_action_result_display_t*)&unit->numeric_display_active;
     if (progress < 21) {
         if (unit->numeric_display_selector & BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL) {
@@ -62,7 +56,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
                 critical_scale_2.value[progress]);
         } else {
             switch (unit->numeric_display_selector & BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK) {
-            case 0 ... 15:
+            case BATTLE_NUMERIC_DISPLAY_HP_DAMAGE ... BATTLE_NUMERIC_DISPLAY_MA_GAIN:
                 main_util_set_svector(
                     &zoom_0, scale_0.value[progress], scale_0.value[progress], scale_0.value[progress]);
                 main_util_set_svector(
@@ -83,19 +77,18 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
                 break;
             }
         }
-    } else if (progress >= 50 && (u16)unit->numeric_display_progress < 50) {
+    } else if (progress >= 50 && unit->numeric_display_progress < 50) {
         if (battle_gfx_build_next_action_result_display(unit) != 0) {
             return;
         }
         if (battle_gfx_build_next_special_action_result_display(unit) != 0) {
             return;
         }
-        unit->numeric_displays[0]->spritesheet_id = unit->numeric_displays[1]->spritesheet_id
-            = unit->numeric_displays[2]->spritesheet_id = 0x3f;
-        MODIFY_PALETTE_WORDS(4, 2, 7, unit->unit_id, 0, -31, -31, -31);
-        battle_gfx_set_sprite_part_flag_bit_0(display_0, 0, 1);
-        battle_gfx_set_sprite_part_flag_bit_0(display_1, 0, 1);
-        battle_gfx_set_sprite_part_flag_bit_0(display_2, 0, 1);
+        unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage = 0x3f;
+        battle_map_modify_palette(MAP_COLOR_MODE_BASE, 2, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0, -31, -31, -31);
+        battle_gfx_set_sprite_part_semi_transparent(display_0, 0, 1);
+        battle_gfx_set_sprite_part_semi_transparent(display_1, 0, 1);
+        battle_gfx_set_sprite_part_semi_transparent(display_2, 0, 1);
     } else if (progress >= 61) {
         if (battle_gfx_build_next_action_result_display(unit) != 0) {
             return;
@@ -108,24 +101,24 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     position.vx = screen_coords[0] + 0x15;
     position.vy = screen_coords[1] - 8;
     switch (display->selector & BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK) {
-    case 0:
-    case 2:
-    case 4:
-    case 6:
-    case 8:
-    case 10:
-    case 12:
-    case 14:
+    case BATTLE_NUMERIC_DISPLAY_HP_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_MP_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_CT_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_PA_DAMAGE:
+    case BATTLE_NUMERIC_DISPLAY_MA_DAMAGE:
         position.vy = screen_coords[1] - 0x30;
         break;
-    case 1:
-    case 3:
-    case 5:
-    case 7:
-    case 9:
-    case 11:
-    case 13:
-    case 15:
+    case BATTLE_NUMERIC_DISPLAY_HP_HEALING:
+    case BATTLE_NUMERIC_DISPLAY_MP_HEALING:
+    case BATTLE_NUMERIC_DISPLAY_SPEED_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_CT_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_FAITH_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_PA_GAIN:
+    case BATTLE_NUMERIC_DISPLAY_MA_GAIN:
         position.vy = screen_coords[1] - 0x10;
         break;
     case BATTLE_NUMERIC_DISPLAY_MISSED:
@@ -134,11 +127,11 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     case BATTLE_NUMERIC_DISPLAY_GAINED_JP:
         break;
     }
-    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display_0, display_0->part_count, 0,
-        (s16*)&position, 0, 0, (s16*)&zoom_0, main_gfx_get_otag() + 1);
-    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display_1, display_1->part_count, 0,
-        (s16*)&position, 0, 0, (s16*)&zoom_1, main_gfx_get_otag() + 1);
-    battle_gfx_construct_polygon_data_for_units((battle_gfx_sprite_display_t*)display_2, display_2->part_count, 0,
-        (s16*)&position, 0, 0, (s16*)&zoom_2, main_gfx_get_otag() + 1);
-    display->progress += g_battle_state_vsync_interval;
+    battle_gfx_construct_polygon_data_for_units(
+        display_0, display_0->part_count, 0, &position, 0, 0, &zoom_0, main_gfx_get_otag() + 1);
+    battle_gfx_construct_polygon_data_for_units(
+        display_1, display_1->part_count, 0, &position, 0, 0, &zoom_1, main_gfx_get_otag() + 1);
+    battle_gfx_construct_polygon_data_for_units(
+        display_2, display_2->part_count, 0, &position, 0, 0, &zoom_2, main_gfx_get_otag() + 1);
+    display->progress += g_main_system_vsync_interval;
 }

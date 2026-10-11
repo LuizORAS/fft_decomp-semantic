@@ -4,7 +4,8 @@
 /* Cold boot: clear the game allocator, install the VSync, DrawSync and CD callbacks, reset the
  * GPU, pads, SPU and CD, show the SCEA and Squaresoft logos, open the memory card events and
  * generic sound effects, load the zodiac frame, seed rand with 1 and fade the Squaresoft logo
- * out. */
+ * out. It clears g_main_boot_game_state_initialized, so the first main_boot_reset_game_state
+ * skips the hardware restart. */
 void main_boot_run_startup(void) {
     main_heap_clear_game_allocator_table();
     ResetCallback();

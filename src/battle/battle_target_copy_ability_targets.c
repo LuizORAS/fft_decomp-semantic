@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Copy the 16-entry ability target list (g_battle_target_ability_targets_list) into `out` and
- * return how many entries hold a unit. */
+/* Copy the 16-entry ability target list (g_battle_target_ability_targets_list) into out and
+ * return how many entries hold a unit (any value but 0xff). */
 s32 battle_target_copy_ability_targets(u8* out) {
     s32 count = 0;
     s32 i = 0;

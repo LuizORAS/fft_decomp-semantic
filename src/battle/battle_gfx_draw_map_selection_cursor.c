@@ -31,11 +31,11 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     s32 half_height;
     u8 color;
 
-    prim = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
+    prim = g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
     ((P_TAG*)prim)->len = 9;
     prim->code = 0x2c;
     if (g_battle_menu_status_screen_selected != 1) {
-        g_battle_gfx_selection_cursor_bob_timer += g_battle_state_vsync_interval;
+        g_battle_gfx_selection_cursor_bob_timer += g_main_system_vsync_interval;
         if (g_battle_gfx_selection_cursor_bob_timer >= duration[g_battle_gfx_selection_cursor_bob_frame]) {
             g_battle_gfx_selection_cursor_bob_frame += 1;
             g_battle_gfx_selection_cursor_bob_timer = 0;
@@ -54,7 +54,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     } else {
         height = 0x3c;
     }
-    base->vy -= height - *(u16*)&bob[g_battle_gfx_selection_cursor_bob_frame];
+    base->vy -= height - bob[g_battle_gfx_selection_cursor_bob_frame];
     RotTrans(base, &transformed, &flag);
 
     half_width = g_battle_camera_zoom.vx;
@@ -109,7 +109,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     }
     prim->code |= 2;
     color = 0x80;
-    prim->clut = GetClut(0x40, 0x1e2);
+    prim->clut = GetClut(0x40, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
     prim->r0 = prim->g0 = prim->b0 = color;
     prim->u2 = 0x40;
     prim->u0 = 0x40;

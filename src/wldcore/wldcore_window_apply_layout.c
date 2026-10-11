@@ -14,7 +14,8 @@ void wldcore_window_apply_layout(wldcore_window_layout_request_t* request) {
     kind = g_wldcore_window_layout_rows[layout].kind;
     if (kind != request->cached_layout_kind) {
         request->cached_layout_kind = kind;
-        g_wldcore_window_records[index].sequence = (kind != 0) ? 0x78 : 2;
+        g_wldcore_window_records[index].sequence
+            = (kind != 0) ? WLDCORE_ANIM_SEQUENCE_LAYOUT_CURSOR_IDLE : WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
         g_wldcore_window_records[index].anim_counter = 0;
         g_wldcore_window_records[index].frame_index = 0;
     }

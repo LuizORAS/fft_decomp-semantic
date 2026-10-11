@@ -27,7 +27,7 @@ u32 wldcore_input_check_repeating_directional(u32 buttons) {
 
             if (g_wldcore_input_repeat_initial_delay < (*counter = next = *counter + 1)) {
                 *counter = next - g_wldcore_input_repeat_period;
-                return 0x1000;
+                return PSX_PAD_UP;
             }
         } else {
             g_wldcore_input_repeat_counter_up = 0;
@@ -40,7 +40,7 @@ u32 wldcore_input_check_repeating_directional(u32 buttons) {
 
             if (g_wldcore_input_repeat_initial_delay < (*counter = next = *counter + 1)) {
                 *counter = next - g_wldcore_input_repeat_period;
-                return 0x4000;
+                return PSX_PAD_DOWN;
             }
         } else {
             g_wldcore_input_repeat_counter_down = 0;
@@ -53,7 +53,7 @@ u32 wldcore_input_check_repeating_directional(u32 buttons) {
 
             if (g_wldcore_input_repeat_initial_delay < (*counter = next = *counter + 1)) {
                 *counter = next - g_wldcore_input_repeat_period;
-                return 0x2000;
+                return PSX_PAD_RIGHT;
             }
         } else {
             g_wldcore_input_repeat_counter_right = 0;
@@ -66,7 +66,7 @@ u32 wldcore_input_check_repeating_directional(u32 buttons) {
 
             if (g_wldcore_input_repeat_initial_delay < (*counter = next = *counter + 1)) {
                 *counter = next - g_wldcore_input_repeat_period;
-                return 0x8000;
+                return PSX_PAD_LEFT;
             }
         } else {
             g_wldcore_input_repeat_counter_left = 0;
@@ -79,7 +79,7 @@ u32 wldcore_input_check_repeating_directional(u32 buttons) {
 
             if (g_wldcore_input_repeat_initial_delay < (*counter = next = *counter + 1)) {
                 *counter = next - g_wldcore_input_secondary_repeat_period;
-                return 0x8;
+                return PSX_PAD_R1;
             }
         } else {
             g_wldcore_input_repeat_counter_r1 = 0;
@@ -96,7 +96,7 @@ u32 wldcore_input_check_repeating_directional(u32 buttons) {
             if (g_wldcore_input_repeat_initial_delay < (*counter = last_next = old_counter + 1)) {
                 old_counter = last_next - g_wldcore_input_secondary_repeat_period;
                 *counter = old_counter;
-                return 0x4;
+                return PSX_PAD_L1;
             }
         } else {
             g_wldcore_input_repeat_counter_l1 = 0;

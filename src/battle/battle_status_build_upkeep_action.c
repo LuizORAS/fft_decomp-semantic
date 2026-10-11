@@ -2,13 +2,14 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* The turn clock's status upkeep for one unit, staged in its action record. A dead unit with Reraise
- * that is not undead revives with max HP / 10 (returns 2). While executing, a dead unit counts down
- * its death counter (immortal and formation units never run out); when it runs out, an undead unit
- * revives on a coin flip with 1 to max HP (2), otherwise the unit becomes a Crystal, on a roll of 1/2
- * (3/4 for a unit that started player-controlled), or else a Treasure (1). Death Sentence counts down
- * and at 0 ends, inflicting Dead unless the unit is undead (3). Defending ends, and a Brave below 10
- * gains 1. Returns 2 when anything else changed, 0 when nothing did. */
+/* The turn clock's status upkeep for one unit, staged in its action record. A dead unit with
+ * Reraise that is not undead revives with max HP / 10 (returns 2). While executing, a dead unit
+ * counts down its death counter (immortal and formation units never run out); when it runs out,
+ * an undead unit revives on a coin flip with 1 to max HP (2), otherwise the unit becomes a
+ * Crystal, on a roll of 1/2 (3/4 for a unit that started player-controlled), or else a Treasure
+ * (either returns 1). Death Sentence counts down and at 0 ends, inflicting Dead unless the unit
+ * is undead (3). Defending ends, and a Brave below 10 gains 1. Returns 2 when anything else
+ * changed, 0 when nothing did. */
 s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
     battle_action_data_t* action = &unit->action;
     s32 roll;

@@ -28,10 +28,10 @@ s32 battle_ai_build_movement_scenarios(void) {
     s32 low;
     s32 high;
 
-    g_battle_ai_movement_scenario = 1;
-    decision = g_battle_ai_acting_unit_decision_ptr;
     ai = &g_battle_ai_data_base;
-    if (g_battle_ai_data_base.decision_state) {
+    g_battle_ai_data_base.movement_scenario = 1;
+    decision = g_battle_ai_data_base.acting_unit_decision;
+    if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         if (g_battle_ai_data_base.movement_decision_state == 0)
             goto fill_target_distance;
@@ -41,7 +41,7 @@ s32 battle_ai_build_movement_scenarios(void) {
         && (decision->main_target_id == g_battle_ai_data_base.acting_unit_id
             || ((ai->unit_decisions[decision->main_target_id].targeting_flags_2 >> 4)
                 & (BATTLE_AI_TARGET_UNTARGETABLE >> 4)))) {
-        battle_ai_clear_words((s32*)ai->tile_target_distance, sizeof(ai->tile_target_distance));
+        battle_ai_clear_words(ai->tile_target_distance, sizeof(ai->tile_target_distance));
     } else {
     fill_target_distance:
         if (battle_ai_fill_target_distance_grid(&decision->target) == -1) {
@@ -49,12 +49,14 @@ s32 battle_ai_build_movement_scenarios(void) {
             return -1;
         }
         if ((decision->targeting_flags_2 & (BATTLE_AI_TARGET_HP_BELOW_HALF | BATTLE_AI_TARGET_MP_CONSTRAINED))
-            && !(ai->acting_unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE))) {
+            && !(ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE))) {
             for (g_battle_ai_movement_unit_index = 0; g_battle_ai_movement_unit_index < BATTLE_UNIT_SLOT_COUNT;
                 g_battle_ai_movement_unit_index++) {
                 unit = &g_battle_unit_stats[g_battle_ai_movement_unit_index];
                 if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
-                    && (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))) {
+                    && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))) {
                     battle_ai_transfer_unit_coordinates(g_battle_ai_movement_unit_index, &ai->considered_unit_coords);
                     ai->tile_target_distance[ai->considered_unit_coords.bytes.elevation]
                                             [ai->considered_unit_coords.bytes.y][ai->considered_unit_coords.bytes.x]
@@ -72,20 +74,18 @@ s32 battle_ai_build_movement_scenarios(void) {
     if (g_battle_ai_target_reach >= limit
         || (decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_REFLECTED_ACTION)) {
         g_battle_ai_target_within_reach = 1;
-        if (decision->flags & BATTLE_AI_DECISION_STAY_NEAR_COORDINATES) {
-            g_battle_ai_movement_unit_index = battle_ai_find_unit_at_coordinates(&decision->target);
-            if (g_battle_ai_movement_unit_index == ai->acting_unit_id
-                || g_battle_ai_movement_unit_index == BATTLE_UNIT_ID_NONE) {
-                if (ai->reachable_tiles[0][decision->target.bytes.elevation][decision->target.bytes.y]
-                    & (0x8000 >> decision->target.bytes.x)) {
-                    ai->candidate_coords[ai->movement_scenario] = decision->target;
-                    battle_ai_set_candidate_and_actor_reachable_tiles();
-                    g_battle_ai_stay_near_destination_fixed = 1;
-                    goto score_tiles;
-                }
-            }
+        if ((decision->flags & BATTLE_AI_DECISION_STAY_NEAR_COORDINATES)
+            && ((g_battle_ai_movement_unit_index = battle_ai_find_unit_at_coordinates(&decision->target))
+                    == ai->acting_unit_id
+                || g_battle_ai_movement_unit_index == BATTLE_UNIT_ID_NONE)
+            && (ai->reachable_tiles[0][decision->target.bytes.elevation][decision->target.bytes.y]
+                & (0x8000 >> decision->target.bytes.x))) {
+            ai->candidate_coords[ai->movement_scenario] = decision->target;
+            battle_ai_set_candidate_and_actor_reachable_tiles();
+            g_battle_ai_stay_near_destination_fixed = 1;
+        } else {
+            battle_ai_filter_reachable_tiles_by_target_distance(ai->acting_unit_move + g_battle_ai_target_distance);
         }
-        battle_ai_filter_reachable_tiles_by_target_distance(ai->acting_unit_move + g_battle_ai_target_distance);
     } else {
         g_battle_ai_target_within_reach = 0;
         battle_ai_filter_reachable_tiles_by_target_distance(limit - 1);

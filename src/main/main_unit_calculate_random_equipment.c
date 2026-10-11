@@ -80,7 +80,7 @@ s32 main_unit_calculate_random_equipment(
     }
 
     if (count == 0) {
-        return ENTD_EQUIPMENT_RANDOM;
+        return ENTD_VALUE_RANDOM;
     }
     value = (rand() * count) / 0x8000;
     return candidates[value];

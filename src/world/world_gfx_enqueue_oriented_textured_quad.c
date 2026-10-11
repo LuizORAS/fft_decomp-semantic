@@ -2,6 +2,10 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Queue a textured quad for `descriptor` at ordering-table entry `otag_index`,
+ * its texture cell mirrored by `orientation` (TEXTURE_UV_FLIP_*). A non-null
+ * `color` modulates the texture with that RGB triple; the screen x is offset
+ * by 0x80. */
 void world_gfx_enqueue_oriented_textured_quad(
     const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index) {
     s32 quad_semitrans = semitrans;
@@ -92,6 +96,5 @@ void world_gfx_enqueue_oriented_textured_quad(
 
     poly->clut = descriptor->clut;
     poly->tpage = descriptor->tpage;
-    setaddr(poly, getaddr(&g_world_gfx_active_packet_buffer->otag[otag_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[otag_index], poly);
+    addPrim(&g_world_gfx_active_packet_buffer->otag[otag_index], poly);
 }

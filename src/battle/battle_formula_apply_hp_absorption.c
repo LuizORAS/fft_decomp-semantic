@@ -12,7 +12,8 @@ void battle_formula_apply_hp_absorption(void) {
     battle_action_data_t* attacker2;
     u16 amount;
 
-    if (g_battle_action_target->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
+    if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
         battle_action_finalize_target_current_action();
         action = g_battle_action_target_data;
         if (action->hit != 0) {

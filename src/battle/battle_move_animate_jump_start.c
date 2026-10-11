@@ -33,8 +33,8 @@ void battle_move_animate_jump_start(battle_unit_misc_data_t* unit) {
         } else {
             unit->position_copies_active = 0;
             unit->shadow_graphic_trigger = 0;
-            unit->distortion_animation_id = 0;
-            battle_unit_store_animation_facing_movement_data(2, unit->facing, unit);
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
+            battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_STAND, unit->facing, unit);
         }
         timer--;
         break;

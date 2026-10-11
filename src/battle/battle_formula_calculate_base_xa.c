@@ -16,36 +16,36 @@ void battle_formula_calculate_base_xa(void) {
     s16 value;
     u8 brave;
 
-    type = g_main_item_primary_data[g_current_ability.weapon_id].type;
+    type = g_main_item_primary_data[g_battle_action_current_ability.weapon_id].type;
     pa = g_battle_action_attacker->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
     ma = g_battle_action_attacker->attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK];
     brave = g_battle_action_attacker->brave;
     if (type == ITEM_TYPE_UNARMED) {
-        g_current_ability.xa = pa;
+        g_battle_action_current_ability.xa = pa;
         value = pa * brave / 100;
-        g_current_ability.ya = value;
+        g_battle_action_current_ability.ya = value;
         if (value == 0) {
-            g_current_ability.ya = value + 1;
+            g_battle_action_current_ability.ya = value + 1;
         }
         return;
     }
-    g_current_ability.ya = g_current_ability.weapon_data.power;
-    if (type == ITEM_TYPE_SWORD || type == ITEM_TYPE_CROSSBOW || type == ITEM_TYPE_ROD || type == ITEM_TYPE_POLEARM) {
-        g_current_ability.xa = pa;
-    } else if (type == ITEM_TYPE_KNIFE || type == ITEM_TYPE_NINJA_BLADE || type == ITEM_TYPE_BOW
-        || type == ITEM_TYPE_THROWING) {
-        g_current_ability.xa = (pa + g_battle_action_attacker->attributes[UNIT_ATTRIBUTE_SPEED]) >> 1;
+    g_battle_action_current_ability.ya = g_battle_action_current_ability.weapon_data.power;
+    if (type == ITEM_TYPE_SWORD || type == ITEM_TYPE_CROSSBOW || type == ITEM_TYPE_ROD || type == ITEM_TYPE_SPEAR) {
+        g_battle_action_current_ability.xa = pa;
+    } else if (type == ITEM_TYPE_KNIFE || type == ITEM_TYPE_NINJA_SWORD || type == ITEM_TYPE_BOW
+        || type == ITEM_TYPE_SHURIKEN) {
+        g_battle_action_current_ability.xa = (pa + g_battle_action_attacker->attributes[UNIT_ATTRIBUTE_SPEED]) >> 1;
     } else if (type == ITEM_TYPE_KNIGHT_SWORD || type == ITEM_TYPE_KATANA) {
         value = pa * brave / 100;
-        g_current_ability.xa = value;
+        g_battle_action_current_ability.xa = value;
         if (value == 0) {
-            g_current_ability.xa = value + 1;
+            g_battle_action_current_ability.xa = value + 1;
         }
-    } else if (type == ITEM_TYPE_STAFF || type == ITEM_TYPE_POLE) {
-        g_current_ability.xa = ma;
-    } else if (type == ITEM_TYPE_AXE || type == ITEM_TYPE_FLAIL || type == ITEM_TYPE_BAG) {
-        g_current_ability.xa = pa * battle_formula_get_random_0_7fff() / 0x8000 + 1;
-    } else if (type == ITEM_TYPE_INSTRUMENT || type == ITEM_TYPE_BOOK || type == ITEM_TYPE_CLOTH) {
-        g_current_ability.xa = (pa + ma) >> 1;
+    } else if (type == ITEM_TYPE_STAFF || type == ITEM_TYPE_STICK) {
+        g_battle_action_current_ability.xa = ma;
+    } else if (type == ITEM_TYPE_AXE || type == ITEM_TYPE_HAMMER || type == ITEM_TYPE_BAG) {
+        g_battle_action_current_ability.xa = pa * battle_formula_get_random_0_7fff() / 0x8000 + 1;
+    } else if (type == ITEM_TYPE_INSTRUMENT || type == ITEM_TYPE_DICTIONARY || type == ITEM_TYPE_CLOTH) {
+        g_battle_action_current_ability.xa = (pa + ma) >> 1;
     }
 }

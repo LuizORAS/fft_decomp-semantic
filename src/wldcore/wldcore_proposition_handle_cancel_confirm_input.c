@@ -1,10 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Provisional: the yes/no confirmation menu level this handler drives. The
+/* The yes/no confirmation menu level this handler drives. The
  * level owns a cursor window (0x00), a render record (0x04), the proposition
- * it acts on (0x10), the highlighted answer (0x14) and a second window
- * (0x20). Only these words are touched here. */
+ * it acts on (0x10), the highlighted answer (0x14), the confirmed flag
+ * (0x18) and a second window (0x20). Only these words are touched here. */
 typedef struct wldcore_menu_proposition_confirm_level {
     s32 window;        /* 0x00 */
     s32 render_index;  /* 0x04 */
@@ -21,13 +21,9 @@ typedef struct wldcore_menu_proposition_confirm_level {
  * accepts the proposition and starts WORLD thread 14 with text 0xb81e or
  * closes the level, and Cross closes it. */
 void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_confirm_level_t* level) {
-    s32 render_index;
-    s32 window;
     s32 choice;
-    s32 row_y;
-    s32 y;
 
-    if (g_wldcore_window_render_records[level->render_index].flags & 0x100) {
+    if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
     if (level->confirmed != 0) {
@@ -51,13 +47,10 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_co
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0
         || wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
-        choice = level->choice;
-        choice = choice ^ 1;
-        window = level->window;
-        render_index = level->render_index;
+        choice = level->choice ^ 1;
         level->choice = choice;
-        g_wldcore_window_records[window].y
-            = (y = g_wldcore_window_render_records[render_index].base_y) + (row_y = choice * 16 + 14);
+        g_wldcore_window_records[level->window].position.y
+            = g_wldcore_window_render_records[level->render_index].base.y - -(choice * 0x10 + 0xE);
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
     if (!(g_wldcore_new_button_presses & PSX_PAD_CIRCLE)) {
@@ -70,10 +63,10 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_co
     if (level->choice == 1) {
         goto close;
     }
-    world_thread_set_parameters(0xE, 0x19, 0xB81E, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CALL_BACK_ACCEPTED, 0);
     level->confirmed = 1;
-    g_main_active_propositions[level->proposition].flags |= 2;
-    g_wldcore_window_records[level->window].flags |= 0x10;
-    g_wldcore_window_records[level->second_window].flags |= 0x10;
-    g_wldcore_window_render_records[level->render_index].flags |= 0x10;
+    g_main_active_propositions[level->proposition].flags |= WLDCORE_PROPOSITION_PROGRESS_RECALLED;
+    g_wldcore_window_records[level->window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_records[level->second_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
 }

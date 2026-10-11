@@ -8,7 +8,7 @@ void battle_formula_calculate_damage_leaving_one_hp(void) {
 
     target = g_battle_action_target;
     if (target->hp != 0) {
-        g_battle_action_target_data->hp_damage = (s16)(g_battle_action_target->hp - 1);
+        g_battle_action_target_data->hp_damage = g_battle_action_target->hp - 1;
     } else {
         g_battle_action_target_data->hp_damage = 0;
     }

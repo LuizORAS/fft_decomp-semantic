@@ -1,15 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* g_battle_ai_temp_unit_data names g_battle_ai_data_base.acting_unit separately:
- * a member access makes GCC share one base register where the target keeps a
- * lui per site. */
-
 /* Make the selected action only moving to the current scenario's destination, Defending there when
  * the unit's support ability is Defend: the fallback when no ranked action is taken. */
 void battle_ai_select_move_only_action(void) {
     u8 scenario = g_battle_ai_data_base.movement_scenario;
-    battle_stats_t* unit = g_battle_ai_temp_unit_data;
+    battle_stats_t* unit = g_battle_ai_data_base.acting_unit;
     u32 coords;
     s32 support;
 
