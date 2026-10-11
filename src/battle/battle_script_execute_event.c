@@ -70,7 +70,7 @@ void battle_script_execute_event(void) {
     s32 operand_3;
     s32 operand_4;
     s32 operand_1;
-    u8* position_instruction;
+    event_set_battle_unit_position_instruction_t* position_instruction;
     u8* message_instruction;
     s32* script_variables;
     u8* parameters;
@@ -827,11 +827,12 @@ restart_script:
              * Operand byte 1 is unused. The target neither guards slots >=21
              * nor synchronizes the renderer's position here. */
             unit = battle_unit_get_stats_from_battle_id(operand_1);
-            position_instruction = instruction_offset + ((u8*)g_battle_event_block);
-            unit->x = position_instruction[3];
-            unit->position.y = position_instruction[4];
-            unit->position.higher_elevation = position_instruction[5];
-            unit->position.facing = position_instruction[6];
+            position_instruction
+                = (event_set_battle_unit_position_instruction_t*)(instruction_offset + (u8*)g_battle_event_block);
+            unit->x = position_instruction->placement.x;
+            unit->position.y = position_instruction->placement.y;
+            unit->position.higher_elevation = position_instruction->placement.elevation;
+            unit->position.facing = position_instruction->placement.facing;
         } else if (opcode == EVENT_OPCODE_WAIT_ADD_UNIT) {
             do {
                 battle_thread_yield();

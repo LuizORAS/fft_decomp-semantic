@@ -535,6 +535,16 @@ typedef struct event_unit_placement {
     u8 facing;
 } event_unit_placement_t;
 
+/* Direct battle-slot placement bypasses the renderer update performed by WarpUnit. */
+typedef struct event_set_battle_unit_position_instruction {
+    u8 opcode;
+    u8 battle_id;
+    u8 _unused_02;
+    event_unit_placement_t placement;
+} event_set_battle_unit_position_instruction_t;
+typedef char event_set_battle_unit_position_instruction_size_must_be_7
+    [sizeof(event_set_battle_unit_position_instruction_t) == 7 ? 1 : -1];
+
 typedef struct event_warp_unit_parameters {
     u8 unit_id_le[2];
     event_unit_placement_t placement;

@@ -43,7 +43,7 @@ void world_script_execute_event(void) {
     u32 operand_3;
     s32 operand_4;
     s32 operand_1;
-    u8* position_instruction;
+    event_set_battle_unit_position_instruction_t* position_instruction;
     u8* dialogue_instruction;
     s32* event_words;
     u8* parameters;
@@ -788,11 +788,12 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_UNKNOWN_61) {
         } else if (opcode == EVENT_OPCODE_SET_BATTLE_UNIT_POSITION) {
             unit = battle_unit_get_stats_from_battle_id(operand_1);
-            position_instruction = g_world_event_script + instruction_offset;
-            unit->x = position_instruction[3];
-            unit->position.y = position_instruction[4];
-            unit->position.higher_elevation = position_instruction[5];
-            unit->position.facing = position_instruction[6];
+            position_instruction
+                = (event_set_battle_unit_position_instruction_t*)(g_world_event_script + instruction_offset);
+            unit->x = position_instruction->placement.x;
+            unit->position.y = position_instruction->placement.y;
+            unit->position.higher_elevation = position_instruction->placement.elevation;
+            unit->position.facing = position_instruction->placement.facing;
         } else if (opcode == EVENT_OPCODE_WAIT_ADD_UNIT) {
             do {
                 world_thread_yield();
