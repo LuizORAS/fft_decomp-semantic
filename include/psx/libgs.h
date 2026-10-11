@@ -9,6 +9,8 @@
 /* GsSPRITE/GsLINE/GsBOXF.attribute: suppress display. */
 #define GsDOFF      (1U << 31)
 #define ZRESOLUTION 0x3fff
+#define GsOFSGPU    4
+#define GsINTER     1
 
 /* Psy-Q packet work areas are byte buffers holding variable GPU packet layouts. */
 typedef u8 PACKET;
@@ -115,15 +117,16 @@ typedef struct {
 } _GsPOSITION;
 
 extern RECT CLIP2;           /* clip rectangle relative to the draw buffer base */
-extern s16 PSDBASEX[2];      /* frame-buffer x of each draw buffer */
-extern s16 PSDBASEY[2];      /* frame-buffer y of each draw buffer */
+extern s16 PSDBASEX[2];      /* draw-buffer bases, zero in GPU offset mode */
+extern s16 PSDBASEY[2];      /* no other linked function reads these bases */
 extern s16 PSDIDX;           /* active draw buffer */
 extern u32 PSDCNT;           /* frame counter; GsSwapDispBuff skips zero */
 extern _GsPOSITION POSITION; /* 2D offset */
 extern DRAWENV GsDRAWENV;
 extern DISPENV GsDISPENV;
-extern s32 HWD0; /* horizontal resolution */
-extern s32 VWD0; /* vertical resolution */
+extern s32 HWD0;               /* horizontal resolution */
+extern s32 VWD0;               /* vertical resolution */
+extern MATRIX GsLIGHTWSMATRIX; /* world-screen light matrix */
 extern MATRIX GsIDMATRIX;
 extern MATRIX GsIDMATRIX2;     /* identity scaled by the aspect ratio */
 extern PACKET* GsOUT_PACKET_P; /* packet work area cursor */
@@ -155,21 +158,19 @@ void GsGetTimInfo(u32* tim, GsIMAGE* im);
 extern const char g_psyq_gs_sort_sprite_overflow_message[];
 extern TILE g_psyq_gs_clear_tile[2]; /* GsSortClear's tile for each draw buffer */
 
-/* Draw-buffer bases as GsDefDispBuff last stored them, zero in GPU offset
- * mode; no linked function reads them. */
-extern s16 g_psyq_gs_buffer_offset_x[2];
-extern s16 g_psyq_gs_buffer_offset_y[2];
+/* Frame-buffer coordinates used for display, clipping and geometry offsets. */
+extern s16 PSDOFSX[2];
+extern s16 PSDOFSY[2];
 
 /* Offset the sorters add to 2D coordinates: zero in GPU offset mode, else
  * the GTE offset GsSetDrawBuffOffset programmed. */
-extern s16 g_psyq_gs_offset_x;
-extern s16 g_psyq_gs_offset_y;
-extern s16 g_psyq_gs_offset_draw_active; /* GsOFSGPU: offsets go through the draw environment */
+extern s16 GsORGOFSX;
+extern s16 GsORGOFSY;
+extern s16 PSDGPU; /* GsOFSGPU: offsets go through the draw environment */
 
-/* Both are zero matrices after GsInitGraph and no linked function reads
- * them; which SDK light matrix each one is has not been established. */
-extern MATRIX g_psyq_gs_ls_matrix;
-extern MATRIX g_psyq_gs_light_ws_matrix;
+/* Internal matrix reset to zero by graphics initialization; no other linked
+ * function accesses it. The original SDK object names it _LC. */
+extern MATRIX _LC;
 
 /* GsInit3D clipping limits; no other linked function reads them. */
 extern s32 GsCLIP3far;

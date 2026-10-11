@@ -64,8 +64,8 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
             /* Share one DMA tag: the mode word occupies this primitive view's tag slot. */
             sprt = (SPRT*)draw_mode->code;
             words = (u32*)sprt;
-            x = sp->x + g_psyq_gs_offset_x;
-            y = sp->y + g_psyq_gs_offset_y;
+            x = sp->x + GsORGOFSX;
+            y = sp->y + GsORGOFSY;
             dr_mode = 0xe1000200;
             draw_mode->code[0] = (sp->tpage & 0x1f) | (((attr >> 17) & 0x180) | dr_mode) | ((attr >> 23) & 0x60);
             sprt_mode = (attr >> 5) & 0x02000000;

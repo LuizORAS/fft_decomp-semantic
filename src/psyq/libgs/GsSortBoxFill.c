@@ -19,7 +19,7 @@ void GsSortBoxFill(GsBOXF* bp, GsOT* otp, u16 pri) {
         draw_mode->code[0] = hi | lo;
         setRGB0(packet, bp->r, bp->g, bp->b);
         packet->code = ((attr >> 29) & 2) | 0x60;
-        setXY0(packet, bp->x + g_psyq_gs_offset_x, bp->y + g_psyq_gs_offset_y);
+        setXY0(packet, bp->x + GsORGOFSX, bp->y + GsORGOFSY);
         setWH(packet, bp->w, bp->h);
         GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)draw_mode, otp, pri, 4);
     }

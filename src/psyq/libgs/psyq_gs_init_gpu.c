@@ -20,8 +20,8 @@ void psyq_gs_init_gpu(u16 x, u16 y, u16 intmode, u16 dither, u16 vram) {
         GsDISPENV.screen.y = 0x18;
         GsDISPENV.pad0 = 1;
     }
-    GsDISPENV.isinter = intmode & 1;
-    g_psyq_gs_offset_draw_active = intmode & 4;
+    GsDISPENV.isinter = intmode & GsINTER;
+    PSDGPU = intmode & GsOFSGPU;
     GsDISPENV.isrgb24 = vram;
     PutDispEnv(&GsDISPENV);
 }

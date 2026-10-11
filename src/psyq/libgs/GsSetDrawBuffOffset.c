@@ -9,16 +9,16 @@ void GsSetDrawBuffOffset(void) {
     s32 x;
     s32 y;
 
-    if (g_psyq_gs_offset_draw_active != 0) {
-        g_psyq_gs_offset_x = g_psyq_gs_offset_y = 0;
-        GsDRAWENV.ofs[0] = POSITION.offx + PSDBASEX[PSDIDX];
-        GsDRAWENV.ofs[1] = POSITION.offy + PSDBASEY[PSDIDX];
+    if (PSDGPU != 0) {
+        GsORGOFSX = GsORGOFSY = 0;
+        GsDRAWENV.ofs[0] = POSITION.offx + PSDOFSX[PSDIDX];
+        GsDRAWENV.ofs[1] = POSITION.offy + PSDOFSY[PSDIDX];
         PutDrawEnv(&GsDRAWENV);
     } else {
-        x = POSITION.offx + PSDBASEX[PSDIDX != 0 ? 0 : 1];
-        y = POSITION.offy + PSDBASEY[PSDIDX != 0 ? 0 : 1];
+        x = POSITION.offx + PSDOFSX[PSDIDX != 0 ? 0 : 1];
+        y = POSITION.offy + PSDOFSY[PSDIDX != 0 ? 0 : 1];
         SetGeomOffset(x, y);
-        g_psyq_gs_offset_x = x;
-        g_psyq_gs_offset_y = y;
+        GsORGOFSX = x;
+        GsORGOFSY = y;
     }
 }

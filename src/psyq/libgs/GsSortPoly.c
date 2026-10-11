@@ -26,8 +26,8 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     dst[offsetof(P_TAG, r0) / sizeof(*dst)] = src[offsetof(P_TAG, r0) / sizeof(*src)];
     source_coordinates = (POLY_F4*)src;
     destination_coordinates = (POLY_F4*)dst;
-    destination_coordinates->x0 = source_coordinates->x0 + g_psyq_gs_offset_x;
-    destination_coordinates->y0 = source_coordinates->y0 + g_psyq_gs_offset_y;
+    destination_coordinates->x0 = source_coordinates->x0 + GsORGOFSX;
+    destination_coordinates->y0 = source_coordinates->y0 + GsORGOFSY;
     if (textured) {
         dst[offsetof(POLY_F4, x1) / sizeof(u32)] = src[offsetof(POLY_F4, x1) / sizeof(u32)];
         src++;
@@ -42,8 +42,8 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     }
     source_coordinates = (POLY_F4*)src;
     destination_coordinates = (POLY_F4*)dst;
-    destination_coordinates->x1 = source_coordinates->x1 + g_psyq_gs_offset_x;
-    destination_coordinates->y1 = source_coordinates->y1 + g_psyq_gs_offset_y;
+    destination_coordinates->x1 = source_coordinates->x1 + GsORGOFSX;
+    destination_coordinates->y1 = source_coordinates->y1 + GsORGOFSY;
     if (textured) {
         dst[offsetof(POLY_F4, x2) / sizeof(u32)] = src[offsetof(POLY_F4, x2) / sizeof(u32)];
         src++;
@@ -58,8 +58,8 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     }
     source_coordinates = (POLY_F4*)src;
     destination_coordinates = (POLY_F4*)dst;
-    destination_coordinates->x2 = source_coordinates->x2 + g_psyq_gs_offset_x;
-    destination_coordinates->y2 = source_coordinates->y2 + g_psyq_gs_offset_y;
+    destination_coordinates->x2 = source_coordinates->x2 + GsORGOFSX;
+    destination_coordinates->y2 = source_coordinates->y2 + GsORGOFSY;
     if (textured) {
         dst[offsetof(POLY_F4, x3) / sizeof(u32)] = src[offsetof(POLY_F4, x3) / sizeof(u32)];
         src++;
@@ -75,8 +75,8 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
         }
         source_coordinates = (POLY_F4*)src;
         destination_coordinates = (POLY_F4*)dst;
-        destination_coordinates->x3 = source_coordinates->x3 + g_psyq_gs_offset_x;
-        destination_coordinates->y3 = source_coordinates->y3 + g_psyq_gs_offset_y;
+        destination_coordinates->x3 = source_coordinates->x3 + GsORGOFSX;
+        destination_coordinates->y3 = source_coordinates->y3 + GsORGOFSY;
         len++;
         if (textured) {
             dst[sizeof(POLY_F4) / sizeof(*dst)] = src[sizeof(POLY_F4) / sizeof(*src)];

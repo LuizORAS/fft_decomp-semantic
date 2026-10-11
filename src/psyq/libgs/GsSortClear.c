@@ -13,10 +13,10 @@ void GsSortClear(u8 r, u8 g, u8 b, GsOT* otp) {
     g_psyq_gs_clear_tile[PSDIDX].g0 = g;
     g_psyq_gs_clear_tile[PSDIDX].b0 = b;
     i = PSDIDX;
-    x = PSDBASEX[i];
+    x = PSDOFSX[i];
     h = VWD0;
     g_psyq_gs_clear_tile[i].x0 = x;
-    y = PSDBASEY[i];
+    y = PSDOFSY[i];
     g_psyq_gs_clear_tile[i].h = h;
     g_psyq_gs_clear_tile[i].y0 = y;
     if (GsDISPENV.isrgb24 != 0) {

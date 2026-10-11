@@ -13,7 +13,7 @@ void GsInitGraph2(u16 x, u16 y, u16 intmode, u16 dither, u16 vram) {
     GsDRAWENV.dfe = 0;
     GsDRAWENV.isbg = 0;
     GsDISPENV.isinter = intmode & 1;
-    g_psyq_gs_offset_draw_active = intmode & 4;
+    PSDGPU = intmode & 4;
     GsDISPENV.isrgb24 = vram;
     psyq_gs_reset_screen_state(x, y);
 }

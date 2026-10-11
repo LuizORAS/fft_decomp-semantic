@@ -10,8 +10,8 @@
 void GsSwapDispBuff(void) {
     u32 stored;
 
-    GsDISPENV.disp.x = PSDBASEX[PSDIDX];
-    GsDISPENV.disp.y = PSDBASEY[PSDIDX];
+    GsDISPENV.disp.x = PSDOFSX[PSDIDX];
+    GsDISPENV.disp.y = PSDOFSY[PSDIDX];
     PutDispEnv(&GsDISPENV);
     SetDispMask(1);
 

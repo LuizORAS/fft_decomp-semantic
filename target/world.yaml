@@ -2215,8 +2215,8 @@ data:
   - {addr: 0x801cd1d0, name: g_world_gfx_textured_gradient_quad_count}
   - {addr: 0x801cd1d4, name: g_world_gfx_sprite_8_capacity}
   - {addr: 0x801cd1d8, name: g_world_gfx_draw_buffer_clip_y}
-  - {addr: 0x801cd1dc, name: PSDBASEX}
-  - {addr: 0x801cd1e0, name: PSDBASEY}
+  - {addr: 0x801cd1dc, name: PSDOFSX}
+  - {addr: 0x801cd1e0, name: PSDOFSY}
   - {addr: 0x801cd1ec, name: g_world_load_work_buffer}
   - {addr: 0x801cd1f8, name: g_world_menu_alternate_number_clut}
   - {addr: 0x801cd1fc, name: g_world_event_map_command_83_args}
@@ -2225,8 +2225,8 @@ data:
   - {addr: 0x801cd20c, name: g_world_menu_cursor_position}
   - {addr: 0x801cd210, name: g_world_gfx_sprite_16_capacity}
   - {addr: 0x801cd218, name: g_world_shop_id}
-  - {addr: 0x801cd21c, name: g_psyq_gs_buffer_offset_x}
-  - {addr: 0x801cd220, name: g_psyq_gs_buffer_offset_y}
+  - {addr: 0x801cd21c, name: PSDBASEX}
+  - {addr: 0x801cd220, name: PSDBASEY}
   - {addr: 0x801cd224, name: g_world_ot_length}
   - {addr: 0x801cd228, name: g_world_gfx_draw_area_capacity}
   - {addr: 0x801cd22c, name: g_world_input_primary_repeat_latched}
@@ -2259,7 +2259,7 @@ data:
   - {addr: 0x801cd5e8, name: g_world_gfx_tile_8_count}
   - {addr: 0x801cd5ec, name: g_world_formation_unit_pointers}
   - {addr: 0x801cd63c, name: g_world_formation_temp_unit}
-  - {addr: 0x801cd644, name: g_psyq_gs_ls_matrix}
+  - {addr: 0x801cd644, name: GsLIGHTWSMATRIX}
   - {addr: 0x801cd664, name: g_world_gfx_packet_buffers}
   - {addr: 0x801cd668, name: g_world_input_secondary_repeat}
   - {addr: 0x801cd66c, name: g_world_text_glyph_bitmap_data}
@@ -2267,11 +2267,11 @@ data:
   - {addr: 0x801cd678, name: GsDRAWENV}
   - {addr: 0x801cd6d4, name: GsDISPENV}
   - {addr: 0x801cd6e8, name: g_world_gfx_tile_16_capacity}
-  - {addr: 0x801cd6ec, name: g_psyq_gs_offset_x}
-  - {addr: 0x801cd6f0, name: g_psyq_gs_offset_y}
+  - {addr: 0x801cd6ec, name: GsORGOFSX}
+  - {addr: 0x801cd6f0, name: GsORGOFSY}
   - {addr: 0x801cd6f4, name: g_world_menu_active_clut_back}
   - {addr: 0x801cd6f8, name: g_world_gfx_tile_16_count}
-  - {addr: 0x801cd6fc, name: g_psyq_gs_light_ws_matrix}
+  - {addr: 0x801cd6fc, name: _LC}
   - {addr: 0x801cd71c, name: g_world_shop_cost_window_visible}
   - {addr: 0x801cd720, name: g_world_menu_window_rect_source}
   - {addr: 0x801cd724, name: g_world_gfx_sprite_16_count}
@@ -2322,7 +2322,7 @@ data:
   - {addr: 0x801cd870, name: g_world_menu_disabled_number_clut}
   - {addr: 0x801cd874, name: g_world_event_pending_map_state}
   - {addr: 0x801cd87c, name: g_world_event_weather_request}
-  - {addr: 0x801cd880, name: g_psyq_gs_offset_draw_active}
+  - {addr: 0x801cd880, name: PSDGPU}
   - {addr: 0x801cd884, name: g_world_map_light_base_matrix}
   - {addr: 0x801cd8a4, name: g_world_text_section_pointers}
   - {addr: 0x801cd924, name: g_world_event_loaded_evtchr_buffer}

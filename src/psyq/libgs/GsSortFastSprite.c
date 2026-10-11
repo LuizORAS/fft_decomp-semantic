@@ -35,8 +35,8 @@ void GsSortFastSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
         sprite_x = sp->x;
         tpage_value = sp->tpage & 0x1F;
         draw_mode->code[0] = tpage_value | (((attr >> 17) & 0x180) | dr_mode) | ((attr >> 23) & 0x60);
-        offset_x = g_psyq_gs_offset_x;
-        offset_y = g_psyq_gs_offset_y;
+        offset_x = GsORGOFSX;
+        offset_y = GsORGOFSY;
         sum_x = sprite_x + offset_x;
         sum_y = sprite_y + offset_y;
         blue = sp->b;

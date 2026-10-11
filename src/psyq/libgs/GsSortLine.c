@@ -16,8 +16,7 @@ void GsSortLine(GsLINE* line, GsOT* ot, u16 z) {
         draw_mode->code[0] = ((attr >> 23) & 0x60) | 0xE1000200;
         setRGB0(prim, line->r, line->g, line->b);
         prim->code = ((attr >> 29) & 2) | 0x40;
-        setXY2(prim, line->x0 + g_psyq_gs_offset_x, line->y0 + g_psyq_gs_offset_y, line->x1 + g_psyq_gs_offset_x,
-            line->y1 + g_psyq_gs_offset_y);
+        setXY2(prim, line->x0 + GsORGOFSX, line->y0 + GsORGOFSY, line->x1 + GsORGOFSX, line->y1 + GsORGOFSY);
         GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)draw_mode, ot, z, 4);
     }
 }
