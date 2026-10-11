@@ -23,8 +23,8 @@ s32 SpuClearReverbWorkArea(s32 mode) {
         address = _spu_rev_startaddr[mode] << _spu_mem_mode_plus;
     }
     saved_mode = _spu_transMode;
-    if (saved_mode == 1) {
-        _spu_transMode = 0;
+    if (saved_mode == SPU_TRANSFER_BY_IO) {
+        _spu_transMode = SPU_TRANSFER_BY_DMA;
         changed_mode = 1;
     }
     more = 1;

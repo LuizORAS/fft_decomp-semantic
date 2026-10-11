@@ -8,7 +8,7 @@ void SpuSetKey(s32 on_off, u32 voice_bit) {
     low = voice_bit;
     high = voice_bit >> 16;
     switch (on_off) {
-    case 1:
+    case SPU_ON:
         if (_spu_env & 1) {
             _spu_RQ[0] = low;
             _spu_RQ[1] = high;
@@ -26,7 +26,7 @@ void SpuSetKey(s32 on_off, u32 voice_bit) {
             _spu_keystat |= voice_bit;
         }
         break;
-    case 0:
+    case SPU_OFF:
         if (_spu_env & 1) {
             _spu_RQ[2] = low;
             _spu_RQ[3] = high;

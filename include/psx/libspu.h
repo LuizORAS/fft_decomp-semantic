@@ -8,6 +8,25 @@
  * layouts and signatures follow the Psy-Q library reference; the offsets
  * noted on each type are the ones the driver's callers use. */
 
+/* Psy-Q on/off selectors. */
+enum {
+    SPU_OFF = 0,
+    SPU_ON = 1,
+};
+
+/* SpuReadDecodedData capture selection. */
+enum {
+    SPU_ALL = 0,
+    SPU_CDONLY = 5,
+    SPU_VOICEONLY = 6,
+};
+
+/* SpuSetTransferMode selectors. */
+enum {
+    SPU_TRANSFER_BY_DMA = 0,
+    SPU_TRANSFER_BY_IO = 1,
+};
+
 /* Psy-Q volume modes, shared by master and voice volume attributes. */
 typedef enum {
     SPU_VOICE_DIRECT = 0,

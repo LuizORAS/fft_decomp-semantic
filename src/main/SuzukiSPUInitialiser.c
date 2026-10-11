@@ -49,7 +49,7 @@ void SuzukiSPUInitialiser(s32 flags) {
     main_sound_set_type(MAIN_SOUND_TYPE_STEREO);
     g_main_sound_reverb_attr.mode = -1;
     main_sound_set_reverb_mode(SPU_REV_MODE_STUDIO_C, 0, 0, 0);
-    main_sound_set_cd_reverb(0, 1);
+    main_sound_set_cd_reverb(SPU_OFF, SPU_ON);
     main_sound_set_master_volume(0x3fff, 0);
     main_sound_set_cd_volume(0x6400, 0);
     if (g_main_sound_driver_flags & MAIN_SOUND_DRIVER_PUT_TYPE) {

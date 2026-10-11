@@ -4,15 +4,15 @@
 s32 SpuSetReverb(s32 on_off) {
     u16 control;
     switch (on_off) {
-    case 0:
-        _spu_rev_flag = 0;
+    case SPU_OFF:
+        _spu_rev_flag = SPU_OFF;
         control = _spu_RXX->rxx.control;
         control &= 0xff7f;
         _spu_RXX->rxx.control = control;
         break;
-    case 1:
+    case SPU_ON:
         if (_spu_rev_reserve_wa != on_off && _SpuIsInAllocateArea_(_spu_rev_offsetaddr)) {
-            _spu_rev_flag = 0;
+            _spu_rev_flag = SPU_OFF;
             control = _spu_RXX->rxx.control;
             control &= 0xff7f;
             _spu_RXX->rxx.control = control;

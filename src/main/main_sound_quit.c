@@ -21,7 +21,7 @@ void main_sound_quit(void) {
         for (voice = 0; voice < 24; voice++) {
             SpuSetVoiceRR(voice, 6);
         }
-        SpuSetKey(0, 0xffffff);
+        SpuSetKey(SPU_OFF, 0xffffff);
         main_sound_set_reverb_mode(0, 0, 0, 0);
         D_80032A28 = 0;
     }

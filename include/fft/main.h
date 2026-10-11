@@ -1554,7 +1554,7 @@ static inline void main_sound_flush_key_on_inline(void) {
     }
 
     if (voices != 0)
-        SpuSetKey(1, voices);
+        SpuSetKey(SPU_ON, voices);
 }
 
 /* Keys off the voices queued in each playing MUS record's key_off_mask (same
@@ -1596,7 +1596,7 @@ static inline void main_sound_flush_key_off_inline(void) {
     }
 
     if (voices != 0)
-        SpuSetKey(0, voices);
+        SpuSetKey(SPU_OFF, voices);
 }
 
 /* status */

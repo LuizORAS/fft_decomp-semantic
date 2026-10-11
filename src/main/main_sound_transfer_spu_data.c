@@ -12,7 +12,7 @@
 void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mode) {
     main_sound_wait_for_spu_transfer(MAIN_SOUND_SPU_TRANSFER_WAIT);
     g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_TRANSFER;
-    SpuSetTransferMode(0);
+    SpuSetTransferMode(SPU_TRANSFER_BY_DMA);
     SpuSetTransferStartAddr(spu_address);
     switch (mode & 0xf) {
     case MAIN_SOUND_SPU_TRANSFER_WRITE:
@@ -25,11 +25,11 @@ void main_sound_transfer_spu_data(u32 spu_address, void* data, u32 size, s32 mod
         break;
     case MAIN_SOUND_SPU_TRANSFER_READ_DECODED:
         g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_READ | MAIN_SOUND_DRIVER_SPU_TRANSFER;
-        g_main_sound_decoded_data_result = SpuReadDecodedData(data, 0);
+        g_main_sound_decoded_data_result = SpuReadDecodedData(data, SPU_ALL);
         break;
     case MAIN_SOUND_SPU_TRANSFER_READ_DECODED_CD:
         g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_SPU_READ | MAIN_SOUND_DRIVER_SPU_TRANSFER;
-        g_main_sound_decoded_data_result = SpuReadDecodedData(data, 5);
+        g_main_sound_decoded_data_result = SpuReadDecodedData(data, SPU_CDONLY);
         break;
     case MAIN_SOUND_SPU_TRANSFER_NONE:
         break;

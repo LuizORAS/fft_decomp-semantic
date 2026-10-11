@@ -7,11 +7,11 @@ s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
     u32 blocks;
     u32 status;
     switch (flag) {
-    case 5:
+    case SPU_CDONLY:
         address = 0;
         blocks = 0x20;
         break;
-    case 6:
+    case SPU_VOICEONLY:
         destination = d_data->voice1;
         address = 0x100;
         blocks = 0x20;

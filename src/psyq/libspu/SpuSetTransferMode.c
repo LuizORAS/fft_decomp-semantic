@@ -4,14 +4,14 @@
 s32 SpuSetTransferMode(s32 mode) {
     s32 normalized;
     switch (mode) {
-    case 0:
-        normalized = 0;
+    case SPU_TRANSFER_BY_DMA:
+        normalized = SPU_TRANSFER_BY_DMA;
         break;
-    case 1:
-        normalized = 1;
+    case SPU_TRANSFER_BY_IO:
+        normalized = SPU_TRANSFER_BY_IO;
         break;
     default:
-        normalized = 0;
+        normalized = SPU_TRANSFER_BY_DMA;
         break;
     }
     _spu_trans_mode = mode;

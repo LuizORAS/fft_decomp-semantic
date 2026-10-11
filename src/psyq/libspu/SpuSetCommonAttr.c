@@ -117,7 +117,7 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
         _spu_RXX->rxx.external_volume_right = attr->ext.volume.right;
     }
     if (all || (mask & SPU_COMMON_CDREV)) {
-        if (attr->cd.reverb == 0) {
+        if (attr->cd.reverb == SPU_OFF) {
             control = _spu_RXX->rxx.control;
             control &= 0xfffb;
             _spu_RXX->rxx.control = control;
@@ -128,7 +128,7 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
         }
     }
     if (all || (mask & SPU_COMMON_CDMIX)) {
-        if (attr->cd.mix == 0) {
+        if (attr->cd.mix == SPU_OFF) {
             control = _spu_RXX->rxx.control;
             control &= 0xfffe;
             _spu_RXX->rxx.control = control;
@@ -139,7 +139,7 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
         }
     }
     if (all || (mask & SPU_COMMON_EXTREV)) {
-        if (attr->ext.reverb == 0) {
+        if (attr->ext.reverb == SPU_OFF) {
             control = _spu_RXX->rxx.control;
             control &= 0xfff7;
             _spu_RXX->rxx.control = control;
@@ -150,7 +150,7 @@ void SpuSetCommonAttr(SpuCommonAttr* attr) {
         }
     }
     if (all || (mask & SPU_COMMON_EXTMIX)) {
-        if (attr->ext.mix == 0) {
+        if (attr->ext.mix == SPU_OFF) {
             control = _spu_RXX->rxx.control;
             control &= 0xfffd;
             _spu_RXX->rxx.control = control;

@@ -7,7 +7,7 @@ s32 _spu_init(s32 hot) {
     u32 wait;
     s32 i;
     *g_psyq_spu_dma_priority_register |= 0xb0000;
-    _spu_transMode = 0;
+    _spu_transMode = SPU_TRANSFER_BY_DMA;
     _spu_addrMode = 0;
     _spu_tsa = 0;
     _spu_RXX->rxx.main_volume_left = 0;

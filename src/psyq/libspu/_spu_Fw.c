@@ -2,7 +2,7 @@
 #include "psx/libspu.h"
 
 u32 _spu_Fw(void* source, u32 size) {
-    if (_spu_transMode == 0) {
+    if (_spu_transMode == SPU_TRANSFER_BY_DMA) {
         _spu_t(PSYQ_SPU_DMA_SET_ADDRESS, _spu_tsa << _spu_mem_mode_plus);
         _spu_t(PSYQ_SPU_DMA_WRITE);
         _spu_t(PSYQ_SPU_DMA_START_TRANSFER, source, size);

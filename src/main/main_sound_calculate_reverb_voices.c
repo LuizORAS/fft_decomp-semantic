@@ -26,6 +26,6 @@ void main_sound_calculate_reverb_voices(void) {
     }
 
     excludable_voices = (excludable_voices & ~g_main_mask_exclusion) | forced_voices;
-    SpuSetReverbVoice(1, excludable_voices);
-    SpuSetReverbVoice(0, ~excludable_voices);
+    SpuSetReverbVoice(SPU_ON, excludable_voices);
+    SpuSetReverbVoice(SPU_OFF, ~excludable_voices);
 }

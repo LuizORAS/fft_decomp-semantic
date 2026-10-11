@@ -27,6 +27,6 @@ void main_sound_calculate_pitch_lfo_voices(void) {
     }
 
     excludable_voices = (excludable_voices & ~g_main_mask_exclusion) | forced_voices;
-    SpuSetPitchLFOVoice(1, excludable_voices);
-    SpuSetPitchLFOVoice(0, ~excludable_voices);
+    SpuSetPitchLFOVoice(SPU_ON, excludable_voices);
+    SpuSetPitchLFOVoice(SPU_OFF, ~excludable_voices);
 }
