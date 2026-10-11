@@ -110,7 +110,6 @@ extern u32 g_open_movie_mdec_output_buffer_1[];
 extern open_movie_mdec_stream_state_t g_open_movie_mdec_stream_state;
 extern s32 g_open_movie_stream_status; /* open_movie_stream_status_e */
 extern s32 g_open_movie_width;
-extern s32 g_st_cd_interrupt_pending;
 
 /* OPEN.BIN interfaces shared across its reconstructed translation units. */
 u32* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state);

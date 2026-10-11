@@ -33,7 +33,7 @@ void battle_text_run_spell_quote_thread(void) {
         window_mode = 0x12;
     }
     message_id = battle_thread_get_current_parameter_2() | 0xA800;
-    g_battle_text_message_buffer = game_malloc(0x4000);
+    g_battle_text_message_buffer = main_heap_alloc(0x4000);
     battle_menu_request_open_companion_data_file(BATTLE_COMPANION_FILE_SPELL_MES);
     g_battle_text_section_pointers[TEXT_SECTION_UNIT_MESSAGE] = g_battle_text_message_buffer;
     battle_thread_start(NATIVE_THREAD_SLOT_MENU, battle_text_character_handling_thread);

@@ -39,7 +39,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
         if (effect->allocation != 0) {
             main_heap_free(effect->allocation);
         }
-        state = game_malloc(sizeof(battle_effect_burst_state_t));
+        state = main_heap_alloc(sizeof(battle_effect_burst_state_t));
         g_battle_effect_current_secondary->allocation = state;
         state->frame = 0;
         state->done = 0;

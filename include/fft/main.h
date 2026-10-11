@@ -303,7 +303,7 @@ typedef char main_file_load_state_size_must_be_36[sizeof(main_file_load_descript
 extern main_file_load_descriptor_t g_main_file_cd_state;
 extern u32 g_main_file_still_loading;
 
-/* File-header wrapper at 0x80011bd0 forwards build's result. */
+/* File-header wrapper at 0x80011bd0 forwards main_file_build_header's result. */
 s32 main_file_build_header_nnl(main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
 s32 main_file_call_build_header(s32 sector, u32 size, void* destination);
 int main_file_is_still_loading(void);
@@ -1372,7 +1372,7 @@ extern main_sound_smd_file_t g_main_sound_permanent_smd_files[5];
 extern s32 g_main_sound_weather_sfx_id; /* the background sound main_sound_play_bg_sfx started, 0 for none */
 void main_sound_set_sfx_echo(int sound_id, int volume);
 void main_sound_stop_weather_sfx_music(void);
-void main_sound_pause_tracked_sfx(void);
+void main_sound_stop_current_weather_sfx(void);
 s32 main_sound_get_current_scenario_music(void);
 suzuki_music_t* main_sound_get_music_handle(s32 slot);
 
@@ -1727,6 +1727,7 @@ typedef enum main_system_error {
     MAIN_SYSTEM_ERROR_SHP_FRAME = 8,               /* frame index above 0x200 or frame pointer -1 */
     MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,           /* animation index above 0x100 or sequence pointer -1 */
     MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,       /* more than eight parts in a unit frame */
+    MAIN_SYSTEM_ERROR_NO_SPRITESHEET_SLOT = 0xb,   /* no free or reusable spritesheet slot */
     MAIN_SYSTEM_ERROR_SEQ_OPCODE = 0xd,            /* unknown sequence opcode, or a queued animation for slot 0 */
     MAIN_SYSTEM_ERROR_SMD_LOAD = 0x11,             /* no SMD buffer or the SMD load could not start */
     MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION = 0x17, /* distortion animation id without a handler */
@@ -1804,7 +1805,6 @@ void main_util_clear_byte_data(void* destination, s32 count);
  * memcpy/memset. Copy takes source first;
  * both routines do nothing for a nonpositive signed byte count. */
 void main_util_copy_byte_data(const void* source, void* destination, s32 count);
-void* game_malloc(s32 byte_length);
 void main_util_copy_action_data(const battle_action_command_t* source, battle_action_command_t* destination);
 void main_heap_clear_smd_allocator_table(void);
 void main_sound_init_stub(void);

@@ -13,7 +13,7 @@ void world_card_init_menu_state(void) {
     g_world_card_slot_cursor_row = 0;
     g_world_card_menu_result = 0;
     g_world_card_slot_select_timer = 0;
-    buffer = game_malloc(0x2000);
+    buffer = main_heap_alloc(0x2000);
     g_world_load_work_buffer = buffer;
     memset(buffer, 0xFF, 0x1E80);
 }

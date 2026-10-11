@@ -1013,7 +1013,6 @@ typedef s32 (*battle_effect_callback_t)(s32 record_index, s32 callback_slot, s32
 
 extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
-void animation_exception_handler(s32 exception_id);
 void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
 
 /* dead unit */
@@ -1436,9 +1435,9 @@ extern s32 g_battle_state_animation_continue_check;
 extern s32 g_battle_state_game_flow_running;
 extern s32 g_battle_state_screen_fade_step;
 extern s32 g_battle_frame_counter;
-extern s32 g_frame_pacing;
-extern s32 g_frame_pacing_suppressed;
-extern s32 g_frame_pacing_timer;
+extern s32 g_battle_frame_pacing;
+extern s32 g_battle_frame_pacing_suppressed;
+extern s32 g_battle_frame_pacing_timer;
 void battle_state_enter_action_cast(void);
 void battle_state_enter_commence_attack_phase(void);
 void battle_action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing);
@@ -1448,7 +1447,6 @@ s32 battle_mul_div_s64(s32 a, s32 b, s32 c);
 void battle_menu_init_stub(void);
 void battle_script_add_unit_stub(void);
 void battle_state_enter_pre_attack_animation(void);
-void* game_realloc(void*, u32);
 void battle_state_deployment_frame_stub(void);
 void battle_menu_run_companion_overlay_stub(void);
 void battle_script_frame_after_threads_stub(void);

@@ -47,7 +47,7 @@ void battle_action_set_item_throw_stone_ability_display(void) {
         || ((unit->animation.sequence_id >> 1) == BATTLE_UNIT_ANIMATION_HOLD_ITEM)) {
         battle_effect_play();
     }
-    main_sound_pause_tracked_sfx();
+    main_sound_stop_current_weather_sfx();
     g_main_system_animation_speed = 2;
     battle_action_clear_at_list_active();
 }

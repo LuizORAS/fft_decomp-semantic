@@ -277,16 +277,16 @@ void battle_state_run_game_loop(void) {
             if (g_battle_game_state == BATTLE_GAME_STATE_EFFECT
                 || g_battle_game_state == BATTLE_GAME_STATE_ACTION_EXECUTE) {
                 if (g_main_system_animation_speed == 1) {
-                    g_frame_pacing_timer = 0;
-                } else if (g_frame_pacing_suppressed == 0) {
+                    g_battle_frame_pacing_timer = 0;
+                } else if (g_battle_frame_pacing_suppressed == 0) {
                     if (g_main_system_battle_frame_hsync_count >= 0x301) {
-                        g_frame_pacing_timer = 0x1e;
-                    } else if (g_main_system_battle_frame_hsync_count >= 0x201 && g_frame_pacing_timer < 0x0f) {
-                        g_frame_pacing_timer = 0x0f;
+                        g_battle_frame_pacing_timer = 0x1e;
+                    } else if (g_main_system_battle_frame_hsync_count >= 0x201 && g_battle_frame_pacing_timer < 0x0f) {
+                        g_battle_frame_pacing_timer = 0x0f;
                     }
                 }
             }
-            g_frame_pacing_suppressed = 0;
+            g_battle_frame_pacing_suppressed = 0;
             main_system_frame_stub();
         }
 

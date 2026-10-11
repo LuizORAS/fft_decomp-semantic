@@ -944,8 +944,6 @@ data:
   - {addr: 0x80010a0c, name: g_psyq_gpu_tmd_gt4_name}
   - {addr: 0x80010a14, name: g_psyq_gpu_unsupported_tmd_format}
   - {addr: 0x80010ba8, name: battle_bin_entrypoint}
-  - {addr: 0x80011bd0, name: load}
-  - {addr: 0x80011bf4, name: build}
   - {addr: 0x8001dad0, name: g_psyq_gte_exception_patch_template}
   - {addr: 0x8001db08, name: g_psyq_gte_exception_patch_template_end}
   - {addr: 0x80022f5c, name: g_fntload_clut_y_offset_immediate}
@@ -1173,7 +1171,6 @@ data:
   - {addr: 0x80037074, name: g_psyq_cd_stream_frame_callback}
   - {addr: 0x80037078, name: g_psyq_cd_stream_end_callback}
   - {addr: 0x8003707c, name: g_psyq_cd_stream_interrupt_pending}
-  - {addr: 0x8003707c, name: g_st_cd_interrupt_pending}
   - {addr: 0x80037080, name: _spu_RQ}
   - {addr: 0x800370a4, name: g_psyq_cd_stream_requested_channel}
   - {addr: 0x800370a8, name: g_psyq_cd_stream_start_frame}
@@ -1194,12 +1191,7 @@ data:
   - {addr: 0x800408e0, name: g_main_sound_spu_malloc_table}
   - {addr: 0x80040918, name: g_psyq_cd_stream_ring_sectors}
   - {addr: 0x8004091c, name: g_psyq_crt_bss_end}
-  - {addr: 0x80042880, name: get_entd}
-  - {addr: 0x80044128, name: main_sound_pause_tracked_sfx}
-  - {addr: 0x80044414, name: game_malloc}
-  - {addr: 0x800444dc, name: game_realloc}
   - {addr: 0x800449ec, name: main_system_frame_stub}
-  - {addr: 0x80044a08, name: animation_exception_handler}
   - {addr: 0x800454cc, name: g_main_brave_story_ages_source}
   - {addr: 0x8004593c, name: _ramsize}
   - {addr: 0x80045940, name: _stacksize}
@@ -1221,10 +1213,10 @@ data:
   - {addr: 0x80045980, name: g_main_system_animation_speed}
   - {addr: 0x80045984, name: g_main_system_battle_frame_hsync_count}
   - {addr: 0x80045988, name: g_main_system_battle_frame_hsync_count_max}
-  - {addr: 0x8004598c, name: g_frame_pacing_timer}
-  - {addr: 0x80045990, name: g_frame_pacing_suppressed}
+  - {addr: 0x8004598c, name: g_battle_frame_pacing_timer}
+  - {addr: 0x80045990, name: g_battle_frame_pacing_suppressed}
   - {addr: 0x80045994, name: g_battle_frame_counter}
-  - {addr: 0x80045998, name: g_frame_pacing}
+  - {addr: 0x80045998, name: g_battle_frame_pacing}
   - {addr: 0x8004599c, name: g_main_sound_weather_sfx_id}
   - {addr: 0x800459a0, name: g_main_deployed_unit_map_coordinates}
   - {addr: 0x800459b8, name: g_main_system_play_time_frames}

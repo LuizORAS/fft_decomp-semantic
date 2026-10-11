@@ -11,9 +11,9 @@ void open_movie_handle_mdec_output_slice(void) {
     RECT* rect;
     s32 size;
 
-    if (g_st_cd_interrupt_pending != 0) {
+    if (g_psyq_cd_stream_interrupt_pending != 0) {
         StCdInterrupt();
-        g_st_cd_interrupt_pending = 0;
+        g_psyq_cd_stream_interrupt_pending = 0;
     }
     rect = &g_open_movie_mdec_stream_state.output_rect;
     LoadImage(rect, g_open_movie_mdec_stream_state.output_buffers[g_open_movie_mdec_stream_state.output_buffer_index]);

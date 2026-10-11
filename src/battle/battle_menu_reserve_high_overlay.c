@@ -5,7 +5,8 @@
  */
 void battle_menu_reserve_high_overlay(u32 size) {
     while (1) {
-        if (game_realloc(g_main_heap_high_overlay_load_address, size) == g_main_heap_high_overlay_load_address) {
+        if (main_heap_reserve_at(g_main_heap_high_overlay_load_address, size)
+            == g_main_heap_high_overlay_load_address) {
             break;
         }
         battle_thread_yield();

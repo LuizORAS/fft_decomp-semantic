@@ -14,7 +14,7 @@ void battle_gfx_load_evtchr_thread(void) {
     parameter = battle_thread_get_current_parameter_1();
     block = battle_thread_get_current_parameter_2();
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
-    buffer = game_malloc(0x7800);
+    buffer = main_heap_alloc(0x7800);
     do {
         battle_thread_yield();
         g_battle_thread_call_target = (void (*)(void))main_file_call_build_header;

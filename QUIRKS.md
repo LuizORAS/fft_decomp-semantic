@@ -402,7 +402,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   so the shadow quad is recalculated on every call and the dirty bit the
   movement code sets gates nothing.
 - Tests that cannot succeed: `battle_state_sync_frame` zeroes a
-  `g_frame_pacing` of 1 under `wait < g_frame_pacing` with `wait` at least 2;
+  `g_battle_frame_pacing` of 1 under `wait < g_battle_frame_pacing` with `wait` at least 2;
   `battle_state_run_deployment` loops until
   `battle_state_update_deployment_controller_input` returns -1, and it always
   returns 1; the first `switch` of `battle_move_apply_unit_step_velocity`
@@ -573,10 +573,6 @@ written that way.
   `g_battle_effect_secondary_animations[BATTLE_EFFECT_SECONDARY_ANIMATION_ENDING].function_id`
   under a second name; the table's own symbol covers the 21 records before
   it.
-- `0x80044128` has two names in `target/main.yaml`: the function
-  `main_sound_stop_current_weather_sfx` and the data row
-  `main_sound_pause_tracked_sfx`, the name BATTLE calls and `include/fft/main.h`
-  declares.
 - `g_open_file_openbk_end_sector_offsets` (`0x80073f5c`) is
   `g_open_file_openbk_start_sector_offsets + 1`: eight sector offsets of
   OPNBK.BIN under two names, each image ending where the next starts.
