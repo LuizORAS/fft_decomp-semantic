@@ -9,12 +9,9 @@
 s32 main_smd_modulator_step_triangle_centered(suzuki_modulator_t* modulator) {
     s32 amplitude;
     u16 flags;
-    u16 timer;
 
     flags = modulator->flags;
-    timer = modulator->timer - 1;
-    modulator->timer = timer;
-    if (timer == 0) {
+    if (--modulator->timer == 0) {
         modulator->timer = modulator->timer_reset;
         modulator->timer *= (flags & SUZUKI_MODULATOR_HALF_PERIOD_DONE) ? 2 : 1;
         amplitude = modulator->amplitude;
