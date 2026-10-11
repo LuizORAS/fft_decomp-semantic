@@ -3,21 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Stack-resident primitive pools for both WORLD packet buffers; each pool
- * holds two frames of the per-type counts this routine publishes. */
-typedef struct world_shop_screen_packets {
-    POLY_FT4 textured_quads[2 * 500];         /* 0x0000: g_world_gfx_textured_quad_capacity = 500 */
-    POLY_G4 gradient_quads[2 * 90];           /* 0x9c40: g_world_gfx_gradient_quad_capacity = 90 */
-    POLY_GT4 textured_gradient_quads[2 * 60]; /* 0xb590: g_world_gfx_textured_gradient_quad_capacity = 60 */
-    TILE tiles[2 * 30];                       /* 0xcdf0: g_world_gfx_tile_capacity = 30 */
-    LINE_F2 flat_lines[2 * 10];               /* 0xd1b0: g_world_gfx_flat_line_capacity = 10 */
-    DR_MOVE draw_moves[2 * 30];               /* 0xd2f0: g_world_gfx_draw_move_capacity = 30 */
-    DR_MODE draw_modes[2 * 30];               /* 0xd890: g_world_gfx_draw_mode_capacity = 30 */
-    DR_AREA draw_areas[2 * 10];               /* 0xdb60: g_world_gfx_draw_area_capacity = 10 */
-    u32 otags[2 * 64];                        /* 0xdc50: g_world_ot_length = 64 */
-    world_gfx_packet_buffer_t buffers[2];     /* 0xde50 */
-} world_shop_screen_packets_t;
-
 /*
  * Run the WORLD shop screen until g_world_shop_menu_step becomes -1.
  *
@@ -36,7 +21,16 @@ typedef struct world_shop_screen_packets {
  * for loop.c to hoist the constant 6 into $s7.
  */
 void world_shop_run_screen(s32 shop_type) {
-    world_shop_screen_packets_t packets;
+    POLY_FT4 textured_quads[2 * 500];
+    POLY_G4 gradient_quads[2 * 90];
+    POLY_GT4 textured_gradient_quads[2 * 60];
+    TILE tiles[2 * 30];
+    LINE_F2 flat_lines[2 * 10];
+    DR_MOVE draw_moves[2 * 30];
+    DR_MODE draw_modes[2 * 30];
+    DR_AREA draw_areas[2 * 10];
+    u32 otags[2 * 64];
+    world_gfx_packet_buffer_t buffers[2];
     u32* tim;
     RECT* tile_box = &g_world_shop_edge_tile_rect;
     s32 buttons;
@@ -95,9 +89,9 @@ void world_shop_run_screen(s32 shop_type) {
     tim = world_shop_load_background_tim(tim_index + buttons);
     world_gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim + 5);
     world_gfx_store_image_and_wait(&g_world_shop_vram_backup_rect, tim);
-    world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0,
-        packets.gradient_quads, packets.textured_gradient_quads, packets.flat_lines, 0, 0, 0, 0, 0, packets.tiles, 0, 0,
-        0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
+    world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, gradient_quads,
+        textured_gradient_quads, flat_lines, 0, 0, 0, 0, 0, tiles, 0, 0, 0, 0, 0, 0, draw_moves, draw_areas,
+        draw_modes);
     last_step = -1;
     world_formation_init_menu_state();
     g_world_shop_main_menu_thread_data.selected_index = 0;

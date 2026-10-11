@@ -4,22 +4,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Stack-resident primitive pools for both WORLD packet buffers. Each pool
- * holds two frames of the per-type counts this routine publishes, which is
- * what fixes the offsets of the pool arguments passed to
- * world_gfx_init_double_packet_buffers. */
-typedef struct world_card_screen_packets {
-    POLY_FT4 textured_quads[2 * 600];     /* 0x0000: g_world_gfx_textured_quad_capacity = 600 */
-    TILE tiles[2 * 10];                   /* 0xbb80: g_world_gfx_tile_capacity = 10 */
-    DR_MOVE draw_moves[2 * 30];           /* 0xbcc0: g_world_gfx_draw_move_capacity = 30 */
-    DR_MODE draw_modes[2 * 30];           /* 0xc260: g_world_gfx_draw_mode_capacity = 30 */
-    DR_AREA draw_areas[2 * 10];           /* 0xc530: g_world_gfx_draw_area_capacity = 10 */
-    u32 otags[2 * 64];                    /* 0xc620: g_world_ot_length = 64 */
-    world_gfx_packet_buffer_t buffers[2]; /* 0xc820: the two packet-buffer headers */
-    u8 _unused_c9f8[0x10];                /* 0xc9f8: gap before the published work area */
-    u8 directory_buffer[0x258];           /* 0xca08: published through g_world_card_directory_buffer */
-} world_card_screen_packets_t;
-
 /*
  * Run the WORLD memory-card screen until its fade-out completes.
  *
@@ -32,7 +16,15 @@ typedef struct world_card_screen_packets {
  * hoists only the $v0 stores.
  */
 s32 world_card_run_menu_screen(s32 mode_select_enabled) {
-    world_card_screen_packets_t packets;
+    POLY_FT4 textured_quads[2 * 600];
+    TILE tiles[2 * 10];
+    DR_MOVE draw_moves[2 * 30];
+    DR_MODE draw_modes[2 * 30];
+    DR_AREA draw_areas[2 * 10];
+    u32 otags[2 * 64];
+    world_gfx_packet_buffer_t buffers[2];
+    u8 unused_packet_gap[0x10]; /* Retains the original unused stack space. */
+    u8 directory_buffer[0x258];
     s16 music_handle;
     u16 input;
     s32 buttons;
@@ -63,8 +55,8 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     g_world_gfx_draw_move_capacity = 30;
     g_world_gfx_draw_area_capacity = 10;
     g_world_gfx_draw_mode_capacity = 30;
-    world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
+    world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, tiles,
+        0, 0, 0, 0, 0, 0, draw_moves, draw_areas, draw_modes);
     world_formation_init_menu_display();
     g_world_formation_unit_count
         = world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
@@ -77,7 +69,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     while (main_sound_is_music_loading_stub() != 0) { }
     main_sound_switch_music_track(music_handle, 0x7f, 0);
     world_card_clear_events();
-    g_world_card_directory_buffer = packets.directory_buffer;
+    g_world_card_directory_buffer = directory_buffer;
     world_card_init_menu_state();
     world_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, world_formation_view_zoom_thread);
     world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, 0, 0);

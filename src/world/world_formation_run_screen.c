@@ -3,23 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Stack-resident primitive pools for both WORLD packet buffers; each pool
- * holds two frames of the per-type counts this routine publishes. */
-typedef struct world_formation_screen_packets {
-    POLY_FT4 textured_quads[2 * 500];         /* 0x0000: g_world_gfx_textured_quad_capacity = 500 */
-    POLY_G4 gradient_quads[2 * 90];           /* 0x9c40: g_world_gfx_gradient_quad_capacity = 90 */
-    LINE_G2 gradient_lines[2 * 130];          /* 0xb590: g_world_gfx_gradient_line_capacity = 130 */
-    LINE_F2 flat_lines[2 * 10];               /* 0xc9e0: g_world_gfx_flat_line_capacity = 10 */
-    POLY_GT4 textured_gradient_quads[2 * 60]; /* 0xcb20: g_world_gfx_textured_gradient_quad_capacity = 60 */
-    TILE tiles[2 * 30];                       /* 0xe380: g_world_gfx_tile_capacity = 30 */
-    DR_MOVE draw_moves[2 * 30];               /* 0xe740: g_world_gfx_draw_move_capacity = 30 */
-    DR_MODE draw_modes[2 * 30];               /* 0xece0: g_world_gfx_draw_mode_capacity = 30 */
-    DR_AREA draw_areas[2 * 30];               /* 0xefb0: g_world_gfx_draw_area_capacity = 30 */
-    u32 otags[2 * 64];                        /* 0xf280: g_world_ot_length = 64 */
-    world_gfx_packet_buffer_t buffers[2];     /* 0xf480 */
-    u8 _unused_f658[0x18];
-} world_formation_screen_packets_t;
-
 /*
  * Run the WORLD formation screen until g_world_formation_screen_running clears or the tutorial ends.
  *
@@ -34,7 +17,18 @@ typedef struct world_formation_screen_packets {
  * index and the thread loop counter, which keeps the (s16) extension.
  */
 void world_formation_run_screen(s32 tutorial, s32 unused) {
-    world_formation_screen_packets_t packets;
+    POLY_FT4 textured_quads[2 * 500];
+    POLY_G4 gradient_quads[2 * 90];
+    LINE_G2 gradient_lines[2 * 130];
+    LINE_F2 flat_lines[2 * 10];
+    POLY_GT4 textured_gradient_quads[2 * 60];
+    TILE tiles[2 * 30];
+    DR_MOVE draw_moves[2 * 30];
+    DR_MODE draw_modes[2 * 30];
+    DR_AREA draw_areas[2 * 30];
+    u32 otags[2 * 64];
+    world_gfx_packet_buffer_t buffers[2];
+    u8 unused_packet_gap[0x18]; /* Retains the original unused stack space. */
     s32 buttons;
     s32 i;
     u8 last_menu;
@@ -49,9 +43,9 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     g_world_gfx_draw_move_capacity = 0x1E;
     g_world_gfx_draw_area_capacity = 0x1E;
     g_world_gfx_draw_mode_capacity = 0x1E;
-    world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0,
-        packets.gradient_quads, packets.textured_gradient_quads, packets.flat_lines, 0, 0, packets.gradient_lines, 0, 0,
-        packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
+    world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, gradient_quads,
+        textured_gradient_quads, flat_lines, 0, 0, gradient_lines, 0, 0, tiles, 0, 0, 0, 0, 0, 0, draw_moves,
+        draw_areas, draw_modes);
     g_world_shop_id = WORLD_SHOP_ID_FORMATION;
     world_formation_init_menu_state();
     tutorial = -(tutorial < 11) & tutorial;

@@ -4,19 +4,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Stack-resident primitive pools for both WORLD packet buffers; each pool
- * holds two frames of the per-type counts this routine publishes. */
-typedef struct world_name_entry_screen_packets {
-    POLY_FT4 textured_quads[2 * 220];     /* 0x0000: g_world_gfx_textured_quad_capacity = 220 */
-    TILE tiles[2 * 4];                    /* 0x44c0: g_world_gfx_tile_capacity = 4 */
-    LINE_F2 flat_lines[2 * 4];            /* 0x4540: g_world_gfx_flat_line_capacity = 4 */
-    DR_MOVE draw_moves[2 * 30];           /* 0x45c0: g_world_gfx_draw_move_capacity = 30 */
-    DR_MODE draw_modes[2 * 30];           /* 0x4b60: g_world_gfx_draw_mode_capacity = 30 */
-    DR_AREA draw_areas[2 * 10];           /* 0x4e30: g_world_gfx_draw_area_capacity = 10 */
-    u32 otags[2 * 64];                    /* 0x4f20: g_world_ot_length = 64 */
-    world_gfx_packet_buffer_t buffers[2]; /* 0x5120 */
-} world_name_entry_screen_packets_t;
-
 /*
  * Run the WORLD name-entry screen until its state reaches 0xFF.
  *
@@ -30,7 +17,14 @@ typedef struct world_name_entry_screen_packets {
  */
 u8* world_name_run_entry_screen(u8* list, u32* image) {
     point16_t cursor;
-    world_name_entry_screen_packets_t packets;
+    POLY_FT4 textured_quads[2 * 220];
+    TILE tiles[2 * 4];
+    LINE_F2 flat_lines[2 * 4];
+    DR_MOVE draw_moves[2 * 30];
+    DR_MODE draw_modes[2 * 30];
+    DR_AREA draw_areas[2 * 10];
+    u32 otags[2 * 64];
+    world_gfx_packet_buffer_t buffers[2];
     DRAWENV env;
     u32* otag;
     s32 busy;
@@ -61,9 +55,8 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     g_world_gfx_draw_move_capacity = 30;
     g_world_gfx_draw_mode_capacity = 30;
     g_world_gfx_draw_area_capacity = 10;
-    world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0, 0, 0,
-        packets.flat_lines, 0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas,
-        packets.draw_modes);
+    world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, 0, 0, flat_lines, 0, 0, 0, 0, 0,
+        tiles, 0, 0, 0, 0, 0, 0, draw_moves, draw_areas, draw_modes);
     g_world_shop_id = WORLD_SHOP_ID_NAME_ENTRY;
     world_formation_init_menu_display();
     world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
