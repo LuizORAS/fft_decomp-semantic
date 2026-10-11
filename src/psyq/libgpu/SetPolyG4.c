@@ -2,8 +2,5 @@
 #include "psx/libgpu.h"
 
 void SetPolyG4(POLY_G4* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
-
-    tag->len = PSYQ_GPU_PACKET_WORDS(POLY_G4);
-    tag->code = PSYQ_GPU_CODE_POLY_G4;
+    setPolyG4(primitive);
 }

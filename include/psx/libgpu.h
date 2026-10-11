@@ -671,7 +671,7 @@ void DumpDispEnv(DISPENV* env);
 void SetDrawEnv(DR_ENV* packet, DRAWENV* env);
 void DrawOTagEnv(u32* ot, DRAWENV* env);
 DISPENV* GetDispEnv(DISPENV* env);
-u32 GetODE(void);
+int GetODE(void);
 void SetTexWindow(DR_TWIN* packet, RECT* window);
 void SetPriority(DR_PRIO* packet, int test_mask, int set_mask);
 void* NextPrim(void* primitive);
@@ -870,15 +870,16 @@ int _otc(u32* ot, int count);
 void checkRECT(const char* name, RECT* rect);
 
 typedef struct {
-    u32 id, flags, object_count;
-} psyq_tmd_header_t;
-
-typedef struct {
     u32 vertex_offset, vertex_count;
     u32 normal_offset, normal_count;
     u32 primitive_offset, primitive_count;
     u32 scale;
 } psyq_tmd_object_t;
+
+typedef struct {
+    u32 id, flags, object_count;
+    psyq_tmd_object_t objects[0]; /* Variable-length object table follows the 12-byte header. */
+} psyq_tmd_header_t;
 
 typedef union psyq_tmd_packet psyq_tmd_packet_t;
 

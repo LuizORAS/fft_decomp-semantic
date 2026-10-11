@@ -2,14 +2,20 @@
 #include "psx/libgpu.h"
 
 u32 get_tw(RECT* rect) {
-    u32 pad[4];
+    /* Scalar locals remove the native stack stores and reloads of these command components. */
+    struct {
+        u32 x_offset;
+        u32 y_offset;
+        u32 x_mask;
+        u32 y_mask;
+    } window;
     if (rect) {
-        pad[0] = (rect->x & 0xff) >> 3;
-        pad[2] = (-rect->w & 0xff) >> 3;
-        pad[1] = (rect->y & 0xff) >> 3;
-        pad[3] = (-rect->h & 0xff) >> 3;
-        return PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_TEXTURE_WINDOW) | (pad[1] << 15) | (pad[0] << 10) | (pad[3] << 5)
-            | pad[2];
+        window.x_offset = (rect->x & 0xff) >> 3;
+        window.x_mask = (-rect->w & 0xff) >> 3;
+        window.y_offset = (rect->y & 0xff) >> 3;
+        window.y_mask = (-rect->h & 0xff) >> 3;
+        return PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_TEXTURE_WINDOW) | (window.y_offset << 15) | (window.x_offset << 10)
+            | (window.y_mask << 5) | window.x_mask;
     }
     return 0;
 }

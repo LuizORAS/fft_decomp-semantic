@@ -2,8 +2,5 @@
 #include "psx/libgpu.h"
 
 void SetPolyGT3(POLY_GT3* primitive) {
-    P_TAG* tag = (P_TAG*)primitive;
-
-    tag->len = PSYQ_GPU_PACKET_WORDS(POLY_GT3);
-    tag->code = PSYQ_GPU_CODE_POLY_GT3;
+    setPolyGT3(primitive);
 }
