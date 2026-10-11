@@ -65,8 +65,8 @@ s32 battle_target_run_calculator(const battle_action_command_t* source) {
         }
         if (type_flags & CALCULATOR_ATTRIBUTE_CT) {
             value = unit->ct;
-            if (value > 100 || unit == actor) {
-                value = 100;
+            if (value > UNIT_TURN_CT_THRESHOLD || unit == actor) {
+                value = UNIT_TURN_CT_THRESHOLD;
             }
         } else if (type_flags & CALCULATOR_ATTRIBUTE_LEVEL) {
             value = unit->level;

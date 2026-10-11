@@ -26,8 +26,8 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     record->max_hp = unit->max_hp < 1000 ? unit->max_hp : 999;
     record->mp = unit->max_mp < 1000 ? unit->max_mp : 999;
     record->max_mp = unit->max_mp < 1000 ? unit->max_mp : 999;
-    record->ct = unit->ct < 101 ? unit->ct : 100;
-    record->max_ct = 100;
+    record->ct = unit->ct <= UNIT_TURN_CT_THRESHOLD ? unit->ct : UNIT_TURN_CT_THRESHOLD;
+    record->max_ct = UNIT_TURN_CT_THRESHOLD;
     record->identity.unit_index = unit->formation_index;
     record->identity.job_id = party->job_id;
     record->identity.brave = unit->brave;

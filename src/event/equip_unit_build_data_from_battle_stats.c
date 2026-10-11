@@ -46,11 +46,11 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
         capped = stats->max_mp;
     }
     unit->max_mp = capped;
-    unit->ct = stats->has_turn != 1 ? stats->ct : 100;
-    if (unit->ct > 100) {
-        unit->ct = 100;
+    unit->ct = stats->has_turn != 1 ? stats->ct : UNIT_TURN_CT_THRESHOLD;
+    if (unit->ct > UNIT_TURN_CT_THRESHOLD) {
+        unit->ct = UNIT_TURN_CT_THRESHOLD;
     }
-    unit->max_ct = 100;
+    unit->max_ct = UNIT_TURN_CT_THRESHOLD;
     unit->identity.unit_index = stats->entd_slot;
     unit->identity.job_id = stats->job_id;
     unit->identity.brave = stats->brave;

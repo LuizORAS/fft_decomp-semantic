@@ -162,8 +162,8 @@ void world_menu_unit_status_banner_thread(void) {
         s32 parity = frame & 1;
         status = status_base + parity;
         summary = summary_base + parity;
-        if (state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value >= 0x65) {
-            state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 0x64;
+        if (state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value > UNIT_TURN_CT_THRESHOLD) {
+            state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
         }
         if (g_world_unit_join_screen_active == 0) {
             world_script_copy_bytes(&g_world_unit_summary_label_sprite_params[6],

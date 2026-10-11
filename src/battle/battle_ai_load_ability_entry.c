@@ -71,17 +71,20 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     case ACTION_MENU_TYPE_JUMP:
         if (unit_id == ai->acting_unit_id)
             ai->considered_ability.ct
-                = ((100 - ai->acting_unit->ct) / ai->acting_unit->attributes[UNIT_ATTRIBUTE_SPEED]) / 2;
+                = ((UNIT_TURN_CT_THRESHOLD - ai->acting_unit->ct) / ai->acting_unit->attributes[UNIT_ATTRIBUTE_SPEED])
+                / 2;
         else {
-            if (unit->ct > 100) {
+            if (unit->ct > UNIT_TURN_CT_THRESHOLD) {
                 ai->considered_ability.ct = 0;
-                value = unit->ct - 100;
+                value = unit->ct - UNIT_TURN_CT_THRESHOLD;
             } else {
-                ai->considered_ability.ct = (100 - unit->ct) / unit->attributes[UNIT_ATTRIBUTE_SPEED];
+                ai->considered_ability.ct
+                    = (UNIT_TURN_CT_THRESHOLD - unit->ct) / unit->attributes[UNIT_ATTRIBUTE_SPEED];
                 value = unit->attributes[UNIT_ATTRIBUTE_SPEED]
-                    - (100 - unit->ct) % unit->attributes[UNIT_ATTRIBUTE_SPEED];
+                    - (UNIT_TURN_CT_THRESHOLD - unit->ct) % unit->attributes[UNIT_ATTRIBUTE_SPEED];
             }
-            ai->considered_ability.ct += ((100 - value) / unit->attributes[UNIT_ATTRIBUTE_SPEED]) / 2;
+            ai->considered_ability.ct
+                += ((UNIT_TURN_CT_THRESHOLD - value) / unit->attributes[UNIT_ATTRIBUTE_SPEED]) / 2;
         }
         if (!ability_id)
             ai->considered_ability.parameters.bytes.range = 1;

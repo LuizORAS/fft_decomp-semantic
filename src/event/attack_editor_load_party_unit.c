@@ -61,8 +61,8 @@ void attack_editor_load_party_unit(s32 unused, s32 party_index) {
     }
     g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_MP].value
         = g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_MP].max;
-    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_CT].max = 100;
-    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 100;
+    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
+    g_attack_panel_selected_billboard.gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
 
     editor->move = unit->move;
     editor->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];

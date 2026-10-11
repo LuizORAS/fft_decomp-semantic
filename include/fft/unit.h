@@ -707,6 +707,11 @@ typedef struct unit_raw_stats {
 } unit_raw_stats_t;
 typedef char unit_raw_stats_size_must_be_15[(sizeof(unit_raw_stats_t) == UNIT_RAW_STAT_DATA_BYTE_COUNT) ? 1 : -1];
 
+/* CT points needed for a unit turn; speed supplies points each clocktick. */
+enum {
+    UNIT_TURN_CT_THRESHOLD = 100,
+};
+
 /* Calculated battle attributes use PA, MA, Speed order. */
 typedef enum unit_attribute_index {
     UNIT_ATTRIBUTE_PHYSICAL_ATTACK = 0,

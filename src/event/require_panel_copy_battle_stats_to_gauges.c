@@ -39,7 +39,7 @@ void require_panel_copy_battle_stats_to_gauges(battle_stats_t* unit, menu_unit_s
     }
     output->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp;
     output->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
-    output->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = 100;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
     ct = unit->ct;
     output->unit_index = 0;
     output->list_index = 0;

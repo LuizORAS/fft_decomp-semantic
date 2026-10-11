@@ -44,15 +44,15 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     record->max_hp = unit->max_hp < 1000 ? unit->max_hp : 999;
     record->current_mp = unit->mp < 1000 ? unit->mp : 999;
     record->max_mp = unit->max_mp < 1000 ? unit->max_mp : 999;
-    value = 100;
+    value = UNIT_TURN_CT_THRESHOLD;
     if (unit->has_turn != 1) {
         value = unit->ct;
     }
     record->current_ct = value;
-    if (value >= 101) {
-        record->current_ct = 100;
+    if (value > UNIT_TURN_CT_THRESHOLD) {
+        record->current_ct = UNIT_TURN_CT_THRESHOLD;
     }
-    record->max_ct = 100;
+    record->max_ct = UNIT_TURN_CT_THRESHOLD;
     record->formation_index = unit->formation_index;
     record->name_index = unit->entd_slot;
     record->job_id = unit->job_id;

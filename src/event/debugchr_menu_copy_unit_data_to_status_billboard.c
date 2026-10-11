@@ -36,14 +36,14 @@ void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu
         output->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = value + 1;
     output->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp;
     output->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
-    output->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = 100;
+    output->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
     output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     output->list_index = 0;
     output->unit_count = 0;
     g_battle_thread_call_target = (void (*)(void))battle_action_check_at_list_for_unit_battle_id;
     output->list_index = battle_thread_call_on_main_stack(unit);
     if (unit->has_turn != 0)
-        output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 100;
+        output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
     if (output->list_index >= 0)
         output->list_index++;
     output->unit_count = BATTLE_UNIT_SLOT_COUNT;

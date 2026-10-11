@@ -125,8 +125,8 @@ void battle_menu_display_hovered_unit_stats(
     battle_copy_bytes(&page[1], page, sizeof(menu_unit_status_page_t));
     text_loaded = 0;
     for (frame = 0;; frame++) {
-        if (status->gauges[MENU_UNIT_STATUS_GAUGE_CT].value > 100) {
-            status->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 100;
+        if (status->gauges[MENU_UNIT_STATUS_GAUGE_CT].value > UNIT_TURN_CT_THRESHOLD) {
+            status->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
         }
         if (text_loaded != 0) {
             battle_menu_free_memory(buffer);

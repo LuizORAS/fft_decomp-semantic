@@ -84,7 +84,7 @@ s32 battle_action_run_between_turn_control(s32 mode) {
             g_battle_between_turn_state = BATTLE_BETWEEN_TURN_STATE_PICK_UNIT;
             break;
         case BATTLE_BETWEEN_TURN_STATE_PICK_UNIT:
-            max_ct = 99;
+            max_ct = UNIT_TURN_CT_THRESHOLD - 1;
             best = 0xff;
             for (i = 0; i < 21; i++) {
                 unit = &g_battle_unit_stats[i];
@@ -100,13 +100,13 @@ s32 battle_action_run_between_turn_control(s32 mode) {
                 unit = &g_battle_unit_stats[best];
                 if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
-                    unit->ct = 99;
+                    unit->ct = UNIT_TURN_CT_THRESHOLD - 1;
                     continue;
                 }
                 if (unit->ct == 0xff) {
                     unit->ct = 0;
                 } else {
-                    unit->ct = max_ct % 100;
+                    unit->ct = max_ct % UNIT_TURN_CT_THRESHOLD;
                 }
                 ret = battle_status_build_upkeep_action(best, unit);
                 if (ret != 0) {

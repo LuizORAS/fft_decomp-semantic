@@ -142,8 +142,8 @@ void bunit_render_unit_status_panel_thread(void) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
-        if (state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value >= 0x65) {
-            state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = 0x64;
+        if (state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value > UNIT_TURN_CT_THRESHOLD) {
+            state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
             battle_copy_bytes(g_bunit_panel_editor_mode_cell, &g_bunit_panel_editor_mode_cells[state->team_kind], 0xC);

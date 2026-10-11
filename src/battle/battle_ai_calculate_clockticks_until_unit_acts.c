@@ -33,8 +33,8 @@ s32 battle_ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit) {
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_STOP)) {
         ticks = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_STOP)];
     }
-    if (unit->ct < 0x64) {
-        rem = 0x64 - unit->ct;
+    if (unit->ct < UNIT_TURN_CT_THRESHOLD) {
+        rem = UNIT_TURN_CT_THRESHOLD - unit->ct;
         ticks += rem / speed;
         if (rem % speed != 0) {
             ticks += 1;

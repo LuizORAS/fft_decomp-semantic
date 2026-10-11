@@ -48,7 +48,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     if (maximum_mp == 0) {
         gauges->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
     }
-    gauges->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = 100;
+    gauges->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
     gauges->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp;
     gauges->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     identity->job_id = unit->job_id;

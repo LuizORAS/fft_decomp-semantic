@@ -125,7 +125,7 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
         tick = wait;
         ct = unit->ct;
         for (turns = 0; turns < 0x28; turns++) {
-            while (ct < 100) {
+            while (ct < UNIT_TURN_CT_THRESHOLD) {
                 tick++;
                 value = speed;
                 if (slow != 0) {
@@ -150,9 +150,10 @@ s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
                 break;
             }
             remainder = ct;
-            remainder %= 100;
+            remainder %= UNIT_TURN_CT_THRESHOLD;
             ct = remainder;
-            added = battle_action_sort_at_list(slot, 0, ((tick << 8) + (100 - remainder)) & 0xffff, list);
+            added = battle_action_sort_at_list(
+                slot, 0, ((tick << 8) + (UNIT_TURN_CT_THRESHOLD - remainder)) & 0xffff, list);
             if (added == 0) {
                 break;
             }
