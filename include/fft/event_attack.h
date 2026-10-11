@@ -377,6 +377,13 @@ void attack_panel_set_primitive_colors(
 void attack_panel_run_character_status_thread(void);
 
 /* text */
+/* Overlay text file: offsets are relative to the data following the header. */
+typedef struct attack_text_file {
+    s32 section_offsets[32];
+    u8 section_data[0];
+} attack_text_file_t;
+typedef char attack_text_file_header_size_must_be_0x80[(sizeof(attack_text_file_t) == 0x80) ? 1 : -1];
+
 extern s32 g_attack_numeric_editor_redraw_request;
 
 /* Entries [1] and [2] of the unit-name text file's section-offset table (0x801cd2b0, s32[32], ending at
@@ -394,7 +401,7 @@ void attack_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_bl
 
 void attack_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
 
-void attack_text_init_battle_pointers(s32* offsets);
+void attack_text_init_battle_pointers(attack_text_file_t* file);
 
 /* unit */
 extern battle_active_unit_t g_attack_panel_selected_unit_data;

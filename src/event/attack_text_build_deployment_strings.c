@@ -31,7 +31,7 @@
  */
 void attack_text_build_deployment_strings(void) {
     u8* dst;
-    void* file;
+    attack_text_file_t* file;
     s32 i;
     s32 j;
     u8* src;
