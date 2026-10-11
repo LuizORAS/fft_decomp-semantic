@@ -8,10 +8,10 @@ void world_gfx_enqueue_draw_move(RECT* src, s32 x, s32 y, s32 ot_index) {
     DR_MOVE* move = &g_world_gfx_active_packet_buffer->draw_moves[g_world_gfx_draw_move_count++];
 
     SetDrawMove(move);
-    move->x0 = src->x;
-    move->y0 = src->y;
-    move->x1 = x;
-    move->y1 = y;
+    move->sx = src->x;
+    move->sy = src->y;
+    move->x0 = x;
+    move->y0 = y;
     move->w = src->w;
     move->h = src->h;
     addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], move);

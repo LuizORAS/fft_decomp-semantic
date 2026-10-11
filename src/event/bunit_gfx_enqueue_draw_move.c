@@ -8,10 +8,10 @@ void bunit_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index)
 
     prim = &g_bunit_gfx_context->draw_moves[g_bunit_gfx_draw_move_count++];
     SetDrawMove(prim);
-    prim->x0 = rect->x;
-    prim->y0 = rect->y;
-    prim->x1 = u;
-    prim->y1 = v;
+    prim->sx = rect->x;
+    prim->sy = rect->y;
+    prim->x0 = u;
+    prim->y0 = v;
     prim->w = rect->w;
     prim->h = rect->h;
     addPrim(&g_bunit_gfx_context->otag[otag_index], prim);

@@ -469,15 +469,15 @@ typedef struct {
     u32 code[2];
 } DR_PRIO;
 
-/* libgpu DR_MOVE (u32 code[5]); the VRAM-to-VRAM move command words are
- * spelled out so game code can fill the source/destination halfwords. */
+/* Psy-Q 3.5 VRAM-to-VRAM move packet. */
 typedef struct {
     u32 tag;
-    u32 code[2]; /* 0x04: cache flush, move command */
-    s16 x0;      /* 0x0c: source */
+    u32 code;  /* 0x04: cache flush */
+    u32 code2; /* 0x08: move command */
+    s16 sx;    /* 0x0c: source */
+    s16 sy;
+    s16 x0; /* 0x10: destination */
     s16 y0;
-    s16 x1; /* 0x10: destination */
-    s16 y1;
     s16 w; /* 0x14 */
     s16 h;
 } DR_MOVE;

@@ -26,12 +26,12 @@ s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_stat
         switch (g_battle_map_texture_animations[index].mode) {
         case MAP_TEXTURE_ANIMATION_MODE_UV_LOOP ... MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE:
         case MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK ... MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_PLAYING:
-            g_battle_map_texture_animation_moves[index].x0 = g_battle_map_texture_animations[index].frame_x;
-            g_battle_map_texture_animation_moves[index].y0 = g_battle_map_texture_animations[index].frame_y;
+            g_battle_map_texture_animation_moves[index].sx = g_battle_map_texture_animations[index].frame_x;
+            g_battle_map_texture_animation_moves[index].sy = g_battle_map_texture_animations[index].frame_y;
             g_battle_map_texture_animation_moves[index].w = g_battle_map_texture_animations[index].width;
             g_battle_map_texture_animation_moves[index].h = g_battle_map_texture_animations[index].height;
-            g_battle_map_texture_animation_moves[index].x1 = g_battle_map_texture_animations[index].canvas_x;
-            g_battle_map_texture_animation_moves[index].y1 = g_battle_map_texture_animations[index].canvas_y;
+            g_battle_map_texture_animation_moves[index].x0 = g_battle_map_texture_animations[index].canvas_x;
+            g_battle_map_texture_animation_moves[index].y0 = g_battle_map_texture_animations[index].canvas_y;
             g_battle_map_texture_animations[index].active = 1;
             g_battle_map_texture_animations[index].timer = 0x7e;
             g_battle_map_texture_animations[index].frame = 0;

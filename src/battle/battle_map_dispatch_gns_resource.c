@@ -290,12 +290,12 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
             g_battle_map_texture_animation_handles[i] = 0;
             g_battle_map_texture_animations[i] = source[i];
             SetDrawMove(&g_battle_map_texture_animation_moves[i]);
-            g_battle_map_texture_animation_moves[i].x0 = g_battle_map_texture_animations[i].frame_x;
-            g_battle_map_texture_animation_moves[i].y0 = g_battle_map_texture_animations[i].frame_y;
+            g_battle_map_texture_animation_moves[i].sx = g_battle_map_texture_animations[i].frame_x;
+            g_battle_map_texture_animation_moves[i].sy = g_battle_map_texture_animations[i].frame_y;
             g_battle_map_texture_animation_moves[i].w = g_battle_map_texture_animations[i].width;
             g_battle_map_texture_animation_moves[i].h = g_battle_map_texture_animations[i].height;
-            g_battle_map_texture_animation_moves[i].x1 = g_battle_map_texture_animations[i].canvas_x;
-            g_battle_map_texture_animation_moves[i].y1 = g_battle_map_texture_animations[i].canvas_y;
+            g_battle_map_texture_animation_moves[i].x0 = g_battle_map_texture_animations[i].canvas_x;
+            g_battle_map_texture_animation_moves[i].y0 = g_battle_map_texture_animations[i].canvas_y;
             if (g_battle_map_texture_animations[i].mode >= MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_0
                 && g_battle_map_texture_animations[i].mode < MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE) {
                 g_battle_map_texture_animations[i].active = 0;
