@@ -143,11 +143,12 @@ void open_movie_wait_for_mdec_output(open_movie_mdec_stream_state_t* state, s32 
 /* world_animated_render_record_t.palette of the selected menu entry. */
 enum { OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE = 9 };
 
+enum { OPEN_GFX_RENDER_RECORD_CAPACITY = 16 };
+
 /* Render records. open_gfx_draw_render_record_pointer_list dispatches on flags
  * (wldcore_display_object_flag_e): ANIMATED is a 36-byte record, IMAGE a
  * 56-byte record, and a record with BLANK or HIDDEN set is skipped.
- * Both pools hold 16 entries, allocated by the open_append_render_record_*
- * counters. */
+ * Each pool holds OPEN_GFX_RENDER_RECORD_CAPACITY entries. */
 /* The render queue holds either record format; its leading flags word selects
  * the concrete layout. */
 
@@ -571,6 +572,17 @@ typedef struct open_gfx_transition_entry {
 } open_gfx_transition_entry_t;
 typedef char open_gfx_transition_entry_header_size_must_be_4[sizeof(open_gfx_transition_entry_t) == 4 ? 1 : -1];
 
+/* High nibble of the image command byte in open_gfx_transition_entry_t.header. */
+typedef enum open_gfx_transition_image_operation {
+    OPEN_GFX_TRANSITION_PREPARE_IMAGE = 0x10,
+    OPEN_GFX_TRANSITION_START_CROSSFADE = 0x20,
+} open_gfx_transition_image_operation_e;
+
+enum {
+    OPEN_GFX_TRANSITION_IMAGE_OPERATION_MASK = 0xf0,
+    OPEN_GFX_TRANSITION_IMAGE_INDEX_MASK = 0x0f,
+};
+
 /* open_gfx_transition_t.flags. */
 typedef enum open_gfx_transition_flag {
     OPEN_GFX_TRANSITION_NEXT_ENTRY = 0x01,  /* starts the next entry of the table, or ends at the target */
@@ -589,8 +601,8 @@ typedef enum open_overlay_fade_flag {
 
 /* OPEN image transition controller at 0x800855b4. */
 typedef struct open_gfx_transition {
-    /* 0x00 */ u16 flags; /* open_gfx_transition_flag_e */
-    /* 0x02 */ s16 mode;
+    /* 0x00 */ u16 flags;    /* open_gfx_transition_flag_e */
+    /* 0x02 */ s16 ot_layer; /* text and shadow occupy this layer and the next */
     /* 0x04 */ s16 current_index;
     /* 0x06 */ s16 target_index;
     /* 0x08 */ s16 step;
@@ -649,11 +661,12 @@ extern s32 g_open_gfx_next_render_record_56;
 extern u32* g_open_gfx_opntex_data;
 extern u32 g_open_gfx_otags[2][16];
 extern s32 g_open_gfx_primitive_count;
-extern open_render_record_56_position_t g_open_gfx_record_translation[16];
+extern open_render_record_56_position_t g_open_gfx_record_translation[OPEN_GFX_RENDER_RECORD_CAPACITY];
 extern s32 g_open_gfx_render_record_pointer_count;
-extern void* g_open_gfx_render_record_pointers[16];
-extern world_animated_render_record_t g_open_gfx_render_records_36[16];
-extern open_render_record_56_t g_open_gfx_render_records_56[16];
+/* Both render pools publish record pointers to this queue. */
+extern void* g_open_gfx_render_record_pointers[];
+extern world_animated_render_record_t g_open_gfx_render_records_36[OPEN_GFX_RENDER_RECORD_CAPACITY];
+extern open_render_record_56_t g_open_gfx_render_records_56[OPEN_GFX_RENDER_RECORD_CAPACITY];
 extern open_screen_environment_t g_open_gfx_screen_environments[2];
 extern open_overlay_fade_t g_open_gfx_overlay_fade;
 extern open_gfx_transition_t g_open_gfx_transition;
@@ -677,7 +690,7 @@ void open_gfx_draw_render_record_pointer_list(u32* otag, void** records, s32 cou
 void open_gfx_show_four_render_records(open_title_controller_t* title);
 void open_gfx_init_render_buffers(void);
 void open_gfx_init_screen_environments(s32 clear_first);
-void open_gfx_init_transition_request(s32 target, s32 mode, open_gfx_transition_entry_t** entry_table);
+void open_gfx_init_transition_request(s32 target, s32 ot_layer, open_gfx_transition_entry_t** entry_table);
 void open_gfx_init_window_frame_record(s32 record_index, RECT quad, s32 depth, u16* image);
 void open_gfx_load_opntex_into_frame_buffer(u32* tim);
 void open_gfx_hide_four_render_records(open_title_controller_t* title);

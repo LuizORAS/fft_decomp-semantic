@@ -22,7 +22,7 @@ s32 open_gfx_update_transition_sequence(void) {
     u16 flags;
     s32 i;
     open_gfx_transition_entry_t* entry;
-    s32 type;
+    s32 image_command;
 
     open_gfx_step_image_crossfade();
     if (!(g_open_gfx_transition.flags & OPEN_GFX_TRANSITION_SKIP)) {
@@ -62,13 +62,13 @@ s32 open_gfx_update_transition_sequence(void) {
                 g_open_gfx_transition.step_count = (u8)entry->header;
                 g_open_gfx_transition.tpage_x = (entry->header & 0xf00) >> 2;
                 g_open_gfx_transition.tpage_y = (entry->header >> 4) & 0x100;
-                /* Image operation: 0x10 + n prepares the crossfade to picture n, 0x20 starts it. */
-                type = (u8)(entry->header >> 16);
-                switch (type & 0xf0) {
-                case 0x10:
-                    open_gfx_copy_file_image_to_210x180_buffer(type & 0xf);
+                /* The high nibble selects the operation; the low nibble selects its image. */
+                image_command = (u8)(entry->header >> 16);
+                switch (image_command & OPEN_GFX_TRANSITION_IMAGE_OPERATION_MASK) {
+                case OPEN_GFX_TRANSITION_PREPARE_IMAGE:
+                    open_gfx_copy_file_image_to_210x180_buffer(image_command & OPEN_GFX_TRANSITION_IMAGE_INDEX_MASK);
                     break;
-                case 0x20:
+                case OPEN_GFX_TRANSITION_START_CROSSFADE:
                     open_file_wait_for_pending();
                     g_open_gfx_image_copy_row_flags[0] = 1;
                     break;

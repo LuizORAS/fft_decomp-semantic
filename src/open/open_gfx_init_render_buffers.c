@@ -11,7 +11,7 @@ void open_gfx_init_render_buffers(void) {
     g_open_gfx_next_render_record_36 = 0;
     g_open_gfx_render_record_pointer_count = 0;
 
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < OPEN_GFX_RENDER_RECORD_CAPACITY; i++) {
         g_open_gfx_render_records_36[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
         g_open_gfx_render_records_36[i].priority = 8;
         color = &g_open_gfx_render_records_36[i].color;
@@ -20,7 +20,7 @@ void open_gfx_init_render_buffers(void) {
         color->b = 0x80;
     }
 
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < OPEN_GFX_RENDER_RECORD_CAPACITY; i++) {
         g_open_gfx_render_records_56[i].flags = WLDCORE_DISPLAY_OBJECT_IMAGE;
         g_open_gfx_render_records_56[i].ot_layer = 8;
         color = &g_open_gfx_render_records_56[i].color;

@@ -14,8 +14,8 @@
  * revealed.
  *
  * Every piece is two POLY_GT4s: the text, added to the picture at intensity in
- * ordering-table entry mode, and a copy one pixel down and right, subtracted at
- * half intensity in entry mode + 1.
+ * ordering-table entry ot_layer, and a copy one pixel down and right, subtracted at
+ * half intensity in entry ot_layer + 1.
  *
  * The coordinates are written in setXY4 order (x0, y0, x1, y1, ...) per
  * primitive, and width + 1 goes through its own variable (the target adds left
@@ -100,8 +100,8 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
 
         SetSemiTrans(&prims[prim_index], 1);
         SetSemiTrans(&prims[prim_index + 1], 1);
-        AddPrim(&g_open_gfx_otags[g_active_graphics_buffer_index][g_open_gfx_transition.mode], &prims[prim_index]);
-        AddPrim(
-            &g_open_gfx_otags[g_active_graphics_buffer_index][g_open_gfx_transition.mode + 1], &prims[prim_index + 1]);
+        AddPrim(&g_open_gfx_otags[g_active_graphics_buffer_index][g_open_gfx_transition.ot_layer], &prims[prim_index]);
+        AddPrim(&g_open_gfx_otags[g_active_graphics_buffer_index][g_open_gfx_transition.ot_layer + 1],
+            &prims[prim_index + 1]);
     }
 }
