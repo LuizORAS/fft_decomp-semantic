@@ -27,16 +27,6 @@ typedef struct world_ability_list {
  * 0x80122f9c and consumed by world_item_combine_stat_details. Armor supplies the
  * HP/MP bonuses; weapon, shield, accessory and item-attribute tables supply
  * the named detail fields. Weapon fields follow equipment-slot order. */
-typedef struct world_item_stat_summary {
-    u8 _unused_00[2];
-    s16 team_kind; /* 0x02; the battle_unit_status_record_t team_kind */
-    u8 _unused_04[0x0a];
-    s16 hp_bonus; /* 0x0e */
-    u8 _unused_10[4];
-    s16 mp_bonus; /* 0x14 */
-    u8 _unused_16[0x28 - 0x16];
-} world_item_stat_summary_t;
-typedef char world_stat_summary_size_must_be_0x28[(sizeof(world_item_stat_summary_t) == 0x28) ? 1 : -1];
 
 typedef struct world_item_stat_detail {
     s16 move_bonus; /* Signed halfwords combined by world_item_combine_stat_details. */
@@ -294,7 +284,7 @@ typedef char battle_unit_status_gauge_size_must_be_6[(sizeof(battle_unit_status_
  * fill the first 0x1e bytes, *_menu_display_hovered_unit_stats and the
  * *_render_unit_status_panel_thread editors draw it, and
  * battle_menu_copy_billboard_data_out saves the banner whole as 0x22 bytes.
- * WORLD's equipment preview reads the same block as world_item_stat_summary_t. */
+ * Equipment previews use the HP and MP gauges' bonus fields. */
 typedef struct battle_unit_status_record {
     s16 level;      /* 0x00; debugchr_editor_apply_values_to_battle_unit writes it back */
     s16 team_kind;  /* 0x02: 0 ally, 1 enemy, 2 neutral, 3 auto-battle; selects the status icon,

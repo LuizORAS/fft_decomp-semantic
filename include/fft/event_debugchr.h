@@ -98,7 +98,7 @@ void debugchr_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* output, const world_status_thread_t* context);
 
 void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
+    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 
 /* menu */
 extern s32 g_debugchr_menu_indicator_brightness[2];
@@ -157,8 +157,8 @@ extern u8 g_debugchr_panel_selected_large_number_image[];
 extern u8 g_debugchr_panel_comparison_number_image[];
 extern u8 g_debugchr_panel_comparison_name_image[];
 extern u8 g_debugchr_panel_comparison_large_number_image[];
-extern u16 g_debugchr_panel_selected_portrait_image[];
-extern u16 g_debugchr_panel_comparison_portrait_image[];
+extern palette_t g_debugchr_panel_selected_portrait_palettes[2];
+extern palette_t g_debugchr_panel_comparison_portrait_palettes[2];
 extern battle_menu_status_panel_buffer_t g_debugchr_panel_frames_a[];
 extern u8 g_debugchr_panel_text_image_a[];
 extern u8 g_debugchr_panel_text_image_b[];

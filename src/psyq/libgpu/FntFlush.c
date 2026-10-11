@@ -25,7 +25,7 @@ u32* FntFlush(int id) {
             return 0;
     }
     window = &g_psyq_gpu_font_windows[id];
-    ot = (u32*)&window->mode;
+    ot = &window->mode.tag;
     text = window->text;
     remaining = window->character_limit;
     x = window->tile.x0;

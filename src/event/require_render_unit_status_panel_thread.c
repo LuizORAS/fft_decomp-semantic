@@ -19,7 +19,7 @@ void require_render_unit_status_panel_thread(void) {
     battle_unit_status_record_t* state;
     s32 portrait_arg;
     const RECT* portrait_rect;
-    u16* portrait_image;
+    palette_t* portrait_palettes;
     u8* small_text_image;
     u8* name_image;
     battle_menu_status_panel_packet_t* panel_base;
@@ -61,7 +61,7 @@ void require_render_unit_status_panel_thread(void) {
         portrait_rect = &g_require_panel_selected_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        portrait_image = g_require_panel_selected_portrait_image;
+        portrait_palettes = g_require_panel_selected_portrait_palettes;
     } else {
         panel = g_require_panel_comparison_packets;
         editor = g_require_panel_comparison_editor_packets;
@@ -74,7 +74,7 @@ void require_render_unit_status_panel_thread(void) {
         portrait_rect = &g_require_panel_comparison_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        portrait_image = g_require_panel_comparison_portrait_image;
+        portrait_palettes = g_require_panel_comparison_portrait_palettes;
     }
 
     battle_menu_init_numeric_display_frame_primitives(&g_require_gfx_portrait_origin, &editor->numeric_frame);
@@ -267,7 +267,7 @@ void require_render_unit_status_panel_thread(void) {
             }
         }
         require_gfx_build_portrait_transition_primitives(
-            portrait_rect, &anim_state, &cur_unit, &prev_unit, portrait_image, &editor->portrait[0], portrait_arg);
+            portrait_rect, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
 

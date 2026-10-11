@@ -12,7 +12,7 @@
  * vertex loop, the CLUT loops and the wipe step alike.
  */
 void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction) {
+    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction) {
     RECT second_rect;
     RECT first_rect;
     s32 i;
@@ -47,19 +47,19 @@ void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect,
         poly++;
         debugchr_gfx_build_portrait_poly_ft4(*first_portrait, poly);
         debugchr_gfx_set_clut_rect_from_id(&first_rect, poly->clut);
-        StoreImage(&first_rect, (u32*)image);
-        StoreImage(&second_rect, (u32*)(image + 16));
+        StoreImage(&first_rect, (u32*)palettes[0]);
+        StoreImage(&second_rect, (u32*)palettes[1]);
         *transition += g_battle_event_speed;
     } else if (*transition < 10) {
         if (*transition == 4) {
             for (i = 0; i < 0x10; i++) {
-                image[i] |= 0x8000;
+                palettes[0][i].semi_transparent = 1;
             }
             for (i = 0; i < 0x10; i++) {
-                image[i + 16] |= 0x8000;
+                palettes[1][i].semi_transparent = 1;
             }
-            LoadImage(&first_rect, (u32*)image);
-            LoadImage(&second_rect, (u32*)(image + 16));
+            LoadImage(&first_rect, (u32*)palettes[0]);
+            LoadImage(&second_rect, (u32*)palettes[1]);
         }
 
         i = *transition - 4;

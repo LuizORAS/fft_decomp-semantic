@@ -3,7 +3,7 @@
 
 /* Sums the per-item stat details of the five equipment slots into total. */
 void world_item_sum_equipment_stat_details(world_item_stat_detail_t* total, u16* equipment) {
-    world_item_stat_summary_t summary;
+    battle_unit_status_record_t summary;
     world_item_stat_detail_t detail;
     world_item_stat_detail_t unused; /* unreferenced in the target; needed for the 0xc8 frame */
     s32 i;

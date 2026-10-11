@@ -3,8 +3,8 @@
 
 /* Accumulates the stat deltas of all equipment slot changes into total. */
 void world_item_calculate_equipment_swap_stat_delta(
-    world_item_stat_detail_t* detail_total, world_item_stat_summary_t* total, u16* items_before, u16* items_after) {
-    world_item_stat_summary_t delta;
+    world_item_stat_detail_t* detail_total, battle_unit_status_record_t* total, u16* items_before, u16* items_after) {
+    battle_unit_status_record_t delta;
     world_item_stat_detail_t detail;
     world_item_stat_detail_t unused;
     s32 slot;
@@ -14,7 +14,7 @@ void world_item_calculate_equipment_swap_stat_delta(
         world_item_calculate_swap_stat_delta(
             &detail, &delta, items_before[slot] & WORLD_ITEM_ID_MASK, items_after[slot] & WORLD_ITEM_ID_MASK, slot);
         world_item_combine_stat_details(detail_total, detail_total, &detail, -1);
-        total->hp_bonus += delta.hp_bonus;
-        total->mp_bonus += delta.mp_bonus;
+        total->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus += delta.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus;
+        total->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus += delta.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus;
     }
 }

@@ -8,7 +8,6 @@ s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     s32 slot;
     party_data_t* party;
     u8 job;
-    s32 byte_index;
     s32 total;
     s32 level;
     s32 levels;
@@ -35,22 +34,21 @@ s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     }
 
     /* Each serialized JP entry is a little-endian byte pair. */
-    byte_index = slot * 2;
-    total = party->career.job_points.current.bytes[byte_index]
-        + (party->career.job_points.current.bytes[byte_index + 1] << 8) + jp;
+    total = party->career.job_points.current.entries[slot].low
+        + (party->career.job_points.current.entries[slot].high << 8) + jp;
     if (total >= 10000) {
         total = 9999;
     }
-    party->career.job_points.current.bytes[byte_index] = total;
-    party->career.job_points.current.bytes[byte_index + 1] = total / 256;
+    party->career.job_points.current.entries[slot].low = total;
+    party->career.job_points.current.entries[slot].high = total / 256;
 
-    total = party->career.job_points.total.bytes[byte_index]
-        + (party->career.job_points.total.bytes[byte_index + 1] << 8) + jp;
+    total = party->career.job_points.total.entries[slot].low + (party->career.job_points.total.entries[slot].high << 8)
+        + jp;
     if (total >= 10000) {
         total = 9999;
     }
-    party->career.job_points.total.bytes[byte_index] = total;
-    party->career.job_points.total.bytes[byte_index + 1] = total / 256;
+    party->career.job_points.total.entries[slot].low = total;
+    party->career.job_points.total.entries[slot].high = total / 256;
     level = main_job_calculate_level(total & 0xFFFF);
 
     levels = party->career.job_levels[slot / 2];

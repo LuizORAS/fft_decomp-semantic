@@ -3805,9 +3805,7 @@ typedef struct effect_work_record {
     struct effect_work_record* prev; /* 0x00 */
     struct effect_work_record* next; /* 0x04 */
     battle_effect_motion_t motion;   /* 0x08 */
-    s16 target_x;                    /* 0x3c */
-    s16 target_y;                    /* 0x3e */
-    s16 target_z;                    /* 0x40 */
+    vec3s16_t target;                /* 0x3c */
     s16 lifetime;                    /* 0x42; frames or EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN */
     u8 _unused_44;
     u8 homing_curve_index;         /* 0x45 */

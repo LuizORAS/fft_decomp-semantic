@@ -117,7 +117,7 @@ void require_render_display_condition_general_cases(s32 value);
 void require_render_display_condition_special_cases_thread(void);
 
 void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
+    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 
 void require_gfx_init_poly_gt4_array_32(s32 x, s32 y);
 void require_gfx_init_poly_gt4_array_8(s32 x, s32 y);
@@ -183,7 +183,7 @@ extern u8 g_require_panel_comparison_name_image[];
 extern u8 g_require_panel_comparison_number_image[];
 extern menu_number_entry_t g_require_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_require_panel_comparison_packets[2];
-extern u16 g_require_panel_comparison_portrait_image[];
+extern palette_t g_require_panel_comparison_portrait_palettes[2];
 extern RECT g_require_panel_comparison_portrait_rect;
 extern battle_active_unit_t g_require_panel_comparison_unit_data;
 extern world_gfx_image_load_parameters_t g_require_panel_editor_label_cells[];
@@ -201,7 +201,7 @@ extern u8 g_require_panel_selected_name_image[];
 extern u8 g_require_panel_selected_number_image[];
 extern menu_number_entry_t g_require_panel_selected_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_require_panel_selected_packets[2];
-extern u16 g_require_panel_selected_portrait_image[];
+extern palette_t g_require_panel_selected_portrait_palettes[2];
 extern RECT g_require_panel_selected_portrait_rect;
 extern world_gfx_image_load_parameters_t g_require_panel_sprite_cells[];
 extern const world_image_location_t g_require_panel_status_texture;

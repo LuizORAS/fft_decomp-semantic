@@ -38,7 +38,7 @@ void world_menu_unit_status_banner_thread(void) {
     battle_unit_status_record_t* state;                     /* sp78 */
     s32 portrait_arg;                                       /* sp80 */
     const RECT* transition;                                 /* sp88 */
-    u8* portrait_image;                                     /* sp90 */
+    palette_t* portrait_palettes;                           /* sp90 */
     u8* render_b;                                           /* sp98 */
     u8* render_c;                                           /* spA0 */
     battle_menu_status_panel_packet_t* status_base;         /* spA8 */
@@ -57,45 +57,46 @@ void world_menu_unit_status_banner_thread(void) {
     s16 cell;
     battle_menu_status_panel_packet_t* status;
     battle_menu_status_panel_editor_packet_t* summary;
-    u8* cur;
+    u32* input;
+    SPRT* sprites;
     u8* render_a_upper;
     u8* render_b_second;
     u8* render_b_third;
-    u8* portrait_prim;
+    POLY_FT4* portrait_prim;
 
     suppress = 0;
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
-    cur = (u8*)world_input_get_menu_controller(0);
+    input = world_input_get_menu_controller(0);
     thread_id = g_world_thread_current_id;
     threads = g_world_threads;
-    g_world_input_frame_controller_input = (u32*)(cur + 4);
+    g_world_input_frame_controller_input = input + 1;
     display = (battle_menu_status_panel_display_thread_t*)threads[thread_id].function_parameter_1;
     if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
-        status = (battle_menu_status_panel_packet_t*)g_world_selected_unit_status_packets;
-        summary = (battle_menu_status_panel_editor_packet_t*)g_world_selected_unit_summary_packets;
+        status = g_world_selected_unit_status_packets;
+        summary = g_world_selected_unit_summary_packets;
         render_a = g_world_selected_unit_stat_text_image;
         render_b = g_world_selected_unit_number_text_image;
         render_c = g_world_selected_unit_name_text_image;
         entries = g_world_selected_unit_number_entries;
-        state = (battle_unit_status_record_t*)&g_world_selected_unit_stat_summary;
+        state = &g_world_selected_unit_stat_summary;
         identity = &g_world_selected_unit_identity;
         transition = &g_world_selected_unit_portrait_rect;
         status_base = status;
         summary_base = summary;
-        portrait_image = g_world_selected_unit_portrait_image;
+        portrait_palettes = g_world_selected_unit_portrait_palettes;
     } else {
-        status = (battle_menu_status_panel_packet_t*)g_world_comparison_unit_status_packets;
-        summary = (battle_menu_status_panel_editor_packet_t*)g_world_comparison_unit_summary_packets;
+        status = g_world_comparison_unit_status_packets;
+        summary = g_world_comparison_unit_summary_packets;
         render_a = g_world_comparison_unit_stat_text_image;
         render_b = g_world_comparison_unit_number_text_image;
         render_c = g_world_comparison_unit_name_text_image;
         entries = g_world_comparison_unit_number_entries;
-        state = (battle_unit_status_record_t*)g_world_comparison_unit_stat_summary;
+        state = &g_world_comparison_unit_stat_summary;
         identity = &g_world_comparison_unit_identity;
         transition = &g_world_comparison_unit_portrait_rect;
         status_base = status;
         summary_base = summary;
-        portrait_image = g_world_comparison_unit_portrait_image;
+        portrait_palettes = g_world_comparison_unit_portrait_palettes;
     }
     shake = 0;
 
@@ -133,10 +134,10 @@ void world_menu_unit_status_banner_thread(void) {
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_status_panel_origin, &status->numeric_frame);
-    cur = (u8*)&status->sprites[0];
-    world_menu_init_sprite_array((SPRT*)cur, 7, 0x7C3C);
+    sprites = &status->sprites[0];
+    world_menu_init_sprite_array(sprites, 7, 0x7C3C);
     world_gfx_init_default_poly_ft4(&status->portrait);
-    world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (world_texture_prim_t*)cur, 0);
+    world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (world_texture_prim_t*)sprites, 0);
     world_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[1], 0);
     world_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[2], 0);
     world_text_configure_sprite_vram(&rects[5], 0x10, 0xA, (world_texture_prim_t*)&status->sprites[3], 0);
@@ -322,7 +323,7 @@ void world_menu_unit_status_banner_thread(void) {
             }
         }
         world_gfx_build_portrait_transition_primitives(
-            transition, &anim_state, &cur_unit, &prev_unit, portrait_image, &summary->portrait[0], portrait_arg);
+            transition, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &summary->portrait[0], portrait_arg);
         {
             CVECTOR* color;
 
@@ -467,7 +468,7 @@ void world_menu_unit_status_banner_thread(void) {
             world_menu_submit_numeric_display_frame_primitives(&summary->numeric_frame);
             world_gfx_draw_or_append_gpu_primitive(&summary->draw_offset_a);
             world_gfx_draw_or_append_gpu_primitive(&status->draw_offset_b);
-            portrait_prim = (u8*)&status->portrait;
+            portrait_prim = &status->portrait;
             SetSemiTrans(portrait_prim, 1);
             world_gfx_draw_or_append_gpu_primitive(portrait_prim);
             for (i = 3; i >= 0; i--) {

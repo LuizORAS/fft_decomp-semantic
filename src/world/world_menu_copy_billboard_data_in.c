@@ -3,7 +3,7 @@
 
 /* Copy a unit's three panel blocks in: the 0x22-byte status billboard, the
  * 0xE-byte identity record and the 0x40-byte stat fields. */
-void world_menu_copy_billboard_data_in(const world_item_stat_summary_t* status,
+void world_menu_copy_billboard_data_in(const battle_unit_status_record_t* status,
     const world_unit_status_identity_t* identity, const world_item_stat_detail_t* detail) {
     world_script_copy_bytes(
         &g_world_unit_selected_status_billboard, status, sizeof(g_world_unit_selected_status_billboard));

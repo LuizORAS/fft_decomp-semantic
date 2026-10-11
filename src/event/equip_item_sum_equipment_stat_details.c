@@ -3,7 +3,7 @@
 
 /* Sum the stat bonuses of the five equipped items listed in `equipment`. */
 void equip_item_sum_equipment_stat_details(world_item_stat_detail_t* total, u16* equipment) {
-    world_item_stat_summary_t summary;
+    battle_unit_status_record_t summary;
     world_item_stat_detail_t detail;
     world_item_stat_detail_t unused; /* unreferenced in the target; needed for the frame size */
     s32 i;

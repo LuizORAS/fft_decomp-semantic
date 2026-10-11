@@ -389,7 +389,7 @@ void bunit_menu_select_primitive_color_palette(
     world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
 
 void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
+    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 
 void bunit_gfx_draw_falloff_shaded_rows(s32 y);
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);
@@ -725,7 +725,7 @@ extern u8 g_bunit_panel_comparison_name_image[];
 extern u8 g_bunit_panel_comparison_number_image[];
 extern menu_number_entry_t g_bunit_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_bunit_panel_comparison_packets[2];
-extern u16 g_bunit_panel_comparison_portrait_image[];
+extern palette_t g_bunit_panel_comparison_portrait_palettes[2];
 extern RECT g_bunit_panel_comparison_portrait_rect;
 extern world_gfx_image_load_parameters_t g_bunit_panel_editor_label_cells[];
 extern u16 g_bunit_panel_editor_label_cluts[][2];
@@ -743,7 +743,7 @@ extern u8 g_bunit_panel_selected_name_image[];
 extern u8 g_bunit_panel_selected_number_image[];
 extern menu_number_entry_t g_bunit_panel_selected_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_bunit_panel_selected_packets[2];
-extern u16 g_bunit_panel_selected_portrait_image[];
+extern palette_t g_bunit_panel_selected_portrait_palettes[2];
 extern RECT g_bunit_panel_selected_portrait_rect;
 extern s16 g_bunit_panel_slide_down_y[];
 extern s16 g_bunit_panel_slide_up_y[];

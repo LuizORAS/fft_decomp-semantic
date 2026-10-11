@@ -24,6 +24,14 @@ typedef struct rgba5551 {
 } rgba5551_t;
 typedef char assert_rgba5551_size[sizeof(rgba5551_t) == 2 ? 1 : -1];
 
+/* Sixteen packed texture colours. */
+typedef rgba5551_t palette_t[16];
+typedef char assert_palette_size[sizeof(palette_t) == 32 ? 1 : -1];
+
+/* Sixteen palette banks. */
+typedef palette_t clut_t[16];
+typedef char assert_clut_size[sizeof(clut_t) == 512 ? 1 : -1];
+
 /* geometry */
 /* Neutral 2D/3D point, rectangle and colour records for shapes the Psy-Q SDK
  * does not define.

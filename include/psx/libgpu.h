@@ -748,7 +748,7 @@ extern u8 g_psyq_gpu_gp1_cache[256];
 extern u32* g_psyq_gpu_tim_cursor;
 extern int g_psyq_gpu_font_window_count;
 extern int g_psyq_gpu_default_font_window;
-extern u8 g_psyq_gpu_font_asset[];
+extern u32 g_psyq_gpu_font_asset[640];
 
 typedef struct {
     TILE tile;

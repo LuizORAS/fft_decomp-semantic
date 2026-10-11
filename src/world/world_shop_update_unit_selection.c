@@ -23,7 +23,7 @@ void world_shop_update_unit_selection(void) {
         if (g_world_formation_unit_banner_enabled != 0) {
             if (g_world_formation_unit_banner_at_bottom_latch != g_world_formation_unit_banner_at_bottom) {
                 bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch],
-                    g_world_comparison_unit_stat_summary, 0x22);
+                    &g_world_comparison_unit_stat_summary, 0x22);
                 bcopy(&g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->name_index,
                     &g_world_comparison_unit_identity, 0xE);
                 world_menu_toggle_comparison_status_thread(1);

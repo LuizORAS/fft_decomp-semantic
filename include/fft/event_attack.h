@@ -91,7 +91,7 @@ void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_l
 void attack_gfx_prepare_formation_sprites(void);
 
 void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
+    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 
 void attack_gfx_build_shaded_panel_strips(POLY_GT4* polys, s32 width, s32 shade, s32 reverse);
 void attack_gfx_build_status_group_primitives(POLY_FT4* poly);
@@ -336,7 +336,7 @@ extern u8 g_attack_panel_comparison_name_image[];
 extern u8 g_attack_panel_comparison_number_image[];
 extern menu_number_entry_t g_attack_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_attack_panel_comparison_packets[2];
-extern u16 g_attack_panel_comparison_portrait_image[];
+extern palette_t g_attack_panel_comparison_portrait_palettes[2];
 extern RECT g_attack_panel_comparison_portrait_rect;
 extern battle_active_unit_t g_attack_panel_comparison_unit_data;
 extern world_gfx_image_load_parameters_t g_attack_panel_editor_label_cells[];
@@ -354,7 +354,7 @@ extern u8 g_attack_panel_selected_name_image[];
 extern u8 g_attack_panel_selected_number_image[];
 extern menu_number_entry_t g_attack_panel_selected_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_attack_panel_selected_packets[2];
-extern u16 g_attack_panel_selected_portrait_image[];
+extern palette_t g_attack_panel_selected_portrait_palettes[2];
 extern RECT g_attack_panel_selected_portrait_rect;
 extern s16 g_attack_panel_slide_down_y[];
 extern s16 g_attack_panel_slide_up_y[];

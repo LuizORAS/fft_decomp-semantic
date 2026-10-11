@@ -394,34 +394,34 @@ s32 battle_effect_spawn_emitter_particles(
     case EFFECT_EMITTER_HOMING_OFFSET:
     case EFFECT_EMITTER_HOMING_OFFSET_ALT:
         for (i = 0; i < count; i++) {
-            particle->target_x = target_offset.vx;
-            particle->target_y = target_offset.vy;
-            particle->target_z = target_offset.vz;
+            particle->target.x = target_offset.vx;
+            particle->target.y = target_offset.vy;
+            particle->target.z = target_offset.vz;
             particle = particle->next;
         }
         break;
     case EFFECT_EMITTER_HOMING_MAP_CENTRE:
         battle_map_store_max_coordinates(&map_max);
         for (i = 0; i < count; i++) {
-            particle->target_x = map_max.vx * 14 + target_offset.vx;
-            particle->target_z = map_max.vz * 14 + target_offset.vz;
-            particle->target_y = target_offset.vy;
+            particle->target.x = map_max.vx * 14 + target_offset.vx;
+            particle->target.z = map_max.vz * 14 + target_offset.vz;
+            particle->target.y = target_offset.vy;
             particle = particle->next;
         }
         break;
     case EFFECT_EMITTER_HOMING_CASTER:
         for (i = 0; i < count; i++) {
-            particle->target_x = caster.vx + target_offset.vx;
-            particle->target_y = caster.vy + target_offset.vy;
-            particle->target_z = caster.vz + target_offset.vz;
+            particle->target.x = caster.vx + target_offset.vx;
+            particle->target.y = caster.vy + target_offset.vy;
+            particle->target.z = caster.vz + target_offset.vz;
             particle = particle->next;
         }
         break;
     case EFFECT_EMITTER_HOMING_TARGET:
         for (i = 0; i < count; i++) {
-            particle->target_x = target.vx + target_offset.vx;
-            particle->target_y = target.vy + target_offset.vy;
-            particle->target_z = target.vz + target_offset.vz;
+            particle->target.x = target.vx + target_offset.vx;
+            particle->target.y = target.vy + target_offset.vy;
+            particle->target.z = target.vz + target_offset.vz;
             particle = particle->next;
         }
         break;
@@ -430,9 +430,9 @@ s32 battle_effect_spawn_emitter_particles(
         tile_anchor.vz = g_battle_effect_target_tile.tile_y * 28 + 14;
         tile_anchor.vy = -(tile->height * 12);
         for (i = 0; i < count; i++) {
-            particle->target_x = tile_anchor.vx + target_offset.vx;
-            particle->target_y = tile_anchor.vy + target_offset.vy;
-            particle->target_z = tile_anchor.vz + target_offset.vz;
+            particle->target.x = tile_anchor.vx + target_offset.vx;
+            particle->target.y = tile_anchor.vy + target_offset.vy;
+            particle->target.z = tile_anchor.vz + target_offset.vz;
             particle = particle->next;
         }
         break;

@@ -28,7 +28,7 @@ void equip_render_unit_status_panel_thread(void) {
     battle_unit_status_record_t* state;                    /* sp78 */
     s32 portrait_arg;                                      /* sp80 */
     const RECT* portrait_rect;                             /* sp88 */
-    u16* portrait_image;                                   /* sp90 */
+    palette_t* portrait_palettes;                          /* sp90 */
     u8* small_text_image;                                  /* sp98 */
     u8* name_image;                                        /* spA0 */
     battle_menu_status_panel_packet_t* panel_base;         /* spA8 */
@@ -72,14 +72,12 @@ void equip_render_unit_status_panel_thread(void) {
         small_text_image = g_equip_panel_selected_large_number_image;
         name_image = g_equip_panel_selected_name_image;
         numeric_entries = g_equip_panel_selected_numeric_entries;
-        /* Declared elsewhere in EQUIP as the 0x28-byte world_item_stat_summary_t;
-         * this function reads it as the first of two 0x24-spaced editor states. */
-        state = (battle_unit_status_record_t*)&g_equip_selected_unit_stat_summary;
+        state = &g_equip_selected_unit_stat_summary;
         unit_data = g_equip_panel_selected_unit_data;
         portrait_rect = &g_equip_panel_selected_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        portrait_image = g_equip_panel_selected_portrait_image;
+        portrait_palettes = g_equip_panel_selected_portrait_palettes;
     } else {
         panel = g_equip_panel_comparison_packets;
         editor = g_equip_panel_comparison_editor_packets;
@@ -92,7 +90,7 @@ void equip_render_unit_status_panel_thread(void) {
         portrait_rect = &g_equip_panel_comparison_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        portrait_image = g_equip_panel_comparison_portrait_image;
+        portrait_palettes = g_equip_panel_comparison_portrait_palettes;
     }
     shake = 0;
 
@@ -318,7 +316,7 @@ void equip_render_unit_status_panel_thread(void) {
             }
         }
         equip_gfx_build_portrait_transition_primitives(
-            portrait_rect, &anim_state, &cur_unit, &prev_unit, portrait_image, &editor->portrait[0], portrait_arg);
+            portrait_rect, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
             battle_unit_status_gauge_t* bar;

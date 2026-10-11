@@ -447,7 +447,10 @@ typedef char unit_learned_ability_row_size_must_be_3
 /* Per-job JP supports the bytewise party serialization and halfword readers. */
 typedef union unit_job_point_table {
     u16 values[UNIT_CAREER_JOB_COUNT];
-    u8 bytes[UNIT_JOB_POINT_BYTE_COUNT];
+    struct {
+        u8 low;
+        u8 high;
+    } entries[UNIT_CAREER_JOB_COUNT];
 } unit_job_point_table_t;
 typedef char
     unit_job_point_table_size_must_be_40[(sizeof(unit_job_point_table_t) == UNIT_JOB_POINT_BYTE_COUNT) ? 1 : -1];

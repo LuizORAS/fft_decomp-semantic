@@ -58,9 +58,9 @@ void battle_effect_integrate_particle_motion(effect_work_record_t* list) {
                 strength = -0x80;
             }
 
-            delta.vx = node->target_x - (motion->position.x >> 12);
-            delta.vy = node->target_y - (motion->position.y >> 12);
-            delta.vz = node->target_z - (motion->position.z >> 12);
+            delta.vx = node->target.x - (motion->position.x >> 12);
+            delta.vy = node->target.y - (motion->position.y >> 12);
+            delta.vz = node->target.z - (motion->position.z >> 12);
             if (delta.vx != 0 || delta.vy != 0 || delta.vz != 0) {
                 VectorNormal(&delta, &delta);
                 delta.vx = (weight * delta.vx) >> 12;

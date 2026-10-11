@@ -19,7 +19,7 @@ void attack_render_unit_status_panel_thread(void) {
     battle_unit_status_record_t* state;                    /* sp78 */
     s32 portrait_request;                                  /* sp80 */
     const RECT* transition;                                /* sp88 */
-    u16* portrait_image;                                   /* sp90 */
+    palette_t* portrait_palettes;                          /* sp90 */
     u8* value_pixels;                                      /* sp98 */
     u8* name_pixels;                                       /* spA0 */
     battle_menu_status_panel_packet_t* panel_base;         /* spA8 */
@@ -68,7 +68,7 @@ void attack_render_unit_status_panel_thread(void) {
         transition = &g_attack_panel_selected_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        portrait_image = g_attack_panel_selected_portrait_image;
+        portrait_palettes = g_attack_panel_selected_portrait_palettes;
     } else {
         panel = g_attack_panel_comparison_packets;
         editor = g_attack_panel_comparison_editor_packets;
@@ -81,7 +81,7 @@ void attack_render_unit_status_panel_thread(void) {
         transition = &g_attack_panel_comparison_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        portrait_image = g_attack_panel_comparison_portrait_image;
+        portrait_palettes = g_attack_panel_comparison_portrait_palettes;
     }
     shake = 0;
 
@@ -307,7 +307,7 @@ void attack_render_unit_status_panel_thread(void) {
             }
         }
         attack_gfx_build_portrait_transition_primitives(
-            transition, &anim_state, &cur_unit, &prev_unit, portrait_image, &editor->portrait[0], portrait_request);
+            transition, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &editor->portrait[0], portrait_request);
         {
             CVECTOR* color;
 

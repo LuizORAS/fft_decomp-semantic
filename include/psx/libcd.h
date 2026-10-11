@@ -130,7 +130,7 @@ typedef enum {
 extern u32 g_psyq_cd_status;
 extern u8 g_psyq_cd_mode;
 extern u8 g_psyq_cd_last_command;
-extern u8 g_psyq_cd_last_position[4];
+extern CdlLOC g_psyq_cd_last_position;
 
 extern char* g_psyq_cd_command_names[28];
 extern char* g_psyq_cd_interrupt_names[7];
@@ -297,16 +297,13 @@ extern psyq_cd_ring_record_t* g_psyq_cd_stream_current_header;
 extern char g_psyq_cd_dma_timeout_format[];
 void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 control, u8 enable_irq, s32 unused);
 
-/* LIBCD Alarm record, 12 bytes at 0x80032a94.
- * Command waits and streaming interrupt callbacks share this state.
- * The wait helpers use a nonvolatile view to preserve retail scheduling.
- */
+/* LIBCD wait timeout state, 12 bytes at 0x80032a94. */
 typedef struct {
     s32 deadline;
     s32 counter;
     char* description;
 } psyq_cd_timeout_state_t;
-extern volatile psyq_cd_timeout_state_t g_psyq_cd_timeout;
+extern psyq_cd_timeout_state_t g_psyq_cd_timeout;
 
 /* Original completed-location/frame record, eight bytes at 0x80032aa0.
  * Position is copied by StGetBackloc; its adjacent frame word is returned.

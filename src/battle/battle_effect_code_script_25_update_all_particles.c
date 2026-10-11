@@ -38,11 +38,11 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
             = (node->flags & EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_MASK) >> EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_SHIFT;
         work = node->next;
         if (threshold != 0) {
-            delta = (node->motion.position.x >> 12) - node->target_x;
+            delta = (node->motion.position.x >> 12) - node->target.x;
             if (delta < threshold && -threshold < delta) {
-                delta = (node->motion.position.y >> 12) - node->target_y;
+                delta = (node->motion.position.y >> 12) - node->target.y;
                 if (delta < threshold && -threshold < delta) {
-                    delta = (node->motion.position.z >> 12) - node->target_z;
+                    delta = (node->motion.position.z >> 12) - node->target.z;
                     if (delta < threshold && -threshold < delta) {
                         node->lifetime = EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN;
                     }

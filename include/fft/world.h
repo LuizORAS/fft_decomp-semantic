@@ -692,17 +692,17 @@ typedef struct world_unit_status_identity {
 } world_unit_status_identity_t;
 typedef char world_unit_status_identity_size_must_be_0xe[sizeof(world_unit_status_identity_t) == 0xe ? 1 : -1];
 
-extern u8 g_world_comparison_unit_stat_summary[];
+extern battle_unit_status_record_t g_world_comparison_unit_stat_summary;
 extern world_unit_status_identity_t g_world_comparison_unit_identity;
 extern menu_number_entry_t g_world_comparison_unit_number_entries[];
 extern RECT g_world_comparison_unit_portrait_rect;
 extern world_status_thread_t g_world_comparison_display_thread_params;
-extern u8 g_world_comparison_unit_summary_packets[];
-extern u8 g_world_comparison_unit_status_packets[];
+extern battle_menu_status_panel_editor_packet_t g_world_comparison_unit_summary_packets[2];
+extern battle_menu_status_panel_packet_t g_world_comparison_unit_status_packets[2];
 extern u8 g_world_comparison_unit_stat_text_image[];
 extern u8 g_world_comparison_unit_name_text_image[];
 extern u8 g_world_comparison_unit_number_text_image[];
-extern u8 g_world_comparison_unit_portrait_image[];
+extern palette_t g_world_comparison_unit_portrait_palettes[2];
 
 /* gfx */
 /* Separate decreasing/increasing RGB-intensity flags.
@@ -996,12 +996,14 @@ void world_gfx_clear_tpage7_vram_allocation_grid(void);
  * clip_portrait_poly_from_left), _left is debugchr's clip_..._from_right. */
 void world_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 delta);
 void world_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 delta);
-void world_menu_copy_billboard_data_in(const world_item_stat_summary_t* status,
+void world_menu_copy_billboard_data_in(const battle_unit_status_record_t* status,
     const world_unit_status_identity_t* identity, const world_item_stat_detail_t* detail);
 void world_menu_copy_billboard_data_out(battle_unit_status_record_t* status, battle_active_unit_t* identity,
     battle_menu_status_panel_slot_storage_t* detail, map_selected_tile_t* selected_tile);
 void world_gfx_draw_or_append_gpu_primitive(void* primitive);
 void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 intensity);
+void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
+    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, glyph_blit_t* pen);
 
 void world_gfx_enqueue_oriented_textured_quad(
@@ -1572,7 +1574,7 @@ s32 world_formation_can_dismiss_unit(s16 formation_idx);
 s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id);
 s32 world_formation_is_selected_unit_in_upper_rows(s32 scroll_position);
 s32 world_formation_change_unit_job(s16 unit_id, s16 job_id, s32 update_equipment);
-void world_formation_clear_stat_preview(world_item_stat_summary_t* summary, world_item_stat_detail_t* detail);
+void world_formation_clear_stat_preview(battle_unit_status_record_t* summary, world_item_stat_detail_t* detail);
 void world_formation_copy_unit_to_temp(s16 index, s32 unused_slot);
 s32 world_formation_cursor_distance_falloff(s32 x, s32 y, s32 base, s32 floor);
 void world_formation_cycle_selected_unit(s16 pad_buttons);
@@ -1680,7 +1682,7 @@ typedef struct vec3u16 {
 } vec3u16_t;
 typedef char assert_vec3u16_size[sizeof(vec3u16_t) == 6 ? 1 : -1];
 
-extern world_item_stat_summary_t g_world_selected_unit_stat_summary;
+extern battle_unit_status_record_t g_world_selected_unit_stat_summary;
 extern battle_unit_status_record_t g_world_unit_selected_status_billboard;
 extern battle_unit_status_record_t g_world_unit_comparison_status_billboard;
 extern battle_menu_status_panel_buffer_t g_world_stat_preview_panel_frames[2];
@@ -1767,12 +1769,12 @@ extern u16 g_world_unit_was_moving_latch[];
 extern vec3u16_t g_world_misc_unit_screen_coords;
 extern world_unit_status_page_t g_world_unit_status_panel_pages[];
 extern world_unit_editor_frame_t g_world_unit_editor_frames[2];
-extern u8 g_world_selected_unit_summary_packets[];
-extern u8 g_world_selected_unit_status_packets[];
+extern battle_menu_status_panel_editor_packet_t g_world_selected_unit_summary_packets[2];
+extern battle_menu_status_panel_packet_t g_world_selected_unit_status_packets[2];
 extern u8 g_world_selected_unit_stat_text_image[];
 extern u8 g_world_selected_unit_name_text_image[];
 extern u8 g_world_selected_unit_number_text_image[];
-extern u8 g_world_selected_unit_portrait_image[];
+extern palette_t g_world_selected_unit_portrait_palettes[2];
 extern u8 g_world_stat_preview_text_image[];
 void set_unit_cannot_exist(s32 unit_index);
 s32 world_get_party_unit_formation_sprite(s32 party_index);
@@ -2988,10 +2990,10 @@ void world_item_build_status_list_polygons(s16 item_id);
 world_item_icon_source_t* world_item_build_type_icon_source(s32 entry_index);
 
 void world_item_calculate_equipment_swap_stat_delta(
-    world_item_stat_detail_t* detail_total, world_item_stat_summary_t* total, u16* items_before, u16* items_after);
+    world_item_stat_detail_t* detail_total, battle_unit_status_record_t* total, u16* items_before, u16* items_after);
 
 void world_item_calculate_swap_stat_delta(
-    world_item_stat_detail_t* output, world_item_stat_summary_t* delta, s16 item_before, s16 item_after, s32 slot);
+    world_item_stat_detail_t* output, battle_unit_status_record_t* delta, s16 item_before, s16 item_after, s32 slot);
 
 void world_item_cash_out_excess_inventory(void);
 s32 world_item_adjust_inventory_count(s16 item_id, s32 delta);
@@ -3020,7 +3022,7 @@ item_menu_category_e world_item_get_menu_category(s16 item_id);
 s32 world_item_is_in_category_list(s32 item_id, s32 list_index);
 
 void world_item_populate_stat_preview(
-    s16 item_id, world_item_stat_summary_t* summary, world_item_stat_detail_t* detail, s32 slot);
+    s16 item_id, battle_unit_status_record_t* summary, world_item_stat_detail_t* detail, s32 slot);
 
 void world_item_prepend_to_category_list(s32 item_id, s32 list_index);
 void world_item_reconcile_sorted_list(s32 list_index);

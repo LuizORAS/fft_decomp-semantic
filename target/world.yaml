@@ -1980,8 +1980,8 @@ data:
   - {addr: 0x801c2684, name: g_world_comparison_unit_stat_text_image}
   - {addr: 0x801c2d84, name: g_world_comparison_unit_name_text_image}
   - {addr: 0x801c3304, name: g_world_comparison_unit_number_text_image}
-  - {addr: 0x801c33f4, name: g_world_selected_unit_portrait_image}
-  - {addr: 0x801c3434, name: g_world_comparison_unit_portrait_image}
+  - {addr: 0x801c33f4, name: g_world_selected_unit_portrait_palettes}
+  - {addr: 0x801c3434, name: g_world_comparison_unit_portrait_palettes}
   - {addr: 0x801c3474, name: g_world_text_message_box_glyph}
   - {addr: 0x801c3488, name: g_world_text_message_box_state}
   - {addr: 0x801c3498, name: g_world_text_message_box_vram_rect}

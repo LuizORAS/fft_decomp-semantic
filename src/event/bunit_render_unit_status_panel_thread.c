@@ -19,7 +19,7 @@ void bunit_render_unit_status_panel_thread(void) {
     battle_unit_status_record_t* state;
     s32 portrait_arg;
     const RECT* transition;
-    u16* image;
+    palette_t* portrait_palettes;
     u8* render_b;
     u8* render_c;
     battle_menu_status_panel_packet_t* panel_base;
@@ -67,7 +67,7 @@ void bunit_render_unit_status_panel_thread(void) {
         transition = &g_bunit_panel_selected_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        image = g_bunit_panel_selected_portrait_image;
+        portrait_palettes = g_bunit_panel_selected_portrait_palettes;
     } else {
         panel = g_bunit_panel_comparison_packets;
         editor = g_bunit_panel_comparison_editor_packets;
@@ -80,7 +80,7 @@ void bunit_render_unit_status_panel_thread(void) {
         transition = &g_bunit_panel_comparison_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        image = g_bunit_panel_comparison_portrait_image;
+        portrait_palettes = g_bunit_panel_comparison_portrait_palettes;
     }
     shake = 0;
 
@@ -306,7 +306,7 @@ void bunit_render_unit_status_panel_thread(void) {
             }
         }
         bunit_gfx_build_portrait_transition_primitives(
-            transition, &anim_state, &cur_unit, &prev_unit, image, &editor->portrait[0], portrait_arg);
+            transition, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
             battle_unit_status_gauge_t* bar;
