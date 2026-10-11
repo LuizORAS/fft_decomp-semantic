@@ -9,37 +9,25 @@
  * main-menu mode 0 (options thread in the previous slot), 1 or 2. */
 void world_menu_run_main_mode(s32 mode) {
     menu_entry_t* entry;
-    u32 options;
+    game_options_fields_t options;
     s32 i;
     s32 last_mode;
 
     entry = world_thread_get_current_parameter_1();
-    options = g_main_game_options.value;
-    g_world_game_option_values[GAME_OPTION_CURSOR_MOVEMENT] = options & GAME_OPTIONS_CURSOR_MOVEMENT_MASK;
-    g_world_game_option_values[GAME_OPTION_CURSOR_REPEAT_SPEED]
-        = (options >> GAME_OPTIONS_CURSOR_REPEAT_SPEED_SHIFT) & GAME_OPTIONS_THREE_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_MULTI_HEIGHT_CURSOR_SPEED]
-        = (options >> GAME_OPTIONS_MULTI_HEIGHT_CURSOR_SPEED_SHIFT) & GAME_OPTIONS_THREE_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_FINGER_CURSOR_REPEAT_SPEED]
-        = (options >> GAME_OPTIONS_FINGER_CURSOR_REPEAT_SPEED_SHIFT) & GAME_OPTIONS_THREE_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_MESSAGE_DISPLAY_SPEED]
-        = (options >> GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_SHIFT) & GAME_OPTIONS_THREE_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_NAVIGATION_MESSAGES]
-        = (options >> GAME_OPTIONS_NAVIGATION_MESSAGES_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_ABILITY_NAMES]
-        = (options >> GAME_OPTIONS_ABILITY_NAMES_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_EFFECT_MESSAGES]
-        = (options >> GAME_OPTIONS_EFFECT_MESSAGES_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_DISPLAY_GAINED_EXP_JP]
-        = (options >> GAME_OPTIONS_DISPLAY_GAINED_EXP_JP_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_TARGET_FLASHING]
-        = (options >> GAME_OPTIONS_TARGET_FLASHING_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_SHOW_UNEQUIPPABLE_ITEMS]
-        = (options >> GAME_OPTIONS_SHOW_UNEQUIPPABLE_ITEMS_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_MAX_EQUIP_AT_JOB_CHANGE]
-        = (options >> GAME_OPTIONS_MAX_EQUIP_AT_JOB_CHANGE_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
-    g_world_game_option_values[GAME_OPTION_SOUND_MODE]
-        = (options >> GAME_OPTIONS_SOUND_MODE_SHIFT) & GAME_OPTIONS_TWO_BIT_VALUE_MASK;
+    options = g_main_game_options.fields;
+    g_world_game_option_values[GAME_OPTION_CURSOR_MOVEMENT] = options.cursor_movement;
+    g_world_game_option_values[GAME_OPTION_CURSOR_REPEAT_SPEED] = options.cursor_repeat_speed;
+    g_world_game_option_values[GAME_OPTION_MULTI_HEIGHT_CURSOR_SPEED] = options.multi_height_cursor_speed;
+    g_world_game_option_values[GAME_OPTION_FINGER_CURSOR_REPEAT_SPEED] = options.finger_cursor_repeat_speed;
+    g_world_game_option_values[GAME_OPTION_MESSAGE_DISPLAY_SPEED] = options.message_display_speed;
+    g_world_game_option_values[GAME_OPTION_NAVIGATION_MESSAGES] = options.navigation_messages;
+    g_world_game_option_values[GAME_OPTION_ABILITY_NAMES] = options.ability_names;
+    g_world_game_option_values[GAME_OPTION_EFFECT_MESSAGES] = options.effect_messages;
+    g_world_game_option_values[GAME_OPTION_DISPLAY_GAINED_EXP_JP] = options.display_gained_exp_jp;
+    g_world_game_option_values[GAME_OPTION_TARGET_FLASHING] = options.target_flashing;
+    g_world_game_option_values[GAME_OPTION_SHOW_UNEQUIPPABLE_ITEMS] = options.show_unequippable_items;
+    g_world_game_option_values[GAME_OPTION_MAX_EQUIP_AT_JOB_CHANGE] = options.max_equip_at_job_change;
+    g_world_game_option_values[GAME_OPTION_SOUND_MODE] = options.sound_mode;
     g_world_game_option_values[GAME_OPTION_UNCHANGED] = 1;
     for (i = 0; i < GAME_OPTION_COUNT; i++) {
         if (g_world_game_option_values[i] != g_world_game_option_original_values[i]) {

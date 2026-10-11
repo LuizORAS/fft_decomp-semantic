@@ -71,7 +71,7 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
     bcopy(&g_world_load_work_buffer->options, &g_main_game_options, sizeof(g_world_load_work_buffer->options));
     i = 0;
     j = 0;
-    suzuki_sound_set_type((*(u32*)&g_main_game_options >> 21) & 3);
+    suzuki_sound_set_type(g_main_game_options.fields.sound_mode);
 
     for (; i < 11; i++) {
         if (g_world_load_work_buffer->item_type_order_0[i] == 11) {
