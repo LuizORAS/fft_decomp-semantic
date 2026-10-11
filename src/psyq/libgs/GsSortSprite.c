@@ -55,7 +55,7 @@ void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
     u8 v_bottom;
 
     attr = sp->attribute;
-    if ((s32)attr >= 0 && sp->w != 0 && sp->h != 0) {
+    if (!(attr & GsDOFF) && sp->w != 0 && sp->h != 0) {
         packet = GsOUT_PACKET_P;
         if (((attr >> 27) & 1)
             | (GS_SPRITE_SCALE_WORD(sp) == 0x10001000 && sp->rotate == 0 && (attr & 0xc00000) == 0)) {

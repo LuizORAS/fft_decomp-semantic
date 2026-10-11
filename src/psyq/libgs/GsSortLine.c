@@ -20,10 +20,10 @@ typedef struct {
 /* Build and link the flat-shaded line packet. */
 void GsSortLine(GsLINE* line, GsOT* ot, u16 z) {
     psyq_gs_line_packet_t* prim;
-    s32 attr;
+    s32 attr; /* Attribute packing uses signed right shifts. */
 
     attr = line->attribute;
-    if (attr >= 0) {
+    if (!(attr & GsDOFF)) {
         prim = (psyq_gs_line_packet_t*)GsOUT_PACKET_P;
         prim->tpage.code[0] = ((attr >> 23) & 0x60) | 0xE1000200;
         setRGB0(prim, line->r, line->g, line->b);

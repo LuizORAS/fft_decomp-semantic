@@ -6,7 +6,7 @@ void DrawOTagEnv(u32* ot, DRAWENV* env) {
         g_psyq_gpu_printf(g_psyq_gpu_draw_otag_env_format, ot, env);
     packet = &env->dr_env;
     SetDrawEnv(packet, env);
-    ((P_TAG*)packet)->addr = (u32)ot;
+    setaddr(packet, ot);
     g_psyq_gpu_dispatch->enqueue_four(g_psyq_gpu_dispatch->ordering_table, packet, sizeof(*packet), 0);
     psyq_api_memcpy(&g_psyq_gpu_environment.draw, env, sizeof(*env));
 }

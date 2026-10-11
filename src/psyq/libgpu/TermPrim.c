@@ -2,5 +2,5 @@
 #include "psx/libgpu.h"
 
 void TermPrim(void* primitive) {
-    ((P_TAG*)primitive)->addr = PSYQ_GPU_DMA_END;
+    termPrim(primitive);
 }

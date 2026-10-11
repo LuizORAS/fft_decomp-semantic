@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 void SetDrawArea(DR_AREA* packet, RECT* rect) {
-    ((P_TAG*)packet)->len = PSYQ_GPU_PACKET_WORDS(DR_AREA);
+    setlen(packet, PSYQ_GPU_PACKET_WORDS(DR_AREA));
     packet->code[0] = get_cs(rect->x, rect->y);
     packet->code[1] = get_ce((rect->x + rect->w - 1), (rect->y + rect->h - 1));
 }

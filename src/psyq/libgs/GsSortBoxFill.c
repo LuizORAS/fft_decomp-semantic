@@ -18,12 +18,12 @@ typedef struct {
 
 void GsSortBoxFill(GsBOXF* bp, GsOT* otp, u16 pri) {
     psyq_gs_boxf_packet_t* packet;
-    s32 attr;
+    s32 attr; /* Attribute packing uses signed right shifts. */
     u32 hi;
     u32 lo;
 
     attr = bp->attribute;
-    if (attr >= 0) {
+    if (!(attr & GsDOFF)) {
         packet = (psyq_gs_boxf_packet_t*)GsOUT_PACKET_P;
         hi = (attr >> 17) & 0x180;
         lo = ((attr >> 23) & 0x60) | 0xE1000200;

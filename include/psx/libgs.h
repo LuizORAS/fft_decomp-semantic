@@ -6,6 +6,9 @@
 #include "psx/tmd.h"
 #include "psx/types.h"
 
+/* GsSPRITE/GsLINE/GsBOXF.attribute: suppress display. */
+#define GsDOFF (1U << 31)
+
 /* Psy-Q packet work areas are byte buffers holding variable GPU packet layouts. */
 typedef u8 PACKET;
 

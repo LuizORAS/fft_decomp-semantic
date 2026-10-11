@@ -22,7 +22,7 @@ void GsSortFastSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
     s32 sum_y;
 
     attr = sp->attribute;
-    if ((s32)attr >= 0 && sp->w != 0 && sp->h != 0) {
+    if (!(attr & GsDOFF) && sp->w != 0 && sp->h != 0) {
         packet = (psyq_gs_sprite_packet_t*)GsOUT_PACKET_P;
         dr_mode = 0xE1000200;
         packet_addr = (u32)packet & 0xFFFFFF;

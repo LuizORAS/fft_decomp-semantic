@@ -2,11 +2,11 @@
 #include "psx/libgpu.h"
 
 int MargePrim(void* first, void* second) {
-    int length = ((P_TAG*)first)->len + ((P_TAG*)second)->len + 1;
+    int length = getlen(first) + getlen(second) + 1;
     int result;
 
     if (length <= 32) {
-        ((P_TAG*)first)->len = length;
+        setlen(first, length);
         *(u32*)second = 0;
         result = 0;
     } else {
