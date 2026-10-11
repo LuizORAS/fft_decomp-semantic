@@ -112,13 +112,6 @@ void DpqColor3(CVECTOR* c0, CVECTOR* c1, CVECTOR* c2, s32 depth, CVECTOR* out0, 
 void MatrixNormal(MATRIX* input, MATRIX* output);
 MATRIX* CompMatrix(MATRIX* left, MATRIX* right, MATRIX* output);
 
-/* driver internals */
-
-typedef union {
-    MATRIX matrix;
-    u32 words[8];
-} psyq_packed_matrix_t;
-
 /* state */
 extern u32 g_psyq_gte_init_saved_ra;
 extern u32 g_psyq_gte_matrix_stack_saved_ra;

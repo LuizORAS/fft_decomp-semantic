@@ -7,7 +7,7 @@
 void wldcore_opcode_start_countdown_timer(void) {
     u32 instruction;
 
-    instruction = g_wldcore_opcode_state.instruction.word;
+    instruction = g_wldcore_opcode_state.instruction;
     g_wldcore_sound_novel_countdown_elapsed = 0;
     g_wldcore_sound_novel_countdown_frames = ((instruction << 8) >> 16) * 60;
     g_wldcore_sound_novel_countdown_section = instruction >> 24;

@@ -3,6 +3,7 @@
 
 /* Map tile and surface records shared by BATTLE and WORLD. */
 
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Battle map ids: EVENT_SCRIPT_VAR_CURRENT_MAP and the index of
@@ -206,21 +207,17 @@ typedef enum map_tile_data_selector {
     MAP_TILE_DATA_ABILITY_RANGE_MARK = 13,
 } map_tile_data_selector_e;
 
-/* RGB888 in a four-byte runtime slot, not the packed three-byte map-file
- * format. The background gradient, ambient light and darkness colours all use
- * it: the scenario VM copies RGB into bytes 0..2 (and 4..6 for the second
- * gradient colour), and 0x800901f8 copies each complete word with lwl/lwr.
- * Preserve byte alignment. */
-typedef struct map_color {
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 _unused_03; /* Copied by the helper; not an established alpha channel. */
-} map_color_t;
+/* Map backgrounds use two four-byte runtime colour slots. The fourth byte
+ * is copied with each CVECTOR but is not an alpha channel; mesh-file RGB
+ * triples have a separate three-byte layout. */
+typedef enum map_background_gradient_color {
+    MAP_BACKGROUND_GRADIENT_TOP = 0,
+    MAP_BACKGROUND_GRADIENT_BOTTOM = 1,
+    MAP_BACKGROUND_GRADIENT_COLOR_COUNT = 2,
+} map_background_gradient_color_e;
 
 typedef struct map_background_gradient_colors {
-    map_color_t first;
-    map_color_t second;
+    CVECTOR colors[MAP_BACKGROUND_GRADIENT_COLOR_COUNT];
 } map_background_gradient_colors_t;
 typedef char map_background_gradient_colors_size_must_be_8[(sizeof(map_background_gradient_colors_t) == 8) ? 1 : -1];
 

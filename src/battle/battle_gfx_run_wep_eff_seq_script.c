@@ -217,7 +217,7 @@ void battle_gfx_run_wep_eff_seq_script(
             display = sprite->display;
             parts = display->part_count = (src->part_count_and_rotation & 7) + 1;
             display->rotation = g_battle_gfx_sprite_y_rotations[src->part_count_and_rotation >> 3];
-            if (unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) {
+            if (unit->sprite_display_flags & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) {
                 display->rotation = -display->rotation;
             }
             if (parts > 3) {

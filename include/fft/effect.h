@@ -418,15 +418,6 @@ extern s32 g_effect_tube_mesh_ring_scales[5];
 /* summon mesh */
 /* Shared records of the 4,744-byte summon dome mesh renderer that 12 EFFECT
  * overlays compile from one source (for example E474 at 0x801c42c4). */
-/* One scratchpad lattice point; the 9x17 lattice starts at 0x1f800000 and is
- * read back by effect_add_scratchpad_xyz_components. */
-typedef struct effect_summon_mesh_point {
-    s16 x;
-    s16 y;
-    s16 z;
-} effect_summon_mesh_point_t;
-typedef char assert_effect_summon_mesh_point_size[sizeof(effect_summon_mesh_point_t) == 6 ? 1 : -1];
-
 /* Work block: two POLY_GT4 buffers of 8 rows x 16 columns. */
 typedef struct effect_summon_mesh_work {
     s32 buffer;             /* 0x0000: 0 or 1, flipped after each update */

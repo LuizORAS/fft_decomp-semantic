@@ -132,11 +132,11 @@ void battle_map_append_mesh_geometry(
 
     for (i = g_battle_map_textured_triangle_count; i < g_battle_map_textured_triangle_count + textured_triangle_count;
         i++) {
-        g_battle_map_textured_triangle_positions[i].terrain_tile.packed = *source++;
+        g_battle_map_textured_triangle_positions[i].terrain_tile = *source++;
     }
 
     for (i = g_battle_map_textured_quad_count; i < g_battle_map_textured_quad_count + textured_quad_count; i++) {
-        g_battle_map_textured_quad_positions[i].terrain_tile.packed = *source++;
+        g_battle_map_textured_quad_positions[i].terrain_tile = *source++;
     }
 
     g_battle_map_textured_triangle_count += textured_triangle_count;

@@ -22,7 +22,7 @@ extern s16 g_wldcore_menu_scroll_offset;
 void wldcore_proposition_push_send_unit_level(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     s32 index;
     s32 depth;
     s32 count;
@@ -72,10 +72,10 @@ void wldcore_proposition_push_send_unit_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.layout_render = index;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0;
-    bounds.dimensions.x = 0x6C;
-    bounds.dimensions.y = 0x40;
+    bounds.x = 0x80;
+    bounds.y = 0;
+    bounds.w = 0x6C;
+    bounds.h = 0x40;
     wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     {
@@ -123,10 +123,10 @@ void wldcore_proposition_push_send_unit_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.list_render = index;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0x40;
-    bounds.dimensions.x = 0x30;
-    bounds.dimensions.y = 0x3B;
+    bounds.x = 0x80;
+    bounds.y = 0x40;
+    bounds.w = 0x30;
+    bounds.h = 0x3B;
     wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     {
@@ -150,10 +150,10 @@ void wldcore_proposition_push_send_unit_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.portrait_frame = index;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0x40;
-    bounds.dimensions.x = 0x30;
-    bounds.dimensions.y = 0x3B;
+    bounds.x = 0x80;
+    bounds.y = 0x40;
+    bounds.w = 0x30;
+    bounds.h = 0x3B;
     wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;

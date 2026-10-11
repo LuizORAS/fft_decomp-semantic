@@ -366,10 +366,10 @@ extern weapon_data_t g_main_item_weapon_data[]; /* 0x80063ab8 */
 extern u8 g_main_weapon_page_order[0x8a];
 extern u8 g_main_item_ability_item_ids[14];
 extern u8 g_main_item_poach_table[48][2];
-extern accessory_data_t g_main_item_accessory_data[];
+extern item_evade_t g_main_item_accessory_data[]; /* 0x80063f58; unit accessory evade slots */
 extern armor_data_t g_main_item_helm_armor_secondary_data[];
 extern item_data_t g_main_item_primary_data[];
-extern shield_data_t g_main_item_shield_data[];
+extern item_evade_t g_main_item_shield_data[]; /* 0x80063eb8; unit right/left shield evade slots */
 void main_item_init_new_game_inventory(void);
 void main_item_init_order_tables(void);
 item_data_t* main_item_get_data_pointer(s32 item_id);
@@ -388,16 +388,6 @@ s32 main_job_get_random_unlocked(const battle_stats_t* unit);
 void main_job_store_unlock_bitset(u8 destination[UNIT_UNLOCKED_JOB_BYTE_COUNT], u32 unlocked_jobs);
 
 /* save */
-/* Byte view of the four-byte world-script instruction word at 0x800d4848:
- * opcode byte followed by up to three operand bytes. */
-typedef struct wldcore_opcode_instruction_bytes {
-    u8 opcode;
-    u8 operand_0;
-    u8 operand_1;
-    u8 operand_2;
-} wldcore_opcode_instruction_bytes_t;
-typedef char wldcore_instruction_bytes_size_must_be_4[sizeof(wldcore_opcode_instruction_bytes_t) == 4 ? 1 : -1];
-
 /* Nine-byte active-proposition records at 0x80057eec. Daily update 0x80074b30
  * advances elapsed_days and sets completion bit 0x04. The assignment at
  * 0x80074a34 stores the current world-map location at +0x04; 0x80074c40
@@ -421,10 +411,7 @@ typedef struct wldcore_saved_record {
      * stores g_main_save_slot_buffer (0x800d0bbc) here for all five slots. */
     u8* buffer;
     u32* script_words; /* 0x04 */
-    union {
-        u32 word;
-        wldcore_opcode_instruction_bytes_t bytes;
-    } instruction; /* 0x08 */
+    u32 instruction;   /* 0x08 */
     /* 0x0c-0x37 mirror the live sound-novel state at 0x800d484c. */
     u16 state_flags; /* 0x0c; wldcore_opcode_state_flag_e */
     s16 section;     /* 0x0e */
@@ -656,28 +643,22 @@ typedef struct suzuki_music_channel {
     u16 voice_update_flags; /* 0x02; suzuki_voice_update_e */
     u16 voice_attr_flags;   /* 0x04; suzuki_voice_attr_e */
     u16 ramp_flags;         /* 0x06; suzuki_ramp_flag_e */
-    union {
-        u32 raw;
-        struct {
-            u16 low;
-            s16 high; /* sound resource id (main_sound_resource_id_e) */
-        } halves;
-    } sound_id;            /* 0x08 */
-    u8 channel_number;     /* 0x0c; 0xff + channel index (SFX: the index); write-only */
-    u8 priority;           /* 0x0d; SFX steal priority (channel id >> 8; stolen when <= 0x20); music: 0x10 */
-    u8 _padding_00e[2];    /* 0x0e; aligns start_tick */
-    u32 start_tick;        /* 0x10; g_main_sound_tick_count when main_sound_start_sfx started the channel */
-    u8* note_data_start;   /* 0x14 */
-    u8* note_data;         /* 0x18; read position */
-    u8* loop_note_data;    /* 0x1c; loop point set by Loop and Loop Select; End Bar jumps to it */
-    u8* restart_note_data; /* 0x20; set by main_smd_init_channel_streams */
-    u32 _unknown_024;      /* 0x24; cleared by both channel initialisers, never read */
-    u16 loop_count;        /* 0x28; times End Bar has jumped to the loop point */
-    u8 _unknown_02a;       /* 0x2a; cleared by both channel initialisers, never read */
-    u8 loop_octave_base;   /* 0x2b; octave_base saved with loop_note_data */
-    u8 instrument;         /* 0x2c; index into waveset->instruments */
-    u8 voice;              /* 0x2d; SPU voice (Set Voice); only an odd voice takes Enable LFO */
-    u16 note_release_rate; /* 0x2e; the instrument's or Release Rate's value; each note reloads release_rate from it */
+    s32 sound_id;           /* 0x08; sound resource id in the high halfword, sound number in the low halfword */
+    u8 channel_number;      /* 0x0c; 0xff + channel index (SFX: the index); write-only */
+    u8 priority;            /* 0x0d; SFX steal priority (channel id >> 8; stolen when <= 0x20); music: 0x10 */
+    u8 _padding_00e[2];     /* 0x0e; aligns start_tick */
+    u32 start_tick;         /* 0x10; g_main_sound_tick_count when main_sound_start_sfx started the channel */
+    u8* note_data_start;    /* 0x14 */
+    u8* note_data;          /* 0x18; read position */
+    u8* loop_note_data;     /* 0x1c; loop point set by Loop and Loop Select; End Bar jumps to it */
+    u8* restart_note_data;  /* 0x20; set by main_smd_init_channel_streams */
+    u32 _unknown_024;       /* 0x24; cleared by both channel initialisers, never read */
+    u16 loop_count;         /* 0x28; times End Bar has jumped to the loop point */
+    u8 _unknown_02a;        /* 0x2a; cleared by both channel initialisers, never read */
+    u8 loop_octave_base;    /* 0x2b; octave_base saved with loop_note_data */
+    u8 instrument;          /* 0x2c; index into waveset->instruments */
+    u8 voice;               /* 0x2d; SPU voice (Set Voice); only an odd voice takes Enable LFO */
+    u16 note_release_rate;  /* 0x2e; the instrument's or Release Rate's value; each note reloads release_rate from it */
     suzuki_waveset_t* waveset; /* 0x30; Select Sound Font */
     u32 voice_mask;            /* 0x34; SPU voice bit(s) owned by this channel */
     u32 voice_attr_mask;       /* 0x38; SpuVoiceAttr mask; 0xff9f, never read */
@@ -976,20 +957,14 @@ typedef struct suzuki_music {
     u32 reverb_voice_mask;         /* 0x70 */
     s32 tempo_accumulator;         /* 0x74; one sequencer tick per 0x10000 of scaled_tempo; initialised to 0x10000 */
     s32 scaled_tempo;              /* 0x78; tempo * tempo_scale */
-    union {
-        s32 raw;
-        struct {
-            u16 low;
-            s16 high; /* the tempo byte itself */
-        } halves;
-    } tempo;                            /* 0x7c */
-    s32 tempo_step;                     /* 0x80; per-tick tempo delta of Tempo Ramp */
-    u16 tempo_step_count;               /* 0x84 */
-    u16 tempo_target;                   /* 0x86; tempo byte Tempo Ramp ends on */
-    suzuki_ramp_t tempo_scale;          /* 0x88; value is scale byte << 24, its high halfword the multiplier */
-    suzuki_ramp_t master_volume;        /* 0x94; value is volume byte << 24 */
-    suzuki_ramp_t pitch_shift;          /* 0xa0 */
-    suzuki_ramp_t balance_shift;        /* 0xac */
+    s32 tempo;                     /* 0x7c; 16.16 tempo advanced by Tempo Ramp */
+    s32 tempo_step;                /* 0x80; per-tick tempo delta of Tempo Ramp */
+    u16 tempo_step_count;          /* 0x84 */
+    u16 tempo_target;              /* 0x86; tempo byte Tempo Ramp ends on */
+    suzuki_ramp_t tempo_scale;     /* 0x88; value is scale byte << 24, its high halfword the multiplier */
+    suzuki_ramp_t master_volume;   /* 0x94; value is volume byte << 24 */
+    suzuki_ramp_t pitch_shift;     /* 0xa0 */
+    suzuki_ramp_t balance_shift;   /* 0xac */
     suzuki_music_channel_t channels[1]; /* 0xb8; channel_count entries */
 } suzuki_music_t;
 typedef char suzuki_music_channels_must_be_at_0xb8[(sizeof(suzuki_music_t) == 0xb8 + 0x160) ? 1 : -1];

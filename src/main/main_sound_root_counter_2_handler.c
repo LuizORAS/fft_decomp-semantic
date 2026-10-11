@@ -59,7 +59,7 @@ s32 main_sound_root_counter_2_handler(void) {
                 main_smd_restore_snapshot(music);
             if (music->tempo_scale.count != 0) {
                 main_smd_step_ramp(&music->tempo_scale);
-                music->scaled_tempo = music->tempo.halves.high * (music->tempo_scale.value >> 16);
+                music->scaled_tempo = (music->tempo >> 16) * (music->tempo_scale.value >> 16);
             }
             if (music->master_volume.count != 0) {
                 main_smd_step_ramp(&music->master_volume);

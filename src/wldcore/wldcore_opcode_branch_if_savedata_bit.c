@@ -3,27 +3,15 @@
 
 /* Script branch on a save-data bit selected by a 16-bit operand: when the
  * bit equals the expected value the branch target byte is armed at 0x800d484e
- * with state flag 0x02, otherwise only flag 0x04 is raised.
- *
- * The target keeps the instruction record address in $s1 across the
- * wldcore_test_bit call instead of rebuilding it at each byte load. GCC folds
- * a symbol address straight into both `lbu`s, so the empty tied `__asm__`
- * (which emits no instruction) is what forces the base into its own pseudo;
- * no plain C spelling of the two loads reproduces it.
- *
- * The target frame reserves 8 bytes of locals that no instruction references;
- * frame_reservation reproduces that reservation and the resulting 0x18/0x1c/0x20
- * saved-register offsets. The original local it stood for is unknown. */
+ * with state flag 0x02, otherwise only flag 0x04 is raised. */
 void wldcore_opcode_branch_if_savedata_bit(s32 expected) {
-    wldcore_opcode_instruction_bytes_t* instruction = &g_wldcore_opcode_state.instruction.bytes;
+    u32* instruction = &g_wldcore_opcode_state.instruction;
     u16 flags;
-    s32 frame_reservation[2];
 
-    __asm__("" : "=r"(instruction) : "0"(instruction));
-
-    if (wldcore_test_bit(g_main_saved_data_bits, (instruction->operand_0 << 8) | instruction->operand_1) == expected) {
+    if (wldcore_test_bit(g_main_saved_data_bits, ((u8)(*instruction >> 8) << 8) | (u8)(*instruction >> 16))
+        == expected) {
         flags = g_wldcore_active_saved_record.state_flags | WLDCORE_OPCODE_STATE_BRANCH;
-        g_wldcore_active_saved_record.section = instruction->operand_2;
+        g_wldcore_active_saved_record.section = (u8)(*instruction >> 24);
     } else {
         flags = g_wldcore_active_saved_record.state_flags | WLDCORE_OPCODE_STATE_FETCH;
     }

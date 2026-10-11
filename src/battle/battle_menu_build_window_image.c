@@ -37,7 +37,7 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
     buf = battle_menu_alloc_memory(byte_count);
     battle_clear_menu_render_buffer(buf, byte_count);
     x_off = 0;
-    src = (u16*)g_battle_menu_glyph_image;
+    src = (u16*)g_battle_menu_glyph_image->pixels;
     if (kind != DIALOG_OPTIONS_NO_TAIL) {
         if ((mode & DIALOG_TYPE_POSITION_MASK) == 2) {
             x_off = words * 8;
@@ -92,8 +92,8 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
         if (width - 0x10 < g_battle_menu_window_sprite_position.rect.x) {
             g_battle_menu_window_sprite_position.rect.x = width - 0x10;
         }
-        blit_text_glyph(
-            g_battle_menu_glyph_image, buf, &g_battle_menu_window_sprite_glyph, &g_battle_menu_window_sprite_position);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, buf, &g_battle_menu_window_sprite_glyph,
+            &g_battle_menu_window_sprite_position);
         if (i != 0) {
             battle_text_mirror_packed_nibble_region_horizontal((u8*)buf, &g_battle_menu_window_sprite_position);
         }

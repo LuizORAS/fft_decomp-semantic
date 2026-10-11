@@ -110,7 +110,7 @@ functions:
   - {addr: 0x8006f7c0, size: 816, name: wldcore_menu_handle_layout_window_input, hash: c1e8409fe84df98d}
   - {addr: 0x8006faf0, size: 2036, name: wldcore_menu_push_location_menu_level, hash: f4f64a730589fe4a}
   - {addr: 0x800702e4, size: 56, name: wldcore_window_set_render_state_0_from_arg_0x10, hash: fee0e6d3cb0d88e0}
-  - {addr: 0x8007031c, size: 60, name: wldcore_window_set_render_state_2_from_arg_0x10, hash: a2f7429843d1a51b}
+  - {addr: 0x8007031c, size: 60, name: wldcore_window_set_secondary_render_palette_2, hash: a2f7429843d1a51b}
   - {addr: 0x80070358, size: 1552, name: wldcore_menu_step_location_menu_level, hash: 5af1aba511f1e8d3}
   - {addr: 0x80070968, size: 320, name: wldcore_menu_close_level_and_release_records, hash: ead85974b020521a}
   - {addr: 0x80070aa8, size: 316, name: wldcore_menu_run_shop_and_rebuild_screen, hash: 3dcf9c23a2dd9c21}
@@ -390,7 +390,7 @@ functions:
   - {addr: 0x8009036c, size: 120, name: wldcore_window_init_record, hash: c2ddfb60e7100f16}
   - {addr: 0x800903e4, size: 732, name: wldcore_text_is_window_finished, hash: b51b825f77122c7e}
   - {addr: 0x800906c0, size: 872, name: wldcore_text_render_scrollable_window_page, hash: 0a6626b97c286fca}
-  - {addr: 0x80090a28, size: 140, name: wldcore_window_update_flag_from_owner_progress, hash: 65507cce57e00cfe}
+  - {addr: 0x80090a28, size: 140, name: wldcore_text_update_page_prompt_visibility, hash: 65507cce57e00cfe}
   - {addr: 0x80090ab4, size: 636, name: wldcore_text_update_scroll_indicators, hash: 8edf02f6f19c040c}
   - {addr: 0x80090d30, size: 32, name: wldcore_sound_play_effect, hash: cbcbcaac21c3c09d}
   - {addr: 0x80090d50, size: 208, name: wldcore_sound_enqueue_audio_command, hash: 6b10a0879bd17fe8}
@@ -621,7 +621,6 @@ data:
   - {addr: 0x800d483c, name: g_wldcore_random_battle_map_id}
   - {addr: 0x800d4840, name: g_wldcore_active_saved_record}
   - {addr: 0x800d4840, name: g_wldcore_script_slot_table}
-  - {addr: 0x800d4848, name: g_wldcore_opcode_instruction}
   - {addr: 0x800d4848, name: g_wldcore_opcode_state}
   - {addr: 0x800d484c, name: g_wldcore_state_flags}
   - {addr: 0x800d4852, name: g_wldcore_sound_novel_counter_delta}

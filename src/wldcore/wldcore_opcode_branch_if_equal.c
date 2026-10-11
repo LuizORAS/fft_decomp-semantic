@@ -20,7 +20,7 @@ void wldcore_opcode_branch_if_equal(void) {
     if (value < 0) {
         value = 0;
     }
-    word = g_wldcore_opcode_state.instruction.word;
+    word = g_wldcore_opcode_state.instruction;
     operand = (word >> 8) & 0xffff;
     if (value == operand) {
         flags = g_wldcore_active_saved_record.state_flags;

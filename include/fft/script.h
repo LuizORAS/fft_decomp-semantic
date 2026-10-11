@@ -439,12 +439,9 @@ typedef struct event_earthquake_parameters {
 } event_earthquake_parameters_t;
 typedef char event_earthquake_parameters_size_must_be_4[sizeof(event_earthquake_parameters_t) == 4 ? 1 : -1];
 
-typedef union event_color_screen_colors {
-    struct {
-        rgb24_t start;
-        rgb24_t end;
-    } rgb;
-    u8 values[6];
+typedef struct event_color_screen_colors {
+    rgb24_t start;
+    rgb24_t end;
 } event_color_screen_colors_t;
 
 typedef struct event_color_screen_parameters {
@@ -454,12 +451,9 @@ typedef struct event_color_screen_parameters {
 } event_color_screen_parameters_t;
 typedef char event_color_screen_parameters_size_must_be_9[sizeof(event_color_screen_parameters_t) == 9 ? 1 : -1];
 
-typedef union event_map_light_targets {
-    struct {
-        u8 rotation_le[3][2];
-        u8 scale_le[3][2];
-    } vectors;
-    u8 values_le[6][2];
+typedef struct event_map_light_targets {
+    u8 rotation_le[3][2];
+    u8 scale_le[3][2];
 } event_map_light_targets_t;
 
 typedef struct event_map_light_parameters {
@@ -577,13 +571,10 @@ typedef char event_sprite_move_parameters_size_must_be_12[sizeof(event_sprite_mo
 /* Camera operands remain byte-aligned in the event stream. Positions are
  * x, z (height), y; rotations are tilt, yaw, roll. RelativeCamera has the
  * same seven values, and Camera appends a frame duration. */
-typedef union event_camera_values {
-    struct {
-        u8 position_le[3][2];
-        u8 rotation_le[3][2];
-        u8 zoom_le[2];
-    } fields;
-    u8 values_le[7][2];
+typedef struct event_camera_values {
+    u8 position_le[3][2];
+    u8 rotation_le[3][2];
+    u8 zoom_le[2];
 } event_camera_values_t;
 typedef char event_camera_values_size_must_be_14[sizeof(event_camera_values_t) == 14 ? 1 : -1];
 

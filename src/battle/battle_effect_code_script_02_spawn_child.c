@@ -10,10 +10,10 @@ s32 battle_effect_code_script_02_spawn_child(effect_record_t* record) {
     s16 child;
     battle_effect_script_instruction_t* instruction;
 
-    instruction = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
-    slot = instruction->value.header.bytes.packed_parameters >> 4;
+    instruction = battle_effect_get_current_script_instruction(record);
+    slot = instruction->header.packed_parameters >> 4;
     child = battle_effect_start_script_record(
-        record->script, instruction->value.value.signed_value, g_battle_effect_current_record_index);
+        record->script, instruction->immediate.value, g_battle_effect_current_record_index);
     if (slot < EFFECT_SCRIPT_CHILD_SLOT_COUNT) {
         record->child_indices[slot] = child;
     }

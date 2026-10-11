@@ -3,8 +3,7 @@
 
 /* Build the centred sub-rectangle of source's w x h area for a scale mode
  * (20%, 50%, 80%, 90% or 100%), aligned to 4 pixels. */
-void wldcore_gfx_calculate_scaled_rectangle(
-    s32 scale_mode, const wldcore_window_render_bounds16_t* source, wldcore_window_render_bounds16_t* rectangle) {
+void wldcore_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, RECT* rectangle) {
     s32 scale;
     s32 x;
     s32 y;
@@ -33,8 +32,8 @@ void wldcore_gfx_calculate_scaled_rectangle(
         break;
     }
 
-    x = source->dimensions.x;
-    y = source->dimensions.y;
+    x = source->w;
+    y = source->h;
     scaled_x = x * scale;
     scaled_y = y * scale;
     half_x = (x / 2) & 0xfffc;
@@ -47,8 +46,8 @@ void wldcore_gfx_calculate_scaled_rectangle(
     if (half_y < height) {
         height = half_y;
     }
-    rectangle->position.x = half_x - width;
-    rectangle->position.y = half_y - height;
-    rectangle->dimensions.x = width * 2;
-    rectangle->dimensions.y = height * 2;
+    rectangle->x = half_x - width;
+    rectangle->y = half_y - height;
+    rectangle->w = width * 2;
+    rectangle->h = height * 2;
 }

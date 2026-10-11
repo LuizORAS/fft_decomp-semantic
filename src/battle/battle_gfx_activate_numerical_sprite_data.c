@@ -16,13 +16,13 @@ void battle_gfx_activate_numerical_sprite_data(battle_unit_misc_data_t* unit, s3
     display_0->tpage = BATTLE_GFX_TPAGE_FRAME;
     switch (mode) {
     case 1:
-        unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_NO_TARGET;
+        unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_NO_TARGET;
         break;
     case 2:
-        unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_SILENCED;
+        unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_SILENCED;
         break;
     case 3:
-        unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_NO_MP;
+        unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_NO_MP;
         break;
     }
     if (unit->numeric_display.active == 0) {

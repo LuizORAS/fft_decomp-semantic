@@ -24,18 +24,18 @@ void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* o
     }
 
     if ((kind == 1) || jobstts_job_is_special_monster(unit->job_id)) {
-        bcopy(unit->unlocked_jobs, out->unlocked_jobs, 3);
+        bcopy(unit->career.unlocked_jobs, out->unlocked_jobs, 3);
     } else {
-        i = main_job_calculate_unlocked(unit->job_levels, unit->unit_flags & UNIT_FLAG_MALE);
+        i = main_job_calculate_unlocked(unit->career.job_levels, unit->unit_flags & UNIT_FLAG_MALE);
         out->unlocked_jobs[0] = i >> 16;
         out->unlocked_jobs[1] = i >> 8;
         out->unlocked_jobs[2] = i;
     }
 
-    bcopy(unit->learned_abilities, out->learned_abilities, 0x39);
-    bcopy(unit->job_levels, out->job_levels, 0xA);
-    bcopy(&unit->job_points.current, &out->job_points.current, 0x28);
-    bcopy(&unit->job_points.total, &out->job_points.total, 0x28);
+    bcopy(unit->career.learned_abilities, out->learned_abilities, 0x39);
+    bcopy(unit->career.job_levels, out->job_levels, 0xA);
+    bcopy(&unit->career.job_points.current, &out->job_points.current, 0x28);
+    bcopy(&unit->career.job_points.total, &out->job_points.total, 0x28);
 
     for (i = 0; i < 20; i++) {
         if (out->job_points.current.values[i] >= 10000) {

@@ -14,7 +14,7 @@
 void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     s32 index;
     wldcore_point32_t point;
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     s32 unused[8];
     wldcore_menu_cursor_state_t* cursor;
     wldcore_point32_t* base;
@@ -48,10 +48,10 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     level->entries[level->entry_count] = WLDCORE_BAR_MENU_ROW_LEAVE;
     level->entry_count++;
     index = level->frame_render;
-    bounds.position.x = 0;
-    bounds.position.y = 0;
-    bounds.dimensions.x = 0x48;
-    bounds.dimensions.y = level->entry_count * 0x10 + 0x10;
+    bounds.x = 0;
+    bounds.y = 0;
+    bounds.w = 0x48;
+    bounds.h = level->entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;

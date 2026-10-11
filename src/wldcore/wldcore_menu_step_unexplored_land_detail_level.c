@@ -18,7 +18,7 @@
  * aggregate: the target loads both words before either store. */
 void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail_level_t* level) {
     GsIMAGE image;
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t clut_position;
     wldcore_point32_t* base;
     s32* index;
@@ -39,10 +39,10 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail
         LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
         LoadClut(image.clut, image.cx, image.cy);
         render = level->render_index;
-        bounds.position.x = image.px;
-        bounds.position.y = image.py;
-        bounds.dimensions.x = image.pw;
-        bounds.dimensions.y = image.ph;
+        bounds.x = image.px;
+        bounds.y = image.py;
+        bounds.w = image.pw;
+        bounds.h = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
         wldcore_window_init_vram_render_record(render, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);

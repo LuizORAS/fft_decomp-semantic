@@ -15,7 +15,7 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
     if (state->scroll_state == WLDCORE_TEXT_SCROLL_RETURN) {
         if (state->scroll_row == state->page_start_row) {
             state->scroll_state = WLDCORE_TEXT_SCROLL_PAGING;
-            wldcore_window_update_flag_from_owner_progress((wldcore_window_owner_t*)state);
+            wldcore_text_update_page_prompt_visibility(state);
             return 1;
         }
         state->scroll_timer += 1;
@@ -72,7 +72,7 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
             g_wldcore_window_records[state->left_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             return 1;
         }
-        wldcore_window_update_flag_from_owner_progress((wldcore_window_owner_t*)state);
+        wldcore_text_update_page_prompt_visibility(state);
         return 1;
     }
     return 0;

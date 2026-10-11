@@ -12,11 +12,11 @@
  * is what produces its four-instruction ASPSX $at indexed loads.
  *
  * `panel_text` keeps the text-id source's address in a saved register across
- * both reads, as the target does. Assigning bounds.position.x before
+ * both reads, as the target does. Assigning bounds.x before
  * position.y is what puts the two by-value halves in the target's registers. */
 void wldcore_list_build_proposition_detail_panel_image(
     wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t point;
     s16 text_width;
     s16 text_rows;
@@ -37,10 +37,10 @@ void wldcore_list_build_proposition_detail_panel_image(
     g_world_text_substitution_values[0] = g_main_active_propositions[proposition].elapsed_days;
     g_world_text_substitution_values[1] = g_main_active_propositions[proposition].assigned_days;
     g_world_text_substitution_values[2] = g_main_active_propositions[proposition].location | TEXT_ID_LOCATION_NAME_BASE;
-    bounds.position.x = 0;
-    bounds.position.y = 0x60;
-    bounds.dimensions.x = 0xF4;
-    bounds.dimensions.y = (g_main_active_propositions[proposition].participant_count + rows) * 0x10 + 0x10;
+    bounds.x = 0;
+    bounds.y = 0x60;
+    bounds.w = 0xF4;
+    bounds.h = (g_main_active_propositions[proposition].participant_count + rows) * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, coordinate_mode, g_wldcore_proposition_detail_image_buffer);
     point.x = 8;
     point.y = text_rows * 0x10 + 8;

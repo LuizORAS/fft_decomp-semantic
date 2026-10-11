@@ -12,7 +12,7 @@
  * target's register base for the offset-0 flags word. The unused array
  * preserves the target's 0x68-byte frame. */
 void wldcore_menu_push_sound_novel_quit_level(void) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     u8 unused[0x28];
     wldcore_point32_t* base;
     s32 index;
@@ -36,16 +36,16 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].save_confirm.render_index = index;
-    bounds.position.x = 0x80;
-    bounds.dimensions.x = 0x3C;
-    bounds.dimensions.y = 0x30;
-    bounds.position.y = 0;
+    bounds.x = 0x80;
+    bounds.w = 0x3C;
+    bounds.h = 0x30;
+    bounds.y = 0;
     wldcore_window_init_render_record_image(
         index, bounds, 0, WLDCORE_TEXT_ID_QUIT_CONTINUE, g_wldcore_window_image_buffer);
     base = &g_wldcore_window_render_records[index].base;
     g_wldcore_window_render_records[index].priority = 8;
     depth = g_wldcore_menu_stack_depth;
-    base->x = -(bounds.dimensions.x / 2);
+    base->x = -(bounds.w / 2);
     base->y = -0x18;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].save_confirm.cursor_window].position.x
         = g_wldcore_window_render_records[index].base.x + 6;

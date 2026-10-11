@@ -30,9 +30,9 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
     }
 
     if (gender & (UNIT_FLAG_MALE | UNIT_FLAG_FEMALE)) {
-        main_util_clear_byte_data(unit->learned_abilities, UNIT_LEARNED_ABILITY_BYTE_COUNT);
+        main_util_clear_byte_data(unit->career.learned_abilities, UNIT_LEARNED_ABILITY_BYTE_COUNT);
         for (i = 0; i < UNIT_JOB_LEVEL_BYTE_COUNT; i++) {
-            byte = unit->job_levels[i];
+            byte = unit->career.job_levels[i];
             level = byte >> 4;
             if (i == UNIT_JOB_LEVEL_BYTE_COUNT - 1 && (gender & UNIT_FLAG_MALE)) {
                 value = 0; /* Dancer is female only */
@@ -41,8 +41,8 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
             } else {
                 value = rand() * 100 / 0x8000 + 100;
             }
-            unit->job_points.total.values[i * 2] = value;
-            unit->job_points.current.values[i * 2] = value;
+            unit->career.job_points.total.values[i * 2] = value;
+            unit->career.job_points.current.values[i * 2] = value;
             main_unit_learn_job_abilities(unit, i * 2 + JOB_ID_SQUIRE, entd);
 
             level = byte & 0xf;
@@ -53,8 +53,8 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
             } else {
                 value = rand() * 100 / 0x8000 + 100;
             }
-            unit->job_points.total.values[i * 2 + 1] = value;
-            unit->job_points.current.values[i * 2 + 1] = value;
+            unit->career.job_points.total.values[i * 2 + 1] = value;
+            unit->career.job_points.current.values[i * 2 + 1] = value;
             if (i == UNIT_JOB_LEVEL_BYTE_COUNT - 1) {
                 break; /* Mime's JP is initialized, but its learning call is skipped. */
             }
@@ -62,9 +62,9 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
         }
 
         if (entd->primary_skillset != 0 && entd->primary_skillset != SKILLSET_ID_NONE) {
-            unit->learned_abilities[0].bits[0] = 0xff;
-            unit->learned_abilities[0].bits[1] = 0xff;
-            unit->learned_abilities[0].bits[2] = 0xff;
+            unit->career.learned_abilities[0].bits[0] = 0xff;
+            unit->career.learned_abilities[0].bits[1] = 0xff;
+            unit->career.learned_abilities[0].bits[2] = 0xff;
         }
     }
 

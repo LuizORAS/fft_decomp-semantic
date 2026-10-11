@@ -15,7 +15,7 @@
  * for the menu and starts the screen fade.
  */
 void wldcore_menu_push_sound_novel_level(s32 argument) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t origin;
     wldcore_window_record_t* window1;
     wldcore_window_record_t* window2;
@@ -70,10 +70,10 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.render_index = index;
-    bounds.position.x = 0x1E4;
-    bounds.position.y = 0x1E8;
-    bounds.dimensions.x = 0x20;
-    bounds.dimensions.y = 8;
+    bounds.x = 0x1E4;
+    bounds.y = 0x1E8;
+    bounds.w = 0x20;
+    bounds.h = 8;
     origin.x = 0x20;
     origin.y = 0x1E8;
     wldcore_window_init_vram_render_record(index, bounds, origin, 0);

@@ -16,8 +16,8 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     battle_ai_clear_words(&ai->considered_ability, sizeof(battle_ai_considered_ability_t));
     battle_ai_clear_words(&ai->current_action.command.calculator_type, 4);
     ai->considered_ability.skillset = entry->skillset_flags.bytes.skillset;
-    ability_id = g_battle_ai_data_base.considered_ability.ability_id = entry->id.packed_id & 0x3ff;
-    unit_id = entry->id.packed_id >> 10;
+    ability_id = g_battle_ai_data_base.considered_ability.ability_id = entry->packed_id & 0x3ff;
+    unit_id = entry->packed_id >> 10;
     unit = &g_battle_unit_stats[unit_id];
     menu = g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset];
     status_id = 0;
@@ -112,8 +112,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         return;
     }
     }
-    battle_ai_transfer_halfword_values(
-        &ai->considered_ability.ai_flags, g_main_ability_data[ability_id].ai_flags.halfwords, 4);
+    battle_ai_transfer_halfword_values(&ai->considered_ability.ai_flags, &g_main_ability_data[ability_id].ai_flags, 4);
     if (menu == ACTION_MENU_TYPE_ITEM_INVENTORY || menu == ACTION_MENU_TYPE_WEAPON_INVENTORY)
         ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_DIRECT_TRAJECTORY;
     ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;

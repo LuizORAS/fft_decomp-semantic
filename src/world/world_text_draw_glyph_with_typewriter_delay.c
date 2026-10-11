@@ -124,7 +124,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
                 if (request->mode == 0) {
                     (image + i)[offset / 2] = 0;
                 } else {
-                    (image + i)[offset / 2] = ((u8*)g_world_menu_glyph_sheet
+                    (image + i)[offset / 2] = (g_world_menu_glyph_sheet->pixels
                         + ((((request->x + (i << 1)) & 0xF) + 8) / 2))[(row << 7) + 0x400];
                 }
             }

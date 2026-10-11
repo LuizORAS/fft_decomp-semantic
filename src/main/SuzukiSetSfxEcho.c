@@ -18,7 +18,7 @@ void SuzukiSetSfxEcho(int sound_id, s16 volume) {
     if (volume != 0) {
         do {
             if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
-                if (channel->sound_id.raw == sound_id) {
+                if (channel->sound_id == sound_id) {
                     channel->velocity = volume << 8;
                     channel->voice_update_flags = SUZUKI_VOICE_UPDATE_VOLUME;
                 }
@@ -41,7 +41,7 @@ void SuzukiSetSfxEcho(int sound_id, s16 volume) {
         remaining = 8;
         do {
             if (stop->flags & SUZUKI_CHANNEL_IN_USE) {
-                if (stop->sound_id.raw == sound_id) {
+                if (stop->sound_id == sound_id) {
                     channels |= bit;
                     voices |= stop->voice_mask;
                     stop->flags = 0;

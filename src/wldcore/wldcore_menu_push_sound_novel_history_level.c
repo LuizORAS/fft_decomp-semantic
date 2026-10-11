@@ -24,7 +24,7 @@
  * store. `top` and `depth` are separate locals for the target's register
  * assignment, and `unused` preserves the 0x50-byte frame. */
 void wldcore_menu_push_sound_novel_history_level(void) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     u8 unused[8];
     wldcore_window_record_t* windows;
     wldcore_window_xy_t* positions;
@@ -63,10 +63,10 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_history.render_index = index;
-    bounds.dimensions.x = 0xF8;
-    bounds.dimensions.y = 0xB0;
-    bounds.position.x = 0;
-    bounds.position.y = 0;
+    bounds.w = 0xF8;
+    bounds.h = 0xB0;
+    bounds.x = 0;
+    bounds.y = 0;
     wldcore_window_build_render_record_image(index, bounds, 1, g_wldcore_window_image_buffer);
     position = &g_wldcore_window_render_records[index].base;
     newest = &g_wldcore_active_saved_record.text_history_3;

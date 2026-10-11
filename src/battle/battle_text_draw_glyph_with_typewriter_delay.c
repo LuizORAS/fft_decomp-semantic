@@ -116,8 +116,8 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
                 if (request->mode == 0) {
                     (image + i)[offset / 2] = 0;
                 } else {
-                    (image + i)[offset / 2]
-                        = (g_battle_menu_glyph_image + ((((request->x + (i << 1)) & 0xF) + 8) / 2))[(row << 7) + 0x400];
+                    (image + i)[offset / 2] = (g_battle_menu_glyph_image->pixels
+                        + ((((request->x + (i << 1)) & 0xF) + 8) / 2))[(row << 7) + 0x400];
                 }
             }
         }

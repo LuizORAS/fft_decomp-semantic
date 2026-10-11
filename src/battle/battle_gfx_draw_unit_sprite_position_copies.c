@@ -27,7 +27,7 @@ void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) 
         depth = transformed.vz / 4;
         position.vx = transformed.vx;
         position.vy = transformed.vy;
-        flags = ((unit->horizontal_flip_flag ^ unit->sprite_display_flags.half) & ~BATTLE_MISC_DISPLAY_BLEND_MASK)
+        flags = ((unit->horizontal_flip_flag ^ unit->sprite_display_flags) & ~BATTLE_MISC_DISPLAY_BLEND_MASK)
             | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         zoom.vx = g_battle_camera_zoom.vx;
         zoom.vy = g_battle_camera_zoom.vy;

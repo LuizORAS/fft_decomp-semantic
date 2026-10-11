@@ -16,8 +16,7 @@ extern s32 g_wldcore_map_projection_motion_target_x;
  * snapped to the target, the record's active flag is toggled off, and 0 is
  * returned.
  *
- * The final snap goes through the VECTOR view of the target, so the four
- * words copy as one struct assignment. */
+ * The final snap copies the four-word target VECTOR. */
 s32 wldcore_map_step_projection_motion(void) {
     s32 progress;
     s32 distance;
@@ -35,9 +34,9 @@ s32 wldcore_map_step_projection_motion(void) {
     g_wldcore_map_projection_origin.vx = origin_x + delta_x;
     origin_y = g_wldcore_map_projection_motion.origin.vy;
     g_wldcore_map_projection_origin.vy
-        = origin_y + (g_wldcore_map_projection_motion.target.y - origin_y) * progress / distance;
+        = origin_y + (g_wldcore_map_projection_motion.target.vy - origin_y) * progress / distance;
     if (progress >= distance) {
-        g_wldcore_map_projection_origin = *(VECTOR*)&g_wldcore_map_projection_motion.target;
+        g_wldcore_map_projection_origin = g_wldcore_map_projection_motion.target;
         g_wldcore_map_projection_motion.flags ^= WLDCORE_PROJECTION_MOTION_ACTIVE;
         return 0;
     }

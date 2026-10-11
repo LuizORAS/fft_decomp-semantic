@@ -32,7 +32,7 @@ s32 effect_e373_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
     effect_summon_mesh_work_t* work;
     POLY_GT4* quad;
     POLY_GT4* other;
-    effect_summon_mesh_point_t* lattice_point;
+    vec3s16_t* lattice_point;
     map_tile_t* tile;
     u8* lattice_bytes;
     u16 placement;
@@ -175,7 +175,7 @@ s32 effect_e373_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
             k = ((radius + (work->radius_offset >> 8)) * rcos(j << 7)) >> 12;
             n = ((((radius + (work->radius_offset >> 8)) * rsin(j << 7)) >> 12) * growth.vy) >> 8;
             for (i = 0; i < 17; i++) {
-                lattice_point = (effect_summon_mesh_point_t*)(lattice_bytes + (j * 0x66 + i * 6));
+                lattice_point = (vec3s16_t*)(lattice_bytes + (j * 0x66 + i * 6));
                 lattice_point->x = (rcos(work->spin + (i << 8)) * k) >> 12;
                 lattice_point->z = (rsin(work->spin + (i << 8)) * k) >> 12;
                 lattice_point->y = -n;

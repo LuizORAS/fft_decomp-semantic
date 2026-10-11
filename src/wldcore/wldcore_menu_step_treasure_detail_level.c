@@ -24,7 +24,7 @@
  * register allocation. */
 void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_t* level) {
     GsIMAGE image;
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t clut_position;
     wldcore_point32_t* base;
     s32 render;
@@ -46,10 +46,10 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
         GsGetTimInfo(g_wldcore_picture_buffer + 1, &image);
         LoadClut(image.clut, image.cx, image.cy);
         render = level->render_index;
-        bounds.position.x = image.px;
-        bounds.position.y = image.py;
-        bounds.dimensions.x = image.pw;
-        bounds.dimensions.y = image.ph;
+        bounds.x = image.px;
+        bounds.y = image.py;
+        bounds.w = image.pw;
+        bounds.h = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
         wldcore_window_init_vram_render_record(render, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);

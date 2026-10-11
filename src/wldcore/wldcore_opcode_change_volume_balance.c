@@ -5,8 +5,8 @@
  * to the maximum 0x3fff) over operand 1 * 3 steps, at least one. */
 void wldcore_opcode_change_volume_balance(void) {
     s32 unused[2];
-    s32 balance = g_wldcore_active_saved_record.instruction.bytes.operand_1 * 3;
-    s32 volume = (g_wldcore_opcode_state.instruction.word & 0xFF00) >> 2;
+    s32 balance = (u8)(g_wldcore_active_saved_record.instruction >> 16) * 3;
+    s32 volume = (g_wldcore_opcode_state.instruction & 0xFF00) >> 2;
 
     if (balance == 0) {
         balance = 1;

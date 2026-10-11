@@ -1,13 +1,13 @@
 #include "fft/wldcore.h"
 
 /* Ends the window tint transition and restores the parent content record. */
-void wldcore_window_end_tint_transition(wldcore_window_tint_request_t* request) {
-    g_wldcore_window_records[request->window_a].palette = g_wldcore_window_render_records[request->render_a].palette
+void wldcore_window_end_tint_transition(wldcore_menu_list_window_level_t* level) {
+    g_wldcore_window_records[level->main_window].palette = g_wldcore_window_render_records[level->side_window].palette
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 2]
                                               .list_window.content_render]
               .palette = 0;
-    g_wldcore_window_records[request->window_a].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
-    g_wldcore_window_records[request->window_a].frame_index = g_wldcore_window_records[request->window_a].anim_counter
+    g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
+    g_wldcore_window_records[level->main_window].frame_index = g_wldcore_window_records[level->main_window].anim_counter
         = 0;
     if (g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 2]
                                             .list_window.content_render]

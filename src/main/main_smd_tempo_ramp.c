@@ -14,7 +14,7 @@ u8* main_smd_tempo_ramp(u8* note_data, suzuki_music_t* music, suzuki_music_chann
     steps = note_data[0];
     music->tempo_target = target;
     scaled = target << 16;
-    delta = scaled - music->tempo.raw;
+    delta = scaled - music->tempo;
     if (steps != 0 && delta != 0) {
         music->tempo_step_count = steps;
         music->tempo_step = delta / steps;

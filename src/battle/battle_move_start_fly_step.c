@@ -53,6 +53,6 @@ void battle_move_start_fly_step(
         }
     }
     battle_move_set_velocity_for_contiguous_clamped_steps(unit, &unit->path, step);
-    battle_move_interpolate_partial(unit, unit->walk_speed.word);
+    battle_move_interpolate_partial(unit, unit->walk_speed);
     unit->movement.bytes.destination_z = (step->value >> 5) & 1;
 }

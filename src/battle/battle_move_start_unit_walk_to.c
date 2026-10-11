@@ -12,7 +12,7 @@ s32 battle_move_start_unit_walk_to(s32 misc_id, s16* destination, s32 flags, s32
             flags, jump, unit->map_x, unit->map_y, unit->map_z, destination[0], destination[2], destination[1]);
         if (path != 0) {
             unit->path = *path;
-            unit->walk_speed.word = speed * 2;
+            unit->walk_speed = speed * 2;
             unit->step_speed = 0x2000;
             unit->movement_path_offset = 0;
             battle_unit_dismount_rider_and_update_display(unit);

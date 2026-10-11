@@ -11,7 +11,8 @@ s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
     s32 job_mask = 0x800000;
     s32 candidate_count = 0;
     s32 job_index = 0;
-    s32 unlocked_jobs = (unit->unlocked_jobs[0] << 16) + (unit->unlocked_jobs[1] << 8) + unit->unlocked_jobs[2];
+    s32 unlocked_jobs
+        = (unit->career.unlocked_jobs[0] << 16) + (unit->career.unlocked_jobs[1] << 8) + unit->career.unlocked_jobs[2];
 
     do {
         if (unlocked_jobs & job_mask) {

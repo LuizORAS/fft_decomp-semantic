@@ -60,7 +60,7 @@ void main_smd_init_channels(suzuki_music_t* music) {
                 }
                 channel->voice_update_flags = SUZUKI_VOICE_UPDATE_VOLUME | SUZUKI_VOICE_UPDATE_PITCH;
                 channel->ramp_flags = 0;
-                channel->sound_id.raw = smd->id;
+                channel->sound_id = smd->id;
                 channel->priority = 0x10;
                 channel->channel_number = index;
                 note_data = (u8*)smd + *offsets;

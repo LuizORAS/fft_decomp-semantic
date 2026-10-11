@@ -281,17 +281,19 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
         red = light->gradient_top[0];
         green = light->gradient_top[1];
         blue = light->gradient_top[2];
-        g_battle_map_background_gradient_colors.first.red = red;
-        g_battle_map_background_gradient_colors.first.green = green;
-        g_battle_map_background_gradient_colors.first.blue = blue;
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = red;
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g = green;
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b = blue;
         red = light->gradient_bottom[0];
         green = light->gradient_bottom[1];
         blue = light->gradient_bottom[2];
-        g_battle_map_background_gradient_colors.second.red = red;
-        g_battle_map_background_gradient_colors.second.green = green;
-        g_battle_map_background_gradient_colors.second.blue = blue;
-        g_battle_map_lightning_state.base_colors[0] = g_battle_map_background_gradient_colors.first;
-        g_battle_map_lightning_state.base_colors[1] = g_battle_map_background_gradient_colors.second;
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = red;
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = green;
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = blue;
+        g_battle_map_lightning_state.base_colors[0]
+            = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP];
+        g_battle_map_lightning_state.base_colors[1]
+            = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM];
         battle_map_light_state_command(MAP_LIGHT_COMMAND_SAVE_BACKGROUND_GRADIENT, 0);
         break;
     case GNS_RESOURCE_TEXTURE_ANIMATIONS:

@@ -33,7 +33,7 @@ void battle_state_handle_close_move_help_state(void) {
             if (path != 0) {
                 /* Copy the 0x80-byte movement block in the renderer-side Misc record. */
                 casting->path = *path;
-                casting->walk_speed.word = 0x2000;
+                casting->walk_speed = 0x2000;
                 battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
                 main_sound_play_sfx(MAIN_SFX_CONFIRM);
                 battle_state_enter_unit_moving_setup();
@@ -70,7 +70,7 @@ void battle_state_handle_close_move_help_state(void) {
         g_battle_cursor_z = elevation;
         g_battle_cursor_y = y;
         casting->path = *path;
-        casting->walk_speed.word = 0x2000;
+        casting->walk_speed = 0x2000;
         battle_state_enter_unit_moving_setup();
         return;
     }

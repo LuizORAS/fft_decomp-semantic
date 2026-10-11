@@ -19,7 +19,7 @@ void battle_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
     /* A separate typed Camera cursor reorders the original argument saves. */
     speed = battle_script_load_halfword(((event_focus_speed_parameters_t*)parameters)->speed_le);
     parameters += sizeof(event_focus_speed_parameters_t);
-    parameters = ((event_camera_instruction_t*)parameters)->parameters.values.fields.position_le[0];
+    parameters = ((event_camera_instruction_t*)parameters)->parameters.values.position_le[0];
     position_sum = 0;
     for (i = 0; i < 3; i++) {
         value = battle_script_load_halfword(parameters + i * 2);
@@ -28,8 +28,7 @@ void battle_script_focus_speed(u8* parameters, s32* position, s32* rotation) {
         } else {
             position_delta[i] = value - position[i] / 1024;
         }
-        value
-            = battle_script_load_halfword(parameters + i * 2 + sizeof(((event_camera_values_t*)0)->fields.position_le));
+        value = battle_script_load_halfword(parameters + i * 2 + sizeof(((event_camera_values_t*)0)->position_le));
         if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
             rotation_delta[i] = 0;
         } else {

@@ -17,12 +17,12 @@ void battle_script_apply_relative_camera(event_camera_values_t* operands, s32* c
     s32 delta;
     s32 val;
 
-    parameters = operands->values_le[0];
+    parameters = operands->position_le[0];
     src = camera_values;
-    dst = ((event_camera_instruction_t*)(operands + 1))->parameters.values.values_le[0];
+    dst = ((event_camera_instruction_t*)(operands + 1))->parameters.values.position_le[0];
     if (((event_camera_instruction_t*)(operands + 1))->opcode == EVENT_OPCODE_FOCUS_SPEED) {
         dst = ((event_camera_instruction_t*)((event_focus_speed_instruction_t*)(operands + 1) + 1))
-                  ->parameters.values.values_le[0];
+                  ->parameters.values.position_le[0];
     }
     for (i = 0; i < 7; i++) {
         delta = *src;

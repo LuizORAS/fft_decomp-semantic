@@ -14,7 +14,7 @@ void main_sound_stop_resource_sfx(main_sound_resource_t* resource) {
     id = resource->id;
     for (i = 8; i != 0; i--) {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
-            sound_id = channel->sound_id.raw;
+            sound_id = channel->sound_id;
             if ((sound_id >> 16) == id) {
                 main_sound_stop_sfx_channels(sound_id);
             }

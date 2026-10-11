@@ -70,37 +70,37 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
     if (config->move_type == BATTLE_MOVEMENT_CLASS_FLY)
         state->height_delta = 0;
     if (state->destination_unit_record_flag != 0) {
-        state->candidate_remaining_range.value = state->source_panel->remaining_range - 1 - extra_span;
-        if (state->candidate_remaining_range.value <= 0)
+        state->candidate_remaining_range = state->source_panel->remaining_range - 1 - extra_span;
+        if (state->candidate_remaining_range <= 0)
             return 11; /* no range left to step onto the unit */
-        if (state->candidate_remaining_range.bytes.low
+        if ((u8)state->candidate_remaining_range
             < g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range)
             return 12; /* the unit top is already reached with more range left */
-        if (state->candidate_remaining_range.bytes.low
+        if ((u8)state->candidate_remaining_range
                 == g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range
             && state->height_delta
                 >= g_battle_target_panels[state->destination_unit_record_index + 512].max_height_delta)
             return 13; /* same range left, and no smaller height difference */
         g_battle_target_panels[state->destination_unit_record_index + 512].remaining_range
-            = state->candidate_remaining_range.bytes.low;
+            = (u8)state->candidate_remaining_range;
         g_battle_target_panels[state->destination_unit_record_index + 512].max_height_delta = state->height_delta;
     } else {
-        state->candidate_remaining_range.value = state->source_panel->remaining_range - extra_span
+        state->candidate_remaining_range = state->source_panel->remaining_range - extra_span
             - terrain_costs[state->destination_tile->surface.value & MAP_SURFACE_MASK];
-        if (state->candidate_remaining_range.value <= 0)
+        if (state->candidate_remaining_range <= 0)
             return 14; /* no range left after the terrain cost */
-        if (state->candidate_remaining_range.bytes.low < state->destination_panel->remaining_range)
+        if ((u8)state->candidate_remaining_range < state->destination_panel->remaining_range)
             return 15; /* the tile is already reached with more range left */
-        if (state->candidate_remaining_range.bytes.low == state->destination_panel->remaining_range
+        if ((u8)state->candidate_remaining_range == state->destination_panel->remaining_range
             && state->height_delta >= state->destination_panel->max_height_delta)
             return 16; /* same range left, and no smaller height difference */
-        state->destination_panel->remaining_range = state->candidate_remaining_range.bytes.low;
+        state->destination_panel->remaining_range = (u8)state->candidate_remaining_range;
         state->destination_panel->max_height_delta = state->height_delta;
     }
-    if (state->candidate_remaining_range.value >= 2) {
+    if (state->candidate_remaining_range >= 2) {
         g_battle_move_frontier_flags_ptr[state->destination_index] |= FRONTIER_FLAG_QUEUED;
-        if (state->candidate_remaining_range.bytes.low > state->frontier_max_remaining_range)
-            state->frontier_max_remaining_range = state->candidate_remaining_range.bytes.low;
+        if ((u8)state->candidate_remaining_range > state->frontier_max_remaining_range)
+            state->frontier_max_remaining_range = (u8)state->candidate_remaining_range;
     }
     return 0;
 }

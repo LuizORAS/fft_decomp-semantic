@@ -7,10 +7,10 @@ s32 battle_effect_code_script_1c_jump_if_counter_not_equal(effect_record_t* reco
     battle_effect_script_instruction_t* instruction;
     u32 slot;
 
-    instruction = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
-    slot = instruction->branch.header.bytes.packed_parameters >> 6;
-    if (record->counters[slot] != instruction->branch.comparison.signed_value) {
-        record->pc = instruction->branch.target_offset.unsigned_value;
+    instruction = battle_effect_get_current_script_instruction(record);
+    slot = instruction->header.packed_parameters >> 6;
+    if (record->counters[slot] != instruction->branch.comparison) {
+        record->pc = instruction->branch.target_offset;
     } else {
         record->pc += 6;
     }

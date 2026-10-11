@@ -3,9 +3,9 @@
 /* Opcode 05: store the high nibble of the instruction's second byte in
  * D_801BF000, which nothing reads. Every retail script begins with it. */
 s32 battle_effect_code_script_05(effect_record_t* record) {
-    battle_effect_script_instruction_t* instruction = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
+    battle_effect_script_instruction_t* instruction = battle_effect_get_current_script_instruction(record);
 
-    D_801BF000 = instruction->header.bytes.packed_parameters >> 4;
+    D_801BF000 = instruction->header.packed_parameters >> 4;
     record->pc += 2;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

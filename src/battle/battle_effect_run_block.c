@@ -7,10 +7,8 @@ s32 battle_effect_run_block(s16 index) {
 
     rec = &g_effect_state_records[index];
     for (;;) {
-        /* Byte-pointer addition retains the retail dispatch registers here. */
-        result = g_battle_effect_instructions[((battle_effect_script_instruction_t*)((u8*)rec->script + rec->pc))
-                                                  ->header.word
-            & EFFECT_SCRIPT_OPCODE_MASK](rec);
+        result = g_battle_effect_instructions[battle_effect_get_current_script_header(rec) & EFFECT_SCRIPT_OPCODE_MASK](
+            rec);
         if (result == EFFECT_SCRIPT_RESULT_ABORT) {
             return 0;
         }

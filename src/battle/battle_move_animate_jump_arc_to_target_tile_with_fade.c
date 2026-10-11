@@ -31,7 +31,7 @@ void battle_move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data
         target.vy = battle_gfx_calculate_screen_z_from_misc_map_data(unit);
         timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
         unit->shadow_graphic_trigger = 0;
-        unit->sprite_display_flags.half |= BATTLE_MISC_DISPLAY_BLEND_MASK | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
+        unit->sprite_display_flags |= BATTLE_MISC_DISPLAY_BLEND_MASK | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 1, unit->unit_id, -31, -31, -31);
         threshold = 4;
         unit->distortion_phase++;
@@ -71,7 +71,7 @@ void battle_move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data
             unit->shadow_graphic_trigger = 1;
             unit->status_flags_5_6 &= ~BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE;
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
-            unit->sprite_display_flags.half &= ~BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
+            unit->sprite_display_flags &= ~BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
         }
         break;
     }

@@ -16,12 +16,12 @@ void world_script_apply_relative_camera(event_camera_values_t* parameters, const
     s32 delta;
     s32 value;
 
-    source = parameters->values_le[0];
+    source = parameters->position_le[0];
     deltas = camera_values;
-    destination = ((event_camera_instruction_t*)(parameters + 1))->parameters.values.values_le[0];
+    destination = ((event_camera_instruction_t*)(parameters + 1))->parameters.values.position_le[0];
     if (((event_camera_instruction_t*)(parameters + 1))->opcode == EVENT_OPCODE_FOCUS_SPEED) {
         destination = ((event_camera_instruction_t*)((event_focus_speed_instruction_t*)(parameters + 1) + 1))
-                          ->parameters.values.values_le[0];
+                          ->parameters.values.position_le[0];
     }
 
     for (index = 0; index < 7; index++) {

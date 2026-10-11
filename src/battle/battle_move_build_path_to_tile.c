@@ -97,11 +97,11 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
         }
         return &g_battle_move_path;
     }
-    state->candidate_remaining_range.value = 0xff;
+    state->candidate_remaining_range = 0xff;
     state->path_length = 0;
     state->inner_count = 4;
     state->selected_source_side_shift = 0;
-    while (state->candidate_remaining_range.value != 0) {
+    while (state->candidate_remaining_range != 0) {
         state->previous_source_side_shift = state->selected_source_side_shift;
         pass = state->path_length + 1;
         state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
@@ -126,18 +126,18 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
             value = state->current_panel->remaining_range;
             state->current_panel->mark = pass;
         }
-        state->candidate_remaining_range.value = value;
+        state->candidate_remaining_range = value;
         if (state->tile_x == config->x && state->tile_y == config->y && state->tile_level == config->high_elevation) {
             break;
         }
         battle_move_spread_to_neighbors();
-        previous = state->candidate_remaining_range.value;
+        previous = state->candidate_remaining_range;
         if (previous != value) {
             state->outer_count = 4;
             continue;
         }
         battle_move_calculate_spread();
-        current = state->candidate_remaining_range.value;
+        current = state->candidate_remaining_range;
         if (current != previous) {
             state->outer_count = 4;
             continue;
@@ -145,12 +145,12 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
         if (config->source_tile_occupied != 0) {
             state->inner_count = 7;
             battle_move_spread_to_neighbors();
-            previous = state->candidate_remaining_range.value;
+            previous = state->candidate_remaining_range;
             if (previous != current) {
                 continue;
             }
             battle_move_calculate_spread();
-            if (state->candidate_remaining_range.value != previous) {
+            if (state->candidate_remaining_range != previous) {
                 continue;
             }
         }

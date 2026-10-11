@@ -9,8 +9,8 @@ void wldcore_window_draw_text_rows(wldcore_menu_send_unit_level_t* level) {
     s32 i;
 
     index = level->layout_render;
-    world_menu_build_window_frame_image(g_wldcore_window_render_records[index].bounds.dimensions.x,
-        g_wldcore_window_render_records[index].bounds.dimensions.y, (u16*)g_wldcore_window_image_buffer);
+    world_menu_build_window_frame_image(g_wldcore_window_render_records[index].bounds.w,
+        g_wldcore_window_render_records[index].bounds.h, (u16*)g_wldcore_window_image_buffer);
     point.x = 8;
     point.y = 8;
     for (i = 0; i < g_wldcore_proposition_send_unit_count; i++) {

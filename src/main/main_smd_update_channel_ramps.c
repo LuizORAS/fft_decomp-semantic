@@ -19,11 +19,11 @@ void main_smd_update_channel_ramps(suzuki_music_t* music, suzuki_music_channel_t
     count = music->tempo_step_count;
     if (count != 0) {
         if (--count != 0)
-            music->tempo.raw += music->tempo_step;
+            music->tempo += music->tempo_step;
         else
-            music->tempo.raw = music->tempo_target << 16;
+            music->tempo = music->tempo_target << 16;
         music->tempo_step_count = count;
-        music->scaled_tempo = music->tempo.halves.high * (music->tempo_scale.value >> 16);
+        music->scaled_tempo = (music->tempo >> 16) * (music->tempo_scale.value >> 16);
     }
     do {
         active = channel->flags;

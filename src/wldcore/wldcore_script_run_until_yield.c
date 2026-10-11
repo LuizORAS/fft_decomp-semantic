@@ -54,12 +54,12 @@ s32 wldcore_script_run_until_yield(void) {
             g_wldcore_active_saved_record.state_flags
                 = (g_wldcore_active_saved_record.state_flags & ~WLDCORE_OPCODE_STATE_FETCH)
                 | WLDCORE_OPCODE_STATE_FETCHED;
-            g_wldcore_active_saved_record.instruction.word
+            g_wldcore_active_saved_record.instruction
                 = g_wldcore_active_saved_record.script_words[g_wldcore_active_saved_record.word_index];
             g_wldcore_active_saved_record.word_index++;
         }
 
-        g_wldcore_opcode_handlers[g_wldcore_active_saved_record.instruction.bytes.opcode]();
+        g_wldcore_opcode_handlers[(u8)g_wldcore_active_saved_record.instruction]();
 
         flags = g_wldcore_active_saved_record.state_flags;
         g_wldcore_active_saved_record.state_flags = flags & ~WLDCORE_OPCODE_STATE_FETCHED;

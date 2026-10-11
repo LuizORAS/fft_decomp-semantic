@@ -18,7 +18,7 @@ void wldcore_opcode_wait_frames(void) {
     *state_flags = updated;
     if ((updated & 0x10) != 0) {
         g_wldcore_sound_novel_wait_counter = 0;
-        g_wldcore_sound_novel_wait_frames = g_wldcore_active_saved_record.instruction.bytes.operand_0;
+        g_wldcore_sound_novel_wait_frames = (u8)(g_wldcore_active_saved_record.instruction >> 8);
     }
     counter = g_wldcore_sound_novel_wait_counter;
     operand = g_wldcore_sound_novel_wait_frames;

@@ -22,7 +22,7 @@ void wldcore_opcode_set_white_screen_overlay(void) {
 
     DrawSync(0);
     VSync(0);
-    if (g_wldcore_active_saved_record.instruction.bytes.operand_0 == 0) {
+    if ((u8)(g_wldcore_active_saved_record.instruction >> 8) == 0) {
         u32* state = (u32*)&g_wldcore_screen_fade_state;
 
         g_wldcore_screen_fade_state.boxes[0].r = 0xff;

@@ -23,9 +23,9 @@ void world_menu_update_panel_fade(void) {
                 g_world_menu_panel_fade_mode = MENU_PANEL_FADE_NONE;
             }
         }
-        frame->center.r0 = ((world_fade_intensity_t*)&g_world_menu_panel_fade_intensity)->bytes[0];
-        frame->center.g0 = ((world_fade_intensity_t*)&g_world_menu_panel_fade_intensity)->bytes[0];
-        frame->center.b0 = ((world_fade_intensity_t*)&g_world_menu_panel_fade_intensity)->bytes[0];
+        frame->center.r0 = g_world_menu_panel_fade_intensity;
+        frame->center.g0 = g_world_menu_panel_fade_intensity;
+        frame->center.b0 = g_world_menu_panel_fade_intensity;
         intensity = g_world_menu_panel_fade_intensity;
         for (i = 0; i < 9; i++) {
             if (intensity != 0) {

@@ -55,8 +55,7 @@ void world_menu_run_ability(void) {
     }
     if (g_world_ability_menu_unit_index != g_world_formation_selected_unit_index) {
         value = world_formation_get_unit_lock(g_world_formation_selected_unit_index);
-        g_world_ability_menu_unit_index
-            = ((world_menu_halfword_view_t*)&g_world_formation_selected_unit_index)->bytes[0];
+        g_world_ability_menu_unit_index = (u8)g_world_formation_selected_unit_index;
         if (value == WORLD_FORMATION_UNIT_LOCK_MIME) {
             g_world_ability_menu.text_id = 0xd80d;
         } else {

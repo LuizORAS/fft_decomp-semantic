@@ -16,8 +16,8 @@ void battle_move_update_knockback_step(battle_unit_misc_data_t* unit) {
     battle_move_get_current_and_destination_tiles(unit, &g_battle_move_current_tile, &g_battle_move_destination_tile);
     g_battle_move_step_value = unit->current_path_step;
     if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
-        speed = unit->walk_speed.word;
-        unit->walk_speed.word = (speed > ONE) ? speed / 4 * 3 : ONE;
+        speed = unit->walk_speed;
+        unit->walk_speed = (speed > ONE) ? speed / 4 * 3 : ONE;
         switch (unit->step_phase) {
         case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH:
         case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST:

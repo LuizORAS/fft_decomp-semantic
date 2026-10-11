@@ -24,7 +24,7 @@ u32 main_sound_get_sfx_channels(s32 sound_id) {
     } else {
         do {
             if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
-                if (channel->sound_id.raw == sound_id) {
+                if (channel->sound_id == sound_id) {
                     channels |= bit;
                 }
             }

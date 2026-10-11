@@ -8,7 +8,7 @@
  * monster gets only the class evade. */
 void main_unit_set_equipment_stats(battle_stats_t* unit) {
     item_data_t* item;
-    shield_data_t* shield;
+    item_evade_t* shield;
     weapon_data_t* weapon;
 
     main_util_clear_byte_data(unit->equipment_stats, BATTLE_UNIT_EQUIPMENT_STAT_COUNT);
@@ -20,7 +20,7 @@ void main_unit_set_equipment_stats(battle_stats_t* unit) {
 
     item = &g_main_item_primary_data[unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY]];
     if (item->type_flags & ITEM_TYPE_FLAG_ACCESSORY) {
-        accessory_data_t* accessory
+        item_evade_t* accessory
             = &g_main_item_accessory_data[g_main_item_secondary_data_ids[unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY]
                 * sizeof(item_data_t)]];
         unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE] = accessory->physical_evade;

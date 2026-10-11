@@ -175,12 +175,12 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
     config->source_tile_occupied = 0;
     config->destination_tile_occupied = 0;
     state->outer_count = 4;
-    state->candidate_remaining_range.value = 0xFF;
+    state->candidate_remaining_range = 0xFF;
     state->source_unit_record_flag = 0;
     state->source_unit_record_index = 0;
     state->path_length = 0;
     state->inner_count = 2;
-    while (state->candidate_remaining_range.value != 0) {
+    while (state->candidate_remaining_range != 0) {
         state->previous_source_side_shift = state->selected_source_side_shift;
         state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
@@ -188,14 +188,14 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
         state->path_length++;
         g_battle_move_pathing_scratch = state->current_panel->remaining_range;
         state->current_panel->mark = state->path_length;
-        state->candidate_remaining_range.value = g_battle_move_pathing_scratch;
+        state->candidate_remaining_range = g_battle_move_pathing_scratch;
         if (state->tile_x == config->x && state->tile_y == config->y && state->tile_level == config->high_elevation) {
             break;
         }
         battle_move_spread_to_neighbors();
-        if (state->candidate_remaining_range.value == g_battle_move_pathing_scratch) {
+        if (state->candidate_remaining_range == g_battle_move_pathing_scratch) {
             battle_move_calculate_spread();
-            if (state->candidate_remaining_range.value == g_battle_move_pathing_scratch) {
+            if (state->candidate_remaining_range == g_battle_move_pathing_scratch) {
                 return 0;
             }
         }

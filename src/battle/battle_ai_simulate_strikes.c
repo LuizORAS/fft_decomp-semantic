@@ -13,7 +13,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
     s32 target_index;
     s32 target_id;
     battle_action_data_t* result;
-    u8* behavior;
+    ability_ai_flags_t* behavior;
     s32 self_hit;
     s32 positive;
     s32 negative;
@@ -21,12 +21,12 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
     if (reaction_mode == 0 && battle_action_init_current_data(action->unit_id) != 0) {
         return;
     }
-    behavior = g_main_ability_data[action->ability_id].ai_flags.bytes;
+    behavior = &g_main_ability_data[action->ability_id].ai_flags;
     if (g_battle_ai_data_base.hit_counter != 0xff) {
         self_hit = 0;
         positive = 0;
         negative = 1;
-        if (behavior[0] & BATTLE_AI_ABILITY_AFFECTS_STATS) {
+        if (behavior->flags_1 & BATTLE_AI_ABILITY_AFFECTS_STATS) {
             positive = 3;
             negative = 4;
         }
@@ -40,7 +40,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                 if (result->attack_accuracy <= 0) {
                     continue;
                 }
-                if (!(behavior[1] & BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES)) {
+                if (!(behavior->flags_2 & BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES)) {
                     if (battle_ai_is_unit_untargetable(target_id) != 0) {
                         continue;
                     }
@@ -49,7 +49,7 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                         if (action->target_id != target_id) {
                             continue;
                         }
-                    } else if (!(behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
+                    } else if (!(behavior->flags_1 & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_acts_before_me[target_id] != 0) {
                         continue;
                     }
@@ -58,13 +58,14 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                 if (ai->hit_counter == 0xff) {
                     continue;
                 }
-                if (((behavior[0] & BATTLE_AI_ABILITY_TARGET_ENEMIES) && ai->unit_decisions[target_id].enemy_flag != 0)
-                    || ((behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
+                if (((behavior->flags_1 & BATTLE_AI_ABILITY_TARGET_ENEMIES)
+                        && ai->unit_decisions[target_id].enemy_flag != 0)
+                    || ((behavior->flags_1 & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_decisions[target_id].enemy_flag == 0)) {
                     ai->current_action.rank.priority += positive;
-                } else if (((behavior[0] & BATTLE_AI_ABILITY_TARGET_ENEMIES)
+                } else if (((behavior->flags_1 & BATTLE_AI_ABILITY_TARGET_ENEMIES)
                                && ai->unit_decisions[target_id].enemy_flag == 0)
-                    || ((behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
+                    || ((behavior->flags_1 & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_decisions[target_id].enemy_flag != 0)) {
                     ai->current_action.rank.priority -= negative;
                 }

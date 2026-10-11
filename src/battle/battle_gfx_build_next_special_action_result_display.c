@@ -17,13 +17,13 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
     u32 clear;
     u16 selector;
 
-    flags = unit->action_display_flags.word;
+    flags = unit->action_display_flags;
     display = &unit->numeric_display;
     if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP) != 0) {
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GAINED_EXP;
         unit->numeric_display.active = 1;
         unit->numeric_display.value = unit->strike.action_rewards.earned_experience;
-        unit->action_display_flags.word &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
+        unit->action_display_flags &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
         if (unit->numeric_display.progress >= 22) {
             unit->numeric_display.progress = 21;
         }
@@ -31,7 +31,7 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GAINED_JP;
         unit->numeric_display.active = 1;
         unit->numeric_display.value = unit->strike.action_rewards.earned_jp;
-        unit->action_display_flags.word &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP;
+        unit->action_display_flags &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP;
         if (unit->numeric_display.progress >= 22) {
             unit->numeric_display.progress = 21;
         }
@@ -52,8 +52,8 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         unit->numeric_display.active = 1;
         {
             u32 current;
-            current = unit->action_display_flags.word;
-            unit->action_display_flags.word = current & clear;
+            current = unit->action_display_flags;
+            unit->action_display_flags = current & clear;
         }
         if (unit->numeric_display.progress >= 22) {
             unit->numeric_display.progress = 21;

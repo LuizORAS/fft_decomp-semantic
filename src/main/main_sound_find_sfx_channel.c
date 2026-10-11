@@ -32,7 +32,7 @@ s32 main_sound_find_sfx_channel(s32 sound_id, s32 voice_count) {
     channel = music->channels;
     do {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
-            if (channel->sound_id.raw == sound_id) {
+            if (channel->sound_id == sound_id) {
                 channels |= mask;
                 voices |= channel->voice_mask;
                 channel->flags = 0;

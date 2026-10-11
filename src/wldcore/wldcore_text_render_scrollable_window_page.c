@@ -6,7 +6,7 @@
  * The final base copy is one point32 block copy (both loads precede both
  * stores); two field assignments reorder it. */
 void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t* state, s32 row) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t point;
     s32 i;
     s32 offset;
@@ -15,10 +15,10 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
 
     g_world_menu_text_param_22 = row;
     g_world_menu_text_param_24 = row + state->rows_per_page;
-    bounds.position.x = state->image_x;
-    bounds.position.y = state->image_y;
-    bounds.dimensions.x = (state->text_width + 0x18) & 0xFFFC;
-    bounds.dimensions.y = state->rows_per_page * 16 + 16;
+    bounds.x = state->image_x;
+    bounds.y = state->image_y;
+    bounds.w = (state->text_width + 0x18) & 0xFFFC;
+    bounds.h = state->rows_per_page * 16 + 16;
     wldcore_window_build_render_record_image(
         state->render_record_index, bounds, state->image_coordinate_mode, g_wldcore_window_image_buffer);
     for (i = 0; i < 2; i++) {
@@ -32,17 +32,13 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
         limit = state->base.y + 8;
         if (top >= limit) {
             g_wldcore_window_render_records[state->extra_render_index].base.y = top;
-            g_wldcore_window_render_records[state->extra_render_index].bounds.position.y
-                = state->extra_bounds.position.y;
-            g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y
-                = state->extra_bounds.dimensions.y;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.y = state->extra_bounds.y;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.h = state->extra_bounds.h;
             g_wldcore_window_render_records[state->extra_render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        } else if (top + state->extra_bounds.dimensions.y >= limit) {
+        } else if (top + state->extra_bounds.h >= limit) {
             g_wldcore_window_render_records[state->extra_render_index].base.y = limit;
-            g_wldcore_window_render_records[state->extra_render_index].bounds.position.y
-                = state->extra_bounds.position.y + offset;
-            g_wldcore_window_render_records[state->extra_render_index].bounds.dimensions.y
-                = state->extra_bounds.dimensions.y - offset;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.y = state->extra_bounds.y + offset;
+            g_wldcore_window_render_records[state->extra_render_index].bounds.h = state->extra_bounds.h - offset;
             g_wldcore_window_render_records[state->extra_render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         } else {
             g_wldcore_window_render_records[state->extra_render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;

@@ -4,10 +4,9 @@
  * selected by the top two bits of the second byte is below the second
  * halfword; otherwise step over the 6-byte instruction. */
 s32 battle_effect_code_script_15_jump_if_counter_less(effect_record_t* record) {
-    battle_effect_script_instruction_t* instruction = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
-    if (record->counters[instruction->branch.header.bytes.packed_parameters >> 6]
-        < instruction->branch.comparison.signed_value) {
-        record->pc = instruction->branch.target_offset.unsigned_value;
+    battle_effect_script_instruction_t* instruction = battle_effect_get_current_script_instruction(record);
+    if (record->counters[instruction->header.packed_parameters >> 6] < instruction->branch.comparison) {
+        record->pc = instruction->branch.target_offset;
     } else {
         record->pc += 6;
     }

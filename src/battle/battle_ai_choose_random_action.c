@@ -23,7 +23,7 @@ s32 battle_ai_choose_random_action(void) {
             abilities = main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ACTION);
             index_or_count = rand() % 16;
             value = abilities[index_or_count];
-        } while (value == 0 || !(g_main_ability_data[value].ai_flags.bytes[3] & BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI)
+        } while (value == 0 || !(g_main_ability_data[value].ai_flags.flags_4 & BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI)
             || !(g_main_ability_range_data[value].flags_3 & ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE)
             || !battle_ai_load_known_ability_flag(ai->acting_unit_id, skillset, index_or_count));
         ai->current_action.command.ability_id = value;

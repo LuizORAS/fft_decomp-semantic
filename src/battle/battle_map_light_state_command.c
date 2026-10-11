@@ -12,24 +12,30 @@ void* battle_map_light_state_command(s32 command, void* data) {
 
     switch (command) {
     case MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT:
-        g_battle_map_background_gradient_colors.first = ((map_color_t*)data)[0];
-        g_battle_map_background_gradient_colors.second = ((map_color_t*)data)[1];
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP]
+            = ((map_background_gradient_colors_t*)data)->colors[MAP_BACKGROUND_GRADIENT_TOP];
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM]
+            = ((map_background_gradient_colors_t*)data)->colors[MAP_BACKGROUND_GRADIENT_BOTTOM];
         break;
     case MAP_LIGHT_COMMAND_GET_BACKGROUND_GRADIENT:
         result = &g_battle_map_background_gradient_colors;
         break;
     case MAP_LIGHT_COMMAND_SAVE_BACKGROUND_GRADIENT:
-        g_battle_map_saved_background_gradient_first = g_battle_map_background_gradient_colors.first;
-        g_battle_map_saved_background_gradient_second = g_battle_map_background_gradient_colors.second;
+        g_battle_map_saved_background_gradient_first
+            = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP];
+        g_battle_map_saved_background_gradient_second
+            = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM];
         break;
     case MAP_LIGHT_COMMAND_RESTORE_BACKGROUND_GRADIENT:
-        g_battle_map_background_gradient_colors.first = g_battle_map_saved_background_gradient_first;
-        g_battle_map_background_gradient_colors.second = g_battle_map_saved_background_gradient_second;
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP]
+            = g_battle_map_saved_background_gradient_first;
+        g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM]
+            = g_battle_map_saved_background_gradient_second;
         break;
     case MAP_LIGHT_COMMAND_SET_AMBIENT_COLOR:
-        g_battle_map_back_color_red = ((map_color_t*)data)->red;
-        g_battle_map_back_color_green = ((map_color_t*)data)->green;
-        g_battle_map_back_color_blue = ((map_color_t*)data)->blue;
+        g_battle_map_back_color_red = ((CVECTOR*)data)->r;
+        g_battle_map_back_color_green = ((CVECTOR*)data)->g;
+        g_battle_map_back_color_blue = ((CVECTOR*)data)->b;
         SetBackColor(g_battle_map_back_color_red, g_battle_map_back_color_green, g_battle_map_back_color_blue);
         break;
     case MAP_LIGHT_COMMAND_SAVE_AMBIENT_COLOR:
@@ -52,9 +58,9 @@ void* battle_map_light_state_command(s32 command, void* data) {
         break;
     }
     case MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR:
-        g_battle_map_light_direction[0] = ((map_color_t*)data)->red;
-        g_battle_map_light_direction[1] = ((map_color_t*)data)->green;
-        g_battle_map_light_direction[2] = ((map_color_t*)data)->blue;
+        g_battle_map_light_direction[0] = ((CVECTOR*)data)->r;
+        g_battle_map_light_direction[1] = ((CVECTOR*)data)->g;
+        g_battle_map_light_direction[2] = ((CVECTOR*)data)->b;
         break;
     case MAP_LIGHT_COMMAND_RESET_DARKNESS_COLOR:
         g_battle_map_light_direction[0] = 0;

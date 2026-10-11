@@ -66,10 +66,10 @@ void battle_map_reset_mesh_render_state(void) {
         g_battle_map_texture_animations[i].active = 0;
     }
     for (i = 0; i < 360; i++) {
-        g_battle_map_textured_triangle_positions[i].terrain_tile.reset_value = -2;
+        g_battle_map_textured_triangle_positions[i].terrain_tile = -2;
     }
     for (i = 0; i < 710; i++) {
-        g_battle_map_textured_quad_positions[i].terrain_tile.reset_value = -2;
+        g_battle_map_textured_quad_positions[i].terrain_tile = -2;
     }
     for (i = 1; i < 9; i++) {
         g_battle_map_mesh_animation_instructions[i].states[0][1].next = 0;

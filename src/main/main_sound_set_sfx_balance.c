@@ -11,7 +11,7 @@ void main_sound_set_sfx_balance(s32 sound_id, s32 balance) {
     channel = g_main_sound_sfx_music->channels;
     do {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
-            if (channel->sound_id.raw == sound_id) {
+            if (channel->sound_id == sound_id) {
                 channel->balance = balance << 8;
                 channel->voice_update_flags = SUZUKI_VOICE_UPDATE_VOLUME;
             }

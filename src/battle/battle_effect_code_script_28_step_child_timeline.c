@@ -207,15 +207,16 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                         battle_map_start_darkness_blend(mode, screen->duration[index], red, green, blue);
                     }
                 } else {
-                    colors.first.red = screen->color[index][0];
-                    colors.first.green = screen->color[index][1];
-                    colors.first.blue = screen->color[index][2];
-                    colors.second.red = screen->second_color[index][0];
-                    colors.second.green = screen->second_color[index][1];
-                    colors.second.blue = screen->second_color[index][2];
+                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = screen->color[index][0];
+                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g = screen->color[index][1];
+                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b = screen->color[index][2];
+                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = screen->second_color[index][0];
+                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = screen->second_color[index][1];
+                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = screen->second_color[index][2];
                     battle_map_set_background_gradient(screen->duration[index], &colors);
                     if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
-                        battle_map_set_darkness_color(screen->duration[index], &colors.first);
+                        battle_map_set_darkness_color(
+                            screen->duration[index], &colors.colors[MAP_BACKGROUND_GRADIENT_TOP]);
                     }
                 }
             }

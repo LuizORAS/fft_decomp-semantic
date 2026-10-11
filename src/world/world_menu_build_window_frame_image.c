@@ -8,7 +8,7 @@
  * not positive.
  */
 s32 world_menu_build_window_frame_image(s32 w, s32 h, u16* dst) {
-    u16* src = (u16*)g_world_menu_glyph_sheet;
+    u16* src = (u16*)g_world_menu_glyph_sheet->pixels;
     s32 words;
     s32 i;
     s32 first = 0;

@@ -11,7 +11,7 @@
  * members: the target keeps the result load behind the level-record stores,
  * which GCC 2.6.3 only does when both accesses are aggregate members. */
 void wldcore_proposition_push_result_level(s32 proposition) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t point;
     s16 text_width;
     s16 text_rows;
@@ -53,11 +53,11 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.render_index = index;
     world_text_measure_pixels(
         &text_width, &text_rows, world_text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
-    bounds.position.x = 0;
-    bounds.position.y = 0x60;
-    bounds.dimensions.x = 0xF4;
+    bounds.x = 0;
+    bounds.y = 0x60;
+    bounds.w = 0xF4;
     rows = text_rows + 2;
-    bounds.dimensions.y = (count + rows) * 0x10 + 0x10;
+    bounds.h = (count + rows) * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     point.x = 8;
     point.y = text_rows * 0x10 + 8;

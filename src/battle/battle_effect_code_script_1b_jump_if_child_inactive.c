@@ -7,10 +7,10 @@ s32 battle_effect_code_script_1b_jump_if_child_inactive(effect_record_t* record)
     battle_effect_script_instruction_t* instruction;
     u32 slot;
 
-    instruction = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
-    slot = instruction->value.header.bytes.packed_parameters >> 4;
+    instruction = battle_effect_get_current_script_instruction(record);
+    slot = instruction->header.packed_parameters >> 4;
     if (record->child_indices[slot] == 0) {
-        record->pc = instruction->value.value.unsigned_value;
+        record->pc = instruction->immediate.value;
     } else {
         record->pc = record->pc + 4;
     }

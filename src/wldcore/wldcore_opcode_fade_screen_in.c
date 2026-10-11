@@ -9,6 +9,6 @@ void wldcore_opcode_fade_screen_in(void) {
 
     *state |= WLDCORE_SCREEN_FADE_OUT;
     *flags &= ~WLDCORE_OPCODE_STATE_WHITE_OVERLAY;
-    wldcore_fade_start_screen(0, g_wldcore_active_saved_record.instruction.bytes.operand_0);
+    wldcore_fade_start_screen(0, (u8)(g_wldcore_active_saved_record.instruction >> 8));
     *flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

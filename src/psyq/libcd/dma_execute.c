@@ -11,7 +11,7 @@ enum {
     CD_STATUS_DATA_READY = 0x40,
 };
 
-#define CD_DMA_CHANNELS ((volatile psyq_cd_dma_channel_t*)0x1f801080)
+#define CD_DMA_CHANNELS ((volatile psyq_dma_channel_t*)0x1f801080)
 void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 control, u8 enable_irq, s32 unused) {
     s32 polls = 0;
     /* Retail stores both register readbacks in a volatile local. */
@@ -21,9 +21,9 @@ void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 contr
     u32 value; /* shift count, then the priority word */
     u32 bit;
     u32 mask;
-    while (CD_DMA_CHANNELS[channel].control & CD_DMA_TRANSFER_ACTIVE) {
+    while (CD_DMA_CHANNELS[channel].channel_control & CD_DMA_TRANSFER_ACTIVE) {
         if (polls == CD_DMA_BUSY_POLL_LIMIT) {
-            printf(g_psyq_cd_dma_timeout_format, CD_DMA_CHANNELS[channel].control);
+            printf(g_psyq_cd_dma_timeout_format, CD_DMA_CHANNELS[channel].channel_control);
             break;
         }
         polls++;
@@ -46,6 +46,7 @@ void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 contr
     value += CD_DMA_PRIORITY_ENABLE_BIT;
     mask = 1;
     mask <<= value;
+    /* Named register stores add a move and change the retail allocation. */
     dma = &CD_DMA_CHANNELS[channel].address;
     value = *g_psyq_cd_stream_dma_priority_register;
     value |= mask;

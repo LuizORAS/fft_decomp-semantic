@@ -21,9 +21,9 @@ void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world
         src->x = 0xBA;
         g_battle_menu_number_glyph_rect.y = 0xD;
         g_battle_menu_number_glyph_rect.w = 6;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, src, pos);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, src, pos);
         pos->rect.x += 7;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, src, pos);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, src, pos);
         pos->rect.x += 7;
         g_battle_menu_number_glyph_rect.w = 8;
         return;
@@ -31,7 +31,7 @@ void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world
     if (digits & 0x1000) {
         src->x = 0xC8;
         g_battle_menu_number_glyph_rect.y = 0;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, src, pos);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, src, pos);
         pos->rect.x += 7;
     }
     if ((digits & 0x800) || (digits & 0x400)) {
@@ -43,7 +43,7 @@ void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world
         src->y = 0xD;
         src->w = 6;
         pos->rect.x -= 6;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_number_glyph_rect, pos);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, &g_battle_menu_number_glyph_rect, pos);
         pos->rect.x += 6;
         src->w = 8;
     }
@@ -58,7 +58,7 @@ void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world
             src->x = 0x48;
             src->y = 0x10;
         }
-        blit_text_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_number_glyph_rect, pos);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, &g_battle_menu_number_glyph_rect, pos);
         /* After the call: the quotient stays live past the argument setup, so
          * it takes a callee-saved register and the update lands in the delay
          * slot, as the target does at 0x238. */

@@ -48,7 +48,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     zoom.vx = g_battle_camera_zoom.vx;
     zoom.vy = g_battle_camera_zoom.vy;
     zoom.vz = g_battle_camera_zoom.vz;
-    flags = unit->horizontal_flip_flag ^ unit->sprite_display_flags.half;
+    flags = unit->horizontal_flip_flag ^ unit->sprite_display_flags;
     row = unit->layer_priority;
     if (unit->animation.trigger == 0) {
         return;
@@ -76,7 +76,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                     if (rider != 0 && rider->draw_enabled != 0) {
                         rider_position.vx = rider->camera_relative_x;
                         rider_position.vy = rider->camera_relative_y;
-                        rider_flags = rider->sprite_display_flags.half;
+                        rider_flags = rider->sprite_display_flags;
                         rider_row = rider->layer_priority;
                         for (j = 0; j < 4; j++) {
                             entry = g_battle_gfx_animation_layer_priorities[rider_row][j];

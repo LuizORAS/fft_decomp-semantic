@@ -15,7 +15,7 @@
  * its words are reached through union members at the same offsets
  * (+0x10 proposition, +0x14 choice, +0x18 confirmed, +0x20 second window). */
 void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     u8 unused[0x30];
     s32 index;
     s32 depth;
@@ -54,10 +54,10 @@ void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_render.render_index = index;
-    bounds.position.x = 0x80;
-    bounds.dimensions.x = 0x28;
-    bounds.dimensions.y = 0x30;
-    bounds.position.y = 0;
+    bounds.x = 0x80;
+    bounds.w = 0x28;
+    bounds.h = 0x30;
+    bounds.y = 0;
     wldcore_window_init_render_record_image(index, bounds, 0, WLDCORE_TEXT_ID_OK_NO, g_wldcore_window_image_buffer);
     base = &g_wldcore_window_render_records[index].base;
     depth = g_wldcore_menu_stack_depth;

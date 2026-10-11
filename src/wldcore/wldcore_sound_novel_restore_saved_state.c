@@ -55,13 +55,13 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     picture_id = picture->picture;
     if (picture_id != -1) {
         g_wldcore_active_saved_record.picture_id = -1;
-        g_wldcore_opcode_state.instruction.word = (g_wldcore_active_saved_record.picture_x << 24)
+        g_wldcore_opcode_state.instruction = (g_wldcore_active_saved_record.picture_x << 24)
             | (g_wldcore_active_saved_record.picture_y << 16) | (picture_id << 8);
         wldcore_opcode_load_picture();
     }
     transition = g_wldcore_active_saved_record.background_set;
     if (transition != -1) {
-        g_wldcore_opcode_state.instruction.word = transition << 8;
+        g_wldcore_opcode_state.instruction = transition << 8;
         g_wldcore_active_saved_record.background_set = -1;
         g_wldcore_loaded_background_set = -1;
         wldcore_opcode_load_background_set();
@@ -90,7 +90,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
             .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
     if (*state_flags & WLDCORE_OPCODE_STATE_VALUE_DISPLAY) {
-        g_wldcore_opcode_state.instruction.word = g_wldcore_active_saved_record.value_display_mode << 8;
+        g_wldcore_opcode_state.instruction = g_wldcore_active_saved_record.value_display_mode << 8;
         wldcore_opcode_start_pending_value_transition();
     }
     tint = g_wldcore_active_saved_record.brightness;

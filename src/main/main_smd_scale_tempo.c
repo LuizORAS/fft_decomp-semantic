@@ -9,7 +9,7 @@ u8* main_smd_scale_tempo(u8* note_data, suzuki_music_t* music, suzuki_music_chan
     scale = *note_data++;
     if (scale != 0) {
         music->tempo_scale.value = scale << 24;
-        music->scaled_tempo = music->tempo.halves.high * (scale << 8);
+        music->scaled_tempo = (music->tempo >> 16) * (scale << 8);
     }
     return note_data;
 }

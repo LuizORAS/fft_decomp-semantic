@@ -71,7 +71,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
 
     buttons = g_wldcore_new_button_presses;
     if (buttons & PSX_PAD_SELECT) {
-        wldcore_window_set_states_and_blue_tint((wldcore_window_tint_request_t*)level);
+        wldcore_window_set_states_and_blue_tint(level);
         wldcore_menu_push_message_level(0x109A, 1);
         return;
     }

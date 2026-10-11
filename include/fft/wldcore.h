@@ -122,14 +122,11 @@ typedef enum wldcore_opcode_state_flag {
  * (the tail of wldcore_world_script_record_t). Handlers must reach it as
  * in-struct references: the target keeps each state_flags store ahead of the
  * window/render-record updates and reloads render_index after them, which GCC
- * only does for in-struct accesses. g_wldcore_opcode_instruction and
- * g_wldcore_state_flags stay scalar views of the first two words for the
- * handlers whose accesses must be scalar. */
+ * only does for in-struct accesses. The instruction is an encoded word;
+ * g_wldcore_state_flags remains a separate scalar view for handlers whose
+ * flag loads need their own symbol base. */
 typedef struct wldcore_opcode_state {
-    union {
-        u32 word;
-        wldcore_opcode_instruction_bytes_t bytes;
-    } instruction;   /* 0x00 */
+    u32 instruction; /* 0x00 */
     u16 state_flags; /* 0x04; g_wldcore_state_flags; wldcore_opcode_state_flag_e */
     u8 _unused_06[0x0e];
     s16 render_index; /* 0x14 */
@@ -359,14 +356,6 @@ s32 wldcore_unit_get_id_from_misc_id(s32 misc_id);
 void wldcore_unit_build_status_panel_data(s32 party_index);
 
 /* gfx */
-/* Image position and size of a render record: the texture rectangle of a
- * sprite display object, and the same shape again as the frame descriptor
- * wldcore_gfx_calculate_scaled_rectangle fills in. */
-typedef struct wldcore_window_render_bounds16 {
-    point16_t position;
-    point16_t dimensions;
-} wldcore_window_render_bounds16_t;
-
 /* g_wldcore_context_value_display_mode: the layout of the HUD numeric readout
  * (wldcore_gfx_draw_context_value_display). */
 typedef enum wldcore_value_display_mode {
@@ -467,8 +456,7 @@ void wldcore_gfx_draw_number_digits(s32 value, s32 digits, GsSPRITE* sprite, GsO
 void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* sprite, GsOT* ot, s32 zero_pad);
 void wldcore_gfx_draw_cursor_sprite_and_underline(GsOT* ot, GsSPRITE* sprite, GsLINE* line);
 
-void wldcore_gfx_calculate_scaled_rectangle(
-    s32 scale_mode, const wldcore_window_render_bounds16_t* source, wldcore_window_render_bounds16_t* rectangle);
+void wldcore_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, RECT* rectangle);
 
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* im, s32 step);
 
@@ -754,9 +742,9 @@ typedef struct wldcore_text_scrollable_window {
     /* 0x20..0x2e: copy of the optional extra render record's base and bounds, taken as two block
      * copies; 0x800906c0 scrolls base.y by row * 16 into the record's base_y and clips the record's
      * y and height from the bounds. */
-    wldcore_point32_t extra_base;                  /* 0x20 */
-    wldcore_window_render_bounds16_t extra_bounds; /* 0x28 */
-    s32 scroll_state;                              /* 0x30; wldcore_text_scroll_state_e */
+    wldcore_point32_t extra_base; /* 0x20 */
+    RECT extra_bounds;            /* 0x28 */
+    s32 scroll_state;             /* 0x30; wldcore_text_scroll_state_e */
     s32 text_id;
     s32 left_window_index;
     s32 middle_window_index;
@@ -1167,17 +1155,8 @@ typedef char wldcore_map_projection_view_size_must_be_0x28[sizeof(wldcore_map_pr
 
 /* Packed eight-byte source row used by wldcore_map_color_and_draw_dots.
  * The low halfword of the first word is x; its high bytes select the animation. */
-typedef union wldcore_map_dot_source_word {
-    s32 value;
-    struct {
-        s16 x;
-        u8 kind;
-        u8 sub_kind;
-    } fields;
-} wldcore_map_dot_source_word_t;
-
 typedef struct wldcore_map_dot_source {
-    wldcore_map_dot_source_word_t position_and_kind;
+    s32 position_and_kind;
     s32 y;
 } wldcore_map_dot_source_t;
 typedef char wldcore_map_dot_source_size_must_be_8[sizeof(wldcore_map_dot_source_t) == 8 ? 1 : -1];
@@ -1225,28 +1204,30 @@ typedef struct wldcore_projection_state {
     wldcore_map_dot_t marker;
 } wldcore_projection_state_t;
 
-/* The volatile first store preserves the target's R3000 load-delay slot. */
-typedef struct wldcore_map_clamped_point32 {
-    volatile s32 x;
-    s32 y;
-} wldcore_map_clamped_point32_t;
-
 /* wldcore_projection_motion_t.flags. */
 typedef enum wldcore_projection_motion_flag {
     WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
     WLDCORE_PROJECTION_MOTION_ZOOMED_OUT = 0x02, /* g_wldcore_map_zoom_motion: the wide view, or the move to it */
 } wldcore_projection_motion_flag_e;
 
-/* The camera's in-progress wrapped projection. The three map-step routines
- * agree on this complete 0x24-byte record; flags is the active bitfield. */
+/* Wrapped projection move: the origin and final target are copied as VECTORs. */
 typedef struct wldcore_projection_motion {
     s32 flags; /* 0x00; wldcore_projection_motion_flag_e */
     s32 distance;
     s32 progress;
     VECTOR origin;
-    wldcore_map_clamped_point32_t target;
+    VECTOR target;
 } wldcore_projection_motion_t;
-typedef char wldcore_projection_motion_size_must_be_0x24[sizeof(wldcore_projection_motion_t) == 0x24 ? 1 : -1];
+typedef char wldcore_projection_motion_size_must_be_0x2c[sizeof(wldcore_projection_motion_t) == 0x2c ? 1 : -1];
+
+/* Zoom transition at 0x800d3c8c, ending before the map-dot array at 0x800d3ca8. */
+typedef struct wldcore_zoom_motion {
+    s32 flags;
+    s32 frame;
+    s32 duration;
+    VECTOR origin;
+} wldcore_zoom_motion_t;
+typedef char wldcore_zoom_motion_size_must_be_0x1c[sizeof(wldcore_zoom_motion_t) == 0x1c ? 1 : -1];
 
 /* Provisional: one axis of the accelerating map scroll stepped by
  * wldcore_map_update_scroll_axis_speed: the fixed-point accumulator, its
@@ -1354,7 +1335,7 @@ extern s32* g_wldcore_map_tile_descriptors;
 
 /* Provisional: the zoom animation record at 0x800d3c8c; flags bit 0 runs
  * the animation, bit 1 selects the zoomed-out direction. */
-extern wldcore_projection_motion_t g_wldcore_map_zoom_motion;
+extern wldcore_zoom_motion_t g_wldcore_map_zoom_motion;
 
 /* Indexed so the store in wldcore_location_process_entry stays behind the
  * window-flag store (MEM_IN_STRUCT_P). */
@@ -1373,11 +1354,11 @@ void wldcore_map_apply_clamped_vertical_scroll(wldcore_point32_t* amount, wldcor
 s32 wldcore_map_find_dot_at_point(wldcore_point32_t point);
 void wldcore_map_init_location_marker_and_camera(void);
 s32 wldcore_map_is_point_outside_projection_bounds(const wldcore_point32_t* point);
-void wldcore_map_negate_and_clamp_coordinates(const s16* input, wldcore_map_clamped_point32_t* output);
+void wldcore_map_negate_and_clamp_coordinates(const SVECTOR* input, VECTOR* output);
 void wldcore_map_project_and_cull_dots(void);
 void wldcore_map_project_and_cull_tiles(void);
 void wldcore_map_pulse_dot_colors(void);
-s32 wldcore_map_start_projection_motion_if_outside_bounds(const wldcore_point32_t* point, const s16* coordinates);
+s32 wldcore_map_start_projection_motion_if_outside_bounds(const wldcore_point32_t* point, const SVECTOR* coordinates);
 void wldcore_map_update_camera_direction_and_projection(void);
 void wldcore_map_update_scroll_axis_speed(wldcore_axis_state_t* axis, s32 direction);
 s32 wldcore_map_roll_random_encounter(s32 location, s32 route);
@@ -1960,21 +1941,8 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_sound_novel_level_t sound_novel;
     wldcore_proposition_result_level_t proposition_result;
     wldcore_bar_active_propositions_level_t active_propositions;
-    u8 raw[0x5c];
 } wldcore_menu_stack_record_t;
 typedef char wldcore_menu_stack_record_size_must_be_0x5c[sizeof(wldcore_menu_stack_record_t) == 0x5c ? 1 : -1];
-
-/* Provisional: owner object passed to 0x80090a28; only the window record
- * index at +0x38 and the compared words at +0x50/+0x54 are established. Its
- * only caller passes a cast wldcore_text_scrollable_window_t, whose fields at
- * those offsets are left_window_index, last_page_row and page_start_row. */
-typedef struct wldcore_window_owner {
-    u8 _unused_00[0x38];
-    s32 window_index; /* 0x38 */
-    u8 _unused_3c[0x14];
-    s32 last_page_row;  /* 0x50 */
-    s32 page_start_row; /* 0x54; flag 0x10 cleared while page_start_row < last_page_row */
-} wldcore_window_owner_t;
 
 /* Verified fields of the 52-byte render records at 0x800bbc70. The pool init
  * 0x8006ad28 sets flags = 2, so the display-object dispatcher draws them as
@@ -1991,7 +1959,7 @@ typedef struct wldcore_window_render_record {
     wldcore_point32_t base; /* 0x18 */
     wldcore_point32_t clut; /* 0x20; (0x3c0, 0x1f0) from the pool init */
     /* 0x28; image position and size, copied and passed by value as one struct; the width is read signed */
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     CVECTOR color; /* 0x30 */
 } wldcore_window_render_record_t;
 typedef char wldcore_render_record_size_must_be_0x34[sizeof(wldcore_window_render_record_t) == 0x34 ? 1 : -1];
@@ -2005,20 +1973,6 @@ typedef struct wldcore_window_entry_36 {
     s8 rest[32];
 } wldcore_window_entry_36_t;
 typedef char wldcore_entry_36_size_must_be_0x24[sizeof(wldcore_window_entry_36_t) == 0x24 ? 1 : -1];
-
-/* Index descriptor passed to the paired window-state routines 0x80076744
- * and 0x8007688c; each word selects a window or render record. */
-typedef struct wldcore_window_tint_request {
-    s32 window_a;
-    s32 render_a;
-    u8 _unused_08[8];
-    s32 render_color; /* 0x10; render record whose colour is set */
-    s32 render_b;
-    s32 window_b;
-    u8 _unused_1c[0x24];
-    s32 window_c; /* 0x40; cleared only by 0x80076744 */
-    s32 window_d;
-} wldcore_window_tint_request_t;
 
 extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
 
@@ -2089,8 +2043,7 @@ s32 wldcore_window_append_record_and_reset_color(s32** queue, s32* count);
 s32 wldcore_window_append_render_record_and_reset_color(s32** queue, s32* count);
 void wldcore_window_apply_layout(wldcore_window_layout_request_t* request);
 
-void wldcore_window_build_render_record_image(
-    s32 index, wldcore_window_render_bounds16_t bounds, s32 coordinate_mode, u32* image);
+void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordinate_mode, u32* image);
 
 void wldcore_window_draw_centered_text(s32 window_index, s32 text_id);
 void wldcore_window_draw_indexed_text(wldcore_window_text_table_t* table, s32 index);
@@ -2104,11 +2057,9 @@ void wldcore_window_init_panel_render_state(
 
 void wldcore_window_init_record(s32 index, s32 priority, s32 sequence);
 
-void wldcore_window_init_render_record_image(
-    s32 index, wldcore_window_render_bounds16_t bounds, s32 coordinate_mode, s32 text_id, u32* image);
+void wldcore_window_init_render_record_image(s32 index, RECT bounds, s32 coordinate_mode, s32 text_id, u32* image);
 
-void wldcore_window_init_vram_render_record(
-    s32 index, wldcore_window_render_bounds16_t bounds, wldcore_point32_t clut, s32 flags);
+void wldcore_window_init_vram_render_record(s32 index, RECT bounds, wldcore_point32_t clut, s32 flags);
 
 void wldcore_window_load_image_record_to_vram(s32 index, u32* image);
 void wldcore_window_publish_slot_b806(wldcore_menu_list_window_level_t* level);
@@ -2120,7 +2071,7 @@ void wldcore_window_set_render_state_2_from_arg_0x04(s32* param);
 void wldcore_window_start_panel_render_thread(
     s32 thread_id, s32 extent, wldcore_point32_t* dimensions, wldcore_point32_t* origin);
 
-void wldcore_window_transform_point_for_mode(s32 mode, wldcore_window_render_bounds16_t bounds, s32* output);
+void wldcore_window_transform_point_for_mode(s32 mode, RECT bounds, s32* output);
 void wldcore_window_set_layout_states(s32* param);
 void wldcore_menu_push_participant_list_level(s32 proposition);
 void wldcore_menu_push_proposition_attempt_detail_level(s32 value);
@@ -2139,7 +2090,8 @@ void wldcore_menu_push_proposition_category_level(void);
 void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t* level);
 void wldcore_menu_push_layout_window_level(void);
 void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant);
-void wldcore_window_begin_tint_transition(wldcore_window_tint_request_t* request);
+void wldcore_window_end_tint_transition(wldcore_menu_list_window_level_t* level);
+void wldcore_window_begin_tint_transition(wldcore_menu_list_window_level_t* level);
 void wldcore_menu_push_proposition_report_level(s32 argument);
 void wldcore_menu_build_brave_story_entries(void);
 void wldcore_menu_push_brave_story_level(void);
@@ -2147,11 +2099,12 @@ void wldcore_window_close_parent_list_all_windows(void);
 void wldcore_window_close_parent_list_frame_windows(void);
 void wldcore_menu_push_scrollable_text_window_level(s32 text_id);
 void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id);
-void wldcore_window_set_render_state_2_from_arg_0x10(s32* level);
+void wldcore_window_set_secondary_render_palette_2(wldcore_menu_slot_set_t* slots);
 void wldcore_menu_push_variable_list_level(void);
 void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t* level, s32 unit, s32 render_index);
 void wldcore_menu_push_number_panel_level(void);
-void wldcore_window_set_states_and_blue_tint(wldcore_window_tint_request_t* param);
+void wldcore_window_clear_states_and_restore_tint(wldcore_menu_send_unit_level_t* level);
+void wldcore_window_set_states_and_blue_tint(wldcore_menu_send_unit_level_t* level);
 void wldcore_menu_push_sound_novel_quit_level(void);
 void wldcore_menu_push_sound_novel_history_level(void);
 void wldcore_window_reset_slot_state(s32* param);
@@ -2159,7 +2112,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text);
 void wldcore_menu_push_sound_novel_level(s32 mode);
 void wldcore_menu_push_sound_novel_resume_level(s32 mode);
 void wldcore_menu_push_countdown_level(void);
-void wldcore_window_update_flag_from_owner_progress(wldcore_window_owner_t* owner);
+void wldcore_text_update_page_prompt_visibility(wldcore_text_scrollable_window_t* state);
 
 /* other */
 extern u32 g_wldcore_current_button_input;

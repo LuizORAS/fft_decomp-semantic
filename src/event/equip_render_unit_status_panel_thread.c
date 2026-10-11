@@ -256,7 +256,7 @@ void equip_render_unit_status_panel_thread(void) {
         }
         if (shake != 0) {
             if (shake < 0xA) {
-                thread->shake_y.word = g_equip_panel_slide_down_y[shake];
+                thread->shake_y = g_equip_panel_slide_down_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -265,7 +265,7 @@ void equip_render_unit_status_panel_thread(void) {
                     thread->flags = thread->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             } else if (shake >= 0xB) {
-                thread->shake_y.word = g_equip_panel_slide_up_y[shake];
+                thread->shake_y = g_equip_panel_slide_up_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -278,7 +278,7 @@ void equip_render_unit_status_panel_thread(void) {
         panel_x = thread->x;
         panel_offset_y = g_equip_gfx_draw_offset_y;
         panel->draw_offset_a.position.x = panel_x - 0x80;
-        panel_shake_y = thread->shake_y.low;
+        panel_shake_y = (u16)thread->shake_y;
         panel->draw_offset_a.position.y = panel_shake_y + panel_offset_y;
         SetDrawOffset(&panel->draw_offset_a.packet, (u16*)&panel->draw_offset_a.position);
         panel_base_offset_y = g_equip_gfx_draw_offset_y;
@@ -288,7 +288,7 @@ void equip_render_unit_status_panel_thread(void) {
         editor_x = thread->x;
         editor_offset_y = g_equip_gfx_draw_offset_y;
         editor->draw_offset_a.position.x = editor_x - 0x80;
-        editor_shake_y = thread->shake_y.low;
+        editor_shake_y = (u16)thread->shake_y;
         editor->draw_offset_a.position.y = editor_shake_y + editor_offset_y;
         SetDrawOffset(&editor->draw_offset_a.packet, (u16*)&editor->draw_offset_a.position);
         editor_base_offset_y = g_equip_gfx_draw_offset_y;

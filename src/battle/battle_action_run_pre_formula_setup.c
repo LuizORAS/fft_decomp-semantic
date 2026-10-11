@@ -85,8 +85,8 @@ s32 battle_action_run_pre_formula_setup(const battle_unit_action_command_t* sour
         g_battle_action_current_ability_view.reaction_id = 0;
     }
     data = &g_main_ability_data[action.ability_id];
-    g_battle_action_target_data->miss_display_flags = data->ai_flags.bytes[0] & BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK;
-    if (data->ai_flags.bytes[3] & BATTLE_AI_ABILITY_FLAG_4_EVADE_WITH_MOTION) {
+    g_battle_action_target_data->miss_display_flags = data->ai_flags.flags_1 & BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK;
+    if (data->ai_flags.flags_4 & BATTLE_AI_ABILITY_FLAG_4_EVADE_WITH_MOTION) {
         g_battle_action_target_data->miss_display_flags += BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION;
     }
     if (menu_type == ACTION_MENU_TYPE_KATANA_INVENTORY) {

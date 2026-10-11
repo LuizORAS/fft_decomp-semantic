@@ -991,6 +991,7 @@ void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, world_glyp
 void world_gfx_enqueue_oriented_textured_quad(
     const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
 
+void world_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
 void world_gfx_flip_poly_ft4_u_if_negative(POLY_FT4* poly, s32 direction);
 
 void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u32* otags, void* unused_2,
@@ -2051,19 +2052,6 @@ typedef struct world_menu_image_pages {
     u32 second_page[1];
 } world_menu_image_pages_t;
 
-/* Persistent palette source, separate from the temporary FRAME.BIN buffer.
- * Only the 64-byte color block at +0x1000 is established. */
-typedef struct world_menu_palette_source {
-    u8 prefix[4096];
-    u8 colors[64];
-} world_menu_palette_source_t;
-
-/* Selection caches read the low byte of a little-endian halfword. */
-typedef union world_menu_halfword_view {
-    s16 value;
-    u8 bytes[2];
-} world_menu_halfword_view_t;
-
 /* Value range of a numeric menu entry (world_menu_number_entry_thread and
  * world_menu_labeled_number_entry_thread). */
 typedef struct world_menu_number_range {
@@ -2139,7 +2127,7 @@ extern s16 g_world_menu_order_unit_entries[];
 extern s8 g_world_menu_order_unit_open;
 extern s32 g_world_menu_packet_buffer_index;
 extern u16 g_world_menu_palette_clut;
-extern u8 g_world_menu_palette_colors[];
+extern menu_palette_t g_world_menu_palette_colors;
 extern s32 g_world_menu_panel_fade_intensity;
 extern s32 g_world_menu_panel_fade_mode; /* menu_panel_fade_mode_e */
 extern u32 g_world_menu_previous_button_input;
@@ -2182,8 +2170,8 @@ extern s32 g_world_menu_last_dispatched_option;
 extern u8 g_world_menu_restore_depth;
 extern u8 g_world_menu_restore_unit_id;
 extern battle_menu_id_record_t g_world_menu_command_maps[31];
-extern world_menu_palette_source_t g_world_menu_glyph_image[];
-extern u8 g_world_menu_default_palette_colors[];
+extern menu_glyph_sheet_t g_world_menu_glyph_image;
+extern menu_palette_t g_world_menu_default_palette_colors;
 extern RECT g_world_menu_portrait_pixel_rect;
 extern RECT g_world_menu_portrait_palette_rect;
 extern s32 g_world_menu_scrolling_list_depth;
@@ -2429,7 +2417,7 @@ extern world_menu_entry_t* g_world_menu_thread_menu_data;
 
 /* Menu-script callback slots, called as s32 (*)(s32) by the script commands. */
 extern s32 (*g_world_menu_script_callbacks[16])(s32);
-extern world_menu_palette_source_t* g_world_menu_glyph_sheet; /* decoded glyph page, 0x80 bytes per row */
+extern menu_glyph_sheet_t* g_world_menu_glyph_sheet; /* decoded glyph page, 0x80 bytes per row */
 extern u16 g_world_menu_disabled_number_clut;
 extern menu_window_buffer_t g_world_menu_window_buffers[6]; /* 0x8019aca0 */
 
@@ -2637,7 +2625,7 @@ s16 world_menu_init_cursor_position(u8 index, s16 value);
 void world_menu_set_default_entry_0_text_values(u32 text_index, u32 value);
 void world_menu_set_default_entry_1_text_values(s32 value);
 void world_menu_set_draw_priority(s32 priority);
-void world_menu_set_palette_colors(const u8* source);
+void world_menu_set_palette_colors(const menu_palette_t* source);
 void world_menu_set_palette_mode(s32 mode);
 void world_menu_set_sprite_color(rgb24_t* src);
 void world_menu_set_transition_active_flag(void);
@@ -2835,17 +2823,6 @@ s32 world_card_seek_file_with_retries(s32 descriptor, s32 offset, s32 origin);
 s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 size, s32 create_file);
 
 /* item */
-/* Halfword list entries retain their high byte when filtered at 0x801220d8;
- * only the low byte selects an item. The complete halfword sentinel is -1. */
-typedef union world_item_list_entry {
-    s16 value;
-    struct {
-        u8 item_id;
-        u8 _unused_01;
-    } bytes;
-} world_item_list_entry_t;
-typedef char world_item_list_entry_size_must_be_2[(sizeof(world_item_list_entry_t) == 2) ? 1 : -1];
-
 extern world_oriented_quad_t g_world_item_category_tab_cursor_sprite;
 extern struct world_item_stat_detail g_world_item_preview_stat_detail;
 extern u8* g_world_item_sorted_lists[];
@@ -2892,7 +2869,7 @@ extern u8 g_world_item_category_input_lock;
 extern world_item_icon_source_t g_world_item_type_icon_source;
 extern u8 g_world_item_menu_saved_browse_enabled;
 extern s8 g_world_remove_item_previewed_slot;
-extern world_menu_halfword_view_t g_world_remove_item_equipment[5];
+extern s16 g_world_remove_item_equipment[5];
 extern s8 g_world_item_category_previewed_cursor;
 extern s16 g_world_item_rearrange_picked_cursor;   /* cursor position of the picked-up item */
 extern u16 g_world_item_rearrange_picked_scroll;   /* scroll offset when picked up */

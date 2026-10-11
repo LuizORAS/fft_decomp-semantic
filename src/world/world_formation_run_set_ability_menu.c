@@ -29,8 +29,7 @@ s32 world_formation_run_set_ability_menu(void) {
 
     if (g_world_set_ability_unit_index != g_world_formation_selected_unit_index) {
         g_world_set_ability_initialized = 0;
-        g_world_set_ability_unit_index
-            = ((world_menu_halfword_view_t*)&g_world_formation_selected_unit_index)->bytes[0];
+        g_world_set_ability_unit_index = (u8)g_world_formation_selected_unit_index;
     }
     if (g_world_set_ability_initialized == 0) {
         world_menu_clear_selection_records();

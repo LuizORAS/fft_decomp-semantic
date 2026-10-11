@@ -11,7 +11,7 @@
  *
  * The unused 48-byte local reproduces the target's frame size. */
 void wldcore_menu_push_brave_story_level(void) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t point;
     s32 index;
     s32 value;
@@ -60,11 +60,10 @@ void wldcore_menu_push_brave_story_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.frame_render = index;
-    bounds.position.x = 0;
-    bounds.position.y = 0;
-    bounds.dimensions.x = 0x5C;
-    bounds.dimensions.y
-        = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0x10;
+    bounds.x = 0;
+    bounds.y = 0;
+    bounds.w = 0x5C;
+    bounds.h = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
@@ -98,10 +97,10 @@ void wldcore_menu_push_brave_story_level(void) {
         value = 9999;
     }
     g_world_text_substitution_values[1] = value;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0x40;
-    bounds.dimensions.x = 0x5C;
-    bounds.dimensions.y = 0x30;
+    bounds.x = 0x80;
+    bounds.y = 0x40;
+    bounds.w = 0x5C;
+    bounds.h = 0x30;
     wldcore_window_init_render_record_image(
         index, bounds, 0, WLDCORE_TEXT_ID_INJURED_CASUALTIES, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;

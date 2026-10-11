@@ -1,39 +1,28 @@
+#include "fft/world.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Four 8-byte slots starting at +0xc, each with a pair of bytes at +0/+1.
- * The function is reached only through a function pointer, and no other code
- * names the owning type. */
-typedef struct {
-    u8 x;
-    u8 y;
-    u8 _unused_02[6];
-} world_800e6f64_slot_t;
+/* Mirrors a quad's texture when direction is negative: corners 0 and 1 and
+ * corners 2 and 3 swap their u when corners 0 and 1 differ in u, otherwise they
+ * swap their v. */
+void world_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction) {
+    u8 temp;
 
-typedef struct {
-    u8 _unused_00[0xc];
-    world_800e6f64_slot_t slots[4];
-} world_800e6f64_record_t;
-
-/* When flag is negative, swap slots 0<->1 and 2<->3: the x bytes if slot 0
- * and 1 already differ in x, otherwise the y bytes. */
-void world_gfx_flip_poly_ft4_uv_if_negative(world_800e6f64_record_t* record, s32 flag) {
-    u8 swap;
-
-    if (flag < 0) {
-        if (record->slots[0].x != record->slots[1].x) {
-            swap = record->slots[0].x;
-            record->slots[0].x = record->slots[1].x;
-            record->slots[1].x = swap;
-            swap = record->slots[2].x;
-            record->slots[2].x = record->slots[3].x;
-            record->slots[3].x = swap;
+    if (direction < 0) {
+        if (primitive->u0 != primitive->u1) {
+            temp = primitive->u0;
+            primitive->u0 = primitive->u1;
+            primitive->u1 = temp;
+            temp = primitive->u2;
+            primitive->u2 = primitive->u3;
+            primitive->u3 = temp;
         } else {
-            swap = record->slots[0].y;
-            record->slots[0].y = record->slots[1].y;
-            record->slots[1].y = swap;
-            swap = record->slots[2].y;
-            record->slots[2].y = record->slots[3].y;
-            record->slots[3].y = swap;
+            temp = primitive->v0;
+            primitive->v0 = primitive->v1;
+            primitive->v1 = temp;
+            temp = primitive->v2;
+            primitive->v2 = primitive->v3;
+            primitive->v3 = temp;
         }
     }
 }

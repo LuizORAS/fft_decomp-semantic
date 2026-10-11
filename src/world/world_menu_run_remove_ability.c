@@ -24,8 +24,7 @@ s32 world_menu_run_remove_ability(void) {
     unit_index = g_world_formation_selected_unit_index;
     if (g_world_remove_ability_unit_index != unit_index) {
         g_world_remove_ability_initialized = 0;
-        g_world_remove_ability_unit_index
-            = ((world_menu_halfword_view_t*)&g_world_formation_selected_unit_index)->bytes[0];
+        g_world_remove_ability_unit_index = (u8)g_world_formation_selected_unit_index;
     }
     if (g_world_remove_ability_initialized == 0) {
         bcopy(g_world_formation_unit_pointers[unit_index]->abilities.slots, g_world_remove_ability_slots, 10);

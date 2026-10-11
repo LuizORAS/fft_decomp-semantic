@@ -97,9 +97,10 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     }
 
     if (world_job_is_special_monster(unit->job_id) != 0 || record->uses_monster_skillset != 0) {
-        bcopy(unit->unlocked_jobs, record->unlocked_jobs, sizeof(record->unlocked_jobs));
+        bcopy(unit->career.unlocked_jobs, record->unlocked_jobs, sizeof(record->unlocked_jobs));
     } else {
-        i = main_job_calculate_unlocked(unit->job_levels, unit->unit_flags & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE));
+        i = main_job_calculate_unlocked(
+            unit->career.job_levels, unit->unit_flags & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE));
         record->unlocked_jobs[0] = i >> 16;
         record->unlocked_jobs[1] = i >> 8;
         record->unlocked_jobs[2] = i;
@@ -107,10 +108,10 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     record->gender_flags = party->gender_flags;
     record->sprite_set = party->sprite_set;
     bcopy(unit->equipment_categories, record->equippable_item_types, sizeof(record->equippable_item_types));
-    bcopy(party->learned_abilities, record->learned_abilities, sizeof(record->learned_abilities));
-    bcopy(party->job_levels, record->job_levels, sizeof(record->job_levels));
-    bcopy(&party->job_points.current, &record->job_points.current, sizeof(record->job_points.current));
-    bcopy(&party->job_points.total, &record->job_points.total, sizeof(record->job_points.total));
+    bcopy(party->career.learned_abilities, record->learned_abilities, sizeof(record->learned_abilities));
+    bcopy(party->career.job_levels, record->job_levels, sizeof(record->job_levels));
+    bcopy(&party->career.job_points.current, &record->job_points.current, sizeof(record->job_points.current));
+    bcopy(&party->career.job_points.total, &record->job_points.total, sizeof(record->job_points.total));
     for (i = 0; i < JOB_ID_GENERIC_COUNT; i++) {
         if (record->job_points.current.values[i] >= 10000) {
             record->job_points.current.values[i] = 9999;

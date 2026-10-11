@@ -13,7 +13,7 @@ void main_smd_set_tempo_scale(suzuki_music_t* music, s16 value, s16 time) {
     if (time == 0) {
         music->tempo_scale.value = value << 16;
         music->tempo_scale.count = 0;
-        music->scaled_tempo = music->tempo.halves.high * value;
+        music->scaled_tempo = (music->tempo >> 16) * value;
     } else {
         difference = (value << 16) - music->tempo_scale.value;
         if (difference != 0) {

@@ -21,7 +21,7 @@ s32 battle_ai_load_known_ability_flag(s32 unit_id, s32 skillset_id, s32 bit) {
     }
     /* Typed indexing moves the field offset ahead of the unit-base addition.
      * Keep the target's address order, deriving the offset from the field. */
-    row = (u8*)(skillset_id * 3 + (u32)unit + ((u32)unit->learned_abilities - (u32)unit));
+    row = (u8*)(skillset_id * 3 + (u32)unit + ((u32)unit->career.learned_abilities - (u32)unit));
     byte = bit / 8;
     return (row[byte] & (0x80 >> (bit - (byte * 8)))) != 0;
 }

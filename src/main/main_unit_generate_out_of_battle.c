@@ -71,7 +71,7 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     main_unit_generate_party_base_raw_stats(party, unit_type);
     party->level = 1;
     party->experience = 0;
-    main_util_clear_byte_data(party->unlocked_jobs, UNIT_CAREER_DATA_BYTE_COUNT);
+    main_util_clear_byte_data(&party->career, sizeof(party->career));
 
     gender = party->gender_flags;
     if (gender & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE)) {
@@ -83,22 +83,22 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
                 continue;
             }
             jp = (rand() * 100) / 0x8000 + 100;
-            party->job_points.total.bytes[i * UNIT_JOB_POINT_BYTES_PER_JOB] = jp;
-            party->job_points.current.bytes[i * UNIT_JOB_POINT_BYTES_PER_JOB] = jp;
-            party->job_levels[i / UNIT_JOBS_PER_LEVEL_BYTE] = UNIT_JOB_LEVEL_ONE_BOTH_NIBBLES;
+            party->career.job_points.total.bytes[i * UNIT_JOB_POINT_BYTES_PER_JOB] = jp;
+            party->career.job_points.current.bytes[i * UNIT_JOB_POINT_BYTES_PER_JOB] = jp;
+            party->career.job_levels[i / UNIT_JOBS_PER_LEVEL_BYTE] = UNIT_JOB_LEVEL_ONE_BOTH_NIBBLES;
         }
     }
     if (gender & UNIT_FLAG_MALE) {
-        party->job_levels[UNIT_JOB_LEVEL_BYTE_INDEX_DANCER_MIME] = UNIT_JOB_LEVEL_ONE_LOW_NIBBLE;
+        party->career.job_levels[UNIT_JOB_LEVEL_BYTE_INDEX_DANCER_MIME] = UNIT_JOB_LEVEL_ONE_LOW_NIBBLE;
     }
     if (gender & UNIT_FLAG_FEMALE) {
-        party->job_levels[UNIT_JOB_LEVEL_BYTE_INDEX_CALCULATOR_BARD] = UNIT_JOB_LEVEL_ONE_HIGH_NIBBLE;
+        party->career.job_levels[UNIT_JOB_LEVEL_BYTE_INDEX_CALCULATOR_BARD] = UNIT_JOB_LEVEL_ONE_HIGH_NIBBLE;
     }
 
     table = g_main_unit_generation_base_data;
     base = table + unit_type;
     generic_id = party->sprite_set;
-    party->unlocked_jobs[0] = 0x80;
+    party->career.unlocked_jobs[0] = 0x80;
     /* Keep sprite sets 0x80+ for the name-uniqueness comparison; collapse
      * other identities to zero. */
     generic_id &= -(generic_id >> 7);
@@ -133,6 +133,6 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     party->proposition_status = 0;
     party->egg_color = 0;
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
-        party->learned_abilities[0].bits[0] = 4;
+        party->career.learned_abilities[0].bits[0] = 4;
     }
 }

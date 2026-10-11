@@ -62,7 +62,8 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     party->bravery = unit->original_brave;
     party->faith = unit->original_faith;
     main_util_copy_byte_data(&unit->raw_stats, &party->raw_stats, sizeof(unit_raw_stats_t));
-    main_util_copy_byte_data(unit->unlocked_jobs, party->unlocked_jobs, 0xa6);
+    /* The saved span includes the career record and following 16-byte name. */
+    main_util_copy_byte_data(&unit->career, &party->career, sizeof(party->career) + sizeof(party->name));
     /* name_id is stored as two byte writes (lbu / lhu+srl), not one sh. */
     party->name_id[0] = unit->quote_name_id;
     party->name_id[1] = unit->quote_name_id >> 8;

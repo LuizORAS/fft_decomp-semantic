@@ -42,15 +42,15 @@ void battle_effect_advance_map_background_track(
                     battle_map_start_darkness_blend(mode, track->duration[index], red, green, blue);
                 }
             } else {
-                colors.first.red = track->color[index][0];
-                colors.first.green = track->color[index][1];
-                colors.first.blue = track->color[index][2];
-                colors.second.red = track->second_color[index][0];
-                colors.second.green = track->second_color[index][1];
-                colors.second.blue = track->second_color[index][2];
+                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = track->color[index][0];
+                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g = track->color[index][1];
+                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b = track->color[index][2];
+                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = track->second_color[index][0];
+                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = track->second_color[index][1];
+                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = track->second_color[index][2];
                 battle_map_set_background_gradient(track->duration[index], &colors);
                 if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
-                    battle_map_set_darkness_color(track->duration[index], &colors.first);
+                    battle_map_set_darkness_color(track->duration[index], &colors.colors[MAP_BACKGROUND_GRADIENT_TOP]);
                 }
             }
         }

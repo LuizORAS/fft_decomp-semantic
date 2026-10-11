@@ -44,6 +44,6 @@ void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_
     unit->facing = facing;
     battle_unit_set_idle_animation_for_movement(unit);
     battle_move_set_float_step_delta_center_to_edge(unit, step, from, edge_height);
-    battle_move_interpolate_partial(unit, unit->walk_speed.word);
+    battle_move_interpolate_partial(unit, unit->walk_speed);
     unit->movement.bytes.destination_z = (step->value >> 5) & 1;
 }

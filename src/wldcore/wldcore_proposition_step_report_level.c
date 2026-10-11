@@ -27,7 +27,7 @@
  */
 void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* level) {
     GsIMAGE image;
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t clut;
     s32 record;
     s32 count;
@@ -194,10 +194,10 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
                 LoadClut(image.clut, image.cx, image.cy);
                 DrawSync(0);
-                bounds.position.x = image.px;
-                bounds.position.y = image.py;
-                bounds.dimensions.x = image.pw;
-                bounds.dimensions.y = image.ph;
+                bounds.x = image.px;
+                bounds.y = image.py;
+                bounds.w = image.pw;
+                bounds.h = image.ph;
                 clut.x = image.cx;
                 clut.y = image.cy;
                 wldcore_window_init_vram_render_record(record, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
@@ -211,10 +211,10 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
 
                 record = wldcore_window_append_render_record_and_reset_color(
                     g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-                bounds.position.x = 0;
-                bounds.position.y = 0x70;
-                bounds.dimensions.x = 0x8C;
-                bounds.dimensions.y = 0x8C;
+                bounds.x = 0;
+                bounds.y = 0x70;
+                bounds.w = 0x8C;
+                bounds.h = 0x8C;
                 wldcore_window_init_render_record_image(record, bounds, 0, 0, g_wldcore_window_image_buffer);
                 g_wldcore_window_render_records[record].priority = 9;
                 {
@@ -232,10 +232,10 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                 LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
                 LoadClut(image.clut, image.cx, image.cy);
                 DrawSync(0);
-                bounds.position.x = image.px;
-                bounds.position.y = image.py;
-                bounds.dimensions.x = image.pw;
-                bounds.dimensions.y = image.ph;
+                bounds.x = image.px;
+                bounds.y = image.py;
+                bounds.w = image.pw;
+                bounds.h = image.ph;
                 clut.x = image.cx;
                 clut.y = image.cy;
                 wldcore_window_init_vram_render_record(record, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
@@ -249,10 +249,10 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
 
                 record = wldcore_window_append_render_record_and_reset_color(
                     g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-                bounds.position.x = 0;
-                bounds.position.y = 0x80;
-                bounds.dimensions.x = 0x88;
-                bounds.dimensions.y = 0x5A;
+                bounds.x = 0;
+                bounds.y = 0x80;
+                bounds.w = 0x88;
+                bounds.h = 0x5A;
                 wldcore_window_init_render_record_image(record, bounds, 0, 0, g_wldcore_window_image_buffer);
                 g_wldcore_window_render_records[record].priority = 9;
                 {

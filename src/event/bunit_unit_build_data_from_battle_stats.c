@@ -135,17 +135,17 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     record->character_identity = unit->character_identity;
     if (bunit_job_is_special_monster(unit->job_id) != 0 || record->uses_monster_skillset != 0
         || record->team_kind == 1) {
-        bcopy(unit->unlocked_jobs, record->unlocked_jobs, sizeof(record->unlocked_jobs));
+        bcopy(unit->career.unlocked_jobs, record->unlocked_jobs, sizeof(record->unlocked_jobs));
     } else {
-        i = main_job_calculate_unlocked(unit->job_levels, unit->unit_flags & UNIT_FLAG_MALE);
+        i = main_job_calculate_unlocked(unit->career.job_levels, unit->unit_flags & UNIT_FLAG_MALE);
         record->unlocked_jobs[0] = i >> 16;
         record->unlocked_jobs[1] = i >> 8;
         record->unlocked_jobs[2] = i;
     }
-    bcopy(unit->learned_abilities, record->learned_abilities, sizeof(record->learned_abilities));
-    bcopy(unit->job_levels, record->job_levels, sizeof(record->job_levels));
-    bcopy(&unit->job_points.current, &record->job_points.current, sizeof(record->job_points.current));
-    bcopy(&unit->job_points.total, &record->job_points.total, sizeof(record->job_points.total));
+    bcopy(unit->career.learned_abilities, record->learned_abilities, sizeof(record->learned_abilities));
+    bcopy(unit->career.job_levels, record->job_levels, sizeof(record->job_levels));
+    bcopy(&unit->career.job_points.current, &record->job_points.current, sizeof(record->job_points.current));
+    bcopy(&unit->career.job_points.total, &record->job_points.total, sizeof(record->job_points.total));
     for (i = 0; i < 20; i++) {
         if (record->job_points.current.values[i] >= 10000) {
             record->job_points.current.values[i] = 9999;

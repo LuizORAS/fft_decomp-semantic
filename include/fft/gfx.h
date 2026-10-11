@@ -15,6 +15,15 @@ typedef struct rgb24 {
 } rgb24_t;
 typedef char assert_rgb24_size[sizeof(rgb24_t) == 3 ? 1 : -1];
 
+/* Packed PS1 colour: the high bit enables semi-transparency for textured pixels. */
+typedef struct rgba5551 {
+    u16 red : 5;
+    u16 green : 5;
+    u16 blue : 5;
+    u16 semi_transparent : 1;
+} rgba5551_t;
+typedef char assert_rgba5551_size[sizeof(rgba5551_t) == 2 ? 1 : -1];
+
 /* geometry */
 /* Neutral 2D/3D point, rectangle and colour records for shapes the Psy-Q SDK
  * does not define.
@@ -91,12 +100,6 @@ typedef struct world_fade_tile_frame {
     TILE bar[9];       /* 0xac */
 } world_fade_tile_frame_t;
 typedef char world_fade_tile_frame_size_must_be_0x13c[sizeof(world_fade_tile_frame_t) == 0x13c ? 1 : -1];
-
-/* The fade routine reads the low byte for RGB and the full word for stepping. */
-typedef union world_fade_intensity {
-    s32 value;
-    u8 bytes[4];
-} world_fade_intensity_t;
 
 /* Draw-area pair built by world_screen_gfx_build_scaled_draw_area_packets: two DR_AREA packets whose
  * rectangles are scaled around their centre by a percentage from

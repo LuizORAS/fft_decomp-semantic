@@ -296,14 +296,6 @@ extern psyq_cd_ring_record_t* g_psyq_cd_stream_current_header;
 extern char g_psyq_cd_dma_timeout_format[];
 void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 control, u8 enable_irq, s32 unused);
 
-/* Direct DMA channels occupy 16 bytes each at 0x1f801080. */
-typedef struct {
-    u32 address;
-    u32 block;
-    u32 control;
-    u32 _padding_0c; /* unused fourth register slot in each channel */
-} psyq_cd_dma_channel_t;
-
 /* LIBCD Alarm record, 12 bytes at 0x80032a94.
  * Command waits and streaming interrupt callbacks share this state.
  * The wait helpers use a nonvolatile view to preserve retail scheduling.

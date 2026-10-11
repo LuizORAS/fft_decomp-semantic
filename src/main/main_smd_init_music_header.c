@@ -34,7 +34,7 @@ void main_smd_init_music_header(suzuki_music_t* music) {
     music->beats_per_bar_copy = 4;
     music->tempo_scale.value = 0x1000000;
     music->master_volume.value = 0x7f000000;
-    music->tempo.raw = 0x660000;
+    music->tempo = 0x660000;
     music->scaled_tempo = 0x6600;
     music->tempo_accumulator = 0x10000;
     music->ticks_per_beat = 0x30 / music->tick_divisor;

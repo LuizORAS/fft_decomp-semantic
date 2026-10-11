@@ -30,10 +30,10 @@ void wldcore_map_color_and_draw_dots(void) {
     g_wldcore_map_dot_pulse_phase = 0;
     g_wldcore_map_dot_count = 0;
     for (i = 0; i < WORLD_LOCATION_COUNT; i++) {
-        g_wldcore_map_dots[i].kind = src[i].position_and_kind.fields.kind;
-        g_wldcore_map_dots[i].sub_kind = src[i].position_and_kind.fields.sub_kind;
-        /* The original loads the packed word for x; a direct x read emits lhu. */
-        g_wldcore_map_dots[i].position.vx = src[i].position_and_kind.value;
+        g_wldcore_map_dots[i].kind = (u8)(src[i].position_and_kind >> 16);
+        g_wldcore_map_dots[i].sub_kind = (u8)(src[i].position_and_kind >> 24);
+        /* The x coordinate occupies the packed word's low halfword. */
+        g_wldcore_map_dots[i].position.vx = src[i].position_and_kind;
         y = src[i].y;
         g_wldcore_map_dots[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
         g_wldcore_map_dots[i].priority = 0xf;

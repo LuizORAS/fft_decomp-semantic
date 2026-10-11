@@ -114,8 +114,8 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
     if (!(motion & WLDCORE_PROJECTION_MOTION_ACTIVE)) {
         if (level->wide_view == 0 && (g_wldcore_new_button_presses & (PSX_PAD_L1 | PSX_PAD_R1))) {
             g_wldcore_window_records[level->window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-            g_wldcore_map_zoom_motion.progress = 0x20;
-            g_wldcore_map_zoom_motion.distance = 0;
+            g_wldcore_map_zoom_motion.duration = 0x20;
+            g_wldcore_map_zoom_motion.frame = 0;
             g_wldcore_map_zoom_motion.flags = (g_wldcore_map_zoom_motion.flags ^ WLDCORE_PROJECTION_MOTION_ZOOMED_OUT)
                 | WLDCORE_PROJECTION_MOTION_ACTIVE;
             if (g_wldcore_map_zoom_motion.flags & WLDCORE_PROJECTION_MOTION_ZOOMED_OUT) {
@@ -130,8 +130,8 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
             goto finish;
         }
     } else {
-        frame = g_wldcore_map_zoom_motion.distance;
-        duration = g_wldcore_map_zoom_motion.progress;
+        frame = g_wldcore_map_zoom_motion.frame;
+        duration = g_wldcore_map_zoom_motion.duration;
         step_x = (frame << 11) / duration;
         if (motion & WLDCORE_PROJECTION_MOTION_ZOOMED_OUT) {
             g_wldcore_map_projection_view.origin.vx
@@ -139,7 +139,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
             g_wldcore_map_projection_view.origin.vy
                 = g_wldcore_map_zoom_motion.origin.vy + ((8 - g_wldcore_map_zoom_motion.origin.vy) * frame) / duration;
             g_wldcore_map_projection_view.scale.vx = g_wldcore_map_projection_view.scale.vy = ONE - step_x;
-            g_wldcore_map_zoom_motion.distance = frame + 1;
+            g_wldcore_map_zoom_motion.frame = frame + 1;
             g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS | MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES;
             if (frame + 1 == duration) {
                 g_wldcore_map_projection_view.scale.vy = 0x800;
@@ -153,7 +153,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
             g_wldcore_map_projection_view.origin.vy
                 = ((g_wldcore_map_zoom_motion.origin.vy - 8) * frame) / duration + 8;
             g_wldcore_map_projection_view.scale.vx = g_wldcore_map_projection_view.scale.vy = step_x + 0x800;
-            g_wldcore_map_zoom_motion.distance = frame + 1;
+            g_wldcore_map_zoom_motion.frame = frame + 1;
             if (frame + 1 == duration) {
                 g_wldcore_map_projection_view.scale.vy = ONE;
                 g_wldcore_map_projection_view.scale.vx = ONE;

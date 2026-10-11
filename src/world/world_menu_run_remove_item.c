@@ -14,8 +14,8 @@ s32 world_menu_run_remove_item(void) {
     s16 item;
     s8 previous;
     u8 preview_item;
-    world_menu_halfword_view_t* items;
-    world_menu_halfword_view_t* selected_item;
+    s16* items;
+    s16* selected_item;
     s16* cursor_y;
 
     if (g_world_remove_item_unit_index != g_world_formation_selected_unit_index) {
@@ -88,14 +88,14 @@ s32 world_menu_run_remove_item(void) {
         &g_world_remove_item_cursor_point, &g_world_remove_item_cursor_anim, g_world_thread_task_active);
     items = g_world_remove_item_equipment;
     selected_item = &items[index];
-    item = selected_item->value;
+    item = *selected_item;
     value = -1;
     if (item != ITEM_ID_NOTHING) {
         value = item + 0x6800;
     }
     g_world_menu_description_text_id = value;
     if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
-        if (selected_item->value == ITEM_ID_NOTHING) {
+        if (*selected_item == ITEM_ID_NOTHING) {
             g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
         } else {
             world_formation_equip_item_to_unit_slot(g_world_formation_selected_unit_index, slot, ITEM_ID_NOTHING);
@@ -111,7 +111,7 @@ s32 world_menu_run_remove_item(void) {
             g_world_status_display_thread_params.redraw_request = 1;
         }
         g_world_remove_item_previewed_slot = slot;
-        preview_item = g_world_remove_item_equipment[slot].bytes[0];
+        preview_item = (u8)g_world_remove_item_equipment[slot];
         if (preview_item != ITEM_ID_NOTHING) {
             world_formation_equip_item_to_unit_slot(20, slot, ITEM_ID_NOTHING);
             world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,

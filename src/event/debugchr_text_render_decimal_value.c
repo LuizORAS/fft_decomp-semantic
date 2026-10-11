@@ -23,7 +23,7 @@ void debugchr_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_
     if (flags & MENU_DECIMAL_SLASH_PREFIX) {
         position->rect.x -= 2;
         g_debugchr_text_decimal_glyph.source_x = 0xb4;
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_debugchr_text_decimal_glyph, position);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_debugchr_text_decimal_glyph, position);
         position->rect.x += 7;
     }
     if (flags & MENU_DECIMAL_DOTS_PREFIX) {
@@ -31,7 +31,7 @@ void debugchr_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_
         g_debugchr_text_decimal_glyph.source_y = 0x1a;
         g_debugchr_text_decimal_glyph.height = 4;
         position->rect.y += 3;
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_debugchr_text_decimal_glyph, position);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_debugchr_text_decimal_glyph, position);
         position->rect.x += 7;
         position->rect.y -= 3;
         g_debugchr_text_decimal_glyph.source_y = 0x10;
@@ -47,7 +47,7 @@ void debugchr_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_
                 position->rect.x += 5;
             }
         }
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_debugchr_text_decimal_glyph, position);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_debugchr_text_decimal_glyph, position);
         position->rect.x += 5;
         if (value == 0) {
             return;
@@ -56,7 +56,7 @@ void debugchr_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_
     plus = flags & MENU_DECIMAL_SIGN_PLUS;
     if (plus) {
         g_debugchr_text_decimal_glyph.source_x = 0xc8;
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_debugchr_text_decimal_glyph, position);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_debugchr_text_decimal_glyph, position);
         position->rect.x += 5;
     }
     digits = flags & MENU_DECIMAL_FIELD_WIDTH_MASK;
@@ -82,7 +82,7 @@ void debugchr_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_
     }
     for (i = 0; i < (flags & 0xff); i++) {
         g_debugchr_text_decimal_glyph.source_x = value % 10 * 6 + 0x78;
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_debugchr_text_decimal_glyph, position);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_debugchr_text_decimal_glyph, position);
         position->rect.x -= 5;
         value /= 10;
         if (!(flags & MENU_DECIMAL_LEADING_ZEROS) && value == 0) {

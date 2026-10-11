@@ -80,7 +80,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->float_bob_phase = 0;
     unit->step_phase = BATTLE_MOVE_STEP_PHASE_NONE;
     unit->path.count = 0;
-    unit->sprite_display_flags.half = 0;
+    unit->sprite_display_flags = 0;
     unit->layer_priority = 0;
     unit->turn_action_flags = 0;
     unit->special_graphic_y_offset = 0;
@@ -105,7 +105,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->velocity.vz = 0;
     unit->velocity.vy = 0;
     unit->velocity.vx = 0;
-    unit->walk_speed.word = 0x2000;
+    unit->walk_speed = 0x2000;
     unit->seq_offset.vz = 0;
     unit->seq_offset.vy = 0;
     unit->seq_offset.vx = 0;

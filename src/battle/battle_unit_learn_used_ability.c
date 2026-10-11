@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Integer address arithmetic preserves the retail instruction order here. */
-#define LEARNED_ABILITIES_OFFSET ((u32) & ((battle_stats_t*)0)->learned_abilities)
+#define LEARNED_ABILITIES_OFFSET ((u32) & ((battle_stats_t*)0)->career.learned_abilities)
 
 /* Learn-on-hit: marks the acting unit's used ability as learned in the unit's
  * current job.

@@ -64,6 +64,20 @@ typedef struct world_item_stat_detail {
 typedef char world_stat_detail_size_must_be_0x40[(sizeof(world_item_stat_detail_t) == 0x40) ? 1 : -1];
 
 /* menu */
+/* Two sixteen-colour banks: the normal menu colours followed by their dimmed forms. */
+typedef struct menu_palette {
+    rgba5551_t colors[32];
+} menu_palette_t;
+typedef char menu_palette_size_must_be_64[(sizeof(menu_palette_t) == 64) ? 1 : -1];
+
+/* Shared 4bpp menu glyph sheet: 32 rows of 128 packed pixel bytes, then
+ * its palette. Window-frame builders copy aligned pairs of bytes. */
+typedef struct menu_glyph_sheet {
+    u8 pixels[4096];        /* 0x0000 */
+    menu_palette_t palette; /* 0x1000 */
+} menu_glyph_sheet_t;
+typedef char menu_glyph_sheet_size_must_be_4160[(sizeof(menu_glyph_sheet_t) == 4160) ? 1 : -1];
+
 /* menu_window_buffer_t::icon_flags: which of the window's three icon sprites
  * are drawn. */
 typedef enum menu_window_icon_flags {
@@ -222,31 +236,43 @@ typedef char battle_active_unit_size_must_be_0xe[(sizeof(battle_active_unit_t) =
  * character slots; the status threads walk them with 2-byte cursors. The
  * layout is the lower billboard record (0x801ca0e8). */
 typedef struct battle_menu_status_panel_slot_state {
-    u8 _unused_00[0x0e]; /* 0x00: move, speed, jump, right/left weapon power and evade */
-    s16 generic_monster; /* 0x0e: star icons instead of ability-type icons; selects the
-                          * ability-name text section and gates the per-slot portrait
-                          * hiding pass; low bit of display_mode */
-    s16 two_hands;       /* 0x10: two-hands flag; high bit of display_mode */
-    u8 _unused_12[0x12]; /* 0x12: PA to magic accessory evade (world_item_stat_detail_t) */
-    s16 equipment[5];    /* 0x24: RH, LH, helmet, armor, accessory; low byte 0xff
-                          * means "no entry"; otherwise rendered through the
-                          * item-name text section and passed to
-                          * battle_gfx_set_item_icon_sprite */
-    s16 ability_ids[5];  /* 0x2e: primary/secondary skillset, reaction, support,
-                          * movement; -1 means no label; the first two rows select
-                          * the skillset-name or ability-name text section by mode,
-                          * and the remaining rows use ability names */
+    s16 move;                     /* 0x00 */
+    s16 speed;                    /* 0x02 */
+    s16 jump;                     /* 0x04 */
+    s16 right_weapon_power;       /* 0x06 */
+    s16 left_weapon_power;        /* 0x08 */
+    s16 right_weapon_evade;       /* 0x0a */
+    s16 left_weapon_evade;        /* 0x0c */
+    s16 generic_monster;          /* 0x0e: star icons instead of ability-type icons; selects the
+                                   * ability-name text section and gates the per-slot portrait
+                                   * hiding pass; low bit of display_mode */
+    s16 two_hands;                /* 0x10: two-hands flag; high bit of display_mode */
+    s16 physical_attack;          /* 0x12 */
+    s16 physical_class_evade;     /* 0x14 */
+    s16 physical_shield_evade;    /* 0x16 */
+    s16 physical_accessory_evade; /* 0x18 */
+    u8 _unused_1a[2];
+    s16 magical_attack;          /* 0x1c */
+    s16 magical_class_evade;     /* 0x1e */
+    s16 magical_shield_evade;    /* 0x20 */
+    s16 magical_accessory_evade; /* 0x22 */
+    s16 equipment[5];            /* 0x24: RH, LH, helmet, armor, accessory; low byte 0xff
+                                  * means "no entry"; otherwise rendered through the
+                                  * item-name text section and passed to
+                                  * battle_gfx_set_item_icon_sprite */
+    s16 ability_ids[5];          /* 0x2e: primary/secondary skillset, reaction, support,
+                                  * movement; -1 means no label; the first two rows select
+                                  * the skillset-name or ability-name text section by mode,
+                                  * and the remaining rows use ability names */
 } battle_menu_status_panel_slot_state_t;
 typedef char
     battle_menu_status_panel_slot_state_size_must_be_0x38[(sizeof(battle_menu_status_panel_slot_state_t) == 0x38) ? 1
                                                                                                                   : -1];
 
-/* Editor storage (0x40 bytes, copied whole by the billboard copy routines) is
- * addressed both as a status record and as halfwords; the load-selected-unit
- * routines fill the first 28. */
-typedef union battle_menu_status_panel_slot_storage {
+/* Editor storage is copied whole by the billboard copy routines. */
+typedef struct battle_menu_status_panel_slot_storage {
     battle_menu_status_panel_slot_state_t state;
-    s16 halfwords[0x20];
+    u8 _unused_38[8]; /* preserves the copied 0x40-byte record */
 } battle_menu_status_panel_slot_storage_t;
 typedef char battle_menu_status_panel_slot_storage_size_must_be_0x40
     [(sizeof(battle_menu_status_panel_slot_storage_t) == 0x40) ? 1 : -1];
@@ -333,21 +359,17 @@ typedef char
 
 /* Parameter block of the editor display threads, reached through the
  * 0x400-byte battle thread table. It has the shape of world_status_thread_t,
- * but these threads load x as a halfword. The shake offset is written as a
- * word from the s16 shake tables and read back as its low halfword, which is
- * how the target loads it into the draw-offset y. Only the members the display
+ * but these threads load x as a halfword. The shake offset is sign-extended
+ * from the s16 shake tables and narrowed to the draw-offset y. Only the members the display
  * threads use are named; the record's total size is not proven. */
 typedef struct battle_menu_status_panel_display_thread {
     u16 x;           /* 0x00 */
     u16 _padding_02; /* aligns shake_y */
-    union {
-        s32 word; /* 0x04 */
-        u16 low;
-    } shake_y;
-    s32 flags;  /* 0x08: menu_status_panel_flags_e */
-    s32 work;   /* 0x0c: redraw request flags, cleared once serviced */
-    s32 dimmed; /* 0x10: nonzero forces the dimmed CLUTs and colours; bound as
-                      g_bunit_status_display_dimmed and the WORLD display globals */
+    s32 shake_y;     /* 0x04; narrowed to a draw-offset halfword when rendered */
+    s32 flags;       /* 0x08: menu_status_panel_flags_e */
+    s32 work;        /* 0x0c: redraw request flags, cleared once serviced */
+    s32 dimmed;      /* 0x10: nonzero forces the dimmed CLUTs and colours; bound as
+                           g_bunit_status_display_dimmed and the WORLD display globals */
 } battle_menu_status_panel_display_thread_t;
 
 /* Per-frame character status buffer (0x3d8 bytes), double buffered by the
@@ -592,10 +614,11 @@ typedef struct battle_menu_sprite_cell {
 typedef char battle_menu_sprite_cell_size_must_be_6[(sizeof(battle_menu_sprite_cell_t) == 6) ? 1 : -1];
 
 /* One 0x100-byte slot holding a panel's palette primitive set. */
-typedef union world_menu_palette_slot {
-    world_menu_palette_primitives_t primitives;
-    u8 storage[0x100];
+typedef struct world_menu_palette_slot {
+    world_menu_palette_primitives_t primitives; /* 0x00 */
+    u8 _padding_ec[0x14];                       /* preserves the 0x100-byte allocation stride */
 } world_menu_palette_slot_t;
+typedef char world_menu_palette_slot_size_must_be_0x100[(sizeof(world_menu_palette_slot_t) == 0x100) ? 1 : -1];
 
 /* Provisional: record reached through world_menu_entry_t::text_binding.
  * world_menu_text_entry_thread, world_menu_text_entry_wait_thread and the

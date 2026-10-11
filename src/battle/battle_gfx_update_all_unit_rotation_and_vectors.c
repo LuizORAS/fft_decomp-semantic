@@ -23,12 +23,12 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
         battle_unit_copy_misc_data_xyz_values(&screen, unit);
         RotTrans(&screen, &transformed, &unit->gte_flag);
 
-        if ((unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) != 0) {
+        if ((unit->sprite_display_flags & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) != 0) {
             unit->camera_relative_x = transformed.vx - unit->screen_offset.vx;
         } else {
             unit->camera_relative_x = transformed.vx + unit->screen_offset.vx;
         }
-        if ((unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_VERTICAL_FLIP) != 0) {
+        if ((unit->sprite_display_flags & BATTLE_MISC_DISPLAY_VERTICAL_FLIP) != 0) {
             unit->camera_relative_y = transformed.vy - unit->screen_offset.vy;
         } else {
             unit->camera_relative_y = transformed.vy + unit->screen_offset.vy;

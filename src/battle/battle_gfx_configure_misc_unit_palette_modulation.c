@@ -16,7 +16,7 @@ void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s1
         battle_unit_move_misc_unit_to_head(misc_id);
         unit->fade_out_phase = BATTLE_MISC_FADE_OUT_FLASH;
         unit->shadow_graphic_trigger = 0;
-        unit->sprite_display_flags.half = (unit->sprite_display_flags.half & ~BATTLE_MISC_DISPLAY_BLEND_MASK)
+        unit->sprite_display_flags = (unit->sprite_display_flags & ~BATTLE_MISC_DISPLAY_BLEND_MASK)
             | (BATTLE_MISC_DISPLAY_BLEND_ADD | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT);
         battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, mode, misc_id, red, green, blue);
         unit->float_bob_offset = 0;

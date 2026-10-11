@@ -12,7 +12,7 @@ u8* main_smd_tempo(volatile u8* note_data, suzuki_music_t* music) {
     u8 tempo;
 
     tempo = note_data[0] & 0xff;
-    music->tempo.raw = tempo << 16;
+    music->tempo = tempo << 16;
     music->scaled_tempo = tempo * (music->tempo_scale.value >> 16);
     return note_data + 1;
 }

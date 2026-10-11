@@ -15,7 +15,7 @@ void wldcore_window_load_image_record_to_vram(s32 index, u32* image) {
     y = transformed[1];
     rect.x = x;
     rect.y = y;
-    rect.w = g_wldcore_window_render_records[index].bounds.dimensions.x / 4;
-    rect.h = g_wldcore_window_render_records[index].bounds.dimensions.y;
+    rect.w = g_wldcore_window_render_records[index].bounds.w / 4;
+    rect.h = g_wldcore_window_render_records[index].bounds.h;
     LoadImage(&rect, image);
 }

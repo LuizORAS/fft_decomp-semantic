@@ -32,7 +32,7 @@ void bunit_gfx_init_vram_and_start_fade(void) {
     rect.y = 0;
     rect.w = 0x40;
     rect.h = 0x30;
-    bunit_gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image);
+    bunit_gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
     rect.x = 0x3C0;
     rect.y = 0x1F0;
     rect.w = 0x10;

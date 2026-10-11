@@ -32,7 +32,7 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     u8 change;
     u8 status;
 
-    flags = unit->action_display_flags.word;
+    flags = unit->action_display_flags;
     data.stats = unit->battle_data;
     display = &unit->numeric_display;
 
@@ -62,14 +62,14 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
         g_battle_action_display_values[15] = change;
         g_battle_action_display_values[14] = change;
 
-        data.scan_flags = unit->action_display_flags.word;
+        data.scan_flags = unit->action_display_flags;
         while (index < 16) {
             if ((flag & data.scan_flags) != 0) {
                 flags = index;
                 display->value = g_battle_action_display_values[flags];
                 display->selector = g_battle_action_display_numeric_selectors[flags];
-                index = unit->action_display_flags.word;
-                unit->action_display_flags.word = ~flag & index;
+                index = unit->action_display_flags;
+                unit->action_display_flags = ~flag & index;
                 break;
             }
             index++;
@@ -78,48 +78,48 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_LEVEL_UP;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_STOLEN) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_STOLEN;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_STOLEN;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_STOLEN;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_BROKEN) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_BROKEN;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_BROKEN;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_BROKEN;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_QUICK) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_QUICK;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_QUICK;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_QUICK;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_CT_ZERO;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_MISSED) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_MISSED;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_MISSED;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_MISSED;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GUARDED) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GUARDED;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_GUARDED;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_GUARDED;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_CAUGHT) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_CAUGHT;
-        branch_flags = unit->action_display_flags.word;
-        unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_CAUGHT;
+        branch_flags = unit->action_display_flags;
+        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_CAUGHT;
     } else if (unit->status_display_image_count != 0) {
         unit->status_display_image_count--;
         status = unit->status_display_image_list[unit->status_display_image_count];

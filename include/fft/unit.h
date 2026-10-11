@@ -460,6 +460,15 @@ typedef struct unit_job_points {
 typedef char
     unit_job_points_size_must_be_80[(sizeof(unit_job_points_t) == UNIT_JOB_POINT_TABLE_PAIR_BYTE_COUNT) ? 1 : -1];
 
+/* Shared 150-byte progression block cleared when a party unit is generated. */
+typedef struct unit_career_data {
+    u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT];                               /* 0x00 */
+    unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x03 */
+    u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT]; /* 0x3c; two packed nibbles per byte */
+    unit_job_points_t job_points;             /* 0x46; current JP followed by total JP */
+} unit_career_data_t;
+typedef char unit_career_data_size_must_be_150[(sizeof(unit_career_data_t) == UNIT_CAREER_DATA_BYTE_COUNT) ? 1 : -1];
+
 /* zodiac */
 /* Unshifted zodiac IDs. Party and battle records store these in the high
  * nibble; ordinary birthdays never produce Serpentarius. */
@@ -656,16 +665,10 @@ typedef struct unit_raw_stat {
 } unit_raw_stat_t;
 typedef char unit_raw_stat_size_must_be_3[(sizeof(unit_raw_stat_t) == UNIT_RAW_STAT_SERIALIZED_BYTES) ? 1 : -1];
 
-/* Saved and battle units copy this complete record. The indexed view is used
- * by generation and level growth, which apply the same formula to each stat. */
-typedef union unit_raw_stats {
-    struct {
-        unit_raw_stat_t hp;
-        unit_raw_stat_t mp;
-        unit_raw_stat_t speed;
-        unit_raw_stat_t physical_attack;
-        unit_raw_stat_t magic_attack;
-    } fields;
+/* HP, MP, speed, physical attack and magic attack in UNIT_RAW_STAT_* order.
+ * Generation, growth and derived-stat calculation select all five entries by index;
+ * saved and battle units copy the complete record. */
+typedef struct unit_raw_stats {
     unit_raw_stat_t values[UNIT_RAW_STAT_COUNT];
 } unit_raw_stats_t;
 typedef char unit_raw_stats_size_must_be_15[(sizeof(unit_raw_stats_t) == UNIT_RAW_STAT_DATA_BYTE_COUNT) ? 1 : -1];
@@ -727,7 +730,6 @@ typedef union battle_unit_position {
         u16 stepping_stone : 1;
         u16 higher_elevation : 1;
     } bits;
-    u8 bytes[2]; /* bytes[0] is y; battle_unit_transform_into_morbol saves it with lbu/sb */
 } battle_unit_position_t;
 typedef char battle_unit_position_size_must_be_2[(sizeof(battle_unit_position_t) == 2) ? 1 : -1];
 
@@ -777,11 +779,7 @@ typedef struct battle_stats {
     u8 reaction_abilities[4];                            /* 0x08b; battle_unit_reaction_set_N_e */
     u8 support_abilities[4];                             /* 0x08f */
     u8 movement_abilities[3];                            /* 0x093 */
-    u8 unlocked_jobs[3];                                 /* 0x096 */
-    unit_learned_ability_row_t
-        learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x099..0x0d1; three bytes per learned-ability row */
-    u8 job_levels[10];                                     /* 0x0d2; two packed job-level nibbles per byte */
-    unit_job_points_t job_points;                          /* 0x0dc; current JP followed by total JP */
+    unit_career_data_t career;                           /* 0x096; unlocked jobs, learned abilities, levels and JP */
     /* main_unit_store_character_names (0x8005c984) copies 16/16/8/8
      * bytes to these four destinations. All names use the game's encoding. */
     u8 name[16];                   /* 0x12c */
@@ -839,8 +837,7 @@ typedef enum battle_unit_ability_outcome {
     BATTLE_ABILITY_OUTCOME_LEARN_CHECKED = 0x04, /* the learn-on-hit pass consumed AFFECTED */
 } battle_unit_ability_outcome_e;
 
-typedef union entd_unit_position {
-    u16 raw;
+typedef struct entd_unit_position {
     struct {
         u16 y : 8;
         u16 facing : 2;
@@ -969,22 +966,19 @@ typedef struct party_data {
     u8 zodiac;             /* 0x06 */
     u8 secondary_skillset; /* 0x07 */
     /* Little-endian ability ids; every reader and writer accesses the two bytes separately. */
-    u8 reaction_ability[2];                                                       /* 0x08 */
-    u8 support_ability[2];                                                        /* 0x0a */
-    u8 movement_ability[2];                                                       /* 0x0c */
-    u8 equipment[7];                                                              /* 0x0e; unit_equipment_slot_e */
-    u8 experience;                                                                /* 0x15 */
-    u8 level;                                                                     /* 0x16 */
-    u8 bravery;                                                                   /* 0x17 */
-    u8 faith;                                                                     /* 0x18 */
-    unit_raw_stats_t raw_stats;                                                   /* 0x19 */
-    u8 unlocked_jobs[3];                                                          /* 0x28 */
-    unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x2b */
-    u8 job_levels[10];                                                            /* 0x64 */
-    unit_job_points_t job_points; /* 0x6e; current JP followed by total JP */
-    u8 name[16];                  /* 0xbe */
-    u8 name_id[2];                /* 0xce; little-endian, accessed bytewise like the ability ids */
-    u8 proposition_status;        /* 0xd0; nonzero while unavailable on a proposition */
+    u8 reaction_ability[2];     /* 0x08 */
+    u8 support_ability[2];      /* 0x0a */
+    u8 movement_ability[2];     /* 0x0c */
+    u8 equipment[7];            /* 0x0e; unit_equipment_slot_e */
+    u8 experience;              /* 0x15 */
+    u8 level;                   /* 0x16 */
+    u8 bravery;                 /* 0x17 */
+    u8 faith;                   /* 0x18 */
+    unit_raw_stats_t raw_stats; /* 0x19 */
+    unit_career_data_t career;  /* 0x28; unlocked jobs, learned abilities, levels and JP */
+    u8 name[16];                /* 0xbe */
+    u8 name_id[2];              /* 0xce; little-endian, accessed bytewise like the ability ids */
+    u8 proposition_status;      /* 0xd0; nonzero while unavailable on a proposition */
     u8 _unused_d1;
     u8 egg_color;        /* 0xd2; create/save/generate unit stores */
     u8 _unused_d3[0x2d]; /* 0xd3; saves and loads copy 0xe0 bytes per record, so 0xe0..0xff is not saved */

@@ -46,5 +46,5 @@ void battle_move_init_knockback(battle_unit_misc_data_t* unit) {
         break;
     }
 
-    unit->walk_speed.word = 0x8000;
+    unit->walk_speed = 0x8000;
 }

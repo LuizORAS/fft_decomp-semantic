@@ -16,7 +16,7 @@ u8* main_smd_play_vfx(u8* note_data, suzuki_music_t* music, suzuki_music_channel
 
     resource = g_main_sound_resource_list;
     sound = note_data[0] | (note_data[1] << 8);
-    id = channel->sound_id.halves.high;
+    id = channel->sound_id >> 16;
     index = note_data[2];
     if (id != 0) {
         while (resource->id != id) {

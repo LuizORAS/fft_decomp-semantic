@@ -68,8 +68,8 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
         crystal_flags = crystal->unit_flags;
         if (!(mover_flags & UNIT_FLAG_MONSTER) && !(crystal_flags & UNIT_FLAG_MONSTER)) {
             learned_count = 0;
-            unlocked_jobs_mask
-                = (mover->unlocked_jobs[0] << 16) + (mover->unlocked_jobs[1] << 8) + mover->unlocked_jobs[2];
+            unlocked_jobs_mask = (mover->career.unlocked_jobs[0] << 16) + (mover->career.unlocked_jobs[1] << 8)
+                + mover->career.unlocked_jobs[2];
             mover_identity = mover->character_identity;
             crystal_identity = crystal->character_identity;
             main_util_clear_byte_data(g_main_crystal_pickup_result.learned_abilities, 0x40);

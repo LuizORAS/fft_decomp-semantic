@@ -14,7 +14,7 @@
  * colour, as the target does. */
 void battle_map_blend_darkness_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue) {
     map_color_transition_channels_t* channels;
-    map_color_t current;
+    CVECTOR current;
     s32 target_red;
     s32 target_green;
     s32 target_blue;
@@ -49,38 +49,38 @@ void battle_map_blend_darkness_color(s32 mode, s32 frame_duration, s32 red, s32 
         break;
     case MAP_COLOR_MODE_BASE:
     case MAP_COLOR_MODE_BASE_REPEAT:
-        target_red = (g_battle_map_darkness_color.red + red) << 16;
-        target_green = (g_battle_map_darkness_color.green + green) << 16;
-        target_blue = (g_battle_map_darkness_color.blue + blue) << 16;
+        target_red = (g_battle_map_darkness_color.r + red) << 16;
+        target_green = (g_battle_map_darkness_color.g + green) << 16;
+        target_blue = (g_battle_map_darkness_color.b + blue) << 16;
         break;
     case MAP_COLOR_MODE_BASE_HALF:
         /* The base colour is unsigned, so the halved 16.16 value is a shift. */
-        target_red = (g_battle_map_darkness_color.red << 15) + (red << 16);
-        target_green = (g_battle_map_darkness_color.green << 15) + (green << 16);
-        target_blue = (g_battle_map_darkness_color.blue << 15) + (blue << 16);
+        target_red = (g_battle_map_darkness_color.r << 15) + (red << 16);
+        target_green = (g_battle_map_darkness_color.g << 15) + (green << 16);
+        target_blue = (g_battle_map_darkness_color.b << 15) + (blue << 16);
         break;
     case MAP_COLOR_MODE_BASE_GREY:
-        base_red = g_battle_map_darkness_color.red << 16;
-        base_green = g_battle_map_darkness_color.green << 16;
-        base_blue = g_battle_map_darkness_color.blue << 16;
+        base_red = g_battle_map_darkness_color.r << 16;
+        base_green = g_battle_map_darkness_color.g << 16;
+        base_blue = g_battle_map_darkness_color.b << 16;
         grey = (base_red * 2 + base_green * 3 + base_blue) / 6;
         target_red = grey + (red << 16);
         target_green = grey + (green << 16);
         target_blue = grey + (blue << 16);
         break;
     case MAP_COLOR_MODE_BASE_GREY_HALF:
-        base_red = g_battle_map_darkness_color.red << 16;
-        base_green = g_battle_map_darkness_color.green << 16;
-        base_blue = g_battle_map_darkness_color.blue << 16;
+        base_red = g_battle_map_darkness_color.r << 16;
+        base_green = g_battle_map_darkness_color.g << 16;
+        base_blue = g_battle_map_darkness_color.b << 16;
         grey = (base_red * 2 + base_green * 3 + base_blue) / 12;
         target_red = grey + (red << 16);
         target_green = grey + (green << 16);
         target_blue = grey + (blue << 16);
         break;
     case MAP_COLOR_MODE_RESTORE:
-        target_red = g_battle_map_darkness_color.red << 16;
-        target_green = g_battle_map_darkness_color.green << 16;
-        target_blue = g_battle_map_darkness_color.blue << 16;
+        target_red = g_battle_map_darkness_color.r << 16;
+        target_green = g_battle_map_darkness_color.g << 16;
+        target_blue = g_battle_map_darkness_color.b << 16;
         break;
     case MAP_COLOR_MODE_STOP_REPEAT:
         g_battle_map_darkness_transition.repeat = MAP_COLOR_REPEAT_OFF;
@@ -131,9 +131,9 @@ void battle_map_blend_darkness_color(s32 mode, s32 frame_duration, s32 red, s32 
         }
     } else {
         g_battle_map_darkness_transition.active = 0;
-        current.red = channels->red / 0x10000;
-        current.green = channels->green / 0x10000;
-        current.blue = channels->blue / 0x10000;
+        current.r = channels->red / 0x10000;
+        current.g = channels->green / 0x10000;
+        current.b = channels->blue / 0x10000;
         battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR, &current);
     }
 }

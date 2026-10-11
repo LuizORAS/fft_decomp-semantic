@@ -244,7 +244,7 @@ void bunit_render_unit_status_panel_thread(void) {
         }
         if (shake != 0) {
             if (shake < 0xA) {
-                thread->shake_y.word = g_bunit_panel_slide_down_y[shake];
+                thread->shake_y = g_bunit_panel_slide_down_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -253,7 +253,7 @@ void bunit_render_unit_status_panel_thread(void) {
                     thread->flags = thread->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             } else if (shake >= 0xB) {
-                thread->shake_y.word = g_bunit_panel_slide_up_y[shake];
+                thread->shake_y = g_bunit_panel_slide_up_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -266,7 +266,7 @@ void bunit_render_unit_status_panel_thread(void) {
         px1 = thread->x;
         dx1 = g_bunit_gfx_draw_offset_y;
         panel->draw_offset_a.position.x = px1 - 0x80;
-        pya = thread->shake_y.low;
+        pya = (u16)thread->shake_y;
         panel->draw_offset_a.position.y = pya + dx1;
         SetDrawOffset(&panel->draw_offset_a.packet, (u16*)&panel->draw_offset_a.position);
         dx2 = g_bunit_gfx_draw_offset_y;
@@ -276,7 +276,7 @@ void bunit_render_unit_status_panel_thread(void) {
         px2 = thread->x;
         dx3 = g_bunit_gfx_draw_offset_y;
         editor->draw_offset_a.position.x = px2 - 0x80;
-        pyb = thread->shake_y.low;
+        pyb = (u16)thread->shake_y;
         editor->draw_offset_a.position.y = pyb + dx3;
         SetDrawOffset(&editor->draw_offset_a.packet, (u16*)&editor->draw_offset_a.position);
         dx4 = g_bunit_gfx_draw_offset_y;

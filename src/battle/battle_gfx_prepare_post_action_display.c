@@ -22,77 +22,77 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
     action = &stats->action;
     if (action->hit != 0) {
         if (action->attack_type & BATTLE_ACTION_TYPE_HP_DAMAGE) {
-            unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_HP_DAMAGE;
+            unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_HP_DAMAGE;
         }
         if (action->attack_type & BATTLE_ACTION_TYPE_HP_HEALING) {
-            unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_HP_HEALING;
+            unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_HP_HEALING;
         }
         if (action->attack_type & BATTLE_ACTION_TYPE_MP_DAMAGE) {
-            unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MP_DAMAGE;
+            unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_MP_DAMAGE;
         }
         if (action->attack_type & BATTLE_ACTION_TYPE_MP_HEALING) {
-            unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MP_HEALING;
+            unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_MP_HEALING;
         }
         if (action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS) {
             if (action->sp_change != 0) {
                 if (action->sp_change & 0x80) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_SPEED_GAIN;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_SPEED_GAIN;
                 } else {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_SPEED_DAMAGE;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_SPEED_DAMAGE;
                 }
             }
             if (action->ct_change != 0) {
                 if (action->ct_change == BATTLE_ACTION_CT_CHANGE_QUICK) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_QUICK;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_QUICK;
                 } else if (action->ct_change == BATTLE_ACTION_CT_CHANGE_ZERO) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO;
                 } else if (action->ct_change & 0x80) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_CT_GAIN;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_CT_GAIN;
                 } else {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_CT_DAMAGE;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_CT_DAMAGE;
                 }
             }
             if (action->pa_change != 0) {
                 if (action->pa_change & 0x80) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_PA_GAIN;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_PA_GAIN;
                 } else {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_PA_DAMAGE;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_PA_DAMAGE;
                 }
             }
             if (action->ma_change != 0) {
                 if (action->ma_change & 0x80) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MA_GAIN;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_MA_GAIN;
                 } else {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MA_DAMAGE;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_MA_DAMAGE;
                 }
             }
             if (action->brave_change != 0) {
                 if (action->brave_change & 0x80) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_BRAVE_GAIN;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_BRAVE_GAIN;
                 } else {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_BRAVE_DAMAGE;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_BRAVE_DAMAGE;
                 }
             }
             if (action->faith_change != 0) {
                 if (action->faith_change & 0x80) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_FAITH_GAIN;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_FAITH_GAIN;
                 } else {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_FAITH_DAMAGE;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_FAITH_DAMAGE;
                 }
             }
         }
         if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP) {
-            unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP;
+            unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP;
         }
         if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN) {
-            unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN;
+            unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN;
         }
         if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
-            unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_STOLEN;
+            unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_STOLEN;
         }
         if (action->special_effect
             & (BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT | BATTLE_ACTION_SPECIAL_EFFECT_DRAW_OUT_KATANA_BROKEN)) {
-            unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_BROKEN;
+            unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_BROKEN;
         }
         if (action->attack_type & BATTLE_ACTION_TYPE_STATUS_CHANGE) {
             unit->status_display_image_count = 0;
@@ -126,15 +126,15 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
                 || miss == BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE
                 || miss == BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD) {
                 if ((action->miss_display_flags & BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK) == 1) {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MISSED;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_MISSED;
                 } else {
-                    unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_GUARDED;
+                    unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_GUARDED;
                 }
             } else if (miss == BATTLE_ACTION_MISS_TYPE_CATCH) {
-                unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_CAUGHT;
+                unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_CAUGHT;
             } else if (miss != BATTLE_ACTION_MISS_TYPE_CANCELLED && miss != BATTLE_ACTION_MISS_TYPE_HIT
                 && miss != BATTLE_ACTION_MISS_TYPE_REFLECTED) {
-                unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_MISSED;
+                unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_MISSED;
             }
         }
     }

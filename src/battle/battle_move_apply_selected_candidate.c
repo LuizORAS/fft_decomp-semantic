@@ -8,7 +8,7 @@
  * masks because its equivalent bitfield assignments change register allocation.
  */
 void battle_move_apply_selected_candidate(battle_move_spread_state_t* state) {
-    state->candidate_remaining_range.value = state->saved_remaining_range;
+    state->candidate_remaining_range = state->saved_remaining_range;
     state->tile_x = state->saved_x;
     state->tile_y = state->saved_y;
     state->tile_level = state->saved_level;

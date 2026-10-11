@@ -44,8 +44,8 @@ void wldcore_map_init_location_marker_and_camera(void) {
         g_wldcore_map_projection_state.marker.palette = 3;
     }
     marker->position = g_wldcore_map_dots[marker->kind].position;
-    wldcore_map_negate_and_clamp_coordinates(&g_wldcore_map_projection_state.marker.position.vx,
-        (wldcore_map_clamped_point32_t*)&g_wldcore_map_projection_origin);
+    wldcore_map_negate_and_clamp_coordinates(
+        &g_wldcore_map_projection_state.marker.position, &g_wldcore_map_projection_origin);
     wldcore_map_project_and_cull_tiles();
     wldcore_map_update_camera_direction_and_projection();
 }

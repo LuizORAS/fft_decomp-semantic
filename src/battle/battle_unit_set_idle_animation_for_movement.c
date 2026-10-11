@@ -22,7 +22,7 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
     switch (battle_move_get_water_depth(unit)) {
     case 0:
     case 1:
-        walk_speed = unit->walk_speed.word;
+        walk_speed = unit->walk_speed;
         if (walk_speed >= 0x3000) {
             anim = BATTLE_UNIT_ANIMATION_WALK_FAST;
         } else {
@@ -40,7 +40,7 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
         break;
     case 2:
     default:
-        walk_speed = unit->walk_speed.word;
+        walk_speed = unit->walk_speed;
         if (walk_speed >= 0x3000) {
             anim = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_HASTE;
         } else {

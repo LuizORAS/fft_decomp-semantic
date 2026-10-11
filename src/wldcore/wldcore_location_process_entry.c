@@ -50,7 +50,7 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].flags
             |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         if (wldcore_map_start_projection_motion_if_outside_bounds(
-                &g_wldcore_location_view.point, &g_wldcore_location_view.coordinates.vx)
+                &g_wldcore_location_view.point, &g_wldcore_location_view.coordinates)
             == 0) {
             g_wldcore_location_view.projection_state
                 |= WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION | WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;

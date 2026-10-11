@@ -7,7 +7,7 @@
 void PushMatrix(void) {
     /* Fixed scratch registers reproduce the handwritten COP2/ABI allocation. */
     register s32 offset __asm__("$14");
-    register psyq_packed_matrix_t* frame __asm__("$15");
+    register MATRIX* frame __asm__("$15");
     register s32 first __asm__("$8");
     register s32 second __asm__("$9");
     register s32 third __asm__("$10");
@@ -24,24 +24,25 @@ void PushMatrix(void) {
     goto* psyq_cpu_return_address;
 save_frame:
     PSYQ_CPU_ADDRESS_HIGH(frame, g_psyq_gte_matrix_stack);
-    frame = (psyq_packed_matrix_t*)((u32)frame + offset);
+    frame = (MATRIX*)((u32)frame + offset);
     PSYQ_CPU_ADDRESS_LOW(frame, g_psyq_gte_matrix_stack);
     PSYQ_GTE_CFC2(PSYQ_GTE_CTRL_R11_R12, first);
     PSYQ_GTE_CFC2(PSYQ_GTE_CTRL_R13_R21, second);
-    frame->words[0] = first;
-    frame->words[1] = second;
+    /* Rotation controls transfer words; R33 includes MATRIX's alignment halfword. */
+    *(u32*)&frame->m[0][0] = first;
+    *(u32*)&frame->m[0][2] = second;
     PSYQ_GTE_CFC2(PSYQ_GTE_CTRL_R22_R23, first);
     PSYQ_GTE_CFC2(PSYQ_GTE_CTRL_R31_R32, second);
-    frame->words[2] = first;
-    frame->words[3] = second;
+    *(u32*)&frame->m[1][1] = first;
+    *(u32*)&frame->m[2][0] = second;
     PSYQ_GTE_CFC2_NOP(PSYQ_GTE_CTRL_R33, first);
-    frame->words[4] = first;
+    *(u32*)&frame->m[2][2] = first;
     PSYQ_GTE_CFC2(PSYQ_GTE_CTRL_TRX, first);
     PSYQ_GTE_CFC2(PSYQ_GTE_CTRL_TRY, second);
     PSYQ_GTE_CFC2(PSYQ_GTE_CTRL_TRZ, third);
-    frame->words[5] = first;
-    frame->words[6] = second;
-    frame->words[7] = third;
+    frame->t[0] = first;
+    frame->t[1] = second;
+    frame->t[2] = third;
     PSYQ_CPU_TRAP_ADDI(offset, offset, 32);
     g_psyq_gte_matrix_stack_offset = offset;
     goto* psyq_cpu_return_address;

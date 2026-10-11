@@ -10,7 +10,7 @@
  * own local: reusing `row` (then set twice) schedules the loop's `addiu v1`
  * ahead of `move a0`. */
 void wldcore_proposition_push_dispatch_confirm_level(void) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t point;
     s16 size[2];
     s32 unused[8];
@@ -44,10 +44,10 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].choice_panel.render_index = index;
-    bounds.position.x = 0x80;
-    bounds.dimensions.x = 0x28;
-    bounds.dimensions.y = 0x30;
-    bounds.position.y = 0;
+    bounds.x = 0x80;
+    bounds.w = 0x28;
+    bounds.h = 0x30;
+    bounds.y = 0;
     wldcore_window_init_render_record_image(index, bounds, 0, WLDCORE_TEXT_ID_OK_NO, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
     position = &g_wldcore_window_render_records[index].base;
@@ -61,11 +61,11 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     location = &g_wldcore_selected_proposition_row[0].fields.name_text;
     world_text_measure_pixels(
         &size[0], &size[1], world_text_find_entry(*location + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
-    bounds.position.y = 0x60;
-    bounds.dimensions.x = 0xF4;
-    bounds.position.x = 0;
+    bounds.y = 0x60;
+    bounds.w = 0xF4;
+    bounds.x = 0;
     row = size[1] + 2;
-    bounds.dimensions.y = (g_wldcore_proposition_send_unit_count - -row) * 0x10 + 0x10;
+    bounds.h = (g_wldcore_proposition_send_unit_count - -row) * 0x10 + 0x10;
     g_world_text_substitution_values[1] = g_wldcore_proposition_dispatch_days;
     g_world_text_substitution_values[0] = g_wldcore_proposition_dispatch_days;
     g_world_text_substitution_values[2] = g_wldcore_map_projection_state.marker.kind + TEXT_ID_LOCATION_NAME_BASE;

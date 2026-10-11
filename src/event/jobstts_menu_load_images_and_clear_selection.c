@@ -17,7 +17,7 @@ void jobstts_menu_load_images_and_clear_selection(void) {
     rect.y = 0;
     rect.w = 0x40;
     rect.h = 0x30;
-    jobstts_gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image);
+    jobstts_gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
 
     rect.x = 0x100;
     rect.y = 0xfa;

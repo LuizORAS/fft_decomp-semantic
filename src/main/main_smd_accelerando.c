@@ -10,6 +10,6 @@ s8* main_smd_accelerando(s8* note_data, suzuki_music_t* music) {
     (void)unused;
     tempo_delta = note_data[0];
     music->scaled_tempo = 0;
-    music->tempo.raw += tempo_delta << 16;
+    music->tempo += tempo_delta << 16;
     return note_data + 1;
 }

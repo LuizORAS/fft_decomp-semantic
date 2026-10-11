@@ -28,7 +28,7 @@
 
 void wldcore_list_open_active_propositions(void) {
     wldcore_point32_t point;
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t* base;
     s32 index;
     s32 depth;
@@ -87,10 +87,10 @@ void wldcore_list_open_active_propositions(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     LEVEL.render_index = index;
-    bounds.position.y = 0x40;
-    bounds.position.x = 0;
-    bounds.dimensions.x = 0xD8;
-    bounds.dimensions.y = LEVEL.entry_count * 0x10 + 0x10;
+    bounds.y = 0x40;
+    bounds.x = 0;
+    bounds.w = 0xD8;
+    bounds.h = LEVEL.entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 2, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 8;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;

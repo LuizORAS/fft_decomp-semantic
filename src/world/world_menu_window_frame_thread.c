@@ -46,20 +46,20 @@ void world_menu_window_frame_thread(void) {
 
     world_gfx_set_image_blit_source_rect(8, 8, 0x20, 0x10);
     world_gfx_set_image_blit_destination_origin(0, 0);
-    world_text_blit_glyph(g_world_menu_glyph_sheet, g_world_menu_window_frame_image, &g_world_gfx_image_blit_source,
-        &g_world_gfx_image_blit_destination);
+    world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, g_world_menu_window_frame_image,
+        &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_gfx_set_image_blit_source_rect(0, 8, 8, 0x10);
     world_gfx_set_image_blit_destination_origin(0x20, 0);
-    world_text_blit_glyph(g_world_menu_glyph_sheet, g_world_menu_window_frame_image, &g_world_gfx_image_blit_source,
-        &g_world_gfx_image_blit_destination);
+    world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, g_world_menu_window_frame_image,
+        &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_gfx_set_image_blit_source_rect(0xd8, 0, 0x28, 0x10);
     world_gfx_set_image_blit_destination_origin(0x28, 0);
-    world_text_blit_glyph(g_world_menu_glyph_sheet, g_world_menu_window_frame_image, &g_world_gfx_image_blit_source,
-        &g_world_gfx_image_blit_destination);
+    world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, g_world_menu_window_frame_image,
+        &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_gfx_set_image_blit_source_rect(0xd8, 0x10, 0x28, 0x10);
     world_gfx_set_image_blit_destination_origin(0x58, 0);
-    world_text_blit_glyph(g_world_menu_glyph_sheet, g_world_menu_window_frame_image, &g_world_gfx_image_blit_source,
-        &g_world_gfx_image_blit_destination);
+    world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, g_world_menu_window_frame_image,
+        &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
 
     LoadImage(&texture, (u32*)g_world_menu_window_frame_image);
     world_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);

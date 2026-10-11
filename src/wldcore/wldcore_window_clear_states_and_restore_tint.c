@@ -3,16 +3,18 @@
 
 /* Clears the palette of two window records and two render records, resets one
  * render record's colour to neutral grey, then clears two more windows. */
-void wldcore_window_clear_states_and_restore_tint(wldcore_window_tint_request_t* param) {
-    CVECTOR* colors;
+void wldcore_window_clear_states_and_restore_tint(wldcore_menu_send_unit_level_t* level) {
+    CVECTOR* color;
 
-    g_wldcore_window_records[param->window_a].palette = g_wldcore_window_render_records[param->render_a].palette
-        = g_wldcore_window_render_records[param->render_b].palette = g_wldcore_window_records[param->window_b].palette
-        = 0;
-    /* Direct record.color access changes the column base and instruction scheduling. */
-    colors = &g_wldcore_window_render_records->color;
-    ((CVECTOR*)((u8*)colors + param->render_color * sizeof(g_wldcore_window_render_records[0])))->r = 0x80;
-    ((CVECTOR*)((u8*)colors + param->render_color * sizeof(g_wldcore_window_render_records[0])))->g = 0x80;
-    ((CVECTOR*)((u8*)colors + param->render_color * sizeof(g_wldcore_window_render_records[0])))->b = 0x80;
-    g_wldcore_window_records[param->window_c].palette = g_wldcore_window_records[param->window_d].palette = 0;
+    g_wldcore_window_records[level->list_window].palette = g_wldcore_window_render_records[level->layout_render].palette
+        = g_wldcore_window_render_records[level->list_render].palette
+        = g_wldcore_window_records[level->cursor_window].palette = 0;
+    /* Each channel store reloads the level's render index. */
+    color = &g_wldcore_window_render_records[level->preview_render].color;
+    color->r = 0x80;
+    color = &g_wldcore_window_render_records[level->preview_render].color;
+    color->g = 0x80;
+    color = &g_wldcore_window_render_records[level->preview_render].color;
+    color->b = 0x80;
+    g_wldcore_window_records[level->left_arrow].palette = g_wldcore_window_records[level->right_arrow].palette = 0;
 }

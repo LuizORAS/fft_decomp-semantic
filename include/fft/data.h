@@ -672,17 +672,23 @@ typedef struct ability_secondary_data {
 } ability_secondary_data_t;
 typedef char ability_secondary_data_size_must_be_14[(sizeof(ability_secondary_data_t) == 14) ? 1 : -1];
 
-/* Eight-byte ability records at 0x8005ebf0. Bytes 4..7 hold the AI behaviour
- * flags: the AI loaders copy them as halfwords, the strike simulator reads
- * them as bytes, and the random-action picker tests byte 7 bit 0x80. */
+/* Static AI behaviour bytes. The AI working record replaces flags_4 with
+ * skillset usage flags after copying these four bytes. */
+typedef struct ability_ai_flags {
+    u8 flags_1;
+    u8 flags_2;
+    u8 flags_3;
+    u8 flags_4;
+} ability_ai_flags_t;
+typedef char ability_ai_flags_size_must_be_4[(sizeof(ability_ai_flags_t) == 4) ? 1 : -1];
+
+/* Eight-byte ability records at 0x8005ebf0. AI loaders copy the four flag
+ * bytes with the generic halfword-copy helper. */
 typedef struct ability_data {
-    u16 jp_cost;   /* 0x00 */
-    u8 learn_rate; /* 0x02; learn-on-hit roll out of 100 (0x8018e6b8) */
-    u8 type_flags; /* 0x03; ability_type_flag_e high bits; serialized class in the low nibble */
-    union {
-        u16 halfwords[2];
-        u8 bytes[4];
-    } ai_flags; /* 0x04 */
+    u16 jp_cost;                 /* 0x00 */
+    u8 learn_rate;               /* 0x02; learn-on-hit roll out of 100 (0x8018e6b8) */
+    u8 type_flags;               /* 0x03; ability_type_flag_e high bits; serialized class in the low nibble */
+    ability_ai_flags_t ai_flags; /* 0x04 */
 } ability_data_t;
 typedef char battle_ability_primary_record_size_must_be_8[(sizeof(ability_data_t) == 8) ? 1 : -1];
 
@@ -1180,19 +1186,13 @@ typedef struct item_secondary_data {
 } item_secondary_data_t;
 typedef char item_secondary_data_size_must_be_3[(sizeof(item_secondary_data_t) == 3) ? 1 : -1];
 
-/* Shield records at 0x80063eb8 (g_main_item_shield_data), indexed by
- * item_data_t.secondary_data_id for items with type flag 0x40. */
-typedef struct shield_data {
-    u8 physical_evade; /* 0x00; battle_stats_t 0x41 (right hand) / 0x42 (left hand) */
-    u8 magic_evade;    /* 0x01; battle_stats_t 0x45 (right hand) / 0x46 (left hand) */
-} shield_data_t;
-
-/* Accessory records at 0x80063f58 (g_main_item_accessory_data), indexed by
- * item_data_t.secondary_data_id for items with type flag 0x08. */
-typedef struct accessory_data {
-    u8 physical_evade; /* 0x00; battle_stats_t 0x40 */
-    u8 magic_evade;    /* 0x01; battle_stats_t 0x44 */
-} accessory_data_t;
+/* Shield and accessory records share unsigned physical/magic evade percentages,
+ * indexed by item_data_t.secondary_data_id. */
+typedef struct item_evade {
+    u8 physical_evade; /* 0x00 */
+    u8 magic_evade;    /* 0x01 */
+} item_evade_t;
+typedef char item_evade_size_must_be_2[(sizeof(item_evade_t) == 2) ? 1 : -1];
 
 typedef struct armor_data {
     u8 hp_bonus; /* 0x00; added to battle_stats_t.max_hp */

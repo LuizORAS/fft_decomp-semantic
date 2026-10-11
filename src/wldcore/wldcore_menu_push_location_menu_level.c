@@ -21,7 +21,7 @@
  */
 void wldcore_menu_push_location_menu_level(s32 menu) {
     GsIMAGE image;
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t origin;
     wldcore_point32_t dimensions;
     s16 text_width;
@@ -83,10 +83,10 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         index = wldcore_window_append_render_record_and_reset_color(
             g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.frame_render = index;
-        bounds.position.x = image.px;
-        bounds.position.y = image.py;
-        bounds.dimensions.x = image.pw;
-        bounds.dimensions.y = image.ph;
+        bounds.x = image.px;
+        bounds.y = image.py;
+        bounds.w = image.pw;
+        bounds.h = image.ph;
         origin.x = image.cx;
         origin.y = image.cy;
         wldcore_window_init_vram_render_record(index, bounds, origin, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);

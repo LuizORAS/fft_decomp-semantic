@@ -264,7 +264,7 @@ void world_menu_unit_status_banner_thread(void) {
         }
         if (shake != 0) {
             if (shake < 0xA) {
-                display->shake_y.word = g_world_panel_slide_down_y[shake];
+                display->shake_y = g_world_panel_slide_down_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -273,7 +273,7 @@ void world_menu_unit_status_banner_thread(void) {
                     display->flags = display->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             } else if (shake >= 0xB) {
-                display->shake_y.word = g_world_panel_slide_up_y[shake];
+                display->shake_y = g_world_panel_slide_up_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -286,7 +286,7 @@ void world_menu_unit_status_banner_thread(void) {
         draw_x = display->x;
         draw_y = g_world_gfx_draw_area_y;
         status->draw_offset_a.position.x = draw_x - 0x80;
-        status->draw_offset_a.position.y = display->shake_y.low + draw_y;
+        status->draw_offset_a.position.y = (u16)display->shake_y + draw_y;
         SetDrawOffset(&status->draw_offset_a.packet, (u16*)&status->draw_offset_a.position);
         status->draw_offset_b.position.x = -0x80;
         status->draw_offset_b.position.y = g_world_gfx_draw_area_y;
@@ -294,7 +294,7 @@ void world_menu_unit_status_banner_thread(void) {
         draw_x = display->x;
         draw_y = g_world_gfx_draw_area_y;
         summary->draw_offset_a.position.x = draw_x - 0x80;
-        summary->draw_offset_a.position.y = display->shake_y.low + draw_y;
+        summary->draw_offset_a.position.y = (u16)display->shake_y + draw_y;
         SetDrawOffset(&summary->draw_offset_a.packet, (u16*)&summary->draw_offset_a.position);
         summary->draw_offset_b.position.x = -0x80;
         summary->draw_offset_b.position.y = g_world_gfx_draw_area_y;

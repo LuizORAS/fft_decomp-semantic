@@ -6,7 +6,7 @@
 void world_menu_init_subsystem_pointers(void) {
     g_world_threads = g_world_thread_contexts;
     g_world_text_glyph_bitmap_data = g_world_text_glyph_bitmaps;
-    g_world_menu_glyph_sheet = g_world_menu_glyph_image;
+    g_world_menu_glyph_sheet = &g_world_menu_glyph_image;
     g_world_event_script = (const u8*)g_main_script_event_block;
     g_world_script_variables = g_main_script_variables;
     g_world_menu_thread_menu_data = g_world_menu_system_entries;

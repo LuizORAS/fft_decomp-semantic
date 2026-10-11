@@ -6,9 +6,9 @@ s32 battle_effect_code_script_22_add_immediate_to_selected_counter(effect_record
     battle_effect_script_instruction_t* instruction;
     u16 amount;
 
-    instruction = BATTLE_EFFECT_SCRIPT_INSTRUCTION_AT(record->script, record->pc);
-    amount = instruction->value.value.unsigned_value;
-    record->counters[instruction->value.header.bytes.packed_parameters >> 6] += amount;
+    instruction = battle_effect_get_current_script_instruction(record);
+    amount = (u16)instruction->immediate.value;
+    record->counters[instruction->header.packed_parameters >> 6] += amount;
     record->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

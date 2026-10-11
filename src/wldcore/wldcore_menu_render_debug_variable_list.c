@@ -5,7 +5,7 @@
  * `value` first holds the row count for the panel height and then each
  * variable's value: one register (v1) in the target. */
 void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t* level) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t point;
     s32 index;
     wldcore_point32_t* base;
@@ -23,16 +23,16 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
     }
     value = level->row_count;
     index = level->render_index;
-    bounds.position.x = 0;
-    bounds.position.y = 0;
-    bounds.dimensions.x = 0x68;
-    bounds.dimensions.y = value * 0x10 + 0x10;
+    bounds.x = 0;
+    bounds.y = 0;
+    bounds.w = 0x68;
+    bounds.h = value * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     /* Direct record indexing moves the symbol load after the index scaling
      * and breaks the exact match. Retain the target's biased base and stride. */
     records = &g_wldcore_window_render_records[0].base;
     base = (wldcore_point32_t*)((u8*)records + index * sizeof(wldcore_window_render_record_t));
-    base->x = -(bounds.dimensions.x / 2);
+    base->x = -(bounds.w / 2);
     base->y = -88;
     point.x = 8;
     point.y = 8;

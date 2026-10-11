@@ -4,22 +4,10 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* One sprite part of a cel, two packed words. The byte view supplies the
- * position and the source rectangle; the word view supplies the bitfields. */
-typedef union wldcore_sprite_part {
-    struct {
-        u8 x; /* 0x00; biased by 0x80 */
-        u8 y; /* 0x01; biased by 0x80 */
-        u8 _unused_02[2];
-        u8 h; /* 0x04 */
-        u8 w; /* 0x05 */
-        u8 _unused_06;
-        u8 u; /* 0x07 */
-    } field;
-    struct {
-        u32 flags;   /* 0x00 */
-        u32 texture; /* 0x04 */
-    } packed;
+/* One sprite part of a cel, two packed words. */
+typedef struct wldcore_sprite_part {
+    u32 flags;
+    u32 texture;
 } wldcore_sprite_part_t;
 
 extern wldcore_anim_sequence_t** g_wldcore_anim_sequence_table;
@@ -36,8 +24,8 @@ extern wldcore_anim_sequence_t** g_wldcore_anim_sequence_table;
  * The parts are walked back to front as raw word indices: the target spells the
  * subscript ((frame_count - i) * 2) | 1 into the cel's word array, which is the
  * part's second word, and reaches the part itself from there. Indexing a part
- * array of the union type instead produces a different address computation, so
- * the word view is kept and the union carries the field names.
+ * array of records instead produces a different address computation, so
+ * the word index is retained.
  *
  * Both high halves are masked before the shift. The code is the same as a
  * plain shift, but it matches the target's 0x88-byte frame: CSE shares the
@@ -115,19 +103,19 @@ step_frame:
             mode = (words[index] >> 28) & 3;
         }
         part = (wldcore_sprite_part_t*)(index * 4 + (s32)words);
-        sprite.attribute |= (part->packed.flags & 0x07000000) >> 2;
-        px = part->field.x - 0x80;
+        sprite.attribute |= (part->flags & 0x07000000) >> 2;
+        px = (u8)part->flags - 0x80;
         sprite.x = object->position.x + px;
-        px = part->field.y - 0x80;
+        px = (u8)(part->flags >> 8) - 0x80;
         sprite.y = object->position.y + px;
-        sprite.w = part->field.w;
-        sprite.h = part->field.h;
+        sprite.w = (u8)(part->texture >> 8);
+        sprite.h = (u8)part->texture;
         sprite.tpage = GetTPage(0, mode, clut_x, clut_y);
-        sprite.u = part->field.u;
-        sprite.v = (part->packed.texture & 0xff0000) >> 16;
+        sprite.u = (u8)(part->texture >> 24);
+        sprite.v = (part->texture & 0xff0000) >> 16;
         palette = object->palette;
-        if (palette == 0 || (part->packed.flags & 0x08000000)) {
-            sprite.cx = (cx_base + (part->packed.flags & 0xff0000)) >> 12;
+        if (palette == 0 || (part->flags & 0x08000000)) {
+            sprite.cx = (cx_base + (part->flags & 0xff0000)) >> 12;
         } else {
             sprite.cx = cx_base + ((palette - 1) << 4);
         }

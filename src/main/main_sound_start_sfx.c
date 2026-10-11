@@ -68,7 +68,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
     count = g_main_sound_sfx_channel_count;
     DisableEvent(g_main_root_counter_2_event);
     do {
-        channel->sound_id.raw = sound_id;
+        channel->sound_id = sound_id;
         channel->start_tick = g_main_sound_tick_count;
         channel->priority = priority;
         if (*offsets != 0) {

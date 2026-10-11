@@ -15,7 +15,7 @@ void wldcore_proposition_push_detail_level(s32 value) {
     s32 index;
     s32 depth;
     u8 state;
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     wldcore_point32_t* base;
 
     state = g_main_proposition_states[value];
@@ -37,10 +37,10 @@ void wldcore_proposition_push_detail_level(s32 value) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_render.render_index = index;
-    bounds.position.y = 0x60;
-    bounds.dimensions.x = 0xF4;
-    bounds.dimensions.y = 0x80;
-    bounds.position.x = 0;
+    bounds.y = 0x60;
+    bounds.w = 0xF4;
+    bounds.h = 0x80;
+    bounds.x = 0;
     wldcore_window_init_render_record_image(
         index, bounds, 0, value + TEXT_ID_WORLD_MESSAGE_BASE, g_wldcore_window_image_buffer);
     base = &g_wldcore_window_render_records[index].base;
