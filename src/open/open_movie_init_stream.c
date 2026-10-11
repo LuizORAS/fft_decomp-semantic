@@ -4,8 +4,8 @@
 
 /* Prepare the MDEC and the 0x30-sector CD ring for a movie and aim the drive at
  * it: a one-sector read with no destination makes the file loader seek to
- * `sector` and leaves its position in g_open_file_location (the loader
- * descriptor's position field), which is then set as the read location. */
+ * `sector` and leaves its position in the loader descriptor, which is then
+ * set as the read location. */
 void open_movie_init_stream(s32 sector, psyq_interrupt_callback_t output_callback) {
     main_file_load_descriptor_t* header;
 
@@ -21,5 +21,5 @@ void open_movie_init_stream(s32 sector, psyq_interrupt_callback_t output_callbac
         VSync(0);
     }
 
-    while (CdControl(CdlSetloc, g_open_file_location, 0) == 0) { }
+    while (CdControl(CdlSetloc, (u8*)&g_main_file_cd_state.position, 0) == 0) { }
 }

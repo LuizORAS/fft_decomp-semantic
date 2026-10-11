@@ -27,7 +27,6 @@ extern s32 g_open_file_current_openbk_image_id;
 extern void* g_open_file_destination;
 extern const s32 g_open_file_openbk_end_sector_offsets[];
 extern const s32 g_open_file_openbk_start_sector_offsets[];
-extern u8 g_open_file_location[];
 void open_file_build_openbk_header(s32 image_id, void* destination);
 void open_file_load_end_movie_graphics(void);
 void open_file_load_main_menu_graphics(void);

@@ -36,8 +36,8 @@ void open_script_update_xa_audio(void) {
             }
             break;
         case 4:
-            CdIntToPos(DISC_SECTOR_OPEN_ENDING_XA, g_open_file_location);
-            CdControlF(CdlSeekL, g_open_file_location);
+            CdIntToPos(DISC_SECTOR_OPEN_ENDING_XA, &g_main_file_cd_state.position);
+            CdControlF(CdlSeekL, (u8*)&g_main_file_cd_state.position);
             {
                 s32* state = &g_open_script_state.control_state;
 
