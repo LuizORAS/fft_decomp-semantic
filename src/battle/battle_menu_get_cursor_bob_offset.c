@@ -1,18 +1,10 @@
 #include "fft/battle.h"
 
-typedef struct battle_menu_cursor_bob_threshold {
-    s8 threshold;
-    s8 offset;
-} battle_menu_cursor_bob_threshold_t;
-
-extern battle_menu_cursor_bob_threshold_t g_battle_cursor_bob_thresholds[];
-extern battle_menu_cursor_bob_threshold_t g_battle_cursor_bob_active_thresholds[];
-
 /* Return the cursor's vertical animation offset for the current menu frame.
  *
  * The two signed threshold tables produce the idle and active cursor curves. */
 s32 battle_menu_get_cursor_bob_offset(s32 mode) {
-    battle_menu_cursor_bob_threshold_t* entry;
+    menu_cursor_bob_entry_t* entry;
     s32 counter;
     s32 threshold;
 

@@ -3131,10 +3131,11 @@ extern s16 g_world_field_object_use_request;
 extern u16 g_world_field_object_wait_status;
 extern u16 g_world_frame_arg;
 extern s32 g_world_frame_counter;
-extern s8 g_world_cursor_bob_thresholds[];        /* (threshold, value) pairs, 0-terminated; entry 0 is the modulus */
-extern s8 g_world_cursor_bob_active_thresholds[]; /* (threshold, value) pairs, 0-terminated */
-extern u16 g_world_saved_animation_speed;         /* saved animation speed */
-extern u16 g_world_animation_speed_forced;        /* animation speed override active */
+extern menu_cursor_bob_entry_t
+    g_world_cursor_bob_thresholds[]; /* (threshold, value) pairs, 0-terminated; entry 0 is the modulus */
+extern menu_cursor_bob_entry_t g_world_cursor_bob_active_thresholds[]; /* (threshold, value) pairs, 0-terminated */
+extern u16 g_world_saved_animation_speed;                              /* saved animation speed */
+extern u16 g_world_animation_speed_forced;                             /* animation speed override active */
 extern u8 g_world_rotation_speed_frames[];
 extern u8 g_world_location_names_resident[];
 extern s16 g_world_debug_variable_list_request_state;

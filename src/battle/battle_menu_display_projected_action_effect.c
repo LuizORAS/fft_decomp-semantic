@@ -2,16 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* The two 0x3c-byte label entries at 0x80168474, as this file uses them; entry 1 holds the defaults. */
-typedef struct battle_menu_preview_label_panel {
-    u16 x;               /* 0x00 */
-    u8 _unused_02[0xa];  /* 0x02 */
-    u16 _unknown_0c;     /* 0x0c */
-    u8 _unused_0e[0x2e]; /* 0x0e */
-} battle_menu_preview_label_panel_t;
-
-extern battle_menu_preview_label_panel_t g_battle_menu_projected_label_panels[2];
-
 /*
  * Loads the action-preview result image (HP/MP/gil/EXP/level/status/stat
  * change) and sets up the value panel for the current preview action.
@@ -25,7 +15,7 @@ extern battle_menu_preview_label_panel_t g_battle_menu_projected_label_panels[2]
 s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_image_location_t* base_load,
     const RECT* base_screen, world_gfx_image_load_parameters_t* params) {
     menu_number_entry_t* panel;
-    battle_menu_preview_label_panel_t* label;
+    u16* label_x;
     const battle_action_display_image_rect_t* rect;
     s32 value;
     s32 image;
@@ -35,7 +25,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
     s32 x;
     u32 exp;
     u16* digits_x;
-    u16* label_0c;
+    u16* extra_label_x;
     battle_action_data_t* action;
     u8 target_id;
 
@@ -48,12 +38,12 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
     g_battle_menu_projected_value_panel[0].y = 0;
     digits_x = &panel[1].x;
     *digits_x = 0x32;
-    label = &g_battle_menu_projected_label_panels[0];
+    label_x = &g_battle_menu_attack_caster_quad_image_params[0][2].x_screen_offset;
     image = 0;
     g_battle_menu_projected_value_panel[1].kind = 0;
-    label->x = g_battle_menu_projected_label_panels[1].x;
-    label_0c = &label->_unknown_0c;
-    *label_0c = g_battle_menu_projected_label_panels[1]._unknown_0c;
+    *label_x = g_battle_menu_attack_caster_quad_image_params[1][2].x_screen_offset;
+    extra_label_x = &g_battle_menu_attack_caster_quad_image_params[0][3].x_screen_offset;
+    *extra_label_x = g_battle_menu_attack_caster_quad_image_params[1][3].x_screen_offset;
     /* A skipped preview leaves the action null, and its accuracy is read
      * (from kernel RAM) before the null test. */
     action = g_battle_menu_preview_target_action;
@@ -92,7 +82,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
             g_battle_menu_projected_value_panel[0].format = 0x804;
         }
         panel[0].kind = 0;
-        label->x -= 4;
+        *label_x -= 4;
         panel[0].x -= 10;
         panel[0].y += 4;
         *digits_x += 2;
@@ -111,7 +101,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
         number_x = panel[0].x;
         number_x -= 8;
         panel[0].x = number_x;
-        label->x -= 8;
+        *label_x -= 8;
     } else if ((g_battle_menu_preview_target_action->special_effect
                    & (BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP | BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN))
         && (g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)) {
@@ -130,19 +120,19 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
         image = BATTLE_ACTION_DISPLAY_IMAGE_QUICK;
         value = 0;
         panel[0].kind = 2;
-        label->x = label->x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_QUICK].width + 8;
+        *label_x = *label_x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_QUICK].width + 8;
     } else if ((g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)
         && (g_battle_menu_preview_target_action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM)) {
         image = BATTLE_ACTION_DISPLAY_IMAGE_STOLEN;
         value = 0;
         panel[0].kind = 2;
-        label->x = label->x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_STOLEN].width + 8;
+        *label_x = *label_x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_STOLEN].width + 8;
     } else if ((g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)
         && (g_battle_menu_preview_target_action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT)) {
         image = BATTLE_ACTION_DISPLAY_IMAGE_BROKEN;
         value = 0;
         panel[0].kind = 2;
-        label->x = label->x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_BROKEN].width + 8;
+        *label_x = *label_x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_BROKEN].width + 8;
     } else if (g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_STATUS_CHANGE) {
         g_battle_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
         image = battle_thread_call_on_main_stack(g_battle_menu_preview_target_action);
@@ -163,11 +153,11 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
                 panel[0].kind = 2;
             }
             width = g_battle_action_display_image_rects[image].width;
-            x = label->x - width;
+            x = *label_x - width;
             value = 0;
-            label->x = x + 8;
+            *label_x = x + 8;
             if (extra != 0) {
-                *label_0c = x - 0x12;
+                *extra_label_x = x - 0x12;
             }
         } else {
             panel[0].kind = 2;
@@ -177,27 +167,27 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
         if (g_battle_menu_preview_target_action->sp_change != 0) {
             image = BATTLE_ACTION_DISPLAY_IMAGE_SPEED;
             value = g_battle_menu_preview_target_action->sp_change;
-            label->x -= 0x26;
+            *label_x -= 0x26;
         } else if (g_battle_menu_preview_target_action->ct_change != 0) {
             image = BATTLE_ACTION_DISPLAY_IMAGE_CT;
             value = g_battle_menu_preview_target_action->ct_change;
-            label->x -= 0x1e;
+            *label_x -= 0x1e;
         } else if (g_battle_menu_preview_target_action->pa_change != 0) {
             image = BATTLE_ACTION_DISPLAY_IMAGE_PHYSICAL_ATTACK;
             value = g_battle_menu_preview_target_action->pa_change;
-            label->x -= 0x14;
+            *label_x -= 0x14;
         } else if (g_battle_menu_preview_target_action->ma_change != 0) {
             image = BATTLE_ACTION_DISPLAY_IMAGE_MAGICAL_ATTACK;
             value = g_battle_menu_preview_target_action->ma_change;
-            label->x -= 0x14;
+            *label_x -= 0x14;
         } else if (g_battle_menu_preview_target_action->brave_change != 0) {
             image = BATTLE_ACTION_DISPLAY_IMAGE_BRAVE;
             value = g_battle_menu_preview_target_action->brave_change;
-            label->x -= 0x24;
+            *label_x -= 0x24;
         } else if (g_battle_menu_preview_target_action->faith_change != 0) {
             image = BATTLE_ACTION_DISPLAY_IMAGE_FAITH_STAT;
             value = g_battle_menu_preview_target_action->faith_change;
-            label->x -= 0x24;
+            *label_x -= 0x24;
         }
         if (image >= BATTLE_ACTION_DISPLAY_IMAGE_CT && image <= BATTLE_ACTION_DISPLAY_IMAGE_MAGICAL_ATTACK) {
             panel[0].x += 0x10;
@@ -206,7 +196,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
                 if (image == BATTLE_ACTION_DISPLAY_IMAGE_CT && value == 0xff) {
                     value = 0x64;
                     panel[0].format = 3;
-                    label->x = label->x; /* reloads and rewrites x, as the target does */
+                    *label_x = *label_x; /* reloads and rewrites x, as the target does */
                     panel[0].x -= 8;
                 }
             } else {
@@ -214,7 +204,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_imag
                 if (image == BATTLE_ACTION_DISPLAY_IMAGE_CT && value == 0x7f) {
                     value = 0;
                     panel[0].format = 2;
-                    label->x += 8;
+                    *label_x += 8;
                 }
             }
             value &= BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;

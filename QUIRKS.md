@@ -5,6 +5,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 
 ## Retail bugs the source reproduces
 
+- `battle_unit_calculate_height_data`: the seven-byte result preserves an uninitialized elevation high bit; an unavailable unit leaves the other result fields unset.
 - `DrawOTagEnv`: the diagnostic string uses literal `&08x` for its second item, so it does not format the environment pointer.
 - `StCdInterrupt`: without `CdlModeSize1`, it skips the local disc-position read but still copies the uninitialized four bytes into the ring descriptor.
 - `sprintf`: unchecked precision and zero padding can overrun its 512-byte temporary segment buffer.

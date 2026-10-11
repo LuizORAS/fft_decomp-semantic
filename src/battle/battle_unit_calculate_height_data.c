@@ -1,19 +1,5 @@
 #include "fft/battle.h"
 
-/* The result bytes as the target writes them. The elevation store is a 7-bit
- * field write that keeps bit 7 of the uninitialized local byte, and only these
- * 7 bytes are copied out. */
-typedef struct battle_unit_height_copy {
-    u8 x;
-    u8 y;
-    u8 elevation : 7;
-    u8 unknown_bit7 : 1;
-    u8 unit_flags;
-    s8 unit_height;
-    s8 walking_height;
-    s8 total_height;
-} battle_unit_height_copy_t;
-
 /* Build a unit's targeting-height record.
  *
  * For a non-Chocobo, another unit at the same x, y, and elevation supplies
@@ -26,7 +12,7 @@ typedef struct battle_unit_height_copy {
  * outranks `depth` in allocation, which gives it $v1 and `depth` $a1.
  */
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id) {
-    battle_unit_height_copy_t height;
+    battle_unit_height_data_t height;
     battle_stats_t* unit;
     battle_stats_t* candidate;
     map_tile_t* tile;
@@ -104,6 +90,6 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
     } else {
         height.unit_flags = BATTLE_UNIT_HEIGHT_UNAVAILABLE;
     }
-    *(battle_unit_height_copy_t*)out = height;
+    *out = height;
     return out;
 }

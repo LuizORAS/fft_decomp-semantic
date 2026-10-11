@@ -4995,17 +4995,18 @@ typedef struct battle_war_result {
 } battle_war_result_t;
 typedef char battle_war_result_size_must_be_0x24[(sizeof(battle_war_result_t) == 0x24) ? 1 : -1];
 
+/* Seven result bytes; assigning elevation preserves the unassigned high bit. */
 typedef struct battle_unit_height_data {
     u8 x;
     u8 y;
-    u8 elevation;
+    u8 elevation : 7;
+    u8 _unused_02 : 1; /* not read or assigned */
     u8 unit_flags;
     u8 unit_height;
     u8 walking_height;
     u8 total_height;
-    u8 _unused_07; /* not written by battle_unit_calculate_height_data */
 } battle_unit_height_data_t;
-typedef char battle_unit_height_data_size_must_be_8[sizeof(battle_unit_height_data_t) == 8 ? 1 : -1];
+typedef char battle_unit_height_data_size_must_be_7[sizeof(battle_unit_height_data_t) == 7 ? 1 : -1];
 
 /* Sprite lookup result filled in by battle_gfx_get_unit_sprite_frame_and_vram_ids. */
 typedef struct {
@@ -5099,6 +5100,8 @@ extern u8 g_battle_unit_status_first_page_by_mode[];
 extern CVECTOR g_battle_unit_status_gauge_colors[];
 extern world_gfx_image_load_parameters_t g_battle_unit_status_icon_image_params[];
 extern u16 g_battle_unit_status_quad_clut_pairs[][2];
+/* Live caster-panel image parameters followed by their defaults. */
+extern world_gfx_image_load_parameters_t g_battle_menu_attack_caster_quad_image_params[2][5];
 extern world_gfx_image_load_parameters_t* g_battle_unit_status_quad_image_params_by_mode[];
 extern u16 g_battle_unit_status_sprite_clut_pairs[][2];
 extern world_gfx_image_load_parameters_t* g_battle_unit_status_sprite_image_params_by_mode[];
@@ -8602,6 +8605,8 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
 void battle_menu_enter_status_screen_selection(void);
 void battle_menu_fade_out_thread(void);
 void battle_menu_free_high_overlay(void);
+extern menu_cursor_bob_entry_t g_battle_cursor_bob_thresholds[];
+extern menu_cursor_bob_entry_t g_battle_cursor_bob_active_thresholds[];
 s32 battle_menu_get_cursor_bob_offset(s32 mode);
 battle_ai_command_t* battle_menu_get_selected_command_address(void);
 void battle_menu_icon_linked_entry_thread(void);

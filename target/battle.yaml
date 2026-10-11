@@ -2441,7 +2441,7 @@ data:
   - {addr: 0x80168384, name: g_battle_menu_sprite_page_texture_windows}
   - {addr: 0x801683ac, name: g_battle_menu_sprite_page_image_params}
   - {addr: 0x801683e8, name: g_battle_menu_sprite_page_image_param_bases}
-  - {addr: 0x80168474, name: g_battle_menu_projected_label_panels}
+  - {addr: 0x80168454, name: g_battle_menu_attack_caster_quad_image_params}
   - {addr: 0x80168544, name: g_battle_unit_status_quad_clut_pairs}
   - {addr: 0x801685fc, name: g_battle_unit_status_sprite_clut_pairs}
   - {addr: 0x80168618, name: g_battle_unit_status_icon_image_params}

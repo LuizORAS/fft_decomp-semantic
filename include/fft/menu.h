@@ -605,6 +605,13 @@ typedef enum menu_script_opcode {
     MENU_SCRIPT_OP_NUMBER_TINTED = 0x1b,                  /* sprite colour */
 } menu_script_opcode_e;
 
+/* One cursor animation threshold and its signed screen offset. */
+typedef struct menu_cursor_bob_entry {
+    s8 threshold;
+    s8 offset;
+} menu_cursor_bob_entry_t;
+typedef char menu_cursor_bob_entry_size_must_be_2[sizeof(menu_cursor_bob_entry_t) == 2 ? 1 : -1];
+
 /* Six-byte menu sprite cell: screen rectangle and texture origin. */
 typedef struct battle_menu_sprite_cell {
     u8 x;
