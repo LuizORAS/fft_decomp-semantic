@@ -1,8 +1,6 @@
 #include "fft/event_option.h"
 #include "psx/types.h"
 
-/* option_at_menu_t lives in fft/event_option.h. */
-
 /*
  * Rebuild the AT (turn order) list from the descriptor table and size the
  * menu window around it.
@@ -17,7 +15,7 @@
  * temporary: the store through the layout pointer may alias the menu record,
  * so the repeated window_y store is not redundant to the compiler.
  */
-void option_menu_init_at_list(option_at_menu_t* menu) {
+void option_menu_init_at_list(world_menu_entry_t* menu) {
     s32 entry_count;
     s32 has_special_entry;
     s32 index;
@@ -99,28 +97,42 @@ void option_menu_init_at_list(option_at_menu_t* menu) {
     }
 
     if (has_special_entry != 0) {
+        world_menu_text_layout_t* layout;
+
         menu->window_y = 0x20;
-        menu->layout->row_count = 10;
+        layout = menu->context;
+        layout->row_count = 10;
         menu->window_x = 0x8c;
         menu->window_y = 0x20;
         menu->window_width = 0xe8;
-        menu->overall_width = 0xe8;
+        menu->text_image.width = 0xe8;
         menu->inner_width = 0xe8;
     } else {
+        world_menu_text_layout_t* layout;
+
         menu->window_y = 0x20;
-        menu->layout->row_count = 10;
+        layout = menu->context;
+        layout->row_count = 10;
         menu->window_x = 0xbe;
         menu->window_y = 0x20;
         menu->window_width = 0x84;
-        menu->overall_width = 0x84;
+        menu->text_image.width = 0x84;
         menu->inner_width = 0x84;
     }
 
     if (entry_count < 10) {
+        world_menu_text_layout_t* layout;
+        world_menu_text_layout_t* resized_layout;
+
         menu->window_y = (10 - entry_count) * 8 + 0x20;
-        menu->layout->row_count = entry_count;
-        menu->layout->hidden_rows = 0;
+        layout = menu->context;
+        layout->row_count = entry_count;
+        resized_layout = menu->context;
+        resized_layout->hidden_rows = 0;
     } else {
-        menu->layout->hidden_rows = entry_count - 10;
+        world_menu_text_layout_t* layout;
+
+        layout = menu->context;
+        layout->hidden_rows = entry_count - 10;
     }
 }

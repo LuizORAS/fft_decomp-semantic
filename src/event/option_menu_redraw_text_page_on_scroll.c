@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Apply scroll input, rebuild the menu image, and upload the changed region. */
-void* option_menu_redraw_text_page_on_scroll(
+u8* option_menu_redraw_text_page_on_scroll(
     world_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor) {
     RECT source;
     RECT clear_strip;

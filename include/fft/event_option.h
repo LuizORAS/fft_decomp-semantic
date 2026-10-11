@@ -24,33 +24,14 @@ void option_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t
 void option_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 
 /* menu */
-/* Record types hoisted out of the defining .c files so that callers and
- * definitions agree on one spelling. */
-
-/* OPTION's view of the 0x3c-byte menu record (g_battle_menu_thread_menu_data);
- * field names follow world_menu_entry_t. */
-typedef struct option_at_menu {
-    s16 vram_x;       /* 0x00: text-image VRAM x */
-    s16 vram_y;       /* 0x02: text-image VRAM y */
-    s16 inner_width;  /* 0x04 */
-    s16 inner_height; /* 0x06 */
-    s16 window_x;     /* 0x08 */
-    s16 window_y;     /* 0x0a */
-    s16 window_width; /* 0x0c */
-    u8 _unused_0e[6];
-    s16 overall_width; /* 0x14 */
-    u8 _unused_16[0x1a];
-    world_menu_text_layout_t* layout; /* 0x30 */
-} option_at_menu_t;
-
-extern const u8 g_option_menu_at_list_entry_table[];
-extern const void* g_option_menu_at_list_entry_table_pointer;
+extern world_menu_text_layout_t g_option_menu_at_list_entry_table[1];
+extern world_menu_text_layout_t* g_option_menu_at_list_entry_table_pointer;
 extern s16 g_option_menu_at_list_flags[];
 extern s16 g_option_menu_at_list_indices[];
 extern s16 g_option_menu_at_list_menu_type;
 extern s16 g_option_menu_at_list_primary_values[];
 extern s16 g_option_menu_at_list_secondary_values[];
-extern option_at_menu_t g_option_menu_at_list_state[];
+extern world_menu_entry_t g_option_menu_at_list_state[1];
 extern u8 g_option_menu_at_list_text[];
 extern battle_at_entry_t g_option_menu_at_list_descriptors[40];
 extern world_menu_text_layout_t g_option_menu_entry_table[1];
@@ -72,12 +53,12 @@ extern RECT g_option_menu_entry_panel_rect;
 extern world_menu_entry_t g_option_menu_icon_thread_param;
 extern RECT g_option_menu_title_image_rect;
 extern RECT g_option_menu_value_image_rect;
-void option_menu_init_at_list(option_at_menu_t* menu);
+void option_menu_init_at_list(world_menu_entry_t* menu);
 void option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, u8* buffer);
 void option_menu_start_at_list_thread(void);
 void option_menu_start_dead_unit_threads(void);
 void option_menu_window_frame_thread(void);
-void* option_menu_redraw_text_page_on_scroll(
+u8* option_menu_redraw_text_page_on_scroll(
     world_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor);
 
 /* text */
