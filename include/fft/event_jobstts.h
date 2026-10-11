@@ -79,20 +79,6 @@ menu_instruction_t* jobstts_cmd_skip_group(menu_instruction_t* instruction);
 void jobstts_cmd_run_stream_with_mode(u8* data, s32 flags, s32 event_mode);
 
 /* gfx */
-/* Texture cell read by the oriented-quad renderer. */
-typedef struct jobstts_oriented_uv {
-    u8 u; /* 0x00 */
-    u8 _unused_01;
-    u8 v; /* 0x02 */
-    u8 _unused_03;
-    u8 uw; /* 0x04 */
-    u8 _unused_05;
-    u8 vh;          /* 0x06 */
-    u8 _padding_07; /* 0x07; aligns clut */
-    u16 clut;       /* 0x08 */
-    u16 tpage;      /* 0x0a */
-} jobstts_oriented_uv_t;
-
 /* Per-buffer primitive-pool pointers used by JOBSTTS.OUT's renderer. */
 typedef struct jobstts_gfx_context {
     u32* otag;                /* 0x00 */
@@ -194,7 +180,7 @@ void jobstts_gfx_enqueue_textured_quad(
     RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index);
 
 void jobstts_gfx_enqueue_oriented_textured_quad(
-    RECT* rect, jobstts_oriented_uv_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index);
+    RECT* rect, world_gfx_texture_source_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad_rect(
     RECT* rect, menu_icon_source_t* tex, rgb24_t* color, s32 semitrans, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad_list(

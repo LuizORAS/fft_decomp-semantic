@@ -168,20 +168,20 @@ typedef union world_texture_prim {
  * four screen points, four texture points (only the low byte of each
  * halfword is used), then the CLUT and texture page. */
 typedef struct world_gfx_textured_quad_source {
-    s16 x0, y0;    /* 0x00 */
-    s16 x1, y1;    /* 0x04 */
-    s16 x2, y2;    /* 0x08 */
-    s16 x3, y3;    /* 0x0c */
-    u8 u0, u0_pad; /* 0x10 */
-    u8 v0, v0_pad; /* 0x12 */
-    u8 u1, u1_pad; /* 0x14 */
-    u8 v1, v1_pad; /* 0x16 */
-    u8 u2, u2_pad; /* 0x18 */
-    u8 v2, v2_pad; /* 0x1a */
-    u8 u3, u3_pad; /* 0x1c */
-    u8 v3, v3_pad; /* 0x1e */
-    u16 clut;      /* 0x20 */
-    u16 tpage;     /* 0x22 */
+    s16 x0, y0; /* 0x00 */
+    s16 x1, y1; /* 0x04 */
+    s16 x2, y2; /* 0x08 */
+    s16 x3, y3; /* 0x0c */
+    u16 u0;     /* 0x10 */
+    u16 v0;     /* 0x12 */
+    u16 u1;     /* 0x14 */
+    u16 v1;     /* 0x16 */
+    u16 u2;     /* 0x18 */
+    u16 v2;     /* 0x1a */
+    u16 u3;     /* 0x1c */
+    u16 v3;     /* 0x1e */
+    u16 clut;   /* 0x20 */
+    u16 tpage;  /* 0x22 */
 } world_gfx_textured_quad_source_t;
 
 /* Twelve-byte texture cell copied by the formation portrait producers and
