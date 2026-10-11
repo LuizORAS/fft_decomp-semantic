@@ -578,19 +578,24 @@ typedef struct {
 typedef TILE_1 TILE_8;
 typedef TILE_1 TILE_16;
 
-/* Resolved retail TMD record used by ReadTMD; field offsets are measured. */
+/* Psy-Q decoded TMD primitive. Some fields are unused for a given primitive mode. */
 typedef struct {
     u32 id;
-    CVECTOR color0, color1, color2, color3;
+    u8 r0, g0, b0, p0;
+    u8 r1, g1, b1, p1;
+    u8 r2, g2, b2, p2;
+    u8 r3, g3, b3, p3;
     u16 tpage, clut;
     u8 u0, v0, u1, v1, u2, v2, u3, v3;
     SVECTOR x0, x1, x2, x3;
     SVECTOR n0, n1, n2, n3;
-    SVECTOR* vertex_base;
-    SVECTOR* normal_base;
-    u16 vertex0, vertex1, vertex2, vertex3;
-    u16 normal0, normal1, normal2, normal3;
-} psyq_tmd_primitive_t;
+    SVECTOR* v_ofs;
+    SVECTOR* n_ofs;
+    u16 vert0, vert1, vert2, vert3;
+    u16 norm0, norm1, norm2, norm3;
+} TMD_PRIM;
+
+typedef char assert_tmd_prim_size[sizeof(TMD_PRIM) == 0x78 ? 1 : -1];
 
 extern void FntLoad(int, int);
 extern int FntOpen(int, int, int, int, int, int);
@@ -677,7 +682,7 @@ void SetDrawTPage(DR_TPAGE* p, int dfe, int dtd, int tpage);
 void SetDrawLoad(DR_LOAD* primitive, RECT* rect);
 int MargePrim(void* first, void* second);
 int OpenTMD(u32* tmd, int object_index);
-psyq_tmd_primitive_t* ReadTMD(psyq_tmd_primitive_t* primitive);
+TMD_PRIM* ReadTMD(TMD_PRIM* primitive);
 
 /* driver internals */
 
@@ -887,7 +892,7 @@ extern const char g_psyq_gpu_tmd_normals_format[];
 extern const char g_psyq_gpu_tmd_primitives_format[];
 int psyq_gpu_open_tmd_object(
     psyq_tmd_header_t* header, int object_index, psyq_tmd_packet_t** primitive, SVECTOR** vertices, SVECTOR** normals);
-int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, psyq_tmd_primitive_t* primitive);
+int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, TMD_PRIM* primitive);
 
 extern volatile psyq_gpu_operation_snapshot_t g_psyq_gpu_last_operation;
 extern const char g_psyq_gpu_timeout_state_format[];

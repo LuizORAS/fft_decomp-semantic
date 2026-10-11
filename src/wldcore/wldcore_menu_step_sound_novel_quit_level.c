@@ -86,9 +86,9 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
-        g_wldcore_screen_brightness_rgb[0] = 0;
-        g_wldcore_screen_brightness_rgb[1] = 0;
-        g_wldcore_screen_brightness_rgb[2] = 0;
+        g_wldcore_screen_brightness_rgb.r = 0;
+        g_wldcore_screen_brightness_rgb.g = 0;
+        g_wldcore_screen_brightness_rgb.b = 0;
         g_wldcore_screen_fade_state.flags[0] |= WLDCORE_SCREEN_FADE_OUT;
         first = g_wldcore_sound_novel_text_history_0;
         g_wldcore_sound_novel_text_history_0 = -1;

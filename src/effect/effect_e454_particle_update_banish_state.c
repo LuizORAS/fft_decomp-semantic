@@ -9,10 +9,10 @@
  *
  * The work holds four 16-byte vertex slots per 64-byte row; the overlay table
  * at 0x801c48dc lists (slot, row) byte pairs for emitter groups 1-12, and
- * groups 13 and 14 walk pairs 0-3 and 4-11. The loops step the byte index by
- * 2, which keeps loop.c from reducing the table address to a pointer. */
+ * groups 13 and 14 walk pairs 0-3 and 4-11. */
 s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame) {
     effect_record_t* record;
+    /* VECTOR indexing changes the offset-sum register. */
     u8* work;
     effect_work_record_t parent;
     s32 emitter_index;
@@ -52,8 +52,8 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
             if (group >= 1 && group <= 12) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
                     i = group - 1;
-                    offset = (&g_effect_e454_particle_work_offset_scale_16)[i * 2] << 4;
-                    offset += (&g_effect_e454_particle_work_offset_scale_64)[i * 2] << 6;
+                    offset = g_effect_e454_particle_vertex_locations[i].slot << 4;
+                    offset += g_effect_e454_particle_vertex_locations[i].row << 6;
                     vertex = (VECTOR*)(work + offset);
                     parent.motion.position.x = vertex->vx << 12;
                     parent.motion.position.y = vertex->vy << 12;
@@ -63,9 +63,9 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
                 }
             } else if (group == 13) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
-                    for (i = 0; i < 8; i += 2) {
-                        offset = (&g_effect_e454_particle_work_offset_scale_16)[i] << 4;
-                        offset += (&g_effect_e454_particle_work_offset_scale_64)[i] << 6;
+                    for (i = 0; i < 4; i++) {
+                        offset = g_effect_e454_particle_vertex_locations[i].slot << 4;
+                        offset += g_effect_e454_particle_vertex_locations[i].row << 6;
                         vertex = (VECTOR*)(work + offset);
                         parent.motion.position.x = vertex->vx << 12;
                         parent.motion.position.y = vertex->vy << 12;
@@ -76,9 +76,9 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
                 }
             } else if (group == 14) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
-                    for (i = 8; i < 24; i += 2) {
-                        offset = (&g_effect_e454_particle_work_offset_scale_16)[i] << 4;
-                        offset += (&g_effect_e454_particle_work_offset_scale_64)[i] << 6;
+                    for (i = 4; i < 12; i++) {
+                        offset = g_effect_e454_particle_vertex_locations[i].slot << 4;
+                        offset += g_effect_e454_particle_vertex_locations[i].row << 6;
                         vertex = (VECTOR*)(work + offset);
                         parent.motion.position.x = vertex->vx << 12;
                         parent.motion.position.y = vertex->vy << 12;

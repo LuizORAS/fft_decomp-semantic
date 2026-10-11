@@ -1450,8 +1450,7 @@ functions:
   - {addr: 0x801c4168, size: 1908, name: effect_e454_update_textured_quad_grid_4x4, hash: 7c4feff22928839e}
 
 data:
-  - {addr: 0x801c48dc, name: g_effect_e454_particle_work_offset_scale_16}
-  - {addr: 0x801c48dd, name: g_effect_e454_particle_work_offset_scale_64}
+  - {addr: 0x801c48dc, name: g_effect_e454_particle_vertex_locations}
   - {addr: 0x801c48f4, name: g_effect_e454_polar_mesh_brightness_table}
   - {addr: 0x801c499c, name: g_effect_gfx_brightness_table}
 ---
@@ -1602,8 +1601,7 @@ functions:
 data:
   - {addr: 0x801c4dc4, name: g_effect_summon_mesh_brightness_table}
   - {addr: 0x801c4e9c, name: g_effect_e464_single_ring_mesh_brightness_table}
-  - {addr: 0x801c4ecc, name: g_effect_e464_particle_work_offset_scale_16}
-  - {addr: 0x801c4ecd, name: g_effect_e464_particle_work_offset_scale_64}
+  - {addr: 0x801c4ecc, name: g_effect_e464_particle_vertex_locations}
 ---
 module: effect-e465
 file: EFFECT/E465.BIN

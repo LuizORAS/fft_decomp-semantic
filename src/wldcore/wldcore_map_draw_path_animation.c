@@ -29,9 +29,9 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
     poly.v2 = 0xEF;
     poly.u3 = 0x97;
     poly.v3 = 0xEF;
-    poly.r0 = g_wldcore_screen_brightness_rgb[0];
-    poly.g0 = g_wldcore_screen_brightness_rgb[1];
-    poly.b0 = g_wldcore_screen_brightness_rgb[2];
+    poly.r0 = g_wldcore_screen_brightness_rgb.r;
+    poly.g0 = g_wldcore_screen_brightness_rgb.g;
+    poly.b0 = g_wldcore_screen_brightness_rgb.b;
     poly.tpage = GetTPage(0, 0, 0x1C0, 0x100);
     poly.clut = GetClut(0x10, 0x1E8);
     if (g_wldcore_map_path_animation.page_index < 0

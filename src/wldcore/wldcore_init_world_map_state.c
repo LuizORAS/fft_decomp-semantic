@@ -23,9 +23,9 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_loaded_message_block = -1;
     g_wldcore_loaded_picture_set = -1;
     g_wldcore_menu_ordering_table_offset = 1;
-    g_wldcore_screen_brightness_rgb[0] = 0x80;
-    g_wldcore_screen_brightness_rgb[1] = 0x80;
-    g_wldcore_screen_brightness_rgb[2] = 0x80;
+    g_wldcore_screen_brightness_rgb.r = 0x80;
+    g_wldcore_screen_brightness_rgb.g = 0x80;
+    g_wldcore_screen_brightness_rgb.b = 0x80;
     g_wldcore_previous_system_flags = 0;
     g_active_graphics_buffer_index = 0;
     g_wldcore_map_zoom_motion.flags = 0;

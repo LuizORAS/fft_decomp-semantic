@@ -426,7 +426,7 @@ extern u32* g_wldcore_picture_buffer;
 extern u32* g_wldcore_scratch_buffer;
 
 /* Per-channel tint factors, one byte each, 0x80 == unity. */
-extern u8 g_wldcore_screen_brightness_rgb[3];
+extern rgb24_t g_wldcore_screen_brightness_rgb;
 extern wldcore_sortbox_state_t g_wldcore_screen_fade_state;
 
 /* Word views of g_wldcore_screen_fade_state.flags[1] and priorities[0..1]:

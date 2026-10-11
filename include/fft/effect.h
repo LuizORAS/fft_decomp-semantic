@@ -459,10 +459,12 @@ extern u32 g_effect_summon_mesh_brightness_table[][9];
  * handler allocates its work block into work_slots; it then stays at UPDATE
  * until the channel sets DESTROY two frames before the keyframe ends. */
 
-extern u8 g_effect_e454_particle_work_offset_scale_16;
-extern u8 g_effect_e454_particle_work_offset_scale_64;
-extern u8 g_effect_e464_particle_work_offset_scale_16;
-extern u8 g_effect_e464_particle_work_offset_scale_64;
+typedef struct effect_particle_vertex_location {
+    u8 slot;
+    u8 row;
+} effect_particle_vertex_location_t;
+extern effect_particle_vertex_location_t g_effect_e454_particle_vertex_locations[12];
+extern effect_particle_vertex_location_t g_effect_e464_particle_vertex_locations[3];
 
 /* tentacle mesh */
 /* Shared records of two emitter-driven EFFECT renderers compiled from one
