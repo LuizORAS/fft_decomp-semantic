@@ -18,7 +18,6 @@ void battle_move_start_unit_jump_step(
         BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH, BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH };
     battle_move_step_t* step;
     s32 animation;
-    u32 word;
     battle_move_step_t current_step;
 
     /* Copy the byte to retain narrow loads of the packed step fields. */
@@ -38,8 +37,7 @@ void battle_move_start_unit_jump_step(
             animation = BATTLE_UNIT_ANIMATION_HOP_ALTERNATE;
         }
         battle_unit_store_animation_facing(animation, unit->facing, unit);
-        word = unit->movement.word;
-        unit->movement.word = (word & ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) | ((((word >> 27) & 1) ^ 1) << 27);
+        unit->movement.flags.alternate_short_hop ^= 1;
     }
     switch (step->bits.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:

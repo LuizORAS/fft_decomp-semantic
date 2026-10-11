@@ -247,6 +247,17 @@ typedef union battle_move_destination {
         u8 destination_z;
         u8 motion_flags;
     } bytes;
+    /* Flags use the same 32-bit load and store as the destination word. */
+    struct {
+        u32 : 24; /* destination bytes */
+        u32 suppress_facing_update : 1;
+        u32 suppress_sfx_and_landing_effects : 1;
+        u32 suppress_palette_update : 1;
+        u32 alternate_short_hop : 1;
+        u32 floating : 1;
+        u32 force_animation_update : 1;
+        u32 : 2;
+    } flags;
 } battle_move_destination_t;
 
 /* One frame of an SHP file: a 2-byte header followed by 4-byte parts, each a

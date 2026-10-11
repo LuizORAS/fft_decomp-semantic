@@ -18,7 +18,6 @@ void battle_move_start_unit_climb_hop_step(
     s32 rise_height;
     s32 height;
     u32 animation;
-    u32 word;
     u8 next;
 
     step = &unit->current_path_step;
@@ -77,7 +76,6 @@ void battle_move_start_unit_climb_hop_step(
         animation = BATTLE_UNIT_ANIMATION_HOP_ALTERNATE;
     }
     battle_unit_store_animation_facing(animation, unit->facing, unit);
-    word = unit->movement.word;
-    unit->movement.word = (word & ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) | ((((word >> 27) & 1) ^ 1) << 27);
+    unit->movement.flags.alternate_short_hop ^= 1;
     unit->movement.bytes.destination_z = step->bits.higher;
 }
