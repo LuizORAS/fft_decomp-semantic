@@ -9,15 +9,17 @@
  * separate pseudo (combine does not merge across the call), which places
  * the reset argument where the target has it. */
 u8* suzuki_smd_tremolo_waveform(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
+    const suzuki_smd_waveform_parameters_t* parameters;
     s8 depth;
     s16 speed;
     u16 waveform;
     s32 flags;
     suzuki_modulator_t* modulator;
 
-    waveform = note_data[2];
-    depth = note_data[1];
-    speed = note_data[0];
+    parameters = (const suzuki_smd_waveform_parameters_t*)note_data;
+    waveform = parameters->waveform_flags;
+    depth = parameters->depth;
+    speed = parameters->speed;
     if (depth != 0 && speed != 0) {
         modulator = &channel->modulators[SUZUKI_MODULATOR_SLOT_TREMOLO];
         flags = (waveform & SUZUKI_MODULATOR_INPUT_NO_KEY_ON_RESTART) ? 0 : SUZUKI_MODULATOR_RESTART_ON_KEY_ON;
@@ -32,5 +34,5 @@ u8* suzuki_smd_tremolo_waveform(u8* note_data, suzuki_music_t* music, suzuki_mus
         modulator->flags = flags + SUZUKI_MODULATOR_ACTIVE;
         suzuki_smd_modulator_reset(modulator);
     }
-    return note_data + 3;
+    return note_data + sizeof(*parameters);
 }
