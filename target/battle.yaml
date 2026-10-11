@@ -2708,11 +2708,11 @@ data:
   - {addr: 0x80193d24, name: g_battle_ai_current_attacker_backup}
   - {addr: 0x80193d44, name: g_battle_acting_unit_used_ability_id}
   - {addr: 0x80193d70, name: g_battle_ai_recovery_status_ids}
-  - {addr: 0x80193dd4, name: g_battle_math_extra_known_bit_ids}
+  - {addr: 0x80193dd4, name: g_battle_ai_math_extra_known_ability_ids}
   - {addr: 0x8019f2f8, name: g_battle_ai_range_row_masks}
   - {addr: 0x8019f308, name: g_battle_ai_status_priority_weights}
   - {addr: 0x8019f358, name: g_battle_ai_facing_tile_offsets}
-  - {addr: 0x8019f360, name: g_battle_math_source_skillsets}
+  - {addr: 0x8019f360, name: g_battle_ai_math_source_skillsets}
   - {addr: 0x8019f368, name: g_battle_ai_target_in_range}
   - {addr: 0x8019f36c, name: g_battle_ai_closest_ability_range}
   - {addr: 0x8019f370, name: g_battle_ai_movement_unit_index}

@@ -8,12 +8,12 @@
  * indices resume a suspended priority check; -1 suspends and 0 ends this pass.
  */
 s32 battle_ai_evaluate_math_targets(void) {
-    u8 special_abilities[BATTLE_AI_MATH_EXTRA_KNOWN_BIT_COUNT];
+    u8 special_abilities[BATTLE_AI_MATH_EXTRA_KNOWN_ABILITY_COUNT];
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
     s32 unit;
 
-    memcpy(special_abilities, g_battle_math_extra_known_bit_ids, sizeof(special_abilities));
+    memcpy(special_abilities, g_battle_ai_math_extra_known_ability_ids, sizeof(special_abilities));
     if (g_battle_ai_data_base.resume_pending)
         goto evaluate_priority; /* resume inside the multiplier loop */
     if (!battle_ai_check_ability_use_at_coords(&ai->acting_unit_coords))
@@ -21,7 +21,7 @@ s32 battle_ai_evaluate_math_targets(void) {
     g_battle_ai_data_base.current_action.act_before_move = 1;
     for (g_battle_ai_math_skillset_index = 0; g_battle_ai_math_skillset_index < BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT;
         g_battle_ai_math_skillset_index++) {
-        g_battle_ai_math_skillset = g_battle_math_source_skillsets[g_battle_ai_math_skillset_index];
+        g_battle_ai_math_skillset = g_battle_ai_math_source_skillsets[g_battle_ai_math_skillset_index];
         g_battle_ai_math_ability_list
             = main_ability_store_skillset_abilities(g_battle_ai_math_skillset, SKILLSET_ABILITY_FILTER_ACTION);
         for (g_battle_ai_math_ability_index = 0; g_battle_ai_math_ability_index < BATTLE_AI_SKILLSET_SCAN_COUNT;
@@ -37,7 +37,7 @@ s32 battle_ai_evaluate_math_targets(void) {
                     ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index))
                 continue;
             /* The extra known-bit call's result is ignored. */
-            for (i = 0; i < BATTLE_AI_MATH_EXTRA_KNOWN_BIT_COUNT; i++) {
+            for (i = 0; i < BATTLE_AI_MATH_EXTRA_KNOWN_ABILITY_COUNT; i++) {
                 if (ai->math_ability_id == special_abilities[i])
                     battle_ai_load_known_ability_flag(
                         ai->acting_unit_id, g_battle_ai_math_skillset, g_battle_ai_math_ability_index + 1);

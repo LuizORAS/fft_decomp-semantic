@@ -21,7 +21,7 @@ s32 battle_ai_choose_random_action(void) {
         = ai->considered_ability.parameters.bytes.item_id;
     if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] == ACTION_MENU_TYPE_ARITHMETICKS) {
         do {
-            skillset = g_battle_math_source_skillsets[rand() % BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT];
+            skillset = g_battle_ai_math_source_skillsets[rand() % BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT];
             abilities = main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ACTION);
             index_or_count = rand() % BATTLE_AI_SKILLSET_SCAN_COUNT;
             value = abilities[index_or_count];

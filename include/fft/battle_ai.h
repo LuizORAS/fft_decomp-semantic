@@ -23,7 +23,7 @@ enum {
 
 enum {
     BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT = 4,
-    BATTLE_AI_MATH_EXTRA_KNOWN_BIT_COUNT = 10,
+    BATTLE_AI_MATH_EXTRA_KNOWN_ABILITY_COUNT = 10,
 };
 
 /* Scanlines since vertical blank at which each search yields. */
@@ -262,12 +262,7 @@ typedef union battle_ai_coords {
  * constituent bytes; use the corresponding masks above for each view. */
 typedef union battle_ai_ability_flags {
     u32 word;
-    struct {
-        u8 flags_1;
-        u8 flags_2;
-        u8 flags_3;
-        u8 flags_4;
-    } bytes;
+    ability_ai_flags_t bytes;
 } battle_ai_ability_flags_t;
 
 /* Shared prefix of the baseline and suspended AI unit snapshots.
@@ -747,8 +742,8 @@ extern s32 g_battle_ai_cowardly_movement_step;             /* battle_ai_cowardly
 extern battle_ai_data_t g_battle_ai_data_base;
 extern battle_ai_facing_tile_offsets_t g_battle_ai_facing_tile_offsets; /* 0x8019f358 */
 extern s32 g_battle_ai_math_ability_index;
-extern u8 g_battle_math_source_skillsets[BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT];
-extern u8 g_battle_math_extra_known_bit_ids[BATTLE_AI_MATH_EXTRA_KNOWN_BIT_COUNT];
+extern u8 g_battle_ai_math_source_skillsets[BATTLE_AI_MATH_SOURCE_SKILLSET_COUNT];
+extern u8 g_battle_ai_math_extra_known_ability_ids[BATTLE_AI_MATH_EXTRA_KNOWN_ABILITY_COUNT];
 extern u16* g_battle_ai_math_ability_list; /* borrowed from main's temporary skillset list */
 extern s32 g_battle_ai_math_skillset;
 extern s32 g_battle_ai_math_skillset_index;
