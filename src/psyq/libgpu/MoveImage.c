@@ -9,5 +9,6 @@ s32 MoveImage(RECT* rect, s32 x, s32 y) {
     g_psyq_gpu_move_packet.source = *(u32*)&rect->x;
     g_psyq_gpu_move_packet.destination = (y << 16) | (x & 0xffff);
     g_psyq_gpu_move_packet.dimensions = *(u32*)&rect->w;
-    return g_psyq_gpu_dispatch->enqueue_four(g_psyq_gpu_dispatch->ordering_table, &g_psyq_gpu_move_packet, 20, 0);
+    return g_psyq_gpu_dispatch->enqueue_four(
+        g_psyq_gpu_dispatch->ordering_table, &g_psyq_gpu_move_packet, sizeof(g_psyq_gpu_move_packet), 0);
 }
