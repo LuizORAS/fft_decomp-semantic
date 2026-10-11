@@ -62,10 +62,10 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     } else {
         config->can_pass_lava = 0;
     }
-    value = unit->status_sets.current[2];
+    value = unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHICKEN)];
     if (value & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
-        movement[1] &= 0xF3;
-        movement[2] &= 0xFB;
+        movement[1] &= ~(BATTLE_MOVEMENT_SET_2_TELEPORT_2 | BATTLE_MOVEMENT_SET_2_TELEPORT);
+        movement[2] &= ~BATTLE_MOVEMENT_SET_3_FLY;
         config->unit_size = 4;
     } else {
         config->unit_size = 6;
@@ -84,7 +84,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         movement[2] |= BATTLE_MOVEMENT_SET_3_FLOAT;
     }
     if (movement[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER) {
-        movement[2] &= 0xAF;
+        movement[2] &= ~(BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER);
     }
     weather = battle_move_get_weather_terrain_cost();
     if (movement[2] & BATTLE_MOVEMENT_SET_3_FLY) {
@@ -152,7 +152,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         value = 7;
     }
     config->jump_half = value >> 1;
-    if (config->move_type == BATTLE_MOVEMENT_CLASS_FLY || (movement[0] & 2)) {
+    if (config->move_type == BATTLE_MOVEMENT_CLASS_FLY || (movement[0] & BATTLE_MOVEMENT_SET_1_IGNORE_HEIGHT)) {
         value = 0x1F;
     }
     config->jump_times_two = (value & 0xFF) * 2;
@@ -223,7 +223,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         current->y = other->position.y;
         current->higher_elevation = other->position.higher_elevation;
         current->stepping_stone = other->position.stepping_stone;
-        value = other->status_sets.current[2];
+        value = other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHICKEN)];
         if (value
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
             current->body_height = 4;
