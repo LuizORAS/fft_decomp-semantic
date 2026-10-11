@@ -1212,7 +1212,6 @@ data:
   - {addr: 0x80040918, name: g_psyq_cd_stream_ring_sectors}
   - {addr: 0x8004091c, name: g_psyq_crt_bss_end}
   - {addr: 0x80042880, name: get_entd}
-  - {addr: 0x80042b1c, name: save_3_u16}
   - {addr: 0x80044128, name: main_sound_pause_tracked_sfx}
   - {addr: 0x80044414, name: game_malloc}
   - {addr: 0x800444dc, name: game_realloc}

@@ -125,9 +125,9 @@ void battle_map_blend_darkness_color(s32 mode, s32 frame_duration, s32 red, s32 
         g_battle_map_darkness_transition.period = frame_duration;
         if (mode == MAP_COLOR_MODE_BASE_REPEAT) {
             g_battle_map_darkness_transition.repeat = MAP_COLOR_REPEAT_TINTED;
-            g_battle_map_darkness_transition.repeat_rgb[0] = red;
-            g_battle_map_darkness_transition.repeat_rgb[1] = green;
-            g_battle_map_darkness_transition.repeat_rgb[2] = blue;
+            g_battle_map_darkness_transition.repeat_color.r = red;
+            g_battle_map_darkness_transition.repeat_color.g = green;
+            g_battle_map_darkness_transition.repeat_color.b = blue;
         }
     } else {
         g_battle_map_darkness_transition.active = 0;

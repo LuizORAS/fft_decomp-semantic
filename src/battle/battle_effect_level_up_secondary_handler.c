@@ -22,14 +22,14 @@ s32 battle_effect_level_up_secondary_handler(void) {
         effect->timer = 0;
         effect->finish_timer = 0;
         effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position[1] = -8;
+        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position.y = -8;
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP, 11);
         {
             /* Addressing through a pointer keeps the target lui/addiu pair. */
-            s16* rise = &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position[1];
+            s16* rise = &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position.y;
             *rise -= 3;
         }
         /* fallthrough */

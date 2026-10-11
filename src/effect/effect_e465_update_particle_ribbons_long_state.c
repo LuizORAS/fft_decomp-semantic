@@ -159,7 +159,7 @@ s32 effect_e465_update_particle_ribbons_long_state(s16 record_index, s32 callbac
             caster_target = &g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY];
             if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                 quadrant = battle_unit_get_facing_quadrant_by_misc_id(
-                    g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id);
+                    g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id);
                 quadrant = ((quadrant + 1) & 3) << 10;
                 vector.vz = 0;
                 vector.vx = 0;
@@ -183,10 +183,10 @@ s32 effect_e465_update_particle_ribbons_long_state(s16 record_index, s32 callbac
             case EFFECT_EMITTER_ORIGIN_WORLD:
                 break;
             case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.id.tile_x,
-                    g_battle_effect_target_tile.tile_y, g_battle_effect_target_tile.map_z);
-                origin.vx += g_battle_effect_target_tile.id.tile_x * 28 + 14;
-                origin.vz += g_battle_effect_target_tile.tile_y * 28 + 14;
+                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+                    g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
+                origin.vx += g_battle_effect_target_tile.data.tile.vx * 28 + 14;
+                origin.vz += g_battle_effect_target_tile.data.tile.vz * 28 + 14;
                 origin.vy -= tile->height * 12;
                 break;
             case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -264,10 +264,10 @@ s32 effect_e465_update_particle_ribbons_long_state(s16 record_index, s32 callbac
                 target_base.vz += target.vz;
                 break;
             case EFFECT_EMITTER_HOMING_CURSOR_TILE:
-                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.id.tile_x,
-                    g_battle_effect_target_tile.tile_y, g_battle_effect_target_tile.map_z);
-                target_base.vx += g_battle_effect_target_tile.id.tile_x * 28 + 14;
-                target_base.vz += g_battle_effect_target_tile.tile_y * 28 + 14;
+                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+                    g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
+                target_base.vx += g_battle_effect_target_tile.data.tile.vx * 28 + 14;
+                target_base.vz += g_battle_effect_target_tile.data.tile.vz * 28 + 14;
                 target_base.vy -= tile->height * 12;
                 break;
             }

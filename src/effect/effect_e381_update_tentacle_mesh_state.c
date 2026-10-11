@@ -149,7 +149,7 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             orient = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
             caster_target = &g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY];
             if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-                facing_yaw = ((battle_unit_get_facing_quadrant_by_misc_id(caster_target->id.unit.misc_id) + 1) & 3)
+                facing_yaw = ((battle_unit_get_facing_quadrant_by_misc_id(caster_target->data.unit.misc_id) + 1) & 3)
                     << 10;
                 rotation.vz = 0;
                 rotation.vx = 0;
@@ -173,10 +173,10 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
                 break;
             case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.id.tile_x,
-                    g_battle_effect_target_tile.tile_y, g_battle_effect_target_tile.map_z);
-                origin.vx += g_battle_effect_target_tile.id.tile_x * 28 + 14;
-                origin.vz += g_battle_effect_target_tile.tile_y * 28 + 14;
+                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+                    g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
+                origin.vx += g_battle_effect_target_tile.data.tile.vx * 28 + 14;
+                origin.vz += g_battle_effect_target_tile.data.tile.vz * 28 + 14;
                 origin.vy -= tile->height * 12;
                 break;
             case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -251,10 +251,10 @@ s32 effect_e381_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 tip.vz += target.vz;
                 break;
             case EFFECT_EMITTER_HOMING_CURSOR_TILE:
-                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.id.tile_x,
-                    g_battle_effect_target_tile.tile_y, g_battle_effect_target_tile.map_z);
-                tip.vx += g_battle_effect_target_tile.id.tile_x * 28 + 14;
-                tip.vz += g_battle_effect_target_tile.tile_y * 28 + 14;
+                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+                    g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
+                tip.vx += g_battle_effect_target_tile.data.tile.vx * 28 + 14;
+                tip.vz += g_battle_effect_target_tile.data.tile.vz * 28 + 14;
                 tip.vy -= tile->height * 12;
                 break;
             }

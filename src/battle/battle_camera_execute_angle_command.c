@@ -22,9 +22,9 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
     switch (command & BATTLE_EFFECT_CAMERA_SOURCE_MASK) {
     case BATTLE_EFFECT_CAMERA_SOURCE_TARGET:
         if (g_battle_effect_context.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-            battle_unit_get_map_coords_from_misc_id(g_battle_effect_context.targets[target].id.unit.misc_id, &coords);
+            battle_unit_get_map_coords_from_misc_id(g_battle_effect_context.targets[target].data.unit.misc_id, &coords);
         } else {
-            coords = *(SVECTOR*)&g_battle_effect_context.targets[target].id;
+            coords = g_battle_effect_context.targets[target].data.tile;
         }
         battle_camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
         if (angles) {
@@ -74,9 +74,9 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
     case BATTLE_EFFECT_CAMERA_SOURCE_CASTER:
         if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_unit_get_map_coords_from_misc_id(
-                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id, &coords);
+                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id, &coords);
         } else {
-            coords = *(SVECTOR*)&g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id;
+            coords = g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile;
         }
         battle_camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
         if (angles) {
@@ -85,7 +85,7 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_CURSOR_TILE:
-        coords = *(SVECTOR*)&g_battle_effect_target_tile.id;
+        coords = g_battle_effect_target_tile.data.tile;
         battle_camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
         if (angles) {
             battle_effect_add_svectors(

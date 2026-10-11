@@ -19,10 +19,10 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
     case BATTLE_EFFECT_CAMERA_SOURCE_TARGET:
         if (g_battle_effect_context.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_effect_copy_misc_unit_screen_location(
-                g_battle_effect_context.targets[target].id.unit.misc_id, &g_battle_effect_camera_position_target);
+                g_battle_effect_context.targets[target].data.unit.misc_id, &g_battle_effect_camera_position_target);
         } else {
             battle_effect_convert_tile_coords_to_world_coords(
-                &g_battle_effect_context.targets[target].id.tile_x, &g_battle_effect_camera_position_target.vx);
+                &g_battle_effect_context.targets[target].data.tile, &g_battle_effect_camera_position_target);
         }
         coords = battle_camera_get_current_real_coords();
         battle_effect_shift_vector_right_12(&coords->vx, &g_battle_effect_camera_position_start.vx);
@@ -61,12 +61,12 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
     case BATTLE_EFFECT_CAMERA_SOURCE_CASTER:
         if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_effect_copy_misc_unit_screen_location(
-                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id,
+                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id,
                 &g_battle_effect_camera_position_target);
         } else {
             battle_effect_convert_tile_coords_to_world_coords(
-                &g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.tile_x,
-                &g_battle_effect_camera_position_target.vx);
+                &g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile,
+                &g_battle_effect_camera_position_target);
         }
         if (offset) {
             battle_effect_add_vectors(
@@ -79,7 +79,8 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
         sum.vz = 0;
         for (i = 0; i < g_battle_effect_context.target_count; i++) {
             if (g_battle_effect_context.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-                screen = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_context.targets[i].id.unit.misc_id);
+                screen
+                    = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_context.targets[i].data.unit.misc_id);
                 sum.vx += screen->vx;
                 sum.vy += screen->vy;
                 sum.vz += screen->vz;
@@ -94,7 +95,7 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_CURSOR_TILE:
         battle_effect_convert_tile_coords_to_world_coords(
-            &g_battle_effect_target_tile.id.tile_x, &g_battle_effect_camera_position_target.vx);
+            &g_battle_effect_target_tile.data.tile, &g_battle_effect_camera_position_target);
         if (offset) {
             battle_effect_add_vectors(
                 &offset->vx, &g_battle_effect_camera_position_target.vx, &g_battle_effect_camera_position_target.vx);

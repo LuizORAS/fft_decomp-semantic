@@ -48,7 +48,7 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
         if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_effect_advance_caster_palette_track(&g_battle_effect_timeline->color_tracks[0].caster,
                 &state->parent.keyframe.tracks.track[1][0], &state->parent.remaining.tracks.track[1][0],
-                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id);
+                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id);
         }
         battle_effect_advance_coord_target_palette_track(&g_battle_effect_timeline->color_tracks[0].target,
             &state->parent.keyframe.tracks.track[2][0], &state->parent.remaining.tracks.track[2][0]);
@@ -81,7 +81,7 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
         if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_effect_advance_caster_palette_track(&g_battle_effect_timeline->color_tracks[1].caster,
                 &state->parent.keyframe.tracks.track[1][1], &state->parent.remaining.tracks.track[1][1],
-                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id);
+                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id);
         }
         battle_effect_advance_coord_target_palette_track(&g_battle_effect_timeline->color_tracks[1].target,
             &state->parent.keyframe.tracks.track[2][1], &state->parent.remaining.tracks.track[2][1]);

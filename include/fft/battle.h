@@ -2631,11 +2631,8 @@ typedef struct battle_effect_target {
             u8 misc_id;
             u8 result_animation; /* battle_effect_hit_result_e */
         } unit;
-        s16 tile_x;
-    } id;             /* 0x02 */
-    s16 map_z;        /* 0x04 */
-    s16 tile_y;       /* 0x06 */
-    u8 _unused_08[2]; /* 0x08 */
+        SVECTOR tile; /* x, layer, y */
+    } data;           /* 0x02 */
 } battle_effect_target_t;
 typedef char battle_effect_target_size_must_be_0x0a[(sizeof(battle_effect_target_t) == 0x0a) ? 1 : -1];
 
@@ -3044,27 +3041,28 @@ typedef enum battle_effect_secondary_animation_id {
  * emitter, from which battle_effect_spawn_particle_motion draws each slot's
  * motion as the effect file emitter does a particle's. */
 typedef struct battle_effect_emitter_values {
-    u8 trap_animation;    /* 0x00; trap groups: index into g_battle_effect_trap_animation_data */
-    u8 _unused_01;        /* 0x01 */
-    u8 spawn_start_frame; /* 0x02; trap groups */
-    u8 spawn_end_frame;   /* 0x03; trap groups */
-    u8 count;             /* 0x04; trap groups: slots the group owns */
-    u8 _unused_05;        /* 0x05 */
-    u16 anchor_flags;     /* 0x06; effect_emitter_origin_e: CASTER and TARGET are honoured */
-    u16 motion_flags;     /* 0x08; effect_emitter_velocity_e */
-    s16 position[3];      /* 0x0a */
-    s16 spread[3];        /* 0x10 */
-    s16 angle[3];         /* 0x16 */
-    s16 angle_spread[3];  /* 0x1c */
-    s16 weight_min;       /* 0x22 */
-    s16 weight_max;       /* 0x24 */
-    u16 speed_min;        /* 0x26 */
-    u16 speed_max;        /* 0x28 */
-    u8 spawns_per_frame;  /* 0x2a; trap groups: slots one frame may start */
-    u8 _unused_2b;        /* 0x2b */
-    s8 lifetime_min;      /* 0x2c */
-    s8 lifetime_max;      /* 0x2d */
+    u8 trap_animation;      /* 0x00; trap groups: index into g_battle_effect_trap_animation_data */
+    u8 _unused_01;          /* 0x01 */
+    u8 spawn_start_frame;   /* 0x02; trap groups */
+    u8 spawn_end_frame;     /* 0x03; trap groups */
+    u8 count;               /* 0x04; trap groups: slots the group owns */
+    u8 _unused_05;          /* 0x05 */
+    u16 anchor_flags;       /* 0x06; effect_emitter_origin_e: CASTER and TARGET are honoured */
+    u16 motion_flags;       /* 0x08; effect_emitter_velocity_e */
+    vec3s16_t position;     /* 0x0a */
+    vec3s16_t spread;       /* 0x10 */
+    vec3s16_t angle;        /* 0x16 */
+    vec3s16_t angle_spread; /* 0x1c */
+    s16 weight_min;         /* 0x22 */
+    s16 weight_max;         /* 0x24 */
+    u16 speed_min;          /* 0x26 */
+    u16 speed_max;          /* 0x28 */
+    u8 spawns_per_frame;    /* 0x2a; trap groups: slots one frame may start */
+    u8 _unused_2b;          /* 0x2b */
+    s8 lifetime_min;        /* 0x2c */
+    s8 lifetime_max;        /* 0x2d */
 } battle_effect_emitter_values_t;
+typedef char battle_effect_emitter_values_size_must_be_0x2e[(sizeof(battle_effect_emitter_values_t) == 0x2e) ? 1 : -1];
 
 /* flags of a sprite part (battle_effect_sprite_part_t, battle_effect_sprite_frame_t). */
 enum {
@@ -4392,7 +4390,7 @@ extern u8* g_battle_effect_palette_ptr;
  * handlers spawn while spawn_start_frame <= timer < spawn_end_frame and finish
  * once timer passes spawn_start_frame with no live slots;
  * battle_effect_update_active_slots walks count active slots. The level-up
- * handler seeds group 5's position[1] with -8, then lowers it by 3 per frame. */
+ * handler seeds group 5's position.y with -8, then lowers it by 3 per frame. */
 extern battle_effect_emitter_values_t g_battle_effect_trap_particle_configs[17];
 extern s16 g_battle_effect_root_record_index;
 extern battle_effect_resource_t* g_battle_effect_model_data_ptrs[];
@@ -4663,7 +4661,7 @@ s32 battle_effect_calculate_arc_trajectory_term(s32 a, s32 b);
 s32 battle_effect_check_arc_trajectory_between_units(u8 source_id, u8 target_id);
 s32 battle_effect_check_direct_trajectory_between_units(u8 source_id, u8 target_id);
 void battle_effect_convert_svector_to_vector(s16* src, VECTOR* dst);
-void battle_effect_convert_tile_coords_to_world_coords(s16* in, s32* out);
+void battle_effect_convert_tile_coords_to_world_coords(SVECTOR* in, VECTOR* out);
 void battle_effect_copy_misc_unit_screen_location(u32 misc_id, VECTOR* destination);
 void battle_effect_copy_svector(s16* src, SVECTOR* dst);
 void battle_effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle);
@@ -7637,8 +7635,8 @@ typedef struct map_palette_animation_state {
     u8 blend_step;    /* 0x01; index into g_battle_map_palette_blend_steps_32/_8 */
     u8 delay_counter; /* 0x02; one blend step each time it reaches mode >> 2 */
     u8 mode;
-    u8 repeat;        /* 0x04; map_color_repeat_e */
-    u8 repeat_rgb[3]; /* 0x05 */
+    u8 repeat;            /* 0x04; map_color_repeat_e */
+    rgb24_t repeat_color; /* 0x05 */
 } map_palette_animation_state_t;
 typedef char map_palette_animation_state_size_must_be_8[(sizeof(map_palette_animation_state_t) == 8) ? 1 : -1];
 
@@ -7825,8 +7823,8 @@ typedef struct map_color_transition {
     u8 phase;
     u8 tick; /* 0x02; frame counter, reset when it reaches period >> 2 */
     u8 period;
-    u8 repeat;        /* 0x04; map_color_repeat_e */
-    u8 repeat_rgb[3]; /* 0x05 */
+    u8 repeat;            /* 0x04; map_color_repeat_e */
+    rgb24_t repeat_color; /* 0x05 */
     map_color_transition_channels_t channels;
 } map_color_transition_t;
 typedef char map_color_transition_size_must_be_0x20[(sizeof(map_color_transition_t) == 0x20) ? 1 : -1];
@@ -7839,8 +7837,8 @@ typedef struct map_gradient_transition {
     u8 phase;
     u8 tick; /* 0x02; frame counter, reset when it reaches period >> 2 */
     u8 period;
-    u8 repeat;        /* 0x04; map_color_repeat_e */
-    u8 repeat_rgb[3]; /* 0x05 */
+    u8 repeat;            /* 0x04; map_color_repeat_e */
+    rgb24_t repeat_color; /* 0x05 */
     map_color_transition_channels_t channels[2];
     CVECTOR colors[MAP_BACKGROUND_GRADIENT_COLOR_COUNT];
 } map_gradient_transition_t;
@@ -8929,7 +8927,6 @@ s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);
 void battle_script_process_inflict_status_commands(void);
 s32 battle_menu_poll_small_load(void);
 s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
-void save_3_u16(SVECTOR* output, u16 x, u16 y, u16 z);
 s32 battle_status_prepare_terrain_poison(battle_stats_t* unit);
 s32 battle_return_one(s32 unused_misc_id);
 void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);

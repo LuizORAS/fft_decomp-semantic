@@ -8,10 +8,10 @@ void battle_effect_start_basic_ability_animation(s32 ability_id) {
 
     effect_data.target_count = 1;
     effect_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-    effect_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id = 0;
+    effect_data.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id = 0;
     effect_data.targets[0].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-    effect_data.targets[0].id.unit.misc_id = 1;
-    effect_data.targets[0].id.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
+    effect_data.targets[0].data.unit.misc_id = 1;
+    effect_data.targets[0].data.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
     effect_data.spectator_count = 0;
     battle_effect_set_ability_animation(0, ability_id, &effect_data);
 }

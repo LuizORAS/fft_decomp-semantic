@@ -89,9 +89,9 @@ void battle_map_update_animations(void) {
                     } else if (g_battle_map_background_gradient_transition.repeat == MAP_COLOR_REPEAT_RESTORED) {
                         battle_map_blend_background_gradient_color(MAP_COLOR_MODE_BASE_REPEAT,
                             g_battle_map_background_gradient_transition.period,
-                            g_battle_map_background_gradient_transition.repeat_rgb[0],
-                            g_battle_map_background_gradient_transition.repeat_rgb[1],
-                            g_battle_map_background_gradient_transition.repeat_rgb[2]);
+                            g_battle_map_background_gradient_transition.repeat_color.r,
+                            g_battle_map_background_gradient_transition.repeat_color.g,
+                            g_battle_map_background_gradient_transition.repeat_color.b);
                         g_battle_map_background_gradient_transition.repeat = MAP_COLOR_REPEAT_TINTED;
                     } else {
                         g_battle_map_background_gradient_transition.active = 0;
@@ -107,9 +107,9 @@ void battle_map_update_animations(void) {
             } else if (g_battle_map_background_gradient_transition.repeat == MAP_COLOR_REPEAT_RESTORED) {
                 battle_map_blend_background_gradient_color(MAP_COLOR_MODE_BASE_REPEAT,
                     g_battle_map_background_gradient_transition.period,
-                    g_battle_map_background_gradient_transition.repeat_rgb[0],
-                    g_battle_map_background_gradient_transition.repeat_rgb[1],
-                    g_battle_map_background_gradient_transition.repeat_rgb[2]);
+                    g_battle_map_background_gradient_transition.repeat_color.r,
+                    g_battle_map_background_gradient_transition.repeat_color.g,
+                    g_battle_map_background_gradient_transition.repeat_color.b);
                 g_battle_map_background_gradient_transition.repeat = MAP_COLOR_REPEAT_TINTED;
             } else {
                 g_battle_map_background_gradient_transition.active = 0;
@@ -142,9 +142,9 @@ void battle_map_update_animations(void) {
                     } else if (g_battle_map_ambient_light_transition.repeat == MAP_COLOR_REPEAT_RESTORED) {
                         battle_map_blend_ambient_light_color(MAP_COLOR_MODE_BASE_REPEAT,
                             g_battle_map_ambient_light_transition.period,
-                            g_battle_map_ambient_light_transition.repeat_rgb[0],
-                            g_battle_map_ambient_light_transition.repeat_rgb[1],
-                            g_battle_map_ambient_light_transition.repeat_rgb[2]);
+                            g_battle_map_ambient_light_transition.repeat_color.r,
+                            g_battle_map_ambient_light_transition.repeat_color.g,
+                            g_battle_map_ambient_light_transition.repeat_color.b);
                         g_battle_map_ambient_light_transition.repeat = MAP_COLOR_REPEAT_TINTED;
                     } else {
                         transition->active = 0;
@@ -158,9 +158,9 @@ void battle_map_update_animations(void) {
                 g_battle_map_ambient_light_transition.repeat = MAP_COLOR_REPEAT_RESTORED;
             } else if (g_battle_map_ambient_light_transition.repeat == MAP_COLOR_REPEAT_RESTORED) {
                 battle_map_blend_ambient_light_color(MAP_COLOR_MODE_BASE_REPEAT,
-                    g_battle_map_ambient_light_transition.period, g_battle_map_ambient_light_transition.repeat_rgb[0],
-                    g_battle_map_ambient_light_transition.repeat_rgb[1],
-                    g_battle_map_ambient_light_transition.repeat_rgb[2]);
+                    g_battle_map_ambient_light_transition.period, g_battle_map_ambient_light_transition.repeat_color.r,
+                    g_battle_map_ambient_light_transition.repeat_color.g,
+                    g_battle_map_ambient_light_transition.repeat_color.b);
                 g_battle_map_ambient_light_transition.repeat = MAP_COLOR_REPEAT_TINTED;
             } else {
                 transition->active = 0;
@@ -191,9 +191,9 @@ void battle_map_update_animations(void) {
                         g_battle_map_darkness_transition.repeat = MAP_COLOR_REPEAT_RESTORED;
                     } else if (g_battle_map_darkness_transition.repeat == MAP_COLOR_REPEAT_RESTORED) {
                         battle_map_blend_darkness_color(MAP_COLOR_MODE_BASE_REPEAT,
-                            g_battle_map_darkness_transition.period, g_battle_map_darkness_transition.repeat_rgb[0],
-                            g_battle_map_darkness_transition.repeat_rgb[1],
-                            g_battle_map_darkness_transition.repeat_rgb[2]);
+                            g_battle_map_darkness_transition.period, g_battle_map_darkness_transition.repeat_color.r,
+                            g_battle_map_darkness_transition.repeat_color.g,
+                            g_battle_map_darkness_transition.repeat_color.b);
                         g_battle_map_darkness_transition.repeat = MAP_COLOR_REPEAT_TINTED;
                     } else {
                         transition->active = 0;
@@ -207,8 +207,8 @@ void battle_map_update_animations(void) {
                 g_battle_map_darkness_transition.repeat = MAP_COLOR_REPEAT_RESTORED;
             } else if (g_battle_map_darkness_transition.repeat == MAP_COLOR_REPEAT_RESTORED) {
                 battle_map_blend_darkness_color(MAP_COLOR_MODE_BASE_REPEAT, g_battle_map_darkness_transition.period,
-                    g_battle_map_darkness_transition.repeat_rgb[0], g_battle_map_darkness_transition.repeat_rgb[1],
-                    g_battle_map_darkness_transition.repeat_rgb[2]);
+                    g_battle_map_darkness_transition.repeat_color.r, g_battle_map_darkness_transition.repeat_color.g,
+                    g_battle_map_darkness_transition.repeat_color.b);
                 g_battle_map_darkness_transition.repeat = MAP_COLOR_REPEAT_TINTED;
             } else {
                 transition->active = 0;
@@ -266,9 +266,9 @@ void battle_map_update_animations(void) {
                                 == MAP_COLOR_REPEAT_RESTORED) {
                                 battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT,
                                     g_battle_map_palette_state.clut_rows[i].animations[k].mode, i, k, 0,
-                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[0],
-                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[1],
-                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[2]);
+                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_color.r,
+                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_color.g,
+                                    g_battle_map_palette_state.clut_rows[i].animations[k].repeat_color.b);
                                 g_battle_map_palette_state.clut_rows[i].animations[k].repeat = MAP_COLOR_REPEAT_TINTED;
                             } else {
                                 g_battle_map_palette_state.clut_rows[i].animations[k].active = 0;
@@ -306,9 +306,9 @@ void battle_map_update_animations(void) {
                             == MAP_COLOR_REPEAT_RESTORED) {
                             battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT,
                                 g_battle_map_palette_state.clut_rows[i].animations[k].mode, i, k, 0,
-                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[0],
-                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[1],
-                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_rgb[2]);
+                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_color.r,
+                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_color.g,
+                                g_battle_map_palette_state.clut_rows[i].animations[k].repeat_color.b);
                             g_battle_map_palette_state.clut_rows[i].animations[k].repeat = MAP_COLOR_REPEAT_TINTED;
                         } else {
                             g_battle_map_palette_state.clut_rows[i].animations[k].active = 0;
@@ -352,9 +352,9 @@ void battle_map_update_animations(void) {
                             == MAP_COLOR_REPEAT_RESTORED) {
                             battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT,
                                 g_battle_map_palette_state.clut_rows[i].animations[0].mode, i, 0, 1,
-                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[0],
-                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[1],
-                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[2]);
+                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_color.r,
+                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_color.g,
+                                g_battle_map_palette_state.clut_rows[i].animations[0].repeat_color.b);
                             g_battle_map_palette_state.clut_rows[i].animations[0].repeat = MAP_COLOR_REPEAT_TINTED;
                         } else {
                             for (j = 15; j >= 0; j--) {
@@ -394,9 +394,9 @@ void battle_map_update_animations(void) {
                         == MAP_COLOR_REPEAT_RESTORED) {
                         battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT,
                             g_battle_map_palette_state.clut_rows[i].animations[0].mode, i, 0, 1,
-                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[0],
-                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[1],
-                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_rgb[2]);
+                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_color.r,
+                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_color.g,
+                            g_battle_map_palette_state.clut_rows[i].animations[0].repeat_color.b);
                         g_battle_map_palette_state.clut_rows[i].animations[0].repeat = MAP_COLOR_REPEAT_TINTED;
                     } else {
                         for (j = 15; j >= 0; j--) {

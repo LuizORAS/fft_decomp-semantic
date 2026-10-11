@@ -56,7 +56,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
 
     target = record->target_index;
     state = (battle_effect_child_timeline_view_t*)&record->target_index;
-    if (g_battle_effect_context.targets[target].id.unit.result_animation != BATTLE_EFFECT_HIT_REFLECTED) {
+    if (g_battle_effect_context.targets[target].data.unit.result_animation != BATTLE_EFFECT_HIT_REFLECTED) {
         for (i = 0; i < 5; i++) {
             table = &g_battle_effect_timing_channels->particle[i];
             if (state->child.remaining.tracks.particle[i] == 0) {
@@ -147,7 +147,7 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                         == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
                             track->duration[index],
-                            g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].id.unit.misc_id, red, green,
+                            g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id, red, green,
                             blue);
                     }
                 }
@@ -175,8 +175,8 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                     blue = track->color[index][2];
                     if (g_battle_effect_context.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                            track->duration[index], g_battle_effect_context.targets[target].id.unit.misc_id, red, green,
-                            blue);
+                            track->duration[index], g_battle_effect_context.targets[target].data.unit.misc_id, red,
+                            green, blue);
                     }
                 }
             }

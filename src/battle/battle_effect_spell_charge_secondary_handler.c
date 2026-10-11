@@ -94,11 +94,13 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         for (i = 0; i < 14; i++) {
             state->ids_b[i] = 0;
         }
-        screen = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.id.unit.misc_id);
-        i = battle_gfx_get_unit_spritesheet_height_by_misc_id(g_battle_effect_current_secondary->caster.id.unit.misc_id)
+        screen
+            = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.data.unit.misc_id);
+        i = battle_gfx_get_unit_spritesheet_height_by_misc_id(
+                g_battle_effect_current_secondary->caster.data.unit.misc_id)
             + 8;
-        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].position[1]
-            = g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE_13].position[1] = -i;
+        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].position.y
+            = g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE_13].position.y = -i;
         in.vx = screen->vx;
         in.vz = screen->vz;
         in.vy = screen->vy - i;

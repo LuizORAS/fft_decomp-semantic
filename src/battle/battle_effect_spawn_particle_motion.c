@@ -43,7 +43,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     if ((values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING) {
         oriented = 1;
         anchor_angle.vy
-            = ((battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_current_secondary->caster.id.unit.misc_id)
+            = ((battle_unit_get_facing_quadrant_by_misc_id(g_battle_effect_current_secondary->caster.data.unit.misc_id)
                    + 1)
                   & 3)
             << 10;
@@ -62,9 +62,9 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         RotMatrix(&anchor_angle, &anchor_matrix);
     }
 
-    position.vx = values->position[0];
-    position.vy = values->position[1];
-    position.vz = values->position[2];
+    position.vx = values->position.x;
+    position.vy = values->position.y;
+    position.vz = values->position.z;
     if (oriented) {
         SetRotMatrix(&anchor_matrix);
         vector.vx = position.vx;
@@ -85,9 +85,9 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         break;
     }
 
-    spread.vx = values->spread[0];
-    spread.vy = values->spread[1];
-    spread.vz = values->spread[2];
+    spread.vx = values->spread.x;
+    spread.vy = values->spread.y;
+    spread.vz = values->spread.z;
     if (oriented) {
         vector.vx = spread.vx;
         vector.vy = spread.vy;
@@ -110,12 +110,12 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
 
     speed_min = values->speed_min;
     speed_max = values->speed_max;
-    angle.vx = values->angle[0];
-    angle.vy = values->angle[1];
-    angle.vz = values->angle[2];
-    half_spread.vx = values->angle_spread[0] / 2;
-    half_spread.vy = values->angle_spread[1] / 2;
-    half_spread.vz = values->angle_spread[2] / 2;
+    angle.vx = values->angle.x;
+    angle.vy = values->angle.y;
+    angle.vz = values->angle.z;
+    half_spread.vx = values->angle_spread.x / 2;
+    half_spread.vy = values->angle_spread.y / 2;
+    half_spread.vz = values->angle_spread.z / 2;
     switch (values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) {
     case EFFECT_EMITTER_VELOCITY_OUTWARD:
     case EFFECT_EMITTER_VELOCITY_TOWARD_TARGET:

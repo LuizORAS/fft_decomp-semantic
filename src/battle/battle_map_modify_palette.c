@@ -162,9 +162,9 @@ void battle_map_modify_palette(
                 animation->mode = amount;
                 if (command == MAP_COLOR_MODE_BASE_REPEAT) {
                     animation->repeat = MAP_COLOR_REPEAT_TINTED;
-                    animation->repeat_rgb[0] = red;
-                    animation->repeat_rgb[1] = green;
-                    animation->repeat_rgb[2] = blue;
+                    animation->repeat_color.r = red;
+                    animation->repeat_color.g = green;
+                    animation->repeat_color.b = blue;
                 }
             }
             return;
@@ -317,9 +317,9 @@ void battle_map_modify_palette(
             animation->mode = amount;
             if (command == MAP_COLOR_MODE_BASE_REPEAT) {
                 animation->repeat = MAP_COLOR_REPEAT_TINTED;
-                animation->repeat_rgb[0] = red;
-                animation->repeat_rgb[1] = green;
-                animation->repeat_rgb[2] = blue;
+                animation->repeat_color.r = red;
+                animation->repeat_color.g = green;
+                animation->repeat_color.b = blue;
             }
             return;
         }
