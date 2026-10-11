@@ -1,6 +1,7 @@
 #include "fft/world.h"
 
-/* Return the item category's primary stat for descending menu sorts. */
+/* The value an item ranks by in the menus' descending sorts: a weapon's power, a shield's physical
+ * evade, headgear's or body armor's HP bonus, and the item level of an accessory or any other item. */
 s32 world_item_get_ranking_value(s32 item_id) {
     s32 type;
     s32 idx;

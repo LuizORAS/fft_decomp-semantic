@@ -1,9 +1,11 @@
-/* Item-list menu thread for the formation item screen: builds the item
- * category list on entry, steps the cursor, and refreshes the stat preview.
- */
 #include "fft/world.h"
 #include "psx/pad.h"
 
+/* The formation item screen's list (MENU_ITEM_LIST_STATE_BROWSE): on entry it builds the current
+ * category's item list and the row callbacks; each frame it shows the cursor item's description and
+ * stat preview. Left and right switch among the five categories, Circle starts rearranging
+ * (MENU_ITEM_LIST_STATE_REARRANGE), Triangle lists the units that equip the item when any does
+ * (MENU_ITEM_LIST_STATE_EQUIPPED_BY), and Cross closes the list (MENU_ITEM_LIST_STATE_CLOSE). */
 s32 world_item_run_category_menu(void) {
     s16 x;
     s16 y;

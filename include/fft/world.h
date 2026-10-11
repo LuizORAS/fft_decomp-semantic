@@ -2508,6 +2508,10 @@ void world_menu_init_sprite(SPRT* sprite);
 void world_menu_set_text_origin(s32 x, s32 y);
 
 /* item */
+/* WORLD's item screens: the formation item menu (categories, sort orders, rearranging, the
+ * equipped-by view), the item lists and sorts the shops and equipment screens share, and the stat
+ * previews of an equipment change. */
+
 /* Halfword list entries retain their high byte when filtered at 0x801220d8;
  * only the low byte selects an item. The complete halfword sentinel is -1. */
 typedef union world_item_list_entry {

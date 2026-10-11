@@ -5,6 +5,8 @@
  * lists respectively. The weapon item-ID order starts at 0x80057b5c, outside
  * this 0x3c-byte aggregate. */
 
+/* Reset the item menus' category orders to the default order, empty the five page orders and clear
+ * the poached stock of the fur shop. */
 void main_item_init_order_tables(void) {
     g_main_item_type_order_tables.order_0[0] = 0;
     g_main_item_type_order_tables.order_0[1] = 1;

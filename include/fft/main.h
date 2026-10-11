@@ -720,6 +720,9 @@ u32 main_ability_get_known(battle_stats_t* unit, u32 job_row);
 u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
 
 /* item */
+/* The inventory (quantities by item id, the fur shop's poached stock, the list orders) and the item
+ * tables and lookups every module uses. */
+
 extern u8 g_main_item_quantities[ITEM_ID_COUNT];
 extern item_attribute_t g_main_item_attributes[];
 extern u8 g_main_item_page_order[0x15];
@@ -2203,6 +2206,8 @@ extern const u8 g_main_terrain_status_flags[64];
  * _unknown_02/_unknown_04, which nothing reads. */
 extern u8 g_main_terrain_tile_info_pairs[];
 
+/* Second link name of main_item_get_total_equipment_quantity with an s32 id: battle_action_add_party_item
+ * passes its masked s32 id without the andi the u8 prototype adds. */
 s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
 s32 main_sound_is_music_loading_stub(void);
 
