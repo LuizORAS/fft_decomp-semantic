@@ -43,7 +43,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     value = entd->unit_flags;
     if (value & UNIT_FLAG_LOAD_FORMATION) {
         party_slot = main_unit_init_job_data_from_entd(unit, entd);
-    } else if (entd->sprite_set < CHARACTER_IDENTITY_RAMZA_END && entd->birthday[0] == 0) {
+    } else if (entd->sprite_set < CHARACTER_IDENTITY_RAMZA_END && entd->birth_month == 0) {
         for (party_index = 0, ramza_jobs = &g_main_job_data[1]; party_index < PARTY_ROSTER_SLOT_COUNT; party_index++) {
             party_unit = main_party_get_data_pointer(party_index);
             if (party_unit->party_id == PARTY_ID_NONE) {
@@ -102,8 +102,8 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     }
     unit->level = value;
 
-    number = entd->birthday[0];
-    day = entd->birthday[1];
+    number = entd->birth_month;
+    day = entd->birth_day;
     if (number == 0 || number >= 13 || day == 0 || day >= 32) {
         birthday = (365 * rand()) / 0x8000 + 1;
     } else {

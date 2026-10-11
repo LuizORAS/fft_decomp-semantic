@@ -922,7 +922,8 @@ typedef struct entd_unit {
     u8 unit_flags;                           /* 0x01; unit_flags_e */
     u8 name_id;                              /* 0x02 */
     u8 level;                                /* 0x03; 0 or 0xfe: L - rnd(0..L/8); 100 + n: L + n; L: top party level */
-    u8 birthday[2];                          /* 0x04; month, day (read bytewise); out of range: a random day */
+    u8 birth_month;                          /* 0x04; 1..12 for a fixed birthday */
+    u8 birth_day;                            /* 0x05; 1..31 for a fixed birthday */
     u8 bravery;                              /* 0x06; above 100: random 45..74 */
     u8 faith;                                /* 0x07; above 100: random 45..74 */
     u8 job_unlock;                           /* 0x08 */
