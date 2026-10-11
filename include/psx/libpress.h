@@ -11,7 +11,7 @@ typedef struct {
     s16 dct[64];
 } DECDCTENV;
 
-typedef char decdctenv_size_must_be_0x100[(sizeof(DECDCTENV) == 0x100) ? 1 : -1];
+typedef char decdctenv_size_must_be_256[(sizeof(DECDCTENV) == 256) ? 1 : -1];
 
 void DecDCTReset(s32 mode);
 DECDCTENV* DecDCTGetEnv(DECDCTENV* env);

@@ -27,7 +27,7 @@ typedef struct etc_graphic {
     void* _unused_18;
     s32 texture_mode;
 } etc_graphic_t;
-typedef char etc_graphic_size_check[sizeof(etc_graphic_t) == 0x20 ? 1 : -1];
+typedef char etc_graphic_size_check[sizeof(etc_graphic_t) == 32 ? 1 : -1];
 
 extern POLY_GT4 g_etc_graphic_chapter_primitives_a[2][4];
 extern POLY_GT4 g_etc_graphic_chapter_primitives_b[2][4];

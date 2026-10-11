@@ -158,7 +158,7 @@ typedef struct card_save_summary {
     u8 location;        /* 0x16; script variable 0x31, location text index */
     u8 format_version;  /* 0x17; CARD writes 4 and WORLD load requires 4 */
 } card_save_summary_t;
-typedef char card_save_summary_size_must_be_0x18[(sizeof(card_save_summary_t) == 0x18) ? 1 : -1];
+typedef char card_save_summary_size_must_be_24[(sizeof(card_save_summary_t) == 24) ? 1 : -1];
 
 /* The 0x1e00-byte memory-card save image, parity-covered per 128-byte block.
  * WORLD holds it in g_world_load_work_buffer (0x801cd1ec) and its serializer
@@ -211,7 +211,7 @@ typedef struct card_save_buffer {
 typedef char
     card_save_buffer_options_offset_must_be_0x1c84[((unsigned long)&((card_save_buffer_t*)0)->options == 0x1c84) ? 1
                                                                                                                  : -1];
-typedef char card_save_buffer_size_must_be_0x1e00[(sizeof(card_save_buffer_t) == 0x1e00) ? 1 : -1];
+typedef char card_save_buffer_size_must_be_7680[(sizeof(card_save_buffer_t) == 7680) ? 1 : -1];
 
 /* Hours, minutes and seconds shown for one memory-card save slot. */
 typedef struct card_save_play_time {
@@ -473,7 +473,7 @@ typedef struct wldcore_saved_record {
     s16 sound_id;             /* 0x32 */
     s32 counter;              /* 0x34 */
 } wldcore_saved_record_t;
-typedef char wldcore_saved_record_size_must_be_0x38[sizeof(wldcore_saved_record_t) == 0x38 ? 1 : -1];
+typedef char wldcore_saved_record_size_must_be_56[sizeof(wldcore_saved_record_t) == 56 ? 1 : -1];
 
 /* Provisional: an adjacent word pair copied as one structure. The paired
  * type reproduces the target's two-load/two-store schedule. */
@@ -607,7 +607,7 @@ typedef struct suzuki_modulator {
     u8 waveform;                           /* 0x1d; suzuki_modulator_waveform_e */
     s16 flags;                             /* 0x1e; suzuki_modulator_flag_e */
 } suzuki_modulator_t;
-typedef char suzuki_modulator_size_must_be_0x20[(sizeof(suzuki_modulator_t) == 0x20) ? 1 : -1];
+typedef char suzuki_modulator_size_must_be_32[(sizeof(suzuki_modulator_t) == 32) ? 1 : -1];
 
 /* suzuki_modulator_t.target: the channel output main_smd_update_modulators
  * adds the modulator to. */
@@ -735,10 +735,10 @@ typedef struct suzuki_music_channel {
     suzuki_repeat_t repeats[4];       /* 0xb0 */
     suzuki_modulator_t modulators[4]; /* 0xe0 */
 } suzuki_music_channel_t;
-typedef char suzuki_music_channel_size_must_be_0x160[(sizeof(suzuki_music_channel_t) == 0x160) ? 1 : -1];
+typedef char suzuki_music_channel_size_must_be_352[(sizeof(suzuki_music_channel_t) == 352) ? 1 : -1];
 typedef char suzuki_channel_voice_attr_must_be_at_offset_0x34
     [((unsigned long)&((suzuki_music_channel_t*)0)->voice_attr == 0x34) ? 1 : -1];
-typedef char suzuki_channel_voice_attr_size_must_be_0x40[(sizeof(SpuVoiceAttr) == 0x40) ? 1 : -1];
+typedef char suzuki_channel_voice_attr_size_must_be_64[(sizeof(SpuVoiceAttr) == 64) ? 1 : -1];
 
 /* suzuki_music_channel_t.flags. */
 typedef enum suzuki_channel_flag {
@@ -993,7 +993,7 @@ typedef struct suzuki_music {
     suzuki_ramp_t balance_shift;   /* 0xac */
     suzuki_music_channel_t channels[0]; /* 0xb8; channel_count entries */
 } suzuki_music_t;
-typedef char suzuki_music_header_size_must_be_0xb8[(sizeof(suzuki_music_t) == 0xb8) ? 1 : -1];
+typedef char suzuki_music_header_size_must_be_184[(sizeof(suzuki_music_t) == 184) ? 1 : -1];
 
 /* suzuki_music_t.status. */
 typedef enum suzuki_music_status {
@@ -1037,7 +1037,7 @@ typedef struct suzuki_spu_state {
     suzuki_ramp_t music_ramp; /* 0x30 0x80037050 */
     suzuki_ramp_t cd_ramp;    /* 0x3c 0x8003705c */
 } suzuki_spu_state_t;
-typedef char suzuki_spu_state_size_must_be_0x48[(sizeof(suzuki_spu_state_t) == 0x48) ? 1 : -1];
+typedef char suzuki_spu_state_size_must_be_72[(sizeof(suzuki_spu_state_t) == 72) ? 1 : -1];
 
 /* g_main_sound_driver_flags. */
 typedef enum main_sound_driver_flag {
@@ -1129,24 +1129,24 @@ typedef struct main_sound_music {
  * event scripts and scenario data choose the others. The music test offers
  * ids 1-96 (g_open_music_test_music_ids). */
 typedef enum main_music {
-    MAIN_MUSIC_NONE = 0,         /* the *_sound_play_music_tracks functions and the WLDCORE audio queue skip it */
-    MAIN_MUSIC_ALTIMA = 0x13,    /* EVENT_CALL_FUNCTION_PLAY_ALTIMA_MUSIC */
-    MAIN_MUSIC_MILESTONE = 0x14, /* wldcore_map_step_discovery_announcement, in the bar */
-    MAIN_MUSIC_TUTORIAL = 0x1a,  /* the world menu's tutorial screen */
-    MAIN_MUSIC_WORLD_MAP = 0x1b,
-    MAIN_MUSIC_SHOP = 0x1c,                         /* world_shop_run_screen: the item shop */
-    MAIN_MUSIC_SOLDIER_OFFICE = 0x1d,               /* world_shop_run_screen */
-    MAIN_MUSIC_FUR_SHOP = 0x1e,                     /* world_shop_run_screen */
-    MAIN_MUSIC_FORMATION = 0x1f,                    /* world_formation_run_screen */
-    MAIN_MUSIC_BRAVE_STORY = 0x20,                  /* the Brave Story screens */
-    MAIN_MUSIC_BAR = 0x21,                          /* the bar of a town */
-    MAIN_MUSIC_NEW_GAME = 0x22,                     /* name and birthday entry of a new game */
-    MAIN_MUSIC_PROPOSITION_REPORT = 0x23,           /* a finished proposition's report */
-    MAIN_MUSIC_SAVE = 0x29,                         /* the memory card screens */
-    MAIN_MUSIC_DEPLOYMENT = 0x2a,                   /* the ATTACK unit placement screen */
-    MAIN_MUSIC_CONGRATULATIONS = 0x2b,              /* require_text_show_battle_congratulations */
-    MAIN_MUSIC_CONGRATULATIONS_FINAL_BATTLE = 0x2c, /* the same screen after event 0x145 */
-    MAIN_MUSIC_GAME_OVER = 0x32,                    /* etc_graphic_show_game_over */
+    MAIN_MUSIC_NONE = 0,       /* the *_sound_play_music_tracks functions and the WLDCORE audio queue skip it */
+    MAIN_MUSIC_ALTIMA = 19,    /* EVENT_CALL_FUNCTION_PLAY_ALTIMA_MUSIC */
+    MAIN_MUSIC_MILESTONE = 20, /* wldcore_map_step_discovery_announcement, in the bar */
+    MAIN_MUSIC_TUTORIAL = 26,  /* the world menu's tutorial screen */
+    MAIN_MUSIC_WORLD_MAP = 27,
+    MAIN_MUSIC_SHOP = 28,                         /* world_shop_run_screen: the item shop */
+    MAIN_MUSIC_SOLDIER_OFFICE = 29,               /* world_shop_run_screen */
+    MAIN_MUSIC_FUR_SHOP = 30,                     /* world_shop_run_screen */
+    MAIN_MUSIC_FORMATION = 31,                    /* world_formation_run_screen */
+    MAIN_MUSIC_BRAVE_STORY = 32,                  /* the Brave Story screens */
+    MAIN_MUSIC_BAR = 33,                          /* the bar of a town */
+    MAIN_MUSIC_NEW_GAME = 34,                     /* name and birthday entry of a new game */
+    MAIN_MUSIC_PROPOSITION_REPORT = 35,           /* a finished proposition's report */
+    MAIN_MUSIC_SAVE = 41,                         /* the memory card screens */
+    MAIN_MUSIC_DEPLOYMENT = 42,                   /* the ATTACK unit placement screen */
+    MAIN_MUSIC_CONGRATULATIONS = 43,              /* require_text_show_battle_congratulations */
+    MAIN_MUSIC_CONGRATULATIONS_FINAL_BATTLE = 44, /* the same screen after event 0x145 */
+    MAIN_MUSIC_GAME_OVER = 50,                    /* etc_graphic_show_game_over */
     MAIN_MUSIC_COUNT = 100,
 } main_music_e;
 
@@ -1160,9 +1160,13 @@ typedef enum main_sound_tune {
     MAIN_SOUND_TUNE_ITEM_FOUND = 2, /* an item found by moving, a poach, a trained monster */
     MAIN_SOUND_TUNE_JOB_LEVEL_UP = 3,
     MAIN_SOUND_TUNE_JOB_CHANGE = 5,
-    MAIN_SOUND_TUNE_ID_MASK = 0x3f, /* the id in g_main_sound_music.slots.tune */
-    MAIN_SOUND_TUNE_PENDING = 0x80, /* set there until the scenario music has faded out */
 } main_sound_tune_e;
+
+/* Packed tune-slot id and pending flag. */
+enum {
+    MAIN_SOUND_TUNE_ID_MASK = 0x3f,
+    MAIN_SOUND_TUNE_PENDING = 0x80,
+};
 
 /* Steal priority of an SFX channel, the high byte of a main_sound_start_sfx
  * channel id. When no channel pair is free, main_sound_find_sfx_channel takes
@@ -1180,9 +1184,9 @@ typedef enum main_sound_sfx_priority {
  * sound in it in the low. Each battle effect file brings a resource of its
  * own (battle_effect_load_sound_section). */
 typedef enum main_sound_resource_id {
-    MAIN_SOUND_RESOURCE_SYSTEM = 0,         /* SOUND/SYSTEM.SED: main_sfx_e */
-    MAIN_SOUND_RESOURCE_ENV = 1,            /* SOUND/ENV.SED: main_env_sfx_e */
-    MAIN_SOUND_RESOURCE_SOUND_NOVEL = 0xe1, /* g_wldcore_sound_novel_sound_resource, 81 sounds */
+    MAIN_SOUND_RESOURCE_SYSTEM = 0,        /* SOUND/SYSTEM.SED: main_sfx_e */
+    MAIN_SOUND_RESOURCE_ENV = 1,           /* SOUND/ENV.SED: main_env_sfx_e */
+    MAIN_SOUND_RESOURCE_SOUND_NOVEL = 225, /* g_wldcore_sound_novel_sound_resource, 81 sounds */
 } main_sound_resource_id_e;
 
 #define MAIN_SOUND_ID(resource, sound) (((resource) << 16) | (sound))
@@ -1209,107 +1213,107 @@ typedef enum main_sfx {
     MAIN_SFX_UNEQUIP = 7,     /* remove equipment/abilities */
     MAIN_SFX_RED_ORBS = 8,    /* battle_effect_red_orbs_secondary_handler starts */
     MAIN_SFX_DISMISS = 9,     /* dismiss unit */
-    MAIN_SFX_EQUIP = 0xa,     /* equip, set ability, best fit */
-    MAIN_SFX_CAMERA_ROTATE_LEFT = 0xb,
-    MAIN_SFX_CAMERA_ROTATE_RIGHT = 0xc,
-    MAIN_SFX_CAMERA_ROTATE_STOP = 0xd, /* the rotation reached its target */
+    MAIN_SFX_EQUIP = 10,      /* equip, set ability, best fit */
+    MAIN_SFX_CAMERA_ROTATE_LEFT = 11,
+    MAIN_SFX_CAMERA_ROTATE_RIGHT = 12,
+    MAIN_SFX_CAMERA_ROTATE_STOP = 13, /* the rotation reached its target */
     /* Paired zoom sounds: battle_camera_toggle_zoom and battle_camera_zoom_map
      * play 0x11 with zoom action 4 and 0xe with action 2; the in/out reading
      * follows the zoom-target comment in battle_camera_toggle_zoom. The
      * ATTACK deploy screen also plays 0x11 when a placed unit is moved. */
-    MAIN_SFX_CAMERA_ZOOM_IN = 0xe,
+    MAIN_SFX_CAMERA_ZOOM_IN = 14,
     /* L1/R1 on the world map (wldcore_menu_step_map_cursor_level): 0x10 when
      * the toggle sets the zoomed-out bit of g_wldcore_map_zoom_motion, 0xf
      * when it clears it. */
-    MAIN_SFX_WORLD_MAP_ZOOM_IN = 0xf,
-    MAIN_SFX_WORLD_MAP_ZOOM_OUT = 0x10,
-    MAIN_SFX_CAMERA_ZOOM_OUT = 0x11,
-    MAIN_SFX_WINDOW_OPEN = 0x12, /* help, message or text window opens */
+    MAIN_SFX_WORLD_MAP_ZOOM_IN = 15,
+    MAIN_SFX_WORLD_MAP_ZOOM_OUT = 16,
+    MAIN_SFX_CAMERA_ZOOM_OUT = 17,
+    MAIN_SFX_WINDOW_OPEN = 18, /* help, message or text window opens */
     /* The weapon sounds of battle_sound_select_weapon_hit, by the weapon's
      * item_type_e: g_battle_sound_weapon_miss_sfx_ids (the swing, played
      * before the hit is known), g_battle_sound_weapon_hit_sfx_ids and
      * g_battle_sound_shield_deflect_sfx_ids. */
-    MAIN_SFX_HIT_BLADE = 0x13,    /* knife, ninja blade, sword, knight sword, katana */
-    MAIN_SFX_HIT_HEAVY = 0x15,    /* axe, flail; also the deflect of a fist, bag or cloth */
-    MAIN_SFX_HIT_UNARMED = 0x18,  /* fist, bag, cloth */
-    MAIN_SFX_SWING_LIGHT = 0x19,  /* fist, knife, ninja blade, instrument, book, bag, cloth */
-    MAIN_SFX_SWING_MEDIUM = 0x1a, /* sword, knight sword, katana, rod, staff */
-    MAIN_SFX_SWING_HEAVY = 0x1b,  /* axe, flail, polearm, pole */
+    MAIN_SFX_HIT_BLADE = 19,    /* knife, ninja blade, sword, knight sword, katana */
+    MAIN_SFX_HIT_HEAVY = 21,    /* axe, flail; also the deflect of a fist, bag or cloth */
+    MAIN_SFX_HIT_UNARMED = 24,  /* fist, bag, cloth */
+    MAIN_SFX_SWING_LIGHT = 25,  /* fist, knife, ninja blade, instrument, book, bag, cloth */
+    MAIN_SFX_SWING_MEDIUM = 26, /* sword, knight sword, katana, rod, staff */
+    MAIN_SFX_SWING_HEAVY = 27,  /* axe, flail, polearm, pole */
     /* Started by the spell-charge and summon-charge secondary effects, which
      * stop them with main_sound_stop_sfx_channels when they finish. */
-    MAIN_SFX_SPELL_CHARGE = 0x1f,
-    MAIN_SFX_SUMMON_CHARGE = 0x21,
-    MAIN_SFX_VENOM_TRAP = 0x22, /* battle_effect_venom_trap_secondary_handler starts */
+    MAIN_SFX_SPELL_CHARGE = 31,
+    MAIN_SFX_SUMMON_CHARGE = 33,
+    MAIN_SFX_VENOM_TRAP = 34, /* battle_effect_venom_trap_secondary_handler starts */
     /* battle_sound_play_landing_sfx_by_surface_type: water surfaces play
      * 0x23, grassland, thicket and rug 0x28, wooden floor, tree and box 0x3a,
      * every other surface 0x29. A step that ends on another unit also plays
      * 0x28, and mounting a unit named by battle id plays 0x29. */
-    MAIN_SFX_LAND_WATER = 0x23,
-    MAIN_SFX_JUMP = 0x27, /* a jump rise starts; the fall that ends a mount ride starts */
-    MAIN_SFX_LAND_SOFT = 0x28,
-    MAIN_SFX_LAND_DEFAULT = 0x29,
-    MAIN_SFX_TEXT_PAGE = 0x2d,            /* dialogue/scroll window advances a page */
-    MAIN_SFX_SHIELD_DEFLECT_LIGHT = 0x2e, /* blades, rod, staff, polearm, pole */
-    MAIN_SFX_SHIELD_DEFLECT_HEAVY = 0x2f, /* axe, flail */
+    MAIN_SFX_LAND_WATER = 35,
+    MAIN_SFX_JUMP = 39, /* a jump rise starts; the fall that ends a mount ride starts */
+    MAIN_SFX_LAND_SOFT = 40,
+    MAIN_SFX_LAND_DEFAULT = 41,
+    MAIN_SFX_TEXT_PAGE = 45,            /* dialogue/scroll window advances a page */
+    MAIN_SFX_SHIELD_DEFLECT_LIGHT = 46, /* blades, rod, staff, polearm, pole */
+    MAIN_SFX_SHIELD_DEFLECT_HEAVY = 47, /* axe, flail */
     /* An error message opens: a memory-card load, save or scan failure, or a
      * refused equip, dismissal, job change or ability.
      * battle_sound_select_weapon_hit plays it for an attack stopped by an
      * accessory or class evade, a forced failure, a blade grasp or a catch,
      * and as the shield deflect of an instrument or book. */
-    MAIN_SFX_ERROR_MESSAGE = 0x30,
-    MAIN_SFX_CAMERA_TILT = 0x31, /* battle_camera_handle_tilt_request */
-    MAIN_SFX_HIT_ROD = 0x38,     /* rod, staff */
-    MAIN_SFX_LAND_WOOD = 0x3a,
+    MAIN_SFX_ERROR_MESSAGE = 48,
+    MAIN_SFX_CAMERA_TILT = 49, /* battle_camera_handle_tilt_request */
+    MAIN_SFX_HIT_ROD = 56,     /* rod, staff */
+    MAIN_SFX_LAND_WOOD = 58,
     /* Circle on a name-entry character key, or on an occupied tile of the
      * ATTACK deploy screen. */
-    MAIN_SFX_SELECT = 0x3c,
-    MAIN_SFX_HIT_POLE = 0x3e,         /* polearm, pole */
-    MAIN_SFX_EVENT_REVIVE = 0x41,     /* the event script's revive status change (*_script_inflict_status_thread) */
-    MAIN_SFX_WORLD_MAP_ARRIVE = 0x43, /* a route leg ends at a location with no event or encounter */
+    MAIN_SFX_SELECT = 60,
+    MAIN_SFX_HIT_POLE = 62,         /* polearm, pole */
+    MAIN_SFX_EVENT_REVIVE = 65,     /* the event script's revive status change (*_script_inflict_status_thread) */
+    MAIN_SFX_WORLD_MAP_ARRIVE = 67, /* a route leg ends at a location with no event or encounter */
     /* Dead status added outside an event
      * (battle_unit_update_animation_for_status_changes), chosen by the unit's
      * male, female or monster flag; the male sound is 0x9a. */
-    MAIN_SFX_DEATH_FEMALE = 0x45,
-    MAIN_SFX_DEATH_MONSTER = 0x46,
-    MAIN_SFX_SHIELD_DEFLECT_BULLET = 0x47, /* gun */
-    MAIN_SFX_SHIELD_DEFLECT_ARROW = 0x49,  /* crossbow, bow */
+    MAIN_SFX_DEATH_FEMALE = 69,
+    MAIN_SFX_DEATH_MONSTER = 70,
+    MAIN_SFX_SHIELD_DEFLECT_BULLET = 71, /* gun */
+    MAIN_SFX_SHIELD_DEFLECT_ARROW = 73,  /* crossbow, bow */
     /* Proposition result (g_wldcore_job_selection.result): 0 plays the
      * 0x4d/0x4e pair through main_sound_play_2_sfx, 1 the 0x4f/0x50 pair,
      * 2 plays 0x51. */
-    MAIN_SFX_PROPOSITION_SUCCESS_A = 0x4d,
-    MAIN_SFX_PROPOSITION_SUCCESS_B = 0x4e,
-    MAIN_SFX_PROPOSITION_PARTIAL_A = 0x4f,
-    MAIN_SFX_PROPOSITION_PARTIAL_B = 0x50,
-    MAIN_SFX_PROPOSITION_FAILURE = 0x51,
-    MAIN_SFX_SWING_BOW = 0x52,
-    MAIN_SFX_SWING_CROSSBOW = 0x56,
-    MAIN_SFX_SWING_GUN = 0x5a,
-    MAIN_SFX_HIT_GUN = 0x5b,
-    MAIN_SFX_TELEPORT_OUT = 0x6a,
-    MAIN_SFX_TELEPORT_IN = 0x6b,
+    MAIN_SFX_PROPOSITION_SUCCESS_A = 77,
+    MAIN_SFX_PROPOSITION_SUCCESS_B = 78,
+    MAIN_SFX_PROPOSITION_PARTIAL_A = 79,
+    MAIN_SFX_PROPOSITION_PARTIAL_B = 80,
+    MAIN_SFX_PROPOSITION_FAILURE = 81,
+    MAIN_SFX_SWING_BOW = 82,
+    MAIN_SFX_SWING_CROSSBOW = 86,
+    MAIN_SFX_SWING_GUN = 90,
+    MAIN_SFX_HIT_GUN = 91,
+    MAIN_SFX_TELEPORT_OUT = 106,
+    MAIN_SFX_TELEPORT_IN = 107,
     /* Animation step 4 of the world event-transition indicator
      * (wldcore_menu_step_event_transition_level): 0x6c in mode 0, which a
      * random encounter pushes, 0x6d in the other spinning modes. */
-    MAIN_SFX_EVENT_TRANSITION_MODE_0 = 0x6c,
-    MAIN_SFX_EVENT_TRANSITION_MODE_1 = 0x6d,
+    MAIN_SFX_EVENT_TRANSITION_MODE_0 = 108,
+    MAIN_SFX_EVENT_TRANSITION_MODE_1 = 109,
     MAIN_SFX_STATUS_MENU_REQUEST
-    = 0x71,                       /* Triangle queues the status menu on another unit's turn; again when it opens */
-    MAIN_SFX_CRITICAL_HIT = 0x72, /* a weapon hit whose action is critical (battle_sound_select_weapon_hit) */
-    MAIN_SFX_TEXT_GLYPH = 0x73,   /* typewriter tick after a dialogue glyph */
-    MAIN_SFX_HIT_ARROW = 0x74,    /* crossbow, bow */
+    = 113,                       /* Triangle queues the status menu on another unit's turn; again when it opens */
+    MAIN_SFX_CRITICAL_HIT = 114, /* a weapon hit whose action is critical (battle_sound_select_weapon_hit) */
+    MAIN_SFX_TEXT_GLYPH = 115,   /* typewriter tick after a dialogue glyph */
+    MAIN_SFX_HIT_ARROW = 116,    /* crossbow, bow */
     /* World map: 0x76 when a path animation starts, drawing or erasing; 0x77
      * when a hidden location is made visible. */
-    MAIN_SFX_WORLD_MAP_PATH = 0x76,
-    MAIN_SFX_WORLD_MAP_LOCATION_APPEAR = 0x77,
+    MAIN_SFX_WORLD_MAP_PATH = 118,
+    MAIN_SFX_WORLD_MAP_LOCATION_APPEAR = 119,
     /* A save or load finished, Start pressed in the opening's new-game
      * transition or to end deployment, a crystal or treasure picked up, or a
      * proposition report showing its reward picture. */
-    MAIN_SFX_COMPLETE = 0x85,
-    MAIN_SFX_SHOP_TRANSACTION = 0x97, /* shop buy/sell confirmed */
-    MAIN_SFX_ABILITY_LEARNED = 0x98,  /* an ability bought in the learn list */
-    MAIN_SFX_DEATH_MALE = 0x9a,
-    MAIN_SFX_HIT_BOOK = 0x9c, /* instrument, book */
-    MAIN_SFX_COUNT = 0xa8,    /* the sound count in the SYSTEM.SED header */
+    MAIN_SFX_COMPLETE = 133,
+    MAIN_SFX_SHOP_TRANSACTION = 151, /* shop buy/sell confirmed */
+    MAIN_SFX_ABILITY_LEARNED = 152,  /* an ability bought in the learn list */
+    MAIN_SFX_DEATH_MALE = 154,
+    MAIN_SFX_HIT_BOOK = 156, /* instrument, book */
+    MAIN_SFX_COUNT = 168,    /* the sound count in the SYSTEM.SED header */
 } main_sfx_e;
 
 /* Sounds of MAIN_SOUND_RESOURCE_ENV that the code plays by number. ENV.SED
@@ -1318,7 +1322,7 @@ typedef enum main_sfx {
 typedef enum main_env_sfx {
     MAIN_ENV_SFX_RAIN = 2,      /* battle_map_run_weather_command: rain without snow, and the thunder command */
     MAIN_ENV_SFX_THUNDER_A = 3, /* battle_map_draw_mesh_and_weather picks one of the two for a lightning flash */
-    MAIN_ENV_SFX_THUNDER_B = 0xe,
+    MAIN_ENV_SFX_THUNDER_B = 14,
 } main_env_sfx_e;
 
 /* SMD and WD resources store their total byte size at offset eight. */
@@ -1753,16 +1757,16 @@ typedef enum main_game_flow_state {
 /* Error codes passed to main_system_handle_error, whose report
  * hook is empty in retail. */
 typedef enum main_system_error {
-    MAIN_SYSTEM_ERROR_HEAP_ALLOC = 1,              /* main_file_load_to_heap got no block */
-    MAIN_SYSTEM_ERROR_FILE_LOAD = 2,               /* a checked file load returned 0 */
-    MAIN_SYSTEM_ERROR_NO_MISC_UNIT_SLOT = 6,       /* battle_unit_claim_misc_slot found none free */
-    MAIN_SYSTEM_ERROR_SHP_FRAME = 8,               /* frame index above 0x200 or frame pointer -1 */
-    MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,           /* animation index above 0x100 or sequence pointer -1 */
-    MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,       /* more than eight parts in a unit frame */
-    MAIN_SYSTEM_ERROR_NO_SPRITESHEET_SLOT = 0xb,   /* no free or reusable spritesheet slot */
-    MAIN_SYSTEM_ERROR_SEQ_OPCODE = 0xd,            /* unknown sequence opcode, or a queued animation for slot 0 */
-    MAIN_SYSTEM_ERROR_SMD_LOAD = 0x11,             /* no SMD buffer or the SMD load could not start */
-    MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION = 0x17, /* distortion animation id without a handler */
+    MAIN_SYSTEM_ERROR_HEAP_ALLOC = 1,            /* main_file_load_to_heap got no block */
+    MAIN_SYSTEM_ERROR_FILE_LOAD = 2,             /* a checked file load returned 0 */
+    MAIN_SYSTEM_ERROR_NO_MISC_UNIT_SLOT = 6,     /* battle_unit_claim_misc_slot found none free */
+    MAIN_SYSTEM_ERROR_SHP_FRAME = 8,             /* frame index above 0x200 or frame pointer -1 */
+    MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,         /* animation index above 0x100 or sequence pointer -1 */
+    MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,     /* more than eight parts in a unit frame */
+    MAIN_SYSTEM_ERROR_NO_SPRITESHEET_SLOT = 11,  /* no free or reusable spritesheet slot */
+    MAIN_SYSTEM_ERROR_SEQ_OPCODE = 13,           /* unknown sequence opcode, or a queued animation for slot 0 */
+    MAIN_SYSTEM_ERROR_SMD_LOAD = 17,             /* no SMD buffer or the SMD load could not start */
+    MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION = 23, /* distortion animation id without a handler */
 } main_system_error_e;
 
 extern s32 g_main_system_frontend_world_result;
@@ -1877,7 +1881,7 @@ typedef enum main_unit_action_state {
     MAIN_UNIT_ACTION_STATE_JUMPING = 6,
     MAIN_UNIT_ACTION_STATE_DEFENDING = 7,
     MAIN_UNIT_ACTION_STATE_PERFORMING = 8,
-    MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING = 0xff
+    MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING = 255
 } main_unit_action_state_e;
 
 extern u8 g_main_party_highest_level;
@@ -2007,8 +2011,8 @@ typedef struct main_gfx_unit_graphics_load_descriptor {
     struct battle_stats* battle_stats;
     u32 flags; /* nonzero: the unit starts undrawn */
 } main_gfx_unit_graphics_load_descriptor_t;
-typedef char main_gfx_unit_graphics_load_descriptor_size_must_be_0x14
-    [(sizeof(main_gfx_unit_graphics_load_descriptor_t) == 0x14) ? 1 : -1];
+typedef char main_gfx_unit_graphics_load_descriptor_size_must_be_20
+    [(sizeof(main_gfx_unit_graphics_load_descriptor_t) == 20) ? 1 : -1];
 
 /* The 0x144-byte queue occupies 0x80049c18..0x80049d5c. */
 typedef struct main_gfx_unit_graphics_load_queue {
@@ -2016,9 +2020,8 @@ typedef struct main_gfx_unit_graphics_load_queue {
     main_gfx_unit_graphics_load_descriptor_t descriptors[16]; /* 0x04 */
 } main_gfx_unit_graphics_load_queue_t;
 
-typedef char main_gfx_unit_graphics_load_queue_size_must_be_0x144[(sizeof(main_gfx_unit_graphics_load_queue_t) == 0x144)
-        ? 1
-        : -1];
+typedef char
+    main_gfx_unit_graphics_load_queue_size_must_be_324[(sizeof(main_gfx_unit_graphics_load_queue_t) == 324) ? 1 : -1];
 
 /* EVENT/FRAME.BIN: 256x288 pixels at 4bpp and 22 palettes, sector rounded.
  * The loaders upload rows 32..287 and the two palette blocks. */
@@ -2028,7 +2031,7 @@ typedef struct main_gfx_frame_bin {
     palette_t palette_tail[6]; /* 0x9200; remaining six palettes */
     u8 _padding_92c0[0x540];   /* 0x92c0; past the end of the file, to the sector boundary */
 } main_gfx_frame_bin_t;
-typedef char main_gfx_frame_bin_size_must_be_0x9800[(sizeof(main_gfx_frame_bin_t) == 0x9800) ? 1 : -1];
+typedef char main_gfx_frame_bin_size_must_be_38912[(sizeof(main_gfx_frame_bin_t) == 38912) ? 1 : -1];
 
 /* EVENT/WLDFACE.BIN is four of these sheets: forty 32x48 portraits at 4 bits
  * per pixel, eight across and five down, then sixteen rows of four palettes.
@@ -2048,7 +2051,7 @@ enum {
     MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW = 10, /* first CLUT row of the monsters' other palettes */
     MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT = 6,
 };
-typedef char main_gfx_wldface_sheet_size_must_be_0x8000[(sizeof(main_gfx_wldface_sheet_t) == 0x8000) ? 1 : -1];
+typedef char main_gfx_wldface_sheet_size_must_be_32768[(sizeof(main_gfx_wldface_sheet_t) == 32768) ? 1 : -1];
 
 extern RECT g_main_gfx_frame_image_rect;
 extern RECT g_main_gfx_frame_palette_rect;

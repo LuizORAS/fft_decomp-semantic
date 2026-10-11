@@ -51,7 +51,7 @@ typedef struct effect_particle_ribbon_short {
     s16 frame_timer;       /* 0x3a8 */
     u8 _padding_3aa[0x02]; /* tail padding to 4-byte alignment */
 } effect_particle_ribbon_short_t;
-typedef char assert_effect_particle_ribbon_short_size[sizeof(effect_particle_ribbon_short_t) == 0x3ac ? 1 : -1];
+typedef char assert_effect_particle_ribbon_short_size[sizeof(effect_particle_ribbon_short_t) == 940 ? 1 : -1];
 
 /* One long ribbon: the short layout with 16 quads per buffer and a 17-point
  * trail. */
@@ -69,7 +69,7 @@ typedef struct effect_particle_ribbon_long {
     s16 frame_timer;       /* 0x718 */
     u8 _padding_71a[0x02]; /* tail padding to 4-byte alignment */
 } effect_particle_ribbon_long_t;
-typedef char assert_effect_particle_ribbon_long_size[sizeof(effect_particle_ribbon_long_t) == 0x71c ? 1 : -1];
+typedef char assert_effect_particle_ribbon_long_size[sizeof(effect_particle_ribbon_long_t) == 1820 ? 1 : -1];
 
 /* Work block allocated by the short variant. */
 typedef struct effect_particle_ribbon_short_work {
@@ -81,7 +81,7 @@ typedef struct effect_particle_ribbon_short_work {
     s32 destroy_delay;                                                          /* 0x1d88 */
 } effect_particle_ribbon_short_work_t;
 typedef char
-    assert_effect_particle_ribbon_short_work_size[sizeof(effect_particle_ribbon_short_work_t) == 0x1d8c ? 1 : -1];
+    assert_effect_particle_ribbon_short_work_size[sizeof(effect_particle_ribbon_short_work_t) == 7564 ? 1 : -1];
 
 /* Work block allocated by the long variant. */
 typedef struct effect_particle_ribbon_long_work {
@@ -92,8 +92,7 @@ typedef struct effect_particle_ribbon_long_work {
     MATRIX matrix;                                                            /* 0x1c78 */
     s32 destroy_delay;                                                        /* 0x1c98 */
 } effect_particle_ribbon_long_work_t;
-typedef char
-    assert_effect_particle_ribbon_long_work_size[sizeof(effect_particle_ribbon_long_work_t) == 0x1c9c ? 1 : -1];
+typedef char assert_effect_particle_ribbon_long_work_size[sizeof(effect_particle_ribbon_long_work_t) == 7324 ? 1 : -1];
 
 extern u32 g_effect_e070_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
 extern u32 g_effect_e403_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
@@ -211,7 +210,7 @@ typedef struct effect_polar_mesh_work {
     s32 frame;         /* 0x20f4: curve column, advanced once per update */
     s32 destroy_delay; /* 0x20f8: the destroy phase waits one call before freeing */
 } effect_polar_mesh_work_t;
-typedef char assert_effect_polar_mesh_work_size[sizeof(effect_polar_mesh_work_t) == 0x20fc ? 1 : -1];
+typedef char assert_effect_polar_mesh_work_size[sizeof(effect_polar_mesh_work_t) == 8444 ? 1 : -1];
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the ring (0-5) the column. */
@@ -254,7 +253,7 @@ typedef struct effect_textured_quad_grid_2x2_work {
     s32 destroy_latched; /* 0x200: phase 3 frees the block on its second call */
 } effect_textured_quad_grid_2x2_work_t;
 typedef char
-    assert_effect_textured_quad_grid_2x2_work_size[sizeof(effect_textured_quad_grid_2x2_work_t) == 0x204 ? 1 : -1];
+    assert_effect_textured_quad_grid_2x2_work_size[sizeof(effect_textured_quad_grid_2x2_work_t) == 516 ? 1 : -1];
 
 typedef struct effect_textured_quad_grid_4x4_work {
     s32 buffer;            /* 0x000: quads[buffer] is drawn this frame */
@@ -269,7 +268,7 @@ typedef struct effect_textured_quad_grid_4x4_work {
     s32 destroy_latched; /* 0x6e0: phase 3 frees the block on its second call */
 } effect_textured_quad_grid_4x4_work_t;
 typedef char
-    assert_effect_textured_quad_grid_4x4_work_size[sizeof(effect_textured_quad_grid_4x4_work_t) == 0x6e4 ? 1 : -1];
+    assert_effect_textured_quad_grid_4x4_work_size[sizeof(effect_textured_quad_grid_4x4_work_t) == 1764 ? 1 : -1];
 
 typedef struct effect_textured_quad_grid_8x8_work {
     s32 buffer;            /* 0x000: quads[buffer] is drawn this frame */
@@ -283,7 +282,7 @@ typedef struct effect_textured_quad_grid_8x8_work {
     s32 destroy_latched; /* 0x1a18: phase 3 frees the block on its second call */
 } effect_textured_quad_grid_8x8_work_t;
 typedef char
-    assert_effect_textured_quad_grid_8x8_work_size[sizeof(effect_textured_quad_grid_8x8_work_t) == 0x1a1c ? 1 : -1];
+    assert_effect_textured_quad_grid_8x8_work_size[sizeof(effect_textured_quad_grid_8x8_work_t) == 6684 ? 1 : -1];
 
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 2x2 grid:
  * brightness_row selects the row, the column is the quad row. */
@@ -312,7 +311,7 @@ typedef struct effect_ring_mesh_work {
     u8 _unused_1a10[0x08];
     s32 destroy_delay; /* 0x1a18: the destroy phase waits one call before freeing */
 } effect_ring_mesh_work_t;
-typedef char assert_effect_ring_mesh_work_size[sizeof(effect_ring_mesh_work_t) == 0x1a1c ? 1 : -1];
+typedef char assert_effect_ring_mesh_work_size[sizeof(effect_ring_mesh_work_t) == 6684 ? 1 : -1];
 
 /* Scratchpad (0x1f800000) layout while the ring is rebuilt. points[row][0..8]
  * sweep one quadrant in 0x80 steps; the rotating add helpers reuse them for
@@ -337,7 +336,7 @@ typedef struct effect_single_ring_mesh_work {
     u8 _unused_d10[0x08];
     s32 destroy_delay; /* 0xd18: the destroy phase waits one call before freeing */
 } effect_single_ring_mesh_work_t;
-typedef char assert_effect_single_ring_mesh_work_size[sizeof(effect_single_ring_mesh_work_t) == 0xd1c ? 1 : -1];
+typedef char assert_effect_single_ring_mesh_work_size[sizeof(effect_single_ring_mesh_work_t) == 3356 ? 1 : -1];
 
 /* Scratchpad (0x1f800000) layout of the single-ring variant: two lattice
  * rows of one quadrant. */
@@ -409,7 +408,7 @@ typedef struct effect_summon_mesh_work {
     u8 _unused_3410[0x08];
     s32 destroy_delay; /* 0x3418: the destroy phase waits one call before freeing */
 } effect_summon_mesh_work_t;
-typedef char assert_effect_summon_mesh_work_size[sizeof(effect_summon_mesh_work_t) == 0x341c ? 1 : -1];
+typedef char assert_effect_summon_mesh_work_size[sizeof(effect_summon_mesh_work_t) == 13340 ? 1 : -1];
 
 /* Leading flags word of the effect section at *g_battle_effect_flags_section. */
 typedef struct effect_summon_mesh_effect_header {
@@ -470,7 +469,7 @@ typedef struct effect_tentacle_mesh_segment {
     s16 frame_timer;       /* 0x6e8 */
     u8 _padding_6ea[0x02]; /* tail padding to 4-byte alignment */
 } effect_tentacle_mesh_segment_t;
-typedef char assert_effect_tentacle_mesh_segment_size[sizeof(effect_tentacle_mesh_segment_t) == 0x6ec ? 1 : -1];
+typedef char assert_effect_tentacle_mesh_segment_size[sizeof(effect_tentacle_mesh_segment_t) == 1772 ? 1 : -1];
 
 typedef struct effect_tentacle_mesh_work {
     s32 buffer;                                 /* 0x0000 */
@@ -480,7 +479,7 @@ typedef struct effect_tentacle_mesh_work {
     MATRIX matrix;                              /* 0x3768 */
     s32 destroy_delay;                          /* 0x3788 */
 } effect_tentacle_mesh_work_t;
-typedef char assert_effect_tentacle_mesh_work_size[sizeof(effect_tentacle_mesh_work_t) == 0x378c ? 1 : -1];
+typedef char assert_effect_tentacle_mesh_work_size[sizeof(effect_tentacle_mesh_work_t) == 14220 ? 1 : -1];
 
 /* A 17-point particle trail; spawning seeds only points 0-8 (the target's loop bound is 9). */
 typedef struct effect_trail_segment {
@@ -493,7 +492,7 @@ typedef struct effect_trail_segment {
     s16 active;           /* 0x92 */
     u8 _unused_94[0x04];
 } effect_trail_segment_t;
-typedef char assert_effect_trail_segment_size[sizeof(effect_trail_segment_t) == 0x98 ? 1 : -1];
+typedef char assert_effect_trail_segment_size[sizeof(effect_trail_segment_t) == 152 ? 1 : -1];
 
 typedef struct effect_trail_work {
     s32 buffer;                         /* 0x000 */
@@ -503,7 +502,7 @@ typedef struct effect_trail_work {
     MATRIX matrix;                      /* 0x268 */
     s32 destroy_delay;                  /* 0x288 */
 } effect_trail_work_t;
-typedef char assert_effect_trail_work_size[sizeof(effect_trail_work_t) == 0x28c ? 1 : -1];
+typedef char assert_effect_trail_work_size[sizeof(effect_trail_work_t) == 652 ? 1 : -1];
 
 extern u32 g_effect_e384_tentacle_mesh_brightness_table[][9];
 extern u32 g_effect_e453_tentacle_mesh_brightness_table[][9];
@@ -535,7 +534,7 @@ typedef struct effect_wave_mesh_work {
     s32 frame;           /* 0x1a54 */
     s32 destroy_latched; /* 0x1a58 */
 } effect_wave_mesh_work_t;
-typedef char assert_effect_wave_mesh_work_size[sizeof(effect_wave_mesh_work_t) == 0x1a5c ? 1 : -1];
+typedef char assert_effect_wave_mesh_work_size[sizeof(effect_wave_mesh_work_t) == 6748 ? 1 : -1];
 
 /* Scratchpad (0x1f800000) layout while the mesh is rebuilt. */
 typedef struct effect_wave_mesh_scratch {

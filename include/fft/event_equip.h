@@ -131,7 +131,7 @@ typedef struct equip_gfx_context {
     DR_AREA* draw_areas;      /* 0x5c */
     DR_MODE* draw_modes;      /* 0x60 */
 } equip_gfx_context_t;
-typedef char equip_gfx_context_size_must_be_0x64[(sizeof(equip_gfx_context_t) == 0x64) ? 1 : -1];
+typedef char equip_gfx_context_size_must_be_100[(sizeof(equip_gfx_context_t) == 100) ? 1 : -1];
 
 /* One of the two double-buffered graphics contexts: the pool-pointer table
  * followed by per-buffer state. equip_gfx_swap_context_and_clear_otag and
@@ -140,7 +140,7 @@ typedef struct equip_gfx_buffer {
     equip_gfx_context_t context;
     u8 _unused_64[0x88];
 } equip_gfx_buffer_t;
-typedef char equip_gfx_buffer_size_must_be_0xec[(sizeof(equip_gfx_buffer_t) == 0xec) ? 1 : -1];
+typedef char equip_gfx_buffer_size_must_be_236[(sizeof(equip_gfx_buffer_t) == 236) ? 1 : -1];
 
 extern u16 g_equip_gfx_clut_id;
 extern equip_gfx_context_t* g_equip_gfx_context;
@@ -694,7 +694,7 @@ typedef struct equip_unit_data {
     u8 party_index;                       /* 0x78; battle_stats_t.formation_index */
     u8 _padding_79;                       /* tail padding to 2-byte alignment */
 } equip_unit_data_t;
-typedef char equip_unit_data_size_must_be_0x7a[(sizeof(equip_unit_data_t) == 0x7A) ? 1 : -1];
+typedef char equip_unit_data_size_must_be_122[(sizeof(equip_unit_data_t) == 122) ? 1 : -1];
 
 /* Provisional: the 0x7A-byte preview records for the selected unit (index 0)
  * and its compare slot (index 1); several callers view one as raw bytes. */

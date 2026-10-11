@@ -97,7 +97,7 @@ typedef struct wldcore_job_selection {
     u8 _unused_24[0x10];
     s32 rows[3][3]; /* 0x34; per-participant score/report rows */
 } wldcore_job_selection_t;
-typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_job_selection_t) == 0x58 ? 1 : -1];
+typedef char wldcore_job_selection_size_must_be_88[sizeof(wldcore_job_selection_t) == 88 ? 1 : -1];
 
 extern wldcore_job_selection_t g_wldcore_job_selection;
 void wldcore_proposition_prepare_report(s32 job_id);
@@ -231,14 +231,14 @@ typedef union wldcore_audio_music_slots {
  * wait states wldcore_sound_process_audio_queue moves the current command
  * through. */
 typedef enum wldcore_audio_command {
-    WLDCORE_AUDIO_COMMAND_NONE = 0x00,       /* idle: takes the next queued command */
-    WLDCORE_AUDIO_COMMAND_PLAY_MUSIC = 0x01, /* value: WLDCORE_AUDIO_MUSIC(slot, music id) */
-    WLDCORE_AUDIO_COMMAND_FADE_OUT = 0x02,   /* value << 2: fade time */
-    WLDCORE_AUDIO_COMMAND_FADE_IN = 0x03,    /* the current slot, to the stored volume over value << 2 */
-    WLDCORE_AUDIO_COMMAND_UNLOAD = 0x04,     /* value: slot, 0 for the current one */
-    WLDCORE_AUDIO_COMMAND_WAIT_LOAD = 0x10,
-    WLDCORE_AUDIO_COMMAND_WAIT_FADE_OUT = 0x11,
-    WLDCORE_AUDIO_COMMAND_WAIT_FADE_IN = 0x12,
+    WLDCORE_AUDIO_COMMAND_NONE = 0,       /* idle: takes the next queued command */
+    WLDCORE_AUDIO_COMMAND_PLAY_MUSIC = 1, /* value: WLDCORE_AUDIO_MUSIC(slot, music id) */
+    WLDCORE_AUDIO_COMMAND_FADE_OUT = 2,   /* value << 2: fade time */
+    WLDCORE_AUDIO_COMMAND_FADE_IN = 3,    /* the current slot, to the stored volume over value << 2 */
+    WLDCORE_AUDIO_COMMAND_UNLOAD = 4,     /* value: slot, 0 for the current one */
+    WLDCORE_AUDIO_COMMAND_WAIT_LOAD = 16,
+    WLDCORE_AUDIO_COMMAND_WAIT_FADE_OUT = 17,
+    WLDCORE_AUDIO_COMMAND_WAIT_FADE_IN = 18,
 } wldcore_audio_command_e;
 
 /* Audio command FIFO at 0x800d45a4, filled by
@@ -255,7 +255,7 @@ typedef struct wldcore_audio_queue {
     s32 current_slot;                  /* 0x98 */
     s32 volume;                        /* 0x9c */
 } wldcore_audio_queue_t;
-typedef char wldcore_audio_queue_size_must_be_0xa0[sizeof(wldcore_audio_queue_t) == 0xa0 ? 1 : -1];
+typedef char wldcore_audio_queue_size_must_be_160[sizeof(wldcore_audio_queue_t) == 160 ? 1 : -1];
 
 /* Rows of four sound numbers in the WLDCORE sound bank (id 0xE1), indexed by
  * a sound id from 1. Row 0 is not a sound row: 0x8009ec18 holds the eighth
@@ -378,7 +378,7 @@ typedef struct wldcore_thread_block {
     s32 redraw_request; /* 0x0c; scroll direction for thread 8, redraw request for 12 and 9 */
     u8 _unused_10[4];
 } wldcore_thread_block_t;
-typedef char wldcore_thread_block_size_must_be_0x14[sizeof(wldcore_thread_block_t) == 0x14 ? 1 : -1];
+typedef char wldcore_thread_block_size_must_be_20[sizeof(wldcore_thread_block_t) == 20 ? 1 : -1];
 
 extern wldcore_thread_block_t g_wldcore_thread8_params;
 extern wldcore_thread_block_t g_wldcore_thread9_params;
@@ -423,7 +423,7 @@ typedef struct wldcore_sortbox_state {
     s32 duration;      /* 0x14 */
     GsBOXF boxes[2];   /* 0x18; full-screen fill boxes drawn by wldcore_fade_draw_screen_overlays */
 } wldcore_sortbox_state_t;
-typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_state_t) == 0x38 ? 1 : -1];
+typedef char wldcore_sortbox_state_size_must_be_56[sizeof(wldcore_sortbox_state_t) == 56 ? 1 : -1];
 
 /* libgs GsOT descriptor: the 20-byte ordering-table records at 0x800bb364
  * (main) and 0x800bb3c4 (auxiliary), one per display buffer. The 0x14 stride
@@ -544,7 +544,7 @@ typedef struct wldcore_location_entry_state {
     SVECTOR target_position;         /* 0x88 */
     s32 arrival_location;            /* 0x90; arrival location id + 1 */
 } wldcore_location_entry_state_t;
-typedef char wldcore_location_entry_state_size_must_be_0x94[sizeof(wldcore_location_entry_state_t) == 0x94 ? 1 : -1];
+typedef char wldcore_location_entry_state_size_must_be_148[sizeof(wldcore_location_entry_state_t) == 148 ? 1 : -1];
 
 extern wldcore_location_entry_state_t g_wldcore_location_entry_state;
 extern wldcore_state_record_t* g_wldcore_location_records;
@@ -626,7 +626,7 @@ typedef struct wldcore_script_state {
     /* 0x20: script request arguments; the staged Choice values share them. */
     s32 args[4];
 } wldcore_script_state_t;
-typedef char wldcore_script_state_size_must_be_0x30[sizeof(wldcore_script_state_t) == 0x30 ? 1 : -1];
+typedef char wldcore_script_state_size_must_be_48[sizeof(wldcore_script_state_t) == 48 ? 1 : -1];
 
 extern u16* g_wldcore_default_script_base;
 extern u16* g_wldcore_script_base;
@@ -732,15 +732,15 @@ typedef enum wldcore_text_id {
 
 /* Blocks of the message file (wldcore_load_message_block_if_changed). */
 typedef enum wldcore_message_block {
-    WLDCORE_MESSAGE_BLOCK_RUMORS = 0x00,
-    WLDCORE_MESSAGE_BLOCK_PROPOSITIONS = 0x01,
-    WLDCORE_MESSAGE_BLOCK_UNEXPLORED_LANDS = 0x02,
-    WLDCORE_MESSAGE_BLOCK_TREASURES = 0x03,
-    WLDCORE_MESSAGE_BLOCK_STORY_EVENTS = 0x04,
-    WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS = 0x05,
-    WLDCORE_MESSAGE_BLOCK_BRAVE_STORY_PROPOSITIONS = 0x0a,
-    WLDCORE_MESSAGE_BLOCK_SCRIPT_FLAGS_01A4_01BB = 0x0b,
-    WLDCORE_MESSAGE_BLOCK_PROPOSITION_REPORT_FIRST = 0x10, /* one block per proposition id */
+    WLDCORE_MESSAGE_BLOCK_RUMORS = 0,
+    WLDCORE_MESSAGE_BLOCK_PROPOSITIONS = 1,
+    WLDCORE_MESSAGE_BLOCK_UNEXPLORED_LANDS = 2,
+    WLDCORE_MESSAGE_BLOCK_TREASURES = 3,
+    WLDCORE_MESSAGE_BLOCK_STORY_EVENTS = 4,
+    WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS = 5,
+    WLDCORE_MESSAGE_BLOCK_BRAVE_STORY_PROPOSITIONS = 10,
+    WLDCORE_MESSAGE_BLOCK_SCRIPT_FLAGS_01A4_01BB = 11,
+    WLDCORE_MESSAGE_BLOCK_PROPOSITION_REPORT_FIRST = 16, /* one block per proposition id */
 } wldcore_message_block_e;
 
 /* State for a paged text window and its four decorative window records. */
@@ -773,8 +773,7 @@ typedef struct wldcore_text_scrollable_window {
     s32 extra_render_index;    /* 0x64; optional render record scrolled with the text, -1 if none */
     s32 text_substitutions[2]; /* 0x68; copied to the text substitution values unless -1 */
 } wldcore_text_scrollable_window_t;
-typedef char
-    wldcore_scrollable_text_window_size_must_be_0x70[sizeof(wldcore_text_scrollable_window_t) == 0x70 ? 1 : -1];
+typedef char wldcore_scrollable_text_window_size_must_be_112[sizeof(wldcore_text_scrollable_window_t) == 112 ? 1 : -1];
 
 extern s32 g_wldcore_message_block_sector_offsets[];
 extern wldcore_text_scrollable_window_t g_wldcore_scrollable_text_window;
@@ -930,7 +929,7 @@ enum {
     WLDCORE_PROPOSITION_CONDITION_MONTH = 2,
     WLDCORE_PROPOSITION_CONDITION_STATUS = 4,
 };
-typedef char wldcore_proposition_fields_size_must_be_0x2e[sizeof(wldcore_proposition_fields_t) == 0x2e ? 1 : -1];
+typedef char wldcore_proposition_fields_size_must_be_46[sizeof(wldcore_proposition_fields_t) == 46 ? 1 : -1];
 
 /* Window and render handles passed together to the palette helper. */
 typedef struct wldcore_window_render_pair {
@@ -961,7 +960,7 @@ typedef struct wldcore_menu_send_unit_level {
     u8 _unused_48[0x10];
     s32 shown_unit; /* 0x58 */
 } wldcore_menu_send_unit_level_t;
-typedef char wldcore_menu_send_unit_level_size_must_be_0x5c[sizeof(wldcore_menu_send_unit_level_t) == 0x5c ? 1 : -1];
+typedef char wldcore_menu_send_unit_level_size_must_be_92[sizeof(wldcore_menu_send_unit_level_t) == 92 ? 1 : -1];
 
 extern s32* g_wldcore_proposition_data_base;
 extern s32 g_wldcore_proposition_selected_entry;
@@ -1157,7 +1156,7 @@ typedef struct wldcore_map_projection_view {
     VECTOR scale;     /* 0x10 */
     SVECTOR rotation; /* 0x20 */
 } wldcore_map_projection_view_t;
-typedef char wldcore_map_projection_view_size_must_be_0x28[sizeof(wldcore_map_projection_view_t) == 0x28 ? 1 : -1];
+typedef char wldcore_map_projection_view_size_must_be_40[sizeof(wldcore_map_projection_view_t) == 40 ? 1 : -1];
 
 /* Packed eight-byte source row used by wldcore_map_color_and_draw_dots.
  * The low halfword of the first word is x; its high bytes select the animation. */
@@ -1178,7 +1177,7 @@ typedef struct wldcore_map_dot {
      * is 0, 2 or 3 for the player's marker, from EVENT_SCRIPT_VAR_TOWN_BACKGROUND. */
     world_animated_render_record_t render;
 } wldcore_map_dot_t;
-typedef char wldcore_map_dot_size_must_be_0x34[sizeof(wldcore_map_dot_t) == 0x34 ? 1 : -1];
+typedef char wldcore_map_dot_size_must_be_52[sizeof(wldcore_map_dot_t) == 52 ? 1 : -1];
 
 /* wldcore_projection_state_t.flags: work pending for
  * wldcore_map_update_camera_direction_and_projection, and the marker's sprite set. */
@@ -1214,7 +1213,7 @@ typedef struct wldcore_projection_motion {
     VECTOR origin;
     VECTOR target;
 } wldcore_projection_motion_t;
-typedef char wldcore_projection_motion_size_must_be_0x2c[sizeof(wldcore_projection_motion_t) == 0x2c ? 1 : -1];
+typedef char wldcore_projection_motion_size_must_be_44[sizeof(wldcore_projection_motion_t) == 44 ? 1 : -1];
 
 /* Zoom transition at 0x800d3c8c, ending before the map-dot array at 0x800d3ca8. */
 typedef struct wldcore_zoom_motion {
@@ -1223,7 +1222,7 @@ typedef struct wldcore_zoom_motion {
     s32 duration;
     VECTOR origin;
 } wldcore_zoom_motion_t;
-typedef char wldcore_zoom_motion_size_must_be_0x1c[sizeof(wldcore_zoom_motion_t) == 0x1c ? 1 : -1];
+typedef char wldcore_zoom_motion_size_must_be_28[sizeof(wldcore_zoom_motion_t) == 28 ? 1 : -1];
 
 /* Provisional: one axis of the accelerating map scroll stepped by
  * wldcore_map_update_scroll_axis_speed: the fixed-point accumulator, its
@@ -1254,7 +1253,7 @@ typedef struct wldcore_projected_entry {
     s32 screen_x; /* 0x10; projected x, culled against the 0x121 screen span */
     s32 screen_y; /* 0x14; projected y, culled against 0x111 */
 } wldcore_projected_entry_t;
-typedef char wldcore_projected_entry_size_must_be_0x18[sizeof(wldcore_projected_entry_t) == 0x18 ? 1 : -1];
+typedef char wldcore_projected_entry_size_must_be_24[sizeof(wldcore_projected_entry_t) == 24 ? 1 : -1];
 
 /* map */
 /* The type-0x36 menu level pushed by wldcore_push_map_location_visibility_level
@@ -1267,7 +1266,7 @@ typedef struct wldcore_map_visibility_level {
     s32 pending_sound; /* 0x0c; set so the step handler plays a sound once */
     u8 _unused_10[0x4c];
 } wldcore_map_visibility_level_t;
-typedef char wldcore_map_visibility_level_size_must_be_0x5c[sizeof(wldcore_map_visibility_level_t) == 0x5c ? 1 : -1];
+typedef char wldcore_map_visibility_level_size_must_be_92[sizeof(wldcore_map_visibility_level_t) == 92 ? 1 : -1];
 
 /* Provisional: the type-0x35 menu level pushed by
  * wldcore_menu_push_map_path_level, decoded from the four words it writes and
@@ -1285,7 +1284,7 @@ typedef struct wldcore_map_path_level {
     s32 pending_sound; /* 0x0c; set so the step handler plays a sound once */
     u8 _unused_10[0x4c];
 } wldcore_map_path_level_t;
-typedef char wldcore_map_path_level_size_must_be_0x5c[sizeof(wldcore_map_path_level_t) == 0x5c ? 1 : -1];
+typedef char wldcore_map_path_level_size_must_be_92[sizeof(wldcore_map_path_level_t) == 92 ? 1 : -1];
 
 extern s32 g_wldcore_map_dot_count;
 extern wldcore_map_dot_t g_wldcore_map_dots[];
@@ -1357,22 +1356,22 @@ s32 wldcore_map_get_dot_snap_step(point32_t point, s32* step_x, s32* step_y);
 /* menu */
 /* Slots of g_wldcore_menu_cursor_states: the remembered row of each list. */
 typedef enum wldcore_cursor_slot {
-    WLDCORE_CURSOR_SLOT_LOCATION_MENU = 0x00,
-    WLDCORE_CURSOR_SLOT_BAR_MENU = 0x01,
-    WLDCORE_CURSOR_SLOT_RUMORS = 0x02,
-    WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS = 0x03,
-    WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS = 0x04,
-    WLDCORE_CURSOR_SLOT_PROPOSITIONS = 0x05,
-    WLDCORE_CURSOR_SLOT_UNEXPLORED_LANDS = 0x07,
-    WLDCORE_CURSOR_SLOT_TREASURES = 0x08,
-    WLDCORE_CURSOR_SLOT_STORY_EVENTS = 0x0a,
-    WLDCORE_CURSOR_SLOT_SET_SCRIPT_VARIABLES_03C0_03FF = 0x0b,
-    WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS = 0x0c,
-    WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST = 0x0f,
-    WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS = 0x10,
-    WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS = 0x12,
-    WLDCORE_CURSOR_SLOT_TUTORIAL_MASK_1_ENTRIES = 0x13,
-    WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB = 0x14,
+    WLDCORE_CURSOR_SLOT_LOCATION_MENU = 0,
+    WLDCORE_CURSOR_SLOT_BAR_MENU = 1,
+    WLDCORE_CURSOR_SLOT_RUMORS = 2,
+    WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS = 3,
+    WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS = 4,
+    WLDCORE_CURSOR_SLOT_PROPOSITIONS = 5,
+    WLDCORE_CURSOR_SLOT_UNEXPLORED_LANDS = 7,
+    WLDCORE_CURSOR_SLOT_TREASURES = 8,
+    WLDCORE_CURSOR_SLOT_STORY_EVENTS = 10,
+    WLDCORE_CURSOR_SLOT_SET_SCRIPT_VARIABLES_03C0_03FF = 11,
+    WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS = 12,
+    WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST = 15,
+    WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS = 16,
+    WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS = 18,
+    WLDCORE_CURSOR_SLOT_TUTORIAL_MASK_1_ENTRIES = 19,
+    WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB = 20,
 } wldcore_cursor_slot_e;
 
 enum { WLDCORE_CURSOR_SLOT_COUNT = 21 };
@@ -1387,45 +1386,45 @@ typedef char wldcore_menu_cursor_state_size_must_be_8[sizeof(wldcore_menu_cursor
  * a window record plays. The CURSOR and *_PRESS sequences other than
  * CURSOR_IDLE end on a pinned frame. */
 typedef enum wldcore_anim_sequence_id {
-    WLDCORE_ANIM_SEQUENCE_CURSOR_STILL = 0x00, /* list cursor, one pinned frame */
-    WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS = 0x01, /* list cursor after its row is confirmed */
-    WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE = 0x02,  /* list cursor of the level with focus, looping */
-    WLDCORE_ANIM_SEQUENCE_LIST_SIDE_LABEL = 0x04,
-    WLDCORE_ANIM_SEQUENCE_MAP_FRAME = 0x05,
-    WLDCORE_ANIM_SEQUENCE_ROOT_MENU_FRAME = 0x06,
-    WLDCORE_ANIM_SEQUENCE_TEXT_PAGE_PROMPT = 0x08, /* shown while a paged text window has more pages */
-    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_UP = 0x09,
-    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_DOWN = 0x0a,
-    WLDCORE_ANIM_SEQUENCE_LOCATION_PICTURE_BORDER = 0x0b,
-    WLDCORE_ANIM_SEQUENCE_CHOICE_PANEL_HEADER = 0x0c,
-    WLDCORE_ANIM_SEQUENCE_MAP_EDGE_ARROWS = 0x0d, /* four arrows at the screen edges, two alternating frames */
-    WLDCORE_ANIM_SEQUENCE_MESSAGE_LABEL = 0x0e,
-    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_THUMB = 0x0f,
-    WLDCORE_ANIM_SEQUENCE_MARKER_FIRST = 0x10,           /* the player's marker, eight facings */
-    WLDCORE_ANIM_SEQUENCE_MARKER_ALTERNATE_FIRST = 0x18, /* the same eight at the faster frame rate */
-    WLDCORE_ANIM_SEQUENCE_MONTH_FIRST = 0x20,            /* twelve month labels */
-    WLDCORE_ANIM_SEQUENCE_DIGIT_FIRST = 0x2c,            /* ten date digits */
-    WLDCORE_ANIM_SEQUENCE_LOCATION_NAME_FIRST = 0x37,    /* one label per map dot */
-    WLDCORE_ANIM_SEQUENCE_PROPOSITION_TITLE_LABEL = 0x63,
-    WLDCORE_ANIM_SEQUENCE_PROPOSITION_COUNT_LABEL = 0x64,
-    WLDCORE_ANIM_SEQUENCE_PROPOSITION_DAYS_LABEL = 0x65,
-    WLDCORE_ANIM_SEQUENCE_L1_BUTTON = 0x66,
-    WLDCORE_ANIM_SEQUENCE_L1_BUTTON_PRESS = 0x67,
-    WLDCORE_ANIM_SEQUENCE_R1_BUTTON = 0x68,
-    WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS = 0x69,
-    WLDCORE_ANIM_SEQUENCE_MAP_DOT = 0x6a, /* the next row is the dot of a kind-2 location */
-    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_UPPER = 0x6c,
-    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_LOWER = 0x6d,
-    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON = 0x6e,
-    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON_PRESS = 0x6f,
-    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON = 0x70,
-    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON_PRESS = 0x71,
-    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_OVERLAY = 0x72,
-    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_A = 0x73,
-    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_B = 0x74,
-    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_PORTRAIT = 0x75,
-    WLDCORE_ANIM_SEQUENCE_LAYOUT_CURSOR_IDLE = 0x78, /* the layout windows' cursor, looping */
-    WLDCORE_ANIM_SEQUENCE_BRAVE_STORY_MARKER = 0x79, /* the brave-story list's two completion markers */
+    WLDCORE_ANIM_SEQUENCE_CURSOR_STILL = 0, /* list cursor, one pinned frame */
+    WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS = 1, /* list cursor after its row is confirmed */
+    WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE = 2,  /* list cursor of the level with focus, looping */
+    WLDCORE_ANIM_SEQUENCE_LIST_SIDE_LABEL = 4,
+    WLDCORE_ANIM_SEQUENCE_MAP_FRAME = 5,
+    WLDCORE_ANIM_SEQUENCE_ROOT_MENU_FRAME = 6,
+    WLDCORE_ANIM_SEQUENCE_TEXT_PAGE_PROMPT = 8, /* shown while a paged text window has more pages */
+    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_UP = 9,
+    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_DOWN = 10,
+    WLDCORE_ANIM_SEQUENCE_LOCATION_PICTURE_BORDER = 11,
+    WLDCORE_ANIM_SEQUENCE_CHOICE_PANEL_HEADER = 12,
+    WLDCORE_ANIM_SEQUENCE_MAP_EDGE_ARROWS = 13, /* four arrows at the screen edges, two alternating frames */
+    WLDCORE_ANIM_SEQUENCE_MESSAGE_LABEL = 14,
+    WLDCORE_ANIM_SEQUENCE_TEXT_SCROLL_THUMB = 15,
+    WLDCORE_ANIM_SEQUENCE_MARKER_FIRST = 16,           /* the player's marker, eight facings */
+    WLDCORE_ANIM_SEQUENCE_MARKER_ALTERNATE_FIRST = 24, /* the same eight at the faster frame rate */
+    WLDCORE_ANIM_SEQUENCE_MONTH_FIRST = 32,            /* twelve month labels */
+    WLDCORE_ANIM_SEQUENCE_DIGIT_FIRST = 44,            /* ten date digits */
+    WLDCORE_ANIM_SEQUENCE_LOCATION_NAME_FIRST = 55,    /* one label per map dot */
+    WLDCORE_ANIM_SEQUENCE_PROPOSITION_TITLE_LABEL = 99,
+    WLDCORE_ANIM_SEQUENCE_PROPOSITION_COUNT_LABEL = 100,
+    WLDCORE_ANIM_SEQUENCE_PROPOSITION_DAYS_LABEL = 101,
+    WLDCORE_ANIM_SEQUENCE_L1_BUTTON = 102,
+    WLDCORE_ANIM_SEQUENCE_L1_BUTTON_PRESS = 103,
+    WLDCORE_ANIM_SEQUENCE_R1_BUTTON = 104,
+    WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS = 105,
+    WLDCORE_ANIM_SEQUENCE_MAP_DOT = 106, /* the next row is the dot of a kind-2 location */
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_UPPER = 108,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_LOWER = 109,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON = 110,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON_PRESS = 111,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON = 112,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON_PRESS = 113,
+    WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_OVERLAY = 114,
+    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_A = 115,
+    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_B = 116,
+    WLDCORE_ANIM_SEQUENCE_SEND_UNIT_PORTRAIT = 117,
+    WLDCORE_ANIM_SEQUENCE_LAYOUT_CURSOR_IDLE = 120, /* the layout windows' cursor, looping */
+    WLDCORE_ANIM_SEQUENCE_BRAVE_STORY_MARKER = 121, /* the brave-story list's two completion markers */
 } wldcore_anim_sequence_id_e;
 
 /* Window-layout request at the start of a layout-window menu level. The
@@ -1454,7 +1453,7 @@ typedef struct wldcore_window_layout_row {
     s16 y;            /* 0x0c */
     s16 kind;         /* 0x0e */
 } wldcore_window_layout_row_t;
-typedef char wldcore_window_layout_row_size_must_be_0x10[sizeof(wldcore_window_layout_row_t) == 0x10 ? 1 : -1];
+typedef char wldcore_window_layout_row_size_must_be_16[sizeof(wldcore_window_layout_row_t) == 16 ? 1 : -1];
 
 /* Message menu level pushed by 0x8006e860. */
 typedef struct wldcore_menu_message_level {
@@ -1742,8 +1741,9 @@ typedef struct wldcore_menu_location_transition_level {
     s32 pending_result;      /* 0x30 */
     s32 choice_text_ids[10]; /* 0x34; retained as location_list.entries after arrival */
 } wldcore_menu_location_transition_level_t;
-typedef char wldcore_menu_location_transition_level_size_must_be_0x5c
-    [sizeof(wldcore_menu_location_transition_level_t) == 0x5c ? 1 : -1];
+typedef char
+    wldcore_menu_location_transition_level_size_must_be_92[sizeof(wldcore_menu_location_transition_level_t) == 92 ? 1
+                                                                                                                  : -1];
 
 /* wldcore_menu_choice_panel_level_t.mode as wldcore_proposition_handle_accept_confirm_input steps it. */
 typedef enum wldcore_accept_confirm_mode {
@@ -1817,68 +1817,66 @@ typedef struct wldcore_menu_sound_novel_level {
     s32 fade_timer;  /* 0x2c; cleared at push */
 } wldcore_menu_sound_novel_level_t;
 
-/* Menu-stack level types: the g_wldcore_menu_stack_types value that selects a
- * level's idle, publish and resume handlers. Each value is stored by exactly
- * one push routine, which supplies its name. 0x01, the return level, is stored
- * by wldcore_menu_push_entry_window_level from a local it shares with the
- * value display mode. */
+/* Menu-stack handler selectors. Push routines supply the level record;
+ * RETURN bridges the entry window and a pending world-map transition. */
 typedef enum wldcore_menu_level_type {
-    WLDCORE_MENU_LEVEL_ROOT = 0x00,
-    WLDCORE_MENU_LEVEL_TEXT_WINDOW = 0x02,
-    WLDCORE_MENU_LEVEL_MESSAGE = 0x03,
-    WLDCORE_MENU_LEVEL_LOCATION_MENU = 0x04,
-    WLDCORE_MENU_LEVEL_BAR_MENU = 0x05,
-    WLDCORE_MENU_LEVEL_RUMORS = 0x06,
-    WLDCORE_MENU_LEVEL_AVAILABLE_PROPOSITIONS = 0x07,
-    WLDCORE_MENU_LEVEL_RUMOR_DETAIL = 0x08,
-    WLDCORE_MENU_LEVEL_PROPOSITION_DETAIL = 0x09,
-    WLDCORE_MENU_LEVEL_PROPOSITION_ACCEPT = 0x0a,
-    WLDCORE_MENU_LEVEL_VARIABLE_LIST = 0x0b,
-    WLDCORE_MENU_LEVEL_NUMBER_PANEL = 0x0c,
-    WLDCORE_MENU_LEVEL_PROPOSITION_DISPATCH_CONFIRM = 0x0d,
-    WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS = 0x0e,
-    WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS_BROWSE = 0x0f,
-    WLDCORE_MENU_LEVEL_PROPOSITION_REPORT = 0x10,
-    WLDCORE_MENU_LEVEL_PROPOSITION_RESULT = 0x11,
-    WLDCORE_MENU_LEVEL_PROPOSITIONS = 0x12,
-    WLDCORE_MENU_LEVEL_PROPOSITION_CANCEL_CONFIRM = 0x13,
-    WLDCORE_MENU_LEVEL_SOUND_NOVEL_RESUME = 0x14,
-    WLDCORE_MENU_LEVEL_SOUND_NOVEL = 0x15,
-    WLDCORE_MENU_LEVEL_SOUND_NOVEL_QUIT = 0x16,
-    WLDCORE_MENU_LEVEL_SOUND_NOVEL_HISTORY = 0x17,
-    WLDCORE_MENU_LEVEL_UNEXPLORED_LANDS = 0x18,
-    WLDCORE_MENU_LEVEL_UNEXPLORED_LAND_DETAIL = 0x19,
-    WLDCORE_MENU_LEVEL_TREASURES = 0x1a,
-    WLDCORE_MENU_LEVEL_TREASURE_DETAIL = 0x1b,
-    WLDCORE_MENU_LEVEL_BRAVE_STORY = 0x1c,
-    WLDCORE_MENU_LEVEL_STORY_EVENTS = 0x1d,
-    WLDCORE_MENU_LEVEL_STORY_EVENT_TEXT = 0x1e,
-    WLDCORE_MENU_LEVEL_SET_SCRIPT_VARIABLES_03C0_03FF = 0x1f,
-    WLDCORE_MENU_LEVEL_VARIABLE_DETAIL = 0x20,
-    WLDCORE_MENU_LEVEL_TUTORIAL_TOPICS = 0x21,
-    WLDCORE_MENU_LEVEL_TUTORIAL_TOPIC_TEXT = 0x22,
-    WLDCORE_MENU_LEVEL_EVENT_TRANSITION = 0x23,
-    WLDCORE_MENU_LEVEL_PROPOSITION_SEND_UNIT = 0x24,
-    WLDCORE_MENU_LEVEL_PROPOSITION_CATEGORY = 0x25,
-    WLDCORE_MENU_LEVEL_ACTIVE_PROPOSITIONS = 0x26,
-    WLDCORE_MENU_LEVEL_PARTICIPANT_LIST = 0x27,
-    WLDCORE_MENU_LEVEL_PARTICIPANT_DETAIL = 0x28,
-    WLDCORE_MENU_LEVEL_BRAVE_STORY_PROPOSITIONS = 0x29,
-    WLDCORE_MENU_LEVEL_PROPOSITION_ATTEMPT_DETAIL = 0x2a,
-    WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES = 0x2b,
-    WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS = 0x2c,
-    WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES = 0x2d,
-    WLDCORE_MENU_LEVEL_SCRIPT_FLAGS_01A4_01BB = 0x2e,
-    WLDCORE_MENU_LEVEL_SCRIPT_FLAG_01A4_DETAIL = 0x2f,
-    WLDCORE_MENU_LEVEL_NUMBER_PANEL_WITH_ARGUMENT = 0x30,
-    WLDCORE_MENU_LEVEL_SCREEN_TRANSITION = 0x31,
-    WLDCORE_MENU_LEVEL_FOCUS_LOCATION = 0x32,
-    WLDCORE_MENU_LEVEL_SCROLLABLE_TEXT_WINDOW = 0x33,
-    WLDCORE_MENU_LEVEL_FIXED_NUMBER_PANEL = 0x34,
-    WLDCORE_MENU_LEVEL_MAP_PATH = 0x35,
-    WLDCORE_MENU_LEVEL_MAP_LOCATION_VISIBILITY = 0x36,
-    WLDCORE_MENU_LEVEL_COUNTDOWN = 0x37,
-    WLDCORE_MENU_LEVEL_LAYOUT_WINDOW = 0x38,
+    WLDCORE_MENU_LEVEL_ROOT = 0,
+    WLDCORE_MENU_LEVEL_RETURN = 1,
+    WLDCORE_MENU_LEVEL_TEXT_WINDOW = 2,
+    WLDCORE_MENU_LEVEL_MESSAGE = 3,
+    WLDCORE_MENU_LEVEL_LOCATION_MENU = 4,
+    WLDCORE_MENU_LEVEL_BAR_MENU = 5,
+    WLDCORE_MENU_LEVEL_RUMORS = 6,
+    WLDCORE_MENU_LEVEL_AVAILABLE_PROPOSITIONS = 7,
+    WLDCORE_MENU_LEVEL_RUMOR_DETAIL = 8,
+    WLDCORE_MENU_LEVEL_PROPOSITION_DETAIL = 9,
+    WLDCORE_MENU_LEVEL_PROPOSITION_ACCEPT = 10,
+    WLDCORE_MENU_LEVEL_VARIABLE_LIST = 11,
+    WLDCORE_MENU_LEVEL_NUMBER_PANEL = 12,
+    WLDCORE_MENU_LEVEL_PROPOSITION_DISPATCH_CONFIRM = 13,
+    WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS = 14,
+    WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS_BROWSE = 15,
+    WLDCORE_MENU_LEVEL_PROPOSITION_REPORT = 16,
+    WLDCORE_MENU_LEVEL_PROPOSITION_RESULT = 17,
+    WLDCORE_MENU_LEVEL_PROPOSITIONS = 18,
+    WLDCORE_MENU_LEVEL_PROPOSITION_CANCEL_CONFIRM = 19,
+    WLDCORE_MENU_LEVEL_SOUND_NOVEL_RESUME = 20,
+    WLDCORE_MENU_LEVEL_SOUND_NOVEL = 21,
+    WLDCORE_MENU_LEVEL_SOUND_NOVEL_QUIT = 22,
+    WLDCORE_MENU_LEVEL_SOUND_NOVEL_HISTORY = 23,
+    WLDCORE_MENU_LEVEL_UNEXPLORED_LANDS = 24,
+    WLDCORE_MENU_LEVEL_UNEXPLORED_LAND_DETAIL = 25,
+    WLDCORE_MENU_LEVEL_TREASURES = 26,
+    WLDCORE_MENU_LEVEL_TREASURE_DETAIL = 27,
+    WLDCORE_MENU_LEVEL_BRAVE_STORY = 28,
+    WLDCORE_MENU_LEVEL_STORY_EVENTS = 29,
+    WLDCORE_MENU_LEVEL_STORY_EVENT_TEXT = 30,
+    WLDCORE_MENU_LEVEL_SET_SCRIPT_VARIABLES_03C0_03FF = 31,
+    WLDCORE_MENU_LEVEL_VARIABLE_DETAIL = 32,
+    WLDCORE_MENU_LEVEL_TUTORIAL_TOPICS = 33,
+    WLDCORE_MENU_LEVEL_TUTORIAL_TOPIC_TEXT = 34,
+    WLDCORE_MENU_LEVEL_EVENT_TRANSITION = 35,
+    WLDCORE_MENU_LEVEL_PROPOSITION_SEND_UNIT = 36,
+    WLDCORE_MENU_LEVEL_PROPOSITION_CATEGORY = 37,
+    WLDCORE_MENU_LEVEL_ACTIVE_PROPOSITIONS = 38,
+    WLDCORE_MENU_LEVEL_PARTICIPANT_LIST = 39,
+    WLDCORE_MENU_LEVEL_PARTICIPANT_DETAIL = 40,
+    WLDCORE_MENU_LEVEL_BRAVE_STORY_PROPOSITIONS = 41,
+    WLDCORE_MENU_LEVEL_PROPOSITION_ATTEMPT_DETAIL = 42,
+    WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES = 43,
+    WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS = 44,
+    WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES = 45,
+    WLDCORE_MENU_LEVEL_SCRIPT_FLAGS_01A4_01BB = 46,
+    WLDCORE_MENU_LEVEL_SCRIPT_FLAG_01A4_DETAIL = 47,
+    WLDCORE_MENU_LEVEL_NUMBER_PANEL_WITH_ARGUMENT = 48,
+    WLDCORE_MENU_LEVEL_SCREEN_TRANSITION = 49,
+    WLDCORE_MENU_LEVEL_FOCUS_LOCATION = 50,
+    WLDCORE_MENU_LEVEL_SCROLLABLE_TEXT_WINDOW = 51,
+    WLDCORE_MENU_LEVEL_FIXED_NUMBER_PANEL = 52,
+    WLDCORE_MENU_LEVEL_MAP_PATH = 53,
+    WLDCORE_MENU_LEVEL_MAP_LOCATION_VISIBILITY = 54,
+    WLDCORE_MENU_LEVEL_COUNTDOWN = 55,
+    WLDCORE_MENU_LEVEL_LAYOUT_WINDOW = 56,
 } wldcore_menu_level_type_e;
 
 /* Provisional: 0x5c-byte menu-stack records at 0x800bb930, one per menu
@@ -1932,7 +1930,7 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_sound_novel_level_t sound_novel;
     wldcore_proposition_result_level_t proposition_result;
 } wldcore_menu_stack_record_t;
-typedef char wldcore_menu_stack_record_size_must_be_0x5c[sizeof(wldcore_menu_stack_record_t) == 0x5c ? 1 : -1];
+typedef char wldcore_menu_stack_record_size_must_be_92[sizeof(wldcore_menu_stack_record_t) == 92 ? 1 : -1];
 
 /* Verified fields of the 52-byte render records at 0x800bbc70. The pool init
  * 0x8006ad28 sets flags = 2, so the display-object dispatcher draws them as
@@ -1952,7 +1950,7 @@ typedef struct wldcore_window_render_record {
     RECT bounds;
     CVECTOR color; /* 0x30 */
 } wldcore_window_render_record_t;
-typedef char wldcore_render_record_size_must_be_0x34[sizeof(wldcore_window_render_record_t) == 0x34 ? 1 : -1];
+typedef char wldcore_render_record_size_must_be_52[sizeof(wldcore_window_render_record_t) == 52 ? 1 : -1];
 
 /* Text width is in pixels; the second value counts visible list rows. */
 typedef struct wldcore_window_panel_layout {

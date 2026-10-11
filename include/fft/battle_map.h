@@ -38,7 +38,7 @@ typedef struct battle_map_terrain_resource {
     u8 depth;                   /* 0x0001; map y dimension */
     map_tile_t tiles[2][0x100]; /* 0x0002; tile levels 0 and 1 */
 } battle_map_terrain_resource_t;
-typedef char battle_map_terrain_resource_size_must_be_0x1002[sizeof(battle_map_terrain_resource_t) == 0x1002 ? 1 : -1];
+typedef char battle_map_terrain_resource_size_must_be_4098[sizeof(battle_map_terrain_resource_t) == 4098 ? 1 : -1];
 
 /*
  * Script variable 0x23, set by event instruction {3C} Weather.  The same
@@ -86,7 +86,7 @@ typedef struct map_texture_animation_state {
     u16 first_color; /* 0x06; colour index in the row: the colours first..last rotate one place */
     u16 last_color;  /* 0x08; every frame_duration frames, towards last */
 } map_texture_animation_state_t;
-typedef char map_texture_animation_state_size_must_be_0xa[(sizeof(map_texture_animation_state_t) == 0xa) ? 1 : -1];
+typedef char map_texture_animation_state_size_must_be_10[(sizeof(map_texture_animation_state_t) == 10) ? 1 : -1];
 
 /* Weather particle positions at 0x800fc358: weather 0x8f (snow) uses all 64,
  * 0x90 (rain) fills two sets of 32. */
@@ -254,7 +254,7 @@ enum { MAP_LOAD_RESULT_HELD = 0x9b };
 typedef enum map_gns_load_phase {
     MAP_GNS_LOAD_PHASE_IDLE = 0,
     MAP_GNS_LOAD_PHASE_RESOURCES = 1, /* loading the pending resource files one by one */
-    MAP_GNS_LOAD_PHASE_START = 0xf,   /* choose the resources once the GNS is in */
+    MAP_GNS_LOAD_PHASE_START = 15,    /* choose the resources once the GNS is in */
 } map_gns_load_phase_e;
 
 /* Commands of battle_map_polygon_flag_command. */
@@ -353,7 +353,7 @@ enum {
     MAP_CLUTS_PER_ROW = 16,
     MAP_CLUT_COLOR_COUNT = 16,
     MAP_CLUT_ROW_COLOR_COUNT = 256, /* MAP_CLUTS_PER_ROW * MAP_CLUT_COLOR_COUNT */
-    MAP_CLUT_ROWS_Y = 0x1e0,        /* VRAM line of MAP_CLUT_ROW_MAP; the rows follow one line apart */
+    MAP_CLUT_ROWS_Y = 480,          /* VRAM line of MAP_CLUT_ROW_MAP; the rows follow one line apart */
 };
 
 /* The clut word of CLUT clut_index of a map CLUT row: the value of
@@ -365,10 +365,10 @@ enum {
  * a map's mesh file carries. */
 enum {
     MAP_CLUT_CYCLE_SLOT_COUNT = 8,
-    MAP_CLUT_CYCLE_SLOT_BYTE_COUNT = 0x0a,
+    MAP_CLUT_CYCLE_SLOT_BYTE_COUNT = 10,
 };
 
-/* Unscaled 5:5:5:1 PlayStation color components. */
+/* Expanded palette color and interpolation deltas; each component occupies one byte. */
 typedef struct map_palette_color_components {
     u8 red_5bit;
     u8 green_5bit;
@@ -402,7 +402,7 @@ typedef struct map_clut_row_state {
     map_palette_color_components_t components[MAP_CLUT_ROW_COLOR_COUNT];
     u16 packed_colors[MAP_CLUT_ROW_COLOR_COUNT];
 } map_clut_row_state_t;
-typedef char map_clut_row_state_size_must_be_0x982[(sizeof(map_clut_row_state_t) == 0x982) ? 1 : -1];
+typedef char map_clut_row_state_size_must_be_2434[(sizeof(map_clut_row_state_t) == 2434) ? 1 : -1];
 
 /* Palette runtime state block at 0x800995ec: battle_map_update_animations
  * addresses the CLUT rows (0x800995f4) from this base. The upload/move words are
@@ -412,7 +412,7 @@ typedef struct map_palette_state {
     s32 move_pending;
     map_clut_row_state_t clut_rows[MAP_CLUT_ROW_COUNT];
 } map_palette_state_t;
-typedef char map_palette_state_size_must_be_0x8524[(sizeof(map_palette_state_t) == 0x8524) ? 1 : -1];
+typedef char map_palette_state_size_must_be_34084[(sizeof(map_palette_state_t) == 34084) ? 1 : -1];
 
 /*
  * A 20-byte row from the file section of MAPnnn.GNS, before the 0x80
@@ -439,7 +439,7 @@ typedef struct gns_file_record {
     u8 _unused_10[3];        /* 0x10 */
     u8 file_present_marker;  /* 0x13; 0x88 on disc, tested for nonzero */
 } gns_file_record_t;
-typedef char gns_file_record_size_must_be_0x14[(sizeof(gns_file_record_t) == 0x14) ? 1 : -1];
+typedef char gns_file_record_size_must_be_20[(sizeof(gns_file_record_t) == 20) ? 1 : -1];
 
 /* Command rows after the 0x80 separator reuse the 20-byte prefix, but +0x08
  * is a byte stride (0x14 or 0x1c), not a disc LBA. The 0x1c rows have eight
@@ -456,7 +456,7 @@ typedef struct gns_command_record_prefix {
     u16 _unused_0a;
     SVECTOR payload; /* 0x0c; followed by more bytes for 0x1c rows */
 } gns_command_record_prefix_t;
-typedef char gns_command_record_prefix_size_must_be_0x14[(sizeof(gns_command_record_prefix_t) == 0x14) ? 1 : -1];
+typedef char gns_command_record_prefix_size_must_be_20[(sizeof(gns_command_record_prefix_t) == 20) ? 1 : -1];
 
 /* Serialized GNS primary/animated mesh geometry. Counts are unsigned; the
  * variable tail stores unpadded XYZ halfwords, normals, materials and terrain
@@ -494,7 +494,7 @@ typedef struct map_mesh_file_header {
     u32 polygon_flags_offset;            /* 0xb0 */
     u32 _unused_b4[4];                   /* 0xb4 */
 } map_mesh_file_header_t;
-typedef char map_mesh_file_header_size_must_be_0xc4[(sizeof(map_mesh_file_header_t) == 0xc4) ? 1 : -1];
+typedef char map_mesh_file_header_size_must_be_196[(sizeof(map_mesh_file_header_t) == 196) ? 1 : -1];
 
 /* Polygon position and normal records copied from the mesh geometry block.
  * Each XYZ vector occupies eight bytes; the first position's spare halfword
@@ -551,7 +551,7 @@ typedef struct gns_record_view {
     u8 resource_type;        /* 0x05; gns_resource_type_e, or GNS_RECORD_COMMAND_SEPARATOR */
     gns_load_info_t load_info;
 } gns_record_view_t;
-typedef char gns_record_view_size_must_be_0x14[(sizeof(gns_record_view_t) == 0x14) ? 1 : -1];
+typedef char gns_record_view_size_must_be_20[(sizeof(gns_record_view_t) == 20) ? 1 : -1];
 
 /* Runtime colour fades stepped by update_map_animations (0x800912a4):
  * g_battle_map_background_gradient_transition at 0x800a1b10, the ambient light at
@@ -565,8 +565,7 @@ typedef struct map_color_transition_channels {
     s32 green_step;
     s32 blue_step;
 } map_color_transition_channels_t;
-typedef char
-    map_color_transition_channels_size_must_be_0x18[(sizeof(map_color_transition_channels_t) == 0x18) ? 1 : -1];
+typedef char map_color_transition_channels_size_must_be_24[(sizeof(map_color_transition_channels_t) == 24) ? 1 : -1];
 
 typedef struct map_color_transition {
     u8 active;
@@ -577,7 +576,7 @@ typedef struct map_color_transition {
     rgb24_t repeat_color; /* 0x05 */
     map_color_transition_channels_t channels;
 } map_color_transition_t;
-typedef char map_color_transition_size_must_be_0x20[(sizeof(map_color_transition_t) == 0x20) ? 1 : -1];
+typedef char map_color_transition_size_must_be_32[(sizeof(map_color_transition_t) == 32) ? 1 : -1];
 
 /* The background gradient fade: one channel set per gradient colour. colors[]
  * at 0x38 (0x800a1b48/0x800a1b4c) is the applied gradient pair;
@@ -592,7 +591,7 @@ typedef struct map_gradient_transition {
     map_color_transition_channels_t channels[2];
     CVECTOR colors[MAP_BACKGROUND_GRADIENT_COLOR_COUNT];
 } map_gradient_transition_t;
-typedef char map_gradient_transition_size_must_be_0x40[(sizeof(map_gradient_transition_t) == 0x40) ? 1 : -1];
+typedef char map_gradient_transition_size_must_be_64[(sizeof(map_gradient_transition_t) == 64) ? 1 : -1];
 
 /* 0x98-byte map mesh part records at 0x800fbe00. Each of the rotation,
  * translation and scale channels has its current value, the start of the
@@ -625,7 +624,7 @@ typedef struct battle_map_mesh_part {
     u16 untextured_triangle_count;
     u16 untextured_quad_count;
 } battle_map_mesh_part_t;
-typedef char battle_map_mesh_part_size_must_be_0x98[(sizeof(battle_map_mesh_part_t) == 0x98) ? 1 : -1];
+typedef char battle_map_mesh_part_size_must_be_152[(sizeof(battle_map_mesh_part_t) == 152) ? 1 : -1];
 
 /* One 0x50-byte keyframe from a mesh animation record of type 1.
  * Keyframe ids are 1-based; entry 0 is never loaded. Each of the nine channels
@@ -644,7 +643,7 @@ typedef struct battle_map_mesh_keyframe {
     u16 tween_flags[9];  /* 0x3c; per channel */
     u16 _unused_4e;      /* 0x4e */
 } battle_map_mesh_keyframe_t;
-typedef char battle_map_mesh_keyframe_size_must_be_0x50[(sizeof(battle_map_mesh_keyframe_t) == 0x50) ? 1 : -1];
+typedef char battle_map_mesh_keyframe_size_must_be_80[(sizeof(battle_map_mesh_keyframe_t) == 80) ? 1 : -1];
 
 /* battle_map_mesh_keyframe_t.tween_flags: how one channel reaches its keyframe value. */
 typedef enum battle_map_mesh_tween_flags {
@@ -669,48 +668,47 @@ typedef struct battle_map_mesh_instruction {
 typedef struct battle_map_mesh_instructions {
     battle_map_mesh_instruction_t states[8][17];
 } battle_map_mesh_instructions_t;
-typedef char
-    battle_map_mesh_instructions_size_must_be_0x220[(sizeof(battle_map_mesh_instructions_t) == 0x220) ? 1 : -1];
+typedef char battle_map_mesh_instructions_size_must_be_544[(sizeof(battle_map_mesh_instructions_t) == 544) ? 1 : -1];
 
 /* battle_map_texture_animation_t.mode: the technique of a map texture animation row and, for the
- * values from 0x80, its playback state. */
+ * values from 128, its playback state. */
 typedef enum map_texture_animation_mode {
-    MAP_TEXTURE_ANIMATION_MODE_NONE = 0x00, /* an unused row */
-    MAP_TEXTURE_ANIMATION_MODE_UV_LOOP = 0x01,
-    MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG = 0x02,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_LOOP = 0x03,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG = 0x04,
-    /* 5-0x1c play once when a map data command starts them; the eight ids of a group behave alike */
-    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_0 = 0x05,
-    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_1 = 0x06,
-    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_2 = 0x07,
-    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_3 = 0x08,
-    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_4 = 0x09,
-    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_5 = 0x0a,
-    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_6 = 0x0b,
-    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_7 = 0x0c,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_0 = 0x0d,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_1 = 0x0e,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_2 = 0x0f,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_3 = 0x10,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_4 = 0x11,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_5 = 0x12,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_6 = 0x13,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_7 = 0x14,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_0 = 0x15,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_1 = 0x16,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_2 = 0x17,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_3 = 0x18,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_4 = 0x19,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_5 = 0x1a,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_6 = 0x1b,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_7 = 0x1c,
+    MAP_TEXTURE_ANIMATION_MODE_NONE = 0, /* an unused row */
+    MAP_TEXTURE_ANIMATION_MODE_UV_LOOP = 1,
+    MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG = 2,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_LOOP = 3,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG = 4,
+    /* 5-28 play once when a map data command starts them; the eight ids of a group behave alike */
+    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_0 = 5,
+    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_1 = 6,
+    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_2 = 7,
+    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_3 = 8,
+    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_4 = 9,
+    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_5 = 10,
+    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_6 = 11,
+    MAP_TEXTURE_ANIMATION_MODE_UV_ONCE_7 = 12,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_0 = 13,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_1 = 14,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_2 = 15,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_3 = 16,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_4 = 17,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_5 = 18,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_6 = 19,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_ONCE_7 = 20,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_0 = 21,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_1 = 22,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_2 = 23,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_3 = 24,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_4 = 25,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_5 = 26,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_6 = 27,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_7 = 28,
     /* starts a battle_map_start_texture_animation over colours canvas_x .. canvas_x + width - 1 of MAP_CLUT_ROW_MAP */
-    MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE = 0x1d,
+    MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE = 29,
     /* Playback states written and dispatched by battle_map_update_texture_animations. */
-    MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK = 0x80,
-    MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG_BACK = 0x81,
-    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_PLAYING = 0x82,
+    MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK = 128,
+    MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG_BACK = 129,
+    MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_PLAYING = 130,
 } map_texture_animation_mode_e;
 
 /* Provisional runtime copy of one 0x14-byte map texture animation
@@ -734,7 +732,7 @@ typedef struct battle_map_texture_animation {
     u8 timer;       /* 0x12 */
     u8 active;      /* 0x13 */
 } battle_map_texture_animation_t;
-typedef char battle_map_texture_animation_size_must_be_0x14[(sizeof(battle_map_texture_animation_t) == 0x14) ? 1 : -1];
+typedef char battle_map_texture_animation_size_must_be_20[(sizeof(battle_map_texture_animation_t) == 20) ? 1 : -1];
 
 /* Lightning flash state at 0x800f79c0 (g_battle_map_lightning_state).
  * battle_map_set_light_matrices fills color_matrices[0] and [2]; the lightning weather commands clear the rotation part
@@ -746,7 +744,7 @@ typedef struct battle_lightning_state {
     CVECTOR base_colors[MAP_BACKGROUND_GRADIENT_COLOR_COUNT]; /* 0x84 */
     CVECTOR colors[MAP_BACKGROUND_GRADIENT_COLOR_COUNT];      /* 0x8c */
 } battle_lightning_state_t;
-typedef char battle_lightning_state_size_must_be_0x94[(sizeof(battle_lightning_state_t) == 0x94) ? 1 : -1];
+typedef char battle_lightning_state_size_must_be_148[(sizeof(battle_lightning_state_t) == 148) ? 1 : -1];
 
 /* Nested records in GNS_RESOURCE_STATE_RECORDS, a mesh-file chunk at slot 0x23. */
 typedef enum map_mesh_animation_record_type {
@@ -781,9 +779,8 @@ typedef struct battle_map_polygon_flags_resource {
     u16 untextured_triangles[64]; /* 0x0d80 */
     u16 untextured_quads[256];    /* 0x0e00 */
 } battle_map_polygon_flags_resource_t;
-typedef char battle_map_polygon_flags_resource_size_must_be_0x1000[sizeof(battle_map_polygon_flags_resource_t) == 0x1000
-        ? 1
-        : -1];
+typedef char
+    battle_map_polygon_flags_resource_size_must_be_4096[sizeof(battle_map_polygon_flags_resource_t) == 4096 ? 1 : -1];
 
 /* resource_type selects a serialized prefix or block; file offsets locate
  * variable-length chunks within the loaded resource. */

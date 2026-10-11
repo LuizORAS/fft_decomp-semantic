@@ -299,7 +299,7 @@ typedef struct bunit_gfx_context {
     DISPENV disp_env;                     /* 0xc0 */
     u8 _unused_d4[0x18];                  /* 0xd4 */
 } bunit_gfx_context_t;
-typedef char bunit_gfx_context_size_must_be_0xec[(sizeof(bunit_gfx_context_t) == 0xec) ? 1 : -1];
+typedef char bunit_gfx_context_size_must_be_236[(sizeof(bunit_gfx_context_t) == 236) ? 1 : -1];
 typedef char bunit_gfx_context_textured_quads_must_be_0x10
     [((unsigned long)&((bunit_gfx_context_t*)0)->textured_quads == 0x10) ? 1 : -1];
 typedef char bunit_gfx_context_tiles_must_be_0x3c[((unsigned long)&((bunit_gfx_context_t*)0)->tiles == 0x3c) ? 1 : -1];
@@ -669,7 +669,7 @@ typedef struct bunit_unit_data {
     u8 _padding_0bb;              /* aligns job_points */
     unit_job_points_t job_points; /* 0xbc; current JP followed by total JP */
 } bunit_unit_data_t;
-typedef char bunit_unit_data_size_must_be_0x10c[(sizeof(bunit_unit_data_t) == 0x10c) ? 1 : -1];
+typedef char bunit_unit_data_size_must_be_268[(sizeof(bunit_unit_data_t) == 268) ? 1 : -1];
 typedef char bunit_unit_data_character_identity_must_be_0x74
     [((unsigned long)&((bunit_unit_data_t*)0)->character_identity == 0x74) ? 1 : -1];
 typedef char

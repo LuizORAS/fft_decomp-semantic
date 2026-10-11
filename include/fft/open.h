@@ -97,7 +97,7 @@ typedef struct open_movie_mdec_stream_state {
     RECT output_rect;        /* 0x2c */
     s32 output_ready;        /* 0x34 */
 } open_movie_mdec_stream_state_t;
-typedef char open_mdec_stream_state_size_must_be_0x38[(sizeof(open_movie_mdec_stream_state_t) == 0x38) ? 1 : -1];
+typedef char open_mdec_stream_state_size_must_be_56[(sizeof(open_movie_mdec_stream_state_t) == 56) ? 1 : -1];
 
 extern s32 g_open_movie_aligned_height;
 extern u32 g_open_movie_cd_stream_ring_buffer[];
@@ -176,7 +176,7 @@ typedef struct open_render_record_56 {
      * `&rec[i].tail.r` cannot give (CSE rewrites that as tail + 0x10). */
     CVECTOR color;
 } open_render_record_56_t;
-typedef char open_render_record_56_size_must_be_0x38[(sizeof(open_render_record_56_t) == 0x38) ? 1 : -1];
+typedef char open_render_record_56_size_must_be_56[(sizeof(open_render_record_56_t) == 56) ? 1 : -1];
 
 /* x/y view of the 56-byte render records, based at records_56[0].x; the
  * retail code addresses that pair through its own base register, loaded
@@ -259,7 +259,7 @@ typedef struct open_birthday_confirmation_state {
     u8 _unused_28[0x64 - 0x28];
 } open_birthday_confirmation_state_t;
 typedef char
-    open_birthday_confirmation_state_size_must_be_0x64[(sizeof(open_birthday_confirmation_state_t) == 0x64) ? 1 : -1];
+    open_birthday_confirmation_state_size_must_be_100[(sizeof(open_birthday_confirmation_state_t) == 100) ? 1 : -1];
 
 /* Days in each month of the birthday entry. February has 28, so 29 February cannot be entered. */
 extern u8 g_open_birthday_month_lengths[12];
@@ -358,7 +358,7 @@ typedef union open_controller_record {
     open_controller_thread_completion_t text_message;
     open_title_exit_state_t title_exit;
 } open_controller_record_t;
-typedef char open_controller_record_size_must_be_0x64[(sizeof(open_controller_record_t) == 0x64) ? 1 : -1];
+typedef char open_controller_record_size_must_be_100[(sizeof(open_controller_record_t) == 100) ? 1 : -1];
 
 typedef void (*open_controller_handler_t)(open_controller_record_t* record);
 extern open_controller_handler_t g_open_controller_handlers[];
@@ -433,26 +433,26 @@ typedef struct open_script_record {
     s32 y;
     RECT glyphs[42];
 } open_script_record_t;
-typedef char open_script_record_size_must_be_0x164[(sizeof(open_script_record_t) == 0x164) ? 1 : -1];
+typedef char open_script_record_size_must_be_356[(sizeof(open_script_record_t) == 356) ? 1 : -1];
 
 /* Serialized ending-script opcodes, in the order of g_open_opcode_handlers. */
 typedef enum open_script_opcode {
-    OPEN_SCRIPT_OPCODE_END = 0,
-    OPEN_SCRIPT_OPCODE_POSITIONED_TEXT = 1,
-    OPEN_SCRIPT_OPCODE_SCROLL_SPEED = 2,
-    OPEN_SCRIPT_OPCODE_REVEAL_SCREEN = 3,
-    OPEN_SCRIPT_OPCODE_HIDE_SCREEN = 4,
-    OPEN_SCRIPT_OPCODE_WAIT_FRAMES = 5,
-    OPEN_SCRIPT_OPCODE_WAIT_SCROLL = 6,
-    OPEN_SCRIPT_OPCODE_START_XA_AUDIO = 7,
-    OPEN_SCRIPT_OPCODE_FADE_IN_AUDIO = 8,
-    OPEN_SCRIPT_OPCODE_FADE_OUT_AUDIO = 9,
-    OPEN_SCRIPT_OPCODE_STOP_XA_AUDIO = 10,
-    OPEN_SCRIPT_OPCODE_LOAD_OPNTEX_FRAME = 11,
-    OPEN_SCRIPT_OPCODE_FADE_IN_PICTURE = 12,
-    OPEN_SCRIPT_OPCODE_FADE_OUT_PICTURE = 13,
-    OPEN_SCRIPT_OPCODE_WAIT_XA_AUDIO_IDLE = 14,
-    OPEN_SCRIPT_OPCODE_START_OPNTEX_SEQUENCE = 15,
+    OPEN_SCRIPT_OPCODE_END = 0x00,
+    OPEN_SCRIPT_OPCODE_POSITIONED_TEXT = 0x01,
+    OPEN_SCRIPT_OPCODE_SCROLL_SPEED = 0x02,
+    OPEN_SCRIPT_OPCODE_REVEAL_SCREEN = 0x03,
+    OPEN_SCRIPT_OPCODE_HIDE_SCREEN = 0x04,
+    OPEN_SCRIPT_OPCODE_WAIT_FRAMES = 0x05,
+    OPEN_SCRIPT_OPCODE_WAIT_SCROLL = 0x06,
+    OPEN_SCRIPT_OPCODE_START_XA_AUDIO = 0x07,
+    OPEN_SCRIPT_OPCODE_FADE_IN_AUDIO = 0x08,
+    OPEN_SCRIPT_OPCODE_FADE_OUT_AUDIO = 0x09,
+    OPEN_SCRIPT_OPCODE_STOP_XA_AUDIO = 0x0a,
+    OPEN_SCRIPT_OPCODE_LOAD_OPNTEX_FRAME = 0x0b,
+    OPEN_SCRIPT_OPCODE_FADE_IN_PICTURE = 0x0c,
+    OPEN_SCRIPT_OPCODE_FADE_OUT_PICTURE = 0x0d,
+    OPEN_SCRIPT_OPCODE_WAIT_XA_AUDIO_IDLE = 0x0e,
+    OPEN_SCRIPT_OPCODE_START_OPNTEX_SEQUENCE = 0x0f,
 } open_script_opcode_e;
 
 /* The ending-script dispatcher passes a serialized halfword cursor. */
@@ -479,7 +479,7 @@ typedef struct open_script_dispatch_state {
     /* 0x24 */ s32 wait_counter;
     /* 0x28 */ open_script_cursor_t cursor;
 } open_script_dispatch_state_t;
-typedef char open_script_dispatch_state_size_must_be_0x30[(sizeof(open_script_dispatch_state_t) == 0x30) ? 1 : -1];
+typedef char open_script_dispatch_state_size_must_be_48[(sizeof(open_script_dispatch_state_t) == 48) ? 1 : -1];
 
 /* OPNTEX frame sequence and the script screen fade it starts. */
 typedef struct open_opntex_sequence_state {
@@ -507,7 +507,7 @@ typedef struct open_script_state {
     /* 0x1684 */ open_opntex_sequence_state_t opntex;
     /* 0x16a4 */ s32 opntex_control_value;
 } open_script_state_t;
-typedef char open_script_state_size_must_be_0x16a8[(sizeof(open_script_state_t) == 0x16a8) ? 1 : -1];
+typedef char open_script_state_size_must_be_5800[(sizeof(open_script_state_t) == 5800) ? 1 : -1];
 
 extern open_script_entry_handler_t g_open_opcode_handlers[16];
 extern open_script_state_t g_open_script_state;
@@ -606,14 +606,14 @@ typedef struct open_gfx_transition {
     /* 0x30 */ open_gfx_transition_entry_t** entry_table;
     /* 0x34 */ open_gfx_transition_entry_t* entry;
 } open_gfx_transition_t;
-typedef char open_gfx_transition_size_must_be_0x38[(sizeof(open_gfx_transition_t) == 0x38) ? 1 : -1];
+typedef char open_gfx_transition_size_must_be_56[(sizeof(open_gfx_transition_t) == 56) ? 1 : -1];
 
 /* One DR_MODE + SPRT pair of the shared 32-entry per-buffer sprite pool. */
 typedef struct open_sprite_prim {
     /* 0x00 */ DR_MODE mode;
     /* 0x0c */ SPRT sprt;
 } open_sprite_prim_t;
-typedef char open_sprite_prim_size_must_be_0x20[(sizeof(open_sprite_prim_t) == 0x20) ? 1 : -1];
+typedef char open_sprite_prim_size_must_be_32[(sizeof(open_sprite_prim_t) == 32) ? 1 : -1];
 
 /* Double-buffered draw/display environments at 0x800851c0, one pair per
  * frame buffer (0x70 bytes each); open_initialize_screen_environments fills

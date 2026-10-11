@@ -33,7 +33,7 @@ typedef struct {
     GsOT_TAG* tag; /* 0x10 */
 } GsOT;
 
-typedef char gs_ot_size_must_be_0x14[(sizeof(GsOT) == 0x14) ? 1 : -1];
+typedef char gs_ot_size_must_be_20[(sizeof(GsOT) == 20) ? 1 : -1];
 
 /* libgs sprite descriptor (Psy-Q GsSPRITE), 0x24 bytes; 0x17 is implicit
  * padding. As a stack local GCC rounds it to 0x28, which is what the wldcore
@@ -59,7 +59,7 @@ typedef struct {
     s32 rotate;    /* 0x20 */
 } GsSPRITE;
 
-typedef char gs_sprite_size_must_be_0x24[(sizeof(GsSPRITE) == 0x24) ? 1 : -1];
+typedef char gs_sprite_size_must_be_36[(sizeof(GsSPRITE) == 36) ? 1 : -1];
 
 /* libgs flat-shaded line primitive descriptor, 0x10 bytes; 0x0F is implicit
  * padding. */
@@ -74,7 +74,7 @@ typedef struct {
     u8 b;          /* 0x0E */
 } GsLINE;
 
-typedef char gs_line_size_must_be_0x10[(sizeof(GsLINE) == 0x10) ? 1 : -1];
+typedef char gs_line_size_must_be_16[(sizeof(GsLINE) == 16) ? 1 : -1];
 
 /* libgs filled-rectangle descriptor (Psy-Q GsBOXF), 0x10 bytes; 0x0F is
  * implicit padding. */
@@ -89,7 +89,7 @@ typedef struct {
     u8 b;          /* 0x0E */
 } GsBOXF;
 
-typedef char gs_boxf_size_must_be_0x10[(sizeof(GsBOXF) == 0x10) ? 1 : -1];
+typedef char gs_boxf_size_must_be_16[(sizeof(GsBOXF) == 16) ? 1 : -1];
 
 /* libgs TIM image descriptor (Psy-Q GsIMAGE), 0x1C bytes, as GsGetTimInfo
  * fills it: pixel mode, then VRAM rectangle and data pointer for the pixels
@@ -108,7 +108,7 @@ typedef struct {
     u32* clut;  /* 0x18 */
 } GsIMAGE;
 
-typedef char gs_image_size_must_be_0x1c[(sizeof(GsIMAGE) == 0x1C) ? 1 : -1];
+typedef char gs_image_size_must_be_28[(sizeof(GsIMAGE) == 28) ? 1 : -1];
 
 /* 2D screen offset (Psy-Q _GsPOSITION). */
 typedef struct {

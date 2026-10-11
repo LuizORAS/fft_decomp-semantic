@@ -1,18 +1,15 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Opens the entry window for menu kind 4 and pushes a type-1 menu level over
- * it, clearing system flag 0x04000000 while the level is up. */
+/* Open the entry window and push its world-map return level. */
 void wldcore_menu_push_entry_window_level(void) {
-    s32 one;
     u32 flags;
     s32 depth;
     s32* counter;
 
     g_wldcore_menu_blocked_buttons = -1;
     world_menu_open_entry_window(4, -0x30, -0x38);
-    one = 1;
-    g_wldcore_context_value_display_mode = one;
+    g_wldcore_context_value_display_mode = 1;
     g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     depth = g_wldcore_menu_stack_depth;
     flags = g_main_system_flags;
@@ -27,7 +24,7 @@ void wldcore_menu_push_entry_window_level(void) {
     {
         s32 last;
         last = g_wldcore_menu_stack_depth;
-        g_wldcore_menu_stack_types[last + 1] = one;
+        g_wldcore_menu_stack_types[last + 1] = WLDCORE_MENU_LEVEL_RETURN;
         g_wldcore_menu_stack_depth = last + 1;
     }
 }

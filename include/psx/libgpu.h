@@ -624,7 +624,7 @@ typedef struct {
     u16 norm0, norm1, norm2, norm3;
 } TMD_PRIM;
 
-typedef char assert_tmd_prim_size[sizeof(TMD_PRIM) == 0x78 ? 1 : -1];
+typedef char assert_tmd_prim_size[sizeof(TMD_PRIM) == 120 ? 1 : -1];
 
 extern void FntLoad(int, int);
 extern int FntOpen(int, int, int, int, int, int);

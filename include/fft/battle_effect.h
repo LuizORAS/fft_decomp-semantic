@@ -49,7 +49,7 @@ typedef struct battle_effect_target {
         SVECTOR tile; /* x, layer, y */
     } data;           /* 0x02 */
 } battle_effect_target_t;
-typedef char battle_effect_target_size_must_be_0x0a[(sizeof(battle_effect_target_t) == 0x0a) ? 1 : -1];
+typedef char battle_effect_target_size_must_be_10[(sizeof(battle_effect_target_t) == 10) ? 1 : -1];
 
 /* One running secondary effect: a 0x54-byte record of
  * g_battle_effect_secondary_data (0x801b8b9c), ids 1-16 with record 0 the
@@ -90,7 +90,7 @@ typedef struct battle_effect_secondary_data {
     u8 slot_ids[0x20]; /* 0x30; its effect slots, 0 for none; cleared when the record is allocated */
     void* allocation;  /* 0x50; the handler's work block; freed when the record is removed */
 } battle_effect_secondary_data_t;
-typedef char battle_secondary_effect_data_size_must_be_0x54[(sizeof(battle_effect_secondary_data_t) == 0x54) ? 1 : -1];
+typedef char battle_secondary_effect_data_size_must_be_84[(sizeof(battle_effect_secondary_data_t) == 84) ? 1 : -1];
 
 /* Complete 0xc8-byte effect context: built on the stack for secondary effects
  * and copied whole to g_battle_effect_context for the ability effect. */
@@ -105,7 +105,7 @@ typedef struct battle_effect_secondary_init {
     battle_effect_target_t target_tile; /* 0xbc; post-action destination tile */
     u16 used_weapon_id;                 /* 0xc6 */
 } battle_effect_secondary_init_t;
-typedef char battle_secondary_effect_init_size_must_be_0xc8[(sizeof(battle_effect_secondary_init_t) == 0xc8) ? 1 : -1];
+typedef char battle_secondary_effect_init_size_must_be_200[(sizeof(battle_effect_secondary_init_t) == 200) ? 1 : -1];
 typedef char battle_secondary_effect_init_caster_offset_must_be_0xa4
     [((unsigned long)&((battle_effect_secondary_init_t*)0)->targets[BATTLE_EFFECT_CASTER_ENTRY] == 0xa4) ? 1 : -1];
 
@@ -159,7 +159,7 @@ typedef enum battle_effect_model {
 
 /* The inertia threshold every secondary effect handler runs its slots under, with a gravity of
  * (0, ONE, 0); an effect file's script sets its own pair (opcode 27). */
-enum { BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD = 0x230 };
+enum { BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD = 560 };
 
 /* One 14-byte parameter row for the spell-charge secondary effect. */
 typedef struct battle_effect_charge_params {
@@ -173,7 +173,7 @@ typedef struct battle_effect_charge_params {
     u8 max_trails;
     u8 fade_row;
 } battle_effect_charge_params_t;
-typedef char battle_effect_charge_params_size_must_be_0x0e[sizeof(battle_effect_charge_params_t) == 0x0e ? 1 : -1];
+typedef char battle_effect_charge_params_size_must_be_14[sizeof(battle_effect_charge_params_t) == 14 ? 1 : -1];
 
 /* Per-secondary-slot spawn state for the two-particle death poof. */
 typedef struct battle_effect_death_poof_state {
@@ -261,7 +261,7 @@ typedef struct battle_effect_keyframe_table {
     u8 _unused_7a[4];      /* 0x7a */
     s16 last_index;        /* 0x7e; highest valid keyframe index */
 } battle_effect_keyframe_table_t;
-typedef char battle_effect_keyframe_table_size_must_be_0x80[(sizeof(battle_effect_keyframe_table_t) == 0x80) ? 1 : -1];
+typedef char battle_effect_keyframe_table_size_must_be_128[(sizeof(battle_effect_keyframe_table_t) == 128) ? 1 : -1];
 
 enum {
     BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES = 33,
@@ -286,7 +286,7 @@ typedef struct battle_effect_background_track {
     s16 count;
 } battle_effect_background_track_t;
 typedef char
-    battle_effect_background_track_size_must_be_0x12c[(sizeof(battle_effect_background_track_t) == 0x12c) ? 1 : -1];
+    battle_effect_background_track_size_must_be_300[(sizeof(battle_effect_background_track_t) == 300) ? 1 : -1];
 
 /* preset of a colour track keyframe. */
 enum {
@@ -303,7 +303,7 @@ typedef struct battle_effect_palette_track {
     u8 preset[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
     s16 count;
 } battle_effect_palette_track_t;
-typedef char battle_effect_palette_track_size_must_be_0xc8[sizeof(battle_effect_palette_track_t) == 0xC8 ? 1 : -1];
+typedef char battle_effect_palette_track_size_must_be_200[sizeof(battle_effect_palette_track_t) == 200 ? 1 : -1];
 
 /* One phase's colour tracks. The surroundings are the map's field colour and
  * the spectators: the living units that are neither a target nor the caster. */
@@ -337,7 +337,7 @@ typedef struct battle_effect_tick_channels {
     battle_effect_palette_track_t target;       /* 0x4b6 */
     battle_effect_background_track_t screen;    /* 0x57e */
 } battle_effect_tick_channels_t;
-typedef char battle_effect_tick_channels_size_must_be_0x6aa[sizeof(battle_effect_tick_channels_t) == 0x6aa ? 1 : -1];
+typedef char battle_effect_tick_channels_size_must_be_1706[sizeof(battle_effect_tick_channels_t) == 1706 ? 1 : -1];
 
 /* target_mode of battle_effect_start_new. */
 typedef enum battle_effect_start_target {
@@ -361,8 +361,8 @@ enum {
 
 /* The effect files the code names by number. */
 enum {
-    BATTLE_EFFECT_FILE_CURE = 0x01, /* loaded in place of a file of no size */
-    BATTLE_EFFECT_FILE_FIRE = 0x10,
+    BATTLE_EFFECT_FILE_CURE = 1, /* loaded in place of a file of no size */
+    BATTLE_EFFECT_FILE_FIRE = 16,
     BATTLE_EFFECT_FILE_BOLT = 0x14,
     BATTLE_EFFECT_FILE_ICE = 0x18,
 };
@@ -438,29 +438,29 @@ typedef enum battle_effect_particle_group {
  * (g_battle_effect_weapon_type_extra_flags) and the ability's charge animation set
  * (g_battle_effect_secondary_by_charge_animation). */
 typedef enum battle_effect_secondary_animation_id {
-    BATTLE_EFFECT_SECONDARY_ANIMATION_NONE = 0x00,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_BOW_ARROW = 0x01,       /* bows: the arrow model on an arc */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_SPELL_CHARGE = 0x02,    /* charge animation set 1 */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_CROSSBOW_BOLT = 0x03,   /* crossbows: the arrow model on a straight line */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_SPELL_CHARGE_04 = 0x04, /* the charge with parameter row 1; no table names it */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_SUMMON_CHARGE = 0x05,   /* charge animation set 2 */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_THROWN_STONE = 0x06,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_WEAPON_HIT = 0x07,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_WEAPON_HIT_08 = 0x08, /* the weapon hit handler again; nothing starts it */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_FALL_DUST = 0x09,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_REFLECT = 0x0a,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_ZODIAC_POOF = 0x0b,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_DEATH_SMOKE = 0x0c,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_LEVEL_UP = 0x0d,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_VENOM_TRAP = 0x0e,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_SPLASH = 0x0f,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_THROWN_ITEM = 0x10, /* Item and Throw: the item's graphic or the shuriken model */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_RED_ORBS = 0x11,    /* the Charge abilities and Accumulate */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_EQUIP_BREAK = 0x12, /* abilities 0x8a-0x91 */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_TELEPORT = 0x13,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_GOLEM = 0x14,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_NONE = 0,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_BOW_ARROW = 1,       /* bows: the arrow model on an arc */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_SPELL_CHARGE = 2,    /* charge animation set 1 */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_CROSSBOW_BOLT = 3,   /* crossbows: the arrow model on a straight line */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_SPELL_CHARGE_04 = 4, /* the charge with parameter row 1; no table names it */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_SUMMON_CHARGE = 5,   /* charge animation set 2 */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_THROWN_STONE = 6,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_WEAPON_HIT = 7,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_WEAPON_HIT_08 = 8, /* the weapon hit handler again; nothing starts it */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_FALL_DUST = 9,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_REFLECT = 10,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_ZODIAC_POOF = 11,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_DEATH_SMOKE = 12,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_LEVEL_UP = 13,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_VENOM_TRAP = 14,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_SPLASH = 15,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_THROWN_ITEM = 16, /* Item and Throw: the item's graphic or the shuriken model */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_RED_ORBS = 17,    /* the Charge abilities and Accumulate */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_EQUIP_BREAK = 18, /* abilities 0x8a-0x91 */
+    BATTLE_EFFECT_SECONDARY_ANIMATION_TELEPORT = 19,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_GOLEM = 20,
     /* the null handler; g_battle_effect_ending_secondary_function_id is this record's function byte */
-    BATTLE_EFFECT_SECONDARY_ANIMATION_ENDING = 0x15,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_ENDING = 21,
 } battle_effect_secondary_animation_id_e;
 
 /* One particle group of the secondary effects: a 0x2e-byte record of
@@ -490,7 +490,7 @@ typedef struct battle_effect_emitter_values {
     s8 lifetime_min;        /* 0x2c */
     s8 lifetime_max;        /* 0x2d */
 } battle_effect_emitter_values_t;
-typedef char battle_effect_emitter_values_size_must_be_0x2e[(sizeof(battle_effect_emitter_values_t) == 0x2e) ? 1 : -1];
+typedef char battle_effect_emitter_values_size_must_be_46[(sizeof(battle_effect_emitter_values_t) == 46) ? 1 : -1];
 
 /* flags of a sprite part (battle_effect_sprite_part_t, battle_effect_sprite_frameset_t). */
 enum {
@@ -512,7 +512,7 @@ typedef struct battle_effect_sprite_part {
     /* Four-byte alignment preserves the original x/y word copies. */
     DVECTOR corners[4] __attribute__((aligned(4))); /* 0x08 */
 } battle_effect_sprite_part_t;
-typedef char battle_effect_sprite_part_size_must_be_0x18[(sizeof(battle_effect_sprite_part_t) == 0x18) ? 1 : -1];
+typedef char battle_effect_sprite_part_size_must_be_24[(sizeof(battle_effect_sprite_part_t) == 24) ? 1 : -1];
 
 /* Arc endpoint handed to the per-arc obstacle test: the unit's raised tile
  * position followed by its id and height allowance. */
@@ -579,9 +579,8 @@ typedef struct battle_effect_decoded_model_command {
         u16 indices[4];
     } vertices; /* 0x68 */
 } battle_effect_decoded_model_command_t;
-typedef char battle_effect_decoded_model_command_size_must_be_0x70[sizeof(battle_effect_decoded_model_command_t) == 0x70
-        ? 1
-        : -1];
+typedef char
+    battle_effect_decoded_model_command_size_must_be_112[sizeof(battle_effect_decoded_model_command_t) == 112 ? 1 : -1];
 
 /* 0xc88-byte arrow work buffer of the bow-arrow (0x801b0ffc) and projectile
  * (0x801b3938) secondary handlers: two sets of four G3 and thirteen G4
@@ -591,7 +590,7 @@ typedef struct battle_effect_arrow_buffer {
     POLY_G4 g4[2][13]; /* 0x0e0 */
     u8 _unused_488[0x800];
 } battle_effect_arrow_buffer_t;
-typedef char battle_effect_arrow_buffer_size_must_be_0xc88[(sizeof(battle_effect_arrow_buffer_t) == 0xc88) ? 1 : -1];
+typedef char battle_effect_arrow_buffer_size_must_be_3208[(sizeof(battle_effect_arrow_buffer_t) == 3208) ? 1 : -1];
 
 /* Double-buffered polygons initialized by the secondary handler and drawn by
  * battle_effect_draw_projectile_model. */
@@ -670,7 +669,7 @@ typedef char effect_timeline_rotation_offset_must_be_0x6d4[((unsigned long)&((ef
         : -1];
 typedef char effect_timeline_phase1_camera_offset_must_be_0x14e6
     [((unsigned long)&((effect_timeline_t*)0)->phase1_camera == 0x14e6) ? 1 : -1];
-typedef char effect_timeline_size_must_be_0x1886[(sizeof(effect_timeline_t) == 0x1886) ? 1 : -1];
+typedef char effect_timeline_size_must_be_6278[(sizeof(effect_timeline_t) == 6278) ? 1 : -1];
 
 /* Byte offset to a group's frame-offset table, relative to the group-table base. */
 typedef struct battle_effect_sprite_group {
@@ -706,7 +705,7 @@ typedef struct effect_file_header {
     s32 sound_section;       /* 0x20: 0 when the effect has no sound */
     s32 palette;             /* 0x24 */
 } effect_file_header_t;
-typedef char effect_file_header_size_must_be_0x28[sizeof(effect_file_header_t) == 0x28 ? 1 : -1];
+typedef char effect_file_header_size_must_be_40[sizeof(effect_file_header_t) == 40 ? 1 : -1];
 
 /* Two palette rows, then a 24-bit image size, width flag and pixel tail. */
 typedef struct battle_effect_palette_section {
@@ -716,8 +715,7 @@ typedef struct battle_effect_palette_section {
     u8 wide_image;             /* 0x403; 256-byte rows when nonzero, otherwise 128 */
     u32 pixels[0];             /* 0x404; packed GPU image-transfer words */
 } battle_effect_palette_section_t;
-typedef char
-    battle_effect_palette_section_size_must_be_0x404[sizeof(battle_effect_palette_section_t) == 0x404 ? 1 : -1];
+typedef char battle_effect_palette_section_size_must_be_1028[sizeof(battle_effect_palette_section_t) == 1028 ? 1 : -1];
 
 /* An effect script instruction is a halfword, its opcode in the low nine bits
  * (g_battle_effect_instructions holds 120 handlers; retail scripts stay below
@@ -791,7 +789,7 @@ typedef struct effect_flags_section {
     u8 _unused_05[3];                   /* 0x05 */
     effect_sound_channel_t channels[4]; /* 0x08 */
 } effect_flags_section_t;
-typedef char effect_flags_section_size_must_be_0x18[(sizeof(effect_flags_section_t) == 0x18) ? 1 : -1];
+typedef char effect_flags_section_size_must_be_24[(sizeof(effect_flags_section_t) == 24) ? 1 : -1];
 
 /* effect_flags_section_t::flags bits read by the engine. */
 enum {
@@ -909,9 +907,9 @@ enum { BATTLE_EFFECT_CAMERA_MODE_MASK = 0x1e00 };
  * becomes MIN and one at or beyond LIMIT (the OT slot count) becomes MAX. */
 enum {
     EFFECT_OT_DEPTH_MIN = 4,
-    EFFECT_OT_DEPTH_MAX = 0x17f,
-    EFFECT_OT_DEPTH_LIMIT = 0x180,
-    EFFECT_SPRITE_OT_DEPTH_MAX = 0x17e, /* the farthest depth of a particle sprite */
+    EFFECT_OT_DEPTH_MAX = 383,
+    EFFECT_OT_DEPTH_LIMIT = 384,
+    EFFECT_SPRITE_OT_DEPTH_MAX = 382, /* the farthest depth of a particle sprite */
 };
 
 /* primitive_type of battle_effect_alloc_primitive: an index into g_battle_effect_primitive_sizes. */
@@ -924,7 +922,7 @@ typedef enum battle_effect_primitive_type {
 enum { BATTLE_EFFECT_PRIMITIVE_BUFFER_SIZE = 0x8000 };
 
 /* Initial Z coordinate of each particle sprite's four corner vectors. */
-enum { BATTLE_EFFECT_CORNER_Z_DEFAULT = 0x200 };
+enum { BATTLE_EFFECT_CORNER_Z_DEFAULT = 512 };
 
 /* Word 0x06 of an emitter record (effect_geometry_entry_t.flags), copied to each particle's flags
  * (effect_work_record_t.flags). Bits 0x410 are effect_emitter_velocity_e. A child mode of 1 or 2
@@ -1022,7 +1020,7 @@ typedef struct battle_effect_child_timeline_state {
     battle_effect_child_track_steps_t step;         /* 0x34; record +0x5e */
 } battle_effect_child_timeline_state_t;
 typedef char
-    battle_effect_child_timeline_state_size_must_be_0x4e[sizeof(battle_effect_child_timeline_state_t) == 0x4e ? 1 : -1];
+    battle_effect_child_timeline_state_size_must_be_78[sizeof(battle_effect_child_timeline_state_t) == 78 ? 1 : -1];
 
 /* Parent counters: ten particle tracks, fourteen colour/sound tracks and
  * two extra halfwords. The reset clears all 26, not just the 24 stepped tracks. */
@@ -1065,7 +1063,7 @@ typedef union battle_effect_timeline_state {
     battle_effect_child_timeline_state_t child;
     battle_effect_parent_timeline_state_t parent;
 } battle_effect_timeline_state_t;
-typedef char battle_effect_timeline_state_size_must_be_0xa6[sizeof(battle_effect_timeline_state_t) == 0xa6 ? 1 : -1];
+typedef char battle_effect_timeline_state_size_must_be_166[sizeof(battle_effect_timeline_state_t) == 166 ? 1 : -1];
 
 /* The target and frame travel with the counters of the active timeline. */
 typedef struct battle_effect_record_timeline {
@@ -1073,7 +1071,7 @@ typedef struct battle_effect_record_timeline {
     s16 frame;                            /* 0x02 */
     battle_effect_timeline_state_t state; /* 0x04; opcode 28 child or opcode 29 parent */
 } battle_effect_record_timeline_t;
-typedef char battle_effect_record_timeline_size_must_be_0xaa[sizeof(battle_effect_record_timeline_t) == 0xaa ? 1 : -1];
+typedef char battle_effect_record_timeline_size_must_be_170[sizeof(battle_effect_record_timeline_t) == 170 ? 1 : -1];
 
 /* effect_list_node_t.kind: how battle_effect_render_particle_sprite places the sprite, and the
  * FRAME_CHANGED bit it sets when the sequence picks another frame. */
@@ -1137,7 +1135,7 @@ typedef struct effect_list_node {
     u8 sprite_frame_index;     /* 0x1f: frame id from the sequence opcode */
     battle_effect_sprite_block_t* sprite_block; /* 0x20 */
 } effect_list_node_t;
-typedef char assert_effect_list_node_size[sizeof(effect_list_node_t) == 0x24 ? 1 : -1];
+typedef char assert_effect_list_node_size[sizeof(effect_list_node_t) == 36 ? 1 : -1];
 
 /* Motion state of an effect slot (battle_effect_slot_t +0x98) and of a
  * particle (effect_work_record_t +0x08), stepped once a frame by
@@ -1154,7 +1152,7 @@ typedef struct battle_effect_motion {
     vec3s32_t acceleration;      /* 0x1c */
     vec3s32_t acceleration_step; /* 0x28 */
 } battle_effect_motion_t;
-typedef char battle_effect_motion_size_must_be_0x34[(sizeof(battle_effect_motion_t) == 0x34) ? 1 : -1];
+typedef char battle_effect_motion_size_must_be_52[(sizeof(battle_effect_motion_t) == 52) ? 1 : -1];
 
 /* 0x58-byte particle on an effect record's work list. The emitter initializes
  * its motion, homing and child-emitter state; the integrator advances it. */
@@ -1176,7 +1174,7 @@ typedef struct effect_work_record {
     u8 child_emitter_mid_life;     /* 0x53 */
     struct effect_list_node* data; /* 0x54; sprite node, or heap work for EFFECT_WORK_KIND_HEAP_BLOCK */
 } effect_work_record_t;
-typedef char assert_effect_work_record_size[sizeof(effect_work_record_t) == 0x58 ? 1 : -1];
+typedef char assert_effect_work_record_size[sizeof(effect_work_record_t) == 88 ? 1 : -1];
 
 enum { EFFECT_RECORD_FLAG_ALLOCATED = 0x1 };
 
@@ -1215,7 +1213,7 @@ static __inline__ u16 battle_effect_get_current_script_header(effect_record_t* r
     return *(u16*)(record->script + record->pc);
 }
 
-typedef char assert_effect_record_size[sizeof(effect_record_t) == 0xf8 ? 1 : -1];
+typedef char assert_effect_record_size[sizeof(effect_record_t) == 248 ? 1 : -1];
 typedef char
     effect_record_timeline_offset_must_be_0x26[((unsigned long)&((effect_record_t*)0)->timeline == 0x26) ? 1 : -1];
 typedef char
@@ -1258,7 +1256,7 @@ typedef struct battle_effect_slot {
     u8 _padding_96[0x02];                /* aligns motion */
     battle_effect_motion_t motion;       /* 0x98 */
 } battle_effect_slot_t;
-typedef char assert_battle_effect_slot_size[sizeof(battle_effect_slot_t) == 0xcc ? 1 : -1];
+typedef char assert_battle_effect_slot_size[sizeof(battle_effect_slot_t) == 204 ? 1 : -1];
 
 /* The spawn block at 0x14-0x4b of an emitter record, as the
  * battle_effect_interpolate_emitter_* helpers read it; the native renderers
@@ -1277,7 +1275,7 @@ typedef struct effect_emitter_geometry_view {
     s16 inertia_start[2];                /* 0x44: min, max */
     s16 inertia_end[2];                  /* 0x48 */
 } effect_emitter_geometry_view_t;
-typedef char assert_effect_emitter_geometry_view_size[sizeof(effect_emitter_geometry_view_t) == 0x38 ? 1 : -1];
+typedef char assert_effect_emitter_geometry_view_size[sizeof(effect_emitter_geometry_view_t) == 56 ? 1 : -1];
 
 /* One 0xc4-byte emitter record of the effect file's particle-system section,
  * with the meanings the BATTLE particle emitter
@@ -1339,7 +1337,7 @@ typedef struct effect_geometry_entry {
     u8 child_emitter_mid_life;    /* 0xc1: see EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK */
     u8 _padding_c2[0x02];         /* tail padding to 4-byte alignment */
 } effect_geometry_entry_t;
-typedef char assert_effect_geometry_entry_size[sizeof(effect_geometry_entry_t) == 0xc4 ? 1 : -1];
+typedef char assert_effect_geometry_entry_size[sizeof(effect_geometry_entry_t) == 196 ? 1 : -1];
 
 /* The scrolling textured quad grids' (2x2, 4x4 and 8x8) and the wave mesh's
  * view of one emitter record. Curve nibbles: curve_indices[0] 2 scroll angle
@@ -1382,7 +1380,7 @@ typedef struct effect_textured_quad_geometry_view {
     u8 _unused_ac[0x18];
 } effect_textured_quad_geometry_view_t;
 typedef char
-    assert_effect_textured_quad_geometry_view_size[sizeof(effect_textured_quad_geometry_view_t) == 0xc4 ? 1 : -1];
+    assert_effect_textured_quad_geometry_view_size[sizeof(effect_textured_quad_geometry_view_t) == 196 ? 1 : -1];
 
 /* This renderer's view of one effect_geometry_entry_t. */
 typedef struct effect_particle_ribbon_geometry_view {
@@ -1428,7 +1426,7 @@ typedef struct effect_particle_ribbon_geometry_view {
     u8 _padding_c2[0x02];      /* tail padding to 4-byte alignment */
 } effect_particle_ribbon_geometry_view_t;
 typedef char
-    assert_effect_particle_ribbon_geometry_view_size[sizeof(effect_particle_ribbon_geometry_view_t) == 0xc4 ? 1 : -1];
+    assert_effect_particle_ribbon_geometry_view_size[sizeof(effect_particle_ribbon_geometry_view_t) == 196 ? 1 : -1];
 
 /* This renderer's view of one effect_geometry_entry_t. It keeps the particle
  * emitter's slot-to-curve bindings but gives the slots its own meanings; each
@@ -1497,7 +1495,7 @@ typedef struct effect_polar_mesh_geometry_view {
     u16 texture_v;              /* 0xba: maximum start homing strength */
     u8 _unused_bc[0x08];
 } effect_polar_mesh_geometry_view_t;
-typedef char assert_effect_polar_mesh_geometry_view_size[sizeof(effect_polar_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
+typedef char assert_effect_polar_mesh_geometry_view_size[sizeof(effect_polar_mesh_geometry_view_t) == 196 ? 1 : -1];
 
 /* This renderer's view of one effect_geometry_entry_t. It shares the layout of
  * effect_summon_mesh_geometry_view_t and adds the per-row radius terms at
@@ -1557,7 +1555,7 @@ typedef struct effect_ring_mesh_geometry_view {
     s16 radius_end; /* 0xac */
     u8 _unused_ae[0x16];
 } effect_ring_mesh_geometry_view_t;
-typedef char assert_effect_ring_mesh_geometry_view_size[sizeof(effect_ring_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
+typedef char assert_effect_ring_mesh_geometry_view_size[sizeof(effect_ring_mesh_geometry_view_t) == 196 ? 1 : -1];
 
 /* This renderer's view of one effect_geometry_entry_t. The shared entry type
  * names several of these offsets for other effect kinds; the curve nibbles
@@ -1609,7 +1607,7 @@ typedef struct effect_summon_mesh_geometry_view {
     s16 radius_end; /* 0xac */
     u8 _unused_ae[0x16];
 } effect_summon_mesh_geometry_view_t;
-typedef char assert_effect_summon_mesh_geometry_view_size[sizeof(effect_summon_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
+typedef char assert_effect_summon_mesh_geometry_view_size[sizeof(effect_summon_mesh_geometry_view_t) == 196 ? 1 : -1];
 
 /* These renderers' view of one effect_geometry_entry_t. They spawn segments as
  * the BATTLE particle emitter spawns particles, so the fields they share with
@@ -1671,7 +1669,7 @@ typedef struct effect_tentacle_mesh_geometry_view {
     u8 _padding_c2[0x02];      /* tail padding to 4-byte alignment */
 } effect_tentacle_mesh_geometry_view_t;
 typedef char
-    assert_effect_tentacle_mesh_geometry_view_size[sizeof(effect_tentacle_mesh_geometry_view_t) == 0xc4 ? 1 : -1];
+    assert_effect_tentacle_mesh_geometry_view_size[sizeof(effect_tentacle_mesh_geometry_view_t) == 196 ? 1 : -1];
 
 /* The E454 and E464 particle handlers use the renderer-specific meanings of
  * the emitter record's 0x4c and 0xa8 fields. */
@@ -1684,7 +1682,7 @@ typedef struct effect_particle_vertex_emitter_view {
     u8 _unused_ac[0x18];
 } effect_particle_vertex_emitter_view_t;
 typedef char
-    assert_effect_particle_vertex_emitter_view_size[sizeof(effect_particle_vertex_emitter_view_t) == 0xc4 ? 1 : -1];
+    assert_effect_particle_vertex_emitter_view_size[sizeof(effect_particle_vertex_emitter_view_t) == 196 ? 1 : -1];
 
 /* The existing 0xc4-byte geometry record, interpreted by its owning renderer.
  * The interpolation helpers read the particle-emitter slots shared by these
@@ -1699,7 +1697,7 @@ typedef union effect_geometry_record {
     effect_tentacle_mesh_geometry_view_t tentacle_mesh;
     effect_particle_vertex_emitter_view_t particle_vertex_emitter;
 } effect_geometry_record_t;
-typedef char assert_effect_geometry_record_size[sizeof(effect_geometry_record_t) == 0xc4 ? 1 : -1];
+typedef char assert_effect_geometry_record_size[sizeof(effect_geometry_record_t) == 196 ? 1 : -1];
 
 /* Particle-system section addressed by effect-file header word 0x0c. */
 typedef struct effect_geometry_table {
@@ -1714,11 +1712,11 @@ typedef struct effect_geometry_table {
 } effect_geometry_table_t;
 
 /* Frames in one animation curve: emitter and particle frame counters wrap here. */
-enum { EFFECT_ANIMATION_CURVE_FRAMES = 0xa0 };
+enum { EFFECT_ANIMATION_CURVE_FRAMES = 160 };
 
 /* One interpolation factor per frame; curve indices select emitter and colour tracks. */
 typedef u8 effect_animation_curve_t[EFFECT_ANIMATION_CURVE_FRAMES];
-typedef char assert_effect_animation_curve_size[sizeof(effect_animation_curve_t) == 0xa0 ? 1 : -1];
+typedef char assert_effect_animation_curve_size[sizeof(effect_animation_curve_t) == 160 ? 1 : -1];
 
 /* The effect file has one count followed by one 160-byte curve per entry. */
 typedef struct effect_animation_curve_table {

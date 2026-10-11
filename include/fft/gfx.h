@@ -138,7 +138,7 @@ typedef struct scaled_draw_area_pair {
     DR_AREA areas[2]; /* 0x00 */
     RECT rects[2];    /* 0x18 */
 } scaled_draw_area_pair_t;
-typedef char scaled_draw_area_pair_size_must_be_0x28[sizeof(scaled_draw_area_pair_t) == 0x28 ? 1 : -1];
+typedef char scaled_draw_area_pair_size_must_be_40[sizeof(scaled_draw_area_pair_t) == 40 ? 1 : -1];
 
 /* The 0x10-byte glyph blit descriptor used by the window frame threads and filled
  * by world_gfx_set_image_blit_source_rect / _destination_origin. The stride is
@@ -149,7 +149,7 @@ typedef struct glyph_blit {
     u32 color;  /* 0x0c: colour word the decimal renderers set by value sign
                  * (0x77777777, 0xbbbbbbbb, ...) and clear after each draw */
 } glyph_blit_t;
-typedef char glyph_blit_size_must_be_0x10[sizeof(glyph_blit_t) == 0x10 ? 1 : -1];
+typedef char glyph_blit_size_must_be_16[sizeof(glyph_blit_t) == 16 ? 1 : -1];
 
 /* Texture primitive used by the WORLD/BATTLE image-loading and
  * texture-page allocation helpers: a SPRT
@@ -190,7 +190,7 @@ typedef struct texture_source {
     u16 clut;  /* 0x08 */
     s16 tpage; /* 0x0a */
 } texture_source_t;
-typedef char texture_source_size_must_be_0xc[sizeof(texture_source_t) == 0xc ? 1 : -1];
+typedef char texture_source_size_must_be_12[sizeof(texture_source_t) == 12 ? 1 : -1];
 
 /* Screen rectangle and texture source, passed to the oriented-quad readers.
  * Equipment-slot marker arrays have a 0x14-byte stride. */
@@ -200,7 +200,7 @@ typedef struct oriented_quad {
     u16 h;                   /* 0x06 */
     texture_source_t source; /* 0x08 */
 } oriented_quad_t;
-typedef char oriented_quad_size_must_be_0x14[sizeof(oriented_quad_t) == 0x14 ? 1 : -1];
+typedef char oriented_quad_size_must_be_20[sizeof(oriented_quad_t) == 20 ? 1 : -1];
 
 /* Gouraud-textured rectangle source for world_gfx_enqueue_gouraud_textured_quad
  * (0x8012cfd4) and bunit_gfx_enqueue_gouraud_textured_quad: screen rectangle,
@@ -215,7 +215,7 @@ typedef struct textured_rect_source {
     u16 clut;  /* 0x0c */
     u16 tpage; /* 0x0e */
 } textured_rect_source_t;
-typedef char textured_rect_source_size_must_be_0x10[sizeof(textured_rect_source_t) == 0x10 ? 1 : -1];
+typedef char textured_rect_source_size_must_be_16[sizeof(textured_rect_source_t) == 16 ? 1 : -1];
 
 /* Full-screen fade primitive pair: a TILE followed by the DR_MODE that
  * selects its texture page and window. */
@@ -223,7 +223,7 @@ typedef struct fade_overlay {
     TILE tile;    /* 0x00 */
     DR_MODE mode; /* 0x10 */
 } fade_overlay_t;
-typedef char fade_overlay_size_must_be_0x1c[(sizeof(fade_overlay_t) == 0x1c) ? 1 : -1];
+typedef char fade_overlay_size_must_be_28[(sizeof(fade_overlay_t) == 28) ? 1 : -1];
 
 /* camera */
 enum {
@@ -251,6 +251,6 @@ typedef struct camera_track {
     s32 segment_duration; /* 0x9c */
     s32 finished;         /* 0xa0 */
 } camera_track_t;
-typedef char camera_track_size_must_be_0xa4[sizeof(camera_track_t) == 0xa4 ? 1 : -1];
+typedef char camera_track_size_must_be_164[sizeof(camera_track_t) == 164 ? 1 : -1];
 
 #endif

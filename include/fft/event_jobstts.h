@@ -107,7 +107,7 @@ typedef struct jobstts_gfx_context {
     DR_AREA* draw_areas;      /* 0x5c */
     u8 _unused_60[0x94];      /* 0x60 */
 } jobstts_gfx_context_t;
-typedef char jobstts_gfx_context_size_must_be_0xf4[(sizeof(jobstts_gfx_context_t) == 0xF4) ? 1 : -1];
+typedef char jobstts_gfx_context_size_must_be_244[(sizeof(jobstts_gfx_context_t) == 244) ? 1 : -1];
 
 extern u16 g_jobstts_menu_palette_clut;
 extern u16 g_jobstts_gfx_background_texture_page;
@@ -351,7 +351,7 @@ typedef struct jobstts_unit_job_data {
     u8 job_levels[10];                                                            /* 0x44 */
     unit_job_points_t job_points; /* 0x4e; current JP followed by total JP */
 } jobstts_unit_job_data_t;
-typedef char jobstts_unit_job_data_size_must_be_0x9e[(sizeof(jobstts_unit_job_data_t) == 0x9E) ? 1 : -1];
+typedef char jobstts_unit_job_data_size_must_be_158[(sizeof(jobstts_unit_job_data_t) == 158) ? 1 : -1];
 
 extern jobstts_unit_job_data_t* g_jobstts_unit_data[];
 extern jobstts_unit_job_data_t g_jobstts_unit_job_data;

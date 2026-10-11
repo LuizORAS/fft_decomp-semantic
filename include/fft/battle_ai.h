@@ -339,7 +339,7 @@ typedef struct battle_ai_considered_ability {
     u8 mp_cost;                                /* 0x11 */
     u8 _padding_12[2];                         /* tail padding to 4-byte alignment */
 } battle_ai_considered_ability_t;
-typedef char battle_ai_considered_ability_size_must_be_0x14[(sizeof(battle_ai_considered_ability_t) == 0x14) ? 1 : -1];
+typedef char battle_ai_considered_ability_size_must_be_20[(sizeof(battle_ai_considered_ability_t) == 20) ? 1 : -1];
 typedef char battle_ai_status_tail_must_be_at_offset_8
     [((unsigned long)&((battle_ai_considered_ability_t*)0)->parameters.words.status_tail == 8) ? 1 : -1];
 
@@ -379,7 +379,7 @@ typedef struct battle_ai_action_data {
     battle_action_command_t command; /* 0x08; copied as the ACT payload */
     battle_ai_action_rank_t rank;    /* 0x1c */
 } battle_ai_action_data_t;
-typedef char battle_ai_action_data_size_must_be_0x20[(sizeof(battle_ai_action_data_t) == 0x20) ? 1 : -1];
+typedef char battle_ai_action_data_size_must_be_32[(sizeof(battle_ai_action_data_t) == 32) ? 1 : -1];
 typedef char battle_ai_action_command_must_be_at_offset_8[((unsigned long)&((battle_ai_action_data_t*)0)->command == 8)
         ? 1
         : -1];
@@ -484,7 +484,7 @@ typedef struct battle_ai_unit_decision {
     u8 enemy_ability_min_reach; /* 0x0e; least range + AoE of the enemy-targeting abilities, plus Move */
     u8 ally_ability_min_reach;  /* 0x0f; least range + AoE of the ally-targeting abilities, plus Move */
 } battle_ai_unit_decision_t;
-typedef char battle_ai_unit_decision_size_must_be_0x10[(sizeof(battle_ai_unit_decision_t) == 0x10) ? 1 : -1];
+typedef char battle_ai_unit_decision_size_must_be_16[(sizeof(battle_ai_unit_decision_t) == 16) ? 1 : -1];
 
 /* AI +0x0c78..0x0cb7. The target's 21-byte save at +0xca2 overlaps
  * the low three bytes of target_setting_flags at +0xcb4. Loops at
@@ -632,7 +632,7 @@ typedef struct battle_ai_data {
     u8 _unused_19bf[8];
     u8 _padding_19c7; /* 0x19c7; last documented byte; tail padding to 4-byte alignment */
 } battle_ai_data_t;
-typedef char battle_ai_data_size_must_be_0x19c8[(sizeof(battle_ai_data_t) == 0x19c8) ? 1 : -1];
+typedef char battle_ai_data_size_must_be_6600[(sizeof(battle_ai_data_t) == 6600) ? 1 : -1];
 typedef char battle_ai_saved_targetability_must_be_0xca2
     [((unsigned long)&((battle_ai_data_t*)0)->targetability.snapshot.unit_targetable_saved == 0xca2) ? 1 : -1];
 typedef char battle_ai_target_flags_must_be_0xcb4

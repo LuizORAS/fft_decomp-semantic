@@ -151,14 +151,14 @@ typedef struct attack_deployment_squad_data {
     u8 map_id;             /* 0x09 */
     u16 placement_id;      /* 0x0a */
 } attack_deployment_squad_data_t;
-typedef char attack_squad_data_size_must_be_0x0c[(sizeof(attack_deployment_squad_data_t) == 0x0c) ? 1 : -1];
+typedef char attack_squad_data_size_must_be_12[(sizeof(attack_deployment_squad_data_t) == 12) ? 1 : -1];
 
 /* Textured deployment banner followed by its two triangle packets. */
 typedef struct attack_deploy_arrow_gfx {
     POLY_FT4 poly;  /* 0x00 */
     POLY_F3 tri[2]; /* 0x28 */
 } attack_deploy_arrow_gfx_t;
-typedef char attack_deploy_arrow_gfx_size_must_be_0x50[sizeof(attack_deploy_arrow_gfx_t) == 0x50 ? 1 : -1];
+typedef char attack_deploy_arrow_gfx_size_must_be_80[sizeof(attack_deploy_arrow_gfx_t) == 80 ? 1 : -1];
 
 /* One 0xa2c-byte half of the double-buffered deployment-screen primitive
  * block at 0x801db650 (g_attack_deploy_render_buffers). The 5-by-5 valid-tile
@@ -183,7 +183,7 @@ typedef struct attack_deploy_render_buffer {
     DR_OFFSET screen_offset;                /* 0xa1c */
     point16_t screen_position;              /* 0xa28; SDK draw-offset input */
 } attack_deploy_render_buffer_t;
-typedef char attack_deploy_render_buffer_size_must_be_0xa2c[(sizeof(attack_deploy_render_buffer_t) == 0xa2c) ? 1 : -1];
+typedef char attack_deploy_render_buffer_size_must_be_2604[(sizeof(attack_deploy_render_buffer_t) == 2604) ? 1 : -1];
 
 /* Alias of render_buffers[0].screen_arrow, addressed separately by the constructor. */
 extern attack_deploy_arrow_gfx_t g_attack_deploy_screen_arrow;
@@ -378,7 +378,7 @@ typedef struct attack_text_file {
     s32 section_offsets[32];
     u8 section_data[0];
 } attack_text_file_t;
-typedef char attack_text_file_header_size_must_be_0x80[(sizeof(attack_text_file_t) == 0x80) ? 1 : -1];
+typedef char attack_text_file_header_size_must_be_128[(sizeof(attack_text_file_t) == 128) ? 1 : -1];
 
 extern s32 g_attack_numeric_editor_redraw_request;
 

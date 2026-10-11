@@ -87,7 +87,7 @@ typedef struct card_graphics_context {
     DR_MODE draw_mode;           /* 0xd0 */
     u8 _unused_dc[0x18];         /* 0xdc */
 } card_graphics_context_t;
-typedef char card_graphics_context_size_must_be_0xf4[(sizeof(card_graphics_context_t) == 0xf4) ? 1 : -1];
+typedef char card_graphics_context_size_must_be_244[(sizeof(card_graphics_context_t) == 244) ? 1 : -1];
 
 /*
  * The g_card_save_*_descriptor menu-thread descriptors below are 0x3c-byte

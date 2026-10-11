@@ -112,90 +112,90 @@ enum {
  * describe the sequences of the human sheets. */
 typedef enum battle_unit_animation {
     /* Plays sequences 1 to 5 instead: the standing pose for each direction the unit is seen from. */
-    BATTLE_UNIT_ANIMATION_STAND = 0x02, /* stop, petrify, cursed; the default hit reaction */
-    BATTLE_UNIT_ANIMATION_IDLE = 0x03,
-    BATTLE_UNIT_ANIMATION_IDLE_HASTE = 0x04,
-    BATTLE_UNIT_ANIMATION_IDLE_SLOW = 0x05,
-    BATTLE_UNIT_ANIMATION_IDLE_FLYING = 0x06, /* sheets with the flying flag */
-    BATTLE_UNIT_ANIMATION_IDLE_FLYING_HASTE = 0x07,
-    BATTLE_UNIT_ANIMATION_IDLE_FLYING_SLOW = 0x08,
+    BATTLE_UNIT_ANIMATION_STAND = 2, /* stop, petrify, cursed; the default hit reaction */
+    BATTLE_UNIT_ANIMATION_IDLE = 3,
+    BATTLE_UNIT_ANIMATION_IDLE_HASTE = 4,
+    BATTLE_UNIT_ANIMATION_IDLE_SLOW = 5,
+    BATTLE_UNIT_ANIMATION_IDLE_FLYING = 6, /* sheets with the flying flag */
+    BATTLE_UNIT_ANIMATION_IDLE_FLYING_HASTE = 7,
+    BATTLE_UNIT_ANIMATION_IDLE_FLYING_SLOW = 8,
     BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE
-    = 0x09, /* in water two or more deep (battle_move_get_water_depth); also the crystal sprite */
-    BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_HASTE = 0x0a,
-    BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_SLOW = 0x0b,
-    BATTLE_UNIT_ANIMATION_WALK = 0x0c, /* a movement step on foot (battle_unit_set_idle_animation_for_movement) */
-    BATTLE_UNIT_ANIMATION_WALK_FAST = 0x0d,
-    BATTLE_UNIT_ANIMATION_WALK_SLOW = 0x0e,
-    BATTLE_UNIT_ANIMATION_FLY = 0x12,      /* a flying unit's movement step */
-    BATTLE_UNIT_ANIMATION_TREASURE = 0x15, /* the treasure chest sprite */
-    BATTLE_UNIT_ANIMATION_KNEEL = 0x16,    /* one held frame, the picture of SLEEP: event poison, a failed mimic */
-    BATTLE_UNIT_ANIMATION_DEFEND = 0x17,
-    BATTLE_UNIT_ANIMATION_DODGE = 0x18,
-    BATTLE_UNIT_ANIMATION_HURT = 0x19,
-    BATTLE_UNIT_ANIMATION_DEAD = 0x1a,
-    BATTLE_UNIT_ANIMATION_RAISE_HANDS = 0x1b, /* healed, blade grasp or catch, crystal pickup */
+    = 9, /* in water two or more deep (battle_move_get_water_depth); also the crystal sprite */
+    BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_HASTE = 10,
+    BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_SLOW = 11,
+    BATTLE_UNIT_ANIMATION_WALK = 12, /* a movement step on foot (battle_unit_set_idle_animation_for_movement) */
+    BATTLE_UNIT_ANIMATION_WALK_FAST = 13,
+    BATTLE_UNIT_ANIMATION_WALK_SLOW = 14,
+    BATTLE_UNIT_ANIMATION_FLY = 18,      /* a flying unit's movement step */
+    BATTLE_UNIT_ANIMATION_TREASURE = 21, /* the treasure chest sprite */
+    BATTLE_UNIT_ANIMATION_KNEEL = 22,    /* one held frame, the picture of SLEEP: event poison, a failed mimic */
+    BATTLE_UNIT_ANIMATION_DEFEND = 23,
+    BATTLE_UNIT_ANIMATION_DODGE = 24,
+    BATTLE_UNIT_ANIMATION_HURT = 25,
+    BATTLE_UNIT_ANIMATION_DEAD = 26,
+    BATTLE_UNIT_ANIMATION_RAISE_HANDS = 27, /* healed, blade grasp or catch, crystal pickup */
     /* Jumps for joy; in water one deep and for a rider, small hops instead. */
-    BATTLE_UNIT_ANIMATION_LEVEL_UP = 0x1c,
-    BATTLE_UNIT_ANIMATION_LEVEL_UP_HOP = 0x1d,
-    BATTLE_UNIT_ANIMATION_JUMP = 0x1e,
-    BATTLE_UNIT_ANIMATION_FALL = 0x1f,
-    BATTLE_UNIT_ANIMATION_LAND = 0x20, /* after a jump or a fall */
+    BATTLE_UNIT_ANIMATION_LEVEL_UP = 28,
+    BATTLE_UNIT_ANIMATION_LEVEL_UP_HOP = 29,
+    BATTLE_UNIT_ANIMATION_JUMP = 30,
+    BATTLE_UNIT_ANIMATION_FALL = 31,
+    BATTLE_UNIT_ANIMATION_LAND = 32, /* after a jump or a fall */
     /* Held while charging: the second animation of several charge animation sets. */
-    BATTLE_UNIT_ANIMATION_CHARGE = 0x22,
-    BATTLE_UNIT_ANIMATION_CLIMB = 0x23,
-    BATTLE_UNIT_ANIMATION_SLEEP = 0x24, /* kneeling: also the critical status */
-    BATTLE_UNIT_ANIMATION_CONFUSION = 0x25,
-    BATTLE_UNIT_ANIMATION_SING = 0x28,
-    BATTLE_UNIT_ANIMATION_DANCE = 0x29,
-    BATTLE_UNIT_ANIMATION_CAST_START = 0x2a,  /* the first animation of most charge animation sets */
-    BATTLE_UNIT_ANIMATION_CAST_CHARGE = 0x2b, /* its loop, held while charging as CHARGE is */
+    BATTLE_UNIT_ANIMATION_CHARGE = 34,
+    BATTLE_UNIT_ANIMATION_CLIMB = 35,
+    BATTLE_UNIT_ANIMATION_SLEEP = 36, /* kneeling: also the critical status */
+    BATTLE_UNIT_ANIMATION_CONFUSION = 37,
+    BATTLE_UNIT_ANIMATION_SING = 40,
+    BATTLE_UNIT_ANIMATION_DANCE = 41,
+    BATTLE_UNIT_ANIMATION_CAST_START = 42,  /* the first animation of most charge animation sets */
+    BATTLE_UNIT_ANIMATION_CAST_CHARGE = 43, /* its loop, held while charging as CHARGE is */
     /* Arms raised until the effect ends: the usual attack animation of the
      * ability table, and every ability of the RUKA, ARUTE and KANZEN sequences. */
-    BATTLE_UNIT_ANIMATION_CAST = 0x2c,
-    BATTLE_UNIT_ANIMATION_HOP = 0x30, /* short hops alternate between the two */
-    BATTLE_UNIT_ANIMATION_HOP_ALTERNATE = 0x31,
-    BATTLE_UNIT_ANIMATION_RIDING = 0x32, /* a mounted unit; the rider while its mount moves */
-    BATTLE_UNIT_ANIMATION_FOUND_ITEM = 0x33,
-    BATTLE_UNIT_ANIMATION_DEATH = 0x34,
-    BATTLE_UNIT_ANIMATION_REVIVE = 0x35,
-    BATTLE_UNIT_ANIMATION_HOLD_ITEM = 0x39,
-    BATTLE_UNIT_ANIMATION_TELEPORT = 0x3c,
+    BATTLE_UNIT_ANIMATION_CAST = 44,
+    BATTLE_UNIT_ANIMATION_HOP = 48, /* short hops alternate between the two */
+    BATTLE_UNIT_ANIMATION_HOP_ALTERNATE = 49,
+    BATTLE_UNIT_ANIMATION_RIDING = 50, /* a mounted unit; the rider while its mount moves */
+    BATTLE_UNIT_ANIMATION_FOUND_ITEM = 51,
+    BATTLE_UNIT_ANIMATION_DEATH = 52,
+    BATTLE_UNIT_ANIMATION_REVIVE = 53,
+    BATTLE_UNIT_ANIMATION_HOLD_ITEM = 57,
+    BATTLE_UNIT_ANIMATION_TELEPORT = 60,
     /* attacks: HIGH at a target at least 12 higher, LOW at one at least 12 lower */
-    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_HIGH = 0x3d,
-    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_LEVEL = 0x3e,
-    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_LOW = 0x3f,
-    BATTLE_UNIT_ANIMATION_SWING_HIGH = 0x40,
-    BATTLE_UNIT_ANIMATION_SWING_LEVEL = 0x41,
-    BATTLE_UNIT_ANIMATION_SWING_LOW = 0x42,
-    BATTLE_UNIT_ANIMATION_THROW_ITEM = 0x4c, /* an item used on a target that is not adjacent */
-    BATTLE_UNIT_ANIMATION_THRUST_HIGH = 0x4d,
-    BATTLE_UNIT_ANIMATION_THRUST_LEVEL = 0x4e,
-    BATTLE_UNIT_ANIMATION_THRUST_LOW = 0x4f,
-    BATTLE_UNIT_ANIMATION_GUN_HIGH = 0x50,
-    BATTLE_UNIT_ANIMATION_GUN_LEVEL = 0x51,
-    BATTLE_UNIT_ANIMATION_GUN_LOW = 0x52,
-    BATTLE_UNIT_ANIMATION_BOW_HIGH = 0x53, /* a bow shot takes its row from battle_effect_get_bow_shot_angle */
-    BATTLE_UNIT_ANIMATION_BOW_LEVEL = 0x54,
-    BATTLE_UNIT_ANIMATION_BOW_LOW = 0x55,
-    BATTLE_UNIT_ANIMATION_BOOK = 0x56,
-    BATTLE_UNIT_ANIMATION_INSTRUMENT = 0x57,
-    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_HIGH = 0x58, /* the attacker stands at least 12 higher */
-    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LEVEL = 0x59,
-    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW = 0x5a,
-    BATTLE_UNIT_ANIMATION_SWING_BLOCKED_HIGH = 0x5b, /* the attacker's recoil from a blocked attack */
-    BATTLE_UNIT_ANIMATION_SWING_BLOCKED_LEVEL = 0x5c,
-    BATTLE_UNIT_ANIMATION_SWING_BLOCKED_LOW = 0x5d,
-    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_HIGH = 0x5e,
-    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_LEVEL = 0x5f,
-    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_LOW = 0x60,
-    BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_HIGH = 0x61,
-    BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_LEVEL = 0x62,
-    BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_LOW = 0x63,
-    BATTLE_UNIT_ANIMATION_JUMP_DEPART = 0x75, /* the jump status is added in event mode; charging a Jump */
-    BATTLE_UNIT_ANIMATION_JUMP_LAND = 0x76,
-    BATTLE_UNIT_ANIMATION_CLOTH_HIGH = 0x77, /* bags and cloths */
-    BATTLE_UNIT_ANIMATION_CLOTH_LEVEL = 0x78,
-    BATTLE_UNIT_ANIMATION_CLOTH_LOW = 0x79,
+    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_HIGH = 61,
+    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_LEVEL = 62,
+    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_LOW = 63,
+    BATTLE_UNIT_ANIMATION_SWING_HIGH = 64,
+    BATTLE_UNIT_ANIMATION_SWING_LEVEL = 65,
+    BATTLE_UNIT_ANIMATION_SWING_LOW = 66,
+    BATTLE_UNIT_ANIMATION_THROW_ITEM = 76, /* an item used on a target that is not adjacent */
+    BATTLE_UNIT_ANIMATION_THRUST_HIGH = 77,
+    BATTLE_UNIT_ANIMATION_THRUST_LEVEL = 78,
+    BATTLE_UNIT_ANIMATION_THRUST_LOW = 79,
+    BATTLE_UNIT_ANIMATION_GUN_HIGH = 80,
+    BATTLE_UNIT_ANIMATION_GUN_LEVEL = 81,
+    BATTLE_UNIT_ANIMATION_GUN_LOW = 82,
+    BATTLE_UNIT_ANIMATION_BOW_HIGH = 83, /* a bow shot takes its row from battle_effect_get_bow_shot_angle */
+    BATTLE_UNIT_ANIMATION_BOW_LEVEL = 84,
+    BATTLE_UNIT_ANIMATION_BOW_LOW = 85,
+    BATTLE_UNIT_ANIMATION_BOOK = 86,
+    BATTLE_UNIT_ANIMATION_INSTRUMENT = 87,
+    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_HIGH = 88, /* the attacker stands at least 12 higher */
+    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LEVEL = 89,
+    BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW = 90,
+    BATTLE_UNIT_ANIMATION_SWING_BLOCKED_HIGH = 91, /* the attacker's recoil from a blocked attack */
+    BATTLE_UNIT_ANIMATION_SWING_BLOCKED_LEVEL = 92,
+    BATTLE_UNIT_ANIMATION_SWING_BLOCKED_LOW = 93,
+    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_HIGH = 94,
+    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_LEVEL = 95,
+    BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_LOW = 96,
+    BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_HIGH = 97,
+    BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_LEVEL = 98,
+    BATTLE_UNIT_ANIMATION_THRUST_BLOCKED_LOW = 99,
+    BATTLE_UNIT_ANIMATION_JUMP_DEPART = 117, /* the jump status is added in event mode; charging a Jump */
+    BATTLE_UNIT_ANIMATION_JUMP_LAND = 118,
+    BATTLE_UNIT_ANIMATION_CLOTH_HIGH = 119, /* bags and cloths */
+    BATTLE_UNIT_ANIMATION_CLOTH_LEVEL = 120,
+    BATTLE_UNIT_ANIMATION_CLOTH_LOW = 121,
 } battle_unit_animation_e;
 
 /* Animation ids from 500 up are not doubled into a front and a back
@@ -282,14 +282,14 @@ typedef struct battle_gfx_weapon_shp {
     u16 first_frame[0x20];                    /* 0x000; indexed by weapon type */
     battle_gfx_source_frame_t* frames[0x200]; /* 0x040 */
 } battle_gfx_weapon_shp_t;
-typedef char battle_gfx_weapon_shp_size_must_be_0x840[sizeof(battle_gfx_weapon_shp_t) == 0x840 ? 1 : -1];
+typedef char battle_gfx_weapon_shp_size_must_be_2112[sizeof(battle_gfx_weapon_shp_t) == 2112 ? 1 : -1];
 
 /* Native WEP/EFF storage pairs the SHP frame table with its SEQ pointers. */
 typedef struct battle_gfx_wep_eff_graphics {
     battle_gfx_weapon_shp_t shp; /* 0x000 */
     u8* seq[0x100];              /* 0x840; sequence command streams */
 } battle_gfx_wep_eff_graphics_t;
-typedef char battle_gfx_wep_eff_graphics_size_must_be_0xc40[sizeof(battle_gfx_wep_eff_graphics_t) == 0xc40 ? 1 : -1];
+typedef char battle_gfx_wep_eff_graphics_size_must_be_3136[sizeof(battle_gfx_wep_eff_graphics_t) == 3136 ? 1 : -1];
 
 /* Texture rectangle and screen offset used by menu overlay graphics. */
 typedef struct battle_gfx_sprite_region {
@@ -334,15 +334,13 @@ typedef struct battle_gfx_sprite_display_data {
     u16 rotation;
     battle_gfx_sprite_part_display_data_t parts[0]; /* 0x0e; variable tail */
 } battle_gfx_sprite_display_data_t;
-typedef char
-    battle_gfx_sprite_display_data_size_must_be_0x0e[sizeof(battle_gfx_sprite_display_data_t) == 0x0e ? 1 : -1];
+typedef char battle_gfx_sprite_display_data_size_must_be_14[sizeof(battle_gfx_sprite_display_data_t) == 14 ? 1 : -1];
 
 typedef struct battle_gfx_unit_sprite_display {
     battle_gfx_sprite_display_data_t header;        /* 0x00 */
     battle_gfx_sprite_part_display_data_t parts[8]; /* 0x0e */
 } battle_gfx_unit_sprite_display_t;
-typedef char
-    battle_gfx_unit_sprite_display_size_must_be_0x46[sizeof(battle_gfx_unit_sprite_display_t) == 0x46 ? 1 : -1];
+typedef char battle_gfx_unit_sprite_display_size_must_be_70[sizeof(battle_gfx_unit_sprite_display_t) == 70 ? 1 : -1];
 
 typedef struct battle_gfx_weapon_sprite_display {
     battle_gfx_sprite_display_data_t header;        /* 0x00 */
@@ -350,15 +348,16 @@ typedef struct battle_gfx_weapon_sprite_display {
     u8 _padding_23;                                 /* aligns the following display */
 } battle_gfx_weapon_sprite_display_t;
 typedef char
-    battle_gfx_weapon_sprite_display_size_must_be_0x24[sizeof(battle_gfx_weapon_sprite_display_t) == 0x24 ? 1 : -1];
+    battle_gfx_weapon_sprite_display_size_must_be_36[sizeof(battle_gfx_weapon_sprite_display_t) == 36 ? 1 : -1];
 
 typedef struct battle_gfx_single_part_sprite_display {
     battle_gfx_sprite_display_data_t header;        /* 0x00 */
     battle_gfx_sprite_part_display_data_t parts[1]; /* 0x0e */
     u8 _padding_15;                                 /* aligns the following display */
 } battle_gfx_single_part_sprite_display_t;
-typedef char battle_gfx_single_part_sprite_display_size_must_be_0x16
-    [sizeof(battle_gfx_single_part_sprite_display_t) == 0x16 ? 1 : -1];
+typedef char battle_gfx_single_part_sprite_display_size_must_be_22[sizeof(battle_gfx_single_part_sprite_display_t) == 22
+        ? 1
+        : -1];
 
 /* Weapon/effect sprite animation block, misc unit data 0x208, 0x238 and
  * 0x268: block 0 plays the weapon sheet's sequences, blocks 1 and 2 the
@@ -387,7 +386,7 @@ typedef struct battle_unit_sprite_block {
     battle_gfx_sprite_display_data_t* display; /* 0x24 */
     u8 _unused_28[8];                          /* 0x28 */
 } battle_unit_sprite_block_t;
-typedef char battle_unit_sprite_block_size_must_be_0x30[(sizeof(battle_unit_sprite_block_t) == 0x30) ? 1 : -1];
+typedef char battle_unit_sprite_block_size_must_be_48[(sizeof(battle_unit_sprite_block_t) == 48) ? 1 : -1];
 
 /* Manual targeting and WAIT_DIRECTION reuse the AI command storage.
  * The facing word overlaps the action's item/type/target-ID bytes. Cursor
@@ -437,7 +436,7 @@ typedef struct battle_gfx_unit_shp_frame_tables {
     battle_gfx_source_frame_t* submerged_frames[0xd0]; /* 0x348 */
 } battle_gfx_unit_shp_frame_tables_t;
 typedef char
-    battle_gfx_unit_shp_frame_tables_size_must_be_0x688[sizeof(battle_gfx_unit_shp_frame_tables_t) == 0x688 ? 1 : -1];
+    battle_gfx_unit_shp_frame_tables_size_must_be_1672[sizeof(battle_gfx_unit_shp_frame_tables_t) == 1672 ? 1 : -1];
 
 /* Block view of the numeric display fields at misc unit data 0x2bc..0x2cf,
  * taken as one pointer by the action result display builders
@@ -450,7 +449,7 @@ typedef struct battle_action_result_display {
     u16 progress;                                  /* 0x06 */
     battle_gfx_sprite_display_data_t* displays[3]; /* 0x08 */
 } battle_action_result_display_t;
-typedef char battle_action_result_display_size_must_be_0x14[(sizeof(battle_action_result_display_t) == 0x14) ? 1 : -1];
+typedef char battle_action_result_display_size_must_be_20[(sizeof(battle_action_result_display_t) == 20) ? 1 : -1];
 
 /* Common header of an unpacked unit SEQ table. The pointer tail has 0x100
  * entries in a native table and 0x40 in an EVTCHR slot. */
@@ -468,7 +467,7 @@ typedef struct battle_gfx_native_unit_seq_table {
     u8* sequences[0x100];               /* 0x008 */
 } battle_gfx_native_unit_seq_table_t;
 typedef char
-    battle_gfx_native_unit_seq_table_size_must_be_0x408[sizeof(battle_gfx_native_unit_seq_table_t) == 0x408 ? 1 : -1];
+    battle_gfx_native_unit_seq_table_size_must_be_1032[sizeof(battle_gfx_native_unit_seq_table_t) == 1032 ? 1 : -1];
 
 /* Unit SPR file: 16 palettes, two uncompressed 4bpp image blocks, then
  * a variable-length compressed attack-image stream. */
@@ -478,7 +477,7 @@ typedef struct battle_gfx_unit_sprite_file {
     u8 portrait_and_body_pixels[32][128]; /* 0x8200; 256 x 32 pixels, two per byte */
     u8 compressed_attack_image[0];        /* 0x9200; variable byte tail */
 } battle_gfx_unit_sprite_file_t;
-typedef char battle_gfx_unit_sprite_file_size_must_be_0x9200[sizeof(battle_gfx_unit_sprite_file_t) == 0x9200 ? 1 : -1];
+typedef char battle_gfx_unit_sprite_file_size_must_be_37376[sizeof(battle_gfx_unit_sprite_file_t) == 37376 ? 1 : -1];
 
 /* Packed unit SEQ file. Values and offsets are little-endian byte
  * sequences, so this view needs no native halfword or word alignment. */
@@ -489,7 +488,7 @@ typedef struct battle_gfx_packed_seq_record {
     u8 sequence_data_size[2];      /* 0x404; unsigned little-endian halfword */
     u8 sequence_data[0];           /* 0x406; variable byte tail */
 } battle_gfx_packed_seq_record_t;
-typedef char battle_gfx_packed_seq_record_size_must_be_0x406[sizeof(battle_gfx_packed_seq_record_t) == 0x406 ? 1 : -1];
+typedef char battle_gfx_packed_seq_record_size_must_be_1030[sizeof(battle_gfx_packed_seq_record_t) == 1030 ? 1 : -1];
 
 /* Unit sprite animation state passed to the sequence and frame renderers.
  * Weapon/effect sprite blocks share its first 0x1c bytes, with distinct tails. */
@@ -517,7 +516,7 @@ typedef struct battle_unit_anim_state {
     battle_gfx_unit_seq_table_t* saved_seq;        /* 0x28 */
     battle_gfx_sprite_display_data_t* display;     /* 0x2c */
 } battle_unit_anim_state_t;
-typedef char battle_unit_anim_state_size_must_be_0x30[sizeof(battle_unit_anim_state_t) == 0x30 ? 1 : -1];
+typedef char battle_unit_anim_state_size_must_be_48[sizeof(battle_unit_anim_state_t) == 48 ? 1 : -1];
 typedef char
     battle_unit_anim_state_frame_must_be_0x08[((unsigned long)&((battle_unit_anim_state_t*)0)->frame == 0x08) ? 1 : -1];
 typedef char
@@ -577,7 +576,7 @@ typedef struct battle_walk_path {
     battle_move_height_offsets_t height_offsets; /* 0x7e; source/destination offsets */
     u8 pending_mount;                            /* 0x7f; BATTLE_PENDING_MOUNT_SET | battle id */
 } battle_walk_path_t;
-typedef char battle_walk_path_size_must_be_0x80[sizeof(battle_walk_path_t) == 0x80 ? 1 : -1];
+typedef char battle_walk_path_size_must_be_128[sizeof(battle_walk_path_t) == 128 ? 1 : -1];
 typedef char battle_walk_path_flags_must_be_0x7d[((unsigned long)&((battle_walk_path_t*)0)->flags == 0x7d) ? 1 : -1];
 
 /* battle_walk_path_t.count values that are not a step count
@@ -611,65 +610,65 @@ typedef enum battle_move_step_direction {
 typedef enum battle_move_step_phase {
     BATTLE_MOVE_STEP_PHASE_NONE = 0,
     /* walking: from the tile centre to its exit edge, then on to the destination centre */
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH = 0x01,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH = 0x02,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_EAST = 0x03,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST = 0x04,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_NORTH = 0x05,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH = 0x06,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_WEST = 0x07,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST = 0x08,
+    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH = 1,
+    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH = 2,
+    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_EAST = 3,
+    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST = 4,
+    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_NORTH = 5,
+    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH = 6,
+    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_WEST = 7,
+    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST = 8,
     /* the same two stages at climb speed */
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH = 0x09,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_SOUTH = 0x0a,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST = 0x0b,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_EAST = 0x0c,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH = 0x0d,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH = 0x0e,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST = 0x0f,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST = 0x10,
+    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH = 9,
+    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_SOUTH = 10,
+    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST = 11,
+    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_EAST = 12,
+    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH = 13,
+    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH = 14,
+    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST = 15,
+    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST = 16,
     /* jumping: the take-off animation, rising, falling to the destination edge, the landing animation */
-    BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH = 0x11,
-    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH = 0x12,
-    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_SOUTH = 0x13,
-    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_SOUTH = 0x14,
-    BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST = 0x15,
-    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST = 0x16,
-    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_EAST = 0x17,
-    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_EAST = 0x18,
-    BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH = 0x19,
-    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH = 0x1a,
-    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH = 0x1b,
-    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_NORTH = 0x1c,
-    BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST = 0x1d,
-    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST = 0x1e,
-    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_WEST = 0x1f,
-    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_WEST = 0x20,
+    BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH = 17,
+    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH = 18,
+    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_SOUTH = 19,
+    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_SOUTH = 20,
+    BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST = 21,
+    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST = 22,
+    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_EAST = 23,
+    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_EAST = 24,
+    BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH = 25,
+    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH = 26,
+    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH = 27,
+    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_NORTH = 28,
+    BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST = 29,
+    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST = 30,
+    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_WEST = 31,
+    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_WEST = 32,
     /* flying */
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_SOUTH = 0x22,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_SOUTH = 0x23,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_EAST = 0x24,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_EAST = 0x25,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH = 0x26,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_NORTH = 0x27,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_WEST = 0x28,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_WEST = 0x29,
+    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_SOUTH = 34,
+    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_SOUTH = 35,
+    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_EAST = 36,
+    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_EAST = 37,
+    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH = 38,
+    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_NORTH = 39,
+    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_WEST = 40,
+    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_WEST = 41,
     /* floating: the two walking stages, and the jump up to a higher tile */
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_SOUTH = 0x2b,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_SOUTH = 0x2c,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH = 0x2d,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_EAST = 0x2f,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_EAST = 0x30,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_EAST = 0x31,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH = 0x33,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_NORTH = 0x34,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_NORTH = 0x35,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST = 0x37,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_WEST = 0x38,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_WEST = 0x39,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_SOUTH = 43,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_SOUTH = 44,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH = 45,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_EAST = 47,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_EAST = 48,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_EAST = 49,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH = 51,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_NORTH = 52,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_NORTH = 53,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST = 55,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_WEST = 56,
+    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_WEST = 57,
     /* a teleport path (BATTLE_MOVE_PATH_TELEPORT and _FAILED): start the animation, then wait for it */
-    BATTLE_MOVE_STEP_PHASE_TELEPORT_START = 0x3b,
-    BATTLE_MOVE_STEP_PHASE_TELEPORT_ANIMATION = 0x3c,
+    BATTLE_MOVE_STEP_PHASE_TELEPORT_START = 59,
+    BATTLE_MOVE_STEP_PHASE_TELEPORT_ANIMATION = 60,
 } battle_move_step_phase_e;
 
 /* battle_unit_misc_data_t.distortion_animation_id: the motion that
@@ -895,7 +894,7 @@ typedef struct battle_unit_misc_data {
     battle_gfx_single_part_sprite_display_t item_sprite_display;          /* 0x426 */
     u8 _unused_43c[4]; /* 0x43c; the next slot's in-use word (g_battle_unit_misc_slot_flags) */
 } battle_unit_misc_data_t;
-typedef char battle_misc_data_size_must_be_0x440[(sizeof(battle_unit_misc_data_t) == 0x440) ? 1 : -1];
+typedef char battle_misc_data_size_must_be_1088[(sizeof(battle_unit_misc_data_t) == 1088) ? 1 : -1];
 typedef char
     battle_misc_step_speed_must_be_0x03c[((unsigned long)&((battle_unit_misc_data_t*)0)->step_speed == 0x03c) ? 1 : -1];
 typedef char battle_misc_distortion_target_must_be_0x090
@@ -969,8 +968,8 @@ typedef enum battle_unit_existence_state {
     BATTLE_UNIT_EXISTENCE_OFF_FIELD = 0, /* defined but not placed; AddUnit can use the slot */
     BATTLE_UNIT_EXISTENCE_ACTIVE = 1,
     BATTLE_UNIT_EXISTENCE_PENDING_REMOVAL = 2,
-    BATTLE_UNIT_EXISTENCE_DISABLED = 0x80,
-    BATTLE_UNIT_EXISTENCE_NONE = 0xff, /* empty slot */
+    BATTLE_UNIT_EXISTENCE_DISABLED = 128,
+    BATTLE_UNIT_EXISTENCE_NONE = 255, /* empty slot */
 } battle_unit_existence_state_e;
 
 /* How battle_gfx_construct_polygon_data_for_units draws a sprite part. The
@@ -1029,7 +1028,7 @@ typedef struct battle_gfx_unit_seq {
     u8* sequences[0x40];                /* 0x008 */
     u8 sequence_data[0x400];            /* 0x108 */
 } battle_gfx_unit_seq_t;
-typedef char battle_gfx_unit_seq_size_must_be_0x508[sizeof(battle_gfx_unit_seq_t) == 0x508 ? 1 : -1];
+typedef char battle_gfx_unit_seq_size_must_be_1288[sizeof(battle_gfx_unit_seq_t) == 1288 ? 1 : -1];
 
 /* Renderer-side Misc-unit status mirror. These packed masks do not use the
  * canonical battle_status_id_e byte order. */
@@ -1103,7 +1102,7 @@ typedef struct battle_unit_misc_slot_flag {
     s32 in_use;
     u8 _unused_004[0x43c];
 } battle_unit_misc_slot_flag_t;
-typedef char battle_misc_slot_flag_size_must_be_0x440[(sizeof(battle_unit_misc_slot_flag_t) == 0x440) ? 1 : -1];
+typedef char battle_misc_slot_flag_size_must_be_1088[(sizeof(battle_unit_misc_slot_flag_t) == 1088) ? 1 : -1];
 
 /* Provisional: war-trophy search result filled by
  * battle_unit_find_war_trophies_and_bonus_money. REQUIRE links the same routine
@@ -1117,7 +1116,7 @@ typedef struct battle_war_result {
     s32 level_sum_money;                 /* 0x1c; g_battle_enemy_level_sum * 100 */
     s32 level_bonus_money;               /* 0x20; (highest enemy level - lowest level) * 100 */
 } battle_war_result_t;
-typedef char battle_war_result_size_must_be_0x24[(sizeof(battle_war_result_t) == 0x24) ? 1 : -1];
+typedef char battle_war_result_size_must_be_36[(sizeof(battle_war_result_t) == 36) ? 1 : -1];
 
 /* Seven result bytes; assigning elevation preserves the unassigned high bit. */
 typedef struct battle_unit_height_data {

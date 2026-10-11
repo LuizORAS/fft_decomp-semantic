@@ -344,7 +344,7 @@ typedef struct psyq_spu_reverb_registers {
     u16 input_volume_right;          /* 0x3e; vRIN */
 } psyq_spu_reverb_registers_t;
 
-typedef char assert_psyq_spu_reverb_register_size[(sizeof(psyq_spu_reverb_registers_t) == 0x40) ? 1 : -1];
+typedef char assert_psyq_spu_reverb_register_size[(sizeof(psyq_spu_reverb_registers_t) == 64) ? 1 : -1];
 
 typedef struct psyq_spu_registers {
     psyq_spu_voice_t voices[24]; /* 0x000 */
@@ -383,8 +383,8 @@ typedef struct psyq_spu_registers {
     psyq_spu_reverb_registers_t reverb; /* 0x1c0 */
 } psyq_spu_registers_t;
 
-typedef char assert_psyq_spu_voice_size[(sizeof(psyq_spu_voice_t) == 0x10) ? 1 : -1];
-typedef char assert_psyq_spu_register_size[(sizeof(psyq_spu_registers_t) == 0x200) ? 1 : -1];
+typedef char assert_psyq_spu_voice_size[(sizeof(psyq_spu_voice_t) == 16) ? 1 : -1];
+typedef char assert_psyq_spu_register_size[(sizeof(psyq_spu_registers_t) == 512) ? 1 : -1];
 
 /* The library addresses the block through the named layout and as raw halfword registers. */
 typedef union psyq_spu_register_block {

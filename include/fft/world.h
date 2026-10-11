@@ -547,7 +547,7 @@ typedef struct world_ability_menu_layout {
     u8 _unused_20[8];
     s16 row_offset; /* 0x28; first visible row */
 } world_ability_menu_layout_t;
-typedef char world_ability_menu_layout_size_must_be_0x2c[sizeof(world_ability_menu_layout_t) == 0x2c ? 1 : -1];
+typedef char world_ability_menu_layout_size_must_be_44[sizeof(world_ability_menu_layout_t) == 44 ? 1 : -1];
 
 extern s16 g_world_ability_category; /* menu_ability_category_e */
 extern s32 g_world_ability_selected_skill_ct;
@@ -766,7 +766,7 @@ typedef struct world_sprite_cel_header {
     u32 packed_texture_page_origin;
     u32 packed_clut_origin;
 } world_sprite_cel_header_t;
-typedef char world_sprite_cel_header_size_must_be_0xc[sizeof(world_sprite_cel_header_t) == 0xc ? 1 : -1];
+typedef char world_sprite_cel_header_size_must_be_12[sizeof(world_sprite_cel_header_t) == 12 ? 1 : -1];
 
 /* One serialized cel part. Offsets are biased by 0x80; texture_flags
  * selects vertical/horizontal UV flips and eight-bit texture depth. */
@@ -798,7 +798,7 @@ typedef struct world_animated_render_record {
     point32_t position; /* 0x18; screen coordinates */
     CVECTOR color;      /* 0x20; RGB tint */
 } world_animated_render_record_t;
-typedef char world_animated_render_record_size_must_be_0x24[sizeof(world_animated_render_record_t) == 0x24 ? 1 : -1];
+typedef char world_animated_render_record_size_must_be_36[sizeof(world_animated_render_record_t) == 36 ? 1 : -1];
 
 /* Provisional: the column view of the 36-byte WLDCORE window records and OPEN
  * render records, rebased on their x/y pair (+0x18) and keeping the 0x24-byte
@@ -808,7 +808,7 @@ typedef struct wldcore_window_xy {
     s32 y;
     u8 _unused_08[0x1c];
 } wldcore_window_xy_t;
-typedef char wldcore_window_xy_size_must_be_0x24[sizeof(wldcore_window_xy_t) == 0x24 ? 1 : -1];
+typedef char wldcore_window_xy_size_must_be_36[sizeof(wldcore_window_xy_t) == 36 ? 1 : -1];
 
 extern menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
 
@@ -1196,7 +1196,7 @@ typedef struct world_tutorial_state {
 } world_tutorial_state_t;
 typedef char world_tutorial_state_messages_offset_must_be_0x1e00
     [((unsigned long)&((world_tutorial_state_t*)0)->messages == 0x1e00) ? 1 : -1];
-typedef char world_tutorial_state_size_must_be_0x1e08[sizeof(world_tutorial_state_t) == 0x1e08 ? 1 : -1];
+typedef char world_tutorial_state_size_must_be_7688[sizeof(world_tutorial_state_t) == 7688 ? 1 : -1];
 
 /*
  * WORLD.BIN tutorial command stream. Commands below 0x10 are one-byte shifts;
@@ -1331,7 +1331,7 @@ typedef union world_formation_abilities {
     world_formation_ability_fields_t fields;
     u16 slots[5];
 } world_formation_abilities_t;
-typedef char world_formation_abilities_size_must_be_0xa[(sizeof(world_formation_abilities_t) == 0xa) ? 1 : -1];
+typedef char world_formation_abilities_size_must_be_10[(sizeof(world_formation_abilities_t) == 10) ? 1 : -1];
 
 /*
  * WORLD menu unit record, compacted after roster and menu-specific filtering.
@@ -1400,7 +1400,7 @@ typedef struct world_formation_unit {
                       index */
     u8 support_abilities[4]; /* 0x124; copy of battle_stats_t.support_abilities, BATTLE_SUPPORT_SET_1..4_* */
 } world_formation_unit_t;
-typedef char world_formation_unit_t_size_must_be_0x128[(sizeof(world_formation_unit_t) == 0x128) ? 1 : -1];
+typedef char world_formation_unit_t_size_must_be_296[(sizeof(world_formation_unit_t) == 296) ? 1 : -1];
 
 extern oriented_quad_t g_world_formation_cursor_shadow_sprite;
 extern world_formation_background_tile_t g_world_formation_background_tiles[2][4];
@@ -1848,8 +1848,8 @@ void world_unit_update_monster_breeding(s32 unused);
 /* WORLD text files materialize 32 section pointers after their 0x80-byte
  * offset/header area. The same table is saved and restored around overlays. */
 enum {
-    WORLD_TEXT_SECTION_TABLE_BYTES = 0x80,
-    WORLD_TEXT_FILE_HEADER_BYTES = 0x80,
+    WORLD_TEXT_SECTION_TABLE_BYTES = 128,
+    WORLD_TEXT_FILE_HEADER_BYTES = 128,
 };
 
 /* The text sections WORLD's screens bind while they are up (text_section_e
@@ -2961,8 +2961,8 @@ typedef enum world_location_id {
 enum {
     WORLD_SHOP_ID_NAME_ENTRY = -2,
     WORLD_SHOP_ID_FORMATION = -1,
-    WORLD_SHOP_ID_FUR_SHOP = 0x64,
-    WORLD_SHOP_ID_SOLDIER_OFFICE = 0x65,
+    WORLD_SHOP_ID_FUR_SHOP = 100,
+    WORLD_SHOP_ID_SOLDIER_OFFICE = 101,
 };
 
 /* Two-byte shop availability mask, stored most significant byte first: bit

@@ -46,7 +46,7 @@ typedef struct require_display_condition_colors {
     CVECTOR vertices[4]; /* 0x04 */
 } require_display_condition_colors_t;
 typedef char
-    require_display_condition_colors_size_must_be_0x14[sizeof(require_display_condition_colors_t) == 0x14 ? 1 : -1];
+    require_display_condition_colors_size_must_be_20[sizeof(require_display_condition_colors_t) == 20 ? 1 : -1];
 
 typedef struct require_render_condition_tpage {
     u8 _unused_00;
@@ -212,8 +212,9 @@ typedef struct require_reward_war_trophy_primitives {
     SPRT banner;        /* 0x280 */
     DR_MODE draw_mode;  /* 0x294 */
 } require_reward_war_trophy_primitives_t;
-typedef char require_reward_war_trophy_primitives_size_must_be_0x2a0
-    [sizeof(require_reward_war_trophy_primitives_t) == 0x2a0 ? 1 : -1];
+typedef char require_reward_war_trophy_primitives_size_must_be_672[sizeof(require_reward_war_trophy_primitives_t) == 672
+        ? 1
+        : -1];
 
 /* One 12x24 burst tile: a double-buffered flat quad plus its motion state. */
 typedef struct require_reward_burst_tile {
@@ -226,7 +227,7 @@ typedef struct require_reward_burst_tile {
     s32 initial_delay; /* 0x44 */
 } require_reward_burst_tile_t;
 
-typedef char require_reward_burst_tile_size_must_be_0x48[sizeof(require_reward_burst_tile_t) == 0x48 ? 1 : -1];
+typedef char require_reward_burst_tile_size_must_be_72[sizeof(require_reward_burst_tile_t) == 72 ? 1 : -1];
 
 extern require_reward_burst_tile_t g_require_reward_burst_tiles[12][24];
 

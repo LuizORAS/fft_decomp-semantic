@@ -17,8 +17,9 @@ typedef struct battle_gfx_packed_unit_shp_frame_set {
     u8 frame_data_size[2];      /* 0x400; unsigned halfword */
     u8 frame_data[0];           /* 0x402; variable tail */
 } battle_gfx_packed_unit_shp_frame_set_t;
-typedef char battle_gfx_packed_unit_shp_frame_set_size_must_be_0x402
-    [sizeof(battle_gfx_packed_unit_shp_frame_set_t) == 0x402 ? 1 : -1];
+typedef char
+    battle_gfx_packed_unit_shp_frame_set_size_must_be_1026[sizeof(battle_gfx_packed_unit_shp_frame_set_t) == 1026 ? 1
+                                                                                                                  : -1];
 
 typedef struct battle_gfx_packed_unit_shp_record {
     u8 submerged_frame_set_offset[4]; /* 0x000; 8 means both native tables share the primary set */
@@ -27,7 +28,7 @@ typedef struct battle_gfx_packed_unit_shp_record {
     battle_gfx_packed_unit_shp_frame_set_t primary_frame_set; /* 0x008 */
 } battle_gfx_packed_unit_shp_record_t;
 typedef char
-    battle_gfx_packed_unit_shp_record_size_must_be_0x40a[sizeof(battle_gfx_packed_unit_shp_record_t) == 0x40a ? 1 : -1];
+    battle_gfx_packed_unit_shp_record_size_must_be_1034[sizeof(battle_gfx_packed_unit_shp_record_t) == 1034 ? 1 : -1];
 
 /* WEP/EFF SHP has a different header and twice as many frame offsets. */
 typedef struct battle_gfx_packed_weapon_shp_record {
@@ -37,9 +38,9 @@ typedef struct battle_gfx_packed_weapon_shp_record {
     u8 frame_data_size[2];      /* 0x844; unsigned halfword */
     u8 frame_data[0];           /* 0x846; variable tail */
 } battle_gfx_packed_weapon_shp_record_t;
-typedef char
-    battle_gfx_packed_weapon_shp_record_size_must_be_0x846[sizeof(battle_gfx_packed_weapon_shp_record_t) == 0x846 ? 1
-                                                                                                                  : -1];
+typedef char battle_gfx_packed_weapon_shp_record_size_must_be_2118[sizeof(battle_gfx_packed_weapon_shp_record_t) == 2118
+        ? 1
+        : -1];
 
 /* WEP/EFF SEQ stores 256 offsets followed by a variable sequence payload. */
 typedef struct battle_gfx_packed_offset_table {
@@ -49,7 +50,7 @@ typedef struct battle_gfx_packed_offset_table {
     u8 payload[0];      /* 0x406; variable sequence data */
 } battle_gfx_packed_offset_table_t;
 typedef char
-    battle_gfx_packed_offset_table_size_must_be_0x406[sizeof(battle_gfx_packed_offset_table_t) == 0x406 ? 1 : -1];
+    battle_gfx_packed_offset_table_size_must_be_1030[sizeof(battle_gfx_packed_offset_table_t) == 1030 ? 1 : -1];
 
 /* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
  * or widened unit-animation header words are present in the file. */
@@ -63,7 +64,7 @@ typedef struct battle_gfx_packed_evtchr_record {
     u8 _unused_6d80[0xa80];       /* unread tail of the 0x7800-byte block */
 } battle_gfx_packed_evtchr_record_t;
 typedef char
-    battle_gfx_packed_evtchr_record_size_must_be_0x7800[sizeof(battle_gfx_packed_evtchr_record_t) == 0x7800 ? 1 : -1];
+    battle_gfx_packed_evtchr_record_size_must_be_30720[sizeof(battle_gfx_packed_evtchr_record_t) == 30720 ? 1 : -1];
 
 /* OTHER.SPR: the palette helper copies only the first 21 of 32 CLUTs. */
 typedef struct battle_gfx_other_sprite_archive {
@@ -71,7 +72,7 @@ typedef struct battle_gfx_other_sprite_archive {
     u8 pixels[256 * 128];     /* 0x0400; uncompressed 256x256, 4bpp */
 } battle_gfx_other_sprite_archive_t;
 typedef char
-    battle_gfx_other_sprite_archive_size_must_be_0x8400[sizeof(battle_gfx_other_sprite_archive_t) == 0x8400 ? 1 : -1];
+    battle_gfx_other_sprite_archive_size_must_be_33792[sizeof(battle_gfx_other_sprite_archive_t) == 33792 ? 1 : -1];
 
 /* First 21 OTHER.SPR palettes copied together; the other three groups also
  * retain their independently loaded symbol aliases. */
@@ -81,7 +82,7 @@ typedef struct battle_gfx_other_palettes {
     palette_t crystal[6];  /* 0x140 */
     palette_t treasure[5]; /* 0x200 */
 } battle_gfx_other_palettes_t;
-typedef char battle_gfx_other_palettes_size_must_be_0x2a0[sizeof(battle_gfx_other_palettes_t) == 0x2a0 ? 1 : -1];
+typedef char battle_gfx_other_palettes_size_must_be_672[sizeof(battle_gfx_other_palettes_t) == 672 ? 1 : -1];
 
 /* WEP.SPR contains three CLUT/image pairs: weapons, trails and particles. */
 typedef struct battle_gfx_weapon_sprite_archive {
@@ -128,169 +129,169 @@ enum {
  * by the first job whose record has it (job_data_t.spritesheet_id), and the
  * four status sheets, which have no file of their own. */
 typedef enum battle_spritesheet_id {
-    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_1 = 0x01,
-    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_2_3 = 0x02,
-    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_4 = 0x03,
-    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_1 = 0x04,
-    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_2_3 = 0x05,
-    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_4 = 0x06,
-    BATTLE_SPRITESHEET_ID_ALGUS = 0x07,
-    BATTLE_SPRITESHEET_ID_ZALBAG = 0x08,
-    BATTLE_SPRITESHEET_ID_DYCEDARG = 0x09,
-    BATTLE_SPRITESHEET_ID_LARG = 0x0a,
-    BATTLE_SPRITESHEET_ID_GOLTANA = 0x0b,
-    BATTLE_SPRITESHEET_ID_OVELIA = 0x0c,
-    BATTLE_SPRITESHEET_ID_ORLANDU = 0x0d,
-    BATTLE_SPRITESHEET_ID_FUNERAL = 0x0e,
-    BATTLE_SPRITESHEET_ID_REIS_HUMAN = 0x0f,
-    BATTLE_SPRITESHEET_ID_ZALMO = 0x10,
-    BATTLE_SPRITESHEET_ID_GAFGARION_ENEMY = 0x11,
-    BATTLE_SPRITESHEET_ID_MALAK_12 = 0x12,
-    BATTLE_SPRITESHEET_ID_SIMON = 0x13,
-    BATTLE_SPRITESHEET_ID_ALMA_BATTLE = 0x14,
-    BATTLE_SPRITESHEET_ID_OLAN = 0x15,
-    BATTLE_SPRITESHEET_ID_MUSTADIO_JOIN = 0x16,
-    BATTLE_SPRITESHEET_ID_GAFGARION_GUEST = 0x17,
-    BATTLE_SPRITESHEET_ID_DRACLAU = 0x18,
-    BATTLE_SPRITESHEET_ID_RAFA_GUEST = 0x19,
-    BATTLE_SPRITESHEET_ID_MALAK = 0x1a,
-    BATTLE_SPRITESHEET_ID_ELMDOR = 0x1b,
-    BATTLE_SPRITESHEET_ID_TETA = 0x1c,
-    BATTLE_SPRITESHEET_ID_BARINTEN = 0x1d,
-    BATTLE_SPRITESHEET_ID_AGRIAS_JOIN = 0x1e,
-    BATTLE_SPRITESHEET_ID_BEOWULF = 0x1f,
-    BATTLE_SPRITESHEET_ID_WIEGRAF_CHAPTER_1 = 0x20,
-    BATTLE_SPRITESHEET_ID_BALMAFULA = 0x21,
-    BATTLE_SPRITESHEET_ID_MUSTADIO_GUEST = 0x22,
-    BATTLE_SPRITESHEET_ID_RUDVICH = 0x23,
-    BATTLE_SPRITESHEET_ID_VORMAV = 0x24,
-    BATTLE_SPRITESHEET_ID_ROFEL = 0x25,
-    BATTLE_SPRITESHEET_ID_IZLUDE = 0x26,
-    BATTLE_SPRITESHEET_ID_KLETIAN = 0x27,
-    BATTLE_SPRITESHEET_ID_WIEGRAF_CHAPTER_2_3 = 0x28,
-    BATTLE_SPRITESHEET_ID_RAFA_JOIN = 0x29,
-    BATTLE_SPRITESHEET_ID_MELIADOUL_JOIN = 0x2a,
-    BATTLE_SPRITESHEET_ID_BALK = 0x2b,
-    BATTLE_SPRITESHEET_ID_ALMA_2C = 0x2c,
-    BATTLE_SPRITESHEET_ID_CELIA = 0x2d,
-    BATTLE_SPRITESHEET_ID_LEDE = 0x2e,
-    BATTLE_SPRITESHEET_ID_MELIADOUL_ENEMY = 0x2f,
-    BATTLE_SPRITESHEET_ID_ALMA_EVENTS = 0x30,
-    BATTLE_SPRITESHEET_ID_AJORA = 0x31,
-    BATTLE_SPRITESHEET_ID_CLOUD = 0x32,
-    BATTLE_SPRITESHEET_ID_ZALBAG_ZOMBIE = 0x33,
-    BATTLE_SPRITESHEET_ID_AGRIAS_GUEST = 0x34,
-    BATTLE_SPRITESHEET_ID_FEMALE_CHEMIST_35 = 0x35,
-    BATTLE_SPRITESHEET_ID_FEMALE_PRIEST_36 = 0x36,
-    BATTLE_SPRITESHEET_ID_MALE_WIZARD_37 = 0x37,
-    BATTLE_SPRITESHEET_ID_MALE_ORACLE_38 = 0x38,
-    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_39 = 0x39,
-    BATTLE_SPRITESHEET_ID_CELIA_3A = 0x3a,
-    BATTLE_SPRITESHEET_ID_LEDE_3B = 0x3b,
-    BATTLE_SPRITESHEET_ID_VELIUS = 0x3c,
-    BATTLE_SPRITESHEET_ID_MALE_KNIGHT_3D = 0x3d,
-    BATTLE_SPRITESHEET_ID_ZALERA = 0x3e,
-    BATTLE_SPRITESHEET_ID_MALE_ARCHER_3F = 0x3f,
-    BATTLE_SPRITESHEET_ID_HASHMALUM = 0x40,
-    BATTLE_SPRITESHEET_ID_ALTIMA_FIRST_FORM = 0x41,
-    BATTLE_SPRITESHEET_ID_MALE_WIZARD_42 = 0x42,
-    BATTLE_SPRITESHEET_ID_QUEKLAIN = 0x43,
-    BATTLE_SPRITESHEET_ID_FEMALE_TIME_MAGE_44 = 0x44,
-    BATTLE_SPRITESHEET_ID_ADRAMELK = 0x45,
-    BATTLE_SPRITESHEET_ID_MALE_ORACLE_46 = 0x46,
-    BATTLE_SPRITESHEET_ID_FEMALE_SUMMONER_47 = 0x47,
-    BATTLE_SPRITESHEET_ID_REIS_DRAGON = 0x48,
-    BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM = 0x49,
-    BATTLE_SPRITESHEET_ID_BOY = 0x4a,
-    BATTLE_SPRITESHEET_ID_GIRL = 0x4b,
-    BATTLE_SPRITESHEET_ID_YOUNG_MAN = 0x4c,
-    BATTLE_SPRITESHEET_ID_YOUNG_WOMAN = 0x4d,
-    BATTLE_SPRITESHEET_ID_MIDDLE_AGED_MAN = 0x4e,
-    BATTLE_SPRITESHEET_ID_MIDDLE_AGED_WOMAN = 0x4f,
-    BATTLE_SPRITESHEET_ID_OLD_MAN = 0x50,
-    BATTLE_SPRITESHEET_ID_OLD_WOMAN = 0x51,
-    BATTLE_SPRITESHEET_ID_OLD_FUNERAL_MAN = 0x52,
-    BATTLE_SPRITESHEET_ID_OLD_FUNERAL_WOMAN = 0x53,
-    BATTLE_SPRITESHEET_ID_FUNERAL_MAN = 0x54,
-    BATTLE_SPRITESHEET_ID_FUNERAL_WOMAN = 0x55,
-    BATTLE_SPRITESHEET_ID_FUNERAL_PRIEST = 0x56,
-    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_57 = 0x57,
-    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_58 = 0x58,
-    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_59 = 0x59,
-    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5A = 0x5a,
-    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5B = 0x5b,
-    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5C = 0x5c,
-    BATTLE_SPRITESHEET_ID_DAMI = 0x5d,    /* named by its file, DAMI.SPR; no ENTD unit has it */
-    BATTLE_SPRITESHEET_ID_KASANEK = 0x5e, /* named by its file, KASANEK.SPR; no ENTD unit has it */
-    BATTLE_SPRITESHEET_ID_KASANEM = 0x5f, /* named by its file, KASANEM.SPR; no ENTD unit has it */
-    BATTLE_SPRITESHEET_ID_MALE_SQUIRE = 0x60,
-    BATTLE_SPRITESHEET_ID_FEMALE_SQUIRE = 0x61,
-    BATTLE_SPRITESHEET_ID_MALE_CHEMIST = 0x62,
-    BATTLE_SPRITESHEET_ID_FEMALE_CHEMIST = 0x63,
-    BATTLE_SPRITESHEET_ID_MALE_KNIGHT = 0x64,
-    BATTLE_SPRITESHEET_ID_FEMALE_KNIGHT = 0x65,
-    BATTLE_SPRITESHEET_ID_MALE_ARCHER = 0x66,
-    BATTLE_SPRITESHEET_ID_FEMALE_ARCHER = 0x67,
-    BATTLE_SPRITESHEET_ID_MALE_MONK = 0x68,
-    BATTLE_SPRITESHEET_ID_FEMALE_MONK = 0x69,
-    BATTLE_SPRITESHEET_ID_MALE_PRIEST = 0x6a,
-    BATTLE_SPRITESHEET_ID_FEMALE_PRIEST = 0x6b,
-    BATTLE_SPRITESHEET_ID_MALE_WIZARD = 0x6c,
-    BATTLE_SPRITESHEET_ID_FEMALE_WIZARD = 0x6d,
-    BATTLE_SPRITESHEET_ID_MALE_TIME_MAGE = 0x6e,
-    BATTLE_SPRITESHEET_ID_FEMALE_TIME_MAGE = 0x6f,
-    BATTLE_SPRITESHEET_ID_MALE_SUMMONER = 0x70,
-    BATTLE_SPRITESHEET_ID_FEMALE_SUMMONER = 0x71,
-    BATTLE_SPRITESHEET_ID_MALE_THIEF = 0x72,
-    BATTLE_SPRITESHEET_ID_FEMALE_THIEF = 0x73,
-    BATTLE_SPRITESHEET_ID_MALE_MEDIATOR = 0x74,
-    BATTLE_SPRITESHEET_ID_FEMALE_MEDIATOR = 0x75,
-    BATTLE_SPRITESHEET_ID_MALE_ORACLE = 0x76,
-    BATTLE_SPRITESHEET_ID_FEMALE_ORACLE = 0x77,
-    BATTLE_SPRITESHEET_ID_MALE_GEOMANCER = 0x78,
-    BATTLE_SPRITESHEET_ID_FEMALE_GEOMANCER = 0x79,
-    BATTLE_SPRITESHEET_ID_MALE_LANCER = 0x7a,
-    BATTLE_SPRITESHEET_ID_FEMALE_LANCER = 0x7b,
-    BATTLE_SPRITESHEET_ID_MALE_SAMURAI = 0x7c,
-    BATTLE_SPRITESHEET_ID_FEMALE_SAMURAI = 0x7d,
-    BATTLE_SPRITESHEET_ID_MALE_NINJA = 0x7e,
-    BATTLE_SPRITESHEET_ID_FEMALE_NINJA = 0x7f,
-    BATTLE_SPRITESHEET_ID_MALE_CALCULATOR = 0x80,
-    BATTLE_SPRITESHEET_ID_FEMALE_CALCULATOR = 0x81,
-    BATTLE_SPRITESHEET_ID_BARD = 0x82,
-    BATTLE_SPRITESHEET_ID_DANCER = 0x83,
-    BATTLE_SPRITESHEET_ID_MALE_MIME = 0x84,
-    BATTLE_SPRITESHEET_ID_FEMALE_MIME = 0x85,
-    BATTLE_SPRITESHEET_ID_CHOCOBO = 0x86,
-    BATTLE_SPRITESHEET_ID_GOBLIN = 0x87,
-    BATTLE_SPRITESHEET_ID_BOMB = 0x88,
-    BATTLE_SPRITESHEET_ID_RED_PANTHER = 0x89,
-    BATTLE_SPRITESHEET_ID_PISCO_DEMON = 0x8a,
-    BATTLE_SPRITESHEET_ID_SKELETON = 0x8b,
-    BATTLE_SPRITESHEET_ID_GHOUL = 0x8c,
-    BATTLE_SPRITESHEET_ID_FLOTIBALL = 0x8d,
-    BATTLE_SPRITESHEET_ID_JURAVIS = 0x8e,
-    BATTLE_SPRITESHEET_ID_URIBO = 0x8f,
-    BATTLE_SPRITESHEET_ID_WOODMAN = 0x90,
-    BATTLE_SPRITESHEET_ID_BULL_DEMON = 0x91,
-    BATTLE_SPRITESHEET_ID_MORBOL = 0x92,
-    BATTLE_SPRITESHEET_ID_BEHEMOTH = 0x93,
-    BATTLE_SPRITESHEET_ID_DRAGON = 0x94, /* also Reis as a Holy Dragon */
-    BATTLE_SPRITESHEET_ID_HYUDRA = 0x95,
-    BATTLE_SPRITESHEET_ID_BYBLOS = 0x96, /* and Apanda */
-    BATTLE_SPRITESHEET_ID_SERPENTARIUS = 0x97,
-    BATTLE_SPRITESHEET_ID_DRAGON_98 = 0x98,     /* loads the Dragon file again; no job has it */
-    BATTLE_SPRITESHEET_ID_ARCHAIC_DEMON = 0x99, /* and Ultima Demon */
-    BATTLE_SPRITESHEET_ID_STEEL_GIANT = 0x9a,
-    BATTLE_SPRITESHEET_ID_CRYSTAL = 0x9b,
-    BATTLE_SPRITESHEET_ID_CHICKEN = 0x9c,
-    BATTLE_SPRITESHEET_ID_FROG = 0x9d,
-    BATTLE_SPRITESHEET_ID_TREASURE = 0x9e,
+    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_1 = 1,
+    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_2_3 = 2,
+    BATTLE_SPRITESHEET_ID_RAMZA_CHAPTER_4 = 3,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_1 = 4,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_2_3 = 5,
+    BATTLE_SPRITESHEET_ID_DELITA_CHAPTER_4 = 6,
+    BATTLE_SPRITESHEET_ID_ALGUS = 7,
+    BATTLE_SPRITESHEET_ID_ZALBAG = 8,
+    BATTLE_SPRITESHEET_ID_DYCEDARG = 9,
+    BATTLE_SPRITESHEET_ID_LARG = 10,
+    BATTLE_SPRITESHEET_ID_GOLTANA = 11,
+    BATTLE_SPRITESHEET_ID_OVELIA = 12,
+    BATTLE_SPRITESHEET_ID_ORLANDU = 13,
+    BATTLE_SPRITESHEET_ID_FUNERAL = 14,
+    BATTLE_SPRITESHEET_ID_REIS_HUMAN = 15,
+    BATTLE_SPRITESHEET_ID_ZALMO = 16,
+    BATTLE_SPRITESHEET_ID_GAFGARION_ENEMY = 17,
+    BATTLE_SPRITESHEET_ID_MALAK_12 = 18,
+    BATTLE_SPRITESHEET_ID_SIMON = 19,
+    BATTLE_SPRITESHEET_ID_ALMA_BATTLE = 20,
+    BATTLE_SPRITESHEET_ID_OLAN = 21,
+    BATTLE_SPRITESHEET_ID_MUSTADIO_JOIN = 22,
+    BATTLE_SPRITESHEET_ID_GAFGARION_GUEST = 23,
+    BATTLE_SPRITESHEET_ID_DRACLAU = 24,
+    BATTLE_SPRITESHEET_ID_RAFA_GUEST = 25,
+    BATTLE_SPRITESHEET_ID_MALAK = 26,
+    BATTLE_SPRITESHEET_ID_ELMDOR = 27,
+    BATTLE_SPRITESHEET_ID_TETA = 28,
+    BATTLE_SPRITESHEET_ID_BARINTEN = 29,
+    BATTLE_SPRITESHEET_ID_AGRIAS_JOIN = 30,
+    BATTLE_SPRITESHEET_ID_BEOWULF = 31,
+    BATTLE_SPRITESHEET_ID_WIEGRAF_CHAPTER_1 = 32,
+    BATTLE_SPRITESHEET_ID_BALMAFULA = 33,
+    BATTLE_SPRITESHEET_ID_MUSTADIO_GUEST = 34,
+    BATTLE_SPRITESHEET_ID_RUDVICH = 35,
+    BATTLE_SPRITESHEET_ID_VORMAV = 36,
+    BATTLE_SPRITESHEET_ID_ROFEL = 37,
+    BATTLE_SPRITESHEET_ID_IZLUDE = 38,
+    BATTLE_SPRITESHEET_ID_KLETIAN = 39,
+    BATTLE_SPRITESHEET_ID_WIEGRAF_CHAPTER_2_3 = 40,
+    BATTLE_SPRITESHEET_ID_RAFA_JOIN = 41,
+    BATTLE_SPRITESHEET_ID_MELIADOUL_JOIN = 42,
+    BATTLE_SPRITESHEET_ID_BALK = 43,
+    BATTLE_SPRITESHEET_ID_ALMA_2C = 44,
+    BATTLE_SPRITESHEET_ID_CELIA = 45,
+    BATTLE_SPRITESHEET_ID_LEDE = 46,
+    BATTLE_SPRITESHEET_ID_MELIADOUL_ENEMY = 47,
+    BATTLE_SPRITESHEET_ID_ALMA_EVENTS = 48,
+    BATTLE_SPRITESHEET_ID_AJORA = 49,
+    BATTLE_SPRITESHEET_ID_CLOUD = 50,
+    BATTLE_SPRITESHEET_ID_ZALBAG_ZOMBIE = 51,
+    BATTLE_SPRITESHEET_ID_AGRIAS_GUEST = 52,
+    BATTLE_SPRITESHEET_ID_FEMALE_CHEMIST_35 = 53,
+    BATTLE_SPRITESHEET_ID_FEMALE_PRIEST_36 = 54,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD_37 = 55,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE_38 = 56,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_39 = 57,
+    BATTLE_SPRITESHEET_ID_CELIA_3A = 58,
+    BATTLE_SPRITESHEET_ID_LEDE_3B = 59,
+    BATTLE_SPRITESHEET_ID_VELIUS = 60,
+    BATTLE_SPRITESHEET_ID_MALE_KNIGHT_3D = 61,
+    BATTLE_SPRITESHEET_ID_ZALERA = 62,
+    BATTLE_SPRITESHEET_ID_MALE_ARCHER_3F = 63,
+    BATTLE_SPRITESHEET_ID_HASHMALUM = 64,
+    BATTLE_SPRITESHEET_ID_ALTIMA_FIRST_FORM = 65,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD_42 = 66,
+    BATTLE_SPRITESHEET_ID_QUEKLAIN = 67,
+    BATTLE_SPRITESHEET_ID_FEMALE_TIME_MAGE_44 = 68,
+    BATTLE_SPRITESHEET_ID_ADRAMELK = 69,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE_46 = 70,
+    BATTLE_SPRITESHEET_ID_FEMALE_SUMMONER_47 = 71,
+    BATTLE_SPRITESHEET_ID_REIS_DRAGON = 72,
+    BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM = 73,
+    BATTLE_SPRITESHEET_ID_BOY = 74,
+    BATTLE_SPRITESHEET_ID_GIRL = 75,
+    BATTLE_SPRITESHEET_ID_YOUNG_MAN = 76,
+    BATTLE_SPRITESHEET_ID_YOUNG_WOMAN = 77,
+    BATTLE_SPRITESHEET_ID_MIDDLE_AGED_MAN = 78,
+    BATTLE_SPRITESHEET_ID_MIDDLE_AGED_WOMAN = 79,
+    BATTLE_SPRITESHEET_ID_OLD_MAN = 80,
+    BATTLE_SPRITESHEET_ID_OLD_WOMAN = 81,
+    BATTLE_SPRITESHEET_ID_OLD_FUNERAL_MAN = 82,
+    BATTLE_SPRITESHEET_ID_OLD_FUNERAL_WOMAN = 83,
+    BATTLE_SPRITESHEET_ID_FUNERAL_MAN = 84,
+    BATTLE_SPRITESHEET_ID_FUNERAL_WOMAN = 85,
+    BATTLE_SPRITESHEET_ID_FUNERAL_PRIEST = 86,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_57 = 87,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_58 = 88,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_59 = 89,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5A = 90,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5B = 91,
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE_5C = 92,
+    BATTLE_SPRITESHEET_ID_DAMI = 93,    /* named by its file, DAMI.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_KASANEK = 94, /* named by its file, KASANEK.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_KASANEM = 95, /* named by its file, KASANEM.SPR; no ENTD unit has it */
+    BATTLE_SPRITESHEET_ID_MALE_SQUIRE = 96,
+    BATTLE_SPRITESHEET_ID_FEMALE_SQUIRE = 97,
+    BATTLE_SPRITESHEET_ID_MALE_CHEMIST = 98,
+    BATTLE_SPRITESHEET_ID_FEMALE_CHEMIST = 99,
+    BATTLE_SPRITESHEET_ID_MALE_KNIGHT = 100,
+    BATTLE_SPRITESHEET_ID_FEMALE_KNIGHT = 101,
+    BATTLE_SPRITESHEET_ID_MALE_ARCHER = 102,
+    BATTLE_SPRITESHEET_ID_FEMALE_ARCHER = 103,
+    BATTLE_SPRITESHEET_ID_MALE_MONK = 104,
+    BATTLE_SPRITESHEET_ID_FEMALE_MONK = 105,
+    BATTLE_SPRITESHEET_ID_MALE_PRIEST = 106,
+    BATTLE_SPRITESHEET_ID_FEMALE_PRIEST = 107,
+    BATTLE_SPRITESHEET_ID_MALE_WIZARD = 108,
+    BATTLE_SPRITESHEET_ID_FEMALE_WIZARD = 109,
+    BATTLE_SPRITESHEET_ID_MALE_TIME_MAGE = 110,
+    BATTLE_SPRITESHEET_ID_FEMALE_TIME_MAGE = 111,
+    BATTLE_SPRITESHEET_ID_MALE_SUMMONER = 112,
+    BATTLE_SPRITESHEET_ID_FEMALE_SUMMONER = 113,
+    BATTLE_SPRITESHEET_ID_MALE_THIEF = 114,
+    BATTLE_SPRITESHEET_ID_FEMALE_THIEF = 115,
+    BATTLE_SPRITESHEET_ID_MALE_MEDIATOR = 116,
+    BATTLE_SPRITESHEET_ID_FEMALE_MEDIATOR = 117,
+    BATTLE_SPRITESHEET_ID_MALE_ORACLE = 118,
+    BATTLE_SPRITESHEET_ID_FEMALE_ORACLE = 119,
+    BATTLE_SPRITESHEET_ID_MALE_GEOMANCER = 120,
+    BATTLE_SPRITESHEET_ID_FEMALE_GEOMANCER = 121,
+    BATTLE_SPRITESHEET_ID_MALE_LANCER = 122,
+    BATTLE_SPRITESHEET_ID_FEMALE_LANCER = 123,
+    BATTLE_SPRITESHEET_ID_MALE_SAMURAI = 124,
+    BATTLE_SPRITESHEET_ID_FEMALE_SAMURAI = 125,
+    BATTLE_SPRITESHEET_ID_MALE_NINJA = 126,
+    BATTLE_SPRITESHEET_ID_FEMALE_NINJA = 127,
+    BATTLE_SPRITESHEET_ID_MALE_CALCULATOR = 128,
+    BATTLE_SPRITESHEET_ID_FEMALE_CALCULATOR = 129,
+    BATTLE_SPRITESHEET_ID_BARD = 130,
+    BATTLE_SPRITESHEET_ID_DANCER = 131,
+    BATTLE_SPRITESHEET_ID_MALE_MIME = 132,
+    BATTLE_SPRITESHEET_ID_FEMALE_MIME = 133,
+    BATTLE_SPRITESHEET_ID_CHOCOBO = 134,
+    BATTLE_SPRITESHEET_ID_GOBLIN = 135,
+    BATTLE_SPRITESHEET_ID_BOMB = 136,
+    BATTLE_SPRITESHEET_ID_RED_PANTHER = 137,
+    BATTLE_SPRITESHEET_ID_PISCO_DEMON = 138,
+    BATTLE_SPRITESHEET_ID_SKELETON = 139,
+    BATTLE_SPRITESHEET_ID_GHOUL = 140,
+    BATTLE_SPRITESHEET_ID_FLOTIBALL = 141,
+    BATTLE_SPRITESHEET_ID_JURAVIS = 142,
+    BATTLE_SPRITESHEET_ID_URIBO = 143,
+    BATTLE_SPRITESHEET_ID_WOODMAN = 144,
+    BATTLE_SPRITESHEET_ID_BULL_DEMON = 145,
+    BATTLE_SPRITESHEET_ID_MORBOL = 146,
+    BATTLE_SPRITESHEET_ID_BEHEMOTH = 147,
+    BATTLE_SPRITESHEET_ID_DRAGON = 148, /* also Reis as a Holy Dragon */
+    BATTLE_SPRITESHEET_ID_HYUDRA = 149,
+    BATTLE_SPRITESHEET_ID_BYBLOS = 150, /* and Apanda */
+    BATTLE_SPRITESHEET_ID_SERPENTARIUS = 151,
+    BATTLE_SPRITESHEET_ID_DRAGON_98 = 152,     /* loads the Dragon file again; no job has it */
+    BATTLE_SPRITESHEET_ID_ARCHAIC_DEMON = 153, /* and Ultima Demon */
+    BATTLE_SPRITESHEET_ID_STEEL_GIANT = 154,
+    BATTLE_SPRITESHEET_ID_CRYSTAL = 155,
+    BATTLE_SPRITESHEET_ID_CHICKEN = 156,
+    BATTLE_SPRITESHEET_ID_FROG = 157,
+    BATTLE_SPRITESHEET_ID_TREASURE = 158,
 } battle_spritesheet_id_e;
 
 enum {
-    BATTLE_SPRITESHEET_ID_RAMZA_END = 0x04,
-    BATTLE_SPRITESHEET_ID_JOB_FIRST = 0x60, /* the generic job sheets start here; the monsters' follow */
+    BATTLE_SPRITESHEET_ID_RAMZA_END = 4,
+    BATTLE_SPRITESHEET_ID_JOB_FIRST = 96, /* the generic job sheets start here; the monsters' follow */
     BATTLE_SPRITESHEET_ID_COUNT = 0x9f,
 };
 
@@ -327,7 +328,7 @@ typedef struct battle_gfx_vram_slot {
     clut_t cluts;                /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_misc_id */
     u8 image_data[0x6400];       /* 0x1164 */
 } battle_gfx_vram_slot_t;
-typedef char battle_vram_slot_size_must_be_0x7564[(sizeof(battle_gfx_vram_slot_t) == 0x7564) ? 1 : -1];
+typedef char battle_vram_slot_size_must_be_30052[(sizeof(battle_gfx_vram_slot_t) == 30052) ? 1 : -1];
 
 /* Per-slot summary written by battle_gfx_get_vram_slot_summary. */
 typedef struct battle_gfx_vram_slot_summary {
@@ -364,7 +365,7 @@ typedef struct battle_gfx_spritesheet_slot {
     u8 compressed_attack_image[0x30d4]; /* 0x02; image data copied from SPR data +0x9200 by 0x80087704 */
     clut_t palettes;                    /* 0x30d6; 16 CLUTs with the STP bit set (0x80087704) */
 } battle_gfx_spritesheet_slot_t;
-typedef char battle_spritesheet_slot_size_must_be_0x32d6[(sizeof(battle_gfx_spritesheet_slot_t) == 0x32d6) ? 1 : -1];
+typedef char battle_spritesheet_slot_size_must_be_13014[(sizeof(battle_gfx_spritesheet_slot_t) == 13014) ? 1 : -1];
 
 /* Four-byte lookup record for the 0x9f ordinary unit spritesheets. */
 typedef struct battle_gfx_spritesheet_data {
@@ -414,7 +415,7 @@ typedef struct battle_render_buffer {
     u8 _unused_e5b8[0x70]; /* 0x0e5b8 */
     POLY_FT3 ft3[64];      /* 0x0e628 */
 } battle_render_buffer_t;
-typedef char battle_render_buffer_size_must_be_0xee28[(sizeof(battle_render_buffer_t) == 0xee28) ? 1 : -1];
+typedef char battle_render_buffer_size_must_be_60968[(sizeof(battle_render_buffer_t) == 60968) ? 1 : -1];
 
 /* g_battle_gfx_unit_graphics_load_state.phase: the phase of the file being loaded. */
 typedef enum battle_gfx_unit_load_phase {

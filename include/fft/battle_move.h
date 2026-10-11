@@ -21,7 +21,7 @@ typedef enum battle_trap_id {
     BATTLE_TRAP_ID_DEATHTRAP = 1,
     BATTLE_TRAP_ID_SLEEPING_GAS = 2,
     BATTLE_TRAP_ID_STEEL_NEEDLE = 3,
-    BATTLE_TRAP_ID_NONE = 0xff,
+    BATTLE_TRAP_ID_NONE = 255,
 } battle_trap_id_e;
 
 typedef enum battle_move_find_result_flags {
