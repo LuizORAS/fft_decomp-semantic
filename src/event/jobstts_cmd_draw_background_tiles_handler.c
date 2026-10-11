@@ -5,7 +5,7 @@
  * Command bytes 5 and 6 encode the full-tile counts in their high nibbles and
  * the remaining width and height in their low nibbles.
  */
-u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
+menu_instruction_t* jobstts_cmd_draw_background_tiles_handler(menu_instruction_t* stream) {
     RECT rect;
     s32 full_columns;
     s32 origin_x;
@@ -20,16 +20,16 @@ u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
     s32 row;
     s32 column;
 
-    packed_height = stream[6];
-    packed_width = stream[5];
+    packed_height = stream->window.height;
+    packed_width = stream->window.width;
     otag_index = g_jobstts_gfx_otag_index;
     clut_id = g_jobstts_menu_palette_clut;
     full_columns = packed_width >> 4;
     partial_width = packed_width & 0xF;
     full_rows = packed_height >> 4;
     partial_height = packed_height & 0xF;
-    origin_x = stream[3];
-    origin_y = stream[4];
+    origin_x = stream->window.x;
+    origin_y = stream->window.y;
 
     for (row = 0; row < full_rows; row++) {
         rect.x = origin_x;
@@ -65,5 +65,5 @@ u8* jobstts_cmd_draw_background_tiles_handler(u8* stream) {
         }
     }
 
-    return stream + stream[1];
+    return menu_next_instruction(stream);
 }

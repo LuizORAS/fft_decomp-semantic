@@ -1,9 +1,9 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
-const u8* jobstts_cmd_set_otag_index_if_unlocked_handler(const u8* data) {
+menu_instruction_t* jobstts_cmd_set_otag_index_if_unlocked_handler(menu_instruction_t* data) {
     if (g_jobstts_gfx_otag_index_locked == 0) {
-        g_jobstts_gfx_otag_index = data[3];
+        g_jobstts_gfx_otag_index = data->draw_state.value;
     }
-    return data + data[1];
+    return menu_next_instruction(data);
 }

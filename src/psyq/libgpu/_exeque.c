@@ -12,12 +12,12 @@ int _exeque(void) {
             DMACallback(PSYQ_GPU_DMA_GPU_CHANNEL, 0);
         while (!(*g_psyq_gpu_gp1_port & PSYQ_GPU_STATUS_READY_COMMAND))
             ;
-        g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].operation(
-            g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].source,
-            g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].argument);
-        g_psyq_gpu_last_operation.operation = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].operation;
-        g_psyq_gpu_last_operation.source = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].source;
-        g_psyq_gpu_last_operation.argument = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].argument;
+        g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].request.operation(
+            g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].request.source,
+            g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].request.argument);
+        g_psyq_gpu_last_operation.operation = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].request.operation;
+        g_psyq_gpu_last_operation.source = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].request.source;
+        g_psyq_gpu_last_operation.argument = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_tail].request.argument;
         g_psyq_gpu_queue_tail = (g_psyq_gpu_queue_tail + 1) & 63;
     }
     SetIntrMask(g_psyq_gpu_queue_interrupt_mask);

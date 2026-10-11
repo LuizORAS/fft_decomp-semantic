@@ -6,12 +6,14 @@
  * semi-transparency state; `flags` is the input the handlers see. Then
  * advances the transition frame, up to 10. */
 void jobstts_cmd_run_stream(u8* data, s32 flags) {
+    menu_instruction_t* instruction = (menu_instruction_t*)data;
+
     g_jobstts_gfx_otag_index_locked = 0;
     g_jobstts_gfx_otag_index = 0;
     g_jobstts_gfx_semitransparency = 0;
     g_jobstts_cmd_stream_input = flags;
-    while (*data != JOBSTTS_CMD_END) {
-        data = g_jobstts_cmd_handlers[*data](data);
+    while (instruction->header.opcode != JOBSTTS_CMD_END) {
+        instruction = g_jobstts_cmd_handlers[instruction->header.opcode](instruction);
     }
     if (g_jobstts_gfx_transition_frame < 10) {
         g_jobstts_gfx_transition_frame = g_jobstts_gfx_transition_frame + 1;

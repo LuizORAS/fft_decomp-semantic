@@ -783,14 +783,15 @@ typedef struct {
     psyq_gpu_operation_t operation;
     void* source;
     u32 argument;
+} psyq_gpu_operation_snapshot_t;
+
+typedef struct {
+    psyq_gpu_operation_snapshot_t request;
     u32 packet_words[21];
 } psyq_gpu_queue_entry_t;
 
-typedef struct {
-    psyq_gpu_operation_t operation;
-    void* source;
-    u32 argument;
-} psyq_gpu_operation_snapshot_t;
+typedef char assert_gpu_operation_snapshot_size[sizeof(psyq_gpu_operation_snapshot_t) == 12 ? 1 : -1];
+typedef char assert_gpu_queue_entry_size[sizeof(psyq_gpu_queue_entry_t) == 96 ? 1 : -1];
 
 /* The DMA interrupt callback (_exeque) and the foreground share the queue. */
 extern volatile psyq_gpu_queue_entry_t g_psyq_gpu_operation_queue[64];

@@ -29,12 +29,12 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
     if (copy_size) {
         for (i = 0; i < copy_size / 4; i++)
             g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].packet_words[i] = ((u32*)source)[i];
-        g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].source
+        g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.source
             = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].packet_words;
     } else
-        g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].source = source;
-    g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].argument = argument;
-    g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].operation = operation;
+        g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.source = source;
+    g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.argument = argument;
+    g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.operation = operation;
     g_psyq_gpu_queue_head = (g_psyq_gpu_queue_head + 1) & 63;
     SetIntrMask(g_psyq_gpu_enqueue_interrupt_mask);
     _exeque();

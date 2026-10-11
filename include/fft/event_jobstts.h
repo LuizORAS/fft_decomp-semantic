@@ -45,25 +45,38 @@ u32 jobstts_bits_read_primary(s32 count);
 /* command */
 /* Render-command stream callbacks: every handler consumes and returns a
  * command pointer; every condition is indexed by a row or literal operand. */
-typedef u8* (*jobstts_command_handler_t)(u8*);
+typedef menu_instruction_t* (*jobstts_command_handler_t)(menu_instruction_t* instruction);
 
 typedef s32 (*jobstts_condition_t)(s32);
 
 extern menu_window_command_t g_jobstts_cmd_window_interior_command;
 extern jobstts_condition_t g_jobstts_cmd_conditions[];
-/* The opcode that ends a JOBSTTS menu script stream (menu_script_opcode_e
- * names the others). */
+/* The opcode that ends a JOBSTTS menu display stream. */
 enum {
     JOBSTTS_CMD_END = 0x16,
 };
 
-extern jobstts_command_handler_t g_jobstts_cmd_handlers[];
+extern jobstts_command_handler_t g_jobstts_cmd_handlers[22];
 extern s32 g_jobstts_cmd_stream_input;
-u8* jobstts_cmd_draw_background_tiles_handler(u8* stream);
-u8* jobstts_cmd_draw_border_tiles_with_transition_clip(u8* command);
 void jobstts_cmd_run_stream(u8* data, s32 flags);
+menu_instruction_t* jobstts_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_draw_background_tiles_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_draw_border_tiles_with_transition_clip(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_draw_formatted_number_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_draw_scrollable_list_body_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_draw_textured_quad_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_draw_window_frame_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_release_otag_lock_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_run_if_else_group_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_run_if_group_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_set_clut_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_set_layout_clut_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_set_otag_index_if_unlocked_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_set_semitrans_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_set_tpage_handler(menu_instruction_t* instruction);
+menu_instruction_t* jobstts_cmd_skip_group(menu_instruction_t* instruction);
 void jobstts_cmd_run_stream_with_mode(u8* data, s32 flags, s32 event_mode);
-u8* jobstts_cmd_skip_group(u8* data);
 
 /* gfx */
 /* Texture cell read by the oriented-quad renderer. */
@@ -292,7 +305,7 @@ void jobstts_menu_draw_scrollable_list(const u8* script);
 s32 jobstts_menu_get_event_speed(void);
 void jobstts_menu_init_scrollable_list(s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table);
 void jobstts_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table);
-void jobstts_menu_scroll_list_by_page(jobstts_menu_page_scroll_direction_e direction, const u8* commands);
+void jobstts_menu_scroll_list_by_page(jobstts_menu_page_scroll_direction_e direction, const menu_list_record_t* list);
 s32 jobstts_menu_update_job_list(void);
 void jobstts_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* abilities);
 s32 jobstts_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
@@ -365,7 +378,6 @@ extern s8 g_jobstts_active_page;            /* menu_job_list_step_e; each page's
 extern u8 g_jobstts_initialized;
 extern u32 g_jobstts_help_text_table[];
 extern u8 g_jobstts_previous_event_mode;
-u8* jobstts_cmd_draw_window_frame_handler(u8* command);
 s32 jobstts_entrypoint(s32 unit, void* unused_otag);
 
 #endif

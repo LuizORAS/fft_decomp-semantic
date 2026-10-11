@@ -1,9 +1,9 @@
 #include "fft/event_jobstts.h"
 #include "psx/libgpu.h"
 
-/* Stream command: set the sprite CLUT to GetClut(data[3] * 16,
- * data[4] | data[2] << 8) and return the next command. */
-const u8* jobstts_cmd_set_clut_handler(const u8* data) {
-    g_jobstts_gfx_clut_id = GetClut(data[3] << 4, data[4] | (data[2] << 8));
-    return data + data[1];
+/* Select the sprite CLUT from the command's VRAM coordinates. */
+menu_instruction_t* jobstts_cmd_set_clut_handler(menu_instruction_t* data) {
+    g_jobstts_gfx_clut_id
+        = GetClut(data->fixed_clut.x_div_16 << 4, data->fixed_clut.y_low | (data->fixed_clut.y_high << 8));
+    return menu_next_instruction(data);
 }

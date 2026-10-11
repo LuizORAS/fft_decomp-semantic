@@ -1,7 +1,6 @@
 /* SCUS_942.21 0x800212ec..0x80021c5b. */
 #include "psx/libcd.h"
 
-/* A ring record's status is read and written through volatile halfword pointers, never as a struct member. */
 void StCdInterrupt(void) {
     /* Retail stores both response bytes in a volatile halfword array and reloads the first. */
     volatile u16 response_status[3];
@@ -29,6 +28,7 @@ void StCdInterrupt(void) {
         return;
     }
     g_psyq_cd_stream_current_header = &g_psyq_cd_stream_ring[g_psyq_cd_stream_write_index];
+    /* The addressed halfword preserves the status load's native delay-slot scheduling. */
     if (*&g_psyq_cd_stream_current_header->status) {
         if (g_psyq_cd_stream_emulation_base)
             g_psyq_cd_stream_emulation_sector_index++;

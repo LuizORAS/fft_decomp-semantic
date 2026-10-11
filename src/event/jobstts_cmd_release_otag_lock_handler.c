@@ -5,7 +5,7 @@
  * cropped draw area, queue the full draw area again one ordering-table entry
  * above the window's contents, move on to the next entry and clear the
  * lock. */
-u8* jobstts_cmd_release_otag_lock_handler(u8* data) {
+menu_instruction_t* jobstts_cmd_release_otag_lock_handler(menu_instruction_t* data) {
     s16 otag_index;
     if (g_jobstts_gfx_otag_index_locked != 0) {
         otag_index = g_jobstts_gfx_otag_index + 1;
@@ -15,5 +15,5 @@ u8* jobstts_cmd_release_otag_lock_handler(u8* data) {
         g_jobstts_gfx_otag_index_locked = 0;
         g_jobstts_gfx_otag_index = g_jobstts_gfx_otag_index + 1;
     }
-    return data + data[1];
+    return menu_next_instruction(data);
 }

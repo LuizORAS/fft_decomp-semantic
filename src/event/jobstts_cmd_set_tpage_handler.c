@@ -1,9 +1,8 @@
 #include "fft/event_jobstts.h"
 
-/* Stream command: set the texture page from the command (colour mode
- * data[4], blend rate data[2] >> 4, x data[3] * 16, y data[2] * 256) and
- * return the next command. */
-const u8* jobstts_cmd_set_tpage_handler(const u8* data) {
-    g_jobstts_gfx_texture_page = GetTPage(data[4], data[2] >> 4, data[3] << 4, data[2] << 8);
-    return data + data[1];
+/* Select the texture page and blend rate encoded in the command. */
+menu_instruction_t* jobstts_cmd_set_tpage_handler(menu_instruction_t* data) {
+    g_jobstts_gfx_texture_page = GetTPage(data->texture_page.depth, data->texture_page.y_blend >> 4,
+        data->texture_page.x_div_16 << 4, data->texture_page.y_blend << 8);
+    return menu_next_instruction(data);
 }
