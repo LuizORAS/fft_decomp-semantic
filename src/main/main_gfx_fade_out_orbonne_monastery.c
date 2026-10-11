@@ -24,8 +24,7 @@ void main_gfx_fade_out_orbonne_monastery(void) {
     SetDrawMode(&draw_modes[0], 0, 0, 0x40, &image_rect);
     draw_modes[1] = draw_modes[0];
 
-    ((P_TAG*)&title_polygons[0])->len = 9;
-    title_polygons[0].code = 0x2c;
+    setPolyFT4(&title_polygons[0]);
     setRGB0(&title_polygons[0], 128, 128, 128);
     setXY4(&title_polygons[0], 0, 116, 255, 116, 0, 140, 255, 140);
     setUV4(&title_polygons[0], 0, 0, 255, 0, 0, 24, 255, 24);
