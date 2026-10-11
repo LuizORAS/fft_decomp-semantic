@@ -8,9 +8,8 @@
  * positive) and places it at position + offset. The texture page is the
  * 8-bit page holding `texture`. CARD copy of
  * world_gfx_set_scaled_poly_ft4_geometry_and_uv. */
-void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
-    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
-    const main_zodiac_draw_offset_t* offset) {
+void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
+    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset) {
     s32 xoff = uv_rect->offset_x * scale->x;
     s32 yoff = uv_rect->offset_y * scale->y;
     s32 width = uv_rect->width * scale->x;

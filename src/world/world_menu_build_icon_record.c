@@ -29,7 +29,7 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
     world_menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
-    world_gfx_init_image_loading((world_texture_prim_t*)record->base.sprites, (const world_image_location_t*)param,
+    world_gfx_init_image_loading((world_texture_prim_t*)record->base.sprites, &param->vram_origin,
         (const RECT*)&param->window_x, &param->text_image);
     SetSemiTrans(&record->base.sprites[1], 0);
     SetSemiTrans(&record->base.sprites[2], 1);

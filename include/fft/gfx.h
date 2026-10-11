@@ -235,15 +235,6 @@ enum {
     BATTLE_CAMERA_FUSION_HOLD_SENTINEL = 0x2710,
 };
 
-/* Base texture/screen location paired with the parameters above by
- * world_gfx_init_image_loading: the x is sign-tested (an s16) while the y is
- * only ever added as an unsigned VRAM row. Hoisted here from the three
- * identical local copies in the WORLD and BATTLE unit-editor panels. */
-typedef struct world_image_location {
-    s16 x; /* 0x00 */
-    u16 y; /* 0x02 */
-} world_image_location_t;
-
 /* Provisional camera interpolation key: frame time and target value. */
 typedef struct battle_camera_key {
     s32 time;  /* 0x00; cumulative frame of this key */

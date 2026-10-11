@@ -1991,7 +1991,7 @@ extern upoint16_t g_main_gfx_zodiac_screen_position;
 extern u8 g_main_gfx_zodiac_sprite_count;
 extern main_zodiac_sprite_frame_t g_main_gfx_zodiac_sprite_frames[];
 extern point16_t g_main_gfx_zodiac_sprite_scales[];
-extern world_image_location_t g_main_gfx_zodiac_texture_position;
+extern point16_t g_main_gfx_zodiac_texture_position;
 extern DISPENV g_main_gfx_display_envs[2];
 extern DRAWENV g_main_gfx_draw_envs[2];
 extern s32 g_main_gfx_loading_display_frame_counter;
@@ -2012,7 +2012,7 @@ void main_gfx_build_now_loading_center(u32 visible);
 void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
 
-void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture, upoint16_t* base,
+void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, upoint16_t* base,
     main_zodiac_sprite_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset);
 
 /* other */

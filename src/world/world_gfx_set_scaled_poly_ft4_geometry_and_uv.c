@@ -5,7 +5,7 @@
 /* Fills one POLY_FT4 for a formation graphic entry: scales the entry's
  * offset and size by a 12-bit fixed scale (rounded to the nearest pixel,
  * size made positive) and places it at position + origin. */
-void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, const RECT* position,
+void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, point16_t* page, const RECT* position,
     main_zodiac_sprite_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin) {
     s32 x_off = rect->offset_x * scale->x;
     s32 y_off = rect->offset_y * scale->y;

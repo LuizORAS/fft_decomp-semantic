@@ -24,7 +24,7 @@ extern RECT g_require_editor_numeric_entries_c;
 extern RECT g_require_editor_numeric_entries_d;
 extern RECT g_require_editor_numeric_entries_e;
 extern RECT g_require_editor_numeric_entries_f;
-extern world_image_location_t g_require_editor_numeric_geometry[];
+extern point16_t g_require_editor_numeric_geometry[];
 extern battle_menu_status_panel_numeric_buffer_t g_require_editor_numeric_state[2];
 extern battle_menu_status_panel_numeric_geometry_t g_require_editor_numeric_table;
 extern u8 g_require_editor_numeric_text_a[];
@@ -76,7 +76,7 @@ extern u8 g_require_gfx_portrait_transition_offsets[];
 extern u8 g_require_gfx_scaled_sprite_count;
 extern point16_t g_require_gfx_scaled_sprite_scale[];
 extern main_zodiac_sprite_frame_t g_require_gfx_scaled_sprite_uv_rects[];
-extern world_image_location_t g_require_gfx_scaled_sprite_texture_page;
+extern point16_t g_require_gfx_scaled_sprite_texture_page;
 extern u8 g_require_portrait_cell_pixels[];
 extern RECT g_require_portrait_cell_rect;
 extern u16 g_require_portrait_index_by_sprite_set[];
@@ -108,12 +108,11 @@ void require_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buf
 void require_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 void require_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 
-void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
-    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
+void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
+    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
 
-void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
-    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
-    const main_zodiac_draw_offset_t* offset);
+void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
+    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
 void require_gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index);
 void require_render_display_condition_general_cases(s32 value);
@@ -168,7 +167,7 @@ extern main_zodiac_draw_offset_t g_require_panel_status_offsets[];
 extern point16_t g_require_panel_status_scales[];
 extern main_zodiac_sprite_frame_t g_require_panel_status_uv_rects[];
 extern const u16 g_require_panel_status_y_offsets[];
-extern world_image_location_t g_require_panel_item_icon_texture[];
+extern point16_t g_require_panel_item_icon_texture[];
 extern RECT g_require_panel_origin_offsets[];
 extern RECT g_require_panel_text_upload_rect_a;
 extern RECT g_require_panel_text_upload_rect_b;
@@ -207,7 +206,7 @@ extern battle_menu_status_panel_packet_t g_require_panel_selected_packets[2];
 extern palette_t g_require_panel_selected_portrait_palettes[2];
 extern RECT g_require_panel_selected_portrait_rect;
 extern world_gfx_image_load_parameters_t g_require_panel_sprite_cells[];
-extern const world_image_location_t g_require_panel_status_texture;
+extern const point16_t g_require_panel_status_texture;
 void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, battle_unit_status_record_t* output);
 
 void require_panel_set_primitive_colors(

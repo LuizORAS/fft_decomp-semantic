@@ -117,7 +117,7 @@ extern u8 g_card_gfx_scaled_sprite_count;
 /* Double-buffered ZODIAC sprite chains (0x4b0 bytes each). */
 extern POLY_FT4 g_card_gfx_scaled_sprite_primitive_buffers[2][30];
 extern point16_t g_card_gfx_scaled_sprite_scale[];
-extern world_image_location_t g_card_gfx_scaled_sprite_texture_page;
+extern point16_t g_card_gfx_scaled_sprite_texture_page;
 extern main_zodiac_sprite_frame_t g_card_gfx_scaled_sprite_uv_rects[];
 extern u16 g_card_gfx_texture_page;
 extern u16 g_card_gfx_tile_count;
@@ -141,9 +141,8 @@ s32 card_gfx_get_fade_state(void);
 void card_gfx_set_draw_mode_and_link_ot(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 otag_index);
 void card_gfx_set_otag_index(s32 value);
 
-void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
-    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
-    const main_zodiac_draw_offset_t* offset);
+void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
+    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
 void card_gfx_set_render_otag(u32* otag);
 void card_gfx_start_decreasing_fade(void);

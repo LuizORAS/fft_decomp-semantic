@@ -20,7 +20,7 @@ extern RECT g_attack_editor_numeric_entries_c;
 extern RECT g_attack_editor_numeric_entries_d;
 extern RECT g_attack_editor_numeric_entries_e;
 extern RECT g_attack_editor_numeric_entries_f;
-extern world_image_location_t g_attack_editor_numeric_geometry[];
+extern point16_t g_attack_editor_numeric_geometry[];
 extern battle_menu_status_panel_numeric_buffer_t g_attack_editor_numeric_state[2];
 extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table;
 extern u8 g_attack_editor_numeric_text_a[];
@@ -54,7 +54,7 @@ extern RECT g_attack_gfx_portrait_origin;
 extern u8 g_attack_gfx_portrait_transition_offsets[];
 extern u8 g_attack_gfx_scaled_sprite_count;
 extern point16_t g_attack_gfx_scaled_sprite_scale[];
-extern world_image_location_t g_attack_gfx_scaled_sprite_texture_page[];
+extern point16_t g_attack_gfx_scaled_sprite_texture_page[];
 extern main_zodiac_sprite_frame_t g_attack_gfx_scaled_sprite_uv_rects[];
 extern RECT g_attack_gfx_draw_area_template;
 extern u16 g_attack_gfx_draw_offset_y;
@@ -77,7 +77,7 @@ void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void attack_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
     s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
 
-void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture_page, const RECT* position,
+void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
     main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
 void attack_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
@@ -88,8 +88,8 @@ void attack_gfx_load_portraits(void);
 void attack_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
 void attack_gfx_set_formation_icon_uv(POLY_FT4* primitive, s32 icon_id);
 
-void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
-    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
+void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
+    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
 
 void attack_gfx_prepare_formation_sprites(void);
 
@@ -224,7 +224,7 @@ extern s32 g_attack_deploy_grid_slide_x;
 extern s32 g_attack_deploy_grid_slide_y;
 extern s32 g_attack_deploy_tiles_only_mode;
 extern RECT g_attack_deploy_arrow_clut_rect;
-extern world_image_location_t g_attack_deploy_texture_location[];
+extern point16_t g_attack_deploy_texture_location[];
 extern world_gfx_image_load_parameters_t g_attack_deploy_menu_cursor_cells[];
 extern help_navigation_record_t g_attack_deploy_select_menu_nodes[];
 /* g_attack_scenario_table string arena, installed as TEXT_SECTION_DEPLOYMENT_UNIT_HELP */
@@ -314,7 +314,7 @@ extern s32 g_attack_menu_indicator_state[2];
 
 /* panel */
 extern battle_unit_status_record_t g_attack_panel_comparison_billboard;
-extern world_image_location_t g_attack_panel_item_icon_texture[];
+extern point16_t g_attack_panel_item_icon_texture[];
 extern RECT g_attack_panel_origin_offsets[];
 extern RECT g_attack_panel_text_upload_rect_a;
 extern RECT g_attack_panel_text_upload_rect_b;

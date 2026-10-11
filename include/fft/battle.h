@@ -982,7 +982,7 @@ extern u32 g_controller_stable_frames;
 extern u8 g_battle_weapon_attack_animations[][3];
 extern s16 g_battle_item_icon_clut_base_x;
 extern s16 g_battle_item_icon_clut_base_y;
-extern world_image_location_t g_battle_item_icon_image_location;
+extern point16_t g_battle_item_icon_image_location;
 void battle_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
 
 /* script */
@@ -6029,8 +6029,8 @@ void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* disp
 
 s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const battle_gfx_packed_evtchr_record_t* file);
 
-void battle_gfx_init_image_loading(world_texture_prim_t* primitive, const world_image_location_t* base_load,
-    const RECT* base_screen, const world_gfx_image_load_parameters_t* parameters);
+void battle_gfx_init_image_loading(world_texture_prim_t* primitive, const point16_t* base_load, const RECT* base_screen,
+    const world_gfx_image_load_parameters_t* parameters);
 
 void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite_archive_t* archive);
 void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive);
@@ -8548,7 +8548,7 @@ extern battle_unit_status_record_t g_battle_menu_status_billboard;
 extern u16 g_battle_menu_zoom_percentages[];
 extern s32 g_battle_menu_text_param_22; /* 0x80166020: record +0x22 */
 extern s32 g_battle_menu_text_param_24; /* 0x80166024: record +0x24 */
-extern world_image_location_t g_battle_menu_texture_location;
+extern point16_t g_battle_menu_texture_location;
 extern u16 g_option_menu_open;
 extern u16 g_battle_menu_suspend_state;
 extern u16 g_option_menu_transition_finished;
@@ -8736,8 +8736,8 @@ void battle_menu_render_text_image_at_record_origin(world_text_dialog_record_t* 
 
 void battle_menu_build_window_sprites(RECT* rect, world_menu_entry_t* param, world_menu_icon_record_t* record);
 
-s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_image_location_t* base_load,
-    const RECT* base_screen, world_gfx_image_load_parameters_t* params);
+s32 battle_menu_display_projected_action_effect(
+    POLY_FT4* prim, const point16_t* base_load, const RECT* base_screen, world_gfx_image_load_parameters_t* params);
 
 void battle_menu_clear_option_menu_open(void);
 void battle_menu_open_bunit(void);

@@ -64,7 +64,7 @@ menu_instruction_t* equip_cmd_set_zoomed_draw_area_handler(menu_instruction_t* i
 menu_instruction_t* equip_cmd_skip_group(menu_instruction_t* instruction);
 
 /* editor */
-extern world_image_location_t g_equip_editor_numeric_geometry[];
+extern point16_t g_equip_editor_numeric_geometry[];
 extern menu_number_entry_t g_equip_editor_numeric_descriptor_a[];
 extern menu_number_entry_t g_equip_editor_numeric_descriptor_b[];
 extern RECT g_equip_editor_numeric_entries_a;
@@ -480,7 +480,7 @@ s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_i
 
 /* panel */
 extern world_unit_status_identity_t g_equip_panel_selected_unit_data;
-extern world_image_location_t g_equip_panel_item_icon_texture[];
+extern point16_t g_equip_panel_item_icon_texture[];
 extern RECT g_equip_panel_origin_offsets[];
 extern RECT g_equip_panel_text_upload_rect_a;
 extern RECT g_equip_panel_text_upload_rect_b;

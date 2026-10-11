@@ -26,7 +26,7 @@ extern RECT g_debugchr_editor_numeric_entries_c;
 extern RECT g_debugchr_editor_numeric_entries_d;
 extern RECT g_debugchr_editor_numeric_entries_e;
 extern RECT g_debugchr_editor_numeric_entries_f;
-extern world_image_location_t g_debugchr_editor_numeric_geometry[];
+extern point16_t g_debugchr_editor_numeric_geometry[];
 extern battle_menu_status_panel_numeric_buffer_t g_debugchr_editor_numeric_state_a[2];
 extern battle_menu_status_panel_numeric_buffer_t g_debugchr_editor_numeric_state_b[2];
 extern battle_menu_status_panel_numeric_geometry_t g_debugchr_editor_numeric_table;
@@ -73,7 +73,7 @@ extern POLY_FT4 g_debugchr_gfx_render_buffers[2][30];
 extern u8 g_debugchr_gfx_scaled_sprite_count;
 extern point16_t g_debugchr_gfx_scaled_sprite_scale[];
 extern main_zodiac_sprite_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
-extern world_image_location_t g_debugchr_gfx_scaled_sprite_texture_page;
+extern point16_t g_debugchr_gfx_scaled_sprite_texture_page;
 void debugchr_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void debugchr_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
@@ -84,12 +84,11 @@ void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly);
 void debugchr_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
 void debugchr_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 
-void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
-    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
+void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
+    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
 
-void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
-    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
-    const main_zodiac_draw_offset_t* offset);
+void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
+    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
 void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
@@ -127,7 +126,7 @@ extern const u16 g_debugchr_panel_status_y_offsets[];
 extern battle_active_unit_t g_debugchr_panel_selected_unit_data;
 extern battle_active_unit_t g_debugchr_panel_comparison_unit_data;
 extern s16 g_debugchr_panel_slide_up_y[];
-extern world_image_location_t g_debugchr_panel_item_icon_texture[];
+extern point16_t g_debugchr_panel_item_icon_texture[];
 extern s16 g_debugchr_panel_slide_down_y[];
 extern world_gfx_image_load_parameters_t g_debugchr_panel_editor_label_cells[];
 extern world_gfx_image_load_parameters_t g_debugchr_panel_editor_mode_cell[];
@@ -166,7 +165,7 @@ extern u8 g_debugchr_panel_text_image_b[];
 extern menu_number_entry_t g_debugchr_panel_comparison_numeric_entries[];
 extern CVECTOR g_debugchr_panel_gauge_bar_colors[];
 extern menu_number_entry_t g_debugchr_panel_selected_numeric_entries[];
-extern const world_image_location_t g_debugchr_panel_status_texture;
+extern const point16_t g_debugchr_panel_status_texture;
 void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output);
 
 void debugchr_panel_set_primitive_colors(

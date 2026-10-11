@@ -13,7 +13,7 @@ void battle_menu_build_window_sprites(RECT* rect, world_menu_entry_t* param, wor
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
     battle_menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
-    battle_gfx_init_image_loading((world_texture_prim_t*)record->base.sprites, (const world_image_location_t*)param,
+    battle_gfx_init_image_loading((world_texture_prim_t*)record->base.sprites, &param->vram_origin,
         (const RECT*)&param->window_x, &param->text_image);
     SetSemiTrans(&record->base.sprites[1], 0);
     SetSemiTrans(&record->base.sprites[2], 1);

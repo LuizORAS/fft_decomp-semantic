@@ -12,8 +12,8 @@
  * with the panel state's 2 still in $v0. An explicit `return 2;` adds a second
  * constant load, so they use a bare `return;`. The caller discards the result.
  */
-s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_image_location_t* base_load,
-    const RECT* base_screen, world_gfx_image_load_parameters_t* params) {
+s32 battle_menu_display_projected_action_effect(
+    POLY_FT4* prim, const point16_t* base_load, const RECT* base_screen, world_gfx_image_load_parameters_t* params) {
     menu_number_entry_t* panel;
     u16* label_x;
     const battle_action_display_image_rect_t* rect;

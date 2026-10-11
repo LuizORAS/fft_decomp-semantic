@@ -2,8 +2,8 @@
 #include "psx/libgpu.h"
 
 /* Configure a sprite quad using truncated 4.12 fixed-point geometry. */
-void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
-    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base) {
+void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
+    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base) {
     s16 scale_x;
     s16 scale_y;
     s32 dx;

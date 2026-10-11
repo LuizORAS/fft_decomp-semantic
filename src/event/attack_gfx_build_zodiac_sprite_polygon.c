@@ -4,7 +4,7 @@
  *
  * This variant selects 8-bit texture mode and adds the PSX screen center to
  * the draw offset. */
-void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture_page, const RECT* position,
+void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
     main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset) {
     s32 rx;
     s32 ry;

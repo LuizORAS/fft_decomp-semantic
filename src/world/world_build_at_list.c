@@ -89,7 +89,7 @@ void world_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, (const world_image_location_t*)entry,
+    world_gfx_init_image_loading((world_texture_prim_t*)&page->frame, &entry->vram_origin,
         (const RECT*)&entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;

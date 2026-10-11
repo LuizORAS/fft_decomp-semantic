@@ -98,7 +98,7 @@ extern s32 g_bunit_comparison_display_offset_y;
 /* Copy of the selected unit's 0x40 bytes from +0x30; only the leading
  * slot-state fields are read. */
 extern battle_menu_status_panel_slot_state_t g_bunit_editor_unit_fields;
-extern world_image_location_t g_bunit_editor_numeric_geometry[];
+extern point16_t g_bunit_editor_numeric_geometry[];
 extern battle_menu_status_panel_numeric_geometry_t g_bunit_editor_numeric_table;
 extern RECT g_bunit_editor_numeric_entries_a;
 extern RECT g_bunit_editor_numeric_entries_b;
@@ -756,7 +756,7 @@ extern world_gfx_image_load_parameters_t g_bunit_panel_editor_value_cells[];
 extern u16 g_bunit_panel_editor_value_cluts[][2];
 extern RECT g_bunit_panel_frame_rect;
 extern CVECTOR g_bunit_panel_gauge_bar_colors[];
-extern world_image_location_t g_bunit_panel_item_icon_texture[];
+extern point16_t g_bunit_panel_item_icon_texture[];
 extern world_gfx_image_load_parameters_t g_bunit_panel_portrait_cell[];
 extern battle_menu_status_panel_editor_packet_t g_bunit_panel_selected_editor_packets[2];
 extern u8 g_bunit_panel_selected_large_number_image[];

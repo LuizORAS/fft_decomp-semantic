@@ -413,9 +413,8 @@ void world_menu_copy_bytes_to_halfwords(u16* destination, const u8* source, s32 
 s32 world_mul_div_64(s32 a, s32 b, s32 c);
 void world_game_reset(void);
 void world_menu_init_stub(void);
-void world_menu_display_projected_action_effect(POLY_FT4* unused_primitive,
-    const world_image_location_t* unused_base_load, const RECT* unused_base_screen,
-    const world_gfx_image_load_parameters_t* unused_parameters);
+void world_menu_display_projected_action_effect(POLY_FT4* unused_primitive, const point16_t* unused_base_load,
+    const RECT* unused_base_screen, const world_gfx_image_load_parameters_t* unused_parameters);
 void world_text_run_spell_quote_thread(void);
 void world_menu_run_companion_overlay_stub(void);
 void world_script_frame_after_threads_stub(void);
@@ -660,7 +659,7 @@ extern volatile u16 g_world_remove_all_equipment_blink_counter;
 
 /* editor */
 
-extern world_image_location_t g_world_editor_numeric_geometry[];
+extern point16_t g_world_editor_numeric_geometry[];
 extern RECT g_world_editor_numeric_table[2];
 extern RECT g_world_editor_numeric_entries_a[];
 extern RECT g_world_editor_numeric_entries_b[];
@@ -814,7 +813,7 @@ extern RECT g_world_gfx_temporary_draw_area;
 extern u8 g_world_gfx_texture_allocation_grid[15][16];
 extern s8 g_world_gfx_vsync_mode;
 extern u16 g_world_gfx_textured_quad_count;
-extern world_image_location_t g_world_gfx_menu_image_source;
+extern point16_t g_world_gfx_menu_image_source;
 extern RECT g_world_gfx_texture_window;
 extern u16 g_world_gfx_draw_area_scale_percent[];
 
@@ -980,8 +979,8 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
     void* unused_14, void* unused_15, TILE* tiles, void* unused_17, void* unused_18, void* unused_19, void* unused_20,
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
-void world_gfx_init_image_loading(world_texture_prim_t* primitive, const world_image_location_t* base_load,
-    const RECT* base_screen, const world_gfx_image_load_parameters_t* parameters);
+void world_gfx_init_image_loading(world_texture_prim_t* primitive, const point16_t* base_load, const RECT* base_screen,
+    const world_gfx_image_load_parameters_t* parameters);
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
@@ -1131,7 +1130,7 @@ s32 world_job_is_locked_for_all_units(s16 job_id);
 /* panel */
 
 extern s16 g_world_panel_slide_up_y[];
-extern world_image_location_t g_world_panel_item_icon_texture[];
+extern point16_t g_world_panel_item_icon_texture[];
 extern s16 g_world_panel_slide_down_y[];
 
 /* tutorial */
@@ -1451,7 +1450,7 @@ extern const world_zodiac_date_limit_t g_world_zodiac_date_limits[WORLD_ZODIAC_D
 extern void (*g_world_formation_menu_handlers[])(void);
 extern s32 g_world_formation_screen_active;
 extern s16 g_world_formation_open_request_state; /* world_screen_request_state_e */
-extern world_image_location_t g_world_formation_view_texture_page;
+extern point16_t g_world_formation_view_texture_page;
 extern u32 g_world_formation_menu_allowed_buttons; /* pad mask applied to the new presses of each menu frame */
 extern s32 g_world_formation_name_string_revision;
 extern main_zodiac_sprite_frame_t g_world_formation_view_graphic_rects[];
@@ -1565,7 +1564,7 @@ s32 world_formation_run_item_submenu_step(void);
 s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
-void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, const RECT* position,
+void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, point16_t* page, const RECT* position,
     main_zodiac_sprite_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin);
 /* The mode argument of world_formation_build_record_list: which roster units
  * it lists. */
@@ -2777,7 +2776,7 @@ extern uv8_t g_world_item_type_icon_origins[];
 extern world_oriented_quad_t g_world_item_category_tab_cursor_sprite;
 extern struct world_item_stat_detail g_world_item_preview_stat_detail;
 extern u8* g_world_item_sorted_lists[];
-extern world_image_location_t g_world_item_icon_image_location;
+extern point16_t g_world_item_icon_image_location;
 extern s16 g_world_item_icon_clut_base_x; /* item icon CLUT base x */
 extern s16 g_world_item_icon_clut_base_y; /* item icon CLUT base y */
 

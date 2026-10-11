@@ -1,8 +1,8 @@
 #include "fft/world.h"
 
 /* Place a SPRT or POLY_FT4 from texture and screen parameters; BATTLE twin. */
-void world_gfx_init_image_loading(world_texture_prim_t* primitive, const world_image_location_t* base_load,
-    const RECT* base_screen, const world_gfx_image_load_parameters_t* parameters) {
+void world_gfx_init_image_loading(world_texture_prim_t* primitive, const point16_t* base_load, const RECT* base_screen,
+    const world_gfx_image_load_parameters_t* parameters) {
     int texture_column;
 
     if ((primitive->sprt.code & 0x7c) == 0x64) {
