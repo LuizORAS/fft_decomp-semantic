@@ -1,6 +1,6 @@
 #include "psx/libetc.h"
 void v_wait(s32 vblank, s32 frames) {
-    /* Retail declares the counter volatile: it is stored to and reloaded from the stack on every pass. */
+    /* Volatile preserves the native per-iteration stack store/reload of the timeout. */
     volatile s32 timeout = frames << PSYQ_ETC_VSYNC_TIMEOUT_SHIFT;
     while (g_psyq_etc_vblank_count < vblank) {
         if (--timeout == -1) {
