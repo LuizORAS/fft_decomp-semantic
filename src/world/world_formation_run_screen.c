@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef void (*world_formation_menu_handler_t)(void);
-
 /* Stack-resident primitive pools for both WORLD packet buffers; each pool
  * holds two frames of the per-type counts this routine publishes. */
 typedef struct world_formation_screen_packets {
@@ -21,8 +19,6 @@ typedef struct world_formation_screen_packets {
     world_gfx_packet_buffer_t buffers[2];     /* 0xf480 */
     u8 _unused_f658[0x18];
 } world_formation_screen_packets_t;
-
-extern world_formation_menu_handler_t g_world_formation_menu_handlers[];
 
 /*
  * Run the WORLD formation screen until g_world_formation_screen_running clears or the tutorial ends.

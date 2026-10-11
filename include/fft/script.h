@@ -609,14 +609,12 @@ typedef struct event_focus_speed_instruction {
 } event_focus_speed_instruction_t;
 typedef char event_focus_speed_instruction_size_must_be_3[sizeof(event_focus_speed_instruction_t) == 3 ? 1 : -1];
 
-/* Operand view of the event jump instruction that
- * *_script_jump_event_instruction reads: a unit id halfword, then the two
- * byte operands. */
-typedef struct battle_script_jump_instruction {
-    u8 _unused_00[2];
-    u8 param0;
-    u8 param1;
-} battle_script_jump_instruction_t;
+/* Jump operands: unit id, encoded path length, and direction. */
+typedef struct event_jump_parameters {
+    u8 unit_id_le[2];
+    u8 length_plus_one;
+    u8 direction;
+} event_jump_parameters_t;
 
 /* Provisional work block at *g_battle_ai_workspace_ptr: the menus build their
  * ability list and the outermost scrolling list's packet pages in it, events

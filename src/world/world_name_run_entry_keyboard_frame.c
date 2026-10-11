@@ -2,10 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef void (*world_name_entry_handler_t)(void);
-
-extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
-
 /* Name-entry step: on the first call (once menu thread 2 is idle) seeds the
  * entry from list, then runs the current state handler, draws the cursor and
  * key prompts each frame, and returns the entered g_world_name_entry_text name once the

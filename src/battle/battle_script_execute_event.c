@@ -3,10 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* battle.h has no prototype for the Jump handler; this file and
- * battle_script_block_start_thread declare it. */
-void battle_script_jump_event_instruction(battle_script_jump_instruction_t* instr);
-
 /* BATTLE event-script interpreter: the body of the event thread
  * (NATIVE_THREAD_SLOT_EVENT), entered from battle_script_run_next_event once
  * battle_script_load_next_event has read the event block.
@@ -553,7 +549,7 @@ restart_script:
             g_battle_thread_call_target = (void (*)(void))battle_script_walkto_event_instruction;
             battle_thread_call_on_main_stack(parameters);
         } else if (opcode == EVENT_OPCODE_JUMP) {
-            battle_script_jump_event_instruction((battle_script_jump_instruction_t*)parameters);
+            battle_script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
             battle_script_waitwalk_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {

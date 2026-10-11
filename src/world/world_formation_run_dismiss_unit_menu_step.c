@@ -3,19 +3,6 @@
 #include "psx/types.h"
 
 /*
- * The sprite-set -> script-variable table walked by the
- * dismissal tail, terminated by sprite_set == -1. The four-byte stride is
- * proved by the target advancing both its record pointer and its byte-offset
- * index by 4 per iteration.
- */
-typedef struct world_formation_dismiss_entry {
-    s16 sprite_set;  /* 0x00 */
-    s16 variable_id; /* 0x02 */
-} world_formation_dismiss_entry_t;
-
-extern world_formation_dismiss_entry_t g_world_formation_dismiss_entries[];
-
-/*
  * Per-frame step of the "dismiss unit" menu
  * (WORLD_FORMATION_MENU_DISMISS_UNIT), called by world_formation_process_frame.
  * Three phases: first entry, which picks the prompt text and menu record;

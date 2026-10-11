@@ -1,16 +1,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* 0x24-byte menu thread-group record at 0x80189ecc, indexed by
- * the request word (0-3). Each group names up to three menu threads. */
-typedef struct world_menu_thread_group {
-    void (*function[3])(void); /* 0x00; -1 when unused */
-    s32 thread_id[3];          /* 0x0c; -1 when unused */
-    s32 task_id[3];            /* 0x18 */
-} world_menu_thread_group_t;
-
-extern world_menu_thread_group_t g_world_menu_thread_groups[];
-
 /* Menu thread-group dispatcher thread. Each request in parameter 1 selects a
  * group: running members with the expected task are signalled to continue,
  * others are signalled to finish (state 1) and awaited, then every finished

@@ -4,8 +4,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef void (*world_name_entry_handler_t)(void);
-
 /* Stack-resident primitive pools for both WORLD packet buffers; each pool
  * holds two frames of the per-type counts this routine publishes. */
 typedef struct world_name_entry_screen_packets {
@@ -18,8 +16,6 @@ typedef struct world_name_entry_screen_packets {
     u32 otags[2 * 64];                    /* 0x4f20: g_world_ot_length = 64 */
     world_gfx_packet_buffer_t buffers[2]; /* 0x5120 */
 } world_name_entry_screen_packets_t;
-
-extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
 
 /*
  * Run the WORLD name-entry screen until its state reaches 0xFF.

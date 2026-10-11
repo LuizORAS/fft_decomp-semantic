@@ -661,6 +661,7 @@ extern open_overlay_fade_t g_open_gfx_overlay_fade;
 extern open_gfx_transition_t g_open_gfx_transition;
 extern open_sprite_prim_t g_open_gfx_sprite_primitive_pool[2][32];
 extern POLY_FT4 g_open_gfx_credit_band_primitives[2];
+extern wldcore_anim_sequence_t** g_open_gfx_record_36_animations;
 extern u32** g_open_gfx_record_36_sprites;
 extern POLY_GT4 g_open_gfx_transition_line_primitives[2][14];
 void open_gfx_draw_animated_render_record(world_animated_render_record_t* actor, u32* ot);

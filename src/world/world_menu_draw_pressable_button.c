@@ -1,7 +1,5 @@
 #include "fft/world.h"
 
-extern world_menu_button_piece_t g_world_menu_button_pieces[];
-
 /*
  * Draw an on-screen button from its sprite pieces and animate its press.
  *

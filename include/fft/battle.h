@@ -1544,6 +1544,7 @@ extern s32 g_battle_thread_task_ids[][256];
  * the use site. */
 extern native_thread_t* g_battle_threads;
 void battle_thread_wait_for_unit_view_panels(void);
+void battle_script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void battle_script_block_start_thread(void);
 s32 battle_thread_call_on_main_stack();
 void battle_thread_exit_current(void);

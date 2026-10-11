@@ -514,7 +514,7 @@ restart_event:
         /* ---- unit_t movement and facing ---- */
         else if (opcode == EVENT_OPCODE_WALK_TO) {
         } else if (opcode == EVENT_OPCODE_JUMP) {
-            world_script_jump_event_instruction(parameters);
+            world_script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
             world_script_waitwalk_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {

@@ -2,28 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* One cell of a directional grid menu: a description text id (base plus
- * offset), the cell index reached by each d-pad direction, and the cursor
- * position. A non-zero `vertical` draws the vertical cursor. */
-typedef struct world_menu_grid_cell {
-    s16* text_id;
-    u16 text_offset;
-    u8 next_up;
-    u8 next_down;
-    u8 next_right;
-    u8 next_left;
-    point16_t cursor;
-    s16 vertical;
-} world_menu_grid_cell_t;
-
-extern world_menu_grid_cell_t g_world_grid_menu_default_cells[];
 /* g_world_grid_menu_default_cells[23]/[24].text_offset, bound separately: as
  * members GCC addresses the second store from the first's base. */
 extern s16 g_world_grid_menu_cell_23_text_offset;
 extern s16 g_world_grid_menu_cell_24_text_offset;
-extern world_menu_grid_cell_t g_world_grid_menu_shop_cells[];
-extern world_menu_grid_cell_t g_world_grid_menu_shop_scrolled_cells[];
-extern world_menu_grid_cell_t* g_world_active_grid_menu_cells; /* active grid */
 
 /* Runs the d-pad grid menu selected by g_world_grid_menu_id (0x20000, 0x20001, else
  * the default grid) and draws its cursor.

@@ -2126,6 +2126,7 @@ extern s32 g_wldcore_context_value_display_mode;
  * heuristic needs an in-struct object to keep the target's load order in
  * wldcore_list_handle_active_propositions_input; a scalar does not. */
 extern s32 g_wldcore_active_propositions_saved_cursor[];
+extern wldcore_anim_sequence_t** g_wldcore_anim_sequence_table;
 extern u32** g_wldcore_anim_cel_table;
 extern u8 g_wldcore_choice_hidden_variable_offsets[];
 extern battle_stats_t g_wldcore_status_unit;

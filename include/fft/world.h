@@ -127,6 +127,7 @@ extern u8 g_world_name_entry_input_delay;
 extern u8 g_world_name_confirm_finished;
 extern u8 g_world_name_used_original_name;
 extern s16 g_world_name_entry_key_ids[];
+extern void (*g_world_name_entry_state_handlers[])(void);
 extern u8 g_world_name_entry_state;
 extern u8 g_world_name_entry_saved_state;
 extern u8 g_world_name_entry_cursor_index;
@@ -1228,6 +1229,17 @@ void world_input_update_menu_state(void);
 
 /* formation */
 
+/*
+ * The sprite-set -> script-variable table walked by the
+ * dismissal tail, terminated by sprite_set == -1. The four-byte stride is
+ * proved by the target advancing both its record pointer and its byte-offset
+ * index by 4 per iteration.
+ */
+typedef struct world_formation_dismiss_entry {
+    s16 sprite_set;  /* 0x00 */
+    s16 variable_id; /* 0x02 */
+} world_formation_dismiss_entry_t;
+
 typedef enum world_monster_breed_rarity {
     WORLD_MONSTER_BREED_RARITY_NONE = 0,
     WORLD_MONSTER_BREED_RARITY_COMMON = 1,
@@ -1406,6 +1418,7 @@ extern u8 g_world_formation_unit_browse_enabled;
  * the zodiac date limits at 0x8018de84). Read by world_unit_update_monster_breeding. */
 extern const u8 g_world_month_lengths[WORLD_MONTH_LENGTH_TABLE_COUNT];
 extern const world_zodiac_date_limit_t g_world_zodiac_date_limits[WORLD_ZODIAC_DATE_LIMIT_COUNT];
+extern void (*g_world_formation_menu_handlers[])(void);
 extern s32 g_world_formation_screen_active;
 extern s16 g_world_formation_open_request_state; /* world_screen_request_state_e */
 extern world_image_location_t g_world_formation_view_texture_page;
@@ -1482,6 +1495,7 @@ extern world_menu_entry_t g_world_formation_triangle_menu;
 extern world_menu_entry_t g_world_formation_dismiss_prompt;
 extern world_menu_entry_t g_world_formation_dismiss_confirm_menu[4];
 extern world_menu_entry_t g_world_formation_dismiss_confirm_menu_scrolled[4];
+extern world_formation_dismiss_entry_t g_world_formation_dismiss_entries[];
 extern s16 g_world_formation_dismiss_prompt_text_id;
 extern s16 g_world_formation_dismiss_prompt_kind;
 extern s16 g_world_formation_dismiss_anim_timer;
@@ -1966,6 +1980,29 @@ void world_menu_start_building_thread(void);
 void world_text_character_handling_thread(void);
 
 /* menu */
+
+/* One cell of a directional grid menu: a description text id (base plus
+ * offset), the cell index reached by each d-pad direction, and the cursor
+ * position. A non-zero `vertical` draws the vertical cursor. */
+typedef struct world_menu_grid_cell {
+    s16* text_id;
+    u16 text_offset;
+    u8 next_up;
+    u8 next_down;
+    u8 next_right;
+    u8 next_left;
+    point16_t cursor;
+    s16 vertical;
+} world_menu_grid_cell_t;
+
+/* 0x24-byte menu thread-group record at 0x80189ecc, indexed by
+ * the request word (0-3). Each group names up to three menu threads. */
+typedef struct world_menu_thread_group {
+    void (*function[3])(void); /* 0x00; -1 when unused */
+    s32 thread_id[3];          /* 0x0c; -1 when unused */
+    s32 task_id[3];            /* 0x18 */
+} world_menu_thread_group_t;
+
 /* The builder walks the table with a byte offset stepping by 8 (the
  * target's induction variable), so it addresses these fields by offset. */
 enum world_menu_line_layout_offset {
@@ -2163,6 +2200,7 @@ extern RECT g_world_menu_panel_texture_windows[7];
 extern world_menu_text_layout_t g_world_menu_at_list_entry_table;
 extern world_menu_entry_t g_world_menu_at_list_state;
 extern s16 g_world_menu_open_entry_index;
+extern world_menu_thread_group_t g_world_menu_thread_groups[];
 extern s32 g_world_menu_thread_group_parameter;
 extern s32 g_world_menu_location_id;
 extern s32 g_world_menu_location_window_x;
@@ -2196,6 +2234,7 @@ extern s32 g_world_menu_indicator_fade_work[2];
 extern s32 g_world_menu_indicator_state[2];
 
 /* Per-piece 4.12 fixed-point x/y scale; a negative factor flips that axis. */
+extern world_menu_button_piece_t g_world_menu_button_pieces[];
 extern point16_t g_world_menu_button_piece_scales[];
 extern u8 g_world_menu_button_piece_starts[];
 extern s8 g_world_menu_button_press_timers[];
@@ -2225,6 +2264,10 @@ extern u16 g_world_menu_list_cursor_anim;
 extern u16 g_world_menu_scroll_hold_counter;
 extern s16 g_world_menu_text_redraw_request;
 extern s16 g_world_menu_pending_selection[4];
+extern world_menu_grid_cell_t g_world_grid_menu_default_cells[];
+extern world_menu_grid_cell_t g_world_grid_menu_shop_cells[];
+extern world_menu_grid_cell_t g_world_grid_menu_shop_scrolled_cells[];
+extern world_menu_grid_cell_t* g_world_active_grid_menu_cells;
 extern u16 g_world_grid_menu_cursor_anim; /* grid cursor animation state */
 extern u8 g_world_grid_menu_initialized;  /* grid menu initialised */
 extern u32 g_world_menu_new_button_input;
@@ -2934,6 +2977,7 @@ typedef enum world_shop_step {
     WORLD_SHOP_STEP_RENAME_NAME_ENTRY = 27,
 } world_shop_step_e;
 
+extern void (*g_world_shop_menu_step_handlers[])(void);
 extern s16 g_world_shop_menu_step; /* world_shop_step_e */
 extern s16 g_world_shop_quantity_limit;
 extern world_menu_entry_t g_world_shop_quantity_menu_data[2];
@@ -3131,6 +3175,7 @@ s32 world_is_skillset_in_spell_quote_exception_list(s32 value);
 s16 world_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
 void world_script_process_inflict_status_commands(void);
 void world_script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
+void world_script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void world_script_block_start_thread(void);
 
 /* unnamed */

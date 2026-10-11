@@ -36,8 +36,6 @@ typedef struct open_gfx_sprite_part {
 
 #define PART(index) ((open_gfx_sprite_part_t*)&sprite[index])
 
-extern wldcore_anim_sequence_t** g_open_gfx_record_36_animations;
-
 void open_gfx_draw_animated_render_record(world_animated_render_record_t* actor, u32* ot) {
     u32** sprites;
     wldcore_anim_sequence_t* anim;

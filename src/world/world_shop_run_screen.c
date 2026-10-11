@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef void (*world_shop_menu_handler_t)(void);
-
 /* Stack-resident primitive pools for both WORLD packet buffers; each pool
  * holds two frames of the per-type counts this routine publishes. */
 typedef struct world_shop_screen_packets {
@@ -19,8 +17,6 @@ typedef struct world_shop_screen_packets {
     u32 otags[2 * 64];                        /* 0xdc50: g_world_ot_length = 64 */
     world_gfx_packet_buffer_t buffers[2];     /* 0xde50 */
 } world_shop_screen_packets_t;
-
-extern world_shop_menu_handler_t g_world_shop_menu_step_handlers[];
 
 /*
  * Run the WORLD shop screen until g_world_shop_menu_step becomes -1.

@@ -10,8 +10,6 @@ typedef struct wldcore_sprite_part {
     u32 texture;
 } wldcore_sprite_part_t;
 
-extern wldcore_anim_sequence_t** g_wldcore_anim_sequence_table;
-
 /* Draw one animated display object: advance its sequence, then convert every
  * part of the current cel into a libgs sprite primitive and sort it into the
  * ordering table.
