@@ -60,7 +60,7 @@ enum {
 typedef struct {
     u16 initialized;
     u16 in_callback;
-    psyq_interrupt_callback_t callbacks[11];
+    psyq_interrupt_callback_t callbacks[PSYQ_IRQ_SOURCES];
     u16 callback_mask;
     u16 saved_mask;
     u32 saved_dma_priority;
@@ -68,17 +68,13 @@ typedef struct {
     u32 stack[1024];
 } psyq_interrupt_state_t;
 extern psyq_interrupt_state_t g_psyq_etc_interrupt_state;
-extern u32 g_psyq_etc_saved_stack_pointer; /* Alias of interrupt_state.jump_buffer[1]. */
 extern volatile u16* g_psyq_etc_irq_status;
 extern volatile u32* g_psyq_etc_dma_dpcr;
-extern u16 g_psyq_etc_callback_mask;
-extern u16 g_psyq_etc_saved_irq_mask;
-extern u32 g_psyq_etc_saved_dma_dpcr;
-extern psyq_interrupt_callback_t g_psyq_etc_vblank_callbacks[8];
+extern psyq_interrupt_callback_t g_psyq_etc_vblank_callbacks[PSYQ_ETC_CALLBACK_SLOTS];
 extern volatile u32* g_psyq_etc_timer1_mode;
 extern volatile s32 g_psyq_etc_vblank_count; /* Updated by VBlank; retail also performs an unused reload. */
 extern volatile u32* g_psyq_etc_dma_dicr;
-extern psyq_interrupt_callback_t g_psyq_etc_dma_callbacks[8];
+extern psyq_interrupt_callback_t g_psyq_etc_dma_callbacks[PSYQ_ETC_CALLBACK_SLOTS];
 psyq_interrupt_state_t* startIntr(void);
 psyq_interrupt_state_t* stopIntr(void);
 psyq_interrupt_state_t* restartIntr(void);
@@ -102,7 +98,6 @@ typedef struct {
 } psyq_interrupt_dispatch_t;
 extern psyq_interrupt_dispatch_t* g_psyq_etc_dispatch;
 extern volatile u16* g_psyq_etc_irq_mask;
-extern u16 g_psyq_etc_in_callback;
 void psyq_etc_clear_interrupt_state_words(u32* words, s32 count);
 void psyq_etc_clear_vblank_callbacks(psyq_interrupt_callback_t* callbacks, s32 count);
 void psyq_etc_clear_dma_callbacks(psyq_interrupt_callback_t* callbacks, s32 count);
