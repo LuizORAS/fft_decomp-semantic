@@ -785,7 +785,7 @@ extern s32 g_wldcore_displayed_numeric_value_tertiary;
 extern s32 g_wldcore_loaded_message_block;
 void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t* state, s32 row);
 void wldcore_load_message_block_if_changed(s32 block);
-void wldcore_text_get_padded_dimensions(s32 text_id, wldcore_text_dimensions_t* output);
+void wldcore_text_get_padded_dimensions(s32 text_id, size32_t* output);
 void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state);
 s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state);

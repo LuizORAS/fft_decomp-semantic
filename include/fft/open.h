@@ -406,6 +406,7 @@ typedef struct open_font_metrics {
 
 extern s32 g_open_text_section_offsets[];
 s32 open_text_decode_hex_digit(s32 character);
+void open_text_measure_menu_image(s32 combined_text_index, size32_t* dimensions);
 void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s32 combined_text_index, u8* image);
 
 /* script */

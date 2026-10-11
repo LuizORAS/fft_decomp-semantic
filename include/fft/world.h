@@ -773,14 +773,6 @@ typedef struct world_animated_render_record {
 } world_animated_render_record_t;
 typedef char world_animated_render_record_size_must_be_0x24[sizeof(world_animated_render_record_t) == 0x24 ? 1 : -1];
 
-/* Padded pixel size of a text image (wldcore_text_get_padded_dimensions,
- * open_text_measure_menu_image). */
-typedef struct wldcore_text_dimensions {
-    s32 width;
-    s32 height;
-} wldcore_text_dimensions_t;
-typedef char wldcore_text_dimensions_size_must_be_8[(sizeof(wldcore_text_dimensions_t) == 8) ? 1 : -1];
-
 /* Provisional: the column view of the 36-byte WLDCORE window records and OPEN
  * render records, rebased on their x/y pair (+0x18) and keeping the 0x24-byte
  * stride. */

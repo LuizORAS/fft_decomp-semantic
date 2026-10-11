@@ -61,6 +61,13 @@ typedef struct point32 {
 } point32_t;
 typedef char assert_point32_size[sizeof(point32_t) == 8 ? 1 : -1];
 
+/* Signed 32-bit width/height pair. */
+typedef struct size32 {
+    s32 width;
+    s32 height;
+} size32_t;
+typedef char size32_size_must_be_8[sizeof(size32_t) == 8 ? 1 : -1];
+
 /* Unsigned 16-bit x/y pair, e.g. VRAM or texture-page positions. */
 typedef struct upoint16 {
     u16 x;

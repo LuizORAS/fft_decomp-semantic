@@ -5686,12 +5686,6 @@ typedef enum battle_seq_type {
     BATTLE_SEQ_KANZEN = 7,
 } battle_seq_type_e;
 
-/* Sprite part dimensions in 8-pixel tiles, indexed by attribute bits 10-13. */
-typedef struct battle_gfx_part_size {
-    s32 width;
-    s32 height;
-} battle_gfx_part_size_t;
-
 /* One of the two 0xee28-byte battle render buffers. The primitive pools are
  * pre-initialised once here; the swap helper at 0x8005a0cc reads the ordering
  * table pointer at +0xe5b4. */
@@ -5788,7 +5782,8 @@ extern battle_file_extent_t g_battle_gfx_effect_shp_files[];
 extern battle_file_extent_t g_battle_gfx_spritesheet_files[];
 extern battle_file_extent_t g_battle_gfx_sp2_files[];
 extern battle_file_extent_t g_battle_gfx_worker8_sp2_files[];
-extern battle_gfx_part_size_t g_battle_gfx_part_sizes[];
+/* Sprite part width/height in 8-pixel tiles, indexed by SHP size bits. */
+extern size32_t g_battle_gfx_part_sizes[];
 extern battle_gfx_wep_eff_graphics_t g_battle_gfx_effect_graphics[1];
 extern u8* g_battle_gfx_compressed_data;
 extern s32 g_battle_gfx_compressed_nibble_phase;
