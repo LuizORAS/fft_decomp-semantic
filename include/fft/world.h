@@ -33,8 +33,8 @@ void world_camera_thread(void);
 
 extern s32 g_world_dead_unit_action; /* committed action */
 extern s32 g_world_dead_unit_result;
-extern dead_unit_entry_counts_t g_world_dead_unit_menu_entries;
-extern dead_unit_menu_t g_world_dead_unit_menu;
+extern world_menu_text_layout_t g_world_dead_unit_menu_entries;
+extern world_menu_entry_t g_world_dead_unit_menu[DEAD_UNIT_MENU_ENTRY_COUNT];
 extern RECT g_world_screen_menu_thin_panel_texture_windows[7];
 
 /* One libgpu texture window per DR_MODE packet (the seven RECTs after

@@ -920,37 +920,16 @@ typedef struct world_menu_button_piece {
     u16 y_offset; /* 0x0a */
 } world_menu_button_piece_t;
 
-/* Provisional layouts for the dead-unit ("treasure/crystal") result panel
- * started by option_menu_start_dead_unit_threads and
- * world_menu_start_dead_unit_threads. Only the fields those routines touch are
- * named; the surrounding bytes stay anonymous. dead_unit_menu_t opens with the
- * 0x3c menu record and uses the world_menu_entry_t names. */
-typedef struct dead_unit_entry_counts {
-    s16 visible_count;  /* 0x00 */
-    s16 overflow_count; /* 0x02 */
-} dead_unit_entry_counts_t;
-
-typedef struct dead_unit_menu {
-    u8 _unused_000[4];
-    s16 inner_width; /* 0x04 */
-    u8 _unused_006[2];
-    s16 window_x;     /* 0x08 */
-    s16 window_y;     /* 0x0a */
-    s16 window_width; /* 0x0c */
-    u8 _unused_00e[6];
-    s16 overall_width; /* 0x14 */
-    u8 _unused_016[0x18];
-    dead_unit_entry_counts_t* entries; /* 0x30 */
-    u8 _unused_034[6];
-    s16 menu_type;         /* 0x3a */
-    u8 at_list_menu[0x78]; /* 0x3c */
-    u8 confirm_menu[0x78]; /* 0xb4 */
-    u8 message_menu[0x1c]; /* 0x12c */
-    s16 message_id;        /* 0x148 */
-    u8 _unused_14a[0x1e];
-    u8 move_menu[4]; /* 0x168 */
-} dead_unit_menu_t;
-typedef char dead_unit_menu_size_must_be_0x16c[sizeof(dead_unit_menu_t) == 0x16c ? 1 : -1];
+/* Seven menu entries form the crystal/treasure result panel. The AT-list
+ * and confirmation groups each contain a message entry followed by a choice. */
+typedef enum dead_unit_menu_entry {
+    DEAD_UNIT_MENU_LIST = 0,
+    DEAD_UNIT_MENU_AT_LIST = 1,
+    DEAD_UNIT_MENU_CONFIRM = 3,
+    DEAD_UNIT_MENU_MESSAGE = 5,
+    DEAD_UNIT_MENU_MOVE = 6,
+    DEAD_UNIT_MENU_ENTRY_COUNT = 7,
+} dead_unit_menu_entry_e;
 
 /* Crystal/treasure pickup result (g_main_crystal_pickup_result, 0x8006623c)
  * that battle_unit_generate_crystal_or_treasure builds on the main thread

@@ -2,35 +2,23 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Installs the dead-unit result panel as the active menu descriptor, rebuilds
- * its selectable list from the context bitmap, then runs the panel's worker
- * threads until the player commits an action (0x801c0e80-0x801c14ec).
- *
- * Source-order constraints proven by the byte-exact build:
- *   - `g_battle_menu_thread_menu_data` must be assigned from `&g_option_dead_unit_menu` *before*
- *     `menu`, so the shared address stays a copy (`move`) instead of being
- *     folded into a single definition.
- *   - `g_option_dead_unit_menu.menu_type` must be stored *after* both of those, or
- *     CSE bases the plain object address on `symbol + 0x3a` and derives
- *     `&g_option_dead_unit_menu` with an extra `addiu`.
- *   - `battle_thread_exit_current()` does not return, and the original relies
- *     on that: no `return` follows the early exits, so their epilogues fall
- *     through into the next case instead of being cross-jumped to the shared
- *     tail. */
+/* Runs the crystal/treasure result panel and its list and choice threads. */
 void option_menu_start_dead_unit_threads(void) {
     crystal_pickup_result_t* context = g_battle_dead_unit_context;
     world_menu_entry_t* previous_menu_descriptor = g_battle_menu_thread_menu_data;
-    dead_unit_menu_t* menu;
+    world_menu_entry_t* menu;
     s32 value_count;
     s32 byte_index;
     s32 bit_index;
     s32 index;
     s16 message_id;
 
-    g_battle_menu_thread_menu_data = (world_menu_entry_t*)&g_option_dead_unit_menu;
-    menu = &g_option_dead_unit_menu;
-    g_option_dead_unit_menu.menu_type = 5;
-    g_option_dead_unit_menu.entries = &g_option_dead_unit_menu_entries;
+    /* Publish the menu before its local copy and selector store.
+     * Reordering them changes address CSE. */
+    g_battle_menu_thread_menu_data = g_option_dead_unit_menu;
+    menu = g_option_dead_unit_menu;
+    g_option_dead_unit_menu[DEAD_UNIT_MENU_LIST].select_text_table = 5;
+    g_option_dead_unit_menu[DEAD_UNIT_MENU_LIST].context = &g_option_dead_unit_menu_entries;
 
     for (index = 0x1ff; index >= 0; index--) {
         g_option_dead_unit_menu_flags[index] = 0;
@@ -60,27 +48,34 @@ void option_menu_start_dead_unit_threads(void) {
     menu->window_x = 0xc8;
     menu->window_y = 0x40;
     menu->window_width = 0x70;
-    menu->overall_width = 0x70;
+    menu->text_image.width = 0x70;
     menu->inner_width = 0x70;
     if (value_count < 8) {
-        menu->entries->visible_count = value_count;
-        menu->entries->overflow_count = 0;
+        world_menu_text_layout_t* layout;
+        layout = menu->context;
+        layout->row_count = value_count;
+        layout = menu->context;
+        layout->hidden_rows = 0;
     } else {
-        menu->entries->visible_count = 8;
-        menu->entries->overflow_count = value_count - 8;
+        world_menu_text_layout_t* layout;
+        layout = menu->context;
+        layout->row_count = 8;
+        layout = menu->context;
+        layout->hidden_rows = value_count - 8;
     }
 
     if (context->result == 0) {
         message_id = 0x183c;
-        ((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_id = message_id;
+        g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE].text_id = message_id;
         battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
-        battle_thread_set_parameters(g_battle_current_thread_id - 1,
-            (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_menu, 0, 0);
+        battle_thread_set_parameters(
+            g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE], 0, 0);
         battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
         battle_thread_wait_frames(2);
         g_battle_dead_unit_action = 0;
         g_battle_menu_thread_menu_data = previous_menu_descriptor;
         g_battle_menu_pending_selection[0] = 0;
+        /* Thread exit does not return; a source return changes epilogue sharing. */
         battle_thread_exit_current();
     }
 
@@ -97,10 +92,10 @@ void option_menu_start_dead_unit_threads(void) {
             g_battle_text_substitution_values[0] = context->treasure_item;
             g_battle_dead_unit_result = context->treasure_item;
         }
-        ((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_id = message_id;
+        g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE].text_id = message_id;
         battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
-        battle_thread_set_parameters(g_battle_current_thread_id - 1,
-            (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->message_menu, 0, 0);
+        battle_thread_set_parameters(
+            g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE], 0, 0);
         battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
         battle_thread_wait_frames(2);
         g_battle_dead_unit_action = 4;
@@ -122,8 +117,8 @@ void option_menu_start_dead_unit_threads(void) {
         if (context->result == 3) {
             g_option_dead_unit_secondary_result = 0xff;
             battle_thread_start(g_battle_current_thread_id - 1, battle_menu_run_icon_selection_loop);
-            battle_thread_set_parameters(g_battle_current_thread_id - 1,
-                (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->move_menu, 0, 0);
+            battle_thread_set_parameters(
+                g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MOVE], 0, 0);
             battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
         }
 
@@ -133,7 +128,7 @@ void option_menu_start_dead_unit_threads(void) {
             battle_thread_set_parameters(g_battle_current_thread_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
             battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,
-                (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->at_list_menu, 0, 0);
+                (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_AT_LIST], 0, 0);
             for (;;) {
                 battle_thread_yield();
                 if (battle_thread_is_running_asm(g_battle_current_thread_id - 3) != 0) {
@@ -167,8 +162,8 @@ void option_menu_start_dead_unit_threads(void) {
         if ((g_option_dead_unit_secondary_result == 1 && context->result == 3) || context->result == 2) {
             g_option_dead_unit_primary_result = 0xff;
             battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
-            battle_thread_set_parameters(g_battle_current_thread_id - 1,
-                (s32)((dead_unit_menu_t*)g_battle_menu_thread_menu_data)->confirm_menu, 0, 0);
+            battle_thread_set_parameters(
+                g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_CONFIRM], 0, 0);
             battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
             if (g_option_dead_unit_primary_result == 0) {
                 g_battle_dead_unit_action = 2;

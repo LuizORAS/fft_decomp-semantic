@@ -8,8 +8,8 @@
 /* dead unit */
 
 extern u32* g_option_dead_unit_controller_input;
-extern dead_unit_menu_t g_option_dead_unit_menu;
-extern dead_unit_entry_counts_t g_option_dead_unit_menu_entries;
+extern world_menu_entry_t g_option_dead_unit_menu[DEAD_UNIT_MENU_ENTRY_COUNT];
+extern world_menu_text_layout_t g_option_dead_unit_menu_entries;
 extern s16 g_option_dead_unit_menu_flags[];
 extern s16 g_option_dead_unit_primary_result;
 extern s16 g_option_dead_unit_secondary_result;
