@@ -71,7 +71,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         frame
             = (battle_effect_frame_record_t*)(*(u16*)(g_battle_effect_frame_data
                                                   + (node->sprite_frame_index * 2
-                                                      + *(s16*)(g_battle_effect_frame_data + node->frame_group_index)))
+                                                      + *(s16*)(g_battle_effect_frame_data + node->frame_group_offset)))
                 + g_battle_effect_frame_data);
         count = frame->count;
         if (block->color.sprite_count != count) {

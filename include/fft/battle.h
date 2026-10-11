@@ -3741,7 +3741,7 @@ typedef struct effect_list_node {
     s16 frame_timer;           /* 0x16: counts down by 2; the next opcode runs at <= 0 */
     u8* sequence_data;         /* 0x18: base of the u8 animation sequence */
     u16 sequence_offset;       /* 0x1c: byte offset of the next sequence opcode */
-    u8 frame_group_index;      /* 0x1e: indexes g_battle_effect_frame_data */
+    u8 frame_group_offset;     /* 0x1e: byte offset into the frame-group offset table */
     u8 sprite_frame_index;     /* 0x1f: frame id from the sequence opcode */
     battle_effect_sprite_block_t* sprite_block; /* 0x20 */
 } effect_list_node_t;

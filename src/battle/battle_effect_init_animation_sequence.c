@@ -15,7 +15,7 @@ void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_
     flags = state->kind | EFFECT_LIST_NODE_FRAME_CHANGED;
     offset = entry[0] + (entry[1] << 8);
     state->sequence_offset = 0;
-    state->frame_group_index = (frame_group & 0xFF) * 2;
+    state->frame_group_offset = (frame_group & 0xFF) * 2;
     state->frame_timer = 0;
     state->kind = flags;
     /* Integer addition preserves the original register order. */
