@@ -15,9 +15,7 @@ void main_boot_fade_out_squaresoft_logo(void) {
 
     intensity = 0;
     SetPolyF4(&polygons[0]);
-    polygons[0].r0 = 0;
-    polygons[0].g0 = 0;
-    polygons[0].b0 = 0;
+    setRGB0(&polygons[0], 0, 0, 0);
     polygons[0].x0 = 0;
     polygons[0].y0 = 0;
     polygons[0].x1 = 320;
@@ -40,9 +38,7 @@ void main_boot_fade_out_squaresoft_logo(void) {
 
         buffer = g_main_gfx_screen_polarity;
         ClearOTag(otag_base + buffer * 2, 2);
-        g_main_gfx_screen_polarity[polygons].r0 = intensity;
-        g_main_gfx_screen_polarity[polygons].g0 = intensity;
-        g_main_gfx_screen_polarity[polygons].b0 = intensity;
+        setRGB0(&g_main_gfx_screen_polarity[polygons], intensity, intensity, intensity);
         AddPrim(otag_base + buffer * 2, &polygons[g_main_gfx_screen_polarity]);
         AddPrim(otag_base + buffer * 2, &draw_modes[g_main_gfx_screen_polarity]);
         main_boot_draw_squaresoft_logo(otag_base + buffer * 2, g_main_boot_squaresoft_logo_image_words);

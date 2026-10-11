@@ -15,9 +15,7 @@ void main_gfx_build_now_loading(u32 visible, s32 x, s32 y) {
     g_main_gfx_now_loading_visible = visible;
     setPolyFT4(&prims[0]);
     g_main_gfx_now_loading_frame_counter = 0;
-    prims[0].r0 = 0x80;
-    prims[0].g0 = 0x80;
-    prims[0].b0 = 0x80;
+    setRGB0(&prims[0], 0x80, 0x80, 0x80);
     SetSemiTrans(&prims[0], 0);
     prims[0].tpage = 0x1f;
     prims[0].clut = 0x7887;

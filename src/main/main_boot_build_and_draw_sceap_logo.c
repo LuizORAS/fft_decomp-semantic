@@ -22,9 +22,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
     frame = 0;
 
     SetPolyF4(&polygons[0]);
-    polygons[0].r0 = 0;
-    polygons[0].g0 = 0;
-    polygons[0].b0 = 0;
+    setRGB0(&polygons[0], 0, 0, 0);
     polygons[0].x0 = 0;
     polygons[0].y0 = 0;
     polygons[0].x1 = 320;
@@ -55,9 +53,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
     while (intensity >= 0) {
         current_otag = otags[g_main_gfx_screen_polarity];
         ClearOTag(current_otag, 2);
-        g_main_gfx_screen_polarity[polygons].r0 = intensity;
-        g_main_gfx_screen_polarity[polygons].g0 = intensity;
-        g_main_gfx_screen_polarity[polygons].b0 = intensity;
+        setRGB0(&g_main_gfx_screen_polarity[polygons], intensity, intensity, intensity);
         AddPrim(current_otag, &polygons[g_main_gfx_screen_polarity]);
         AddPrim(current_otag, &draw_modes[g_main_gfx_screen_polarity]);
         main_boot_draw_sceap_logo(current_otag, (u32*)g_main_heap_high_overlay_load_address);
@@ -76,9 +72,7 @@ void main_boot_build_and_draw_sceap_logo(void) {
 
         current_otag = otags[g_main_gfx_screen_polarity];
         ClearOTag(current_otag, 2);
-        g_main_gfx_screen_polarity[polygons].r0 = intensity;
-        g_main_gfx_screen_polarity[polygons].g0 = intensity;
-        g_main_gfx_screen_polarity[polygons].b0 = intensity;
+        setRGB0(&g_main_gfx_screen_polarity[polygons], intensity, intensity, intensity);
         AddPrim(current_otag, &polygons[g_main_gfx_screen_polarity]);
         AddPrim(current_otag, &draw_modes[g_main_gfx_screen_polarity]);
         main_boot_draw_sceap_logo(current_otag, (u32*)g_main_heap_high_overlay_load_address);
