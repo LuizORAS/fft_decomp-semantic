@@ -919,50 +919,6 @@ s32 battle_menu_should_close_thread(u32* input);
 void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 
 /* text */
-/* The low 9 bits select a result graphic; bit 9 alters its motion for a
- * critical hit.  Values below 0x10 are also indices into the numeric-value
- * table at 0x800962d4. */
-typedef enum battle_numeric_display_selector {
-    BATTLE_NUMERIC_DISPLAY_HP_DAMAGE = 0x000,
-    BATTLE_NUMERIC_DISPLAY_HP_HEALING = 0x001,
-    BATTLE_NUMERIC_DISPLAY_MP_DAMAGE = 0x002,
-    BATTLE_NUMERIC_DISPLAY_MP_HEALING = 0x003,
-    BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE = 0x004,
-    BATTLE_NUMERIC_DISPLAY_SPEED_GAIN = 0x005,
-    BATTLE_NUMERIC_DISPLAY_CT_DAMAGE = 0x006,
-    BATTLE_NUMERIC_DISPLAY_CT_GAIN = 0x007,
-    BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE = 0x008,
-    BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN = 0x009,
-    BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE = 0x00a,
-    BATTLE_NUMERIC_DISPLAY_FAITH_GAIN = 0x00b,
-    BATTLE_NUMERIC_DISPLAY_PA_DAMAGE = 0x00c,
-    BATTLE_NUMERIC_DISPLAY_PA_GAIN = 0x00d,
-    BATTLE_NUMERIC_DISPLAY_MA_DAMAGE = 0x00e,
-    BATTLE_NUMERIC_DISPLAY_MA_GAIN = 0x00f,
-    BATTLE_NUMERIC_DISPLAY_MISSED = 0x010,
-    BATTLE_NUMERIC_DISPLAY_GUARDED = 0x020,
-    BATTLE_NUMERIC_DISPLAY_CAUGHT = 0x030,
-    BATTLE_NUMERIC_DISPLAY_GAINED_EXP = 0x040,
-    BATTLE_NUMERIC_DISPLAY_GAINED_JP = 0x050,
-    BATTLE_NUMERIC_DISPLAY_STATUS_INFLICTED = 0x060,
-    BATTLE_NUMERIC_DISPLAY_STATUS_REMOVED = 0x070,
-    BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN = 0x080,
-    BATTLE_NUMERIC_DISPLAY_LEVEL_UP = 0x090,
-    BATTLE_NUMERIC_DISPLAY_STOLEN = 0x0a0,
-    BATTLE_NUMERIC_DISPLAY_BROKEN = 0x0b0,
-    BATTLE_NUMERIC_DISPLAY_QUICK = 0x0c0,
-    BATTLE_NUMERIC_DISPLAY_CT_ZERO = 0x0d0,
-    BATTLE_NUMERIC_DISPLAY_NO_TARGET = 0x0e0,
-    BATTLE_NUMERIC_DISPLAY_SILENCED = 0x0f0,
-    BATTLE_NUMERIC_DISPLAY_NO_MP = 0x100,
-} battle_numeric_display_selector_e;
-
-/* Encoding in battle_action_result_display_t.selector. */
-enum {
-    BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
-    BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL = 0x200,
-};
-
 /* Text variables $27 and $28 (rows of glyph pixels drawn, 0x10 by default),
  * bound separately: battle_menu_display_text also takes the table base, and
  * element spellings let GCC address them from it. */

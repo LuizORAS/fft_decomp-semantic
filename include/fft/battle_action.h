@@ -116,6 +116,56 @@ typedef enum battle_action_display_flag {
     BATTLE_ACTION_DISPLAY_FLAG_NO_MP = 0x20000000,
 } battle_action_display_flag_e;
 
+/* The low 9 bits select a result graphic; bit 9 alters its motion for a
+ * critical hit.  Values below 0x10 are also indices into the numeric-value
+ * table at 0x800962d4. */
+typedef enum battle_numeric_display_selector {
+    BATTLE_NUMERIC_DISPLAY_HP_DAMAGE = 0x000,
+    BATTLE_NUMERIC_DISPLAY_HP_HEALING = 0x001,
+    BATTLE_NUMERIC_DISPLAY_MP_DAMAGE = 0x002,
+    BATTLE_NUMERIC_DISPLAY_MP_HEALING = 0x003,
+    BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE = 0x004,
+    BATTLE_NUMERIC_DISPLAY_SPEED_GAIN = 0x005,
+    BATTLE_NUMERIC_DISPLAY_CT_DAMAGE = 0x006,
+    BATTLE_NUMERIC_DISPLAY_CT_GAIN = 0x007,
+    BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE = 0x008,
+    BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN = 0x009,
+    BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE = 0x00a,
+    BATTLE_NUMERIC_DISPLAY_FAITH_GAIN = 0x00b,
+    BATTLE_NUMERIC_DISPLAY_PA_DAMAGE = 0x00c,
+    BATTLE_NUMERIC_DISPLAY_PA_GAIN = 0x00d,
+    BATTLE_NUMERIC_DISPLAY_MA_DAMAGE = 0x00e,
+    BATTLE_NUMERIC_DISPLAY_MA_GAIN = 0x00f,
+    BATTLE_NUMERIC_DISPLAY_MISSED = 0x010,
+    BATTLE_NUMERIC_DISPLAY_GUARDED = 0x020,
+    BATTLE_NUMERIC_DISPLAY_CAUGHT = 0x030,
+    BATTLE_NUMERIC_DISPLAY_GAINED_EXP = 0x040,
+    BATTLE_NUMERIC_DISPLAY_GAINED_JP = 0x050,
+    BATTLE_NUMERIC_DISPLAY_STATUS_INFLICTED = 0x060,
+    BATTLE_NUMERIC_DISPLAY_STATUS_REMOVED = 0x070,
+    BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN = 0x080,
+    BATTLE_NUMERIC_DISPLAY_LEVEL_UP = 0x090,
+    BATTLE_NUMERIC_DISPLAY_STOLEN = 0x0a0,
+    BATTLE_NUMERIC_DISPLAY_BROKEN = 0x0b0,
+    BATTLE_NUMERIC_DISPLAY_QUICK = 0x0c0,
+    BATTLE_NUMERIC_DISPLAY_CT_ZERO = 0x0d0,
+    BATTLE_NUMERIC_DISPLAY_NO_TARGET = 0x0e0,
+    BATTLE_NUMERIC_DISPLAY_SILENCED = 0x0f0,
+    BATTLE_NUMERIC_DISPLAY_NO_MP = 0x100,
+} battle_numeric_display_selector_e;
+
+/* Encoding in battle_action_result_display_t.selector. */
+enum {
+    BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
+    BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL = 0x200,
+};
+
+/* Numeric values correspond to the first sixteen action display flags. */
+enum {
+    BATTLE_ACTION_DISPLAY_VALUE_COUNT = 16,
+    BATTLE_ACTION_DISPLAY_NUMERIC_FLAGS_MASK = 0x0000ffff,
+};
+
 /* Image IDs used by the projected-action display. These index the 49-entry
  * texture-source table at 0x8014cf68; they are not battle status IDs. */
 typedef enum battle_action_display_image_id {
@@ -430,8 +480,8 @@ extern s32 g_battle_action_turn_event_type;
 extern s32 g_battle_action_at_list_active;
 extern s32 g_battle_action_at_list_id;
 extern battle_action_display_image_rect_t g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_COUNT];
-extern const u8 g_battle_action_display_numeric_selectors[16];
-extern u16 g_battle_action_display_values[16];
+extern const u8 g_battle_action_display_numeric_selectors[BATTLE_ACTION_DISPLAY_VALUE_COUNT];
+extern u16 g_battle_action_display_values[BATTLE_ACTION_DISPLAY_VALUE_COUNT];
 
 /* Eight per status_infliction/status_removal byte, indexed from the byte's high bit. */
 extern u8 g_battle_action_status_display_image_ids[BATTLE_STATUS_BYTE_COUNT][8];

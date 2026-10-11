@@ -34,34 +34,34 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     stats = unit->battle_data;
     display = &unit->numeric_display;
 
-    if ((flags & 0xffff) != 0) {
-        g_battle_action_display_values[0] = stats->action.hp_damage;
-        g_battle_action_display_values[1] = stats->action.hp_healing;
-        g_battle_action_display_values[2] = stats->action.mp_damage;
-        g_battle_action_display_values[3] = stats->action.mp_healing;
+    if ((flags & BATTLE_ACTION_DISPLAY_NUMERIC_FLAGS_MASK) != 0) {
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_HP_DAMAGE] = stats->action.hp_damage;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_HP_HEALING] = stats->action.hp_healing;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_MP_DAMAGE] = stats->action.mp_damage;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_MP_HEALING] = stats->action.mp_healing;
         change = stats->action.sp_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[5] = change;
-        g_battle_action_display_values[4] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_SPEED_GAIN] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE] = change;
         change = stats->action.ct_change & 0x7f;
-        g_battle_action_display_values[7] = change;
-        g_battle_action_display_values[6] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_CT_GAIN] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_CT_DAMAGE] = change;
         change = stats->action.brave_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[9] = change;
-        g_battle_action_display_values[8] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE] = change;
         change = stats->action.faith_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[11] = change;
-        g_battle_action_display_values[10] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_FAITH_GAIN] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE] = change;
         flag = 1;
         change = stats->action.pa_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[13] = change;
-        g_battle_action_display_values[12] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_PA_GAIN] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_PA_DAMAGE] = change;
         index = 0;
         change = stats->action.ma_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[15] = change;
-        g_battle_action_display_values[14] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_MA_GAIN] = change;
+        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_MA_DAMAGE] = change;
 
         scan_flags = unit->action_display_flags;
-        while (index < 16) {
+        while (index < BATTLE_ACTION_DISPLAY_VALUE_COUNT) {
             if ((flag & scan_flags) != 0) {
                 flags = index;
                 display->value = g_battle_action_display_values[flags];
