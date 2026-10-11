@@ -34,20 +34,20 @@ void battle_effect_advance_map_background_track(
             preset = track->preset[index];
             if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                 mode = preset & EFFECT_COLOR_KEYFRAME_MODE_MASK;
-                red = track->color[index][0] * 2;
-                green = track->color[index][1] * 2;
-                blue = track->color[index][2] * 2;
+                red = track->color[index].r * 2;
+                green = track->color[index].g * 2;
+                blue = track->color[index].b * 2;
                 battle_map_modify_background_gradient(mode, track->duration[index], red, green, blue);
                 if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
                     battle_map_start_darkness_blend(mode, track->duration[index], red, green, blue);
                 }
             } else {
-                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = track->color[index][0];
-                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g = track->color[index][1];
-                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b = track->color[index][2];
-                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = track->second_color[index][0];
-                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = track->second_color[index][1];
-                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = track->second_color[index][2];
+                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = track->color[index].r;
+                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g = track->color[index].g;
+                colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b = track->color[index].b;
+                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = track->second_color[index].r;
+                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = track->second_color[index].g;
+                colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = track->second_color[index].b;
                 battle_map_set_background_gradient(track->duration[index], &colors);
                 if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
                     battle_map_set_darkness_color(track->duration[index], &colors.colors[MAP_BACKGROUND_GRADIENT_TOP]);

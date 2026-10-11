@@ -100,9 +100,9 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 timeline->state.child.remaining.tracks.surroundings = i;
                 preset = track->preset[index];
                 if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
-                    red = track->color[index][0];
-                    green = track->color[index][1];
-                    blue = track->color[index][2];
+                    red = track->color[index].r;
+                    green = track->color[index].g;
+                    blue = track->color[index].b;
                     battle_map_color_field(
                         preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
                     for (i = 0; i < g_battle_effect_context.spectator_count; i++) {
@@ -133,9 +133,9 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 timeline->state.child.remaining.tracks.caster = i;
                 preset = track->preset[index];
                 if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
-                    red = track->color[index][0];
-                    green = track->color[index][1];
-                    blue = track->color[index][2];
+                    red = track->color[index].r;
+                    green = track->color[index].g;
+                    blue = track->color[index].b;
                     if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
                         == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
@@ -163,9 +163,9 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 timeline->state.child.remaining.tracks.target = i;
                 preset = track->preset[index];
                 if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
-                    red = track->color[index][0];
-                    green = track->color[index][1];
-                    blue = track->color[index][2];
+                    red = track->color[index].r;
+                    green = track->color[index].g;
+                    blue = track->color[index].b;
                     if (g_battle_effect_context.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
                             track->duration[index], g_battle_effect_context.targets[target].data.unit.misc_id, red,
@@ -192,20 +192,20 @@ s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
                 preset = screen->preset[index];
                 mode = preset & EFFECT_COLOR_KEYFRAME_MODE_MASK;
                 if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
-                    red = screen->color[index][0] * 2;
-                    green = screen->color[index][1] * 2;
-                    blue = screen->color[index][2] * 2;
+                    red = screen->color[index].r * 2;
+                    green = screen->color[index].g * 2;
+                    blue = screen->color[index].b * 2;
                     battle_map_modify_background_gradient(mode, screen->duration[index], red, green, blue);
                     if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
                         battle_map_start_darkness_blend(mode, screen->duration[index], red, green, blue);
                     }
                 } else {
-                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = screen->color[index][0];
-                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g = screen->color[index][1];
-                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b = screen->color[index][2];
-                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = screen->second_color[index][0];
-                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = screen->second_color[index][1];
-                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = screen->second_color[index][2];
+                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = screen->color[index].r;
+                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g = screen->color[index].g;
+                    colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b = screen->color[index].b;
+                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = screen->second_color[index].r;
+                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = screen->second_color[index].g;
+                    colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = screen->second_color[index].b;
                     battle_map_set_background_gradient(screen->duration[index], &colors);
                     if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
                         battle_map_set_darkness_color(

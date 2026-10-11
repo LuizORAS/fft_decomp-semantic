@@ -26,9 +26,9 @@ void battle_effect_advance_caster_palette_track(
             *remaining_frames = timer;
             preset = track->preset[index];
             if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
-                red = track->color[index][0];
-                green = track->color[index][1];
-                blue = track->color[index][2];
+                red = track->color[index].r;
+                green = track->color[index].g;
+                blue = track->color[index].b;
                 battle_gfx_start_misc_unit_palette_modulation(
                     preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], caster_misc_id, red, green, blue);
             }
