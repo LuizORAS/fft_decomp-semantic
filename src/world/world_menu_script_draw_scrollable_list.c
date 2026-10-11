@@ -45,14 +45,14 @@ menu_instruction_t* world_menu_script_draw_scrollable_list(menu_instruction_t* i
     speed = world_gfx_get_vsync_mode_or_one();
     g_world_menu_use_scroll_position = 1;
     if (g_world_menu_list_layout_pending != 0) {
-        world_menu_load_scrollable_list_layout((u8*)instruction);
+        world_menu_load_scrollable_list_layout(instruction);
     }
     old_cursor = g_world_menu_cursor_position;
     if (g_world_menu_list_scroll_direction == 0) {
         i = world_input_read_menu_scroll_repeat();
         if (i != 0) {
             if (i != 2) {
-                world_menu_scroll_list_page(i, &instruction->list);
+                world_menu_scroll_list_page(i, instruction);
             }
         } else if ((g_world_menu_display_script_input & 0x10000000)
             || (g_world_menu_display_script_input & PSX_PAD_UP)) {

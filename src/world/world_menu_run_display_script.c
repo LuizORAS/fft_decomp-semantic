@@ -4,8 +4,8 @@
 /* Run a menu display script from its first opcode until the 0x1c terminator,
  * after clearing the shared draw priority, semi-transparency, palette-mode
  * and temporary-draw-area state. */
-void world_menu_run_display_script(u8* script, s32 input) {
-    menu_instruction_t* instruction = (menu_instruction_t*)script;
+void world_menu_run_display_script(menu_instruction_t* script, s32 input) {
+    menu_instruction_t* instruction = script;
 
     g_world_menu_draw_priority = 0;
     g_world_menu_semi_trans = 0;

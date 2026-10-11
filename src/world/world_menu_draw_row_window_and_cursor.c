@@ -6,7 +6,7 @@ void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode) {
     s16 y;
     /* One pointer serves the script then the quad; separate locals remove the argument copy. */
     union {
-        u8* script;
+        menu_instruction_t* script;
         world_oriented_quad_t* quad;
     } drawing;
     s32 cursor_x;
@@ -17,11 +17,11 @@ void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode) {
         x -= 1;
     }
     if (wide == 0) {
-        drawing.script = g_world_item_category_tabs_script;
+        drawing.script = &g_world_item_category_tabs_script;
         y = 0x40;
     } else {
         y = 0x4F;
-        drawing.script = g_world_item_category_tabs_wide_script;
+        drawing.script = &g_world_item_category_tabs_wide_script;
     }
     world_menu_run_script_with_palette_mode(drawing.script, 0, mode);
     drawing.quad = &g_world_item_category_tab_sprites[row];

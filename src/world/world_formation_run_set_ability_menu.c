@@ -160,7 +160,7 @@ s32 world_formation_run_set_ability_menu(void) {
             }
         }
         world_menu_run_script_with_palette_mode(
-            g_world_set_ability_window_script, g_world_input_primary_repeat, world_thread_is_task_active(0));
+            &g_world_set_ability_window_script, g_world_input_primary_repeat, world_thread_is_task_active(0));
     }
     if (g_world_set_ability_list_close_pending != 0) {
         world_menu_set_window_scale_step(0);

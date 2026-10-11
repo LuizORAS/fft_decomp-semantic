@@ -1375,6 +1375,30 @@ typedef struct menu_sprite_color_command {
 } menu_sprite_color_command_t;
 typedef char menu_sprite_color_command_size_must_be_8[sizeof(menu_sprite_color_command_t) == 8 ? 1 : -1];
 
+/* Four-byte menu state commands, including draw priority and blend state. */
+typedef struct menu_draw_state_command {
+    u8 opcode;
+    u8 length;
+    u8 _unused_02;
+    u8 value;
+} menu_draw_state_command_t;
+
+typedef struct menu_fixed_clut_command {
+    u8 opcode;
+    u8 length;
+    u8 y_high;
+    u8 x_div_16;
+    u8 y_low;
+} menu_fixed_clut_command_t;
+
+typedef struct menu_texture_page_command {
+    u8 opcode;
+    u8 length;
+    u8 y_blend; /* bits 0-1: y/256; bits 4-5: blend rate */
+    u8 x_div_16;
+    u8 depth;
+} menu_texture_page_command_t;
+
 /* A view of the current byte-aligned instruction, not a fixed-stride array.
  * Commands advance by their encoded byte length; opcode 0x16 and the module's
  * terminator are single bytes without a length operand. */
@@ -1409,13 +1433,7 @@ typedef union menu_instruction {
     menu_line_command_t line;
     menu_draw_area_command_t draw_area;
     menu_sprite_color_command_t sprite_color;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 y_high;
-        u8 x_div_16;
-        u8 y_low;
-    } fixed_clut;
+    menu_fixed_clut_command_t fixed_clut;
     struct {
         u8 opcode;
         u8 length;
@@ -1426,19 +1444,8 @@ typedef union menu_instruction {
         u8 alternate_x_div_16;
         u8 alternate_y_low;
     } clut;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 y_blend; /* bits 0-1: y/256; bits 4-5: blend rate */
-        u8 x_div_16;
-        u8 depth;
-    } texture_page;
-    struct {
-        u8 opcode;
-        u8 length;
-        u8 _unused_02;
-        u8 value;
-    } draw_state;
+    menu_texture_page_command_t texture_page;
+    menu_draw_state_command_t draw_state;
     struct {
         u8 opcode;
         u8 length;

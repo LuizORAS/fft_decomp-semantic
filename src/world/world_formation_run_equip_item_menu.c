@@ -125,7 +125,7 @@ s32 world_formation_run_equip_item_menu(void) {
             }
             g_world_status_display_thread_params.redraw_request = 1;
         }
-        world_menu_run_display_script(g_world_equip_item_menu_script, g_world_input_primary_repeat);
+        world_menu_run_display_script(&g_world_equip_item_menu_script, g_world_input_primary_repeat);
     }
     if (g_world_equip_item_list_refresh != 0) {
         g_world_change_banner_panel_thread_params.style = 0;

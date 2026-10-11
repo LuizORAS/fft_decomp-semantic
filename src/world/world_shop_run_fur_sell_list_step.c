@@ -51,6 +51,6 @@ void world_shop_run_fur_sell_list_step(void) {
     }
     world_menu_switch_item_category(g_world_input_newly_pressed);
     world_menu_run_script_with_palette_mode(
-        g_world_shop_sale_confirm_menu_script, g_world_input_primary_repeat, g_world_thread_task_active);
+        &g_world_shop_sale_confirm_menu_script, g_world_input_primary_repeat, g_world_thread_task_active);
     world_shop_run_obtain_gil_menu();
 }

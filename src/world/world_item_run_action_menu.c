@@ -92,7 +92,7 @@ s8 world_item_run_action_menu(void) {
                         g_world_menu_entry_ids[i] = g_world_menu_entry_ids[i + 1];
                     }
                     world_menu_init_and_load_scrollable_list(g_world_menu_entry_ids, g_world_menu_cursor_position,
-                        g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES], g_world_item_list_window_script);
+                        g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES], &g_world_item_list_window_script);
                     world_menu_set_window_scale_step(10);
                     world_item_reconcile_sorted_list(g_world_item_menu_category);
                     world_item_populate_stat_preview(g_world_menu_entry_ids[g_world_menu_cursor_position],

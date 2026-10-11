@@ -84,7 +84,7 @@ s32 world_ability_run_view_list(void) {
         world_menu_set_window_scale_step(10);
     }
     world_menu_run_script_with_palette_mode(
-        g_world_ability_list_script, g_world_input_primary_repeat, g_world_thread_task_active);
+        &g_world_ability_list_script, g_world_input_primary_repeat, g_world_thread_task_active);
     rect.x = 0x26;
     rect.y = 0x2d;
     rect.w = 0x50;

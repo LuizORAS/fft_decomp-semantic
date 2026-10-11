@@ -103,8 +103,8 @@ void world_map_light_thread(void);
 
 /* name */
 extern u8 g_world_name_entry_character_rows[];
-extern u8 g_world_name_entry_display_script[];
-extern u8 g_world_name_entry_keyboard_script[];
+extern menu_instruction_t g_world_name_entry_display_script;
+extern menu_instruction_t g_world_name_entry_keyboard_script;
 extern s8 g_world_name_entry_started; /* name entry started */
 extern u16 g_world_name_keyboard_text_cursor_anim;
 extern u16 g_world_name_entry_text_cursor_anim;
@@ -573,13 +573,13 @@ extern s8 g_world_remove_ability_unit_index;
 extern u16 g_world_remove_ability_cursor_anim;
 extern point16_t g_world_remove_ability_cursor_point;
 extern point16_t g_world_clear_abilities_cursor_point;
-extern u8 g_world_set_ability_window_script[];
+extern menu_instruction_t g_world_set_ability_window_script;
 extern s8 g_world_set_ability_slot;               /* ability slot under the cursor: 0..4 */
 extern s8 g_world_set_ability_list_close_pending; /* close the ability list this frame */
 extern s8 g_world_set_ability_show_stat_preview;  /* show the stat preview window */
 extern u16 g_world_set_ability_cursor_anim;
 extern point16_t g_world_set_ability_cursor_point;
-extern u8 g_world_ability_list_script[];
+extern menu_instruction_t g_world_ability_list_script;
 extern s32 g_world_menu_selected_command;
 extern world_menu_list_page_t g_world_ability_list_pages[][2];
 extern u8 g_world_ability_menu_saved_browse_enabled;
@@ -644,7 +644,7 @@ extern world_gfx_image_load_parameters_t g_world_equipment_panel_sprite_params_3
 extern world_gfx_image_load_parameters_t g_world_equipment_panel_icon_params[5];
 extern world_status_thread_t g_world_equipment_ability_panel_thread_params;
 extern s8 g_world_equip_menu_initialized;
-extern u8 g_world_equip_item_menu_script[];
+extern menu_instruction_t g_world_equip_item_menu_script;
 extern s8 g_world_equip_item_slot;
 extern s8 g_world_equip_item_list_refresh;
 extern s8 g_world_equip_item_preview_active;
@@ -1034,7 +1034,7 @@ extern s16 g_world_job_wheel_unit_index;
  * world_formation_run_job_wheel_menu addresses each with its own lui/addiu. */
 extern world_gfx_textured_rect_source_t g_world_job_wheel_portrait_quad;
 extern world_gfx_textured_rect_source_t g_world_job_wheel_new_portrait_quad;
-extern u8 g_world_job_wheel_script[];
+extern menu_instruction_t g_world_job_wheel_script;
 extern u8 g_world_job_wheel_job_selected;
 extern point16_t g_world_job_wheel_unit_sprite_position;
 extern u8 g_world_job_wheel_center_x;
@@ -1050,7 +1050,7 @@ extern u8 g_world_job_wheel_open_frame;
 extern u8 g_world_job_wheel_closing;
 extern u8 g_world_job_wheel_opening;
 extern world_oriented_quad_t g_world_job_wheel_mastered_icon_sprite;
-extern u8 g_world_learn_job_list_script[];
+extern menu_instruction_t g_world_learn_job_list_script;
 extern world_menu_entry_t g_world_learn_confirm_menu[2];
 
 /* The prompt chained after g_world_learn_confirm_menu. */
@@ -1488,8 +1488,8 @@ extern menu_draw_number_command_t g_world_formation_faith_number;
 extern menu_draw_number_command_t g_world_formation_brave_number_wide;
 extern menu_draw_number_command_t g_world_formation_faith_number_wide;
 extern menu_draw_number_command_t g_world_formation_gauge_max_number;
-extern menu_window_command_t g_world_formation_stat_bar_window_top;
-extern menu_window_command_t g_world_formation_stat_bar_window_bottom;
+extern menu_instruction_t g_world_formation_stat_bar_window_top;
+extern menu_instruction_t g_world_formation_stat_bar_window_bottom;
 
 /* Three consecutive sprite records at 0x8018c704 / 0x8018c718 / 0x8018c72c. */
 extern world_oriented_quad_t g_world_formation_shadow_egg_sprites[3];
@@ -2444,7 +2444,7 @@ void world_menu_run_equip_thread(void);
 void world_screen_menu_window_frame_thread(void);
 void world_menu_run_order_unit(void);
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames);
-void world_menu_scroll_list_page(s32 dir, menu_list_record_t* list);
+void world_menu_scroll_list_page(s32 dir, menu_instruction_t* instruction);
 void world_menu_select_icon_cluts(world_menu_icon_sprites_t* menu);
 void world_menu_select_sprite_clut(world_texture_prim_t* primitive);
 void world_menu_add_gradient_line_primitive(point16_t* endpoints, rgb24_t* colors, s32 semi_trans, s32 ot_index);
@@ -2501,15 +2501,16 @@ s32 world_menu_get_window_scale_step(void);
 void world_menu_copy_unit_data_to_status_billboard(struct battle_stats* unit, battle_unit_status_record_t* output);
 void world_menu_init_quad_from_record(RECT* out, const world_menu_entry_t* record, SPRT* primitive);
 void world_menu_reserve_high_overlay(u32 size);
-void world_menu_run_display_script(u8* script, s32 value);
+void world_menu_run_display_script(menu_instruction_t* script, s32 value);
 rgb24_t* world_menu_get_sprite_color(void);
 s32 world_menu_handle_remove_all_equipment(void);
 s32 world_menu_has_items(s32 mode);
 void world_menu_icon_linked_entry_thread(void);
 void world_menu_icon_list_thread(void);
-void world_menu_init_and_load_scrollable_list(const s16* values, s32 selected_index, u8* text_table, u8* script);
+void world_menu_init_and_load_scrollable_list(
+    const s16* values, s32 selected_index, u8* text_table, menu_instruction_t* script);
 void world_menu_init_and_load_scrollable_list_with_scroll(
-    const s16* values, s32 value, s32 selected, u8* text_table, u8* script);
+    const s16* values, s32 value, s32 selected, u8* text_table, menu_instruction_t* script);
 void world_menu_init_at_list(world_menu_entry_t* entry);
 void world_menu_init_palette_and_text(s32 unused);
 void world_menu_init_primitive_colors_normal(world_menu_palette_primitives_t*);
@@ -2525,7 +2526,7 @@ s32 world_menu_is_learn_ability_learned(s32 index);
 s32 world_menu_lerp_fixed12(s32 from, s32 to, s32 t);
 s32 world_screen_menu_lerp_fixed12(s32 from, s32 to, s32 t);
 void world_menu_load_common_graphics(s32 load_extra_pages);
-void world_menu_load_scrollable_list_layout(u8* script);
+void world_menu_load_scrollable_list_layout(menu_instruction_t* script);
 void world_menu_load_text_1bd8(void);
 void world_menu_load_text_1bd8_with_face(void);
 void world_menu_load_text_1c18(void);
@@ -2550,7 +2551,7 @@ void world_menu_run_numeric_display_panel_thread(void);
 void world_menu_run_numeric_editor_thread(void);
 s32 world_menu_run_remove_ability(void);
 s32 world_menu_run_remove_item(void);
-void world_menu_run_script_with_palette_mode(u8* script, s32 input, s32 mode);
+void world_menu_run_script_with_palette_mode(menu_instruction_t* script, s32 input, s32 mode);
 void world_menu_run_skillset_thread(void);
 void world_menu_run_system_function_thread(void);
 s32 world_menu_run_thread(s32 thread_id, world_menu_entry_t* menu);
@@ -2796,15 +2797,15 @@ extern u16 g_world_remove_item_cursor_anim;
 extern point16_t g_world_remove_item_cursor_point;
 extern world_menu_entry_t g_world_item_quantity_change_menu;
 extern world_menu_entry_t g_world_item_unequip_all_menu;
-extern u8 g_world_item_list_window_script[];
-extern u8 g_world_item_hp_mp_bonus_window_script[];
+extern menu_instruction_t g_world_item_list_window_script;
+extern menu_instruction_t g_world_item_hp_mp_bonus_window_script;
 extern s8 g_world_item_menu_mode; /* menu_item_list_state_e */
 
 /* The two item-category icon strips; the active one is kept in g_world_item_category_icon_strip. */
 extern world_menu_entry_t g_world_item_category_icon_strip_a;
 extern world_menu_entry_t g_world_item_category_icon_strip_b;
-extern u8 g_world_item_category_tabs_script[];                    /* menu display stream (narrow variant) */
-extern u8 g_world_item_category_tabs_wide_script[];               /* menu display stream (wide variant) */
+extern menu_instruction_t g_world_item_category_tabs_script;      /* menu display stream (narrow variant) */
+extern menu_instruction_t g_world_item_category_tabs_wide_script; /* menu display stream (wide variant) */
 extern world_oriented_quad_t g_world_item_category_tab_sprites[]; /* 20-byte quads, one per row */
 extern u8 g_world_item_category_tab_x[];                          /* per-row base x */
 extern u8 g_world_item_category_input_lock;
@@ -2947,6 +2948,17 @@ typedef struct world_shop_item_availability {
     u8 low;
 } world_shop_item_availability_t;
 
+/* Prefix of the shop roster display stream, through its first number command. */
+typedef struct world_shop_roster_count_menu_script {
+    menu_draw_state_command_t priority;       /* 0x00 */
+    menu_texture_page_command_t texture_page; /* 0x04 */
+    menu_fixed_clut_command_t clut;           /* 0x09 */
+    menu_sprite_command_t sprites[2];         /* 0x0e */
+    menu_draw_number_command_t unit_count;    /* 0x20 */
+} world_shop_roster_count_menu_script_t;
+typedef char world_shop_roster_count_value_must_be_0x29
+    [((unsigned long)&((world_shop_roster_count_menu_script_t*)0)->unit_count.value == 0x29) ? 1 : -1];
+
 extern s16 g_world_shop_fitting_room_items[][5];
 extern u8 g_world_shop_hire_menu_initialized;
 extern u8 g_world_shop_item_category;
@@ -3004,15 +3016,15 @@ extern RECT g_world_shop_vram_backup_rect;
 extern u8 g_world_shop_main_menu_running;     /* menu open flag */
 extern u8 g_world_shop_exit_fade_started;     /* fade-out started */
 extern u8 g_world_shop_exit_step_initialized; /* state initialised */
-extern u8 g_world_shop_obtain_gil_menu_script[];
-extern u8 g_world_shop_purchase_menu_script[];
+extern menu_instruction_t g_world_shop_obtain_gil_menu_script;
+extern menu_instruction_t g_world_shop_purchase_menu_script;
 extern s8 g_world_shop_purchase_list_initialized;
 extern s8 g_world_shop_purchase_equip_check_pending;
 extern s16 g_world_shop_purchase_message_wait;
 extern u8 g_world_shop_quantity_menu_running;
 extern u8 g_world_shop_equip_candidate_initialized;
 extern u8 g_world_shop_equip_candidate_preview_visible;
-extern u8 g_world_shop_sell_list_menu_script[];
+extern menu_instruction_t g_world_shop_sell_list_menu_script;
 extern s8 g_world_shop_sell_list_initialized;
 extern s16 g_world_shop_sell_message_wait;
 extern u8 g_world_shop_sell_result; /* sell-menu thread result */
@@ -3021,13 +3033,13 @@ extern u8 g_world_shop_fitting_room_initialized;
 /* Two-entry menu chain: row 3 of [0] opens [1] through [0]'s parent-index
  * table at 0x80195518. */
 extern world_menu_entry_t g_world_shop_fitting_room_menu_thread_data[2];
-extern u8 g_world_shop_fitting_item_list_menu_script[];
+extern menu_instruction_t g_world_shop_fitting_item_list_menu_script;
 extern s8 g_world_shop_fitting_equip_menu_initialized;
 extern s8 g_world_shop_fitting_equip_slot;
 extern s8 g_world_shop_fitting_item_list_close;
 extern u16 g_world_shop_fitting_slot_cursor_anim;
 extern point16_t g_world_shop_fitting_slot_cursor_point;
-extern u8 g_world_shop_fitting_cost_menu_script[];
+extern menu_instruction_t g_world_shop_fitting_cost_menu_script;
 extern s8 g_world_shop_equip_slot_preview_initialized;
 extern u16 g_world_shop_equip_slot_cursor_anim;
 extern point16_t g_world_shop_equip_slot_cursor_point;
@@ -3045,11 +3057,11 @@ extern u16 g_world_shop_sell_equipped_cursor_anim;
 extern point16_t g_world_shop_sell_equipped_cursor_point;
 extern u8 g_world_shop_sell_subflow_initialized;
 extern u8 g_world_shop_fur_opened; /* fur shop opened */
-extern u8 g_world_shop_sale_confirm_menu_script[];
+extern menu_instruction_t g_world_shop_sale_confirm_menu_script;
 extern s8 g_world_shop_fur_sell_list_initialized;
 extern s16 g_world_shop_fur_sale_message_wait;
 extern u8 g_world_shop_fur_quantity_menu_running; /* sell-menu thread result */
-extern u8 g_world_shop_fur_purchase_menu_script[];
+extern menu_instruction_t g_world_shop_fur_purchase_menu_script;
 extern s8 g_world_shop_fur_purchase_list_initialized;
 extern s8 g_world_shop_fur_equip_check_pending;
 extern s16 g_world_shop_fur_purchase_message_wait;
@@ -3060,8 +3072,8 @@ extern u8 g_world_shop_hire_name_entry_initialized;
 extern u8 g_world_shop_hire_fee_message_wait;
 extern u8 g_world_shop_rename_prompt_initialized;
 extern u8 g_world_shop_rename_name_entry_initialized;
-extern u8 g_world_shop_soldier_office_fee_menu_script[];
-extern u8 g_world_shop_roster_count_menu_script[];
+extern menu_instruction_t g_world_shop_soldier_office_fee_menu_script;
+extern world_shop_roster_count_menu_script_t g_world_shop_roster_count_menu_script;
 extern s32 g_world_shop_purchase_unit_price;
 extern s16 g_world_shop_purchase_item;
 extern u8 g_world_shop_purchase_total_shown;

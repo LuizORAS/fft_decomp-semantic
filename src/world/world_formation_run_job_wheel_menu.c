@@ -256,5 +256,5 @@ void world_formation_run_job_wheel_menu(void) {
     }
     world_gfx_enqueue_textured_quad(
         &g_world_job_wheel_name_rect, 0x30, 0x30, 0, 0, g_world_menu_window_tpage, g_world_menu_window_clut, 0x33);
-    world_menu_run_script_with_palette_mode(g_world_job_wheel_script, 0, g_world_thread_task_active);
+    world_menu_run_script_with_palette_mode(&g_world_job_wheel_script, 0, g_world_thread_task_active);
 }

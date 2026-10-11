@@ -31,7 +31,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     s16 mode;
     u8 rgb_value;
     battle_menu_sprite_cell_t* cells;
-    menu_window_command_t* window;
+    menu_instruction_t* window;
     rgb24_t* color;
     world_formation_unit_t* unit;
 
@@ -114,7 +114,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             MENU_PRESSABLE_BUTTON_L2, 0x26, value, input & PSX_PAD_L2, row, MAIN_SFX_PAGE_SWITCH);
         world_menu_draw_pressable_button(
             MENU_PRESSABLE_BUTTON_R2, 0xc2, value, input & PSX_PAD_R2, row, MAIN_SFX_PAGE_SWITCH);
-        world_menu_run_script_with_palette_mode((u8*)window, 0, 0);
+        world_menu_run_script_with_palette_mode(window, 0, 0);
         world_gfx_enqueue_textured_quad_list(
             cells, 0, 0, g_world_menu_icon_tpage, g_world_menu_palette_clut_normal, 0xb, 8);
         if (g_world_formation_stat_display_mode < 3) {

@@ -129,7 +129,7 @@ s32 world_ability_run_learn_list(void) {
     if (g_world_thread_task_active != 0 || running != 0) {
         mode = 1;
     }
-    world_menu_run_script_with_palette_mode(g_world_ability_list_script, input, mode);
+    world_menu_run_script_with_palette_mode(&g_world_ability_list_script, input, mode);
     rect.x = 0x26;
     rect.y = 0x2d;
     rect.w = 0x50;
