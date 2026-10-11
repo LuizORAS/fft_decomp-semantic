@@ -3,11 +3,11 @@
 /*
  * Save baseline unit data, or suspend simulated status and restore baseline status.
  *
- * Mode 0 saves selected fields, action records, and team Golem values. Any
- * nonzero mode saves only the compact status record before restoring the
+ * BASELINE saves selected fields, action records, and team Golem values. Any
+ * non-baseline mode saves only the compact status record before restoring the
  * baseline identity, death counter, current status, and Death Sentence CT.
  */
-void battle_ai_save_unit_state(s32 mode) {
+void battle_ai_save_unit_state(battle_ai_snapshot_mode_e mode) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_ai_status_snapshot_t* status;
     battle_ai_extended_snapshot_t* snapshot;
@@ -21,7 +21,7 @@ void battle_ai_save_unit_state(s32 mode) {
             continue;
         }
         unit = &g_battle_unit_stats[i];
-        if (mode != 0) {
+        if (mode != BATTLE_AI_SNAPSHOT_BASELINE) {
             status = &ai->unit_status_records[id];
         } else {
             status = &g_battle_ai_unit_snapshots[id].status;
@@ -29,7 +29,7 @@ void battle_ai_save_unit_state(s32 mode) {
         status->entd_slot = unit->entd_slot;
         status->death_counter = unit->death_counter;
         battle_ai_transfer_byte_values(status->current_status, unit->status_sets.current, 5);
-        if (mode != 0) {
+        if (mode != BATTLE_AI_SNAPSHOT_BASELINE) {
             status->death_sentence_ct = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)];
             snapshot = &g_battle_ai_unit_snapshots[id];
             unit->entd_slot = snapshot->status.entd_slot;
@@ -55,7 +55,7 @@ void battle_ai_save_unit_state(s32 mode) {
             battle_ai_transfer_halfword_values(&ai->unit_action_records[id], &unit->action_command, 20);
         }
     }
-    if (mode == 0) {
+    if (mode == BATTLE_AI_SNAPSHOT_BASELINE) {
         battle_ai_transfer_byte_values(ai->team_golem, g_battle_team_golem, sizeof(ai->team_golem));
     }
 }

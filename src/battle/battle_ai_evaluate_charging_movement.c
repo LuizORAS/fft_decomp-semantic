@@ -10,7 +10,7 @@ s32 battle_ai_evaluate_charging_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit = g_battle_ai_data_base.acting_unit;
     battle_action_command_t* action = &unit->action_command;
-    s32 state;
+    battle_ai_charging_stage_e state;
 
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */

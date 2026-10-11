@@ -18,9 +18,13 @@ enum {
 
 /* Scanlines since vertical blank at which each search yields. */
 enum {
-    BATTLE_AI_DECISION_SCANLINE_LIMIT = 441,
     BATTLE_AI_TURN_SIMULATION_SCANLINE_LIMIT = 313,
     BATTLE_AI_PATHFIND_SCANLINE_LIMIT = 325,
+    BATTLE_AI_DECISION_SCANLINE_LIMIT = 441,
+};
+
+/* Turn-event iteration limit for one simulated action. */
+enum {
     BATTLE_AI_SIMULATED_TURN_LIMIT = 256,
 };
 
@@ -35,23 +39,24 @@ typedef enum battle_ai_command_kind {
     BATTLE_AI_COMMAND_ACT = 1,
     BATTLE_AI_COMMAND_END_TURN = 2,
     /* The rest reach the command from battle_menu_resolve_selection, for a player's menu choice.
-     * The auto-battle choices are 0x0c plus twice the option, plus one once a unit has been
+     * The auto-battle choices are 12 plus twice the option, plus one once a unit has been
      * picked for the two that name one (SELECT picks it, DISPLAY shows it); SELECT and the two
      * others equal their battle_ai_autobattle_mode_e values. */
-    BATTLE_AI_COMMAND_NO_MENU_RECORD = 0x07, /* the current menu id has no record: back to the turn events */
-    BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT = 0x0c,
-    BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_DISPLAY = 0x0d,
-    BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT = 0x0e,
-    BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_DISPLAY = 0x0f,
-    BATTLE_AI_COMMAND_AUTOBATTLE_FADING_LIFE = 0x10,
-    BATTLE_AI_COMMAND_AUTOBATTLE_RETREAT = 0x11,
-    BATTLE_AI_COMMAND_REFRESH_CONTROL = 0x12, /* copy the control flag back from the stats */
-    BATTLE_AI_COMMAND_MOVE_SELF = 0x19,       /* MOVE that never redirects to the unit's mount */
+    BATTLE_AI_COMMAND_NO_MENU_RECORD = 7, /* the current menu id has no record: back to the turn events */
+    BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT = 12,
+    BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_DISPLAY = 13,
+    BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT = 14,
+    BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_DISPLAY = 15,
+    BATTLE_AI_COMMAND_AUTOBATTLE_FADING_LIFE = 16,
+    BATTLE_AI_COMMAND_AUTOBATTLE_RETREAT = 17,
+    BATTLE_AI_COMMAND_REFRESH_CONTROL = 18, /* copy the control flag back from the stats */
+    BATTLE_AI_COMMAND_MOVE_SELF = 25,       /* MOVE that never redirects to the unit's mount */
     BATTLE_AI_COMMAND_UNRESOLVED_FE = 0xfe,
     BATTLE_AI_COMMAND_UNRESOLVED_FF = 0xff,
 } battle_ai_command_kind_e;
 
 /* Stored resume stages are byte fields; each policy has its own stage domain. */
+/* Only 0, 2, 3 and 7 are saved; other values resume the general search. */
 typedef enum battle_ai_initial_selection_stage {
     BATTLE_AI_INITIAL_SELECTION_STATUS = 0,
     BATTLE_AI_INITIAL_SELECTION_RETREAT = 2,
@@ -77,6 +82,7 @@ typedef enum battle_ai_origin_evaluation_stage {
     BATTLE_AI_ORIGIN_EVALUATION_SCANNED = 2,
 } battle_ai_origin_evaluation_stage_e;
 
+/* These three suspend points use their own byte; other values resume abilities. */
 typedef enum battle_ai_autobattle_stage {
     BATTLE_AI_AUTOBATTLE_CHARGING = 2,
     BATTLE_AI_AUTOBATTLE_MOVEMENT = 4,
@@ -102,6 +108,7 @@ typedef enum battle_ai_targeted_selection_stage {
     BATTLE_AI_TARGETED_SELECTION_OTHER_ABILITIES = 4,
 } battle_ai_targeted_selection_stage_e;
 
+/* No pass saves stage 5; it follows the same ally-search fallback as stage 6. */
 typedef enum battle_ai_recovery_selection_stage {
     BATTLE_AI_RECOVERY_SELECTION_SCORE_TILES = 0,
     BATTLE_AI_RECOVERY_SELECTION_MOVEMENT = 1,
@@ -133,6 +140,12 @@ typedef enum battle_ai_cast_origin_stage {
     BATTLE_AI_CAST_ORIGIN_ACT_BEFORE_MOVE = 0,
     BATTLE_AI_CAST_ORIGIN_MOVE_BEFORE_ACT = 1,
 } battle_ai_cast_origin_stage_e;
+
+/* Baseline records include action/equipment data; simulated status uses the compact records. */
+typedef enum battle_ai_snapshot_mode {
+    BATTLE_AI_SNAPSHOT_BASELINE = 0,
+    BATTLE_AI_SNAPSHOT_SIMULATED_STATUS = 1,
+} battle_ai_snapshot_mode_e;
 
 typedef enum battle_ai_simulation_phase {
     BATTLE_AI_SIMULATION_PREPARE_ACTION = 0,
@@ -337,7 +350,7 @@ enum {
 
 /* How an action follows its target, in the AI/menu command and stored unit command. */
 typedef enum battle_targeting_type {
-    BATTLE_TARGETING_TYPE_TILE = 5, /* aims at target_x, target_elevation, target_y */
+    BATTLE_TARGETING_TYPE_TILE = 5, /* aims at target_position */
     BATTLE_TARGETING_TYPE_UNIT = 6, /* follows the unit target_id */
 } battle_targeting_type_e;
 
@@ -828,12 +841,12 @@ void battle_ai_record_considered_coords(s32 x, s32 y, s32 level);
 s32 battle_ai_refresh_unit_decision_flags(void);
 void battle_ai_reset_action_ranking_fields(battle_ai_action_data_t* action);
 void battle_ai_restore_considered_action_data(void);
-void battle_ai_restore_unit_state(s32 mode);
+void battle_ai_restore_unit_state(battle_ai_snapshot_mode_e mode);
 s32 battle_ai_run_cowardly_movement(void);
 s32 battle_ai_run_non_specific_autobattle(void);
 void battle_ai_move_temp_unit_to_coords(battle_ai_coords_t* coordinates);
 s32 battle_ai_select_fading_life_action(void);
-void battle_ai_save_unit_state(s32 mode);
+void battle_ai_save_unit_state(battle_ai_snapshot_mode_e mode);
 s32 battle_ai_score_reachable_tiles(void);
 s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id);
 void battle_ai_select_candidate_coords_and_check_crystal(void);

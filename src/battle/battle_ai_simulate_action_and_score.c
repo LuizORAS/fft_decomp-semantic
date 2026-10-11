@@ -32,7 +32,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     u32 below_cost;
 
     if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.action_simulation_phase) {
-        battle_ai_restore_unit_state(1);
+        battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_SIMULATED_STATUS);
         /* Resume: re-enter the suspended turn-advance or scoring phase. */
         if (g_battle_ai_data_base.action_simulation_phase == BATTLE_AI_SIMULATION_ADVANCE_TURNS)
             goto advance_turns;
@@ -43,7 +43,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         ai->action_simulation_phase = BATTLE_AI_SIMULATION_PREPARE_ACTION;
         return -1;
     }
-    battle_ai_save_unit_state(0);
+    battle_ai_save_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
     ai->ability_processing_done = 0;
     /* Direct array iteration changes the bytes; retain a workspace-relative cursor. */
     for (unit_index = BATTLE_UNIT_SLOT_COUNT - 1,
@@ -59,7 +59,7 @@ s32 battle_ai_simulate_action_and_score(void) {
             action = &ai->current_action.command;
             if (battle_action_call_attack_preparation_at_preview(action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
                 && battle_ai_call_ability_processing(action) == 0) {
-                battle_ai_restore_unit_state(0);
+                battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
                 ai->resume_pending = 0;
                 return 0;
             }
@@ -73,7 +73,7 @@ s32 battle_ai_simulate_action_and_score(void) {
             action = &ai->current_action.command;
             if (battle_action_call_attack_preparation_at_preview(action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
                 && battle_ai_call_ability_processing(action) == 0) {
-                battle_ai_restore_unit_state(0);
+                battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
                 ai->resume_pending = 0;
                 return 0;
             }
@@ -95,7 +95,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     for (;;) {
     advance_turns:
         if (VSync(1) >= BATTLE_AI_TURN_SIMULATION_SCANLINE_LIMIT) {
-            battle_ai_save_unit_state(1);
+            battle_ai_save_unit_state(BATTLE_AI_SNAPSHOT_SIMULATED_STATUS);
             ai->action_simulation_phase = BATTLE_AI_SIMULATION_ADVANCE_TURNS;
             return -1;
         }
@@ -146,7 +146,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     g_battle_turn_unit_id = ai->saved_turn_unit_id;
 score_state:
     if (VSync(1) >= BATTLE_AI_DECISION_SCANLINE_LIMIT) {
-        battle_ai_save_unit_state(1);
+        battle_ai_save_unit_state(BATTLE_AI_SNAPSHOT_SIMULATED_STATUS);
         ai->action_simulation_phase = BATTLE_AI_SIMULATION_SCORE_STATE;
         return -1;
     }
@@ -274,12 +274,12 @@ score_state:
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_SHURIKEN
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_BALL)
             ai->current_action.rank.base_hit_percent >>= 1;
-        battle_ai_restore_unit_state(0);
+        battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
         ai->resume_pending = 0;
         return 1;
     }
 finish_without_scoring:
-    battle_ai_restore_unit_state(0);
+    battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
     ai->resume_pending = 0;
     return 0;
 }

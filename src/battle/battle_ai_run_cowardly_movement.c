@@ -5,7 +5,7 @@
  * call resumes at the step that did. */
 s32 battle_ai_run_cowardly_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
-    s32 state;
+    battle_ai_cowardly_movement_stage_e state;
 
     if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */

@@ -10,7 +10,7 @@
 s32 battle_ai_run_non_specific_autobattle(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 charging_result;
-    s32 resume_state;
+    battle_ai_autobattle_stage_e resume_state;
 
     if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
