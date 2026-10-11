@@ -28,7 +28,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
             return -2;
         }
     }
-    action->targeting_type = BATTLE_ACTION_TARGET_TILE;
+    action->targeting_type = BATTLE_TARGETING_TYPE_TILE;
     action->target_id = g_battle_acting_unit_id;
     action->target_x = acting_unit->x;
     action->target_y = acting_unit->position.y;

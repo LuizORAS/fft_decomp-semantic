@@ -240,7 +240,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
     }
     PopMatrix();
-    if (g_battle_map_weather_effect_mode == MAP_WEATHER_COMMAND_SNOW) {
+    if (g_battle_map_weather_effect_mode == BATTLE_MAP_WEATHER_EFFECT_SNOW) {
         PushMatrix();
         g_battle_map_weather_rotation.vy += g_battle_map_weather_primary_speed;
         RotMatrix(&g_battle_map_weather_rotation, &g_battle_map_weather_matrix);
@@ -323,7 +323,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
         PopMatrix();
     }
-    if (g_battle_map_weather_effect_mode == 0x96) {
+    if (g_battle_map_weather_effect_mode == BATTLE_MAP_WEATHER_EFFECT_TIMED_PARTICLE_TRANSFORM) {
         s32 sine;
 
         PushMatrix();
@@ -446,7 +446,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
         PopMatrix();
     }
-    if (g_battle_map_weather_effect_mode == MAP_WEATHER_COMMAND_RAIN) {
+    if (g_battle_map_weather_effect_mode == BATTLE_MAP_WEATHER_EFFECT_RAIN) {
         half_size = g_battle_map_camera_zoom.vx * 22;
         half_size /= 0x2000;
         for (i = 0; i < 32; i++) {

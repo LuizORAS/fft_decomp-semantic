@@ -20,7 +20,7 @@ void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battl
     if (target != 0) {
         delta.vx = target->screen.vx - unit->screen.vx;
         delta.vz = target->screen.vz - unit->screen.vz;
-    } else if (unit->battle_data->action_command.targeting_type == BATTLE_ACTION_TARGET_TILE) {
+    } else if (unit->battle_data->action_command.targeting_type == BATTLE_TARGETING_TYPE_TILE) {
         delta.vx = unit->battle_data->action_command.target_x * 28 + 14 - unit->screen.vx;
         delta.vz = unit->battle_data->action_command.target_y * 28 + 14 - unit->screen.vz;
     } else {

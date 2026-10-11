@@ -133,7 +133,7 @@ void battle_map_run_weather_command(s32 command) {
         battle_map_init_weather_particles(MAP_WEATHER_COMMAND_INIT_RAIN_PARTICLES);
         break;
     case MAP_WEATHER_COMMAND_CLEAR:
-        g_battle_map_weather_effect_mode = MAP_WEATHER_COMMAND_CLEAR;
+        g_battle_map_weather_effect_mode = BATTLE_MAP_WEATHER_EFFECT_CLEAR;
         g_battle_map_lightning_mode = MAP_LIGHTNING_OFF;
         break;
     }

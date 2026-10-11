@@ -12,7 +12,7 @@ void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_st
         out->target_new_x = g_battle_action_current_ability.target_new_x;
         out->target_new_y = g_battle_action_current_ability.target_new_y;
         out->target_new_map_level = g_battle_action_current_ability.target_new_elevation;
-    } else if (acting->action_command.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
+    } else if (acting->action_command.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
         target = &g_battle_unit_stats[acting->action_command.target_id];
         out->target_new_x = target->x;
         out->target_new_y = target->position.y;

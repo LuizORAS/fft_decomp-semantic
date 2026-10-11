@@ -25,7 +25,7 @@ s32 battle_target_apply_reflect(battle_stats_t* unit) {
     }
     act->skillset_id = SKILLSET_ID_BLACK_MAGIC;
     last_attack = unit->action.last_received_attack;
-    act->targeting_type = BATTLE_ACTION_TARGET_TILE;
+    act->targeting_type = BATTLE_TARGETING_TYPE_TILE;
     act->target_id = 0;
     act->ability_id = last_attack;
     act->target_x = x;

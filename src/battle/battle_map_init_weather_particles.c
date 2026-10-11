@@ -24,7 +24,7 @@ void battle_map_init_weather_particles(s32 command) {
     rects = g_battle_map_weather_drop_uv_rects;
     switch (command & 0xff) {
     case MAP_WEATHER_COMMAND_INIT_SNOW_PARTICLES:
-        g_battle_map_weather_effect_mode = MAP_WEATHER_COMMAND_SNOW;
+        g_battle_map_weather_effect_mode = BATTLE_MAP_WEATHER_EFFECT_SNOW;
         for (i = 0; i < 64; i++) {
             g_battle_map_weather_particles[i].y = -rand() % 240 - 16;
             g_battle_map_weather_particles[i].fall_speed = g_battle_map_weather_fall_speed;
@@ -57,7 +57,7 @@ void battle_map_init_weather_particles(s32 command) {
         }
         break;
     case MAP_WEATHER_COMMAND_INIT_RAIN_PARTICLES:
-        g_battle_map_weather_effect_mode = MAP_WEATHER_COMMAND_RAIN;
+        g_battle_map_weather_effect_mode = BATTLE_MAP_WEATHER_EFFECT_RAIN;
         for (i = 0; i < 32; i++) {
             g_battle_map_weather_particles[i].x = rand() % (g_battle_map_tile_width * 28);
             g_battle_map_weather_particles[i].z = rand() % (g_battle_map_tile_depth * 28);

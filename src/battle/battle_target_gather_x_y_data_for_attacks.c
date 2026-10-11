@@ -7,7 +7,7 @@ void battle_target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit) {
     battle_stats_t* bd;
 
     bd = unit->battle_data;
-    if (bd->action_command.targeting_type == BATTLE_ACTION_TARGET_TILE) {
+    if (bd->action_command.targeting_type == BATTLE_TARGETING_TYPE_TILE) {
         g_battle_cursor_x = bd->action_command.target_x;
         g_battle_cursor_z = unit->battle_data->action_command.target_elevation;
         g_battle_cursor_y = unit->battle_data->action_command.target_y;

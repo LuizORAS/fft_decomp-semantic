@@ -13,13 +13,6 @@ typedef enum battle_ability_facing_modifier {
     BATTLE_ABILITY_FACING_BACK = 2,
 } battle_ability_facing_modifier_e;
 
-typedef enum battle_effect_secondary_phase {
-    BATTLE_SECONDARY_EFFECT_ENDED = 0, /* the slot is free */
-    BATTLE_SECONDARY_EFFECT_INITIALIZING = 1,
-    BATTLE_SECONDARY_EFFECT_EXECUTING = 2,
-    BATTLE_SECONDARY_EFFECT_FINALIZING = 3
-} battle_effect_secondary_phase_e;
-
 typedef struct battle_ability_animation_data {
     u8 charge_animation_set_id; /* row of g_battle_ability_charge_animation_sets */
     u8 attack_animation;        /* battle_unit_animation_e, or BATTLE_ATTACK_ANIMATION_USE_WEAPON or _USE_ITEM */
@@ -302,8 +295,7 @@ enum {
     BATTLE_AI_ACTION_DECIDED = 0xff,
 };
 
-/* How an action follows its target: battle_ai_action_data_t.command.targeting_type and
- * its copies in the command and menu action records. */
+/* How an action follows its target, in the AI/menu command and stored unit command. */
 typedef enum battle_targeting_type {
     BATTLE_TARGETING_TYPE_TILE = 5, /* aims at target_x, target_elevation, target_y */
     BATTLE_TARGETING_TYPE_UNIT = 6, /* follows the unit target_id */
@@ -841,7 +833,7 @@ void battle_ai_clear_words(void* destination, s32 byte_count);
 /* animation */
 /* A facing is an angle with 0x1000 to the turn. Units rest on the four
  * cardinals; the diagonals are the boundaries a free angle is snapped at. */
-typedef enum battle_facing {
+typedef enum battle_unit_facing {
     BATTLE_FACING_SOUTH = 0x000,
     BATTLE_FACING_SOUTH_WEST = 0x200,
     BATTLE_FACING_WEST = 0x400,
@@ -2590,6 +2582,13 @@ void battle_sound_bg_thread(void);
 void battle_sound_edit_bg_thread(void);
 
 /* effect */
+typedef enum battle_effect_secondary_phase {
+    BATTLE_SECONDARY_EFFECT_ENDED = 0, /* the slot is free */
+    BATTLE_SECONDARY_EFFECT_INITIALIZING = 1,
+    BATTLE_SECONDARY_EFFECT_EXECUTING = 2,
+    BATTLE_SECONDARY_EFFECT_FINALIZING = 3
+} battle_effect_secondary_phase_e;
+
 /* Verified prefix only: BATTLE 0x801aa7c4 reads/writes a halfword at +6.
  * Neither the full record nor the individual bit meanings are known. */
 typedef struct battle_effect_flag_prefix {
@@ -6110,11 +6109,6 @@ typedef enum battle_action_state {
     BATTLE_ACTION_STATE_PREVIEW = 2,
 } battle_action_state_e;
 
-typedef enum battle_action_target_kind {
-    BATTLE_ACTION_TARGET_TILE = 5,
-    BATTLE_ACTION_TARGET_UNIT = 6,
-} battle_action_target_kind_e;
-
 /* g_battle_action_phase: which unit's action the attack phase is announcing. */
 typedef enum battle_action_phase {
     BATTLE_ACTION_PHASE_PRE_ACTION = 0,    /* a reaction that pre-empts the pending action (Hamedo) */
@@ -6877,7 +6871,7 @@ typedef char battle_move_find_result_data_size_must_be_6[(sizeof(battle_move_fin
  * height. The BATTLE_MOVEMENT_SET_3 bits carry the retail ability names, which
  * are the other way round: "Move in Water" (0x1f6) stands on the surface and
  * "Walk on Water" (0x1f7) one level below it. */
-typedef enum battle_movement_class {
+typedef enum battle_move_class {
     BATTLE_MOVEMENT_CLASS_FLY = 0,
     BATTLE_MOVEMENT_CLASS_TELEPORT = 1,
     BATTLE_MOVEMENT_CLASS_FLOAT = 2,
@@ -6888,7 +6882,7 @@ typedef enum battle_movement_class {
     BATTLE_MOVEMENT_CLASS_NORMAL = 7,
 } battle_move_class_e;
 
-typedef enum battle_effective_movement_flags {
+typedef enum battle_move_effective_flags {
     BATTLE_EFFECTIVE_MOVEMENT_SILENT_WALK = 0x02,
     BATTLE_EFFECTIVE_MOVEMENT_TELEPORT = 0x08,
     BATTLE_EFFECTIVE_MOVEMENT_IN_WATER = 0x10, /* BATTLE_MOVEMENT_SET_3_WALK_ON_WATER: one level below the surface */
@@ -7316,7 +7310,7 @@ typedef char battle_map_terrain_resource_size_must_be_0x1002[sizeof(battle_map_t
  * which one is falling.  battle_map_get_effective_weather folds that flag in by
  * adding 3, so callers that compare against it see the snow values.
  */
-typedef enum battle_weather {
+typedef enum battle_map_weather {
     BATTLE_WEATHER_NONE = 0,
     BATTLE_WEATHER_NONE_ALT = 1,
     BATTLE_WEATHER_RAIN = 2,
@@ -7464,9 +7458,9 @@ typedef enum map_light_matrix_command {
 
 /* Commands of battle_map_run_weather_command and battle_map_init_weather_particles. */
 typedef enum map_weather_command {
-    MAP_WEATHER_COMMAND_SNOW = 0x53,  /* also the snow value of g_battle_map_weather_effect_mode */
-    MAP_WEATHER_COMMAND_CLEAR = 0x54, /* also the mode with no weather effect */
-    MAP_WEATHER_COMMAND_RAIN = 0x55,  /* also the rain mode */
+    MAP_WEATHER_COMMAND_SNOW = 0x53,
+    MAP_WEATHER_COMMAND_CLEAR = 0x54,
+    MAP_WEATHER_COMMAND_RAIN = 0x55,
     MAP_WEATHER_COMMAND_LIGHT_RAIN = 0x7c,
     MAP_WEATHER_COMMAND_HEAVY_RAIN = 0x7d,
     MAP_WEATHER_COMMAND_LIGHT_SNOW = 0x7e,
@@ -7478,6 +7472,15 @@ typedef enum map_weather_command {
     MAP_WEATHER_COMMAND_INIT_SNOW_PARTICLES = 0x8f, /* battle_map_init_weather_particles */
     MAP_WEATHER_COMMAND_INIT_RAIN_PARTICLES = 0x90,
 } map_weather_command_e;
+
+/* Stored renderer selector at g_battle_map_weather_effect_mode. The ordinary
+ * modes reuse command IDs; 0x96 runs E458's timed particle transform. */
+typedef enum battle_map_weather_effect_mode {
+    BATTLE_MAP_WEATHER_EFFECT_SNOW = MAP_WEATHER_COMMAND_SNOW,
+    BATTLE_MAP_WEATHER_EFFECT_CLEAR = MAP_WEATHER_COMMAND_CLEAR,
+    BATTLE_MAP_WEATHER_EFFECT_RAIN = MAP_WEATHER_COMMAND_RAIN,
+    BATTLE_MAP_WEATHER_EFFECT_TIMED_PARTICLE_TRANSFORM = 0x96,
+} battle_map_weather_effect_mode_e;
 
 /* g_battle_map_lightning_mode. */
 typedef enum map_lightning_mode {
@@ -7566,8 +7569,9 @@ typedef enum map_effect_data_command {
     MAP_EFFECT_DATA_BEGIN = 0x88,
 } map_effect_data_command_e;
 
-/* Colour modes of battle_map_modify_palette, battle_gfx_modify_vram_palette and the
- * battle_map_blend_*_color functions: what the red, green and blue offsets are added to. */
+/* Map color-transition commands: the source color and treatment of RGB offsets.
+ * battle_gfx_modify_vram_palette honors modes 5-7; every other value adds the
+ * offsets to its supplied colors, including RESTORE. */
 typedef enum map_color_mode {
     MAP_COLOR_MODE_CURRENT = 0,           /* the colour in transition plus the offsets */
     MAP_COLOR_MODE_CURRENT_HALF = 1,      /* half of it plus the offsets */
@@ -7577,7 +7581,7 @@ typedef enum map_color_mode {
     MAP_COLOR_MODE_BASE_HALF = 5,
     MAP_COLOR_MODE_BASE_GREY = 6,
     MAP_COLOR_MODE_BASE_GREY_HALF = 7,
-    MAP_COLOR_MODE_RESTORE = 8,      /* the last applied colour; the offsets are ignored */
+    MAP_COLOR_MODE_RESTORE = 8,      /* map transitions restore the last applied colour and ignore offsets */
     MAP_COLOR_MODE_BASE_REPEAT = 9,  /* as BASE, and record the offsets so that the fade alternates with RESTORE */
     MAP_COLOR_MODE_STOP_REPEAT = 10, /* only clear the repeat record */
 } map_color_mode_e;
@@ -8100,7 +8104,7 @@ extern SVECTOR g_battle_map_light_rotation;
 extern s32 g_battle_map_back_color_red;
 extern s32 g_battle_map_back_color_green;
 extern s32 g_battle_map_back_color_blue;
-extern s16 g_battle_map_weather_effect_mode;
+extern s16 g_battle_map_weather_effect_mode; /* battle_map_weather_effect_mode_e */
 extern VECTOR g_battle_map_camera_zoom;
 extern u8 g_battle_map_back_color_disabled;
 extern MATRIX g_battle_map_camera_matrix;

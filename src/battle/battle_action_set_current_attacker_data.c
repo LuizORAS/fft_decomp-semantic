@@ -15,7 +15,7 @@ void battle_action_set_current_attacker_data(battle_stats_t* unit) {
         return;
     }
     main_util_copy_action_data(&unit->action_command, &g_battle_action_current_attacker.action);
-    if (unit->action_command.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
+    if (unit->action_command.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
         target = &g_battle_unit_stats[unit->action_command.target_id];
         x = target->x;
         y = target->position.y;

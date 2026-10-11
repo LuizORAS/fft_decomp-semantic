@@ -142,7 +142,7 @@ typedef struct battle_unit_action_command {
     s16 calculator_type;       /* 0x04 */
     s16 calculator_multiplier; /* 0x06 */
     u16 item_or_equipment;     /* 0x08 */
-    u8 targeting_type;         /* 0x0a; battle_action_target_kind_e */
+    u8 targeting_type;         /* 0x0a; battle_targeting_type_e */
     u8 target_id;              /* 0x0b */
     s16 target_x;              /* 0x0c */
     s16 target_elevation;      /* 0x0e */
