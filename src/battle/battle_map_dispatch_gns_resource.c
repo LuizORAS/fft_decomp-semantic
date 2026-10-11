@@ -167,7 +167,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
             g_battle_map_pending_palette_data[i] = data->bytes[i];
         }
         break;
-    case GNS_RESOURCE_APPLY_PALETTES:
+    case MAP_RESOURCE_APPLY_PALETTES:
         g_battle_map_vram_load_rect.y = MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_MAP;
         g_battle_map_vram_load_rect.w = 0x100;
         g_battle_map_palette_pending = 0;
@@ -244,7 +244,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
     case GNS_RESOURCE_MESH_ALTERNATE:
         i = GNS_RESOURCE_PRIMARY_GEOMETRY;
         resource_offset = &data->mesh_file.primary_geometry_offset;
-        for (; i < GNS_RESOURCE_END; i++) {
+        for (; i < GNS_RESOURCE_TABLE_COUNT; i++) {
             if (*resource_offset != 0) {
                 battle_map_dispatch_gns_resource(i, (battle_map_resource_t*)(data->bytes + *resource_offset));
             }
@@ -257,7 +257,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
             g_battle_map_pending_lighting_data[i] = data->bytes[i];
         }
         break;
-    case GNS_RESOURCE_APPLY_LIGHTING:
+    case MAP_RESOURCE_APPLY_LIGHTING:
         light = &data->lighting;
         g_battle_map_lighting_pending = 0;
         g_battle_map_light_rotation.vx = 0;
@@ -328,10 +328,10 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
     }
     case GNS_RESOURCE_STATE_RECORDS:
         cursor = &data->state_record;
-        if (cursor->type != 0) {
+        if (cursor->type != MAP_MESH_ANIMATION_RECORD_END) {
             do {
                 cursor = battle_map_load_saved_state_record(cursor);
-            } while (cursor->type != 0);
+            } while (cursor->type != MAP_MESH_ANIMATION_RECORD_END);
         }
         break;
     case GNS_RESOURCE_SET_CAMERA_POSITION:

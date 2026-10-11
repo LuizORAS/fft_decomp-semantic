@@ -169,7 +169,7 @@ s32 battle_action_run_pre_formula_setup(const battle_unit_action_command_t* sour
     }
     g_battle_action_current_ability_view.weapon_proc_pending = 0;
     g_battle_action_current_ability.knockback_flags = 0;
-    if (formula == 0 || formula >= ABILITY_FORMULA_COUNT) {
+    if (formula == 0 || formula >= ABILITY_FORMULA_ID_LIMIT) {
         formula = ABILITY_FORMULA_WEAPON_DAMAGE;
     }
     id = g_battle_action_current_ability_view.proc_id;

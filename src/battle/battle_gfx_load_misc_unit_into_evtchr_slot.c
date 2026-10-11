@@ -27,7 +27,7 @@ s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot) {
                 MoveImage(&rect, g_battle_gfx_vram_slots[slot].image_rect.x,
                     g_battle_gfx_vram_slots[slot].image_rect.y + 200);
                 g_battle_gfx_vram_slots[slot].owner = misc_id + BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE;
-                g_battle_gfx_vram_slots[slot].image_buffer_state = BATTLE_GFX_VRAM_SLOT_BUFFER_UPLOADING;
+                g_battle_gfx_vram_slots[slot].image_buffer_state = BATTLE_GFX_VRAM_SLOT_UPLOAD_FRAMES;
                 g_battle_gfx_vram_slots[slot].evtchr_load_state = 1;
                 return 1;
             }

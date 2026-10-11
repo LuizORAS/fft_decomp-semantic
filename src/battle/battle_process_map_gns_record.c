@@ -34,8 +34,8 @@ s32 battle_process_map_gns_record(s32 phase, battle_map_resource_t* record) {
             battle_map_dispatch_gns_resource(GNS_RESOURCE_CLEAR_SNOW, selected);
         } else if (selected->command.resource_type == GNS_RESOURCE_SET_SNOW) {
             battle_map_dispatch_gns_resource(GNS_RESOURCE_SET_SNOW, selected);
-        } else if (selected->command.resource_type == GNS_RESOURCE_RESERVED_8A) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_RESERVED_8A, selected);
+        } else if (selected->command.resource_type == GNS_RESOURCE_UNHANDLED_8A) {
+            battle_map_dispatch_gns_resource(GNS_RESOURCE_UNHANDLED_8A, selected);
         } else if (selected->command.resource_type == GNS_RESOURCE_SET_WEATHER_MODIFIER) {
             battle_map_dispatch_gns_resource(GNS_RESOURCE_SET_WEATHER_MODIFIER, selected);
         } else {

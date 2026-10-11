@@ -19,7 +19,7 @@ battle_map_state_record_t* battle_map_load_saved_state_record(battle_map_state_r
 
     count = record->count;
     switch (record->type) {
-    case 1: {
+    case MAP_MESH_ANIMATION_RECORD_KEYFRAMES: {
         u8* src = record->data;
 
         count++;
@@ -30,9 +30,9 @@ battle_map_state_record_t* battle_map_load_saved_state_record(battle_map_state_r
         next = (battle_map_state_record_t*)src;
         break;
     }
-    case 0:
+    case MAP_MESH_ANIMATION_RECORD_END:
         break;
-    case 2: {
+    case MAP_MESH_ANIMATION_RECORD_INSTRUCTIONS: {
         u8* src = record->data;
 
         for (y = 0; y < 8; y++) {
@@ -46,7 +46,7 @@ battle_map_state_record_t* battle_map_load_saved_state_record(battle_map_state_r
         next = (battle_map_state_record_t*)src;
         break;
     }
-    case 3: {
+    case MAP_MESH_ANIMATION_RECORD_PART_PROPERTIES: {
         u8* src = record->data;
 
         count++;

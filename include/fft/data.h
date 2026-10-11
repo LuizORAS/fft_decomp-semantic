@@ -558,6 +558,56 @@ typedef enum ability_id {
     ABILITY_ID_KNOCKBACK = 0x200, /* past the id space: the strike that resolves a knockback */
 } ability_id_e;
 
+/* Primary ability-record byte 3 at 0x8005ebf0. Learn-on-hit is consumed at
+ * 0x8018e6b8; WORLD 0x80122b08 and JOBSTTS 0x801e03bc prove the JP-learning
+ * flag's negative polarity. */
+typedef enum ability_type_flag {
+    ABILITY_TYPE_FLAG_LEARN_ON_HIT = 0x20,
+    ABILITY_TYPE_FLAG_SHOW_NAME = 0x40, /* the announcement shows the ability's name when the option is on */
+    ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP = 0x80,
+} ability_type_flag_e;
+
+enum {
+    ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP_SHIFT = 7,
+};
+
+/* The ID-range classification returned by main_ability_calculate_pointers_and_type.
+ * Values 0..8 are not the serialized low type_flags nibble, numbered 1..9. */
+typedef enum ability_type {
+    ABILITY_TYPE_DEFAULT = 0,
+    ABILITY_TYPE_ITEM = 1,
+    ABILITY_TYPE_THROW = 2,
+    ABILITY_TYPE_JUMP = 3,
+    ABILITY_TYPE_CHARGE = 4,
+    ABILITY_TYPE_MATH = 5,
+    ABILITY_TYPE_REACTION = 6,
+    ABILITY_TYPE_SUPPORT = 7,
+    ABILITY_TYPE_MOVEMENT = 8,
+} ability_type_e;
+
+/* Four flag bytes of ability_secondary_data_t, with only confirmed meanings named. */
+typedef enum ability_secondary_flags_1 {
+    ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF = 0x01,
+    ABILITY_SECONDARY_FLAG_1_AUTO = 0x02,
+    ABILITY_SECONDARY_FLAG_1_WEAPON_STRIKE = 0x04,
+    ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE = 0x08,
+    ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED = 0x10,
+    ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE = 0x20,
+    ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS = 0x40, /* mark the panels under enemy units */
+    ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS = 0x80,  /* mark the panels under allied units */
+} ability_secondary_flags_1_e;
+
+typedef enum ability_secondary_flags_2 {
+    ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER = 0x01,
+    ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS = 0x02,
+    ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK = 0x04,
+    ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE = 0x08,
+    ABILITY_SECONDARY_FLAG_2_NO_FOLLOW_TARGET = 0x10, /* tile targeting without the follow-unit choice */
+    ABILITY_SECONDARY_FLAG_2_TOP_DOWN = 0x20,         /* only the upper terrain layer is targeted; no ability has it */
+    ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES = 0x40,
+    ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES = 0x80,
+} ability_secondary_flags_2_e;
+
 typedef enum ability_secondary_flags_3 {
     ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS = 0x01, /* a strike that reaches no unit still plays on the target tile */
     ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE = 0x02,
@@ -569,9 +619,19 @@ typedef enum ability_secondary_flags_3 {
     ABILITY_SECONDARY_FLAG_3_REFLECTABLE = 0x80,
 } ability_secondary_flags_3_e;
 
-/* Formula ids of abilities, weapons and items: the index of the BATTLE handler that resolves the
- * action (g_battle_formula_handlers). Only the ids the code tests by number are named, after
- * their handlers. */
+typedef enum ability_secondary_flags_4 {
+    ABILITY_SECONDARY_FLAG_4_EVADEABLE = 0x02,
+    ABILITY_SECONDARY_FLAG_4_REQUIRES_MATERIA_BLADE = 0x04,
+    ABILITY_SECONDARY_FLAG_4_REQUIRES_SWORD = 0x08,
+    ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE = 0x10,
+    ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING = 0x20,
+    ABILITY_SECONDARY_FLAG_4_COUNTER_MAGIC = 0x40,
+    ABILITY_SECONDARY_FLAG_4_COUNTER_FLOOD = 0x80,
+} ability_secondary_flags_4_e;
+
+/* One-based formula IDs of abilities, weapons and items: BATTLE resolves an
+ * action through g_battle_formula_handlers[id - 1]. Only IDs tested by the
+ * code are named, after their handlers. */
 typedef enum ability_formula {
     ABILITY_FORMULA_WEAPON_DAMAGE = 0x01, /* also stands in for 0 and for ids past the table */
     ABILITY_FORMULA_GUN_DAMAGE = 0x03,
@@ -582,8 +642,12 @@ typedef enum ability_formula {
     ABILITY_FORMULA_DAMAGE_MA_PLUS_Y_HALF_TIMES_MA = 0x5e,
     ABILITY_FORMULA_DAMAGE_SP_TIMES_WP = 0x63, /* thrown weapons */
     ABILITY_FORMULA_DAMAGE_PA_TIMES_WP = 0x64, /* Jump */
-    ABILITY_FORMULA_COUNT = 0x65,
 } ability_formula_e;
+
+/* Valid formula IDs are 1..0x64; handlers are indexed by ID minus one. */
+enum {
+    ABILITY_FORMULA_ID_LIMIT = 0x65,
+};
 
 /* Default-ability secondary records at 0x8005fbf0.
  * The 14-byte stride/range are used by main_ability_get_range; BATTLE
@@ -614,7 +678,7 @@ typedef char ability_secondary_data_size_must_be_14[(sizeof(ability_secondary_da
 typedef struct ability_data {
     u16 jp_cost;   /* 0x00 */
     u8 learn_rate; /* 0x02; learn-on-hit roll out of 100 (0x8018e6b8) */
-    u8 type_flags; /* 0x03; ability_type_flag_e */
+    u8 type_flags; /* 0x03; ability_type_flag_e high bits; serialized class in the low nibble */
     union {
         u16 halfwords[2];
         u8 bytes[4];
@@ -622,13 +686,48 @@ typedef struct ability_data {
 } ability_data_t;
 typedef char battle_ability_primary_record_size_must_be_8[(sizeof(ability_data_t) == 8) ? 1 : -1];
 
+/* Bit flags in status_infliction_data_t.type and the active-ability copy. The
+ * target status applicator checks these in descending-bit precedence. */
+typedef enum battle_status_infliction_type {
+    BATTLE_STATUS_INFLICTION_TYPE_CANCEL = 0x10,
+    BATTLE_STATUS_INFLICTION_TYPE_SEPARATE = 0x20,
+    BATTLE_STATUS_INFLICTION_TYPE_RANDOM_ONE = 0x40,
+    BATTLE_STATUS_INFLICTION_TYPE_ALL_OR_NOTHING = 0x80,
+} battle_status_infliction_type_e;
+
 /* Six-byte status-infliction records at 0x80063fc4; byte 0 selects how the
  * five-byte status set is applied. */
 typedef struct status_infliction_data {
-    u8 type;
+    u8 type; /* battle_status_infliction_type_e bit flags */
     u8 statuses[5];
 } status_infliction_data_t;
 typedef char battle_status_infliction_record_size_must_be_6[(sizeof(status_infliction_data_t) == 6) ? 1 : -1];
+
+/* element */
+/* Element bits shared by abilities, equipment, jobs and unit affinity sets. */
+typedef enum element_flags {
+    BATTLE_ELEMENT_FIRE = 0x80,
+    BATTLE_ELEMENT_LIGHTNING = 0x40,
+    BATTLE_ELEMENT_ICE = 0x20,
+    BATTLE_ELEMENT_WIND = 0x10,
+    BATTLE_ELEMENT_EARTH = 0x08,
+    BATTLE_ELEMENT_WATER = 0x04,
+    BATTLE_ELEMENT_HOLY = 0x02,
+    BATTLE_ELEMENT_DARK = 0x01,
+} element_flags_e;
+
+/* Shared ordering for job, item-attribute, and runtime unit affinity arrays.
+ * Job records contain only the first four entries; item and runtime records
+ * also contain Strengthen. */
+typedef enum elemental_affinity_index {
+    ELEMENTAL_AFFINITY_ABSORB = 0,
+    ELEMENTAL_AFFINITY_NULLIFY = 1,
+    ELEMENTAL_AFFINITY_HALF = 2,
+    ELEMENTAL_AFFINITY_WEAK = 3,
+    ELEMENTAL_AFFINITY_STRENGTHEN = 4,
+} elemental_affinity_index_e;
+
+enum { ELEMENTAL_AFFINITY_COUNT = 5 };
 
 /* item */
 enum {

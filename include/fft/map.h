@@ -224,6 +224,11 @@ typedef struct map_background_gradient_colors {
 } map_background_gradient_colors_t;
 typedef char map_background_gradient_colors_size_must_be_8[(sizeof(map_background_gradient_colors_t) == 8) ? 1 : -1];
 
+/* Depth-bias flag in map_tile_surface_t.value; the low six bits use MAP_SURFACE_MASK. */
+enum {
+    MAP_TILE_SURFACE_FLAG_DEPTH_BIAS = 0x40,
+};
+
 typedef union map_tile_surface {
     u8 value;
     struct {
@@ -232,6 +237,20 @@ typedef union map_tile_surface {
         u8 _unused_00_bit7 : 1;
     } bits;
 } map_tile_surface_t;
+
+/* map_tile_marks_t.value flags. */
+enum {
+    MAP_TILE_FLAG_MOVE_DESTINATION = 0x20,
+    MAP_TILE_FLAG_ABILITY_RANGE = 0x40,
+    MAP_TILE_FLAG_TARGETED = 0x80,
+};
+
+/* Ceiling depth and flag extraction within tile byte 0x05. */
+enum {
+    MAP_TILE_CEILING_DEPTH_MASK = 0x1f,
+    MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT = 5,
+    MAP_TILE_FLAG_ABILITY_RANGE_SHIFT = 6,
+};
 
 /* Tile byte 0x05. Retail reads the depth as a bitfield: its zero test and
  * its value are separate loads (BATTLE 0x801af948..0x801af970). */
@@ -245,6 +264,22 @@ typedef union map_tile_marks {
     } bits;
 } map_tile_marks_t;
 
+/* map_tile_flags_t.value flags; COLLISION_MASK combines BLOCKED and UNTARGETABLE. */
+enum {
+    MAP_TILE_FLAG_BLOCKED = 0x01,
+    MAP_TILE_FLAG_UNTARGETABLE = 0x02,
+    MAP_TILE_COLLISION_MASK = 0x03,
+    MAP_TILE_FLAG_CANNOT_STOP = 0x80,
+};
+
+/* Packed shadow value and flag extraction within tile byte 0x06. */
+enum {
+    MAP_TILE_FLAG_UNTARGETABLE_SHIFT = 1,
+    MAP_TILE_SHADOW_MODE_SHIFT = 2,
+    MAP_TILE_SHADOW_MODE_MASK = 0x0c,
+    MAP_TILE_SHADOW_MODE_VALUE_MASK = 0x03,
+};
+
 typedef union map_tile_flags {
     u8 value;
     struct {
@@ -257,6 +292,13 @@ typedef union map_tile_flags {
         u8 cannot_stop : 1; /* set by no terrain file */
     } bits;
 } map_tile_flags_t;
+
+enum {
+    MAP_TILE_HALF_HEIGHT_MASK = 0x1f,
+    MAP_TILE_DEPTH_VALUE_MASK = 0x07,
+    MAP_TILE_DEPTH_SHIFT = 5,
+    MAP_TILE_DEPTH_MASK = 0xe0,
+};
 
 /* Tile byte 0x03: slope half-height and the depth added to the height
  * (battle_map_get_tile_data_value selectors 3/4, movement geometry setup).
@@ -286,6 +328,20 @@ typedef enum map_slope_type {
     MAP_SLOPE_HIGH_CORNER_NORTH_EAST = 0x96,
     MAP_SLOPE_HIGH_CORNER_NORTH_WEST = 0x99,
 } map_slope_type_e;
+
+/* Direction bits shared by the flat and steep nibbles of tile byte 0x07. */
+typedef enum map_tile_camera_block_direction {
+    MAP_TILE_CAMERA_BLOCK_NORTHWEST = 0x01,
+    MAP_TILE_CAMERA_BLOCK_SOUTHWEST = 0x02,
+    MAP_TILE_CAMERA_BLOCK_SOUTHEAST = 0x04,
+    MAP_TILE_CAMERA_BLOCK_NORTHEAST = 0x08,
+} map_tile_camera_block_direction_e;
+
+enum {
+    MAP_TILE_CAMERA_BLOCK_DIRECTION_MASK = 0x0f,
+    MAP_TILE_CAMERA_BLOCK_STEEP_SHIFT = 4,
+    MAP_TILE_CAMERA_BLOCK_STEEP_MASK = 0xf0,
+};
 
 /* Eight-byte terrain record: battle_map_get_tile_data_pointer (0x80183fb4)
  * indexes (layer * 256 + y * width + x) * 8. Scenario opcode 0x40 at

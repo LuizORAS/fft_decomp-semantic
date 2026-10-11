@@ -9,8 +9,8 @@
  * eight slots, the first of g_battle_gfx_cycled_deployed_palettes. The byte view
  * keeps that addressing. */
 s32 battle_map_stop_texture_animation(s32 handle) {
-    if (handle >= 1 && handle <= 8) {
-        ((u8*)g_battle_map_texture_animation_states)[handle * MAP_TEXTURE_ANIMATION_STATE_BYTES] = 0;
+    if (handle >= 1 && handle <= MAP_CLUT_CYCLE_SLOT_COUNT) {
+        ((u8*)g_battle_map_texture_animation_states)[handle * MAP_CLUT_CYCLE_SLOT_BYTE_COUNT] = 0;
         return 1;
     }
     return 0;

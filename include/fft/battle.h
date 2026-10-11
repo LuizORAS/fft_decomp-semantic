@@ -13,7 +13,7 @@ typedef enum battle_ability_facing_modifier {
     BATTLE_ABILITY_FACING_BACK = 2,
 } battle_ability_facing_modifier_e;
 
-typedef enum battle_secondary_effect_phase {
+typedef enum battle_effect_secondary_phase {
     BATTLE_SECONDARY_EFFECT_ENDED = 0, /* the slot is free */
     BATTLE_SECONDARY_EFFECT_INITIALIZING = 1,
     BATTLE_SECONDARY_EFFECT_EXECUTING = 2,
@@ -31,87 +31,13 @@ enum {
     BATTLE_ABILITY_ANIMATION_COUNT = 0x1c6,
     BATTLE_CHARGE_ANIMATION_SET_COUNT = 20,
     BATTLE_CHARGE_ANIMATION_VARIANT_COUNT = 2,
+};
+
+/* Selectors in attack_animation; other values are battle_unit_animation_e IDs. */
+enum {
     BATTLE_ATTACK_ANIMATION_USE_WEAPON = 0,
     BATTLE_ATTACK_ANIMATION_USE_ITEM = 1,
 };
-
-typedef enum battle_support_set_2 {
-    BATTLE_SUPPORT_SET_2_HALF_MP = 0x80,
-    BATTLE_SUPPORT_SET_2_GAINED_JP_UP = 0x40,
-    BATTLE_SUPPORT_SET_2_GAINED_EXP_UP = 0x20,
-    BATTLE_SUPPORT_SET_2_ATTACK_UP = 0x10,
-    BATTLE_SUPPORT_SET_2_DEFENSE_UP = 0x08,
-    BATTLE_SUPPORT_SET_2_MAGIC_ATTACK_UP = 0x04,
-    BATTLE_SUPPORT_SET_2_MAGIC_DEFENSE_UP = 0x02,
-    BATTLE_SUPPORT_SET_2_CONCENTRATE = 0x01,
-} battle_unit_support_set_2_e;
-
-typedef enum battle_support_set_4 {
-    BATTLE_SUPPORT_SET_4_MONSTER_SKILL = 0x80,
-    BATTLE_SUPPORT_SET_4_DEFEND = 0x40,
-    BATTLE_SUPPORT_SET_4_EQUIP_CHANGE = 0x20,
-    BATTLE_SUPPORT_SET_4_SHORT_CHARGE = 0x08,
-    BATTLE_SUPPORT_SET_4_NON_CHARGE = 0x04,
-} battle_unit_support_set_4_e;
-
-/* Primary ability-record byte 3 at 0x8005ebf0. Learn-on-hit is consumed at
- * 0x8018e6b8; WORLD 0x80122b08 and JOBSTTS 0x801e03bc prove the JP-learning
- * flag's negative polarity. */
-typedef enum ability_type_flag {
-    ABILITY_TYPE_FLAG_LEARN_ON_HIT = 0x20,
-    ABILITY_TYPE_FLAG_SHOW_NAME = 0x40, /* the announcement shows the ability's name when the option is on */
-    ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP = 0x80,
-} ability_type_flag_e;
-
-enum {
-    ABILITY_TYPE_FLAG_CANNOT_LEARN_WITH_JP_SHIFT = 7,
-};
-
-typedef enum ability_type {
-    ABILITY_TYPE_DEFAULT = 0,
-    ABILITY_TYPE_ITEM = 1,
-    ABILITY_TYPE_THROW = 2,
-    ABILITY_TYPE_JUMP = 3,
-    ABILITY_TYPE_CHARGE = 4,
-    ABILITY_TYPE_MATH = 5,
-    ABILITY_TYPE_REACTION = 6,
-    ABILITY_TYPE_SUPPORT = 7,
-    ABILITY_TYPE_MOVEMENT = 8,
-} ability_type_e;
-
-/* Behavior flags in the four secondary bytes of a default ability record.
- * Only meanings confirmed by reconstructed target consumers are named here. */
-typedef enum ability_secondary_flags_1 {
-    ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF = 0x01,
-    ABILITY_SECONDARY_FLAG_1_AUTO = 0x02,
-    ABILITY_SECONDARY_FLAG_1_WEAPON_STRIKE = 0x04,
-    ABILITY_SECONDARY_FLAG_1_VERTICAL_TOLERANCE = 0x08,
-    ABILITY_SECONDARY_FLAG_1_VERTICAL_FIXED = 0x10,
-    ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE = 0x20,
-    ABILITY_SECONDARY_FLAG_1_ENEMY_UNIT_PANELS = 0x40, /* mark the panels under enemy units */
-    ABILITY_SECONDARY_FLAG_1_ALLY_UNIT_PANELS = 0x80,  /* mark the panels under allied units */
-} ability_secondary_flags_1_e;
-
-typedef enum ability_secondary_flags_2 {
-    ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER = 0x01,
-    ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS = 0x02,
-    ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK = 0x04,
-    ABILITY_SECONDARY_FLAG_2_RANDOM_FIRE = 0x08,
-    ABILITY_SECONDARY_FLAG_2_NO_FOLLOW_TARGET = 0x10, /* tile targeting without the follow-unit choice */
-    ABILITY_SECONDARY_FLAG_2_TOP_DOWN = 0x20,         /* only the upper terrain layer is targeted; no ability has it */
-    ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES = 0x40,
-    ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES = 0x80,
-} ability_secondary_flags_2_e;
-
-typedef enum ability_secondary_flags_4 {
-    ABILITY_SECONDARY_FLAG_4_EVADEABLE = 0x02,
-    ABILITY_SECONDARY_FLAG_4_REQUIRES_MATERIA_BLADE = 0x04,
-    ABILITY_SECONDARY_FLAG_4_REQUIRES_SWORD = 0x08,
-    ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE = 0x10,
-    ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING = 0x20,
-    ABILITY_SECONDARY_FLAG_4_COUNTER_MAGIC = 0x40,
-    ABILITY_SECONDARY_FLAG_4_COUNTER_FLOOD = 0x80,
-} ability_secondary_flags_4_e;
 
 extern battle_ability_animation_data_t g_battle_ability_animation_data[BATTLE_ABILITY_ANIMATION_COUNT];
 
@@ -190,9 +116,10 @@ enum {
     BATTLE_AI_ABILITY_FLAG_4_USABLE_BY_AI = 0x80,
 };
 
-/* Full-word masks, distinct from the byte-view FLAG_1 constants above.
- * Tests in 0x8019e5d8..0x8019ef24 establish the low-byte effect categories
- * and distinguish team preferences from the absolute ONLY restrictions. */
+/* Word flags of the considered ability. Bytes 1..3 retain the static table
+ * meanings, but byte 4 is replaced by battle_ai_ability_entry_flag_e: its
+ * low bit means CONSUME_EVALUATED_ORIGINS, not the static EVADE_WITH_MOTION.
+ * Team preferences remain distinct from the absolute ONLY restrictions. */
 enum {
     BATTLE_AI_ABILITY_TARGET_ALLIES = 0x00000001,
     BATTLE_AI_ABILITY_TARGET_ENEMIES = 0x00000002,
@@ -435,8 +362,9 @@ typedef struct battle_ai_ability_entry {
 } battle_ai_ability_entry_t;
 typedef char battle_ai_ability_entry_must_be_4[sizeof(battle_ai_ability_entry_t) == 4 ? 1 : -1];
 
-/* What the equipped weapons' formulas do, gathered by battle_ai_store_weapon_attack_data for
- * battle_ai_build_unit_ability_list. */
+/* OR-combined categories gathered from both equipped weapon formulas. They
+ * are flags, not ability_formula_e IDs; mixed categories bypass the builder
+ * switch's single-category cases. */
 enum {
     BATTLE_AI_WEAPON_FORMULA_NONE = 0, /* no weapon in either hand */
     BATTLE_AI_WEAPON_FORMULA_DAMAGE = 1,
@@ -1335,15 +1263,6 @@ void battle_script_walkto_event_instruction(const event_walk_to_parameters_t* pa
 void battle_script_warp_unit_display_to_paired_unit(s32 misc_id);
 
 /* status */
-/* Bit flags in status_infliction_data_t.type and the active-ability copy. The
- * target status applicator checks these in descending-bit precedence. */
-typedef enum battle_status_infliction_type {
-    BATTLE_STATUS_INFLICTION_TYPE_CANCEL = 0x10,
-    BATTLE_STATUS_INFLICTION_TYPE_SEPARATE = 0x20,
-    BATTLE_STATUS_INFLICTION_TYPE_RANDOM_ONE = 0x40,
-    BATTLE_STATUS_INFLICTION_TYPE_ALL_OR_NOTHING = 0x80,
-} battle_status_infliction_type_e;
-
 /* Event infliction helpers number bits LSB-first, unlike stored status IDs. */
 #define BATTLE_STATUS_LSB_INDEX(id) (((id) & ~7) | (7 - ((id) & 7)))
 
@@ -2698,8 +2617,6 @@ void battle_sound_bg_thread(void);
 void battle_sound_edit_bg_thread(void);
 
 /* effect */
-enum { BATTLE_EFFECT_FLAGS_0006 = 0x0006 };
-
 /* Verified prefix only: BATTLE 0x801aa7c4 reads/writes a halfword at +6.
  * Neither the full record nor the individual bit meanings are known. */
 typedef struct battle_effect_flag_prefix {
@@ -3593,7 +3510,6 @@ typedef enum effect_phase {
  * mask 0x0e). 0xa00 is the map centre:
  * every handler adds battle_map_store_max_coordinates() * 14 there. */
 typedef enum effect_emitter_origin {
-    EFFECT_EMITTER_ORIGIN_MASK = 0xe00,
     EFFECT_EMITTER_ORIGIN_WORLD = 0x000,
     EFFECT_EMITTER_ORIGIN_CURSOR_TILE = 0x200, /* centre of g_battle_effect_target_tile */
     EFFECT_EMITTER_ORIGIN_CASTER = 0x400,
@@ -3603,11 +3519,12 @@ typedef enum effect_emitter_origin {
     EFFECT_EMITTER_ORIGIN_TRACKED_ENTITY = 0xc00, /* target plus its unit coordinates */
 } effect_emitter_origin_e;
 
+enum { EFFECT_EMITTER_ORIGIN_MASK = 0xe00 };
+
 /* Point particles home toward: bits 5-7 of the placement word (byte 0x02 mask
  * 0xe0). 0x00 and 0x20 both leave the
  * interpolated offset unchanged; 0x40 is the map centre. */
 typedef enum effect_emitter_homing {
-    EFFECT_EMITTER_HOMING_MASK = 0xe0,
     EFFECT_EMITTER_HOMING_OFFSET = 0x00,
     EFFECT_EMITTER_HOMING_OFFSET_ALT = 0x20,
     EFFECT_EMITTER_HOMING_MAP_CENTRE = 0x40,
@@ -3616,6 +3533,8 @@ typedef enum effect_emitter_homing {
     EFFECT_EMITTER_HOMING_CURSOR_TILE = 0xa0,
 } effect_emitter_homing_e;
 
+enum { EFFECT_EMITTER_HOMING_MASK = 0xe0 };
+
 /* Initial particle velocity mode: the velocity_inward bit (byte 0x06 mask
  * 0x10) and align_to_unit_facing bit (byte 0x07 mask 0x04) of the emitter's
  * child/velocity word. OUTWARD scatters around the base angles, INWARD aims at
@@ -3623,12 +3542,13 @@ typedef enum effect_emitter_homing {
  * TOWARD_TARGET (battle_effect_spawn_particle_motion) rotates it along the
  * caster-to-target direction. */
 typedef enum effect_emitter_velocity {
-    EFFECT_EMITTER_VELOCITY_MASK = 0x410,
     EFFECT_EMITTER_VELOCITY_OUTWARD = 0x000,
     EFFECT_EMITTER_VELOCITY_INWARD = 0x010,
     EFFECT_EMITTER_VELOCITY_TOWARD_TARGET = 0x400,
     EFFECT_EMITTER_VELOCITY_CASTER_FACING = 0x410,
 } effect_emitter_velocity_e;
+
+enum { EFFECT_EMITTER_VELOCITY_MASK = 0x410 };
 
 /* Bits 0-2 of an effect timeline camera command: the tracks the keyframe moves. */
 enum {
@@ -3658,8 +3578,9 @@ typedef enum battle_effect_camera_source {
     BATTLE_EFFECT_CAMERA_SOURCE_CASTER = 0x140,
     BATTLE_EFFECT_CAMERA_SOURCE_TARGET_AVERAGE = 0x180, /* position: the mean of all unit targets */
     BATTLE_EFFECT_CAMERA_SOURCE_CURSOR_TILE = 0x1c0,
-    BATTLE_EFFECT_CAMERA_SOURCE_MASK = 0x1e0,
 } battle_effect_camera_source_e;
+
+enum { BATTLE_EFFECT_CAMERA_SOURCE_MASK = 0x1e0 };
 
 /* Bits 0x1e00 of an effect timeline camera command, kept in g_battle_effect_camera_rotation_mode,
  * _position_mode and _zoom_mode while the move runs: how the track goes from its start to its
@@ -3676,8 +3597,9 @@ typedef enum battle_effect_camera_mode {
     BATTLE_EFFECT_CAMERA_MODE_SHAKE_GROWING = 0x1000,    /* random offsets around the start */
     BATTLE_EFFECT_CAMERA_MODE_SHAKE = 0x1200,
     BATTLE_EFFECT_CAMERA_MODE_SHAKE_DECAYING = 0x1400,
-    BATTLE_EFFECT_CAMERA_MODE_MASK = 0x1e00,
 } battle_effect_camera_mode_e;
+
+enum { BATTLE_EFFECT_CAMERA_MODE_MASK = 0x1e00 };
 
 /* Ordering-table depth clamp shared by the EFFECT renderers: a depth below MIN
  * becomes MIN and one at or beyond LIMIT (the OT slot count) becomes MAX. */
@@ -3689,15 +3611,16 @@ enum {
 };
 
 /* primitive_type of battle_effect_alloc_primitive: an index into g_battle_effect_primitive_sizes. */
-enum {
+typedef enum battle_effect_primitive_type {
     BATTLE_EFFECT_PRIMITIVE_FT4 = 0,
     BATTLE_EFFECT_PRIMITIVE_DR_MODE = 1,
-};
+} battle_effect_primitive_type_e;
 
-enum {
-    BATTLE_EFFECT_PRIMITIVE_BUFFER_SIZE = 0x8000, /* the per-effect primitive arena of battle_effect_alloc_primitive */
-    BATTLE_EFFECT_CORNER_Z_DEFAULT = 0x200,       /* z of the four sprite corner vectors */
-};
+/* Size of the per-effect arena used by battle_effect_alloc_primitive. */
+enum { BATTLE_EFFECT_PRIMITIVE_BUFFER_SIZE = 0x8000 };
+
+/* Initial Z coordinate of each particle sprite's four corner vectors. */
+enum { BATTLE_EFFECT_CORNER_Z_DEFAULT = 0x200 };
 
 /* Word 0x06 of an emitter record (effect_geometry_entry_t.flags), copied to each particle's flags
  * (effect_work_record_t.flags). Bits 0x410 are effect_emitter_velocity_e. A child mode of 1 or 2
@@ -3731,12 +3654,16 @@ enum {
     EFFECT_EMITTER_ORIENT_TO_VELOCITY = 0x0002, /* turn the sprite along its heading on screen */
     EFFECT_EMITTER_BOX_SPREAD = 0x0100,         /* spawn inside the spread box; clear, on the spread ellipsoid */
     EFFECT_WORK_KIND_MASK = 0xf000,
+};
+
+/* The work-record payload selected by the high nibble of placement_flags. */
+typedef enum effect_work_kind {
     EFFECT_WORK_KIND_SPRITE_WORLD = 0x0000,
     EFFECT_WORK_KIND_SPRITE_SCREEN_OFFSET = 0x1000,
     EFFECT_WORK_KIND_SPRITE_WORLD_UNSCALED = 0x2000,
     EFFECT_WORK_KIND_SPRITE_SCREEN = 0x3000,
     EFFECT_WORK_KIND_HEAP_BLOCK = 0x4000,
-};
+} effect_work_kind_e;
 
 /* A particle channel keyframe's action word (battle_effect_keyframe_table_t.action), run by
  * battle_effect_run_keyframe_actions when the keyframe is entered. Bit 7 is set in a few retail
@@ -3836,12 +3763,16 @@ typedef char battle_effect_record_timeline_size_must_be_0xa6[sizeof(battle_effec
  * FRAME_CHANGED bit it sets when the sequence picks another frame. */
 enum {
     EFFECT_LIST_NODE_FRAME_CHANGED = 0x1,
+    EFFECT_LIST_NODE_PLACEMENT_MASK = 0x6,
+};
+
+/* Placement subfield of effect_list_node_t.kind. */
+typedef enum effect_list_node_placement {
     EFFECT_LIST_NODE_WORLD = 0x0,          /* projected position, scaled by the camera zoom */
     EFFECT_LIST_NODE_SCREEN_OFFSET = 0x2,  /* screen position from the camera translation, scaled by the zoom */
     EFFECT_LIST_NODE_WORLD_UNSCALED = 0x4, /* projected position, no zoom */
     EFFECT_LIST_NODE_SCREEN = 0x6,         /* screen position as stored, no zoom */
-    EFFECT_LIST_NODE_PLACEMENT_MASK = 0x6,
-};
+} effect_list_node_placement_e;
 
 /* effect_list_node_t.depth_mode: the third byte of a sequence frame, which adjusts the sprite's
  * ordering-table depth. */
@@ -3853,11 +3784,15 @@ typedef enum effect_sprite_depth_mode {
     EFFECT_SPRITE_DEPTH_NEARER_16 = 5,
 } effect_sprite_depth_mode_e;
 
-/* Control bytes of an effect sprite sequence: FLAG marks one, its low seven bits say which. */
-enum {
+/* Opcodes in the low seven bits of a sprite-sequence control byte. */
+typedef enum effect_sequence_opcode {
     EFFECT_SEQUENCE_OP_LOOP = 1,       /* back to the first byte */
     EFFECT_SEQUENCE_OP_SET_OFFSET = 2, /* two s16 sprite offsets follow */
     EFFECT_SEQUENCE_OP_ADD_OFFSET = 3, /* two s8 sprite offset deltas follow */
+} effect_sequence_opcode_e;
+
+/* The high bit distinguishes control bytes from ordinary frame indices. */
+enum {
     EFFECT_SEQUENCE_OP_MASK = 0x7f,
     EFFECT_SEQUENCE_OP_FLAG = 0x80,
 };
@@ -5561,7 +5496,7 @@ typedef enum battle_background_color_command {
     BATTLE_BACKGROUND_COLOR_GET = 10,
     BATTLE_BACKGROUND_COLOR_DISABLE = 11,
     BATTLE_BACKGROUND_COLOR_RESTORE = 12
-} battle_map_background_color_command_e;
+} battle_background_color_command_e;
 
 /* Texture pages stored in a sprite display record's tpage. */
 enum {
@@ -5753,6 +5688,7 @@ typedef enum battle_spritesheet_id {
 enum {
     BATTLE_SPRITESHEET_ID_RAMZA_END = 0x04,
     BATTLE_SPRITESHEET_ID_JOB_FIRST = 0x60, /* the generic job sheets start here; the monsters' follow */
+    BATTLE_SPRITESHEET_ID_COUNT = 0x9f,
 };
 
 enum {
@@ -5781,8 +5717,8 @@ typedef struct battle_gfx_evtchr_shp {
  * target access uses a 0x7564-byte stride.
  */
 typedef struct battle_gfx_vram_slot {
-    u32 owner;                   /* 0x0000; battle_gfx_vram_slot_owner_e: what the texture page shows */
-    u32 image_buffer_state;      /* 0x0004; battle_gfx_vram_slot_buffer_e: what image_data holds */
+    u32 owner;                   /* 0x0000; misc id with owner flags, or battle_gfx_vram_slot_owner_marker_e marker */
+    u32 image_buffer_state;      /* 0x0004; upload countdown or battle_gfx_vram_slot_buffer_marker_e marker */
     u32 evtchr_load_state;       /* 0x0008; set to 0 free, 1 a unit's attack image, 3 an EVTCHR block; never read */
     RECT image_rect;             /* 0x000c */
     battle_gfx_unit_seq_t seq;   /* 0x0014 */
@@ -5792,20 +5728,26 @@ typedef struct battle_gfx_vram_slot {
 } battle_gfx_vram_slot_t;
 typedef char battle_vram_slot_size_must_be_0x7564[(sizeof(battle_gfx_vram_slot_t) == 0x7564) ? 1 : -1];
 
-typedef enum battle_gfx_vram_slot_owner {
-    BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK = 0x1f, /* the unit's misc id, under one of the next two bits */
-    BATTLE_GFX_VRAM_SLOT_OWNER_SP2 = 0x40,     /* the unit's SP2 file (battle_state_handle_open_sp2_files_state) */
-    BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE = 0x80,
+typedef enum battle_gfx_vram_slot_owner_marker {
     BATTLE_GFX_VRAM_SLOT_OWNER_EVTCHR = 0xfe, /* an EVTCHR image (battle_gfx_save_evtchr_slot) */
     BATTLE_GFX_VRAM_SLOT_OWNER_NONE = 0xff,
-} battle_gfx_vram_slot_owner_e;
+} battle_gfx_vram_slot_owner_marker_e;
 
-typedef enum battle_gfx_vram_slot_buffer {
+/* Otherwise owner is a misc id combined with one of these image-kind bits. */
+typedef enum battle_gfx_vram_slot_owner_flags {
+    BATTLE_GFX_VRAM_SLOT_OWNER_SP2 = 0x40,
+    BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE = 0x80,
+} battle_gfx_vram_slot_owner_flags_e;
+
+enum { BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK = 0x1f };
+
+typedef enum battle_gfx_vram_slot_buffer_marker {
     BATTLE_GFX_VRAM_SLOT_BUFFER_FREE = 0,
-    /* An attack image on its way to VRAM: battle_state_run_game_loop counts the value down each frame. */
-    BATTLE_GFX_VRAM_SLOT_BUFFER_UPLOADING = 2,
     BATTLE_GFX_VRAM_SLOT_BUFFER_EVTCHR = 0xfe, /* an unpacked EVTCHR block, not yet saved to VRAM or cleared */
-} battle_gfx_vram_slot_buffer_e;
+} battle_gfx_vram_slot_buffer_marker_e;
+
+/* Other positive buffer values are upload countdowns decremented each frame. */
+enum { BATTLE_GFX_VRAM_SLOT_UPLOAD_FRAMES = 2 };
 
 /* 0x32d6-byte spritesheet VRAM slot records at 0x800c7ce8 (nine slots);
  * g_battle_gfx_spritesheet_ids_by_vram_slot aliases the first record's byte 1. */
@@ -5851,8 +5793,6 @@ typedef enum battle_seq_type {
     BATTLE_SEQ_KANZEN = 7,
 } battle_seq_type_e;
 
-enum { BATTLE_SPRITESHEET_ID_COUNT = 0x9f };
-
 /* Sprite part dimensions in 8-pixel tiles, indexed by attribute bits 10-13. */
 typedef struct battle_gfx_part_size {
     s32 width;
@@ -5886,14 +5826,13 @@ typedef enum battle_gfx_unit_load_phase {
 /* g_battle_gfx_unit_graphics_load_state[0], the file kind, counts through one of two lists:
  * battle_gfx_step_queued_unit_graphics_load loads three files per queued unit and
  * battle_gfx_step_load_unit_shp_seq_data the shared sprite, weapon and effect files. */
-enum {
-    BATTLE_GFX_UNIT_LOAD_KIND_FIRST = 0, /* what the resets store: both lists start here */
+typedef enum battle_gfx_queued_load_kind {
     BATTLE_GFX_QUEUED_LOAD_SHP = 0,
     BATTLE_GFX_QUEUED_LOAD_SEQ = 1,
     BATTLE_GFX_QUEUED_LOAD_SPR = 2,
-};
+} battle_gfx_queued_load_kind_e;
 
-enum {
+typedef enum battle_gfx_shared_load_kind {
     BATTLE_GFX_SHARED_LOAD_SPRITE_SHP = 0,
     BATTLE_GFX_SHARED_LOAD_SPRITE_SEQ = 1,
     BATTLE_GFX_SHARED_LOAD_WEAPON_SHP = 2,
@@ -5902,7 +5841,10 @@ enum {
     BATTLE_GFX_SHARED_LOAD_EFFECT_SEQ = 5,
     BATTLE_GFX_SHARED_LOAD_WEAPON_SPR = 6,
     BATTLE_GFX_SHARED_LOAD_OTHER_SPR = 7,
-};
+} battle_gfx_shared_load_kind_e;
+
+/* Both load-kind lists start at zero. */
+enum { BATTLE_GFX_UNIT_LOAD_KIND_FIRST = 0 };
 
 extern u16 g_battle_gfx_screen_color_modulation_fade_frames;
 extern u16 g_battle_gfx_wait_direction_arrow_palette[16];
@@ -6213,14 +6155,15 @@ s32 battle_gfx_poll_unit_graphics_load(void);
 s32 battle_gfx_step_queued_unit_graphics_load(void);
 
 /* action */
-typedef enum battle_action_type {
+/* Bitset in battle_action_data_t.attack_type; one result can affect HP and MP. */
+typedef enum battle_action_type_flags {
     BATTLE_ACTION_TYPE_PSEUDO_STATUS = 0x01,
     BATTLE_ACTION_TYPE_STATUS_CHANGE = 0x08,
     BATTLE_ACTION_TYPE_MP_HEALING = 0x10,
     BATTLE_ACTION_TYPE_MP_DAMAGE = 0x20,
     BATTLE_ACTION_TYPE_HP_HEALING = 0x40,
     BATTLE_ACTION_TYPE_HP_DAMAGE = 0x80,
-} battle_action_type_e;
+} battle_action_type_flags_e;
 
 typedef enum battle_action_miss_type {
     BATTLE_ACTION_MISS_TYPE_HIT = 0x00,
@@ -6278,8 +6221,9 @@ typedef enum battle_action_phase {
     BATTLE_ACTION_PHASE_PRE_ACTION = 0,    /* a reaction that pre-empts the pending action (Hamedo) */
     BATTLE_ACTION_PHASE_ACTING_UNIT = 1,   /* the acting unit's own action */
     BATTLE_ACTION_PHASE_REACTING_UNIT = 2, /* the reactions it provoked */
-    BATTLE_ACTION_PHASE_COUNT = 3,
 } battle_action_phase_e;
+
+enum { BATTLE_ACTION_PHASE_COUNT = 3 };
 
 /* Pending post-action displays are queued as one little-endian word in Misc
  * Unit Data 0x1b8..0x1bb.  The two dispatchers at 0x8007f5f8 and 0x800808b8
@@ -6377,35 +6321,12 @@ typedef struct battle_action_display_image_rect {
 typedef char
     battle_action_display_image_rect_size_must_be_4[(sizeof(battle_action_display_image_rect_t) == 4) ? 1 : -1];
 
-typedef enum element_flags {
-    BATTLE_ELEMENT_FIRE = 0x80,
-    BATTLE_ELEMENT_LIGHTNING = 0x40,
-    BATTLE_ELEMENT_ICE = 0x20,
-    BATTLE_ELEMENT_WIND = 0x10,
-    BATTLE_ELEMENT_EARTH = 0x08,
-    BATTLE_ELEMENT_WATER = 0x04,
-    BATTLE_ELEMENT_HOLY = 0x02,
-    BATTLE_ELEMENT_DARK = 0x01,
-} element_flags_e;
-
-/* Shared ordering for job, item-attribute, and runtime unit affinity arrays.
- * Job records contain only the first four entries; item and runtime records
- * also contain Strengthen. */
-typedef enum elemental_affinity_index {
-    ELEMENTAL_AFFINITY_ABSORB = 0,
-    ELEMENTAL_AFFINITY_NULLIFY = 1,
-    ELEMENTAL_AFFINITY_HALF = 2,
-    ELEMENTAL_AFFINITY_WEAK = 3,
-    ELEMENTAL_AFFINITY_STRENGTHEN = 4,
-    ELEMENTAL_AFFINITY_COUNT = 5,
-} elemental_affinity_index_e;
-
 /* Ordinary SP/PA/MA/Brave/Faith action-result encoding. CT and EXP reuse
  * these bits with distinct sentinel or sign meanings and are excluded. */
-typedef enum battle_action_stat_change {
+enum {
     BATTLE_ACTION_STAT_CHANGE_VALUE_MASK = 0x7f,
     BATTLE_ACTION_STAT_CHANGE_INCREASE = 0x80,
-} battle_action_stat_change_e;
+};
 
 /* Bit order mirrors the seven serialized battle_stats_t equipment slots. */
 typedef enum battle_action_equipment_slot_mask {
@@ -6500,14 +6421,29 @@ typedef struct battle_current_ability {
 } battle_current_ability_t;
 typedef char battle_current_ability_size_must_be_0x50[(sizeof(battle_current_ability_t) == 0x50) ? 1 : -1];
 
+/* The compatibility table is indexed by absolute zodiac-ID difference, not
+ * by a particular sign. Value 3 is resolved from sex and monster flags. */
+typedef enum zodiac_compatibility {
+    ZODIAC_COMPATIBILITY_NEUTRAL = 0,
+    ZODIAC_COMPATIBILITY_BAD = 1,
+    ZODIAC_COMPATIBILITY_GOOD = 2,
+    ZODIAC_COMPATIBILITY_GENDER_DEPENDENT = 3,
+    ZODIAC_COMPATIBILITY_WORST = 4,
+    ZODIAC_COMPATIBILITY_BEST = 5,
+} zodiac_compatibility_e;
+
 /* battle_current_ability_t.knockback_flags: the kind of knockback found by
  * battle_formula_calculate_knockback, with PENDING set until it is applied. */
-typedef enum battle_knockback_flags {
+typedef enum battle_knockback_kind {
     BATTLE_KNOCKBACK_FALL_DAMAGE = 0x01,    /* a grounded target: the fall height can hurt */
     BATTLE_KNOCKBACK_NO_FALL_DAMAGE = 0x02, /* a flying target */
+} battle_knockback_kind_e;
+
+/* Encoding of the kind and pending marker in the same byte. */
+enum {
     BATTLE_KNOCKBACK_KIND_MASK = 0x7f,
     BATTLE_KNOCKBACK_PENDING = 0x80,
-} battle_knockback_flags_e;
+};
 
 /* battle_current_ability_t.post_action_message, copied to the strike work and
  * the misc unit record: the message the post-action state opens. */
@@ -6537,50 +6473,6 @@ typedef char battle_current_attacker_data_size_must_be_30[(sizeof(battle_current
 /* Active reaction abilities occupy four MSB-first bytes at
  * battle_stats_t + 0x08b. These values are verified against the target's
  * reaction dispatchers. */
-typedef enum battle_unit_reaction_set_1 {
-    BATTLE_REACTION_SET_1_PA_SAVE = 0x80,
-    BATTLE_REACTION_SET_1_MA_SAVE = 0x40,
-    BATTLE_REACTION_SET_1_SPEED_SAVE = 0x20,
-    BATTLE_REACTION_SET_1_SUNKEN_STATE = 0x10,
-    BATTLE_REACTION_SET_1_CAUTION = 0x08,
-    BATTLE_REACTION_SET_1_DRAGON_SPIRIT = 0x04,
-    BATTLE_REACTION_SET_1_REGENERATOR = 0x02,
-    BATTLE_REACTION_SET_1_BRAVE_UP = 0x01,
-} battle_unit_reaction_set_1_e;
-
-typedef enum battle_unit_reaction_set_2 {
-    BATTLE_REACTION_SET_2_FAITH_UP = 0x80,
-    BATTLE_REACTION_SET_2_HP_RESTORE = 0x40,
-    BATTLE_REACTION_SET_2_MP_RESTORE = 0x20,
-    BATTLE_REACTION_SET_2_CRITICAL_QUICK = 0x10,
-    BATTLE_REACTION_SET_2_MEATBONE_SLASH = 0x08,
-    BATTLE_REACTION_SET_2_COUNTER_MAGIC = 0x04,
-    BATTLE_REACTION_SET_2_COUNTER_TACKLE = 0x02,
-    BATTLE_REACTION_SET_2_COUNTER_FLOOD = 0x01,
-} battle_unit_reaction_set_2_e;
-
-typedef enum battle_unit_reaction_set_3 {
-    BATTLE_REACTION_SET_3_ABSORB_USED_MP = 0x80,
-    BATTLE_REACTION_SET_3_GILGAME_HEART = 0x40,
-    BATTLE_REACTION_SET_3_REFLECT = 0x20,
-    BATTLE_REACTION_SET_3_AUTO_POTION = 0x10,
-    BATTLE_REACTION_SET_3_COUNTER = 0x08,
-    /* 0x04 is present in the bitset but remains unidentified. */
-    BATTLE_REACTION_SET_3_DISTRIBUTE = 0x02,
-    BATTLE_REACTION_SET_3_MP_SWITCH = 0x01,
-} battle_unit_reaction_set_3_e;
-
-typedef enum battle_unit_reaction_set_4 {
-    BATTLE_REACTION_SET_4_DAMAGE_SPLIT = 0x80,
-    BATTLE_REACTION_SET_4_WEAPON_GUARD = 0x40,
-    BATTLE_REACTION_SET_4_FINGER_GUARD = 0x20,
-    BATTLE_REACTION_SET_4_ABANDON = 0x10,
-    BATTLE_REACTION_SET_4_CATCH = 0x08,
-    BATTLE_REACTION_SET_4_BLADE_GRASP = 0x04,
-    BATTLE_REACTION_SET_4_ARROW_GUARD = 0x02,
-    BATTLE_REACTION_SET_4_HAMEDO = 0x01,
-} battle_unit_reaction_set_4_e;
-
 /* Reaction behavior flags (g_main_reaction_behavior_flags). */
 typedef enum battle_reaction_behavior_flag {
     BATTLE_REACTION_BEHAVIOR_FLAG_TRIGGER_ABILITY = 0x01,
@@ -6590,6 +6482,16 @@ typedef enum battle_reaction_behavior_flag {
     BATTLE_REACTION_BEHAVIOR_FLAG_PASSIVE = 0x10,
     BATTLE_REACTION_BEHAVIOR_FLAG_ACTIVE = 0x20,
 } battle_reaction_behavior_flag_e;
+
+typedef enum map_move_find_item_entry_flags {
+    MAP_MOVE_FIND_ENTRY_TRAP_DEGENERATOR = 0x01,
+    MAP_MOVE_FIND_ENTRY_TRAP_DEATHTRAP = 0x02,
+    MAP_MOVE_FIND_ENTRY_TRAP_SLEEPING_GAS = 0x04,
+    MAP_MOVE_FIND_ENTRY_TRAP_STEEL_NEEDLE = 0x08,
+    MAP_MOVE_FIND_ENTRY_NO_TRAP = 0x10,
+    MAP_MOVE_FIND_ENTRY_NO_ITEM = 0x20,
+    MAP_MOVE_FIND_ENTRY_UPPER_LAYER = 0x80,
+} map_move_find_item_entry_flags_e;
 
 typedef struct map_move_find_item_entry {
     u8 position; /* X in the high nibble, Y in the low nibble. */
@@ -6636,12 +6538,12 @@ typedef enum battle_character_slot {
 } battle_character_slot_e;
 
 /* Directions of battle_target_calculate_linear_attack_tiles. */
-enum {
+typedef enum battle_target_line_direction {
     BATTLE_TARGET_LINE_EAST = 0,  /* +x */
     BATTLE_TARGET_LINE_WEST = 2,  /* -x */
     BATTLE_TARGET_LINE_SOUTH = 4, /* -y */
     BATTLE_TARGET_LINE_NORTH = 6, /* +y */
-};
+} battle_target_line_direction_e;
 
 /* Result of battle_action_prepare_attack, kept in battle_unit_misc_data_t.attack_phase_state. */
 typedef enum battle_attack_preparation {
@@ -6686,6 +6588,11 @@ typedef enum battle_post_action_display_phase {
     BATTLE_POST_ACTION_DISPLAY_JOB_LEVEL_UP = 1,
     BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT = 2,
 } battle_post_action_display_phase_e;
+
+/* Provisional: the 12-entry zodiac compatibility table indexed by the absolute
+ * difference of the two signs.  1/4 weaken the formula, 2/5 strengthen it, and
+ * 3 marks the opposition pair whose result depends on sex. */
+extern u8 g_battle_zodiac_compatibility_modifiers[];
 
 extern s32 g_battle_action_turn_event_type;
 extern s32 g_battle_action_at_list_active;
@@ -7042,6 +6949,14 @@ typedef struct battle_move_found_item {
 } battle_move_found_item_t;
 typedef char battle_move_found_item_size_must_be_8[sizeof(battle_move_found_item_t) == 8 ? 1 : -1];
 
+typedef enum battle_trap_id {
+    BATTLE_TRAP_ID_DEGENERATOR = 0,
+    BATTLE_TRAP_ID_DEATHTRAP = 1,
+    BATTLE_TRAP_ID_SLEEPING_GAS = 2,
+    BATTLE_TRAP_ID_STEEL_NEEDLE = 3,
+    BATTLE_TRAP_ID_NONE = 0xff,
+} battle_trap_id_e;
+
 typedef enum battle_move_find_result_flags {
     BATTLE_MOVE_FIND_RESULT_ITEM = 0x01,
     BATTLE_MOVE_FIND_RESULT_TRAP = 0x02,
@@ -7123,39 +7038,6 @@ typedef struct battle_move_pathfind_scratch {
     u8 movement_set_2;      /* 0x24 */
     u8 can_pass_lava;       /* 0x25 */
 } battle_move_pathfind_scratch_t;
-
-typedef enum battle_movement_set_1 {
-    BATTLE_MOVEMENT_SET_1_MOVE_PLUS_1 = 0x80,
-    BATTLE_MOVEMENT_SET_1_MOVE_PLUS_2 = 0x40,
-    BATTLE_MOVEMENT_SET_1_MOVE_PLUS_3 = 0x20,
-    BATTLE_MOVEMENT_SET_1_JUMP_PLUS_1 = 0x10,
-    BATTLE_MOVEMENT_SET_1_JUMP_PLUS_2 = 0x08,
-    BATTLE_MOVEMENT_SET_1_JUMP_PLUS_3 = 0x04,
-    BATTLE_MOVEMENT_SET_1_IGNORE_HEIGHT = 0x02,
-    BATTLE_MOVEMENT_SET_1_MOVE_HP_UP = 0x01,
-} battle_unit_movement_set_1_e;
-
-typedef enum battle_movement_set_2 {
-    BATTLE_MOVEMENT_SET_2_MOVE_MP_UP = 0x80,
-    BATTLE_MOVEMENT_SET_2_MOVE_GET_EXP = 0x40,
-    BATTLE_MOVEMENT_SET_2_MOVE_GET_JP = 0x20,
-    BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER = 0x10,
-    BATTLE_MOVEMENT_SET_2_TELEPORT = 0x08,
-    BATTLE_MOVEMENT_SET_2_TELEPORT_2 = 0x04,
-    BATTLE_MOVEMENT_SET_2_ANY_WEATHER = 0x02,
-    BATTLE_MOVEMENT_SET_2_ANY_GROUND = 0x01,
-} battle_unit_movement_set_2_e;
-
-typedef enum battle_movement_set_3 {
-    BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER = 0x80, /* ability 0x1f6; stands on the water surface */
-    BATTLE_MOVEMENT_SET_3_WALK_ON_WATER = 0x40, /* ability 0x1f7; wades one level deep */
-    BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA = 0x20,
-    BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER = 0x10,
-    BATTLE_MOVEMENT_SET_3_FLOAT = 0x08,
-    BATTLE_MOVEMENT_SET_3_FLY = 0x04,
-    BATTLE_MOVEMENT_SET_3_SILENT_WALK = 0x02,
-    BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM = 0x01,
-} battle_unit_movement_set_3_e;
 
 enum {
     BATTLE_MOVEMENT_SAVED_SOURCE_HEIGHT = 1,
@@ -7539,14 +7421,6 @@ typedef struct battle_map_terrain_resource {
 } battle_map_terrain_resource_t;
 typedef char battle_map_terrain_resource_size_must_be_0x1002[sizeof(battle_map_terrain_resource_t) == 0x1002 ? 1 : -1];
 
-typedef enum battle_trap_id {
-    BATTLE_TRAP_ID_DEGENERATOR = 0,
-    BATTLE_TRAP_ID_DEATHTRAP = 1,
-    BATTLE_TRAP_ID_SLEEPING_GAS = 2,
-    BATTLE_TRAP_ID_STEEL_NEEDLE = 3,
-    BATTLE_TRAP_ID_NONE = 0xff,
-} battle_trap_id_e;
-
 /*
  * Script variable 0x23, set by event instruction {3C} Weather.  The same
  * strength scale covers rain and snow; the map's palette-mod flag word says
@@ -7575,10 +7449,9 @@ typedef enum battle_map_weather_flags {
     BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER = 0x02,
 } battle_map_weather_flags_e;
 
-/* Eight 0x0a-byte map texture-animation runtime slots at 0x800911f4, distinct
- * from the 32 mesh texture-animation instructions and their handle table.
- * The slot constants and the serialized/runtime distinction are defined with
- * the map format declarations in map.h. */
+/* Eight CLUT colour-cycle slots at 0x800911f4. Each holds a row and a colour
+ * range to rotate; they are separate from the mesh's 32 texture-animation
+ * instructions and their handle table. */
 typedef struct map_texture_animation_state {
     u8 active;
     u8 elapsed_frames;
@@ -7606,64 +7479,26 @@ typedef struct battle_weather_sprite_rects {
     RECT rects[3];
 } battle_weather_sprite_rects_t;
 
-enum {
-    MAP_TILE_CEILING_DEPTH_MASK = 0x1f,
-    MAP_TILE_FLAG_MOVE_DESTINATION = 0x20,
-    MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT = 5,
-    MAP_TILE_FLAG_ABILITY_RANGE = 0x40,
-    MAP_TILE_FLAG_ABILITY_RANGE_SHIFT = 6,
-    MAP_TILE_FLAG_TARGETED = 0x80,
-};
-
-enum {
-    MAP_TILE_FLAG_BLOCKED = 0x01,
-    MAP_TILE_FLAG_UNTARGETABLE = 0x02,
-    MAP_TILE_FLAG_UNTARGETABLE_SHIFT = 1,
-    MAP_TILE_COLLISION_MASK = 0x03,
-    MAP_TILE_SHADOW_MODE_SHIFT = 2,
-    MAP_TILE_SHADOW_MODE_MASK = 0x0c,
-    MAP_TILE_SHADOW_MODE_VALUE_MASK = 0x03,
-    MAP_TILE_FLAG_CANNOT_STOP = 0x80,
-};
-
-enum {
-    MAP_TILE_HALF_HEIGHT_MASK = 0x1f,
-    MAP_TILE_DEPTH_VALUE_MASK = 0x07,
-    MAP_TILE_DEPTH_SHIFT = 5,
-    MAP_TILE_DEPTH_MASK = 0xe0,
-};
-
-typedef enum map_tile_camera_block_direction {
-    MAP_TILE_CAMERA_BLOCK_NORTHWEST = 0x01,
-    MAP_TILE_CAMERA_BLOCK_SOUTHWEST = 0x02,
-    MAP_TILE_CAMERA_BLOCK_SOUTHEAST = 0x04,
-    MAP_TILE_CAMERA_BLOCK_NORTHEAST = 0x08,
-} map_tile_camera_block_direction_e;
-
-enum {
-    MAP_TILE_CAMERA_BLOCK_DIRECTION_MASK = 0x0f,
-    MAP_TILE_CAMERA_BLOCK_STEEP_SHIFT = 4,
-    MAP_TILE_CAMERA_BLOCK_STEEP_MASK = 0xf0,
-};
-
 typedef enum gns_map_state_comparison {
     GNS_MAP_STATE_EQUAL = 1,
     GNS_MAP_STATE_REQUESTED_LESS_THAN_RECORD = 2,
     GNS_MAP_STATE_REQUESTED_GREATER_THAN_RECORD = 3,
 } gns_map_state_comparison_e;
 
+/* IDs shared by GNS row tags and mesh-file offset slots. The dispatcher also
+ * accepts the separate map_resource_apply_command_e operations below. */
 typedef enum gns_resource_type {
     GNS_RESOURCE_NONE = 0x00, /* empty record slot; also ends the command records */
-    /* 0x10-0x30: chunks of a mesh file, in the order of its offset table at +0x40 */
+    /* Mesh-file slots use these IDs as word indices; a file row may load a whole mesh or texture. */
     GNS_RESOURCE_PRIMARY_GEOMETRY = 0x10,
-    GNS_RESOURCE_PALETTES = 0x11,          /* kept pending until GNS_RESOURCE_APPLY_PALETTES */
+    GNS_RESOURCE_PALETTES = 0x11,          /* kept pending until MAP_RESOURCE_APPLY_PALETTES */
     GNS_RESOURCE_UNSUPPORTED_12 = 0x12,    /* raises exception 0x3ca */
     GNS_RESOURCE_TEXTURE_QUARTER_0 = 0x13, /* 64x256 texture strip at VRAM x 0x300 */
     GNS_RESOURCE_TEXTURE_QUARTER_1 = 0x14,
     GNS_RESOURCE_TEXTURE_QUARTER_2 = 0x15,
     GNS_RESOURCE_TEXTURE_QUARTER_3 = 0x16,
     GNS_RESOURCE_TEXTURE = 0x17,
-    GNS_RESOURCE_LIGHTING = 0x19, /* kept pending until GNS_RESOURCE_APPLY_LIGHTING */
+    GNS_RESOURCE_LIGHTING = 0x19, /* kept pending until MAP_RESOURCE_APPLY_LIGHTING */
     GNS_RESOURCE_TERRAIN = 0x1a,
     GNS_RESOURCE_TEXTURE_ANIMATIONS = 0x1b,
     GNS_RESOURCE_PALETTE_ANIMATION_FRAMES = 0x1c,
@@ -7681,9 +7516,7 @@ typedef enum gns_resource_type {
     GNS_RESOURCE_MESH_PRIMARY = 0x2e,
     GNS_RESOURCE_MESH_OVERRIDE = 0x2f,
     GNS_RESOURCE_MESH_ALTERNATE = 0x30,
-    GNS_RESOURCE_END = 0x31,
-    GNS_RESOURCE_APPLY_LIGHTING = 0x32,      /* internal: apply the pending lighting chunk */
-    GNS_RESOURCE_APPLY_PALETTES = 0x33,      /* internal: apply the pending palette chunk */
+    GNS_RESOURCE_FILLER = 0x31,              /* repeated file-section rows; the loader still visits them */
     GNS_RESOURCE_SET_CAMERA_POSITION = 0x83, /* 0x83 up: command records */
     GNS_RESOURCE_SET_CAMERA_ROTATION = 0x84,
     GNS_RESOURCE_SET_INDOOR = 0x85,
@@ -7691,9 +7524,21 @@ typedef enum gns_resource_type {
     GNS_RESOURCE_UNHANDLED_87 = 0x87, /* rows of this type are in 14 maps' files; the dispatcher has no case for it */
     GNS_RESOURCE_CLEAR_SNOW = 0x88,
     GNS_RESOURCE_SET_SNOW = 0x89,
-    GNS_RESOURCE_RESERVED_8A = 0x8a,
+    GNS_RESOURCE_UNHANDLED_8A = 0x8a, /* 28-byte rows; forwarded unconditionally and ignored by the dispatcher */
     GNS_RESOURCE_SET_WEATHER_MODIFIER = 0x8b,
 } gns_resource_type_e;
+
+/* Structural bounds and the tag separating file rows from command records. */
+enum {
+    GNS_RESOURCE_TABLE_COUNT = 49, /* mesh offset words and pending/loaded resource slots */
+    GNS_RECORD_COMMAND_SEPARATOR = 0x80,
+};
+
+/* Private dispatcher operations issued after a texture load, not serialized IDs. */
+typedef enum map_resource_apply_command {
+    MAP_RESOURCE_APPLY_LIGHTING = 0x32,
+    MAP_RESOURCE_APPLY_PALETTES = 0x33,
+} map_resource_apply_command_e;
 
 /* Commands of battle_map_dispatch_map_data_command, which switches on command
  * - 0x6a. This is its own id space: event Use3DObject (0x54) reaches command
@@ -7752,26 +7597,31 @@ typedef enum map_lightning_mode {
     MAP_LIGHTNING_ONCE = 2, /* back to OFF when the flash ends */
 } map_lightning_mode_e;
 
-/* Commands and result of battle_map_load_data and the g_battle_map_resource_load_state values, which
- * share the map command id space. */
+/* Commands of battle_map_load_data, read only while the GNS phase is idle. */
 typedef enum map_load_command {
-    MAP_LOAD_STATE_IDLE = 0x00,       /* ready to pick the next resource */
-    MAP_LOAD_COMMAND_LOAD_GNS = 0x73, /* read the GNS of a map */
-    MAP_LOAD_STATE_GNS_FILE = 0x74,   /* waiting for the GNS file; as a command it does nothing */
-    MAP_LOAD_COMMAND_START = 0x75,    /* start loading what the current map state needs */
-    MAP_LOAD_COMMAND_POLL = 0x76,     /* any command without a case only advances the load */
-    MAP_LOAD_STATE_DONE = 0x77,
-    MAP_LOAD_STATE_RESOURCE_FILE = 0x78, /* waiting for a resource file */
-    MAP_LOAD_STATE_MESH_RECORDS = 0x79,  /* rebuild the mesh render records, once per render buffer */
-    MAP_LOAD_STATE_MESH_RECORDS_SECOND = 0x91,
-    MAP_LOAD_STATE_APPLY_LIGHTING = 0x92, /* after the texture file */
-    MAP_LOAD_STATE_APPLY_TEXTURE = 0x93,
-    MAP_LOAD_COMMAND_START_HELD = 0x99, /* as START, but hold each resource until MAP_DATA_COMMAND_RELEASE_GNS_HOLD */
-    MAP_LOAD_RESULT_HELD = 0x9b,        /* a file is loaded and its dispatch is held */
+    MAP_LOAD_COMMAND_LOAD_GNS = 0x73, /* always read the GNS; no current caller issues this */
+    MAP_LOAD_COMMAND_START = 0x75,
+    MAP_LOAD_COMMAND_POLL = 0x76,       /* an unhandled command only advances the load */
+    MAP_LOAD_COMMAND_START_HELD = 0x99, /* as START, but hold dispatch until MAP_DATA_COMMAND_RELEASE_GNS_HOLD */
     MAP_LOAD_COMMAND_POLL_HELD = 0x9c,
 } map_load_command_e;
 
-/* g_battle_map_gns_load_phase. */
+/* g_battle_map_resource_load_state; these are not the loader's normal return values. */
+typedef enum map_resource_load_state {
+    MAP_LOAD_STATE_IDLE = 0x00,
+    MAP_LOAD_STATE_GNS_FILE = 0x74, /* also accepted as a no-op input command */
+    MAP_LOAD_STATE_DONE = 0x77,
+    MAP_LOAD_STATE_RESOURCE_FILE = 0x78,
+    MAP_LOAD_STATE_MESH_RECORDS = 0x79, /* rebuild render records once per buffer */
+    MAP_LOAD_STATE_MESH_RECORDS_SECOND = 0x91,
+    MAP_LOAD_STATE_APPLY_LIGHTING = 0x92,
+    MAP_LOAD_STATE_APPLY_TEXTURE = 0x93,
+} map_resource_load_state_e;
+
+/* The loader otherwise returns g_battle_map_gns_load_phase. */
+enum { MAP_LOAD_RESULT_HELD = 0x9b };
+
+/* g_battle_map_gns_load_phase and the normal return of battle_map_load_data. */
 typedef enum map_gns_load_phase {
     MAP_GNS_LOAD_PHASE_IDLE = 0,
     MAP_GNS_LOAD_PHASE_RESOURCES = 1, /* loading the pending resource files one by one */
@@ -7824,10 +7674,10 @@ typedef enum map_light_command {
 
 /* Commands of battle_map_configure_effect_data_state: the ordering-table
  * handling of untextured map polygons while an effect draws. */
-enum {
+typedef enum map_effect_data_command {
     MAP_EFFECT_DATA_END = 0x87,
     MAP_EFFECT_DATA_BEGIN = 0x88,
-};
+} map_effect_data_command_e;
 
 /* Colour modes of battle_map_modify_palette, battle_gfx_modify_vram_palette and the
  * battle_map_blend_*_color functions: what the red, green and blue offsets are added to. */
@@ -7852,8 +7702,8 @@ typedef enum map_color_repeat {
     MAP_COLOR_REPEAT_RESTORED = 2, /* fading back to the base; the offsets follow again */
 } map_color_repeat_e;
 
-/* A CLUT row of the battle map: one VRAM line of sixteen 16-colour CLUTs, from y 0x1e0 down
- * (battle_map_upload_clut_rows uploads the rows as one 256x14 image). Index into
+/* A CLUT row of the battle map: one VRAM line of sixteen 16-colour CLUTs,
+ * at y 0x1e0 through 0x1ed (battle_map_upload_clut_rows uploads a 256x14 image). Index into
  * map_palette_state_t.clut_rows and g_battle_map_palette_modified_colors. */
 typedef enum map_clut_row {
     MAP_CLUT_ROW_MAP = 0,
@@ -7886,23 +7736,9 @@ enum {
  * They are separate from the 32 serialized 0x14-byte animation instructions
  * a map's mesh file carries. */
 enum {
-    MAP_TEXTURE_ANIMATION_CAPACITY = 8,
-    MAP_TEXTURE_ANIMATION_STATE_BYTES = 0x0a,
+    MAP_CLUT_CYCLE_SLOT_COUNT = 8,
+    MAP_CLUT_CYCLE_SLOT_BYTE_COUNT = 0x0a,
 };
-
-enum {
-    MAP_TILE_SURFACE_FLAG_DEPTH_BIAS = 0x40,
-};
-
-typedef enum map_move_find_item_entry_flags {
-    MAP_MOVE_FIND_ENTRY_TRAP_DEGENERATOR = 0x01,
-    MAP_MOVE_FIND_ENTRY_TRAP_DEATHTRAP = 0x02,
-    MAP_MOVE_FIND_ENTRY_TRAP_SLEEPING_GAS = 0x04,
-    MAP_MOVE_FIND_ENTRY_TRAP_STEEL_NEEDLE = 0x08,
-    MAP_MOVE_FIND_ENTRY_NO_TRAP = 0x10,
-    MAP_MOVE_FIND_ENTRY_NO_ITEM = 0x20,
-    MAP_MOVE_FIND_ENTRY_UPPER_LAYER = 0x80,
-} map_move_find_item_entry_flags_e;
 
 /* Unscaled components decoded from one PlayStation ABBBBBGGGGGRRRRR word. */
 typedef struct map_palette_color_components {
@@ -7989,8 +7825,8 @@ typedef union gns_command_payload {
 typedef struct gns_command_record_prefix {
     u16 script_variable_id;  /* 0x00 */
     s16 map_state;           /* 0x02 */
-    u8 map_state_comparison; /* 0x04 */
-    u8 resource_type;        /* 0x05 */
+    u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
+    u8 resource_type;        /* 0x05; gns_resource_type_e, or GNS_RECORD_COMMAND_SEPARATOR */
     u16 _unused_06;
     u8 record_byte_length; /* 0x08 */
     u8 _unused_09;
@@ -8093,8 +7929,8 @@ typedef char gns_load_info_size_must_be_14[sizeof(gns_load_info_t) == 14 ? 1 : -
 typedef struct gns_record_view {
     s16 script_variable_id;
     s16 map_state;
-    u8 map_state_comparison;
-    u8 resource_type;
+    u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
+    u8 resource_type;        /* 0x05; gns_resource_type_e, or GNS_RECORD_COMMAND_SEPARATOR */
     gns_load_info_t load_info;
 } gns_record_view_t;
 typedef char gns_record_view_size_must_be_0x14[(sizeof(gns_record_view_t) == 0x14) ? 1 : -1];
@@ -8173,7 +8009,7 @@ typedef struct battle_map_mesh_part {
 } battle_map_mesh_part_t;
 typedef char battle_map_mesh_part_size_must_be_0x98[(sizeof(battle_map_mesh_part_t) == 0x98) ? 1 : -1];
 
-/* One 0x50-byte map mesh animation keyframe (MAPnnn.GNS record type 1).
+/* One 0x50-byte keyframe from a mesh animation record of type 1.
  * Keyframe ids are 1-based; entry 0 is never loaded. Each of the nine channels
  * (rotation, translation and scale of a mesh part) has a target value, a
  * start/end angle for the sine modes and a mode flag word whose bits 0 and 1
@@ -8201,7 +8037,7 @@ typedef enum battle_map_mesh_tween_flags {
     BATTLE_MAP_MESH_TWEEN_RAISED_SINE = 0x10, /* delta * (sin + 1) */
 } battle_map_mesh_tween_flags_e;
 
-/* One mesh animation instruction (MAPnnn.GNS record type 2). A duration of
+/* One instruction from a mesh animation record of type 2. A duration of
  * 0 stops the part's animation when it is reached. */
 typedef struct battle_map_mesh_instruction {
     u8 keyframe;  /* 1-based keyframe id */
@@ -8253,7 +8089,7 @@ typedef enum map_texture_animation_mode {
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_7 = 0x1c,
     /* starts a battle_map_start_texture_animation over colours canvas_x .. canvas_x + width - 1 of MAP_CLUT_ROW_MAP */
     MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE = 0x1d,
-    /* 0x80 up: set while running, never loaded: the return half of UV_PING_PONG */
+    /* Playback states written and dispatched by battle_map_update_texture_animations. */
     MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK = 0x80,
     MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG_BACK = 0x81,
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_PLAYING = 0x82,
@@ -8294,11 +8130,19 @@ typedef struct battle_lightning_state {
 } battle_lightning_state_t;
 typedef char battle_lightning_state_size_must_be_0x94[(sizeof(battle_lightning_state_t) == 0x94) ? 1 : -1];
 
+/* Nested records in GNS_RESOURCE_STATE_RECORDS, a mesh-file chunk at slot 0x23. */
+typedef enum map_mesh_animation_record_type {
+    MAP_MESH_ANIMATION_RECORD_END = 0,
+    MAP_MESH_ANIMATION_RECORD_KEYFRAMES = 1,
+    MAP_MESH_ANIMATION_RECORD_INSTRUCTIONS = 2,
+    MAP_MESH_ANIMATION_RECORD_PART_PROPERTIES = 3,
+} map_mesh_animation_record_type_e;
+
 /* Record header parsed by the map-state loader at 0x800f26bc: a type word,
  * an entry count and the packed entries. */
 typedef struct battle_map_state_record {
-    u32 type;
-    u32 count;
+    u32 type;  /* map_mesh_animation_record_type_e */
+    u32 count; /* types 1/3: entry count; type 2: packed instruction/state dimensions */
     u8 data[4];
 } battle_map_state_record_t;
 
@@ -8359,7 +8203,7 @@ extern battle_map_resource_t* g_battle_map_mesh_load_buffer;
 extern s32 g_battle_map_mesh_load_state;
 extern map_move_find_item_data_t g_battle_map_move_find_item_data[MAP_ID_COUNT];
 extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
-extern s32 g_battle_map_resource_load_state;
+extern s32 g_battle_map_resource_load_state;                                 /* map_resource_load_state_e */
 extern s32 g_battle_map_texture_animation_handles[];
 extern map_texture_animation_state_t g_battle_map_texture_animation_states[];
 extern s32 g_battle_map_textured_quad_count;
@@ -8422,8 +8266,8 @@ extern map_palette_state_t g_battle_map_palette_state;
 
 /* GNS records selected for loading and the ones currently loaded, indexed by
  * resource type. */
-extern gns_record_view_t g_battle_map_pending_gns_records[49];
-extern gns_record_view_t g_battle_map_loaded_gns_records[49];
+extern gns_record_view_t g_battle_map_pending_gns_records[GNS_RESOURCE_TABLE_COUNT];
+extern gns_record_view_t g_battle_map_loaded_gns_records[GNS_RESOURCE_TABLE_COUNT];
 
 /* The applied background gradient pair at 0x801251c8. The copies at
  * 0x800e81d0, 0x800e8228 and 0x800e827c move each colour as an independent
@@ -8445,7 +8289,7 @@ extern u8 g_battle_map_ambient_polygon_color[3];
 extern u8 g_battle_map_back_color_bytes[3];
 extern SVECTOR g_battle_map_command_0x96_rotation;
 extern u8 g_battle_map_gns_dispatch_held;
-extern s32 g_battle_map_gns_load_phase;
+extern s32 g_battle_map_gns_load_phase; /* map_gns_load_phase_e */
 extern u8 g_battle_map_light_direction[4];
 extern u16 g_battle_map_light_transition_command;               /* pending per-frame light command, 0 when idle */
 extern u16 g_battle_map_light_transition_duration;              /* transition duration in frames */
@@ -8566,7 +8410,7 @@ void battle_map_modify_palette(
 
 s32 battle_map_calculate_slope_height(const s16* coords, s32 map_z);
 s32 battle_map_resolve_rotated_offset_layer(battle_stats_t*, s32, s32, s32, s32*, s32*, s32*);
-s32 battle_map_load_data(s32 map_id, s32 kind);
+s32 battle_map_load_data(s32 map_id, s32 command);
 void battle_map_blend_background_gradient_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
 void battle_map_blend_ambient_light_color(s32 mode, s32 frame_duration, s32 red, s32 green, s32 blue);
 void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_index, const u16* colors);
@@ -9076,9 +8920,13 @@ typedef enum battle_numeric_display_selector {
     BATTLE_NUMERIC_DISPLAY_NO_TARGET = 0x0e0,
     BATTLE_NUMERIC_DISPLAY_SILENCED = 0x0f0,
     BATTLE_NUMERIC_DISPLAY_NO_MP = 0x100,
+} battle_numeric_display_selector_e;
+
+/* Encoding in battle_action_result_display_t.selector. */
+enum {
     BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
     BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL = 0x200,
-} battle_numeric_display_selector_e;
+};
 
 /* Text variables $27 and $28 (rows of glyph pixels drawn, 0x10 by default),
  * bound separately: battle_menu_display_text also takes the table base, and
@@ -9183,35 +9031,6 @@ void battle_text_mirror_packed_nibble_region_horizontal(u8* data, world_glyph_bl
 u8* battle_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* reader, u8* p);
 
 /* other */
-/* Unshifted zodiac IDs. Party and battle records store these in the high
- * nibble; ordinary birthdays never produce Serpentarius. */
-typedef enum zodiac_sign {
-    ZODIAC_SIGN_ARIES = 0,
-    ZODIAC_SIGN_TAURUS = 1,
-    ZODIAC_SIGN_GEMINI = 2,
-    ZODIAC_SIGN_CANCER = 3,
-    ZODIAC_SIGN_LEO = 4,
-    ZODIAC_SIGN_VIRGO = 5,
-    ZODIAC_SIGN_LIBRA = 6,
-    ZODIAC_SIGN_SCORPIO = 7,
-    ZODIAC_SIGN_SAGITTARIUS = 8,
-    ZODIAC_SIGN_CAPRICORN = 9,
-    ZODIAC_SIGN_AQUARIUS = 10,
-    ZODIAC_SIGN_PISCES = 11,
-    ZODIAC_SIGN_SERPENTARIUS = 12,
-} zodiac_sign_e;
-
-/* The compatibility table is indexed by absolute zodiac-ID difference, not
- * by a particular sign. Value 3 is resolved from sex and monster flags. */
-typedef enum zodiac_compatibility {
-    ZODIAC_COMPATIBILITY_NEUTRAL = 0,
-    ZODIAC_COMPATIBILITY_BAD = 1,
-    ZODIAC_COMPATIBILITY_GOOD = 2,
-    ZODIAC_COMPATIBILITY_GENDER_DEPENDENT = 3,
-    ZODIAC_COMPATIBILITY_WORST = 4,
-    ZODIAC_COMPATIBILITY_BEST = 5,
-} zodiac_compatibility_e;
-
 extern s32 g_battle_destination_camera_yaw;
 extern u8 g_battle_job_level_gained_flag;
 extern u8 g_battle_math_source_skillsets[4];
@@ -9234,10 +9053,6 @@ extern u8 g_battle_mimic_pending_flags[21];
 extern s16 g_battle_preview_target_unit_id;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 
-/* Provisional: the 12-entry zodiac compatibility table indexed by the absolute
- * difference of the two signs.  1/4 weaken the formula, 2/5 strengthen it, and
- * 3 marks the opposition pair whose result depends on sex. */
-extern u8 g_battle_zodiac_compatibility_modifiers[];
 extern u16 g_battle_team_golem[4]; /* 0x8018f5f4 */
 extern void* g_battle_formation_screen_active;
 

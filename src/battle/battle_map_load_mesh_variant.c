@@ -17,12 +17,12 @@ s32 battle_map_load_mesh_variant(s32 palette_mode) {
 
     switch (g_battle_map_mesh_load_state) {
     case MAP_MESH_LOAD_IDLE:
-        for (i = 0; g_battle_map_gns_records[i].resource_type < 0x80; i++) {
+        for (i = 0; g_battle_map_gns_records[i].resource_type < GNS_RECORD_COMMAND_SEPARATOR; i++) {
             if (g_battle_map_gns_records[i].resource_type == GNS_RESOURCE_MESH_PRIMARY) {
                 g_battle_map_selected_mesh_record = g_battle_map_gns_records[i];
             }
         }
-        for (i = 0; g_battle_map_gns_records[i].resource_type < 0x80; i++) {
+        for (i = 0; g_battle_map_gns_records[i].resource_type < GNS_RECORD_COMMAND_SEPARATOR; i++) {
             if (g_battle_map_gns_records[i].resource_type == GNS_RESOURCE_MESH_ALTERNATE) {
                 state = battle_script_get_variable(g_battle_map_gns_records[i].script_variable_id) & 0xfff;
                 state |= (battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;

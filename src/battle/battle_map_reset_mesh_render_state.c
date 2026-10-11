@@ -32,7 +32,7 @@ void battle_map_reset_mesh_render_state(void) {
         }
         D_800F78E8[i] = 0;
     }
-    for (i = 0; i < 49; i++) {
+    for (i = 0; i < GNS_RESOURCE_TABLE_COUNT; i++) {
         bzero(g_battle_map_loaded_gns_records[i].load_info.bytes, sizeof(gns_load_info_t));
         bzero(&g_battle_map_pending_gns_records[i].resource_type, 14);
     }
