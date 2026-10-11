@@ -34,7 +34,7 @@ void GsSortLine(GsLINE* line, GsOT* ot, u16 z) {
 
     attr = line->attribute;
     if (attr >= 0) {
-        prim = GsOUT_PACKET_P;
+        prim = (psyq_gs_line_packet_t*)GsOUT_PACKET_P;
         prim->tpage.code[0] = ((attr >> 23) & 0x60) | 0xE1000200;
         prim->r0 = line->r;
         prim->g0 = line->g;

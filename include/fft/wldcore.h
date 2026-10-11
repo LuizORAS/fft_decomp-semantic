@@ -433,7 +433,7 @@ extern u32 g_wldcore_gfx_aux_ot_tags[2][4];
 extern GsOT g_wldcore_gfx_aux_ordering_tables[2];
 extern u32 g_wldcore_gfx_ot_tags[2][16];
 extern GsOT g_wldcore_gfx_ordering_tables[2];
-extern u8 g_wldcore_gfx_world_primitive_buffers;
+extern PACKET g_wldcore_gfx_world_primitive_buffers[];
 extern s32 g_wldcore_picture_sector_offsets[];
 extern s32 g_wldcore_background_sector_offsets[];
 

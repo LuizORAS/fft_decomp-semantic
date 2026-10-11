@@ -10,7 +10,7 @@ void wldcore_init_core(void) {
     GsSwapDispBuff();
     count = GsGetActiveBuff();
     g_active_graphics_buffer_index = count;
-    GsSetWorkBase(&g_wldcore_gfx_world_primitive_buffers + count * 0xE000);
+    GsSetWorkBase(g_wldcore_gfx_world_primitive_buffers + count * 0xE000);
     GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_draw_close_indicator_if_pending(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_switch_to_stack((void*)0x1F8003FC);

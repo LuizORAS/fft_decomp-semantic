@@ -3,13 +3,6 @@
 #define OPEN_IMAGE_COPY_WIDTH  210
 #define OPEN_IMAGE_COPY_HEIGHT 180
 
-/* View of the frame image at g_open_file_destination, 256 pixels per row:
- * the 210x180 picture starts at byte 0x5600, the first pixel of row 43. */
-typedef struct open_gfx_image_file {
-    u8 _unused_0000[0x5600];
-    u16 pixels[1];
-} open_gfx_image_file_t;
-
 /* Prepare the crossfade of the new-game prologue's picture to OPNBK image
  * file_index + 2.
  *
@@ -32,12 +25,13 @@ void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index) {
     s32 source_index;
     u16* pixels;
     u16 value;
-    open_gfx_image_file_t* file_image;
+    u16(*file_image)[256];
 
     copy_source = (u16*)g_open_work_buffer_0;
     copy_destination = (u16*)g_open_work_buffer_1;
     file_image = g_open_file_destination;
-    file_pixels = file_image->pixels;
+    /* The 210x180 picture begins at row 43 of the 256-pixel frame image. */
+    file_pixels = file_image[43];
     g_open_gfx_image_copy_source_buffer = copy_source;
     g_open_gfx_image_copy_destination_buffer = copy_destination;
     g_open_gfx_image_copy_file_pixels = file_pixels;

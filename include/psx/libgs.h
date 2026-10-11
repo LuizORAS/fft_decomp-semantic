@@ -5,6 +5,9 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* Psy-Q packet work areas are byte buffers holding variable GPU packet layouts. */
+typedef u8 PACKET;
+
 /* libgs ordering-table handle. Five words, 0x14 bytes; the 0x14 stride is what
  * the per-display-buffer descriptor arrays are indexed with. `org` points at
  * the OT root, `tag` at the last entry, and `offset`/`point` carry the z
@@ -111,8 +114,8 @@ extern DISPENV GsDISPENV;
 extern s32 HWD0; /* horizontal resolution */
 extern s32 VWD0; /* vertical resolution */
 extern MATRIX GsIDMATRIX;
-extern MATRIX GsIDMATRIX2;   /* identity scaled by the aspect ratio */
-extern void* GsOUT_PACKET_P; /* packet work area cursor; PACKET* in the SDK */
+extern MATRIX GsIDMATRIX2;     /* identity scaled by the aspect ratio */
+extern PACKET* GsOUT_PACKET_P; /* packet work area cursor */
 extern s32 GsLIGHT_MODE;
 
 void GsInitGraph(u16 x, u16 y, u16 intmode, u16 dith, u16 varmmode);
@@ -126,10 +129,10 @@ void GsSetDrawBuffOffset(void);
 void GsSetClip2D(RECT* rectp);
 void GsClearOt(u16 offset, u16 point, GsOT* otp);
 void GsDrawOt(GsOT* ot);
-void GsSetWorkBase(void* base);
+void GsSetWorkBase(PACKET* base);
 void GsSortSprite(GsSPRITE* sp, GsOT* ot, u16 pri);
-void GsSortFastSprite(const GsSPRITE* sp, GsOT* ot, u16 pri);
-void GsSortFlipSprite(const GsSPRITE* sp, GsOT* ot, u16 pri);
+void GsSortFastSprite(GsSPRITE* sp, GsOT* ot, u16 pri);
+void GsSortFlipSprite(GsSPRITE* sp, GsOT* ot, u16 pri);
 void GsSortBoxFill(GsBOXF* bp, GsOT* ot, u16 pri);
 void GsSortLine(GsLINE* lp, GsOT* ot, u16 pri);
 void GsSortPoly(void* pp, GsOT* ot, u16 pri);
@@ -172,7 +175,7 @@ extern MATRIX g_psyq_gs_light_ws_matrix;
 extern s32 D_801CD7DC;
 extern s32 D_801CD854;
 
-u32* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, s32 len);
+PACKET* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, s32 len);
 void psyq_gs_init_gpu(u16 x, u16 y, u16 intmode, u16 dith, u16 varmmode);
 void psyq_gs_init_gte(void);
 void psyq_gs_reset_screen_state(u16 width, u16 height);

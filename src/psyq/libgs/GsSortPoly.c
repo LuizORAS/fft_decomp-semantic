@@ -15,7 +15,7 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     s32 textured;
 
     src = prim;
-    dst = GsOUT_PACKET_P;
+    dst = (u32*)GsOUT_PACKET_P;
     len = 4;
     code = getcode(src);
     gouraud = code & 0x10;
@@ -83,5 +83,5 @@ void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
             len++;
         }
     }
-    GsOUT_PACKET_P = psyq_gs_sort_sprite_bg(GsOUT_PACKET_P, ot, pri, len);
+    GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)GsOUT_PACKET_P, ot, pri, len);
 }

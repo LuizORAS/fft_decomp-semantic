@@ -11,7 +11,7 @@ void wldcore_init_runtime_state(void) {
     wldcore_wait_for_file_load();
     count = GsGetActiveBuff();
     g_active_graphics_buffer_index = count;
-    GsSetWorkBase(&g_wldcore_gfx_world_primitive_buffers + count * 0xE000);
+    GsSetWorkBase(g_wldcore_gfx_world_primitive_buffers + count * 0xE000);
     wldcore_init_core();
     VSync(0);
     ResetGraph(1);

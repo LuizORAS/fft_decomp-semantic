@@ -4,7 +4,7 @@
 /* GsSortSprite for unscaled, unrotated sprites: attribute
  * bits 22/23 flip the texture, bits 24-25 and 28-29 select the texture page
  * depth and blend mode, bit 30 shading and bit 6 semi-transparency. */
-void GsSortFlipSprite(const GsSPRITE* sp, GsOT* otp, u16 pri) {
+void GsSortFlipSprite(GsSPRITE* sp, GsOT* otp, u16 pri) {
     POLY_FT4* p;
     s32 attr;
     s32 x;
@@ -18,7 +18,7 @@ void GsSortFlipSprite(const GsSPRITE* sp, GsOT* otp, u16 pri) {
 
     attr = sp->attribute;
     if (attr >= 0 && sp->w != 0 && sp->h != 0) {
-        p = GsOUT_PACKET_P;
+        p = (POLY_FT4*)GsOUT_PACKET_P;
         x = sp->x + g_psyq_gs_offset_x - sp->mx;
         y = sp->y + g_psyq_gs_offset_y - sp->my;
         if (attr & 0x800000) {

@@ -24,7 +24,7 @@ void GsSortBoxFill(GsBOXF* bp, GsOT* otp, u16 pri) {
 
     attr = bp->attribute;
     if (attr >= 0) {
-        packet = GsOUT_PACKET_P;
+        packet = (psyq_gs_boxf_packet_t*)GsOUT_PACKET_P;
         hi = (attr >> 17) & 0x180;
         lo = ((attr >> 23) & 0x60) | 0xE1000200;
         packet->tpage.code[0] = hi | lo;

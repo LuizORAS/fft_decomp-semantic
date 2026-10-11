@@ -3,7 +3,7 @@
 
 /* Emits a texture-page packet and SPRT primitive for the sprite, then links
  * the packet into the ordering table. */
-void GsSortFastSprite(const GsSPRITE* sp, GsOT* ot, u16 pri) {
+void GsSortFastSprite(GsSPRITE* sp, GsOT* ot, u16 pri) {
     psyq_gs_sprite_packet_t* packet;
     u32* tag;
     u32 attr;
@@ -23,7 +23,7 @@ void GsSortFastSprite(const GsSPRITE* sp, GsOT* ot, u16 pri) {
 
     attr = sp->attribute;
     if ((s32)attr >= 0 && sp->w != 0 && sp->h != 0) {
-        packet = GsOUT_PACKET_P;
+        packet = (psyq_gs_sprite_packet_t*)GsOUT_PACKET_P;
         dr_mode = 0xE1000200;
         packet_addr = (u32)packet & 0xFFFFFF;
         sprite_y = sp->y;
@@ -45,6 +45,6 @@ void GsSortFastSprite(const GsSPRITE* sp, GsOT* ot, u16 pri) {
         tag = &ot->org[pri] - ot->offset;
         packet->tpage.tag = *tag + 0x05000000;
         *tag = packet_addr;
-        GsOUT_PACKET_P = packet + 1;
+        GsOUT_PACKET_P = (PACKET*)(packet + 1);
     }
 }
