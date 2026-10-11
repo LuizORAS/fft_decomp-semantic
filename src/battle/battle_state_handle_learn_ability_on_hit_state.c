@@ -10,7 +10,7 @@
  * display, the source unit returns to its status animation and the after-command
  * state begins. */
 void battle_state_handle_learn_ability_on_hit_state(void) {
-    s32* selected_command_address;
+    battle_ai_command_t* selected_command_address;
     s32 selected_command;
     s32 counter;
     s32 skip_animation;
@@ -23,7 +23,7 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     selected_command_address = battle_menu_get_selected_command_address();
     casting_unit = battle_unit_get_casting_misc_data();
-    selected_command = *selected_command_address;
+    selected_command = selected_command_address->kind;
     switch (selected_command) {
     case 7:
         if (g_battle_action_post_action_display_phase == BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT) {

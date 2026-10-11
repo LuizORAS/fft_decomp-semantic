@@ -5,7 +5,7 @@
  * caster's wait counter passes 0x1f, retire one pending move-find result.
  */
 void battle_state_handle_crystal_learn_state(void) {
-    s32* command;
+    battle_ai_command_t* command;
     battle_unit_misc_data_t* source;
     battle_unit_misc_data_t* casting;
     u16 counter;
@@ -15,7 +15,7 @@ void battle_state_handle_crystal_learn_state(void) {
     command = battle_menu_get_selected_command_address();
     source = battle_unit_get_source_misc_data();
     casting = battle_unit_get_casting_misc_data();
-    switch (*command) {
+    switch ((s32)command->kind) {
     case 2:
         battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_RESTORE_HP_MP);
         g_battle_action_post_action = 1;
@@ -26,7 +26,7 @@ void battle_state_handle_crystal_learn_state(void) {
     case 0:
     case 1:
     case 4:
-        battle_unit_learn_from_crystal(source->battle_data, *command);
+        battle_unit_learn_from_crystal(source->battle_data, command->kind);
         g_battle_action_post_action = 1;
         break;
     case 7:

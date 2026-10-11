@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/world.h"
+#include "psx/libc.h"
 #include "psx/types.h"
 
 /*
@@ -52,17 +53,8 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
             } else {
                 wrapped = delta + 0x1000;
             }
-            if (delta < 0) {
-                delta = -delta;
-            }
-            if (wrapped < 0) {
-                wrapped = -wrapped;
-            }
-            /* At the head of the join block: reorg would otherwise steal the
-             * first join instruction into the preceding bgez delay slot and
-             * retarget the branch past it. The target leaves that slot empty.
-             * An asm is not a delay-slot candidate; this emits no instruction. */
-            __asm__ volatile("");
+            delta = abs(delta);
+            wrapped = abs(wrapped);
             if (wrapped < delta) {
                 dist = wrapped;
             } else {

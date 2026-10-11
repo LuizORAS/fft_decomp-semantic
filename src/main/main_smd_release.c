@@ -9,6 +9,6 @@ u8* main_smd_release(u8* note_data, suzuki_music_t* music, suzuki_music_channel_
     release = note_data[0];
     channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_RELEASE;
     channel->note_release_rate = release;
-    channel->release_rate = release;
+    channel->voice_attr.rr = release;
     return note_data + 1;
 }

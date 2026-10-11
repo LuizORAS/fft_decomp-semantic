@@ -6,10 +6,10 @@
  * preceded by sign glyphs selected by the flag bits of `digits`: 0xC00
  * draws two glyphs, 0x1000 one at 0xC8, 0x800/0x400 a 0xC8 or 0xBA glyph
  * six pixels to the left. The cursor is left after the number. */
-void world_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos) {
+void world_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos) {
     s32 i;
     s32 cursor;
-    world_glyph_blit_t* src;
+    glyph_blit_t* src;
 
     /* One variable holds the sign-glyph selector first and the x to leave the
      * cursor at afterwards; the target keeps both roles in $s6. */

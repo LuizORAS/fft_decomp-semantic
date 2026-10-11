@@ -13,9 +13,9 @@ s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* 
     unit = battle_unit_get_misc_data_by_battle_id(battle_id & 0xffff);
     if (unit != 0) {
         battle_map_get_tile_data_pointer(
-            unit->battle_data->x, unit->battle_data->position.bits.y, unit->battle_data->position.raw >> 15);
+            unit->battle_data->x, unit->battle_data->position.y, unit->battle_data->position.higher_elevation);
         coords->vx = unit->battle_data->x * 28 + 14;
-        coords->vz = unit->battle_data->position.bits.y * 28 + 14;
+        coords->vz = unit->battle_data->position.y * 28 + 14;
         coords->vy = battle_gfx_calculate_screen_z_from_misc_battle_map_data(unit);
         return 1;
     }

@@ -3,7 +3,7 @@
 
 /* Render signed gauge values with their positive, negative, or zero color. */
 void debugchr_text_render_signed_decimal_entries(
-    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
+    u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count) {
     s32 i;
     for (i = 0; i < count;) {
         s32 amount = *entries->value;

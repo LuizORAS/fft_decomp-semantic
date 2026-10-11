@@ -7,7 +7,7 @@
  * per emitted digit, so shorter values are not zero-padded. Reading the cell
  * position unsigned through an `s32` temporary preserves the target's hoisted
  * divide-by-10 constant. */
-void world_display_menu_number_entry(s32 value, u8 digit_count, void* image, world_glyph_blit_t* origin) {
+void world_display_menu_number_entry(s32 value, u8 digit_count, void* image, glyph_blit_t* origin) {
     origin->rect.x += (digit_count - 1) * 6;
     do {
         world_text_blit_font_glyph_to_4bpp(

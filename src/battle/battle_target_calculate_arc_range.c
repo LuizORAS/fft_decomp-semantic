@@ -21,7 +21,7 @@ void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags)
 
     height = battle_unit_get_effective_height(unit);
     ux = unit->x;
-    uy = unit->position.bits.y;
+    uy = unit->position.y;
     for (y = 0; y < g_battle_map_max_y; y++) {
         if (uy < y) {
             dy = y - uy;

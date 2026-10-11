@@ -35,33 +35,34 @@ void main_sound_update_voice_attrs(void) {
             else
                 allowed = ~(g_main_mask_exclusion | g_main_sound_sfx_key_off_voices);
             do {
-                if ((channel->flags & SUZUKI_CHANNEL_IN_USE) != 0 && (allowed & channel->voice_mask) != 0) {
+                if ((channel->flags & SUZUKI_CHANNEL_IN_USE) != 0 && (allowed & channel->voice_attr.voice) != 0) {
                     flags = channel->voice_attr_flags;
                     if (flags != 0) {
                         voice = channel->voice;
                         if ((flags & SUZUKI_VOICE_ATTR_VOLUME_MODE) != 0) {
-                            SpuSetVoiceVolumeAttr(voice, channel->spu_volume_left, channel->spu_volume_right,
-                                channel->spu_volume_mode_left, channel->spu_volume_mode_right);
+                            SpuSetVoiceVolumeAttr(voice, channel->voice_attr.volume.left,
+                                channel->voice_attr.volume.right, channel->voice_attr.volmode.left,
+                                channel->voice_attr.volmode.right);
                             flags &= ~SUZUKI_VOICE_ATTR_VOLUME;
                         }
                         if ((flags & SUZUKI_VOICE_ATTR_VOLUME) != 0)
-                            SpuSetVoiceVolume(voice, channel->spu_volume_left, channel->spu_volume_right);
+                            SpuSetVoiceVolume(voice, channel->voice_attr.volume.left, channel->voice_attr.volume.right);
                         if ((flags & SUZUKI_VOICE_ATTR_PITCH) != 0)
-                            SpuSetVoicePitch(voice, channel->spu_pitch);
+                            SpuSetVoicePitch(voice, channel->voice_attr.pitch);
                         if ((flags & SUZUKI_VOICE_ATTR_ADDRESS) != 0) {
-                            SpuSetVoiceStartAddr(voice, channel->start_address);
-                            SpuSetVoiceLoopStartAddr(voice, channel->loop_address);
+                            SpuSetVoiceStartAddr(voice, channel->voice_attr.addr);
+                            SpuSetVoiceLoopStartAddr(voice, channel->voice_attr.loop_addr);
                         }
                         if ((flags & SUZUKI_VOICE_ATTR_ATTACK) != 0)
-                            SpuSetVoiceARAttr(voice, channel->attack_rate, channel->attack_mode);
+                            SpuSetVoiceARAttr(voice, channel->voice_attr.ar, channel->voice_attr.a_mode);
                         if ((flags & SUZUKI_VOICE_ATTR_DECAY) != 0)
-                            SpuSetVoiceDR(voice, channel->decay_rate);
+                            SpuSetVoiceDR(voice, channel->voice_attr.dr);
                         if ((flags & SUZUKI_VOICE_ATTR_SUSTAIN) != 0)
-                            SpuSetVoiceSRAttr(voice, channel->sustain_rate, channel->sustain_mode);
+                            SpuSetVoiceSRAttr(voice, channel->voice_attr.sr, channel->voice_attr.s_mode);
                         if ((flags & SUZUKI_VOICE_ATTR_RELEASE) != 0)
-                            SpuSetVoiceRRAttr(voice, channel->release_rate, channel->release_mode);
+                            SpuSetVoiceRRAttr(voice, channel->voice_attr.rr, channel->voice_attr.r_mode);
                         if ((flags & SUZUKI_VOICE_ATTR_SUSTAIN_LEVEL) != 0)
-                            SpuSetVoiceSL(voice, channel->sustain_level);
+                            SpuSetVoiceSL(voice, channel->voice_attr.sl);
                         if ((flags & SUZUKI_VOICE_ATTR_PITCH) != 0)
                             g_main_sound_voice_update_requests |= SUZUKI_VOICE_MASK_REQUEST_PITCH_LFO;
                         if ((flags & SUZUKI_VOICE_ATTR_ATTACK) != 0)

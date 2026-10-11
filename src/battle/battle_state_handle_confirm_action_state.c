@@ -12,7 +12,7 @@
  * pre-attack animation. */
 void battle_state_handle_confirm_action_state(void) {
     battle_unit_misc_data_t* unit;
-    s32* selected_command_address;
+    battle_ai_command_t* selected_command_address;
     battle_unit_misc_data_t* target;
     s32 selected_command;
 
@@ -21,10 +21,10 @@ void battle_state_handle_confirm_action_state(void) {
     selected_command_address = battle_menu_get_selected_command_address();
     unit = battle_unit_get_source_misc_data();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
-        selected_command = *selected_command_address;
+        selected_command = selected_command_address->kind;
         switch (selected_command) {
         case 5:
-            unit->command_state.ai.data.action.targeting_type = *selected_command_address;
+            unit->command_state.ai.data.action.targeting_type = selected_command_address->kind;
             main_util_set_svector(
                 &unit->command_state.cursor.target_panel, g_battle_cursor_x, g_battle_cursor_z, g_battle_cursor_y);
             battle_state_enter_pre_attack_animation();
@@ -34,7 +34,7 @@ void battle_state_handle_confirm_action_state(void) {
             target = battle_unit_get_selectable_misc_data_at_map_coords(
                 g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
             if (target != 0) {
-                unit->command_state.ai.data.action.targeting_type = *selected_command_address;
+                unit->command_state.ai.data.action.targeting_type = selected_command_address->kind;
                 unit->command_state.ai.data.action.target_id = target->battle_data->misc_unit_id;
             } else {
                 unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
@@ -52,7 +52,7 @@ void battle_state_handle_confirm_action_state(void) {
             break;
         }
     } else {
-        selected_command = *selected_command_address;
+        selected_command = selected_command_address->kind;
         switch (selected_command) {
         case 5:
         case 6:

@@ -33,14 +33,14 @@ void battle_ai_build_monster_skill_tile_mask(void) {
             continue;
         if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION))
             continue;
-        height
-            = g_battle_map_tile_data[(unit->position.raw >> 15) * 256 + unit->position.bits.y * ai->map_max_x + unit->x]
-                  .height;
+        height = g_battle_map_tile_data[(unit->position.higher_elevation) * 256 + unit->position.y * ai->map_max_x
+            + unit->x]
+                     .height;
         for (direction = 0; direction < 4; direction++) {
             x = unit->x + g_battle_ai_facing_tile_offsets.by_direction[direction][0];
             if (x < 0 || x >= ai->map_max_x)
                 continue;
-            y = unit->position.bits.y + g_battle_ai_facing_tile_offsets.by_direction[direction][1];
+            y = unit->position.y + g_battle_ai_facing_tile_offsets.by_direction[direction][1];
             if (y < 0 || y >= ai->map_max_y)
                 continue;
             for (level = 0; level <= 0; level++) {

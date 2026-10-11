@@ -22,7 +22,7 @@ s32 battle_menu_resolve_selection(void) {
     command = selection->command;
     option = selection->option;
     item = selection->item;
-    g_battle_menu_selected_command = command;
+    g_battle_menu_selected_command.kind = command;
     index = option;
     if (command != 0x12 && (command & 0xFE) != 0xFE) {
         menu = g_battle_menu_current_id;
@@ -69,7 +69,7 @@ s32 battle_menu_resolve_selection(void) {
             item = 0xFFFE;
             g_battle_menu_resolved_command = command;
         }
-        g_battle_menu_selected_command = command;
+        g_battle_menu_selected_command.kind = command;
         if ((option & 0xFE) != 0xFE) {
             option = g_battle_action_menu_skillsets[index];
             if (option == SKILLSET_ID_ATTACK || option == SKILLSET_ID_DEFEND || option == SKILLSET_ID_EQUIP_CHANGE

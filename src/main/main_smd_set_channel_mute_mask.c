@@ -23,14 +23,14 @@ void main_smd_set_channel_mute_mask(suzuki_music_t* music, u32 mask) {
                 if (mask & 1) {
                     if (!(channel->flags & SUZUKI_CHANNEL_MUTED)) {
                         channel->flags |= SUZUKI_CHANNEL_MUTED;
-                        key_off |= channel->voice_mask;
+                        key_off |= channel->voice_attr.voice;
                     }
                 } else {
                     if (channel->flags & SUZUKI_CHANNEL_MUTED) {
                         channel->flags &= ~SUZUKI_CHANNEL_MUTED;
                         if ((channel->flags & SUZUKI_CHANNEL_SOUNDING)
                             && !(channel->flags & SUZUKI_CHANNEL_NO_RETRIGGER)) {
-                            key_on |= channel->voice_mask;
+                            key_on |= channel->voice_attr.voice;
                         }
                     }
                 }

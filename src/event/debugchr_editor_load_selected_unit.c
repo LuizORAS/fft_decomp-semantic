@@ -48,7 +48,7 @@ void debugchr_editor_load_selected_unit(void) {
     /* The zodiac sign lives in the top nibble of the halfword at 0x008. */
     /* Direct union-member access hoists the halfword load above the faith
      * store (1344 vs 1348 bytes); keep the typed field's aliased word view. */
-    g_debugchr_panel_selected_unit_data.zodiac = *(u16*)&unit->birthday >> 12;
+    g_debugchr_panel_selected_unit_data.zodiac = unit->birthday.zodiac;
 
     editor->move = unit->move;
     editor->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];

@@ -66,7 +66,7 @@ void main_smd_read_instructions(suzuki_music_t* music, suzuki_music_channel_t* c
                         } else {
                             channel->event_ticks = *note_data++;
                         }
-                        channel->release_rate = channel->note_release_rate;
+                        channel->voice_attr.rr = channel->note_release_rate;
                         channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_RELEASE;
                         channel->pitch = ((op << 8) + channel->pitch_offset + channel->fine_tune) << 16;
                         channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_PITCH;

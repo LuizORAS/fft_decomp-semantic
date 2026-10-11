@@ -67,7 +67,7 @@ s32 battle_ai_choose_wait_facing(void) {
             ai->targetability.live.unit_targetable[target_id] = 0;
             continue;
         }
-        facing = ai->acting_unit->position.bits.facing;
+        facing = ai->acting_unit->position.facing;
         if (work.viable_directions[facing] == 0)
             return fallback_direction;
         return facing;

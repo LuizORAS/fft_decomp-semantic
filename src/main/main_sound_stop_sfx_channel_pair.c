@@ -21,7 +21,7 @@ void main_sound_stop_sfx_channel_pair(s32 index) {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
             channels |= bit;
             channel->flags = 0;
-            voices |= channel->voice_mask;
+            voices |= channel->voice_attr.voice;
         }
         bit <<= 1;
         channel++;

@@ -77,8 +77,8 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
             }
             target = &g_battle_unit_stats[action.target_id];
             action.target_x = target->x;
-            action.target_y = target->position.bits.y;
-            action.target_elevation = target->position.raw >> 15;
+            action.target_y = target->position.y;
+            action.target_elevation = target->position.higher_elevation;
         }
         flags = WEAPON_FLAG_DIRECT;
     }
@@ -97,7 +97,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
         if (distance_x < 0) {
             distance_x = -distance_x;
         }
-        distance_y = y - unit->position.bits.y;
+        distance_y = y - unit->position.y;
         if (distance_y < 0) {
             distance_y = -distance_y;
         }

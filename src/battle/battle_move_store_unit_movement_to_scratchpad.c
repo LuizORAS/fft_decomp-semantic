@@ -47,8 +47,8 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     }
     config->unit_id = unit_id;
     config->x = unit->x;
-    config->y = unit->position.bits.y;
-    config->high_elevation = unit->position.bits.higher_elevation;
+    config->y = unit->position.y;
+    config->high_elevation = unit->position.higher_elevation;
     config->map_max_x = g_battle_map_max_x;
     config->map_max_y = g_battle_map_max_y;
     config->cannot_enter_water = 0;
@@ -56,7 +56,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     config->will_drown = 1;
     config->will_sink = 1;
     config->fly_or_teleport = 0;
-    config->stepping_stone = unit->position.bits.stepping_stone;
+    config->stepping_stone = unit->position.stepping_stone;
     if (movement[2] & (BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA | BATTLE_MOVEMENT_SET_3_FLOAT)) {
         config->can_pass_lava = 1;
     } else {
@@ -220,9 +220,9 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         current = &record[count];
         current->unit_id_flags = value;
         current->x = other->x;
-        current->y = other->position.bits.y;
-        current->higher_elevation = other->position.bits.higher_elevation;
-        current->stepping_stone = other->position.bits.stepping_stone;
+        current->y = other->position.y;
+        current->higher_elevation = other->position.higher_elevation;
+        current->stepping_stone = other->position.stepping_stone;
         value = other->status_sets.current[2];
         if (value
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {

@@ -285,7 +285,7 @@ typedef union map_tile_flags {
         u8 shadow_mode : 2;
         /* A value 0-5 in the terrain files. The trajectory obstacle test copies
          * it to g_battle_effect_trajectory_tile_flags, which nothing reads. */
-        u8 unknown_4_6 : 3;
+        u8 _unknown_00 : 3;
         u8 cannot_stop : 1; /* set by no terrain file */
     } bits;
 } map_tile_flags_t;

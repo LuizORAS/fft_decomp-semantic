@@ -27,8 +27,8 @@ void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
      * low byte, and the lvalue form emits the target's bare lbu. */
     unit->brave = g_debugchr_panel_selected_unit_data.brave;
     unit->faith = g_debugchr_panel_selected_unit_data.faith;
-    /* Zodiac is the top nibble of the birthday halfword. Union-member access
-     * instead of the u16 view reorders the stores. */
+    /* Named bitfield assignment narrows the signed-halfword zodiac load
+     * and reorders these stores. */
     zodiac = g_debugchr_panel_selected_unit_data.zodiac << 12;
     unit_flags = *(u16*)&unit->birthday & 0x0fff;
     *(u16*)&unit->birthday = unit_flags | zodiac;

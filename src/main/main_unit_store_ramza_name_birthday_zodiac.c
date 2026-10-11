@@ -19,8 +19,8 @@ void main_unit_store_ramza_name_birthday_zodiac(battle_stats_t* unit) {
             continue;
         }
         birthday = (party->birthday_day + (party->zodiac << 8)) & PARTY_BIRTHDAY_DAY_MASK;
-        unit->birthday.value = (unit->birthday.value & 0xFE00) | birthday;
-        unit->birthday.value = (unit->birthday.value & 0xFFF) | ((party->zodiac >> PARTY_ZODIAC_SHIFT) << 12);
+        unit->birthday.birthday = birthday;
+        unit->birthday.zodiac = party->zodiac >> PARTY_ZODIAC_SHIFT;
         main_util_copy_byte_data(party->name, unit->name, 16);
         return;
     }

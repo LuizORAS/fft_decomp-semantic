@@ -164,7 +164,7 @@ extern s8 g_bunit_status_banner_slide_step;
 /* text */
 
 extern const char g_bunit_text_decimal_format[];
-extern battle_menu_status_panel_glyph_t g_bunit_text_decimal_glyph;
+extern glyph_blit_t g_bunit_text_decimal_glyph;
 extern s32 g_bunit_text_selection_id;
 extern u8 g_bunit_numeric_editor_thread_params;
 extern s32 g_bunit_numeric_editor_redraw_request;
@@ -194,15 +194,14 @@ extern u8 g_bunit_text_menu_section[];
 extern u8 g_bunit_text_reorder_list_buffer[];
 void bunit_menu_run_numeric_editor_thread(void);
 
-void bunit_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
+void bunit_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
 
-void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position);
+void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 
 s32 bunit_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
-void bunit_text_render_signed_decimal_entries(
-    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
+void bunit_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
 
 void bunit_menu_set_palette_mode(s32 mode);
 void bunit_text_concatenate_entries(const u8* text_table, u8* out, s16* list, s32 separate);

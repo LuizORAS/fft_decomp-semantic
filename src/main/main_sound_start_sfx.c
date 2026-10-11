@@ -74,7 +74,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
         if (*offsets != 0) {
             i = 3;
             started |= bit;
-            voices |= channel->voice_mask;
+            voices |= channel->voice_attr.voice;
             flags = SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_SFX | SUZUKI_CHANNEL_IN_USE;
             channel->flags = flags;
             flags = SUZUKI_VOICE_UPDATE_VOLUME;
@@ -99,8 +99,8 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
             channel->pitch_modulation = 0;
             channel->volume_modulation = 0;
             channel->balance_modulation = 0;
-            channel->spu_volume_mode_left = 0;
-            channel->spu_volume_mode_right = 0;
+            channel->voice_attr.volmode.left = 0;
+            channel->voice_attr.volmode.right = 0;
             channel->note_data_start = data;
             channel->note_data = data;
             for (; i >= 0; i--) {
@@ -112,7 +112,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
             }
         } else {
             if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
-                stopped |= channel->voice_mask;
+                stopped |= channel->voice_attr.voice;
             }
             channel->flags = 0;
         }
@@ -143,7 +143,7 @@ void main_sound_start_sfx(s16 channel_id, s32 sound_id, s16 volume, s16 balance)
                 count = music->channel_count;
                 do {
                     if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
-                        if (voices & channel->voice_mask) {
+                        if (voices & channel->voice_attr.voice) {
                             channel->voice_attr_flags |= 0x7000 | SUZUKI_VOICE_ATTR_ALL;
                         }
                     }

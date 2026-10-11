@@ -26,8 +26,8 @@ void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party)
     unit->unit_flags = party->gender_flags;
     value = party->birthday_day + (party->zodiac << 8);
     birthday = &unit->birthday;
-    birthday->fields.birthday = value;
-    birthday->fields.zodiac = party->zodiac >> PARTY_ZODIAC_SHIFT;
+    birthday->birthday = value;
+    birthday->zodiac = party->zodiac >> PARTY_ZODIAC_SHIFT;
     unit->secondary_skillset = party->secondary_skillset;
     unit->reaction_ability = party->reaction_ability[0] + (party->reaction_ability[1] << 8);
     unit->support_ability = party->support_ability[0] + (party->support_ability[1] << 8);

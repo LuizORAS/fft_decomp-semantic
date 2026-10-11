@@ -124,13 +124,13 @@ typedef char world_scaled_draw_area_pair_size_must_be_0x28[sizeof(world_gfx_scal
 /* The 0x10-byte glyph blit descriptor used by the window frame threads and filled
  * by world_gfx_set_image_blit_source_rect / _destination_origin. The stride is
  * the surface width in pixels. */
-typedef struct world_glyph_blit {
+typedef struct glyph_blit {
     RECT rect;  /* 0x00 */
     s32 stride; /* 0x08 */
     u32 color;  /* 0x0c: colour word the decimal renderers set by value sign
                  * (0x77777777, 0xbbbbbbbb, ...) and clear after each draw */
-} world_glyph_blit_t;
-typedef char world_glyph_blit_size_must_be_0x10[sizeof(world_glyph_blit_t) == 0x10 ? 1 : -1];
+} glyph_blit_t;
+typedef char glyph_blit_size_must_be_0x10[sizeof(glyph_blit_t) == 0x10 ? 1 : -1];
 
 /* Texture primitive used by the WORLD/BATTLE image-loading and
  * texture-page allocation helpers: a SPRT

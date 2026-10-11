@@ -46,7 +46,7 @@ s32 battle_action_set_mimic_ability(battle_stats_t* unit) {
             return 0;
         }
     }
-    facing = self->position.bits.facing;
+    facing = self->position.facing;
     attacker_facing = g_battle_action_current_attacker.facing - 4;
     direction = facing - attacker_facing;
     if (menu_type == ACTION_MENU_TYPE_JUMP) {

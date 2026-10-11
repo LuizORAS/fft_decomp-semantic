@@ -8,7 +8,7 @@
  * sign and leading zeros, and widen the field for the value 100. A zero with
  * the minus flag draws only the sign glyph. Digits are drawn right to left,
  * at most the low byte of `flags` of them. */
-void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position) {
+void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position) {
     s32 saved_color;
     s32 plus;
     s32 digits;
@@ -22,24 +22,24 @@ void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
     }
     if (flags & MENU_DECIMAL_SLASH_PREFIX) {
         position->rect.x -= 2;
-        g_bunit_text_decimal_glyph.source_x = 0xb4;
+        g_bunit_text_decimal_glyph.rect.x = 0xb4;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_bunit_text_decimal_glyph, position);
         position->rect.x += 7;
     }
     if (flags & MENU_DECIMAL_DOTS_PREFIX) {
-        g_bunit_text_decimal_glyph.source_x = 0x78;
-        g_bunit_text_decimal_glyph.source_y = 0x1a;
-        g_bunit_text_decimal_glyph.height = 4;
+        g_bunit_text_decimal_glyph.rect.x = 0x78;
+        g_bunit_text_decimal_glyph.rect.y = 0x1a;
+        g_bunit_text_decimal_glyph.rect.h = 4;
         position->rect.y += 3;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_bunit_text_decimal_glyph, position);
         position->rect.x += 7;
         position->rect.y -= 3;
-        g_bunit_text_decimal_glyph.source_y = 0x10;
-        g_bunit_text_decimal_glyph.height = 0x0a;
+        g_bunit_text_decimal_glyph.rect.y = 0x10;
+        g_bunit_text_decimal_glyph.rect.h = 0x0a;
     }
     position->color = saved_color;
     if (flags & MENU_DECIMAL_SIGN_MINUS) {
-        g_bunit_text_decimal_glyph.source_x = 0xba;
+        g_bunit_text_decimal_glyph.rect.x = 0xba;
         if (value == 0) {
             if ((flags & MENU_DECIMAL_FIELD_WIDTH_MASK) == 4) {
                 position->rect.x += 10;
@@ -55,7 +55,7 @@ void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
     }
     plus = flags & MENU_DECIMAL_SIGN_PLUS;
     if (plus) {
-        g_bunit_text_decimal_glyph.source_x = 0xc8;
+        g_bunit_text_decimal_glyph.rect.x = 0xc8;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_bunit_text_decimal_glyph, position);
         position->rect.x += 5;
     }
@@ -81,7 +81,7 @@ void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
         position->rect.x += (digits - min_digits) * 5;
     }
     for (i = 0; i < (flags & 0xff); i++) {
-        g_bunit_text_decimal_glyph.source_x = value % 10 * 6 + 0x78;
+        g_bunit_text_decimal_glyph.rect.x = value % 10 * 6 + 0x78;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_bunit_text_decimal_glyph, position);
         position->rect.x -= 5;
         value /= 10;

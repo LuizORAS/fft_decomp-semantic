@@ -58,7 +58,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     identity->unit_index = party_index;
     identity->roster_slot = party_index;
     identity->faith = unit->faith;
-    identity->zodiac = unit->birthday.fields.zodiac;
+    identity->zodiac = unit->birthday.zodiac;
     detail->move_bonus = unit->move;
     detail->speed_bonus = unit->attributes[UNIT_ATTRIBUTE_SPEED];
     detail->jump_bonus = unit->jump;

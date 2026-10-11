@@ -3,7 +3,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-extern world_glyph_blit_t g_world_text_message_box_state;
+extern glyph_blit_t g_world_text_message_box_state;
 
 /* Draw the message box's pending glyph into VRAM and hold it for the typewriter delay.
  *

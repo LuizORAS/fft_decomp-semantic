@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Returns the yaw a Focus instruction gives the camera for a pair of units.
@@ -16,7 +17,7 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     s32 yaw;
     s32 mask;
     s32 raw;
-    /* Pin: unpinned, `bit` loses priority to raw/ptr/i and the four rotate one register. */
+    /* Removing the binding changes four loop-register assignments. */
     register s32 bit __asm__("$7");
     s32 best;
     s32 sign;
@@ -50,14 +51,8 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
             } else {
                 wrapped = delta + 0x1000;
             }
-            if (delta < 0) {
-                delta = -delta;
-            }
-            if (wrapped < 0) {
-                wrapped = -wrapped;
-            }
-            /* Barrier: keeps reorg from stealing `dist = delta` into the bgez delay slot above. */
-            __asm__ volatile("");
+            delta = abs(delta);
+            wrapped = abs(wrapped);
 
             if (wrapped < delta) {
                 dist = wrapped;

@@ -20,7 +20,7 @@ void battle_target_calculate_weapon_range(battle_stats_t* unit) {
     battle_target_panel_t* panel;
     battle_target_panel_t* upper;
 
-    y = unit->position.bits.y;
+    y = unit->position.y;
     weapon = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     x = unit->x;
     index = x + y * g_battle_map_max_x;

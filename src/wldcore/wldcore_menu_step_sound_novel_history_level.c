@@ -18,7 +18,7 @@
  * read into `x`/`y` so the s32 point is loaded with `lw`; `unused` preserves
  * the 0x58-byte frame. */
 void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_history_level_t* level) {
-    world_glyph_blit_t box;
+    glyph_blit_t box;
     point32_t point;
     u8 unused[0x20];
     u32* image;

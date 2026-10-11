@@ -32,9 +32,9 @@ void main_unit_copy_job_data(battle_stats_t* unit) {
     unit->move = job->move;
     unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
     if (job->jump & JOB_JUMP_STEPPING_STONE) {
-        unit->position.raw |= BATTLE_UNIT_POSITION_STEPPING_STONE;
+        unit->position.stepping_stone = 1;
     } else {
-        unit->position.raw &= ~BATTLE_UNIT_POSITION_STEPPING_STONE;
+        unit->position.stepping_stone = 0;
     }
     main_util_copy_byte_data(&job->status_sets, &unit->status_sets, 15);
 

@@ -18,14 +18,14 @@
  * Reading each control operand through the byte local and the u8
  * variable_base keep the outer loop large enough that loop.c does not hoist
  * the 0xFFFF pending-width constant, as in the target. */
-void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin, u8* text) {
+void battle_menu_display_text(u32 text_id, s32 image, glyph_blit_t* origin, u8* text) {
     world_text_backreference_state_t* state;
     u8* cursor;
     u8 operand;
     s32 width;
     u32* divisor;
     u32* powers;
-    world_glyph_blit_t* pen;
+    glyph_blit_t* pen;
     s32 digit;
     s32 started;
     s32 count;

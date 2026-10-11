@@ -12,7 +12,7 @@ u32 SuzukiGetActiveChannels(suzuki_music_t* music) {
     active = 0;
     do {
         if (channel->flags != 0) {
-            active |= channel->voice_mask;
+            active |= channel->voice_attr.voice;
         }
         remaining--;
         channel++;

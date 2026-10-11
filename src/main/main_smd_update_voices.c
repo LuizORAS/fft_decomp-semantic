@@ -65,20 +65,20 @@ void main_smd_update_voices(suzuki_music_t* music, suzuki_music_channel_t* chann
                     right = (volume * 0x5a00) >> 15;
                     left = right;
                 }
-                channel->spu_volume_left = left;
-                channel->spu_volume_right = right;
+                channel->voice_attr.volume.left = left;
+                channel->voice_attr.volume.right = right;
                 channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_VOLUME;
             }
             if ((voice_update_flags & SUZUKI_VOICE_UPDATE_PITCH) != 0) {
-                channel->spu_pitch = main_smd_calculate_pitch((channel->pitch >> 16) + channel->pitch_modulation
-                                         + (music->pitch_shift.value >> 16))
+                channel->voice_attr.pitch = main_smd_calculate_pitch((channel->pitch >> 16) + channel->pitch_modulation
+                                                + (music->pitch_shift.value >> 16))
                     & 0x3fff;
                 channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_PITCH;
             }
             if ((voice_update_flags & SUZUKI_VOICE_UPDATE_KEY_ON) != 0 && (channel->flags & SUZUKI_CHANNEL_MUTED) == 0)
-                key_on |= channel->voice_mask;
+                key_on |= channel->voice_attr.voice;
             if ((voice_update_flags & SUZUKI_VOICE_UPDATE_KEY_OFF) != 0)
-                key_off |= channel->voice_mask;
+                key_off |= channel->voice_attr.voice;
             channel->voice_update_flags = 0;
         }
         channel++;

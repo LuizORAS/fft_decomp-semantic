@@ -273,14 +273,6 @@ typedef enum require_reward_burst_mode {
 void require_reward_animate_bonus_image_burst(void);
 
 /* text */
-typedef struct require_glyph {
-    s16 source_x;
-    s16 source_y;
-    s16 width;
-    s16 height;
-    s16 source_stride;
-} require_glyph_t;
-
 /* Section offsets of the REQUIRE text file, relative to g_require_text_data (0x80 bytes before it). */
 /* REQUIRE's text, which its post-battle routines bind over the resident
  * sections; it binds its job names as TEXT_SECTION_JOB_NAMES. */
@@ -295,16 +287,15 @@ extern u8 g_require_text_data[];
 extern s16 g_require_message_menu_result;
 extern s32 g_require_numeric_editor_redraw_request;
 extern s32 g_require_numeric_editor_thread_params;
-extern require_glyph_t g_require_text_decimal_glyph;
+extern glyph_blit_t g_require_text_decimal_glyph;
 void require_text_clear_string_buffer(u8* data);
 
-void require_text_render_decimal_entry_list(
-    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+void require_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
-void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position);
+void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 
 void require_text_render_signed_decimal_entries(
-    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
 void require_text_show_battle_congratulations(void);
 void require_text_build_battle_nicknames(void);

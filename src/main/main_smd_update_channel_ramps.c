@@ -53,7 +53,7 @@ void main_smd_update_channel_ramps(suzuki_music_t* music, suzuki_music_channel_t
                     channel->balance += channel->balance_step;
                 }
                 if (--channel->event_ticks == 1 && (active & SUZUKI_CHANNEL_NOTE_FOLLOWS) != 0) {
-                    channel->release_rate = 6;
+                    channel->voice_attr.rr = 6;
                     channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_RELEASE;
                 }
                 if ((active & (SUZUKI_CHANNEL_KEYED_OFF | SUZUKI_CHANNEL_TIED)) == 0 && --channel->note_ticks == 0) {

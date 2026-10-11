@@ -5,9 +5,9 @@
 u8* main_smd_envelope_tail(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     u16 level;
 
-    channel->decay_rate = note_data[0];
+    channel->voice_attr.dr = note_data[0];
     level = note_data[1];
     channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_SUSTAIN_LEVEL | SUZUKI_VOICE_ATTR_DECAY;
-    channel->sustain_level = level;
+    channel->voice_attr.sl = level;
     return note_data + 2;
 }

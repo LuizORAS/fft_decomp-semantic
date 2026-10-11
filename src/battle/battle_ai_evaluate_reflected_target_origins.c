@@ -61,7 +61,7 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
             ai->current_action.coords.bytes.x
                 = reflector->x * 2 - g_battle_unit_stats[ai->reflected_target_unit_index].x;
             ai->current_action.coords.bytes.y
-                = reflector->position.bits.y * 2 - g_battle_unit_stats[ai->reflected_target_unit_index].position.bits.y;
+                = reflector->position.y * 2 - g_battle_unit_stats[ai->reflected_target_unit_index].position.y;
             if (ai->current_action.coords.bytes.x >= ai->map_max_x)
                 continue;
             if (ai->current_action.coords.bytes.y >= ai->map_max_y)

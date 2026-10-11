@@ -32,7 +32,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     record->job_id = party->job_id;
     record->brave = unit->brave;
     record->faith = unit->faith;
-    record->zodiac = *(u16*)&unit->birthday >> 12;
+    record->zodiac = unit->birthday.zodiac;
     record->roster_slot = unit->formation_index;
     record->move = unit->move;
     record->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
@@ -124,7 +124,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     bcopy(unit->support_abilities, record->support_abilities, sizeof(record->support_abilities));
     record->proposition_status = party->proposition_status;
     record->monster_graphic = unit->monster_graphic;
-    record->birthday = *(u16*)&unit->birthday & 0x1ff;
+    record->birthday = unit->birthday.birthday;
     record->egg_color = party->egg_color;
     record->two_handed = world_unit_is_two_handing_weapon(
         (s16*)record->equipment, record->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);

@@ -24,7 +24,7 @@ s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin) {
 
     count = 0;
     x = origin->x;
-    y = origin->position.bits.y;
+    y = origin->position.y;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && battle_target_is_unit_untargetable_and_store_tile(i, &tile) == 0
@@ -34,7 +34,7 @@ s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin) {
                 if (dx < 0) {
                     dx = -dx;
                 }
-                dy = y - unit->position.bits.y;
+                dy = y - unit->position.y;
                 if (dy < 0) {
                     dy = -dy;
                 }

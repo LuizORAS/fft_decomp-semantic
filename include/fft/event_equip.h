@@ -575,11 +575,11 @@ extern u16 g_equip_menu_active_clut_back;
 
 /* The "%d" format string at the head of the overlay. */
 extern const char g_equip_text_decimal_format[];
-extern battle_menu_status_panel_glyph_t g_equip_text_decimal_glyph;
+extern glyph_blit_t g_equip_text_decimal_glyph;
 
-void equip_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
+void equip_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
 
-void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position);
+void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 
 s32 equip_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
@@ -593,8 +593,7 @@ void equip_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bo
 
 void equip_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
 
-void equip_text_render_signed_decimal_entries(
-    u8* pixels, menu_number_entry_t* entry, world_glyph_blit_t* out, s32 count);
+void equip_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entry, glyph_blit_t* out, s32 count);
 
 void equip_text_show_message_with_sound(s32 message_id, s32 sound_id);
 const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);

@@ -55,7 +55,7 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
     unit->job_id = stats->job_id;
     unit->brave = stats->brave;
     unit->faith = stats->faith;
-    unit->zodiac = stats->birthday.value >> 12;
+    unit->zodiac = stats->birthday.zodiac;
     unit->formation_index = stats->formation_index;
     unit->move = stats->move;
     unit->speed = stats->attributes[UNIT_ATTRIBUTE_SPEED];

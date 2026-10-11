@@ -23,7 +23,7 @@ void battle_target_build_directional_attack_panels(const battle_ai_command_actio
     g_battle_sort_targets_nearest_first = 1;
     unit = &g_battle_unit_stats[action.actor_id];
     x = unit->x;
-    y = unit->position.bits.y;
+    y = unit->position.y;
     target_x = action.target_x;
     target_y = action.target_y;
     if (x < target_x) {

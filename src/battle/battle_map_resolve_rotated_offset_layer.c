@@ -42,7 +42,7 @@ s32 battle_map_resolve_rotated_offset_layer(
         break;
     }
     *out_x = unit->x + dx;
-    *out_y = unit->position.bits.y + dy;
+    *out_y = unit->position.y + dy;
     if (*out_x < 0 || *out_x >= g_battle_map_max_x) {
         return -1;
     }

@@ -3,7 +3,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-extern void battle_menu_draw_stacked_glyph_pair(void* pixels, world_glyph_blit_t* position);
+extern void battle_menu_draw_stacked_glyph_pair(void* pixels, glyph_blit_t* position);
 
 /*
  * Scrolling three-column ability list thread, the BATTLE twin of

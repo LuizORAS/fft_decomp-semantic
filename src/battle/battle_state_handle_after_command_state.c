@@ -4,7 +4,7 @@
  * 0xff) and the source unit's numeric display is idle, enter the JP/EXP gain
  * state. */
 void battle_state_handle_after_command_state(void) {
-    s32* command_address;
+    battle_ai_command_t* command_address;
     s32 command;
     battle_unit_misc_data_t* unit;
 
@@ -12,7 +12,7 @@ void battle_state_handle_after_command_state(void) {
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     command_address = battle_menu_get_selected_command_address();
     unit = battle_unit_get_source_misc_data();
-    command = *command_address;
+    command = command_address->kind;
     if ((command >= 7) && ((command < 9) || (command == 0xFF))) {
         g_battle_action_post_action = 1;
     }

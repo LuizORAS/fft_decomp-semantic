@@ -22,7 +22,7 @@ void open_title_push_menu_controller(s32 argument) {
     s32 y;
     s32 controller;
     wldcore_window_xy_t* positions;
-    wldcore_window_xy_t* position;
+    point32_t* position;
     world_animated_render_record_t* records;
     world_animated_render_record_t* entry;
     s32* field;
@@ -76,7 +76,7 @@ void open_title_push_menu_controller(s32 argument) {
     g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
     g_open_gfx_render_records_36[record].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    position = (wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].position.x;
+    position = &g_open_gfx_render_records_36[record].position;
     position->x = 0x60;
     position->y = 0x58;
 

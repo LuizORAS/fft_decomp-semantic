@@ -16,6 +16,7 @@ void open_menu_push_sound_type_controller(void) {
     register s32 controller_index __asm__("$4");
     s32 sound_type;
     s32 selected_record;
+    point32_t* position;
     open_sound_menu_state_t* menu;
 
     for (i = 0; i < 3; i++) {
@@ -26,8 +27,9 @@ void open_menu_push_sound_type_controller(void) {
         g_open_gfx_render_records_36[record].sequence = i + 7;
         (&g_open_gfx_render_records_36[record])->anim_counter = 0;
         g_open_gfx_render_records_36[record].frame_index = 0;
-        ((wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].position.x)->y = i * 0xc + 0x1e;
-        ((wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].position.x)->x = -0x14;
+        position = &g_open_gfx_render_records_36[record].position;
+        position->y = i * 0xc + 0x1e;
+        position->x = -0x14;
     }
 
     g_open_controller_selected_options[g_open_current_controller_index * 25 + 1] = 0;

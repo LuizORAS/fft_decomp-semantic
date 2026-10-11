@@ -3,7 +3,7 @@
 
 /* Draw positioned menu-number entries using the renderer selected by type. */
 void world_menu_draw_numeric_display_entries(
-    void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count) {
+    void* pixels, menu_number_entry_t* entries, glyph_blit_t* position, s32 count) {
     s32 i;
 
     for (i = 0; i < count; i++) {

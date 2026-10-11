@@ -47,8 +47,8 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     }
     if (flags_2 & (ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS | ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK)) {
         x = unit->x;
-        y = unit->position.bits.y;
-        elevation = unit->position.bits.higher_elevation;
+        y = unit->position.y;
+        elevation = unit->position.higher_elevation;
     } else if (action_copy.targeting_type != BATTLE_TARGETING_TYPE_UNIT) {
         x = (u8)action_copy.target_x;
         y = (u8)action_copy.target_y;
@@ -56,8 +56,8 @@ s32 battle_target_set_green_panels_for_action(battle_ai_command_action_t* action
     } else {
         target = &g_battle_unit_stats[action_copy.target_id];
         x = target->x;
-        y = target->position.bits.y;
-        elevation = target->position.bits.higher_elevation;
+        y = target->position.y;
+        elevation = target->position.higher_elevation;
     }
     if (x >= g_battle_map_max_x) {
         return -1;

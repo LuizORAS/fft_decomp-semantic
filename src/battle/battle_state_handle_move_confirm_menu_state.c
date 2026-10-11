@@ -5,7 +5,7 @@
  * Command 8 or 0xff undoes it and returns to choosing a destination, except after
  * a teleport, which is kept like command 7. */
 void battle_state_handle_move_confirm_menu_state(void) {
-    s32* selected_command_address;
+    battle_ai_command_t* selected_command_address;
     s32 selected_command;
     battle_unit_misc_data_t* source_misc_data;
     battle_unit_misc_data_t* casting_misc_data;
@@ -15,7 +15,7 @@ void battle_state_handle_move_confirm_menu_state(void) {
     selected_command_address = battle_menu_get_selected_command_address();
     source_misc_data = battle_unit_get_source_misc_data();
     casting_misc_data = battle_unit_get_casting_misc_data();
-    selected_command = *selected_command_address;
+    selected_command = selected_command_address->kind;
     switch (selected_command) {
     case 8:
     case 0xff:

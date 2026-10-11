@@ -46,7 +46,7 @@ void battle_ai_fill_foe_proximity_grid(void) {
                     if (distance < 0) {
                         distance = -distance;
                     }
-                    dy = unit->position.bits.y - y;
+                    dy = unit->position.y - y;
                     if (dy < 0) {
                         dy = -dy;
                     }

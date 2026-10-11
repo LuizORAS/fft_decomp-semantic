@@ -81,8 +81,8 @@ void* option_menu_redraw_text_page_on_scroll(
 
 /* text */
 
-extern world_glyph_blit_t g_option_text_glyph_dest;
-extern world_glyph_blit_t g_option_text_glyph_source;
+extern glyph_blit_t g_option_text_glyph_dest;
+extern glyph_blit_t g_option_text_glyph_source;
 void option_text_set_blit_destination(s16 destination_x, s16 destination_y);
 void option_text_set_blit_source_rect(s16 source_x, s16 source_y, s16 width, s16 height);
 

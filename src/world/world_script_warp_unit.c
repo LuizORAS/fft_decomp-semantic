@@ -27,15 +27,15 @@ s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
             }
         }
         unit->x = parameters->x;
-        unit->position.bits.y = parameters->y;
-        unit->position.bits.higher_elevation = parameters->elevation;
-        unit->position.bits.facing = parameters->facing;
+        unit->position.y = parameters->y;
+        unit->position.higher_elevation = parameters->elevation;
+        unit->position.facing = parameters->facing;
         index = battle_unit_get_misc_id_by_battle_id(index);
         if (index != -1) {
             state = &g_world_unit_animation_states[index];
             coordinates.x = unit->x;
-            coordinates.elevation = unit->position.raw >> 15;
-            coordinates.y = unit->position.bits.y;
+            coordinates.elevation = unit->position.higher_elevation;
+            coordinates.y = unit->position.y;
             facing = parameters->facing;
             state->delay = 0;
             state->rotating = 0;

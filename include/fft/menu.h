@@ -1340,7 +1340,7 @@ typedef struct menu_text_state {
      * the rect's size is not used; stride (0x0c) is the rect width * 4
      * (the inner window width); color (0x10) is the glyph blit fill,
      * 0x44444444 while text colour 4 is drawn (*_menu_draw_text_columns). */
-    world_glyph_blit_t pen;
+    glyph_blit_t pen;
 } menu_text_state_t;
 
 /* options */

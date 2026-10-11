@@ -15,8 +15,8 @@ void battle_target_set_coordinates_for_ability(battle_stats_t* acting, battle_st
     } else if (acting->action_command.targeting_type == BATTLE_ACTION_TARGET_UNIT) {
         target = &g_battle_unit_stats[acting->action_command.target_id];
         out->target_new_x = target->x;
-        out->target_new_y = target->position.bits.y;
-        out->target_new_map_level = target->position.raw >> 15;
+        out->target_new_y = target->position.y;
+        out->target_new_map_level = target->position.higher_elevation;
     } else {
         out->target_new_x = acting->action_command.target_x;
         out->target_new_y = acting->action_command.target_y;

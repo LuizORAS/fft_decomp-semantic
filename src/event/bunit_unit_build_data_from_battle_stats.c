@@ -58,7 +58,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     record->job_id = unit->job_id;
     record->brave = unit->brave;
     record->faith = unit->faith;
-    record->zodiac = *(u16*)&unit->birthday >> 12;
+    record->zodiac = unit->birthday.zodiac;
     record->battle_id = unit->entd_slot;
     record->move = unit->move;
     record->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];

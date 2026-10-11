@@ -16,8 +16,7 @@ s32 battle_gfx_load_unit_graphics_by_battle_id(s32 battle_id, s32 flags) {
     g_battle_gfx_unit_graphics_load_state.buffer = 0;
     unit = battle_unit_get_stats_from_battle_id(battle_id);
     battle_unit_set_enemy_level_data_by_battle_id(battle_id);
-    battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.bits.y,
-        unit->position.bits.higher_elevation, unit->position.bits.facing, unit->spritesheet_id,
-        unit->job_portrait_palette, 0xFF, unit, flags);
+    battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.y, unit->position.higher_elevation,
+        unit->position.facing, unit->spritesheet_id, unit->job_portrait_palette, 0xFF, unit, flags);
     return 1;
 }

@@ -843,8 +843,8 @@ extern u8 g_world_gfx_fade_decreasing;
 extern u8 g_world_gfx_fade_disabled;
 extern u8 g_world_gfx_fade_increasing;
 extern s16 g_world_gfx_fade_intensity;
-extern world_glyph_blit_t g_world_gfx_image_blit_destination;
-extern world_glyph_blit_t g_world_gfx_image_blit_source;
+extern glyph_blit_t g_world_gfx_image_blit_destination;
+extern glyph_blit_t g_world_gfx_image_blit_source;
 extern world_menu_selection_record_t g_world_menu_selection_records[];
 extern RECT g_world_gfx_temporary_draw_area;
 extern u8 g_world_gfx_texture_allocation_grid[15][16];
@@ -948,8 +948,8 @@ extern u16 g_world_gfx_gradient_quad_count;
 extern u16 g_world_gfx_sprite_capacity;
 extern s32 g_active_graphics_buffer_index;
 void world_gfx_set_party_unit_portrait_poly_texture(s32 portrait_id, POLY_FT4* poly);
-void world_menu_display_text_string(u8* image, world_glyph_blit_t* origin, u8* text);
-void world_display_menu_number_entry(s32 value, u8 digit_count, void* image, world_glyph_blit_t* origin);
+void world_menu_display_text_string(u8* image, glyph_blit_t* origin, u8* text);
+void world_display_menu_number_entry(s32 value, u8 digit_count, void* image, glyph_blit_t* origin);
 
 void world_panel_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packets, const RECT* geometry,
     s32 scale_index, s32 frame_offset, const world_status_thread_t* thread);
@@ -1000,7 +1000,7 @@ void world_menu_copy_billboard_data_out(battle_unit_status_record_t* status, bat
     battle_menu_status_panel_slot_storage_t* detail, map_selected_tile_t* selected_tile);
 void world_gfx_draw_or_append_gpu_primitive(void* primitive);
 void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 intensity);
-void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, world_glyph_blit_t* pen);
+void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, glyph_blit_t* pen);
 
 void world_gfx_enqueue_oriented_textured_quad(
     const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
@@ -1020,7 +1020,7 @@ void world_gfx_init_image_loading(world_texture_prim_t* primitive, const world_i
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 u32* world_shop_load_background_tim(s32 index);
-void world_gfx_mirror_4bpp_rect(u8* pixels, world_glyph_blit_t* rect);
+void world_gfx_mirror_4bpp_rect(u8* pixels, glyph_blit_t* rect);
 void world_gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
 void world_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
 void world_panel_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
@@ -1885,9 +1885,9 @@ extern menu_number_entry_t g_world_numeric_display_entries[];
 extern u16 g_world_text_message_duration_frames;
 
 /* Same layout as g_world_decimal_glyph_source. */
-extern world_glyph_blit_t g_world_text_large_number_glyph_rect;
-extern world_glyph_blit_t g_world_text_shadow_bottom_glyph_source[];
-extern world_glyph_blit_t g_world_text_shadow_top_glyph_source[];
+extern glyph_blit_t g_world_text_large_number_glyph_rect;
+extern glyph_blit_t g_world_text_shadow_bottom_glyph_source[];
+extern glyph_blit_t g_world_text_shadow_top_glyph_source[];
 extern s16 g_world_fixed_number_panel_request_state;
 extern s32 g_world_text_message_box_digit_divisors[];
 extern s32 g_world_text_message_box_slot_threads[3];
@@ -1897,7 +1897,7 @@ extern u8 g_world_text_message_box_slot_carry_offset[4];
 extern u8 g_world_text_message_box_slot_prev_width[4];
 
 /* Same layout as world_text_render_decimal_entry_list's output record. */
-extern world_glyph_blit_t g_world_decimal_glyph_source;
+extern glyph_blit_t g_world_decimal_glyph_source;
 extern world_status_thread_t g_world_numeric_editor_thread_params;
 extern u8 g_world_text_task_phase;
 extern u8 g_world_text_skillset_names_data[];
@@ -1911,7 +1911,7 @@ extern u8 g_world_text_shop_dialogue_data[];
 extern u8 g_world_text_shop_menu_labels_data[];
 extern u8 g_world_text_name_entry_keys_data[];
 extern world_menu_palette_slot_t g_world_numeric_display_palettes[];
-extern world_glyph_blit_t g_world_text_draw_origin;
+extern glyph_blit_t g_world_text_draw_origin;
 extern battle_text_glyph_state_t g_world_text_typewriter_glyph;
 extern menu_text_state_t g_world_text_typewriter_state;     /* origin/stride passed to 0x800ff284 */
 extern RECT g_world_text_typewriter_vram_rect;              /* VRAM destination of the finished glyph */
@@ -1928,8 +1928,8 @@ extern world_menu_list_page_t g_world_text_list_pages[2];
  * and world_gfx_set_blit_dest_position. Each is 0x10 bytes and the second
  * starts 0x10 past the first. The stride is the surface width in pixels:
  * 0x100 for the glyph sheet, 0x80 for a window frame's scratch image. */
-extern world_glyph_blit_t g_world_text_glyph_source;
-extern world_glyph_blit_t g_world_text_glyph_dest;
+extern glyph_blit_t g_world_text_glyph_source;
+extern glyph_blit_t g_world_text_glyph_dest;
 extern RECT g_world_text_message_box_vram_rect;
 extern u8 g_world_text_message_box_glyph_images[3][8][84];
 extern u8 g_world_text_message_box_previous_images[3][84];
@@ -1942,29 +1942,28 @@ extern u8* g_world_text_glyph_bitmap_data;
  * several elements also carry their own names below. */
 extern u8* g_world_text_section_pointers[TEXT_SECTION_COUNT];
 void world_text_message_box_thread(void);
-void world_text_blit_font_glyph_to_4bpp(u8* glyph, void* arg1, world_glyph_blit_t* origin, s32 arg3);
+void world_text_blit_font_glyph_to_4bpp(u8* glyph, void* arg1, glyph_blit_t* origin, s32 arg3);
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_target_t* target, s32 palette);
 void world_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 u8* world_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
-void world_text_blit_glyph(void* otag, void* text_id, world_glyph_blit_t* resource, world_glyph_blit_t* pos);
+void world_text_blit_glyph(void* otag, void* text_id, glyph_blit_t* resource, glyph_blit_t* pos);
 s32 world_text_count_decimal_digits(s32 value);
 void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 wait);
-void world_menu_draw_stacked_glyph_pair(void* buffer, world_glyph_blit_t* dest);
+void world_menu_draw_stacked_glyph_pair(void* buffer, glyph_blit_t* dest);
 u8* world_text_find_entry_by_index(u8* p, s16 count, s32 unused);
 
-void world_text_render_decimal_entry_list(
-    void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+void world_text_render_decimal_entry_list(void* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
-void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
-void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
+void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, glyph_blit_t* position);
+void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, void* pixels, glyph_blit_t* position);
 void world_text_render_id_list_to_image_rows(u8* font, s16* text_ids, RECT* destination, s32 palette);
 
 void world_text_render_encoded_ids_to_image(
     u8* image, RECT* rect, s32 unused, s32 max_glyphs, u8* font, s16* ids, s32 count, s16 glyph, s32 unused_palette);
 
 void world_text_render_signed_decimal_entries(
-    void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    void* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
 s32 world_text_resolve_format_string_id(s32 event_code, s32 value);
 u8* world_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor);
@@ -2241,11 +2240,11 @@ extern s32 g_world_menu_building_thread_started;
 extern u8 g_world_menu_cleared_entry_indices[11];
 extern s16 g_world_menu_row_type_confirm_actions[][2]; /* per row type: [1] == 1 lists by id */
 extern u8 g_world_menu_action_slot_default_messages[];
-extern world_glyph_blit_t g_world_menu_number_glyph_rect; /* glyph source rectangle in the number/sign font */
+extern glyph_blit_t g_world_menu_number_glyph_rect; /* glyph source rectangle in the number/sign font */
 
 /* Tail glyph source and destination records for world_menu_build_window_image. */
-extern world_glyph_blit_t g_world_menu_window_sprite_source;
-extern world_glyph_blit_t g_world_menu_window_sprite_position;
+extern glyph_blit_t g_world_menu_window_sprite_source;
+extern glyph_blit_t g_world_menu_window_sprite_position;
 extern RECT g_world_menu_thin_panel_texture_windows[7];
 extern RECT g_world_menu_panel_texture_windows[7];
 extern u8 g_world_menu_at_list_entry_table[];
@@ -2461,7 +2460,7 @@ void world_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
 void world_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 void world_menu_init_panel_fade_tiles(void);
-void world_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
+void world_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos);
 void world_menu_labeled_number_entry_thread(void);
 world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_window_command_t* command);
 void* world_menu_alloc_window_buffer_pair(void);
@@ -2481,7 +2480,7 @@ s32 world_menu_dispatch_system_function(
 void world_menu_draw_active_window_frames(void);
 
 void world_menu_draw_numeric_display_entries(
-    void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
+    void* pixels, menu_number_entry_t* entries, glyph_blit_t* position, s32 count);
 
 void world_menu_draw_pressable_button(s16 index, s32 x, s16 y, s16 pressed, s16 disabled, u16 sound_effect_id);
 void world_screen_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
@@ -2544,7 +2543,7 @@ void world_menu_clear_window_buffer_pointers(void);
 void world_menu_configure_status_panel_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
 
-void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* origin, u8* text);
+void world_menu_display_text(s32 text_id, void* pixels, glyph_blit_t* origin, u8* text);
 void world_menu_display_triangle_selection(void);
 void world_menu_draw_animated_cursor(point16_t* position, u16* state, s32 mode);
 void world_menu_draw_animated_vertical_cursor(point16_t* position, u16* state, s32 mode);
@@ -2687,8 +2686,8 @@ s32 world_menu_copy_ff_terminated_bytes_to_halfwords(u16* destination, const u8*
 void world_menu_window_frame_thread(void);
 void world_menu_set_slot_4_cursor_index(s32 index);
 s32 world_menu_get_thread_activity(void);
-void world_menu_display_text_entry_past_choice_marks(s32 text_id, void* image, world_glyph_blit_t* origin);
-void world_menu_display_text_entry(s32 text_id, void* image, world_glyph_blit_t* origin);
+void world_menu_display_text_entry_past_choice_marks(s32 text_id, void* image, glyph_blit_t* origin);
+void world_menu_display_text_entry(s32 text_id, void* image, glyph_blit_t* origin);
 void world_menu_init_sprite(SPRT* sprite);
 void world_menu_set_text_origin(s32 x, s32 y);
 

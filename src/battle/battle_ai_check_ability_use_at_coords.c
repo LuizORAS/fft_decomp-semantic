@@ -38,7 +38,7 @@ s32 battle_ai_check_ability_use_at_coords(battle_ai_coords_t* coords) {
             dx = unit->x - coords->bytes.x;
             if (dx < 0)
                 dx = -dx;
-            dy = unit->position.bits.y - coords->bytes.y;
+            dy = unit->position.y - coords->bytes.y;
             if (dy < 0)
                 dy = -dy;
             if (dx + dy < 2) {

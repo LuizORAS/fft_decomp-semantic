@@ -16,7 +16,7 @@ s32 battle_target_apply_reflect(battle_stats_t* unit) {
 
     act = &unit->action_command;
     dx = unit->x - g_battle_acting_unit_x;
-    dy = unit->position.bits.y - g_battle_acting_unit_y;
+    dy = unit->position.y - g_battle_acting_unit_y;
     if (dx == 0 && dy == 0) {
         return -1;
     }

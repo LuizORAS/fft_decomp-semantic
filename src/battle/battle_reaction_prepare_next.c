@@ -101,8 +101,8 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         action->targeting_type = 5;
                         action->target_id = i;
                         action->target_x = unit->x;
-                        action->target_y = unit->position.bits.y;
-                        action->target_elevation = unit->position.raw >> 15;
+                        action->target_y = unit->position.y;
+                        action->target_elevation = unit->position.higher_elevation;
                         result = battle_action_call_attack_preparation_at_preview((battle_ai_command_action_t*)action);
                         outcome = BATTLE_REACTION_OUTCOME_COUNTER;
                         unit->action_command.ability_id = ABILITY_ID_REACTION_AUTO_POTION;
@@ -150,8 +150,8 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                             unit = &g_battle_unit_stats[g_battle_acting_unit_id];
                         }
                         action->target_x = unit->x;
-                        action->target_y = unit->position.bits.y;
-                        action->target_elevation = unit->position.raw >> 15;
+                        action->target_y = unit->position.y;
+                        action->target_elevation = unit->position.higher_elevation;
                     }
                     *out_ability = g_battle_current_reaction_ability_id;
                     action->actor_id = i;

@@ -35,7 +35,7 @@ void attack_editor_load_party_unit(s32 unused, s32 party_index) {
     g_attack_panel_selected_unit_data.job_id = unit->job_id;
     g_attack_panel_selected_unit_data.brave = unit->brave;
     g_attack_panel_selected_unit_data.faith = unit->faith;
-    g_attack_panel_selected_unit_data.zodiac = *(u16*)&unit->birthday >> 12;
+    g_attack_panel_selected_unit_data.zodiac = unit->birthday.zodiac;
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         gauges->team_kind = 1;
     }

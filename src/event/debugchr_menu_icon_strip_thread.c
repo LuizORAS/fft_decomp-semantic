@@ -31,7 +31,7 @@ void debugchr_menu_icon_strip_thread(void) {
                 state->inner_width, state->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             battle_menu_set_text_origin(8, 9);
             *display_x = state->inner_width;
-            battle_menu_display_text_entry(state->text_id, render, (world_glyph_blit_t*)(display_x - 2));
+            battle_menu_display_text_entry(state->text_id, render, (glyph_blit_t*)(display_x - 2));
             LoadImage(&rect, render);
         }
         battle_thread_yield();

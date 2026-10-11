@@ -57,9 +57,8 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
                     unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
                     unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
                 } else {
-                    battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.bits.y,
-                        unit->position.bits.higher_elevation, unit->position.bits.facing, sprite, palette, 0xff, unit,
-                        0);
+                    battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.y,
+                        unit->position.higher_elevation, unit->position.facing, sprite, palette, 0xff, unit, 0);
                     main_unit_init_status_and_rewards(unit, 1);
                     unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
                 }

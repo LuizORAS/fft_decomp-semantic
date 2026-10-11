@@ -45,7 +45,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
     s32 ability;
     u16 ability_id;
 
-    crystal_index = battle_unit_find_at_tile(mover->x, mover->position.bits.y, mover->position.bits.higher_elevation,
+    crystal_index = battle_unit_find_at_tile(mover->x, mover->position.y, mover->position.higher_elevation,
         BATTLE_UNIT_TILE_FILTER_CRYSTAL | BATTLE_UNIT_TILE_FILTER_TREASURE);
     if (crystal_index < 0) {
         g_main_crystal_pickup_result.result = -1;

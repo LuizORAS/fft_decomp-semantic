@@ -174,16 +174,15 @@ void debugchr_panel_set_primitive_colors(
 void debugchr_panel_run_character_status_thread(void);
 
 /* text */
-extern battle_menu_status_panel_glyph_t g_debugchr_text_decimal_glyph;
+extern glyph_blit_t g_debugchr_text_decimal_glyph;
 void debugchr_text_clear_string_buffer(u8* output);
 
-void debugchr_text_render_decimal_entry_list(
-    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+void debugchr_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
-void debugchr_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position);
+void debugchr_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 
 void debugchr_text_render_signed_decimal_entries(
-    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
+    u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
 /* thread */
 extern battle_menu_status_panel_indicator_prims_t g_debugchr_thread_indicator_packets[2][2];

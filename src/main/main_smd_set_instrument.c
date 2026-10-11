@@ -19,16 +19,16 @@ void main_smd_set_instrument(s16 instrument, suzuki_music_channel_t* channel) {
     channel->instrument = instrument;
     waveset = channel->waveset;
     entry = &waveset->instruments[instrument];
-    channel->start_address = entry->start + waveset->spu_address;
-    channel->loop_address = entry->loop_offset + entry->start;
-    channel->attack_mode = entry->attack_mode;
-    channel->sustain_mode = entry->sustain_mode;
-    channel->release_mode = entry->release_mode;
-    channel->attack_rate = entry->attack_rate;
-    channel->decay_rate = entry->decay_rate;
-    channel->sustain_rate = entry->sustain_rate;
-    channel->release_rate = channel->note_release_rate = entry->release_rate;
-    channel->sustain_level = entry->sustain_level;
+    channel->voice_attr.addr = entry->start + waveset->spu_address;
+    channel->voice_attr.loop_addr = entry->loop_offset + entry->start;
+    channel->voice_attr.a_mode = entry->attack_mode;
+    channel->voice_attr.s_mode = entry->sustain_mode;
+    channel->voice_attr.r_mode = entry->release_mode;
+    channel->voice_attr.ar = entry->attack_rate;
+    channel->voice_attr.dr = entry->decay_rate;
+    channel->voice_attr.sr = entry->sustain_rate;
+    channel->voice_attr.rr = channel->note_release_rate = entry->release_rate;
+    channel->voice_attr.sl = entry->sustain_level;
     channel->fine_tune = entry->fine_tune;
     if (channel->flags & (SUZUKI_CHANNEL_SFX | SUZUKI_CHANNEL_IMMEDIATE_INSTRUMENT)) {
         channel->voice_update_flags |= SUZUKI_VOICE_UPDATE_VOLUME | SUZUKI_VOICE_UPDATE_PITCH;

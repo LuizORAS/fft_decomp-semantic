@@ -17,7 +17,7 @@ void SuzukiTurnOffAllMusic(void) {
     for (i = 8; i != 0; i--) {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
             channel->flags = 0;
-            voices |= channel->voice_mask;
+            voices |= channel->voice_attr.voice;
         }
         channel++;
     }

@@ -34,16 +34,16 @@ void battle_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
         }
     }
     unit->x = cursor.placement->x;
-    unit->position.bits.y = cursor.placement->y;
-    unit->position.bits.higher_elevation = cursor.placement->elevation;
-    unit->position.bits.facing = cursor.placement->facing;
+    unit->position.y = cursor.placement->y;
+    unit->position.higher_elevation = cursor.placement->elevation;
+    unit->position.facing = cursor.placement->facing;
     misc_id = battle_unit_get_misc_id_by_battle_id(battle_id);
     if (misc_id == -1) {
         return;
     }
     tile[0] = unit->x;
-    tile[1] = unit->position.bits.higher_elevation;
-    tile[2] = unit->position.bits.y;
+    tile[1] = unit->position.higher_elevation;
+    tile[2] = unit->position.y;
     rotation_state = &g_battle_unit_misc_rotation_data[misc_id];
     rotation_state->target_facing = cursor.placement->facing * 4;
     rotation_state->delay = 0;

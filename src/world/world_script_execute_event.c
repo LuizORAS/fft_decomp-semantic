@@ -202,8 +202,8 @@ restart_event:
                 unit = battle_unit_get_stats_from_battle_id(7);
                 copy_destination = battle_unit_get_stats_from_battle_id(8);
                 copy_destination->x = unit->x;
-                copy_destination->position.bits.y = unit->position.bits.y;
-                copy_destination->position.bits.higher_elevation = unit->position.bits.higher_elevation;
+                copy_destination->position.y = unit->position.y;
+                copy_destination->position.higher_elevation = unit->position.higher_elevation;
                 battle_gfx_load_unit_graphics_by_battle_id(8, 1);
                 g_world_unit_graphics_load_pending = 1;
                 do {
@@ -219,10 +219,10 @@ restart_event:
                         operand_1 = battle_unit_get_battle_index_by_misc_id(region_misc_id);
                         if (operand_1 != -1U) {
                             unit = battle_unit_get_stats_from_battle_id(operand_1);
-                            if ((unit->x < 4U) && (unit->position.bits.y < 0xBU)) {
+                            if ((unit->x < 4U) && (unit->position.y < 0xBU)) {
                                 battle_gfx_reset_unit_graphic_trigger(region_misc_id);
                             }
-                            if (((unit->x - 4) < 3U) && ((unit->position.bits.y - 2) < 6U)) {
+                            if (((unit->x - 4) < 3U) && ((unit->position.y - 2) < 6U)) {
                                 battle_gfx_reset_unit_graphic_trigger(region_misc_id);
                             }
                         }
@@ -234,9 +234,9 @@ restart_event:
                 unit = battle_unit_get_stats_from_battle_id(1);
                 copy_destination = battle_unit_get_stats_from_battle_id(7);
                 copy_destination->x = unit->x;
-                copy_destination->position.bits.y = unit->position.bits.y;
-                copy_destination->position.bits.higher_elevation = unit->position.bits.higher_elevation;
-                copy_destination->position.bits.facing = unit->position.bits.facing;
+                copy_destination->position.y = unit->position.y;
+                copy_destination->position.higher_elevation = unit->position.higher_elevation;
+                copy_destination->position.facing = unit->position.facing;
                 battle_gfx_load_unit_graphics_by_battle_id(7, 1);
                 g_world_unit_graphics_load_pending = 1U;
                 do {
@@ -303,7 +303,7 @@ restart_event:
                     operand_1 = battle_unit_get_battle_index_by_misc_id(work_index);
                     if (operand_1 >= 0) {
                         unit = battle_unit_get_stats_from_battle_id(operand_1);
-                        unit->position.bits.facing = battle_unit_get_facing_quadrant_by_misc_id(work_index);
+                        unit->position.facing = battle_unit_get_facing_quadrant_by_misc_id(work_index);
                     }
                 }
                 work_index += 1;
@@ -792,9 +792,9 @@ restart_event:
             unit = battle_unit_get_stats_from_battle_id(operand_1);
             position_instruction = instruction_offset + ((u32)g_world_event_script);
             unit->x = ((u8*)position_instruction)[3];
-            unit->position.bits.y = ((u8*)position_instruction)[4];
-            unit->position.bits.higher_elevation = ((u8*)position_instruction)[5];
-            unit->position.bits.facing = ((u8*)position_instruction)[6];
+            unit->position.y = ((u8*)position_instruction)[4];
+            unit->position.higher_elevation = ((u8*)position_instruction)[5];
+            unit->position.facing = ((u8*)position_instruction)[6];
         } else if (opcode == EVENT_OPCODE_WAIT_ADD_UNIT) {
             do {
                 world_thread_yield();

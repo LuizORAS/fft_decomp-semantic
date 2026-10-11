@@ -22,11 +22,11 @@ void battle_text_determine_spell_quote(battle_ai_command_action_t* action, s32 u
         known = 1;
     }
     if (action->skillset == unit->primary_skillset
-        && (unit->position.bits.spell_quote_skillsets & BATTLE_UNIT_SPELL_QUOTE_PRIMARY_SKILLSET)) {
+        && (unit->position.spell_quote_skillsets & BATTLE_UNIT_SPELL_QUOTE_PRIMARY_SKILLSET)) {
         known = 1;
     }
     if (action->skillset == unit->secondary_skillset
-        && (unit->position.bits.spell_quote_skillsets & BATTLE_UNIT_SPELL_QUOTE_SECONDARY_SKILLSET)) {
+        && (unit->position.spell_quote_skillsets & BATTLE_UNIT_SPELL_QUOTE_SECONDARY_SKILLSET)) {
         known = 1;
     }
     if (known == 0 && g_battle_spell_quote_last_ability_id != (action->ability_id & ABILITY_ID_MASK)

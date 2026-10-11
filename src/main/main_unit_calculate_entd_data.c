@@ -111,13 +111,13 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
         birthday = g_main_month_start_day_offsets[number] + day;
     }
     year_day = birthday;
-    unit->birthday.value = (unit->birthday.value & 0xfe00) | (year_day & 0x1ff);
+    unit->birthday.birthday = year_day;
     /* Preserve the target's explicit 16-bit normalization before packing the
      * zodiac nibble into the birthday word. */
     zodiac = main_unit_calculate_zodiac_symbol(year_day) & 0xFFFF;
-    unit->birthday.value = (unit->birthday.value & 0x0fff) | (zodiac << 12);
+    unit->birthday.zodiac = zodiac;
     if (entd->job_id == JOB_ID_SERPENTARIUS) {
-        unit->birthday.value = (unit->birthday.value & 0x0fff) | (ZODIAC_SIGN_SERPENTARIUS << 12);
+        unit->birthday.zodiac = ZODIAC_SIGN_SERPENTARIUS;
     }
 
     value = entd->bravery;

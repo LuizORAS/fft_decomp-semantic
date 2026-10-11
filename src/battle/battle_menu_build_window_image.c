@@ -2,9 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-extern world_glyph_blit_t g_battle_menu_window_sprite_glyph;
-extern world_glyph_blit_t g_battle_menu_window_sprite_position;
-
 /* Battle twin of world_menu_build_window_image: build a 4bpp menu window image from the shared menu graphics,
  * optionally with its pointer tail, and upload it to `rect` unless `keep` is set.
  *

@@ -9,7 +9,7 @@
  *
  * `digits` arrives as a full word and only its low byte is used.
  */
-void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, world_glyph_blit_t* pen) {
+void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, glyph_blit_t* pen) {
     s32 original;
     s32 i;
 

@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Render a decimal value with optional sign/plus glyphs into a text image. */
-void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position) {
+void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, glyph_blit_t* position) {
     s32 saved_color;
     s32 plus;
     s32 digits;

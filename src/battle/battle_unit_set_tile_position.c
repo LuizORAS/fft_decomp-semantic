@@ -44,17 +44,17 @@ s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) 
         g_battle_unit_stats[rider].mount_info = unit_id + BATTLE_MOUNT_INFO_FLAG_MOUNT;
     }
 
-    unit->position.bits.y = y;
+    unit->position.y = y;
     unit->x = x;
-    unit->position.bits.higher_elevation = level;
-    unit->position.bits.facing = facing;
+    unit->position.higher_elevation = level;
+    unit->position.facing = facing;
 
     if (mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         partner = &g_battle_unit_stats[mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK];
-        partner->position.bits.y = y;
+        partner->position.y = y;
         partner->x = x;
-        partner->position.bits.higher_elevation = level;
-        partner->position.bits.facing = facing;
+        partner->position.higher_elevation = level;
+        partner->position.facing = facing;
     }
     return 0;
 }

@@ -620,8 +620,8 @@ typedef struct suzuki_repeat {
 
 /* Suzuki sequencer channel record (0x160 bytes), the third argument of every
  * SMD opcode handler (note data, music, channel). Field names follow the
- * opcode that writes them. Offsets 0x34-0x73 have the layout of an
- * SpuVoiceAttr; the driver passes the members to LIBSPU one by one.
+ * opcode that writes them. voice_attr at 0x34 is the SDK SpuVoiceAttr; the driver passes its
+ * members to LIBSPU one by one.
  *
  * flags is the channel flag word (suzuki_channel_flag_e); a channel is
  * allocated while it is non-zero, and main_smd_set_flags_all_channels ORs a
@@ -660,26 +660,7 @@ typedef struct suzuki_music_channel {
     u8 voice;               /* 0x2d; SPU voice (Set Voice); only an odd voice takes Enable LFO */
     u16 note_release_rate;  /* 0x2e; the instrument's or Release Rate's value; each note reloads release_rate from it */
     suzuki_waveset_t* waveset; /* 0x30; Select Sound Font */
-    u32 voice_mask;            /* 0x34; SPU voice bit(s) owned by this channel */
-    u32 voice_attr_mask;       /* 0x38; SpuVoiceAttr mask; 0xff9f, never read */
-    s16 spu_volume_left;       /* 0x3c; SpuSetVoiceVolume(Attr) left, from main_smd_update_voices */
-    s16 spu_volume_right;      /* 0x3e */
-    s16 spu_volume_mode_left;  /* 0x40; SpuSetVoiceVolumeAttr left mode; cleared by the channel initialiser */
-    s16 spu_volume_mode_right; /* 0x42 */
-    u8 _unused_044[4];         /* 0x44; SpuVoiceAttr volumex */
-    u16 spu_pitch;             /* 0x48; SpuSetVoicePitch value, from main_smd_update_voices */
-    u8 _unused_04a[6];         /* 0x4a; SpuVoiceAttr note, sample_note, envx */
-    u32 start_address;         /* 0x50; instrument sample SPU address */
-    u32 loop_address;          /* 0x54; instrument loop SPU address */
-    s32 attack_mode;           /* 0x58; LIBSPU envelope modes, see suzuki_instrument_t */
-    s32 sustain_mode;          /* 0x5c */
-    s32 release_mode;          /* 0x60 */
-    u16 attack_rate;           /* 0x64; LIBSPU envelope rates and level */
-    u16 decay_rate;            /* 0x66 */
-    u16 sustain_rate;          /* 0x68 */
-    u16 release_rate;          /* 0x6a */
-    u16 sustain_level;         /* 0x6c */
-    u8 _unused_06e[6];         /* 0x6e; SpuVoiceAttr adsr1, adsr2 */
+    SpuVoiceAttr voice_attr;   /* 0x34; SPU voice, volume, sample addresses and envelope */
     s16 event_ticks;           /* 0x74; ticks left of the current note, Rest or Fermata; 0 reads the next event */
     s8 length_adjust;          /* 0x76; ticks added to each event's length (Length Adjust) */
     u8 _padding_077;           /* 0x77; aligns note_ticks */
@@ -712,6 +693,9 @@ typedef struct suzuki_music_channel {
     suzuki_modulator_t modulators[4]; /* 0xe0 */
 } suzuki_music_channel_t;
 typedef char suzuki_music_channel_size_must_be_0x160[(sizeof(suzuki_music_channel_t) == 0x160) ? 1 : -1];
+typedef char suzuki_channel_voice_attr_must_be_at_offset_0x34
+    [((unsigned long)&((suzuki_music_channel_t*)0)->voice_attr == 0x34) ? 1 : -1];
+typedef char suzuki_channel_voice_attr_size_must_be_0x40[(sizeof(SpuVoiceAttr) == 0x40) ? 1 : -1];
 
 /* suzuki_music_channel_t.flags. */
 typedef enum suzuki_channel_flag {

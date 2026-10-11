@@ -44,7 +44,7 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
 
     unit = &g_battle_unit_stats[unit_id];
     unit_x = unit->x;
-    unit_y = unit->position.bits.y;
+    unit_y = unit->position.y;
     if (unit_x < x) {
         dx = x - unit_x;
     } else {

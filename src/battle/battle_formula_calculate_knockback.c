@@ -48,14 +48,14 @@ void battle_formula_calculate_knockback(void) {
         return;
     }
     dx = target->x - attacker->x;
-    dy = target->position.bits.y - attacker->position.bits.y;
+    dy = target->position.y - attacker->position.y;
     adx = abs(dx);
     ady = abs(dy);
     if (adx + ady == 0) {
         return;
     }
     x = target->x;
-    y = target->position.bits.y;
+    y = target->position.y;
     if (ady < adx) {
         if (dx > 0) {
             direction = 3;

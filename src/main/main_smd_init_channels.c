@@ -84,16 +84,16 @@ void main_smd_init_channels(suzuki_music_t* music) {
                 channel->pitch_modulation = 0;
                 channel->volume_modulation = 0;
                 channel->balance_modulation = 0;
-                channel->spu_volume_mode_left = 0;
-                channel->spu_volume_mode_right = 0;
+                channel->voice_attr.volmode.left = 0;
+                channel->voice_attr.volmode.right = 0;
                 channel->note_data_start = note_data;
                 channel->note_data = note_data;
                 if (slot < 25) {
-                    channel->voice_mask = 1 << voice;
-                    channel->voice_attr_mask = 0xff9f;
+                    channel->voice_attr.voice = 1 << voice;
+                    channel->voice_attr.mask = 0xff9f;
                 } else {
-                    channel->voice_mask = 0;
-                    channel->voice_attr_mask = 0;
+                    channel->voice_attr.voice = 0;
+                    channel->voice_attr.mask = 0;
                 }
                 for (i = 3; i >= 0; i--) {
                     channel->modulators[i].flags = 0;

@@ -5,7 +5,7 @@
  * or 0xff returns to the after-command state, unless the unit's turn is over
  * (battle_action_check_change_of_turn returns 1): then it chooses a facing too. */
 void battle_state_handle_wait_menu_state(void) {
-    s32* selected_command_address;
+    battle_ai_command_t* selected_command_address;
     s32 selected_command;
     battle_unit_misc_data_t* source_misc_data;
 
@@ -13,7 +13,7 @@ void battle_state_handle_wait_menu_state(void) {
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     selected_command_address = battle_menu_get_selected_command_address();
     source_misc_data = battle_unit_get_source_misc_data();
-    selected_command = *selected_command_address;
+    selected_command = selected_command_address->kind;
     switch (selected_command) {
     case 8:
     case 0xff:

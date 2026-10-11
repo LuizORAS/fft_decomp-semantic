@@ -705,31 +705,25 @@ typedef enum battle_unit_equipment_stat_index {
  * Unidentified areas intentionally remain explicit padding until evidence
  * supports a name and type.
  */
-/* Packed day-of-year/zodiac word at unit offset 0x008. The halfword masks
- * in SCUS 0x8005ac1c and the bitfield stores at 0x8005b0d0 establish both views. */
-typedef union battle_unit_birthday {
-    u16 value;
-    struct {
-        u16 birthday : 9;
-        u16 _unused_01_bit1 : 3;
-        u16 zodiac : 4;
-    } fields;
+/* Packed birthday and zodiac at unit offset 0x008. Field updates preserve
+ * the three reserved bits between the day-of-year and zodiac. */
+typedef struct battle_unit_birthday {
+    u16 birthday : 9;
+    u16 _unused_01 : 3; /* reserved bits 9..11 */
+    u16 zodiac : 4;
 } battle_unit_birthday_t;
 typedef char battle_birthday_size_must_be_2[(sizeof(battle_unit_birthday_t) == 2) ? 1 : -1];
 
 /*
- * Packed Y and facing data shared by ENTD definitions and runtime battle
- * records.  The US target copies the named bit groups independently.
+ * Runtime Y, facing and tile-layer fields. ENTD uses the narrower facing
+ * field in entd_unit_position_t below; initialization copies each group.
  */
-typedef union battle_unit_position {
-    u16 raw;
-    struct {
-        u16 y : 8;
-        u16 facing : 4;
-        u16 spell_quote_skillsets : 2;
-        u16 stepping_stone : 1;
-        u16 higher_elevation : 1;
-    } bits;
+typedef struct battle_unit_position {
+    u16 y : 8;
+    u16 facing : 4;
+    u16 spell_quote_skillsets : 2;
+    u16 stepping_stone : 1;
+    u16 higher_elevation : 1;
 } battle_unit_position_t;
 typedef char battle_unit_position_size_must_be_2[(sizeof(battle_unit_position_t) == 2) ? 1 : -1];
 
@@ -838,14 +832,12 @@ typedef enum battle_unit_ability_outcome {
 } battle_unit_ability_outcome_e;
 
 typedef struct entd_unit_position {
-    struct {
-        u16 y : 8;
-        u16 facing : 2;
-        u16 _bits10_11 : 2;
-        u16 spell_quote_skillsets : 2;
-        u16 stepping_stone : 1;
-        u16 higher_elevation : 1;
-    } bits;
+    u16 y : 8;
+    u16 facing : 2;
+    u16 _unused_01 : 2; /* bits 10-11 */
+    u16 spell_quote_skillsets : 2;
+    u16 stepping_stone : 1;
+    u16 higher_elevation : 1;
 } entd_unit_position_t;
 typedef char entd_unit_position_size_must_be_2[(sizeof(entd_unit_position_t) == 2) ? 1 : -1];
 

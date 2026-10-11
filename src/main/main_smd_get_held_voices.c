@@ -15,7 +15,7 @@ u32 main_smd_get_held_voices(suzuki_music_t* music) {
     do {
         if ((channel->flags & SUZUKI_CHANNEL_IN_USE) && (channel->flags & SUZUKI_CHANNEL_SOUNDING)) {
             if ((channel->flags & (SUZUKI_CHANNEL_MUTED | SUZUKI_CHANNEL_NO_RETRIGGER)) == 0) {
-                voices |= channel->voice_mask;
+                voices |= channel->voice_attr.voice;
             }
         }
         count--;

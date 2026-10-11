@@ -42,7 +42,7 @@ s32 battle_target_set_ability_panels(const battle_ai_command_action_t* source) {
     vertical = ability->vertical;
     flags_4 = ability->flags_4;
     x = unit->x;
-    y = unit->position.bits.y;
+    y = unit->position.y;
     location = battle_map_calculate_location(unit);
     tile = &g_battle_map_tile_data[location];
     elevation = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)

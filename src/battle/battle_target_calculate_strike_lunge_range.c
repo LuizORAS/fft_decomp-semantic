@@ -16,7 +16,7 @@ void battle_target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags) 
 
     height = battle_unit_get_effective_height(unit);
     x = unit->x;
-    y = unit->position.bits.y;
+    y = unit->position.y;
     if (flags & 0x80) {
         lo = height - 6;
         hi = height + 5;

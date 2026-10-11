@@ -20,7 +20,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     u8* buffer;
     u8* digits;
     s32* stride;
-    world_glyph_blit_t* origin;
+    glyph_blit_t* origin;
     SPRT* sprite;
     s32 speed;
     s32 slide;
@@ -62,7 +62,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     stride = &g_menu_text_state.pen.stride;
     *stride = 0x58;
     battle_menu_set_text_origin(0, 0);
-    origin = (world_glyph_blit_t*)(stride - 2);
+    origin = (glyph_blit_t*)(stride - 2);
     battle_menu_display_text_string((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_unit_name);
     battle_menu_set_text_origin(0, 0x10);
     battle_menu_display_text_string((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_job_name);

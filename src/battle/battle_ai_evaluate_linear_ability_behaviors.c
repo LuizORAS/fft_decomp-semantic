@@ -106,8 +106,7 @@ void battle_ai_evaluate_linear_ability_behaviors(void) {
                 jumping = status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP);
                 if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_TILE || jumping) {
                     ((battle_ai_tile_rows_view_t*)ai)
-                        ->attack_origin_tiles[pos->position.bits.higher_elevation][pos->position.bits.y]
-                        ^= 0x8000 >> pos->x;
+                        ->attack_origin_tiles[pos->position.higher_elevation][pos->position.y] ^= 0x8000 >> pos->x;
                 }
             }
         }

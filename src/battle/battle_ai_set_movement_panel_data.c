@@ -107,7 +107,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
             && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
-            ai->reachable_tiles[0][unit->position.bits.higher_elevation][unit->position.bits.y] &= ~(0x8000 >> unit->x);
+            ai->reachable_tiles[0][unit->position.higher_elevation][unit->position.y] &= ~(0x8000 >> unit->x);
         }
     }
     ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]

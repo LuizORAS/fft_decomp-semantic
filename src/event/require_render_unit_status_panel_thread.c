@@ -35,7 +35,7 @@ void require_render_unit_status_panel_thread(void) {
     s32 panel_x;
     s32 editor_x;
     s16 icon_index;
-    world_glyph_blit_t* text_position;
+    glyph_blit_t* text_position;
     battle_menu_status_panel_packet_t* panel;
     battle_menu_status_panel_editor_packet_t* editor;
     SPRT* name_sprite;
@@ -342,7 +342,7 @@ void require_render_unit_status_panel_thread(void) {
             }
             battle_clear_menu_render_buffer(number_image, 0x700);
             window_width = &g_menu_text_state.pen.stride;
-            text_position = (world_glyph_blit_t*)(window_width - 2);
+            text_position = (glyph_blit_t*)(window_width - 2);
             *window_width = 0x38;
             battle_menu_draw_numeric_display_entries(number_image, numeric_entries, text_position, 6);
             LoadImage(&rects[0], (u32*)number_image);

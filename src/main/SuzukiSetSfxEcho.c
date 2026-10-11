@@ -43,7 +43,7 @@ void SuzukiSetSfxEcho(int sound_id, s16 volume) {
             if (stop->flags & SUZUKI_CHANNEL_IN_USE) {
                 if (stop->sound_id == sound_id) {
                     channels |= bit;
-                    voices |= stop->voice_mask;
+                    voices |= stop->voice_attr.voice;
                     stop->flags = 0;
                 }
             }

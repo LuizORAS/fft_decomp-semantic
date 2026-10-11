@@ -55,7 +55,7 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     }
 
     /* The 0x008 halfword packs the birthday (9 bits) and zodiac (top nibble). */
-    birthday = unit->birthday.fields.birthday | (unit->birthday.fields.zodiac << 12);
+    birthday = unit->birthday.birthday | (unit->birthday.zodiac << 12);
     party->birthday_day = birthday;
     party->zodiac = birthday >> 8;
     main_util_copy_byte_data(&unit->secondary_skillset, &party->secondary_skillset, 0x10);

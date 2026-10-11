@@ -5,23 +5,23 @@
 /* Draws `value` right to left as `digits & 0xff` large glyphs at `pos`, with
  * the sign and marker glyphs selected by the flag bits of `digits`. Sibling of
  * battle_draw_menu_number_glyphs (0x8014ac30) on the 5-pixel font. */
-void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos) {
+void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource, glyph_blit_t* pos) {
     s32 i;
     s32 cursor;
-    RECT* src;
+    glyph_blit_t* src;
 
     src = &g_battle_text_large_number_glyph_rect;
     cursor = digits & 0xFF00;
     if (cursor == 0xC00 || cursor == 0xE00) {
-        g_battle_text_large_number_glyph_rect.y = 0x10;
+        g_battle_text_large_number_glyph_rect.rect.y = 0x10;
         if (digits & 1) {
-            src->x = 0xB4;
+            src->rect.x = 0xB4;
             blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, src, pos);
             pos->rect.x += 5;
         }
-        src->x = 0xBA;
+        src->rect.x = 0xBA;
         if (cursor == 0xE00) {
-            src->x = 0xD0;
+            src->rect.x = 0xD0;
         }
         for (i = 0; i < 3; i++) {
             blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, &g_battle_text_large_number_glyph_rect, pos);
@@ -30,7 +30,7 @@ void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource,
         return;
     }
     if (digits & 0x800) {
-        src->x = 0xBA;
+        src->rect.x = 0xBA;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, src, pos);
         pos->rect.x += 7;
     }
@@ -44,33 +44,33 @@ void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource,
         }
     }
     if (digits & 0x1000) {
-        src->x = 0xB4;
+        src->rect.x = 0xB4;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, &g_battle_text_large_number_glyph_rect, pos);
         pos->rect.x += 5;
     }
     if (digits & 0x8000) {
         pos->rect.x -= 2;
-        src->x = 0xB4;
+        src->rect.x = 0xB4;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, &g_battle_text_large_number_glyph_rect, pos);
         pos->rect.x += 7;
     }
     if (digits & 0x100) {
-        src->x = 0x78;
-        src->y = 0x1A;
-        src->h = 4;
+        src->rect.x = 0x78;
+        src->rect.y = 0x1A;
+        src->rect.h = 4;
         pos->rect.y += 3;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, &g_battle_text_large_number_glyph_rect, pos);
         pos->rect.x += 7;
         pos->rect.y -= 3;
-        src->y = 0x10;
-        src->h = 0xA;
+        src->rect.y = 0x10;
+        src->rect.h = 0xA;
     }
     pos->rect.x += ((digits & 0xFF) - 1) * 5;
     cursor = pos->rect.x + 5;
     for (i = 0; i < (digits & 0xFF); i++) {
-        src->x = (value % 10) * 6 + 0x78;
+        src->rect.x = (value % 10) * 6 + 0x78;
         if (g_battle_menu_hide_numeric_values != 0) {
-            src->x = 0xD0;
+            src->rect.x = 0xD0;
         }
         blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, &g_battle_text_large_number_glyph_rect, pos);
         value /= 10;
@@ -78,7 +78,7 @@ void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource,
     }
     pos->rect.x = cursor;
     if (digits & 0x2000) {
-        src->x = 0xC0;
+        src->rect.x = 0xC0;
         blit_text_glyph(g_battle_menu_glyph_image->pixels, resource, &g_battle_text_large_number_glyph_rect, pos);
         pos->rect.x += 5;
     }

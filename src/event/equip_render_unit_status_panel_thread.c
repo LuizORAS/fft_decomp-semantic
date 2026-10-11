@@ -51,7 +51,7 @@ void equip_render_unit_status_panel_thread(void) {
     s32 editor_offset_y;
     s32 editor_base_offset_y;
     s16 icon_index;
-    world_glyph_blit_t* text_position;
+    glyph_blit_t* text_position;
     battle_menu_status_panel_packet_t* panel;
     battle_menu_status_panel_editor_packet_t* editor;
     SPRT* name_sprite;
@@ -403,14 +403,14 @@ void equip_render_unit_status_panel_thread(void) {
             battle_clear_menu_render_buffer(number_image, 0x700);
             {
                 s32* stride;
-                world_glyph_blit_t* position;
+                glyph_blit_t* position;
                 stride = &g_menu_text_state.pen.stride;
                 *stride = 0x38;
                 if (g_equip_item_numeric_thread_enabled == 0) {
                     battle_menu_draw_numeric_display_entries(
-                        number_image, numeric_entries, (world_glyph_blit_t*)(stride - 2), 6);
+                        number_image, numeric_entries, (glyph_blit_t*)(stride - 2), 6);
                 } else {
-                    position = (world_glyph_blit_t*)(stride - 2);
+                    position = (glyph_blit_t*)(stride - 2);
                     equip_text_render_decimal_entry_list(number_image, &numeric_entries[10], position, 1);
                     equip_text_render_decimal_entry_list(number_image, &numeric_entries[12], position, 1);
                     battle_menu_draw_numeric_display_entries(number_image, &numeric_entries[11], position, 1);
@@ -420,7 +420,7 @@ void equip_render_unit_status_panel_thread(void) {
             }
             LoadImage(&rects[0], number_image);
             window_width = &g_menu_text_state.pen.stride;
-            text_position = (world_glyph_blit_t*)(window_width - 2);
+            text_position = (glyph_blit_t*)(window_width - 2);
             number_image_lower = number_image + 0x400;
             *window_width = 0x60;
             battle_menu_draw_numeric_display_entries(number_image_lower, &numeric_entries[6], text_position, 4);

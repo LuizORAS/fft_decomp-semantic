@@ -102,8 +102,8 @@ s32 battle_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_UNIT_AT_TILE) {
         unit = battle_unit_get_by_unit_id(id);
-        if (unit != (battle_stats_t*)-1 && unit->x == value && unit->position.bits.y == tile_y
-            && unit->position.bits.higher_elevation == elevation)
+        if (unit != (battle_stats_t*)-1 && unit->x == value && unit->position.y == tile_y
+            && unit->position.higher_elevation == elevation)
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     }
     if (type == EVENT_SCENARIO_CONDITION_PALETTE_UNIT_AT_TILE) {
@@ -112,8 +112,8 @@ s32 battle_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile
                 j = battle_unit_get_battle_index_by_misc_id(i);
                 if (j != -1) {
                     unit = battle_unit_get_stats_from_battle_id(j);
-                    if (unit->x == value && unit->position.bits.y == tile_y
-                        && unit->position.bits.higher_elevation == elevation && unit->sprite_palette == id)
+                    if (unit->x == value && unit->position.y == tile_y && unit->position.higher_elevation == elevation
+                        && unit->sprite_palette == id)
                         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
                 }
             }

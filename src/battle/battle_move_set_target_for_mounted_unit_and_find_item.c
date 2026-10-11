@@ -17,7 +17,7 @@ u32 battle_move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) 
 
     /* Synthesize CRYSTAL_OR_TREASURE when the filtered tile search returns a
      * non-negative unit ID. The explicit sign test keeps the target nor/srl. */
-    flags = (~battle_unit_find_at_tile(unit->x, unit->position.bits.y, unit->position.bits.higher_elevation,
+    flags = (~battle_unit_find_at_tile(unit->x, unit->position.y, unit->position.higher_elevation,
                  BATTLE_UNIT_TILE_FILTER_CRYSTAL | BATTLE_UNIT_TILE_FILTER_TREASURE)
                 >> 31)
         & 1;
@@ -39,7 +39,7 @@ u32 battle_move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) 
         }
     }
     find_item = target->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM;
-    tile = battle_map_set_item_trap_data(unit->x, unit->position.bits.y, unit->position.bits.higher_elevation);
+    tile = battle_map_set_item_trap_data(unit->x, unit->position.y, unit->position.higher_elevation);
     if (find_item && (tile->flags & BATTLE_MOVE_FIND_RESULT_ITEM)) {
         flags |= BATTLE_MOVE_POST_EVENT_ITEM_FOUND;
     } else if (tile->flags & BATTLE_MOVE_FIND_RESULT_TRAP) {

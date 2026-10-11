@@ -54,14 +54,14 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
             flags = unit_id | BATTLE_UNIT_HEIGHT_NON_CHOCOBO;
         x = unit->x;
         height.x = x;
-        y = unit->position.bits.y;
+        y = unit->position.y;
         height.y = y;
-        level = unit->position.bits.higher_elevation;
+        level = unit->position.higher_elevation;
         height.elevation = level;
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             candidate = &g_battle_unit_stats[i];
             if (i != unit_id && candidate->entd_slot != BATTLE_ENTD_SLOT_NONE && candidate->x == x
-                && candidate->position.bits.y == y && candidate->position.bits.higher_elevation == level) {
+                && candidate->position.y == y && candidate->position.higher_elevation == level) {
                 if (flags & BATTLE_UNIT_HEIGHT_NON_CHOCOBO)
                     unit = candidate;
                 offset = 2;

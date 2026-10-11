@@ -2,8 +2,7 @@
 #include "psx/types.h"
 
 /* Render signed gauge values with their positive, negative, or zero color. */
-void equip_text_render_signed_decimal_entries(
-    u8* pixels, menu_number_entry_t* entry, world_glyph_blit_t* out, s32 count) {
+void equip_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entry, glyph_blit_t* out, s32 count) {
     s32 i;
     s32 value;
 

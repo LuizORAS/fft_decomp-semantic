@@ -302,20 +302,20 @@ void battle_menu_display_hovered_unit_stats(
             battle_clear_menu_render_buffer(buffer, 0x700);
             inner_width = &g_menu_text_state.pen.stride;
             *inner_width = 0x28;
-            battle_menu_draw_numeric_display_entries(buffer, entries, (world_glyph_blit_t*)(inner_width - 2), 6);
+            battle_menu_draw_numeric_display_entries(buffer, entries, (glyph_blit_t*)(inner_width - 2), 6);
             LoadImage(&rects[0], (u32*)buffer);
             i = g_battle_menu_hide_numeric_values;
             *inner_width = 0x60;
             g_battle_menu_hide_numeric_values = 0;
             if (mode == UNIT_STATS_PANEL_HOVERED_UNIT || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
                 battle_menu_draw_numeric_display_entries(
-                    buffer + 0x400, entries + 6, (world_glyph_blit_t*)(inner_width - 2), 2);
+                    buffer + 0x400, entries + 6, (glyph_blit_t*)(inner_width - 2), 2);
                 g_battle_menu_hide_numeric_values = i;
                 battle_menu_draw_numeric_display_entries(
-                    buffer + 0x400, entries + 8, (world_glyph_blit_t*)(inner_width - 2), 2);
+                    buffer + 0x400, entries + 8, (glyph_blit_t*)(inner_width - 2), 2);
             } else if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
                 battle_menu_draw_numeric_display_entries(
-                    buffer + 0x400, entries + 6, (world_glyph_blit_t*)(inner_width - 2), 2);
+                    buffer + 0x400, entries + 6, (glyph_blit_t*)(inner_width - 2), 2);
                 g_battle_menu_hide_numeric_values = i;
             } else if (text_id != 0) {
                 battle_menu_set_text_origin(2, 0);

@@ -30,8 +30,8 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
     s32 i;
 
     x = unit->x;
-    y = unit->position.bits.y;
-    higher_elevation = unit->position.bits.higher_elevation;
+    y = unit->position.y;
+    higher_elevation = unit->position.higher_elevation;
     if (x >= g_battle_map_max_x) {
         return -1;
     }
@@ -60,8 +60,8 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
     }
     for (i = 0; i < unit_idx; i++) {
         other = &g_battle_unit_stats[i];
-        if (other->entd_slot != BATTLE_ENTD_SLOT_NONE && other->x == x && other->position.bits.y == y
-            && other->position.bits.higher_elevation == higher_elevation) {
+        if (other->entd_slot != BATTLE_ENTD_SLOT_NONE && other->x == x && other->position.y == y
+            && other->position.higher_elevation == higher_elevation) {
             return -1;
         }
     }
