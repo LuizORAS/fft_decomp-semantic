@@ -10,11 +10,11 @@ suzuki_music_t* main_sound_init_sfx_music(void) {
     s32 index;
     s32 count;
 
-    music = main_sound_alloc(sizeof(suzuki_music_t) + 8 * sizeof(suzuki_music_channel_t));
+    music = main_sound_alloc(sizeof(suzuki_music_t) + SUZUKI_SFX_CHANNEL_COUNT * sizeof(suzuki_music_channel_t));
     main_smd_init_sfx_music_header(music);
     channel = music->channels;
-    voice = 16;
-    count = 8;
+    voice = SUZUKI_SFX_VOICE_FIRST;
+    count = SUZUKI_SFX_CHANNEL_COUNT;
     index = 0;
     do {
         channel->flags = 0;

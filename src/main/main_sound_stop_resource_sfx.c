@@ -12,7 +12,7 @@ void main_sound_stop_resource_sfx(main_sound_resource_t* resource) {
 
     channel = g_main_sound_sfx_music->channels;
     id = resource->id;
-    for (i = 8; i != 0; i--) {
+    for (i = SUZUKI_SFX_CHANNEL_COUNT; i != 0; i--) {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
             sound_id = channel->sound_id;
             if ((sound_id >> 16) == id) {

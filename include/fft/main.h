@@ -1487,6 +1487,11 @@ void main_smd_set_flags_all_channels(u16 mask, suzuki_music_t* music);
  * SPU voices 16-23; the low byte of a start_sfx channel id is the first
  * channel and its high byte the steal priority
  * (MAIN_SOUND_SFX_CHANNEL_ID). */
+enum {
+    SUZUKI_SFX_CHANNEL_COUNT = 8,
+    SUZUKI_SFX_VOICE_FIRST = 16,
+};
+
 void main_sound_set_sfx_enabled(s32 enabled);
 void main_sound_play_sfx_in_channel(s32 sound_id, s32 channel);
 void main_sound_play_sfx_with_settings_find_channel(s32 sound_id, s32 volume, s32 balance);

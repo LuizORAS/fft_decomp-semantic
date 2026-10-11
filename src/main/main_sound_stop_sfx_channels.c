@@ -15,7 +15,7 @@ void main_sound_stop_sfx_channels(s32 sound_id) {
     channels = 0;
     music = g_main_sound_sfx_music;
     channel = music->channels;
-    for (i = 8; i != 0; i--) {
+    for (i = SUZUKI_SFX_CHANNEL_COUNT; i != 0; i--) {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
             if (channel->sound_id == sound_id) {
                 channels |= bit;

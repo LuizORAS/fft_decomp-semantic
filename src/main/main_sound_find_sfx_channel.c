@@ -28,7 +28,7 @@ s32 main_sound_find_sfx_channel(s32 sound_id, s32 voice_count) {
     voices = 0;
     channels = 0;
     mask = 1;
-    count = 8;
+    count = SUZUKI_SFX_CHANNEL_COUNT;
     channel = music->channels;
     do {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {

@@ -9,7 +9,7 @@ void main_smd_init_sfx_music_header(suzuki_music_t* music) {
     music->id = 0x7fff;
     music->_unknown_014 = 1;
     music->tick_divisor = 1;
-    music->channel_count = 8;
+    music->channel_count = SUZUKI_SFX_CHANNEL_COUNT;
     music->_unknown_017 = 0;
     music->waveset_id = 0;
     music->_unknown_01a = 0x7f;

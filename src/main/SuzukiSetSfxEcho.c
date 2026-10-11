@@ -12,7 +12,7 @@ void SuzukiSetSfxEcho(int sound_id, s16 volume) {
     suzuki_music_channel_t* channel;
     s32 count;
 
-    count = 8;
+    count = SUZUKI_SFX_CHANNEL_COUNT;
     music = g_main_sound_sfx_music;
     channel = music->channels;
     if (volume != 0) {
@@ -38,7 +38,7 @@ void SuzukiSetSfxEcho(int sound_id, s16 volume) {
         bit = 1;
         voices = 0;
         channels = 0;
-        remaining = 8;
+        remaining = SUZUKI_SFX_CHANNEL_COUNT;
         do {
             if (stop->flags & SUZUKI_CHANNEL_IN_USE) {
                 if (stop->sound_id == sound_id) {

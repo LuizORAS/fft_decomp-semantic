@@ -7,7 +7,7 @@ void main_sound_set_sfx_balance(s32 sound_id, s32 balance) {
     suzuki_music_channel_t* channel;
     s32 count;
 
-    count = 8;
+    count = SUZUKI_SFX_CHANNEL_COUNT;
     channel = g_main_sound_sfx_music->channels;
     do {
         if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
