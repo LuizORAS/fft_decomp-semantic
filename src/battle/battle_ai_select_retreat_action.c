@@ -14,11 +14,11 @@ s32 battle_ai_select_retreat_action(void) {
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the step that suspended. */
         switch (g_battle_ai_retreat_phase) {
-        case 0:
+        case BATTLE_AI_RETREAT_MOVEMENT:
             goto movement;
-        case 1:
+        case BATTLE_AI_RETREAT_SELF_ABILITIES:
             goto self_abilities;
-        case 2:
+        case BATTLE_AI_RETREAT_CHARGING:
             goto charging;
         default:
             goto other_abilities;
@@ -28,7 +28,7 @@ s32 battle_ai_select_retreat_action(void) {
         battle_ai_find_nearest_target(BATTLE_AI_NEAREST_HEALER_OR_CRYSTAL));
 movement:
     if (battle_ai_run_cowardly_movement() == -1) {
-        g_battle_ai_retreat_phase = 0;
+        g_battle_ai_retreat_phase = BATTLE_AI_RETREAT_MOVEMENT;
         return -1;
     }
     ai->movement_scenario = 1;
@@ -36,7 +36,7 @@ movement:
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, ai->acting_unit_id)) {
     self_abilities:
         if (battle_ai_choose_move_from_move_list() == -1) {
-            g_battle_ai_retreat_phase = 1;
+            g_battle_ai_retreat_phase = BATTLE_AI_RETREAT_SELF_ABILITIES;
             return -1;
         }
     }
@@ -46,7 +46,7 @@ charging:
     result = battle_ai_evaluate_charging_movement();
     switch (result) {
     case -1:
-        g_battle_ai_retreat_phase = 2;
+        g_battle_ai_retreat_phase = BATTLE_AI_RETREAT_CHARGING;
         return -1;
     case 1:
         return 0;
@@ -63,7 +63,7 @@ charging:
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 255)) {
     other_abilities:
         if (battle_ai_choose_move_from_move_list() == -1) {
-            g_battle_ai_retreat_phase = 3;
+            g_battle_ai_retreat_phase = BATTLE_AI_RETREAT_OTHER_ABILITIES;
             return -1;
         }
         if (battle_ai_select_ranked_action())

@@ -43,7 +43,7 @@ s32 battle_ai_evaluate_ability_outcome(void) {
             return 0;
         if (flags & BATTLE_AI_ABILITY_RANDOM_USE) {
             i = ai->random_use_threshold;
-            if (i < rand() % 128)
+            if (i < rand() % BATTLE_AI_ABILITY_SHARE_SCALE)
                 return 0;
         }
     }

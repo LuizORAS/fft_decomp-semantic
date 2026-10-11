@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/libetc.h"
 
+/* Unit-state utility at full HP/MP, unchanged equipment, or one average HP of Golem. */
+enum {
+    BATTLE_AI_HP_SCORE_SCALE = 128,
+    BATTLE_AI_MP_SCORE_SCALE = 64,
+    BATTLE_AI_EQUIPMENT_SCORE = 51,
+    BATTLE_AI_GOLEM_SCORE_SCALE = 128,
+};
+
 /*
  * Simulate the current action and intervening events, then score unit state.
  *
@@ -178,7 +186,7 @@ score_state:
                 continue;
             unit = &g_battle_unit_stats[unit_index];
             score = unit->hp;
-            score <<= 7;
+            score *= BATTLE_AI_HP_SCORE_SCALE;
             score /= unit->max_hp;
             status = 0;
             /* A pointer to unit_decisions adds an addiu and changes scheduling;
@@ -234,13 +242,13 @@ score_state:
                 for (equipment_slot = 0; equipment_slot < 7; equipment_slot++) {
                     if (unit->equipment[equipment_slot]
                         == g_battle_ai_unit_snapshots[ai->unit_compact_indices[unit_index]].equipment[equipment_slot])
-                        score += 51;
+                        score += BATTLE_AI_EQUIPMENT_SCORE;
                 }
             }
             if (unit->max_mp) {
                 weight_offset = unit->mp;
                 below_cost = weight_offset;
-                weight_offset <<= 6;
+                weight_offset *= BATTLE_AI_MP_SCORE_SCALE;
                 below_cost = below_cost < ai->unit_decisions[unit_index].lowest_mp_cost;
                 weight_offset /= unit->max_mp;
                 if (below_cost)
@@ -253,7 +261,7 @@ score_state:
 
                 weight_offset = g_battle_team_golem[(unit->team_flags >> 4) & 3];
                 golem = weight_offset;
-                weight_offset <<= 7;
+                weight_offset *= BATTLE_AI_GOLEM_SCORE_SCALE;
                 score += weight_offset / ai->present_unit_average_max_hp;
                 if (golem < ai->team_golem[(unit->team_flags >> 4) & 3])
                     score--;

@@ -3,8 +3,8 @@
 
 enum {
     BATTLE_AI_BASE_HIT_PERCENT = 100,
-    BATTLE_AI_TILE_ROW_BYTE_STRIDE = 32,
-    BATTLE_AI_TILE_LEVEL_BYTE_STRIDE = 576,
+    BATTLE_AI_TILE_ROW_BYTE_STRIDE = BATTLE_AI_GRID_COLUMN_COUNT * sizeof(s16),
+    BATTLE_AI_TILE_LEVEL_BYTE_STRIDE = BATTLE_AI_GRID_ROW_COUNT * BATTLE_AI_TILE_ROW_BYTE_STRIDE,
 };
 
 /* 0x5f4; kept as a separate integer term so the target's addu/addiu order
@@ -14,7 +14,8 @@ enum {
 /*
  * Copies the candidate tile's priority into the inverted-priority scratch
  * action with its sign flipped.  tile_priority is a
- * u16 grid of 16 columns x 18 rows per map level (32 / 576 bytes).
+ * grid of 16 columns x 18 signed halfwords per map level. The lookup reads
+ * the stored halfword bits before negating them.
  */
 void battle_ai_invert_target_priority(void) {
     battle_ai_data_t* ai;

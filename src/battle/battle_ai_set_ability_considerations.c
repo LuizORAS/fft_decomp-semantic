@@ -188,8 +188,8 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 if (total == 0) {
                     decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
                 } else {
-                    ratio = (unit_helpful << 7) / total;
-                    if (ratio >= 0x4d) {
+                    ratio = unit_helpful * BATTLE_AI_ABILITY_SHARE_SCALE / total;
+                    if (ratio >= BATTLE_AI_SUPPORT_SHARE_THRESHOLD) {
                         decision->targeting_flags_1 |= BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
                     } else {
                         decision->targeting_flags_1 &= ~BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT;
@@ -293,6 +293,6 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
     }
     decision->ally_ability_min_reach += g_battle_ai_data_base.acting_unit_move;
     if (usable != 0) {
-        ai->random_use_threshold = (random_use << 7) / usable;
+        ai->random_use_threshold = random_use * BATTLE_AI_ABILITY_SHARE_SCALE / usable;
     }
 }

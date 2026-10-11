@@ -10,22 +10,22 @@ s32 battle_ai_run_cowardly_movement(void) {
     if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
         state = g_battle_ai_cowardly_movement_step;
-        if (state == 0) {
-            goto step_a;
+        if (state == BATTLE_AI_COWARDLY_MOVEMENT_SCORE_TILES) {
+            goto score_tiles;
         }
-        if (state == 1) {
-            goto step_b;
+        if (state == BATTLE_AI_COWARDLY_MOVEMENT_TARGET_DISTANCE) {
+            goto fill_target_distance;
         }
     }
     g_battle_ai_data_base.movement_scenario = 0;
-step_a:
+score_tiles:
     if (battle_ai_score_reachable_tiles() == -1) {
-        g_battle_ai_cowardly_movement_step = 0;
+        g_battle_ai_cowardly_movement_step = BATTLE_AI_COWARDLY_MOVEMENT_SCORE_TILES;
         return -1;
     }
-step_b:
+fill_target_distance:
     if (battle_ai_fill_target_distance_grid(&ai->acting_unit_decision->target) == -1) {
-        g_battle_ai_cowardly_movement_step = 1;
+        g_battle_ai_cowardly_movement_step = BATTLE_AI_COWARDLY_MOVEMENT_TARGET_DISTANCE;
         return -1;
     }
     battle_ai_select_destination(0xff, BATTLE_AI_DESTINATION_PRIORITY_FIRST);

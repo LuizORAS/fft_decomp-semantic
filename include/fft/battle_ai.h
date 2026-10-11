@@ -24,6 +24,12 @@ enum {
     BATTLE_AI_SIMULATED_TURN_LIMIT = 256,
 };
 
+/* Shares of usable abilities are measured in 128ths. */
+enum {
+    BATTLE_AI_ABILITY_SHARE_SCALE = 128,
+    BATTLE_AI_SUPPORT_SHARE_THRESHOLD = 77,
+};
+
 typedef enum battle_ai_command_kind {
     BATTLE_AI_COMMAND_MOVE = 0,
     BATTLE_AI_COMMAND_ACT = 1,
@@ -110,6 +116,23 @@ typedef enum battle_ai_status_selection_stage {
     BATTLE_AI_STATUS_SELECTION_CHICKEN = 0,
     BATTLE_AI_STATUS_SELECTION_TARGET_DISTANCE = 1,
 } battle_ai_status_selection_stage_e;
+
+typedef enum battle_ai_retreat_stage {
+    BATTLE_AI_RETREAT_MOVEMENT = 0,
+    BATTLE_AI_RETREAT_SELF_ABILITIES = 1,
+    BATTLE_AI_RETREAT_CHARGING = 2,
+    BATTLE_AI_RETREAT_OTHER_ABILITIES = 3,
+} battle_ai_retreat_stage_e;
+
+typedef enum battle_ai_cowardly_movement_stage {
+    BATTLE_AI_COWARDLY_MOVEMENT_SCORE_TILES = 0,
+    BATTLE_AI_COWARDLY_MOVEMENT_TARGET_DISTANCE = 1,
+} battle_ai_cowardly_movement_stage_e;
+
+typedef enum battle_ai_cast_origin_stage {
+    BATTLE_AI_CAST_ORIGIN_ACT_BEFORE_MOVE = 0,
+    BATTLE_AI_CAST_ORIGIN_MOVE_BEFORE_ACT = 1,
+} battle_ai_cast_origin_stage_e;
 
 typedef enum battle_ai_simulation_phase {
     BATTLE_AI_SIMULATION_PREPARE_ACTION = 0,
@@ -547,7 +570,7 @@ typedef struct battle_ai_data {
     u8 main_ai_state;             /* 0x0ed4; battle_ai_command_build_stage_e */
     u8 autobattle_state;          /* 0x0ed5; battle_ai_autobattle_stage_e */
     u8 charging_state;            /* 0x0ed6; battle_ai_charging_stage_e */
-    u8 find_highest_target_state; /* 0x0ed7; check_if_map_allows_use_and_find_highest_target's progress variable */
+    u8 find_highest_target_state; /* 0x0ed7; battle_ai_cast_origin_stage_e */
     u8 reflected_origin_phase;    /* 0x0ed8; cleared at 0x8019ba40, set at 0x8019ba78 */
     u8 highest_priority_state;    /* 0x0ed9; battle_ai_origin_evaluation_stage_e */
     u8 max_possibilities;         /* 0x0eda; byte-truncated combination count, then scan x at 0x8019bf2c */
@@ -694,7 +717,7 @@ extern s32 g_battle_ai_propagation_resume_pass;
 extern u16 g_battle_ai_range_row_masks[];
 extern s32 g_battle_ai_self_target_origin_stage;
 extern battle_ai_command_t g_battle_ai_command_history[2]; /* 0x801a0d94, 0x801a0dac */
-extern s32 g_battle_ai_cowardly_movement_step;
+extern s32 g_battle_ai_cowardly_movement_step;             /* battle_ai_cowardly_movement_stage_e */
 
 /* One shared AI workspace at 0x8019f3c4, not a separate record per candidate.
  * Preserve resume-state writes before returning -1. */
@@ -708,7 +731,7 @@ extern s32 g_battle_ai_math_skillset_index;
 extern u8 g_battle_ai_recovery_status_ids[BATTLE_AI_RECOVERY_STATUS_COUNT];
 extern s32 g_battle_ai_recovery_status_index; /* 0x8019f380; status-list cursor preserved for resume */
 extern s32 g_battle_ai_recovery_status_retry; /* 0x8019f37c; skip status pass after one failed attempt */
-extern s32 g_battle_ai_retreat_phase;         /* 0x8019f390; retreat child resume stage */
+extern s32 g_battle_ai_retreat_phase;         /* 0x8019f390; battle_ai_retreat_stage_e */
 
 /* 0x8019f384–0x8019f38c; cancellation-search accounting survives suspension. */
 extern s32 g_battle_ai_status_candidate_count;

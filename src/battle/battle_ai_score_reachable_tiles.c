@@ -21,8 +21,8 @@ s32 battle_ai_score_reachable_tiles(void) {
             u32 level_address;
             u32 row_address;
             scenario_address += (u32)&ai->reachable_tiles - (u32)ai;
-            level_address = level * 36 + scenario_address;
-            row_address = y * 2 + level_address;
+            level_address = level * sizeof(ai->reachable_tiles[0][0]) + scenario_address;
+            row_address = y * sizeof(ai->reachable_tiles[0][0][0]) + level_address;
             row = *(u16*)row_address;
         }
         /* This tile was already set up before the interrupted evaluation. */
@@ -38,8 +38,8 @@ s32 battle_ai_score_reachable_tiles(void) {
                 u32 level_address;
                 u32 row_address;
                 scenario_address += (u32)&ai->reachable_tiles - (u32)ai;
-                level_address = level * 36 + scenario_address;
-                row_address = y * 2 + level_address;
+                level_address = level * sizeof(ai->reachable_tiles[0][0]) + scenario_address;
+                row_address = y * sizeof(ai->reachable_tiles[0][0][0]) + level_address;
                 row = *(u16*)row_address;
             }
             if (row != 0) {
@@ -55,12 +55,12 @@ s32 battle_ai_score_reachable_tiles(void) {
                             return -1;
                         }
                         {
-                            u32 level_address = level * 576 + (u32)ai;
+                            u32 level_address = level * sizeof(ai->tile_priority[0]) + (u32)ai;
                             u32 row_address;
                             u32 tile_address;
                             level_address += (u32)&ai->tile_priority - (u32)ai;
-                            row_address = y * 32 + level_address;
-                            tile_address = x * 2 + row_address;
+                            row_address = y * sizeof(ai->tile_priority[0][0]) + level_address;
+                            tile_address = x * sizeof(ai->tile_priority[0][0][0]) + row_address;
                             *(u16*)tile_address = -ai->current_action.rank.priority;
                         }
                     }
