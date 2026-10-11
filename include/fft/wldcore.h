@@ -556,12 +556,11 @@ s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out);
 s32 wldcore_location_process_entry(s32 from_location, s32 to_location);
 
 /* save */
-/* Provisional: the save-slot word list at g_wldcore_script_slot_table: section offsets into
- * the save-slot buffer, indexed from +0x04. */
-typedef struct wldcore_save_slot_table {
-    s32 _unused_00;
-    u32 offsets[1]; /* 0x04 */
-} wldcore_save_slot_table_t;
+/* Section byte offsets at the start of a loaded sound-novel script. */
+typedef struct wldcore_sound_novel_script_file {
+    u32 _unknown_00;
+    u32 offsets[1]; /* 0x04; section byte offsets in the loaded script file */
+} wldcore_sound_novel_script_file_t;
 
 extern s16 g_wldcore_saved_record_index;
 
@@ -630,7 +629,6 @@ typedef struct wldcore_script_state {
 } wldcore_script_state_t;
 typedef char wldcore_script_state_size_must_be_0x30[sizeof(wldcore_script_state_t) == 0x30 ? 1 : -1];
 
-extern wldcore_save_slot_table_t* g_wldcore_script_slot_table;
 extern u16* g_wldcore_default_script_base;
 extern u16* g_wldcore_script_base;
 extern void (*g_wldcore_script_opcode_table[])(void);

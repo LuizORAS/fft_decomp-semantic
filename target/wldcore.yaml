@@ -619,7 +619,6 @@ data:
   - {addr: 0x800d467c, name: g_wldcore_status_unit}
   - {addr: 0x800d483c, name: g_wldcore_random_battle_map_id}
   - {addr: 0x800d4840, name: g_wldcore_active_saved_record}
-  - {addr: 0x800d4840, name: g_wldcore_script_slot_table}
   - {addr: 0x800d4848, name: g_wldcore_opcode_state}
   - {addr: 0x800d484c, name: g_wldcore_state_flags}
   - {addr: 0x800d4852, name: g_wldcore_sound_novel_counter_delta}

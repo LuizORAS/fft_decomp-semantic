@@ -31,7 +31,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
         wldcore_reset_saved_record_fields(&g_wldcore_active_saved_record);
     }
     g_wldcore_active_saved_record.picture_render_index = render_record;
-    g_wldcore_active_saved_record.buffer = g_main_save_slot_buffer;
+    g_wldcore_active_saved_record.buffer = &g_main_save_slot_buffer;
     g_wldcore_active_saved_record.state_flags &= ~(WLDCORE_OPCODE_STATE_BRANCH | WLDCORE_OPCODE_STATE_FETCH);
     for (i = 0; i < 1; i++) {
         g_wldcore_sound_novel_local_flags[i] = 0;
@@ -99,8 +99,9 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     wldcore_wait_for_file_load();
     section = g_wldcore_active_saved_record.section;
     if (section != 0) {
+        /* The word view preserves register order; the named offset field swaps the index and base. */
         g_wldcore_active_saved_record.script_words
-            = (u32*)&g_main_save_slot_buffer[(((u32*)g_wldcore_active_saved_record.buffer)[section] >> 2) * 4];
+            = &((u32*)&g_main_save_slot_buffer)[((u32*)g_wldcore_active_saved_record.buffer)[section] >> 2];
         /* A struct-field store: as a scalar global the store would be
          * scheduled above the table load (GCC 2.7 alias rule). */
         g_wldcore_active_saved_record.word_index = 0;

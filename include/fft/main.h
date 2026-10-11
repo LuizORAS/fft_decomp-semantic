@@ -405,10 +405,11 @@ typedef char wldcore_proposition_progress_size_must_be_9[sizeof(wldcore_proposit
 /* Saved-data records at 0x80059594. The exact caller at 0x8008aba8 establishes
  * the 0x38 stride; 0x8008abe4 selectively resets these fields. Field meanings
  * beyond those stores remain provisional. */
+struct wldcore_sound_novel_script_file;
+
 typedef struct wldcore_saved_record {
-    /* 0x00: the slot's save-block buffer; MAIN's initializer at 0x80059594
-     * stores g_main_save_slot_buffer (0x800d0bbc) here for all five slots. */
-    u8* buffer;
+    /* 0x00: loaded sound-novel script, including its section-offset table. */
+    struct wldcore_sound_novel_script_file* buffer;
     u32* script_words; /* 0x04 */
     u32 instruction;   /* 0x08 */
     /* 0x0c-0x37 mirror the live sound-novel state at 0x800d484c. */
@@ -454,7 +455,7 @@ extern u32 g_main_proposition_last_attempt_date_bits[27];
 extern u32 g_main_treasure_acquisition_date_bits[14];
 extern u32 g_main_land_discovery_date_bits[5];
 extern u8 g_main_proposition_states[96]; /* wldcore_proposition_state_e */
-extern u8 g_main_save_slot_buffer[];
+extern struct wldcore_sound_novel_script_file g_main_save_slot_buffer;
 extern u32 g_main_saved_data_bits[40];
 extern wldcore_word_pair_t g_main_saved_list_cursor_state;
 extern wldcore_proposition_progress_t g_main_active_propositions[8];

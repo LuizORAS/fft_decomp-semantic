@@ -18,8 +18,7 @@
  * set. Returns zero when the script aborted, which is how the caller at
  * 0x8007c2d0 tests it; it also clears the yield flag on the way out.
  *
- * The record's first word holds the save-slot section table while a script
- * runs (g_wldcore_script_slot_table names the same word). */
+ * The record holds the loaded script's section-offset table. */
 s32 wldcore_script_run_until_yield(void) {
     s32 low;
     s32 high;
@@ -38,12 +37,11 @@ s32 wldcore_script_run_until_yield(void) {
             wldcore_set_bit_value(
                 g_main_saved_data_bits, (g_wldcore_saved_record_index << 8) + g_wldcore_active_saved_record.section, 1);
             g_wldcore_active_saved_record.state_flags &= ~WLDCORE_OPCODE_STATE_BRANCH;
-            offset = ((wldcore_save_slot_table_t*)g_wldcore_active_saved_record.buffer)
-                         ->offsets[g_wldcore_active_saved_record.section];
+            offset = g_wldcore_active_saved_record.buffer->offsets[g_wldcore_active_saved_record.section];
             g_wldcore_active_saved_record.section++;
             g_wldcore_active_saved_record.word_index = 0;
             g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
-            g_wldcore_active_saved_record.script_words = &((u32*)g_main_save_slot_buffer)[offset >> 2];
+            g_wldcore_active_saved_record.script_words = &((u32*)&g_main_save_slot_buffer)[offset >> 2];
             if (g_wldcore_saved_record_index < 5) {
                 memcpy(&g_main_saved_records[g_wldcore_saved_record_index], &g_wldcore_active_saved_record,
                     sizeof(wldcore_saved_record_t));
