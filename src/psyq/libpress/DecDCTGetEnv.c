@@ -8,23 +8,24 @@ DECDCTENV* DecDCTGetEnv(DECDCTENV* env) {
     u32* src;
     s32 i;
 
+    /* The cached tables are copied in aligned 32-bit units. */
     dst = (u32*)env->iq_y;
-    src = g_psyq_press_luma_quant_table;
-    i = sizeof(g_psyq_press_luma_quant_table) / sizeof(u32) - 1;
+    src = (u32*)g_psyq_press_quant_table.iq_y;
+    i = sizeof(g_psyq_press_quant_table.iq_y) / sizeof(u32) - 1;
     do {
         *dst++ = *src++;
     } while (--i != -1);
 
     dst = (u32*)env->iq_c;
-    src = g_psyq_press_chroma_quant_table;
-    i = sizeof(g_psyq_press_chroma_quant_table) / sizeof(u32) - 1;
+    src = (u32*)g_psyq_press_quant_table.iq_c;
+    i = sizeof(g_psyq_press_quant_table.iq_c) / sizeof(u32) - 1;
     do {
         *dst++ = *src++;
     } while (--i != -1);
 
     dst = (u32*)env->dct;
-    src = g_psyq_press_scale_table;
-    i = sizeof(g_psyq_press_scale_table) / sizeof(u32) - 1;
+    src = (u32*)g_psyq_press_scale_table.dct;
+    i = sizeof(g_psyq_press_scale_table.dct) / sizeof(u32) - 1;
     do {
         *dst++ = *src++;
     } while (--i != -1);

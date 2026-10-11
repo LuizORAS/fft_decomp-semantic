@@ -189,11 +189,8 @@ data:
   - {addr: 0x80074034, name: g_open_opcode_handlers}
   - {addr: 0x80074074, name: g_open_card_slot}
   - {addr: 0x80074075, name: g_open_card_info_pending}
-  - {addr: 0x80074078, name: g_psyq_press_quant_table_command}
-  - {addr: 0x8007407c, name: g_psyq_press_luma_quant_table}
-  - {addr: 0x800740bc, name: g_psyq_press_chroma_quant_table}
-  - {addr: 0x800740fc, name: g_psyq_press_scale_table_command}
-  - {addr: 0x80074100, name: g_psyq_press_scale_table}
+  - {addr: 0x80074078, name: g_psyq_press_quant_table}
+  - {addr: 0x800740fc, name: g_psyq_press_scale_table}
   - {addr: 0x80074180, name: g_psyq_press_dma_in_madr}
   - {addr: 0x80074184, name: g_psyq_press_dma_in_bcr}
   - {addr: 0x80074188, name: g_psyq_press_dma_in_chcr}

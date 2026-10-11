@@ -78,13 +78,23 @@ extern const psyq_press_dc_entry_t g_psyq_press_dc_chroma_table[];
 extern const psyq_press_ac_entry_t g_psyq_press_ac_primary_table[];
 extern const u32 g_psyq_press_ac_secondary_table[];
 
-/* The quantisation and IDCT tables DecDCTGetEnv and DecDCTPutEnv copy, each
- * behind the 32-bit MDEC command that uploads it. */
-extern u32 g_psyq_press_quant_table_command[];
-extern u32 g_psyq_press_luma_quant_table[16];
-extern u32 g_psyq_press_chroma_quant_table[16];
-extern u32 g_psyq_press_scale_table_command[];
-extern u32 g_psyq_press_scale_table[32];
+/* Each cached table packet begins with the command that uploads it. */
+typedef struct {
+    u32 command;
+    u8 iq_y[64];
+    u8 iq_c[64];
+} psyq_press_quant_table_packet_t;
+
+typedef struct {
+    u32 command;
+    s16 dct[64];
+} psyq_press_scale_table_packet_t;
+
+typedef char assert_press_quant_table_packet_size[sizeof(psyq_press_quant_table_packet_t) == 132 ? 1 : -1];
+typedef char assert_press_scale_table_packet_size[sizeof(psyq_press_scale_table_packet_t) == 132 ? 1 : -1];
+
+extern psyq_press_quant_table_packet_t g_psyq_press_quant_table;
+extern psyq_press_scale_table_packet_t g_psyq_press_scale_table;
 
 /* Hardware register addresses: MDEC command and status, the MDEC-in and
  * MDEC-out DMA channels and the DMA control register. */
