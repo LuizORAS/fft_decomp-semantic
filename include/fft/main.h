@@ -1747,11 +1747,10 @@ typedef enum main_status_change {
 extern status_infliction_data_t g_main_status_infliction_data[];
 extern const status_effect_data_t g_main_status_effect_data[BATTLE_STATUS_COUNT];
 
-/* Byte-stride alias of g_main_status_effect_data[0].flags_1. The target uses
- * this address directly while walking the 0x10-byte records. */
+/* Built status masks, indexed by main_status_check_set_e. */
 extern u8 g_main_status_check_sets[MAIN_STATUS_CHECK_SET_COUNT][BATTLE_STATUS_BYTE_COUNT];
 void main_status_init_check_data(void);
-void main_status_change_unit(battle_stats_t* unit, s32 status_set, u8 status_flag, s32 change_type);
+void main_status_change_unit(battle_stats_t* unit, s32 status_byte_index, u8 status_flag, s32 change_type);
 void main_status_init_ct(battle_stats_t* unit);
 void main_status_init_unit(battle_stats_t* unit);
 void main_status_set_action_state(battle_stats_t* unit, u8 action_state);
