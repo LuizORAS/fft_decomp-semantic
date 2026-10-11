@@ -12,16 +12,13 @@ battle_ai_direction_e battle_ai_find_direction_of_target(
     s8 origin_y = origin->bytes.y;
     s32 diagonal_y_minus_x = ((target_y - target_x) + origin_x) - origin_y;
     s32 diagonal_y_plus_x = ((target_y + target_x) - origin_x) - origin_y;
-    s32 unused;
 
     if (diagonal_y_minus_x <= 0) {
         if (diagonal_y_plus_x < 0)
             return BATTLE_AI_DIRECTION_SOUTH;
-        unused = 0;
     } else {
         if (diagonal_y_plus_x <= 0)
             return BATTLE_AI_DIRECTION_WEST;
-        unused = 1;
     }
     if (diagonal_y_minus_x >= 0 && diagonal_y_plus_x > 0)
         return BATTLE_AI_DIRECTION_NORTH;

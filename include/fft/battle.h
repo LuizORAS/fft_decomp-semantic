@@ -2115,10 +2115,8 @@ typedef struct battle_unit_misc_data {
     SVECTOR screen_offset; /* 0x058 */
     SVECTOR event_offset;  /* 0x060; accumulated by the event SpriteMove instructions */
     u8 _unused_068[4];
-    /* Camera-relative facing, ((camera yaw + facing) & 0xfff) / 1024 and / 256,
-     * stored at 0x80085c0c; copied from mount to rider at 0x80069174/0x80069180;
-     * read as signed halfwords by battle_get_alternate_facing_quadrant_* (% 4) and
-     * battle_unit_get_facing_field_0x6e_nibble_by_misc_id (% 0x10). */
+    /* Camera-relative facing, ((camera yaw + facing) & 0xfff) / 1024 and / 256.
+     * Initialized to -1 and copied from mount to rider. */
     s16 camera_facing_quadrant;   /* 0x06c */
     s16 camera_facing_sixteenth;  /* 0x06e */
     s16 facing;                   /* 0x070 */
