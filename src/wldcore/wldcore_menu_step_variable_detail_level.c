@@ -22,7 +22,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
     s32 depth;
     s32 value;
     s32 page_x;
-    urect16_t* bounds;
+    RECT* bounds;
     CVECTOR* color;
     point32_t* base;
 
@@ -70,7 +70,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
             /* The rectangle at +0x28 and the colour triple at +0x30 are written
              * through their own addresses; the rectangle and the base point are
              * then copied as blocks into the text window's extra-record fields. */
-            bounds = (urect16_t*)&g_wldcore_window_render_records[render_index].bounds;
+            bounds = &g_wldcore_window_render_records[render_index].bounds;
             bounds->x = portrait.u0;
             bounds->y = portrait.v0;
             bounds->w = portrait.u1 - portrait.u0;
