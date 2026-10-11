@@ -89,7 +89,7 @@ void main_smd_init_channels(suzuki_music_t* music) {
                 channel->note_data_start = note_data;
                 channel->note_data = note_data;
                 if (slot < 25) {
-                    channel->voice_attr.voice = 1 << voice;
+                    channel->voice_attr.voice = SPU_VOICECH(voice);
                     channel->voice_attr.mask = SPU_VOICE_VOLL | SPU_VOICE_VOLR | SPU_VOICE_VOLMODEL | SPU_VOICE_VOLMODER
                         | SPU_VOICE_PITCH | SPU_VOICE_WDSA | SPU_VOICE_ADSR_AMODE | SPU_VOICE_ADSR_SMODE
                         | SPU_VOICE_ADSR_RMODE | SPU_VOICE_ADSR_AR | SPU_VOICE_ADSR_DR | SPU_VOICE_ADSR_SR

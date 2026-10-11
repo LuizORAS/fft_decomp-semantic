@@ -10,7 +10,7 @@ u8* main_smd_set_voice(u8* note_data, suzuki_music_t* music, suzuki_music_channe
     voice = *note_data++;
     channel->voice = voice;
     if (voice < 25) {
-        channel->voice_attr.voice = 1 << channel->voice;
+        channel->voice_attr.voice = SPU_VOICECH(channel->voice);
         channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_ALL;
     } else {
         channel->voice_attr.voice = 0;

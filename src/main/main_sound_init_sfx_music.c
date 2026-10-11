@@ -20,7 +20,7 @@ suzuki_music_t* main_sound_init_sfx_music(void) {
         channel->flags = 0;
         channel->channel_number = index++;
         channel->voice = voice;
-        channel->voice_attr.voice = 1 << voice;
+        channel->voice_attr.voice = SPU_VOICECH(voice);
         channel++;
         voice++;
     } while (--count != 0);
