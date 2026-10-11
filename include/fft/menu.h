@@ -657,7 +657,7 @@ typedef struct world_menu_entry {
     point16_t vram_origin; /* 0x00: text-image VRAM origin passed to the draw-mode helpers */
     s16 inner_width;       /* 0x04: text-image width; RECT.w = inner_width >> 2 (4bpp) */
     s16 inner_height;      /* 0x06: text-image height (world_menu_size_entry_to_text) */
-    u16 window_x;          /* 0x08: screen x; shifted left as the width grows */
+    s16 window_x;          /* 0x08: screen x; shifted left as the width grows */
     s16 window_y;          /* 0x0a: screen y; (7 - visible rows) * 8 - 0x48 in world_menu_build_available_item_list */
     s16 window_width;      /* 0x0c: window width; scroll arrows at window_x + window_width - 0xf */
     s16 window_height;     /* 0x0e: window height; child windows open at window_y + window_height */
@@ -681,7 +681,7 @@ typedef struct world_menu_entry {
      * world_menu_number_range_t and the icon threads the s16 redraw flag they
      * poll (set to 1 to rebuild the text image). */
     void* context;
-    s16* value;            /* 0x34: result cell (g_world_menu_selected_option); the number-entry threads edit it */
+    void* value;           /* 0x34: thread-specific value data: s16 result cell or main-window s32 substitution pair */
     s16 selected_index;    /* 0x38: selected row; indexes the binding's halfword table
                               (world_menu_announce_entry_value_thread) */
     s16 select_text_table; /* 0x3a: "Index for select text": row of g_world_menu_entry_text_id_tables
@@ -690,6 +690,11 @@ typedef struct world_menu_entry {
                               scroll row offset here instead. */
 } world_menu_entry_t;
 typedef char world_menu_entry_size_must_be_0x3c[(sizeof(world_menu_entry_t) == 0x3c) ? 1 : -1];
+
+/* Numeric-entry and action-selection threads use value as a halfword result cell. */
+static inline s16* world_menu_entry_result(world_menu_entry_t* entry) {
+    return entry->value;
+}
 
 /* world_menu_text_layout_t.mode[]: what a column of the layout draws. */
 typedef enum menu_text_column_mode {

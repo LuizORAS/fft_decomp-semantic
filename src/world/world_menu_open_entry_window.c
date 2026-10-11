@@ -17,14 +17,13 @@ void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y) {
         g_world_menu_thread_menu_data = g_world_menu_default_entries;
         entry->window_x = initial_x;
         entry->window_y = initial_y;
-        x = (s16)entry->window_x;
+        x = entry->window_x;
         g_world_menu_open_entry_index = index;
         width = entry->window_width;
         if (x + width >= 0x81) {
             entry->window_x = 0x78 - entry->window_width;
         } else if (x < -0x80) {
-            /* Unsigned storage chooses ori 0xff88; retail stores the signed -0x78. */
-            *(s16*)&entry->window_x = -0x78;
+            entry->window_x = -0x78;
         }
         height = entry->window_height;
         y = entry->window_y;

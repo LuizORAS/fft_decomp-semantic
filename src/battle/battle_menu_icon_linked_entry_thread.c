@@ -26,8 +26,9 @@ void battle_menu_icon_linked_entry_thread(void) {
     battle_copy_bytes(&records[1], &records[0], 0x7C);
     parent = param->row_actions[0];
     if (parent >= 0) {
+        /* Unsigned narrowing keeps the retail halfword centering expression. */
         g_battle_menu_thread_menu_data[parent].window_x
-            = (width >> 1) - (g_battle_menu_thread_menu_data[parent].inner_width - 0x102);
+            = (u16)((width >> 1) - (g_battle_menu_thread_menu_data[parent].inner_width - 0x102));
         g_battle_menu_thread_menu_data[parent].window_y = param->window_y + param->window_height;
         battle_thread_start(g_battle_current_thread_id - 1, g_battle_menu_thread_menu_data[parent].thread_entry);
         battle_thread_set_parameters(

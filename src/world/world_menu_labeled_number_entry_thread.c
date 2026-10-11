@@ -37,7 +37,7 @@ void world_menu_labeled_number_entry_thread(void) {
     param = *(world_menu_entry_t**)thread;
     range = param->context;
     digits = world_text_count_decimal_digits(range->max);
-    original = *param->value;
+    original = *world_menu_entry_result(param);
     value = original;
     if (value < range->min || range->max < value) {
         value = range->min;
@@ -83,7 +83,7 @@ void world_menu_labeled_number_entry_thread(void) {
     redraw = 1;
     for (i = 0;; i++) {
         if (g_world_formation_screen_active != 0) {
-            *param->value = value;
+            *world_menu_entry_result(param) = value;
         }
         world_thread_wait_frames(1);
         if (redraw == 1) {
@@ -97,10 +97,10 @@ void world_menu_labeled_number_entry_thread(void) {
         world_menu_cancel_thread_group(param);
         world_menu_handle_entry_confirm(param, 0);
         if (input != *g_world_menu_list_controller_input) {
-            if (*param->value == -1) {
-                *param->value = original;
+            if (*world_menu_entry_result(param) == -1) {
+                *world_menu_entry_result(param) = original;
             } else {
-                *param->value = value;
+                *world_menu_entry_result(param) = value;
                 {
                     world_menu_number_range_t* current_range = param->context;
 

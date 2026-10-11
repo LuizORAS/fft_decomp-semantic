@@ -1989,16 +1989,6 @@ typedef struct world_menu_description_record {
     u8 description_text[1]; /* 0x38: rendered menu description text */
 } world_menu_description_record_t;
 
-/* Provisional record read by world_menu_build_layout_sprites: an x/y origin at +0x08
- * and a layout mode halfword at +0x2c (1 or 2). Other fields are unknown. */
-typedef struct world_menu_sprite_layout {
-    u8 _unused_00[8];
-    u16 x; /* 0x08 */
-    u16 y; /* 0x0a */
-    u8 _unused_0c[0x2c - 0x0c];
-    s16 mode; /* 0x2c */
-} world_menu_sprite_layout_t;
-
 /* Partial image view used by 0x801061e0. Upload rectangles determine the
  * second page's size; it begins at byte +0x8000 in both resource layouts. */
 typedef struct world_menu_image_pages {
@@ -2426,7 +2416,7 @@ u8* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* 
 void world_gfx_enqueue_line_f2(RECT* rect, rgb24_t* rgb, u8 semi_trans, s32 priority);
 void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_menu_icon_record_t* buffer);
 void world_menu_submit_icon_primitives(world_menu_icon_sprites_t* prims);
-void world_menu_build_layout_sprites(world_menu_sprite_layout_t* layout, SPRT* sprite, s32 unused_2);
+void world_menu_build_layout_sprites(world_menu_entry_t* entry, SPRT* sprite, s32 unused_2);
 void world_menu_init_numeric_display_frame_primitives(RECT* rect, world_menu_palette_primitives_t* menu);
 s32 world_menu_build_quad_pieces(s32 group, POLY_GT4* poly);
 void world_menu_build_skillset_entries(void);

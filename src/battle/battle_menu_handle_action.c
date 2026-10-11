@@ -76,7 +76,7 @@ void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option) {
         }
     }
     g_battle_script_event_input = 0;
-    *entry->value = selected_option;
+    *world_menu_entry_result(entry) = selected_option;
     if (g_battle_sound_suppressed == 0 && silent == 0) {
         battle_sound_set_effect_to_confirm();
     }

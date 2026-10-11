@@ -66,7 +66,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
             }
         }
         g_world_menu_new_button_input = 0;
-        *entry->value = row_index;
+        *world_menu_entry_result(entry) = row_index;
         if (g_world_menu_sound_muted == 0 && silent == 0) {
             world_sound_set_effect_to_confirm();
         }

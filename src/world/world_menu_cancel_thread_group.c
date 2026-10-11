@@ -34,7 +34,7 @@ void world_menu_cancel_thread_group(world_menu_entry_t* context) {
         }
     }
     g_world_menu_new_button_input = 0;
-    *context->value = -1;
+    *world_menu_entry_result(context) = -1;
     world_sound_set_effect_to_cancel();
     g_world_thread_change_cooldown = 5;
 }
