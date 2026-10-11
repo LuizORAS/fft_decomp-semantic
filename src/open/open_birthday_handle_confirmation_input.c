@@ -30,8 +30,8 @@ void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
     if (buttons & PSX_PAD_CIRCLE) {
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
         if (menu->selected_option == 0) {
-            month = g_open_controller_birthdays[g_open_current_controller_index - 2].month;
-            day = g_open_controller_birthdays[g_open_current_controller_index - 2].day;
+            month = g_open_controller_records_next[g_open_current_controller_index - 2].birthday_date.month;
+            day = g_open_controller_records_next[g_open_current_controller_index - 2].birthday_date.day;
             world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, month);
             world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
             value = open_birthday_month_day_to_day_of_year(month, day);

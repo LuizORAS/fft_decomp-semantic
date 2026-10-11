@@ -220,7 +220,6 @@ data:
   - {addr: 0x80085324, name: g_open_title_menu_states}
   - {addr: 0x80085328, name: g_open_controller_stream_length}
   - {addr: 0x80085340, name: g_open_controller_selected_options}
-  - {addr: 0x80085344, name: g_open_controller_birthdays}
   - {addr: 0x800854b4, name: g_open_gfx_image_copy_row_flags}
   - {addr: 0x800854b5, name: g_open_gfx_image_copy_progress}
   - {addr: 0x8008556c, name: g_open_gfx_image_copy_source_buffer}

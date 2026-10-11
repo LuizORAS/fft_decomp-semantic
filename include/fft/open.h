@@ -58,14 +58,6 @@ typedef enum open_controller_handler {
 } open_controller_handler_e;
 
 /* input */
-/* Field-base view used to read birthday values from 100-byte controller records. */
-typedef struct open_controller_birthday {
-    s32 month;
-    s32 day;
-    u8 _unused_08[0x64 - 8];
-} open_controller_birthday_t;
-
-extern open_controller_birthday_t g_open_controller_birthdays[];
 extern s32 g_open_controller_handler_indices[]; /* open_controller_handler_e */
 extern u32 g_open_input_current_buttons;
 extern s32 g_open_input_left_repeat_counter;
