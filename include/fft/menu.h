@@ -1263,6 +1263,16 @@ typedef enum menu_number_value_flags {
     MENU_NUMBER_VALUE_DASHES = 0x20000000,   /* a row of dashes instead of the digits */
     MENU_NUMBER_VALUE_DISABLED = 0x40000000, /* drawn with the disabled number clut */
 } menu_number_value_flags_e;
+/* Destination rectangle and source cell for a decimal digit. */
+typedef struct menu_digit_glyph {
+    RECT rect;
+    s16 u;
+    s16 v;
+    s16 w;
+    u16 h;
+} menu_digit_glyph_t;
+typedef char menu_digit_glyph_size_must_be_0x10[sizeof(menu_digit_glyph_t) == 0x10 ? 1 : -1];
+
 /* Ten-byte menu-script "draw number" command: an
  * opcode/length prefix followed by the value getter (a row-callback index),
  * layout and byte position operands. world_menu_script_draw_formatted_number

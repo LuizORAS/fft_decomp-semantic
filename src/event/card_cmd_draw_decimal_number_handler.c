@@ -2,22 +2,11 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* Destination rectangle followed by the source glyph cell. The frame also
- * holds the eight bytes where EQUIP's twin keeps its minus-sign rectangle;
- * CARD never touches them. */
-typedef struct card_number_glyph {
-    RECT rect;
-    s16 u;
-    s16 v;
-    s16 w;
-    u16 h;
-    RECT _unused_10;
-} card_number_glyph_t;
-
 /* Draw the literal value as zero-padded digits at the requested position. */
 menu_draw_number_command_t* card_cmd_draw_decimal_number_handler(menu_draw_number_command_t* command) {
     s8 text[16];
-    card_number_glyph_t glyph;
+    menu_digit_glyph_t glyph;
+    RECT unused_minus_rect; /* Preserves the original frame size. */
     s32 y;
     s16 pad;
     s32 pos;

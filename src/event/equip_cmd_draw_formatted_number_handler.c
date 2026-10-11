@@ -2,33 +2,16 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* Destination rect, source glyph cell and minus-sign rect. The target keeps
- * the cell fields in the frame and reloads them inside the digit loop, so they
- * form one address-taken aggregate. */
-typedef struct equip_number_glyph {
-    RECT rect;
-    s16 u;
-    s16 v;
-    s16 w;
-    u16 h;
-    RECT minus_rect;
-} equip_number_glyph_t;
-
-/* Render command that draws the decimal value returned by one of the list-row
- * callbacks as a row of digit tiles.
- *
- * Twin of JOBSTTS jobstts_cmd_draw_formatted_number_handler, extended with a
- * leading minus sign and three glyph styles (data->number.style); style 2 uses the
- * two-row digit strip with its own CLUT. `negative` is s16: the target copies
- * the promoted halfword into a scratch register before each test. Clearing it
- * after the sign quad's call (not before) reproduces the target schedule. */
+/* Draw the getter's signed decimal value or dashes in the requested digit style. */
 menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* data) {
     s8 text[16];
-    equip_number_glyph_t glyph;
+    menu_digit_glyph_t glyph;
+    RECT minus_rect;
     equip_row_callback_t callback;
     s32 arg;
     s32 y;
     s32 value;
+    /* Clear this halfword after drawing the sign to retain the store schedule. */
     s16 negative;
     s32 cell;
     s32 dash_x;
@@ -107,11 +90,11 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
         glyph.rect.h = glyph.h;
         glyph.rect.x = cell_x;
         if (negative != 0) {
-            glyph.minus_rect.x = cell_x - 6;
-            glyph.minus_rect.y = y + 2;
-            glyph.minus_rect.w = 6;
-            glyph.minus_rect.h = 0xB;
-            equip_gfx_enqueue_textured_quad(&glyph.minus_rect, 0xBA, 0x10, 0, g_equip_gfx_semitransparency,
+            minus_rect.x = cell_x - 6;
+            minus_rect.y = y + 2;
+            minus_rect.w = 6;
+            minus_rect.h = 0xB;
+            equip_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, 0, g_equip_gfx_semitransparency,
                 g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
             negative = 0;
         } else {
