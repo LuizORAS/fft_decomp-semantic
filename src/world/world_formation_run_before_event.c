@@ -1,13 +1,11 @@
 #include "fft/world.h"
 
-/*
- * Restore formation-menu resources and settings when WLDCORE requests exit.
- *
- * GPU work finishes before resources change. `EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT`
- * becomes `EVENT_SCRIPT_VAR_CURRENT_EVENT`, then the pending exit and auxiliary
- * flag are cleared.
- */
-void world_formation_restore_menu_after_core_exit(void) {
+/* Run the formation screen an event asked for. When EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT
+ * is set, WLDCORE's exit (wldcore_handle_exit_request) calls this instead of leaving: it unloads the
+ * scenario music, clears the screen, reloads the menu text with the face images and the input timing
+ * of the game options, runs world_formation_run_screen, then makes the stored event current
+ * (EVENT_SCRIPT_VAR_CURRENT_EVENT) and clears that variable and EVENT_SCRIPT_VAR_NEXT_SCENARIO. */
+void world_formation_run_before_event(void) {
     s32 profile;
 
     main_sound_unload_scenario_music_and_tunes();
@@ -17,7 +15,7 @@ void world_formation_restore_menu_after_core_exit(void) {
     world_menu_load_text_1bd8_with_face();
     DrawSync(0);
     VSync(0);
-    world_formation_reset_menu_context();
+    world_menu_reset_context();
     DrawSync(0);
     VSync(0);
     profile = g_main_game_options.fields.finger_cursor_repeat_speed;
@@ -29,7 +27,7 @@ void world_formation_restore_menu_after_core_exit(void) {
     g_main_menu_scroll_fast_step = g_world_input_timing_profiles[profile].scroll_fast_step;
     world_menu_set_brightness(0x80, 0x80, 0x80);
     world_formation_run_screen(0, 0);
-    world_formation_reset_menu_context();
+    world_menu_reset_context();
     ClearImage(&g_world_screen_clear_rect, 0, 0, 0);
     DrawSync(0);
     world_script_set_variable(

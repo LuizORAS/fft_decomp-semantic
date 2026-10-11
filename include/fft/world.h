@@ -278,7 +278,7 @@ void world_name_update_entry_cursor(void);
 
 /* map */
 /* State of a screen request raised from the world map menu (the
- * g_world_*_request_state globals stepped by world_formation_run_menu_frame):
+ * g_world_*_request_state globals stepped by world_menu_run_frame):
  * fade out, run the screen, fade back in. States 4 to 7 only count frames. */
 typedef enum world_screen_request_state {
     WORLD_SCREEN_REQUEST_IDLE = 0,
@@ -297,8 +297,8 @@ extern u16 g_world_map_refresh_pending;
 extern RECT g_world_tile_info_image_location;
 extern world_gfx_image_load_parameters_t g_world_tile_info_image_params[2];
 extern u16 g_world_map_darkness_wait_frames[];
-extern s16 g_world_map_root_request_state; /* world_screen_request_state_e */
-extern s32 g_world_map_light_scale[4];     /* current light scale (VECTOR) */
+extern s16 g_world_brave_story_request_state; /* world_screen_request_state_e */
+extern s32 g_world_map_light_scale[4];        /* current light scale (VECTOR) */
 extern MATRIX g_world_map_light_base_matrix;
 extern s16 g_world_map_light_rotation[4]; /* current light rotation (SVECTOR) */
 extern MATRIX g_world_map_light_color_matrix;
@@ -514,6 +514,13 @@ extern RECT g_world_gfx_fade_tile_rect;
  * member access changes how the target addresses them. */
 extern s32 g_world_script_tutorial_message_files[7 * 2];
 extern s32 g_world_script_tutorial_script_files[7 * 2];
+
+/* The sprites world_gfx_build_zodiac_primitives draws: texture page, frames, 12-bit fixed
+ * offsets and count. */
+extern world_image_location_t g_world_gfx_zodiac_texture_page;
+extern main_zodiac_sprite_frame_t g_world_gfx_zodiac_sprite_frames[];
+extern point16_t g_world_gfx_zodiac_sprite_offsets[];
+extern u8 g_world_gfx_zodiac_sprite_count;
 
 extern s32 g_world_gfx_free_rect_texels[4];
 extern s32 g_world_gfx_free_rect_grid_cells[4];
@@ -1181,17 +1188,9 @@ typedef enum world_formation_unit_lock {
 extern world_oriented_quad_t g_world_formation_cursor_shadow_sprite;
 extern world_oriented_quad_t g_world_formation_cursor_sprite;
 extern s32 g_world_formation_current_menu; /* world_formation_menu_e */
-extern s32 g_world_formation_display_mode;
 extern point16_t g_world_formation_cursor_position;
 extern u8 g_world_formation_generic_human_graphic_index_table[];
 extern world_formation_graphic_entry_t g_world_formation_graphic_entries[];
-extern world_menu_input_state_t g_world_formation_menu_input_state;
-
-/* First-word alias retained for the target's separate absolute store. */
-extern s32 g_world_formation_menu_new_buttons;
-extern void* g_world_formation_ordering_table;
-/* g_main_system_flags as saved by world_formation_save_and_set_system_flags (main_system_flags_e). */
-extern u32 g_world_formation_saved_system_flags;
 
 /* Set while the selected unit is in the upper rows of the grid: the unit banner
  * then sits at the bottom of the screen and the stat bar at the top (BUNIT's
@@ -1212,15 +1211,8 @@ extern u8 g_world_formation_unit_browse_enabled;
  * the zodiac date limits at 0x8018de84). Read by world_unit_update_monster_breeding. */
 extern const u8 g_world_month_lengths[WORLD_MONTH_LENGTH_TABLE_COUNT];
 extern const world_zodiac_date_limit_t g_world_zodiac_date_limits[WORLD_ZODIAC_DATE_LIMIT_COUNT];
-extern s32 g_world_formation_screen_active;
 extern s16 g_world_formation_open_request_state; /* world_screen_request_state_e */
-extern world_image_location_t g_world_formation_view_texture_page;
-extern u32 g_world_formation_menu_allowed_buttons; /* pad mask applied to the new presses of each menu frame */
 extern s32 g_world_formation_name_string_revision;
-extern main_zodiac_sprite_frame_t g_world_formation_view_graphic_rects[];
-extern point16_t g_world_formation_view_graphic_offsets[]; /* per-entry 12-bit fixed offsets */
-extern u8 g_world_formation_view_graphic_count;            /* formation graphic entry count */
-extern zodiac_draw_context_t g_world_formation_view;
 
 /* Portrait code per sprite set: low byte is the portrait index. */
 extern u16 g_world_formation_sprite_by_portrait[];
@@ -1291,8 +1283,6 @@ extern s16 g_world_formation_dismiss_prompt_text_id;
 extern s16 g_world_formation_dismiss_prompt_kind;
 extern s16 g_world_formation_dismiss_anim_timer;
 extern s8 g_world_formation_sort_field_indices[];
-extern u8 g_world_formation_thread_status_snapshot[16];
-extern u8 g_world_formation_view_quads[2][0x4b0];
 extern point16_t g_world_formation_cursor_target;
 extern s8 D_801C833C; /* zeroed with g_world_formation_scroll_velocity when the formation cursor starts; never read */
 /* Cursor trail position history at 0x801c8344, reset by
@@ -1381,19 +1371,12 @@ s32 world_formation_process_job_change(s32 job);
 void world_formation_rebuild_unit_list(void);
 void world_formation_recalculate_selected_unit_stats(void);
 void world_formation_remove_invalid_unit_loadout(s16 unit_id);
-void world_formation_reset_menu_context(void);
 void world_formation_reset_slots_and_frame_tpages(void);
-void world_formation_restore_menu_after_core_exit(void);
-void world_formation_restore_saved_system_flags(void);
+void world_formation_run_before_event(void);
 void world_formation_run_dismiss_unit_menu_step(void);
 void world_formation_run_job_wheel_menu(void);
-s16 world_formation_run_menu_frame(u32* otag, u32 input);
-void world_formation_run_screen_for_menu_index(s32 menu_index);
-void world_formation_save_and_set_system_flags(void);
+void world_formation_run_tutorial_screen(s32 menu_index);
 void world_formation_save_records_to_party_data(void);
-void world_formation_set_display_mode(s32 mode);
-void world_formation_set_menu_allowed_buttons(u32 mask);
-void world_formation_set_ordering_table_pointer(void* ordering_table);
 s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s32 update_equipment);
 void world_formation_set_unit_name(s16 formation_index, const u8* name);
 void world_formation_stage_selected_unit(void);
@@ -1412,11 +1395,6 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
 void world_formation_update_job_wheel_state(void);
 void world_formation_update_open_request(void);
 void world_formation_update_unit_selection(void);
-void world_formation_view_zoom_thread(void);
-void world_formation_update_tutorial_categories_request(void);
-void world_formation_update_debug_variable_list_request(void);
-void world_formation_update_fixed_number_panel_request(void);
-void world_formation_update_world_map_root_request(void);
 void world_formation_sort_roster(s32 index);
 s32 world_get_formation_unit_stat_by_mode(s32 unit_index);
 
@@ -2142,6 +2120,30 @@ extern u8* g_world_menu_submenu_page_text_ids[];
 extern world_menu_scroll_text_layout_t g_world_menu_submenu_page_layout;
 extern s32 g_world_menu_number_entry_value;
 extern world_menu_entry_t g_world_menu_default_entries[];
+
+/* The menu frame of world_menu_run_frame: its input words, the buttons it lets through, the
+ * thread states it compares across its yield, and the system flags world_menu_hide_world_map saves. */
+extern world_menu_input_state_t g_world_menu_frame_input_state;
+
+/* First-word alias retained for the target's separate absolute store. */
+extern s32 g_world_menu_frame_new_buttons;
+extern u32 g_world_menu_allowed_buttons; /* pad mask applied to the new presses of each menu frame */
+extern u8 g_world_menu_thread_status_snapshot[16];
+extern u32 g_world_menu_saved_system_flags; /* main_system_flags_e */
+
+/* 1 while the menu frame runs inside WLDCORE's or OPEN's frame (world_menu_run_frame); WORLD's own
+ * screens clear it (world_input_update_event_state). Message boxes and the zodiac backdrop place
+ * themselves by it. */
+extern s32 g_world_menu_hosted_frame;
+
+/* 1 holds the menu cursors in their confirm bob (world_menu_set_cursor_confirm_hold). */
+extern s32 g_world_menu_cursor_confirm_hold;
+
+/* The zodiac backdrop thread's view record, its two frames of quads and its ordering table. */
+extern zodiac_draw_context_t g_world_menu_zodiac_backdrop;
+extern u8 g_world_menu_zodiac_backdrop_quads[2][0x4b0];
+extern void* g_world_menu_zodiac_backdrop_otag;
+
 extern RECT g_world_menu_frame_palette_rect;
 extern RECT g_world_menu_frame_palette_tail_rect;
 extern RECT g_world_menu_frame_image_rect;
@@ -2502,6 +2504,18 @@ void world_menu_display_text_entry_past_choice_marks(s32 text_id, void* image, w
 void world_menu_display_text_entry(s32 text_id, void* image, world_glyph_blit_t* origin);
 void world_menu_init_sprite(SPRT* sprite);
 void world_menu_set_text_origin(s32 x, s32 y);
+void world_menu_hide_world_map(void);
+void world_menu_reset_context(void);
+void world_menu_restore_world_map(void);
+s16 world_menu_run_frame(u32* otag, u32 input);
+void world_menu_set_allowed_buttons(u32 mask);
+void world_menu_set_cursor_confirm_hold(s32 hold);
+void world_menu_set_zodiac_backdrop_otag(void* ordering_table);
+void world_menu_update_brave_story_request(void);
+void world_menu_update_debug_variable_list_request(void);
+void world_menu_update_fixed_number_panel_request(void);
+void world_menu_update_tutorial_categories_request(void);
+void world_menu_zodiac_backdrop_thread(void);
 
 /* item */
 /* WORLD's item screens: the formation item menu (categories, sort orders, rearranging, the

@@ -8,7 +8,7 @@
  *
  * Draws param->text_id left of the number and edits the halfword at
  * param->value one decimal digit at a time within the range bound at param->text_binding. The value is
- * written back each frame only while g_world_formation_screen_active is set. The initial label is
+ * written back each frame only while g_world_menu_hosted_frame is set. The initial label is
  * measured in pixels and each redraw in character columns (times 6).
  * i is shared by the quad setup loop and the frame loop, as in the target.
  */
@@ -82,7 +82,7 @@ void world_menu_labeled_number_entry_thread(void) {
     LoadImage(&rect, buffer);
     redraw = 1;
     for (i = 0;; i++) {
-        if (g_world_formation_screen_active != 0) {
+        if (g_world_menu_hosted_frame != 0) {
             *param->value = value;
         }
         world_thread_wait_frames(1);

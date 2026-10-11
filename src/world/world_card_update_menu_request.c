@@ -2,7 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Sibling of world_formation_update_tutorial_categories_request driven by g_world_card_menu_request_state. */
+/* Sibling of world_menu_update_tutorial_categories_request driven by g_world_card_menu_request_state. */
 void world_card_update_menu_request(void) {
     s16 state = g_world_card_menu_request_state;
     s32 result;
@@ -24,13 +24,13 @@ void world_card_update_menu_request(void) {
         return;
     }
     if (state == WORLD_SCREEN_REQUEST_RUN) {
-        world_formation_reset_menu_context();
+        world_menu_reset_context();
         world_menu_set_brightness(0x80, 0x80, 0x80);
         result = world_card_run_menu_screen(1);
-        world_formation_reset_menu_context();
+        world_menu_reset_context();
         g_world_menu_screen_open_request = 0;
         g_world_menu_thread_menu_data = g_world_menu_default_entries;
-        world_formation_save_and_set_system_flags();
+        world_menu_hide_world_map();
         if (result == 1) {
             g_world_card_menu_request_state = WORLD_SCREEN_REQUEST_IDLE;
             g_main_system_flags |= MAIN_SYSTEM_FLAG_RESTART;
@@ -52,7 +52,7 @@ void world_card_update_menu_request(void) {
         return;
     }
     if (state == WORLD_SCREEN_REQUEST_START_FADE_IN) {
-        world_formation_restore_saved_system_flags();
+        world_menu_restore_world_map();
         wldcore_fade_start_screen(0x24, 0x10);
         g_world_card_menu_request_state++;
         return;

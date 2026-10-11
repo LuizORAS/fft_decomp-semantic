@@ -19,7 +19,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
 
     if (state->blink_frames != 0 && ++state->blink_frames >= 10) {
         state->blink_frames = 0;
-        world_formation_set_display_mode(0);
+        world_menu_set_cursor_confirm_hold(0);
         g_open_menu_blocked_buttons ^= PSX_PAD_UP | PSX_PAD_DOWN;
     }
 
@@ -74,7 +74,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
         }
         buttons = g_open_input_new_button_presses;
         if (buttons & PSX_PAD_CIRCLE) {
-            world_formation_set_display_mode(1);
+            world_menu_set_cursor_confirm_hold(1);
             state->blink_frames = 1;
             g_open_menu_blocked_buttons |= PSX_PAD_UP | PSX_PAD_DOWN;
             if (state->music_id != 0) {

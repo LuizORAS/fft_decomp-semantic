@@ -2,9 +2,11 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Resets shared context before framebuffer setup and after formation or
- * memory-card sessions. */
-void world_formation_reset_menu_context(void) {
+/* Reset WORLD's menu context around a full-screen menu (the formation, a shop, the card screen,
+ * name entry, the world map's screen requests): wait for the GPU, reset the menu subsystems, relocate
+ * the menu text file's pointer table, rebuild the formation unit name strings, and point the menu at
+ * its default entries and the resident location names with text color 0. */
+void world_menu_reset_context(void) {
     DrawSync(0);
     world_menu_init_subsystem_pointers();
     world_menu_reset_subsystems();

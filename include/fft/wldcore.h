@@ -2000,7 +2000,7 @@ extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
  * GsSortSprite (0x800e0480). */
 extern GsSPRITE g_wldcore_menu_indicator_sprite;
 /* Pad buttons withheld from the WORLD menu frame (wldcore_menu_run_world_frame passes its
- * complement to world_formation_set_menu_allowed_buttons); -1 blocks all. */
+ * complement to world_menu_set_allowed_buttons); -1 blocks all. */
 extern s32 g_wldcore_menu_blocked_buttons;
 extern s32 g_wldcore_menu_stack_depth;
 extern wldcore_menu_stack_record_t g_wldcore_menu_stack_records[];

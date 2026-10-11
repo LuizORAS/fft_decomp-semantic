@@ -23,7 +23,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     g_world_gfx_active_otag_entries = otag;
     g_world_frame_arg = frame_arg;
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
-    g_world_formation_screen_active = 0;
+    g_world_menu_hosted_frame = 0;
     if (input == 0) {
         g_world_input_frame_initial_repeat_counter = 0;
         g_world_input_frame_repeat_counter = 0;

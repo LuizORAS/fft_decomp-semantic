@@ -43,7 +43,7 @@ void world_menu_formation_icon_list_thread(void) {
         param->selected_index = cursor;
         world_menu_select_icon_cluts(record);
         world_menu_update_icon_cursor_sprites(param, record, i, cursor);
-        if (world_menu_check_thread_completion(&g_world_formation_menu_input_state.new_buttons) != 0) {
+        if (world_menu_check_thread_completion(&g_world_menu_frame_input_state.new_buttons) != 0) {
             break;
         }
         if (world_thread_is_previous_running() == 0) {

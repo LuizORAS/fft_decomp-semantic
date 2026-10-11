@@ -17,7 +17,7 @@ void world_menu_update_entry_cursor_quads(
     s32 y;
 
     if (cursor >= 0) {
-        if (g_world_formation_display_mode == 1) {
+        if (g_world_menu_cursor_confirm_hold == 1) {
             thread->task_words[1] = 2;
             thread->task_words[0] = 0;
         }

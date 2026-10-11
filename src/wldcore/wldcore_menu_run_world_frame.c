@@ -18,8 +18,8 @@ void wldcore_menu_run_world_frame(GsOT* context) {
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_SKIP_MENU_FRAME) {
         return;
     }
-    world_formation_set_ordering_table_pointer(context->org + 15);
-    world_formation_set_menu_allowed_buttons(~g_wldcore_menu_blocked_buttons);
+    world_menu_set_zodiac_backdrop_otag(context->org + 15);
+    world_menu_set_allowed_buttons(~g_wldcore_menu_blocked_buttons);
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS) {
         otag_entries = context->org;
         g_world_gfx_active_otag_entries = otag_entries + g_wldcore_menu_ordering_table_offset;
@@ -32,7 +32,6 @@ void wldcore_menu_run_world_frame(GsOT* context) {
         }
     } else {
         menu_entries = context->org;
-        world_formation_run_menu_frame(
-            menu_entries + g_wldcore_menu_ordering_table_offset, g_wldcore_current_button_input);
+        world_menu_run_frame(menu_entries + g_wldcore_menu_ordering_table_offset, g_wldcore_current_button_input);
     }
 }

@@ -2,7 +2,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Sibling of world_card_update_menu_request driven by g_world_formation_open_request_state. */
+/* Step the formation screen request (g_world_formation_open_request_state) once a frame, as
+ * world_card_update_menu_request does for the card screen: fade the world map out, run the formation
+ * screen (world_formation_run_screen), reopen the world menu's threads and entry window, hide the world
+ * map and clear WLDCORE's scratch buffer, count frames, then restore the map and fade back in. */
 void world_formation_update_open_request(void) {
     s16 state = g_world_formation_open_request_state;
     s32 i;
@@ -23,16 +26,16 @@ void world_formation_update_open_request(void) {
         return;
     }
     if (state == WORLD_SCREEN_REQUEST_RUN) {
-        world_formation_reset_menu_context();
+        world_menu_reset_context();
         world_menu_set_brightness(0x80, 0x80, 0x80);
         world_formation_run_screen(0, 0);
-        world_formation_reset_menu_context();
+        world_menu_reset_context();
         g_world_menu_screen_open_request = 0;
         world_menu_start_thread_group(g_world_menu_thread_group_parameter, g_world_menu_location_id,
             g_world_menu_location_window_x, g_world_menu_location_window_y);
         world_menu_open_entry_window(g_world_menu_open_entry_index, -0x30, -0x38);
         g_world_menu_thread_menu_data = g_world_menu_default_entries;
-        world_formation_save_and_set_system_flags();
+        world_menu_hide_world_map();
         wldcore_clear_screen_and_set_map_clip_rect(0);
         for (i = 0x77FF; i >= 0; i--) {
             g_wldcore_scratch_buffer[i] = 0;
@@ -46,7 +49,7 @@ void world_formation_update_open_request(void) {
         return;
     }
     if (state == WORLD_SCREEN_REQUEST_START_FADE_IN) {
-        world_formation_restore_saved_system_flags();
+        world_menu_restore_world_map();
         wldcore_fade_start_screen(0x24, 0x10);
         g_world_formation_open_request_state++;
         return;

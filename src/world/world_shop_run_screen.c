@@ -188,7 +188,7 @@ void world_shop_run_screen(s32 shop_type) {
     main_sound_unload_scenario_mus(g_world_menu_music_slot);
     world_formation_save_records_to_party_data();
     world_script_set_vsync_mode_and_event_speed(0);
-    world_formation_reset_menu_context();
+    world_menu_reset_context();
     world_gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim);
     main_heap_free(tim);
 }

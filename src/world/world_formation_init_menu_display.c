@@ -12,7 +12,7 @@ void world_formation_init_menu_display(void) {
     RECT rect;
     u16 clut[16];
 
-    world_formation_reset_menu_context();
+    world_menu_reset_context();
     world_script_set_vsync_mode_and_event_speed(0);
     if (g_world_shop_id != WORLD_SHOP_ID_NAME_ENTRY) {
         rect.x = 0;

@@ -173,5 +173,5 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     world_formation_save_records_to_party_data();
     world_formation_stop_menu_threads();
     world_script_set_vsync_mode_and_event_speed(0);
-    world_formation_reset_menu_context();
+    world_menu_reset_context();
 }

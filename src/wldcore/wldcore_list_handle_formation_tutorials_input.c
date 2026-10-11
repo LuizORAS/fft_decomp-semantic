@@ -13,7 +13,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
 
             wldcore_set_bit_value(g_main_tutorial_progress_masks, *selected, 1);
             world_menu_set_brightness(0x80, 0x80, 0x80);
-            world_formation_run_screen_for_menu_index(*selected);
+            world_formation_run_tutorial_screen(*selected);
             g_wldcore_menu_ordering_table_offset = 1;
             g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED | MAIN_SYSTEM_FLAG_DISPLAY_OFF;

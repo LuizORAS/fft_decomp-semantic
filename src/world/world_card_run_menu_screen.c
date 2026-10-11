@@ -79,7 +79,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     world_card_clear_events();
     g_world_card_directory_buffer = packets.directory_buffer;
     world_card_init_menu_state();
-    world_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, world_formation_view_zoom_thread);
+    world_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, world_menu_zodiac_backdrop_thread);
     world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, 0, 0);
     while (world_gfx_update_fade_out_tile() != 0) {
         g_world_script_tutorial_id = 0;
@@ -113,7 +113,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
             world_gfx_start_increasing_fade();
             g_world_card_menu_step = WORLD_CARD_MENU_STEP_LEFT;
         }
-        world_formation_set_ordering_table_pointer(g_world_gfx_active_packet_buffer->otag + 1);
+        world_menu_set_zodiac_backdrop_otag(g_world_gfx_active_packet_buffer->otag + 1);
         g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 60;
         world_menu_draw_active_window_frames();
         buttons = PadRead(0) & PSX_PAD_DPAD_MASK;
@@ -131,7 +131,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     world_free_work_buffer();
     world_card_close_stub();
     main_sound_unload_scenario_mus(music_handle);
-    world_formation_reset_menu_context();
+    world_menu_reset_context();
     world_text_generate_formation_unit_name_string();
     return g_world_card_menu_result;
 }

@@ -173,7 +173,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         g_world_sound_effect_id_to_play = MAIN_SFX_NONE;
     }
     world_script_set_vsync_mode_and_event_speed(2);
-    world_formation_reset_menu_context();
+    world_menu_reset_context();
     world_gfx_set_fade_disabled(0);
     return g_world_name_entry_text;
 }

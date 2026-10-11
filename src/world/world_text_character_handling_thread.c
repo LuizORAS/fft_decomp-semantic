@@ -17,7 +17,7 @@
     }
 
 #define YIELD_OR_INPUT()                                                                                               \
-    if (g_world_formation_screen_active != 0 && rec.box_type == DIALOG_BOX_TYPE_HELP) {                                \
+    if (g_world_menu_hosted_frame != 0 && rec.box_type == DIALOG_BOX_TYPE_HELP) {                                      \
         world_input_update_menu_state();                                                                               \
     } else {                                                                                                           \
         world_thread_yield();                                                                                          \
@@ -98,7 +98,7 @@ void world_text_character_handling_thread(void) {
         world_text_save_section_pointers();
         world_text_relocate_pointer_table(g_open_text_section_offsets);
     }
-    if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 0) {
+    if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_menu_hosted_frame == 0) {
         world_text_save_section_pointers();
         world_text_relocate_pointer_table(g_open_text_section_offsets);
         if (thread->function_parameter_2 == 0x807) {
@@ -113,8 +113,8 @@ void world_text_character_handling_thread(void) {
             rec.portrait = g_world_active_turn_unit.battle_id;
         }
     }
-    if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 1) {
-        g_world_thread_task_active = g_world_formation_screen_active;
+    if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_menu_hosted_frame == 1) {
+        g_world_thread_task_active = g_world_menu_hosted_frame;
     }
     if (rec.dialog_type & 0x10) {
         if (party_name_request == 0) {
@@ -301,7 +301,7 @@ void world_text_character_handling_thread(void) {
         rec.last_line = rec.lines;
         world_menu_render_text_image_at_record_origin(&rec);
     }
-    if (g_world_formation_screen_active != 0) {
+    if (g_world_menu_hosted_frame != 0) {
         right -= 0x100;
         bottom -= 0x78;
         rec.x -= 0x100;
@@ -851,12 +851,11 @@ end:
     world_gfx_free_tpage7_vram(&rec.rect);
     world_menu_release_current_thread_slot();
     YIELD_OR_INPUT();
-    if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 1) {
+    if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_menu_hosted_frame == 1) {
         g_world_thread_task_active = 0;
     }
     if (((rec.box_type == DIALOG_BOX_TYPE_HELP || party_name_request != 0) && rec.options == 0xC)
-        || ((rec.box_type == DIALOG_BOX_TYPE_HELP || party_name_request != 0)
-            && g_world_formation_screen_active == 0)) {
+        || ((rec.box_type == DIALOG_BOX_TYPE_HELP || party_name_request != 0) && g_world_menu_hosted_frame == 0)) {
         world_text_restore_section_pointers();
     }
     if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_TEXT || rec.options != 0xC) {
