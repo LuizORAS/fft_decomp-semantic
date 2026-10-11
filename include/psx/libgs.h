@@ -114,7 +114,7 @@ extern RECT CLIP2;           /* clip rectangle relative to the draw buffer base 
 extern s16 PSDBASEX[2];      /* frame-buffer x of each draw buffer */
 extern s16 PSDBASEY[2];      /* frame-buffer y of each draw buffer */
 extern s16 PSDIDX;           /* active draw buffer */
-extern s32 PSDCNT;           /* frame counter; GsSwapDispBuff skips zero */
+extern u32 PSDCNT;           /* frame counter; GsSwapDispBuff skips zero */
 extern _GsPOSITION POSITION; /* 2D offset */
 extern DRAWENV GsDRAWENV;
 extern DISPENV GsDISPENV;

@@ -8,7 +8,7 @@
  * again after skipping zero; the pre-increment keeps the target's register
  * copy between the increment and the first store. */
 void GsSwapDispBuff(void) {
-    s32 stored;
+    u32 stored;
 
     GsDISPENV.disp.x = PSDBASEX[PSDIDX];
     GsDISPENV.disp.y = PSDBASEY[PSDIDX];
