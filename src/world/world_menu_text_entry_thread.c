@@ -8,17 +8,23 @@
 void world_menu_text_entry_thread(void) {
     native_thread_t* thread = &g_world_threads[g_world_thread_current_id];
     world_menu_entry_t* entry = (world_menu_entry_t*)thread->function_parameter_1;
+    world_menu_text_binding_t* binding;
     s32 text_thread;
     u16 second;
     s32 speaker_id;
     u16 text_id;
 
-    entry->text_binding->prepare();
+    {
+        world_menu_text_binding_t* prepare_binding = entry->context;
+
+        prepare_binding->prepare();
+    }
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
     text_id = entry->text_id;
     second = entry->header_id;
-    text_thread = entry->text_binding->text_thread_id;
-    speaker_id = entry->text_binding->speaker_id;
+    binding = entry->context;
+    text_thread = binding->text_thread_id;
+    speaker_id = binding->speaker_id;
     world_thread_start(text_thread, world_text_character_handling_thread);
     world_thread_set_parameters(text_thread, second, text_id, speaker_id);
     world_thread_wait_until_inactive(text_thread);

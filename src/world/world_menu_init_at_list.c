@@ -2,8 +2,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define LAYOUT(entry) ((world_menu_text_layout_t*)(entry)->text_binding)
-
 /* Build the unit-name list menu (WORLD twin of option_menu_init_at_list):
  * fetch the unit list on the main stack, write each unit name (0xFE
  * terminated, bracketed by D9 BE / D9 BF when flag 0x40 is set) into the text
@@ -85,16 +83,22 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         count = 39;
     }
     if (bracketed != 0) {
+        world_menu_text_layout_t* layout;
+
         entry->window_y = 0x20;
-        LAYOUT(entry)->row_count = 10;
+        layout = entry->context;
+        layout->row_count = 10;
         entry->window_x = 0x8C;
         entry->window_y = 0x20;
         entry->window_width = 0xE8;
         entry->text_image.width = 0xE8;
         entry->inner_width = 0xE8;
     } else {
+        world_menu_text_layout_t* layout;
+
         entry->window_y = 0x20;
-        LAYOUT(entry)->row_count = 10;
+        layout = entry->context;
+        layout->row_count = 10;
         entry->window_x = 0xBE;
         entry->window_y = 0x20;
         entry->window_width = 0x84;
@@ -102,10 +106,17 @@ void world_menu_init_at_list(world_menu_entry_t* entry) {
         entry->inner_width = 0x84;
     }
     if (count < 10) {
+        world_menu_text_layout_t* layout;
+        world_menu_text_layout_t* hidden_rows_layout;
+
         entry->window_y = (10 - count) * 8 + 0x20;
-        LAYOUT(entry)->row_count = count;
-        LAYOUT(entry)->hidden_rows = 0;
+        layout = entry->context;
+        layout->row_count = count;
+        hidden_rows_layout = entry->context;
+        hidden_rows_layout->hidden_rows = 0;
     } else {
-        LAYOUT(entry)->hidden_rows = count - 10;
+        world_menu_text_layout_t* layout = entry->context;
+
+        layout->hidden_rows = count - 10;
     }
 }

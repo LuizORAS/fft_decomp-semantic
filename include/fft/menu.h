@@ -623,7 +623,7 @@ typedef struct world_menu_palette_slot {
 } world_menu_palette_slot_t;
 typedef char world_menu_palette_slot_size_must_be_0x100[(sizeof(world_menu_palette_slot_t) == 0x100) ? 1 : -1];
 
-/* Provisional: record reached through world_menu_entry_t::text_binding.
+/* Provisional: record reached through world_menu_entry_t::context.
  * world_menu_text_entry_thread, world_menu_text_entry_wait_thread and the
  * overlays' *_menu_open_submenu_thread call the hook at +0 and start the text
  * thread whose id is at +6 with speaker_id as its third and fourth parameters. */
@@ -668,12 +668,12 @@ typedef struct world_menu_entry {
     s16 header_id;               /* 0x2c: menu header; text-thread parameter (world_menu_text_entry_thread); the
                                     icon threads read it signed as the icon kind: 0x10 arrow, 0..4 single
                                     icon, 5..15 four-piece icon (world_menu_build_icon_record) */
-    u8 _padding_2e[2];           /* aligns text_binding */
-    /* 0x30: per-thread binding. The text threads keep a world_menu_text_binding_t
+    u8 _padding_2e[2];           /* aligns context */
+    /* 0x30: context interpreted by the menu thread. Text threads use world_menu_text_binding_t
      * here, the list threads a world_menu_text_layout_t, the number threads a
      * world_menu_number_range_t and the icon threads the s16 redraw flag they
      * poll (set to 1 to rebuild the text image). */
-    struct world_menu_text_binding* text_binding;
+    void* context;
     s16* value;            /* 0x34: result cell (g_world_menu_selected_option); the number-entry threads edit it */
     s16 selected_index;    /* 0x38: selected row; indexes the binding's halfword table
                               (world_menu_announce_entry_value_thread) */
@@ -693,7 +693,7 @@ typedef enum menu_text_column_mode {
 } menu_text_column_mode_e;
 
 /* Provisional: three-column menu text layout walked by world_screen_menu_draw_text_columns (0x80109374) /
- * world_menu_draw_text_columns (reached through world_menu_entry_t::text_binding when
+ * world_menu_draw_text_columns (reached through world_menu_entry_t::context when
  * that record is a layout rather than a binding). Column i uses x[i],
  * mode[i] (menu_text_column_mode_e), text_ids[i] and
  * text_colors[i], each indexed by row + row offset. */
@@ -751,7 +751,7 @@ typedef struct world_input_timing_profile {
 } world_input_timing_profile_t;
 
 /* A text layout followed by the first visible row, as bound to a scrolling
- * list's world_menu_entry_t::text_binding (world_menu_scrolling_list_thread and the AT list
+ * list's world_menu_entry_t::context (world_menu_scrolling_list_thread and the AT list
  * built by world_menu_build_ability_preview_at_list). */
 typedef struct world_menu_scroll_text_layout {
     world_menu_text_layout_t columns; /* 0x00 */

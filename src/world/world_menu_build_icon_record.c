@@ -46,13 +46,15 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
     /* The range test below reads its own halfword copy of the kind. */
     index = (s16)kind;
     if (kind == 0x10) {
+        const world_gfx_image_load_parameters_t* image_params;
+
         world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
         record->icons[0]->u0 = 0x30;
         record->icons[0]->v0 = 0x10;
         record->icons[0]->w = size;
         record->icons[0]->h = 8;
-        record->icons[0]->x0
-            = ((const world_gfx_image_load_parameters_t*)param->text_binding)->height + param->window_x + 7;
+        image_params = param->context;
+        record->icons[0]->x0 = image_params->height + param->window_x + 7;
         record->icons[0]->y0 = param->window_y - 1;
         world_gfx_init_image_loading((world_texture_prim_t*)&record->base.sprites[3], &g_world_gfx_menu_image_source,
             (const RECT*)&param->window_x, &g_world_menu_single_icon_image_params[1]);

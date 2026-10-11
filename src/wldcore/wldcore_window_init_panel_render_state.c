@@ -46,7 +46,6 @@ void wldcore_window_init_panel_render_state(s32 unused, s32 extent, point32_t* d
     g_wldcore_window_panel_render_state.thread_count = 0;
     g_wldcore_window_panel_render_state.row_actions = g_wldcore_panel_row_actions;
     g_wldcore_window_panel_render_state.header_id = 1;
-    g_wldcore_window_panel_render_state.text_binding
-        = (struct world_menu_text_binding*)&g_wldcore_window_panel_label_state; /* a column layout */
+    g_wldcore_window_panel_render_state.context = &g_wldcore_window_panel_label_state; /* a column layout */
     g_wldcore_window_panel_render_state.value = &g_wldcore_active_menu_value;
 }

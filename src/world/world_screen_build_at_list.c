@@ -57,7 +57,7 @@ void world_screen_build_at_list(void) {
     row_offset = 0;
     cursor = 0;
     entry = world_thread_get_current_parameter_1();
-    binding = (world_menu_text_layout_t*)entry->text_binding;
+    binding = entry->context;
     entry->window_height = binding->row_count * 16 + 0x1C;
     entry->inner_height = binding->row_count * 16 + 0x1C;
     entry->text_image.height = binding->row_count * 16 + 0x1C;

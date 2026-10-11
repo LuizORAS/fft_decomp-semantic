@@ -7,7 +7,7 @@
  * Labelled numeric entry thread: world_menu_number_entry_thread with a text label.
  *
  * Draws param->text_id left of the number and edits the halfword at
- * param->value one decimal digit at a time within the range bound at param->text_binding. The value is
+ * param->value one decimal digit at a time within the range bound at param->context. The value is
  * written back each frame only while g_world_formation_screen_active is set. The initial label is
  * measured in pixels and each redraw in character columns (times 6).
  * i is shared by the quad setup loop and the frame loop, as in the target.
@@ -35,7 +35,7 @@ void world_menu_labeled_number_entry_thread(void) {
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
     thread = &g_world_threads[g_world_thread_current_id];
     param = *(world_menu_entry_t**)thread;
-    range = (world_menu_number_range_t*)param->text_binding;
+    range = param->context;
     digits = world_text_count_decimal_digits(range->max);
     original = *param->value;
     value = original;
@@ -101,7 +101,11 @@ void world_menu_labeled_number_entry_thread(void) {
                 *param->value = original;
             } else {
                 *param->value = value;
-                ((world_menu_number_range_t*)param->text_binding)->on_change();
+                {
+                    world_menu_number_range_t* current_range = param->context;
+
+                    current_range->on_change();
+                }
             }
         }
         if (thread[-1].is_running == 0) {

@@ -31,7 +31,9 @@ void world_menu_announce_entry_value_thread(void) {
     }
     index = entry->selected_index;
     if (kind == 0x11) {
-        value = entry->text_binding->row_text_ids[index];
+        world_menu_text_binding_t* binding = entry->context;
+
+        value = binding->row_text_ids[index];
         value &= 0x7FF;
         if (value == 0x2B) {
             value = 0x63;

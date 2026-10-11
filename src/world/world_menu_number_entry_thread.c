@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* Numeric entry thread: edits the halfword at param->value one decimal digit
- * at a time within the range bound at param->text_binding. Left/right move the digit cursor, up/down
+ * at a time within the range bound at param->context. Left/right move the digit cursor, up/down
  * step the value by the g_world_menu_number_entry_digit_steps step of that digit (clamped to the range),
  * and a changed value is redrawn as a signed number in the window. When the
  * cancel/confirm handlers change the input word, a -1 left in the value
@@ -40,7 +40,7 @@ void world_menu_number_entry_thread(void) {
     thread = &g_world_threads[g_world_thread_current_id];
     parameter = &thread->function_parameter_1;
     param = (world_menu_entry_t*)*parameter;
-    range = (world_menu_number_range_t*)param->text_binding;
+    range = param->context;
     digits = world_text_count_decimal_digits(range->max);
     original = *param->value;
     value = original;
@@ -103,7 +103,11 @@ void world_menu_number_entry_thread(void) {
                 *param->value = original;
             } else {
                 *param->value = value;
-                ((world_menu_number_range_t*)param->text_binding)->on_change();
+                {
+                    world_menu_number_range_t* current_range = param->context;
+
+                    current_range->on_change();
+                }
             }
         }
         if (thread[-1].is_running == 0) {

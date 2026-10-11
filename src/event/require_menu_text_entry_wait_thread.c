@@ -19,10 +19,14 @@ void require_menu_text_entry_wait_thread(void) {
     u16 text_id;
 
     obj = (world_menu_entry_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
-    obj->text_binding->prepare();
+    {
+        world_menu_text_binding_t* binding = obj->context;
+
+        binding->prepare();
+    }
     ctl = battle_script_get_controller_input_pointer(0);
     text_id = obj->text_id;
-    task = obj->text_binding;
+    task = obj->context;
     header_id = obj->header_id;
     g_require_input_controller = ctl;
     id = task->text_thread_id;

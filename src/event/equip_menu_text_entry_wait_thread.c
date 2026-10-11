@@ -19,11 +19,15 @@ void equip_menu_text_entry_wait_thread(void) {
     u16 task_arg;
 
     thread = (world_menu_entry_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
-    thread->text_binding->prepare();
+    {
+        world_menu_text_binding_t* binding = thread->context;
+
+        binding->prepare();
+    }
 
     input = battle_script_get_controller_input_pointer(0);
     text_id = thread->text_id;
-    task = thread->text_binding;
+    task = thread->context;
     header_id = thread->header_id;
     g_equip_input_controller = input;
     child_id = task->text_thread_id;

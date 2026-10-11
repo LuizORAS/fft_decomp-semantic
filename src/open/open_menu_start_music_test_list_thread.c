@@ -36,8 +36,7 @@ void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, point32_t*
     g_open_music_test_list_params.thread_count = 0;
     g_open_music_test_list_params.row_actions = g_open_music_test_row_actions;
     g_open_music_test_list_params.header_id = 1;
-    /* The list thread reads text_binding as a column layout, not a binding. */
-    g_open_music_test_list_params.text_binding = (struct world_menu_text_binding*)&g_open_music_test_list_state;
+    g_open_music_test_list_params.context = &g_open_music_test_list_state;
     g_open_music_test_list_params.value = &g_open_music_test_selected_option;
     g_open_music_test_list_params.selected_index = 0;
     g_open_music_test_list_params.select_text_table = 0;

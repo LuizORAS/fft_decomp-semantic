@@ -12,7 +12,7 @@ void* option_menu_redraw_text_page_on_scroll(
     u32* secondary_input;
     s32 changed;
 
-    layout = (world_menu_text_layout_t*)menu->text_binding;
+    layout = menu->context;
     primary_input = battle_script_get_controller_input_pointer(0);
     secondary_input = battle_script_get_controller_input_pointer(1);
     source.x = menu->vram_origin.x;

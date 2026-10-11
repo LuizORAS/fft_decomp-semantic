@@ -46,7 +46,7 @@ void world_build_at_list(void) {
     row_offset = 0;
     cursor = 0;
     entry = world_thread_get_current_parameter_1();
-    layout = (world_menu_text_layout_t*)entry->text_binding;
+    layout = entry->context;
     entry->window_height = layout->row_count * 16 + 0x1C;
     entry->inner_height = layout->row_count * 16 + 0x1C;
     entry->text_image.height = layout->row_count * 16 + 0x1C;

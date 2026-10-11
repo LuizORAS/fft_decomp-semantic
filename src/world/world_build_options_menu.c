@@ -7,7 +7,7 @@ extern world_options_menu_page_t g_world_options_menu_pages[2];
 
 /*
  * Options-menu thread started by world_menu_run_main_mode (mode 0) with
- * entry->text_binding = &g_world_option_menu_entry_table.
+ * entry->context = &g_world_option_menu_entry_table.
  *
  * Scrolls the two-column option list like world_menu_scrolling_list_thread, shows the
  * selected option's value text (g_world_option_menu_first_text_ids[i] + g_world_game_option_values[i]),

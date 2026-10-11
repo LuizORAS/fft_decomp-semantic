@@ -74,7 +74,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     toggle = 0;
     g_battle_menu_scroll_list_depth++;
     entry = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
-    layout = (world_menu_scroll_text_layout_t*)entry->text_binding;
+    layout = entry->context;
     entry->window_height = layout->columns.row_count * 16 + 0x1C;
     entry->inner_height = layout->columns.row_count * 16 + 0x1C;
     entry->text_image.height = layout->columns.row_count * 16 + 0x1C;
@@ -397,8 +397,13 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
             battle_menu_zoom_cursor_frame(entry, frame, i * g_battle_event_speed);
         }
         if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {
-            page->icons.base.sprites[1].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
-            page->icons.base.sprites[2].x0 += ((world_menu_text_layout_t*)entry->text_binding)->x[1];
+            {
+                world_menu_text_layout_t* columns = entry->context;
+
+                page->icons.base.sprites[1].x0 += columns->x[1];
+                columns = entry->context;
+                page->icons.base.sprites[2].x0 += columns->x[1];
+            }
         }
         page->icons.base.sprites[1].y0 += 4;
         page->icons.base.sprites[2].y0 += 4;

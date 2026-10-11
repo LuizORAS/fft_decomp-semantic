@@ -26,7 +26,7 @@ void debugchr_menu_icon_list_thread(void) {
     battle_menu_build_window_sprites(&rect, state, record);
     battle_copy_bytes(&records[1], record, sizeof(records[1]));
     fresh = 0;
-    redraw = (s16*)state->text_binding;
+    redraw = state->context;
     *redraw = 1;
     for (i = 0;; i++) {
         if (*redraw == 1) {

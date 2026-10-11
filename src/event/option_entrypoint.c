@@ -60,7 +60,7 @@ void option_entrypoint(s32 menu_type) {
         battle_thread_start(g_battle_current_thread_id - 1, option_build_options_menu);
         child_thread = g_battle_current_thread_id;
         menu->select_text_table = 1;
-        menu->text_binding = (struct world_menu_text_binding*)g_option_menu_entry_table;
+        menu->context = g_option_menu_entry_table;
         battle_thread_set_parameters(child_thread - 1, menu, 0, 0);
         battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
         battle_thread_exit_current();

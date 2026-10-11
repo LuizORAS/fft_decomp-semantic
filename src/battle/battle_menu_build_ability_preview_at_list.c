@@ -5,8 +5,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-#define LAYOUT(entry) ((world_menu_scroll_text_layout_t*)(entry)->text_binding)
-
 /*
  * Build the AT (turn order) list previewing the ability the player is about to
  * confirm: stage the selected ability or item into the shared action record at
@@ -46,8 +44,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     at_table = g_battle_ai_workspace_ptr->ability_list.ids;
     work = (world_menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].select_text_table = 0x13;
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].text_binding
-        = (struct world_menu_text_binding*)&g_battle_menu_at_list_layout;
+    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].context = &g_battle_menu_at_list_layout;
     text_id = at_table[g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index];
     g_battle_menu_selected_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     entry = &g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST];
@@ -159,14 +156,18 @@ void battle_menu_build_ability_preview_at_list(void) {
     g_battle_menu_at_list_layout.columns.mode[1] = MENU_TEXT_COLUMN_TEXT;
     g_battle_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_TEXT;
     if (bracketed != 0) {
-        LAYOUT(entry)->columns.row_count = 6;
+        world_menu_scroll_text_layout_t* layout = entry->context;
+
+        layout->columns.row_count = 6;
         entry->window_x = 0x8c;
         entry->window_y = 0x30;
         entry->window_width = 0xe8;
         entry->text_image.width = 0xe8;
         entry->inner_width = 0xe8;
     } else {
-        LAYOUT(entry)->columns.row_count = 6;
+        world_menu_scroll_text_layout_t* layout = entry->context;
+
+        layout->columns.row_count = 6;
         entry->window_x = 0xbe;
         entry->window_y = 0x30;
         entry->window_width = 0x84;
@@ -175,19 +176,32 @@ void battle_menu_build_ability_preview_at_list(void) {
         g_battle_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
     }
     if (count < 6) {
+        world_menu_scroll_text_layout_t* layout;
+        world_menu_scroll_text_layout_t* hidden_rows_layout;
+
         entry->window_y = (6 - count) * 8 + 0x20;
-        LAYOUT(entry)->columns.row_count = count;
-        LAYOUT(entry)->columns.hidden_rows = 0;
+        layout = entry->context;
+        layout->columns.row_count = count;
+        hidden_rows_layout = entry->context;
+        hidden_rows_layout->columns.hidden_rows = 0;
     } else {
-        LAYOUT(entry)->columns.hidden_rows = count - 6;
+        world_menu_scroll_text_layout_t* layout = entry->context;
+
+        layout->columns.hidden_rows = count - 6;
     }
     entry->selected_index = turn;
     if (turn < 3) {
-        LAYOUT(entry)->row_offset = 0;
+        world_menu_scroll_text_layout_t* layout = entry->context;
+
+        layout->row_offset = 0;
     } else if (turn >= count - 6) {
-        LAYOUT(entry)->row_offset = count - 6;
+        world_menu_scroll_text_layout_t* layout = entry->context;
+
+        layout->row_offset = count - 6;
     } else {
-        LAYOUT(entry)->row_offset = turn - 3;
+        world_menu_scroll_text_layout_t* layout = entry->context;
+
+        layout->row_offset = turn - 3;
     }
     g_battle_menu_at_list_layout.columns.text_ids[0] = work->entry_numbers;
     g_battle_menu_at_list_layout.columns.text_ids[2] = work->secondary_values;

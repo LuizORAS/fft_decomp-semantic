@@ -18,10 +18,14 @@ void world_menu_text_entry_wait_thread(void) {
     u16 third;
 
     param = (world_menu_entry_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
-    param->text_binding->prepare();
+    {
+        world_menu_text_binding_t* binding = param->context;
+
+        binding->prepare();
+    }
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
     second = param->text_id;
-    task = param->text_binding;
+    task = param->context;
     first = param->header_id;
     thread_id = task->text_thread_id;
     third = task->speaker_id;
