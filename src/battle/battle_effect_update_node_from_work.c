@@ -17,9 +17,7 @@ void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t*
     if (work->kind_flags & EFFECT_EMITTER_ORIENT_TO_VELOCITY) {
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_effect_particle_heading_matrix);
-        direction.vx = work->motion.velocity.x >> 3;
-        direction.vy = work->motion.velocity.y >> 3;
-        direction.vz = work->motion.velocity.z >> 3;
+        setVector(&direction, work->motion.velocity.x >> 3, work->motion.velocity.y >> 3, work->motion.velocity.z >> 3);
         /* The flag word lands in the output vector's pad word; the target frame
          * has no separate flag slot. */
         RotTrans(&direction, &rotated, &rotated.pad);

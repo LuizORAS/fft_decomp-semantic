@@ -30,9 +30,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
 
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    local.vx = slot->x >> 12;
-    local.vy = slot->y >> 12;
-    local.vz = slot->z >> 12;
+    setVector(&local, slot->x >> 12, slot->y >> 12, slot->z >> 12);
     RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
     if (depth < EFFECT_OT_DEPTH_MIN) {

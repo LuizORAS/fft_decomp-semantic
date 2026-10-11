@@ -43,9 +43,7 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT:
         coords = battle_camera_get_current_real_coords();
-        g_battle_effect_camera_position_target.vx = coords->vx >> 12;
-        g_battle_effect_camera_position_target.vy = coords->vy >> 12;
-        g_battle_effect_camera_position_target.vz = coords->vz >> 12;
+        setVector(&g_battle_effect_camera_position_target, coords->vx >> 12, coords->vy >> 12, coords->vz >> 12);
         if (offset) {
             battle_effect_add_vectors(
                 offset, &g_battle_effect_camera_position_target, &g_battle_effect_camera_position_target);
@@ -74,9 +72,7 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_TARGET_AVERAGE:
-        sum.vx = 0;
-        sum.vy = 0;
-        sum.vz = 0;
+        setVector(&sum, 0, 0, 0);
         for (i = 0; i < g_battle_effect_context.target_count; i++) {
             if (g_battle_effect_context.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
                 screen

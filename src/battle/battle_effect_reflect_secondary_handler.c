@@ -89,9 +89,7 @@ s32 battle_effect_reflect_secondary_handler(void) {
             = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.data.unit.misc_id);
         target = battle_unit_get_screen_data_ptr_by_misc_id(
             g_battle_effect_current_secondary->target.record.data.unit.misc_id);
-        delta.vx = caster->vx - target->vx;
-        delta.vy = caster->vy - target->vy;
-        delta.vz = caster->vz - target->vz;
+        setVector(&delta, caster->vx - target->vx, caster->vy - target->vy, caster->vz - target->vz);
         position.vx = target->vx;
         position.vz = target->vz;
         position.vy = target->vy

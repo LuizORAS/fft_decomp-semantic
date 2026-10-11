@@ -76,23 +76,20 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
             g_battle_effect_arrow_arc_height, g_battle_effect_arrow_arc_distance);
         next = -battle_effect_calculate_arc_trajectory_term(g_battle_effect_arrow_arc_height,
             g_battle_effect_arrow_arc_distance + g_battle_effect_arrow_arc_distance_step);
-        angles.vx = 0;
-        angles.vy = g_battle_effect_arrow_arc_yaw;
-        angles.vz = ratan2(next - previous, g_battle_effect_arrow_arc_distance_step * 2) + 0x400;
+        setVector(&angles, 0, g_battle_effect_arrow_arc_yaw,
+            ratan2(next - previous, g_battle_effect_arrow_arc_distance_step * 2) + 0x400);
         SetRotMatrix(&g_battle_effect_projectile_matrix);
         SetTransMatrix(&g_battle_effect_projectile_matrix);
         rotation.vy = term >> 12;
         rotation.vz = 0;
         rotation.vx = g_battle_effect_arrow_arc_distance >> 12;
         RotTrans(&rotation, &delta, &delta.pad);
-        position.vx = g_battle_effect_trajectory_origin.vx + delta.vx;
-        position.vy = g_battle_effect_trajectory_origin.vy + delta.vy;
-        position.vz = g_battle_effect_trajectory_origin.vz + delta.vz;
+        setVector(&position, g_battle_effect_trajectory_origin.vx + delta.vx,
+            g_battle_effect_trajectory_origin.vy + delta.vy, g_battle_effect_trajectory_origin.vz + delta.vz);
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
-        rotation.vx = g_battle_effect_trajectory_origin.vx + delta.vx;
-        rotation.vy = g_battle_effect_trajectory_origin.vy + delta.vy;
-        rotation.vz = g_battle_effect_trajectory_origin.vz + delta.vz;
+        setVector(&rotation, g_battle_effect_trajectory_origin.vx + delta.vx,
+            g_battle_effect_trajectory_origin.vy + delta.vy, g_battle_effect_trajectory_origin.vz + delta.vz);
         RotTrans(&rotation, &delta, &delta.pad);
         scale.vz = 0x40;
         scale.vy = 0x40;

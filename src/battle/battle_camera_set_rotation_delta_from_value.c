@@ -11,7 +11,7 @@ void battle_camera_set_rotation_delta_from_value(const s16* destination_value, s
     delta_x = *destination_value - g_battle_camera_render_state.vx;
     g_battle_camera_rotation_countdown = animation_frames;
     animation_frames = g_battle_camera_rotation_countdown;
-    g_battle_camera_rotation_delta.vx = delta_x / animation_frames;
-    g_battle_camera_rotation_delta.vy = (*destination_value - g_battle_camera_render_state.vy) / animation_frames;
-    g_battle_camera_rotation_delta.vz = (*destination_value - g_battle_camera_render_state.vz) / animation_frames;
+    setVector(&g_battle_camera_rotation_delta, delta_x / animation_frames,
+        (*destination_value - g_battle_camera_render_state.vy) / animation_frames,
+        (*destination_value - g_battle_camera_render_state.vz) / animation_frames);
 }

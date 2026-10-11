@@ -129,9 +129,7 @@ s32 battle_effect_spawn_emitter_particles(
     battle_effect_interpolate_emitter_spawn_position(entry, factor, &spawn);
     if (rotate) {
         SetRotMatrix(&matrix);
-        rotation.vx = spawn.vx;
-        rotation.vy = spawn.vy;
-        rotation.vz = spawn.vz;
+        copyVector(&rotation, &spawn);
         RotTrans(&rotation, &spawn, &out.pad);
     }
     switch (kind & EFFECT_EMITTER_ORIGIN_MASK) {
@@ -171,9 +169,7 @@ s32 battle_effect_spawn_emitter_particles(
     battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
     if (rotate) {
         SetRotMatrix(&matrix);
-        rotation.vx = spread.vx;
-        rotation.vy = spread.vy;
-        rotation.vz = spread.vz;
+        copyVector(&rotation, &spread);
         RotTrans(&rotation, &spread, &out.pad);
     }
     particle = head;
@@ -188,9 +184,7 @@ s32 battle_effect_spawn_emitter_particles(
         scale = battle_effect_select_largest_magnitude_s16(spread.vx, spread.vy, spread.vz);
         for (i = 0; i < count; i++) {
             if (scale != 0) {
-                rotation.vx = rand();
-                rotation.vy = rand();
-                rotation.vz = rand();
+                setVector(&rotation, rand(), rand(), rand());
                 RotMatrix(&rotation, &g_battle_effect_emitter_matrix);
                 SetRotMatrix(&g_battle_effect_emitter_matrix);
                 rotation.vx = scale;
@@ -232,9 +226,8 @@ s32 battle_effect_spawn_emitter_particles(
         angle_spread.vz = battle_effect_lerp_linear(
             entry->emitter.velocity_spread_start.z, entry->emitter.velocity_spread_end.z, factor);
     } else {
-        angle_spread.vx = entry->emitter.velocity_spread_start.x / 2;
-        angle_spread.vy = entry->emitter.velocity_spread_start.y / 2;
-        angle_spread.vz = entry->emitter.velocity_spread_start.z / 2;
+        setVector(&angle_spread, entry->emitter.velocity_spread_start.x / 2, entry->emitter.velocity_spread_start.y / 2,
+            entry->emitter.velocity_spread_start.z / 2);
     }
     CURVE_FACTOR(entry->emitter.curve_indices[0] >> 8 & 0xf);
     battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle);
@@ -243,9 +236,9 @@ s32 battle_effect_spawn_emitter_particles(
     switch (flags & EFFECT_EMITTER_VELOCITY_MASK) {
     case EFFECT_EMITTER_VELOCITY_OUTWARD:
         for (i = 0; i < count; i++) {
-            rotation.vx = angle.vx + RANDOM_BETWEEN(angle_spread.vx, -angle_spread.vx);
-            rotation.vy = angle.vy + RANDOM_BETWEEN(angle_spread.vy, -angle_spread.vy);
-            rotation.vz = angle.vz + RANDOM_BETWEEN(angle_spread.vz, -angle_spread.vz);
+            setVector(&rotation, angle.vx + RANDOM_BETWEEN(angle_spread.vx, -angle_spread.vx),
+                angle.vy + RANDOM_BETWEEN(angle_spread.vy, -angle_spread.vy),
+                angle.vz + RANDOM_BETWEEN(angle_spread.vz, -angle_spread.vz));
             RotMatrix(&rotation, &g_battle_effect_emitter_matrix);
             SetRotMatrix(&g_battle_effect_emitter_matrix);
             rotation.vz = 0;
@@ -260,9 +253,9 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     case EFFECT_EMITTER_VELOCITY_CASTER_FACING:
         for (i = 0; i < count; i++) {
-            rotation.vx = angle.vx + RANDOM_BETWEEN(angle_spread.vx, -angle_spread.vx);
-            rotation.vy = angle.vy + RANDOM_BETWEEN(angle_spread.vy, -angle_spread.vy);
-            rotation.vz = angle.vz + RANDOM_BETWEEN(angle_spread.vz, -angle_spread.vz);
+            setVector(&rotation, angle.vx + RANDOM_BETWEEN(angle_spread.vx, -angle_spread.vx),
+                angle.vy + RANDOM_BETWEEN(angle_spread.vy, -angle_spread.vy),
+                angle.vz + RANDOM_BETWEEN(angle_spread.vz, -angle_spread.vz));
             RotMatrix(&rotation, &g_battle_effect_emitter_matrix);
             SetRotMatrix(&g_battle_effect_emitter_matrix);
             rotation.vz = 0;
@@ -270,9 +263,7 @@ s32 battle_effect_spawn_emitter_particles(
             rotation.vy = RANDOM_BETWEEN(speed_min, speed_max);
             RotTrans(&rotation, &out, &out.pad);
             SetRotMatrix(&matrix);
-            rotation.vx = out.vx;
-            rotation.vy = out.vy;
-            rotation.vz = out.vz;
+            copyVector(&rotation, &out);
             RotTrans(&rotation, &out, &out.pad);
             particle->motion.velocity.x = out.vx << 3;
             particle->motion.velocity.y = out.vy << 3;
@@ -284,9 +275,8 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     case EFFECT_EMITTER_VELOCITY_INWARD:
         for (i = 0; i < count; i++) {
-            out.vx = spawn.vx - (particle->motion.position.x >> 12);
-            out.vy = spawn.vy - (particle->motion.position.y >> 12);
-            out.vz = spawn.vz - (particle->motion.position.z >> 12);
+            setVector(&out, spawn.vx - (particle->motion.position.x >> 12),
+                spawn.vy - (particle->motion.position.y >> 12), spawn.vz - (particle->motion.position.z >> 12));
             speed = RANDOM_BETWEEN(speed_min, speed_max);
             if (out.vx != 0 || out.vy != 0 || out.vz != 0) {
                 VectorNormal(&out, &out);
@@ -319,13 +309,9 @@ s32 battle_effect_spawn_emitter_particles(
     if (rotate) {
         SetRotMatrix(&matrix);
         RotTrans(&accel_min, &out, &out.pad);
-        accel_min.vx = out.vx;
-        accel_min.vy = out.vy;
-        accel_min.vz = out.vz;
+        copyVector(&accel_min, &out);
         RotTrans(&accel_max, &out, &out.pad);
-        accel_max.vx = out.vx;
-        accel_max.vy = out.vy;
-        accel_max.vz = out.vz;
+        copyVector(&accel_max, &out);
     }
     CURVE_FACTOR(entry->emitter.curve_indices[1] >> 4 & 0xf);
     accel_step_min.vx = battle_effect_lerp_linear(
@@ -342,13 +328,9 @@ s32 battle_effect_spawn_emitter_particles(
         entry->emitter.acceleration_step_start[5], entry->emitter.acceleration_step_end[5], factor);
     if (rotate) {
         RotTrans(&accel_step_min, &out, &out.pad);
-        accel_step_min.vx = out.vx;
-        accel_step_min.vy = out.vy;
-        accel_step_min.vz = out.vz;
+        copyVector(&accel_step_min, &out);
         RotTrans(&accel_step_max, &out, &out.pad);
-        accel_step_max.vx = out.vx;
-        accel_step_max.vy = out.vy;
-        accel_step_max.vz = out.vz;
+        copyVector(&accel_step_max, &out);
     }
     particle = head;
     for (i = 0; i < count; i++) {

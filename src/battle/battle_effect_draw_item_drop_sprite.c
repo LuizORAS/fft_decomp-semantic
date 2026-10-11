@@ -32,9 +32,7 @@ void battle_effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle)
     prim = &slot->quads[g_battle_effect_buffer_index];
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    local.vx = origin->vx;
-    local.vy = origin->vy;
-    local.vz = origin->vz;
+    copyVector(&local, origin);
     RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
     if (depth < EFFECT_OT_DEPTH_MIN) {

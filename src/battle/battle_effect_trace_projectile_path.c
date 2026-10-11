@@ -40,12 +40,9 @@ s32 battle_effect_trace_projectile_path(
             break;
         }
     }
-    g_battle_effect_trajectory_step.vx = position.vx - previous.vx;
-    g_battle_effect_trajectory_step.vy = position.vy - previous.vy;
-    g_battle_effect_trajectory_step.vz = position.vz - previous.vz;
-    g_battle_effect_trajectory_position.vx = position.vx;
-    g_battle_effect_trajectory_position.vy = position.vy;
-    g_battle_effect_trajectory_position.vz = position.vz;
+    setVector(&g_battle_effect_trajectory_step, position.vx - previous.vx, position.vy - previous.vy,
+        position.vz - previous.vz);
+    copyVector(&g_battle_effect_trajectory_position, &position);
     if (hit != 0) {
         g_battle_effect_trajectory_step_count = i / 4;
         return 0;

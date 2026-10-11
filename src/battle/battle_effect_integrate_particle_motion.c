@@ -56,14 +56,11 @@ void battle_effect_integrate_particle_motion(effect_work_record_t* list) {
                 strength = -0x80;
             }
 
-            delta.vx = node->target.x - (motion->position.x >> 12);
-            delta.vy = node->target.y - (motion->position.y >> 12);
-            delta.vz = node->target.z - (motion->position.z >> 12);
+            setVector(&delta, node->target.x - (motion->position.x >> 12), node->target.y - (motion->position.y >> 12),
+                node->target.z - (motion->position.z >> 12));
             if (delta.vx != 0 || delta.vy != 0 || delta.vz != 0) {
                 VectorNormal(&delta, &delta);
-                delta.vx = (weight * delta.vx) >> 12;
-                delta.vy = (weight * delta.vy) >> 12;
-                delta.vz = (weight * delta.vz) >> 12;
+                setVector(&delta, (weight * delta.vx) >> 12, (weight * delta.vy) >> 12, (weight * delta.vz) >> 12);
             }
 
             motion->acceleration.x += ((motion->acceleration_step.x - delta.vx) * strength) / 127 + delta.vx;

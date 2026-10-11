@@ -19,9 +19,9 @@ s32 battle_camera_calculate_cursor_tile_vector_normal(void) {
     depth = tile->depth_half_height.value;
     height = -((tile->height + (depth >> MAP_TILE_DEPTH_SHIFT)) * 12 + (depth & MAP_TILE_HALF_HEIGHT_MASK) * 6);
     main_util_set_svector(&tile_position, g_battle_cursor_x * 28 + 14, height, g_battle_cursor_y * 28 + 14);
-    delta.vx = tile_position.vx - g_battle_camera_current_real_coords.vx / ONE;
-    delta.vy = height - g_battle_camera_current_real_coords.vy / ONE;
-    delta.vz = tile_position.vz - g_battle_camera_current_real_coords.vz / ONE;
+    setVector(&delta, tile_position.vx - g_battle_camera_current_real_coords.vx / ONE,
+        height - g_battle_camera_current_real_coords.vy / ONE,
+        tile_position.vz - g_battle_camera_current_real_coords.vz / ONE);
     VectorNormal(&delta, &g_battle_current_vector);
     g_battle_current_vector.vx *= 3;
     g_battle_current_vector.vy *= 3;

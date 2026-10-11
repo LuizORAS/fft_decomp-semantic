@@ -73,9 +73,7 @@ void battle_effect_draw_projectile_model(
     SetRotMatrix(&matrix);
     SetTransMatrix(&matrix);
     for (i = 0; i < count; i++) {
-        point.vx = scratch[i].vx;
-        point.vy = scratch[i].vy;
-        point.vz = scratch[i].vz;
+        copyVector(&point, &scratch[i]);
         gte_ldv0(&point);
         gte_rtv0tr();
         gte_stlvnl(&scratch[i]);
@@ -84,9 +82,7 @@ void battle_effect_draw_projectile_model(
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
     for (i = 0; i < count; i++) {
-        point.vx = scratch[i].vx;
-        point.vy = scratch[i].vy;
-        point.vz = scratch[i].vz;
+        copyVector(&point, &scratch[i]);
         gte_ldv0(&point);
         gte_rtv0tr();
         gte_stlvnl(&scratch[i]);

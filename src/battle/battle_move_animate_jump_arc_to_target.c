@@ -26,9 +26,9 @@ void battle_move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
         if (unit->battle_data != 0) {
             if (unit->strike.target_count != 0) {
                 other = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
-                target.vx = other->screen.vx;
-                target.vy = other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2;
-                target.vz = other->screen.vz;
+                setVector(&target, other->screen.vx,
+                    other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2,
+                    other->screen.vz);
             } else {
                 target.vx = unit->battle_data->action_command.target_x * 28 + 14;
                 target.vz = unit->battle_data->action_command.target_y * 28 + 14;

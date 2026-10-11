@@ -40,18 +40,14 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
         } else if (delta > 0x800) {
             delta -= ONE;
         }
-        g_battle_effect_camera_rotation_target.vx = angles->vx;
-        g_battle_effect_camera_rotation_target.vy = delta + current->vy;
-        g_battle_effect_camera_rotation_target.vz = angles->vz;
+        setVector(&g_battle_effect_camera_rotation_target, angles->vx, delta + current->vy, angles->vz);
         g_battle_effect_camera_rotation_mode = command & BATTLE_EFFECT_CAMERA_MODE_MASK;
         g_battle_effect_camera_rotation_duration = duration;
         g_battle_effect_camera_rotation_frame = 0;
         return;
     case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT:
         rotation = battle_camera_get_rotation();
-        g_battle_effect_camera_rotation_target.vx = rotation->vx;
-        g_battle_effect_camera_rotation_target.vy = rotation->vy;
-        g_battle_effect_camera_rotation_target.vz = rotation->vz;
+        copyVector(&g_battle_effect_camera_rotation_target, rotation);
         if (angles) {
             battle_effect_add_svectors(
                 angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
@@ -95,16 +91,14 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
     case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT_YAW_ROLL:
         rotation = battle_camera_get_rotation();
         if (angles) {
-            g_battle_effect_camera_rotation_target.vx = angles->vx;
-            g_battle_effect_camera_rotation_target.vy = rotation->vy + angles->vy;
-            g_battle_effect_camera_rotation_target.vz = rotation->vz + angles->vz;
+            setVector(&g_battle_effect_camera_rotation_target, angles->vx, rotation->vy + angles->vy,
+                rotation->vz + angles->vz);
         }
         break;
     case BATTLE_EFFECT_CAMERA_SOURCE_SAVED_PITCH:
         rotation = battle_camera_get_rotation();
-        g_battle_effect_camera_rotation_target.vx = g_battle_effect_camera_rotation_saved.vx;
-        g_battle_effect_camera_rotation_target.vy = rotation->vy;
-        g_battle_effect_camera_rotation_target.vz = rotation->vz;
+        setVector(&g_battle_effect_camera_rotation_target, g_battle_effect_camera_rotation_saved.vx, rotation->vy,
+            rotation->vz);
         if (angles) {
             battle_effect_add_svectors(
                 angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);

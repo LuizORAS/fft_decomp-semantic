@@ -92,9 +92,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     case EFFECT_LIST_NODE_WORLD:
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
-        input.vx = node->x + node->sprite_offset_x;
-        input.vy = node->y + node->sprite_offset_y;
-        input.vz = node->z;
+        setVector(&input, node->x + node->sprite_offset_x, node->y + node->sprite_offset_y, node->z);
         RotTrans(&input, &output, &output.pad);
         depth = output.vz >> 2;
         switch (node->depth_mode) {
@@ -141,9 +139,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     case EFFECT_LIST_NODE_WORLD_UNSCALED:
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
-        input.vx = node->x + node->sprite_offset_x;
-        input.vy = node->y + node->sprite_offset_y;
-        input.vz = node->z;
+        setVector(&input, node->x + node->sprite_offset_x, node->y + node->sprite_offset_y, node->z);
         RotTrans(&input, &output, &output.pad);
         depth = output.vz >> 2;
         switch (node->depth_mode) {

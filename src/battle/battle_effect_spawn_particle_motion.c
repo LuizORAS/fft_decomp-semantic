@@ -62,14 +62,10 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         RotMatrix(&anchor_angle, &anchor_matrix);
     }
 
-    position.vx = values->position.x;
-    position.vy = values->position.y;
-    position.vz = values->position.z;
+    setVector(&position, values->position.x, values->position.y, values->position.z);
     if (oriented) {
         SetRotMatrix(&anchor_matrix);
-        vector.vx = position.vx;
-        vector.vy = position.vy;
-        vector.vz = position.vz;
+        copyVector(&vector, &position);
         RotTrans(&vector, &position, &direction.pad);
     }
     switch (values->anchor_flags & EFFECT_EMITTER_ORIGIN_MASK) {
@@ -85,19 +81,13 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         break;
     }
 
-    spread.vx = values->spread.x;
-    spread.vy = values->spread.y;
-    spread.vz = values->spread.z;
+    setVector(&spread, values->spread.x, values->spread.y, values->spread.z);
     if (oriented) {
-        vector.vx = spread.vx;
-        vector.vy = spread.vy;
-        vector.vz = spread.vz;
+        copyVector(&vector, &spread);
         RotTrans(&vector, &spread, &direction.pad);
     }
     scale = battle_effect_select_largest_magnitude_s16(spread.vx, spread.vy, spread.vz);
-    vector.vx = rand();
-    vector.vy = rand();
-    vector.vz = rand();
+    setVector(&vector, rand(), rand(), rand());
     RotMatrix(&vector, &rotation);
     SetRotMatrix(&rotation);
     vector.vx = scale;
@@ -110,19 +100,15 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
 
     speed_min = values->speed_min;
     speed_max = values->speed_max;
-    angle.vx = values->angle.x;
-    angle.vy = values->angle.y;
-    angle.vz = values->angle.z;
-    half_spread.vx = values->angle_spread.x / 2;
-    half_spread.vy = values->angle_spread.y / 2;
-    half_spread.vz = values->angle_spread.z / 2;
+    setVector(&angle, values->angle.x, values->angle.y, values->angle.z);
+    setVector(&half_spread, values->angle_spread.x / 2, values->angle_spread.y / 2, values->angle_spread.z / 2);
     switch (values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) {
     case EFFECT_EMITTER_VELOCITY_OUTWARD:
     case EFFECT_EMITTER_VELOCITY_TOWARD_TARGET:
     case EFFECT_EMITTER_VELOCITY_CASTER_FACING:
-        vector.vx = angle.vx + battle_effect_get_random_between(half_spread.vx, -half_spread.vx);
-        vector.vy = angle.vy + battle_effect_get_random_between(half_spread.vy, -half_spread.vy);
-        vector.vz = angle.vz + battle_effect_get_random_between(half_spread.vz, -half_spread.vz);
+        setVector(&vector, angle.vx + battle_effect_get_random_between(half_spread.vx, -half_spread.vx),
+            angle.vy + battle_effect_get_random_between(half_spread.vy, -half_spread.vy),
+            angle.vz + battle_effect_get_random_between(half_spread.vz, -half_spread.vz));
         RotMatrix(&vector, &rotation);
         SetRotMatrix(&rotation);
         vector.vz = 0;
@@ -130,9 +116,7 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         vector.vy = battle_effect_get_random_between(speed_min, speed_max);
         RotTrans(&vector, &direction, &direction.pad);
         if (oriented) {
-            vector.vx = direction.vx;
-            vector.vy = direction.vy;
-            vector.vz = direction.vz;
+            copyVector(&vector, &direction);
             SetRotMatrix(&anchor_matrix);
             RotTrans(&vector, &direction, &direction.pad);
         }
@@ -141,9 +125,8 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
         motion->velocity.z = direction.vz << 3;
         break;
     case EFFECT_EMITTER_VELOCITY_INWARD:
-        direction.vx = position.vx - (motion->position.x >> 12);
-        direction.vy = position.vy - (motion->position.y >> 12);
-        direction.vz = position.vz - (motion->position.z >> 12);
+        setVector(&direction, position.vx - (motion->position.x >> 12), position.vy - (motion->position.y >> 12),
+            position.vz - (motion->position.z >> 12));
         speed = battle_effect_get_random_between(speed_min, speed_max);
         if (direction.vx != 0 || direction.vy != 0 || direction.vz != 0) {
             VectorNormal(&direction, &direction);

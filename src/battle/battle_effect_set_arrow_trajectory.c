@@ -32,9 +32,9 @@ void battle_effect_set_arrow_trajectory(s32 source_id, SVECTOR* tile_position, s
         battle_unit_get_tile_center_and_height_by_battle_id(target_id, &g_battle_effect_trajectory_destination);
         g_battle_effect_trajectory_destination.vy -= target_height;
     }
-    delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
-    delta.vy = g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy;
-    delta.vz = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
+    setVector(&delta, g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx,
+        g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy,
+        g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz);
     g_battle_effect_trajectory_step_count
         = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) << 12) / 8 >> 12;
 }

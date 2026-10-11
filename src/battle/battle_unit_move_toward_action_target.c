@@ -25,9 +25,8 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
                 velocity.vy = 0;
             } else if (unit->strike.target_count != 0) {
                 target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
-                velocity.vx = target->real.vx - unit->real.vx;
-                velocity.vy = target->real.vy - unit->real.vy;
-                velocity.vz = target->real.vz - unit->real.vz;
+                setVector(&velocity, target->real.vx - unit->real.vx, target->real.vy - unit->real.vy,
+                    target->real.vz - unit->real.vz);
             } else {
                 velocity.vx = (unit->battle_data->action_command.target_x * 0x1C + 0xE - unit->screen.vx) << 12;
                 velocity.vz = (unit->battle_data->action_command.target_y * 0x1C + 0xE - unit->screen.vz) << 12;

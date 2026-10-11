@@ -15,9 +15,7 @@ void battle_camera_update_offset_screen_coord_animation(void) {
         fixed_y = g_battle_camera_offset_screen_coords_fixed.vz + g_battle_camera_real_coord_delta.vz;
         g_battle_camera_offset_screen_coords_fixed.vy = fixed_z;
         g_battle_camera_offset_screen_coords_fixed.vz = fixed_y;
-        g_battle_offset_screen_coords.vx = fixed_x / ONE;
-        g_battle_offset_screen_coords.vy = fixed_z / ONE;
-        g_battle_offset_screen_coords.vz = fixed_y / ONE;
+        setVector(&g_battle_offset_screen_coords, fixed_x / ONE, fixed_z / ONE, fixed_y / ONE);
         g_battle_camera_offset_screen_coord_countdown--;
     }
 }

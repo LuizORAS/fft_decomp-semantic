@@ -49,9 +49,9 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
 
     switch (g_battle_effect_current_secondary->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
-        delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
-        delta.vy = g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy;
-        delta.vz = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
+        setVector(&delta, g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx,
+            g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy,
+            g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz);
         g_battle_effect_projectile_length
             = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) << 12);
         g_battle_effect_projectile_delta = delta;
@@ -119,9 +119,8 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
         g_battle_effect_projectile_progress += g_battle_effect_projectile_speed;
         battle_effect_find_projectile_xyz_along_trajectory(&g_battle_effect_projectile_delta,
             g_battle_effect_projectile_length, g_battle_effect_projectile_progress, &position);
-        position.vx = g_battle_effect_trajectory_origin.vx + position.vx;
-        position.vy = g_battle_effect_trajectory_origin.vy + position.vy;
-        position.vz = g_battle_effect_trajectory_origin.vz + position.vz;
+        setVector(&position, g_battle_effect_trajectory_origin.vx + position.vx,
+            g_battle_effect_trajectory_origin.vy + position.vy, g_battle_effect_trajectory_origin.vz + position.vz);
         delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
         delta.vz = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
         delta.vy = g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy;
@@ -142,9 +141,8 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 scale.vz = 0xc0;
                 scale.vy = 0xc0;
                 scale.vx = 0xc0;
-                spin.vx = 0;
-                spin.vy = g_battle_effect_projectile_spin_passes * 256;
-                spin.vz = g_battle_effect_projectile_spin_passes * 128;
+                setVector(&spin, 0, g_battle_effect_projectile_spin_passes * 256,
+                    g_battle_effect_projectile_spin_passes * 128);
             }
             battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         } else {

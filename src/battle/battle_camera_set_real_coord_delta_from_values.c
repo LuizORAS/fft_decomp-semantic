@@ -8,7 +8,6 @@ void battle_camera_set_real_coord_delta_from_values(const VECTOR* values, s32 fr
     animation_frames = (frame_count & 0xffff) / g_main_system_animation_speed;
     g_battle_camera_real_coord_countdown = animation_frames;
     animation_frames = g_battle_camera_real_coord_countdown;
-    g_battle_camera_real_coord_delta.vx = values->vx / animation_frames;
-    g_battle_camera_real_coord_delta.vy = values->vy / animation_frames;
-    g_battle_camera_real_coord_delta.vz = values->vz / animation_frames;
+    setVector(&g_battle_camera_real_coord_delta, values->vx / animation_frames, values->vy / animation_frames,
+        values->vz / animation_frames);
 }

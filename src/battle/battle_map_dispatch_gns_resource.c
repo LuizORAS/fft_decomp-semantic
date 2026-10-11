@@ -250,9 +250,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
     case MAP_RESOURCE_APPLY_LIGHTING:
         light = &data->lighting;
         g_battle_map_lighting_pending = 0;
-        g_battle_map_light_rotation.vx = 0;
-        g_battle_map_light_rotation.vy = 0;
-        g_battle_map_light_rotation.vz = 0;
+        setVector(&g_battle_map_light_rotation, 0, 0, 0);
         vector = light->colour[0];
         vector += 9;
         direction.m[0][0] = vector[0];
@@ -330,17 +328,13 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
     case GNS_RESOURCE_SET_CAMERA_POSITION:
         vector = data->command_halfwords;
         vector += 6;
-        g_battle_camera_integer_coords.vx = -vector[0];
-        g_battle_camera_integer_coords.vy = vector[1];
-        g_battle_camera_integer_coords.vz = -vector[2];
+        setVector(&g_battle_camera_integer_coords, -vector[0], vector[1], -vector[2]);
         battle_camera_set_focus_and_cursor_tile(&g_battle_camera_integer_coords, &g_battle_map_camera_rotation);
         break;
     case GNS_RESOURCE_SET_CAMERA_ROTATION:
         vector = data->command_halfwords;
         vector += 6;
-        g_battle_map_camera_rotation.vx = vector[0];
-        g_battle_map_camera_rotation.vy = vector[1];
-        g_battle_map_camera_rotation.vz = vector[2];
+        setVector(&g_battle_map_camera_rotation, vector[0], vector[1], vector[2]);
         battle_camera_set_focus_and_cursor_tile(&g_battle_camera_integer_coords, &g_battle_map_camera_rotation);
         break;
     /* Case-local pointers preserve the native address lifetimes. */
