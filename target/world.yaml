@@ -1977,10 +1977,10 @@ data:
   - {addr: 0x801c1564, name: g_world_comparison_unit_status_packets}
   - {addr: 0x801c1914, name: g_world_selected_unit_stat_text_image}
   - {addr: 0x801c2014, name: g_world_selected_unit_name_text_image}
-  - {addr: 0x801c2594, name: g_world_selected_unit_number_text_image}
+  - {addr: 0x801c2594, name: g_world_selected_unit_number_text_images}
   - {addr: 0x801c2684, name: g_world_comparison_unit_stat_text_image}
   - {addr: 0x801c2d84, name: g_world_comparison_unit_name_text_image}
-  - {addr: 0x801c3304, name: g_world_comparison_unit_number_text_image}
+  - {addr: 0x801c3304, name: g_world_comparison_unit_number_text_images}
   - {addr: 0x801c33f4, name: g_world_selected_unit_portrait_palettes}
   - {addr: 0x801c3434, name: g_world_comparison_unit_portrait_palettes}
   - {addr: 0x801c3474, name: g_world_text_message_box_glyph}

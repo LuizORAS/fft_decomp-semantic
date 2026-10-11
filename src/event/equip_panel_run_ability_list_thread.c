@@ -16,7 +16,7 @@ void equip_panel_run_ability_list_thread(void) {
     menu_status_thread_t* thread;
     u8* text;
     menu_status_panel_buffer_t* screen;
-    menu_item_stat_detail_t* state;
+    menu_status_panel_slot_state_t* state;
     s32 frame;
     s32 i;
     s32 id;
@@ -27,14 +27,14 @@ void equip_panel_run_ability_list_thread(void) {
     if (g_battle_current_thread_id == EQUIP_THREAD_SLOT_EQUIPMENT_LIST) {
         text = g_equip_panel_text_image_a;
         screen = g_equip_panel_frames_a;
-        state = &g_equip_unit_editor_stats;
+        state = &g_equip_unit_editor_stats.state;
         base = g_equip_panel_frames_a;
         upload = &g_equip_panel_text_upload_rect_a;
         u = 0;
     } else {
         text = g_equip_panel_text_image_b;
         screen = g_equip_panel_frames_b;
-        state = &g_equip_item_preview_stat_detail;
+        state = &g_equip_item_preview_stat_detail.state;
         upload = &g_equip_panel_text_upload_rect_b;
         base = g_equip_panel_frames_b;
         u = 0x50;

@@ -22,37 +22,6 @@ typedef struct menu_ability_list {
     u8 skill_ct[0x52]; /* 0x334 */
 } menu_ability_list_t;
 
-/* item */
-/* Provisional records filled by the WORLD stat-comparison helper at
- * 0x80122f9c and consumed by world_item_combine_stat_details. Armor supplies the
- * HP/MP bonuses; weapon, shield, accessory and item-attribute tables supply
- * the named detail fields. Weapon fields follow equipment-slot order. */
-
-typedef struct menu_item_stat_detail {
-    s16 move_bonus; /* Signed 16-bit values combined by world_item_combine_stat_details. */
-    s16 speed_bonus;
-    s16 jump_bonus;
-    s16 right_weapon_power; /* 0x06; summed per equipment slot by world_item_sum_equipment_stat_details */
-    s16 left_weapon_power;  /* 0x08 */
-    s16 right_weapon_evade; /* 0x0a */
-    s16 left_weapon_evade;  /* 0x0c */
-    s16 generic_monster;    /* 0x0e; star icons instead of ability-type icons; panels pick labels and sprites by it */
-    s16 two_hands;          /* 0x10; with generic_monster, selects the panel sprite sheet layout */
-    s16 physical_attack_bonus;
-    s16 physical_class_evade;     /* 0x14 */
-    s16 physical_shield_evade;    /* 0x16 */
-    s16 physical_accessory_evade; /* 0x18 */
-    u8 _unused_1a[2];
-    s16 magical_attack_bonus;
-    s16 magical_class_evade;     /* 0x1e */
-    s16 magical_shield_evade;    /* 0x20 */
-    s16 magical_accessory_evade; /* 0x22 */
-    s16 equipment[5];            /* 0x24; world_menu_run_best_fit_equipment (0x8011b554) keeps its suggested set here */
-    s16 ability_ids[5];          /* 0x2e; status panel ability rows, -1 for an empty row */
-    u8 _unused_38[0x40 - 0x38];
-} menu_item_stat_detail_t;
-typedef char menu_item_stat_detail_size_must_be_64[(sizeof(menu_item_stat_detail_t) == 64) ? 1 : -1];
-
 /* palette */
 /* Two sixteen-colour banks: the normal menu colours followed by their dimmed forms. */
 typedef struct menu_palette_pair {
@@ -243,9 +212,8 @@ typedef struct menu_unit_status_identity {
 } menu_unit_status_identity_t;
 typedef char menu_unit_status_identity_size_must_be_14[sizeof(menu_unit_status_identity_t) == 14 ? 1 : -1];
 
-/* Per-slot editor state (0x38 bytes). Both arrays are indexed by the five
- * character slots; the status threads walk them with 2-byte cursors. The
- * layout is the lower billboard record (0x801ca0e8). */
+/* Unit stats and equipment/ability rows used by status panels and previews.
+ * The arrays follow the five character slots. */
 typedef struct menu_status_panel_slot_state {
     s16 move;                     /* 0x00 */
     s16 speed;                    /* 0x02 */
@@ -278,7 +246,7 @@ typedef struct menu_status_panel_slot_state {
 } menu_status_panel_slot_state_t;
 typedef char menu_status_panel_slot_state_size_must_be_56[(sizeof(menu_status_panel_slot_state_t) == 56) ? 1 : -1];
 
-/* Editor storage is copied whole by the billboard copy routines. */
+/* Complete status and preview record, copied whole by the billboard routines. */
 typedef struct menu_status_panel_slot_storage {
     menu_status_panel_slot_state_t state;
     u8 _unused_38[8]; /* preserves the copied 0x40-byte record */
@@ -867,6 +835,14 @@ typedef struct menu_at_list_work {
 typedef char
     menu_at_list_work_entries_offset_must_be_0x680[((unsigned long)&((menu_at_list_work_t*)0)->entries == 0x680) ? 1
                                                                                                                  : -1];
+
+/* Packed 4-bit images for the status panel's three numeric groups. */
+typedef struct menu_unit_stat_number_images {
+    u8 mobility[20 * 36 / 2]; /* Move, Jump and Speed. */
+    u8 weapons[64 * 24 / 2];  /* Weapon power and evade. */
+    u8 combat[100 * 24 / 2];  /* Physical/magical attack and class/shield/accessory evade. */
+} menu_unit_stat_number_images_t;
+typedef char menu_unit_stat_number_images_size_must_be_2328[sizeof(menu_unit_stat_number_images_t) == 2328 ? 1 : -1];
 
 /* Provisional 0x1ac-byte double-buffered panel record at WORLD 0x801a2bd0 and
  * BATTLE 0x80172834. */

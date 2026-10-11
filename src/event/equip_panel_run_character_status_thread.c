@@ -8,7 +8,7 @@ void equip_panel_run_character_status_thread(void) {
     menu_status_thread_t* thread;
     menu_status_panel_buffer_t* screen;
     menu_status_panel_buffer_t* base;
-    menu_item_stat_detail_t* state;
+    menu_status_panel_slot_state_t* state;
     s32 frame;
     s32 mode;
     s32 i;
@@ -22,7 +22,7 @@ void equip_panel_run_character_status_thread(void) {
     g_equip_input_controller = battle_script_get_controller_input_pointer(0);
     screen = g_equip_panel_frames_a;
     base = g_equip_panel_frames_a;
-    state = &g_equip_unit_editor_stats;
+    state = &g_equip_unit_editor_stats.state;
     rect = g_equip_character_status_frame_rect;
     battle_menu_init_numeric_display_frame_primitives(rect, &screen->numeric_frame);
     equip_gfx_init_menu_tile_and_line_primitives(screen);

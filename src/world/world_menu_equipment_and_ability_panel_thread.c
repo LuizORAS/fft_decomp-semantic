@@ -15,7 +15,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
     menu_status_thread_t* thread;
     menu_status_panel_buffer_t* screen;
     menu_status_panel_buffer_t* base;
-    menu_item_stat_detail_t* state;
+    menu_status_panel_slot_state_t* state;
     u8* cursor;
     s32 frame;
     s32 mode;
@@ -26,7 +26,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
     screen = g_world_change_banner_panel_frames;
     base = g_world_change_banner_panel_frames;
-    state = &g_world_selected_unit_stat_detail;
+    state = &g_world_selected_unit_stat_detail.state;
     world_menu_init_numeric_display_frame_primitives(&g_world_equipment_ability_panel_origin, &screen->numeric_frame);
     world_gfx_init_menu_tile_and_line_primitives(screen);
     world_panel_gfx_init_scaled_draw_area_packets(&screen->portrait);

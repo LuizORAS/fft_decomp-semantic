@@ -10,7 +10,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     battle_stats_t* unit;
     menu_unit_status_record_t* gauges;
     menu_unit_status_identity_t* identity;
-    menu_item_stat_detail_t* detail;
+    menu_status_panel_slot_state_t* detail;
     u16* abilities;
     s32 i;
     u8 flags;
@@ -23,7 +23,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     unit = &g_wldcore_status_unit;
     gauges = &g_world_selected_unit_stat_summary;
     identity = &g_world_selected_unit_identity;
-    detail = &g_world_selected_unit_stat_detail;
+    detail = &g_world_selected_unit_stat_detail.state;
     gauges->team_kind = 0;
     gauges->level = unit->level;
     flags = unit->team_flags;
@@ -59,14 +59,14 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     identity->roster_slot = party_index;
     identity->faith = unit->faith;
     identity->zodiac = unit->birthday.zodiac;
-    detail->move_bonus = unit->move;
-    detail->speed_bonus = unit->attributes[UNIT_ATTRIBUTE_SPEED];
-    detail->jump_bonus = unit->jump;
+    detail->move = unit->move;
+    detail->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
+    detail->jump = unit->jump;
     detail->right_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE];
     detail->left_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE];
     detail->right_weapon_power = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_POWER];
     detail->left_weapon_power = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER];
-    detail->physical_attack_bonus = unit->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
+    detail->physical_attack = unit->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
     detail->physical_class_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE];
     detail->physical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_PHYSICAL_EVADE];
     if (unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_PHYSICAL_EVADE]
@@ -74,7 +74,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
         detail->physical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_PHYSICAL_EVADE];
     }
     detail->physical_accessory_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE];
-    detail->magical_attack_bonus = unit->attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK];
+    detail->magical_attack = unit->attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK];
     detail->magical_class_evade = 0;
     detail->magical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_MAGIC_EVADE];
     if (unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_MAGIC_EVADE]

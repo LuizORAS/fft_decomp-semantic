@@ -317,7 +317,7 @@ extern s32 g_equip_item_numeric_panel_y;
 extern s32 g_equip_item_numeric_panel_redraw;
 extern s32 g_equip_item_numeric_panel_style;
 extern s32 g_equip_item_numeric_thread_enabled;
-extern struct menu_item_stat_detail g_equip_item_preview_stat_detail;
+extern struct menu_status_panel_slot_storage g_equip_item_preview_stat_detail;
 extern menu_entry_t g_equip_item_action_menu;
 extern menu_entry_t g_equip_item_action_menu_single_item;
 extern s8 g_equip_item_action_menu_active;
@@ -331,13 +331,13 @@ extern u16 g_equip_remove_item_cursor_anim[];
 extern s16 g_equip_remove_item_equipment[];
 extern point16_t g_equip_remove_item_marker_rect;
 extern s8 g_equip_remove_item_previewed_slot;
-void equip_item_clear_stat_sums(menu_unit_status_record_t* summary, menu_item_stat_detail_t* detail);
+void equip_item_clear_stat_sums(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail);
 s32 equip_item_adjust_inventory_count(s32 item_entry, s32 delta);
 void equip_item_build_inventory_totals(void);
 menu_icon_source_t* equip_item_build_type_icon_source(s32 index);
 
 void equip_item_calculate_swap_stat_delta(
-    menu_item_stat_detail_t* output, menu_unit_status_record_t* out, s16 from, s16 to, s32 slot);
+    menu_status_panel_slot_storage_t* output, menu_unit_status_record_t* out, s16 from, s16 to, s32 slot);
 
 void equip_menu_load_sort_key_list(s32 list_index, s16* destination);
 s32 equip_item_get_equipped_count(s32 item_entry);
@@ -360,8 +360,8 @@ s32 equip_item_build_filtered_list(s16 unit_index, s16 sort_mode, s8 category, s
 menu_icon_source_t* equip_menu_get_entry_item_icon_source(s32 row);
 s32 equip_item_get_ranking_value(s32 item_id);
 
-void equip_item_subtract_scaled_stats(
-    menu_item_stat_detail_t* out, menu_item_stat_detail_t* scaled, menu_item_stat_detail_t* base, s32 scale);
+void equip_item_subtract_scaled_stats(menu_status_panel_slot_storage_t* out, menu_status_panel_slot_storage_t* scaled,
+    menu_status_panel_slot_storage_t* base, s32 scale);
 
 /* menu */
 /* g_equip_menu_screen_state: the index of the screen's handler in
@@ -705,14 +705,14 @@ extern u8 g_equip_unit_status_panel_params[];
 extern s32 g_equip_unit_status_panel_flags;
 extern s32 g_equip_unit_status_panel_redraw;
 extern s8 g_equip_unit_banner_enabled;
-extern menu_item_stat_detail_t g_equip_unit_editor_stats;
+extern menu_status_panel_slot_storage_t g_equip_unit_editor_stats;
 extern s16 g_equip_unit_saved_hp;
 extern s16 g_equip_unit_saved_mp;
 extern equip_unit_data_t g_equip_unit_records[];
 extern menu_unit_status_record_t g_equip_selected_unit_stat_summary;
 
 void equip_item_calculate_equipment_swap_stat_delta(
-    menu_item_stat_detail_t* detail_total, menu_unit_status_record_t* acc, u16* froms, u16* tos);
+    menu_status_panel_slot_storage_t* detail_total, menu_unit_status_record_t* acc, u16* froms, u16* tos);
 
 s32 equip_unit_can_equip_item_id(s16 unit_index, s16 item_entry);
 s32 equip_unit_has_two_hands(s16 unit_index);
@@ -724,7 +724,7 @@ s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id);
 equip_item_slot_result_e equip_unit_validate_slot_item(s16 unit_index, s16 slot, s32 item_id);
 void equip_unit_build_data_from_battle_stats(struct battle_stats* stats, equip_unit_data_t* unit);
 void equip_unit_commit_loadout_to_battle_stats(void);
-void equip_item_sum_equipment_stat_details(menu_item_stat_detail_t* total, u16* equipment);
+void equip_item_sum_equipment_stat_details(menu_status_panel_slot_storage_t* total, u16* equipment);
 void equip_render_unit_status_panel_thread(void);
 s32 equip_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support);
 
@@ -753,7 +753,7 @@ extern menu_entry_t g_equip_type_order_menu_other_slots;
 extern s8 g_equip_type_order_ready;
 
 void equip_collect_item_stat_deltas(
-    s16 raw_item, menu_unit_status_record_t* summary, menu_item_stat_detail_t* detail, s32 alternate);
+    s16 raw_item, menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail, s32 alternate);
 
 s32 equip_entrypoint(s32 unit, u32* otag);
 

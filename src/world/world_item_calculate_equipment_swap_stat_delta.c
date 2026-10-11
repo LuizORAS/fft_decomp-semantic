@@ -2,11 +2,11 @@
 #include "psx/types.h"
 
 /* Accumulates the stat deltas of all equipment slot changes into total. */
-void world_item_calculate_equipment_swap_stat_delta(
-    menu_item_stat_detail_t* detail_total, menu_unit_status_record_t* total, u16* items_before, u16* items_after) {
+void world_item_calculate_equipment_swap_stat_delta(menu_status_panel_slot_storage_t* detail_total,
+    menu_unit_status_record_t* total, u16* items_before, u16* items_after) {
     menu_unit_status_record_t delta;
-    menu_item_stat_detail_t detail;
-    menu_item_stat_detail_t unused;
+    menu_status_panel_slot_storage_t detail;
+    menu_status_panel_slot_storage_t unused;
     s32 slot;
 
     world_formation_clear_stat_preview(total, detail_total);

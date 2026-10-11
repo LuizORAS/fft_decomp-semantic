@@ -9,7 +9,7 @@
 void world_menu_run_numeric_display_panel_thread(void) {
     menu_panel_record_t* records;
     menu_panel_record_t* record;
-    u8* buffer;
+    menu_unit_stat_number_images_t* number_images;
     s32 i;
     s32 frame;
 
@@ -19,24 +19,25 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_gfx_set_draw_mode_for_texture_page(&record->mode0, MENU_TEXTURE_PAGE_FRAME);
     world_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_TEXT_IMAGES);
     world_gfx_init_scaled_draw_area_packets(&record->draw_areas);
-    buffer = world_menu_alloc_ui_buffer(0x918);
-    world_clear_menu_render_buffer(buffer, 0x918);
+    number_images = world_menu_alloc_ui_buffer(sizeof(*number_images));
+    world_clear_menu_render_buffer(number_images, sizeof(*number_images));
     g_world_menu_text_state.pen.stride = 0x14;
     world_menu_set_text_origin(0, 0);
-    world_menu_draw_numeric_display_entries(buffer, g_world_numeric_display_entries, &g_world_menu_text_state.pen, 3);
+    world_menu_draw_numeric_display_entries(
+        number_images->mobility, g_world_numeric_display_entries, &g_world_menu_text_state.pen, 3);
     g_world_menu_text_state.pen.stride = 0x40;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_numeric_display_entries(
-        buffer + 0x168, &g_world_numeric_display_entries[3], &g_world_menu_text_state.pen, 4);
+        number_images->weapons, &g_world_numeric_display_entries[3], &g_world_menu_text_state.pen, 4);
     g_world_menu_text_state.pen.stride = 0x64;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_numeric_display_entries(
-        buffer + 0x468, &g_world_numeric_display_entries[7], &g_world_menu_text_state.pen, 8);
-    LoadImage(&g_world_numeric_display_text_rect_a, (u32*)buffer);
-    LoadImage(&g_world_numeric_display_text_rect_b, (u32*)(buffer + 0x168));
-    LoadImage(&g_world_numeric_display_text_rect_c, (u32*)(buffer + 0x468));
+        number_images->combat, &g_world_numeric_display_entries[7], &g_world_menu_text_state.pen, 8);
+    LoadImage(&g_world_numeric_display_text_rect_a, (u32*)number_images->mobility);
+    LoadImage(&g_world_numeric_display_text_rect_b, (u32*)number_images->weapons);
+    LoadImage(&g_world_numeric_display_text_rect_c, (u32*)number_images->combat);
     world_thread_wait_frames(1);
-    world_menu_free_memory(buffer);
+    world_menu_free_memory(number_images);
     for (i = 0; i < 18; i++) {
         world_menu_init_sprite(&record->sprites[i]);
         world_gfx_init_image_loading((texture_primitive_t*)&record->sprites[i], &g_world_gfx_menu_image_source,

@@ -9,7 +9,7 @@
  *
  * Moving onto a unit that can equip the item stages it in the temporary
  * formation preview record and shows the stat preview; slots
- * already holding the item are flagged in g_world_selected_unit_stat_detail.equipment. Cancel returns to shop
+ * already holding the item are flagged in g_world_selected_unit_stat_detail.state.equipment. Cancel returns to shop
  * step 1.
  */
 void world_shop_run_equip_candidate_step(void) {
@@ -60,7 +60,7 @@ void world_shop_run_equip_candidate_step(void) {
                 if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i]
                     == g_world_shop_equip_candidate_item) {
                     equipped = 1;
-                    g_world_selected_unit_stat_detail.equipment[i] |= 0x8000;
+                    g_world_selected_unit_stat_detail.state.equipment[i] |= 0x8000;
                 }
             }
             if (equipped != 0
@@ -74,16 +74,16 @@ void world_shop_run_equip_candidate_step(void) {
                 world_formation_equip_item_to_unit_slot(
                     WORLD_FORMATION_PREVIEW_UNIT_INDEX, slot, g_world_shop_equip_candidate_item);
                 bcopy(g_world_formation_unit_pointers[WORLD_FORMATION_PREVIEW_UNIT_INDEX]->equipment,
-                    g_world_item_preview_stat_detail.equipment, 10);
+                    g_world_item_preview_stat_detail.state.equipment, 10);
                 world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
                     &g_world_selected_unit_stat_summary,
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                     g_world_formation_unit_pointers[WORLD_FORMATION_PREVIEW_UNIT_INDEX]->equipment);
-                g_world_item_preview_stat_detail.two_hands
-                    = world_unit_is_two_handing_weapon(g_world_item_preview_stat_detail.equipment,
+                g_world_item_preview_stat_detail.state.two_hands
+                    = world_unit_is_two_handing_weapon(g_world_item_preview_stat_detail.state.equipment,
                         world_ability_has_two_hands(g_world_formation_selected_unit_index));
                 g_world_shop_equip_candidate_preview_visible = 1;
-                g_world_item_preview_stat_detail.equipment[slot]
+                g_world_item_preview_stat_detail.state.equipment[slot]
                     = g_world_shop_equip_candidate_item | WORLD_EQUIPMENT_SHOP_ITEM;
             }
         }

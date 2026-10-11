@@ -2,11 +2,11 @@
 #include "psx/types.h"
 
 /* Sum the stat changes of swapping each of the five equipment slots from `from_items` to `to_items`. */
-void equip_item_calculate_equipment_swap_stat_delta(
-    menu_item_stat_detail_t* detail_total, menu_unit_status_record_t* summary_total, u16* from_items, u16* to_items) {
+void equip_item_calculate_equipment_swap_stat_delta(menu_status_panel_slot_storage_t* detail_total,
+    menu_unit_status_record_t* summary_total, u16* from_items, u16* to_items) {
     menu_unit_status_record_t summary_delta;
-    menu_item_stat_detail_t detail_delta;
-    menu_item_stat_detail_t unused; /* unreferenced in the target; needed for the frame size */
+    menu_status_panel_slot_storage_t detail_delta;
+    menu_status_panel_slot_storage_t unused; /* unreferenced in the target; needed for the frame size */
     s32 i;
 
     equip_item_clear_stat_sums(summary_total, detail_total);

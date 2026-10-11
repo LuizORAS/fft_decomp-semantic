@@ -6,18 +6,18 @@
  * IDs 0x1E6-0x1E8 grant Move +1/+2/+3; 0x1E9-0x1EB grant Jump +1/+2/+3.
  * Other abilities leave both bonuses at 0.
  */
-void world_ability_get_move_and_jump_increase_values(s16 ability, menu_item_stat_detail_t* out) {
+void world_ability_get_move_and_jump_increase_values(s16 ability, menu_status_panel_slot_storage_t* out) {
     menu_unit_status_record_t summary;
 
     world_formation_clear_stat_preview(&summary, out);
     if (ability >= ABILITY_ID_MOVEMENT_MOVE_PLUS_1 && ability <= ABILITY_ID_MOVEMENT_MOVE_PLUS_3) {
-        out->move_bonus = ability - (ABILITY_ID_MOVEMENT_MOVE_PLUS_1 - 1);
+        out->state.move = ability - (ABILITY_ID_MOVEMENT_MOVE_PLUS_1 - 1);
     } else {
-        out->move_bonus = 0;
+        out->state.move = 0;
     }
     if (ability >= ABILITY_ID_MOVEMENT_JUMP_PLUS_1 && ability <= ABILITY_ID_MOVEMENT_JUMP_PLUS_3) {
-        out->jump_bonus = ability - (ABILITY_ID_MOVEMENT_JUMP_PLUS_1 - 1);
+        out->state.jump = ability - (ABILITY_ID_MOVEMENT_JUMP_PLUS_1 - 1);
     } else {
-        out->jump_bonus = 0;
+        out->state.jump = 0;
     }
 }

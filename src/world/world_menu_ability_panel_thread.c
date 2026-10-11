@@ -20,7 +20,7 @@ void world_menu_ability_panel_thread(void) {
     menu_status_thread_t* thread;
     u8* text;
     menu_status_panel_buffer_t* screen;
-    menu_item_stat_detail_t* state;
+    menu_status_panel_slot_state_t* state;
     s32 frame;
     s32 i;
     s32 id;
@@ -31,14 +31,14 @@ void world_menu_ability_panel_thread(void) {
     if (g_world_thread_current_id == WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) {
         text = g_world_change_banner_text_image;
         screen = g_world_change_banner_panel_frames;
-        state = &g_world_selected_unit_stat_detail;
+        state = &g_world_selected_unit_stat_detail.state;
         base = g_world_change_banner_panel_frames;
         upload = &g_world_equipment_panel_item_text_rect;
         u = 0;
     } else {
         text = g_world_stat_preview_text_image;
         screen = g_world_stat_preview_panel_frames;
-        state = &g_world_item_preview_stat_detail;
+        state = &g_world_item_preview_stat_detail.state;
         upload = &g_world_equipment_panel_ability_text_rect;
         base = g_world_stat_preview_panel_frames;
         u = 0x50;

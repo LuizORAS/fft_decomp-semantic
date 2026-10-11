@@ -32,22 +32,22 @@ void world_menu_unit_status_banner_thread(void) {
     s32 cur_unit;
     s32 prev_unit;
 
-    u8* render_a;                                    /* sp60 */
-    menu_status_panel_editor_packet_t* summary_base; /* sp68 */
-    menu_number_entry_t* entries;                    /* sp70 */
-    menu_unit_status_record_t* state;                /* sp78 */
-    s32 portrait_arg;                                /* sp80 */
-    const RECT* transition;                          /* sp88 */
-    palette_t* portrait_palettes;                    /* sp90 */
-    u8* render_b;                                    /* sp98 */
-    u8* render_c;                                    /* spA0 */
-    menu_status_panel_packet_t* status_base;         /* spA8 */
-    menu_unit_status_identity_t* identity;           /* spB0 */
-    menu_status_panel_display_thread_t* display;     /* spB8 */
-    s32 frame;                                       /* spC0 */
-    s32 shake;                                       /* spC8 */
-    s32 dimmed;                                      /* spD0 */
-    s32 suppress;                                    /* spD8 */
+    u8* stat_image;                                   /* sp60 */
+    menu_status_panel_editor_packet_t* summary_base;  /* sp68 */
+    menu_number_entry_t* entries;                     /* sp70 */
+    menu_unit_status_record_t* state;                 /* sp78 */
+    s32 portrait_arg;                                 /* sp80 */
+    const RECT* transition;                           /* sp88 */
+    palette_t* portrait_palettes;                     /* sp90 */
+    world_unit_status_number_images_t* number_images; /* sp98 */
+    u8* name_image;                                   /* spA0 */
+    menu_status_panel_packet_t* status_base;          /* spA8 */
+    menu_unit_status_identity_t* identity;            /* spB0 */
+    menu_status_panel_display_thread_t* display;      /* spB8 */
+    s32 frame;                                        /* spC0 */
+    s32 shake;                                        /* spC8 */
+    s32 dimmed;                                       /* spD0 */
+    s32 suppress;                                     /* spD8 */
 
     s32 thread_id;
     s32 i;
@@ -57,9 +57,7 @@ void world_menu_unit_status_banner_thread(void) {
     menu_status_panel_packet_t* status;
     menu_status_panel_editor_packet_t* summary;
     u32* input;
-    u8* render_a_upper;
-    u8* render_b_second;
-    u8* render_b_third;
+    u8* stat_image_upper;
     POLY_FT4* portrait_prim;
 
     suppress = 0;
@@ -71,9 +69,9 @@ void world_menu_unit_status_banner_thread(void) {
     if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
         status = g_world_selected_unit_status_packets;
         summary = g_world_selected_unit_summary_packets;
-        render_a = g_world_selected_unit_stat_text_image;
-        render_b = g_world_selected_unit_number_text_image;
-        render_c = g_world_selected_unit_name_text_image;
+        stat_image = g_world_selected_unit_stat_text_image;
+        number_images = &g_world_selected_unit_number_text_images;
+        name_image = g_world_selected_unit_name_text_image;
         entries = g_world_selected_unit_number_entries;
         state = &g_world_selected_unit_stat_summary;
         identity = &g_world_selected_unit_identity;
@@ -84,9 +82,9 @@ void world_menu_unit_status_banner_thread(void) {
     } else {
         status = g_world_comparison_unit_status_packets;
         summary = g_world_comparison_unit_summary_packets;
-        render_a = g_world_comparison_unit_stat_text_image;
-        render_b = g_world_comparison_unit_number_text_image;
-        render_c = g_world_comparison_unit_name_text_image;
+        stat_image = g_world_comparison_unit_stat_text_image;
+        number_images = &g_world_comparison_unit_number_text_images;
+        name_image = g_world_comparison_unit_name_text_image;
         entries = g_world_comparison_unit_number_entries;
         state = &g_world_comparison_unit_stat_summary;
         identity = &g_world_comparison_unit_identity;
@@ -350,52 +348,51 @@ void world_menu_unit_status_banner_thread(void) {
             } else {
                 entries[6].format = 2;
             }
-            world_clear_menu_render_buffer(render_a, 0x700);
+            world_clear_menu_render_buffer(stat_image, 0x700);
             {
                 g_world_menu_text_state.pen.stride = 0x38;
                 if (g_world_preview_stats_window_active == 0) {
-                    world_menu_draw_numeric_display_entries(render_a, entries, &g_world_menu_text_state.pen, 6);
+                    world_menu_draw_numeric_display_entries(stat_image, entries, &g_world_menu_text_state.pen, 6);
                 } else {
-                    world_text_render_decimal_entry_list(render_a, &entries[10], &g_world_menu_text_state.pen, 1);
-                    world_text_render_decimal_entry_list(render_a, &entries[12], &g_world_menu_text_state.pen, 1);
-                    world_menu_draw_numeric_display_entries(render_a, &entries[11], &g_world_menu_text_state.pen, 1);
-                    world_menu_draw_numeric_display_entries(render_a, &entries[13], &g_world_menu_text_state.pen, 1);
-                    world_menu_draw_numeric_display_entries(render_a, &entries[4], &g_world_menu_text_state.pen, 2);
+                    world_text_render_decimal_entry_list(stat_image, &entries[10], &g_world_menu_text_state.pen, 1);
+                    world_text_render_decimal_entry_list(stat_image, &entries[12], &g_world_menu_text_state.pen, 1);
+                    world_menu_draw_numeric_display_entries(stat_image, &entries[11], &g_world_menu_text_state.pen, 1);
+                    world_menu_draw_numeric_display_entries(stat_image, &entries[13], &g_world_menu_text_state.pen, 1);
+                    world_menu_draw_numeric_display_entries(stat_image, &entries[4], &g_world_menu_text_state.pen, 2);
                 }
             }
-            LoadImage(&rects[0], (u32*)render_a);
-            render_a_upper = render_a + 0x400;
+            LoadImage(&rects[0], (u32*)stat_image);
+            stat_image_upper = stat_image + 0x400;
             g_world_menu_text_state.pen.stride = 0x60;
-            world_menu_draw_numeric_display_entries(render_a_upper, &entries[8], &g_world_menu_text_state.pen, 2);
-            LoadImage(&rects[1], (u32*)render_a_upper);
+            world_menu_draw_numeric_display_entries(stat_image_upper, &entries[8], &g_world_menu_text_state.pen, 2);
+            LoadImage(&rects[1], (u32*)stat_image_upper);
             display->work = 0;
-            world_clear_menu_render_buffer(render_c, 0x580);
+            world_clear_menu_render_buffer(name_image, 0x580);
             g_world_menu_text_state.pen.stride = 0x58;
             world_menu_set_text_origin(0, 0);
             world_menu_display_text_entry(
-                identity->unit_index + TEXT_ID_UNIT_NAME_BASE, render_c, &g_world_menu_text_state.pen);
+                identity->unit_index + TEXT_ID_UNIT_NAME_BASE, name_image, &g_world_menu_text_state.pen);
             world_menu_set_text_origin(0, 0x10);
             world_menu_display_text_entry(
-                identity->job_id + TEXT_ID_JOB_NAME_BASE, render_c, &g_world_menu_text_state.pen);
-            LoadImage(&rects[2], (u32*)render_c);
-            world_clear_menu_render_buffer(render_b, 0xF0);
+                identity->job_id + TEXT_ID_JOB_NAME_BASE, name_image, &g_world_menu_text_state.pen);
+            LoadImage(&rects[2], (u32*)name_image);
+            world_clear_menu_render_buffer(number_images, sizeof(*number_images));
             g_world_menu_text_state.pen.stride = 0x10;
             world_menu_set_text_origin(0, 0);
-            world_text_render_decimal_value_or_dashes(identity->brave, 0x202, render_b, &g_world_menu_text_state.pen);
-            LoadImage(&rects[3], (u32*)render_b);
-            world_menu_set_text_origin(0, 0);
-            render_b_second = render_b + 0x50;
             world_text_render_decimal_value_or_dashes(
-                identity->faith, 0x202, render_b_second, &g_world_menu_text_state.pen);
-            LoadImage(&rects[4], (u32*)render_b_second);
+                identity->brave, 0x202, number_images->brave, &g_world_menu_text_state.pen);
+            LoadImage(&rects[3], (u32*)number_images->brave);
+            world_menu_set_text_origin(0, 0);
+            world_text_render_decimal_value_or_dashes(
+                identity->faith, 0x202, number_images->faith, &g_world_menu_text_state.pen);
+            LoadImage(&rects[4], (u32*)number_images->faith);
             if (g_world_unit_join_screen_active == 0) {
                 world_menu_set_text_origin(0, 0);
-                render_b_third = render_b + 0xA0;
                 world_text_render_decimal_value_or_dashes(
-                    identity->roster_slot + 1, 0x4002, render_b_third, &g_world_menu_text_state.pen);
-                LoadImage(&rects[5], (u32*)render_b_third);
+                    identity->roster_slot + 1, 0x4002, number_images->roster_slot, &g_world_menu_text_state.pen);
+                LoadImage(&rects[5], (u32*)number_images->roster_slot);
             } else {
-                LoadImage(&rects[5], (u32*)(render_b + 0xA0));
+                LoadImage(&rects[5], (u32*)number_images->roster_slot);
             }
         }
         if (!(display->flags & MENU_STATUS_PANEL_HIDDEN)) {
