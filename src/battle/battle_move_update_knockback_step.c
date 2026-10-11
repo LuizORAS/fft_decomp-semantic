@@ -54,11 +54,11 @@ void battle_move_update_knockback_step(battle_unit_misc_data_t* unit) {
             return;
         }
     }
-    if (unit->movement_path_count != 0) {
+    if (unit->path.count != 0) {
         offset = unit->movement_path_offset;
-        if (offset < unit->movement_path_count) {
+        if (offset < unit->path.count) {
             unit->movement_path_offset = offset + 1;
-            unit->current_path_step = g_battle_move_step_value = unit->movement_path[offset];
+            unit->current_path_step = g_battle_move_step_value = unit->path.data.steps[offset];
             battle_move_set_unit_step_slope_scales(unit);
             unit->step_speed = 0x2000;
             battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);

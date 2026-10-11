@@ -49,7 +49,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
             && unit->map_z != unit->movement.bytes.destination_z) {
             layer = unit->map_z = unit->movement.bytes.destination_z;
-            battle_move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step.value,
+            battle_move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step,
                 battle_map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed.word);
         }
@@ -61,7 +61,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
             && unit->map_z != unit->movement.bytes.destination_z) {
             layer = unit->map_z = unit->movement.bytes.destination_z;
-            battle_move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step.value,
+            battle_move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step,
                 battle_map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->step_speed);
         }
@@ -83,7 +83,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if ((-unit->real.vy / 4096) <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_unit_step_delta_center_to_edge(
-                unit, &unit->current_path_step.value, map_tile, unit->current_edge_height);
+                unit, &unit->current_path_step, map_tile, unit->current_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed.word);
         } else {
             if ((-unit->real.vy / 4096) < -ground_z + 6) {
@@ -112,7 +112,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->step_speed += g_battle_move_jump_gravity;
             }
             battle_move_set_unit_step_delta_center_to_edge(
-                unit, &unit->current_path_step.value, map_tile, unit->current_edge_height);
+                unit, &unit->current_path_step, map_tile, unit->current_edge_height);
             battle_move_interpolate_partial(unit, unit->step_speed);
         } else {
             if ((-unit->real.vy / 4096) < -ground_z + 6) {
@@ -138,7 +138,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (-unit->real.vy / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_unit_step_delta_edge_to_center(
-                unit, &unit->current_path_step.value, map_tile, unit->destination_edge_height);
+                unit, &unit->current_path_step, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed.word);
         }
         if (-ground_z < (-unit->real.vy / 4096)) {
@@ -168,7 +168,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
                 unit->step_speed += g_battle_move_jump_gravity;
             }
             battle_move_set_unit_step_delta_edge_to_center(
-                unit, &unit->current_path_step.value, map_tile, unit->destination_edge_height);
+                unit, &unit->current_path_step, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->step_speed);
         }
         if ((-unit->real.vy / 4096) > -ground_z) {
@@ -219,7 +219,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (depth / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_float_step_delta_center_to_edge(
-                unit, &unit->current_path_step.value, map_tile, unit->destination_edge_height);
+                unit, &unit->current_path_step, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed.word);
         } else {
             /* Shared with the next case: a duplicated branch does not merge. */
@@ -237,7 +237,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (depth / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_float_step_delta_edge_to_center(
-                unit, &unit->current_path_step.value, map_tile, unit->destination_edge_height);
+                unit, &unit->current_path_step, map_tile, unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed.word);
         } else {
         accelerate:
@@ -257,8 +257,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
         if (-unit->real.vy / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
-            battle_move_set_velocity_for_contiguous_clamped_steps(
-                unit, &unit->movement_path_count, &unit->current_path_step.value);
+            battle_move_set_velocity_for_contiguous_clamped_steps(unit, &unit->path, &unit->current_path_step);
             battle_move_interpolate_partial(unit, unit->walk_speed.word);
         }
         unit->shadow_dirty |= 1;
@@ -273,7 +272,7 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         if (depth / 4096 <= -ground_z) {
             unit->real.vy = ground_z << 12;
             battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
-                unit, &unit->movement_path_count, &unit->current_path_step.value);
+                unit, &unit->path, &unit->current_path_step);
             battle_move_interpolate_partial(unit, unit->walk_speed.word);
         }
         unit->shadow_dirty |= 1;

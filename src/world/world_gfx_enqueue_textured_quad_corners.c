@@ -8,13 +8,13 @@
  * shaded with that color; otherwise texture shading is disabled.
  */
 void world_gfx_enqueue_textured_quad_corners(
-    world_gfx_textured_quad_source_t* source, u8* rgb, s32 semi_trans, s32 ot_index) {
+    world_gfx_textured_quad_source_t* source, rgb24_t* rgb, s32 semi_trans, s32 ot_index) {
     POLY_FT4* poly = &g_world_gfx_active_packet_buffer->textured_quads[g_world_gfx_textured_quad_count++];
     if (rgb != 0) {
         SetShadeTex(poly, 0);
-        poly->r0 = rgb[0];
-        poly->g0 = rgb[1];
-        poly->b0 = rgb[2];
+        poly->r0 = rgb->r;
+        poly->g0 = rgb->g;
+        poly->b0 = rgb->b;
     } else {
         SetShadeTex(poly, 1);
     }

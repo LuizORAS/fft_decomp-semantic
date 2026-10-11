@@ -47,10 +47,10 @@ void battle_state_handle_crystal_learn_state(void) {
     if (counter < 0x1f) {
         return;
     }
-    if (source->numeric_display_active != 0) {
+    if (source->numeric_display.active != 0) {
         return;
     }
-    if (casting->numeric_display_active != 0) {
+    if (casting->numeric_display.active != 0) {
         return;
     }
 

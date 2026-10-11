@@ -39,12 +39,12 @@ s32 battle_unit_prepare_rider_dismount(u32 misc_id, s32 direction, s32 jump_leng
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
     if (unit != 0) {
-        head = (battle_unit_rider_path_head_t*)&unit->movement_path_count;
-        state = (battle_unit_rider_move_state_t*)&unit->movement_path[0x7b];
-        unit->movement_path_count = 1;
+        head = (battle_unit_rider_path_head_t*)&unit->path;
+        state = (battle_unit_rider_move_state_t*)&unit->path.data.steps[0x7b];
+        unit->path.count = 1;
         unit->walk_speed.word = 0x2000;
         unit->step_speed = 0x2000;
-        unit->pending_mount = 0;
+        unit->path.pending_mount = 0;
         unit->movement_path_offset = 0;
         state->bits_5_7 = 0;
         state->bit_4 = 0;
@@ -56,7 +56,7 @@ s32 battle_unit_prepare_rider_dismount(u32 misc_id, s32 direction, s32 jump_leng
         head->path_flag = 0;
         head->higher_elevation = unit->map_z;
         head->direction = direction;
-        unit->movement_flags = 0;
+        unit->path.flags = 0;
         battle_unit_dismount_rider_and_update_display(unit);
     } else {
         main_system_handle_pointer_exception(12);

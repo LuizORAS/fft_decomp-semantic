@@ -16,7 +16,7 @@ void battle_state_handle_after_command_state(void) {
     if ((command >= 7) && ((command < 9) || (command == 0xFF))) {
         g_battle_action_post_action = 1;
     }
-    if ((g_battle_action_post_action != 0) && (unit->numeric_display_active == 0)) {
+    if ((g_battle_action_post_action != 0) && (unit->numeric_display.active == 0)) {
         battle_state_enter_jp_xp_gain();
     }
 }

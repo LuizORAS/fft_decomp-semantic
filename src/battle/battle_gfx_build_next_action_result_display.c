@@ -34,7 +34,7 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
 
     flags = unit->action_display_flags.word;
     data.stats = unit->battle_data;
-    display = (battle_action_result_display_t*)&unit->numeric_display_active;
+    display = &unit->numeric_display;
 
     if ((flags & 0xffff) != 0) {
         g_battle_action_display_values[0] = data.stats->action.hp_damage;
@@ -77,47 +77,47 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
         }
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_LEVEL_UP;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_LEVEL_UP;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_STOLEN) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_STOLEN;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_STOLEN;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_STOLEN;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_BROKEN) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_BROKEN;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_BROKEN;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_BROKEN;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_QUICK) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_QUICK;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_QUICK;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_QUICK;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_CT_ZERO;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_CT_ZERO;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_MISSED) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_MISSED;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_MISSED;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_MISSED;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GUARDED) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_GUARDED;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GUARDED;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_GUARDED;
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_CAUGHT) != 0) {
         u32 branch_flags;
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_CAUGHT;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_CAUGHT;
         branch_flags = unit->action_display_flags.word;
         unit->action_display_flags.word = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_CAUGHT;
     } else if (unit->status_display_image_count != 0) {

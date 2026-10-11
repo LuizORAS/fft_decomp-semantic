@@ -11,7 +11,7 @@ void battle_move_update_unit_by_misc_id(void) {
     do {
         unit = battle_unit_get_misc_data_by_misc_id(i);
         if (unit != 0) {
-            if (unit->movement_path_count != 0) {
+            if (unit->path.count != 0) {
                 battle_move_update_path_step(unit);
             }
         }

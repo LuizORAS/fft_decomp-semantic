@@ -7,9 +7,9 @@
  * The three numeric displays are pointed at the FRAME.BIN page, and the first
  * display is built at once unless one is already running. */
 void battle_gfx_activate_numerical_sprite_data(battle_unit_misc_data_t* unit, s32 mode) {
-    battle_gfx_sprite_display_data_t* display_0 = unit->numeric_displays[0];
-    battle_gfx_sprite_display_data_t* display_1 = unit->numeric_displays[1];
-    battle_gfx_sprite_display_data_t* display_2 = unit->numeric_displays[2];
+    battle_gfx_sprite_display_data_t* display_0 = unit->numeric_display.displays[0];
+    battle_gfx_sprite_display_data_t* display_1 = unit->numeric_display.displays[1];
+    battle_gfx_sprite_display_data_t* display_2 = unit->numeric_display.displays[2];
 
     display_2->tpage = BATTLE_GFX_TPAGE_FRAME;
     display_1->tpage = BATTLE_GFX_TPAGE_FRAME;
@@ -25,8 +25,8 @@ void battle_gfx_activate_numerical_sprite_data(battle_unit_misc_data_t* unit, s3
         unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_NO_MP;
         break;
     }
-    if (unit->numeric_display_active == 0) {
-        unit->numeric_display_progress = 0;
+    if (unit->numeric_display.active == 0) {
+        unit->numeric_display.progress = 0;
         battle_gfx_build_next_special_action_result_display(unit);
     }
 }

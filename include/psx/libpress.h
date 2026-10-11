@@ -4,12 +4,21 @@
 #include "psx/libetc.h"
 #include "psx/types.h"
 
+/* Quantization tables and the cached inverse-DCT coefficient matrix. */
+typedef struct {
+    u8 iq_y[64];
+    u8 iq_c[64];
+    s16 dct[64];
+} DECDCTENV;
+
+typedef char decdctenv_size_must_be_0x100[(sizeof(DECDCTENV) == 0x100) ? 1 : -1];
+
 void DecDCTReset(s32 mode);
-u32* DecDCTGetEnv(u32* env);
-u32* DecDCTPutEnv(u32* env);
+DECDCTENV* DecDCTGetEnv(DECDCTENV* env);
+DECDCTENV* DecDCTPutEnv(DECDCTENV* env);
 s32 DecDCTBufSize(const u16* bs);
 void DecDCTin(s32* buf, s32 mode);
-void DecDCTout(u32 buf, u32 size);
+void DecDCTout(u32* buf, s32 size);
 void DecDCTinSync(void);
 void DecDCToutSync(void);
 void DecDCTinCallback(psyq_interrupt_callback_t func);
@@ -82,7 +91,7 @@ extern const char g_psyq_press_timeout_format[];
 
 void MDEC_reset(s32 mode);
 void MDEC_in(u32* buf, u32 size);
-void MDEC_out(u32 buf, u32 size);
+void MDEC_out(u32* buf, u32 size);
 s32 MDEC_in_sync(void);
 s32 MDEC_out_sync(void);
 s32 timeout(const char* name);

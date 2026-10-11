@@ -10,16 +10,16 @@ enum {
  * edge of a tile to its centre.
  *
  * The mirror of battle_move_set_unit_step_delta_center_to_edge: the height part
- * of the direction vector, (step_count - 1) * the tile's slope half-height * 6,
+ * of the direction vector, (edge_height - 1) * the tile's slope half-height * 6,
  * is not negated, so entering over a high side (slope height 2) moves the unit
  * down to the centre. */
 void battle_move_set_unit_step_delta_edge_to_center(
-    battle_unit_misc_data_t* unit, const u8* step, const map_tile_t* tile, s32 step_count) {
+    battle_unit_misc_data_t* unit, const battle_move_step_t* step, const map_tile_t* tile, s32 edge_height) {
     VECTOR direction;
 
-    direction.vy = (step_count - 1) * (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
+    direction.vy = (edge_height - 1) * (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
         * BATTLE_MOVE_STEP_HEIGHT_SCALE;
-    switch (*step >> 6) {
+    switch (step->value >> 6) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         direction.vx = BATTLE_MOVE_STEP_WIDTH;
         direction.vz = 0;

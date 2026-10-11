@@ -119,8 +119,8 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
             break;
         case BATTLE_GFX_QUEUED_LOAD_SEQ:
             g_battle_gfx_seq_data_cursor = g_battle_gfx_fallback_seq_data;
-            battle_gfx_unpack_unit_seq_data(
-                &g_battle_gfx_boss_seq_tables, (u8*)g_battle_gfx_unit_graphics_load_state[3]);
+            battle_gfx_unpack_unit_seq_data(&g_battle_gfx_boss_seq_tables,
+                (const battle_gfx_packed_seq_record_t*)g_battle_gfx_unit_graphics_load_state[3]);
             break;
         case BATTLE_GFX_QUEUED_LOAD_SPR:
             battle_unit_init_misc_data(

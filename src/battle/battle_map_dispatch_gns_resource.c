@@ -338,7 +338,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         cursor = (battle_map_state_record_t*)data;
         if (cursor->type != 0) {
             do {
-                cursor = (battle_map_state_record_t*)battle_map_load_saved_state_record(cursor);
+                cursor = battle_map_load_saved_state_record(cursor);
             } while (cursor->type != 0);
         }
         break;

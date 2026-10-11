@@ -20,9 +20,9 @@ enum {
  * byte again, cse reuses the direction test's load and the reload is lost.
  */
 void battle_move_set_velocity_for_contiguous_clamped_steps(
-    battle_unit_misc_data_t* unit, const u8* path, const u8* step) {
+    battle_unit_misc_data_t* unit, const battle_walk_path_t* path, const battle_move_step_t* step) {
     VECTOR direction;
-    const u8* current;
+    const battle_move_step_t* current;
     s32 start_x;
     s32 start_y;
     s32 start_z;
@@ -42,12 +42,12 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
     start_y = unit->screen.vz;
     start_z = unit->screen.vy;
 
-    while (index < *path) {
-        current = &path[index + 1];
-        if ((*current & 0xc0) != (*step & 0xc0)) {
+    while (index < path->count) {
+        current = &path->data.steps[index];
+        if ((current->value & 0xc0) != (step->value & 0xc0)) {
             break;
         }
-        code = *current;
+        code = current->value;
         switch (code >> 6) {
         case BATTLE_MOVE_STEP_DIRECTION_EAST:
             x += (code & 3) + 1;
@@ -70,7 +70,7 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_NEAR_EDGE;
             break;
         }
-        end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, (*current >> 5) & 1);
+        end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, (current->value >> 5) & 1);
         if (end_z != start_z) {
             break;
         }

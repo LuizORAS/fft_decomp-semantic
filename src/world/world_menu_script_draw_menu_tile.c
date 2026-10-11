@@ -1,15 +1,15 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Menu-script opcode handler: bytes 2..5 give x, y, w, h; the payload
- * starts at byte 6. Returns the address of the next instruction. */
+/* Draw the command's two endpoints with its RGB color, then advance. */
 u8* world_menu_script_draw_menu_tile(u8* script) {
+    world_menu_line_command_t* command = (world_menu_line_command_t*)script;
     RECT rect;
 
-    rect.x = script[2];
-    rect.y = script[3];
-    rect.w = script[4];
-    rect.h = script[5];
-    world_gfx_enqueue_line_f2(&rect, script + 6, g_world_menu_semi_trans, g_world_menu_draw_priority);
-    return script + script[1];
+    rect.x = command->x0;
+    rect.y = command->y0;
+    rect.w = command->x1;
+    rect.h = command->y1;
+    world_gfx_enqueue_line_f2(&rect, &command->color, g_world_menu_semi_trans, g_world_menu_draw_priority);
+    return (u8*)command + command->length;
 }

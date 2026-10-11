@@ -102,7 +102,7 @@ typedef enum open_movie_stream_status {
 typedef struct open_movie_mdec_stream_state {
     void* vlc_buffers[2];    /* 0x00 */
     s32 vlc_buffer_index;    /* 0x08 */
-    void* output_buffers[2]; /* 0x0c */
+    u32* output_buffers[2];  /* 0x0c; decoded image words */
     s32 output_buffer_index; /* 0x14 */
     RECT frame_rects[2];     /* 0x18 */
     s32 frame_rect_index;    /* 0x28 */
@@ -117,8 +117,8 @@ extern u32 g_open_movie_current_frame;
 extern u32 g_open_movie_end_frame;
 extern s32 g_open_movie_height;
 extern s32 g_open_movie_video_end_frame; /* -1: none */
-extern u8 g_open_movie_mdec_output_buffer_0[];
-extern u8 g_open_movie_mdec_output_buffer_1[];
+extern u32 g_open_movie_mdec_output_buffer_0[];
+extern u32 g_open_movie_mdec_output_buffer_1[];
 extern open_movie_mdec_stream_state_t g_open_movie_mdec_stream_state;
 extern s32 g_open_movie_stream_status; /* open_movie_stream_status_e */
 extern s32 g_open_movie_width;

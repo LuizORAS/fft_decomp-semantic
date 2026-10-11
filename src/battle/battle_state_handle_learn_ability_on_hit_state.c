@@ -42,13 +42,13 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     }
     if (g_battle_action_post_action != 0 && g_battle_state_animation_continue_check == 0) {
         counter = 0;
-        if (casting_unit->numeric_display_active == 0) {
+        if (casting_unit->numeric_display.active == 0) {
             hit_count = casting_unit->target_count;
             skip_animation = 0;
             if (hit_count > 0) {
                 do {
                     target_unit = battle_unit_get_misc_data_by_battle_id(casting_unit->target_list[counter]);
-                    if (target_unit != 0 && target_unit->numeric_display_active != 0) {
+                    if (target_unit != 0 && target_unit->numeric_display.active != 0) {
                         skip_animation = 1;
                         break;
                     }

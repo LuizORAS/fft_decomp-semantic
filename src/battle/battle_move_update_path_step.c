@@ -110,14 +110,14 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
         break;
     }
     if (unit->step_phase == BATTLE_MOVE_STEP_PHASE_NONE) {
-        count = unit->movement_path_count;
+        count = unit->path.count;
         if (count == BATTLE_MOVE_PATH_TELEPORT) {
             battle_unit_dismount_rider_and_update_display(unit);
             battle_move_start_teleport_step(unit);
         } else if (count == BATTLE_MOVE_PATH_TELEPORT_FAILED) {
             battle_unit_dismount_rider_and_update_display(unit);
             battle_move_start_teleport_step(unit);
-            unit->pending_mount = 0;
+            unit->path.pending_mount = 0;
             battle_ai_init_selected_action();
         } else if (count == 0) {
             battle_unit_mount_onto_pending_mount(unit);
@@ -127,11 +127,11 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
             }
             offset = unit->movement_path_offset;
             unit->movement_path_offset = offset + 1;
-            unit->current_path_step = g_battle_move_step_value = unit->movement_path[offset];
+            unit->current_path_step = g_battle_move_step_value = unit->path.data.steps[offset];
             battle_move_set_unit_step_slope_scales(unit);
-            flags = unit->movement_flags;
+            flags = unit->path.flags;
             if (flags & BATTLE_EFFECTIVE_MOVEMENT_FLY) {
-                battle_move_start_fly_step(unit, (s32)g_battle_move_current_tile, (s32)g_battle_move_destination_tile);
+                battle_move_start_fly_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
             } else if (flags & BATTLE_EFFECTIVE_MOVEMENT_FLOAT) {
                 battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
             } else {

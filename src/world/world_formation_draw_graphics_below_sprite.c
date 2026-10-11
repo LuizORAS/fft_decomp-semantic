@@ -14,7 +14,7 @@
  * for y + 45 in layouts 3 and 4 so it shares s4 as in the target.
  */
 void world_formation_draw_graphics_below_sprite(
-    s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s32), s32 enabled, s32 priority) {
+    s16 unit_index, s32 mode, s32 x, s32 y, rgb24_t* color, s32 (*get_value)(s32), s32 enabled, s32 priority) {
     RECT unused_rect;
     RECT rect;
     point16_t xy[10];

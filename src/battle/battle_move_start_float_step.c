@@ -7,14 +7,14 @@
  * edge offset; its low two bits extend the destination tile coordinate. The
  * second tile argument is unused. */
 void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to) {
-    u8* step;
-    s32 step_count;
+    battle_move_step_t* step;
+    s32 edge_height;
     s16 facing;
     u8 next;
 
     battle_unit_dismount_rider_and_update_display(unit);
-    step_count = unit->current_edge_height;
-    step = &unit->current_path_step.value;
+    edge_height = unit->current_edge_height;
+    step = &unit->current_path_step;
     switch (unit->current_path_step.value >> 6) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         facing = BATTLE_FACING_EAST;
@@ -43,7 +43,7 @@ void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_
     }
     unit->facing = facing;
     battle_unit_set_idle_animation_for_movement(unit);
-    battle_move_set_float_step_delta_center_to_edge(unit, step, from, step_count);
+    battle_move_set_float_step_delta_center_to_edge(unit, step, from, edge_height);
     battle_move_interpolate_partial(unit, unit->walk_speed.word);
-    unit->movement.bytes.destination_z = (*step >> 5) & 1;
+    unit->movement.bytes.destination_z = (step->value >> 5) & 1;
 }

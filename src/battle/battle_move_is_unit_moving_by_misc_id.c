@@ -10,5 +10,5 @@ s32 battle_move_is_unit_moving_by_misc_id(u32 misc_id) {
         main_system_handle_pointer_exception(12);
         return 0;
     }
-    return unit->movement_path_count != 0;
+    return unit->path.count != 0;
 }

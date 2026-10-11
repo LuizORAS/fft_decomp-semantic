@@ -7,8 +7,8 @@
  * The 0xff record fill is an s32 local: a literal fill becomes a single-set
  * hoisted pseudo that sched1 places after `li s2,0xf`.
  */
-u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, s32 target_x, s32 target_y,
-    u32 target_level, s32 initialize, s32* suspended, s32 check_budget) {
+battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, s32 target_x,
+    s32 target_y, u32 target_level, s32 initialize, s32* suspended, s32 check_budget) {
     u8 frontier_snapshot[512];
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
@@ -99,7 +99,7 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
             g_battle_move_pathing_resume_pass = i;
             *suspended = 1;
             main_util_copy_byte_data((void*)0x1f800000, g_battle_ai_unit_snapshot_storage, 1024);
-            return g_battle_move_path;
+            return &g_battle_move_path;
         }
         if (!state->frontier_max_remaining_range) {
             break;
@@ -201,5 +201,5 @@ u8* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, 
         }
     }
     battle_move_encode_path_steps();
-    return g_battle_move_path;
+    return &g_battle_move_path;
 }

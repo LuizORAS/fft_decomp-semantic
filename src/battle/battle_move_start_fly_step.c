@@ -9,14 +9,15 @@
  * extend the destination tile coordinate. A carried rider (mount state MOUNT)
  * takes animation 0x32 with the mount's facing. The caller also passes the
  * current and destination tiles, which this variant never reads. */
-void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile, s32 destination_tile) {
+void battle_move_start_fly_step(
+    battle_unit_misc_data_t* unit, const map_tile_t* unused_current_tile, const map_tile_t* unused_destination_tile) {
     s32 facing;
-    u8* step;
+    battle_move_step_t* step;
     battle_unit_misc_data_t* rider;
     u8 next;
 
     battle_unit_dismount_rider(unit);
-    step = &unit->current_path_step.value;
+    step = &unit->current_path_step;
     switch (unit->current_path_step.value >> 6) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         facing = BATTLE_FACING_EAST;
@@ -51,7 +52,7 @@ void battle_move_start_fly_step(battle_unit_misc_data_t* unit, s32 current_tile,
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, rider);
         }
     }
-    battle_move_set_velocity_for_contiguous_clamped_steps(unit, &unit->movement_path_count, step);
+    battle_move_set_velocity_for_contiguous_clamped_steps(unit, &unit->path, step);
     battle_move_interpolate_partial(unit, unit->walk_speed.word);
-    unit->movement.bytes.destination_z = (*step >> 5) & 1;
+    unit->movement.bytes.destination_z = (step->value >> 5) & 1;
 }

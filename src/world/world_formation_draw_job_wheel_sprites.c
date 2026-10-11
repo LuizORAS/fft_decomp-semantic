@@ -32,7 +32,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
     s32 scaled_y;
     s32 theta;
     s16 job;
-    u8* rgb;
+    rgb24_t* rgb;
     s16 next;
 
     if (g_world_job_wheel_job_count < 2) {
@@ -66,7 +66,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
         sprite.y = g_world_job_wheel_center_y + ((scaled_y * rsin(theta)) >> 12) - 0x14;
         rgb = 0;
         if (g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_UNAVAILABLE) {
-            rgb = g_world_formation_dimmed_sprite_color;
+            rgb = &g_world_formation_dimmed_sprite_color;
         }
         if (g_world_job_wheel_mastered_jobs[job] != 0) {
             world_menu_select_stat_gauge_level(sprite.x, sprite.y, ot_index, g_world_job_wheel_animation_counter);

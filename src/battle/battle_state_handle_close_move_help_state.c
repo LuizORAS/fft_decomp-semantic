@@ -9,7 +9,7 @@
 void battle_state_handle_close_move_help_state(void) {
     battle_unit_misc_data_t* source;
     battle_unit_misc_data_t* casting;
-    u8* path;
+    battle_walk_path_t* path;
     s32 buttons;
     u16 frame;
     s32 x;
@@ -32,7 +32,7 @@ void battle_state_handle_close_move_help_state(void) {
                 casting->battle_data->misc_unit_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
             if (path != 0) {
                 /* Copy the 0x80-byte movement block in the renderer-side Misc record. */
-                *(battle_walk_path_t*)&casting->movement_path_count = *(battle_walk_path_t*)path;
+                casting->path = *path;
                 casting->walk_speed.word = 0x2000;
                 battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
                 main_sound_play_sfx(MAIN_SFX_CONFIRM);
@@ -69,7 +69,7 @@ void battle_state_handle_close_move_help_state(void) {
         g_battle_cursor_x = x;
         g_battle_cursor_z = elevation;
         g_battle_cursor_y = y;
-        *(battle_walk_path_t*)&casting->movement_path_count = *(battle_walk_path_t*)path;
+        casting->path = *path;
         casting->walk_speed.word = 0x2000;
         battle_state_enter_unit_moving_setup();
         return;

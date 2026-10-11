@@ -4,12 +4,12 @@
 
 /* Draw a flat line from (rect->x, rect->y) to (rect->w, rect->h), with
  * an x bias of 0x80, and link it into ordering-table entry ot_index. */
-void world_gfx_enqueue_line_f2(RECT* rect, u8* rgb, u8 semi_trans, s32 ot_index) {
+void world_gfx_enqueue_line_f2(RECT* rect, rgb24_t* rgb, u8 semi_trans, s32 ot_index) {
     LINE_F2* line = &g_world_gfx_active_packet_buffer->flat_lines[g_world_gfx_flat_line_count++];
 
-    line->r0 = rgb[0];
-    line->g0 = rgb[1];
-    line->b0 = rgb[2];
+    line->r0 = rgb->r;
+    line->g0 = rgb->g;
+    line->b0 = rgb->b;
     SetSemiTrans(line, semi_trans);
     line->x0 = rect->x + 0x80;
     line->y0 = rect->y;

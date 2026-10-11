@@ -79,7 +79,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->float_bob_offset = 0;
     unit->float_bob_phase = 0;
     unit->step_phase = BATTLE_MOVE_STEP_PHASE_NONE;
-    unit->movement_path_count = 0;
+    unit->path.count = 0;
     unit->sprite_display_flags.half = 0;
     unit->layer_priority = 0;
     unit->turn_action_flags = 0;
@@ -119,21 +119,22 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->shadow_graphic_trigger = 1;
     unit->shadow_dirty = 1;
     unit->shadow_counter = 0;
-    unit->numeric_display_active = 0;
-    unit->numeric_display_selector = 0;
-    unit->numeric_display_progress = 0;
-    unit->numeric_displays[0] = battle_gfx_init_numeric_sprite_display(unit_id, 0);
-    unit->numeric_displays[1] = battle_gfx_init_numeric_sprite_display(unit_id, 1);
-    unit->numeric_displays[2] = battle_gfx_init_numeric_sprite_display(unit_id, 2);
-    unit->numeric_displays[0]->scale_x = unit->numeric_displays[0]->scale_y = unit->numeric_displays[1]->scale_x
-        = unit->numeric_displays[1]->scale_y = unit->numeric_displays[2]->scale_x = unit->numeric_displays[2]->scale_y
-        = ONE;
-    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage
-        = BATTLE_GFX_TPAGE_FRAME;
-    unit->numeric_displays[0]->clut = unit->numeric_displays[1]->clut = unit->numeric_displays[2]->clut
+    unit->numeric_display.active = 0;
+    unit->numeric_display.selector = 0;
+    unit->numeric_display.progress = 0;
+    unit->numeric_display.displays[0] = battle_gfx_init_numeric_sprite_display(unit_id, 0);
+    unit->numeric_display.displays[1] = battle_gfx_init_numeric_sprite_display(unit_id, 1);
+    unit->numeric_display.displays[2] = battle_gfx_init_numeric_sprite_display(unit_id, 2);
+    unit->numeric_display.displays[0]->scale_x = unit->numeric_display.displays[0]->scale_y
+        = unit->numeric_display.displays[1]->scale_x = unit->numeric_display.displays[1]->scale_y
+        = unit->numeric_display.displays[2]->scale_x = unit->numeric_display.displays[2]->scale_y = ONE;
+    unit->numeric_display.displays[0]->tpage = unit->numeric_display.displays[1]->tpage
+        = unit->numeric_display.displays[2]->tpage = BATTLE_GFX_TPAGE_FRAME;
+    unit->numeric_display.displays[0]->clut = unit->numeric_display.displays[1]->clut
+        = unit->numeric_display.displays[2]->clut
         = unit->clut + 0x100; /* the unit's CLUT of MAP_CLUT_ROW_ACTION_RESULTS */
-    unit->numeric_displays[0]->part_count = unit->numeric_displays[1]->part_count
-        = unit->numeric_displays[2]->part_count = 1;
+    unit->numeric_display.displays[0]->part_count = unit->numeric_display.displays[1]->part_count
+        = unit->numeric_display.displays[2]->part_count = 1;
     unit->status_bubble_active = 0;
     unit->status_bubble_id = 0;
     unit->status_bubble_timer = 0;

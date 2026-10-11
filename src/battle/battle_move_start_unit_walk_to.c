@@ -11,7 +11,7 @@ s32 battle_move_start_unit_walk_to(s32 misc_id, s16* destination, s32 flags, s32
         path = battle_move_calculate_walkto_pathing(
             flags, jump, unit->map_x, unit->map_y, unit->map_z, destination[0], destination[2], destination[1]);
         if (path != 0) {
-            *(battle_walk_path_t*)&unit->movement_path_count = *path;
+            unit->path = *path;
             unit->walk_speed.word = speed * 2;
             unit->step_speed = 0x2000;
             unit->movement_path_offset = 0;

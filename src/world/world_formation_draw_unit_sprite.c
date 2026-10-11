@@ -19,12 +19,12 @@ typedef struct world_formation_unit_sprite {
  * get a palette 9/11 backdrop first and the sprite is drawn with its shadow.
  * Compiled at -O1; the (s16) casts keep the centring offset from being
  * reassociated onto pos. */
-void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s32 ot_index) {
+void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, rgb24_t* rgb, s32 ot_index) {
     world_formation_unit_sprite_t sprite;
     s32 scale;
     s32 w;
     s32 h;
-    u8* backdrop_rgb;
+    rgb24_t* backdrop_rgb;
 
     world_formation_build_unit_graphic_entry(unit_index, &sprite.source, 0);
     if (g_world_formation_dismiss_anim_timer != 0 && (g_world_formation_dismiss_anim_timer >> 8) == unit_index) {
@@ -45,7 +45,7 @@ void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s
     sprite.h = sprite.source.h;
     if (g_world_formation_unit_pointers[unit_index]->proposition_status != 0) {
         if (unit_index == g_world_formation_selected_unit_index) {
-            backdrop_rgb = g_world_formation_normal_sprite_color;
+            backdrop_rgb = &g_world_formation_normal_sprite_color;
         } else {
             backdrop_rgb = world_menu_get_sprite_color();
         }
@@ -54,7 +54,7 @@ void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s
                 ? MENU_UNIT_READOUT_LEAVING
                 : MENU_UNIT_READOUT_MISSING,
             pos->x, pos->y, backdrop_rgb, 0, 1, ot_index + 2);
-        rgb = g_world_formation_away_unit_color;
+        rgb = &g_world_formation_away_unit_color;
     }
     world_formation_draw_sprite_with_shadow((world_oriented_quad_t*)&sprite, rgb, ot_index);
 }

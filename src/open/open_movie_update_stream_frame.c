@@ -33,8 +33,8 @@ void open_movie_update_stream_frame(void) {
     DecDCTin(g_open_movie_mdec_stream_state.vlc_buffers[g_open_movie_mdec_stream_state.vlc_buffer_index], 3);
     words = g_open_movie_mdec_stream_state.output_rect.w;
     words *= g_open_movie_mdec_stream_state.output_rect.h;
-    DecDCTout((u32)g_open_movie_mdec_stream_state.output_buffers[g_open_movie_mdec_stream_state.output_buffer_index],
-        words / 2);
+    DecDCTout(
+        g_open_movie_mdec_stream_state.output_buffers[g_open_movie_mdec_stream_state.output_buffer_index], words / 2);
     open_movie_decode_next_frame(&g_open_movie_mdec_stream_state);
     open_movie_wait_for_mdec_output(&g_open_movie_mdec_stream_state, 0);
 

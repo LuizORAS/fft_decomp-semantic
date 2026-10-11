@@ -41,13 +41,13 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     battle_action_result_display_t* display;
     u16 progress;
 
-    display_0 = unit->numeric_displays[0];
-    display_1 = unit->numeric_displays[1];
-    display_2 = unit->numeric_displays[2];
-    progress = unit->numeric_display_progress + g_main_system_animation_speed;
-    display = (battle_action_result_display_t*)&unit->numeric_display_active;
+    display_0 = unit->numeric_display.displays[0];
+    display_1 = unit->numeric_display.displays[1];
+    display_2 = unit->numeric_display.displays[2];
+    progress = unit->numeric_display.progress + g_main_system_animation_speed;
+    display = &unit->numeric_display;
     if (progress < 21) {
-        if (unit->numeric_display_selector & BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL) {
+        if (unit->numeric_display.selector & BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL) {
             main_util_set_svector(&zoom_0, critical_scale_0.value[progress], critical_scale_0.value[progress],
                 critical_scale_0.value[progress]);
             main_util_set_svector(&zoom_1, critical_scale_1.value[progress], critical_scale_1.value[progress],
@@ -55,7 +55,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
             main_util_set_svector(&zoom_2, critical_scale_2.value[progress], critical_scale_2.value[progress],
                 critical_scale_2.value[progress]);
         } else {
-            switch (unit->numeric_display_selector & BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK) {
+            switch (unit->numeric_display.selector & BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK) {
             case BATTLE_NUMERIC_DISPLAY_HP_DAMAGE ... BATTLE_NUMERIC_DISPLAY_MA_GAIN:
                 main_util_set_svector(
                     &zoom_0, scale_0.value[progress], scale_0.value[progress], scale_0.value[progress]);
@@ -77,14 +77,15 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
                 break;
             }
         }
-    } else if (progress >= 50 && unit->numeric_display_progress < 50) {
+    } else if (progress >= 50 && unit->numeric_display.progress < 50) {
         if (battle_gfx_build_next_action_result_display(unit) != 0) {
             return;
         }
         if (battle_gfx_build_next_special_action_result_display(unit) != 0) {
             return;
         }
-        unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage = 0x3f;
+        unit->numeric_display.displays[0]->tpage = unit->numeric_display.displays[1]->tpage
+            = unit->numeric_display.displays[2]->tpage = 0x3f;
         battle_map_modify_palette(MAP_COLOR_MODE_BASE, 2, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0, -31, -31, -31);
         battle_gfx_set_sprite_part_semi_transparent(display_0, 0, 1);
         battle_gfx_set_sprite_part_semi_transparent(display_1, 0, 1);
@@ -96,7 +97,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
         if (battle_gfx_build_next_special_action_result_display(unit) != 0) {
             return;
         }
-        unit->numeric_display_active = 0;
+        unit->numeric_display.active = 0;
     }
     position.vx = screen_coords[0] + 0x15;
     position.vy = screen_coords[1] - 8;

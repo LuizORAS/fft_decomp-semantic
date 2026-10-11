@@ -24,7 +24,7 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_
     s32 text_index;
     s32 i;
     s8 negative;
-    CVECTOR* color;
+    rgb24_t* color;
     u16 clut;
 
     getter = g_world_menu_script_callbacks[command->getter];

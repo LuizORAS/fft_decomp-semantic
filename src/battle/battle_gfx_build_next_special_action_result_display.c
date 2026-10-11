@@ -18,22 +18,22 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
     u16 selector;
 
     flags = unit->action_display_flags.word;
-    display = (battle_action_result_display_t*)&unit->numeric_display_active;
+    display = &unit->numeric_display;
     if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP) != 0) {
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_GAINED_EXP;
-        unit->numeric_display_active = 1;
-        unit->numeric_display_value = unit->action_rewards.earned_experience;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GAINED_EXP;
+        unit->numeric_display.active = 1;
+        unit->numeric_display.value = unit->action_rewards.earned_experience;
         unit->action_display_flags.word &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
-        if (unit->numeric_display_progress >= 22) {
-            unit->numeric_display_progress = 21;
+        if (unit->numeric_display.progress >= 22) {
+            unit->numeric_display.progress = 21;
         }
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP) != 0) {
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_GAINED_JP;
-        unit->numeric_display_active = 1;
-        unit->numeric_display_value = unit->action_rewards.earned_jp;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GAINED_JP;
+        unit->numeric_display.active = 1;
+        unit->numeric_display.value = unit->action_rewards.earned_jp;
         unit->action_display_flags.word &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP;
-        if (unit->numeric_display_progress >= 22) {
-            unit->numeric_display_progress = 21;
+        if (unit->numeric_display.progress >= 22) {
+            unit->numeric_display.progress = 21;
         }
     } else {
         if ((flags & BATTLE_ACTION_DISPLAY_FLAG_NO_TARGET) != 0) {
@@ -48,15 +48,15 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         } else {
             return 0;
         }
-        unit->numeric_display_selector = selector;
-        unit->numeric_display_active = 1;
+        unit->numeric_display.selector = selector;
+        unit->numeric_display.active = 1;
         {
             u32 current;
             current = unit->action_display_flags.word;
             unit->action_display_flags.word = current & clear;
         }
-        if (unit->numeric_display_progress >= 22) {
-            unit->numeric_display_progress = 21;
+        if (unit->numeric_display.progress >= 22) {
+            unit->numeric_display.progress = 21;
         }
     }
 

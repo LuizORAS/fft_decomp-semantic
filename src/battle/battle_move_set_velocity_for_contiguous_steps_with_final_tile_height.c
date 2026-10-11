@@ -17,10 +17,10 @@ enum {
  * twin: read through the byte again, cse reuses the direction test's load.
  */
 void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
-    battle_unit_misc_data_t* unit, const u8* path, const u8* step) {
+    battle_unit_misc_data_t* unit, const battle_walk_path_t* path, const battle_move_step_t* step) {
     VECTOR direction;
     map_tile_t* tile;
-    const u8* current;
+    const battle_move_step_t* current;
     s32 start_x;
     s32 start_y;
     s32 start_z;
@@ -42,12 +42,12 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     start_y = unit->screen.vz;
     start_z = unit->screen.vy;
 
-    while (index < *path) {
-        current = &path[index + 1];
-        if ((*current & 0xc0) != (*step & 0xc0)) {
+    while (index < path->count) {
+        current = &path->data.steps[index];
+        if ((current->value & 0xc0) != (step->value & 0xc0)) {
             break;
         }
-        code = *current;
+        code = current->value;
         switch (code >> 6) {
         case BATTLE_MOVE_STEP_DIRECTION_EAST:
             x += (code & 3) + 1;
@@ -70,8 +70,8 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_WIDTH;
             break;
         }
-        layer = (*current >> 5) & 1;
-        if (unit->movement_path_offset == *path) {
+        layer = (current->value >> 5) & 1;
+        if (unit->movement_path_offset == path->count) {
             tile = battle_map_get_tile_data_pointer(x, y, layer);
             depth = tile->depth_half_height.value;
             end_z = -(((tile->height + (depth >> MAP_TILE_DEPTH_SHIFT)) * 2) + (depth & MAP_TILE_HALF_HEIGHT_MASK))

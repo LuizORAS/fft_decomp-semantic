@@ -16,8 +16,8 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
     u8 image;
     u8 miss;
 
-    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage
-        = BATTLE_GFX_TPAGE_FRAME;
+    unit->numeric_display.displays[0]->tpage = unit->numeric_display.displays[1]->tpage
+        = unit->numeric_display.displays[2]->tpage = BATTLE_GFX_TPAGE_FRAME;
     stats = unit->battle_data;
     action = &stats->action;
     if (action->hit != 0) {
@@ -138,8 +138,8 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit) {
             }
         }
     }
-    if (unit->numeric_display_active == 0) {
-        unit->numeric_display_progress = 0;
+    if (unit->numeric_display.active == 0) {
+        unit->numeric_display.progress = 0;
         battle_gfx_build_next_action_result_display(unit);
     }
 }

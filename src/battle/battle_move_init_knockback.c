@@ -10,14 +10,14 @@
  * destination layer.
  */
 void battle_move_init_knockback(battle_unit_misc_data_t* unit) {
-    u32* path_word = (u32*)&unit->movement_path_count;
+    u32* path_word = (u32*)&unit->path;
     u32 state;
     u32 knockback_state;
     s32 direction;
 
     unit->movement_path_offset = 0;
-    unit->movement_path_count = 1;
-    unit->movement_flags = battle_move_get_effective_flags(unit->battle_data);
+    unit->path.count = 1;
+    unit->path.flags = battle_move_get_effective_flags(unit->battle_data);
 
     state = *path_word;
     state &= ~0x300;

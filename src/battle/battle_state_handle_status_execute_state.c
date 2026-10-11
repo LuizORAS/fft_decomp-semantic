@@ -17,7 +17,7 @@ void battle_state_handle_status_execute_state(void) {
     if (g_battle_action_post_action != 0) {
         if (g_battle_state_animation_continue_check == 0) {
             misc = battle_unit_get_source_misc_data();
-            if (misc->numeric_display_active == 0) {
+            if (misc->numeric_display.active == 0) {
                 battle_unit_update_display_by_misc_id(misc->unit_id);
                 battle_action_check_between_turn_events();
             }

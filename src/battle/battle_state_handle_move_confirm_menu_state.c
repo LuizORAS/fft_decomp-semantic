@@ -19,7 +19,7 @@ void battle_state_handle_move_confirm_menu_state(void) {
     switch (selected_command) {
     case 8:
     case 0xff:
-        if (casting_misc_data->movement_flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT) {
+        if (casting_misc_data->path.flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT) {
         case 7:
             battle_unit_copy_rider_data_to_mount(source_misc_data, casting_misc_data);
             return;

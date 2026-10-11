@@ -23,9 +23,8 @@ void battle_move_update_unit_vertical_step_to_destination_tile_center(battle_uni
         unit->velocity.vz = 0;
         unit->velocity.vx = 0;
         g_battle_move_target_screen_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
-        if (unit->movement_path_offset == unit->movement_path_count
-            && (unit->pending_mount & BATTLE_PENDING_MOUNT_SET)) {
-            mount = battle_unit_get_misc_data_by_battle_id(unit->pending_mount & BATTLE_PENDING_MOUNT_ID_MASK);
+        if (unit->movement_path_offset == unit->path.count && (unit->path.pending_mount & BATTLE_PENDING_MOUNT_SET)) {
+            mount = battle_unit_get_misc_data_by_battle_id(unit->path.pending_mount & BATTLE_PENDING_MOUNT_ID_MASK);
             if (mount != 0) {
                 g_battle_move_target_screen_z = battle_gfx_calculate_screen_z_from_misc_screen_data(mount) - 10;
             }
@@ -37,7 +36,7 @@ void battle_move_update_unit_vertical_step_to_destination_tile_center(battle_uni
         } else if (unit->screen.vy <= g_battle_move_target_screen_z) {
             done = 1;
         }
-        if (unit->movement_path_offset != unit->movement_path_count) {
+        if (unit->movement_path_offset != unit->path.count) {
             done = 1;
         }
         if (done) {

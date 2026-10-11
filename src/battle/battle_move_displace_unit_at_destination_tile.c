@@ -18,7 +18,7 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     s32 center;
     s32 next;
 
-    if (unit->movement_path_offset == unit->movement_path_count) {
+    if (unit->movement_path_offset == unit->path.count) {
         return;
     }
     other = battle_unit_get_overlapping_misc_data_pointer(unit, unit->movement.bytes.destination_x,
@@ -26,7 +26,7 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     if (unit->movement_path_offset == 0) {
         return;
     }
-    if (((unit->movement_path - 1)[unit->movement_path_offset].value >> 4) & 1) {
+    if (((unit->path.data.steps - 1)[unit->movement_path_offset].value >> 4) & 1) {
         return;
     }
     if (other == 0) {
@@ -57,7 +57,7 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     }
     dist -= 7;
     dist = -dist * 3 / 2;
-    switch ((unit->movement_path_offset + unit->movement_path)->value >> 6) {
+    switch ((unit->movement_path_offset + unit->path.data.steps)->value >> 6) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         next = BATTLE_MOVE_DIRECTION_EAST;
         break;

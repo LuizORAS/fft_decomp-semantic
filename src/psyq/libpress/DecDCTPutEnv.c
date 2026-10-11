@@ -1,13 +1,12 @@
 #include "psx/libpress.h"
 
-/* Install the caller supplied quantisation tables into the library's cache
- * and push them and the IDCT table to the MDEC. */
-u32* DecDCTPutEnv(u32* env) {
+/* Install the quantisation tables and upload the cached IDCT table; env->dct is ignored. */
+DECDCTENV* DecDCTPutEnv(DECDCTENV* env) {
     u32* src;
     u32* dst;
     s32 i;
 
-    src = env;
+    src = (u32*)env->iq_y;
     dst = g_psyq_press_luma_quant_table;
     i = 15;
     do {
@@ -15,7 +14,7 @@ u32* DecDCTPutEnv(u32* env) {
     } while (--i != -1);
 
     dst = g_psyq_press_chroma_quant_table;
-    src = env + 16;
+    src = (u32*)env->iq_c;
     i = 15;
     do {
         *dst++ = *src++;

@@ -10,7 +10,7 @@
  * hatch_countdown; the second layer is drawn only while it is below 2.
  */
 void world_formation_draw_egg_sprite(
-    world_oriented_quad_t* pos, s32 palette, const u8* rgb, s32 hatch_countdown, s32 ot_index) {
+    world_oriented_quad_t* pos, s32 palette, const rgb24_t* rgb, s32 hatch_countdown, s32 ot_index) {
     g_world_formation_shadow_egg_sprites[2].x = g_world_formation_shadow_egg_sprites[1].x = pos->x + 0x14;
     g_world_formation_shadow_egg_sprites[2].y = g_world_formation_shadow_egg_sprites[1].y = pos->y + 0x10;
     g_world_formation_shadow_egg_sprites[2].clut = g_world_formation_shadow_egg_sprites[1].clut

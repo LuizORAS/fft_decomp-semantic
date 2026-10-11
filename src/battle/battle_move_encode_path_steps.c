@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /* Encode the traced path as battle_move_step_t bytes in g_battle_move_path,
- * byte 0 holding the step count. Starting from the unit's tile, step n goes to
+ * count holding the number of encoded steps. Starting from the unit's tile, step n goes to
  * the tile or unit record the back-trace marked with path_length - n; the byte
  * records the direction, the distance, the level, whether the step ends on a
  * unit and whether either end is a climb. */
@@ -117,7 +117,7 @@ void battle_move_encode_path_steps(void) {
             }
             source_bit = state->source_climb << 2;
             destination_bit = state->destination_climb << 3;
-            g_battle_move_path[path_index]
+            g_battle_move_path.data.steps[step].value
                 = (state->step_distance - 1) | (source_bit | (destination_bit | (flag | (dir | level))));
             state->tile_x = state->work_x;
             state->tile_y = state->work_y;
@@ -125,7 +125,7 @@ void battle_move_encode_path_steps(void) {
             break;
         }
     }
-    g_battle_move_path[0] = state->path_length - 1;
+    g_battle_move_path.count = state->path_length - 1;
     if (config->unit_id >= 0x15) {
         g_battle_move_effective_flags = 0;
     } else {

@@ -13,7 +13,7 @@
  *
  * The flag byte at 0x8018f86d is written through a pointer loaded twice: the
  * target materialises its address in a register in both blocks. */
-u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
+battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     battle_move_record_t* records = g_battle_move_records_ptr;
@@ -88,14 +88,14 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
             *move_flags |= BATTLE_EFFECTIVE_MOVEMENT_SILENT_WALK;
         }
         if (battle_move_calculate_teleport_chances() != 0) {
-            g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT;
-            g_battle_move_path[1] = x;
-            g_battle_move_path[2] = y;
-            g_battle_move_path[3] = elevation;
+            g_battle_move_path.count = BATTLE_MOVE_PATH_TELEPORT;
+            g_battle_move_path.data.teleport.x = x;
+            g_battle_move_path.data.teleport.y = y;
+            g_battle_move_path.data.teleport.elevation = elevation;
         } else {
-            g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT_FAILED;
+            g_battle_move_path.count = BATTLE_MOVE_PATH_TELEPORT_FAILED;
         }
-        return g_battle_move_path;
+        return &g_battle_move_path;
     }
     state->candidate_remaining_range.value = 0xff;
     state->path_length = 0;
@@ -157,5 +157,5 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
         return 0;
     }
     battle_move_encode_path_steps();
-    return g_battle_move_path;
+    return &g_battle_move_path;
 }

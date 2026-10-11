@@ -53,7 +53,7 @@ void battle_state_update_action_execute_mode(void) {
             || (unit->used_ability_id >= ABILITY_ID_CHARGE_FIRST && unit->used_ability_id < ABILITY_ID_MATH_FIRST)) {
             battle_camera_update_cursor_tile_vector();
         }
-        if (g_battle_state_animation_continue_check == 0 && unit->numeric_display_active == 0
+        if (g_battle_state_animation_continue_check == 0 && unit->numeric_display.active == 0
             && (unit->animation.wait == 0 || (unit->animation.sequence_id >> 1) < 0x3cU)) {
             main_sound_replay_bg_sfx();
             if (unit->target_count != 0) {
@@ -79,7 +79,7 @@ void battle_state_update_action_execute_mode(void) {
     } else {
         battle_camera_update_cursor_tile_vector();
         battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-        if (g_battle_state_animation_continue_check == 0 && unit->numeric_display_active == 0
+        if (g_battle_state_animation_continue_check == 0 && unit->numeric_display.active == 0
             && (unit->animation.wait == 0 || (unit->animation.sequence_id >> 1) < 0x3cU)) {
             if (unit->target_count != 0) {
                 for (i = 0; i < unit->target_count; i++) {
