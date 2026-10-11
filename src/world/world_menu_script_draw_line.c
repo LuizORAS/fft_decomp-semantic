@@ -3,12 +3,12 @@
 
 /* Draw the command's two endpoints with its RGB color, then advance. */
 menu_instruction_t* world_menu_script_draw_line(menu_instruction_t* instruction) {
-    RECT rect;
+    point16_t endpoints[2];
 
-    rect.x = instruction->line.x0;
-    rect.y = instruction->line.y0;
-    rect.w = instruction->line.x1;
-    rect.h = instruction->line.y1;
-    world_gfx_enqueue_line_f2(&rect, &instruction->line.color, g_world_menu_semi_trans, g_world_menu_draw_priority);
+    endpoints[0].x = instruction->line.x0;
+    endpoints[0].y = instruction->line.y0;
+    endpoints[1].x = instruction->line.x1;
+    endpoints[1].y = instruction->line.y1;
+    world_gfx_enqueue_line_f2(endpoints, &instruction->line.color, g_world_menu_semi_trans, g_world_menu_draw_priority);
     return menu_next_instruction(instruction);
 }
