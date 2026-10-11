@@ -2,7 +2,7 @@
 
 /* Opcode 03: free the child record in the child slot named by bits 4-5 of
  * the instruction's second byte. */
-s32 battle_effect_code_script_03_free_child(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_03_free_child(effect_record_t* record) {
     battle_effect_script_instruction_t* instruction = battle_effect_get_current_script_instruction(record);
     s32 slot_offset = (instruction->header.packed_parameters >> 3) & 6;
     s16 child = record->child_indices[slot_offset >> 1];

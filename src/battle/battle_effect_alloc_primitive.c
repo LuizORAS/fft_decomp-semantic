@@ -4,7 +4,7 @@
  *
  * The original renderer wraps before an allocation that would cross the
  * 0x8000-byte arena boundary; callers consume the result immediately. */
-void* battle_effect_alloc_primitive(s32 primitive_type) {
+void* battle_effect_alloc_primitive(battle_effect_primitive_type_e primitive_type) {
     /* These registers retain the arena offset and primitive size across the wrap test. */
     s32 offset;
     register s32 size __asm__("$4");

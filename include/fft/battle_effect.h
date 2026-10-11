@@ -1865,7 +1865,7 @@ extern SVECTOR g_battle_effect_corner_bottom_right __attribute__((aligned(4)));
 extern SVECTOR g_battle_effect_corner_top_left __attribute__((aligned(4)));
 extern SVECTOR g_battle_effect_corner_top_right __attribute__((aligned(4)));
 extern u8 g_battle_effect_ending_secondary_function_id; /* function byte to store; 5 = nothing */
-extern s32 (*g_battle_effect_instructions[120])(effect_record_t*);
+extern effect_script_result_e (*g_battle_effect_instructions[120])(effect_record_t*);
 extern MATRIX g_battle_effect_matrix; /* 0x801bc09c */
 extern u32* g_battle_effect_otag;
 
@@ -2147,7 +2147,7 @@ void battle_effect_advance_caster_palette_track(
     battle_effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_misc_id);
 
 effect_list_node_t* battle_effect_alloc_list_node(s16 kind);
-void* battle_effect_alloc_primitive(s32 primitive_type);
+void* battle_effect_alloc_primitive(battle_effect_primitive_type_e primitive_type);
 s32 battle_effect_alloc_slot(void);
 battle_effect_sprite_block_t* battle_effect_alloc_sprite_block(u8 sprite_count);
 s16 battle_effect_alloc_state_record(void);
@@ -2167,8 +2167,8 @@ void battle_effect_init_record_chain(void);
 void battle_effect_init_render_state(void);
 void battle_effect_init_state_records(void);
 s16 battle_effect_start_script_record(u8* script, s16 start_pc, s16 parent_index);
-s32 battle_effect_code_script_04_end(effect_record_t* unused_record);
-s32 battle_effect_code_script_2e_invalid(effect_record_t* unused_record);
+effect_script_result_e battle_effect_code_script_04_end(effect_record_t* unused_record);
+effect_script_result_e battle_effect_code_script_2e_invalid(effect_record_t* unused_record);
 void battle_effect_interpolate_emitter_spawn_spread(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
 s32 battle_effect_lerp_linear(s32 start, s32 end, s32 factor);
 void battle_effect_play(void);

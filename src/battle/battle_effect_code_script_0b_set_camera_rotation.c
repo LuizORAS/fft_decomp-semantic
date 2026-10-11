@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /* Opcode 0b: set the camera rotation from the three halfwords that follow. */
-s32 battle_effect_code_script_0b_set_camera_rotation(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_0b_set_camera_rotation(effect_record_t* record) {
     SVECTOR rotation;
 
     setVector(&rotation, (u16)battle_effect_get_current_script_instruction(record)->vector.x,

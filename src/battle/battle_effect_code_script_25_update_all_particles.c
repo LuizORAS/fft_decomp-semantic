@@ -17,7 +17,7 @@
  * whose arms are identical (cross-jumping merges them): `mode == 1 || mode ==
  * 2` is folded into an unsigned range test that the target does not contain.
  */
-s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
     effect_work_record_t* work;
 
     work = record->work_head;

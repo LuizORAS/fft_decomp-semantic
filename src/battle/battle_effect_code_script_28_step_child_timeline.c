@@ -17,7 +17,7 @@
  * palette/background/sound track helpers. Each track keeps its own keyframe
  * local and the timers reuse i, as in those helpers: both reproduce the
  * target's load sharing and register allocation. */
-s32 battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_record_t* record) {
     map_background_gradient_colors_t colors;
     battle_effect_secondary_init_t init;
     battle_effect_record_timeline_t* timeline;

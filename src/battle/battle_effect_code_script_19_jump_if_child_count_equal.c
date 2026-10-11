@@ -3,7 +3,7 @@
 /* Opcode 19: jump to the offset in the third halfword when the number of
  * occupied child slots equals the second halfword; otherwise step over the
  * 6-byte instruction. */
-s32 battle_effect_code_script_19_jump_if_child_count_equal(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_19_jump_if_child_count_equal(effect_record_t* record) {
     s16 i;
     s16 count;
     s16 target;

@@ -10,7 +10,7 @@
  * target is started, spawn_delay frames apart. Phase 2 runs from
  * phase1_duration + (target_count - 1) * spawn_delay + child_duration. The
  * camera tracks advance every frame. */
-s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
     battle_effect_record_timeline_t* timeline;
     s32 i;
     s16 child;

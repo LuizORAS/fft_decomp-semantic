@@ -3,7 +3,7 @@
 /* Opcode 1b: jump to the offset in the second halfword when the child slot
  * named by the second byte's high nibble is empty; otherwise step over the
  * 4-byte instruction. */
-s32 battle_effect_code_script_1b_jump_if_child_inactive(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_1b_jump_if_child_inactive(effect_record_t* record) {
     battle_effect_script_instruction_t* instruction;
     u32 slot;
 

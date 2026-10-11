@@ -785,9 +785,9 @@ translation unit. Share their types and constants through headers.
   `MAP_CLUT(MAP_CLUT_ROW_SPRITES, 7)`, the status bubble CLUT.
 - The effect interpreter indexes fixed tables with wider fields and no check:
   the opcode is masked to nine bits over the 120 entries of
-  `g_battle_effect_instructions` (0x2e-0x77 are the error report, a `void`
-  function in a table of `s16` handlers: `battle_effect_run_block` would test
-  its leftover `$v0` and the script position would not move);
+  `g_battle_effect_instructions` (0x2e-0x77 report an error without returning
+  a result: `battle_effect_run_block` narrows the leftover `$v0` to `s16`
+  and tests it while the script position stays unchanged);
   `g_battle_effect_particle_render_handlers` has four entries for
   `(kind_flags >> 12) & 0xf`, so `EFFECT_WORK_KIND_HEAP_BLOCK` would call
   through `g_battle_effect_camera_rotation_mode`; opcode 06 takes a six-bit

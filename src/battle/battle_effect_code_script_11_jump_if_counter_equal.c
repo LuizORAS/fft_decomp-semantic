@@ -3,7 +3,7 @@
 /* Opcode 11: jump to the offset in the third halfword when the counter
  * selected by the top two bits of the second byte equals the second halfword;
  * otherwise step over the 6-byte instruction. */
-s32 battle_effect_code_script_11_jump_if_counter_equal(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_11_jump_if_counter_equal(effect_record_t* record) {
     battle_effect_script_instruction_t* instruction = battle_effect_get_current_script_instruction(record);
     if (record->counters[instruction->header.packed_parameters >> 6] == instruction->branch.comparison) {
         record->pc = instruction->branch.target_offset;
