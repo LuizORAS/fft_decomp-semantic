@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Scale a cursor sprite about its center and round its geometry down to even values. */
-void world_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step) {
+void world_menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step) {
     s32 scale;
     s32 offset;
 

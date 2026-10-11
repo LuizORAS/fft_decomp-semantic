@@ -967,6 +967,7 @@ void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters)
 extern s32 g_battle_dead_unit_action;
 extern crystal_pickup_result_t* g_battle_dead_unit_context;
 extern s32 g_battle_dead_unit_result;
+crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
 
 /* deploy */
 extern const RECT g_battle_deployment_clear_rect;
@@ -8746,7 +8747,7 @@ void battle_menu_run_equip_thread(void);
 void battle_menu_store_auto_battle_main_target_id(s32 target_id, s32 battle_id);
 void battle_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* display);
 void battle_menu_copy_bytes_to_halfwords(u16* dst, u8* src, s32 count);
-void battle_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
+void battle_menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step);
 void battle_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 void battle_menu_select_icon_sprite_clut(SPRT* sprite);
 void battle_menu_open_illegal_move_help(void);

@@ -2,8 +2,6 @@
 #include "fft/world.h"
 
 /* Declared as in the BATTLE callers. */
-extern crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
-
 /* Run battle_unit_generate_crystal_or_treasure for the unit on the main thread
  * and return the treasure item when the result is 4, else -1. */
 s32 world_menu_get_dead_unit_selection(s32 battle_unit_index) {

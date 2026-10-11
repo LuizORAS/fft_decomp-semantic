@@ -1,8 +1,6 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-extern crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
-
 /* Run battle_unit_generate_crystal_or_treasure for the unit on the main stack,
  * keep its record in g_battle_dead_unit_context and return the treasure item when
  * the result is 4, otherwise -1. */
