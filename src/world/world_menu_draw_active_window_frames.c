@@ -41,9 +41,7 @@ void world_menu_draw_active_window_frames(void) {
         if (window->is_message_box != 0) {
             if (g_world_thread_task_active != 0) {
                 window->quads[0].clut = 0x7D3C;
-                window->quads[1].r0 = 0x40;
-                window->quads[1].g0 = 0x50;
-                window->quads[1].b0 = 0x70;
+                setRGB0(&window->quads[1], 0x40, 0x50, 0x70);
             } else {
                 window->quads[0].clut = 0x7C3C;
             }

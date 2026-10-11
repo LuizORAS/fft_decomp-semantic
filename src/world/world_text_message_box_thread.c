@@ -128,22 +128,8 @@ void world_text_message_box_thread(void) {
         right -= 0x100;
         bottom -= 0x78;
     }
-    win->quads[1].x0 = right;
-    win->quads[1].y0 = bottom;
-    win->quads[1].x1 = right;
-    win->quads[1].y1 = bottom;
-    win->quads[1].x2 = right;
-    win->quads[1].y2 = bottom;
-    win->quads[1].x3 = right;
-    win->quads[1].y3 = bottom;
-    win->quads[0].x0 = right;
-    win->quads[0].y0 = bottom;
-    win->quads[0].x1 = right;
-    win->quads[0].y1 = bottom;
-    win->quads[0].x2 = right;
-    win->quads[0].y2 = bottom;
-    win->quads[0].x3 = right;
-    win->quads[0].y3 = bottom;
+    setXY4(&win->quads[1], right, bottom, right, bottom, right, bottom, right, bottom);
+    setXY4(&win->quads[0], right, bottom, right, bottom, right, bottom, right, bottom);
     from.x = x;
     from.y = y;
     from.w = rec.width;

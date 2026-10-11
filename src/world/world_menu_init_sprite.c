@@ -5,9 +5,7 @@
 void world_menu_init_sprite(SPRT* sprite) {
     SetSprt(sprite);
     SetShadeTex(sprite, 0);
-    sprite->r0 = 0x80;
-    sprite->g0 = 0x80;
-    sprite->b0 = 0x80;
+    setRGB0(sprite, 0x80, 0x80, 0x80);
     sprite->x0 = 0x200;
     sprite->u0 = 0;
     sprite->v0 = 0;

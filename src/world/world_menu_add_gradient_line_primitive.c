@@ -9,11 +9,7 @@ void world_menu_add_gradient_line_primitive(point16_t* endpoints, rgb24_t* color
     line->y0 = endpoints[0].y;
     line->x1 = endpoints[1].x + 0x80;
     line->y1 = endpoints[1].y;
-    line->r0 = colors[0].r;
-    line->g0 = colors[0].g;
-    line->b0 = colors[0].b;
-    line->r1 = colors[1].r;
-    line->g1 = colors[1].g;
-    line->b1 = colors[1].b;
+    setRGB0(line, colors[0].r, colors[0].g, colors[0].b);
+    setRGB1(line, colors[1].r, colors[1].g, colors[1].b);
     addPrim(&g_world_gfx_active_packet_buffer->otag[ot_index], line);
 }

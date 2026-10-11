@@ -31,9 +31,7 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
         SetDefDispEnv(&g_world_gfx_packet_buffers[i].disp_env, 0, i == 0 ? 240 : 0, 255, 240);
         g_world_gfx_packet_buffers[i].draw_env.isbg = 0;
         g_world_gfx_packet_buffers[i].draw_env.dfe = 1;
-        g_world_gfx_packet_buffers[i].draw_env.r0 = 0;
-        g_world_gfx_packet_buffers[i].draw_env.g0 = 0;
-        g_world_gfx_packet_buffers[i].draw_env.b0 = 0;
+        setRGB0(&g_world_gfx_packet_buffers[i].draw_env, 0, 0, 0);
         g_world_gfx_packet_buffers[i].draw_env.ofs[0] = -128;
     }
     world_gfx_present_frame_and_swap_packet_buffer(0, -1);

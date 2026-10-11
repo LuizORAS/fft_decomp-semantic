@@ -13,34 +13,16 @@ s32 world_menu_build_quad_pieces(s32 group, POLY_GT4* poly) {
     piece = &g_world_menu_quad_pieces[g_world_menu_quad_group_starts[group]];
     count = g_world_menu_quad_group_starts[group + 1] - g_world_menu_quad_group_starts[group];
     for (i = 0; i < count; i++) {
-        poly->x0 = g_world_menu_quad_origin.x + piece->x;
-        poly->y0 = g_world_menu_quad_origin.y + piece->y;
-        poly->x1 = g_world_menu_quad_origin.x + piece->x + piece->w;
-        poly->y1 = g_world_menu_quad_origin.y + piece->y;
-        poly->x2 = g_world_menu_quad_origin.x + piece->x;
-        poly->y2 = g_world_menu_quad_origin.y + piece->y + (piece->h - 1);
-        poly->x3 = g_world_menu_quad_origin.x + piece->x + piece->w;
-        poly->y3 = g_world_menu_quad_origin.y + piece->y + (piece->h - 1);
-        poly->u0 = piece->u;
-        poly->v0 = piece->v - 0x78;
-        poly->u1 = piece->u + piece->w;
-        poly->v1 = piece->v - 0x78;
-        poly->u2 = piece->u;
-        poly->v2 = piece->v - 0x78 + (piece->h - 1);
-        poly->u3 = piece->u + piece->w;
-        poly->v3 = piece->v - 0x78 + (piece->h - 1);
-        poly->r0 = colors->vertex[0].r;
-        poly->g0 = colors->vertex[0].g;
-        poly->b0 = colors->vertex[0].b;
-        poly->r1 = colors->vertex[1].r;
-        poly->g1 = colors->vertex[1].g;
-        poly->b1 = colors->vertex[1].b;
-        poly->r2 = colors->vertex[2].r;
-        poly->g2 = colors->vertex[2].g;
-        poly->b2 = colors->vertex[2].b;
-        poly->r3 = colors->vertex[3].r;
-        poly->g3 = colors->vertex[3].g;
-        poly->b3 = colors->vertex[3].b;
+        setXY4(poly, g_world_menu_quad_origin.x + piece->x, g_world_menu_quad_origin.y + piece->y,
+            g_world_menu_quad_origin.x + piece->x + piece->w, g_world_menu_quad_origin.y + piece->y,
+            g_world_menu_quad_origin.x + piece->x, g_world_menu_quad_origin.y + piece->y + (piece->h - 1),
+            g_world_menu_quad_origin.x + piece->x + piece->w, g_world_menu_quad_origin.y + piece->y + (piece->h - 1));
+        setUV4(poly, piece->u, piece->v - 0x78, piece->u + piece->w, piece->v - 0x78, piece->u,
+            piece->v - 0x78 + (piece->h - 1), piece->u + piece->w, piece->v - 0x78 + (piece->h - 1));
+        setRGB0(poly, colors->vertex[0].r, colors->vertex[0].g, colors->vertex[0].b);
+        setRGB1(poly, colors->vertex[1].r, colors->vertex[1].g, colors->vertex[1].b);
+        setRGB2(poly, colors->vertex[2].r, colors->vertex[2].g, colors->vertex[2].b);
+        setRGB3(poly, colors->vertex[3].r, colors->vertex[3].g, colors->vertex[3].b);
         poly++;
         piece++;
     }

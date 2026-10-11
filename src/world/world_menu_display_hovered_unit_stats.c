@@ -164,13 +164,9 @@ void world_menu_display_hovered_unit_stats(
         page = &g_world_unit_status_panel_pages[g_world_unit_status_first_page_by_mode[mode] + (frame & 1)];
         world_gfx_set_portrait_poly_texture(&page->portrait, unit_id);
         if (running != 0) {
-            page->portrait.r0 = 0x40;
-            page->portrait.g0 = 0x50;
-            page->portrait.b0 = 0x70;
+            setRGB0(&page->portrait, 0x40, 0x50, 0x70);
         } else {
-            page->portrait.r0 = 0x80;
-            page->portrait.g0 = 0x80;
-            page->portrait.b0 = 0x80;
+            setRGB0(&page->portrait, 0x80, 0x80, 0x80);
         }
         status->team_kind = 0;
         if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
@@ -184,14 +180,8 @@ void world_menu_display_hovered_unit_stats(
         }
         params = g_world_unit_status_sprite_image_params_by_mode[mode];
         if (g_world_unit_status_bounce_step == 0) {
-            page->portrait.x0 = frame_rect->x + 2;
-            page->portrait.y0 = frame_rect->y + 2;
-            page->portrait.x1 = frame_rect->x + 0x21;
-            page->portrait.y1 = frame_rect->y + 2;
-            page->portrait.x2 = frame_rect->x + 2;
-            page->portrait.y2 = frame_rect->y + 0x32;
-            page->portrait.x3 = frame_rect->x + 0x21;
-            page->portrait.y3 = frame_rect->y + 0x32;
+            setXY4(&page->portrait, frame_rect->x + 2, frame_rect->y + 2, frame_rect->x + 0x21, frame_rect->y + 2,
+                frame_rect->x + 2, frame_rect->y + 0x32, frame_rect->x + 0x21, frame_rect->y + 0x32);
             world_script_copy_bytes(
                 &params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
@@ -228,14 +218,7 @@ void world_menu_display_hovered_unit_stats(
                 width = 0x20;
             }
             row_y = extent_h + i * 0xB;
-            poly->x0 = extent_w;
-            poly->y0 = row_y;
-            poly->x1 = extent_w + width;
-            poly->y1 = row_y;
-            poly->x2 = extent_w;
-            poly->y2 = row_y + 3;
-            poly->x3 = extent_w + width;
-            poly->y3 = row_y + 3;
+            setXY4(poly, extent_w, row_y, extent_w + width, row_y, extent_w, row_y + 3, extent_w + width, row_y + 3);
             width = (gauge->bonus << 5) / gauge->max;
             if (width == 0) {
                 extent_w = 0;
@@ -243,51 +226,27 @@ void world_menu_display_hovered_unit_stats(
             poly->x2 -= 3;
             poly->x3 -= 3;
             if (flag != 0) {
-                poly->r0 = 0x40;
-                poly->g0 = 0x40;
-                poly->b0 = 0x40;
-                poly->r1 = 0x80;
-                poly->g1 = 0x80;
-                poly->b1 = 0x80;
-                poly->r2 = 0x40;
-                poly->g2 = 0x40;
-                poly->b2 = 0x40;
-                poly->r3 = 0xA0;
-                poly->g3 = 0xC4;
-                poly->b3 = 0xC4;
+                setRGB0(poly, 0x40, 0x40, 0x40);
+                setRGB1(poly, 0x80, 0x80, 0x80);
+                setRGB2(poly, 0x40, 0x40, 0x40);
+                setRGB3(poly, 0xA0, 0xC4, 0xC4);
             } else if (running != 0) {
-                poly->r0 = color->r >> 1;
-                poly->g0 = color->g >> 1;
-                poly->b0 = color->b;
+                setRGB0(poly, color->r >> 1, color->g >> 1, color->b);
                 color++;
-                poly->r1 = color->r >> 1;
-                poly->g1 = color->g >> 1;
-                poly->b1 = color->b;
+                setRGB1(poly, color->r >> 1, color->g >> 1, color->b);
                 color++;
-                poly->r2 = color->r >> 1;
-                poly->g2 = color->g >> 1;
-                poly->b2 = color->b;
+                setRGB2(poly, color->r >> 1, color->g >> 1, color->b);
                 color++;
-                poly->r3 = color->r >> 1;
-                poly->g3 = color->g >> 1;
-                poly->b3 = color->b;
+                setRGB3(poly, color->r >> 1, color->g >> 1, color->b);
                 color++;
             } else {
-                poly->r0 = color->r;
-                poly->g0 = color->g;
-                poly->b0 = color->b;
+                setRGB0(poly, color->r, color->g, color->b);
                 color++;
-                poly->r1 = color->r;
-                poly->g1 = color->g;
-                poly->b1 = color->b;
+                setRGB1(poly, color->r, color->g, color->b);
                 color++;
-                poly->r2 = color->r;
-                poly->g2 = color->g;
-                poly->b2 = color->b;
+                setRGB2(poly, color->r, color->g, color->b);
                 color++;
-                poly->r3 = color->r;
-                poly->g3 = color->g;
-                poly->b3 = color->b;
+                setRGB3(poly, color->r, color->g, color->b);
                 color++;
             }
             poly++;

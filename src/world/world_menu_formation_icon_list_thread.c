@@ -51,18 +51,10 @@ void world_menu_formation_icon_list_thread(void) {
             world_menu_handle_entry_confirm(param, cursor);
             world_menu_cancel_thread_group(param);
         }
-        record->sprites[0].r0 = g_world_menu_color_red;
-        record->sprites[0].g0 = g_world_menu_color_green;
-        record->sprites[0].b0 = g_world_menu_color_blue;
-        record->sprites[1].r0 = g_world_menu_color_red;
-        record->sprites[1].g0 = g_world_menu_color_green;
-        record->sprites[1].b0 = g_world_menu_color_blue;
-        record->sprites[2].r0 = g_world_menu_color_red;
-        record->sprites[2].g0 = g_world_menu_color_green;
-        record->sprites[2].b0 = g_world_menu_color_blue;
-        record->sprites[3].r0 = g_world_menu_color_red;
-        record->sprites[3].g0 = g_world_menu_color_green;
-        record->sprites[3].b0 = g_world_menu_color_blue;
+        setRGB0(&record->sprites[0], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
+        setRGB0(&record->sprites[1], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
+        setRGB0(&record->sprites[2], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
+        setRGB0(&record->sprites[3], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
         world_menu_submit_icon_primitives(record);
     }
     world_thread_yield();

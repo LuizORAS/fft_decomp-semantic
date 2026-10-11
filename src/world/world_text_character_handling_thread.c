@@ -319,14 +319,7 @@ void world_text_character_handling_thread(void) {
     if (bottom > 0xE4) {
         bottom = 0xE4;
     }
-    win->quads[0].x0 = right;
-    win->quads[0].y0 = bottom;
-    win->quads[0].x1 = right;
-    win->quads[0].y1 = bottom;
-    win->quads[0].x2 = right;
-    win->quads[0].y2 = bottom;
-    win->quads[0].x3 = right;
-    win->quads[0].y3 = bottom;
+    setXY4(&win->quads[0], right, bottom, right, bottom, right, bottom, right, bottom);
     from.x = rec.x;
     from.y = rec.y;
     from.w = rec.width;
@@ -335,14 +328,7 @@ void world_text_character_handling_thread(void) {
     rec.arrow_y = rec.y + rec.height - 0x18;
     to.x = 0;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
-        win->quads[1].x0 = right;
-        win->quads[1].y0 = bottom;
-        win->quads[1].x1 = right;
-        win->quads[1].y1 = bottom;
-        win->quads[1].x2 = right;
-        win->quads[1].y2 = bottom;
-        win->quads[1].x3 = right;
-        win->quads[1].y3 = bottom;
+        setXY4(&win->quads[1], right, bottom, right, bottom, right, bottom, right, bottom);
         if (rec.tail_offset < 0) {
             to.x = rec.x + 8;
             if (rec.portrait < 8) {

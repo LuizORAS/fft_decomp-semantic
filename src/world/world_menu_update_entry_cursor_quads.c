@@ -38,21 +38,13 @@ void world_menu_update_entry_cursor_quads(
         thread->task_words[0] += g_world_event_speed;
         x = -(cursor + 1) * 6;
         y -= 0x17;
-        quad->x0 = entry->window.x + (entry->inner_width + x) - 0x13;
-        quad->y0 = entry->window.y - y + 4;
-        quad->x1 = entry->window.x + (entry->inner_width + x) - 3;
-        quad->y1 = entry->window.y - y + 4;
-        quad->x2 = entry->window.x + (entry->inner_width + x) - 0x13;
-        quad->y2 = entry->window.y - y + 0x14;
-        quad->x3 = entry->window.x + (entry->inner_width + x) - 3;
-        quad->y3 = entry->window.y - y + 0x14;
-        shadow->x0 = entry->window.x + (entry->inner_width + x) - 0x11;
-        shadow->y0 = entry->window.y - y + 6;
-        shadow->x1 = entry->window.x + (entry->inner_width + x) - 1;
-        shadow->y1 = entry->window.y - y + 6;
-        shadow->x2 = entry->window.x + (entry->inner_width + x) - 0x11;
-        shadow->y2 = entry->window.y - y + 0x16;
-        shadow->x3 = entry->window.x + (entry->inner_width + x) - 1;
-        shadow->y3 = entry->window.y - y + 0x16;
+        setXY4(quad, entry->window.x + (entry->inner_width + x) - 0x13, entry->window.y - y + 4,
+            entry->window.x + (entry->inner_width + x) - 3, entry->window.y - y + 4,
+            entry->window.x + (entry->inner_width + x) - 0x13, entry->window.y - y + 0x14,
+            entry->window.x + (entry->inner_width + x) - 3, entry->window.y - y + 0x14);
+        setXY4(shadow, entry->window.x + (entry->inner_width + x) - 0x11, entry->window.y - y + 6,
+            entry->window.x + (entry->inner_width + x) - 1, entry->window.y - y + 6,
+            entry->window.x + (entry->inner_width + x) - 0x11, entry->window.y - y + 0x16,
+            entry->window.x + (entry->inner_width + x) - 1, entry->window.y - y + 0x16);
     }
 }

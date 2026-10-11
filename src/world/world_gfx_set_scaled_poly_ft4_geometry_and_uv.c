@@ -47,20 +47,10 @@ void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, point16_t* pa
         h = -h;
     }
     poly->tpage = GetTPage(1, 0, page->x, page->y & 0xF00);
-    poly->u0 = rect->u;
-    poly->v0 = rect->v;
-    poly->u1 = rect->u + rect->width;
-    poly->v1 = rect->v;
-    poly->u2 = rect->u;
-    poly->v2 = rect->v + rect->height;
-    poly->u3 = rect->u + rect->width;
-    poly->v3 = rect->v + rect->height;
-    poly->x0 = (u16)position->x + x_off + origin->x;
-    poly->y0 = (u16)position->y + y_off + origin->y;
-    poly->x1 = (u16)position->x + x_off + origin->x + w;
-    poly->y1 = (u16)position->y + y_off + origin->y;
-    poly->x2 = (u16)position->x + x_off + origin->x;
-    poly->y2 = (u16)position->y + y_off + origin->y + h;
-    poly->x3 = (u16)position->x + x_off + origin->x + w;
-    poly->y3 = (u16)position->y + y_off + origin->y + h;
+    setUV4(poly, rect->u, rect->v, rect->u + rect->width, rect->v, rect->u, rect->v + rect->height,
+        rect->u + rect->width, rect->v + rect->height);
+    setXY4(poly, (u16)position->x + x_off + origin->x, (u16)position->y + y_off + origin->y,
+        (u16)position->x + x_off + origin->x + w, (u16)position->y + y_off + origin->y,
+        (u16)position->x + x_off + origin->x, (u16)position->y + y_off + origin->y + h,
+        (u16)position->x + x_off + origin->x + w, (u16)position->y + y_off + origin->y + h);
 }

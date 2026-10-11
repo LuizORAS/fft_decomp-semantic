@@ -24,9 +24,7 @@ void world_menu_configure_status_panel_primitive_colors(
         primitives->sprites[1].clut = 0x7c7c;
         for (i = 0; i < 5; i++) {
             SetShadeTex(&primitives->sprites[i + 19], 0);
-            (primitives->sprites + i + 19)->r0 = 0x40;
-            (primitives->sprites + i + 19)->g0 = 0x40;
-            (primitives->sprites + i + 19)->b0 = 0x80;
+            setRGB0((primitives->sprites + i + 19), 0x40, 0x40, 0x80);
         }
     } else {
         clut = 0x7d7c;
@@ -40,9 +38,7 @@ void world_menu_configure_status_panel_primitive_colors(
         primitives->sprites[1].clut = 0x7cbc;
         for (i = 0; i < 5; i++) {
             SetShadeTex(&primitives->sprites[i + 19], 0);
-            (primitives->sprites + i + 19)->r0 = 0x80;
-            (primitives->sprites + i + 19)->g0 = 0x80;
-            (primitives->sprites + i + 19)->b0 = 0x80;
+            setRGB0((primitives->sprites + i + 19), 0x80, 0x80, 0x80);
         }
     }
 }

@@ -13,9 +13,7 @@ void world_menu_init_panel_fade_tiles(void) {
     SetDrawMode(&frame->draw_mode, 0, 0, tpage, &g_world_gfx_texture_window);
 
     SetTile(&frame->center);
-    frame->center.r0 = 0;
-    frame->center.g0 = 0;
-    frame->center.b0 = 0;
+    setRGB0(&frame->center, 0, 0, 0);
     SetSemiTrans(&frame->center, 1);
     frame->center.x0 = 0x80;
     frame->center.y0 = 0xac;
@@ -24,9 +22,7 @@ void world_menu_init_panel_fade_tiles(void) {
 
     for (i = 0; i < 9; i++) {
         SetTile(&frame->backdrop[i]);
-        frame->backdrop[i].r0 = 0;
-        frame->backdrop[i].g0 = 0;
-        frame->backdrop[i].b0 = 0;
+        setRGB0(&frame->backdrop[i], 0, 0, 0);
         SetSemiTrans(&frame->backdrop[i], 1);
         frame->backdrop[i].w = 0x100;
         frame->backdrop[i].h = 1;
@@ -34,9 +30,7 @@ void world_menu_init_panel_fade_tiles(void) {
         frame->backdrop[i].y0 = i + 0xa3;
 
         SetTile(&frame->bar[i]);
-        frame->bar[i].r0 = 0;
-        frame->bar[i].g0 = 0;
-        frame->bar[i].b0 = 0;
+        setRGB0(&frame->bar[i], 0, 0, 0);
         SetSemiTrans(&frame->bar[i], 1);
         frame->bar[i].w = 0x100;
         frame->bar[i].h = 1;

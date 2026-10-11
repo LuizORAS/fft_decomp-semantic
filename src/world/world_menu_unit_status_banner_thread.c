@@ -204,55 +204,31 @@ void world_menu_unit_status_banner_thread(void) {
             world_menu_init_primitive_colors_dimmed(&summary->numeric_frame);
             world_menu_init_primitive_colors_dimmed(&status->numeric_frame);
             if ((anim_state - 4) < 6U) {
-                summary->portrait[0].r0 = 0x20;
-                summary->portrait[0].g0 = 0x28;
-                summary->portrait[0].b0 = 0x38;
+                setRGB0(&summary->portrait[0], 0x20, 0x28, 0x38);
             } else {
-                summary->portrait[0].r0 = 0x40;
-                summary->portrait[0].g0 = 0x50;
-                summary->portrait[0].b0 = 0x70;
+                setRGB0(&summary->portrait[0], 0x40, 0x50, 0x70);
             }
-            summary->portrait[1].r0 = 0x20;
-            summary->portrait[1].g0 = 0x28;
-            summary->portrait[1].b0 = 0x38;
-            summary->portrait[2].r0 = 0x20;
-            summary->portrait[2].g0 = 0x28;
-            summary->portrait[2].b0 = 0x38;
-            summary->portrait[3].r0 = 0x20;
-            summary->portrait[3].g0 = 0x28;
-            summary->portrait[3].b0 = 0x38;
+            setRGB0(&summary->portrait[1], 0x20, 0x28, 0x38);
+            setRGB0(&summary->portrait[2], 0x20, 0x28, 0x38);
+            setRGB0(&summary->portrait[3], 0x20, 0x28, 0x38);
         } else {
             s32 shade;
             world_menu_init_primitive_colors_normal(&summary->numeric_frame);
             world_menu_init_primitive_colors_normal(&status->numeric_frame);
             if ((anim_state - 4) >= 6U) {
-                summary->portrait[0].r0 = 0x80;
-                summary->portrait[0].g0 = 0x80;
-                summary->portrait[0].b0 = 0x80;
+                setRGB0(&summary->portrait[0], 0x80, 0x80, 0x80);
             } else {
-                summary->portrait[0].r0 = 0x40;
-                summary->portrait[0].g0 = 0x40;
-                summary->portrait[0].b0 = 0x40;
+                setRGB0(&summary->portrait[0], 0x40, 0x40, 0x40);
             }
             shade = 0x40;
-            summary->portrait[1].r0 = shade;
-            summary->portrait[1].g0 = shade;
-            summary->portrait[1].b0 = shade;
-            summary->portrait[2].r0 = shade;
-            summary->portrait[2].g0 = shade;
-            summary->portrait[2].b0 = shade;
-            summary->portrait[3].r0 = shade;
-            summary->portrait[3].g0 = shade;
-            summary->portrait[3].b0 = shade;
+            setRGB0(&summary->portrait[1], shade, shade, shade);
+            setRGB0(&summary->portrait[2], shade, shade, shade);
+            setRGB0(&summary->portrait[3], shade, shade, shade);
         }
         if (dimmed != 0) {
-            status->portrait.r0 = 0x40;
-            status->portrait.g0 = 0x40;
-            status->portrait.b0 = 0x60;
+            setRGB0(&status->portrait, 0x40, 0x40, 0x60);
         } else {
-            status->portrait.r0 = 0x80;
-            status->portrait.g0 = 0x80;
-            status->portrait.b0 = 0x80;
+            setRGB0(&status->portrait, 0x80, 0x80, 0x80);
         }
         g_world_gfx_draw_area_y = (g_world_frame_arg != 0xF0) ? 0xF0 : 0;
         if ((display->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
@@ -346,38 +322,22 @@ void world_menu_unit_status_banner_thread(void) {
                 summary->bars[i].x2 -= 3;
                 summary->bars[i].x3 -= 3;
                 if (dimmed != 0) {
-                    summary->bars[i].r0 = color->r >> 1;
-                    summary->bars[i].g0 = color->g >> 1;
-                    summary->bars[i].b0 = color->b;
+                    setRGB0(&summary->bars[i], color->r >> 1, color->g >> 1, color->b);
                     color++;
-                    summary->bars[i].r1 = color->r >> 1;
-                    summary->bars[i].g1 = color->g >> 1;
-                    summary->bars[i].b1 = color->b;
+                    setRGB1(&summary->bars[i], color->r >> 1, color->g >> 1, color->b);
                     color++;
-                    summary->bars[i].r2 = color->r >> 1;
-                    summary->bars[i].g2 = color->g >> 1;
-                    summary->bars[i].b2 = color->b;
+                    setRGB2(&summary->bars[i], color->r >> 1, color->g >> 1, color->b);
                     color++;
-                    summary->bars[i].r3 = color->r >> 1;
-                    summary->bars[i].g3 = color->g >> 1;
-                    summary->bars[i].b3 = color->b;
+                    setRGB3(&summary->bars[i], color->r >> 1, color->g >> 1, color->b);
                     color++;
                 } else {
-                    summary->bars[i].r0 = color->r;
-                    summary->bars[i].g0 = color->g;
-                    summary->bars[i].b0 = color->b;
+                    setRGB0(&summary->bars[i], color->r, color->g, color->b);
                     color++;
-                    summary->bars[i].r1 = color->r;
-                    summary->bars[i].g1 = color->g;
-                    summary->bars[i].b1 = color->b;
+                    setRGB1(&summary->bars[i], color->r, color->g, color->b);
                     color++;
-                    summary->bars[i].r2 = color->r;
-                    summary->bars[i].g2 = color->g;
-                    summary->bars[i].b2 = color->b;
+                    setRGB2(&summary->bars[i], color->r, color->g, color->b);
                     color++;
-                    summary->bars[i].r3 = color->r;
-                    summary->bars[i].g3 = color->g;
-                    summary->bars[i].b3 = color->b;
+                    setRGB3(&summary->bars[i], color->r, color->g, color->b);
                     color++;
                 }
             }
