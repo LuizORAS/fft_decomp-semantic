@@ -8,9 +8,11 @@ s16 main_smd_calculate_pitch(s16 key) {
     s32 index;
     s32 shift;
     s16 pitch;
+    u8 fine_step;
 
     index = (key & 0x7fff) >> 8;
-    pitch = g_main_smd_pitch_table[(key & 0xff) + (g_main_smd_key_semitones[index] << 8)];
+    fine_step = key;
+    pitch = g_main_smd_pitch_table[fine_step + (g_main_smd_key_semitones[index] << 8)];
     shift = 6 - g_main_smd_key_octaves[index];
     if (shift >= 0)
         pitch = pitch >> shift;
