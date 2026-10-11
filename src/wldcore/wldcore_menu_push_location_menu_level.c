@@ -34,7 +34,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
     s32 kind;
     u32 flags;
     s32 i;
-    wldcore_window_entry_36_rgb_t* color;
+    CVECTOR* color;
     wldcore_window_record_t* records;
     wldcore_location_list_level_t* level;
     wldcore_point32_t* base;
@@ -61,14 +61,15 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.cursor_window = index;
     records = g_wldcore_window_records;
-    color = (wldcore_window_entry_36_rgb_t*)&records->color;
+    /* Direct record.color access changes the column base and instruction scheduling. */
+    color = &records->color;
     g_wldcore_window_records[index].priority = 0xB;
     g_wldcore_window_records[index].sequence = menu;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    color[index].red = 0;
-    color[index].green = 0;
-    color[index].blue = 0;
+    ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->r = 0;
+    ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->g = 0;
+    ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->b = 0;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.mode = 8;
 
     if (g_wldcore_map_projection_state.marker.sub_kind != 0) {
@@ -105,9 +106,9 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         position = (wldcore_window_xy_t*)&records->position.x;
         position[index].x = -8;
         position[index].y = 0x10;
-        color[index].red = 0;
-        color[index].green = 0;
-        color[index].blue = 0;
+        ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->r = 0;
+        ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->g = 0;
+        ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->b = 0;
     }
 
     widest = 0;

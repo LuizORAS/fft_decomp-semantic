@@ -413,8 +413,8 @@ extern world_menu_text_layout_t g_open_music_test_list_state;
 extern s16 g_open_music_test_list_entry_flags[96];
 extern s16 g_open_music_test_list_entries[96];
 extern s16 g_open_music_test_selected_option;
-extern u8 g_open_music_test_music_ids[];   /* music test entry -> scenario music id */
-extern s32 g_open_music_test_sound_handle; /* handle of the playing music test track */
+extern u8 g_open_music_test_music_ids[];               /* music test entry -> scenario music id */
+extern suzuki_music_t* g_open_music_test_sound_handle; /* handle of the playing music test track */
 /* Fades the CD audio in at the given mix level (main_sound_put_type), or out when it is 0. */
 void open_sound_set_cd_mix_and_volume(s32 cd_mix_level, s32 duration);
 

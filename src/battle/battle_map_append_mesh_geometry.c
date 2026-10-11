@@ -26,7 +26,7 @@ void battle_map_append_mesh_geometry(
     s32 untextured_quad_count;
 
     g_battle_map_resource_load_state = MAP_LOAD_STATE_MESH_RECORDS;
-    g_battle_map_mesh_data_buffer = (s32)g_battle_gfx_current_render_buffer;
+    g_battle_map_mesh_last_render_buffer = g_battle_gfx_current_render_buffer;
 
     textured_triangle_count = *source++;
     textured_quad_count = *source++;

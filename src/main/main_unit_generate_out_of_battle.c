@@ -133,6 +133,6 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     party->proposition_status = 0;
     party->egg_color = 0;
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
-        party->learned_abilities[0] = 4;
+        party->learned_abilities[0].bits[0] = 4;
     }
 }

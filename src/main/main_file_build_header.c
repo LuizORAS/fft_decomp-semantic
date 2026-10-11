@@ -41,7 +41,7 @@ s32 main_file_build_header(
     header->error_count = 0;
     header->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
     header->lba = lba;
-    CdIntToPos(lba, header->position);
+    CdIntToPos(lba, &header->position);
     header->sector_count = sector_count;
     header->destination = destination;
     return 0;

@@ -338,16 +338,16 @@ void jobstts_text_start_help_thread(s32 thread_data);
 /* unit */
 /* Job and ability data copied into JOBSTTS.OUT for the selected unit. */
 typedef struct jobstts_unit_job_data {
-    s16 job_id;               /* 0x00 */
-    s16 entd_slot;            /* 0x02 */
-    u16 primary_skillset;     /* 0x04 */
-    u8 unit_flags;            /* 0x06 */
-    u8 character_identity;    /* 0x07 */
-    u8 unlocked_jobs[3];      /* 0x08 */
-    u8 learned_abilities[57]; /* 0x0B */
-    u8 job_levels[10];        /* 0x44 */
-    u16 job_points[20];       /* 0x4E */
-    u16 total_job_points[20]; /* 0x76 */
+    s16 job_id;                                                                   /* 0x00 */
+    s16 entd_slot;                                                                /* 0x02 */
+    u16 primary_skillset;                                                         /* 0x04 */
+    u8 unit_flags;                                                                /* 0x06 */
+    u8 character_identity;                                                        /* 0x07 */
+    u8 unlocked_jobs[3];                                                          /* 0x08 */
+    unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x0B */
+    u8 job_levels[10];                                                            /* 0x44 */
+    u16 job_points[20];                                                           /* 0x4E */
+    u16 total_job_points[20];                                                     /* 0x76 */
 } jobstts_unit_job_data_t;
 typedef char jobstts_unit_job_data_size_must_be_0x9e[(sizeof(jobstts_unit_job_data_t) == 0x9E) ? 1 : -1];
 

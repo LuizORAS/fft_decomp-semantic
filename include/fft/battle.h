@@ -7971,6 +7971,11 @@ typedef struct gns_file_record {
 } gns_file_record_t;
 typedef char gns_file_record_size_must_be_0x14[(sizeof(gns_file_record_t) == 0x14) ? 1 : -1];
 
+typedef union gns_command_payload {
+    u8 bytes[8];
+    SVECTOR vector; /* Camera coordinates, rotation or weather modifier. */
+} gns_command_payload_t;
+
 /* Command rows after the 0x80 separator reuse the 20-byte prefix, but +0x08
  * is a byte stride (0x14 or 0x1c), not a disc LBA. The 0x1c rows have eight
  * more payload bytes after this prefix. +0x06/+0x09..+0x0b are zero in the
@@ -7984,7 +7989,7 @@ typedef struct gns_command_record_prefix {
     u8 record_byte_length; /* 0x08 */
     u8 _unused_09;
     u16 _unused_0a;
-    u8 payload[8]; /* 0x0c; command arguments, followed by more bytes for 0x1c rows */
+    gns_command_payload_t payload; /* 0x0c; followed by more bytes for 0x1c rows */
 } gns_command_record_prefix_t;
 typedef char gns_command_record_prefix_size_must_be_0x14[(sizeof(gns_command_record_prefix_t) == 0x14) ? 1 : -1];
 
@@ -8291,20 +8296,60 @@ typedef struct battle_map_state_record {
     u8 data[4];
 } battle_map_state_record_t;
 
+/* Packed lighting: two nine-halfword matrices followed by three RGB colors. */
+typedef struct battle_map_light_resource {
+    s16 colour[3][3];      /* 0x00 */
+    s16 direction[3][3];   /* 0x12 */
+    u8 ambient[3];         /* 0x24 */
+    u8 gradient_top[3];    /* 0x27 */
+    u8 gradient_bottom[3]; /* 0x2a */
+} battle_map_light_resource_t;
+
+/* Polygon-render properties: the 0x380-byte prefix is not consumed here. */
+typedef struct battle_map_polygon_flags_resource {
+    u8 _unused_0000[0x380];
+    u16 textured_triangles[512];  /* 0x0380 */
+    u16 textured_quads[768];      /* 0x0780 */
+    u16 untextured_triangles[64]; /* 0x0d80 */
+    u16 untextured_quads[256];    /* 0x0e00 */
+} battle_map_polygon_flags_resource_t;
+typedef char battle_map_polygon_flags_resource_size_must_be_0x1000[sizeof(battle_map_polygon_flags_resource_t) == 0x1000
+        ? 1
+        : -1];
+
+/* resource_type selects a serialized prefix or block; file offsets locate
+ * variable-length chunks within the loaded resource. */
+typedef union battle_map_resource {
+    battle_map_mesh_geometry_t geometry;
+    battle_map_polygon_flags_resource_t polygon_flags;
+    map_mesh_file_header_t mesh_file;
+    battle_map_light_resource_t lighting;
+    battle_map_terrain_resource_t terrain;
+    battle_map_texture_animation_t texture_animations[32];
+    battle_map_state_record_t state_record;
+    gns_record_view_t gns_records[150];
+    gns_command_record_prefix_t command;
+    s16 command_halfwords[10]; /* Halfword view of the 20-byte command prefix. */
+    u16 palette_colors[MAP_CLUT_ROW_COLOR_COUNT];
+    u32 texture_words[0]; /* Variable-length image data consumed by LoadImage. */
+    u8 bytes[0];          /* Byte offsets in files and variable-length command payloads. */
+} battle_map_resource_t;
+
 extern u8 g_battle_map_background_color[];
 extern u8 g_battle_map_background_color_backup[];
-extern void* g_battle_map_data_load_buffer;
+extern battle_map_resource_t* g_battle_map_data_load_buffer;
 extern s32 g_battle_map_data_load_complete;
 extern s32 g_battle_map_deep_dungeon_load_in_progress;
-extern u8 g_battle_map_file_table[];
+extern char g_battle_map_directory_path[];
 extern u32 g_battle_map_gns_lba[MAP_ID_COUNT]; /* 0 where the map id has no file */
 extern u32 g_battle_map_gns_record_cursor;
 extern gns_record_view_t g_battle_map_gns_records[150];
+extern gns_record_view_t g_battle_map_selected_mesh_record;
 extern s32 g_battle_map_id;
 extern u8 g_battle_map_max_x;
 extern u8 g_battle_map_max_y;
-extern s32 g_battle_map_mesh_data_buffer;
-extern void* g_battle_map_mesh_load_buffer;
+extern battle_render_buffer_t* g_battle_map_mesh_last_render_buffer;
+extern map_mesh_file_header_t* g_battle_map_mesh_load_buffer;
 extern s32 g_battle_map_mesh_load_state;
 extern map_move_find_item_data_t g_battle_map_move_find_item_data[MAP_ID_COUNT];
 extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
@@ -8484,7 +8529,7 @@ s32* battle_map_control_gte_background_color(s32 command, s32 red, s32 green, s3
 void battle_map_polygon_flag_command(s32 command);
 MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration);
 void battle_map_data_load_complete_thread(void);
-s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data);
+s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* data);
 void battle_map_extract_palette_colors(const u16* palette, s32 clut_row, s32 clut_index);
 s32 battle_map_get_effective_weather(void);
 map_tile_t* battle_map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
@@ -8521,7 +8566,7 @@ void battle_map_blend_ambient_light_color(s32 mode, s32 frame_duration, s32 red,
 void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_index, const u16* colors);
 battle_move_found_item_t* battle_map_determine_rare_common_item(battle_stats_t* unit);
 battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, u8 y, u8 layer);
-s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record);
+s32 battle_process_map_gns_record(s32 phase, battle_map_resource_t* record);
 void battle_map_update_animations(void);
 void battle_map_upload_clut_rows(void);
 void battle_map_draw_mesh_and_weather(MATRIX* camera_matrix);
@@ -8541,8 +8586,8 @@ void battle_map_transition_darkness_color(s32 frame_duration, const map_color_t*
 void battle_map_init_darkness(void);
 s16 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
 void battle_map_load_palette_data(const u16* palette, s32 clut_row, s32 clut_index, s32 load_all);
-s32 battle_map_start_file_load(
-    void* unused_directory_path, gns_load_info_t* load_info, s32 destination, s32 unused_resource_type);
+void* battle_map_start_file_load(
+    const char* unused_directory_path, gns_load_info_t* load_info, void* destination, s32 unused_resource_type);
 s32 battle_map_stop_texture_animations_and_weather_sfx(void);
 void battle_map_store_max_coordinates(SVECTOR* destination);
 

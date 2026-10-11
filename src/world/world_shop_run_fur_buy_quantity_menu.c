@@ -41,7 +41,7 @@ s32 world_shop_run_fur_buy_quantity_menu(void) {
         g_world_menu_sound_muted = 1;
     }
     g_world_shop_fur_purchase_result
-        = world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, &g_world_shop_quantity_menu_data);
+        = world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, g_world_shop_quantity_menu_data);
     if (world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) != 0
         && g_world_shop_fur_purchase_confirm_shown == 0) {
         g_world_text_substitution_values[0]

@@ -3,10 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef struct world_chained_record world_chained_record_t;
-
-extern world_chained_record_t* world_skip_chained_records(world_chained_record_t* record);
-
 /*
  * Menu-script handler for a scrollable list: the WORLD original of the
  * overlays' scrollable-list body commands.
@@ -49,7 +45,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
     speed = world_gfx_get_vsync_mode_or_one();
     g_world_menu_use_scroll_position = 1;
     if (g_world_menu_list_layout_pending != 0) {
-        world_menu_load_scrollable_list_layout(record);
+        world_menu_load_scrollable_list_layout((u8*)record);
     }
     old_cursor = g_world_menu_cursor_position;
     if (g_world_menu_list_scroll_direction == 0) {

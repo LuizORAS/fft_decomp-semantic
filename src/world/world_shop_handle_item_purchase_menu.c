@@ -57,7 +57,7 @@ void world_shop_handle_item_purchase_menu(void) {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
             } else {
                 g_world_shop_menu_step = WORLD_SHOP_STEP_BUY_CONFIRM;
-                g_world_shop_quantity_menu_data.selection = 0;
+                g_world_shop_quantity_menu_data[1].selected_index = 0;
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             }
         }

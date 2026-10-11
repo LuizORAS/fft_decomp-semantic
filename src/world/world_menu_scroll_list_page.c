@@ -25,7 +25,7 @@ void world_menu_scroll_list_page(s32 dir, world_menu_list_record_t* list) {
         }
     }
     g_world_menu_cursor_position = g_world_menu_scroll_offset;
-    world_menu_load_scrollable_list_layout(list);
+    world_menu_load_scrollable_list_layout((u8*)list);
     g_world_menu_cursor_position = delta + g_world_menu_scroll_offset;
     if (g_world_menu_cursor_position >= g_world_menu_option_count) {
         g_world_menu_cursor_position = g_world_menu_option_count - 1;

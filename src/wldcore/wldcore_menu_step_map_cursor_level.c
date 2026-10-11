@@ -2,17 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/pad.h"
 
-/* View of wldcore_window_record_t with its x/y pair as one
- * point: the target passes records[i].x/y by value with two absolute-form
- * loads, which only a real point member reproduces (a local copy spills to
- * the stack and a cast view computes the address into a register). */
-typedef struct wldcore_window_position_record {
-    u8 _unused_00[0x18];
-    wldcore_point32_t position;
-    s32 _unused_20;
-} wldcore_window_position_record_t;
-extern wldcore_window_position_record_t g_wldcore_window_position_records[];
-
 /* Per-frame step of the world map cursor.
  *
  * While the projection zoom animation (g_wldcore_map_zoom_motion.flags
@@ -79,7 +68,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 & (WLDCORE_PROJECTION_MOTION_ACTIVE | WLDCORE_PROJECTION_MOTION_ZOOMED_OUT))
             && g_wldcore_audio_queue.count == 0) {
             if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
-                hit = wldcore_map_find_dot_at_point(g_wldcore_window_position_records[level->window_index].position);
+                hit = wldcore_map_find_dot_at_point(g_wldcore_window_records[level->window_index].position);
                 if (hit != 0) {
                     wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
                     hit--;
@@ -109,7 +98,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 return;
             }
             if (buttons & PSX_PAD_SELECT) {
-                hit = wldcore_map_find_dot_at_point(g_wldcore_window_position_records[level->window_index].position);
+                hit = wldcore_map_find_dot_at_point(g_wldcore_window_records[level->window_index].position);
                 if (hit != 0) {
                     hit--;
                     wldcore_window_reset_state_and_scroll((wldcore_menu_stack_record_t*)level);

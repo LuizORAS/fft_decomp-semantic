@@ -43,6 +43,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/battle/battle_menu_preview_attack_caster_stats.c`: for an item the
   secondary-data pointer stays uninitialized, yet its `flags_3` is read before
   the item test.
+- `battle_map_dispatch_gns_resource` passes the packed lighting colors as a
+  `MATRIX` to `battle_map_set_light_matrices`, which also copies its translation
+  words from the following direction halfwords.
 - `src/battle/battle_map_load_mesh_variant.c`: scales the mesh header's color
   palette byte offset by four, placing the palette read past most mesh files.
 - `battle_map_queue_textured_triangles`, `battle_map_queue_textured_quads`
@@ -716,7 +719,7 @@ translation unit. Share their types and constants through headers.
   `battle_map_copy_xy_coords_and_tile_data` copies as they are. Tile flag 0x80
   (`cannot_stop`), which `battle_move_set_reachable_tile_flags` tests, is set
   in no terrain chunk, and tile byte 1 is 0 in all of them.
-- `g_battle_map_file_table` is the string `C:\FFTIMG\MAP\GNS\`; every map
+- `g_battle_map_directory_path` is the string `C:\FFTIMG\MAP\GNS\`; every map
   file load passes it as the first argument, which
   `battle_map_start_file_load` ignores.
 - The Brave Story "Fact" row never appears:

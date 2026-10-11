@@ -54,7 +54,7 @@ s32 jobstts_ability_build_list(
     unit_data = g_jobstts_unit_data[unit_index];
     /* Keeping this offset separate preserves the target's GCC operand order;
      * direct learned_abilities indexing reverses the final commutative addu. */
-    byte_offset = generic_index * 3 + 0xb;
+    byte_offset = generic_index * sizeof(unit_learned_ability_row_t) + 0xb;
     jobstts_bits_init_primary_reader((u8*)(byte_offset + (s32)unit_data));
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
         if (jobstts_job_is_special_monster(g_jobstts_unit_data[unit_index]->job_id) != 0) {

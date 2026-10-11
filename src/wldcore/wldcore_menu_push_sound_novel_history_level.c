@@ -29,7 +29,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     wldcore_window_record_t* windows;
     wldcore_window_xy_t* positions;
     wldcore_point32_t* position;
-    wldcore_window_entry_52_rgb_t* colors;
+    CVECTOR* colors;
     s16* newest;
     s32 index;
     s32 depth;
@@ -80,10 +80,17 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_pair_render.first_window]
         .palette = 0xA;
-    colors = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->color;
-    colors[g_wldcore_active_saved_record.picture_render_index].red = 0x80;
-    colors[g_wldcore_active_saved_record.picture_render_index].green = 0x80;
-    colors[g_wldcore_active_saved_record.picture_render_index].blue = 0x80;
+    /* Direct record.color access changes the column base and instruction scheduling. */
+    colors = &g_wldcore_window_render_records->color;
+    ((CVECTOR*)((u8*)colors
+         + g_wldcore_active_saved_record.picture_render_index * sizeof(g_wldcore_window_render_records[0])))
+        ->r = 0x80;
+    ((CVECTOR*)((u8*)colors
+         + g_wldcore_active_saved_record.picture_render_index * sizeof(g_wldcore_window_render_records[0])))
+        ->g = 0x80;
+    ((CVECTOR*)((u8*)colors
+         + g_wldcore_active_saved_record.picture_render_index * sizeof(g_wldcore_window_render_records[0])))
+        ->b = 0x80;
     g_wldcore_screen_fade_state.boxes[0].r = 0;
     g_wldcore_screen_fade_state.boxes[0].g = 0;
     g_wldcore_screen_fade_state.boxes[0].b = 0;

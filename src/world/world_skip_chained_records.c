@@ -1,12 +1,4 @@
-#include "psx/types.h"
-
-typedef struct world_chained_record {
-    /* 0x00 */ u8 type;
-    /* 0x01 */ u8 length;
-    /* 0x02 */ u8 _unused_02[2];
-    /* 0x04 */ u8 count_a;
-    /* 0x05 */ u8 count_b;
-} world_chained_record_t;
+#include "fft/world.h"
 
 /* Walks past the records that follow the header, returning the next one. */
 world_chained_record_t* world_skip_chained_records(world_chained_record_t* record) {

@@ -71,7 +71,7 @@ void world_card_update_slot_scan(void) {
                 ClearImage(&rect, 0, 0, 0);
             }
             if (g_world_card_scan_start_frame == 1) {
-                world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_checking_message);
+                world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_checking_message);
             }
             g_world_card_scan_start_frame++;
             return;
@@ -105,7 +105,7 @@ void world_card_update_slot_scan(void) {
             g_card_save_slot_file_states[result] = CARD_SAVE_SLOT_UNSCANNED;
         }
         g_world_menu_selection_results[5] = -1;
-        g_world_card_format_prompt[0].selection = 1;
+        g_world_card_format_prompt[1].selected_index = 1;
         g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
         g_world_card_scan_prompt_active = 1;
         g_world_card_slot_scan_index = 0;
@@ -130,7 +130,7 @@ void world_card_update_slot_scan(void) {
             g_world_card_scan_prompt_active
                 = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_format_prompt);
             if (g_world_card_scan_prompt_active == 0 && g_world_menu_selection_results[5] == 0) {
-                world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_formatting_message);
+                world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_formatting_message);
             }
         }
         return;
@@ -138,7 +138,7 @@ void world_card_update_slot_scan(void) {
 
     if (g_world_card_probe_result == CARD_IO_RESULT_ERROR || g_world_card_probe_result == CARD_IO_RESULT_TIMEOUT) {
         result = world_card_check_selected();
-        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_access_error_message);
+        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_access_error_message);
         if ((g_world_input_primary_repeat & PSX_PAD_CROSS) != 0
             || (g_world_input_primary_repeat & PSX_PAD_CIRCLE) != 0) {
             world_menu_stop_thread(NATIVE_SCREEN_THREAD_SLOT_MENU);

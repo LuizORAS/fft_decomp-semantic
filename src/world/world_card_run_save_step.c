@@ -23,7 +23,7 @@ void world_card_run_save_step(s32 slot) {
         g_world_card_save_failed = 0;
         D_801CC7D8 = 0;
         world_card_build_save_image(slot);
-        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_saving_message);
+        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_saving_message);
         return;
     }
     if (state < 2) {
@@ -31,7 +31,7 @@ void world_card_run_save_step(s32 slot) {
         return;
     }
     if (g_world_card_save_failed != 0) {
-        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_save_error_message);
+        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_save_error_message);
         input = g_world_input_primary_repeat;
         if ((input & PSX_PAD_CIRCLE) || (input & PSX_PAD_CROSS)) {
             world_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);

@@ -6,11 +6,11 @@
 void world_menu_confirm_auto_battle_selection_thread(void) {
     world_menu_entry_t* entry = world_thread_get_current_parameter_1();
     battle_stats_t* unit = world_unit_get_battle_stats_for_stored();
-    world_menu_thread_data_t* menu = (world_menu_thread_data_t*)g_world_menu_thread_menu_data;
+    world_menu_entry_t* menu = g_world_menu_thread_menu_data;
 
-    if (menu->selection == 3) {
+    if (menu[1].selected_index == 3) {
         unit->auto_battle_setting = BATTLE_AI_AUTOBATTLE_FADING_LIFE;
-    } else if (menu->selection == 4) {
+    } else if (menu[1].selected_index == 4) {
         unit->auto_battle_setting = BATTLE_AI_AUTOBATTLE_RETREAT;
     }
     g_world_menu_set_auto_battle_row_actions = -3;

@@ -30,12 +30,12 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         if (level->fade >= 0x80) {
             level->fade = 0x80;
         }
-        g_wldcore_window_record_colors[level->slots.window_a].red = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_a].green = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_a].blue = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_b].red = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_b].green = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_b].blue = level->fade;
+        g_wldcore_window_records[level->slots.window_a].color.r = level->fade;
+        g_wldcore_window_records[level->slots.window_a].color.g = level->fade;
+        g_wldcore_window_records[level->slots.window_a].color.b = level->fade;
+        g_wldcore_window_records[level->slots.window_b].color.r = level->fade;
+        g_wldcore_window_records[level->slots.window_b].color.g = level->fade;
+        g_wldcore_window_records[level->slots.window_b].color.b = level->fade;
         if (level->fade == 0x80) {
             level->fade = 0;
             wldcore_gfx_toggle_captured_world_frame(1);

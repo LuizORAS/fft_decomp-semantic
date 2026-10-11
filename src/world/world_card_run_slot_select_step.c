@@ -15,11 +15,11 @@ void world_card_run_slot_select_step(void) {
         g_world_card_save_mode = 0xff;
         g_world_card_slot_cursor_row = 0;
         g_world_menu_selection_results[5] = -1;
-        g_world_card_slot_select_menu.selection = g_card_save_selected_slot;
+        g_world_card_slot_select_menu[1].selected_index = g_card_save_selected_slot;
         return;
     }
     g_world_card_slot_select_running
-        = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_slot_select_menu);
+        = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_slot_select_menu);
     if (g_world_card_slot_select_running == 0) {
         selected = &g_world_menu_selection_results[5];
         slot = *selected;

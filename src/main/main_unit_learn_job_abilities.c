@@ -1,14 +1,6 @@
 #include "fft/battle.h"
 #include "fft/main.h"
 
-/* One job's row of battle_stats_t.learned_abilities. Indexing the rows
- * through this view keeps the row address (unit + job * 3 + 0x99) one
- * loop-invariant value, as in the target; a flat learned_abilities[job * 3 +
- * i / 8] adds the two indexes first. */
-typedef struct unit_learned_ability_row {
-    u8 bits[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
-} unit_learned_ability_row_t;
-
 /* Learns abilities for one job of a unit.
  * job_id 0x4a (Squire) stands for the unit's base job.  With an ENTD primary
  * skillset of 0 every ability of the unit's own job is learned; otherwise
@@ -64,6 +56,7 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
     } else {
         skillset = g_main_job_data_pointer[job_id].skillset;
     }
+    /* The row cast keeps the field offset in the loop-invariant address. */
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
         learned = 0;
         ability_id = main_ability_get_id_from_skillset(skillset, i);

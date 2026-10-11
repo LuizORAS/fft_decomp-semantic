@@ -13,16 +13,18 @@ typedef struct {
 /* Find the next list-layout record in a menu script stream, apply its
  * geometry, clamp the cursor and scroll position to the option count, and
  * redraw the visible text ids when a list font is active. */
-void world_menu_load_scrollable_list_layout(world_menu_list_record_t* record) {
+void world_menu_load_scrollable_list_layout(u8* script) {
     world_menu_scrollable_list_image_t image;
+    world_menu_list_record_t* record;
     s32 i;
 
-    while (record->type != 0x10) {
-        if (record->type == 0x1C) {
+    while (script[0] != 0x10) {
+        if (script[0] == 0x1C) {
             return;
         }
-        record = (world_menu_list_record_t*)((u8*)record + record->length);
+        script += script[1];
     }
+    record = (world_menu_list_record_t*)script;
     g_world_menu_list_row_record_count = record->skip_count;
     g_world_menu_row_height = record->row_height;
     g_world_menu_list_visible_rows = record->visible_rows;

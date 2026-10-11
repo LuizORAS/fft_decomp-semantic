@@ -13,33 +13,19 @@ typedef struct battle_map_weather_bits {
 
 #define WEATHER ((battle_map_weather_bits_t*)&g_battle_map_weather_flags)
 
-/* Lighting resource (GNS_RESOURCE_LIGHTING, applied by
- * GNS_RESOURCE_APPLY_LIGHTING): the light colour matrix, the light
- * direction matrix, then the ambient colour and the background gradient's top
- * and bottom colours. The colours come first: 0x00 is passed as the colour
- * matrix to battle_map_set_light_matrices and 0x24 to the GTE back colour. */
-typedef struct battle_map_light_resource {
-    s16 colour[3][3];      /* 0x00 */
-    s16 direction[3][3];   /* 0x12 */
-    u8 ambient[3];         /* 0x24 */
-    u8 gradient_top[3];    /* 0x27 */
-    u8 gradient_bottom[3]; /* 0x2a */
-} battle_map_light_resource_t;
-
 /* Apply one map resource by type: mesh parts, polygon flags, palettes,
  * textures, lighting, texture animations, terrain, saved state, camera and
  * weather commands. The three mesh file types walk the file's table of chunk
  * offsets and dispatch each present entry as types 0x10-0x30. */
-s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
+s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* data) {
     MATRIX direction;
     SVECTOR zero_vector;
     VECTOR unit_scale;
     battle_map_texture_animation_t* source;
     battle_map_light_resource_t* light;
     u16* polygon_flags;
-    /* Halfword cursor of the light, camera and weather-modifier cases: each
-     * sets it to the start of the resource and then steps over the leading
-     * halfwords. */
+    /* Halfword cursor of the light, camera and weather-modifier cases.
+     * Direct command payload-vector access removes four bytes from each arm. */
     s16* vector;
     u32* resource_offset;
     battle_map_state_record_t* cursor;
@@ -66,47 +52,47 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
             g_battle_map_mesh_parts[i].untextured_quad_count = 0;
             g_battle_map_mesh_part_geometry[i] = 0;
         }
-        g_battle_map_mesh_part_geometry[0] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[0]);
+        g_battle_map_mesh_part_geometry[0] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[0]);
         g_battle_map_primary_textured_triangle_count = g_battle_map_textured_triangle_count;
         g_battle_map_primary_textured_quad_count = g_battle_map_textured_quad_count;
         g_battle_map_primary_untextured_triangle_count = g_battle_map_untextured_triangle_count;
         g_battle_map_primary_untextured_quad_count = g_battle_map_untextured_quad_count;
         break;
     case GNS_RESOURCE_PART_GEOMETRY_1:
-        g_battle_map_mesh_part_geometry[1] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[1]);
+        g_battle_map_mesh_part_geometry[1] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[1]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_2:
-        g_battle_map_mesh_part_geometry[2] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[2]);
+        g_battle_map_mesh_part_geometry[2] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[2]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_3:
-        g_battle_map_mesh_part_geometry[3] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[3]);
+        g_battle_map_mesh_part_geometry[3] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[3]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_4:
-        g_battle_map_mesh_part_geometry[4] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[4]);
+        g_battle_map_mesh_part_geometry[4] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[4]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_5:
-        g_battle_map_mesh_part_geometry[5] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[5]);
+        g_battle_map_mesh_part_geometry[5] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[5]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_6:
-        g_battle_map_mesh_part_geometry[6] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[6]);
+        g_battle_map_mesh_part_geometry[6] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[6]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_7:
-        g_battle_map_mesh_part_geometry[7] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[7]);
+        g_battle_map_mesh_part_geometry[7] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[7]);
         break;
     case GNS_RESOURCE_PART_GEOMETRY_8:
-        g_battle_map_mesh_part_geometry[8] = (const battle_map_mesh_geometry_t*)data;
-        battle_map_append_mesh_geometry((const battle_map_mesh_geometry_t*)data, &g_battle_map_mesh_parts[8]);
+        g_battle_map_mesh_part_geometry[8] = &data->geometry;
+        battle_map_append_mesh_geometry(&data->geometry, &g_battle_map_mesh_parts[8]);
         break;
     case GNS_RESOURCE_POLYGON_FLAGS:
-        polygon_flags = (u16*)(data + 0x380);
+        polygon_flags = data->polygon_flags.textured_triangles;
         for (i = 0; i < 360; i++) {
             flags = *polygon_flags++;
             g_battle_map_textured_triangle_positions[i].polygon_flags = flags;
@@ -178,7 +164,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
     case GNS_RESOURCE_PALETTES:
         g_battle_map_palette_pending = 1;
         for (i = 0; i < 0x200; i++) {
-            g_battle_map_pending_palette_data[i] = data[i];
+            g_battle_map_pending_palette_data[i] = data->bytes[i];
         }
         break;
     case GNS_RESOURCE_APPLY_PALETTES:
@@ -187,14 +173,14 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         g_battle_map_palette_pending = 0;
         g_battle_map_vram_load_rect.x = 0;
         g_battle_map_vram_load_rect.h = 1;
-        battle_map_load_palette_data((u16*)data, MAP_CLUT_ROW_MAP, 0, 1);
+        battle_map_load_palette_data(data->palette_colors, MAP_CLUT_ROW_MAP, 0, 1);
         break;
     case GNS_RESOURCE_MARKED_TILE_PALETTES:
         g_battle_map_vram_load_rect.y = MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_MARKED_TILES;
         g_battle_map_vram_load_rect.w = 0x100;
         g_battle_map_vram_load_rect.x = 0;
         g_battle_map_vram_load_rect.h = 1;
-        battle_map_load_palette_data((u16*)data, MAP_CLUT_ROW_MARKED_TILES, 0, 1);
+        battle_map_load_palette_data(data->palette_colors, MAP_CLUT_ROW_MARKED_TILES, 0, 1);
         break;
     case GNS_RESOURCE_UNSUPPORTED_12:
         main_system_handle_malloc_exception(2, 0x3ca);
@@ -204,7 +190,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         g_battle_map_vram_load_rect.w = 0x40;
         g_battle_map_vram_load_rect.y = 0;
         g_battle_map_vram_load_rect.h = 0x100;
-        LoadImage(&g_battle_map_vram_load_rect, (u32*)data);
+        LoadImage(&g_battle_map_vram_load_rect, data->texture_words);
         while (DrawSync(1) != 0) { }
         break;
     case GNS_RESOURCE_TEXTURE_QUARTER_1:
@@ -212,7 +198,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         g_battle_map_vram_load_rect.w = 0x40;
         g_battle_map_vram_load_rect.y = 0;
         g_battle_map_vram_load_rect.h = 0x100;
-        LoadImage(&g_battle_map_vram_load_rect, (u32*)data);
+        LoadImage(&g_battle_map_vram_load_rect, data->texture_words);
         while (DrawSync(1) != 0) { }
         break;
     case GNS_RESOURCE_TEXTURE_QUARTER_2:
@@ -220,7 +206,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         g_battle_map_vram_load_rect.w = 0x40;
         g_battle_map_vram_load_rect.y = 0;
         g_battle_map_vram_load_rect.h = 0x100;
-        LoadImage(&g_battle_map_vram_load_rect, (u32*)data);
+        LoadImage(&g_battle_map_vram_load_rect, data->texture_words);
         while (DrawSync(1) != 0) { }
         break;
     case GNS_RESOURCE_TEXTURE_QUARTER_3:
@@ -228,7 +214,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         g_battle_map_vram_load_rect.w = 0x40;
         g_battle_map_vram_load_rect.y = 0;
         g_battle_map_vram_load_rect.h = 0x100;
-        LoadImage(&g_battle_map_vram_load_rect, (u32*)data);
+        LoadImage(&g_battle_map_vram_load_rect, data->texture_words);
         while (DrawSync(1) != 0) { }
         break;
     case GNS_RESOURCE_TEXTURE:
@@ -236,13 +222,16 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
             battle_map_dispatch_gns_resource(GNS_RESOURCE_TEXTURE_QUARTER_0, data);
         }
         if (g_battle_map_texture_quarter_1_pending != 0) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_TEXTURE_QUARTER_1, data + 0x8000);
+            battle_map_dispatch_gns_resource(
+                GNS_RESOURCE_TEXTURE_QUARTER_1, (battle_map_resource_t*)(data->bytes + 0x8000));
         }
         if (g_battle_map_texture_quarter_2_pending != 0) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_TEXTURE_QUARTER_2, data + 0x10000);
+            battle_map_dispatch_gns_resource(
+                GNS_RESOURCE_TEXTURE_QUARTER_2, (battle_map_resource_t*)(data->bytes + 0x10000));
         }
         if (g_battle_map_texture_quarter_3_pending != 0) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_TEXTURE_QUARTER_3, data + 0x18000);
+            battle_map_dispatch_gns_resource(
+                GNS_RESOURCE_TEXTURE_QUARTER_3, (battle_map_resource_t*)(data->bytes + 0x18000));
         }
         g_battle_map_texture_quarter_0_pending = 0;
         g_battle_map_texture_quarter_1_pending = 0;
@@ -254,10 +243,10 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
     case GNS_RESOURCE_MESH_OVERRIDE:
     case GNS_RESOURCE_MESH_ALTERNATE:
         i = GNS_RESOURCE_PRIMARY_GEOMETRY;
-        resource_offset = (u32*)(data + 0x40);
+        resource_offset = &data->mesh_file.primary_geometry_offset;
         for (; i < GNS_RESOURCE_END; i++) {
             if (*resource_offset != 0) {
-                battle_map_dispatch_gns_resource(i, data + *resource_offset);
+                battle_map_dispatch_gns_resource(i, (battle_map_resource_t*)(data->bytes + *resource_offset));
             }
             resource_offset++;
         }
@@ -265,11 +254,11 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
     case GNS_RESOURCE_LIGHTING:
         g_battle_map_lighting_pending = 1;
         for (i = 0; i < 0x2d; i++) {
-            g_battle_map_pending_lighting_data[i] = data[i];
+            g_battle_map_pending_lighting_data[i] = data->bytes[i];
         }
         break;
     case GNS_RESOURCE_APPLY_LIGHTING:
-        light = (battle_map_light_resource_t*)data;
+        light = &data->lighting;
         g_battle_map_lighting_pending = 0;
         g_battle_map_light_rotation.vx = 0;
         g_battle_map_light_rotation.vy = 0;
@@ -285,6 +274,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         direction.m[2][0] = vector[6];
         direction.m[2][1] = vector[7];
         direction.m[2][2] = vector[8];
+        /* Retail reads the packed direction bytes as MATRIX translation fields. */
         battle_map_set_light_matrices((MATRIX*)light, &direction);
         battle_map_control_gte_background_color(
             BATTLE_BACKGROUND_COLOR_SET, light->ambient[0], light->ambient[1], light->ambient[2]);
@@ -305,7 +295,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         battle_map_light_state_command(MAP_LIGHT_COMMAND_SAVE_BACKGROUND_GRADIENT, 0);
         break;
     case GNS_RESOURCE_TEXTURE_ANIMATIONS:
-        source = (battle_map_texture_animation_t*)data;
+        source = data->texture_animations;
         for (i = 0; i < 32; i++) {
             g_battle_map_texture_animation_handles[i] = 0;
             g_battle_map_texture_animations[i] = source[i];
@@ -326,18 +316,18 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         break;
     case GNS_RESOURCE_PALETTE_ANIMATION_FRAMES:
         for (i = 0; i < 0x100; i++) {
-            g_battle_map_palette_animation_frames[0][i] = ((u16*)data)[i];
+            g_battle_map_palette_animation_frames[0][i] = data->palette_colors[i];
         }
         break;
     case GNS_RESOURCE_TERRAIN: {
-        battle_map_terrain_resource_t* terrain = (battle_map_terrain_resource_t*)data;
+        battle_map_terrain_resource_t* terrain = &data->terrain;
         g_battle_map_tile_width = terrain->width;
         g_battle_map_tile_depth = terrain->depth;
-        battle_map_copy_xy_coords_and_tile_data(data);
+        battle_map_copy_xy_coords_and_tile_data(data->bytes);
         break;
     }
     case GNS_RESOURCE_STATE_RECORDS:
-        cursor = (battle_map_state_record_t*)data;
+        cursor = &data->state_record;
         if (cursor->type != 0) {
             do {
                 cursor = battle_map_load_saved_state_record(cursor);
@@ -345,7 +335,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         }
         break;
     case GNS_RESOURCE_SET_CAMERA_POSITION:
-        vector = (s16*)data;
+        vector = data->command_halfwords;
         vector += 6;
         g_battle_camera_integer_coords.vx = -vector[0];
         g_battle_camera_integer_coords.vy = vector[1];
@@ -353,7 +343,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         battle_camera_set_focus_and_cursor_tile(&g_battle_camera_integer_coords, &g_battle_map_camera_rotation);
         break;
     case GNS_RESOURCE_SET_CAMERA_ROTATION:
-        vector = (s16*)data;
+        vector = data->command_halfwords;
         vector += 6;
         g_battle_map_camera_rotation.vx = vector[0];
         g_battle_map_camera_rotation.vy = vector[1];
@@ -377,7 +367,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         WEATHER->snow = 1;
         break;
     case GNS_RESOURCE_SET_WEATHER_MODIFIER:
-        vector = (s16*)data;
+        vector = data->command_halfwords;
         vector += 6;
         WEATHER->modifier = vector[0];
         break;

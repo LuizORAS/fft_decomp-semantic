@@ -27,7 +27,7 @@ void battle_map_init_mesh_render_records(const battle_map_mesh_geometry_t* geome
     u16 clut_data;
     u16 texture_page;
 
-    g_battle_map_mesh_data_buffer = (s32)g_battle_gfx_current_render_buffer;
+    g_battle_map_mesh_last_render_buffer = g_battle_gfx_current_render_buffer;
 
     textured_triangle_count = *source++;
     textured_quad_count = *source++;

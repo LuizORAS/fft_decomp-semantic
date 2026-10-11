@@ -3,18 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Local view of world_menu_thread_data_t with the +0x0a field. */
-typedef struct world_card_prompt_thread_data {
-    u8 _unused_00[0x0a];
-    s16 window_y; /* 0x0a: menu record window y; prompt y chosen from the selected row */
-    u8 _unused_0c[0x74 - 0x0c];
-    s16 selection; /* 0x74 */
-} world_card_prompt_thread_data_t;
-
-extern world_card_prompt_thread_data_t g_world_card_overwrite_confirm_prompt;
-extern world_card_prompt_thread_data_t g_world_card_load_confirm_prompt;
-extern world_card_prompt_thread_data_t* g_world_card_confirm_prompt;
-
 /*
  * Memory-card slot list: in menu step 3 handle slot selection input, then
  * draw the visible slot rows, the row cursor and the scroll arrows.
@@ -53,13 +41,13 @@ void world_card_update_and_draw_slot_list(s32 input) {
             }
         } else if (g_world_card_overwrite_prompt_running != 0) {
             g_world_card_overwrite_prompt_running
-                = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_overwrite_confirm_prompt);
+                = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_overwrite_confirm_prompt);
             if (g_world_card_overwrite_prompt_running == 0 && g_world_menu_selection_results[5] == 0) {
                 g_world_card_menu_step = WORLD_CARD_MENU_STEP_SAVING;
             }
         } else if (g_world_card_load_prompt_running != 0) {
             g_world_card_load_prompt_running
-                = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_load_confirm_prompt);
+                = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_load_confirm_prompt);
             if (g_world_card_load_prompt_running == 0 && g_world_menu_selection_results[5] == 0) {
                 g_world_card_menu_step = WORLD_CARD_MENU_STEP_LOADING;
             }
@@ -102,11 +90,11 @@ void world_card_update_and_draw_slot_list(s32 input) {
                 break;
             }
             if (g_world_card_save_mode == 0) {
-                g_world_card_confirm_prompt = &g_world_card_overwrite_confirm_prompt;
-                g_world_card_overwrite_confirm_prompt.selection = 1;
+                g_world_card_confirm_prompt = g_world_card_overwrite_confirm_prompt;
+                g_world_card_overwrite_confirm_prompt[1].selected_index = 1;
             } else {
-                g_world_card_confirm_prompt = &g_world_card_load_confirm_prompt;
-                g_world_card_load_confirm_prompt.selection = 0;
+                g_world_card_confirm_prompt = g_world_card_load_confirm_prompt;
+                g_world_card_load_confirm_prompt[1].selected_index = 0;
             }
             g_world_card_confirm_prompt->window_y = i;
             if (g_world_card_save_mode == 0) {

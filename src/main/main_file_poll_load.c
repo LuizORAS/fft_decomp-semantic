@@ -24,7 +24,7 @@ void main_file_poll_load(main_file_load_descriptor_t* header) {
         }
         break;
     case MAIN_FILE_LOAD_STATE_START_SEEK:
-        CdControlF(CdlSeekL, header->position);
+        CdControlF(CdlSeekL, (u8*)&header->position);
         header->state++;
         break;
     case MAIN_FILE_LOAD_STATE_POLL_SEEK:

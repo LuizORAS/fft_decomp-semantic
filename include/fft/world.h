@@ -803,16 +803,6 @@ typedef struct wldcore_window_xy {
 } wldcore_window_xy_t;
 typedef char wldcore_window_xy_size_must_be_0x24[sizeof(wldcore_window_xy_t) == 0x24 ? 1 : -1];
 
-/* Colour triple of the 36-byte WLDCORE window records and OPEN render records
- * (+0x20), rebased so the stores are `sb 0/1/2(records + 0x20 + index * 36)`. */
-typedef struct wldcore_window_entry_36_rgb {
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 _unused_03[0x21];
-} wldcore_window_entry_36_rgb_t;
-typedef char wldcore_entry_36_rgb_size_must_be_0x24[sizeof(wldcore_window_entry_36_rgb_t) == 0x24 ? 1 : -1];
-
 /* One remembered list position (g_world_menu_selection_records, 14 entries / 0x54 bytes), the
  * WORLD twin of bunit_menu_selection_record_t. world_menu_set_selection_record stores the cursor
  * index, the scroll base and the masked id of the entry under the cursor;
@@ -1090,7 +1080,7 @@ extern u8 g_world_job_wheel_closing;
 extern u8 g_world_job_wheel_opening;
 extern world_oriented_quad_t g_world_job_wheel_mastered_icon_sprite;
 extern u8 g_world_learn_job_list_script[];
-extern u8 g_world_learn_confirm_menu[];
+extern world_menu_entry_t g_world_learn_confirm_menu[2];
 
 /* The prompt chained after g_world_learn_confirm_menu. */
 extern world_menu_entry_t g_world_learn_confirm_submenu;
@@ -1349,17 +1339,17 @@ typedef struct world_formation_unit {
     u8 sprite_set;               /* 0x072; "Sprite Set ID": party_data_t.sprite_set / character identity */
     u8 equippable_item_types[4]; /* 0x073; bit per item type, read by can_unit_equip_item_id */
     u8 unlocked_jobs[3];         /* 0x077 */
-    u8 learned_abilities[0x39];  /* 0x07a through 0x0b2 */
-    u8 job_levels[0x0a];         /* 0x0b3 */
-    u8 _padding_0bd;             /* aligns job_points */
-    u16 job_points[0x14];        /* 0x0be; per-job JP */
-    u16 total_job_points[0x14];  /* 0x0e6; per-job total JP */
-    u8 name[0x10];               /* 0x10e; "unit_t Nickname" */
-    u8 monster_graphic;          /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82
-                                    (world_formation_build_unit_graphic_entry) */
-    u8 proposition_status;       /* 0x11f; "Proposition Byte": world_formation_unit_proposition_e, 0 when present */
-    u16 birthday;                /* 0x120; battle_stats_t birthday & 0x1ff; egg readers split
-                                    it into nibbles */
+    unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x07a through 0x0b2 */
+    u8 job_levels[0x0a];                                                          /* 0x0b3 */
+    u8 _padding_0bd;                                                              /* aligns job_points */
+    u16 job_points[0x14];                                                         /* 0x0be; per-job JP */
+    u16 total_job_points[0x14];                                                   /* 0x0e6; per-job total JP */
+    u8 name[0x10];                                                                /* 0x10e; "unit_t Nickname" */
+    u8 monster_graphic;    /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82
+                              (world_formation_build_unit_graphic_entry) */
+    u8 proposition_status; /* 0x11f; "Proposition Byte": world_formation_unit_proposition_e, 0 when present */
+    u16 birthday;          /* 0x120; battle_stats_t birthday & 0x1ff; egg readers split
+                              it into nibbles */
     u16 egg_color; /* 0x122; party_data_t 0xd2; the formation sprite drawer (0x8011751c) loads it as a halfword palette
                       index */
     u8 support_abilities[4]; /* 0x124; copy of battle_stats_t.support_abilities, BATTLE_SUPPORT_SET_1..4_* */
@@ -1502,7 +1492,9 @@ extern u8 g_world_formation_grid_return_done;
 extern u8 g_world_formation_portrait_slide_frame;
 extern rgb24_t g_world_formation_away_unit_color;
 extern world_menu_entry_t g_world_formation_triangle_menu;
-extern u8 g_world_formation_dismiss_prompt[];
+extern world_menu_entry_t g_world_formation_dismiss_prompt;
+extern world_menu_entry_t g_world_formation_dismiss_confirm_menu[4];
+extern world_menu_entry_t g_world_formation_dismiss_confirm_menu_scrolled[4];
 extern s16 g_world_formation_dismiss_prompt_text_id;
 extern s16 g_world_formation_dismiss_prompt_kind;
 extern s16 g_world_formation_dismiss_anim_timer;
@@ -1517,7 +1509,7 @@ extern point16_t g_world_formation_cursor_target;
  * -1 in an unused entry. */
 extern point16_t g_world_formation_cursor_trail[8];
 extern u8 g_world_formation_dismiss_step;
-extern u8* g_world_formation_dismiss_menu_data;
+extern world_menu_entry_t* g_world_formation_dismiss_menu_data;
 extern s16 g_world_formation_record_order[];
 extern struct world_formation_unit g_world_formation_unit_records[];
 extern u8 g_world_formation_menu_text_buffer[];
@@ -2003,15 +1995,16 @@ enum world_menu_line_layout_offset {
     WORLD_MENU_LINE_LAYOUT_SIZE = 8
 };
 
-/* Provisional: menu-thread data record reached through
- * g_world_menu_thread_menu_data; the thread entry at 0x28 and the
- * selection at 0x74 are the only known fields. */
-typedef struct world_menu_thread_data {
-    u8 _unused_00[0x28];
-    void (*thread_entry)(void); /* 0x28 */
-    u8 _unused_2c[0x74 - 0x2c];
-    s16 selection; /* 0x74 */
-} world_menu_thread_data_t;
+/* Menu-script record view used while skipping conditional groups. The count
+ * fields are read only for opcodes 1 and 2; records advance by their encoded
+ * byte length, rather than sizeof this view. */
+typedef struct world_chained_record {
+    u8 type;
+    u8 length;
+    u8 _unused_02[2];
+    u8 count_a;
+    u8 count_b;
+} world_chained_record_t;
 
 /* Variable-length list command (0x10) in a WORLD menu script: the layout
  * world_menu_load_scrollable_list_layout reads and the placement
@@ -2582,7 +2575,9 @@ void world_menu_handle_window_command_with_scaled_clip(world_menu_window_command
 s32 world_menu_has_items(s32 mode);
 void world_menu_icon_linked_entry_thread(void);
 void world_menu_icon_list_thread(void);
-void world_menu_init_and_load_scrollable_list(const s16* values, s32 selected_index, u8* text_table, void* menu);
+void world_menu_init_and_load_scrollable_list(const s16* values, s32 selected_index, u8* text_table, u8* script);
+void world_menu_init_and_load_scrollable_list_with_scroll(
+    const s16* values, s32 value, s32 selected, u8* text_table, u8* script);
 void world_menu_init_at_list(world_menu_entry_t* entry);
 void world_menu_init_palette_and_text(s32 unused);
 void world_menu_init_primitive_colors_normal(world_menu_palette_primitives_t*);
@@ -2598,7 +2593,8 @@ s32 world_menu_is_learn_ability_learned(s32 index);
 s32 world_menu_lerp_fixed12(s32 from, s32 to, s32 t);
 s32 world_screen_menu_lerp_fixed12(s32 from, s32 to, s32 t);
 void world_menu_load_common_graphics(s32 load_extra_pages);
-void world_menu_load_scrollable_list_layout(world_menu_list_record_t* record);
+void world_menu_load_scrollable_list_layout(u8* script);
+world_chained_record_t* world_skip_chained_records(world_chained_record_t* record);
 void world_menu_load_text_1bd8(void);
 void world_menu_load_text_1bd8_with_face(void);
 void world_menu_load_text_1c18(void);
@@ -2624,10 +2620,10 @@ void world_menu_run_numeric_display_panel_thread(void);
 void world_menu_run_numeric_editor_thread(void);
 s32 world_menu_run_remove_ability(void);
 s32 world_menu_run_remove_item(void);
-void world_menu_run_script_with_palette_mode(void* output, s32 input, s32 mode);
+void world_menu_run_script_with_palette_mode(u8* script, s32 input, s32 mode);
 void world_menu_run_skillset_thread(void);
 void world_menu_run_system_function_thread(void);
-s32 world_menu_run_thread(s32 thread_id, void* menu);
+s32 world_menu_run_thread(s32 thread_id, world_menu_entry_t* menu);
 void world_menu_open_debugchr_unit_editor(void);
 u8* world_menu_script_add_blend_draw_mode(u8* script);
 u8* world_menu_script_clear_temporary_draw_area(u8* script);
@@ -2651,7 +2647,7 @@ void world_menu_start_at_list_thread(void);
 void world_menu_start_dead_unit_threads(void);
 void world_menu_start_description_text_thread(world_menu_description_record_t* record);
 void world_menu_open_option_dead_unit_panel(void);
-void world_menu_start_or_poll_thread(s32 thread_id, world_menu_thread_data_t* data);
+void world_menu_start_or_poll_thread(s32 thread_id, world_menu_entry_t* data);
 void world_menu_start_system_function_thread(s32 parameter);
 void world_menu_start_thread_group(s32 parameter, s32 location_id, s32 window_x, s32 window_y);
 s32 world_menu_update_vertical_selection_and_mark_change(u16 count, u8 cursor_id, s32 input, u8 sound);
@@ -2732,29 +2728,32 @@ extern void* g_world_card_save_file_names[];
 extern u8 g_world_card_slot_text_table[];
 extern s16 g_world_card_slot_select_timer;
 extern RECT g_world_card_screen_background_tile;
-extern world_menu_thread_data_t g_world_card_slot_select_menu;
+extern world_menu_entry_t g_world_card_slot_select_menu[2];
 extern u8 g_world_card_slot_select_running;
 
-/* Menu-thread descriptors of the same 0x3c-spaced family as g_world_card_saving_message
- * below; world_card_run_mode_select_step assigns each into g_world_card_pending_message. */
-extern world_menu_thread_data_t g_world_card_save_unavailable_message[];
-extern world_menu_thread_data_t g_world_card_no_save_data_message[];
+/* Message entries selected by world_card_run_mode_select_step. */
+extern world_menu_entry_t g_world_card_save_unavailable_message;
+extern world_menu_entry_t g_world_card_no_save_data_message;
 extern world_menu_entry_t g_world_card_mode_select_menu;
 extern u8 g_world_card_mode_select_running;
 
 /* A pointer cell, not a record: cleared to 0, tested, and assigned
  * g_world_card_save_unavailable_message / g_world_card_no_save_data_message by world_card_run_mode_select_step. */
-extern world_menu_thread_data_t* g_world_card_pending_message;
-extern world_menu_thread_data_t g_world_card_saving_message[];
-extern world_menu_thread_data_t g_world_card_loading_message[];
-extern world_menu_thread_data_t g_world_card_checking_message[];
-extern world_menu_thread_data_t g_world_card_load_error_message[];
-extern world_menu_thread_data_t g_world_card_save_error_message[];
+extern world_menu_entry_t* g_world_card_pending_message;
+extern world_menu_entry_t g_world_card_saving_message;
+extern world_menu_entry_t g_world_card_loading_message;
+extern world_menu_entry_t g_world_card_checking_message;
+extern world_menu_entry_t g_world_card_load_error_message;
+extern world_menu_entry_t g_world_card_save_error_message;
 extern u8 g_world_card_load_step_state;
 extern u8 g_world_card_save_step_state;
-extern world_menu_thread_data_t g_world_card_format_prompt[];
-extern world_menu_thread_data_t g_world_card_formatting_message[];
-extern world_menu_thread_data_t g_world_card_access_error_message[];
+/* Two-entry confirmation chains; the choice is entry 1 selected_index. */
+extern world_menu_entry_t g_world_card_format_prompt[2];
+extern world_menu_entry_t g_world_card_overwrite_confirm_prompt[2];
+extern world_menu_entry_t g_world_card_load_confirm_prompt[2];
+extern world_menu_entry_t* g_world_card_confirm_prompt;
+extern world_menu_entry_t g_world_card_formatting_message;
+extern world_menu_entry_t g_world_card_access_error_message;
 extern s8 g_world_card_slot_scan_active;
 extern s8 g_world_card_format_delay_counter;
 extern s8 g_world_card_error_message_closing;
@@ -3071,7 +3070,7 @@ typedef enum world_shop_step {
 
 extern s16 g_world_shop_menu_step; /* world_shop_step_e */
 extern s16 g_world_shop_quantity_limit;
-extern world_menu_thread_data_t g_world_shop_quantity_menu_data;
+extern world_menu_entry_t g_world_shop_quantity_menu_data[2];
 extern u8 g_world_shop_background_visible;
 extern world_menu_entry_t g_world_shop_main_menu_thread_data;
 extern world_menu_entry_t g_world_shop_fur_menu_thread_data;
@@ -3087,7 +3086,7 @@ extern u8 g_world_shop_main_menu_running;     /* menu open flag */
 extern u8 g_world_shop_exit_fade_started;     /* fade-out started */
 extern u8 g_world_shop_exit_step_initialized; /* state initialised */
 extern u8 g_world_shop_obtain_gil_menu_script[];
-extern s16 g_world_shop_purchase_menu_script[];
+extern u8 g_world_shop_purchase_menu_script[];
 extern s8 g_world_shop_purchase_list_initialized;
 extern s8 g_world_shop_purchase_equip_check_pending;
 extern s16 g_world_shop_purchase_message_wait;
@@ -3127,11 +3126,11 @@ extern u16 g_world_shop_sell_equipped_cursor_anim;
 extern point16_t g_world_shop_sell_equipped_cursor_point;
 extern u8 g_world_shop_sell_subflow_initialized;
 extern u8 g_world_shop_fur_opened; /* fur shop opened */
-extern s16 g_world_shop_sale_confirm_menu_script[];
+extern u8 g_world_shop_sale_confirm_menu_script[];
 extern s8 g_world_shop_fur_sell_list_initialized;
 extern s16 g_world_shop_fur_sale_message_wait;
 extern u8 g_world_shop_fur_quantity_menu_running; /* sell-menu thread result */
-extern s16 g_world_shop_fur_purchase_menu_script[];
+extern u8 g_world_shop_fur_purchase_menu_script[];
 extern s8 g_world_shop_fur_purchase_list_initialized;
 extern s8 g_world_shop_fur_equip_check_pending;
 extern s16 g_world_shop_fur_purchase_message_wait;
@@ -3243,7 +3242,7 @@ extern world_menu_quad_page_t world_D_80173CBC[2];
 extern s32 g_world_preview_stats_window_active;
 extern s8 g_world_dismiss_unit_prompt_running;
 extern world_menu_entry_t g_world_best_fit_confirm_menu;
-extern u8 g_world_order_unit_menu[];
+extern world_menu_entry_t g_world_order_unit_menu;
 extern s8* g_world_sort_key_lists[];
 extern u8 g_world_best_fit_slot_categories[5];
 

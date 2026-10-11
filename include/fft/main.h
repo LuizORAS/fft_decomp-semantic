@@ -295,7 +295,7 @@ typedef struct main_file_load_descriptor {
     s32 sector_count;
     s32 lba;
     s32 sector_index; /* 0x18; sector being read by wldcore_file_poll_vram_image_stream */
-    u8 position[4];
+    CdlLOC position;
     u8* destination;
 } main_file_load_descriptor_t;
 typedef char main_file_load_state_size_must_be_36[sizeof(main_file_load_descriptor_t) == 36 ? 1 : -1];
@@ -1438,7 +1438,7 @@ s32 main_sound_stop_current_music(void);
 
 /* battle_map_step_init_sequence calls this without loading $a0, but the body reads sound_id. */
 void main_sound_stop_sfx(int sound_id);
-s32 main_sound_switch_music_track(s32 slot, s32 volume, s32 fade);
+suzuki_music_t* main_sound_switch_music_track(s32 slot, s32 volume, s32 fade);
 void main_sound_unload_current_scenario_music(void);
 s32 main_sound_unload_scenario_mus(s32 slot);
 void main_sound_unload_scenario_music_and_tunes(void);

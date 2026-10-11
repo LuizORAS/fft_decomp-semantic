@@ -20,7 +20,7 @@ s32 world_shop_run_fur_sell_quantity_menu(void) {
         g_world_menu_sound_muted = 1;
     }
     g_world_shop_fur_quantity_menu_running
-        = world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, &g_world_shop_quantity_menu_data);
+        = world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, g_world_shop_quantity_menu_data);
     if (world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) != 0 && g_world_shop_sell_total_shown == 0) {
         g_world_text_substitution_values[0] = world_item_get_half_price(g_world_shop_sell_quantity_item)
             * g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY];

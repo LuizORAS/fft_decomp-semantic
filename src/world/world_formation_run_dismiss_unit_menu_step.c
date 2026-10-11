@@ -13,23 +13,7 @@ typedef struct world_formation_dismiss_entry {
     s16 variable_id; /* 0x02 */
 } world_formation_dismiss_entry_t;
 
-/*
- * The menu record handed to world_menu_run_thread for the
- * dismissal prompt. Offset 0x74 is world_menu_thread_data_t.selection; the
- * other two fields are written only here.
- */
-typedef struct world_formation_dismiss_menu {
-    u8 _unused_00[0x74];
-    s16 selection; /* 0x74 */
-    u8 _unused_76[0x94 - 0x76];
-    s16 prompt_text_id; /* 0x94 */
-    u8 _unused_96[0xec - 0x96];
-    s16 entry3_selected_index; /* 0xec: selected_index of the fourth 0x3c menu entry */
-} world_formation_dismiss_menu_t;
-
 extern world_formation_dismiss_entry_t g_world_formation_dismiss_entries[];
-extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu;
-extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scrolled;
 
 /*
  * Per-frame step of the "dismiss unit" menu
@@ -53,7 +37,7 @@ extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scr
  */
 void world_formation_run_dismiss_unit_menu_step(void) {
     world_formation_unit_t* unit;
-    world_formation_dismiss_menu_t* menu;
+    world_menu_entry_t* menu;
     s32 i;
     s32 value;
     s32 sprite;
@@ -126,7 +110,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             text_id = value + 0xE800;
             if (g_world_formation_dismiss_step == 0) {
                 g_world_menu_sound_muted = 1;
-                g_world_formation_dismiss_menu_data = g_world_formation_dismiss_prompt;
+                g_world_formation_dismiss_menu_data = &g_world_formation_dismiss_prompt;
                 if (g_world_formation_unit_banner_at_bottom != 0) {
                     value = 0x19;
                 } else {
@@ -135,14 +119,14 @@ void world_formation_run_dismiss_unit_menu_step(void) {
                 g_world_formation_dismiss_prompt_kind = value;
                 g_world_formation_dismiss_prompt_text_id = text_id;
             } else {
-                menu = &g_world_formation_dismiss_confirm_menu;
+                menu = g_world_formation_dismiss_confirm_menu;
                 if (g_world_formation_unit_banner_at_bottom != 0) {
-                    menu = &g_world_formation_dismiss_confirm_menu_scrolled;
+                    menu = g_world_formation_dismiss_confirm_menu_scrolled;
                 }
-                g_world_formation_dismiss_menu_data = (u8*)menu;
-                menu->selection = 0;
-                menu->entry3_selected_index = 0;
-                menu->prompt_text_id = text_id;
+                g_world_formation_dismiss_menu_data = menu;
+                menu[1].selected_index = 0;
+                menu[3].selected_index = 0;
+                menu[2].text_id = text_id;
             }
             g_world_dismiss_unit_prompt_running = 1;
         }

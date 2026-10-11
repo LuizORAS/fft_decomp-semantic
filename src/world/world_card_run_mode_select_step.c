@@ -68,7 +68,7 @@ void world_card_run_mode_select_step(void) {
             }
         }
         if (all) {
-            g_world_card_pending_message = g_world_card_save_unavailable_message;
+            g_world_card_pending_message = &g_world_card_save_unavailable_message;
         }
     } else {
         for (i = 0, all = 1; i < 15; i++) {
@@ -77,7 +77,7 @@ void world_card_run_mode_select_step(void) {
             }
         }
         if (all) {
-            g_world_card_pending_message = g_world_card_no_save_data_message;
+            g_world_card_pending_message = &g_world_card_no_save_data_message;
         }
     }
     if (g_world_card_pending_message == 0) {

@@ -76,7 +76,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
             secondary_unchecked = 0;
         }
         if (checking) {
-            known = unit->learned_abilities[i * UNIT_LEARNED_ABILITY_BYTES_PER_JOB + 2];
+            known = unit->learned_abilities[i].bits[2];
         }
         for (j = RSM_SKILLSET_SLOT_FIRST; j < HUMAN_SKILLSET_ABILITY_COUNT; j++) {
             if (checking) {

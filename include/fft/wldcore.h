@@ -2006,15 +2006,6 @@ typedef struct wldcore_window_entry_36 {
 } wldcore_window_entry_36_t;
 typedef char wldcore_entry_36_size_must_be_0x24[sizeof(wldcore_window_entry_36_t) == 0x24 ? 1 : -1];
 
-/* Colour triple of the 52-byte render records (+0x30). */
-typedef struct wldcore_window_entry_52_rgb {
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 rest[49];
-} wldcore_window_entry_52_rgb_t;
-typedef char wldcore_entry_52_rgb_size_must_be_0x34[sizeof(wldcore_window_entry_52_rgb_t) == 0x34 ? 1 : -1];
-
 /* Index descriptor passed to the paired window-state routines 0x80076744
  * and 0x8007688c; each word selects a window or render record. */
 typedef struct wldcore_window_tint_request {
@@ -2073,7 +2064,6 @@ extern s32 g_wldcore_menu_ordering_table_offset;
 extern void (*g_wldcore_menu_publish_handlers[])(wldcore_menu_stack_record_t*);
 extern void (*g_wldcore_menu_resume_handlers[])(wldcore_menu_stack_record_t*);
 extern struct world_menu_number_range g_wldcore_window_panel_number_state;
-extern wldcore_window_entry_36_rgb_t g_wldcore_window_record_colors[];
 extern s32 g_wldcore_menu_root_window_index;
 void wldcore_window_init_record_pools(void);
 void wldcore_window_build_yes_no_panel(wldcore_point32_t origin);

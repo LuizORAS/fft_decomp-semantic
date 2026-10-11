@@ -17,7 +17,7 @@ void world_card_run_load_step(s32 slot) {
         g_world_card_load_step_state = 1;
         g_world_card_load_failed = 0;
         D_801CC7D0 = 0;
-        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_loading_message);
+        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_loading_message);
         memset(g_world_load_work_buffer, 0xFF, 0x1E80);
         return;
     }
@@ -26,7 +26,7 @@ void world_card_run_load_step(s32 slot) {
         return;
     }
     if (g_world_card_load_failed != 0) {
-        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_load_error_message);
+        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_load_error_message);
         input = g_world_input_primary_repeat;
         if ((input & PSX_PAD_CIRCLE) || (input & PSX_PAD_CROSS)) {
             world_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);

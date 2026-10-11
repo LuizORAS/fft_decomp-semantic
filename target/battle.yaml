@@ -2127,7 +2127,7 @@ data:
   - {addr: 0x800e6b68, name: g_battle_map_white_cvector}
   - {addr: 0x800e6b94, name: g_battle_map_zero_svector}
   - {addr: 0x800e6b9c, name: g_battle_map_unit_scale_vector}
-  - {addr: 0x800e7160, name: g_battle_map_file_table}
+  - {addr: 0x800e7160, name: g_battle_map_directory_path}
   - {addr: 0x800f5af4, name: g_battle_map_light_color_matrix}
   - {addr: 0x800f5b14, name: g_battle_map_light_matrix}
   - {addr: 0x800f5b34, name: g_battle_map_light_rotation}
@@ -2211,7 +2211,7 @@ data:
   - {addr: 0x800f6db4, name: g_battle_map_texture_animation_moves}
   - {addr: 0x800f70b4, name: D_800F70B4}
   - {addr: 0x800f78e8, name: D_800F78E8}
-  - {addr: 0x800f7980, name: g_battle_map_mesh_data_buffer}
+  - {addr: 0x800f7980, name: g_battle_map_mesh_last_render_buffer}
   - {addr: 0x800f7984, name: g_battle_map_textured_triangle_render_record_count}
   - {addr: 0x800f7988, name: g_battle_map_textured_quad_render_record_count}
   - {addr: 0x800f798c, name: g_battle_map_untextured_triangle_render_record_count}

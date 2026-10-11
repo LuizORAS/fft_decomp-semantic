@@ -31,7 +31,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         stream->state++;
         break;
     case MAIN_FILE_LOAD_STATE_START_SEEK:
-        CdControlF(CdlSetloc, stream->position);
+        CdControlF(CdlSetloc, (u8*)&stream->position);
         stream->state++;
         break;
     case MAIN_FILE_LOAD_STATE_POLL_SEEK:
@@ -70,7 +70,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         }
         if (stream->wait_frames > 0x40000 || (CdStatus() & 1) != 0) {
             main_file_reset_cd_subsystems();
-            CdIntToPos(stream->lba + stream->sector_index, stream->position);
+            CdIntToPos(stream->lba + stream->sector_index, &stream->position);
             stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
             stream->error_count++;
             return;
