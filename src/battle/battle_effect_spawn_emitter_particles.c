@@ -143,8 +143,8 @@ s32 battle_effect_spawn_emitter_particles(
         break;
     case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
         battle_map_store_max_coordinates(&map_max);
-        spawn.vx += map_max.vx * 14;
-        spawn.vz += map_max.vz * 14;
+        spawn.vx += map_max.vx * (MAP_TILE_SIZE / 2);
+        spawn.vz += map_max.vz * (MAP_TILE_SIZE / 2);
         break;
     case EFFECT_EMITTER_ORIGIN_TRACKED_ENTITY:
         spawn.vx += target.vx + unit_coords->vx;
@@ -372,8 +372,8 @@ s32 battle_effect_spawn_emitter_particles(
     case EFFECT_EMITTER_HOMING_MAP_CENTRE:
         battle_map_store_max_coordinates(&map_max);
         for (i = 0; i < count; i++) {
-            particle->target.x = map_max.vx * 14 + target_offset.vx;
-            particle->target.z = map_max.vz * 14 + target_offset.vz;
+            particle->target.x = map_max.vx * (MAP_TILE_SIZE / 2) + target_offset.vx;
+            particle->target.z = map_max.vz * (MAP_TILE_SIZE / 2) + target_offset.vz;
             particle->target.y = target_offset.vy;
             particle = particle->next;
         }
