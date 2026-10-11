@@ -11,7 +11,7 @@
  */
 void jobstts_menu_load_images_and_clear_selection(void) {
     RECT rect;
-    u16 buf[16];
+    palette_t palette;
 
     rect.x = 0x100;
     rect.y = 0;
@@ -29,39 +29,39 @@ void jobstts_menu_load_images_and_clear_selection(void) {
     rect.y = 0x1f0;
     rect.w = 0x10;
     rect.h = 1;
-    jobstts_gfx_store_image_and_wait(&rect, &buf[0]);
+    jobstts_gfx_store_image_and_wait(&rect, palette);
 
-    buf[4] = 0;
+    palette[4].red = palette[4].green = palette[4].blue = palette[4].semi_transparent = 0;
     rect.x = 0x120;
     rect.y = 0xfe;
     rect.w = 0x10;
     rect.h = 1;
-    jobstts_gfx_load_image_and_wait(&rect, &buf[0]);
+    jobstts_gfx_load_image_and_wait(&rect, palette);
 
     rect.x = 0x100;
     rect.y = 0xfe;
     rect.w = 0xc;
     rect.h = 1;
-    jobstts_gfx_load_image_and_wait(&rect, &buf[4]);
+    jobstts_gfx_load_image_and_wait(&rect, &palette[4]);
 
     rect.x = 0x3c0;
     rect.y = 0x1f4;
     rect.w = 0x10;
     rect.h = 1;
-    jobstts_gfx_store_image_and_wait(&rect, &buf[0]);
+    jobstts_gfx_store_image_and_wait(&rect, palette);
 
-    buf[4] = 0;
+    palette[4].red = palette[4].green = palette[4].blue = palette[4].semi_transparent = 0;
     rect.x = 0x130;
     rect.y = 0xfe;
     rect.w = 0x10;
     rect.h = 1;
-    jobstts_gfx_load_image_and_wait(&rect, &buf[0]);
+    jobstts_gfx_load_image_and_wait(&rect, palette);
 
     rect.x = 0x110;
     rect.y = 0xfe;
     rect.w = 0xc;
     rect.h = 1;
-    jobstts_gfx_load_image_and_wait(&rect, &buf[4]);
+    jobstts_gfx_load_image_and_wait(&rect, &palette[4]);
 
     jobstts_menu_clear_selection_values();
     g_jobstts_text_selected_job_id = 0;
