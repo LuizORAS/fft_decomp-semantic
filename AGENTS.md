@@ -13,9 +13,11 @@ put one reconstructed function per file under `src/psyq/<library>/`. Register
 it in the original module's `target/` configuration with an explicit `source:`
 path. A routine or global with no established SDK name is `psyq_<lib>_…` or
 `g_psyq_<lib>_…`. LIBGS (WORLD) is `src/psyq/libgs/` and LIBPRESS (OPENING)
-`src/psyq/libpress/`. The Suzuki sound driver is in `src/main/` under `main_`
-and `Suzuki` names, apart from its four heap routines in `src/psyq/suzuki/`;
-it stays there unless a separate change moves it coherently.
+`src/psyq/libpress/`. The Suzuki sound driver is in `src/suzuki/`, with
+declarations in `include/psx/suzuki.h`. It keeps its `main_` and `Suzuki`
+names and remains linked into MAIN at the original addresses and profiles.
+Game-specific sound adapters, music slots and file loading remain in
+`src/main/` and `include/fft/main.h`.
 
 Library C has the same byte-exact requirements as game C. Every completed
 function must match all original bytes; unmatched drafts stay in ignored
@@ -59,6 +61,7 @@ remain excluded. Never modify `meta/`.
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
 | `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
+| `src/suzuki/` | Suzuki sound driver, registered with explicit `source:` paths in MAIN |
 | `include/fft/` | Module headers (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), focused `battle_<subsystem>.h` headers, and shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `menu_script.h`, `script.h`) |
 | `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
