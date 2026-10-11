@@ -4,11 +4,9 @@
  * home slots before narrowing them into the origin record. */
 void wldcore_menu_display_text_entry(s32 index, s32 text_id, point32_t point, void* buffer) {
     glyph_blit_t origin;
-    s32 x = point.x;
-    s32 y = point.y;
 
-    origin.rect.x = x;
-    origin.rect.y = y;
+    origin.rect.x = point.x;
+    origin.rect.y = point.y;
     origin.stride = g_wldcore_window_render_records[index].bounds.w;
     world_menu_display_text_entry(text_id, buffer, &origin);
 }

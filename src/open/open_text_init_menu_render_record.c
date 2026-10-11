@@ -9,13 +9,11 @@ void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s
     /* The pair is stack-resident (0x18 / 0x1c) because it is passed by value,
      * which also lets the y store fill the beqz delay slot. */
     point32_t text;
-    s32 margin;
 
     open_gfx_init_window_frame_record(record_index, quad, depth, image);
 
-    margin = OPEN_MENU_TEXT_MARGIN;
-    text.x = margin;
-    text.y = margin;
+    text.x = OPEN_MENU_TEXT_MARGIN;
+    text.y = OPEN_MENU_TEXT_MARGIN;
     if (combined_text_index != 0) {
         open_birthday_draw_menu_text_entry(record_index, combined_text_index, text, image);
     }
