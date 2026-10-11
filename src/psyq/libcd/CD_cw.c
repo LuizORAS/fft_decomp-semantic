@@ -37,6 +37,6 @@ s32 CD_cw(u8 command, const u8* parameter, u8* result, s32 asynchronous) {
     }
     if (g_psyq_cd_irq_state.sync == CdlComplete && command == CdlSetmode)
         CD_mode = *parameter;
-    psyq_cd_copy_result(result, g_psyq_cd_sync_result, 8);
+    psyq_cd_copy_result(result, g_psyq_cd_sync_result, sizeof(g_psyq_cd_sync_result));
     return -(g_psyq_cd_irq_state.sync == CdlDiskError);
 }

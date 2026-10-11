@@ -15,8 +15,8 @@ void GsSetDrawBuffOffset(void) {
         GsDRAWENV.ofs[1] = POSITION.offy + PSDOFSY[PSDIDX];
         PutDrawEnv(&GsDRAWENV);
     } else {
-        x = POSITION.offx + PSDOFSX[PSDIDX != 0 ? 0 : 1];
-        y = POSITION.offy + PSDOFSY[PSDIDX != 0 ? 0 : 1];
+        x = POSITION.offx + PSDOFSX[!PSDIDX];
+        y = POSITION.offy + PSDOFSY[!PSDIDX];
         SetGeomOffset(x, y);
         GsORGOFSX = x;
         GsORGOFSY = y;
