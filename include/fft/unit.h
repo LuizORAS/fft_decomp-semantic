@@ -433,7 +433,17 @@ enum {
         + UNIT_JOB_LEVEL_BYTE_COUNT + UNIT_JOB_POINT_TABLE_PAIR_BYTE_COUNT,
 };
 
-typedef char assert_unit_career_data_byte_count[UNIT_CAREER_DATA_BYTE_COUNT == 0x96 ? 1 : -1];
+typedef char assert_unit_career_data_byte_count[UNIT_CAREER_DATA_BYTE_COUNT == 150 ? 1 : -1];
+
+/* Twenty job-unlock bits occupy the high bits of the three-byte career value. */
+enum {
+    UNIT_UNLOCKED_JOB_DANCER = 0x20,
+    UNIT_UNLOCKED_JOB_BARD = 0x40,
+    UNIT_UNLOCKED_JOB_SQUIRE = 0x800000,
+};
+enum {
+    UNIT_UNLOCKED_JOB_MASK = 0xfffff0,
+};
 
 /* One job's 24 learned-ability bits, MSB-first within each byte. */
 typedef struct unit_learned_ability_row {

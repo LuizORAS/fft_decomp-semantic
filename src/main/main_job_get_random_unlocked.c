@@ -1,14 +1,16 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-#define JOB_COUNT 19
+enum {
+    RANDOM_JOB_COUNT = JOB_ID_MIME - JOB_ID_GENERIC_FIRST,
+};
 
-/* Return a random unlocked generic job ID, or 0 when none are unlocked.
+/* Return a random unlocked generic job ID below Mime, or 0 when none are unlocked.
  *
  * The ENTD caller explicitly normalizes the zero-extended job byte. */
 s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
-    u8 candidates[JOB_COUNT];
-    s32 job_mask = 0x800000;
+    u8 candidates[RANDOM_JOB_COUNT];
+    s32 job_mask = UNIT_UNLOCKED_JOB_SQUIRE;
     s32 candidate_count = 0;
     s32 job_index = 0;
     s32 unlocked_jobs
@@ -29,7 +31,7 @@ s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
         }
         job_index++;
         job_mask /= 2;
-    } while (job_index < JOB_COUNT);
+    } while (job_index < RANDOM_JOB_COUNT);
 
     if (candidate_count != 0) {
         s32 scaled_random = rand() * candidate_count;

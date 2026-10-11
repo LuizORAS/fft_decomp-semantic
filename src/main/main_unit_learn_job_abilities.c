@@ -32,7 +32,7 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
             }
         }
     } else {
-        i = 0x800000 >> job_index;
+        i = UNIT_UNLOCKED_JOB_SQUIRE >> job_index;
         scratch = (unit->career.unlocked_jobs[0] << 16) + (unit->career.unlocked_jobs[1] << 8)
             + unit->career.unlocked_jobs[2];
         if ((scratch & i) == 0) {

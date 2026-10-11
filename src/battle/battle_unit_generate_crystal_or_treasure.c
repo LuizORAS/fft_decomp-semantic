@@ -86,13 +86,13 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
                     if (mover_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                         job_id = mover_identity;
                     }
-                } else if (!(unlocked_jobs_mask & (0x800000 >> i))) {
+                } else if (!(unlocked_jobs_mask & (UNIT_UNLOCKED_JOB_SQUIRE >> i))) {
                     continue;
                 }
-                if (i == 0x11 && (mover_flags & UNIT_FLAG_FEMALE)) {
+                if (i == JOB_ID_BARD - JOB_ID_GENERIC_FIRST && (mover_flags & UNIT_FLAG_FEMALE)) {
                     continue;
                 }
-                if (i == 0x12 && (mover_flags & UNIT_FLAG_MALE)) {
+                if (i == JOB_ID_DANCER - JOB_ID_GENERIC_FIRST && (mover_flags & UNIT_FLAG_MALE)) {
                     continue;
                 }
                 skillset = g_main_job_data_pointer[job_id].skillset;

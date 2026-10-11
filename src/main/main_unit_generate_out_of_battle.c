@@ -98,7 +98,7 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     table = g_main_unit_generation_base_data;
     base = table + unit_type;
     generic_id = party->sprite_set;
-    party->career.unlocked_jobs[0] = 0x80;
+    party->career.unlocked_jobs[0] = UNIT_UNLOCKED_JOB_SQUIRE >> 16;
     /* Keep sprite sets 0x80+ for the name-uniqueness comparison; collapse
      * other identities to zero. */
     generic_id = generic_id >= CHARACTER_IDENTITY_SELECTOR_FIRST ? generic_id : 0;
