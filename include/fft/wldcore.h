@@ -2027,7 +2027,7 @@ void wldcore_window_clear_layout_states_and_queue_msg_b8dd(wldcore_menu_stack_re
 void wldcore_window_finalize_record_and_stop_task(wldcore_menu_stack_record_t* level);
 void wldcore_menu_resume_root_level(wldcore_menu_stack_record_t* level);
 
-void wldcore_menu_display_text_entry(s32 index, s32 text_id, point32_t point, void* buffer);
+void wldcore_menu_display_text_entry(s32 index, s32 text_id, point32_t point, u32* buffer);
 void wldcore_menu_push_message_level(s32 text, s32 reload_text);
 void wldcore_menu_push_number_panel_level_with_argument(s32 variable_id, s32 value);
 void wldcore_menu_reset_window_list_and_store_origin(void);

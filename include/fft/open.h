@@ -278,7 +278,7 @@ void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
 s32 open_birthday_month_day_to_day_of_year(s32 month, s32 day);
 void open_birthday_convert_to_zodiac_position(s32* month, s32* day);
 
-void open_birthday_draw_menu_text_entry(s32 record_index, s32 combined_text_index, point32_t position, void* image);
+void open_birthday_draw_menu_text_entry(s32 record_index, s32 combined_text_index, point32_t position, u8* image);
 
 void open_birthday_load_window_image(s32 record_index, u32* image);
 void open_birthday_push_confirmation_controller(void);
@@ -406,7 +406,7 @@ typedef struct open_font_metrics {
 
 extern s32 g_open_text_section_offsets[];
 s32 open_text_decode_hex_digit(s32 character);
-void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s32 combined_text_index, void* image);
+void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s32 combined_text_index, u8* image);
 
 /* script */
 typedef enum open_script_dispatch_flag {
