@@ -241,19 +241,21 @@ typedef enum wldcore_audio_command {
     WLDCORE_AUDIO_COMMAND_WAIT_FADE_IN = 18,
 } wldcore_audio_command_e;
 
+enum { WLDCORE_AUDIO_QUEUE_CAPACITY = 16 };
+
 /* Audio command FIFO at 0x800d45a4, filled by
  * wldcore_sound_enqueue_audio_command and serviced by wldcore_sound_process_audio_queue, followed
  * by the music state that consumer owns. current_command and count are the
  * busy words the queue-drain waits test. */
 typedef struct wldcore_audio_queue {
-    s32 commands[16];
-    s32 values[16];
-    s32 current_command;               /* 0x80; wldcore_audio_command_e */
-    s32 current_value;                 /* 0x84 */
-    s32 count;                         /* 0x88 */
-    wldcore_audio_music_slots_t music; /* 0x8c */
-    s32 current_slot;                  /* 0x98 */
-    s32 volume;                        /* 0x9c */
+    wldcore_audio_command_e commands[WLDCORE_AUDIO_QUEUE_CAPACITY];
+    s32 values[WLDCORE_AUDIO_QUEUE_CAPACITY];
+    wldcore_audio_command_e current_command; /* 0x80 */
+    s32 current_value;                       /* 0x84 */
+    s32 count;                               /* 0x88 */
+    wldcore_audio_music_slots_t music;       /* 0x8c */
+    s32 current_slot;                        /* 0x98 */
+    s32 volume;                              /* 0x9c */
 } wldcore_audio_queue_t;
 typedef char wldcore_audio_queue_size_must_be_160[sizeof(wldcore_audio_queue_t) == 160 ? 1 : -1];
 
@@ -287,7 +289,7 @@ extern s32 g_wldcore_sound_novel_wait_frames;
 extern u8 g_wldcore_sound_novel_quit_help_text_ids[];
 void wldcore_sound_process_audio_queue(void);
 void wldcore_sound_change_scenario_music(s32 music_id);
-void wldcore_sound_enqueue_audio_command(s32 kind, s32 value);
+void wldcore_sound_enqueue_audio_command(wldcore_audio_command_e command, s32 value);
 void wldcore_sound_enqueue_music_start(s32 value);
 void wldcore_sound_play_effect(s32 sound_id);
 void wldcore_sound_stop_music_and_play_sound(s32 sound_id);
