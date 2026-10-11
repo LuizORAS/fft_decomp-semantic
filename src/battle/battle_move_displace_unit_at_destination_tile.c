@@ -26,7 +26,7 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     if (unit->movement_path_offset == 0) {
         return;
     }
-    if ((unit->path.data.steps[unit->movement_path_offset - 1].value >> 4) & 1) {
+    if (unit->path.data.steps[unit->movement_path_offset - 1].bits.mount) {
         return;
     }
     if (other == 0) {
