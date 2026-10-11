@@ -47,7 +47,7 @@ void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_ind
             component->red_5bit = red;
             component->blue_5bit = blue;
             g_battle_map_palette_modified_colors[clut_row][color_index]
-                = red_for_packing + (green_for_packing << 5) + (blue_value << 10) + (component->alpha_bit << 15);
+                = red_for_packing + (green_for_packing << 5) + (blue_value << 10) + (component->semi_transparent << 15);
         }
 
         index++;

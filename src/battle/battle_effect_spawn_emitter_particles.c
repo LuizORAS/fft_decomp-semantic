@@ -49,7 +49,7 @@ s32 battle_effect_spawn_emitter_particles(
     SVECTOR tile_anchor;
     effect_geometry_record_t* entry;
     effect_particle_physics_view_t* particle;
-    s16* unit_coords;
+    SVECTOR* unit_coords;
     s32 time;
     s32 curve;
     s32 factor;
@@ -167,9 +167,9 @@ s32 battle_effect_spawn_emitter_particles(
         spawn.vz += map_max.vz * 14;
         break;
     case EFFECT_EMITTER_ORIGIN_TRACKED_ENTITY:
-        spawn.vx += target.vx + unit_coords[0];
-        spawn.vy += target.vy + unit_coords[1];
-        spawn.vz += target.vz + unit_coords[2];
+        spawn.vx += target.vx + unit_coords->vx;
+        spawn.vy += target.vy + unit_coords->vy;
+        spawn.vz += target.vz + unit_coords->vz;
         break;
     }
 

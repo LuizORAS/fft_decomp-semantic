@@ -11,8 +11,8 @@
  * rotation time * n / 4.
  */
 void battle_script_face_tile(const event_face_tile_parameters_t* parameters) {
-    s16 screen[3];
-    s16 tile[3];
+    SVECTOR screen;
+    SVECTOR tile;
     u16 unit_id;
     s32 state;
     s32 i;
@@ -23,17 +23,17 @@ void battle_script_face_tile(const event_face_tile_parameters_t* parameters) {
     s32 dy;
 
     order = 1;
-    tile[0] = parameters->x * 28 + 14;
-    tile[2] = parameters->y * 28 + 14;
+    tile.vx = parameters->x * 28 + 14;
+    tile.vz = parameters->y * 28 + 14;
     unit_id = battle_script_load_halfword(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &state) == 0) {
         return;
     }
     for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
         if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_filter_modes[i], &state) != 0) {
-            battle_unit_copy_misc_screen_coords(unit_id, screen);
-            dx = tile[0] - screen[0];
-            dy = tile[2] - screen[2];
+            battle_unit_copy_misc_screen_coords(unit_id, &screen);
+            dx = tile.vx - screen.vx;
+            dy = tile.vz - screen.vz;
             facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;
             rotation_state = &g_battle_unit_misc_rotation_data[unit_id];
             rotation_state->target_facing = facing;

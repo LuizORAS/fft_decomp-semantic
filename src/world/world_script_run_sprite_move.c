@@ -23,7 +23,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
     /* Indexed destination fields change allocation and shorten the target by four bytes. */
     const u8* parameters;
     s32 mode;
-    s16* coords;
+    SVECTOR* coords;
     s32 misc_id;
     s32 weight;
     s32 curve;
@@ -47,12 +47,12 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
     g_world_thread_contexts[g_world_thread_current_id].task_words[0] = misc_id;
     coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
     parameters += sizeof(arg->unit_id_le);
-    pos[0][0] = coords[0];
-    pos[0][1] = coords[1];
-    pos[0][2] = coords[2];
-    pos[3][0] = -coords[0];
-    pos[3][1] = -coords[1];
-    pos[3][2] = -coords[2];
+    pos[0][0] = coords->vx;
+    pos[0][1] = coords->vy;
+    pos[0][2] = coords->vz;
+    pos[3][0] = -coords->vx;
+    pos[3][1] = -coords->vy;
+    pos[3][2] = -coords->vz;
     for (i = 0; i < 3; i++) {
         pos[1][i] = world_script_load_halfword(parameters);
         parameters += sizeof(arg->destination_le[0]);

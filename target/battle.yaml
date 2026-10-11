@@ -426,7 +426,7 @@ functions:
   - {addr: 0x80088018, size: 280, name: battle_gfx_reset_unit_graphics_load_state, hash: 08f053272412b87e}
   - {addr: 0x80088130, size: 1752, name: battle_gfx_step_load_unit_shp_seq_data, hash: c911b689397fcd77, rodata: [{addr: 0x800681a8, size: 96, hash: a02cd99f70e5ffe1}]}
   - {addr: 0x80088808, size: 56, name: battle_unit_update_and_animate_units_three_times, hash: 671753be2f1d332d}
-  - {addr: 0x80088840, size: 40, name: battle_gfx_clear_four_state_words, hash: 39115dfd29d2ba72}
+  - {addr: 0x80088840, size: 40, name: battle_gfx_clear_unit_graphics_load_state, hash: 39115dfd29d2ba72}
   - {addr: 0x80088868, size: 156, name: battle_gfx_init_deployment_and_reset_unit_graphics_state, hash: 7639c5daabf799ab}
   - {addr: 0x80088904, size: 1512, name: battle_gfx_step_queued_unit_graphics_load, hash: a6dc10f03754655b}
   - {addr: 0x80088eec, size: 460, name: battle_gfx_update_unit_palette_animation, hash: 3096c0877e2a9f57}

@@ -23,7 +23,7 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
     case BATTLE_EFFECT_CAMERA_SOURCE_TARGET:
         if (g_battle_effect_context.targets.records[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_unit_get_map_coords_from_misc_id(
-                g_battle_effect_context.targets.records[target].id.misc_id, &coords.vx);
+                g_battle_effect_context.targets.records[target].id.misc_id, &coords);
         } else {
             coords = *(SVECTOR*)&g_battle_effect_context.targets.records[target].id;
         }
@@ -76,7 +76,7 @@ void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, 
         if (g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].target_type
             == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_unit_get_map_coords_from_misc_id(
-                g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id, &coords.vx);
+                g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id, &coords);
         } else {
             coords = *(SVECTOR*)&g_battle_effect_context.targets.records[BATTLE_EFFECT_CASTER_ENTRY].id;
         }

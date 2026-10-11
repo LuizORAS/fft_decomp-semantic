@@ -251,7 +251,7 @@ void battle_map_update_animations(void) {
                                 component[j].red_5bit = red;
                                 component[j].green_5bit = green;
                                 g_battle_map_palette_modified_colors[i][k * 16 + j]
-                                    = red + (green << 5) + (blue << 10) + (component[j].alpha_bit << 15);
+                                    = red + (green << 5) + (blue << 10) + (component[j].semi_transparent << 15);
                             }
                         }
 
@@ -293,7 +293,7 @@ void battle_map_update_animations(void) {
                             component[j].red_5bit = red;
                             component[j].green_5bit = green;
                             g_battle_map_palette_modified_colors[i][k * 16 + j]
-                                = red + (green << 5) + (blue << 10) + (component[j].alpha_bit << 15);
+                                = red + (green << 5) + (blue << 10) + (component[j].semi_transparent << 15);
                         }
                     }
 
@@ -339,7 +339,7 @@ void battle_map_update_animations(void) {
                             component[j].green_5bit = green;
                             component[j].blue_5bit = blue;
                             g_battle_map_palette_modified_colors[i][j]
-                                = red + (green << 5) + (blue << 10) + (component[j].alpha_bit << 15);
+                                = red + (green << 5) + (blue << 10) + (component[j].semi_transparent << 15);
                         }
                     }
 
@@ -381,7 +381,7 @@ void battle_map_update_animations(void) {
                         component[j].green_5bit = green;
                         component[j].blue_5bit = blue;
                         g_battle_map_palette_modified_colors[i][j]
-                            = red + (green << 5) + (blue << 10) + (component[j].alpha_bit << 15);
+                            = red + (green << 5) + (blue << 10) + (component[j].semi_transparent << 15);
                     }
                 }
 

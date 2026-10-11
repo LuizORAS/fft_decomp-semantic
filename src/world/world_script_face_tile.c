@@ -8,8 +8,8 @@
  * of its value each. The second argument to world_process_unit_misc_state_value is
  * taken from the g_world_unit_face_slot_order halfword table rather than a local counter. */
 void world_script_face_tile(const event_face_tile_parameters_t* parameters) {
-    s16 position[3];
-    s16 target[3];
+    SVECTOR position;
+    SVECTOR target;
     u16 unit_id;
     s32 misc_index;
     s32 i;
@@ -20,15 +20,15 @@ void world_script_face_tile(const event_face_tile_parameters_t* parameters) {
     world_unit_animation_state_t* state;
 
     order = 1;
-    target[0] = parameters->x * 28 + 14;
-    target[2] = parameters->y * 28 + 14;
+    target.vx = parameters->x * 28 + 14;
+    target.vz = parameters->y * 28 + 14;
     unit_id = world_script_load_halfword(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0) {
-                world_unit_copy_misc_screen_coords(unit_id, position);
-                dx = target[0] - position[0];
-                dy = target[2] - position[2];
+                world_unit_copy_misc_screen_coords(unit_id, &position);
+                dx = target.vx - position.vx;
+                dy = target.vz - position.vz;
                 facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;
                 state = &g_world_unit_animation_states[unit_id];
                 state->target_facing = facing;

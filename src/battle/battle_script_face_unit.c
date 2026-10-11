@@ -12,8 +12,8 @@
  * The angle is built in place (negate, then add) so combine cannot fold the two
  * constant additions into one. */
 void battle_script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only) {
-    s16 position[4];
-    s16 target[4];
+    SVECTOR position;
+    SVECTOR target;
     u16 unit_id;
     s32 misc_index;
     u16 misc_id;
@@ -35,10 +35,10 @@ void battle_script_face_unit(const event_face_unit_parameters_t* parameters, s32
                 if (battle_script_filter_unit_id_by_mode(&unit_id, &g_battle_script_unit_filter_modes[i], &misc_index)
                         != 0
                     && misc_id != unit_id) {
-                    battle_unit_copy_misc_screen_coords(misc_id, position);
-                    battle_unit_copy_misc_screen_coords(unit_id, target);
-                    dx = target[0] - position[0];
-                    dy = target[2] - position[2];
+                    battle_unit_copy_misc_screen_coords(misc_id, &position);
+                    battle_unit_copy_misc_screen_coords(unit_id, &target);
+                    dx = target.vx - position.vx;
+                    dy = target.vz - position.vz;
                     facing = -ratan2(dy, dx);
                     facing += 0xC00;
                     reverse = facing + 0x800;

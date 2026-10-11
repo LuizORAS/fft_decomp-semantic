@@ -81,9 +81,9 @@ s32 effect_e468_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
             &g_battle_effect_context, &scratch->position);
         scratch->unit_coords = battle_unit_get_event_offset_ptr_by_misc_id(
             g_battle_effect_context.targets.records[scratch->target_index].id.misc_id);
-        scratch->position.vx += scratch->unit_coords[0];
-        scratch->position.vy += scratch->unit_coords[1];
-        scratch->position.vz += scratch->unit_coords[2];
+        scratch->position.vx += scratch->unit_coords->vx;
+        scratch->position.vy += scratch->unit_coords->vy;
+        scratch->position.vz += scratch->unit_coords->vz;
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
         RotTrans(&scratch->position, (VECTOR*)scratch->screen, &scratch->flag);

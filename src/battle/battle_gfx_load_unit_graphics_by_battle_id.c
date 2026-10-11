@@ -10,10 +10,10 @@ s32 battle_gfx_load_unit_graphics_by_battle_id(s32 battle_id, s32 flags) {
     battle_stats_t* unit;
 
     g_main_gfx_unit_graphics_load_queue.count = 0;
-    g_battle_gfx_unit_graphics_load_state[0] = BATTLE_GFX_UNIT_LOAD_KIND_FIRST;
-    g_battle_gfx_unit_graphics_load_state[1] = BATTLE_GFX_UNIT_LOAD_PHASE_START_READ;
-    g_battle_gfx_unit_graphics_load_state[2] = 0;
-    g_battle_gfx_unit_graphics_load_state[3] = 0;
+    g_battle_gfx_unit_graphics_load_state.file_kind = BATTLE_GFX_UNIT_LOAD_KIND_FIRST;
+    g_battle_gfx_unit_graphics_load_state.phase = BATTLE_GFX_UNIT_LOAD_PHASE_START_READ;
+    g_battle_gfx_unit_graphics_load_state.index = 0;
+    g_battle_gfx_unit_graphics_load_state.buffer = 0;
     unit = battle_unit_get_stats_from_battle_id(battle_id);
     battle_unit_set_enemy_level_data_by_battle_id(battle_id);
     battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.bits.y,

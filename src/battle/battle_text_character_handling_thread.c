@@ -133,18 +133,18 @@ void battle_text_character_handling_thread(void) {
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != DIALOG_OPTIONS_NO_TAIL) {
         center = rec.width >> 1;
         value = battle_script_get_misc_id(battle_thread_get_current_parameter_3());
-        battle_unit_project_misc_to_screen(value, g_battle_scratch_coords);
+        battle_unit_project_misc_to_screen(value, &g_battle_scratch_coords);
         cursor_x = center;
         rec.tail_offset = 0;
-        rec.x = g_battle_scratch_coords[0] - center - 4;
+        rec.x = g_battle_scratch_coords.vx - center - 4;
         if (rec.position == 0) {
             if (battle_thread_get_current_parameter_3() == g_battle_text_speaker_swap_unit_a) {
                 value = g_battle_text_speaker_swap_unit_b;
             } else if (battle_thread_get_current_parameter_3() == g_battle_text_speaker_swap_unit_b) {
                 value = g_battle_text_speaker_swap_unit_a;
             }
-            battle_unit_project_misc_to_screen(battle_script_get_misc_id(value), &g_battle_camera_script_rotation.vx);
-            if (g_battle_scratch_coords[1] < 0 || g_battle_camera_script_rotation.vy < g_battle_scratch_coords[1]) {
+            battle_unit_project_misc_to_screen(battle_script_get_misc_id(value), &g_battle_camera_script_rotation);
+            if (g_battle_scratch_coords.vy < 0 || g_battle_camera_script_rotation.vy < g_battle_scratch_coords.vy) {
                 rec.position = 2;
             } else {
                 rec.position = 1;
@@ -153,11 +153,11 @@ void battle_text_character_handling_thread(void) {
         }
         if (rec.position == 1) {
             rec.x += 0xC;
-            rec.y = g_battle_scratch_coords[1] - rec.height - 0x28;
+            rec.y = g_battle_scratch_coords.vy - rec.height - 0x28;
         }
         if (rec.position == 2) {
             rec.x -= 8;
-            rec.y = g_battle_scratch_coords[1];
+            rec.y = g_battle_scratch_coords.vy;
         }
         if (rec.x < 0x88) {
             rec.tail_offset = rec.x - 0x88;

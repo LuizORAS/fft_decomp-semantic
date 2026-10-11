@@ -146,7 +146,7 @@ void battle_map_modify_palette(
                     components[i].green_5bit = out_green;
                     components[i].blue_5bit = out_blue;
                     g_battle_map_palette_modified_colors[clut_row][i]
-                        = out_red + (out_green << 5) + (out_blue << 10) + (components[i].alpha_bit << 15);
+                        = out_red + (out_green << 5) + (out_blue << 10) + (components[i].semi_transparent << 15);
                 }
             } else {
                 components[i].red_delta_biased = components[i].green_delta_biased = components[i].blue_delta_biased
@@ -303,7 +303,7 @@ void battle_map_modify_palette(
                     component->green_5bit = out_green;
                     component->blue_5bit = out_blue;
                     g_battle_map_palette_modified_colors[clut_row][clut_index * 16 + i]
-                        = out_red + (out_green << 5) + (out_blue << 10) + (component->alpha_bit << 15);
+                        = out_red + (out_green << 5) + (out_blue << 10) + (component->semi_transparent << 15);
                 }
             } else {
                 component->red_delta_biased = component->green_delta_biased = component->blue_delta_biased = 0x1f;

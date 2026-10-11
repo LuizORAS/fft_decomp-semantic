@@ -39,6 +39,6 @@ void battle_map_extract_palette_colors(const u16* palette, s32 clut_row, s32 clu
         components->red_5bit = color & 0x1f;
         components->green_5bit = (color & 0x3e0) >> 5;
         components->blue_5bit = (color & 0x7c00) >> 10;
-        components->alpha_bit = color >> 15;
+        components->semi_transparent = color >> 15;
     } while (i < MAP_CLUT_COLOR_COUNT);
 }

@@ -2411,7 +2411,7 @@ void battle_camera_init_defaults(void);
 void battle_camera_init_tilt_and_zoom(void);
 void battle_camera_normalize_yaw_angle(void);
 s32 battle_camera_is_active(void);
-void battle_camera_project_world_coords_to_screen(SVECTOR* world_coords, s16* screen_coords);
+void battle_camera_project_world_coords_to_screen(SVECTOR* world_coords, SVECTOR* screen_coords);
 void battle_camera_request_rotation(s32 angle);
 void battle_map_reset_script_light_transform(void);
 void battle_camera_restore_current_real_coords(void);
@@ -5190,7 +5190,7 @@ battle_unit_misc_data_t* battle_unit_find_other_chocobo_at_map_coords(s32 map_x,
 void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result);
 s32 battle_unit_disable_remove(s32 misc_id);
 void battle_unit_set_facing(s32 misc_id, s32 value);
-void battle_unit_project_misc_to_screen(u32 misc_id, s16* screen_coordinates);
+void battle_unit_project_misc_to_screen(u32 misc_id, SVECTOR* screen_coordinates);
 s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id);
 s32 battle_unit_set_target_anim_by_misc_id(s32 misc_id);
 void battle_unit_set_facing_update_suppression(u32 misc_id);
@@ -5276,17 +5276,17 @@ battle_unit_misc_data_t* battle_unit_claim_misc_slot(s16 unit_id);
 void battle_unit_clear_horizontal_flip_flag(u32 misc_id);
 void battle_unit_clear_movement_effect_suppression(u32 misc_id);
 void battle_unit_clear_palette_update_suppression(u32 misc_id);
-void battle_unit_copy_map_coords_from_misc_id(u32 misc_id, s16* coords);
+void battle_unit_copy_map_coords_from_misc_id(u32 misc_id, SVECTOR* coords);
 void battle_unit_copy_misc_data_xyz_values(SVECTOR* destination, const battle_unit_misc_data_t* misc_data);
-void battle_unit_copy_misc_screen_coords(u32 misc_id, s16* screen_coords);
+void battle_unit_copy_misc_screen_coords(u32 misc_id, SVECTOR* screen_coords);
 void battle_unit_dismount_rider_and_update_display(battle_unit_misc_data_t* rider);
 void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target);
 battle_stats_t* battle_unit_find_active_data_pointer(void);
 battle_unit_action_command_t* battle_unit_check_party_member_exists(s32 unit_id);
-s16* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id);
+SVECTOR* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id);
 battle_stats_t* battle_unit_get_attacker_data_pointer(void);
 s32 battle_unit_get_facing_nibble_by_misc_id(u32 misc_id);
-s32 battle_unit_get_map_coords_from_misc_id(u32 misc_id, s16* coords);
+s32 battle_unit_get_map_coords_from_misc_id(u32 misc_id, SVECTOR* coords);
 battle_unit_misc_data_t* battle_unit_find_any_misc_data_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
 
 battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
@@ -5747,7 +5747,7 @@ typedef struct battle_render_buffer {
 } battle_render_buffer_t;
 typedef char battle_render_buffer_size_must_be_0xee28[(sizeof(battle_render_buffer_t) == 0xee28) ? 1 : -1];
 
-/* g_battle_gfx_unit_graphics_load_state[1]: the phase of the file being loaded. */
+/* g_battle_gfx_unit_graphics_load_state.phase: the phase of the file being loaded. */
 typedef enum battle_gfx_unit_load_phase {
     BATTLE_GFX_UNIT_LOAD_PHASE_START_READ = 0,
     BATTLE_GFX_UNIT_LOAD_PHASE_WAIT = 1,
@@ -5755,7 +5755,7 @@ typedef enum battle_gfx_unit_load_phase {
     BATTLE_GFX_UNIT_LOAD_PHASE_FINISH = 3,
 } battle_gfx_unit_load_phase_e;
 
-/* g_battle_gfx_unit_graphics_load_state[0], the file kind, counts through one of two lists:
+/* g_battle_gfx_unit_graphics_load_state.file_kind, the file kind, counts through one of two lists:
  * battle_gfx_step_queued_unit_graphics_load loads three files per queued unit and
  * battle_gfx_step_load_unit_shp_seq_data the shared sprite, weapon and effect files. */
 typedef enum battle_gfx_queued_load_kind {
@@ -5778,6 +5778,17 @@ typedef enum battle_gfx_shared_load_kind {
 /* Both load-kind lists start at zero. */
 enum { BATTLE_GFX_UNIT_LOAD_KIND_FIRST = 0 };
 
+/* Shared by the resident-file and queued-unit loaders. The file kind selects
+ * the buffer's format, and index selects a file or a queued descriptor. */
+typedef struct battle_gfx_unit_graphics_load_state {
+    s32 file_kind; /* 0x00; battle_gfx_shared_load_kind_e or battle_gfx_queued_load_kind_e */
+    s32 phase;     /* 0x04; battle_gfx_unit_load_phase_e */
+    s32 index;     /* 0x08 */
+    void* buffer;  /* 0x0c; allocated until the FINISH phase */
+} battle_gfx_unit_graphics_load_state_t;
+typedef char
+    battle_gfx_unit_graphics_load_state_size_must_be_16[sizeof(battle_gfx_unit_graphics_load_state_t) == 16 ? 1 : -1];
+
 extern u16 g_battle_gfx_screen_color_modulation_fade_frames;
 extern u16 g_battle_gfx_wait_direction_arrow_palette[16];
 extern u16 g_battle_gfx_map_selection_cursor_palette[16];
@@ -5789,9 +5800,7 @@ extern u16 g_battle_gfx_screen_color_modulation_value[3];
 extern u16 g_battle_gfx_screen_color_modulation_step[3];
 extern RECT g_battle_gfx_screen_modulation_tex_window;
 
-/* Unit graphics loader state: file kind, phase, file or descriptor index and
- * the heap buffer being filled. */
-extern s32 g_battle_gfx_unit_graphics_load_state[4];
+extern battle_gfx_unit_graphics_load_state_t g_battle_gfx_unit_graphics_load_state;
 extern u8 g_battle_gfx_cycled_deployed_palettes[2][32];
 extern u8 g_battle_gfx_unit_animation_data[];
 extern u16 g_battle_gfx_item_palettes[16][16]; /* the first 0x200 bytes of WEP.SPR */
@@ -5979,7 +5988,7 @@ s32 battle_gfx_calculate_screen_z_from_misc_map_data(struct battle_unit_misc_dat
 void battle_gfx_check_tile_status_palette_mod(
     struct battle_unit_misc_data* unit, s32 tile_effect_level, s32 final_value);
 
-void battle_gfx_clear_four_state_words(s32 unused_map_id);
+void battle_gfx_clear_unit_graphics_load_state(s32 unused_map_id);
 s32 battle_gfx_clear_shadow_graphic_trigger_by_misc_id(u32 misc_id);
 void battle_gfx_clear_tpage7_vram_allocation_grid(void);
 void battle_gfx_configure_misc_unit_palette_modulation_1f(s32 unit_id);
@@ -7662,12 +7671,12 @@ enum {
     MAP_CLUT_CYCLE_SLOT_BYTE_COUNT = 0x0a,
 };
 
-/* Unscaled components decoded from one PlayStation ABBBBBGGGGGRRRRR word. */
+/* Unscaled 5:5:5:1 PlayStation color components. */
 typedef struct map_palette_color_components {
     u8 red_5bit;
     u8 green_5bit;
     u8 blue_5bit;
-    u8 alpha_bit;
+    u8 semi_transparent;
     u8 red_delta_biased;   /* target - current + 0x1f */
     u8 green_delta_biased; /* target - current + 0x1f */
     u8 blue_delta_biased;  /* target - current + 0x1f */
@@ -8955,9 +8964,8 @@ extern u8 g_battle_highest_enemy_level;
 extern s32 g_battle_previous_game_state;
 extern game_options_t g_battle_saved_game_options;
 
-/* Scratch map coordinates filled by battle_unit_copy_map_coords_from_misc_id;
- * read as x/z/y halfwords by battle_camera_pick_nearest_unblocked_yaw. */
-extern s16 g_battle_scratch_coords[3];
+/* Unit coordinates shared by camera tile tests and dialogue positioning. */
+extern SVECTOR g_battle_scratch_coords;
 extern s32 g_battle_sort_targets_nearest_first;
 extern s32 g_battle_post_battle_unit_changes_active;
 extern s16 g_battle_auto_battle_option_colors[5]; /* text colour per option */

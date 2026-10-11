@@ -14,7 +14,7 @@ void battle_script_jump_event_instruction(battle_script_jump_instruction_t* inst
 
     misc_id = battle_script_get_misc_id(battle_script_load_halfword((const u8*)instr));
     if (misc_id != EVENT_MISC_ID_NONE) {
-        coords = (SVECTOR*)battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
+        coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
         vec.vx = -coords->vx;
         vec.vy = -coords->vy;
         vec.vz = -coords->vz;

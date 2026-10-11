@@ -210,7 +210,7 @@ typedef struct effect_anchored_polar_mesh_scratch {
     s32 angle_step_delta;   /* 0xfc */
     s32 ot_depth;           /* 0x100 */
     SVECTOR position;       /* 0x104 */
-    s16* unit_coords;       /* 0x10c */
+    SVECTOR* unit_coords;   /* 0x10c */
     s32 screen[3];          /* 0x110 */
     long flag;              /* 0x11c */
     point16_t points[6][5]; /* 0x120 */

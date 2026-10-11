@@ -23,7 +23,7 @@ void battle_script_run_sprite_move(const event_sprite_move_parameters_t* instruc
     SVECTOR vec;
     const u8* parameters;
     s32 mode;
-    s16* coords;
+    SVECTOR* coords;
     s32 misc_id;
     s32 weight;
     s32 curve;
@@ -49,12 +49,12 @@ void battle_script_run_sprite_move(const event_sprite_move_parameters_t* instruc
     coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
     /* One advancing operand cursor preserves the retail register allocation. */
     parameters = ((const event_sprite_move_parameters_t*)parameters)->destination_le[0];
-    pos[0][0] = coords[0];
-    pos[0][1] = coords[1];
-    pos[0][2] = coords[2];
-    pos[3][0] = -coords[0];
-    pos[3][1] = -coords[1];
-    pos[3][2] = -coords[2];
+    pos[0][0] = coords->vx;
+    pos[0][1] = coords->vy;
+    pos[0][2] = coords->vz;
+    pos[3][0] = -coords->vx;
+    pos[3][1] = -coords->vy;
+    pos[3][2] = -coords->vz;
     for (i = 0; i < 3; i++) {
         pos[1][i] = battle_script_load_halfword(parameters);
         parameters += sizeof(instruction->destination_le[i]);

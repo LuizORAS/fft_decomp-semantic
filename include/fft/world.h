@@ -1769,10 +1769,10 @@ s32 world_unit_can_equip_item_id(s16 unit_index, s16 item_id);
 s32 world_unit_check_facing_relative_to_camera(s32 unit_id);
 void world_unit_clear_status_staging_data(void);
 void world_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
-void world_unit_copy_misc_screen_coords(s32 misc_id, s16* out);
+void world_unit_copy_misc_screen_coords(s32 misc_id, SVECTOR* out);
 struct battle_stats* world_unit_get_battle_stats_for_stored(void);
 struct battle_stats* world_unit_get_by_unit_id(s32 unit_id);
-s32 world_unit_get_map_coords_from_misc_id(s32 misc_id, s16* out);
+s32 world_unit_get_map_coords_from_misc_id(s32 misc_id, SVECTOR* out);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);
 s32 world_unit_get_zodiac_for_date(s32 month, s32 day);
 s32 world_unit_has_any_current_status(s32 unit_id);
@@ -1784,7 +1784,7 @@ void world_unit_inflict_status_by_entd_unit_id(
 s32 world_unit_is_moving(s32 id);
 void world_script_join_units_silently(void);
 void world_menu_load_selected_unit(void);
-void world_unit_project_misc_to_screen(s32 misc_id, s16* screen_coords);
+void world_unit_project_misc_to_screen(s32 misc_id, SVECTOR* screen_coords);
 void world_unit_reset_animation_states(void);
 void world_unit_set_animation(s32 misc_id, u32 animation);
 void world_unit_set_facing(s32 misc_id, s32 rotation);
@@ -1904,8 +1904,8 @@ extern RECT g_world_text_typewriter_vram_rect;              /* VRAM destination 
 extern u8 g_world_text_typewriter_glyph_images[3][8][0x54]; /* eight glyph images per slot */
 extern u8 g_world_text_typewriter_previous_images[3][0x54]; /* previous image per slot */
 extern u8 g_world_text_typewriter_column_scratch[14];       /* one-column scratch used by the phase shift */
-extern s16 g_world_text_partner_screen_coords[];
-extern s16 g_world_text_speaker_screen_coords[3];
+extern SVECTOR g_world_text_partner_screen_coords;
+extern SVECTOR g_world_text_speaker_screen_coords;
 extern world_panel_record_t g_world_numeric_display_panel_records[2];
 extern s32 g_world_text_substitution_values_backup[32]; /* substitution words saved around the text calls */
 extern world_menu_list_page_t g_world_text_list_pages[2];

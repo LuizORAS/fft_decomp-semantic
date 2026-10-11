@@ -9,7 +9,7 @@
  * screen, from SPELL.MES (companion data file 4) loaded into a 16 KiB
  * buffer. */
 void battle_text_run_spell_quote_thread(void) {
-    s16 screen_coords[2];
+    SVECTOR screen_coords;
     battle_stats_t* unit;
     s32 id; /* Battle id, then the unit's unit_id: one variable in the target. */
     s32 window_mode;
@@ -27,9 +27,9 @@ void battle_text_run_spell_quote_thread(void) {
     g_battle_text_substitution_values[1] = id;
     g_battle_text_substitution_values[2] = id;
     unit = battle_unit_get_stats_from_battle_id(id);
-    battle_unit_project_misc_to_screen(battle_unit_get_misc_id_by_battle_id(id), screen_coords);
+    battle_unit_project_misc_to_screen(battle_unit_get_misc_id_by_battle_id(id), &screen_coords);
     id = unit->unit_id;
-    if (screen_coords[1] < 0x80) {
+    if (screen_coords.vy < 0x80) {
         window_mode = 0x12;
     }
     message_id = battle_thread_get_current_parameter_2() | 0xA800;

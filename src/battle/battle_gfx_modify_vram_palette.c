@@ -25,7 +25,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s
     s32 gray_red;
     s32 gray_green;
     s32 gray_blue;
-    u32 alpha;
+    u32 semi_transparent;
     map_palette_color_components_t* component;
 
     if (preset == 1) {
@@ -71,7 +71,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s
                 out_green = (color & 0x3e0) >> 5;
                 out_blue = (color & 0x7c00) >> 10;
             }
-            alpha = color >> 15;
+            semi_transparent = color >> 15;
             if (out_red >= 0x20) {
                 out_red = 0x1f;
             }
@@ -95,17 +95,17 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s
             }
             if (final_value != 0) {
                 g_battle_map_palette_modified_colors[clut_row][i]
-                    = out_red + (out_green << 5) + (out_blue << 10) + (alpha << 15);
+                    = out_red + (out_green << 5) + (out_blue << 10) + (semi_transparent << 15);
                 if (g_battle_map_palette_state.clut_rows[clut_row].animations[i / 16].active == 0) {
                     component = &g_battle_map_palette_state.clut_rows[clut_row].components[i];
                     component->red_5bit = out_red;
                     component->green_5bit = out_green;
                     component->blue_5bit = out_blue;
-                    component->alpha_bit = alpha;
+                    component->semi_transparent = semi_transparent;
                 }
             }
             g_battle_map_palette_state.clut_rows[clut_row].packed_colors[i]
-                = out_red + (out_green << 5) + (out_blue << 10) + (alpha << 15);
+                = out_red + (out_green << 5) + (out_blue << 10) + (semi_transparent << 15);
             i++;
             source++;
         } while (i < 0x100);
@@ -152,7 +152,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s
                 out_green = (color & 0x3e0) >> 5;
                 out_blue = (color & 0x7c00) >> 10;
             }
-            alpha = color >> 15;
+            semi_transparent = color >> 15;
             if (out_red >= 0x20) {
                 out_red = 0x1f;
             }
@@ -177,17 +177,17 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s
             if (final_value != 0) {
                 index = clut_index * 16 + i;
                 g_battle_map_palette_modified_colors[clut_row][index]
-                    = out_red + (out_green << 5) + (out_blue << 10) + (alpha << 15);
+                    = out_red + (out_green << 5) + (out_blue << 10) + (semi_transparent << 15);
                 if (g_battle_map_palette_state.clut_rows[clut_row].animations[clut_index].active == 0) {
                     component = &g_battle_map_palette_state.clut_rows[clut_row].components[index];
                     component->red_5bit = out_red;
                     component->green_5bit = out_green;
                     component->blue_5bit = out_blue;
-                    component->alpha_bit = alpha;
+                    component->semi_transparent = semi_transparent;
                 }
             }
             g_battle_map_palette_state.clut_rows[clut_row].packed_colors[clut_index * 16 + i]
-                = out_red + (out_green << 5) + (out_blue << 10) + (alpha << 15);
+                = out_red + (out_green << 5) + (out_blue << 10) + (semi_transparent << 15);
             i++;
             source++;
         } while (i < 16);
