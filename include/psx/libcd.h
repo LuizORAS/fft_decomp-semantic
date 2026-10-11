@@ -80,13 +80,13 @@ typedef struct {
 } StHEADER;
 
 /* Event byte and result-buffer contract for command and read callbacks. */
-typedef void (*psyq_cd_result_callback_t)(u8 event, u8* result);
+typedef void (*CdlCB)(u8 event, u8* result);
 
 extern s32 CdInit(void);
 extern int CdSetDebug(int level);
 extern void SetMem(int);
-extern psyq_cd_result_callback_t CdReadyCallback(psyq_cd_result_callback_t callback);
-extern psyq_cd_result_callback_t CdReadCallback(psyq_cd_result_callback_t callback);
+extern CdlCB CdReadyCallback(CdlCB callback);
+extern CdlCB CdReadCallback(CdlCB callback);
 extern int CdControl(u8, u8*, u8*);
 extern int CdControlF(u8, u8*);
 extern int CdSync(int, u8*);
@@ -119,7 +119,7 @@ int CdStatus(void);
 s32 CdMode(void);
 s32 CdLastCom(void);
 CdlLOC* CdLastPos(void);
-psyq_cd_result_callback_t CdSyncCallback(psyq_cd_result_callback_t callback);
+CdlCB CdSyncCallback(CdlCB callback);
 
 psyq_interrupt_callback_t CdDataCallback(psyq_interrupt_callback_t callback);
 void StClearRing(void);
@@ -150,9 +150,9 @@ extern char* g_psyq_cd_command_names[28];
 extern char* g_psyq_cd_interrupt_names[7];
 extern char g_psyq_cd_unknown_name[];
 extern s32 g_psyq_cd_debug_level;
-extern psyq_cd_result_callback_t g_psyq_cd_sync_callback;
-extern psyq_cd_result_callback_t g_psyq_cd_ready_callback;
-extern psyq_cd_result_callback_t g_psyq_cd_read_callback;
+extern CdlCB g_psyq_cd_sync_callback;
+extern CdlCB g_psyq_cd_ready_callback;
+extern CdlCB g_psyq_cd_read_callback;
 void def_cbsync(u8 unused_event, u8* unused_result);
 void def_cbready(u8 unused_event, u8* unused_result);
 void def_cbread(u8 unused_event, u8* unused_result);
@@ -266,8 +266,8 @@ typedef struct {
     s32 sector_clock;
     s32 start_clock;
     s32 expected_sector;
-    psyq_cd_result_callback_t sync_callback;
-    psyq_cd_result_callback_t ready_callback;
+    CdlCB sync_callback;
+    CdlCB ready_callback;
 } psyq_cd_read_state_t;
 extern volatile psyq_cd_read_state_t g_psyq_cd_read_state;
 
@@ -318,7 +318,7 @@ extern psyq_cd_backloc_state_t g_psyq_cd_backloc;
 
 /* shared driver helpers */
 static __inline__ s32 psyq_cd_issue_with_retry(u8 command, const u8* parameter, u8* result, s32 asynchronous) {
-    psyq_cd_result_callback_t callback = g_psyq_cd_sync_callback;
+    CdlCB callback = g_psyq_cd_sync_callback;
     s32 attempts = 3;
     do {
         g_psyq_cd_sync_callback = 0;

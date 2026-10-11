@@ -465,7 +465,7 @@ typedef struct {
 typedef struct {
     u32 tag;
     u32 code[2];
-} DR_STP;
+} DR_PRIO;
 
 /* libgpu DR_MOVE (u32 code[5]); the VRAM-to-VRAM move command words are
  * spelled out so game code can fill the source/destination halfwords. */
@@ -695,7 +695,7 @@ void DrawOTagEnv(u32* ot, DRAWENV* env);
 DISPENV* GetDispEnv(DISPENV* env);
 int GetODE(void);
 void SetTexWindow(DR_TWIN* packet, RECT* window);
-void SetPriority(DR_STP* packet, int test_mask, int set_mask);
+void SetPriority(DR_PRIO* packet, int test_mask, int set_mask);
 void* NextPrim(void* primitive);
 int IsEndPrim(void* primitive);
 void CatPrim(void* primitive, void* next);
