@@ -15,7 +15,7 @@ void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id) {
     ability_id = index;
     if (index < ABILITY_ID_RANDOM_FIRST - ABILITY_ID_REACTION_FIRST) {
         if (original_ability_id < ABILITY_ID_SUPPORT_FIRST) {
-            unit->rsm.reaction = original_ability_id;
+            unit->abilities.reaction = original_ability_id;
         }
         rsm_flags = unit->reaction_abilities;
         rsm_flags += ability_id >> 3;

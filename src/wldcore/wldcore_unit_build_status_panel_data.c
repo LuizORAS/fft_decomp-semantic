@@ -105,9 +105,9 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     } else {
         detail->ability_ids[0] = unit->primary_skillset;
         detail->ability_ids[1] = unit->secondary_skillset;
-        detail->ability_ids[2] = unit->rsm.reaction;
-        detail->ability_ids[3] = unit->rsm.support;
-        detail->ability_ids[4] = unit->rsm.movement;
+        detail->ability_ids[2] = unit->abilities.reaction;
+        detail->ability_ids[3] = unit->abilities.support;
+        detail->ability_ids[4] = unit->abilities.movement;
     }
     for (i = 0; i < 5; i++) {
         if (detail->ability_ids[i] == 0) {

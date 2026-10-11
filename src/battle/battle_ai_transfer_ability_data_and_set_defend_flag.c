@@ -11,7 +11,7 @@ void battle_ai_transfer_ability_data_and_set_defend_flag(void) {
 
     g_battle_ai_data_base.selected_action.act_before_move = 0;
     coords = g_battle_ai_data_base.candidate_coords[scenario].word;
-    support = unit->rsm.support;
+    support = unit->abilities.support;
     g_battle_ai_data_base.selected_action.coords.word = coords;
     if (support == ABILITY_ID_SUPPORT_DEFEND) {
         g_battle_ai_data_base.selected_action.command.skillset_id = SKILLSET_ID_DEFEND;

@@ -57,7 +57,7 @@ void world_menu_display_hovered_unit_stats(
         g_world_menu_hovered_stats_frame_count++;
     }
     if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
-        text_id = unit->rsm.reaction;
+        text_id = unit->abilities.reaction;
         if (text_id >= ABILITY_ID_COUNT) {
             text_id = 0;
         }

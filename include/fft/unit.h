@@ -794,12 +794,12 @@ typedef struct unit_deployment_coordinates {
 typedef char unit_deployment_coordinates_size_must_be_4[(sizeof(unit_deployment_coordinates_t) == 4) ? 1 : -1];
 
 /* Equipped or ENTD-selected reaction/support/movement ability IDs. */
-typedef struct unit_rsm_abilities {
+typedef struct unit_abilities {
     u16 reaction;
     u16 support;
     u16 movement;
-} unit_rsm_abilities_t;
-typedef char unit_rsm_abilities_size_must_be_6[(sizeof(unit_rsm_abilities_t) == 6) ? 1 : -1];
+} unit_abilities_t;
+typedef char unit_abilities_size_must_be_6[(sizeof(unit_abilities_t) == 6) ? 1 : -1];
 
 typedef struct battle_stats {
     u8 character_identity;                               /* 0x000 */
@@ -814,7 +814,7 @@ typedef struct battle_stats {
     u16 innate_abilities[4];                             /* 0x00a */
     u8 primary_skillset;                                 /* 0x012 */
     u8 secondary_skillset;                               /* 0x013 */
-    unit_rsm_abilities_t rsm;                            /* 0x014; reaction, support, movement */
+    unit_abilities_t abilities;                          /* 0x014; reaction, support, movement */
     u8 equipment[7];                                     /* 0x01a; unit_equipment_slot_e */
     u8 experience;                                       /* 0x021 */
     u8 level;                                            /* 0x022 */
@@ -971,7 +971,7 @@ typedef struct entd_unit {
     u8 job_level;                            /* 0x09 */
     u8 job_id;                               /* 0x0a */
     u8 secondary_skillset;                   /* 0x0b */
-    unit_rsm_abilities_t rsm;                /* 0x0c; reaction, support, movement */
+    unit_abilities_t abilities;              /* 0x0c; reaction, support, movement */
     u8 equipment[ENTD_EQUIPMENT_SLOT_COUNT]; /* 0x12 */
     u8 palette;                              /* 0x17 */
     u8 team_flags;                           /* 0x18 */

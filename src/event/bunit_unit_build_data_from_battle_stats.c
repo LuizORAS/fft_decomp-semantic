@@ -121,9 +121,9 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
         }
         record->abilities[0] = unit->primary_skillset;
         record->abilities[1] = unit->secondary_skillset;
-        record->abilities[2] = unit->rsm.reaction;
-        record->abilities[3] = unit->rsm.support;
-        record->abilities[4] = unit->rsm.movement;
+        record->abilities[2] = unit->abilities.reaction;
+        record->abilities[3] = unit->abilities.support;
+        record->abilities[4] = unit->abilities.movement;
     }
 
     record->misc_unit_id = battle_unit_get_misc_id_by_battle_id(unit->entd_slot);
