@@ -1,6 +1,7 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* Numeric entry thread: edits the halfword at param->value one decimal digit
@@ -34,8 +35,7 @@ void world_menu_number_entry_thread(void) {
     s32* stride;
 
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
-    /* A register copy of the address: the target forms the pen address as
-     * &g_world_menu_text_state.pen.stride - 8 instead of folding the constant. */
+    /* A direct pen pointer folds both member-address adjustments and changes scheduling. */
     stride = &g_world_menu_text_state.pen.stride;
     thread = &g_world_threads[g_world_thread_current_id];
     parameter = &thread->function_parameter_1;
@@ -81,7 +81,7 @@ void world_menu_number_entry_thread(void) {
     *stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
     world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
-    world_gfx_draw_signed_number(value, digits, buffer, (glyph_blit_t*)(stride - 2));
+    world_gfx_draw_signed_number(value, digits, buffer, (glyph_blit_t*)((u8*)stride - offsetof(glyph_blit_t, stride)));
     LoadImage(&rect, buffer);
     redraw = 1;
     for (i = 0;; i++) {
@@ -138,7 +138,8 @@ void world_menu_number_entry_thread(void) {
                 param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             *stride = param->inner_width;
             world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
-            world_gfx_draw_signed_number(value, digits, buffer, (glyph_blit_t*)(stride - 2));
+            world_gfx_draw_signed_number(
+                value, digits, buffer, (glyph_blit_t*)((u8*)stride - offsetof(glyph_blit_t, stride)));
             LoadImage(&rect, buffer);
         }
         cursor_quad = &cursor_quads[i & 1];
