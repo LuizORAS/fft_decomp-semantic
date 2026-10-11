@@ -170,7 +170,7 @@ void card_gfx_init_primitive_lists(card_graphics_context_t* lists);
 void card_gfx_load_image_and_wait(RECT* rect, void* data);
 
 /* input */
-extern void* g_card_input_controller;
+extern u32* g_card_input_controller;
 extern u32 g_card_input_current;
 extern u32 g_card_input_event;
 extern u32 g_card_input_initial_repeat_counter;
