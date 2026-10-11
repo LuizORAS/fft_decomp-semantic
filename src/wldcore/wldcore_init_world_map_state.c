@@ -10,6 +10,7 @@
 
 void wldcore_init_world_map_state(void) {
     wldcore_menu_cursor_state_t* cursor;
+    GsBOXF* box;
     party_data_t* party;
     wldcore_date_t date;
     s32 day_of_year;
@@ -44,15 +45,15 @@ void wldcore_init_world_map_state(void) {
     for (i = 0; i < 2; i++) {
         g_wldcore_screen_fade_state.flags[i] = 0;
         g_wldcore_screen_fade_state.priorities[i] = 0xf;
-        /* The byte stride keeps the attribute address separate from the rectangle-field walker. */
-        ((GsBOXF*)((u8*)g_wldcore_screen_fade_state.boxes + (i << 4)))->attribute = 0x60000000;
-        ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].x = -0x80;
-        ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].y = -0x78;
-        ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].w = 0x100;
-        ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].h = 0xf0;
-        ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].r = 0;
-        ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].g = 0;
-        ((GsBOXF*)g_wldcore_screen_fade_state.boxes)[i].b = 0;
+        g_wldcore_screen_fade_state.boxes[i].attribute = 0x60000000;
+        box = &g_wldcore_screen_fade_state.boxes[i];
+        box->x = -0x80;
+        box->y = -0x78;
+        box->w = 0x100;
+        box->h = 0xf0;
+        box->r = 0;
+        box->g = 0;
+        box->b = 0;
     }
     g_wldcore_screen_fade_state.flags[0] = WLDCORE_SCREEN_FADE_OUT;
 
