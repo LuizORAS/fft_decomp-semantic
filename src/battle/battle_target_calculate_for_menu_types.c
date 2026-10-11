@@ -12,6 +12,7 @@ s32 battle_target_calculate_for_menu_types(const battle_action_command_t* source
     battle_action_command_t action;
     battle_stats_t* unit;
     u16 ability_id;
+    u8 item;
     s32 mode;
     s32 result;
 
@@ -47,7 +48,8 @@ s32 battle_target_calculate_for_menu_types(const battle_action_command_t* source
         ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        if ((u8)action.item_or_equipment < ITEM_ID_ASURA_KNIFE || (u8)action.item_or_equipment > ITEM_ID_CHIRIJIRADEN) {
+        item = action.item_or_equipment;
+        if (item < ITEM_ID_ASURA_KNIFE || item > ITEM_ID_CHIRIJIRADEN) {
             return -1;
         }
         ability_id = (u8)action.item_or_equipment + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);

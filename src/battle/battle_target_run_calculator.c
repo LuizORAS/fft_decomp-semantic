@@ -29,8 +29,8 @@ s32 battle_target_run_calculator(const battle_action_command_t* source) {
 
     count = 0;
     main_util_copy_action_data(source, &action);
-    type = (u16)action.calculator_type;
-    multiplier = (u16)action.calculator_multiplier;
+    type = action.calculator_type;
+    multiplier = action.calculator_multiplier;
     actor = &g_battle_unit_stats[action.actor_id];
     if (type < ABILITY_ID_MATH_FIRST || type >= ABILITY_ID_REACTION_FIRST) {
         return -1;

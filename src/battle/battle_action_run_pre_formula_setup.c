@@ -11,10 +11,8 @@ extern battle_current_ability_t g_battle_action_current_ability_view;
  *
  * Returns 1 when the target was already missed before the formula (reflect,
  * Blade Grasp, Arrow Guard) and 0 otherwise, including the reaction and
- * knockback early exits. id holds the weapon, then the thrown item, then the
- * status-infliction index. The fields the target addresses through a base
- * register, plus ability_id, go through g_battle_action_current_ability_view; the others
- * use g_battle_action_current_ability. */
+ * knockback early exits. id holds a weapon or item id, then a status-infliction
+ * index. */
 s32 battle_action_run_pre_formula_setup(const battle_action_command_t* source, u8 target_id) {
     battle_action_command_t action;
     weapon_data_t* weapon;
@@ -52,7 +50,7 @@ s32 battle_action_run_pre_formula_setup(const battle_action_command_t* source, u
     }
     if (action.skillset_id == SKILLSET_ID_DRAW_OUT) {
         /* Item selection reads only the low byte of the item/equipment word. */
-        id = (u8)action.item_or_equipment;
+        id = action.item_or_equipment;
     }
     if (id >= 0x80) {
         id = ITEM_ID_NOTHING;
@@ -90,7 +88,8 @@ s32 battle_action_run_pre_formula_setup(const battle_action_command_t* source, u
         g_battle_action_target_data->miss_display_flags += BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION;
     }
     if (menu_type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
-        action.ability_id = (u8)action.item_or_equipment + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
+        id = action.item_or_equipment;
+        action.ability_id = id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
     }
     switch (menu_type) {
     case ACTION_MENU_TYPE_ELEMENTS:
@@ -123,7 +122,7 @@ s32 battle_action_run_pre_formula_setup(const battle_action_command_t* source, u
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         formula = ABILITY_FORMULA_WEAPON_DAMAGE;
-        id = (u8)action.item_or_equipment;
+        id = action.item_or_equipment;
         if (id >= ITEM_ID_CONSUMABLE_FIRST) {
             g_battle_action_current_ability_view.weapon_id = id;
             id += ITEM_ID_COUNT - ITEM_ID_CONSUMABLE_FIRST;

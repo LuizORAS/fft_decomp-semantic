@@ -13,7 +13,7 @@ s32 battle_action_prepare_attack(battle_action_command_t* source, battle_action_
     s16 ability;
     u8* table;
     u8 jump_ct;
-    s32 item;
+    u8 item;
     u8 ct;
     u8 persevere;
     s32 skip;
@@ -40,21 +40,21 @@ s32 battle_action_prepare_attack(battle_action_command_t* source, battle_action_
     }
     switch (g_main_action_menu_types_by_skillset[action.skillset_id]) {
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
-        item = (u8)action.item_or_equipment;
-        if (g_main_item_primary_data[item & 0xff].type != ITEM_TYPE_CONSUMABLE) {
+        item = action.item_or_equipment;
+        if (g_main_item_primary_data[item].type != ITEM_TYPE_CONSUMABLE) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
         ability = item + (ABILITY_ID_ITEM_FIRST - ITEM_ID_CONSUMABLE_FIRST);
         dest->ability_id = ability;
         if (phase != 0 && (phase & 1)) {
-            battle_action_decrement_player_item_quantity(unit, item & 0xff, 1);
+            battle_action_decrement_player_item_quantity(unit, item, 1);
             unit->action_taken = 1;
         }
         return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
         ability = ABILITY_ID_THROW_FIRST;
-        item = (u8)action.item_or_equipment;
+        item = action.item_or_equipment;
         table = g_main_throw_ability_item_types - ABILITY_ID_THROW_FIRST;
         for (; ability < ABILITY_ID_JUMP_FIRST; ability++) {
             /* The index+base integer spelling of the biased table is byte-required. */
@@ -74,8 +74,8 @@ s32 battle_action_prepare_attack(battle_action_command_t* source, battle_action_
         return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_ARITHMETICKS:
         ability = action.ability_id;
-        type = (u16)action.calculator_type;
-        multiplier = (u16)action.calculator_multiplier;
+        type = action.calculator_type;
+        multiplier = action.calculator_multiplier;
         if (type < ABILITY_ID_MATH_FIRST || type >= ABILITY_ID_REACTION_FIRST) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
@@ -94,7 +94,7 @@ s32 battle_action_prepare_attack(battle_action_command_t* source, battle_action_
         action.ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        item = (u8)action.item_or_equipment;
+        item = action.item_or_equipment;
         if (item < ITEM_ID_ASURA_KNIFE || item > ITEM_ID_CHIRIJIRADEN) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }

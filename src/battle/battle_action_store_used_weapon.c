@@ -28,7 +28,7 @@ void battle_action_store_used_weapon(battle_action_command_t* action) {
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         /* Retail reads only the low byte of the item/equipment word. */
-        weapon = (u8)action->item_or_equipment;
+        weapon = action->item_or_equipment;
         break;
     case ACTION_MENU_TYPE_JUMP:
     case ACTION_MENU_TYPE_UNKNOWN_0F:

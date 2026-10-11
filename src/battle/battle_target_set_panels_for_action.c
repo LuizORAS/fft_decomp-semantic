@@ -28,6 +28,7 @@ s32 battle_target_set_panels_for_action(const battle_action_command_t* source) {
     s32 range;
     s32 result;
     u8 flags;
+    u8 item;
     u16 ability_id;
 
     main_util_copy_action_data(source, &action);
@@ -60,7 +61,8 @@ s32 battle_target_set_panels_for_action(const battle_action_command_t* source) {
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         mode = 1;
-        if ((u8)action.item_or_equipment < ITEM_ID_ASURA_KNIFE || (u8)action.item_or_equipment > ITEM_ID_CHIRIJIRADEN) {
+        item = action.item_or_equipment;
+        if (item < ITEM_ID_ASURA_KNIFE || item > ITEM_ID_CHIRIJIRADEN) {
             return BATTLE_TARGET_PANELS_INVALID;
         }
         ability_id = (u8)action.item_or_equipment + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);

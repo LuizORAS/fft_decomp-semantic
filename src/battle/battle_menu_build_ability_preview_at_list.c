@@ -63,7 +63,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     turn = battle_thread_call_on_main_stack(stats, action, work->entries);
     if (staged_item != 0) {
         work->entries[1].unit |= BATTLE_AT_ACTION_ENTRY;
-        work->entries[1].action_id_low = (u8)g_battle_menu_selected_action.item_or_equipment;
+        work->entries[1].action_id_low = g_battle_menu_selected_action.item_or_equipment;
     }
     count = 0;
     if (turn < 0 || turn == 0xff) {
