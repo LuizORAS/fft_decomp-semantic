@@ -1,6 +1,0 @@
-#include "psx/suzuki.h"
-#include "psx/types.h"
-
-u32 SuzukiGetMusicPlaying(suzuki_music_t* music) {
-    return (music->status & SUZUKI_MUSIC_STATUS_PLAYING) != 0;
-}

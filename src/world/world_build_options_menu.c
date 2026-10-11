@@ -326,7 +326,7 @@ void world_build_options_menu(void) {
         world_gfx_draw_or_append_gpu_primitive(&page->title);
         world_gfx_draw_or_append_gpu_primitive(&page->text_mode);
         world_gfx_draw_or_append_gpu_primitive(&page->value_area.areas[0]);
-        g_world_thread_call_target = (void (*)(void))main_sound_set_type;
+        g_world_thread_call_target = (void (*)(void))suzuki_sound_set_type;
         g_main_game_options.fields.cursor_movement = g_world_game_option_values[GAME_OPTION_CURSOR_MOVEMENT];
         g_main_game_options.fields.cursor_repeat_speed = g_world_game_option_values[GAME_OPTION_CURSOR_REPEAT_SPEED];
         g_main_game_options.fields.multi_height_cursor_speed

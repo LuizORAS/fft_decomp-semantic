@@ -4,7 +4,7 @@
 /* Per-frame handler of the sound type menu (handler 3).
  *
  * Circle or Start applies the highlighted mode (mono, stereo or wide) with
- * main_sound_set_type and stores it in the game options; Cross leaves the mode as
+ * suzuki_sound_set_type and stores it in the game options; Cross leaves the mode as
  * it is. Both set step 2, and the next update releases the three option records,
  * pops the controller, shows the title menu's four entries again and zeroes the
  * title controller's idle timer. Up, and Down or Select, move the highlight and
@@ -24,7 +24,7 @@ void open_menu_handle_sound_type_input(open_controller_record_t* record) {
     }
 
     if (g_open_input_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_START)) {
-        main_sound_set_type(menu->sound_mode_selection);
+        suzuki_sound_set_type(menu->sound_mode_selection);
         g_main_game_options.fields.sound_mode = menu->sound_mode_selection;
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
         menu->step = 2;

@@ -25,7 +25,7 @@ void battle_effect_update_on_hit_sound_timer(
                 sound_index = battle_effect_get_on_hit_sound_index(effect_kind - 2);
 
                 if (sound_index != 0) {
-                    SuzukiPlaySoundFindChannel(g_battle_effect_sound_data_base + sound_index);
+                    suzuki_sound_play_sfx(g_battle_effect_sound_data_base + sound_index);
                 }
             }
         }

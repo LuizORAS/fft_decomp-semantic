@@ -105,7 +105,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         g_wldcore_window_render_record_count -= 2;
         g_wldcore_window_render_object_count -= 5;
         g_wldcore_menu_stack_depth -= 2;
-        main_sound_remove_vfx_resource(g_wldcore_sound_novel_sound_resource);
+        suzuki_sound_remove_resource(g_wldcore_sound_novel_sound_resource);
         wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TREASURE_DETAIL,
             g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.selected_entry, 0);
         return;

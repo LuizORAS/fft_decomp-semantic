@@ -107,11 +107,11 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0;
     switch (g_wldcore_job_selection.result) {
     case WLDCORE_PROPOSITION_RESULT_SUCCESS:
-        main_sound_play_2_sfx(MAIN_SFX_PROPOSITION_SUCCESS_A, MAIN_SFX_PROPOSITION_SUCCESS_B);
+        suzuki_sound_play_2_sfx(MAIN_SFX_PROPOSITION_SUCCESS_A, MAIN_SFX_PROPOSITION_SUCCESS_B);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0x78;
         break;
     case WLDCORE_PROPOSITION_RESULT_FAILURE:
-        main_sound_play_2_sfx(MAIN_SFX_PROPOSITION_PARTIAL_A, MAIN_SFX_PROPOSITION_PARTIAL_B);
+        suzuki_sound_play_2_sfx(MAIN_SFX_PROPOSITION_PARTIAL_A, MAIN_SFX_PROPOSITION_PARTIAL_B);
         break;
     case WLDCORE_PROPOSITION_RESULT_BAD_FAILURE:
         wldcore_sound_play_effect(MAIN_SFX_PROPOSITION_FAILURE);

@@ -44,7 +44,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             g_wldcore_menu_stack_depth--;
             fade->flags[0] = (fade->flags[0] & ~WLDCORE_SCREEN_FADE_BOX_VISIBLE) | WLDCORE_SCREEN_FADE_OUT;
             main_sound_stop_weather_sfx_music();
-            main_sound_remove_vfx_resource(g_wldcore_sound_novel_sound_resource);
+            suzuki_sound_remove_resource(g_wldcore_sound_novel_sound_resource);
             wldcore_reset_selected_saved_record(g_wldcore_saved_record_index);
             g_wldcore_sound_novel_countdown_frames = 0;
             wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TREASURE_DETAIL, level->message, 0);

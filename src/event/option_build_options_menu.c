@@ -318,7 +318,7 @@ void option_build_options_menu(void) {
         battle_gfx_draw_or_append_gpu_primitive(&page->title);
         battle_gfx_draw_or_append_gpu_primitive(&page->text_mode);
         battle_gfx_draw_or_append_gpu_primitive(&page->value_area.areas[0]);
-        g_battle_thread_call_target = (void (*)(void))main_sound_set_type;
+        g_battle_thread_call_target = (void (*)(void))suzuki_sound_set_type;
         g_main_game_options.fields.cursor_movement = g_option_current_values[GAME_OPTION_CURSOR_MOVEMENT];
         g_main_game_options.fields.cursor_repeat_speed = g_option_current_values[GAME_OPTION_CURSOR_REPEAT_SPEED];
         g_main_game_options.fields.multi_height_cursor_speed

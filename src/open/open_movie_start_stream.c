@@ -4,7 +4,7 @@
  * without touching the audio at video_end_frame (-1: none). */
 void open_movie_start_stream(s32 sector, s32 end_frame, s32 video_end_frame, s32 cd_mix_level) {
     open_sound_set_cd_mix_and_volume(0, 1);
-    main_sound_set_type(main_sound_get_type());
+    suzuki_sound_set_type(suzuki_sound_get_type());
     g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN | OPEN_SYSTEM_RUNTIME_FLAG_RGB24;
     open_gfx_init_screen_environments(1);
 

@@ -24,7 +24,7 @@
  *    `and v0,v1,s4` operand order: the loaded flags word in `rs`, the caller's
  *    `action_mask` in `rt`. Reading the global directly at both tests
  *    reverses it (as for the `or rd,flags,mask` temp in
- *    main_smd_set_voice_attr_flags_all_channels).
+ *    suzuki_smd_set_voice_attr_flags_all_channels).
  *
  * The do/while condition deliberately reads the global rather than the temp:
  * the target reloads it there, after the dispatched call. */

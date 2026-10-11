@@ -10,7 +10,7 @@ int main_sound_set_tune_volume(int time) {
         if ((tune & MAIN_SOUND_TUNE_PENDING) != 0) {
             g_main_sound_music.slots.tune = 0;
         } else {
-            SuzukiCalcMusVolChange(g_main_sound_music.slots.music[1 + (tune & MAIN_SOUND_TUNE_ID_MASK)], 0, time);
+            suzuki_smd_set_music_volume(g_main_sound_music.slots.music[1 + (tune & MAIN_SOUND_TUNE_ID_MASK)], 0, time);
         }
     }
     return 1;

@@ -33,7 +33,7 @@ void open_menu_push_sound_type_controller(void) {
     }
 
     g_open_controller_selected_options[g_open_current_controller_index * 25 + 1] = 0;
-    sound_type = main_sound_get_type();
+    sound_type = suzuki_sound_get_type();
     controller_index = g_open_current_controller_index;
     g_open_controller_selected_options[controller_index * 25] = sound_type;
     menu = &g_open_controller_records_next[controller_index].sound_menu;

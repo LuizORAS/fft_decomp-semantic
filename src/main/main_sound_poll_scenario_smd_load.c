@@ -10,7 +10,7 @@ int main_sound_poll_scenario_smd_load(void) {
         return 1;
     }
     g_main_sound_music.slots.music[g_main_sound_music.slots.loading_slot - 1]
-        = SuzukiPutPlaySMD(g_main_sound_music.slots.smd[g_main_sound_music.slots.loading_slot - 1]);
+        = suzuki_smd_create_music(g_main_sound_music.slots.smd[g_main_sound_music.slots.loading_slot - 1]);
     g_main_sound_music.slots.loading_slot = 0;
     return 0;
 }

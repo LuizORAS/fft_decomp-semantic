@@ -17,7 +17,7 @@
  * Constructs the match depends on:
  *   - `j`, the parity-sweep counter, doubles as the item-order "found" flag.
  *     A separate flag local swaps the $s1/$s2 roles of the flag and `i`.
- *   - `i = 0;` written above `j = 0;` before the main_sound_set_type call,
+ *   - `i = 0;` written above `j = 0;` before the suzuki_sound_set_type call,
  *     with the loop spelled `for (; i < 11; i++)`. That run is one basic
  *     block, so the list scheduler orders the two zeroing moves by source
  *     order, and the flag is live across the call in a callee-saved register.
@@ -71,7 +71,7 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
     bcopy(&g_world_load_work_buffer->options, &g_main_game_options, sizeof(g_world_load_work_buffer->options));
     i = 0;
     j = 0;
-    main_sound_set_type((*(u32*)&g_main_game_options >> 21) & 3);
+    suzuki_sound_set_type((*(u32*)&g_main_game_options >> 21) & 3);
 
     for (; i < 11; i++) {
         if (g_world_load_work_buffer->item_type_order_0[i] == 11) {

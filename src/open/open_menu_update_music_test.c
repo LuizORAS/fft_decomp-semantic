@@ -68,7 +68,7 @@ void open_menu_update_music_test(open_controller_record_t* record) {
             }
         }
     } else {
-        if (state->music_slot != 0 && SuzukiGetMusicPlaying(g_open_music_test_sound_handle) == 0) {
+        if (state->music_slot != 0 && suzuki_smd_is_music_playing(g_open_music_test_sound_handle) == 0) {
             main_sound_unload_scenario_mus(state->music_slot);
             state->music_slot = 0;
             state->music_id = 0;

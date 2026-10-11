@@ -13,13 +13,14 @@
 void main_sound_open_generic_sfx(void) {
     s32 i;
 
-    SuzukiSPUInitialiser(0);
+    suzuki_sound_init(0);
     main_heap_clear_smd_allocator_table();
-    main_sound_load_waveset(
+    suzuki_sound_load_waveset(
         main_file_load_to_address(DISC_SECTOR_SOUND_WAVESET_WD, WAVESET_WD_SIZE, g_main_heap_low_overlay_load_address));
-    SuzukiAppendVFXSMD(
+    suzuki_sound_append_resource(
         main_file_load_to_address(DISC_SECTOR_SOUND_SYSTEM_SED, SYSTEM_SED_SIZE, g_main_sound_system_sed_data));
-    SuzukiAppendVFXSMD(main_file_load_to_address(DISC_SECTOR_SOUND_ENV_SED, ENV_SED_SIZE, g_main_sound_env_sed_data));
+    suzuki_sound_append_resource(
+        main_file_load_to_address(DISC_SECTOR_SOUND_ENV_SED, ENV_SED_SIZE, g_main_sound_env_sed_data));
 
     g_main_sound_music.state.current_smd = 0;
     g_main_sound_music.slots.tune = 0;

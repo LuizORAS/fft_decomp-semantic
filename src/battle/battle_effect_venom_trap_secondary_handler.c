@@ -22,7 +22,7 @@ s32 battle_effect_venom_trap_secondary_handler(void) {
         effect->timer = 0;
         effect->finish_timer = 0;
         effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        SuzukiPlaySoundFindChannel(MAIN_SFX_VENOM_TRAP);
+        suzuki_sound_play_sfx(MAIN_SFX_VENOM_TRAP);
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:

@@ -204,7 +204,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - Suzuki driver: music status bits 0x20 and 0x2000, channel flag 0x10 and
   driver flag 0x2000 are tested and never set; channel flags 0x80 and 0x4000
   and voice-attribute bits 0x7000 are set and never tested;
-  `main_smd_set_flags_all_channels` and `main_smd_dispatch_snapshot` have no
+  `suzuki_smd_set_flags_all_channels` and `suzuki_smd_dispatch_snapshot` have no
   caller.
 - CARD save menu state 9 is compared and never stored. EQUIP refuses command
   row 1, so its screen state 3 is never entered. `g_etc_graphics` entries 0, 5
@@ -297,16 +297,16 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `battle_unit_apply_level_up_down_ability`: a level-1 target of a level-down
   (the Degenerator trap; formula 0x59 misses at level 1) is clamped back to
   level 1 and still loses raw / (growth + 1) of every raw stat.
-- `main_sound_set_reverb_mode`: a negative mode is meant to keep the current
+- `suzuki_sound_set_reverb_mode`: a negative mode is meant to keep the current
   mode, but the stored mode still carries the 0x100 work-area flag that LIBSPU
   strips from its own copy only. It never equals the SPU's mode, so there is
   no early return, and the reloaded value is treated as a mode of 10 or more.
   The 100 music files all hold mode 4.
-- `g_main_smd_opcode_lengths`: the 37 unassigned opcodes have length 0, so
-  the look-ahead of `main_smd_read_instructions` would never step past one,
-  and 0x9D has three parameter bytes there while `main_smd_stop_sfx` consumes
+- `g_suzuki_smd_opcode_lengths`: the 37 unassigned opcodes have length 0, so
+  the look-ahead of `suzuki_smd_read_instructions` would never step past one,
+  and 0x9D has three parameter bytes there while `suzuki_smd_stop_sfx` consumes
   two. No retail sequence uses any of them.
-- `main_smd_set_instrument`: the waveset kept on the Suzuki heap is the
+- `suzuki_smd_set_instrument`: the waveset kept on the Suzuki heap is the
   0xb30-byte header of WAVESET.WD (176 instruments), and most music channels
   end with Instrument 0xFF before End Bar, so entry 255 is read 0x4f0 bytes
   past the copy.
@@ -337,7 +337,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   without clearing `g_main_sound_music.state` when that slot is the playing
   one. The shop, formation and both save screens unload their own music this
   way, so the next `main_sound_stop_current_music` hands the released record
-  to `SuzukiDeallocateMUSChannels`.
+  to `suzuki_smd_stop_music`.
 - `battle_map_stop_clut_cycle` clears the active byte of slot `handle`,
   but `battle_map_start_clut_cycle` returns slot + 1: it stops the slot
   after the handle's own, and handle 8 clears the byte after the eight slots,
@@ -445,10 +445,10 @@ written that way.
   `battle_gfx_calculate_screen_z_from_misc_screen_data`, as it does to
   `battle_gfx_calculate_screen_z_with_caller_data`;
   `battle_move_animate_jump_arc_to_own_tile.c` does not.
-- `g_main_smd_modulator_waveforms` entries 8-15 call the void
-  `main_smd_modulator_deactivate`; `main_smd_update_modulators` adds the
+- `g_suzuki_smd_modulator_waveforms` entries 8-15 call the void
+  `suzuki_smd_modulator_deactivate`; `suzuki_smd_update_modulators` adds the
   leftover `$v0` (the cleared modulator flags) to the channel output.
-- `main_sound_update_tunes` passes `current_music` to `SuzukiGetMusicPlaying`
+- `main_sound_update_tunes` passes `current_music` to `suzuki_smd_is_music_playing`
   even when no scenario music is loaded; the null record reads the status
   halfword at address `0x10`.
 - `src/world/world_menu_animate_window_quad_crop.c` passes an uninitialized
@@ -654,12 +654,12 @@ translation unit. Share their types and constants through headers.
 - `InitCARD` and `StartCARD`: this linked version calls `ChangeClearPAD(0)`, while later SDK descriptions use one for startup; retain the retail value.
 - `_patch_card2`: exchanges five resident/BIOS instruction words, so calling it again reverses the exchange rather than repeating an idempotent patch.
 - `SetDrawLoad`: initializes the upload header and rectangle but leaves pixel payload storage to its caller.
-- `main_sound_get_largest_free_block`: reports the rounded gap including space needed for a new block header, rather than a directly usable payload size.
+- `suzuki_sound_get_largest_free_block`: reports the rounded gap including space needed for a new block header, rather than a directly usable payload size.
 - `battle_gfx_load_spritesheet_into_vram_slot`: its fixed 0x30d4-byte copy from the variable compressed SPR tail at 0x9200 extends beyond the file-sized allocation in 153 of the 154 nonempty unit sprite-table entries and includes retained heap bytes.
 - `battle_gfx_update_and_animate_unit_wep_eff`: when neither EVTCHR slot is free, one path tests `j` before setting it.
 - `g_battle_effect_disc_entries` (`0x801b53e8`) stores whole-sector sizes, and entry 0 repeats entry 1: effect id 0 loads E001.BIN, so E000.BIN's code is never loaded through the table.
 - `src/world/world_gfx_load_wldface_to_frame_buffer.c`: the WLDFACE rectangles (`g_world_wldface_vram_rects`) use x = 1664–1856; the GPU masks VRAM transfer coordinates, so the pages land at x = 640–832.
-- `SuzukiSPUInitialiser`: `main_sound_init_sfx_music` reaches `main_smd_insert_music`, which disables and re-enables `g_main_root_counter_2_event` before the initialiser opens that event: handle 0 at boot, the handle `main_sound_quit` closed on a soft reset.
+- `suzuki_sound_init`: `suzuki_sound_init_sfx_music` reaches `suzuki_smd_insert_music`, which disables and re-enables `g_suzuki_sound_root_counter_2_event` before the initialiser opens that event: handle 0 at boot, the handle `suzuki_sound_quit` closed on a soft reset.
 - `src/event/equip_menu_load_images_and_reset_lists.c` and `bunit_gfx_init_vram_and_start_fade.c`: store 16-colour CLUTs into the 4-entry `buf1`; they run on into `buf2`, which the frame places directly after it (the source reads as two arrays, the stack holds one).
 - `battle_effect_code_script_2e_invalid`: opcodes 2e–77 report an error without setting a handler result; `battle_effect_run_block` then tests the undefined return value.
 - EFFECT scripts never run seven state handlers: E000's script calls only `effect_e000_noop` (opcode 07) and E314's names no file function, so native function ids 1 and 90 are bound by nothing; E134/E242 `update_ring_stack_mesh_state`, E454/E455 `map_set_3d_objects_to_state_2_state` and E456 `map_step_freeze_state` sit in callback slots (script opcode 06) that no keyframe selector fires. E457.BIN, which has no code, binds native function 88 (0x801c2578, E259's `effect_e259_update_summon_mesh_state`; data in its own image) to slot 0, and none of its keyframes names a slot.
@@ -750,8 +750,8 @@ translation unit. Share their types and constants through headers.
   ids 0xC000 and 0xC800 + entry) are not translated: each string is the
   Japanese release's glyph codes around Latin fragments such as the composer
   tags.
-- SCUS_942.21 0x80028f94-0x80028fe7, between `g_main_smd_modulator_waveforms`
-  and `g_main_smd_key_octaves`, is referenced by no instruction or pointer in
+- SCUS_942.21 0x80028f94-0x80028fe7, between `g_suzuki_smd_modulator_waveforms`
+  and `g_suzuki_smd_key_octaves`, is referenced by no instruction or pointer in
   any executable: a five-byte SMD sequence (`B0 91 7F 99 90`), ten words whose
   last nine are the LIBSPU reverb work-area sizes of modes 1-9, and a
   0x23-byte `feds` sound bank with id 0x7000.
@@ -811,7 +811,7 @@ translation unit. Share their types and constants through headers.
   - WORLD (87): `world_copy_misc_unit_screen_coords`, `world_font_upload_glyph_image`, `world_formation_show_unit_message`, `world_gfx_append_gpu_primitive_to_secondary_otag`, `world_gfx_append_poly_f4_to_otag`, `world_gfx_clear_draw_suppress_flag`, `world_gfx_flip_poly_ft4_uv_if_negative`, `world_gfx_set_draw_suppress_flag`, `world_job_calculate_and_store_unlocks`, `world_map_get_weather`, `world_menu_clear_window_buffer_pair_by_thread`, `world_menu_confirm_sound_delay_thread`, `world_menu_disable_alternate_main_palette`, `world_menu_enable_alternate_main_palette`, `world_menu_get_dead_unit_selection`, `world_menu_get_selected_command_address`, `world_menu_icon_clamped_list_thread`, `world_menu_icon_strip_thread`, `world_menu_init_and_load_scrollable_list_with_scroll`, `world_menu_init_attack_resources_and_threads`, `world_menu_init_system_function`, `world_menu_load_portrait_image`, `world_menu_poll_small_load`, `world_menu_preview_ability_turn_at_list`, `world_menu_request_open_companion_data_file`, `world_menu_request_open_small`, `world_menu_request_transition`, `world_menu_reset_unit_record`, `world_menu_reset_unit_records_wrapper`, `world_menu_resize_parent_entry_to_digits`, `world_menu_restore_selection_for_selected_unit`, `world_menu_run_require_help`, `world_menu_run_thread_with_selected_index`, `world_menu_set_default_entry_0_text_values`, `world_menu_set_default_entry_1_text_values`, `world_menu_set_main_scroll_parameters`, `world_menu_start_entry_chain_threads`, `world_menu_start_entry_thread`, `world_menu_start_mini_menu_display_thread`, `world_menu_store_auto_battle_main_target_id`, `world_menu_take_and_clear_thread_result`, `world_menu_text_entry_thread`, `world_menu_thin_window_frame_thread`, `world_menu_update_menus_and_event_speed`, `world_noop`, `world_option_gfx_build_scaled_draw_area_packets`, `world_option_gfx_init_scaled_draw_area_packets`, `world_return_parameter_1`, `world_return_zero`, `world_screen_gfx_build_scaled_draw_area_packets`, `world_screen_gfx_init_scaled_draw_area_packets`, `world_screen_menu_thin_window_frame_thread`, `world_script_filter_controller_input`, `world_script_get_scenario_finish_operation_flags`, `world_script_is_deployment_running`, `world_script_reset_event_state`, `world_script_run_next_event_unused`, `world_script_scale_music_volume`, `world_script_set_current_otag_entry_and_update_input`, `world_text_count_characters`, `world_text_print_fnt_value_and_next`, `world_text_set_substitution_values_7e_7f`, `world_text_start_thread_if_idle`, `world_thread_start_idle_5_to_8`, `world_thread_stop_after_empty_slots_5_to_8`, `world_thread_yield_then_stop_current`, `world_unit_update_facing_and_pending_animations`, `world_noop_800e8aa8` (and the same at 800e90e4, 800eba28, 800ef97c, 800ef9cc, 800f01f0, 800f05a4, 800f0f54, 800f0f5c, 800f1378, 800f1380, 800f1390, 800f1398, 800f2d18, 800f3024, 800f5f04, 800fad84, 80106138), `world_return_argument_800e7b54`, `world_return_zero_800f0b5c`. Most are its copies of BATTLE and overlay code; the quirks recorded above for `world_menu_resize_parent_entry_to_digits` and `world_menu_run_require_help` therefore never execute in WORLD.
   - WLDCORE (3): `wldcore_find_save_slot_entry_by_tag`, `wldcore_script_calculate_save_data_completion_percent`, `wldcore_text_get_padded_dimensions`.
   - OPEN (3): `open_card_wait_for_hardware_event`, `open_menu_init_render_record_fields`, `open_text_measure_menu_image`; the last is the only caller of `open_card_poll_hardware_event`.
-  - MAIN (55): `func_800184e0`, `main_ability_get_aoe`, `main_ability_get_range`, `main_gfx_fade_in_orbonne_monastery`, `main_gfx_fade_out_orbonne_monastery`, `main_job_find_by_skillset`, `main_overlay_call_battle_return_zero`, `main_smd_dispatch_snapshot`, `main_smd_get_held_voices`, `main_smd_get_instrument_attr`, `main_smd_get_min_loop_count`, `main_smd_get_music_filename`, `main_smd_get_play_time`, `main_smd_init_channel_streams`, `main_smd_pause_music`, `main_smd_resume_music`, `main_smd_seed_random`, `main_smd_set_channel_mute_mask`, `main_smd_set_channel_select`, `main_smd_set_flags_all_channels`, `main_smd_set_stop_bar`, `main_sound_find_waveset`, `main_sound_flush_key_off`, `main_sound_flush_key_on`, `main_sound_free_wavesets`, `main_sound_get_current_scenario_music`, `main_sound_get_largest_free_block`, `main_sound_get_music_handle`, `main_sound_get_sfx_channels`, `main_sound_open_music_into_slot`, `main_sound_play_sfx_in_channel`, `main_sound_play_sfx_with_settings_in_channel`, `main_sound_set_current_music_balance_shift_timed`, `main_sound_set_current_music_pitch_shift_timed`, `main_sound_set_current_music_tempo_scale_timed`, `main_sound_set_sfx_balance`, `main_sound_stop_all`, `main_sound_stop_sfx_channel_pair`, `main_sound_sum_resource_words`, `main_sound_wait_for_scenario_smd_load`, `main_system_disable_root_counter_2_evcb`, `main_system_enable_root_counter_2_evcb`, `main_unit_init_stats_and_statuses`, `main_noop_800121cc` (and the same at 800121d4, 800124ac, 800124b4, 800124bc, 800124c4, 80013634, 80015864, 80018654, 800186bc, 80059ac0), `main_return_zero_80014204`. `main_set_display_draw_new_game` is called only by `main_gfx_fade_in_orbonne_monastery`. `func_800184e0` stores a word that `SuzukiSPUInitialiser` and `main_sound_quit` clear and nothing reads.
+  - MAIN (55): `func_800184e0`, `main_ability_get_aoe`, `main_ability_get_range`, `main_gfx_fade_in_orbonne_monastery`, `main_gfx_fade_out_orbonne_monastery`, `main_job_find_by_skillset`, `main_overlay_call_battle_return_zero`, `suzuki_smd_dispatch_snapshot`, `suzuki_smd_get_held_voices`, `suzuki_smd_get_instrument_attr`, `suzuki_smd_get_min_loop_count`, `suzuki_smd_get_music_filename`, `suzuki_smd_get_play_time`, `suzuki_smd_init_channel_streams`, `suzuki_smd_pause_music`, `suzuki_smd_resume_music`, `suzuki_smd_seed_random`, `suzuki_smd_set_channel_mute_mask`, `suzuki_smd_set_channel_select`, `suzuki_smd_set_flags_all_channels`, `suzuki_smd_set_stop_bar`, `suzuki_sound_find_waveset`, `suzuki_sound_flush_key_off`, `suzuki_sound_flush_key_on`, `suzuki_sound_free_wavesets`, `main_sound_get_current_scenario_music`, `suzuki_sound_get_largest_free_block`, `main_sound_get_music_handle`, `suzuki_sound_get_sfx_channels`, `main_sound_open_music_into_slot`, `suzuki_sound_play_sfx_in_channel`, `suzuki_sound_play_sfx_with_settings_in_channel`, `main_sound_set_current_music_balance_shift_timed`, `main_sound_set_current_music_pitch_shift_timed`, `main_sound_set_current_music_tempo_scale_timed`, `suzuki_sound_set_sfx_balance`, `suzuki_sound_stop_all`, `suzuki_sound_stop_sfx_channel_pair`, `suzuki_sound_sum_resource_words`, `main_sound_wait_for_scenario_smd_load`, `suzuki_sound_disable_root_counter_2_event`, `suzuki_sound_enable_root_counter_2_event`, `main_unit_init_stats_and_statuses`, `suzuki_noop_800121cc` (and the same at 800121d4, 800124ac, 800124b4, 800124bc, 800124c4, 80013634, 80015864, 80018654, 800186bc, 80059ac0), `suzuki_return_zero_80014204`. `main_set_display_draw_new_game` is called only by `main_gfx_fade_in_orbonne_monastery`. `func_800184e0` stores a word that `suzuki_sound_init` and `suzuki_sound_quit` clear and nothing reads.
   - ATTACK (17): `attack_deploy_get_valid_tile`, `attack_deploy_init_valid_tiles`, `attack_deploy_set_arrow_position_mode`, `attack_deploy_set_cursor_tile`, `attack_deploy_set_valid_tile`, `attack_gfx_build_gradient_grid_primitives`, `attack_gfx_build_item_graphic_descriptor`, `attack_gfx_build_zodiac_primitives`, `attack_input_update_event_state`, `attack_menu_draw_thread_status_indicators`, `attack_panel_run_ability_list_thread`, `attack_panel_run_equipment_list_thread`, `attack_return_zero`, `attack_text_render_decimal_entry_list`, `attack_noop_801c087c` (and the same at 801c3070, 801c61dc).
   - BUNIT (13): `bunit_gfx_build_item_graphic_descriptor`, `bunit_gfx_get_transition_frame`, `bunit_gfx_move_image_and_wait`, `bunit_job_calculate_and_store_unlocks`, `bunit_menu_clear_selection_values`, `bunit_menu_icon_strip_thread`, `bunit_menu_init_and_draw_scrollable_list`, `bunit_menu_init_and_draw_scrollable_list_simple`, `bunit_menu_text_entry_wait_thread`, `bunit_panel_run_ability_list_thread`, `bunit_panel_run_equipment_list_thread`, `bunit_text_render_decimal_entry_list`, `bunit_noop_801c0adc`.
   - CARD (7): `card_gfx_enqueue_textured_quad_list`, `card_gfx_set_draw_color`, `card_menu_set_vsync_mode_and_event_speed`, `card_save_clear_selection_indices`, `card_text_count_encoded_glyphs`, `card_text_start_character_thread_if_idle`, `card_text_start_thread_if_idle`.

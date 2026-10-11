@@ -25,9 +25,9 @@ void wldcore_reset_game_if_special_keycode_is_pressed(void) {
 
     if (g_wldcore_polled_button_input == (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_SELECT | PSX_PAD_START)) {
         DrawSync(0);
-        main_sound_set_master_volume(0x3fff, 1);
-        main_sound_put_type(0xc0);
-        main_sound_set_cd_volume(0x74ff, 1);
+        suzuki_sound_set_master_volume(0x3fff, 1);
+        suzuki_sound_put_type(0xc0);
+        suzuki_sound_set_cd_volume(0x74ff, 1);
         main_system_reset_game();
     }
 }

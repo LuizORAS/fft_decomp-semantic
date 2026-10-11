@@ -14,6 +14,6 @@ void wldcore_opcode_change_volume_balance(void) {
     if (volume == 0x3FC0) {
         volume = 0x3FFF;
     }
-    main_sound_set_master_volume(volume, balance);
+    suzuki_sound_set_master_volume(volume, balance);
     g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
 }

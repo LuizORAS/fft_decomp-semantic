@@ -56,7 +56,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     if (level->delay != 0) {
         level->delay = level->delay - 1;
         if (level->delay == 0) {
-            main_sound_play_2_sfx(MAIN_SFX_PROPOSITION_SUCCESS_A, MAIN_SFX_PROPOSITION_SUCCESS_B);
+            suzuki_sound_play_2_sfx(MAIN_SFX_PROPOSITION_SUCCESS_A, MAIN_SFX_PROPOSITION_SUCCESS_B);
         }
     }
     if (!(g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {

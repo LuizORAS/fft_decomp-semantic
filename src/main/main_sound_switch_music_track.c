@@ -12,7 +12,7 @@ suzuki_music_t* main_sound_switch_music_track(s32 slot, s32 volume, s32 fade) {
             g_main_sound_music.state.current_smd = g_main_sound_music.slots.smd[slot - 1];
             g_main_sound_music.state.current_music = g_main_sound_music.slots.music[slot - 1];
             g_main_sound_music.state.volume = volume;
-            main_smd_reset_music(g_main_sound_music.state.current_music, volume, fade);
+            suzuki_smd_reset_music(g_main_sound_music.state.current_music, volume, fade);
         }
         return g_main_sound_music.state.current_music;
     }

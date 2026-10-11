@@ -91,7 +91,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TREASURES);
         wldcore_wait_for_file_load();
         wldcore_sound_wait_for_queue_drain();
-        main_sound_set_master_volume(0x3FFF, 1);
+        suzuki_sound_set_master_volume(0x3FFF, 1);
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));
         break;
     default:

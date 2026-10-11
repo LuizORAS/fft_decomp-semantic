@@ -503,7 +503,7 @@ extern event_file_block_t g_main_script_event_block[];
 /* Scenario-music playback state at 0x8004d95c (SCUS_942.21). current_music
  * is the Suzuki music record of the playing scenario music:
  * main_sound_stop_current_music hands it straight to
- * SuzukiDeallocateMUSChannels, which takes a suzuki_music_t*. */
+ * suzuki_smd_stop_music, which takes a suzuki_music_t*. */
 typedef struct main_sound_music_state {
     s32 current_slot;                 /* 0x00 0x8004d95c slot of the playing scenario music */
     suzuki_music_t* current_music;    /* 0x04 0x8004d960 */
@@ -516,7 +516,7 @@ typedef struct main_sound_music_state {
 typedef struct main_sound_music_slots {
     s32 tune;                    /* 0x00: pending tune (id | 0x80) or playing tune id */
     s32 loading_slot;            /* 0x04: slot whose SMD load is in flight, or zero */
-    suzuki_music_t* music[7];    /* 0x08: music records returned by SuzukiPutPlaySMD */
+    suzuki_music_t* music[7];    /* 0x08: music records returned by suzuki_smd_create_music */
     suzuki_smd_header_t* smd[7]; /* 0x24: loaded SMD data */
 } main_sound_music_slots_t;
 
@@ -574,7 +574,7 @@ enum {
 };
 
 /* Sound resources. A sound id is MAIN_SOUND_ID(resource, sound): the id of a
- * loaded main_sound_resource_t in the high halfword and the index of a
+ * loaded suzuki_sound_resource_t in the high halfword and the index of a
  * sound in it in the low. Each battle effect file brings a resource of its
  * own (battle_effect_load_sound_section). */
 typedef enum main_sound_resource_id {
@@ -587,7 +587,7 @@ typedef enum main_sound_resource_id {
 
 /* Sound-effect ids passed to main_sound_play_sfx and the module queues that
  * feed it (wldcore_sound_play_effect, world_sound_dispatch_effect and the
- * g_*_sound_*effect_id globals); every path reaches main_sound_start_sfx with
+ * g_*_sound_*effect_id globals); every path reaches suzuki_sound_start_sfx with
  * MAIN_SOUND_RESOURCE_SYSTEM in the high halfword, so this is one id space.
  * SYSTEM.SED holds MAIN_SFX_COUNT sounds; the ones named here are named
  * from their users in the code, the others are played only by event and
@@ -634,7 +634,7 @@ typedef enum main_sfx {
     MAIN_SFX_SWING_MEDIUM = 26, /* sword, knight sword, katana, rod, staff */
     MAIN_SFX_SWING_HEAVY = 27,  /* axe, flail, polearm, pole */
     /* Started by the spell-charge and summon-charge secondary effects, which
-     * stop them with main_sound_stop_sfx_channels when they finish. */
+     * stop them with suzuki_sound_stop_sfx_channels when they finish. */
     MAIN_SFX_SPELL_CHARGE = 31,
     MAIN_SFX_SUMMON_CHARGE = 33,
     MAIN_SFX_VENOM_TRAP = 34, /* battle_effect_venom_trap_secondary_handler starts */
@@ -672,7 +672,7 @@ typedef enum main_sfx {
     MAIN_SFX_SHIELD_DEFLECT_BULLET = 71, /* gun */
     MAIN_SFX_SHIELD_DEFLECT_ARROW = 73,  /* crossbow, bow */
     /* Proposition result (g_wldcore_job_selection.result): 0 plays the
-     * 0x4d/0x4e pair through main_sound_play_2_sfx, 1 the 0x4f/0x50 pair,
+     * 0x4d/0x4e pair through suzuki_sound_play_2_sfx, 1 the 0x4f/0x50 pair,
      * 2 plays 0x51. */
     MAIN_SFX_PROPOSITION_SUCCESS_A = 77,
     MAIN_SFX_PROPOSITION_SUCCESS_B = 78,
@@ -1279,7 +1279,6 @@ extern u8 g_main_terrain_geomancy_abilities[];
 s32 main_sound_is_music_loading_stub(void);
 
 /* unnamed */
-void func_800184e0(u16 value);
 extern s32 D_800459D8;
 extern u8 D_800473A7;
 extern u8 D_80057b1c;

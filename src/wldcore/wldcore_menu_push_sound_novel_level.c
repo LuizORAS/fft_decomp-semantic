@@ -97,7 +97,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     pos4->y = 0x58;
     g_wldcore_window_records[index].palette = 0;
 
-    SuzukiAppendVFXSMD(g_wldcore_sound_novel_sound_resource);
+    suzuki_sound_append_resource(g_wldcore_sound_novel_sound_resource);
     wldcore_sound_novel_restore_saved_state(bar_render);
     g_wldcore_menu_blocked_buttons = PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;

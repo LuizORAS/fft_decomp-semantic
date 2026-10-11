@@ -228,7 +228,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
                     if (kind >= 2) {
                         sound_index = battle_effect_get_on_hit_sound_index(kind - 2);
                         if (sound_index != 0) {
-                            SuzukiPlaySoundFindChannel(sound_index + g_battle_effect_sound_data_base);
+                            suzuki_sound_play_sfx(sound_index + g_battle_effect_sound_data_base);
                         }
                     }
                 }

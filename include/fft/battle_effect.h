@@ -1837,7 +1837,7 @@ extern u16 g_battle_effect_active_slot_tail;
 extern s32 g_battle_effect_primitive_sizes[];
 extern s32 g_battle_effect_saved_inertia_threshold;
 extern s32 g_battle_effect_sound_data_base;
-extern struct main_sound_resource* g_battle_effect_sound_section_ptr;
+extern struct suzuki_sound_resource* g_battle_effect_sound_section_ptr;
 extern u8 g_battle_effect_target_id; /* id of the charge secondary effect started with the ability; 0 none */
 extern effect_flags_section_t* g_battle_effect_flags_section;
 /* Particle gravity; secondary handlers save it while using (0, ONE, 0). */

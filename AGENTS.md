@@ -14,8 +14,8 @@ it in the original module's `target/` configuration with an explicit `source:`
 path. A routine or global with no established SDK name is `psyq_<lib>_…` or
 `g_psyq_<lib>_…`. LIBGS (WORLD) is `src/psyq/libgs/` and LIBPRESS (OPENING)
 `src/psyq/libpress/`. The Suzuki sound driver is in `src/suzuki/`, with
-declarations in `include/psx/suzuki.h`. It keeps its `main_` and `Suzuki`
-names and remains linked into MAIN at the original addresses and profiles.
+declarations in `include/psx/suzuki.h`. Driver names use `suzuki_` and
+`g_suzuki_`; it remains linked into MAIN at the original addresses and profiles.
 Game-specific sound adapters, music slots and file loading remain in
 `src/main/` and `include/fft/main.h`.
 

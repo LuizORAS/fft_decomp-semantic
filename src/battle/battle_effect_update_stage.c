@@ -76,7 +76,7 @@ s32 battle_effect_update_stage(void) {
                 main_sound_set_current_music_volume_timed(0x78);
             }
             if (g_battle_effect_sound_section_ptr != 0) {
-                main_sound_remove_vfx_resource(g_battle_effect_sound_section_ptr);
+                suzuki_sound_remove_resource(g_battle_effect_sound_section_ptr);
                 g_battle_effect_sound_section_ptr = 0;
             }
             battle_map_configure_effect_data_state(MAP_EFFECT_DATA_END);
