@@ -65,5 +65,7 @@ func TestHeaderMacroUnknownSymbolStillFails(t *testing.T) {
 	}
 	if _, err := p.compileFunction(newSymbolResolver(config), m, f, filepath.Join(p.root, "build")); err == nil {
 		t.Fatal("unresolved header symbol was accepted")
+	} else if !strings.Contains(err.Error(), "missing_binding") {
+		t.Fatalf("link error lost the unresolved symbol diagnostic: %v", err)
 	}
 }

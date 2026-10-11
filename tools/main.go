@@ -553,6 +553,19 @@ func runInDir(dir string, arguments ...string) error {
 	return nil
 }
 
+// A macro can introduce a binding found only after the first link attempt.
+// Keep that attempt's diagnostics in its error so a successful retry is quiet.
+func linkHistoricalObject(dir, script, object, linkedPath string) error {
+	command := exec.Command("mipsel-linux-gnu-ld", "-EL", "-T", script, "-o", linkedPath, object)
+	command.Dir = dir
+	output, err := command.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("mipsel-linux-gnu-ld: %w\n%s", err, bytes.TrimSpace(output))
+	}
+	_, err = os.Stderr.Write(output)
+	return err
+}
+
 func transformFile(dir, input, output string, arguments ...string) error {
 	in, err := os.Open(input)
 	if err != nil {
@@ -728,7 +741,7 @@ func (p project) compileHistoricalSections(sourcePath, linkPath, buildDir string
 	if err := runInDir(p.root, "mipsel-linux-gnu-as", "-EL", "-march=r3000", "-mtune=r3000", "-no-pad-sections", "-O1", fmt.Sprintf("-G%d", profile.smallDataLimit), "-o", object, translated); err != nil {
 		return nil, err
 	}
-	if err := runInDir(p.root, "mipsel-linux-gnu-ld", "-EL", "-T", linkPath, "-o", linkedPath, object); err != nil {
+	if err := linkHistoricalObject(p.root, linkPath, object, linkedPath); err != nil {
 		return nil, err
 	}
 	if err := runInDir(p.root, "mipsel-linux-gnu-objcopy", "-O", "binary", "--only-section=.text", linkedPath, binary); err != nil {
