@@ -350,10 +350,10 @@ typedef enum map_clut_row {
 
 enum {
     MAP_CLUT_ROW_COUNT = 14,
-    MAP_CLUTS_PER_ROW = 16,
-    MAP_CLUT_COLOR_COUNT = 16,
-    MAP_CLUT_ROW_COLOR_COUNT = 256, /* MAP_CLUTS_PER_ROW * MAP_CLUT_COLOR_COUNT */
-    MAP_CLUT_ROWS_Y = 480,          /* VRAM line of MAP_CLUT_ROW_MAP; the rows follow one line apart */
+    MAP_CLUTS_PER_ROW = CLUT_PALETTE_COUNT,
+    MAP_CLUT_COLOR_COUNT = PALETTE_COLOR_COUNT,
+    MAP_CLUT_ROW_COLOR_COUNT = MAP_CLUTS_PER_ROW * MAP_CLUT_COLOR_COUNT,
+    MAP_CLUT_ROWS_Y = 480, /* VRAM line of MAP_CLUT_ROW_MAP; the rows follow one line apart */
 };
 
 /* The clut word of CLUT clut_index of a map CLUT row: the value of

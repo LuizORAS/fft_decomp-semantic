@@ -25,7 +25,7 @@ void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_ind
         u32 red_value;
         u8 blue;
 
-        color_index = clut_index * 16 + index;
+        color_index = clut_index * MAP_CLUT_COLOR_COUNT + index;
         component = &g_battle_map_palette_state.clut_rows[clut_row].components[color_index];
         /* Named component fields reverse the native mask/shift order. */
         color = *(const u16*)colors;
@@ -53,7 +53,7 @@ void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_ind
 
         index++;
         colors++;
-    } while (index < 16);
+    } while (index < MAP_CLUT_COLOR_COUNT);
 
     if (mode != 0) {
         map_palette_animation_state_t* animation;

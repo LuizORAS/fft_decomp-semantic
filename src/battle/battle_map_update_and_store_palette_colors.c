@@ -20,7 +20,7 @@ void battle_map_update_and_store_palette_colors(
         index = 0;
         destination = g_battle_map_palette_state.clut_rows[clut_row].packed_colors;
         source = (const u16*)colors_reg;
-        while (index < 256) {
+        while (index < MAP_CLUT_ROW_COLOR_COUNT) {
             *destination++ = *source++;
             index++;
         }
@@ -30,10 +30,10 @@ void battle_map_update_and_store_palette_colors(
         s32 palette_offset;
 
         index = 0;
-        palette_offset = clut_index * 16;
+        palette_offset = clut_index * MAP_CLUT_COLOR_COUNT;
         palette_colors = g_battle_map_palette_state.clut_rows[clut_row].packed_colors;
         source = (const u16*)colors_reg;
-        while (index < 16) {
+        while (index < MAP_CLUT_COLOR_COUNT) {
             palette_colors[palette_offset + index] = *source++;
             index++;
         }

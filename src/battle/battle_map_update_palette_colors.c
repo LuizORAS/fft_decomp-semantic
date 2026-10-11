@@ -14,7 +14,7 @@ void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s3
 
         index = 0;
         current_colors = colors;
-        while (index < 16) {
+        while (index < MAP_CLUTS_PER_ROW) {
             battle_map_update_palette_colors_inner(mode, clut_row, index, *current_colors);
             index++;
             current_colors++;

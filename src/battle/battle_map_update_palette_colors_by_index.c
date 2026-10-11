@@ -6,12 +6,12 @@
 void battle_map_update_palette_colors_by_index(s32 mode, s32 clut_index, const palette_t* color_data) {
     s32 index;
 
-    if (clut_index >= 16) {
+    if (clut_index >= MAP_CLUTS_PER_ROW) {
         index = 0;
         do {
             battle_map_update_palette_colors(mode, MAP_CLUT_ROW_UNITS, index, 0, color_data);
             index++;
-        } while (index < 16);
+        } while (index < MAP_CLUTS_PER_ROW);
     } else {
         battle_map_update_palette_colors(mode, MAP_CLUT_ROW_UNITS, clut_index, 0, color_data);
     }
