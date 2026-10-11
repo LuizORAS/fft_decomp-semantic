@@ -20,7 +20,7 @@ DISPENV* PutDispEnv(DISPENV* env) {
         || g_psyq_gpu_environment.display.screen.y != env->screen.y
         || g_psyq_gpu_environment.display.screen.w != env->screen.w
         || g_psyq_gpu_environment.display.screen.h != env->screen.h) {
-        env->pad0 = GetVideoMode(); /* pad0 carries the video mode in this SDK version. */
+        env->pad0 = GetVideoMode(); /* pad0 caches the video mode. */
         h_start = env->screen.x * 10 + 608;
         v_start = env->screen.y + (env->pad0 ? 19 : 16);
         h_end = h_start + (env->screen.w ? env->screen.w * 10 : 2560);
@@ -40,7 +40,7 @@ DISPENV* PutDispEnv(DISPENV* env) {
         || g_psyq_gpu_environment.display.disp.w != env->disp.w
         || g_psyq_gpu_environment.display.disp.h != env->disp.h) {
         env->pad0 = GetVideoMode();
-        if (env->pad0 == 1)
+        if (env->pad0 == MODE_PAL)
             mode |= PSYQ_GPU_DISPLAY_PAL;
         if (env->isrgb24)
             mode |= PSYQ_GPU_DISPLAY_RGB24;

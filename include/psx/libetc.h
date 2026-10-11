@@ -6,6 +6,9 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
+#define MODE_NTSC 0
+#define MODE_PAL  1
+
 typedef void (*psyq_interrupt_callback_t)(void);
 
 extern int VSync(int);

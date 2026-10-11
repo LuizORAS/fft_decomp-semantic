@@ -16,9 +16,9 @@ void psyq_gs_init_gpu(u16 x, u16 y, u16 intmode, u16 dither, u16 vram) {
     PutDrawEnv(&GsDRAWENV);
     setRECT(&GsDISPENV.disp, 0, 0, x, y);
     setRECT(&GsDISPENV.screen, 0, 0, 0, 0);
-    if (GetVideoMode() == 1) {
+    if (GetVideoMode() == MODE_PAL) {
         GsDISPENV.screen.y = 0x18;
-        GsDISPENV.pad0 = 1;
+        GsDISPENV.pad0 = MODE_PAL;
     }
     GsDISPENV.isinter = intmode & GsINTER;
     PSDGPU = intmode & GsOFSGPU;
