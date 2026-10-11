@@ -1,15 +1,5 @@
 #include "fft/event_attack.h"
 
-/* libgpu-style rectangle setters; the macro argument re-evaluation and the
- * narrowing store into each field are part of the matched expression shapes. */
-#define SET_UVWH(prim, _u0, _v0, _w, _h)                                                                               \
-    (prim->u0 = _u0, prim->v0 = _v0, prim->u1 = (_u0) + _w, prim->v1 = _v0, prim->u2 = _u0, prim->v2 = (_v0) + _h,     \
-        prim->u3 = (_u0) + _w, prim->v3 = (_v0) + _h)
-#define SET_XYWH(prim, _x0, _y0, _w, _h)                                                                               \
-    (prim->x0 = _x0, prim->y0 = _y0, prim->x1 = (_x0) + _w, prim->y1 = _y0, prim->x2 = _x0, prim->y2 = (_y0) + _h,     \
-        prim->x3 = (_x0) + _w, prim->y3 = (_y0) + _h)
-#define SET_RGB(prim, n, value) (prim->r##n = value, prim->g##n = value, prim->b##n = value)
-
 /*
  * Builds and submits a 2x2 set of shaded POLY_GT4 panel strips at the current
  * thread's position.
@@ -64,43 +54,43 @@ void attack_gfx_build_shaded_panel_strips(POLY_GT4* polys, s32 width, s32 shade,
             poly->clut = 0x3fdc;
             if (row == 0) {
                 if (reverse == 0) {
-                    SET_UVWH(poly, 0, 0xe0, width, 0x14);
-                    SET_XYWH(poly, x + 0x80 + dx, y + 0x60 + dy, width, height);
+                    setUVWH(poly, 0, 0xe0, width, 0x14);
+                    setXYWH(poly, x + 0x80 + dx, y + 0x60 + dy, width, height);
                 } else {
                     rest = 0xff - width;
-                    SET_UVWH(poly, width, 0xe0, rest, 0x14);
-                    SET_XYWH(poly, x + (0x80 + width) + dx, y + 0x60 + dy, rest, height);
+                    setUVWH(poly, width, 0xe0, rest, 0x14);
+                    setXYWH(poly, x + (0x80 + width) + dx, y + 0x60 + dy, rest, height);
                 }
-                SET_RGB(poly, 0, shade);
-                SET_RGB(poly, 1, shade);
-                SET_RGB(poly, 2, shade);
-                SET_RGB(poly, 3, shade);
+                setRGB0(poly, shade, shade, shade);
+                setRGB1(poly, shade, shade, shade);
+                setRGB2(poly, shade, shade, shade);
+                setRGB3(poly, shade, shade, shade);
             } else {
                 if (reverse == 0) {
-                    SET_RGB(poly, 0, shade);
-                    SET_RGB(poly, 1, 0);
-                    SET_RGB(poly, 2, shade);
-                    SET_RGB(poly, 3, 0);
+                    setRGB0(poly, shade, shade, shade);
+                    setRGB1(poly, 0, 0, 0);
+                    setRGB2(poly, shade, shade, shade);
+                    setRGB3(poly, 0, 0, 0);
                 } else {
-                    SET_RGB(poly, 1, shade);
-                    SET_RGB(poly, 0, 0);
-                    SET_RGB(poly, 3, shade);
-                    SET_RGB(poly, 2, 0);
+                    setRGB1(poly, shade, shade, shade);
+                    setRGB0(poly, 0, 0, 0);
+                    setRGB3(poly, shade, shade, shade);
+                    setRGB2(poly, 0, 0, 0);
                 }
                 if (reverse == 0) {
                     edge = 0x20;
                     if (width >= 0xdf) {
                         edge = 0xfe - width;
                     }
-                    SET_UVWH(poly, width, 0xe0, edge, 0x14);
-                    SET_XYWH(poly, x + 0x80 + width + dx, y + 0x60 + dy, edge, height);
+                    setUVWH(poly, width, 0xe0, edge, 0x14);
+                    setXYWH(poly, x + 0x80 + width + dx, y + 0x60 + dy, edge, height);
                 } else {
                     edge = 0x20;
                     if (width < 0x20) {
                         edge = width;
                     }
-                    SET_UVWH(poly, width - edge, 0xe0, edge, 0x14);
-                    SET_XYWH(poly, x + (0x80 + width) - edge + dx, y + 0x60 + dy, edge, height);
+                    setUVWH(poly, width - edge, 0xe0, edge, 0x14);
+                    setXYWH(poly, x + (0x80 + width) - edge + dx, y + 0x60 + dy, edge, height);
                 }
             }
             poly++;
