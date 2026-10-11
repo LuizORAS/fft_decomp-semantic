@@ -637,7 +637,7 @@ typedef enum equip_thread_slot {
 
 extern u8 g_equip_thread_idle_stop_pending;
 extern s32 g_equip_thread_state;
-extern menu_status_panel_indicator_prims_t g_equip_thread_indicator_packets[2][2];
+extern menu_gradient_panel_prims_t g_equip_thread_indicator_packets[2][2];
 void equip_thread_request_stop(s32 id);
 void equip_text_start_character_thread_if_idle(s32 thread_id, s32 parameter_0, s32 parameter_1, s32 parameter_2);
 s32 equip_thread_start_managed(s32 thread_id, menu_entry_t* desc);

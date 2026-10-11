@@ -328,7 +328,7 @@ typedef enum require_thread_slot {
     REQUIRE_THREAD_SLOT_TRANSITION = 10, /* require_gfx_run_suspended_thread_transition */
 } require_thread_slot_e;
 
-extern menu_status_panel_indicator_prims_t g_require_thread_indicator_packets[2][2];
+extern menu_gradient_panel_prims_t g_require_thread_indicator_packets[2][2];
 extern s32 g_require_thread_suspended_id;
 void require_thread_exit_current(void);
 s32 require_thread_is_running(s32 thread_id);

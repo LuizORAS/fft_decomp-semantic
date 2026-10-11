@@ -4,7 +4,7 @@
 
 /* Initialize the center tile and two nine-tile scanline strips. */
 void world_menu_init_panel_fade_tiles(void) {
-    fade_tile_frame_t* frame;
+    menu_gradient_panel_prims_t* frame;
     s32 i;
     u16 tpage;
 
@@ -21,23 +21,23 @@ void world_menu_init_panel_fade_tiles(void) {
     frame->center.h = 0x32;
 
     for (i = 0; i < 9; i++) {
-        SetTile(&frame->backdrop[i]);
-        setRGB0(&frame->backdrop[i], 0, 0, 0);
-        SetSemiTrans(&frame->backdrop[i], 1);
-        frame->backdrop[i].w = 0x100;
-        frame->backdrop[i].h = 1;
-        frame->backdrop[i].x0 = 0x80;
-        frame->backdrop[i].y0 = i + 0xa3;
+        SetTile(&frame->top[i]);
+        setRGB0(&frame->top[i], 0, 0, 0);
+        SetSemiTrans(&frame->top[i], 1);
+        frame->top[i].w = 0x100;
+        frame->top[i].h = 1;
+        frame->top[i].x0 = 0x80;
+        frame->top[i].y0 = i + 0xa3;
 
-        SetTile(&frame->bar[i]);
-        setRGB0(&frame->bar[i], 0, 0, 0);
-        SetSemiTrans(&frame->bar[i], 1);
-        frame->bar[i].w = 0x100;
-        frame->bar[i].h = 1;
-        frame->bar[i].x0 = 0x80;
-        frame->bar[i].y0 = i + 0xde;
+        SetTile(&frame->bottom[i]);
+        setRGB0(&frame->bottom[i], 0, 0, 0);
+        SetSemiTrans(&frame->bottom[i], 1);
+        frame->bottom[i].w = 0x100;
+        frame->bottom[i].h = 1;
+        frame->bottom[i].x0 = 0x80;
+        frame->bottom[i].y0 = i + 0xde;
     }
 
     world_script_copy_bytes(
-        &g_world_menu_panel_fade_frames[1], &g_world_menu_panel_fade_frames[0], sizeof(fade_tile_frame_t));
+        &g_world_menu_panel_fade_frames[1], &g_world_menu_panel_fade_frames[0], sizeof(menu_gradient_panel_prims_t));
 }

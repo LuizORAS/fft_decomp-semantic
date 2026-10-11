@@ -8,7 +8,7 @@
  * BATTLE twin of world_menu_update_panel_fade.
  */
 void battle_menu_update_panel_fade(void) {
-    fade_tile_frame_t* frame;
+    menu_gradient_panel_prims_t* frame;
     s32 i;
     s32 intensity;
 
@@ -32,12 +32,12 @@ void battle_menu_update_panel_fade(void) {
                 intensity -= 8;
             }
             /* The pointer walk preserves the target's operand order for the biased index. */
-            (frame->backdrop + (8 - i))->r0 = intensity;
-            (frame->backdrop + (8 - i))->g0 = intensity;
-            (frame->backdrop + (8 - i))->b0 = intensity;
-            setRGB0(&frame->bar[i], intensity, intensity, intensity);
-            battle_gfx_draw_or_append_gpu_primitive(&frame->backdrop[8 - i]);
-            battle_gfx_draw_or_append_gpu_primitive(&frame->bar[i]);
+            (frame->top + (8 - i))->r0 = intensity;
+            (frame->top + (8 - i))->g0 = intensity;
+            (frame->top + (8 - i))->b0 = intensity;
+            setRGB0(&frame->bottom[i], intensity, intensity, intensity);
+            battle_gfx_draw_or_append_gpu_primitive(&frame->top[8 - i]);
+            battle_gfx_draw_or_append_gpu_primitive(&frame->bottom[i]);
         }
         battle_gfx_draw_or_append_gpu_primitive(
             &g_battle_menu_panel_fade_frames[g_battle_menu_packet_buffer_index].center);

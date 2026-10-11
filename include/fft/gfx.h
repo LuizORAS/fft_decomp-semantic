@@ -127,18 +127,6 @@ typedef struct image_load_parameters {
     u16 y_screen_offset;
 } image_load_parameters_t;
 
-/* The 0x13c-byte panel fade packet group world_menu_init_panel_fade_tiles
- * (0x800ef2fc) and battle_menu_init_panel_fade_tiles (0x8013b6e4) initialize and
- * copy to the second frame buffer: independent nine-tile strips at +0x1c and
- * +0xac, each ordered left to right. */
-typedef struct fade_tile_frame {
-    DR_MODE draw_mode; /* 0x00 */
-    TILE center;       /* 0x0c */
-    TILE backdrop[9];  /* 0x1c */
-    TILE bar[9];       /* 0xac */
-} fade_tile_frame_t;
-typedef char fade_tile_frame_size_must_be_0x13c[sizeof(fade_tile_frame_t) == 0x13c ? 1 : -1];
-
 /* Draw-area pair built by the menu graphics helpers: two DR_AREA packets whose
  * rectangles are scaled around their centre by a percentage from
  * g_world_menu_zoom_percentages (indexed by g_world_event_speed-adjusted step).

@@ -238,7 +238,7 @@ typedef enum bunit_thread_slot {
     BUNIT_THREAD_SLOT_REORDER_MENU = 15, /* the reorder list */
 } bunit_thread_slot_e;
 
-extern menu_status_panel_indicator_prims_t g_bunit_thread_indicator_packets[2][2];
+extern menu_gradient_panel_prims_t g_bunit_thread_indicator_packets[2][2];
 extern u8 g_bunit_thread_status_snapshot[16];
 s32 bunit_thread_is_running(s32 thread_id);
 void bunit_thread_request_stop(s32 thread_id);

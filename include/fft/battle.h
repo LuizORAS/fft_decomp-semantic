@@ -7729,7 +7729,7 @@ extern s16 g_battle_menu_status_right_text_ids[20];
 extern s32 g_battle_menu_action_menu_build_result;
 extern s16 g_battle_menu_selected_option;
 extern battle_action_data_t* g_battle_menu_preview_target_action;
-extern fade_tile_frame_t g_battle_menu_panel_fade_frames[];
+extern menu_gradient_panel_prims_t g_battle_menu_panel_fade_frames[];
 extern battle_menu_scratch_buffer_t g_battle_menu_scratch_buffer;
 extern u16* const* g_battle_help_active_text_id_tables;
 extern u16 g_battle_menu_anything_ability_id;

@@ -184,7 +184,7 @@ void debugchr_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
 /* thread */
-extern menu_status_panel_indicator_prims_t g_debugchr_thread_indicator_packets[2][2];
+extern menu_gradient_panel_prims_t g_debugchr_thread_indicator_packets[2][2];
 s32 debugchr_thread_is_running(s32 thread_id);
 
 /* other */

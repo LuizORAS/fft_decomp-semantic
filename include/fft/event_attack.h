@@ -410,7 +410,7 @@ void attack_render_unit_status_panel_thread(void);
 
 /* other */
 extern u32* g_attack_input_controller;
-extern menu_status_panel_indicator_prims_t g_attack_thread_indicator_packets[2][2];
+extern menu_gradient_panel_prims_t g_attack_thread_indicator_packets[2][2];
 extern s32 g_attack_status_display_thread_params;
 extern RECT attack_D_801CD0A4;
 extern u8 g_attack_event_condition_blocks[];

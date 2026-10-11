@@ -128,19 +128,15 @@ typedef struct menu_status_panel_draw_offset {
 typedef char
     menu_status_panel_draw_offset_size_must_be_0x10[(sizeof(menu_status_panel_draw_offset_t) == 0x10) ? 1 : -1];
 
-/* 0x13c primitive block of the *_menu_draw_thread_status_indicators letterbox
- * panels: draw mode, the panel frame tile, and two sets of nine one-pixel
- * scanline tiles that produce the top and bottom gradients. Each overlay
- * double-buffers one block per panel ([panel][buffer]). */
-typedef struct menu_status_panel_indicator_prims {
-    DR_MODE mode;   /* 0x00 */
-    TILE frame;     /* 0x0c */
-    TILE top[9];    /* 0x1c */
-    TILE bottom[9]; /* 0xac */
-} menu_status_panel_indicator_prims_t;
-typedef char menu_status_panel_indicator_prims_size_must_be_0x13c[(sizeof(menu_status_panel_indicator_prims_t) == 0x13c)
-        ? 1
-        : -1];
+/* Double-buffered panel packets: a center tile and nine-scanline top and
+ * bottom gradients, used by status indicators and menu panel fades. */
+typedef struct menu_gradient_panel_prims {
+    DR_MODE draw_mode; /* 0x00 */
+    TILE center;       /* 0x0c */
+    TILE top[9];       /* 0x1c */
+    TILE bottom[9];    /* 0xac */
+} menu_gradient_panel_prims_t;
+typedef char menu_gradient_panel_prims_size_must_be_0x13c[(sizeof(menu_gradient_panel_prims_t) == 0x13c) ? 1 : -1];
 
 /* Menu line-box layout, established by the builder at 0x800e3358: two DR_MODE
  * packets, twelve LINE_F2 packets and one SPRT whose CLUT (+0xe6)

@@ -12,7 +12,7 @@
  * EQUIP twin watches threads 13 and 14.
  */
 void bunit_menu_draw_thread_status_indicators(void) {
-    menu_status_panel_indicator_prims_t* prims;
+    menu_gradient_panel_prims_t* prims;
     menu_status_thread_t* display;
     menu_status_thread_t* descriptor;
     s32 active;
@@ -63,16 +63,16 @@ draw_panels:
         flip = g_bunit_menu_indicator_packet_index[i] ^ 1;
         g_bunit_menu_indicator_packet_index[i] = flip;
         prims = &g_bunit_thread_indicator_packets[i][flip];
-        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_bunit_gfx_draw_area_template);
-        SetTile(&prims->frame);
-        setRGB0(&prims->frame, 0, 0, 0);
-        SetSemiTrans(&prims->frame, 1);
+        SetDrawMode(&prims->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_bunit_gfx_draw_area_template);
+        SetTile(&prims->center);
+        setRGB0(&prims->center, 0, 0, 0);
+        SetSemiTrans(&prims->center, 1);
         y = 0xb2;
         if (i == 0) {
             y = 0x23;
         }
-        setXY0(&prims->frame, 0x80, y);
-        setWH(&prims->frame, 0x100, 0x32);
+        setXY0(&prims->center, 0x80, y);
+        setWH(&prims->center, 0x100, 0x32);
         for (j = 0; j < 9; j++) {
             SetTile(&prims->top[j]);
             setRGB0(&prims->top[j], 0, 0, 0);
@@ -94,7 +94,7 @@ draw_panels:
             setXY0(&prims->bottom[j], 0x80, y + j);
         }
         if (g_bunit_menu_indicator_state[i] == MENU_INDICATOR_STATE_HIDDEN) {
-            setRGB0(&prims->frame, 0, 0, 0);
+            setRGB0(&prims->center, 0, 0, 0);
         } else {
             if (g_bunit_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_IN) {
                 if (g_bunit_menu_indicator_brightness[i] < 0x78) {
@@ -108,7 +108,7 @@ draw_panels:
                     g_bunit_menu_indicator_state[i] = MENU_INDICATOR_STATE_HIDDEN;
                 }
             }
-            setRGB0(&prims->frame, g_bunit_menu_indicator_brightness[i], g_bunit_menu_indicator_brightness[i],
+            setRGB0(&prims->center, g_bunit_menu_indicator_brightness[i], g_bunit_menu_indicator_brightness[i],
                 g_bunit_menu_indicator_brightness[i]);
             /* fade_work holds the edge brightness that steps down across the gradient. */
             g_bunit_menu_indicator_fade_work[i] = g_bunit_menu_indicator_brightness[i];
@@ -125,8 +125,8 @@ draw_panels:
                 battle_gfx_draw_or_append_gpu_primitive((k + prims->top));
                 battle_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }
-            battle_gfx_draw_or_append_gpu_primitive(&prims->frame);
-            battle_gfx_draw_or_append_gpu_primitive(&prims->mode);
+            battle_gfx_draw_or_append_gpu_primitive(&prims->center);
+            battle_gfx_draw_or_append_gpu_primitive(&prims->draw_mode);
         }
     }
 }

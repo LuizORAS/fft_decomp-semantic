@@ -7,7 +7,7 @@
  * tile pairs taper away from the center in increments of 8.
  */
 void world_menu_update_panel_fade(void) {
-    fade_tile_frame_t* frame;
+    menu_gradient_panel_prims_t* frame;
     s32 i;
     s32 intensity;
 
@@ -31,10 +31,10 @@ void world_menu_update_panel_fade(void) {
                 intensity -= 8;
             }
             /* The pointer walk preserves the target's operand order for the biased index. */
-            setRGB0((frame->backdrop + (8 - i)), intensity, intensity, intensity);
-            setRGB0(&frame->bar[i], intensity, intensity, intensity);
-            world_gfx_draw_or_append_gpu_primitive(&frame->backdrop[8 - i]);
-            world_gfx_draw_or_append_gpu_primitive(&frame->bar[i]);
+            setRGB0((frame->top + (8 - i)), intensity, intensity, intensity);
+            setRGB0(&frame->bottom[i], intensity, intensity, intensity);
+            world_gfx_draw_or_append_gpu_primitive(&frame->top[8 - i]);
+            world_gfx_draw_or_append_gpu_primitive(&frame->bottom[i]);
         }
         world_gfx_draw_or_append_gpu_primitive(
             &g_world_menu_panel_fade_frames[g_world_menu_packet_buffer_index].center);

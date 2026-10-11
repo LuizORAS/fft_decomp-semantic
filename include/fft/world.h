@@ -462,7 +462,7 @@ extern u8 g_world_thread_status_snapshot[16];
  * input and dim their palette while it is set. */
 extern s32 g_world_thread_task_active;
 extern s32 g_world_thread_task_ids[][256];
-extern menu_status_panel_indicator_prims_t g_world_thread_indicator_packets[2][2];
+extern menu_gradient_panel_prims_t g_world_thread_indicator_packets[2][2];
 extern crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
 
 /* The unspecified argument list is intentional for the same stack-switching
@@ -2294,7 +2294,7 @@ extern s16 g_world_menu_action_slot_selected_option;
 extern menu_allocation_t g_world_menu_buffer_allocations[16];
 extern u8 g_world_menu_buffer_arena[0x70][0x100];
 extern battle_action_data_t* g_world_menu_preview_target_action;
-extern fade_tile_frame_t g_world_menu_panel_fade_frames[];
+extern menu_gradient_panel_prims_t g_world_menu_panel_fade_frames[];
 extern s32 g_world_active_menu; /* active menu */
 /* Handed to the dead-unit panel thread as its second parameter. Nothing stores to it and the thread
  * does not read the parameter. */
