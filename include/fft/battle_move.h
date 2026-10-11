@@ -71,6 +71,11 @@ enum {
     BATTLE_MOVE_PANEL_COUNT = MAP_TILE_COUNT + BATTLE_MOVE_RECORD_COUNT,
 };
 
+/* Generic pathfinding flags, distinct from movement ability bytes. */
+typedef enum battle_move_pathfind_flags {
+    BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST = 0x100,
+} battle_move_pathfind_flags_e;
+
 /* Generic mover and search range used by scripted and reverse pathfinding. */
 enum {
     BATTLE_MOVE_GENERIC_UNIT_ID = 0x7f,

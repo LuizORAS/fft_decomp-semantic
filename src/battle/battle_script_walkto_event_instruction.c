@@ -1,9 +1,7 @@
 #include "fft/battle.h"
 
-/* Start event opcode 0x28 movement for one unit.
- *
- * Coordinates are ordered x, elevation, y for the movement subsystem. The
- * final payload bit selects absolute elevation or a one-level addend. */
+/* Start event opcode 0x28 movement. The final operand enables terrain costs;
+ * the separate destination-layer byte selects elevation. */
 void battle_script_walkto_event_instruction(const event_walk_to_parameters_t* parameters) {
     s32 id;
     unit_tile_coordinates_t coordinates;
@@ -14,7 +12,9 @@ void battle_script_walkto_event_instruction(const event_walk_to_parameters_t* pa
         coordinates.x = parameters->x;
         coordinates.y = parameters->y;
         coordinates.elevation = parameters->elevation;
-        battle_move_start_unit_walk_to(id, &coordinates, 0x100 - (parameters->elevation_flag << 8), 3,
-            battle_script_load_halfword(parameters->speed_le));
+        battle_move_start_unit_walk_to(id, &coordinates,
+            BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST
+                - parameters->terrain_cost_flag * BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST,
+            3, battle_script_load_halfword(parameters->speed_le));
     }
 }

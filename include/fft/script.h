@@ -96,7 +96,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_SET_SPEAKER_PAIR = 0x25,      /* 4: unit id (u16), unit id (u16) */
     EVENT_OPCODE_RESUME_WAITING_DIALOG = 0x26, /* 2: text id - 1 (u16) */
     EVENT_OPCODE_RELOAD_MAP_STATE = 0x27,      /* 0 */
-    /* 8: unit id (u16), x, y, elevation, speed (u16), elevation flag (event_walk_to_parameters_t) */
+    /* 8: unit id (u16), x, y, elevation, speed (s16), terrain-cost flag (event_walk_to_parameters_t) */
     EVENT_OPCODE_WALK_TO = 0x28,
     EVENT_OPCODE_WAIT_WALK = 0x29,   /* 2: unit id (u16) */
     EVENT_OPCODE_BLOCK_START = 0x2a, /* 0; seeks to BLOCK_END */
@@ -406,7 +406,7 @@ typedef struct event_walk_to_parameters {
     u8 y;
     u8 elevation;
     u8 speed_le[2];
-    u8 elevation_flag;
+    u8 terrain_cost_flag; /* 0 ignores terrain costs; 1 uses them */
 } event_walk_to_parameters_t;
 typedef char event_walk_to_parameters_size_must_be_8[sizeof(event_walk_to_parameters_t) == 8 ? 1 : -1];
 

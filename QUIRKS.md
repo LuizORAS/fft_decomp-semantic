@@ -321,7 +321,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `battle_move_calculate_pathing` copies 256 terrain costs from row 0 of
   `g_main_terrain_movement_cost_tables` (64 a row) to the scratchpad cost
   block at 0x1f800100, on over the spread state at 0x1f800180. Its flag-0x100
-  test (a WalkTo with the elevation flag clear) compares the cost-table index,
+  test (a WalkTo with terrain costs disabled) compares the cost-table index,
   not the cost, with 0xff, so blocked surfaces cost 1 too.
   `battle_move_store_unit_movement_to_scratchpad` copies 64 and keeps 0xff.
 - `battle_formula_weapon_heal` (formula 0x07, the Healing Staff) applies

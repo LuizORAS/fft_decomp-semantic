@@ -15,7 +15,9 @@ void world_script_walkto_event_instruction(const event_walk_to_parameters_t* par
         coords.x = parameters->x;
         coords.y = parameters->y;
         coords.elevation = parameters->elevation;
-        battle_move_start_unit_walk_to(misc_id, &coords, 0x100 - (parameters->elevation_flag << 8), 3,
-            world_script_load_halfword(parameters->speed_le));
+        battle_move_start_unit_walk_to(misc_id, &coords,
+            BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST
+                - parameters->terrain_cost_flag * BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST,
+            3, world_script_load_halfword(parameters->speed_le));
     }
 }

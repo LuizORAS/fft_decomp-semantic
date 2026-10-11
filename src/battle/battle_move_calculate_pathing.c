@@ -62,7 +62,7 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
             if (g_battle_move_terrain_cost == MAIN_TERRAIN_COST_WEATHER) {
                 g_battle_move_terrain_cost = g_battle_move_weather_terrain_cost;
             }
-            if ((flags & 0x100) && g_battle_move_pathing_scratch != 0xFF) {
+            if ((flags & BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST) && g_battle_move_pathing_scratch != 0xFF) {
                 g_battle_move_terrain_cost = 1;
             }
             g_battle_move_terrain_costs_ptr[i] = g_battle_move_terrain_cost;
