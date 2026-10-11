@@ -148,10 +148,8 @@ enum { OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE = 9 };
  * 56-byte record, and a record with BLANK or HIDDEN set is skipped.
  * Both pools hold 16 entries, allocated by the open_append_render_record_*
  * counters. */
-/* Common prefix used to dispatch either render-record layout. */
-typedef struct open_render_record {
-    u32 flags;
-} open_render_record_t;
+/* The render queue holds either record format; its leading flags word selects
+ * the concrete layout. */
 
 /* CLUT position and source rectangle at +0x24 of a 56-byte record.
  * open_gfx_init_window_frame_record takes its address as one pointer. */
@@ -653,7 +651,7 @@ extern u32 g_open_gfx_otags[2][16];
 extern s32 g_open_gfx_primitive_count;
 extern open_render_record_56_position_t g_open_gfx_record_translation[16];
 extern s32 g_open_gfx_render_record_pointer_count;
-extern open_render_record_t* g_open_gfx_render_record_pointers[16];
+extern void* g_open_gfx_render_record_pointers[16];
 extern world_animated_render_record_t g_open_gfx_render_records_36[16];
 extern open_render_record_56_t g_open_gfx_render_records_56[16];
 extern open_screen_environment_t g_open_gfx_screen_environments[2];
@@ -668,14 +666,14 @@ void open_gfx_draw_animated_render_record(world_animated_render_record_t* actor,
 void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot);
 s32 open_gfx_update_transition_sequence(void);
 void open_gfx_draw_transition_line_strips(s32 intensity);
-s32 open_gfx_append_animated_render_record(open_render_record_t** list, s32* count);
-s32 open_gfx_append_window_record(open_render_record_t** list, s32* count);
+s32 open_gfx_append_animated_render_record(void** list, s32* count);
+s32 open_gfx_append_window_record(void** list, s32* count);
 void open_gfx_restore_frame_vram_page(void);
 void open_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* quad, RECT* rectangle);
 void open_gfx_clear_and_draw_current_frame(void);
 void open_gfx_clear_current_otag(void);
 void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index);
-void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** records, s32 count);
+void open_gfx_draw_render_record_pointer_list(u32* otag, void** records, s32 count);
 void open_gfx_show_four_render_records(open_title_controller_t* title);
 void open_gfx_init_render_buffers(void);
 void open_gfx_init_screen_environments(s32 clear_first);
