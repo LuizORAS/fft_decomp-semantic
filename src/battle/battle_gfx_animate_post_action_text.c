@@ -24,7 +24,7 @@ extern battle_gfx_numeric_scale_table_t g_battle_numeric_digit_2_critical_zoom_c
  * initializers: the switch table that follows them must stay 8-byte aligned
  * relative to the TU's original .rdata base (0x80067cb8), which a standalone
  * .rodata placement at 0x80067bac cannot reproduce. */
-void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u16* screen_coords) {
+void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const SVECTOR* screen_coords) {
     SVECTOR position;
     SVECTOR zoom_0 = g_battle_status_bubble_zoom;
     SVECTOR zoom_1 = g_battle_status_bubble_zoom;
@@ -99,8 +99,8 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
         }
         unit->numeric_display.active = 0;
     }
-    position.vx = screen_coords[0] + 0x15;
-    position.vy = screen_coords[1] - 8;
+    position.vx = screen_coords->vx + 0x15;
+    position.vy = screen_coords->vy - 8;
     switch (display->selector & BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK) {
     case BATTLE_NUMERIC_DISPLAY_HP_DAMAGE:
     case BATTLE_NUMERIC_DISPLAY_MP_DAMAGE:
@@ -110,7 +110,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     case BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE:
     case BATTLE_NUMERIC_DISPLAY_PA_DAMAGE:
     case BATTLE_NUMERIC_DISPLAY_MA_DAMAGE:
-        position.vy = screen_coords[1] - 0x30;
+        position.vy = screen_coords->vy - 0x30;
         break;
     case BATTLE_NUMERIC_DISPLAY_HP_HEALING:
     case BATTLE_NUMERIC_DISPLAY_MP_HEALING:
@@ -120,7 +120,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u1
     case BATTLE_NUMERIC_DISPLAY_FAITH_GAIN:
     case BATTLE_NUMERIC_DISPLAY_PA_GAIN:
     case BATTLE_NUMERIC_DISPLAY_MA_GAIN:
-        position.vy = screen_coords[1] - 0x10;
+        position.vy = screen_coords->vy - 0x10;
         break;
     case BATTLE_NUMERIC_DISPLAY_MISSED:
     case BATTLE_NUMERIC_DISPLAY_GUARDED:

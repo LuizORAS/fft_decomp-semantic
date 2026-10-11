@@ -1,10 +1,14 @@
 /* SCUS_942.21 0x8001a014..0x8001a523. */
 #include "psx/libspu.h"
 
-static inline void psyq_spu_copy_bytes(u8* destination, u8* source, s32 size) {
+/* Whole-record assignment replaces the retail byte copy with word copies. */
+static inline void psyq_spu_copy_reverb_parameters(
+    psyq_spu_reverb_parameters_t* destination, psyq_spu_reverb_parameters_t* source) {
+    u8* destination_bytes = (u8*)destination;
+    u8* source_bytes = (u8*)source;
     s32 i;
-    for (i = size - 1; i != -1; i--) {
-        *destination++ = *source++;
+    for (i = sizeof(*destination) - 1; i != -1; i--) {
+        *destination_bytes++ = *source_bytes++;
     }
 }
 
@@ -36,7 +40,7 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
         mode_changed = 1;
         _spu_rev_attr.mode = mode;
         _spu_rev_offsetaddr = _spu_rev_startaddr[_spu_rev_attr.mode];
-        psyq_spu_copy_bytes((u8*)&parameters, (u8*)&_spu_rev_param[_spu_rev_attr.mode], sizeof(parameters));
+        psyq_spu_copy_reverb_parameters(&parameters, &_spu_rev_param[_spu_rev_attr.mode]);
         switch (_spu_rev_attr.mode) {
         case 7:
             _spu_rev_attr.feedback = 127;
@@ -58,7 +62,7 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
         case 8:
             delay_changed = 1;
             if (!mode_changed) {
-                psyq_spu_copy_bytes((u8*)&parameters, (u8*)&_spu_rev_param[_spu_rev_attr.mode], sizeof(parameters));
+                psyq_spu_copy_reverb_parameters(&parameters, &_spu_rev_param[_spu_rev_attr.mode]);
                 parameters.mask = 0x0c011c00;
             }
             delay = attr->delay;
@@ -84,7 +88,7 @@ s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
             feedback_changed = 1;
             if (!mode_changed) {
                 if (!delay_changed) {
-                    psyq_spu_copy_bytes((u8*)&parameters, (u8*)&_spu_rev_param[_spu_rev_attr.mode], sizeof(parameters));
+                    psyq_spu_copy_reverb_parameters(&parameters, &_spu_rev_param[_spu_rev_attr.mode]);
                     parameters.mask = 0x80;
                 } else {
                     parameters.mask |= 0x80;

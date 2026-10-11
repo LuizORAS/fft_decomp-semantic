@@ -1840,6 +1840,16 @@ typedef struct battle_gfx_native_unit_seq_table {
 typedef char
     battle_gfx_native_unit_seq_table_size_must_be_0x408[sizeof(battle_gfx_native_unit_seq_table_t) == 0x408 ? 1 : -1];
 
+/* Unit SPR file: 16 CLUTs, two uncompressed 4bpp image blocks, then
+ * a variable-length compressed attack-image stream. */
+typedef struct battle_gfx_unit_sprite_file {
+    u8 palettes[0x200];                   /* 0x0000; little-endian CLUT bytes */
+    u32 pixels[256][32];                  /* 0x0200; 256 x 256 pixels */
+    u32 portrait_and_body_pixels[32][32]; /* 0x8200; 256 x 32 pixels */
+    u8 compressed_attack_image[0];        /* 0x9200; variable byte tail */
+} battle_gfx_unit_sprite_file_t;
+typedef char battle_gfx_unit_sprite_file_size_must_be_0x9200[sizeof(battle_gfx_unit_sprite_file_t) == 0x9200 ? 1 : -1];
+
 /* Packed unit SEQ file. Values and offsets are little-endian byte
  * sequences, so this view needs no native halfword or word alignment. */
 typedef struct battle_gfx_packed_seq_record {
@@ -5301,7 +5311,7 @@ void battle_move_start_teleport_animation(battle_unit_misc_data_t* unit);
 void battle_unit_init_deployed_units_data_for_debug_red_team(battle_deployed_coords_t* formation, s32 unused_1);
 
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
-    s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, u8* data);
+    s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data);
 
 s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags);
 s32 battle_unit_load_job_level(battle_stats_t* unit, s32 job_id, s32* out_slot);
@@ -5882,7 +5892,7 @@ extern DR_MODE g_battle_gfx_screen_modulation_draw_modes[2];
 /* Frame counter and frame index of the selection cursor's bob animation. */
 extern s32 g_battle_gfx_selection_cursor_bob_timer;
 extern s32 g_battle_gfx_selection_cursor_bob_frame;
-extern void* g_battle_gfx_sp2_data;
+extern u32* g_battle_gfx_sp2_data;
 /* The display rotations that the upper five bits of a frame's first byte select, ONE to the turn. */
 extern u16 g_battle_gfx_sprite_y_rotations[];
 
@@ -5907,7 +5917,7 @@ extern u16 g_battle_3d_object_use_request; /* 0x80165fe2 */
 extern u16 g_battle_3d_object_wait_status; /* 0x8016606e */
 extern battle_render_buffer_t g_battle_buffer_a[2];
 void battle_display_menu_number_entry(s32 value, u8 digit_count, s32 image, world_glyph_blit_t* origin);
-void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* screen_coords);
+void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords);
 void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance);
 
 void battle_gfx_run_wep_eff_seq_script(
@@ -5928,7 +5938,7 @@ void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit);
 void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_misc_data_t* unit);
 void battle_gfx_update_all_unit_rotation_and_vectors(void);
 void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* unit, s32 level, s32 final_value);
-void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u16* screen_coords);
+void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const SVECTOR* screen_coords);
 void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s32 tile_effect_level);
 s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t* unit);
 void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t* unit);
@@ -5955,7 +5965,7 @@ void battle_gfx_load_unit_into_evtchr_slot(battle_unit_misc_data_t* unit, s32 sl
 void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode, s32 clut_row, s32 clut_index,
     s32 preset, s16 red, s16 green, s16 blue, s32 final_value);
 
-s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, void* destination);
+s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, u32* destination);
 
 void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame,
     u16 sequence_id, s32** out_table, s32* out_value);
@@ -6014,8 +6024,8 @@ void battle_gfx_init_position_vector_copies(struct battle_unit_misc_data* unit);
 void battle_gfx_init_render_frame(void);
 void battle_gfx_init_render_state(void);
 void battle_gfx_load_casting_unit_graphics(void);
-void battle_gfx_load_spritesheet_into_vram_slot(
-    u8* data, u32 index, s32 unused, struct battle_unit_misc_data* unit, s16 unused_palette);
+void battle_gfx_load_spritesheet_into_vram_slot(const battle_gfx_unit_sprite_file_t* data, u32 index, s32 unused,
+    struct battle_unit_misc_data* unit, s16 unused_palette);
 s32 battle_gfx_load_unit_graphics_by_battle_id(s32, s32);
 void battle_gfx_modify_palette_based_on_team(struct battle_unit_misc_data* unit, s32 amount);
 u32 battle_gfx_read_compressed_nibble(void);

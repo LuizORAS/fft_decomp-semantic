@@ -2,6 +2,7 @@
 #include "psx/libspu.h"
 
 s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
+    void* destination = d_data;
     u16 address;
     u32 blocks;
     u32 status;
@@ -11,7 +12,7 @@ s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
         blocks = 0x20;
         break;
     case 6:
-        d_data = (SpuDecodedData*)d_data->voice1;
+        destination = d_data->voice1;
         address = 0x100;
         blocks = 0x20;
         break;
@@ -20,7 +21,7 @@ s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
         blocks = 0x40;
         break;
     }
-    _spu_Fr_(d_data, address, blocks);
+    _spu_Fr_(destination, address, blocks);
     status = _spu_RXX->rxx.status & 0x800;
     return status != 0;
 }

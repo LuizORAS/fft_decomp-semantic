@@ -26,22 +26,22 @@ void wldcore_map_init_location_marker_and_camera(void) {
     g_wldcore_map_projection_state.flags
         = WLDCORE_PROJECTION_FLAG_UPDATE_POSITION | WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION;
     count = g_wldcore_window_render_object_count;
-    g_wldcore_window_render_object_queue[count++] = &marker->flags;
-    marker->flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
-    g_wldcore_map_projection_state.marker.priority = 0xE;
+    g_wldcore_window_render_object_queue[count++] = &marker->render.flags;
+    marker->render.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
+    g_wldcore_map_projection_state.marker.render.priority = 0xE;
     g_wldcore_window_render_object_count = count;
-    g_wldcore_map_projection_state.marker.anim_counter = 0;
-    g_wldcore_map_projection_state.marker.frame_index = 0;
-    g_wldcore_map_projection_state.marker.color.r = 0x80;
-    g_wldcore_map_projection_state.marker.color.g = 0x80;
-    g_wldcore_map_projection_state.marker.color.b = 0x80;
+    g_wldcore_map_projection_state.marker.render.anim_counter = 0;
+    g_wldcore_map_projection_state.marker.render.frame_index = 0;
+    g_wldcore_map_projection_state.marker.render.color.r = 0x80;
+    g_wldcore_map_projection_state.marker.render.color.g = 0x80;
+    g_wldcore_map_projection_state.marker.render.color.b = 0x80;
     value = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
-    g_wldcore_map_projection_state.marker.palette = 0;
+    g_wldcore_map_projection_state.marker.render.palette = 0;
     if (value == 1) {
-        g_wldcore_map_projection_state.marker.palette = 2;
+        g_wldcore_map_projection_state.marker.render.palette = 2;
     }
     if (value == 2) {
-        g_wldcore_map_projection_state.marker.palette = 3;
+        g_wldcore_map_projection_state.marker.render.palette = 3;
     }
     marker->position = g_wldcore_map_dots[marker->kind].position;
     wldcore_map_negate_and_clamp_coordinates(

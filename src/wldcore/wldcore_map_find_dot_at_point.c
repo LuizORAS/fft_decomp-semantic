@@ -18,18 +18,19 @@ s32 wldcore_map_find_dot_at_point(point32_t point) {
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
             continue;
         }
-        if ((g_wldcore_map_dots[i].flags & (WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN)) != 0) {
+        if ((g_wldcore_map_dots[i].render.flags & (WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
+            != 0) {
             continue;
         }
-        value = g_wldcore_map_dots[i].screen_x;
+        value = g_wldcore_map_dots[i].render.position.x;
         if (point.x < value - 10 || value + 10 < point.x) {
             continue;
         }
-        value = g_wldcore_map_dots[i].screen_y;
+        value = g_wldcore_map_dots[i].render.position.y;
         if (point.y < value - 14 || value + 6 < point.y) {
             continue;
         }
-        value = g_wldcore_map_dots[i].priority;
+        value = g_wldcore_map_dots[i].render.priority;
         if (value < best) {
             hit = i + 1;
             best = value;

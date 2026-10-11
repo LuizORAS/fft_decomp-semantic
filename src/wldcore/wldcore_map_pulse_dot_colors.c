@@ -3,6 +3,7 @@
  * the limit ($v1); reusing the function-scope allocno reproduces the target
  * pair. */
 #include "fft/wldcore.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 void wldcore_map_pulse_dot_colors(void) {
@@ -13,7 +14,7 @@ void wldcore_map_pulse_dot_colors(void) {
     s32 dark;
     u8 state;
     s32 counter;
-    rgb24_t* color;
+    CVECTOR* color;
 
     flags = g_main_system_flags;
     if (flags & MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS) {
@@ -42,9 +43,10 @@ void wldcore_map_pulse_dot_colors(void) {
     bright = phase + 0x60;
     dark = -0x20 - phase;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
-        if (!(g_wldcore_map_dots[i].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
-            color = &g_wldcore_map_dots[i].color;
-            if (g_wldcore_map_dots[i].palette != 0) {
+        if (!(g_wldcore_map_dots[i].render.flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
+            /* Direct nested access biases the base to render; retail addresses the color column. */
+            color = (CVECTOR*)((u8*)&g_wldcore_map_dots[i] + offsetof(wldcore_map_dot_t, render.color));
+            if (g_wldcore_map_dots[i].render.palette != 0) {
                 color->r = bright;
                 color->g = bright;
                 color->b = bright;

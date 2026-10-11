@@ -21,7 +21,7 @@ void battle_state_handle_open_sp2_files_state(void) {
     s32 empty_slot;
     s32 offset;
     RECT* image_rect_address;
-    void* sp2_data;
+    u32* sp2_data;
 
     unit = battle_unit_get_casting_misc_data();
     if (g_battle_gfx_sp2_data == 0) {

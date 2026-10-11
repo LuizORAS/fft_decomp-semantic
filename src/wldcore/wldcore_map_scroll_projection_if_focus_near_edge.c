@@ -10,8 +10,8 @@ void wldcore_map_scroll_projection_if_focus_near_edge(point32_t* delta) {
     VECTOR saved;
 
     saved = g_wldcore_map_projection_origin;
-    position.x = g_wldcore_map_projection_state.marker.screen_x + delta->x;
-    position.y = g_wldcore_map_projection_state.marker.screen_y + delta->y;
+    position.x = g_wldcore_map_projection_state.marker.render.position.x + delta->x;
+    position.y = g_wldcore_map_projection_state.marker.render.position.y + delta->y;
     if ((delta->x < 0 && position.x < -0x40) || (delta->x > 0 && position.x >= 0x49)) {
         wldcore_map_apply_clamped_horizontal_scroll(&delta->x, &g_wldcore_map_projection_origin.vx);
     }

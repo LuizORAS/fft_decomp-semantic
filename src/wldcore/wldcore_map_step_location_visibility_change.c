@@ -29,7 +29,7 @@ void wldcore_map_step_location_visibility_change(wldcore_map_visibility_level_t*
         return;
     }
     if (level->was_set != 0) {
-        g_wldcore_map_dots[level->dot_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_map_dots[level->dot_index].render.flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         world_script_set_variable(level->dot_index + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST, 0);
     }
     g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;

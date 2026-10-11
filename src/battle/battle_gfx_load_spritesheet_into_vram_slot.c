@@ -13,8 +13,10 @@
  * three RECT locals reproduce the 0x50-byte frame; only the middle one is
  * written (dead x/y stores the target keeps).
  */
-void battle_gfx_load_spritesheet_into_vram_slot(
-    u8* data, u32 index, s32 unused, battle_unit_misc_data_t* unit, s16 unused_palette) {
+void battle_gfx_load_spritesheet_into_vram_slot(const battle_gfx_unit_sprite_file_t* source, u32 index, s32 unused,
+    battle_unit_misc_data_t* unit, s16 unused_palette) {
+    const u8* data;
+    u32 column;
     u8* palette;
     u8* image;
     s32 i;
@@ -22,25 +24,28 @@ void battle_gfx_load_spritesheet_into_vram_slot(
     RECT rect;
     RECT unused_rect2;
 
+    /* Named fields change the palette-to-image cursor lifetime. */
+    data = (const u8*)source;
+    column = index;
     palette = (u8*)g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].palettes[0];
     image = g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].compressed_attack_image;
     if (data != 0) {
         for (i = 0; i < 0x200; i++) {
             if ((i & 1) && (i % 32 != 1)) {
-                palette[i] = data[i] | 0x80;
+                palette[i] = source->palettes[i] | 0x80;
             } else {
-                palette[i] = data[i];
+                palette[i] = source->palettes[i];
             }
         }
-        data += 0x200;
-        rect.x = (index << 6) + 0x100;
+        data += sizeof(source->palettes);
+        rect.x = (column << 6) + 0x100;
         rect.y = 0x100;
         LoadTPage((u32*)data, 0, 0, rect.x, 0x100, 0x100, 0x100);
-        rect.x = ((index >> 3) << 6) + 0x340;
-        rect.y = ((index & 7) << 5) + 0x100;
-        LoadTPage((u32*)(data + 0x8000), 0, 0, rect.x, rect.y, 0x100, 0x20);
+        rect.x = ((column >> 3) << 6) + 0x340;
+        rect.y = ((column & 7) << 5) + 0x100;
+        LoadTPage((u32*)(data + sizeof(source->pixels)), 0, 0, rect.x, rect.y, 0x100, 0x20);
         for (i = 0; i < 0x30d4; i++) {
-            image[i] = data[i + 0x9000];
+            image[i] = data[i + sizeof(source->pixels) + sizeof(source->portrait_and_body_pixels)];
         }
     }
 }

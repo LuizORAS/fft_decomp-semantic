@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /*
@@ -15,15 +16,15 @@ void wldcore_map_color_and_draw_dots(void) {
     wldcore_map_dot_t* dots;
     wldcore_map_dot_t* dot;
     s32* flags_base;
-    rgb24_t* color;
+    CVECTOR* color;
     s32 y;
     s32 is_castle;
     s32 queue_index;
     s32 i;
 
     dots = g_wldcore_map_dots;
-    /* Queue entries are built from the flags column base; &dots[i].flags does not match. */
-    flags_base = &dots->flags;
+    /* Queue entries are built from the flags column base; &dots[i].render.flags does not match. */
+    flags_base = &dots->render.flags;
     dot = dots;
     src = g_wldcore_map_dot_sources;
     g_wldcore_map_dot_pulse_direction = 0;
@@ -35,29 +36,30 @@ void wldcore_map_color_and_draw_dots(void) {
         /* The x coordinate occupies the packed word's low halfword. */
         g_wldcore_map_dots[i].position.vx = src[i].position_and_kind;
         y = src[i].y;
-        g_wldcore_map_dots[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
-        g_wldcore_map_dots[i].priority = 0xf;
-        color = &g_wldcore_map_dots[i].color;
+        g_wldcore_map_dots[i].render.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
+        g_wldcore_map_dots[i].render.priority = 0xf;
+        /* Direct nested access biases the base to render; retail addresses the color column. */
+        color = (CVECTOR*)((u8*)&g_wldcore_map_dots[i] + offsetof(wldcore_map_dot_t, render.color));
         g_wldcore_map_dots[i].position.vz = 0;
         g_wldcore_map_dots[i].position.vy = y;
         color->r = 0x80;
         color->g = 0x80;
         color->b = 0x80;
         is_castle = g_wldcore_map_dots[i].kind == 2;
-        g_wldcore_map_dots[i].sequence = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
+        g_wldcore_map_dots[i].render.sequence = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
             if (i < WORLD_LOCATION_FIELD_FIRST) {
-                g_wldcore_map_dots[i].palette = 0xc;
+                g_wldcore_map_dots[i].render.palette = 0xc;
             } else {
-                g_wldcore_map_dots[i].palette = 0x10;
+                g_wldcore_map_dots[i].render.palette = 0x10;
             }
         } else {
-            g_wldcore_map_dots[i].palette = 0;
+            g_wldcore_map_dots[i].render.palette = 0;
         }
-        dot->anim_counter = 0;
-        g_wldcore_map_dots[i].frame_index = 0;
+        dot->render.anim_counter = 0;
+        g_wldcore_map_dots[i].render.frame_index = 0;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
-            g_wldcore_map_dots[i].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+            g_wldcore_map_dots[i].render.flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
         dot++;
         queue_index = g_wldcore_window_render_object_count;

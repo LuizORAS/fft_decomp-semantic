@@ -10,11 +10,10 @@
  * the OT root, `tag` at the last entry, and `offset`/`point` carry the z
  * origin and resolution the sort helpers bias against. */
 typedef struct {
-    s32 log2n;  /* 0x00; the SDK spells this field `length`, but every
-                 * accepted source here uses log2n, which is what it holds */
+    u32 length; /* 0x00; number of ordering-table entries is 1 << length */
     u32* org;   /* 0x04 */
-    s32 offset; /* 0x08 */
-    s32 point;  /* 0x0C */
+    u32 offset; /* 0x08 */
+    u32 point;  /* 0x0C */
     u32* tag;   /* 0x10 */
 } GsOT;
 
@@ -49,7 +48,7 @@ typedef char gs_sprite_size_must_be_0x24[(sizeof(GsSPRITE) == 0x24) ? 1 : -1];
 /* libgs flat-shaded line primitive descriptor, 0x10 bytes; 0x0F is implicit
  * padding. */
 typedef struct {
-    s32 attribute; /* 0x00 */
+    u32 attribute; /* 0x00 */
     s16 x0;        /* 0x04 */
     s16 y0;        /* 0x06 */
     s16 x1;        /* 0x08 */

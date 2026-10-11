@@ -10,7 +10,7 @@
  * bubble is drawn one tile above the unit's feet and offset by status_bubble_x
  * and status_bubble_y.
  */
-void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* screen_coords) {
+void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords) {
     SVECTOR position;
     SVECTOR zoom = g_battle_status_bubble_zoom;
     VECTOR transformed;
@@ -31,7 +31,7 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
 
     /* The caller supplies its culling coordinates in a1, but this routine
      * independently projects the bubble and never reads them. */
-    (void)screen_coords;
+    (void)unused_screen_coords;
 
     bubble_id = unit->status_bubble_id;
     display = unit->status_bubble_display;

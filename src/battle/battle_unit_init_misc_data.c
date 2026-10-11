@@ -14,7 +14,7 @@
  * The contradictory weapon range test (<0x86, <0x3c, >=0x4a, !=0x5d) is
  * literally what the target branches encode (the call is dead code). */
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
-    s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, u8* data) {
+    s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data) {
     battle_unit_misc_data_t* unit;
     union {
         battle_unit_anim_state_t* animation;
