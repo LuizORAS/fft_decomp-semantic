@@ -3,7 +3,7 @@
 DRAWENV* PutDrawEnv(DRAWENV* env) {
     DR_ENV* packet;
     if (g_psyq_gpu_environment.debug_level >= 2)
-        g_psyq_gpu_printf(g_psyq_gpu_put_draw_env_format, env);
+        GPU_printf(g_psyq_gpu_put_draw_env_format, env);
     packet = &env->dr_env;
     SetDrawEnv(packet, env);
     termPrim(packet);

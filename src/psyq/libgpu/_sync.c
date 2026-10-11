@@ -5,7 +5,7 @@ int _sync(int mode) {
     int count;
     if (!mode) {
         set_alarm();
-        while (g_psyq_gpu_queue_head != g_psyq_gpu_queue_tail) {
+        while (_qin != _qout) {
             _exeque();
             if (get_alarm())
                 return -1;
@@ -16,7 +16,7 @@ int _sync(int mode) {
         }
         return 0;
     }
-    count = (g_psyq_gpu_queue_head - g_psyq_gpu_queue_tail) & PSYQ_GPU_QUEUE_INDEX_MASK;
+    count = (_qin - _qout) & PSYQ_GPU_QUEUE_INDEX_MASK;
     if (count)
         _exeque();
     if ((*g_psyq_gpu_dma_chcr & PSYQ_GPU_DMA_BUSY) || !(*g_psyq_gpu_gp1_port & PSYQ_GPU_STATUS_READY_COMMAND)) {

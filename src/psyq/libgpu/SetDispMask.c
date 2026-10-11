@@ -4,7 +4,7 @@ void SetDispMask(int mask) {
     u32 command;
     psyq_gpu_dispatch_t* dispatch;
     if (g_psyq_gpu_environment.debug_level >= 2)
-        g_psyq_gpu_printf(g_psyq_gpu_display_mask_format, mask);
+        GPU_printf(g_psyq_gpu_display_mask_format, mask);
     if (!mask)
         memset2(&g_psyq_gpu_environment.display, -1, sizeof(DISPENV));
     dispatch = g_psyq_gpu_dispatch;

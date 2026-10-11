@@ -7,7 +7,7 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
         g_psyq_gpu_environment; /* An unqualified RAM view folds the native queue-state address sequence. */
     int i;
     set_alarm();
-    while (((g_psyq_gpu_queue_head + 1) & PSYQ_GPU_QUEUE_INDEX_MASK) == g_psyq_gpu_queue_tail) {
+    while (((_qin + 1) & PSYQ_GPU_QUEUE_INDEX_MASK) == _qout) {
         if (get_alarm())
             return -1;
         _exeque();
@@ -15,29 +15,28 @@ int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 ar
     g_psyq_gpu_enqueue_interrupt_mask = SetIntrMask(0);
     g_psyq_gpu_environment.completion_pending = 1;
     if (!g_psyq_gpu_environment.queue_enabled
-        || (g_psyq_gpu_queue_head == g_psyq_gpu_queue_tail && !(*g_psyq_gpu_dma_chcr & PSYQ_GPU_DMA_BUSY)
+        || (_qin == _qout && !(*g_psyq_gpu_dma_chcr & PSYQ_GPU_DMA_BUSY)
             && !g_psyq_gpu_environment.draw_sync_callback)) {
         while (!(*g_psyq_gpu_gp1_port & PSYQ_GPU_STATUS_READY_COMMAND))
             ;
         operation(source, argument);
-        g_psyq_gpu_last_operation.operation = operation;
-        g_psyq_gpu_last_operation.source = source;
-        g_psyq_gpu_last_operation.argument = argument;
+        _qlog.operation = operation;
+        _qlog.source = source;
+        _qlog.argument = argument;
         SetIntrMask(g_psyq_gpu_enqueue_interrupt_mask);
         return 0;
     }
     DMACallback(PSYQ_GPU_DMA_GPU_CHANNEL, _exeque);
     if (copy_size) {
         for (i = 0; i < copy_size / 4; i++)
-            g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].packet_words[i] = ((u32*)source)[i];
-        g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.source
-            = g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].packet_words;
+            _que[_qin].packet_words[i] = ((u32*)source)[i];
+        _que[_qin].request.source = _que[_qin].packet_words;
     } else
-        g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.source = source;
-    g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.argument = argument;
-    g_psyq_gpu_operation_queue[g_psyq_gpu_queue_head].request.operation = operation;
-    g_psyq_gpu_queue_head = (g_psyq_gpu_queue_head + 1) & PSYQ_GPU_QUEUE_INDEX_MASK;
+        _que[_qin].request.source = source;
+    _que[_qin].request.argument = argument;
+    _que[_qin].request.operation = operation;
+    _qin = (_qin + 1) & PSYQ_GPU_QUEUE_INDEX_MASK;
     SetIntrMask(g_psyq_gpu_enqueue_interrupt_mask);
     _exeque();
-    return (g_psyq_gpu_queue_head - g_psyq_gpu_queue_tail) & PSYQ_GPU_QUEUE_INDEX_MASK;
+    return (_qin - _qout) & PSYQ_GPU_QUEUE_INDEX_MASK;
 }

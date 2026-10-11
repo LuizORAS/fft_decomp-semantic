@@ -3,7 +3,7 @@
 void DrawOTagEnv(u32* ot, DRAWENV* env) {
     DR_ENV* packet;
     if (g_psyq_gpu_environment.debug_level >= 2)
-        g_psyq_gpu_printf(g_psyq_gpu_draw_otag_env_format, ot, env);
+        GPU_printf(g_psyq_gpu_draw_otag_env_format, ot, env);
     packet = &env->dr_env;
     SetDrawEnv(packet, env);
     setaddr(packet, ot);

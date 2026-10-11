@@ -9,26 +9,24 @@ int FntOpen(int x, int y, int width, int height, int background, int characters)
         return -1;
     if (g_psyq_gpu_font_window_count == 0)
         g_psyq_gpu_font_allocated_characters = 0;
-    g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].wrap_disabled = width == 0;
+    Font[g_psyq_gpu_font_window_count].wrap_disabled = width == 0;
     if (characters + g_psyq_gpu_font_allocated_characters > 1024)
         characters = 1024 - g_psyq_gpu_font_allocated_characters;
     setRECT(&window, 0, 0, 256, 256);
-    SetDrawMode(&g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].mode, 0, 0, g_psyq_gpu_font_tpage, &window);
+    SetDrawMode(&Font[g_psyq_gpu_font_window_count].mode, 0, 0, g_psyq_gpu_font_tpage, &window);
     if (background) {
-        SetTile(&g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].tile);
-        setRGB0(&g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].tile, 0, 0, 0);
-        SetSemiTrans(&g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].tile, background == 2);
+        SetTile(&Font[g_psyq_gpu_font_window_count].tile);
+        setRGB0(&Font[g_psyq_gpu_font_window_count].tile, 0, 0, 0);
+        SetSemiTrans(&Font[g_psyq_gpu_font_window_count].tile, background == 2);
     }
-    setXY0(&g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].tile, x, y);
-    setWH(&g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].tile, width, height);
-    g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].character_limit = characters;
-    g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].text_count = 0;
-    g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].text
-        = g_psyq_gpu_font_text_pool + g_psyq_gpu_font_allocated_characters;
-    g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].sprites
-        = g_psyq_gpu_font_sprite_pool + g_psyq_gpu_font_allocated_characters;
-    *g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].text = 0;
-    sprite = g_psyq_gpu_font_windows[g_psyq_gpu_font_window_count].sprites;
+    setXY0(&Font[g_psyq_gpu_font_window_count].tile, x, y);
+    setWH(&Font[g_psyq_gpu_font_window_count].tile, width, height);
+    Font[g_psyq_gpu_font_window_count].character_limit = characters;
+    Font[g_psyq_gpu_font_window_count].text_count = 0;
+    Font[g_psyq_gpu_font_window_count].text = g_psyq_gpu_font_text_pool + g_psyq_gpu_font_allocated_characters;
+    Font[g_psyq_gpu_font_window_count].sprites = g_psyq_gpu_font_sprite_pool + g_psyq_gpu_font_allocated_characters;
+    *Font[g_psyq_gpu_font_window_count].text = 0;
+    sprite = Font[g_psyq_gpu_font_window_count].sprites;
     for (i = 0; i < characters; i++) {
         SetSprt8(sprite);
         sprite->clut = g_psyq_gpu_font_clut;

@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 u32* ClearOTag(u32* ot, int count) {
     if (g_psyq_gpu_environment.debug_level >= 2)
-        g_psyq_gpu_printf(g_psyq_gpu_clear_otag_format, ot, count);
+        GPU_printf(g_psyq_gpu_clear_otag_format, ot, count);
     while (--count) {
         setlen(ot, 0);
         setaddr(ot, ot + 1);

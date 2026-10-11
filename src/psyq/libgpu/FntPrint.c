@@ -23,11 +23,11 @@ int FntPrint(char* first, ...) {
     if ((int)first < 0 || (int)first >= g_psyq_gpu_font_window_count) {
         format = first;
         first = (char*)g_psyq_gpu_default_font_window;
-        if (!g_psyq_gpu_font_windows[(int)first].text)
+        if (!Font[(int)first].text)
             return -1;
     } else
         format = PSYQ_GPU_FONT_VA_ARG(ap, char*);
-    window = &g_psyq_gpu_font_windows[(int)first];
+    window = &Font[(int)first];
     if (window->text_count > window->character_limit)
         return -1;
     for (; (c = *format) != 0; format++) {

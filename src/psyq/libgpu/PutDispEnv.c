@@ -10,7 +10,7 @@ DISPENV* PutDispEnv(DISPENV* env) {
     int v_end;
     u32 mode = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_DISPLAY_MODE);
     if (g_psyq_gpu_environment.debug_level >= 2)
-        g_psyq_gpu_printf(g_psyq_gpu_put_disp_env_format, env);
+        GPU_printf(g_psyq_gpu_put_disp_env_format, env);
     g_psyq_gpu_dispatch->control((g_psyq_gpu_environment.graph_type == 1 || g_psyq_gpu_environment.graph_type == 2)
             ? ((env->disp.y & 0xfff) << 12) | (get_dx(&env->disp) & 0xfff)
                 | PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_GP1_DISPLAY_START)

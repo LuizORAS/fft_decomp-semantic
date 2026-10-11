@@ -759,7 +759,7 @@ extern psyq_gpu_environment_t g_psyq_gpu_environment;
 
 extern psyq_gpu_dispatch_t* g_psyq_gpu_dispatch;
 extern psyq_gpu_dispatch_t g_psyq_gpu_dispatch_table;
-extern int (*g_psyq_gpu_printf)(const char*, ...);
+extern int (*GPU_printf)(const char*, ...);
 extern volatile u32* g_psyq_gpu_gp0_port;
 extern volatile u32* g_psyq_gpu_gp1_port;
 extern volatile u32* g_psyq_gpu_dma_madr;
@@ -785,7 +785,7 @@ typedef struct {
     int wrap_disabled;
 } psyq_font_window_t;
 
-extern psyq_font_window_t g_psyq_gpu_font_windows[8];
+extern psyq_font_window_t Font[8];
 extern int g_psyq_gpu_font_allocated_characters;
 extern const char* g_psyq_gpu_font_hex_digits;
 extern char g_psyq_gpu_font_text_pool[1024];
@@ -796,8 +796,8 @@ extern int g_psyq_gpu_sync_deadline;
 extern int g_psyq_gpu_sync_poll_count;
 extern const int g_psyq_gpu_vram_width_lookup[5];
 extern const int g_psyq_gpu_vram_height_lookup[5];
-extern volatile int g_psyq_gpu_queue_head;
-extern volatile int g_psyq_gpu_queue_tail;
+extern volatile int _qin;
+extern volatile int _qout;
 extern int g_psyq_gpu_reset_interrupt_mask;
 typedef struct {
     psyq_gpu_operation_t operation;
@@ -819,7 +819,7 @@ enum {
 };
 
 /* The DMA interrupt callback (_exeque) and the foreground share the queue. */
-extern volatile psyq_gpu_queue_entry_t g_psyq_gpu_operation_queue[PSYQ_GPU_QUEUE_CAPACITY];
+extern volatile psyq_gpu_queue_entry_t _que[PSYQ_GPU_QUEUE_CAPACITY];
 extern int g_psyq_gpu_enqueue_interrupt_mask;
 extern int g_psyq_gpu_queue_interrupt_mask;
 
@@ -921,7 +921,7 @@ int psyq_gpu_open_tmd_object(
     psyq_tmd_header_t* header, int object_index, psyq_tmd_packet_t** primitive, SVECTOR** vertices, SVECTOR** normals);
 int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, TMD_PRIM* primitive);
 
-extern volatile psyq_gpu_operation_snapshot_t g_psyq_gpu_last_operation;
+extern volatile psyq_gpu_operation_snapshot_t _qlog;
 extern const char g_psyq_gpu_timeout_state_format[];
 extern const char g_psyq_gpu_timeout_operation_format[];
 int _exeque(void);

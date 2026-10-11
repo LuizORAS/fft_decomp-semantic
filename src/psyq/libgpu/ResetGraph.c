@@ -20,6 +20,6 @@ int ResetGraph(int mode) {
         return g_psyq_gpu_environment.graph_type;
     }
     if (g_psyq_gpu_environment.debug_level >= 2)
-        g_psyq_gpu_printf(g_psyq_gpu_reset_graph_format, mode);
+        GPU_printf(g_psyq_gpu_reset_graph_format, mode);
     return g_psyq_gpu_dispatch->reset(1);
 }

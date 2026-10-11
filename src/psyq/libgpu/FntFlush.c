@@ -21,10 +21,10 @@ u32* FntFlush(int id) {
     int b = 128;
     if (id < 0 || id >= g_psyq_gpu_font_window_count) {
         id = g_psyq_gpu_default_font_window;
-        if (!g_psyq_gpu_font_windows[id].text)
+        if (!Font[id].text)
             return 0;
     }
-    window = &g_psyq_gpu_font_windows[id];
+    window = &Font[id];
     ot = &window->mode.tag;
     text = window->text;
     remaining = window->character_limit;

@@ -1077,7 +1077,7 @@ data:
   - {addr: 0x80031c9c, name: g_psyq_api_root_counters}
   - {addr: 0x80031ca0, name: g_psyq_api_root_counter_irq_masks}
   - {addr: 0x80031cb0, name: g_psyq_libc_default_format}
-  - {addr: 0x80031cbc, name: g_psyq_gpu_font_windows}
+  - {addr: 0x80031cbc, name: Font}
   - {addr: 0x80031e3c, name: g_psyq_gpu_font_window_count}
   - {addr: 0x80031e40, name: g_psyq_gpu_default_font_window}
   - {addr: 0x80031e44, name: g_psyq_gpu_font_asset}
@@ -1085,7 +1085,7 @@ data:
   - {addr: 0x80032848, name: g_psyq_gpu_font_hex_digits}
   - {addr: 0x8003284c, name: g_psyq_gpu_dispatch_table}
   - {addr: 0x8003288c, name: g_psyq_gpu_dispatch}
-  - {addr: 0x80032890, name: g_psyq_gpu_printf}
+  - {addr: 0x80032890, name: GPU_printf}
   - {addr: 0x80032894, name: g_psyq_gpu_environment}
   - {addr: 0x80032914, name: g_psyq_gpu_vram_width_lookup}
   - {addr: 0x80032928, name: g_psyq_gpu_vram_height_lookup}
@@ -1100,9 +1100,9 @@ data:
   - {addr: 0x8003297c, name: g_psyq_gpu_otc_dma_bcr}
   - {addr: 0x80032980, name: g_psyq_gpu_otc_dma_chcr}
   - {addr: 0x80032984, name: g_psyq_gpu_dma_dpcr}
-  - {addr: 0x80032988, name: g_psyq_gpu_last_operation}
-  - {addr: 0x80032998, name: g_psyq_gpu_queue_head}
-  - {addr: 0x8003299c, name: g_psyq_gpu_queue_tail}
+  - {addr: 0x80032988, name: _qlog}
+  - {addr: 0x80032998, name: _qin}
+  - {addr: 0x8003299c, name: _qout}
   - {addr: 0x800329a0, name: g_psyq_gpu_enqueue_interrupt_mask}
   - {addr: 0x800329a4, name: g_psyq_gpu_queue_interrupt_mask}
   - {addr: 0x800329a8, name: g_psyq_gpu_reset_interrupt_mask}
@@ -1181,7 +1181,7 @@ data:
   - {addr: 0x800370b4, name: g_psyq_cd_stream_frame_dma_pending}
   - {addr: 0x800370b8, name: g_psyq_cd_stream_emulation_sector_index}
   - {addr: 0x800370bc, name: g_main_sound_heap_memory}
-  - {addr: 0x8003f0bc, name: g_psyq_gpu_operation_queue}
+  - {addr: 0x8003f0bc, name: _que}
   - {addr: 0x800408bc, name: g_psyq_cd_stream_write_index}
   - {addr: 0x800408c0, name: g_psyq_cd_stream_frame_start_index}
   - {addr: 0x800408c4, name: g_psyq_cd_stream_read_index}
