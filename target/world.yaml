@@ -2291,7 +2291,7 @@ data:
   - {addr: 0x801cd794, name: g_world_menu_script_callbacks}
   - {addr: 0x801cd7d4, name: g_world_menu_scenario_event_started}
   - {addr: 0x801cd7d8, name: g_world_event_pending_effect_id}
-  - {addr: 0x801cd7dc, name: D_801CD7DC}
+  - {addr: 0x801cd7dc, name: GsCLIP3far}
   - {addr: 0x801cd7e0, name: g_world_menu_thread_menu_data}
   - {addr: 0x801cd7e4, name: GsIDMATRIX2}
   - {addr: 0x801cd804, name: CLIP2}
@@ -2312,7 +2312,7 @@ data:
   - {addr: 0x801cd848, name: g_world_gfx_poly_g3_capacity}
   - {addr: 0x801cd84c, name: g_world_gfx_poly_f4_capacity}
   - {addr: 0x801cd850, name: g_world_gfx_gradient_quad_capacity}
-  - {addr: 0x801cd854, name: D_801CD854}
+  - {addr: 0x801cd854, name: GsCLIP3near}
   - {addr: 0x801cd858, name: g_world_gfx_poly_f3_count}
   - {addr: 0x801cd85c, name: g_world_gfx_poly_g3_count}
   - {addr: 0x801cd860, name: g_world_gfx_poly_f4_count}

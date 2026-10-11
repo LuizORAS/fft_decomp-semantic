@@ -7,7 +7,8 @@
 #include "psx/types.h"
 
 /* GsSPRITE/GsLINE/GsBOXF.attribute: suppress display. */
-#define GsDOFF (1U << 31)
+#define GsDOFF      (1U << 31)
+#define ZRESOLUTION 0x3fff
 
 /* Psy-Q packet work areas are byte buffers holding variable GPU packet layouts. */
 typedef u8 PACKET;
@@ -170,9 +171,9 @@ extern s16 g_psyq_gs_offset_draw_active; /* GsOFSGPU: offsets go through the dra
 extern MATRIX g_psyq_gs_ls_matrix;
 extern MATRIX g_psyq_gs_light_ws_matrix;
 
-/* Set by GsInit3D to 0x3FFF and 10; no linked function reads them. */
-extern s32 D_801CD7DC;
-extern s32 D_801CD854;
+/* GsInit3D clipping limits; no other linked function reads them. */
+extern s32 GsCLIP3far;
+extern s32 GsCLIP3near;
 
 PACKET* psyq_gs_sort_sprite_bg(u32* tag, GsOT* ot, u16 z, s32 len);
 void psyq_gs_init_gpu(u16 x, u16 y, u16 intmode, u16 dith, u16 varmmode);
