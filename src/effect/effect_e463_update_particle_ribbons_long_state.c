@@ -209,7 +209,7 @@ s32 effect_e463_update_particle_ribbons_long_state(s16 record_index, s32 callbac
             }
 
             READ_CURVE(factor, j, (scroll >> 4) & 0xf, frame);
-            battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread.vx);
+            battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
             if (rotate) {
                 SetRotMatrix(&facing);
                 vector.vx = spread.vx;
@@ -232,9 +232,9 @@ s32 effect_e463_update_particle_ribbons_long_state(s16 record_index, s32 callbac
             }
 
             READ_CURVE(factor, j, (scroll >> 12) & 0xf, frame);
-            battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &angle_spread.vx);
+            battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &angle_spread);
             READ_CURVE(factor, j, (scroll >> 8) & 0xf, frame);
-            battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle_base.vx);
+            battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle_base);
 
             READ_CURVE(factor, j, (wave >> 12) & 0xf, frame);
             target_base.vx = battle_effect_lerp_linear(

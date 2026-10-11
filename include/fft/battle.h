@@ -3918,16 +3918,16 @@ typedef char assert_battle_effect_slot_size[sizeof(battle_effect_slot_t) == 0xcc
  * or box half-extent around the spawn position and the velocity spread
  * randomizes the base angles. */
 typedef struct effect_emitter_geometry_view {
-    vec3s16_t spawn_position_start;   /* 0x14 */
-    vec3s16_t spawn_position_end;     /* 0x1a */
-    s16 spawn_spread_start[3];        /* 0x20 */
-    s16 spawn_spread_end[3];          /* 0x26 */
-    s16 velocity_base_angle_start[3]; /* 0x2c */
-    s16 velocity_base_angle_end[3];   /* 0x32 */
-    s16 velocity_spread_start[3];     /* 0x38 */
-    s16 velocity_spread_end[3];       /* 0x3e */
-    s16 inertia_start[2];             /* 0x44: min, max */
-    s16 inertia_end[2];               /* 0x48 */
+    vec3s16_t spawn_position_start;      /* 0x14 */
+    vec3s16_t spawn_position_end;        /* 0x1a */
+    vec3s16_t spawn_spread_start;        /* 0x20 */
+    vec3s16_t spawn_spread_end;          /* 0x26 */
+    vec3s16_t velocity_base_angle_start; /* 0x2c */
+    vec3s16_t velocity_base_angle_end;   /* 0x32 */
+    vec3s16_t velocity_spread_start;     /* 0x38 */
+    vec3s16_t velocity_spread_end;       /* 0x3e */
+    s16 inertia_start[2];                /* 0x44: min, max */
+    s16 inertia_end[2];                  /* 0x48 */
 } effect_emitter_geometry_view_t;
 typedef char assert_effect_emitter_geometry_view_size[sizeof(effect_emitter_geometry_view_t) == 0x38 ? 1 : -1];
 
@@ -3956,30 +3956,30 @@ typedef struct effect_geometry_entry {
     u16 flags;                /* 0x06: EFFECT_EMITTER_FLAG_* and effect_emitter_velocity_e; the particle's flags */
     u32 curve_indices[2];     /* 0x08 */
     u32 colour_curves;        /* 0x10: nibbles 0-2 = r/g/b curve indexes, used raw */
-    vec3s16_t spawn_position_start;   /* 0x14: offset from the origin effect_emitter_origin_e names */
-    vec3s16_t spawn_position_end;     /* 0x1a */
-    s16 spawn_spread_start[3];        /* 0x20: half-extent of the spawn box or ellipsoid */
-    s16 spawn_spread_end[3];          /* 0x26 */
-    s16 velocity_base_angle_start[3]; /* 0x2c */
-    s16 velocity_base_angle_end[3];   /* 0x32 */
-    s16 velocity_spread_start[3];     /* 0x38: random angle added to each base angle; halved when it has no curve */
-    s16 velocity_spread_end[3];       /* 0x3e */
-    s16 inertia_start[2];             /* 0x44: min, max */
-    s16 inertia_end[2];               /* 0x48 */
-    s16 _unknown_4c[2];               /* 0x4c: lerped to _unknown_50 and discarded */
-    s16 _unknown_50[2];               /* 0x50 */
-    s16 weight_start[2];              /* 0x54: min, max; scales gravity */
-    s16 weight_end[2];                /* 0x58 */
-    s16 radial_speed_start[2];        /* 0x5c: min, max */
-    s16 radial_speed_end[2];          /* 0x60 */
-    s16 acceleration_start[6];        /* 0x64: x, y and z min, max pairs */
-    s16 acceleration_end[6];          /* 0x70 */
-    s16 acceleration_step_start[6];   /* 0x7c: x, y and z min, max pairs */
-    s16 acceleration_step_end[6];     /* 0x88 */
-    s16 lifetime_start[2];            /* 0x94: min, max, in frames */
-    s16 lifetime_end[2];              /* 0x98 */
-    s16 target_offset_start[3];       /* 0x9c: homing target, an offset from what effect_emitter_homing_e names */
-    s16 target_offset_end[3];         /* 0xa2 */
+    vec3s16_t spawn_position_start;      /* 0x14: offset from the origin effect_emitter_origin_e names */
+    vec3s16_t spawn_position_end;        /* 0x1a */
+    vec3s16_t spawn_spread_start;        /* 0x20: half-extent of the spawn box or ellipsoid */
+    vec3s16_t spawn_spread_end;          /* 0x26 */
+    vec3s16_t velocity_base_angle_start; /* 0x2c */
+    vec3s16_t velocity_base_angle_end;   /* 0x32 */
+    vec3s16_t velocity_spread_start;     /* 0x38: random angle added to each base angle; halved when it has no curve */
+    vec3s16_t velocity_spread_end;       /* 0x3e */
+    s16 inertia_start[2];                /* 0x44: min, max */
+    s16 inertia_end[2];                  /* 0x48 */
+    s16 _unknown_4c[2];                  /* 0x4c: lerped to _unknown_50 and discarded */
+    s16 _unknown_50[2];                  /* 0x50 */
+    s16 weight_start[2];                 /* 0x54: min, max; scales gravity */
+    s16 weight_end[2];                   /* 0x58 */
+    s16 radial_speed_start[2];           /* 0x5c: min, max */
+    s16 radial_speed_end[2];             /* 0x60 */
+    s16 acceleration_start[6];           /* 0x64: x, y and z min, max pairs */
+    s16 acceleration_end[6];             /* 0x70 */
+    s16 acceleration_step_start[6];      /* 0x7c: x, y and z min, max pairs */
+    s16 acceleration_step_end[6];        /* 0x88 */
+    s16 lifetime_start[2];               /* 0x94: min, max, in frames */
+    s16 lifetime_end[2];                 /* 0x98 */
+    s16 target_offset_start[3];          /* 0x9c: homing target, an offset from what effect_emitter_homing_e names */
+    s16 target_offset_end[3];            /* 0xa2 */
     u8 _unused_a8[0x08];
     s16 particle_count_start;     /* 0xb0: particles per spawn */
     s16 particle_count_end;       /* 0xb2 */
@@ -4782,7 +4782,7 @@ void battle_effect_init_state_records(void);
 s16 battle_effect_start_script_record(u8* script, s16 start_pc, s16 parent_index);
 s32 battle_effect_code_script_04_end(effect_record_t* unused_record);
 s32 battle_effect_code_script_2e_invalid(effect_record_t* unused_record);
-void battle_effect_interpolate_emitter_spawn_spread(const effect_geometry_record_t* source, s32 factor, s32* out);
+void battle_effect_interpolate_emitter_spawn_spread(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
 s32 battle_effect_lerp_linear(s32 start, s32 end, s32 factor);
 void battle_effect_play(void);
 s32 battle_effect_run_block(s16 index);
@@ -4795,9 +4795,9 @@ s32 battle_effect_update_slot(s32 id);
 s32 battle_effect_update_stage(void);
 void battle_effect_interpolate_emitter_spawn_position(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
 void battle_effect_interpolate_emitter_velocity_base_angles(
-    const effect_geometry_record_t* source, s32 factor, s32* out);
+    const effect_geometry_record_t* source, s32 factor, VECTOR* out);
 void battle_effect_interpolate_emitter_velocity_direction_spread(
-    const effect_geometry_record_t* source, s32 factor, s32* out);
+    const effect_geometry_record_t* source, s32 factor, VECTOR* out);
 void battle_effect_add_vectors_to_svector(const VECTOR* left, const VECTOR* right, SVECTOR* result);
 void battle_effect_add_vectors_to_svector_rot_y_270(const VECTOR* left, const VECTOR* right, SVECTOR* result);
 void battle_effect_add_vectors_to_svector_rot_y_180(const VECTOR* left, const VECTOR* right, SVECTOR* result);

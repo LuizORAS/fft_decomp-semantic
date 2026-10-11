@@ -1,12 +1,5 @@
 #include "fft/wldcore.h"
 
-/* View of the picture state at 0x800d485c (render record index,
- * then the pending picture id). */
-typedef struct wldcore_script_picture_state {
-    s16 render_index; /* 0x00; g_wldcore_active_saved_record.picture_render_index */
-    s16 picture;      /* 0x02; g_wldcore_active_saved_record.picture_id */
-} wldcore_script_picture_state_t;
-
 /*
  * Loads the sound novel's reading state and replays what it implies.
  *
@@ -31,7 +24,6 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     s32 tint;
     s32 section;
     u16* state_flags;
-    wldcore_script_picture_state_t* picture;
 
     if (g_wldcore_saved_record_index < 5) {
         g_wldcore_active_saved_record = g_main_saved_records[g_wldcore_saved_record_index];
@@ -47,12 +39,13 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
     world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
     world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
-    picture = (wldcore_script_picture_state_t*)&g_wldcore_active_saved_record.picture_render_index;
-    g_wldcore_window_render_records[picture->render_index].priority = 0xC;
-    g_wldcore_window_render_records[picture->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_wldcore_window_render_records[picture->render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_POP_IN;
+    g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].priority = 0xC;
+    g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags
+        &= ~WLDCORE_DISPLAY_OBJECT_POP_IN;
 
-    picture_id = picture->picture;
+    picture_id = g_wldcore_active_saved_record.picture_id;
     if (picture_id != -1) {
         g_wldcore_active_saved_record.picture_id = -1;
         g_wldcore_opcode_state.instruction = (g_wldcore_active_saved_record.picture_x << 24)

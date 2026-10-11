@@ -93,7 +93,7 @@ s32 open_script_build_text_record(u8* text) {
             i--;
         } else {
             value = (ch - 0x20) * 8 + g_open_script_state.dispatch.font_index * 0x380;
-            /* The integer sum keeps this first metrics pointer in a0. */
+            /* Typed pointer addition reverses this retail addu's operands. */
             mt = (open_font_metrics_t*)(value + (s32)font);
             if (mt->flags & 1) {
                 text++;
@@ -104,14 +104,14 @@ s32 open_script_build_text_record(u8* text) {
                 G.y = -mt->descender;
                 width = mt->bearing + mt->width;
                 height = mt->height + mt->descender - 1;
-                G.width = width;
-                G.height = height;
+                G.w = width;
+                G.h = height;
                 if (g_open_script_state.dispatch.wide_glyphs == 0) {
                     G.x = G.x * 2;
-                    G.width = G.width * 2;
+                    G.w = G.w * 2;
                 } else {
                     G.x = G.x + G.x / 2;
-                    G.width = G.width + G.width / 2;
+                    G.w = G.w + G.w / 2;
                 }
                 front = &g_open_script_glyph_primitives[0][slot];
                 g_open_script_state.records[index].skew = g_open_script_state.dispatch.skew;
@@ -133,7 +133,7 @@ s32 open_script_build_text_record(u8* text) {
                 back->r0 = 0x80;
                 back->g0 = 0x80;
                 back->b0 = 0x80;
-                mt2 = (open_font_metrics_t*)((u8*)font + value);
+                mt2 = font + (value >> 3);
                 u0 = mt2->u;
                 v0 = mt2->v - mt2->height - mt2->descender + 1;
                 front->u0 = u0;

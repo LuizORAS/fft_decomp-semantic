@@ -32,12 +32,12 @@ void open_script_draw_text_records(u32* otag, s32 graphics_buffer_index) {
                     y = g_open_script_state.records[i].y + g_open_script_state.records[i].glyphs[j].y - 120;
                     P.x0 = x + g_open_script_state.records[i].skew;
                     P.y0 = y;
-                    P.x1 = g_open_script_state.records[i].glyphs[j].width + x + g_open_script_state.records[i].skew;
+                    P.x1 = g_open_script_state.records[i].glyphs[j].w + x + g_open_script_state.records[i].skew;
                     P.y1 = y;
                     P.x2 = x;
-                    P.y2 = g_open_script_state.records[i].glyphs[j].height + y;
-                    P.x3 = g_open_script_state.records[i].glyphs[j].width + x;
-                    P.y3 = g_open_script_state.records[i].glyphs[j].height + y;
+                    P.y2 = g_open_script_state.records[i].glyphs[j].h + y;
+                    P.x3 = g_open_script_state.records[i].glyphs[j].w + x;
+                    P.y3 = g_open_script_state.records[i].glyphs[j].h + y;
                     AddPrim((void*)otag[8], &P);
                 }
             }

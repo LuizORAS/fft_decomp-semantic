@@ -122,7 +122,7 @@ extern s32 g_open_movie_width;
 extern s32 g_st_cd_interrupt_pending;
 
 /* OPEN.BIN interfaces shared across its reconstructed translation units. */
-void* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state);
+u32* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state);
 s32 open_movie_decode_next_frame(open_movie_mdec_stream_state_t* state);
 void open_movie_handle_mdec_output_slice(void);
 void open_movie_init_and_play_end(void);
@@ -429,13 +429,6 @@ typedef enum open_script_dispatch_flag {
     OPEN_SCRIPT_DISPATCH_DECREASE_FADE_INTENSITY = 0x80,
 } open_script_dispatch_flag_e;
 
-typedef struct open_script_glyph {
-    s16 x;
-    s16 y;
-    s16 width;
-    s16 height;
-} open_script_glyph_t;
-
 /* open_script_record_t.flags. */
 typedef enum open_script_record_flag {
     OPEN_SCRIPT_RECORD_ACTIVE = 0x01, /* the record holds a text being shown */
@@ -447,7 +440,7 @@ typedef struct open_script_record {
     s32 skew; /* 0x08: italic skew added to the top edge of each glyph quad */
     s32 x;
     s32 y;
-    open_script_glyph_t glyphs[42];
+    RECT glyphs[42];
 } open_script_record_t;
 typedef char open_script_record_size_must_be_0x164[(sizeof(open_script_record_t) == 0x164) ? 1 : -1];
 

@@ -6,8 +6,8 @@
  * stream position, adopt a changed frame size (clearing the screen), and size
  * the decode rectangles: 24-bit rows take three halfwords per two pixels.
  * Returns the frame data, or NULL on timeout. */
-void* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
-    void* frame_data;
+u32* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
+    u32* frame_data;
     psyq_cd_ring_record_t* header;
     s32 attempts;
 

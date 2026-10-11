@@ -20,7 +20,7 @@
  * curve factor, as `row` does as the curve index and brightness. The s32
  * return with no value keeps $v0 live at the exit. */
 s32 effect_e456_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
-    s32 spread[3];
+    VECTOR spread;
     effect_record_t* record;
     s32 translucent;
     u16 texture_page;
@@ -208,9 +208,9 @@ s32 effect_e456_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         } else {
             column = 0;
         }
-        battle_effect_interpolate_emitter_spawn_spread(geometry, column, spread);
-        work->wave_y_phase += spread[0];
-        work->wave_y_amplitude_phase += spread[1];
+        battle_effect_interpolate_emitter_spawn_spread(geometry, column, &spread);
+        work->wave_y_phase += spread.vx;
+        work->wave_y_amplitude_phase += spread.vy;
         row = (geometry->textured_quad.curve_indices[0] >> 12) & 0xf;
         row -= 1;
         if (row != -1) {

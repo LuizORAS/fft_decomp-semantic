@@ -196,7 +196,7 @@ s32 effect_e401_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             }
 
             READ_CURVE(factor, index, (curves0 >> 4) & 0xF, frame);
-            battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread.vx);
+            battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
             if (orient) {
                 SetRotMatrix(&facing);
                 rotation.vx = spread.vx;
@@ -219,9 +219,9 @@ s32 effect_e401_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             }
 
             READ_CURVE(factor, index, (curves0 >> 12) & 0xF, frame);
-            battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &direction_spread.vx);
+            battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &direction_spread);
             READ_CURVE(factor, index, (curves0 >> 8) & 0xF, frame);
-            battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &base_angles.vx);
+            battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &base_angles);
 
             READ_CURVE(factor, index, (curves1 >> 12) & 0xF, frame);
             tip.vx = battle_effect_lerp_linear(

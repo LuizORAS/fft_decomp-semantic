@@ -169,7 +169,7 @@ s32 battle_effect_spawn_emitter_particles(
     }
 
     CURVE_FACTOR(entry->emitter.curve_indices[0] >> 4 & 0xf);
-    battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread.vx);
+    battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
     if (rotate) {
         SetRotMatrix(&matrix);
         rotation.vx = spread.vx;
@@ -227,18 +227,18 @@ s32 battle_effect_spawn_emitter_particles(
     if (curve != -1) {
         factor = g_effect_palette_table[curve].factor[frame];
         angle_spread.vx = battle_effect_lerp_linear(
-            entry->emitter.velocity_spread_start[0], entry->emitter.velocity_spread_end[0], factor);
+            entry->emitter.velocity_spread_start.x, entry->emitter.velocity_spread_end.x, factor);
         angle_spread.vy = battle_effect_lerp_linear(
-            entry->emitter.velocity_spread_start[1], entry->emitter.velocity_spread_end[1], factor);
+            entry->emitter.velocity_spread_start.y, entry->emitter.velocity_spread_end.y, factor);
         angle_spread.vz = battle_effect_lerp_linear(
-            entry->emitter.velocity_spread_start[2], entry->emitter.velocity_spread_end[2], factor);
+            entry->emitter.velocity_spread_start.z, entry->emitter.velocity_spread_end.z, factor);
     } else {
-        angle_spread.vx = entry->emitter.velocity_spread_start[0] / 2;
-        angle_spread.vy = entry->emitter.velocity_spread_start[1] / 2;
-        angle_spread.vz = entry->emitter.velocity_spread_start[2] / 2;
+        angle_spread.vx = entry->emitter.velocity_spread_start.x / 2;
+        angle_spread.vy = entry->emitter.velocity_spread_start.y / 2;
+        angle_spread.vz = entry->emitter.velocity_spread_start.z / 2;
     }
     CURVE_FACTOR(entry->emitter.curve_indices[0] >> 8 & 0xf);
-    battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle.vx);
+    battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle);
 
     particle = head;
     switch (flags & EFFECT_EMITTER_VELOCITY_MASK) {

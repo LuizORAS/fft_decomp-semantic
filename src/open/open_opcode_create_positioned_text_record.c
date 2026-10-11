@@ -22,7 +22,7 @@ void open_opcode_create_positioned_text_record(s16* command) {
 
             x = 256
                 - (g_open_script_state.records[index].glyphs[last].x
-                      + g_open_script_state.records[index].glyphs[last].width)
+                      + g_open_script_state.records[index].glyphs[last].w)
                     / 2;
         }
         if (y == -1) {
@@ -30,14 +30,14 @@ void open_opcode_create_positioned_text_record(s16* command) {
 
             y = 120
                 - (g_open_script_state.records[index].glyphs[last].y
-                      + g_open_script_state.records[index].glyphs[last].height)
+                      + g_open_script_state.records[index].glyphs[last].h)
                     / 2;
         }
         if (x & 0x100) {
             s32 glyph = x & 0xFF;
 
             x = 0x100 - g_open_script_state.records[index].glyphs[glyph].x
-                - g_open_script_state.records[index].glyphs[glyph].width / 2;
+                - g_open_script_state.records[index].glyphs[glyph].w / 2;
         }
         g_open_script_state.records[index].x = x;
         g_open_script_state.records[index].y = y;
