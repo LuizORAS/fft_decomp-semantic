@@ -1,8 +1,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define WORLD_CARD_SLOT_TEXT_TABLE g_world_card_slot_text_table
-
 /* Build the encoded save-slot description text for WORLD's save screen.
  *
  * mode 1 copies the empty-slot caption; mode 0 formats leader name, job,
@@ -20,7 +18,7 @@ s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
     u8* source;
 
     if (mode == 1) {
-        source = world_text_find_entry_by_index(WORLD_CARD_SLOT_TEXT_TABLE, 14, 1);
+        source = world_text_find_entry_by_index(g_world_card_slot_text_table, 14, 1);
         while ((*slot_graphic++ = *source++) != 0xFE) { }
     } else if (mode < 0) {
         return 0;
@@ -39,14 +37,15 @@ s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
         }
         *slot_graphic++ = 0xE7;
         *slot_graphic++ = 0xAC;
-        source = world_text_find_entry_by_index(WORLD_CARD_SLOT_TEXT_TABLE, 13, 1);
+        source = world_text_find_entry_by_index(g_world_card_slot_text_table, 13, 1);
         while (*source != 0xFE) {
             *slot_graphic++ = *source++;
         }
         *slot_graphic++ = g_world_load_work_buffer->summary.level / 10;
         *slot_graphic++ = g_world_load_work_buffer->summary.level % 10;
         *slot_graphic++ = 0xFE;
-        source = world_text_find_entry_by_index(WORLD_CARD_SLOT_TEXT_TABLE, g_world_load_work_buffer->summary.month, 1);
+        source
+            = world_text_find_entry_by_index(g_world_card_slot_text_table, g_world_load_work_buffer->summary.month, 1);
         while (*source != 0xFE) {
             *slot_graphic++ = *source++;
         }
