@@ -4,13 +4,9 @@
 /* Modulator step: square wave between 0 and amplitude, toggling each time
  * the timer expires. Returns the current value. */
 s32 suzuki_smd_modulator_step_square(suzuki_modulator_t* modulator) {
-    s32 next_value = 0;
-
     if (--modulator->timer == 0) {
         modulator->timer = modulator->timer_reset;
-        if (modulator->value == 0)
-            next_value = modulator->amplitude;
-        modulator->value = next_value;
+        modulator->value = modulator->value == 0 ? modulator->amplitude : 0;
     }
     return modulator->value;
 }
