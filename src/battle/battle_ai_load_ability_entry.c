@@ -16,8 +16,9 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     battle_ai_clear_words(&ai->considered_ability, sizeof(battle_ai_considered_ability_t));
     battle_ai_clear_words(&ai->current_action.command.calculator_type, 4);
     ai->considered_ability.skillset = entry->skillset_flags.bytes.skillset;
-    ability_id = g_battle_ai_data_base.considered_ability.ability_id = entry->packed_id & 0x3ff;
-    unit_id = entry->packed_id >> 10;
+    ability_id = g_battle_ai_data_base.considered_ability.ability_id
+        = entry->packed_id & BATTLE_AI_ABILITY_ENTRY_ABILITY_MASK;
+    unit_id = entry->packed_id >> BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
     unit = &g_battle_unit_stats[unit_id];
     menu = g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset];
     status_id = 0;

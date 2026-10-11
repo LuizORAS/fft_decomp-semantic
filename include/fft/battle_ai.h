@@ -385,7 +385,13 @@ typedef char battle_ai_action_command_must_be_at_offset_8[((unsigned long)&((bat
         ? 1
         : -1];
 
-/* unit_t AI ability list entry, 4 bytes, 0x22 per unit. */
+/* The packed halfword combines an ability ID and a physical unit slot. */
+enum {
+    BATTLE_AI_ABILITY_ENTRY_ABILITY_MASK = 0x03ff,
+    BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT = 10,
+};
+
+/* Four-byte entries in each compact unit's AI ability list. */
 typedef struct battle_ai_ability_entry {
     s16 packed_id; /* bits 0..9: ability ID; bits 10..15: physical unit slot */
     /* The AI updates the flag bits with lhu/sh over both bytes, so the
@@ -470,7 +476,7 @@ typedef enum battle_ai_target_setting_flags {
  * acting_unit_decision points at the acting unit's record.
  */
 typedef struct battle_ai_unit_decision {
-    battle_ai_coords_t target; /* 0x00..0x03; x, level, y, 0 */
+    battle_ai_coords_t target; /* 0x00..0x03; x, elevation, y, 0 */
     u8 flags;                  /* 0x04; battle_ai_decision_flags_e */
     u8 main_target_id;         /* 0x05 */
     u8 targeting_flags_1; /* 0x06; 0x08 selected reflected action; 0x04 helpful-ability ratio >= 77/128, cleared for

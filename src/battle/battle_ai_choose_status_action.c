@@ -39,7 +39,8 @@ s32 battle_ai_choose_status_action(void) {
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)) {
         target_or_count = battle_ai_find_nearest_target(BATTLE_AI_NEAREST_WITHOUT_BLOOD_SUCK);
         entry = &ai->hardcoded_status_abilities[0];
-        ai->hardcoded_status_abilities[0].packed_id |= g_battle_ai_data_base.acting_unit_id << 10;
+        ai->hardcoded_status_abilities[0].packed_id |= g_battle_ai_data_base.acting_unit_id
+            << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
     load_targeted_ability:
         battle_ai_load_ability_entry(entry);
         {
@@ -125,7 +126,7 @@ s32 battle_ai_choose_status_action(void) {
             entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_compact_index][0];
         } else {
             entry = &ai->hardcoded_status_abilities[1];
-            ai->hardcoded_status_abilities[1].packed_id |= ai->acting_unit_id << 10;
+            ai->hardcoded_status_abilities[1].packed_id |= ai->acting_unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
         }
         goto load_targeted_ability;
     }

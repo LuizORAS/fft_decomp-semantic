@@ -44,7 +44,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
     list_id = ai->unit_compact_indices[unit_id];
     if (menu == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
         if (battle_ai_load_known_ability_flag(unit_id, skillset, 0)) {
-            unit_bits = unit_id << 10;
+            unit_bits = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
             for (i = 0, slot = ai->ability_lists[list_id]; i < 3; i++) {
                 slot[count].skillset_flags.bytes.skillset = skillset;
                 slot[count].packed_id = unit_bits + i + ITEM_ID_THROWABLE_FIRST;
@@ -53,7 +53,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         }
         if (battle_ai_load_known_ability_flag(unit_id, skillset, 1)) {
             i = 0;
-            unit_bits = unit_id << 10;
+            unit_bits = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
             for (row = ai->ability_lists[list_id]; i < 3; i++) {
                 row[count].skillset_flags.bytes.skillset = skillset;
                 row[count].packed_id = unit_bits + i + ITEM_ID_FIRE_BALL;
@@ -65,7 +65,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
                 entry = &ai->ability_lists[list_id][count];
                 count++;
                 entry->skillset_flags.bytes.skillset = skillset;
-                entry->packed_id = unit_id << 10;
+                entry->packed_id = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
                 break;
             }
         }
@@ -74,7 +74,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
     if (menu == ACTION_MENU_TYPE_ARITHMETICKS) {
         entry = &ai->ability_lists[list_id][count];
         entry->skillset_flags.bytes.skillset = skillset;
-        entry->packed_id = unit_id << 10;
+        entry->packed_id = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
         return count + 1;
     }
     if (menu == ACTION_MENU_TYPE_CHARGE) {
@@ -142,11 +142,11 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
             jump_found = 1;
         }
         count++;
-        entry->packed_id += unit_id << 10;
+        entry->packed_id += unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
     }
     if (menu == ACTION_MENU_TYPE_JUMP && jump_found == 0) {
         entry->skillset_flags.bytes.skillset = SKILLSET_ID_JUMP;
-        entry->packed_id = unit_id << 10;
+        entry->packed_id = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
     }
     return count;
 }
