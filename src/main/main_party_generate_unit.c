@@ -3,7 +3,7 @@
 /* Generate a new unit of unit_type (MAIN_UNIT_TYPE_*) in the first empty ordinary
  * roster slot (0..15), with palette 0. Returns the slot, or -1 when all sixteen
  * are taken. */
-s32 main_party_generate_unit(s32 unit_type) {
+s32 main_party_generate_unit(main_unit_generation_type_e unit_type) {
     party_data_t* party_data[PARTY_ROSTER_SLOT_COUNT];
     s32 party_index;
     s32 palette = 0;

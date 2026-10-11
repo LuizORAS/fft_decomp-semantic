@@ -1036,7 +1036,7 @@ s32 main_party_find_slot_by_sprite_set(s32 sprite_set);
 
 /* Out-of-battle generation normalizes every value except male, female and
  * monster to Ramza. The raw-stat generator indexes the tables directly. */
-s32 main_party_generate_unit(s32 unit_type);
+s32 main_party_generate_unit(main_unit_generation_type_e unit_type);
 party_data_t* main_party_get_data_pointer(s32 party_index);
 void main_party_init_new_game(s32 mode);
 u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta);
@@ -1062,9 +1062,9 @@ void main_unit_copy_job_data(battle_stats_t* unit);
 void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);
 void main_unit_copy_last_ability_ct(battle_stats_t* unit);
 void main_unit_enable_rsm_flags(battle_stats_t* unit);
-void main_unit_generate_base_raw_stats(unit_raw_stats_t* raw_stats, s32 unit_type);
-void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type);
-void main_unit_generate_party_base_raw_stats(party_data_t* party, s32 unit_type);
+void main_unit_generate_base_raw_stats(unit_raw_stats_t* raw_stats, main_unit_generation_type_e unit_type);
+void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_type_e unit_type);
+void main_unit_generate_party_base_raw_stats(party_data_t* party, main_unit_generation_type_e unit_type);
 void main_unit_generate_raw_stats(battle_stats_t* unit);
 u8 main_unit_get_spritesheet_palette(battle_stats_t* unit, u8* palette);
 s32 main_unit_has_status_in_set(const battle_stats_t* unit, main_status_check_set_e status_set);
