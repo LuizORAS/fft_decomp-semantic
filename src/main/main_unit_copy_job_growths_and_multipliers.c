@@ -1,4 +1,3 @@
-#include "fft/battle.h"
 #include "fft/main.h"
 
 void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit) {

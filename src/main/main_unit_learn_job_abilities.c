@@ -1,4 +1,3 @@
-#include "fft/battle.h"
 #include "fft/main.h"
 
 /* Learns abilities for one job of a unit.

@@ -333,6 +333,19 @@ enum {
 extern u8 g_main_input_repeat_initial_delay;
 extern u8 g_main_input_repeat_period;
 extern u8 g_main_input_secondary_repeat_period;
+extern s32 g_main_input_pressed_buttons;
+extern s32 g_main_input_previous_buttons;
+extern u32 g_main_input_current_buttons;
+extern u32 g_main_input_released_buttons;
+extern u32 g_controller_pressed_copy_0;
+extern u32 g_controller_pressed_copy_1;
+extern u32 g_controller_pressed_copy_2;
+extern u32 g_controller_pressed_copy_3;
+extern u32 g_controller_previous_copy_0;
+extern u32 g_controller_previous_copy_1;
+extern u32 g_controller_previous_copy_2;
+extern u32 g_controller_previous_copy_3;
+extern u32 g_controller_stable_frames;
 
 /* item */
 extern u8 g_main_item_quantities[ITEM_ID_COUNT];
@@ -377,6 +390,7 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle);
 
 /* job */
 extern job_data_t g_main_job_data[];
+extern job_data_t* g_main_job_data_pointer;
 extern const u16 g_main_job_level_jp_requirements[8];
 extern u16 g_main_job_jp_requirements_by_level[];
 extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
@@ -1730,6 +1744,9 @@ extern s32 g_main_system_play_time_seconds;
 /* main_system_flags_e bits; cleared by main_save_init_data_tables. */
 extern u32 g_main_system_flags;
 extern s32 g_main_system_session_frames;
+extern s32 g_main_system_animation_speed;
+extern s32 g_main_system_battle_frame_hsync_count;
+extern s32 g_main_system_battle_frame_hsync_count_max;
 
 /* The packed-word view of the options record; g_main_game_options names the
  * same address under its union type. The scalar name is retained because GCC
@@ -1834,6 +1851,7 @@ typedef enum main_unit_action_state {
 extern u8 g_main_party_highest_level;
 extern s32 g_main_entd_current_event_id;
 extern entd_file_t* g_main_entd_set;
+extern entd_unit_t* g_main_entd_current_unit;
 extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
 extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
 extern main_unit_generation_raw_stat_variance_t g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT];
@@ -1944,6 +1962,32 @@ extern POLY_FT4 g_main_zodiac_primitives[2][30];
 
 /* gfx */
 
+/* Resident unit-graphics queue, filled and consumed by the BATTLE loader. */
+typedef struct main_gfx_unit_graphics_load_descriptor {
+    u8 map_x;
+    u8 map_y;
+    u8 map_level;
+    u8 _padding_03; /* aligns facing */
+    u16 facing;     /* a quarter turn per unit */
+    s16 spritesheet_id;
+    u16 palette_id;
+    u16 misc_id;
+    struct battle_stats* battle_stats;
+    u32 flags; /* nonzero: the unit starts undrawn */
+} main_gfx_unit_graphics_load_descriptor_t;
+typedef char main_gfx_unit_graphics_load_descriptor_size_must_be_0x14
+    [(sizeof(main_gfx_unit_graphics_load_descriptor_t) == 0x14) ? 1 : -1];
+
+/* The 0x144-byte queue occupies 0x80049c18..0x80049d5c. */
+typedef struct main_gfx_unit_graphics_load_queue {
+    s32 count;                                                /* 0x00 */
+    main_gfx_unit_graphics_load_descriptor_t descriptors[16]; /* 0x04 */
+} main_gfx_unit_graphics_load_queue_t;
+
+typedef char main_gfx_unit_graphics_load_queue_size_must_be_0x144[(sizeof(main_gfx_unit_graphics_load_queue_t) == 0x144)
+        ? 1
+        : -1];
+
 /* EVENT/FRAME.BIN: 256x288 pixels at 4bpp and 22 palettes, sector rounded.
  * The loaders upload rows 32..287 and the two palette blocks. */
 typedef struct main_gfx_frame_bin {
@@ -1985,6 +2029,8 @@ extern u32 g_main_gfx_now_loading_otags[2][2];
  * walks the same table as a [7][sizeof(POLY_FT4)] byte array. */
 extern POLY_FT4 g_main_gfx_now_loading_primitives[2][7];
 extern u32 g_main_gfx_now_loading_visible;
+extern u32 g_main_gfx_battle_otags[2][0x180];
+extern main_gfx_unit_graphics_load_queue_t g_main_gfx_unit_graphics_load_queue;
 extern upoint16_t g_main_gfx_zodiac_screen_position;
 extern u8 g_main_gfx_zodiac_sprite_count;
 extern main_zodiac_sprite_frame_t g_main_gfx_zodiac_sprite_frames[];
@@ -2065,6 +2111,7 @@ extern u8 g_main_special_portrait_wldface_id;
 extern unit_deployment_coordinates_t g_main_deployed_unit_map_coordinates[6];
 extern u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
+extern u8 g_main_terrain_geomancy_abilities[];
 s32 main_sound_is_music_loading_stub(void);
 
 /* unnamed */

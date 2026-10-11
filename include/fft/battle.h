@@ -1013,7 +1013,6 @@ typedef s32 (*battle_effect_callback_t)(s32 record_index, s32 callback_slot, s32
 
 extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
-extern s32 g_main_system_animation_speed;
 void animation_exception_handler(s32 exception_id);
 void battle_script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
 
@@ -1041,19 +1040,6 @@ extern s32 g_battle_cursor_previous_z;     /* cursor level before this step */
 extern u32 g_battle_cursor_repeat_counter; /* free-cursor repeat counter */
 extern s16 g_battle_cursor_screen_y;
 extern s32 g_battle_cursor_input_mode;
-extern s32 g_main_input_pressed_buttons;
-extern s32 g_main_input_previous_buttons;
-extern u32 g_main_input_current_buttons;
-extern u32 g_main_input_released_buttons;
-extern u32 g_controller_pressed_copy_0;
-extern u32 g_controller_pressed_copy_1;
-extern u32 g_controller_pressed_copy_2;
-extern u32 g_controller_pressed_copy_3;
-extern u32 g_controller_previous_copy_0;
-extern u32 g_controller_previous_copy_1;
-extern u32 g_controller_previous_copy_2;
-extern u32 g_controller_previous_copy_3;
-extern u32 g_controller_stable_frames;
 
 /* item */
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
@@ -1450,7 +1436,6 @@ extern s32 g_battle_state_animation_continue_check;
 extern s32 g_battle_state_game_flow_running;
 extern s32 g_battle_state_screen_fade_step;
 extern s32 g_battle_frame_counter;
-extern s32 g_main_system_battle_frame_hsync_count;
 extern s32 g_frame_pacing;
 extern s32 g_frame_pacing_suppressed;
 extern s32 g_frame_pacing_timer;
@@ -4994,31 +4979,6 @@ typedef struct {
     s16 graphic_y_offset; /* 0x06 */
 } battle_unit_sprite_query_t;
 
-/* Queued unit graphics load (g_main_gfx_unit_graphics_load_queue.descriptors, 16 entries),
- * appended by battle_gfx_append_unit_graphics_load_descriptor and consumed by
- * the per-unit graphics loader at 0x80088904. */
-typedef struct battle_unit_graphics_load_descriptor {
-    u8 map_x;
-    u8 map_y;
-    u8 map_level;
-    u8 _padding_03;     /* aligns facing */
-    u16 facing;         /* a quarter turn per unit */
-    s16 spritesheet_id; /* below BATTLE_SPRITESHEET_ID_COUNT */
-    u16 palette_id;
-    u16 misc_id;
-    struct battle_stats* battle_stats;
-    u32 flags; /* nonzero: the unit starts undrawn */
-} battle_unit_graphics_load_descriptor_t;
-typedef char battle_unit_graphics_load_descriptor_size_must_be_0x14
-    [(sizeof(battle_unit_graphics_load_descriptor_t) == 0x14) ? 1 : -1];
-
-/* The load queue at 0x80049c18: battle_gfx_append_unit_graphics_load_descriptor
- * indexes the descriptors by the count through one base register. */
-typedef struct battle_unit_graphics_load_queue {
-    s32 count;                                              /* 0x00 */
-    battle_unit_graphics_load_descriptor_t descriptors[16]; /* 0x04 */
-} battle_unit_graphics_load_queue_t;
-
 typedef enum battle_unit_spell_quote_skillset_flags {
     BATTLE_UNIT_SPELL_QUOTE_SECONDARY_SKILLSET = 1,
     BATTLE_UNIT_SPELL_QUOTE_PRIMARY_SKILLSET = 2,
@@ -5104,7 +5064,6 @@ extern world_unit_animation_state_t g_battle_unit_misc_rotation_data[];
 extern u16 g_battle_unit_graphics_load_pending;
 extern battle_menu_status_panel_slot_storage_t g_battle_menu_comparison_billboard_data;
 extern u8 g_battle_unit_editor_line_colors[8 * WORLD_UNIT_EDITOR_LINE_SIZE];
-extern battle_unit_graphics_load_queue_t g_main_gfx_unit_graphics_load_queue;
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id);
 battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id);
 battle_stats_t* battle_unit_get_existing_pointer(u32 unit_id);
@@ -5767,7 +5726,6 @@ extern SVECTOR g_battle_gte_rtps_vxy0;
 extern SVECTOR g_battle_gte_rtpt_vxy0;
 extern SVECTOR g_battle_gte_rtpt_vxy1;
 extern SVECTOR g_battle_gte_rtpt_vxy2;
-extern u32 g_main_gfx_battle_otags[2][0x180];
 extern battle_file_extent_t g_battle_gfx_sprite_seq_files[];
 extern battle_file_extent_t g_battle_gfx_sprite_shp_files[];
 extern battle_file_extent_t g_battle_gfx_weapon_seq_files[];
@@ -6518,7 +6476,6 @@ extern u32* g_battle_gfx_current_otag_entry;
 extern battle_render_buffer_t* g_battle_target_tile_color_buffer;
 extern void* g_battle_effect_current_work;
 extern u16 g_battle_current_music_track_index; /* 0x80165fd8 */
-extern entd_unit_t* g_main_entd_current_unit;
 extern s32 g_battle_current_thread_id;
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void);
 s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode);
@@ -8939,9 +8896,6 @@ extern s32 g_battle_formation_screen_active;
 extern u16 g_battle_etc_graphics_enabled;
 extern u16 g_battle_field_object_use_request; /* 0x80165fe4 */
 extern u16 g_battle_field_object_wait_status; /* 0x80166070 */
-extern u8 g_main_terrain_geomancy_abilities[];
-extern job_data_t* g_main_job_data_pointer;
-extern s32 g_main_system_battle_frame_hsync_count_max;
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
 s32 battle_map_tile_data_15_stub(void);
 s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);
