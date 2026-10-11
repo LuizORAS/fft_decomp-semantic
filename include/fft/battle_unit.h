@@ -1203,8 +1203,6 @@ extern menu_unit_status_page_t g_battle_unit_status_panel_pages[];
 extern CVECTOR g_battle_unit_status_gauge_colors[];
 extern image_load_parameters_t g_battle_unit_status_icon_image_params[];
 extern u16 g_battle_unit_status_quad_clut_pairs[][2];
-/* Live caster-panel image parameters followed by their defaults. */
-extern image_load_parameters_t g_battle_menu_attack_caster_quad_image_params[2][5];
 extern image_load_parameters_t* g_battle_unit_status_quad_image_params_by_mode[];
 extern u16 g_battle_unit_status_sprite_clut_pairs[][2];
 extern image_load_parameters_t* g_battle_unit_status_sprite_image_params_by_mode[];
@@ -1221,7 +1219,6 @@ extern unit_animation_state_t g_battle_unit_misc_rotation_data[];
 
 /* 0x8016604e: result of battle_gfx_poll_unit_graphics_load, 0 done / 1 pending. */
 extern u16 g_battle_unit_graphics_load_pending;
-extern menu_status_panel_slot_storage_t g_battle_menu_comparison_billboard_data;
 extern u8 g_battle_unit_editor_line_colors[8 * MENU_UNIT_EDITOR_LINE_SIZE];
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id);
 battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id);
@@ -1405,5 +1402,8 @@ void battle_unit_set_screen_coords_from_real_coords(struct battle_unit_misc_data
 void battle_unit_clear_misc_units(void);
 
 s32 battle_unit_is_moving(s32 misc_id);
+
+s32 battle_unit_has_any_current_status(s32 unit_id);
+void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 
 #endif

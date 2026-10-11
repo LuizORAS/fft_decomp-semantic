@@ -574,7 +574,6 @@ extern u32 g_battle_gfx_wait_arrow_blink_timer;
 extern u16 g_battle_3d_object_use_request; /* 0x80165fe2 */
 extern u16 g_battle_3d_object_wait_status; /* 0x8016606e */
 extern battle_render_buffer_t g_battle_buffer_a[2];
-void battle_display_menu_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
 s32 battle_gfx_get_vram_slot_summary(battle_gfx_vram_slot_summary_t* summary);
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords);
 void battle_gfx_unpack_unit_seq_data(
@@ -594,7 +593,6 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t*);
 s32 battle_gfx_claim_spritesheet_slot(s16 spritesheet_id);
 void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit);
 void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit);
-void battle_menu_init_panel_fade_tiles(void);
 void battle_gfx_prepare_post_action_display(battle_unit_misc_data_t* unit);
 void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_misc_data_t* unit);
 void battle_gfx_update_all_unit_rotation_and_vectors(void);
@@ -772,5 +770,10 @@ s32 battle_gfx_step_queued_unit_graphics_load(void);
 void battle_gfx_ramp_screen_overlay_intensity_to_max(void);
 
 void battle_gfx_ramp_screen_overlay_intensity_to_zero(void);
+
+void battle_gfx_build_scaled_draw_area_pair_swapped(
+    scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
+void battle_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
+void battle_gfx_copy_sprite_position_uv_and_size(const menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 
 #endif

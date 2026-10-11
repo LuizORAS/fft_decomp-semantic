@@ -1,0 +1,127 @@
+#ifndef BATTLE_TEXT_H
+#define BATTLE_TEXT_H
+
+/* Battle and event-overlay text buffers, glyph rendering and messages. */
+
+#include "fft/menu.h"
+#include "fft/unit.h"
+
+/* text */
+/* Origin and row geometry used by the EVENT menu text image renderers. */
+typedef struct battle_menu_text_image_bounds {
+    u16 x;
+    u16 y;
+    u16 row_stride;
+    s16 line_height;
+} battle_menu_text_image_bounds_t;
+
+/* Pen of the BUNIT, CARD, EQUIP and JOBSTTS *_text_render_glyph_to_4bpp_image: x in pixels (two per byte),
+ * y in rows, and the image's row stride in halfwords. */
+typedef struct battle_text_image_position {
+    s16 x;          /* 0x00 */
+    s16 y;          /* 0x02 */
+    s16 row_stride; /* 0x04 */
+} battle_text_image_position_t;
+typedef char battle_text_image_position_size_must_be_6[(sizeof(battle_text_image_position_t) == 6) ? 1 : -1];
+
+/* Text variables $27 and $28 (rows of glyph pixels drawn, 0x10 by default),
+ * bound separately: battle_menu_display_text also takes the table base, and
+ * element spellings let GCC address them from it. */
+extern s32 g_battle_text_substitution_value_27;
+extern s32 g_battle_text_substitution_value_28;
+extern s32 g_battle_spell_quote_last_ability_id;
+extern u8 g_battle_spell_quote_exception_skillsets[];
+extern char g_battle_text_wait_for_allocation_message[];
+extern char g_battle_text_wait_for_file_allocation_message[];
+extern u8 g_battle_text_glyph_bitmaps[];
+extern u16 g_battle_text_speaker_swap_unit_a;
+extern u16 g_battle_text_speaker_swap_unit_b;
+
+/* Player name buffer substituted for text command 0xE0, 0xFE-terminated;
+ * 0x801720cf is its last byte. */
+extern u8 g_battle_player_name[20];
+extern glyph_blit_t g_battle_text_large_number_glyph_rect; /* glyph source rectangle in the large number font */
+
+extern menu_text_state_t
+    g_battle_text_typewriter_state; /* origin/stride passed to battle_text_render_glyph_to_4bpp_image */
+
+extern RECT g_battle_text_typewriter_vram_rect; /* VRAM destination of the finished glyph */
+extern const u8* g_text_glyph_bitmap_data;
+
+extern text_glyph_state_t g_battle_text_typewriter_glyph;
+extern const char g_battle_text_decimal_format[];
+extern u16 g_battle_text_message_duration_frames;
+extern u8* g_battle_text_pointer_backup[32];
+extern s32 g_battle_text_pointer_backup_active;
+
+/* BATTLE text IDs use their upper five bits to select one of these sections
+ * (text_section_e). Overlay loaders replace individual entries as their text
+ * becomes active. */
+extern u8* g_battle_text_section_pointers[32];
+
+/* Glyph pixel widths, 0xD0 entries per 0xDx prefix page. */
+extern const u8 g_text_glyph_widths[];
+extern s32 g_battle_text_awaiting_input;
+extern s32 g_battle_text_current_line;
+extern u32 g_battle_text_decimal_divisors[];
+extern s32 g_battle_text_glyphs_per_wait;             /* glyphs drawn before the typewriter waits */
+extern const char g_battle_text_heap_dp_format[];     /* "DP %x\n" */
+extern const char g_battle_text_heap_remain_format[]; /* "HEAP REMAIN %x MAX %x\n" */
+extern const char g_battle_text_heap_task_format[];   /* "TASK %d %x\n" */
+
+/* Pixel width of each line measured by the last call. */
+extern s32 g_battle_text_line_widths[];
+extern u8* g_battle_text_message_buffer;
+extern const char g_battle_text_min_heap_format[];     /* "MIN HEAP %x " */
+extern char g_battle_text_reading_character_message[]; /* "reading charactor%d \n" */
+extern u8 g_battle_text_slot_row_pitches[];            /* per-slot source row pitch in bytes */
+extern u8 g_battle_text_slot_source_columns[];         /* per-slot source column */
+
+/* Text variables $00-$1F. TEXT_PRINT_INDEXED_VALUE indexes them with a raw
+ * text byte, so a larger index reads the globals that follow. */
+extern s32 g_battle_text_substitution_values[32];
+
+/* Text substitutions $7E/$7F (0x801660ec, table index 0x7e from 0x80165ef4)
+ * as the four halfwords battle_text_set_substitution_values_7e_7f stores. */
+extern RECT g_battle_text_substitution_rect;
+
+extern u8 g_battle_text_typewriter_column_scratch[14];       /* one-column scratch used by the phase shift */
+extern u8 g_battle_text_typewriter_glyph_images[3][8][0x54]; /* eight glyph images per slot */
+extern u8 g_battle_text_typewriter_previous_images[3][0x54]; /* previous image per slot */
+void battle_text_run_spell_quote_thread(void);
+const u8* battle_text_skip_to_entry(const u8* text_section, s32 entry_id);
+void battle_text_measure_pixels(s16* width, s16* rows, const u8* text);
+u8* battle_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
+void battle_text_render_glyph_to_4bpp_image(
+    const u8* glyph_bitmap, u8* image, glyph_blit_t* origin, s32 palette_offset);
+void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width);
+void battle_text_build_unit_name_list(void);
+u8* battle_text_find_entry(u32 text_id);
+void battle_text_init_menu_section_pointers(void);
+void battle_text_set_message_duration_frames(u16 frames);
+void battle_text_relocate_pointer_table(const u32* offsets);
+void battle_text_restore_section_pointers(void);
+void battle_text_save_section_pointers(void);
+void battle_text_draw_large_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
+void battle_text_character_handling_thread(void);
+void battle_text_configure_sprite_vram(
+    RECT* rect, s16 width, s16 height, texture_primitive_t* primitive, s32 clut_offset);
+u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
+s32 battle_text_count_decimal_digits(s32 value);
+void battle_text_determine_spell_quote(battle_action_command_t* action, s32 unit_id, s32 enabled);
+void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
+void battle_text_print_fnt_value_and_next(s32 value);
+s32 battle_text_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);
+s32 battle_text_resolve_format_string_id(s32 format_code, s32 value);
+
+/* The caller leaves 0x16f in $a1, but the body never reads $a1. */
+void battle_text_fill_field_with_terminators(u8* text);
+void battle_text_mirror_packed_nibble_region_horizontal(u8* data, glyph_blit_t* region);
+
+void battle_draw_menu_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
+void battle_display_menu_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
+void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);
+void blit_text_glyph(const u8* source, u8* pixels, const glyph_blit_t* glyph, glyph_blit_t* position);
+s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);
+
+#endif

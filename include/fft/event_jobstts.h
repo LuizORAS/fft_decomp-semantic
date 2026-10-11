@@ -332,7 +332,7 @@ void jobstts_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_
 void jobstts_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
 
 s32 jobstts_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
+    s32 glyph_id, u8* image, const battle_text_image_position_t* position, s32 style);
 
 void jobstts_menu_set_palette_mode(s32 mode);
 const u8* jobstts_text_find_entry_by_index(const u8* text, s16 terminators, s32 unused_2);

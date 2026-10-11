@@ -216,7 +216,7 @@ void bunit_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entri
 void bunit_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 
 s32 bunit_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
+    s32 glyph_id, u8* image, const battle_text_image_position_t* position, s32 style);
 
 void bunit_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
 

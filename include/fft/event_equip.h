@@ -605,7 +605,7 @@ void equip_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entri
 void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 
 s32 equip_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
+    s32 glyph_id, u8* image, const battle_text_image_position_t* position, s32 style);
 
 void equip_menu_set_palette_mode(s32 mode);
 void equip_text_start_help_thread(s32 text_id);

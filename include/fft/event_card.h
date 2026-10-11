@@ -343,7 +343,7 @@ void card_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bou
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
 
 s32 card_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
+    s32 glyph_id, u8* image, const battle_text_image_position_t* position, s32 style);
 
 void card_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
 void card_menu_set_palette_mode(s32 mode);
