@@ -215,6 +215,16 @@ void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 
 /* reward */
+
+/* Double-buffered war-trophy primitives, copied when each page opens. */
+typedef struct require_reward_war_trophy_primitives {
+    POLY_FT4 quads[16]; /* 0x000 */
+    SPRT banner;        /* 0x280 */
+    DR_MODE draw_mode;  /* 0x294 */
+} require_reward_war_trophy_primitives_t;
+typedef char require_reward_war_trophy_primitives_size_must_be_0x2a0
+    [sizeof(require_reward_war_trophy_primitives_t) == 0x2a0 ? 1 : -1];
+
 /* One 12x24 burst tile: a double-buffered flat quad plus its motion state. */
 typedef struct require_reward_burst_tile {
     POLY_F4 poly[2];   /* 0x00 */
@@ -246,6 +256,7 @@ typedef enum require_war_trophy_entry {
 
 extern RECT g_require_reward_bonus_image_rect;
 extern RECT g_require_reward_bonus_palette_rect;
+extern require_reward_war_trophy_primitives_t g_require_reward_war_trophy_primitives[2];
 extern s32 g_require_reward_war_trophy_entry_count;
 extern s32 g_require_reward_war_trophy_entry_types[];
 extern s32 g_require_reward_war_trophy_entry_values[];
