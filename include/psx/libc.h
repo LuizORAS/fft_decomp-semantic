@@ -29,15 +29,15 @@ void* memmove(void* destination, const void* source, s32 count);
 
 /* driver internals */
 
-typedef enum {
-    PSYQ_PRINTF_LEFT = 1,
-    PSYQ_PRINTF_PLUS = 2,
-    PSYQ_PRINTF_ALTERNATE = 4,
-    PSYQ_PRINTF_ZERO = 8,
-    PSYQ_PRINTF_PRECISION = 16,
-    PSYQ_PRINTF_SHORT = 32,
-    PSYQ_PRINTF_LONG = 64,
-    PSYQ_PRINTF_CAPITAL_L = 128
+typedef enum psyq_printf_flag {
+    PSYQ_PRINTF_LEFT = 0x01,
+    PSYQ_PRINTF_PLUS = 0x02,
+    PSYQ_PRINTF_ALTERNATE = 0x04,
+    PSYQ_PRINTF_ZERO = 0x08,
+    PSYQ_PRINTF_PRECISION = 0x10,
+    PSYQ_PRINTF_SHORT = 0x20,
+    PSYQ_PRINTF_LONG = 0x40,
+    PSYQ_PRINTF_CAPITAL_L = 0x80
 } psyq_printf_flag_e;
 
 /* The formatter changes flags as a 32-bit value and the sign through byte one. */

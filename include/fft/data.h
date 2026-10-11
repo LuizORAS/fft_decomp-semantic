@@ -1125,13 +1125,17 @@ enum {
     WORLD_ITEM_ID_MASK = 0x3ff,
     WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE = 0x4000, /* item list entries: the unit cannot equip the item */
     WORLD_EQUIPMENT_SHOP_ITEM = 0x8000, /* equipment 16-bit values: an unpaid shop item tried on in the fitting room */
-    ITEM_ID_THROWABLE_FIRST = 0x7a,
-    ITEM_ID_SHIELD_FIRST = 0x80,
-    ITEM_ID_HEADGEAR_FIRST = 0x90,
-    ITEM_ID_BODY_ARMOR_FIRST = 0xac,
-    ITEM_ID_ACCESSORY_FIRST = 0xd0,
-    ITEM_ID_CONSUMABLE_FIRST = 0xf0,
-    ITEM_ID_END = 0xfe, /* one past the last item; ENTD's Random and None follow */
+};
+
+/* Item table and equipment-category boundaries. */
+enum {
+    ITEM_ID_THROWABLE_FIRST = ITEM_ID_SHURIKEN,
+    ITEM_ID_SHIELD_FIRST = ITEM_ID_ESCUTCHEON,
+    ITEM_ID_HEADGEAR_FIRST = ITEM_ID_LEATHER_HELMET,
+    ITEM_ID_BODY_ARMOR_FIRST = ITEM_ID_LEATHER_ARMOR,
+    ITEM_ID_ACCESSORY_FIRST = ITEM_ID_BATTLE_BOOTS,
+    ITEM_ID_CONSUMABLE_FIRST = ITEM_ID_POTION,
+    ITEM_ID_END = 254, /* one past the last item; ENTD's Random and None follow */
 };
 
 /* Broad item categories shared by the WORLD and EQUIP menu classifiers.
