@@ -2,7 +2,7 @@
 void v_wait(s32 vblank, s32 frames) {
     /* Volatile preserves the native per-iteration stack store/reload of the timeout. */
     volatile s32 timeout = frames << PSYQ_ETC_VSYNC_TIMEOUT_SHIFT;
-    while (g_psyq_etc_vblank_count < vblank) {
+    while (Vcount < vblank) {
         if (--timeout == -1) {
             puts(g_psyq_etc_vsync_timeout_message);
             ChangeClearPAD(0);

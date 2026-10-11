@@ -1018,7 +1018,7 @@ data:
   - {addr: 0x8002fee8, name: g_psyq_gte_atan_ratio_table}
   - {addr: 0x800306ec, name: g_psyq_etc_gpu_status}
   - {addr: 0x800306f0, name: g_psyq_etc_timer1_count}
-  - {addr: 0x800306f4, name: g_psyq_etc_last_timer1_count}
+  - {addr: 0x800306f4, name: Hcount}
   - {addr: 0x800306f8, name: g_psyq_etc_last_vblank}
   - {addr: 0x800306fc, name: g_psyq_etc_interrupt_state}
   - {addr: 0x80031784, name: g_psyq_etc_dispatch}
@@ -1027,7 +1027,7 @@ data:
   - {addr: 0x80031790, name: g_psyq_etc_dma_dpcr}
   - {addr: 0x80031794, name: g_psyq_etc_unhandled_irq_count}
   - {addr: 0x80031798, name: g_psyq_etc_vblank_callbacks}
-  - {addr: 0x800317b8, name: g_psyq_etc_vblank_count}
+  - {addr: 0x800317b8, name: Vcount}
   - {addr: 0x800317bc, name: g_psyq_etc_timer1_mode}
   - {addr: 0x800317c0, name: g_psyq_etc_dma_dicr}
   - {addr: 0x800317c4, name: g_psyq_etc_dma_callbacks}

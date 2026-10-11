@@ -72,7 +72,7 @@ extern volatile u16* g_psyq_etc_irq_status;
 extern volatile u32* g_psyq_etc_dma_dpcr;
 extern psyq_interrupt_callback_t g_psyq_etc_vblank_callbacks[PSYQ_ETC_CALLBACK_SLOTS];
 extern volatile u32* g_psyq_etc_timer1_mode;
-extern volatile s32 g_psyq_etc_vblank_count; /* Updated by VBlank; retail also performs an unused reload. */
+extern volatile s32 Vcount; /* Updated by VBlank; retail also performs an unused reload. */
 extern volatile u32* g_psyq_etc_dma_dicr;
 extern psyq_interrupt_callback_t g_psyq_etc_dma_callbacks[PSYQ_ETC_CALLBACK_SLOTS];
 psyq_interrupt_state_t* startIntr(void);
@@ -104,7 +104,7 @@ void psyq_etc_clear_dma_callbacks(psyq_interrupt_callback_t* callbacks, s32 coun
 
 extern volatile u32* g_psyq_etc_gpu_status;
 extern volatile u32* g_psyq_etc_timer1_count;
-extern u32 g_psyq_etc_last_timer1_count;
+extern u32 Hcount;
 extern s32 g_psyq_etc_last_vblank;
 extern char g_psyq_etc_vsync_timeout_message[];
 void v_wait(s32 vblank, s32 frames);
