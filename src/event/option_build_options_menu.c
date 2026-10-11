@@ -245,7 +245,7 @@ void option_build_options_menu(void) {
             LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
         }
         battle_thread_yield();
-        if (battle_menu_should_close_thread((s32*)input0) != 0) {
+        if (battle_menu_should_close_thread(input0) != 0) {
             break;
         }
         if (delta == 0 && battle_menu_can_accept_input() != 0) {

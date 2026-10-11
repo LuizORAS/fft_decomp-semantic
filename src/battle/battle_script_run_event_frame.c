@@ -85,7 +85,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     battle_script_update_event_input_state(buttons);
     if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL) {
         g_battle_script_unfiltered_controller_input = g_battle_script_event_input;
-        battle_script_apply_input_overrides((u32*)&g_battle_script_event_input);
+        battle_script_apply_input_overrides(&g_battle_script_event_input);
         g_battle_script_saved_event_input = g_battle_script_event_input;
         battle_script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
     }

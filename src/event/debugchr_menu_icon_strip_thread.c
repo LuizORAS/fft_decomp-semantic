@@ -11,7 +11,7 @@ void debugchr_menu_icon_strip_thread(void) {
     world_menu_icon_record_t* frame_pair;
     world_menu_icon_record_t* frame_base;
     s32* stride;
-    s32 done = 0;
+    u32 input = 0;
     s32 frame;
     s32 redraw;
     u8* render;
@@ -42,7 +42,7 @@ void debugchr_menu_icon_strip_thread(void) {
             battle_menu_free_memory(render);
             redraw = 0;
         }
-        if (battle_menu_should_close_thread(&done) != 0)
+        if (battle_menu_should_close_thread(&input) != 0)
             break;
         frame_parity = frame & 1;
         frame_pair = &frame_base[frame_parity];

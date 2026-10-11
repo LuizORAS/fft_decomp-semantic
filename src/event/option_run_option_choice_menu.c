@@ -71,7 +71,7 @@ void option_run_option_choice_menu(void) {
     battle_thread_wait_frames(1);
     cursor = g_option_current_values[kind];
     for (width = 0;; width++) {
-        battle_menu_should_close_thread((s32*)input);
+        battle_menu_should_close_thread(input);
         record = &g_option_picker_icon_records[width & 1];
         if (battle_menu_can_accept_input()) {
             if (*input & PSX_PAD_CROSS) {

@@ -1030,8 +1030,8 @@ extern s16 g_battle_event_effect_target_y;
 extern u8 g_battle_script_condition_param_lengths[];
 extern u16 g_battle_script_map_darkness_durations[];
 extern u16 g_battle_script_unit_filter_modes[];
-extern s32 g_battle_script_event_input;
-extern s32 g_battle_script_saved_event_input;
+extern u32 g_battle_script_event_input;
+extern u32 g_battle_script_saved_event_input;
 extern s16 g_battle_event_map_jump_in_request;
 extern s16 g_battle_script_threads_idle;
 extern s32 g_battle_next_event_id;
@@ -8778,7 +8778,7 @@ void battle_menu_display_text_entry_past_choice_marks(s32 text_id, u8* image, gl
 void battle_menu_display_text_string(u8* image, glyph_blit_t* origin, u8* text);
 void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option);
 void battle_menu_set_text_origin(s32 x, s32 y);
-s32 battle_menu_should_close_thread(s32* out_flag);
+s32 battle_menu_should_close_thread(u32* input);
 void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 
 /* text */

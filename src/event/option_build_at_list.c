@@ -225,7 +225,7 @@ void option_build_at_list(void) {
             ClearImage(&clear, 0, 0, 0);
         }
         entry->selected_index = cursor + row_offset;
-        if (battle_menu_should_close_thread((s32*)input) != 0) {
+        if (battle_menu_should_close_thread(input) != 0) {
             break;
         }
         if (delta == 0) {
