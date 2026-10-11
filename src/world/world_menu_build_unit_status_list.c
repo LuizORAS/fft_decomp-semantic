@@ -26,7 +26,7 @@ void world_menu_build_unit_status_list(void) {
         if (*flag_a != 0 || *flag_b == 1) {
             g_world_menu_status_list_row_actions[i] = 0x7D0;
         } else {
-            g_world_menu_status_list_row_actions[i] = BATTLE_MENU_ROW_ACTION_SILENT | BATTLE_MENU_ID_JOBSTTS;
+            g_world_menu_status_list_row_actions[i] = MENU_ROW_ACTION_SILENT | BATTLE_MENU_ID_JOBSTTS;
         }
     }
     unit = battle_unit_get_stats_from_battle_id(g_world_active_unit_data.battle_id);

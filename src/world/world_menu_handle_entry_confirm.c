@@ -28,11 +28,11 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
         row_actions = entry->row_actions;
         target = ((s32)row_actions >= -0xf && (s32)row_actions <= -1) ? (s32)row_actions : row_actions[row_index];
         if (target >= 0) {
-            if (target & 0x1000) {
+            if (target & MENU_ROW_ACTION_SILENT) {
                 silent = 1;
                 /* Raises silent's allocation priority; otherwise $s6-$s8 rotate. */
                 __asm__("" : : "r"(silent), "r"(silent));
-                target -= 0x1000;
+                target -= MENU_ROW_ACTION_SILENT;
             }
         }
         if (target >= 0) {
@@ -40,7 +40,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
                 world_thread_start(g_world_thread_current_id - 1, g_world_menu_thread_menu_data[target].thread_entry);
                 world_thread_set_parameters(
                     g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[target], 0, 0);
-            } else if (target == 0x4d2) {
+            } else if (target == MENU_ROW_ACTION_CLEAR_SELECTION) {
                 row_index = -1;
             }
         } else {

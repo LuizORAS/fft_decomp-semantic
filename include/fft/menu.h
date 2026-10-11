@@ -642,6 +642,12 @@ typedef struct world_menu_text_binding {
     s16* row_text_ids; /* 0x10: text ids indexed by entry selected_index (world_menu_announce_entry_value_thread) */
 } world_menu_text_binding_t;
 
+/* Row actions 0..0xff open a menu entry; this flag suppresses the confirm sound. */
+enum { MENU_ROW_ACTION_SILENT = 0x1000 };
+
+/* Special row action: records no selection without opening another entry. */
+enum { MENU_ROW_ACTION_CLEAR_SELECTION = 0x4d2 };
+
 /* Provisional: 0x3c-byte menu entry reached through
  * g_world_menu_thread_menu_data; the same menu record as BATTLE
  * g_battle_menu_thread_menu_data and the OPTION/EQUIP menus. 0x0c/0x0e are the
@@ -1090,10 +1096,6 @@ typedef enum battle_menu_id {
     BATTLE_MENU_ID_EGG_STATUS = 0x37,              /* EGG's Status row: only the invalid sound */
     BATTLE_MENU_ID_DEAD_UNIT = 0x69,               /* crystal or treasure options */
 } battle_menu_id_e;
-/* A row action (world_menu_entry_t::row_actions) from 0 to 0xff is the
- * battle_menu_id_e entry *_menu_handle_action opens; with this bit the entry
- * opens without the confirm sound. */
-enum { BATTLE_MENU_ROW_ACTION_SILENT = 0x1000 };
 /* Indices of the system function table (g_battle_system_function_table and
  * its WORLD twin) that the dispatcher names; the rest are message variants. */
 typedef enum battle_system_function_id {

@@ -38,12 +38,12 @@ void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option) {
         action = actions[selected_option];
     }
     if (action >= 0) {
-        if (action & BATTLE_MENU_ROW_ACTION_SILENT) {
+        if (action & MENU_ROW_ACTION_SILENT) {
             silent = 1;
             /* Zero-instruction use: raises silent's allocation priority so it
                takes $s6 and selected_option keeps $s7, as in the target. */
             __asm__("" : : "r"(silent), "r"(silent));
-            action -= BATTLE_MENU_ROW_ACTION_SILENT;
+            action -= MENU_ROW_ACTION_SILENT;
         }
     }
     if (action >= 0) {
@@ -51,7 +51,7 @@ void battle_menu_handle_action(world_menu_entry_t* menu, s32 selected_option) {
             battle_thread_start(g_battle_current_thread_id - 1, g_battle_menu_thread_menu_data[action].thread_entry);
             battle_thread_set_parameters(
                 g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[action], 0, 0);
-        } else if (action == 0x4D2) {
+        } else if (action == MENU_ROW_ACTION_CLEAR_SELECTION) {
             selected_option = -1;
         }
     } else {

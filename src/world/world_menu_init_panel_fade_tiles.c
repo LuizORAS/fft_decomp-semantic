@@ -6,18 +6,11 @@
 void world_menu_init_panel_fade_tiles(void) {
     world_fade_tile_frame_t* frame;
     s32 i;
-    /* GetTPage's argument registers, tied by the barrier below. */
-    register s32 mode __asm__("$4") = 0;
-    register s32 blend __asm__("$5") = 2;
-    register s32 x __asm__("$6") = 0x3c0;
-    register s32 y __asm__("$7") = 0x100;
+    u16 tpage;
 
     frame = &g_world_menu_panel_fade_frames[0];
-
-    /* Materializes the frame base before the register saves and the GetTPage
-     * call; without it GCC sets up the base after the call. */
-    __asm__("" : "=r"(mode), "=r"(blend), "=r"(x), "=r"(y) : "0"(mode), "1"(blend), "2"(x), "3"(y), "r"(frame));
-    SetDrawMode(&frame->draw_mode, 0, 0, GetTPage(mode, blend, x, y), &g_world_gfx_texture_window);
+    tpage = GetTPage(0, 2, 0x3c0, 0x100);
+    SetDrawMode(&frame->draw_mode, 0, 0, tpage, &g_world_gfx_texture_window);
 
     SetTile(&frame->center);
     frame->center.r0 = 0;
