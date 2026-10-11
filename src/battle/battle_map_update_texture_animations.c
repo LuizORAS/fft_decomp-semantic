@@ -246,12 +246,12 @@ void battle_map_update_texture_animations(void) {
             }
             break;
         case MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE:
-            if (g_battle_map_texture_animation_handles[i] == 0) {
-                g_battle_map_texture_animation_handles[i]
-                    = battle_map_start_texture_animation(g_battle_map_texture_animations[i].duration, MAP_CLUT_ROW_MAP,
+            if (g_battle_map_texture_animation_cycle_handles[i] == 0) {
+                g_battle_map_texture_animation_cycle_handles[i]
+                    = battle_map_start_clut_cycle(g_battle_map_texture_animations[i].duration, MAP_CLUT_ROW_MAP,
                         g_battle_map_texture_animations[i].canvas_x,
                         g_battle_map_texture_animations[i].canvas_x + g_battle_map_texture_animations[i].width - 1);
-                if (g_battle_map_texture_animation_handles[i] == 0) {
+                if (g_battle_map_texture_animation_cycle_handles[i] == 0) {
                     main_system_handle_malloc_exception(2, 0x3CC);
                 }
             }

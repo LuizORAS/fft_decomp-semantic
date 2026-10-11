@@ -630,9 +630,9 @@ functions:
   - {addr: 0x80090c48, size: 352, name: battle_map_transition_darkness_color, hash: e213ff353825f510}
   - {addr: 0x80090da8, size: 68, name: battle_map_transition_and_store_darkness_color, hash: 271fa8f07346d0e2}
   - {addr: 0x80090dec, size: 1032, name: battle_map_blend_darkness_color, hash: e301f373ce1db338, rodata: [{addr: 0x8006838c, size: 44, hash: 5c7e927c07a24267}]}
-  - {addr: 0x800911f4, size: 84, name: battle_map_start_texture_animation, hash: b72413bd06996e17}
-  - {addr: 0x80091248, size: 56, name: battle_map_stop_texture_animation, hash: b2b3e217319a1b40}
-  - {addr: 0x80091280, size: 36, name: battle_map_reset_texture_animations, hash: eea4788933ed120e}
+  - {addr: 0x800911f4, size: 84, name: battle_map_start_clut_cycle, hash: b72413bd06996e17}
+  - {addr: 0x80091248, size: 56, name: battle_map_stop_clut_cycle, hash: b2b3e217319a1b40}
+  - {addr: 0x80091280, size: 36, name: battle_map_reset_clut_cycles, hash: eea4788933ed120e}
   - {addr: 0x800912a4, size: 4856, name: battle_map_update_animations, hash: 79ff745ff22ea81e}
   - {addr: 0x8009259c, size: 132, name: battle_map_stop_palette_animation, hash: 9cb5794abf15d3fd}
   - {addr: 0x80092620, size: 184, name: battle_map_extract_palette_colors, hash: 5aae1dc5724d5f01}
@@ -688,7 +688,7 @@ functions:
   - {addr: 0x800f4acc, size: 776, name: battle_map_load_mesh_variant, hash: 73bbc7bcf87038c6}
   - {addr: 0x800f4dd4, size: 1956, name: battle_map_append_mesh_geometry, hash: c311b7b2a36f1385}
   - {addr: 0x800f5578, size: 1036, name: battle_map_init_mesh_render_records, hash: b542a7ce19b82664}
-  - {addr: 0x800f5984, size: 108, name: battle_map_stop_texture_animations_and_weather_sfx, hash: bc7d2dc040adf637}
+  - {addr: 0x800f5984, size: 108, name: battle_map_stop_clut_cycles_and_weather_sfx, hash: bc7d2dc040adf637}
   - {addr: 0x800f59f0, size: 60, name: battle_sound_start_weather_sfx, hash: 5a9461dd8939799f}
   - {addr: 0x800f5a2c, size: 56, name: battle_map_set_command_0x96_duration, hash: 0c87accc94879977}
   - {addr: 0x800f5a64, size: 136, name: battle_sound_stop_weather_sfx, hash: 29ca15674c0eac0b}
@@ -2059,7 +2059,7 @@ data:
   - {addr: 0x800a1b70, name: g_battle_map_ambient_light_color}
   - {addr: 0x800a1b74, name: g_battle_map_darkness_transition}
   - {addr: 0x800a1b94, name: g_battle_map_darkness_color}
-  - {addr: 0x800a1b98, name: g_battle_map_texture_animation_states}
+  - {addr: 0x800a1b98, name: g_battle_map_clut_cycle_states}
   - {addr: 0x800a1be8, name: g_battle_gfx_cycled_deployed_palettes}
   - {addr: 0x800a1c48, name: g_battle_current_vector}
   - {addr: 0x800a1c58, name: g_battle_gfx_seq_data_cursor}
@@ -2205,7 +2205,7 @@ data:
   - {addr: 0x800f6cc0, name: g_battle_map_texture_quarter_1_pending}
   - {addr: 0x800f6cc4, name: g_battle_map_texture_quarter_2_pending}
   - {addr: 0x800f6cc8, name: g_battle_map_texture_quarter_3_pending}
-  - {addr: 0x800f6ccc, name: g_battle_map_texture_animation_handles}
+  - {addr: 0x800f6ccc, name: g_battle_map_texture_animation_cycle_handles}
   - {addr: 0x800f6d4c, name: g_battle_map_saved_texture_animation_modes}
   - {addr: 0x800f6d94, name: g_battle_map_camera_matrix}
   - {addr: 0x800f6db4, name: g_battle_map_texture_animation_moves}

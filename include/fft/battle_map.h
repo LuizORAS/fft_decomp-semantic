@@ -74,10 +74,10 @@ enum {
     BATTLE_MAP_WEATHER_LOW_FLAGS_MASK = 0x7f,
 };
 
-/* Eight CLUT colour-cycle slots at 0x800911f4. Each holds a row and a colour
+/* Eight CLUT colour-cycle slots at 0x800a1b98. Each holds a row and a colour
  * range to rotate; they are separate from the mesh's 32 texture-animation
  * instructions and their handle table. */
-typedef struct map_texture_animation_state {
+typedef struct map_clut_cycle_state {
     u8 active;
     u8 elapsed_frames;
     u8 frame_duration;
@@ -85,8 +85,8 @@ typedef struct map_texture_animation_state {
     u16 clut_row;    /* 0x04; map_clut_row_e */
     u16 first_color; /* 0x06; colour index in the row: the colours first..last rotate one place */
     u16 last_color;  /* 0x08; every frame_duration frames, towards last */
-} map_texture_animation_state_t;
-typedef char map_texture_animation_state_size_must_be_10[(sizeof(map_texture_animation_state_t) == 10) ? 1 : -1];
+} map_clut_cycle_state_t;
+typedef char map_clut_cycle_state_size_must_be_10[(sizeof(map_clut_cycle_state_t) == 10) ? 1 : -1];
 
 /* Weather particle positions at 0x800fc358: weather 0x8f (snow) uses all 64,
  * 0x90 (rain) fills two sets of 32. */
@@ -711,7 +711,7 @@ typedef enum map_texture_animation_mode {
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_5 = 26,
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_6 = 27,
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_7 = 28,
-    /* starts a battle_map_start_texture_animation over colours canvas_x .. canvas_x + width - 1 of MAP_CLUT_ROW_MAP */
+    /* starts a battle_map_start_clut_cycle over colours canvas_x .. canvas_x + width - 1 of MAP_CLUT_ROW_MAP */
     MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE = 29,
     /* Playback states written and dispatched by battle_map_update_texture_animations. */
     MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK = 128,
@@ -830,8 +830,8 @@ extern map_move_find_item_data_t g_battle_map_move_find_item_data[MAP_ID_COUNT];
 extern map_move_find_item_data_t g_battle_current_map_move_find_item_data;
 extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
 extern s32 g_battle_map_resource_load_state;                                 /* map_resource_load_state_e */
-extern s32 g_battle_map_texture_animation_handles[MAP_TEXTURE_ANIMATION_COUNT];
-extern map_texture_animation_state_t g_battle_map_texture_animation_states[];
+extern s32 g_battle_map_texture_animation_cycle_handles[MAP_TEXTURE_ANIMATION_COUNT];
+extern map_clut_cycle_state_t g_battle_map_clut_cycle_states[];
 extern s32 g_battle_map_textured_quad_count;
 extern s32 g_battle_map_textured_quad_render_record_count;
 extern s32 g_battle_map_textured_triangle_count;
@@ -1018,13 +1018,13 @@ s32 battle_map_poll_data_load(void);
 void battle_map_load_move_find_item_data(map_move_find_item_data_t* map_data);
 void battle_map_mark_data_load_complete(void);
 void battle_map_modify_background_gradient(s32 mode, s32 frame_duration, s16 red, s16 green, s16 blue);
-void battle_map_reset_texture_animations(void);
+void battle_map_reset_clut_cycles(void);
 void battle_map_set_background_gradient(s32 frame_duration, const map_background_gradient_colors_t* colors);
 void battle_map_set_command_0x96_duration(s32 id, s32 value);
 void battle_map_start_ambient_light_blend(s32 mode, s32 frame_duration, s16 red, s16 green, s16 blue);
 void battle_map_set_darkness_color(s32 frame_duration, const CVECTOR* color);
 s32 battle_map_step_init_sequence(s32 map_id, s32 step);
-s32 battle_map_stop_texture_animation(s32 handle);
+s32 battle_map_stop_clut_cycle(s32 handle);
 void battle_map_store_modified_palette_colors(s32 clut_row, s32 clut_index, s32 store_all);
 void battle_map_store_selected_tile_coordinates(SVECTOR* destination);
 void battle_map_store_selected_tile_data(void);
@@ -1069,7 +1069,7 @@ void battle_map_update_and_store_palette_colors(
 void battle_map_load_palette_data(const palette_t* palettes, s32 clut_row, s32 clut_index, s32 load_all);
 void* battle_map_start_file_load(
     const char* unused_directory_path, gns_load_info_t* load_info, void* destination, s32 unused_resource_type);
-s32 battle_map_stop_texture_animations_and_weather_sfx(void);
+s32 battle_map_stop_clut_cycles_and_weather_sfx(void);
 void battle_map_store_max_coordinates(SVECTOR* destination);
 
 void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const palette_t* colors);
@@ -1093,7 +1093,7 @@ s32 battle_map_command_set_3d_object_state(s32 value_a, s32 value_b);
 s32 battle_map_command_start_texture_animation(s32 value_a, s32 value_b);
 void battle_map_set_light_matrices(MATRIX* first, MATRIX* second);
 void battle_map_run_weather_command(s32 command);
-s32 battle_map_start_texture_animation(s32 frame_duration, s32 clut_row, s32 first_color, s32 last_color);
+s32 battle_map_start_clut_cycle(s32 frame_duration, s32 clut_row, s32 first_color, s32 last_color);
 void battle_map_update_mesh_part_animations(void);
 
 void battle_map_update_palette_from_other(

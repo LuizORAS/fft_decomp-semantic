@@ -338,8 +338,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   one. The shop, formation and both save screens unload their own music this
   way, so the next `main_sound_stop_current_music` hands the released record
   to `SuzukiDeallocateMUSChannels`.
-- `battle_map_stop_texture_animation` clears the active byte of slot `handle`,
-  but `battle_map_start_texture_animation` returns slot + 1: it stops the slot
+- `battle_map_stop_clut_cycle` clears the active byte of slot `handle`,
+  but `battle_map_start_clut_cycle` returns slot + 1: it stops the slot
   after the handle's own, and handle 8 clears the byte after the eight slots,
   the first of `g_battle_gfx_cycled_deployed_palettes`.
 - `battle_gfx_append_unit_graphics_load_descriptor` writes its record before it

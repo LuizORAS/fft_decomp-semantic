@@ -42,5 +42,5 @@ void battle_map_init_palette_state(void) {
     g_battle_map_palette_state.clut_rows[MAP_CLUT_ROW_UNITS].enabled = 0;
     g_battle_map_palette_state.clut_rows[MAP_CLUT_ROW_UNIT_SHADOWS].enabled = 0;
     g_battle_map_palette_state.clut_rows[MAP_CLUT_ROW_ACTION_RESULTS].enabled = 0;
-    battle_map_reset_texture_animations();
+    battle_map_reset_clut_cycles();
 }

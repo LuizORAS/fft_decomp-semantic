@@ -3,17 +3,17 @@
 
 /* Stop the weather sound effects and every colour rotation the 32 map texture
  * animations hold a handle for. Always returns 0. */
-s32 battle_map_stop_texture_animations_and_weather_sfx(void) {
+s32 battle_map_stop_clut_cycles_and_weather_sfx(void) {
     s32 index;
     s32* handle;
 
     battle_sound_stop_weather_sfx();
 
     index = 0;
-    handle = g_battle_map_texture_animation_handles;
+    handle = g_battle_map_texture_animation_cycle_handles;
     do {
         if (*handle != 0) {
-            battle_map_stop_texture_animation(*handle);
+            battle_map_stop_clut_cycle(*handle);
             *handle = 0;
         }
         index++;

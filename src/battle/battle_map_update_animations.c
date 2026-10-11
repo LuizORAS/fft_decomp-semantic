@@ -12,7 +12,7 @@
 void battle_map_update_animations(void) {
     map_palette_color_components_t saved_component;
     map_background_gradient_colors_t gradient;
-    map_texture_animation_state_t* state;
+    map_clut_cycle_state_t* state;
     map_clut_row_state_t* row_state;
     map_palette_color_components_t* component;
     s32 i;
@@ -28,7 +28,7 @@ void battle_map_update_animations(void) {
     s32 step;
 
     for (i = 0; i < MAP_CLUT_CYCLE_SLOT_COUNT; i++) {
-        state = &g_battle_map_texture_animation_states[i];
+        state = &g_battle_map_clut_cycle_states[i];
         if (state->active != 0) {
             state->elapsed_frames++;
             if (state->elapsed_frames >= state->frame_duration) {
