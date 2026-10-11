@@ -214,18 +214,6 @@ typedef struct world_gfx_textured_rect_source {
 } world_gfx_textured_rect_source_t;
 typedef char world_textured_rect_source_size_must_be_0x10[sizeof(world_gfx_textured_rect_source_t) == 0x10 ? 1 : -1];
 
-/* Stack working set of world_formation_draw_background_tiles and
- * bunit_gfx_draw_falloff_shaded_rows: the tile rectangle, its four corner RGB
- * triples and the per-grid-point shade table (rows 32 pixels apart, columns
- * 64; five samples per row). */
-typedef struct world_formation_background_draw_state {
-    world_gfx_textured_rect_source_t rect; /* 0x00 */
-    u8 _unused_10[8];                      /* 0x10; reserved in the frame, never read */
-    rgb24_t rgb[4];                        /* 0x18 */
-    u8 _unused_24[4];                      /* reserved in the frame */
-    u8 shades[16][5];                      /* 0x28 */
-} world_formation_background_draw_state_t;
-
 /* Full-screen fade primitive pair: a TILE followed by the DR_MODE that
  * selects its texture page and window. */
 typedef struct battle_gfx_fade_overlay {

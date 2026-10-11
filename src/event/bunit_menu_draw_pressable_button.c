@@ -2,8 +2,6 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-extern world_menu_button_piece_t g_bunit_slot_sprite_entries[];
-
 /* Draw one slot's span of g_bunit_slot_sprite_entries sprite entries at (x, y).
  *
  * A nonzero `busy` clears the slot's g_bunit_menu_button_press_timers phase (CLUT
@@ -15,12 +13,9 @@ extern world_menu_button_piece_t g_bunit_slot_sprite_entries[];
  * matters: GCC expands it to the single-insn abssi2, which keeps the entry
  * loop body one basic block as in the target. */
 void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 busy, u16 sound_id) {
-    /* The target frame reserves 0x20 bytes for the descriptor; the tail is
-     * never accessed. */
-    struct {
-        world_oriented_quad_t quad;
-        s16 _unused_14[6];
-    } desc;
+    world_oriented_quad_t desc;
+    /* Eight untouched bytes plus descriptor alignment retain the target frame. */
+    s16 unused_tail[4];
     u16 clut;
     s32 speed;
     s32 phase;
@@ -55,26 +50,26 @@ void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 b
     }
     entry = g_bunit_menu_button_piece_starts[slot];
     count = g_bunit_menu_button_piece_starts[slot + 1] - entry;
-    desc.quad.source.clut = clut;
-    desc.quad.source.tpage = g_bunit_menu_icon_texture_page;
+    desc.source.clut = clut;
+    desc.source.tpage = g_bunit_menu_icon_texture_page;
     if (count > 0) {
         do {
             world_menu_button_piece_t* sprite = &g_bunit_slot_sprite_entries[entry];
-            desc.quad.position.x = x + sprite->x_offset;
-            desc.quad.position.y = y + sprite->y_offset;
-            desc.quad.w = abs(g_bunit_menu_button_piece_scales[entry][0] * sprite->w) >> 12;
-            desc.quad.h = abs(g_bunit_menu_button_piece_scales[entry][1] * sprite->h) >> 12;
-            desc.quad.source.u = sprite->u;
-            desc.quad.source.v = sprite->v;
-            desc.quad.source.w = sprite->w;
-            desc.quad.source.h = sprite->h;
+            desc.position.x = x + sprite->x_offset;
+            desc.position.y = y + sprite->y_offset;
+            desc.w = abs(g_bunit_menu_button_piece_scales[entry][0] * sprite->w) >> 12;
+            desc.h = abs(g_bunit_menu_button_piece_scales[entry][1] * sprite->h) >> 12;
+            desc.source.u = sprite->u;
+            desc.source.v = sprite->v;
+            desc.source.w = sprite->w;
+            desc.source.h = sprite->h;
             scale_x = g_bunit_menu_button_piece_scales[entry][0];
             scale_y = g_bunit_menu_button_piece_scales[entry][1];
             orientation = scale_x < 0;
             if (scale_y < 0) {
                 orientation += 2;
             }
-            bunit_gfx_enqueue_oriented_textured_quad(&desc.quad, 0, orientation, 0, i + 0x32);
+            bunit_gfx_enqueue_oriented_textured_quad(&desc, 0, orientation, 0, i + 0x32);
             i += 1;
             entry += 1;
         } while (i < count);

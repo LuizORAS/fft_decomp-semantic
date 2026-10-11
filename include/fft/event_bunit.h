@@ -520,6 +520,7 @@ extern u16 g_bunit_menu_button_clut;
 /* Signed 4.12 x/y scale pair per sprite entry; a negative scale flips the quad. */
 extern s16 g_bunit_menu_button_piece_scales[][2];
 extern u8 g_bunit_menu_button_piece_starts[];
+extern world_menu_button_piece_t g_bunit_slot_sprite_entries[];
 
 /* Per-slot blink phase, and the half-open span of sprite entries the slot draws. */
 extern s8 g_bunit_menu_button_press_timers[];

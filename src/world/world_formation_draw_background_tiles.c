@@ -20,7 +20,11 @@ extern world_formation_background_tile_t g_world_formation_background_tiles[2][4
  * hoist that product and the shade-row addresses.
  */
 void world_formation_draw_background_tiles(s32 y, s32 unused_1) {
-    world_formation_background_draw_state_t st;
+    world_gfx_textured_rect_source_t rect;
+    /* Unused local bytes and RGB alignment retain the target frame. */
+    u8 unused_frame[8];
+    rgb24_t rgb[4];
+    u8 shades[16][5];
     s32 row;
     s32 col;
     register s32 draw_row __asm__("$20");
@@ -29,36 +33,36 @@ void world_formation_draw_background_tiles(s32 y, s32 unused_1) {
     world_formation_background_tile_t(*tiles)[4];
 
     draw_row = 0;
-    st.rect.y = y;
-    st.rect.w = 0x40;
-    st.rect.clut = 0x40;
-    st.rect.h = 0x20;
-    st.rect.tpage = 0x20;
-    st.rect.v = 0xD8;
+    rect.y = y;
+    rect.w = 0x40;
+    rect.clut = 0x40;
+    rect.h = 0x20;
+    rect.tpage = 0x20;
+    rect.v = 0xD8;
     for (row = 0; y < 0x101; row++) {
         for (col = 0; col < 5; col++) {
             shade = world_formation_cursor_distance_falloff(col << 6, y, 0xFF, 0x50);
-            st.shades[row][col] = (shade >= 0xDD) ? 0xDC : shade;
+            shades[row][col] = (shade >= 0xDD) ? 0xDC : shade;
         }
         y += 0x20;
     }
-    st.rect.clut = g_world_menu_background_clut;
-    st.rect.tpage = g_world_menu_icon_tpage;
-    for (; st.rect.y < 0xF0; draw_row++) {
+    rect.clut = g_world_menu_background_clut;
+    rect.tpage = g_world_menu_icon_tpage;
+    for (; rect.y < 0xF0; draw_row++) {
         tiles = g_world_formation_background_tiles;
-        if (st.rect.y >= -0x20) {
+        if (rect.y >= -0x20) {
             col = 0;
             tile = tiles[draw_row % 2];
             for (; col < 4; col++) {
-                st.rect.x = tile[col].x;
-                st.rect.u = tile[col].u;
-                st.rgb[0].r = st.rgb[0].g = st.rgb[0].b = st.shades[draw_row][col];
-                st.rgb[1].r = st.rgb[1].g = st.rgb[1].b = st.shades[draw_row][col + 1];
-                st.rgb[2].r = st.rgb[2].g = st.rgb[2].b = st.shades[draw_row + 1][col];
-                st.rgb[3].r = st.rgb[3].g = st.rgb[3].b = st.shades[draw_row + 1][col + 1];
-                world_gfx_enqueue_gouraud_textured_quad(&st.rect, st.rgb, 0, st.rect.u == 0x58);
+                rect.x = tile[col].x;
+                rect.u = tile[col].u;
+                rgb[0].r = rgb[0].g = rgb[0].b = shades[draw_row][col];
+                rgb[1].r = rgb[1].g = rgb[1].b = shades[draw_row][col + 1];
+                rgb[2].r = rgb[2].g = rgb[2].b = shades[draw_row + 1][col];
+                rgb[3].r = rgb[3].g = rgb[3].b = shades[draw_row + 1][col + 1];
+                world_gfx_enqueue_gouraud_textured_quad(&rect, rgb, 0, rect.u == 0x58);
             }
         }
-        st.rect.y += 0x20;
+        rect.y += 0x20;
     }
 }
