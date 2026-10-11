@@ -34,9 +34,7 @@ void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
     color.g = 0x80;
     color.b = 0x80;
     wldcore_gfx_copy_color_with_tint(&color, &color);
-    poly.r0 = color.r;
-    poly.g0 = color.g;
-    poly.b0 = color.b;
+    setRGB0(&poly, color.r, color.g, color.b);
     poly.clut = GetClut(0, WLDCORE_MAP_DOT_CLUT_Y);
 
     for (row = 0; row < WLDCORE_MAP_TILE_ROWS; row++) {

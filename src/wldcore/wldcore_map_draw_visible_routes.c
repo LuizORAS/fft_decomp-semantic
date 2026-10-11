@@ -42,17 +42,9 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     table = g_wldcore_map_route_polylines;
     SetPolyFT4(&poly);
     SetSemiTrans(&poly, 1);
-    poly.u0 = 0x88;
-    poly.v0 = 0xE0;
-    poly.u1 = 0x97;
-    poly.v1 = 0xE0;
-    poly.u2 = 0x88;
-    poly.v2 = 0xEF;
-    poly.u3 = 0x97;
-    poly.v3 = 0xEF;
-    poly.r0 = g_wldcore_screen_brightness_rgb.r;
-    poly.g0 = g_wldcore_screen_brightness_rgb.g;
-    poly.b0 = g_wldcore_screen_brightness_rgb.b;
+    setUV4(&poly, 0x88, 0xE0, 0x97, 0xE0, 0x88, 0xEF, 0x97, 0xEF);
+    setRGB0(
+        &poly, g_wldcore_screen_brightness_rgb.r, g_wldcore_screen_brightness_rgb.g, g_wldcore_screen_brightness_rgb.b);
     poly.tpage = GetTPage(0, 0, 0x1C0, 0x100);
     poly.clut = GetClut(0x10, 0x1E8);
 

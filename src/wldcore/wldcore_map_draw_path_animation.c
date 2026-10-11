@@ -21,17 +21,9 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
     }
     SetPolyFT4(&poly);
     SetSemiTrans(&poly, 1);
-    poly.u0 = 0x88;
-    poly.v0 = 0xE0;
-    poly.u1 = 0x97;
-    poly.v1 = 0xE0;
-    poly.u2 = 0x88;
-    poly.v2 = 0xEF;
-    poly.u3 = 0x97;
-    poly.v3 = 0xEF;
-    poly.r0 = g_wldcore_screen_brightness_rgb.r;
-    poly.g0 = g_wldcore_screen_brightness_rgb.g;
-    poly.b0 = g_wldcore_screen_brightness_rgb.b;
+    setUV4(&poly, 0x88, 0xE0, 0x97, 0xE0, 0x88, 0xEF, 0x97, 0xEF);
+    setRGB0(
+        &poly, g_wldcore_screen_brightness_rgb.r, g_wldcore_screen_brightness_rgb.g, g_wldcore_screen_brightness_rgb.b);
     poly.tpage = GetTPage(0, 0, 0x1C0, 0x100);
     poly.clut = GetClut(0x10, 0x1E8);
     if (g_wldcore_map_path_animation.page_index < 0
@@ -61,14 +53,8 @@ void wldcore_map_draw_path_animation(GsOT* ot) {
             verts[3].vy
                 = verts[1].vy + (verts[3].vy - verts[1].vy) * frames / g_wldcore_map_path_animation.page_frames[i];
         }
-        poly.x0 = verts[0].vx;
-        poly.y0 = verts[0].vy;
-        poly.x1 = verts[1].vx;
-        poly.y1 = verts[1].vy;
-        poly.x2 = verts[2].vx;
-        poly.y2 = verts[2].vy;
-        poly.x3 = verts[3].vx;
-        poly.y3 = verts[3].vy;
+        setXY4(&poly, verts[0].vx, verts[0].vy, verts[1].vx, verts[1].vy, verts[2].vx, verts[2].vy, verts[3].vx,
+            verts[3].vy);
         GsSortPoly(&poly, ot, 1);
     }
 }
