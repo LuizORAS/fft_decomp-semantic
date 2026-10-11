@@ -3,14 +3,12 @@
 
 void SpuFree(u32 addr) {
     s32 index = 0;
-    psyq_spu_heap_record_t* record;
     for (; index < _spu_AllocBlockNum; index++) {
-        record = &_spu_memList[index];
-        if (record->address & PSYQ_SPU_HEAP_TAIL) {
+        if (_spu_memList[index].address & PSYQ_SPU_HEAP_TAIL) {
             break;
         }
-        if (record->address == addr) {
-            record->address = addr | PSYQ_SPU_HEAP_FREE;
+        if (_spu_memList[index].address == addr) {
+            _spu_memList[index].address = addr | PSYQ_SPU_HEAP_FREE;
             break;
         }
     }
