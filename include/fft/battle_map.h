@@ -104,51 +104,58 @@ typedef enum gns_map_state_comparison {
     GNS_MAP_STATE_REQUESTED_GREATER_THAN_RECORD = 3,
 } gns_map_state_comparison_e;
 
-/* IDs shared by GNS row tags and mesh-file offset slots. The dispatcher also
- * accepts the separate map_resource_apply_command_e operations below. */
-typedef enum gns_resource_type {
-    GNS_RESOURCE_NONE = 0x00, /* empty record slot; also ends the command records */
-    /* Mesh-file slots use these IDs as 32-bit offset-table indices; a file row may load a whole mesh or texture. */
-    GNS_RESOURCE_PRIMARY_GEOMETRY = 0x10,
-    GNS_RESOURCE_PALETTES = 0x11,          /* kept pending until MAP_RESOURCE_APPLY_PALETTES */
-    GNS_RESOURCE_UNSUPPORTED_12 = 0x12,    /* raises exception 0x3ca */
-    GNS_RESOURCE_TEXTURE_QUARTER_0 = 0x13, /* 64x256 texture strip at VRAM x 0x300 */
-    GNS_RESOURCE_TEXTURE_QUARTER_1 = 0x14,
-    GNS_RESOURCE_TEXTURE_QUARTER_2 = 0x15,
-    GNS_RESOURCE_TEXTURE_QUARTER_3 = 0x16,
-    GNS_RESOURCE_TEXTURE = 0x17,
-    GNS_RESOURCE_LIGHTING = 0x19, /* kept pending until MAP_RESOURCE_APPLY_LIGHTING */
-    GNS_RESOURCE_TERRAIN = 0x1a,
-    GNS_RESOURCE_TEXTURE_ANIMATIONS = 0x1b,
-    GNS_RESOURCE_PALETTE_ANIMATION_FRAMES = 0x1c,
-    GNS_RESOURCE_MARKED_TILE_PALETTES = 0x1f, /* the sixteen CLUTs of MAP_CLUT_ROW_MARKED_TILES */
-    GNS_RESOURCE_STATE_RECORDS = 0x23,        /* battle_map_state_record_t list */
-    GNS_RESOURCE_PART_GEOMETRY_1 = 0x24,      /* geometry of mesh parts 1-8 */
-    GNS_RESOURCE_PART_GEOMETRY_2 = 0x25,
-    GNS_RESOURCE_PART_GEOMETRY_3 = 0x26,
-    GNS_RESOURCE_PART_GEOMETRY_4 = 0x27,
-    GNS_RESOURCE_PART_GEOMETRY_5 = 0x28,
-    GNS_RESOURCE_PART_GEOMETRY_6 = 0x29,
-    GNS_RESOURCE_PART_GEOMETRY_7 = 0x2a,
-    GNS_RESOURCE_PART_GEOMETRY_8 = 0x2b,
-    GNS_RESOURCE_POLYGON_FLAGS = 0x2c,
-    GNS_RESOURCE_MESH_PRIMARY = 0x2e,
-    GNS_RESOURCE_MESH_OVERRIDE = 0x2f,
-    GNS_RESOURCE_MESH_ALTERNATE = 0x30,
-    GNS_RESOURCE_FILLER = 0x31,              /* repeated file-section rows; the loader still visits them */
-    GNS_RESOURCE_SET_CAMERA_POSITION = 0x83, /* 0x83 up: command records */
-    GNS_RESOURCE_SET_CAMERA_ROTATION = 0x84,
-    GNS_RESOURCE_SET_INDOOR = 0x85,
-    GNS_RESOURCE_SET_OUTDOOR = 0x86,
-    GNS_RESOURCE_UNHANDLED_87 = 0x87, /* rows of this type are in 14 maps' files; the dispatcher has no case for it */
-    GNS_RESOURCE_CLEAR_SNOW = 0x88,
-    GNS_RESOURCE_SET_SNOW = 0x89,
-    GNS_RESOURCE_UNHANDLED_8A = 0x8a, /* 28-byte rows; forwarded unconditionally and ignored by the dispatcher */
-    GNS_RESOURCE_SET_WEATHER_MODIFIER = 0x8b,
-} gns_resource_type_e;
+/* Serialized GNS file-row types. These select a file to load, not a chunk within a mesh file. */
+typedef enum gns_file_type {
+    GNS_FILE_TEXTURE = 0x17,
+    GNS_FILE_MESH_PRIMARY = 0x2e,
+    GNS_FILE_MESH_OVERRIDE = 0x2f,
+    GNS_FILE_MESH_ALTERNATE = 0x30,
+    GNS_FILE_FILLER = 0x31, /* repeated file-section rows; the loader still visits them */
+} gns_file_type_e;
+
+/* Numeric slots in a mesh file's 49-entry offset table. The dispatcher also
+ * accepts these values when it applies a chunk after loading a mesh file. */
+typedef enum map_mesh_chunk_type {
+    MAP_MESH_CHUNK_PRIMARY_GEOMETRY = 0x10,
+    MAP_MESH_CHUNK_PALETTES = 0x11,          /* kept pending until MAP_RESOURCE_APPLY_PALETTES */
+    MAP_MESH_CHUNK_UNSUPPORTED_12 = 0x12,    /* raises exception 0x3ca */
+    MAP_MESH_CHUNK_TEXTURE_QUARTER_0 = 0x13, /* 64x256 texture strip at VRAM x 0x300 */
+    MAP_MESH_CHUNK_TEXTURE_QUARTER_1 = 0x14,
+    MAP_MESH_CHUNK_TEXTURE_QUARTER_2 = 0x15,
+    MAP_MESH_CHUNK_TEXTURE_QUARTER_3 = 0x16,
+    MAP_MESH_CHUNK_LIGHTING = 0x19, /* kept pending until MAP_RESOURCE_APPLY_LIGHTING */
+    MAP_MESH_CHUNK_TERRAIN = 0x1a,
+    MAP_MESH_CHUNK_TEXTURE_ANIMATIONS = 0x1b,
+    MAP_MESH_CHUNK_PALETTE_ANIMATION_FRAMES = 0x1c,
+    MAP_MESH_CHUNK_MARKED_TILE_PALETTES = 0x1f, /* the sixteen CLUTs of MAP_CLUT_ROW_MARKED_TILES */
+    MAP_MESH_CHUNK_STATE_RECORDS = 0x23,        /* battle_map_state_record_t list */
+    MAP_MESH_CHUNK_PART_GEOMETRY_1 = 0x24,      /* geometry of mesh parts 1-8 */
+    MAP_MESH_CHUNK_PART_GEOMETRY_2 = 0x25,
+    MAP_MESH_CHUNK_PART_GEOMETRY_3 = 0x26,
+    MAP_MESH_CHUNK_PART_GEOMETRY_4 = 0x27,
+    MAP_MESH_CHUNK_PART_GEOMETRY_5 = 0x28,
+    MAP_MESH_CHUNK_PART_GEOMETRY_6 = 0x29,
+    MAP_MESH_CHUNK_PART_GEOMETRY_7 = 0x2a,
+    MAP_MESH_CHUNK_PART_GEOMETRY_8 = 0x2b,
+    MAP_MESH_CHUNK_POLYGON_FLAGS = 0x2c,
+} map_mesh_chunk_type_e;
+
+/* GNS command rows follow the file-resource rows and use the same tag byte. */
+typedef enum gns_map_command_type {
+    GNS_COMMAND_SET_CAMERA_POSITION = 0x83,
+    GNS_COMMAND_SET_CAMERA_ROTATION = 0x84,
+    GNS_COMMAND_SET_INDOOR = 0x85,
+    GNS_COMMAND_SET_OUTDOOR = 0x86,
+    GNS_COMMAND_UNHANDLED_87 = 0x87, /* rows of this type are in 14 maps' files; the dispatcher has no case for it */
+    GNS_COMMAND_CLEAR_SNOW = 0x88,
+    GNS_COMMAND_SET_SNOW = 0x89,
+    GNS_COMMAND_UNHANDLED_8A = 0x8a, /* 28-byte rows; forwarded unconditionally and ignored by the dispatcher */
+    GNS_COMMAND_SET_WEATHER_MODIFIER = 0x8b,
+} gns_map_command_type_e;
 
 /* Structural bounds and the tag separating file rows from command records. */
 enum {
+    GNS_RECORD_NONE = 0,           /* empty file slot; also ends the command records */
     GNS_RESOURCE_TABLE_COUNT = 49, /* mesh 32-bit offsets and pending/loaded resource slots */
     GNS_RECORD_COMMAND_SEPARATOR = 0x80,
 };
@@ -263,7 +270,7 @@ typedef enum map_polygon_flag_command {
     MAP_POLYGON_FLAG_COMMAND_RESTORE_AMBIENT = 0x94, /* repaint the polygons without LIT in the ambient colour */
 } map_polygon_flag_command_e;
 
-/* polygon_flags of the textured map polygons (GNS_RESOURCE_POLYGON_FLAGS).
+/* polygon_flags of the textured map polygons (MAP_MESH_CHUNK_POLYGON_FLAGS).
  * The four battle_map_queue_ routines skip a polygon whose hide bit for the
  * camera yaw is set. No mesh file sets bits 0, 1 or 14. */
 enum {
@@ -439,7 +446,7 @@ typedef struct gns_file_record {
     u16 script_variable_id;  /* 0x00 */
     s16 map_state;           /* 0x02 */
     u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
-    u8 resource_type;        /* 0x05; gns_resource_type_e */
+    u8 resource_type;        /* 0x05; gns_file_type_e */
     u16 _padding_06;         /* 0x06; aligns disc_lba */
     u32 disc_lba;            /* 0x08; absolute, including the high 16 bits at +0x0a */
     u32 byte_length;         /* 0x0c; sector-rounded */
@@ -456,7 +463,7 @@ typedef struct gns_command_record_prefix {
     u16 script_variable_id;  /* 0x00 */
     s16 map_state;           /* 0x02 */
     u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
-    u8 resource_type;        /* 0x05; gns_resource_type_e, or GNS_RECORD_COMMAND_SEPARATOR */
+    u8 resource_type;        /* 0x05; gns_map_command_type_e, or GNS_RECORD_COMMAND_SEPARATOR */
     u16 _unused_06;
     u8 record_byte_length; /* 0x08 */
     u8 _unused_09;
@@ -481,7 +488,7 @@ typedef char battle_map_mesh_geometry_prefix_must_be_8[sizeof(battle_map_mesh_ge
  * The dispatcher visits IDs 0x10..0x30; slots 0..0x0f and the other reserved
  * 32-bit offsets are zero in the USA disc's mesh files. A zero offset means the chunk
  * is absent. MAP000.5 alone has an embedded texture quarter at 0x4c. Each
- * member is named after its gns_resource_type_e id. */
+ * member is named after its map_mesh_chunk_type_e id. */
 typedef struct map_mesh_file_header {
     u32 _unused_00[16];                  /* 0x00 */
     u32 primary_geometry_offset;         /* 0x40 */
@@ -504,8 +511,9 @@ typedef struct map_mesh_file_header {
 typedef char map_mesh_file_header_size_must_be_196[(sizeof(map_mesh_file_header_t) == 196) ? 1 : -1];
 
 /* Polygon position and normal records copied from the mesh geometry block.
- * Each XYZ vector occupies eight bytes; the first position's spare 16-bit value
- * stores the packed terrain tile. */
+ * Each XYZ vector occupies eight bytes. The first position's spare 16-bit
+ * terrain tile has height level in bit 0, Z in bits 1-7 and X in bits 8-15;
+ * 0xfffe marks a polygon without a terrain tile. */
 typedef struct battle_map_mesh_triangle_positions {
     s16 x0, y0, z0;
     s16 terrain_tile;
@@ -555,7 +563,7 @@ typedef struct gns_record_view {
     s16 script_variable_id;
     s16 map_state;
     u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
-    u8 resource_type;        /* 0x05; gns_resource_type_e, or GNS_RECORD_COMMAND_SEPARATOR */
+    u8 resource_type;        /* 0x05; file resource or command type, or GNS_RECORD_COMMAND_SEPARATOR */
     gns_load_info_t load_info;
 } gns_record_view_t;
 typedef char gns_record_view_size_must_be_20[(sizeof(gns_record_view_t) == 20) ? 1 : -1];
@@ -755,7 +763,7 @@ typedef struct battle_lightning_state {
 } battle_lightning_state_t;
 typedef char battle_lightning_state_size_must_be_148[(sizeof(battle_lightning_state_t) == 148) ? 1 : -1];
 
-/* Nested records in GNS_RESOURCE_STATE_RECORDS, a mesh-file chunk at slot 0x23. */
+/* Nested records in MAP_MESH_CHUNK_STATE_RECORDS, a mesh-file chunk at slot 0x23. */
 typedef enum map_mesh_animation_record_type {
     MAP_MESH_ANIMATION_RECORD_END = 0,
     MAP_MESH_ANIMATION_RECORD_KEYFRAMES = 1,
@@ -1048,7 +1056,7 @@ void battle_map_upload_clut_rows(void);
 void battle_map_draw_mesh_and_weather(MATRIX* camera_matrix);
 void battle_map_freeze(void);
 void battle_map_unfreeze(void);
-s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_state, s32 flag);
+s32 battle_map_dispatch_map_data_command(map_data_command_e command, u32 index, s32 object_state, s32 flag);
 void battle_map_light_thread(void);
 void battle_map_transition_ambient_light_color(s32 frame_duration, const CVECTOR* color);
 
@@ -1105,7 +1113,7 @@ void battle_map_init_mesh_render_records(const battle_map_mesh_geometry_t* geome
 void battle_weather_randomize_from_calendar(void);
 void battle_map_init_weather_particles(s32 command);
 gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id);
-s32 battle_map_configure_effect_data_state(s32 command);
+s32 battle_map_configure_effect_data_state(map_effect_data_command_e command);
 void battle_map_reset_mesh_render_state(void);
 
 void battle_map_reset_script_light_transform(void);

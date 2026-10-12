@@ -27,18 +27,18 @@ s32 battle_process_map_gns_record(s32 phase, battle_map_resource_t* record) {
         /* Everything below works on this copy; the parameter itself dies
          * here, which keeps it out of a callee-saved register. */
         selected = record;
-        if (selected->command.resource_type == GNS_RESOURCE_SET_INDOOR) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_SET_INDOOR, selected);
-        } else if (selected->command.resource_type == GNS_RESOURCE_SET_OUTDOOR) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_SET_OUTDOOR, selected);
-        } else if (selected->command.resource_type == GNS_RESOURCE_CLEAR_SNOW) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_CLEAR_SNOW, selected);
-        } else if (selected->command.resource_type == GNS_RESOURCE_SET_SNOW) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_SET_SNOW, selected);
-        } else if (selected->command.resource_type == GNS_RESOURCE_UNHANDLED_8A) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_UNHANDLED_8A, selected);
-        } else if (selected->command.resource_type == GNS_RESOURCE_SET_WEATHER_MODIFIER) {
-            battle_map_dispatch_gns_resource(GNS_RESOURCE_SET_WEATHER_MODIFIER, selected);
+        if (selected->command.resource_type == GNS_COMMAND_SET_INDOOR) {
+            battle_map_dispatch_gns_resource(GNS_COMMAND_SET_INDOOR, selected);
+        } else if (selected->command.resource_type == GNS_COMMAND_SET_OUTDOOR) {
+            battle_map_dispatch_gns_resource(GNS_COMMAND_SET_OUTDOOR, selected);
+        } else if (selected->command.resource_type == GNS_COMMAND_CLEAR_SNOW) {
+            battle_map_dispatch_gns_resource(GNS_COMMAND_CLEAR_SNOW, selected);
+        } else if (selected->command.resource_type == GNS_COMMAND_SET_SNOW) {
+            battle_map_dispatch_gns_resource(GNS_COMMAND_SET_SNOW, selected);
+        } else if (selected->command.resource_type == GNS_COMMAND_UNHANDLED_8A) {
+            battle_map_dispatch_gns_resource(GNS_COMMAND_UNHANDLED_8A, selected);
+        } else if (selected->command.resource_type == GNS_COMMAND_SET_WEATHER_MODIFIER) {
+            battle_map_dispatch_gns_resource(GNS_COMMAND_SET_WEATHER_MODIFIER, selected);
         } else {
             /*
              * Requested map state, packed like the file row's map_state: layout in

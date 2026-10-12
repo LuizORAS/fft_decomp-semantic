@@ -35,7 +35,7 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
     state->tile_level = config->target_level = elevation;
     battle_move_store_unit_movement_to_scratchpad(unit_id);
     index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-    if (!((g_battle_map_tile_data[index].ceiling_depth_and_marks.value >> MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT) & 1)) {
+    if (!g_battle_map_tile_data[index].ceiling_depth_and_marks.bits.move_destination) {
         return 0;
     }
     if (g_battle_move_reachable_tiles_valid == 0) {

@@ -32,7 +32,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
             } else {
                 selected = table->submerged_frames[frame];
             }
-        } else if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
+        } else if (tile->depth_half_height.bits.depth) {
             if (unit->battle_data != 0) {
                 flags = battle_move_get_effective_flags(unit->battle_data);
                 /* The combined test keeps the table pointer's reference count
@@ -47,13 +47,13 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
                     selected = table->frames[frame];
                 } else if (unit->spritesheet_id == BATTLE_SPRITESHEET_ID_CHICKEN
                     || unit->spritesheet_id == BATTLE_SPRITESHEET_ID_FROG) {
-                    if ((tile->height + (tile->depth_half_height.value >> 5)) * 12 >= -unit->screen.vy + 4) {
+                    if ((tile->height + tile->depth_half_height.bits.depth) * 12 >= -unit->screen.vy + 4) {
                         selected = table->submerged_frames[frame];
                     } else {
                         selected = table->frames[frame];
                     }
                 } else {
-                    height = (tile->height + (tile->depth_half_height.value >> 5)) * 12;
+                    height = (tile->height + tile->depth_half_height.bits.depth) * 12;
                     z = -unit->screen.vy;
                     if (height >= z + 0x24) {
                         selected = table->submerged_frames[0];
@@ -64,7 +64,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
                     }
                 }
             } else {
-                height = (tile->height + (tile->depth_half_height.value >> 5)) * 12;
+                height = (tile->height + tile->depth_half_height.bits.depth) * 12;
                 z = -unit->screen.vy;
                 if (height >= z + 0x24) {
                     selected = table->submerged_frames[0];
@@ -82,7 +82,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
         if (sequence_id < BATTLE_SEQUENCE_EVTCHR_SLOT_1) {
             table = &g_battle_gfx_vram_slots[0].shp.tables;
         }
-        if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
+        if (tile->depth_half_height.bits.depth) {
             selected = table->submerged_frames[frame - BATTLE_SHP_FRAME_EVTCHR_FIRST];
         } else {
             selected = table->frames[frame - BATTLE_SHP_FRAME_EVTCHR_FIRST];

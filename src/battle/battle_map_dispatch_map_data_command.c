@@ -7,7 +7,7 @@
  * For event Use3DObject (0x80) `index` is the object id, `object_state` its
  * state row and `flag` is stored beside it; 0x9d reuses `object_state` as a
  * duration. */
-s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_state, s32 flag) {
+s32 battle_map_dispatch_map_data_command(map_data_command_e command, u32 index, s32 object_state, s32 flag) {
     s32 result;
     s16 i;
     battle_map_mesh_instructions_t* entry;
