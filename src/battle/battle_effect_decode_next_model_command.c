@@ -21,7 +21,7 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_model_command
     index = g_battle_effect_model_command_word_offset;
     command = (psyq_tmd_packet_t*)((u8*)g_battle_effect_model_commands + index * sizeof(u32));
     header = command->id;
-    out->header.word = header;
+    memcpy(&out->header, &command->id, sizeof(out->header));
     /* Struct assignments use unaligned copies; memcpy preserves the 32-bit transfers. */
     switch (header >> 24) {
     case BATTLE_EFFECT_MODEL_COMMAND_G4:
@@ -66,7 +66,7 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_model_command
         break;
     }
     default:
-        g_battle_effect_model_command_word_offset += out->header.fields.word_count + 1;
+        g_battle_effect_model_command_word_offset += out->header.word_count + 1;
         break;
     }
 }

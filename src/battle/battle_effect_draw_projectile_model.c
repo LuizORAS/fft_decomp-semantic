@@ -101,7 +101,7 @@ void battle_effect_draw_projectile_model(
         work = g_battle_effect_current_secondary->allocation;
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
-            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G4) {
+            if (command.header.opcode == BATTLE_EFFECT_MODEL_COMMAND_G4) {
                 quad = &work->g4[g_battle_effect_buffer_index][g4_index];
                 setRGB0(quad, command.colors[0].r, command.colors[0].g, command.colors[0].b);
                 setRGB1(quad, command.colors[1].r, command.colors[1].g, command.colors[1].b);
@@ -126,7 +126,7 @@ void battle_effect_draw_projectile_model(
                 }
             }
             i++;
-            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
+            if (command.header.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][g3_index];
                 setRGB0(tri, command.colors[0].r, command.colors[0].g, command.colors[0].b);
                 setRGB1(tri, command.colors[1].r, command.colors[1].g, command.colors[1].b);
@@ -158,7 +158,7 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
+            if (command.header.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
                 setRGB0(tri, command.colors[0].r, command.colors[0].g, command.colors[0].b);
                 setRGB1(tri, command.colors[1].r, command.colors[1].g, command.colors[1].b);
@@ -194,7 +194,7 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < g4_index;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_GT3_37) {
+            if (command.header.opcode == BATTLE_EFFECT_MODEL_COMMAND_GT3_37) {
                 tri = &work->prims[g_battle_effect_buffer_index][gt3_index];
                 tri->tpage = 0x3f;
                 tri->clut = g_battle_effect_current_secondary->own_slot_id + 0x7eff;
@@ -232,7 +232,7 @@ void battle_effect_draw_projectile_model(
         for (i = 0; i < command_count;) {
             battle_effect_decode_next_model_command(&command);
             i++;
-            if (command.header.fields.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
+            if (command.header.opcode == BATTLE_EFFECT_MODEL_COMMAND_G3) {
                 tri = &work->g3[g_battle_effect_buffer_index][j];
                 setRGB0(tri, command.colors[0].r, command.colors[0].g, command.colors[0].b);
                 setRGB1(tri, command.colors[1].r, command.colors[1].g, command.colors[1].b);

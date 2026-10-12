@@ -556,15 +556,14 @@ typedef struct battle_effect_obstacle_unit_list {
 } battle_effect_obstacle_unit_list_t;
 
 /* Header of one packed projectile model command. */
-typedef union battle_effect_model_command_header {
-    u32 word;
-    struct {
-        u8 _unused_00;
-        u8 word_count;
-        u8 _unused_02;
-        u8 opcode;
-    } fields;
+typedef struct battle_effect_model_command_header {
+    u8 _unused_00;
+    u8 word_count;
+    u8 _unused_02;
+    u8 opcode;
 } battle_effect_model_command_header_t;
+typedef char
+    battle_effect_model_command_header_size_must_be_4[sizeof(battle_effect_model_command_header_t) == 4 ? 1 : -1];
 
 /* Shared output of the model-command decoder and input of the projectile renderer. */
 typedef struct battle_effect_decoded_model_command {
