@@ -2240,7 +2240,7 @@ void battle_effect_init_system(void);
 void battle_effect_interpolate_s16(s16 from, s16 to, s32 t, s16* out);
 void battle_effect_interpolate_svector(const SVECTOR* from, const SVECTOR* to, s32 t, SVECTOR* out);
 void battle_effect_interpolate_vector_q13(const VECTOR* from, const VECTOR* to, s32 t, VECTOR* out);
-s32 battle_effect_lerp_and_store(s32 start, s32 end, s32 factor, s32* out);
+s32 battle_lerp_fixed8_and_store(s32 start, s32 end, s32 factor, s32* out);
 void battle_effect_lerp_component_q13(s32 from, s32 to, s32 t, s32* out);
 void battle_effect_list_valid_unit_targeting_data(s32 first, s32 second, battle_effect_obstacle_unit_list_t** out);
 void battle_effect_mask_vector_low_12_bits(const SVECTOR* src, SVECTOR* dst);
@@ -2404,7 +2404,7 @@ s16 battle_effect_start_script_record(u8* script, s16 start_pc, s16 parent_index
 effect_script_result_e battle_effect_code_script_04_end(effect_record_t* unused_record);
 effect_script_result_e battle_effect_code_script_2e_invalid(effect_record_t* unused_record);
 void battle_effect_interpolate_emitter_spawn_spread(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
-s32 battle_effect_lerp_linear(s32 start, s32 end, s32 factor);
+s32 battle_lerp_fixed8(s32 start, s32 end, s32 factor);
 void battle_effect_play(void);
 s32 battle_effect_run_block(s16 index);
 s16 battle_effect_select_larger_magnitude_s16(s16 first, s16 second);

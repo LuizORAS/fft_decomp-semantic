@@ -100,12 +100,12 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         texture_height = geometry->textured_quad.texture_height / 2;
         selector = geometry->textured_quad.scroll_curves.scroll_speed;
         BATTLE_EFFECT_READ_CURVE(row, column, selector, work->frame);
-        speed = battle_effect_lerp_linear(
+        speed = battle_lerp_fixed8(
                     geometry->textured_quad.scroll_speed_start, geometry->textured_quad.scroll_speed_end, column)
             << 4;
         selector = geometry->textured_quad.scroll_curves.scroll_angle;
         BATTLE_EFFECT_READ_CURVE(row, column, selector, work->frame);
-        angle = battle_effect_lerp_linear(
+        angle = battle_lerp_fixed8(
             geometry->textured_quad.scroll_angle_start, geometry->textured_quad.scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
         while (work->scroll_u >= texture_width << 12) {
@@ -141,14 +141,14 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         selector = geometry->textured_quad.wave_curves.shape;
         BATTLE_EFFECT_READ_CURVE(row, column, selector, frame);
         step = 0x20000
-            / battle_effect_lerp_linear(
+            / battle_lerp_fixed8(
                 geometry->textured_quad.wave_y_start.period, geometry->textured_quad.wave_y_end.period, column);
         amplitude_step = 0x20000
-            / battle_effect_lerp_linear(geometry->textured_quad.wave_y_start.amplitude_period,
+            / battle_lerp_fixed8(geometry->textured_quad.wave_y_start.amplitude_period,
                 geometry->textured_quad.wave_y_end.amplitude_period, column);
-        amplitude = battle_effect_lerp_linear(
+        amplitude = battle_lerp_fixed8(
             geometry->textured_quad.wave_y_start.amplitude, geometry->textured_quad.wave_y_end.amplitude, column);
-        phase_step = battle_effect_lerp_linear(
+        phase_step = battle_lerp_fixed8(
             geometry->textured_quad.wave_y_start.phase_step, geometry->textured_quad.wave_y_end.phase_step, column);
         for (quad_row = 0; quad_row < 9; quad_row++) {
             scaled = (amplitude * rcos(amplitude_phase)) >> 4;
@@ -164,14 +164,14 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         phase = work->wave_x_phase;
         amplitude_phase = work->wave_x_amplitude_phase;
         step = 0x20000
-            / battle_effect_lerp_linear(
+            / battle_lerp_fixed8(
                 geometry->textured_quad.wave_x_start.period, geometry->textured_quad.wave_x_end.period, column);
         amplitude_step = 0x20000
-            / battle_effect_lerp_linear(geometry->textured_quad.wave_x_start.amplitude_period,
+            / battle_lerp_fixed8(geometry->textured_quad.wave_x_start.amplitude_period,
                 geometry->textured_quad.wave_x_end.amplitude_period, column);
-        amplitude = battle_effect_lerp_linear(
+        amplitude = battle_lerp_fixed8(
             geometry->textured_quad.wave_x_start.amplitude, geometry->textured_quad.wave_x_end.amplitude, column);
-        phase_step = battle_effect_lerp_linear(
+        phase_step = battle_lerp_fixed8(
             geometry->textured_quad.wave_x_start.phase_step, geometry->textured_quad.wave_x_end.phase_step, column);
         for (quad_column = 0; quad_column < 9; quad_column++) {
             scaled = (amplitude * rcos(amplitude_phase)) >> 4;
@@ -191,9 +191,9 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         work->wave_y_amplitude_phase += spread.vy;
         phase_selector = geometry->textured_quad.scroll_curves.wave_x_phase_speed;
         BATTLE_EFFECT_READ_CURVE(row, column, phase_selector, frame);
-        work->wave_x_phase += battle_effect_lerp_linear(
+        work->wave_x_phase += battle_lerp_fixed8(
             geometry->textured_quad.wave_phase_speed_start[0], geometry->textured_quad.wave_phase_speed_end[0], column);
-        work->wave_x_amplitude_phase += battle_effect_lerp_linear(
+        work->wave_x_amplitude_phase += battle_lerp_fixed8(
             geometry->textured_quad.wave_phase_speed_start[1], geometry->textured_quad.wave_phase_speed_end[1], column);
 
         depth = geometry->textured_quad.ot_depth;

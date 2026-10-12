@@ -88,7 +88,7 @@ s32 battle_effect_spawn_emitter_particles(
     } else {
         factor = 0;
     }
-    if (time % battle_effect_lerp_linear(entry->emitter.spawn_interval_start, entry->emitter.spawn_interval_end, factor)
+    if (time % battle_lerp_fixed8(entry->emitter.spawn_interval_start, entry->emitter.spawn_interval_end, factor)
         != 0) {
         return;
     }
@@ -126,7 +126,7 @@ s32 battle_effect_spawn_emitter_particles(
     } else {
         factor = 0;
     }
-    count = battle_effect_lerp_linear(entry->emitter.particle_count_start, entry->emitter.particle_count_end, factor);
+    count = battle_lerp_fixed8(entry->emitter.particle_count_start, entry->emitter.particle_count_end, factor);
     for (i = 0; i < count; i++) {
         particle = battle_effect_alloc_work_record(record_index, (placement_flags & EFFECT_WORK_KIND_MASK));
         particle->kind_flags = placement_flags;
@@ -232,10 +232,10 @@ s32 battle_effect_spawn_emitter_particles(
     curve--;
     if (curve != -1) {
         factor = g_battle_effect_animation_curve_data->curves[curve][frame];
-        speed_min = battle_effect_lerp_linear(
-            entry->emitter.radial_speed_start.min, entry->emitter.radial_speed_end.min, factor);
-        speed_max = battle_effect_lerp_linear(
-            entry->emitter.radial_speed_start.max, entry->emitter.radial_speed_end.max, factor);
+        speed_min
+            = battle_lerp_fixed8(entry->emitter.radial_speed_start.min, entry->emitter.radial_speed_end.min, factor);
+        speed_max
+            = battle_lerp_fixed8(entry->emitter.radial_speed_start.max, entry->emitter.radial_speed_end.max, factor);
     } else {
         speed_min = entry->emitter.radial_speed_start.min;
         speed_max = entry->emitter.radial_speed_start.max;
@@ -245,11 +245,11 @@ s32 battle_effect_spawn_emitter_particles(
     curve--;
     if (curve != -1) {
         factor = g_battle_effect_animation_curve_data->curves[curve][frame];
-        angle_spread.vx = battle_effect_lerp_linear(
+        angle_spread.vx = battle_lerp_fixed8(
             entry->emitter.spawn.velocity_spread_start.x, entry->emitter.spawn.velocity_spread_end.x, factor);
-        angle_spread.vy = battle_effect_lerp_linear(
+        angle_spread.vy = battle_lerp_fixed8(
             entry->emitter.spawn.velocity_spread_start.y, entry->emitter.spawn.velocity_spread_end.y, factor);
-        angle_spread.vz = battle_effect_lerp_linear(
+        angle_spread.vz = battle_lerp_fixed8(
             entry->emitter.spawn.velocity_spread_start.z, entry->emitter.spawn.velocity_spread_end.z, factor);
     } else {
         setVector(&angle_spread, entry->emitter.spawn.velocity_spread_start.x / 2,
@@ -333,18 +333,18 @@ s32 battle_effect_spawn_emitter_particles(
     } else {
         factor = 0;
     }
-    accel_min.vx = battle_effect_lerp_linear(
-        entry->emitter.acceleration_start.x_min, entry->emitter.acceleration_end.x_min, factor);
-    accel_max.vx = battle_effect_lerp_linear(
-        entry->emitter.acceleration_start.x_max, entry->emitter.acceleration_end.x_max, factor);
-    accel_min.vy = battle_effect_lerp_linear(
-        entry->emitter.acceleration_start.y_min, entry->emitter.acceleration_end.y_min, factor);
-    accel_max.vy = battle_effect_lerp_linear(
-        entry->emitter.acceleration_start.y_max, entry->emitter.acceleration_end.y_max, factor);
-    accel_min.vz = battle_effect_lerp_linear(
-        entry->emitter.acceleration_start.z_min, entry->emitter.acceleration_end.z_min, factor);
-    accel_max.vz = battle_effect_lerp_linear(
-        entry->emitter.acceleration_start.z_max, entry->emitter.acceleration_end.z_max, factor);
+    accel_min.vx
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.x_min, entry->emitter.acceleration_end.x_min, factor);
+    accel_max.vx
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.x_max, entry->emitter.acceleration_end.x_max, factor);
+    accel_min.vy
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.y_min, entry->emitter.acceleration_end.y_min, factor);
+    accel_max.vy
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.y_max, entry->emitter.acceleration_end.y_max, factor);
+    accel_min.vz
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.z_min, entry->emitter.acceleration_end.z_min, factor);
+    accel_max.vz
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.z_max, entry->emitter.acceleration_end.z_max, factor);
     if (rotate) {
         SetRotMatrix(&matrix);
         RotTrans(&accel_min, &out, &out.pad);
@@ -359,17 +359,17 @@ s32 battle_effect_spawn_emitter_particles(
     } else {
         factor = 0;
     }
-    accel_step_min.vx = battle_effect_lerp_linear(
+    accel_step_min.vx = battle_lerp_fixed8(
         entry->emitter.acceleration_step_start.x_min, entry->emitter.acceleration_step_end.x_min, factor);
-    accel_step_max.vx = battle_effect_lerp_linear(
+    accel_step_max.vx = battle_lerp_fixed8(
         entry->emitter.acceleration_step_start.x_max, entry->emitter.acceleration_step_end.x_max, factor);
-    accel_step_min.vy = battle_effect_lerp_linear(
+    accel_step_min.vy = battle_lerp_fixed8(
         entry->emitter.acceleration_step_start.y_min, entry->emitter.acceleration_step_end.y_min, factor);
-    accel_step_max.vy = battle_effect_lerp_linear(
+    accel_step_max.vy = battle_lerp_fixed8(
         entry->emitter.acceleration_step_start.y_max, entry->emitter.acceleration_step_end.y_max, factor);
-    accel_step_min.vz = battle_effect_lerp_linear(
+    accel_step_min.vz = battle_lerp_fixed8(
         entry->emitter.acceleration_step_start.z_min, entry->emitter.acceleration_step_end.z_min, factor);
-    accel_step_max.vz = battle_effect_lerp_linear(
+    accel_step_max.vz = battle_lerp_fixed8(
         entry->emitter.acceleration_step_start.z_max, entry->emitter.acceleration_step_end.z_max, factor);
     if (rotate) {
         RotTrans(&accel_step_min, &out, &out.pad);
@@ -396,10 +396,10 @@ s32 battle_effect_spawn_emitter_particles(
     } else {
         factor = 0;
     }
-    inertia_min = battle_effect_lerp_linear(
-        entry->emitter.spawn.inertia_start.min, entry->emitter.spawn.inertia_end.min, factor);
-    inertia_max = battle_effect_lerp_linear(
-        entry->emitter.spawn.inertia_start.max, entry->emitter.spawn.inertia_end.max, factor);
+    inertia_min
+        = battle_lerp_fixed8(entry->emitter.spawn.inertia_start.min, entry->emitter.spawn.inertia_end.min, factor);
+    inertia_max
+        = battle_lerp_fixed8(entry->emitter.spawn.inertia_start.max, entry->emitter.spawn.inertia_end.max, factor);
     discarded_selector = entry->emitter.spawn_bindings._unknown_02;
     curve = discarded_selector;
     curve--;
@@ -408,8 +408,8 @@ s32 battle_effect_spawn_emitter_particles(
     } else {
         factor = 0;
     }
-    battle_effect_lerp_linear(entry->emitter._unknown_4c[0], entry->emitter._unknown_50[0], factor);
-    battle_effect_lerp_linear(entry->emitter._unknown_4c[1], entry->emitter._unknown_50[1], factor);
+    battle_lerp_fixed8(entry->emitter._unknown_4c[0], entry->emitter._unknown_50[0], factor);
+    battle_lerp_fixed8(entry->emitter._unknown_4c[1], entry->emitter._unknown_50[1], factor);
     weight_binding = entry->emitter.spawn_bindings.weight;
     curve = weight_binding;
     curve--;
@@ -418,8 +418,8 @@ s32 battle_effect_spawn_emitter_particles(
     } else {
         factor = 0;
     }
-    weight_min = battle_effect_lerp_linear(entry->emitter.weight_start.min, entry->emitter.weight_end.min, factor);
-    weight_max = battle_effect_lerp_linear(entry->emitter.weight_start.max, entry->emitter.weight_end.max, factor);
+    weight_min = battle_lerp_fixed8(entry->emitter.weight_start.min, entry->emitter.weight_end.min, factor);
+    weight_max = battle_lerp_fixed8(entry->emitter.weight_start.max, entry->emitter.weight_end.max, factor);
     curve = entry->emitter.motion_curve_selectors >> EFFECT_EMITTER_CURVE_LIFETIME_SHIFT & 0xf;
     curve--;
     if (curve != -1) {
@@ -427,10 +427,8 @@ s32 battle_effect_spawn_emitter_particles(
     } else {
         factor = 0;
     }
-    lifetime_min
-        = battle_effect_lerp_linear(entry->emitter.lifetime_start.min, entry->emitter.lifetime_end.min, factor);
-    lifetime_max
-        = battle_effect_lerp_linear(entry->emitter.lifetime_start.max, entry->emitter.lifetime_end.max, factor);
+    lifetime_min = battle_lerp_fixed8(entry->emitter.lifetime_start.min, entry->emitter.lifetime_end.min, factor);
+    lifetime_max = battle_lerp_fixed8(entry->emitter.lifetime_start.max, entry->emitter.lifetime_end.max, factor);
     particle = head;
     for (i = 0; i < count; i++) {
         particle->motion.inertia = RANDOM_BETWEEN(inertia_min, inertia_max);
@@ -447,11 +445,11 @@ s32 battle_effect_spawn_emitter_particles(
         factor = 0;
     }
     target_offset.vx
-        = battle_effect_lerp_linear(entry->emitter.target_offset_start.x, entry->emitter.target_offset_end.x, factor);
+        = battle_lerp_fixed8(entry->emitter.target_offset_start.x, entry->emitter.target_offset_end.x, factor);
     target_offset.vy
-        = battle_effect_lerp_linear(entry->emitter.target_offset_start.y, entry->emitter.target_offset_end.y, factor);
+        = battle_lerp_fixed8(entry->emitter.target_offset_start.y, entry->emitter.target_offset_end.y, factor);
     target_offset.vz
-        = battle_effect_lerp_linear(entry->emitter.target_offset_start.z, entry->emitter.target_offset_end.z, factor);
+        = battle_lerp_fixed8(entry->emitter.target_offset_start.z, entry->emitter.target_offset_end.z, factor);
     particle = head;
     switch (placement_flags & EFFECT_EMITTER_HOMING_MASK) {
     case EFFECT_EMITTER_HOMING_OFFSET:
@@ -510,11 +508,11 @@ s32 battle_effect_spawn_emitter_particles(
     }
     /* The lerp results pass through curve: that reassignment keeps CSE from
      * sign-extending the call results instead of homing_min/max. */
-    curve = battle_effect_lerp_linear(
-        entry->emitter.homing_strength_start.min, entry->emitter.homing_strength_end.min, factor);
+    curve
+        = battle_lerp_fixed8(entry->emitter.homing_strength_start.min, entry->emitter.homing_strength_end.min, factor);
     homing_min = curve;
-    curve = battle_effect_lerp_linear(
-        entry->emitter.homing_strength_start.max, entry->emitter.homing_strength_end.max, factor);
+    curve
+        = battle_lerp_fixed8(entry->emitter.homing_strength_start.max, entry->emitter.homing_strength_end.max, factor);
     homing_max = curve;
     /* This otherwise-unused test keeps the packed selectors live through the loop setup. */
     motion_curve_selectors = entry->emitter.motion_curve_selectors;

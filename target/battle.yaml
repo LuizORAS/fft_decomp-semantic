@@ -1788,8 +1788,8 @@ functions:
   - {addr: 0x801a8ae8, size: 100, name: battle_effect_interpolate_vector_q13_cos, hash: 780406bfc0e02002}
   - {addr: 0x801a8b4c, size: 100, name: battle_effect_interpolate_vector_q13_cos_q12, hash: 9dc613bd73dd4809}
   - {addr: 0x801a8bb0, size: 48, name: battle_effect_interpolate_vector_q13_linear, hash: 3adaecb89ae8bfc6}
-  - {addr: 0x801a8be0, size: 24, name: battle_effect_lerp_linear, hash: 32beccbbfe152ab8}
-  - {addr: 0x801a8bf8, size: 28, name: battle_effect_lerp_and_store, hash: 7dfbd222cfab214f}
+  - {addr: 0x801a8be0, size: 24, name: battle_lerp_fixed8, hash: 32beccbbfe152ab8}
+  - {addr: 0x801a8bf8, size: 28, name: battle_lerp_fixed8_and_store, hash: 7dfbd222cfab214f}
   - {addr: 0x801a8c14, size: 120, name: battle_effect_interpolate_emitter_spawn_position, hash: cad2d3bf5cf6328e}
   - {addr: 0x801a8c8c, size: 120, name: battle_effect_interpolate_emitter_spawn_spread, hash: 6f50e5b8089b165f}
   - {addr: 0x801a8d04, size: 120, name: battle_effect_interpolate_emitter_velocity_base_angles, hash: 1102eb23acedb6d3}
