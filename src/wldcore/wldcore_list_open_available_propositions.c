@@ -51,7 +51,7 @@ void wldcore_list_open_available_propositions(void) {
         if (!(script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
                 & (WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS | WLDCORE_PROPOSITION_VARIABLE_COMPLETED))
             && !(g_main_proposition_states[i] & WLDCORE_PROPOSITION_STATE_DAYS_MASK)
-            && wldcore_proposition_set_based_on_location(i, g_wldcore_map_projection_state.marker.kind + 1) != 0) {
+            && wldcore_proposition_is_available_at_location(i, g_wldcore_map_projection_state.marker.kind + 1) != 0) {
             g_wldcore_list_entry_values[count] = i + TEXT_ID_PROPOSITION_NAME_BASE;
             g_wldcore_list_row_flags[count] = 0;
             count++;

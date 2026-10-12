@@ -45,7 +45,7 @@ void wldcore_list_handle_completed_propositions_input(wldcore_menu_stack_record_
         depth = g_wldcore_menu_stack_depth;
         g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS_BROWSE;
         g_wldcore_menu_stack_depth = depth + 1;
-        g_wldcore_menu_stack_records_next[depth].job_report_confirm.argument
+        g_wldcore_menu_stack_records_next[depth].proposition_report_confirm.argument
             = level->proposition_list.entries[g_wldcore_window_panel_render_state.selected_index];
     }
 }

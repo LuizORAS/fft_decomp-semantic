@@ -5,7 +5,7 @@
 /* Whether proposition `index` is offered at `location`: the row's location
  * (0 for any), then each condition its flags select. The status condition
  * tests bit 2 of script variable 0x360 + condition_value. */
-s32 wldcore_proposition_set_based_on_location(s32 index, s32 location) {
+s32 wldcore_proposition_is_available_at_location(s32 index, s32 location) {
     wldcore_proposition_fields_t entry;
     s32 month;
     s32 day;

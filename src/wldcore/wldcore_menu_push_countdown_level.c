@@ -8,7 +8,7 @@ void wldcore_menu_push_countdown_level(void) {
     s32 count;
 
     count = wldcore_get_completion_milestone_rank();
-    if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
+    if (g_wldcore_proposition_report.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].countdown.current
             = WLDCORE_TEXT_ID_TREASURE_FOUND_FIRST;
     } else {

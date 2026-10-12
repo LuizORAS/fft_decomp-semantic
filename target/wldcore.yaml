@@ -45,7 +45,7 @@ functions:
   - {addr: 0x80069810, size: 264, name: wldcore_fade_draw_screen_overlays, hash: 410c3788cecdf2f4}
   - {addr: 0x80069918, size: 28, name: wldcore_proposition_get_data_pointer, hash: 8370b9e747338d02}
   - {addr: 0x80069934, size: 176, name: wldcore_unpack_proposition_row, hash: 99bb07ead255aa82}
-  - {addr: 0x800699e4, size: 248, name: wldcore_proposition_set_based_on_location, hash: 3651cbeedd1a3548}
+  - {addr: 0x800699e4, size: 248, name: wldcore_proposition_is_available_at_location, hash: 3651cbeedd1a3548}
   - {addr: 0x80069adc, size: 212, name: wldcore_advance_calendar_day, hash: fa23d9cb75d2330b}
   - {addr: 0x80069bb0, size: 400, name: wldcore_convert_date_to_zodiac_date, hash: 8d40642805cd5ac8}
   - {addr: 0x80069d40, size: 248, name: wldcore_advance_brave_story_birthdays, hash: 093651326def3e0f}
@@ -507,7 +507,7 @@ data:
   - {addr: 0x8009f1e0, name: g_wldcore_sound_novel_sound_resource}
   - {addr: 0x8009f1e4, name: g_wldcore_previous_system_flags}
   - {addr: 0x8009f1e8, name: g_wldcore_window_aux_render_object_count}
-  - {addr: 0x8009f1ec, name: g_wldcore_job_selection}
+  - {addr: 0x8009f1ec, name: g_wldcore_proposition_report}
   - {addr: 0x8009f244, name: g_wldcore_window_render_record_count}
   - {addr: 0x8009f248, name: g_wldcore_random_battle_squad_id}
   - {addr: 0x8009f24c, name: g_wldcore_map_projection_state}

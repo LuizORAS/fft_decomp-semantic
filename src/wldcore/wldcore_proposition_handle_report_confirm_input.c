@@ -24,7 +24,7 @@
  * 0xE))` and `base_y - (0 - (0xE + selection * 0x10))` are byte-identical
  * spellings; `base_y - (-0xE - selection * 0x10)` is not (fold collapses it
  * back to a plus tree and the tie returns). */
-void wldcore_proposition_handle_report_confirm_input(wldcore_job_report_confirm_level_t* level) {
+void wldcore_proposition_handle_report_confirm_input(wldcore_proposition_report_confirm_level_t* level) {
     s32 selection;
 
     if (g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN) {

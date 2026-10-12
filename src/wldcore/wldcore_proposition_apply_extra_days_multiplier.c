@@ -14,12 +14,12 @@ void wldcore_proposition_apply_extra_days_multiplier(void) {
     s32 i;
     s32 value;
 
-    if (g_wldcore_job_selection.recalled != 0) {
+    if (g_wldcore_proposition_report.recalled != 0) {
         return;
     }
     reward_scale = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_EXTRA_DAY_JP_SCALES);
     bonus_scale = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_EXTRA_DAY_GIL_SCALES);
-    record = g_wldcore_job_selection.proposition_index;
+    record = g_wldcore_proposition_report.proposition_index;
     day = g_main_active_propositions[record].elapsed_days - g_wldcore_selected_proposition_row[0].min_days;
     count = g_main_active_propositions[record].participant_count;
     if (day < 0) {
@@ -29,13 +29,13 @@ void wldcore_proposition_apply_extra_days_multiplier(void) {
         day = 9;
     }
     for (percent = reward_scale[day], i = 0; i < count; i++) {
-        value = g_wldcore_job_selection.participant_jp[i];
+        value = g_wldcore_proposition_report.participant_jp[i];
         value *= percent;
-        g_wldcore_job_selection.participant_jp[i] = value / 100;
+        g_wldcore_proposition_report.participant_jp[i] = value / 100;
     }
     for (percent = bonus_scale[day], i = 0; i < count; i++) {
-        value = g_wldcore_job_selection.participant_gil[i];
+        value = g_wldcore_proposition_report.participant_gil[i];
         value *= percent;
-        g_wldcore_job_selection.participant_gil[i] = value / 100;
+        g_wldcore_proposition_report.participant_gil[i] = value / 100;
     }
 }

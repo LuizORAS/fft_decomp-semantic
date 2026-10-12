@@ -35,7 +35,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
                 wldcore_menu_push_countdown_level();
                 return;
             }
-            if (g_wldcore_job_selection.recalled == 0) {
+            if (g_wldcore_proposition_report.recalled == 0) {
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 0x10);
             }
             wldcore_list_open_completed_propositions();
@@ -45,7 +45,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     if (level->phase == WLDCORE_PROPOSITION_RESULT_PHASE_CLOSING) {
         if (g_wldcore_audio_queue.count == 0 && g_wldcore_audio_queue.current_command == WLDCORE_AUDIO_COMMAND_NONE
             && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
-            if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_job_selection.recalled == 0) {
+            if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_proposition_report.recalled == 0) {
                 wldcore_sound_enqueue_audio_command(
                     WLDCORE_AUDIO_COMMAND_PLAY_MUSIC, WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BAR));
             }
@@ -68,7 +68,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     proposition_flags = script_get_variable(g_main_active_propositions[level->proposition].proposition_id
                             + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
         & 0xFFFD;
-    if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
+    if (g_wldcore_proposition_report.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         proposition_flags |= WLDCORE_PROPOSITION_VARIABLE_COMPLETED;
     }
     world_script_set_variable(
@@ -82,46 +82,48 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     g_wldcore_displayed_numeric_value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
     month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
+    if (g_wldcore_proposition_report.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         date.day = day;
         date.month = month;
         wldcore_write_nine_bit_record(g_main_proposition_last_attempt_date_bits,
             g_main_active_propositions[level->proposition].proposition_id, &date);
     }
-    if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
-        world_script_set_variable(g_wldcore_job_selection.reward_index + EVENT_SCRIPT_VAR_TREASURE_FIRST, 1);
+    if (g_wldcore_proposition_report.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
+        world_script_set_variable(g_wldcore_proposition_report.reward_index + EVENT_SCRIPT_VAR_TREASURE_FIRST, 1);
         date.day = day;
         date.month = month;
         wldcore_write_nine_bit_record(
-            g_main_treasure_acquisition_date_bits, g_wldcore_job_selection.reward_index, &date);
+            g_main_treasure_acquisition_date_bits, g_wldcore_proposition_report.reward_index, &date);
     }
-    if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
-        world_script_set_variable(g_wldcore_job_selection.reward_index + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST, 1);
+    if (g_wldcore_proposition_report.reward_type == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
+        world_script_set_variable(
+            g_wldcore_proposition_report.reward_index + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST, 1);
         date.day = day;
         date.month = month;
-        wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, g_wldcore_job_selection.reward_index, &date);
+        wldcore_write_nine_bit_record(
+            g_main_land_discovery_date_bits, g_wldcore_proposition_report.reward_index, &date);
     }
-    for (i = 0; i < g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count; i++) {
+    for (i = 0; i < g_main_active_propositions[g_wldcore_proposition_report.proposition_index].participant_count; i++) {
         wldcore_get_party_data_pointer(
-            g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i])
+            g_main_active_propositions[g_wldcore_proposition_report.proposition_index].participant_indices[i])
             ->proposition_status = 0;
         main_job_add_proposition_jp(
-            g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i],
-            g_wldcore_job_selection.participant_jp[i]);
+            g_main_active_propositions[g_wldcore_proposition_report.proposition_index].participant_indices[i],
+            g_wldcore_proposition_report.participant_jp[i]);
     }
-    if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_FAILURE) {
-        g_main_proposition_states[g_main_active_propositions[g_wldcore_job_selection.proposition_index].proposition_id]
-            = WLDCORE_PROPOSITION_STATE_FAILURE | 0x20;
+    if (g_wldcore_proposition_report.result == WLDCORE_PROPOSITION_RESULT_FAILURE) {
+        g_main_proposition_states[g_main_active_propositions[g_wldcore_proposition_report.proposition_index]
+                .proposition_id] = WLDCORE_PROPOSITION_STATE_FAILURE | 0x20;
     }
-    if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_BAD_FAILURE) {
-        g_main_proposition_states[g_main_active_propositions[g_wldcore_job_selection.proposition_index].proposition_id]
-            = WLDCORE_PROPOSITION_STATE_BAD_FAILURE | 0x10;
+    if (g_wldcore_proposition_report.result == WLDCORE_PROPOSITION_RESULT_BAD_FAILURE) {
+        g_main_proposition_states[g_main_active_propositions[g_wldcore_proposition_report.proposition_index]
+                .proposition_id] = WLDCORE_PROPOSITION_STATE_BAD_FAILURE | 0x10;
     }
     for (i = level->proposition; i < g_main_save_proposition_count - 1; i++) {
         g_main_active_propositions[i] = g_main_active_propositions[i + 1];
     }
     g_main_save_proposition_count--;
-    if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_job_selection.recalled == 0) {
+    if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_proposition_report.recalled == 0) {
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
     }
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);

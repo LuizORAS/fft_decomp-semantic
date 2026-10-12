@@ -23,19 +23,20 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     count = g_main_active_propositions[proposition].participant_count;
     g_wldcore_proposition_gil_amount = 0;
     for (i = 0; i < count; i++) {
-        g_wldcore_proposition_gil_amount += g_wldcore_job_selection.participant_gil[i];
+        g_wldcore_proposition_gil_amount += g_wldcore_proposition_report.participant_gil[i];
     }
-    g_wldcore_proposition_gil_amount += g_wldcore_job_selection.reward_value;
+    g_wldcore_proposition_gil_amount += g_wldcore_proposition_report.reward_value;
     g_text_substitution_values[1] = g_wldcore_proposition_gil_amount;
-    switch (g_wldcore_job_selection.reward_type) {
+    switch (g_wldcore_proposition_report.reward_type) {
     case WLDCORE_PROPOSITION_REWARD_TREASURE:
-        g_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x782E;
+        g_text_substitution_values[0] = g_wldcore_proposition_report.reward_index + 0x782E;
         break;
     case WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND:
-        g_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x781B;
+        g_text_substitution_values[0] = g_wldcore_proposition_report.reward_index + 0x781B;
         break;
     case WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS:
-        g_text_substitution_values[0] = g_wldcore_job_selection.reward_index + TEXT_ID_PROPOSITION_REWARD_NAME_BASE;
+        g_text_substitution_values[0]
+            = g_wldcore_proposition_report.reward_index + TEXT_ID_PROPOSITION_REWARD_NAME_BASE;
         break;
     default:
         g_text_substitution_values[0] = 0x7806;
@@ -78,7 +79,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
 
         point.x = 0xA0;
         point.y = (text_rows + row) * 0x10 + 8;
-        g_text_substitution_values[0] = g_wldcore_job_selection.participant_jp[i];
+        g_text_substitution_values[0] = g_wldcore_proposition_report.participant_jp[i];
         wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_FOUR_DIGIT_VALUE, point, g_wldcore_window_image_buffer);
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);
@@ -90,11 +91,11 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
-    party = &g_wldcore_job_selection.excluded_party_index;
+    party = &g_wldcore_proposition_report.excluded_party_index;
     g_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
     message = 0x9C;
     world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_get_party_unit_formation_sprite(*party));
-    if (g_wldcore_job_selection.recalled != 0) {
+    if (g_wldcore_proposition_report.recalled != 0) {
         message = 0xA2;
     }
     if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
@@ -104,7 +105,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
         wldcore_proposition_adjust_message_index(message, *party) + TEXT_ID_WORLD_MESSAGE_BASE, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.proposition = proposition;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0;
-    switch (g_wldcore_job_selection.result) {
+    switch (g_wldcore_proposition_report.result) {
     case WLDCORE_PROPOSITION_RESULT_SUCCESS:
         suzuki_sound_play_2_sfx(MAIN_SFX_PROPOSITION_SUCCESS_A, MAIN_SFX_PROPOSITION_SUCCESS_B);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0x78;

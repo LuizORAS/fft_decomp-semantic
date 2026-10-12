@@ -41,62 +41,6 @@ extern s32 g_wldcore_input_secondary_repeat_period;
 void wldcore_init_input_repeat_state(void);
 u32 wldcore_input_check_repeating_directional(u32 buttons);
 
-/* job */
-/* Provisional: the job-report confirmation level. The cursor window at +0x00
- * is moved between the two rows of the render record at +0x04, and +0x08
- * records which of the two rows is selected.
- * wldcore_list_handle_completed_propositions_input pushes this level (type
- * 0x0f) over the yes/no panel and stores the argument at +0x10. */
-typedef struct wldcore_job_report_confirm_level {
-    s32 cursor_window; /* 0x00; window record moved between the two rows */
-    s32 render_index;  /* 0x04; render record holding the confirmation text */
-    s32 selection;     /* 0x08; 0 = upper row, 1 = lower row */
-    s32 _unused_0c;
-    s32 argument; /* 0x10; argument of the level wldcore_menu_push_proposition_report_level pushes */
-} wldcore_job_report_confirm_level_t;
-
-/* Outcome of a proposition (wldcore_job_selection_t.result), from the
- * participants' total score. Only SUCCESS completes the proposition and earns
- * its reward. */
-typedef enum wldcore_proposition_result {
-    WLDCORE_PROPOSITION_RESULT_SUCCESS = 0,     /* score of 99 or more, or the preferred-job roll */
-    WLDCORE_PROPOSITION_RESULT_FAILURE = 1,     /* score of 59 to 98: a tenth of the JP, a fifth of the gil */
-    WLDCORE_PROPOSITION_RESULT_BAD_FAILURE = 2, /* lower score, or recalled: a twentieth of both */
-} wldcore_proposition_result_e;
-
-/* What a successful proposition brought back (wldcore_job_selection_t.reward_type);
- * TREASURE and UNEXPLORED_LAND are also the proposition row's discovery_kind. */
-typedef enum wldcore_proposition_reward {
-    WLDCORE_PROPOSITION_REWARD_NONE = 0,
-    WLDCORE_PROPOSITION_REWARD_TREASURE = 1,
-    WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND = 2,
-    WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS = 3, /* the three-tier random reward */
-} wldcore_proposition_reward_e;
-
-/* Provisional: proposition-resolution work record at 0x8009f1ec. One object:
- * wldcore_proposition_find_preferred_job_unit reads excluded_party_index at
- * -0xc from its &proposition_index base, and calculate_base_jp_and_gil and
- * step_result_level reach -0x10..+0x24 from single bases. */
-typedef struct wldcore_job_selection {
-    s32 excluded_party_index; /* 0x00 */
-    s32 speaker_party_index;  /* 0x04; chosen and read back by wldcore_proposition_step_participant_message */
-    s32 preferred_unit;       /* 0x08; fixed speaker passed to wldcore_proposition_step_participant_message */
-    s32 proposition_index;    /* 0x0c; index into g_main_active_propositions */
-    s32 result;               /* 0x10; wldcore_proposition_result_e */
-    s32 reward_type;          /* 0x14; wldcore_proposition_reward_e */
-    s32 reward_index;         /* 0x18 */
-    s32 reward_value;         /* 0x1c */
-    s32 recalled;             /* 0x20; reward calculation is skipped after a recall */
-    u8 _unused_24[0x10];
-    s32 participant_jp[3];     /* 0x34; JP awarded to each participant */
-    s32 participant_scores[3]; /* 0x40; success-score contribution */
-    s32 participant_gil[3];    /* 0x4c; contribution to the total gil reward */
-} wldcore_job_selection_t;
-typedef char wldcore_job_selection_size_must_be_88[sizeof(wldcore_job_selection_t) == 88 ? 1 : -1];
-
-extern wldcore_job_selection_t g_wldcore_job_selection;
-void wldcore_proposition_prepare_report(s32 job_id);
-
 /* opcode */
 /* Interpreter state of the sound-novel script (wldcore_saved_record_t.state_flags),
  * stepped by wldcore_script_run_until_yield. */
@@ -783,6 +727,58 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state);
 
 /* proposition */
+/* Provisional: the job-report confirmation level. The cursor window at +0x00
+ * is moved between the two rows of the render record at +0x04, and +0x08
+ * records which of the two rows is selected.
+ * wldcore_list_handle_completed_propositions_input pushes this level (type
+ * 0x0f) over the yes/no panel and stores the argument at +0x10. */
+typedef struct wldcore_proposition_report_confirm_level {
+    s32 cursor_window; /* 0x00; window record moved between the two rows */
+    s32 render_index;  /* 0x04; render record holding the confirmation text */
+    s32 selection;     /* 0x08; 0 = upper row, 1 = lower row */
+    s32 _unused_0c;
+    s32 argument; /* 0x10; argument of the level wldcore_menu_push_proposition_report_level pushes */
+} wldcore_proposition_report_confirm_level_t;
+
+/* Outcome of a proposition (wldcore_proposition_report_t.result), from the
+ * participants' total score. Only SUCCESS completes the proposition and earns
+ * its reward. */
+typedef enum wldcore_proposition_result {
+    WLDCORE_PROPOSITION_RESULT_SUCCESS = 0,     /* score of 99 or more, or the preferred-job roll */
+    WLDCORE_PROPOSITION_RESULT_FAILURE = 1,     /* score of 59 to 98: a tenth of the JP, a fifth of the gil */
+    WLDCORE_PROPOSITION_RESULT_BAD_FAILURE = 2, /* lower score, or recalled: a twentieth of both */
+} wldcore_proposition_result_e;
+
+/* What a successful proposition brought back (wldcore_proposition_report_t.reward_type);
+ * TREASURE and UNEXPLORED_LAND are also the proposition row's discovery_kind. */
+typedef enum wldcore_proposition_reward {
+    WLDCORE_PROPOSITION_REWARD_NONE = 0,
+    WLDCORE_PROPOSITION_REWARD_TREASURE = 1,
+    WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND = 2,
+    WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS = 3, /* the three-tier random reward */
+} wldcore_proposition_reward_e;
+
+/* Provisional: proposition-resolution work record at 0x8009f1ec. One object:
+ * wldcore_proposition_find_preferred_job_unit reads excluded_party_index at
+ * -0xc from its &proposition_index base, and calculate_base_jp_and_gil and
+ * step_result_level reach -0x10..+0x24 from single bases. */
+typedef struct wldcore_proposition_report {
+    s32 excluded_party_index; /* 0x00 */
+    s32 speaker_party_index;  /* 0x04; chosen and read back by wldcore_proposition_step_participant_message */
+    s32 preferred_unit;       /* 0x08; fixed speaker passed to wldcore_proposition_step_participant_message */
+    s32 proposition_index;    /* 0x0c; index into g_main_active_propositions */
+    s32 result;               /* 0x10; wldcore_proposition_result_e */
+    s32 reward_type;          /* 0x14; wldcore_proposition_reward_e */
+    s32 reward_index;         /* 0x18 */
+    s32 reward_value;         /* 0x1c */
+    s32 recalled;             /* 0x20; reward calculation is skipped after a recall */
+    u8 _unused_24[0x10];
+    s32 participant_jp[3];     /* 0x34; JP awarded to each participant */
+    s32 participant_scores[3]; /* 0x40; success-score contribution */
+    s32 participant_gil[3];    /* 0x4c; contribution to the total gil reward */
+} wldcore_proposition_report_t;
+typedef char wldcore_proposition_report_size_must_be_88[sizeof(wldcore_proposition_report_t) == 88 ? 1 : -1];
+
 /* wldcore_proposition_progress_t.flags of an active proposition. */
 typedef enum wldcore_proposition_progress_flag {
     WLDCORE_PROPOSITION_PROGRESS_DISPATCHED = 0x01,
@@ -913,11 +909,11 @@ typedef struct wldcore_proposition_fields {
     u16 required_script_var_6f; /* 0x2a */
     u16 condition_value;        /* 0x2c; zodiac month or proposition status index */
 } wldcore_proposition_fields_t;
-enum {
-    WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F = 1,
-    WLDCORE_PROPOSITION_CONDITION_MONTH = 2,
-    WLDCORE_PROPOSITION_CONDITION_STATUS = 4,
-};
+typedef enum wldcore_proposition_condition_flag {
+    WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F = 0x01,
+    WLDCORE_PROPOSITION_CONDITION_MONTH = 0x02,
+    WLDCORE_PROPOSITION_CONDITION_STATUS = 0x04,
+} wldcore_proposition_condition_flag_e;
 typedef char wldcore_proposition_fields_size_must_be_46[sizeof(wldcore_proposition_fields_t) == 46 ? 1 : -1];
 
 /* Window and render handles passed together to the palette helper. */
@@ -951,6 +947,7 @@ typedef struct wldcore_menu_send_unit_level {
 } wldcore_menu_send_unit_level_t;
 typedef char wldcore_menu_send_unit_level_size_must_be_92[sizeof(wldcore_menu_send_unit_level_t) == 92 ? 1 : -1];
 
+extern wldcore_proposition_report_t g_wldcore_proposition_report;
 extern s32* g_wldcore_proposition_data_base;
 extern s32 g_wldcore_proposition_selected_entry;
 extern s32 g_wldcore_proposition_send_unit_count;
@@ -964,7 +961,9 @@ extern s32 g_wldcore_proposition_dispatch_days;
  * g_wldcore_active_propositions_saved_cursor. */
 extern s32 g_wldcore_proposition_category_saved_cursor[];
 extern u32 g_wldcore_proposition_detail_image_buffer[];
-s32 wldcore_proposition_select_report_speaker(s32 job_id);
+void wldcore_proposition_prepare_report(s32 proposition_index);
+void wldcore_proposition_handle_report_confirm_input(wldcore_proposition_report_confirm_level_t* level);
+s32 wldcore_proposition_select_report_speaker(s32 proposition_index);
 void wldcore_proposition_determine_success(void);
 void wldcore_proposition_calculate_base_jp_and_gil(void);
 void wldcore_proposition_roll_bonus_reward(void);
@@ -982,7 +981,7 @@ void wldcore_proposition_submit_marker_request(GsOT* ot);
 void wldcore_unpack_proposition_row(wldcore_proposition_fields_t* out, s32 index);
 void wldcore_proposition_push_cancel_confirm_level(s32 value);
 void wldcore_proposition_push_detail_level(s32 value);
-s32 wldcore_proposition_set_based_on_location(s32 index, s32 location);
+s32 wldcore_proposition_is_available_at_location(s32 index, s32 location);
 void wldcore_proposition_push_dispatch_confirm_level(void);
 void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_t* level);
 void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* level);
@@ -1903,7 +1902,7 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_location_transition_level_t location_transition;
     wldcore_menu_send_unit_level_t send_unit;
     wldcore_menu_choice_panel_level_t choice_panel;
-    wldcore_job_report_confirm_level_t job_report_confirm;
+    wldcore_proposition_report_confirm_level_t proposition_report_confirm;
     wldcore_text_list_panel_t text_list;
     wldcore_menu_map_cursor_level_t map_cursor;
     wldcore_map_visibility_level_t visibility;

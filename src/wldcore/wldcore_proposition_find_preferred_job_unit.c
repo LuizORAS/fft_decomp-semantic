@@ -22,13 +22,14 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
     const u8* jobs;
     party_data_t* unit;
 
-    participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
+    participant_count = g_main_active_propositions[g_wldcore_proposition_report.proposition_index].participant_count;
     jobs = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LISTS);
     count = 0;
 
     if (g_wldcore_selected_proposition_row[0].preferred_job != 0) {
         for (i = 0; i < participant_count; i++) {
-            party_index = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i];
+            party_index
+                = g_main_active_propositions[g_wldcore_proposition_report.proposition_index].participant_indices[i];
             unit = wldcore_get_party_data_pointer(party_index);
             if (g_wldcore_selected_proposition_row[0].preferred_job - 1
                 == wldcore_map_job_id_to_category_index(unit->job_id)) {
@@ -40,7 +41,7 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
 
     if (count != 0) {
         for (i = 0; i < count; i++) {
-            if (candidates[i] != g_wldcore_job_selection.excluded_party_index) {
+            if (candidates[i] != g_wldcore_proposition_report.excluded_party_index) {
                 return candidates[i] + 1;
             }
         }
@@ -49,8 +50,8 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
 
     base = (g_wldcore_selected_proposition_row[0].job_list_index - 1) * 9;
     for (i = 0; i < participant_count; i++) {
-        party_index = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i];
-        if (party_index != g_wldcore_job_selection.excluded_party_index) {
+        party_index = g_main_active_propositions[g_wldcore_proposition_report.proposition_index].participant_indices[i];
+        if (party_index != g_wldcore_proposition_report.excluded_party_index) {
             unit = wldcore_get_party_data_pointer(party_index);
             for (k = 0; k < 9; k++) {
                 if (jobs[base + k] == unit->job_id) {
