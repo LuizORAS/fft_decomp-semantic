@@ -22,7 +22,7 @@ void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit
     if (unit->status_flags_5_6 & (BATTLE_MISC_STATUS_JUMP | BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE)) {
         return;
     }
-    if (unit->movement.word & BATTLE_MOTION_FLAG_FLOAT) {
+    if (unit->movement.floating) {
         if (unit->depth_height_offset < 12) {
             unit->depth_height_offset += g_main_system_animation_speed;
         } else if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {

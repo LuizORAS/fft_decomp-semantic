@@ -12,10 +12,10 @@ void battle_effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t
     map_tile_t* tile;
     s32 surface;
 
-    if (unit->movement.word & BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS)
+    if (unit->movement.suppress_sfx_and_landing_effects)
         return;
     tile = battle_map_get_tile_data_pointer(
-        unit->movement.bytes.destination_x, unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
+        unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
     if (tile == 0)
         return;
     surface = tile->surface.value & MAP_SURFACE_MASK;

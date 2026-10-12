@@ -7,6 +7,6 @@ void battle_unit_set_facing_update_suppression(u32 misc_id) {
 
     if (unit != 0) {
         unit->sprite_display_flags = 0;
-        unit->movement.word |= BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE;
+        unit->movement.suppress_facing_update = 1;
     }
 }

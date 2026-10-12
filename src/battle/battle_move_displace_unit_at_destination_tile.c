@@ -21,8 +21,8 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     if (unit->movement_path_offset == unit->path.count) {
         return;
     }
-    other = battle_unit_get_overlapping_misc_data_pointer(unit, unit->movement.bytes.destination_x,
-        unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
+    other = battle_unit_get_overlapping_misc_data_pointer(
+        unit, unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
     if (unit->movement_path_offset == 0) {
         return;
     }
@@ -32,23 +32,23 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     if (other == 0) {
         return;
     }
-    x = other->movement.bytes.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-    y = other->movement.bytes.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+    x = other->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+    y = other->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     switch (direction) {
     case BATTLE_MOVE_DIRECTION_NORTH:
-        center = unit->movement.bytes.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        center = unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = center - unit->screen.vz;
         break;
     case BATTLE_MOVE_DIRECTION_SOUTH:
-        center = unit->movement.bytes.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        center = unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = unit->screen.vz - center;
         break;
     case BATTLE_MOVE_DIRECTION_WEST:
-        center = unit->movement.bytes.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        center = unit->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = unit->screen.vx - center;
         break;
     case BATTLE_MOVE_DIRECTION_EAST:
-        center = unit->movement.bytes.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        center = unit->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         dist = center - unit->screen.vx;
         break;
     }

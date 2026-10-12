@@ -19,9 +19,9 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_
         if (rider->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
             mount = battle_unit_get_misc_data_by_misc_id(rider->mount_partner_misc_id);
             if (mount != 0) {
-                mount->map_x = mount->movement.bytes.destination_x = rider->map_x;
-                mount->map_y = mount->movement.bytes.destination_y = rider->map_y;
-                mount->map_z = mount->movement.bytes.destination_z = rider->map_z;
+                mount->map_x = mount->movement.destination_x = rider->map_x;
+                mount->map_y = mount->movement.destination_y = rider->map_y;
+                mount->map_z = mount->movement.destination_z = rider->map_z;
                 mount->real = rider->real;
                 mount->screen = rider->screen;
                 mount->screen.vy -= 10;

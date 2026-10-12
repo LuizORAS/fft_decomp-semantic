@@ -235,26 +235,20 @@ enum {
 
 enum { BATTLE_ACTION_STATUS_DISPLAY_CAPACITY = 27 };
 
-typedef union battle_move_destination {
-    u32 word;
-    struct {
-        u8 destination_x;
-        u8 destination_y;
-        u8 destination_z;
-        u8 motion_flags;
-    } bytes;
-    /* Flags use the same 32-bit load and store as the destination word. */
-    struct {
-        u32 : 24; /* destination bytes */
-        u32 suppress_facing_update : 1;
-        u32 suppress_sfx_and_landing_effects : 1;
-        u32 suppress_palette_update : 1;
-        u32 alternate_short_hop : 1;
-        u32 floating : 1;
-        u32 force_animation_update : 1;
-        u32 : 2;
-    } flags;
+/* Destination bytes and motion flags share one 32-bit movement record. */
+typedef struct battle_move_destination {
+    u8 destination_x;
+    u8 destination_y;
+    u8 destination_z;
+    u32 suppress_facing_update : 1;
+    u32 suppress_sfx_and_landing_effects : 1;
+    u32 suppress_palette_update : 1;
+    u32 alternate_short_hop : 1;
+    u32 floating : 1;
+    u32 force_animation_update : 1;
+    u32 : 2;
 } battle_move_destination_t;
+typedef char battle_move_destination_size_must_be_4[sizeof(battle_move_destination_t) == 4 ? 1 : -1];
 
 /* One frame of an SHP file: a 2-byte header followed by 4-byte parts, each a
  * rectangle of the sheet and where it is drawn (battle_gfx_load_trap_and_unit_frame_parts). */

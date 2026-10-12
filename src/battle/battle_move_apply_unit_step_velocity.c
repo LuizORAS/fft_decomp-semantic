@@ -37,18 +37,18 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     tile[0] = (unit->real.vx + unit->velocity.vx) / (MAP_TILE_SIZE * ONE);
     tile[1] = (unit->real.vz + unit->velocity.vz) / (MAP_TILE_SIZE * ONE);
     layer = unit->map_z;
-    if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
-        && unit->map_z != unit->movement.bytes.destination_z) {
-        layer = unit->map_z = unit->movement.bytes.destination_z;
+    if (tile[0] == unit->movement.destination_x && tile[1] == unit->movement.destination_y
+        && unit->map_z != unit->movement.destination_z) {
+        layer = unit->map_z = unit->movement.destination_z;
     }
     switch (unit->step_phase) {
     case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH:
     case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST:
     case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH:
     case BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST:
-        if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
-            && unit->map_z != unit->movement.bytes.destination_z) {
-            layer = unit->map_z = unit->movement.bytes.destination_z;
+        if (tile[0] == unit->movement.destination_x && tile[1] == unit->movement.destination_y
+            && unit->map_z != unit->movement.destination_z) {
+            layer = unit->map_z = unit->movement.destination_z;
             battle_move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step,
                 battle_map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->walk_speed);
@@ -58,9 +58,9 @@ void battle_move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_EAST:
     case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH:
     case BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST:
-        if (tile[0] == unit->movement.bytes.destination_x && tile[1] == unit->movement.bytes.destination_y
-            && unit->map_z != unit->movement.bytes.destination_z) {
-            layer = unit->map_z = unit->movement.bytes.destination_z;
+        if (tile[0] == unit->movement.destination_x && tile[1] == unit->movement.destination_y
+            && unit->map_z != unit->movement.destination_z) {
+            layer = unit->map_z = unit->movement.destination_z;
             battle_move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step,
                 battle_map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
             battle_move_interpolate_partial(unit, unit->step_speed);

@@ -21,9 +21,9 @@ s32 battle_unit_place_in_new_location(u32 misc_id, map_tile_coordinates_t* tile,
         unit->screen_offset.vz = 0;
         unit->screen_offset.vy = 0;
         unit->screen_offset.vx = 0;
-        unit->map_x = unit->movement.bytes.destination_x = tile->x;
-        unit->map_y = unit->movement.bytes.destination_y = tile->y;
-        unit->map_z = unit->movement.bytes.destination_z = tile->layer;
+        unit->map_x = unit->movement.destination_x = tile->x;
+        unit->map_y = unit->movement.destination_y = tile->y;
+        unit->map_z = unit->movement.destination_z = tile->layer;
         unit->facing = facing << 10;
         unit->screen.vx = tile->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         unit->screen.vz = tile->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);

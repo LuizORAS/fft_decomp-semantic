@@ -26,25 +26,25 @@ void battle_move_start_unit_step_at_climb_speed(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_EAST, unit);
         next = unit->map_x + 1;
-        unit->movement.bytes.destination_x = next + unit->current_path_step.bits.length;
+        unit->movement.destination_x = next + unit->current_path_step.bits.length;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_WEST, unit);
         next = unit->map_x - 1;
-        unit->movement.bytes.destination_x = next - unit->current_path_step.bits.length;
+        unit->movement.destination_x = next - unit->current_path_step.bits.length;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_SOUTH, unit);
         next = unit->map_y - 1;
-        unit->movement.bytes.destination_y = next - unit->current_path_step.bits.length;
+        unit->movement.destination_y = next - unit->current_path_step.bits.length;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_CLIMB, BATTLE_FACING_NORTH, unit);
         next = unit->map_y + 1;
-        unit->movement.bytes.destination_y = next + unit->current_path_step.bits.length;
+        unit->movement.destination_y = next + unit->current_path_step.bits.length;
         break;
     }
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
@@ -55,5 +55,5 @@ void battle_move_start_unit_step_at_climb_speed(
     }
     battle_move_set_unit_step_delta_center_to_edge(unit, step, from, edge_height);
     battle_move_interpolate_partial(unit, unit->step_speed);
-    unit->movement.bytes.destination_z = step->bits.higher;
+    unit->movement.destination_z = step->bits.higher;
 }

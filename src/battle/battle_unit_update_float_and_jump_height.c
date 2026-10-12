@@ -5,9 +5,9 @@
  * the unit back at its tile's height. */
 void battle_unit_update_float_and_jump_height(battle_unit_misc_data_t* unit) {
     if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_FLOAT) {
-        unit->movement.word |= BATTLE_MOTION_FLAG_FLOAT;
+        unit->movement.floating = 1;
     } else {
-        unit->movement.word &= ~BATTLE_MOTION_FLAG_FLOAT;
+        unit->movement.floating = 0;
     }
     if ((unit->status_flags_5_6 & (BATTLE_MISC_STATUS_JUMP | BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE)) == 0
         && (unit->statuses_to_remove_5_6 & BATTLE_MISC_STATUS_JUMP) == 0) {

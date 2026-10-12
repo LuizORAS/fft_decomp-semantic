@@ -17,13 +17,13 @@ void battle_move_snap_axis_to_destination_tile_center(s32 direction, battle_unit
     switch (direction) {
     case BATTLE_MOVE_DIRECTION_NORTH:
     case BATTLE_MOVE_DIRECTION_SOUTH:
-        coordinate = unit->movement.bytes.destination_y * MAP_TILE_SIZE + TILE_CENTER_OFFSET;
+        coordinate = unit->movement.destination_y * MAP_TILE_SIZE + TILE_CENTER_OFFSET;
         unit->screen.vz = coordinate;
         unit->real.vz = coordinate << REAL_COORD_SHIFT;
         return;
     case BATTLE_MOVE_DIRECTION_EAST:
     case BATTLE_MOVE_DIRECTION_WEST:
-        coordinate = unit->movement.bytes.destination_x * MAP_TILE_SIZE + TILE_CENTER_OFFSET;
+        coordinate = unit->movement.destination_x * MAP_TILE_SIZE + TILE_CENTER_OFFSET;
         unit->screen.vx = coordinate;
         unit->real.vx = coordinate << REAL_COORD_SHIFT;
         return;

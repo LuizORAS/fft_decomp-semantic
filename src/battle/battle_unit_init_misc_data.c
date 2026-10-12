@@ -88,18 +88,18 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->distortion_phase = 0;
     tile_x = map_x;
     unit->map_x = tile_x;
-    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE;
+    unit->movement.suppress_facing_update = 0;
     tile_y = map_y;
     unit->map_y = tile_y;
-    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_PALETTE_UPDATE;
+    unit->movement.suppress_palette_update = 0;
     tile_z = map_level;
     unit->map_z = tile_z;
-    unit->movement.word &= ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP;
-    unit->movement.word &= ~BATTLE_MOTION_FLAG_FLOAT;
-    unit->movement.word &= ~BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
-    unit->movement.bytes.destination_x = tile_x;
-    unit->movement.bytes.destination_y = tile_y;
-    unit->movement.bytes.destination_z = tile_z;
+    unit->movement.alternate_short_hop = 0;
+    unit->movement.floating = 0;
+    unit->movement.force_animation_update = 0;
+    unit->movement.destination_x = tile_x;
+    unit->movement.destination_y = tile_y;
+    unit->movement.destination_z = tile_z;
     battle_unit_set_move_and_screen_coords(unit);
     cursor.animation = &unit->animation;
     unit->velocity.vz = 0;
@@ -195,9 +195,9 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     battle_gfx_set_thrown_item_graphic_palette(
         unit->battle_data->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], unit);
     battle_status_init_special_flag_enabling(unit->battle_data->misc_unit_id);
-    unit->movement.word |= BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS;
+    unit->movement.suppress_sfx_and_landing_effects = 1;
     battle_unit_update_display_by_misc_id(unit->unit_id);
     battle_unit_set_animation_based_on_status(unit);
-    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS;
+    unit->movement.suppress_sfx_and_landing_effects = 0;
     return unit;
 }

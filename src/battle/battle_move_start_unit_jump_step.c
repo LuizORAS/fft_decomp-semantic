@@ -34,37 +34,37 @@ void battle_move_start_unit_jump_step(
         unit->step_phase = hop_phases[current_step.bits.direction];
         battle_unit_dismount_rider(unit);
         animation = BATTLE_UNIT_ANIMATION_HOP;
-        if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {
+        if (unit->movement.alternate_short_hop) {
             animation = BATTLE_UNIT_ANIMATION_HOP_ALTERNATE;
         }
         battle_unit_store_animation_facing(animation, unit->facing, unit);
-        unit->movement.flags.alternate_short_hop ^= 1;
+        unit->movement.alternate_short_hop ^= 1;
     }
     switch (step->bits.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         next = unit->map_x + 1;
-        unit->movement.bytes.destination_x = next + step->bits.length;
+        unit->movement.destination_x = next + step->bits.length;
         unit->velocity.vx = 3 * ONE;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         next = unit->map_x - 1;
-        unit->movement.bytes.destination_x = next - step->bits.length;
+        unit->movement.destination_x = next - step->bits.length;
         unit->velocity.vx = -3 * ONE;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         next = unit->map_y - 1;
-        unit->movement.bytes.destination_y = next - step->bits.length;
+        unit->movement.destination_y = next - step->bits.length;
         unit->velocity.vx = 0;
         unit->velocity.vz = -3 * ONE;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         next = unit->map_y + 1;
-        unit->movement.bytes.destination_y = next + step->bits.length;
+        unit->movement.destination_y = next + step->bits.length;
         unit->velocity.vx = 0;
         unit->velocity.vz = 3 * ONE;
         break;
     }
-    unit->movement.bytes.destination_z = step->bits.higher;
+    unit->movement.destination_z = step->bits.higher;
 }

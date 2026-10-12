@@ -7,5 +7,5 @@ void battle_unit_store_animation_facing_movement_data(s32 animation, s32 facing,
     animation++;
     misc->requested_animation = animation;
     misc->facing = facing;
-    misc->movement.word |= BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
+    misc->movement.force_animation_update = 1;
 }

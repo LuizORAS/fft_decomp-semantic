@@ -7,12 +7,12 @@
 s32 battle_move_has_reached_destination_tile_entry_edge(s32 direction, battle_unit_misc_data_t* unit) {
     switch (direction) {
     case BATTLE_MOVE_DIRECTION_NORTH:
-        return unit->screen.vz >= ((unit->movement.bytes.destination_y * MAP_TILE_SIZE) + 7);
+        return unit->screen.vz >= ((unit->movement.destination_y * MAP_TILE_SIZE) + 7);
     case BATTLE_MOVE_DIRECTION_SOUTH:
-        return (((unit->movement.bytes.destination_y + 1) * MAP_TILE_SIZE) - 7) >= unit->screen.vz;
+        return (((unit->movement.destination_y + 1) * MAP_TILE_SIZE) - 7) >= unit->screen.vz;
     case BATTLE_MOVE_DIRECTION_WEST:
-        return (((unit->movement.bytes.destination_x + 1) * MAP_TILE_SIZE) - 7) >= unit->screen.vx;
+        return (((unit->movement.destination_x + 1) * MAP_TILE_SIZE) - 7) >= unit->screen.vx;
     case BATTLE_MOVE_DIRECTION_EAST:
-        return unit->screen.vx >= ((unit->movement.bytes.destination_x * MAP_TILE_SIZE) + 7);
+        return unit->screen.vx >= ((unit->movement.destination_x * MAP_TILE_SIZE) + 7);
     }
 }

@@ -42,9 +42,8 @@ void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit)
         }
 
         if (g_battle_move_step_value.bits.mount) {
-            g_battle_move_tile_occupant
-                = battle_unit_find_any_misc_data_at_map_coords(unit->movement.bytes.destination_x,
-                    unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
+            g_battle_move_tile_occupant = battle_unit_find_any_misc_data_at_map_coords(
+                unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
             unit->standing_on_unit_id_plus_one = g_battle_move_tile_occupant->battle_data->misc_unit_id + 1;
             battle_unit_calculate_height_data(
                 &g_battle_move_tile_occupant_height, g_battle_move_tile_occupant->battle_data->misc_unit_id);

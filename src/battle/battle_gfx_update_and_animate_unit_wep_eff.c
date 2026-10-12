@@ -77,11 +77,11 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             unit->requested_animation = 0;
             battle_gfx_release_unit_vram_slot(unit);
         } else if (unit->requested_animation >= 12 || (unit->unit_id & 3) == g_battle_frame_counter % 4
-            || (unit->movement.word & BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE)) {
+            || (unit->movement.force_animation_update)) {
             /* An animation below 11 waits for the unit's frame in four. */
             ok = 1;
             if ((unit->requested_animation - 1) * 2 + back_by_quadrant[quadrant] != unit->animation.sequence_id
-                || unit->animation.wait == 0 || (unit->movement.word & BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE)) {
+                || unit->animation.wait == 0 || (unit->movement.force_animation_update)) {
                 animation = unit->requested_animation - 1;
                 if (animation < BATTLE_SEQUENCE_EVTCHR_SLOT_0) {
                     seq = unit->animation.seq;
@@ -172,7 +172,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                     unit->animation.repeat_count = 0;
                     unit->animation.flags = 0;
                     battle_gfx_run_unit_seq_script(unit, &unit->animation, 1);
-                    unit->movement.word &= ~BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
+                    unit->movement.force_animation_update = 0;
                     unit->requested_animation = 0;
                     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
                         other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
@@ -196,7 +196,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                 unit->requested_animation = 0;
             }
         }
-    } else if (!(unit->movement.word & BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE)) {
+    } else if (!(unit->movement.suppress_facing_update)) {
         if (sixteenth != unit->camera_facing_sixteenth) {
             sequence_id = unit->animation.sequence_id;
             if (sequence_id < (BATTLE_UNIT_ANIMATION_IDLE << 1)) {

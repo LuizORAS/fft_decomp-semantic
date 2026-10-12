@@ -24,8 +24,8 @@ void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_da
         screen_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
         g_battle_move_target_screen_z = screen_z;
         if (unit->screen.vy >= screen_z) {
-            unit->map_x = unit->movement.bytes.destination_x;
-            unit->map_y = unit->movement.bytes.destination_y;
+            unit->map_x = unit->movement.destination_x;
+            unit->map_y = unit->movement.destination_y;
             unit->velocity.vy = 0;
             unit->real.vy = g_battle_move_target_screen_z << 12;
             unit->screen.vy = unit->real.vy / ONE;

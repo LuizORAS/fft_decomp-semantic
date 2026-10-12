@@ -27,7 +27,7 @@ void battle_move_init_knockback(battle_unit_misc_data_t* unit) {
     *path_word = state;
 
     knockback_state = state & ~0x2000;
-    knockback_state |= (unit->movement.bytes.destination_z & 1) << 13;
+    knockback_state |= (unit->movement.destination_z & 1) << 13;
     *path_word = knockback_state;
     direction = battle_move_get_direction(unit);
 

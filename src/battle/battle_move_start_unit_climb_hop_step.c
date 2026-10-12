@@ -37,7 +37,7 @@ void battle_move_start_unit_climb_hop_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST;
         unit->facing = BATTLE_FACING_EAST;
         next = unit->map_x + 1;
-        unit->movement.bytes.destination_x = next + step->bits.length;
+        unit->movement.destination_x = next + step->bits.length;
         unit->velocity.vz = 0;
         unit->velocity.vx = (MAP_TILE_SIZE * ONE / 2) / frames;
         break;
@@ -45,7 +45,7 @@ void battle_move_start_unit_climb_hop_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST;
         unit->facing = BATTLE_FACING_WEST;
         next = unit->map_x - 1;
-        unit->movement.bytes.destination_x = next - step->bits.length;
+        unit->movement.destination_x = next - step->bits.length;
         unit->velocity.vz = 0;
         unit->velocity.vx = -(MAP_TILE_SIZE * ONE / 2) / frames;
         break;
@@ -53,7 +53,7 @@ void battle_move_start_unit_climb_hop_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH;
         unit->facing = BATTLE_FACING_SOUTH;
         next = unit->map_y - 1;
-        unit->movement.bytes.destination_y = next - step->bits.length;
+        unit->movement.destination_y = next - step->bits.length;
         unit->velocity.vx = 0;
         unit->velocity.vz = -(MAP_TILE_SIZE * ONE / 2) / frames;
         break;
@@ -65,16 +65,16 @@ void battle_move_start_unit_climb_hop_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH;
         unit->facing = BATTLE_FACING_NORTH;
         next = unit->map_y + 1;
-        unit->movement.bytes.destination_y = next + step->bits.length;
+        unit->movement.destination_y = next + step->bits.length;
         unit->velocity.vx = 0;
         unit->velocity.vz = (MAP_TILE_SIZE * ONE / 2) / frames;
         break;
     }
     animation = BATTLE_UNIT_ANIMATION_HOP;
-    if (unit->movement.word & BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP) {
+    if (unit->movement.alternate_short_hop) {
         animation = BATTLE_UNIT_ANIMATION_HOP_ALTERNATE;
     }
     battle_unit_store_animation_facing(animation, unit->facing, unit);
-    unit->movement.flags.alternate_short_hop ^= 1;
-    unit->movement.bytes.destination_z = step->bits.higher;
+    unit->movement.alternate_short_hop ^= 1;
+    unit->movement.destination_z = step->bits.higher;
 }

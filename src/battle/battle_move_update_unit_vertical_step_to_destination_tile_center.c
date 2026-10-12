@@ -46,8 +46,8 @@ void battle_move_update_unit_vertical_step_to_destination_tile_center(battle_uni
             unit->velocity.vx = 0;
             g_battle_move_target_screen_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
             unit->step_phase = BATTLE_MOVE_STEP_PHASE_NONE;
-            unit->map_x = unit->movement.bytes.destination_x;
-            unit->map_y = unit->movement.bytes.destination_y;
+            unit->map_x = unit->movement.destination_x;
+            unit->map_y = unit->movement.destination_y;
             unit->shadow_dirty |= 1;
         }
     }

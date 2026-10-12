@@ -34,9 +34,9 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
         break;
     case 3:
         if (g_battle_state_animation_continue_check == 0) {
-            unit->map_x = unit->movement.bytes.destination_x;
-            unit->map_y = unit->movement.bytes.destination_y;
-            unit->map_z = unit->movement.bytes.destination_z;
+            unit->map_x = unit->movement.destination_x;
+            unit->map_y = unit->movement.destination_y;
+            unit->map_z = unit->movement.destination_z;
             battle_unit_set_real_coords_from_map_coords(unit);
             battle_unit_set_screen_coords_from_real_coords(unit);
             if (battle_effect_start_altima_teleport_arrival(unit) == 0) {
