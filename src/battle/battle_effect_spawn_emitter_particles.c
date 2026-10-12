@@ -12,6 +12,7 @@
  * The particles belong to state record record_index and are placed for its
  * target; parent is the particle that the PARENT_PARTICLE origin spawns from.
  *
+ * Positions have 12 fractional bits; initial speed values scale into velocity by eight.
  * The lerps of the pair at 0x4c and the target's facing quadrant are discarded. */
 s32 battle_effect_spawn_emitter_particles(
     s16 record_index, s32 frame, s32 emitter_index, effect_work_record_t* parent) {
@@ -44,11 +45,11 @@ s32 battle_effect_spawn_emitter_particles(
     s16 speed_max;
     s16 speed;
     s16 facing;
-    u32 word;
+    u32 motion_curve_selectors;
     s32 count;
     effect_work_record_t* head;
-    u16 kind;
-    u16 flags;
+    u16 placement_flags;
+    u16 behavior_flags;
     s32 rotate;
     s16 inertia_min;
     s16 inertia_max;
@@ -58,7 +59,7 @@ s32 battle_effect_spawn_emitter_particles(
     s16 lifetime_max;
     s16 homing_min;
     s16 homing_max;
-    u16 blend;
+    u16 homing_curve_selector;
     u8 colour_r;
     u8 colour_g;
     u8 colour_b;
@@ -67,8 +68,9 @@ s32 battle_effect_spawn_emitter_particles(
     entry = &g_battle_effect_geometry_table->entries[emitter_index];
     time = frame;
     frame = frame % EFFECT_ANIMATION_CURVE_FRAMES;
-    kind = entry->emitter.placement_flags;
-    flags = entry->emitter.flags;
+    placement_flags = entry->emitter.placement_flags;
+    behavior_flags = entry->emitter.flags;
+    /* Named curve bit fields change extraction registers and load-delay scheduling. */
     BATTLE_EFFECT_READ_CURVE(
         g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] >> 24 & 0xf, frame);
     if (time % battle_effect_lerp_linear(entry->emitter.spawn_interval_start, entry->emitter.spawn_interval_end, factor)
@@ -78,7 +80,7 @@ s32 battle_effect_spawn_emitter_particles(
 
     SetTransMatrix(&g_battle_effect_emitter_matrix);
     target_index = g_battle_effect_state_records[record_index].timeline.target_index;
-    rotate = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
+    rotate = (behavior_flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
     battle_effect_resolve_target_render_coords(g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
         BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &caster);
     if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
@@ -106,9 +108,9 @@ s32 battle_effect_spawn_emitter_particles(
         g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[1] >> 20 & 0xf, frame);
     count = battle_effect_lerp_linear(entry->emitter.particle_count_start, entry->emitter.particle_count_end, factor);
     for (i = 0; i < count; i++) {
-        particle = battle_effect_alloc_work_record(record_index, (kind & EFFECT_WORK_KIND_MASK));
-        particle->kind_flags = kind;
-        particle->flags = flags;
+        particle = battle_effect_alloc_work_record(record_index, (placement_flags & EFFECT_WORK_KIND_MASK));
+        particle->kind_flags = placement_flags;
+        particle->flags = behavior_flags;
         particle->curve_frame = 0;
         battle_effect_init_animation_sequence(
             particle->data, entry->emitter.animation_frame_group, entry->emitter.animation_index);
@@ -123,7 +125,7 @@ s32 battle_effect_spawn_emitter_particles(
         copyVector(&rotation, &spawn);
         RotTrans(&rotation, &spawn, &out.pad);
     }
-    switch (kind & EFFECT_EMITTER_ORIGIN_MASK) {
+    switch (placement_flags & EFFECT_EMITTER_ORIGIN_MASK) {
     case EFFECT_EMITTER_ORIGIN_WORLD:
         break;
     case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
@@ -165,11 +167,11 @@ s32 battle_effect_spawn_emitter_particles(
         RotTrans(&rotation, &spread, &out.pad);
     }
     particle = head;
-    if (kind & EFFECT_EMITTER_BOX_SPREAD) {
+    if (placement_flags & EFFECT_EMITTER_BOX_SPREAD) {
         for (i = 0; i < count; i++) {
-            particle->motion.position.x = (spawn.vx + RANDOM_BETWEEN(spread.vx, -spread.vx)) << 12;
-            particle->motion.position.y = (spawn.vy + RANDOM_BETWEEN(spread.vy, -spread.vy)) << 12;
-            particle->motion.position.z = (spawn.vz + RANDOM_BETWEEN(spread.vz, -spread.vz)) << 12;
+            particle->motion.position.x = (spawn.vx + RANDOM_BETWEEN(spread.vx, -spread.vx)) * ONE;
+            particle->motion.position.y = (spawn.vy + RANDOM_BETWEEN(spread.vy, -spread.vy)) * ONE;
+            particle->motion.position.z = (spawn.vz + RANDOM_BETWEEN(spread.vz, -spread.vz)) * ONE;
             particle = particle->next;
         }
     } else {
@@ -183,13 +185,13 @@ s32 battle_effect_spawn_emitter_particles(
                 rotation.vz = 0;
                 rotation.vy = 0;
                 RotTrans(&rotation, &out, &out.pad);
-                particle->motion.position.x = ((out.vx * spread.vx) / scale + spawn.vx) << 12;
-                particle->motion.position.y = ((out.vy * spread.vy) / scale + spawn.vy) << 12;
-                particle->motion.position.z = ((out.vz * spread.vz) / scale + spawn.vz) << 12;
+                particle->motion.position.x = ((out.vx * spread.vx) / scale + spawn.vx) * ONE;
+                particle->motion.position.y = ((out.vy * spread.vy) / scale + spawn.vy) * ONE;
+                particle->motion.position.z = ((out.vz * spread.vz) / scale + spawn.vz) * ONE;
             } else {
-                particle->motion.position.x = spawn.vx << 12;
-                particle->motion.position.y = spawn.vy << 12;
-                particle->motion.position.z = spawn.vz << 12;
+                particle->motion.position.x = spawn.vx * ONE;
+                particle->motion.position.y = spawn.vy * ONE;
+                particle->motion.position.z = spawn.vz * ONE;
             }
             particle = particle->next;
         }
@@ -212,21 +214,21 @@ s32 battle_effect_spawn_emitter_particles(
     if (curve != -1) {
         factor = g_battle_effect_animation_curve_data->curves[curve][frame];
         angle_spread.vx = battle_effect_lerp_linear(
-            entry->emitter.velocity_spread_start.x, entry->emitter.velocity_spread_end.x, factor);
+            entry->emitter.spawn.velocity_spread_start.x, entry->emitter.spawn.velocity_spread_end.x, factor);
         angle_spread.vy = battle_effect_lerp_linear(
-            entry->emitter.velocity_spread_start.y, entry->emitter.velocity_spread_end.y, factor);
+            entry->emitter.spawn.velocity_spread_start.y, entry->emitter.spawn.velocity_spread_end.y, factor);
         angle_spread.vz = battle_effect_lerp_linear(
-            entry->emitter.velocity_spread_start.z, entry->emitter.velocity_spread_end.z, factor);
+            entry->emitter.spawn.velocity_spread_start.z, entry->emitter.spawn.velocity_spread_end.z, factor);
     } else {
-        setVector(&angle_spread, entry->emitter.velocity_spread_start.x / 2, entry->emitter.velocity_spread_start.y / 2,
-            entry->emitter.velocity_spread_start.z / 2);
+        setVector(&angle_spread, entry->emitter.spawn.velocity_spread_start.x / 2,
+            entry->emitter.spawn.velocity_spread_start.y / 2, entry->emitter.spawn.velocity_spread_start.z / 2);
     }
     BATTLE_EFFECT_READ_CURVE(
         g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] >> 8 & 0xf, frame);
     battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle);
 
     particle = head;
-    switch (flags & EFFECT_EMITTER_VELOCITY_MASK) {
+    switch (behavior_flags & EFFECT_EMITTER_VELOCITY_MASK) {
     case EFFECT_EMITTER_VELOCITY_OUTWARD:
         for (i = 0; i < count; i++) {
             setVector(&rotation, angle.vx + RANDOM_BETWEEN(angle_spread.vx, -angle_spread.vx),
@@ -238,9 +240,9 @@ s32 battle_effect_spawn_emitter_particles(
             rotation.vx = 0;
             rotation.vy = RANDOM_BETWEEN(speed_min, speed_max);
             RotTrans(&rotation, &out, &out.pad);
-            particle->motion.velocity.x = out.vx << 3;
-            particle->motion.velocity.y = out.vy << 3;
-            particle->motion.velocity.z = out.vz << 3;
+            particle->motion.velocity.x = out.vx * 8;
+            particle->motion.velocity.y = out.vy * 8;
+            particle->motion.velocity.z = out.vz * 8;
             particle = particle->next;
         }
         break;
@@ -258,9 +260,9 @@ s32 battle_effect_spawn_emitter_particles(
             SetRotMatrix(&matrix);
             copyVector(&rotation, &out);
             RotTrans(&rotation, &out, &out.pad);
-            particle->motion.velocity.x = out.vx << 3;
-            particle->motion.velocity.y = out.vy << 3;
-            particle->motion.velocity.z = out.vz << 3;
+            particle->motion.velocity.x = out.vx * 8;
+            particle->motion.velocity.y = out.vy * 8;
+            particle->motion.velocity.z = out.vz * 8;
             particle = particle->next;
         }
         break;
@@ -277,7 +279,7 @@ s32 battle_effect_spawn_emitter_particles(
                 particle->motion.velocity.y = (speed * out.vy) >> 9;
                 particle->motion.velocity.z = (speed * out.vz) >> 9;
             } else {
-                particle->motion.velocity.y = speed << 3;
+                particle->motion.velocity.y = speed * 8;
                 particle->motion.velocity.z = 0;
                 particle->motion.velocity.x = 0;
             }
@@ -340,8 +342,10 @@ s32 battle_effect_spawn_emitter_particles(
 
     BATTLE_EFFECT_READ_CURVE(
         g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] >> 16 & 0xf, frame);
-    inertia_min = battle_effect_lerp_linear(entry->emitter.inertia_start[0], entry->emitter.inertia_end[0], factor);
-    inertia_max = battle_effect_lerp_linear(entry->emitter.inertia_start[1], entry->emitter.inertia_end[1], factor);
+    inertia_min
+        = battle_effect_lerp_linear(entry->emitter.spawn.inertia_start[0], entry->emitter.spawn.inertia_end[0], factor);
+    inertia_max
+        = battle_effect_lerp_linear(entry->emitter.spawn.inertia_start[1], entry->emitter.spawn.inertia_end[1], factor);
     BATTLE_EFFECT_READ_CURVE(
         g_battle_effect_animation_curve_data, curve, factor, entry->emitter.curve_selectors[0] >> 20 & 0xf, frame);
     battle_effect_lerp_linear(entry->emitter._unknown_4c[0], entry->emitter._unknown_50[0], factor);
@@ -371,7 +375,7 @@ s32 battle_effect_spawn_emitter_particles(
     target_offset.vz
         = battle_effect_lerp_linear(entry->emitter.target_offset_start[2], entry->emitter.target_offset_end[2], factor);
     particle = head;
-    switch (kind & EFFECT_EMITTER_HOMING_MASK) {
+    switch (placement_flags & EFFECT_EMITTER_HOMING_MASK) {
     case EFFECT_EMITTER_HOMING_OFFSET:
     case EFFECT_EMITTER_HOMING_OFFSET_ALT:
         for (i = 0; i < count; i++) {
@@ -429,12 +433,11 @@ s32 battle_effect_spawn_emitter_particles(
     curve = battle_effect_lerp_linear(
         entry->emitter.homing_strength_start[1], entry->emitter.homing_strength_end[1], factor);
     homing_max = curve;
-    /* The dead test on word is required for the match: it keeps the word live
-     * past the shift and splits the block before the loop setup. */
-    word = entry->emitter.curve_selectors[1];
-    blend = word >> 30;
-    if (word != 0) {
-        curve = word >> 28 & 3;
+    /* This otherwise-unused test keeps the packed selectors live through the loop setup. */
+    motion_curve_selectors = entry->emitter.curve_selectors[1];
+    homing_curve_selector = motion_curve_selectors >> 30;
+    if (motion_curve_selectors != 0) {
+        curve = motion_curve_selectors >> 28 & 3;
     }
     colour_r = entry->emitter.colour_curves & 0xf;
     colour_g = entry->emitter.colour_curves >> 4 & 0xf;
@@ -442,14 +445,14 @@ s32 battle_effect_spawn_emitter_particles(
     particle = head;
     for (i = 0; i < count; i++) {
         particle->homing_strength = RANDOM_BETWEEN(homing_min, homing_max);
-        particle->homing_curve_index = blend;
+        particle->homing_curve_selector = homing_curve_selector;
         particle->colour_curves[0] = colour_r;
         particle->colour_curves[1] = colour_g;
         particle->colour_curves[2] = colour_b;
-        if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
+        if (behavior_flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
             particle->child_emitter_on_death = entry->emitter.child_emitter_on_death;
         }
-        if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
+        if (behavior_flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
             particle->child_emitter_mid_life = entry->emitter.child_emitter_mid_life;
         }
         particle = particle->next;

@@ -1211,7 +1211,7 @@ typedef struct effect_work_record {
     vec3s16_t target;                /* 0x3c */
     s16 lifetime;                    /* 0x42; frames or EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN */
     u8 _unused_44;
-    u8 homing_curve_index;         /* 0x45 */
+    u8 homing_curve_selector;      /* 0x45; zero disables, otherwise curve row + 1 */
     u8 colour_curves[3];           /* 0x46; RGB animation curves */
     u8 _padding_49;                /* aligns homing_strength */
     s16 homing_strength;           /* 0x4a */
@@ -1359,30 +1359,21 @@ typedef struct effect_geometry_entry {
     u16 flags;                /* 0x06: EFFECT_EMITTER_FLAG_* and effect_emitter_velocity_e; the particle's flags */
     u32 curve_selectors[2];   /* 0x08 */
     u32 colour_curves;        /* 0x10: nibbles 0-2 = r/g/b curve indexes, used raw */
-    vec3s16_t spawn_position_start;      /* 0x14: offset from the origin effect_emitter_origin_e names */
-    vec3s16_t spawn_position_end;        /* 0x1a */
-    vec3s16_t spawn_spread_start;        /* 0x20: half-extent of the spawn box or ellipsoid */
-    vec3s16_t spawn_spread_end;          /* 0x26 */
-    vec3s16_t velocity_base_angle_start; /* 0x2c */
-    vec3s16_t velocity_base_angle_end;   /* 0x32 */
-    vec3s16_t velocity_spread_start;     /* 0x38: random angle added to each base angle; halved when it has no curve */
-    vec3s16_t velocity_spread_end;       /* 0x3e */
-    s16 inertia_start[2];                /* 0x44: min, max */
-    s16 inertia_end[2];                  /* 0x48 */
-    s16 _unknown_4c[2];                  /* 0x4c: lerped to _unknown_50 and discarded */
-    s16 _unknown_50[2];                  /* 0x50 */
-    s16 weight_start[2];                 /* 0x54: min, max; scales gravity */
-    s16 weight_end[2];                   /* 0x58 */
-    s16 radial_speed_start[2];           /* 0x5c: min, max */
-    s16 radial_speed_end[2];             /* 0x60 */
-    s16 acceleration_start[6];           /* 0x64: x, y and z min, max pairs */
-    s16 acceleration_end[6];             /* 0x70 */
-    s16 acceleration_step_start[6];      /* 0x7c: x, y and z min, max pairs */
-    s16 acceleration_step_end[6];        /* 0x88 */
-    s16 lifetime_start[2];               /* 0x94: min, max, in frames */
-    s16 lifetime_end[2];                 /* 0x98 */
-    s16 target_offset_start[3];          /* 0x9c: homing target, an offset from what effect_emitter_homing_e names */
-    s16 target_offset_end[3];            /* 0xa2 */
+    effect_emitter_geometry_view_t spawn; /* 0x14: initial position, spread, angles and inertia */
+    s16 _unknown_4c[2];                   /* 0x4c: lerped to _unknown_50 and discarded */
+    s16 _unknown_50[2];                   /* 0x50 */
+    s16 weight_start[2];                  /* 0x54: min, max; scales gravity */
+    s16 weight_end[2];                    /* 0x58 */
+    s16 radial_speed_start[2];            /* 0x5c: min, max */
+    s16 radial_speed_end[2];              /* 0x60 */
+    s16 acceleration_start[6];            /* 0x64: x, y and z min, max pairs */
+    s16 acceleration_end[6];              /* 0x70 */
+    s16 acceleration_step_start[6];       /* 0x7c: x, y and z min, max pairs */
+    s16 acceleration_step_end[6];         /* 0x88 */
+    s16 lifetime_start[2];                /* 0x94: min, max, in frames */
+    s16 lifetime_end[2];                  /* 0x98 */
+    s16 target_offset_start[3];           /* 0x9c: homing target, an offset from what effect_emitter_homing_e names */
+    s16 target_offset_end[3];             /* 0xa2 */
     u8 _unused_a8[0x08];
     s16 particle_count_start;     /* 0xb0: particles per spawn */
     s16 particle_count_end;       /* 0xb2 */

@@ -48,7 +48,7 @@ void battle_effect_integrate_particle_motion(effect_work_record_t* list) {
 
         weight = node->homing_strength;
         if (weight != 0) {
-            track = node->homing_curve_index;
+            track = node->homing_curve_selector;
             track--;
             if (track != -1) {
                 strength = g_battle_effect_animation_curve_data->curves[track][node->curve_frame] - 0x80;
