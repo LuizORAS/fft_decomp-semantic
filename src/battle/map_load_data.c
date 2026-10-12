@@ -299,7 +299,7 @@ s32 map_load_data(s32 map_id, s32 command) {
                     i++;
                     g_map_gns_record_cursor = (s32)&g_map_gns_records[i];
                     while (((map_resource_t*)g_map_gns_record_cursor)->command.resource_type != GNS_RECORD_NONE) {
-                        battle_process_map_gns_record(2, (map_resource_t*)g_map_gns_record_cursor);
+                        map_apply_gns_command(2, (map_resource_t*)g_map_gns_record_cursor);
                     }
                     g_map_gns_load_phase = MAP_GNS_LOAD_PHASE_IDLE;
                     g_map_resource_load_state = MAP_LOAD_STATE_DONE;

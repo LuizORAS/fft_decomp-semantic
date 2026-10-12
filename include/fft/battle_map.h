@@ -868,7 +868,7 @@ s32 map_step_init_sequence(s32 map_id, s32 step);
 s32 map_try_start_deep_dungeon_mesh_load(void);
 void map_wait_for_refresh(void);
 s32 map_load_data(s32 map_id, s32 command);
-s32 battle_process_map_gns_record(s32 phase, map_resource_t* record);
+s32 map_apply_gns_command(s32 phase, map_resource_t* record);
 s32 map_dispatch_map_data_command(map_data_command_e command, u32 index, s32 object_state, s32 flag);
 s16 map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
 void* map_start_file_load(
@@ -1080,7 +1080,7 @@ extern s32 g_map_untextured_fixed_ot_index;
 extern s32 g_map_untextured_otz_mask;
 extern CVECTOR g_map_white_cvector;
 
-/* Default vectors shared with battle_process_map_gns_record, which emits them. */
+/* Default vectors shared with map_apply_gns_command, which emits them. */
 extern SVECTOR g_map_zero_svector;
 extern VECTOR g_map_unit_scale_vector;
 extern SVECTOR g_map_camera_rotation;

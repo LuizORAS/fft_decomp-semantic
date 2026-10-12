@@ -4,7 +4,7 @@
 
 /* Remove the range from every panel, on both levels, whose tile is flagged
  * untargetable. */
-void target_can_select_tile(void) {
+void target_clear_range_on_untargetable_tiles(void) {
     s32 i = 0;
     target_panel_t* dst = g_target_panel_data;
     map_tile_t* src = g_map_tile_data;

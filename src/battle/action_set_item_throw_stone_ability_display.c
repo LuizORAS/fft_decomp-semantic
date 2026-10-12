@@ -21,7 +21,7 @@ void action_set_item_throw_stone_ability_display(void) {
     unit = battle_unit_get_casting_misc_data();
     ability = unit->used_ability_id;
     unit->state_frame_counter = 0;
-    target_gather_x_y_data_for_attacks(unit);
+    target_move_cursor_to_action_target(unit);
 
     if ((ability == 0) || (ability == ABILITY_ID_KNOCKBACK)) {
         g_main_system_animation_speed = 1;

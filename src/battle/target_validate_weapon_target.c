@@ -86,7 +86,7 @@ s32 target_validate_weapon_target(const action_command_t* source) {
     x = unit->action_command.target_position.vx;
     y = unit->action_command.target_position.vz;
     elevation = unit->action_command.target_position.vy;
-    target_id = target_get_unit_id_if_tile_targetable(x, y, elevation);
+    target_id = target_find_unit_at_tile(x, y, elevation);
     if (target_id < 0) {
         target_id = -1;
     }

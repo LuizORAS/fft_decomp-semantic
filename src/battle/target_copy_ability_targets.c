@@ -3,7 +3,7 @@
 
 /* Copy the current ability's 16-entry target list to `out` and return how many
  * entries hold a unit (anything but 0xff). */
-s32 target_count_hit_by_ability(u8* out) {
+s32 target_copy_ability_targets(u8* out) {
     s32 count = 0;
     s32 i = 0;
     do {

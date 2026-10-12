@@ -17,7 +17,7 @@
  *
  * Only phase 2 does anything, and it is the only phase the map loader passes.
  * Always returns 0. */
-s32 battle_process_map_gns_record(s32 phase, map_resource_t* record) {
+s32 map_apply_gns_command(s32 phase, map_resource_t* record) {
     char unused_zeroes[8] = { 0 };
     s32 unused_sizes[4] = { 0x1000, 0x1000, 0x1000, 0 };
     s32 requested_layout;

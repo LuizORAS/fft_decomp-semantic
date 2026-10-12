@@ -17,7 +17,7 @@ void action_is_at_list_unit_charging_ability(void) {
         if (id >= 0) {
             unit = battle_unit_get_misc_data_by_battle_id(id & 0xFF);
             if ((id & 0x100) != 0) {
-                target_gather_x_y_data_for_attacks(unit);
+                target_move_cursor_to_action_target(unit);
                 target_calculate_for_menu_types(&unit->battle_data->action_command);
                 target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
             } else {

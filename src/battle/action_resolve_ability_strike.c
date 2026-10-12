@@ -86,7 +86,7 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
         }
     }
     status_remove_transparent_if_jump_used(attacker);
-    count = target_count_hit_by_ability(work->target_list);
+    count = target_copy_ability_targets(work->target_list);
     work->target_count = count;
     g_action_current_ability.target_count = count;
     if (g_action_context == ACTION_CONTEXT_PRIMARY) {

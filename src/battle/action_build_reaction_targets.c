@@ -31,7 +31,7 @@ s32 action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32*
         work->target_new_y = target_y;
         target_elevation = actor->action_command.target_position.vy;
         work->target_new_map_level = target_elevation;
-        target_or_count = target_get_unit_id_if_tile_targetable(target_x, target_y, target_elevation);
+        target_or_count = target_find_unit_at_tile(target_x, target_y, target_elevation);
         if (target_or_count < 0) {
             *target_count = 0;
             break;

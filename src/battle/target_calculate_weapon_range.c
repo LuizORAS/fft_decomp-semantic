@@ -53,5 +53,5 @@ void target_calculate_weapon_range(battle_stats_t* unit) {
     } else {
         target_calculate_arc_range(unit, range, flags);
     }
-    target_can_select_tile();
+    target_clear_range_on_untargetable_tiles();
 }

@@ -77,7 +77,7 @@ void target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags);
 void target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y);
 void target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags);
 void target_calculate_weapon_range(battle_stats_t* unit);
-void target_can_select_tile(void);
+void target_clear_range_on_untargetable_tiles(void);
 void target_clear_panel_data(void);
 void target_clear_panel_spread_flags(void);
 void target_clear_panels_on_untargetable_tiles(void);
@@ -105,7 +105,7 @@ s32 target_set_weapon_attack_panels(action_command_t* source);
 s32 target_apply_reflect(battle_stats_t* unit);
 void target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff);
 void target_check_moldball_virus_depth(s16 ability_id);
-s32 target_get_unit_id_if_tile_targetable(s32 a0, s32 a1, s32 a2);
+s32 target_find_unit_at_tile(s32 x, s32 y, s32 level);
 s32 target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_index);
 s32 target_validate_height_overlap(s32 attacker_id, s32 target_x, s32 target_y, s32 target_elevation, s32 target_id);
 s32 target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevation, s32 target_id);
@@ -114,14 +114,14 @@ s32 target_validate_weapon_target(const action_command_t* source);
 /* target lists */
 extern u8 g_target_ability_targets_list[BATTLE_UNIT_MISC_SLOT_COUNT];
 
-s32 target_count_hit_by_ability(u8* out);
+s32 target_copy_ability_targets(u8* out);
 s32 target_list_units_on_panels(u8* list, battle_stats_t* origin);
 void target_select_random_tile_for_random_fire_abilities(void);
 void target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out);
 void target_sort_list(s32 target_battle_id);
 
 /* cursor */
-void target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit);
+void target_move_cursor_to_action_target(battle_unit_misc_data_t* unit);
 s32 target_move_cursor_by_input(void);
 s32 target_move_cursor_to_battle_id(u32 battle_id);
 void target_move_cursor_to_unit(battle_unit_misc_data_t* unit);

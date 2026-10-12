@@ -12,7 +12,7 @@ functions:
   - {addr: 0x800683c0, size: 20, name: action_set_at_list_active, hash: 8a8a6eec590a8201}
   - {addr: 0x800683d4, size: 16, name: action_clear_at_list_active, hash: 4f307990a5cb2cc0}
   - {addr: 0x800683e4, size: 52, name: target_move_cursor_to_unit, hash: 76d1367bddeedb3b}
-  - {addr: 0x80068418, size: 124, name: target_gather_x_y_data_for_attacks, hash: 6a31a1745175dea2}
+  - {addr: 0x80068418, size: 124, name: target_move_cursor_to_action_target, hash: 6a31a1745175dea2}
   - {addr: 0x80068494, size: 160, name: battle_gfx_update_unit_palettes, hash: 3bbcc6db0fd8d488}
   - {addr: 0x80068534, size: 256, name: battle_gfx_modify_palette_based_on_team, hash: 400571530b63cf6d}
   - {addr: 0x80068634, size: 72, name: battle_gfx_tint_all_units_by_team, hash: dc6488bcdac16694}
@@ -681,7 +681,7 @@ functions:
   - {addr: 0x800f2294, size: 900, name: map_load_saved_state_record, hash: 9821fba0cee8f43a}
   - {addr: 0x800f2618, size: 164, name: map_is_gns_record_matching_state, hash: 1d4012e33d448757}
   - {addr: 0x800f26bc, size: 3592, name: map_dispatch_gns_resource, hash: 5b5787ad477aaca4, rodata: [{addr: 0x800e6f70, size: 496, hash: d92b411e7f4fe813}]}
-  - {addr: 0x800f34c4, size: 372, name: battle_process_map_gns_record, hash: 888a8328b66b7e1d, rodata: [{addr: 0x800e6b94, size: 24, hash: d40089d17817dc6f}]}
+  - {addr: 0x800f34c4, size: 372, name: map_apply_gns_command, hash: 888a8328b66b7e1d, rodata: [{addr: 0x800e6b94, size: 24, hash: d40089d17817dc6f}]}
   - {addr: 0x800f3638, size: 140, name: map_load_gns_and_move_find_items, hash: b558d851e0fec1a4}
   - {addr: 0x800f36c4, size: 84, name: map_start_file_load, hash: 49d3e511ae62ee25}
   - {addr: 0x800f3718, size: 5044, name: map_load_data, hash: 80e0c81db01af2f3, rodata: [{addr: 0x800e7178, size: 296, hash: 9789505d5f40b59f}]}
@@ -1135,7 +1135,7 @@ functions:
   - {addr: 0x80179a20, size: 312, name: target_calculate_weapon_range, hash: 066252ab8bf0434c}
   - {addr: 0x80179b58, size: 324, name: target_calculate_strike_lunge_range, hash: f072f738c94b8da9}
   - {addr: 0x80179c9c, size: 232, name: target_calculate_aoe_vertical_tolerance, hash: 2bd42e1e6e1caa98}
-  - {addr: 0x80179d84, size: 68, name: target_can_select_tile, hash: 143609e1b46f6ab4}
+  - {addr: 0x80179d84, size: 68, name: target_clear_range_on_untargetable_tiles, hash: 143609e1b46f6ab4}
   - {addr: 0x80179dc8, size: 932, name: target_set_jump_ability_panels, hash: 834c084c386014ca}
   - {addr: 0x8017a16c, size: 292, name: target_calculate_ability_range_with_map_parameters, hash: 4ba31a5020dbe4f4}
   - {addr: 0x8017a290, size: 648, name: target_set_ability_panels, hash: 62c7e4d40cddffc6}
@@ -1174,7 +1174,7 @@ functions:
   - {addr: 0x8017d850, size: 464, name: target_list_units_on_panels, hash: 28e4027d6ad4905c}
   - {addr: 0x8017da20, size: 424, name: action_check_and_consume_mp, hash: 2f6aa8037955c9d8}
   - {addr: 0x8017dbc8, size: 192, name: action_store_acting_unit_data, hash: eaca17b092587daa}
-  - {addr: 0x8017dc88, size: 32, name: target_get_unit_id_if_tile_targetable, hash: 42a1cc17fbffa4a8}
+  - {addr: 0x8017dc88, size: 32, name: target_find_unit_at_tile, hash: 42a1cc17fbffa4a8}
   - {addr: 0x8017dca8, size: 552, name: battle_unit_find_at_tile, hash: 60e500d728c8441b}
   - {addr: 0x8017ded0, size: 44, name: target_clear_panel_data, hash: cccfa17e2b1d0287}
   - {addr: 0x8017defc, size: 636, name: battle_reaction_prepare_hamedo_for_pending_action, hash: 77b0bc123d833970}
@@ -1545,7 +1545,7 @@ functions:
   - {addr: 0x8018ec44, size: 312, name: status_apply_unit_action_removal, hash: c2817a2420e40cea}
   - {addr: 0x8018ed7c, size: 124, name: target_sort_list, hash: fef366c43dc1920b}
   - {addr: 0x8018edf8, size: 44, name: action_store_target_ids, hash: dd705760435fb9b2}
-  - {addr: 0x8018ee24, size: 68, name: target_count_hit_by_ability, hash: 1f3bc2c9e57d42cf}
+  - {addr: 0x8018ee24, size: 68, name: target_copy_ability_targets, hash: 1f3bc2c9e57d42cf}
   - {addr: 0x8018ee68, size: 56, name: action_store_8019387c_if_not_reacting, hash: 2547dcc0dde673ee}
   - {addr: 0x8018eea0, size: 56, name: formula_get_random_0_7fff, hash: 37dd909945e49420}
   - {addr: 0x8018eed8, size: 84, name: formula_roll_random_at_least, hash: c99dd3d0cdcbbc3a}
