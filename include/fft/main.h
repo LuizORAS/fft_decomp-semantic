@@ -994,13 +994,6 @@ typedef struct main_unit_generation_base_data {
 } main_unit_generation_base_data_t;
 typedef char main_unit_generation_base_data_size_must_be_12[(sizeof(main_unit_generation_base_data_t) == 12) ? 1 : -1];
 
-typedef struct main_unit_generation_raw_stat_variance {
-    u8 raw_stats[UNIT_RAW_STAT_COUNT];
-} main_unit_generation_raw_stat_variance_t;
-typedef char
-    main_unit_generation_raw_stat_variance_size_must_be_5[(sizeof(main_unit_generation_raw_stat_variance_t) == 5) ? 1
-                                                                                                                  : -1];
-
 /* Values accepted by main_status_set_action_state. */
 typedef enum main_unit_action_state {
     MAIN_UNIT_ACTION_STATE_NONE = 0,
@@ -1017,7 +1010,7 @@ extern entd_file_t* g_main_entd_set;
 extern entd_unit_t* g_main_entd_current_unit;
 extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
 extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
-extern main_unit_generation_raw_stat_variance_t g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT];
+extern u8 g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT][UNIT_RAW_STAT_COUNT];
 extern u32 g_main_unit_name_uses_world_text;
 void main_unit_update_formation_stats(battle_stats_t* unit);
 
@@ -1059,7 +1052,8 @@ void main_unit_copy_job_data(battle_stats_t* unit);
 void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);
 void main_unit_copy_last_ability_ct(battle_stats_t* unit);
 void main_unit_enable_rsm_flags(battle_stats_t* unit);
-void main_unit_generate_base_raw_stats(unit_raw_stats_t* raw_stats, main_unit_generation_type_e unit_type);
+void main_unit_generate_base_raw_stats(
+    unit_raw_stat_t raw_stats[UNIT_RAW_STAT_COUNT], main_unit_generation_type_e unit_type);
 void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_type_e unit_type);
 void main_unit_generate_party_base_raw_stats(party_data_t* party, main_unit_generation_type_e unit_type);
 void main_unit_generate_raw_stats(battle_stats_t* unit);

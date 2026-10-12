@@ -7,7 +7,6 @@
  * setup. Returns -1 when the requested party slot is unavailable. */
 s32 main_unit_init_job_data(battle_stats_t* unit, s32 slot, s32 use_world_text) {
     party_data_t* party_unit;
-    u8* job_levels;
 
     g_main_unit_name_uses_world_text = use_world_text;
     party_unit = main_party_get_data_pointer(slot);
@@ -17,10 +16,9 @@ s32 main_unit_init_job_data(battle_stats_t* unit, s32 slot, s32 use_world_text) 
     if (party_unit->party_id == PARTY_ID_NONE) {
         return -1;
     }
-    job_levels = party_unit->career.job_levels;
-    main_unit_init_job_levels(party_unit->career.job_points.total.values, job_levels);
-    main_job_store_unlock_bitset(
-        party_unit->career.unlocked_jobs, main_job_calculate_unlocked(job_levels, party_unit->gender_flags));
+    main_unit_init_job_levels(party_unit->career.job_points.total.values, party_unit->career.job_levels);
+    main_job_store_unlock_bitset(party_unit->career.unlocked_jobs,
+        main_job_calculate_unlocked(party_unit->career.job_levels, party_unit->gender_flags));
     main_unit_reset_battle_state(unit);
     unit->formation_index = slot;
     main_unit_init_battle_data(unit, party_unit);

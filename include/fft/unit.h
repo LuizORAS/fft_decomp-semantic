@@ -733,9 +733,7 @@ typedef char unit_raw_stat_size_must_be_3[(sizeof(unit_raw_stat_t) == UNIT_RAW_S
 /* HP, MP, speed, physical attack and magic attack in UNIT_RAW_STAT_* order.
  * Generation, growth and derived-stat calculation select all five entries by index;
  * saved and battle units copy the complete record. */
-typedef struct unit_raw_stats {
-    unit_raw_stat_t values[UNIT_RAW_STAT_COUNT];
-} unit_raw_stats_t;
+typedef unit_raw_stat_t unit_raw_stats_t[UNIT_RAW_STAT_COUNT];
 typedef char unit_raw_stats_size_must_be_15[(sizeof(unit_raw_stats_t) == UNIT_RAW_STAT_DATA_BYTE_COUNT) ? 1 : -1];
 
 /* CT points needed for a unit turn; speed supplies points each clocktick. */

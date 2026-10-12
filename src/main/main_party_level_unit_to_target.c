@@ -15,7 +15,7 @@ u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
     u32 raw;
     u32 divisor;
 
-    raw_stats = party_unit->raw_stats.values;
+    raw_stats = party_unit->raw_stats;
     growth_table = g_main_job_data_pointer[party_unit->job_id].stat_growths;
     if (level > UNIT_LEVEL_MAX) {
         level = UNIT_LEVEL_MAX;

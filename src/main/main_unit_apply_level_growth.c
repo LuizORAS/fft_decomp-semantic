@@ -13,7 +13,7 @@ void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down) {
     u32 minimum_growth;
     s32 i;
 
-    raw_stats = unit->raw_stats.values;
+    raw_stats = unit->raw_stats;
     growth = unit->stat_growths;
     level = unit->level;
 

@@ -32,7 +32,7 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
     }
     mult = unit->stat_growths;
     level = unit->level;
-    raw = unit->raw_stats.values;
+    raw = unit->raw_stats;
 
     for (i = 0; i < UNIT_RAW_STAT_COUNT; i++) {
         value = raw[i].low + (raw[i].middle << 8) + (raw[i].high << 16);

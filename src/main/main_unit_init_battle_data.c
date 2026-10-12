@@ -7,7 +7,6 @@ void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party)
     s32 team;
     s32 i;
     s32 value;
-    battle_unit_birthday_t* birthday;
 
     team = 8;
     if (party->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
@@ -25,9 +24,8 @@ void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party)
     unit->sprite_palette = value;
     unit->unit_flags = party->gender_flags;
     value = party->birthday_day + (party->zodiac << 8);
-    birthday = &unit->birthday;
-    birthday->birthday = value;
-    birthday->zodiac = party->zodiac >> PARTY_ZODIAC_SHIFT;
+    unit->birthday.birthday = value;
+    unit->birthday.zodiac = party->zodiac >> PARTY_ZODIAC_SHIFT;
     unit->secondary_skillset = party->secondary_skillset;
     unit->abilities.reaction = party->reaction_ability[0] + (party->reaction_ability[1] << 8);
     unit->abilities.support = party->support_ability[0] + (party->support_ability[1] << 8);
