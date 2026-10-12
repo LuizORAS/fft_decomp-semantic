@@ -2,9 +2,9 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Builds the map camera matrix and projects the 13x17 grid of tile corners,
- * storing each screen position and setting flag 0x100 on corners that fall
- * outside the visible window; empty tiles (flag 0x200) keep their flags. */
+/* Build the map camera matrix (the rotation, the origin as its translation, the scale) and project
+ * the 13 x 17 tile corners, storing each screen position. A corner outside x -160..128 or
+ * y -152..120 is marked WLDCORE_MAP_TILE_OFF_SCREEN; empty tiles keep their flags. */
 void wldcore_map_project_and_cull_tiles(void) {
     MATRIX matrix;
     SVECTOR position;

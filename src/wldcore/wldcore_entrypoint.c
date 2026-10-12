@@ -1,7 +1,16 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* WLDCORE's entrypoint; the overlay is loaded at 0x80067000. */
+/* WLDCORE's entry point, run by MAIN's world loader (main_overlay_exec_wldcore_and_world_bin): one
+ * world map visit per pass of the outer loop, until the visit hands over to something else.
+ *
+ * A pass first runs the formation an event asked for (wldcore_handle_exit_request, then returns 0),
+ * then sets the visit up (wldcore_init_subsystems), fades in and runs the frame loop while
+ * MAIN_SYSTEM_FLAG_RUNNING is set: the disc read, the audio queue, the fade, the dot pulse, the menu
+ * level's step, the backdrop capture, then a frame with the live map (MAIN_SYSTEM_FLAG_DRAW_MAP) or
+ * over the captured backdrop. MAIN_SYSTEM_FLAG_RESTART starts another visit; otherwise the visit
+ * ends (wldcore_finalize_loop) and the world result is returned: 5 back to the title, 4 a Deep
+ * Dungeon battle, 2 a tutorial event or a replayed story event, 1 a random battle, 0 a story event. */
 s32 wldcore_entrypoint(void) {
     s32 buffer_index;
 
@@ -23,7 +32,7 @@ s32 wldcore_entrypoint(void) {
             wldcore_fade_step_screen();
             wldcore_map_pulse_dot_colors();
             wldcore_menu_dispatch_idle_handler();
-            wldcore_process_frame_gate();
+            wldcore_gfx_update_map_backdrop();
             if (g_main_system_flags & MAIN_SYSTEM_FLAG_DRAW_MAP) {
                 wldcore_gfx_draw_world_frame_with_map();
             } else {

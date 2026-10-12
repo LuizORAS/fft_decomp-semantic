@@ -10,13 +10,13 @@
  * flags, texture and .screen_x/.screen_y, and the .screen_x of the next
  * entry, so the accesses are written against `index` and `index + 1`.
  *
- * The texture word packs paired_uv, v, width and height from the top byte down; a
+ * The texture word packs u, v, width and height from the top byte down; a
  * width or height that would run past texel 255 is shortened by one. */
 
 #define WLDCORE_MAP_TILE_ROWS    12
 #define WLDCORE_MAP_TILE_COLUMNS 16
 #define WLDCORE_MAP_ROW_STRIDE   17
-#define WLDCORE_MAP_DOT_CLUT_Y   0x1e0
+#define WLDCORE_MAP_CLUT_Y       0x1e0
 
 /* Sorts the world map's projected tile grid into `ot` as textured quads.
  * Each tile spans from its own projected corner to the next column's x and
@@ -37,7 +37,7 @@ void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
     poly.r0 = color.r;
     poly.g0 = color.g;
     poly.b0 = color.b;
-    poly.clut = GetClut(0, WLDCORE_MAP_DOT_CLUT_Y);
+    poly.clut = GetClut(0, WLDCORE_MAP_CLUT_Y);
 
     for (row = 0; row < WLDCORE_MAP_TILE_ROWS; row++) {
         index = row * WLDCORE_MAP_ROW_STRIDE;
@@ -48,7 +48,7 @@ void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
         for (column = 0; column < WLDCORE_MAP_TILE_COLUMNS; column++, index++) {
             s32 flags = g_wldcore_map_projected_tiles[index].flags;
             u32 texture;
-            s32 paired_uv;
+            s32 u;
             s32 v;
             s32 w;
             s32 h;
@@ -61,19 +61,19 @@ void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
             poly.x1 = poly.x3 = g_wldcore_map_projected_tiles[index + 1].screen_x;
 
             texture = g_wldcore_map_projected_tiles[index].texture;
-            paired_uv = (texture & 0xff000000) >> 24;
+            u = (texture & 0xff000000) >> 24;
             v = (texture & 0x00ff0000) >> 16;
             w = (texture & 0x0000ff00) >> 8;
-            if (paired_uv + w >= 0x100) {
+            if (u + w >= 0x100) {
                 w--;
             }
             h = texture & 0x000000ff;
             if (v + h >= 0x100) {
                 h--;
             }
-            poly.u0 = poly.u2 = paired_uv;
+            poly.u0 = poly.u2 = u;
             poly.v0 = poly.v1 = v;
-            poly.u1 = poly.u3 = paired_uv + w;
+            poly.u1 = poly.u3 = u + w;
             poly.v2 = poly.v3 = v + h;
             GsSortPoly(&poly, ot, 2);
         }

@@ -1,16 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/*
- * WORLD-map graphics-subsystem bring-up: display mask off, GS graph init at
- * 256x240, draw offsets/3D init, GTE screen offset, then the two double-
- * buffered ordering-table descriptors are pointed at their tag arrays.
- *
- * The descriptor stride of 0x14 matches the libgs GsOT record already assumed
- * by src/wldcore/wldcore_init_core.c, which indexes these same globals
- * with `g_active_graphics_buffer_index * 0x14`.
- */
-
+/* Bring up the GPU for the world map: GsInitGraph2 at 256 x 240 with two display buffers, 3D
+ * with no geometry offset, the screen cleared with the map's clip rectangle
+ * (wldcore_clear_screen_and_set_map_clip_rect), and the double-buffered ordering tables: the main
+ * one with 16 levels and the auxiliary one, which holds the map, with 4. */
 void wldcore_gfx_init_subsystem(void) {
     SetDispMask(0);
     GsInitGraph2(256, 240, 4, 0, 0);

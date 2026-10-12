@@ -1,9 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Per-frame WLDCORE render pass with the 3D map: clears both ordering
- * tables, projects and draws the map tiles into the auxiliary table and the
- * map dots and menus into the main one, then sorts the auxiliary table's
- * clear, draws both tables and clears system flag 2. Sibling of
+/* Draw a frame with the live 3D map, for frames where something on the map moves
+ * (MAIN_SYSTEM_FLAG_DRAW_MAP, cleared at the end). The tiles, routes, path animation and map-side
+ * objects go into the auxiliary ordering table; the travel step, the camera, the menus, the HUD
+ * value, the date, the location label and the window objects into the main one. After the pad read
+ * and VSync it swaps buffers and draws the auxiliary table, then the main one. Sibling of
  * wldcore_gfx_draw_world_frame. */
 void wldcore_gfx_draw_world_frame_with_map(void) {
     GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
@@ -31,7 +32,7 @@ void wldcore_gfx_draw_world_frame_with_map(void) {
         g_wldcore_window_render_object_queue, g_wldcore_window_render_object_count);
     wldcore_restore_previous_stack();
     DrawSync(0);
-    wldcore_reset_game_if_special_keycode_is_pressed();
+    wldcore_input_read_pad();
     VSync(0);
     GsSwapDispBuff();
     GsSortClear(0, 0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);

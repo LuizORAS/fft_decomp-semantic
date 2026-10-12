@@ -1,9 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Load the WORLD menu text and portraits, rebuild the roster name strings and
- * apply any pending date advance from its script variable. */
-void wldcore_load_formation_unit_name_and_face(void) {
+/* Prepare WORLD's menus for the visit (world_menu_load_text_1bd8_with_face: their text, common
+ * graphics and the WLDFACE portraits) and the roster's name strings, then advance the calendar by
+ * the days an event left in EVENT_SCRIPT_VAR_DATE_ADVANCE (wldcore_advance_calendar_days) and clear
+ * it. */
+void wldcore_init_world_menus_and_date(void) {
     s32 value;
 
     world_menu_load_text_1bd8_with_face();

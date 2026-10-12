@@ -1,9 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Called at the top of wldcore_entrypoint's loop; a nonzero script
- * `EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT` clears system flag 0x10000 and
- * makes the entrypoint return. */
+/* Run the formation screen an event asked for before it starts
+ * (EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT): clear MAIN_SYSTEM_FLAG_RESTART, run
+ * world_formation_run_before_event and return 1, so wldcore_entrypoint returns 0 and the event
+ * plays. Returns 0 when no event is waiting. */
 s32 wldcore_handle_exit_request(void) {
     if (world_script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0) {
         g_main_system_flags &= ~MAIN_SYSTEM_FLAG_RESTART;

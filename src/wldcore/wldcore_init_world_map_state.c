@@ -2,12 +2,18 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Resets state used when entering the world map.
+/* Reset the world map's state for a visit: the buffers and the loaded-set caches, the screen
+ * brightness, the two fade boxes (the screen starts faded out), the menu cursors, the HUD and date
+ * positions, the audio queue and the travel state. Of the system flags only the restart, replay,
+ * tutorial, unlock-all and title requests survive, with MAIN_SYSTEM_FLAG_RUNNING set.
+ *
+ * With MAIN_SYSTEM_FLAG_UNLOCK_ALL every Brave Story person, rumour, route, location and story event
+ * is unlocked, and unless Start is held every treasure and unexplored land (found on 1/1) and every
+ * proposition (state 4); war funds become 30000, the shop level 20, propositions and the fur shop are
+ * enabled, and Ramza's birthday is set to 1/1.
  *
  * The target derives each fade box's attribute word through the record base
- * while it walks the rectangle fields separately.
- */
-
+ * while it walks the rectangle fields separately. */
 void wldcore_init_world_map_state(void) {
     wldcore_menu_cursor_state_t* cursor;
     party_data_t* party;

@@ -10,7 +10,7 @@ void wldcore_load_message_block_if_changed(s32 block) {
     if (block != g_wldcore_loaded_message_block) {
         wldcore_wait_for_file_load();
         g_wldcore_loaded_message_block = block;
-        wldcore_file_wait_then_build_header(&g_main_file_cd_state,
+        wldcore_file_request_read(&g_main_file_cd_state,
             g_wldcore_message_block_sector_offsets[block] + DISC_SECTOR_WORLD_WLDMES_BIN,
             g_wldcore_message_block_sector_offsets[block + 1] - g_wldcore_message_block_sector_offsets[block],
             g_wldcore_message_buffer);

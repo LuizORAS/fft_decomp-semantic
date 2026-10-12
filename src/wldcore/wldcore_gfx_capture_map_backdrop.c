@@ -1,7 +1,12 @@
 #include "fft/wldcore.h"
 
-/* Initialize the WLDCORE world buffers, menu state, and runtime tables. */
-void wldcore_init_core(void) {
+/* Capture the map as the still backdrop: draw the tiles, routes, dots and the map-side display
+ * objects into the auxiliary ordering table, store the drawn frame into g_wldcore_scratch_buffer
+ * (which drops the loaded background set) and draw the menus, HUD value, date and location label
+ * over it. wldcore_gfx_draw_world_frame uploads the backdrop every frame until the map moves again.
+ * Runs when the map stops moving (wldcore_gfx_update_map_backdrop), as a visit starts
+ * (wldcore_init_screen) and when WORLD's menu returns with a destination. */
+void wldcore_gfx_capture_map_backdrop(void) {
     RECT rect;
     s32 count;
 

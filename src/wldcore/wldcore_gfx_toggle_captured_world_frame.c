@@ -1,11 +1,12 @@
 #include "fft/wldcore.h"
 
-/* World render/present pass with the 3D map, plus the menu-window handoff.
+/* Hide the map for a window that covers it, or show it again.
  *
- * With `capture` == 0 it only drops the 0x10 visibility bit on the two active
- * window records and restores the saved system flags; otherwise it renders a
- * whole frame into both ordering tables, stores the composed image into the
- * scratch buffer, and re-arms the menu windows behind flag mask 0x3c20. */
+ * With `capture` set it draws one whole frame (map, routes, dots, HUD value, date, location label,
+ * objects), captures it as the backdrop, then hides the map frame and root menu frame windows and,
+ * saving the system flags, the routes, objects, HUD value, date and location label, so only the
+ * backdrop and the new windows are drawn. With `capture` 0 it shows both windows again and restores
+ * the saved flags with MAIN_SYSTEM_FLAG_DRAW_MAP. */
 void wldcore_gfx_toggle_captured_world_frame(s32 capture) {
     RECT display_rect;
     s32 buffer_index;

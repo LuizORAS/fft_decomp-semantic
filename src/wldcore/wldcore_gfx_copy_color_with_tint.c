@@ -1,13 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Copies a packed 24-bit RGB triple, applying the global per-channel tint
- * when bit 0 of the fade state word is set. Each channel is scaled by
- * ((c << 16) / 128) * factor >> 16, i.e. c * factor / 128, and clamped to
- * 255 with no lower clamp; with the factors at their 0x80 default the scale
- * is the identity. When the bit is clear the triple is copied verbatim,
- * which the 4-byte alignment-1 struct assignment emits as the unaligned
- * lwl/lwr + swl/swr quartet. */
+/* Copy an RGB triple, scaled by the screen brightness while a screen fade runs: each channel
+ * becomes c * g_wldcore_screen_brightness_rgb / 128 (0x80 leaves it unchanged), clamped to 255.
+ * Without a fade the triple is copied as is, which the 4-byte alignment-1 struct assignment emits as
+ * the unaligned lwl/lwr + swl/swr quartet. */
 void wldcore_gfx_copy_color_with_tint(CVECTOR* source, CVECTOR* out) {
     s32 red;
     s32 green;

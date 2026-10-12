@@ -11,8 +11,8 @@ links: [world]
 
 functions:
   - {addr: 0x800672f8, size: 396, name: wldcore_entrypoint, hash: be43a4c70a891d0f}
-  - {addr: 0x80067484, size: 92, name: wldcore_process_frame_gate, hash: 25a5e00be7ab4f2a}
-  - {addr: 0x800674e0, size: 708, name: wldcore_init_core, hash: bae131b88dafa102}
+  - {addr: 0x80067484, size: 92, name: wldcore_gfx_update_map_backdrop, hash: 25a5e00be7ab4f2a}
+  - {addr: 0x800674e0, size: 708, name: wldcore_gfx_capture_map_backdrop, hash: bae131b88dafa102}
   - {addr: 0x800677a4, size: 724, name: wldcore_gfx_draw_world_frame_with_map, hash: 6167ee0d206570fd}
   - {addr: 0x80067a78, size: 436, name: wldcore_gfx_draw_world_frame, hash: c2f990f6bb5d385a}
   - {addr: 0x80067c2c, size: 136, name: wldcore_init_subsystems, hash: 21db44f52ea80fd1}
@@ -20,11 +20,11 @@ functions:
   - {addr: 0x80067d70, size: 200, name: wldcore_gfx_init_subsystem, hash: e3a770070c197e86}
   - {addr: 0x80067e38, size: 1128, name: wldcore_init_world_map_state, hash: 84e5bc0de1b8261d}
   - {addr: 0x800682a0, size: 104, name: wldcore_finalize_loop, hash: 8bb0c6cc847f2ab4}
-  - {addr: 0x80068308, size: 244, name: wldcore_init_runtime_state, hash: 958d57491c632bc5}
+  - {addr: 0x80068308, size: 244, name: wldcore_init_screen, hash: 958d57491c632bc5}
   - {addr: 0x800683fc, size: 400, name: wldcore_menu_restore_level_on_world_entry, hash: b0014d61c955a268}
   - {addr: 0x8006858c, size: 84, name: wldcore_handle_exit_request, hash: 4cc1e38c1a2d32ff}
-  - {addr: 0x800685e0, size: 96, name: wldcore_file_wait_then_build_header, hash: 5d2462dc5511c5a9}
-  - {addr: 0x80068640, size: 136, name: wldcore_load_scratch_data_blocking, hash: bd1749a0f84c27ce}
+  - {addr: 0x800685e0, size: 96, name: wldcore_file_request_read, hash: 5d2462dc5511c5a9}
+  - {addr: 0x80068640, size: 136, name: wldcore_map_load_texture, hash: bd1749a0f84c27ce}
   - {addr: 0x800686c8, size: 100, name: wldcore_wait_for_file_load, hash: 2cb1c83c2614745a}
   - {addr: 0x8006872c, size: 828, name: wldcore_file_poll_vram_image_stream, hash: 26a8e79c258efc1c, rodata: [{addr: 0x80067000, size: 32, hash: afd8c59574a140ff}]}
   - {addr: 0x80068a68, size: 76, name: wldcore_proposition_load_picture, hash: 43c1d216b7baabcd}
@@ -34,7 +34,7 @@ functions:
   - {addr: 0x80068c64, size: 220, name: wldcore_load_sound_novel_files, hash: 070cab2d292b95f8}
   - {addr: 0x80068d40, size: 52, name: wldcore_file_seek_to_battle_bin, hash: e96aed18062103de}
   - {addr: 0x80068d74, size: 48, name: wldcore_gfx_set_display_rect, hash: 318e2bd701eb87fa}
-  - {addr: 0x80068da4, size: 204, name: wldcore_reset_game_if_special_keycode_is_pressed, hash: 6121aaec16ecf650}
+  - {addr: 0x80068da4, size: 204, name: wldcore_input_read_pad, hash: 6121aaec16ecf650}
   - {addr: 0x80068e70, size: 312, name: wldcore_map_update_scroll_axis_speed, hash: 847c2250f4204453}
   - {addr: 0x80068fa8, size: 104, name: wldcore_init_input_repeat_state, hash: cd033db34fcf2c41}
   - {addr: 0x80069010, size: 668, name: wldcore_input_check_repeating_directional, hash: f5ac2d626cd95e19}
@@ -75,7 +75,7 @@ functions:
   - {addr: 0x8006bd84, size: 536, name: wldcore_gfx_draw_number_digits_with_fill, hash: a418021d05820d27}
   - {addr: 0x8006bf9c, size: 364, name: wldcore_gfx_draw_calendar_date, hash: fad8f45c4135b000}
   - {addr: 0x8006c108, size: 244, name: wldcore_proposition_submit_marker_request, hash: 1dc3a756616af99e}
-  - {addr: 0x8006c1fc, size: 76, name: wldcore_load_formation_unit_name_and_face, hash: 612b5687dd91566d}
+  - {addr: 0x8006c1fc, size: 76, name: wldcore_init_world_menus_and_date, hash: 612b5687dd91566d}
   - {addr: 0x8006c248, size: 264, name: wldcore_menu_run_world_frame, hash: a7b6c9f7d5ebedab}
   - {addr: 0x8006c350, size: 140, name: wldcore_menu_reset_window_list_and_store_origin, hash: 70bde74f247d3161}
   - {addr: 0x8006c3dc, size: 112, name: wldcore_menu_dispatch_idle_handler, hash: 2d06b000d9070865}

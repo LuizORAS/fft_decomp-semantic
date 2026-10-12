@@ -45,7 +45,7 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
     }
     if (flags & MAIN_SYSTEM_FLAG_REQUEST_DESTINATION) {
         location = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
-        wldcore_init_core();
+        wldcore_gfx_capture_map_backdrop();
         wldcore_menu_dispatch_resume_handler();
         if (g_wldcore_map_projection_state.marker.kind != location) {
             wldcore_location_process_entry(g_wldcore_map_projection_state.marker.kind, location);

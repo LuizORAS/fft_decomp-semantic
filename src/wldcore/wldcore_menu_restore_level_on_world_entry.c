@@ -1,12 +1,13 @@
 #include "fft/wldcore.h"
 
-/* Clear system flag 0x10000 and act on the pending world-menu request flags.
- *
- * With none of 0x202c0000 pending, a selected proposition with a Text action
- * reopens its menu level and text (0x5800 + script value); otherwise pending
- * script requests are dispatched. Either way two audio commands follow. Flags
- * 0x40000 and 0x200000 are consumed after publishing g_main_saved_weather_variable as script
- * variable 0x23; each request ends in wldcore_menu_push_screen_transition_level. */
+/* Clear MAIN_SYSTEM_FLAG_RESTART and open what the visit starts with. Normally that is the
+ * current location's arrival text (its WLDCORE_SCRIPT_ACTION_TEXT condition, a world help message in
+ * the scrollable text window) or else its pending map requests
+ * (wldcore_menu_dispatch_pending_script_requests), with the world map music fading in. A replayed
+ * story event returns to the Story Events list and a tutorial event to its tutorial list (both
+ * restoring the weather from g_main_saved_weather_variable; the tutorial also its music), and the
+ * title's Tutorial and Brave Story choices open those screens
+ * (wldcore_menu_push_screen_transition_level). */
 void wldcore_menu_restore_level_on_world_entry(void) {
     s32 flags;
 

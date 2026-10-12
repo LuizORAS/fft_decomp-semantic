@@ -2,11 +2,11 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* WLDCORE's per-frame pad poll: reads pad 0 and publishes the held buttons
- * and the newly pressed ones (both 0 while MAIN_SYSTEM_FLAG_INPUT_BLOCKED is
- * set). Exactly L1 + R1 + Select + Start restores the sound volumes and
- * resets the game. */
-void wldcore_reset_game_if_special_keycode_is_pressed(void) {
+/* WLDCORE's pad read, once a frame from the frame draws: reads pad 0 and publishes the held buttons
+ * and the newly pressed ones (both 0 while MAIN_SYSTEM_FLAG_INPUT_BLOCKED is set). Holding exactly
+ * L1 + R1 + Select + Start (MAIN_INPUT_RESET_BUTTONS) restores the sound volumes and resets the
+ * game. */
+void wldcore_input_read_pad(void) {
     u32 input;
     u32 previous;
 
@@ -23,7 +23,7 @@ void wldcore_reset_game_if_special_keycode_is_pressed(void) {
         g_wldcore_new_button_presses = input & ~previous;
     }
 
-    if (g_wldcore_polled_button_input == (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_SELECT | PSX_PAD_START)) {
+    if (g_wldcore_polled_button_input == MAIN_INPUT_RESET_BUTTONS) {
         DrawSync(0);
         main_sound_set_master_volume(0x3fff, 1);
         main_sound_put_type(0xc0);

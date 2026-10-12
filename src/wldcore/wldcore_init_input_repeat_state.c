@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Clear the auto-repeat counters of the D-pad, L1 and R1 and copy MAIN's repeat timing: the
+ * initial delay, the period, and the shoulder buttons' period. */
 void wldcore_init_input_repeat_state(void) {
     g_wldcore_input_repeat_counter_l1 = 0;
     g_wldcore_input_repeat_counter_r1 = 0;

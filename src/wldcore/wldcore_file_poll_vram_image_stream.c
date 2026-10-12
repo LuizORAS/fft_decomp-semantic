@@ -3,7 +3,11 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Streams CD-resident image chunks to VRAM through a retrying state machine.
+/* Advance a disc read that goes straight to VRAM, one state per call and with the same retries as
+ * main_file_poll_load. The sectors arrive in alternate 2 KB halves of the destination; each holds a
+ * rectangle count and that many rectangles (x, y, w, h, then the pixels), which
+ * MAIN_FILE_LOAD_STATE_UPLOAD_SECTOR loads with LoadImage before the next sector. The drive pauses
+ * after the last one. The world map texture loads this way (wldcore_map_load_texture).
  *
  * The switch jump table occupies 0x80067000-0x80067020, at the start of
  * WLDCORE.BIN. */
@@ -77,7 +81,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         }
         stream->wait_frames++;
         return;
-    case 7:
+    case MAIN_FILE_LOAD_STATE_UPLOAD_SECTOR:
         if (CdDataSync(1) != 0) {
             return;
         }

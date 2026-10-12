@@ -6,6 +6,9 @@
 #include "fft/world.h"
 
 /* system */
+/* WLDCORE's own loop: wldcore_entrypoint runs one world map visit at a time (its set-up, the frame
+ * loop, its end) and returns the world result to MAIN, with the random battle it chose. */
+
 /* Provisional: four-byte per-location records reached through g_wldcore_location_records. */
 typedef struct wldcore_state_record {
     u8 _unused_00[2];
@@ -20,7 +23,7 @@ typedef enum wldcore_thread_slot {
     WLDCORE_THREAD_SLOT_MESSAGE = 14,      /* the message box and script text */
 } wldcore_thread_slot_e;
 
-/* g_main_system_flags as wldcore_process_frame_gate last saw it (main_system_flags_e). */
+/* g_main_system_flags as wldcore_gfx_update_map_backdrop last saw it (main_system_flags_e). */
 extern u32 g_wldcore_previous_system_flags;
 
 /* Scalar view of g_wldcore_active_saved_record.state_flags for opcode
@@ -30,10 +33,17 @@ extern u16 g_wldcore_state_flags;
 extern s32 g_wldcore_random_battle_entd_id;
 extern s32 g_wldcore_random_battle_map_id;
 extern s32 g_wldcore_random_battle_squad_id;
-void wldcore_restore_previous_stack(void);
+s32 wldcore_entrypoint(void);
+void wldcore_finalize_loop(void);
+s32 wldcore_handle_exit_request(void);
+void wldcore_init_screen(void);
 void wldcore_init_stub(void);
+void wldcore_init_subsystems(void);
+void wldcore_init_world_map_state(void);
+void wldcore_init_world_menus_and_date(void);
+void wldcore_restore_previous_stack(void);
+void wldcore_switch_to_stack(void*);
 void wldcore_window_number_panel_noop_callback(void);
-void wldcore_reset_game_if_special_keycode_is_pressed(void);
 
 /* thread */
 /* Provisional: 0x14-byte parameter blocks at 0x8009ebc0 for WORLD threads 8,
@@ -53,15 +63,24 @@ extern wldcore_thread_block_t g_wldcore_thread9_params;
 extern wldcore_thread_block_t g_wldcore_threadc_params;
 
 /* file */
+/* Disc reads on MAIN's shared descriptor, waited for a frame at a time while the audio queue keeps
+ * running, and the image stream that loads the world map texture straight into VRAM. */
+
 void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream);
 void wldcore_file_seek_to_battle_bin(void);
 
-void wldcore_file_wait_then_build_header(
-    main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
+void wldcore_file_request_read(main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
 
 void wldcore_wait_for_file_load(void);
 
 /* input */
+/* The pad as WLDCORE reads it once a frame (held, newly pressed, the reset combination) and the
+ * auto-repeat of the D-pad and shoulder buttons. */
+
+extern u32 g_wldcore_current_button_input;
+extern u32 g_wldcore_new_button_presses;
+extern u32 g_wldcore_polled_button_input;
+extern u32 g_wldcore_previous_button_input;
 extern s32 g_wldcore_input_repeat_counter_up;
 extern s32 g_wldcore_input_repeat_counter_down;
 extern s32 g_wldcore_input_repeat_counter_left;
@@ -72,6 +91,7 @@ extern s32 g_wldcore_input_repeat_initial_delay;
 extern s32 g_wldcore_input_repeat_period;
 extern s32 g_wldcore_input_secondary_repeat_period;
 void wldcore_init_input_repeat_state(void);
+void wldcore_input_read_pad(void);
 u32 wldcore_input_check_repeating_directional(u32 buttons);
 
 /* sound */
@@ -178,7 +198,7 @@ typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_stat
 
 /* libgs GsOT descriptor: the 20-byte ordering-table records at 0x800bb364
  * (main) and 0x800bb3c4 (auxiliary), one per display buffer. The 0x14 stride
- * is what wldcore_init_core indexes these globals with. */
+ * is what wldcore_gfx_capture_map_backdrop indexes these globals with. */
 /* The ordering-table handle is libgs GsOT; see include/psx/libgs.h. */
 /* The display-object queues hold a pointer to each object's leading flags
  * word, which selects the handler in wldcore_dispatch_display_object_list:
@@ -302,6 +322,9 @@ void wldcore_gfx_calculate_scaled_rectangle(
     s32 scale_mode, const wldcore_window_render_bounds16_t* source, wldcore_window_render_bounds16_t* rectangle);
 
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* im, s32 step);
+void wldcore_gfx_capture_map_backdrop(void);
+void wldcore_gfx_load_background_set(s32 set);
+void wldcore_gfx_update_map_backdrop(void);
 
 /* calendar */
 extern u8 g_wldcore_days_per_month[12]; /* 0x8009e66c; non-leap-year month lengths */
@@ -858,6 +881,7 @@ extern wldcore_projection_motion_t g_wldcore_map_zoom_motion;
  * window-flag store (MEM_IN_STRUCT_P). */
 extern s32 g_wldcore_next_map_id[];
 void wldcore_map_init_tile_atlas(void);
+void wldcore_map_load_texture(void);
 void wldcore_map_color_and_draw_dots(void);
 s32 wldcore_map_build_location_menu_entries(s32 proposition_id, s32* out);
 void wldcore_map_draw_visible_routes(GsOT* ot);
@@ -2137,10 +2161,6 @@ void wldcore_menu_push_countdown_level(void);
 void wldcore_window_update_flag_from_owner_progress(wldcore_window_owner_t* owner);
 
 /* other */
-extern u32 g_wldcore_current_button_input;
-extern u32 g_wldcore_new_button_presses;
-extern u32 g_wldcore_polled_button_input;
-extern u32 g_wldcore_previous_button_input;
 extern s16 g_wldcore_panel_row_actions[16];
 extern wldcore_word_pair_t g_wldcore_tutorial_entries_cursor_state;
 extern s32 g_wldcore_context_value_display_mode;
@@ -2154,20 +2174,8 @@ extern u8 g_wldcore_choice_hidden_variable_offsets[];
 extern battle_stats_t g_wldcore_status_unit;
 extern s32 g_wldcore_tutorial_category_saved_cursor;
 extern s32 g_wldcore_tutorial_event_ids[];
-void wldcore_init_world_map_state(void);
-void wldcore_switch_to_stack(void*);
-s32 wldcore_handle_exit_request(void);
-void wldcore_gfx_load_background_set(s32 set);
-void wldcore_load_formation_unit_name_and_face(void);
-void wldcore_load_scratch_data_blocking(void);
 void wldcore_set_bit_value(u32* bits, s32 index, s32 set);
 s32 wldcore_test_bit(u32* bits, s32 index);
-s32 wldcore_entrypoint(void);
-void wldcore_finalize_loop(void);
-void wldcore_init_core(void);
-void wldcore_init_runtime_state(void);
-void wldcore_init_subsystems(void);
-void wldcore_process_frame_gate(void);
 void wldcore_day_of_year_to_month_day(s32 day_of_year, s32* output_month, s32* output_day);
 
 void wldcore_write_nine_bit_record(u32* bits, s32 record, u8* source);

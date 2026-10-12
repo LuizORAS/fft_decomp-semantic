@@ -1,8 +1,12 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Steps the world screen fade: ramps the menu brightness and the first fill box
- * colour toward the target until the elapsed counter reaches the duration. */
+/* Step the screen fade one frame. Fading out, the screen brightness (WORLD's menu brightness and
+ * g_wldcore_screen_brightness_rgb) falls from 0x70 to 0 while the subtractive fill box 0 rises from
+ * 0x20 to 0xFF; fading in, the brightness rises from 0x10 to 0x80 and the box falls from 0xC0 to 0. A
+ * WLDCORE_SCREEN_FADE_REDRAW_MAP fade sets MAIN_SYSTEM_FLAG_DRAW_MAP each step. One step before the
+ * end it clears MAIN_SYSTEM_FLAG_FADING and waits for the audio queue; the end clears RUNNING,
+ * REDRAW_MAP and BOX_VISIBLE. Returns 1 while a step ran. */
 s32 wldcore_fade_step_screen(void) {
     u32 flags;
     s32 elapsed;

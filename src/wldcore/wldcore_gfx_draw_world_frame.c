@@ -1,9 +1,9 @@
 #include "fft/wldcore.h"
 
-/* Per-frame WLDCORE render pass: clears the current ordering table, runs the
- * menu frame and marker/display-object passes, draws screen fades, waits for
- * VSync and, unless system flag 0x200 is set, uploads the scratch image to the
- * other display buffer before drawing the ordering table. */
+/* Draw a frame over the captured map backdrop, for frames where nothing on the map moves: the
+ * menus, HUD value, date, location label, window objects and screen fade boxes. After the pad read
+ * and VSync it swaps buffers and, unless MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE is set, uploads the
+ * backdrop (g_wldcore_scratch_buffer) into the buffer about to be drawn. */
 void wldcore_gfx_draw_world_frame(void) {
     RECT rect;
 
@@ -20,7 +20,7 @@ void wldcore_gfx_draw_world_frame(void) {
     wldcore_fade_draw_screen_overlays();
     wldcore_restore_previous_stack();
     DrawSync(0);
-    wldcore_reset_game_if_special_keycode_is_pressed();
+    wldcore_input_read_pad();
     VSync(0);
     GsSwapDispBuff();
     if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE)) {
