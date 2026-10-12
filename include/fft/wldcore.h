@@ -948,6 +948,10 @@ void wldcore_reset_saved_record_fields(wldcore_saved_record_t* record);
 void wldcore_reset_selected_saved_record(s32 unused);
 
 /* proposition */
+/* The Bar's propositions: the jobs on offer, sending units, the days out, the report, the
+ * success and the rewards, and the discovery milestones; the static proposition data and the
+ * outcome being reported. */
+
 /* Provisional: the type-0x10 proposition report level pushed by
  * wldcore_proposition_push_report_level (0x800779d0), which stores its argument at
  * +0x2c and starts WORLD thread 14, and stepped by
