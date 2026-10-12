@@ -11,13 +11,11 @@ void world_unit_queue_current_status_graphics(s32 battle_unit_index, s32 enabled
 
     unit = battle_unit_get_stats_from_battle_id(battle_unit_index);
     g_world_thread_call_target = (void (*)(void))status_queue_misc_graphics_flag_change;
-    status_index = 0;
-    do {
+    for (status_index = 0; status_index < STATUS_COUNT; status_index++) {
         byte_index = status_index / 8;
         bit_index = status_index - byte_index * 8;
         if ((unit->status_sets.current[byte_index] & (0x80 >> bit_index)) != 0) {
             world_thread_call_on_main_stack(STATUS_HANDLER_INDEX(status_index), enabled, battle_unit_index);
         }
-        status_index++;
-    } while (status_index < STATUS_COUNT);
+    }
 }

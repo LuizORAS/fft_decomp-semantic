@@ -10,8 +10,7 @@ void world_script_join_units_silently(void) {
     u8 first;
     u8 flags;
 
-    i = 0;
-    do {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = battle_unit_find_stats_by_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &out_idx);
         if (out_idx >= 0 && i == out_idx) {
             if (unit->formation_index == BATTLE_FORMATION_INDEX_NONE
@@ -23,6 +22,5 @@ void world_script_join_units_silently(void) {
                 }
             }
         }
-        i++;
-    } while (i < BATTLE_UNIT_SLOT_COUNT);
+    }
 }

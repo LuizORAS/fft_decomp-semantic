@@ -118,21 +118,17 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
         g_world_thread_change_cooldown = 5;
     }
 
-    thread_id = 1;
-    do {
+    for (thread_id = 1; thread_id < 16; thread_id++) {
         g_world_formation_thread_status_snapshot[thread_id] = world_thread_is_running_asm(thread_id);
-        thread_id++;
-    } while (thread_id < 16);
+    }
 
     world_thread_yield();
-    thread_id = 1;
-    do {
+    for (thread_id = 1; thread_id < 16; thread_id++) {
         status = g_world_formation_thread_status_snapshot[thread_id];
         if (status != world_thread_is_running_asm(thread_id)) {
             g_world_thread_change_cooldown = 5;
         }
-        thread_id++;
-    } while (thread_id < 16);
+    }
     if (g_world_thread_change_cooldown != 0) {
         g_world_thread_change_cooldown--;
     }

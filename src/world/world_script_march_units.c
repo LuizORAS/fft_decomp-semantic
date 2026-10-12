@@ -15,8 +15,7 @@ void world_script_march_units(const event_march_parameters_t* parameters) {
 
     unit_id = world_script_load_halfword(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
-        unit_index = 0;
-        do {
+        for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 battle_unit_set_status_animation_by_misc_id(unit_id);
                 world_thread_wait_frames(parameters->wait_frames);
@@ -24,7 +23,6 @@ void world_script_march_units(const event_march_parameters_t* parameters) {
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+        }
     }
 }

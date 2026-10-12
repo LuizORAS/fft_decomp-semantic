@@ -90,8 +90,7 @@ void world_script_update_tutorial_controller_input(void) {
             }
         }
         counter_base = g_world_script_tutorial_repeat_counters;
-        index = 0;
-        do {
+        for (index = 0; index < 16; index++) {
             if (index == 4) {
                 index = 12;
             }
@@ -111,8 +110,7 @@ void world_script_update_tutorial_controller_input(void) {
                 || ((s32)counter_base[index] >= 2 && counter_base[index] < initial_delay << 1)) {
                 filtered_input &= ~(1U << index);
             }
-            index++;
-        } while (index < 16);
+        }
         {
             u32 newly_pressed = g_world_input_newly_pressed & 0x0ff0;
             current_input &= 0xf00ff00f;

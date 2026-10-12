@@ -10,8 +10,7 @@ void world_script_set_units_movement_effect_suppression(const event_movement_eff
 
     unit_id = world_script_load_halfword(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
-        unit_index = 0;
-        do {
+        for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 if (parameters->suppressed != 0) {
                     battle_unit_set_movement_effect_suppression(unit_id);
@@ -22,7 +21,6 @@ void world_script_set_units_movement_effect_suppression(const event_movement_eff
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+        }
     }
 }

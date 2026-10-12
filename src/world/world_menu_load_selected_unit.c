@@ -99,11 +99,9 @@ void world_menu_load_selected_unit(void) {
 
     if (editor->generic_monster != 0) {
         innate_items = main_ability_store_skillset_abilities(unit->primary_skillset, SKILLSET_ABILITY_FILTER_ACTION);
-        i = 0;
-        do {
+        for (i = 0; i < 5; i++) {
             editor->ability_ids[i] = *innate_items++;
-            i++;
-        } while (i < 5);
+        }
 
         g_world_thread_call_target = unit_has_adjacent_monster_skill_support;
         if (world_thread_call_on_main_stack(unit) == 0)

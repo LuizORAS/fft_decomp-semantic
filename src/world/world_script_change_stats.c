@@ -19,8 +19,7 @@ void world_script_change_stats(const event_change_stats_parameters_t* parameters
     delta = world_script_load_halfword(parameters->delta_le);
     unit_id = world_script_load_halfword(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
-        unit_index = 0;
-        do {
+        for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
                 if (battle_unit_index != -1) {
@@ -53,7 +52,6 @@ void world_script_change_stats(const event_change_stats_parameters_t* parameters
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+        }
     }
 }

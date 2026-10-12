@@ -21,12 +21,10 @@ void world_unit_inflict_status_by_entd_unit_id(
     battle_unit_index = world_unit_get_battle_index_by_entd_unit_id(entd_unit_id);
     if (battle_unit_index != 2000) {
         unit = battle_unit_get_stats_from_battle_id(battle_unit_index);
-        clear_index = 0;
-        do {
+        for (clear_index = 0; clear_index < STATUS_BYTE_COUNT; clear_index++) {
             unit->action.status_changes.infliction[clear_index] = 0;
             unit->action.status_changes.removal[clear_index] = 0;
-            clear_index++;
-        } while (clear_index < STATUS_BYTE_COUNT);
+        }
 
         /* Action infliction/removal bytes use the event VM's LSB-first order,
          * unlike the stored status-set masks. */

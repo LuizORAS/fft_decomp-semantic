@@ -33,13 +33,11 @@ void world_script_add_unit_start_thread(void) {
         } else if (opcode == EVENT_OPCODE_ADD_UNIT) {
             unit = battle_unit_find_stats_by_entd_unit_id(unit_id, &index);
             if (index == -2 || index >= 0) {
-                slot = 0;
-                do {
+                for (slot = 0; slot < EVENT_UNIT_SLOT_COUNT; slot++) {
                     if (battle_unit_get_stats_from_battle_id(slot) == unit) {
                         break;
                     }
-                    slot++;
-                } while (slot < EVENT_UNIT_SLOT_COUNT);
+                }
                 misc_id = battle_unit_get_misc_id_by_battle_id(slot);
                 if (misc_id == -1) {
                     world_unit_save_staged_status_data(slot);

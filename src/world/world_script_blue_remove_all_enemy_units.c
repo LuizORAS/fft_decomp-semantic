@@ -10,8 +10,7 @@ void world_script_blue_remove_all_enemy_units(void) {
     s32 unit_index;
     s32 misc_id;
 
-    misc_id = 0;
-    do {
+    for (misc_id = 0; misc_id < BATTLE_UNIT_SLOT_COUNT; misc_id++) {
         if (battle_unit_has_misc_id(misc_id) != 0) {
             unit_index = wldcore_unit_get_id_from_misc_id(misc_id);
             if (unit_index != -1
@@ -24,6 +23,5 @@ void world_script_blue_remove_all_enemy_units(void) {
                 battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, -0x1f, -0x1f, 0);
             }
         }
-        misc_id++;
-    } while (misc_id < BATTLE_UNIT_SLOT_COUNT);
+    }
 }

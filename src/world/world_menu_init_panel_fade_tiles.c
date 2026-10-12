@@ -6,11 +6,9 @@
 void world_menu_init_panel_fade_tiles(void) {
     menu_gradient_panel_prims_t* frame;
     s32 i;
-    u16 tpage;
 
     frame = &g_world_menu_panel_fade_frames[0];
-    tpage = GetTPage(0, 2, 0x3c0, 0x100);
-    SetDrawMode(&frame->draw_mode, 0, 0, tpage, &g_world_gfx_texture_window);
+    SetDrawMode(&frame->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
 
     SetTile(&frame->center);
     setRGB0(&frame->center, 0, 0, 0);

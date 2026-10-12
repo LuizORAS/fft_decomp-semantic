@@ -13,8 +13,7 @@ void world_script_unit_anim(const event_unit_anim_parameters_t* parameters) {
 
     unit_id = world_script_load_halfword(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
-        unit_index = 0;
-        do {
+        for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 if (parameters->facing_update_mode == 0) {
                     battle_unit_clear_facing_update_suppression(unit_id);
@@ -30,7 +29,6 @@ void world_script_unit_anim(const event_unit_anim_parameters_t* parameters) {
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+        }
     }
 }
