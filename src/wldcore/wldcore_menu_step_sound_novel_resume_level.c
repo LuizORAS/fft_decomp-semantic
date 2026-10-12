@@ -40,7 +40,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         wldcore_menu_push_sound_novel_level(level->mode);
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         g_wldcore_window_record_count--;
         g_wldcore_window_render_record_count -= 3;
@@ -61,8 +61,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) == 0
-        && wldcore_input_check_repeating_directional(PSX_PAD_DOWN) == 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) == 0 && wldcore_input_update_repeat(PSX_PAD_DOWN) == 0) {
         return;
     }
     level->cursor_row ^= 1;

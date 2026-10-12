@@ -40,7 +40,7 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         wldcore_menu_push_participant_list_level(level->proposition);
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
@@ -58,7 +58,7 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         wldcore_menu_push_layout_window_level();
         return;
     }
-    if (!(g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1))) {
+    if (!(g_wldcore_input_current_buttons & (PSX_PAD_L1 | PSX_PAD_R1))) {
         g_wldcore_window_records[level->left_window].sequence = WLDCORE_ANIM_SEQUENCE_L1_BUTTON;
         g_wldcore_window_records[level->right_window].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
         g_wldcore_window_records[level->left_window].frame_index
@@ -66,7 +66,7 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
             = g_wldcore_window_records[level->right_window].frame_index
             = g_wldcore_window_records[level->right_window].anim_counter = 0;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_R1) != 0
+    if (wldcore_input_update_repeat(PSX_PAD_R1) != 0
         && g_wldcore_window_records[level->left_window].sequence != WLDCORE_ANIM_SEQUENCE_L1_BUTTON_PRESS) {
         g_wldcore_window_records[level->right_window].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS;
         g_wldcore_window_records[level->right_window].frame_index
@@ -86,7 +86,7 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         }
         direction = 1;
     } else {
-        if (wldcore_input_check_repeating_directional(PSX_PAD_L1) == 0
+        if (wldcore_input_update_repeat(PSX_PAD_L1) == 0
             || g_wldcore_window_records[level->right_window].sequence == WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS) {
             return;
         }

@@ -26,7 +26,7 @@ void wldcore_menu_handle_story_event_text_input(wldcore_menu_stack_record_t* lev
             return;
         }
     }
-    if ((g_wldcore_new_button_presses & PSX_PAD_TRIANGLE) != 0) {
+    if ((g_wldcore_input_new_button_presses & PSX_PAD_TRIANGLE) != 0) {
         world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_story_event_ids[level->story_event_index]);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;

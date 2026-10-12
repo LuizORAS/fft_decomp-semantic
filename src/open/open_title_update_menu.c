@@ -200,7 +200,7 @@ void open_title_update_menu(open_controller_record_t* record) {
         return;
     }
 
-    if (open_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (open_input_update_repeat(PSX_PAD_UP) != 0) {
         state->idle_timer = 0;
         g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = 0;
         state->cursor--;
@@ -211,8 +211,7 @@ void open_title_update_menu(open_controller_record_t* record) {
             = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
-    if (open_input_check_repeating_directional(PSX_PAD_DOWN) != 0
-        || (g_open_input_new_button_presses & PSX_PAD_SELECT)) {
+    if (open_input_update_repeat(PSX_PAD_DOWN) != 0 || (g_open_input_new_button_presses & PSX_PAD_SELECT)) {
         state->idle_timer = 0;
         g_open_gfx_render_records_36[state->records_36[state->cursor + 1]].palette = 0;
         state->cursor++;

@@ -14,7 +14,7 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
     world_animated_render_record_t* record;
     s32 window;
 
-    if ((g_wldcore_new_button_presses & PSX_PAD_CROSS) != 0) {
+    if ((g_wldcore_input_new_button_presses & PSX_PAD_CROSS) != 0) {
         g_wldcore_window_record_count -= 1;
         g_wldcore_window_render_object_count -= 1;
         g_wldcore_menu_ordering_table_offset = request->saved_state;
@@ -24,7 +24,7 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
         return;
     }
 
-    if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) != 0) {
+    if ((g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) != 0) {
         layout = request->layout;
         counter = g_wldcore_window_layout_rows[layout].counter;
         if (counter != 0) {
@@ -46,7 +46,7 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
         return;
     }
 
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
         if (g_wldcore_window_layout_rows[request->layout].up != request->layout) {
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
             request->layout = g_wldcore_window_layout_rows[request->layout].up;
@@ -54,7 +54,7 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
             return;
         }
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         if (g_wldcore_window_layout_rows[request->layout].down != request->layout) {
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
             request->layout = g_wldcore_window_layout_rows[request->layout].down;
@@ -62,7 +62,7 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
             return;
         }
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_RIGHT) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_RIGHT) != 0) {
         if (g_wldcore_window_layout_rows[request->layout].left != request->layout) {
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
             request->layout = g_wldcore_window_layout_rows[request->layout].left;
@@ -70,7 +70,7 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
             return;
         }
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_LEFT) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_LEFT) != 0) {
         if (g_wldcore_window_layout_rows[request->layout].right != request->layout) {
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
             request->layout = g_wldcore_window_layout_rows[request->layout].right;

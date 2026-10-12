@@ -62,8 +62,7 @@ void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
         return;
     }
 
-    if (open_input_check_repeating_directional(PSX_PAD_UP) != 0
-        || open_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (open_input_update_repeat(PSX_PAD_UP) != 0 || open_input_update_repeat(PSX_PAD_DOWN) != 0) {
         menu->selected_option ^= 1;
         /* Adding 12 before the option offset keeps the target's (option * 16 + 12) + y evaluation. */
         g_open_gfx_render_records_36[menu->cursor_record_36].position.y

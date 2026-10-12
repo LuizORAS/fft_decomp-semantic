@@ -23,7 +23,7 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
             wldcore_window_load_party_unit_sprite_record(level, unit, level->portrait_render);
         }
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if ((buttons & PSX_PAD_CROSS) != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         /* Shared tail: a duplicated close path cross-jumps to the same
@@ -48,13 +48,13 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
         level->mode = WLDCORE_SEND_UNIT_MODE_SELECT;
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
         if (level->slot == 0) {
             level->slot = 2;
         } else {
             level->slot--;
         }
-    } else if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    } else if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         if (level->slot == 2) {
             level->slot = 0;
         } else {

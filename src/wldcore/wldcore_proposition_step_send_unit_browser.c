@@ -36,7 +36,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
         wldcore_start_core_background_threads(g_wldcore_list_entry_values[*menu_selected_index] & TEXT_ID_ENTRY_MASK);
         level->slot = *menu_selected_index;
     } else if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS) {
-        buttons = g_wldcore_new_button_presses;
+        buttons = g_wldcore_input_new_button_presses;
         if (buttons & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
             g_wldcore_window_records[level->left_arrow].flags |= WORLD_RENDER_RECORD_HIDDEN;
             g_wldcore_window_records[level->right_arrow].flags |= WORLD_RENDER_RECORD_HIDDEN;
@@ -53,7 +53,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
             wldcore_menu_push_layout_window_level();
             return;
         }
-        if (!(g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1))) {
+        if (!(g_wldcore_input_current_buttons & (PSX_PAD_L1 | PSX_PAD_R1))) {
             g_wldcore_window_records[level->left_arrow].sequence = WLDCORE_ANIM_SEQUENCE_L1_BUTTON;
             g_wldcore_window_records[level->right_arrow].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
             g_wldcore_window_records[level->left_arrow].frame_index
@@ -61,7 +61,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
                 = g_wldcore_window_records[level->right_arrow].frame_index
                 = g_wldcore_window_records[level->right_arrow].anim_counter = 0;
         }
-        if (wldcore_input_check_repeating_directional(PSX_PAD_R1) != 0
+        if (wldcore_input_update_repeat(PSX_PAD_R1) != 0
             && g_wldcore_window_records[level->left_arrow].sequence != WLDCORE_ANIM_SEQUENCE_L1_BUTTON_PRESS) {
             g_wldcore_window_records[level->right_arrow].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS;
             g_wldcore_window_records[level->right_arrow].frame_index
@@ -79,7 +79,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
             }
             direction = 1;
         } else {
-            if (wldcore_input_check_repeating_directional(PSX_PAD_L1) == 0
+            if (wldcore_input_update_repeat(PSX_PAD_L1) == 0
                 || g_wldcore_window_records[level->right_arrow].sequence == WLDCORE_ANIM_SEQUENCE_R1_BUTTON_PRESS) {
                 return;
             }

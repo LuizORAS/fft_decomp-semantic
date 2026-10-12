@@ -18,7 +18,7 @@ void wldcore_list_handle_completed_propositions_input(wldcore_menu_stack_record_
         return;
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);

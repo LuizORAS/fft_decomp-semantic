@@ -70,7 +70,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
     }
 
     if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE) {
-        if (!(g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
+        if (!(g_wldcore_input_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
             return;
         }
         level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
@@ -91,7 +91,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         return;
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_GOODBYE, 0);
@@ -159,7 +159,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         return;
     }
 
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
         if (level->selected_entry != 0) {
             g_wldcore_window_records[level->main_window].position.y -= 0x10;
             level->selected_entry = level->selected_entry - 1;
@@ -170,7 +170,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
 
-    if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         if (level->selected_entry < level->entry_count - 1) {
             g_wldcore_window_records[level->main_window].position.y += 0x10;
             level->selected_entry = level->selected_entry + 1;

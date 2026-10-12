@@ -22,7 +22,7 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
     if (g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         g_wldcore_window_records[level->window_index].palette = 0xA;
         g_wldcore_window_render_records[level->render_index].palette = 2;
         g_wldcore_window_records[level->window_index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
@@ -32,7 +32,7 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
         wldcore_menu_push_number_panel_level_with_argument(variable, script_get_variable(variable));
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         g_wldcore_window_record_count -= 1;
         g_wldcore_window_render_record_count -= 1;
         g_wldcore_window_render_object_count -= 2;
@@ -40,14 +40,14 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
         wldcore_menu_dispatch_resume_handler();
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
-        if (g_wldcore_current_button_input & PSX_PAD_TRIANGLE) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
+        if (g_wldcore_input_current_buttons & PSX_PAD_TRIANGLE) {
             if (level->first_variable < 0x64) {
                 level->first_variable = 0;
             } else {
                 level->first_variable -= 0x64;
             }
-        } else if (g_wldcore_current_button_input & PSX_PAD_SQUARE) {
+        } else if (g_wldcore_input_current_buttons & PSX_PAD_SQUARE) {
             if (level->first_variable == 0) {
                 level->first_variable = 0x3fc;
             } else {
@@ -61,14 +61,14 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
             }
             goto move_cursor;
         }
-    } else if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
-        if (g_wldcore_current_button_input & PSX_PAD_TRIANGLE) {
+    } else if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
+        if (g_wldcore_input_current_buttons & PSX_PAD_TRIANGLE) {
             if (level->first_variable + 0x64 < 0x3fd) {
                 level->first_variable += 0x64;
             } else {
                 level->first_variable = 0x3fc;
             }
-        } else if (g_wldcore_current_button_input & PSX_PAD_SQUARE) {
+        } else if (g_wldcore_input_current_buttons & PSX_PAD_SQUARE) {
             if (level->first_variable == 0x3fc) {
                 level->first_variable = 0;
             } else {

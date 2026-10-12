@@ -30,7 +30,7 @@ void open_birthday_handle_menu_input(open_controller_record_t* record) {
         return;
     }
 
-    if (open_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (open_input_update_repeat(PSX_PAD_UP) != 0) {
         if (menu->selecting_month == 0) {
             menu->day += 1;
             if (g_open_birthday_month_lengths[menu->month - 1] < menu->day) {
@@ -53,7 +53,7 @@ void open_birthday_handle_menu_input(open_controller_record_t* record) {
         g_open_gfx_next_render_record_56 -= 1;
         open_birthday_build_menu_text(menu);
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
-    } else if (open_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    } else if (open_input_update_repeat(PSX_PAD_DOWN) != 0) {
         if (menu->selecting_month == 0) {
             menu->day -= 1;
             if (menu->day <= 0) {

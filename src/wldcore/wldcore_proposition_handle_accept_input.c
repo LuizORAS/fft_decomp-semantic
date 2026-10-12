@@ -12,13 +12,13 @@ void wldcore_proposition_handle_accept_input(wldcore_window_render_pair_t* owner
     if (g_wldcore_window_render_records[owner->render_index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         g_wldcore_window_render_record_count--;
         g_wldcore_window_render_object_count--;
         g_wldcore_menu_stack_depth--;
         wldcore_list_open_available_propositions();
-    } else if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    } else if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         total = g_wldcore_selected_proposition_row[0].fee_a + g_wldcore_selected_proposition_row[0].fee_b;
         g_wldcore_proposition_gil_amount = total;

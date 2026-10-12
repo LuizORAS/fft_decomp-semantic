@@ -28,7 +28,7 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
         return 1;
     }
     if (state->scroll_state == WLDCORE_TEXT_SCROLL_MANUAL) {
-        if ((g_wldcore_current_button_input & PSX_PAD_SQUARE) == 0) {
+        if ((g_wldcore_input_current_buttons & PSX_PAD_SQUARE) == 0) {
             state->scroll_state = WLDCORE_TEXT_SCROLL_RETURN;
             state->scroll_timer = 0;
             g_wldcore_window_records[state->middle_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
@@ -36,9 +36,9 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
             g_wldcore_window_records[state->lower_window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
             return 1;
         }
-        if ((wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) && (state->scroll_row != 0)) {
+        if ((wldcore_input_update_repeat(PSX_PAD_UP) != 0) && (state->scroll_row != 0)) {
             state->scroll_row--;
-        } else if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+        } else if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
             if (state->page_start_row > state->scroll_row) {
                 state->scroll_row++;
             } else {
@@ -53,11 +53,12 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
         return 1;
     }
     if (state->scroll_state == WLDCORE_TEXT_SCROLL_PAGING) {
-        if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
-            if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+        if (g_wldcore_input_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
+            if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
                 state->page_start_row += state->rows_per_page;
             }
-            if ((g_wldcore_new_button_presses & PSX_PAD_CROSS) || (state->page_start_row > state->last_page_row)) {
+            if ((g_wldcore_input_new_button_presses & PSX_PAD_CROSS)
+                || (state->page_start_row > state->last_page_row)) {
                 g_wldcore_window_record_count -= 4;
                 g_wldcore_window_render_record_count -= 1;
                 g_wldcore_window_render_object_count -= 5;
@@ -65,7 +66,7 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* state) {
             }
             wldcore_sound_play_effect(MAIN_SFX_TEXT_PAGE);
             wldcore_text_render_scrollable_window_page(state, state->page_start_row);
-        } else if (g_wldcore_new_button_presses & PSX_PAD_SQUARE) {
+        } else if (g_wldcore_input_new_button_presses & PSX_PAD_SQUARE) {
             state->scroll_state = WLDCORE_TEXT_SCROLL_MANUAL;
             state->scroll_row = state->page_start_row;
             wldcore_text_update_scroll_indicators(state);

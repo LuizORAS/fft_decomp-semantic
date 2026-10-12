@@ -60,7 +60,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
             suzuki_sound_play_2_sfx(MAIN_SFX_PROPOSITION_SUCCESS_A, MAIN_SFX_PROPOSITION_SUCCESS_B);
         }
     }
-    if (!(g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
+    if (!(g_wldcore_input_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
         return;
     }
     g_wldcore_window_render_record_count = g_wldcore_window_render_record_count - 1;

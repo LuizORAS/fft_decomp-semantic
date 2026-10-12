@@ -30,6 +30,10 @@ void wldcore_file_wait_then_build_header(
 void wldcore_wait_for_file_load(void);
 
 /* input */
+extern u32 g_wldcore_input_current_buttons;
+extern u32 g_wldcore_input_new_button_presses;
+extern u32 g_wldcore_input_polled_buttons;
+extern u32 g_wldcore_input_previous_buttons;
 extern s32 g_wldcore_input_repeat_counter_up;
 extern s32 g_wldcore_input_repeat_counter_down;
 extern s32 g_wldcore_input_repeat_counter_left;
@@ -40,7 +44,7 @@ extern s32 g_wldcore_input_repeat_initial_delay;
 extern s32 g_wldcore_input_repeat_period;
 extern s32 g_wldcore_input_secondary_repeat_period;
 void wldcore_init_input_repeat_state(void);
-u32 wldcore_input_check_repeating_directional(u32 buttons);
+u32 wldcore_input_update_repeat(u32 buttons);
 
 /* opcode */
 /* Interpreter state of the sound-novel script (wldcore_saved_record_t.state_flags),
@@ -2109,10 +2113,6 @@ void wldcore_menu_push_countdown_level(void);
 void wldcore_text_update_page_prompt_visibility(wldcore_text_scrollable_window_t* state);
 
 /* other */
-extern u32 g_wldcore_current_button_input;
-extern u32 g_wldcore_new_button_presses;
-extern u32 g_wldcore_polled_button_input;
-extern u32 g_wldcore_previous_button_input;
 extern s16 g_wldcore_panel_row_actions[16];
 extern menu_cursor_state_t g_wldcore_tutorial_entries_cursor_state;
 extern s32 g_wldcore_context_value_display_mode;

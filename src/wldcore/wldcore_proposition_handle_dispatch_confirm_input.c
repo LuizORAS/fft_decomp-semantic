@@ -14,7 +14,7 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
     if (g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         /* Shared tail: the target keeps this copy and both confirm paths
          * jump into it; duplicated copies cross-jump into the last one. */
@@ -27,15 +27,14 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
         wldcore_list_open_available_propositions();
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0
-        || wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0 || wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         row = level->row ^ 1;
         level->row = row;
         g_wldcore_window_records[level->cursor_window].position.y
             = g_wldcore_window_render_records[level->render_index].base.y - -(row * 0x10 + 0xE);
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         if (level->row != 1) {
             world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS,

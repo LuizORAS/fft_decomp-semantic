@@ -13,13 +13,13 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_stack_record_t
         return;
     }
     if (level->proposition_cancel_confirm.confirmed != 0) {
-        if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
+        if (g_wldcore_input_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
             wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
             goto close;
         }
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         /* Shared tail: the target keeps this copy and the other close paths
          * jump into it; duplicated copies cross-jump into the last one. */
@@ -31,8 +31,7 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_stack_record_t
         wldcore_list_open_propositions();
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0
-        || wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0 || wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         choice = level->proposition_cancel_confirm.choice ^ 1;
         level->proposition_cancel_confirm.choice = choice;
         g_wldcore_window_records[level->proposition_cancel_confirm.cursor_window].position.y
@@ -40,7 +39,7 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_stack_record_t
             - -(choice * 0x10 + 0xE);
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
-    if (!(g_wldcore_new_button_presses & PSX_PAD_CIRCLE)) {
+    if (!(g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE)) {
         return;
     }
     if (level->proposition_cancel_confirm.confirmed != 0) {

@@ -9,7 +9,7 @@
  * per call; past g_open_input_directional_repeat_initial_delay it fires and steps
  * back by g_open_input_directional_repeat_period. Unlike the WLDCORE twin only Up
  * and Down repeat: the other two counters are cleared and never counted. */
-u32 open_input_check_repeating_directional(u32 buttons) {
+u32 open_input_update_repeat(u32 buttons) {
     s32 next;
     u32 pressed;
 

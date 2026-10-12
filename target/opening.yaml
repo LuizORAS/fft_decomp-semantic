@@ -33,7 +33,7 @@ functions:
   - {addr: 0x80067e90, size: 40, name: open_gfx_start_overlay_fade_in, hash: b9b1c837a334afc9}
   - {addr: 0x80067eb8, size: 872, name: open_gfx_update_fade_overlay, hash: d85fa9508eb94e58}
   - {addr: 0x80068220, size: 72, name: open_input_init_directional_state, hash: e10b9650f2587d8a}
-  - {addr: 0x80068268, size: 284, name: open_input_check_repeating_directional, hash: a82e23c2bd0cb926}
+  - {addr: 0x80068268, size: 284, name: open_input_update_repeat, hash: a82e23c2bd0cb926}
   - {addr: 0x80068384, size: 156, name: open_title_init_new_game_party, hash: 3b01ce90b00a6557}
   - {addr: 0x80068420, size: 300, name: open_birthday_convert_date_to_zodiac, hash: 9aaa68be5ea32880}
   - {addr: 0x8006854c, size: 160, name: open_menu_update_world_formation, hash: b27c035b144dee4f}

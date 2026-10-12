@@ -23,7 +23,7 @@ void wldcore_menu_step_unit_browser_panel(wldcore_menu_panel_level_t* level) {
         return;
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if ((buttons & PSX_PAD_CROSS) != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->result = -1;

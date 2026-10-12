@@ -58,13 +58,13 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
     }
 
     if (wldcore_script_run_until_yield() != 0) {
-        if (g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1)) {
-            if (g_wldcore_current_button_input & PSX_PAD_L1) {
+        if (g_wldcore_input_current_buttons & (PSX_PAD_L1 | PSX_PAD_R1)) {
+            if (g_wldcore_input_current_buttons & PSX_PAD_L1) {
                 if (g_wldcore_active_saved_record.brightness < 0xFF) {
                     g_wldcore_active_saved_record.brightness++;
                 }
             }
-            if (g_wldcore_current_button_input & PSX_PAD_R1) {
+            if (g_wldcore_input_current_buttons & PSX_PAD_R1) {
                 brightness = &g_wldcore_active_saved_record.brightness;
                 if (*brightness != 0) {
                     (*brightness)--;
@@ -89,7 +89,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
         }
 
         if (world_menu_get_event_state_flag() != 0) {
-            buttons = g_wldcore_new_button_presses;
+            buttons = g_wldcore_input_new_button_presses;
             if (buttons & PSX_PAD_CIRCLE) {
                 return;
             }
@@ -112,7 +112,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 wldcore_menu_push_sound_novel_quit_level();
                 return;
             }
-            if ((g_wldcore_current_button_input & PSX_PAD_SQUARE)
+            if ((g_wldcore_input_current_buttons & PSX_PAD_SQUARE)
                 && (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE)
                 && g_wldcore_active_saved_record.text_history_3 != -1) {
                 g_wldcore_window_records[level->right_window].sequence

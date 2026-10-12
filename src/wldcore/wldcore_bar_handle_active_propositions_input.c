@@ -28,7 +28,7 @@ void wldcore_bar_handle_active_propositions_input(wldcore_menu_stack_record_t* l
         }
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->panel.result = 0;

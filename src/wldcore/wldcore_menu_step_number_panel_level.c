@@ -39,7 +39,7 @@ void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
         g_wldcore_window_records[slot].anim_counter = 0;
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         level->result = 2;
     } else if (buttons & PSX_PAD_CIRCLE) {

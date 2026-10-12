@@ -111,7 +111,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         return;
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         level->fade_out = level->fade_in;
         return;
@@ -121,8 +121,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         wldcore_menu_push_text_window_level(g_wldcore_sound_novel_quit_help_text_ids[level->choice] | 0x1000, 1);
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0
-        || wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0 || wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         value = level->choice ^ 1;
         level->choice = value;
         record = &g_wldcore_window_records[level->cursor_window];
@@ -131,7 +130,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
         record->position.y = base + offset;
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         g_wldcore_window_records[level->cursor_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         window = level->cursor_window;
         g_wldcore_window_records[window].anim_counter = 0;

@@ -28,7 +28,7 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* lev
         wldcore_menu_push_participant_detail_level(level->participant_list.proposition, level->participant_list.cursor);
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         g_wldcore_participant_list_saved_cursor = 0;
         g_wldcore_window_record_count--;
@@ -38,7 +38,7 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* lev
         wldcore_list_open_active_propositions();
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         g_wldcore_window_record_count--;
         g_wldcore_participant_list_saved_cursor = level->participant_list.cursor;
@@ -48,7 +48,7 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* lev
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
         if (level->participant_list.entry_count >= 2) {
             if (level->participant_list.cursor != 0) {
                 g_wldcore_window_records[level->participant_list.cursor_window].position.y -= 0x10;
@@ -61,7 +61,7 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* lev
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
         }
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         count = level->participant_list.entry_count;
         if (count >= 2) {
             count = count - 1;

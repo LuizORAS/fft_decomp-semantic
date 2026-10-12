@@ -32,7 +32,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
     }
 
     if (level->mode != WLDCORE_LIST_WINDOW_MODE_BROWSE) {
-        if (!(g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
+        if (!(g_wldcore_input_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
             return;
         }
         level->mode = WLDCORE_LIST_WINDOW_MODE_BROWSE;
@@ -43,7 +43,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         return;
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         /* Same exit as case 4 below; GCC cross-jumps the two copies. */
@@ -99,7 +99,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         return;
     }
 
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
         if (level->selected_entry != 0) {
             g_wldcore_window_records[level->main_window].position.y -= 0x10;
             level->selected_entry--;
@@ -107,7 +107,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
             g_wldcore_window_records[level->main_window].position.y += (level->entry_count - 1) * 0x10;
             level->selected_entry = level->entry_count - 1;
         }
-    } else if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    } else if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         if (level->selected_entry < level->entry_count - 1) {
             g_wldcore_window_records[level->main_window].position.y += 0x10;
             level->selected_entry++;

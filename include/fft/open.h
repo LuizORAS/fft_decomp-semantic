@@ -74,7 +74,7 @@ extern s32 g_open_input_up_repeat_counter;
 extern s32 g_open_controller_selected_options[];
 void open_controller_dispatch_current(void);
 void open_controller_start_text_message(s32 parameter, s32 run_followup);
-u32 open_input_check_repeating_directional(u32 buttons);
+u32 open_input_update_repeat(u32 buttons);
 void open_input_init_directional_state(void);
 void open_input_update_buttons_and_check_game_reset(void);
 

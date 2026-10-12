@@ -110,7 +110,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
             wldcore_list_open_treasures();
             break;
         }
-        if (g_wldcore_new_button_presses & PSX_PAD_TRIANGLE) {
+        if (g_wldcore_input_new_button_presses & PSX_PAD_TRIANGLE) {
             entry = g_wldcore_treasure_sound_novel_ids[level->value];
             if (entry != 0) {
                 level->saved_record_index = entry - 1;

@@ -15,7 +15,7 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
     if ((g_wldcore_window_render_records[level->render_index].flags & WORLD_RENDER_RECORD_POP_IN) != 0) {
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if ((buttons & PSX_PAD_SELECT) != 0) {
         g_wldcore_window_records[level->cursor_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         window = level->cursor_window;
@@ -45,7 +45,7 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
         wldcore_menu_push_participant_list_level(level->entries[level->cursor]);
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
         if (level->entry_count >= 2) {
             if (level->cursor != 0) {
                 g_wldcore_window_records[level->cursor_window].position.y -= 0x10;
@@ -57,7 +57,7 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
         }
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         count = level->entry_count;
         if (count >= 2) {
             count = count - 1;

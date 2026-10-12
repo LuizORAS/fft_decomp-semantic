@@ -32,7 +32,7 @@ void wldcore_map_step_discovery_announcement(wldcore_menu_countdown_t* countdown
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 0x10);
             countdown->phase = WLDCORE_COUNTDOWN_PHASE_JINGLE;
         }
-    } else if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    } else if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_menu_show_next_sequence_message(countdown);
     }
 }

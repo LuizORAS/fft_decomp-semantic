@@ -45,7 +45,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
         return;
     }
     if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE) {
-        if (g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
+        if (g_wldcore_input_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
             level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
             g_main_system_flags = g_main_system_flags | MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
@@ -63,7 +63,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
     if (g_wldcore_audio_queue.count != 0) {
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_PROMPT, 0);
@@ -109,7 +109,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
         }
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
         if (level->selected_entry != 0) {
             g_wldcore_window_records[level->main_window].position.y -= 0x10;
             level->selected_entry--;
@@ -119,7 +119,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
         }
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0) {
         if (level->selected_entry < level->entry_count - 1) {
             g_wldcore_window_records[level->main_window].position.y += 0x10;
             level->selected_entry++;

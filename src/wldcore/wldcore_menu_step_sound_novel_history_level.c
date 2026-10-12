@@ -116,7 +116,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
         }
         return;
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_UP) != 0) {
         if (level->scroll < 3 && level->text_ids[level->scroll] != -1) {
             wldcore_window_draw_indexed_text(level, 4);
             level->scroll = level->scroll + 1;
@@ -128,7 +128,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             g_wldcore_window_records[level->lower_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         }
     }
-    if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0 && level->scroll != 0) {
+    if (wldcore_input_update_repeat(PSX_PAD_DOWN) != 0 && level->scroll != 0) {
         wldcore_window_draw_indexed_text(level, 2);
         level->scroll = level->scroll - 1;
         if (level->scroll == 0) {
@@ -138,7 +138,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
         }
         g_wldcore_window_records[level->upper_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     }
-    if (!(g_wldcore_current_button_input & PSX_PAD_SQUARE)) {
+    if (!(g_wldcore_input_current_buttons & PSX_PAD_SQUARE)) {
         level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_RESTORE;
     }
 }

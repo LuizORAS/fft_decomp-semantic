@@ -37,7 +37,7 @@ functions:
   - {addr: 0x80068da4, size: 204, name: wldcore_reset_game_if_special_keycode_is_pressed, hash: 6121aaec16ecf650}
   - {addr: 0x80068e70, size: 312, name: wldcore_map_update_scroll_axis_speed, hash: 847c2250f4204453}
   - {addr: 0x80068fa8, size: 104, name: wldcore_init_input_repeat_state, hash: cd033db34fcf2c41}
-  - {addr: 0x80069010, size: 668, name: wldcore_input_check_repeating_directional, hash: f5ac2d626cd95e19}
+  - {addr: 0x80069010, size: 668, name: wldcore_input_update_repeat, hash: f5ac2d626cd95e19}
   - {addr: 0x800692ac, size: 340, name: wldcore_window_set_render_objects_visible, hash: 082e633a45d41f5d}
   - {addr: 0x80069400, size: 168, name: wldcore_fade_start_screen, hash: 3278f2a87335c5a6}
   - {addr: 0x800694a8, size: 624, name: wldcore_fade_step_screen, hash: a288f6e5f4b66b67}
@@ -520,7 +520,7 @@ data:
   - {addr: 0x8009f2c0, name: g_wldcore_map_projection_view}
   - {addr: 0x8009f2d0, name: g_wldcore_map_projection_scale}
   - {addr: 0x8009f2e0, name: g_wldcore_map_projection_rotation}
-  - {addr: 0x8009f2e8, name: g_wldcore_current_button_input}
+  - {addr: 0x8009f2e8, name: g_wldcore_input_current_buttons}
   - {addr: 0x8009f2ec, name: g_wldcore_selected_proposition_row}
   - {addr: 0x8009f31c, name: g_wldcore_gfx_world_primitive_buffers}
   - {addr: 0x800bb31c, name: g_wldcore_window_panel_render_state}
@@ -543,12 +543,12 @@ data:
   - {addr: 0x800bb504, name: g_wldcore_window_records}
   - {addr: 0x800bb51c, name: g_wldcore_window_record_positions}
   - {addr: 0x800bb930, name: g_wldcore_menu_stack_records}
-  - {addr: 0x800bb984, name: g_wldcore_previous_button_input}
+  - {addr: 0x800bb984, name: g_wldcore_input_previous_buttons}
   - {addr: 0x800bb988, name: g_wldcore_picture_buffer}
   - {addr: 0x800bb98c, name: g_wldcore_menu_stack_records_next}
   - {addr: 0x800bbc6c, name: g_wldcore_next_map_id}
   - {addr: 0x800bbc70, name: g_wldcore_window_render_records}
-  - {addr: 0x800bc2f0, name: g_wldcore_new_button_presses}
+  - {addr: 0x800bc2f0, name: g_wldcore_input_new_button_presses}
   - {addr: 0x800bc2f4, name: g_wldcore_message_buffer}
   - {addr: 0x800c72f4, name: g_wldcore_scratch_buffer}
   - {addr: 0x800c72f8, name: g_wldcore_input_repeat_initial_delay}
@@ -560,7 +560,7 @@ data:
   - {addr: 0x800c7310, name: g_wldcore_input_repeat_counter_right}
   - {addr: 0x800c7314, name: g_wldcore_input_repeat_counter_r1}
   - {addr: 0x800c7318, name: g_wldcore_input_repeat_counter_l1}
-  - {addr: 0x800c731c, name: g_wldcore_polled_button_input}
+  - {addr: 0x800c731c, name: g_wldcore_input_polled_buttons}
   - {addr: 0x800c7320, name: g_wldcore_map_projected_tiles}
   - {addr: 0x800c87d8, name: g_wldcore_window_image_buffer}
   - {addr: 0x800c8fd8, name: g_wldcore_proposition_detail_image_buffer}

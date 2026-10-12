@@ -55,7 +55,7 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         state->phase++;
         break;
     case 3:
-        if (!(g_wldcore_new_button_presses & PSX_PAD_CIRCLE))
+        if (!(g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE))
             return 0;
         if (!world_menu_get_event_state_flag())
             return 0;
