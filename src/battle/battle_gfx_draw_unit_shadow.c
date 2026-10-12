@@ -56,8 +56,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     prim->code |= 2;
     tile = battle_map_get_tile_data_pointer(
         (unit->screen.vx / MAP_TILE_SIZE), (unit->screen.vz / MAP_TILE_SIZE), unit->map_z);
-    if ((tile->depth_half_height.value & MAP_TILE_DEPTH_MASK)
-        && -(tile->height + (tile->depth_half_height.value >> 5)) * 12 < unit->screen.vy) {
+    if (tile->depth_half_height.depth && -(tile->height + tile->depth_half_height.depth) * 12 < unit->screen.vy) {
         unit->shadow_counter += g_main_system_animation_speed;
         frame = unit->shadow_counter;
         prim->tpage = 0x3f;
@@ -106,7 +105,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     } else {
         tile = battle_map_get_tile_data_pointer(
             (position.vx / MAP_TILE_SIZE), (position.vz / MAP_TILE_SIZE), unit->map_z);
-        position.vy -= (tile->depth_half_height.value >> 5) * 12;
+        position.vy -= tile->depth_half_height.depth * 12;
         if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
             if (tile->surface.depth_bias) {
                 battle_camera_calculate_relative_offset_by_5(&position, &offset);

@@ -17,6 +17,7 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
     battle_stats_t* unit;
     battle_stats_t* candidate;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     s32 offset;
     s32 i;
     s32 id;
@@ -65,8 +66,8 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
             height.unit_height = offset + 6;
         flags = unit->movement_abilities[2];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
-        tile_height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
-        depth = tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
+        tile_height = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK);
+        depth = (*(u8*)&tile->depth_half_height) >> MAP_TILE_DEPTH_SHIFT;
         level = tile_height;
         if (depth != 0) {
             if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]

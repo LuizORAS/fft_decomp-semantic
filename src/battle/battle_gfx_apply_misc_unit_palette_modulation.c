@@ -25,8 +25,7 @@ void battle_gfx_apply_misc_unit_palette_modulation(
 
     battle_map_modify_palette(preset_color, time, MAP_CLUT_ROW_UNITS, misc_id, 0, red, green, blue);
 
-    if (tile->depth_half_height.bits.depth != 0
-        && unit->screen.vy >= -(tile->height + tile->depth_half_height.bits.depth) * 12) {
+    if (tile->depth_half_height.depth != 0 && unit->screen.vy >= -(tile->height + tile->depth_half_height.depth) * 12) {
         battle_map_modify_palette(preset_color, time, MAP_CLUT_ROW_UNIT_SHADOWS, misc_id, 0, red, green, blue);
     } else {
         battle_map_modify_palette(preset_color, time, MAP_CLUT_ROW_UNIT_SHADOWS, misc_id, 0, -red, -green, -blue);

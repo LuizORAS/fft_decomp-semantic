@@ -18,9 +18,8 @@ s32 battle_ai_check_ability_use_at_coords(battle_ai_coords_t* coords) {
 
     if (g_battle_ai_data_base.water_penalty) {
         s32 depth = g_battle_map_tile_data[coords->bytes.y * g_battle_ai_data_base.map_max_x + coords->bytes.x
-                        + (coords->bytes.elevation * MAP_TILES_PER_LAYER)]
-                        .depth_half_height.value
-            >> MAP_TILE_DEPTH_SHIFT;
+            + (coords->bytes.elevation * MAP_TILES_PER_LAYER)]
+                        .depth_half_height.depth;
         if (depth >= 2)
             return 0;
     }

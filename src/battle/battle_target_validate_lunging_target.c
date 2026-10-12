@@ -109,8 +109,8 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
         lower = &g_battle_map_tile_data[index];
         upper_index = index + 0x100;
         upper = &g_battle_map_tile_data[upper_index];
-        lower_height = lower->height * 2 + lower->depth_half_height.bits.half_height;
-        upper_height = upper->height * 2 + upper->depth_half_height.bits.half_height;
+        lower_height = lower->height * 2 + lower->depth_half_height.half_height;
+        upper_height = upper->height * 2 + upper->depth_half_height.half_height;
         lower_id = battle_target_get_unit_id_if_tile_targetable(mid_x, mid_y, 0);
         upper_id = battle_target_get_unit_id_if_tile_targetable(mid_x, mid_y, 1);
         if (lower->flags.bits.blocked) {

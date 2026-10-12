@@ -85,8 +85,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                 break;
             case BATTLE_SHP_TYPE1:
             case BATTLE_SHP_TYPE2:
-                if (battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z)->depth_half_height.value
-                    & MAP_TILE_DEPTH_MASK) {
+                if (battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z)->depth_half_height.depth) {
                     switch (unit->animation.sequence_id >> 1) {
                     case BATTLE_UNIT_ANIMATION_DEAD:
                     case BATTLE_UNIT_ANIMATION_DEATH:

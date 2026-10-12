@@ -15,6 +15,7 @@ s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
     battle_stats_t* unit;
     battle_stats_t* target;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     battle_target_panel_t* panel;
     battle_target_panel_t* other_panel;
     battle_target_panel_t* cursor;
@@ -73,8 +74,8 @@ s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
     if (tile->flags.value & MAP_TILE_FLAG_BLOCKED) {
         return -1;
     }
-    height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
-        + (tile->depth_half_height.value >> 5) * 2;
+    height = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK)
+        + ((*(u8*)&tile->depth_half_height) >> 5) * 2;
     if (aoe == 0xff) {
         cursor = g_battle_target_panels;
         for (i = 0; i < 0x200; i++) {

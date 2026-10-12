@@ -29,10 +29,10 @@ s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
         return -2;
     }
     if (filters & BATTLE_UNIT_TILE_FILTER_DRY_LOW_SLOPE) {
-        if (tile->depth_half_height.bits.depth != 0) {
+        if (tile->depth_half_height.depth != 0) {
             return -2;
         }
-        if (tile->depth_half_height.bits.half_height >= 3) {
+        if (tile->depth_half_height.half_height >= 3) {
             return -2;
         }
     }

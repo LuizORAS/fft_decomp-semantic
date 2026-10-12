@@ -20,6 +20,7 @@ s32 battle_target_set_ability_panels(const battle_action_command_t* source) {
     battle_target_panel_t* seed;
     battle_target_panel_t* seed_upper;
     map_tile_t* tile;
+    map_tile_depth_t terrain_depth;
     s32 location;
     s32 index;
     s32 elevation;
@@ -46,8 +47,8 @@ s32 battle_target_set_ability_panels(const battle_action_command_t* source) {
     y = unit->position.y;
     location = battle_map_calculate_location(unit);
     tile = &g_battle_map_tile_data[location];
-    elevation = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
-        + (tile->depth_half_height.value >> 5) * 2;
+    terrain_depth = tile->depth_half_height;
+    elevation = tile->height * 2 + (terrain_depth.half_height) + tile->depth_half_height.depth * 2;
     panels = g_battle_target_panels;
     origin_offset = location * sizeof(battle_target_panel_t);
     origin = (battle_target_panel_t*)((s32)panels + origin_offset);

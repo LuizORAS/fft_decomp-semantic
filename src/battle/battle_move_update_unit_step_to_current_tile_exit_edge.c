@@ -16,10 +16,10 @@ void battle_move_update_unit_step_to_current_tile_exit_edge(battle_unit_misc_dat
     if (battle_move_has_reached_current_tile_exit_edge(direction, unit) != 0) {
         battle_move_snap_axis_to_current_tile_exit_edge(direction, unit);
         g_battle_move_current_edge_height = g_battle_move_current_tile->height * 2
-            + g_battle_move_current_tile->depth_half_height.bits.half_height * unit->current_edge_height;
+            + g_battle_move_current_tile->depth_half_height.half_height * unit->current_edge_height;
         unit->standing_on_unit_id_plus_one = 0;
         g_battle_move_destination_edge_height = g_battle_move_destination_tile->height * 2
-            + g_battle_move_destination_tile->depth_half_height.bits.half_height * unit->destination_edge_height;
+            + g_battle_move_destination_tile->depth_half_height.half_height * unit->destination_edge_height;
         battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
             unit, &unit->path, &unit->current_path_step);
         battle_move_interpolate_partial(unit, unit->walk_speed);

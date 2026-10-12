@@ -46,10 +46,10 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             }
             tile = battle_map_get_tile_data_pointer(
                 unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
-            if (tile->depth_half_height.bits.depth == 0) {
+            if (tile->depth_half_height.depth == 0) {
                 return;
             }
-            if (-unit->screen.vy >= (tile->height + tile->depth_half_height.bits.depth) * 12) {
+            if (-unit->screen.vy >= (tile->height + tile->depth_half_height.depth) * 12) {
                 return;
             }
             battle_sound_play_landing_sfx_by_surface_type(unit);

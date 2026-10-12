@@ -83,10 +83,10 @@ void battle_formula_calculate_knockback(void) {
     if (tile->flags.bits.untargetable) {
         return;
     }
-    if (tile->depth_half_height.bits.depth != 0) {
+    if (tile->depth_half_height.depth != 0) {
         return;
     }
-    if (tile->depth_half_height.bits.half_height >= 3) {
+    if (tile->depth_half_height.half_height >= 3) {
         return;
     }
     if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {

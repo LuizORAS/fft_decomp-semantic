@@ -18,6 +18,7 @@
  */
 s32 battle_target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECTOR* quad) {
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     s32 split;
     s32 rise;
     u8 height;
@@ -27,7 +28,7 @@ s32 battle_target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECT
     split = 0;
     tile = battle_map_get_tile_data_pointer((coords->vx / MAP_TILE_SIZE), (coords->vz / MAP_TILE_SIZE), layer);
     height = tile->height;
-    depth = tile->depth_half_height.value;
+    depth = (*(u8*)&tile->depth_half_height);
     slope = tile->slope_type;
     quad[0].vx = coords->vx - 14;
     quad[0].vz = coords->vz + 14;

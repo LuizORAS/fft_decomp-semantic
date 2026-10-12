@@ -23,6 +23,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     battle_stats_t* unit;
     battle_stats_t* other;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     u8 movement[3];
     battle_unit_height_data_t height_data;
     s32 i;
@@ -239,8 +240,8 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         }
         movement_3 = other->movement_abilities[2];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(other)];
-        base = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
-        depth = tile->depth_half_height.value >> 5;
+        base = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK);
+        depth = (*(u8*)&tile->depth_half_height) >> 5;
         byte = base;
         if (depth != 0) {
             if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]

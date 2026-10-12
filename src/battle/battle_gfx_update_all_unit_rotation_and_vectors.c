@@ -54,12 +54,12 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
         if (unit->battle_data != 0) {
             movement_flags = battle_move_get_effective_flags(unit->battle_data);
             if ((movement_flags & BATTLE_EFFECTIVE_MOVEMENT_IN_WATER) != 0) {
-                if ((tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) != 0) {
+                if (tile->depth_half_height.depth != 0) {
                     adjusted.vy -= 12;
                 }
             } else if ((movement_flags & BATTLE_EFFECTIVE_MOVEMENT_FLOAT) == 0) {
                 if ((movement_flags & BATTLE_EFFECTIVE_MOVEMENT_ON_WATER) == 0) {
-                    adjusted.vy -= (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 12;
+                    adjusted.vy -= tile->depth_half_height.depth * 12;
                 }
             }
         }

@@ -21,7 +21,7 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
     state->destination_tile = &g_battle_map_tile_data[state->destination_index];
     state->destination_panel = &g_battle_target_panels[state->destination_index];
     state->destination_base_height_times_two = state->destination_tile->height * 2;
-    state->destination_half_height = state->destination_tile->depth_half_height.bits.half_height;
+    state->destination_half_height = state->destination_tile->depth_half_height.half_height;
     state->destination_slope = state->destination_tile->slope_type;
     if (state->inner_count >= 5 || state->destination_unit_record_flag != 0) {
         state->destination_unit_record_index = state->destination_panel->unit_record_index;
@@ -59,9 +59,9 @@ s32 battle_move_init_destination_geometry(s32 candidate) {
         if (state->destination_side_height_delta >= 0 && (tile_flags[state->destination_index] & FRONTIER_FLAG_STEEP))
             return 5;
         state->clearance_height = state->source_exit_height;
-        if (state->destination_tile->depth_half_height.bits.depth
+        if (state->destination_tile->depth_half_height.depth
             && (config->movement_set_3 & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER))) {
-            state->destination_entry_height += state->destination_tile->depth_half_height.bits.depth * 2;
+            state->destination_entry_height += state->destination_tile->depth_half_height.depth * 2;
             if (config->movement_set_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER)
                 state->destination_entry_height -= 2;
         }

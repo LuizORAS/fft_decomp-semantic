@@ -28,14 +28,14 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
     if (tile->flags.value & MAP_TILE_COLLISION_MASK) {
         return -1;
     }
-    if (tile->depth_half_height.bits.half_height >= 3) {
+    if (tile->depth_half_height.half_height >= 3) {
         return -1;
     }
-    if ((unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER)
-        && tile->depth_half_height.bits.depth != 0 && !(unit->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_FLOAT)) {
+    if ((unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER) && tile->depth_half_height.depth != 0
+        && !(unit->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_FLOAT)) {
         return -1;
     }
-    if (tile->depth_half_height.bits.depth >= 3
+    if (tile->depth_half_height.depth >= 3
         && !(unit->movement_abilities[2]
             & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER
                 | BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER | BATTLE_MOVEMENT_SET_3_FLOAT))) {

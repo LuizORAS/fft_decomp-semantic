@@ -248,8 +248,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
             tile = (g_battle_map_weather_particles[i].z / MAP_TILE_SIZE) * g_battle_map_tile_width
                 + g_battle_map_weather_particles[i].x / MAP_TILE_SIZE;
-            ground = -((g_battle_map_tile_data_ptr[tile].height
-                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
+            ground = -(
+                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height.depth))
                 * 12);
             if (g_battle_render_buffers[0].ft3[i].y0 >= 0x119) {
                 if (g_battle_map_weather_scale.vy != 0) {
@@ -340,13 +340,13 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
             tile = (g_battle_map_weather_particles[i].z / MAP_TILE_SIZE) * g_battle_map_tile_width
                 + g_battle_map_weather_particles[i].x / MAP_TILE_SIZE;
-            ground = -((g_battle_map_tile_data_ptr[tile].height
-                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
+            ground = -(
+                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height.depth))
                 * 12);
             tile = (g_battle_map_weather_particles[i + 32].z / MAP_TILE_SIZE) * g_battle_map_tile_width
                 + g_battle_map_weather_particles[i + 32].x / MAP_TILE_SIZE;
-            ground = -((g_battle_map_tile_data_ptr[tile].height
-                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
+            ground = -(
+                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height.depth))
                 * 12);
             if ((g_battle_map_command_0x96_frame < g_battle_map_command_0x96_duration / 8
                     && g_battle_render_buffers[0].ft3[i].y0 >= 0x119)
@@ -448,8 +448,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
             tile = (g_battle_map_weather_particles[i].z / MAP_TILE_SIZE) * g_battle_map_tile_width
                 + g_battle_map_weather_particles[i].x / MAP_TILE_SIZE;
-            ground = -((g_battle_map_tile_data_ptr[tile].height
-                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
+            ground = -(
+                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height.depth))
                 * 12);
             if (ground < g_battle_map_weather_particles[i + 32].y) {
                 g_battle_map_weather_particles[i].fall_speed = 0;

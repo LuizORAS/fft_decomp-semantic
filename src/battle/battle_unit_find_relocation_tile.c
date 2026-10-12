@@ -18,6 +18,7 @@
 s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* destination) {
     battle_stats_t* unit;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     s32 origin_x;
     s32 origin_y;
     s32 low;
@@ -55,7 +56,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
             panel = &g_battle_target_panels[index];
             tile = &g_battle_map_tile_data[index];
             if (i == unit_index) {
-                height = tile->height * 2 + tile->depth_half_height.bits.half_height;
+                height = tile->height * 2 + tile->depth_half_height.half_height;
                 low = height - 10;
                 if (low < 0) {
                     low = 0;
@@ -96,8 +97,8 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
                         for (level = 0; level < 2; level++) {
                             index = level * 256 + g_battle_map_max_x * y + x;
                             tile = &g_battle_map_tile_data[index];
-                            depth = tile->depth_half_height.value;
-                            if (tile->depth_half_height.bits.depth >= 3) {
+                            depth = (*(u8*)&tile->depth_half_height);
+                            if (tile->depth_half_height.depth >= 3) {
                                 continue;
                             }
                             height = depth & MAP_TILE_HALF_HEIGHT_MASK;

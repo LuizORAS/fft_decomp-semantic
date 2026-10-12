@@ -30,12 +30,12 @@ s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value
         tile->height = value;
         break;
     case MAP_TILE_DATA_HALF_HEIGHT:
-        tile->depth_half_height.bits.half_height = value;
+        tile->depth_half_height.half_height = value;
         break;
     case MAP_TILE_DATA_DEPTH:
-        /* A bit-field assignment changes the shared store tail. */
+        /* A byte store keeps the mask before the shift and the shared switch tail. */
         value = (value & MAP_TILE_DEPTH_VALUE_MASK) << MAP_TILE_DEPTH_SHIFT;
-        tile->depth_half_height.value = (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) | value;
+        (*(u8*)&tile->depth_half_height) = ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK) | value;
         break;
     case MAP_TILE_DATA_SLOPE_TYPE:
         tile->slope_type = value;

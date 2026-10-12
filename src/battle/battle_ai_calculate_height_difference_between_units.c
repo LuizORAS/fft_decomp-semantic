@@ -14,9 +14,9 @@ s32 battle_ai_calculate_height_difference_between_units(battle_ai_coords_t* coor
 
     tile = &g_battle_map_tile_data[unit->position.higher_elevation * MAP_TILES_PER_LAYER
         + unit->position.y * g_battle_ai_data_base.map_max_x + unit->x];
-    h1 = tile->height * 2 + tile->depth_half_height.bits.half_height;
+    h1 = tile->height * 2 + tile->depth_half_height.half_height;
     tile = &g_battle_map_tile_data[(coords->bytes.elevation * MAP_TILES_PER_LAYER)
         + coords->bytes.y * g_battle_ai_data_base.map_max_x + coords->bytes.x];
-    h2 = tile->height * 2 + tile->depth_half_height.bits.half_height;
+    h2 = tile->height * 2 + tile->depth_half_height.half_height;
     return (h1 - h2) / 2;
 }

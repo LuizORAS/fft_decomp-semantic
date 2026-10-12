@@ -15,6 +15,7 @@ void battle_move_set_reachable_tile_flags(void) {
     s32 self;
     s32 i;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     battle_target_panel_t* panel;
     u32 depth;
     s32 half_height;
@@ -37,7 +38,7 @@ void battle_move_set_reachable_tile_flags(void) {
         }
         if (!((config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) && (flags[i] & FRONTIER_FLAG_MOUNTABLE_UNIT))
             && !((panel->ride_remaining_range != 0) && (config->can_ride != 0))) {
-            depth = tile->depth_half_height.value;
+            depth = (*(u8*)&tile->depth_half_height);
             half_height = depth & MAP_TILE_HALF_HEIGHT_MASK;
             if ((half_height >= 3) && (flags[i] & FRONTIER_FLAG_LOW_CORNER)) {
                 continue;
@@ -56,14 +57,14 @@ void battle_move_set_reachable_tile_flags(void) {
             if (surface == MAP_SURFACE_OBSTACLE) {
                 continue;
             }
-            depth_bits = tile->depth_half_height.value & MAP_TILE_DEPTH_MASK;
+            depth_bits = (*(u8*)&tile->depth_half_height) & MAP_TILE_DEPTH_MASK;
             if ((depth_bits != 0) && (config->cannot_stay_on_water != 0)) {
                 continue;
             }
             if ((depth_bits == 0x60) && (config->will_drown != 0)) {
                 continue;
             }
-            if ((tile->depth_half_height.bits.depth >= 4) && (config->will_sink != 0)) {
+            if ((tile->depth_half_height.depth >= 4) && (config->will_sink != 0)) {
                 continue;
             }
             if ((surface == MAP_SURFACE_LAVA) && (config->can_pass_lava == 0)) {

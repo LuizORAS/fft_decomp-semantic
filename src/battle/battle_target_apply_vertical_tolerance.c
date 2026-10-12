@@ -32,8 +32,8 @@ void battle_target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 sin
         tile = &g_battle_map_tile_data[i];
         lower_panel = &g_battle_target_panel_data[i];
         if (!tile->flags.bits.blocked) {
-            u32 depth = tile->depth_half_height.value;
-            lower = tile->height * 2 + (depth & MAP_TILE_HALF_HEIGHT_MASK) + (depth >> MAP_TILE_DEPTH_SHIFT) * 2;
+            map_tile_depth_t depth = tile->depth_half_height;
+            lower = tile->height * 2 + depth.half_height + depth.depth * 2;
         } else {
             lower = -0xFF;
             lower_panel->remaining_range = 0;
@@ -43,8 +43,8 @@ void battle_target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 sin
         tile = &g_battle_map_tile_data[j];
         upper_panel = &g_battle_target_panel_data[j];
         if (!tile->flags.bits.blocked) {
-            u32 depth = tile->depth_half_height.value;
-            upper = tile->height * 2 + (depth & MAP_TILE_HALF_HEIGHT_MASK) + (depth >> MAP_TILE_DEPTH_SHIFT) * 2;
+            map_tile_depth_t depth = tile->depth_half_height;
+            upper = tile->height * 2 + depth.half_height + depth.depth * 2;
         } else {
             upper = -0xFF;
             upper_panel->remaining_range = 0;

@@ -26,7 +26,7 @@ void battle_move_start_float_climb_jump_step(
     u8 next;
 
     step = &unit->current_path_step;
-    height = to->height * 2 + to->depth_half_height.bits.half_height * unit->destination_edge_height + 2;
+    height = to->height * 2 + to->depth_half_height.half_height * unit->destination_edge_height + 2;
     height -= -unit->screen.vy / 6;
     current_step = unit->current_path_step;
     height += (current_step.bits.length + 1) * 2;

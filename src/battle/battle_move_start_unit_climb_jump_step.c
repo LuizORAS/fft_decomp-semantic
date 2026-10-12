@@ -27,7 +27,7 @@ void battle_move_start_unit_climb_jump_step(
             (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
         height = height_data.total_height;
     } else {
-        height = to->height * 2 + to->depth_half_height.bits.half_height * unit->destination_edge_height + 2;
+        height = to->height * 2 + to->depth_half_height.half_height * unit->destination_edge_height + 2;
     }
     /* Grouping each constant with the gravity term keeps the target's order
      * (scale, then multiply by gravity); the flat spelling scales gravity first. */

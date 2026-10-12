@@ -15,9 +15,9 @@ s32 battle_map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer) {
     case MAP_TILE_DATA_HEIGHT:
         return tile->height;
     case MAP_TILE_DATA_HALF_HEIGHT:
-        return tile->depth_half_height.bits.half_height;
+        return tile->depth_half_height.half_height;
     case MAP_TILE_DATA_DEPTH:
-        return tile->depth_half_height.bits.depth;
+        return tile->depth_half_height.depth;
     case MAP_TILE_DATA_SLOPE_TYPE:
         return tile->slope_type;
     case MAP_TILE_DATA_CEILING_DEPTH:

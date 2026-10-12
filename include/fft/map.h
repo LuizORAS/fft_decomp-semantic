@@ -315,15 +315,11 @@ enum {
     MAP_TILE_DEPTH_MASK = 0xe0,
 };
 
-/* Tile byte 0x03: slope half-height and the depth added to the height
- * (battle_map_get_tile_data_value selectors 3/4, movement geometry setup).
- * Retail reads the two as bit-fields where it loads the byte once for each. */
-typedef union map_tile_depth {
-    u8 value;
-    struct {
-        u8 half_height : 5; /* MAP_TILE_HALF_HEIGHT_MASK */
-        u8 depth : 3;       /* MAP_TILE_DEPTH_MASK */
-    } bits;
+/* Tile byte 0x03: five-bit slope half-height and three-bit depth. Both
+ * contribute to the height used by movement and targeting geometry. */
+typedef struct map_tile_depth {
+    u8 half_height : 5;
+    u8 depth : 3;
 } map_tile_depth_t;
 
 /* map_tile_t.slope_type shapes. The byte holds the height of each side in two bits (east, west,

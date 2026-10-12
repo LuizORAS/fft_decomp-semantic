@@ -26,7 +26,7 @@ void battle_move_start_unit_climb_hop_step(
             (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
         height = height_data.total_height;
     } else {
-        height = to->height * 2 + to->depth_half_height.bits.half_height * unit->destination_edge_height;
+        height = to->height * 2 + to->depth_half_height.half_height * unit->destination_edge_height;
     }
     rise_height = (height - -unit->screen.vy / 6) * 6 + 1;
     rise = SquareRoot12(rise_height * g_battle_move_jump_gravity * 2);

@@ -25,7 +25,7 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
     SVECTOR* quad;
     u8 layer;
     u8 height;
-    u8 depth;
+    map_tile_depth_t depth;
     u8 slope_type;
     s32 slope;
     s16 tx;
@@ -37,8 +37,8 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
     layer = unit->map_z;
     battle_unit_copy_misc_data_xyz_values(&coords, unit);
     tile = battle_map_get_tile_data_pointer((coords.vx / MAP_TILE_SIZE), (coords.vz / MAP_TILE_SIZE), layer);
-    depth = tile->depth_half_height.value;
-    height = tile->height + (depth >> MAP_TILE_DEPTH_SHIFT);
+    depth = tile->depth_half_height;
+    height = tile->height + depth.depth;
     slope_type = tile->slope_type;
     quad = unit->shadow_quad;
     quad[0].vx = coords.vx - 10;
@@ -50,7 +50,7 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t*
     quad[3].vx = coords.vx + 10;
     quad[3].vz = coords.vz - 10;
     quad[0].vy = quad[1].vy = quad[2].vy = quad[3].vy = -(height * 12);
-    slope = depth & MAP_TILE_HALF_HEIGHT_MASK;
+    slope = depth.half_height;
     if (slope == 0) {
         return;
     }

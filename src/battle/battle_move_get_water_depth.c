@@ -30,5 +30,5 @@ u8 battle_move_get_water_depth(battle_unit_misc_data_t* unit) {
             return 0;
         }
     }
-    return tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
+    return tile->depth_half_height.depth;
 }

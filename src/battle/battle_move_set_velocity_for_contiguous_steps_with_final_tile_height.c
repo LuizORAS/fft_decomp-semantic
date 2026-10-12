@@ -74,7 +74,7 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
         if (unit->movement_path_offset == path->count) {
             tile = battle_map_get_tile_data_pointer(x, y, layer);
             depth = tile->depth_half_height;
-            end_z = -(((tile->height + depth.bits.depth) * 2) + depth.bits.half_height) * BATTLE_MOVE_STEP_HEIGHT_SCALE;
+            end_z = -(((tile->height + depth.depth) * 2) + depth.half_height) * BATTLE_MOVE_STEP_HEIGHT_SCALE;
         } else {
             end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, layer);
         }
