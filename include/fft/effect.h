@@ -504,7 +504,6 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
  * family: brightness_row selects the row, the column is the quad row. */
 extern u32 g_effect_textured_quad_grid_4x4_brightness_table[][5];
 s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-extern battle_effect_tick_channels_t* g_effect_timeline_channel_base;
 void effect_add_scratchpad_xyz_components(s32 group, s32 point, const VECTOR* offset, SVECTOR* output);
 
 #endif

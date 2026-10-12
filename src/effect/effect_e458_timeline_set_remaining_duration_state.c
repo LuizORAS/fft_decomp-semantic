@@ -13,7 +13,7 @@ s32 effect_e458_timeline_set_remaining_duration_state(
         break;
     case EFFECT_PHASE_INIT:
         battle_map_set_command_0x96_duration(BATTLE_MAP_WEATHER_EFFECT_TIMED_PARTICLE_TRANSFORM,
-            g_effect_timeline_channel_base->duration - record->timeline.frame);
+            g_battle_effect_timing_channels->duration - record->timeline.frame);
         record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
