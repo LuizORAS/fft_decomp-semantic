@@ -622,6 +622,15 @@ typedef enum event_camera_component {
 
 enum { EVENT_CAMERA_POSITION_COMPONENT_COUNT = 3, EVENT_CAMERA_COMPONENT_COUNT = 7 };
 
+/* The event byte is widened into a 32-bit setting; bitfield reads change the extraction order. */
+enum {
+    EVENT_CAMERA_SPEED_CURVE_MODE_MASK = 0x03,
+    EVENT_CAMERA_SPEED_CURVE_GROUP_MASK = 0x0c,
+    EVENT_CAMERA_SPEED_CURVE_GROUP_SHIFT = 2,
+    EVENT_CAMERA_SPEED_CURVE_EASING_MASK = 0xf0,
+    EVENT_CAMERA_SPEED_CURVE_EASING_SHIFT = 4,
+};
+
 /* Camera operands remain byte-aligned in the event stream. Positions are
  * x, z (height), y; rotations are tilt, yaw, roll. RelativeCamera has the
  * same seven values, and Camera appends a frame duration. */

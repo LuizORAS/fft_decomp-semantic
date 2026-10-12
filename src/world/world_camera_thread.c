@@ -36,9 +36,9 @@ void world_camera_thread(void) {
     const event_camera_parameters_t* parameters;
     const u8* script;
 
-    mode = g_world_camera_speed_curve & 3;
-    group = (g_world_camera_speed_curve & 0xC) >> 2;
-    ease = (g_world_camera_speed_curve & 0xF0) >> 4;
+    mode = g_world_camera_speed_curve & EVENT_CAMERA_SPEED_CURVE_MODE_MASK;
+    group = (g_world_camera_speed_curve & EVENT_CAMERA_SPEED_CURVE_GROUP_MASK) >> EVENT_CAMERA_SPEED_CURVE_GROUP_SHIFT;
+    ease = (g_world_camera_speed_curve & EVENT_CAMERA_SPEED_CURVE_EASING_MASK) >> EVENT_CAMERA_SPEED_CURVE_EASING_SHIFT;
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
     parameters = world_thread_get_current_parameter_1();
     script = parameters->values.position_le[0];
