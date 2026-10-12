@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "fft/world.h"
 
 /* Store a unit's auto-battle choice: `target` as its auto-battle target and

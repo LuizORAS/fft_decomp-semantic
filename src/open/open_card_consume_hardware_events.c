@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Twin of open_card_consume_bios_events over the hardware event handles. */
 void open_card_consume_hardware_events(void) {

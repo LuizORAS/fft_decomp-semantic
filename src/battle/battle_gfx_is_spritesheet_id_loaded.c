@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 s32 battle_gfx_is_spritesheet_id_loaded(s16 spritesheet_id) {
     s32 slot;

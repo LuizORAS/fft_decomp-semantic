@@ -1,6 +1,5 @@
 #include "fft/main.h"
 #include "fft/world.h"
-#include "psx/libc.h"
 
 /* Fills a fresh party record for a generic male (0), generic female (1),
  * monster (3) or Ramza (anything else, forced to 2).

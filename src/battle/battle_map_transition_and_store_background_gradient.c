@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Fade the background gradient to `colors` and make them the base pair that the
  * MAP_COLOR_MODE_BASE modes and RESTORE start from. */

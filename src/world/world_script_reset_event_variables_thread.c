@@ -1,6 +1,5 @@
 #include "fft/wldcore.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Advance the system flags, reset the script variables and stop this thread. */
 void world_script_reset_event_variables_thread(void) {

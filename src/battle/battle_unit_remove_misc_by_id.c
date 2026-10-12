@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* battle_unit_remove_misc by misc id. Returns 1, or 0 after raising pointer
  * exception 12 when no record has the id. */

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 /* Resets a unit's item sprite display to one 16 x 16 part of the ITEM.BIN page
  * with CLUT 7 of the sprite row, neutral colour and scale ONE. */

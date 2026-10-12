@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* End the current thread: mark its slot idle with no task, then yield. */
 void battle_thread_exit_current(void) {

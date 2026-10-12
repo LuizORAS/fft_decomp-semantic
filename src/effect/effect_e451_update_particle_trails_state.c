@@ -1,8 +1,6 @@
 /* E451.BIN is the effect of effect id 0x21d, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
-#include "psx/libc.h"
-#include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 

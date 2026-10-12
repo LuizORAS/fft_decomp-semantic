@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Free a slot's page if it holds an EVTCHR image. */
 s32 battle_gfx_clear_saved_evtchr_slot(s32 slot_index) {

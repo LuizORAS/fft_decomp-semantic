@@ -1,4 +1,3 @@
-#include "psx/cpu_abi_inline.h"
 #include "psx/libcard.h"
 
 #define PSYQ_CARD_CLEAR_SYSTEM_SECTOR 0x3f

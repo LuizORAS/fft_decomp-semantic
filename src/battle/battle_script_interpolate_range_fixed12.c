@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
 #include "psx/types.h"
 
 /* Linear interpolation from start to end at fraction / value, returned in 20.12

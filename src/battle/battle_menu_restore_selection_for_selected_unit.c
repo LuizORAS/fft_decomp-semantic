@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
 
 /* Put the row the active-turn unit last chose back into a menu entry.
  *

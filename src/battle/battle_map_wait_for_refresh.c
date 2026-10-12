@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_map.h"
 
 /* Yield until g_battle_map_refresh_pending is clear:
  * battle_script_process_pending_requests zeroes it when the mesh variant load it

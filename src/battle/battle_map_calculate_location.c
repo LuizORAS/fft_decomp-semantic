@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Index of the unit's tile in g_battle_map_tile_data: layer * 256 + y * map width

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* The SHP frame tables of a sheet: one of the five resident ones, or those of
  * the battle's ARUTE or KANZEN file. */

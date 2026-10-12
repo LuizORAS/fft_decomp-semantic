@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Show the text-page prompt while more pages remain. */
 void wldcore_text_update_page_prompt_visibility(wldcore_text_scrollable_window_t* state) {

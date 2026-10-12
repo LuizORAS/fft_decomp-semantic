@@ -1,8 +1,6 @@
 #ifndef PSX_KERNEL_H
 #define PSX_KERNEL_H
 
-#include "psx/types.h"
-
 /* Event descriptors, specs and modes used by the linked drivers. */
 #define HwCdRom    0xF0000003
 #define HwCARD     0xF0000011

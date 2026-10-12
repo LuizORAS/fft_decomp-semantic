@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Mark each unit's usable abilities and derive the acting unit's AI hints.
  *

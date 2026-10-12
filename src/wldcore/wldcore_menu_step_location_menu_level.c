@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/libc.h"
 #include "psx/pad.h"
 
 /* Per-frame step of the location menu level: fades its two windows in, starts

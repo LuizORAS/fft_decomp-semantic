@@ -6,7 +6,6 @@
 #include "fft/map.h"
 #include "fft/menu.h"
 #include "fft/script.h"
-#include "fft/unit.h"
 
 /* event */
 typedef struct battle_script_weather_environment {

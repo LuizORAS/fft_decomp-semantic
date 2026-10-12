@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Copy the first 21 OTHER.SPR CLUTs, setting STP on all but colour zero. */

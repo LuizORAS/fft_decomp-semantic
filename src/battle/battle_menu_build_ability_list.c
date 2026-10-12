@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Builds the ability list for the active skillset menu entry (menu entry 4's

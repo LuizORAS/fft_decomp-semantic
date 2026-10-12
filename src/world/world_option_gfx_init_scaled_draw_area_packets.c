@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Reset the first draw-area width and restore the second rectangle. */
 void world_option_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair) {

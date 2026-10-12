@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Queue the confirm sound unless a menu restore is pending
  * (g_battle_menu_restore_pending). */

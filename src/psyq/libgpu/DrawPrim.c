@@ -1,5 +1,4 @@
 /* LIBGPU 80024bd8-80024c38. */
-#include "psx/libetc.h"
 #include "psx/libgpu.h"
 
 void DrawPrim(void* primitive) {

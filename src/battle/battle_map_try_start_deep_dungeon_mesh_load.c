@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Between turns: when the crystal count calls for a map reload
  * (battle_map_check_deep_dungeon_crystal_and_init_state), enter the Deep Dungeon

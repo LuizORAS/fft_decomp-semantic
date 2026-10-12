@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Formation menu display setup: clears the display area unless g_world_shop_id is
  * -2, uploads the window-frame texture and CLUTs, derives two 16-entry palettes

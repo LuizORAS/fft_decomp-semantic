@@ -1,6 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Set a BATTLE draw mode from aligned texture-page coordinates from the menu text image origin. */
 void battle_gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin) {

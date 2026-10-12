@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Calls battle_gfx_configure_misc_unit_palette_modulation with the same

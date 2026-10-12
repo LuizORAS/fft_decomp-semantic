@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Makes a unit visible: enables its drawing, triggers its sprite graphic and,

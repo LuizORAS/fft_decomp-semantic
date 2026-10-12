@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Dispatch the first active stat-save or resource-restoring reaction. A weapon

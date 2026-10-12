@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 /* Tints one unit's two CLUTs through battle_map_modify_palette; `preset_color` is
  * the MAP_COLOR_MODE_* command and `time` its amount.

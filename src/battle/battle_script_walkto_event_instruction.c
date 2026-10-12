@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_move.h"
 
 /* Start event opcode 0x28 movement. The final operand enables terrain costs;
  * the separate destination-layer byte selects elevation. */

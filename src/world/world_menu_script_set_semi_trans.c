@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu-script opcode handler: byte 3 of the instruction selects the
    semi-transparency flag used by the window/text primitives. Returns the

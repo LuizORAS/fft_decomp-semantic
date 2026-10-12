@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Request an animation and set the facing: battle_gfx_update_and_animate_unit_wep_eff
  * starts the animation on a later frame, and not at all while its sequence

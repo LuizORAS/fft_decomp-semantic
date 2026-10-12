@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Step handler of the FLY_TO_EDGE stages: advance a flying unit one frame toward

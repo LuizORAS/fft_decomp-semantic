@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Return the after-event code of the pending event (g_battle_next_event_id): bits

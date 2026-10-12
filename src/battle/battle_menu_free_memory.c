@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
 
 /* Return a buffer of battle_menu_alloc_memory to the menu arena: its slot record
  * is marked free (-1) and its 256-byte pages are cleared in the occupancy map.

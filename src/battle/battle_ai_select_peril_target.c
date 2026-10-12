@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /*
  * Select the allied target with the highest recovery-priority score.

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 
 /* Choose the CLUTs of the four menu-frame sprites: the dimmed set while the
  * previous thread is running or g_battle_menu_input_lock_mode is 1. */

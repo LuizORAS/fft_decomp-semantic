@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/libetc.h"
 
 /* Unit-state utility at full HP/MP, unchanged equipment, or one average HP of Golem. */

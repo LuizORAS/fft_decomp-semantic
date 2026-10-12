@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 typedef union battle_ai_direction_viability {
     u32 word;

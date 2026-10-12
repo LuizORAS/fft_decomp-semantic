@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* The `j = 0;` before `none = 0xFF;` is load-bearing: it puts the induction

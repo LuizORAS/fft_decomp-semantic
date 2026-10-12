@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu thread: load the OPTION overlay and run its game options mode. */
 void world_menu_open_option_game_options(void) {

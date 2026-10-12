@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Tint a map CLUT row and stage or apply the result.

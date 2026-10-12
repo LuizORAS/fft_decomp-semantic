@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Evaluate each entry of the acting unit's ability list in turn: 34 entries at
  * most, ended early by SKILLSET_ID_NONE. -1 suspends, and the next call

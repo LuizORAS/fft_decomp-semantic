@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Scale the pending formula XA by the attacker/target zodiac compatibility.

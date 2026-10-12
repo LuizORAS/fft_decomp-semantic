@@ -1,5 +1,4 @@
 /* LIBGPU 800244a4-80024510. */
-#include "psx/libetc.h"
 #include "psx/libgpu.h"
 
 int SetGraphDebug(int level) {

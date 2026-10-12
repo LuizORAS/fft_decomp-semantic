@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Copy the current ability's 16-entry target list to `out` and return how many

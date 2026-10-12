@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Advance the movement of every misc unit (ids 0-15) that has a path by one

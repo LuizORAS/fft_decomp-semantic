@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
 

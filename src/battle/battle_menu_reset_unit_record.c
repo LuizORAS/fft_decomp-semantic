@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 
 /* Reset one unit's menu record while the unit is not under auto-battle control. */
 void battle_menu_reset_unit_record(s32 battle_id) {

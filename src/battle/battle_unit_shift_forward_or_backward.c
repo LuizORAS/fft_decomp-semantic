@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* SEQ script step: moves the sprite offset by delta along the unit's facing

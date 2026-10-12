@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Reset the unit animation states and, while no thread occupies the event
  * slot, the camera speed curve and position lock. The two no-op calls stand

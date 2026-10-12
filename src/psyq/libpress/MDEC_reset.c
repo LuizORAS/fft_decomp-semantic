@@ -1,4 +1,3 @@
-#include "psx/libc.h"
 #include "psx/libpress.h"
 #include "psx/types.h"
 

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Ask the formation screen's panel threads to stop (both status banners, the
  * equipment/ability panel, the numeric editor and the two preview windows)

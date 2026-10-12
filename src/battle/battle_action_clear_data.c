@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Reset the result records of the current target and the current attacker; the
  * attacker's starts as not hit. */

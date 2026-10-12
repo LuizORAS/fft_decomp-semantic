@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_map.h"
 #include "psx/libgpu.h"
 
 /* Flat-textured triangle; the psx/libgpu.h clean-room set does not declare it. */

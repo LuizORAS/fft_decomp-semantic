@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* No retail code calls it. */
 void battle_gfx_clear_screen_color_modulation(void) {

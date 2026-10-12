@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* Copies the Float display status into BATTLE_MOTION_FLAG_FLOAT and, unless the
  * unit is in a Jump (flag set, being removed, or its height still active), puts

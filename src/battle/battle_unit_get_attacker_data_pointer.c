@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* The battle stats of the unit whose turn it is (g_battle_active_turn_unit). */
 battle_stats_t* battle_unit_get_attacker_data_pointer(void) {

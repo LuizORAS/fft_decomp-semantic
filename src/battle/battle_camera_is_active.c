@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* 1 while the camera is moving: a pan vector is left, or it is rotating,

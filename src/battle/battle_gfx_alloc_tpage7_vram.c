@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Allocate a texture rectangle in the 16-column VRAM allocation grid.

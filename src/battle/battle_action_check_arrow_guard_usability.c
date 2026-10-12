@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Applies Arrow Guard to bow and crossbow attacks that use weapon range.
  *

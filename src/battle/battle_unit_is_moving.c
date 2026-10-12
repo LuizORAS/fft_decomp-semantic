@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Event instruction 0x39: is the unit with this misc id moving (any of the

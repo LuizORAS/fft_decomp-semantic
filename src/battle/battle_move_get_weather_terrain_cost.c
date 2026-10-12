@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Weather severity, the difficulty of moving through weather-affected tiles:

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* Convert map-tile coordinates to tile-centered Q12 world coordinates.
  *

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* The battle unit slot of a misc record, or -1 when the record has no battle
  * stats. A misc id without a record raises pointer exception 12 and also returns

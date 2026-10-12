@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* Frees every loaded waveset whose id is 0x20 or above, keeping the
  * resident low-id sets. */

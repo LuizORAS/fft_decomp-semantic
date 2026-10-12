@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Start resolving a unit's queued action: check and spend its MP, record it as

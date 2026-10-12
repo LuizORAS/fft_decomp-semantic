@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Opcode 1d: jump to the offset in the second 16-bit value once the record's
  * timeline frame reaches the child timeline's duration; otherwise step over

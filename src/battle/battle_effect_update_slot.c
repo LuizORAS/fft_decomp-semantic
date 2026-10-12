@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Advance one effect slot (a particle of a secondary effect) by a frame: step its
  * motion, advance its frame script, in which each step shows a frame for hold

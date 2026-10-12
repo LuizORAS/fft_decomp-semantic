@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /*
  * Focus the acting unit's decision on one target and its coordinates.

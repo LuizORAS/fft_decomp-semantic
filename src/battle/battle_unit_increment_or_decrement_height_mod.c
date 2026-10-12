@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* The callee returns (s16), and this caller treats the result as a 16-bit value
  * (sign-extending where it is widened). The shared prototype returns s32 for

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Apply a color modulation to the colors at `source` and store them into a map CLUT row.

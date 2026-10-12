@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 #include "psx/types.h"
 
 /* Score the considered ability cast from the unit's own tile (act, then move)

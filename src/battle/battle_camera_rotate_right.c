@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* Set the destination of a right turn (rising yaw) and record the yaw it

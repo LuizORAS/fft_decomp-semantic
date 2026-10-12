@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /*
  * Remember a triggered trap unless its tile is already in the cache.

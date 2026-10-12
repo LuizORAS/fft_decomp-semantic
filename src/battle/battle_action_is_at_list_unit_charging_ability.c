@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Show the next AT list entry and advance the AT list cursor past it.

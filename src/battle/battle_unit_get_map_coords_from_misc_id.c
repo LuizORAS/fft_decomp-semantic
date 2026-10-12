@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Writes a unit's tile as three 16-bit values in the order x, z, y and returns 1. A

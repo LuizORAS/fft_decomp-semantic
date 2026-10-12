@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Monster Skill check: the number of the four tiles adjacent to the unit that

@@ -1,5 +1,4 @@
 #include "fft/event_jobstts.h"
-#include "psx/types.h"
 
 /* Select the sprite CLUT for the current palette mode. */
 menu_instruction_t* jobstts_cmd_set_layout_clut_handler(menu_instruction_t* cmd) {

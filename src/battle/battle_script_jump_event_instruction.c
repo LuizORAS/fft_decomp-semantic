@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Jump: cancel the unit's accumulated event offset, then build its one-step path

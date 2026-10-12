@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* The tile at (x, y) of a layer, or 0 outside the map or for a layer other than 0

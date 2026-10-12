@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Fill g_battle_map_selected_tile_data for the tile under the cursor, which the

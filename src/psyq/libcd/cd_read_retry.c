@@ -1,5 +1,4 @@
 /* SCUS_942.21 0x80020a64..0x80020c3b. */
-#include "psx/libc.h"
 #include "psx/libcd.h"
 #include "psx/libetc.h"
 s32 cd_read_retry(s32 retry) {

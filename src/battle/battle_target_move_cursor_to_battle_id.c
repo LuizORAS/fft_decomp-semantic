@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Move the cursor to the unit with this battle id. Returns 1 when the unit has
  * misc data, otherwise 0 with the cursor unchanged. */

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Tutorial command: count the wait timer down by the VSync mode and move to
  * the next command when it reaches zero. */

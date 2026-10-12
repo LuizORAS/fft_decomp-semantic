@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/libgte.h"
 
 /* Closes one menu level. While a projection move is active it advances the
  * move, sets projection-state flag 1 and system flag 2, and returns;

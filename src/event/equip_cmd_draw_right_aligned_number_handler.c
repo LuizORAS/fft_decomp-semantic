@@ -1,5 +1,4 @@
 #include "fft/event_equip.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Draw record: print a callback-supplied number right-aligned in a field of

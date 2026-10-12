@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Damage XA * rnd(1..Y). When executing, the target is knocked back if a roll

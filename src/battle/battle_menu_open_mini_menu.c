@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 
 /* Leave the view of a unit picked from the AT list: enter the mini-menu state,
  * remove the tile marks and release OPTION.OUT's AT list thread, which waits on

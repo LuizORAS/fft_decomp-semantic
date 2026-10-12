@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* DeepDungeonMeshFinish game-state handler: when the Deep Dungeon map has loaded,
  * enter the after-command state. */

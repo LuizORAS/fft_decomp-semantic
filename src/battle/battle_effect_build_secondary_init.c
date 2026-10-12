@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Fill an init record for a secondary effect that one unit both casts and
  * receives: the caster and the single target are the unit. Every other field of

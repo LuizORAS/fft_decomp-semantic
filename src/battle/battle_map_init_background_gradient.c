@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_map.h"
 
 /* Load the two map background gradient colours for the current map. */
 void battle_map_init_background_gradient(void) {

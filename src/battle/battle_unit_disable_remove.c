@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Takes a present unit out of the battle: the slot is emptied and its existence

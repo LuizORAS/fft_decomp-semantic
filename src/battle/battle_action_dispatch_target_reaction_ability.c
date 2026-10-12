@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Dispatches the target unit's first reaction ability whose bit is set in
  * reaction_abilities[0..2]. Formula 7 abilities never provoke a reaction.

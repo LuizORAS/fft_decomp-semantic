@@ -1,5 +1,4 @@
 /* LIBGPU 80024c38-80024cac. */
-#include "psx/libetc.h"
 #include "psx/libgpu.h"
 
 void DrawOTag(u32* ot) {

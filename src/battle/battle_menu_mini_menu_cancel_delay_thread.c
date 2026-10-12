@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Thread entry of system functions 4, 5, 8 (close) and 0x0e: after two frames
  * post command 7 as the frame's menu selection and exit. The table lists it for

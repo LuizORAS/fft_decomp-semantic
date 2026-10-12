@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
 
 /* Load camera rotation, zoom and position back out of the script variable
  * block; the inverse of battle_camera_store_state_to_script_variables. */

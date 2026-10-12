@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* A second entry to formula 0x49's handler. The formula table does not point
  * here and no retail code calls it. */

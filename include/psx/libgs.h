@@ -3,7 +3,6 @@
 
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
-#include "psx/tmd.h"
 #include "psx/types.h"
 
 /* GsSPRITE/GsLINE/GsBOXF.attribute: suppress display. */

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Resets every unit slot's status staging state and inflict-status mode to none. */
 void battle_unit_clear_status_staging_data(void) {

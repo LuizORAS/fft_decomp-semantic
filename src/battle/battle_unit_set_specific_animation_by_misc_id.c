@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Request `animation` for a unit by misc id, keeping its facing. */
 void battle_unit_set_specific_animation_by_misc_id(u32 misc_id, u32 animation) {

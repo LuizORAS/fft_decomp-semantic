@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "fft/world.h"
 
 /* Resolve the script's signed unit ID and refresh its environment palette

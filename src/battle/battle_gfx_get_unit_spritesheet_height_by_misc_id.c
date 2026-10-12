@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 s32 battle_gfx_get_unit_spritesheet_height_by_misc_id(u32 misc_id) {

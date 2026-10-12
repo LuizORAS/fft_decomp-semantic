@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Thread entry in g_battle_menu_idle_action_entries: queue the invalid-choice
  * sound and end the thread. */

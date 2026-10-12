@@ -1,5 +1,4 @@
 #include "fft/event_equip.h"
-#include "psx/types.h"
 
 /* Zero the 16-bit HP/MP bonuses of an item stat summary and the stat block of its detail record. */
 void equip_item_clear_stat_sums(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail) {

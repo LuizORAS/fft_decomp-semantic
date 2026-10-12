@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 void battle_formula_apply_quick_effect(void) {
     g_battle_action_target_data->ct_change = BATTLE_ACTION_CT_CHANGE_QUICK;

@@ -1,4 +1,9 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
+#include "fft/thread.h"
 
 /* BATTLE twin of world_script_block_start_thread. Thread body for an event BLOCK_START: runs the enclosed instructions
  * up to BLOCK_END on its own thread, dispatching the unit-movement, animation and wait opcodes that may appear inside a

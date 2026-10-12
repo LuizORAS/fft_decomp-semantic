@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Store the deployment position and return its placement validation result.

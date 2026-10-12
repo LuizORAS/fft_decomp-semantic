@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Tutorial command: let the tutorial text continue and move on once its
  * thread has ended. */

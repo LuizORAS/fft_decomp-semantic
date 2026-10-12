@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 
 /* Apply a level-up or level-down special effect: level + 1 (99 at most) or
  * level - 1 (1 at least), then one level of growth or its inverse. The new

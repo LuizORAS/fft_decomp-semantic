@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Step handler of the WALK_TO_CENTRE and CLIMB_TO_CENTRE stages (and of the

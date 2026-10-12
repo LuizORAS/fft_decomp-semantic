@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Free the EVTCHR slots whose page holds the unit's attack image. One that
  * holds its SP2 image stays. */

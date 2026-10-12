@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Turns the camera when the unit's tile is blocked from the current view.
  *

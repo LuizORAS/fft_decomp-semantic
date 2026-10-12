@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Open BUNIT.OUT through a child thread and wait for its transition to finish. */
 void world_menu_open_bunit(void) {

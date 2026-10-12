@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Start the attacker's animation for the ability it uses: the cast for the

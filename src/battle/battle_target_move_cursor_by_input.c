@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
 #include "psx/pad.h"
 
 /* Moves the free cursor one step from the pad direction and reports whether

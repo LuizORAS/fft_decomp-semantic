@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 #include "psx/libgpu.h"
 
 /* Select a menu sprite's CLUT as battle_menu_select_icon_cluts does for its fourth

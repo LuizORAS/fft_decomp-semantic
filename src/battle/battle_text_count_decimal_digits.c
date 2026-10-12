@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Counts the decimal digits of the magnitude (at least one), not a minus sign. */

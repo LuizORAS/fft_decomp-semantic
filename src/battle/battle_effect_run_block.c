@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Run until yield or abort; returns 1 on yield and 0 on abort. */
 s32 battle_effect_run_block(s16 index) {

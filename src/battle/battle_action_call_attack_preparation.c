@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Validate the action in place with battle_action_prepare_attack phase 0, which
  * consumes nothing and leaves the unit's turn flags alone. */

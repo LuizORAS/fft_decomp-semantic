@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* The unit's drawn position: its screen position plus the event and SEQ offsets,
  * with the Float bob added to the height. */

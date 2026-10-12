@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Start a unit's jump across one or more tiles onto the destination tile.

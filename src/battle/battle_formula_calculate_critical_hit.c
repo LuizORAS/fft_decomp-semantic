@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Critical hit step: a 4 in 100 roll, never outside execution. XA gains

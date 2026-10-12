@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "fft/main.h"
 
 /* Build a battle unit from one ENTD unit slot on the stack and save it into the

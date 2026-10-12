@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_event.h"
+#include "fft/battle_map.h"
+#include "fft/thread.h"
 
 /* Thread body of MapDarkness: start the ambient-light blend described by the
  * operands (blend mode, red, green, blue as s8, duration index), then keep the

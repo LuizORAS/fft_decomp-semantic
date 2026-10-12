@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /*
  * WORLD-map graphics-subsystem bring-up: display mask off, GS graph init at

@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Handler 10: run the ending script for a frame. When it ends, VSync mode 0 is
  * restored, the controller is popped and OPEN.BIN's loop ends. */

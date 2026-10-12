@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* HP damage of Y% of the target's max HP, rounded up. */
 void battle_formula_calculate_hp_percent_damage(void) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Thin public entry point for the BATTLE menu-buffer allocator. */

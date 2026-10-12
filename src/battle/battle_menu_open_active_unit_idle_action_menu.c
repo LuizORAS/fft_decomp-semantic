@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 
 /* Open the source unit's own action menu: the unit becomes the casting unit, the
  * cursor returns to it, the idling-action-menus state begins with the unit

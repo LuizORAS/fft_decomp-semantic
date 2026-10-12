@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /*
  * Soldier office step that shows the generated recruit.

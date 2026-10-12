@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Give the twelve frame lines the colours of the normal menu palette (the first

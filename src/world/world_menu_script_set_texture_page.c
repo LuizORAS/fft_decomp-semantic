@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu-script opcode handler: set the texture page from the operand bytes and
  * advance by the instruction length (byte 1), like world_menu_script_set_semi_trans. */

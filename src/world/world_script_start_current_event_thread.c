@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Resets unit animation states and, when the current-event script variable is set, clears the screen
  * colour modulation and starts the next event on thread 1. */

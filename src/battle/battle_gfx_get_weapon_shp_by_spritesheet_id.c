@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* The weapon SHP of a sheet. The weapon tables are 0xc40-byte records, a

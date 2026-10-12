@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* Start the target's reaction to the attacker's action and its post-action
  * display. Both parameters are misc records; byte 4 is the unit id. */

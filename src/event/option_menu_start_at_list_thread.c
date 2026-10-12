@@ -1,5 +1,4 @@
 #include "fft/event_option.h"
-#include "psx/types.h"
 
 /* Install the AT-list menu context until both builder threads finish. */
 void option_menu_start_at_list_thread(void) {

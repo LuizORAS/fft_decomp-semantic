@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* The SEQ table of a sheet: one of the five resident ones, or the table of
  * the battle's RUKA, ARUTE or KANZEN file. */

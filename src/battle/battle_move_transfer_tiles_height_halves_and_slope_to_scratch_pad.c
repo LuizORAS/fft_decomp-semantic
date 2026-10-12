@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Load the current tile's base height (doubled, in half-height units), half
  * height and slope into the spread state. */

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Distortion animation 11: ends at once. The same routine as animation 10, compiled twice. */
 void battle_unit_clear_distortion_animation_id_11(battle_unit_misc_data_t* unit) {

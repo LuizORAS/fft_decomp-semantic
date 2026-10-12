@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Tutorial command below WORLD_TUTORIAL_CMD_SHIFT_LIMIT: press pad bit
  * number <command> for one frame, then wait 30 frames (counted by the VSync

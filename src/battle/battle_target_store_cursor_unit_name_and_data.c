@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Start the hovered-unit stats panel for the unit on the cursor tile, or the tile
  * info panel when the tile is empty. */

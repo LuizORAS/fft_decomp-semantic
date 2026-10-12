@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Rewinds the unit graphics loader (g_battle_gfx_unit_graphics_load_state) to its

@@ -1,4 +1,11 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_text.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/thread.h"
 
 /*
  * Battle twin of world_script_add_unit_start_thread. Event thread started by

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Set or clear bit 0 of a sprite part's flags: the part is drawn semi-transparent while it is set. */
 void battle_gfx_set_sprite_part_semi_transparent(

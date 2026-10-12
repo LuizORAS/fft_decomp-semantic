@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_map.h"
 
 /* Write the map's width and depth in tiles to `destination` as (x, 0, z). */
 void battle_map_store_max_coordinates(SVECTOR* destination) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* 1 when the ability's entry in g_battle_effect_ability_ids carries

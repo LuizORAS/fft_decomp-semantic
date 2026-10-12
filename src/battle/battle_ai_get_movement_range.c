@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /*
  * Choose the range threshold used to partition movement candidates.

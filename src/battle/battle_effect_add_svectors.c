@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 void battle_effect_add_svectors(const SVECTOR* first, const SVECTOR* second, SVECTOR* out) {
     out->vx = first->vx + second->vx;

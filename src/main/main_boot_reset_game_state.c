@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Prepare a fresh session before the opening runs: reset the 32-bit save values and
  * options, rebuild the status check sets and restore the save data and item order

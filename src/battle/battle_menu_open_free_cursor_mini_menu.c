@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
 
 void battle_menu_open_free_cursor_mini_menu(void) {
     battle_state_stop_game_flow();

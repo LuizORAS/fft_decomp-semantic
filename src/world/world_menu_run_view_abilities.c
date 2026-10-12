@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu processing sibling of world_menu_run_learn: opens on first entry, runs
  * sub-state 0 (world_menu_run_learn_job_list) or 1 (world_ability_run_view_list), tears down on -1. */

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Applies the auto-battle choice of the menu selection (3 or 4) to the stored unit and confirms the
  * thread's menu entry without a sound. */

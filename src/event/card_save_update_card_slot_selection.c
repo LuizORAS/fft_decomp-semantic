@@ -1,5 +1,4 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
 
 /*
  * Save-menu state CARD_SAVE_MENU_SELECT_CARD: runs the "slot 1 / slot 2" menu.

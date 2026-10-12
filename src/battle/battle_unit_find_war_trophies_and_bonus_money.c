@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Collect the war trophies and bonus money of every present unit into

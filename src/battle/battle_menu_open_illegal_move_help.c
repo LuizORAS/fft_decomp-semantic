@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 
 /* Enter the illegal-move state and show move feedback option 2, which rejects the
  * chosen destination. */

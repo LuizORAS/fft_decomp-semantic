@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
 #include "psx/libgpu.h"
 
 /* Link a GPU primitive into the current ordering table entry (libgpu addPrim). */

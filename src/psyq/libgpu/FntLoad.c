@@ -1,5 +1,4 @@
 /* LIBGPU 80022f2c-80022fd0. */
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 void FntLoad(int x, int y) {
     g_psyq_gpu_font_clut = LoadClut2((u32*)g_psyq_gpu_font_asset.palette, x, y + 128);

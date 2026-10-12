@@ -3,7 +3,6 @@
  * the limit ($v1); reusing the function-scope allocno reproduces the target
  * pair. */
 #include "fft/wldcore.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 void wldcore_map_pulse_dot_colors(void) {

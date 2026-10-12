@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Toggles the zoom when L2 is newly pressed and no zoom is running. */
 void battle_camera_call_zoom_map(void) {

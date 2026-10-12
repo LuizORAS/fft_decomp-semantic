@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
 #include "psx/libgte.h"
 
 /* Spawns an emitter's particles for this frame and initializes their motion.

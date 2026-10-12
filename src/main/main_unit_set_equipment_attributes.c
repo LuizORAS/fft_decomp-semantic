@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "fft/main.h"
 
 /* Applies equipment attribute bonuses to a unit's stats.

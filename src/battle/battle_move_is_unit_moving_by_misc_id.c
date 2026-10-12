@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* 1 while the misc unit still has a movement path. A missing unit raises pointer

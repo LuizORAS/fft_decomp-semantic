@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Start a frame: clear the active ordering table and queue the overlay fade. */
 void open_gfx_clear_and_draw_current_frame(void) {

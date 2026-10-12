@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 
 /* The crystal or treasure lying on a tile, or 0. Among several, the source unit
  * (g_battle_unit_source_misc_id) is preferred, then the first in list order. The

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Spawn this frame's share of a particle group's effect slots, drawn with CLUT

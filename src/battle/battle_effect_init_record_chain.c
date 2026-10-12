@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Allocate the 256 effect work records and chain them all into the free list.
  * Also clears the translation of the particle heading and emitter matrices. */

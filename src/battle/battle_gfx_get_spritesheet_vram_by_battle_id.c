@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* The VRAM spritesheet slot of the displayed unit with this battle id, or -1 when
  * no misc record belongs to it. */

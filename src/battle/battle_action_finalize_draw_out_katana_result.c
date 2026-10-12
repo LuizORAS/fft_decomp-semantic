@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Finalize Draw Out's katana-consumption result after target processing.
  *

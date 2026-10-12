@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /*
  * Returns the signed-16-bit screen Z at coords after applying unit height,

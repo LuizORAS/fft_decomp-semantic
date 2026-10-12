@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
 
 /*
  * Submit a primitive for the active rendering mode.

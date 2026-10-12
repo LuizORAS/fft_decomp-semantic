@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Per-frame float and status-bubble update of one unit: adjusts its float height
  * except during the four float-jump step phases, then advances its status bubble

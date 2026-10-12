@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* The physical modifiers on XA without the attacker supports: Berserk or Frog,
  * Defense Up, the target's statuses, zodiac compatibility. */

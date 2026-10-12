@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Miss decided by the accuracy roll. */
 void battle_formula_cause_action_miss(void) {

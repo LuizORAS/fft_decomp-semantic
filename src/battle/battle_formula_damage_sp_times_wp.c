@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x63: thrown weapon damage (SP * WP) with the weapon's element;
  * Catch, then physical evade. */

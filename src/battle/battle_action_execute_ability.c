@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Starts the acting unit's confirmed ability: marks the action taken, faces the
  * cursor and runs the attack preview. A preview result of 1 or 3 enters the

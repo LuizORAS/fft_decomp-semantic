@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Effect game-state handler: animate the units, the screen colour modulation and
  * the camera while an effect plays. When the effect cycle has ended, the game

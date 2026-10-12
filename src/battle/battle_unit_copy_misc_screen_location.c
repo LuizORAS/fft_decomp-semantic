@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Widens a unit's screen position 16-bit values into three 32-bit components. A missing unit is
  * not tested for: the copy then reads address 0. */

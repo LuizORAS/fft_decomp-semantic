@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Faces a unit in a direction given in sixteenths of a turn and restarts its
  * current animation with that facing; an animation below idle becomes standing.

@@ -1,5 +1,6 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* Settles a unit on its map tile when its knockback or path move ends, or once it
  * has mounted: the battle stats take the tile and facing, the record is snapped

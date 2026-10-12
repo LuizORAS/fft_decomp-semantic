@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Draw a decimal value right-to-left from the menu text origin.

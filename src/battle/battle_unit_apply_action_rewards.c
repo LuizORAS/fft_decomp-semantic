@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 
 /* Apply the acting unit's pending EXP and JP rewards.
  *

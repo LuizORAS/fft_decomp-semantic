@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Step handler of the FLOAT_JUMP stages: advance a floating unit's jump to a

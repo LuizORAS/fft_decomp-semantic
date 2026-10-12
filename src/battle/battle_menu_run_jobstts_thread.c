@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 
 /* Thread body that swaps in companion overlay 7 behind the option menu. */
 void battle_menu_run_jobstts_thread(void) {

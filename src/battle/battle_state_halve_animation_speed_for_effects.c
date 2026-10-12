@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Enter the Effect game state at two vertical blanks per frame. No code calls it
  * or battle_state_enter_effect_playback, the only other entry to that state. */

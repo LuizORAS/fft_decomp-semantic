@@ -1,5 +1,4 @@
 /* LIBGPU 80022eb0-80022eec. */
-#include "psx/libetc.h"
 #include "psx/libgpu.h"
 
 DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h) {

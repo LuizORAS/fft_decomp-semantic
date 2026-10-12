@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_map.h"
 
 /* Seed the ambient light fade from the colour the map loaded: the base colour and
  * the 16.16 transition channels take the current GTE back colour.

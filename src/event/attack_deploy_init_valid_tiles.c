@@ -1,5 +1,4 @@
 #include "fft/event_attack.h"
-#include "psx/types.h"
 
 /* Enter the deployment screen's tiles-only view: hide the menu, reset the
  * cursor and grid slide, prepare the valid-tile primitives and start the

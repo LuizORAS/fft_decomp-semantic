@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* battle_gfx_prepare_post_action_display for a misc id. An absent unit raises
  * pointer exception 0xc and returns 0. */

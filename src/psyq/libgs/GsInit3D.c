@@ -1,5 +1,4 @@
 #include "psx/libgs.h"
-#include "psx/types.h"
 
 void GsInit3D(void) {
     POSITION.offx = HWD0 / 2;

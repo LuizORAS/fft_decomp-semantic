@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "fft/main.h"
 
 /* Queues the unit's item icon at its item-get offset from the unit's screen

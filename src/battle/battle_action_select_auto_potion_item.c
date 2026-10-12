@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* The item Auto Potion uses: the first of Potion, Hi-Potion and X-Potion the

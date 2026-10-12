@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 
 battle_unit_misc_data_t* battle_unit_get_source_misc_data(void) {
     battle_unit_misc_data_t* unit;

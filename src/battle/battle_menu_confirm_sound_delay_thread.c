@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Thread body: request the confirm sound and hold task id MINI_MENU for 16
  * frames. Nothing in the game starts it. */

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
 #include "psx/types.h"
 
 /* The yaw script variable raised by whole turns until it is not negative. A yaw

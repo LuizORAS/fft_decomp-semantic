@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 
 /* Returns the unit the cursor selects on a tile: one with battle stats in an
  * occupied slot that is not a crystal, a treasure or in the air from Jump.

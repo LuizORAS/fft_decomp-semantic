@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* battle_map_blend_ambient_light_color with the colour offsets narrowed to s16:

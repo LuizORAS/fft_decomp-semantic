@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Mark the candidate action as not decided on: only the selected action ever
  * holds BATTLE_AI_ACTION_DECIDED (battle_ai_build_command). */

@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
 
 /* Clear the first draw area's width and install the default second draw area. */
 void battle_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair) {

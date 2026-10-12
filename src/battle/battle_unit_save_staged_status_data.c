@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_unit.h"
 
 /* Snapshot a unit into the event staging record and queue its status removal.
  *

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Cycles the colours of the two deployed-unit palettes (sprite CLUTs 1 and 2).

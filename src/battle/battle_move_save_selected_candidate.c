@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Rank and save a movement candidate for the common finalizer.
  *

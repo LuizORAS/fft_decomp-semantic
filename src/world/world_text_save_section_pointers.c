@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Back up the text section pointer table once; world_text_restore_section_pointers undoes it. */
 void world_text_save_section_pointers(void) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 void battle_effect_load_lba_and_size(s32 effect_id, s32* lba, s32* byte_length) {
     u32 stack_padding[2];

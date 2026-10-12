@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Steps a level that waits for the message box to close: once the message
  * thread has ended it pops the level, restores the blocked buttons, resumes

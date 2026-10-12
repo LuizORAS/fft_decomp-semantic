@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Step the unit's distortion animation, if it has one: a motion that a
  * sequence started with BATTLE_SEQ_OP_START_DISTORTION and that its handler

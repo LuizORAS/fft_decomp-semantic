@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Menu-script opcode handler: pick the CLUT x/y operands from bytes 2..4 or,
  * when g_world_menu_use_alternate_palette selects the alternate palette, bytes 5..7, and record the

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
 
 /* Start the departure effect of a teleport. Altima's two forms request their own
  * ability effect and the result is 1; any other unit gets the teleport secondary

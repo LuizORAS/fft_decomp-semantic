@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* The battle stats in a unit slot, occupied or not; 0 for an id past the last

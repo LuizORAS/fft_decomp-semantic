@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 
 /*
  * Build the AI's attack-origin and movable tile masks for a linear ability.

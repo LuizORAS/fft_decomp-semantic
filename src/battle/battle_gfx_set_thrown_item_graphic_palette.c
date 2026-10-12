@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "fft/main.h"
 
 /* Make item `item_id` the one a unit's weapon and effect blocks draw.

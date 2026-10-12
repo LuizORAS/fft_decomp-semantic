@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* battle_unit_restore_facing_after_attack for every misc id 0..15. */

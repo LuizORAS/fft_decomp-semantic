@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_text.h"
 
 /* Back up the text section pointer table once;
  * battle_text_restore_section_pointers undoes it. */

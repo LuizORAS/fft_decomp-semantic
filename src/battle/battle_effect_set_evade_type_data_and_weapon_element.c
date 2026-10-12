@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Starts the weapon-hit secondary effect of the unit's action, in the element
  * of the used weapon; is_bow is 1 for the bow hardcoding path and 0

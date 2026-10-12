@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 /* Record reaction_id when the ability cost MP and the target passes its reaction
  * roll; the MP cost is the reaction's amount. */

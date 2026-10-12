@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x59: -Level (1), hit (MA+X)%. */
 void battle_formula_lower_level_by_one(void) {

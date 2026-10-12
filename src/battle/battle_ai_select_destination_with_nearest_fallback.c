@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Prefer priority within range, falling back to the nearest reachable tile.
  *

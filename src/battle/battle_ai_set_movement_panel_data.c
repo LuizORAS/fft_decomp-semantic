@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 #include "psx/libetc.h"
 
 /* Build the AI walkable and reachable tile rows for the acting unit.

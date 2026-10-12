@@ -1,6 +1,5 @@
 #include "fft/battle.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Runs the effect playback helper on the main stack, then yields once per
  * frame until the animation continue check reports completion. */

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
 
 /* Advance the caster colour track one frame: an APPLY keyframe recolours the
  * caster. */

@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Menu screen step: on the first frame reset the fade flag; once any of the
  * face buttons (0xf0) is pressed start the fade-out with a music fade, then

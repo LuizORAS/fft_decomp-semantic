@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Amount Move-Get EXP or Move-Get JP gives: the number of steps walked

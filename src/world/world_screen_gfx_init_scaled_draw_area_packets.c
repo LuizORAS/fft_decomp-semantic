@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* The menu-screen library's copy of the draw-area pair reset; nothing calls it. */
 void world_screen_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair) {

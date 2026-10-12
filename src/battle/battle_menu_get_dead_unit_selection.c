@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Run battle_unit_generate_crystal_or_treasure for the unit on the main stack,

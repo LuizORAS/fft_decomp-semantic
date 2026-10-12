@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Update one unit's sprite animation for the frame.

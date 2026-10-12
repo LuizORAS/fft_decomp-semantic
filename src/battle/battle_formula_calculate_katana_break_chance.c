@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Draw Out: the used katana breaks when a roll of 0..99 is below its weapon
  * power. The roll is made only when executing; any other state records it as

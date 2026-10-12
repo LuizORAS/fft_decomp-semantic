@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Allocate an effect state record for a script and reset its per-handler state.
  * Returns the record index, or 0 when none is available. */

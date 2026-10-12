@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* The unit's camera_facing_quadrant modulo 4, or -1 when no misc record has the
  * battle id. */

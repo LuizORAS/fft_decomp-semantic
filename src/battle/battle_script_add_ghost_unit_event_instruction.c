@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
 
 /* AddGhostUnit: queue the graphics load that creates an event-only unit on the
  * given misc slot.

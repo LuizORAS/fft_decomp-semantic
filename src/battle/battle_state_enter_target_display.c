@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Enter the target-display state: move the cursor to the casting unit's
  * auto-battle target, turn the camera when its tile is hidden and show its

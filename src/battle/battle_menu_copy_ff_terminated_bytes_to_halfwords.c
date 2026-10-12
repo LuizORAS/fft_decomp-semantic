@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Widen a 0xff-terminated byte list into 16-bit values, without the terminator, and

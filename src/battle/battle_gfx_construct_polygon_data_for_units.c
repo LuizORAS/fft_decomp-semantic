@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/gte_inline.h"
 #include "psx/gte_inline_split.h"
 #include "psx/libgpu.h"

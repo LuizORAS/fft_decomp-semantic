@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Formula 3C: damage the caster for MaxHP/5 and heal the target for twice

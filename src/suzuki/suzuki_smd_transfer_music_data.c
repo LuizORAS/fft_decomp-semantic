@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* Copies the SMD header settings into a MUS record, applies its reverb and
  * resets the playback header. */

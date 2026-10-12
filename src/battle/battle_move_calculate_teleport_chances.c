@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* 1 when the teleport succeeds: always with Teleport 2, otherwise it fails

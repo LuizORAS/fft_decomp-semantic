@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* SPU transfer-complete callback: clears the driver's read, write and
  * transfer-busy flags. */

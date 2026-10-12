@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Moves a rider killed on its mount (pending_attack_result set) off it: the pair
  * is unlinked, the unit takes the relocation tile in dismount as its map position

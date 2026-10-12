@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Fill a secondary-effect init record with the unit's current action targets.

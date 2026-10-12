@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* The first unit whose has_turn is set (the unit taking its turn), or 0. */

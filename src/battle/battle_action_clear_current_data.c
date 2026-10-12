@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Reset an action result record to "hit, 100% accuracy, no effect".
  *

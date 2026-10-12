@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Mini-menu thread: after two frames, post selection 7 as the
  * pending selection. */

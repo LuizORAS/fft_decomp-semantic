@@ -1,6 +1,5 @@
 #include "fft/open.h"
 #include "psx/pad.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* Advance the new-game prologue by one frame: the picture crossfade and the text

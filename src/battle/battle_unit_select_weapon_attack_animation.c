@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Choose the attacker's weapon attack animation from the target's height.

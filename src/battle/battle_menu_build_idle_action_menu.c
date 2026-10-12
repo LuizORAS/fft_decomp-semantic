@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 
 enum {
     IDLE_ACTION_MENU_ENTRY_COUNT = 0x34,

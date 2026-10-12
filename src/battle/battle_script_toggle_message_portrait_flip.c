@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Event instruction 0x37 (unused by the scenario scripts): toggles bit 0 of

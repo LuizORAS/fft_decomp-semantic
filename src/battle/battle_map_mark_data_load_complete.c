@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_map.h"
 
 /* Mark the asynchronous map-data sequence ready for its next init stage. */
 void battle_map_mark_data_load_complete(void) {

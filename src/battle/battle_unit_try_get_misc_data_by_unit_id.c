@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Prepares an event-script unit operand for the unit filter loop.

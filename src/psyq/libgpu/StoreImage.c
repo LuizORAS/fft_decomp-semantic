@@ -1,5 +1,4 @@
 /* LIBGPU 80024960-800249c4. */
-#include "psx/libetc.h"
 #include "psx/libgpu.h"
 
 s32 StoreImage(RECT* rect, u32* pixels) {

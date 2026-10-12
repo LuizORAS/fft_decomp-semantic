@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Toggle the camera tilt and play its sound. */

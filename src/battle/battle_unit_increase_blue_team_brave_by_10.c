@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Grants +10 Brave, capped at 100, to every blue-team battle unit. */
 void battle_unit_increase_blue_team_brave_by_10(void) {

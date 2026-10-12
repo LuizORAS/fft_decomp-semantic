@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_effect.h"
 
 void battle_effect_add_vector_and_store_q12(const VECTOR* delta, VECTOR* value, VECTOR* out) {
     value->vx += delta->vx;

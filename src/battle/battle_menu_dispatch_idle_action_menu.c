@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 
 /* Open the action menu for the unit on the cursor tile, which becomes the casting
  * unit.

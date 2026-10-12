@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 #include "psx/types.h"
 
 /* For an enemy-targeting ability, drop from the target list each enemy that

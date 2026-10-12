@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Pack the names of the 21 battle units into the roster-unit-names text section,

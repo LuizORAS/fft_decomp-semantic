@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Start the current effect target's fall-dust secondary effect at the
  * given position and return its id. Phase 1 is

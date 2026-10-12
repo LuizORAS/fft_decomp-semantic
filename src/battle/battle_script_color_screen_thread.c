@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Fades the screen colour modulation from a start RGB to an end RGB over a duration.

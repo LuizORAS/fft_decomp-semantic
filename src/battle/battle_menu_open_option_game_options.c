@@ -1,6 +1,5 @@
 #include "fft/battle.h"
 #include "fft/event_option.h"
-#include "psx/types.h"
 
 /* Thread entry of menu entry 0x0b: load OPTION.OUT and open the game options. */
 void battle_menu_open_option_game_options(void) {

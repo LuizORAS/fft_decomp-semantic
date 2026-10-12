@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 
 /* Return to the source unit's action menus: set the AT-list-active flag, run the
  * scenario check, and unless it starts an event enter the open-action-menus state

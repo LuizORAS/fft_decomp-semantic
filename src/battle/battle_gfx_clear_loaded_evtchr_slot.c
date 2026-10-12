@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Free a slot's image buffer if it holds an unpacked EVTCHR block. */
 s32 battle_gfx_clear_loaded_evtchr_slot(s32 slot_index) {

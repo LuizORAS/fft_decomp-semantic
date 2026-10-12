@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Run a unit's SEQ sequence up to its next frame instruction, or to its end.

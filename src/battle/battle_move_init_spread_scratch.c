@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Reset the best-candidate fields of the spread state and load the current
  * tile's heights. */

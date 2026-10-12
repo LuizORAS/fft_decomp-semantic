@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 
 /* Load the active-turn banner, the active-turn unit record and the billboard data
  * from the caller's copies: the inverse of battle_menu_copy_billboard_data_out,

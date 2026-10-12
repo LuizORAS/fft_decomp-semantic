@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x31: damage ((PA + Y) / 2 * PA) with element; physical evade; 19%
  * status. */

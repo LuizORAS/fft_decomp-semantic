@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_event.h"
 #include "psx/types.h"
 
 /* Add total to the war funds, plus a quarter of the item's price when an item

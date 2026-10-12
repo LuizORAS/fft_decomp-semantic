@@ -218,9 +218,10 @@ none), and prefer the profile of its neighbours.
   in `main.h`, and MAIN-only table or unit records (item, ability, job,
   party, ENTD) sit with their siblings in `data.h` and `unit.h`. A `volatile`
   or otherwise one-function view of a global stays local to that source
-  file, with its reason. A source file includes its own
-  module header, plus another module's header when it calls into that module
-  (MAIN and WORLD code calling BATTLE functions, for example). `main.h`
+  file, with its reason. A source file includes the header declaring its own
+  function and the headers owning the other declarations it uses. Prefer a
+  focused subsystem header over a module umbrella when it provides the needed
+  declarations (MAIN and WORLD callers of BATTLE do the same). `main.h`
   includes every shared header. Each header groups its declarations under
   short lowercase subsystem labels (`/* ai */`), types first, then globals,
   then functions. A subsystem header includes its own dependencies and compiles

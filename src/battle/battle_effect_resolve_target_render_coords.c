@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Resolve one effect target to renderer-space coordinates.

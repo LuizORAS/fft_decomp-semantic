@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Steps the formation unit-selection slide; once its frame counter reaches 9 it
  * ends the slide, sets the status display redraw_request to 1 and clears flags.

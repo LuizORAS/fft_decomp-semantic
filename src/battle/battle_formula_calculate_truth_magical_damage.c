@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Magical damage without Faith: elemental strengthen, magical modifiers, XA *
  * YA with weather and element, absorption, 19% status. */

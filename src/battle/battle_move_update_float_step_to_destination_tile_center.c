@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Step handler of the FLOAT_TO_CENTRE stages: advance a floating unit one frame

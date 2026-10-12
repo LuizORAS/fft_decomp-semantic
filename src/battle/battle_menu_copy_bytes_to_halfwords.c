@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Widen `count` bytes at `src` into 16-bit values at `dst`. */

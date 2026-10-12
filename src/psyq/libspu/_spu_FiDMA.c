@@ -2,7 +2,6 @@
 #include "psx/libspu.h"
 
 #include "psx/libapi.h"
-#include "psx/libetc.h"
 
 void _spu_FiDMA(void) {
     u32 wait;

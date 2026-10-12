@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Returns one packed field of the tile at (x, y, layer), or 0xff for an

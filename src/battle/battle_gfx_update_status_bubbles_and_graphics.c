@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 
 /*
  * Per-frame status-bubble and unit-graphics update.

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Blaze Gun, Glacier Gun and Blast Gun (item ids 0x4a..0x4c) play the weapon

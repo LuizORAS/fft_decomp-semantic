@@ -1,5 +1,4 @@
 #include "fft/event_equip.h"
-#include "psx/types.h"
 
 void equip_input_clear_state(void) {
     g_equip_input_newly_pressed = 0;

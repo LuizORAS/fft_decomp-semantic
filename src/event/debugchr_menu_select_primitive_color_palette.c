@@ -1,5 +1,4 @@
 #include "fft/event_debugchr.h"
-#include "psx/types.h"
 
 /* Give the menu primitives their dimmed colours when the panel style is 1 or
  * the menu input lock mode is 1, their normal colours otherwise. */

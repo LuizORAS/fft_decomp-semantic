@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* End the unit's turn: CT gains 20 when it neither moved nor has Don't Move,

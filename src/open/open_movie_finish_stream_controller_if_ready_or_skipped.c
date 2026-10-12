@@ -1,6 +1,5 @@
 #include "fft/open.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Handler 0, the FFTST.STR logo movie: when the stream has ended, or on Start
  * (which stops the video, blanks the display and leaves the CD audio playing),

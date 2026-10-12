@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu thread body with no window of its own: with the menu sounds muted,
  * every frame it handles a Circle confirm of row 0 and a Cross cancel of its

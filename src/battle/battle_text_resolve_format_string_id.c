@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Convert a text-format substitution opcode into its string-table ID. */

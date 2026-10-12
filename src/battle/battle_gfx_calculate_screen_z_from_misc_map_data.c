@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* battle_gfx_calculate_screen_z_from_input_coords at the centre of the map tile

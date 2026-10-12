@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
 
 /* Start the fade from intensity 0xf0 down to zero (the screen fades in). */
 void bunit_gfx_start_decreasing_fade(void) {

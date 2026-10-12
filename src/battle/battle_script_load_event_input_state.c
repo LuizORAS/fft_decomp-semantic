@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_event.h"
 
 /* Copy a saved input state of six 32-bit values (pressed, held and previous buttons and the
  * three repeat counters) into the event input globals. The BUNIT and CARD

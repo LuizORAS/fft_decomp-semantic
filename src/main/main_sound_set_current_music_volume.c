@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Fades the current music to volume over time ticks without remembering
  * the volume. */

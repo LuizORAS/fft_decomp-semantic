@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Advances the unit's position trail: each copy takes the next newer one and copy
  * 0 the unit's current position. */

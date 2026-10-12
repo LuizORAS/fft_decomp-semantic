@@ -16,7 +16,6 @@
  * the RotMatrix/vector addresses out of the column loop.
  */
 #include "fft/event_require.h"
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"

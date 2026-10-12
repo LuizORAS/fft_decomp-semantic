@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Enter the illegal-range state, reached when the chosen tile lacks the
  * ability-range mark: opens action-confirm option 5 for the source unit. */

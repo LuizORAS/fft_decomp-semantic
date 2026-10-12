@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /*
  * Choose a random action from the candidate movement and target masks.

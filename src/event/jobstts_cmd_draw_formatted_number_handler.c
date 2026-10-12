@@ -1,5 +1,4 @@
 #include "fft/event_jobstts.h"
-#include "psx/libc.h"
 
 /* Draw the getter's decimal value, or dashes, using the current row and palette. */
 menu_instruction_t* jobstts_cmd_draw_formatted_number_handler(menu_instruction_t* data) {

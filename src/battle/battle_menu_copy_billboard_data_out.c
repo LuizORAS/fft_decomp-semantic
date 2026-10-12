@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
 
 /* Snapshot the AT banner, active unit, billboard and cursor tile records into
    the four caller-owned buffers so the caller can restore them later. */

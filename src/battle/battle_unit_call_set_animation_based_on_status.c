@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_unit.h"
 
 struct battle_unit_misc_data;
 

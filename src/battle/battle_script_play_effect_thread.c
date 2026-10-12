@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_event.h"
+#include "fft/thread.h"
 
 /* Thread body of EffectEnd: play the effect that Effect and EffectStart prepared
  * and exit when it has finished. */

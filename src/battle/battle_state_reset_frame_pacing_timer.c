@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Stop the slow-down timer the game loop starts when a frame of the effect or
  * action-execute state takes more than 0x200 hsyncs. */

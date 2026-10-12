@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Damage MA * (MA + Y) / 2 without Faith: stores XA and YA, then runs the magical
  * damage chain of battle_formula_calculate_truth_magical_damage. */

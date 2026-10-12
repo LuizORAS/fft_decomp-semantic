@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
 
 /* Fades the screen back in: lowers g_battle_screen_fade from 255 by 4 per frame,
  * yielding once per step, and ends on 0. */

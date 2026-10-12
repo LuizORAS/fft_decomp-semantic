@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /*

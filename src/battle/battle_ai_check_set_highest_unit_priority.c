@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Simulate and score the current action and keep it as the best when it
  * outranks the best so far. -1 suspends; otherwise 0. */

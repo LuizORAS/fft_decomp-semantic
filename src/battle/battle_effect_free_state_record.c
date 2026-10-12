@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Tear down effect state record record_index and return it to the free list.
  *

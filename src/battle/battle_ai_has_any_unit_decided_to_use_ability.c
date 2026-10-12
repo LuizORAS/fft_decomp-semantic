@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Keep in the target list only the units the considered ability is useful on.
  * Returns 1 while one is left. */

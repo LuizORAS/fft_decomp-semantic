@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/stddef.h"
 
 /* Stages one world-map route segment in the location-entry state.
  *

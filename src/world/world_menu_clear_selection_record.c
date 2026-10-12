@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 void world_menu_clear_selection_record(s32 index) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "fft/world.h"
 
 /* Run staged status commands for units whose Float or Jump state needs a

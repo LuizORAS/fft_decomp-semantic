@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 
 /* Sets the "an options/menu overlay is on screen" flag; the matching clear is
  * battle_menu_clear_option_menu_open. */

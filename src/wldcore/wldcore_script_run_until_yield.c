@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/libc.h"
 
 /* Runs the world-script interpreter until the active record yields. Each turn
  * refreshes the pending script sounds from script variables 0x5c-0x5e, then:

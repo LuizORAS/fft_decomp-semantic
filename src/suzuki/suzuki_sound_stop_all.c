@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* Stops every SMD music record and silences every SFX channel. */
 void suzuki_sound_stop_all(void) {

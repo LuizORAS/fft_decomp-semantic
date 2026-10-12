@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
 
 /* Twin of jobstts_cmd_set_draw_area_if_unlocked_handler. */
 menu_instruction_t* bunit_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* data) {

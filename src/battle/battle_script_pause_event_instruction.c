@@ -1,6 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Pause: yield until Select, Cross or Circle is pressed, or until the thread's
  * task id becomes the stop request. */

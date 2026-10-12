@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 /* Uploads the fixed CLUTs of the sprite row: 1 and 2 the deployed-unit palettes,
  * 3 the wait-direction arrow, 4 the map selection cursor, 5 the shadow and 7 the

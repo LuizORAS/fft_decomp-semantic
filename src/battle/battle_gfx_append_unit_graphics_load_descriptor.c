@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Appends one unit to the graphics load queue that
  * battle_gfx_step_queued_unit_graphics_load works through.

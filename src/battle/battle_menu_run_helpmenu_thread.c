@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "fft/event_helpmenu.h"
-#include "psx/types.h"
 
 /* Thread that opens the help menu: reserve 0x20000 bytes for the high overlay,
  * load HELPMENU.OUT and run its battle help. The confirm sound plays first when

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* TempWeapon event instruction: battle_gfx_set_thrown_item_graphic_palette for a
  * misc id. An absent unit is skipped. */

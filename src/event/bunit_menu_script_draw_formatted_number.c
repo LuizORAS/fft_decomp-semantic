@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Draw a row-callback value as a row of digit glyphs (opcodes 0x19-0x1B).

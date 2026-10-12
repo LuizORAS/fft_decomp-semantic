@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Returns the $gp register. Hand-written assembly in retail. */
 void* world_thread_get_current_global_pointer(void) {

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/stddef.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Unpack a unit SHP file into its two frame tables.

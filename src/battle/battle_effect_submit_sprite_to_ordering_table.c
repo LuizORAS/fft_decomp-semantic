@@ -1,6 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
 #include "psx/gte_inline_split.h"
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"

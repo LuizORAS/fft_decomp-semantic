@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Clears a record's child-timeline state and sets the effect target it plays
  * on. */

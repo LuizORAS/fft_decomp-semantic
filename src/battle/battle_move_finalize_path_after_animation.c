@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Step handler of the TELEPORT_ANIMATION phase: once the animation countdown

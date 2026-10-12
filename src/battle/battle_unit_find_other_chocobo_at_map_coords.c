@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* Find the other Chocobo renderer record occupying a map tile.
  *

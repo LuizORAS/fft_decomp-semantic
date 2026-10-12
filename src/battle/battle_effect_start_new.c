@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Starts an ability's effect outside an action, on a unit, on a tile or

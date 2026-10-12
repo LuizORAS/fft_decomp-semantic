@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Integer address arithmetic preserves the retail instruction order here. */

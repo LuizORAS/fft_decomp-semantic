@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* Snaps a unit to its map tile: the movement destination becomes the tile and the
  * screen position its centre (28 units per tile) at the tile's height. */

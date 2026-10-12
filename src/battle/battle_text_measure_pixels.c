@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 #define TEXT_STATE ((text_backreference_state_t*)0x1F800000)

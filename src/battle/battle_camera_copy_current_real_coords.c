@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Saves the camera position for battle_camera_restore_current_real_coords (effect
  * script opcodes 09 and 0a). */

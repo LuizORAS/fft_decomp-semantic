@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Thread body: run the sprite move of parameter 1 in mode 1 (the plain
  * sprite-move thread uses mode 0). */

@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Withholds every button from the WORLD menu frame while the next menu level runs. */
 /* The caller hands in its menu level; the target reads no argument. */

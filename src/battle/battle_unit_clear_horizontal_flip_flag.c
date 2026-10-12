@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 void battle_unit_clear_horizontal_flip_flag(u32 misc_id) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Spread movement to ordinary neighboring candidates.
  *

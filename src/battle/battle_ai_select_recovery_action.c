@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /*
  * Select an action for the recovery-oriented AI policy.

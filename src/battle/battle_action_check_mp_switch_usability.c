@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* MP Switch: when the target would lose HP, still has MP and passes its reaction
  * roll, move the HP damage onto MP (capped at 999) and mark the reaction.

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu action: request the fixed number panel from the world map, hand the formation input
  * state to the event input and exit the thread. */

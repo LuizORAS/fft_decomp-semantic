@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* DeepDungeonMeshLoad game-state handler: when the Deep Dungeon map has loaded,
  * run the between-turn events. */

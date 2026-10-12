@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Faces a unit, and its mount partner when one is linked, in a direction given in

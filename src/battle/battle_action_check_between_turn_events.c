@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
 
 /* Runs any in-between-turn event, then opens the next acting unit's turn. */
 void battle_action_check_between_turn_events(void) {

@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* main_unit_update_stats_statuses_and_equipment with both flags clear: stats are
  * re-derived and the status notifications run. */

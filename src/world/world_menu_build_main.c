@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu thread of the main command menu: requests a redraw, runs the icon
  * selection loop and stores the chosen row in byte 0 of the active unit's

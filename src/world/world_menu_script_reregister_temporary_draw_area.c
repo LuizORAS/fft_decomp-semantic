@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu-script opcode handler: unless the flag is set, clears the y of
  * g_world_gfx_temporary_draw_area and re-registers the draw area at draw

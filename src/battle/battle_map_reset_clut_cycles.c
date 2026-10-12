@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Free the eight colour rotation slots (map_clut_cycle_state_t) by

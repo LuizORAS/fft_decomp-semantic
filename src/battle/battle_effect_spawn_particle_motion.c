@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_effect.h"
 #include "psx/libgte.h"
 
 /* Spawns one particle's motion block from the interpolated emitter values and

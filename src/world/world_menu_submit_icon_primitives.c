@@ -1,6 +1,4 @@
 #include "fft/world.h"
-#include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Submit the six primitives that compose one menu-frame buffer. */
 void world_menu_submit_icon_primitives(menu_icon_sprites_t* prims) {

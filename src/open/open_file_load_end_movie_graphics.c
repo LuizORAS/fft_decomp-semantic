@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Load the ending's graphics from OPNTEX.BIN and OPNBK.BIN: the TIM at sector
  * 0x65 (the script's glyph page, uploaded at once), OPNBK image 6 (uploaded as

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Prepare a unit's one-step movement path and dismount it from its rider.
  *

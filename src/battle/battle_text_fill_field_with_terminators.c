@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Fill a 16-byte text field with the terminator byte 0xfe. */

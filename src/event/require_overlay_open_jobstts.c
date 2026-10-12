@@ -1,5 +1,4 @@
 #include "fft/event_require.h"
-#include "psx/types.h"
 
 /*
  * Thread body that runs the JOBSTTS overlay from the REQUIRE screen.

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Add the Charge ability's power to XA (0 for every other action). */
 void battle_formula_apply_charge(void) {

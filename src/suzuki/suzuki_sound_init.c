@@ -1,5 +1,4 @@
 #include "psx/libapi.h"
-#include "psx/libetc.h"
 #include "psx/libspu.h"
 #include "psx/suzuki.h"
 #include "psx/types.h"

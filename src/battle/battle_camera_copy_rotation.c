@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Saves the camera angles for battle_camera_restore_rotation (effect script
  * opcodes 0c and 0d). */

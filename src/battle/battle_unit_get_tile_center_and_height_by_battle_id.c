@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 
 /*
  * Store a unit's tile-center coordinates and calculated screen Z.

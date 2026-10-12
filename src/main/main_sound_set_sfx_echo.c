@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Sets the volume of the SFX channels playing sound_id: volume is the new
  * channel velocity, and 0 stops them (and forgets a remembered background

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* battle_camera_convert_screen_coords_modify_by_1 on a unit's position. An absent
  * unit passes address 0 on. No retail code calls it. */

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Resolve the casting unit's next strike and start showing it.

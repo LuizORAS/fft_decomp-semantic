@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Drops a requested effect that has not been released. */
 void battle_effect_set_phase_none(void) {

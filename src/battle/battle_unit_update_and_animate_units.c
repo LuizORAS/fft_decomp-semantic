@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* Per-frame update of every unit record: its animation with the weapon and effect
  * sprites, its status bubble and its fade-out removal. */

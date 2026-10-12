@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/libgpu.h"
 
 /* Initialize an array of BATTLE menu sprites with a shared CLUT. */

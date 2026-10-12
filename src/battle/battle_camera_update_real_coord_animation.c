@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Advances the camera-position move by one frame while its countdown runs. Only
  * the uncalled battle_camera_set_real_coord_delta_* routines start the countdown,

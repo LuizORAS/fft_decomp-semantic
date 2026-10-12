@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* XA = PA, YA = the weapon's power + Y. */
 void battle_formula_store_pa_and_weapon_power_plus_y(void) {

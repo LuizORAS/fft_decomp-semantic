@@ -1,5 +1,6 @@
-#include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Picks the knockback destination for the current action's target.

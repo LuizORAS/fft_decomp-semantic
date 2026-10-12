@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 /* Starts the repeating tint that marks the candidates of an auto-battle target
  * choice: red on every unit of another team than the casting unit's for

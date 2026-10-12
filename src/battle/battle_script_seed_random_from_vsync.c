@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_event.h"
 
 /* Seed the event script's 16-bit random generator (battle_script_get_rand16) with
  * the vertical-blank count. */

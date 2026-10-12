@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 
 /* Enter the event state and run the scenario check with no unit (0xff), as the
  * deployment screen does when it finishes. */

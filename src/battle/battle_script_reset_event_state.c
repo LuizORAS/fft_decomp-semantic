@@ -1,5 +1,9 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/thread.h"
 
 /* Battle twin of world_script_reset_event_state. Where WORLD has no-op stubs, BATTLE
  * snapshots the camera into script variables and resets the script camera

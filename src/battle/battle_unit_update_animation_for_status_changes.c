@@ -1,5 +1,8 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /*
  * Apply this frame's pending status changes to a unit's animation.

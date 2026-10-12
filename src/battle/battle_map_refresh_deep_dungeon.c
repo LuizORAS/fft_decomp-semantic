@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* As battle_map_try_start_deep_dungeon_mesh_load, entering the mesh-finish state

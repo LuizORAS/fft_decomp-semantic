@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Rebuilds the 40-entry AT list: charged and performing actions first, then

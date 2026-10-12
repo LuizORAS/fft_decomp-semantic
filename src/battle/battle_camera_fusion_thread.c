@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/stddef.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Runs an event camera fusion: seeds one track per camera component from the

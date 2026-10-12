@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Build the targeting panels for a weapon attack: the weapon's range around the

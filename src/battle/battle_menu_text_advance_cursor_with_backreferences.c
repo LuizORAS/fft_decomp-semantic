@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Advance a text cursor by one byte, entering and leaving 0xF0-0xF3

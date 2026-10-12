@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* ColorUnit: start a palette modulation on a unit or a unit group.

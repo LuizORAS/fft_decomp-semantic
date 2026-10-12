@@ -1,5 +1,4 @@
 #include "fft/event_debugchr.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* Menu window thread without a cursor: rebuilds the text image every seventh

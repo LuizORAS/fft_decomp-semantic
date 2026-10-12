@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Enter the wait-direction state for the source unit, starting from its current
  * facing.

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Save the system flags and hide the world map's layers (dots, routes,
  * background, display objects, context value, date and location marker)

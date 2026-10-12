@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu thread: load the OPTION overlay and run its AT list mode. */
 void world_menu_open_option_at_list(void) {

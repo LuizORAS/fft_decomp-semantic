@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Pushes a unit sharing the mover's tile aside as the mover steps off-centre.

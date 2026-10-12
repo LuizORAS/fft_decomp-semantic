@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Whether a unit is a chocobo that can be ridden: BATTLE_CHOCOBO_MOUNT_NONE for

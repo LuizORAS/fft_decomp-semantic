@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
 
 /* Resolve one strike of the current ability: build the target list, run the
  * per-target formula setup and fill the strike work record.

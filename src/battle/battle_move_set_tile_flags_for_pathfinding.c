@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 
 /* Rebuild the frontier flags of all terrain tiles from slope, half height, depth
  * and the tile flags, then mark the tiles under the 16 unit records. A unit of

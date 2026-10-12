@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* The unit panels' copy of the draw-area pair reset (the BUNIT and EQUIP twin). */
 void world_panel_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair) {

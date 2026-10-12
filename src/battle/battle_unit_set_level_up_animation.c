@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /* Start a unit's level-up animation: the jump on dry land, the hops for a
  * rider and in water one deep, the submerged idle in water two deep. */

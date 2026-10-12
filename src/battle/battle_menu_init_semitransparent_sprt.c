@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/libgpu.h"
 
 /* Initialize the fixed sprite used by BATTLE menu graphics. */

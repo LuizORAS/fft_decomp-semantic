@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Yield until the scheduler leaves task 3 or the player presses one of the
  * 0x160 buttons (event pause instruction at 0x800e7654-0x800e76a8). */

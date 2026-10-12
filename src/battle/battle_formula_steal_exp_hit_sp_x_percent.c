@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x28: steal (SP + Y) EXP, at most 100 and at most what the target
  * has, hit (SP+X)%; physical evade. */

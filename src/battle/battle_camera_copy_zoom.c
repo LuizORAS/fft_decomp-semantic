@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Saves the camera zoom for battle_camera_restore_zoom (effect script opcodes 0f
  * and 24). */

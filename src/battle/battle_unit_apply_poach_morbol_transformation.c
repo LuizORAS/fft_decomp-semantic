@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 
 /* Carries out a pending Poached or Morbol display flag (status_flags_5_6) and
  * clears it; Poached is tested first and only one is handled per call.

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Fill the init record of a teleport effect: the unit is the caster and the only

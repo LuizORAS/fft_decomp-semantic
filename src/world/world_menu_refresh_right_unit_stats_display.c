@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Reload the selected unit and redraw the right-hand (comparison) unit stats
  * panel. Number entry 6 (the list position) is drawn as dashes when the

@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Load BATTLE.BIN (sector 1000) into the whole low overlay area, which ends at
  * the high overlay address, and call its entry point. */

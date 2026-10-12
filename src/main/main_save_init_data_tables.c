@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Reset the save record fields and new-game data tables.

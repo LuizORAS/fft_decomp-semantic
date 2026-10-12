@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Clear the first draw area's width and install the default second draw area. */
 void world_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair) {

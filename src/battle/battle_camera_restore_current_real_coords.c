@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 void battle_camera_restore_current_real_coords(void) {
     copyVector(&g_battle_camera_current_real_coords, &g_battle_camera_saved_real_coords);

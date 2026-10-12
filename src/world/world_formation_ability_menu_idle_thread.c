@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Idle thread body: wait one frame, forever. world_menu_run_ability parks it in the upper menu's
  * child slot. The same routine as world_formation_item_menu_idle_thread, compiled twice. */

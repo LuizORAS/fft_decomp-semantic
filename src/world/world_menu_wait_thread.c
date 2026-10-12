@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu thread of the Wait command: marks both row actions unset (-2) and
  * confirms the entry without a sound. */

@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Thread body of the map darkness event instruction: start the ambient
  * light blend from the five parameter bytes (mode, signed RGB amounts,

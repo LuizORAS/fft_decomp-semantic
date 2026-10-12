@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* The number of items battle_menu_collect_throwable_items lists in out_item_ids:

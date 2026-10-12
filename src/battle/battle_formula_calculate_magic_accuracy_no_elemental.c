@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* battle_formula_calculate_magic_accuracy without the elemental strengthen. */

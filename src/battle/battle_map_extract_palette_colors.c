@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Load the sixteen colours of one CLUT into a map CLUT row: the upload staging

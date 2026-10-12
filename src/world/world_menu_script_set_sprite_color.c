@@ -1,6 +1,4 @@
 #include "fft/world.h"
-#include "psx/libgte.h"
-#include "psx/types.h"
 
 /* Set the current sprite color from a menu-script operand triplet.
  *

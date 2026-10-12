@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Horizontal jumps: from the current tile, in each direction, try landing 2 to
  * jump_half + 1 tiles away, provided every tile in between can be jumped over

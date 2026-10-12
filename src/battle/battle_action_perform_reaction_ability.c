@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Applies the pending reaction ability's effect to the current target action
  * record and finishes the strike. Returns 0 when the ability's behaviour

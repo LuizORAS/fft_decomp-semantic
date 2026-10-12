@@ -1,5 +1,7 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /*
  * After `rider` moves, re-registers its map position and, when it is the

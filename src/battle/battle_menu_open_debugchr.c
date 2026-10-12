@@ -1,6 +1,5 @@
 #include "fft/battle.h"
 #include "fft/event_debugchr.h"
-#include "psx/types.h"
 
 /* Thread entry of menu entry 0x2c: close the unit panels and the menu thread,
  * load DEBUGCHR.OUT, run its character debug session and restore the menu state

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* XA = MA, YA = (PA + Y) / 2. */
 void battle_formula_store_ma_and_pa_plus_y_divided_by_two(void) {

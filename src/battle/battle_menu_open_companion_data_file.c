@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
 
 /* Non-blocking two-step file load driven by g_battle_thread_call_target:
  * issue the read for the pending request, then poll until it completes and

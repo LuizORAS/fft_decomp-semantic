@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 
 /* Hand the battle over to an event script: enter the event state at animation
  * speed 2, reset the jump graphics and the event state, disable the status menu

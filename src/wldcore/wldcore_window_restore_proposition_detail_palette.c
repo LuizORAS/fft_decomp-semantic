@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Restore the proposition detail renderer's palette. */
 void wldcore_window_restore_proposition_detail_palette(wldcore_menu_stack_record_t* level) {

@@ -1,6 +1,5 @@
 #include "fft/event_debugchr.h"
 #include "psx/pad.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 /*

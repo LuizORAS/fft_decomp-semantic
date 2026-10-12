@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Apply an action result's EXP change when executing. Without bit 0x80 the

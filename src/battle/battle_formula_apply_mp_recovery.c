@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* MP drain step: the stored HP damage becomes MP damage on the target; when it

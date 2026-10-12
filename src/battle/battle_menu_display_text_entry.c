@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
 
 /* Render one BATTLE menu-text entry through the main-thread callback. */
 void battle_menu_display_text_entry(s32 text_id, u8* image, glyph_blit_t* origin) {

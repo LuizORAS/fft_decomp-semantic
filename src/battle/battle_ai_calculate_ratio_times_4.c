@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* dividend * 4 / divisor, or 0 for a zero divisor: a share in quarters, such
  * as how many of a unit's abilities Silence stops. */

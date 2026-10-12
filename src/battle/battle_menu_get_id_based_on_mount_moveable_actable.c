@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* The idle action menu for a unit id: battle_menu_get_unit_action_menu_id, with

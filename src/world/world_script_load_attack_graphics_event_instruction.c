@@ -1,6 +1,5 @@
 #include "fft/event_attack.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Enter the attack overlay when script variable 0x1fc is clear: mark the
  * transition state, load BIN file 0xd, then hand off to the overlay's

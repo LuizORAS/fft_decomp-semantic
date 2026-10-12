@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "fft/event_option.h"
-#include "psx/types.h"
 
 /* Thread started for system function 0x1f (crystal or treasure): load OPTION.OUT
  * and open its dead-unit panel. */

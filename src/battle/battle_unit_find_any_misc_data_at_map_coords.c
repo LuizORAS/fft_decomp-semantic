@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* The first record in the misc unit list standing on a tile, whatever its state
  * (crystals, treasures and records without battle stats included), or 0. */

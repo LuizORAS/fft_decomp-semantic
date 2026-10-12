@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Per-frame movement step for a unit walking between two tiles.

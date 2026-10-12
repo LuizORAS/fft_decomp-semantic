@@ -1,5 +1,9 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_move.h"
+#include "fft/battle_text.h"
+#include "fft/battle_unit.h"
 
 /* Enter the move-confirm state once the unit has stopped moving and show the
  * matching prompt, with a one-second message time.

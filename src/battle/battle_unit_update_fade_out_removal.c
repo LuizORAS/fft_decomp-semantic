@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Steps a unit's fade-out removal; each phase waits for the unit's palette

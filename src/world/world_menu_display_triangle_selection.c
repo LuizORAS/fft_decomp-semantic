@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu thread of the Triangle mini menu: waits out any camera move and menu
  * transition, pulses tutorial wait value 0xFE and runs the icon selection

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_unit.h"
 #include "fft/main.h"
 
 /* Persist event units marked to join without opening the formation screen. */

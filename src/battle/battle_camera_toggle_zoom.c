@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Toggle the battle map zoom between "in" (target=1, action=2) and
    "out" (target=4, action=4), playing the corresponding zoom SFX. Any

@@ -1,7 +1,6 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* Numeric entry thread: edits the 16-bit value at param->value one decimal digit

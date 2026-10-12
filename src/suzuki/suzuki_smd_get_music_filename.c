@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* Returns the file name stored in the SMD data of a queued MUS record, or of
  * the most recently queued record when music is 0; 0 if it is not queued. */

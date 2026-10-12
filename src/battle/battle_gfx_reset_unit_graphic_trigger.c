@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Hides a unit: clears draw_enabled and its sprite graphic trigger. Returns 0
  * when no unit has the misc id. */

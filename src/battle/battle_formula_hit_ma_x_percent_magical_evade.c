@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x3D: status, hit (MA+X)%; magic evade. */
 void battle_formula_hit_ma_x_percent_magical_evade(void) {

@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Clears the palette of two window records and two render records, resets one
  * render record's colour to neutral grey, then clears two more windows. */

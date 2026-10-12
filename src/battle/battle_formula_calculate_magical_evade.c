@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Magic evade step: load the target's magic evades, then a Transparent
  * attacker, Abandon and the target's statuses; then roll. Returns 1 when the

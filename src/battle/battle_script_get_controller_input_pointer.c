@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
 
 /* Return the 32-bit event input value the menus read: the buttons pressed this frame
  * (with key repeat) for 0, the buttons held for any other value. */

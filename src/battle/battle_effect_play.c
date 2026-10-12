@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Releases a requested effect: battle_effect_update_stage starts it on its
  * next frame. */

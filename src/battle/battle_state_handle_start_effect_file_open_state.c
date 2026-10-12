@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* StartEffectFileOpen game-state handler: step the effect-file load
  * (battle_effect_init_data); when no work remains, resolve the strike and pick

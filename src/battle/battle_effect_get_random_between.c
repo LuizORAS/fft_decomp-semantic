@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Random integer between the two arguments, given in either order: at least the
  * smaller and less than the larger. Equal arguments return that value without

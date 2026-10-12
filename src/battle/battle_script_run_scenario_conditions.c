@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Walk the scenario's condition chains and report whether one selects an event.

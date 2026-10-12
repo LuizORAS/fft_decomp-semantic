@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x36: +PA (Y). */
 void battle_formula_add_pa_y(void) {

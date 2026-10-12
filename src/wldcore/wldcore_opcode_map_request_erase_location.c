@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Stage the location ID for a deferred EraseLocation request. */
 void wldcore_opcode_map_request_erase_location(void) {

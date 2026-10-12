@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Rejects a unit from the AI's imminent-enemy set.

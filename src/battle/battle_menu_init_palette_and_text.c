@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Load the default menu palette and bind the menu text sections. The caller

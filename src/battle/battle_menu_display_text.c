@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Text-stream state in the scratchpad, 0x200 past the one used by the

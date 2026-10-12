@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /*
  * Save the actor's position or restore its pre-reaction action command.

@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Print the script pause message, yield one frame and set the debug-paused
  * flag. */

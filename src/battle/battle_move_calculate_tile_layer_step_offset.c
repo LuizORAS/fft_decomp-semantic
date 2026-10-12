@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Clearance above a tile for battle_move_clamp_z_to_tile_headroom, in half-height

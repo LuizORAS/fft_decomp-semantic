@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x48: heal (Z * 10) HP. */
 void battle_formula_heal_z_times_ten(void) {

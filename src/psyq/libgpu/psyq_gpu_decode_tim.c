@@ -1,5 +1,4 @@
 /* LIBGPU 80027308-80027428. */
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 
 int psyq_gpu_decode_tim(u32* tim, TIM_IMAGE* image) {

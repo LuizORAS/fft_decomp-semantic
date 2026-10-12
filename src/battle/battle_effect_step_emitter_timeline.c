@@ -7,7 +7,7 @@
  * sums `*(i + p)` and `i[p]` build index-first -- see the comment at that
  * call.
  */
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Advances one particle channel of the parent timeline by a frame: enters the

@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Start the help-menu thread in the menu-building slot when nothing prevents
  * it: no thread-change cooldown, menu transition, active camera move or

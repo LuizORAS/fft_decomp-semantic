@@ -1,6 +1,5 @@
 #include "fft/battle.h"
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Clears the unit's Charging, Jump, Defending and Performing statuses (action state 0). */
 void battle_status_disable_acting(battle_stats_t* unit) {

@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Two independent frame counters apply the two shake pulses. The task loops

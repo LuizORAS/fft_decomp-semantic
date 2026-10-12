@@ -1,5 +1,10 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/thread.h"
 
 /* Reset the unit animation states and, when the current-event variable is set,
  * fade the screen colour modulation to zero and start the event thread (slot 1)

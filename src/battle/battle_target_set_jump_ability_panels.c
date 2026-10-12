@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Mark every tile the acting unit's Jump abilities can reach.

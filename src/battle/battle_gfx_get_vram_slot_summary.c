@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /*
  * Describe both battle VRAM slots: the owning unit's spritesheet (or the

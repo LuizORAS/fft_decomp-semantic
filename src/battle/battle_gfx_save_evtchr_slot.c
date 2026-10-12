@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* SaveEVTCHR: upload the slot's unpacked EVTCHR image to its page, if the
  * page is free. */

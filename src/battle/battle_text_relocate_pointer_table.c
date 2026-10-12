@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Converts a text file's table of 32 section offsets into the absolute section

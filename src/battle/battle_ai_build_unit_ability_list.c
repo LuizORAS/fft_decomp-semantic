@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Byte-oriented view of the same four-byte ability entry. */
 typedef struct battle_ai_ability_entry_byte_view {

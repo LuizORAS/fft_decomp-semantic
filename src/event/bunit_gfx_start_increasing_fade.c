@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
 
 /* Start the fade from intensity 0 up to full (the screen fades out). */
 void bunit_gfx_start_increasing_fade(void) {

@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x1F: damage ((MA + Y) / 2 * MA) with element, scaled by (100 -
  * caster Faith) and (100 - target Faith) over 10000, the Faith status counting

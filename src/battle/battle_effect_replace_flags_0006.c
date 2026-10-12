@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* The two flag meanings remain unknown. */
 enum { BATTLE_EFFECT_REPLACED_FLAGS_MASK = 0x0006 };

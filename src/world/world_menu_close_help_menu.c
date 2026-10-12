@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Thread tail of the help menu: restore the text section pointers saved
  * when it opened, free the overlay reservation and exit. */

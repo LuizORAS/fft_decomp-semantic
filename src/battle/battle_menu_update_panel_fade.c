@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
 
 /*
  * Update the menu panel's fade and submit its center and edge tiles.

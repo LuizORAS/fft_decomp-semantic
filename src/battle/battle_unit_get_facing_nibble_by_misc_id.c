@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* The unit's facing in sixteenths of a turn (0..15), or -1 when no record has the
  * misc id. */

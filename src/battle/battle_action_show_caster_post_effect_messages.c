@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 
 /* Queue the casting unit's own post-effect messages and show the first one. With
  * effect messages turned off, or nothing to report, an effect message with text

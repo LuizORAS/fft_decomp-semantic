@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Clear the 15-by-16 allocation grid consumed by the tpage-7 VRAM allocator. */

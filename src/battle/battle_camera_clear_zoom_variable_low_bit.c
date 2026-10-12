@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
 
 /* Clear bit 0 of script variable EVENT_SCRIPT_VAR_CAMERA_ZOOM (entry 6 of the camera variable
  * indices). The camera threads call it after each step. */

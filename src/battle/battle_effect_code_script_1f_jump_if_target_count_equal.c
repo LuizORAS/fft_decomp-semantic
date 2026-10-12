@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Opcode 1f: jump to the offset in the second 16-bit value when the effect has as
  * many targets as the instruction's second byte shifted right by 2 says;

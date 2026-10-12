@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Pans the camera with the directional buttons, once per frame of the battle
  * loop, while g_battle_state_game_flow_running is set (the states that put the

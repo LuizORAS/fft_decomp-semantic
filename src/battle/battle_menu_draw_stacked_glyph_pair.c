@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Draw the two stacked glyphs of g_battle_menu_stacked_glyph_upper and _lower at

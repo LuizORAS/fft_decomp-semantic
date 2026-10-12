@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* Resets the playback state of a MUS record: frees its snapshots, clears the
  * counters, voice masks and ramps, and sets 4/4 time, tempo 0x66 and full

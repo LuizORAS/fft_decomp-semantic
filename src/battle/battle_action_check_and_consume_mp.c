@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /*
  * Check action restrictions and consume MP outside preview mode.

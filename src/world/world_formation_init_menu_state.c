@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Reset the formation screen to its initial state: every submenu's
  * "initialized" latch, the panel thread styles, the selected unit and the

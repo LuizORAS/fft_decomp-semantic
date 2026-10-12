@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 #include "psx/types.h"
 
 /* Copy byte_count / 2 16-bit values; an odd last byte is left alone. */

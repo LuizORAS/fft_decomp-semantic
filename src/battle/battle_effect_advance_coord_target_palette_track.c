@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Advance the target colour track of the parent timeline one frame: an APPLY

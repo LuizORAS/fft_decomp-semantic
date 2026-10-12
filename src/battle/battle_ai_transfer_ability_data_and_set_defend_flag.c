@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 #include "psx/types.h"
 
 /* Reset the selected action to the candidate coordinates for the current

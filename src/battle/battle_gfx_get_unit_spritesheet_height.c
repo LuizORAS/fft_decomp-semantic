@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* The sprite height of the unit's sheet, or 0 for an absent, dead, crystal or
  * treasure unit. */

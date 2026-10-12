@@ -1,5 +1,4 @@
 #include "fft/event_card.h"
-#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* List the selected card slot's directory into `entries` and return the

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Pack a unit's tile as AI coordinates: x, y and the elevation bit (position
  * bit 15). */

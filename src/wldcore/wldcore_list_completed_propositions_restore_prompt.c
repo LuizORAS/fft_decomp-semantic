@@ -1,6 +1,5 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Resume handler of the completed propositions list: block Circle, Cross and Select for the
  * levels underneath and show prompt 0xB819 again. */

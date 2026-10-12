@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Twin of battle_menu_request_open_companion_executable at 0x8013bc14: same wait

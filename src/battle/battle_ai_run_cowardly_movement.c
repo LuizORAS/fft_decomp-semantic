@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Score the reachable tiles, fill the distance grid for the decision's target,
  * and store the best destination as movement scenario 1. -1 suspends; the next

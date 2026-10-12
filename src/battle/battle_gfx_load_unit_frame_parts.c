@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Expand a frame into the display's parts, all drawn from texture page
  * `tpage`: that of the EVTCHR slot holding the frame's pictures. */

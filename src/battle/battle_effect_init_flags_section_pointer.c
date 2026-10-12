@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 void battle_effect_init_flags_section_pointer(s16 effect_id) {

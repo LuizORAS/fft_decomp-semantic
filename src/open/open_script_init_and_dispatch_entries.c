@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/stddef.h"
 
 /* Run one frame of the ending script. Returns 0 once the script has ended and 1
  * while it runs.

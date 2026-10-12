@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* CallFunction 0x0f and 0x10: place the misc unit of battle id 3 on the tile and

@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Scores the current proposition's success chance.

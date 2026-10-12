@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Start the post-action reports: restore the units' facings, apply the source
  * unit's EXP and JP rewards (clearing the display values when nothing is

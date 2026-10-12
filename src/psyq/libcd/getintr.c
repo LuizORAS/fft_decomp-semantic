@@ -1,7 +1,5 @@
 /* SCUS_942.21 0x8001f140..0x8001f6b7. */
-#include "psx/libc.h"
 #include "psx/libcd.h"
-#include "psx/libetc.h"
 
 static __inline__ void cd_copy_result(u8* destination, const volatile u8* source, u32 size) {
     u8* output = destination;

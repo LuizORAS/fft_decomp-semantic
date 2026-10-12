@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Initialize the fixed 4-point textured quad used by BATTLE menus: a grey quad
  * with all four corners parked off-screen at x -0x200, texture page 0 at x=0x1c0,

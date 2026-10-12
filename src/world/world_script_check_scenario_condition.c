@@ -1,3 +1,5 @@
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 /* Evaluates one five-field 16-bit scenario condition record for world_script_run_scenario_conditions
  * (the WORLD sibling of BATTLE process_scenario_conditionals): returns 1 when
  * the condition holds, 2 for type 0x19 (stores the id in script variable
@@ -12,7 +14,6 @@
  * The range test on unit_id is written as two comparisons: that spelling
  * makes GCC reload the byte (as the target does) where the (u32)(x - 0x78) < 5
  * form lets cse reuse the earlier load. */
-#include "fft/battle.h"
 #include "fft/world.h"
 
 s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation) {

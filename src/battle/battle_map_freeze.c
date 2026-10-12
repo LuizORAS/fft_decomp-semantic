@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Pause every map texture animation (their modes are saved and cleared) until
  * battle_map_unfreeze. Ability effects and the event script use the pair. */

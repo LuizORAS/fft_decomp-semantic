@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Resolves an event unit id to battle stats for the scenario conditions; returns
  * -1 for none.

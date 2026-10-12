@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Returns the Elemental (Geomancy) ability for the surface under the unit when

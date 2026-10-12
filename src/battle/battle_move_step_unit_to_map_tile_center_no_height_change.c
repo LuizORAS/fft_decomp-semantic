@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Distortion animation 0x09: move to the centre of the unit's map tile without
  * changing height. */

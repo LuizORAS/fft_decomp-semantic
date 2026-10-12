@@ -1,7 +1,5 @@
 /* SCUS_942.21 0x800204e4..0x8002064f. */
-#include "psx/libc.h"
 #include "psx/libcd.h"
-#include "psx/libetc.h"
 
 s32 CD_datasync(s32 mode) {
     s32 result;

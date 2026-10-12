@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
 
 /* Run a weapon or effect sprite block's sequence up to its next frame
  * instruction, or to its end, as battle_gfx_run_unit_seq_script does for the

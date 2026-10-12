@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
 #include "fft/event_attack.h"
-#include "psx/types.h"
 
 /* Enter ATTACK.OUT when script variable 0x1fc is clear: mark the transition,
  * load companion executable 0xd, then hand off to its scenario-music,

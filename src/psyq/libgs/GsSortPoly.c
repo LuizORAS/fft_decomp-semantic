@@ -1,5 +1,4 @@
 #include "psx/libgs.h"
-#include "psx/stddef.h"
 
 /* Copy a polygon to the work area, apply the 2D offset and link it into the OT.
  * Code bits 0x04/0x08/0x10 select 32-bit texture fields, a fourth vertex and vertex colors. */

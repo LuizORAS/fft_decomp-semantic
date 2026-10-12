@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x3A: +Brave (Y). */
 void battle_formula_add_brave_y(void) {

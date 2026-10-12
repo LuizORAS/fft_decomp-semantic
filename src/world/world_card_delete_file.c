@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Deletes `name` from the selected memory card, retrying erase up to

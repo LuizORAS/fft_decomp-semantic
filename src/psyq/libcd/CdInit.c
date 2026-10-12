@@ -1,5 +1,4 @@
 /* SCUS_942.21 0x8001e8c4..0x8001e953. */
-#include "psx/libc.h"
 #include "psx/libcd.h"
 s32 CdInit(void) {
     s32 retry = 4;

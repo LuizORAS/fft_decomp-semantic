@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_unit.h"
 
 /* Starts the teleport animation and sets the step destination: the tile in the path bytes,
  * or the unit's own tile when the teleport failed. */

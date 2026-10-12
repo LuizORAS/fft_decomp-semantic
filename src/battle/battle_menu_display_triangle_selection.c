@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 
 /* Thread entry of the mini menu (the Triangle menu): wait for the camera and any
  * menu transition to finish, pulse tutorial wait value 0xfe, show numeric values

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 
 /* Prepare destination geometry for a movement candidate.
  *

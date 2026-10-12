@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
 
 /* Stream command closing a zoomed window: when the zoom transition queued a
  * cropped draw area, queue the full draw area again at the next

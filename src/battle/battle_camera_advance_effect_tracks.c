@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Starts the parent timeline's camera moves for this frame: each of the

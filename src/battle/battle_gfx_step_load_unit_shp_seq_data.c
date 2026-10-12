@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Advances the unit SHP/SEQ loader by one step and returns the file kind index.
  *

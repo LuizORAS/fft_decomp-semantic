@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 void battle_unit_update_anim_display_for_all_targets(battle_unit_misc_data_t* unit) {

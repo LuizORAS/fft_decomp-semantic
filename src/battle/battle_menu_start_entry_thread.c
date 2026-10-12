@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Menu thread: waits for thread 8, runs the tutorial event if pending, then

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
 #include "psx/types.h"
 
 /* Write a 16-bit value little-endian into a script operand, which may be unaligned. */

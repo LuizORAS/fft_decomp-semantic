@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* A rider's mount; any other unit is returned itself. */
 battle_unit_misc_data_t* battle_unit_get_mount_misc_data(battle_unit_misc_data_t* unit) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 void battle_effect_interpolate_emitter_velocity_base_angles(
     const effect_geometry_record_t* source, s32 factor, VECTOR* out) {

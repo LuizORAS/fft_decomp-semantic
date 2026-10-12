@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
 
 /* Draws the unit's status bubble when the unit is on screen and has one.
  *

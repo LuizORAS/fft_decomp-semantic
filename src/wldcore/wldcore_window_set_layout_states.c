@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Select the palettes for the active-proposition list and its four windows. */
 void wldcore_window_set_layout_states(wldcore_menu_proposition_list_level_t* level) {

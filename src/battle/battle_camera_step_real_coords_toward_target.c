@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 
 /* Moves the camera position by this frame's step vector (g_battle_current_vector)
  * toward the unit's position without passing it.

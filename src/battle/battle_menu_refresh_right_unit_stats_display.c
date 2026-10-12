@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Reload the unit and redraw its status panel; a negative list index draws dashes. */
 void battle_menu_refresh_right_unit_stats_display(void) {

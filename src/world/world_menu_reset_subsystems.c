@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Target 0x800f2998. */
 void world_menu_reset_subsystems(void) {

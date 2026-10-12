@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Menu-opening thread 6: the Wait menu. */
 void battle_menu_wait_thread(void) {

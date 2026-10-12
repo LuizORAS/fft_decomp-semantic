@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Set part `index` of a sprite display: its place, the rectangle of the
  * texture page it shows and its battle_misc_display_flags_e. */

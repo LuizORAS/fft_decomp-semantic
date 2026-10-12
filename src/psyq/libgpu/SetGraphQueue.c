@@ -1,5 +1,4 @@
 /* LIBGPU 80024510-800245bc. */
-#include "psx/libapi.h"
 #include "psx/libgpu.h"
 int SetGraphQueue(int enabled) {
     u8 old = g_psyq_gpu_environment.queue_enabled;

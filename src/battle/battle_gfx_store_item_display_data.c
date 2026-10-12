@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Make the unit's item display show an item's 16x16 icon, centred on the
  * display's origin. */

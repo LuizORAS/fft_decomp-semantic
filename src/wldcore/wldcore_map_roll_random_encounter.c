@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/stddef.h"
 
 #define ENTRY_AT(byte_offset)   ((wldcore_encounter_entry_t*)((byte_offset) + (s32)base))
 #define ENTRY_BASE(byte_offset) ((wldcore_encounter_entry_t*)((s32)base + (byte_offset)))

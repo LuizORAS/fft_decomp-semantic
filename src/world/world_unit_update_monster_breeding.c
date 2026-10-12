@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Advance egg hatch counters, then make the daily monster-breeding roll.

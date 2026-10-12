@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Post-move benefits of the unit's movement abilities: Move-HP Up, Move-MP Up,

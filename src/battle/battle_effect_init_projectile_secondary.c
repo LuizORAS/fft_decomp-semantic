@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Start the current effect target's secondary effect: the low half of
  * animation selects the animation id (and its function id), the high half is

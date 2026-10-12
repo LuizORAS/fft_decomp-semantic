@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Blade Grasp. An ability flagged Blade Grasp eligible has its accuracy set to
  * 100 - Brave of the target; when the target passes its reaction roll during

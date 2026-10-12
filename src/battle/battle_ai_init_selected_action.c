@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_ai.h"
 
 /* Target 0x8019ae30. */
 void battle_ai_init_selected_action(void) {

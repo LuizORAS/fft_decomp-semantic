@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Polled by a menu thread each frame; input is the frame's 32-bit input value.

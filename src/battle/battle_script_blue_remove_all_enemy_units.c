@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* CallFunction 4: tint blue (red and green modulated by -0x1f) every displayed
  * unit whose initial team is not the blue one, skipping units whose ENTD lookup

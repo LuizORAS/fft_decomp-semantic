@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* WaitRotateUnit and WaitRotateAll: yield until the named unit, or every misc

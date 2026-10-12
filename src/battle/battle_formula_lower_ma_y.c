@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x56: -MA (Y), hit (MA+X)%. */
 void battle_formula_lower_ma_y(void) {

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_effect.h"
 
 /* The subset of battle_effect_init_render_state that does not touch the
  * prim buffer or the sprite counters. */

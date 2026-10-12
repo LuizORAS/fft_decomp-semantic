@@ -1,5 +1,4 @@
 #include "fft/event_helpmenu.h"
-#include "psx/types.h"
 
 /* Thread tail of the help menu: restore the 0x80 bytes of text section
  * pointers saved when it opened, free the overlay reservation and exit. */

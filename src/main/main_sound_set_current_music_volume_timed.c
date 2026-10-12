@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Fades the current music back to the remembered volume over time ticks. */
 int main_sound_set_current_music_volume_timed(int time) {

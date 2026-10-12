@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Starts a unit's reaction animation to the casting unit's action
  * (battle_unit_set_target_animation_from_attack_type). Always returns 1. */

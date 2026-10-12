@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Return to the soldier office menu with message 0xf821, redrawing the gil,
  * fee and roster-count displays for this frame. */

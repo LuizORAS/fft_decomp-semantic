@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Turns a living unit back to the facing saved in attack_facing (-1 for none) and

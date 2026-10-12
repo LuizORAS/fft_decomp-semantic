@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Concentrate on the attacker: the target's four evades become 0. */
 void battle_formula_calculate_concentrate(void) {

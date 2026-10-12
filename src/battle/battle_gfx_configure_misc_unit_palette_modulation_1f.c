@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Start a unit's fade-out removal with a red flash: fade step 4 and a red offset

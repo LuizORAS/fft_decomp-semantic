@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Move a unit to (x, y, level) with a new facing, carrying its mounted partner.

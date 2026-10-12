@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 
 /* Moves a unit to the centre of its map tile over distortion_timer frames.
  *

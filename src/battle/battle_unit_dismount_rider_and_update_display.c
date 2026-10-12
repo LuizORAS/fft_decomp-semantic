@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_unit.h"
 
 /* battle_unit_dismount_rider, followed by a display update of the rider and of
  * the mount. */

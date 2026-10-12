@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Reset the display of one of a unit's three sprite blocks: neutral colour,
  * no flags on its three parts and none of them in use. */

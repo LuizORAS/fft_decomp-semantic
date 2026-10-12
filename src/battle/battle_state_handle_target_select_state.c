@@ -1,6 +1,5 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /*
  * Per-frame handler for the BattleTargetSelectMode game state.

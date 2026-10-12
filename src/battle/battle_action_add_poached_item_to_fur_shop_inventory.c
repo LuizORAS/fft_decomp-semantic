@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Add a poached monster's item to the Fur Shop inventory: the rare one when a
  * roll of 0..255 is below 31 (31 in 256), otherwise the common one.

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* battle_gfx_apply_misc_unit_palette_modulation for one unit, or for all sixteen
  * when misc_id is 16 or more. */

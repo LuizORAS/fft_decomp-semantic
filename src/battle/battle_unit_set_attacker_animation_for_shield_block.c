@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* When the target blocked with a hand or a golem took the blow, replace the
  * attacker's unarmed, swing or thrust animation with its recoil at the same

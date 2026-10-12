@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/libc.h"
 
 /* Sort a -1 terminated item-id list in place for a shop or equipment menu.
  *

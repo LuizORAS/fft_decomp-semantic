@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Unlinks a rider from its mount: both records return to the unmounted state and
  * the rider loses its mounted display flag. Does nothing for a unit that is not a

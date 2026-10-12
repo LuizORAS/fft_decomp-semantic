@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Apply the target's reflect or weapon-evasion reactions before the attack resolves. */

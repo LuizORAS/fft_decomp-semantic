@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Advance the rhombus-cursor trail toward target and draw it.

@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Enter the target-select state: show the panel for the cursor tile and tint the
  * units the casting unit's selection command may pick, the other teams' red for a

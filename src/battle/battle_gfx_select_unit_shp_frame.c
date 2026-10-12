@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 
 /* Return the frame tables that a unit frame id indexes and the frame itself:
  * a battle_gfx_source_frame_t pointer.

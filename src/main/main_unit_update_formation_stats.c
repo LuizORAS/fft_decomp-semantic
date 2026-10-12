@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* main_unit_update_stats_statuses_and_equipment with skip_status_check set: stats
  * are re-derived without the critical and status notifications. */

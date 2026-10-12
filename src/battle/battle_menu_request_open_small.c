@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_menu.h"
 
 /* Queues companion executable 8 for loading without waiting for the current
  * request to drain (compare battle_menu_request_open_companion_executable, which blocks).

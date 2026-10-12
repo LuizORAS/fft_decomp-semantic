@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Per-frame body of the two Deep Dungeon mesh game states, which run while the

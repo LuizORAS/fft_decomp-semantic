@@ -1,5 +1,4 @@
 #include "fft/event_jobstts.h"
-#include "psx/types.h"
 
 menu_instruction_t* jobstts_cmd_set_otag_index_if_unlocked_handler(menu_instruction_t* data) {
     if (g_jobstts_gfx_otag_index_locked == 0) {

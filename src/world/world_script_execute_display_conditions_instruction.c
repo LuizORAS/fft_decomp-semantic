@@ -1,6 +1,5 @@
 #include "fft/event_require.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Target 0x800ef984; the no-op immediately before it is a separate function. */
 void world_script_execute_display_conditions_instruction(void) {

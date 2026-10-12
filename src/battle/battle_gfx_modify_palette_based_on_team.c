@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 /* Tint a unit's palette by its team: blue, red, green or light blue.
  *

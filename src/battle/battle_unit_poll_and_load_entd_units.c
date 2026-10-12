@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Loads the encounter's ENTD units once the ENTD file has arrived, then frees the

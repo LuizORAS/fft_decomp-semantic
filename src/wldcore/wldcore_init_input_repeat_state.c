@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 void wldcore_init_input_repeat_state(void) {
     g_wldcore_input_repeat_counter_l1 = 0;

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Side of origin the target tile lies on, split along the two diagonals (south
  * is lower y, west lower x). A tile on a diagonal counts as south (to the

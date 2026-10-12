@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* Offset a position for the current camera yaw: subtract 0xc from y, and move

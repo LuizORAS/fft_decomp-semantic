@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Expand one SHP frame into the parts of a unit's sprite display.
  *

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 
 /* The depth of water the unit stands in, which picks its animations: 0 on the surface (ON_WATER
  * movement, Float, a crystal), 1 for a chicken, frog or treasure and for IN_WATER movement,

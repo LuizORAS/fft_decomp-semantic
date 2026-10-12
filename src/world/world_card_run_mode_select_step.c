@@ -1,4 +1,3 @@
-#include "fft/event_card.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"

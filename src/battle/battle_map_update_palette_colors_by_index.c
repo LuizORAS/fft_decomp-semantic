@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* battle_map_update_palette_colors for one CLUT of the unit row. A clut_index of

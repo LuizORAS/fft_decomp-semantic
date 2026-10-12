@@ -2,7 +2,6 @@
 #include "psx/libspu.h"
 
 #include "psx/libapi.h"
-#include "psx/libetc.h"
 
 void SpuStart(void) {
     if (!_spu_isCalled) {

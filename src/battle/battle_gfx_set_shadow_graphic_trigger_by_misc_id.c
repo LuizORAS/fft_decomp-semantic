@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Shows a unit's shadow (UnitShadow event instruction). Returns 0 when no unit

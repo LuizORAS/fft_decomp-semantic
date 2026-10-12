@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
 #include "psx/types.h"
 
 /* RelativeCamera: rewrite the next Camera instruction's seven 16-bit operands

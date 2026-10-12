@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 void battle_formula_convert_hp_damage_to_mp_recovery(void) {

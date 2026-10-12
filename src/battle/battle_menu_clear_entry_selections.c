@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 
 /* Reset the selected row of the 11 menu entries listed in
  * g_battle_menu_idle_action_flag_clear_ids. */

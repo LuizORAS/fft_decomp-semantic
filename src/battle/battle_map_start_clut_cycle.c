@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Claim a free colour rotation slot: the colours first_color..last_color of a
  * CLUT row rotate one place every frame_duration frames. Returns the slot index +

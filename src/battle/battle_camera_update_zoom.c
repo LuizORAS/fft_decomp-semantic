@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Step the three zoom scales toward the zoom target, ONE zooming in or 0xc00

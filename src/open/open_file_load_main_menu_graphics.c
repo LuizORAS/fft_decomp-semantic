@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Load the title screen's graphics: upload the three TIMs at sectors 0, 0x11 and
  * 0x22 of OPNTEX.BIN, then read OPNBK image 0 as the frame image. */

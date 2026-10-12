@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Distortion animation 10 of g_battle_unit_distortion_animation_handlers: ends at once. Animation 11
  * is a second copy of this routine. */

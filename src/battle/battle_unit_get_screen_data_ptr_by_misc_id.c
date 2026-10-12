@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* The screen position of the unit with this misc id, or 0 for a missing unit.
  * battle_unit_copy_misc_screen_coords and battle_unit_project_misc_to_screen test

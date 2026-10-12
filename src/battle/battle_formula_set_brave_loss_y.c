@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Brave loss of Y: the amount is stored without
  * BATTLE_ACTION_STAT_CHANGE_INCREASE. */

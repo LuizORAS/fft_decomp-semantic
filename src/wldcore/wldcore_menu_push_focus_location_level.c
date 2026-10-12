@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Push a map-dot focus level and hide its parent window during the projection move.

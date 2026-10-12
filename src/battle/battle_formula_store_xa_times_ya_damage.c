@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Sets the target's result to HP damage XA * YA. */
 void battle_formula_store_xa_times_ya_damage(void) {

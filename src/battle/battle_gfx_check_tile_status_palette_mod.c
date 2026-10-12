@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Refresh the status palette of a unit and of its mount partner, unless suppressed. */
 void battle_gfx_check_tile_status_palette_mod(battle_unit_misc_data_t* unit, s32 tile_effect_level, s32 final_value) {

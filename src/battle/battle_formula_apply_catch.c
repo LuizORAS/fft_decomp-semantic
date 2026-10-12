@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Catch the thrown weapon when the target's Brave-based reaction roll succeeds. */

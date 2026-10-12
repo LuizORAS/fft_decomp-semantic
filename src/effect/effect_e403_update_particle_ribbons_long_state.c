@@ -1,7 +1,6 @@
 /* E403.BIN is the effect of ABILITY_ID_PHANTOM_MIDGAR_SWARM. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
-#include "psx/libc.h"
 
 #define RIBBON_SLOTS    EFFECT_PARTICLE_RIBBON_LONG_SLOTS
 #define RIBBON_POINTS   EFFECT_PARTICLE_RIBBON_LONG_POINTS

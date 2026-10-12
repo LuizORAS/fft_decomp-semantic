@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Moves a unit's record to the head of the misc unit list, so list walks reach it
  * first. Returns 1 when moved, 0 when no record has the misc id. */

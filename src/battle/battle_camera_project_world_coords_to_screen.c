@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* Projects a world position to screen x and y. Rebuilds the camera matrices first

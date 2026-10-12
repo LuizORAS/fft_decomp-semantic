@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Travel direction of the step in progress (battle_move_direction_e), from the
  * unit's tile to its destination tile. A difference in y decides before one in x,

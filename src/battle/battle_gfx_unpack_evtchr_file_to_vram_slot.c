@@ -1,6 +1,4 @@
-#include "fft/battle.h"
-#include "psx/libgpu.h"
-#include "psx/stddef.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Unpack a loaded block of EVTCHR.BIN into an EVTCHR slot whose image

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Free the EVTCHR slots whose page holds the unit's SP2 image. */
 void battle_gfx_invalidate_sp2_vram_slot(battle_unit_misc_data_t* unit) {

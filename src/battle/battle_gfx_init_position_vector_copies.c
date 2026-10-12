@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Enables the unit's six-copy position trail and seeds every copy with its
  * current position. */

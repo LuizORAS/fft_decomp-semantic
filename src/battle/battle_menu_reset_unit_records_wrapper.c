@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Nothing in the game calls it. */
 void battle_menu_reset_unit_records_wrapper(void) {

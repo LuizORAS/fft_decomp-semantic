@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
 
 /* Queues the gained Exp and JP displays after an action, when the Display Gained
  * Exp/JP option is on and the amount is not 0. The first display is built at once

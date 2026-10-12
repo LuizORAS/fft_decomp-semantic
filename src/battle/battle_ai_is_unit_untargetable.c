@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Excludes absent, inert, mounted, or hidden enemies from ordinary AI targeting.

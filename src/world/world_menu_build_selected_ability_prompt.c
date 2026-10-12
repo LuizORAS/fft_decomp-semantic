@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Store the selected ability-name text ID, then build the prompt. */
 void world_menu_build_selected_ability_prompt(void) {

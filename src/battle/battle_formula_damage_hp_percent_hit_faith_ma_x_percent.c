@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x0E: damage (Y)% of max HP, hit F(MA+X)%; magic evade. The
  * ability's status must apply. An undead target skips the evade and its magic

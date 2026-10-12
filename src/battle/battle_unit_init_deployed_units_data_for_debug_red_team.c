@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Clears g_battle_enemy_level_sum, then runs battle_unit_init_deployed_units_data

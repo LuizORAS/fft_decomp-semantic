@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* One-time setup of the sprite renderer: the numeric display matrix's third row
  * and column, a depth of 0x200 for the four GTE input vertices the part quads are

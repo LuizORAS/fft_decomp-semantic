@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Formula 0x43: damage equal to the caster's missing HP (MaxHP - CurHP). */

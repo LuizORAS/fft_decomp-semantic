@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Linear counterpart of battle_effect_interpolate_svector_cos: t = current/duration in q13. */

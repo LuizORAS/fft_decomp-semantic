@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* Linear ramp: value slides by step until count expires, then snaps to
  * target. */

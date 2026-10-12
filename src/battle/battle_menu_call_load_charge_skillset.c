@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* battle_menu_load_charge_skillset for a caller that only wants the ability ids;

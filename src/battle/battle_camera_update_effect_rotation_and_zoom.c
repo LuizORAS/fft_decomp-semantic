@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 
 /* Advance the effect camera rotation, position and zoom tracks one frame.
  *

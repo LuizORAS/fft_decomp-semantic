@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Reaction roll: returns 0 when the unit reacts, a Brave in 100 chance.

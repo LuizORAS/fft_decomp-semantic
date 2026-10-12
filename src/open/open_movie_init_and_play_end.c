@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Set up the ending: reset the runtime state, save the 64x256 VRAM page at (960,
  * 256) to (960, 0), load the ending's graphics and start FFTEND.STR. */

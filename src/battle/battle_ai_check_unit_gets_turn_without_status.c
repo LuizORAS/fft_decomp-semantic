@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /*
  * Reject removal of a control status that expires before the unit's next turn.

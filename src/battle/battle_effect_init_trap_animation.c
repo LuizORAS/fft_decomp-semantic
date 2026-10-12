@@ -9,7 +9,7 @@
  * constraint reaches that temp; only keeping every symbol at its own type
  * avoids it.
  */
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Start the animation script of trap group on slot: reset the colour and

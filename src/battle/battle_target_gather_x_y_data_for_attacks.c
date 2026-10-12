@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Move the cursor to the target of the unit's stored action: the target tile, or
  * the tile of the target unit. */

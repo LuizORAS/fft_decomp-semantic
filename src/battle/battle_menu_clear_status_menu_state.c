@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_menu.h"
 
 void battle_menu_clear_status_menu_state(void) {
     g_battle_menu_status_requested = 0;

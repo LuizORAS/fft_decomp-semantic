@@ -1,5 +1,4 @@
 #include "fft/event_equip.h"
-#include "psx/types.h"
 
 /* Stream command: enqueue a draw-area rect (x, y, w, h from the command)
    unless the zoom transition already emitted one. */

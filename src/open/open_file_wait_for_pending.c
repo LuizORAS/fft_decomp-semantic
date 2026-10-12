@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 void open_file_wait_for_pending(void) {

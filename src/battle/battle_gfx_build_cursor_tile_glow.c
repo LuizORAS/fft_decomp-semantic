@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"

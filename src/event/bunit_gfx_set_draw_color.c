@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
 
 void bunit_gfx_set_draw_color(const rgb24_t* color) {
     if (color != 0) {

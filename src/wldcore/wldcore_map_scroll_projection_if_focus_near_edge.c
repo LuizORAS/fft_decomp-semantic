@@ -1,6 +1,5 @@
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 /* Applies a scroll delta to the projection origin when the resulting window
  * origin would leave [-64, 72] horizontally or [-64, 64] vertically, and

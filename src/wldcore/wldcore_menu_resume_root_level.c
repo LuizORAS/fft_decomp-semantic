@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Resume handler of the world map's root level: show the war funds in the
  * context value display, reset the level's window palette, restore the live

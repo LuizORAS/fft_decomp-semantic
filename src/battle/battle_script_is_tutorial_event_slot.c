@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
 #include "psx/types.h"
 
 /* 1 while the current event id is one of the sixteen tutorial events,

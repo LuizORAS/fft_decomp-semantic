@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /*
  * Release a texture rectangle's occupied cells in the 16-by-15 grid.

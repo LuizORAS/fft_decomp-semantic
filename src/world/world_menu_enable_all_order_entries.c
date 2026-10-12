@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Request a redraw from all eight formation panel threads. */
 void world_menu_enable_all_order_entries(void) {

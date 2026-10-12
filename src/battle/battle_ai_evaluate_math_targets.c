@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_ai.h"
 
 /*
  * Evaluate learned Math Skill ability and parameter combinations.

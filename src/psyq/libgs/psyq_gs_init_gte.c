@@ -1,6 +1,5 @@
 #include "psx/libgs.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 void psyq_gs_init_gte(void) {
     InitGeom();

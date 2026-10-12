@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Start loading the SP2 file that holds the frames of the unit's pending

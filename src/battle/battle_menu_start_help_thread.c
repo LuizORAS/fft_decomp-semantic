@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Enter the ability-preview-help state and start the help menu. Nothing in the
  * game calls it. */

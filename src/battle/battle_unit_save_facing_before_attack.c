@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* If the unit has no attack facing yet (0xffff), seed it from the unit's

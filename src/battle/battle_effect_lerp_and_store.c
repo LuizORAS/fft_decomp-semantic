@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* start + (end - start) * factor / 256, stored in out and returned: factor is a
  * fraction of 256. */

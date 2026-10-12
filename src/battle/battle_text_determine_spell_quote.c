@@ -1,4 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/script.h"
 
 /* Chooses whether an ability announcement shows a spell quote.
  *

@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_event.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Steps the camera tilt script variable by 0x10 per frame to the nearer of the

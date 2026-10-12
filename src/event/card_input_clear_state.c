@@ -1,5 +1,4 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
 
 void card_input_clear_state(void) {
     g_card_input_newly_pressed = 0;

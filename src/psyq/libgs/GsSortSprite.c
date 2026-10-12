@@ -1,7 +1,6 @@
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
 #include "psx/libgte.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* The target compares the adjacent neutral x/y scales with one 32-bit load. */

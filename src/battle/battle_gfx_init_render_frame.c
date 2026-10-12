@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/libgte.h"
 
 /* Starts a frame of sprite drawing: the GTE offset is reset to (0, 0) and the

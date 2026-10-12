@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Event Use3DObject: start state row value_b of map mesh part value_a (map data

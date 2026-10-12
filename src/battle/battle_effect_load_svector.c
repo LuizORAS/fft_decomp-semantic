@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 void battle_effect_load_svector(vec3s16_t* src, SVECTOR* dst) {
     dst->vx = src->x;

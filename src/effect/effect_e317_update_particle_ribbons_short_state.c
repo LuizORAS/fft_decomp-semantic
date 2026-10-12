@@ -1,7 +1,6 @@
 /* E317.BIN is the effect of ABILITY_ID_MONSTER_BLACK_CHOCOBO_CHOCO_BALL. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
-#include "psx/libc.h"
 
 #define RIBBON_SLOTS    EFFECT_PARTICLE_RIBBON_SHORT_SLOTS
 #define RIBBON_POINTS   EFFECT_PARTICLE_RIBBON_SHORT_POINTS

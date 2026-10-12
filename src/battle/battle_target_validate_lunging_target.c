@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Validates a lunging-weapon target one or two tiles away in a straight line.

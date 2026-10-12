@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Hit chance (XA+YA)% with Attack Up, Martial Arts, Berserk or Frog, Defense

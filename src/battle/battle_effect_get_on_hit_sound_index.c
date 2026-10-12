@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Returns the next sound of an effect sound channel, chosen from the channel's
  * three ids by its mode and the number of sounds it has played; 0 is no sound.

@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* The load-game overlay restores only 12/8/7/5/5/7/5 bytes of the seven order
  * lists respectively. The weapon item-ID order starts at 0x80057b5c, outside

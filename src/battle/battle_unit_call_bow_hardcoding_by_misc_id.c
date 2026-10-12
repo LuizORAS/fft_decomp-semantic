@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* battle_unit_set_bow_hardcoding for two misc unit ids: called by the arrow-arc
  * and linear projectile effects for the unit the projectile hits. */

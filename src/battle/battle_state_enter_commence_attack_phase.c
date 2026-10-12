@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /*
  * Copies the caster's action target data (battle_stats_t 0x16e..0x181) into

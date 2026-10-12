@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Wait until the unit view's four panel threads (slots 13 down to 10) have stopped. */
 void battle_thread_wait_for_unit_view_panels(void) {

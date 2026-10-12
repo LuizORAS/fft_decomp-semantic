@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Save the map background colour in the backup that
  * battle_map_restore_background_color reloads. */

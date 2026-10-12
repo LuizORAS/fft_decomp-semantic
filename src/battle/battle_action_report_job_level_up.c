@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
 
 /* Report a job level up recorded in the unit's rewards: message 0x183e for three
  * seconds, the level-up animation and effect, the cursor on the unit and the job

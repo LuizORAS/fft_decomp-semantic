@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
 
 void battle_menu_init_subsystems(void) {
     battle_menu_init_subsystem_pointers();

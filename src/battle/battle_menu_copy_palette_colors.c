@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_menu.h"
 
 /* Copies the normal and the dimmed 16-colour menu palette into the menu palette color table. */
 void battle_menu_copy_palette_colors(const menu_palette_pair_t* source) {

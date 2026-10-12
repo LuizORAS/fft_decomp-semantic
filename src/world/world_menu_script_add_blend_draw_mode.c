@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Add a blend draw-mode primitive from menu-script opcode 0x18.
  *

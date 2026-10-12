@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Thread body: loads companion overlay file 7 and runs it with state 3 until
  * it reports completion. */

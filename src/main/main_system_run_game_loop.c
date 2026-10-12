@@ -1,6 +1,5 @@
 #include "fft/battle.h"
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* The top-level loop of the game: opening, then world map and battles until a
  * reset or the ending. It never returns; main_system_reset_game re-enters it from

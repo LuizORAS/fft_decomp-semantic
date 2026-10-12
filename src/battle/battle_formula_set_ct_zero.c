@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x15: CT to 0, hit F(MA+X)%; magic evade. */
 void battle_formula_set_ct_zero(void) {

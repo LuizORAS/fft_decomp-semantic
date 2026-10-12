@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
 #include "fft/event_require.h"
-#include "psx/types.h"
 
 /* Thread body of DisplayConditions: draw numeric values again and run REQUIRE's
  * condition dispatcher, which takes the display id and its operand from the

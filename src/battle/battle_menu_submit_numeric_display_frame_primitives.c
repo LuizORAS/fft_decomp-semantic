@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Submit the frame's twelve lines, sprite and draw modes. */

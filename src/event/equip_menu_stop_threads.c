@@ -1,5 +1,4 @@
 #include "fft/event_equip.h"
-#include "psx/types.h"
 
 /* Ask the unit status, equipment list, numeric editor and item numeric
  * panel threads to stop and clear the two panel styles. */

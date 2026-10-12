@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "fft/world.h"
 
 /* Copy a displayed unit's screen x, y and z into `out`; nothing is written

@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 /* Only the low 16 bits of each input component are read. */
 /* result = left + right */

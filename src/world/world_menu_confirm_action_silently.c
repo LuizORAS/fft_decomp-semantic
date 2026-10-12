@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Runs the menu's confirm handler on a simulated, silent Circle press with
  * option 0 selected, then clears the injected input. */

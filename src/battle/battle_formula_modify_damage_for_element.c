@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Target affinities on the stored HP damage: absorb flags the action, nullify
  * cancels it, half halves, weak doubles. Half and weak both apply. */

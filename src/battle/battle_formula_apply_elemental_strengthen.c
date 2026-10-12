@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Strengthen step: XA * 5/4 when the attacker strengthens one of the ability's
  * elements. */

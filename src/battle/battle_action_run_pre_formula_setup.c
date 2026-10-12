@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* g_battle_action_current_ability bound a second time. Spelling every field through one

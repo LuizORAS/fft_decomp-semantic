@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Step the pitch toward the tilt target, 0x1c0 (high) or 0x12e (low), from
  * either side, by an increment that grows by twice the animation speed each

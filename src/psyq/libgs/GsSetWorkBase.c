@@ -1,5 +1,4 @@
 #include "psx/libgs.h"
-#include "psx/types.h"
 
 /* Sets the base of the packet work area the sorters allocate their packets
  * from. */

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_unit.h"
 
 /* Seat the rider on the mount: link both records, copy the mount's facing,
  * position and map coordinates to the rider and raise the rider above it. */

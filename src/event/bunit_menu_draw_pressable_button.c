@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Draw one slot's span of g_bunit_slot_sprite_entries sprite entries at (x, y).

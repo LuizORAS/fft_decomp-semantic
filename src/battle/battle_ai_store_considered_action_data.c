@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_ai.h"
 
 /* Enter AI action simulation, save the current attacker and clear Hamedo state. */
 void battle_ai_store_considered_action_data(void) {

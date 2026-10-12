@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* The number of katanas battle_menu_collect_draw_out_katanas lists in

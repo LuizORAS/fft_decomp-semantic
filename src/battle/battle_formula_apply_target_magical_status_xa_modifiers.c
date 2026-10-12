@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Target statuses on magical XA: Shell * 2/3; Chicken or Frog * 3/2. */
 void battle_formula_apply_target_magical_status_xa_modifiers(void) {

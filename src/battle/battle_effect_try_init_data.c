@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* battle_effect_init_data as a 0 or 1 result: the event script's EffectStart

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Upload WEP.SPR's weapon, trail and particle images. Keep weapon and trail

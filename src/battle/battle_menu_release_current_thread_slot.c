@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Release the typewriter text slot the current thread owns, if any: clear its

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Damage of formulas 0x01 and 0x02: XA and YA by weapon type, charge power,

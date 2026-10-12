@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Loads the route joining locations from and to (in either direction) into

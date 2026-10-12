@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Nonzero when the unit cannot react: it has a status of the prevent-reaction
  * set, or the current action is itself a reaction or a simulation (anything but

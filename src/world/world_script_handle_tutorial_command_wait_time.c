@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Tutorial command: wait the number of frames in the command's operand byte
  * (counted by the VSync mode), then step past the two-byte command. */

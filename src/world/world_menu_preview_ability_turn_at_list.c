@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Menu thread: build the AT list preview for the pending ability, pulse
  * tutorial wait value 0xFA and run the scrolling list. */

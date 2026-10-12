@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* 1 when the unit gets a turn before the considered ability's charge time runs

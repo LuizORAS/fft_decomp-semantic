@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Restore the location list's optional renderer palette. */
 void wldcore_window_restore_location_list_palette(wldcore_menu_stack_record_t* level) {

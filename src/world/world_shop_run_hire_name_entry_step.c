@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Soldier office: the name entry keyboard for the recruit, then the fee prompt. */
 void world_shop_run_hire_name_entry_step(void) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* XA = Speed, YA = the ability's X. */
 void battle_formula_store_speed_and_x(void) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* XA and YA of formula 0x64 (Jump): XA = PA, or PA * 3/2 with a polearm; YA =
  * weapon power, or bare-handed XA * Brave / 100 (at least 1). */

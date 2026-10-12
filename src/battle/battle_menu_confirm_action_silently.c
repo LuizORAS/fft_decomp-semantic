@@ -1,6 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Runs the menu's action handler on a simulated, silent Circle press with
  * option 0 selected, then clears the injected input. */

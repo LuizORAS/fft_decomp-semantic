@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_move.h"
 
 /* Distortion animation 0x08: move toward the action target in equal steps without
  * changing height (battle_unit_move_toward_action_target). */

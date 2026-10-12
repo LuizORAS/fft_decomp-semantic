@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 /*

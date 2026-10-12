@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Find the first camera keyframe of the tracks in mask that is still ahead

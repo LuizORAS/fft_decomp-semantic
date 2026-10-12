@@ -1,5 +1,4 @@
 /* LIBGPU 80024238-80024390. */
-#include "psx/libc.h"
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 

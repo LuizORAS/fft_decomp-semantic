@@ -1,6 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Render a text record into a freshly built window image at the record's own
  * origin, upload it to the record's rectangle and free the buffer.

@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_map.h"
 
 /* Thread that battle_menu_init_attack_resources_and_threads starts in the
  * deployment slot: one frame later it sets g_battle_map_data_load_complete, which

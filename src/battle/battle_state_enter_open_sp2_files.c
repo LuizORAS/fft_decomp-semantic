@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Enter the open-SP2-files state at animation speed 1 with no SP2 buffer
  * allocated. */

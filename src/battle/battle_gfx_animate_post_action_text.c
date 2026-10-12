@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Animate and queue the three numeric post-action display sprites.

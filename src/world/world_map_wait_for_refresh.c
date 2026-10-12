@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Yield until g_world_map_refresh_pending is cleared by another thread. */
 void world_map_wait_for_refresh(void) {

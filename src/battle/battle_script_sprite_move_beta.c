@@ -1,5 +1,6 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_event.h"
+#include "fft/thread.h"
 
 /* Thread body of SpriteMoveBeta: run the sprite move with the last operand taken
  * as a speed. */

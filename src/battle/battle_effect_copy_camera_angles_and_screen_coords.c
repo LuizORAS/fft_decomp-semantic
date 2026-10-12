@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 
 /* Seed the four effect camera snapshots from the live camera.
  *

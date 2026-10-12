@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Extend the tutorial highlight while other commands run; WAIT counts its brightness down. */
 void world_script_advance_tutorial_highlight_brightness(void) {

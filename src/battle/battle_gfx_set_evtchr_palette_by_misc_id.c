@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 /* Give a unit CLUT `clut_index` of a slot's EVTCHR block, and the one eight
  * after it as its second. */

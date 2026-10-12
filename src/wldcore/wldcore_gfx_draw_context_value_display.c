@@ -2,7 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 /* Draws the HUD numeric readout at the context-value display position, laid
  * out by g_wldcore_context_value_display_mode: 1 is the labelled, underlined

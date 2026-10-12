@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Target affinities to the weapon's elements. */
 void battle_formula_modify_elemental_damage(void) {

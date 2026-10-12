@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 void battle_unit_snap_all_facings_to_quadrants(void) {
     battle_unit_misc_data_t* unit;

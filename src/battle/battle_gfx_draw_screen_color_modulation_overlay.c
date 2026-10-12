@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
 
 /* Queues the screen colour-modulation overlay for this frame, the polygon and its
  * draw mode of the current screen polarity, unless all three components are 0.

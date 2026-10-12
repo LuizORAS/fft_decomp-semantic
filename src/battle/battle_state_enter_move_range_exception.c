@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 
 /* Enter the move-range-exception state, reached when the casting unit has no
  * reachable tile: opens targeting-prompt option 2 for the source unit. */

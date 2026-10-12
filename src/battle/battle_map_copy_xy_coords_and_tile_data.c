@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Load a terrain chunk (GNS_RESOURCE_TERRAIN): the map's width and depth in

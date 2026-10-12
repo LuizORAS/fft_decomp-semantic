@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Use the percentage in hp_damage as the hit chance and clear it. 100 or more

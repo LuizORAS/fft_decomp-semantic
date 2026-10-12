@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Rebuilds the camera matrix from the angles (`rotation`, an SVECTOR), the
  * screen offset and the zoom.

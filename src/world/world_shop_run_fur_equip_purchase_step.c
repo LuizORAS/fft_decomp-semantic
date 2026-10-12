@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Fur shop version of the equip-candidate step: a return to the buy list
  * goes to the fur shop's buy list. */

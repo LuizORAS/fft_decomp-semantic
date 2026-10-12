@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_move.h"
 
 /* Knockback: copy the destination tile that the attacker's record (src) holds for
  * its target into the target's (dst) movement destination and start the target's

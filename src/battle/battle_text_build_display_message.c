@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_text.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Caching a view across selector tests removes the native script-base reload. */

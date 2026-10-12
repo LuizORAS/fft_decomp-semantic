@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Called for the last step of a path: when the unit has a pending mount, set the
  * step's mount bit (0x10), which marks a step that ends on another unit. */

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 s32 battle_unit_count_crystal_misc_units(void) {
     battle_unit_misc_data_t* unit;

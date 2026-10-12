@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /*
  * Test whether a current status lasts through the requested charge time.

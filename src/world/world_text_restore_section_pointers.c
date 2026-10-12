@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 void world_text_restore_section_pointers(void) {
     world_script_copy_bytes(

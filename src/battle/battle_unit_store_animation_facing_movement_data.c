@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* battle_unit_store_animation_facing with the force flag: the animation
  * starts on the next update, from its beginning even when it is playing. */

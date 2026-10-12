@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_map.h"
 
 /* Write the cursor tile to `destination` as an SVECTOR: x, the layer in vy, and
  * the map y in vz. */

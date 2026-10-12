@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Show the countdown's next message and count it off; the last one also
  * fades the music out and moves the countdown to

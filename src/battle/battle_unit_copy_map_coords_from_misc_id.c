@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 void battle_unit_copy_map_coords_from_misc_id(u32 misc_id, SVECTOR* coords) {

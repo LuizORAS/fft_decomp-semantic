@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Thread entry of system function 0x28 (the silent move confirmation): with menu
  * sounds suppressed, handle confirm and cancel on the menu each frame until

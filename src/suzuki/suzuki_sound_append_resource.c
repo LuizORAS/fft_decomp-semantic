@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* Appends a loaded SED/SMD block to the end of the Suzuki driver's sound
  * resource list. */

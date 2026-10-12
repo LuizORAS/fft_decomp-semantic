@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Cancels a pending tune, or fades a playing one out to volume 0 over time
  * ticks (0: at once). */

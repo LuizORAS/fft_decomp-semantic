@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Set or blend CLUTs of a map row to `colors`: all sixteen (256 colours) when

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Maintenance on the target turns a break or steal into a forced failure.
  *

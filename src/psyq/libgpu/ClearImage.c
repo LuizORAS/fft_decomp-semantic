@@ -1,5 +1,4 @@
 /* LIBGPU 80024868-800248fc. */
-#include "psx/libetc.h"
 #include "psx/libgpu.h"
 
 int ClearImage(RECT* rect, u8 r, u8 g, u8 b) {

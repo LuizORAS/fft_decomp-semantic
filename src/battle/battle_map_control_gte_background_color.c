@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* GTE back colour commands for the map's ambient colour.
  *

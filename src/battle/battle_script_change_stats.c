@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Battle twin of world_script_change_stats. ChangeStats event instruction: add a signed delta to one stat of each

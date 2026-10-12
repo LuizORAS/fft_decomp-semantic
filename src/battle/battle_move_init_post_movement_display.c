@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Stop the game flow after the casting unit's move and start the post-movement
  * steps.

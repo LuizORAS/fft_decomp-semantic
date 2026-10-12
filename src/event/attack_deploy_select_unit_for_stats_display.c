@@ -1,5 +1,4 @@
 #include "fft/event_attack.h"
-#include "psx/types.h"
 
 /* Move the roster cursor forward (wrapping at 20) to the first unit the
  * current squad may still deploy and load it into the status panels. */

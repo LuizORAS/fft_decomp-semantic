@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Start a secondary effect on a unit as both its caster and its target, with the
  * unit's sprite palette as the effect's parameter. A unit without battle data

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* The underlying loader handles ordinary SPR as well as special SHP/SEQ.
  * Keep polling only its immediate-progress result, not deferred work. */

@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 
 /* The acting-unit camera step vector at double length, used when the unit is
  * outside the wider screen window. */

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Miss that no roll decides: accuracy 0, miss type forced failure. */
 void battle_formula_force_attack_miss(void) {

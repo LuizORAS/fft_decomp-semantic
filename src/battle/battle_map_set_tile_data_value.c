@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Store one packed field of the tile at (x, y, layer): the setter of

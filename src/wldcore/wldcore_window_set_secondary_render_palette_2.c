@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Sets the second owned render record's palette selector when its slot is present. */
 void wldcore_window_set_secondary_render_palette_2(wldcore_menu_slot_set_t* slots) {

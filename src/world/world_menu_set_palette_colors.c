@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Copies the normal and the dimmed 16-colour menu palette into the menu
  * palette color table. */

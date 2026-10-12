@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Distance in tiles along the map axes (|dx| + |dy|), ignoring height. */
 s32 battle_ai_calculate_distance_between_units(battle_stats_t* first, battle_stats_t* second) {

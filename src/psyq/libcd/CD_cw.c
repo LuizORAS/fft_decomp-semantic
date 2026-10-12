@@ -1,5 +1,4 @@
 /* SCUS_942.21 0x8001fc04..0x8002004b. */
-#include "psx/libc.h"
 #include "psx/libcd.h"
 #include "psx/libetc.h"
 

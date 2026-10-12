@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Resets the camera for a new map: screen offset (0x100, 0xa0, 0x280), zoom ONE,
  * pitch 0x12e (the low tilt), yaw 0xe00, position at the origin, cursor on tile

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* With an ally in peril, switch to the recovery policy and return -2.
  * Otherwise focus on the unit's auto-battle target and run the general search;

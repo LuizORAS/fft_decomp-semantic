@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Clear all 26 16-bit values in each bank, including the extra reset slots. */
 void battle_effect_reset_parent_timeline(effect_record_t* record) {

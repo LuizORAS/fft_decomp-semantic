@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Item-list shop menu step: on first entry prompts 0xF80B (0xF80C when the
  * player already holds items), rebuilds the item list and installs the seven

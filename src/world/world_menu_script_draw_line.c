@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Draw the command's two endpoints with its RGB color, then advance. */
 menu_instruction_t* world_menu_script_draw_line(menu_instruction_t* instruction) {

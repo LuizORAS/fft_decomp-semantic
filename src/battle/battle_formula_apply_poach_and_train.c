@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Resolve Secret Hunt and Train after an HP-damaging formula 01-06 hit.

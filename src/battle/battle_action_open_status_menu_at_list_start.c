@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Open the status menu once: mark it open and restart the AT list cursor at entry
  * 0. */

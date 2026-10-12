@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Saves the screen colour modulation for
  * battle_gfx_restore_screen_color_modulation. No retail code calls either. */

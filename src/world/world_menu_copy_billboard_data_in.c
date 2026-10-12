@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Copy a unit's three panel blocks in: the 0x22-byte status billboard, the
  * 0xE-byte identity record and the 0x40-byte stat fields. */

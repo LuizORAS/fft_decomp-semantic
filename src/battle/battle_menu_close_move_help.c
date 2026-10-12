@@ -1,5 +1,8 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /* Return to choosing a move destination: recompute the source unit's reachable
  * tiles, show them and enter the close-move-help state with the cursor unit's

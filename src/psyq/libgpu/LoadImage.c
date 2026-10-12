@@ -1,5 +1,4 @@
 /* LIBGPU 800248fc-80024960. */
-#include "psx/libetc.h"
 #include "psx/libgpu.h"
 
 s32 LoadImage(RECT* rect, u32* pixels) {

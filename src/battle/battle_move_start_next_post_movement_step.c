@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_move.h"
 
 /* Starts the next post-action step selected by g_battle_move_find_result.
  *

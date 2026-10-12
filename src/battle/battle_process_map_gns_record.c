@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_map.h"
 
 /* Apply one command record that follows the resource rows of a map's GNS file and
  * step g_battle_map_gns_record_cursor past it.

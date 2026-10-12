@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Effect of each talk skill: Negotiate takes gil, Persuade zeroes CT, Praise
  * and Threaten change Brave by Y, Preach and Solution change Faith by Y; the

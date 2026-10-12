@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Golem's hit chance: (MA with Magic Attack Up + X) * caster Faith / 100, the

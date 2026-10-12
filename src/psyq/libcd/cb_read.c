@@ -1,5 +1,4 @@
 /* SCUS_942.21 0x80020840..0x80020a63. */
-#include "psx/libc.h"
 #include "psx/libcd.h"
 #include "psx/libetc.h"
 void cb_read(u8 event, u8* result) {

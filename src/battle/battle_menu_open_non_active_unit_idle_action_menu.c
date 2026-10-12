@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Opens the non-active-unit idle action menu for the unit under the cursor;

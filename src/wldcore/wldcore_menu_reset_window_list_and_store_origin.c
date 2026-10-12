@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Empty the menu stack, push the root level and place its window at the
  * projected location marker (4 pixels above it). */

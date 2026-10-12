@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Hides every unit that has the Jump status. */
 void battle_gfx_reset_jumping_unit_graphic_triggers(void) {

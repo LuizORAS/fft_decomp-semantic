@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* battle_gfx_calculate_screen_z_from_input_coords at the caller's coords (vy
  * holds the map layer), evaluated for the mount when the unit is a rider. A

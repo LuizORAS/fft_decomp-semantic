@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Begin the job wheel's close animation; with fewer than two jobs there is
  * no wheel and WORLD_FORMATION_MENU_JOB_WHEEL_OPENING is set at once. */

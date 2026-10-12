@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Formula 0x09: damage (Y)% of max HP with element, hit F(MA+X)%; magic evade;
  * 19% status. */

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/libgte.h"
 
 /* Queue a unit's sprite layers into the ordering table at its depth.

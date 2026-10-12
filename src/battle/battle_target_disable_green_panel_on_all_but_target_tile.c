@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Leave only the action's target tile marked as targeted. Returns 1, or -1

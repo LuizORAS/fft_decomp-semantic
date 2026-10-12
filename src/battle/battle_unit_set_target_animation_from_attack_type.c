@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /*
  * Pick and start the reaction animation a target plays after an action

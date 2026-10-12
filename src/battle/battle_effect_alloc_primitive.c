@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Allocate one typed primitive from the effect renderer's circular arena.
  *

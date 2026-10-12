@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Advance the current secondary effect's particles: every effect slot in the
  * first count entries of slot_ids, count being the particle group's. A slot that

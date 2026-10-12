@@ -1,5 +1,4 @@
 #include "fft/event_option.h"
-#include "psx/types.h"
 
 /* Reset the mutable fields and restore the embedded menu template. */
 void option_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* record) {

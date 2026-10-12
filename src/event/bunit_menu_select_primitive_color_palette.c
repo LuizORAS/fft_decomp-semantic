@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
 
 /* Select the menu primitives' normal or dimmed colours from the panel style
  * or the global event mode. The palette

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "fft/world.h"
 
 /* Widen a displayed unit's 16-bit screen x, y and z values into a 32-bit coordinate triple. */

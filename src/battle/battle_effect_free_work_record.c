@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Unlinks work from state record record_index, releases its data according
  * to the kind in kind_flags, and returns it to the free chain. */

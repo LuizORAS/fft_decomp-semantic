@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
 
 /* Queues the post-action displays for a unit's resolved action.
  *

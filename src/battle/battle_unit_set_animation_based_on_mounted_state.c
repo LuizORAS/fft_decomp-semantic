@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /* Give a rider the riding animation and any other unit the standing one, or
  * the submerged idle in water two or more deep; a mount on land also puts

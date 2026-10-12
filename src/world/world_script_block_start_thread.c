@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "fft/world.h"
 
 /* Thread body for an event BLOCK_START: runs the enclosed instructions up to

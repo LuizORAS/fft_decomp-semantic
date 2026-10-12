@@ -1,5 +1,4 @@
 #include "fft/event_option.h"
-#include "psx/types.h"
 
 /* Close the AT list's worker set and restore the parent option threads. */
 void option_menu_at_list_select_unit_thread(void) {

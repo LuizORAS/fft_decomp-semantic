@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Counts a unit of any team but blue into the enemy level statistics: its level
  * is added to g_battle_enemy_level_sum and raises g_battle_highest_enemy_level. */

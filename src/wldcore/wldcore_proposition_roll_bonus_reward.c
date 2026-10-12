@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Rolls the reward of a successful proposition.

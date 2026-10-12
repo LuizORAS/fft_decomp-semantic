@@ -1,5 +1,4 @@
 /* SCUS_942.21 0x80021c90..0x80021e4b. */
-#include "psx/libc.h"
 #include "psx/libcd.h"
 enum {
     CD_DMA_TRANSFER_ACTIVE = 0x01000000,

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Target statuses on physical XA: Protect * 2/3; Sleep or Charging * 3/2;
  * Chicken or Frog * 3/2. */

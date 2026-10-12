@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* SEQ script step: moves the sprite offset by delta across the unit's facing: +x
  * facing north, -x facing south, +z facing west, -z facing east. A diagonal

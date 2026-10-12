@@ -1,4 +1,3 @@
-#include "psx/libc.h"
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 

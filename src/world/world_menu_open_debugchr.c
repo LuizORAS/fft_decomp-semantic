@@ -1,6 +1,5 @@
 #include "fft/event_debugchr.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Thread body that runs the DEBUGCHR character debug session from a WORLD
  * menu: hides the unit view, loads the overlay, stops the menu thread and

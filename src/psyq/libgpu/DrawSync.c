@@ -1,5 +1,4 @@
 /* LIBGPU 800246d4-80024740. */
-#include "psx/libetc.h"
 #include "psx/libgpu.h"
 
 int DrawSync(int mode) {

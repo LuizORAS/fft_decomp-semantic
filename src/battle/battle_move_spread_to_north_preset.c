@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Step +y: the slope shifts select the source's exit side and the
  * destination's entry side. */

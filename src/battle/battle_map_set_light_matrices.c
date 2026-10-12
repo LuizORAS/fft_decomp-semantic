@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Main-executable libgte routine at 0x8001d108; it loads the matrix into GTE

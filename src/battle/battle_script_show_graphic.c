@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
 #include "fft/event_etc.h"
-#include "psx/types.h"
 
 /* Thread body of ShowGraphic: open the ETC overlay and run its graphic display on
  * this thread. */

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Spread one step from the current tile. Source i uses direction i % 4 (east,
  * north, west, south): 0..3 leave from the ground, 4..7 from the top of the

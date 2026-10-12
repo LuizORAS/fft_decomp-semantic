@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Queue the confirm sound unless a menu restore is pending. */
 void world_sound_set_effect_to_confirm_checked(void) {

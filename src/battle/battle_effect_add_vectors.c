@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_effect.h"
 
 void battle_effect_add_vectors(const VECTOR* first, const VECTOR* second, VECTOR* out) {
     out->vx = first->vx + second->vx;

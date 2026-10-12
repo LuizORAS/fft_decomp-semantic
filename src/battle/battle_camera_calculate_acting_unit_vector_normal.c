@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 
 /* Aims the camera step vector from the camera position at the acting unit: the
  * unit-length direction (ONE) with its height component multiplied by four. */

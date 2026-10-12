@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Put the unit back on the tile, facing and mount state saved before its move,
  * then refresh its screen position and animation facing. */

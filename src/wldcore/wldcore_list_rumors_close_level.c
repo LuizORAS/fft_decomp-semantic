@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Pop the rumors list level: toggle the input-blocked system flag and
  * unblock the menu buttons. */

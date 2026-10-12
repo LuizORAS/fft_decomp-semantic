@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Thread body: pauses the four worker threads after this one, yields until
  * g_world_menu_transition_finished is raised (keeping the g_world_menu_transition_timeout timeout 100 ahead of

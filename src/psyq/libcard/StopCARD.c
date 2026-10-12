@@ -1,4 +1,3 @@
-#include "psx/cpu_abi_inline.h"
 #include "psx/libcard.h"
 
 /* Leaves the return value unspecified. */

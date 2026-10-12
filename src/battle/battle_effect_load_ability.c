@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Returns 1 when the ability has no effect file (effect id 0xffff), 0 for

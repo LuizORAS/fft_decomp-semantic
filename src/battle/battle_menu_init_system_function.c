@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
+#include "fft/battle_unit.h"
 
 /* Run a system function (battle_menu_system_command_e) for unit_id, looking up
  * the unit's command action first except for SCENARIO_CHECK and CLOSE.

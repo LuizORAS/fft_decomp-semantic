@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Advances one unit's status bubble by g_main_system_animation_speed frames.

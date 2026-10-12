@@ -1,5 +1,4 @@
 /* LIBGPU 800275c0-80028740. */
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 
 int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, TMD_PRIM* primitive) {

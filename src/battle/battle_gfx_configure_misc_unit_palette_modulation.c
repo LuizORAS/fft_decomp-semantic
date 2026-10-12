@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Starts a unit's fade-out removal with a colour flash.

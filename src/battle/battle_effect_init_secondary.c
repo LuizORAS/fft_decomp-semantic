@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Start secondary effect animation_id for the caster and first target of the
  * init record and return its id. parameter is the animation's own: an

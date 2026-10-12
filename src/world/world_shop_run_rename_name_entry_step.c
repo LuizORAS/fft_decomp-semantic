@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Soldier office: the name entry keyboard of the Rename service; sibling of
  * world_shop_run_hire_name_entry_step, which goes on to the fee prompt (0xF82A). */

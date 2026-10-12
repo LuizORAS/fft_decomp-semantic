@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Clear the four BIOS card events (done, error, timeout, new card) by
  * testing each. */

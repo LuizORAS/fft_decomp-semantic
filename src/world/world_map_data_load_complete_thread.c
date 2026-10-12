@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Thread body: after one yield, mark the asynchronous map-data load
  * complete, yield once more and exit. */

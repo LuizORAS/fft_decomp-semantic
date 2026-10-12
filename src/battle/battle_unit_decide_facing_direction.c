@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Turn a unit to one of the four cardinal facings and restart its animation.
  * A diagonal or any other angle leaves it as it is. */

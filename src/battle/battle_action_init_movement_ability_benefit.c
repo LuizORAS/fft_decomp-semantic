@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_move.h"
 
 /* Prepare the action record for a movement ability's benefit.
  *

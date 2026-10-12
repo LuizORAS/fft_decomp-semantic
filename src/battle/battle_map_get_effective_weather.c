@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Current weather as seen by damage and movement rules: none when the map

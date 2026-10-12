@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Refresh the cursor-tile camera vector while the map camera is idle.

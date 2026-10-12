@@ -1,6 +1,5 @@
 #include "fft/event_etc.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Thread body of the show-graphic event instruction: load the ETC overlay
  * and run its graphic routine, which exits the thread. */

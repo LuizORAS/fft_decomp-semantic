@@ -1,4 +1,3 @@
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 
 /* LIBGPU, retail 0x80027428-0x800275c0. Offsets are relative to the object table. */

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Miss unless the target's monster graphic is 0x0F or 0x10: the dragon and
  * hydra jobs and the Holy Dragon. */

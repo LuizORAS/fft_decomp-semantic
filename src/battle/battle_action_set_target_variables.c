@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Make the unit the current target and reset its action result record. */
 void battle_action_set_target_variables(battle_stats_t* unit) {

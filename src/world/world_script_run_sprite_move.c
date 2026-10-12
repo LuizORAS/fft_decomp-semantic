@@ -1,3 +1,4 @@
+#include "fft/battle_unit.h"
 /*
  * Sprite-move worker called by world_script_sprite_move (mode 0) and
  * world_script_sprite_move_beta (mode 1) with the script cursor: a unit
@@ -10,7 +11,6 @@
  * Built with the divcheck profile, which reproduces the checked-division
  * guard after SquareRoot0.
  */
-#include "fft/battle.h"
 #include "fft/world.h"
 #include "psx/libgte.h"
 #include "psx/types.h"

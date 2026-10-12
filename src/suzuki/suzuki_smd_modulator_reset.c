@@ -1,5 +1,4 @@
 #include "psx/suzuki.h"
-#include "psx/types.h"
 
 /* Restarts a modulator: called by the SMD opcodes that program one (the
  * vibrato, tremolo and pan LFO opcodes) or enable one (0xF5, 0xF6). */

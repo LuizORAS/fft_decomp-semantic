@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* WaitSpriteMove: yield until no running thread carries the sprite-move task for

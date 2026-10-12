@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Store the tile a strike lands on in the strike work record: the random-fire
  * tile picked for this strike, else the target unit's tile and level, else the

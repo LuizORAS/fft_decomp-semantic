@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Animates a window's two quads from their current corners towards `to`

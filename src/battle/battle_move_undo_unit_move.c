@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Cancel a move at the confirm prompt. The unit returns to its previous tile;
  * a mount takes its rider back with it, a unit that was riding is put back on

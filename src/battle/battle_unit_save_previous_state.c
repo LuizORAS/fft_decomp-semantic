@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Saves the unit's tile, facing, mount link and stood-on unit before it moves;
  * battle_move_return_to_previous_map_square restores them. */
