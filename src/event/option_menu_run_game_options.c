@@ -13,7 +13,7 @@
  * loop notes keep the input-1 spill and the entry load ahead of the
  * row-count loads, as in the target.
  */
-void option_build_options_menu(void) {
+void option_menu_run_game_options(void) {
     image_load_parameters_t image_parameters;
     RECT image_rect;
     RECT clear;
@@ -226,7 +226,7 @@ void option_build_options_menu(void) {
                 if (battle_menu_can_accept_input() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
-                    battle_thread_start(g_battle_current_thread_id - 1, option_run_option_choice_menu);
+                    battle_thread_start(g_battle_current_thread_id - 1, option_menu_run_choice);
                     battle_thread_set_parameters(g_battle_current_thread_id - 1, index, 0, 0);
                 }
             }

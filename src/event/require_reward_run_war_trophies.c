@@ -16,7 +16,7 @@
  * a number followed by an 18x8 label glyph. Each new line of text is uploaded to
  * VRAM and its buffer freed on the following frame.
  */
-void require_render_war_trophies(void) {
+void require_reward_run_war_trophies(void) {
     SPRT sprite;
     s32 start;
     s32 last;
@@ -39,7 +39,7 @@ void require_render_war_trophies(void) {
     prims = g_require_reward_war_trophy_primitives;
     thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     last = 0;
-    battle_thread_start(thread, require_render_display_condition_special_cases_thread);
+    battle_thread_start(thread, require_condition_run_special_thread);
     battle_thread_set_parameters(thread, 4, 0, 0);
     for (start = 0; start < g_require_reward_war_trophy_entry_count; start += 8) {
         row = 0;

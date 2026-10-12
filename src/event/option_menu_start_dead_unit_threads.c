@@ -125,7 +125,7 @@ void option_menu_start_dead_unit_threads(void) {
 
         g_option_dead_unit_primary_result = 0xff;
         if ((context->result == 3 && g_option_dead_unit_secondary_result == 0) || context->result == 1) {
-            battle_thread_start(g_battle_current_thread_id - 2, option_build_at_list);
+            battle_thread_start(g_battle_current_thread_id - 2, option_menu_run_at_list);
             battle_thread_set_parameters(g_battle_current_thread_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
             battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,

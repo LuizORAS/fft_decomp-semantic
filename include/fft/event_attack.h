@@ -177,9 +177,9 @@ void attack_deploy_select_previous_roster_unit(void);
 void attack_deploy_select_unit_for_stats_display(void);
 void attack_deploy_swap_roster_unit_tile(s32 column, s32 row, s32 roster_id);
 void attack_deploy_update_screen_graphics(void);
-void attack_init_deployment_cursor_primitives(void);
+void attack_deploy_init_cursor_primitives(void);
 void attack_text_build_deployment_strings(void);
-void attack_update_deployment_cursor_primitives(s32 frame, attack_deploy_render_buffer_t* buffer);
+void attack_deploy_update_cursor_primitives(s32 frame, attack_deploy_render_buffer_t* buffer);
 
 /* formation */
 extern job_data_t* g_attack_formation_job_data;
@@ -217,7 +217,7 @@ extern RECT g_attack_character_status_frame_rect[];
 extern s32 g_attack_character_status_redraw_request;
 
 /* unit panels */
-extern RECT attack_D_801CD0A4;
+extern RECT g_attack_deploy_cursor_texture_rect;
 extern menu_unit_status_record_t g_attack_panel_comparison_billboard;
 extern menu_status_panel_editor_packet_t g_attack_panel_comparison_editor_packets[2];
 extern u8 g_attack_panel_comparison_large_number_image[];
@@ -279,7 +279,7 @@ extern s32 g_attack_status_display_thread_params;
 void attack_gfx_build_shaded_panel_strips(POLY_GT4* polys, s32 width, s32 shade, s32 reverse);
 void attack_panel_run_character_status_thread(void);
 void attack_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
-void attack_render_unit_status_panel_thread(void);
+void attack_panel_run_unit_status_thread(void);
 
 /* numeric editor */
 /* Five name ids and five ability/skillset ids of the unit loaded into the

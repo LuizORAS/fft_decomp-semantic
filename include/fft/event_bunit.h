@@ -56,7 +56,7 @@ typedef struct bunit_unit_data {
     s16 magical_accessory_evade; /* 0x52 */
     s16 equipment[5];            /* 0x54 */
     s16 abilities[5];            /* 0x5e; primary skillset, secondary, reaction, support, movement (filled by
-                                  * bunit_unit_build_data_from_battle_stats; bunit_create_ability_list reads [0]) */
+                                  * bunit_unit_build_data_from_battle_stats; bunit_ability_build_list reads [0]) */
     u8 _unused_068[8];           /* 0x68; spare tail of the stat-detail block */
     u8 gender_flags;             /* 0x70; Bard/Dancer restrictions */
     u8 misc_unit_id;             /* 0x71 */
@@ -187,8 +187,8 @@ s32 bunit_ability_is_non_action_learned(s32 index);
 s32 bunit_ability_is_non_action_unlearned(s32 index);
 s32 bunit_ability_is_reaction_tab(s32 unused_row);
 s32 bunit_ability_is_support_tab(s32 unused_row);
-s32 bunit_create_ability_list(s16 unit_index, s16 job_id, s32 ability_category, s16* ability_list, s32 mode);
-s32 bunit_run_ability_list_menu(void);
+s32 bunit_ability_build_list(s16 unit_index, s16 job_id, s32 ability_category, s16* ability_list, s32 mode);
+s32 bunit_ability_update_list_menu(void);
 
 /* job */
 extern u32 g_bunit_job_current_jp;
@@ -289,7 +289,7 @@ void bunit_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, co
 void bunit_panel_toggle_comparison_status_thread(s32 enable);
 void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
 void bunit_panel_toggle_unit_status_thread(s32 enable);
-void bunit_render_unit_status_panel_thread(void);
+void bunit_panel_run_unit_status_thread(void);
 void bunit_unit_build_data_from_battle_stats(struct battle_stats* unit, bunit_unit_data_t* record, s32 unused_slot);
 s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
 

@@ -10,8 +10,8 @@ extern job_data_t* g_require_formation_job_data;
 extern menu_entry_t g_require_join_menu_descriptor[];
 extern u8 g_require_work[];
 
-s32 require_apply_permanent_brave_faith_changes_and_collect_warnings(void);
-void require_apply_post_battle_unit_changes(void);
+s32 require_party_update_brave_faith_and_collect_warnings(void);
+void require_party_apply_post_battle_changes(void);
 void require_overlay_open_jobstts(void);
 void require_overlay_run_helpmenu(void);
 void require_party_report_brave_departure_stub(
@@ -44,7 +44,7 @@ extern menu_entry_t g_require_party_removal_menus[6];
 extern s16 g_require_party_removal_result;
 
 void require_gfx_prepare_party_portrait_textures(void);
-void require_party_apply_permanent_brave_faith_changes(void);
+void require_party_report_brave_faith_changes(void);
 s32 require_party_find_low_brave_high_faith_departures(void);
 s32 require_party_get_free_slot_status(s32 unit_id);
 void require_party_remove_low_brave_high_faith_units(void);
@@ -53,7 +53,7 @@ s32 require_party_save_battle_units_and_find_join_candidates(void);
 s32 require_party_sell_equipment_over_limit(s32 unit_id);
 s32 require_party_store_equipment_or_sell_overflow(s32 unit_id);
 void require_party_update_bio_variable_for_unit_class(s32 unit_class, s32 value);
-s32 require_select_party_unit_to_remove(void);
+s32 require_party_select_unit_to_remove(void);
 
 /* conditions */
 /* One color record per display-condition quad; the fourth byte of each
@@ -84,8 +84,8 @@ extern require_display_condition_colors_t g_require_condition_special_vertex_col
 /* REQUIRE 0x801cafd4, invoked by both BATTLE and WORLD event dispatch. */
 void require_condition_dispatch(void);
 void require_condition_show_ready_bugged(void);
-void require_render_display_condition_general_cases(s32 value);
-void require_render_display_condition_special_cases_thread(void);
+void require_condition_show_general(s32 value);
+void require_condition_run_special_thread(void);
 
 /* rewards */
 /* Double-buffered war-trophy primitives, copied when each page opens. */
@@ -164,8 +164,8 @@ extern u8 g_require_reward_war_trophy_item_count;
 extern require_reward_war_trophy_primitives_t g_require_reward_war_trophy_primitives[2];
 extern battle_war_result_t g_require_reward_war_trophy_search_result;
 
-void require_render_gil_reward_ticker(void);
-void require_render_war_trophies(void);
+void require_reward_run_gil_ticker(void);
+void require_reward_run_war_trophies(void);
 void require_reward_animate_bonus_image_burst(void);
 void require_reward_collect_war_trophies_and_bonus_money(void);
 s32 require_reward_get_war_trophy_column_x(s32 value, s32 index);
@@ -243,7 +243,7 @@ void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, menu_u
 void require_panel_run_character_status_thread(void);
 void require_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 void require_panel_set_transition_value(s32 value);
-void require_render_unit_status_panel_thread(void);
+void require_panel_run_unit_status_thread(void);
 
 /* numeric editor */
 extern u8 g_require_editor_job_name[];

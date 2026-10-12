@@ -77,7 +77,7 @@ extern u8 g_card_save_title_template[0x16];
 extern u8 g_card_save_write_failed;
 extern u8 g_card_save_write_phase;
 
-void card_build_save_file_header(s32 slot, s32 level, card_save_header_t* header);
+void card_save_build_file_header(s32 slot, s32 level, card_save_header_t* header);
 void card_save_build_buffer(s32 slot);
 void card_save_build_slot_description(s32 mode, u8* destination);
 s32 card_save_init_occupied_slot_selection(void);
@@ -277,7 +277,7 @@ extern s8 g_card_menu_use_alternate_palette;
 extern u16 g_card_menu_window_clut;
 extern menu_window_rect_source_t* g_card_menu_window_rect_source;
 extern s16 g_card_menu_window_right_x;
-extern clut_t g_card_save_menu_palette_image;
+extern clut_t g_card_save_menu_clut;
 extern u8 g_card_save_menu_state;
 /* card_save_menu_state_e */
 extern DIRENTRY* g_card_save_menu_work_buffer;

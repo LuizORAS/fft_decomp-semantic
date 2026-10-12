@@ -18,8 +18,8 @@ extern menu_icon_record_t g_option_picker_icon_records[2];
 extern s32 g_option_reference_values[];
 extern s32 g_option_value_text_id_bases[];
 
-void option_build_options_menu(void);
-void option_run_option_choice_menu(void);
+void option_menu_run_game_options(void);
+void option_menu_run_choice(void);
 
 /* at list */
 extern menu_list_page_t g_option_at_list_pages[2];
@@ -34,7 +34,7 @@ extern s16 g_option_menu_at_list_secondary_values[];
 extern menu_entry_t g_option_menu_at_list_state[1];
 extern u8 g_option_menu_at_list_text[];
 
-void option_build_at_list(void);
+void option_menu_run_at_list(void);
 void option_menu_init_at_list(menu_entry_t* menu);
 void option_menu_start_at_list_thread(void);
 

@@ -9,7 +9,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void option_build_at_list(void) {
+void option_menu_run_at_list(void) {
     image_load_parameters_t image_parameters;
     RECT image_rect;
     RECT clear;

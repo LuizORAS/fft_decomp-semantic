@@ -11,7 +11,7 @@ extern s8 g_equip_remove_all_equipment_prompt_active;
 extern s8 g_equip_remove_mode_initialized;
 extern s8 g_equip_type_order_ready;
 
-void equip_collect_item_stat_deltas(
+void equip_item_collect_stat_deltas(
     s16 raw_item, menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail, s32 alternate);
 s32 equip_entrypoint(s32 unit, u32* otag);
 
@@ -161,7 +161,7 @@ void equip_item_sort_list_by_criteria(s32 mode, s16* list);
 void equip_item_store_category_list(s32 category_index, const s16* source);
 void equip_item_subtract_scaled_stats(menu_status_panel_slot_storage_t* out, menu_status_panel_slot_storage_t* scaled,
     menu_status_panel_slot_storage_t* base, s32 scale);
-s32 equip_run_item_type_order_mode(void);
+s32 equip_item_run_type_order_mode(void);
 
 /* rearrange */
 extern s8 g_equip_rearrange_active;
@@ -256,7 +256,7 @@ void equip_panel_toggle_equipment_threads(s32 enable);
 void equip_panel_toggle_item_numeric_thread(s32 enable);
 void equip_panel_toggle_numeric_editor_thread(s32 enable);
 void equip_panel_toggle_unit_status_thread(s32 enable);
-void equip_render_unit_status_panel_thread(void);
+void equip_panel_run_unit_status_thread(void);
 
 /* numeric editor */
 extern menu_number_entry_t g_equip_editor_numeric_descriptor_a[];
@@ -602,7 +602,7 @@ extern u32 g_equip_input_secondary_repeat;
 void equip_input_clear_state(void);
 s32 equip_input_read_page_scroll_direction(void);
 void equip_input_update_with_message_state(void);
-void equip_update_controller_input(void);
+void equip_input_update_controller(void);
 
 /* menu commands */
 /* Render-command stream callbacks: every handler consumes and returns a
@@ -618,7 +618,7 @@ extern menu_sprite_command_t g_equip_cmd_row_sprite_command;
 extern s32 g_equip_cmd_stream_input;
 extern menu_window_command_t g_equip_cmd_window_interior_command;
 /* EQUIP's 0x3c-byte menu records: the main commands, the item actions and
- * (in equip_run_item_type_order_mode) the item-type order menus. Each is
+ * (in equip_item_run_type_order_mode) the item-type order menus. Each is
  * started through equip_thread_start_managed, which makes it the current
  * g_battle_menu_thread_menu_data. */
 extern menu_entry_t g_equip_command_menu;
@@ -702,7 +702,7 @@ typedef enum equip_thread_slot {
     EQUIP_THREAD_SLOT_COMMAND_MENU = 5,       /* equip_menu_icon_list_thread */
     EQUIP_THREAD_SLOT_EQUIPMENT_LIST = 10,    /* equip_panel_run_equipment_list_thread */
     EQUIP_THREAD_SLOT_ITEM_NUMERIC = 11,      /* the numeric editor thread of the item panel */
-    EQUIP_THREAD_SLOT_UNIT_STATUS = 13,       /* equip_render_unit_status_panel_thread */
+    EQUIP_THREAD_SLOT_UNIT_STATUS = 13,       /* equip_panel_run_unit_status_thread */
     EQUIP_THREAD_SLOT_COMPARISON_STATUS = 14, /* the second banner slot the indicator draw watches */
 } equip_thread_slot_e;
 

@@ -46,7 +46,7 @@ void option_entrypoint(s32 menu_type) {
         s32 child_thread;
 
         script_pulse_tutorial_wait_value(0xfd);
-        battle_thread_start(g_battle_current_thread_id - 1, option_build_options_menu);
+        battle_thread_start(g_battle_current_thread_id - 1, option_menu_run_game_options);
         child_thread = g_battle_current_thread_id;
         menu->select_text_table = 1;
         menu->context = g_option_menu_entry_table;

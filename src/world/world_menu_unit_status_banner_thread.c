@@ -7,7 +7,7 @@
 /*
  * Thread task 0x39: the unit status banner (portrait, name and job, level,
  * exp, HP/MP/CT bars, Brave, Faith and zodiac). WORLD copy of
- * debugchr_render_unit_status_panel_thread.
+ * debugchr_panel_run_unit_status_thread.
  *
  * Slot 8 draws the selected unit's banner and any other slot the comparison
  * unit's; each has its own packets, text images and unit records. The thread's

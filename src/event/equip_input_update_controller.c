@@ -11,7 +11,7 @@
  * rather than shifting. Counter slots 4..11 are skipped; those buttons use
  * only the newly pressed mask.
  */
-void equip_update_controller_input(void) {
+void equip_input_update_controller(void) {
     s16 bit;
     s32 index;
     u32 current_input;

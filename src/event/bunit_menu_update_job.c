@@ -14,7 +14,7 @@ void bunit_menu_update_job(void) {
     if (g_bunit_job_menu_phase == MENU_JOB_LIST_STEP_JOBS) {
         g_bunit_job_menu_phase = bunit_menu_run_job_list();
     } else if (g_bunit_job_menu_phase == MENU_JOB_LIST_STEP_ABILITIES) {
-        g_bunit_job_menu_phase = bunit_run_ability_list_menu();
+        g_bunit_job_menu_phase = bunit_ability_update_list_menu();
     }
     if (g_bunit_job_menu_phase == MENU_JOB_LIST_STEP_CLOSE) {
         g_bunit_menu_current_menu = BUNIT_MENU_UNIT_LIST;

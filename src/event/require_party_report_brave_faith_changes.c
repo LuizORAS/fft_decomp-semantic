@@ -7,18 +7,18 @@
  * Thread body of the post-battle Brave/Faith report.
  *
  * Exits at once in the world debug battle style, or when
- * require_apply_permanent_brave_faith_changes_and_collect_warnings reports
+ * require_party_update_brave_faith_and_collect_warnings reports
  * nobody. Otherwise it binds the Brave/Faith text sections, shows banner 5
  * and plays each affected unit's warning line in turn before fading the
  * banner out.
  */
-void require_party_apply_permanent_brave_faith_changes(void) {
+void require_party_report_brave_faith_changes(void) {
     s32 i;
     s32 main_thread;
 
     if (script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0)
         battle_thread_exit_current();
-    if (require_apply_permanent_brave_faith_changes_and_collect_warnings() == 0)
+    if (require_party_update_brave_faith_and_collect_warnings() == 0)
         battle_thread_exit_current();
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
         = g_require_text_data + g_require_text_section_offsets[1];
@@ -28,7 +28,7 @@ void require_party_apply_permanent_brave_faith_changes(void) {
         = g_require_text_data + g_require_text_section_offsets[3];
     g_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_require_text_data + g_require_text_section_offsets[4];
     main_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    battle_thread_start(main_thread, require_render_display_condition_special_cases_thread);
+    battle_thread_start(main_thread, require_condition_run_special_thread);
     battle_thread_set_parameters(main_thread, 5, 0, 0);
     require_gfx_fade_rgb_31_frames(0xd, 0xd, 2);
     for (i = 0; i < g_require_party_affected_unit_count; i++) {

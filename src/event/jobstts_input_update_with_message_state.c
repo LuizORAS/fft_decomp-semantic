@@ -15,7 +15,7 @@ void jobstts_input_update_with_message_state(void) {
     s32 frame;
 
     running = 0;
-    jobstts_update_controller_input();
+    jobstts_input_update_controller();
     frame = jobstts_gfx_get_transition_frame();
     if (frame < 1 || frame > 7) {
         running = battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);

@@ -559,7 +559,7 @@ typedef enum menu_unit_readout {
 /* Step of the job list menus (WORLD learn and view-abilities menus, BUNIT job
  * menu, the JOBSTTS page); each list's handler returns the next step. In
  * JOBSTTS, JOBS is jobstts_menu_update_job_list, ABILITIES is
- * jobstts_update_ability_list_menu and CLOSE makes jobstts_entrypoint close
+ * jobstts_ability_update_list_menu and CLOSE makes jobstts_entrypoint close
  * the screen. */
 typedef enum menu_job_list_step {
     MENU_JOB_LIST_STEP_CLOSE = -1,
@@ -623,7 +623,7 @@ enum { MENU_ROW_ACTION_CLEAR_SELECTION = 0x4d2 };
  * g_world_menu_thread_menu_data; the same menu record as BATTLE
  * g_battle_menu_thread_menu_data and the OPTION/EQUIP menus. 0x0c/0x0e are the
  * window size (frame rect 0x0c - 0x12 by 0x0e - 0x1a in WORLD 0x8010088c and
- * option_build_at_list). The parent table at 0x24 (indexed by selected_index)
+ * option_menu_run_at_list). The parent table at 0x24 (indexed by selected_index)
  * and the thread entry at 0x28 are known from
  * world_menu_start_entry_chain_threads. The record is also the first parameter
  * of the menu threads it starts: the icon threads read 0x00..0x07 as the text

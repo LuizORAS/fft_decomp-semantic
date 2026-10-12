@@ -20,7 +20,7 @@
  * to a single pointer induction variable. `pass` doubles as the fade level,
  * which the target's register allocation reflects.
  */
-void require_render_gil_reward_ticker(void) {
+void require_reward_run_gil_ticker(void) {
     DR_AREA areas[4];
     s32 thread_id;
     s32 money;
@@ -42,7 +42,7 @@ void require_render_gil_reward_ticker(void) {
         script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + g_require_reward_war_trophy_search_result.level_sum_money);
     money = g_require_reward_war_trophy_search_result.level_sum_money;
     thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    battle_thread_start(thread_id, require_render_display_condition_special_cases_thread);
+    battle_thread_start(thread_id, require_condition_run_special_thread);
     battle_thread_set_parameters(thread_id, 2, 0, 0);
     g_require_input_controller = script_get_controller_input_pointer(0);
     /* `i = 0` here (not before the script calls) lets sched1 keep

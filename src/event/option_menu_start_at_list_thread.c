@@ -9,7 +9,7 @@ void option_menu_start_at_list_thread(void) {
     g_option_menu_at_list_entry_table_pointer = g_option_menu_at_list_entry_table;
     option_menu_init_at_list(g_option_menu_at_list_state);
 
-    battle_thread_start(g_battle_current_thread_id - 2, option_build_at_list);
+    battle_thread_start(g_battle_current_thread_id - 2, option_menu_run_at_list);
     battle_thread_set_parameters(g_battle_current_thread_id - 2, g_option_menu_at_list_state, 0, 0);
 
     do {

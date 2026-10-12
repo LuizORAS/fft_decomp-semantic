@@ -28,7 +28,7 @@ void card_save_init_menu_graphics(void) {
     rect.y = 0xfa;
     rect.w = 0x40;
     rect.h = 4;
-    card_gfx_load_image_and_wait(&rect, g_card_save_menu_palette_image);
+    card_gfx_load_image_and_wait(&rect, g_card_save_menu_clut);
 
     rect.x = 0x3c0;
     rect.y = 0x1f0;

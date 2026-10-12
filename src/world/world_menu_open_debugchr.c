@@ -14,7 +14,7 @@ void world_menu_open_debugchr(void) {
     world_thread_wait_for_unit_view_panels();
     world_thread_yield();
     world_thread_yield();
-    debugchr_run_character_debug_session();
+    debugchr_editor_run_session();
     g_world_menu_overlay_state = 0;
     g_world_menu_sound_muted = 0;
     g_world_menu_new_button_input = 0;

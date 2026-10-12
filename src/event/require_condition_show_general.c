@@ -83,7 +83,7 @@
     poly->x3 = QUAD(index).offset.x + 0x100 + QUAD(index).source.w;                                                    \
     poly->y3 = QUAD(index).offset.y + ((hide_pixels) + 0x78) + (QUAD(index).source.h - hide_pixels)
 
-void require_render_display_condition_general_cases(s32 hold_frames) {
+void require_condition_show_general(s32 hold_frames) {
     sprite_sheet_frame_t* quads;
     u8* range;
     require_display_condition_colors_t* colors;

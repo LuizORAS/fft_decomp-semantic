@@ -50,7 +50,7 @@ s32 equip_item_run_rearrange_mode(void) {
         equip_menu_init_scrollable_list_core(g_equip_item_list_entries, g_equip_menu_selected_list_index,
             g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         equip_gfx_set_transition_frame(10);
-        equip_collect_item_stat_deltas(
+        equip_item_collect_stat_deltas(
             value, &g_equip_selected_unit_stat_summary, &g_equip_item_preview_stat_detail, 0);
         g_equip_item_numeric_panel_redraw = 1;
         g_equip_rearrange_active = 0;
@@ -83,7 +83,7 @@ s32 equip_item_run_rearrange_mode(void) {
             value = 0;
         }
         g_equip_rearrange_preview_cursor = g_equip_menu_selected_list_index;
-        equip_collect_item_stat_deltas(
+        equip_item_collect_stat_deltas(
             value, &g_equip_selected_unit_stat_summary, &g_equip_item_preview_stat_detail, 0);
         g_equip_item_numeric_panel_redraw = 1;
     }

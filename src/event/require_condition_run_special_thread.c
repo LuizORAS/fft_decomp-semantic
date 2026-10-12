@@ -16,7 +16,7 @@
  * g_require_gfx_poly_gt4_buffers, the second symbol at the address of
  * g_require_gfx_poly_gt4_array_32: sharing that base lets the hoisted
  * small-array address derive from the copy source, which keeps it live in s0. */
-void require_render_display_condition_special_cases_thread(void) {
+void require_condition_run_special_thread(void) {
     s32 parameter_index;
     s32 use_small_array;
     s32 quad_count;

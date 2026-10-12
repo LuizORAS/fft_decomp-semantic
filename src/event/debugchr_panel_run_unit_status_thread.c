@@ -1,15 +1,24 @@
+/* Profile gcc-2.6.3_O2_aspsx-2.34_divcheck: the bar-width division at
+ * 0x801c021c carries the full ASPSX checked-division expansion
+ * (`bnez`/`break 0x7`, then the INT_MIN/-1 test and `break 0x6`) at
+ * 0x801c0220-0x801c0240. Nothing else in the range needs the exception.
+ *
+ * The overlay draws two alternating copies of the editor and status panels;
+ * `frame & 1` picks one, and the copy stride fixes each packet's size. The
+ * packet, state and thread layouts are the shared fft/menu.h records,
+ * proven by this function's own accesses and the primitive strides it walks.
+ */
 #include "fft/battle_script.h"
-#include "fft/event_attack.h"
+#include "fft/event_debugchr.h"
 #include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Thread task 0x39: the character editor and status panels. ATTACK twin of
- * DEBUGCHR debugchr_render_unit_status_panel_thread and BUNIT
- * bunit_render_unit_status_panel_thread; this copy draws fixed-width gauge bars and a
- * formation-slot number instead of the zodiac/unit-id field. */
-void attack_render_unit_status_panel_thread(void) {
+/* Thread task 0x39: draws the character editor and status panels. DEBUGCHR
+ * twin of attack_panel_run_unit_status_thread; this copy scales each gauge
+ * bar by its value/limit and can show the zodiac sign. */
+void debugchr_panel_run_unit_status_thread(void) {
     RECT rects[6];
     s32 anim_state;
     s32 cur_unit;
@@ -55,39 +64,39 @@ void attack_render_unit_status_panel_thread(void) {
 
     hide_portrait = 0;
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
-    g_attack_input_controller = script_get_controller_input_pointer(0) + 1;
+    g_debugchr_input_controller = script_get_controller_input_pointer(0) + 1;
     thread_id = g_battle_current_thread_id;
     thread = (menu_status_panel_display_thread_t*)g_battle_threads[thread_id].function_parameter_1;
     if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
-        panel = g_attack_panel_selected_packets;
-        editor = g_attack_panel_selected_editor_packets;
-        number_pixels = g_attack_panel_selected_number_image;
-        value_pixels = g_attack_panel_selected_large_number_image;
-        name_pixels = g_attack_panel_selected_name_image;
-        number_entries = g_attack_panel_selected_numeric_entries;
-        state = &g_attack_panel_selected_billboard;
-        unit_info = &g_attack_panel_selected_unit_data;
-        transition = &g_attack_panel_selected_portrait_rect;
+        panel = g_debugchr_panel_selected_packets;
+        editor = g_debugchr_panel_selected_editor_packets;
+        number_pixels = g_debugchr_panel_selected_number_image;
+        value_pixels = g_debugchr_panel_selected_large_number_image;
+        name_pixels = g_debugchr_panel_selected_name_image;
+        number_entries = g_debugchr_panel_selected_numeric_entries;
+        state = &g_debugchr_panel_selected_billboard;
+        unit_info = &g_debugchr_panel_selected_unit_data;
+        transition = &g_debugchr_panel_selected_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        portrait_palettes = g_attack_panel_selected_portrait_palettes;
+        portrait_palettes = g_debugchr_panel_selected_portrait_palettes;
     } else {
-        panel = g_attack_panel_comparison_packets;
-        editor = g_attack_panel_comparison_editor_packets;
-        number_pixels = g_attack_panel_comparison_number_image;
-        value_pixels = g_attack_panel_comparison_large_number_image;
-        name_pixels = g_attack_panel_comparison_name_image;
-        number_entries = g_attack_panel_comparison_numeric_entries;
-        state = &g_attack_panel_comparison_billboard;
-        unit_info = &g_attack_panel_comparison_unit_data;
-        transition = &g_attack_panel_comparison_portrait_rect;
+        panel = g_debugchr_panel_comparison_packets;
+        editor = g_debugchr_panel_comparison_editor_packets;
+        number_pixels = g_debugchr_panel_comparison_number_image;
+        value_pixels = g_debugchr_panel_comparison_large_number_image;
+        name_pixels = g_debugchr_panel_comparison_name_image;
+        number_entries = g_debugchr_panel_comparison_numeric_entries;
+        state = &g_debugchr_panel_comparison_billboard;
+        unit_info = &g_debugchr_panel_comparison_unit_data;
+        transition = &g_debugchr_panel_comparison_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        portrait_palettes = g_attack_panel_comparison_portrait_palettes;
+        portrait_palettes = g_debugchr_panel_comparison_portrait_palettes;
     }
     shake = 0;
 
-    battle_menu_init_numeric_display_frame_primitives(&g_attack_gfx_portrait_origin, &editor->numeric_frame);
+    battle_menu_init_numeric_display_frame_primitives(&g_debugchr_gfx_portrait_origin, &editor->numeric_frame);
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_a, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_b, MENU_TEXTURE_PAGE_FRAME);
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
@@ -98,25 +107,26 @@ void attack_render_unit_status_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, (texture_primitive_t*)&editor->value_sprites[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&editor->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
-        gfx_init_image_loading((texture_primitive_t*)&editor->value_sprites[frame], g_attack_editor_numeric_geometry,
-            &g_attack_gfx_portrait_origin, &g_attack_panel_editor_value_cells[frame]);
+        gfx_init_image_loading((texture_primitive_t*)&editor->value_sprites[frame], g_debugchr_editor_numeric_geometry,
+            &g_debugchr_gfx_portrait_origin, &g_debugchr_panel_editor_value_cells[frame]);
     }
     if (state->team_kind >= 4) {
         state->team_kind = 0;
     }
     if (g_battle_post_battle_unit_changes_active == 0) {
-        battle_copy_bytes(g_attack_panel_editor_mode_cell, &g_attack_panel_editor_mode_cells[state->team_kind], 0xC);
+        battle_copy_bytes(
+            g_debugchr_panel_editor_mode_cell, &g_debugchr_panel_editor_mode_cells[state->team_kind], 0xC);
     } else {
-        battle_copy_bytes(g_attack_panel_editor_mode_cell, g_attack_panel_editor_mode_cells, 0xC);
+        battle_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
     }
     for (frame = 0; frame < 7; frame++) {
-        gfx_init_image_loading((texture_primitive_t*)&editor->label_sprites[frame], g_attack_editor_numeric_geometry,
-            &g_attack_gfx_portrait_origin, &g_attack_panel_editor_label_cells[frame]);
+        gfx_init_image_loading((texture_primitive_t*)&editor->label_sprites[frame], g_debugchr_editor_numeric_geometry,
+            &g_debugchr_gfx_portrait_origin, &g_debugchr_panel_editor_label_cells[frame]);
     }
     battle_copy_bytes(editor + 1, editor, sizeof(menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
-    battle_menu_init_numeric_display_frame_primitives(&g_attack_panel_frame_rect, &panel->numeric_frame);
+    battle_menu_init_numeric_display_frame_primitives(&g_debugchr_panel_frame_rect, &panel->numeric_frame);
     panel_sprites = &panel->sprites[0];
     battle_menu_init_sprite_array(panel_sprites, 7, 0x7C3C);
     menu_init_default_poly_ft4(&panel->portrait);
@@ -125,11 +135,11 @@ void attack_render_unit_status_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        gfx_init_image_loading((texture_primitive_t*)&panel->sprites[frame], g_attack_editor_numeric_geometry,
-            &g_attack_panel_frame_rect, &g_attack_panel_sprite_cells[frame]);
+        gfx_init_image_loading((texture_primitive_t*)&panel->sprites[frame], g_debugchr_editor_numeric_geometry,
+            &g_debugchr_panel_frame_rect, &g_debugchr_panel_sprite_cells[frame]);
     }
-    gfx_init_image_loading((texture_primitive_t*)&panel->portrait, g_attack_editor_numeric_geometry,
-        &g_attack_panel_frame_rect, g_attack_panel_portrait_cell);
+    gfx_init_image_loading((texture_primitive_t*)&panel->portrait, g_debugchr_editor_numeric_geometry,
+        &g_debugchr_panel_frame_rect, g_debugchr_panel_portrait_cell);
     if (state->team_kind == 1) {
         panel->portrait.clut = 0x7FFD;
     } else {
@@ -137,10 +147,11 @@ void attack_render_unit_status_panel_thread(void) {
     }
     panel->portrait.tpage = GetTPage(0, 1, 0x3C0, 0x100);
     battle_copy_bytes(panel + 1, panel, sizeof(menu_status_panel_packet_t));
+    frame = 0;
     anim_state = 0;
     prev_unit = state->unit_index;
     cur_unit = state->unit_index;
-    for (frame = 0;; frame++) {
+    for (;;) {
         s32 parity = frame & 1;
         panel = panel_base + parity;
         editor = editor_base + parity;
@@ -149,12 +160,12 @@ void attack_render_unit_status_panel_thread(void) {
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
             battle_copy_bytes(
-                g_attack_panel_editor_mode_cell, &g_attack_panel_editor_mode_cells[state->team_kind], 0xC);
+                g_debugchr_panel_editor_mode_cell, &g_debugchr_panel_editor_mode_cells[state->team_kind], 0xC);
         } else {
-            battle_copy_bytes(g_attack_panel_editor_mode_cell, g_attack_panel_editor_mode_cells, 0xC);
+            battle_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
         }
-        gfx_init_image_loading((texture_primitive_t*)&editor->label_sprites[6], g_attack_editor_numeric_geometry,
-            &g_attack_gfx_portrait_origin, g_attack_panel_editor_mode_cell);
+        gfx_init_image_loading((texture_primitive_t*)&editor->label_sprites[6], g_debugchr_editor_numeric_geometry,
+            &g_debugchr_gfx_portrait_origin, g_debugchr_panel_editor_mode_cell);
         if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
         } else {
@@ -168,10 +179,10 @@ void attack_render_unit_status_panel_thread(void) {
             dimmed = 1;
         }
         for (i = 0; i < 4; i++) {
-            editor->value_sprites[i].clut = g_attack_panel_editor_value_cluts[i][dimmed];
+            editor->value_sprites[i].clut = g_debugchr_panel_editor_value_cluts[i][dimmed];
         }
         for (i = 0; i < 7; i++) {
-            editor->label_sprites[i].clut = g_attack_panel_editor_label_cluts[i][dimmed];
+            editor->label_sprites[i].clut = g_debugchr_panel_editor_label_cluts[i][dimmed];
         }
         i = 0;
         do {
@@ -212,7 +223,7 @@ void attack_render_unit_status_panel_thread(void) {
         } else {
             setRGB0(&panel->portrait, 0x80, 0x80, 0x80);
         }
-        g_attack_gfx_draw_offset_y = ((g_main_gfx_screen_polarity * 0xF0) != 0xF0) ? 0xF0 : 0;
+        g_debugchr_gfx_draw_offset_y = ((g_main_gfx_screen_polarity * 0xF0) != 0xF0) ? 0xF0 : 0;
         if ((thread->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
             shake = 1;
         }
@@ -223,7 +234,7 @@ void attack_render_unit_status_panel_thread(void) {
         }
         if (shake != 0) {
             if (shake < 0xA) {
-                thread->shake_y = g_attack_panel_slide_down_y[shake];
+                thread->shake_y = g_debugchr_panel_slide_down_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -232,7 +243,7 @@ void attack_render_unit_status_panel_thread(void) {
                     thread->flags = thread->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             } else if (shake >= 0xB) {
-                thread->shake_y = g_attack_panel_slide_up_y[shake];
+                thread->shake_y = g_debugchr_panel_slide_up_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -243,22 +254,22 @@ void attack_render_unit_status_panel_thread(void) {
             }
         }
         panel_x = thread->x;
-        panel_y_a = g_attack_gfx_draw_offset_y;
+        panel_y_a = g_debugchr_gfx_draw_offset_y;
         panel->draw_offset_a.position.x = panel_x - 0x80;
         panel_shake_y = (u16)thread->shake_y;
         panel->draw_offset_a.position.y = panel_shake_y + panel_y_a;
         SetDrawOffset(&panel->draw_offset_a.packet, (u16*)&panel->draw_offset_a.position);
-        panel_y_b = g_attack_gfx_draw_offset_y;
+        panel_y_b = g_debugchr_gfx_draw_offset_y;
         panel->draw_offset_b.position.x = -0x80;
         panel->draw_offset_b.position.y = panel_y_b;
         SetDrawOffset(&panel->draw_offset_b.packet, (u16*)&panel->draw_offset_b.position);
         editor_x = thread->x;
-        editor_y_a = g_attack_gfx_draw_offset_y;
+        editor_y_a = g_debugchr_gfx_draw_offset_y;
         editor->draw_offset_a.position.x = editor_x - 0x80;
         editor_shake_y = (u16)thread->shake_y;
         editor->draw_offset_a.position.y = editor_shake_y + editor_y_a;
         SetDrawOffset(&editor->draw_offset_a.packet, (u16*)&editor->draw_offset_a.position);
-        editor_y_b = g_attack_gfx_draw_offset_y;
+        editor_y_b = g_debugchr_gfx_draw_offset_y;
         editor->draw_offset_b.position.x = -0x80;
         editor->draw_offset_b.position.y = editor_y_b;
         SetDrawOffset(&editor->draw_offset_b.packet, (u16*)&editor->draw_offset_b.position);
@@ -284,27 +295,38 @@ void attack_render_unit_status_panel_thread(void) {
                 anim_state = 2;
             }
         }
-        attack_gfx_build_portrait_transition_primitives(
+        debugchr_gfx_build_portrait_transition_primitives(
             transition, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &editor->portrait[0], portrait_request);
         {
             CVECTOR* color;
+            menu_unit_status_gauge_t* bar;
 
-            color = g_attack_panel_gauge_bar_colors;
+            color = g_debugchr_panel_gauge_bar_colors;
+            bar = state->gauges;
             for (i = 0; i < 3; i++) {
                 s32 x0;
+                s32 w;
                 s32 y;
 
                 SetPolyG4(&editor->bars[i]);
-                x0 = g_attack_gfx_portrait_origin.x + 0x2F;
+                x0 = g_debugchr_gfx_portrait_origin.x + 0x2F;
+                if (bar->max == 0) {
+                    w = 4;
+                } else {
+                    w = (bar->value << 5) / bar->max;
+                }
+                if (w == 0) {
+                    x0 = 0;
+                }
                 editor->bars[i].x0 = x0;
                 y = i * 0xB + 0x18;
-                editor->bars[i].y0 = g_attack_gfx_portrait_origin.y + y;
-                editor->bars[i].x1 = x0 + 0x20;
-                editor->bars[i].y1 = g_attack_gfx_portrait_origin.y + y;
+                editor->bars[i].y0 = g_debugchr_gfx_portrait_origin.y + y;
+                editor->bars[i].x1 = x0 + w;
+                editor->bars[i].y1 = g_debugchr_gfx_portrait_origin.y + y;
                 editor->bars[i].x2 = x0;
-                editor->bars[i].y2 = g_attack_gfx_portrait_origin.y + y + 3;
-                editor->bars[i].x3 = x0 + 0x20;
-                editor->bars[i].y3 = g_attack_gfx_portrait_origin.y + y + 3;
+                editor->bars[i].y2 = g_debugchr_gfx_portrait_origin.y + y + 3;
+                editor->bars[i].x3 = x0 + w;
+                editor->bars[i].y3 = g_debugchr_gfx_portrait_origin.y + y + 3;
                 editor->bars[i].x2 -= 3;
                 editor->bars[i].x3 -= 3;
                 if (dimmed != 0) {
@@ -326,6 +348,7 @@ void attack_render_unit_status_panel_thread(void) {
                     setRGB3(&editor->bars[i], color->r, color->g, color->b);
                     color++;
                 }
+                bar++;
             }
         }
         panel->sprites[6].u0 = (unit_info->zodiac % 7) * 0x18;
@@ -347,13 +370,13 @@ void attack_render_unit_status_panel_thread(void) {
             LoadImage(&rects[0], number_pixels);
             number_pixels_b = number_pixels + 0x400;
             *window_width = 0x60;
-            battle_menu_draw_numeric_display_entries(number_pixels_b, &number_entries[8], text_position, 2);
+            battle_menu_draw_numeric_display_entries(number_pixels_b, &number_entries[6], text_position, 4);
             LoadImage(&rects[1], number_pixels_b);
             thread->work = 0;
             battle_clear_menu_render_buffer(name_pixels, 0x580);
             *window_width = 0x58;
             battle_menu_set_text_origin(0, 0);
-            battle_menu_display_text_entry(unit_info->name_id + 0x5800, name_pixels, text_position);
+            battle_menu_display_text_entry(unit_info->name_id + TEXT_ID_UNIT_NAME_BASE, name_pixels, text_position);
             battle_menu_set_text_origin(0, 0x10);
             battle_menu_display_text_entry(unit_info->job_id + TEXT_ID_JOB_NAME_BASE, name_pixels, text_position);
             LoadImage(&rects[2], name_pixels);
@@ -367,10 +390,21 @@ void attack_render_unit_status_panel_thread(void) {
             battle_text_draw_large_number_glyphs(unit_info->faith, 0x202, value_pixels_b, text_position);
             LoadImage(&rects[4], value_pixels_b);
             if (g_battle_post_battle_unit_changes_active == 0) {
-                battle_menu_set_text_origin(0, 0);
-                value_pixels_c = value_pixels + 0xA0;
-                battle_text_draw_large_number_glyphs(unit_info->battle_id + 1, 0x4002, value_pixels_c, text_position);
-                LoadImage(&rects[5], value_pixels_c);
+                if (g_debugchr_editor_active != 0) {
+                    battle_menu_set_text_origin(0, 0);
+                    value_pixels_c = value_pixels + 0xA0;
+                    battle_text_draw_large_number_glyphs(
+                        unit_info->battle_id + 1, 0x4002, value_pixels_c, text_position);
+                    LoadImage(&rects[5], value_pixels_c);
+                } else {
+                    s32 zodiac;
+                    battle_menu_set_text_origin(0, 0);
+                    zodiac = unit_info->battle_id;
+                    if (zodiac >= 0x10) {
+                        battle_text_draw_large_number_glyphs(zodiac - 0xF, 0x4002, value_pixels + 0xA0, text_position);
+                    }
+                    LoadImage(&rects[5], value_pixels + 0xA0);
+                }
             } else {
                 LoadImage(&rects[5], value_pixels + 0xA0);
             }
@@ -418,6 +452,7 @@ void attack_render_unit_status_panel_thread(void) {
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
+        frame++;
     }
     battle_thread_yield();
     battle_gfx_free_tpage7_vram(&rects[0]);

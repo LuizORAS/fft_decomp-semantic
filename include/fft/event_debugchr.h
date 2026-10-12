@@ -39,7 +39,7 @@ extern s16 g_debugchr_editor_values[];
 void debugchr_editor_apply_values_to_battle_unit(s32 unit_id);
 void debugchr_editor_load_selected_unit(void);
 void debugchr_editor_run_unit_thread(s32 unit_id);
-void debugchr_run_character_debug_session(void);
+void debugchr_editor_run_session(void);
 
 /* character status */
 extern RECT g_debugchr_character_status_draw_area_rect;
@@ -104,7 +104,7 @@ extern menu_status_thread_t g_debugchr_status_display_thread_params;
 
 void debugchr_panel_run_character_status_thread(void);
 void debugchr_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
-void debugchr_render_unit_status_panel_thread(void);
+void debugchr_panel_run_unit_status_thread(void);
 
 /* numeric editor */
 extern menu_number_entry_t g_debugchr_editor_numeric_descriptor_a[];

@@ -58,7 +58,7 @@ s32 jobstts_ability_is_non_action_learned(s32 index);
 s32 jobstts_ability_is_non_action_unlearned(s32 index);
 s32 jobstts_ability_is_reaction_tab(s32 unused_row);
 s32 jobstts_ability_is_support_tab(s32 unused_row);
-s32 jobstts_update_ability_list_menu(void);
+s32 jobstts_ability_update_list_menu(void);
 
 /* job */
 extern u32 g_jobstts_job_current_jp;
@@ -294,7 +294,7 @@ extern s32 g_jobstts_input_secondary_repeat;
 
 jobstts_menu_page_scroll_direction_e jobstts_input_read_page_scroll_direction(void);
 void jobstts_input_update_with_message_state(void);
-void jobstts_update_controller_input(void);
+void jobstts_input_update_controller(void);
 
 /* menu commands */
 /* Render-command stream callbacks: every handler consumes and returns a
@@ -347,7 +347,7 @@ extern rgb24_t g_jobstts_text_color;
 /* The "%d" literal that JOBSTTS.OUT keeps at overlay file offset 0, i.e. the
  * three data bytes ahead of the first function. */
 extern const char g_jobstts_text_decimal_format[];
-extern s32 g_jobstts_text_selected_job_id;
+extern s32 g_jobstts_text_selection_id;
 
 const u8* jobstts_text_find_entry_by_index(const u8* text, s16 terminators, s32 unused_2);
 void jobstts_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused,

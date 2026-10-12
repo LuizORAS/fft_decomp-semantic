@@ -2909,7 +2909,7 @@ imports:
   - {addr: 0x801c3b00, name: attack_sound_resync_scenario_music_and_apply_map_darkness}
   - {addr: 0x801c3d84, name: debugchr_editor_run_unit_thread}
   - {addr: 0x801c3f44, name: attack_deploy_run_screen}
-  - {addr: 0x801c438c, name: debugchr_run_character_debug_session}
+  - {addr: 0x801c438c, name: debugchr_editor_run_session}
   - {addr: 0x801c5a50, name: attack_deploy_get_coordinate_slots}
   - {addr: 0x801c7fe4, name: attack_gfx_build_formation_sprites}
   - {addr: 0x801c8004, name: attack_gfx_load_portraits}

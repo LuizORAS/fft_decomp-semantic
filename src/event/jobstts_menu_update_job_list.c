@@ -19,7 +19,7 @@ s32 jobstts_menu_update_job_list(void) {
         g_jobstts_job_list_menu_initialized = 1;
     }
 
-    g_jobstts_text_selected_job_id = g_jobstts_job_ids[g_jobstts_menu_list_selected_index] + 0x6000;
+    g_jobstts_text_selection_id = g_jobstts_job_ids[g_jobstts_menu_list_selected_index] + 0x6000;
     input = g_jobstts_input_primary_repeat;
     if (input & PSX_PAD_CIRCLE) {
         g_jobstts_job_selected_id = g_jobstts_job_ids[g_jobstts_menu_list_selected_index];

@@ -18,7 +18,7 @@ void equip_input_update_with_message_state(void) {
     s32 delay;
 
     running = 0;
-    equip_update_controller_input();
+    equip_input_update_controller();
     frame = equip_gfx_get_transition_frame();
     if (frame >= 1 && frame <= 3) {
         equip_input_clear_state();

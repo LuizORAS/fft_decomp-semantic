@@ -8,7 +8,7 @@
  * this one additionally honours the uses_monster_skillset restriction.
  */
 
-s32 bunit_create_ability_list(s16 unit_index, s16 job_id, s32 ability_category, s16* list, s32 mode) {
+s32 bunit_ability_build_list(s16 unit_index, s16 job_id, s32 ability_category, s16* list, s32 mode) {
     s32 skillset;
     s16 generic_index;
     s16* abilities;

@@ -17,7 +17,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void option_run_option_choice_menu(void) {
+void option_menu_run_choice(void) {
     RECT rect;
     u32* input;
     native_thread_t* thread;

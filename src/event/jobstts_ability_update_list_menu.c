@@ -6,7 +6,7 @@
 /* Selected job's ability list: tabbed by category, with the selected
  * ability's description text. Returns 1 while open, 0 on cancel, -1 on
  * confirm. */
-s32 jobstts_update_ability_list_menu(void) {
+s32 jobstts_ability_update_list_menu(void) {
     RECT rect;
     s16 selected_index;
     s16 scroll_index;
@@ -52,11 +52,11 @@ s32 jobstts_update_ability_list_menu(void) {
 
     entry = g_jobstts_ability_entries[g_jobstts_menu_list_selected_index];
     if (g_jobstts_menu_list_entry_count == 0) {
-        g_jobstts_text_selected_job_id = -1;
+        g_jobstts_text_selection_id = -1;
     } else if (entry & ABILITY_LIST_ENTRY_HIDE_DETAILS) {
-        g_jobstts_text_selected_job_id = -1;
+        g_jobstts_text_selection_id = -1;
     } else {
-        g_jobstts_text_selected_job_id = (entry & ABILITY_LIST_ENTRY_ID_MASK) + 0x7800;
+        g_jobstts_text_selection_id = (entry & ABILITY_LIST_ENTRY_ID_MASK) + 0x7800;
     }
 
     input = g_jobstts_input_primary_repeat;

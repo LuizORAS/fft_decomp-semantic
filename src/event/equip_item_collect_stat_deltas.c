@@ -6,7 +6,7 @@
  * Unlike the WORLD twin, this overlay accepts every positive low-10-bit item
  * ID; preserving that gate is required for the target control flow.
  */
-void equip_collect_item_stat_deltas(
+void equip_item_collect_stat_deltas(
     s16 raw_item, menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail, s32 alternate) {
     s32 item_id;
     s32 attribute;
