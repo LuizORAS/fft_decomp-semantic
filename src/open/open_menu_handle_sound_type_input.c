@@ -37,26 +37,26 @@ void open_menu_handle_sound_type_input(open_controller_record_t* record) {
     }
 
     if (open_input_check_repeating_directional(PSX_PAD_UP) != 0) {
-        render_record = menu->render_records[menu->sound_mode_selection];
+        render_record = menu->entry_render_indices[menu->sound_mode_selection];
         g_open_gfx_render_records_36[render_record].palette = 0;
         menu->sound_mode_selection -= 1;
         if (menu->sound_mode_selection < GAME_SOUND_MODE_MONO) {
             menu->sound_mode_selection = GAME_SOUND_MODE_WIDE;
         }
-        render_record = menu->render_records[menu->sound_mode_selection];
+        render_record = menu->entry_render_indices[menu->sound_mode_selection];
         g_open_gfx_render_records_36[render_record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }
 
     if (open_input_check_repeating_directional(PSX_PAD_DOWN) != 0
         || (g_open_input_new_button_presses & PSX_PAD_SELECT) != 0) {
-        render_record = menu->render_records[menu->sound_mode_selection];
+        render_record = menu->entry_render_indices[menu->sound_mode_selection];
         g_open_gfx_render_records_36[render_record].palette = 0;
         menu->sound_mode_selection += 1;
         if (menu->sound_mode_selection > GAME_SOUND_MODE_WIDE) {
             menu->sound_mode_selection = GAME_SOUND_MODE_MONO;
         }
-        render_record = menu->render_records[menu->sound_mode_selection];
+        render_record = menu->entry_render_indices[menu->sound_mode_selection];
         g_open_gfx_render_records_36[render_record].palette = OPEN_MENU_ENTRY_HIGHLIGHTED_PALETTE;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }

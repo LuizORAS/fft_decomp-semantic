@@ -22,7 +22,7 @@ void open_menu_push_sound_type_controller(void) {
     for (i = 0; i < OPEN_SOUND_MENU_ENTRY_COUNT; i++) {
         record = open_gfx_append_animated_render_record(
             g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
-        g_open_controller_records_next[g_open_current_controller_index].sound_menu.render_records[i] = record;
+        g_open_controller_records_next[g_open_current_controller_index].sound_menu.entry_render_indices[i] = record;
         g_open_gfx_render_records_36[record].priority = 4;
         g_open_gfx_render_records_36[record].sequence = i + 7;
         (&g_open_gfx_render_records_36[record])->anim_counter = 0;

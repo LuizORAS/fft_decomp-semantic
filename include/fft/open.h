@@ -304,7 +304,7 @@ void open_menu_init_render_record_fields(
 enum { OPEN_SOUND_MENU_ENTRY_COUNT = 3 };
 
 typedef struct open_sound_menu_state {
-    /* 0x00 */ s32 render_records[OPEN_SOUND_MENU_ENTRY_COUNT];
+    /* 0x00 */ s32 entry_render_indices[OPEN_SOUND_MENU_ENTRY_COUNT]; /* Mono, Stereo and Wide labels */
     u8 _unused_0c[16];
     /* 0x1c */ s32 sound_mode_selection; /* Signed so decrement can wrap below Mono. */
     /* 0x20 */ s32 step;
