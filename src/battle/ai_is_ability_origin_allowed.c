@@ -8,7 +8,7 @@
  * Return 1 when these checks permit use, otherwise 0. Geomancy delegates
  * directly to its terrain check; this is not a complete ability-use test.
  */
-s32 ai_is_ability_origin_allowed(ai_coords_t* coords) {
+s32 ai_is_ability_origin_allowed(const ai_coords_t* coords) {
     ai_data_t* ai = &g_ai_data_base;
     s32 i;
     s32 dx;

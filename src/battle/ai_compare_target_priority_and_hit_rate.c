@@ -6,7 +6,7 @@
  * Compare the decided marker, signed priority, then hit percentage. Every
  * candidate holds 0 in the marker, so priority is the first key that differs.
  */
-ai_rank_order_e ai_compare_target_priority_and_hit_rate(ai_action_rank_t* first, ai_action_rank_t* second) {
+ai_rank_order_e ai_compare_target_priority_and_hit_rate(const ai_action_rank_t* first, const ai_action_rank_t* second) {
     u8 decided_a, decided_b;
     s16 priority_a, priority_b;
     u8 hit_a, hit_b;

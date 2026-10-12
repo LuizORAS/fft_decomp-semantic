@@ -6,7 +6,7 @@
  *
  * Return 1 for the terrain table's matching ability ID, otherwise 0.
  */
-s32 ai_can_use_geomancy(ai_coords_t* coords) {
+s32 ai_can_use_geomancy(const ai_coords_t* coords) {
     u32 tile_id;
     u32 tile_type;
     u32 ability_terrain;

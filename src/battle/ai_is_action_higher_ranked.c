@@ -6,7 +6,7 @@
  * Rank ties prefer lower foe proximity; equal proximity is not an improvement.
  * Reusing the working scalar for the level preserves target register lifetimes.
  */
-s32 ai_is_action_higher_ranked(ai_action_data_t* first, ai_action_data_t* second) {
+s32 ai_is_action_higher_ranked(const ai_action_data_t* first, const ai_action_data_t* second) {
     ai_data_t* ai = &g_ai_data_base;
     ai_rank_order_e comparison;
     s32 proximity_a;

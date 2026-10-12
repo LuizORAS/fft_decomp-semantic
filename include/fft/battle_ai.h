@@ -712,17 +712,17 @@ s32 ai_is_unit_untargetable(s32 unit_id);
 s32 ai_check_target_type(s32 unit_id);
 s32 ai_should_exclude_from_imminent_enemies(s32 unit_id);
 s32 ai_find_nearest_target(ai_nearest_target_mode_e mode);
-s32 ai_find_unit_at_coordinates(ai_coords_t* coords);
+s32 ai_find_unit_at_coordinates(const ai_coords_t* coords);
 s32 ai_find_unit_on_target_panel(void);
 
 /* status and turn timing */
-s32 ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit);
+s32 ai_calculate_clockticks_until_unit_acts(const battle_stats_t* unit);
 s32 ai_calculate_clockticks_until_death_counter_expires();
 s32 ai_is_unit_active_after_delay(s32 limit, s32 unit_id);
 s32 ai_can_unit_act_within_charge_time(s32 unit_index);
-s32 ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
-s32 ai_can_status_cancellation_affect_turn(battle_stats_t* unit, s32 status);
-s32 ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit);
+s32 ai_is_status_active_through_delay(s32 delay, const battle_stats_t* unit, s32 status_id);
+s32 ai_can_status_cancellation_affect_turn(const battle_stats_t* unit, s32 status);
+s32 ai_can_cancel_current_status(const battle_stats_t* unit, s32 status_bit);
 s32 ai_exclude_enemies_acting_before_ct(void);
 
 /* movement */
@@ -779,10 +779,10 @@ void ai_build_monster_skill_tile_mask(void);
 s32 ai_calculate_ability_range(void);
 s32 ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT]);
 s32 ai_take_random_tile(u16 tiles[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT], ai_coords_t* coordinates, s32 count);
-s32 ai_is_ability_origin_allowed(ai_coords_t* coordinates);
-s32 ai_can_use_geomancy(ai_coords_t* coords);
-s32 ai_calculate_distance_between_units(battle_stats_t* a, battle_stats_t* b);
-s32 ai_calculate_height_difference_between_units(ai_coords_t* coords, battle_stats_t* unit);
+s32 ai_is_ability_origin_allowed(const ai_coords_t* coordinates);
+s32 ai_can_use_geomancy(const ai_coords_t* coords);
+s32 ai_calculate_distance_between_units(const battle_stats_t* a, const battle_stats_t* b);
+s32 ai_calculate_height_difference_between_units(const ai_coords_t* coords, const battle_stats_t* unit);
 void ai_transfer_unit_coordinates(s32 unit_index, ai_coords_t* destination);
 
 /* ability evaluation */
@@ -856,8 +856,8 @@ typedef enum ai_rank_order {
 void ai_reset_action_ranking_fields(ai_action_data_t* action);
 void ai_clear_current_action_decision(void);
 void ai_init_selected_action(void);
-ai_rank_order_e ai_compare_target_priority_and_hit_rate(ai_action_rank_t* a, ai_action_rank_t* b);
-s32 ai_is_action_higher_ranked(ai_action_data_t* a, ai_action_data_t* b);
+ai_rank_order_e ai_compare_target_priority_and_hit_rate(const ai_action_rank_t* a, const ai_action_rank_t* b);
+s32 ai_is_action_higher_ranked(const ai_action_data_t* a, const ai_action_data_t* b);
 void ai_insert_ranked_action(void);
 void ai_invert_target_priority(void);
 s32 ai_select_action_ranked(void);
@@ -921,7 +921,7 @@ typedef struct ai_facing_tile_offsets {
 extern ai_facing_tile_offsets_t g_ai_facing_tile_offsets; /* 0x8019f358 */
 
 ai_direction_e ai_find_direction_of_target(const ai_coords_t* target, const ai_coords_t* origin);
-s32 ai_is_facing_tile_blocked(ai_coords_t* source, ai_coords_t* target);
+s32 ai_is_facing_tile_blocked(const ai_coords_t* source, const ai_coords_t* target);
 s32 ai_choose_wait_facing(void);
 
 /* copy and arithmetic */

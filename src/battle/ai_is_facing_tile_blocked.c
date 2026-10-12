@@ -8,7 +8,7 @@
  * Only the destination's lower layer is checked; a rise of 3 is rejected,
  * but descents are unrestricted. Slope and depth do not affect this test.
  */
-s32 ai_is_facing_tile_blocked(ai_coords_t* source, ai_coords_t* target) {
+s32 ai_is_facing_tile_blocked(const ai_coords_t* source, const ai_coords_t* target) {
     u8 x = target->bytes.x;
     u8 width = g_ai_data_base.map_max_x;
     u8 y;
