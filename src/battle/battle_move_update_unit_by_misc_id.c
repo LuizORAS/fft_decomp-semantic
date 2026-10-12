@@ -16,5 +16,5 @@ void battle_move_update_unit_by_misc_id(void) {
             }
         }
         i++;
-    } while (i < 0x10);
+    } while (i < BATTLE_UNIT_MISC_SLOT_COUNT);
 }
