@@ -1,7 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Draw a formation unit's sprite at its resting position (0x8B, 0x9E). */
+/* Draw a formation unit's sprite at its resting position (0x8B, 0x9E), where it stands while the
+ * item and ability menus run. */
 void world_formation_place_unit_portrait_at_rest(s16 unit_index) {
     point16_t pos;
 

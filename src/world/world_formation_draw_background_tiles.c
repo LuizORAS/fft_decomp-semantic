@@ -1,14 +1,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Screen x and texture u of one background tile; two alternating rows of four. */
-typedef struct world_formation_background_tile {
-    u16 x;
-    u16 u;
-} world_formation_background_tile_t;
-
-extern world_formation_background_tile_t g_world_formation_background_tiles[2][4];
-
 /*
  * Draw the formation-screen background as 64x32 tiles from `y` downwards,
  * shading each tile corner by its distance from the formation cursor.

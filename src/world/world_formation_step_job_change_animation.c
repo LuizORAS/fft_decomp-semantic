@@ -5,23 +5,22 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/*
- * Run one frame of the WORLD job-change graphic dissolve; returns 1 while it
- * runs, 2 during the closing frames and 0 once finished.
+/* Run one frame of the job-change animation; returns WORLD_JOB_CHANGE_ANIM_DISSOLVE while it runs,
+ * _CLOSING during the last 20 frames and _DONE once finished. The job itself changes afterwards
+ * (world_formation_run_job_wheel_menu).
  *
- * The first call changes unit 0x14 to `job`, copies the VRAM strip at
- * g_world_job_change_old_sprite_rect and the unit's new graphic into heap buffers, and shuffles a
- * 480-entry byte-index table. Each frame clears two shuffled bytes of the old
- * strip, copies the same bytes of the new graphic into an initially blank
+ * The first call plays the job-change tune, changes the preview record (WORLD_FORMATION_PREVIEW_RECORD)
+ * to `job` to get its graphic, copies the VRAM strip at g_world_job_change_old_sprite_rect and that
+ * new graphic into heap buffers, and shuffles a 480-entry byte-index table. Each frame clears two
+ * shuffled bytes of the old strip, copies the same bytes of the new graphic into an initially blank
  * strip at g_world_job_change_new_sprite_rect, uploads both, and draws a 64-line rcos/rsin wave band
- * that slides in over frames 0-19 and out over 221-239.
- * Input bits 0x60 skip ahead to frame 220; frame 240 frees the buffers.
+ * that slides in over frames 0-19 and out over 221-239. Circle or Cross skips to frame 220 (from frame
+ * 40 on) and lowers the tune; frame 240 frees the buffers.
  *
  * `j`/`k`/`n` are each reused across the phases, and the wave phase is
  * `i * k` with `k` holding the step: splitting any of them, or keeping a
- * separate phase accumulator, changes the target's register assignment.
- */
-s32 world_formation_process_job_change(s32 job) {
+ * separate phase accumulator, changes the target's register assignment. */
+s32 world_formation_step_job_change_animation(s32 job) {
     union {
         world_formation_graphic_entry_t entry;
         s16 points[6];
@@ -48,8 +47,8 @@ s32 world_formation_process_job_change(s32 job) {
         world_gfx_store_image_and_wait(&g_world_job_change_old_sprite_rect, g_world_job_change_old_sprite_image);
         g_world_job_change_new_sprite_image = main_heap_alloc(0x1e0);
         memset(g_world_job_change_new_sprite_image, 0, 0x1e0);
-        world_formation_change_unit_job(0x14, job, 0);
-        world_formation_build_unit_graphic_entry(0x14, &scratch.entry, 0);
+        world_formation_change_unit_job(WORLD_FORMATION_PREVIEW_RECORD, job, 0);
+        world_formation_build_unit_graphic_entry(WORLD_FORMATION_PREVIEW_RECORD, &scratch.entry, 0);
         g_world_job_change_new_sprite_source = main_heap_alloc(0x1e0);
         if (scratch.entry.tpage == 100) {
             rect.x = (scratch.entry.x >> 2) + 0x100;

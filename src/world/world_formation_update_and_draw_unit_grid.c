@@ -17,15 +17,20 @@ typedef struct world_formation_slot_sprite {
     u8 _unused_08[0x14 - 0x08];
 } world_formation_slot_sprite_t;
 
-/*
- * Formation screen unit grid: handle the palette, browse and banner toggles,
- * step the grid cursor, then draw each visible unit slot and ease the cursor
- * trail toward the selected slot.
+/* Run and draw the unit grid of the formation and the shops. With no `get_mode` callback and no
+ * unit open, L2/R2 cycle the cards' readout (HP, MP, CT, Level/EXP, Brave/Faith). With
+ * `allow_browse`, Circle opens the selected unit (not an egg) and X closes it; with `toggle_banner`,
+ * Square turns the unit banner on and off and the banner follows the selection's rows. The d-pad
+ * moves the selection over the four columns unless a help screen, a fade or the open unit's panel
+ * runs; `locked` drops the input. Then it draws the readout bar with its L2/R2 buttons, each visible
+ * unit's card (readout from `get_mode` when given), sprite or egg, shaded by its distance from the
+ * cursor or by `get_shade`, the glowing dot under the selected unit, the cursor trail easing toward
+ * it and the background. `background_y` only reaches the unused second parameter of
+ * world_formation_draw_background_tiles. Returns 1.
  *
  * `value`, `row` and `col` each carry several short-lived roles, as the
  * target's s1/s3/s5 do; separate variables change the call-saved register
- * assignment. The two unused locals reproduce the target's frame layout.
- */
+ * assignment. The two unused locals reproduce the target's frame layout. */
 s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banner, s16 allow_browse, s16 input,
     s16 locked, s32 (*get_mode)(s32), s32 (*get_shade)(s32)) {
     world_oriented_quad_t unused_desc;
@@ -190,7 +195,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 } else {
                     mode = g_world_formation_stat_display_mode;
                 }
-                world_formation_draw_graphics_below_sprite(i, mode, pos.x, pos.y, color, get_shade, 0, 8);
+                world_formation_draw_unit_readout(i, mode, pos.x, pos.y, color, get_shade, 0, 8);
             }
             value = 0x50;
             if (g_world_formation_unit_pointers[i]->proposition_status == 0) {

@@ -2,10 +2,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Steps the formation roster cursor one slot backwards (L1) or forwards (R1),
- * wrapping at either end and skipping over egg units. Plays menu sound 6 on
- * either move.
- */
+/* Steps the formation roster cursor one slot backwards (L1) or forwards (R1), wrapping at either end
+ * and skipping over egg units, with the page-switch sound. The formation's L1/R1 buttons and the job
+ * wheel (while the banner is off) call it. */
 void world_formation_cycle_selected_unit(s16 pad_buttons) {
     u16 index;
 

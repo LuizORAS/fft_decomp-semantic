@@ -15,8 +15,8 @@ typedef struct world_formation_unit_sprite {
 /* Draws one formation unit sprite centred on pos.
  *
  * When g_world_formation_dismiss_anim_timer selects this unit (high byte) the sprite is drawn shrunk by
- * (low byte + 1) without a shadow. Otherwise units with a proposition status
- * get a palette 9/11 backdrop first and the sprite is drawn with its shadow.
+ * (low byte + 1) without a shadow. Otherwise a unit away on a proposition gets its "leaving" or
+ * "missing" label first and the away tint, and the sprite is drawn with its shadow.
  * Compiled at -O1; the (s16) casts keep the centring offset from being
  * reassociated onto pos. */
 void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s32 ot_index) {
@@ -49,7 +49,7 @@ void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, u8* rgb, s
         } else {
             backdrop_rgb = world_menu_get_sprite_color();
         }
-        world_formation_draw_graphics_below_sprite(unit_index,
+        world_formation_draw_unit_readout(unit_index,
             g_world_formation_unit_pointers[unit_index]->proposition_status == WORLD_FORMATION_UNIT_PROPOSITION_LEAVING
                 ? MENU_UNIT_READOUT_LEAVING
                 : MENU_UNIT_READOUT_MISSING,

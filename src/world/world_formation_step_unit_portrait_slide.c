@@ -1,8 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Interpolates the sprite position from (0x61, 0x63) to (0x8b, 0x9e) over 24
- * steps and advances the step counter, wrapping back to zero. */
+/* Interpolates the sprite position from (0x61, 0x63) to (0x8b, 0x9e) over 24 steps and advances the
+ * step counter, wrapping back to zero. Only the ability menu's ABILITY_ENTER_PORTRAIT_SLIDE state
+ * calls it, and nothing stores that state, so it never runs. */
 u8 world_formation_step_unit_portrait_slide(void) {
     point16_t pos;
     s32 to_x = 0x8b;

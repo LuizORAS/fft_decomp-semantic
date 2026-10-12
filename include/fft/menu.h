@@ -528,7 +528,7 @@ typedef enum menu_grid_help_id {
     MENU_GRID_HELP_RECRUIT_PREVIEW = 0x20003, /* WORLD: the cursor skips cell 7 */
 } menu_grid_help_id_e;
 
-/* What the unit grids draw below a unit (world_formation_draw_graphics_below_sprite,
+/* What the unit grids draw below a unit (world_formation_draw_unit_readout,
  * bunit_menu_update_unit_grid). L2/R2 step g_world_formation_stat_display_mode and
  * g_bunit_unit_stat_mode through the first five, wrapping between HP and
  * BRAVE_FAITH; WORLD picks the others per unit. */

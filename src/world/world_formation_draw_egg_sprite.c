@@ -2,13 +2,11 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/*
- * Draw an egg unit's two layered egg sprites and their shadow at pos.
+/* Draw an egg unit's two layered egg sprites and their shadow at pos.
  *
- * Callers pass the unit's egg_color as palette and the low nibble of birthday
- * (hatch countdown; see world_formation_get_unit_egg_hatch_progress) as
- * hatch_countdown; the second layer is drawn only while it is below 2.
- */
+ * Callers pass the unit's egg_color as palette (one of four egg CLUTs) and the low nibble of birthday
+ * (the days left; see world_formation_get_unit_egg_hatch_progress) as hatch_countdown; the second
+ * layer is drawn only while it is below 2, on the egg's last day. */
 void world_formation_draw_egg_sprite(
     world_oriented_quad_t* pos, s32 palette, const u8* rgb, s32 hatch_countdown, s32 ot_index) {
     g_world_formation_shadow_egg_sprites[2].x = g_world_formation_shadow_egg_sprites[1].x = pos->x + 0x14;

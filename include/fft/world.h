@@ -805,7 +805,7 @@ s32 world_ability_run_learn_list(void);
 /* The formation's job screens: the job wheel and the job change, the Learn Abilities job list and its
  * cached numbers, and the job lookups the ability lists use. */
 
-/* Result of world_formation_process_job_change, kept in
+/* Result of world_formation_step_job_change_animation, kept in
  * g_world_job_change_anim_state: the phase of the job-change dissolve. */
 typedef enum world_job_change_anim {
     WORLD_JOB_CHANGE_ANIM_DONE = 0,
@@ -1170,6 +1170,13 @@ typedef enum world_formation_menu {
 /* A formation menu handler (g_world_formation_menu_handlers). */
 typedef void (*world_formation_menu_handler_t)(void);
 
+/* Screen x and texture u of one formation background tile; two alternating rows of four
+ * (g_world_formation_background_tiles, drawn by world_formation_draw_background_tiles). */
+typedef struct world_formation_background_tile {
+    u16 x;
+    u16 u;
+} world_formation_background_tile_t;
+
 /* The mode argument of world_formation_build_record_list: which roster units
  * it lists. */
 typedef enum world_formation_record_list_mode {
@@ -1192,6 +1199,7 @@ extern world_oriented_quad_t g_world_formation_cursor_shadow_sprite;
 extern world_oriented_quad_t g_world_formation_cursor_sprite;
 extern s32 g_world_formation_current_menu;                               /* world_formation_menu_e */
 extern world_formation_menu_handler_t g_world_formation_menu_handlers[]; /* one per world_formation_menu_e */
+extern world_formation_background_tile_t g_world_formation_background_tiles[2][4];
 extern point16_t g_world_formation_cursor_position;
 extern u8 g_world_formation_generic_human_graphic_index_table[];
 extern world_formation_graphic_entry_t g_world_formation_graphic_entries[];
@@ -1288,7 +1296,7 @@ extern s8 g_world_formation_sort_field_indices[];
 extern point16_t g_world_formation_cursor_target;
 extern s8 D_801C833C; /* zeroed with g_world_formation_scroll_velocity when the formation cursor starts; never read */
 /* Cursor trail position history at 0x801c8344, reset by
- * world_formation_reset_slots_and_frame_tpages; entry 7 is the newest and x is
+ * world_formation_reset_cursor_trail; entry 7 is the newest and x is
  * -1 in an unused entry. */
 extern point16_t g_world_formation_cursor_trail[8];
 extern u8 g_world_formation_dismiss_step;
@@ -1309,7 +1317,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused);
 s32 world_formation_is_unit_list_scroll_needed(void);
 void world_formation_draw_unit_slots(point16_t* positions, s32 shade);
 
-void world_formation_draw_graphics_below_sprite(
+void world_formation_draw_unit_readout(
     s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s32), s32 enabled, s32 priority);
 
 s32 world_formation_run_equip_item_menu(void);
@@ -1340,6 +1348,7 @@ void world_formation_dismiss_unit(s16 formation_idx);
 void world_formation_draw_background_tiles(s32 y, s32 unused_1);
 void world_formation_draw_cursor_trail(s16* cursor);
 void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_y);
+void world_formation_draw_job_wheel_mastered_star(s32 x, s32 y, s32 otag_index, s32 value);
 void world_formation_draw_sprite_with_shadow(world_oriented_quad_t* pos, const u8* rgb, s32 ot_index);
 
 void world_formation_draw_egg_sprite(
@@ -1369,11 +1378,11 @@ void world_formation_item_menu(void);
 void world_formation_layout_job_wheel_portrait(void);
 s32 world_formation_get_unit_lock(s32 unit_id);
 void world_formation_place_unit_portrait_at_rest(s16 unit_index);
-s32 world_formation_process_job_change(s32 job);
+s32 world_formation_step_job_change_animation(s32 job);
 void world_formation_rebuild_unit_list(void);
 void world_formation_recalculate_selected_unit_stats(void);
 void world_formation_remove_invalid_unit_loadout(s16 unit_id);
-void world_formation_reset_slots_and_frame_tpages(void);
+void world_formation_reset_cursor_trail(void);
 void world_formation_run_before_event(void);
 void world_formation_run_dismiss_unit_menu_step(void);
 void world_formation_run_job_wheel_menu(void);
@@ -1394,7 +1403,7 @@ void world_formation_stop_menu_threads(void);
 /* get_mode and get_shade take the unit slot index; NULL selects the default. */
 s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banner, s16 allow_browse, s16 input,
     s16 locked, s32 (*get_mode)(s32), s32 (*get_shade)(s32));
-void world_formation_update_job_wheel_state(void);
+void world_formation_switch_job_wheel_unit(void);
 void world_formation_update_open_request(void);
 void world_formation_update_unit_selection(void);
 void world_formation_sort_roster(s32 index);
@@ -2451,7 +2460,6 @@ u8* world_menu_script_clear_temporary_draw_area(u8* script);
 u8* world_menu_script_set_draw_area(u8* script);
 u8* world_menu_script_set_sprite_color(u8* script);
 void world_menu_select_primitive_color_palette(world_menu_palette_primitives_t* menu, world_status_thread_t* input);
-void world_menu_select_stat_gauge_level(s32 x, s32 y, s32 otag_index, s32 value);
 void world_menu_select_icon_sprite_clut(SPRT* slot);
 void world_menu_set_brightness(s32 red, s32 green, s32 blue);
 s16 world_menu_set_cursor_position(u8 index, s16 value);

@@ -2,9 +2,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/*
- * Per-frame handler of the formation screen's job wheel, called by
- * world_formation_run_unit_grid_menu for the job-wheel menu values.
+/* Handler of the formation's job wheel menus (JOB_WHEEL and its ENTER, LEAVE, CLOSING, OPENING and
+ * JOB_CHANGE states in g_world_formation_menu_handlers); world_formation_run_unit_grid_menu also calls
+ * it once when Change Job is picked.
  *
  * The first call binds the job descriptions, stops the two detail panels and
  * installs the wheel's menu-script callbacks. Menu value
@@ -13,15 +13,14 @@
  * grid back. On the wheel itself:
  *  - Left/Right start a spin of 36 progress units (2 a frame with fewer than
  *    four jobs, 3 otherwise) that moves the cursor one job and wraps;
- *  - Circle on an available job starts the job-change flash
- *    (world_formation_process_job_change), after which the job is changed,
+ *  - Circle on an available job starts the job-change animation
+ *    (world_formation_step_job_change_animation), after which the job is changed,
  *    with replacement equipment chosen when the "max equip at job change"
  *    option field is 0, and the job list rebuilt; on an unavailable job other
  *    than the unit's own it shows that job's text with the error sound;
  *  - Select shows the job's text, Square toggles the unit banner (L1/R1
  *    cycle units while it is hidden) and Cross leaves.
- * With fewer than two jobs the wheel is not drawn and Circle is refused.
- */
+ * With fewer than two jobs the wheel is not drawn and Circle is refused. */
 void world_formation_run_job_wheel_menu(void) {
     u8 unused[0x28];
     s32 i;
@@ -47,16 +46,16 @@ void world_formation_run_job_wheel_menu(void) {
         g_world_job_wheel_unit_index = g_world_formation_selected_unit_index;
     }
     i = g_world_formation_current_menu;
-    if (i == 0xE) {
+    if (i == WORLD_FORMATION_MENU_JOB_WHEEL_ENTER) {
         if (world_formation_step_grid_transition(2) == 0) {
-            world_formation_update_job_wheel_state();
+            world_formation_switch_job_wheel_unit();
             world_formation_build_job_wheel_job_name();
             g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL_OPENING;
             world_formation_build_job_wheel_availability();
         }
         return;
     }
-    if (i == 0xF) {
+    if (i == WORLD_FORMATION_MENU_JOB_WHEEL_LEAVE) {
         if (g_world_job_wheel_job_selected != 0) {
             world_formation_step_job_wheel_close_animation();
             world_formation_draw_unit_sprite(
@@ -73,7 +72,7 @@ void world_formation_run_job_wheel_menu(void) {
     }
     if (g_world_job_change_anim_state != WORLD_JOB_CHANGE_ANIM_DONE) {
         g_world_job_change_anim_state
-            = world_formation_process_job_change(g_world_job_wheel_jobs[g_world_job_wheel_cursor_index]);
+            = world_formation_step_job_change_animation(g_world_job_wheel_jobs[g_world_job_wheel_cursor_index]);
         if (g_world_job_change_anim_state == WORLD_JOB_CHANGE_ANIM_DONE) {
             i = g_main_game_options.value & GAME_OPTIONS_MAX_EQUIP_AT_JOB_CHANGE_MASK;
             world_formation_change_unit_job(
@@ -152,7 +151,7 @@ void world_formation_run_job_wheel_menu(void) {
             g_world_formation_saved_banner_enabled = g_world_formation_unit_banner_enabled;
         }
         if (g_world_formation_selected_unit_index != g_world_job_wheel_unit_index) {
-            world_formation_update_job_wheel_state();
+            world_formation_switch_job_wheel_unit();
         }
         if (g_world_formation_unit_banner_enabled == 0) {
             world_formation_cycle_selected_unit(g_world_input_secondary_repeat);

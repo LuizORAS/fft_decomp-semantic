@@ -1,6 +1,7 @@
 #include "fft/world.h"
 
-/* Steps the 24-frame formation-grid transition and draws it.
+/* Steps the 24-frame formation-grid transition into a menu and draws it: the item menu passes mode 0,
+ * the ability menu 1 and the job wheel 2.
  *
  * The selected unit slides from its grid cell to the portrait rest point
  * (0x8b,0x9e; 0x61,0x63 when mode >= 2) and drags the cursor with it; the

@@ -39,5 +39,5 @@ void world_formation_init_selection_cursor(s16 formation_index) {
     x = g_world_formation_scroll_position;
     cursor->y = x + (formation_index >> 2) * 60 + 61;
     g_world_formation_selection_cursor_ready = 1;
-    world_formation_reset_slots_and_frame_tpages();
+    world_formation_reset_cursor_trail();
 }

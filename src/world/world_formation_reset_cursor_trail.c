@@ -2,9 +2,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Empty the eight cursor trail points (x = -1) and set the texture pages of
- * the cursor sprite and its shadow. */
-void world_formation_reset_slots_and_frame_tpages(void) {
+/* Empty the eight points of the formation cursor's trail (x = -1) and set the texture pages of the
+ * cursor sprite and its shadow. */
+void world_formation_reset_cursor_trail(void) {
     s32 i;
 
     for (i = 0; i < 8; i++) {

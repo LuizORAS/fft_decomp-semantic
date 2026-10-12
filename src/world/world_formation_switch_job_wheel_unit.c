@@ -1,9 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Formation menu step: either finish the pending job-wheel open (menu 0x15)
- * or advance the wheel scroll position by the frame step, capping at 16. */
-void world_formation_update_job_wheel_state(void) {
+/* Move the job wheel to the newly selected unit (the L1/R1 cycle, and the end of the grid's slide
+ * in): a closing wheel turns straight to opening, an opening one rebuilds its jobs for the unit and
+ * backs its animation up by the input repeat period (to at most 16 frames left), and a settled wheel
+ * starts closing to reopen. Then it lays out the unit's portrait. */
+void world_formation_switch_job_wheel_unit(void) {
     s32 step;
     /* The target frame is 0x30 bytes; 0x18 of unreferenced locals. */
     s32 unused[6];

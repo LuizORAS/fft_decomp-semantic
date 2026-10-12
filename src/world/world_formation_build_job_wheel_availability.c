@@ -1,12 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Build the selected unit's job-wheel choices and availability flags.
+/* Build the selected unit's job-wheel choices (world_job_build_unit_list, including jobs other units
+ * unlocked) and mark as mastered each job the unit can take whose abilities are all learned.
  *
  * Units away on propositions have no choices. Fewer than 2 choices bypass
- * the wheel; otherwise its opening animation starts at 20 frames.
- */
+ * the wheel; otherwise its opening animation starts at 20 frames. */
 void world_formation_build_job_wheel_availability(void) {
     s32 i;
     s16 unit;

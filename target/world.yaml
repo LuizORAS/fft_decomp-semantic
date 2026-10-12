@@ -616,7 +616,7 @@ functions:
   - {addr: 0x80116264, size: 2924, name: world_formation_update_and_draw_unit_grid, hash: c1fa22b02874b8cf, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80116dd0, size: 164, name: world_formation_cursor_distance_falloff, hash: bfabc3c8852ab225, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80116e74, size: 576, name: world_formation_draw_background_tiles, hash: f8ae1a32508cd42e, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x801170b4, size: 120, name: world_formation_reset_slots_and_frame_tpages, hash: c235675eb18b05e9, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x801170b4, size: 120, name: world_formation_reset_cursor_trail, hash: c235675eb18b05e9, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x8011712c, size: 1008, name: world_formation_draw_cursor_trail, hash: 25b18e1ffb90921b, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x8011751c, size: 540, name: world_formation_draw_unit_slots, hash: cd90a473baf961d9, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80117738, size: 616, name: world_formation_step_grid_transition, hash: 2d3357a306d7ecd3, profile: gcc-2.6.3_O1_aspsx-2.34}
@@ -627,7 +627,7 @@ functions:
   - {addr: 0x80117ffc, size: 336, name: world_formation_draw_egg_sprite, hash: 932443cf66c7df7a, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x8011814c, size: 224, name: world_formation_draw_sprite_with_shadow, hash: a608b835cf084070, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x8011822c, size: 24, name: world_coords_fit_in_byte, hash: 6b484c1daa42118d}
-  - {addr: 0x80118244, size: 2296, name: world_formation_draw_graphics_below_sprite, hash: 92fe28a4904b632c, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80118244, size: 2296, name: world_formation_draw_unit_readout, hash: 92fe28a4904b632c, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80118b3c, size: 44, name: world_menu_clear_selection_records, hash: a3845868058abc9f}
   - {addr: 0x80118b68, size: 60, name: world_menu_clear_selection_record, hash: 865d628c2d8e7551}
   - {addr: 0x80118ba4, size: 76, name: world_menu_set_selection_record, hash: 5c90bb339e17a1fd, profile: gcc-2.6.3_O1_aspsx-2.34}
@@ -638,15 +638,15 @@ functions:
   - {addr: 0x80118ee8, size: 44, name: world_job_get_text_index, hash: 30658cb41159d81a}
   - {addr: 0x80118f14, size: 2956, name: world_formation_run_job_wheel_menu, hash: 4b3cae141d98fe15}
   - {addr: 0x80119aa0, size: 704, name: world_formation_draw_job_wheel_sprites, hash: d774faceb7845623}
-  - {addr: 0x80119d60, size: 1300, name: world_formation_process_job_change, hash: 480c2d9ea1bbd600}
+  - {addr: 0x80119d60, size: 1300, name: world_formation_step_job_change_animation, hash: 480c2d9ea1bbd600}
   - {addr: 0x8011a274, size: 84, name: world_formation_start_job_wheel_close, hash: 582e4940e3a43be5}
   - {addr: 0x8011a2c8, size: 176, name: world_formation_step_job_wheel_close_animation, hash: ccc5f2de9a52d42c}
   - {addr: 0x8011a378, size: 364, name: world_formation_build_job_wheel_availability, hash: aaa008868515d070}
   - {addr: 0x8011a4e4, size: 180, name: world_formation_step_job_wheel_open_animation, hash: 0578a1771cc596a1}
-  - {addr: 0x8011a598, size: 236, name: world_formation_update_job_wheel_state, hash: 89dde75684b3d966}
+  - {addr: 0x8011a598, size: 236, name: world_formation_switch_job_wheel_unit, hash: 89dde75684b3d966}
   - {addr: 0x8011a684, size: 244, name: world_formation_layout_job_wheel_portrait, hash: 6b20b398ac425f37}
   - {addr: 0x8011a778, size: 264, name: world_formation_build_job_wheel_job_name, hash: de83300daa37b39e}
-  - {addr: 0x8011a880, size: 212, name: world_menu_select_stat_gauge_level, hash: 51273e24192e0e6b}
+  - {addr: 0x8011a880, size: 212, name: world_formation_draw_job_wheel_mastered_star, hash: 51273e24192e0e6b}
   - {addr: 0x8011a954, size: 40, name: world_formation_item_menu_idle_thread, hash: 38437c674ba18e54}
   - {addr: 0x8011a97c, size: 92, name: world_menu_get_entry_item_count, hash: af8f5961adbfba37}
   - {addr: 0x8011a9d8, size: 92, name: world_menu_get_entry_item_equipped_count, hash: 49c6e60b38d5b05d}

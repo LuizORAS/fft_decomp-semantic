@@ -1,19 +1,18 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
-/*
- * Draw the stat readout below a formation-screen unit sprite.
- *
- * Modes 0-6 draw the label tile, number commands and (layouts 0-2) the gauge
- * backdrop according to the formation layout g_world_formation_stat_display_mode; modes 8, 9 and 11
- * draw one oriented status sprite.
+/* Draw a unit card's readout below its sprite (menu_unit_readout_e `mode`). For the HP, MP and CT
+ * readouts: the label, two numbers through the menu number scripts and a gauge in the readout's
+ * colours; for Level/EXP and Brave/Faith: two labels and two numbers, a wider number
+ * record for a Brave or Faith of 100. Mode 8 shows "equipping" or, when `get_value` is below 100,
+ * "can't equip"; 9 and 11 show "leaving" and "missing" when `enabled`; other modes (the egg's 10)
+ * draw nothing. Numbers whose position does not fit in a byte are skipped.
  *
  * The two do/while (0) blocks only add loop-depth weight to the references
  * inside them; global allocation then orders y before mode and priority
  * before color as the target's register assignment requires. top is reused
- * for y + 45 in layouts 3 and 4 so it shares s4 as in the target.
- */
-void world_formation_draw_graphics_below_sprite(
+ * for y + 45 in layouts 3 and 4 so it shares s4 as in the target. */
+void world_formation_draw_unit_readout(
     s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s32), s32 enabled, s32 priority) {
     RECT unused_rect;
     RECT rect;
