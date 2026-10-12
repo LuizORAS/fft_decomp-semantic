@@ -23,7 +23,7 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
     s32 length;
     s32 buffer_index;
 
-    if (g_wldcore_route_search_depth < 16) {
+    if (g_wldcore_route_search_depth < WLDCORE_ROUTE_PATH_CAPACITY) {
         table = g_wldcore_map_route_tables;
         for (route = 0; route < WLDCORE_ROUTE_COUNT; route++) {
             if (VSync(1) > 200) {
@@ -39,7 +39,7 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
                 continue;
             }
             for (i = 0; i < g_wldcore_route_search_depth; i++) {
-                if ((g_wldcore_route_search_path.routes[i] & 0xff) == route) {
+                if ((g_wldcore_route_search_path.routes[i] & WLDCORE_ROUTE_PATH_ID_MASK) == route) {
                     break;
                 }
             }
@@ -65,7 +65,7 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
                 goto found;
             }
             if (to == start && from == end) {
-                g_wldcore_route_search_path.routes[g_wldcore_route_search_depth] = route | 0x100;
+                g_wldcore_route_search_path.routes[g_wldcore_route_search_depth] = route | WLDCORE_ROUTE_PATH_REVERSED;
             found:
                 g_wldcore_location_entry_state.route_path = g_wldcore_route_search_path;
                 g_wldcore_location_entry_state.best_cost = g_wldcore_route_search_cost + cost;
@@ -82,7 +82,7 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
                 g_wldcore_route_search_depth--;
                 g_wldcore_route_search_cost -= cost;
             } else if (from == end) {
-                g_wldcore_route_search_path.routes[g_wldcore_route_search_depth] = route | 0x100;
+                g_wldcore_route_search_path.routes[g_wldcore_route_search_depth] = route | WLDCORE_ROUTE_PATH_REVERSED;
                 g_wldcore_route_search_depth++;
                 g_wldcore_route_search_cost += cost;
                 wldcore_map_find_best_route_path(start, to);

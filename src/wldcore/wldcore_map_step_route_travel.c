@@ -59,7 +59,7 @@ void wldcore_map_step_route_travel(void) {
             }
             if (wldcore_map_roll_random_encounter(g_wldcore_location_entry_state.leg_end_location,
                     g_wldcore_location_entry_state.route_path.routes[g_wldcore_location_entry_state.route_index - 1]
-                        & 0xFF)
+                        & WLDCORE_ROUTE_PATH_ID_MASK)
                 != 0) {
                 g_main_system_flags |= MAIN_SYSTEM_FLAG_RANDOM_BATTLE;
                 g_wldcore_next_map_id[0] = g_wldcore_random_battle_map_id;

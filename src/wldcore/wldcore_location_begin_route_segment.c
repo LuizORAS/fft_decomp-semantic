@@ -8,9 +8,8 @@
  * (turned by 0x800) and distance from the preceding point; the ascending arm
  * takes them from the point itself. Returns the point count minus one.
  *
- * The table pointer and the record share one variable: that is what makes the
- * target load the table first and keep both in $t0. The unused 32-byte local
- * reproduces the target's otherwise empty 0x20 frame, and `index` is shared by
+ * The unused 32-byte local reproduces the target's otherwise empty 0x20 frame.
+ * `index` is shared by
  * both arms while each arm has its own point pointer, which fixes the
  * target's register choice for both index computations. The packed 32-bit position values supply x in the low
  * 16 bits and y in the high 16 bits; the `flags` local gives the
@@ -24,8 +23,9 @@ s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, 
     s32 word;
     s32 flags;
 
+    /* Direct indexing or separate typed locals move the table load after the route-ID store. */
     record = (wldcore_route_record_t*)g_wldcore_map_route_tables;
-    state->route_id = route & 0xff;
+    state->route_id = route & WLDCORE_ROUTE_PATH_ID_MASK;
     flags = state->flags;
     state->flags = flags | ((route >> 7) & WLDCORE_ROUTE_TRAVEL_REVERSED);
     record = ((wldcore_route_record_t**)record)[state->route_id];

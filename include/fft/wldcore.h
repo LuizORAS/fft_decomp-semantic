@@ -177,11 +177,18 @@ extern wldcore_encounter_entry_t (*g_wldcore_random_battle_data)[3];
 extern wldcore_deep_dungeon_battle_t* g_wldcore_deep_dungeon_battles;
 
 /* route */
-/* Provisional: a 16-entry world-map route path, each entry a route id with
- * bit 8 set when the route is travelled end-to-start. */
+enum { WLDCORE_ROUTE_PATH_CAPACITY = 16 };
+
+/* A path entry packs the route id in its low byte and the direction in bit 8. */
+enum {
+    WLDCORE_ROUTE_PATH_ID_MASK = 0xff,
+    WLDCORE_ROUTE_PATH_REVERSED = 0x100,
+};
+
 typedef struct wldcore_route_path {
-    s32 routes[16];
+    s32 routes[WLDCORE_ROUTE_PATH_CAPACITY];
 } wldcore_route_path_t;
+typedef char wldcore_route_path_size_must_be_64[sizeof(wldcore_route_path_t) == 64 ? 1 : -1];
 
 /* A travel point: packed x/y, a 32-bit heading, and segment distance. */
 typedef struct wldcore_route_point {
@@ -196,8 +203,9 @@ typedef struct wldcore_route_record {
     u8 start_location;
     u8 end_location;
     u8 cost;
-    wldcore_route_point_t points[1]; /* 0x04; variable length */
+    wldcore_route_point_t points[0]; /* 0x04; variable length */
 } wldcore_route_record_t;
+typedef char wldcore_route_record_size_must_be_4[sizeof(wldcore_route_record_t) == 4 ? 1 : -1];
 
 extern s32 g_wldcore_route_search_depth;
 extern s32 g_wldcore_route_search_cost;
