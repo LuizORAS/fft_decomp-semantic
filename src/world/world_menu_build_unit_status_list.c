@@ -51,7 +51,7 @@ void world_menu_build_unit_status_list(void) {
             mask >>= 1;
         }
     }
-    world_sound_set_effect_to_confirm();
+    world_sound_queue_sfx_confirm();
     if (count == 0) {
         world_menu_run_jobstts_thread();
     }

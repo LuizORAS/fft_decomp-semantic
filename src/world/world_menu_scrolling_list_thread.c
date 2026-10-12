@@ -164,26 +164,26 @@ void world_menu_scrolling_list_thread(void) {
                     || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
-                    world_sound_set_scroll_effect();
+                    world_sound_queue_sfx_cursor_move();
                 } else if (row_offset != 0) {
                     delta = -1;
-                    world_sound_set_scroll_effect();
+                    world_sound_queue_sfx_cursor_move();
                 } else if (layout->columns.hidden_rows == 0) {
                     cursor = layout->columns.row_count - 1;
-                    world_sound_set_scroll_effect();
+                    world_sound_queue_sfx_cursor_move();
                 }
             } else if ((g_world_menu_new_button_input & PSX_PAD_DOWN)
                 && (!(g_world_menu_current_button_input & PSX_PAD_SQUARE)
                     || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->columns.row_count - 1) {
                     cursor++;
-                    world_sound_set_scroll_effect();
+                    world_sound_queue_sfx_cursor_move();
                 } else if (row_offset != layout->columns.hidden_rows) {
                     delta++;
-                    world_sound_set_scroll_effect();
+                    world_sound_queue_sfx_cursor_move();
                 } else if (row_offset == 0) {
                     cursor = 0;
-                    world_sound_set_scroll_effect();
+                    world_sound_queue_sfx_cursor_move();
                 }
             } else {
                 timer = 0;

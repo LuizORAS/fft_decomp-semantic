@@ -668,7 +668,7 @@ restart_event:
         }
         /* ---- Sound and music ---- */
         else if (opcode == EVENT_OPCODE_SOUND_EFFECT) {
-            g_world_sound_effect_id_to_play = first_operand;
+            g_world_sound_pending_sfx_id = first_operand;
         } else if (opcode == EVENT_OPCODE_BG_SOUND) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, world_sound_bg_thread);

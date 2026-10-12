@@ -497,7 +497,7 @@ void world_text_character_handling_thread(void) {
                                         }
                                     }
                                     if ((g_world_menu_new_button_input & PSX_PAD_UP) && rec.first_line != 0) {
-                                        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                                         WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line += no_value;
                                         rec.last_line = rec.first_line + rec.lines;
@@ -505,7 +505,7 @@ void world_text_character_handling_thread(void) {
                                     }
                                     if ((g_world_menu_new_button_input & PSX_PAD_DOWN)
                                         && rec.first_line != rec.line - rec.lines) {
-                                        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                                         WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line++;
                                         rec.last_line = rec.first_line + rec.lines;
@@ -590,7 +590,7 @@ void world_text_character_handling_thread(void) {
                     world_menu_build_and_upload_window_image(
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
                 } else if (rec.box_type != DIALOG_BOX_TYPE_CENTERED) {
-                    g_world_sound_effect_id_to_play = MAIN_SFX_TEXT_PAGE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_TEXT_PAGE;
                     rec.first_line = rec.line;
                     rec.last_line = rec.line + rec.lines;
                     world_menu_render_text_image_at_record_origin(&rec);
@@ -625,16 +625,16 @@ void world_text_character_handling_thread(void) {
                         continue;
                     }
                     if ((g_world_menu_new_button_input & PSX_PAD_UP) && choice != rec.mark) {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                         choice += no_value;
                     }
                     if ((g_world_menu_new_button_input & PSX_PAD_DOWN) && choice != column) {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                         choice++;
                     }
                     if (g_world_menu_new_button_input & PSX_PAD_CIRCLE) {
                         if (rec.box_type != DIALOG_BOX_TYPE_CENTERED) {
-                            g_world_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                            g_world_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                         }
                         break;
                     }

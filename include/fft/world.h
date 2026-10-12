@@ -401,7 +401,7 @@ void world_script_waitwalk_event_instruction(s32 unit_id);
 
 /* sound */
 extern s16 g_world_sound_current_music_track_index;
-extern s32 g_world_sound_effect_id_to_play; /* main_sfx_e; -1 while the event frame has no request */
+extern s32 g_world_sound_pending_sfx_id; /* main_sfx_e; -1 while the event frame has no request */
 extern s16 g_world_sound_music_switch_request;
 extern s16 g_world_sound_music_track_1_id;
 extern s16 g_world_sound_music_track_2_id;
@@ -410,11 +410,11 @@ extern s32 g_world_sound_music_volume_transition_request;
 extern u8 g_world_sound_release_held_loop;
 void world_sound_dispatch_effect(void);
 void world_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
-void world_sound_set_effect_to_cancel(void);
-void world_sound_set_effect_to_confirm(void);
-void world_sound_set_effect_to_confirm_checked(void);
-void world_sound_set_effect_to_invalid(void);
-void world_sound_set_scroll_effect(void);
+void world_sound_queue_sfx_cancel(void);
+void world_sound_queue_sfx_confirm(void);
+void world_sound_queue_sfx_confirm_unless_restoring(void);
+void world_sound_queue_sfx_invalid(void);
+void world_sound_queue_sfx_cursor_move(void);
 void world_sound_wait_for_music_stub(void);
 void world_sound_bg_thread(void);
 void world_sound_edit_bg_thread(void);

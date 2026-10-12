@@ -100,7 +100,7 @@ void world_menu_run_require_help(void) {
             }
             input = *g_world_help_controller_state_ptr;
             if (input & PSX_PAD_CROSS) {
-                g_world_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                g_world_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
             if (input & PSX_PAD_CIRCLE) {
@@ -111,7 +111,7 @@ void world_menu_run_require_help(void) {
                         if ((*entry->value & 0x7FF) == 0x7FF || (*entry->value & 0x7FF) == 0) {
                             *g_world_help_controller_state_ptr = 0;
                         } else {
-                            g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                            g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                             world_thread_start(text_thread_id, world_text_character_handling_thread);
                             world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
@@ -122,13 +122,13 @@ void world_menu_run_require_help(void) {
                     } else if (entry->help_base == -0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_world_help_controller_state_ptr = 0;
                     } else {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                         world_thread_start(text_thread_id, world_text_character_handling_thread);
                         world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                     }
                 } else {
                     help_id = entry->help_base;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(text_thread_id, world_text_character_handling_thread);
                     world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                 }
@@ -143,7 +143,7 @@ void world_menu_run_require_help(void) {
                     help_id = 3;
                 }
                 if (menu_index != entry->destination[help_id]) {
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
                 menu_index = entry->destination[help_id];
             }

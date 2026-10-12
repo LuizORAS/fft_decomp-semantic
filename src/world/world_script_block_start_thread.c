@@ -28,7 +28,7 @@ void world_script_block_start_thread(void) {
                 world_script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 0);
             }
         } else if (script[0] == EVENT_OPCODE_SOUND_EFFECT) {
-            g_world_sound_effect_id_to_play = first_halfword;
+            g_world_sound_pending_sfx_id = first_halfword;
         } else if (script[0] == EVENT_OPCODE_WARP_UNIT) {
             world_script_warp_unit((const event_warp_unit_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_VALUE) {

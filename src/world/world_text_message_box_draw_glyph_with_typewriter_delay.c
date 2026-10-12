@@ -166,6 +166,6 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         }
     }
     if (g_world_text_message_box_glyph.mode != 0) {
-        g_world_sound_effect_id_to_play = MAIN_SFX_TEXT_GLYPH;
+        g_world_sound_pending_sfx_id = MAIN_SFX_TEXT_GLYPH;
     }
 }

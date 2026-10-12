@@ -140,7 +140,7 @@ s32 world_menu_dispatch_system_function(
         }
         world_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK) {
-        world_sound_set_effect_to_confirm();
+        world_sound_queue_sfx_confirm();
         if (option == 0) {
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         } else if (option == 1) {
@@ -148,7 +148,7 @@ s32 world_menu_dispatch_system_function(
         } else if (option == 4) {
             world_menu_start_system_function_thread(0x30);
         } else {
-            world_sound_set_effect_to_invalid();
+            world_sound_queue_sfx_invalid();
             world_menu_start_system_function_thread(option + 0xD);
         }
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_WAIT_MENU) {

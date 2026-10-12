@@ -48,10 +48,10 @@ functions:
   - {addr: 0x800e1e40, size: 76, name: world_unit_get_battle_index_by_entd_unit_id, hash: 6bd874927737de2e}
   - {addr: 0x800e1e8c, size: 20, name: world_menu_set_transition_active_flag, hash: edfede6075ee1f04}
   - {addr: 0x800e1ea0, size: 16, name: world_menu_clear_transition_active_flag, hash: d7f503c035758c32}
-  - {addr: 0x800e1eb0, size: 20, name: world_sound_set_effect_to_confirm, hash: dcec320743e88359}
-  - {addr: 0x800e1ec4, size: 20, name: world_sound_set_effect_to_cancel, hash: 2e72a265e93b98c6}
-  - {addr: 0x800e1ed8, size: 20, name: world_sound_set_scroll_effect, hash: 7684f65afee83ab4}
-  - {addr: 0x800e1eec, size: 20, name: world_sound_set_effect_to_invalid, hash: 2cded14f2af8d448}
+  - {addr: 0x800e1eb0, size: 20, name: world_sound_queue_sfx_confirm, hash: dcec320743e88359}
+  - {addr: 0x800e1ec4, size: 20, name: world_sound_queue_sfx_cancel, hash: 2e72a265e93b98c6}
+  - {addr: 0x800e1ed8, size: 20, name: world_sound_queue_sfx_cursor_move, hash: 7684f65afee83ab4}
+  - {addr: 0x800e1eec, size: 20, name: world_sound_queue_sfx_invalid, hash: 2cded14f2af8d448}
   - {addr: 0x800e1f00, size: 40, name: world_menu_stop_thread_with_invalid_sound, hash: 673200a96478bd69}
   - {addr: 0x800e1f28, size: 48, name: world_camera_wait_until_idle, hash: fecdc06e231e4865}
   - {addr: 0x800e1f58, size: 36, name: world_camera_init_yaw_angle, hash: 4b9b57139167c4c5}
@@ -283,7 +283,7 @@ functions:
   - {addr: 0x800f3fa4, size: 352, name: world_menu_run_skillset_thread, hash: 39f4d2e5aa1934c7}
   - {addr: 0x800f4104, size: 124, name: world_menu_record_selection_for_selected_unit, hash: d5e1f7fe303d084c}
   - {addr: 0x800f4180, size: 120, name: world_menu_build_main, hash: 8c0005b9d4465929}
-  - {addr: 0x800f41f8, size: 36, name: world_sound_set_effect_to_confirm_checked, hash: e5915fc070be8986}
+  - {addr: 0x800f41f8, size: 36, name: world_sound_queue_sfx_confirm_unless_restoring, hash: e5915fc070be8986}
   - {addr: 0x800f421c, size: 72, name: world_menu_confirm_action_silently, hash: 26759444d4dbb39f}
   - {addr: 0x800f4264, size: 68, name: world_menu_wait_thread, hash: 8cabc12cfd63cfb0}
   - {addr: 0x800f42a8, size: 212, name: world_menu_confirm_move_command_thread, hash: f34f9bf82eb55401}
@@ -1093,7 +1093,7 @@ data:
   - {addr: 0x80153280, name: g_world_menu_text_state}
   - {addr: 0x80153280, name: g_world_script_variables}
   - {addr: 0x80153294, name: g_world_script_opcode_dc_value}
-  - {addr: 0x80153298, name: g_world_sound_effect_id_to_play}
+  - {addr: 0x80153298, name: g_world_sound_pending_sfx_id}
   - {addr: 0x801532a0, name: g_world_menu_sound_muted}
   - {addr: 0x801532a4, name: g_world_sound_music_volume_transition_request}
   - {addr: 0x801532a8, name: g_world_unit_join_screen_active}

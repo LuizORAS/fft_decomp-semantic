@@ -16,7 +16,7 @@ void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit) {
 
     misc_id = script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
-        g_world_sound_effect_id_to_play = MAIN_SFX_TELEPORT_OUT;
+        g_world_sound_pending_sfx_id = MAIN_SFX_TELEPORT_OUT;
         g_thread_call_target = effect_set_secondary_teleport_by_misc_id;
         thread_call_on_main_stack(misc_id);
         unit_index = wldcore_unit_get_id_from_misc_id(misc_id);

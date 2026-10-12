@@ -147,27 +147,27 @@ void world_build_at_list(void) {
             if ((*input0 & PSX_PAD_UP) && !(*input1 & PSX_PAD_SQUARE)) {
                 if (cursor != 0) {
                     cursor--;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != 0) {
                     delta = -1;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (layout->hidden_rows == 0) {
                     cursor = layout->row_count - 1;
                     if (layout->row_count != 1) {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                     }
                 }
             } else if ((*input0 & PSX_PAD_DOWN) && !(*input1 & PSX_PAD_SQUARE)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != layout->hidden_rows) {
                     delta++;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset == 0) {
                     cursor = 0;
                     if (layout->row_count != 1) {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                     }
                 }
             } else {

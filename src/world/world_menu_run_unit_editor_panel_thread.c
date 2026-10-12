@@ -245,7 +245,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     g_world_unit_summary_panel_rect.y = 0xAA;
     g_world_menu_panel_fade_mode = MENU_PANEL_FADE_IN;
     g_world_unit_status_bounce_step = 6;
-    world_sound_set_effect_to_cancel();
+    world_sound_queue_sfx_cancel();
     do {
         world_thread_yield();
     } while (g_world_unit_status_bounce_step != 0);
