@@ -152,10 +152,13 @@ game data is never committed.
 
 ### Event scripts
 
-Story scenes are bytecode, run by three sets of code:
+Story scenes are bytecode, run by two copies of one interpreter:
 - the BATTLE interpreter (`battle_script_*`);
-- the WORLD interpreter (`world_script_*`);
-- WLDCORE's opcode handlers (`wldcore_opcode_*`).
+- the WORLD interpreter (`world_script_*`).
+
+WLDCORE runs two smaller script languages of its own: each location's
+scripts on the world map (`wldcore_script_*`) and the sound novels
+(`wldcore_sound_novel_*`).
 
 [`include/fft/script.h`](include/fft/script.h) declares the bytecode and the
 script variables that both interpreters share. The game loop itself writes

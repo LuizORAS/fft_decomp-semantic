@@ -5,7 +5,7 @@
  * Per-frame handler for a WLDCORE brightness/fade menu level.
  *
  * The unused array reproduces the target's 0x40-byte frame. The 0x140 state-flag test is a
- * word load (`lw`) of the u16 g_wldcore_active_saved_record.state_flags in the target, so it
+ * word load (`lw`) of the u16 g_wldcore_sound_novel_record.state_flags in the target, so it
  * reads the flags through an s32 cast; the u16 declaration gives `lhu`.
  */
 void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level) {
@@ -45,32 +45,32 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             fade->flags[0] = (fade->flags[0] & ~WLDCORE_SCREEN_FADE_BOX_VISIBLE) | WLDCORE_SCREEN_FADE_OUT;
             main_sound_stop_weather_sfx_music();
             main_sound_remove_vfx_resource(g_wldcore_sound_novel_sound_resource);
-            wldcore_reset_selected_saved_record(g_wldcore_saved_record_index);
+            wldcore_sound_novel_reset_selected_record(g_wldcore_sound_novel_index);
             g_wldcore_sound_novel_countdown_frames = 0;
             wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TREASURE_DETAIL, level->message, 0);
             return;
         }
     }
 
-    state_flags = &g_wldcore_active_saved_record.state_flags;
-    if (*state_flags & WLDCORE_OPCODE_STATE_END) {
+    state_flags = &g_wldcore_sound_novel_record.state_flags;
+    if (*state_flags & WLDCORE_SOUND_NOVEL_STATE_END) {
         return;
     }
 
-    if (wldcore_script_run_until_yield() != 0) {
+    if (wldcore_sound_novel_run_until_yield() != 0) {
         if (g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1)) {
             if (g_wldcore_current_button_input & PSX_PAD_L1) {
-                if (g_wldcore_active_saved_record.brightness < 0xFF) {
-                    g_wldcore_active_saved_record.brightness++;
+                if (g_wldcore_sound_novel_record.brightness < 0xFF) {
+                    g_wldcore_sound_novel_record.brightness++;
                 }
             }
             if (g_wldcore_current_button_input & PSX_PAD_R1) {
-                brightness = &g_wldcore_active_saved_record.brightness;
+                brightness = &g_wldcore_sound_novel_record.brightness;
                 if (*brightness != 0) {
                     (*brightness)--;
                 }
             }
-            shade = g_wldcore_active_saved_record.brightness;
+            shade = g_wldcore_sound_novel_record.brightness;
             g_wldcore_screen_fade_state.boxes[1].r = shade;
             g_wldcore_screen_fade_state.boxes[1].g = shade;
             g_wldcore_screen_fade_state.boxes[1].b = shade;
@@ -80,7 +80,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
         if (level->fade_timer != 0) {
             g_wldcore_window_render_records[level->render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_records[level->overlay_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-            width = 0x100 - g_wldcore_active_saved_record.brightness;
+            width = 0x100 - g_wldcore_sound_novel_record.brightness;
             g_wldcore_window_render_records[level->render_index].bounds.dimensions.x = width / 4;
             level->fade_timer--;
         } else {
@@ -100,8 +100,8 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 return;
             }
             if ((buttons & PSX_PAD_START)
-                && (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE)
-                && !(g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_WHITE_OVERLAY)) {
+                && (g_wldcore_sound_novel_record.state_flags & WLDCORE_SOUND_NOVEL_STATE_PARENT_WINDOWS_VISIBLE)
+                && !(g_wldcore_sound_novel_record.state_flags & WLDCORE_SOUND_NOVEL_STATE_WHITE_OVERLAY)) {
                 g_wldcore_window_records[level->left_window].sequence
                     = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_START_BUTTON_PRESS;
                 g_wldcore_window_records[level->left_window].frame_index
@@ -113,8 +113,8 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 return;
             }
             if ((g_wldcore_current_button_input & PSX_PAD_SQUARE)
-                && (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE)
-                && g_wldcore_active_saved_record.text_history_3 != -1) {
+                && (g_wldcore_sound_novel_record.state_flags & WLDCORE_SOUND_NOVEL_STATE_PARENT_WINDOWS_VISIBLE)
+                && g_wldcore_sound_novel_record.text_history_3 != -1) {
                 g_wldcore_window_records[level->right_window].sequence
                     = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_SQUARE_BUTTON_PRESS;
                 window = level->right_window;
@@ -139,7 +139,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
         main_sound_stop_weather_sfx_music();
         level->phase = WLDCORE_SOUND_NOVEL_PHASE_END;
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-        if (!(*state_flags & WLDCORE_OPCODE_STATE_WHITE_OVERLAY)) {
+        if (!(*state_flags & WLDCORE_SOUND_NOVEL_STATE_WHITE_OVERLAY)) {
             wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
         }
     }

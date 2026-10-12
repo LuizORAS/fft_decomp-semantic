@@ -52,11 +52,10 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         }
         kind = &g_wldcore_proposition_outcome.reward_type;
         if (*kind == WLDCORE_PROPOSITION_REWARD_TREASURE) {
-            wldcore_proposition_load_picture_data_set(
-                g_wldcore_treasure_picture_sets[g_wldcore_proposition_outcome.reward_index]);
+            wldcore_gfx_load_picture_set(g_wldcore_treasure_picture_sets[g_wldcore_proposition_outcome.reward_index]);
         }
         if (*kind == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
-            wldcore_proposition_load_picture_data_set(
+            wldcore_gfx_load_picture_set(
                 g_wldcore_unexplored_land_picture_sets[g_wldcore_proposition_outcome.reward_index]);
         }
         level->load_phase = WLDCORE_PROPOSITION_REPORT_LOAD_DONE;

@@ -290,16 +290,16 @@ typedef struct card_save_buffer {
     u8 proposition_last_attempt_date_bits[0x6c]; /* 0x16b; packed 9-bit dates */
     u8 proposition_states[0x60];                 /* 0x1d7; low 6 bits are a remaining-day counter */
     u8 _unused_0237[1];                          /* 0x237; serialized and parity-covered */
-    u8 saved_records[5][0x38];                   /* 0x238; wldcore_saved_record_t: one sound-novel reading state each */
-    u32 saved_data_bits[40];                     /* 0x350 */
-    u32 secondary_saved_data_bits[2];            /* 0x3f0 */
-    u8 brave_story_character_ages[0x40];         /* 0x3f8 */
-    u8 proposition_count;                        /* 0x438 */
-    u8 active_propositions[8][9];                /* 0x439 */
-    u8 _unused_0481[3];                          /* 0x481; serialized and parity-covered */
-    u8 party_records[20][0xe0];                  /* 0x484; party_data_t records truncated to 0xe0 bytes */
-    u8 item_quantities[ITEM_ID_COUNT];           /* 0x1604; g_main_item_quantities */
-    u8 poached_item_quantities[ITEM_ID_COUNT];   /* 0x1704; g_main_item_poached_quantities */
+    u8 saved_records[5][0x38];           /* 0x238; wldcore_sound_novel_record_t: one sound-novel reading state each */
+    u32 saved_data_bits[40];             /* 0x350 */
+    u32 secondary_saved_data_bits[2];    /* 0x3f0 */
+    u8 brave_story_character_ages[0x40]; /* 0x3f8 */
+    u8 proposition_count;                /* 0x438 */
+    u8 active_propositions[8][9];        /* 0x439 */
+    u8 _unused_0481[3];                  /* 0x481; serialized and parity-covered */
+    u8 party_records[20][0xe0];          /* 0x484; party_data_t records truncated to 0xe0 bytes */
+    u8 item_quantities[ITEM_ID_COUNT];   /* 0x1604; g_main_item_quantities */
+    u8 poached_item_quantities[ITEM_ID_COUNT]; /* 0x1704; g_main_item_poached_quantities */
     /* 0x1804; first 0x40 bytes are Move-Find-Item flags, second half unknown. */
     u8 item_location_flags[0x80];
     s32 script_variables[0x100]; /* 0x1884 */
@@ -421,13 +421,13 @@ extern game_options_t g_main_game_options_defaults;
 /* save */
 /* Byte view of the four-byte world-script instruction word at 0x800d4848:
  * opcode byte followed by up to three operand bytes. */
-typedef struct wldcore_opcode_instruction_bytes {
+typedef struct wldcore_sound_novel_instruction_bytes {
     u8 opcode;
     u8 operand_0;
     u8 operand_1;
     u8 operand_2;
-} wldcore_opcode_instruction_bytes_t;
-typedef char wldcore_instruction_bytes_size_must_be_4[sizeof(wldcore_opcode_instruction_bytes_t) == 4 ? 1 : -1];
+} wldcore_sound_novel_instruction_bytes_t;
+typedef char wldcore_instruction_bytes_size_must_be_4[sizeof(wldcore_sound_novel_instruction_bytes_t) == 4 ? 1 : -1];
 
 /* Nine-byte active-proposition records at 0x80057eec. Daily update 0x80074b30
  * advances elapsed_days and sets completion bit 0x04. The assignment at
@@ -447,17 +447,17 @@ typedef char wldcore_proposition_progress_size_must_be_9[sizeof(wldcore_proposit
 /* Saved-data records at 0x80059594. The exact caller at 0x8008aba8 establishes
  * the 0x38 stride; 0x8008abe4 selectively resets these fields. Field meanings
  * beyond those stores remain provisional. */
-typedef struct wldcore_saved_record {
+typedef struct wldcore_sound_novel_record {
     /* 0x00: the slot's save-block buffer; MAIN's initializer at 0x80059594
      * stores g_main_save_slot_buffer (0x800d0bbc) here for all five slots. */
     u8* buffer;
     u32* script_words; /* 0x04 */
     union {
         u32 word;
-        wldcore_opcode_instruction_bytes_t bytes;
+        wldcore_sound_novel_instruction_bytes_t bytes;
     } instruction; /* 0x08 */
     /* 0x0c-0x37 mirror the live sound-novel state at 0x800d484c. */
-    u16 state_flags; /* 0x0c; wldcore_opcode_state_flag_e */
+    u16 state_flags; /* 0x0c; wldcore_sound_novel_state_flag_e */
     s16 section;     /* 0x0e */
     s16 word_index;  /* 0x10; instruction word index in the section; cleared by wldcore_sound_novel_restore_saved_state
                       */
@@ -479,8 +479,8 @@ typedef struct wldcore_saved_record {
     s16 picture_y;            /* 0x30 */
     s16 sound_id;             /* 0x32 */
     s32 counter;              /* 0x34 */
-} wldcore_saved_record_t;
-typedef char wldcore_saved_record_size_must_be_0x38[sizeof(wldcore_saved_record_t) == 0x38 ? 1 : -1];
+} wldcore_sound_novel_record_t;
+typedef char wldcore_saved_record_size_must_be_0x38[sizeof(wldcore_sound_novel_record_t) == 0x38 ? 1 : -1];
 
 /* Provisional: an adjacent word pair copied as one structure. The paired
  * type reproduces the target's two-load/two-store schedule. */
@@ -501,10 +501,10 @@ extern u32 g_main_land_discovery_date_bits[5];
 extern u8 g_main_proposition_states[96]; /* wldcore_proposition_state_e */
 
 extern u8 g_main_save_slot_buffer[];
-extern u32 g_main_saved_data_bits[40];
+extern u32 g_main_sound_novel_section_bits[40];
 extern wldcore_word_pair_t g_main_saved_list_cursor_state;
 extern wldcore_proposition_progress_t g_main_active_propositions[8];
-extern wldcore_saved_record_t g_main_saved_records[];
+extern wldcore_sound_novel_record_t g_main_sound_novel_records[];
 extern u8 D_80057b1c; /* 0xc5 at boot; saved at image offset 0x1c88 and restored on load, nothing else uses it */
 void main_save_init_data_tables(void);
 void main_save_init_state_and_options(void);
@@ -715,7 +715,7 @@ extern main_ability_human_skillset_t g_main_ability_human_skillset_abilities[];
 extern main_ability_monster_skillset_t g_main_ability_monster_skillset_abilities[];
 extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
 extern main_crystal_pickup_result_t g_main_crystal_pickup_result;
-extern u32 g_main_secondary_saved_data_bits[2];
+extern u32 g_main_sound_novel_saved_flags[2];
 s32 main_ability_calculate_pointers_and_type(s32 id, u8** out_ability_data, u8** out_secondary_data);
 s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u32 main_ability_get_known(battle_stats_t* unit, u32 job_row);

@@ -83,8 +83,8 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
             g_wldcore_window_render_object_count -= 6;
             saved = level->saved_record_index;
             g_wldcore_menu_stack_depth--;
-            g_wldcore_saved_record_index = saved;
-            if (slot < 5 && g_main_saved_records[slot].section != 0) {
+            g_wldcore_sound_novel_index = saved;
+            if (slot < 5 && g_main_sound_novel_records[slot].section != 0) {
                 wldcore_menu_push_sound_novel_resume_level(level->value);
                 break;
             }
@@ -115,7 +115,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
             entry = g_wldcore_treasure_sound_novel_ids[level->value];
             if (entry != 0) {
                 level->saved_record_index = entry - 1;
-                if (entry - 1 >= 5 || g_main_saved_records[entry - 1].section == 0) {
+                if (entry - 1 >= 5 || g_main_sound_novel_records[entry - 1].section == 0) {
                     wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
                 }
                 g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;

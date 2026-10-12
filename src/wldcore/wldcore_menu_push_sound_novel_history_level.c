@@ -5,7 +5,7 @@
  * Suspends WORLD thread 14, appends the two header windows (kinds 0x6c and
  * 0x6d, the second hidden) and the 0xf8 x 0xb0 panel render record built from
  * g_wldcore_window_image_buffer, centres the newest history entry's name text
- * (0x8800 + g_wldcore_active_saved_record.text_history_3) in it, and copies the four operand-history entries
+ * (0x8800 + g_wldcore_sound_novel_record.text_history_3) in it, and copies the four operand-history entries
  * (newest first) into the level at +0x0c..+0x18. It also tints the picture
  * render record to half brightness, clears the screen dim and sets the menu
  * result to -1. The first header window is hidden when the second history
@@ -69,7 +69,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     bounds.position.y = 0;
     wldcore_window_build_render_record_image(index, bounds, 1, g_wldcore_window_image_buffer);
     position = &g_wldcore_window_render_records[index].base;
-    newest = &g_wldcore_active_saved_record.text_history_3;
+    newest = &g_wldcore_sound_novel_record.text_history_3;
     g_wldcore_window_render_records[index].priority = g_wldcore_menu_ordering_table_offset;
     position->x = -0x80;
     position->y = -0x64;
@@ -81,9 +81,9 @@ void wldcore_menu_push_sound_novel_history_level(void) {
                                  .window_pair_render.first_window]
         .palette = 0xA;
     colors = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->color;
-    colors[g_wldcore_active_saved_record.picture_render_index].red = 0x80;
-    colors[g_wldcore_active_saved_record.picture_render_index].green = 0x80;
-    colors[g_wldcore_active_saved_record.picture_render_index].blue = 0x80;
+    colors[g_wldcore_sound_novel_record.picture_render_index].red = 0x80;
+    colors[g_wldcore_sound_novel_record.picture_render_index].green = 0x80;
+    colors[g_wldcore_sound_novel_record.picture_render_index].blue = 0x80;
     g_wldcore_screen_fade_state.boxes[0].r = 0;
     g_wldcore_screen_fade_state.boxes[0].g = 0;
     g_wldcore_screen_fade_state.boxes[0].b = 0;

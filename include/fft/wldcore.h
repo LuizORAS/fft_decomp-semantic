@@ -26,10 +26,10 @@ typedef enum wldcore_thread_slot {
 /* g_main_system_flags as wldcore_gfx_update_map_backdrop last saw it (main_system_flags_e). */
 extern u32 g_wldcore_previous_system_flags;
 
-/* Scalar view of g_wldcore_active_saved_record.state_flags for opcode
+/* Scalar view of g_wldcore_sound_novel_record.state_flags for opcode
  * handlers that read-modify-write it beside another record store: the member
  * spelling shares one base register where the target uses absolute addresses. */
-extern u16 g_wldcore_state_flags;
+extern u16 g_wldcore_sound_novel_state_flags;
 extern s32 g_wldcore_random_battle_entd_id;
 extern s32 g_wldcore_random_battle_map_id;
 extern s32 g_wldcore_random_battle_squad_id;
@@ -162,9 +162,9 @@ extern wldcore_audio_queue_t g_wldcore_audio_queue;
 
 /* The branch opcodes subtract this halfword sign-extended, so it is signed;
  * the three flag-0x04 handlers reach the same storage through a u16 view. */
-/* Unsigned views of g_wldcore_active_saved_record.text_history_0..3 for the
+/* Unsigned views of g_wldcore_sound_novel_record.text_history_0..3 for the
  * two history shifters, which load them with lhu; the record keeps s16 for
- * the -1 stores of wldcore_reset_saved_record_fields. */
+ * the -1 stores of wldcore_sound_novel_reset_record. */
 extern s16 g_wldcore_sound_novel_text_history_0;
 extern u16 g_wldcore_sound_novel_text_history_1;
 extern u16 g_wldcore_sound_novel_text_history_2;
@@ -179,10 +179,7 @@ void wldcore_sound_play_effect(s32 sound_id);
 void wldcore_sound_stop_music_and_play_sound(s32 sound_id);
 void wldcore_sound_stop_weather_sfx_and_send_quad(s32 sound_id);
 void wldcore_sound_wait_for_queue_drain(void);
-void wldcore_sound_novel_restore_saved_state(s32 render_index);
 void wldcore_sound_play_pending_script_sounds(s32 low, s32 high, s32 value);
-s32 wldcore_sound_novel_update_countdown_timer(void);
-void wldcore_load_sound_novel_files(s32 chapter);
 
 /* gfx */
 /* The three parallel arrays share one object, which is why the target builds
@@ -283,7 +280,7 @@ extern s32 g_wldcore_loaded_picture_set;
 extern u16* g_wldcore_dissolve_band_order;
 extern u8 g_wldcore_dissolve_band_progress[16];
 
-/* Destination image buffer (read back as a TIM by wldcore_opcode_load_picture). */
+/* Destination image buffer (read back as a TIM by wldcore_sound_novel_load_picture). */
 extern u32* g_wldcore_picture_buffer;
 extern u32* g_wldcore_scratch_buffer;
 
@@ -324,6 +321,8 @@ void wldcore_gfx_calculate_scaled_rectangle(
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* im, s32 step);
 void wldcore_gfx_capture_map_backdrop(void);
 void wldcore_gfx_load_background_set(s32 set);
+s32 wldcore_gfx_load_location_picture(s32 index);
+void wldcore_gfx_load_picture_set(s32 value);
 void wldcore_gfx_update_map_backdrop(void);
 
 /* calendar */
@@ -770,19 +769,6 @@ typedef struct wldcore_proposition_outcome {
 } wldcore_proposition_outcome_t;
 typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_proposition_outcome_t) == 0x58 ? 1 : -1];
 
-/* Interpreter state of the sound-novel script (wldcore_saved_record_t.state_flags),
- * stepped by wldcore_script_run_until_yield. */
-typedef enum wldcore_opcode_state_flag {
-    WLDCORE_OPCODE_STATE_BRANCH = 0x002,  /* a branch was taken: mark its saved-data bit and enter the next section */
-    WLDCORE_OPCODE_STATE_FETCH = 0x004,   /* the handler is done: load the next instruction word */
-    WLDCORE_OPCODE_STATE_YIELD = 0x008,   /* leave the interpreter until the next frame */
-    WLDCORE_OPCODE_STATE_FETCHED = 0x010, /* the instruction word was loaded this turn: the handler's first call */
-    WLDCORE_OPCODE_STATE_END = 0x020,     /* the script ended */
-    WLDCORE_OPCODE_STATE_PARENT_WINDOWS_VISIBLE = 0x040,
-    WLDCORE_OPCODE_STATE_VALUE_DISPLAY = 0x080, /* the numeric value display is up */
-    WLDCORE_OPCODE_STATE_WHITE_OVERLAY = 0x100, /* the white full-screen overlay is up */
-} wldcore_opcode_state_flag_e;
-
 extern wldcore_proposition_outcome_t g_wldcore_proposition_outcome;
 void wldcore_proposition_prepare_report(s32 job_id);
 
@@ -937,15 +923,13 @@ typedef struct wldcore_save_slot_table {
     u32 offsets[1]; /* 0x04 */
 } wldcore_save_slot_table_t;
 
-extern s16 g_wldcore_saved_record_index;
+extern s16 g_wldcore_sound_novel_index;
 
 /* Saved copy of g_wldcore_context_value_display_position. */
 extern wldcore_point32_t g_wldcore_saved_context_value_display_position;
-extern wldcore_saved_record_t g_wldcore_active_saved_record;
+extern wldcore_sound_novel_record_t g_wldcore_sound_novel_record;
 /* g_main_system_flags as saved by wldcore_gfx_toggle_captured_world_frame (main_system_flags_e). */
 extern u32 g_wldcore_saved_system_flags;
-void wldcore_reset_saved_record_fields(wldcore_saved_record_t* record);
-void wldcore_reset_selected_saved_record(s32 unused);
 
 /* proposition */
 /* The Bar's propositions: the jobs on offer, sending units, the days out, the report, the
@@ -1142,8 +1126,6 @@ s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index);
 void wldcore_proposition_advance_daily_counters(void);
 s32 wldcore_proposition_count_returned(s32 location);
 wldcore_proposition_data_t* wldcore_proposition_get_data_pointer(s32 record);
-s32 wldcore_proposition_load_picture(s32 index);
-void wldcore_proposition_load_picture_data_set(s32 value);
 s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, s32 message);
 void wldcore_proposition_unpack_row(wldcore_proposition_fields_t* out, s32 index);
 void wldcore_proposition_push_recall_level(s32 value);
@@ -1160,38 +1142,62 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
 void wldcore_proposition_push_result_level(s32 proposition);
 s32 wldcore_proposition_find_preferred_job_unit(void);
 
-/* opcode */
-/* The world-script state from the instruction word at 0x800d4848 onwards
- * (the tail of the world-script record). Handlers must reach it as
+/* sound novel */
+/* The sound novels' reader (wldcore_sound_novel_*): the script interpreter and its 54 opcodes (text,
+ * pictures, branches on choices, flags and a counter, sound and fades), the record of the novel
+ * being read and the bookmarks kept with the save. Its menu levels are wldcore_menu_*sound_novel*. */
+
+/* Interpreter state of the sound-novel script (wldcore_sound_novel_record_t.state_flags),
+ * stepped by wldcore_sound_novel_run_until_yield. */
+typedef enum wldcore_sound_novel_state_flag {
+    WLDCORE_SOUND_NOVEL_STATE_BRANCH
+    = 0x002, /* a branch was taken: mark its saved-data bit and enter the next section */
+    WLDCORE_SOUND_NOVEL_STATE_FETCH = 0x004,   /* the handler is done: load the next instruction word */
+    WLDCORE_SOUND_NOVEL_STATE_YIELD = 0x008,   /* leave the interpreter until the next frame */
+    WLDCORE_SOUND_NOVEL_STATE_FETCHED = 0x010, /* the instruction word was loaded this turn: the handler's first call */
+    WLDCORE_SOUND_NOVEL_STATE_END = 0x020,     /* the script ended */
+    WLDCORE_SOUND_NOVEL_STATE_PARENT_WINDOWS_VISIBLE = 0x040,
+    WLDCORE_SOUND_NOVEL_STATE_VALUE_DISPLAY = 0x080, /* the numeric value display is up */
+    WLDCORE_SOUND_NOVEL_STATE_WHITE_OVERLAY = 0x100, /* the white full-screen overlay is up */
+} wldcore_sound_novel_state_flag_e;
+
+/* The record of the novel being read from its instruction word (0x800d4848) on, the tail of
+ * g_wldcore_sound_novel_record. Handlers must reach it as
  * in-struct references: the target keeps each state_flags store ahead of the
  * window/render-record updates and reloads render_index after them, which GCC
- * only does for in-struct accesses. g_wldcore_opcode_instruction and
- * g_wldcore_state_flags stay scalar views of the first two words for the
+ * only does for in-struct accesses. g_wldcore_sound_novel_instruction and
+ * g_wldcore_sound_novel_state_flags stay scalar views of the first two words for the
  * handlers whose accesses must be scalar. */
-typedef struct wldcore_opcode_state {
+typedef struct wldcore_sound_novel_state {
     union {
         u32 word;
-        wldcore_opcode_instruction_bytes_t bytes;
+        wldcore_sound_novel_instruction_bytes_t bytes;
     } instruction;   /* 0x00 */
-    u16 state_flags; /* 0x04; g_wldcore_state_flags; wldcore_opcode_state_flag_e */
+    u16 state_flags; /* 0x04; g_wldcore_sound_novel_state_flags; wldcore_sound_novel_state_flag_e */
     u8 _unused_06[0x0e];
     s16 render_index; /* 0x14 */
     s16 picture;      /* 0x16 */
     u8 _unused_18[0x0e];
     s16 x; /* 0x26 */
     s16 y; /* 0x28 */
-} wldcore_opcode_state_t;
+} wldcore_sound_novel_state_t;
 
-extern wldcore_opcode_state_t g_wldcore_opcode_state;
-extern void (*g_wldcore_opcode_handlers[])(void);
-void wldcore_opcode_apply_pending_delta_and_clamp_value(void);
-void wldcore_opcode_branch_if_saved_bit(s32 expected);
-void wldcore_opcode_branch_if_local_flag(s32 expected);
-void wldcore_opcode_branch_if_savedata_bit(s32 expected);
-void wldcore_opcode_branch_if_dialog_option(s32 expected);
-void wldcore_opcode_start_pending_value_transition(void);
-void wldcore_opcode_load_picture(void);
-void wldcore_opcode_load_background_set(void);
+extern wldcore_sound_novel_state_t g_wldcore_sound_novel_state;
+extern void (*g_wldcore_sound_novel_handlers[])(void);
+void wldcore_sound_novel_apply_counter_delta(void);
+void wldcore_sound_novel_branch_if_saved_flag(s32 expected);
+void wldcore_sound_novel_branch_if_local_flag(s32 expected);
+void wldcore_sound_novel_branch_if_section_read_bit(s32 expected);
+void wldcore_sound_novel_branch_if_dialog_option(s32 expected);
+void wldcore_sound_novel_show_value_display(void);
+void wldcore_sound_novel_load_picture(void);
+void wldcore_sound_novel_load_background_set(void);
+void wldcore_sound_novel_load_files(s32 chapter);
+void wldcore_sound_novel_reset_record(wldcore_sound_novel_record_t* record);
+void wldcore_sound_novel_reset_selected_record(s32 unused);
+void wldcore_sound_novel_restore_saved_state(s32 render_index);
+s32 wldcore_sound_novel_run_until_yield(void);
+s32 wldcore_sound_novel_update_countdown_timer(void);
 
 /* script */
 /* The world map's location scripts (wldcore_script_*): for each location a list of scripts, each a
@@ -1274,7 +1280,6 @@ void wldcore_script_request_load_event(void);
 void wldcore_script_request_set_var_2(void);
 void wldcore_script_request_text(void);
 void wldcore_script_read_operand_pair_and_date(s32* out_a, s32* out_b, s32* out_c, s32* out_d);
-s32 wldcore_script_run_until_yield(void);
 
 /* bar */
 /* The Bar, opened from a town's menu: its menu (rumors, the propositions on offer, the job reports,

@@ -3,17 +3,17 @@
 
 /* Handler of the history-text level (type 0x17).
  *
- * Phase 1 steps the picture render record (g_wldcore_active_saved_record.picture_render_index) and g_wldcore_hud_color
+ * Phase 1 steps the picture render record (g_wldcore_sound_novel_record.picture_render_index) and g_wldcore_hud_color
  * from 0x80 down to 0x60 while the screen fade box brightens, in five steps. Phase 2 runs the reverse ramp and then, if
- * g_wldcore_active_saved_record.text_id names a text, clears the image buffer for the level's render record (width *
- * height / 8 words), renders text 0x8800 + g_wldcore_active_saved_record.text_id into it, uploads it and clears script
+ * g_wldcore_sound_novel_record.text_id names a text, clears the image buffer for the level's render record (width *
+ * height / 8 words), renders text 0x8800 + g_wldcore_sound_novel_record.text_id into it, uploads it and clears script
  * variables 0x5c-0x5e; it then pops the level and resumes WORLD thread 14.
  * Phase 0 scrolls the text history with up/down, hiding the arrow window at
  * either end, and starts phase 2 once button bit 0x80 is released.
  *
  * Load-bearing spellings: the nonzero phases are a switch nested under
  * `phase != 0`, matching the target's test order; each fade case holds
- * &g_wldcore_active_saved_record.picture_render_index in its own pointer local, and `shade` is shared between the
+ * &g_wldcore_sound_novel_record.picture_render_index in its own pointer local, and `shade` is shared between the
  * cases (a global pseudo, as in the target's $a2); the text box position is
  * read into `x`/`y` so the s32 point is loaded with `lw`; `unused` preserves
  * the 0x58-byte frame. */
@@ -37,7 +37,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
         switch (level->phase) {
         case WLDCORE_SOUND_NOVEL_HISTORY_PHASE_DIM:
             shade = 0x80 - level->step * 8;
-            index1 = &g_wldcore_active_saved_record.picture_render_index;
+            index1 = &g_wldcore_sound_novel_record.picture_render_index;
             g_wldcore_window_render_records[*index1].color.r = shade;
             g_wldcore_window_render_records[*index1].color.g = shade;
             g_wldcore_window_render_records[*index1].color.b = shade;
@@ -56,7 +56,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             }
             break;
         case WLDCORE_SOUND_NOVEL_HISTORY_PHASE_RESTORE:
-            index2 = &g_wldcore_active_saved_record.picture_render_index;
+            index2 = &g_wldcore_sound_novel_record.picture_render_index;
             shade = level->step * 0x10 + 0x40;
             g_wldcore_window_render_records[*index2].color.r = shade;
             g_wldcore_window_render_records[*index2].color.g = shade;
@@ -73,7 +73,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             if (step < 5) {
                 break;
             }
-            text_id = g_wldcore_active_saved_record.text_id;
+            text_id = g_wldcore_sound_novel_record.text_id;
             if (text_id != -1) {
                 text_id += TEXT_ID_WORLD_MESSAGE_BASE;
                 i = 0;

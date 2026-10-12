@@ -1341,15 +1341,15 @@ data:
   - {addr: 0x80057eec, name: g_main_active_propositions}
   - {addr: 0x80057f34, name: g_main_brave_story_character_ages}
   - {addr: 0x80057f74, name: g_main_party_data}
-  - {addr: 0x80059374, name: g_main_saved_data_bits}
+  - {addr: 0x80059374, name: g_main_sound_novel_section_bits}
   - {addr: 0x80059414, name: g_main_item_location_flags}
   - {addr: 0x80059494, name: g_main_item_poached_quantities}
-  - {addr: 0x80059594, name: g_main_saved_records}
+  - {addr: 0x80059594, name: g_main_sound_novel_records}
   - {addr: 0x800596ac, name: g_main_land_discovery_date_bits}
   - {addr: 0x800596c0, name: g_main_card_bios_events}
   - {addr: 0x800596e0, name: g_main_item_quantities}
   - {addr: 0x800597e0, name: g_main_card_save_slot_playtimes}
-  - {addr: 0x80059810, name: g_main_secondary_saved_data_bits}
+  - {addr: 0x80059810, name: g_main_sound_novel_saved_flags}
   - {addr: 0x8005a884, name: get_item_data_pointer}
   - {addr: 0x8005e288, name: get_total_equipment_quantity}
   - {addr: 0x8005e90c, name: g_main_unit_generation_base_data}

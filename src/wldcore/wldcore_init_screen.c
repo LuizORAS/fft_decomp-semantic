@@ -9,7 +9,7 @@ void wldcore_init_screen(void) {
     s32 count;
     SetDispMask(0);
     g_wldcore_map_projection_state.marker.sub_kind
-        = wldcore_proposition_load_picture(g_wldcore_map_projection_state.marker.kind);
+        = wldcore_gfx_load_location_picture(g_wldcore_map_projection_state.marker.kind);
     wldcore_wait_for_file_load();
     count = GsGetActiveBuff();
     g_active_graphics_buffer_index = count;

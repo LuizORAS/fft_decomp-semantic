@@ -10,8 +10,8 @@
  * system-flag-4 path; up and down toggle cursor_row, which moves the owned
  * window record down by 16.
  *
- * wldcore_reset_selected_saved_record ignores its argument; retail still
- * passes g_wldcore_saved_record_index. */
+ * wldcore_sound_novel_reset_selected_record ignores its argument; retail still
+ * passes g_wldcore_sound_novel_index. */
 void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_level_t* level) {
     GsIMAGE image;
     s32 toggle;
@@ -36,7 +36,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         g_wldcore_window_render_object_count -= 4;
         g_wldcore_menu_stack_depth--;
         if (level->cursor_row != 0) {
-            wldcore_reset_selected_saved_record(g_wldcore_saved_record_index);
+            wldcore_sound_novel_reset_selected_record(g_wldcore_sound_novel_index);
         }
         wldcore_menu_push_sound_novel_level(level->mode);
         return;

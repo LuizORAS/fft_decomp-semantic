@@ -35,7 +35,7 @@ void wldcore_menu_push_location_menu_level(s32 location) {
     wldcore_window_xy_t* position;
 
     g_wldcore_map_projection_state.marker.sub_kind
-        = wldcore_proposition_load_picture(g_wldcore_map_projection_state.marker.kind);
+        = wldcore_gfx_load_location_picture(g_wldcore_map_projection_state.marker.kind);
     if (g_wldcore_map_projection_state.marker.sub_kind != 0) {
         location += WLDCORE_ANIM_SEQUENCE_LOCATION_NAME_FIRST;
     } else {

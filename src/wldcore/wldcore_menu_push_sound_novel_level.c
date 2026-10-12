@@ -5,7 +5,7 @@
  * Pushes the sound-novel menu level (WLDCORE_MENU_LEVEL_SOUND_NOVEL).
  * `argument` is kept in the level and names the treasure detail reopened
  * when the novel ends; the novel read is the one in
- * g_wldcore_saved_record_index.
+ * g_wldcore_sound_novel_index.
  *
  * Hides the context value display, clears VRAM and the scratch buffer, and
  * appends the level's display objects, all hidden: the two button prompts,

@@ -104,9 +104,9 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
     bcopy(
         g_world_load_work_buffer->proposition_last_attempt_date_bits, g_main_proposition_last_attempt_date_bits, 0x6c);
     bcopy(g_world_load_work_buffer->proposition_states, g_main_proposition_states, 0x60);
-    bcopy(g_world_load_work_buffer->saved_records, g_main_saved_records, 0x118);
-    bcopy(g_world_load_work_buffer->saved_data_bits, g_main_saved_data_bits, 0xa0);
-    bcopy(g_world_load_work_buffer->secondary_saved_data_bits, g_main_secondary_saved_data_bits, 8);
+    bcopy(g_world_load_work_buffer->saved_records, g_main_sound_novel_records, 0x118);
+    bcopy(g_world_load_work_buffer->saved_data_bits, g_main_sound_novel_section_bits, 0xa0);
+    bcopy(g_world_load_work_buffer->secondary_saved_data_bits, g_main_sound_novel_saved_flags, 8);
     bcopy(g_world_load_work_buffer->brave_story_character_ages, g_main_brave_story_character_ages, 0x40);
     g_main_save_proposition_count = g_world_load_work_buffer->proposition_count;
     bcopy(g_world_load_work_buffer->active_propositions, g_main_active_propositions, 0x48);

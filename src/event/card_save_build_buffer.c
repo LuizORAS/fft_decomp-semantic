@@ -78,9 +78,10 @@ void card_save_build_buffer(s32 slot) {
         0x6c);
     bcopy(g_main_proposition_states, g_card_save_buffer_pointer->proposition_states,
         sizeof(g_card_save_buffer_pointer->proposition_states));
-    bcopy(g_main_saved_records, g_card_save_buffer_pointer->saved_records, 0x118);
-    bcopy(g_main_saved_data_bits, g_card_save_buffer_pointer->saved_data_bits, sizeof(g_main_saved_data_bits));
-    bcopy(g_main_secondary_saved_data_bits, g_card_save_buffer_pointer->secondary_saved_data_bits,
+    bcopy(g_main_sound_novel_records, g_card_save_buffer_pointer->saved_records, 0x118);
+    bcopy(g_main_sound_novel_section_bits, g_card_save_buffer_pointer->saved_data_bits,
+        sizeof(g_main_sound_novel_section_bits));
+    bcopy(g_main_sound_novel_saved_flags, g_card_save_buffer_pointer->secondary_saved_data_bits,
         sizeof(g_card_save_buffer_pointer->secondary_saved_data_bits));
     bcopy(g_main_brave_story_character_ages, g_card_save_buffer_pointer->brave_story_character_ages,
         sizeof(g_main_brave_story_character_ages));

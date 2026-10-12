@@ -4,7 +4,7 @@
  * relative to the disc LBA below it, so entry i+1 minus entry i is that set's
  * sector count. Same shape as g_wldcore_sound_novel_script_sector_offsets and
  * g_wldcore_sound_novel_text_sector_offsets used by
- * wldcore_load_sound_novel_files. */
+ * wldcore_sound_novel_load_files. */
 
 /* Load set `set` into the shared scratch buffer, skipping the transfer when it
  * is already resident. */

@@ -1,0 +1,8 @@
+#include "fft/wldcore.h"
+#include "psx/types.h"
+
+/* Sound novel opcode 22: clear saved flag operand 0 (g_main_sound_novel_saved_flags). */
+void wldcore_sound_novel_clear_saved_flag(void) {
+    wldcore_set_bit_value(g_main_sound_novel_saved_flags, g_wldcore_sound_novel_record.instruction.bytes.operand_0, 0);
+    g_wldcore_sound_novel_record.state_flags |= WLDCORE_SOUND_NOVEL_STATE_FETCH;
+}

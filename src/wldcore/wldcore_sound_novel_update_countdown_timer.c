@@ -27,8 +27,8 @@ s32 wldcore_sound_novel_update_countdown_timer(void) {
         }
         g_wldcore_sound_novel_countdown_frames = 0;
         g_wldcore_sound_novel_countdown_frames_reset = 0;
-        g_wldcore_active_saved_record.section = g_wldcore_sound_novel_countdown_section;
-        g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_BRANCH;
+        g_wldcore_sound_novel_record.section = g_wldcore_sound_novel_countdown_section;
+        g_wldcore_sound_novel_record.state_flags |= WLDCORE_SOUND_NOVEL_STATE_BRANCH;
         return 1;
     }
 
