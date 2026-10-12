@@ -15,17 +15,13 @@ void open_gfx_init_render_buffers(void) {
         g_open_gfx_render_records_36[i].flags = WORLD_RENDER_RECORD_ANIMATED;
         g_open_gfx_render_records_36[i].priority = 8;
         color = &g_open_gfx_render_records_36[i].color;
-        color->r = 0x80;
-        color->g = 0x80;
-        color->b = 0x80;
+        color->b = color->g = color->r = 0x80;
     }
 
     for (i = 0; i < OPEN_GFX_RENDER_RECORD_CAPACITY; i++) {
         g_open_gfx_render_records_56[i].flags = WORLD_RENDER_RECORD_IMAGE;
         g_open_gfx_render_records_56[i].ot_layer = 8;
         color = &g_open_gfx_render_records_56[i].color;
-        color->r = 0x80;
-        color->g = 0x80;
-        color->b = 0x80;
+        color->b = color->g = color->r = 0x80;
     }
 }

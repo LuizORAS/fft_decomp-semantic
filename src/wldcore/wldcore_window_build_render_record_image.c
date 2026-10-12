@@ -26,9 +26,7 @@ void wldcore_window_build_render_record_image(s32 index, RECT bounds, s32 coordi
     wldcore_window_transform_point_for_mode(coordinate_mode, bounds, &transformed);
     g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, transformed.x, transformed.y);
     color = &g_wldcore_window_render_records[index].color;
-    color->r = 0x80;
-    color->g = 0x80;
-    color->b = 0x80;
+    color->b = color->g = color->r = 0x80;
     g_wldcore_window_render_records[index].anim_counter = 0;
     world_menu_build_window_frame_image(bounds.w, bounds.h, (u16*)image);
 }

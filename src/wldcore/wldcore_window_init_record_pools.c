@@ -16,9 +16,7 @@ void wldcore_window_init_record_pools(void) {
         g_wldcore_window_records[i].flags = WORLD_RENDER_RECORD_ANIMATED;
         g_wldcore_window_records[i].priority = 1;
         color = &g_wldcore_window_records[i].color;
-        color->r = 0x80;
-        color->g = 0x80;
-        color->b = 0x80;
+        color->b = color->g = color->r = 0x80;
     }
 
     for (i = 0; i < WLDCORE_WINDOW_RECORD_CAPACITY; i++) {
@@ -28,8 +26,6 @@ void wldcore_window_init_record_pools(void) {
         clut->x = 0x3c0;
         clut->y = 0x1f0;
         color = &g_wldcore_window_render_records[i].color;
-        color->r = 0x80;
-        color->g = 0x80;
-        color->b = 0x80;
+        color->b = color->g = color->r = 0x80;
     }
 }

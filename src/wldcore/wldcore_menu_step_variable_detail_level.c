@@ -76,9 +76,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
             bounds->w = portrait.u1 - portrait.u0;
             bounds->h = portrait.v2 - portrait.v0;
             color = &g_wldcore_window_render_records[render_index].color;
-            color->r = 0x80;
-            color->g = 0x80;
-            color->b = 0x80;
+            color->b = color->g = color->r = 0x80;
             g_wldcore_window_render_records[render_index].anim_counter = 0;
             base = &g_wldcore_window_render_records[render_index].base;
             base->x = -0x72;

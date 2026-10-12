@@ -25,9 +25,7 @@ void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t
     bounds->w = poly.u1 - poly.u0;
     bounds->h = poly.v2 - poly.v0;
     color = &g_wldcore_window_render_records[index].color;
-    color->r = 0x80;
-    color->g = 0x80;
-    color->b = 0x80;
+    color->b = color->g = color->r = 0x80;
     g_wldcore_window_render_records[index].anim_counter = 0;
     g_wldcore_window_render_records[index].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
 }

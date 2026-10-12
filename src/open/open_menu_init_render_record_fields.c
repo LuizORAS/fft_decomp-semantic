@@ -29,8 +29,6 @@ void open_menu_init_render_record_fields(
     quad->w = image_size.x * 2;
     quad->h = image_size.y;
     color = &g_open_gfx_render_records_56[record_index].color;
-    color->r = 0x80;
-    color->g = 0x80;
-    color->b = 0x80;
+    color->b = color->g = color->r = 0x80;
     g_open_gfx_render_records_56[record_index].pop_in_step = 0;
 }

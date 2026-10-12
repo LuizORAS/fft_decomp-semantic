@@ -26,9 +26,7 @@ void open_gfx_init_window_frame_record(s32 index, RECT quad, s32 depth, u16* ima
     g_open_gfx_render_records_56[index].vram_x = half + scaled;
     g_open_gfx_render_records_56[index].vram_y = quad.y;
     color = &g_open_gfx_render_records_56[index].color;
-    color->r = 0x80;
-    color->g = 0x80;
-    color->b = 0x80;
+    color->b = color->g = color->r = 0x80;
     g_open_gfx_render_records_56[index].pop_in_step = 0;
     world_menu_build_window_frame_image(quad.w, quad.h, image);
 }

@@ -19,8 +19,6 @@ void wldcore_window_init_vram_render_record(s32 index, RECT bounds, point32_t cl
     record_bounds->w = bounds.w * 2;
     record_bounds->h = bounds.h;
     rgb = &g_wldcore_window_render_records[index].color;
-    rgb->r = 0x80;
-    rgb->g = 0x80;
-    rgb->b = 0x80;
+    rgb->b = rgb->g = rgb->r = 0x80;
     g_wldcore_window_render_records[index].anim_counter = 0;
 }

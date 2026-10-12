@@ -8,12 +8,11 @@
 void world_gfx_enqueue_textured_quad(
     RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semi_trans, u16 texture_page, u16 clut, s32 priority) {
     POLY_FT4* poly;
-    rgb24_t* rgb = color;
 
     poly = &g_world_gfx_active_packet_buffer->textured_quads[g_world_gfx_textured_quad_count++];
-    if (rgb != 0) {
+    if (color != 0) {
         SetShadeTex(poly, 0);
-        setRGB0(poly, rgb->r, rgb->g, rgb->b);
+        setRGB0(poly, color->r, color->g, color->b);
     } else {
         SetShadeTex(poly, 1);
     }
