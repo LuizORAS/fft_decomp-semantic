@@ -7,7 +7,7 @@
  * BATTLE text measurers. */
 #define TEXT_STATE ((text_backreference_state_t*)0x1F800200)
 
-#define TEXT_NEXT(state, cursor) battle_menu_text_advance_cursor_with_backreferences(state, cursor)
+#define TEXT_NEXT(state, cursor) menu_text_advance_cursor_with_backreferences(state, cursor)
 
 /* Renders a text entry's glyphs into a menu image at the pen position.
  *

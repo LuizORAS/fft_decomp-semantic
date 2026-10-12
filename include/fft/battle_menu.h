@@ -383,7 +383,6 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option);
 void battle_menu_set_text_origin(s32 x, s32 y);
 s32 battle_menu_should_close_thread(u32* input);
 
-u8* battle_menu_text_advance_cursor_with_backreferences(text_backreference_state_t* reader, u8* p);
 void battle_menu_init_panel_fade_tiles(void);
 s32 battle_menu_poll_small_load(void);
 

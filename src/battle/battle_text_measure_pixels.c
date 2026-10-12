@@ -60,7 +60,7 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
         } else if (state->command == TEXT_SPACE) {
             state->column += 4;
         } else if (state->command == TEXT_SET_NUMBER_WIDTH) {
-            cursor = battle_text_advance_cursor_with_backreferences(state, cursor);
+            cursor = text_advance_cursor_with_backreferences(state, cursor);
             state->pending_width = *cursor;
         } else if (state->command == TEXT_PRINT_NEXT_VALUE) {
             state->value = *state->value_cursor;
@@ -72,7 +72,7 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             }
             state->value_cursor++;
         } else if (state->command == TEXT_PRINT_INDEXED_VALUE) {
-            cursor = battle_text_advance_cursor_with_backreferences(state, cursor);
+            cursor = text_advance_cursor_with_backreferences(state, cursor);
             state->value = g_battle_text_substitution_values[*cursor];
             if (state->pending_width == 0xFFFF) {
                 state->column += battle_text_count_decimal_digits(state->value) * 6;
@@ -83,8 +83,8 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
         } else if (state->command == TEXT_SET_GLYPH_DELAY || state->command == TEXT_SET_PALETTE
             || state->command == TEXT_SET_VARIABLE_BASE || state->command == TEXT_STORE_VARIABLE
             || state->command == TEXT_SET_PORTRAIT) {
-            cursor = battle_text_advance_cursor_with_backreferences(
-                state, battle_text_advance_cursor_with_backreferences(state, cursor));
+            cursor = text_advance_cursor_with_backreferences(
+                state, text_advance_cursor_with_backreferences(state, cursor));
             continue;
         }
         state->value = battle_text_resolve_format_string_id(state->command, *state->value_cursor);
@@ -118,7 +118,7 @@ void battle_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             state->column += g_text_glyph_widths[(state->glyph_page & 0xF) * TEXT_GLYPHS_PER_PREFIX + state->command];
             state->glyph_page = 0;
         }
-        cursor = battle_text_advance_cursor_with_backreferences(state, cursor);
+        cursor = text_advance_cursor_with_backreferences(state, cursor);
     }
     *width = state->max_column;
     *rows = state->row;

@@ -1605,9 +1605,19 @@ typedef enum text_format_code {
     TEXT_FORMAT_EXPLICIT_ID = 0xeb,
 } text_format_code_e;
 
-/* Provisional: text-stream cursor state shared by the two WORLD copies of
- * the back-reference cursor stepper (battle twin: 0x80130718). world_measure_text
- * keeps it in the scratchpad at 0x1f800000 and names the remaining fields. */
+/* Three-byte backreference: five length bits and a base-254 backward offset. */
+typedef struct text_backreference_command {
+    u8 length_high : 2;
+    u8 opcode : 6;
+    u8 offset_high : 4;
+    u8 _unused_01 : 1;
+    u8 length_low : 3;
+    u8 offset_low;
+} text_backreference_command_t;
+typedef char text_backreference_command_size_must_be_3[sizeof(text_backreference_command_t) == 3 ? 1 : -1];
+
+/* Text-stream cursor state used by measurement and menu rendering. The
+ * measurers use scratchpad 0x1f800000; menu rendering uses 0x1f800200. */
 typedef struct text_backreference_state {
     s32 command;         /* 0x00; current text byte */
     s32 column;          /* 0x04; characters on the current line */
@@ -1674,6 +1684,12 @@ typedef struct text_glyph_state {
     s16 palette;      /* 0x0e */
 } text_glyph_state_t;
 typedef char text_glyph_state_size_must_be_16[(sizeof(text_glyph_state_t) == 16) ? 1 : -1];
+
+u8* text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
+/* The menu renderer has a separate linked copy of the same cursor helper. */
+u8* menu_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
+u8* text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
+const u8* text_skip_to_entry(const u8* text, s32 entry_index);
 
 /* unit */
 /* Provisional 0x2d0-byte double-buffered frame of the unit editor panel

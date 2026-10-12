@@ -61,6 +61,7 @@ remain excluded. Never modify `meta/`.
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
 | `src/gfx/` | Shared graphics helpers, compiled separately in each original module through explicit `source:` paths |
+| `src/text/` | Shared text helpers, retaining each original module's copies and call bindings |
 | `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
 | `src/suzuki/` | Suzuki sound driver, registered with explicit `source:` paths in MAIN |
 | `include/fft/` | Module headers (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), focused `battle_<subsystem>.h` headers, and shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `menu_script.h`, `script.h`) |

@@ -604,8 +604,8 @@ translation unit. Share their types and constants through headers.
   `move_set_float_step_delta_center_to_edge` and
   `move_set_float_step_delta_edge_to_center`, which repeat the
   `move_set_unit_step_delta_*` pair;
-  `battle_text_advance_cursor_with_backreferences` and
-  `battle_menu_text_advance_cursor_with_backreferences` (and the WORLD pair);
+  `text_advance_cursor_with_backreferences` and
+  `menu_text_advance_cursor_with_backreferences` (and the WORLD pair);
   `world_menu_set_cursor_position` and `world_menu_init_cursor_position`;
   WORLD's `world_option_gfx_*` and `world_screen_gfx_*` scaled-draw-area
   routines and its two thin-window-frame threads. The two copies named unused

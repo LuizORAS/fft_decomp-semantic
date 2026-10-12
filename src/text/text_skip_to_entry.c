@@ -1,14 +1,16 @@
-#include "fft/world.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
-/* Advance to the requested entry in a packed text section. */
-const u8* world_text_skip_to_entry(const u8* text, s32 entry_index) {
+/* Advance to the requested entry in a packed text section.
+ *
+ * The retail helper uses trapping arithmetic and fixed $t0-$t2 scratch
+ * registers. The inline sequence preserves those instruction choices and the
+ * deliberately empty branch delay slots. */
+const u8* text_skip_to_entry(const u8* text, s32 entry_index) {
     const u8* result;
     const u8* cursor = text;
     s32 index = entry_index;
 
-    /* Hand-assembled in the retail binary: trapping addi/add, $t0-$t2
-     * scratch, and unfilled delay slots (`b` with nop). No C form emits these. */
     __asm__ volatile("addi $9,$0,0\n"
                      "addi $10,$0,0xfe\n"
                      "1:\n"

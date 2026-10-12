@@ -90,8 +90,8 @@ functions:
   - {addr: 0x800e4268, size: 1024, name: world_text_measure, hash: 694a13bd7fb3f97e}
   - {addr: 0x800e4668, size: 1180, name: world_text_measure_pixels, hash: 899223b71ed0424b}
   - {addr: 0x800e4b04, size: 240, name: world_menu_render_text_image_at_record_origin, hash: 410b378a04558e03}
-  - {addr: 0x800e4bf4, size: 188, name: world_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0}
-  - {addr: 0x800e4cb0, size: 160, name: world_text_advance_cursor_with_separate_backreference_state, hash: 267aa40059dcef97}
+  - {addr: 0x800e4bf4, size: 188, name: text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/text/text_advance_cursor_with_backreferences.c}
+  - {addr: 0x800e4cb0, size: 160, name: text_advance_cursor_with_separate_backreference_state, hash: 267aa40059dcef97, source: src/text/text_advance_cursor_with_separate_backreference_state.c}
   - {addr: 0x800e4d50, size: 76, name: world_text_print_fnt_value_and_next, hash: 9128d74441ddfc53}
   - {addr: 0x800e4d9c, size: 8512, name: world_text_character_handling_thread, hash: c1dab33e925f6e10, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e6edc, size: 56, name: world_text_find_entry, hash: 1a029dac5097e38c}
@@ -409,7 +409,7 @@ functions:
   - {addr: 0x800fe7a4, size: 48, name: world_menu_display_text_entry_past_choice_marks, hash: 99e2ba5c27fe29f3}
   - {addr: 0x800fe7d4, size: 68, name: world_menu_display_text_string, hash: 546bc309ac1221e3}
   - {addr: 0x800fe818, size: 1820, name: world_menu_display_text, hash: d9988a33ac0cc206, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800fef34, size: 188, name: world_menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0}
+  - {addr: 0x800fef34, size: 188, name: menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/text/menu_text_advance_cursor_with_backreferences.c}
   - {addr: 0x800ff450, size: 40, name: world_script_copy_bytes, hash: 73eb033d6e800062}
   - {addr: 0x800ff478, size: 496, name: world_gfx_mirror_4bpp_rect, hash: 29198ac37701ca7e}
   - {addr: 0x800ff668, size: 40, name: world_menu_build_and_upload_window_image, hash: c452a59dd99e0cda}
@@ -432,7 +432,7 @@ functions:
   - {addr: 0x801000f8, size: 52, name: world_thread_get_current_parameter_3, hash: 2eb16d761d6d87fe}
   - {addr: 0x8010012c, size: 56, name: world_thread_is_previous_running, hash: 0a6edd120247a375}
   - {addr: 0x80100164, size: 36, name: world_thread_is_running_asm, hash: d9c5668fe09910ef}
-  - {addr: 0x80100348, size: 60, name: world_text_skip_to_entry, hash: 90cff8271922ef07}
+  - {addr: 0x80100348, size: 60, name: text_skip_to_entry, hash: 90cff8271922ef07, source: src/text/text_skip_to_entry.c}
   - {addr: 0x80100430, size: 480, name: world_menu_draw_text_columns, hash: ea0c5d112530bb05}
   - {addr: 0x80100610, size: 636, name: world_menu_redraw_text_page_on_scroll, hash: 327edc74c76a57e0}
   - {addr: 0x8010088c, size: 3184, name: world_build_at_list, hash: 632132e7dd8d11d5, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}

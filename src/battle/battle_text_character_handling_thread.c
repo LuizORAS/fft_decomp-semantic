@@ -11,7 +11,7 @@
 
 #define WINDOW_AT(index) ((menu_window_buffer_t*)((index) * sizeof(menu_window_buffer_t) + (s32)win))
 
-#define NEXT() text = battle_text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
+#define NEXT() text = text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
 
 #define CHECK_ABORT()                                                                                                  \
     if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {                                      \

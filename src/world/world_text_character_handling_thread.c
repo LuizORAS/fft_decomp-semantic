@@ -6,7 +6,7 @@
 
 #define WINDOW_AT(index) ((menu_window_buffer_t*)((index) * sizeof(menu_window_buffer_t) + (s32)win))
 
-#define NEXT() text = world_text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
+#define NEXT() text = text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
 
 /* Aborts (here and below) leave the nested text loops for the shared
    window close-and-release tail at `end`. */

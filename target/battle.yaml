@@ -743,8 +743,8 @@ functions:
   - {addr: 0x8012fd8c, size: 1024, name: battle_text_measure, hash: db194586ee0af6b5}
   - {addr: 0x8013018c, size: 1180, name: battle_text_measure_pixels, hash: 92c6053117958c19}
   - {addr: 0x80130628, size: 240, name: battle_menu_render_text_image_at_record_origin, hash: 458d39111bad80dd}
-  - {addr: 0x80130718, size: 188, name: battle_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0}
-  - {addr: 0x801307d4, size: 160, name: battle_text_advance_cursor_with_separate_backreference_state, hash: 267aa40059dcef97}
+  - {addr: 0x80130718, size: 188, name: text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/text/text_advance_cursor_with_backreferences.c}
+  - {addr: 0x801307d4, size: 160, name: text_advance_cursor_with_separate_backreference_state, hash: 267aa40059dcef97, source: src/text/text_advance_cursor_with_separate_backreference_state.c}
   - {addr: 0x80130874, size: 76, name: battle_text_print_fnt_value_and_next, hash: 32702a6e63eea736}
   - {addr: 0x801308c0, size: 8036, name: battle_text_character_handling_thread, hash: c934521a2b7c294a}
   - {addr: 0x80132824, size: 56, name: battle_text_find_entry, hash: cec167648bea266e}
@@ -1061,7 +1061,7 @@ functions:
   - {addr: 0x8014b320, size: 48, name: battle_menu_display_text_entry_past_choice_marks, hash: f66a71771a466060}
   - {addr: 0x8014b350, size: 68, name: battle_menu_display_text_string, hash: ebe5d1168147a19f}
   - {addr: 0x8014b394, size: 1684, name: battle_menu_display_text, hash: 80dbacaf4e422774}
-  - {addr: 0x8014ba28, size: 188, name: battle_menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0}
+  - {addr: 0x8014ba28, size: 188, name: menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/text/menu_text_advance_cursor_with_backreferences.c}
   - {addr: 0x8014bf54, size: 40, name: battle_copy_bytes, hash: 73eb033d6e800062}
   - {addr: 0x8014bf7c, size: 72, name: battle_text_read_packed_nibble, hash: ae6f7bc884e8a41c}
   - {addr: 0x8014bfc4, size: 80, name: battle_write_packed_nibble, hash: b50d2f23553363d9}
@@ -1086,7 +1086,7 @@ functions:
   - {addr: 0x8014cc28, size: 52, name: battle_thread_get_current_parameter_3, hash: d1fc2dccdda1feee}
   - {addr: 0x8014cc5c, size: 56, name: battle_thread_is_previous_running, hash: f14ee857209e40f9}
   - {addr: 0x8014cc94, size: 36, name: battle_thread_is_running_asm, hash: 1057a9f27abe5a5a}
-  - {addr: 0x8014ce78, size: 60, name: battle_text_skip_to_entry, hash: 90cff8271922ef07}
+  - {addr: 0x8014ce78, size: 60, name: text_skip_to_entry, hash: 90cff8271922ef07, source: src/text/text_skip_to_entry.c}
   - {addr: 0x80174370, size: 88, name: move_get_weather_terrain_cost, hash: 93bdb40ee3440793}
   - {addr: 0x801743c8, size: 104, name: battle_unit_get_chocobo_mount_state, hash: 7fbe3284351b693c}
   - {addr: 0x80174430, size: 1884, name: move_store_unit_movement_to_scratchpad, hash: 24f5bfdb9efb73c1}

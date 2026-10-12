@@ -57,19 +57,19 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
         if (state->command >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
             if ((state->command & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                 state->command = (*cursor & 0xF) * TEXT_GLYPHS_PER_PREFIX;
-                cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                 state->command = *cursor + state->command;
             } else {
                 if (state->command == TEXT_SET_GLYPH_DELAY) {
-                    cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                    cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                 } else if (state->command == TEXT_SET_PORTRAIT) {
-                    cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                    cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                     world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *cursor);
                 } else if (state->command == TEXT_SET_VARIABLE_BASE) {
-                    cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                    cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                     variable_id = *cursor;
                 } else if (state->command == TEXT_STORE_VARIABLE) {
-                    cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                    cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                     i = world_script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
                     if (i != 0) {
                         world_script_set_variable(variable_id + i * 10, *cursor);
@@ -78,7 +78,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                         world_script_set_variable(variable_id, *cursor);
                     }
                 } else if (state->command == TEXT_SET_PALETTE) {
-                    cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                    cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                     g_world_menu_text_color = *cursor;
                 } else if (state->command == TEXT_CHOICE_MARK) {
                     if (text != (u8*)1) {
@@ -94,14 +94,14 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                     }
                     line++;
                 } else if (state->command == TEXT_SET_NUMBER_WIDTH) {
-                    cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                    cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                     state->pending_width = *cursor;
                 } else if (state->command == TEXT_PRINT_NEXT_VALUE || state->command == TEXT_PRINT_INDEXED_VALUE) {
                     if (state->command == TEXT_PRINT_NEXT_VALUE) {
                         state->value = *state->value_cursor;
                         state->value_cursor++;
                     } else {
-                        cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                        cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                         state->value = g_world_text_substitution_values[*cursor];
                     }
                     i = state->pending_width - 1;
@@ -160,11 +160,11 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                     state->return_cursor = (u8*)-1;
                     continue;
                 }
-                cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+                cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                 continue;
             }
         }
-        cursor = world_menu_text_advance_cursor_with_backreferences(state, cursor);
+        cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
         if (line >= g_world_menu_text_param_24) {
             break;
         }

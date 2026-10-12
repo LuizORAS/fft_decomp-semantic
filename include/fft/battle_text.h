@@ -89,9 +89,7 @@ extern u8 g_battle_text_typewriter_column_scratch[14];       /* one-column scrat
 extern u8 g_battle_text_typewriter_glyph_images[3][8][0x54]; /* eight glyph images per slot */
 extern u8 g_battle_text_typewriter_previous_images[3][0x54]; /* previous image per slot */
 void battle_text_run_spell_quote_thread(void);
-const u8* battle_text_skip_to_entry(const u8* text_section, s32 entry_id);
 void battle_text_measure_pixels(s16* width, s16* rows, const u8* text);
-u8* battle_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
 void battle_text_render_glyph_to_4bpp_image(
     const u8* glyph_bitmap, u8* image, glyph_blit_t* origin, s32 palette_offset);
 void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width);
@@ -106,7 +104,6 @@ void battle_text_draw_large_number_glyphs(s32 value, s32 digits, u8* pixels, gly
 void battle_text_character_handling_thread(void);
 void battle_text_configure_sprite_vram(
     RECT* rect, s16 width, s16 height, texture_primitive_t* primitive, s32 clut_offset);
-u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 s32 battle_text_count_decimal_digits(s32 value);
 void battle_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);

@@ -58,7 +58,7 @@ void world_text_measure(s16* columns, s16* rows, const u8* text) {
         } else if (state->command == TEXT_SPACE) {
             state->column++;
         } else if (state->command == TEXT_SET_NUMBER_WIDTH) {
-            cursor = world_text_advance_cursor_with_backreferences(state, cursor);
+            cursor = text_advance_cursor_with_backreferences(state, cursor);
             state->pending_width = *cursor;
         } else if (state->command == TEXT_PRINT_NEXT_VALUE) {
             state->value = *state->value_cursor;
@@ -70,7 +70,7 @@ void world_text_measure(s16* columns, s16* rows, const u8* text) {
             }
             state->value_cursor++;
         } else if (state->command == TEXT_PRINT_INDEXED_VALUE) {
-            cursor = world_text_advance_cursor_with_backreferences(state, cursor);
+            cursor = text_advance_cursor_with_backreferences(state, cursor);
             state->value = g_world_text_substitution_values[*cursor];
             if (state->pending_width == 0xFFFF) {
                 state->column += world_text_count_decimal_digits(state->value);
@@ -81,8 +81,8 @@ void world_text_measure(s16* columns, s16* rows, const u8* text) {
         } else if (state->command == TEXT_SET_GLYPH_DELAY || state->command == TEXT_SET_PALETTE
             || state->command == TEXT_SET_VARIABLE_BASE || state->command == TEXT_STORE_VARIABLE
             || state->command == TEXT_SET_PORTRAIT) {
-            cursor = world_text_advance_cursor_with_backreferences(
-                state, world_text_advance_cursor_with_backreferences(state, cursor));
+            cursor = text_advance_cursor_with_backreferences(
+                state, text_advance_cursor_with_backreferences(state, cursor));
             continue;
         }
         state->value = world_text_resolve_format_string_id(state->command, *state->value_cursor);
@@ -109,7 +109,7 @@ void world_text_measure(s16* columns, s16* rows, const u8* text) {
         if ((state->command & 0xF0) < TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
             state->column++;
         }
-        cursor = world_text_advance_cursor_with_backreferences(state, cursor);
+        cursor = text_advance_cursor_with_backreferences(state, cursor);
     }
     *columns = state->max_column;
     *rows = state->row;

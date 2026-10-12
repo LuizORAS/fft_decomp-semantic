@@ -246,7 +246,6 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* paramete
 void world_script_set_specialized_map_destroyed(void);
 void world_menu_init_subsystem_pointers(void);
 s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode);
-u8* world_text_advance_cursor_with_separate_backreference_state(s32* count, u8* cursor, u8** saved);
 void world_script_advance_date_by_one_year(void);
 void world_script_advance_tutorial_highlight_brightness(void);
 void world_script_blue_remove_all_enemy_units(void);
@@ -1974,7 +1973,6 @@ void world_text_message_box_thread(void);
 void world_text_blit_font_glyph_to_4bpp(const u8* glyph, u8* image, glyph_blit_t* origin, s32 palette);
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, RECT* target, s32 palette);
 void world_text_build_display_message(s32 offset, s32 flags, s32* out_width);
-u8* world_menu_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
 void world_text_blit_glyph(const u8* source, u8* image, glyph_blit_t* source_rect, glyph_blit_t* position);
 s32 world_text_count_decimal_digits(s32 value);
 void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
@@ -1995,14 +1993,12 @@ void world_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
 s32 world_text_resolve_format_string_id(s32 event_code, s32 value);
-u8* world_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
 u8* world_text_advance_entry_by_char_count(u8* text, s32 count);
 void world_text_concatenate_entries(u8* text_table, u8* destination, const s16* text_ids, s32 separate_entries);
 u8* world_text_find_entry(s32 combined_text_index);
 void world_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled);
 void world_text_build_unit_name_list(void);
 void world_text_generate_formation_unit_name_string(void);
-const u8* world_text_skip_to_entry(const u8* text, s32 entry_index);
 s16 world_text_get_encoded_char_at_position(u8* text, s16 position, s32 mode);
 void world_text_relocate_pointer_table(s32* offset_table);
 void world_text_init_section_pointers(void);
