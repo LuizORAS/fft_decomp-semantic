@@ -678,8 +678,9 @@ typedef struct battle_effect_sprite_group {
 typedef struct battle_effect_sprite_section {
     u8 group_count;                         /* 0x00 */
     u8 _unused_01[3];                       /* 0x01; reserved header bytes */
-    battle_effect_sprite_group_t groups[1]; /* 0x04; variable-length group table */
+    battle_effect_sprite_group_t groups[0]; /* 0x04; variable-length group table */
 } battle_effect_sprite_section_t;
+typedef char battle_effect_sprite_section_size_must_be_4[sizeof(battle_effect_sprite_section_t) == 4 ? 1 : -1];
 
 /* One frame selected by the animation stream; its parts render together. */
 typedef struct battle_effect_sprite_frameset {
@@ -1282,10 +1283,16 @@ typedef struct battle_effect_anim_step {
     u8 frame; /* 0x01 */
 } battle_effect_anim_step_t;
 
+typedef char battle_effect_anim_step_size_must_be_2[sizeof(battle_effect_anim_step_t) == 2 ? 1 : -1];
+
 typedef struct battle_effect_anim_script {
     s16 count;                         /* 0x00 */
-    battle_effect_anim_step_t step[1]; /* 0x02 */
+    battle_effect_anim_step_t step[0]; /* 0x02; count steps follow */
 } battle_effect_anim_script_t;
+typedef char battle_effect_anim_script_prefix_size_must_be_2[sizeof(battle_effect_anim_script_t) == 2 ? 1 : -1];
+typedef char
+    battle_effect_anim_script_steps_offset_must_be_2[(unsigned long)&((battle_effect_anim_script_t*)0)->step == 2 ? 1
+                                                                                                                  : -1];
 
 /* 0xcc-byte effect slots at 0x801b9278, chained through the leading next/prev
  * byte pair; slot 0 is the null sentinel. g_battle_effect_active_slot_head heads the active chain
@@ -1702,8 +1709,12 @@ typedef struct effect_geometry_table {
     /* One 0xc4-byte record per emitter or mesh. The slots keep their curve
      * bindings, but each native EFFECT renderer gives them its own meanings,
      * so a record is read through the member of the renderer that owns it. */
-    effect_geometry_record_t entries[1];
+    effect_geometry_record_t entries[0];
 } effect_geometry_table_t;
+typedef char assert_effect_geometry_table_prefix_size[sizeof(effect_geometry_table_t) == 20 ? 1 : -1];
+typedef char
+    effect_geometry_table_entries_offset_must_be_20[(unsigned long)&((effect_geometry_table_t*)0)->entries == 20 ? 1
+                                                                                                                 : -1];
 
 /* Frames in one animation curve: emitter and particle frame counters wrap here. */
 enum { EFFECT_ANIMATION_CURVE_FRAMES = 160 };
