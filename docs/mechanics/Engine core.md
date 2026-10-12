@@ -68,7 +68,7 @@ words at the start of MAIN's data (`0x80010000`) hold the load addresses.
    Each loads its overlay from a fixed sector and calls its entry point.
 3. **A frame inside an overlay.** The overlay's main loop is thread slot 0.
    Once a frame its event or menu frame function
-   ([[battle_script_run_event_frame]], [[world_script_run_frame]]) yields:
+   ([[battle_script_run_event_frame]], [[world_script_run_event_frame]]) yields:
    [[battle_thread_yield]] saves its registers and resumes the next running
    slot, each thread runs until its own next yield, and after the last slot
    (15 in BATTLE, 16 in WORLD) control returns to slot 0. Every running

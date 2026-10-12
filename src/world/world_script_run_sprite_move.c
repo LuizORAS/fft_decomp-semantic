@@ -15,8 +15,11 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* The parameters are copied into locals in this order: it is what places the
- * s0 copy before the s2 copy in the prologue. */
+/* WORLD's copy of battle_script_run_sprite_move, which moves a unit's sprite along an eased curve,
+ * with the checked-division guard.
+ *
+ * The parameters are copied into locals in this order: it is what places the s0 copy before the s2
+ * copy in the prologue. */
 void world_script_run_sprite_move(u8* arg, s32 use_speed) {
     s32 pos[4][4];
     SVECTOR vec;

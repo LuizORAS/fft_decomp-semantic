@@ -1,22 +1,17 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * The BATTLE sibling at 0x801425b0 is instruction-for-instruction equivalent
- * apart from its data addresses.
+/* WORLD's copy of battle_script_run_scenario_conditions: walk the scenario's condition chains and
+ * report whether one selects an event.
  *
- * The signed halving is written out because `v / 2` over a sign-extended
- * halfword cannot reach the target's shape. The target keeps `lhu` plus an
- * explicit `sll 16` / `sra 16` pair and reads the sign bit off the *shifted*
- * value (`srl 31` on the `sll` result, not on the extended one), which is only
- * possible while the `sll` result has two users. Spell the halving as `v / 2`
- * and the shift chain becomes single-use, combine folds `lhu`+`sll`+`sra` into
- * one `lh`, and the function comes out 208 bytes. Naming the shifted value
- * gives the second user back. It also keeps the `i != 0` test on the extended
- * value: `shorten_compare` would strip a narrowing cast compared against a
- * constant, which is what sinks the extension below both branches.
- */
-
+ * The signed halving is written out because `v / 2` over a sign-extended halfword cannot reach the
+ * target's shape. The target keeps `lhu` plus an explicit `sll 16` / `sra 16` pair and reads the sign
+ * bit off the *shifted* value (`srl 31` on the `sll` result, not on the extended one), which is only
+ * possible while the `sll` result has two users. Spell the halving as `v / 2` and the shift chain
+ * becomes single-use, combine folds `lhu`+`sll`+`sra` into one `lh`, and the function comes out 208
+ * bytes. Naming the shifted value gives the second user back. It also keeps the `i != 0` test on the
+ * extended value: `shorten_compare` would strip a narrowing cast compared against a constant, which is
+ * what sinks the extension below both branches. */
 s32 world_script_run_scenario_conditions(void) {
     s16* condition;
     s32 i;

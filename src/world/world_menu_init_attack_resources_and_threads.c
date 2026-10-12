@@ -30,7 +30,7 @@ s32 world_menu_init_attack_resources_and_threads(void) {
     }
     g_world_menu_panel_fade_mode = MENU_PANEL_FADE_NONE;
     g_world_menu_panel_fade_intensity = 0;
-    if (world_script_check_tutorial_event_slot() != 0) {
+    if (world_script_is_tutorial_event_slot() != 0) {
         g_world_screen_fade = 0xff;
         g_world_saved_game_options = g_main_game_options;
         options = &g_main_game_options.fields;

@@ -49,7 +49,7 @@ void world_menu_number_entry_thread(void) {
         value = range->min;
     }
     world_menu_build_icon_record(&rect, param, &records[0]);
-    world_script_copy_bytes(&records[1], &records[0], 0x7C);
+    world_copy_bytes(&records[1], &records[0], 0x7C);
     for (j = 0; j < 2; j++) {
         world_gfx_init_default_poly_ft4(&cursor_quads[j]);
         SetSemiTrans(&cursor_quads[j], 0);

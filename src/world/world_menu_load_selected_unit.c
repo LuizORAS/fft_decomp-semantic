@@ -165,8 +165,8 @@ void world_menu_load_selected_unit(void) {
     world_fill_16_bytes_fe(g_world_unit_editor_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
-    world_script_copy_bytes(g_world_unit_editor_unit_name, unit->name, 0x10);
-    world_script_copy_bytes(g_world_unit_editor_job_name, unit->job_name, 0x10);
-    world_script_copy_bytes(g_world_unit_editor_primary_skillset_name, unit->primary_skillset_name, 0x10);
-    world_script_copy_bytes(g_world_unit_editor_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
+    world_copy_bytes(g_world_unit_editor_unit_name, unit->name, 0x10);
+    world_copy_bytes(g_world_unit_editor_job_name, unit->job_name, 0x10);
+    world_copy_bytes(g_world_unit_editor_primary_skillset_name, unit->primary_skillset_name, 0x10);
+    world_copy_bytes(g_world_unit_editor_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
 }

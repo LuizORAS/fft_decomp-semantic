@@ -1,9 +1,11 @@
 #include "fft/world.h"
 
-/* WORLD 0x800fd4a8..0x800fd7c4. EVENT_SCRIPT_VAR_RANDOM_VALUE is read through the event
- * RNG, not its ordinary storage. ZERO never reads the uninitialized operand.
- * Keep the target's arithmetic edge behavior: only division explicitly stops
- * the thread on zero; the assembler emits checked division/modulo traps. */
+/* WORLD's copy of battle_script_run_variable_command: run one variable instruction on a script
+ * variable of any range. EVENT_SCRIPT_VAR_RANDOM_VALUE is read through the event random generator,
+ * not its ordinary storage; ZERO never reads the operand.
+ *
+ * Keep the target's arithmetic edge behavior: only division explicitly stops the thread on zero; the
+ * assembler emits checked division/modulo traps. */
 void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused) {
     s32* source_word;
     s32* destination_word;

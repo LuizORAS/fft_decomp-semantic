@@ -155,7 +155,7 @@ void world_build_options_menu(void) {
     value_rect.y = base->title.y0;
     value_rect.w = base->title.w;
     value_rect.h = base->title.h;
-    world_script_copy_bytes(&g_world_options_menu_window_rect, &entry->window_x, 8);
+    world_copy_bytes(&g_world_options_menu_window_rect, &entry->window_x, 8);
     world_thread_start(g_world_thread_current_id + 1, world_menu_window_frame_thread);
     g_world_options_menu_window_rect.h += 0xC;
     g_world_options_menu_window_rect.y -= 2;
@@ -170,7 +170,7 @@ void world_build_options_menu(void) {
     world_menu_set_text_origin(0, 0);
     world_menu_display_text_entry(0x5021, buffer, &g_world_menu_text_state.pen);
     LoadImage(&g_world_options_menu_value_rect, (u32*)buffer);
-    world_script_copy_bytes(&base[1], base, sizeof(world_options_menu_page_t));
+    world_copy_bytes(&base[1], base, sizeof(world_options_menu_page_t));
     for (;;) {
         page = &g_world_options_menu_pages[i & 1];
         if (delta == 0 && world_menu_is_input_allowed() != 0) {

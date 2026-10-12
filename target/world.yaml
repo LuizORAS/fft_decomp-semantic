@@ -44,7 +44,7 @@ functions:
   - {addr: 0x800e1d44, size: 76, name: world_script_scale_music_volume, hash: 5d48df7d66aa367f}
   - {addr: 0x800e1d90, size: 84, name: world_gfx_ramp_screen_overlay_intensity_to_zero, hash: d0ba1ed84f50d428}
   - {addr: 0x800e1de4, size: 84, name: world_gfx_ramp_screen_overlay_intensity_to_max, hash: 12f588f0776e2346}
-  - {addr: 0x800e1e38, size: 8, name: world_script_check_tutorial_event_slot, hash: 207819bf4ebe3078}
+  - {addr: 0x800e1e38, size: 8, name: world_script_is_tutorial_event_slot, hash: 207819bf4ebe3078}
   - {addr: 0x800e1e40, size: 76, name: world_unit_get_battle_index_by_entd_unit_id, hash: 6bd874927737de2e}
   - {addr: 0x800e1e8c, size: 20, name: world_menu_set_transition_active_flag, hash: edfede6075ee1f04}
   - {addr: 0x800e1ea0, size: 16, name: world_menu_clear_transition_active_flag, hash: d7f503c035758c32}
@@ -305,12 +305,12 @@ functions:
   - {addr: 0x800f5f04, size: 8, name: world_noop_800f5f04, hash: 6d64edf91449c1b1}
   - {addr: 0x800f5f0c, size: 1296, name: world_script_check_scenario_condition, hash: 5e07a4b1d51f3ad0, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800f641c, size: 72, name: world_script_get_current_scenario_finish_operation, hash: deaa25ecf5628c12}
-  - {addr: 0x800f6464, size: 44, name: world_script_get_scenario_finish_operation_flags, hash: 7d999b7e3a6a55c0}
+  - {addr: 0x800f6464, size: 44, name: world_script_get_event_finish_operation, hash: 7d999b7e3a6a55c0}
   - {addr: 0x800f6490, size: 84, name: world_script_pulse_tutorial_wait_value, hash: 9e5204eaa009440e}
   - {addr: 0x800f64e4, size: 132, name: world_script_apply_input_overrides, hash: a3e515891d532a57}
   - {addr: 0x800f6568, size: 604, name: world_script_update_event_input_state, hash: 9e2593c6e781c5b6, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800f67c4, size: 44, name: world_script_filter_controller_input, hash: fe99b31bcc328180}
-  - {addr: 0x800f67f0, size: 1596, name: world_script_run_frame, hash: eac0cd402d9dd578}
+  - {addr: 0x800f67f0, size: 1596, name: world_script_run_event_frame, hash: eac0cd402d9dd578}
   - {addr: 0x800f6e2c, size: 60, name: world_script_set_current_otag_entry_and_update_input, hash: d5b6fdd929637d19}
   - {addr: 0x800f6e68, size: 48, name: world_script_set_specialized_map_destroyed, hash: d1d0b33651696dd9}
   - {addr: 0x800f6e98, size: 8, name: world_script_process_pending_requests, hash: 6d64edf91449c1b1}
@@ -384,7 +384,7 @@ functions:
   - {addr: 0x800fd7c4, size: 176, name: world_script_get_variable_word_pointer_from_id, hash: 6a6f5aa839d4ad4d}
   - {addr: 0x800fd874, size: 92, name: world_script_get_variable_bit_position, hash: 58c6183072a6e980}
   - {addr: 0x800fd8d0, size: 108, name: world_script_wait_value_event_instruction, hash: bf0474d1b7f495e5}
-  - {addr: 0x800fd93c, size: 40, name: world_script_seed_event_rng_from_vsync, hash: 0558cf34e10433b2}
+  - {addr: 0x800fd93c, size: 40, name: world_script_seed_random_from_vsync, hash: 0558cf34e10433b2}
   - {addr: 0x800fd964, size: 76, name: world_script_get_rand16, hash: 9347ed63e047087b}
   - {addr: 0x800fd9b0, size: 68, name: world_script_wait_for_unit_ready, hash: 27f4fb7c909f3472}
   - {addr: 0x800fd9f4, size: 64, name: world_text_init_section_pointers, hash: 27bf3bcb9a9d726b}
@@ -410,7 +410,7 @@ functions:
   - {addr: 0x800fe7d4, size: 68, name: world_menu_display_text_string, hash: 546bc309ac1221e3}
   - {addr: 0x800fe818, size: 1820, name: world_menu_display_text, hash: d9988a33ac0cc206, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800fef34, size: 188, name: world_menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0}
-  - {addr: 0x800ff450, size: 40, name: world_script_copy_bytes, hash: 73eb033d6e800062}
+  - {addr: 0x800ff450, size: 40, name: world_copy_bytes, hash: 73eb033d6e800062}
   - {addr: 0x800ff478, size: 496, name: world_gfx_mirror_4bpp_rect, hash: 29198ac37701ca7e}
   - {addr: 0x800ff668, size: 40, name: world_menu_build_and_upload_window_image, hash: c452a59dd99e0cda}
   - {addr: 0x800ff690, size: 796, name: world_menu_build_window_image, hash: af5f5261b59f0b0d}

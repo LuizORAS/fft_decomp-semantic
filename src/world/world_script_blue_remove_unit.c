@@ -2,8 +2,8 @@
 #include "fft/wldcore.h"
 #include "fft/world.h"
 
-/* BlueRemoveUnit (event instruction 0x99): tints every non-player unit whose
- * ENTD unit id is unit_id blue (red and green modulated by -0x1f).
+/* BlueRemoveUnit (EVENT_OPCODE_BLUE_REMOVE_UNIT): tint blue every non-player unit whose ENTD unit id
+ * is unit_id (red and green modulated by -0x1f).
  *
  * The team test reads the current team flags, not the initial ones. */
 void world_script_blue_remove_unit(s32 unit_id) {

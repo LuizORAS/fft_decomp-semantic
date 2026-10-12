@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/* The interpreter also supplies a1=1; this entry does not consume it. */
+/* WORLD's copy of battle_script_teleport_in_event_instruction (TeleportIn): play the teleport effect
+ * on the unit.
+ *
+ * The interpreter also passes a second argument, 1; this entry does not read it. */
 void world_script_teleport_in_event_instruction(s32 unit_id, s32 unused) {
     s32 misc_id;
 

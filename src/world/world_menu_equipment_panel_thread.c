@@ -60,7 +60,7 @@ void world_menu_equipment_panel_thread(void) {
     world_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    world_script_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
+    world_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {

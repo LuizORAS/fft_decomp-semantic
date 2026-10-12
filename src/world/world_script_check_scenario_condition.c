@@ -15,6 +15,14 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
+/* WORLD's copy of battle_script_check_scenario_condition, built with divide checks: evaluate one
+ * scenario condition record (event_scenario_condition_e) for world_script_run_scenario_conditions.
+ * Returns EVENT_SCENARIO_CONDITION_RESULT_PASS when it holds, RESULT_RUN_EVENT for RUN_EVENT after
+ * storing the id as the current event, and RESULT_FAIL otherwise. ACTING_UNIT tests
+ * g_world_script_acting_unit_id.
+ *
+ * The range test on unit_id is written as two comparisons: that spelling makes GCC reload the byte
+ * (as the target does) where the (u32)(x - 0x78) < 5 form lets cse reuse the earlier load. */
 s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation) {
     battle_stats_t* unit;
     s32 i;

@@ -57,6 +57,7 @@ void world_bits_write_primary(u8 bit);
 void world_script_clamp_s32_to_range(s32* value, s32 min, s32 max);
 void world_menu_copy_bytes_to_halfwords(u16* destination, const u8* source, s32 count);
 s32 world_mul_div_64(s32 a, s32 b, s32 c);
+void world_copy_bytes(void* destination, const void* source, s32 count);
 void world_game_reset(void);
 void world_menu_init_stub(void);
 void world_menu_display_projected_action_effect(POLY_FT4* unused_primitive,
@@ -3114,6 +3115,10 @@ s32 world_card_seek_file_with_retries(s32 descriptor, s32 offset, s32 origin);
 s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 size, s32 create_file);
 
 /* script */
+/* WORLD's copy of the event-script interpreter (world_script_*, twins of battle_script_*): loading
+ * and running an event, its frame, the script variables and the scenario conditions, and the event
+ * input; also the tutorials' command player. */
+
 extern s32 g_world_script_acting_unit_id;
 extern s32 g_world_script_loaded_event_id;
 extern u32 g_world_script_tutorial_button_input;
@@ -3159,7 +3164,6 @@ void world_script_change_stats(const u8* parameters);
 void world_camera_clear_zoom_variable_low_bit(void);
 void world_script_color_unit_event_instruction(const u8* parameters);
 void world_script_copy_32_bytes(void* destination, const void* source);
-void world_script_copy_bytes(void* destination, const void* source, s32 count);
 void world_script_earthquake_thread(void);
 void world_script_toggle_message_portrait_flip(const u8* parameters);
 void world_script_apply_relative_camera(u8* source, const s32* deltas);
@@ -3190,9 +3194,9 @@ void world_script_play_effect_and_wait(void);
 void world_script_print_debug_message(void);
 void world_script_pulse_tutorial_wait_value(s32 value);
 void world_script_unit_animation_rotate_event_instruction(const u8* parameters);
-s32 world_script_run_frame(u32* ot, u32 buttons);
+s32 world_script_run_event_frame(u32* ot, u32 buttons);
 void world_script_run_next_event(void);
-void world_script_seed_event_rng_from_vsync(void);
+void world_script_seed_random_from_vsync(void);
 void world_script_set_event_speed(s32 speed);
 void world_script_set_variable(s32 variable_id, s32 value);
 void world_script_set_vsync_mode_and_event_speed(s32 value);
@@ -3216,7 +3220,7 @@ void world_script_set_units_movement_effect_suppression(const u8* parameters);
 void world_script_set_units_palette_update_suppression(u16 id, s32 enable);
 s32 world_script_get_variable_bit_position(s32 variable_id);
 void world_script_add_unit_start_thread(void);
-s32 world_script_check_tutorial_event_slot(void);
+s32 world_script_is_tutorial_event_slot(void);
 void world_script_color_screen_thread(void);
 void world_script_dismiss_unit_event_instruction(s32);
 void world_script_display_conditions_thread(void);
@@ -3240,6 +3244,9 @@ void world_script_wait_sprite_move_event_instruction(s32);
 void world_script_wait_walk_event_instruction(s32 unit_id);
 
 /* event */
+/* What WORLD's event instructions share with its main loop: the requests, the event unit slots and
+ * the staged statuses. */
+
 /* Operand pairs that one world_script_execute_event opcode stores together;
  * each second halfword sits off a word boundary in WORLD bss, so each pair is
  * one object. */

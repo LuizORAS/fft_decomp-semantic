@@ -1,8 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Copy a byte range used by WORLD.BIN data setup. */
-void world_script_copy_bytes(void* destination, const void* source, s32 count) {
+/* Copy `count` bytes one at a time, the first before the count is tested, so callers pass at least
+ * one: WORLD's byte copy, the twin of battle_copy_bytes. */
+void world_copy_bytes(void* destination, const void* source, s32 count) {
     /* The hand-written original moves the byte through $a3; GCC would pick $v0. */
     register u8 value __asm__("$7");
     u8* dst = destination;

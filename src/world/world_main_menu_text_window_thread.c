@@ -56,11 +56,11 @@ void world_main_menu_text_window_thread(void) {
     world_gfx_set_draw_mode_from_rect(&record->mode_a, (u16*)entry);
     world_gfx_set_draw_mode_for_texture_page(&record->mode_b, MENU_TEXTURE_PAGE_FRAME);
     world_menu_build_layout_sprites((world_menu_sprite_layout_t*)entry, &record->sprite_b, 0);
-    world_script_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values, 0x80);
+    world_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values, 0x80);
     g_world_text_substitution_values[0] = entry->text_values[0];
     g_world_text_substitution_values[1] = entry->text_values[1];
     world_text_measure(&width, &height, world_text_find_entry(entry->text_id));
-    world_script_copy_bytes(g_world_text_substitution_values, g_world_text_substitution_values_backup, 0x80);
+    world_copy_bytes(g_world_text_substitution_values, g_world_text_substitution_values_backup, 0x80);
     /* 10-pixel columns plus a 0x18 border, rounded up past the next multiple of four. */
     x = width * 10;
     pad = ((x & 2) == 0) * 4;
@@ -92,7 +92,7 @@ void world_main_menu_text_window_thread(void) {
     SetShadeTex(&record->sprite_a, 0);
     SetSemiTrans(&record->sprite_b, 1);
     SetShadeTex(&record->sprite_b, 0);
-    world_script_copy_bytes(&records[1], &records[0], sizeof(world_menu_text_window_record_t));
+    world_copy_bytes(&records[1], &records[0], sizeof(world_menu_text_window_record_t));
     target = 0;
     for (i = 0;; i++) {
         record = &records[i & 1];
@@ -103,11 +103,11 @@ void world_main_menu_text_window_thread(void) {
             g_world_menu_text_state.pen.stride = entry->width;
             world_menu_set_text_origin(10, 8);
             g_world_menu_text_color = 0;
-            world_script_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values, 0x80);
+            world_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values, 0x80);
             g_world_text_substitution_values[0] = entry->text_values[0];
             g_world_text_substitution_values[1] = entry->text_values[1];
             world_menu_display_text_entry(entry->text_id, buffer, &g_world_menu_text_state.pen);
-            world_script_copy_bytes(g_world_text_substitution_values, g_world_text_substitution_values_backup, 0x80);
+            world_copy_bytes(g_world_text_substitution_values, g_world_text_substitution_values_backup, 0x80);
             LoadImage(&rect, buffer);
         }
         world_thread_yield();

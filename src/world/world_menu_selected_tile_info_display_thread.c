@@ -34,7 +34,7 @@ void world_menu_selected_tile_info_display_thread(void) {
             &g_world_tile_info_image_location, &g_world_tile_info_image_params[i]);
     }
     world_text_configure_sprite_vram(&rect, 0x18, 0x10, &page->sprites[0], 0);
-    world_script_copy_bytes(&world_D_80173CBC[1], &world_D_80173CBC[0], sizeof(world_menu_quad_page_t));
+    world_copy_bytes(&world_D_80173CBC[1], &world_D_80173CBC[0], sizeof(world_menu_quad_page_t));
 
     for (frame = 0;; frame++) {
         map_selected_tile_t* tile = &g_world_map_selected_tile_data;

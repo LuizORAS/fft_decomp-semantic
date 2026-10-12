@@ -58,7 +58,7 @@ void world_menu_build_ability_list(s32 mode) {
             (s16*)g_battle_ai_workspace_ptr->ability_list.ids, g_battle_ai_workspace_ptr->ability_list.mp_costs,
             g_battle_ai_workspace_ptr->ability_list.ct, 0, g_battle_ai_workspace_ptr->ability_list.flags,
             g_battle_ai_workspace_ptr->ability_list.turns);
-        world_script_copy_bytes(
+        world_copy_bytes(
             g_battle_ai_workspace_ptr->ability_list.skill_ct, g_battle_ai_workspace_ptr->ability_list.ct, 0x50);
     }
     if (type == ACTION_MENU_TYPE_ITEM_INVENTORY) {
@@ -92,7 +92,7 @@ void world_menu_build_ability_list(s32 mode) {
     if (type == ACTION_MENU_TYPE_CHARGE) {
         battle_menu_load_charge_skillset(unit_index, skillset, (s16*)g_battle_ai_workspace_ptr->ability_list.ids,
             g_battle_ai_workspace_ptr->ability_list.mp_costs, g_battle_ai_workspace_ptr->ability_list.turns);
-        world_script_copy_bytes(
+        world_copy_bytes(
             g_battle_ai_workspace_ptr->ability_list.skill_ct, g_battle_ai_workspace_ptr->ability_list.mp_costs, 0x50);
     }
     window_x = 0xAC;

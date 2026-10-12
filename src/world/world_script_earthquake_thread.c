@@ -1,8 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Event instruction 0x41 EarthquakeStart thread: every parameter[1] frames add
- * parameter[0] to g_world_camera_shake_z_offset, every parameter[3] frames add parameter[2]. */
+/* Thread body of EarthquakeStart (EVENT_OPCODE_EARTHQUAKE_START): every operand-1 frames add operand
+ * 0 to g_world_camera_shake_z_offset, and every operand-3 frames add operand 2. */
 void world_script_earthquake_thread(void) {
     s32 first_frames;
     s32 second_frames;

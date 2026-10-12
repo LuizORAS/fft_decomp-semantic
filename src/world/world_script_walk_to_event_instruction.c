@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/* Start event opcode 0x28 movement for one unit.
- *
- * Only the block thread calls this, through the main-stack callback bridge:
- * world_script_execute_event recognizes the opcode and does nothing. */
+/* WORLD's copy of battle_script_walk_to_event_instruction (WalkTo), for blocks only: the
+ * interpreter recognizes the opcode and does nothing, so only the block thread calls this, through the
+ * main-stack callback bridge. */
 void world_script_walk_to_event_instruction(const event_walk_to_parameters_t* parameters) {
     s16 coords[3];
     s32 misc_id;

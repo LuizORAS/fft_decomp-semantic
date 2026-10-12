@@ -2,13 +2,13 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Inflict Status event command thread.
+/* WORLD's copy of battle_script_inflict_status_thread: the event's Inflict Status command as a
+ * thread.
  *
- * Parameters: ENTD unit id halfword, mode byte, then a wait-frame halfword.
- * Mode 0 revives a dead unit at 1 HP with Critical (or refreshes its mounted
- * animation when it is neither dead nor critical). Mode 1 clears Dead/Critical
- * and inflicts Crystal. Mode 2 inflicts Poison with the kneeling animation. Each mode
- * records the matching staged exit mode for the later status-application pass. */
+ * Parameters: ENTD unit id halfword, mode byte, then a wait-frame halfword. Mode 0 revives a dead unit
+ * at 1 HP with Critical (or refreshes its mounted animation when it is neither dead nor critical).
+ * Mode 1 clears Dead/Critical and inflicts Crystal. Mode 2 inflicts Poison with the kneeling
+ * animation. Each mode records the matching staged exit mode for the later status-application pass. */
 void world_script_inflict_status_thread(void) {
     u8* parameters;
     s32 unit_id;

@@ -1,12 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Toggle the 0x1c counter of the menu window buffer whose 0x08 field matches
- * the halfword parameter.
+/* WORLD's copy of battle_script_toggle_message_portrait_flip (FlipMessagePortrait): toggle bit 0 of
+ * portrait_flipped of the menu window buffer whose message_id matches the halfword operand.
  *
- * The record index is never initialized in the target: the loop runs six
- * times over whatever slot the uninitialized local names, so the reconstruction
- * reproduces that uninitialized read. */
+ * The record index is never initialized in the target: the loop runs six times over whatever slot the
+ * uninitialized local names, so the reconstruction reproduces that uninitialized read. */
 void world_script_toggle_message_portrait_flip(const u8* parameters) {
     s32 index;
     s32 i;

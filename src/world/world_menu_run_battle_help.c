@@ -51,7 +51,7 @@ void world_menu_run_battle_help(void) {
     if (g_world_menu_transition_active != 0) {
         world_thread_exit_current();
     }
-    world_script_copy_bytes(g_world_text_section_pointer_backup, g_world_text_section_pointers, 0x80);
+    world_copy_bytes(g_world_text_section_pointer_backup, g_world_text_section_pointers, 0x80);
     setup_banner = &g_world_help_active_banner;
     setup_unit_data = &g_world_help_active_unit_data;
     setup_billboard = &g_world_help_billboard;

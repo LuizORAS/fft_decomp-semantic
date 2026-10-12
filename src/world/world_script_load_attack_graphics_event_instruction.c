@@ -2,9 +2,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Enter the attack overlay when script variable 0x1fc is clear: mark the
- * transition state, load BIN file 0xd, then hand off to the overlay's
- * scenario-music, formation-sprite and portrait entry points. */
+/* WORLD's copy of battle_script_load_attack_graphics_event_instruction (LoadAttackGraphics): unless
+ * a replay suppresses it (EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS), open ATTACK.OUT and run its
+ * scenario conditionals, formation sprites and portraits loads. */
 void world_script_load_attack_graphics_event_instruction(void) {
     if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
         g_world_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOADED;

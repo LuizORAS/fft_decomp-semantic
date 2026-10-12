@@ -127,7 +127,7 @@ BATTLE and WORLD each schedule cooperative native threads:
   Slot 0 is the overlay's main loop; BATTLE runs threads in slots 1–15 and
   WORLD in slots 1–16.
 - **A frame:** the main loop yields once a frame
-  (`battle_script_run_event_frame`, `world_script_run_frame`). The
+  (`battle_script_run_event_frame`, `world_script_run_event_frame`). The
   hand-written `battle_thread_yield` and `world_thread_yield` save the
   thread's registers in its slot and resume the next running slot, returning
   to slot 0 after the last. So every running thread advances once a frame,

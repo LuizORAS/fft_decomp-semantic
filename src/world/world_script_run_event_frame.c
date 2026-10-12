@@ -7,17 +7,11 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Run one frame of WORLD bookkeeping around the thread scheduler.
- *
- * Returns the scenario-finish result (9, 0xA, 0xB or 0x13, 0 when no finish
- * operation is pending) once every script thread has stopped, otherwise 1
- * (or g_world_frame_result_override while it is set, or 0 while menu input is disabled with state
- * 2). The companion-overlay entry points at 0x801BF3B8-0x801DF198 are overlay
- * addresses whose owner depends on what is loaded, so they keep func_ names.
- * The finish-operation getter is called through an s32-returning cast: the
- * target uses its return value without the u16 zero extension.
- */
-s32 world_script_run_frame(u32* ot, u32 buttons) {
+/* WORLD's copy of battle_script_run_event_frame: run one frame of an event around WORLD's thread
+ * scheduler, with the same results (1 while the event runs; at its end 0, or 9, 0xA, 0xB or 0x13 for
+ * the exit). The pad goes through world_input_update_menu_repeat and the event input state is reloaded
+ * every frame, the end waits for thread slots 1-16, and there are no sound requests to reset. */
+s32 world_script_run_event_frame(u32* ot, u32 buttons) {
     RECT rect;
     s32 i;
     s32 op;
@@ -131,7 +125,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     }
 
     world_script_load_event_input_state((world_menu_input_state_t*)&g_world_menu_new_button_input);
-    if (world_script_check_tutorial_event_slot() == 0 && g_world_menu_new_button_input != PSX_PAD_SELECT
+    if (world_script_is_tutorial_event_slot() == 0 && g_world_menu_new_button_input != PSX_PAD_SELECT
         && g_world_menu_new_button_input != 0) {
         g_world_thread_change_cooldown = 5;
     }

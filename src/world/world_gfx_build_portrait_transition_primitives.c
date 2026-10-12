@@ -15,8 +15,8 @@ void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
     RECT first_rect;
     s32 i;
 
-    world_script_copy_bytes(&first_rect, texture_rect, sizeof(first_rect));
-    world_script_copy_bytes(&second_rect, texture_rect, sizeof(second_rect));
+    world_copy_bytes(&first_rect, texture_rect, sizeof(first_rect));
+    world_copy_bytes(&second_rect, texture_rect, sizeof(second_rect));
     second_rect.x += 0x10;
 
     for (i = 0; i < 4; i++) {

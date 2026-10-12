@@ -1,12 +1,8 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/* Resolve an event-script unit identifier to its active Misc Unit ID.
- *
- * Character identities, Ramza and active-turn aliases, and the four event-unit
- * slots require separate lookup paths. Crystal/treasure records and missing
- * units return EVENT_MISC_ID_NONE.
- */
+/* WORLD's copy of battle_script_get_misc_id: resolve a script unit id to the misc id of that unit's
+ * sprite, or to EVENT_MISC_ID_NONE when there is none. */
 s32 world_script_get_misc_id(s32 unit_id) {
     s32 battle_id;
     s32 unit_state;

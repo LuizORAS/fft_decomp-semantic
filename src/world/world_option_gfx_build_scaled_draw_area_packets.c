@@ -27,7 +27,7 @@ void world_option_gfx_build_scaled_draw_area_packets(
         step = 11;
     }
     percent = g_world_gfx_draw_area_scale_percent[step];
-    world_script_copy_bytes(&pair->rects[0], source, 8);
+    world_copy_bytes(&pair->rects[0], source, 8);
     w = pair->rects[0].w;
     h = pair->rects[0].h;
     pair->rects[0].x -= 0x80;

@@ -2,20 +2,18 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/* WORLD scenario interpreter, 0x800f6f20..0x800f92a0.
+/* WORLD's copy of battle_script_execute_event, the event interpreter on WORLD's event thread
+ * (NATIVE_THREAD_SLOT_EVENT). It differs in five places: WalkTo does nothing outside a block and Arrow
+ * resolves both units and stops, DarkScreen's thread only takes its task id, the two ChangeMap
+ * instructions call the empty world_map_reset_script_light_transform, and the thread scans of
+ * ResumeWaitingDialog and WaitForInstruction cover slots 1-16.
  *
- * One cooperative thread runs this loop: fetch the opcode and its first four
- * operand bytes, dispatch through the else-if chain below, then advance by the
- * opcode's encoded length. The chain order is the target's compare order and
- * must not be re-sorted. Handlers that seek (jumps) `continue` without the
+ * One cooperative thread runs this loop: fetch the opcode and its first four operand bytes, dispatch
+ * through the else-if chain below, then advance by the opcode's encoded length. The chain order is the
+ * target's compare order and must not be re-sorted. Handlers that seek (jumps) `continue` without the
  * length step; EventEnd may `goto restart_event` for a chained scenario.
  *
- * BATTLE carries the same interpreter (battle_script_execute_event); the two
- * are kept structurally identical so differences stay visible.
- *
- * The native inner-call trampoline intentionally forwards varying argument
- * counts through its () ABI. */
-
+ * The native inner-call trampoline intentionally forwards varying argument counts through its () ABI. */
 void world_script_execute_event(void) {
     s32 unit_lookup_status;
     s32 ghost_misc_id;
@@ -59,7 +57,7 @@ void world_script_execute_event(void) {
     native_thread_t* threads;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_EXECUTE_EVENT);
-    if (world_script_check_tutorial_event_slot() != 0) {
+    if (world_script_is_tutorial_event_slot() != 0) {
         world_gfx_ramp_screen_overlay_intensity_to_zero();
     }
     if (g_world_menu_input_mode == MENU_INPUT_PLAYER) {
@@ -268,7 +266,7 @@ restart_event:
                 world_thread_yield();
             } while (main_file_is_still_loading() != 0);
             world_thread_yield();
-            if (world_script_check_tutorial_event_slot() != 0) {
+            if (world_script_is_tutorial_event_slot() != 0) {
                 world_gfx_ramp_screen_overlay_intensity_to_max();
                 g_main_game_options = g_world_saved_game_options;
                 world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
@@ -592,8 +590,8 @@ restart_event:
         }
         /* ---- Background, palettes, and terrain ---- */
         else if (opcode == EVENT_OPCODE_BACKGROUND) {
-            world_script_copy_bytes(&g_world_event_background_colors.first, parameters, 3);
-            world_script_copy_bytes(&g_world_event_background_colors.second, parameters + 3, 3);
+            world_copy_bytes(&g_world_event_background_colors.first, parameters, 3);
+            world_copy_bytes(&g_world_event_background_colors.second, parameters + 3, 3);
             if (parameters[7] == 0) {
                 battle_map_transition_and_store_background_gradient(parameters[6], &g_world_event_background_colors);
             } else {
@@ -830,7 +828,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_YIELD) {
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_WAIT) {
-            if (world_script_check_tutorial_event_slot() != 0 && first_halfword >= 3) {
+            if (world_script_is_tutorial_event_slot() != 0 && first_halfword >= 3) {
                 world_thread_wait_frames(first_halfword / battle_state_get_vsync_interval());
             } else {
                 world_thread_wait_frames(first_halfword);

@@ -17,7 +17,7 @@ void world_menu_start_entry_thread(void) {
         world_thread_yield();
     }
     if (g_world_menu_input_mode == MENU_INPUT_PLAYER) {
-        if (world_script_check_tutorial_event_slot() != 0) {
+        if (world_script_is_tutorial_event_slot() != 0) {
             g_world_menu_input_mode = MENU_INPUT_TUTORIAL;
             world_script_set_variable(
                 EVENT_SCRIPT_VAR_CURRENT_EVENT, world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);

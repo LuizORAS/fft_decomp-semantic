@@ -1,9 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Block until no thread is still running the sprite-move task (task 0xB) for
- * the calling event's sprite. A misc id of 0x7d0 means the sprite is absent,
- * so there is nothing to wait for. */
+/* WORLD's copy of battle_script_wait_sprite_move_event_instruction (WaitSpriteMove): yield until no
+ * thread runs the sprite-move task (NATIVE_THREAD_TASK_SPRITE_MOVE) for the unit's sprite; an absent
+ * unit (EVENT_MISC_ID_NONE) has nothing to wait for. WORLD scans thread slots 0-16. */
 void world_script_wait_sprite_move_event_instruction(s32 unit_id) {
     s32 misc_id;
     s32 i;

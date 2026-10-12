@@ -2,10 +2,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Loads the 0x2000-byte portrait colour record (sector 0x164b + 4 * index) on
- * the main thread, yielding until the request is queued and again until the
- * read completes, then uploads the eight 8x0x30 palette columns and the
- * trailing image half to VRAM. */
+/* WORLD's copy of battle_script_load_portrait_colors_event_instruction (PortraitCol): read one
+ * four-sector block of EVTFACE.BIN on the main stack, upload its eight pixel columns and its palette to
+ * VRAM, and free the buffer. */
 void world_script_load_portrait_colors_event_instruction(s32 index) {
     RECT rect;
     u8* buffer;
@@ -23,7 +22,7 @@ void world_script_load_portrait_colors_event_instruction(s32 index) {
         g_world_thread_call_target = (void (*)(void))main_file_is_still_loading;
     } while (world_thread_call_on_main_stack() != 0);
     upper_half = buffer + 0x1800;
-    world_script_copy_bytes(&rect, &g_world_menu_portrait_pixel_rect, 8);
+    world_copy_bytes(&rect, &g_world_menu_portrait_pixel_rect, 8);
     i = 0;
     source = buffer;
     rect.w = 8;

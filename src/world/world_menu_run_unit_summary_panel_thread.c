@@ -90,7 +90,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     zodiac = g_world_active_turn_unit.zodiac;
     frames[0].sprites[6].u0 = zodiac % 7 * 0x18;
     frames[0].sprites[6].v0 = zodiac / 7 * 0x14 + 0x2A;
-    world_script_copy_bytes(&frames[1], &frames[0], sizeof(world_unit_summary_frame_t));
+    world_copy_bytes(&frames[1], &frames[0], sizeof(world_unit_summary_frame_t));
     frames[0].palette = &g_world_unit_summary_palettes[0].primitives;
     frames[1].palette = &g_world_unit_summary_palettes[1].primitives;
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_summary_panel_rect, frames[0].palette);
