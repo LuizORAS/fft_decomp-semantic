@@ -7,15 +7,13 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_unit_sprite_display(s32 unit_i
     s32 body_part;
     battle_gfx_sprite_display_data_t* display;
 
-    body_part = 7;
     display = &g_battle_unit_misc_data[unit_index].unit_sprite_display.header;
     display->color.b = 0x80;
     display->color.g = 0x80;
     display->color.r = 0x80;
-    do {
+    for (body_part = 7; body_part >= 0; body_part--) {
         display->parts[body_part].flags = 0;
-        body_part--;
-    } while (body_part >= 0);
+    }
     display->part_count = 0;
     return display;
 }

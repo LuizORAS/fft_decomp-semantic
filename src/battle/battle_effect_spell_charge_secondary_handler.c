@@ -179,9 +179,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 state->count.particles--;
             }
         }
-        red = g_battle_effect_trap_colors[state->colour][0];
-        green = g_battle_effect_trap_colors[state->colour][1];
-        blue = g_battle_effect_trap_colors[state->colour][2];
+        red = g_battle_effect_trap_colors[state->colour].r;
+        green = g_battle_effect_trap_colors[state->colour].g;
+        blue = g_battle_effect_trap_colors[state->colour].b;
         offsets = &g_battle_effect_charge_line_direction_offsets[0].vx;
         offsets_y = &g_battle_effect_charge_line_direction_offsets[0].vy;
         for (i = 0; i < 16; i++) {

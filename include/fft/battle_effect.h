@@ -2085,7 +2085,7 @@ extern s32 g_battle_effect_trajectory_tile_flags;
  * the address instead reserves an unused 8-byte frame in
  * battle_effect_init_trap_animation. */
 extern u8 g_battle_effect_trap_animation_data[];
-extern u8 g_battle_effect_trap_colors[][3];
+extern rgb24_t g_battle_effect_trap_colors[];
 
 /* CLUT of the zodiac poof's particles, an index in the weapons row, for each
  * sprite palette (the secondary effect's parameter). */
