@@ -112,11 +112,7 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
             for (scratch = 0; scratch < 8; scratch++) {
                 quad = &work->segments[i].quads[0][scratch];
                 SetPolyGT4(quad);
-                if (translucent) {
-                    quad->code |= 2;
-                } else {
-                    quad->code &= ~2;
-                }
+                setSemiTrans(quad, translucent);
                 quad->tpage = tpage;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 work->segments[i].quads[1][scratch] = *quad;

@@ -117,20 +117,12 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
             for (i = 0; i < RIBBON_SEGMENTS; i++) {
                 quad = &work->ribbons[k].quads[0][i];
                 SetPolyGT4(quad);
-                if (translucent) {
-                    quad->code |= 2;
-                } else {
-                    quad->code &= ~2;
-                }
+                setSemiTrans(quad, translucent);
                 quad->tpage = tpage;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 quad = &work->ribbons[k].quads[1][i];
                 SetPolyGT4(quad);
-                if (translucent) {
-                    quad->code |= 2;
-                } else {
-                    quad->code &= ~2;
-                }
+                setSemiTrans(quad, translucent);
                 quad->tpage = tpage;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
             }

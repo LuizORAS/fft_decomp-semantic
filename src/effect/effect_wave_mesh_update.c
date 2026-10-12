@@ -79,11 +79,7 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             for (column = 0; column < 8; column++) {
                 quad = &work->quads[0][row * 8 + column];
                 SetPolyGT4(quad);
-                if (translucent) {
-                    quad->code |= 2;
-                } else {
-                    quad->code &= 0xfd;
-                }
+                setSemiTrans(quad, translucent);
                 quad->tpage = texture_page;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 work->quads[1][row * 8 + column] = *quad;

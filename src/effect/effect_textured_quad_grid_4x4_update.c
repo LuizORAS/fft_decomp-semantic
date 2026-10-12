@@ -66,11 +66,7 @@ s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s3
             for (column = 0; column < 4; column++) {
                 quad = &work->quads[0][row * 4 + column];
                 SetPolyGT4(quad);
-                if (translucent) {
-                    quad->code |= 2;
-                } else {
-                    quad->code &= 0xfd;
-                }
+                setSemiTrans(quad, translucent);
                 quad->tpage = texture_page;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 quad->x0 = quad->x2 = (column << 6) + 128;

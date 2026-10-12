@@ -92,11 +92,7 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
             for (i = 0; i < 64; i++) {
                 quad = &work->quads[j][i];
                 SetPolyGT4(quad);
-                if (translucent) {
-                    quad->code |= 2;
-                } else {
-                    quad->code &= ~2;
-                }
+                setSemiTrans(quad, translucent);
                 quad->tpage = tpage;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
             }

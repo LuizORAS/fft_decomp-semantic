@@ -50,11 +50,7 @@ s32 effect_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_in
         for (i = 0; i < 80; i++) {
             quad = &work->quads[0][i];
             SetPolyGT4(quad);
-            if (scratch->translucent) {
-                quad->code |= 2;
-            } else {
-                quad->code &= ~2;
-            }
+            setSemiTrans(quad, scratch->translucent);
             quad->tpage = scratch->tpage;
             quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
             work->quads[1][i] = *quad;
