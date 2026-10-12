@@ -1,4 +1,3 @@
-/* E408.BIN is the effect of ABILITY_ID_NIGHT_MAGIC_NANOFLARE. */
 #include "fft/effect.h"
 
 /* Builds and draws a four-fold symmetric polar mesh of textured quads.
@@ -13,7 +12,7 @@
  * register. The handler returns no value, but the s32 return keeps $v0 live at
  * the exit, which leaves the phase dispatch's delay slots empty as in the
  * target. */
-s32 effect_e408_update_polar_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     effect_polar_mesh_scratch_t* scratch;
     effect_record_t* record;
@@ -191,7 +190,7 @@ s32 effect_e408_update_polar_mesh_state(s32 record_index, s32 callback_slot, s32
             scratch->u1 = quad->u1 = quad->u3 = scratch->u0 + scratch->half_width;
             scratch->v0 = quad->v0 = quad->v1 = (work->scroll_v >> 12) + work->base_v;
             scratch->v1 = quad->v2 = quad->v3 = scratch->v0 + scratch->half_height;
-            brightness = g_effect_e241_polar_mesh_brightness_table[scratch->brightness_row][0];
+            brightness = g_effect_polar_mesh_brightness_table[scratch->brightness_row][0];
             scratch->rgb = PACK_RGB(scratch, brightness);
             POLY_RGB(quad, 0) = scratch->rgb;
             POLY_RGB(quad, 1) = scratch->rgb;
@@ -243,7 +242,7 @@ s32 effect_e408_update_polar_mesh_state(s32 record_index, s32 callback_slot, s32
                     inner->y2 = scratch->center.vy + scratch->points[j + 1][i].y,
                     inner->x3 = scratch->center.vx + scratch->points[j + 1][i + 1].x + 0x80,
                     inner->y3 = scratch->center.vy + scratch->points[j + 1][i + 1].y);
-                brightness = g_effect_e241_polar_mesh_brightness_table[scratch->brightness_row][j + 1];
+                brightness = g_effect_polar_mesh_brightness_table[scratch->brightness_row][j + 1];
                 POLY_RGB(quad, 0) = POLY_RGB(quad, 1) = POLY_RGB(inner, 2) = POLY_RGB(inner, 3) = scratch->rgb
                     = PACK_RGB(scratch, brightness);
                 AddPrim(ot + scratch->ot_depth, inner);
@@ -304,7 +303,7 @@ s32 effect_e408_update_polar_mesh_state(s32 record_index, s32 callback_slot, s32
             quad->y2 = scratch->center.vy + scratch->points[5][i].y;
             quad->x3 = scratch->center.vx + scratch->points[5][i + 1].x + 0x80;
             quad->y3 = scratch->center.vy + scratch->points[5][i + 1].y;
-            brightness = g_effect_e241_polar_mesh_brightness_table[scratch->brightness_row][5];
+            brightness = g_effect_polar_mesh_brightness_table[scratch->brightness_row][5];
             POLY_RGB(quad, 2) = POLY_RGB(quad, 3) = scratch->rgb = PACK_RGB(scratch, brightness);
             AddPrim(ot + scratch->ot_depth, quad);
 

@@ -1,4 +1,3 @@
-/* E259.BIN is the effect of ABILITY_ID_LIMIT_OMNISLASH. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 
@@ -11,14 +10,14 @@
  * per-row steps. Each point is offset by the placement origin, transformed by
  * the battle camera through the inline GTE, and linked into the ordering
  * table by the average depth of each quad. The texture scrolls in v and each
- * lattice row takes its brightness from g_effect_e259_ring_stack_mesh_brightness_table.
+ * lattice row takes its brightness from g_effect_ring_stack_mesh_brightness_table.
  *
  * `i`, `j`, `k` and `n` are shared temporaries as in the ring mesh renderer.
  * The projected corners are four separate VECTORs: as one array, the unused
  * base address of &screen[2] is CSE'd into the later &screen[0] operand. The
  * colour stores are chained so that loop.c keeps the blue product in the
  * inner loop, as in the target. */
-s32 effect_e259_update_ring_stack_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR vertex;
     SVECTOR unused_18[3]; /* frame padding the target reserves but never touches */
@@ -365,7 +364,7 @@ s32 effect_e259_update_ring_stack_mesh_state(s32 record_index, s32 callback_slot
             green = 0x80;
             red = 0x80;
         }
-        k = g_effect_e259_ring_stack_mesh_brightness_table[n][0];
+        k = g_effect_ring_stack_mesh_brightness_table[n][0];
         for (i = 0; i < 8; i++) {
             quad = &work->quads[buffer][i];
             quad->r3 = (k * red) >> 12;
@@ -376,7 +375,7 @@ s32 effect_e259_update_ring_stack_mesh_state(s32 record_index, s32 callback_slot
             quad->b2 = (k * blue) >> 12;
         }
         for (j = 0; j < 7; j++) {
-            k = g_effect_e259_ring_stack_mesh_brightness_table[n][j + 1];
+            k = g_effect_ring_stack_mesh_brightness_table[n][j + 1];
             for (i = 0; i < 8; i++) {
                 quad = &work->quads[buffer][j * 8 + i];
                 other = &work->quads[buffer][(j + 1) * 8 + i];
@@ -385,7 +384,7 @@ s32 effect_e259_update_ring_stack_mesh_state(s32 record_index, s32 callback_slot
                     quad->b1 = other->b2 = other->b3 = (k * blue) >> 12);
             }
         }
-        k = g_effect_e259_ring_stack_mesh_brightness_table[n][8];
+        k = g_effect_ring_stack_mesh_brightness_table[n][8];
         for (i = 0; i < 8; i++) {
             quad = &work->quads[buffer][i + 56];
             quad->r1 = (k * red) >> 12;

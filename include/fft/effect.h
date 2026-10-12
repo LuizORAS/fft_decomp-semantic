@@ -222,20 +222,8 @@ extern u32 g_effect_e467_anchored_polar_mesh_brightness_table[][6];
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the ring (0-5) the column. */
-extern u32 g_effect_e004_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e033_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e065_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e070_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e077_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e241_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e242_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e245_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e384_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e409_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e453_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e454_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e461_polar_mesh_brightness_table[][6];
 extern u32 g_effect_polar_mesh_brightness_table[][6];
+s32 effect_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* quad grid */
 /* Work blocks of the scrolling textured quad grid renderer that EFFECT
@@ -349,37 +337,13 @@ typedef struct effect_single_ring_mesh_scratch {
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the lattice row (0-2) the column. */
-extern u32 g_effect_e015_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e080_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e134_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e235_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e256_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e371_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e373_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e383_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e450_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e451_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e452_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e461_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e474_ring_mesh_brightness_table[][3];
-extern u32 g_effect_e480_ring_mesh_brightness_table[][3];
 extern u32 g_effect_ring_mesh_brightness_table[][3];
+s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the lattice row (0-8) the column. */
-extern u32 g_effect_e004_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e015_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e065_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e067_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e073_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e074_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e077_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e134_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e242_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e256_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e259_ring_stack_mesh_brightness_table[][9];
-extern u32 g_effect_e383_ring_stack_mesh_brightness_table[][9];
 extern u32 g_effect_ring_stack_mesh_brightness_table[][9];
+s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* Overlay-local vertex brightness rows (12-bit fixed). */
 extern u32 g_effect_e464_single_ring_mesh_brightness_table[][2];

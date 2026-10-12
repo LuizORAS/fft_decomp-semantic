@@ -1,4 +1,3 @@
-/* E246.BIN is the effect of ABILITY_ID_MAGIC_SWORD_SHOCK. */
 #include "fft/effect.h"
 
 /* Builds and draws a spinning, flaring ring of 2x32 textured quads.
@@ -17,7 +16,7 @@
  * is narrowed once, which is what places it in $s0. The handler returns no
  * value, but the s32 return keeps $v0 live at the exit, which leaves the phase
  * dispatch's delay slots empty as in the target. */
-s32 effect_e246_update_ring_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     SVECTOR unused_10[3]; /* frame padding the target reserves but never touches */
     VECTOR origin;
     VECTOR growth;      /* vx: radius speed step, vy: row height step, vz: row radius step */
