@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -49,7 +50,7 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     poly.clut = GetClut(0x10, 0x1E8);
 
     for (i = 0, vertex = verts; i < WLDCORE_ROUTE_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST) == 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST) == 0) {
             continue;
         }
         slot = 0;

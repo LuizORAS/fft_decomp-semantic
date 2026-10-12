@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -20,7 +21,7 @@ void wldcore_list_open_story_events(void) {
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
     for (; i < EVENT_SCRIPT_VAR_STORY_EVENT_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_STORY_EVENT_FIRST) != 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_STORY_EVENT_FIRST) != 0) {
             *values = i + (s16)TEXT_ID_STORY_EVENT_NAME_BASE;
             *flags = 0;
             flags++;

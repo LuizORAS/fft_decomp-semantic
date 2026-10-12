@@ -3,6 +3,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Menu thread: waits for thread 8, runs the tutorial event if pending, then

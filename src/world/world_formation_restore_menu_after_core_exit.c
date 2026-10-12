@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 
 /*
@@ -33,9 +34,9 @@ void world_formation_restore_menu_after_core_exit(void) {
     ClearImage(&g_world_screen_clear_rect, 0, 0, 0);
     DrawSync(0);
     world_script_set_variable(
-        EVENT_SCRIPT_VAR_CURRENT_EVENT, world_script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT));
+        EVENT_SCRIPT_VAR_CURRENT_EVENT, script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT));
     world_script_set_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT, 0);
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
         world_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
     }
 }

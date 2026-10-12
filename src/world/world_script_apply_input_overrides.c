@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -12,6 +13,6 @@ void world_script_apply_input_overrides(u32* state) {
     }
 
     high = *state & 0xFFFF0000;
-    *state = *state & (world_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_CONTROLLER_INPUTS) ^ 0xFFFF);
-    *state = high | (world_script_get_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS) | *state);
+    *state = *state & (script_get_variable(EVENT_SCRIPT_VAR_DISABLED_CONTROLLER_INPUTS) ^ 0xFFFF);
+    *state = high | (script_get_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS) | *state);
 }

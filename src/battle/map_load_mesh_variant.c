@@ -1,5 +1,6 @@
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 
 enum {
     MAP_MESH_LOAD_IDLE = 0,

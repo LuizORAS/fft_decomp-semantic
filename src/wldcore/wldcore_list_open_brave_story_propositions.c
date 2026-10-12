@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -20,8 +21,7 @@ void wldcore_list_open_brave_story_propositions(void) {
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
     for (; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
-            & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
             *values = i + TEXT_ID_COMPLETED_PROPOSITION_NAME_BASE;
             *flags = 0;
             flags++;

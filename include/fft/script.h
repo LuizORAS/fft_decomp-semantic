@@ -949,6 +949,14 @@ enum {
     EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST = 0x97,
 };
 
+/* Four unit bindings used by the scenario's slot selectors. */
+extern s16 g_script_unit_slots[EVENT_UNIT_SELECTOR_SLOT_COUNT];
+
+/* Read through the resident scene's variable commands, preserving the comparison
+ * result. Reading weather/time first rebuilds it from the separate variables. */
+s32 script_get_variable(s32 variable_id);
+void script_report_missing_unit_stub(s32 unused_unit_id);
+
 /* Event-unit lookup uses the resident scene's interpreter state. */
 s32 script_get_misc_id(s32 unit_id);
 /* TeleportIn forwards the unit ID; the interpreter's second argument is unused. */

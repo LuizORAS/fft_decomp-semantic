@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -15,7 +16,7 @@ s32 wldcore_map_find_dot_at_point(point32_t point) {
     best = 0xFFFFFF;
     hit = 0;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
             continue;
         }
         if ((g_wldcore_map_dots[i].render.flags & (WORLD_RENDER_RECORD_BLANK | WORLD_RENDER_RECORD_HIDDEN)) != 0) {

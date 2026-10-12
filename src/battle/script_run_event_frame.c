@@ -6,6 +6,7 @@
 #include "fft/event_card.h"
 #include "fft/event_equip.h"
 #include "fft/event_jobstts.h"
+#include "fft/script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"

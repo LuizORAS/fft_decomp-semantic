@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 
 /* Build the item list offered by a normal or poachers' den shop.
@@ -69,7 +70,7 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
         s32 progression;
         s32 shop_mask;
 
-        progression = world_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY);
+        progression = script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY);
         item_id = 0;
         shop_mask = 0x8000 >> shop_id;
         for (; item_id < ITEM_ID_END; item_id++) {

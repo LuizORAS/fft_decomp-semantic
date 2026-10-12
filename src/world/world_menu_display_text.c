@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -70,7 +71,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                     variable_id = *cursor;
                 } else if (state->command == TEXT_STORE_VARIABLE) {
                     cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
-                    i = world_script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
+                    i = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
                     if (i != 0) {
                         world_script_set_variable(variable_id + i * 10, *cursor);
                         world_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);

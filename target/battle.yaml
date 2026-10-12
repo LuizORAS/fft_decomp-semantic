@@ -760,8 +760,8 @@ functions:
   - {addr: 0x80133088, size: 92, name: battle_unit_copy_misc_screen_coords, hash: 804df09b5303cc41}
   - {addr: 0x801330e4, size: 76, name: battle_unit_copy_misc_screen_location, hash: 0db0657e68cb43ea}
   - {addr: 0x80133130, size: 32, name: battle_unit_copy_map_coords_from_misc_id, hash: b293d475560aeacb}
-  - {addr: 0x80133150, size: 8, name: script_report_missing_unit_stub, hash: 6d64edf91449c1b1}
-  - {addr: 0x80133158, size: 828, name: script_get_misc_id, hash: 0dc0e1d2249ad0d7}
+  - {addr: 0x80133150, size: 8, name: script_report_missing_unit_stub, hash: 6d64edf91449c1b1, source: src/shared/script/script_report_missing_unit_stub.c}
+  - {addr: 0x80133158, size: 828, name: script_get_misc_id, hash: 0dc0e1d2249ad0d7, source: src/shared/script/script_get_misc_id.c}
   - {addr: 0x80133494, size: 16, name: battle_return_argument_80133494, hash: ce4ad88e7603b293}
   - {addr: 0x801334a4, size: 196, name: battle_text_build_unit_name_list, hash: 9e89b0033e7a7acd}
   - {addr: 0x80133568, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
@@ -2348,7 +2348,7 @@ data:
   - {addr: 0x80165fe0, name: g_map_append_state}
   - {addr: 0x80165fe2, name: g_battle_3d_object_use_request}
   - {addr: 0x80165fe4, name: g_battle_field_object_use_request}
-  - {addr: 0x80165fe8, name: g_battle_event_unit_slots}
+  - {addr: 0x80165fe8, name: g_script_unit_slots}
   - {addr: 0x80165ff0, name: g_camera_shake_z_offset}
   - {addr: 0x80165ff2, name: g_battle_etc_graphics_enabled}
   - {addr: 0x80165ff4, name: g_script_debug_paused}

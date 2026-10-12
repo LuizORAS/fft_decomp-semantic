@@ -1,6 +1,4 @@
 #include "fft/battle.h"
-#include "fft/battle_event.h"
-#include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
 
@@ -86,7 +84,7 @@ s32 script_get_misc_id(s32 unit_id) {
 
     if (unit_id >= EVENT_UNIT_SELECTOR_SLOT_FIRST
         && unit_id < EVENT_UNIT_SELECTOR_SLOT_FIRST + EVENT_UNIT_SELECTOR_SLOT_COUNT) {
-        misc_id = (u16)g_battle_event_unit_slots[unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST];
+        misc_id = (u16)g_script_unit_slots[unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST];
         if (misc_id == EVENT_UNIT_SLOT_EMPTY) {
             script_report_missing_unit_stub(original_unit_id);
             return EVENT_MISC_ID_NONE;

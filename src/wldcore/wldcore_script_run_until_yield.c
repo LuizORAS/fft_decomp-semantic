@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Runs the world-script interpreter until the active record yields. Each turn
@@ -26,10 +27,9 @@ s32 wldcore_script_run_until_yield(void) {
     s32 aborted;
 
     do {
-        low = world_script_get_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT);
-        high = world_script_get_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND);
-        wldcore_sound_play_pending_script_sounds(
-            low, high, world_script_get_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK));
+        low = script_get_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT);
+        high = script_get_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND);
+        wldcore_sound_play_pending_script_sounds(low, high, script_get_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK));
         wldcore_sound_novel_update_countdown_timer();
 
         if (g_wldcore_active_saved_record.state_flags & WLDCORE_OPCODE_STATE_BRANCH) {

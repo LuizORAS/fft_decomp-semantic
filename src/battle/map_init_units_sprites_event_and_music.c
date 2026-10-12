@@ -1,6 +1,7 @@
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Runs one step of the expanded battle-map initialization sequence.

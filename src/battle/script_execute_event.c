@@ -121,7 +121,7 @@ restart_script:
         s32 empty_unit_id = EVENT_UNIT_SLOT_EMPTY;
         /* Matching: load the fill value before the descending loop index. */
         for (work_index = 3; work_index >= 0; work_index--) {
-            g_battle_event_unit_slots[work_index] = empty_unit_id;
+            g_script_unit_slots[work_index] = empty_unit_id;
         }
     }
     for (;;) {
@@ -787,14 +787,13 @@ restart_script:
             } while (ghost_misc_id >= 0);
             for (ghost_misc_id = 0; ghost_misc_id < EVENT_UNIT_SLOT_COUNT; ghost_misc_id++) {
                 if (battle_unit_has_misc_id(ghost_misc_id) == 0) {
-                    g_battle_event_unit_slots[ghost_parameters[0]] = ghost_misc_id;
+                    g_script_unit_slots[ghost_parameters[0]] = ghost_misc_id;
                     break;
                 }
             }
             if (ghost_misc_id != EVENT_UNIT_SLOT_COUNT) {
                 script_add_ghost_unit_event_instruction(ghost_parameters[1], ghost_parameters[2], ghost_parameters[3],
-                    ghost_parameters[4], first_operand, g_battle_event_unit_slots[ghost_parameters[0]],
-                    ghost_parameters[5]);
+                    ghost_parameters[4], first_operand, g_script_unit_slots[ghost_parameters[0]], ghost_parameters[5]);
                 g_battle_unit_graphics_load_pending = 1U;
             } else {
                 /* No free misc slot: the instruction is retried at once,

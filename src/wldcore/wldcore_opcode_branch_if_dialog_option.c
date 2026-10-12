@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -7,8 +8,8 @@
 void wldcore_opcode_branch_if_dialog_option(s32 branch_if_equal) {
     u8 operand = (u8)(g_wldcore_active_saved_record.instruction >> 16);
 
-    if (operand == world_script_get_variable(EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION) ? branch_if_equal == 1
-                                                                                      : branch_if_equal == 0) {
+    if (operand == script_get_variable(EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION) ? branch_if_equal == 1
+                                                                                : branch_if_equal == 0) {
         g_wldcore_active_saved_record.section = (u8)(g_wldcore_active_saved_record.instruction >> 8);
         g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_BRANCH;
     } else {

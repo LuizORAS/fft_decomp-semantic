@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Renders up to 10 script-variable rows in the debug list panel.
@@ -37,7 +38,7 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
     point.x = 8;
     point.y = 8;
     for (i = 0; i < level->row_count; i++) {
-        value = world_script_get_variable(variable);
+        value = script_get_variable(variable);
         if (value < 10000) {
             g_text_substitution_values[0] = variable;
             g_text_substitution_values[1] = value;

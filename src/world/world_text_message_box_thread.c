@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -107,8 +108,8 @@ void world_text_message_box_thread(void) {
         win[1].portrait_code = text[1];
         world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, text[1]);
     } else {
-        win[0].portrait_code = world_script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
-        win[1].portrait_code = world_script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
+        win[0].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
+        win[1].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
     }
     win[0].is_message_box = 1;
     win[1].is_message_box = 1;
@@ -211,8 +212,8 @@ void world_text_message_box_thread(void) {
                 win[1].portrait_code = text[1];
                 world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, text[1]);
             } else {
-                win[0].portrait_code = world_script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
-                win[1].portrait_code = world_script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
+                win[0].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
+                win[1].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
             }
             world_thread_yield();
             continue;
@@ -340,7 +341,7 @@ void world_text_message_box_thread(void) {
             NEXT();
         } else if (code == TEXT_STORE_VARIABLE) {
             NEXT();
-            i = world_script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
+            i = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
             if (i != 0) {
                 world_script_set_variable(script_variable_base + i * 10, *text);
                 world_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);

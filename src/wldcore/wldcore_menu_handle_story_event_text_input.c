@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -21,7 +22,7 @@ void wldcore_menu_handle_story_event_text_input(wldcore_menu_stack_record_t* lev
             g_main_saved_list_cursor_state = g_wldcore_story_events_cursor_state;
             g_main_system_flags = (flags ^ MAIN_SYSTEM_FLAG_RUNNING) | MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY;
             g_main_replay_story_event_index = value;
-            g_main_saved_weather_variable = world_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
+            g_main_saved_weather_variable = script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
             return;
         }
     }

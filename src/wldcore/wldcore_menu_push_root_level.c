@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -55,7 +56,7 @@ void wldcore_menu_push_root_level(void) {
     g_wldcore_map_cursor_scroll_y.step = 0x80;
     g_wldcore_map_cursor_scroll_x.step = 0x80;
 
-    g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
+    g_wldcore_displayed_numeric_value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     level = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[level].map_cursor.wide_view = 0;
     g_wldcore_menu_stack_records_next[level].map_cursor.snap_hit = g_wldcore_map_projection_state.marker.kind + 1;

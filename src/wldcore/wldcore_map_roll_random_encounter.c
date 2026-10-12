@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 #define ENTRY_AT(byte_offset)   ((wldcore_encounter_entry_t*)((byte_offset) + (s32)base))
@@ -39,7 +40,7 @@ s32 wldcore_map_roll_random_encounter(s32 location, s32 route) {
     offset += location * 24;
     row = ENTRY_AT(offset);
     g_wldcore_random_battle_squad_id = row->deployment_squad_id + 0x200;
-    progress = world_script_get_variable(row->script_variable_id);
+    progress = script_get_variable(row->script_variable_id);
     /* Direct tier fields cache the row pointer and remove retail base additions. */
     for (location = 0; location < 4; location++) {
         if (((u8*)(offset + location * sizeof(wldcore_encounter_tier_t)

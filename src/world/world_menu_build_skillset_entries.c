@@ -1,6 +1,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -55,7 +56,7 @@ void world_menu_build_skillset_entries(void) {
         }
         count++;
     }
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_ANYTHING_ACTION_ENABLED) != 0 && i < 6) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_ANYTHING_ACTION_ENABLED) != 0 && i < 6) {
         rows[i].style = 0;
         g_world_menu_skillset_row_actions[i] = BATTLE_MENU_ID_PROMPT_16;
         g_world_action_menu_skillsets[i] = ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;

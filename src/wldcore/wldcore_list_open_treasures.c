@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -13,7 +14,7 @@ void wldcore_list_open_treasures(void) {
 
     count = 0;
     for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
             g_wldcore_list_entry_values[count] = i + (s16)TEXT_ID_TREASURE_NAME_BASE;
             g_wldcore_list_row_flags[count] = 0;
             count++;

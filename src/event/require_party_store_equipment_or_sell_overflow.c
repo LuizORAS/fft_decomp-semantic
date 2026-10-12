@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/script.h"
 
 /* Return a departing battle unit's seven equipped items to the inventory.
  * An item of which 100 or more are already held or equipped is sold for a

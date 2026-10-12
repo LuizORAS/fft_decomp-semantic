@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -65,7 +66,7 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_gfx_draw_area_capacity = 0xA;
     g_world_gfx_draw_mode_capacity = 0x1E;
     g_world_shop_id = shop_type;
-    buttons = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
+    buttons = script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
     if (shop_type == WORLD_SHOP_ID_FUR_SHOP) {
         ot_index = MAIN_MUSIC_FUR_SHOP;
         g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_MENU;
@@ -77,7 +78,7 @@ void world_shop_run_screen(s32 shop_type) {
         disabled = 0xF820;
         tim_index = 6;
     } else {
-        g_world_shop_id = world_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
+        g_world_shop_id = script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
         ot_index = MAIN_MUSIC_SHOP;
         disabled = 0xF801;
         tim_index = 0;

@@ -67,7 +67,6 @@ extern s32 g_battle_event_pending_saved_evtchr_clear_slot;    /* 0x80173f50 */
 /* 0x80173cac: packed misc ID << 8 | reserved VRAM slot; -1 absent. */
 extern s32 g_battle_event_pending_unit_vram_copy;
 extern s32 g_battle_event_speed;
-extern s16 g_battle_event_unit_slots[4];
 
 /* 0x80173f68: packed weather flags; consumer replaces it with a table index. */
 extern s16 g_battle_event_weather_request;

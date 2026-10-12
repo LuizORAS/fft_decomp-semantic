@@ -1,6 +1,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_formula.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Gil stolen: attacker Level * Speed, capped at the war funds when the target

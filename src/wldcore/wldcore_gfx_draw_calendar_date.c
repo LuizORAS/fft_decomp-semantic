@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -27,8 +28,8 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot) {
     request.color.g = color.g;
     request.color.b = color.b;
 
-    first = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    second = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    first = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    second = script_get_variable(EVENT_SCRIPT_VAR_DAY);
     request.sequence = first + (WLDCORE_ANIM_SEQUENCE_MONTH_FIRST - 1);
     wldcore_gfx_draw_animated_display_object(&request, ot);
 

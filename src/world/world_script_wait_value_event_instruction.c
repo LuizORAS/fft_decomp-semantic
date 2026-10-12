@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -8,7 +9,7 @@ void world_script_wait_value_event_instruction(const event_wait_value_parameters
     s16 test_value = world_script_load_halfword(parameters->test_value_le);
 
     do {
-        if (world_script_get_variable(variable_id) >= test_value) {
+        if (script_get_variable(variable_id) >= test_value) {
             break;
         }
         world_thread_yield();

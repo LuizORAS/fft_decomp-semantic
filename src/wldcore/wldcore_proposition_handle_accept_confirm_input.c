@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -79,7 +80,7 @@ void wldcore_proposition_handle_accept_confirm_input(wldcore_menu_choice_panel_l
         level->mode = WLDCORE_ACCEPT_CONFIRM_MODE_NO_UNIT_MESSAGE;
         goto fail;
     }
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) < g_wldcore_proposition_gil_amount) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) < g_wldcore_proposition_gil_amount) {
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_NOT_ENOUGH_GIL, 0);
         level->mode = WLDCORE_ACCEPT_CONFIRM_MODE_CLOSE_MESSAGE;
     fail:

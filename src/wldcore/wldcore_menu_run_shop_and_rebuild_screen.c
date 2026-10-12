@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -16,7 +17,7 @@ void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id) {
     world_menu_set_brightness(0x80, 0x80, 0x80);
     wldcore_sound_wait_for_queue_drain();
     world_shop_run_screen(shop_id);
-    g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
+    g_wldcore_displayed_numeric_value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]);
     selected = &g_wldcore_map_projection_state.marker.kind;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count

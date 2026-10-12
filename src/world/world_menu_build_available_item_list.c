@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -12,14 +13,14 @@ void world_menu_build_available_item_list(void) {
     menu_entry_t* menu;
 
     for (i = 0, count = 0; i < WORLD_LOCATION_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) != 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) != 0) {
             g_world_menu_location_list_text_ids[count] = i + (s16)TEXT_ID_LOCATION_NAME_BASE;
-            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) == 0) {
+            if (script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) == 0) {
                 g_world_menu_location_list_row_colors[count] = 8;
             } else {
                 g_world_menu_location_list_row_colors[count] = 0;
             }
-            if (i == world_script_get_variable(EVENT_SCRIPT_VAR_LOCATION)) {
+            if (i == script_get_variable(EVENT_SCRIPT_VAR_LOCATION)) {
                 g_world_menu_location_list_row_colors[count] = 4;
                 selected = count;
             }

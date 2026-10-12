@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 
@@ -15,7 +16,7 @@ void wldcore_map_init_location_marker_and_camera(void) {
     s32 count;
     s32 value;
 
-    index = world_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
+    index = script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
     /* Only the kind, position and flags go through the pointer, as in the
      * target; the other fields are addressed through the symbol. */
     marker = &g_wldcore_map_projection_state.marker;
@@ -35,7 +36,7 @@ void wldcore_map_init_location_marker_and_camera(void) {
     g_wldcore_map_projection_state.marker.render.color.r = 0x80;
     g_wldcore_map_projection_state.marker.render.color.g = 0x80;
     g_wldcore_map_projection_state.marker.render.color.b = 0x80;
-    value = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
+    value = script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
     g_wldcore_map_projection_state.marker.render.palette = 0;
     if (value == 1) {
         g_wldcore_map_projection_state.marker.render.palette = 2;

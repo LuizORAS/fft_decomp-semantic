@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -18,7 +19,7 @@ void wldcore_map_project_and_cull_dots(void) {
         g_wldcore_map_dots[i].render.position.y = position.vy;
         if (position.vx < -128 || position.vx > 128 || position.vy < -116 || position.vy > 120
             || (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS)
-            || world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
+            || script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
             g_wldcore_map_dots[i].render.flags |= WORLD_RENDER_RECORD_HIDDEN;
         } else {
             g_wldcore_map_dots[i].render.flags &= ~WORLD_RENDER_RECORD_HIDDEN;

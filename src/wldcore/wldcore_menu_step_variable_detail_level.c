@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Per-frame step of the brave-story detail level.
@@ -59,7 +60,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
         }
         g_wldcore_scrollable_text_window.extra_render_index = -1;
         wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
-        value = world_script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
+        value = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
         render_index = level->render_index;
         if (value != 0xFF) {
             world_gfx_set_portrait_poly_texture(&portrait, value);

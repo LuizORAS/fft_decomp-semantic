@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Pump event-thread execution until no other running thread has a task ID

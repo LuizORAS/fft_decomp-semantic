@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "fft/script.h"
 #include "psx/libcd.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -150,8 +151,8 @@ void open_title_update_menu(open_controller_record_t* record) {
                 return;
             }
             g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_RUNNING;
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0
-                || world_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) == 0) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0
+                || script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) == 0) {
                 g_open_system_result = cursor;
                 return;
             }

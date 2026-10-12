@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -37,8 +38,8 @@ void world_unit_update_monster_breeding(s32 unused) {
                 unit->birthday_day = (unit->birthday_day & 0xF0) | n;
                 if (n == 0) {
                     unit->gender_flags = UNIT_FLAG_MONSTER;
-                    day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-                    month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+                    day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
+                    month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
                     value = 0;
                     for (n = 1; n < month; n++) {
                         value += g_world_month_lengths[n];

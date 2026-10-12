@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /*
@@ -7,8 +8,8 @@
  * The target does not validate the incoming month or day.
  */
 void wldcore_advance_calendar_day(void) {
-    s32 month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    s32 day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY) + 1;
+    s32 month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    s32 day = script_get_variable(EVENT_SCRIPT_VAR_DAY) + 1;
 
     if (g_wldcore_days_per_month[month - 1] < day) {
         month++;
@@ -20,7 +21,7 @@ void wldcore_advance_calendar_day(void) {
     world_script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
     world_script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
     if (month == 3 && day == 21) {
-        s32 value = world_script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1;
+        s32 value = script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1;
         if (value >= 100) {
             value = 99;
         }

@@ -17,6 +17,7 @@
  */
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/script.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"

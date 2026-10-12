@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -135,11 +136,11 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
             g_world_text_typewriter_state.pen.rect.y = 0;
             g_world_text_typewriter_state.pen.stride = pitch;
             world_script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
-                world_script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
+                script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
             world_text_blit_font_glyph_to_4bpp(request->glyph * TEXT_GLYPH_BYTES + g_world_text_glyph_bitmap_data,
                 image, &g_world_text_typewriter_state.pen, request->palette);
             g_world_text_typewriter_vram_rect.x
-                = (pen_x >> 2) + (s16)(world_script_get_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET) + 0x1C0);
+                = (pen_x >> 2) + (s16)(script_get_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET) + 0x1C0);
             g_world_text_typewriter_vram_rect.y = pen_y;
             g_world_text_typewriter_vram_rect.h = 14;
             LoadImage(&g_world_text_typewriter_vram_rect, (u32*)image);
@@ -180,7 +181,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
             }
         }
 
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->mode != 0) {
+        if (script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->mode != 0) {
             g_world_sound_effect_id_to_play = MAIN_SFX_TEXT_GLYPH;
         }
     }

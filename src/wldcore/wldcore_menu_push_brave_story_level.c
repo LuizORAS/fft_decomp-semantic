@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Pushes a list menu level (type 0x1C).
@@ -87,12 +88,12 @@ void wldcore_menu_push_brave_story_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.content_render = index;
-    value = world_script_get_variable(EVENT_SCRIPT_VAR_INJURED);
+    value = script_get_variable(EVENT_SCRIPT_VAR_INJURED);
     if (value >= 10000) {
         value = 9999;
     }
     g_text_substitution_values[0] = value;
-    value = world_script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES);
+    value = script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES);
     if (value >= 10000) {
         value = 9999;
     }

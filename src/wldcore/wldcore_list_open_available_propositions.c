@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -47,7 +48,7 @@ void wldcore_list_open_available_propositions(void) {
     }
     count = 0;
     for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {
-        if (!(world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
+        if (!(script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
                 & (WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS | WLDCORE_PROPOSITION_VARIABLE_COMPLETED))
             && !(g_main_proposition_states[i] & WLDCORE_PROPOSITION_STATE_DAYS_MASK)
             && wldcore_proposition_set_based_on_location(i, g_wldcore_map_projection_state.marker.kind + 1) != 0) {

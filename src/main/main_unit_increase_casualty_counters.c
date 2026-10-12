@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/main.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Increment the battle casualty or injured counter for a unit, capped at 9999. */

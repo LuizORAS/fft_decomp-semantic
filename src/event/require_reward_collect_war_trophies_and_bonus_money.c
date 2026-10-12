@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /*

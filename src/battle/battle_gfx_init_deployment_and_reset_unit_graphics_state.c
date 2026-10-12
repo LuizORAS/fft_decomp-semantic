@@ -1,6 +1,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
 
 /* Builds the deployed units' data when a map starts and rewinds the unit graphics
  * loader.

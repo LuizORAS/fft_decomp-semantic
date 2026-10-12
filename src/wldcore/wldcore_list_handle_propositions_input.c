@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -45,7 +46,7 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
         }
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
-        if (world_script_get_variable(
+        if (script_get_variable(
                 (g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK)
                 + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
             & WLDCORE_PROPOSITION_VARIABLE_ATTEMPTED) {

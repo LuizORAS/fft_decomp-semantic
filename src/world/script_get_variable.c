@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -10,7 +11,7 @@
  * Reading the combined weather/time variable first rebuilds it: time of day
  * in bit 15 and weather in bits 12..14.
  */
-s32 world_script_get_variable(s32 variable_id) {
+s32 script_get_variable(s32 variable_id) {
     s32 saved = *g_world_script_variables;
     s32 result;
 
@@ -18,9 +19,9 @@ s32 world_script_get_variable(s32 variable_id) {
         s32 tod;
         s32 wth;
 
-        tod = world_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY);
+        tod = script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY);
         tod &= 1;
-        wth = world_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
+        wth = script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
         wth &= 7;
         tod <<= 15;
         wth <<= 12;

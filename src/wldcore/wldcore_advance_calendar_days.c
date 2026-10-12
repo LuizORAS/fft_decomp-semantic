@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /*
@@ -35,17 +36,16 @@ void wldcore_advance_calendar_days(s32 days) {
 
     birthdays = g_wldcore_brave_story_birthdays;
     years = days / 365;
-    world_script_set_variable(
-        EVENT_SCRIPT_VAR_UNKNOWN_67, world_script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + years);
+    world_script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + years);
     days %= 365;
-    month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
     today = wldcore_month_day_to_day_of_year(month, day);
     for (i = 0; i < 64; i++) {
         g_main_brave_story_character_ages[i] += years;
         if (i == 0) {
-            month = world_script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH);
-            day = world_script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY);
+            month = script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH);
+            day = script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY);
         } else {
             month = birthdays[i][0];
             day = birthdays[i][1];
@@ -60,8 +60,7 @@ void wldcore_advance_calendar_days(s32 days) {
     }
     today += days;
     if (today >= 365) {
-        world_script_set_variable(
-            EVENT_SCRIPT_VAR_UNKNOWN_67, world_script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1);
+        world_script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1);
         today -= 365;
     }
     wldcore_day_of_year_to_month_day(today, &month, &day);

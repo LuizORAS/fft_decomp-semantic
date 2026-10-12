@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -21,7 +22,7 @@ void wldcore_list_open_set_script_variables_03c0_03ff(void) {
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
     for (; i < EVENT_SCRIPT_VAR_PERSON_PROFILE_COUNT; i++) {
-        value = world_script_get_variable(i + EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST);
+        value = script_get_variable(i + EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST);
         if (value != 0) {
             *values = (i << 4) + (s16)(value - 0x1000);
             *flags = 0;

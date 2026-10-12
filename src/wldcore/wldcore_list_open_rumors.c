@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -29,7 +30,7 @@ void wldcore_list_open_rumors(void) {
         /* A register operand keeps the loaded 32-bit value first in the `and`;
          * testing *locations directly lets expand_binop swap them. */
         entry = *locations;
-        if ((entry & mask) && world_script_get_variable(i + EVENT_SCRIPT_VAR_RUMOR_FIRST) != 0) {
+        if ((entry & mask) && script_get_variable(i + EVENT_SCRIPT_VAR_RUMOR_FIRST) != 0) {
             *values = i + (s16)TEXT_ID_RUMOR_NAME_BASE;
             *flags = 0;
             flags++;

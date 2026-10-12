@@ -5,6 +5,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
+#include "fft/script.h"
 
 /*
  * System-function dispatcher called by battle_menu_init_system_function:

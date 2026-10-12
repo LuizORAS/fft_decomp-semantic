@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 
 /* Chooses whether an ability announcement shows a spell quote.
@@ -36,7 +37,7 @@ void world_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32
         && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)]
             & (STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT) | STATUS_BYTE_MASK(STATUS_ID_FROG)))
         && g_main_game_options.fields.ability_names == GAME_OPTION_ON
-        && (world_script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 0xF) < 4) {
+        && (script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 0xF) < 4) {
         g_world_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;
         world_menu_dispatch_system_function(BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE, 0, unit_id, 0, enabled, action);
         return;

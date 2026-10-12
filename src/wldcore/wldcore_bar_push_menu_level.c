@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Opens a full-screen menu level (type 5): hides the map, loads data set
@@ -12,7 +13,7 @@ void wldcore_bar_push_menu_level(void) {
     wldcore_clear_screen_and_set_map_clip_rect(1);
     wldcore_window_set_render_objects_visible(0);
     wldcore_fade_start_screen(0, 0x10);
-    value = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
+    value = script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
     set = value == 1 ? 0x16 : 0;
     if (value == 2) {
         set = 0x17;

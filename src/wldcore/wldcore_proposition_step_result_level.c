@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -64,7 +65,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     }
     g_wldcore_window_render_record_count = g_wldcore_window_render_record_count - 1;
     g_wldcore_window_render_object_count = g_wldcore_window_render_object_count - 1;
-    proposition_flags = world_script_get_variable(g_main_active_propositions[level->proposition].proposition_id
+    proposition_flags = script_get_variable(g_main_active_propositions[level->proposition].proposition_id
                             + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
         & 0xFFFD;
     if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
@@ -73,14 +74,14 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     world_script_set_variable(
         g_main_active_propositions[level->proposition].proposition_id + EVENT_SCRIPT_VAR_PROPOSITION_FIRST,
         proposition_flags);
-    war_funds = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + g_wldcore_proposition_gil_amount;
+    war_funds = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + g_wldcore_proposition_gil_amount;
     if (war_funds > 0x05F5E0FF) {
         war_funds = 0x05F5E0FF;
     }
     world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, war_funds);
-    g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
-    day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    g_wldcore_displayed_numeric_value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
+    day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
     if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         date.day = day;
         date.month = month;

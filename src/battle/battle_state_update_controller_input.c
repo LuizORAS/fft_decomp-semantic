@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/pad.h"
 
 /* Read pad 1 and derive the frame's pressed and released buttons; always returns

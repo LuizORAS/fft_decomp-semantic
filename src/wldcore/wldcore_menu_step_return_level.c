@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Per-frame handler of the world-map return level: waits out its own delay,
@@ -44,7 +45,7 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
         return;
     }
     if (flags & MAIN_SYSTEM_FLAG_REQUEST_DESTINATION) {
-        location = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
+        location = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
         wldcore_init_core();
         wldcore_menu_dispatch_resume_handler();
         if (g_wldcore_map_projection_state.marker.kind != location) {
@@ -67,8 +68,8 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
     }
     if (flags & MAIN_SYSTEM_FLAG_RESTART) {
         g_main_system_flags = cleared & ~(MAIN_SYSTEM_FLAG_RUNNING | MAIN_SYSTEM_FLAG_UNLOCK_ALL);
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0
-            || world_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) == 0) {
+        if (script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0
+            || script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) == 0) {
             g_main_system_flags |= MAIN_SYSTEM_FLAG_RESTART;
         } else {
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_RESTART;

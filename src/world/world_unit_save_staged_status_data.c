@@ -1,5 +1,6 @@
 #include "fft/battle_status.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 
@@ -34,7 +35,7 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
         g_world_unit_status_staging_data->hp[unit_id] = stats->hp;
         g_world_unit_status_staging_data->team_flags[unit_id] = stats->team_flags;
         for (i = 0; i < STATUS_BYTE_COUNT; i++) {
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
                 if ((stats->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && stats->primary_skillset < SKILLSET_ID_END)
                     || stats->character_identity == CHARACTER_IDENTITY_ALTIMA_FIRST_FORM
                     || stats->character_identity == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM

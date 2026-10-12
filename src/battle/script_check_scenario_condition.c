@@ -1,6 +1,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 
 /* Evaluate one scenario condition record for
  * script_run_scenario_conditions.

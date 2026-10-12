@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Builds the town menu list level that wldcore_bar_handle_menu_input steps: row kinds 0
@@ -33,7 +34,7 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     g_wldcore_window_records[index].frame_index = 0;
     level->entries[0] = WLDCORE_BAR_MENU_ROW_RUMORS;
     level->entry_count = 1;
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED) != 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED) != 0) {
         level->entries[1] = WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS;
         level->entry_count++;
     }

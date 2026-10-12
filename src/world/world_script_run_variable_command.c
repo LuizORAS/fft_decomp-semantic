@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 
 /* WORLD 0x800fd4a8..0x800fd7c4. EVENT_SCRIPT_VAR_RANDOM_VALUE is read through the event
@@ -75,7 +76,7 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
     if (g_world_event_variable_write_guard == 0) {
         if (destination_id >= EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST) {
             g_world_event_variable_write_guard = 1;
-            write_allowed = (u32)world_script_get_variable(destination_id) < 12;
+            write_allowed = (u32)script_get_variable(destination_id) < 12;
             g_world_event_variable_write_guard = 0;
             if (!write_allowed) {
                 return;
@@ -83,7 +84,7 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
         }
         if (g_world_event_variable_write_guard == 0) {
             g_world_event_variable_write_guard = 1;
-            replay_mode = world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS);
+            replay_mode = script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS);
             g_world_event_variable_write_guard = 0;
             if (replay_mode != 0 && (destination_id - EVENT_SCRIPT_VAR_SCENARIO_LOCAL_FIRST) >= 0x20U
                 && (destination_id - EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) >= 4U

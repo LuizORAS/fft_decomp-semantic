@@ -3,6 +3,7 @@
 #include "fft/event_card.h"
 #include "fft/event_equip.h"
 #include "fft/event_jobstts.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -50,7 +51,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         if (i == 17) {
             op = world_script_get_current_scenario_finish_operation();
             if (op != 0) {
-                if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
+                if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
                     g_world_event_finish_check_pending = 0;
                     world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                     return 9;
@@ -60,7 +61,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
                 g_world_menu_overlay_state = 0;
                 return 0;
             }
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_FUNERAL) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_FUNERAL) {
                 return 0x13;
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));

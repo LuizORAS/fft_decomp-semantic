@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -46,7 +47,7 @@ void wldcore_map_color_and_draw_dots(void) {
         color->b = 0x80;
         is_castle = g_wldcore_map_dots[i].kind == 2;
         g_wldcore_map_dots[i].render.sequence = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
             if (i < WORLD_LOCATION_FIELD_FIRST) {
                 g_wldcore_map_dots[i].render.palette = 0xc;
             } else {
@@ -57,7 +58,7 @@ void wldcore_map_color_and_draw_dots(void) {
         }
         dot->render.anim_counter = 0;
         g_wldcore_map_dots[i].render.frame_index = 0;
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
             g_wldcore_map_dots[i].render.flags |= WORLD_RENDER_RECORD_HIDDEN;
         }
         dot++;

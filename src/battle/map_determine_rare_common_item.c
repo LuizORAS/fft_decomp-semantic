@@ -1,5 +1,6 @@
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Pick the rare or common move-find item on the unit's tile and mark the tile found.
  *

@@ -3,6 +3,7 @@
  * 0x80146110; see that file for the interpolation modes and the
  * allocation-sensitive spellings.
  */
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -49,7 +50,7 @@ void world_camera_thread(void) {
 
     if (g_world_camera_yaw_unwrap_request != 0) {
         g_world_camera_yaw_unwrap_request = 0;
-        angle = world_script_get_variable(EVENT_SCRIPT_VAR_CAMERA_YAW);
+        angle = script_get_variable(EVENT_SCRIPT_VAR_CAMERA_YAW);
         yaw_delta = ((angle << 16) >> 16) - target[EVENT_CAMERA_COMPONENT_YAW];
         yaw = angle;
         if (ABS(yaw_delta + ONE) < ABS(yaw_delta)) {

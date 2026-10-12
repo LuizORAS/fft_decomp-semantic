@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
 
 /* Enter ATTACK.OUT when script variable 0x1fc is clear: mark the transition,
  * load companion executable 0xd, then hand off to its scenario-music,

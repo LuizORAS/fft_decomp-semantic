@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -20,7 +21,7 @@ void world_menu_start_entry_thread(void) {
         if (world_script_check_tutorial_event_slot() != 0) {
             g_world_menu_input_mode = MENU_INPUT_TUTORIAL;
             world_script_set_variable(
-                EVENT_SCRIPT_VAR_CURRENT_EVENT, world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);
+                EVENT_SCRIPT_VAR_CURRENT_EVENT, script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);
             world_script_start_current_event_thread();
             world_thread_wait_frames(0x1E);
         }

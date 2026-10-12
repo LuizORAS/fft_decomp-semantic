@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -21,7 +22,7 @@ void wldcore_list_handle_tutorial_mask_1_entries_input(wldcore_menu_panel_level_
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_TUTORIAL_MASK_1_ENTRIES);
             g_main_saved_list_cursor_state = g_wldcore_tutorial_entries_cursor_state;
             g_main_system_flags = (g_main_system_flags | MAIN_SYSTEM_FLAG_TUTORIAL_EVENT) ^ MAIN_SYSTEM_FLAG_RUNNING;
-            g_main_saved_weather_variable = world_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
+            g_main_saved_weather_variable = script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
         }
         return;
     }

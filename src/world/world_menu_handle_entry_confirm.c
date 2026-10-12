@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -16,7 +17,7 @@ void world_menu_handle_entry_confirm(menu_entry_t* entry, s32 row_index) {
     s16* row_actions;
 
     if (g_world_menu_input_mode == MENU_INPUT_TUTORIAL
-        && ((world_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> row_index) & 1)) {
+        && ((script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> row_index) & 1)) {
         return;
     }
     silent = 0;

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -14,6 +15,6 @@ void wldcore_script_read_operand_pair_and_date(
     *ipp = ip;
     *out_day = g_wldcore_script_state.data[ip];
     *ipp = *ipp + 1;
-    *out_current_month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    *out_current_day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    *out_current_month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    *out_current_day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
 }

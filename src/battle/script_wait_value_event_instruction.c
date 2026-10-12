@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* WaitValue event instruction: yield until the script variable named by the

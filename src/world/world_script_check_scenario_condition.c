@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 /* Evaluates one five-field 16-bit scenario condition record for world_script_run_scenario_conditions
  * (the WORLD sibling of BATTLE process_scenario_conditionals): returns 1 when
  * the condition holds, 2 for type 0x19 (stores the id in script variable
@@ -21,11 +22,11 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
     s32 i;
     s32 j; /* equipment slot, then battle index: one variable (a0 in both loops) */
 
-    if (type == EVENT_SCENARIO_CONDITION_VARIABLE_EQUAL && world_script_get_variable(id) == value)
+    if (type == EVENT_SCENARIO_CONDITION_VARIABLE_EQUAL && script_get_variable(id) == value)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-    if (type == EVENT_SCENARIO_CONDITION_VARIABLE_AT_LEAST && world_script_get_variable(id) >= value)
+    if (type == EVENT_SCENARIO_CONDITION_VARIABLE_AT_LEAST && script_get_variable(id) >= value)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-    if (type == EVENT_SCENARIO_CONDITION_VARIABLE_AT_MOST && value >= world_script_get_variable(id))
+    if (type == EVENT_SCENARIO_CONDITION_VARIABLE_AT_MOST && value >= script_get_variable(id))
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type >= 4 && type <= 10) {
         unit = world_unit_get_by_unit_id(id);
@@ -68,31 +69,25 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
             }
         }
     }
-    if (type == EVENT_SCENARIO_CONDITION_WAR_FUNDS_AT_LEAST
-        && world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) >= value)
+    if (type == EVENT_SCENARIO_CONDITION_WAR_FUNDS_AT_LEAST && script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) >= value)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-    if (type == EVENT_SCENARIO_CONDITION_WAR_FUNDS_AT_MOST
-        && value >= world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS))
+    if (type == EVENT_SCENARIO_CONDITION_WAR_FUNDS_AT_MOST && value >= script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS))
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_DATE_ON_OR_BEFORE) {
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_MONTH) < id)
+        if (script_get_variable(EVENT_SCRIPT_VAR_MONTH) < id)
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_MONTH) == id
-            && value >= world_script_get_variable(EVENT_SCRIPT_VAR_DAY))
+        if (script_get_variable(EVENT_SCRIPT_VAR_MONTH) == id && value >= script_get_variable(EVENT_SCRIPT_VAR_DAY))
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     }
     if (type == EVENT_SCENARIO_CONDITION_DATE_ON_OR_AFTER) {
-        if (id < world_script_get_variable(EVENT_SCRIPT_VAR_MONTH))
+        if (id < script_get_variable(EVENT_SCRIPT_VAR_MONTH))
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_MONTH) == id
-            && world_script_get_variable(EVENT_SCRIPT_VAR_DAY) >= value)
+        if (script_get_variable(EVENT_SCRIPT_VAR_MONTH) == id && script_get_variable(EVENT_SCRIPT_VAR_DAY) >= value)
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     }
-    if (type == EVENT_SCENARIO_CONDITION_CASUALTIES_AT_LEAST
-        && world_script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES) >= id)
+    if (type == EVENT_SCENARIO_CONDITION_CASUALTIES_AT_LEAST && script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES) >= id)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-    if (type == EVENT_SCENARIO_CONDITION_CASUALTIES_AT_MOST
-        && id >= world_script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES))
+    if (type == EVENT_SCENARIO_CONDITION_CASUALTIES_AT_MOST && id >= script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES))
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED && action_check_battle_outcome() == 0)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;

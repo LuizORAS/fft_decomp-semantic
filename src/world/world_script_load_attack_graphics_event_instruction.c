@@ -1,11 +1,12 @@
 #include "fft/event_attack.h"
+#include "fft/script.h"
 #include "fft/world.h"
 
 /* Enter the attack overlay when script variable 0x1fc is clear: mark the
  * transition state, load BIN file 0xd, then hand off to the overlay's
  * scenario-music, formation-sprite and portrait entry points. */
 void world_script_load_attack_graphics_event_instruction(void) {
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
         g_world_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOADED;
         world_menu_request_open_companion_executable(COMPANION_OVERLAY_ATTACK);
         world_thread_yield();

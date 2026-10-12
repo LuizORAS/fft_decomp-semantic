@@ -1,5 +1,6 @@
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Map loader: takes a command between loads, then advances the load of a map's

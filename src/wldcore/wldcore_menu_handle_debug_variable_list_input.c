@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -28,7 +29,7 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
         g_wldcore_window_records[level->window_index].anim_counter
             = g_wldcore_window_records[level->window_index].frame_index = 0;
         variable = level->first_variable + level->cursor;
-        wldcore_menu_push_number_panel_level_with_argument(variable, world_script_get_variable(variable));
+        wldcore_menu_push_number_panel_level_with_argument(variable, script_get_variable(variable));
         return;
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {

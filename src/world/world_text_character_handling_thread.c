@@ -707,7 +707,7 @@ void world_text_character_handling_thread(void) {
             NEXT();
         } else if (code == TEXT_STORE_VARIABLE) {
             NEXT();
-            i = world_script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
+            i = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
             if (i != 0) {
                 world_script_set_variable(variable_id + i * 10, *text);
                 world_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);

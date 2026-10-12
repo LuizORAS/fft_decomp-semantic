@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -16,7 +17,7 @@ void world_input_update_menu_repeat(u32 input) {
 
     if (input == 0
         || (world_script_check_tutorial_event_slot() != 0
-            && (world_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_CONTROLLER_INPUTS) & 0x5000))) {
+            && (script_get_variable(EVENT_SCRIPT_VAR_DISABLED_CONTROLLER_INPUTS) & 0x5000))) {
         g_world_menu_input_initial_repeat_counter = 0;
         g_world_menu_input_repeat_counter = 0;
         g_world_menu_input_secondary_repeat_counter = 0;

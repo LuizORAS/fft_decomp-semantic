@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
 
 #define ATTACK_NAME_BYTES 16
 #define ATTACK_NAME_END   0xfe

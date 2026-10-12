@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/script.h"
 #include "fft/world.h"
 
 /*
@@ -22,7 +23,7 @@ s32 world_menu_dispatch_system_function(
     g_world_menu_restore_pending = 0;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     if (command == BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK) {
-        value = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+        value = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if (value >= EVENT_ID_TUTORIAL_FIRST && value <= EVENT_ID_TUTORIAL_LAST) {
             if (option != 2) {
                 world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
@@ -49,7 +50,7 @@ s32 world_menu_dispatch_system_function(
                     }
                 }
                 if ((action_check_battle_outcome() < 0 || count != 0)
-                    && world_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0) {
+                    && script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0) {
                     if (option != 2) {
                         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_GAME_OVER);
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
@@ -68,8 +69,7 @@ s32 world_menu_dispatch_system_function(
                             g_world_menu_overlay_state = 1;
                             world_script_start_current_event_thread();
                         } else {
-                            g_world_finish_operation_event_id
-                                = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+                            g_world_finish_operation_event_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
                             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, value);
                         }
                         return MENU_SYSTEM_DISPATCH_EVENT;
@@ -78,11 +78,11 @@ s32 world_menu_dispatch_system_function(
                         world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
                     }
                     return MENU_SYSTEM_DISPATCH_DONE;
-                } else if (world_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
+                } else if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
                     if (option != 2) {
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
                         g_world_menu_overlay_state = 1;
-                        if (world_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
+                        if (script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
                             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_DEBUG_BATTLE_START);
                         } else {
                             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_BATTLE_START);
@@ -246,7 +246,7 @@ s32 world_menu_dispatch_system_function(
             item = main_item_get_data_pointer(option);
             g_text_substitution_values[2] = item->price >> 2;
             world_script_set_variable(
-                EVENT_SCRIPT_VAR_WAR_FUNDS, (item->price >> 2) + world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS));
+                EVENT_SCRIPT_VAR_WAR_FUNDS, (item->price >> 2) + script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS));
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_MOVE_FIND_ITEM_SOLD);
         } else {
             main_item_get_data_pointer(option);

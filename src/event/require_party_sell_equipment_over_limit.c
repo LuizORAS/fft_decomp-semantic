@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/script.h"
 
 /* Sell each of a battle unit's seven equipped items of which 100 or more are
  * already held or equipped, for a quarter of its price, and remove it from

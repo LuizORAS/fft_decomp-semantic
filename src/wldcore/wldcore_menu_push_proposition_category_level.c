@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Push list-window menu level 0x25.
@@ -36,8 +37,7 @@ void wldcore_menu_push_proposition_category_level(void) {
     }
     completed = 0;
     for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
-            & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
             completed++;
         }
     }

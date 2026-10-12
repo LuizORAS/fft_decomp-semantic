@@ -78,7 +78,7 @@ void world_script_execute_event(void) {
         g_world_menu_right_unit_stats_display.y = 0xAA;
     }
     world_unit_clear_status_staging_data();
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
         world_unit_update_staged_status_data(0, 0);
     } else {
         world_script_process_inflict_status_commands();
@@ -94,7 +94,7 @@ restart_event:
         s32 empty_unit_id = EVENT_UNIT_SLOT_EMPTY;
         /* Keep the shared fill value available before the countdown initializer. */
         for (work_index = 3; work_index >= 0; work_index--) {
-            g_world_event_unit_slots[work_index] = empty_unit_id;
+            g_script_unit_slots[work_index] = empty_unit_id;
         }
     }
     for (;;) {
@@ -122,7 +122,7 @@ restart_event:
         }
         /* ---- Scenario progression: DismissUnit, CallFunction, BlueRemoveUnit, EventEnd ---- */
         else if (opcode == EVENT_OPCODE_DISMISS_UNIT) {
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
                 world_script_dismiss_unit_event_instruction(first_operand);
             }
         } else if (opcode == EVENT_OPCODE_CALL_FUNCTION) {
@@ -130,9 +130,9 @@ restart_event:
              * and 14 reuse operand_1 as a loop index and later tests see the
              * changed value. That target-visible fallthrough is preserved. */
             world_thread_wait_frames(4);
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
                 if (operand_1 == EVENT_CALL_FUNCTION_JOIN_UNITS_SILENTLY) {
-                    if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) < EVENT_ID_NEW_GAME_INVENTORY_END) {
+                    if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) < EVENT_ID_NEW_GAME_INVENTORY_END) {
                         main_item_init_new_game_inventory();
                     }
                     world_script_join_units_silently();
@@ -145,7 +145,7 @@ restart_event:
                         world_thread_wait_until_inactive(operand_1);
                         operand_1 += 1;
                     } while (operand_1 < 0xF);
-                    if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_EPILOGUE) {
+                    if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_EPILOGUE) {
                         world_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
@@ -283,7 +283,7 @@ restart_event:
                     world_thread_wait_until_inactive(work_index);
                 }
             }
-            operand_1 = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+            operand_1 = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
             if (operand_1 != EVENT_ID_OLAN_WOUNDED) {
                 if (operand_1 != EVENT_ID_BEOWULF_INVITATION) {
                     battle_gfx_init_evtchr_vram_slots();
@@ -736,7 +736,7 @@ restart_event:
             zalera_misc_id = script_get_misc_id(first_operand);
             if (zalera_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(zalera_misc_id);
-                if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_LIMBERRY_CEMETERY_BATTLE) {
+                if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_LIMBERRY_CEMETERY_BATTLE) {
                     world_unit_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 1);
                     g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
@@ -756,13 +756,13 @@ restart_event:
             } while (ghost_misc_id >= 0);
             for (ghost_misc_id = 0; ghost_misc_id < EVENT_UNIT_SLOT_COUNT; ghost_misc_id++) {
                 if (battle_unit_has_misc_id(ghost_misc_id) == 0) {
-                    g_world_event_unit_slots[ghost_operands[0]] = ghost_misc_id;
+                    g_script_unit_slots[ghost_operands[0]] = ghost_misc_id;
                     break;
                 }
             }
             if (ghost_misc_id != EVENT_UNIT_SLOT_COUNT) {
                 script_add_ghost_unit_event_instruction(ghost_operands[1], ghost_operands[2], ghost_operands[3],
-                    ghost_operands[4], first_operand, g_world_event_unit_slots[ghost_operands[0]], ghost_operands[5]);
+                    ghost_operands[4], first_operand, g_script_unit_slots[ghost_operands[0]], ghost_operands[5]);
                 g_world_unit_graphics_load_pending = 1U;
             } else {
                 continue;
@@ -879,10 +879,10 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_PLAY_TUNE) {
             main_sound_play_tune(operand_1);
         } else if (opcode == EVENT_OPCODE_UNLOCK_DATE) {
-            if ((world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) && (operand_1 != 0)) {
-                month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+            if ((script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) && (operand_1 != 0)) {
+                month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
                 world_script_unlockdate_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1, month,
-                    world_script_get_variable(EVENT_SCRIPT_VAR_DAY));
+                    script_get_variable(EVENT_SCRIPT_VAR_DAY));
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {
             palette_misc_id = script_get_misc_id(first_operand);
@@ -930,7 +930,7 @@ restart_event:
             world_thread_set_parameters(operand_4, (s8)operand_1, (s8)operand_2, (s8)operand_3);
             world_thread_wait_until_inactive(operand_4);
         } else if (opcode == EVENT_OPCODE_SET_DATE_ADVANCE) {
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
                 world_script_set_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE, first_operand);
             }
         } else if (opcode == EVENT_OPCODE_TELEPORT_OUT) {

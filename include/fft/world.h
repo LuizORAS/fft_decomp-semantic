@@ -235,7 +235,6 @@ extern s32 g_world_event_pending_reserved_vram_release_slot;
 extern s32 g_world_event_pending_saved_evtchr_clear_slot;
 extern s32 g_world_event_pending_unit_vram_copy;
 extern u8* g_world_event_script;
-extern s16 g_world_event_unit_slots[4];
 extern u8 g_world_event_variable_write_guard; /* WORLD counterpart: 0x80153387 */
 extern s16 g_world_event_weather_request;
 extern map_background_gradient_colors_t g_world_event_background_colors;
@@ -265,8 +264,6 @@ void world_script_focus(event_focus_parameters_t* parameters);
 void world_script_focus_speed(u8* parameters, s32* position, s32* rotation);
 s32 world_script_get_current_scenario_finish_operation(void);
 
-/* Event variable read via the 0xb1 instruction; 0x22 is rebuilt from 0x23/0x24. */
-s32 world_script_get_variable(s32 variable_id);
 s32 world_script_handle_tutorial_command(void);
 void world_script_handle_tutorial_command_change_dialog(void);
 void world_script_handle_tutorial_command_display_message(void);
@@ -422,7 +419,6 @@ void world_script_frame_after_requests_stub(void);
 void world_card_close_stub(void);
 void world_menu_open_companion_executable(void);
 void world_menu_open_companion_data_file(void);
-void world_script_report_missing_unit_stub(s32 unused_unit_id);
 void world_script_opcode_74_event_instruction(const u8* unused_parameters);
 
 /* thread */
