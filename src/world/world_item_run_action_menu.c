@@ -34,7 +34,7 @@ s8 world_item_run_action_menu(void) {
                 != 0) {
             text[1] = 0;
             g_world_item_action_option_states[0] = 1;
-            g_world_item_action_quantity_range.max = result;
+            g_world_item_action_quantity_range.bounds.max = result;
         } else {
             text[1] = 4;
             g_world_item_action_option_states[0] = 0x14D2;

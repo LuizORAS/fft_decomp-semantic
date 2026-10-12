@@ -2077,8 +2077,7 @@ typedef struct world_menu_image_pages {
 /* Value range of a numeric menu entry (world_menu_number_entry_thread and
  * world_menu_labeled_number_entry_thread). */
 typedef struct world_menu_number_range {
-    s16 min;                 /* 0x00 */
-    s16 max;                 /* 0x02 */
+    ranges16_t bounds;       /* 0x00 */
     s16 _unknown_04[2];      /* 0x04: -1 from wldcore_window_init_number_panel_render_thread */
     void (*on_change)(void); /* 0x08 */
 } world_menu_number_range_t;

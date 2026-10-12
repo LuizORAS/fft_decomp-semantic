@@ -38,6 +38,21 @@ typedef char assert_palette_size[sizeof(palette_t) == 32 ? 1 : -1];
 typedef palette_t clut_t[CLUT_PALETTE_COUNT];
 typedef char assert_clut_size[sizeof(clut_t) == 512 ? 1 : -1];
 
+/* ranges */
+/* Signed 16-bit lower and upper bounds. */
+typedef struct ranges16 {
+    s16 min;
+    s16 max;
+} ranges16_t;
+typedef char ranges16_size_must_be_4[sizeof(ranges16_t) == 4 ? 1 : -1];
+
+/* Signed 32-bit lower and upper bounds. */
+typedef struct ranges32 {
+    s32 min;
+    s32 max;
+} ranges32_t;
+typedef char ranges32_size_must_be_8[sizeof(ranges32_t) == 8 ? 1 : -1];
+
 /* geometry */
 /* Use DVECTOR for GTE screen coordinates, SVECTOR/VECTOR for padded GTE
  * vectors, RECT for signed rectangles and CVECTOR for r/g/b plus a code byte.

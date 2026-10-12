@@ -250,14 +250,14 @@ editor:
                     value = g_debugchr_editor_current_field->value;
                     cur = *value;
                     /* Shared pointers or a combined range test change address materialization. */
-                    up_lo = &g_debugchr_editor_template[row].lo;
+                    up_lo = &g_debugchr_editor_template[row].min;
                     if (cur < *up_lo) {
                         goto clamp_hi;
                     }
-                    up_hi = &g_debugchr_editor_template[row].hi;
+                    up_hi = &g_debugchr_editor_template[row].max;
                     if (*up_hi < cur) {
                     clamp_hi:
-                        up_clamp = &g_debugchr_editor_template[row].hi;
+                        up_clamp = &g_debugchr_editor_template[row].max;
                         *value = *up_clamp - 1;
                     }
                     if (PadRead(1) & PSX_PAD_L1) {
@@ -266,7 +266,7 @@ editor:
                         steps = 1;
                     }
                     for (i = 0; i < steps; i++) {
-                        hi_limit = &g_debugchr_editor_template[row].hi;
+                        hi_limit = &g_debugchr_editor_template[row].max;
                         span = row - 9;
                         clearable = span < 5U;
                         /* The native loop computes this range test without reading its result. */
@@ -289,11 +289,11 @@ editor:
                 } else {
                     down_value = g_debugchr_editor_current_field->value;
                     cur = *down_value;
-                    dn_lo = &g_debugchr_editor_template[row].lo;
+                    dn_lo = &g_debugchr_editor_template[row].min;
                     if (cur < *dn_lo) {
                         goto clamp_lo;
                     }
-                    dn_hi = &g_debugchr_editor_template[row].hi;
+                    dn_hi = &g_debugchr_editor_template[row].max;
                     if (*dn_hi < cur) {
                     clamp_lo:
                         *down_value = *dn_lo + 1;
@@ -304,7 +304,7 @@ editor:
                         steps = 1;
                     }
                     for (i = 0; i < steps; i++) {
-                        lo_limit = &g_debugchr_editor_template[row].lo;
+                        lo_limit = &g_debugchr_editor_template[row].min;
                         span = row - 9;
                         clearable = span < 5U;
                         /* The native loop computes this range test without reading its result. */

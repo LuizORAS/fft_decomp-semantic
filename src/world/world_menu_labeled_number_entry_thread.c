@@ -36,11 +36,11 @@ void world_menu_labeled_number_entry_thread(void) {
     thread = &g_world_threads[g_world_thread_current_id];
     param = *(menu_entry_t**)thread;
     range = param->context;
-    digits = world_text_count_decimal_digits(range->max);
+    digits = world_text_count_decimal_digits(range->bounds.max);
     original = *menu_entry_result(param);
     value = original;
-    if (value < range->min || range->max < value) {
-        value = range->min;
+    if (value < range->bounds.min || range->bounds.max < value) {
+        value = range->bounds.min;
     }
     world_menu_build_icon_record(&rect, param, &record);
     for (i = 0; i < 2; i++) {
@@ -115,18 +115,18 @@ void world_menu_labeled_number_entry_thread(void) {
                 digit++;
             }
             if (*g_world_menu_list_controller_input & PSX_PAD_UP) {
-                if (value <= range->max - g_world_menu_number_entry_digit_steps[digit]) {
+                if (value <= range->bounds.max - g_world_menu_number_entry_digit_steps[digit]) {
                     value += g_world_menu_number_entry_digit_steps[digit];
                 } else {
-                    value = range->max;
+                    value = range->bounds.max;
                 }
                 redraw = 1;
             }
             if (*g_world_menu_list_controller_input & PSX_PAD_DOWN) {
-                if (value >= range->min + g_world_menu_number_entry_digit_steps[digit]) {
+                if (value >= range->bounds.min + g_world_menu_number_entry_digit_steps[digit]) {
                     value -= g_world_menu_number_entry_digit_steps[digit];
                 } else {
-                    value = range->min;
+                    value = range->bounds.min;
                 }
                 redraw = 1;
             }

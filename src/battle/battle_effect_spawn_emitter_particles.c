@@ -334,17 +334,17 @@ s32 battle_effect_spawn_emitter_particles(
         factor = 0;
     }
     accel_min.vx
-        = battle_lerp_fixed8(entry->emitter.acceleration_start.x_min, entry->emitter.acceleration_end.x_min, factor);
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.x.min, entry->emitter.acceleration_end.x.min, factor);
     accel_max.vx
-        = battle_lerp_fixed8(entry->emitter.acceleration_start.x_max, entry->emitter.acceleration_end.x_max, factor);
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.x.max, entry->emitter.acceleration_end.x.max, factor);
     accel_min.vy
-        = battle_lerp_fixed8(entry->emitter.acceleration_start.y_min, entry->emitter.acceleration_end.y_min, factor);
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.y.min, entry->emitter.acceleration_end.y.min, factor);
     accel_max.vy
-        = battle_lerp_fixed8(entry->emitter.acceleration_start.y_max, entry->emitter.acceleration_end.y_max, factor);
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.y.max, entry->emitter.acceleration_end.y.max, factor);
     accel_min.vz
-        = battle_lerp_fixed8(entry->emitter.acceleration_start.z_min, entry->emitter.acceleration_end.z_min, factor);
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.z.min, entry->emitter.acceleration_end.z.min, factor);
     accel_max.vz
-        = battle_lerp_fixed8(entry->emitter.acceleration_start.z_max, entry->emitter.acceleration_end.z_max, factor);
+        = battle_lerp_fixed8(entry->emitter.acceleration_start.z.max, entry->emitter.acceleration_end.z.max, factor);
     if (rotate) {
         SetRotMatrix(&matrix);
         RotTrans(&accel_min, &out, &out.pad);
@@ -360,17 +360,17 @@ s32 battle_effect_spawn_emitter_particles(
         factor = 0;
     }
     accel_step_min.vx = battle_lerp_fixed8(
-        entry->emitter.acceleration_step_start.x_min, entry->emitter.acceleration_step_end.x_min, factor);
+        entry->emitter.acceleration_step_start.x.min, entry->emitter.acceleration_step_end.x.min, factor);
     accel_step_max.vx = battle_lerp_fixed8(
-        entry->emitter.acceleration_step_start.x_max, entry->emitter.acceleration_step_end.x_max, factor);
+        entry->emitter.acceleration_step_start.x.max, entry->emitter.acceleration_step_end.x.max, factor);
     accel_step_min.vy = battle_lerp_fixed8(
-        entry->emitter.acceleration_step_start.y_min, entry->emitter.acceleration_step_end.y_min, factor);
+        entry->emitter.acceleration_step_start.y.min, entry->emitter.acceleration_step_end.y.min, factor);
     accel_step_max.vy = battle_lerp_fixed8(
-        entry->emitter.acceleration_step_start.y_max, entry->emitter.acceleration_step_end.y_max, factor);
+        entry->emitter.acceleration_step_start.y.max, entry->emitter.acceleration_step_end.y.max, factor);
     accel_step_min.vz = battle_lerp_fixed8(
-        entry->emitter.acceleration_step_start.z_min, entry->emitter.acceleration_step_end.z_min, factor);
+        entry->emitter.acceleration_step_start.z.min, entry->emitter.acceleration_step_end.z.min, factor);
     accel_step_max.vz = battle_lerp_fixed8(
-        entry->emitter.acceleration_step_start.z_max, entry->emitter.acceleration_step_end.z_max, factor);
+        entry->emitter.acceleration_step_start.z.max, entry->emitter.acceleration_step_end.z.max, factor);
     if (rotate) {
         RotTrans(&accel_step_min, &out, &out.pad);
         copyVector(&accel_step_min, &out);

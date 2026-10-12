@@ -15,8 +15,8 @@ void wldcore_window_init_number_panel_render_thread(s32 thread_id, u32 packed_va
     s32 y;
     s32 label_width;
 
-    g_wldcore_window_panel_number_state.min = min;
-    g_wldcore_window_panel_number_state.max = max;
+    g_wldcore_window_panel_number_state.bounds.min = min;
+    g_wldcore_window_panel_number_state.bounds.max = max;
     g_wldcore_window_panel_number_state._unknown_04[0] = -1;
     g_wldcore_window_panel_number_state._unknown_04[1] = -1;
     g_wldcore_window_panel_number_state.on_change = wldcore_window_number_panel_noop_callback;

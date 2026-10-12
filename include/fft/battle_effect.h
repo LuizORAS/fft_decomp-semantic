@@ -503,8 +503,7 @@ typedef struct battle_effect_emitter_values {
     vec3s16_t spread;       /* 0x10 */
     vec3s16_t angle;        /* 0x16 */
     vec3s16_t angle_spread; /* 0x1c */
-    s16 weight_min;         /* 0x22 */
-    s16 weight_max;         /* 0x24 */
+    ranges16_t weight;      /* 0x22 */
     u16 speed_min;          /* 0x26 */
     u16 speed_max;          /* 0x28 */
     u8 spawns_per_frame;    /* 0x2a; trap groups: slots one frame may start */
@@ -1367,13 +1366,6 @@ typedef struct battle_effect_slot {
 } battle_effect_slot_t;
 typedef char assert_battle_effect_slot_size[sizeof(battle_effect_slot_t) == 204 ? 1 : -1];
 
-/* Minimum and maximum values of one particle parameter. */
-typedef struct effect_s16_min_max {
-    s16 min;
-    s16 max;
-} effect_s16_min_max_t;
-typedef char effect_s16_min_max_size_must_be_4[sizeof(effect_s16_min_max_t) == 4 ? 1 : -1];
-
 /* The spawn block at 0x14-0x4b of an emitter record, as the
  * battle_effect_interpolate_emitter_* helpers read it; the native renderers
  * that spawn like the particle emitter embed it. The spread is the ellipsoid
@@ -1388,8 +1380,8 @@ typedef struct effect_emitter_geometry_view {
     vec3s16_t velocity_base_angle_end;   /* 0x32 */
     vec3s16_t velocity_spread_start;     /* 0x38 */
     vec3s16_t velocity_spread_end;       /* 0x3e */
-    effect_s16_min_max_t inertia_start;  /* 0x44 */
-    effect_s16_min_max_t inertia_end;    /* 0x48 */
+    ranges16_t inertia_start;            /* 0x44 */
+    ranges16_t inertia_end;              /* 0x48 */
 } effect_emitter_geometry_view_t;
 typedef char assert_effect_emitter_geometry_view_size[sizeof(effect_emitter_geometry_view_t) == 56 ? 1 : -1];
 
@@ -1421,12 +1413,9 @@ typedef char
 
 /* Minimum and maximum components of a particle-motion vector. */
 typedef struct effect_xyz_min_max {
-    s16 x_min;
-    s16 x_max;
-    s16 y_min;
-    s16 y_max;
-    s16 z_min;
-    s16 z_max;
+    ranges16_t x;
+    ranges16_t y;
+    ranges16_t z;
 } effect_xyz_min_max_t;
 typedef char effect_xyz_min_max_size_must_be_12[sizeof(effect_xyz_min_max_t) == 12 ? 1 : -1];
 
@@ -1461,28 +1450,28 @@ typedef struct effect_geometry_entry {
     effect_emitter_geometry_view_t spawn;         /* 0x14: initial position, spread, angles and inertia */
     s16 _unknown_4c[2];                           /* 0x4c: lerped to _unknown_50 and discarded */
     s16 _unknown_50[2];                           /* 0x50 */
-    effect_s16_min_max_t weight_start;            /* 0x54: scales gravity */
-    effect_s16_min_max_t weight_end;              /* 0x58 */
-    effect_s16_min_max_t radial_speed_start;      /* 0x5c */
-    effect_s16_min_max_t radial_speed_end;        /* 0x60 */
+    ranges16_t weight_start;                      /* 0x54: scales gravity */
+    ranges16_t weight_end;                        /* 0x58 */
+    ranges16_t radial_speed_start;                /* 0x5c */
+    ranges16_t radial_speed_end;                  /* 0x60 */
     effect_xyz_min_max_t acceleration_start;      /* 0x64 */
     effect_xyz_min_max_t acceleration_end;        /* 0x70 */
     effect_xyz_min_max_t acceleration_step_start; /* 0x7c */
     effect_xyz_min_max_t acceleration_step_end;   /* 0x88 */
-    effect_s16_min_max_t lifetime_start;          /* 0x94: in frames */
-    effect_s16_min_max_t lifetime_end;            /* 0x98 */
+    ranges16_t lifetime_start;                    /* 0x94: in frames */
+    ranges16_t lifetime_end;                      /* 0x98 */
     vec3s16_t target_offset_start; /* 0x9c: homing target, an offset from what effect_emitter_homing_e names */
     vec3s16_t target_offset_end;   /* 0xa2 */
     u8 _unused_a8[0x08];
-    s16 particle_count_start;                   /* 0xb0: particles per spawn */
-    s16 particle_count_end;                     /* 0xb2 */
-    s16 spawn_interval_start;                   /* 0xb4: frames between spawns */
-    s16 spawn_interval_end;                     /* 0xb6 */
-    effect_s16_min_max_t homing_strength_start; /* 0xb8 */
-    effect_s16_min_max_t homing_strength_end;   /* 0xbc */
-    u8 child_emitter_on_death;                  /* 0xc0: see EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK */
-    u8 child_emitter_mid_life;                  /* 0xc1: see EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK */
-    u8 _padding_c2[0x02];                       /* tail padding to 4-byte alignment */
+    s16 particle_count_start;         /* 0xb0: particles per spawn */
+    s16 particle_count_end;           /* 0xb2 */
+    s16 spawn_interval_start;         /* 0xb4: frames between spawns */
+    s16 spawn_interval_end;           /* 0xb6 */
+    ranges16_t homing_strength_start; /* 0xb8 */
+    ranges16_t homing_strength_end;   /* 0xbc */
+    u8 child_emitter_on_death;        /* 0xc0: see EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK */
+    u8 child_emitter_mid_life;        /* 0xc1: see EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK */
+    u8 _padding_c2[0x02];             /* tail padding to 4-byte alignment */
 } effect_geometry_entry_t;
 typedef char assert_effect_geometry_entry_size[sizeof(effect_geometry_entry_t) == 196 ? 1 : -1];
 
@@ -1588,11 +1577,9 @@ typedef struct effect_particle_ribbon_geometry_view {
     u8 _unused_50[0x04];
     s16 ot_depth; /* 0x54 */
     u8 _unused_56[0x06];
-    s16 radial_speed_min_start; /* 0x5c */
-    s16 radial_speed_max_start; /* 0x5e */
-    s16 radial_speed_min_end;   /* 0x60 */
-    s16 radial_speed_max_end;   /* 0x62 */
-    s16 texture_u;              /* 0x64 */
+    ranges16_t radial_speed_start; /* 0x5c */
+    ranges16_t radial_speed_end;   /* 0x60 */
+    s16 texture_u;                 /* 0x64 */
     u8 _unused_66[0x02];
     s16 texture_v; /* 0x68 */
     u8 _unused_6a[0x02];
@@ -1611,12 +1598,12 @@ typedef struct effect_particle_ribbon_geometry_view {
     u8 _unused_8e[2];
     s16 target_spread_end_z; /* 0x90 */
     u8 _unused_92[2];
-    effect_s16_min_max_t lifetime_start; /* 0x94 */
-    effect_s16_min_max_t lifetime_end;   /* 0x98 */
-    vec3s16_t target_offset_start;       /* 0x9c */
-    vec3s16_t target_offset_end;         /* 0xa2 */
-    s16 texture_width;                   /* 0xa8 */
-    s16 texture_height;                  /* 0xaa */
+    ranges16_t lifetime_start;     /* 0x94 */
+    ranges16_t lifetime_end;       /* 0x98 */
+    vec3s16_t target_offset_start; /* 0x9c */
+    vec3s16_t target_offset_end;   /* 0xa2 */
+    s16 texture_width;             /* 0xa8 */
+    s16 texture_height;            /* 0xaa */
     u8 _unused_ac[0x04];
     s16 particle_count_start; /* 0xb0 */
     s16 particle_count_end;   /* 0xb2 */
@@ -1825,11 +1812,9 @@ typedef struct effect_tentacle_mesh_geometry_view {
     u8 _unused_50[0x04];
     s16 ot_depth; /* 0x54: added to each quad's depth */
     u8 _unused_56[0x06];
-    s16 radial_speed_min_start; /* 0x5c */
-    s16 radial_speed_max_start; /* 0x5e */
-    s16 radial_speed_min_end;   /* 0x60 */
-    s16 radial_speed_max_end;   /* 0x62 */
-    s16 texture_u;              /* 0x64 */
+    ranges16_t radial_speed_start; /* 0x5c */
+    ranges16_t radial_speed_end;   /* 0x60 */
+    s16 texture_u;                 /* 0x64 */
     u8 _unused_66[0x02];
     s16 texture_v; /* 0x68 */
     u8 _unused_6a[0x02];
@@ -1848,12 +1833,12 @@ typedef struct effect_tentacle_mesh_geometry_view {
     u8 _unused_8e[0x02];
     s16 tip_spread_end_z; /* 0x90 */
     u8 _unused_92[0x02];
-    effect_s16_min_max_t lifetime_start; /* 0x94: the segment's length */
-    effect_s16_min_max_t lifetime_end;   /* 0x98 */
-    vec3s16_t target_offset_start;       /* 0x9c: the tip, added to the anchor chosen by placement_flags bits 5-7 */
-    vec3s16_t target_offset_end;         /* 0xa2 */
-    s16 texture_width;                   /* 0xa8 */
-    s16 texture_height;                  /* 0xaa */
+    ranges16_t lifetime_start;     /* 0x94: the segment's length */
+    ranges16_t lifetime_end;       /* 0x98 */
+    vec3s16_t target_offset_start; /* 0x9c: the tip, added to the anchor chosen by placement_flags bits 5-7 */
+    vec3s16_t target_offset_end;   /* 0xa2 */
+    s16 texture_width;             /* 0xa8 */
+    s16 texture_height;            /* 0xaa */
     u8 _unused_ac[0x04];
     s16 particle_count_start; /* 0xb0: segments spawned per interval */
     s16 particle_count_end;   /* 0xb2 */

@@ -6,12 +6,6 @@
 #include "fft/battle.h"
 
 /* editor */
-/* Inclusive value range for one editable field row. */
-typedef struct debug_range {
-    s32 lo; /* 0x00 */
-    s32 hi; /* 0x04 */
-} debug_range_t;
-
 extern s32 g_debugchr_editor_active;
 extern u8 g_debugchr_editor_unit_name[];
 extern s16 g_debugchr_editor_first_maximum;
@@ -39,7 +33,7 @@ extern s32 g_debugchr_editor_selected_unit_slot;
 extern u8 g_debugchr_editor_speed;
 
 /* 0x801c5e34; per-row value ranges, copied from the _normal or _special table. */
-extern debug_range_t g_debugchr_editor_template[21];
+extern ranges32_t g_debugchr_editor_template[21];
 extern u8 g_debugchr_editor_template_normal[];
 extern u8 g_debugchr_editor_template_special[];
 extern u8 g_debugchr_editor_primary_skillset_name[];

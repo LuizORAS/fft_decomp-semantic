@@ -145,6 +145,6 @@ s32 battle_effect_spawn_particle_motion(battle_effect_emitter_values_t* values, 
     motion->acceleration.x = motion->acceleration.y = motion->acceleration.z = motion->acceleration_step.x
         = motion->acceleration_step.y = motion->acceleration_step.z = 0;
     motion->inertia = ONE;
-    motion->weight = battle_effect_get_random_between(values->weight_min, values->weight_max);
+    motion->weight = battle_effect_get_random_between(values->weight.min, values->weight.max);
     return battle_effect_get_random_between(values->lifetime_min, values->lifetime_max);
 }

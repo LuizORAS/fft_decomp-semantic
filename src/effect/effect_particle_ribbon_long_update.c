@@ -239,12 +239,12 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
             if (j != -1) {
                 factor = g_battle_effect_animation_curve_data->curves[j][frame];
                 speed_min = battle_lerp_fixed8(
-                    entry->particle_ribbon.radial_speed_min_start, entry->particle_ribbon.radial_speed_min_end, factor);
+                    entry->particle_ribbon.radial_speed_start.min, entry->particle_ribbon.radial_speed_end.min, factor);
                 speed_max = battle_lerp_fixed8(
-                    entry->particle_ribbon.radial_speed_max_start, entry->particle_ribbon.radial_speed_max_end, factor);
+                    entry->particle_ribbon.radial_speed_start.max, entry->particle_ribbon.radial_speed_end.max, factor);
             } else {
-                speed_min = entry->particle_ribbon.radial_speed_min_start;
-                speed_max = entry->particle_ribbon.radial_speed_max_start;
+                speed_min = entry->particle_ribbon.radial_speed_start.min;
+                speed_max = entry->particle_ribbon.radial_speed_start.max;
             }
 
             BATTLE_EFFECT_READ_CURVE(j, factor,
