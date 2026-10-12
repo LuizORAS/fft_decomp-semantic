@@ -1033,12 +1033,6 @@ typedef enum party_name_class {
     PARTY_NAME_CLASS_GENERIC_MONSTER = 3
 } party_name_class_e;
 
-/* Encoded name-id class bits. */
-enum {
-    PARTY_NAME_CLASS_SHIFT = 8,
-    PARTY_NAME_CLASS_MASK = 0x0300,
-};
-
 /* Serialized birthday and zodiac bits. */
 enum {
     PARTY_BIRTHDAY_DAY_MASK = 0x01ff,
@@ -1053,6 +1047,13 @@ typedef struct party_name_id {
     u8 name_class;
 } party_name_id_t;
 typedef char party_name_id_size_must_be_2[(sizeof(party_name_id_t) == 2) ? 1 : -1];
+
+/* A packed unit-name ID and its index and text-page class. */
+typedef union unit_name_id {
+    u16 value;
+    party_name_id_t fields;
+} unit_name_id_t;
+typedef char unit_name_id_size_must_be_2[(sizeof(unit_name_id_t) == 2) ? 1 : -1];
 
 /*
  * Persistent roster record. Its 0x100-byte stride is established by the

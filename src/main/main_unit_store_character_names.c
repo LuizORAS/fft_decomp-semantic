@@ -15,9 +15,10 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     u8 unused[0x100];
     u8* (*prepare_text)(u32 text_id);
     u32 text_id;
-    u32 name_base;
+    unit_name_id_t name_base;
     u8 gender;
-    u16 name_id;
+    unit_name_id_t name_id;
+    unit_name_id_t existing_name;
     u8 name_index;
     s32 name_available;
     s32 i;
@@ -33,27 +34,33 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     if (unit->formation_index == PARTY_ID_NONE) {
         text_id = TEXT_ID_UNIT_NAME_SPECIAL_BASE;
         name_index = unit->quote_name_id;
-        name_id = name_index;
-        if (name_id == 0xff) {
+        name_id.value = name_index;
+        if (name_id.value == 0xff) {
             gender = unit->unit_flags & NAME_GENDER_MASK;
             if (unit->unit_flags & UNIT_FLAG_MALE) {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
-                name_base = PARTY_NAME_CLASS_GENERIC_MALE << PARTY_NAME_CLASS_SHIFT;
+                name_base.value = 0;
+                name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_MALE;
             } else if (unit->unit_flags & UNIT_FLAG_FEMALE) {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_FEMALE_BASE;
-                name_base = PARTY_NAME_CLASS_GENERIC_FEMALE << PARTY_NAME_CLASS_SHIFT;
+                name_base.value = 0;
+                name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_FEMALE;
             } else {
                 text_id = TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE;
-                name_base = PARTY_NAME_CLASS_GENERIC_MONSTER << PARTY_NAME_CLASS_SHIFT;
+                name_base.value = 0;
+                name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_MONSTER;
             }
             do {
                 name_available = 1;
-                name_id = name_base + (rand() * 255) / 0x8000;
+                name_id.value = name_base.value + (rand() * 255) / 0x8000;
                 for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
                     party = &g_main_party_data[i];
                     if (party->party_id != PARTY_ID_NONE && gender == (party->gender_flags & NAME_GENDER_MASK)) {
                         name_id_record = &party->name_id;
-                        if ((name_id_record->index | (name_id_record->name_class << 8)) == name_id) {
+                        existing_name.value = 0;
+                        existing_name.fields.name_class = name_id_record->name_class;
+                        existing_name.fields.index = name_id_record->index;
+                        if (existing_name.value == name_id.value) {
                             name_available = 0;
                             break;
                         }
@@ -61,15 +68,15 @@ void main_unit_store_character_names(battle_stats_t* unit) {
                 }
                 for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                     other = &g_battle_unit_stats[i];
-                    if (gender == (other->unit_flags & NAME_GENDER_MASK) && other->quote_name_id == name_id) {
+                    if (gender == (other->unit_flags & NAME_GENDER_MASK) && other->quote_name_id == name_id.value) {
                         name_available = 0;
                         break;
                     }
                 }
             } while (name_available == 0);
-            unit->quote_name_id = name_id;
+            unit->quote_name_id = name_id.value;
         }
-        name_index = name_id;
+        name_index = name_id.fields.index;
         text_id += name_index;
         text = prepare_text(text_id);
     } else {

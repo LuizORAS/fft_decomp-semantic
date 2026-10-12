@@ -12,43 +12,46 @@
  * same kind has it. */
 void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_type_e unit_type) {
     s32 name_flags;
-    u32 name_modifier;
+    unit_name_id_t name_base;
+    unit_name_id_t name_id;
+    unit_name_id_t existing_name;
     u16 birthday;
     s32 zodiac;
     s32 gender;
     s32 i;
-    u32 name_id;
     u8 generic_id;
     main_unit_generation_base_data_t* base;
     main_unit_generation_base_data_t* table;
     party_data_t* other;
     s32 found;
     s32 jp;
-    u32 hi;
-    u8 name_id_hi;
 
     if (unit_type == MAIN_UNIT_TYPE_MALE) {
         name_flags = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
-        name_modifier = PARTY_NAME_CLASS_GENERIC_MALE << PARTY_NAME_CLASS_SHIFT;
+        name_base.value = 0;
+        name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_MALE;
         party->sprite_set = CHARACTER_IDENTITY_GENERIC_MALE;
         party->gender_flags = UNIT_FLAG_MALE;
         party->job_id = JOB_ID_SQUIRE;
     } else if (unit_type == MAIN_UNIT_TYPE_FEMALE) {
         name_flags = TEXT_ID_UNIT_NAME_GENERIC_FEMALE_BASE;
-        name_modifier = PARTY_NAME_CLASS_GENERIC_FEMALE << PARTY_NAME_CLASS_SHIFT;
+        name_base.value = 0;
+        name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_FEMALE;
         party->sprite_set = CHARACTER_IDENTITY_GENERIC_FEMALE;
         party->gender_flags = UNIT_FLAG_FEMALE;
         party->job_id = JOB_ID_SQUIRE;
     } else if (unit_type == MAIN_UNIT_TYPE_MONSTER) {
         name_flags = TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE;
-        name_modifier = PARTY_NAME_CLASS_GENERIC_MONSTER << PARTY_NAME_CLASS_SHIFT;
+        name_base.value = 0;
+        name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_MONSTER;
         party->sprite_set = CHARACTER_IDENTITY_MONSTER;
         party->gender_flags = UNIT_FLAG_MONSTER;
         party->job_id = JOB_ID_SQUIRE;
     } else {
         name_flags = TEXT_ID_UNIT_NAME_SPECIAL_BASE;
         unit_type = MAIN_UNIT_TYPE_RAMZA;
-        name_modifier = PARTY_NAME_CLASS_SPECIAL << PARTY_NAME_CLASS_SHIFT;
+        name_base.value = 0;
+        name_base.fields.name_class = PARTY_NAME_CLASS_SPECIAL;
         party->sprite_set = CHARACTER_IDENTITY_RAMZA_CHAPTER_1;
         party->gender_flags = UNIT_FLAG_MALE;
         party->job_id = JOB_ID_SQUIRE_RAMZA_CHAPTER_1;
@@ -106,29 +109,31 @@ void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_
         party->equipment[i] = base->equipment[i];
     }
 
-    hi = name_modifier >> PARTY_NAME_CLASS_SHIFT;
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
-        name_id = 1;
+        name_id.value = 1;
     } else {
         party->name_id.index = 0xff;
-        party->name_id.name_class = hi;
+        party->name_id.name_class = name_base.fields.name_class;
         do {
             found = 1;
-            name_id = name_modifier + (rand() * 255) / 0x8000;
+            name_id.value = name_base.value + (rand() * 255) / 0x8000;
             for (i = 0; i < PARTY_MEMBER_SLOT_COUNT; i++) {
                 other = &g_main_party_data[i];
-                if (other->party_id != PARTY_ID_NONE && (other->sprite_set & -(other->sprite_set >> 7)) == generic_id
-                    && (other->name_id.index | (other->name_id.name_class << 8)) == (name_id & 0xffff)) {
-                    found = 0;
-                    break;
+                if (other->party_id != PARTY_ID_NONE && (other->sprite_set & -(other->sprite_set >> 7)) == generic_id) {
+                    existing_name.value = 0;
+                    existing_name.fields.name_class = other->name_id.name_class;
+                    existing_name.fields.index = other->name_id.index;
+                    if (existing_name.value == name_id.value) {
+                        found = 0;
+                        break;
+                    }
                 }
             }
         } while (found == 0);
     }
-    name_id_hi = name_id >> PARTY_NAME_CLASS_SHIFT;
-    party->name_id.index = name_id;
-    party->name_id.name_class = name_id_hi;
-    name_flags += name_id & 0xff;
+    party->name_id.index = name_id.fields.index;
+    party->name_id.name_class = name_id.fields.name_class;
+    name_flags += name_id.fields.index;
     main_util_copy_bytes(world_text_find_entry(name_flags), party->name, sizeof(party->name));
     party->proposition_status = 0;
     party->egg_color = 0;
