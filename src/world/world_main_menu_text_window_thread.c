@@ -2,14 +2,14 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Two draw modes and three sprites, double-buffered by the thread below. */
+/* The text sprite and the two frame sprites, double-buffered by the thread below. */
 typedef struct world_menu_text_window_record {
-    DR_MODE mode_a;
-    DR_MODE mode_b;
-    SPRT sprite_a;
-    SPRT sprite_b;
-    SPRT sprite_c;
+    DR_MODE text_draw_mode;
+    DR_MODE frame_draw_mode;
+    SPRT text_sprite;
+    SPRT frame_sprites[2];
 } world_menu_text_window_record_t;
+typedef char world_menu_text_window_record_size_must_be_84[sizeof(world_menu_text_window_record_t) == 84 ? 1 : -1];
 
 /* Main menu text window thread:
  * sizes the entry's window to its text, clamps it on screen, redraws the text
@@ -32,9 +32,9 @@ void world_main_menu_text_window_thread(void) {
 
     entry = world_thread_get_current_parameter_1();
     record = records;
-    world_gfx_set_draw_mode_from_origin(&record->mode_a, &entry->vram_origin);
-    world_gfx_set_draw_mode_for_texture_page(&record->mode_b, MENU_TEXTURE_PAGE_FRAME);
-    world_menu_build_layout_sprites(entry, &record->sprite_b, 0);
+    world_gfx_set_draw_mode_from_origin(&record->text_draw_mode, &entry->vram_origin);
+    world_gfx_set_draw_mode_for_texture_page(&record->frame_draw_mode, MENU_TEXTURE_PAGE_FRAME);
+    world_menu_build_layout_sprites(entry, record->frame_sprites, 0);
     world_script_copy_bytes(g_world_text_substitution_values_backup, g_world_text_substitution_values,
         sizeof(g_world_text_substitution_values_backup));
     text_values = entry->value;
@@ -66,11 +66,11 @@ void world_main_menu_text_window_thread(void) {
     } else if (entry->window.y < -0x78) {
         entry->window.y = -0x68;
     }
-    world_menu_init_quad_from_record(&rect, entry, &record->sprite_a);
-    SetSemiTrans(&record->sprite_a, 1);
-    SetShadeTex(&record->sprite_a, 0);
-    SetSemiTrans(&record->sprite_b, 1);
-    SetShadeTex(&record->sprite_b, 0);
+    world_menu_init_quad_from_record(&rect, entry, &record->text_sprite);
+    SetSemiTrans(&record->text_sprite, 1);
+    SetShadeTex(&record->text_sprite, 0);
+    SetSemiTrans(&record->frame_sprites[0], 1);
+    SetShadeTex(&record->frame_sprites[0], 0);
     world_script_copy_bytes(&records[1], &records[0], sizeof(world_menu_text_window_record_t));
     target = 0;
     for (i = 0;; i++) {
@@ -101,11 +101,11 @@ void world_main_menu_text_window_thread(void) {
             break;
         }
         if (g_world_menu_use_alternate_main_palette != 0) {
-            record->sprite_a.clut = 0x7D3C;
-            record->sprite_b.clut = 0x7C7C;
+            record->text_sprite.clut = 0x7D3C;
+            record->frame_sprites[0].clut = 0x7C7C;
         } else {
-            record->sprite_a.clut = 0x7C3C;
-            record->sprite_b.clut = 0x7CBC;
+            record->text_sprite.clut = 0x7C3C;
+            record->frame_sprites[0].clut = 0x7CBC;
         }
         if (g_world_threads[g_world_thread_current_id].task_id == NATIVE_THREAD_TASK_MENU_GROUP_SECOND_WINDOW) {
             if (g_world_menu_main_scroll_threshold > 0x28 && target == 0) {
@@ -132,14 +132,14 @@ void world_main_menu_text_window_thread(void) {
                     }
                 }
             }
-            record->sprite_a.x0 = entry->window.x;
+            record->text_sprite.x0 = entry->window.x;
         }
-        setRGB0(&record->sprite_b, g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
-        world_gfx_draw_or_append_gpu_primitive(&record->sprite_b);
-        world_gfx_draw_or_append_gpu_primitive(&record->mode_b);
-        setRGB0(&record->sprite_a, g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
-        world_gfx_draw_or_append_gpu_primitive(&record->sprite_a);
-        world_gfx_draw_or_append_gpu_primitive(&record->mode_a);
+        setRGB0(&record->frame_sprites[0], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
+        world_gfx_draw_or_append_gpu_primitive(&record->frame_sprites[0]);
+        world_gfx_draw_or_append_gpu_primitive(&record->frame_draw_mode);
+        setRGB0(&record->text_sprite, g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
+        world_gfx_draw_or_append_gpu_primitive(&record->text_sprite);
+        world_gfx_draw_or_append_gpu_primitive(&record->text_draw_mode);
     }
     world_thread_yield();
     world_thread_exit_current();

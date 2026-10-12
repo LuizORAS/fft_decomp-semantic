@@ -7,7 +7,7 @@
  *
  * `mode` is reused to carry the y coordinate once the mode test is done; that
  * reuse is what puts the y value in the target's v1. */
-void world_menu_build_layout_sprites(menu_entry_t* entry, SPRT* sprite, s32 unused_2) {
+void world_menu_build_layout_sprites(menu_entry_t* entry, SPRT sprite[2], s32 unused_2) {
     u16 x;
     s32 mode;
 

@@ -12,7 +12,7 @@ void bunit_menu_run_numeric_editor_thread(void) {
     menu_status_thread_t* thread;
     menu_status_panel_numeric_buffer_t* buffer;
     menu_status_panel_numeric_buffer_t* buffers;
-    u8* text_pixels;
+    menu_unit_stat_number_images_t* number_images;
     menu_number_entry_t* entries;
     RECT* upload_a;
     RECT* upload_b;
@@ -29,7 +29,7 @@ void bunit_menu_run_numeric_editor_thread(void) {
     if (g_battle_current_thread_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
         buffer = g_bunit_editor_numeric_state_a;
         buffers = buffer;
-        text_pixels = g_bunit_editor_numeric_text_a;
+        number_images = &g_bunit_editor_numeric_text_a;
         upload_a = &g_bunit_editor_numeric_entries_a;
         upload_b = &g_bunit_editor_numeric_entries_b;
         upload_c = &g_bunit_editor_numeric_entries_c;
@@ -37,7 +37,7 @@ void bunit_menu_run_numeric_editor_thread(void) {
     } else {
         buffer = g_bunit_editor_numeric_state_b;
         buffers = buffer;
-        text_pixels = g_bunit_editor_numeric_text_b;
+        number_images = &g_bunit_editor_numeric_text_b;
         upload_a = &g_bunit_editor_numeric_entries_d;
         upload_b = &g_bunit_editor_numeric_entries_e;
         upload_c = &g_bunit_editor_numeric_entries_f;
@@ -68,31 +68,33 @@ void bunit_menu_run_numeric_editor_thread(void) {
     for (frame = 0;; frame++) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
-            battle_clear_menu_render_buffer(text_pixels, 0x918);
+            battle_clear_menu_render_buffer(number_images, sizeof(*number_images));
             g_menu_text_state.pen.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
-                bunit_text_render_signed_decimal_entries(text_pixels, entries, &g_menu_text_state.pen, 3);
+                bunit_text_render_signed_decimal_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             } else {
-                battle_menu_draw_numeric_display_entries(text_pixels, entries, &g_menu_text_state.pen, 3);
+                battle_menu_draw_numeric_display_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             }
             g_menu_text_state.pen.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
-                bunit_text_render_signed_decimal_entries(text_pixels + 0x168, entries + 3, &g_menu_text_state.pen, 4);
+                bunit_text_render_signed_decimal_entries(
+                    number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
             } else {
-                battle_menu_draw_numeric_display_entries(text_pixels + 0x168, entries + 3, &g_menu_text_state.pen, 4);
+                battle_menu_draw_numeric_display_entries(
+                    number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
             }
             g_menu_text_state.pen.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_current_thread_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
-                bunit_text_render_signed_decimal_entries(text_pixels + 0x468, entries + 7, &g_menu_text_state.pen, 8);
+                bunit_text_render_signed_decimal_entries(number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             } else {
-                battle_menu_draw_numeric_display_entries(text_pixels + 0x468, entries + 7, &g_menu_text_state.pen, 8);
+                battle_menu_draw_numeric_display_entries(number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             }
-            LoadImage(upload_a, (u32*)text_pixels);
-            LoadImage(upload_b, (u32*)(text_pixels + 0x168));
-            LoadImage(upload_c, (u32*)(text_pixels + 0x468));
+            LoadImage(upload_a, (u32*)number_images->mobility);
+            LoadImage(upload_b, (u32*)number_images->weapons);
+            LoadImage(upload_c, (u32*)number_images->combat);
         }
         field_y = g_bunit_frame_arg;
         use_offset = field_y != 0xF0;

@@ -27,8 +27,8 @@ extern RECT g_require_editor_numeric_entries_f;
 extern point16_t g_require_editor_numeric_geometry[];
 extern menu_status_panel_numeric_buffer_t g_require_editor_numeric_state[2];
 extern battle_menu_status_panel_numeric_geometry_t g_require_editor_numeric_table;
-extern u8 g_require_editor_numeric_text_a[];
-extern u8 g_require_editor_numeric_text_b[];
+extern menu_unit_stat_number_images_t g_require_editor_numeric_text_a;
+extern menu_unit_stat_number_images_t g_require_editor_numeric_text_b;
 extern image_load_parameters_t g_require_editor_numeric_texture[];
 extern u8 g_require_editor_job_name[];
 extern u8 g_require_editor_primary_skillset_name[];
@@ -119,13 +119,13 @@ void require_gfx_scale_poly_gt4_vertex_colors(
 
 /* condition */
 extern u8 g_require_condition_general_quad_ranges[];
-extern battle_gfx_sprite_region_t g_require_condition_general_quads[];
+extern sprite_sheet_frame_t g_require_condition_general_quads[];
 extern require_display_condition_colors_t g_require_condition_general_vertex_colors[];
 extern require_render_condition_tpage_t g_require_condition_general_tpages[];
 
 /* Per-condition first-quad indices; entry n+1 bounds entry n. */
 extern u8 g_require_condition_special_quad_ranges[];
-extern battle_gfx_sprite_region_t g_require_condition_special_quads[];
+extern sprite_sheet_frame_t g_require_condition_special_quads[];
 
 /* 0x14-byte vertex-colour records, one per quad. */
 extern require_display_condition_colors_t g_require_condition_special_vertex_colors[];

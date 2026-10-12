@@ -22,7 +22,7 @@ typedef struct etc_graphic {
     s32 lba;
     s32 size;
     RECT* framebuffer_rect;
-    battle_gfx_sprite_region_t* dimensions;
+    sprite_sheet_frame_t* dimensions;
     void* _unused_14;
     void* _unused_18;
     s32 texture_mode;

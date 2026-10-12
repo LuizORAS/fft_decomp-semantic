@@ -670,8 +670,8 @@ extern menu_number_entry_t g_world_editor_numeric_descriptor_a[];
 extern menu_number_entry_t g_world_editor_numeric_descriptor_b[];
 extern menu_status_panel_numeric_buffer_t g_world_editor_numeric_state_a[2];
 extern menu_status_panel_numeric_buffer_t g_world_editor_numeric_state_b[2];
-extern u8 g_world_editor_numeric_text_a[];
-extern u8 g_world_editor_numeric_text_b[];
+extern menu_unit_stat_number_images_t g_world_editor_numeric_text_a;
+extern menu_unit_stat_number_images_t g_world_editor_numeric_text_b;
 
 /* comparison */
 /* Three 16x10 packed 4bpp images for the numbers below a unit's name. */
@@ -1023,6 +1023,7 @@ void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* t
 u32* world_shop_load_background_tim(s32 index);
 void world_gfx_mirror_4bpp_rect(u8* pixels, glyph_blit_t* rect);
 void world_gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
+void world_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void world_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
 void world_panel_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
 void world_gfx_set_blit_dest_position(s32 x, s32 y);
@@ -1243,6 +1244,7 @@ extern point16_t g_world_tutorial_highlight_corners_b[31][2]; /* middle/inner ri
 extern rgb24_t g_world_tutorial_highlight_colors_a[4];        /* first quad corner colours */
 extern rgb24_t g_world_tutorial_highlight_colors_b[4];        /* second quad corner colours */
 extern u8 g_world_tutorial_highlight_quad_count;
+void world_script_draw_tutorial_highlight_quads(s32 brightness);
 void world_script_load_tutorial_files(s32 index, world_tutorial_state_t* record);
 
 /* input */
@@ -1807,7 +1809,7 @@ extern s8 g_world_unit_status_banner_state; /* banner state: 0 idle, 1 finishing
  * (+0x100, +0x200) and [14] (+0x100, +0x200). native_thread_t leaves those
  * bytes unnamed, so a member spelling would be raw offset arithmetic; they
  * stay separate symbols. The palette areas hold one slot per page. */
-extern u8 g_world_unit_summary_digit_images[];
+extern world_unit_status_number_images_t g_world_unit_summary_digit_images;
 extern menu_palette_primitives_t g_world_unit_editor_palette;
 extern menu_palette_slot_t g_world_unit_summary_palettes[];
 extern s32 g_world_companion_overlay_prims;
@@ -2503,9 +2505,10 @@ void* world_menu_alloc_ui_buffer(s32 size);
 void world_menu_announce_entry_value_thread(void);
 u8* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
 void world_gfx_enqueue_line_f2(point16_t endpoints[2], rgb24_t* rgb, u8 semi_trans, s32 priority);
+void world_menu_size_entry_to_text(menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short);
 void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_record_t* buffer);
 void world_menu_submit_icon_primitives(menu_icon_sprites_t* prims);
-void world_menu_build_layout_sprites(menu_entry_t* entry, SPRT* sprite, s32 unused_2);
+void world_menu_build_layout_sprites(menu_entry_t* entry, SPRT sprite[2], s32 unused_2);
 void world_menu_init_numeric_display_frame_primitives(RECT* rect, menu_palette_primitives_t* menu);
 s32 world_menu_build_quad_pieces(s32 group, POLY_GT4* poly);
 void world_menu_build_skillset_entries(void);

@@ -23,8 +23,8 @@ extern RECT g_attack_editor_numeric_entries_f;
 extern point16_t g_attack_editor_numeric_geometry[];
 extern menu_status_panel_numeric_buffer_t g_attack_editor_numeric_state[2];
 extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table;
-extern u8 g_attack_editor_numeric_text_a[];
-extern u8 g_attack_editor_numeric_text_b[];
+extern menu_unit_stat_number_images_t g_attack_editor_numeric_text_a;
+extern menu_unit_stat_number_images_t g_attack_editor_numeric_text_b;
 extern image_load_parameters_t g_attack_editor_numeric_texture[];
 extern menu_unit_status_record_t g_attack_panel_selected_billboard;
 extern u8 g_attack_editor_primary_skillset_name[];
@@ -179,9 +179,9 @@ typedef struct attack_deploy_render_buffer {
     DR_MODE draw_mode_9f4;                  /* 0x9f4 */
     DR_MODE menu_draw_mode;                 /* 0xa00 */
     DR_OFFSET world_offset;                 /* 0xa0c */
-    point16_t world_position;               /* 0xa18; SDK draw-offset input */
+    point16_t world_position;               /* 0xa18; draw-offset input */
     DR_OFFSET screen_offset;                /* 0xa1c */
-    point16_t screen_position;              /* 0xa28; SDK draw-offset input */
+    point16_t screen_position;              /* 0xa28; draw-offset input */
 } attack_deploy_render_buffer_t;
 typedef char attack_deploy_render_buffer_size_must_be_2604[(sizeof(attack_deploy_render_buffer_t) == 2604) ? 1 : -1];
 

@@ -23,7 +23,7 @@ void require_render_display_condition_special_cases_thread(void) {
     s32 buffer;
     s32 scale;
     s32 quad_index;
-    battle_gfx_sprite_region_t* quads;
+    sprite_sheet_frame_t* quads;
     u8* table;
     require_display_condition_colors_t* color_table;
 
@@ -48,10 +48,11 @@ void require_render_display_condition_special_cases_thread(void) {
         POLY_GT4* poly
             = &(use_small_array == 0 ? g_require_gfx_poly_gt4_array_32 : g_require_gfx_poly_gt4_array_8)[quad_index];
 
-        setUV4(poly, QUAD.u, QUAD.v, QUAD.u + QUAD.width, QUAD.v, QUAD.u, QUAD.v + QUAD.height, QUAD.u + QUAD.width,
-            QUAD.v + QUAD.height);
-        setXY4(poly, QUAD.x + 0x100, QUAD.y + 0x78, QUAD.x + 0x100 + QUAD.width, QUAD.y + 0x78, QUAD.x + 0x100,
-            QUAD.y + 0x78 + QUAD.height, QUAD.x + 0x100 + QUAD.width, QUAD.y + 0x78 + QUAD.height);
+        setUV4(poly, QUAD.source.x, QUAD.source.y, QUAD.source.x + QUAD.source.w, QUAD.source.y, QUAD.source.x,
+            QUAD.source.y + QUAD.source.h, QUAD.source.x + QUAD.source.w, QUAD.source.y + QUAD.source.h);
+        setXY4(poly, QUAD.offset.x + 0x100, QUAD.offset.y + 0x78, QUAD.offset.x + 0x100 + QUAD.source.w,
+            QUAD.offset.y + 0x78, QUAD.offset.x + 0x100, QUAD.offset.y + 0x78 + QUAD.source.h,
+            QUAD.offset.x + 0x100 + QUAD.source.w, QUAD.offset.y + 0x78 + QUAD.source.h);
     }
     battle_copy_bytes(g_require_gfx_poly_gt4_buffers[1], g_require_gfx_poly_gt4_buffers, 40 * sizeof(POLY_GT4));
 

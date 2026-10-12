@@ -5,7 +5,7 @@
  * three unit panel threads on it (status banner, numeric editor, equipment
  * and ability panel), raising MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS. */
 void wldcore_start_core_background_threads(s32 party_index) {
-    wldcore_thread_block_t* thread8;
+    menu_status_thread_t* thread8;
 
     wldcore_unit_build_status_panel_data(party_index);
     thread8 = &g_wldcore_thread8_params;

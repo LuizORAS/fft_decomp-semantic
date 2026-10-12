@@ -14,7 +14,7 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     s32 frame;
     s32 fade;
     s32 color;
-    battle_gfx_sprite_region_t* dimensions;
+    sprite_sheet_frame_t* dimensions;
 
     g_battle_thread_call_target = main_sound_unload_scenario_music_and_tunes;
     battle_thread_call_on_main_stack();
@@ -30,20 +30,20 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     dimensions = g_etc_graphics[graphic_id].dimensions;
     frame = 0;
     fade = 0;
-    if (dimensions[2].height > 0) {
+    if (dimensions[2].source.h > 0) {
         do {
             etc_graphic_build_game_over_polygons(
                 graphic_id, fade, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], 0x80);
             frame++;
             battle_thread_yield();
             fade += g_battle_event_speed;
-        } while (fade < dimensions[2].height);
+        } while (fade < dimensions[2].source.h);
     }
 
     fade = 0;
     do {
         etc_graphic_build_game_over_polygons(
-            graphic_id, dimensions[2].height, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], 0x80);
+            graphic_id, dimensions[2].source.h, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], 0x80);
         frame++;
         battle_thread_yield();
         fade += g_battle_event_speed;
@@ -53,7 +53,7 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     fade = 0;
     do {
         etc_graphic_build_game_over_polygons(
-            graphic_id, dimensions[2].height, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], color);
+            graphic_id, dimensions[2].source.h, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], color);
         color -= g_battle_event_speed;
         battle_thread_yield();
         fade += g_battle_event_speed;

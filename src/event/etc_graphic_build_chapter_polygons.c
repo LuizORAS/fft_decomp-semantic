@@ -9,7 +9,7 @@
  * the part already revealed by `fade`; row 1 is the 32-pixel gradient edge. */
 void etc_graphic_build_chapter_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 layer, POLY_GT4* primitives, s32 color) {
-    battle_gfx_sprite_region_t* dimensions;
+    sprite_sheet_frame_t* dimensions;
     s32 texture_mode;
     POLY_GT4* poly;
     s32 row;
@@ -38,37 +38,40 @@ void etc_graphic_build_chapter_polygons(
             }
             if (row == 0) {
                 if (layer != 0) {
-                    setUV4(poly, DIM.u + DIM.width - fade, DIM.v, DIM.u + DIM.width, DIM.v, DIM.u + DIM.width - fade,
-                        DIM.v + DIM.height, DIM.u + DIM.width, DIM.v + DIM.height);
-                    setXY4(poly, DIM.x + DIM.width - fade + 0x100, DIM.y + 0x80, DIM.x + DIM.width + 0x100,
-                        DIM.y + 0x80, DIM.x + DIM.width - fade + 0x100, DIM.y + 0x80 + DIM.height,
-                        DIM.x + DIM.width + 0x100, DIM.y + 0x80 + DIM.height);
+                    setUV4(poly, DIM.source.x + DIM.source.w - fade, DIM.source.y, DIM.source.x + DIM.source.w,
+                        DIM.source.y, DIM.source.x + DIM.source.w - fade, DIM.source.y + DIM.source.h,
+                        DIM.source.x + DIM.source.w, DIM.source.y + DIM.source.h);
+                    setXY4(poly, DIM.offset.x + DIM.source.w - fade + 0x100, DIM.offset.y + 0x80,
+                        DIM.offset.x + DIM.source.w + 0x100, DIM.offset.y + 0x80,
+                        DIM.offset.x + DIM.source.w - fade + 0x100, DIM.offset.y + 0x80 + DIM.source.h,
+                        DIM.offset.x + DIM.source.w + 0x100, DIM.offset.y + 0x80 + DIM.source.h);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, color, color, color);
                     setRGB3(poly, color, color, color);
                 } else {
-                    setUVWH(poly, DIM.u, DIM.v, fade, DIM.height);
-                    setXYWH(poly, DIM.x + 0x100, DIM.y + 0x80, fade, DIM.height);
+                    setUVWH(poly, DIM.source.x, DIM.source.y, fade, DIM.source.h);
+                    setXYWH(poly, DIM.offset.x + 0x100, DIM.offset.y + 0x80, fade, DIM.source.h);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, color, color, color);
                     setRGB3(poly, color, color, color);
                 }
             } else if (row == 1) {
-                clip = (DIM.width < fade + 0x20) ? DIM.width - fade : 0x20;
+                clip = (DIM.source.w < fade + 0x20) ? DIM.source.w - fade : 0x20;
                 if (layer != 0) {
-                    setUV4(poly, DIM.u + DIM.width - fade - clip, DIM.v, DIM.u + DIM.width - fade, DIM.v,
-                        DIM.u + DIM.width - fade - clip, DIM.v + DIM.height, DIM.u + DIM.width - fade,
-                        DIM.v + DIM.height);
-                    setXYWH(poly, DIM.x + DIM.width - fade + 0x100 - clip, DIM.y + 0x80, clip, DIM.height);
+                    setUV4(poly, DIM.source.x + DIM.source.w - fade - clip, DIM.source.y,
+                        DIM.source.x + DIM.source.w - fade, DIM.source.y, DIM.source.x + DIM.source.w - fade - clip,
+                        DIM.source.y + DIM.source.h, DIM.source.x + DIM.source.w - fade, DIM.source.y + DIM.source.h);
+                    setXYWH(poly, DIM.offset.x + DIM.source.w - fade + 0x100 - clip, DIM.offset.y + 0x80, clip,
+                        DIM.source.h);
                     setRGB0(poly, 0, 0, 0);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, 0, 0, 0);
                     setRGB3(poly, color, color, color);
                 } else {
-                    setUVWH(poly, DIM.u + fade, DIM.v, clip, DIM.height);
-                    setXYWH(poly, DIM.x + fade + 0x100, DIM.y + 0x80, clip, DIM.height);
+                    setUVWH(poly, DIM.source.x + fade, DIM.source.y, clip, DIM.source.h);
+                    setXYWH(poly, DIM.offset.x + fade + 0x100, DIM.offset.y + 0x80, clip, DIM.source.h);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, 0, 0, 0);
                     setRGB2(poly, color, color, color);

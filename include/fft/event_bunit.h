@@ -111,8 +111,8 @@ extern menu_number_entry_t g_bunit_editor_numeric_descriptor_a[];
 extern menu_number_entry_t g_bunit_editor_numeric_descriptor_b[];
 extern menu_status_panel_numeric_buffer_t g_bunit_editor_numeric_state_a[2];
 extern menu_status_panel_numeric_buffer_t g_bunit_editor_numeric_state_b[2];
-extern u8 g_bunit_editor_numeric_text_a[];
-extern u8 g_bunit_editor_numeric_text_b[];
+extern menu_unit_stat_number_images_t g_bunit_editor_numeric_text_a;
+extern menu_unit_stat_number_images_t g_bunit_editor_numeric_text_b;
 
 /* help */
 extern u32 g_bunit_help_text_table[];

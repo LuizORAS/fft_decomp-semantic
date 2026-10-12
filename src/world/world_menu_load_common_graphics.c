@@ -24,7 +24,7 @@ void world_menu_load_common_graphics(s32 load_extra_pages) {
         main_heap_call_free(resource);
         g_main_common_menu_graphics_loaded++;
     }
-    /* The SDK transfers pairs of 16-bit colors through 32-bit buffer elements. */
+    /* LoadImage transfers pairs of 16-bit colors through 32-bit buffer elements. */
     LoadImage(&g_world_menu_common_clut_rect, (u32*)&g_world_menu_common_clut_data);
     DrawSync(0);
     g_world_thread_call_target = main_file_load_checked_to_heap;

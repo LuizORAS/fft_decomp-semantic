@@ -39,19 +39,11 @@ typedef palette_t clut_t[CLUT_PALETTE_COUNT];
 typedef char assert_clut_size[sizeof(clut_t) == 512 ? 1 : -1];
 
 /* geometry */
-/* Neutral 2D/3D point, rectangle and colour records for shapes the Psy-Q SDK
- * does not define.
- *
- * Use the SDK type whenever its layout and signedness fit exactly: DVECTOR
- * for GTE screen coordinates (SXY), SVECTOR/VECTOR for padded GTE vectors,
- * RECT for signed x/y/w/h rectangles and CVECTOR for r/g/b plus a code or
- * padding byte. These types cover the remaining cases. Field signedness is
- * part of the choice, not a detail: s16 fields load with lh and u16 fields
- * with lhu, so pick the variant whose loads match the target.
- *
- * Battle real positions are VECTORs (vx = x, vy = height, vz = map depth) and
- * screen positions and rotations are SVECTORs in the same order; keep those
- * in the SDK types rather than vec3s16_t/vec3u16_t. */
+/* Use DVECTOR for GTE screen coordinates, SVECTOR/VECTOR for padded GTE
+ * vectors, RECT for signed rectangles and CVECTOR for r/g/b plus a code byte.
+ * The point types below cover other field widths and signedness. Battle real
+ * positions use VECTOR (vx = x, vy = height, vz = map depth); screen positions
+ * and rotations use SVECTOR in the same order. */
 /* Signed 16-bit x/y pair: screen offsets, sprite positions and per-axis
  * factors that are not GTE output. */
 typedef struct point16 {

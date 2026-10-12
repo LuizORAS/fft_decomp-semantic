@@ -27,63 +27,63 @@
 
 /* Full, unanimated quad: the reveal offset is not yet applied. */
 #define STORE_QUAD_FULL(poly, index)                                                                                   \
-    poly->u0 = QUAD(index).u;                                                                                          \
-    poly->v0 = QUAD(index).v - 0x80;                                                                                   \
-    poly->u1 = QUAD(index).u + QUAD(index).width;                                                                      \
-    poly->v1 = QUAD(index).v - 0x80;                                                                                   \
-    poly->u2 = QUAD(index).u;                                                                                          \
-    poly->v2 = QUAD(index).v - 0x80 + QUAD(index).height;                                                              \
-    poly->u3 = QUAD(index).u + QUAD(index).width;                                                                      \
-    poly->v3 = QUAD(index).v - 0x80 + QUAD(index).height;                                                              \
-    poly->x0 = QUAD(index).x + 0x100;                                                                                  \
-    poly->y0 = QUAD(index).y + 0x78;                                                                                   \
-    poly->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
-    poly->y1 = QUAD(index).y + 0x78;                                                                                   \
-    poly->x2 = QUAD(index).x + 0x100;                                                                                  \
-    poly->y2 = QUAD(index).y + 0x78 + QUAD(index).height;                                                              \
-    poly->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
-    poly->y3 = QUAD(index).y + 0x78 + QUAD(index).height
+    poly->u0 = QUAD(index).source.x;                                                                                   \
+    poly->v0 = QUAD(index).source.y - 0x80;                                                                            \
+    poly->u1 = QUAD(index).source.x + QUAD(index).source.w;                                                            \
+    poly->v1 = QUAD(index).source.y - 0x80;                                                                            \
+    poly->u2 = QUAD(index).source.x;                                                                                   \
+    poly->v2 = QUAD(index).source.y - 0x80 + QUAD(index).source.h;                                                     \
+    poly->u3 = QUAD(index).source.x + QUAD(index).source.w;                                                            \
+    poly->v3 = QUAD(index).source.y - 0x80 + QUAD(index).source.h;                                                     \
+    poly->x0 = QUAD(index).offset.x + 0x100;                                                                           \
+    poly->y0 = QUAD(index).offset.y + 0x78;                                                                            \
+    poly->x1 = QUAD(index).offset.x + 0x100 + QUAD(index).source.w;                                                    \
+    poly->y1 = QUAD(index).offset.y + 0x78;                                                                            \
+    poly->x2 = QUAD(index).offset.x + 0x100;                                                                           \
+    poly->y2 = QUAD(index).offset.y + 0x78 + QUAD(index).source.h;                                                     \
+    poly->x3 = QUAD(index).offset.x + 0x100 + QUAD(index).source.w;                                                    \
+    poly->y3 = QUAD(index).offset.y + 0x78 + QUAD(index).source.h
 
-/* Reveal: the bottom edge is fixed and the top edge rises by `offset`. */
-#define STORE_QUAD_REVEAL(poly, index, offset)                                                                         \
-    poly->u0 = QUAD(index).u;                                                                                          \
-    poly->v0 = (QUAD(index).v + (QUAD(index).height - 0x80)) - offset;                                                 \
-    poly->u1 = QUAD(index).u + QUAD(index).width;                                                                      \
-    poly->v1 = (QUAD(index).v + (QUAD(index).height - 0x80)) - offset;                                                 \
-    poly->u2 = QUAD(index).u;                                                                                          \
-    poly->v2 = QUAD(index).v + (QUAD(index).height - 0x80);                                                            \
-    poly->u3 = QUAD(index).u + QUAD(index).width;                                                                      \
-    poly->v3 = QUAD(index).v + (QUAD(index).height - 0x80);                                                            \
-    poly->x0 = QUAD(index).x + 0x100;                                                                                  \
-    poly->y0 = QUAD(index).y + (QUAD(index).height + 0x78) - offset;                                                   \
-    poly->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
-    poly->y1 = QUAD(index).y + (QUAD(index).height + 0x78) - offset;                                                   \
-    poly->x2 = QUAD(index).x + 0x100;                                                                                  \
-    poly->y2 = QUAD(index).y + 0x78 + QUAD(index).height;                                                              \
-    poly->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
-    poly->y3 = QUAD(index).y + 0x78 + QUAD(index).height
+/* Reveal: keep the bottom edge fixed while raising the top edge. */
+#define STORE_QUAD_REVEAL(poly, index, reveal_pixels)                                                                  \
+    poly->u0 = QUAD(index).source.x;                                                                                   \
+    poly->v0 = (QUAD(index).source.y + (QUAD(index).source.h - 0x80)) - reveal_pixels;                                 \
+    poly->u1 = QUAD(index).source.x + QUAD(index).source.w;                                                            \
+    poly->v1 = (QUAD(index).source.y + (QUAD(index).source.h - 0x80)) - reveal_pixels;                                 \
+    poly->u2 = QUAD(index).source.x;                                                                                   \
+    poly->v2 = QUAD(index).source.y + (QUAD(index).source.h - 0x80);                                                   \
+    poly->u3 = QUAD(index).source.x + QUAD(index).source.w;                                                            \
+    poly->v3 = QUAD(index).source.y + (QUAD(index).source.h - 0x80);                                                   \
+    poly->x0 = QUAD(index).offset.x + 0x100;                                                                           \
+    poly->y0 = QUAD(index).offset.y + (QUAD(index).source.h + 0x78) - reveal_pixels;                                   \
+    poly->x1 = QUAD(index).offset.x + 0x100 + QUAD(index).source.w;                                                    \
+    poly->y1 = QUAD(index).offset.y + (QUAD(index).source.h + 0x78) - reveal_pixels;                                   \
+    poly->x2 = QUAD(index).offset.x + 0x100;                                                                           \
+    poly->y2 = QUAD(index).offset.y + 0x78 + QUAD(index).source.h;                                                     \
+    poly->x3 = QUAD(index).offset.x + 0x100 + QUAD(index).source.w;                                                    \
+    poly->y3 = QUAD(index).offset.y + 0x78 + QUAD(index).source.h
 
-/* Hide: the bottom edge is fixed and the top edge sinks by `offset`. */
-#define STORE_QUAD_HIDE(poly, index, offset)                                                                           \
-    poly->u0 = QUAD(index).u;                                                                                          \
-    poly->v0 = QUAD(index).v - 0x80 + offset;                                                                          \
-    poly->u1 = QUAD(index).u + QUAD(index).width;                                                                      \
-    poly->v1 = QUAD(index).v - 0x80 + offset;                                                                          \
-    poly->u2 = QUAD(index).u;                                                                                          \
-    poly->v2 = QUAD(index).v + ((offset) - 0x80) + (QUAD(index).height - offset);                                      \
-    poly->u3 = QUAD(index).u + QUAD(index).width;                                                                      \
-    poly->v3 = QUAD(index).v + ((offset) - 0x80) + (QUAD(index).height - offset);                                      \
-    poly->x0 = QUAD(index).x + 0x100;                                                                                  \
-    poly->y0 = QUAD(index).y + 0x78 + offset;                                                                          \
-    poly->x1 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
-    poly->y1 = QUAD(index).y + 0x78 + offset;                                                                          \
-    poly->x2 = QUAD(index).x + 0x100;                                                                                  \
-    poly->y2 = QUAD(index).y + ((offset) + 0x78) + (QUAD(index).height - offset);                                      \
-    poly->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
-    poly->y3 = QUAD(index).y + ((offset) + 0x78) + (QUAD(index).height - offset)
+/* Hide: keep the bottom edge fixed while lowering the top edge. */
+#define STORE_QUAD_HIDE(poly, index, hide_pixels)                                                                      \
+    poly->u0 = QUAD(index).source.x;                                                                                   \
+    poly->v0 = QUAD(index).source.y - 0x80 + hide_pixels;                                                              \
+    poly->u1 = QUAD(index).source.x + QUAD(index).source.w;                                                            \
+    poly->v1 = QUAD(index).source.y - 0x80 + hide_pixels;                                                              \
+    poly->u2 = QUAD(index).source.x;                                                                                   \
+    poly->v2 = QUAD(index).source.y + ((hide_pixels) - 0x80) + (QUAD(index).source.h - hide_pixels);                   \
+    poly->u3 = QUAD(index).source.x + QUAD(index).source.w;                                                            \
+    poly->v3 = QUAD(index).source.y + ((hide_pixels) - 0x80) + (QUAD(index).source.h - hide_pixels);                   \
+    poly->x0 = QUAD(index).offset.x + 0x100;                                                                           \
+    poly->y0 = QUAD(index).offset.y + 0x78 + hide_pixels;                                                              \
+    poly->x1 = QUAD(index).offset.x + 0x100 + QUAD(index).source.w;                                                    \
+    poly->y1 = QUAD(index).offset.y + 0x78 + hide_pixels;                                                              \
+    poly->x2 = QUAD(index).offset.x + 0x100;                                                                           \
+    poly->y2 = QUAD(index).offset.y + ((hide_pixels) + 0x78) + (QUAD(index).source.h - hide_pixels);                   \
+    poly->x3 = QUAD(index).offset.x + 0x100 + QUAD(index).source.w;                                                    \
+    poly->y3 = QUAD(index).offset.y + ((hide_pixels) + 0x78) + (QUAD(index).source.h - hide_pixels)
 
 void require_render_display_condition_general_cases(s32 hold_frames) {
-    battle_gfx_sprite_region_t* quads;
+    sprite_sheet_frame_t* quads;
     u8* range;
     require_display_condition_colors_t* colors;
     require_render_condition_tpage_t* tpage;
@@ -146,8 +146,8 @@ void require_render_display_condition_general_cases(s32 hold_frames) {
             for (index = 5; index >= 3; index--) {
                 POLY_GT4* poly = &g_require_gfx_poly_gt4_buffers[buffer][index];
 
-                if (QUAD(index).height < reveal_offset_top)
-                    reveal_offset_top = QUAD(index).height;
+                if (QUAD(index).source.h < reveal_offset_top)
+                    reveal_offset_top = QUAD(index).source.h;
                 STORE_QUAD_REVEAL(poly, index, reveal_offset_top);
                 require_gfx_scale_poly_gt4_vertex_colors(VERTEX_COLORS(index), 0x80, poly);
                 battle_gfx_draw_or_append_gpu_primitive(poly);
@@ -156,8 +156,8 @@ void require_render_display_condition_general_cases(s32 hold_frames) {
         for (index = 2; index >= 0; index--) {
             POLY_GT4* poly = &g_require_gfx_poly_gt4_buffers[buffer][index];
 
-            if (QUAD(index).height < reveal_offset_bottom)
-                reveal_offset_bottom = QUAD(index).height;
+            if (QUAD(index).source.h < reveal_offset_bottom)
+                reveal_offset_bottom = QUAD(index).source.h;
             STORE_QUAD_REVEAL(poly, index, reveal_offset_bottom);
             require_gfx_scale_poly_gt4_vertex_colors(VERTEX_COLORS(index), 0x80, poly);
             battle_gfx_draw_or_append_gpu_primitive(poly);
@@ -205,8 +205,8 @@ void require_render_display_condition_general_cases(s32 hold_frames) {
         for (index = quad_count - 1; index >= 0; index--) {
             POLY_GT4* poly = &g_require_gfx_poly_gt4_buffers[buffer][index];
 
-            if (QUAD(index).height < hide_offset)
-                hide_offset = QUAD(index).height;
+            if (QUAD(index).source.h < hide_offset)
+                hide_offset = QUAD(index).source.h;
             STORE_QUAD_HIDE(poly, index, hide_offset);
             require_gfx_scale_poly_gt4_vertex_colors(VERTEX_COLORS(index), 0x80, poly);
             battle_gfx_draw_or_append_gpu_primitive(poly);

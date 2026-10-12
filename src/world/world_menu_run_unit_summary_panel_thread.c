@@ -17,7 +17,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     menu_unit_summary_frame_t* frame_record;
     battle_stats_t* unit;
     u8* buffer;
-    u8* digits;
+    world_unit_status_number_images_t* number_images;
     SPRT* sprite;
     s32 speed;
     s32 slide;
@@ -28,7 +28,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
 
     speed = 0x16;
     slide = 0x84;
-    digits = g_world_unit_summary_digit_images;
+    number_images = &g_world_unit_summary_digit_images;
     world_menu_load_selected_unit();
     unit = world_unit_get_battle_stats_for_stored();
     g_world_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
@@ -62,28 +62,29 @@ void world_menu_run_unit_summary_panel_thread(void) {
     world_menu_set_text_origin(0, 0x10);
     world_menu_display_text_string(buffer, &g_world_menu_text_state.pen, g_world_unit_editor_job_name);
     LoadImage(&rects[0], (u32*)buffer);
-    world_clear_menu_render_buffer(digits, 0xF0);
+    world_clear_menu_render_buffer(number_images, sizeof(*number_images));
     g_world_menu_text_state.pen.stride = 0x10;
     world_menu_set_text_origin(0, 0);
     world_text_render_decimal_value_or_dashes(
-        g_world_active_unit_data.brave, 0x202, digits, &g_world_menu_text_state.pen);
-    LoadImage(&rects[1], (u32*)digits);
+        g_world_active_unit_data.brave, 0x202, number_images->brave, &g_world_menu_text_state.pen);
+    LoadImage(&rects[1], (u32*)number_images->brave);
     world_menu_set_text_origin(0, 0);
     world_text_render_decimal_value_or_dashes(
-        g_world_active_unit_data.faith, 0x202, digits + 0x50, &g_world_menu_text_state.pen);
-    LoadImage(&rects[2], (u32*)(digits + 0x50));
+        g_world_active_unit_data.faith, 0x202, number_images->faith, &g_world_menu_text_state.pen);
+    LoadImage(&rects[2], (u32*)number_images->faith);
     world_menu_set_text_origin(0, 0);
     if (g_main_debug_display_enabled != 0) {
         world_text_render_decimal_value_or_dashes(
-            g_world_active_unit_data.battle_id, 0x4002, digits + 0xA0, &g_world_menu_text_state.pen);
+            g_world_active_unit_data.battle_id, 0x4002, number_images->roster_slot, &g_world_menu_text_state.pen);
     } else if (g_world_active_unit_data.battle_id >= BATTLE_DEPLOYED_UNIT_SLOT_FIRST) {
         value = unit->formation_index;
         if (value == 0xFF) {
             value = 0;
         }
-        world_text_render_decimal_value_or_dashes(value + 1, 0x4002, digits + 0xA0, &g_world_menu_text_state.pen);
+        world_text_render_decimal_value_or_dashes(
+            value + 1, 0x4002, number_images->roster_slot, &g_world_menu_text_state.pen);
     }
-    LoadImage(&rects[3], (u32*)(digits + 0xA0));
+    LoadImage(&rects[3], (u32*)number_images->roster_slot);
     frames[0].sprites[6].clut = 0x7C3C;
     frames[0].sprites[6].w = 0x18;
     frames[0].sprites[6].h = 0x14;

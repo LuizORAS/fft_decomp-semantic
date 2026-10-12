@@ -130,7 +130,7 @@ typedef struct card_save_header {
     u8 block_count;      /* 0x03 */
     u8 title[0x40];      /* 0x04: Shift-JIS save-file title */
     u8 reserved[0x1C];   /* 0x44 */
-    u8 icon_clut[0x20];  /* 0x60 */
+    palette_t icon_clut; /* 0x60 */
     u8 icon_image[0x80]; /* 0x80 */
 } card_save_header_t;
 
@@ -968,9 +968,8 @@ u8* main_heap_reserve_at(u8* allocation, u32 size);
 s32 main_heap_free_smd(void* allocation);
 void main_util_clear_byte_data(void* destination, s32 count);
 
-/* SCUS byte loops at 0x8005e254 (copy) and 0x8005e644 (clear), not SDK
- * memcpy/memset. Copy takes source first;
- * both routines do nothing for a nonpositive signed byte count. */
+/* SCUS byte loops at 0x8005e254 (copy) and 0x8005e644 (clear).
+ * Copy takes source first; both routines do nothing for a nonpositive count. */
 void main_util_copy_byte_data(const void* source, void* destination, s32 count);
 void main_util_copy_action_data(const battle_action_command_t* source, battle_action_command_t* destination);
 void main_heap_clear_smd_allocator_table(void);

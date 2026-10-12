@@ -365,21 +365,11 @@ typedef enum wldcore_thread_slot {
     WLDCORE_THREAD_SLOT_MESSAGE = 14,      /* the message box and script text */
 } wldcore_thread_slot_e;
 
-/* Provisional: 0x14-byte parameter blocks at 0x8009ebc0 for WORLD threads 8,
- * 12 and 9; each thread receives its block's address as its first
- * parameter. */
-typedef struct wldcore_thread_block {
-    s32 x; /* 0x00; panel draw x (thread 9 draws at x - 0x80); WORLD twin menu_status_thread_t.x */
-    s32 y; /* 0x04; added to the panel's draw offset; thread 8's shake offset */
-    u8 _unused_08[4];
-    s32 redraw_request; /* 0x0c; scroll direction for thread 8, redraw request for 12 and 9 */
-    u8 _unused_10[4];
-} wldcore_thread_block_t;
-typedef char wldcore_thread_block_size_must_be_20[sizeof(wldcore_thread_block_t) == 20 ? 1 : -1];
-
-extern wldcore_thread_block_t g_wldcore_thread8_params;
-extern wldcore_thread_block_t g_wldcore_thread9_params;
-extern wldcore_thread_block_t g_wldcore_threadc_params;
+/* Parameter blocks passed to WORLD's status banner, numeric editor and
+ * equipment/ability panel threads. */
+extern menu_status_thread_t g_wldcore_thread8_params;
+extern menu_status_thread_t g_wldcore_thread9_params;
+extern menu_status_thread_t g_wldcore_threadc_params;
 
 /* unit */
 extern s32 g_wldcore_participant_list_saved_cursor;
@@ -993,6 +983,7 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
 void wldcore_proposition_push_send_unit_level(void);
 s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_level_t* state, s32 message, s32 speaker);
 void wldcore_proposition_push_result_level(s32 proposition);
+s32 wldcore_map_job_id_to_category_index(s32 job_id);
 s32 wldcore_proposition_find_preferred_job_unit(void);
 
 /* scroll */
@@ -2022,7 +2013,9 @@ void wldcore_menu_resume_root_level(wldcore_menu_stack_record_t* level);
 
 void wldcore_menu_display_text_entry(s32 index, s32 text_id, point32_t point, u32* buffer);
 void wldcore_menu_push_message_level(s32 text, s32 reload_text);
+void wldcore_menu_push_fixed_number_panel_level(void);
 void wldcore_menu_push_number_panel_level_with_argument(s32 variable_id, s32 value);
+void wldcore_menu_push_root_level(void);
 void wldcore_menu_reset_window_list_and_store_origin(void);
 void wldcore_menu_restore_level_on_world_entry(void);
 void wldcore_menu_run_world_frame(GsOT* context);

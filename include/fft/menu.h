@@ -119,7 +119,7 @@ typedef char menu_portrait_sheet_size_must_be_32768[(sizeof(menu_portrait_sheet_
 /* Battle menu status and character-editor panel records. The EVENT overlays
  * (ATTACK, BUNIT, DEBUGCHR, EQUIP, REQUIRE) each link their own copy of the
  * panel code, and the WORLD unit-editor panels reuse the packet layouts. */
-/* DR_OFFSET followed by signed GPU offsets, passed through the SDK u16 view.
+/* DR_OFFSET followed by signed GPU offsets.
  * Signed storage retains the retail negative-immediate loads. */
 typedef struct menu_status_panel_draw_offset {
     DR_OFFSET packet;   /* 0x00 */
@@ -273,11 +273,13 @@ typedef struct menu_status_panel_slot_storage {
 } menu_status_panel_slot_storage_t;
 typedef char menu_status_panel_slot_storage_size_must_be_64[(sizeof(menu_status_panel_slot_storage_t) == 64) ? 1 : -1];
 
-/* One gauge of the unit status record: the Gouraud bar is drawn value/max
- * wide, and a zero max draws the fixed 4-pixel stub. */
+/* HP, MP or CT gauge, drawn 32 * value / max pixels wide. Overlay panels
+ * use a four-pixel stub when max is zero; battle billboard builders instead
+ * store 1 for zero HP/MP maxima. Those builders clear HP/MP bonuses but leave
+ * the CT bonus field untouched. */
 typedef struct menu_unit_status_gauge {
     s16 value; /* 0x00 */
-    s16 bonus; /* 0x02; equipment-preview delta (world_menu_get_selected_unit_hp_bonus_or_dashes/_2); 0 in battle */
+    s16 bonus; /* 0x02; equipment contribution or preview delta for HP/MP */
     s16 max;   /* 0x04 */
 } menu_unit_status_gauge_t;
 typedef char menu_unit_status_gauge_size_must_be_6[(sizeof(menu_unit_status_gauge_t) == 6) ? 1 : -1];
@@ -1789,7 +1791,7 @@ typedef char menu_unit_view_thread_set_size_must_be_48[(sizeof(menu_unit_view_th
 /* other */
 /* One selectable save-file icon: 16-colour CLUT plus 16x16 4bpp image. */
 typedef struct card_save_icon {
-    u8 clut[0x20];  /* 0x00 */
+    palette_t clut; /* 0x00 */
     u8 image[0x80]; /* 0x20 */
 } card_save_icon_t;
 
