@@ -409,7 +409,7 @@ functions:
   - {addr: 0x800fe7a4, size: 48, name: world_menu_display_text_entry_past_choice_marks, hash: 99e2ba5c27fe29f3}
   - {addr: 0x800fe7d4, size: 68, name: world_menu_display_text_string, hash: 546bc309ac1221e3}
   - {addr: 0x800fe818, size: 1820, name: world_menu_display_text, hash: d9988a33ac0cc206, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800fef34, size: 188, name: menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/text/menu_text_advance_cursor_with_backreferences.c}
+  - {addr: 0x800fef34, size: 188, name: menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/menu/menu_text_advance_cursor_with_backreferences.c}
   - {addr: 0x800ff450, size: 40, name: world_script_copy_bytes, hash: 73eb033d6e800062}
   - {addr: 0x800ff478, size: 496, name: world_gfx_mirror_4bpp_rect, hash: 29198ac37701ca7e}
   - {addr: 0x800ff668, size: 40, name: world_menu_build_and_upload_window_image, hash: c452a59dd99e0cda}
