@@ -25,7 +25,6 @@
  * event input is consumed, the cancel sound is queued and event input stays
  * suppressed for 5 frames. */
 void battle_handle_menu_cancel_input(menu_entry_t* menu) {
-    menu_entry_t* ctx = menu;
     s32 count;
     s32 i;
     s32 idx;
@@ -36,7 +35,7 @@ void battle_handle_menu_cancel_input(menu_entry_t* menu) {
     char unused[8];
 
     if ((g_battle_script_event_input & PSX_PAD_CROSS) && battle_menu_can_accept_input() != 0) {
-        count = ctx->thread_count;
+        count = menu->thread_count;
         if (count != -1) {
             /* The counter is zeroed ahead of the guard, not inside the arm.
                That is what puts `move a0,zero` immediately before the `blez`,
@@ -74,7 +73,7 @@ void battle_handle_menu_cancel_input(menu_entry_t* menu) {
                 j++;
             } while (i < 0x10);
         }
-        cur = ctx->value;
+        cur = menu->value;
         g_battle_script_event_input = 0;
         *cur = -1;
         battle_sound_set_effect_to_cancel();

@@ -13,7 +13,7 @@ battle_unit_misc_data_t* battle_unit_find_other_chocobo_at_map_coords(s32 x, s32
     s32 count;
     s32 id;
     s32 spritesheet_id;
-    battle_unit_misc_data_t* list[16];
+    battle_unit_misc_data_t* list[BATTLE_UNIT_MISC_SLOT_COUNT];
     battle_unit_misc_data_t* result;
     s32 index;
 

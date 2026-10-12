@@ -13,7 +13,6 @@
  * polls.
  */
 #include "fft/battle.h"
-#include "fft/battle_action.h"
 #include "fft/battle_event.h"
 #include "fft/battle_unit.h"
 #include "psx/libgte.h"

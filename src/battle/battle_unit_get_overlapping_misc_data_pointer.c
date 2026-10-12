@@ -11,7 +11,7 @@
  * entries and is filled without a bound check. */
 battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
     battle_unit_misc_data_t* self, s32 x, s32 y, s32 z) {
-    battle_unit_misc_data_t* list[16];
+    battle_unit_misc_data_t* list[BATTLE_UNIT_MISC_SLOT_COUNT];
     battle_unit_misc_data_t* unit;
     battle_stats_t* stats;
     s32 count;

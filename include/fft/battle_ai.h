@@ -61,8 +61,7 @@ typedef enum battle_ai_command_kind {
     BATTLE_AI_COMMAND_UNRESOLVED_FF = 0xff,
 } battle_ai_command_kind_e;
 
-/* Stored resume stages are byte fields; each policy has its own stage domain. */
-/* Sparse resume tags saved when initial action selection yields. */
+/* Byte-sized resume labels for initial action selection; the gaps are not dispatched. */
 typedef enum battle_ai_initial_selection_stage {
     BATTLE_AI_INITIAL_SELECTION_STATUS = 0,
     BATTLE_AI_INITIAL_SELECTION_RETREAT = 2,
@@ -766,7 +765,7 @@ extern s32 g_battle_ai_propagation_resume_pass;
 extern u16 g_battle_ai_range_row_masks[];
 extern s32 g_battle_ai_self_target_origin_stage;
 extern battle_ai_command_t g_battle_ai_command_history[2]; /* 0x801a0d94, 0x801a0dac */
-extern s32 g_battle_ai_cowardly_movement_step;             /* battle_ai_cowardly_movement_stage_e */
+extern battle_ai_cowardly_movement_stage_e g_battle_ai_cowardly_movement_step;
 
 /* One shared AI workspace at 0x8019f3c4, not a separate record per candidate.
  * Preserve resume-state writes before returning -1. */

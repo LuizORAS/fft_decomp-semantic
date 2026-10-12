@@ -3,9 +3,8 @@
 /* battle_unit_store_animation_facing with the force flag: the animation
  * starts on the next update, from its beginning even when it is playing. */
 void battle_unit_store_animation_facing_movement_data(s32 animation, s32 facing, battle_unit_misc_data_t* unit) {
-    battle_unit_misc_data_t* misc = unit;
     animation++;
-    misc->requested_animation = animation;
-    misc->facing = facing;
-    misc->movement.force_animation_update = 1;
+    unit->requested_animation = animation;
+    unit->facing = facing;
+    unit->movement.force_animation_update = 1;
 }

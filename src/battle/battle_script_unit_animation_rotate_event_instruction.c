@@ -7,7 +7,6 @@
  * (16-bit value), 0x04 move-flag mode (0 unset, else flip).
  */
 void battle_script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters) {
-    const event_unit_anim_rotate_parameters_t* data = parameters;
     u8 rotation;
     s16 animation;
     s16 call_misc_id;
@@ -15,12 +14,12 @@ void battle_script_unit_animation_rotate_event_instruction(const event_unit_anim
     s32 index;
     unit_animation_state_t* rotation_state;
 
-    misc_id = battle_script_load_halfword(data->unit_id_le);
-    rotation = data->rotation;
-    animation = battle_script_load_halfword(data->animation_le);
+    misc_id = battle_script_load_halfword(parameters->unit_id_le);
+    rotation = parameters->rotation;
+    animation = battle_script_load_halfword(parameters->animation_le);
     call_misc_id = battle_script_get_misc_id(misc_id);
     misc_id = call_misc_id;
-    if (data->animation_le[1] == 0) {
+    if (parameters->animation_le[1] == 0) {
         battle_unit_clear_facing_update_suppression(call_misc_id);
     } else {
         battle_unit_set_facing_update_suppression(call_misc_id);

@@ -3,7 +3,6 @@
  * world_draw_menu_text_columns_narrow (WORLD 0x800ed5f4).
  */
 #include "fft/battle.h"
-#include "fft/battle_action.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "psx/types.h"

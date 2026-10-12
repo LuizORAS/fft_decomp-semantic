@@ -12,17 +12,15 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_misc_da
     item_data_t* item;
     u32 weapon_type;
     s32 clut_index;
-    battle_unit_misc_data_t* unit2;
     /* The last test re-reads the ability id rather than reusing the value the
      * range test loaded; assigning it through its own local stops cse folding
      * the two reads into one. */
     u16 ability_id;
 
-    unit2 = unit;
     item = main_item_get_data_pointer(item_id);
     weapon_type = item->type;
     if ((weapon_type >= ITEM_TYPE_SHURIKEN)
-        || ((u32)(unit2->used_ability_id - ABILITY_ID_THROW_FIRST) < ABILITY_ID_JUMP_FIRST - ABILITY_ID_THROW_FIRST)
+        || ((u32)(unit->used_ability_id - ABILITY_ID_THROW_FIRST) < ABILITY_ID_JUMP_FIRST - ABILITY_ID_THROW_FIRST)
         || ((ability_id = unit->used_ability_id), ability_id == ABILITY_ID_BASIC_SKILL_THROW_STONE)) {
         weapon_type = 0x15;
     }

@@ -8,7 +8,7 @@
  * then a rider over its mount, then the first in list order. Returns 0 for none.
  * The candidate array holds 16 entries and is filled without a bound check. */
 battle_unit_misc_data_t* battle_unit_get_selectable_misc_data_at_map_coords(s32 map_x, s32 map_y, s32 map_z) {
-    battle_unit_misc_data_t* matches[16];
+    battle_unit_misc_data_t* matches[BATTLE_UNIT_MISC_SLOT_COUNT];
     battle_unit_misc_data_t* unit;
     s32 count;
     s32 index;
