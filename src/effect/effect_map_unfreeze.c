@@ -1,8 +1,7 @@
-/* E450.BIN is the effect of effect id 0x218, one of the ids past the abilities. */
 #include "fft/effect.h"
 
-/* Callback handler: freezes the map when its keyframe starts. */
-s32 effect_e450_map_step_freeze_state(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame) {
+/* Callback handler: unfreezes the map when its keyframe starts. */
+s32 effect_map_unfreeze(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame) {
     s16 state_index = record_index;
     effect_record_t* record;
 
@@ -12,7 +11,7 @@ s32 effect_e450_map_step_freeze_state(s32 record_index, s32 callback_slot, s32 u
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        battle_map_freeze();
+        battle_map_unfreeze();
         record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:

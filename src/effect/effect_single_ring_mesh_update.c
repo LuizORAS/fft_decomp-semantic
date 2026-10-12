@@ -1,11 +1,10 @@
-/* E483.BIN is the effect of effect id 0x21c, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 
 /* Builds and draws a spinning, flaring ring of 32 textured quads: the
  * single-ring build of the ring mesh renderer, with two lattice rows of one
  * quadrant in the scratchpad instead of three. */
-s32 effect_e483_update_single_ring_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     SVECTOR vertex;
     SVECTOR unused_18[3]; /* frame padding the target reserves but never touches */
     VECTOR origin;

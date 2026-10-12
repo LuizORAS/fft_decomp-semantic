@@ -6,6 +6,9 @@
 #include "fft/battle.h"
 
 /* callbacks */
+s32 effect_map_set_3d_objects_state_2(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+s32 effect_map_unfreeze(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+s32 effect_map_freeze(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 s32 effect_e000_noop(s32 unused_record_index, s32 unused_callback_slot, s32 unused_emitter_index, s32 unused_frame);
 
 /* helpers */
@@ -97,16 +100,10 @@ typedef struct effect_particle_ribbon_long_work {
 } effect_particle_ribbon_long_work_t;
 typedef char assert_effect_particle_ribbon_long_work_size[sizeof(effect_particle_ribbon_long_work_t) == 7324 ? 1 : -1];
 
-extern u32 g_effect_e070_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
-extern u32 g_effect_e403_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
-extern u32 g_effect_e461_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
 extern u32 g_effect_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
-extern u32 g_effect_e000_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIBBON_SHORT_POINTS];
-extern u32 g_effect_e242_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIBBON_SHORT_POINTS];
-extern u32 g_effect_e317_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIBBON_SHORT_POINTS];
-extern u32 g_effect_e371_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIBBON_SHORT_POINTS];
-extern u32 g_effect_e409_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIBBON_SHORT_POINTS];
+s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 extern u32 g_effect_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIBBON_SHORT_POINTS];
+s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* polar mesh */
 /* Shared records of the 6,012-byte polar quad mesh renderer that 23 EFFECT
@@ -218,7 +215,7 @@ typedef char assert_effect_polar_mesh_work_size[sizeof(effect_polar_mesh_work_t)
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the ring (0-5) the column. */
 extern u32 g_effect_anchored_polar_mesh_brightness_table[][6];
-extern u32 g_effect_e467_anchored_polar_mesh_brightness_table[][6];
+s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the ring (0-5) the column. */
@@ -346,20 +343,17 @@ extern u32 g_effect_ring_stack_mesh_brightness_table[][9];
 s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* Overlay-local vertex brightness rows (12-bit fixed). */
-extern u32 g_effect_e464_single_ring_mesh_brightness_table[][2];
 extern u32 g_effect_single_ring_mesh_brightness_table[][2];
+s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the lattice row (0-8) the column. */
-extern u32 g_effect_e317_tube_mesh_brightness_table[][9];
-extern u32 g_effect_e383_tube_mesh_brightness_table[][9];
 extern u32 g_effect_tube_mesh_brightness_table[][9];
 
 /* Overlay-local ring scale per lattice row pair (12-bit fixed): row 4 - i and
  * row 4 + i share g_effect_tube_mesh_ring_scales[i]. */
-extern s32 g_effect_e317_tube_mesh_ring_scales[5];
-extern s32 g_effect_e383_tube_mesh_ring_scales[5];
 extern s32 g_effect_tube_mesh_ring_scales[5];
+s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* dome mesh */
 /* Work block of the spinning dome renderer shared by twelve EFFECT overlays. */
@@ -459,9 +453,10 @@ typedef struct effect_trail_work {
 } effect_trail_work_t;
 typedef char assert_effect_trail_work_size[sizeof(effect_trail_work_t) == 652 ? 1 : -1];
 
-extern u32 g_effect_e384_tentacle_mesh_brightness_table[][9];
-extern u32 g_effect_e453_tentacle_mesh_brightness_table[][9];
+s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+
 extern u32 g_effect_tentacle_mesh_brightness_table[][9];
+s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* wave mesh */
 /* Shared records of the 2,924-byte 8x8 wave-distorted quad mesh renderer that

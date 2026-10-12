@@ -1,4 +1,3 @@
-/* E468.BIN is the effect of effect id 0x211, one of the ids past the abilities. */
 #include "fft/effect.h"
 
 /* Builds and draws a four-fold symmetric polar mesh of textured quads anchored
@@ -14,7 +13,7 @@
  * `i` doubles as the curve factor and segment index, and `j` as the curve
  * index, scalar temporary and ring counter: the target keeps each pair in one
  * register. The s32 return with no value keeps $v0 live at the exit. */
-s32 effect_e468_update_anchored_polar_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     effect_anchored_polar_mesh_scratch_t* scratch;
     effect_record_t* record;

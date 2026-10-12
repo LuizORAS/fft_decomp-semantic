@@ -1,4 +1,3 @@
-/* E341.BIN is the effect of ABILITY_ID_MONSTER_SKELETON_KNIFE_HAND and ABILITY_ID_REACTION_DAMAGE_SPLIT. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 
@@ -15,7 +14,7 @@
  * renderers: the target keeps each group in one register (`k`: the row
  * height step, colour curves and brightness; `n`: the lattice row, brightness
  * row and quad depth). */
-s32 effect_e341_update_tube_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR vertex;
     SVECTOR unused_18[2]; /* frame padding the target reserves but never touches */

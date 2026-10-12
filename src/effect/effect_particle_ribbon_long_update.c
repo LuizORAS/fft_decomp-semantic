@@ -1,4 +1,3 @@
-/* E465.BIN is the effect of effect id 0x207, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 
@@ -20,7 +19,7 @@
  * so fold keeps the target's (j - 16) and (index - 16) subexpressions; the
  * head point is re-read through the same `slot->trail[index]` address before
  * `index` steps back to the tail. */
-s32 effect_e465_update_particle_ribbons_long_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR target_base;
     SVECTOR target_spread;
@@ -505,7 +504,7 @@ s32 effect_e465_update_particle_ribbons_long_state(s32 record_index, s32 callbac
             quad->u0 = quad->u2 = u;
             quad->v0 = v;
             quad->v2 = v + height;
-            factor = g_effect_e461_particle_ribbon_long_brightness_table[row][point];
+            factor = g_effect_particle_ribbon_long_brightness_table[row][point];
             setRGB0(
                 quad, quad->r2 = factor * red >> 12, quad->g2 = factor * green >> 12, quad->b2 = factor * blue >> 12);
             point--;
@@ -536,7 +535,7 @@ s32 effect_e465_update_particle_ribbons_long_state(s32 record_index, s32 callbac
                 prev->u1 = prev->u3 = quad->u0 = quad->u2 = u + j * (width / RIBBON_SEGMENTS);
                 prev->v1 = quad->v0 = v;
                 prev->v3 = quad->v2 = v + height;
-                factor = g_effect_e461_particle_ribbon_long_brightness_table[row][point];
+                factor = g_effect_particle_ribbon_long_brightness_table[row][point];
                 setRGB1(prev, prev->r3 = quad->r0 = quad->r2 = factor * red >> 12,
                     prev->g3 = quad->g0 = quad->g2 = factor * green >> 12,
                     prev->b3 = quad->b0 = quad->b2 = factor * blue >> 12);
@@ -560,7 +559,7 @@ s32 effect_e465_update_particle_ribbons_long_state(s32 record_index, s32 callbac
             quad->u1 = quad->u3 = u + width / RIBBON_SEGMENTS * segments;
             quad->v1 = v;
             quad->v3 = v + height;
-            factor = g_effect_e461_particle_ribbon_long_brightness_table[row][point];
+            factor = g_effect_particle_ribbon_long_brightness_table[row][point];
             setRGB1(
                 quad, quad->r3 = factor * red >> 12, quad->g3 = factor * green >> 12, quad->b3 = factor * blue >> 12);
             if (depth < EFFECT_OT_DEPTH_MIN) {

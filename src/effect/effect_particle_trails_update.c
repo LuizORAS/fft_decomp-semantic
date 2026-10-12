@@ -1,14 +1,14 @@
-/* E376.BIN is the effect of ABILITY_ID_MONSTER_MORBOL_TENTACLE. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
-#include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Run one phase of a tentacle-mesh effect: allocate its segment quads, spawn
- * up to 8 segments on the emitter interval, then advance each segment and
- * draw it as a strip of paired POLY_GT4 quads. */
-s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+/* Runs up to four unseen particles from the emitter's spawn volume towards a
+ * tip, keeping a 17-point trail of each, and spawns the emitter's children
+ * from the trail's far end: the mid-life child every frame and the death
+ * child when the trail has run out. The tentacle mesh renderer without its
+ * mesh. */
+s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR tip;
     SVECTOR tip_spread;
@@ -22,12 +22,10 @@ s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, 
     VECTOR out;
     SVECTOR tip_map_max;
     MATRIX facing;
-    VECTOR screen0;
-    VECTOR screen1;
     effect_work_record_t emitter;
     SVECTOR map_max;
     effect_record_t* record;
-    effect_tentacle_mesh_work_t* work;
+    effect_trail_work_t* work;
     effect_geometry_record_t* entry;
     s16 speed_min;
     s16 speed_max;
@@ -36,31 +34,12 @@ s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, 
     s32 i;
     s32 count;
     s32 j;
-    u16 flags;
     s32 shade_index;
-    s32 link_count;
-    s32 u;
-    s32 v;
-    s32 width;
-    s32 height;
-    s32 depth_bias;
-    s16 prev_angle;
-    s16 angle;
-    u32 red;
-    u32 green;
-    u32 blue;
-    u32* ot;
-    effect_tentacle_mesh_segment_t* seg;
-    POLY_GT4* quad;
-    POLY_GT4* offset_quad;
-    POLY_GT4* prev;
-    POLY_GT4* prev_offset_quad;
+    effect_trail_segment_t* seg;
     map_tile_t* tile;
-    u16 placement;
-    effect_texture_page_config_t texture_page_config;
-    u16 tpage;
-    s32 translucent;
     s32 orient;
+    u16 placement;
+    u16 flags;
     s32 target_index;
     s32 curves0;
     s32 curves1;
@@ -68,19 +47,13 @@ s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, 
     s32 factor;
     s16 len;
     s32 speed;
-    s32 brightness_row;
-    s32 scratch; /* one register: INIT column, edge half-width x, then brightness factor */
-    s32 dy;
-    s32 depth;
-    s16 edge_angle;
-    s32 point_index;
+    s32 point;
     battle_effect_target_t* caster_target;
     s32 px;
     s32 tail_step;
     s32 x;
     s32 y;
     s32 z;
-    s32 mid_angle;
     s16 facing_yaw;
     s32 py;
     s32 pz;
@@ -90,7 +63,6 @@ s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, 
     entry = &g_battle_effect_geometry_table->entries[emitter_index];
     placement = entry->tentacle_mesh.placement_flags;
     flags = entry->tentacle_mesh.flags;
-    ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
@@ -100,31 +72,9 @@ s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, 
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = record->work_slots[callback_slot]
-            = battle_heap_alloc_block(sizeof(effect_tentacle_mesh_work_t), state_index);
-        texture_page_config = entry->tentacle_mesh.texture_page_config;
-        if (texture_page_config.clear_abe) {
-            translucent = 0;
-        } else {
-            translucent = 1;
-        }
-        tpage = (texture_page_config.blend_mode << 5) | 0x86;
-        for (i = 0; i < 8; i++) {
-            for (scratch = 0; scratch < 8; scratch++) {
-                quad = &work->segments[i].quads[0][scratch];
-                SetPolyGT4(quad);
-                if (translucent) {
-                    quad->code |= 2;
-                } else {
-                    quad->code &= ~2;
-                }
-                quad->tpage = tpage;
-                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
-                work->segments[i].quads[1][scratch] = *quad;
-                work->segments[i].quads[2][scratch] = *quad;
-                work->segments[i].quads[3][scratch] = *quad;
-            }
-            work->segments[i].active = 0;
+        work = record->work_slots[callback_slot] = battle_heap_alloc_block(sizeof(effect_trail_work_t), state_index);
+        for (index = 3; index >= 0; index--) {
+            work->segments[index].active = 0;
         }
         work->buffer = 0;
         work->count = 0;
@@ -276,11 +226,11 @@ s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, 
                 entry->tentacle_mesh.lifetime_start[1], entry->tentacle_mesh.lifetime_end[1], factor);
 
             for (i = 0; i < count; i++) {
-                if (work->count >= 8) {
+                if (work->count >= 4) {
                     break;
                 }
                 work->count++;
-                for (j = 0; j < 8; j++) {
+                for (j = 0; j < 4; j++) {
                     if (work->segments[j].active == 0) {
                         seg = &work->segments[j];
                         break;
@@ -383,8 +333,6 @@ s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, 
                 seg->length = RANDOM_BETWEEN(length_min, length_max);
                 seg->head = 0;
                 seg->active = 1;
-                seg->frame = 0;
-                seg->frame_timer = entry->tentacle_mesh.frame_delay;
                 rotation.vx = seg->position.vx >> 12;
                 rotation.vy = seg->position.vy >> 12;
                 rotation.vz = seg->position.vz >> 12;
@@ -396,189 +344,46 @@ s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, 
             }
         }
 
-        width = entry->tentacle_mesh.texture_width;
-        height = entry->tentacle_mesh.texture_height;
-        depth_bias = entry->tentacle_mesh.ot_depth;
-        brightness_row = entry->tentacle_mesh.brightness_row;
-        for (j = 0; j < 8; j++) {
+        for (j = 0; j < 4; j++) {
             if (work->segments[j].active == 0) {
                 continue;
             }
             seg = &work->segments[j];
-            if (--seg->frame_timer == 0) {
-                if (++seg->frame > entry->tentacle_mesh.frame_count - 1) {
-                    seg->frame = 0;
-                }
-                seg->frame_timer = entry->tentacle_mesh.frame_delay;
-            }
-            if (entry->tentacle_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-                red = g_battle_effect_animation_curve_data->curves[entry->tentacle_mesh.colour_curves & 0xF][seg->head];
-                factor = entry->tentacle_mesh.colour_curves & 0xFFF;
-                green = g_battle_effect_animation_curve_data->curves[(factor >> 4) & 0xF][seg->head];
-                blue = g_battle_effect_animation_curve_data->curves[(factor >> 8) & 0xF][seg->head];
-            } else {
-                red = green = blue = 0x80;
-            }
-
             emitter.motion.position.x = x = seg->position.vx += seg->velocity.vx;
             emitter.motion.position.y = y = seg->position.vy += seg->velocity.vy;
             emitter.motion.position.z = z = seg->position.vz += seg->velocity.vz;
             index = ++seg->head;
-            point_index = index % 9;
+            point = index % 17;
             px = x >> 12;
             py = y >> 12;
             pz = z >> 12;
             if (index <= seg->length) {
-                seg->points[point_index].x = battle_effect_interpolate_s32_cos(px, seg->tip.vx, seg->length, index);
-                seg->points[point_index].y = battle_effect_interpolate_s32_cos(py, seg->tip.vy, seg->length, index);
-                seg->points[point_index].z = battle_effect_interpolate_s32_cos(pz, seg->tip.vz, seg->length, index);
-                /* Assigned after the calls; the scheduler hoists both stores above them. */
-                shade_index = 8;
-                link_count = 8;
-                if (index < 8) {
-                    link_count = index;
-                }
-                u = entry->tentacle_mesh.texture_u;
+                seg->points[point].x = battle_effect_interpolate_s32_cos(px, seg->tip.vx, seg->length, index);
+                seg->points[point].y = battle_effect_interpolate_s32_cos(py, seg->tip.vy, seg->length, index);
+                seg->points[point].z = battle_effect_interpolate_s32_cos(pz, seg->tip.vz, seg->length, index);
             } else {
-                seg->points[point_index].x = seg->tip.vx;
-                seg->points[point_index].y = seg->tip.vy;
-                seg->points[point_index].z = seg->tip.vz;
-                tail_step = index - 8;
+                seg->points[point].x = seg->tip.vx;
+                seg->points[point].y = seg->tip.vy;
+                seg->points[point].z = seg->tip.vz;
+                tail_step = index - 16;
                 shade_index = seg->length - tail_step;
                 if (shade_index < 0) {
                     shade_index = 0;
                 }
-                link_count = shade_index;
-                wrap = point_index - 8;
-                point_index = wrap + shade_index;
-                if (point_index < 0) {
-                    point_index += 9;
+                wrap = point - 16;
+                point = wrap + shade_index;
+                if (point < 0) {
+                    point += 17;
                 }
-                u = entry->tentacle_mesh.texture_u + (8 - shade_index) * (width / 8);
             }
-
-            emitter.motion.position.x = seg->points[point_index].x << 12;
-            emitter.motion.position.y = seg->points[point_index].y << 12;
-            emitter.motion.position.z = seg->points[point_index].z << 12;
+            emitter.motion.position.x = seg->points[point].x << 12;
+            emitter.motion.position.y = seg->points[point].y << 12;
+            emitter.motion.position.z = seg->points[point].z << 12;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 battle_effect_spawn_emitter_particles(
                     record->record_index, seg->head, entry->tentacle_mesh.child_emitter_mid_life, &emitter);
             }
-            v = entry->tentacle_mesh.texture_v + seg->frame * height;
-            quad = &seg->quads[work->buffer][0];
-            offset_quad = &seg->quads[work->buffer + 2][0];
-            SetRotMatrix(&g_battle_camera_matrix);
-            SetTransMatrix(&g_battle_camera_matrix);
-            rotation.vx = seg->points[point_index].x;
-            rotation.vy = seg->points[point_index].y;
-            rotation.vz = seg->points[point_index].z;
-            RotTrans(&rotation, &screen0, &screen0.pad);
-            point_index--;
-            if (point_index < 0) {
-                point_index = 8;
-            }
-            rotation.vx = seg->points[point_index].x;
-            rotation.vy = seg->points[point_index].y;
-            rotation.vz = seg->points[point_index].z;
-            RotTrans(&rotation, &screen1, &screen1.pad);
-            prev_angle = ratan2(screen1.vy - screen0.vy, screen1.vx - screen0.vx);
-            scratch = ((rcos(prev_angle + 0x400) * height) / 2) >> 12;
-            dy = ((rsin(prev_angle + 0x400) * height) / 2) >> 12;
-            depth = (screen0.vz + screen1.vz) / 8 + depth_bias;
-            quad->x0 = screen0.vx - scratch;
-            offset_quad->x0 = quad->x0 + 1;
-            quad->y0 = screen0.vy - dy;
-            offset_quad->y0 = quad->y0 + 1;
-            quad->x2 = screen0.vx + scratch;
-            offset_quad->x2 = quad->x2 + 1;
-            quad->y2 = screen0.vy + dy;
-            offset_quad->y2 = quad->y2 + 1;
-            offset_quad->u0 = offset_quad->u2 = quad->u0 = quad->u2 = u;
-            offset_quad->v0 = quad->v0 = v;
-            offset_quad->v2 = quad->v2 = v + height;
-            scratch = g_effect_tentacle_mesh_brightness_table[brightness_row][shade_index];
-            shade_index--;
-            setRGB0(offset_quad, offset_quad->r2 = quad->r0 = quad->r2 = (scratch * red) >> 12,
-                offset_quad->g2 = quad->g0 = quad->g2 = (scratch * green) >> 12,
-                offset_quad->b2 = quad->b0 = quad->b2 = (scratch * blue) >> 12);
-
-            for (index = 1; index < link_count; index++) {
-                point_index--;
-                prev = quad;
-                prev_offset_quad = offset_quad;
-                quad = &seg->quads[work->buffer][index];
-                offset_quad = &seg->quads[work->buffer + 2][index];
-                screen0 = screen1;
-                if (point_index < 0) {
-                    point_index = 8;
-                }
-                rotation.vx = seg->points[point_index].x;
-                rotation.vy = seg->points[point_index].y;
-                rotation.vz = seg->points[point_index].z;
-                RotTrans(&rotation, &screen1, &screen1.pad);
-                angle = ratan2(screen1.vy - screen0.vy, screen1.vx - screen0.vx);
-                mid_angle = (angle + prev_angle) / 2;
-                edge_angle = mid_angle + 0x400;
-                if (angle - prev_angle < -0x800 || angle - prev_angle > 0x800) {
-                    edge_angle = mid_angle + 0xC00;
-                }
-                scratch = ((rcos(edge_angle) * height) / 2) >> 12;
-                dy = ((rsin(edge_angle) * height) / 2) >> 12;
-                prev_offset_quad->x1 = offset_quad->x0 = (prev->x1 = quad->x0 = screen0.vx - scratch) + 1;
-                prev_offset_quad->y1 = offset_quad->y0 = (prev->y1 = quad->y0 = screen0.vy - dy) + 1;
-                prev_offset_quad->x3 = offset_quad->x2 = (prev->x3 = quad->x2 = screen0.vx + scratch) + 1;
-                prev_offset_quad->y3 = offset_quad->y2 = (prev->y3 = quad->y2 = screen0.vy + dy) + 1;
-                prev_offset_quad->u1 = prev_offset_quad->u3 = offset_quad->u0 = offset_quad->u2 = prev->u1 = prev->u3
-                    = quad->u0 = quad->u2 = u + index * (width / 8);
-                prev_offset_quad->v1 = offset_quad->v0 = prev->v1 = quad->v0 = v;
-                prev_offset_quad->v3 = offset_quad->v2 = prev->v3 = quad->v2 = v + height;
-                scratch = g_effect_tentacle_mesh_brightness_table[brightness_row][shade_index];
-                shade_index--;
-                prev_offset_quad->r1 = prev_offset_quad->r3 = offset_quad->r0 = offset_quad->r2 = prev->r1 = prev->r3
-                    = quad->r0 = quad->r2 = (scratch * red) >> 12;
-                prev_offset_quad->g1 = prev_offset_quad->g3 = offset_quad->g0 = offset_quad->g2 = prev->g1 = prev->g3
-                    = quad->g0 = quad->g2 = (scratch * green) >> 12;
-                prev_offset_quad->b1 = prev_offset_quad->b3 = offset_quad->b0 = offset_quad->b2 = prev->b1 = prev->b3
-                    = quad->b0 = quad->b2 = (scratch * blue) >> 12;
-                if (depth < EFFECT_OT_DEPTH_MIN) {
-                    depth = EFFECT_OT_DEPTH_MIN;
-                }
-                if (depth >= EFFECT_OT_DEPTH_LIMIT) {
-                    depth = EFFECT_OT_DEPTH_MAX;
-                }
-                AddPrim(&ot[depth], prev);
-                AddPrim(&ot[depth], prev_offset_quad);
-                depth = (screen0.vz + screen1.vz) / 8 + depth_bias;
-                prev_angle = angle;
-            }
-
-            scratch = ((rcos(prev_angle + 0x400) * height) / 2) >> 12;
-            dy = ((rsin(prev_angle + 0x400) * height) / 2) >> 12;
-            quad->x1 = screen1.vx - scratch;
-            offset_quad->x1 = quad->x1 + 1;
-            quad->y1 = screen1.vy - dy;
-            offset_quad->y1 = quad->y1 + 1;
-            quad->x3 = screen1.vx + scratch;
-            offset_quad->x3 = quad->x3 + 1;
-            quad->y3 = screen1.vy + dy;
-            offset_quad->y3 = quad->y3 + 1;
-            offset_quad->u1 = offset_quad->u3 = quad->u1 = quad->u3 = u + (width / 8) * link_count;
-            offset_quad->v1 = quad->v1 = v;
-            offset_quad->v3 = quad->v3 = v + height;
-            scratch = g_effect_tentacle_mesh_brightness_table[brightness_row][shade_index];
-            setRGB1(offset_quad, offset_quad->r3 = quad->r1 = quad->r3 = (scratch * red) >> 12,
-                offset_quad->g3 = quad->g1 = quad->g3 = (scratch * green) >> 12,
-                offset_quad->b3 = quad->b1 = quad->b3 = (scratch * blue) >> 12);
-            if (depth < EFFECT_OT_DEPTH_MIN) {
-                depth = EFFECT_OT_DEPTH_MIN;
-            }
-            if (depth >= EFFECT_OT_DEPTH_LIMIT) {
-                depth = EFFECT_OT_DEPTH_MAX;
-            }
-            AddPrim(&ot[depth], offset_quad);
-            AddPrim(&ot[depth], quad);
-
-            if (seg->length + 8 == seg->head) {
+            if (seg->length + 16 == seg->head) {
                 if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
                     battle_effect_spawn_emitter_particles(
                         record->record_index, seg->head, entry->tentacle_mesh.child_emitter_on_death, &emitter);

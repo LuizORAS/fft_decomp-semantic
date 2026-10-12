@@ -1,4 +1,3 @@
-/* E381.BIN is the effect of ABILITY_ID_MONSTER_BEHEMOTH_STAB_UP. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 #include "psx/libgpu.h"
@@ -8,7 +7,7 @@
 /* Run one phase of a tentacle-mesh effect: allocate its segment quads, spawn
  * up to 8 segments on the emitter interval, then advance each segment and
  * draw it as a strip of paired POLY_GT4 quads. */
-s32 effect_e381_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR tip;
     SVECTOR tip_spread;

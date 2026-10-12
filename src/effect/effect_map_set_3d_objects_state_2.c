@@ -1,10 +1,8 @@
-/* E455.BIN is the effect of effect id 0x20f, one of the ids past the abilities. */
 #include "fft/effect.h"
 
 /* Callback handler: when its keyframe starts, sets the map's 3D objects 1-6 to
  * state 2. */
-s32 effect_e455_map_set_3d_objects_to_state_2_state(
-    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame) {
+s32 effect_map_set_3d_objects_state_2(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame) {
     s16 state_index = record_index;
     effect_record_t* record = &g_battle_effect_state_records[state_index];
 

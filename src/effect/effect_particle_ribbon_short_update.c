@@ -1,9 +1,8 @@
-/* E461.BIN is the effect of effect id 0x204, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/gte_inline.h"
 
-#define RIBBON_SLOTS    EFFECT_PARTICLE_RIBBON_LONG_SLOTS
-#define RIBBON_POINTS   EFFECT_PARTICLE_RIBBON_LONG_POINTS
+#define RIBBON_SLOTS    EFFECT_PARTICLE_RIBBON_SHORT_SLOTS
+#define RIBBON_POINTS   EFFECT_PARTICLE_RIBBON_SHORT_POINTS
 #define RIBBON_SEGMENTS (RIBBON_POINTS - 1)
 
 /* Spawns homing particles and draws each one's recent path as a ribbon of
@@ -20,7 +19,7 @@
  * so fold keeps the target's (j - 16) and (index - 16) subexpressions; the
  * head point is re-read through the same `slot->trail[index]` address before
  * `index` steps back to the tail. */
-s32 effect_e461_update_particle_ribbons_long_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR target_base;
     SVECTOR target_spread;
@@ -39,7 +38,7 @@ s32 effect_e461_update_particle_ribbons_long_state(s32 record_index, s32 callbac
     effect_work_record_t parent;
     SVECTOR map_origin;
     effect_record_t* record;
-    effect_particle_ribbon_long_work_t* work;
+    effect_particle_ribbon_short_work_t* work;
     effect_geometry_record_t* entry;
     s16 speed_min;
     s16 speed_max;
@@ -85,7 +84,7 @@ s32 effect_e461_update_particle_ribbons_long_state(s32 record_index, s32 callbac
     s32 depth;
     s16 mid;
     s32 bisector;
-    effect_particle_ribbon_long_t* slot;
+    effect_particle_ribbon_short_t* slot;
     POLY_GT4* quad;
     POLY_GT4* prev;
     map_tile_t* tile;
@@ -105,7 +104,7 @@ s32 effect_e461_update_particle_ribbons_long_state(s32 record_index, s32 callbac
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = battle_heap_alloc_block(sizeof(effect_particle_ribbon_long_work_t), state_index);
+        work = battle_heap_alloc_block(sizeof(effect_particle_ribbon_short_work_t), state_index);
         record->work_slots[callback_slot] = work;
         configuration = entry->particle_ribbon.texture_page_config;
         if (configuration.clear_abe) {
@@ -312,7 +311,10 @@ s32 effect_e461_update_particle_ribbons_long_state(s32 record_index, s32 callbac
                     vector.vx = largest;
                     vector.vz = 0;
                     vector.vy = 0;
-                    gte_RotTrans(&vector, &result, &result.pad);
+                    gte_ldv0(&vector);
+                    gte_rtv0tr();
+                    gte_stlvnl(&result);
+                    gte_stflg(&result.pad);
                     slot->position.vx = (result.vx * spread.vx / largest + origin.vx) << 12;
                     slot->position.vy = (result.vy * spread.vy / largest + origin.vy) << 12;
                     slot->position.vz = (result.vz * spread.vz / largest + origin.vz) << 12;
@@ -505,7 +507,7 @@ s32 effect_e461_update_particle_ribbons_long_state(s32 record_index, s32 callbac
             quad->u0 = quad->u2 = u;
             quad->v0 = v;
             quad->v2 = v + height;
-            factor = g_effect_e461_particle_ribbon_long_brightness_table[row][point];
+            factor = g_effect_particle_ribbon_short_brightness_table[row][point];
             setRGB0(
                 quad, quad->r2 = factor * red >> 12, quad->g2 = factor * green >> 12, quad->b2 = factor * blue >> 12);
             point--;
@@ -536,7 +538,7 @@ s32 effect_e461_update_particle_ribbons_long_state(s32 record_index, s32 callbac
                 prev->u1 = prev->u3 = quad->u0 = quad->u2 = u + j * (width / RIBBON_SEGMENTS);
                 prev->v1 = quad->v0 = v;
                 prev->v3 = quad->v2 = v + height;
-                factor = g_effect_e461_particle_ribbon_long_brightness_table[row][point];
+                factor = g_effect_particle_ribbon_short_brightness_table[row][point];
                 setRGB1(prev, prev->r3 = quad->r0 = quad->r2 = factor * red >> 12,
                     prev->g3 = quad->g0 = quad->g2 = factor * green >> 12,
                     prev->b3 = quad->b0 = quad->b2 = factor * blue >> 12);
@@ -560,7 +562,7 @@ s32 effect_e461_update_particle_ribbons_long_state(s32 record_index, s32 callbac
             quad->u1 = quad->u3 = u + width / RIBBON_SEGMENTS * segments;
             quad->v1 = v;
             quad->v3 = v + height;
-            factor = g_effect_e461_particle_ribbon_long_brightness_table[row][point];
+            factor = g_effect_particle_ribbon_short_brightness_table[row][point];
             setRGB1(
                 quad, quad->r3 = factor * red >> 12, quad->g3 = factor * green >> 12, quad->b3 = factor * blue >> 12);
             if (depth < EFFECT_OT_DEPTH_MIN) {
