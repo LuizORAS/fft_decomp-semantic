@@ -1,4 +1,3 @@
-/* E035.BIN is the effect of ABILITY_ID_TIME_MAGIC_SLOW_2. */
 #include "fft/effect.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
@@ -19,7 +18,7 @@
  * reassociated by fold into a per-point `addiu -0x40`. `column` doubles as the
  * curve factor, as `row` does as the curve index and brightness. The s32
  * return with no value keeps $v0 live at the exit. */
-s32 effect_e035_update_wave_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     VECTOR spread;
     effect_record_t* record;
@@ -237,10 +236,10 @@ s32 effect_e035_update_wave_mesh_state(s32 record_index, s32 callback_slot, s32 
                 v = (work->scroll_v >> 12) + work->texture_v;
                 quad->v0 = quad->v1 = v;
                 quad->v2 = quad->v3 = v + texture_height;
-                row = g_effect_e035_wave_mesh_brightness_table[brightness_row][quad_row];
+                row = g_effect_wave_mesh_brightness_table[brightness_row][quad_row];
                 setRGB0(
                     quad, quad->r1 = (row * red) >> 12, quad->g1 = (row * green) >> 12, quad->b1 = (row * blue) >> 12);
-                row = g_effect_e035_wave_mesh_brightness_table[brightness_row][quad_row + 1];
+                row = g_effect_wave_mesh_brightness_table[brightness_row][quad_row + 1];
                 setRGB2(
                     quad, quad->r3 = (row * red) >> 12, quad->g3 = (row * green) >> 12, quad->b3 = (row * blue) >> 12);
                 AddPrim(ot + depth, quad);

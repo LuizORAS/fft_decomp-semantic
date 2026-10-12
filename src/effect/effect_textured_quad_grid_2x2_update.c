@@ -1,23 +1,16 @@
-/* E385.BIN is the effect of ABILITY_ID_DARK_MAGIC_GIGA_FLARE. */
 #include "fft/effect.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
 /*
- * Phase handler for the scrolling 4x4 textured quad grid.
+ * Phase handler for the scrolling 2x2 textured quad grid (E481 electricity).
  *
- * Phase 1 builds both POLY_GT4 buffers of a 256x256 grid; phase 2 scrolls the
- * texture window along the emitter record's speed and angle curves, tints each
- * quad from the colour curves and the overlay-local vertex brightness rows, and
- * links the current buffer into the ordering table; phase 3 frees the work
- * block one call after it is first reached.
- *
- * row and column are also the update phase's curve scratch values. GCC 2.6.3
- * gives each C variable one pseudo, and that sharing is what places the curve
- * index, colour curves and brightness in s2 and the curve factor in s3.
+ * The 2x2 build of effect_e047_update_textured_quad_grid_4x4 (E047): 128-pixel
+ * cells, three brightness entries per row and an ordering-table depth of at
+ * least 4. The shared row/column scratch variables are explained there.
  */
-s32 effect_e385_update_textured_quad_grid_4x4(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_textured_quad_grid_2x2_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     effect_record_t* record;
     s32 translucent;
@@ -27,7 +20,7 @@ s32 effect_e385_update_textured_quad_grid_4x4(s32 record_index, s32 callback_slo
     s32 texture_height;
     u32* ot;
     effect_textured_quad_geometry_view_t* geometry;
-    effect_textured_quad_grid_4x4_work_t* work;
+    effect_textured_quad_grid_2x2_work_t* work;
     POLY_GT4* quad;
     s32 row;
     s32 column;
@@ -54,7 +47,7 @@ s32 effect_e385_update_textured_quad_grid_4x4(s32 record_index, s32 callback_slo
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = battle_heap_alloc_block(sizeof(effect_textured_quad_grid_4x4_work_t), state_index);
+        work = battle_heap_alloc_block(sizeof(effect_textured_quad_grid_2x2_work_t), state_index);
         record->work_slots[callback_slot] = work;
         configuration = geometry->texture_page_config;
         if (configuration.clear_abe) {
@@ -63,9 +56,9 @@ s32 effect_e385_update_textured_quad_grid_4x4(s32 record_index, s32 callback_slo
             translucent = 1;
         }
         texture_page = (configuration.blend_mode << 5) | 0x86;
-        for (row = 0; row < 4; row++) {
-            for (column = 0; column < 4; column++) {
-                quad = &work->quads[0][row * 4 + column];
+        for (row = 0; row < 2; row++) {
+            for (column = 0; column < 2; column++) {
+                quad = &work->quads[0][row * 2 + column];
                 SetPolyGT4(quad);
                 if (translucent) {
                     quad->code |= 2;
@@ -74,11 +67,11 @@ s32 effect_e385_update_textured_quad_grid_4x4(s32 record_index, s32 callback_slo
                 }
                 quad->tpage = texture_page;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
-                quad->x0 = quad->x2 = (column << 6) + 0x80;
-                quad->y0 = quad->y1 = row << 6;
-                quad->x1 = quad->x3 = (column << 6) + 0xc0;
-                quad->y2 = quad->y3 = (row << 6) + 0x40;
-                work->quads[1][row * 4 + column] = *quad;
+                quad->x0 = quad->x2 = (column << 7) + 0x80;
+                quad->y0 = quad->y1 = row << 7;
+                quad->x1 = quad->x3 = (column << 7) + 0x100;
+                quad->y2 = quad->y3 = (row << 7) + 0x80;
+                work->quads[1][row * 2 + column] = *quad;
             }
         }
         work->scroll_v = 0;
@@ -126,25 +119,25 @@ s32 effect_e385_update_textured_quad_grid_4x4(s32 record_index, s32 callback_slo
         }
         depth = geometry->ot_depth;
         brightness_row = geometry->brightness_row;
-        if (depth <= 0) {
-            depth = 1;
+        if (depth < EFFECT_OT_DEPTH_MIN) {
+            depth = EFFECT_OT_DEPTH_MIN;
         }
         if (depth >= EFFECT_OT_DEPTH_LIMIT) {
             depth = EFFECT_OT_DEPTH_MAX;
         }
-        for (quad_row = 0; quad_row < 4; quad_row++) {
-            for (quad_column = 0; quad_column < 4; quad_column++) {
-                quad = &work->quads[work->buffer][quad_row * 4 + quad_column];
+        for (quad_row = 0; quad_row < 2; quad_row++) {
+            for (quad_column = 0; quad_column < 2; quad_column++) {
+                quad = &work->quads[work->buffer][quad_row * 2 + quad_column];
                 u = (work->scroll_u >> 12) + work->texture_u;
                 quad->u0 = quad->u2 = u;
                 quad->u1 = quad->u3 = u + texture_width;
                 v = (work->scroll_v >> 12) + work->texture_v;
                 quad->v0 = quad->v1 = v;
                 quad->v2 = quad->v3 = v + texture_height;
-                row = g_effect_gfx_brightness_table[brightness_row][quad_row];
+                row = g_effect_textured_quad_grid_2x2_brightness_table[brightness_row][quad_row];
                 setRGB0(
                     quad, quad->r1 = (row * red) >> 12, quad->g1 = (row * green) >> 12, quad->b1 = (row * blue) >> 12);
-                row = g_effect_gfx_brightness_table[brightness_row][quad_row + 1];
+                row = g_effect_textured_quad_grid_2x2_brightness_table[brightness_row][quad_row + 1];
                 setRGB2(
                     quad, quad->r3 = (row * red) >> 12, quad->g3 = (row * green) >> 12, quad->b3 = (row * blue) >> 12);
                 AddPrim(ot + depth, quad);

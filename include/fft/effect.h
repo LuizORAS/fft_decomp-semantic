@@ -274,11 +274,13 @@ typedef char
 
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 2x2 grid:
  * brightness_row selects the row, the column is the quad row. */
-extern u32 g_effect_electricity_grid_brightness_table[][3];
+extern u32 g_effect_textured_quad_grid_2x2_brightness_table[][3];
+s32 effect_textured_quad_grid_2x2_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 8x8 grid:
  * brightness_row selects the row, the column is the quad row. */
-extern u32 g_effect_textured_grid_brightness_table[][9];
+extern u32 g_effect_textured_quad_grid_8x8_brightness_table[][9];
+s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* ring mesh */
 /* Shared records of the 5,584-byte ring mesh renderer that 32 EFFECT overlays
@@ -493,18 +495,15 @@ typedef struct effect_wave_mesh_scratch {
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the quad row (0-8) the column. */
-extern u32 g_effect_e035_wave_mesh_brightness_table[][9];
-extern u32 g_effect_e073_wave_mesh_brightness_table[][9];
-extern u32 g_effect_e080_wave_mesh_brightness_table[][9];
-extern u32 g_effect_e230_wave_mesh_brightness_table[][9];
-extern u32 g_effect_e453_wave_mesh_brightness_table[][9];
 extern u32 g_effect_wave_mesh_brightness_table[][9];
+s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* other */
 
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 4x4 grid-mesh
  * family: brightness_row selects the row, the column is the quad row. */
-extern u32 g_effect_gfx_brightness_table[][5];
+extern u32 g_effect_textured_quad_grid_4x4_brightness_table[][5];
+s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 extern battle_effect_tick_channels_t* g_effect_timeline_channel_base;
 void effect_add_scratchpad_xyz_components(s32 group, s32 point, const VECTOR* offset, SVECTOR* output);
 
