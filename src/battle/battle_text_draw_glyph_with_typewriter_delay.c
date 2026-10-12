@@ -158,9 +158,9 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
         } else {
             if (PadRead(1) & PSX_PAD_CIRCLE) {
                 g_battle_text_glyphs_per_wait = 8;
-            } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0) {
+            } else if (g_main_game_options.fields.message_display_speed == GAME_MESSAGE_DISPLAY_SPEED_FAST) {
                 g_battle_text_glyphs_per_wait = 8;
-            } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0x1000) {
+            } else if (g_main_game_options.fields.message_display_speed == GAME_MESSAGE_DISPLAY_SPEED_REGULAR) {
                 g_battle_text_glyphs_per_wait = 2;
             } else {
                 g_battle_text_glyphs_per_wait = 1;

@@ -53,9 +53,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
         mode = 1;
     }
     if (mode != 0) {
-        if ((g_main_game_options.value & GAME_OPTIONS_NAVIGATION_MESSAGES_MASK)
-                != GAME_OPTIONS_NAVIGATION_MESSAGES_OFF_BITS
-            || (message & 0xff00) != (g_main_game_options.value & GAME_OPTIONS_NAVIGATION_MESSAGES_MASK)) {
+        if (g_main_game_options.fields.navigation_messages != GAME_OPTION_OFF || (message & 0xff00) != 0x8000) {
             g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
             world_thread_set_parameters(g_world_thread_current_id - 1,
@@ -63,7 +61,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
         }
         if (mode == 2) {
             world_sound_set_effect_to_invalid();
-            if ((g_main_game_options.value & GAME_OPTIONS_NAVIGATION_MESSAGES_MASK) == 0) {
+            if (g_main_game_options.fields.navigation_messages == GAME_OPTION_ON) {
                 world_thread_wait_until_inactive(g_world_thread_current_id - 1);
             }
             world_thread_exit_current();

@@ -151,9 +151,9 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
     } else {
         if (PadRead(1) & PSX_PAD_CIRCLE) {
             g_world_text_message_box_glyph_delay = 8;
-        } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0) {
+        } else if (g_main_game_options.fields.message_display_speed == GAME_MESSAGE_DISPLAY_SPEED_FAST) {
             g_world_text_message_box_glyph_delay = 8;
-        } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0x1000) {
+        } else if (g_main_game_options.fields.message_display_speed == GAME_MESSAGE_DISPLAY_SPEED_REGULAR) {
             g_world_text_message_box_glyph_delay = 2;
         } else {
             g_world_text_message_box_glyph_delay = 1;
