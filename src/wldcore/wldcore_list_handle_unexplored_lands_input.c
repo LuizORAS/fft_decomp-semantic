@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Twin of wldcore_list_handle_rumors_input for cursor slot 7: closes the level inline, opens
+/* Twin of wldcore_bar_handle_rumors_input for cursor slot 7: closes the level inline, opens
  * help message 0x1058 on 0x100, and hands a confirmed entry to 0x8007e360.
  * Cancel (0x40) is accepted even while a file is loading.
  *

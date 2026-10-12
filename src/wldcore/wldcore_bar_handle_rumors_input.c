@@ -1,18 +1,17 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Yes/no list-level input step. Cancel (0x40) or confirm (0x20) starts
- * thread 12's closing animation and records the choice in result; 0x100
- * with a non-empty list opens help message 0x105e. Once thread 12 finishes,
- * the level closes and a confirmed choice passes the selected entry's value
- * (low 11 bits of g_wldcore_list_entry_values) to 0x80072618, otherwise the bar menu resumes.
+/* Step of the rumor list. Circle (with a rumor listed) or Cross closes the list panel; once its
+ * thread ends, a chosen rumor opens in a scrollable text window (wldcore_bar_push_rumor_detail_level)
+ * and Cross returns to the Bar's menu. Select shows the list's help text (0x105e).
  *
- * The target passes the level to 0x80072404 and 0x800723f0 even though
- * neither reads an argument; their local prototypes here take it. */
-void wldcore_list_handle_rumors_input(wldcore_menu_panel_level_t* level) {
+ * The target passes the level to wldcore_bar_rumors_close_level and
+ * wldcore_bar_rumors_block_all_buttons even though neither reads an argument;
+ * their prototypes take it. */
+void wldcore_bar_handle_rumors_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
         && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
-        wldcore_list_rumors_close_level(level);
+        wldcore_bar_rumors_close_level(level);
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_RUMORS);
             wldcore_bar_push_rumor_detail_level(
@@ -30,7 +29,7 @@ void wldcore_list_handle_rumors_input(wldcore_menu_panel_level_t* level) {
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0) {
-        wldcore_list_rumors_block_all_buttons(level);
+        wldcore_bar_rumors_block_all_buttons(level);
         wldcore_menu_push_message_level(0x105E, 1);
         return;
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0

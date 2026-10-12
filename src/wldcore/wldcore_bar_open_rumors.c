@@ -1,13 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a panel list of the 64 entries whose location mask (word table at
- * g_wldcore_rumor_location_masks) includes the current location and whose script variable
- * 0x2d1 + index is set (entry values 0xc800 + index); shows up to eight rows
- * at (0x4c, 0x50) with width 0x96 and appends its record tagged 6. With no
- * entries it resets the parent window-pair level's records and shows text
- * 0xb80a instead. */
-void wldcore_list_open_rumors(void) {
+/* Open the Bar's rumor list (WLDCORE_MENU_LEVEL_RUMORS): the rumors whose variable
+ * (EVENT_SCRIPT_VAR_RUMOR_FIRST + id) is set and whose location mask word includes this town
+ * (bit 0x4000 >> location), as rows of TEXT_ID_RUMOR_NAME_BASE + id with eight visible. With none the
+ * barkeeper says so (WLDCORE_TEXT_ID_NO_RUMORS) and the Bar's menu stays. */
+void wldcore_bar_open_rumors(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;
     s16* values;

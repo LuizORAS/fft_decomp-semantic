@@ -1,10 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Close this menu level once its message window is finished.
- *
- * Same wait as wldcore_menu_wait_text_then_pop_level; then toggles flag 0x10 on the
- * level's two windows and render record, pops the stack and marks the render
- * record 0x100 before wldcore_list_open_rumors redraws. */
+/* Step of the rumor text level: once the scrollable text window has finished (the wait of
+ * wldcore_menu_wait_text_then_pop_level), show the Bar's windows again, pop the level and reopen the
+ * rumor list. */
 void wldcore_bar_wait_rumor_text_then_pop_level(wldcore_menu_rumor_detail_level_t* level) {
     s32* index = &g_wldcore_scrollable_text_window.render_record_index;
 
@@ -19,5 +17,5 @@ void wldcore_bar_wait_rumor_text_then_pop_level(wldcore_menu_rumor_detail_level_
     g_wldcore_window_render_records[level->render_index].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_menu_stack_depth--;
     g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
-    wldcore_list_open_rumors();
+    wldcore_bar_open_rumors();
 }

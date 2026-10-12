@@ -122,13 +122,13 @@ functions:
   - {addr: 0x8007148c, size: 1092, name: wldcore_bar_build_menu_rows, hash: 0bf2b1b02faf6e4f}
   - {addr: 0x800718d0, size: 236, name: wldcore_window_clear_layout_states_and_queue_msg_b806, hash: a6d8e7a5dc83c4a5}
   - {addr: 0x800719bc, size: 228, name: wldcore_window_publish_slot_b806, hash: 512442d2f93c0290}
-  - {addr: 0x80071aa0, size: 272, name: wldcore_menu_pop_level_and_rebuild_screen, hash: b422526c51f8f5d4}
+  - {addr: 0x80071aa0, size: 272, name: wldcore_bar_close, hash: b422526c51f8f5d4}
   - {addr: 0x80071bb0, size: 1212, name: wldcore_bar_handle_menu_input, hash: 0a6e9dc857b30aa8, rodata: [{addr: 0x80067034, size: 20, hash: ae99fb771d003104}]}
-  - {addr: 0x8007206c, size: 844, name: wldcore_list_open_rumors, hash: fceb17e0a6e9a75a}
-  - {addr: 0x800723b8, size: 56, name: wldcore_list_rumors_restore_prompt, hash: eaf13c42017efa17}
-  - {addr: 0x800723f0, size: 20, name: wldcore_list_rumors_block_all_buttons, hash: 11034aa27eaa3095}
-  - {addr: 0x80072404, size: 68, name: wldcore_list_rumors_close_level, hash: 12816d7d95d26605}
-  - {addr: 0x80072448, size: 464, name: wldcore_list_handle_rumors_input, hash: 53cfce9835b9c6ad}
+  - {addr: 0x8007206c, size: 844, name: wldcore_bar_open_rumors, hash: fceb17e0a6e9a75a}
+  - {addr: 0x800723b8, size: 56, name: wldcore_bar_rumors_restore_prompt, hash: eaf13c42017efa17}
+  - {addr: 0x800723f0, size: 20, name: wldcore_bar_rumors_block_all_buttons, hash: 11034aa27eaa3095}
+  - {addr: 0x80072404, size: 68, name: wldcore_bar_rumors_close_level, hash: 12816d7d95d26605}
+  - {addr: 0x80072448, size: 464, name: wldcore_bar_handle_rumors_input, hash: 53cfce9835b9c6ad}
   - {addr: 0x80072618, size: 624, name: wldcore_bar_push_rumor_detail_level, hash: b8ebacace76767db}
   - {addr: 0x80072888, size: 400, name: wldcore_bar_wait_rumor_text_then_pop_level, hash: c2eda3582b564e63}
   - {addr: 0x80072a18, size: 1168, name: wldcore_list_open_available_propositions, hash: c83798798d18675d}

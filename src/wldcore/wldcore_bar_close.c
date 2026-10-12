@@ -1,14 +1,15 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Tears down the top window record: releases it, clears the two window system
- * flags, hands the current location id to wldcore_map_build_location_menu_entries, and wipes the
- * scratch buffer.
+/* Leave the Bar for the town's menu: show the window objects again, pop the Bar's level, show the
+ * date and the location label, rebuild the town's menu (wldcore_map_build_location_menu_entries,
+ * wldcore_menu_push_location_menu_level), fade in with the map redrawing, and clear the screen and the
+ * backdrop.
  *
  * The local pointer to g_wldcore_map_projection_state.marker.kind reproduces the target's
  * saved-register base: read directly, the global is re-materialised at each of
  * the two uses. */
-void wldcore_menu_pop_level_and_rebuild_screen(wldcore_menu_list_window_level_t* unused_level) {
+void wldcore_bar_close(wldcore_menu_list_window_level_t* unused_level) {
     s32* selected = &g_wldcore_map_projection_state.marker.kind;
     s32 i;
 

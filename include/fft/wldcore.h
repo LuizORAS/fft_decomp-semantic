@@ -1264,6 +1264,10 @@ void wldcore_script_read_operand_pair_and_date(s32* out_a, s32* out_b, s32* out_
 s32 wldcore_script_run_until_yield(void);
 
 /* bar */
+/* The Bar, opened from a town's menu: its menu (rumors, the propositions on offer, the job reports,
+ * the propositions in progress) and its rumors; the propositions themselves are in the
+ * proposition block. */
+
 /* Provisional: the bar's active-proposition list level
  * (wldcore_bar_handle_active_propositions_input); the confirmed flag and the value
  * words indexed by the selected row are the only fields read. */
@@ -1358,6 +1362,10 @@ void wldcore_bar_active_propositions_block_all_buttons(wldcore_menu_panel_level_
 void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level);
 void wldcore_bar_push_rumor_detail_level(s32 value);
 void wldcore_bar_push_menu_level(void);
+void wldcore_bar_rumors_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_bar_rumors_close_level(wldcore_menu_panel_level_t* level);
+void wldcore_bar_open_rumors(void);
+void wldcore_bar_close(wldcore_menu_list_window_level_t* unused_level);
 
 /* list */
 /* Menu level owning two window records and a render record: 0x800712b0
@@ -1384,9 +1392,7 @@ void wldcore_list_store_cursor_state(s32 index);
 
 /* The list-level steps hand their menu level to these stubs, which read no
  * argument; the parameter is the argument the target passes in $a0. */
-void wldcore_list_rumors_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_propositions_block_all_buttons(wldcore_menu_panel_level_t* level);
-void wldcore_list_rumors_close_level(wldcore_menu_panel_level_t* level);
 void wldcore_list_propositions_close_level(wldcore_menu_panel_level_t* level);
 void wldcore_list_unexplored_lands_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_story_events_block_all_buttons(wldcore_menu_panel_level_t* level);
@@ -1397,7 +1403,6 @@ void wldcore_list_script_flags_block_all_buttons(wldcore_menu_panel_level_t* lev
 void wldcore_list_open_available_propositions(void);
 void wldcore_list_open_completed_propositions(void);
 void wldcore_list_open_propositions(void);
-void wldcore_list_open_rumors(void);
 void wldcore_list_open_tutorial_mask_1_entries(void);
 void wldcore_list_open_formation_tutorials(void);
 void wldcore_list_tutorial_mask_1_block_all_buttons(wldcore_menu_panel_level_t* unused_level);
@@ -2087,7 +2092,6 @@ extern s32 g_wldcore_menu_root_window_index;
 void wldcore_window_init_record_pools(void);
 void wldcore_window_build_yes_no_panel(wldcore_point32_t origin);
 void wldcore_menu_push_location_menu_level(s32 menu);
-void wldcore_menu_pop_level_and_rebuild_screen(wldcore_menu_list_window_level_t* unused_level);
 void wldcore_menu_push_event_transition_level(s32 mode);
 void wldcore_gfx_draw_transition_screen(GsOT* ot);
 void wldcore_menu_close_level_and_release_records(wldcore_menu_slot_set_t* slots, s32 restore);

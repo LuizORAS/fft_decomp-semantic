@@ -1,13 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Builds the town menu list level that wldcore_bar_handle_menu_input steps: row kinds 0
- * (rumors) and 4 (leave) always, 1 (wldcore_list_open_available_propositions) when script variable 0x91
- * is set, 2 (wldcore_list_open_completed_propositions) when wldcore_proposition_count_completed for the
- * current location is nonzero, and 3 (proposition list) when
- * g_main_save_proposition_count differs from the count for location -1. The
- * rows are drawn as text 0xb800 + kind into a 0x48-wide render record at
- * (-0x78, -0x28); the remembered row g_wldcore_bar_menu_saved_cursor (cursor state 1) is reset if
- * out of range and both windows are placed on it.
+/* Build the Bar's menu rows into its list level: Rumors and Leave always, Propositions while
+ * EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED is set, the job reports when a proposition has come back to
+ * this town (wldcore_proposition_count_completed), and the propositions in progress while any is still
+ * out. The rows (text TEXT_ID_WORLD_MENU_BASE + row) are drawn into a pop-in render record at
+ * (-0x78, -0x28); the cursor keeps its saved row, reset when out of range.
  *
  * `unused` reproduces the target's 0x78-byte frame. The single `render`
  * access raises `index` above `level` in allocation priority. */

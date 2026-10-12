@@ -1,9 +1,9 @@
 #include "fft/wldcore.h"
 
-/* Opens a full-screen menu level (type 5): hides the map, loads data set
- * 0x16 or 0x17 by `EVENT_SCRIPT_VAR_TOWN_BACKGROUND`, starts WORLD thread 14 on
- * 0x8010f250 with text 0xb806, and allocates two window records and one
- * render record for the level before 0x8007148c fills it. */
+/* Open the Bar (WLDCORE_MENU_LEVEL_BAR_MENU) from a town's menu: the map hides behind the Bar's
+ * background (set 0x16 or 0x17 by EVENT_SCRIPT_VAR_TOWN_BACKGROUND, 0 otherwise), the date and the
+ * location label hide, the barkeeper's welcome (WLDCORE_TEXT_ID_BAR_WELCOME) opens in the message box,
+ * and the menu's rows are built (wldcore_bar_build_menu_rows). */
 void wldcore_bar_push_menu_level(void) {
     s32 value;
     s32 set;

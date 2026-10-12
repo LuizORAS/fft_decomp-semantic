@@ -13,6 +13,12 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
+/* Step of the Bar's menu. Once its pop-in and any fade are done: Circle opens the highlighted row
+ * (the rumors, the propositions on offer, the job reports, the propositions in progress, or Leave),
+ * Select shows the row's help text, and the D-pad moves the cursor, wrapping (the first move after a
+ * message brings the welcome back). Cross or Leave says goodbye (WLDCORE_TEXT_ID_BAR_GOODBYE) and
+ * drops the menu's records; the next press fades the screen and the music back to the map, and once
+ * the message box has closed wldcore_bar_close returns to the town's menu. */
 void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
     s32 flags;
     u32 buttons;
@@ -27,7 +33,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
     }
     if ((flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-        wldcore_menu_pop_level_and_rebuild_screen(level);
+        wldcore_bar_close(level);
         return;
     }
 
@@ -72,7 +78,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         case WLDCORE_BAR_MENU_ROW_RUMORS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_RUMORS);
             wldcore_window_publish_slot_b806(level);
-            wldcore_list_open_rumors();
+            wldcore_bar_open_rumors();
             return;
         case WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITIONS);
