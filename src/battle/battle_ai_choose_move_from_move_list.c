@@ -14,7 +14,7 @@ s32 battle_ai_choose_move_from_move_list(void) {
     g_battle_ai_data_base.ability_counter = 0;
     while (1) {
         entry = &ai->ability_lists[ai->acting_unit_compact_index][ai->ability_counter];
-        if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
+        if (entry->skillset == SKILLSET_ID_NONE) {
             return 0;
         }
         battle_ai_load_ability_entry(entry);

@@ -16,12 +16,12 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
 
     battle_ai_clear_words(&ai->considered_ability, sizeof(battle_ai_considered_ability_t));
     battle_ai_clear_words(&ai->current_action.command.calculator_type, 4);
-    ai->considered_ability.skillset = entry->skillset_flags.bytes.skillset;
+    ai->considered_ability.skillset = entry->skillset;
     ability_id = g_battle_ai_data_base.considered_ability.ability_id
         = entry->packed_id & BATTLE_AI_ABILITY_ENTRY_ABILITY_MASK;
     unit_id = entry->packed_id >> BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
     unit = &g_battle_unit_stats[unit_id];
-    menu = g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset];
+    menu = g_main_action_menu_types_by_skillset[entry->skillset];
     status_id = 0;
     switch (menu) {
     case ACTION_MENU_TYPE_ATTACK:
@@ -34,7 +34,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
         ai->considered_ability.ai_flags.bytes.flags_1 = weapon->bytes.flags_1;
         ai->considered_ability.ai_flags.bytes.flags_2 = weapon->bytes.flags_2;
         ai->considered_ability.ai_flags.bytes.flags_3 = weapon->bytes.flags_3;
-        ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
+        ai->considered_ability.ai_flags.bytes.flags_4 = entry->usage.flags;
         if (menu == ACTION_MENU_TYPE_JUMP)
             ai->considered_ability.ai_flags.word
                 = (ai->considered_ability.ai_flags.word | BATTLE_AI_ABILITY_TARGET_ENEMIES)
@@ -112,7 +112,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
             status_cursor--;
         } while (value >= 0);
         ai->considered_ability.ai_flags.bytes.flags_1 = 0xfc;
-        ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
+        ai->considered_ability.ai_flags.bytes.flags_4 = entry->usage.flags;
         ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_TARGET_MAP_TILES;
         return;
     }
@@ -120,7 +120,7 @@ void battle_ai_load_ability_entry(battle_ai_ability_entry_t* entry) {
     battle_ai_transfer_halfword_values(&ai->considered_ability.ai_flags, &g_main_ability_data[ability_id].ai_flags, 4);
     if (menu == ACTION_MENU_TYPE_ITEM_INVENTORY || menu == ACTION_MENU_TYPE_WEAPON_INVENTORY)
         ai->considered_ability.ai_flags.word |= BATTLE_AI_ABILITY_DIRECT_TRAJECTORY;
-    ai->considered_ability.ai_flags.bytes.flags_4 = entry->skillset_flags.bytes.usage_flags;
+    ai->considered_ability.ai_flags.bytes.flags_4 = entry->usage.flags;
     if (ability_id < ABILITY_ID_ITEM_FIRST) {
         s32 ct;
         secondary = &g_main_ability_range_data[ability_id];

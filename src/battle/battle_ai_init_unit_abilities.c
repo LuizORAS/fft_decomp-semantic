@@ -31,13 +31,13 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
     decision->lowest_mp_cost = 0xff;
     for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
         entry = &ai->ability_lists[ai->unit_compact_indices[unit_id]][i];
-        if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
+        if (entry->skillset == SKILLSET_ID_NONE) {
             break;
         }
         battle_ai_load_ability_entry(entry);
         ability_count++;
         /* The target reads and updates skillset/usage as one 16-bit value. */
-        if (!entry->skillset_flags.bits.requires_monster_skill) {
+        if (!entry->usage.policy.requires_monster_skill) {
             if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTED_BY_SILENCE) {
                 silence_count++;
             }
@@ -54,29 +54,29 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
                 }
             }
         }
-        entry->skillset_flags.bytes.usage_flags &= BATTLE_AI_ABILITY_ENTRY_INIT_PRESERVE_MASK;
+        entry->usage.flags &= BATTLE_AI_ABILITY_ENTRY_INIT_PRESERVE_MASK;
         if (ai->considered_ability.ai_flags.word
             & (BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY)) {
             continue;
         }
         if (ai->considered_ability.ai_flags.bytes.flags_3 & BATTLE_AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK) {
-            entry->skillset_flags.bits.exhaustive_origin_scan = 1;
+            entry->usage.policy.exhaustive_origin_scan = 1;
         } else {
             if (ai->considered_ability.ability_id < ABILITY_ID_ITEM_FIRST) {
                 if (ai->considered_ability.parameters.bytes.range + ai->considered_ability.parameters.bytes.aoe < 3
                     && (g_main_ability_range_data[ai->considered_ability.ability_id].flags_4
                         & ABILITY_SECONDARY_FLAG_4_EVADEABLE)) {
-                    entry->skillset_flags.bits.exhaustive_origin_scan = 1;
+                    entry->usage.policy.exhaustive_origin_scan = 1;
                     continue;
                 }
                 if (g_main_ability_range_data[ai->considered_ability.ability_id].flags_2
                     & (ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES)) {
-                    entry->skillset_flags.bits.force_consume_evaluated_origins = 1;
+                    entry->usage.policy.force_consume_evaluated_origins = 1;
                     continue;
                 }
             }
             if (ai->considered_ability.parameters.bytes.aoe == 0) {
-                entry->skillset_flags.bits.force_consume_evaluated_origins = 1;
+                entry->usage.policy.force_consume_evaluated_origins = 1;
             }
         }
     }

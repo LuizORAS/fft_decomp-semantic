@@ -18,13 +18,13 @@ void battle_ai_init_workspace(void) {
     ai->resume_pending = 0;
     ai->selected_action.rank.decided = 0;
     ai->selected_action.coords.bytes.zero = 0;
-    ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_BLOOD_SUCK_STATUS;
+    ai->hardcoded_status_abilities[0].skillset = SKILLSET_ID_BLOOD_SUCK_STATUS;
     ai->hardcoded_status_abilities[0].packed_id = ABILITY_ID_BLOOD_SUCK;
-    ai->hardcoded_status_abilities[0].skillset_flags.bytes.usage_flags
+    ai->hardcoded_status_abilities[0].usage.flags
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
-    ai->hardcoded_status_abilities[1].skillset_flags.bytes.skillset = SKILLSET_ID_FROG_ATTACK;
+    ai->hardcoded_status_abilities[1].skillset = SKILLSET_ID_FROG_ATTACK;
     ai->hardcoded_status_abilities[1].packed_id = ABILITY_ID_FROG_ATTACK;
-    ai->hardcoded_status_abilities[1].skillset_flags.bytes.usage_flags
+    ai->hardcoded_status_abilities[1].usage.flags
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
     ai->present_unit_average_max_hp = 0;
     ai->map_max_x = g_battle_map_max_x;

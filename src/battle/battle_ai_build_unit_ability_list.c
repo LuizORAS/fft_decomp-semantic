@@ -25,7 +25,7 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
     s32 weapon_flags;
 
     if (unit->primary_skillset < SKILLSET_ID_MONSTER_FIRST) {
-        ai->ability_lists[list_id][0].skillset_flags.bytes.skillset = SKILLSET_ID_ATTACK;
+        ai->ability_lists[list_id][0].skillset = SKILLSET_ID_ATTACK;
         ai->ability_lists[list_id][0].packed_id = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
         weapon = &ai->unit_weapon_data[list_id];
         weapon->words[0] = 0;
@@ -62,7 +62,7 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
     if (unit->primary_skillset < SKILLSET_ID_MONSTER_FIRST) {
         count = battle_ai_add_usable_skillset_abilities(unit_id, unit->secondary_skillset, count);
     }
-    ai->ability_lists[list_id][count].skillset_flags.bytes.skillset = SKILLSET_ID_FROG_ATTACK;
+    ai->ability_lists[list_id][count].skillset = SKILLSET_ID_FROG_ATTACK;
     ai->ability_lists[list_id][count].packed_id
         = (unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT) + ABILITY_ID_FROG_ATTACK;
     /* The byte view preserves the target's separate final-store address. */
@@ -70,6 +70,6 @@ void battle_ai_build_unit_ability_list(s32 unit_id) {
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
     count++;
     if (count < BATTLE_AI_ABILITY_LIST_COUNT) {
-        ai->ability_lists[list_id][count].skillset_flags.bytes.skillset = SKILLSET_ID_NONE;
+        ai->ability_lists[list_id][count].skillset = SKILLSET_ID_NONE;
     }
 }

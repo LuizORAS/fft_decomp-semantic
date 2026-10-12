@@ -71,8 +71,8 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 &= ~(BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY | BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES);
             for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
                 entry = &ai->ability_lists[ai->unit_compact_indices[unit_id]][i];
-                entry->skillset_flags.bits.usable = 0;
-                if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
+                entry->usage.policy.usable = 0;
+                if (entry->skillset == SKILLSET_ID_NONE) {
                     break;
                 }
                 battle_ai_load_ability_entry(entry);
@@ -100,7 +100,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 if (ability->mp_cost > unit->mp) {
                     continue;
                 }
-                menu = g_main_action_menu_types_by_skillset[entry->skillset_flags.bytes.skillset];
+                menu = g_main_action_menu_types_by_skillset[entry->skillset];
                 if (menu == ACTION_MENU_TYPE_ITEM_INVENTORY || menu == ACTION_MENU_TYPE_KATANA_INVENTORY
                     || ability_id == ABILITY_ID_THROW_SHURIKEN || ability_id == ABILITY_ID_THROW_BALL) {
                     if (!(unit->initial_team_flags & BATTLE_TEAM_MASK)) {
@@ -144,8 +144,8 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                         continue;
                     }
                 }
-                entry->skillset_flags.bits.usable = 1;
-                if (!entry->skillset_flags.bits.requires_monster_skill) {
+                entry->usage.policy.usable = 1;
+                if (!entry->usage.policy.requires_monster_skill) {
                     if (decision->enemy_flag) {
                         if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
                             enemy_harmful++;
@@ -219,11 +219,11 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
     }
     for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
         entry = &ai->ability_lists[g_battle_ai_data_base.acting_unit_compact_index][i];
-        if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
+        if (entry->skillset == SKILLSET_ID_NONE) {
             break;
         }
         battle_ai_load_ability_entry(entry);
-        if (entry->skillset_flags.bits.usable) {
+        if (entry->usage.policy.usable) {
             if (threshold >= enemy_magical) {
                 battle_ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_SHELL);
             }
@@ -236,7 +236,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             if (enemy_earth <= 0) {
                 battle_ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_FLOAT);
             }
-            if (entry->skillset_flags.bits.usable) {
+            if (entry->usage.policy.usable) {
                 usable++;
                 if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_RANDOM_USE) {
                     random_use++;
@@ -267,19 +267,19 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                         decision->ally_ability_min_reach = range;
                     }
                 }
-                if (entry->skillset_flags.bits.force_consume_evaluated_origins) {
-                    entry->skillset_flags.bits.consume_evaluated_origins = 1;
-                } else if (!entry->skillset_flags.bits.exhaustive_origin_scan) {
+                if (entry->usage.policy.force_consume_evaluated_origins) {
+                    entry->usage.policy.consume_evaluated_origins = 1;
+                } else if (!entry->usage.policy.exhaustive_origin_scan) {
                     if (ability->ct >= g_battle_ai_data_base.acting_unit_remaining_clockticks
                         || battle_ai_classify_ability_effect(g_battle_ai_data_base.acting_unit_id, 1)
                             == BATTLE_AI_ABILITY_EFFECT_NONE) {
-                        entry->skillset_flags.bits.consume_evaluated_origins = 1;
+                        entry->usage.policy.consume_evaluated_origins = 1;
                     } else {
-                        entry->skillset_flags.bits.consume_evaluated_origins = 0;
+                        entry->usage.policy.consume_evaluated_origins = 0;
                     }
                 }
                 if (action_taken != 0) {
-                    entry->skillset_flags.bits.usable = 0;
+                    entry->usage.policy.usable = 0;
                 }
             }
         }

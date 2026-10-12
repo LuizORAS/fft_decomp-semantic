@@ -394,30 +394,24 @@ enum {
     BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT = 10,
 };
 
-/* Skillset and runtime policy flags: byte copies and individual flag updates. */
-typedef union battle_ai_ability_entry_flags {
-    struct {
-        u16 skillset : 8;
-        u16 consume_evaluated_origins : 1;
-        u16 force_consume_evaluated_origins : 1;
-        u16 exhaustive_origin_scan : 1;
-        u16 requires_monster_skill : 1;
-        u16 _unknown_00_bit12 : 1;
-        u16 enemies_only : 1;
-        u16 allies_only : 1;
-        u16 usable : 1;
-    } bits;
-    struct {
-        u8 skillset;
-        u8 usage_flags;
-    } bytes;
-} battle_ai_ability_entry_flags_t;
-typedef char battle_ai_ability_entry_flags_size_must_be_2[sizeof(battle_ai_ability_entry_flags_t) == 2 ? 1 : -1];
-
-/* Four-byte entries in each compact unit's AI ability list. */
+/* Four-byte entries in each compact unit's AI ability list. Whole usage
+ * bytes are copied into considered flags4; policy updates address its bits. */
 typedef struct battle_ai_ability_entry {
     s16 packed_id; /* bits 0..9: ability ID; bits 10..15: physical unit slot */
-    battle_ai_ability_entry_flags_t skillset_flags;
+    u8 skillset;
+    union {
+        u8 flags;
+        struct {
+            u8 consume_evaluated_origins : 1;
+            u8 force_consume_evaluated_origins : 1;
+            u8 exhaustive_origin_scan : 1;
+            u8 requires_monster_skill : 1;
+            u8 _unknown_00_bit4 : 1;
+            u8 enemies_only : 1;
+            u8 allies_only : 1;
+            u8 usable : 1;
+        } policy;
+    } usage;
 } battle_ai_ability_entry_t;
 typedef char battle_ai_ability_entry_must_be_4[sizeof(battle_ai_ability_entry_t) == 4 ? 1 : -1];
 

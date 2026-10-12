@@ -87,9 +87,9 @@ s32 battle_ai_choose_status_action(void) {
             target_or_count = 0;
             for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
                 entry = &ai->ability_lists[ai->acting_unit_compact_index][i];
-                if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
+                if (entry->skillset == SKILLSET_ID_NONE)
                     break;
-                if (entry->skillset_flags.bits.usable)
+                if (entry->usage.policy.usable)
                     target_or_count++;
             }
             if (target_or_count) {
@@ -99,7 +99,7 @@ s32 battle_ai_choose_status_action(void) {
                         s32 n;
                         for (n = 0; n < BATTLE_AI_ABILITY_LIST_COUNT; n++) {
                             entry = &ai->ability_lists[ai->acting_unit_compact_index][n];
-                            if (entry->skillset_flags.bits.usable) {
+                            if (entry->usage.policy.usable) {
                                 if (i == 0)
                                     break;
                                 i--;
@@ -110,7 +110,7 @@ s32 battle_ai_choose_status_action(void) {
                     if (battle_ai_choose_random_action())
                         return 1;
                     target_or_count--;
-                    entry->skillset_flags.bits.usable = 0;
+                    entry->usage.policy.usable = 0;
                 } while (target_or_count);
             }
         }

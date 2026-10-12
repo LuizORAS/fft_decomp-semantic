@@ -47,7 +47,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         if (battle_ai_load_known_ability_flag(unit_id, skillset, 0)) {
             unit_bits = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
             for (i = 0, slot = ai->ability_lists[list_id]; i < 3; i++) {
-                slot[count].skillset_flags.bytes.skillset = skillset;
+                slot[count].skillset = skillset;
                 slot[count].packed_id = unit_bits + i + ITEM_ID_THROWABLE_FIRST;
                 count++;
             }
@@ -56,7 +56,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
             i = 0;
             unit_bits = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
             for (row = ai->ability_lists[list_id]; i < 3; i++) {
-                row[count].skillset_flags.bytes.skillset = skillset;
+                row[count].skillset = skillset;
                 row[count].packed_id = unit_bits + i + ITEM_ID_FIRE_BALL;
                 count++;
             }
@@ -65,7 +65,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
             if (battle_ai_load_known_ability_flag(unit_id, skillset, i)) {
                 entry = &ai->ability_lists[list_id][count];
                 count++;
-                entry->skillset_flags.bytes.skillset = skillset;
+                entry->skillset = skillset;
                 entry->packed_id = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
                 break;
             }
@@ -74,7 +74,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
     }
     if (menu == ACTION_MENU_TYPE_ARITHMETICKS) {
         entry = &ai->ability_lists[list_id][count];
-        entry->skillset_flags.bytes.skillset = skillset;
+        entry->skillset = skillset;
         entry->packed_id = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
         return count + 1;
     }
@@ -124,12 +124,12 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         }
         if (skillset >= SKILLSET_ID_MONSTER_FIRST) {
             if (i == 3) {
-                entry->skillset_flags.bits.requires_monster_skill = 1;
+                entry->usage.policy.requires_monster_skill = 1;
             } else {
-                entry->skillset_flags.bits.requires_monster_skill = 0;
+                entry->usage.policy.requires_monster_skill = 0;
             }
         }
-        entry->skillset_flags.bytes.skillset = skillset;
+        entry->skillset = skillset;
         entry->packed_id = ability_id;
         if (menu == ACTION_MENU_TYPE_JUMP) {
             if (ability_id >= ABILITY_ID_JUMP_VERTICAL_2) {
@@ -146,7 +146,7 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         entry->packed_id += unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
     }
     if (menu == ACTION_MENU_TYPE_JUMP && jump_found == 0) {
-        entry->skillset_flags.bytes.skillset = SKILLSET_ID_JUMP;
+        entry->skillset = SKILLSET_ID_JUMP;
         entry->packed_id = unit_id << BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT;
     }
     return count;
