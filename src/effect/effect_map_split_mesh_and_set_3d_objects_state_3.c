@@ -2,12 +2,9 @@
 #include "fft/battle_map.h"
 #include "fft/effect.h"
 
-/* E453.BIN is the effect of effect id 0x221, one of the ids past the abilities. */
-#include "fft/effect.h"
-
 /* Callback handler: when its keyframe starts, splits the map's mesh parts and
  * sets 3D objects 1-8 to state 3. */
-s32 effect_e453_map_split_mesh_and_set_3d_objects_to_state_3_state(
+s32 effect_map_split_mesh_and_set_3d_objects_state_3(
     s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame) {
     s16 state_index = record_index;
     effect_record_t* record = &g_battle_effect_state_records[state_index];

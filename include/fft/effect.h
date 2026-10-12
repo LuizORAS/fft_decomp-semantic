@@ -6,10 +6,29 @@
 #include "fft/battle_effect.h"
 
 /* callbacks */
-s32 effect_map_set_3d_objects_state_2(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-s32 effect_map_unfreeze(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-s32 effect_map_freeze(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-s32 effect_e000_noop(s32 unused_record_index, s32 unused_callback_slot, s32 unused_emitter_index, s32 unused_frame);
+/* Effect script opcode 06 puts a handler in one of the callback slots, and a
+ * particle keyframe whose 16-bit action value names the slot binds it to the record.
+ * While a keyframe that names the slot runs, the particle channel calls
+ *     handler(record_index, callback_slot, emitter_index, frame)
+ * once a frame in place of the particle emitter: emitter_index is the
+ * keyframe's emitter record, which the handler reads through its own view,
+ * and frame counts from the start of the keyframe. The slot's phase
+ * (effect_record_t.callback_phase, effect_phase_e) starts at INIT, where the
+ * handler allocates its work block into work_slots; it then stays at UPDATE
+ * until the channel sets DESTROY two frames before the keyframe ends. */
+s32 effect_map_split_mesh_and_set_3d_objects_state_3(
+    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_set_3d_objects_state_1(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_destruction_update(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_set_timed_transform_duration(
+    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_banish_map_vertex_particles_update(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame);
+s32 effect_altima_transformation_map_vertex_particles_update(
+    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame);
+s32 effect_map_set_3d_objects_state_2(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_unfreeze(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_freeze(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_noop(s32 unused_record_index, s32 unused_callback_slot, s32 unused_emitter_index, s32 unused_frame);
 
 /* helpers */
 /* Fixed texture-page bits shared by the native effect renderers. */
@@ -380,28 +399,23 @@ typedef char assert_effect_dome_mesh_work_size[sizeof(effect_dome_mesh_work_t) =
  * the row, the lattice row (0-8) the column. */
 extern u32 g_effect_dome_mesh_brightness_table[][9];
 s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-void effect_add_scratchpad_xyz_components(s32 group, s32 point, const VECTOR* offset, SVECTOR* output);
+void effect_dome_mesh_load_translated_vertex(s32 group, s32 point, const VECTOR* offset, SVECTOR* output);
 
-/* system */
-/* The native handlers of the EFFECT/E###.BIN overlays.
- *
- * Effect script opcode 06 puts a handler in one of the callback slots, and a
- * particle keyframe whose 16-bit action value names the slot binds it to the record.
- * While a keyframe that names the slot runs, the particle channel calls
- *     handler(record_index, callback_slot, emitter_index, frame)
- * once a frame in place of the particle emitter: emitter_index is the
- * keyframe's emitter record, which the handler reads through its own view,
- * and frame counts from the start of the keyframe. The slot's phase
- * (effect_record_t.callback_phase, effect_phase_e) starts at INIT, where the
- * handler allocates its work block into work_slots; it then stays at UPDATE
- * until the channel sets DESTROY two frames before the keyframe ends. */
-
-typedef struct effect_particle_vertex_location {
+/* map vertex particles */
+typedef struct effect_map_vertex_location {
     u8 vertex_index;    /* one of the mesh part's four cached vertices */
     u8 mesh_part_index; /* zero-based among map mesh parts 1-8 */
-} effect_particle_vertex_location_t;
-extern effect_particle_vertex_location_t g_effect_e454_particle_vertex_locations[12];
-extern effect_particle_vertex_location_t g_effect_e464_particle_vertex_locations[3];
+} effect_map_vertex_location_t;
+/* Eight animated map mesh parts each provide four cached vertices. */
+enum {
+    EFFECT_PARTICLE_VERTEX_EMITTER_COUNT = 16,
+    EFFECT_MAP_VERTEX_PART_COUNT = 8,
+    EFFECT_MAP_VERTEX_COUNT_PER_PART = 4,
+    EFFECT_MAP_VERTEX_WORK_BYTES = EFFECT_MAP_VERTEX_PART_COUNT * EFFECT_MAP_VERTEX_COUNT_PER_PART * sizeof(VECTOR),
+};
+
+extern effect_map_vertex_location_t g_effect_banish_vertex_locations[12];
+extern effect_map_vertex_location_t g_effect_altima_transformation_vertex_locations[3];
 
 /* tentacle mesh */
 /* The tentacle renderer draws textured strips; the related particle-trail

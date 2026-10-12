@@ -12,7 +12,7 @@ links: [battle]
 
 functions:
   - {addr: 0x801c2500, size: 8096, name: effect_particle_ribbon_short_update, hash: 402de41ad3570cb5}
-  - {addr: 0x801c44a0, size: 8, name: effect_e000_noop, hash: 6d64edf91449c1b1}
+  - {addr: 0x801c44a0, size: 8, name: effect_noop, hash: 6d64edf91449c1b1}
 
 data:
   - {addr: 0x801c44a8, name: g_effect_particle_ribbon_short_brightness_table}
@@ -274,7 +274,7 @@ links: [battle]
 
 functions:
   - {addr: 0x801c2500, size: 1908, name: effect_textured_quad_grid_4x4_update, hash: daf9ed8d679eda98}
-  - {addr: 0x801c2c74, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c2c74, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c2cec, size: 4744, name: effect_dome_mesh_update, hash: 653686a6ff4966e9}
 
 data:
@@ -328,7 +328,7 @@ links: [battle]
 functions:
   - {addr: 0x801c2500, size: 1908, name: effect_textured_quad_grid_4x4_update, hash: dae7117bbf342f79}
   - {addr: 0x801c2c74, size: 5368, name: effect_ring_stack_mesh_update, hash: 164c7961cfc994ac}
-  - {addr: 0x801c416c, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c416c, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c41e4, size: 4744, name: effect_dome_mesh_update, hash: 1e8f06cd21cb78bb}
 
 data:
@@ -969,7 +969,7 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
 functions:
-  - {addr: 0x801c2500, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c2500, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c2578, size: 4744, name: effect_dome_mesh_update, hash: cae5f0fae079c9e4}
   - {addr: 0x801c3800, size: 5368, name: effect_ring_stack_mesh_update, hash: 02327eab85badfba}
 
@@ -1039,7 +1039,7 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
 functions:
-  - {addr: 0x801c2500, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c2500, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c2578, size: 4744, name: effect_dome_mesh_update, hash: ea924af581a353ac}
 
 data:
@@ -1108,7 +1108,7 @@ links: [battle]
 
 functions:
   - {addr: 0x801c2500, size: 5584, name: effect_ring_mesh_update, hash: 784dc3c3b5d7f62d}
-  - {addr: 0x801c3ad0, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c3ad0, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c3b48, size: 4744, name: effect_dome_mesh_update, hash: 23934938fae044ea}
 
 data:
@@ -1403,7 +1403,7 @@ links: [battle]
 
 functions:
   - {addr: 0x801c2500, size: 5584, name: effect_ring_mesh_update, hash: b1d2acab22900fef}
-  - {addr: 0x801c3ad0, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c3ad0, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c3b48, size: 4744, name: effect_dome_mesh_update, hash: 56950ab67bb2bdff}
   - {addr: 0x801c4dd0, size: 1916, name: effect_textured_quad_grid_2x2_update, hash: 34a87769661dd184}
 
@@ -1426,7 +1426,7 @@ functions:
   - {addr: 0x801c2500, size: 8668, name: effect_tentacle_mesh_update, hash: b3bc52a36955d729}
   - {addr: 0x801c46dc, size: 6012, name: effect_polar_mesh_update, hash: cfa336cfcfa41a0c}
   - {addr: 0x801c5e58, size: 2924, name: effect_wave_mesh_update, hash: 83ef420ce2bb22d7}
-  - {addr: 0x801c69c4, size: 320, name: effect_e453_map_split_mesh_and_set_3d_objects_to_state_3_state, hash: 1b6a06084d02d647}
+  - {addr: 0x801c69c4, size: 320, name: effect_map_split_mesh_and_set_3d_objects_state_3, hash: 1b6a06084d02d647}
 
 data:
   - {addr: 0x801c6b04, name: g_effect_tentacle_mesh_brightness_table}
@@ -1444,13 +1444,13 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
 functions:
-  - {addr: 0x801c2500, size: 1000, name: effect_e454_particle_update_banish_state, hash: 96b9db988669fa57}
+  - {addr: 0x801c2500, size: 1000, name: effect_banish_map_vertex_particles_update, hash: 96b9db988669fa57}
   - {addr: 0x801c28e8, size: 260, name: effect_map_set_3d_objects_state_2, hash: c50b73d4a0e1859b}
   - {addr: 0x801c29ec, size: 6012, name: effect_polar_mesh_update, hash: b706f2b469299fd3}
   - {addr: 0x801c4168, size: 1908, name: effect_textured_quad_grid_4x4_update, hash: 7c4feff22928839e}
 
 data:
-  - {addr: 0x801c48dc, name: g_effect_e454_particle_vertex_locations}
+  - {addr: 0x801c48dc, name: g_effect_banish_vertex_locations}
   - {addr: 0x801c48f4, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c499c, name: g_effect_textured_quad_grid_4x4_brightness_table}
 ---
@@ -1465,7 +1465,7 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
 functions:
-  - {addr: 0x801c2500, size: 260, name: effect_e455_map_set_3d_objects_to_state_1_state, hash: a2ca8ad126bc44f7}
+  - {addr: 0x801c2500, size: 260, name: effect_map_set_3d_objects_state_1, hash: a2ca8ad126bc44f7}
   - {addr: 0x801c2604, size: 260, name: effect_map_set_3d_objects_state_2, hash: 488bc19ae1b5f90f}
   - {addr: 0x801c2708, size: 148, name: effect_map_unfreeze, hash: 816d3ed7ef0dcafa}
   - {addr: 0x801c279c, size: 148, name: effect_map_freeze, hash: b055bca9b224bb19}
@@ -1481,7 +1481,7 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
 functions:
-  - {addr: 0x801c2500, size: 172, name: effect_e456_map_update_specialized_destruction_state, hash: ff615cf6cf1cd454}
+  - {addr: 0x801c2500, size: 172, name: effect_map_destruction_update, hash: ff615cf6cf1cd454}
   - {addr: 0x801c25ac, size: 2924, name: effect_wave_mesh_update, hash: f5ac2668e6a3ba21}
   - {addr: 0x801c3118, size: 148, name: effect_map_unfreeze, hash: 5bf141db0212b40d}
   - {addr: 0x801c31ac, size: 148, name: effect_map_freeze, hash: 7e1058d25d4a77e7}
@@ -1501,7 +1501,7 @@ links: [battle]
 
 functions:
   - {addr: 0x801c2500, size: 1908, name: effect_textured_quad_grid_4x4_update, hash: e78fbae91480e6c0}
-  - {addr: 0x801c2c74, size: 168, name: effect_e458_timeline_set_remaining_duration_state, hash: 0682312fd498b75f}
+  - {addr: 0x801c2c74, size: 168, name: effect_map_set_timed_transform_duration, hash: 0682312fd498b75f}
 
 data:
   - {addr: 0x801c2d1c, name: g_effect_textured_quad_grid_4x4_brightness_table}
@@ -1593,15 +1593,15 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
 functions:
-  - {addr: 0x801c2500, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c2500, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c2578, size: 4744, name: effect_dome_mesh_update, hash: 2839d18641d237ff}
   - {addr: 0x801c3800, size: 4948, name: effect_single_ring_mesh_update, hash: edddd6045178114b}
-  - {addr: 0x801c4b54, size: 624, name: effect_e464_particle_update_altima_transformation_state, hash: c2934ee8a7ae52a5}
+  - {addr: 0x801c4b54, size: 624, name: effect_altima_transformation_map_vertex_particles_update, hash: c2934ee8a7ae52a5}
 
 data:
   - {addr: 0x801c4dc4, name: g_effect_dome_mesh_brightness_table}
   - {addr: 0x801c4e9c, name: g_effect_single_ring_mesh_brightness_table}
-  - {addr: 0x801c4ecc, name: g_effect_e464_particle_vertex_locations}
+  - {addr: 0x801c4ecc, name: g_effect_altima_transformation_vertex_locations}
 ---
 module: effect-e465
 file: EFFECT/E465.BIN
@@ -1752,7 +1752,7 @@ links: [battle]
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_textured_quad_grid_8x8_update, hash: 1f197b48f154251b}
   - {addr: 0x801c2c7c, size: 5584, name: effect_ring_mesh_update, hash: afb2e8c0d6ae9ae7}
-  - {addr: 0x801c424c, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c424c, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c42c4, size: 4744, name: effect_dome_mesh_update, hash: d92a2d33a073e9bf}
 
 data:
@@ -1773,7 +1773,7 @@ links: [battle]
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_textured_quad_grid_8x8_update, hash: 1f197b48f154251b}
   - {addr: 0x801c2c7c, size: 5584, name: effect_ring_mesh_update, hash: afb2e8c0d6ae9ae7}
-  - {addr: 0x801c424c, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c424c, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c42c4, size: 4744, name: effect_dome_mesh_update, hash: d92a2d33a073e9bf}
 
 data:
@@ -1794,7 +1794,7 @@ links: [battle]
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_textured_quad_grid_8x8_update, hash: 1f197b48f154251b}
   - {addr: 0x801c2c7c, size: 5584, name: effect_ring_mesh_update, hash: afb2e8c0d6ae9ae7}
-  - {addr: 0x801c424c, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c424c, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c42c4, size: 4744, name: effect_dome_mesh_update, hash: d92a2d33a073e9bf}
 
 data:
@@ -1815,7 +1815,7 @@ links: [battle]
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_textured_quad_grid_8x8_update, hash: 1f197b48f154251b}
   - {addr: 0x801c2c7c, size: 5584, name: effect_ring_mesh_update, hash: afb2e8c0d6ae9ae7}
-  - {addr: 0x801c424c, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c424c, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c42c4, size: 4744, name: effect_dome_mesh_update, hash: d92a2d33a073e9bf}
 
 data:
@@ -1836,7 +1836,7 @@ links: [battle]
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_textured_quad_grid_8x8_update, hash: 1f197b48f154251b}
   - {addr: 0x801c2c7c, size: 5584, name: effect_ring_mesh_update, hash: afb2e8c0d6ae9ae7}
-  - {addr: 0x801c424c, size: 120, name: effect_add_scratchpad_xyz_components, hash: 8f768abda88cbfca}
+  - {addr: 0x801c424c, size: 120, name: effect_dome_mesh_load_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c42c4, size: 4744, name: effect_dome_mesh_update, hash: d92a2d33a073e9bf}
 
 data:
@@ -1878,7 +1878,6 @@ functions:
   - {addr: 0x801c2500, size: 1916, name: effect_textured_quad_grid_2x2_update, hash: 33d5f006b29e378b}
 
 data:
-  - {addr: 0x801c2c7c, name: g_effect_gfx_brightness_table}
   - {addr: 0x801c2c7c, name: g_effect_textured_quad_grid_2x2_brightness_table}
 ---
 module: effect-e482

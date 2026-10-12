@@ -3,18 +3,12 @@
 #include "fft/battle_map.h"
 #include "fft/effect.h"
 
-/* E464.BIN is the effect of effect id 0x21a, one of the ids past the abilities. */
-#include "fft/effect.h"
-
-/* E464: Altima's Transformation; the target range ends before trailing data. */
-
 #define NULL ((void*)0)
 
-/* Altima transformation particle handler, the single-group form of
- * effect_e454_particle_update_banish_state: phase 1 allocates the 0x200-byte
- * vertex work and enables map data groups 1-6, phase 2 spawns each active
- * emitter's particles at its work vertex, phase 3 frees the work. */
-s32 effect_e464_particle_update_altima_transformation_state(
+/* Altima transformation particle handler: allocate the map-vertex work,
+ * enable map data groups 1-6, then spawn particles for timed vertex emitters.
+ * E464's shipped emitter records all have vertex group 0, so none spawn here. */
+s32 effect_altima_transformation_map_vertex_particles_update(
     s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame) {
     s16 state_index = record_index;
     effect_record_t* record;
@@ -22,7 +16,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
     effect_work_record_t parent;
     s32 emitter_index;
     s32 i;
-    s32 offset;
+    s32 byte_offset;
     effect_particle_vertex_emitter_view_t* emitter;
     VECTOR* vertex;
     VECTOR* vertex_work;
@@ -36,7 +30,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
         if (record->work_slots[callback_slot] != NULL) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        vertex_work = battle_heap_alloc_block(0x200, state_index);
+        vertex_work = battle_heap_alloc_block(EFFECT_MAP_VERTEX_WORK_BYTES, state_index);
         record->work_slots[callback_slot] = vertex_work;
         g_battle_effect_map_vertices = vertex_work;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 1, 1, 1);
@@ -49,13 +43,15 @@ s32 effect_e464_particle_update_altima_transformation_state(
         break;
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
-        for (emitter_index = 0; emitter_index < 16; emitter_index++) {
+        for (emitter_index = 0; emitter_index < EFFECT_PARTICLE_VERTEX_EMITTER_COUNT; emitter_index++) {
             emitter = &g_battle_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             i = emitter->vertex_group - 1;
             if (i >= 0 && i < 12 && frame >= emitter->start_frame && frame < emitter->end_frame) {
-                offset = g_effect_e464_particle_vertex_locations[i].vertex_index * sizeof(VECTOR);
-                offset += g_effect_e464_particle_vertex_locations[i].mesh_part_index * (4 * sizeof(VECTOR));
-                vertex = &work[offset >> 4];
+                /* Byte accumulation preserves the vertex and mesh-part load order. */
+                byte_offset = g_effect_altima_transformation_vertex_locations[i].vertex_index * sizeof(*work);
+                byte_offset += g_effect_altima_transformation_vertex_locations[i].mesh_part_index
+                    * (EFFECT_MAP_VERTEX_COUNT_PER_PART * sizeof(*work));
+                vertex = &work[byte_offset / sizeof(*work)];
                 parent.motion.position.x = vertex->vx << 12;
                 parent.motion.position.y = vertex->vy << 12;
                 parent.motion.position.z = vertex->vz << 12;

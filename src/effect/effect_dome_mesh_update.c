@@ -195,23 +195,23 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         SetTransMatrix(&g_battle_camera_matrix);
 
         /* Row 0: quad column j - 1 takes lattice rows 1 (x0/x1) and 0 (x2/x3). */
-        effect_add_scratchpad_xyz_components(0, 0, &origin, &vertex);
+        effect_dome_mesh_load_translated_vertex(0, 0, &origin, &vertex);
         RotTrans(&vertex, &screen[2], &screen[2].pad);
         quad = &work->quads[work->buffer][0];
         quad->x2 = screen[2].vx;
         quad->y2 = screen[2].vy;
         depth[0][0] = screen[2].vz;
-        effect_add_scratchpad_xyz_components(0, 1, &origin, &vertex);
+        effect_dome_mesh_load_translated_vertex(0, 1, &origin, &vertex);
         RotTrans(&vertex, &screen[3], &screen[3].pad);
         quad->x3 = screen[3].vx;
         quad->y3 = screen[3].vy;
         depth[0][1] = screen[3].vz;
-        effect_add_scratchpad_xyz_components(1, 0, &origin, &vertex);
+        effect_dome_mesh_load_translated_vertex(1, 0, &origin, &vertex);
         RotTrans(&vertex, &screen[0], &screen[0].pad);
         quad->x0 = screen[0].vx;
         quad->y0 = screen[0].vy;
         depth[1][0] = screen[0].vz;
-        effect_add_scratchpad_xyz_components(1, 1, &origin, &vertex);
+        effect_dome_mesh_load_translated_vertex(1, 1, &origin, &vertex);
         RotTrans(&vertex, &screen[1], &screen[1].pad);
         quad->x1 = screen[1].vx;
         quad->y1 = screen[1].vy;
@@ -222,12 +222,12 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             quad->y0 = screen[1].vy;
             quad->x2 = screen[3].vx;
             quad->y2 = screen[3].vy;
-            effect_add_scratchpad_xyz_components(0, j, &origin, &vertex);
+            effect_dome_mesh_load_translated_vertex(0, j, &origin, &vertex);
             RotTrans(&vertex, &screen[3], &screen[3].pad);
             quad->x3 = screen[3].vx;
             quad->y3 = screen[3].vy;
             depth[0][j] = screen[3].vz;
-            effect_add_scratchpad_xyz_components(1, j, &origin, &vertex);
+            effect_dome_mesh_load_translated_vertex(1, j, &origin, &vertex);
             RotTrans(&vertex, &screen[1], &screen[1].pad);
             quad->x1 = screen[1].vx;
             quad->y1 = screen[1].vy;
@@ -238,13 +238,13 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
          * closes the ring on column 0. */
         for (i = 1; i < DOME_MESH_ROWS; i++) {
             n = i + 1;
-            effect_add_scratchpad_xyz_components(n, 0, &origin, &vertex);
+            effect_dome_mesh_load_translated_vertex(n, 0, &origin, &vertex);
             RotTrans(&vertex, &screen[0], &screen[0].pad);
             quad = &work->quads[work->buffer][i * DOME_MESH_SEGMENTS];
             quad->x0 = screen[0].vx;
             quad->y0 = screen[0].vy;
             depth[n][0] = screen[0].vz;
-            effect_add_scratchpad_xyz_components(n, 1, &origin, &vertex);
+            effect_dome_mesh_load_translated_vertex(n, 1, &origin, &vertex);
             RotTrans(&vertex, &screen[1], &screen[1].pad);
             quad->x1 = screen[1].vx;
             quad->y1 = screen[1].vy;
@@ -263,7 +263,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
                 quad->y2 = other->y0;
                 quad->x3 = other->x1;
                 quad->y3 = other->y1;
-                effect_add_scratchpad_xyz_components(n, j, &origin, &vertex);
+                effect_dome_mesh_load_translated_vertex(n, j, &origin, &vertex);
                 RotTrans(&vertex, &screen[1], &screen[1].pad);
                 quad->x1 = screen[1].vx;
                 quad->y1 = screen[1].vy;
