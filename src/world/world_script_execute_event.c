@@ -44,7 +44,8 @@ void world_script_execute_event(void) {
     s32 operand_4;
     s32 operand_1;
     event_set_battle_unit_position_instruction_t* position_instruction;
-    u8* dialogue_instruction;
+    u8* dialogue_cursor;
+    event_display_message_instruction_t* dialogue_instruction;
     s32* event_words;
     u8* parameters;
     /* One unit pointer, one thread pointer and one index serve every handler;
@@ -345,18 +346,21 @@ restart_event:
                 instruction_offset, operand_2, &g_world_thread_contexts[operand_1].task_words[6]);
             g_world_thread_contexts[operand_1].function_parameter_1 = operand_2;
             g_world_thread_contexts[operand_1].function_parameter_2 = ((operand_4 << 8) + operand_3) - 1;
-            dialogue_instruction = g_world_event_script;
-            dialogue_instruction += instruction_offset;
-            operand_4 = dialogue_instruction[6];
-            operand_3 = dialogue_instruction[5];
+            dialogue_cursor = g_world_event_script;
+            dialogue_cursor += instruction_offset;
+            dialogue_instruction = (event_display_message_instruction_t*)dialogue_cursor;
+            operand_4 = dialogue_instruction->unit_id_le[1];
+            operand_3 = dialogue_instruction->unit_id_le[0];
             g_world_thread_contexts[operand_1].function_parameter_3 = (operand_4 << 8) + operand_3;
-            g_world_thread_contexts[operand_1].function_parameter_4 = dialogue_instruction[7];
-            g_world_thread_contexts[operand_1].task_words[2] = world_script_load_halfword(dialogue_instruction + 8);
-            g_world_thread_contexts[operand_1].task_words[3]
-                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 0xA);
-            g_world_thread_contexts[operand_1].task_words[4]
-                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 0xC);
-            g_world_thread_contexts[operand_1].task_words[5] = (((g_world_event_script) + instruction_offset))[0xE];
+            g_world_thread_contexts[operand_1].function_parameter_4 = dialogue_instruction->portrait_selector;
+            g_world_thread_contexts[operand_1].task_words[2]
+                = world_script_load_halfword(dialogue_instruction->x_offset_le);
+            g_world_thread_contexts[operand_1].task_words[3] = world_script_load_halfword(
+                ((event_display_message_instruction_t*)(instruction_offset + g_world_event_script))->y_offset_le);
+            g_world_thread_contexts[operand_1].task_words[4] = world_script_load_halfword(
+                ((event_display_message_instruction_t*)(instruction_offset + g_world_event_script))->arrow_offset_le);
+            g_world_thread_contexts[operand_1].task_words[5]
+                = ((event_display_message_instruction_t*)(g_world_event_script + instruction_offset))->window_options;
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
@@ -364,13 +368,15 @@ restart_event:
                 if ((g_world_menu_window_buffers[work_index].dialogue_selector == operand_1)
                     && (world_thread_is_running_asm(operand_2) == 1)
                     && (g_world_thread_contexts[operand_2].task_id == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
-                    operand_1 = world_script_load_halfword(instruction_offset + (g_world_event_script) + 2);
-                    if ((operand_1 & 0xFFFF) != 0xFFFF) {
+                    operand_1 = world_script_load_halfword(
+                        ((event_change_dialog_instruction_t*)(instruction_offset + g_world_event_script))->text_id_le);
+                    if ((u16)operand_1 != 0xFFFF) {
                         operand_1 -= 1;
                     }
                     g_world_thread_contexts[operand_2].function_parameter_2 = operand_1;
-                    g_world_thread_contexts[operand_2].function_parameter_4
-                        = world_script_load_halfword(instruction_offset + (g_world_event_script) + 4);
+                    g_world_thread_contexts[operand_2].function_parameter_4 = world_script_load_halfword(
+                        ((event_change_dialog_instruction_t*)(instruction_offset + g_world_event_script))
+                            ->portrait_selector_le);
                     g_world_thread_contexts[operand_2].task_id = NATIVE_THREAD_TASK_RESUME;
                     break;
                 }

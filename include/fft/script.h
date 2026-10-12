@@ -398,6 +398,38 @@ typedef struct event_file_block {
 } event_file_block_t;
 typedef char event_file_block_size_must_be_8192[(sizeof(event_file_block_t) == EVENT_BLOCK_BYTES) ? 1 : -1];
 
+/* Dialogue commands are byte-aligned records in the event instruction stream. */
+typedef struct event_display_message_instruction {
+    u8 opcode;
+    u8 thread_id;
+    u8 dialog_type;
+    u8 text_id_le[2]; /* one-based text id */
+    u8 unit_id_le[2];
+    u8 portrait_selector;
+    u8 x_offset_le[2];
+    u8 y_offset_le[2];
+    u8 arrow_offset_le[2];
+    u8 window_options;
+} event_display_message_instruction_t;
+typedef char
+    event_display_message_instruction_size_must_be_15[sizeof(event_display_message_instruction_t) == 15 ? 1 : -1];
+
+typedef struct event_change_dialog_instruction {
+    u8 opcode;
+    u8 window_selector;
+    u8 text_id_le[2]; /* one-based text id; 0xffff closes the window */
+    u8 portrait_selector_le[2];
+} event_change_dialog_instruction_t;
+typedef char event_change_dialog_instruction_size_must_be_6[sizeof(event_change_dialog_instruction_t) == 6 ? 1 : -1];
+
+static inline event_display_message_instruction_t* event_display_message_at(u8* base, s32 byte_offset) {
+    return (event_display_message_instruction_t*)(base + byte_offset);
+}
+
+static inline event_change_dialog_instruction_t* event_change_dialog_at(u8* base, s32 byte_offset) {
+    return (event_change_dialog_instruction_t*)(base + byte_offset);
+}
+
 /* Eight-byte operand payload of EVENT_OPCODE_WALK_TO. Multi-byte values
  * remain byte arrays because event scripts are not guaranteed to be aligned. */
 typedef struct event_walk_to_parameters {

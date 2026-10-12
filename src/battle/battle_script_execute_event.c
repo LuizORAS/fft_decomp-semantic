@@ -71,7 +71,8 @@ void battle_script_execute_event(void) {
     s32 operand_4;
     s32 operand_1;
     event_set_battle_unit_position_instruction_t* position_instruction;
-    u8* message_instruction;
+    u8* dialogue_cursor;
+    event_display_message_instruction_t* message_instruction;
     s32* script_variables;
     u8* parameters;
     /* One unit pointer, one thread pointer and one index serve every handler;
@@ -375,20 +376,24 @@ restart_script:
                 instruction_offset, operand_2, &g_battle_thread_contexts[operand_1].task_words[6]);
             g_battle_thread_contexts[operand_1].function_parameter_1 = operand_2;
             g_battle_thread_contexts[operand_1].function_parameter_2 = ((operand_4 << 8) + operand_3) - 1;
-            message_instruction = (u8*)g_battle_event_block;
-            message_instruction += instruction_offset;
-            operand_4 = message_instruction[6];
-            operand_3 = message_instruction[5];
+            dialogue_cursor = (u8*)g_battle_event_block;
+            dialogue_cursor += instruction_offset;
+            message_instruction = (event_display_message_instruction_t*)dialogue_cursor;
+            operand_4 = message_instruction->unit_id_le[1];
+            operand_3 = message_instruction->unit_id_le[0];
             g_battle_thread_contexts[operand_1].function_parameter_3 = (operand_4 << 8) + operand_3;
-            g_battle_thread_contexts[operand_1].function_parameter_4 = message_instruction[7];
-            g_battle_thread_contexts[operand_1].task_words[2] = battle_script_load_halfword(message_instruction + 8);
-            g_battle_thread_contexts[operand_1].task_words[3]
-                = battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 0xA);
-            g_battle_thread_contexts[operand_1].task_words[4]
-                = battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 0xC);
+            g_battle_thread_contexts[operand_1].function_parameter_4 = message_instruction->portrait_selector;
+            g_battle_thread_contexts[operand_1].task_words[2]
+                = battle_script_load_halfword(message_instruction->x_offset_le);
+            g_battle_thread_contexts[operand_1].task_words[3] = battle_script_load_halfword(
+                ((event_display_message_instruction_t*)(instruction_offset + (u8*)g_battle_event_block))->y_offset_le);
+            g_battle_thread_contexts[operand_1].task_words[4] = battle_script_load_halfword(
+                ((event_display_message_instruction_t*)(instruction_offset + (u8*)g_battle_event_block))
+                    ->arrow_offset_le);
             message_cursor = (u8*)g_battle_event_block;
             message_cursor += instruction_offset;
-            g_battle_thread_contexts[operand_1].task_words[5] = message_cursor[14];
+            g_battle_thread_contexts[operand_1].task_words[5]
+                = ((event_display_message_instruction_t*)message_cursor)->window_options;
             battle_thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
@@ -396,13 +401,16 @@ restart_script:
                 if ((g_battle_menu_window_buffers[work_index].dialogue_selector == operand_1)
                     && (battle_thread_is_running_asm(operand_2) == 1)
                     && (g_battle_thread_contexts[operand_2].task_id == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
-                    operand_1 = battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 2);
-                    if ((operand_1 & 0xFFFF) != 0xFFFF) {
+                    operand_1 = battle_script_load_halfword(
+                        ((event_change_dialog_instruction_t*)(instruction_offset + (u8*)g_battle_event_block))
+                            ->text_id_le);
+                    if ((u16)operand_1 != 0xFFFF) {
                         operand_1 -= 1;
                     }
                     g_battle_thread_contexts[operand_2].function_parameter_2 = operand_1;
-                    g_battle_thread_contexts[operand_2].function_parameter_4
-                        = battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 4);
+                    g_battle_thread_contexts[operand_2].function_parameter_4 = battle_script_load_halfword(
+                        ((event_change_dialog_instruction_t*)(instruction_offset + (u8*)g_battle_event_block))
+                            ->portrait_selector_le);
                     g_battle_thread_contexts[operand_2].task_id = NATIVE_THREAD_TASK_RESUME;
                     break;
                 }
