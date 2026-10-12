@@ -75,6 +75,7 @@ extern SVECTOR* g_camera_published_rotation_ptr;
 /* Maps a camera quadrant index to its map-tile camera-block direction. */
 extern u8 g_camera_quadrant_block_directions[4];
 extern VECTOR g_camera_current_real_coords;
+extern VECTOR g_battle_current_vector;
 extern SVECTOR g_camera_integer_coords;
 extern MATRIX g_camera_matrix;
 extern u16 g_camera_offset_screen_coord_countdown;

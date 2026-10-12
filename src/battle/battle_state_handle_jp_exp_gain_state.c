@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_script.h"
 
 /* JpExpGain game-state handler: move on once the camera has settled (no cursor

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* ActionCast game-state handler: once the message has closed and the camera has

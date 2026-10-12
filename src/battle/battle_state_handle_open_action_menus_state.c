@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* OpenActionMenus game-state handler: once the window has closed (command 7, 8 or
  * 0xff) and the camera has settled, open the idle action menu of the unit under

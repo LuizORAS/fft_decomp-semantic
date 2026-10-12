@@ -1,3 +1,4 @@
+#include "fft/battle_menu.h"
 /* Run the help menu over the REQUIRE screen. */
 #include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"

@@ -277,6 +277,10 @@ void battle_menu_start_entry_thread(void);
 void battle_menu_start_mini_menu_display_thread(void);
 void battle_menu_start_system_function_thread(s32 system_function);
 void battle_menu_load_selected_unit(void);
+void battle_menu_copy_billboard_data_in(const menu_unit_status_record_t* banner, const menu_active_unit_t* unit,
+    const menu_status_panel_slot_storage_t* billboard);
+void battle_menu_copy_billboard_data_out(menu_unit_status_record_t* banner, menu_active_unit_t* unit,
+    menu_status_panel_slot_storage_t* billboard, map_selected_tile_t* cursor_tile);
 void battle_menu_update_panel_fade(void);
 void battle_menu_draw_active_window_frames(void);
 void battle_menu_build_ability_preview_at_list(void);

@@ -8,7 +8,7 @@
 #include "fft/battle_unit.h"
 #include "fft/main.h"
 
-/* effect */
+/* callbacks */
 /* Native effect handlers receive the record, callback slot, emitter and frame.
  * Individual handlers narrow the record index or ignore unused arguments. */
 typedef s32 (*effect_callback_t)(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
@@ -37,6 +37,7 @@ typedef struct effect_flag_prefix {
 } effect_flag_prefix_t;
 typedef char effect_flag_prefix_flags_must_be_6[((unsigned long)&((effect_flag_prefix_t*)0)->flags == 6) ? 1 : -1];
 
+/* targets */
 /* target_type of an effect target record. */
 typedef enum effect_target_type {
     EFFECT_TARGET_TYPE_UNIT = 0,
@@ -66,6 +67,7 @@ typedef struct effect_target {
 } effect_target_t;
 typedef char effect_target_size_must_be_10[(sizeof(effect_target_t) == 10) ? 1 : -1];
 
+/* secondary effects */
 /* One running secondary effect: a 0x54-byte record of
  * g_effect_secondary_data (0x801b8b9c), ids 1-16 with record 0 the
  * sentinel. The secondary effects are the ones resident in BATTLE.BIN (weapon
@@ -164,7 +166,7 @@ typedef struct battle_post_effect_msg {
     s32 value;         /* 0x04 reported amount */
 } battle_post_effect_msg_t;
 
-/* The projectile models of g_effect_model_data_ptrs. */
+/* The projectile models of g_effect_model_files. */
 typedef enum effect_model {
     EFFECT_MODEL_ARROW = 0,
     EFFECT_MODEL_STONE = 1,
@@ -176,6 +178,7 @@ typedef enum effect_model {
  * (0, ONE, 0); an effect file's script sets its own pair (opcode 27). */
 enum { EFFECT_SECONDARY_INERTIA_THRESHOLD = 560 };
 
+/* secondary state */
 /* One 14-byte parameter row for the spell-charge secondary effect. */
 typedef struct effect_charge_params {
     s16 speed;
@@ -261,6 +264,7 @@ typedef union effect_secondary_state {
     effect_trap_state_24_t zodiac_poof;
 } effect_secondary_state_t;
 
+/* timelines */
 /* One 0x80-byte particle channel of an effect timeline. Keyframe k lasts
  * from frame_start[k] to frame_start[k + 1]. Entering it runs its 16-bit action value
  * (unit reactions, and binding a native handler to a callback slot); on each
@@ -355,6 +359,7 @@ typedef enum effect_start_target {
     EFFECT_START_ON_CASTER = 2, /* a unit that is both caster and target */
 } effect_start_target_e;
 
+/* loading and playback */
 /* target_mode selects the unit id or the tile coordinate pointer. */
 typedef union effect_start_target_data {
     s32 misc_id;
@@ -481,6 +486,7 @@ typedef enum effect_secondary_animation_id {
  * group's effect slots (effect_start_group); the rest is a fixed
  * emitter, from which effect_spawn_particle_motion draws each slot's
  * motion as the effect file emitter does a particle's. */
+/* particle motion */
 typedef struct effect_emitter_values {
     u8 trap_animation;      /* 0x00; trap groups: index into g_effect_trap_animation_data */
     u8 _unused_01;          /* 0x01 */
@@ -542,6 +548,7 @@ typedef struct battle_arc_delta {
     s32 distance;
 } battle_arc_delta_t;
 
+/* projectile geometry */
 /* Query read by effect_calculate_arcing_trajectory: the offset to the
  * target and both endpoints. */
 typedef struct battle_arc_query {
@@ -726,6 +733,7 @@ typedef struct effect_palette_section {
 } effect_palette_section_t;
 typedef char effect_palette_section_size_must_be_1028[sizeof(effect_palette_section_t) == 1028 ? 1 : -1];
 
+/* script */
 /* An effect script instruction starts with a 16-bit header, its opcode in the low nine bits
  * (g_effect_instructions holds 120 handlers; retail scripts stay below
  * 2e) and small operands in the bits above, followed by up to three operand
@@ -1039,6 +1047,7 @@ typedef struct effect_sprite_block {
 } effect_sprite_block_t;
 typedef char assert_effect_sprite_block_prefix_size[sizeof(effect_sprite_block_t) == 8 ? 1 : -1];
 
+/* timeline state */
 /* Steppers use the named tracks; resets clear each complete slot array.
  * The reset extents include slots that no track stepper reads. */
 enum {
@@ -1189,6 +1198,7 @@ typedef union effect_sequence_instruction {
 } effect_sequence_instruction_t;
 typedef char effect_sequence_instruction_size_must_be_5[sizeof(effect_sequence_instruction_t) == 5 ? 1 : -1];
 
+/* particle records */
 /* 0x24-byte sprite node at 0x801c00a4: the animated sprite of one particle
  * (effect_work_record_t.data). Links are node indexes into that array; node 0
  * is the sentinel. g_effect_active_list_node_head is the list head and
@@ -1355,6 +1365,7 @@ typedef char assert_effect_slot_size[sizeof(effect_slot_t) == 204 ? 1 : -1];
  * that spawn like the particle emitter embed it. The spread is the ellipsoid
  * or box half-extent around the spawn position and the velocity spread
  * randomizes the base angles. */
+/* geometry */
 typedef struct effect_emitter_geometry_view {
     vec3s16_t spawn_position_start;      /* 0x14 */
     vec3s16_t spawn_position_end;        /* 0x1a */
@@ -1879,6 +1890,7 @@ typedef char
     effect_geometry_table_entries_offset_must_be_20[(unsigned long)&((effect_geometry_table_t*)0)->entries == 20 ? 1
                                                                                                                  : -1];
 
+/* curves */
 /* Frames in one animation curve: emitter and particle frame counters wrap here. */
 enum { EFFECT_ANIMATION_CURVE_FRAMES = 160 };
 
@@ -1918,104 +1930,155 @@ typedef char effect_animation_curve_table_data_offset_must_be_4
         }                                                                                                              \
     }
 
-/* Vertex work allocated by Banish/Altima and filled by the map renderer. */
-extern VECTOR* g_effect_map_vertices;
-extern effect_charge_params_t g_effect_charge_line_params[2];
-extern effect_death_poof_state_t g_effect_death_poof_states[];
-extern effect_secondary_callback_t g_effect_secondary_handlers[23];
-extern effect_secondary_animation_t g_effect_secondary_animations[];
-extern effect_secondary_data_t g_effect_secondary_data[];
-extern u8 g_effect_load_state; /* effect_load_state_e */
-/* Projectile secondary animation of each weapon item type: BOW_ARROW for bows, CROSSBOW_BOLT for
- * crossbows, NONE for the rest. */
-extern u8 g_effect_weapon_type_extra_flags[];
-extern u32 g_effect_camera_rotation_mode;
-extern u32 g_effect_camera_position_mode;
-extern u32 g_effect_camera_zoom_mode;
-extern effect_sprite_section_t g_effect_trap_frame_data;
-extern u8 g_effect_ninja_ball_masks[];
-extern s32 g_effect_gravity_scale;
-extern MATRIX g_effect_particle_heading_matrix;
-extern MATRIX g_effect_emitter_matrix;
-extern MATRIX g_effect_projectile_matrix;
-extern psyq_tmd_object_t* g_effect_model_object;
-extern SVECTOR* g_effect_model_vertices;
-extern SVECTOR* g_effect_model_normals;
-extern psyq_tmd_packet_t* g_effect_model_commands;
-extern s32 g_effect_model_command_word_offset;
-extern SVECTOR g_effect_camera_rotation_start;
-extern SVECTOR g_effect_camera_rotation_target;
-extern SVECTOR g_effect_camera_rotation_current;
-extern SVECTOR g_effect_camera_rotation_saved;
-extern VECTOR g_effect_camera_position_start;
-extern VECTOR g_effect_camera_position_target;
-extern VECTOR g_effect_camera_position_current;
-extern VECTOR g_effect_camera_position_saved;
-extern s32 g_effect_camera_zoom_duration;
-extern s32 g_effect_camera_zoom_frame;
-extern VECTOR g_effect_camera_zoom_start;
-extern VECTOR g_effect_camera_zoom_target;
-extern VECTOR g_effect_camera_zoom_current;
-extern VECTOR g_effect_camera_zoom_saved;
-extern s32 g_effect_trajectory_hit_unit_id;
-extern effect_sprite_section_t* g_effect_trap_frame_data_ptr;
-extern effect_callback_t g_effect_callback_slots[];
-extern u8 g_effect_palette_target_misc_ids[];
-extern SVECTOR g_effect_trajectory_origin;
-extern SVECTOR g_effect_trajectory_destination;
-extern s32 g_effect_trajectory_step_count;
-extern effect_palette_section_t* g_effect_palette_ptr;
+/* loading and playback */
+/* Action/reaction ability IDs index directly; event IDs map after those rows. */
+extern s16 g_effect_ability_files[];
+extern effect_file_header_t* g_effect_data_ptrs[EFFECT_FILE_ID_COUNT];
+extern file_extent_t g_effect_disc_entries[EFFECT_FILE_ID_COUNT];
+/* id of the charge secondary effect started with the ability; 0 none */
+extern effect_flags_section_t* g_effect_flags_section;
+extern s16 g_effect_load_countdown;
+extern u8 g_effect_load_state;
+extern s32 g_effect_playback_phase;
 
+void effect_call_play(void);
+void effect_cancel_playback_request(void);
+s32 effect_get_playback_phase(void);
+s32 effect_init_data(void);
+void effect_init_flags_section_pointer(s16 effect_id);
+void effect_init_system(void);
+s32 effect_is_item_ability(s32 ability_id);
+u32 effect_load_ability(s32 ability_id);
+void effect_load_lba_and_size(s32 effect_id, s32* lba, s32* byte_length);
+void effect_play(void);
+void effect_replace_flags_0006(struct effect_flag_prefix* object, s32 value);
+void effect_reset_subsystems(void);
+void effect_set_ability_animation(u32 packed, s32 ability, effect_secondary_init_t* source);
+void effect_start_new(s32 ability_id, s32 target_mode, effect_start_target_data_t target);
+s32 effect_try_init_data(void);
+s32 effect_update_cycle(void);
+s32 effect_update_stage(void);
+
+/* secondary effects */
+extern u16 g_effect_active_slot_tail;
+extern s32 g_effect_buffer_index;
+/* angle track counter; reset by camera_execute_angle_command */
+
+extern DVECTOR g_effect_charge_line_direction_offsets[];
+extern u8 g_effect_charge_line_fade_levels[];
+extern effect_charge_params_t g_effect_charge_line_params[2];
+extern struct effect_secondary_data* g_effect_current_secondary;
+extern u32 g_effect_current_slot_id;
+extern effect_death_poof_state_t g_effect_death_poof_states[];
+extern u8 g_effect_ending_secondary_function_id;
+extern u16 g_effect_free_slot_head;
+extern u32* g_effect_polygon_depth_data;
+extern effect_secondary_animation_t g_effect_secondary_animations[];
+/* Secondary-animation id per charge animation set, indexed by the low 16 bits of the
+ * caller's packed argument. */
+extern u8 g_effect_secondary_by_charge_animation[];
+extern effect_secondary_data_t g_effect_secondary_data[];
+extern effect_secondary_callback_t g_effect_secondary_handlers[23];
+extern effect_secondary_state_t g_effect_secondary_state;
+/* per-channel call counts */
+
+/* Brightness (out of 128) of each of a summon-charge ring's ten slots, newest point first. */
+extern u8 g_effect_summon_ring_brightness[];
+extern u8 g_effect_target_id;
 /* Per-group trap emitter records (0x801b8564, stride 0x2e). The secondary-effect
  * handlers spawn while spawn_start_frame <= timer < spawn_end_frame and finish
  * once timer passes spawn_start_frame with no live slots;
  * effect_update_active_slots walks count active slots. The level-up
  * handler seeds group 5's position.y with -8, then lowers it by 3 per frame. */
 extern effect_emitter_values_t g_effect_trap_particle_configs[17];
-extern s16 g_effect_root_record_index;
-extern psyq_tmd_header_t* g_effect_model_files[];
-extern file_extent_t g_effect_disc_entries[EFFECT_FILE_ID_COUNT];
-extern effect_secondary_state_t g_effect_secondary_state;
+/* effect_load_state_e */
+/* Projectile secondary animation of each weapon item type: BOW_ARROW for bows, CROSSBOW_BOLT for
+ * crossbows, NONE for the rest. */
+extern u8 g_effect_weapon_type_extra_flags[];
+/* CLUT of the zodiac poof's particles, an index in the weapons row, for each
+ * sprite palette (the secondary effect's parameter). */
+extern u8 g_effect_zodiac_poof_animations[];
+
+s32 battle_noop_801b2968(void);
+s32 battle_noop_801b2bfc(void);
+s32 battle_noop_801b2c04(void);
+s32 battle_noop_801b2e60(void);
+s32 battle_noop_801b3118(void);
+s32 battle_return_zero_801b0fec(void);
+u8 effect_allocate_secondary_slot(void);
+s32 effect_arrow_arc_secondary_handler(void);
+s32 effect_end_secondary_on_current_unit(void);
+s32 effect_equip_break_secondary_handler(void);
+s32 effect_fall_dust_secondary_handler(void);
+void effect_finalize_secondary(u8 secondary_id);
+effect_secondary_phase_e effect_get_secondary_phase(u8 secondary_id);
+s32 effect_golem_secondary_handler(void);
+s32 effect_init_fall_dust_secondary(effect_secondary_init_t* source, VECTOR* position);
+s32 effect_init_projectile_secondary(s32 animation, struct effect_secondary_init* source);
+s32 effect_init_secondary(s32 animation_id, s32 parameter, struct effect_secondary_init* source);
+s32 effect_init_weapon_hit_secondary(s32 elements, effect_secondary_init_t* source, s32 unused_is_bow);
+s32 effect_level_up_secondary_handler(void);
+s32 effect_linear_projectile_secondary_handler(void);
+s32 effect_null_secondary_handler(void);
+s32 effect_red_orbs_secondary_handler(void);
+s32 effect_reflect_secondary_handler(void);
+void effect_remove_secondary(u8 id);
+void effect_set_evade_type_data_and_weapon_element(struct battle_unit_misc_data* unit, s32 is_bow);
+void effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit);
+void effect_set_secondary(struct battle_unit_misc_data* unit, s32 effect);
+void effect_set_secondary_death_smoke(battle_unit_misc_data_t* unit);
+void effect_set_secondary_fall_dust(struct battle_unit_misc_data* unit);
+void effect_set_secondary_level_up(struct battle_unit_misc_data* unit);
+void effect_set_secondary_splash(struct battle_unit_misc_data* unit);
+void effect_set_secondary_teleport(struct battle_unit_misc_data* unit);
+s32 effect_set_secondary_teleport_by_misc_id(u32 misc_id);
+void effect_set_secondary_venom_trap(battle_unit_misc_data_t* unit);
+void effect_set_secondary_zodiac_poof(battle_unit_misc_data_t* unit);
+s32 effect_spell_charge_secondary_handler(void);
+s32 effect_splash_secondary_handler(void);
+void effect_start_action_projectile_secondary(battle_unit_misc_data_t* unit);
+s32 effect_start_altima_teleport_arrival(battle_unit_misc_data_t* unit);
+s32 effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit);
+void effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit);
+void effect_start_altima_teleport_white_flash(battle_unit_misc_data_t* unit);
+void effect_start_group(s32 group, s32 clut_index);
+s32 effect_summon_charge_secondary_handler(void);
+s32 effect_teleport_secondary_handler(void);
+void effect_update_active_slots(s32 group);
+s32 effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough);
+s32 effect_update_secondary_effects(void);
+s32 effect_venom_trap_secondary_handler(void);
+s32 effect_weapon_hit_secondary_handler(void);
+s32 effect_zodiac_poof_secondary_handler(void);
+void move_start_teleport_step(battle_unit_misc_data_t* unit);
+
+/* targets */
+extern effect_secondary_init_t g_effect_context;
+extern u8 g_effect_palette_target_misc_ids[];
 /* Tile target of the current effect: emitter origin CURSOR_TILE, homing CURSOR_TILE and camera source
  * CURSOR_TILE. */
 extern effect_target_t g_effect_target_tile;
-extern map_tile_coordinates_t g_effect_trajectory_tile;
-/* Action/reaction ability IDs index directly; event IDs map after those rows. */
-extern s16 g_effect_ability_files[];
-extern effect_animation_curve_table_t* g_effect_animation_curve_data;
-extern s16 g_effect_arctan_angle_mod;
-extern s32 g_effect_buffer_index;
-extern effect_secondary_init_t g_effect_context;
-extern u16 g_effect_free_slot_head;
-extern struct effect_secondary_data* g_effect_current_secondary;
-extern u32 g_effect_current_slot_id;
-extern effect_file_header_t* g_effect_data_ptrs[EFFECT_FILE_ID_COUNT];
-extern effect_callback_t g_effect_native_callbacks[EFFECT_NATIVE_CALLBACK_COUNT];
-extern u8* g_effect_frame_data;
-extern u8* g_effect_frame_data_start;
-extern s32 g_effect_gravity_modifier;
-extern s32 g_effect_inertia_threshold;
-extern s16 g_effect_load_countdown;
-extern effect_timeline_t* g_effect_timeline;
-extern u8* g_effect_script;
-/* Written by effect-script opcode 05; no game source reads it. */
-extern u16 D_801BF000;
-extern effect_timing_curves_t* g_effect_timing_curves;
-extern effect_child_timeline_t* g_effect_child_timeline;
-extern u8* g_effect_animation_sequences;
-extern u8* g_effect_animation_sequences_start;
-extern u32* g_effect_polygon_depth_data;
-extern u16 g_effect_active_slot_tail;
-extern s32 g_effect_primitive_sizes[3];
-extern s32 g_effect_saved_inertia_threshold;
-extern s32 g_effect_sound_data_base;
-extern struct suzuki_sound_resource* g_effect_sound_section_ptr;
-extern u8 g_effect_target_id; /* id of the charge secondary effect started with the ability; 0 none */
-extern effect_flags_section_t* g_effect_flags_section;
-/* Particle gravity; secondary handlers save it while using (0, ONE, 0). */
-extern vec3s32_t g_effect_gravity;
-extern vec3s32_t g_effect_saved_gravity;
+
+void effect_build_secondary_init(struct battle_unit_misc_data* unit, struct effect_secondary_init* effect);
+void effect_build_secondary_init_from_action(battle_unit_misc_data_t* unit, effect_secondary_init_t* init);
+void effect_convert_tile_coords_to_world_coords(SVECTOR* in, VECTOR* out);
+void effect_copy_misc_unit_screen_location(u32 misc_id, VECTOR* destination);
+void effect_get_screen_location_by_battle_id(
+    s32 adjust_for_tile_height, u32 battle_id, effect_secondary_init_t* effect_coordinates, SVECTOR* destination);
+void effect_init_altima_teleport_data(battle_unit_misc_data_t* unit, effect_secondary_init_t* teleport_data);
+void effect_resolve_target_render_coords(
+    s32 add_depth, s32 target_index, effect_secondary_init_t* coord_data, SVECTOR* out);
+void effect_store_map_center_coordinates(VECTOR* destination);
+void effect_store_targets_and_display_types(s32 ability_id, battle_unit_misc_data_t* unit);
+
+/* elements */
+extern u8 g_effect_ninja_ball_masks[];
+
+s32 effect_get_ninja_ball(s32 elements);
+
+/* projectiles */
 extern s32 g_effect_arc_trajectory_height;
+extern s16 g_effect_arctan_angle_mod;
 extern s16 g_effect_arrow_arc_caster_relative_yaw;
 extern s32 g_effect_arrow_arc_distance;
 extern s32 g_effect_arrow_arc_distance_step;
@@ -2023,51 +2086,172 @@ extern s32 g_effect_arrow_arc_height;
 extern s16 g_effect_arrow_arc_launch_angle;
 extern s32 g_effect_arrow_arc_length;
 extern u16 g_effect_arrow_arc_yaw;
-extern s32 g_effect_camera_position_duration;
-extern s32 g_effect_camera_position_frame;
-extern s32 g_effect_camera_rotation_duration; /* angle track duration */
-
-extern s32 g_effect_camera_rotation_frame; /* angle track counter; reset by camera_execute_angle_command */
-
-extern DVECTOR g_effect_charge_line_direction_offsets[];
-extern u8 g_effect_charge_line_fade_levels[];
-/* Four-byte alignment preserves the original 32-bit copies into x/y. */
-extern SVECTOR g_effect_corner_bottom_left __attribute__((aligned(4)));
-extern SVECTOR g_effect_corner_bottom_right __attribute__((aligned(4)));
-extern SVECTOR g_effect_corner_top_left __attribute__((aligned(4)));
-extern SVECTOR g_effect_corner_top_right __attribute__((aligned(4)));
-extern u8 g_effect_ending_secondary_function_id; /* function byte to store; 5 = nothing */
-extern effect_script_result_e (*g_effect_instructions[120])(effect_record_t*);
-extern MATRIX g_effect_matrix; /* 0x801bc09c */
-extern u32* g_effect_otag;
-
-/* Work-kind handlers, indexed by kind_flags >> 12. The int return type is
- * load-bearing even though the result is ignored: the value-returning call is
- * a second set of $2, so sched1 no longer boosts the final `$2 = 1` to the end
- * of its block, and the pc update is allocated $3 as in the target. */
-extern s32 (*g_effect_particle_render_handlers[])(effect_record_t* record, effect_work_record_t* work);
 extern VECTOR g_effect_projectile_delta;
 extern s32 g_effect_projectile_length;
 extern s32 g_effect_projectile_progress;
 extern s32 g_effect_projectile_speed;
 extern s16 g_effect_projectile_spin_passes;
 extern s16 g_effect_projectile_step_count;
-
-/* Six RGB byte triples, packed into both CLUT images as 15-bit colours. */
-extern rgb24_t g_effect_reflect_palette_colors[6];
-
-/* Secondary-animation id per ability, indexed by the low 16 bits of the
- * caller's packed argument. */
-extern u8 g_effect_secondary_by_charge_animation[];
-extern u8 g_effect_sound_call_counts[]; /* per-channel call counts */
-
-/* Brightness (out of 128) of each of a summon-charge ring's ten slots, newest point first. */
-extern u8 g_effect_summon_ring_brightness[];
-extern SVECTOR g_effect_trajectory_position; /* final projectile position */
+extern SVECTOR g_effect_trajectory_destination;
+extern s32 g_effect_trajectory_hit_unit_id;
+extern SVECTOR g_effect_trajectory_origin;
+extern SVECTOR g_effect_trajectory_position;
 extern s32 g_effect_trajectory_source_id;
-extern VECTOR g_effect_trajectory_step; /* last step's movement */
+extern VECTOR g_effect_trajectory_step;
+extern s32 g_effect_trajectory_step_count;
+extern map_tile_coordinates_t g_effect_trajectory_tile;
+/* last step's movement */
 extern s32 g_effect_trajectory_tile_flags;
 
+s32 effect_calculate_arc_height_term(s32 distance);
+s32 effect_calculate_arc_trajectory_term(s32 a, s32 b);
+s32 effect_calculate_arcing_trajectory(battle_arc_query_t* query, s32* arc_a, s32* arc_b);
+s32 effect_calculate_launch_velocity(void);
+s32 effect_check_arc_trajectory_between_units(u8 source_id, u8 target_id);
+s32 effect_check_direct_trajectory_between_units(u8 source_id, u8 target_id);
+s32 effect_check_direct_trajectory_to_target(s32 source_id, SVECTOR* tile_position, s32 target_id);
+void effect_find_projectile_xyz_along_trajectory(const VECTOR* src, s32 total, s32 current, VECTOR* dst);
+s32 effect_get_bow_shot_angle(void);
+void effect_list_valid_unit_targeting_data(s32 first, s32 second, effect_obstacle_unit_list_t** out);
+s32 effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_position, s32 target_id);
+void effect_set_arrow_trajectory(s32 source_id, SVECTOR* tile_position, s32 target_id);
+s32 effect_test_position_for_obstacle(
+    effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, map_tile_coordinates_t* tile_ref);
+s32 effect_trace_arc_trajectory_path(
+    SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, effect_obstacle_unit_list_t* obstacles);
+/* Steps the projectile along its trajectory, testing each obstacle. */
+s32 effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* distance, effect_obstacle_unit_list_t* obstacles);
+
+/* models */
+extern s32 g_effect_model_command_word_offset;
+extern psyq_tmd_packet_t* g_effect_model_commands;
+extern psyq_tmd_header_t* g_effect_model_files[];
+extern SVECTOR* g_effect_model_normals;
+extern psyq_tmd_object_t* g_effect_model_object;
+extern SVECTOR* g_effect_model_vertices;
+extern MATRIX g_effect_projectile_matrix;
+
+void effect_decode_next_model_command(effect_decoded_model_command_t* out);
+void effect_draw_projectile_model(SVECTOR* spin, VECTOR* position, SVECTOR* angles, VECTOR* scale, s32 parameter);
+s32 effect_init_model_sections(psyq_tmd_header_t* resource, s32 unused_1);
+
+/* timelines */
+extern effect_child_timeline_t* g_effect_child_timeline;
+extern effect_timeline_t* g_effect_timeline;
+extern effect_timing_curves_t* g_effect_timing_curves;
+
+void effect_advance_map_background_track(effect_background_track_t* track, s16* keyframe, s16* remaining_frames);
+s32 effect_find_next_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame);
+s32 effect_get_animation_timing_curve_value(effect_record_t* record);
+s32 effect_get_timing_curve_value(effect_record_t* record);
+void effect_reset_child_timeline(effect_record_t* record, s16 target_index);
+void effect_reset_parent_timeline(effect_record_t* record);
+void effect_run_keyframe_actions(u16 flags, u8 target, effect_record_t* state);
+void effect_run_keyframe_actions_all_targets(u16 flags, effect_record_t* state);
+void effect_set_timeline_pointers(s16 effect_id);
+void effect_set_timing_curves_pointer(s16 effect_id);
+void effect_step_emitter_timeline(
+    effect_record_t* state, effect_keyframe_table_t* table, s16* index, s16* remaining, s16* step);
+
+/* scripts */
+/* Written by effect-script opcode 05; no game source reads it. */
+extern u16 D_801BF000;
+extern effect_callback_t g_effect_callback_slots[];
+/* function byte to store; 5 = nothing */
+extern effect_script_result_e (*g_effect_instructions[120])(effect_record_t*);
+extern effect_callback_t g_effect_native_callbacks[EFFECT_NATIVE_CALLBACK_COUNT];
+extern u8* g_effect_script;
+
+effect_script_result_e effect_code_script_04_end(effect_record_t* unused_record);
+effect_script_result_e effect_code_script_2e_invalid(effect_record_t* unused_record);
+effect_callback_t effect_get_native_callback(s16 callback_id);
+s32 effect_run_block(s16 index);
+void effect_set_script_pointer(s16 effect_id);
+s16 effect_start_script_record(u8* script, s16 start_pc, s16 parent_index);
+
+/* particle motion */
+extern effect_animation_curve_table_t* g_effect_animation_curve_data;
+extern MATRIX g_effect_emitter_matrix;
+extern effect_geometry_table_t* g_effect_geometry_table;
+/* Particle gravity; secondary handlers save it while using (0, ONE, 0). */
+extern vec3s32_t g_effect_gravity;
+extern s32 g_effect_gravity_modifier;
+extern s32 g_effect_gravity_scale;
+extern s32 g_effect_inertia_threshold;
+/* Vertex work allocated by Banish/Altima and filled by the map renderer. */
+extern VECTOR* g_effect_map_vertices;
+extern MATRIX g_effect_particle_heading_matrix;
+extern vec3s32_t g_effect_saved_gravity;
+extern s32 g_effect_saved_inertia_threshold;
+
+void effect_integrate_particle_motion(effect_work_record_t* list);
+void effect_interpolate_emitter_spawn_position(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
+void effect_interpolate_emitter_spawn_spread(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
+void effect_interpolate_emitter_velocity_base_angles(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
+void effect_interpolate_emitter_velocity_direction_spread(
+    const effect_geometry_record_t* source, s32 factor, VECTOR* out);
+void effect_restore_gravity(void);
+void effect_restore_inertia_threshold(void);
+void effect_save_gravity(void);
+void effect_save_inertia_threshold(void);
+void effect_set_animation_curve_data_pointer(s16 effect_id);
+void effect_set_gravity(vec3s32_t* src);
+void effect_set_inertia_threshold(s32 threshold);
+void effect_set_particle_system_data_pointer(s16 effect_id);
+/* parent is the particle a child emitter spawns from, read only for the
+ * EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE origin: the particle update passes
+ * the particle, the EFFECT overlay's particle handlers a record built on
+ * their stack that holds a position, and the timeline none. The emitter index
+ * arrives as a full 32-bit value. The function is declared with an int result it
+ * never sets and no caller reads. */
+s32 effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitter_index, effect_work_record_t* parent);
+s32 effect_spawn_particle_motion(effect_emitter_values_t* values, effect_motion_t* motion);
+void effect_step_motion(effect_motion_t* motion);
+
+/* particle pools */
+extern u16 g_effect_active_list_node_head;
+extern u8 g_effect_active_slot_head;
+/* Unsigned 16-bit indexes: BATTLE list traversal loads these with lhu. */
+extern s16 g_effect_allocated_record_head;
+extern u16 g_effect_available_record_head;
+extern s16 g_effect_current_record_index;
+extern u16 g_effect_free_list_node_head;
+extern effect_work_record_t* g_effect_free_work_record_head;
+extern effect_list_node_t g_effect_list_nodes[EFFECT_SPRITE_NODE_CAPACITY + 1];
+extern s16 g_effect_root_record_index;
+extern u8 g_effect_slot_free_head;
+extern effect_slot_t g_effect_slots[];
+extern s32 g_effect_sprite_count;
+extern s32 g_effect_sprite_count_peak;
+extern effect_record_t g_effect_state_records[EFFECT_STATE_RECORD_CAPACITY + 1];
+extern s32 g_effect_work_record_count;
+extern s32 g_effect_work_record_peak;
+/* Effect work pool: g_effect_work_records is the 256-record allocation, g_effect_free_work_record_head
+ * the free-chain head, g_effect_work_record_count the in-use count and g_effect_work_record_peak its
+ * peak. */
+extern effect_work_record_t* g_effect_work_records;
+
+effect_list_node_t* effect_alloc_list_node(s16 kind);
+s32 effect_alloc_slot(void);
+effect_sprite_block_t* effect_alloc_sprite_block(u8 sprite_count);
+s16 effect_alloc_state_record(void);
+effect_work_record_t* effect_alloc_work_record(s16 record_index, s16 kind);
+void effect_free_list_node(effect_list_node_t* node);
+void effect_free_slot(u8 id);
+void effect_free_sprite_block(effect_sprite_block_t* block);
+void effect_free_state_record(s16);
+void effect_free_work_record(s16 record_index, effect_work_record_t* work);
+effect_work_record_t* effect_get_list_node(s16 record_index, s16 requested_index);
+void effect_init_free_list(void);
+void effect_init_record_chain(void);
+void effect_init_state_records(void);
+s32 effect_update_slot(s32 id);
+
+/* sprite animation */
+extern u8* g_effect_animation_sequences;
+extern u8* g_effect_animation_sequences_start;
+extern u8* g_effect_frame_data;
+extern u8* g_effect_frame_data_start;
 /* Self-relative animation script table: each 16-bit value is a byte offset from
  * the table's own base to a effect_anim_script_t. Declared as bytes
  * because both uses are byte-based -- the stored pointer is the table's own
@@ -2076,289 +2260,132 @@ extern s32 g_effect_trajectory_tile_flags;
  * the address instead reserves an unused 8-byte frame in
  * effect_init_trap_animation. */
 extern u8 g_effect_trap_animation_data[];
-extern rgb24_t g_effect_trap_colors[];
+extern effect_sprite_section_t g_effect_trap_frame_data;
+extern effect_sprite_section_t* g_effect_trap_frame_data_ptr;
 
-/* CLUT of the zodiac poof's particles, an index in the weapons row, for each
- * sprite palette (the secondary effect's parameter). */
-extern u8 g_effect_zodiac_poof_animations[];
-
-/* Unsigned 16-bit indexes: BATTLE list traversal loads these with lhu. */
-extern s16 g_effect_allocated_record_head;
-extern u16 g_effect_available_record_head;
-extern s32 g_effect_frame_parity;
-extern s32 g_effect_frame_start_prim_buffer_offset;
-extern s32 g_effect_playback_phase; /* effect_playback_phase_e */
-extern u8* g_effect_prim_buffer;
-extern s32 g_effect_prim_buffer_offset;
-extern effect_slot_t g_effect_slots[];
-extern s32 g_effect_sprite_count;
-extern s32 g_effect_sprite_count_peak;
-extern effect_geometry_table_t* g_effect_geometry_table;
-
-extern effect_record_t g_effect_state_records[EFFECT_STATE_RECORD_CAPACITY + 1];
-extern s16 g_effect_current_record_index;
-extern s32 g_effect_work_record_peak;
-extern effect_work_record_t* g_effect_free_work_record_head;
-extern u8 g_effect_active_slot_head;
-extern s32 g_effect_work_record_count;
-
-/* Effect work pool: g_effect_work_records is the 256-record allocation, g_effect_free_work_record_head
- * the free-chain head, g_effect_work_record_count the in-use count and g_effect_work_record_peak its
- * peak. */
-extern effect_work_record_t* g_effect_work_records;
-extern u8 g_effect_slot_free_head;
-extern u16 g_effect_free_list_node_head;
-extern effect_list_node_t g_effect_list_nodes[EFFECT_SPRITE_NODE_CAPACITY + 1];
-extern u16 g_effect_active_list_node_head;
-void effect_set_ability_animation(u32 packed, s32 ability, effect_secondary_init_t* source);
-s32 effect_init_fall_dust_secondary(effect_secondary_init_t* source, VECTOR* position);
-s32 effect_is_item_ability(s32 ability_id);
-void effect_set_arrow_trajectory(s32 source_id, SVECTOR* tile_position, s32 target_id);
-s32 effect_check_direct_trajectory_to_target(s32 source_id, SVECTOR* tile_position, s32 target_id);
-void effect_store_targets_and_display_types(s32 ability_id, battle_unit_misc_data_t* unit);
-void effect_free_state_record(s16);
-
-/* parent is the particle a child emitter spawns from, read only for the
- * EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE origin: the particle update passes
- * the particle, the EFFECT overlay's particle handlers a record built on
- * their stack that holds a position, and the timeline none. The emitter index
- * arrives as a full 32-bit value. The function is declared with an int result it
- * never sets and no caller reads. */
-s32 effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitter_index, effect_work_record_t* parent);
-
-void effect_build_secondary_init_from_action(battle_unit_misc_data_t* unit, effect_secondary_init_t* init);
-
-void move_start_teleport_step(battle_unit_misc_data_t* unit);
-
-void effect_init_altima_teleport_data(battle_unit_misc_data_t* unit, effect_secondary_init_t* teleport_data);
-
-s32 effect_init_weapon_hit_secondary(s32 elements, effect_secondary_init_t* source, s32 unused_is_bow);
-void effect_start_action_projectile_secondary(battle_unit_misc_data_t* unit);
-void effect_set_secondary_death_smoke(battle_unit_misc_data_t* unit);
-void effect_set_secondary_venom_trap(battle_unit_misc_data_t* unit);
-void effect_set_secondary_zodiac_poof(battle_unit_misc_data_t* unit);
-s32 effect_start_altima_teleport_arrival(battle_unit_misc_data_t* unit);
-s32 effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit);
-void effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit);
-void effect_start_altima_teleport_white_flash(battle_unit_misc_data_t* unit);
-void effect_decode_next_model_command(effect_decoded_model_command_t* out);
-s32 effect_init_model_sections(psyq_tmd_header_t* resource, s32 unused_1);
-s32 effect_spawn_particle_motion(effect_emitter_values_t* values, effect_motion_t* motion);
-void effect_add_random_vector_offsets(const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
-
-void effect_add_random_vector_offsets_and_store_q12(const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
-
-void effect_add_vectors(const VECTOR* first, const VECTOR* second, VECTOR* out);
-
-void effect_advance_map_background_track(effect_background_track_t* track, s16* keyframe, s16* remaining_frames);
-
-void effect_build_secondary_init(struct battle_unit_misc_data* unit, struct effect_secondary_init* effect);
-
-s32 effect_calculate_arc_height_term(s32 distance);
-s32 effect_calculate_arcing_trajectory(battle_arc_query_t* query, s32* arc_a, s32* arc_b);
-void effect_call_play(void);
-void effect_copy_camera_angles_and_screen_coords(void);
-void effect_save_gravity(void);
-void effect_restore_gravity(void);
-void effect_finalize_secondary(u8 secondary_id);
-s32 effect_find_next_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame);
-s32 effect_get_bow_shot_angle(void);
-u8 effect_allocate_secondary_slot(void);
-s32 effect_get_ninja_ball(s32 elements);
-s32 effect_select_effect_sound_id(s32 channel);
-s16 effect_get_random_between_s16(s16 minimum, s16 maximum);
-effect_secondary_phase_e effect_get_secondary_phase(u8 secondary_id);
-void effect_init_palette(s16 index);
-void effect_set_frame_data_pointer(s16 effect_id);
-void effect_set_animation_sequences_pointer(s16 effect_id);
-void effect_set_script_pointer(s16 effect_id);
-void effect_set_animation_curve_data_pointer(s16 effect_id);
-void effect_set_particle_system_data_pointer(s16 effect_id);
-void effect_set_timeline_pointers(s16 effect_id);
-void effect_load_sound_section(s16 index);
-void effect_set_timing_curves_pointer(s16 effect_id);
-void effect_init_flags_section_pointer(s16 effect_id);
-void effect_init_camera_and_screen_data(void);
-s32 effect_init_projectile_secondary(s32 animation, struct effect_secondary_init* source);
-s32 effect_init_secondary(s32 animation_id, s32 parameter, struct effect_secondary_init* source);
-void effect_init_system(void);
-void effect_interpolate_s16(s16 from, s16 to, s32 t, s16* out);
-void effect_interpolate_svector(const SVECTOR* from, const SVECTOR* to, s32 t, SVECTOR* out);
-void effect_interpolate_vector_q13(const VECTOR* from, const VECTOR* to, s32 t, VECTOR* out);
-s32 battle_lerp_fixed8_and_store(s32 start, s32 end, s32 factor, s32* out);
-void effect_lerp_component_q13(s32 from, s32 to, s32 t, s32* out);
-void effect_list_valid_unit_targeting_data(s32 first, s32 second, effect_obstacle_unit_list_t** out);
-void effect_mask_vector_low_12_bits(const SVECTOR* src, SVECTOR* dst);
-void effect_load_lba_and_size(s32 effect_id, s32* lba, s32* byte_length);
-void effect_remove_secondary(u8 id);
-void effect_replace_flags_0006(struct effect_flag_prefix* object, s32 value);
-void effect_reset_frame_data_pointer(void);
-void effect_reset_animation_sequences_pointer(void);
-void effect_reset_subsystems(void);
-void effect_reset_render_state(void);
-void effect_restore_inertia_threshold(void);
-void effect_save_inertia_threshold(void);
-void effect_set_evade_type_data_and_weapon_element(struct battle_unit_misc_data* unit, s32 is_bow);
-void effect_set_inertia_threshold(s32 threshold);
-void effect_set_secondary(struct battle_unit_misc_data* unit, s32 effect);
-void effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit);
-void effect_set_secondary_fall_dust(struct battle_unit_misc_data* unit);
-void effect_set_secondary_level_up(struct battle_unit_misc_data* unit);
-void effect_set_secondary_splash(struct battle_unit_misc_data* unit);
-void effect_set_secondary_teleport(struct battle_unit_misc_data* unit);
-void effect_shift_vector_left_12(const VECTOR* src, VECTOR* dst);
-void effect_shift_vector_right_12(const VECTOR* src, VECTOR* dst);
-void effect_start_group(s32 group, s32 clut_index);
-
-void effect_step_emitter_timeline(
-    effect_record_t* state, effect_keyframe_table_t* table, s16* index, s16* remaining, s16* step);
-
-void effect_integrate_particle_motion(effect_work_record_t* list);
-void effect_step_motion(effect_motion_t* motion);
-void effect_set_gravity(vec3s32_t* src);
-
-s32 effect_trace_arc_trajectory_path(
-    SVECTOR* origin, s32* height, s32* distance, SVECTOR* arc, effect_obstacle_unit_list_t* obstacles);
-
-s32 effect_test_position_for_obstacle(
-    effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, map_tile_coordinates_t* tile_ref);
-
-s32 effect_try_init_data(void);
-void effect_update_active_slots(s32 group);
-s32 effect_update_secondary_effects(void);
-s32 battle_return_zero_801b0fec(void);
-s32 effect_arrow_arc_secondary_handler(void);
-s32 effect_weapon_hit_secondary_handler(void);
-s32 effect_golem_secondary_handler(void);
-s32 effect_spell_charge_secondary_handler(void);
-s32 effect_null_secondary_handler(void);
-s32 effect_red_orbs_secondary_handler(void);
-s32 battle_noop_801b2968(void);
-s32 effect_fall_dust_secondary_handler(void);
-s32 effect_splash_secondary_handler(void);
-s32 battle_noop_801b2bfc(void);
-s32 battle_noop_801b2c04(void);
-s32 effect_venom_trap_secondary_handler(void);
-s32 effect_level_up_secondary_handler(void);
-s32 battle_noop_801b2e60(void);
-s32 effect_update_death_poof_secondary(s32 unused_arg0, s32 passthrough);
-s32 battle_noop_801b3118(void);
-s32 effect_zodiac_poof_secondary_handler(void);
-s32 effect_reflect_secondary_handler(void);
-s32 effect_teleport_secondary_handler(void);
-s32 effect_linear_projectile_secondary_handler(void);
-s32 effect_equip_break_secondary_handler(void);
-s32 effect_summon_charge_secondary_handler(void);
-void effect_add_svector_to_vector(const SVECTOR* first, const VECTOR* second, VECTOR* out);
-void effect_add_svectors(const SVECTOR* first, const SVECTOR* second, SVECTOR* out);
-
-void effect_advance_coord_target_palette_track(effect_palette_track_t* track, s16* keyframe, s16* remaining_frames);
-
-void effect_advance_target_palette_track(effect_palette_track_t* track, s16* keyframe, s16* remaining_frames);
-
-s32 effect_calculate_launch_velocity(void);
-s32 effect_calculate_arc_trajectory_term(s32 a, s32 b);
-s32 effect_check_arc_trajectory_between_units(u8 source_id, u8 target_id);
-s32 effect_check_direct_trajectory_between_units(u8 source_id, u8 target_id);
-void effect_load_vector(vec3s16_t* src, VECTOR* dst);
-void effect_convert_tile_coords_to_world_coords(SVECTOR* in, VECTOR* out);
-void effect_copy_misc_unit_screen_location(u32 misc_id, VECTOR* destination);
-void effect_load_svector(vec3s16_t* src, SVECTOR* dst);
-void effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle);
-
-void effect_draw_projectile_model(SVECTOR* spin, VECTOR* position, SVECTOR* angles, VECTOR* scale, s32 parameter);
-
-s32 effect_end_secondary_on_current_unit(void);
-void effect_find_projectile_xyz_along_trajectory(const VECTOR* src, s32 total, s32 current, VECTOR* dst);
-s32 effect_get_animation_timing_curve_value(effect_record_t* record);
-s32 effect_get_timing_curve_value(effect_record_t* record);
-s32 effect_init_data(void);
 void effect_init_animation_sequence(effect_list_node_t* state, s32 frame_group, s32 animation_index);
 void effect_init_trap_animation(s32 group, u16 clut, effect_slot_t* slot);
-s32 effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 current);
-u32 effect_load_ability(s32 ability_id);
+void effect_reset_animation_sequences_pointer(void);
+void effect_reset_frame_data_pointer(void);
+void effect_set_animation_sequences_pointer(s16 effect_id);
+void effect_set_frame_data_pointer(s16 effect_id);
+
+/* particle rendering */
+/* Four-byte alignment preserves the original 32-bit copies into x/y. */
+extern SVECTOR g_effect_corner_bottom_left __attribute__((aligned(4)));
+extern SVECTOR g_effect_corner_bottom_right __attribute__((aligned(4)));
+extern SVECTOR g_effect_corner_top_left __attribute__((aligned(4)));
+extern SVECTOR g_effect_corner_top_right __attribute__((aligned(4)));
+extern s32 g_effect_frame_parity;
+extern s32 g_effect_frame_start_prim_buffer_offset;
+extern MATRIX g_effect_matrix;
+/* 0x801bc09c */
+extern u32* g_effect_otag;
+/* Work-kind handlers, indexed by kind_flags >> 12. The int return type is
+ * load-bearing even though the result is ignored: the value-returning call is
+ * a second set of $2, so sched1 no longer boosts the final `$2 = 1` to the end
+ * of its block, and the pc update is allocated $3 as in the target. */
+extern s32 (*g_effect_particle_render_handlers[])(effect_record_t* record, effect_work_record_t* work);
+/* effect_playback_phase_e */
+extern u8* g_effect_prim_buffer;
+extern s32 g_effect_prim_buffer_offset;
+extern s32 g_effect_primitive_sizes[3];
+
+void* effect_alloc_primitive(effect_primitive_type_e primitive_type);
+void effect_draw_billboard_sprite(effect_slot_t* slot);
+void effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle);
+s32 effect_get_prim_buffer_offset(void);
+void effect_init_render_state(void);
 void effect_render_particle_sprite(effect_list_node_t* particle, s32 red, s32 green, s32 blue);
-
-void effect_get_screen_location_by_battle_id(
-    s32 adjust_for_tile_height, u32 battle_id, effect_secondary_init_t* effect_coordinates, SVECTOR* destination);
-
-void effect_resolve_target_render_coords(
-    s32 add_depth, s32 target_index, effect_secondary_init_t* coord_data, SVECTOR* out);
-
-void effect_run_keyframe_actions(u16 flags, u8 target, effect_record_t* state);
-void effect_run_keyframe_actions_all_targets(u16 flags, effect_record_t* state);
-s32 effect_set_secondary_teleport_by_misc_id(u32 misc_id);
-s32 effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_position, s32 target_id);
-void effect_start_new(s32 ability_id, s32 target_mode, effect_start_target_data_t target);
-void effect_store_map_center_coordinates(VECTOR* destination);
-
+void effect_reset_render_state(void);
+void effect_start_render_frame(void);
 void effect_submit_sprite_to_ordering_table(
     effect_sprite_block_t* set, DVECTOR* position, s16 angle, VECTOR* zoom, u32* ot);
 
-/* Steps the projectile along its trajectory, testing each obstacle. */
-s32 effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* distance, effect_obstacle_unit_list_t* obstacles);
+/* camera */
+extern VECTOR g_effect_camera_position_current;
+extern s32 g_effect_camera_position_duration;
+extern s32 g_effect_camera_position_frame;
+extern u32 g_effect_camera_position_mode;
+extern VECTOR g_effect_camera_position_saved;
+extern VECTOR g_effect_camera_position_start;
+extern VECTOR g_effect_camera_position_target;
+extern SVECTOR g_effect_camera_rotation_current;
+extern s32 g_effect_camera_rotation_duration;
+extern s32 g_effect_camera_rotation_frame;
+extern u32 g_effect_camera_rotation_mode;
+extern SVECTOR g_effect_camera_rotation_saved;
+extern SVECTOR g_effect_camera_rotation_start;
+extern SVECTOR g_effect_camera_rotation_target;
+extern VECTOR g_effect_camera_zoom_current;
+extern s32 g_effect_camera_zoom_duration;
+extern s32 g_effect_camera_zoom_frame;
+extern u32 g_effect_camera_zoom_mode;
+extern VECTOR g_effect_camera_zoom_saved;
+extern VECTOR g_effect_camera_zoom_start;
+extern VECTOR g_effect_camera_zoom_target;
+
+void effect_copy_camera_angles_and_screen_coords(void);
+void effect_init_camera_and_screen_data(void);
+
+/* palettes */
+extern effect_palette_section_t* g_effect_palette_ptr;
+/* Six RGB byte triples, packed into both CLUT images as 15-bit colours. */
+extern rgb24_t g_effect_reflect_palette_colors[6];
+extern rgb24_t g_effect_trap_colors[];
+
+void effect_advance_caster_palette_track(
+    effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_misc_id);
+void effect_advance_coord_target_palette_track(effect_palette_track_t* track, s16* keyframe, s16* remaining_frames);
+void effect_advance_target_palette_track(effect_palette_track_t* track, s16* keyframe, s16* remaining_frames);
+void effect_init_palette(s16 index);
+
+/* sound */
+extern u8 g_effect_sound_call_counts[];
+extern s32 g_effect_sound_data_base;
+extern struct suzuki_sound_resource* g_effect_sound_section_ptr;
+
 void effect_advance_parent_sound_track(
     effect_sound_track_t* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state);
+void effect_load_sound_section(s16 index);
+s32 effect_select_effect_sound_id(s32 channel);
+
+/* math */
+s32 battle_lerp_fixed8(s32 start, s32 end, s32 factor);
+s32 battle_lerp_fixed8_and_store(s32 start, s32 end, s32 factor, s32* out);
+void effect_add_random_rotation_offsets(const SVECTOR* source, const SVECTOR* ranges, SVECTOR* destination);
+void effect_add_random_vector_offsets(const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
+void effect_add_random_vector_offsets_and_store_q12(const VECTOR* source, const VECTOR* ranges, VECTOR* destination);
+void effect_add_rotation_vectors_mod_q12(const SVECTOR* first, const SVECTOR* second, SVECTOR* out);
+void effect_add_svector_to_vector(const SVECTOR* first, const VECTOR* second, VECTOR* out);
+void effect_add_svectors(const SVECTOR* first, const SVECTOR* second, SVECTOR* out);
 void effect_add_vector_and_store_q12(const VECTOR* delta, VECTOR* value, VECTOR* out);
+void effect_add_vectors(const VECTOR* first, const VECTOR* second, VECTOR* out);
+void effect_add_vectors_to_svector(const VECTOR* left, const VECTOR* right, SVECTOR* result);
+void effect_add_vectors_to_svector_rot_y_180(const VECTOR* left, const VECTOR* right, SVECTOR* result);
+void effect_add_vectors_to_svector_rot_y_270(const VECTOR* left, const VECTOR* right, SVECTOR* result);
+void effect_add_vectors_to_svector_rot_y_90(const VECTOR* left, const VECTOR* right, SVECTOR* result);
 s32 effect_get_random_between(s32 value_a, s32 value_b);
+s16 effect_get_random_between_s16(s16 minimum, s16 maximum);
+void effect_interpolate_s16(s16 from, s16 to, s32 t, s16* out);
+s32 effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 current);
+void effect_interpolate_svector(const SVECTOR* from, const SVECTOR* to, s32 t, SVECTOR* out);
 void effect_interpolate_svector_cos(const SVECTOR* from, const SVECTOR* to, s32 duration, s32 current, SVECTOR* out);
 void effect_interpolate_svector_cos_q12(
     const SVECTOR* from, const SVECTOR* to, s32 duration, s32 current, SVECTOR* out);
 void effect_interpolate_svector_linear(const SVECTOR* from, const SVECTOR* to, s32 duration, s32 current, SVECTOR* out);
+void effect_interpolate_vector_q13(const VECTOR* from, const VECTOR* to, s32 t, VECTOR* out);
 void effect_interpolate_vector_q13_cos(const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
 void effect_interpolate_vector_q13_cos_q12(
     const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
 void effect_interpolate_vector_q13_linear(const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
-
-void effect_add_random_rotation_offsets(const SVECTOR* source, const SVECTOR* ranges, SVECTOR* destination);
-
-void effect_add_rotation_vectors_mod_q12(const SVECTOR* first, const SVECTOR* second, SVECTOR* out);
-
-void effect_advance_caster_palette_track(
-    effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_misc_id);
-
-effect_list_node_t* effect_alloc_list_node(s16 kind);
-void* effect_alloc_primitive(effect_primitive_type_e primitive_type);
-s32 effect_alloc_slot(void);
-effect_sprite_block_t* effect_alloc_sprite_block(u8 sprite_count);
-s16 effect_alloc_state_record(void);
-effect_work_record_t* effect_alloc_work_record(s16 record_index, s16 kind);
-void effect_reset_child_timeline(effect_record_t* record, s16 target_index);
-void effect_reset_parent_timeline(effect_record_t* record);
-void effect_free_list_node(effect_list_node_t* node);
-void effect_free_work_record(s16 record_index, effect_work_record_t* work);
-void effect_free_slot(u8 id);
-void effect_free_sprite_block(effect_sprite_block_t* block);
-effect_callback_t effect_get_native_callback(s16 callback_id);
-effect_work_record_t* effect_get_list_node(s16 record_index, s16 requested_index);
-s32 effect_get_playback_phase(void);
-s32 effect_get_prim_buffer_offset(void);
-void effect_init_free_list(void);
-void effect_init_record_chain(void);
-void effect_init_render_state(void);
-void effect_init_state_records(void);
-s16 effect_start_script_record(u8* script, s16 start_pc, s16 parent_index);
-effect_script_result_e effect_code_script_04_end(effect_record_t* unused_record);
-effect_script_result_e effect_code_script_2e_invalid(effect_record_t* unused_record);
-void effect_interpolate_emitter_spawn_spread(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
-s32 battle_lerp_fixed8(s32 start, s32 end, s32 factor);
-void effect_play(void);
-s32 effect_run_block(s16 index);
+void effect_lerp_component_q13(s32 from, s32 to, s32 t, s32* out);
+void effect_load_svector(vec3s16_t* src, SVECTOR* dst);
+void effect_load_vector(vec3s16_t* src, VECTOR* dst);
+void effect_mask_vector_low_12_bits(const SVECTOR* src, SVECTOR* dst);
 s16 effect_select_larger_magnitude_s16(s16 first, s16 second);
 s16 effect_select_largest_magnitude_s16(s16 first, s16 second, s16 third);
-void effect_cancel_playback_request(void);
-void effect_start_render_frame(void);
-s32 effect_update_cycle(void);
-s32 effect_update_slot(s32 id);
-s32 effect_update_stage(void);
-void effect_interpolate_emitter_spawn_position(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
-void effect_interpolate_emitter_velocity_base_angles(const effect_geometry_record_t* source, s32 factor, VECTOR* out);
-void effect_interpolate_emitter_velocity_direction_spread(
-    const effect_geometry_record_t* source, s32 factor, VECTOR* out);
-void effect_add_vectors_to_svector(const VECTOR* left, const VECTOR* right, SVECTOR* result);
-void effect_add_vectors_to_svector_rot_y_270(const VECTOR* left, const VECTOR* right, SVECTOR* result);
-void effect_add_vectors_to_svector_rot_y_180(const VECTOR* left, const VECTOR* right, SVECTOR* result);
-void effect_add_vectors_to_svector_rot_y_90(const VECTOR* left, const VECTOR* right, SVECTOR* result);
-void effect_draw_billboard_sprite(effect_slot_t* slot);
+void effect_shift_vector_left_12(const VECTOR* src, VECTOR* dst);
+void effect_shift_vector_right_12(const VECTOR* src, VECTOR* dst);
 
 #endif

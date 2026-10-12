@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* CloseBattle game-state handler: draw the fade overlay and raise its intensity
  * by g_battle_state_screen_fade_step. The game loop leaves in the frame it finds

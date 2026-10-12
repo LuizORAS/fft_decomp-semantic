@@ -25,8 +25,9 @@ extern s16 g_battle_music_set_track_request;
 extern s16 g_battle_music_switch_request; /* 0x80165fc8 */
 
 /* Track IDs are unsigned; -1 in the signed unload request means no request. */
-extern u16 g_battle_music_track_1_id;          /* 0x80165fd4 */
-extern u16 g_battle_music_track_2_id;          /* 0x80165fd6 */
+extern u16 g_battle_music_track_1_id; /* 0x80165fd4 */
+extern u16 g_battle_music_track_2_id; /* 0x80165fd6 */
+extern u16 g_battle_current_music_track_index;
 extern s16 g_battle_music_unload_slot_request; /* 0x80165fca */
 
 /* 0x80165fc0: -1 absent; volume = low 16 bits,

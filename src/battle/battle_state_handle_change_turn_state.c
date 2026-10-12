@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* ChangeTurn game-state handler. Once the menu layer reports command 7, 8 or 0xff

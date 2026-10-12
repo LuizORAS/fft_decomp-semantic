@@ -801,6 +801,12 @@ typedef struct battle_unit_position {
 } battle_unit_position_t;
 typedef char battle_unit_position_size_must_be_2[(sizeof(battle_unit_position_t) == 2) ? 1 : -1];
 
+/* deployment */
+typedef enum battle_formation_index {
+    BATTLE_FORMATION_INDEX_GENERATED_UNIT = 254,
+    BATTLE_FORMATION_INDEX_NONE = 255,
+} battle_formation_index_e;
+
 /* Deployment records share the byte written by ATTACK and read by BATTLE. */
 typedef struct unit_deployment_flags {
     u8 facing : 4;
@@ -825,6 +831,44 @@ typedef struct unit_abilities {
 } unit_abilities_t;
 typedef char unit_abilities_size_must_be_6[(sizeof(unit_abilities_t) == 6) ? 1 : -1];
 
+/* teams and control */
+/* Team bits select one of four independently tracked battle teams. */
+enum {
+    BATTLE_TEAM_COUNT = 4,
+    BATTLE_TEAM_SHIFT = 4,
+    BATTLE_TEAM_INDEX_MASK = 0x03,
+};
+
+/* Battle Stats 0x05 and Miscellaneous Unit Data 0x13d share this byte. */
+typedef enum battle_team_flags {
+    BATTLE_TEAM_MASK = 0x30,
+    BATTLE_TEAM_OR_PLAYER_CONTROL_MASK = 0x38,
+    BATTLE_TEAM_BLUE = 0x00,
+    BATTLE_TEAM_RED = 0x10,
+    BATTLE_TEAM_GREEN = 0x20,
+    BATTLE_TEAM_LIGHT_BLUE = 0x30,
+    BATTLE_TEAM_IMPORTANCE_MASK = 0x03, /* 0..3; 3 decides the battle outcome and cannot be knocked back */
+    BATTLE_TEAM_FLAG_IMMORTAL = 0x04,
+    BATTLE_TEAM_FLAG_PLAYER_CONTROLLED = 0x08,
+    /* ENTD presence, read when the units are loaded: neither bit leaves the
+     * unit out, RANDOMLY_PRESENT alone leaves it out half the time, and both
+     * load its graphics for a later AddUnit. */
+    BATTLE_TEAM_FLAG_RANDOMLY_PRESENT = 0x40,
+    BATTLE_TEAM_FLAG_ALWAYS_PRESENT = 0x80,
+    BATTLE_TEAM_PRESENCE_MASK = 0xc0,
+} battle_unit_team_flags_e;
+
+/* battle_stats_t.auto_battle_setting and the AI copies of it. The BATTLE and
+ * WORLD auto-battle menus store it and the AI reads it. */
+typedef enum ai_autobattle_mode {
+    AI_AUTOBATTLE_MANUAL = 0, /* the player gives the orders */
+    AI_AUTOBATTLE_TARGETED = 12,
+    AI_AUTOBATTLE_RECOVERY = 14,
+    AI_AUTOBATTLE_FADING_LIFE = 16,
+    AI_AUTOBATTLE_RETREAT = 17,
+} ai_autobattle_mode_e;
+
+/* battle stats */
 typedef struct battle_stats {
     u8 character_identity;                               /* 0x000 */
     u8 entd_slot;                                        /* 0x001; 0xff means absent */
@@ -930,6 +974,11 @@ typedef enum battle_unit_ability_outcome {
     BATTLE_ABILITY_OUTCOME_LEARN_CHECKED = 0x04, /* the learn-on-hit pass consumed AFFECTED */
 } battle_unit_ability_outcome_e;
 
+/* encounters */
+enum {
+    ENTD_VALUE_RANDOM = 254, /* in an ENTD equipment, level or secondary skillset byte: pick one at random */
+};
+
 typedef struct entd_unit_position {
     u16 y : 8;
     u16 facing : 2;
@@ -1031,6 +1080,7 @@ typedef struct entd_file {
 typedef char entd_file_size_must_be_81920[(sizeof(entd_file_t) == 81920) ? 1 : -1];
 
 /* unit_name_id_t.fields.name_class selects the unit-name text page. */
+/* party */
 typedef enum party_name_class {
     PARTY_NAME_CLASS_SPECIAL = 0,
     PARTY_NAME_CLASS_GENERIC_MALE = 1,
@@ -1093,6 +1143,7 @@ typedef enum unit_flags {
 } unit_flags_e;
 
 /* unit_animation_state_t.rotate_mode: how the facing nibble steps toward target_facing. */
+/* animation */
 typedef enum unit_rotate_mode {
     UNIT_ROTATE_MODE_SHORTEST = 0,  /* the direction with fewer steps */
     UNIT_ROTATE_MODE_INCREMENT = 1, /* facing + 1 each step */
@@ -1113,54 +1164,5 @@ typedef struct unit_animation_state {
     u8 delay;          /* frames to wait before the first step */
 } unit_animation_state_t;
 typedef char unit_animation_state_size_must_be_7[sizeof(unit_animation_state_t) == 7 ? 1 : -1];
-
-/* other */
-/* Team bits select one of four independently tracked battle teams. */
-enum {
-    BATTLE_TEAM_COUNT = 4,
-    BATTLE_TEAM_SHIFT = 4,
-    BATTLE_TEAM_INDEX_MASK = 0x03,
-};
-
-/* Battle Stats 0x05 and Miscellaneous Unit Data 0x13d share this byte. */
-typedef enum battle_team_flags {
-    BATTLE_TEAM_MASK = 0x30,
-    BATTLE_TEAM_OR_PLAYER_CONTROL_MASK = 0x38,
-    BATTLE_TEAM_BLUE = 0x00,
-    BATTLE_TEAM_RED = 0x10,
-    BATTLE_TEAM_GREEN = 0x20,
-    BATTLE_TEAM_LIGHT_BLUE = 0x30,
-    BATTLE_TEAM_IMPORTANCE_MASK = 0x03, /* 0..3; 3 decides the battle outcome and cannot be knocked back */
-    BATTLE_TEAM_FLAG_IMMORTAL = 0x04,
-    BATTLE_TEAM_FLAG_PLAYER_CONTROLLED = 0x08,
-    /* ENTD presence, read when the units are loaded: neither bit leaves the
-     * unit out, RANDOMLY_PRESENT alone leaves it out half the time, and both
-     * load its graphics for a later AddUnit. */
-    BATTLE_TEAM_FLAG_RANDOMLY_PRESENT = 0x40,
-    BATTLE_TEAM_FLAG_ALWAYS_PRESENT = 0x80,
-    BATTLE_TEAM_PRESENCE_MASK = 0xc0,
-} battle_unit_team_flags_e;
-
-typedef enum battle_formation_index {
-    BATTLE_FORMATION_INDEX_GENERATED_UNIT = 254,
-    BATTLE_FORMATION_INDEX_NONE = 255,
-} battle_formation_index_e;
-
-/* battle_stats_t.auto_battle_setting and the AI copies of it. The BATTLE and
- * WORLD auto-battle menus store it and the AI reads it. */
-typedef enum ai_autobattle_mode {
-    AI_AUTOBATTLE_MANUAL = 0, /* the player gives the orders */
-    AI_AUTOBATTLE_TARGETED = 12,
-    AI_AUTOBATTLE_RECOVERY = 14,
-    AI_AUTOBATTLE_FADING_LIFE = 16,
-    AI_AUTOBATTLE_RETREAT = 17,
-} ai_autobattle_mode_e;
-
-enum {
-    ITEM_ID_MASK = 0xff,
-    ITEM_ID_COUNT = 256,
-    ENTD_VALUE_RANDOM = 254, /* in an ENTD equipment, level or secondary skillset byte: pick one at random */
-    ITEM_TYPE_FILTER_ANY = 255,
-};
 
 #endif

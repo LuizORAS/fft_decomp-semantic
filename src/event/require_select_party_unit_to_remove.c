@@ -1,3 +1,5 @@
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
 #include "fft/script.h"

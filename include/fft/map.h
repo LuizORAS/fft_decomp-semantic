@@ -20,6 +20,7 @@ enum {
     MAP_TILE_COUNT = MAP_TERRAIN_LAYER_COUNT * MAP_TILES_PER_LAYER,
 };
 
+/* coordinates */
 /* Map x, terrain layer and map y, shared by unit placement and obstacle tests. */
 typedef struct map_tile_coordinates {
     s16 x;     /* 0x00 */
@@ -28,6 +29,7 @@ typedef struct map_tile_coordinates {
 } map_tile_coordinates_t;
 typedef char map_tile_coordinates_size_must_be_6[sizeof(map_tile_coordinates_t) == 6 ? 1 : -1];
 
+/* maps */
 /* Battle map ids: EVENT_SCRIPT_VAR_CURRENT_MAP and the index of
  * g_map_gns_lba. Each is named as its map name text spells it
  * (TEXT_ID_MAP_NAME_BASE + id - 1); a map whose name repeats an earlier one
@@ -154,6 +156,7 @@ typedef enum map_id {
     MAP_ID_COUNT = 128,
 } map_id_e;
 
+/* terrain */
 /* Low six bits of a terrain tile's first byte. */
 typedef enum map_surface_type {
     MAP_SURFACE_NATURAL = 0x00,
@@ -228,20 +231,6 @@ typedef enum map_tile_data_selector {
     MAP_TILE_DATA_MOVE_DESTINATION_MARK = 12,
     MAP_TILE_DATA_ABILITY_RANGE_MARK = 13,
 } map_tile_data_selector_e;
-
-/* Map backgrounds use two four-byte runtime colour slots. The fourth byte
- * is copied with each CVECTOR but is not an alpha channel; mesh-file RGB
- * triples have a separate three-byte layout. */
-typedef enum map_background_gradient_color {
-    MAP_BACKGROUND_GRADIENT_TOP = 0,
-    MAP_BACKGROUND_GRADIENT_BOTTOM = 1,
-    MAP_BACKGROUND_GRADIENT_COLOR_COUNT = 2,
-} map_background_gradient_color_e;
-
-typedef struct map_background_gradient_colors {
-    CVECTOR colors[MAP_BACKGROUND_GRADIENT_COLOR_COUNT];
-} map_background_gradient_colors_t;
-typedef char map_background_gradient_colors_size_must_be_8[(sizeof(map_background_gradient_colors_t) == 8) ? 1 : -1];
 
 /* Depth-bias flag in terrain tile byte0; the low six bits use MAP_SURFACE_MASK. */
 enum {
@@ -360,6 +349,7 @@ typedef struct map_tile {
 } map_tile_t;
 typedef char map_tile_size_must_be_8[(sizeof(map_tile_t) == 8) ? 1 : -1];
 
+/* selection */
 /* Provisional 0xa-byte selected-tile record: BATTLE's at 0x8014d02c, filled by
  * map_store_selected_tile_data, and WORLD's at 0x8013a310, filled by
  * world_map_store_selected_tile_data and saved whole by
@@ -374,5 +364,20 @@ typedef struct map_selected_tile {
     s16 display_height; /* 0x06: half height + height * 2 + depth * 2 */
     s16 depth;          /* 0x08 */
 } map_selected_tile_t;
+
+/* background */
+/* Map backgrounds use two four-byte runtime colour slots. The fourth byte
+ * is copied with each CVECTOR but is not an alpha channel; mesh-file RGB
+ * triples have a separate three-byte layout. */
+typedef enum map_background_gradient_color {
+    MAP_BACKGROUND_GRADIENT_TOP = 0,
+    MAP_BACKGROUND_GRADIENT_BOTTOM = 1,
+    MAP_BACKGROUND_GRADIENT_COLOR_COUNT = 2,
+} map_background_gradient_color_e;
+
+typedef struct map_background_gradient_colors {
+    CVECTOR colors[MAP_BACKGROUND_GRADIENT_COLOR_COUNT];
+} map_background_gradient_colors_t;
+typedef char map_background_gradient_colors_size_must_be_8[(sizeof(map_background_gradient_colors_t) == 8) ? 1 : -1];
 
 #endif

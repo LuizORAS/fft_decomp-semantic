@@ -6,7 +6,6 @@
 
 #include "fft/battle_effect.h"
 
-/* callbacks */
 /* Effect script opcode 06 puts a handler in one of the callback slots, and a
  * particle keyframe whose 16-bit action value names the slot binds it to the record.
  * While a keyframe that names the slot runs, the particle channel calls
@@ -17,18 +16,17 @@
  * (effect_record_t.callback_phase, effect_callback_phase_e) starts at INIT, where the
  * handler allocates its work block into work_slots; it then stays at UPDATE
  * until the channel sets DESTROY two frames before the keyframe ends. */
-s32 effect_map_split_mesh_and_set_3d_objects_state_3(
-    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
-s32 effect_map_set_3d_objects_state_1(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+
+/* map control */
 s32 effect_map_destruction_update(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_freeze(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_set_3d_objects_state_1(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_set_3d_objects_state_2(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
 s32 effect_map_set_timed_transform_duration(
     s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
-s32 effect_banish_map_vertex_particles_update(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame);
-s32 effect_altima_transformation_map_vertex_particles_update(
-    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame);
-s32 effect_map_set_3d_objects_state_2(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
+s32 effect_map_split_mesh_and_set_3d_objects_state_3(
+    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
 s32 effect_map_unfreeze(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
-s32 effect_map_freeze(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame);
 s32 effect_noop(s32 unused_record_index, s32 unused_callback_slot, s32 unused_emitter_index, s32 unused_frame);
 
 /* helpers */
@@ -46,7 +44,6 @@ enum {
     EFFECT_PARTICLE_RIBBON_LONG_SLOTS = 4,
     EFFECT_PARTICLE_RIBBON_LONG_POINTS = 17,
 };
-
 /* One short ribbon: a particle and the double-buffered quad strip drawn along
  * its recent path, one quad per pair of adjacent trail points. */
 typedef struct effect_particle_ribbon_short {
@@ -64,7 +61,6 @@ typedef struct effect_particle_ribbon_short {
     u8 _padding_3aa[0x02]; /* tail padding to 4-byte alignment */
 } effect_particle_ribbon_short_t;
 typedef char assert_effect_particle_ribbon_short_size[sizeof(effect_particle_ribbon_short_t) == 940 ? 1 : -1];
-
 /* One long ribbon: the short layout with 16 quads per buffer and a 17-point
  * trail. */
 typedef struct effect_particle_ribbon_long {
@@ -82,7 +78,6 @@ typedef struct effect_particle_ribbon_long {
     u8 _padding_71a[0x02]; /* tail padding to 4-byte alignment */
 } effect_particle_ribbon_long_t;
 typedef char assert_effect_particle_ribbon_long_size[sizeof(effect_particle_ribbon_long_t) == 1820 ? 1 : -1];
-
 /* Work block allocated by the short variant. */
 typedef struct effect_particle_ribbon_short_work {
     s32 buffer;                                                                 /* 0x0000 */
@@ -94,7 +89,6 @@ typedef struct effect_particle_ribbon_short_work {
 } effect_particle_ribbon_short_work_t;
 typedef char
     assert_effect_particle_ribbon_short_work_size[sizeof(effect_particle_ribbon_short_work_t) == 7564 ? 1 : -1];
-
 /* Work block allocated by the long variant. */
 typedef struct effect_particle_ribbon_long_work {
     s32 buffer;                                                               /* 0x0000 */
@@ -107,8 +101,9 @@ typedef struct effect_particle_ribbon_long_work {
 typedef char assert_effect_particle_ribbon_long_work_size[sizeof(effect_particle_ribbon_long_work_t) == 7324 ? 1 : -1];
 
 extern u32 g_effect_particle_ribbon_long_brightness_table[][EFFECT_PARTICLE_RIBBON_LONG_POINTS];
-s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 extern u32 g_effect_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIBBON_SHORT_POINTS];
+
+s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* polar mesh */
@@ -121,7 +116,6 @@ enum {
     POLAR_MESH_OUTER_RING_OFFSET = (POLAR_MESH_RING_COUNT - 1) * POLAR_MESH_SEGMENTS_PER_QUADRANT,
     POLAR_MESH_ANGLE_STEP = ONE / (POLAR_MESH_QUADRANT_COUNT * POLAR_MESH_SEGMENTS_PER_QUADRANT),
 };
-
 /* Scratchpad (0x1f800000) layout used while one polar mesh is rebuilt.
  * Each row sweeps one quadrant in four steps; its last point closes the
  * quadrant by rotating the first point a quarter turn. The renderer never
@@ -162,7 +156,6 @@ typedef struct effect_polar_mesh_scratch {
     s32 ot_depth;                                                                      /* 0xf0: clamped to 4..0x17f */
     point16_t points[POLAR_MESH_RING_COUNT + 1][POLAR_MESH_SEGMENTS_PER_QUADRANT + 1]; /* 0xf4 */
 } effect_polar_mesh_scratch_t;
-
 /* Scratchpad (0x1f800000) layout of the Zodiac Stone glow variant. Its fields shift from
  * effect_polar_mesh_scratch_t, so it is a separate layout, not a view. */
 typedef struct effect_anchored_polar_mesh_scratch {
@@ -209,7 +202,6 @@ typedef struct effect_anchored_polar_mesh_scratch {
     VECTOR screen;         /* 0x110; RotTrans stores flags in the unused fourth 32-bit value */
     point16_t points[POLAR_MESH_RING_COUNT + 1][POLAR_MESH_SEGMENTS_PER_QUADRANT + 1]; /* 0x120 */
 } effect_anchored_polar_mesh_scratch_t;
-
 /* Work block: two POLY_GT4 buffers of four quadrants of 5x4 quads. */
 typedef struct effect_polar_mesh_work {
     s32 buffer;                               /* 0x0000: 0 or 1, flipped after each update */
@@ -228,11 +220,11 @@ typedef char assert_effect_polar_mesh_work_size[sizeof(effect_polar_mesh_work_t)
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the ring (0-5) the column. */
 extern u32 g_effect_anchored_polar_mesh_brightness_table[][6];
-s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the ring (0-5) the column. */
 extern u32 g_effect_polar_mesh_brightness_table[][6];
+
+s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 s32 effect_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* quad grid */
@@ -254,7 +246,6 @@ typedef struct effect_textured_quad_grid_2x2_work {
 } effect_textured_quad_grid_2x2_work_t;
 typedef char
     assert_effect_textured_quad_grid_2x2_work_size[sizeof(effect_textured_quad_grid_2x2_work_t) == 516 ? 1 : -1];
-
 typedef struct effect_textured_quad_grid_4x4_work {
     s32 buffer;            /* 0x000: quads[buffer] is drawn this frame */
     POLY_GT4 quads[2][16]; /* 0x004: row-major 4x4 grid, double buffered */
@@ -269,7 +260,6 @@ typedef struct effect_textured_quad_grid_4x4_work {
 } effect_textured_quad_grid_4x4_work_t;
 typedef char
     assert_effect_textured_quad_grid_4x4_work_size[sizeof(effect_textured_quad_grid_4x4_work_t) == 1764 ? 1 : -1];
-
 typedef struct effect_textured_quad_grid_8x8_work {
     s32 buffer;            /* 0x000: quads[buffer] is drawn this frame */
     POLY_GT4 quads[2][64]; /* 0x004: row-major 8x8 grid, double buffered */
@@ -287,16 +277,15 @@ typedef char
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 2x2 grid:
  * brightness_row selects the row, the column is the quad row. */
 extern u32 g_effect_textured_quad_grid_2x2_brightness_table[][3];
-s32 effect_textured_quad_grid_2x2_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 4x4 grid-mesh
  * family: brightness_row selects the row, the column is the quad row. */
 extern u32 g_effect_textured_quad_grid_4x4_brightness_table[][5];
-s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 8x8 grid:
  * brightness_row selects the row, the column is the quad row. */
 extern u32 g_effect_textured_quad_grid_8x8_brightness_table[][9];
+
+s32 effect_textured_quad_grid_2x2_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* ring mesh */
@@ -306,7 +295,6 @@ enum {
     RING_MESH_SEGMENTS_PER_QUADRANT = RING_MESH_SEGMENTS / RING_MESH_QUADRANT_COUNT,
     RING_MESH_ARC_POINTS = RING_MESH_SEGMENTS_PER_QUADRANT + 1,
 };
-
 /* Work block: two POLY_GT4 buffers of two rings of 32 quads. */
 typedef struct effect_ring_mesh_work {
     s32 buffer;                                /* 0x0000: 0 or 1, flipped after each update */
@@ -319,7 +307,6 @@ typedef struct effect_ring_mesh_work {
     s32 destroy_delay; /* 0x1a18: the destroy phase waits one call before freeing */
 } effect_ring_mesh_work_t;
 typedef char assert_effect_ring_mesh_work_size[sizeof(effect_ring_mesh_work_t) == 6684 ? 1 : -1];
-
 /* Scratchpad (0x1f800000) layout while the ring is rebuilt. points[row][0..8]
  * sweep one quadrant in 0x80 steps; the rotating add helpers reuse them for
  * the other three quadrants. */
@@ -330,7 +317,6 @@ typedef struct effect_ring_mesh_scratch {
     VECTOR screen[4];                       /* 0x1c8: projected quad corners; RotTrans writes its flag to pad */
     s16 depth[3][RING_MESH_SEGMENTS + 1];   /* 0x208 */
 } effect_ring_mesh_scratch_t;
-
 /* Work block of the single-ring variant: two POLY_GT4 buffers of 32 quads. */
 typedef struct effect_single_ring_mesh_work {
     s32 buffer;                            /* 0x000: 0 or 1, flipped after each update */
@@ -343,7 +329,6 @@ typedef struct effect_single_ring_mesh_work {
     s32 destroy_delay; /* 0xd18: the destroy phase waits one call before freeing */
 } effect_single_ring_mesh_work_t;
 typedef char assert_effect_single_ring_mesh_work_size[sizeof(effect_single_ring_mesh_work_t) == 3356 ? 1 : -1];
-
 /* Scratchpad (0x1f800000) layout of the single-ring variant: two lattice
  * rows of one quadrant. */
 typedef struct effect_single_ring_mesh_scratch {
@@ -353,24 +338,21 @@ typedef struct effect_single_ring_mesh_scratch {
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the lattice row (0-2) the column. */
 extern u32 g_effect_ring_mesh_brightness_table[][3];
-s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the lattice row (0-8) the column. */
 extern u32 g_effect_ring_stack_mesh_brightness_table[][9];
-s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
 /* Overlay-local vertex brightness rows (12-bit fixed). */
 extern u32 g_effect_single_ring_mesh_brightness_table[][2];
-s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the lattice row (0-8) the column. */
 extern u32 g_effect_tube_mesh_brightness_table[][9];
-
 /* Overlay-local ring scale per lattice row pair (12-bit fixed): row 4 - i and
  * row 4 + i share g_effect_tube_mesh_ring_scales[i]. */
 extern s32 g_effect_tube_mesh_ring_scales[5];
+
+s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* dome mesh */
@@ -399,8 +381,9 @@ typedef char assert_effect_dome_mesh_work_size[sizeof(effect_dome_mesh_work_t) =
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the lattice row (0-8) the column. */
 extern u32 g_effect_dome_mesh_brightness_table[][9];
-s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+
 void effect_dome_mesh_load_translated_vertex(s32 group, s32 point, const VECTOR* offset, SVECTOR* output);
+s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* map vertex particles */
 typedef struct effect_map_vertex_location {
@@ -415,8 +398,12 @@ enum {
     EFFECT_MAP_VERTEX_WORK_BYTES = EFFECT_MAP_VERTEX_PART_COUNT * EFFECT_MAP_VERTEX_COUNT_PER_PART * sizeof(VECTOR),
 };
 
-extern effect_map_vertex_location_t g_effect_banish_vertex_locations[12];
 extern effect_map_vertex_location_t g_effect_altima_transformation_vertex_locations[3];
+extern effect_map_vertex_location_t g_effect_banish_vertex_locations[12];
+
+s32 effect_altima_transformation_map_vertex_particles_update(
+    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame);
+s32 effect_banish_map_vertex_particles_update(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame);
 
 /* tentacle mesh */
 /* The tentacle renderer draws textured strips; the related particle-trail
@@ -437,7 +424,6 @@ typedef struct effect_tentacle_mesh_segment {
     u8 _padding_6ea[0x02]; /* tail padding to 4-byte alignment */
 } effect_tentacle_mesh_segment_t;
 typedef char assert_effect_tentacle_mesh_segment_size[sizeof(effect_tentacle_mesh_segment_t) == 1772 ? 1 : -1];
-
 typedef struct effect_tentacle_mesh_work {
     s32 buffer;                                 /* 0x0000 */
     s16 count;                                  /* 0x0004 */
@@ -447,7 +433,6 @@ typedef struct effect_tentacle_mesh_work {
     s32 destroy_delay;                          /* 0x3788 */
 } effect_tentacle_mesh_work_t;
 typedef char assert_effect_tentacle_mesh_work_size[sizeof(effect_tentacle_mesh_work_t) == 14220 ? 1 : -1];
-
 /* A 17-point particle trail; spawning seeds only points 0-8 (the target's loop bound is 9). */
 typedef struct effect_trail_segment {
     SVECTOR tip;          /* 0x00 */
@@ -460,7 +445,6 @@ typedef struct effect_trail_segment {
     u8 _unused_94[0x04];
 } effect_trail_segment_t;
 typedef char assert_effect_trail_segment_size[sizeof(effect_trail_segment_t) == 152 ? 1 : -1];
-
 typedef struct effect_trail_work {
     s32 buffer;                         /* 0x000 */
     s16 count;                          /* 0x004 */
@@ -471,9 +455,9 @@ typedef struct effect_trail_work {
 } effect_trail_work_t;
 typedef char assert_effect_trail_work_size[sizeof(effect_trail_work_t) == 652 ? 1 : -1];
 
-s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
 extern u32 g_effect_tentacle_mesh_brightness_table[][9];
+
+s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* wave mesh */
@@ -500,7 +484,6 @@ typedef struct effect_wave_mesh_work {
     s32 destroy_latched; /* 0x1a58 */
 } effect_wave_mesh_work_t;
 typedef char assert_effect_wave_mesh_work_size[sizeof(effect_wave_mesh_work_t) == 6748 ? 1 : -1];
-
 /* Scratchpad (0x1f800000) layout while the mesh is rebuilt. */
 typedef struct effect_wave_mesh_scratch {
     point16_t points[9][9]; /* 0x000: wave-displaced lattice */
@@ -509,6 +492,7 @@ typedef struct effect_wave_mesh_scratch {
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the quad row (0-8) the column. */
 extern u32 g_effect_wave_mesh_brightness_table[][9];
+
 s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 #endif

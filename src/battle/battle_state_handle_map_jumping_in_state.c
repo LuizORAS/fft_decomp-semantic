@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* MapJumpingIn game-state handler: lighten the screen by
  * g_battle_state_screen_fade_step per frame. When it is clear, the saved game

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* MapInitialize2 game-state handler, the map change an event asks for: run one
  * step of the map init sequence behind a black screen. At step 0xd the saved game

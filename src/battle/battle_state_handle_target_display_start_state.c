@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* TargetDisplayStart game-state handler: once the prompt has closed (command 7, 8

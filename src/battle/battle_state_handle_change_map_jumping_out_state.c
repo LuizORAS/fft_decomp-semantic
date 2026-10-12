@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* MapJumpingOut2 game-state handler: darken the screen by
  * g_battle_state_screen_fade_step per frame. Past full black it stops the map

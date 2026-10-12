@@ -121,42 +121,13 @@ typedef struct urect16 {
 } urect16_t;
 typedef char assert_urect16_size[sizeof(urect16_t) == 8 ? 1 : -1];
 
-/* Round x, y, width and height from texture pixels to 16-pixel cells. */
-static inline void texture_rect_pixels_to_cells(const s32 pixels[4], s32 cells[4]) {
-    s32 i;
-    s32 value;
-
-    for (i = 0; i < 4; i++) {
-        value = pixels[i] >> 4;
-        cells[i] = value;
-        if (pixels[i] & 0xf) {
-            cells[i] = value + 1;
-        }
-    }
-}
-
-/* gfx */
-/* Sprite-sheet frame: sampled rectangle and scaled screen offset. */
-typedef struct sprite_sheet_frame {
-    RECT source;
-    point16_t offset;
-} sprite_sheet_frame_t;
-typedef char assert_sprite_sheet_frame_size[sizeof(sprite_sheet_frame_t) == 12 ? 1 : -1];
-
-/* Screen translation used by the sprite geometry helpers. */
-typedef struct sprite_draw_offset {
-    u8 _unused_00[8];
-    upoint16_t position;
-} sprite_draw_offset_t;
-typedef char sprite_draw_offset_size_must_be_12[sizeof(sprite_draw_offset_t) == 12 ? 1 : -1];
-
+/* texture coordinates */
 /* Eight-bit texture coordinates within a PS1 texture page. */
 typedef struct uv8 {
     u8 u;
     u8 v;
 } uv8_t;
 typedef char assert_uv8_size[sizeof(uv8_t) == 2 ? 1 : -1];
-
 typedef enum texture_uv_flip {
     TEXTURE_UV_FLIP_NONE = 0,
     TEXTURE_UV_FLIP_X = 1,
@@ -164,45 +135,21 @@ typedef enum texture_uv_flip {
     TEXTURE_UV_FLIP_XY = TEXTURE_UV_FLIP_X | TEXTURE_UV_FLIP_Y,
 } texture_uv_flip_e;
 
-/* event character graphics */
-/* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
- * or widened 32-bit unit-animation headers are present in the file. */
-typedef struct evtchr_file_record {
-    u8 sequence_offsets[0x40][4]; /* 0x0000; signed 32-bit offsets, -1 resolves to zero */
-    u8 sequence_data[0x400];      /* 0x0100 */
-    u8 frame_offsets[0x28][4];    /* 0x0500; signed 32-bit offsets, -1 resolves to zero */
-    u8 frame_data[0x1e0];         /* 0x05a0; copied into both native frame sets */
-    u8 cluts[16 * 16 * 2];        /* 0x0780; 16 palettes of 16 little-endian colors */
-    u8 pixels[200 * 128];         /* 0x0980; 256x200, 4bpp */
-    u8 _unused_6d80[0xa80];       /* unread tail of the 0x7800-byte block */
-} evtchr_file_record_t;
-typedef char evtchr_file_record_size_must_be_30720[sizeof(evtchr_file_record_t) == 30720 ? 1 : -1];
+/* sprites */
+/* Sprite-sheet frame: sampled rectangle and scaled screen offset. */
+typedef struct sprite_sheet_frame {
+    RECT source;
+    point16_t offset;
+} sprite_sheet_frame_t;
+typedef char assert_sprite_sheet_frame_size[sizeof(sprite_sheet_frame_t) == 12 ? 1 : -1];
+/* Screen translation used by the sprite geometry helpers. */
+typedef struct sprite_draw_offset {
+    u8 _unused_00[8];
+    upoint16_t position;
+} sprite_draw_offset_t;
+typedef char sprite_draw_offset_size_must_be_12[sizeof(sprite_draw_offset_t) == 12 ? 1 : -1];
 
-/* image loading */
-/* Texture and screen placement for gfx_init_image_loading (12 bytes).
- * BATTLE's table at 0x80155838 holds one per menu sprite. */
-typedef struct image_load_parameters {
-    s16 x_load;
-    s16 y_load;
-    u16 width;
-    u16 height;
-    u16 x_screen_offset;
-    u16 y_screen_offset;
-} image_load_parameters_t;
-
-/* Draw-area pair built by the menu graphics helpers: two DR_AREA packets whose
- * rectangles are scaled around their centre by a percentage from
- * g_world_menu_zoom_percentages (indexed by g_world_event_speed-adjusted step).
- * The BATTLE menus and the overlay status panels build the same pair: the
- * *_gfx_build_scaled_draw_area_packets helpers call SetDrawArea(areas[i],
- * rects[i]), the *_gfx_init_scaled_draw_area_packets helpers clear rects[0].w
- * and rects[1].h and copy the menu template into rects[1]. */
-typedef struct scaled_draw_area_pair {
-    DR_AREA areas[2]; /* 0x00 */
-    RECT rects[2];    /* 0x18 */
-} scaled_draw_area_pair_t;
-typedef char scaled_draw_area_pair_size_must_be_40[sizeof(scaled_draw_area_pair_t) == 40 ? 1 : -1];
-
+/* image surfaces */
 /* The 0x10-byte glyph blit descriptor used by the window frame threads and filled
  * by world_gfx_set_image_blit_source_rect / _destination_origin. The stride is
  * the surface width in pixels. */
@@ -214,6 +161,7 @@ typedef struct glyph_blit {
 } glyph_blit_t;
 typedef char glyph_blit_size_must_be_16[sizeof(glyph_blit_t) == 16 ? 1 : -1];
 
+/* textures */
 /* Texture primitive used by the WORLD/BATTLE image-loading and
  * texture-page allocation helpers: a SPRT
  * (code 0x64-0x67) or a POLY_FT4. Both carry the CLUT at 0x0e, which the icon
@@ -222,7 +170,6 @@ typedef union texture_primitive {
     SPRT sprt;
     POLY_FT4 ft4;
 } texture_primitive_t;
-
 /* Textured menu quad source for world_gfx_enqueue_textured_quad_corners (0x8012ccd0):
  * four screen points, four texture points (only the low byte of each
  * 16-bit value is used), then the CLUT and texture page. */
@@ -242,7 +189,6 @@ typedef struct textured_quad_source {
     u16 clut;   /* 0x20 */
     u16 tpage;  /* 0x22 */
 } textured_quad_source_t;
-
 /* Twelve-byte texture cell copied by the formation portrait producers and
  * embedded in oriented menu quads. */
 typedef struct texture_source {
@@ -254,7 +200,6 @@ typedef struct texture_source {
     s16 tpage; /* 0x0a */
 } texture_source_t;
 typedef char texture_source_size_must_be_12[sizeof(texture_source_t) == 12 ? 1 : -1];
-
 /* Screen rectangle and texture source, passed to the oriented-quad readers.
  * Equipment-slot marker arrays have a 0x14-byte stride. */
 typedef struct oriented_quad {
@@ -264,7 +209,6 @@ typedef struct oriented_quad {
     texture_source_t source; /* 0x08 */
 } oriented_quad_t;
 typedef char oriented_quad_size_must_be_20[sizeof(oriented_quad_t) == 20 ? 1 : -1];
-
 /* Gouraud-textured rectangle source for world_gfx_enqueue_gouraud_textured_quad
  * (0x8012cfd4) and bunit_gfx_enqueue_gouraud_textured_quad: screen rectangle,
  * texture origin (only the low byte of u/v is used; the texture extent is the
@@ -280,6 +224,48 @@ typedef struct textured_rect_source {
 } textured_rect_source_t;
 typedef char textured_rect_source_size_must_be_16[sizeof(textured_rect_source_t) == 16 ? 1 : -1];
 
+/* image loading */
+/* Texture and screen placement for gfx_init_image_loading (12 bytes).
+ * BATTLE's table at 0x80155838 holds one per menu sprite. */
+typedef struct image_load_parameters {
+    s16 x_load;
+    s16 y_load;
+    u16 width;
+    u16 height;
+    u16 x_screen_offset;
+    u16 y_screen_offset;
+} image_load_parameters_t;
+
+void gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
+    const image_load_parameters_t* parameters);
+
+/* Round x, y, width and height from texture pixels to 16-pixel cells. */
+static inline void texture_rect_pixels_to_cells(const s32 pixels[4], s32 cells[4]) {
+    s32 i;
+    s32 value;
+
+    for (i = 0; i < 4; i++) {
+        value = pixels[i] >> 4;
+        cells[i] = value;
+        if (pixels[i] & 0xf) {
+            cells[i] = value + 1;
+        }
+    }
+}
+
+/* primitives */
+/* Draw-area pair built by the menu graphics helpers: two DR_AREA packets whose
+ * rectangles are scaled around their centre by a percentage from
+ * g_world_menu_zoom_percentages (indexed by g_world_event_speed-adjusted step).
+ * The BATTLE menus and the overlay status panels build the same pair: the
+ * *_gfx_build_scaled_draw_area_packets helpers call SetDrawArea(areas[i],
+ * rects[i]), the *_gfx_init_scaled_draw_area_packets helpers clear rects[0].w
+ * and rects[1].h and copy the menu template into rects[1]. */
+typedef struct scaled_draw_area_pair {
+    DR_AREA areas[2]; /* 0x00 */
+    RECT rects[2];    /* 0x18 */
+} scaled_draw_area_pair_t;
+typedef char scaled_draw_area_pair_size_must_be_40[sizeof(scaled_draw_area_pair_t) == 40 ? 1 : -1];
 /* Full-screen fade primitive pair: a TILE followed by the DR_MODE that
  * selects its texture page and window. */
 typedef struct fade_overlay {
@@ -288,18 +274,33 @@ typedef struct fade_overlay {
 } fade_overlay_t;
 typedef char fade_overlay_size_must_be_28[(sizeof(fade_overlay_t) == 28) ? 1 : -1];
 
+void gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
+void gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
+
+/* event character graphics */
+/* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
+ * or widened 32-bit unit-animation headers are present in the file. */
+typedef struct evtchr_file_record {
+    u8 sequence_offsets[0x40][4]; /* 0x0000; signed 32-bit offsets, -1 resolves to zero */
+    u8 sequence_data[0x400];      /* 0x0100 */
+    u8 frame_offsets[0x28][4];    /* 0x0500; signed 32-bit offsets, -1 resolves to zero */
+    u8 frame_data[0x1e0];         /* 0x05a0; copied into both native frame sets */
+    u8 cluts[16 * 16 * 2];        /* 0x0780; 16 palettes of 16 little-endian colors */
+    u8 pixels[200 * 128];         /* 0x0980; 256x200, 4bpp */
+    u8 _unused_6d80[0xa80];       /* unread tail of the 0x7800-byte block */
+} evtchr_file_record_t;
+typedef char evtchr_file_record_size_must_be_30720[sizeof(evtchr_file_record_t) == 30720 ? 1 : -1];
+
 /* camera */
 enum {
     CAMERA_FUSION_HOLD_SENTINEL = 0x2710,
 };
-
 /* Provisional camera interpolation key: frame time and target value. */
 typedef struct camera_key {
     s32 time;  /* 0x00; cumulative frame of this key */
     s32 value; /* 0x04 */
     u8 _unused_08[8];
 } camera_key_t;
-
 /* Provisional per-component camera fusion track (0xa4 bytes), seeded by the
  * *_camera_fusion_thread and advanced by *_camera_step_track. */
 typedef struct camera_track {
@@ -315,13 +316,5 @@ typedef struct camera_track {
     s32 finished;         /* 0xa0 */
 } camera_track_t;
 typedef char camera_track_size_must_be_164[sizeof(camera_track_t) == 164 ? 1 : -1];
-
-/* primitives */
-void gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
-void gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
-
-/* image loading */
-void gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
-    const image_load_parameters_t* parameters);
 
 #endif

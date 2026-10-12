@@ -7,38 +7,6 @@
 #include "psx/libc.h"
 
 /* ability */
-typedef enum battle_ability_facing_modifier {
-    BATTLE_ABILITY_FACING_FRONT = 0,
-    BATTLE_ABILITY_FACING_SIDE = 1,
-    BATTLE_ABILITY_FACING_BACK = 2,
-} battle_ability_facing_modifier_e;
-
-typedef struct battle_ability_animation_data {
-    u8 charge_animation_set_id; /* row of g_battle_ability_charge_animation_sets */
-    u8 attack_animation;        /* battle_unit_animation_e, or BATTLE_ATTACK_ANIMATION_USE_WEAPON or _USE_ITEM */
-    u8 text_display; /* low byte of the message text id (0x1800 | this) shown when the ability hits; 0 none */
-} battle_ability_animation_data_t;
-typedef char battle_ability_animation_data_size_must_be_3[(sizeof(battle_ability_animation_data_t) == 3) ? 1 : -1];
-
-enum {
-    BATTLE_ABILITY_ANIMATION_COUNT = 454,
-    BATTLE_CHARGE_ANIMATION_SET_COUNT = 20,
-    BATTLE_CHARGE_ANIMATION_VARIANT_COUNT = 2,
-};
-
-/* Selectors in attack_animation; other values are battle_unit_animation_e IDs. */
-enum {
-    BATTLE_ATTACK_ANIMATION_USE_WEAPON = 0,
-    BATTLE_ATTACK_ANIMATION_USE_ITEM = 1,
-};
-
-extern battle_ability_animation_data_t g_battle_ability_animation_data[BATTLE_ABILITY_ANIMATION_COUNT];
-
-/* Two battle_unit_animation_e for each set: the one that starts a charge and
- * the one held while the unit charges or performs; 0 for none. */
-extern u8 g_battle_ability_charge_animation_sets[BATTLE_CHARGE_ANIMATION_SET_COUNT]
-                                                [BATTLE_CHARGE_ANIMATION_VARIANT_COUNT];
-
 extern s16 g_battle_ability_effect_id;
 extern u8 g_battle_loaded_ability_flags_1;
 
@@ -57,7 +25,6 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id);
 extern s32 g_battle_dead_unit_action;
 extern crystal_pickup_result_t* g_battle_dead_unit_context;
 extern s32 g_battle_dead_unit_result;
-crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
 
 /* deploy */
 extern const RECT g_battle_deployment_clear_rect;
@@ -78,10 +45,6 @@ extern s16 g_battle_cursor_screen_y;
 /* item */
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
 extern u8 g_battle_weapon_attack_animations[][3];
-extern s16 g_battle_item_icon_clut_base_x;
-extern s16 g_battle_item_icon_clut_base_y;
-extern point16_t g_battle_item_icon_image_location;
-void battle_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
 
 #include "fft/battle_event.h"
 #include "fft/battle_script.h"
@@ -222,6 +185,7 @@ void battle_state_enter_jp_xp_gain(void);
 void battle_state_enter_status_execute(void);
 void battle_state_enter_target_display(void);
 void battle_state_enter_target_out_of_range(void);
+void battle_state_enter_move_range_exception(void);
 void battle_state_enter_target_select(void);
 void battle_state_enter_target_select_confirm(void);
 void battle_state_enter_target_select_denied(void);
@@ -339,8 +303,6 @@ void battle_state_enter_unit_moving_setup(void);
 extern s32 g_battle_destination_camera_yaw;
 extern u8 g_battle_job_level_gained_flag;
 extern VECTOR g_battle_offset_screen_coords;
-extern s16 g_battle_unit_entd_spritesheet_ids[];
-extern s32 g_battle_unit_entd_spritesheet_count;
 extern u16 g_battle_enemy_level_sum;
 extern u8 g_battle_highest_enemy_level;
 extern s32 g_battle_previous_game_state;
@@ -364,7 +326,6 @@ extern s32 g_battle_formation_screen_active;
 extern u16 g_battle_etc_graphics_enabled;
 extern u16 g_battle_field_object_use_request; /* 0x80165fe4 */
 extern u16 g_battle_field_object_wait_status; /* 0x80166070 */
-s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
 s32 map_tile_data_15_stub(void);
 s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 battle_return_one(s32 unused_misc_id);

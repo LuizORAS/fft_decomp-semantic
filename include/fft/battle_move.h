@@ -7,7 +7,7 @@
 #include "fft/battle_unit.h"
 #include "fft/main.h"
 
-/* move */
+/* post movement types */
 /* Eight-byte result copied whole into the post-movement item display. */
 typedef struct move_found_item {
     s32 _unknown_00;   /* 0x00; reset when an item is selected */
@@ -40,6 +40,7 @@ typedef struct move_find_result_data {
 } move_find_result_data_t;
 typedef char move_find_result_data_size_must_be_6[(sizeof(move_find_result_data_t) == 6) ? 1 : -1];
 
+/* pathfinding types */
 /* Ordered class selection at 0x80174630–0x80174700, not movement ability
  * flags or the separate cost-table selector. Water names describe standing
  * height. The BATTLE_MOVEMENT_SET_3 bits carry the retail ability names, which
@@ -149,6 +150,7 @@ typedef enum move_tile_flags_mode {
     MOVE_TILE_FLAGS_MODE_TERRAIN_ONLY = 3, /* leave the units out */
 } move_tile_flags_mode_e;
 
+/* post movement flags */
 /* Composite event work produced after movement. This is separate from the
  * tile-query flags in move_find_result_data_t and the learned movement
  * ability bitsets. Bit 0x0200 has readers but no proven producer. */
@@ -166,6 +168,7 @@ typedef enum move_post_event_flags {
     MOVE_POST_EVENT_MOUNT_STATUS_CHANGE = 0x0400,
 } move_post_event_flags_e;
 
+/* propagation records */
 /* Shared movement work state addressed through 0x8018f4e4.
  *
  * Propagation at 0x80178ca4 and jump spreading at 0x80177c08 use the same
@@ -265,6 +268,7 @@ typedef struct move_spread_state {
 typedef char move_spread_tile_x_must_be_26[((unsigned long)&((move_spread_state_t*)0)->tile_x == 0x26) ? 1 : -1];
 typedef char move_spread_frontier_must_be_62
     [((unsigned long)&((move_spread_state_t*)0)->frontier_max_remaining_range == 0x62) ? 1 : -1];
+
 typedef char
     move_spread_placement_must_be_71[((unsigned long)&((move_spread_state_t*)0)->placement_failed == 0x71) ? 1 : -1];
 
@@ -293,44 +297,27 @@ typedef struct move_record {
 } move_record_t;
 typedef char move_record_size_must_be_7[(sizeof(move_record_t) == 7) ? 1 : -1];
 
-/* Contiguous result bytes returned as move_find_result_data_t. Keep
- * distinct symbols: the target reloads their absolute addresses separately. */
-extern move_found_item_t g_move_find_display_item;
-/* The scalar first-byte alias retains the retail absolute read/write addresses. */
-extern move_find_result_data_t g_move_find_tile_result;
-extern u8 g_move_find_result_flags;
-extern u8 g_move_find_entry_index;
-extern u8 g_move_find_rare_item_id;
-extern u8 g_move_find_common_item_id;
-extern u8 g_move_find_trap_id;
-extern s8 g_move_find_occupying_unit_id;
-extern u8 g_move_current_edge_height;
-extern u8 g_move_destination_edge_height;
-extern s32 g_move_jump_gravity;
-extern move_step_t g_move_step_value;
-extern s16 g_move_target_screen_z;
-/* move_step_phase_e by step direction: the phase each kind of step enters. */
-extern u8 g_move_float_to_centre_phases[];
-extern u8 g_move_walk_to_centre_phases[];
-extern u8 g_move_climb_to_centre_phases[];
-extern u8 g_move_jump_descent_phases[];
-extern battle_unit_misc_data_t* g_move_tile_occupant;
-extern s32 g_move_displacement_direction;
+/* terrain and abilities */
 extern u8* g_move_terrain_costs_ptr;
+extern u8 g_move_terrain_cost;
+extern u8 g_move_weather_terrain_cost;
+
+u8 move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, u8 exit_height);
+s32 move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer);
+move_effective_flags_e move_get_effective_flags(const battle_stats_t* unit);
+s32 move_get_support_flags(battle_stats_t* unit);
+s32 move_calculate_water_lift(battle_unit_misc_data_t* unit, map_tile_t* tile);
+u8 move_get_water_depth(battle_unit_misc_data_t* unit);
+s32 move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer);
+s32 move_get_weather_terrain_cost(void);
+
+/* pathfinding */
+extern battle_unit_misc_data_t* g_move_tile_occupant;
 extern s32 g_move_reachable_tiles_valid;
 extern s32 g_move_reachable_unit_id;
 extern battle_walk_path_t g_move_path;
 extern u8 g_move_pathing_scratch;
 extern move_pathfind_scratch_t* g_move_config_ptr;
-
-/* The two map tiles of the step in progress, refreshed by move_get_current_and_destination_tiles from
- * the unit's movement value. Step starters receive the tile pointers; the geometry readers use the tile
- * fields (height at 0x02, depth_half_height at 0x03, slope_type, flags). */
-extern map_tile_t* g_move_current_tile;
-extern map_tile_t* g_move_destination_tile;
-
-/* Pending move_post_event_flags_e bits, dispatched in priority order. */
-extern s32 g_move_find_result;
 extern u8* g_move_frontier_flags_ptr;
 
 /* Seven proven half-height offsets at 0x8018f4d8; the following byte is not
@@ -341,10 +328,10 @@ extern move_spread_state_t* g_move_scratch_pad_ptr;
 extern move_height_offsets_t g_move_path_height_offsets;
 extern u8 g_move_destination_unit_record;
 extern u8 g_move_effective_flags;
-extern u8 g_move_jump_landing_phases[];
 extern u8* g_move_pathing_frontier;
 extern s32 g_move_pathing_resume_pass;
 extern s32 g_move_pathing_tile_index;
+
 /* Zeroed by move_calculate_pathing and never read. That pass keeps in statics what
  * move_store_unit_movement_to_scratchpad keeps in locals; these three stand where it sets
  * its team, ignore_terrain and count locals (the generic unit has no team, terrain rule or units). */
@@ -352,140 +339,160 @@ extern u8 g_move_pathing_team;
 extern u8 g_move_pathing_ignore_terrain;
 extern s32 g_move_pathing_unit_record_count;
 extern void (*g_move_spread_preset_table[])(void);
-extern u8 g_move_terrain_cost;
 
 /* Height scratch record at 0x80096238; battle_unit_calculate_height_data fills
  * it in place. */
 extern battle_unit_height_data_t g_move_tile_occupant_height;
-extern u8 g_move_weather_terrain_cost;
-s32 move_check_horizontal_jump(s32, u8, u8, u8);
 
 battle_walk_path_t* move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, s32 target_x, s32 target_y,
     u32 target_level, s32 initialize, s32* suspended, s32 check_budget);
-
 void move_calculate_pathing_time_sliced(s32 flags, s32 jump, s32 x, s32 y, s32 level, s32 target_x, s32 target_y,
     s32 target_level, s32 initialize, s32* suspended);
-
-void move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit);
-void move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32 allow_height_change);
-void move_undo_unit_move(battle_unit_misc_data_t* unit);
-
-void move_set_velocity_for_contiguous_steps_with_final_tile_height(
-    battle_unit_misc_data_t* unit, const battle_walk_path_t* path, const move_step_t* step);
-
-void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit);
-void move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit, s32 direction);
-void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit);
-void move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit);
-s32 move_start_next_post_movement_step(void);
-void move_accelerate_unit_to_destination_with_height_change(battle_unit_misc_data_t* unit);
-void move_accelerate_unit_to_destination_no_height_change(battle_unit_misc_data_t* unit);
 void move_store_unit_movement_to_scratchpad(s32 unit_id);
 s32 move_set_reachable_tiles(s32 unit_id, s32 map_x, s32 map_y, s32 map_z);
 void move_set_tile_flags_for_pathfinding(s32 mode);
-void move_update_path_step(battle_unit_misc_data_t* unit);
-
-void move_get_current_and_destination_tiles(
-    battle_unit_misc_data_t* unit, map_tile_t** current_tile, map_tile_t** destination_tile);
-
 void move_check_occupied_tile_standing_height(s32 record_index, s32 extra_span);
-void move_advance_display_unit_step(battle_unit_misc_data_t* unit);
 void move_apply_selected_candidate(move_spread_state_t* state);
 void move_calculate_spread(void);
-u8 move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, u8 exit_height);
-s32 move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer);
 s32 move_check_spreading_tile_coordinates(void);
 void move_clear_enterable_flags_under_dead_or_jumping_units(void);
-void move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 direction);
-void move_displace_unit_along_step_direction(battle_unit_misc_data_t* unit, s32 x, s32 y, s32 delta);
-void move_finalize_path_after_animation(battle_unit_misc_data_t* unit);
-move_effective_flags_e move_get_effective_flags(const battle_stats_t* unit);
-s32 move_get_support_flags(battle_stats_t* unit);
-s32 move_has_reached_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
-s32 move_has_reached_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
-s32 move_has_reached_destination_tile_entry_edge(s32 direction, battle_unit_misc_data_t* unit);
 s32 move_init_destination_geometry(s32 candidate);
-void move_init_knockback(battle_unit_misc_data_t* unit);
-void move_init_post_movement_display(void);
 s32 move_init_source_geometry(s32 direction);
 s32 move_init_source_panel(s32 direction);
 void move_init_spread_scratch(void);
-
-s32 move_calculate_jump_arc_velocity(const SVECTOR* from, const SVECTOR* to, VECTOR* out);
-
 battle_walk_path_t* move_calculate_walkto_pathing(
     s32 a, s32 b, s32 x, s32 y, s32 z, s32 destination_x, s32 destination_y, s32 destination_z);
+s32 move_propagate_destination(s32 candidate, s32 extra_span);
+void move_save_selected_candidate(s32 direction, s32 candidate, s32 extra_span);
+void move_set_reachable_tile_flags(void);
+void move_set_spreading_tile_x_and_y_coordinates(void);
+void move_spread_to_neighbors(void);
+void move_transfer_tiles_height_halves_and_slope_to_scratch_pad(void);
+s32 move_update_candidate(s32 extra_span);
+void move_check_and_spread_one_tile_around(void);
+void move_encode_path_steps(void);
+void move_set_unit_path_flag(battle_unit_misc_data_t* unit);
+void move_spread_horizontal_jump(void);
+battle_walk_path_t* move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation);
 
-/* Scales the three 32-bit velocity components at misc-unit offsets 0x28/0x2c/0x30; the
- * definition indexes them as a 32-bit array. */
+/* steps and velocity */
+extern u8 g_move_current_edge_height;
+extern u8 g_move_destination_edge_height;
+extern s32 g_move_jump_gravity;
+extern move_step_t g_move_step_value;
+extern s16 g_move_target_screen_z;
+
+/* move_step_phase_e by step direction: the phase each kind of step enters. */
+extern u8 g_move_float_to_centre_phases[];
+extern u8 g_move_walk_to_centre_phases[];
+extern u8 g_move_climb_to_centre_phases[];
+extern u8 g_move_jump_descent_phases[];
+
+/* The two map tiles of the step in progress, refreshed by move_get_current_and_destination_tiles from
+ * the unit's movement value. Step starters receive the tile pointers; the geometry readers use the tile
+ * fields (height at 0x02, depth_half_height at 0x03, slope_type, flags). */
+extern map_tile_t* g_move_current_tile;
+extern map_tile_t* g_move_destination_tile;
+extern u8 g_move_jump_landing_phases[];
+
+s32 move_check_horizontal_jump(s32, u8, u8, u8);
+void move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit);
+void move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32 allow_height_change);
+void move_undo_unit_move(battle_unit_misc_data_t* unit);
+void move_set_velocity_for_contiguous_steps_with_final_tile_height(
+    battle_unit_misc_data_t* unit, const battle_walk_path_t* path, const move_step_t* step);
+void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit);
+void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit);
+void move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit);
+void move_accelerate_unit_to_destination_with_height_change(battle_unit_misc_data_t* unit);
+void move_accelerate_unit_to_destination_no_height_change(battle_unit_misc_data_t* unit);
+void move_update_path_step(battle_unit_misc_data_t* unit);
+void move_get_current_and_destination_tiles(
+    battle_unit_misc_data_t* unit, map_tile_t** current_tile, map_tile_t** destination_tile);
+void move_advance_display_unit_step(battle_unit_misc_data_t* unit);
+void move_finalize_path_after_animation(battle_unit_misc_data_t* unit);
+s32 move_has_reached_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
+s32 move_has_reached_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
+s32 move_has_reached_destination_tile_entry_edge(s32 direction, battle_unit_misc_data_t* unit);
+s32 move_calculate_jump_arc_velocity(const SVECTOR* from, const SVECTOR* to, VECTOR* out);
+
+/* Scales each velocity component by scale / ONE. */
 void move_interpolate_partial(struct battle_unit_misc_data* unit, s32 scale);
-u32 move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit);
 void move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* unused_to);
 void move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
 void move_start_unit_step_at_climb_speed(
     battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* unused_to);
 s32 move_is_unit_moving_by_misc_id(u32 misc_id);
-s32 move_propagate_destination(s32 candidate, s32 extra_span);
 void move_return_to_previous_map_square(battle_unit_misc_data_t* unit);
-void move_save_selected_candidate(s32 direction, s32 candidate, s32 extra_span);
-void move_set_reachable_tile_flags(void);
-void move_set_spreading_tile_x_and_y_coordinates(void);
 void move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit);
 void move_snap_axis_to_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit);
-void move_spread_to_neighbors(void);
 s32 move_start_unit_walk_to(s32 misc_id, map_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed);
 void move_step_unit_to_map_tile_center_no_height_change(battle_unit_misc_data_t* unit);
 void move_step_unit_to_map_tile_center_with_height_change(battle_unit_misc_data_t* unit);
-void move_transfer_tiles_height_halves_and_slope_to_scratch_pad(void);
 void move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit);
-s32 move_update_candidate(s32 extra_span);
-void move_update_knockback_after_animation(battle_unit_misc_data_t* unit);
 void move_update_unit_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
-s32 move_calculate_water_lift(battle_unit_misc_data_t* unit, map_tile_t* tile);
-u8 move_get_water_depth(battle_unit_misc_data_t* unit);
-void move_apply_knockback(void);
-s32 move_calculate_teleport_chances(void);
-void move_check_and_spread_one_tile_around(void);
-s32 move_check_knockback_destination(s32 direction, s32 x, s32 y);
-void move_encode_path_steps(void);
 s32 move_get_direction(const battle_unit_misc_data_t* unit);
-void move_set_unit_path_flag(battle_unit_misc_data_t* unit);
-
 void move_set_unit_step_delta_center_to_edge(
     battle_unit_misc_data_t* unit, const move_step_t* step, const map_tile_t* tile, s32 edge_height);
-
 void move_set_float_step_delta_center_to_edge(
     battle_unit_misc_data_t* unit, const move_step_t* step, const map_tile_t* tile, s32 edge_height);
-
 void move_set_unit_step_delta_edge_to_center(
     battle_unit_misc_data_t* unit, const move_step_t* step, const map_tile_t* tile, s32 edge_height);
-
 void move_set_float_step_delta_edge_to_center(
     battle_unit_misc_data_t* unit, const move_step_t* step, const map_tile_t* tile, s32 edge_height);
-
 void move_set_velocity_for_contiguous_clamped_steps(
     battle_unit_misc_data_t* unit, const battle_walk_path_t* path, const move_step_t* step);
-
-void move_spread_horizontal_jump(void);
 void move_start_unit_climb_hop_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
-
 void move_start_unit_climb_jump_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
-
 void move_start_float_climb_jump_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to);
-
 void move_start_unit_jump_step(
     battle_unit_misc_data_t* unit, const map_tile_t* unused_from, const map_tile_t* unused_to);
 void move_start_fly_step(
     battle_unit_misc_data_t* unit, const map_tile_t* unused_current_tile, const map_tile_t* unused_destination_tile);
 void move_transfer_target_coordinates(battle_unit_misc_data_t* src, battle_unit_misc_data_t* dst);
-void move_update_knockback_step(battle_unit_misc_data_t* unit);
 void move_update_unit_by_misc_id(void);
 void move_update_unit_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit);
 void move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit);
 void move_update_float_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
 void move_update_unit_step_to_destination_tile_entry_edge(battle_unit_misc_data_t* unit);
 void move_update_unit_vertical_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
-battle_walk_path_t* move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation);
-s32 move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer);
+
+/* teleport */
+s32 move_calculate_teleport_chances(void);
+void move_update_teleport_start(struct battle_unit_misc_data* unit);
+void move_start_teleport_animation(battle_unit_misc_data_t* unit);
+
+/* knockback */
+extern s32 g_move_displacement_direction;
+
+void move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit, s32 direction);
+void move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 direction);
+void move_displace_unit_along_step_direction(battle_unit_misc_data_t* unit, s32 x, s32 y, s32 delta);
+void move_init_knockback(battle_unit_misc_data_t* unit);
+void move_update_knockback_after_animation(battle_unit_misc_data_t* unit);
+void move_apply_knockback(void);
+s32 move_check_knockback_destination(s32 direction, s32 x, s32 y);
+void move_update_knockback_step(battle_unit_misc_data_t* unit);
+
+/* post movement */
+/* Contiguous result bytes returned as move_find_result_data_t. Keep
+ * distinct symbols: the target reloads their absolute addresses separately. */
+extern move_found_item_t g_move_find_display_item;
+
+/* The scalar first-byte alias retains the retail absolute read/write addresses. */
+extern move_find_result_data_t g_move_find_tile_result;
+extern u8 g_move_find_result_flags;
+extern u8 g_move_find_entry_index;
+extern u8 g_move_find_rare_item_id;
+extern u8 g_move_find_common_item_id;
+extern u8 g_move_find_trap_id;
+extern s8 g_move_find_occupying_unit_id;
+
+/* Pending move_post_event_flags_e bits, dispatched in priority order. */
+extern s32 g_move_find_result;
+
+s32 move_start_next_post_movement_step(void);
+void move_init_post_movement_display(void);
+u32 move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit);
 
 #endif

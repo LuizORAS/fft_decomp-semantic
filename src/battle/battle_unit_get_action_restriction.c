@@ -1,5 +1,5 @@
-#include "fft/battle_action.h"
 #include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Returns the unit's battle_unit_action_restriction_e.

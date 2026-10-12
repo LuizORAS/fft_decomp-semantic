@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* PreAttackAnimation game-state handler: execute the ability once the source
  * unit's animation has ended or looped, or its state frame counter has reached

@@ -1,4 +1,4 @@
-#include "fft/battle_unit.h"
+#include "fft/battle_move.h"
 struct battle_unit_misc_data;
 
 /* Step handler of the TELEPORT_START phase. */

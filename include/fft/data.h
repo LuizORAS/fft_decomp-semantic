@@ -717,6 +717,30 @@ typedef struct status_infliction_data {
 } status_infliction_data_t;
 typedef char status_infliction_data_size_must_be_6[(sizeof(status_infliction_data_t) == 6) ? 1 : -1];
 
+/* calculator */
+/* Flags stored by the eight Math Skill abilities at 0x80061054. The first
+ * four select a unit attribute; the last four select its divisor test. */
+enum {
+    CALCULATOR_ATTRIBUTE_CT = 0x80,
+    CALCULATOR_ATTRIBUTE_LEVEL = 0x40,
+    CALCULATOR_ATTRIBUTE_EXP = 0x20,
+    CALCULATOR_ATTRIBUTE_HEIGHT = 0x10,
+    CALCULATOR_ATTRIBUTE_MASK = 0xf0,
+    CALCULATOR_MULTIPLE_PRIME = 0x08,
+    CALCULATOR_MULTIPLE_FIVE = 0x04,
+    CALCULATOR_MULTIPLE_FOUR = 0x02,
+    CALCULATOR_MULTIPLE_THREE = 0x01,
+    CALCULATOR_MULTIPLE_MASK = 0x0f,
+};
+
+/* Attribute abilities occupy the first four slots, followed by four divisor tests. */
+enum {
+    CALCULATOR_ATTRIBUTE_ABILITY_COUNT = 4,
+    CALCULATOR_MULTIPLE_ABILITY_COUNT = 4,
+    CALCULATOR_ABILITY_COUNT = CALCULATOR_ATTRIBUTE_ABILITY_COUNT + CALCULATOR_MULTIPLE_ABILITY_COUNT,
+    CALCULATOR_PRIME_COUNT = 54,
+};
+
 /* element */
 /* Element bits shared by abilities, equipment, jobs and unit affinity sets. */
 typedef enum element_flags {
@@ -744,6 +768,12 @@ typedef enum elemental_affinity_index {
 enum { ELEMENTAL_AFFINITY_COUNT = 5 };
 
 /* item */
+enum {
+    ITEM_ID_MASK = 0xff,
+    ITEM_ID_COUNT = 256,
+    ITEM_TYPE_FILTER_ANY = 255,
+};
+
 enum {
     ITEM_ATTRIBUTE_PHYSICAL_ATTACK = 0,
     ITEM_ATTRIBUTE_MAGICAL_ATTACK = 1,
@@ -1491,6 +1521,15 @@ enum {
 };
 
 /* skillset */
+/* Human skillsets contain 16 action slots followed by six reaction/support/movement
+ * slots. Monster records contain four ids; the shared scratch list reserves 24. */
+enum {
+    HUMAN_SKILLSET_ACTION_SLOT_COUNT = 16,
+    HUMAN_SKILLSET_ABILITY_COUNT = 22,
+    MONSTER_SKILLSET_ABILITY_COUNT = 4,
+    SKILLSET_ABILITY_LIST_COUNT = 24,
+};
+
 /* Skillset ids: the rows of g_main_ability_human_skillset_abilities and, from
  * SKILLSET_ID_MONSTER_FIRST, of g_main_ability_monster_skillset_abilities. A
  * name is the skillset's name in the game's text. Where rows share a name, a
@@ -1709,38 +1748,5 @@ typedef enum status_effect_flags_2 {
     STATUS_EFFECT_FLAG_2_IGNORE_ATTACKS = 0x20,
     STATUS_EFFECT_FLAG_2_PREVENT_REACTION = 0x80,
 } status_effect_flags_2_e;
-
-/* other */
-/* Human skillsets contain 16 action slots followed by six reaction/support/movement
- * slots. Monster records contain four ids; the shared scratch list reserves 24. */
-enum {
-    HUMAN_SKILLSET_ACTION_SLOT_COUNT = 16,
-    HUMAN_SKILLSET_ABILITY_COUNT = 22,
-    MONSTER_SKILLSET_ABILITY_COUNT = 4,
-    SKILLSET_ABILITY_LIST_COUNT = 24,
-};
-
-/* Flags stored by the eight Math Skill abilities at 0x80061054. The first
- * four select a unit attribute; the last four select its divisor test. */
-enum {
-    CALCULATOR_ATTRIBUTE_CT = 0x80,
-    CALCULATOR_ATTRIBUTE_LEVEL = 0x40,
-    CALCULATOR_ATTRIBUTE_EXP = 0x20,
-    CALCULATOR_ATTRIBUTE_HEIGHT = 0x10,
-    CALCULATOR_ATTRIBUTE_MASK = 0xf0,
-    CALCULATOR_MULTIPLE_PRIME = 0x08,
-    CALCULATOR_MULTIPLE_FIVE = 0x04,
-    CALCULATOR_MULTIPLE_FOUR = 0x02,
-    CALCULATOR_MULTIPLE_THREE = 0x01,
-    CALCULATOR_MULTIPLE_MASK = 0x0f,
-};
-
-/* Attribute abilities occupy the first four slots, followed by four divisor tests. */
-enum {
-    CALCULATOR_ATTRIBUTE_ABILITY_COUNT = 4,
-    CALCULATOR_MULTIPLE_ABILITY_COUNT = 4,
-    CALCULATOR_ABILITY_COUNT = CALCULATOR_ATTRIBUTE_ABILITY_COUNT + CALCULATOR_MULTIPLE_ABILITY_COUNT,
-    CALCULATOR_PRIME_COUNT = 54,
-};
 
 #endif
