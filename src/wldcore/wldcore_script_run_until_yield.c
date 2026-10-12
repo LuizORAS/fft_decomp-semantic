@@ -21,7 +21,7 @@
 s32 wldcore_script_run_until_yield(void) {
     s32 low;
     s32 high;
-    u32 offset;
+    u32 section_byte_offset;
     u16 flags;
     s32 aborted;
 
@@ -36,11 +36,12 @@ s32 wldcore_script_run_until_yield(void) {
             wldcore_set_bit_value(
                 g_main_saved_data_bits, (g_wldcore_saved_record_index << 8) + g_wldcore_active_saved_record.section, 1);
             g_wldcore_active_saved_record.state_flags &= ~WLDCORE_OPCODE_STATE_BRANCH;
-            offset = g_wldcore_active_saved_record.buffer->offsets[g_wldcore_active_saved_record.section];
+            section_byte_offset = g_wldcore_active_saved_record.buffer->offsets[g_wldcore_active_saved_record.section];
             g_wldcore_active_saved_record.section++;
             g_wldcore_active_saved_record.word_index = 0;
             g_wldcore_active_saved_record.state_flags |= WLDCORE_OPCODE_STATE_FETCH;
-            g_wldcore_active_saved_record.script_words = &((u32*)&g_main_save_slot_buffer)[offset >> 2];
+            g_wldcore_active_saved_record.script_words
+                = &((u32*)&g_main_save_slot_buffer)[section_byte_offset / sizeof(u32)];
             if (g_wldcore_saved_record_index < 5) {
                 memcpy(&g_main_saved_records[g_wldcore_saved_record_index], &g_wldcore_active_saved_record,
                     sizeof(wldcore_saved_record_t));

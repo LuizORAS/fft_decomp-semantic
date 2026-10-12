@@ -1,12 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* The target's sum is `addu v1,v0,v1`: rs is the
- * g_wldcore_active_saved_record.32-bit counter, rt the sign-extended
- * 16-bit counter_delta value. Any `+` spelling canonicalises the 16-bit value into rs.
- * `a - (-b)` reaches fold as MINUS_EXPR(a, NEGATE_EXPR(b)) and is rewritten to
- * a PLUS_EXPR without the commutative re-canonicalisation, which keeps the
- * target's operand order. */
+/* The double negation keeps the native counter/delta add operand order. */
 void wldcore_opcode_branch_if_not_equal(void) {
     s32 value;
     s32 operand;

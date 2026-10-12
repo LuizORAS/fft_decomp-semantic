@@ -6,7 +6,7 @@ u32 wldcore_sound_novel_find_section_instruction(s32 section, s32 opcode) {
     u32* word;
     s32 i;
 
-    word = &((u32*)&g_main_save_slot_buffer)[g_wldcore_active_saved_record.buffer->offsets[section] >> 2];
+    word = &((u32*)&g_main_save_slot_buffer)[g_wldcore_active_saved_record.buffer->offsets[section] / sizeof(u32)];
     for (i = 0; i < 256; i++) {
         u32 value = *word;
         if (opcode == (value & 0xFF)) {

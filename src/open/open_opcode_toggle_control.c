@@ -5,13 +5,12 @@
  * sequence runs; after that it clears OPEN_SCRIPT_DISPATCH_RUNNING, which stops
  * the dispatcher. Two bytes. */
 void open_opcode_toggle_control(s16* unused_entry) {
-    u32* control = &g_open_script_state.dispatch.flags;
-    u32 state = *control;
+    u32 state = g_open_script_state.dispatch.flags;
 
     if (state & (OPEN_SCRIPT_DISPATCH_XA_STOPPING | OPEN_SCRIPT_DISPATCH_XA_STARTING)) {
-        *control = state ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
+        g_open_script_state.dispatch.flags = state ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
     } else {
-        *control = state ^ OPEN_SCRIPT_DISPATCH_RUNNING;
+        g_open_script_state.dispatch.flags = state ^ OPEN_SCRIPT_DISPATCH_RUNNING;
         g_open_script_state.dispatch.cursor.byte_offset += 2;
     }
 }

@@ -101,7 +101,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     if (section != 0) {
         /* The 32-bit view preserves register order; the named offset field swaps the index and base. */
         g_wldcore_active_saved_record.script_words
-            = &((u32*)&g_main_save_slot_buffer)[((u32*)g_wldcore_active_saved_record.buffer)[section] >> 2];
+            = &((u32*)&g_main_save_slot_buffer)[((u32*)g_wldcore_active_saved_record.buffer)[section] / sizeof(u32)];
         /* A struct-field store: as a scalar global the store would be
          * scheduled above the table load (GCC 2.7 alias rule). */
         g_wldcore_active_saved_record.word_index = 0;

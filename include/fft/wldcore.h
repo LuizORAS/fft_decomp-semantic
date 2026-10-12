@@ -545,7 +545,7 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location);
 /* Section byte offsets at the start of a loaded sound-novel script. */
 typedef struct wldcore_sound_novel_script_file {
     u32 _unknown_00;
-    u32 offsets[1]; /* 0x04; section byte offsets in the loaded script file */
+    u32 offsets[0]; /* 0x04; variable-length section byte-offset table */
 } wldcore_sound_novel_script_file_t;
 
 extern s16 g_wldcore_saved_record_index;
