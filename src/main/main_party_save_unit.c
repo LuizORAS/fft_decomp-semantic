@@ -65,8 +65,8 @@ s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
     /* The saved span includes the career record and following 16-byte name. */
     main_util_copy_byte_data(&unit->career, &party->career, sizeof(party->career) + sizeof(party->name));
     /* name_id is stored as two byte writes (lbu / lhu+srl), not one sh. */
-    party->name_id.index = unit->quote_name_id;
-    party->name_id.name_class = unit->quote_name_id >> 8;
+    party->name_id.fields.index = unit->quote_name_id.value;
+    party->name_id.fields.name_class = unit->quote_name_id.value >> 8;
     party->proposition_status = 0;
     party->egg_color = 0;
     return 0;

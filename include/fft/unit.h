@@ -7,6 +7,17 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* names */
+/* A packed unit-name ID and its index and text-page class. */
+typedef union unit_name_id {
+    u16 value;
+    struct {
+        u8 index;
+        u8 name_class;
+    } fields;
+} unit_name_id_t;
+typedef char unit_name_id_size_must_be_2[(sizeof(unit_name_id_t) == 2) ? 1 : -1];
+
 /* ability flags */
 /* Active reaction abilities occupy four MSB-first bytes in battle_stats_t. */
 typedef enum battle_unit_reaction_set_1 {
@@ -890,7 +901,7 @@ typedef struct battle_stats {
     u8 ai_targeting_flags_1;                /* 0x169; copied to battle_ai_unit_decision_t +0x06 */
     u8 ai_targeting_flags_2;                /* 0x16a; battle_ai_targeting_flags_2_e */
     u8 ai_initial_enemy_flag;               /* 0x16b; ENTD 0x27 */
-    u16 quote_name_id;                      /* 0x16c */
+    unit_name_id_t quote_name_id;           /* 0x16c */
     battle_action_command_t action_command; /* 0x16e..0x181 */
     u8 mount_info;                          /* 0x182 */
     u8 existence;                           /* 0x183; battle_unit_existence_state_e */
@@ -1025,7 +1036,7 @@ typedef struct entd_file {
 } entd_file_t;
 typedef char entd_file_size_must_be_81920[(sizeof(entd_file_t) == 81920) ? 1 : -1];
 
-/* party_name_id_t.name_class selects the unit-name text page. */
+/* unit_name_id_t.fields.name_class selects the unit-name text page. */
 typedef enum party_name_class {
     PARTY_NAME_CLASS_SPECIAL = 0,
     PARTY_NAME_CLASS_GENERIC_MALE = 1,
@@ -1040,20 +1051,6 @@ enum {
     PARTY_ZODIAC_SHIFT = 4,
     PARTY_ZODIAC_MASK = 0xf0,
 };
-
-/* Serialized unit-name id: the low byte indexes the selected name class. */
-typedef struct party_name_id {
-    u8 index;
-    u8 name_class;
-} party_name_id_t;
-typedef char party_name_id_size_must_be_2[(sizeof(party_name_id_t) == 2) ? 1 : -1];
-
-/* A packed unit-name ID and its index and text-page class. */
-typedef union unit_name_id {
-    u16 value;
-    party_name_id_t fields;
-} unit_name_id_t;
-typedef char unit_name_id_size_must_be_2[(sizeof(unit_name_id_t) == 2) ? 1 : -1];
 
 /*
  * Persistent roster record. Its 0x100-byte stride is established by the
@@ -1081,7 +1078,7 @@ typedef struct party_data {
     unit_raw_stats_t raw_stats; /* 0x19 */
     unit_career_data_t career;  /* 0x28; unlocked jobs, learned abilities, levels and JP */
     u8 name[16];                /* 0xbe */
-    party_name_id_t name_id;    /* 0xce */
+    unit_name_id_t name_id;     /* 0xce */
     u8 proposition_status;      /* 0xd0; nonzero while unavailable on a proposition */
     u8 _unused_d1;
     u8 egg_color;        /* 0xd2; create/save/generate unit stores */

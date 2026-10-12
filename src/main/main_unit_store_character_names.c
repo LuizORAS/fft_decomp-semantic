@@ -25,7 +25,7 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     u8* text;
     party_data_t* party;
     battle_stats_t* other;
-    const party_name_id_t* name_id_record;
+    const unit_name_id_t* name_id_record;
 
     prepare_text = battle_text_find_entry;
     if (g_main_unit_name_uses_world_text != 0) {
@@ -33,7 +33,7 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     }
     if (unit->formation_index == PARTY_ID_NONE) {
         text_id = TEXT_ID_UNIT_NAME_SPECIAL_BASE;
-        name_index = unit->quote_name_id;
+        name_index = unit->quote_name_id.value;
         name_id.value = name_index;
         if (name_id.value == 0xff) {
             gender = unit->unit_flags & NAME_GENDER_MASK;
@@ -58,8 +58,8 @@ void main_unit_store_character_names(battle_stats_t* unit) {
                     if (party->party_id != PARTY_ID_NONE && gender == (party->gender_flags & NAME_GENDER_MASK)) {
                         name_id_record = &party->name_id;
                         existing_name.value = 0;
-                        existing_name.fields.name_class = name_id_record->name_class;
-                        existing_name.fields.index = name_id_record->index;
+                        existing_name.fields.name_class = name_id_record->fields.name_class;
+                        existing_name.fields.index = name_id_record->fields.index;
                         if (existing_name.value == name_id.value) {
                             name_available = 0;
                             break;
@@ -68,13 +68,14 @@ void main_unit_store_character_names(battle_stats_t* unit) {
                 }
                 for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                     other = &g_battle_unit_stats[i];
-                    if (gender == (other->unit_flags & NAME_GENDER_MASK) && other->quote_name_id == name_id.value) {
+                    if (gender == (other->unit_flags & NAME_GENDER_MASK)
+                        && other->quote_name_id.value == name_id.value) {
                         name_available = 0;
                         break;
                     }
                 }
             } while (name_available == 0);
-            unit->quote_name_id = name_id.value;
+            unit->quote_name_id.value = name_id.value;
         }
         name_index = name_id.fields.index;
         text_id += name_index;

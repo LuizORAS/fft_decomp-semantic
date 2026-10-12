@@ -112,8 +112,8 @@ void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
         name_id.value = 1;
     } else {
-        party->name_id.index = 0xff;
-        party->name_id.name_class = name_base.fields.name_class;
+        party->name_id.fields.index = 0xff;
+        party->name_id.fields.name_class = name_base.fields.name_class;
         do {
             found = 1;
             name_id.value = name_base.value + (rand() * 255) / 0x8000;
@@ -121,8 +121,8 @@ void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_
                 other = &g_main_party_data[i];
                 if (other->party_id != PARTY_ID_NONE && (other->sprite_set & -(other->sprite_set >> 7)) == generic_id) {
                     existing_name.value = 0;
-                    existing_name.fields.name_class = other->name_id.name_class;
-                    existing_name.fields.index = other->name_id.index;
+                    existing_name.fields.name_class = other->name_id.fields.name_class;
+                    existing_name.fields.index = other->name_id.fields.index;
                     if (existing_name.value == name_id.value) {
                         found = 0;
                         break;
@@ -131,8 +131,8 @@ void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_
             }
         } while (found == 0);
     }
-    party->name_id.index = name_id.fields.index;
-    party->name_id.name_class = name_id.fields.name_class;
+    party->name_id.fields.index = name_id.fields.index;
+    party->name_id.fields.name_class = name_id.fields.name_class;
     name_flags += name_id.fields.index;
     main_util_copy_bytes(world_text_find_entry(name_flags), party->name, sizeof(party->name));
     party->proposition_status = 0;

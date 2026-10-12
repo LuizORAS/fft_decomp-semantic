@@ -136,6 +136,6 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
         value = (UNIT_LEVEL_UP_EXPERIENCE * rand()) / 0x8000;
     }
     unit->experience = value;
-    unit->quote_name_id = entd->name_id;
+    unit->quote_name_id.value = entd->name_id;
     return 0;
 }
