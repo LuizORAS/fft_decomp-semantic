@@ -442,6 +442,7 @@ void battle_move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit);
 s32 battle_move_update_candidate(s32 extra_span);
 void battle_move_update_knockback_after_animation(battle_unit_misc_data_t* unit);
 void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
+s32 battle_move_calculate_water_lift(battle_unit_misc_data_t* unit, map_tile_t* tile);
 u8 battle_move_get_water_depth(battle_unit_misc_data_t* unit);
 void battle_move_apply_knockback(void);
 s32 battle_move_calculate_teleport_chances(void);

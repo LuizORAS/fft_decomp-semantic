@@ -515,11 +515,6 @@ written that way.
   `world_script_filter_unit_id_by_mode` read `in_id` as a 16-bit value; most
   callers pass the address of an `int` loop counter (BATTLE through a
   `(u16*)` cast), so the id is that counter's low half.
-- `battle_script_process_pending_requests` assigns the results of
-  `battle_map_command_get_3d_object_state` and
-  `battle_map_command_get_texture_animation_active`, which are defined `void`
-  and have no prototype in `battle.h`; the value is the `$v0` that
-  `battle_map_dispatch_map_data_command` left.
 - `battle_move_calculate_walkto_pathing` has no return statement; its caller
   uses the path block pointer `battle_move_calculate_pathing` left in `$v0`.
 - `battle_map_load_gns_and_move_find_items` falls off its end for a map with no

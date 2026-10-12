@@ -1089,7 +1089,9 @@ void battle_map_queue_textured_triangles(u32* otag, POLY_GT3* prims, s32 yaw, s3
 void battle_map_queue_untextured_quads(u32* otag, POLY_F4* prims, s32 yaw, s32* unused_count);
 void battle_map_queue_untextured_triangles(u32* otag, POLY_F3* prims, s32 yaw, s32* unused_count);
 s32 battle_map_refresh_deep_dungeon(void);
+s32 battle_map_command_get_3d_object_state(s32 value);
 s32 battle_map_command_set_3d_object_state(s32 value_a, s32 value_b);
+s32 battle_map_command_get_texture_animation_active(s32 value);
 s32 battle_map_command_start_texture_animation(s32 value_a, s32 value_b);
 void battle_map_set_light_matrices(MATRIX* first, MATRIX* second);
 void battle_map_run_weather_command(s32 command);
@@ -1101,8 +1103,10 @@ void battle_map_update_palette_from_other(
 
 void battle_map_update_texture_animations(void);
 void battle_map_init_mesh_render_records(const battle_map_mesh_geometry_t* geometry_data);
+void battle_weather_randomize_from_calendar(void);
 void battle_map_init_weather_particles(s32 command);
 gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id);
+s32 battle_map_configure_effect_data_state(s32 command);
 void battle_map_reset_mesh_render_state(void);
 
 void battle_map_reset_script_light_transform(void);

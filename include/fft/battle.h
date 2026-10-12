@@ -248,6 +248,8 @@ extern s32 g_battle_frame_counter;
 extern s32 g_battle_frame_pacing;
 extern s32 g_battle_frame_pacing_suppressed;
 extern s32 g_battle_frame_pacing_timer;
+void battle_state_clear_frame_pacing(void);
+void battle_state_reset_frame_pacing_timer(void);
 s32 battle_state_try_enter_scenario_event(battle_unit_misc_data_t* unit);
 void battle_state_enter_action_cast(void);
 void battle_state_enter_commence_attack_phase(void);
@@ -450,6 +452,7 @@ extern s16 g_battle_music_unload_slot_request; /* 0x80165fca */
 /* 0x80165fc0: -1 absent; volume = low 16 bits,
  * duration = (packed >> 14) & 0x3ffc. Not a linear duration field. */
 extern s32 g_battle_music_volume_transition_request;
+void battle_sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit);
 void battle_sound_play_movement_sfx(battle_unit_misc_data_t* unit, s32 sound_id);
 void battle_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
 void battle_sound_select_weapon_hit(battle_unit_misc_data_t* unit, s32 hit);
