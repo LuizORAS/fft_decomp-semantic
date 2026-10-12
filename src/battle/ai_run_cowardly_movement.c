@@ -9,7 +9,7 @@ s32 ai_run_cowardly_movement(void) {
 
     if (g_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
-        state = g_ai_cowardly_movement_step;
+        state = g_ai_cowardly_movement_stage;
         if (state == AI_COWARDLY_MOVEMENT_SCORE_TILES) {
             goto score_tiles;
         }
@@ -20,12 +20,12 @@ s32 ai_run_cowardly_movement(void) {
     g_ai_data_base.movement_scenario = 0;
 score_tiles:
     if (ai_score_reachable_tiles() == -1) {
-        g_ai_cowardly_movement_step = AI_COWARDLY_MOVEMENT_SCORE_TILES;
+        g_ai_cowardly_movement_stage = AI_COWARDLY_MOVEMENT_SCORE_TILES;
         return -1;
     }
 fill_target_distance:
     if (ai_fill_target_distance_grid(&ai->acting_unit_decision->target) == -1) {
-        g_ai_cowardly_movement_step = AI_COWARDLY_MOVEMENT_TARGET_DISTANCE;
+        g_ai_cowardly_movement_stage = AI_COWARDLY_MOVEMENT_TARGET_DISTANCE;
         return -1;
     }
     ai_select_destination(0xff, AI_DESTINATION_PRIORITY_FIRST);

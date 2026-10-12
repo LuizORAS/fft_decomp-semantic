@@ -18,7 +18,7 @@ s32 ai_evaluate_self_target_origins(void) {
     }
     g_ai_data_base.targetability.live.target_setting_flags &= ~AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS;
     g_ai_data_base.current_action.coords = ai->candidate_coords[g_ai_data_base.movement_scenario];
-    ai_check_unit_for_crystal_or_treasure_status();
+    ai_update_tile_pickup();
     if ((g_ai_data_base.considered_ability.ai_flags.word & AI_ABILITY_FOLLOW_TARGET)
         && !(g_main_ability_range_data[g_ai_data_base.considered_ability.ability_id].flags_1
             & ABILITY_SECONDARY_FLAG_1_CANNOT_TARGET_SELF)) {
@@ -26,7 +26,7 @@ s32 ai_evaluate_self_target_origins(void) {
         g_ai_data_base.current_action.command.targeting_type = BATTLE_TARGETING_TYPE_UNIT;
         g_ai_data_base.current_action.command.target_id = g_ai_data_base.acting_unit_id;
     evaluate_map:
-        if (ai_check_map_allows_use_and_find_highest_target() == -1) {
+        if (ai_evaluate_cast_origins() == -1) {
             g_ai_self_target_origin_stage = 0;
             return -1;
         }
@@ -43,7 +43,7 @@ prepare_origin:
         mode = AI_TILE_MASK_EXPLICIT;
     ai_build_targetable_tile_mask(mode, 0);
     ai_transfer_halfword_values(ai->attack_origin_tiles, ai->targetable_tiles, sizeof(ai->attack_origin_tiles));
-    if (ai_check_ability_use_at_coords(&ai->acting_unit_coords)) {
+    if (ai_is_ability_origin_allowed(&ai->acting_unit_coords)) {
     evaluate_targets:
         if (ai_evaluate_target_tiles() == -1) {
             /* A first-origin suspension skips the moved-origin pass on resume. */

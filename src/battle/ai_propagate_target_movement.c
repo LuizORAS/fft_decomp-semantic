@@ -61,7 +61,7 @@ s32 ai_propagate_target_movement(
             fill_panels[pass].remaining_range = remaining_range;
     } else {
         for (pass = g_ai_propagation_resume_pass; pass < config->move; pass++) {
-            if (check_budget && ai_is_vsync_hblank_past_threshold() && completed_pass) {
+            if (check_budget && ai_is_pathfinding_budget_exhausted() && completed_pass) {
                 g_ai_propagation_resume_pass = pass;
                 *suspended = 1;
                 main_util_copy_byte_data(getScratchAddr(0), g_ai_unit_snapshot_storage, PSX_SCRATCHPAD_BYTE_COUNT);

@@ -1532,8 +1532,8 @@ functions:
   - {addr: 0x8018e1b0, size: 152, name: status_remove_control, hash: 0fa45d3d5c21d978}
   - {addr: 0x8018e248, size: 200, name: status_set_inflicted_ct_and_transfer_last_used_ct, hash: a5d7d939d7c7bf82}
   - {addr: 0x8018e310, size: 724, name: status_store_for_current_attack, hash: 7bf5667111fecdad}
-  - {addr: 0x8018e5e4, size: 68, name: ai_store_considered_action_data, hash: fe5832bd488feff2}
-  - {addr: 0x8018e628, size: 56, name: ai_restore_considered_action_data, hash: e8fd203a8ad070a3}
+  - {addr: 0x8018e5e4, size: 68, name: ai_begin_action_simulation, hash: fe5832bd488feff2}
+  - {addr: 0x8018e628, size: 56, name: ai_end_action_simulation, hash: e8fd203a8ad070a3}
   - {addr: 0x8018e660, size: 88, name: map_get_effective_weather, hash: 83cb512131bff44c}
   - {addr: 0x8018e6b8, size: 500, name: battle_ability_find_learn_on_hit_unit, hash: 78408e9469d00e1a}
   - {addr: 0x8018e8ac, size: 272, name: battle_unit_learn_used_ability, hash: 98bc0928423ea1a9}
@@ -1559,15 +1559,15 @@ functions:
   - {addr: 0x80194314, size: 604, name: ai_refresh_unit_decision_flags, hash: ec5da9cdeda6771d}
   - {addr: 0x80194570, size: 428, name: ai_update_team_targeting_flags, hash: 3fa4c2f3e4d313ae}
   - {addr: 0x8019471c, size: 496, name: ai_init_target_consideration, hash: 42a6f4a87d51533d}
-  - {addr: 0x8019490c, size: 56, name: ai_store_main_target_id_and_focus_on_target_flag, hash: 8933f237e942035c}
+  - {addr: 0x8019490c, size: 56, name: ai_focus_on_target, hash: 8933f237e942035c}
   - {addr: 0x80194944, size: 1300, name: ai_set_movement_panel_data, hash: 87b37e2a68f06c65}
   - {addr: 0x80194e58, size: 2408, name: ai_set_ability_considerations, hash: f98e0d388c80ac00}
   - {addr: 0x801957c0, size: 184, name: ai_disable_ability_if_only_inflicts_status, hash: 73d947bc66e8cd42}
   - {addr: 0x80195878, size: 1308, name: ai_load_ability_entry, hash: 3d235e2da278332b, rodata: [{addr: 0x80193d48, size: 40, hash: 008e79808dddd18e}]}
-  - {addr: 0x80195d94, size: 472, name: ai_select_initial_action, hash: 368891fb63e3f348}
+  - {addr: 0x80195d94, size: 472, name: ai_select_action_initial, hash: 368891fb63e3f348}
   - {addr: 0x80195f6c, size: 32, name: ai_reset_action_ranking_fields, hash: 074e296c669c045a}
   - {addr: 0x80195f8c, size: 528, name: ai_evaluate_charging_movement, hash: 3191770bb63ed22f}
-  - {addr: 0x8019619c, size: 260, name: ai_run_non_specific_autobattle, hash: 6310e1c24c1e8dbf}
+  - {addr: 0x8019619c, size: 260, name: ai_select_action_general, hash: 6310e1c24c1e8dbf}
   - {addr: 0x801962a0, size: 108, name: ai_get_movement_range, hash: 88654b0b36d4bdd5}
   - {addr: 0x8019630c, size: 128, name: ai_invert_target_priority, hash: 6f379ad4de1281a5}
   - {addr: 0x8019638c, size: 1296, name: ai_build_movement_scenarios, hash: aeef3869e98e84ad}
@@ -1579,31 +1579,31 @@ functions:
   - {addr: 0x80196ce8, size: 200, name: ai_is_unit_untargetable, hash: cf7b80ddaa6588a6}
   - {addr: 0x80196db0, size: 112, name: ai_compare_target_priority_and_hit_rate, hash: b4962e4eb03b44e5}
   - {addr: 0x80196e20, size: 212, name: ai_is_action_higher_ranked, hash: 7769374ed90ef8cb}
-  - {addr: 0x80196ef4, size: 208, name: ai_check_map_allows_use_and_find_highest_target, hash: dbadc6cf82598b56}
+  - {addr: 0x80196ef4, size: 208, name: ai_evaluate_cast_origins, hash: dbadc6cf82598b56}
   - {addr: 0x80196fc4, size: 248, name: ai_insert_ranked_action, hash: 4149504c7e477619}
-  - {addr: 0x801970bc, size: 252, name: ai_select_ranked_action, hash: fc6a741315f98565}
-  - {addr: 0x801971b8, size: 896, name: ai_choose_status_action, hash: fe0ea62d7cc53ffe}
-  - {addr: 0x80197538, size: 940, name: ai_choose_random_action, hash: 421c3aff50b3460a}
+  - {addr: 0x801970bc, size: 252, name: ai_select_action_ranked, hash: fc6a741315f98565}
+  - {addr: 0x801971b8, size: 896, name: ai_select_action_status, hash: fe0ea62d7cc53ffe}
+  - {addr: 0x80197538, size: 940, name: ai_select_action_random, hash: 421c3aff50b3460a}
   - {addr: 0x801978e4, size: 120, name: ai_find_direction_of_target, hash: 43fe7efa46caa0a3}
   - {addr: 0x8019795c, size: 464, name: ai_calculate_ability_range, hash: 20b0383d19442bf0}
   - {addr: 0x80197b2c, size: 316, name: ai_take_random_tile, hash: a6ce03e6c6dd9fe4}
   - {addr: 0x80197c68, size: 164, name: ai_count_flagged_tiles_within_map_bounds, hash: eac777c7a9d30596}
   - {addr: 0x80197d0c, size: 340, name: ai_select_active_units, hash: 8206f4a867d328a7}
-  - {addr: 0x80197e60, size: 180, name: ai_choose_move_from_move_list, hash: 2c3dbe0ffd32ff61}
-  - {addr: 0x80197f14, size: 224, name: ai_handle_autobattle, hash: 1b787e2aabf6f112}
-  - {addr: 0x80197ff4, size: 740, name: ai_select_targeted_action, hash: 5efd952843a1ed9d}
+  - {addr: 0x80197e60, size: 180, name: ai_evaluate_ability_list, hash: 2c3dbe0ffd32ff61}
+  - {addr: 0x80197f14, size: 224, name: ai_select_action_autobattle, hash: 1b787e2aabf6f112}
+  - {addr: 0x80197ff4, size: 740, name: ai_select_action_targeted, hash: 5efd952843a1ed9d}
   - {addr: 0x801982d8, size: 532, name: ai_build_targeted_movement, hash: 11514b19ca676f6f}
-  - {addr: 0x801984ec, size: 816, name: ai_select_recovery_action, hash: 3abfe68bf5f52864, rodata: [{addr: 0x80193d78, size: 32, hash: f02144ac62822b6a}]}
+  - {addr: 0x801984ec, size: 816, name: ai_select_action_recovery, hash: 3abfe68bf5f52864, rodata: [{addr: 0x80193d78, size: 32, hash: f02144ac62822b6a}]}
   - {addr: 0x8019881c, size: 744, name: ai_evaluate_status_cancellation, hash: e61912ee894643b8}
   - {addr: 0x80198b04, size: 636, name: ai_select_peril_target, hash: 7557cdfd5f6cd148}
   - {addr: 0x80198d80, size: 112, name: ai_can_cancel_current_status, hash: 3867525bcba2fffb}
-  - {addr: 0x80198df0, size: 112, name: ai_select_fading_life_action, hash: 27f2fb2db0079485}
-  - {addr: 0x80198e60, size: 508, name: ai_select_retreat_action, hash: 69b65fa7889f45dc}
+  - {addr: 0x80198df0, size: 112, name: ai_select_action_fading_life, hash: 27f2fb2db0079485}
+  - {addr: 0x80198e60, size: 508, name: ai_select_action_retreat, hash: 69b65fa7889f45dc}
   - {addr: 0x8019905c, size: 200, name: ai_run_cowardly_movement, hash: 2d3fe7bb22b96467}
   - {addr: 0x80199124, size: 584, name: ai_find_nearest_target, hash: d1fc872e8f1d7107, rodata: [{addr: 0x80193d98, size: 24, hash: d26b1c420394b11c}]}
   - {addr: 0x8019936c, size: 52, name: ai_calculate_distance_between_units, hash: 15d12653fb7a73f6}
   - {addr: 0x801993a0, size: 248, name: ai_set_candidate_and_actor_reachable_tiles, hash: 1837b2d858fdf9b1}
-  - {addr: 0x80199498, size: 96, name: ai_transfer_ability_data_and_set_defend_flag, hash: 357b0d8f0dc8afd6}
+  - {addr: 0x80199498, size: 96, name: ai_select_action_fallback, hash: 357b0d8f0dc8afd6}
   - {addr: 0x801994f8, size: 548, name: ai_fill_target_distance_grid, hash: 92c9831e17b639be}
   - {addr: 0x8019971c, size: 428, name: ai_fill_foe_proximity_grid, hash: e41e2b172bd75a1e}
   - {addr: 0x801998c8, size: 256, name: ai_should_exclude_from_imminent_enemies, hash: 76723c868c20a307}
@@ -1616,47 +1616,47 @@ functions:
   - {addr: 0x8019a2f0, size: 572, name: ai_build_unit_ability_list, hash: 54941fd300d2db4f}
   - {addr: 0x8019a52c, size: 204, name: ai_store_weapon_attack_data, hash: 58abc0faa62c947c}
   - {addr: 0x8019a5f8, size: 1112, name: ai_add_usable_skillset_abilities, hash: 5c08b128fe604338}
-  - {addr: 0x8019aa50, size: 184, name: ai_load_known_ability_flag, hash: 8145ae7b7ce5bc94}
+  - {addr: 0x8019aa50, size: 184, name: ai_is_ability_known, hash: 8145ae7b7ce5bc94}
   - {addr: 0x8019ab08, size: 64, name: ai_transfer_halfword_values, hash: da28d65667a643ff}
   - {addr: 0x8019ab48, size: 48, name: ai_transfer_byte_values, hash: dd334a2332330457}
   - {addr: 0x8019ab78, size: 60, name: ai_clear_words, hash: 26700038eda56a40}
   - {addr: 0x8019abb4, size: 448, name: ai_choose_wait_facing, hash: 973e56c289cb4289}
-  - {addr: 0x8019ad74, size: 188, name: ai_check_facing_tile, hash: 135a5e2ce5e9febf}
+  - {addr: 0x8019ad74, size: 188, name: ai_is_facing_tile_blocked, hash: 135a5e2ce5e9febf}
   - {addr: 0x8019ae30, size: 40, name: ai_init_selected_action, hash: 9545f9d85017e9ff}
   - {addr: 0x8019ae58, size: 152, name: ai_record_triggered_trap_coords, hash: e691b9d21adf6ad3}
-  - {addr: 0x8019aef0, size: 40, name: ai_is_vsync_hblank_past_threshold, hash: aff84ed05931c150}
+  - {addr: 0x8019aef0, size: 40, name: ai_is_pathfinding_budget_exhausted, hash: aff84ed05931c150}
   - {addr: 0x8019af18, size: 1012, name: ai_evaluate_ability_outcome, hash: 963caa337e1e1c7a, rodata: [{addr: 0x80193db0, size: 36, hash: 8a91fa7090317da7}]}
   - {addr: 0x8019b30c, size: 488, name: ai_evaluate_self_target_origins, hash: 98555857b62c3032}
-  - {addr: 0x8019b4f4, size: 444, name: ai_check_ability_use_at_coords, hash: 81477fd3bef0c505}
+  - {addr: 0x8019b4f4, size: 444, name: ai_is_ability_origin_allowed, hash: 81477fd3bef0c505}
   - {addr: 0x8019b6b0, size: 164, name: ai_calculate_height_difference_between_units, hash: 9bcad0cdcecc5aed}
-  - {addr: 0x8019b754, size: 100, name: ai_can_elemental_ability_be_used, hash: e60c20b40acae19a}
+  - {addr: 0x8019b754, size: 100, name: ai_can_use_geomancy, hash: e60c20b40acae19a}
   - {addr: 0x8019b7b8, size: 872, name: ai_evaluate_reflected_target_origins, hash: fdc930fa98af6e86}
-  - {addr: 0x8019bb20, size: 156, name: ai_check_unit_for_crystal_or_treasure_status, hash: 50d76cc59e51cd64}
+  - {addr: 0x8019bb20, size: 156, name: ai_update_tile_pickup, hash: 50d76cc59e51cd64}
   - {addr: 0x8019bbbc, size: 880, name: ai_evaluate_math_targets, hash: 8689a189a4a77c50}
   - {addr: 0x8019bf2c, size: 736, name: ai_evaluate_movement_origins, hash: bcbfefa0160f251c}
-  - {addr: 0x8019c20c, size: 116, name: ai_select_candidate_coords_and_check_crystal, hash: 6e3db359eeeddbd7}
+  - {addr: 0x8019c20c, size: 116, name: ai_finalize_action_destination, hash: 6e3db359eeeddbd7}
   - {addr: 0x8019c280, size: 340, name: ai_take_next_movement_origin, hash: 73020a4fc24dfbde}
-  - {addr: 0x8019c3d4, size: 1304, name: ai_evaluate_linear_ability_behaviors, hash: fc6ef51e7636d2e8}
+  - {addr: 0x8019c3d4, size: 1304, name: ai_build_attack_origin_masks, hash: fc6ef51e7636d2e8}
   - {addr: 0x8019c8ec, size: 680, name: ai_build_targetable_tile_mask, hash: 4e2a9dc6a6cee172}
   - {addr: 0x8019cb94, size: 520, name: ai_build_monster_skill_tile_mask, hash: 3c2dbeca3eb019d1}
   - {addr: 0x8019cd9c, size: 1148, name: ai_evaluate_target_tiles, hash: 48dc3babee0d6a0e}
-  - {addr: 0x8019d218, size: 124, name: ai_has_any_unit_on_target_panel, hash: 94c60f8e4da13419}
+  - {addr: 0x8019d218, size: 124, name: ai_find_unit_on_target_panel, hash: 94c60f8e4da13419}
   - {addr: 0x8019d294, size: 116, name: ai_find_unit_at_coordinates, hash: d857ff9b76d7522e}
-  - {addr: 0x8019d308, size: 116, name: ai_check_set_highest_unit_priority, hash: 8dfb057830540343}
+  - {addr: 0x8019d308, size: 116, name: ai_evaluate_current_action, hash: 8dfb057830540343}
   - {addr: 0x8019d37c, size: 2052, name: ai_simulate_action_and_score, hash: 122e4a684a8c8f25, rodata: [{addr: 0x80193de0, size: 112, hash: cf8dc01c4e3c88bd}]}
   - {addr: 0x8019db80, size: 300, name: ai_simulate_movement_and_pickup, hash: 3d411335fa859d1f}
-  - {addr: 0x8019dcac, size: 16, name: ai_clear_current_action_rank_byte, hash: f3064a018b6e1d42}
-  - {addr: 0x8019dcbc, size: 208, name: ai_call_ability_processing, hash: 6cd2de42d35d66e8}
+  - {addr: 0x8019dcac, size: 16, name: ai_clear_current_action_decision, hash: f3064a018b6e1d42}
+  - {addr: 0x8019dcbc, size: 208, name: ai_simulate_action_hits, hash: 6cd2de42d35d66e8}
   - {addr: 0x8019dd8c, size: 980, name: ai_simulate_strikes, hash: 4844377ab38c8e34}
   - {addr: 0x8019e160, size: 536, name: ai_save_unit_state, hash: d32cb7e160a5153d}
   - {addr: 0x8019e378, size: 456, name: ai_restore_unit_state, hash: 4c57b8f4cc9e051f}
-  - {addr: 0x8019e540, size: 152, name: ai_has_any_unit_decided_to_use_ability, hash: 3b82f430a129280a}
+  - {addr: 0x8019e540, size: 152, name: ai_filter_useful_targets, hash: 3b82f430a129280a}
   - {addr: 0x8019e5d8, size: 2380, name: ai_classify_ability_effect, hash: bcdb66049ff2879f}
   - {addr: 0x8019ef24, size: 140, name: ai_is_status_active_through_delay, hash: b6c0bdf7fe1a1a7e}
-  - {addr: 0x8019efb0, size: 108, name: ai_check_unit_gets_turn_without_status, hash: 6d560ffe007f530c}
+  - {addr: 0x8019efb0, size: 108, name: ai_can_status_cancellation_affect_turn, hash: 6d560ffe007f530c}
   - {addr: 0x8019f01c, size: 188, name: ai_exclude_enemies_acting_before_ct, hash: 48b9e3dd9b0042a2}
-  - {addr: 0x8019f0d8, size: 132, name: ai_check_ability_use_based_on_ct, hash: 312c4493226e8a1c}
-  - {addr: 0x8019f15c, size: 252, name: ai_decide_status_ct_based, hash: 29a269f2d8d039d9}
+  - {addr: 0x8019f0d8, size: 132, name: ai_can_unit_act_within_charge_time, hash: 312c4493226e8a1c}
+  - {addr: 0x8019f15c, size: 252, name: ai_is_unit_active_after_delay, hash: 29a269f2d8d039d9}
   - {addr: 0x8019f258, size: 76, name: ai_move_temp_unit_to_coords, hash: fdfc6e3602be5eaa}
   - {addr: 0x8019f2a4, size: 80, name: ai_transfer_unit_coordinates, hash: d3bcb934c81bc288}
   - {addr: 0x801a0e80, size: 240, name: effect_init_palette, hash: 1d6f93304257f025}
@@ -2723,12 +2723,12 @@ data:
   - {addr: 0x8019f384, name: g_ai_status_candidate_count}
   - {addr: 0x8019f388, name: g_ai_status_insufficient_mp}
   - {addr: 0x8019f38c, name: g_ai_status_sufficient_mp}
-  - {addr: 0x8019f390, name: g_ai_retreat_phase}
-  - {addr: 0x8019f394, name: g_ai_cowardly_movement_step}
+  - {addr: 0x8019f390, name: g_ai_retreat_stage}
+  - {addr: 0x8019f394, name: g_ai_cowardly_movement_stage}
   - {addr: 0x8019f398, name: g_ai_self_target_origin_stage}
   - {addr: 0x8019f39c, name: g_ai_math_skillset_index}
   - {addr: 0x8019f3a0, name: g_ai_math_ability_index}
-  - {addr: 0x8019f3a4, name: g_ai_math_skillset}
+  - {addr: 0x8019f3a4, name: g_ai_math_skillset_id}
   - {addr: 0x8019f3a8, name: g_ai_math_ability_list}
   - {addr: 0x8019f3ac, name: g_ai_workspace}
   - {addr: 0x8019f3c0, name: g_ai_unit_snapshots}

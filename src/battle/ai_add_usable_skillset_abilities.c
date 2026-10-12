@@ -44,7 +44,7 @@ s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count) {
     menu = g_main_action_menu_types_by_skillset[skillset];
     list_id = ai->unit_compact_indices[unit_id];
     if (menu == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
-        if (ai_load_known_ability_flag(unit_id, skillset, 0)) {
+        if (ai_is_ability_known(unit_id, skillset, 0)) {
             unit_bits = unit_id << AI_ABILITY_ENTRY_UNIT_SHIFT;
             for (i = 0, slot = ai->ability_lists[list_id]; i < 3; i++) {
                 slot[count].skillset = skillset;
@@ -52,7 +52,7 @@ s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count) {
                 count++;
             }
         }
-        if (ai_load_known_ability_flag(unit_id, skillset, 1)) {
+        if (ai_is_ability_known(unit_id, skillset, 1)) {
             i = 0;
             unit_bits = unit_id << AI_ABILITY_ENTRY_UNIT_SHIFT;
             for (row = ai->ability_lists[list_id]; i < 3; i++) {
@@ -62,7 +62,7 @@ s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count) {
             }
         }
         for (i = 2; i < 12; i++) {
-            if (ai_load_known_ability_flag(unit_id, skillset, i)) {
+            if (ai_is_ability_known(unit_id, skillset, i)) {
                 entry = &ai->ability_lists[list_id][count];
                 count++;
                 entry->skillset = skillset;
@@ -119,7 +119,7 @@ s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count) {
                 }
             }
         }
-        if (!ai_load_known_ability_flag(unit_id, skillset, i)) {
+        if (!ai_is_ability_known(unit_id, skillset, i)) {
             continue;
         }
         if (skillset >= SKILLSET_ID_MONSTER_FIRST) {

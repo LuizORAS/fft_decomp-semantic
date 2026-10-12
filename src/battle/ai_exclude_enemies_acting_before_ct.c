@@ -19,7 +19,7 @@ s32 ai_exclude_enemies_acting_before_ct(void) {
     do {
         if (ai->targetability.live.unit_targetable[i] != 0) {
             if ((ai->considered_ability.ai_flags.word & AI_ABILITY_FLAG_1_TARGET_ENEMIES)
-                && (walk->unit_decisions[0].enemy_flag != 0) && (ai_check_ability_use_based_on_ct(i) != 0)) {
+                && (walk->unit_decisions[0].enemy_flag != 0) && (ai_can_unit_act_within_charge_time(i) != 0)) {
                 ai->targetability.live.unit_targetable[i] = 0;
             } else {
                 result = 1;

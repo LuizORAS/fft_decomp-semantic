@@ -57,7 +57,7 @@ void ai_init_target_consideration(void) {
             mode = AI_NEAREST_ELIGIBLE_ENEMY;
         }
         target = ai_find_nearest_target(mode);
-        ai_store_main_target_id_and_focus_on_target_flag(target);
+        ai_focus_on_target(target);
     } else {
         targeting_flags = decision->targeting_flags_1;
         if (!(targeting_flags & AI_TARGETING_FLAG_1_MOSTLY_SUPPORT)
@@ -67,7 +67,7 @@ void ai_init_target_consideration(void) {
                 ai->targetability.live.unit_targetable[target] = 1;
             mode = AI_NEAREST_ELIGIBLE_ENEMY;
             target = ai_find_nearest_target(mode);
-            ai_store_main_target_id_and_focus_on_target_flag(target);
+            ai_focus_on_target(target);
         } else {
             ai->autobattle_setting = AI_AUTOBATTLE_FADING_LIFE;
         }

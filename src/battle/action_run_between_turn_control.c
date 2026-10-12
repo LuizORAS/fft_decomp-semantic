@@ -41,7 +41,7 @@ s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
             unit->ability_outcome = 0;
             unit->charged_ability_ct = 0xff;
         }
-        ai_restore_considered_action_data();
+        ai_end_action_simulation();
         return 0xe000;
     }
     if (mode == BATTLE_BETWEEN_TURN_MODE_FIND_ACTIVE_UNIT) {

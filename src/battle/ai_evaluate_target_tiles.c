@@ -89,7 +89,7 @@ s32 ai_evaluate_target_tiles(void) {
                         if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT
                             || (ai->considered_ability.ai_flags.word
                                 & (AI_ABILITY_DIRECT_TRAJECTORY | AI_ABILITY_ARC_TRAJECTORY))) {
-                            target_id = ai_has_any_unit_on_target_panel();
+                            target_id = ai_find_unit_on_target_panel();
                             ai->current_action.command.target_id = target_id;
                             if (target_id == BATTLE_UNIT_ID_NONE)
                                 goto remove_useful_origin;
@@ -115,7 +115,7 @@ s32 ai_evaluate_target_tiles(void) {
                         else
                             ai->useful_on_caster_flag = 0;
                     evaluate_priority:
-                        if (ai_check_set_highest_unit_priority() == -1) {
+                        if (ai_evaluate_current_action() == -1) {
                             ai->search_resume_flag = 1;
                             return -1;
                         }

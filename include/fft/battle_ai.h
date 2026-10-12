@@ -753,7 +753,7 @@ extern s32 g_ai_propagation_resume_pass;
 extern u16 g_ai_range_row_masks[];
 extern s32 g_ai_self_target_origin_stage;
 extern ai_command_t g_ai_command_history[2]; /* 0x801a0d94, 0x801a0dac */
-extern ai_cowardly_movement_stage_e g_ai_cowardly_movement_step;
+extern ai_cowardly_movement_stage_e g_ai_cowardly_movement_stage;
 
 /* One shared AI workspace at 0x8019f3c4, not a separate record per candidate.
  * Preserve resume-state writes before returning -1. */
@@ -763,12 +763,12 @@ extern s32 g_ai_math_ability_index;
 extern u8 g_ai_math_source_skillsets[AI_MATH_SOURCE_SKILLSET_COUNT];
 extern u8 g_ai_math_extra_known_ability_ids[AI_MATH_EXTRA_KNOWN_ABILITY_COUNT];
 extern u16* g_ai_math_ability_list; /* borrowed from main's temporary skillset list */
-extern s32 g_ai_math_skillset;
+extern s32 g_ai_math_skillset_id;
 extern s32 g_ai_math_skillset_index;
 extern u8 g_ai_recovery_status_ids[AI_RECOVERY_STATUS_COUNT];
 extern s32 g_ai_recovery_status_index; /* 0x8019f380; status-list cursor preserved for resume */
 extern s32 g_ai_recovery_status_retry; /* 0x8019f37c; skip status pass after one failed attempt */
-extern s32 g_ai_retreat_phase;         /* 0x8019f390; ai_retreat_stage_e */
+extern s32 g_ai_retreat_stage;         /* 0x8019f390; ai_retreat_stage_e */
 
 /* 0x8019f384–0x8019f38c; cancellation-search accounting survives suspension. */
 extern s32 g_ai_status_candidate_count;
@@ -785,10 +785,10 @@ extern ai_data_t* g_ai_workspace;                   /* 0x8019f3ac */
 
 /* BATTLE-resident state that the EVENT, EFFECT and WORLD overlays also read. */
 extern event_work_t* g_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
-s32 ai_decide_status_ct_based(s32 limit, s32 unit_id);
+s32 ai_is_unit_active_after_delay(s32 limit, s32 unit_id);
 s32 ai_set_movement_panel_data(s32 movement_taken);
 void ai_set_ability_considerations(s32 action_taken);
-void ai_evaluate_linear_ability_behaviors(void);
+void ai_build_attack_origin_masks(void);
 s32 ai_build_command(s32 unit_id, ai_command_t* command);
 void ai_build_monster_skill_tile_mask(void);
 s32 ai_build_movement_scenarios(void);
@@ -801,26 +801,26 @@ s32 ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit);
 s32 ai_calculate_distance_between_units(battle_stats_t* a, battle_stats_t* b);
 s32 ai_calculate_ratio_times_4(s32 divisor, s32 dividend);
 s32 ai_calculate_height_difference_between_units(ai_coords_t* coords, battle_stats_t* unit);
-s32 ai_call_ability_processing(action_command_t* action);
-s32 ai_can_elemental_ability_be_used(ai_coords_t* coords);
+s32 ai_simulate_action_hits(action_command_t* action);
+s32 ai_can_use_geomancy(ai_coords_t* coords);
 s32 ai_should_exclude_from_imminent_enemies(s32 unit_id);
 s32 ai_is_unit_untargetable(s32 unit_id);
-s32 ai_check_ability_use_at_coords(ai_coords_t* coordinates);
-s32 ai_check_ability_use_based_on_ct(s32 unit_index);
-s32 ai_check_facing_tile(ai_coords_t* source, ai_coords_t* target);
+s32 ai_is_ability_origin_allowed(ai_coords_t* coordinates);
+s32 ai_can_unit_act_within_charge_time(s32 unit_index);
+s32 ai_is_facing_tile_blocked(ai_coords_t* source, ai_coords_t* target);
 s32 ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit);
 s32 ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
-s32 ai_check_map_allows_use_and_find_highest_target(void);
-s32 ai_check_set_highest_unit_priority(void);
+s32 ai_evaluate_cast_origins(void);
+s32 ai_evaluate_current_action(void);
 s32 ai_check_target_type(s32 unit_id);
-void ai_check_unit_for_crystal_or_treasure_status(void);
-s32 ai_check_unit_gets_turn_without_status(battle_stats_t* unit, s32 status);
-s32 ai_choose_move_from_move_list(void);
-s32 ai_choose_random_action(void);
-s32 ai_choose_status_action(void);
+void ai_update_tile_pickup(void);
+s32 ai_can_status_cancellation_affect_turn(battle_stats_t* unit, s32 status);
+s32 ai_evaluate_ability_list(void);
+s32 ai_select_action_random(void);
+s32 ai_select_action_status(void);
 s32 ai_choose_wait_facing(void);
 ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect);
-void ai_clear_current_action_rank_byte(void);
+void ai_clear_current_action_decision(void);
 
 ai_rank_order_e ai_compare_target_priority_and_hit_rate(ai_action_rank_t* a, ai_action_rank_t* b);
 
@@ -841,9 +841,9 @@ ai_direction_e ai_find_direction_of_target(const ai_coords_t* target, const ai_c
 s32 ai_find_nearest_target(ai_nearest_target_mode_e mode);
 s32 ai_find_unit_at_coordinates(ai_coords_t* coords);
 s32 ai_get_movement_range(void);
-s32 ai_handle_autobattle(void);
-s32 ai_has_any_unit_decided_to_use_ability(void);
-s32 ai_has_any_unit_on_target_panel(void);
+s32 ai_select_action_autobattle(void);
+s32 ai_filter_useful_targets(void);
+s32 ai_find_unit_on_target_panel(void);
 void ai_init_acting_unit_data(void);
 void ai_init_selected_action(void);
 void ai_init_target_consideration(void);
@@ -852,9 +852,9 @@ void ai_init_workspace(void);
 void ai_insert_ranked_action(void);
 void ai_invert_target_priority(void);
 s32 ai_is_action_higher_ranked(ai_action_data_t* a, ai_action_data_t* b);
-s32 ai_is_vsync_hblank_past_threshold(void);
+s32 ai_is_pathfinding_budget_exhausted(void);
 void ai_load_ability_entry(ai_ability_entry_t* entry);
-s32 ai_load_known_ability_flag(s32 unit_id, s32 skillset_id, s32 bit);
+s32 ai_is_ability_known(s32 unit_id, s32 skillset_id, s32 bit);
 
 s32 ai_propagate_target_movement(
     s32 unit_id, s32 target_x, s32 target_y, s32 target_elevation, s32 initialize, s32* suspended, s32 check_budget);
@@ -862,36 +862,36 @@ s32 ai_propagate_target_movement(
 void ai_record_triggered_trap_coords(s32 x, s32 y, s32 level);
 s32 ai_refresh_unit_decision_flags(void);
 void ai_reset_action_ranking_fields(ai_action_data_t* action);
-void ai_restore_considered_action_data(void);
+void ai_end_action_simulation(void);
 void ai_restore_unit_state(ai_snapshot_mode_e mode);
 s32 ai_run_cowardly_movement(void);
-s32 ai_run_non_specific_autobattle(void);
+s32 ai_select_action_general(void);
 void ai_move_temp_unit_to_coords(ai_coords_t* coordinates);
-s32 ai_select_fading_life_action(void);
+s32 ai_select_action_fading_life(void);
 void ai_save_unit_state(ai_snapshot_mode_e mode);
 s32 ai_score_reachable_tiles(void);
 s32 ai_select_active_units(ai_unit_filter_e mode, s32 target_id);
-void ai_select_candidate_coords_and_check_crystal(void);
+void ai_finalize_action_destination(void);
 s32 ai_select_destination(s32 max_distance, ai_destination_order_e order);
 void ai_select_destination_with_nearest_fallback(s32 range);
 void ai_select_destination_with_range_floor(s32 range);
-s32 ai_select_initial_action(void);
+s32 ai_select_action_initial(void);
 s32 ai_select_peril_target(void);
-s32 ai_select_ranked_action(void);
-s32 ai_select_recovery_action(void);
-s32 ai_select_retreat_action(void);
-s32 ai_select_targeted_action(void);
+s32 ai_select_action_ranked(void);
+s32 ai_select_action_recovery(void);
+s32 ai_select_action_retreat(void);
+s32 ai_select_action_targeted(void);
 s32 ai_simulate_action_and_score(void);
 void ai_set_candidate_and_actor_reachable_tiles(void);
 s32 ai_exclude_enemies_acting_before_ct(void);
 void ai_simulate_movement_and_pickup(void);
 void ai_simulate_strikes(action_command_t* action, s32 reaction_mode);
-void ai_store_considered_action_data(void);
-void ai_store_main_target_id_and_focus_on_target_flag(s32 unit_id);
+void ai_begin_action_simulation(void);
+void ai_focus_on_target(s32 unit_id);
 void ai_store_weapon_attack_data(ai_weapon_data_t* out, s32 item_id, s32* flags_out);
 void ai_take_next_movement_origin(void);
 s32 ai_take_random_tile(u16 tiles[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT], ai_coords_t* coordinates, s32 count);
-void ai_transfer_ability_data_and_set_defend_flag(void);
+void ai_select_action_fallback(void);
 void ai_transfer_byte_values(void* destination, const void* source, s32 byte_count);
 void ai_transfer_halfword_values(void* destination, const void* source, s32 byte_count);
 void ai_transfer_unit_coordinates(s32 unit_index, ai_coords_t* destination);

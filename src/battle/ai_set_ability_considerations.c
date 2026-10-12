@@ -117,8 +117,7 @@ void ai_set_ability_considerations(s32 action_taken) {
                     best_level = -1;
                     for (throw_id = ABILITY_ID_THROW_KNIFE, type_index = 1; throw_id < ABILITY_ID_THROW_BALL;
                         throw_id++, type_index++) {
-                        if (ai_load_known_ability_flag(
-                                unit_id, ability->skillset, throw_id - (ABILITY_ID_THROW_KNIFE - 2))) {
+                        if (ai_is_ability_known(unit_id, ability->skillset, throw_id - (ABILITY_ID_THROW_KNIFE - 2))) {
                             item_type = g_main_throw_ability_item_types[type_index];
                             for (item_id = 0; item_id < ITEM_ID_COUNT; item_id++) {
                                 if (g_main_item_primary_data[item_id].type == item_type) {

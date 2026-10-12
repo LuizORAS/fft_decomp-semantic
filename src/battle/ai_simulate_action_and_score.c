@@ -60,7 +60,7 @@ s32 ai_simulate_action_and_score(void) {
             && ai->current_action.command.skillset_id != SKILLSET_ID_DEFEND) {
             action = &ai->current_action.command;
             if (action_call_attack_preparation_at_preview(action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
-                && ai_call_ability_processing(action) == 0) {
+                && ai_simulate_action_hits(action) == 0) {
                 ai_restore_unit_state(AI_SNAPSHOT_BASELINE);
                 ai->resume_pending = 0;
                 return 0;
@@ -74,7 +74,7 @@ s32 ai_simulate_action_and_score(void) {
             && ai->current_action.command.skillset_id != SKILLSET_ID_DEFEND) {
             action = &ai->current_action.command;
             if (action_call_attack_preparation_at_preview(action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
-                && ai_call_ability_processing(action) == 0) {
+                && ai_simulate_action_hits(action) == 0) {
                 ai_restore_unit_state(AI_SNAPSHOT_BASELINE);
                 ai->resume_pending = 0;
                 return 0;
@@ -113,7 +113,7 @@ s32 ai_simulate_action_and_score(void) {
         if (status == BATTLE_TURN_EVENT_ACTION_RESULT) {
             action_finalize_attack_and_flag_reactions(unit_index);
         } else if (status == BATTLE_TURN_EVENT_ABILITY_READY) {
-            if (ai_call_ability_processing(&unit->action_command) == 0) {
+            if (ai_simulate_action_hits(&unit->action_command) == 0) {
                 g_battle_between_turn_state = ai->saved_between_turn_state;
                 g_battle_between_turn_resume_state = ai->saved_between_turn_resume_state;
                 g_battle_turn_unit_id = ai->saved_turn_unit_id;
@@ -126,7 +126,7 @@ s32 ai_simulate_action_and_score(void) {
             unit->inflicted_status[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)]
                 &= ~(STATUS_BYTE_MASK(STATUS_ID_CHARGING) | STATUS_BYTE_MASK(STATUS_ID_PERFORMING));
         } else if (status == BATTLE_TURN_EVENT_UNIT_READY) {
-            if (ai_decide_status_ct_based(0, unit_index))
+            if (ai_is_unit_active_after_delay(0, unit_index))
                 ai->unit_acts_before_me[unit_index] = 1;
             unit->has_turn = 0;
         }
@@ -174,7 +174,7 @@ score_state:
                 decision->flags |= AI_DECISION_CONSIDERED;
         }
     } else {
-        ai_clear_current_action_rank_byte();
+        ai_clear_current_action_decision();
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             status = ai->unit_compact_indices[unit_index];
             if (status == 0xff)

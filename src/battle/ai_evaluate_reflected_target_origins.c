@@ -31,7 +31,7 @@ s32 ai_evaluate_reflected_target_origins(void) {
             continue;
         if (!ai_is_status_active_through_delay(ai->considered_ability.ct, reflector, STATUS_ID_REFLECT))
             continue;
-        if (ai_check_ability_use_based_on_ct(ai->reflector_unit_index))
+        if (ai_can_unit_act_within_charge_time(ai->reflector_unit_index))
             continue;
         if (decision->targeting_flags_2 & AI_TARGET_DEAD_WITHOUT_RERAISE) {
             ct = ai->considered_ability.ct;
@@ -53,7 +53,7 @@ s32 ai_evaluate_reflected_target_origins(void) {
                 continue;
             if (ai->reflected_target_unit_index == ai->acting_unit_id)
                 continue;
-            if (ai_check_ability_use_based_on_ct(ai->reflected_target_unit_index))
+            if (ai_can_unit_act_within_charge_time(ai->reflected_target_unit_index))
                 continue;
             if (ai_classify_ability_effect(ai->reflected_target_unit_index, 0) != AI_ABILITY_EFFECT_USEFUL)
                 continue;
@@ -72,11 +72,11 @@ s32 ai_evaluate_reflected_target_origins(void) {
                                         [ai->current_action.coords.bytes.y]
                         << ai->current_action.coords.bytes.x)
                     & 0x8000) {
-                    ai_check_unit_for_crystal_or_treasure_status();
+                    ai_update_tile_pickup();
                     ai->current_action.act_before_move = 1;
                     ai->reflected_origin_phase = 0;
                     for (;;) {
-                        if (ai_check_ability_use_at_coords(&ai->acting_unit_coords)) {
+                        if (ai_is_ability_origin_allowed(&ai->acting_unit_coords)) {
                         evaluate_targets:
                             if (ai_evaluate_target_tiles() == -1)
                                 return -1;

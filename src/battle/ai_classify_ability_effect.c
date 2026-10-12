@@ -92,7 +92,7 @@ ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
                 return AI_ABILITY_EFFECT_ADVERSE;
         } else {
             if (ai_is_status_active_through_delay(ct, unit, STATUS_ID_CHARM)
-                && ai_check_unit_gets_turn_without_status(unit, STATUS_ID_CHARM))
+                && ai_can_status_cancellation_affect_turn(unit, STATUS_ID_CHARM))
                 i = 1;
             else
                 i = 0;
@@ -231,7 +231,7 @@ ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
                             if (mask & flag) {
                                 status = i * 8 + bit;
                                 if (!ai_is_status_active_through_delay(ct, unit, status)
-                                    || !ai_check_unit_gets_turn_without_status(unit, status))
+                                    || !ai_can_status_cancellation_affect_turn(unit, status))
                                     mask ^= flag;
                             }
                         }

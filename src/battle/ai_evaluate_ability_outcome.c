@@ -58,7 +58,7 @@ s32 ai_evaluate_ability_outcome(void) {
         ai->current_action.command.targeting_type = BATTLE_TARGETING_TYPE_UNIT;
         ai->current_action.command.target_id = acting_id;
         ai->current_action.coords = ai->candidate_coords[ai->movement_scenario];
-        ai_check_unit_for_crystal_or_treasure_status();
+        ai_update_tile_pickup();
         if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] == ACTION_MENU_TYPE_ARITHMETICKS) {
         evaluate_math_targets:
             if (ai_evaluate_math_targets() == -1) {
@@ -67,10 +67,10 @@ s32 ai_evaluate_ability_outcome(void) {
             }
             return 0;
         }
-        if (!ai_has_any_unit_decided_to_use_ability())
+        if (!ai_filter_useful_targets())
             return 0;
     evaluate_map_targets:
-        if (ai_check_map_allows_use_and_find_highest_target() == -1) {
+        if (ai_evaluate_cast_origins() == -1) {
             ai->outcome_evaluation_state = AI_ABILITY_EVALUATION_MAP_TARGETS;
             return -1;
         }
@@ -84,7 +84,7 @@ s32 ai_evaluate_ability_outcome(void) {
             return -1;
         }
     }
-    if (!ai_has_any_unit_decided_to_use_ability())
+    if (!ai_filter_useful_targets())
         return 0;
     if (ai->targetability.live.unit_targetable[ai->acting_unit_id]) {
     evaluate_self_target_range:
@@ -108,7 +108,7 @@ s32 ai_evaluate_ability_outcome(void) {
              * original eligibility list. The overlapping flag byte stays intact. */
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 ai->targetability.snapshot.unit_targetable_saved[i] = ai->targetability.live.unit_targetable[i];
-                if (ai->targetability.live.unit_targetable[i] && !ai_check_ability_use_based_on_ct(i))
+                if (ai->targetability.live.unit_targetable[i] && !ai_can_unit_act_within_charge_time(i))
                     ai->targetability.live.unit_targetable[i] = 0;
             }
             ai->targetability.live.target_setting_flags |= AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS;
@@ -119,7 +119,7 @@ s32 ai_evaluate_ability_outcome(void) {
             }
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++)
                 if (ai->targetability.snapshot.unit_targetable_saved[i]) {
-                    if (ai_check_ability_use_based_on_ct(i))
+                    if (ai_can_unit_act_within_charge_time(i))
                         ai->targetability.live.unit_targetable[i] = 0;
                     else
                         ai->targetability.live.unit_targetable[i] = 1;

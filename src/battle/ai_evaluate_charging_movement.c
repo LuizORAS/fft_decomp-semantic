@@ -27,13 +27,13 @@ s32 ai_evaluate_charging_movement(void) {
         g_ai_data_base.current_action.coords = g_ai_data_base.acting_unit_coords;
     } else {
         g_ai_data_base.current_action.coords = ai->candidate_coords[g_ai_data_base.movement_scenario];
-        ai_check_unit_for_crystal_or_treasure_status();
+        ai_update_tile_pickup();
     }
     ai->current_action.act_before_move = 0;
     ai->current_action.command.skillset_id = 0;
     if (action->ability_id >= ABILITY_ID_SONG_ANGEL_SONG && action->ability_id <= ABILITY_ID_DANCE_LAST_DANCE) {
     evaluate_song_dance:
-        if (ai_check_set_highest_unit_priority() == -1) {
+        if (ai_evaluate_current_action() == -1) {
             ai->charging_state = AI_CHARGING_SONG_DANCE;
             return -1;
         }

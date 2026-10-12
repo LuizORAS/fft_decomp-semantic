@@ -44,7 +44,7 @@ s32 ai_choose_wait_facing(void) {
         work.target_coords.bytes.y
             = ai->acting_unit_coords.bytes.y + g_ai_facing_tile_offsets.by_direction[direction][1];
         work.target_coords.bytes.elevation = 0;
-        if (ai_check_facing_tile(&ai->acting_unit_coords, &work.target_coords) != 0) {
+        if (ai_is_facing_tile_blocked(&ai->acting_unit_coords, &work.target_coords) != 0) {
             work.viability.by_direction[direction] = 0;
         } else {
             fallback_direction = direction;

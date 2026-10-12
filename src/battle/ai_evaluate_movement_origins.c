@@ -22,7 +22,7 @@ s32 ai_evaluate_movement_origins(void) {
     }
     row = ai->targetability.live.unit_targetable[g_ai_data_base.acting_unit_id];
     ai->targetability.live.unit_targetable[g_ai_data_base.acting_unit_id] = 0;
-    ai_evaluate_linear_ability_behaviors();
+    ai_build_attack_origin_masks();
     ai->targetability.live.unit_targetable[g_ai_data_base.acting_unit_id] = row;
 begin_evaluation:
     if (VSync(1) >= AI_DECISION_SCANLINE_LIMIT) {
@@ -45,7 +45,7 @@ begin_evaluation:
         || ai->ranked_origin_scan) {
         while (ai->attack_origin_tile_count && ai->movable_tile_count) {
             ai_take_next_movement_origin();
-            ai_select_candidate_coords_and_check_crystal();
+            ai_finalize_action_destination();
         evaluate_ranked_origin:
             row = ai_evaluate_target_tiles();
             if (row == -1) {
@@ -64,7 +64,7 @@ begin_evaluation:
                             ai->current_action.coords.bytes.x = ai->max_possibilities;
                             ai->current_action.coords.bytes.y = ai->y_counter;
                             ai->current_action.coords.bytes.elevation = ai->map_level_counter;
-                            ai_select_candidate_coords_and_check_crystal();
+                            ai_finalize_action_destination();
                         evaluate_scanned_origin:
                             if (ai_evaluate_target_tiles() == -1) {
                                 ai->highest_priority_state = AI_ORIGIN_EVALUATION_SCANNED;

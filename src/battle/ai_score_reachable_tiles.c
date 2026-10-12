@@ -48,7 +48,7 @@ s32 ai_score_reachable_tiles(void) {
                         ai->current_action.coords.bytes.x = x;
                         ai->current_action.coords.bytes.y = y;
                         ai->current_action.coords.bytes.elevation = level;
-                        ai_check_unit_for_crystal_or_treasure_status();
+                        ai_update_tile_pickup();
                     evaluate_tile:
                         if (ai_simulate_action_and_score() == -1) {
                             /* Keep the current coordinates and uncommitted score. */

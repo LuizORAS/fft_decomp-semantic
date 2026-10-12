@@ -53,7 +53,7 @@ s32 ai_build_command(s32 unit_id, ai_command_t* command) {
     if (ai->acting_unit->charged_ability_ct == 0xff)
         ai->acting_unit_decision->targeting_flags_1 &= ~AI_TARGETING_FLAG_1_REFLECTED_ACTION;
     if (!ai->selected_action.rank.decided || ai->acting_unit->action_taken) {
-        ai_store_considered_action_data();
+        ai_begin_action_simulation();
     refresh:
         if (ai_refresh_unit_decision_flags() == -1) {
             ai->main_ai_state = AI_COMMAND_BUILD_REFRESH;
@@ -71,7 +71,7 @@ s32 ai_build_command(s32 unit_id, ai_command_t* command) {
         ai_update_team_targeting_flags();
         ai_init_target_consideration();
     choose:
-        if (ai_select_initial_action() == -1) {
+        if (ai_select_action_initial() == -1) {
             ai->main_ai_state = AI_COMMAND_BUILD_CHOOSE_ACTION;
             ai->resume_pending = 1;
             return -1;
@@ -80,7 +80,7 @@ s32 ai_build_command(s32 unit_id, ai_command_t* command) {
         ai->selected_action.rank.decided = AI_ACTION_DECIDED;
         if (ai->selected_action.reflected_action)
             ai->acting_unit_decision->targeting_flags_1 |= AI_TARGETING_FLAG_1_REFLECTED_ACTION;
-        ai_restore_considered_action_data();
+        ai_end_action_simulation();
     }
     if (!ai->acting_unit->movement_taken && (ai->acting_unit->action_taken || !ai->selected_action.act_before_move)) {
         ai->selected_action.coords.bytes.zero = 0;

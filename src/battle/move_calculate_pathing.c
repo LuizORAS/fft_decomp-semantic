@@ -101,7 +101,7 @@ battle_walk_path_t* move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u3
         main_util_copy_byte_data(g_ai_unit_snapshot_storage, getScratchAddr(0), PSX_SCRATCHPAD_BYTE_COUNT);
     }
     for (i = g_move_pathing_resume_pass; i < config->move; i++) {
-        if (check_budget && ai_is_vsync_hblank_past_threshold() && completed_pass) {
+        if (check_budget && ai_is_pathfinding_budget_exhausted() && completed_pass) {
             g_move_pathing_resume_pass = i;
             *suspended = 1;
             main_util_copy_byte_data(getScratchAddr(0), g_ai_unit_snapshot_storage, PSX_SCRATCHPAD_BYTE_COUNT);
