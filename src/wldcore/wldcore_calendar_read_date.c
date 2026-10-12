@@ -1,11 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Reads one nine-bit record: bits 0-4 into dest[1], bits 5-8 into dest[0].
- * Records are packed nine bits apart in the bit array, matching
- * wldcore_write_nine_bit_record. A field that decodes to zero or beyond its
- * range falls back to 1. */
-void wldcore_read_nine_bit_record(u32* bits, s32 record, u8* dest) {
+/* Unpack record `record` of a bit array of 9-bit dates (wldcore_calendar_write_date) into dest[0]
+ * (the month) and dest[1] (the day); a field that reads 0 or out of range (a day of 32 or more, a
+ * month of 13 or more) comes back as 1. */
+void wldcore_calendar_read_date(u32* bits, s32 record, u8* dest) {
     s32 base = record * 9;
     s32 mask;
     s32 i;

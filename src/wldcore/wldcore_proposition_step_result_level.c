@@ -84,21 +84,20 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         date[1] = day;
         date[0] = month;
-        wldcore_write_nine_bit_record(g_main_proposition_last_attempt_date_bits,
+        wldcore_calendar_write_date(g_main_proposition_last_attempt_date_bits,
             g_main_active_propositions[level->proposition].proposition_id, date);
     }
     if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
         world_script_set_variable(g_wldcore_job_selection.reward_index + EVENT_SCRIPT_VAR_TREASURE_FIRST, 1);
         date[1] = day;
         date[0] = month;
-        wldcore_write_nine_bit_record(
-            g_main_treasure_acquisition_date_bits, g_wldcore_job_selection.reward_index, date);
+        wldcore_calendar_write_date(g_main_treasure_acquisition_date_bits, g_wldcore_job_selection.reward_index, date);
     }
     if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
         world_script_set_variable(g_wldcore_job_selection.reward_index + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST, 1);
         date[1] = day;
         date[0] = month;
-        wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, g_wldcore_job_selection.reward_index, date);
+        wldcore_calendar_write_date(g_main_land_discovery_date_bits, g_wldcore_job_selection.reward_index, date);
     }
     for (i = 0; i < g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count; i++) {
         wldcore_get_party_data_pointer(

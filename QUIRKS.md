@@ -21,6 +21,11 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `src/world/world_script_toggle_message_portrait_flip.c`: the record index is never
   assigned; all six passes use whatever `$s0` held. Keep the local
   uninitialized.
+- `src/wldcore/wldcore_calendar_advance_days.c`: an event's date advance keeps the
+  elapsed days of an active proposition that does not finish within it, so those days
+  never count toward it (the daily advance counts each one). It also misses a
+  birthday that falls after December 31 inside the advance, and counts the year at
+  December 31 where the daily advance counts it on March 21.
 - `src/wldcore/wldcore_proposition_determine_success.c`: the preferred-job
   check resolves the party unit once, before its loop, from the scoring loop's
   leftover (past-the-end) index, so it tests that one unit every pass.

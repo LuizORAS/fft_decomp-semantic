@@ -44,7 +44,7 @@ void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x74;
     base->y = -0x22;
-    wldcore_read_nine_bit_record(g_main_land_discovery_date_bits, value, date);
+    wldcore_calendar_read_date(g_main_land_discovery_date_bits, value, date);
     g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
     switch (coordinate_mode) {
     case 0:

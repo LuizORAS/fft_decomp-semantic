@@ -1,9 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* 0-based day-of-year index (party_data_t.birthday_day) to 1-based month
- * and day. */
-void wldcore_day_of_year_to_month_day(s32 day_of_year, s32* output_month, s32* output_day) {
+/* A 0-based day of the year (January 1 being 0, as party_data_t.birthday_day keeps it) to a 1-based
+ * month and day. */
+void wldcore_calendar_from_day_of_year(s32 day_of_year, s32* output_month, s32* output_day) {
     s32 month;
     s32 days_in_month;
 

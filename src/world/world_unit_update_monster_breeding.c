@@ -2,7 +2,7 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* Advance egg hatch counters, then make the day's monster-breeding roll (wldcore_advance_calendar_day).
+/* Advance egg hatch counters, then make the day's monster-breeding roll (wldcore_calendar_advance_day).
  *
  * An egg's counter is the low nibble of its birthday; at 0 it hatches as a monster born on the
  * current date. The roll, reseeded from the play time, needs a monster in the roster (eggs do not

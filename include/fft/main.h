@@ -473,7 +473,7 @@ typedef struct wldcore_saved_record {
     s16 text_history_2;       /* 0x24 */
     s16 text_history_3;       /* 0x26 */
     s16 value_display_mode;   /* 0x28 */
-    s16 music_selection;      /* 0x2a */
+    s16 music_selection;      /* 0x2a; track in the low byte, slot in the high byte */
     s16 sound_mode;           /* 0x2c */
     s16 picture_x;            /* 0x2e */
     s16 picture_y;            /* 0x30 */

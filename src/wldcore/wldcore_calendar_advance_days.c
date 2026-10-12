@@ -1,29 +1,24 @@
 #include "fft/wldcore.h"
 
-/*
- * Advance the calendar by a script-requested number of days.
+/* Advance the calendar by the days an event asked for (EVENT_SCRIPT_VAR_DATE_ADVANCE, applied as a
+ * visit starts by wldcore_init_world_menus_and_date). Whole years add to EVENT_SCRIPT_VAR_YEAR_COUNT
+ * and to every Brave Story age; the remaining days move the date forward and add one more year when
+ * they cross December 31. A character whose birthday falls within the remaining days, later in the
+ * same calendar year, gains a year; ages are capped at 99. Entry 0 is Ramza, whose birthday lives in
+ * EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH and _DAY, as in wldcore_calendar_advance_birthdays.
  *
- * The only caller passes script variable 0x54 (DATE_ADVANCE). Whole years
- * are added to script variable 0x67 and to every brave-story age; the
- * remaining days move the month/day variables forward, adding one more to
- * 0x67 when the day-of-year index passes 365. A character whose birthday
- * falls within the remaining days gains a year, and ages are capped at 99.
- * Entry 0 is the player character, whose birthday lives in script variables
- * 0x5f (month) and 0x60 (day), as in wldcore_advance_brave_story_birthdays.
- *
- * Open propositions complete when elapsed plus the advanced days reaches the
- * assigned duration (elapsed is set to the duration); otherwise flag 0x02
- * completes them with elapsed incremented once, and the rest keep their
- * elapsed count unchanged. Nonzero six-bit proposition countdowns drop by the
- * advanced days, floored at 0, keeping their high 2 bits.
+ * An active proposition returns (WLDCORE_PROPOSITION_PROGRESS_RETURNED) when its elapsed days plus the
+ * advance reach its assigned days (elapsed is set to them), or with one more elapsed day when it was
+ * recalled (WLDCORE_PROPOSITION_PROGRESS_RECALLED); the others keep their elapsed count. Nonzero day
+ * counts in the proposition states drop by the advance, floored at 0, keeping the failure bits. See
+ * QUIRKS.md for how this differs from the daily advance.
  *
  * The birthday table's element type must not be const: a const element makes
  * the reads unchanging, and the scheduler then hoists the second table read
  * above the store of the first. The loop's `i = 0` must sit at the loop, not
  * at function entry, for the first call's `li a0,0x67` to precede the
- * reciprocal-division `mult`.
- */
-void wldcore_advance_calendar_days(s32 days) {
+ * reciprocal-division `mult`. */
+void wldcore_calendar_advance_days(s32 days) {
     s32 i;
     s32 years;
     u8(*birthdays)[2];
@@ -36,11 +31,11 @@ void wldcore_advance_calendar_days(s32 days) {
     birthdays = g_wldcore_brave_story_birthdays;
     years = days / 365;
     world_script_set_variable(
-        EVENT_SCRIPT_VAR_UNKNOWN_67, world_script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + years);
+        EVENT_SCRIPT_VAR_YEAR_COUNT, world_script_get_variable(EVENT_SCRIPT_VAR_YEAR_COUNT) + years);
     days %= 365;
     month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
     day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    today = wldcore_month_day_to_day_of_year(month, day);
+    today = wldcore_calendar_to_day_of_year(month, day);
     for (i = 0; i < 64; i++) {
         g_main_brave_story_character_ages[i] += years;
         if (i == 0) {
@@ -50,7 +45,7 @@ void wldcore_advance_calendar_days(s32 days) {
             month = birthdays[i][0];
             day = birthdays[i][1];
         }
-        until_birthday = wldcore_month_day_to_day_of_year(month, day) - today;
+        until_birthday = wldcore_calendar_to_day_of_year(month, day) - today;
         if (until_birthday > 0 && days >= until_birthday) {
             g_main_brave_story_character_ages[i] += 1;
         }
@@ -61,10 +56,10 @@ void wldcore_advance_calendar_days(s32 days) {
     today += days;
     if (today >= 365) {
         world_script_set_variable(
-            EVENT_SCRIPT_VAR_UNKNOWN_67, world_script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1);
+            EVENT_SCRIPT_VAR_YEAR_COUNT, world_script_get_variable(EVENT_SCRIPT_VAR_YEAR_COUNT) + 1);
         today -= 365;
     }
-    wldcore_day_of_year_to_month_day(today, &month, &day);
+    wldcore_calendar_from_day_of_year(today, &month, &day);
     world_script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
     world_script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
     for (i = 0; i < g_main_save_proposition_count; i++) {

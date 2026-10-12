@@ -46,15 +46,15 @@ functions:
   - {addr: 0x80069918, size: 28, name: wldcore_proposition_get_data_pointer, hash: 8370b9e747338d02}
   - {addr: 0x80069934, size: 176, name: wldcore_unpack_proposition_row, hash: 99bb07ead255aa82}
   - {addr: 0x800699e4, size: 248, name: wldcore_proposition_set_based_on_location, hash: 3651cbeedd1a3548}
-  - {addr: 0x80069adc, size: 212, name: wldcore_advance_calendar_day, hash: fa23d9cb75d2330b}
-  - {addr: 0x80069bb0, size: 400, name: wldcore_convert_date_to_zodiac_date, hash: 8d40642805cd5ac8}
-  - {addr: 0x80069d40, size: 248, name: wldcore_advance_brave_story_birthdays, hash: 093651326def3e0f}
+  - {addr: 0x80069adc, size: 212, name: wldcore_calendar_advance_day, hash: fa23d9cb75d2330b}
+  - {addr: 0x80069bb0, size: 400, name: wldcore_calendar_to_zodiac_date, hash: 8d40642805cd5ac8}
+  - {addr: 0x80069d40, size: 248, name: wldcore_calendar_advance_birthdays, hash: 093651326def3e0f}
   - {addr: 0x80069e38, size: 32, name: wldcore_get_party_data_pointer, hash: 94137dd4e32ea227}
-  - {addr: 0x80069e58, size: 172, name: wldcore_write_nine_bit_record, hash: a100a01dd3458fa8}
-  - {addr: 0x80069f04, size: 276, name: wldcore_read_nine_bit_record, hash: 337a6e03c2eb3680}
+  - {addr: 0x80069e58, size: 172, name: wldcore_calendar_write_date, hash: a100a01dd3458fa8}
+  - {addr: 0x80069f04, size: 276, name: wldcore_calendar_read_date, hash: 337a6e03c2eb3680}
   - {addr: 0x8006a018, size: 148, name: wldcore_gfx_clear_vram_and_scratch, hash: 6d07a88a3d3e8359}
-  - {addr: 0x8006a0ac, size: 76, name: wldcore_month_day_to_day_of_year, hash: efdeb3089d1c7472}
-  - {addr: 0x8006a0f8, size: 72, name: wldcore_day_of_year_to_month_day, hash: 65bc42f96d71e765}
+  - {addr: 0x8006a0ac, size: 76, name: wldcore_calendar_to_day_of_year, hash: efdeb3089d1c7472}
+  - {addr: 0x8006a0f8, size: 72, name: wldcore_calendar_from_day_of_year, hash: 65bc42f96d71e765}
   - {addr: 0x8006a140, size: 1100, name: wldcore_gfx_toggle_captured_world_frame, hash: 78cf845743021b10}
   - {addr: 0x8006a58c, size: 764, name: wldcore_map_init_tile_atlas, hash: d59a2e4f5886bb67}
   - {addr: 0x8006a888, size: 336, name: wldcore_map_project_and_cull_tiles, hash: 54969fac20cc375c}
@@ -442,7 +442,7 @@ functions:
   - {addr: 0x80092434, size: 484, name: wldcore_list_handle_script_flags_01a4_01bb_input, hash: 3f569f76520bc273}
   - {addr: 0x80092618, size: 660, name: wldcore_menu_push_script_flag_01a4_detail_level, hash: 611be9a64cdbcc3a}
   - {addr: 0x800928ac, size: 600, name: wldcore_menu_close_script_flag_01a4_detail_level, hash: f5c8d454f1752f2f}
-  - {addr: 0x8009de1c, size: 720, name: wldcore_advance_calendar_days, hash: 3ddb67c3d1ca1de9}
+  - {addr: 0x8009de1c, size: 720, name: wldcore_calendar_advance_days, hash: 3ddb67c3d1ca1de9}
 
 data:
   - {addr: 0x8008c0ac, name: get_current_facing_byte_from_misc_id}

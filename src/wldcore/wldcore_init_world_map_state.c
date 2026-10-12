@@ -116,11 +116,11 @@ void wldcore_init_world_map_state(void) {
             record[1] = 1;
             for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
                 world_script_set_variable(EVENT_SCRIPT_VAR_TREASURE_FIRST + i, 1);
-                wldcore_write_nine_bit_record(g_main_treasure_acquisition_date_bits, i, record);
+                wldcore_calendar_write_date(g_main_treasure_acquisition_date_bits, i, record);
             }
             for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
                 world_script_set_variable(EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST + i, 1);
-                wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, i, record);
+                wldcore_calendar_write_date(g_main_land_discovery_date_bits, i, record);
             }
             for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++)
                 world_script_set_variable(EVENT_SCRIPT_VAR_PROPOSITION_FIRST + i, 4);
@@ -135,8 +135,8 @@ void wldcore_init_world_map_state(void) {
         day = 1;
         world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, 1);
         world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
-        day_of_year = wldcore_month_day_to_day_of_year(month, day);
-        wldcore_convert_date_to_zodiac_date(&month, &day);
+        day_of_year = wldcore_calendar_to_day_of_year(month, day);
+        wldcore_calendar_to_zodiac_date(&month, &day);
         party = main_party_get_data_pointer(0);
         party->birthday_day = day_of_year;
         /* The separate s32 temp keeps the `month` reload a full word: folding

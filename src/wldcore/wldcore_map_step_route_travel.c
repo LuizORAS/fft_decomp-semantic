@@ -3,7 +3,7 @@
 /* Move the travelling marker one frame along its path; the live map frame calls it. While a camera
  * pan runs it only advances the pan. Otherwise the marker moves between its segment's points, the
  * map scrolling to keep it in view, and the next segment starts when one ends. At the end of each leg
- * a day passes (wldcore_advance_calendar_day), the marker stands on the leg's location
+ * a day passes (wldcore_calendar_advance_day), the marker stands on the leg's location
  * (EVENT_SCRIPT_VAR_LOCATION), and that location is checked in order:
  *  - a story event there (WLDCORE_SCRIPT_ACTION_LOAD_EVENT) starts through the event transition;
  *  - its pending SetVar2 is applied;
@@ -39,7 +39,7 @@ void wldcore_map_step_route_travel(void) {
     }
     if (g_wldcore_map_travel.segment_frame >= g_wldcore_map_travel.segment_frames) {
         if (++g_wldcore_map_travel.segment_index >= g_wldcore_map_travel.segment_count) {
-            wldcore_advance_calendar_day();
+            wldcore_calendar_advance_day();
             g_wldcore_location_view.coordinates = g_wldcore_map_travel.target_position;
             g_wldcore_location_view.projection_state
                 |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION | WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION;

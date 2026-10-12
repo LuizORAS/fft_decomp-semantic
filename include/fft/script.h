@@ -589,9 +589,10 @@ typedef enum event_script_variable_id {
     /* Scaled by 10 and added to the TEXT_SET_VARIABLE_BASE variable by
      * TEXT_STORE_VARIABLE, which then clears it. */
     EVENT_SCRIPT_VAR_TEXT_STORE_INDEX = 0x66,
-    /* Incremented each March 21 and by whole years of advanced days, capped
-     * at 99. */
-    EVENT_SCRIPT_VAR_UNKNOWN_67 = 0x67,
+    /* Years passed: wldcore_calendar_advance_day adds one each March 21 (the first day of Aries,
+     * capped at 99) and wldcore_calendar_advance_days one per whole year and one when it crosses
+     * December 31. Only WLDCORE writes it. */
+    EVENT_SCRIPT_VAR_YEAR_COUNT = 0x67,
     EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT = 0x68,
     /* WLDCORE also uses this value to select the current-location marker's
      * animation on the world map. */

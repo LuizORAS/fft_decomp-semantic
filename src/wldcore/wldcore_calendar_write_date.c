@@ -1,9 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Writes one nine-bit record: bits 0-4 from source[1], bits 5-8 from
- * source[0]. Records are packed nine bits apart in the bit array. */
-void wldcore_write_nine_bit_record(u32* bits, s32 record, u8* source) {
+/* Pack a calendar date (the month in source[0], the day in source[1]) as record `record` of a bit
+ * array of 9-bit records: the day in bits 0-4, the month in bits 5-8. The dates treasures and
+ * unexplored lands were found and propositions last succeeded are kept this way. */
+void wldcore_calendar_write_date(u32* bits, s32 record, u8* source) {
     s32 base = record * 9;
     s32 mask;
     s32 i;

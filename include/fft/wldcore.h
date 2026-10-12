@@ -327,20 +327,28 @@ void wldcore_gfx_load_background_set(s32 set);
 void wldcore_gfx_update_map_backdrop(void);
 
 /* calendar */
+/* The world map's date: a day passes per location reached, an event can skip days, and each
+ * day ages the Brave Story characters on their birthdays; zodiac dates and the packed dates
+ * the Brave Story lists show. */
+
 extern u8 g_wldcore_days_per_month[12]; /* 0x8009e66c; non-leap-year month lengths */
 
-/* Music/sound selection halfword at 0x800d486a: track in the low byte, slot
- * in the high byte. */
+/* Screen position of the world map's date (wldcore_gfx_draw_calendar_date). */
 extern s32 g_wldcore_date_display_x;
 extern s32 g_wldcore_date_display_y;
 
 /* Twelve {month, day} pairs: the calendar date each zodiac sign starts on,
  * Aries (3/21) first. */
 extern u8 g_wldcore_zodiac_start_dates[12][2];
-void wldcore_advance_calendar_day(void);
-void wldcore_convert_date_to_zodiac_date(s32* month, s32* day);
-void wldcore_advance_calendar_days(s32 days);
-s32 wldcore_month_day_to_day_of_year(s32 month, s32 day);
+extern u8 (*g_wldcore_brave_story_birthdays)[2];
+void wldcore_calendar_advance_birthdays(void);
+void wldcore_calendar_advance_day(void);
+void wldcore_calendar_advance_days(s32 days);
+void wldcore_calendar_from_day_of_year(s32 day_of_year, s32* output_month, s32* output_day);
+void wldcore_calendar_read_date(u32* bits, s32 record, u8* dest);
+s32 wldcore_calendar_to_day_of_year(s32 month, s32 day);
+void wldcore_calendar_to_zodiac_date(s32* month, s32* day);
+void wldcore_calendar_write_date(u32* bits, s32 record, u8* source);
 
 /* route */
 /* The 48 routes between locations: their records, the best path between two locations and the
@@ -797,7 +805,6 @@ typedef struct wldcore_slideshow {
 
 extern s32* g_wldcore_rumor_location_masks;
 extern wldcore_word_pair_t g_wldcore_story_events_cursor_state;
-extern u8 (*g_wldcore_brave_story_birthdays)[2];
 extern u8 g_wldcore_brave_story_help_text_ids[];
 extern s32 g_wldcore_brave_story_saved_cursor[];
 extern u16* g_wldcore_story_event_ids;
@@ -809,7 +816,6 @@ extern u8 g_wldcore_treasure_picture_sets[];
 extern u8 g_wldcore_treasure_sound_novel_ids[];
 extern u8 g_wldcore_unexplored_land_count_milestones[];
 extern u8 g_wldcore_unexplored_land_picture_sets[];
-void wldcore_advance_brave_story_birthdays(void);
 
 /* map */
 /* The world map's tiles, location dots and routes, the location label, and the map levels that
@@ -2190,11 +2196,8 @@ extern s32 g_wldcore_tutorial_category_saved_cursor;
 extern s32 g_wldcore_tutorial_event_ids[];
 void wldcore_set_bit_value(u32* bits, s32 index, s32 set);
 s32 wldcore_test_bit(u32* bits, s32 index);
-void wldcore_day_of_year_to_month_day(s32 day_of_year, s32* output_month, s32* output_day);
 
-void wldcore_write_nine_bit_record(u32* bits, s32 record, u8* source);
 s32 wldcore_get_completion_milestone_rank(void);
-void wldcore_read_nine_bit_record(u32* bits, s32 record, u8* dest);
 void wldcore_capture_state_and_play_time(void);
 
 #endif

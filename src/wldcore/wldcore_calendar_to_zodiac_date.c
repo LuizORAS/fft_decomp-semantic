@@ -1,14 +1,14 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Converts a calendar date in place into a zodiac sign number (1 = Aries) and
- * the day within that sign.
+/* Convert a calendar date in place into a zodiac sign (1 = Aries, from March 21) and the day within
+ * that sign, by g_wldcore_zodiac_start_dates. An out-of-range month or day plays MAIN_SFX_INVALID
+ * and becomes 1/1.
  *
- * An out-of-range month or day plays sound effect 5 and resets both to 1.
  * The second table pointer for the previous sign's start month keeps the loop
  * base pointer's reference count low enough for global allocation to give the
  * loop-hoisted month copy the lower register, as the target does. */
-void wldcore_convert_date_to_zodiac_date(s32* month_ptr, s32* day_ptr) {
+void wldcore_calendar_to_zodiac_date(s32* month_ptr, s32* day_ptr) {
     s32 index;
     s32 delta;
     s32 day;

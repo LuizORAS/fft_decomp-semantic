@@ -23,7 +23,7 @@ s32 wldcore_proposition_set_based_on_location(s32 index, s32 location) {
     if (entry.fields.condition_flags & WLDCORE_PROPOSITION_CONDITION_MONTH) {
         month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
         day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-        wldcore_convert_date_to_zodiac_date(&month, &day);
+        wldcore_calendar_to_zodiac_date(&month, &day);
         if (month != entry.fields.condition_value) {
             return 0;
         }
