@@ -1,12 +1,11 @@
 #include "fft/world.h"
 
-/*
- * Set a unit's name in both the formation and persistent party records.
+/* Set a unit's name in both the formation and persistent party records (the soldier office's hire
+ * and Change name).
  *
  * Copy through the first 0xfe byte, or stop after 16 bytes without appending
  * a terminator. The remaining name bytes and name ID are left unchanged.
- * Rebuild the menu's name strings after updating both records.
- */
+ * Rebuild the menu's name strings after updating both records. */
 void world_formation_set_unit_name(s16 formation_index, const u8* name) {
     party_data_t* party;
     s32 i;

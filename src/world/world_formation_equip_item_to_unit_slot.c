@@ -1,15 +1,16 @@
 #include "fft/world.h"
 
-/* Install an item into a formation unit's equipment slot.
+/* Install an item into a formation unit's equipment slot; returns the refusal of
+ * world_formation_can_equip_item_in_slot (below 0) or 1.
  *
- * Slot 20 is the scratch/preview record, which is updated without touching the
- * inventory or refreshing derived stats. Equipping into a hand slot while the
- * unit is two-handing also returns the other hand's item and clears that slot.
+ * The slot's old item goes back to the inventory, and in a hand slot an item that does not pair with
+ * the other hand (status 0) also sends that hand's item back. The roster is saved afterwards. The
+ * preview record (WORLD_FORMATION_PREVIEW_RECORD) is updated without touching the inventory or the
+ * roster.
  *
  * `item` is a separate u16 mirror of the masked argument: one s32 variable
  * reused for both the call argument and the stored value is copy-propagated and
- * swaps which of the two ends up in the callee-saved register.
- */
+ * swaps which of the two ends up in the callee-saved register. */
 s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s16 item_id) {
     s32 status;
     s32 other;

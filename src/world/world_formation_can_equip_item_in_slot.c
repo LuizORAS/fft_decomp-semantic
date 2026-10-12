@@ -1,7 +1,8 @@
 #include "fft/world.h"
 
-/*
- * Checks whether an item may go into a formation unit's equipment slot.
+/* Checks whether an item may go into a formation unit's equipment slot: the unit's lock
+ * (world_formation_get_unit_lock) or -1 when the job cannot use the item, 0 when it can but not with
+ * the item in the other hand, 1 when it fits.
  *
  * Hand slots (0 and 1) also consider the item in the opposite hand: two
  * weapons need both to be Two Swords compatible and the unit to have Two
@@ -9,8 +10,7 @@
  * weapon.
  *
  * The s16 id and its new_item copy reproduce the target's two callee-saved
- * copies of the masked id; an s32 id folds them into one register.
- */
+ * copies of the masked id; an s32 id folds them into one register. */
 s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id) {
     s32 result;
     s16 id;

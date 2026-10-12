@@ -1,14 +1,13 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Compute the formation sprite palette index of a party unit; the caller
+/* Compute the formation sprite palette index of a party unit; the caller
  * turns it into the CLUT at (0x140 + (index % 4) * 16, 0xe0 + index / 4).
  *
  * Generic male/female identities derive their sheet from the job; other
  * selectors take the job's spritesheet. Indices of 0x3e and above are
- * expanded by the job's portrait palette.
- */
+ * expanded by the job's portrait palette. For a story identity below 0x80 `job` is never set (see
+ * QUIRKS.md). */
 s32 world_formation_get_unit_palette_index(s32 party_index) {
     party_data_t* unit = main_party_get_data_pointer(party_index);
     job_data_t* job;

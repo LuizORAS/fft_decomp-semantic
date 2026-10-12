@@ -1304,6 +1304,9 @@ extern u8 g_world_formation_dismiss_prompt[];
 extern s16 g_world_formation_dismiss_prompt_text_id;
 extern s16 g_world_formation_dismiss_prompt_kind;
 extern s16 g_world_formation_dismiss_anim_timer;
+/* Per Order Unit key, the halfword of world_formation_unit_t it compares: 0 Number (roster_slot,
+ * ascending), 1 Level, 2 Job, 4 Brave, 5 Faith, 7 MAX HP, 9 MAX MP (descending). The key's name is
+ * formation menu text key + 14 (0xd80e Number...). */
 extern s8 g_world_formation_sort_field_indices[];
 extern point16_t g_world_formation_cursor_target;
 extern s8 D_801C833C; /* zeroed with g_world_formation_scroll_velocity when the formation cursor starts; never read */
@@ -1339,7 +1342,7 @@ void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
 void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, upoint16_t* position,
     main_zodiac_sprite_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin);
-s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list, s32 mode);
+s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** unused_list, s32 mode);
 
 void world_formation_build_unit_graphic_entry(
     s16 formation_index, world_formation_graphic_entry_t* destination, s32 unused);
@@ -3302,6 +3305,9 @@ extern s32 g_world_preview_stats_window_active;
 extern s8 g_world_dismiss_unit_prompt_running;
 extern world_menu_entry_t g_world_best_fit_confirm_menu;
 extern u8 g_world_order_unit_menu[];
+/* -1-terminated sort key lists; entries 0-5 point at MAIN's g_main_item_type_order_1..6: 0 is the
+ * roster's Order Unit keys (world_formation_run_order_unit_menu), 1-5 the item categories' sort
+ * orders (world_item_run_sort_order_menu). */
 extern s8* g_world_sort_key_lists[];
 /* Item-list filter per equipment slot (right hand, left hand, head, body, accessory); Best Fit sets
  * slot 1 to ITEM_LIST_FILTER_WEAPON for a Two Swords user, else ITEM_LIST_FILTER_SHIELD. */

@@ -1,12 +1,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Change the unit's job and optionally select replacement equipment.
+/* Change the unit's job and drop what it can no longer use (world_formation_remove_invalid_unit_loadout).
  *
- * Mime removes all equipment. Slot 20 does not exchange inventory items;
- * ordinary slots return their old equipment before reserving replacements.
- */
+ * A Mime removes all equipment. With `update_equipment` (the job wheel passes it when the Max Equip
+ * at Job Change option is on) the unit's items go back to the inventory, it takes its best fit
+ * (world_unit_build_best_fit_equipment) and the banner shows "Equip to the maximum". The preview
+ * record (WORLD_FORMATION_PREVIEW_RECORD) never exchanges inventory items. */
 s32 world_formation_change_unit_job(s16 unit_id, s16 job_id, s32 update_equipment) {
     s16 equipment[5];
     s32 i;

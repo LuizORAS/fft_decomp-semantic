@@ -1,15 +1,15 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Fills one WORLD formation record from a unit's battle stats and party data.
+/* Fills one WORLD formation record from a unit's battle stats and party data.
  *
- * HP/MP/level/experience/CT are clamped for display, monster-skillset units
- * (primary skillset 0xb0-0xdf) list up to three nonzero skillset abilities
- * instead of equipment and learned abilities, and JP totals cap at 9999.
+ * HP and MP are shown full (their maximum, capped at 999), level and experience at 99, CT at 100; a
+ * guest slot gets team_kind 2. A monster-skillset unit (primary skillset 0xb0-0xdf) lists up to three
+ * nonzero skillset abilities instead of equipment and learned abilities, and a Mime carries neither.
+ * Unlocked jobs come from the job levels (monsters copy theirs), JP totals cap at 9999, and the
+ * two-handing flag is worked out from the equipment.
  * One scratch variable `i` also carries the monster flag, the second evade
- * operand and the unlocked-job mask; separate locals reallocate a0/v1.
- */
+ * operand and the unlocked-job mask; separate locals reallocate a0/v1. */
 void world_formation_build_unit_record(battle_stats_t* unit, world_formation_unit_t* record, party_data_t* party) {
     s16* abilities;
     s32 i;

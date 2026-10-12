@@ -123,6 +123,12 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   0 even when that list is empty; with no earlier list since WORLD loaded, the
   pointer is 0, so the "restore HP/MP" stores copy kernel RAM 0x10/0x16 to
   0x0c/0x12.
+- `src/world/world_formation_get_unit_palette_index.c`: `job` is assigned only for sprite sets
+  0x80 and up. Of the story identities below 0x80, 28 (Delita in chapters 2-4, Zalbag, Dycedarg,
+  Larg, Goltana, Elmdor and other enemies) map to a portrait of 0x78 or more, which indexes past the
+  20-entry `g_world_monster_formation_sprite_table`, and a result of 0x3e or more reads the unset
+  `job`. The characters who join the party map below 0x3e. The monster branch also ORs the job's
+  portrait palette in at bit 10 and masks it off with `& 0xFF` at once.
 - `src/battle/battle_ai_choose_wait_facing.c`: when the target shares the
   acting unit's tile, `battle_ai_find_direction_of_target` returns
   `BATTLE_AI_DIRECTION_OVERLAP` (4), which indexes `viable_directions[4]`: the

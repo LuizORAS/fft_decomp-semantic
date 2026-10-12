@@ -1,9 +1,8 @@
 #include "fft/world.h"
 
-/* Test for inventory or equipment entries in the current menu.
- *
- * Mode 0 combines both sources, mode 1 selects inventory, and other modes select equipment.
- */
+/* Whether the party owns any item: mode 0 any inventory item or any item a formation unit has
+ * equipped, mode 1 inventory only, other modes equipment only. The shops' sell lists and the fur shop
+ * test it. */
 s32 world_menu_has_items(s32 mode) {
     s32 has_inventory;
     s32 has_equipment;

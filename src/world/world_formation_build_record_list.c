@@ -1,16 +1,14 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Rebuilds the compacted WORLD formation records from the 20 roster slots.
+/* Rebuilds the compacted WORLD formation records from the roster slots and returns their count.
  *
- * Mode 1 drops units with a proposition in progress and the egg-unit flag, a
- * monster skillset, or a special-monster job; mode 2 drops gender flag 0x4
- * and any unit with the top two gender bits set. A nonzero item id keeps only
- * units with that item equipped. The list argument is unused here; the sorter
- * at 0x80121c60 fills g_world_formation_unit_pointers.
- */
-s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** list, s32 mode) {
+ * WORLD_FORMATION_RECORD_LIST_AVAILABLE_HUMANS drops units away on a proposition, eggs, monster
+ * skillsets and special-monster jobs; _MONSTERS drops eggs and units flagged male or female. A
+ * nonzero item id keeps only units with that item equipped (the List menu's "equipped by"). The
+ * records are then sorted (world_formation_sort_roster), which fills g_world_formation_unit_pointers;
+ * the pointer argument every caller passes is not read. */
+s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** unused_list, s32 mode) {
     battle_stats_t unit;
     s32 slot;
     s32 count;

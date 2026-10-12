@@ -2,16 +2,14 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/*
- * Drop equipment and abilities a formation unit can no longer use.
+/* Drop equipment and abilities a formation unit can no longer use.
  *
  * Unequippable items (status 0, -1 or -6) and a second hand weapon without
- * Two Swords are removed, returning items to inventory except for slot 20.
+ * Two Swords are removed, returning items to inventory except for the preview record.
  * Mime clears every ability slot, jobs with an innate support ability drop
  * the redundant copy, and a secondary skillset equal to the primary is
  * cleared. The loop counter and status locals are reused for the two hand
- * items, which keeps the original register assignment.
- */
+ * items, which keeps the original register assignment. */
 void world_formation_remove_invalid_unit_loadout(s16 unit_id) {
     s32 i;
     s32 status;

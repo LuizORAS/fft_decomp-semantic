@@ -743,7 +743,8 @@ extern item_type_order_tables_t g_main_item_type_order_tables;
 
 /* Views of g_main_item_type_order_tables.order_1..6 for the WORLD save-image
  * copies (world_card_build_save_image, world_card_load_globals_from_save_image),
- * whose code the member spelling changes. */
+ * whose code the member spelling changes. order_1 is not an item order: it holds the roster's
+ * Order Unit keys (default Number, Level, Job, Brave, Faith, MAX HP, MAX MP). */
 extern s8 g_main_item_type_order_1[8];
 extern u8 g_main_item_type_order_2[7];
 extern u8 g_main_item_type_order_3[5];

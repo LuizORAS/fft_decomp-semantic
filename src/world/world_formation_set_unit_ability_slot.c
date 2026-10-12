@@ -1,12 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Change an ability slot and optionally replace incompatible equipment.
- *
- * Equipment changes return old items to inventory before reserving the
- * replacement set. Return 1 on success and -2 when the unit cannot change.
- */
+/* Set ability slot `slot` of an unlocked formation unit and drop what it can no longer use; returns
+ * 1, or -2 when the unit is locked. With `update_equipment` (an Equip, Martial Arts, Two Hands or
+ * Two Swords support came or went with the Max Equip at Job Change option on,
+ * world_ability_is_equip_support_change) the unit's items go back to the inventory, it takes its best
+ * fit and the banner shows "Equip to the maximum". */
 s32 world_formation_set_unit_ability_slot(s16 unit_id, s16 slot, s16 ability, s32 update_equipment) {
     s16 equipment[5];
     s32 i;

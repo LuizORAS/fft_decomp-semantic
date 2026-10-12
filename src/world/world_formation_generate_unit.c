@@ -1,12 +1,10 @@
 #include "fft/world.h"
 
-/*
- * Generate a party unit and return its rebuilt formation-list index.
+/* Generate a party unit for the soldier office's hire and return its rebuilt formation-list index.
  *
  * Temporarily substitute a menu name-buffer pointer for generation, then clear
  * the new unit's secondary skillset and reaction, support, and movement slots.
- * Return -1 if generation fails; otherwise rebuild the formation workspace.
- */
+ * Return -1 if generation fails; otherwise rebuild the formation workspace. */
 s32 world_formation_generate_unit(s16 unit_type) {
     u8** name_buffer = &g_world_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     u8* saved_names;
