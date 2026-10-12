@@ -1,11 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Menu thread: waits for thread 8, runs the tutorial event if pending, then
- * starts the menu-entry thread for the requested menu (0x10/0x12 redirect to
- * 0x36 for monster units) and optionally the two follow-up text threads.
- *
- * BATTLE twin of world_menu_start_entry_thread. */
+/* Menu-building thread: open menu `menu_id` (thread parameter 1). It waits for the menu slot to
+ * free up, exits while the menus are suspended, waits for the camera and the attack-target panel, runs
+ * the tutorial event that is due first, and starts the entry's thread in the menu slot (an egg's
+ * OTHER_UNIT menus become EGG). When a menu restore is pending for the active unit it reopens the
+ * skillset list and, two levels deep, the ability list the unit had open; otherwise it records the unit
+ * as the one whose menus a restore would reopen. */
 void battle_menu_start_entry_thread(void) {
     s32 menu_id = battle_thread_get_current_parameter_1();
     s32 count;

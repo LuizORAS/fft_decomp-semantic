@@ -108,7 +108,7 @@ void world_menu_auto_battle_setting_thread(void) {
         if (world_menu_should_close_thread(&g_world_menu_new_button_input) != 0) {
             break;
         }
-        world_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
+        world_menu_step_wrapping_row_cursor(param, &cursor);
         world_menu_handle_entry_cancel(param);
         world_menu_select_icon_cluts(&record->base);
         world_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);

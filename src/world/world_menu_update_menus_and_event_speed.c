@@ -2,11 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Per-frame menu/world step: snapshots g_battle_ai_workspace, substitutes the unfiltered
- * controller input while menu input is disabled, clears the four g_world_menu_pending_selection
- * slots to -2, runs the input/update steps and, while threads 6/7 or thread 8
- * (outside state 0x42) are running, forces event speed 2 (restoring the saved
- * animation speed afterwards). Returns world_menu_resolve_selection's result. */
+/* WORLD twin of battle_menu_update_menus_and_event_speed. */
 s32 world_menu_update_menus_and_event_speed(u32* ot, u32 input) {
     s32 i;
     s16 value;

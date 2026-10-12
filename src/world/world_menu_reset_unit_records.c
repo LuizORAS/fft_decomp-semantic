@@ -7,8 +7,7 @@
  * would form a pointer before the first row. */
 enum { WORLD_UNKNOWN_ROW_BYTES = 17 };
 
-/* Reset the per-unit menu records, clearing each and marking byte 1 as
- * unset (0xFF). */
+/* WORLD twin of battle_menu_reset_unit_records. */
 void world_menu_reset_unit_records(void) {
     s32 index;
     u8* row;

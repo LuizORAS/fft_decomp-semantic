@@ -1,9 +1,6 @@
 #include "fft/battle.h"
 
-/* Reset the per-unit menu records, clearing each and marking byte 1 as
- * unset (0xFF).
- *
- * Target 0x8013f8b4. */
+/* Reset every unit's menu record: all 17 bytes cleared, then byte 1 marked unset (0xFF). */
 void battle_menu_reset_unit_records(void) {
     s32 i;
     s32 j;

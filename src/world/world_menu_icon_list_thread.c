@@ -51,7 +51,7 @@ void world_menu_icon_list_thread(void) {
         if (world_menu_should_close_thread(g_world_input_frame_controller_input) != 0) {
             break;
         }
-        world_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
+        world_menu_step_wrapping_row_cursor(param, &cursor);
         world_menu_handle_entry_confirm(param, cursor);
         world_menu_handle_entry_cancel(param);
         world_menu_select_icon_cluts(&record->base);

@@ -2,12 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/**
- * Resolve the pending action-menu command, option, and item selection.
- *
- * Remaps menu-specific values, publishes the resolved selection, and returns
- * the command, option, and item packed into a single value.
- */
+/* WORLD twin of battle_menu_resolve_selection. */
 s32 world_menu_resolve_selection(void) {
     world_menu_selection_view_t* selection = (world_menu_selection_view_t*)g_world_menu_pending_selection;
     s32 command;

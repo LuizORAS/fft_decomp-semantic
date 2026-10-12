@@ -1,14 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Run one frame of the battle menu/event layer and return battle_menu_resolve_selection's
- * result. While event threads 6-8 run (thread 8 only when g_battle_thread_contexts[8].task_id is not
- * 0x42) the event speed is forced to 2, restoring the saved speed afterwards.
+/* Run one frame of the event script and the menus and return the frame's menu selection
+ * (battle_menu_resolve_selection's packed command, option and item). Under tutorial or blocked input
+ * the unfiltered controller input drives the frame. While a menu thread runs (slots 6 to 8, the mini
+ * menu excepted) the event speed is forced to 2, a VSync interval of 2 or 30 frames a second, and the
+ * speed in use comes back when they stop.
  *
- * The `fill` staging variable places the -2 load ahead of the loop counter
- * the way the target does; a literal store hoists it after the counter.
- */
+ * The `fill` staging variable places the -2 load ahead of the loop counter the way the target does; a
+ * literal store hoists it after the counter. */
 s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input) {
     s32 i;
     s32 result;

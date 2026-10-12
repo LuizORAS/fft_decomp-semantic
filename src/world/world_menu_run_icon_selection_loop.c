@@ -48,7 +48,7 @@ void world_menu_run_icon_selection_loop(void) {
             break;
         }
         world_menu_handle_entry_confirm(param, cursor);
-        world_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
+        world_menu_step_wrapping_row_cursor(param, &cursor);
         world_menu_handle_entry_cancel(param);
         world_menu_submit_icon_primitives(&record->base);
     }

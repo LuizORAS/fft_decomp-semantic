@@ -112,7 +112,7 @@ void battle_menu_auto_battle_setting_thread(void) {
         if (battle_menu_should_close_thread(&g_battle_script_event_input) != 0) {
             break;
         }
-        battle_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
+        battle_menu_step_wrapping_row_cursor(param, &cursor);
         battle_menu_handle_entry_cancel(param);
         battle_menu_select_icon_cluts(record);
         battle_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);

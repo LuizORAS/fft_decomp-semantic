@@ -619,7 +619,7 @@ typedef struct world_menu_text_binding {
  * world_menu_start_entry_chain_threads. The record is also the first parameter
  * of the menu threads it starts: the icon threads read 0x00..0x07 as the text
  * image's upload rect and 0x08/0x0a as the icon origin (the scrolling icon list
- * thread clears bit 0 of 0x0a), and world_menu_step_wrapping_cursor_on_scroll_buttons
+ * thread clears bit 0 of 0x0a), and world_menu_step_wrapping_row_cursor
  * wraps the cursor at max_row_index. */
 typedef struct world_menu_entry {
     s16 vram_x;        /* 0x00: text-image VRAM x (world_menu_redraw_text_page_on_scroll) */

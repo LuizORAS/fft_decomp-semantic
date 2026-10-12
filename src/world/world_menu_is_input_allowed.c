@@ -1,14 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Returns 1 when the current menu thread may act on input.
- *
- * A help box (box type 0x30) in the text or message slot blocks input and
- * arms a five-frame block. Otherwise input is allowed while the previous
- * thread slot is idle, no stop is requested (parameter 3), no text task or
- * overlay is active and the block has run out.
- */
+/* WORLD's version of battle_menu_is_input_allowed. A help box (box type 0x30) in the text or
+ * message slot also blocks input and arms a five-frame block. Otherwise input is allowed while the
+ * child slot is idle, no close is requested (parameter 3), menu input is not locked, the help is not
+ * open and the block has run out. */
 s32 world_menu_is_input_allowed(void) {
     if ((world_thread_is_running_asm(NATIVE_SCREEN_THREAD_SLOT_TEXT)
             && (g_world_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_TEXT].function_parameter_1 & 0x70) == 0x30)

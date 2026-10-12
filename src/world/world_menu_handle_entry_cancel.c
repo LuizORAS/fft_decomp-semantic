@@ -2,8 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* On the cancel button, flag the context's thread group as finished,
- * demote every waiting thread task (1 -> 3) and report -1 to the caller. */
+/* WORLD twin of battle_menu_handle_entry_cancel. */
 void world_menu_handle_entry_cancel(world_menu_entry_t* context) {
     s32 i;
     s32 j;

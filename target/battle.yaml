@@ -801,7 +801,7 @@ functions:
   - {addr: 0x80137b90, size: 8, name: battle_noop_80137b90, hash: 6d64edf91449c1b1}
   - {addr: 0x80137b98, size: 120, name: battle_menu_is_input_allowed, hash: f875053f5144ba32}
   - {addr: 0x80137c10, size: 708, name: battle_menu_handle_entry_confirm, hash: 46aaa86ad0be68d8}
-  - {addr: 0x80137ed4, size: 176, name: battle_menu_step_wrapping_cursor_on_scroll_buttons, hash: 2d20ad44b74b2253}
+  - {addr: 0x80137ed4, size: 176, name: battle_menu_step_wrapping_row_cursor, hash: 2d20ad44b74b2253}
   - {addr: 0x80137f84, size: 272, name: battle_menu_handle_entry_cancel, hash: 5c56c2d632802940}
   - {addr: 0x80138094, size: 224, name: battle_menu_should_close_thread, hash: 3a3f5ddcc1501b24}
   - {addr: 0x80138174, size: 596, name: battle_menu_build_window_sprites, hash: 14eb30841abcf4da}

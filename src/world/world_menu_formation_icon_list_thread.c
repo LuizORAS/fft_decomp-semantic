@@ -47,7 +47,7 @@ void world_menu_formation_icon_list_thread(void) {
             break;
         }
         if (world_thread_is_previous_running() == 0) {
-            world_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
+            world_menu_step_wrapping_row_cursor(param, &cursor);
             world_menu_handle_entry_confirm(param, cursor);
             world_menu_handle_entry_cancel(param);
         }

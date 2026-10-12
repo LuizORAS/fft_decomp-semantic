@@ -1,9 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Menu thread: waits for thread 8, runs the tutorial event if pending, then
- * starts the menu-entry thread for the requested menu (0x10/0x12 redirect to
- * 0x36 for monster units) and optionally the two follow-up text threads. */
+/* WORLD twin of battle_menu_start_entry_thread. */
 void world_menu_start_entry_thread(void) {
     s32 menu_id = (s32)world_thread_get_current_parameter_1();
     s32 count;

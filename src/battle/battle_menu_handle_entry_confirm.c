@@ -14,13 +14,13 @@ typedef struct battle_menu_action_entry {
     u8 _unused_38[4];
 } battle_menu_action_entry_t;
 
-/* Act on a confirmed menu option when circle is pressed.
+/* On Circle, take the action of the menu row `selected_option` and store the row as the entry's
+ * result.
  *
- * An action in 0..0xff starts that idle-action menu entry's thread on the
- * thread below the current one (bit 0x1000 suppresses the confirm sound);
- * 0x4d2 records the option as -1; a negative action -n closes n menu levels
- * by setting the third parameter of the next n threads (thread 8 also saves
- * the open menus' selections). */
+ * An action in 0..0xff starts that menu entry's thread in the slot below the current one (bit 0x1000
+ * suppresses the confirm sound); 0x4d2 records the row as -1; a negative action -n closes n menu levels
+ * by setting the third parameter of the next n threads (thread 8 also saves the open menus'
+ * selections). Rows the tutorial disables (EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) do nothing. */
 void battle_menu_handle_entry_confirm(void* menu, s32 selected_option) {
     battle_menu_action_entry_t* entry;
     s16* actions;

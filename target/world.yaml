@@ -149,7 +149,7 @@ functions:
   - {addr: 0x800eba28, size: 8, name: world_noop_800eba28, hash: 6d64edf91449c1b1}
   - {addr: 0x800eba30, size: 216, name: world_menu_is_input_allowed, hash: 4e37f97168b9bd23}
   - {addr: 0x800ebb08, size: 708, name: world_menu_handle_entry_confirm, hash: ab106a2e271467f7}
-  - {addr: 0x800ebdcc, size: 176, name: world_menu_step_wrapping_cursor_on_scroll_buttons, hash: 9b12399f61ac553f}
+  - {addr: 0x800ebdcc, size: 176, name: world_menu_step_wrapping_row_cursor, hash: 9b12399f61ac553f}
   - {addr: 0x800ebe7c, size: 272, name: world_menu_handle_entry_cancel, hash: ccd645be8cf589cb}
   - {addr: 0x800ebf8c, size: 380, name: world_menu_should_close_thread, hash: 8ae66a2cef531880}
   - {addr: 0x800ec108, size: 740, name: world_menu_build_icon_record, hash: a1c9817e34ef4ab3}

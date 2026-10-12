@@ -50,7 +50,7 @@ void battle_menu_run_icon_selection_loop(void) {
             break;
         }
         battle_menu_handle_entry_confirm(param, cursor);
-        battle_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
+        battle_menu_step_wrapping_row_cursor(param, &cursor);
         battle_menu_handle_entry_cancel(param);
         battle_menu_submit_icon_primitives(record);
     }

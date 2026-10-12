@@ -8392,7 +8392,7 @@ void battle_menu_run_icon_selection_loop(void);
 void battle_menu_select_sprite_clut(SPRT* sprite);
 void battle_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
 void battle_menu_submit_icon_primitives(struct world_menu_icon_record* frame);
-void battle_menu_step_wrapping_cursor_on_scroll_buttons(world_menu_entry_t* ctx, s32* sel);
+void battle_menu_step_wrapping_row_cursor(world_menu_entry_t* ctx, s32* sel);
 
 void battle_menu_update_icon_cursor_sprites(
     world_menu_entry_t* param, world_menu_icon_sprites_t* record, s32 frame, s32 cursor);

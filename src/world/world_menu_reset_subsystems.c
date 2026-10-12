@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Target 0x800f2998. */
+/* WORLD twin of battle_menu_reset_subsystems. */
 void world_menu_reset_subsystems(void) {
     world_script_seed_random_from_vsync();
     world_menu_clear_window_buffer_pointers();

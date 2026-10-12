@@ -1,8 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Bind the WORLD scheduler, script and menu subsystems to their backing
-   storage and clear the per-scene state they share. */
+/* WORLD twin of battle_menu_init_subsystem_pointers. */
 void world_menu_init_subsystem_pointers(void) {
     g_world_threads = g_world_thread_contexts;
     g_world_text_glyph_bitmap_data = g_world_text_glyph_bitmaps;

@@ -50,7 +50,7 @@ void debugchr_menu_icon_list_thread(void) {
         if (battle_menu_should_close_thread(g_debugchr_input_controller) != 0) {
             break;
         }
-        battle_menu_step_wrapping_cursor_on_scroll_buttons(state, &cursor);
+        battle_menu_step_wrapping_row_cursor(state, &cursor);
         battle_menu_handle_entry_confirm(state, cursor);
         battle_menu_handle_entry_cancel(state);
         battle_menu_select_icon_cluts(record);

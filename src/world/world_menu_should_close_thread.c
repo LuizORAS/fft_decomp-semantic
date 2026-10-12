@@ -1,12 +1,8 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/*
- * Suppress menu input while another task owns the UI and check completion.
- *
- * Input bit 0x100 opens the entry's auxiliary text thread when its table
- * selector is nonzero. Completion waits for all other task-3 threads.
- */
+/* WORLD's version of battle_menu_should_close_thread. On Select, an entry with a select text table
+ * also opens its announcement (world_menu_announce_entry_value_thread) in the text slot. */
 s32 world_menu_should_close_thread(u32* input) {
     world_menu_entry_t* parameter;
     s32 i;

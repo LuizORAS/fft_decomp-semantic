@@ -1,11 +1,7 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/* Take the confirmed action for menu row row_index: start the linked menu
- * thread, or close the requested number of menu levels, then store the row as
- * the menu's selection.
- *
- * WORLD analog of battle_menu_handle_entry_confirm. */
+/* WORLD twin of battle_menu_handle_entry_confirm. */
 void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
     s32 silent;
     s32 target;

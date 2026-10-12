@@ -10,9 +10,7 @@ typedef struct world_menu_value_remap {
 
 extern world_menu_value_remap_t g_world_menu_selection_remaps[8];
 
-/* Target 0x800f302c. When menu_index is in the 12-entry lookup table, remaps
- * the stored unit's row value through the matching remap record and copies
- * it into the menu entry's 0x38 field. */
+/* WORLD twin of battle_menu_restore_selection_for_selected_unit. */
 void world_menu_restore_selection_for_selected_unit(s32 menu_index) {
     s32 i;
     s32 k;

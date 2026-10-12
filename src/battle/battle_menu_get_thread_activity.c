@@ -1,12 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Report whether the menu layer is busy.
- *
- * Returns g_battle_menu_transition_state when it is nonzero (4 during the unit
- * list fade-out), 2 while the menu-building thread runs or while menu input is
- * blocked, 4 when one of threads 4-9 is running, and 0 when all are idle. The `i
- * != 3` test inside the scan of threads 4-9 always passes. */
+/* Report how busy the menu layer is: the transition state while one runs (4 during the unit list's
+ * fade-out), 2 while the menu-building slot runs or menu input is blocked, 4 while a thread in slots 4
+ * to 9 runs, else 0. The `i != 3` test inside the scan always passes. */
 s32 battle_menu_get_thread_activity(void) {
     s32 i;
     s32 result;

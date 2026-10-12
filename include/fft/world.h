@@ -2421,7 +2421,7 @@ void world_menu_build_unit_status_list(void);
 s32 world_menu_build_window_frame_image(s32 width, s32 height, u16* destination);
 void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep);
 void world_menu_handle_entry_cancel(world_menu_entry_t* context);
-void world_menu_step_wrapping_cursor_on_scroll_buttons(world_menu_entry_t* bounds, s32* cursor);
+void world_menu_step_wrapping_row_cursor(world_menu_entry_t* bounds, s32* cursor);
 void world_menu_check_action_restrictions(void);
 s32 world_menu_should_close_thread(u32* input);
 void world_menu_confirm_action_silently(world_menu_entry_t* entry);

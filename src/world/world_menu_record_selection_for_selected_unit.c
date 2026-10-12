@@ -6,8 +6,7 @@
  * into the address before the base register is formed. Keep the byte view. */
 enum { WORLD_UNKNOWN_ROW_BYTES = 17 };
 
-/* Copies the selected menu entry's 0x38 byte into the stored unit's row of
- * g_world_menu_unit_selection_records when the selection index appears in the 12-entry lookup table. */
+/* WORLD twin of battle_menu_record_selection_for_selected_unit. */
 void world_menu_record_selection_for_selected_unit(void) {
     s32 i;
     /* Local pointer keeps the row-index address hoisted out of the loop. */
