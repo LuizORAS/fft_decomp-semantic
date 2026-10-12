@@ -27,7 +27,7 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
     ai_coords_t* coords;
 
     if (g_ai_data_base.resume_pending == 0) {
-        if ((g_ai_data_base.acting_unit->movement_abilities[2]
+        if ((g_ai_data_base.acting_unit->ability_flags.movement[2]
                 & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER
                     | BATTLE_MOVEMENT_SET_3_FLOAT))
             || (g_ai_data_base.acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FLOAT)]
@@ -76,7 +76,7 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
         for (y = 0; y < ai->map_max_y; y++) {
             for (x = 0; x < ai->map_max_x; x++) {
                 tile = &g_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
-                if (ai->acting_unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_TELEPORT) {
+                if (ai->acting_unit->ability_flags.movement[1] & BATTLE_MOVEMENT_SET_2_TELEPORT) {
                     if (!(ai->acting_unit->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER)) {
                         i = ai->acting_unit_coords.bytes.x - x;
                         if (i < 0) {

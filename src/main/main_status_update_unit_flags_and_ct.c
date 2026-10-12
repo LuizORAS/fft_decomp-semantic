@@ -7,7 +7,7 @@ void main_status_update_unit_flags_and_ct(battle_stats_t* unit) {
     s32 status;
     u8 immunity;
 
-    if (unit->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_FLOAT) {
+    if (unit->ability_flags.movement[2] & BATTLE_MOVEMENT_SET_3_FLOAT) {
         unit->status_sets.innate[STATUS_BYTE_INDEX(STATUS_ID_FLOAT)] |= STATUS_BYTE_MASK(STATUS_ID_FLOAT);
     }
 

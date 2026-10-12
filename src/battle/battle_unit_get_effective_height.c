@@ -26,7 +26,7 @@ u8 battle_unit_get_effective_height(battle_stats_t* unit) {
         height += 2;
         effective_height = height;
     }
-    flags = unit->movement_abilities[2];
+    flags = unit->ability_flags.movement[2];
     if ((flags & BATTLE_MOVEMENT_SET_3_FLOAT)
         || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FLOAT)] & STATUS_BYTE_MASK(STATUS_ID_FLOAT))) {
         effective_height += 2;

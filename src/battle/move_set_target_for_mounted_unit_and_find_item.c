@@ -40,7 +40,7 @@ u32 move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) {
             flags |= MOVE_POST_EVENT_MOUNT_STATUS_CHANGE;
         }
     }
-    find_item = target->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM;
+    find_item = target->ability_flags.movement[2] & BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM;
     tile = map_set_item_trap_data(unit->x, unit->position.y, unit->position.higher_elevation);
     if (find_item && (tile->flags & MOVE_FIND_RESULT_ITEM)) {
         flags |= MOVE_POST_EVENT_ITEM_FOUND;

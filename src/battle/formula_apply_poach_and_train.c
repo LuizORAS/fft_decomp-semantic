@@ -38,7 +38,7 @@ void formula_apply_poach_and_train(void) {
     if (((remaining <= 0)
             || (action->status_changes.infliction[STATUS_BYTE_INDEX(STATUS_ID_DEAD)]
                 & STATUS_BYTE_MASK(STATUS_ID_DEAD)))
-        && (g_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
+        && (g_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
         && !(target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL)) {
         if (target->job_id < JOB_ID_MONSTER_FIRST || target->job_id > JOB_ID_MONSTER_LAST) {
             return;
@@ -50,7 +50,7 @@ void formula_apply_poach_and_train(void) {
         return;
     }
     if ((remaining > 0) && ((g_action_target->max_hp / 5) >= remaining)
-        && (g_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
+        && (g_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
         g_action_target_data->status_changes.infliction[STATUS_BYTE_INDEX(STATUS_ID_INVITE)]
             |= STATUS_BYTE_MASK(STATUS_ID_INVITE);
         if (status_modify_inflictions(0) != 0) {

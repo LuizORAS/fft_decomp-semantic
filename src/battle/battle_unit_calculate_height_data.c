@@ -61,7 +61,7 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
             height.unit_height = offset + 4;
         else
             height.unit_height = offset + 6;
-        flags = unit->movement_abilities[2];
+        flags = unit->ability_flags.movement[2];
         tile = &g_map_tile_data[map_calculate_location(unit)];
         tile_height = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK);
         depth = (*(u8*)&tile->depth_half_height) >> MAP_TILE_DEPTH_SHIFT;

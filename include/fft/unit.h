@@ -866,10 +866,13 @@ typedef struct battle_stats {
     u8 elemental_affinity[5];                            /* 0x06d; elemental_affinity_index_e */
     unit_raw_stats_t raw_stats;                          /* 0x072 */
     job_stat_growth_t stat_growths[UNIT_RAW_STAT_COUNT]; /* 0x081; job_data_t.stat_growths */
-    u8 reaction_abilities[4];                            /* 0x08b; battle_unit_reaction_set_N_e */
-    u8 support_abilities[4];                             /* 0x08f */
-    u8 movement_abilities[3];                            /* 0x093 */
-    unit_career_data_t career;                           /* 0x096; unlocked jobs, learned abilities, levels and JP */
+    /* Active R/S/M flags: one contiguous 88-bit set indexed by ability ID. */
+    struct {
+        u8 reaction[4];        /* 0x00; battle_unit_reaction_set_N_e */
+        u8 support[4];         /* 0x04; battle_unit_support_set_N_e */
+        u8 movement[3];        /* 0x08; battle_unit_movement_set_N_e */
+    } ability_flags;           /* 0x08b */
+    unit_career_data_t career; /* 0x096; unlocked jobs, learned abilities, levels and JP */
     /* main_unit_store_character_names (0x8005c984) copies 16/16/8/8
      * bytes to these four destinations. All names use the game's encoding. */
     u8 name[16];                     /* 0x12c */

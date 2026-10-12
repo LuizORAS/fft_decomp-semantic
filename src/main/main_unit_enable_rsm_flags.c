@@ -7,7 +7,7 @@
 void main_unit_enable_rsm_flags(battle_stats_t* unit) {
     s32 i;
 
-    main_util_clear_byte_data(unit->reaction_abilities, 0xB);
+    main_util_clear_byte_data(&unit->ability_flags, sizeof(unit->ability_flags));
     for (i = 0; i < 4; i++) {
         main_unit_set_rsm_flag(unit, unit->innate_abilities[i]);
     }

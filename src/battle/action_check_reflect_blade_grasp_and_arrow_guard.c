@@ -29,7 +29,7 @@ void action_check_reflect_blade_grasp_and_arrow_guard(void) {
     if (battle_unit_get_action_restriction(g_action_target) != BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
         return;
     }
-    reaction_flags = g_action_target->reaction_abilities[3];
+    reaction_flags = g_action_target->ability_flags.reaction[3];
     if (reaction_flags & BATTLE_REACTION_SET_4_BLADE_GRASP) {
         action_check_blade_grasp_usability();
         return;

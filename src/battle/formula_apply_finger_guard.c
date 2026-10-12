@@ -10,7 +10,7 @@ void formula_apply_finger_guard(void) {
     if (action_is_reaction_blocked(g_action_target) != 0)
         return;
     unit = g_action_target;
-    if ((unit->reaction_abilities[3] & BATTLE_REACTION_SET_4_FINGER_GUARD) == 0)
+    if ((unit->ability_flags.reaction[3] & BATTLE_REACTION_SET_4_FINGER_GUARD) == 0)
         return;
     chance = 0x64 - unit->brave;
     /* The target stores the accuracy as a 16-bit value (0x2a..0x2b). */

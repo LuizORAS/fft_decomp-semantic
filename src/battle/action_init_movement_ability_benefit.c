@@ -35,12 +35,12 @@ s32 action_init_movement_ability_benefit(battle_stats_t* unit) {
         action->mp_healing = amount;
     } else if (flags & MOVE_POST_EVENT_MOVE_GET_EXP) {
         g_action_target_data->exp_change = battle_unit_calculate_move_exp_jp_up_to_earn(g_action_target);
-        if (g_action_target->support_abilities[1] & BATTLE_SUPPORT_SET_2_GAINED_EXP_UP)
+        if (g_action_target->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_GAINED_EXP_UP)
             g_action_target_data->exp_change *= 2;
         g_action_target_data->attack_type = ACTION_TYPE_PSEUDO_STATUS;
     } else if (flags & MOVE_POST_EVENT_MOVE_GET_JP) {
         g_action_target_data->jp_change = battle_unit_calculate_move_exp_jp_up_to_earn(g_action_target);
-        if (g_action_target->support_abilities[1] & BATTLE_SUPPORT_SET_2_GAINED_JP_UP)
+        if (g_action_target->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_GAINED_JP_UP)
             g_action_target_data->jp_change *= 2;
         g_action_target_data->attack_type = ACTION_TYPE_PSEUDO_STATUS;
     }

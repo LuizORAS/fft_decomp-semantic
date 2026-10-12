@@ -149,7 +149,7 @@ void require_editor_load_selected_unit(void) {
         if (item->type_flags & ITEM_TYPE_FLAG_WEAPON) {
             item_flags = g_main_item_weapon_data[item_id].flags;
             if ((item_flags & WEAPON_FLAG_FORCED_TWO_HANDS)
-                || ((unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS)
+                || ((unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS)
                     && (item_flags & WEAPON_FLAG_TWO_HANDS_COMPATIBLE)))
                 editor->two_hands = 1;
         }

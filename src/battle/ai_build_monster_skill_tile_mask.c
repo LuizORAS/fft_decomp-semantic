@@ -29,7 +29,7 @@ void ai_build_monster_skill_tile_mask(void) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE)
             continue;
-        if (!(unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL))
+        if (!(unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL))
             continue;
         if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != ai->acting_unit_team)
             continue;

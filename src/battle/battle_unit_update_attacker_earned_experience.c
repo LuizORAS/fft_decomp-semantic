@@ -31,7 +31,7 @@ void battle_unit_update_attacker_earned_experience(s32 outcome) {
         if (exp <= 0) {
             exp = 1;
         }
-        if (attacker->support_abilities[1] & BATTLE_SUPPORT_SET_2_GAINED_EXP_UP) {
+        if (attacker->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_GAINED_EXP_UP) {
             exp = exp * 2;
         }
         if (exp >= 100) {

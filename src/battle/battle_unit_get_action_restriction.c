@@ -27,7 +27,7 @@ s32 battle_unit_get_action_restriction(battle_stats_t* unit) {
         != 0) {
         return BATTLE_UNIT_ACTION_RESTRICTION_NONE;
     }
-    if ((unit->movement_abilities[2]
+    if ((unit->ability_flags.movement[2]
             & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER | BATTLE_MOVEMENT_SET_3_FLOAT))
         != 0) {
         return BATTLE_UNIT_ACTION_RESTRICTION_NONE;

@@ -24,7 +24,7 @@ s32 ai_fill_target_distance_grid(ai_coords_t* target) {
         g_ai_data_base.search_resume_flag = 1;
     use_manhattan = 0;
     if (!(ai->acting_unit->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER)
-        && (ai->acting_unit->movement_abilities[1]
+        && (ai->acting_unit->ability_flags.movement[1]
             & (BATTLE_MOVEMENT_SET_2_TELEPORT | BATTLE_MOVEMENT_SET_2_TELEPORT_2))) {
         use_manhattan = 1;
     } else {

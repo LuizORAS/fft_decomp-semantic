@@ -17,7 +17,7 @@ void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id) {
         if (original_ability_id < ABILITY_ID_SUPPORT_FIRST) {
             unit->abilities.reaction = original_ability_id;
         }
-        rsm_flags = unit->reaction_abilities;
+        rsm_flags = (u8*)&unit->ability_flags;
         rsm_flags += ability_id >> 3;
         bit_index = ability_id & 7;
         *rsm_flags |= 0x80 >> bit_index;

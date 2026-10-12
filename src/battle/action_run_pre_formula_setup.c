@@ -153,7 +153,7 @@ s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
     case ACTION_MENU_TYPE_ATTACK:
         formula = weapon->formula;
         if ((g_action_current_ability.weapon_data.flags & WEAPON_FLAG_TWO_HANDS_COMPATIBLE)
-            && (g_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS)) {
+            && (g_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS)) {
             if (g_action_attacker->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] == ITEM_ID_NONE
                 && g_action_attacker->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD] == ITEM_ID_NONE) {
                 g_action_current_ability.two_hands_active = 1;

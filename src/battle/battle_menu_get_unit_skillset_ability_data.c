@@ -50,12 +50,12 @@ s32 battle_menu_get_unit_skillset_ability_data(
     if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG)) { /* Frog */
         frog = 1;
     }
-    if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
+    if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
         half_mp = 1;
     }
-    if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_NON_CHARGE) {
+    if (unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_NON_CHARGE) {
         charge = 2;
-    } else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_SHORT_CHARGE) {
+    } else if (unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_SHORT_CHARGE) {
         charge = 1;
     }
     action_calculate_at_list(at_list, BATTLE_AT_LIST_MODE_ALL);

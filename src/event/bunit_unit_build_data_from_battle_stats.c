@@ -130,7 +130,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     record->initial_team_flags = unit->initial_team_flags;
     record->mount_info = unit->mount_info;
     record->two_handed = bunit_unit_is_two_handing_weapon(
-        record->equipment, unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
+        record->equipment, unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
     record->gender_flags = unit->unit_flags;
     record->character_identity = unit->character_identity;
     if (bunit_job_is_special_monster(unit->job_id) != 0 || record->uses_monster_skillset != 0

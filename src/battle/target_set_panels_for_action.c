@@ -48,7 +48,8 @@ s32 target_set_panels_for_action(const action_command_t* source) {
         mode = 1;
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
-        range = ((unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM) || unit->job_id == JOB_ID_MIME) ? 4 : 1;
+        range = ((unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM) || unit->job_id == JOB_ID_MIME) ? 4
+                                                                                                                    : 1;
         mode = 2;
         break;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:

@@ -1401,7 +1401,7 @@ typedef struct world_formation_unit {
                                      it into nibbles */
     u16 egg_color; /* 0x122; party_data_t 0xd2; the formation sprite drawer (0x8011751c) loads it as a 16-bit palette
                       index */
-    u8 support_abilities[4]; /* 0x124; copy of battle_stats_t.support_abilities, BATTLE_SUPPORT_SET_1..4_* */
+    u8 support_abilities[4]; /* 0x124; copy of battle_stats_t.ability_flags.support, BATTLE_SUPPORT_SET_1..4_* */
 } world_formation_unit_t;
 typedef char world_formation_unit_t_size_must_be_296[(sizeof(world_formation_unit_t) == 296) ? 1 : -1];
 

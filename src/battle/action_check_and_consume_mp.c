@@ -39,7 +39,7 @@ s32 action_check_and_consume_mp(battle_stats_t* unit) {
             return 2;
         if (menu == ACTION_MENU_TYPE_DEFAULT && unit->job_id != JOB_ID_MIME) {
             cost = ability->mp_cost;
-            if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
+            if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
                 cost >>= 1;
             g_action_current_ability.mp_cost = cost;
             /* A signed member view retains the target store-before-load order;

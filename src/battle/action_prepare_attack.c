@@ -163,7 +163,7 @@ s32 action_prepare_attack(action_command_t* source, action_command_t* dest, s32 
         entry = &g_main_ability_range_data[ability];
         ct = entry->ct & 0x7f;
         persevere = entry->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE;
-        support = unit->support_abilities[3];
+        support = unit->ability_flags.support[3];
         if (!persevere) {
             if (support & BATTLE_SUPPORT_SET_4_SHORT_CHARGE) {
                 ct = (ct + 1) >> 1;

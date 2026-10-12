@@ -46,7 +46,7 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
     battle_unit_calculate_height_data(&height_data, unit_id);
     unit = &g_battle_unit_stats[unit_id];
     for (i = 0; i < 3; i++) {
-        movement[i] = unit->movement_abilities[i];
+        movement[i] = unit->ability_flags.movement[i];
     }
     config->unit_id = unit_id;
     config->x = unit->x;
@@ -235,7 +235,7 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
         if ((value & BATTLE_MOUNT_INFO_FLAG_MOUNT) && (value & BATTLE_MOUNT_INFO_PARTNER_ID_MASK) != config->unit_id) {
             current->body_height += 2;
         }
-        movement_3 = other->movement_abilities[2];
+        movement_3 = other->ability_flags.movement[2];
         tile = &g_map_tile_data[map_calculate_location(other)];
         base = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK);
         depth = (*(u8*)&tile->depth_half_height) >> 5;

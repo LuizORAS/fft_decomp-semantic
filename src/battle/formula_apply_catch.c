@@ -17,7 +17,7 @@ void formula_apply_catch(void) {
     if (g_action_attacker->job_id == JOB_ID_MIME)
         return;
     unit = g_action_target;
-    if ((unit->reaction_abilities[3] & BATTLE_REACTION_SET_4_CATCH) == 0)
+    if ((unit->ability_flags.reaction[3] & BATTLE_REACTION_SET_4_CATCH) == 0)
         return;
     chance = 0x64 - unit->brave;
     /* The target stores the accuracy as a 16-bit value (0x2a..0x2b). */

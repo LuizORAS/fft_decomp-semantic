@@ -96,7 +96,7 @@ s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count) {
         }
         if (ability_id < ABILITY_ID_ITEM_FIRST) {
             mp_cost = g_main_ability_range_data[ability_id].mp_cost;
-            if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
+            if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
                 mp_cost >>= 1;
             }
             max_mp = unit->max_mp;

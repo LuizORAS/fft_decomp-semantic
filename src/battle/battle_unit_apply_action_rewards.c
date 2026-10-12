@@ -80,7 +80,7 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, action_reward_display_t* di
         }
     }
 
-    if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_GAINED_JP_UP) {
+    if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_GAINED_JP_UP) {
         jp = jp * 3 / 2;
     }
     team = unit->initial_team_flags & BATTLE_TEAM_MASK;

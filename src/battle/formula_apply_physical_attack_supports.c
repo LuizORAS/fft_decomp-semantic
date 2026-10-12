@@ -12,12 +12,12 @@ void formula_apply_physical_attack_supports(void) {
         g_action_current_ability.xa = g_action_current_ability.xa * 2;
     }
 
-    if (g_action_attacker->support_abilities[1] & BATTLE_SUPPORT_SET_2_ATTACK_UP) {
+    if (g_action_attacker->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_ATTACK_UP) {
         g_action_current_ability.xa = g_action_current_ability.xa * 4 / 3;
     }
 
     if (g_action_current_ability.weapon_id == ITEM_ID_NOTHING
-        && (g_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS)) {
+        && (g_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS)) {
         g_action_current_ability.xa = g_action_current_ability.xa * 3 / 2;
     }
 }

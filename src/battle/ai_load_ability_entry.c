@@ -40,7 +40,7 @@ void ai_load_ability_entry(ai_ability_entry_t* entry) {
         return;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         status_id = g_main_item_secondary_data[ability_id - ABILITY_ID_ITEM_FIRST].status_infliction_id;
-        if (unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM)
+        if (unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM)
             ai->considered_ability.parameters.bytes.range = unit->move;
         else
             ai->considered_ability.parameters.bytes.range = 1;
@@ -127,7 +127,7 @@ void ai_load_ability_entry(ai_ability_entry_t* entry) {
         ai->considered_ability.ct = ct;
         ai->considered_ability.element = secondary->element;
         ai->considered_ability.mp_cost = secondary->mp_cost;
-        if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
+        if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
             ai->considered_ability.mp_cost >>= 1;
         if (secondary->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) {
             ai->considered_ability.parameters.bytes.range
@@ -141,9 +141,9 @@ void ai_load_ability_entry(ai_ability_entry_t* entry) {
             goto copy_status;
     }
     /* Preserve the native support-byte masks, including their CT quirk. */
-    if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL)
+    if (unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL)
         ai->considered_ability.ct >>= 1;
-    else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_DEFEND)
+    else if (unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_DEFEND)
         ai->considered_ability.ct = 0;
 copy_status:
     ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,

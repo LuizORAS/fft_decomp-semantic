@@ -85,7 +85,7 @@ void action_init_current_ability_strike_data(battle_stats_t* unit) {
         }
     }
 
-    support = unit->support_abilities[2];
+    support = unit->ability_flags.support[2];
     if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG))
         || (unit->unit_flags & UNIT_FLAG_MONSTER)) {
         g_action_current_ability.primary_weapon_id = ITEM_ID_NONE;

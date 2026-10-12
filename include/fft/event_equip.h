@@ -682,7 +682,7 @@ typedef struct equip_unit_data {
     u16 equipment[5];                     /* 0x54; equip_unit_equipment_slot_e order */
     u8 _unused_5e[0x12];                  /* 0x5e; ability ids and the spare tail of the stat-detail block, left zero */
     u8 equipment_categories[4];           /* 0x70 */
-    u8 support_abilities[4];              /* 0x74; copy of battle_stats_t.support_abilities */
+    u8 support_abilities[4];              /* 0x74; copy of battle_stats_t.ability_flags.support */
     u8 party_index;                       /* 0x78; battle_stats_t.formation_index */
     u8 _padding_79;                       /* tail padding to 2-byte alignment */
 } equip_unit_data_t;

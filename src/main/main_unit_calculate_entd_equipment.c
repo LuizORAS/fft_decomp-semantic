@@ -27,7 +27,7 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd)
 
     /* Right hand */
     item = entd->equipment[ENTD_EQUIPMENT_SLOT_RIGHT_HAND];
-    flags = unit->support_abilities[2];
+    flags = unit->ability_flags.support[2];
     if (item == ENTD_VALUE_RANDOM) {
         if (flags & BATTLE_SUPPORT_SET_3_TWO_HANDS) {
             item = main_unit_calculate_random_equipment(
@@ -38,7 +38,7 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd)
                 unit, ITEM_TYPE_FLAG_WEAPON, WEAPON_FLAG_TWO_SWORDS_COMPATIBLE, ITEM_TYPE_FILTER_ANY);
         }
     }
-    flags = unit->support_abilities[0];
+    flags = unit->ability_flags.support[0];
     if (item == ENTD_VALUE_RANDOM) {
         if (flags & BATTLE_SUPPORT_SET_1_EQUIP_SWORD) {
             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_SWORD);
@@ -92,10 +92,10 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd)
                                          .secondary_data_id]
                     .flags
                 & WEAPON_FLAG_FORCED_TWO_HANDS)
-            || (unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS))) {
+            || (unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS))) {
         item = ITEM_ID_NONE;
     }
-    flags = unit->support_abilities[2];
+    flags = unit->ability_flags.support[2];
     if (item == ENTD_VALUE_RANDOM && (flags & BATTLE_SUPPORT_SET_3_TWO_SWORDS)) {
         item = main_unit_calculate_random_equipment(
             unit, ITEM_TYPE_FLAG_WEAPON, WEAPON_FLAG_TWO_SWORDS_COMPATIBLE, ITEM_TYPE_FILTER_ANY);
@@ -118,7 +118,7 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd)
 
     /* Head */
     item = entd->equipment[ENTD_EQUIPMENT_SLOT_HEAD];
-    flags = unit->support_abilities[0];
+    flags = unit->ability_flags.support[0];
     if (item == ENTD_VALUE_RANDOM) {
         if (flags & BATTLE_SUPPORT_SET_1_EQUIP_ARMOR) {
             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_HEADGEAR, 0, ITEM_TYPE_HELMET);

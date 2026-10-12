@@ -75,7 +75,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
         return -1;
     }
     target = &g_battle_unit_stats[tid];
-    if (!(target->reaction_abilities[3] & BATTLE_REACTION_SET_4_HAMEDO)) {
+    if (!(target->ability_flags.reaction[3] & BATTLE_REACTION_SET_4_HAMEDO)) {
         return -1;
     }
     if (action_calculate_chance_to_react(target) != 0) {

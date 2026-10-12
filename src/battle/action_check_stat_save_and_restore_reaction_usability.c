@@ -12,7 +12,7 @@ void action_check_stat_save_and_restore_reaction_usability(void) {
         return;
     }
     target = g_action_target;
-    reaction_flags = target->reaction_abilities[0];
+    reaction_flags = target->ability_flags.reaction[0];
     if (reaction_flags & BATTLE_REACTION_SET_1_PA_SAVE) {
         action_check_pa_save_ma_save_speed_save_regenerator_auto_potion_gilgame_heart_usability(
             ABILITY_ID_REACTION_PA_SAVE);
@@ -26,7 +26,7 @@ void action_check_stat_save_and_restore_reaction_usability(void) {
         action_check_pa_save_ma_save_speed_save_regenerator_auto_potion_gilgame_heart_usability(
             ABILITY_ID_REACTION_REGENERATOR);
     } else {
-        reaction_flags = target->reaction_abilities[1];
+        reaction_flags = target->ability_flags.reaction[1];
         if (reaction_flags & BATTLE_REACTION_SET_2_HP_RESTORE) {
             action_check_critical_quick_hp_restore_mp_restore_meatbone_slash_usability(ABILITY_ID_REACTION_HP_RESTORE);
         } else if (reaction_flags & BATTLE_REACTION_SET_2_MP_RESTORE) {
@@ -38,7 +38,7 @@ void action_check_stat_save_and_restore_reaction_usability(void) {
             action_check_critical_quick_hp_restore_mp_restore_meatbone_slash_usability(
                 ABILITY_ID_REACTION_MEATBONE_SLASH);
         } else {
-            reaction_flags = target->reaction_abilities[2];
+            reaction_flags = target->ability_flags.reaction[2];
             if (reaction_flags & BATTLE_REACTION_SET_3_GILGAME_HEART) {
                 action_check_pa_save_ma_save_speed_save_regenerator_auto_potion_gilgame_heart_usability(
                     ABILITY_ID_REACTION_GILGAME_HEART);

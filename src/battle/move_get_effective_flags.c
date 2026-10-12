@@ -14,8 +14,8 @@ move_effective_flags_e move_get_effective_flags(const battle_stats_t* unit) {
     s32 current_status_3;
 
     current_status_3 = unit->status_sets.current[2];
-    movement_abilities_3 = unit->movement_abilities[2];
-    movement_abilities_2 = unit->movement_abilities[1];
+    movement_abilities_3 = unit->ability_flags.movement[2];
+    movement_abilities_2 = unit->ability_flags.movement[1];
 
     flags = 0;
     if (current_status_3 & STATUS_BYTE_MASK(STATUS_ID_FLOAT)) {

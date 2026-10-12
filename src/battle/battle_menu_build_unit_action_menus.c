@@ -39,7 +39,7 @@ s32 battle_menu_build_unit_action_menus(s32 unit_id, u8* entries, u8* empty, u8*
         entries[1] = SKILLSET_ID_NONE;
         return 1;
     }
-    supports = unit->support_abilities[3];
+    supports = unit->ability_flags.support[3];
     if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG)) {
         supports = 0;
     }
