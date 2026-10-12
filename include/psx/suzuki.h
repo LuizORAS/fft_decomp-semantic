@@ -143,6 +143,14 @@ typedef enum suzuki_modulator_waveform {
     SUZUKI_MODULATOR_WAVEFORM_OFF = 8,               /* suzuki_smd_modulator_deactivate, as are 9-15 */
 } suzuki_modulator_waveform_e;
 
+/* Vibrato, tremolo and pan-LFO operands with a start delay. */
+typedef struct suzuki_smd_modulator_parameters {
+    u8 speed;
+    s8 depth;
+    u8 delay;
+} suzuki_smd_modulator_parameters_t;
+typedef char suzuki_smd_modulator_parameters_size_must_be_3[sizeof(suzuki_smd_modulator_parameters_t) == 3 ? 1 : -1];
+
 /* Vibrato, tremolo and pan-LFO waveform operands. */
 typedef struct suzuki_smd_waveform_parameters {
     u8 speed;
