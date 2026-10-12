@@ -16,18 +16,24 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     u32 evade;
 
     memset(record, 0, sizeof(world_formation_unit_t));
-    record->level = party->level <= UNIT_LEVEL_MAX ? party->level : UNIT_LEVEL_MAX;
+    record->status.level = party->level <= UNIT_LEVEL_MAX ? party->level : UNIT_LEVEL_MAX;
     if (unit->formation_index >= PARTY_GUEST_SLOT_FIRST) {
-        record->team_kind = 2;
+        record->status.team_kind = 2;
     }
-    record->experience = party->experience < UNIT_LEVEL_UP_EXPERIENCE ? party->experience : UNIT_LEVEL_EXPERIENCE_MAX;
-    record->party_index = unit->formation_index;
-    record->hp = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
-    record->max_hp = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
-    record->mp = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
-    record->max_mp = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
-    record->ct = unit->ct <= UNIT_TURN_CT_THRESHOLD ? unit->ct : UNIT_TURN_CT_THRESHOLD;
-    record->max_ct = UNIT_TURN_CT_THRESHOLD;
+    record->status.experience
+        = party->experience < UNIT_LEVEL_UP_EXPERIENCE ? party->experience : UNIT_LEVEL_EXPERIENCE_MAX;
+    record->status.unit_index = unit->formation_index;
+    record->status.gauges[MENU_UNIT_STATUS_GAUGE_HP].value
+        = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
+    record->status.gauges[MENU_UNIT_STATUS_GAUGE_HP].max
+        = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
+    record->status.gauges[MENU_UNIT_STATUS_GAUGE_MP].value
+        = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
+    record->status.gauges[MENU_UNIT_STATUS_GAUGE_MP].max
+        = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
+    record->status.gauges[MENU_UNIT_STATUS_GAUGE_CT].value
+        = unit->ct <= UNIT_TURN_CT_THRESHOLD ? unit->ct : UNIT_TURN_CT_THRESHOLD;
+    record->status.gauges[MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
     record->identity.unit_index = unit->formation_index;
     record->identity.job_id = party->job_id;
     record->identity.brave = unit->brave;

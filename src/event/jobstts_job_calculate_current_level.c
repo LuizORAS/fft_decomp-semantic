@@ -10,7 +10,7 @@ s32 jobstts_job_calculate_current_level(s32 index) {
     s32 job_level_index = generic_job >> 1;
     u8 packed_levels;
 
-    packed_levels = unit->job_levels[job_level_index];
+    packed_levels = unit->career.job_levels[job_level_index];
 
     g_jobstts_job_current_level = packed_levels;
     if (generic_job & 1) {

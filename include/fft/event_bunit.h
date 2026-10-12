@@ -618,16 +618,8 @@ typedef struct bunit_unit_data {
     s16 unit_count; /* 0x06; shown units plus eggs in each billboard record */
     s16 experience; /* 0x08 */
     s16 entd_slot;  /* 0x0a */
-    s16 current_hp;
-    u8 _unused_00e[2]; /* 0x0e; HP gauge bonus slot, left zero */
-    s16 max_hp;
-    s16 current_mp;
-    u8 _unused_014[2];
-    s16 max_mp;
-    s16 current_ct;
-    u8 _unused_01a[2];
-    s16 max_ct;          /* 0x1c */
-    s16 formation_index; /* 0x1e */
+    menu_unit_status_gauge_t gauges[3]; /* 0x0c; HP, MP and CT */
+    s16 formation_index;                /* 0x1e */
     u8 _unused_020[2];
     s16 name_index; /* 0x22 */
     s16 job_id;     /* 0x24; used when character_identity is 0x82 */
@@ -664,7 +656,7 @@ typedef struct bunit_unit_data {
     u8 mount_info;               /* 0x73; battle_stats_t.mount_info */
     u8 character_identity;       /* 0x74; special character, generic male/female/monster */
     u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT]; /* 0x75; bit reader consumes Squire through Mime */
-    unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x78 */
+    u8 learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB]; /* 0x78 */
     u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT]; /* 0xb1; two packed job-level nibbles per byte */
     u8 _padding_0bb;                          /* aligns job_points */
     unit_job_points_t job_points;             /* 0xbc; current JP followed by total JP */
@@ -681,14 +673,16 @@ typedef char bunit_unit_data_uses_monster_skillset_must_be_0x3e
     [((unsigned long)&((bunit_unit_data_t*)0)->uses_monster_skillset == 0x3e) ? 1 : -1];
 typedef char
     bunit_unit_data_experience_must_be_0x08[((unsigned long)&((bunit_unit_data_t*)0)->experience == 0x08) ? 1 : -1];
-typedef char
-    bunit_unit_data_current_hp_must_be_0x0c[((unsigned long)&((bunit_unit_data_t*)0)->current_hp == 0x0C) ? 1 : -1];
-typedef char bunit_unit_data_max_hp_must_be_0x10[((unsigned long)&((bunit_unit_data_t*)0)->max_hp == 0x10) ? 1 : -1];
-typedef char
-    bunit_unit_data_current_mp_must_be_0x12[((unsigned long)&((bunit_unit_data_t*)0)->current_mp == 0x12) ? 1 : -1];
-typedef char bunit_unit_data_max_mp_must_be_0x16[((unsigned long)&((bunit_unit_data_t*)0)->max_mp == 0x16) ? 1 : -1];
-typedef char
-    bunit_unit_data_current_ct_must_be_0x18[((unsigned long)&((bunit_unit_data_t*)0)->current_ct == 0x18) ? 1 : -1];
+typedef char bunit_unit_data_current_hp_must_be_0x0c
+    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_HP].value == 0x0C) ? 1 : -1];
+typedef char bunit_unit_data_max_hp_must_be_0x10
+    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_HP].max == 0x10) ? 1 : -1];
+typedef char bunit_unit_data_current_mp_must_be_0x12
+    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_MP].value == 0x12) ? 1 : -1];
+typedef char bunit_unit_data_max_mp_must_be_0x16
+    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_MP].max == 0x16) ? 1 : -1];
+typedef char bunit_unit_data_current_ct_must_be_0x18
+    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_CT].value == 0x18) ? 1 : -1];
 typedef char bunit_unit_data_brave_must_be_0x26[((unsigned long)&((bunit_unit_data_t*)0)->brave == 0x26) ? 1 : -1];
 typedef char bunit_unit_data_faith_must_be_0x28[((unsigned long)&((bunit_unit_data_t*)0)->faith == 0x28) ? 1 : -1];
 typedef char

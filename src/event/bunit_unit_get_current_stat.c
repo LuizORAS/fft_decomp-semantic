@@ -11,13 +11,13 @@ s32 bunit_unit_get_current_stat(s32 unit_index) {
     mode = g_bunit_unit_stat_mode;
     if (mode == MENU_UNIT_READOUT_HP) {
         entry = g_bunit_unit_data[unit_index];
-        value = entry->current_hp;
+        value = entry->gauges[MENU_UNIT_STATUS_GAUGE_HP].value;
     } else if (mode == MENU_UNIT_READOUT_MP) {
         entry = g_bunit_unit_data[unit_index];
-        value = entry->current_mp;
+        value = entry->gauges[MENU_UNIT_STATUS_GAUGE_MP].value;
     } else if (mode == MENU_UNIT_READOUT_CT) {
         entry = g_bunit_unit_data[unit_index];
-        value = entry->current_ct;
+        value = entry->gauges[MENU_UNIT_STATUS_GAUGE_CT].value;
     }
     g_bunit_unit_current_stat_value = value;
     return g_bunit_unit_current_stat_value;

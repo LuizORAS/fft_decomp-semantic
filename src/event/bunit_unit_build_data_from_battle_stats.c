@@ -40,19 +40,19 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     record->list_index = list_index;
     record->experience = unit->experience < UNIT_LEVEL_UP_EXPERIENCE ? unit->experience : UNIT_LEVEL_EXPERIENCE_MAX;
     record->entd_slot = unit->entd_slot;
-    record->current_hp = unit->hp <= UNIT_HP_MP_MAX ? unit->hp : UNIT_HP_MP_MAX;
-    record->max_hp = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
-    record->current_mp = unit->mp <= UNIT_HP_MP_MAX ? unit->mp : UNIT_HP_MP_MAX;
-    record->max_mp = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
+    record->gauges[MENU_UNIT_STATUS_GAUGE_HP].value = unit->hp <= UNIT_HP_MP_MAX ? unit->hp : UNIT_HP_MP_MAX;
+    record->gauges[MENU_UNIT_STATUS_GAUGE_HP].max = unit->max_hp <= UNIT_HP_MP_MAX ? unit->max_hp : UNIT_HP_MP_MAX;
+    record->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp <= UNIT_HP_MP_MAX ? unit->mp : UNIT_HP_MP_MAX;
+    record->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = unit->max_mp <= UNIT_HP_MP_MAX ? unit->max_mp : UNIT_HP_MP_MAX;
     value = UNIT_TURN_CT_THRESHOLD;
     if (unit->has_turn != 1) {
         value = unit->ct;
     }
-    record->current_ct = value;
+    record->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = value;
     if (value > UNIT_TURN_CT_THRESHOLD) {
-        record->current_ct = UNIT_TURN_CT_THRESHOLD;
+        record->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
     }
-    record->max_ct = UNIT_TURN_CT_THRESHOLD;
+    record->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
     record->formation_index = unit->formation_index;
     record->name_index = unit->entd_slot;
     record->job_id = unit->job_id;

@@ -30,27 +30,27 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
     if (stats->hp <= UNIT_HP_MP_MAX) {
         capped = stats->hp;
     }
-    unit->hp = capped;
+    unit->gauges[MENU_UNIT_STATUS_GAUGE_HP].value = capped;
     capped = UNIT_HP_MP_MAX;
     if (stats->max_hp <= UNIT_HP_MP_MAX) {
         capped = stats->max_hp;
     }
-    unit->max_hp = capped;
+    unit->gauges[MENU_UNIT_STATUS_GAUGE_HP].max = capped;
     capped = UNIT_HP_MP_MAX;
     if (stats->mp <= UNIT_HP_MP_MAX) {
         capped = stats->mp;
     }
-    unit->mp = capped;
+    unit->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = capped;
     capped = UNIT_HP_MP_MAX;
     if (stats->max_mp <= UNIT_HP_MP_MAX) {
         capped = stats->max_mp;
     }
-    unit->max_mp = capped;
-    unit->ct = stats->has_turn != 1 ? stats->ct : UNIT_TURN_CT_THRESHOLD;
-    if (unit->ct > UNIT_TURN_CT_THRESHOLD) {
-        unit->ct = UNIT_TURN_CT_THRESHOLD;
+    unit->gauges[MENU_UNIT_STATUS_GAUGE_MP].max = capped;
+    unit->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = stats->has_turn != 1 ? stats->ct : UNIT_TURN_CT_THRESHOLD;
+    if (unit->gauges[MENU_UNIT_STATUS_GAUGE_CT].value > UNIT_TURN_CT_THRESHOLD) {
+        unit->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
     }
-    unit->max_ct = UNIT_TURN_CT_THRESHOLD;
+    unit->gauges[MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
     unit->identity.unit_index = stats->entd_slot;
     unit->identity.job_id = stats->job_id;
     unit->identity.brave = stats->brave;

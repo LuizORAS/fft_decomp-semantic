@@ -22,7 +22,7 @@ s32 jobstts_job_build_unit_job_list(u8 unit_id, s16* job_ids, s32 unused) {
     (void)unused;
 
     slot = &unit_table[unit_index];
-    jobstts_bits_init_primary_reader((*slot)->unlocked_jobs);
+    jobstts_bits_init_primary_reader((*slot)->career.unlocked_jobs);
     job_ids[0] = jobstts_job_get_base(unit_id);
     if ((jobstts_job_is_special_monster((*slot)->job_id) != 0)
         || ((*slot)->character_identity == CHARACTER_IDENTITY_MONSTER)) {

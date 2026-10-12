@@ -37,7 +37,7 @@ void world_card_build_save_image(s32 slot) {
         sizeof(g_world_load_work_buffer->summary.name));
     g_world_load_work_buffer->summary.name_terminator = 0xfe;
     g_world_load_work_buffer->summary.job_id = g_world_formation_unit_pointers[i]->identity.job_id;
-    g_world_load_work_buffer->summary.level = g_world_formation_unit_pointers[i]->level;
+    g_world_load_work_buffer->summary.level = g_world_formation_unit_pointers[i]->status.level;
 
     script_var_2f = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
     script_var_2e = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
@@ -52,7 +52,7 @@ void world_card_build_save_image(s32 slot) {
     g_world_load_work_buffer->summary.format_version = 4;
 
     world_card_build_save_file_header(
-        slot, g_world_formation_unit_pointers[i]->level, &g_world_load_work_buffer->header);
+        slot, g_world_formation_unit_pointers[i]->status.level, &g_world_load_work_buffer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         bcopy(&g_main_party_data[i], g_world_load_work_buffer->party_records[i],

@@ -21,8 +21,8 @@ void world_formation_update_unit_selection(void) {
         if (g_world_formation_unit_banner_enabled != 0) {
             saved = g_world_status_display_thread_params.flags;
             if (g_world_formation_unit_banner_at_bottom_latch != g_world_formation_unit_banner_at_bottom) {
-                bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch],
-                    &g_world_comparison_unit_stat_summary, 0x22);
+                bcopy(&g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->status,
+                    &g_world_comparison_unit_stat_summary, sizeof(menu_unit_status_record_t));
                 bcopy(&g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->identity,
                     &g_world_comparison_unit_identity, sizeof(menu_unit_status_identity_t));
                 world_menu_toggle_comparison_status_thread(1);

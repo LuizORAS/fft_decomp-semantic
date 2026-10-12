@@ -1367,21 +1367,7 @@ typedef char world_formation_abilities_size_must_be_10[(sizeof(world_formation_a
  * stay as padding.
  */
 typedef struct world_formation_unit {
-    s16 level;         /* 0x000 */
-    s16 team_kind;     /* 0x002; 2 for guest slots */
-    u8 _unused_004[4]; /* 0x004; status record list_index and unit_count, left zero */
-    s16 experience;    /* 0x008 */
-    s16 party_index;   /* 0x00a; portrait */
-    s16 hp;            /* 0x00c */
-    u8 _unused_00e[2]; /* 0x00e; HP gauge bonus slot */
-    s16 max_hp;        /* 0x010 */
-    s16 mp;            /* 0x012 */
-    u8 _unused_014[2];
-    s16 max_mp; /* 0x016 */
-    s16 ct;     /* 0x018 */
-    u8 _unused_01a[2];
-    s16 max_ct;                           /* 0x01c; always 100 (world_formation_build_unit_record) */
-    u8 _unused_01e[4];                    /* 0x01e; tail of the 0x22-byte status record */
+    menu_unit_status_record_t status;     /* 0x000; copied whole to the status banner */
     menu_unit_status_identity_t identity; /* 0x022 */
     s16 move;                             /* 0x030 */
     s16 speed;                            /* 0x032 */
@@ -1408,10 +1394,10 @@ typedef struct world_formation_unit {
     u8 _unused_071;
     u8 sprite_set;               /* 0x072; "Sprite Set ID": party_data_t.sprite_set / character identity */
     u8 equippable_item_types[4]; /* 0x073; bit per item type, read by can_unit_equip_item_id */
-    u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT];                               /* 0x077 */
-    unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x07a through 0x0b2 */
-    u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT];                                     /* 0x0b3 */
-    u8 _padding_0bd;                                                              /* aligns job_points */
+    u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT];                                           /* 0x077 */
+    u8 learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB]; /* 0x07a through 0x0b2 */
+    u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT];                                                 /* 0x0b3 */
+    u8 _padding_0bd;                                                                          /* aligns job_points */
     unit_job_points_t job_points; /* 0x0be; current JP followed by total JP */
     u8 name[0x10];                /* 0x10e; "unit_t Nickname" */
     u8 monster_graphic;           /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82

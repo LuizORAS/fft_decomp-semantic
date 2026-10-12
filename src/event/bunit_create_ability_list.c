@@ -56,7 +56,7 @@ s32 bunit_create_ability_list(s16 unit_index, s16 job_id, s32 ability_category, 
     unit_data = g_bunit_unit_data[unit_index];
     /* Integer address arithmetic preserves the final ADDU operand order. */
     byte_offset
-        = generic_index * sizeof(unit_learned_ability_row_t) + (s32) & ((bunit_unit_data_t*)0)->learned_abilities;
+        = generic_index * UNIT_LEARNED_ABILITY_BYTES_PER_JOB + (s32) & ((bunit_unit_data_t*)0)->learned_abilities;
     bunit_bits_init_reader((const u8*)(byte_offset + (s32)unit_data));
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
         if (bunit_job_is_special_monster(g_bunit_unit_data[unit_index]->job_id)) {

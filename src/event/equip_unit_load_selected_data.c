@@ -10,13 +10,13 @@ void equip_unit_load_selected_data(void) {
     equip_unit_data_t* unit;
 
     unit = g_equip_unit_data[g_equip_unit_selected_index];
-    if (unit->max_hp < unit->hp) {
-        unit->hp = unit->max_hp;
+    if (unit->gauges[MENU_UNIT_STATUS_GAUGE_HP].max < unit->gauges[MENU_UNIT_STATUS_GAUGE_HP].value) {
+        unit->gauges[MENU_UNIT_STATUS_GAUGE_HP].value = unit->gauges[MENU_UNIT_STATUS_GAUGE_HP].max;
     }
 
     unit = g_equip_unit_data[g_equip_unit_selected_index];
-    if (unit->max_mp < unit->mp) {
-        unit->mp = unit->max_mp;
+    if (unit->gauges[MENU_UNIT_STATUS_GAUGE_MP].max < unit->gauges[MENU_UNIT_STATUS_GAUGE_MP].value) {
+        unit->gauges[MENU_UNIT_STATUS_GAUGE_MP].value = unit->gauges[MENU_UNIT_STATUS_GAUGE_MP].max;
     }
 
     bcopy(g_equip_unit_data[g_equip_unit_selected_index], &g_equip_selected_unit_stat_summary, 0x22);

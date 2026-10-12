@@ -18,7 +18,7 @@ s32 main_unit_init_job_data(battle_stats_t* unit, s32 slot, s32 use_world_text) 
         return -1;
     }
     job_levels = party_unit->career.job_levels;
-    main_unit_init_job_levels(&party_unit->career.job_points.total, job_levels);
+    main_unit_init_job_levels(party_unit->career.job_points.total.values, job_levels);
     main_job_store_unlock_bitset(
         party_unit->career.unlocked_jobs, main_job_calculate_unlocked(job_levels, party_unit->gender_flags));
     main_unit_reset_battle_state(unit);

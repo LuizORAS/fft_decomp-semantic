@@ -459,6 +459,7 @@ enum {
     UNIT_UNLOCKED_JOB_BYTE_COUNT = 3,
     /* Mime has JP and a packed job level, but no learned-ability row. */
     UNIT_LEARNED_ABILITY_JOB_COUNT = UNIT_CAREER_JOB_COUNT - 1,
+    /* Each job has 24 learned-ability bits, MSB-first within each byte. */
     UNIT_LEARNED_ABILITY_BYTES_PER_JOB = 3,
     UNIT_LEARNED_ABILITY_BYTE_COUNT = UNIT_LEARNED_ABILITY_JOB_COUNT * UNIT_LEARNED_ABILITY_BYTES_PER_JOB,
     UNIT_JOBS_PER_LEVEL_BYTE = 2,
@@ -489,12 +490,7 @@ enum {
     UNIT_UNLOCKED_JOB_MASK = 0xfffff0,
 };
 
-/* One job's 24 learned-ability bits, MSB-first within each byte. */
-typedef u8 unit_learned_ability_row_t[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
-typedef char unit_learned_ability_row_size_must_be_3
-    [(sizeof(unit_learned_ability_row_t) == UNIT_LEARNED_ABILITY_BYTES_PER_JOB) ? 1 : -1];
-
-/* Per-job JP supports the bytewise party serialization and 16-bit readers. */
+/* Most JP access is 16-bit; party generation and proposition awards use bytes. */
 typedef union unit_job_point_table {
     u16 values[UNIT_CAREER_JOB_COUNT];
     struct {
@@ -515,8 +511,8 @@ typedef char
 
 /* Shared 150-byte progression block cleared when a party unit is generated. */
 typedef struct unit_career_data {
-    u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT];                               /* 0x00 */
-    unit_learned_ability_row_t learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT]; /* 0x03 */
+    u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT];                                           /* 0x00 */
+    u8 learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB]; /* 0x03 */
     u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT]; /* 0x3c; two packed nibbles per byte */
     unit_job_points_t job_points;             /* 0x46; current JP followed by total JP */
 } unit_career_data_t;
