@@ -1,8 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Apply a (negated) scroll amount to a position clamped to [-116, 128] (the
- * same x range wldcore_map_negate_and_clamp_coordinates clamps to) and leave the unapplied
- * remainder in *amount. */
+/* Scroll the map by the x of a cursor move: the camera origin `position` moves by -amount, clamped
+ * to WLDCORE_SCROLL_MIN_X..WLDCORE_SCROLL_MAX_X (the range wldcore_map_negate_and_clamp_coordinates
+ * uses), and the part the limit stops is left in `amount`, so the cursor itself moves by it. */
 void wldcore_map_apply_clamped_horizontal_scroll(s32* amount, s32* position) {
     s32 delta;
     s32 old_position;

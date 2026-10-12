@@ -19,7 +19,7 @@ void wldcore_bar_push_menu_level(void) {
     }
     wldcore_gfx_load_background_set(set);
     wldcore_wait_for_file_load();
-    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
     world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_WELCOME, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair_render.first_window

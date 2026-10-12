@@ -1,9 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 
-/* Places the player's map marker on EVENT_SCRIPT_VAR_LOCATION, queues it for
- * drawing, picks its animation from EVENT_SCRIPT_VAR_TOWN_BACKGROUND, then
- * centres the projection on it and refreshes the camera.
+/* Place the player's marker on the current location (EVENT_SCRIPT_VAR_LOCATION), queue it for
+ * drawing with its palette from EVENT_SCRIPT_VAR_TOWN_BACKGROUND (0, 2 or 3), then centre the camera
+ * on it and project the tiles and the marker.
  *
  * The map-dot position is copied as one SVECTOR, which reproduces the
  * target's unaligned lwl/lwr word copy. */

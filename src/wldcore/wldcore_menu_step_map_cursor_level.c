@@ -299,8 +299,8 @@ scroll:
 
 finish:
     if (level->wide_view == 0 && (hit = level->snap_hit) != 0) {
-        g_wldcore_proposition_selected_entry = hit;
+        g_wldcore_map_label_location = hit;
         return;
     }
-    g_wldcore_proposition_selected_entry = 0;
+    g_wldcore_map_label_location = 0;
 }

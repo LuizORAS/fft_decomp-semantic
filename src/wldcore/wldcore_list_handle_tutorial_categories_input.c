@@ -30,7 +30,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
                 g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth - 1;
                 g_main_system_flags = g_main_system_flags
                     & ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
-                        | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER);
+                        | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL);
                 wldcore_menu_dispatch_publish_handler();
                 if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_TUTORIAL) {
                     g_main_system_flags

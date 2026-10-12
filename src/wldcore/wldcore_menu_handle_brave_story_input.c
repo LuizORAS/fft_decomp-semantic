@@ -56,7 +56,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         wldcore_window_set_render_objects_visible(1);
         g_wldcore_menu_stack_depth--;
         g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
-            | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER);
+            | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL);
         wldcore_menu_dispatch_publish_handler();
         if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) {
             g_main_system_flags

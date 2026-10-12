@@ -2,15 +2,12 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Draws the visible world-map routes into the auxiliary ordering table as
- * textured semi-transparent ribbons. Each route record is a run of packed
- * (x, y) pairs holding the two edges of the ribbon; every point is projected
- * through func_8001D3E8 into one of four rotating vertex slots and flagged
- * in-bounds when x + 127 and y + 111 fall inside 255 x 227. Once four slots
- * are full they become one POLY_FT4 quad, emitted when either edge-leading
- * vertex was in bounds, and the last pair slides down to slots 0 and 1 so the
- * next pair closes the following segment. Gated as a whole by system flag
- * 0x20 and per route by script variable 556 + route.
+/* Draw the routes whose variable (EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST + route) is set as textured
+ * semi-transparent ribbons in the auxiliary ordering table; nothing while
+ * MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES is set. A route's polyline holds the two edges of its ribbon as
+ * pairs of points: each point is projected (RotTransSV) into one of four vertex slots and flagged on
+ * screen when it lies within x -127..127, y -111..115. Each further pair closes one quad with the
+ * pair before it, drawn when either leading vertex is on screen.
  *
  * The count is sign-extended into count_tmp, which the loop guard tests before
  * the copy into count; the `j < count_tmp` guard leaves an unused compare

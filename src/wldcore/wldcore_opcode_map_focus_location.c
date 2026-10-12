@@ -12,10 +12,10 @@ void wldcore_opcode_map_focus_location(void) {
     g_wldcore_script_state.args[0] = entry;
     if (entry == 0xff) {
         index = g_wldcore_map_projection_state.marker.kind;
-        g_wldcore_proposition_selected_entry = index + 1;
+        g_wldcore_map_label_location = index + 1;
     } else {
         index = entry;
-        g_wldcore_proposition_selected_entry = index + 1;
+        g_wldcore_map_label_location = index + 1;
     }
     if (wldcore_map_is_point_outside_projection_bounds((const wldcore_point32_t*)&g_wldcore_map_dot_screen_x[index])
         != 0) {

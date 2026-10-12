@@ -1,8 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Once the current location's script yields a map-menu action, reset the
- * current level's window and dispatch its path, location-visibility or focus
- * request. A focus location of 0xff means the current location.
+/* Run the current location's pending map requests (its WLDCORE_SCRIPT_ACTION_MAP_MENU_MASK
+ * conditions): draw or erase a route (the map path level), show or hide a location (the location
+ * visibility level), or focus the camera on a location (0xff: the current one). Each resets the
+ * current level's window first. The root level runs them when it resumes and a visit when it
+ * starts.
  *
  * The flag tests are signed `> 0` comparisons; `!= 0` folds to srl/andi. */
 void wldcore_menu_dispatch_pending_script_requests(void) {
@@ -20,7 +22,7 @@ void wldcore_menu_dispatch_pending_script_requests(void) {
             (*flags & WLDCORE_SCRIPT_ACTION_ERASE_PATH) > 0);
     } else if (*flags & WLDCORE_SCRIPT_ACTION_LOCATION_VISIBILITY_MASK) {
         wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
-        wldcore_push_map_location_visibility_level(
+        wldcore_menu_push_map_location_visibility_level(
             g_wldcore_script_state.args[0], (*flags & WLDCORE_SCRIPT_ACTION_ERASE_LOCATION) > 0);
     } else if (*flags & WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION) {
         wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);

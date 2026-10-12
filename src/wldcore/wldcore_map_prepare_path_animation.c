@@ -40,7 +40,7 @@ void wldcore_map_prepare_path_animation(s32 from, s32 to) {
         }
         records++;
     }
-    if (i == 48) {
+    if (i == WLDCORE_ROUTE_COUNT) {
         return;
     }
     g_wldcore_map_path_animation.flags |= WLDCORE_SLIDESHOW_RUNNING;

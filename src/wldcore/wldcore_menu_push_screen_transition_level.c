@@ -34,7 +34,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
 
     wldcore_clear_screen_and_set_map_clip_rect(1);
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
-        | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
+        | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
     wldcore_fade_start_screen(0, 0x10);
     switch (screen) {
     case WLDCORE_MENU_LEVEL_BRAVE_STORY:

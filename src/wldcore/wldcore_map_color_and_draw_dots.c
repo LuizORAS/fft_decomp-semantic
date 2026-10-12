@@ -13,15 +13,13 @@ typedef struct wldcore_map_dot_source {
 
 extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;
 
-/*
- * Builds the 43 world-map location dots and queues them for drawing.
- *
- * Each dot takes its kind, sub-kind and map position from
- * g_wldcore_map_dot_sources; kind 2 uses the second dot sequence. A location
- * whose colour script variable is set gets palette 0xc (locations 0..23) or
- * 0x10 (the rest), any other the default palette, and one whose visibility
- * variable is 0 is hidden. Resets the pulse state and projects the dots.
- */
+/* Build the 43 location dots and queue them for drawing. Each takes its kind, sub-kind and map
+ * position from g_wldcore_map_dot_sources; kinds 0 and 1 (the castles and towns) use the first dot
+ * sequence and kind 2 (the other places) the second. A location whose colour variable
+ * (EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST + id) is set takes palette 0xc (the first 24 locations) or
+ * 0x10 (the fields), the blue and green dots; 0 keeps the sprite's own red, where a story event
+ * waits. A location whose visibility variable is 0 is hidden. Resets the pulse and projects the
+ * dots. */
 void wldcore_map_color_and_draw_dots(void) {
     wldcore_map_dot_source_t* src;
     wldcore_map_dot_t* dots;
@@ -29,7 +27,7 @@ void wldcore_map_color_and_draw_dots(void) {
     s32* flags_base;
     u8* color;
     s32 y;
-    s32 is_castle;
+    s32 is_site;
     s32 queue_index;
     s32 i;
 
@@ -54,8 +52,8 @@ void wldcore_map_color_and_draw_dots(void) {
         color[0] = 0x80;
         color[1] = 0x80;
         color[2] = 0x80;
-        is_castle = g_wldcore_map_dots[i].kind == 2;
-        g_wldcore_map_dots[i].sequence = is_castle + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
+        is_site = g_wldcore_map_dots[i].kind == 2;
+        g_wldcore_map_dots[i].sequence = is_site + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
         if (world_script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
             if (i < WORLD_LOCATION_FIELD_FIRST) {
                 g_wldcore_map_dots[i].palette = 0xc;

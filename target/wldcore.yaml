@@ -74,7 +74,7 @@ functions:
   - {addr: 0x8006bbc8, size: 444, name: wldcore_gfx_draw_number_digits, hash: 4f4c1a14ea91b92e}
   - {addr: 0x8006bd84, size: 536, name: wldcore_gfx_draw_number_digits_with_fill, hash: a418021d05820d27}
   - {addr: 0x8006bf9c, size: 364, name: wldcore_gfx_draw_calendar_date, hash: fad8f45c4135b000}
-  - {addr: 0x8006c108, size: 244, name: wldcore_proposition_submit_marker_request, hash: 1dc3a756616af99e}
+  - {addr: 0x8006c108, size: 244, name: wldcore_map_draw_location_label, hash: 1dc3a756616af99e}
   - {addr: 0x8006c1fc, size: 76, name: wldcore_init_world_menus_and_date, hash: 612b5687dd91566d}
   - {addr: 0x8006c248, size: 264, name: wldcore_menu_run_world_frame, hash: a7b6c9f7d5ebedab}
   - {addr: 0x8006c350, size: 140, name: wldcore_menu_reset_window_list_and_store_origin, hash: 70bde74f247d3161}
@@ -87,11 +87,11 @@ functions:
   - {addr: 0x8006c894, size: 360, name: wldcore_menu_dispatch_pending_script_requests, hash: b156b072359898b5}
   - {addr: 0x8006c9fc, size: 3576, name: wldcore_menu_step_map_cursor_level, hash: a33bbace5619364e}
   - {addr: 0x8006d7f4, size: 308, name: wldcore_menu_push_focus_location_level, hash: f515d77f6e972be6}
-  - {addr: 0x8006d928, size: 352, name: wldcore_map_step_projection_motion_then_pop_level, hash: 58e814e9fb319b81}
+  - {addr: 0x8006d928, size: 352, name: wldcore_menu_step_focus_location_level, hash: 58e814e9fb319b81}
   - {addr: 0x8006da88, size: 304, name: wldcore_menu_push_map_path_level, hash: 80bc1ab53ecc36ee}
   - {addr: 0x8006dbb8, size: 664, name: wldcore_menu_step_map_path_level, hash: 6c1bb124c0f5007c}
-  - {addr: 0x8006de50, size: 252, name: wldcore_push_map_location_visibility_level, hash: 5b94199b77124379}
-  - {addr: 0x8006df4c, size: 432, name: wldcore_map_step_location_visibility_change, hash: b70784a6ea5fc254}
+  - {addr: 0x8006de50, size: 252, name: wldcore_menu_push_map_location_visibility_level, hash: 5b94199b77124379}
+  - {addr: 0x8006df4c, size: 432, name: wldcore_menu_step_map_location_visibility_level, hash: b70784a6ea5fc254}
   - {addr: 0x8006e0fc, size: 268, name: wldcore_menu_push_entry_window_level, hash: 519de82a790539fd}
   - {addr: 0x8006e208, size: 672, name: wldcore_menu_step_return_level, hash: 5bfaba8eb0907f33}
   - {addr: 0x8006e4a8, size: 724, name: wldcore_menu_push_text_window_level, hash: 36c0187ff6c4e72f}
@@ -493,7 +493,7 @@ data:
   - {addr: 0x8009edd3, name: g_wldcore_choice_hidden_variable_offsets}
   - {addr: 0x8009ee30, name: g_wldcore_panel_row_actions}
   - {addr: 0x8009ee50, name: g_wldcore_script_opcode_table}
-  - {addr: 0x8009eef4, name: g_wldcore_location_marker_shade}
+  - {addr: 0x8009eef4, name: g_wldcore_map_label_shade}
   - {addr: 0x8009eef8, name: g_wldcore_scrollable_text_window}
   - {addr: 0x8009ef6c, name: g_wldcore_map_cursor_scroll_x}
   - {addr: 0x8009ef80, name: g_wldcore_window_render_object_queue}
@@ -595,7 +595,7 @@ data:
   - {addr: 0x800d0b04, name: g_wldcore_map_projection_motion_origin_x}
   - {addr: 0x800d0b14, name: g_wldcore_map_projection_motion_target_x}
   - {addr: 0x800d0b24, name: g_wldcore_location_entry_state}
-  - {addr: 0x800d0bb4, name: g_wldcore_proposition_selected_entry}
+  - {addr: 0x800d0bb4, name: g_wldcore_map_label_location}
   - {addr: 0x800d0bb8, name: g_wldcore_route_search_depth}
   - {addr: 0x800d0bbc, name: g_main_save_slot_buffer}
   - {addr: 0x800d3bbc, name: g_wldcore_map_path_animation}

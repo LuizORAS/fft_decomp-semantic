@@ -80,8 +80,8 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_hud_color.b = 0x80;
     g_wldcore_date_display_x = -0x78;
     g_wldcore_date_display_y = -0x64;
-    g_wldcore_location_marker_shade = 0x80;
-    g_wldcore_proposition_selected_entry = 0;
+    g_wldcore_map_label_shade = 0x80;
+    g_wldcore_map_label_location = 0;
 
     if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_TUTORIAL_EVENT)) {
         main_sound_unload_scenario_music_and_tunes();

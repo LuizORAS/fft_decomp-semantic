@@ -1,7 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 
-/* Start a wrapped projection move for a point outside the camera bounds.
+/* Start a camera pan toward a map position when its screen point calls for one
+ * (wldcore_map_is_point_outside_projection_bounds): from the current origin to the origin that
+ * centres the position (wldcore_map_negate_and_clamp_coordinates), over a number of frames that grows
+ * with the distance. Returns 1 when a pan started.
  *
  * The motion record snapshots the current origin and stores the target
  * distance in the same 8-bit fractional scale used by its progress field. */

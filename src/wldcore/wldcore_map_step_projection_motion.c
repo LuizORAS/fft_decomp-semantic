@@ -8,13 +8,9 @@ extern s32 g_wldcore_map_projection_motion_progress;
 extern s32 g_wldcore_map_projection_motion_origin_x;
 extern s32 g_wldcore_map_projection_motion_target_x;
 
-/* Advance one frame of the wrapped projection move started at 0x8008ec38.
- *
- * Interpolates the live projection origin between the snapshotted origin and
- * the clamped target by progress/distance. While progress is still short of
- * distance it is advanced and 1 is returned. On the final frame the origin is
- * snapped to the target, the record's active flag is toggled off, and 0 is
- * returned.
+/* Step the camera pan one frame: the origin moves from where the pan started toward its target by
+ * progress / distance. Returns 1 while the pan runs, and 0 on the frame it lands, with the origin
+ * on the target and the pan's active flag cleared.
  *
  * The final snap goes through the VECTOR view of the target, so the four
  * words copy as one struct assignment. */

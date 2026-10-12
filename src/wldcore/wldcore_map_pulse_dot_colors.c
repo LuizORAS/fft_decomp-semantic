@@ -1,10 +1,15 @@
-/* The 0x40 compare limit reuses the dead `flags` local. With its own `limit`
- * variable the allocator swaps the g_wldcore_map_dot_pulse_direction snapshot ($a0 in the target) and
- * the limit ($v1); reusing the function-scope allocno reproduces the target
- * pair. */
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Pulse the visible location dots once a frame: a phase runs from 0 to 64 and back (held while
+ * MAIN_SYSTEM_FLAG_FREEZE_ANIMATION is set); the blue and green dots take brightness 0x60 + 2 * phase
+ * and the red ones 0xE0 - 2 * phase, so the two kinds pulse in opposition. Nothing while
+ * MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS is set.
+ *
+ * The 0x40 compare limit reuses the dead `flags` local. With its own `limit`
+ * variable the allocator swaps the g_wldcore_map_dot_pulse_direction snapshot ($a0 in the target) and
+ * the limit ($v1); reusing the function-scope allocno reproduces the target
+ * pair. */
 void wldcore_map_pulse_dot_colors(void) {
     s32 flags;
     s32 i;

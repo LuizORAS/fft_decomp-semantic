@@ -436,7 +436,6 @@ typedef char wldcore_location_view_size_must_be_0x38[sizeof(wldcore_location_vie
 
 extern wldcore_location_entry_state_t g_wldcore_location_entry_state;
 extern wldcore_state_record_t* g_wldcore_location_records;
-extern s32 g_wldcore_location_marker_shade;
 extern wldcore_location_view_t g_wldcore_location_view;
 extern u32* g_wldcore_location_frame_tim;
 s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, u32 value, s32 step);
@@ -591,6 +590,9 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state);
 
 /* camera */
+/* The world map's camera, whose origin, rotation and scale the map is projected with: it pans to a
+ * location, zooms out and back, follows the travelling marker, and projects the location dots. */
+
 /* The 52-byte world map dot records at 0x800d3ca8. */
 typedef struct wldcore_map_dot {
     s32 kind;
@@ -598,7 +600,7 @@ typedef struct wldcore_map_dot {
     SVECTOR position; /* 0x08; world-map position, RotTrans input */
     s32 flags;        /* 0x10; wldcore_display_object_flag_e */
     s32 sequence;     /* 0x14; wldcore_anim_sequence_id_e */
-    s32 priority;     /* 0x18; highest wins in wldcore_map_find_dot_at_point */
+    s32 priority;     /* 0x18; the lowest value wins in wldcore_map_find_dot_at_point; 0xf for every dot */
     s32 frame_index;  /* 0x1c; display object (at &flags) frame_index, cleared on sequence changes */
     s32 anim_counter; /* 0x20; display object anim_counter, cleared with frame_index */
     /* 0x24; CLUT selector read as wldcore_window_record_t.palette (0 keeps the
@@ -687,6 +689,8 @@ typedef struct wldcore_projected_entry {
 typedef char wldcore_projected_entry_size_must_be_0x18[sizeof(wldcore_projected_entry_t) == 0x18 ? 1 : -1];
 
 /* scroll */
+/* How far the map camera's origin may scroll. */
+
 typedef enum wldcore_scroll_limits {
     WLDCORE_SCROLL_MIN_X = -116,
     WLDCORE_SCROLL_MAX_X = 128,
@@ -802,44 +806,48 @@ extern u8 g_wldcore_unexplored_land_picture_sets[];
 void wldcore_advance_brave_story_birthdays(void);
 
 /* map */
-/* The type-0x36 menu level pushed by wldcore_push_map_location_visibility_level
- * and stepped by wldcore_map_step_location_visibility_change; only the first
- * four words are known. */
+/* The world map's tiles, location dots and routes, the location label, and the map levels that
+ * change them: focus a location, draw or erase a route, show or hide a location. */
+
+/* The location visibility level (WLDCORE_MENU_LEVEL_MAP_LOCATION_VISIBILITY), pushed by
+ * wldcore_menu_push_map_location_visibility_level and stepped by
+ * wldcore_menu_step_map_location_visibility_level; one menu-stack slot, of which only the first four
+ * words are used. */
 typedef struct wldcore_map_visibility_level {
     s32 dot_index;     /* 0x00; map dot, and script variable 0x200 + dot_index */
-    s32 was_set;       /* 0x04; whether the variable was already set */
+    s32 erase;         /* 0x04; hide the location (the script's ERASE_LOCATION) instead of showing it */
     s32 delay;         /* 0x08; frames the step handler waits, 0x10 here */
     s32 pending_sound; /* 0x0c; set so the step handler plays a sound once */
     u8 _unused_10[0x4c];
 } wldcore_map_visibility_level_t;
 typedef char wldcore_map_visibility_level_size_must_be_0x5c[sizeof(wldcore_map_visibility_level_t) == 0x5c ? 1 : -1];
 
-/* Provisional: the type-0x35 menu level pushed by
- * wldcore_menu_push_map_path_level, decoded from the four words it writes and
- * corroborated by its step handler at
- * 0x8006dbb8, which reads only the last two: +0x08 selects the erase
- * direction and +0x0c is the one-shot sound flag. The two leading words are
- * the script's path arguments, which the caller
- * wldcore_menu_dispatch_pending_script_requests passes as g_wldcore_script_state.args[0]
- * and g_wldcore_script_state.args[1]. The record is one menu-stack slot, so the
- * view is 0x5c bytes wide and only the first four words are known. */
+/* The map path level (WLDCORE_MENU_LEVEL_MAP_PATH), pushed by wldcore_menu_push_map_path_level
+ * with a location request's two locations (g_wldcore_script_state.args[0] and [1]) and stepped
+ * by wldcore_menu_step_map_path_level; one menu-stack slot, of which only the first four words
+ * are used. */
 typedef struct wldcore_map_path_level {
-    s32 path_id;       /* 0x00; g_wldcore_script_state.args[0] */
-    s32 path_id_hi;    /* 0x04; g_wldcore_script_state.args[1] */
+    s32 from_location; /* 0x00 */
+    s32 to_location;   /* 0x04 */
     s32 erase;         /* 0x08; step handler walks the path backwards when set */
     s32 pending_sound; /* 0x0c; set so the step handler plays a sound once */
     u8 _unused_10[0x4c];
 } wldcore_map_path_level_t;
 typedef char wldcore_map_path_level_size_must_be_0x5c[sizeof(wldcore_map_path_level_t) == 0x5c ? 1 : -1];
 
-typedef struct wldcore_window_entry_52 {
-    s32 value; /* x position for the 0x800d3cd0 column */
-    s32 y;     /* second position word, read by 0x8006d928 */
+/* g_wldcore_map_dots seen from one dot's screen_x (g_wldcore_map_dot_screen_x, 0x800d3cd0) or
+ * screen_y (g_wldcore_map_dot_screen_y, 0x800d3cd4), with the dots' 0x34-byte stride: `value` is
+ * that coordinate, and from screen_x `y` is the screen_y beside it. */
+typedef struct wldcore_map_dot_screen_view {
+    s32 value;
+    s32 y;
     s8 rest[44];
-} wldcore_window_entry_52_t;
-typedef char wldcore_entry_52_size_must_be_0x34[sizeof(wldcore_window_entry_52_t) == 0x34 ? 1 : -1];
+} wldcore_map_dot_screen_view_t;
+typedef char wldcore_map_dot_screen_view_size_must_be_0x34[sizeof(wldcore_map_dot_screen_view_t) == 0x34 ? 1 : -1];
 
 extern s32 g_wldcore_map_dot_count;
+extern s32 g_wldcore_map_label_location;
+extern s32 g_wldcore_map_label_shade;
 extern wldcore_map_dot_t g_wldcore_map_dots[];
 extern wldcore_projection_state_t g_wldcore_map_projection_state;
 extern wldcore_projection_motion_t g_wldcore_map_projection_motion;
@@ -865,9 +873,9 @@ extern u8 g_wldcore_map_dot_pulse_direction;
 extern u8 g_wldcore_map_dot_pulse_phase;
 extern u8 g_wldcore_map_projection_rotation_bytes[];
 extern wldcore_slideshow_t g_wldcore_map_path_animation;
-extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_y[];
+extern wldcore_map_dot_screen_view_t g_wldcore_map_dot_screen_y[];
 extern s32 g_wldcore_map_window_index;
-extern wldcore_window_entry_52_t g_wldcore_map_dot_screen_x[];
+extern wldcore_map_dot_screen_view_t g_wldcore_map_dot_screen_x[];
 extern VECTOR g_wldcore_map_projection_origin;
 extern SVECTOR g_wldcore_map_projection_rotation;
 extern VECTOR g_wldcore_map_projection_scale;
@@ -904,9 +912,10 @@ void wldcore_map_update_camera_direction_and_projection(void);
 void wldcore_map_update_scroll_axis_speed(wldcore_axis_state_t* axis, s32 direction);
 s32 wldcore_map_roll_random_encounter(s32 location, s32 route);
 void wldcore_map_scroll_projection_if_focus_near_edge(wldcore_point32_t* delta);
-void wldcore_push_map_location_visibility_level(s32 value, s32 flag);
+void wldcore_menu_push_map_location_visibility_level(s32 dot_index, s32 erase);
 void wldcore_map_prepare_path_animation(s32 from, s32 to);
 s32 wldcore_map_get_dot_snap_step(wldcore_point32_t point, s32* step_x, s32* step_y);
+void wldcore_map_draw_location_label(GsOT* ot);
 
 /* save */
 /* Provisional: the save-slot word list at g_wldcore_script_slot_table: section offsets into
@@ -1095,7 +1104,6 @@ typedef struct wldcore_menu_send_unit_level {
 typedef char wldcore_menu_send_unit_level_size_must_be_0x5c[sizeof(wldcore_menu_send_unit_level_t) == 0x5c ? 1 : -1];
 
 extern s32* g_wldcore_proposition_data_base;
-extern s32 g_wldcore_proposition_selected_entry;
 extern s32 g_wldcore_proposition_send_unit_count;
 extern wldcore_proposition_fields_t g_wldcore_selected_proposition_row[];
 extern s32 g_wldcore_proposition_gil_amount;
@@ -1120,7 +1128,6 @@ wldcore_proposition_data_t* wldcore_proposition_get_data_pointer(s32 record);
 s32 wldcore_proposition_load_picture(s32 index);
 void wldcore_proposition_load_picture_data_set(s32 value);
 s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, s32 message);
-void wldcore_proposition_submit_marker_request(GsOT* ot);
 void wldcore_unpack_proposition_row(wldcore_proposition_fields_t* out, s32 index);
 void wldcore_proposition_push_cancel_confirm_level(s32 value);
 void wldcore_proposition_push_detail_level(s32 value);

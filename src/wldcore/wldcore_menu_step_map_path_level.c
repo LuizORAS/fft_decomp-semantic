@@ -1,10 +1,10 @@
 #include "fft/wldcore.h"
 
-/*
- * Advances the world slideshow one frame: restarts it at the last page when
- * the level asks, steps the page timer forwards or backwards while the run
- * flag is set, and otherwise pops the menu level and resumes its parent.
- */
+/* Step of the map path level: once the screen fade has finished it plays the path sound (an erase
+ * first clears the route's variable and starts from the last page), then unrolls the route one frame
+ * at a time and sets its variable when it is drawn, or rolls it back for an erase. When the
+ * animation stops it pops the level, shows the location label and the parent's window again and
+ * resumes the parent. */
 void wldcore_menu_step_map_path_level(wldcore_map_path_level_t* level) {
     s32 depth;
     s32 window_index;
@@ -55,7 +55,7 @@ void wldcore_menu_step_map_path_level(wldcore_map_path_level_t* level) {
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_depth = depth - 1;
     window_index = g_wldcore_menu_stack_records_next[depth - 2].window_index;
-    g_main_system_flags &= ~MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
+    g_main_system_flags &= ~MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
     g_wldcore_window_records[window_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     wldcore_menu_dispatch_resume_handler();
 }

@@ -1,8 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Pick the highest-priority visible map dot whose screen position contains the
- * given point, returned as a one-based index (0 when nothing is hit).
+/* The location dot under a screen point, as a one-based index (0 for none): a visible, shown dot
+ * whose screen position is within 10 pixels across and from 14 above to 6 below the point; of
+ * several, the lowest priority value wins, the first on a tie (every dot has 0xf).
  *
  * The point is passed by value in a0/a1; the target reads both members back
  * from the incoming argument home slots. */

@@ -1,12 +1,12 @@
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 
-/* Test the camera projection bounds while allowing wrap-edge exceptions.
+/* Whether a screen point calls for a camera pan: it lies left of -64, right of 72, above -64 or
+ * below 64, and the camera can still scroll more than 32 toward it (its origin is not within 32 of
+ * that scroll limit).
  *
- * An off-screen point remains eligible when the current projection origin is
- * close enough to the opposite edge for wrapping to bring it into view. The
- * final `||` shares one `return 0` between both lower-bound tests, which keeps
- * GCC from folding the last test into a store-flag. */
+ * The final `||` shares one `return 0` between both lower-bound tests, which
+ * keeps GCC from folding the last test into a store-flag. */
 s32 wldcore_map_is_point_outside_projection_bounds(const wldcore_point32_t* point) {
     s32 x;
     s32 y;

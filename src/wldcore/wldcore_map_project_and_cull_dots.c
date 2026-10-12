@@ -2,11 +2,9 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Projects every world-map dot and marks the ones that are off screen, hidden
- * by system flag 0x10, or disabled by their script variable with flag 0x10.
- *
- * The screen bounds are written as the target's unsigned range tests: x in
- * [-128, 128] and y in [-116, 120]. */
+/* Project every location dot and hide the ones off screen (outside x -128..128, y -116..120), all
+ * of them while MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS is set, and the locations whose visibility variable
+ * is 0. */
 void wldcore_map_project_and_cull_dots(void) {
     VECTOR position;
     long flag;

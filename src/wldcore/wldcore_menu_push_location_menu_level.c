@@ -48,7 +48,7 @@ void wldcore_menu_push_location_menu_level(s32 menu) {
         menu += 0x37;
     }
     wldcore_wait_for_file_load();
-    flags = g_main_system_flags | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
+    flags = g_main_system_flags | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
     level = &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list;
     level->extra_render = -1;
     level->label_window = -1;
