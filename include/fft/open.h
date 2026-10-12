@@ -613,6 +613,9 @@ void open_gfx_transition_finished_stub(void);
 void open_system_init_runtime_state(void);
 
 /* script */
+/* The ending's credits script (open_script_*, opcodes open_opcode_*): text lines that scroll over the
+ * OPNTEX pictures, the ENDING.XA music and the fades, run by the OPEN_CONTROLLER_SCRIPT controller. */
+
 typedef enum open_script_dispatch_flag {
     OPEN_SCRIPT_DISPATCH_RUNNING = 0x01,  /* cleared to stop the dispatcher and hide the text records */
     OPEN_SCRIPT_DISPATCH_CONTINUE = 0x02, /* runs another entry this frame */
@@ -695,7 +698,7 @@ extern open_script_state_t g_open_script_state;
 extern open_font_metrics_t* g_open_script_font_metrics;
 
 /* Scalar views of g_open_script_state words. open_opcode_set_timing_step
- * (byte_offset) and open_script_update_timing_and_record_values
+ * (byte_offset) and open_script_scroll_text
  * (timing_fraction, external_counter) load and store them by absolute
  * address; the member spelling lets cse keep the address in a register. */
 extern s32 g_open_script_byte_offset;      /* dispatch.byte_offset */
@@ -709,11 +712,11 @@ void open_script_draw_text_records(u32* otag, s32 graphics_buffer_index);
 void open_script_update_xa_audio(void);
 s32 open_script_add_pointer_offset(s32 left, s32 right);
 s32 open_script_build_text_record(u8* text);
-s32 open_script_init_and_dispatch_entries(void);
+s32 open_script_run_frame(void);
 void open_script_push_controller(void);
 void open_script_update_controller(void);
 void open_script_update_screen_fade(void);
-void open_script_update_timing_and_record_values(void);
+void open_script_scroll_text(void);
 
 /* other */
 extern s32 g_open_current_controller_index;

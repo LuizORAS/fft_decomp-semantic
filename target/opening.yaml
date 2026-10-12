@@ -104,11 +104,11 @@ functions:
   - {addr: 0x8006e068, size: 212, name: open_gfx_copy_file_image_to_210x180_buffer, hash: 5e7217187c9c4567}
   - {addr: 0x8006e13c, size: 436, name: open_gfx_step_image_crossfade, hash: 2470d3b4a852e44e}
   - {addr: 0x8006e2f0, size: 1264, name: open_script_init_state, hash: c000e380ea2213d8}
-  - {addr: 0x8006e7e0, size: 200, name: open_script_init_and_dispatch_entries, hash: 06563bf022b02028}
+  - {addr: 0x8006e7e0, size: 200, name: open_script_run_frame, hash: 06563bf022b02028}
   - {addr: 0x8006e8a8, size: 8, name: open_script_add_pointer_offset, hash: 6e3d0af1356c7afe}
   - {addr: 0x8006e8b0, size: 748, name: open_script_draw_text_records, hash: a86705083fc5f375}
   - {addr: 0x8006eb9c, size: 1432, name: open_script_build_text_record, hash: 54e7999ae4054929}
-  - {addr: 0x8006f134, size: 244, name: open_script_update_timing_and_record_values, hash: 096ef43fc404123c}
+  - {addr: 0x8006f134, size: 244, name: open_script_scroll_text, hash: 096ef43fc404123c}
   - {addr: 0x8006f228, size: 880, name: open_script_update_xa_audio, hash: 599e7ab9df95ebf3, rodata: [{addr: 0x80067000, size: 68, hash: 91f5360ae3d8597d}]}
   - {addr: 0x8006f598, size: 60, name: open_text_decode_hex_digit, hash: f70eb008c32149d3}
   - {addr: 0x8006f5d4, size: 456, name: open_script_update_screen_fade, hash: 727ec04746704c86}
@@ -118,7 +118,7 @@ functions:
   - {addr: 0x8006f988, size: 136, name: open_movie_finish_fftend_controller_if_ready_or_skipped, hash: df1c60f300df0a2c}
   - {addr: 0x8006fa10, size: 144, name: open_script_push_controller, hash: d38b74485501d567}
   - {addr: 0x8006faa0, size: 88, name: open_script_update_controller, hash: c31c968e8b96aab5}
-  - {addr: 0x8006faf8, size: 72, name: open_opcode_toggle_control, hash: 5abc662795697b2e}
+  - {addr: 0x8006faf8, size: 72, name: open_opcode_end_script, hash: 5abc662795697b2e}
   - {addr: 0x8006fb40, size: 548, name: open_opcode_create_positioned_text_record, hash: 79ffee469a0e46ff}
   - {addr: 0x8006fd64, size: 56, name: open_opcode_set_timing_step, hash: 022baf84860eb042}
   - {addr: 0x8006fd9c, size: 68, name: open_opcode_start_overlay_fade_out, hash: 8b4cecdc94072c05}

@@ -4,16 +4,14 @@ typedef void (*open_script_entry_handler_t)(s16* entry);
 
 extern open_script_entry_handler_t g_open_opcode_handlers[];
 
-/* Run one frame of the ending script. Returns 0 once the script has ended and 1
- * while it runs.
+/* Run one frame of the ending script. Returns 0 once the script has ended and 1 while it runs.
  *
- * Updates the text scroll, the XA audio, the OPNTEX sequence and the picture
- * fade, then executes script entries. An entry is a row of 16-bit words at
- * data_base + byte_offset whose first word, the opcode, indexes
- * g_open_opcode_handlers. A handler advances byte_offset itself; one that has to
- * wait clears OPEN_SCRIPT_DISPATCH_CONTINUE to end the frame and is entered again
- * on the next, and opcode 0 clears OPEN_SCRIPT_DISPATCH_RUNNING. */
-s32 open_script_init_and_dispatch_entries(void) {
+ * Updates the text scroll, the XA audio, the OPNTEX sequence and the picture fade, then executes
+ * script entries. An entry is a row of 16-bit words at data_base + byte_offset whose first word, the
+ * opcode, indexes g_open_opcode_handlers. A handler advances byte_offset itself; one that has to wait
+ * clears OPEN_SCRIPT_DISPATCH_CONTINUE to end the frame and is entered again on the next, and opcode 0
+ * clears OPEN_SCRIPT_DISPATCH_RUNNING. */
+s32 open_script_run_frame(void) {
     open_script_dispatch_state_t* state;
     s32* dispatch_arguments;
     open_script_entry_handler_t* handlers;
@@ -21,7 +19,7 @@ s32 open_script_init_and_dispatch_entries(void) {
     s16* entry;
     u32 flags;
 
-    open_script_update_timing_and_record_values();
+    open_script_scroll_text();
     open_script_update_xa_audio();
     open_gfx_update_opntex_sequence();
     open_script_update_screen_fade();

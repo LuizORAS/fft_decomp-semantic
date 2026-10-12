@@ -1,10 +1,10 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
-/* Opcode 0: end the script. It yields for the frame while the XA start or stop
- * sequence runs; after that it clears OPEN_SCRIPT_DISPATCH_RUNNING, which stops
- * the dispatcher. Two bytes. */
-void open_opcode_toggle_control(void) {
+/* Opcode 0: end the script (clear OPEN_SCRIPT_DISPATCH_RUNNING and step past the opcode). While an
+ * XA start or stop sequence still runs it waits instead, toggling OPEN_SCRIPT_DISPATCH_CONTINUE to end
+ * the frame. The flags are toggled, not set or cleared. */
+void open_opcode_end_script(void) {
     u32* control = &g_open_script_state.dispatch.flags;
     u32 state = *control;
 
