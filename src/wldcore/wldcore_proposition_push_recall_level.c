@@ -1,20 +1,18 @@
 #include "fft/wldcore.h"
 
-/* Pushes the proposition confirmation level (type 0x13) for active
- * proposition `proposition`: unpacks its proposition row, hides the parent
- * level's two windows and render record, shows message 0xb81d, and builds a
- * two-row cursor/frame window pair over render record text 0xb805 beside the
- * proposition detail panel.
+/* Ask whether to call a proposition's units back (WLDCORE_MENU_LEVEL_PROPOSITION_RECALL): the
+ * proposition's detail panel (wldcore_proposition_build_detail_panel_image) beside a yes/no panel,
+ * over the hidden list, with the barkeeper's question (WLDCORE_TEXT_ID_CALL_BACK_PROMPT).
  *
  * Every level access re-indexes g_wldcore_menu_stack_depth rather than a
  * local copy, which is what keeps the depth in the target's registers. The
  * target reserves 0x30 bytes of frame the function never uses.
  *
  * The level is the type-0x13 proposition confirmation record
- * (see wldcore_proposition_handle_cancel_confirm_input); wldcore_menu_stack_record_t has no member for it, so
+ * (see wldcore_proposition_handle_recall_input); wldcore_menu_stack_record_t has no member for it, so
  * its words are reached through union members at the same offsets
  * (+0x10 proposition, +0x14 choice, +0x18 confirmed, +0x20 second window). */
-void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {
+void wldcore_proposition_push_recall_level(s32 proposition) {
     wldcore_window_render_bounds16_t bounds;
     u8 unused[0x30];
     s32 index;
@@ -72,10 +70,10 @@ void wldcore_proposition_push_cancel_confirm_level(s32 proposition) {
         = g_wldcore_window_render_records[index].base.x + 3;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].position.y
         = g_wldcore_window_render_records[index].base.y - 2;
-    wldcore_list_build_proposition_detail_panel_image(
+    wldcore_proposition_build_detail_panel_image(
         &g_wldcore_menu_stack_records_next[depth].window_pair_render, proposition, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].participant.participant = 0;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.cursor_window = 0;
-    g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_CANCEL_CONFIRM;
+    g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_RECALL;
     g_wldcore_menu_stack_depth++;
 }

@@ -2,7 +2,7 @@
 
 /* Build the Bar's menu rows into its list level: Rumors and Leave always, Propositions while
  * EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED is set, the job reports when a proposition has come back to
- * this town (wldcore_proposition_count_completed), and the propositions in progress while any is still
+ * this town (wldcore_proposition_count_returned), and the propositions in progress while any is still
  * out. The rows (text TEXT_ID_WORLD_MENU_BASE + row) are drawn into a pop-in render record at
  * (-0x78, -0x28); the cursor keeps its saved row, reset when out of range.
  *
@@ -34,11 +34,11 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
         level->entries[1] = WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS;
         level->entry_count++;
     }
-    if (wldcore_proposition_count_completed(g_wldcore_map_projection_state.marker.kind) != 0) {
+    if (wldcore_proposition_count_returned(g_wldcore_map_projection_state.marker.kind) != 0) {
         level->entries[level->entry_count] = WLDCORE_BAR_MENU_ROW_COMPLETED_PROPOSITIONS;
         level->entry_count++;
     }
-    if (g_main_save_proposition_count != wldcore_proposition_count_completed(-1)) {
+    if (g_main_save_proposition_count != wldcore_proposition_count_returned(-1)) {
         level->entries[level->entry_count] = WLDCORE_BAR_MENU_ROW_PROPOSITIONS;
         level->entry_count++;
     }

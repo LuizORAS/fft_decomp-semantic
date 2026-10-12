@@ -1,12 +1,10 @@
 #include "fft/wldcore.h"
 
-/*
- * Advance daily proposition progress and packed countdown bytes.
- *
- * Records without flag 0x04 increment their elapsed byte. Set flag 0x04 when
- * it equals the assigned duration or flag 0x02 is set. Nonzero low-six-bit
- * countdowns decrease from at most 32, retaining their high 2 bits.
- */
+/* The propositions' share of a day (wldcore_calendar_advance_day): every proposition still out gains
+ * an elapsed day and comes back (WLDCORE_PROPOSITION_PROGRESS_RETURNED) when it reaches its assigned
+ * days or was called back (WLDCORE_PROPOSITION_PROGRESS_RECALLED). Every nonzero day count in
+ * g_main_proposition_states (the wait before a failed proposition is offered again) drops by one, from
+ * at most 32, keeping its failure bits. */
 void wldcore_proposition_advance_daily_counters(void) {
     s32 i;
     u8* counter;

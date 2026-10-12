@@ -1135,13 +1135,14 @@ void wldcore_proposition_apply_extra_days_multiplier(void);
 s32 wldcore_proposition_load_send_unit_candidates(wldcore_menu_send_unit_level_t* level);
 s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index);
 void wldcore_proposition_advance_daily_counters(void);
-s32 wldcore_proposition_count_completed(s32 location);
+s32 wldcore_proposition_count_returned(s32 location);
 wldcore_proposition_data_t* wldcore_proposition_get_data_pointer(s32 record);
 s32 wldcore_proposition_load_picture(s32 index);
 void wldcore_proposition_load_picture_data_set(s32 value);
 s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, s32 message);
 void wldcore_proposition_unpack_row(wldcore_proposition_fields_t* out, s32 index);
-void wldcore_proposition_push_cancel_confirm_level(s32 value);
+void wldcore_proposition_push_recall_level(s32 value);
+void wldcore_proposition_open_active_list(void);
 void wldcore_proposition_push_detail_level(s32 value);
 s32 wldcore_proposition_is_offered_at(s32 index, s32 location);
 void wldcore_proposition_push_dispatch_confirm_level(void);
@@ -1271,13 +1272,13 @@ s32 wldcore_script_run_until_yield(void);
  * proposition block. */
 
 /* Provisional: the bar's active-proposition list level
- * (wldcore_bar_handle_active_propositions_input); the confirmed flag and the value
+ * (wldcore_proposition_handle_active_list_input); the confirmed flag and the value
  * words indexed by the selected row are the only fields read. */
-typedef struct wldcore_bar_active_propositions_level {
+typedef struct wldcore_proposition_active_list_level {
     s32 confirmed;
     u8 _unused_04[0x30];
     s32 values[1]; /* 0x34 */
-} wldcore_bar_active_propositions_level_t;
+} wldcore_proposition_active_list_level_t;
 
 /* Panel menu levels: number panels (0x8006f294, 0x80073ef8) and list panels
  * (0x8007dfcc, 0x80084230, 0x80071aa0). */
@@ -1360,7 +1361,7 @@ typedef struct wldcore_menu_list_window_level {
 
 extern s32 g_wldcore_bar_menu_saved_cursor;
 extern u8 g_wldcore_bar_row_help_text_ids[];
-void wldcore_bar_active_propositions_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_proposition_active_list_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level);
 void wldcore_bar_push_rumor_detail_level(s32 value);
 void wldcore_bar_push_menu_level(void);
@@ -1403,7 +1404,6 @@ void wldcore_list_tutorial_topics_block_all_buttons(wldcore_menu_panel_level_t* 
 void wldcore_list_formation_tutorials_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_script_flags_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_open_completed_propositions(void);
-void wldcore_list_open_propositions(void);
 void wldcore_list_open_tutorial_mask_1_entries(void);
 void wldcore_list_open_formation_tutorials(void);
 void wldcore_list_tutorial_mask_1_block_all_buttons(wldcore_menu_panel_level_t* unused_level);
@@ -1414,7 +1414,7 @@ void wldcore_list_open_set_script_variables_03c0_03ff(void);
 void wldcore_list_open_active_propositions(void);
 void wldcore_list_open_brave_story_propositions(void);
 
-void wldcore_list_build_proposition_detail_panel_image(
+void wldcore_proposition_build_detail_panel_image(
     wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode);
 
 void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset);
@@ -1889,7 +1889,7 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_PROPOSITION_REPORT = 0x10,
     WLDCORE_MENU_LEVEL_PROPOSITION_RESULT = 0x11,
     WLDCORE_MENU_LEVEL_PROPOSITIONS = 0x12,
-    WLDCORE_MENU_LEVEL_PROPOSITION_CANCEL_CONFIRM = 0x13,
+    WLDCORE_MENU_LEVEL_PROPOSITION_RECALL = 0x13,
     WLDCORE_MENU_LEVEL_SOUND_NOVEL_RESUME = 0x14,
     WLDCORE_MENU_LEVEL_SOUND_NOVEL = 0x15,
     WLDCORE_MENU_LEVEL_SOUND_NOVEL_QUIT = 0x16,
@@ -1974,7 +1974,7 @@ typedef union wldcore_menu_stack_record {
     wldcore_proposition_report_level_t proposition_report;
     wldcore_menu_sound_novel_level_t sound_novel;
     wldcore_proposition_result_level_t proposition_result;
-    wldcore_bar_active_propositions_level_t active_propositions;
+    wldcore_proposition_active_list_level_t active_propositions;
     u8 raw[0x5c];
 } wldcore_menu_stack_record_t;
 typedef char wldcore_menu_stack_record_size_must_be_0x5c[sizeof(wldcore_menu_stack_record_t) == 0x5c ? 1 : -1];

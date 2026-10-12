@@ -1,8 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Build the image of the proposition detail panel for g_main_active_propositions[proposition]:
- * the elapsed/assigned day counts and the location go into text substitution
- * words 0-2, and one 16-pixel row is drawn per participant.
+/* Draw a proposition's detail panel for g_main_active_propositions[proposition]: its name, then the
+ * elapsed and assigned days and the place to report (text substitution words 0-2), and one 16-pixel
+ * row per unit sent. The call-back question and Brave Story's participant list show it.
  *
  * The panel's row count is the measured row count of text g_wldcore_selected_proposition_row[0].fields.name_text +
  * 0xf7ff plus two, kept in the level record at +0x0c.
@@ -14,7 +14,7 @@
  * `panel_text` keeps the text-id source's address in a saved register across
  * both reads, as the target does. Assigning bounds.position.x before
  * position.y is what puts the two by-value halves in the target's registers. */
-void wldcore_list_build_proposition_detail_panel_image(
+void wldcore_proposition_build_detail_panel_image(
     wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode) {
     wldcore_window_render_bounds16_t bounds;
     wldcore_point32_t point;

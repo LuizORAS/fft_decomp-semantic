@@ -28,7 +28,7 @@ void wldcore_menu_push_participant_list_level(s32 proposition) {
     g_wldcore_window_records[window].priority = 8;
     g_wldcore_window_records[window].anim_counter = 0;
     g_wldcore_window_records[window].frame_index = 0;
-    wldcore_list_build_proposition_detail_panel_image(
+    wldcore_proposition_build_detail_panel_image(
         &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair_render, proposition, 1);
     g_world_text_substitution_values[0]
         = g_main_active_propositions[proposition].proposition_id | TEXT_ID_PROPOSITION_NAME_BASE;

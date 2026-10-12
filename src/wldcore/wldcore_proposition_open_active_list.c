@@ -1,14 +1,14 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens the active-proposition panel list as menu level type 0x12.
+/* Open the Bar's list of propositions in progress (WLDCORE_MENU_LEVEL_PROPOSITIONS): every active
+ * proposition that has not come back, as its name, with the barkeeper's line
+ * (WLDCORE_TEXT_ID_JOBS_IN_PROGRESS); the Bar's windows are hidden behind it. Each row keeps the index
+ * of its g_main_active_propositions record.
  *
- * Complete propositions are skipped. Each surviving proposition contributes
- * its display value, row flags, and source-record index to the new menu level.
- * Before pushing the level, this hides the previous window pair when visible.
  * The otherwise unused point record preserves the target's 24-byte local area;
  * GCC removes its operations but retains its stack slot. */
-void wldcore_list_open_propositions(void) {
+void wldcore_proposition_open_active_list(void) {
     wldcore_point32_t origin;
     wldcore_point32_t dimensions;
     wldcore_point32_t unused_point;

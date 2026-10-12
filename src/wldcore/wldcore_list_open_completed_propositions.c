@@ -10,7 +10,7 @@
  * display value 0xd000 + proposition_id, clear row flags, source index in
  * entries. With no entries it rebuilds the parent window pair through
  * wldcore_bar_build_menu_rows and resumes the parent handler instead of pushing.
- * Twin of wldcore_list_open_propositions.
+ * Twin of wldcore_proposition_open_active_list.
  *
  * The location is read through a pointer local: that keeps the load inside
  * the loop (the array stores may alias it) with only its address hoisted,

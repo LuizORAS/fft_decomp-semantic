@@ -91,7 +91,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
             return;
         case WLDCORE_BAR_MENU_ROW_PROPOSITIONS:
             wldcore_window_publish_slot_b806(level);
-            wldcore_list_open_propositions();
+            wldcore_proposition_open_active_list();
             return;
         case WLDCORE_BAR_MENU_ROW_LEAVE:
             g_wldcore_bar_menu_saved_cursor = 0;

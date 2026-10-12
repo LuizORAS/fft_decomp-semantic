@@ -16,11 +16,11 @@ typedef struct wldcore_menu_proposition_confirm_level {
     s32 second_window; /* 0x20 */
 } wldcore_menu_proposition_confirm_level_t;
 
-/* Input step for the two-row proposition confirmation window: up/down toggle
- * the highlighted row and move the cursor window, Circle either
- * accepts the proposition and starts WORLD thread 14 with text 0xb81e or
- * closes the level, and Cross closes it. */
-void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_confirm_level_t* level) {
+/* Step of the call-back question. Up and down switch the row; Cross and "no" return to the list of
+ * propositions in progress. "Yes" calls the units back (WLDCORE_PROPOSITION_PROGRESS_RECALLED: they
+ * return the next day, with nothing earned), the barkeeper confirms
+ * (WLDCORE_TEXT_ID_CALL_BACK_ACCEPTED), and the next press returns to the list. */
+void wldcore_proposition_handle_recall_input(wldcore_menu_proposition_confirm_level_t* level) {
     s32 choice;
 
     if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
@@ -42,7 +42,7 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_proposition_co
         g_wldcore_window_render_record_count -= 2;
         g_wldcore_window_render_object_count -= 4;
         g_wldcore_menu_stack_depth--;
-        wldcore_list_open_propositions();
+        wldcore_proposition_open_active_list();
         return;
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0
