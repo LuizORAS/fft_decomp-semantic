@@ -45,10 +45,10 @@ s32 ai_evaluate_target_tiles(void) {
         if (target_set_panels_for_action(&ai->current_action.command) == TARGET_PANELS_NONE)
             return 0;
     } else {
-        tile = g_battle_map_tile_data;
+        tile = g_map_tile_data;
         for (i = 0; i < MAP_TILE_COUNT; i++, tile++)
             tile->ceiling_depth_and_marks.ability_range = 0;
-        g_battle_map_tile_data[origin->bytes.y * ai->map_max_x + origin->bytes.x
+        g_map_tile_data[origin->bytes.y * ai->map_max_x + origin->bytes.x
             + (origin->bytes.elevation * MAP_TILES_PER_LAYER)]
             .ceiling_depth_and_marks.ability_range = 1;
     }
@@ -67,7 +67,7 @@ s32 ai_evaluate_target_tiles(void) {
                     /* Keep the membership test and update in one working mask. */
                     tile_mask = row << x;
                     if (tile_mask & 0x8000) {
-                        if (g_battle_map_tile_data[y * ai->map_max_x + x + (level * MAP_TILES_PER_LAYER)]
+                        if (g_map_tile_data[y * ai->map_max_x + x + (level * MAP_TILES_PER_LAYER)]
                                 .ceiling_depth_and_marks.ability_range) {
                             tile_mask = 0x8000;
                             target_rows[y] |= tile_mask >> x;

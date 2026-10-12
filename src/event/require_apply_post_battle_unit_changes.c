@@ -150,7 +150,7 @@ void require_apply_post_battle_unit_changes(void) {
                     require_panel_set_transition_value(0);
                     do {
                         battle_thread_yield();
-                        g_require_input_controller = battle_script_get_controller_input_pointer(0);
+                        g_require_input_controller = script_get_controller_input_pointer(0);
                         input = *g_require_input_controller;
                         if (input & PSX_PAD_CIRCLE) {
                             break;

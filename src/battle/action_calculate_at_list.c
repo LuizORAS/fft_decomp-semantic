@@ -51,18 +51,16 @@ s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
 
     for (slot = 0; slot < 0x15; slot++) {
         unit = &g_battle_unit_stats[slot];
-        if (battle_status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(unit) != 0) {
+        if (status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(unit) != 0) {
             continue;
         }
 
         wait = 0;
-        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_STOP)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_STOP)) {
-            wait = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_STOP)];
+        if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_STOP)] & STATUS_BYTE_MASK(STATUS_ID_STOP)) {
+            wait = unit->status_ct[STATUS_CT_INDEX(STATUS_ID_STOP)];
         }
-        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP)) {
-            value = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_SLEEP)];
+        if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_SLEEP)] & STATUS_BYTE_MASK(STATUS_ID_SLEEP)) {
+            value = unit->status_ct[STATUS_CT_INDEX(STATUS_ID_SLEEP)];
             if (wait < value) {
                 wait = value;
             }
@@ -75,8 +73,8 @@ s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
                 tick += phase_tick;
             }
             placed += action_sort_at_list(slot, 1, (tick << 8) & 0xff00, list);
-            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
+            if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PERFORMING)]
+                & STATUS_BYTE_MASK(STATUS_ID_PERFORMING)) {
                 main_unit_copy_last_ability_ct(unit);
                 for (turns = 0; turns < 0x27; turns++) {
                     tick += unit->ability_ct;
@@ -96,11 +94,11 @@ s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
 
         slow = 0;
         haste = 0;
-        current = unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLOW)];
-        innate = unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLOW)];
-        if (current & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLOW)) {
-            slow = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_SLOW)];
-            if (innate & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLOW)) {
+        current = unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_SLOW)];
+        innate = unit->status_sets.innate[STATUS_BYTE_INDEX(STATUS_ID_SLOW)];
+        if (current & STATUS_BYTE_MASK(STATUS_ID_SLOW)) {
+            slow = unit->status_ct[STATUS_CT_INDEX(STATUS_ID_SLOW)];
+            if (innate & STATUS_BYTE_MASK(STATUS_ID_SLOW)) {
                 slow = 0x200;
             }
             slow -= wait;
@@ -108,9 +106,9 @@ s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
                 slow = 0;
             }
         }
-        if (current & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_HASTE)) {
-            haste = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_HASTE)];
-            if (innate & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_HASTE)) {
+        if (current & STATUS_BYTE_MASK(STATUS_ID_HASTE)) {
+            haste = unit->status_ct[STATUS_CT_INDEX(STATUS_ID_HASTE)];
+            if (innate & STATUS_BYTE_MASK(STATUS_ID_HASTE)) {
                 haste = 0x200;
             }
             haste -= wait;

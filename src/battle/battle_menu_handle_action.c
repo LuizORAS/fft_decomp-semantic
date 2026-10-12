@@ -22,11 +22,11 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
 
     entry = menu;
     if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL
-        && ((battle_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> selected_option) & 1)) {
+        && ((script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> selected_option) & 1)) {
         return;
     }
     silent = 0;
-    if (!(g_battle_script_event_input & PSX_PAD_CIRCLE) || battle_menu_can_accept_input() == 0) {
+    if (!(g_script_event_input & PSX_PAD_CIRCLE) || battle_menu_can_accept_input() == 0) {
         return;
     }
     if (g_battle_thread_contexts[g_battle_current_thread_id].task_words[1] == 0) {
@@ -76,9 +76,9 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
             }
         }
     }
-    g_battle_script_event_input = 0;
+    g_script_event_input = 0;
     *menu_entry_result(entry) = selected_option;
-    if (g_battle_sound_suppressed == 0 && silent == 0) {
-        battle_sound_set_effect_to_confirm();
+    if (g_sound_suppressed == 0 && silent == 0) {
+        sound_set_effect_to_confirm();
     }
 }

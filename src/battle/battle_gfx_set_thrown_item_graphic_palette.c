@@ -25,9 +25,9 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_misc_da
         weapon_type = 0x15;
     }
     clut_index = unit->unit_id;
-    battle_map_load_palette_data(&g_battle_gfx_item_palettes[g_battle_gfx_item_graphic_data[item_id].palettes >> 4],
+    map_load_palette_data(&g_battle_gfx_item_palettes[g_battle_gfx_item_graphic_data[item_id].palettes >> 4],
         MAP_CLUT_ROW_ITEM_A, clut_index, 0);
-    battle_map_load_palette_data(&g_battle_gfx_item_palettes[g_battle_gfx_item_graphic_data[item_id].palettes & 0xF],
+    map_load_palette_data(&g_battle_gfx_item_palettes[g_battle_gfx_item_graphic_data[item_id].palettes & 0xF],
         MAP_CLUT_ROW_ITEM_B, clut_index, 0);
     unit->used_item_or_weapon_id = item_id;
     unit->equipped_weapon_type = weapon_type;

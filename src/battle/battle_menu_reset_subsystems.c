@@ -7,7 +7,7 @@
  * free every window buffer pair, the tpage-7 VRAM grid and the menu buffer arena,
  * and reset the thread scheduler. */
 void battle_menu_reset_subsystems(void) {
-    battle_script_seed_random_from_vsync();
+    script_seed_random_from_vsync();
     battle_menu_reset_buffer_slots();
     battle_gfx_clear_tpage7_vram_allocation_grid();
     battle_menu_init_buffer_allocator();

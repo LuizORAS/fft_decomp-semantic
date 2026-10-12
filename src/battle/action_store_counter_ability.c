@@ -25,7 +25,7 @@ s32 action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 abili
         if (result == -1 || result == 2 || result == 3) {
             return -1;
         }
-        if (((*(u8*)&g_battle_map_tile_data[battle_map_calculate_location(acting_unit)].ceiling_depth_and_marks)
+        if (((*(u8*)&g_map_tile_data[map_calculate_location(acting_unit)].ceiling_depth_and_marks)
                 & MAP_TILE_FLAG_ABILITY_RANGE)
             == 0) {
             return -2;

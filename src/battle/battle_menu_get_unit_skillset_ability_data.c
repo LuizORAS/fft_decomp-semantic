@@ -47,8 +47,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
     if (unit == 0) {
         return 0;
     }
-    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) { /* Frog */
+    if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG)) { /* Frog */
         frog = 1;
     }
     if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {

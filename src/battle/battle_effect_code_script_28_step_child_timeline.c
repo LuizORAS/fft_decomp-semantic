@@ -109,15 +109,14 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
                     red = track->color[index].r;
                     green = track->color[index].g;
                     blue = track->color[index].b;
-                    battle_map_color_field(
-                        preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
+                    map_color_field(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
                     for (i = 0; i < g_battle_effect_context.spectator_count; i++) {
                         battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
                             track->duration[index], g_battle_effect_palette_target_misc_ids[i], red, green, blue);
                     }
-                    if (!(g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
-                        battle_map_start_darkness_blend(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                            track->duration[index], red * 8, green * 8, blue * 8);
+                    if (!(g_map_weather_flags & MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
+                        map_start_darkness_blend(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index],
+                            red * 8, green * 8, blue * 8);
                     }
                 }
             }
@@ -201,9 +200,9 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
                     red = screen->color[index].r * 2;
                     green = screen->color[index].g * 2;
                     blue = screen->color[index].b * 2;
-                    battle_map_modify_background_gradient(mode, screen->duration[index], red, green, blue);
-                    if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
-                        battle_map_start_darkness_blend(mode, screen->duration[index], red, green, blue);
+                    map_modify_background_gradient(mode, screen->duration[index], red, green, blue);
+                    if (g_map_weather_flags & MAP_WEATHER_FLAG_IGNORE_WEATHER) {
+                        map_start_darkness_blend(mode, screen->duration[index], red, green, blue);
                     }
                 } else {
                     colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = screen->color[index].r;
@@ -212,10 +211,9 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
                     colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = screen->second_color[index].r;
                     colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = screen->second_color[index].g;
                     colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = screen->second_color[index].b;
-                    battle_map_set_background_gradient(screen->duration[index], &colors);
-                    if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
-                        battle_map_set_darkness_color(
-                            screen->duration[index], &colors.colors[MAP_BACKGROUND_GRADIENT_TOP]);
+                    map_set_background_gradient(screen->duration[index], &colors);
+                    if (g_map_weather_flags & MAP_WEATHER_FLAG_IGNORE_WEATHER) {
+                        map_set_darkness_color(screen->duration[index], &colors.colors[MAP_BACKGROUND_GRADIENT_TOP]);
                     }
                 }
             }
@@ -242,7 +240,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
             }
         }
         if (record->parent_index == 0) {
-            battle_camera_start_effect_keyframe_moves(timeline->frame);
+            camera_start_effect_keyframe_moves(timeline->frame);
         }
         if (g_battle_effect_flags_section->flags & EFFECT_FLAG_TIMING_CURVE_CHILD) {
             battle_state_set_time_scale(battle_effect_get_animation_timing_curve_value(record));

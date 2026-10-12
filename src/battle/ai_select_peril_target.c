@@ -29,21 +29,21 @@ s32 ai_select_peril_target(void) {
         distance_score = 255 - ai_calculate_distance_between_units(ai->acting_unit, unit);
         missing_hp = 128 - ((unit->hp << 7) / unit->max_hp);
         team_bits = unit->team_flags & BATTLE_TEAM_IMPORTANCE_MASK;
-        if (ai_can_cancel_current_status(unit, BATTLE_STATUS_ID_DEAD)
+        if (ai_can_cancel_current_status(unit, STATUS_ID_DEAD)
             && (decision->targeting_flags_2 & AI_TARGET_DEAD_WITHOUT_RERAISE)) {
             status_score = 0x78;
         } else if ((ai->acting_unit_decision->targeting_flags_1 & AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES)
             && ((decision->targeting_flags_2 & AI_TARGET_DEAD_WITH_RERAISE)
-                || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)))) {
+                || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRITICAL)]
+                    & STATUS_BYTE_MASK(STATUS_ID_CRITICAL)))) {
             status_score = 0x77;
-        } else if (ai_can_cancel_current_status(unit, BATTLE_STATUS_ID_BLOOD_SUCK)) {
+        } else if (ai_can_cancel_current_status(unit, STATUS_ID_BLOOD_SUCK)) {
             status_score = 0x76;
-        } else if (ai_can_cancel_current_status(unit, BATTLE_STATUS_ID_PETRIFY)) {
+        } else if (ai_can_cancel_current_status(unit, STATUS_ID_PETRIFY)) {
             status_score = 0x75;
-        } else if (ai_can_cancel_current_status(unit, BATTLE_STATUS_ID_CONFUSION)) {
+        } else if (ai_can_cancel_current_status(unit, STATUS_ID_CONFUSION)) {
             status_score = 0x74;
-        } else if (ai_can_cancel_current_status(unit, BATTLE_STATUS_ID_FROG)) {
+        } else if (ai_can_cancel_current_status(unit, STATUS_ID_FROG)) {
             status_score = 0x73;
         } else {
             status_score = 0;

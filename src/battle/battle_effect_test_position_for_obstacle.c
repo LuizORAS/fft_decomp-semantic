@@ -22,7 +22,7 @@ s32 battle_effect_test_position_for_obstacle(
     *out_unit = -1;
     tile_ref->x = position->vx / MAP_TILE_SIZE;
     tile_ref->y = position->vz / MAP_TILE_SIZE;
-    tile = battle_map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 0);
+    tile = map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 0);
     if (tile->ceiling_depth_and_marks.ceiling_depth == 0) {
         ceiling = tile->height;
     } else {
@@ -36,7 +36,7 @@ s32 battle_effect_test_position_for_obstacle(
         return 1;
     }
 
-    tile = battle_map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 1);
+    tile = map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 1);
     ceiling = 1;
     if (tile->ceiling_depth_and_marks.ceiling_depth != 0) {
         ceiling = tile->ceiling_depth_and_marks.ceiling_depth;

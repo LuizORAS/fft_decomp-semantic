@@ -39,11 +39,11 @@ s32 action_remove_broken_or_stolen_equipment(void) {
             if (action->equipment_destroyed == ACTION_EQUIPMENT_SLOT_RIGHT_WEAPON
                 || action->equipment_destroyed == ACTION_EQUIPMENT_SLOT_LEFT_WEAPON) {
                 unit = g_action_target;
-                if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
-                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING))
+                if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)]
+                        & STATUS_BYTE_MASK(STATUS_ID_CHARGING))
                     && unit->charged_ability_ct != 0xFF && unit->action_command.skillset_id == SKILLSET_ID_CHARGE) {
-                    action->status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
-                        |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING);
+                    action->status_changes.removal[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)]
+                        |= STATUS_BYTE_MASK(STATUS_ID_CHARGING);
                 }
             }
             return 1;

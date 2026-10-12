@@ -15,7 +15,7 @@ s32 main_status_find_action_highest_order_effect(const action_data_t* action) {
 
     highest_order = -1;
     result = 0;
-    for (status_index = 0; status_index < BATTLE_STATUS_COUNT; status_index++) {
+    for (status_index = 0; status_index < STATUS_COUNT; status_index++) {
         byte_index = status_index / 8;
         mask = 0x80 >> (status_index & 7);
         if (action->status_changes.removal[byte_index] & mask) {

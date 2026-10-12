@@ -2,7 +2,7 @@
 #include "fft/battle_action.h"
 #include "psx/types.h"
 
-#define STATUS_MASK(id) BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_##id)
+#define STATUS_MASK(id) STATUS_BYTE_MASK(STATUS_ID_##id)
 
 /* Apply the target's pending action results and flag reactions.
  *
@@ -35,7 +35,7 @@ s32 action_finalize_attack_and_flag_reactions(s32 unit_id) {
     if ((g_action_target->status_sets.current[0] & STATUS_MASK(DEAD))
         && ((g_action_target_data->status_changes.infliction[0] & STATUS_MASK(CRYSTAL))
             || (g_action_target_data->status_changes.infliction[1] & STATUS_MASK(TREASURE)))) {
-        battle_status_resolve_unit_changes(unit_id, 0);
+        status_resolve_unit_changes(unit_id, 0);
         return 0;
     }
     if (g_action_context == ACTION_CONTEXT_PRIMARY) {
@@ -116,7 +116,7 @@ s32 action_finalize_attack_and_flag_reactions(s32 unit_id) {
     if (g_action_target_data->special_effect & ACTION_SPECIAL_EFFECT_MORBOL) {
         outcome |= 1;
         if (g_action_state == ACTION_STATE_EXECUTE) {
-            battle_status_reapply_active_flags(g_action_target);
+            status_reapply_active_flags(g_action_target);
         }
     }
     if (hp == 0 && !(g_action_target->status_sets.current[0] & STATUS_MASK(CRYSTAL))
@@ -124,7 +124,7 @@ s32 action_finalize_attack_and_flag_reactions(s32 unit_id) {
         && !(g_action_target->status_sets.current[1] & STATUS_MASK(TREASURE))) {
         action_clear_status_changes(g_action_target_data);
         g_action_target_data->status_changes.infliction[0] = STATUS_MASK(DEAD);
-        battle_status_resolve_unit_changes(unit_id, 1);
+        status_resolve_unit_changes(unit_id, 1);
         if (g_action_state == ACTION_STATE_EXECUTE) {
             g_action_target->ko_count++;
         }
@@ -147,18 +147,18 @@ s32 action_finalize_attack_and_flag_reactions(s32 unit_id) {
         g_action_target_data->status_changes.removal[1] |= STATUS_MASK(CONFUSION);
     }
     if ((g_action_target_data->special_effect & ACTION_SPECIAL_EFFECT_KNOCKBACK)
-        && battle_status_remove_charging_ability_ct(g_action_target, 0) != 0) {
+        && status_remove_charging_ability_ct(g_action_target, 0) != 0) {
         g_action_target_data->status_changes.removal[0] |= STATUS_MASK(CHARGING);
         g_action_target->charged_ability_ct = 0xff;
     }
-    battle_status_modify_inflictions(0);
+    status_modify_inflictions(0);
     for (i = 0; i < 5; i++) {
         old_status[i] = g_action_target->status_sets.current[i];
     }
     for (i = 0; i < 16; i++) {
         old_status_ct[i] = g_action_target->status_ct[i];
     }
-    battle_status_resolve_unit_changes(unit_id, 0);
+    status_resolve_unit_changes(unit_id, 0);
     if ((g_action_target->status_sets.current[0] & STATUS_MASK(DEAD)) && !(old_status[0] & STATUS_MASK(DEAD))) {
         outcome = 2;
         if (g_action_state == ACTION_STATE_EXECUTE) {

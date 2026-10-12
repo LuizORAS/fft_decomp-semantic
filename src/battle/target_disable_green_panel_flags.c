@@ -8,7 +8,7 @@ void target_disable_green_panel_flags(void) {
     s32 i;
 
     for (i = 0; i < 0x200; i++) {
-        tile = &g_battle_map_tile_data[i];
+        tile = &g_map_tile_data[i];
         tile->ceiling_depth_and_marks.targeted = 0;
     }
 }

@@ -10,5 +10,5 @@ void battle_menu_copy_billboard_data_out(menu_unit_status_record_t* banner, menu
     battle_copy_bytes(banner, &g_battle_menu_active_turn_banner, sizeof(g_battle_menu_active_turn_banner));
     battle_copy_bytes(unit, &g_battle_active_turn_unit, sizeof(g_battle_active_turn_unit));
     battle_copy_bytes(billboard, &g_battle_menu_billboard_data, sizeof(g_battle_menu_billboard_data));
-    battle_copy_bytes(cursor_tile, &g_battle_map_selected_tile_data, sizeof(g_battle_map_selected_tile_data));
+    battle_copy_bytes(cursor_tile, &g_map_selected_tile_data, sizeof(g_map_selected_tile_data));
 }

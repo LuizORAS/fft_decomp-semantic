@@ -16,10 +16,8 @@ s32 ai_is_unit_untargetable(s32 unit_idx) {
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return 1;
     }
-    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
-        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
+    if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)] & STATUS_BYTE_MASK(STATUS_ID_CRYSTAL))
+        || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)] & STATUS_BYTE_MASK(STATUS_ID_TREASURE))) {
         return 1;
     }
     mount = unit->mount_info;
@@ -29,12 +27,10 @@ s32 ai_is_unit_untargetable(s32 unit_idx) {
     if (ai->unit_decisions[unit_idx].enemy_flag == 0) {
         return 0;
     }
-    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))
+    if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)] & STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT))
         && (!(mount & BATTLE_MOUNT_INFO_FLAG_RIDER)
-            || !(g_battle_unit_stats[mount & 0xf]
-                     .status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT)))) {
+            || !(g_battle_unit_stats[mount & 0xf].status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)]
+                & STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT)))) {
         return 1;
     }
     return 0;

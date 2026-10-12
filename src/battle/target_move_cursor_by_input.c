@@ -43,10 +43,10 @@ s32 target_move_cursor_by_input(void) {
         }
     } while (0);
     direction = 0;
-    current = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+    current = map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (g_main_game_options.fields.multi_height_cursor_speed == 3) {
         if (g_main_input_pressed_buttons & PSX_PAD_START) {
-            if (!battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1)
+            if (!map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1)
                     ->flags.blocked) {
                 direction = 1;
                 g_battle_cursor_z ^= 1;
@@ -54,8 +54,7 @@ s32 target_move_cursor_by_input(void) {
         }
     } else if (g_battle_cursor_repeat_counter > delay) {
         g_battle_cursor_repeat_counter = 0;
-        if (!battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1)
-                ->flags.blocked) {
+        if (!map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1)->flags.blocked) {
             direction = 1;
             g_battle_cursor_z ^= 1;
         }
@@ -65,7 +64,7 @@ s32 target_move_cursor_by_input(void) {
         g_battle_cursor_previous_x = g_battle_cursor_x;
         g_battle_cursor_previous_z = g_battle_cursor_z;
         g_battle_cursor_previous_y = g_battle_cursor_y;
-        direction = battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_PRESSED);
+        direction = camera_get_input_direction(CAMERA_INPUT_PRESSED);
         switch (direction) {
         case BATTLE_FACING_NORTH:
             g_battle_cursor_y++;
@@ -96,19 +95,19 @@ s32 target_move_cursor_by_input(void) {
             g_battle_cursor_x--;
             break;
         }
-        if (g_battle_cursor_x == g_battle_map_max_x) {
+        if (g_battle_cursor_x == g_map_max_x) {
             g_battle_cursor_x--;
-        } else if ((u32)g_battle_cursor_x > g_battle_map_max_x) {
+        } else if ((u32)g_battle_cursor_x > g_map_max_x) {
             g_battle_cursor_x = 0;
         }
-        if (g_battle_cursor_y == g_battle_map_max_y) {
-            g_battle_cursor_y = g_battle_map_max_y - 1;
+        if (g_battle_cursor_y == g_map_max_y) {
+            g_battle_cursor_y = g_map_max_y - 1;
         }
-        if ((u32)g_battle_cursor_y > g_battle_map_max_y) {
+        if ((u32)g_battle_cursor_y > g_map_max_y) {
             g_battle_cursor_y = 0;
         }
-        lower = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
-        upper = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1);
+        lower = map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        upper = map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1);
         if (lower->flags.blocked) {
             if (upper->flags.blocked) {
                 switch (direction) {

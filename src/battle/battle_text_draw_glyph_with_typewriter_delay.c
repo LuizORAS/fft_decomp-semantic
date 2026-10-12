@@ -130,12 +130,12 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             g_battle_text_typewriter_state.pen.rect.x = phase;
             g_battle_text_typewriter_state.pen.rect.y = 0;
             g_battle_text_typewriter_state.pen.stride = pitch;
-            battle_script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
-                battle_script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
+            script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
+                script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
             battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + request->glyph * TEXT_GLYPH_BYTES, image,
                 &g_battle_text_typewriter_state.pen, request->palette);
             g_battle_text_typewriter_vram_rect.x
-                = (pen_x >> 2) + (s16)(battle_script_get_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET) + 0x1C0);
+                = (pen_x >> 2) + (s16)(script_get_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET) + 0x1C0);
             g_battle_text_typewriter_vram_rect.y = pen_y;
             g_battle_text_typewriter_vram_rect.h = 14;
             LoadImage(&g_battle_text_typewriter_vram_rect, (u32*)image);
@@ -176,8 +176,8 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             }
         }
 
-        if (battle_script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->mode != 0) {
-            g_battle_sound_pending_sfx_id = MAIN_SFX_TEXT_GLYPH;
+        if (script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->mode != 0) {
+            g_sound_pending_sfx_id = MAIN_SFX_TEXT_GLYPH;
         }
     }
 }

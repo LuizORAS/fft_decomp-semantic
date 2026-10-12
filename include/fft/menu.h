@@ -468,7 +468,7 @@ typedef enum menu_ability_category {
     MENU_ABILITY_CATEGORY_MOVEMENT = 3,
     MENU_ABILITY_CATEGORY_ALL = 15, /* the list builders take any other value as all */
 } menu_ability_category_e;
-/* g_battle_script_attack_entry_mode / g_world_script_attack_entry_mode:
+/* g_script_attack_entry_mode / g_world_script_attack_entry_mode:
  * whether an event instruction loaded the ATTACK overlay and its graphics
  * before the deployment screen starts. */
 typedef enum script_attack_entry_mode {
@@ -1297,7 +1297,7 @@ typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 1
  * WORLD 0x80153280 (g_world_menu_text_state): the script-variable pointer,
  * then the pen the glyph renderers receive. */
 typedef struct menu_text_state {
-    s32* script_variables; /* 0x00; also bound as g_world_script_variables / g_battle_script_variables */
+    s32* script_variables; /* 0x00; also bound as g_world_script_variables / g_script_variables */
     /* 0x04: rect.x/rect.y are the text origin (battle_menu_set_text_origin) and
      * the rect's size is not used; stride (0x0c) is the rect width * 4
      * (the inner window width); color (0x10) is the glyph blit fill,

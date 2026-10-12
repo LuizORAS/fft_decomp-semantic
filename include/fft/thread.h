@@ -58,7 +58,7 @@ enum {
 /* The battle and world programs (twin code). */
 typedef enum native_thread_slot {
     NATIVE_THREAD_SLOT_MAIN = 0,
-    NATIVE_THREAD_SLOT_EVENT = 1,           /* the event script: battle_script_run_next_event and its twin */
+    NATIVE_THREAD_SLOT_EVENT = 1,           /* the event script: script_run_next_event and its twin */
     NATIVE_THREAD_SLOT_UNIT_VIEW = 2,       /* the unit view supervisor that starts the four panels below */
     NATIVE_THREAD_SLOT_MENU_BUILDING = 3,   /* the menu entry starter and the help menu thread */
     NATIVE_THREAD_SLOT_SYSTEM_FUNCTION = 4, /* the system function thread and the spell quote it dispatches */

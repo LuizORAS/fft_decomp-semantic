@@ -52,7 +52,7 @@ void ai_evaluate_linear_ability_behaviors(void) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((unit_id << x) & 0x8000) {
                         if (ai->water_penalty
-                            && (depth = g_battle_map_tile_data[j * ai->map_max_x + x + (i * MAP_TILES_PER_LAYER)]
+                            && (depth = g_map_tile_data[j * ai->map_max_x + x + (i * MAP_TILES_PER_LAYER)]
                                        .depth_half_height.depth)
                                 >= 2) {
                             ai->movable_tiles[i][j] ^= 0x8000 >> x;
@@ -97,7 +97,7 @@ void ai_evaluate_linear_ability_behaviors(void) {
                 /* Keeps the position reads on a copy of the loop pointer (`move a1,a2`) that cse2 would fold. */
                 pos = unit;
                 __asm__("" : "=r"(pos) : "0"(pos));
-                jumping = status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP);
+                jumping = status & STATUS_BYTE_MASK(STATUS_ID_JUMP);
                 if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_TILE || jumping) {
                     ai->attack_origin_tiles[pos->position.higher_elevation][pos->position.y] ^= 0x8000 >> pos->x;
                 }

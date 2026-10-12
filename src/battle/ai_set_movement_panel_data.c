@@ -30,8 +30,8 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
         if ((g_ai_data_base.acting_unit->movement_abilities[2]
                 & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER
                     | BATTLE_MOVEMENT_SET_3_FLOAT))
-            || (g_ai_data_base.acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))) {
+            || (g_ai_data_base.acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FLOAT)]
+                & STATUS_BYTE_MASK(STATUS_ID_FLOAT))) {
             g_ai_data_base.water_penalty = 0;
         } else {
             g_ai_data_base.water_penalty = 1;
@@ -40,7 +40,7 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
         for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {
-                    tile = &g_battle_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
+                    tile = &g_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
                     if (!(tile->flags.blocked) && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
                         ai->walkable_tiles[level][y] |= 0x8000 >> x;
                     }
@@ -53,8 +53,8 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
             ai->reachable_tiles[ai->movement_scenario][1][j] = 0;
         }
         if (movement_taken != 0
-            || (ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_MOVE)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE))) {
+            || (ai->acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_MOVE)]
+                & STATUS_BYTE_MASK(STATUS_ID_DONT_MOVE))) {
             ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
                 = 0x8000 >> ai->acting_unit_coords.bytes.x;
             return 0;
@@ -75,7 +75,7 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
     for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             for (x = 0; x < ai->map_max_x; x++) {
-                tile = &g_battle_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
+                tile = &g_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
                 if (ai->acting_unit->movement_abilities[1] & BATTLE_MOVEMENT_SET_2_TELEPORT) {
                     if (!(ai->acting_unit->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER)) {
                         i = ai->acting_unit_coords.bytes.x - x;
@@ -100,18 +100,16 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && i != ai->acting_unit_id
-            && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
-            && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
+            && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)] & STATUS_BYTE_MASK(STATUS_ID_CRYSTAL))
+            && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)]
+                & STATUS_BYTE_MASK(STATUS_ID_TREASURE))) {
             ai->reachable_tiles[0][unit->position.higher_elevation][unit->position.y] &= ~(0x8000 >> unit->x);
         }
     }
     ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
         |= 0x8000 >> ai->acting_unit_coords.bytes.x;
     if (*(u32*)&ai->acting_unit->status_sets.current[0]
-        & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CONFUSION)
-            | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_BERSERK))) {
+        & (STATUS_PACKED_MASK(STATUS_ID_CONFUSION) | STATUS_PACKED_MASK(STATUS_ID_BERSERK))) {
         return 0;
     }
     for (i = 0; i < AI_KNOWN_TRAP_COUNT; i++) {

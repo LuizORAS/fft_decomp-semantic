@@ -52,8 +52,8 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
     config->x = unit->x;
     config->y = unit->position.y;
     config->high_elevation = unit->position.higher_elevation;
-    config->map_max_x = g_battle_map_max_x;
-    config->map_max_y = g_battle_map_max_y;
+    config->map_max_x = g_map_max_x;
+    config->map_max_y = g_map_max_y;
     config->cannot_enter_water = 0;
     config->cannot_stay_on_water = 0;
     config->will_drown = 1;
@@ -65,8 +65,8 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
     } else {
         config->can_pass_lava = 0;
     }
-    value = unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHICKEN)];
-    if (value & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
+    value = unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHICKEN)];
+    if (value & (STATUS_BYTE_MASK(STATUS_ID_CHICKEN) | STATUS_BYTE_MASK(STATUS_ID_FROG))) {
         movement[1] &= ~(BATTLE_MOVEMENT_SET_2_TELEPORT_2 | BATTLE_MOVEMENT_SET_2_TELEPORT);
         movement[2] &= ~BATTLE_MOVEMENT_SET_3_FLY;
         config->unit_size = 4;
@@ -83,7 +83,7 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
     } else {
         config->movement_set_3 = movement[2];
     }
-    if (value & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+    if (value & STATUS_BYTE_MASK(STATUS_ID_FLOAT)) {
         movement[2] |= BATTLE_MOVEMENT_SET_3_FLOAT;
     }
     if (movement[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER) {
@@ -171,10 +171,9 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
     }
     config->move = value;
     if ((unit->unit_flags & (UNIT_FLAG_MALE | UNIT_FLAG_FEMALE))
-        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHICKEN)]
-            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)))
-        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM))) {
+        && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHICKEN)]
+            & (STATUS_BYTE_MASK(STATUS_ID_CHICKEN) | STATUS_BYTE_MASK(STATUS_ID_FROG)))
+        && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARM)] & STATUS_BYTE_MASK(STATUS_ID_CHARM))) {
         config->can_ride = 1;
     } else {
         config->can_ride = 0;
@@ -194,13 +193,12 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
         if (other->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             continue;
         }
-        if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)
-                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
+        if (other->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
+            & (STATUS_BYTE_MASK(STATUS_ID_CRYSTAL) | STATUS_BYTE_MASK(STATUS_ID_DEAD)
+                | STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
             continue;
         }
-        if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
+        if (other->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)] & STATUS_BYTE_MASK(STATUS_ID_TREASURE)) {
             continue;
         }
         if (i == unit_id) {
@@ -226,9 +224,8 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
         current->y = other->position.y;
         current->higher_elevation = other->position.higher_elevation;
         current->stepping_stone = other->position.stepping_stone;
-        value = other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHICKEN)];
-        if (value
-            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
+        value = other->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHICKEN)];
+        if (value & (STATUS_BYTE_MASK(STATUS_ID_CHICKEN) | STATUS_BYTE_MASK(STATUS_ID_FROG))) {
             current->body_height = 4;
             current->stepping_stone = 0;
         } else {
@@ -239,13 +236,12 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
             current->body_height += 2;
         }
         movement_3 = other->movement_abilities[2];
-        tile = &g_battle_map_tile_data[battle_map_calculate_location(other)];
+        tile = &g_map_tile_data[map_calculate_location(other)];
         base = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK);
         depth = (*(u8*)&tile->depth_half_height) >> 5;
         byte = base;
         if (depth != 0) {
-            if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+            if (other->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FLOAT)] & STATUS_BYTE_MASK(STATUS_ID_FLOAT)) {
                 adjust = depth * 2 + 2;
                 byte = base + adjust;
             } else if (movement_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
@@ -255,8 +251,7 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
                 adjust = depth * 2 - 2;
                 byte = base + adjust;
             }
-        } else if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+        } else if (other->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FLOAT)] & STATUS_BYTE_MASK(STATUS_ID_FLOAT)) {
             byte = base + 2;
         }
         current->standing_height = byte;

@@ -10,10 +10,10 @@ void move_clear_enterable_flags_under_dead_or_jumping_units(void) {
         battle_stats_t* unit = &g_battle_unit_stats[unit_id];
 
         if ((unit->entd_slot != BATTLE_ENTD_SLOT_NONE)
-            && ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
-                    & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)))
+            && ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEAD)]
+                    & (STATUS_BYTE_MASK(STATUS_ID_DEAD) | STATUS_BYTE_MASK(STATUS_ID_JUMP)))
                 != 0)) {
-            g_move_frontier_flags_ptr[battle_map_calculate_location(unit)] &= ~FRONTIER_FLAG_ENTERABLE;
+            g_move_frontier_flags_ptr[map_calculate_location(unit)] &= ~FRONTIER_FLAG_ENTERABLE;
         }
     }
 }

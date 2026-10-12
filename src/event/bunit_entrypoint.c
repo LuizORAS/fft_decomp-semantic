@@ -94,14 +94,14 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         battle_menu_draw_active_window_frames();
         bunit_input_update_event_state(
             g_bunit_gfx_context->otag + 9, bunit_input_read_pad1_unless_locked(), g_bunit_gfx_drawenv_y);
-        sound_request = g_battle_sound_pending_sfx_id;
+        sound_request = g_sound_pending_sfx_id;
         if (sound_request == MAIN_SFX_CURSOR_MOVE || sound_request == MAIN_SFX_CANCEL) {
-            g_bunit_sound_queued_effect_id = g_battle_sound_pending_sfx_id;
+            g_bunit_sound_queued_effect_id = g_sound_pending_sfx_id;
         }
-        if (sound_request < 0 || g_battle_sound_suppressed != 0) {
-            g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+        if (sound_request < 0 || g_sound_suppressed != 0) {
+            g_sound_pending_sfx_id = MAIN_SFX_NONE;
         }
-        sound_id = g_battle_sound_pending_sfx_id;
+        sound_id = g_sound_pending_sfx_id;
         if (sound_id == MAIN_SFX_NONE) {
             sound_id = g_bunit_sound_queued_effect_id;
         }
@@ -111,7 +111,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
             main_sound_play_sfx(sound_id);
         }
         g_bunit_sound_queued_effect_id = MAIN_SFX_NONE;
-        g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+        g_sound_pending_sfx_id = MAIN_SFX_NONE;
     } while (running != 0);
     bunit_panel_toggle_equipment_and_numeric_editor_threads(0);
     bunit_panel_toggle_unit_status_thread(0);

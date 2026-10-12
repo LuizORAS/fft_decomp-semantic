@@ -79,8 +79,8 @@ void battle_effect_draw_projectile_model(
         gte_stlvnl(&scratch[i]);
         gte_stflg(&scratch[i].pad);
     }
-    SetRotMatrix(&g_battle_camera_matrix);
-    SetTransMatrix(&g_battle_camera_matrix);
+    SetRotMatrix(&g_camera_matrix);
+    SetTransMatrix(&g_camera_matrix);
     for (i = 0; i < count; i++) {
         copyVector(&point, &scratch[i]);
         gte_ldv0(&point);

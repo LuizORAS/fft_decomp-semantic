@@ -9,7 +9,7 @@ s32 battle_effect_update_cycle(void) {
 
     stage_result = battle_effect_update_stage();
     related_result = battle_effect_update_secondary_effects();
-    battle_camera_update_effect_rotation_and_zoom();
+    camera_update_effect_rotation_and_zoom();
 
     if (stage_result != 0 || related_result != 0) {
         return 1;

@@ -34,7 +34,7 @@ void move_set_velocity_for_contiguous_clamped_steps(
     s32 end_z;
     s16 code;
 
-    battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
+    map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
     x = unit->map_x;
     y = unit->map_y;
     index = unit->movement_path_offset - 1;

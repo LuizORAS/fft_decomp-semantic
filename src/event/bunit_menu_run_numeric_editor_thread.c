@@ -25,7 +25,7 @@ void bunit_menu_run_numeric_editor_thread(void) {
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
     thread = (menu_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
-    g_bunit_input_controller = battle_script_get_controller_input_pointer(0) + 1;
+    g_bunit_input_controller = script_get_controller_input_pointer(0) + 1;
     if (g_battle_current_thread_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
         buffer = g_bunit_editor_numeric_state_a;
         buffers = buffer;

@@ -29,7 +29,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         g_main_gfx_screen_polarity = 1;
     }
     g_battle_gfx_current_otag_entry = otag;
-    g_card_input_controller = battle_script_get_controller_input_pointer(0);
+    g_card_input_controller = script_get_controller_input_pointer(0);
     if (input == 0) {
         g_card_input_initial_repeat_counter = 0;
         g_card_input_repeat_counter = 0;
@@ -80,9 +80,9 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         }
     }
 
-    g_battle_sound_pending_sfx_id = -1;
+    g_sound_pending_sfx_id = -1;
     /* CARD inserts its controller pointer at +4; the copy of six 32-bit values includes it. */
-    battle_script_load_event_input_state((const menu_input_state_t*)&g_card_input_event);
+    script_load_event_input_state((const menu_input_state_t*)&g_card_input_event);
     if (g_card_input_event != PSX_PAD_SELECT && g_card_input_event != 0) {
         g_battle_event_input_suppression_frames = 5;
     }

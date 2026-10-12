@@ -23,7 +23,7 @@ s32 battle_effect_calculate_arcing_trajectory(battle_arc_query_t* query, s32* ar
     s32 result;
 
     result = 0;
-    tile = battle_map_get_tile_data_ptr_from_battle_id(query->target.unit_id);
+    tile = map_get_tile_data_ptr_from_battle_id(query->target.unit_id);
     tile_height = tile->height + tile->depth_half_height.depth;
     floor = (tile_height * 3) << 14;
     peak = battle_effect_calculate_arc_height_term(query->delta.distance);

@@ -33,8 +33,7 @@ void world_menu_check_action_restrictions(void) {
             message = 0x1003;
         }
     } else {
-        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)) {
+        if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)] & STATUS_BYTE_MASK(STATUS_ID_CHARGING)) {
             if (g_main_action_menu_types_by_skillset[unit->action_command.skillset_id] == ACTION_MENU_TYPE_CHARGE) {
                 g_world_text_substitution_values[0]
                     = unit->action_command.skillset_id | TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -42,8 +41,8 @@ void world_menu_check_action_restrictions(void) {
                 g_world_text_substitution_values[0] = unit->action_command.ability_id + TEXT_ID_ABILITY_NAME_BASE;
             }
             message = 0x8001;
-        } else if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
+        } else if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PERFORMING)]
+            & STATUS_BYTE_MASK(STATUS_ID_PERFORMING)) {
             message = 0x8002;
         }
     }

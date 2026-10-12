@@ -29,8 +29,8 @@ void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     u8 right;
     u8 bottom;
 
-    SetRotMatrix(&g_battle_camera_matrix);
-    SetTransMatrix(&g_battle_camera_matrix);
+    SetRotMatrix(&g_camera_matrix);
+    SetTransMatrix(&g_camera_matrix);
     setVector(&local, slot->motion.position.x >> 12, slot->motion.position.y >> 12, slot->motion.position.z >> 12);
     RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
@@ -44,8 +44,8 @@ void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     g_battle_effect_matrix.t[1] = position.vy;
     cosine = rcos(slot->angle);
     sine = rsin(slot->angle);
-    zoom = g_battle_camera_zoom.vx;
-    scale_y = g_battle_camera_zoom.vy;
+    zoom = g_camera_zoom.vx;
+    scale_y = g_camera_zoom.vy;
     g_battle_effect_matrix.m[0][0] = (cosine * zoom) >> 12;
     g_battle_effect_matrix.m[1][1] = (cosine * scale_y) >> 12;
     g_battle_effect_matrix.m[0][1] = (-sine * scale_y) >> 12;

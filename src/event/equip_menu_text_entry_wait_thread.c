@@ -25,7 +25,7 @@ void equip_menu_text_entry_wait_thread(void) {
         binding->prepare();
     }
 
-    input = battle_script_get_controller_input_pointer(0);
+    input = script_get_controller_input_pointer(0);
     text_id = thread->text_id;
     task = thread->context;
     header_id = thread->header_id;

@@ -34,7 +34,7 @@ s32 move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8 height
     state->jump_unit_size = g_move_config_ptr->unit_size;
     for (layer = 0; layer < 4; layer++) {
         index = (layer / 2) * MAP_TILES_PER_LAYER + tile_index;
-        tile = &g_battle_map_tile_data[index];
+        tile = &g_map_tile_data[index];
         if (layer & 1) {
             if ((frontier[index] & (FRONTIER_FLAG_UNIT_ON_TILE | FRONTIER_FLAG_STAND_ON_UNIT))
                 != FRONTIER_FLAG_UNIT_ON_TILE) {

@@ -17,21 +17,21 @@ s32 battle_menu_init_attack_resources_and_threads(void) {
     battle_unit_reset_animation_states();
     battle_menu_reset_unit_records();
     /* The target loads the entry mode unsigned (lhu). */
-    if (g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-        g_battle_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOAD_USED;
+    if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+        g_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOAD_USED;
     } else {
         g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
         battle_thread_call_on_main_stack(
             DISC_SECTOR_EVENT_ATTACK_OUT, 0x20000, g_main_heap_companion_overlay_load_address);
     }
     result = attack_load_scenario_conditionals();
-    if (g_battle_script_attack_entry_mode != SCRIPT_ATTACK_ENTRY_PRELOAD_USED) {
+    if (g_script_attack_entry_mode != SCRIPT_ATTACK_ENTRY_PRELOAD_USED) {
         attack_gfx_build_formation_sprites();
         attack_gfx_load_portraits();
     }
     g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_NONE;
     g_battle_menu_panel_fade_intensity = 0;
-    if (battle_script_is_tutorial_event_slot() != 0) {
+    if (script_is_tutorial_event_slot() != 0) {
         g_battle_screen_fade = 0xff;
         g_battle_saved_game_options = g_main_game_options;
         options = &g_main_game_options.fields;
@@ -46,12 +46,12 @@ s32 battle_menu_init_attack_resources_and_threads(void) {
     }
     attack_deploy_find_fieldable_units();
     if (result != 0) {
-        battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, battle_map_data_load_complete_thread);
+        battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, map_data_load_complete_thread);
         return_value = 1;
     } else {
         g_battle_music_track_1_id = 0;
         g_battle_music_track_2_id = 0;
-        battle_sound_play_music_tracks(MAIN_MUSIC_DEPLOYMENT, MAIN_MUSIC_NONE);
+        sound_play_music_tracks(MAIN_MUSIC_DEPLOYMENT, MAIN_MUSIC_NONE);
         attack_text_build_deployment_strings();
         attack_map_load_title_graphic();
         battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, attack_deploy_run_screen);

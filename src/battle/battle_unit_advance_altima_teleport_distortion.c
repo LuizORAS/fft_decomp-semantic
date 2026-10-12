@@ -21,7 +21,7 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
         break;
     case 1:
         /* The target passes no argument here. */
-        if (battle_effect_init_data() == 0 && battle_camera_is_active() == 0) {
+        if (battle_effect_init_data() == 0 && camera_is_active() == 0) {
             battle_effect_start_altima_teleport_white_flash(unit);
         }
         break;
@@ -46,7 +46,7 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
         }
         break;
     case 4:
-        if (battle_effect_init_data() == 0 && battle_camera_is_active() == 0) {
+        if (battle_effect_init_data() == 0 && camera_is_active() == 0) {
             battle_effect_start_altima_teleport_fade_out(unit);
         }
         break;

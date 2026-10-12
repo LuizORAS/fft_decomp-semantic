@@ -271,7 +271,7 @@ typedef struct ai_status_snapshot {
     u8 entd_slot;
     u8 death_counter;
     u8 death_sentence_ct; /* see 0x8019e214 */
-    u8 current_status[BATTLE_STATUS_BYTE_COUNT];
+    u8 current_status[STATUS_BYTE_COUNT];
 } ai_status_snapshot_t;
 typedef char ai_status_snapshot_must_be_8[sizeof(ai_status_snapshot_t) == 8 ? 1 : -1];
 
@@ -298,9 +298,9 @@ typedef struct ai_extended_snapshot {
     u8 auto_battle_setting; /* 0x2e */
     u8 auto_battle_target;
     u8 initial_team_flags;
-    u8 inflicted_status[BATTLE_STATUS_BYTE_COUNT]; /* 0x31 */
-    u8 equipment[UNIT_EQUIPMENT_SLOT_COUNT];       /* 0x36 */
-    u8 brave;                                      /* 0x3d */
+    u8 inflicted_status[STATUS_BYTE_COUNT];  /* 0x31 */
+    u8 equipment[UNIT_EQUIPMENT_SLOT_COUNT]; /* 0x36 */
+    u8 brave;                                /* 0x3d */
     u8 mount_info;
     u8 _padding_3f; /* tail padding to 2-byte alignment */
 } ai_extended_snapshot_t;
@@ -317,7 +317,7 @@ typedef union ai_ability_parameters {
         u8 range;
         u8 aoe;
         u8 item_id;
-        u8 status_infliction[BATTLE_STATUS_BYTE_COUNT];
+        u8 status_infliction[STATUS_BYTE_COUNT];
     } bytes;
     struct {
         u32 _first;
@@ -327,7 +327,7 @@ typedef union ai_ability_parameters {
 
 /* Pack canonical status IDs 8..39 into the aligned 32-bit value covering status
  * bytes 1..4 of ai_ability_parameters_t. */
-#define AI_STATUS_TAIL_PACKED_MASK(id) ((u32)BATTLE_STATUS_BYTE_MASK(id) << ((BATTLE_STATUS_BYTE_INDEX(id) - 1) * 8))
+#define AI_STATUS_TAIL_PACKED_MASK(id) ((u32)STATUS_BYTE_MASK(id) << ((STATUS_BYTE_INDEX(id) - 1) * 8))
 
 /* Considered ability, base+0x00. */
 typedef struct ai_considered_ability {
@@ -576,7 +576,7 @@ typedef struct ai_data {
     u8 map_max_x;                                   /* 0x0e3a */
     u8 map_max_y;                                   /* 0x0e3b */
     u16 team_golem[BATTLE_TEAM_COUNT];              /* 0x0e3c; 16-bit scoring at 0x8019d37c */
-    u8 status_to_cancel[BATTLE_STATUS_BYTE_COUNT]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built
+    u8 status_to_cancel[STATUS_BYTE_COUNT]; /* 0x0e44; usable actor abilities' aggregate cancellation mask, built
                                                       at 0x80195410 */
     /* Resumable reflected-origin search, 0x8019b7b8–0x8019bb20.
      * Candidate x/y = 2 * reflector position - intended target position. */

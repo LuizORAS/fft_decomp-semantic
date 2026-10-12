@@ -62,8 +62,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
                     break;
             }
             if (battle_id == 3
-                || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
+                || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_JUMP)] & STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
                 world_script_report_missing_unit_stub(original_unit_id);
                 return EVENT_MISC_ID_NONE;
             }
@@ -104,8 +103,7 @@ s32 world_script_get_misc_id(s32 unit_id) {
     }
     unit_id = battle_unit_get_misc_id_by_battle_id(battle_id);
     if (unit_id == -1
-        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
+        || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)] & STATUS_BYTE_MASK(STATUS_ID_TREASURE))) {
         world_script_report_missing_unit_stub(original_unit_id);
         return EVENT_MISC_ID_NONE;
     }

@@ -362,12 +362,12 @@ void world_sound_edit_bg_thread(void);
 /* Status-ID-indexed image source rectangles at 0x8018cf68. Not const: a const
  * qualifier lets GCC hoist world_item_build_status_list_polygons' loads above
  * its rect stores, which the target does not do. */
-extern RECT g_world_status_display_image_rects[BATTLE_STATUS_COUNT];
+extern RECT g_world_status_display_image_rects[STATUS_COUNT];
 
 /* Per-byte status removal masks applied while an event stages a unit. */
-extern u8 g_world_status_removal_mask_unstaged[BATTLE_STATUS_BYTE_COUNT];
-extern u8 g_world_status_removal_mask_staged[BATTLE_STATUS_BYTE_COUNT];
-extern u8 g_world_status_removal_mask_staged_monster[BATTLE_STATUS_BYTE_COUNT];
+extern u8 g_world_status_removal_mask_unstaged[STATUS_BYTE_COUNT];
+extern u8 g_world_status_removal_mask_staged[STATUS_BYTE_COUNT];
+extern u8 g_world_status_removal_mask_staged_monster[STATUS_BYTE_COUNT];
 
 /* Thread parameter blocks of the formation status panels (0x8018ba2c, eight
  * 0x14-byte menu_status_thread_t records). */
@@ -829,7 +829,7 @@ typedef char wldcore_window_xy_size_must_be_36[sizeof(wldcore_window_xy_t) == 36
 
 extern menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
 
-/* Scenario interpreter interfaces shared by battle_script_execute_event and
+/* Scenario interpreter interfaces shared by script_execute_event and
  * world_script_execute_event. Signatures are as the interpreters bind them;
  * unverified names stay provisional. */
 extern s16 g_world_3d_object_use_request;

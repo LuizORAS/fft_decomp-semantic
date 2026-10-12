@@ -35,7 +35,7 @@ void ai_build_monster_skill_tile_mask(void) {
             continue;
         if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION))
             continue;
-        height = g_battle_map_tile_data[unit->position.higher_elevation * MAP_TILES_PER_LAYER
+        height = g_map_tile_data[unit->position.higher_elevation * MAP_TILES_PER_LAYER
             + unit->position.y * ai->map_max_x + unit->x]
                      .height;
         for (direction = 0; direction < AI_CARDINAL_DIRECTION_COUNT; direction++) {
@@ -46,10 +46,8 @@ void ai_build_monster_skill_tile_mask(void) {
             if (y < 0 || y >= ai->map_max_y)
                 continue;
             for (level = 0; level <= 0; level++) {
-                if ((g_battle_map_tile_data[(level * MAP_TILES_PER_LAYER) + y * ai->map_max_x + x].height - height)
-                        >= -2
-                    && (g_battle_map_tile_data[(level * MAP_TILES_PER_LAYER) + y * ai->map_max_x + x].height - height)
-                        <= 2) {
+                if ((g_map_tile_data[(level * MAP_TILES_PER_LAYER) + y * ai->map_max_x + x].height - height) >= -2
+                    && (g_map_tile_data[(level * MAP_TILES_PER_LAYER) + y * ai->map_max_x + x].height - height) <= 2) {
                     /* A typed level-row pointer folds the field offset into
                      * the induction value. Preserve the target's AI-base
                      * cursor with a member-derived displacement. */

@@ -22,8 +22,8 @@ effect_script_result_e battle_effect_code_script_25_update_all_particles(effect_
     effect_work_record_t* work;
 
     work = record->work_head;
-    gte_SetRotMatrix(&g_battle_camera_matrix);
-    gte_SetTransMatrix(&g_battle_camera_matrix);
+    gte_SetRotMatrix(&g_camera_matrix);
+    gte_SetTransMatrix(&g_camera_matrix);
     battle_effect_integrate_particle_motion(record->work_head);
 
     for (;;) {

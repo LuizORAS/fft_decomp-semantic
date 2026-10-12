@@ -9,7 +9,7 @@ effect_script_result_e battle_effect_code_script_0b_set_camera_rotation(effect_r
     setVector(&rotation, battle_effect_get_current_script_instruction(record)->vector.x,
         battle_effect_get_current_script_instruction(record)->vector.y,
         battle_effect_get_current_script_instruction(record)->vector.z);
-    battle_camera_set_rotation(&rotation);
+    camera_set_rotation(&rotation);
     record->pc += 8;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

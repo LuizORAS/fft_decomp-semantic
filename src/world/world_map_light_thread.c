@@ -49,7 +49,7 @@ void world_map_light_thread(void) {
         scale.vy = (target.vectors.scale[1] - start.vectors.scale[1]) * i / frames + start.vectors.scale[1];
         scale.vz = (target.vectors.scale[2] - start.vectors.scale[2]) * i / frames + start.vectors.scale[2];
         ScaleMatrixL(&colour, &scale);
-        battle_map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
+        map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
         world_thread_wait_frames(1);
     }
     world_script_copy_bytes(&g_world_map_light_rotation, &rotation, 8);

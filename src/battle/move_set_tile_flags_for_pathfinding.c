@@ -42,7 +42,7 @@ void move_set_tile_flags_for_pathfinding(s32 mode) {
             panel->max_height_delta = 0xff;
         }
         if (i < MAP_TILE_COUNT) {
-            tile = &g_battle_map_tile_data[i];
+            tile = &g_map_tile_data[i];
             frontier[i] = 0;
             slope = tile->slope_type & 5;
             if (slope == 1 || slope == 4) {

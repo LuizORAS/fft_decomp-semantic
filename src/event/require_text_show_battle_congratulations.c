@@ -16,8 +16,7 @@ void require_text_show_battle_congratulations(void) {
     g_battle_thread_call_target = main_sound_unload_scenario_music_and_tunes;
     battle_thread_call_on_main_stack();
     g_battle_thread_call_target = (void (*)(void))main_sound_open_scenario_smd_files;
-    battle_thread_call_on_main_stack(
-        battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON
+    battle_thread_call_on_main_stack(script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON
             ? MAIN_MUSIC_CONGRATULATIONS
             : MAIN_MUSIC_CONGRATULATIONS_FINAL_BATTLE);
     do {
@@ -30,7 +29,7 @@ void require_text_show_battle_congratulations(void) {
     thread_a = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(thread_a, require_render_display_condition_special_cases_thread);
     battle_thread_set_parameters(thread_a, 1, 0, 0);
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON)
+    if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON)
         require_input_wait_frames_or_skip(0x1e);
     else
         battle_thread_wait_frames(0x1e);
@@ -38,7 +37,7 @@ void require_text_show_battle_congratulations(void) {
     thread_b = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(thread_b, require_render_display_condition_special_cases_thread);
     battle_thread_set_parameters(thread_b, 7, 1, 0);
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON)
+    if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON)
         require_input_wait_frames_or_skip(0xb4);
     else
         battle_thread_wait_frames(0x12c);

@@ -364,7 +364,7 @@ extern u16 g_battle_etc_graphics_enabled;
 extern u16 g_battle_field_object_use_request; /* 0x80165fe4 */
 extern u16 g_battle_field_object_wait_status; /* 0x80166070 */
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
-s32 battle_map_tile_data_15_stub(void);
+s32 map_tile_data_15_stub(void);
 s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 battle_return_one(s32 unused_misc_id);
 s32 target_spread_panel_to_neighbors(s32 y, s32 x);

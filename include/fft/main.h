@@ -610,9 +610,9 @@ typedef enum main_sfx {
     MAIN_SFX_CAMERA_ROTATE_LEFT = 11,
     MAIN_SFX_CAMERA_ROTATE_RIGHT = 12,
     MAIN_SFX_CAMERA_ROTATE_STOP = 13, /* the rotation reached its target */
-    /* Paired zoom sounds: battle_camera_toggle_zoom and battle_camera_zoom_map
+    /* Paired zoom sounds: camera_toggle_zoom and camera_zoom_map
      * play 0x11 with zoom action 4 and 0xe with action 2; the in/out reading
-     * follows the zoom-target comment in battle_camera_toggle_zoom. The
+     * follows the zoom-target comment in camera_toggle_zoom. The
      * ATTACK deploy screen also plays 0x11 when a placed unit is moved. */
     MAIN_SFX_CAMERA_ZOOM_IN = 14,
     /* L1/R1 on the world map (wldcore_menu_step_map_cursor_level): 0x10 when
@@ -622,10 +622,10 @@ typedef enum main_sfx {
     MAIN_SFX_WORLD_MAP_ZOOM_OUT = 16,
     MAIN_SFX_CAMERA_ZOOM_OUT = 17,
     MAIN_SFX_WINDOW_OPEN = 18, /* help, message or text window opens */
-    /* The weapon sounds of battle_sound_select_weapon_hit, by the weapon's
-     * item_type_e: g_battle_sound_weapon_miss_sfx_ids (the swing, played
-     * before the hit is known), g_battle_sound_weapon_hit_sfx_ids and
-     * g_battle_sound_shield_deflect_sfx_ids. */
+    /* The weapon sounds of sound_select_weapon_hit, by the weapon's
+     * item_type_e: g_sound_weapon_miss_sfx_ids (the swing, played
+     * before the hit is known), g_sound_weapon_hit_sfx_ids and
+     * g_sound_shield_deflect_sfx_ids. */
     MAIN_SFX_HIT_BLADE = 19,    /* knife, ninja blade, sword, knight sword, katana */
     MAIN_SFX_HIT_HEAVY = 21,    /* axe, flail; also the deflect of a fist, bag or cloth */
     MAIN_SFX_HIT_UNARMED = 24,  /* fist, bag, cloth */
@@ -637,7 +637,7 @@ typedef enum main_sfx {
     MAIN_SFX_SPELL_CHARGE = 31,
     MAIN_SFX_SUMMON_CHARGE = 33,
     MAIN_SFX_VENOM_TRAP = 34, /* battle_effect_venom_trap_secondary_handler starts */
-    /* battle_sound_play_landing_sfx_by_surface_type: water surfaces play
+    /* sound_play_landing_sfx_by_surface_type: water surfaces play
      * 0x23, grassland, thicket and rug 0x28, wooden floor, tree and box 0x3a,
      * every other surface 0x29. A step that ends on another unit also plays
      * 0x28, and mounting a unit named by battle id plays 0x29. */
@@ -650,11 +650,11 @@ typedef enum main_sfx {
     MAIN_SFX_SHIELD_DEFLECT_HEAVY = 47, /* axe, flail */
     /* An error message opens: a memory-card load, save or scan failure, or a
      * refused equip, dismissal, job change or ability.
-     * battle_sound_select_weapon_hit plays it for an attack stopped by an
+     * sound_select_weapon_hit plays it for an attack stopped by an
      * accessory or class evade, a forced failure, a blade grasp or a catch,
      * and as the shield deflect of an instrument or book. */
     MAIN_SFX_ERROR_MESSAGE = 48,
-    MAIN_SFX_CAMERA_TILT = 49, /* battle_camera_handle_tilt_request */
+    MAIN_SFX_CAMERA_TILT = 49, /* camera_handle_tilt_request */
     MAIN_SFX_HIT_ROD = 56,     /* rod, staff */
     MAIN_SFX_LAND_WOOD = 58,
     /* Circle on a name-entry character key, or on an occupied tile of the
@@ -691,7 +691,7 @@ typedef enum main_sfx {
     MAIN_SFX_EVENT_TRANSITION_MODE_1 = 109,
     MAIN_SFX_STATUS_MENU_REQUEST
     = 113,                       /* Triangle queues the status menu on another unit's turn; again when it opens */
-    MAIN_SFX_CRITICAL_HIT = 114, /* a weapon hit whose action is critical (battle_sound_select_weapon_hit) */
+    MAIN_SFX_CRITICAL_HIT = 114, /* a weapon hit whose action is critical (sound_select_weapon_hit) */
     MAIN_SFX_TEXT_GLYPH = 115,   /* typewriter tick after a dialogue glyph */
     MAIN_SFX_HIT_ARROW = 116,    /* crossbow, bow */
     /* World map: 0x76 when a path animation starts, drawing or erasing; 0x77
@@ -713,8 +713,8 @@ typedef enum main_sfx {
  * holds 27 (0, 0x15, 0x16 and 0x17 are empty); event scripts choose the
  * others through EVENT_OPCODE_BG_SOUND. */
 typedef enum main_env_sfx {
-    MAIN_ENV_SFX_RAIN = 2,      /* battle_map_run_weather_command: rain without snow, and the thunder command */
-    MAIN_ENV_SFX_THUNDER_A = 3, /* battle_map_draw_mesh_and_weather picks one of the two for a lightning flash */
+    MAIN_ENV_SFX_RAIN = 2,      /* map_run_weather_command: rain without snow, and the thunder command */
+    MAIN_ENV_SFX_THUNDER_A = 3, /* map_draw_mesh_and_weather picks one of the two for a lightning flash */
     MAIN_ENV_SFX_THUNDER_B = 14,
 } main_env_sfx_e;
 
@@ -753,7 +753,7 @@ s32 main_sound_set_current_music_volume_timed(s32 time);
 s32 main_sound_set_tune_volume(s32 time);
 s32 main_sound_stop_current_music(void);
 
-/* battle_map_step_init_sequence calls this without loading $a0, but the body reads sound_id. */
+/* map_step_init_sequence calls this without loading $a0, but the body reads sound_id. */
 void main_sound_stop_sfx(int sound_id);
 suzuki_music_t* main_sound_switch_music_track(s32 slot, s32 volume, s32 fade);
 void main_sound_unload_current_scenario_music(void);
@@ -781,10 +781,10 @@ typedef enum main_status_change {
 } main_status_change_e;
 
 extern status_infliction_data_t g_main_status_infliction_data[];
-extern const status_effect_data_t g_main_status_effect_data[BATTLE_STATUS_COUNT];
+extern const status_effect_data_t g_main_status_effect_data[STATUS_COUNT];
 
 /* Built status masks, indexed by main_status_check_set_e. */
-extern u8 g_main_status_check_sets[MAIN_STATUS_CHECK_SET_COUNT][BATTLE_STATUS_BYTE_COUNT];
+extern u8 g_main_status_check_sets[MAIN_STATUS_CHECK_SET_COUNT][STATUS_BYTE_COUNT];
 void main_status_init_check_data(void);
 void main_status_change_unit(battle_stats_t* unit, s32 status_byte_index, u8 status_flag, s32 change_type);
 void main_status_init_ct(battle_stats_t* unit);
@@ -1180,7 +1180,7 @@ void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, up
 /* g_main_terrain_status_flags has one byte per map_surface_type_e; only
  * MAP_SURFACE_POISONED_MARSH has a bit. */
 enum {
-    MAIN_TERRAIN_STATUS_FLAG_POISON = 0x80, /* battle_status_prepare_terrain_poison poisons a unit standing there */
+    MAIN_TERRAIN_STATUS_FLAG_POISON = 0x80, /* status_prepare_terrain_poison poisons a unit standing there */
 };
 
 /* Rows of g_main_terrain_movement_cost_tables, chosen from the unit's movement

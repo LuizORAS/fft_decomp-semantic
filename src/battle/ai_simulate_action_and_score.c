@@ -83,7 +83,7 @@ s32 ai_simulate_action_and_score(void) {
         }
     }
     if (ai->current_action.command.skillset_id == SKILLSET_ID_DEFEND) {
-        battle_status_inflict_defending_to_battle_id(ai->acting_unit_id);
+        status_inflict_defending_to_battle_id(ai->acting_unit_id);
         ai->current_action.rank.base_hit_percent = 100;
         ai->acting_unit->action_taken = 1;
     }
@@ -121,12 +121,10 @@ s32 ai_simulate_action_and_score(void) {
                 goto finish_without_scoring;
             }
             unit->charged_ability_ct = 0xff;
-            unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
-                &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                    | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
-            unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
-                &= ~(BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                    | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING));
+            unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)]
+                &= ~(STATUS_BYTE_MASK(STATUS_ID_CHARGING) | STATUS_BYTE_MASK(STATUS_ID_PERFORMING));
+            unit->inflicted_status[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)]
+                &= ~(STATUS_BYTE_MASK(STATUS_ID_CHARGING) | STATUS_BYTE_MASK(STATUS_ID_PERFORMING));
         } else if (status == BATTLE_TURN_EVENT_UNIT_READY) {
             if (ai_decide_status_ct_based(0, unit_index))
                 ai->unit_acts_before_me[unit_index] = 1;
@@ -135,9 +133,8 @@ s32 ai_simulate_action_and_score(void) {
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             unit = &g_battle_unit_stats[unit_index];
             if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
-                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
-                    & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)
-                        | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING))))
+                && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)]
+                    & (STATUS_BYTE_MASK(STATUS_ID_CHARGING) | STATUS_BYTE_MASK(STATUS_ID_PERFORMING))))
                 break;
         }
         if (unit_index == BATTLE_UNIT_ID_NONE)
@@ -158,26 +155,22 @@ score_state:
             unit = &g_battle_unit_stats[unit_index];
             decision->flags
                 &= ~(AI_DECISION_TRANSIENT_DEAD | AI_DECISION_TRANSIENT_PETRIFIED | AI_DECISION_TRANSIENT_JUMP);
-            if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
+            if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEAD)] & STATUS_BYTE_MASK(STATUS_ID_DEAD))
+                && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_RERAISE)]
+                    & STATUS_BYTE_MASK(STATUS_ID_RERAISE)))
                 decision->flags |= AI_DECISION_TRANSIENT_DEAD;
-            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
+            if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)] & STATUS_BYTE_MASK(STATUS_ID_PETRIFY))
                 decision->flags |= AI_DECISION_TRANSIENT_PETRIFIED;
-            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))
+            if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_JUMP)] & STATUS_BYTE_MASK(STATUS_ID_JUMP))
                 decision->flags |= AI_DECISION_TRANSIENT_JUMP;
             if (!(decision->flags & AI_DECISION_CONSIDERED)
-                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
-                && (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
-                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-                    || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
-                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
-                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
+                && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)]
+                    & STATUS_BYTE_MASK(STATUS_ID_PETRIFY))
+                && (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEAD)] & STATUS_BYTE_MASK(STATUS_ID_DEAD))
+                    || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_RERAISE)]
+                        & STATUS_BYTE_MASK(STATUS_ID_RERAISE)))
+                && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEATH_SENTENCE)]
+                    & STATUS_BYTE_MASK(STATUS_ID_DEATH_SENTENCE)))
                 decision->flags |= AI_DECISION_CONSIDERED;
         }
     } else {
@@ -194,47 +187,43 @@ score_state:
             /* A pointer to unit_decisions adds an addiu and changes scheduling;
              * retain the workspace-relative stride. */
             decision_base = (ai_data_t*)((u8*)ai + unit_index * sizeof(ai_unit_decision_t));
-            for (weight_offset = 0; status < BATTLE_STATUS_COUNT; status++, weight_offset += 2) {
+            for (weight_offset = 0; status < STATUS_COUNT; status++, weight_offset += 2) {
                 if (!((unit->status_sets.current[status / 8] << (status % 8)) & 0x80))
                     continue;
                 /* Indexing the s16 table changes register allocation; retain the byte cursor. */
                 weight = *(s16*)((u8*)g_ai_status_priority_weights + weight_offset);
-                if (((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
-                         & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)
-                             | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)))
-                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
-                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
+                if (((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CONFUSION)]
+                         & (STATUS_BYTE_MASK(STATUS_ID_CONFUSION) | STATUS_BYTE_MASK(STATUS_ID_BLOOD_SUCK)))
+                        || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARM)]
+                            & STATUS_BYTE_MASK(STATUS_ID_CHARM)))
                     && weight >= 0)
                     continue;
                 switch (status) {
-                case BATTLE_STATUS_ID_DARKNESS:
+                case STATUS_ID_DARKNESS:
                     weight = weight * decision_base->unit_decisions[0].evade_mod / 4;
                     break;
-                case BATTLE_STATUS_ID_SILENCE:
+                case STATUS_ID_SILENCE:
                     weight = weight * decision_base->unit_decisions[0].silence_mod / 4;
                     break;
-                case BATTLE_STATUS_ID_CONFUSION:
-                case BATTLE_STATUS_ID_BLOOD_SUCK:
-                case BATTLE_STATUS_ID_CHARM:
-                    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLOW)]
-                            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLOW)
-                                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_STOP)))
-                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]
-                            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP)
-                                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE)
-                                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))))
+                case STATUS_ID_CONFUSION:
+                case STATUS_ID_BLOOD_SUCK:
+                case STATUS_ID_CHARM:
+                    if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_SLOW)]
+                            & (STATUS_BYTE_MASK(STATUS_ID_SLOW) | STATUS_BYTE_MASK(STATUS_ID_STOP)))
+                        || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_SLEEP)]
+                            & (STATUS_BYTE_MASK(STATUS_ID_SLEEP) | STATUS_BYTE_MASK(STATUS_ID_DONT_MOVE)
+                                | STATUS_BYTE_MASK(STATUS_ID_DONT_ACT))))
                         weight /= 2;
                     break;
-                case BATTLE_STATUS_ID_SLOW:
-                case BATTLE_STATUS_ID_STOP:
-                case BATTLE_STATUS_ID_SLEEP:
-                case BATTLE_STATUS_ID_DONT_MOVE:
-                case BATTLE_STATUS_ID_DONT_ACT:
-                    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
-                            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION)
-                                | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_BLOOD_SUCK)))
-                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
-                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)))
+                case STATUS_ID_SLOW:
+                case STATUS_ID_STOP:
+                case STATUS_ID_SLEEP:
+                case STATUS_ID_DONT_MOVE:
+                case STATUS_ID_DONT_ACT:
+                    if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CONFUSION)]
+                            & (STATUS_BYTE_MASK(STATUS_ID_CONFUSION) | STATUS_BYTE_MASK(STATUS_ID_BLOOD_SUCK)))
+                        || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARM)]
+                            & STATUS_BYTE_MASK(STATUS_ID_CHARM)))
                         continue;
                     break;
                 }

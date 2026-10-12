@@ -38,9 +38,9 @@ s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit) {
         }
         return BATTLE_MENU_ID_OTHER_UNIT_INSPECT;
     }
-    dont_move = unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_MOVE)];
+    dont_move = unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_MOVE)];
     can_evade = battle_unit_get_action_restriction(unit);
-    moved = unit->movement_taken | (dont_move & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_MOVE));
+    moved = unit->movement_taken | (dont_move & STATUS_BYTE_MASK(STATUS_ID_DONT_MOVE));
     acted = unit->action_taken | can_evade;
     if (unit->has_turn != 0) {
         if (moved == 0 && acted == 0) {

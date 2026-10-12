@@ -52,9 +52,9 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-            index = battle_map_calculate_location(unit);
+            index = map_calculate_location(unit);
             panel = &g_target_panels[index];
-            tile = &g_battle_map_tile_data[index];
+            tile = &g_map_tile_data[index];
             if (i == unit_index) {
                 height = tile->height * 2 + tile->depth_half_height.half_height;
                 low = height - 10;
@@ -68,8 +68,8 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
         }
     }
     for (i = 0; i < g_battle_relocated_unit_count; i++) {
-        index = g_battle_relocated_unit_coords[i].elevation * 256
-            + g_battle_relocated_unit_coords[i].y * g_battle_map_max_x + g_battle_relocated_unit_coords[i].x;
+        index = g_battle_relocated_unit_coords[i].elevation * 256 + g_battle_relocated_unit_coords[i].y * g_map_max_x
+            + g_battle_relocated_unit_coords[i].x;
         panel = &g_target_panels[index];
         panel->unit_record_index = 1;
     }
@@ -81,7 +81,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
         for (i = 1; i < limit; i++) {
             for (dx = -i; dx <= i; dx++) {
                 x = origin_x + dx;
-                if (x < 0 || x >= g_battle_map_max_x) {
+                if (x < 0 || x >= g_map_max_x) {
                     continue;
                 }
                 if (dx > 0) {
@@ -92,11 +92,11 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
                 side = -1;
                 found_x = x;
                 for (y = origin_y - dy; side < 2; side += 2) {
-                    if (y >= 0 && y < g_battle_map_max_y) {
+                    if (y >= 0 && y < g_map_max_y) {
                         found_y = y;
                         for (level = 0; level < 2; level++) {
-                            index = level * 256 + g_battle_map_max_x * y + x;
-                            tile = &g_battle_map_tile_data[index];
+                            index = level * 256 + g_map_max_x * y + x;
+                            tile = &g_map_tile_data[index];
                             depth = (*(u8*)&tile->depth_half_height);
                             if (tile->depth_half_height.depth >= 3) {
                                 continue;

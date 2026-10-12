@@ -78,23 +78,22 @@ void ai_set_ability_considerations(s32 action_taken) {
                 ai_load_ability_entry(entry);
                 ability_id = ability->ability_id;
                 threshold = delay + ability->ct;
-                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+                if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG)) {
                     if (ability_id != ABILITY_ID_BLACK_MAGIC_FROG && ability_id != ABILITY_ID_FROG_ATTACK) {
                         continue;
                     }
                 } else if (ability_id == ABILITY_ID_FROG_ATTACK) {
                     continue;
                 }
-                if (ai_is_status_active_through_delay(delay, unit, BATTLE_STATUS_ID_DONT_ACT)) {
+                if (ai_is_status_active_through_delay(delay, unit, STATUS_ID_DONT_ACT)) {
                     continue;
                 }
                 if ((ability->ai_flags.halfwords.target_effect_flags & AI_ABILITY_AFFECTED_BY_SILENCE)
-                    && ai_is_status_active_through_delay(threshold, unit, BATTLE_STATUS_ID_SILENCE)) {
+                    && ai_is_status_active_through_delay(threshold, unit, STATUS_ID_SILENCE)) {
                     continue;
                 }
                 if ((ability->ai_flags.halfwords.target_effect_flags & AI_ABILITY_AFFECTED_BY_FAITH)
-                    && ai_is_status_active_through_delay(threshold, unit, BATTLE_STATUS_ID_INNOCENT)) {
+                    && ai_is_status_active_through_delay(threshold, unit, STATUS_ID_INNOCENT)) {
                     continue;
                 }
                 if (ability->mp_cost > unit->mp) {
@@ -214,7 +213,7 @@ void ai_set_ability_considerations(s32 action_taken) {
     decision->ally_ability_min_reach = 0xff;
     decision->enemy_ability_min_reach = 0xff;
     threshold = enemy_harmful / 8;
-    for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+    for (i = 0; i < STATUS_BYTE_COUNT; i++) {
         ai->status_to_cancel[i] = 0;
     }
     for (i = 0; i < AI_ABILITY_LIST_COUNT; i++) {
@@ -225,16 +224,16 @@ void ai_set_ability_considerations(s32 action_taken) {
         ai_load_ability_entry(entry);
         if (entry->usage.policy.usable) {
             if (threshold >= enemy_magical) {
-                ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_SHELL);
+                ai_disable_ability_if_only_inflicts_status(entry, STATUS_ID_SHELL);
             }
             if (threshold >= enemy_physical) {
-                ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_PROTECT);
+                ai_disable_ability_if_only_inflicts_status(entry, STATUS_ID_PROTECT);
             }
             if (threshold >= enemy_reflectable) {
-                ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_REFLECT);
+                ai_disable_ability_if_only_inflicts_status(entry, STATUS_ID_REFLECT);
             }
             if (enemy_earth <= 0) {
-                ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_FLOAT);
+                ai_disable_ability_if_only_inflicts_status(entry, STATUS_ID_FLOAT);
             }
             if (entry->usage.policy.usable) {
                 usable++;
@@ -245,7 +244,7 @@ void ai_set_ability_considerations(s32 action_taken) {
                     ai->targetability.live.target_setting_flags |= AI_TARGET_SETTING_HAS_HOLY_WATER;
                 }
                 if (ability->ai_flags.halfwords.target_effect_flags & AI_ABILITY_CANCEL_STATUS) {
-                    for (throw_id = 0; throw_id < BATTLE_STATUS_BYTE_COUNT; throw_id++) {
+                    for (throw_id = 0; throw_id < STATUS_BYTE_COUNT; throw_id++) {
                         ai->status_to_cancel[throw_id] |= ability->parameters.bytes.status_infliction[throw_id];
                     }
                 }

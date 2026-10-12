@@ -9,8 +9,7 @@ u8 move_get_water_depth(battle_unit_misc_data_t* unit) {
     s32 status;
     u32 flags;
 
-    tile = battle_map_get_tile_data_pointer(
-        unit->screen.vx / MAP_TILE_SIZE, unit->screen.vz / MAP_TILE_SIZE, unit->map_z);
+    tile = map_get_tile_data_pointer(unit->screen.vx / MAP_TILE_SIZE, unit->screen.vz / MAP_TILE_SIZE, unit->map_z);
     if (unit->battle_data != 0) {
         status = move_get_effective_flags(unit->battle_data);
         if (status & BATTLE_EFFECTIVE_MOVEMENT_ON_WATER) {

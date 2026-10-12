@@ -49,7 +49,7 @@ void attack_deploy_run_select_menu(void) {
     u_mid = 0xb8;
     g_attack_panel_status_animation[0] = 1;
     g_attack_panel_status_animation[1] = 1;
-    g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
+    g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
     for (i = 0; i < 2; i++) {
         battle_gfx_init_default_poly_ft4(&left[i]);
         SetSemiTrans(&left[i], 0);
@@ -78,7 +78,7 @@ void attack_deploy_run_select_menu(void) {
     g_battle_text_section_pointers[TEXT_SECTION_DEPLOYMENT_UNIT_HELP] = g_attack_deploy_unit_text_section;
     g_battle_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_attack_deploy_help_text_section;
     parent_id = g_battle_current_thread_id - 1;
-    input = battle_script_get_controller_input_pointer(0);
+    input = script_get_controller_input_pointer(0);
     i = 0;
     thread = &g_battle_threads[g_battle_current_thread_id];
     parent = &g_battle_threads[parent_id];
@@ -104,7 +104,7 @@ void attack_deploy_run_select_menu(void) {
             buttons = *input;
             y += 8;
             if (buttons & PSX_PAD_CROSS) {
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
+                g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 *input = 0;
                 break;
             }
@@ -116,7 +116,7 @@ void attack_deploy_run_select_menu(void) {
                         if ((*node->value & 0x7ff) == 0x7ff || (*node->value & 0x7ff) == 0) {
                             *input = 0;
                         } else {
-                            g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                            g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                             battle_thread_start(parent_id, battle_text_character_handling_thread);
                             battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
                         }
@@ -127,7 +127,7 @@ void attack_deploy_run_select_menu(void) {
                     } else if (node->help_base == -0x6800 && (u16)*node->value - 1 >= 0x101U) {
                         *input = 0;
                     } else {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                        g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                         battle_thread_start(parent_id, battle_text_character_handling_thread);
                         battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
                     }
@@ -135,7 +135,7 @@ void attack_deploy_run_select_menu(void) {
                     text_id = node->help_base;
                     g_battle_thread_call_target = (void (*)(void))battle_text_find_entry;
                     if ((*(u8*)battle_thread_call_on_main_stack(text_id) & 0xfe) != 0xfe) {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                        g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                         battle_thread_start(parent_id, battle_text_character_handling_thread);
                         battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
                     }
@@ -153,7 +153,7 @@ void attack_deploy_run_select_menu(void) {
                     }
                 }
                 if (selected != node->destination[text_id]) {
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
                 selected = node->destination[text_id];
             }

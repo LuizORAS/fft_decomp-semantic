@@ -52,7 +52,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
             && unit->map_z != unit->movement.destination_z) {
             layer = unit->map_z = unit->movement.destination_z;
             move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step,
-                battle_map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
+                map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
             move_interpolate_partial(unit, unit->walk_speed);
         }
         break;
@@ -64,7 +64,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
             && unit->map_z != unit->movement.destination_z) {
             layer = unit->map_z = unit->movement.destination_z;
             move_set_unit_step_delta_edge_to_center(unit, &unit->current_path_step,
-                battle_map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
+                map_get_tile_data_pointer(tile[0], tile[1], layer), unit->destination_edge_height);
             move_interpolate_partial(unit, unit->step_speed);
         }
         break;
@@ -81,7 +81,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case MOVE_STEP_PHASE_WALK_TO_EDGE_NORTH:
     case MOVE_STEP_PHASE_WALK_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
-        map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
+        map_tile = map_get_tile_data_pointer(tile[0], tile[1], layer);
         if ((-unit->real.vy / ONE) <= -ground_z) {
             unit->real.vy = ground_z * ONE;
             move_set_unit_step_delta_center_to_edge(
@@ -107,7 +107,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH:
     case MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
-        map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
+        map_tile = map_get_tile_data_pointer(tile[0], tile[1], layer);
         if ((-unit->real.vy / ONE) <= -ground_z) {
             unit->real.vy = ground_z * ONE;
             if (unit->step_speed <= 0x7FFF) {
@@ -136,7 +136,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH:
     case MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
-        map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
+        map_tile = map_get_tile_data_pointer(tile[0], tile[1], layer);
         if (-unit->real.vy / ONE <= -ground_z) {
             unit->real.vy = ground_z * ONE;
             move_set_unit_step_delta_edge_to_center(
@@ -163,7 +163,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH:
     case MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
-        map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
+        map_tile = map_get_tile_data_pointer(tile[0], tile[1], layer);
         if (-unit->real.vy / ONE <= -ground_z) {
             unit->real.vy = ground_z * ONE;
             if (unit->step_speed <= 0x7FFF) {
@@ -216,7 +216,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH:
     case MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
-        map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
+        map_tile = map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;
         if (depth / ONE <= -ground_z) {
             unit->real.vy = ground_z * ONE;
@@ -234,7 +234,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case MOVE_STEP_PHASE_FLOAT_TO_CENTRE_NORTH:
     case MOVE_STEP_PHASE_FLOAT_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
-        map_tile = battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
+        map_tile = map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;
         if (depth / ONE <= -ground_z) {
             unit->real.vy = ground_z * ONE;
@@ -256,7 +256,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH:
     case MOVE_STEP_PHASE_FLY_TO_EDGE_WEST:
         unit->real.vy += unit->velocity.vy;
-        battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
+        map_get_tile_data_pointer(tile[0], tile[1], layer);
         if (-unit->real.vy / ONE <= -ground_z) {
             unit->real.vy = ground_z * ONE;
             move_set_velocity_for_contiguous_clamped_steps(unit, &unit->path, &unit->current_path_step);
@@ -269,7 +269,7 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
     case MOVE_STEP_PHASE_FLY_TO_CENTRE_NORTH:
     case MOVE_STEP_PHASE_FLY_TO_CENTRE_WEST:
         unit->real.vy += unit->velocity.vy;
-        battle_map_get_tile_data_pointer(tile[0], tile[1], layer);
+        map_get_tile_data_pointer(tile[0], tile[1], layer);
         depth = -unit->real.vy;
         if (depth / ONE <= -ground_z) {
             unit->real.vy = ground_z * ONE;

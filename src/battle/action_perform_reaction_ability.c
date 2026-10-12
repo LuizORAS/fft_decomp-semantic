@@ -37,30 +37,30 @@ s32 action_perform_reaction_ability(void) {
         g_action_target_data->sp_change = 0x81;
         break;
     case ABILITY_ID_REACTION_SUNKEN_STATE:
-        g_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
-            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT);
-        if (battle_status_modify_inflictions(0) != 0) {
+        g_action_target_data->status_changes.infliction[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)]
+            = STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT);
+        if (status_modify_inflictions(0) != 0) {
             attack_type = ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case ABILITY_ID_REACTION_CAUTION:
-        g_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
-            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING);
-        if (battle_status_modify_inflictions(0) != 0) {
+        g_action_target_data->status_changes.infliction[STATUS_BYTE_INDEX(STATUS_ID_DEFENDING)]
+            = STATUS_BYTE_MASK(STATUS_ID_DEFENDING);
+        if (status_modify_inflictions(0) != 0) {
             attack_type = ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case ABILITY_ID_REACTION_DRAGON_SPIRIT:
-        g_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
-            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE);
-        if (battle_status_modify_inflictions(0) != 0) {
+        g_action_target_data->status_changes.infliction[STATUS_BYTE_INDEX(STATUS_ID_RERAISE)]
+            = STATUS_BYTE_MASK(STATUS_ID_RERAISE);
+        if (status_modify_inflictions(0) != 0) {
             attack_type = ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case ABILITY_ID_REACTION_REGENERATOR:
-        g_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REGEN)]
-            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REGEN);
-        if (battle_status_modify_inflictions(0) != 0) {
+        g_action_target_data->status_changes.infliction[STATUS_BYTE_INDEX(STATUS_ID_REGEN)]
+            = STATUS_BYTE_MASK(STATUS_ID_REGEN);
+        if (status_modify_inflictions(0) != 0) {
             attack_type = ACTION_TYPE_STATUS_CHANGE;
         }
         break;

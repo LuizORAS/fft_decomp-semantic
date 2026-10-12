@@ -12,7 +12,7 @@ s32 effect_map_set_timed_transform_duration(
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        battle_map_set_command_0x96_duration(BATTLE_MAP_WEATHER_EFFECT_TIMED_PARTICLE_TRANSFORM,
+        map_set_command_0x96_duration(MAP_WEATHER_EFFECT_TIMED_PARTICLE_TRANSFORM,
             g_battle_effect_child_timeline->duration - record->timeline.frame);
         record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;

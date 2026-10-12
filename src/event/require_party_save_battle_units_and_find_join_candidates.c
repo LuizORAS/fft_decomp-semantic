@@ -45,8 +45,8 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
                 if (unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED || unit->existence == BATTLE_UNIT_EXISTENCE_NONE
                     || found_index == -3) {
                     if (unit->unit_id == 0 || unit->unit_id >= 4) {
-                        if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-                                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))
+                        if (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)]
+                                & STATUS_BYTE_MASK(STATUS_ID_TREASURE)))
                             require_party_store_equipment_or_sell_overflow(i);
                         main_party_remove_unit(party_index);
                         require_party_update_bio_variable_for_unit_class(unit->character_identity, 0xf);
@@ -77,8 +77,8 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
             if ((base_class == CHARACTER_IDENTITY_ENTD_NONE || base_class >= CHARACTER_IDENTITY_RAMZA_END)
                 && unit->unit_id >= 4
                 && ((unit->unit_flags & UNIT_FLAG_JOIN_AFTER_EVENT)
-                    || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
-                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)))) {
+                    || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_INVITE)]
+                        & STATUS_BYTE_MASK(STATUS_ID_INVITE)))) {
                 if (unit->unit_flags & UNIT_FLAG_SAVE_FORMATION) {
                     s32 column;
 
@@ -108,7 +108,7 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
                     s32 script_variant;
                     unit->unit_flags &= ~(UNIT_FLAG_SAVE_FORMATION | UNIT_FLAG_LOAD_FORMATION);
                     g_require_party_affected_unit_message_args[g_require_party_affected_unit_count] = unit->unit_id;
-                    script_variant = battle_script_get_variable(script_index) & 7;
+                    script_variant = script_get_variable(script_index) & 7;
                     prompt_count++;
                     count = g_require_party_affected_unit_count;
                     g_require_party_affected_unit_message_ids[count]

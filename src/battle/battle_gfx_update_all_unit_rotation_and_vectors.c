@@ -18,8 +18,8 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
     map_tile_t* tile;
     move_effective_flags_e movement_flags;
 
-    SetRotMatrix(&g_battle_camera_matrix);
-    SetTransMatrix(&g_battle_camera_matrix);
+    SetRotMatrix(&g_camera_matrix);
+    SetTransMatrix(&g_camera_matrix);
 
     unit = g_battle_unit_misc_list_head;
     while (unit != 0) {
@@ -37,18 +37,17 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
             unit->camera_relative_y = transformed.vy + unit->screen_offset.vy;
         }
 
-        tile = battle_map_get_tile_data_pointer(
-            unit->screen.vx / MAP_TILE_SIZE, unit->screen.vz / MAP_TILE_SIZE, unit->map_z);
+        tile = map_get_tile_data_pointer(unit->screen.vx / MAP_TILE_SIZE, unit->screen.vz / MAP_TILE_SIZE, unit->map_z);
         if (unit->step_phase != MOVE_STEP_PHASE_NONE) {
             if ((tile->surface.depth_bias) != 0) {
-                battle_camera_calculate_relative_offset_by_5(&screen, &adjusted);
+                camera_calculate_relative_offset_by_5(&screen, &adjusted);
             } else {
-                battle_camera_calculate_relative_offset_by_1(&screen, &adjusted);
+                camera_calculate_relative_offset_by_1(&screen, &adjusted);
             }
         } else if ((tile->surface.depth_bias) != 0) {
-            battle_camera_convert_screen_coords_modify_by_5(&screen, &adjusted);
+            camera_convert_screen_coords_modify_by_5(&screen, &adjusted);
         } else {
-            battle_camera_convert_screen_coords_modify_by_1(&screen, &adjusted);
+            camera_convert_screen_coords_modify_by_1(&screen, &adjusted);
         }
 
         if (unit->battle_data != 0) {

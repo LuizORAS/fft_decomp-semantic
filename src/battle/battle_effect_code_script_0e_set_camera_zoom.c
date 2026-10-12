@@ -10,7 +10,7 @@ effect_script_result_e battle_effect_code_script_0e_set_camera_zoom(effect_recor
     setVector(&zoom, battle_effect_get_current_script_instruction(record)->vector.x,
         battle_effect_get_current_script_instruction(record)->vector.y,
         battle_effect_get_current_script_instruction(record)->vector.z);
-    battle_camera_set_zoom(&zoom);
+    camera_set_zoom(&zoom);
     record->pc += 8;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

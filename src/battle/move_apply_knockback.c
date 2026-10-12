@@ -18,12 +18,9 @@ void move_apply_knockback(void) {
     g_action_target_data->attack_type = ACTION_TYPE_PSEUDO_STATUS;
     unit = g_action_target;
     amount = 0;
-    if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
-        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))) {
+    if (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)] & STATUS_BYTE_MASK(STATUS_ID_CRYSTAL))
+        && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEAD)] & STATUS_BYTE_MASK(STATUS_ID_DEAD))
+        && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)] & STATUS_BYTE_MASK(STATUS_ID_PETRIFY))) {
         if (*flags == BATTLE_KNOCKBACK_FALL_DAMAGE) {
             diff = (g_action_current_ability.knockback_fall_height >> 1) - unit->jump;
             if (diff > 0) {

@@ -56,8 +56,7 @@ s32 target_set_panels_for_action(const action_command_t* source) {
         range = unit->move | 0x80;
         break;
     case ACTION_MENU_TYPE_ELEMENTS:
-        ability_id = g_main_terrain_geomancy_abilities[g_battle_map_tile_data[battle_map_calculate_location(unit)]
-                .surface.type];
+        ability_id = g_main_terrain_geomancy_abilities[g_map_tile_data[map_calculate_location(unit)].surface.type];
         mode = 1;
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:

@@ -52,7 +52,7 @@ void bunit_render_unit_status_panel_thread(void) {
 
     suppress = 0;
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
-    g_bunit_input_controller = battle_script_get_controller_input_pointer(0) + 1;
+    g_bunit_input_controller = script_get_controller_input_pointer(0) + 1;
     thread_id = g_battle_current_thread_id;
     thread = (menu_status_panel_display_thread_t*)g_battle_threads[thread_id].function_parameter_1;
     if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {

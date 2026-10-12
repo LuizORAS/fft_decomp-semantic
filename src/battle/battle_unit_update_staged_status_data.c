@@ -23,7 +23,7 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
         unit_index = 0;
         g_battle_unit_status_staging_data->jump_float_flags = 0;
         do {
-            if (battle_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
+            if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
                 battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
                 if (battle_unit_index != -1) {
                     battle_unit_find_stats_by_entd_unit_id(

@@ -30,7 +30,7 @@ void battle_effect_set_arrow_trajectory(s32 source_id, SVECTOR* tile_position, s
     battle_unit_get_tile_center_and_height_by_battle_id(source_id, &g_battle_effect_trajectory_origin);
     g_battle_effect_trajectory_origin.vy -= source_height;
     if (target_id == -1) {
-        tile = battle_map_get_tile_data_pointer(tile_position->vx, tile_position->vz, tile_position->vy);
+        tile = map_get_tile_data_pointer(tile_position->vx, tile_position->vz, tile_position->vy);
         g_battle_effect_trajectory_destination.vx = tile_position->vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         g_battle_effect_trajectory_destination.vz = tile_position->vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         g_battle_effect_trajectory_destination.vy = -(tile->height * 12);

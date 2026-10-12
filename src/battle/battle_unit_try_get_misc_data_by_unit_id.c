@@ -13,7 +13,7 @@ s32 battle_unit_try_get_misc_data_by_unit_id(u16* unit_id, s32* state) {
 
     id = *unit_id;
     if (id != 0 && id < EVENT_UNIT_GROUP_FIRST) {
-        *unit_id = battle_script_get_misc_id(id);
+        *unit_id = script_get_misc_id(id);
         *state = 0;
         if (*unit_id == EVENT_MISC_ID_NONE) {
             return 0;

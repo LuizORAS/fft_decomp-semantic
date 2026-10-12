@@ -19,14 +19,14 @@ void battle_state_run_deployment(void) {
 
     battle_state_init_deployment_display(0x100, 0xf0, 0x200, 0, 0, 0);
     fade_enabled = g_main_system_go_straight_to_battle;
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS) != 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS) != 0) {
         fade_enabled = 0;
     }
     g_battle_deployment_skipped = battle_menu_init_attack_resources_and_threads();
     main_gfx_build_now_loading_center(g_battle_deployment_skipped);
-    map_id = g_battle_map_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
+    map_id = g_map_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
     g_battle_state_map_init_step = 0;
-    g_battle_map_data_load_complete = 0;
+    g_map_data_load_complete = 0;
 
     SetPolyF4(&g_battle_screen_fade_polygons[0]);
     setRGB0(&g_battle_screen_fade_polygons[0], 0, 0, 0);
@@ -77,9 +77,8 @@ void battle_state_run_deployment(void) {
         } else {
             main_gfx_add_now_loading_to_otag(main_gfx_get_otag());
         }
-        g_battle_state_map_init_step
-            = battle_map_init_units_sprites_event_and_music(map_id, g_battle_state_map_init_step,
-                battle_script_is_deployment_running(main_gfx_get_otag(), g_main_input_current_buttons));
+        g_battle_state_map_init_step = map_init_units_sprites_event_and_music(map_id, g_battle_state_map_init_step,
+            script_is_deployment_running(main_gfx_get_otag(), g_main_input_current_buttons));
         if (g_battle_state_map_init_step == 0xd) {
             battle_gfx_extract_deployed_unit_palettes();
             action_set_casting_unit_id_ff_and_init();

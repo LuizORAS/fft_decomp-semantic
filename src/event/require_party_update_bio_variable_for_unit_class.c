@@ -15,7 +15,7 @@ void require_party_update_bio_variable_for_unit_class(s32 unit_class, s32 value)
             }
         }
         if (j != 3) {
-            battle_script_set_variable(g_require_party_bio_update_records[i].variable, value);
+            script_set_variable(g_require_party_bio_update_records[i].variable, value);
         }
     }
 }

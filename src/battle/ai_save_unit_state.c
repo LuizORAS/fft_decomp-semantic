@@ -33,12 +33,12 @@ void ai_save_unit_state(ai_snapshot_mode_e mode) {
         status->death_counter = unit->death_counter;
         ai_transfer_byte_values(status->current_status, unit->status_sets.current, sizeof(status->current_status));
         if (mode != AI_SNAPSHOT_BASELINE) {
-            status->death_sentence_ct = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)];
+            status->death_sentence_ct = unit->status_ct[STATUS_CT_INDEX(STATUS_ID_DEATH_SENTENCE)];
             snapshot = &g_ai_unit_snapshots[id];
             unit->entd_slot = snapshot->status.entd_slot;
             unit->death_counter = snapshot->status.death_counter;
-            unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
-                = snapshot->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)];
+            unit->status_ct[STATUS_CT_INDEX(STATUS_ID_DEATH_SENTENCE)]
+                = snapshot->status_ct[STATUS_CT_INDEX(STATUS_ID_DEATH_SENTENCE)];
             ai_transfer_byte_values(
                 unit->status_sets.current, snapshot->status.current_status, sizeof(snapshot->status.current_status));
         } else {

@@ -61,13 +61,12 @@ s32 action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32*
                 if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
                     if (!(unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT)) {
                         if (unit->hp != unit->max_hp) {
-                            if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-                                    & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL)
-                                        | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)
-                                        | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)))) {
-                                if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
-                                        & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY)
-                                            | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))) {
+                            if (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
+                                    & (STATUS_BYTE_MASK(STATUS_ID_CRYSTAL) | STATUS_BYTE_MASK(STATUS_ID_DEAD)
+                                        | STATUS_BYTE_MASK(STATUS_ID_JUMP)))) {
+                                if (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)]
+                                        & (STATUS_BYTE_MASK(STATUS_ID_PETRIFY)
+                                            | STATUS_BYTE_MASK(STATUS_ID_TREASURE)))) {
                                     /* Retail keeps the candidate's team in the tile-index stack slot. */
                                     tile_index = unit->initial_team_flags & BATTLE_TEAM_MASK;
                                     if (tile_index == actor_team) {

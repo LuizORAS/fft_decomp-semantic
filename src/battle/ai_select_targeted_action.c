@@ -32,11 +32,11 @@ s32 ai_select_targeted_action(void) {
         g_ai_data_base.acting_unit_decision->flags &= ~AI_DECISION_SPECIAL_BEHAVIOR;
         unit = &g_battle_unit_stats[target];
         if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
-            if (!((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
-                      & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))
+            if (!((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)]
+                      & STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT))
                     && (g_battle_unit_stats[unit->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK]
-                            .status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
-                        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))))
+                            .status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)]
+                        & STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT))))
                 target = unit->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK;
         } else {
             /* A direct member pointer folds the target's base cursor and field
@@ -55,8 +55,8 @@ s32 ai_select_targeted_action(void) {
                 for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                     unit = &g_battle_unit_stats[i];
                     if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && ai->unit_decisions[i].enemy_flag
-                        && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
-                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))) {
+                        && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)]
+                            & STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT))) {
                         target = i;
                         break;
                     }

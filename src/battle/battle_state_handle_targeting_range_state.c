@@ -22,16 +22,16 @@ void battle_state_handle_targeting_range_state(void) {
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         target_move_cursor_by_input();
-        battle_camera_handle_rotation_input();
-        battle_camera_call_zoom_map();
-        battle_camera_call_toggle_tilt();
+        camera_handle_rotation_input();
+        camera_call_zoom_map();
+        camera_call_toggle_tilt();
         if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 2);
             battle_menu_open_active_unit_idle_action_menu();
             return;
         }
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
-            if ((battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
+            if ((map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
                         ->ceiling_depth_and_marks.ability_range)
                 != 0) {
                 target_select_tile();
@@ -45,7 +45,7 @@ void battle_state_handle_targeting_range_state(void) {
             target_update_free_cursor_selection(unit, 0);
             frame_data = unit->state_frame_counter++;
             if (frame_data >= 0x1f) {
-                battle_map_get_tile_data_pointer(unit->command_state.cursor.target_panel.vx,
+                map_get_tile_data_pointer(unit->command_state.cursor.target_panel.vx,
                     unit->command_state.cursor.target_panel.vz, unit->command_state.cursor.target_panel.vy);
                 target_select_tile();
             }
@@ -56,7 +56,7 @@ void battle_state_handle_targeting_range_state(void) {
                 target_update_free_cursor_selection(unit, target);
                 frame_data = unit->state_frame_counter++;
                 if (frame_data >= 0x1f) {
-                    battle_map_get_tile_data_pointer(target->map_x, target->map_y, target->map_z);
+                    map_get_tile_data_pointer(target->map_x, target->map_y, target->map_z);
                     target_select_tile();
                 }
             } else {

@@ -42,7 +42,7 @@ typedef enum battle_seq_opcode {
     BATTLE_SEQ_OP_MOVE_FORWARD_2 = 0xd1,
     BATTLE_SEQ_OP_MOVE_FORWARD_1 = 0xd2,
     BATTLE_SEQ_OP_WAIT_FOR_EFFECT_LOAD = 0xd3, /* offset: jump while g_battle_state_animation_continue_check is 1 */
-    BATTLE_SEQ_OP_PLAY_WEAPON_SOUND = 0xd4,    /* 0 swing, 1 hit: battle_sound_select_weapon_hit */
+    BATTLE_SEQ_OP_PLAY_WEAPON_SOUND = 0xd4,    /* 0 swing, 1 hit: sound_select_weapon_hit */
     BATTLE_SEQ_OP_RESTART = 0xd5,              /* back to the sequence's first byte, counting the restart */
     BATTLE_SEQ_OP_WAIT_FOR_EFFECT = 0xd6,      /* offset: jump while g_battle_state_animation_continue_check is not 0 */
     BATTLE_SEQ_OP_UNKNOWN_D7 = 0xd7,           /* one operand; the sequences of death and revival start with it */
@@ -1015,7 +1015,7 @@ typedef struct battle_gfx_unit_seq {
 typedef char battle_gfx_unit_seq_size_must_be_1288[sizeof(battle_gfx_unit_seq_t) == 1288 ? 1 : -1];
 
 /* Renderer-side Misc-unit status mirror. These packed masks do not use the
- * canonical battle_status_id_e byte order. */
+ * canonical status_id_e byte order. */
 typedef enum battle_misc_status_flags_1_4 {
     /* Misc +0x140. Bit 0x00000001 is tested for animation 0x21 and never set. */
     BATTLE_MISC_STATUS_CONFUSION = 0x00000080,
@@ -1133,7 +1133,7 @@ enum {
 
 typedef void (*battle_distortion_animation_handler_t)(battle_unit_misc_data_t* unit);
 
-extern const u32 g_battle_misc_status_mask_by_handler_index[BATTLE_STATUS_COUNT + 1];
+extern const u32 g_battle_misc_status_mask_by_handler_index[STATUS_COUNT + 1];
 extern POLY_FT4* g_battle_gfx_sprite_prim_pool;
 extern battle_unit_misc_data_t g_battle_unit_misc_data[BATTLE_UNIT_MISC_SLOT_COUNT];
 extern battle_distortion_animation_handler_t
@@ -1159,7 +1159,7 @@ extern menu_palette_primitives_t g_battle_unit_editor_palette;
 extern s32 g_battle_companion_overlay_primitives;
 
 /* The statuses a rider can be inflicted with, one mask per status byte. */
-extern u8 g_battle_rider_status_infliction_mask[BATTLE_STATUS_BYTE_COUNT];
+extern u8 g_battle_rider_status_infliction_mask[STATUS_BYTE_COUNT];
 extern s32 g_battle_entd_selection_mode; /* battle_entd_selection_e */
 
 /* Count and coordinates of the tiles already handed out as dismount

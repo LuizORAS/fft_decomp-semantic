@@ -18,11 +18,9 @@ s32 ai_calculate_clockticks_until_death_counter_expires(battle_stats_t* unit, s3
     speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
     if (speed == 0)
         return 0x7fffffff;
-    if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
+    if (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEAD)] & STATUS_BYTE_MASK(STATUS_ID_DEAD)))
         return 0x7fffffff;
-    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE))
+    if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_RERAISE)] & STATUS_BYTE_MASK(STATUS_ID_RERAISE))
         return 0x7fffffff;
     counter = unit->death_counter;
     if (counter == 0xff)

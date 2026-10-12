@@ -21,17 +21,17 @@ void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) 
     s16 flags;
 
     for (i = 0; i < 6; i++) {
-        battle_camera_update_matrices(&g_battle_camera_matrix, &g_battle_camera_render_state,
-            &g_battle_offset_screen_coords, &g_battle_camera_zoom);
-        SetRotMatrix(&g_battle_camera_matrix);
-        SetTransMatrix(&g_battle_camera_matrix);
+        camera_update_matrices(
+            &g_camera_matrix, &g_camera_render_state, &g_battle_offset_screen_coords, &g_camera_zoom);
+        SetRotMatrix(&g_camera_matrix);
+        SetTransMatrix(&g_camera_matrix);
         RotTrans(&unit->position_copies[i], &transformed, &flag);
         depth = transformed.vz / 4;
         position.vx = transformed.vx;
         position.vy = transformed.vy;
         flags = ((unit->horizontal_flip_flag ^ unit->sprite_display_flags) & ~BATTLE_MISC_DISPLAY_BLEND_MASK)
             | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
-        copyVector(&zoom, &g_battle_camera_zoom);
+        copyVector(&zoom, &g_camera_zoom);
         display = unit->animation.display;
         battle_gfx_construct_polygon_data_for_units(
             display, display->part_count, 0, &position, 0, flags, &zoom, main_gfx_get_otag() + depth);

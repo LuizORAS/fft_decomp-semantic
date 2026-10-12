@@ -18,7 +18,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
     thread = (menu_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
-    g_bunit_input_controller = battle_script_get_controller_input_pointer(0);
+    g_bunit_input_controller = script_get_controller_input_pointer(0);
     screen = g_bunit_character_status_frames;
     base = g_bunit_character_status_frames;
     state = &g_bunit_editor_unit_fields;

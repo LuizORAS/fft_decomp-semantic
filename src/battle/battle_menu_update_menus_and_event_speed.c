@@ -20,14 +20,14 @@ s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input) {
 
     g_ai_workspace_ptr = (event_work_t*)g_ai_workspace;
     if (g_battle_menu_input_mode != MENU_INPUT_PLAYER) {
-        controller_input = g_battle_script_unfiltered_controller_input;
+        controller_input = g_script_unfiltered_controller_input;
     }
-    battle_map_store_selected_tile_data();
+    map_store_selected_tile_data();
     fill = -2;
     for (i = 3; i >= 0; i--) {
         g_battle_menu_pending_selection[i] = fill;
     }
-    battle_script_run_event_frame(otag, controller_input);
+    script_run_event_frame(otag, controller_input);
     battle_menu_update_panel_fade();
     result = battle_menu_resolve_selection();
     if ((battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU) != 0
@@ -37,11 +37,11 @@ s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input) {
         if (g_battle_animation_speed_forced == 0) {
             g_battle_animation_speed_forced = 1;
             g_battle_saved_animation_speed = battle_state_get_animation_speed();
-            battle_script_set_event_speed(2);
+            script_set_event_speed(2);
         }
     } else if (g_battle_animation_speed_forced == 1) {
         g_battle_animation_speed_forced = 0;
-        battle_script_set_event_speed(g_battle_saved_animation_speed);
+        script_set_event_speed(g_battle_saved_animation_speed);
     }
     return result;
 }

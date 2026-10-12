@@ -6,14 +6,14 @@ s32 target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_index) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
     s32 result;
 
-    *tile_index = battle_map_calculate_location(unit);
+    *tile_index = map_calculate_location(unit);
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         result = 1;
-    } else if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-        & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
+    } else if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
+        & (STATUS_BYTE_MASK(STATUS_ID_CRYSTAL) | STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
         result = 1;
-    } else if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
+    } else if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)]
+        & STATUS_BYTE_MASK(STATUS_ID_TREASURE)) {
         result = 1;
     } else if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         result = 1;

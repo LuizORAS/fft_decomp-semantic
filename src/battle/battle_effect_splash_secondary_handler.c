@@ -29,7 +29,7 @@ s32 battle_effect_splash_secondary_handler(void) {
         g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        tile = battle_map_get_tile_data_ptr_from_misc_screen_coords(
+        tile = map_get_tile_data_ptr_from_misc_screen_coords(
             g_battle_effect_current_secondary->target.record.data.unit.misc_id);
         g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPLASH].position.y
             = -((tile->height + tile->depth_half_height.depth) * 12)

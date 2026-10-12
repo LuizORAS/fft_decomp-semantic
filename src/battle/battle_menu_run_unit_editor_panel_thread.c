@@ -206,11 +206,11 @@ void battle_menu_run_unit_editor_panel_thread(void) {
             battle_menu_init_primitive_colors_dimmed(frame_record->palette);
         }
         if (battle_menu_can_accept_input() != 0) {
-            if (g_battle_script_event_input & PSX_PAD_CROSS) {
+            if (g_script_event_input & PSX_PAD_CROSS) {
                 battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
                 break;
             }
-            if ((g_battle_script_event_input & PSX_PAD_CIRCLE)
+            if ((g_script_event_input & PSX_PAD_CIRCLE)
                 && battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
                 && (battle_unit_has_any_current_status(g_battle_active_turn_unit.battle_id) != 0
                     || (g_battle_menu_billboard_data.state.generic_monster == 0
@@ -250,7 +250,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     g_battle_unit_summary_panel_rect.y = 0xAA;
     g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_IN;
     g_battle_unit_status_bounce_step = 6;
-    battle_sound_set_effect_to_cancel();
+    sound_set_effect_to_cancel();
     do {
         battle_thread_yield();
     } while (g_battle_unit_status_bounce_step != 0);

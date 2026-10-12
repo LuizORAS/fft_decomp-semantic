@@ -53,11 +53,10 @@ void battle_menu_auto_battle_setting_thread(void) {
     colour = g_battle_auto_battle_option_colors;
     for (;; i++) {
         record = &records[i & 1];
-        if (i == 0 || (g_battle_script_event_input & PSX_PAD_CIRCLE)) {
+        if (i == 0 || (g_script_event_input & PSX_PAD_CIRCLE)) {
             buffer = battle_menu_build_and_upload_window_frame_image(
                 param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
-            if (((g_battle_script_event_input & PSX_PAD_CIRCLE) && battle_thread_is_previous_running() == 0)
-                || i == 0) {
+            if (((g_script_event_input & PSX_PAD_CIRCLE) && battle_thread_is_previous_running() == 0) || i == 0) {
                 selected = cursor;
                 if (selected == 0) {
                     before = battle_menu_get_id_based_on_mount_moveable_actable(g_battle_active_turn_unit.battle_id);
@@ -108,7 +107,7 @@ void battle_menu_auto_battle_setting_thread(void) {
             fresh = 0;
         }
         param->selected_index = cursor;
-        if (battle_menu_should_close_thread(&g_battle_script_event_input) != 0) {
+        if (battle_menu_should_close_thread(&g_script_event_input) != 0) {
             break;
         }
         battle_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);

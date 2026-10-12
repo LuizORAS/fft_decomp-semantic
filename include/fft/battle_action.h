@@ -388,7 +388,7 @@ typedef enum zodiac_compatibility {
 } zodiac_compatibility_e;
 
 /* battle_current_ability_t.knockback_flags: the kind of knockback found by
- * battle_formula_calculate_knockback, with PENDING set until it is applied. */
+ * formula_calculate_knockback, with PENDING set until it is applied. */
 typedef enum battle_knockback_kind {
     BATTLE_KNOCKBACK_FALL_DAMAGE = 1,    /* a grounded target: the fall height can hurt */
     BATTLE_KNOCKBACK_NO_FALL_DAMAGE = 2, /* a flying target */
@@ -498,7 +498,7 @@ typedef enum target_panels {
 
 /* target_set_tile_background_color modes and the g_target_tile_mark_modes states:
  * one layer per map tile mark (move destination, ability range, targeted). A SHOW or HIDE
- * request recolours the current render buffer; battle_map_draw_mesh_and_weather then does the
+ * request recolours the current render buffer; map_draw_mesh_and_weather then does the
  * other buffer and leaves the layer SHOWN or NONE. */
 typedef enum battle_tile_mark_mode {
     BATTLE_TILE_MARK_NONE = 0, /* as a mode: restore every polygon and request the three HIDEs */
@@ -536,7 +536,7 @@ extern const u8 g_action_display_numeric_selectors[ACTION_DISPLAY_VALUE_COUNT];
 extern u16 g_action_display_values[ACTION_DISPLAY_VALUE_COUNT];
 
 /* Eight per status_changes mask byte, indexed from the byte's high bit. */
-extern u8 g_action_status_display_image_ids[BATTLE_STATUS_BYTE_COUNT][8];
+extern u8 g_action_status_display_image_ids[STATUS_BYTE_COUNT][8];
 extern const palette_t g_action_result_palette;
 extern s32 g_action_phase;
 extern s32 g_action_post_action;
@@ -568,7 +568,7 @@ extern action_data_t g_action_attacker_action_data;
 extern battle_stats_t* g_action_attacker;
 extern u8 g_action_menu_row_types[]; /* per-row skillset kind; 13 keeps the row active */
 extern s32 g_action_learn_on_hit_unit_id;
-extern void (*g_battle_formula_handlers[])(void); /* by formula id less 1: formula 0 has no handler */
+extern void (*g_formula_handlers[])(void); /* by formula id less 1: formula 0 has no handler */
 extern u16 g_target_color_tile_x;
 extern s16 g_target_color_tile_y;
 extern s16 g_target_tile_mark_modes[3]; /* battle_tile_mark_mode_e, one per tile mark */
@@ -649,113 +649,113 @@ s32 action_should_end_unit_turn(battle_stats_t* unit);
 void battle_state_enter_move_range_exception(void);
 void action_show_caster_post_effect_messages(void);
 void action_switch_ability_to_default_attack(void);
-void battle_formula_3c_damage_caster_max_hp_one_fifth_heal_target_two_fifths(void);
-void battle_formula_43_damage_caster_missing_hp(void);
-void battle_formula_add_brave_x_stats_y(void);
-void battle_formula_apply_attack_up_and_martial_arts(void);
-void battle_formula_apply_attacker_berserk_frog(void);
-void battle_formula_apply_catch(void);
-void battle_formula_apply_charge(void);
-void battle_formula_apply_damage_and_knockback(void);
-void battle_formula_apply_dance_abilities(void);
-void battle_formula_apply_defense_up(void);
-void battle_formula_apply_elemental(void);
-void battle_formula_apply_elemental_absorption(void);
-s32 battle_formula_apply_elemental_absorption_and_status(void);
+void formula_3c_damage_caster_max_hp_one_fifth_heal_target_two_fifths(void);
+void formula_43_damage_caster_missing_hp(void);
+void formula_add_brave_x_stats_y(void);
+void formula_apply_attack_up_and_martial_arts(void);
+void formula_apply_attacker_berserk_frog(void);
+void formula_apply_catch(void);
+void formula_apply_charge(void);
+void formula_apply_damage_and_knockback(void);
+void formula_apply_dance_abilities(void);
+void formula_apply_defense_up(void);
+void formula_apply_elemental(void);
+void formula_apply_elemental_absorption(void);
+s32 formula_apply_elemental_absorption_and_status(void);
 
 /* Provisional: the definition falls off the end after
- * battle_formula_roll_conditional_status_proc, so v0 carries that result and
+ * formula_roll_conditional_status_proc, so v0 carries that result and
  * every caller tests it. */
-s32 battle_formula_apply_elemental_absorption_and_status_proc(void);
-void battle_formula_apply_elemental_strengthen(void);
-void battle_formula_apply_evasion_changes_due_to_statuses(void);
-void battle_formula_apply_finger_guard(void);
-void battle_formula_apply_full_hp_mp_heal(void);
-void battle_formula_apply_hp_absorption(void);
-void battle_formula_apply_magic_attack_up(void);
-void battle_formula_apply_magic_defense_up(void);
-void battle_formula_apply_magical_support_status_compatibility(void);
-void battle_formula_apply_maintenance(void);
-void battle_formula_apply_mp_recovery(void);
-void battle_formula_apply_physical_attack_supports(void);
-void battle_formula_apply_physical_status_support_compatibility(void);
-void battle_formula_apply_physical_xa_modifying_statuses_support(void);
-void battle_formula_apply_quick_effect(void);
-void battle_formula_apply_song_abilities(void);
-void battle_formula_apply_status(void);
-void battle_formula_apply_status_to_action(void);
-s32 battle_formula_apply_status_and_check_undead(void);
-s32 battle_formula_apply_steal_break_might_sword_hardcoding(void);
-void battle_formula_apply_target_magical_status_xa_modifiers(void);
-void battle_formula_apply_target_xa_affecting_statuses(void);
-void battle_formula_apply_talk_skill(void);
-void battle_formula_apply_undead_absorb_attack(void);
-void battle_formula_apply_undead_reversal(void);
-void battle_formula_apply_weapon_element_strengthen(void);
-void battle_formula_apply_weather_effects_on_bows(void);
-void battle_formula_apply_weather_elemental_effects(void);
-void battle_formula_set_brave_loss_y(void);
-void battle_formula_calculate_abandon(void);
-s32 battle_formula_calculate_attack_evaded(u16 numerator, u16 denominator, u8 miss_type, u8 item_lost);
-void battle_formula_calculate_base_xa(void);
-void battle_formula_calculate_concentrate(void);
-void battle_formula_calculate_critical_hit(void);
-void battle_formula_calculate_dark_confuse(void);
-void battle_formula_calculate_facing_evade(void);
-void battle_formula_calculate_faith(void);
-void battle_formula_calculate_final_hit_percent(void);
-void battle_formula_calculate_gravi2_damage(void);
-void battle_formula_calculate_hp_percent_damage(void);
-void battle_formula_calculate_katana_break_chance(void);
-s32 battle_formula_calculate_magic_accuracy_without_faith(void);
-s32 battle_formula_calculate_magical_evade(void);
-void battle_formula_calculate_magical_xa_times_ya(void);
-void battle_formula_calculate_mp_percent_damage(void);
-void battle_formula_calculate_physical_damage(void);
-s32 battle_formula_calculate_physical_evade(void);
-void battle_formula_calculate_stolen_gil(void);
-void battle_formula_calculate_transparent(void);
-void battle_formula_calculate_truth_damage(void);
-void battle_formula_calculate_truth_magical_damage(void);
+s32 formula_apply_elemental_absorption_and_status_proc(void);
+void formula_apply_elemental_strengthen(void);
+void formula_apply_evasion_changes_due_to_statuses(void);
+void formula_apply_finger_guard(void);
+void formula_apply_full_hp_mp_heal(void);
+void formula_apply_hp_absorption(void);
+void formula_apply_magic_attack_up(void);
+void formula_apply_magic_defense_up(void);
+void formula_apply_magical_support_status_compatibility(void);
+void formula_apply_maintenance(void);
+void formula_apply_mp_recovery(void);
+void formula_apply_physical_attack_supports(void);
+void formula_apply_physical_status_support_compatibility(void);
+void formula_apply_physical_xa_modifying_statuses_support(void);
+void formula_apply_quick_effect(void);
+void formula_apply_song_abilities(void);
+void formula_apply_status(void);
+void formula_apply_status_to_action(void);
+s32 formula_apply_status_and_check_undead(void);
+s32 formula_apply_steal_break_might_sword_hardcoding(void);
+void formula_apply_target_magical_status_xa_modifiers(void);
+void formula_apply_target_xa_affecting_statuses(void);
+void formula_apply_talk_skill(void);
+void formula_apply_undead_absorb_attack(void);
+void formula_apply_undead_reversal(void);
+void formula_apply_weapon_element_strengthen(void);
+void formula_apply_weather_effects_on_bows(void);
+void formula_apply_weather_elemental_effects(void);
+void formula_set_brave_loss_y(void);
+void formula_calculate_abandon(void);
+s32 formula_calculate_attack_evaded(u16 numerator, u16 denominator, u8 miss_type, u8 item_lost);
+void formula_calculate_base_xa(void);
+void formula_calculate_concentrate(void);
+void formula_calculate_critical_hit(void);
+void formula_calculate_dark_confuse(void);
+void formula_calculate_facing_evade(void);
+void formula_calculate_faith(void);
+void formula_calculate_final_hit_percent(void);
+void formula_calculate_gravi2_damage(void);
+void formula_calculate_hp_percent_damage(void);
+void formula_calculate_katana_break_chance(void);
+s32 formula_calculate_magic_accuracy_without_faith(void);
+s32 formula_calculate_magical_evade(void);
+void formula_calculate_magical_xa_times_ya(void);
+void formula_calculate_mp_percent_damage(void);
+void formula_calculate_physical_damage(void);
+s32 formula_calculate_physical_evade(void);
+void formula_calculate_stolen_gil(void);
+void formula_calculate_transparent(void);
+void formula_calculate_truth_damage(void);
+void formula_calculate_truth_magical_damage(void);
 s32 battle_unit_get_action_restriction(battle_stats_t* unit);
-s32 battle_formula_calculate_hit(void);
+s32 formula_calculate_hit(void);
 
-/* Provisional: falls off the end after battle_formula_calculate_hit, whose
+/* Provisional: falls off the end after formula_calculate_hit, whose
  * result stays in v0 for the caller's test. */
-s32 battle_formula_calculate_physical_evade_charge(void);
-void battle_formula_modify_damage_for_element(s32 element);
-void battle_formula_nullify_action(void);
-void battle_formula_cause_action_miss(void);
-void battle_formula_check_dragon(void);
-void battle_formula_clear_nullify_flags(void);
-void battle_formula_convert_hp_damage_to_mp_recovery(void);
-void battle_formula_determine_reduced_stat(void);
-void battle_formula_force_attack_miss(void);
-void battle_formula_force_sleeping_target_miss(void);
-s32 battle_formula_get_random_0_7fff(void);
-void battle_formula_heal_mp_z_times_ten(void);
-void battle_formula_init_weapon_xa_ya(void);
-void battle_formula_modify_elemental_damage(void);
-void battle_formula_roll_conditional_status_proc_inner(void);
-s32 battle_formula_roll_conditional_status_proc(void);
-s32 battle_formula_roll_random_at_least(s32 limit, s32 threshold);
-void battle_formula_select_magic_gun_ability(void);
-void battle_formula_set_exp_stolen(void);
-void battle_formula_store_ma_and_ma_plus_y_divided_by_two(void);
-void battle_formula_store_ma_and_pa_plus_y_divided_by_two(void);
-void battle_formula_store_ma_and_x(void);
-void battle_formula_store_ma_and_y(void);
-void battle_formula_store_magical_evade_values(void);
-void battle_formula_store_pa_and_pa_plus_y_divided_by_two(void);
-void battle_formula_store_pa_and_weapon_power(void);
-void battle_formula_store_pa_and_weapon_power_plus_y(void);
-void battle_formula_store_pa_and_x(void);
-void battle_formula_store_pa_and_y(void);
-void battle_formula_store_reaction_proc_id_and_target(void);
-void battle_formula_store_speed_and_x(void);
-void battle_formula_store_xa_plus_ya_status_damage(void);
-void battle_formula_store_xa_times_ya_damage(void);
-void battle_formula_use_hp_damage_as_action_hit_percent(void);
+s32 formula_calculate_physical_evade_charge(void);
+void formula_modify_damage_for_element(s32 element);
+void formula_nullify_action(void);
+void formula_cause_action_miss(void);
+void formula_check_dragon(void);
+void formula_clear_nullify_flags(void);
+void formula_convert_hp_damage_to_mp_recovery(void);
+void formula_determine_reduced_stat(void);
+void formula_force_attack_miss(void);
+void formula_force_sleeping_target_miss(void);
+s32 formula_get_random_0_7fff(void);
+void formula_heal_mp_z_times_ten(void);
+void formula_init_weapon_xa_ya(void);
+void formula_modify_elemental_damage(void);
+void formula_roll_conditional_status_proc_inner(void);
+s32 formula_roll_conditional_status_proc(void);
+s32 formula_roll_random_at_least(s32 limit, s32 threshold);
+void formula_select_magic_gun_ability(void);
+void formula_set_exp_stolen(void);
+void formula_store_ma_and_ma_plus_y_divided_by_two(void);
+void formula_store_ma_and_pa_plus_y_divided_by_two(void);
+void formula_store_ma_and_x(void);
+void formula_store_ma_and_y(void);
+void formula_store_magical_evade_values(void);
+void formula_store_pa_and_pa_plus_y_divided_by_two(void);
+void formula_store_pa_and_weapon_power(void);
+void formula_store_pa_and_weapon_power_plus_y(void);
+void formula_store_pa_and_x(void);
+void formula_store_pa_and_y(void);
+void formula_store_reaction_proc_id_and_target(void);
+void formula_store_speed_and_x(void);
+void formula_store_xa_plus_ya_status_damage(void);
+void formula_store_xa_times_ya_damage(void);
+void formula_use_hp_damage_as_action_hit_percent(void);
 s32 target_set_panels_for_action(const action_command_t* action);
 s32 action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids);
 void target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff);
@@ -799,9 +799,9 @@ s32 action_prepare_attack(action_command_t* action, action_command_t* target, s3
 s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
 void action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 battle_reaction_prepare_next(s16* reaction_id);
-void battle_formula_calculate_knockback(void);
-void battle_formula_apply_zodiac_compatibility(void);
-void battle_formula_store_physical_evade_values(void);
+void formula_calculate_knockback(void);
+void formula_apply_zodiac_compatibility(void);
+void formula_store_physical_evade_values(void);
 s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id);
 s32 action_finalize_attack_and_flag_reactions(s32 misc_id);
 s32 target_move_cursor_by_input(void);
@@ -837,16 +837,16 @@ s32 action_set_mimic_ability(battle_stats_t* unit);
 s32 action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_entry_t* list);
 void action_store_target_ids(u8* src);
 s32 action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
-void battle_formula_apply_poach_and_train(void);
-s32 battle_formula_calculate_dance_song_hit(void);
-s32 battle_formula_calculate_elemental_xa_times_ya(void);
-s32 battle_formula_calculate_friendly_magic_accuracy(void);
-s32 battle_formula_calculate_golem_accuracy(void);
-s32 battle_formula_calculate_magic_accuracy(void);
-s32 battle_formula_calculate_magic_accuracy_no_elemental(void);
-s32 battle_formula_calculate_physical_accuracy(void);
-s32 battle_formula_calculate_physical_status_accuracy(void);
-s32 battle_formula_calculate_weapon_damage(void);
+void formula_apply_poach_and_train(void);
+s32 formula_calculate_dance_song_hit(void);
+s32 formula_calculate_elemental_xa_times_ya(void);
+s32 formula_calculate_friendly_magic_accuracy(void);
+s32 formula_calculate_golem_accuracy(void);
+s32 formula_calculate_magic_accuracy(void);
+s32 formula_calculate_magic_accuracy_no_elemental(void);
+s32 formula_calculate_physical_accuracy(void);
+s32 formula_calculate_physical_status_accuracy(void);
+s32 formula_calculate_weapon_damage(void);
 s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability);
 s32 target_apply_reflect(battle_stats_t* unit);
 void target_apply_vertical_fixed(s32 x, s32 y);

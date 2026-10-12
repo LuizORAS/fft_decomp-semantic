@@ -31,9 +31,9 @@ void battle_weather_randomize_from_calendar(void) {
     s32 random_bucket;
     u8 selected_weather_period;
 
-    month = battle_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    day = battle_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    weather = battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
+    month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    weather = script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
 
     period = 0;
     while (period < BATTLE_WEATHER_CALENDAR_PERIOD_COUNT) {
@@ -54,11 +54,11 @@ void battle_weather_randomize_from_calendar(void) {
     } else if (weather >= BATTLE_WEATHER_SNOW) {
         weather = BATTLE_WEATHER_STRONG_STORM;
     }
-    battle_script_set_variable(EVENT_SCRIPT_VAR_WEATHER, weather);
+    script_set_variable(EVENT_SCRIPT_VAR_WEATHER, weather);
 
     if ((rand() * 3) / 0x8000 != 0) {
-        battle_script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, 0);
+        script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, 0);
     } else {
-        battle_script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, 1);
+        script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, 1);
     }
 }

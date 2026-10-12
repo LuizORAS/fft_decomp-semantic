@@ -8,13 +8,13 @@
  *
  * A mount passes the trap to the rider in its linked partner slot. Trap 0
  * levels the target down, 1 and 2 inflict Death Sentence and Sleep (status
- * byte 4 bits 0x01 and 0x10) when battle_status_modify_inflictions allows it, and 3
+ * byte 4 bits 0x01 and 0x10) when status_modify_inflictions allows it, and 3
  * deals max HP / 5 damage. Returns the trap id, or 0xff for none. */
 s32 action_apply_tile_trap(battle_stats_t* unit) {
     u8 trap;
     action_data_t* action;
 
-    trap = battle_map_set_item_trap_data(unit->x, unit->position.y, unit->position.higher_elevation)->trap_id;
+    trap = map_set_item_trap_data(unit->x, unit->position.y, unit->position.higher_elevation)->trap_id;
     if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         unit = &g_battle_unit_stats[unit->mount_info & BATTLE_MOUNT_INFO_PARTNER_ID_MASK];
     }
@@ -28,21 +28,21 @@ s32 action_apply_tile_trap(battle_stats_t* unit) {
         g_action_target_data->special_effect = ACTION_SPECIAL_EFFECT_LEVEL_DOWN;
         break;
     case BATTLE_TRAP_ID_DEATHTRAP:
-        g_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
-            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE);
-        if (battle_status_modify_inflictions(0) != 0) {
+        g_action_target_data->status_changes.infliction[STATUS_BYTE_INDEX(STATUS_ID_DEATH_SENTENCE)]
+            = STATUS_BYTE_MASK(STATUS_ID_DEATH_SENTENCE);
+        if (status_modify_inflictions(0) != 0) {
             g_action_target_data->attack_type = ACTION_TYPE_STATUS_CHANGE;
         } else {
-            battle_formula_force_attack_miss();
+            formula_force_attack_miss();
         }
         break;
     case BATTLE_TRAP_ID_SLEEPING_GAS:
-        g_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]
-            = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SLEEP);
-        if (battle_status_modify_inflictions(0) != 0) {
+        g_action_target_data->status_changes.infliction[STATUS_BYTE_INDEX(STATUS_ID_SLEEP)]
+            = STATUS_BYTE_MASK(STATUS_ID_SLEEP);
+        if (status_modify_inflictions(0) != 0) {
             g_action_target_data->attack_type = ACTION_TYPE_STATUS_CHANGE;
         } else {
-            battle_formula_force_attack_miss();
+            formula_force_attack_miss();
         }
         break;
     case BATTLE_TRAP_ID_STEEL_NEEDLE:

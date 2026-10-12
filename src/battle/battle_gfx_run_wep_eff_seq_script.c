@@ -110,7 +110,7 @@ void battle_gfx_run_wep_eff_seq_script(
                 break;
             case BATTLE_SEQ_OP_PLAY_SOUND:
                 value = seq[sequence_id][pos++];
-                battle_sound_play_movement_sfx(unit, value);
+                sound_play_movement_sfx(unit, value);
                 break;
             case BATTLE_SEQ_OP_SET_WAIT_BIAS:
                 sprite->wait_bias = (s8)seq[sequence_id][pos++];

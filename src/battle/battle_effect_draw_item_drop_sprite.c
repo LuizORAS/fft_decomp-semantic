@@ -32,8 +32,8 @@ void battle_effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle)
     slot = &g_battle_effect_slots[g_battle_effect_current_secondary->slot_ids[0]];
     battle_gfx_set_item_icon_sprite(&sprite, item_id);
     prim = &slot->quads[g_battle_effect_buffer_index];
-    SetRotMatrix(&g_battle_camera_matrix);
-    SetTransMatrix(&g_battle_camera_matrix);
+    SetRotMatrix(&g_camera_matrix);
+    SetTransMatrix(&g_camera_matrix);
     copyVector(&local, origin);
     RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
@@ -47,8 +47,8 @@ void battle_effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle)
     g_battle_effect_matrix.t[1] = position.vy;
     cosine = rcos(angle);
     sine = rsin(angle);
-    zoom = g_battle_camera_zoom.vx;
-    scale_y = g_battle_camera_zoom.vy;
+    zoom = g_camera_zoom.vx;
+    scale_y = g_camera_zoom.vy;
     g_battle_effect_matrix.m[0][0] = (cosine * zoom) >> 12;
     g_battle_effect_matrix.m[1][1] = (cosine * scale_y) >> 12;
     g_battle_effect_matrix.m[0][1] = (-sine * scale_y) >> 12;

@@ -22,10 +22,10 @@ void world_script_process_inflict_status_commands(void) {
                 battle_id = battle_unit_get_battle_index_by_misc_id(misc_id);
                 if (battle_id != 0x7d0) {
                     unit = battle_unit_get_stats_from_battle_id(battle_id);
-                    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
-                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))
-                        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
-                            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
+                    if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FLOAT)]
+                            & STATUS_BYTE_MASK(STATUS_ID_FLOAT))
+                        || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_JUMP)]
+                            & STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
                         thread_id = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
                         world_thread_start(thread_id, world_script_inflict_status_thread);
                         world_thread_set_parameters(

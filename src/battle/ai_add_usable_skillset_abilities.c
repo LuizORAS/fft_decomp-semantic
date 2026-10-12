@@ -104,8 +104,8 @@ s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count) {
                 continue;
             }
             if ((ai->considered_ability.ai_flags.word & AI_ABILITY_AFFECTED_BY_FAITH)
-                && (unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INNOCENT)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INNOCENT))) {
+                && (unit->status_sets.innate[STATUS_BYTE_INDEX(STATUS_ID_INNOCENT)]
+                    & STATUS_BYTE_MASK(STATUS_ID_INNOCENT))) {
                 continue;
             }
             flags = g_main_ability_range_data[ability_id].flags_4;

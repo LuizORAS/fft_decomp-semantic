@@ -902,7 +902,7 @@ enum {
     BATTLE_EFFECT_CAMERA_TRACK_ZOOM = 0x4,
 };
 
-/* The camera table battle_camera_find_active_keyframe found its keyframe in: the high half of the
+/* The camera table camera_find_active_keyframe found its keyframe in: the high half of the
  * index it reports. */
 enum {
     BATTLE_EFFECT_CAMERA_TABLE_PHASE1 = 0,
@@ -2035,8 +2035,7 @@ extern s32 g_battle_effect_camera_position_duration;
 extern s32 g_battle_effect_camera_position_frame;
 extern s32 g_battle_effect_camera_rotation_duration; /* angle track duration */
 
-extern s32
-    g_battle_effect_camera_rotation_frame; /* angle track counter; reset by battle_camera_execute_angle_command */
+extern s32 g_battle_effect_camera_rotation_frame; /* angle track counter; reset by camera_execute_angle_command */
 
 extern DVECTOR g_battle_effect_charge_line_direction_offsets[];
 extern u8 g_battle_effect_charge_line_fade_levels[];

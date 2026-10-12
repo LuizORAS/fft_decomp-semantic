@@ -59,9 +59,9 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->status_flags_5_6 = 0;
     unit->status_flags_1_4 = 0;
     battle_gfx_load_spritesheet_into_vram_slot(data, slot, unit_id, unit, palette);
-    tile = battle_map_get_tile_data_pointer(map_x, map_y, map_level);
+    tile = map_get_tile_data_pointer(map_x, map_y, map_level);
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags.shading, 1);
-    battle_map_load_palette_data(&g_battle_gfx_shadow_palette, MAP_CLUT_ROW_UNIT_SHADOWS, unit_id, 0);
+    map_load_palette_data(&g_battle_gfx_shadow_palette, MAP_CLUT_ROW_UNIT_SHADOWS, unit_id, 0);
     unit->clut = GetClut(unit_id << 4, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_UNITS);
     unit->tpage = slot + BATTLE_GFX_TPAGE_SPRITESHEET_SLOT_0;
     if (flags == 0) {
@@ -197,7 +197,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     *head = unit;
     battle_gfx_set_thrown_item_graphic_palette(
         unit->battle_data->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], unit);
-    battle_status_init_special_flag_enabling(unit->battle_data->misc_unit_id);
+    status_init_special_flag_enabling(unit->battle_data->misc_unit_id);
     unit->movement.suppress_sfx_and_landing_effects = 1;
     battle_unit_update_display_by_misc_id(unit->unit_id);
     battle_unit_set_animation_based_on_status(unit);

@@ -31,7 +31,7 @@ void battle_menu_run_system_function_thread(void) {
             battle_thread_yield();
         }
     }
-    battle_camera_wait_until_idle();
+    camera_wait_until_idle();
     entry = &g_battle_system_function_table[id];
     value = entry->menu_id;
     g_battle_menu_thread_menu_data[entry->menu_entry_index].text_id = entry->text_id;
@@ -44,7 +44,7 @@ void battle_menu_run_system_function_thread(void) {
         battle_thread_exit_current();
     }
     if (id != 8) {
-        battle_script_pulse_tutorial_wait_value(id);
+        script_pulse_tutorial_wait_value(id);
     }
     battle_thread_start(NATIVE_THREAD_SLOT_MENU, entry->thread_entry);
     battle_thread_set_four_parameters(

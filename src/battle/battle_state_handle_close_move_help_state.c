@@ -23,9 +23,9 @@ void battle_state_handle_close_move_help_state(void) {
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
         target_move_cursor_by_input();
-        battle_camera_handle_rotation_input();
-        battle_camera_call_zoom_map();
-        battle_camera_call_toggle_tilt();
+        camera_handle_rotation_input();
+        camera_call_zoom_map();
+        camera_call_toggle_tilt();
         buttons = g_main_input_pressed_buttons;
         if (buttons & PSX_PAD_CIRCLE) {
             path = move_build_path_to_tile(

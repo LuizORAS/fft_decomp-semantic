@@ -13,7 +13,7 @@ s32 target_set_all_panels_targeted_if_targetable(void) {
 
     count = 0;
     for (i = 0; i < 0x200; i++) {
-        tile = &g_battle_map_tile_data[i];
+        tile = &g_map_tile_data[i];
         panel = &g_target_panel_data[i];
         if (panel->remaining_range != 0 && !(tile->flags.blocked)
             && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {

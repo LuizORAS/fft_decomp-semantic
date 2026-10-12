@@ -40,12 +40,10 @@ s32 battle_menu_build_unit_action_menus(s32 unit_id, u8* entries, u8* empty, u8*
         return 1;
     }
     supports = unit->support_abilities[3];
-    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+    if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG)) {
         supports = 0;
     }
-    if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
+    if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_ACT)] & STATUS_BYTE_MASK(STATUS_ID_DONT_ACT))
         || (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT)) {
         *entries = SKILLSET_ID_NONE;
         return 0;

@@ -32,7 +32,7 @@ void ai_restore_unit_state(ai_snapshot_mode_e mode) {
         unit->death_counter = status->death_counter;
         ai_transfer_byte_values(unit->status_sets.current, status->current_status, sizeof(status->current_status));
         if (mode != AI_SNAPSHOT_BASELINE) {
-            unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)] = status->death_sentence_ct;
+            unit->status_ct[STATUS_CT_INDEX(STATUS_ID_DEATH_SENTENCE)] = status->death_sentence_ct;
         } else {
             snapshot = (ai_extended_snapshot_t*)status;
             unit->team_flags = snapshot->team_flags;

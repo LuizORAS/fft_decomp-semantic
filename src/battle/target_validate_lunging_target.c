@@ -105,10 +105,10 @@ s32 target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevation, s32
             limit = target_total;
         }
         high = limit;
-        index = mid_y * g_battle_map_max_x + mid_x;
-        lower = &g_battle_map_tile_data[index];
+        index = mid_y * g_map_max_x + mid_x;
+        lower = &g_map_tile_data[index];
         upper_index = index + 0x100;
-        upper = &g_battle_map_tile_data[upper_index];
+        upper = &g_map_tile_data[upper_index];
         lower_height = lower->height * 2 + lower->depth_half_height.half_height;
         upper_height = upper->height * 2 + upper->depth_half_height.half_height;
         lower_id = target_get_unit_id_if_tile_targetable(mid_x, mid_y, 0);

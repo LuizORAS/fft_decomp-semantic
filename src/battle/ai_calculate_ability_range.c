@@ -28,13 +28,13 @@ s32 ai_calculate_ability_range(void) {
         }
     } else {
         x = 0;
-        tile = g_battle_map_tile_data;
+        tile = g_map_tile_data;
         do {
             x++;
             tile->ceiling_depth_and_marks.ability_range = 0;
             tile++;
         } while (x < MAP_TILE_COUNT);
-        g_battle_map_tile_data[ai->current_action.coords.bytes.y * ai->map_max_x + ai->current_action.coords.bytes.x
+        g_map_tile_data[ai->current_action.coords.bytes.y * ai->map_max_x + ai->current_action.coords.bytes.x
             + (ai->current_action.coords.bytes.elevation * MAP_TILES_PER_LAYER)]
             .ceiling_depth_and_marks.ability_range = 1;
     }
@@ -51,7 +51,7 @@ s32 ai_calculate_ability_range(void) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     tile_mask = row << x;
                     if (tile_mask & 0x8000) {
-                        if (g_battle_map_tile_data[y * ai->map_max_x + x + (level * MAP_TILES_PER_LAYER)]
+                        if (g_map_tile_data[y * ai->map_max_x + x + (level * MAP_TILES_PER_LAYER)]
                                 .ceiling_depth_and_marks.ability_range) {
                             count++;
                             tile_mask = 0x8000;

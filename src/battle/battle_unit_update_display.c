@@ -8,7 +8,7 @@ void battle_unit_update_display(battle_unit_misc_data_t* unit) {
     map_tile_t* tile;
 
     if (unit != 0) {
-        tile = battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
+        tile = map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
         unit->status_flags_1_4 &= ~unit->statuses_to_remove_1_4;
         unit->status_flags_5_6 &= ~unit->statuses_to_remove_5_6;
         unit->status_flags_1_4 |= unit->statuses_to_add_1_4;

@@ -21,8 +21,8 @@ s32 require_party_store_equipment_or_sell_overflow(s32 unit_id) {
                 unit->equipment[equipment_slot] = ITEM_ID_NOTHING;
                 sale_value = main_item_get_data_pointer(item_id)->price;
                 sale_value /= 4;
-                battle_script_set_variable(
-                    EVENT_SCRIPT_VAR_WAR_FUNDS, battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + sale_value);
+                script_set_variable(
+                    EVENT_SCRIPT_VAR_WAR_FUNDS, script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + sale_value);
                 sold_equipment = 1;
             } else {
                 g_main_item_quantities[item_id]++;

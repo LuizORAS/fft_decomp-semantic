@@ -19,13 +19,13 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
     x = unit->x;
     y = unit->position.y;
     higher_elevation = unit->position.higher_elevation;
-    if (x >= g_battle_map_max_x) {
+    if (x >= g_map_max_x) {
         return -1;
     }
-    if (y >= g_battle_map_max_y) {
+    if (y >= g_map_max_y) {
         return -1;
     }
-    tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
+    tile = &g_map_tile_data[map_calculate_location(unit)];
     if (((*(u8*)&tile->flags) & MAP_TILE_COLLISION_MASK)) {
         return -1;
     }

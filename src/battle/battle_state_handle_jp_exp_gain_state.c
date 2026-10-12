@@ -19,14 +19,14 @@ void battle_state_handle_jp_exp_gain_state(void) {
     if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) != 0) {
         return;
     }
-    if (g_battle_camera_rotation_action != BATTLE_CAMERA_ROTATION_NONE) {
+    if (g_camera_rotation_action != CAMERA_ROTATION_NONE) {
         return;
     }
     if (g_action_turn_event_type == BATTLE_TURN_EVENT_ABILITY_READY) {
         if (battle_menu_init_system_function(
                 BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->misc_unit_id, 0, 1)
                 == 2
-            && battle_script_get_event_finish_operation() != 0) {
+            && script_get_event_finish_operation() != 0) {
             g_battle_previous_game_state = g_battle_game_state;
             battle_menu_init_system_function(
                 BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 0, unit->battle_data->misc_unit_id, 0, 1);

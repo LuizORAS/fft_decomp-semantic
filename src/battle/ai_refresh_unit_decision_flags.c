@@ -27,10 +27,9 @@ s32 ai_refresh_unit_decision_flags(void) {
             else
                 decision->enemy_flag = 0;
             decision->targeting_flags_2 &= AI_TARGET_CONSERVE_CT | AI_TARGET_TEAM_SUPPORT_UNAVAILABLE;
-            if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)) {
-                if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE))
+            if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEAD)] & STATUS_BYTE_MASK(STATUS_ID_DEAD)) {
+                if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_RERAISE)]
+                    & STATUS_BYTE_MASK(STATUS_ID_RERAISE))
                     decision->targeting_flags_2 |= AI_TARGET_DEAD_WITH_RERAISE;
                 else
                     decision->targeting_flags_2 |= AI_TARGET_DEAD_WITHOUT_RERAISE;

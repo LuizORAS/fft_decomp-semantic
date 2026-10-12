@@ -15,7 +15,7 @@ s32 action_call_attack_preparation_at_preview(action_command_t* command) {
     unit = &g_battle_unit_stats[command->actor_id];
     result = action_prepare_attack(command, &unit->action_command, 1);
     if (result == BATTLE_ATTACK_PREPARATION_IMMEDIATE && g_action_context == ACTION_CONTEXT_PRIMARY) {
-        battle_status_enable_disable_acting(unit);
+        status_enable_disable_acting(unit);
     }
     return result;
 }

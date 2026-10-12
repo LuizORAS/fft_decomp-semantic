@@ -74,7 +74,7 @@ s32 ai_propagate_target_movement(
                     state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
                     for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {
                         state->tile_index = state->row_offset + state->tile_x;
-                        state->current_tile = &g_battle_map_tile_data[state->tile_index];
+                        state->current_tile = &g_map_tile_data[state->tile_index];
                         state->current_panel = &g_target_panels[state->tile_index];
                         frontier_snapshot[state->tile_index] = frontier[state->tile_index] & FRONTIER_FLAG_QUEUED;
                         frontier[state->tile_index] &= ~FRONTIER_FLAG_QUEUED;
@@ -88,7 +88,7 @@ s32 ai_propagate_target_movement(
                     state->row_offset = state->level_offset + state->tile_y * config->map_max_x;
                     for (state->tile_x = 0; state->tile_x < config->map_max_x; state->tile_x++) {
                         state->tile_index = state->row_offset + state->tile_x;
-                        state->current_tile = &g_battle_map_tile_data[state->tile_index];
+                        state->current_tile = &g_map_tile_data[state->tile_index];
                         state->current_panel = &g_target_panels[state->tile_index];
                         if (frontier_snapshot[state->tile_index]) {
                             state->source_unit_record_flag = 0;

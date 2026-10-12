@@ -26,8 +26,8 @@ void battle_menu_open_debugchr_unit_editor(void) {
     battle_menu_enter_status_screen_selection();
     debugchr_editor_run_unit_thread(*selected);
     g_battle_menu_suspend_state = 0;
-    g_battle_sound_suppressed = 0;
-    g_battle_script_event_input = 0;
+    g_sound_suppressed = 0;
+    g_script_event_input = 0;
     battle_menu_build_idle_action_menu(g_battle_menu_current_id);
     battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, *selected, *selected);
     battle_menu_clear_option_menu_open();

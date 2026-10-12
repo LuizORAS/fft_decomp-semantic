@@ -8,8 +8,8 @@
  * leaves the critical/status notifications alone; `initializing` seeds the
  * inflicted statuses from the current ones and clears their CTs. */
 void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing) {
-    u8 saved_inflicted[BATTLE_STATUS_BYTE_COUNT];
-    u8 saved_current[BATTLE_STATUS_BYTE_COUNT];
+    u8 saved_inflicted[STATUS_BYTE_COUNT];
+    u8 saved_current[STATUS_BYTE_COUNT];
     s32 i;
     s32 status_id;
     s32 mask;
@@ -22,7 +22,7 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
 
     misc_unit_id = unit->misc_unit_id;
     main_status_store_current(unit);
-    for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+    for (i = 0; i < STATUS_BYTE_COUNT; i++) {
         saved_current[i] = unit->status_sets.current[i];
         saved_inflicted[i] = unit->inflicted_status[i];
     }
@@ -39,7 +39,7 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     main_unit_set_equipment_attributes(unit, 0);
     main_unit_set_equippable_items(unit);
 
-    for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+    for (i = 0; i < STATUS_BYTE_COUNT; i++) {
         if (initializing) {
             unit->inflicted_status[i] = unit->status_sets.current[i];
         } else {
@@ -57,16 +57,14 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
         return;
     }
     if ((unit->max_hp / 5) >= unit->hp) {
-        unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
-            |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
+        unit->inflicted_status[STATUS_BYTE_INDEX(STATUS_ID_CRITICAL)] |= STATUS_BYTE_MASK(STATUS_ID_CRITICAL);
     } else {
-        unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
-            &= ~BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
+        unit->inflicted_status[STATUS_BYTE_INDEX(STATUS_ID_CRITICAL)] &= ~STATUS_BYTE_MASK(STATUS_ID_CRITICAL);
     }
     main_status_store_current(unit);
 
     i = 0;
-    status_id = BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_UNNAMED_00);
+    status_id = STATUS_HANDLER_INDEX(STATUS_ID_UNNAMED_00);
     do {
         byte_index = i / 8;
         mask = 0x80 >> (i & 7);
@@ -77,12 +75,12 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
                 if (initializing != 0) {
                     main_status_set_ct(unit, i, 0);
                 }
-                battle_status_enable_special_flags(status_id, 1, misc_unit_id);
+                status_enable_special_flags(status_id, 1, misc_unit_id);
             } else {
-                battle_status_enable_special_flags(status_id, 0, misc_unit_id);
+                status_enable_special_flags(status_id, 0, misc_unit_id);
             }
         }
         i++;
         status_id++;
-    } while (i < BATTLE_STATUS_COUNT);
+    } while (i < STATUS_COUNT);
 }

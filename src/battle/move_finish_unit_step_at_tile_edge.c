@@ -43,7 +43,7 @@ void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
                 unit->step_phase = g_move_climb_to_centre_phases[direction];
                 break;
             }
-            tile = battle_map_get_tile_data_pointer(
+            tile = map_get_tile_data_pointer(
                 unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
             if (tile->depth_half_height.depth == 0) {
                 return;
@@ -51,7 +51,7 @@ void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             if (-unit->screen.vy >= (tile->height + tile->depth_half_height.depth) * 12) {
                 return;
             }
-            battle_sound_play_landing_sfx_by_surface_type(unit);
+            sound_play_landing_sfx_by_surface_type(unit);
             battle_effect_set_landing_secondary_by_surface_type(unit);
             return;
         }
@@ -62,10 +62,10 @@ void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
         }
         if (g_move_step_value.mount) {
-            battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
+            sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
             return;
         }
-        battle_sound_play_landing_sfx_by_surface_type(unit);
+        sound_play_landing_sfx_by_surface_type(unit);
         battle_effect_set_landing_secondary_by_surface_type(unit);
         return;
     }
@@ -76,9 +76,9 @@ void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
     }
     if (g_move_step_value.mount) {
-        battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
+        sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
         return;
     }
-    battle_sound_play_landing_sfx_by_surface_type(unit);
+    sound_play_landing_sfx_by_surface_type(unit);
     battle_effect_set_landing_secondary_by_surface_type(unit);
 }

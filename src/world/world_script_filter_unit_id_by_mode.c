@@ -43,14 +43,14 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
         if (index == -1) {
             return 1;
         }
-        for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+        for (i = 0; i < STATUS_BYTE_COUNT; i++) {
             if ((unit->status_sets.current[i]
                     & g_main_status_check_sets[MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED][i])
                 != 0) {
                 break;
             }
         }
-        if ((unit->team_flags & BATTLE_TEAM_MASK) == BATTLE_TEAM_BLUE && i == BATTLE_STATUS_BYTE_COUNT) {
+        if ((unit->team_flags & BATTLE_TEAM_MASK) == BATTLE_TEAM_BLUE && i == STATUS_BYTE_COUNT) {
             return 1;
         }
         return 0;
@@ -66,9 +66,9 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
             return 0;
         }
         first = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED][0];
-        for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+        for (i = 0; i < STATUS_BYTE_COUNT; i++) {
             if (i == 0) {
-                s32 status = unit->status_sets.current[0] & (0xff ^ BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD));
+                s32 status = unit->status_sets.current[0] & (0xff ^ STATUS_BYTE_MASK(STATUS_ID_UNDEAD));
 
                 blocked = first & status;
             } else {
@@ -79,7 +79,7 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
                 break;
             }
         }
-        if ((unit->team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE && i == BATTLE_STATUS_BYTE_COUNT) {
+        if ((unit->team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE && i == STATUS_BYTE_COUNT) {
             return 1;
         }
         return 0;

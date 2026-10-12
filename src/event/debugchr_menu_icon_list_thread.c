@@ -15,7 +15,7 @@ void debugchr_menu_icon_list_thread(void) {
     menu_icon_record_t* record;
     s16* redraw;
 
-    g_debugchr_input_controller = battle_script_get_controller_input_pointer(0);
+    g_debugchr_input_controller = script_get_controller_input_pointer(0);
     state = (menu_entry_t*)battle_thread_get_current_parameter_1();
     state->window.y &= ~1;
     cursor = state->selected_index;

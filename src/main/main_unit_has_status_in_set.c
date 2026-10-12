@@ -4,13 +4,13 @@ s32 main_unit_has_status_in_set(const battle_stats_t* unit, main_status_check_se
     const u8* status_set = g_main_status_check_sets[0];
     s32 index = 0;
 
-    status_set += status_set_index * BATTLE_STATUS_BYTE_COUNT;
+    status_set += status_set_index * STATUS_BYTE_COUNT;
 
     do {
         if ((unit->status_sets.current[index] & status_set[index]) != 0) {
             return 1;
         }
         index++;
-    } while (index < BATTLE_STATUS_BYTE_COUNT);
+    } while (index < STATUS_BYTE_COUNT);
     return 0;
 }

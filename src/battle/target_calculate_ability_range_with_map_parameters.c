@@ -18,7 +18,7 @@ s32 target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 
     s32 count;
     u8 remaining;
 
-    index = unit->position.y * g_battle_map_max_x + unit->x;
+    index = unit->position.y * g_map_max_x + unit->x;
     target_clear_panel_data();
     remaining = (range & 0x7f) + 1;
     panel = &g_target_panels[index];
@@ -32,7 +32,7 @@ s32 target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 
         upper->remaining_range = 0;
     }
     count = 0;
-    tile = g_battle_map_tile_data;
+    tile = g_map_tile_data;
     for (i = 0, panels = g_target_panels; i < 0x200; i++) {
         if (panels->remaining_range != 0 && !(((*(u8*)&tile[i].flags) & MAP_TILE_COLLISION_MASK))) {
             tile[i].ceiling_depth_and_marks.ability_range = 1;

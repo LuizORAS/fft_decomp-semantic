@@ -10,10 +10,10 @@ void battle_state_handle_effect_state(void) {
     if (g_battle_menu_status_screen_selected != 1) {
         battle_unit_update_and_animate_units();
         battle_gfx_update_screen_color_modulation_fade();
-        battle_camera_update_real_coord_animation();
-        battle_camera_update_offset_screen_coord_animation();
-        battle_camera_update_zoom_animation();
-        battle_camera_update_rotation_animation();
+        camera_update_real_coord_animation();
+        camera_update_offset_screen_coord_animation();
+        camera_update_zoom_animation();
+        camera_update_rotation_animation();
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();

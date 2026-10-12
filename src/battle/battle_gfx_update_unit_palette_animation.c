@@ -44,7 +44,7 @@ void battle_gfx_update_unit_palette_animation(void) {
         } else {
             palettes = g_battle_deployed_unit_palettes;
         }
-        battle_map_load_palette_data(palettes, MAP_CLUT_ROW_SPRITES, 1, 0);
-        battle_map_load_palette_data(palettes + 1, MAP_CLUT_ROW_SPRITES, 2, 0);
+        map_load_palette_data(palettes, MAP_CLUT_ROW_SPRITES, 1, 0);
+        map_load_palette_data(palettes + 1, MAP_CLUT_ROW_SPRITES, 2, 0);
     }
 }

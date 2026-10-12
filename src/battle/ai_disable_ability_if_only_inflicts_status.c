@@ -32,7 +32,7 @@ void ai_disable_ability_if_only_inflicts_status(ai_ability_entry_t* entry, s32 s
         mask = 0x80;
         cursor = &g_ai_data_base;
         shift = status_id;
-        for (; status_set < BATTLE_STATUS_BYTE_COUNT; status_set++, shift -= 8) {
+        for (; status_set < STATUS_BYTE_COUNT; status_set++, shift -= 8) {
             if (status_set == status_id / 8) {
                 if ((cursor->considered_ability.parameters.bytes.status_infliction[0] & ((mask >> shift) ^ 0xFF))
                     != 0) {

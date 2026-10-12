@@ -300,7 +300,7 @@ extern s32 g_attack_map_title_closing_past_midpoint;
 /* Two buffers of the four shaded title-panel strips. */
 extern POLY_GT4 g_attack_map_title_sprites[2][4];
 
-/* Scenario interpreter interfaces shared by battle_script_execute_event and
+/* Scenario interpreter interfaces shared by script_execute_event and
  * world_script_execute_event. Signatures are as the interpreters bind them;
  * unverified names stay provisional. */
 void attack_map_load_title_graphic(void);

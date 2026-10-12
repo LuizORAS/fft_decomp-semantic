@@ -62,16 +62,16 @@ s32 target_set_green_panels_for_action(action_command_t* action) {
         y = target->position.y;
         elevation = target->position.higher_elevation;
     }
-    if (x >= g_battle_map_max_x) {
+    if (x >= g_map_max_x) {
         return -1;
     }
-    if (y >= g_battle_map_max_y || elevation >= 2) {
+    if (y >= g_map_max_y || elevation >= 2) {
         return -1;
     }
     location = x;
     index = location;
-    index = elevation * 256 + y * g_battle_map_max_x + location;
-    tile = &g_battle_map_tile_data[index];
+    index = elevation * 256 + y * g_map_max_x + location;
+    tile = &g_map_tile_data[index];
     if (tile->flags.blocked) {
         return -1;
     }
@@ -107,7 +107,7 @@ s32 target_set_green_panels_for_action(action_command_t* action) {
             target_check_moldball_virus_depth(action_copy.ability_id);
         }
     }
-    cursor = &g_target_panels[battle_map_calculate_location(unit)];
+    cursor = &g_target_panels[map_calculate_location(unit)];
     if (flags_2 & ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER) {
         cursor->remaining_range = 0;
     }
@@ -123,7 +123,7 @@ s32 target_set_green_panels_for_action(action_command_t* action) {
     }
     count = 0;
     if (!(flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES))) {
-        tile = g_battle_map_tile_data;
+        tile = g_map_tile_data;
         for (i = 0, marked = g_target_panels; i < 0x200; i++) {
             if (marked->remaining_range != 0 && !(((*(u8*)&tile[i].flags) & MAP_TILE_COLLISION_MASK))) {
                 count++;
@@ -135,7 +135,7 @@ s32 target_set_green_panels_for_action(action_command_t* action) {
         }
         return count;
     }
-    tile = g_battle_map_tile_data;
+    tile = g_map_tile_data;
     for (i = 0, marked = g_target_panels; i < 0x200; i++) {
         if (marked->mark != 0 && !(((*(u8*)&tile[i].flags) & MAP_TILE_COLLISION_MASK))) {
             count++;

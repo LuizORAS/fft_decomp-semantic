@@ -52,7 +52,7 @@ s32 action_set_mimic_ability(battle_stats_t* unit) {
     if (menu_type == ACTION_MENU_TYPE_JUMP) {
         direction |= 0x100;
     }
-    if (battle_map_resolve_rotated_offset_layer(unit, g_action_current_attacker.target_delta_x,
+    if (map_resolve_rotated_offset_layer(unit, g_action_current_attacker.target_delta_x,
             g_action_current_attacker.target_delta_y, direction, &x, &y, &z)
         != 0) {
         return -1;
@@ -71,8 +71,7 @@ s32 action_set_mimic_ability(battle_stats_t* unit) {
     result = target_set_panels_for_action(&action);
     if (result == -1 || result == 3
         || (result < 2
-            && !((*(u8*)&g_battle_map_tile_data[saved_state = (z << 8) + (g_battle_map_max_x * y) + x]
-                         .ceiling_depth_and_marks)
+            && !((*(u8*)&g_map_tile_data[saved_state = (z << 8) + (g_map_max_x * y) + x].ceiling_depth_and_marks)
                 & MAP_TILE_FLAG_ABILITY_RANGE))) {
         unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
         unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
@@ -83,8 +82,8 @@ s32 action_set_mimic_ability(battle_stats_t* unit) {
     result = action_prepare_attack(&action, &unit->action_command, 1);
     unit->charged_ability_ct = 0xff;
     main_status_change_unit(unit, 0,
-        BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
-            | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING),
+        STATUS_BYTE_MASK(STATUS_ID_CHARGING) | STATUS_BYTE_MASK(STATUS_ID_JUMP)
+            | STATUS_BYTE_MASK(STATUS_ID_PERFORMING),
         MAIN_STATUS_REMOVE);
     g_action_state = saved_state;
     if (result < 0) {

@@ -197,7 +197,7 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
             case EFFECT_EMITTER_ORIGIN_WORLD:
                 break;
             case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+                tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
                 origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
@@ -216,7 +216,7 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
             case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
                 break;
             case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
-                battle_map_store_max_coordinates(&map_origin);
+                map_store_max_coordinates(&map_origin);
                 origin.vx += map_origin.vx * (MAP_TILE_SIZE / 2);
                 origin.vz += map_origin.vz * (MAP_TILE_SIZE / 2);
                 break;
@@ -274,7 +274,7 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
             case EFFECT_EMITTER_HOMING_OFFSET_ALT:
                 break;
             case EFFECT_EMITTER_HOMING_MAP_CENTRE:
-                battle_map_store_max_coordinates(&map_max);
+                map_store_max_coordinates(&map_max);
                 target_base.vx += map_max.vx * (MAP_TILE_SIZE / 2);
                 target_base.vz += map_max.vz * (MAP_TILE_SIZE / 2);
                 break;
@@ -289,7 +289,7 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
                 target_base.vz += target.vz;
                 break;
             case EFFECT_EMITTER_HOMING_CURSOR_TILE:
-                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+                tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
                 target_base.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 target_base.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
@@ -510,8 +510,8 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
             }
             v = entry->particle_ribbon.texture_v + slot->frame * height;
             quad = &slot->quads[work->buffer][0];
-            SetRotMatrix(&g_battle_camera_matrix);
-            SetTransMatrix(&g_battle_camera_matrix);
+            SetRotMatrix(&g_camera_matrix);
+            SetTransMatrix(&g_camera_matrix);
             vector.vx = slot->trail[index].x;
             vector.vy = slot->trail[index].y;
             vector.vz = slot->trail[index].z;

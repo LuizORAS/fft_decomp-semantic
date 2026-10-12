@@ -1,6 +1,6 @@
 /* Advances one camera-track component by a frame and returns its new value.
  * Called per component by world_camera_fusion_thread (0x800f14b4); the
- * BATTLE twin is battle_camera_step_track (0x8013dfb0).
+ * BATTLE twin is camera_step_track (0x8013dfb0).
  *
  * Each call samples the two tangent lines of the active key segment at this
  * frame and the next, intersects them (world_cross_product_q12 is a Q12 cross product

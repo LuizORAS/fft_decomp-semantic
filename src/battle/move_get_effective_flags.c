@@ -18,11 +18,10 @@ move_effective_flags_e move_get_effective_flags(const battle_stats_t* unit) {
     movement_abilities_2 = unit->movement_abilities[1];
 
     flags = 0;
-    if (current_status_3 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+    if (current_status_3 & STATUS_BYTE_MASK(STATUS_ID_FLOAT)) {
         movement_abilities_3 |= BATTLE_MOVEMENT_SET_3_FLOAT;
     }
-    if (current_status_3
-        & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
+    if (current_status_3 & (STATUS_BYTE_MASK(STATUS_ID_CHICKEN) | STATUS_BYTE_MASK(STATUS_ID_FROG))) {
         movement_abilities_3 &= (u8)~BATTLE_MOVEMENT_SET_3_FLY;
     }
     if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {

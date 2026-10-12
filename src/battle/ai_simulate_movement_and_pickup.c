@@ -14,14 +14,14 @@ void ai_simulate_movement_and_pickup(void) {
         if (ai->tile_pickup_kind == AI_TILE_PICKUP_CRYSTAL) {
             ai->acting_unit->hp = ai->acting_unit->max_hp;
             ai->acting_unit->mp = ai->acting_unit->max_mp;
-            ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
-                &= ~BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
-            ai->acting_unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
-                &= ~BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
+            ai->acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRITICAL)]
+                &= ~STATUS_BYTE_MASK(STATUS_ID_CRITICAL);
+            ai->acting_unit->inflicted_status[STATUS_BYTE_INDEX(STATUS_ID_CRITICAL)]
+                &= ~STATUS_BYTE_MASK(STATUS_ID_CRITICAL);
         }
         if (ai->tile_pickup_kind != AI_TILE_PICKUP_NONE
-            && !(ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL))
+            && !(ai->acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRITICAL)]
+                & STATUS_BYTE_MASK(STATUS_ID_CRITICAL))
             && ai->autobattle_setting != AI_AUTOBATTLE_RETREAT) {
             ai->current_action.rank.priority += 2;
         }

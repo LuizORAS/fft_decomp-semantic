@@ -25,10 +25,10 @@ void battle_state_update_action_execute_mode(void) {
     if (g_battle_menu_status_screen_selected != 1) {
         battle_unit_update_and_animate_units();
         battle_gfx_update_screen_color_modulation_fade();
-        battle_camera_update_real_coord_animation();
-        battle_camera_update_offset_screen_coord_animation();
-        battle_camera_update_zoom_animation();
-        battle_camera_update_rotation_animation();
+        camera_update_real_coord_animation();
+        camera_update_offset_screen_coord_animation();
+        camera_update_zoom_animation();
+        camera_update_rotation_animation();
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
@@ -51,7 +51,7 @@ void battle_state_update_action_execute_mode(void) {
         && unit->used_ability_id != ABILITY_ID_BASIC_SKILL_THROW_STONE) {
         if (battle_effect_load_ability(unit->used_ability_id) != 0
             || (unit->used_ability_id >= ABILITY_ID_CHARGE_FIRST && unit->used_ability_id < ABILITY_ID_MATH_FIRST)) {
-            battle_camera_update_cursor_tile_vector();
+            camera_update_cursor_tile_vector();
         }
         if (g_battle_state_animation_continue_check == 0 && unit->numeric_display.active == 0
             && (unit->animation.wait == 0 || (unit->animation.sequence_id >> 1) < 0x3cU)) {
@@ -77,7 +77,7 @@ void battle_state_update_action_execute_mode(void) {
             battle_state_start_battle_message_display();
         }
     } else {
-        battle_camera_update_cursor_tile_vector();
+        camera_update_cursor_tile_vector();
         battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
         if (g_battle_state_animation_continue_check == 0 && unit->numeric_display.active == 0
             && (unit->animation.wait == 0 || (unit->animation.sequence_id >> 1) < 0x3cU)) {

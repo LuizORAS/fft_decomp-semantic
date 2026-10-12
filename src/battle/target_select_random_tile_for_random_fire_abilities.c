@@ -22,7 +22,7 @@ void target_select_random_tile_for_random_fire_abilities(void) {
 
     count = 0;
     for (i = 0; i < 0x200; i++) {
-        tile_data = &g_battle_map_tile_data[i];
+        tile_data = &g_map_tile_data[i];
         if (i == 0x100) {
             lower_count = count;
         }
@@ -39,10 +39,10 @@ void target_select_random_tile_for_random_fire_abilities(void) {
     if (index >= lower_count) {
         tile += 0x100;
     }
-    g_battle_map_tile_data[tile].ceiling_depth_and_marks.targeted = 1;
+    g_map_tile_data[tile].ceiling_depth_and_marks.targeted = 1;
     g_action_current_ability.random_fire_flag = 1;
     g_action_current_ability.target_new_elevation = tile / 256;
-    g_action_current_ability.target_new_y = (tile & 0xFF) / g_battle_map_max_x;
-    g_action_current_ability.target_new_x = (tile & 0xFF) % g_battle_map_max_x;
+    g_action_current_ability.target_new_y = (tile & 0xFF) / g_map_max_x;
+    g_action_current_ability.target_new_x = (tile & 0xFF) % g_map_max_x;
     target_clear_panel_spread_flags();
 }

@@ -13,7 +13,7 @@ s32 ai_can_elemental_ability_be_used(ai_coords_t* coords) {
 
     tile_id = (coords->bytes.elevation * MAP_TILES_PER_LAYER) + coords->bytes.y * g_ai_data_base.map_max_x
         + coords->bytes.x;
-    tile_type = g_battle_map_tile_data[tile_id].surface.type;
+    tile_type = g_map_tile_data[tile_id].surface.type;
     ability_terrain = g_main_terrain_geomancy_abilities[tile_type];
     return ability_terrain == g_ai_data_base.considered_ability.ability_id;
 }

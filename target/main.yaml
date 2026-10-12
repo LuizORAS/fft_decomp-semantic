@@ -1373,7 +1373,7 @@ data:
   - {addr: 0x8006720c, name: open_system_run_ending_cutscene}
   - {addr: 0x800672f8, name: wldcore_entrypoint}
   - {addr: 0x80079a98, name: battle_state_run_game_loop}
-  - {addr: 0x80093170, name: battle_map_color_field}
+  - {addr: 0x80093170, name: map_color_field}
   - {addr: 0x800a778c, name: g_main_system_game_flow_state}
   - {addr: 0x800d0bbc, name: g_main_save_slot_buffer}
   - {addr: 0x800e6edc, name: world_text_find_entry}
@@ -1382,10 +1382,10 @@ data:
   - {addr: 0x8010656c, name: world_menu_load_text_1bd8}
   - {addr: 0x8011a2d4, name: g_battle_gfx_current_render_buffer}
   - {addr: 0x80132824, name: battle_text_find_entry}
-  - {addr: 0x8013b590, name: battle_script_get_variable}
-  - {addr: 0x8013b644, name: battle_script_set_variable}
+  - {addr: 0x8013b590, name: script_get_variable}
+  - {addr: 0x8013b644, name: script_set_variable}
   - {addr: 0x8014a81c, name: battle_return_zero}
-  - {addr: 0x8018e9bc, name: battle_status_enable_special_flags}
+  - {addr: 0x8018e9bc, name: status_enable_special_flags}
   - {addr: 0x801908cc, name: g_battle_unit_stats}
 
 overrides:

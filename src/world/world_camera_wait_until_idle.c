@@ -4,5 +4,5 @@
 void world_camera_wait_until_idle(void) {
     do {
         world_thread_yield();
-    } while (battle_camera_is_active() != 0);
+    } while (camera_is_active() != 0);
 }

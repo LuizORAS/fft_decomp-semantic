@@ -36,7 +36,7 @@ void world_menu_build_unit_status_list(void) {
         g_world_menu_ability_display_flags[i] = 0;
     }
     count = 0;
-    for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+    for (i = 0; i < STATUS_BYTE_COUNT; i++) {
         mask = 0x80;
         for (bit = 0; bit < 8; bit++) {
             if (mask & unit->status_sets.current[i]) {

@@ -7,7 +7,7 @@
 void action_check_between_turn_events(void) {
     battle_unit_misc_data_t* unit;
 
-    if (battle_map_try_start_deep_dungeon_mesh_load() != 0) {
+    if (map_try_start_deep_dungeon_mesh_load() != 0) {
         return;
     }
     action_clear_at_list_id();

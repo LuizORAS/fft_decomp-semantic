@@ -27,7 +27,7 @@ s32 battle_effect_update_stage(void) {
         result = 1;
         break;
     case BATTLE_EFFECT_PHASE_INIT_PALETTE:
-        battle_map_freeze();
+        map_freeze();
         battle_menu_suppress_height_display();
         battle_effect_init_palette(g_battle_ability_effect_id);
         g_battle_effect_phase = BATTLE_EFFECT_PHASE_START_SCRIPT;
@@ -59,7 +59,7 @@ s32 battle_effect_update_stage(void) {
         }
         g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_script, 0, 0);
         g_battle_effect_phase = BATTLE_EFFECT_PHASE_RUNNING;
-        battle_map_configure_effect_data_state(MAP_EFFECT_DATA_BEGIN);
+        map_configure_effect_data_state(MAP_EFFECT_DATA_BEGIN);
         result = 1;
         break;
     case BATTLE_EFFECT_PHASE_RUNNING:
@@ -84,8 +84,8 @@ s32 battle_effect_update_stage(void) {
                 suzuki_sound_remove_resource(g_battle_effect_sound_section_ptr);
                 g_battle_effect_sound_section_ptr = 0;
             }
-            battle_map_configure_effect_data_state(MAP_EFFECT_DATA_END);
-            battle_map_unfreeze();
+            map_configure_effect_data_state(MAP_EFFECT_DATA_END);
+            map_unfreeze();
             battle_menu_enable_height_display();
             battle_state_clear_frame_pacing();
             g_battle_effect_phase = BATTLE_EFFECT_PHASE_IDLE;

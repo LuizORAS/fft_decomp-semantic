@@ -58,7 +58,7 @@ void battle_menu_build_skillset_entries(void) {
         }
         count++;
     }
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_ANYTHING_ACTION_ENABLED) != 0 && i < 6) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_ANYTHING_ACTION_ENABLED) != 0 && i < 6) {
         rows[i].style = 0;
         g_battle_menu_row_message_ids[i] = 0x16;
         g_action_menu_skillsets[i] = ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;

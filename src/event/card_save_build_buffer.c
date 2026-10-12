@@ -34,11 +34,11 @@ void card_save_build_buffer(s32 slot) {
     g_card_save_buffer_pointer->summary.job_id = unit->job_id;
     g_card_save_buffer_pointer->summary.level = unit->level;
 
-    day = battle_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    month = battle_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
     g_card_save_buffer_pointer->summary.date.day = day;
     g_card_save_buffer_pointer->summary.date.month = month;
-    g_card_save_buffer_pointer->summary.location = battle_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
+    g_card_save_buffer_pointer->summary.location = script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
     g_card_save_buffer_pointer->summary.slot = 0xff;
     g_card_save_buffer_pointer->elapsed_seconds
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;

@@ -13,8 +13,8 @@ u8* option_menu_redraw_text_page_on_scroll(
     s32 changed;
 
     layout = menu->context;
-    primary_input = battle_script_get_controller_input_pointer(0);
-    secondary_input = battle_script_get_controller_input_pointer(1);
+    primary_input = script_get_controller_input_pointer(0);
+    secondary_input = script_get_controller_input_pointer(1);
     source.x = menu->vram_origin.x;
     source.y = menu->vram_origin.y;
     source.w = menu->inner_width >> 2;
@@ -36,14 +36,14 @@ u8* option_menu_redraw_text_page_on_scroll(
             *first_row = 0;
         }
         changed = 1;
-        g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
     } else if ((*primary_input & PSX_PAD_DOWN) != 0 && *first_row != layout->hidden_rows) {
         *first_row += layout->row_count;
         if (*first_row > layout->hidden_rows) {
             *first_row = layout->hidden_rows;
         }
         changed = 1;
-        g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
     } else if (g_battle_threads[g_battle_current_thread_id].task_words[4] != 0) {
         changed = 1;
         g_battle_threads[g_battle_current_thread_id].task_words[4] = 0;

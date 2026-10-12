@@ -17,31 +17,27 @@ void action_finalize_target_current_action(void) {
 
     status = g_action_target->status_sets.current[0];
     invalid = 0;
-    if ((status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-        && (!(g_action_canceled_statuses[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-            || (status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)))) {
+    if ((status & STATUS_BYTE_MASK(STATUS_ID_DEAD))
+        && (!(g_action_canceled_statuses[STATUS_BYTE_INDEX(STATUS_ID_DEAD)] & STATUS_BYTE_MASK(STATUS_ID_DEAD))
+            || (status & STATUS_BYTE_MASK(STATUS_ID_UNDEAD)))) {
         invalid = 1;
     }
-    if ((g_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
-        && !(g_action_canceled_statuses[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))) {
+    if ((g_action_target->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)]
+            & STATUS_BYTE_MASK(STATUS_ID_PETRIFY))
+        && !(g_action_canceled_statuses[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)] & STATUS_BYTE_MASK(STATUS_ID_PETRIFY))) {
         invalid = 1;
     }
-    if ((g_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_WALL)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))
-        && !(g_action_canceled_statuses[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_WALL)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))) {
+    if ((g_action_target->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_WALL)] & STATUS_BYTE_MASK(STATUS_ID_WALL))
+        && !(g_action_canceled_statuses[STATUS_BYTE_INDEX(STATUS_ID_WALL)] & STATUS_BYTE_MASK(STATUS_ID_WALL))) {
         invalid = 1;
     }
     if (invalid != 0) {
         target_sort_list(g_action_target->misc_unit_id);
         action_clear_data();
-        battle_formula_clear_nullify_flags();
+        formula_clear_nullify_flags();
         action_clear_knockback_flag();
         g_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_NONE;
-        battle_formula_force_attack_miss();
+        formula_force_attack_miss();
         g_action_target_data->miss_type = ACTION_MISS_TYPE_CANCELLED;
         return;
     }
@@ -62,7 +58,7 @@ void action_finalize_target_current_action(void) {
     }
     if (g_action_target_data->hp_damage >= g_action_target->hp) {
         action_clear_knockback_flag();
-        battle_formula_clear_nullify_flags();
+        formula_clear_nullify_flags();
     }
     team = (g_action_target->initial_team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT;
     action = g_action_target_data;

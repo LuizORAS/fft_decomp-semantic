@@ -23,13 +23,13 @@ void target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags) {
     height = battle_unit_get_effective_height(unit);
     ux = unit->x;
     uy = unit->position.y;
-    for (y = 0; y < g_battle_map_max_y; y++) {
+    for (y = 0; y < g_map_max_y; y++) {
         if (uy < y) {
             dy = y - uy;
         } else {
             dy = uy - y;
         }
-        for (x = 0; x < g_battle_map_max_x; x++) {
+        for (x = 0; x < g_map_max_x; x++) {
             if (ux < x) {
                 dist = x - ux + dy;
             } else {
@@ -37,8 +37,8 @@ void target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags) {
             }
             if (dist >= 3) {
                 for (level = 0; level < 2; level++) {
-                    index = (level << 8) + y * g_battle_map_max_x + x;
-                    tile = &g_battle_map_tile_data[index];
+                    index = (level << 8) + y * g_map_max_x + x;
+                    tile = &g_map_tile_data[index];
                     tile_height
                         = tile->height * 2 + tile->depth_half_height.half_height + tile->depth_half_height.depth * 2;
                     if (dist - (height - tile_height) / 4 <= range) {

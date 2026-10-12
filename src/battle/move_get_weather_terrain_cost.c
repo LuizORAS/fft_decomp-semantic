@@ -7,7 +7,7 @@
 s32 move_get_weather_terrain_cost(void) {
     s32 weather;
 
-    weather = battle_map_get_effective_weather();
+    weather = map_get_effective_weather();
     if (weather < BATTLE_WEATHER_STORM || weather == BATTLE_WEATHER_SNOW) {
         return 1;
     }

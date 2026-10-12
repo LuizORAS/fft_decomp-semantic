@@ -12,11 +12,11 @@ s32 effect_map_destruction_update(s32 record_index, s32 callback_slot, s32 unuse
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_RELEASE_GNS_HOLD, 1, 1, 1);
+        map_dispatch_map_data_command(MAP_DATA_COMMAND_RELEASE_GNS_HOLD, 1, 1, 1);
         record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
-        battle_script_set_specialized_map_destroyed();
+        script_set_specialized_map_destroyed();
         break;
     case EFFECT_PHASE_DESTROY:
         record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;

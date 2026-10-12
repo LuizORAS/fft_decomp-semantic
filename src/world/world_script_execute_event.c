@@ -10,7 +10,7 @@
  * must not be re-sorted. Handlers that seek (jumps) `continue` without the
  * length step; EventEnd may `goto restart_event` for a chained scenario.
  *
- * BATTLE carries the same interpreter (battle_script_execute_event); the two
+ * BATTLE carries the same interpreter (script_execute_event); the two
  * are kept structurally identical so differences stay visible.
  *
  * The native inner-call trampoline intentionally forwards varying argument
@@ -604,12 +604,12 @@ restart_event:
             world_script_copy_bytes(
                 &g_world_event_background_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM], parameters + 3, 3);
             if (parameters[7] == 0) {
-                battle_map_transition_and_store_background_gradient(parameters[6], &g_world_event_background_colors);
+                map_transition_and_store_background_gradient(parameters[6], &g_world_event_background_colors);
             } else {
-                battle_map_set_background_gradient(parameters[6], &g_world_event_background_colors);
+                map_set_background_gradient(parameters[6], &g_world_event_background_colors);
             }
         } else if (opcode == EVENT_OPCODE_COLOR_BG_BETA) {
-            battle_map_modify_background_gradient(
+            map_modify_background_gradient(
                 parameters[0], parameters[4], (s8)(parameters)[1], (s8)(parameters)[2], (s8)(parameters)[3]);
         } else if (opcode == EVENT_OPCODE_COLOR_UNIT) {
             world_script_color_unit_event_instruction((const event_color_unit_parameters_t*)parameters);
@@ -618,15 +618,15 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_SUPPRESS_UNIT_PALETTE_UPDATES) {
             world_script_set_units_palette_update_suppression((u16)first_operand, 1);
         } else if (opcode == EVENT_OPCODE_COLOR_FIELD) {
-            battle_map_color_field(
+            map_color_field(
                 parameters[0], parameters[4], (s8)(parameters)[1], (s8)(parameters)[2], (s8)(parameters)[3]);
         } else if (opcode == EVENT_OPCODE_STORE_MODIFIED_MAP_PALETTE) {
-            battle_map_store_modified_palette_colors(0, 0, 1);
+            map_store_modified_palette_colors(0, 0, 1);
         } else if (opcode == EVENT_OPCODE_SET_TILE_CAMERA_BLOCK) {
-            battle_map_set_tile_data_value(
+            map_set_tile_data_value(
                 MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, parameters[0], parameters[1], parameters[2], parameters[3]);
         } else if (opcode == EVENT_OPCODE_SET_TILE_HEIGHT) {
-            tile = battle_map_get_tile_data_pointer(parameters[0], parameters[1], parameters[2]);
+            tile = map_get_tile_data_pointer(parameters[0], parameters[1], parameters[2]);
             if ((tile->surface.type - MAP_SURFACE_GRASSLAND) >= 2U) {
                 tile->surface.type = MAP_SURFACE_STONE_FLOOR;
             }
@@ -758,7 +758,7 @@ restart_event:
                 }
             }
             if (ghost_misc_id != EVENT_UNIT_SLOT_COUNT) {
-                battle_script_add_ghost_unit_event_instruction(ghost_operands[1], ghost_operands[2], ghost_operands[3],
+                script_add_ghost_unit_event_instruction(ghost_operands[1], ghost_operands[2], ghost_operands[3],
                     ghost_operands[4], first_operand, g_world_event_unit_slots[ghost_operands[0]], ghost_operands[5]);
                 g_world_unit_graphics_load_pending = 1U;
             } else {
@@ -897,9 +897,9 @@ restart_event:
                 }
             }
         } else if (opcode == EVENT_OPCODE_MAP_FREEZE) {
-            battle_map_freeze();
+            map_freeze();
         } else if (opcode == EVENT_OPCODE_MAP_UNFREEZE) {
-            battle_map_unfreeze();
+            map_unfreeze();
         } else if (opcode == EVENT_OPCODE_UNIT_ANIM_ROTATE) {
             world_script_unit_animation_rotate_event_instruction(
                 (const event_unit_anim_rotate_parameters_t*)parameters);

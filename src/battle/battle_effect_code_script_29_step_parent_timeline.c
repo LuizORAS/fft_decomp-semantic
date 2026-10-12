@@ -95,7 +95,7 @@ effect_script_result_e battle_effect_code_script_29_step_parent_timeline(effect_
             &timeline->state.parent.keyframe.tracks.sound[2][1], &timeline->state.parent.remaining.tracks.sound[2][1],
             &timeline->state.parent.step.tracks._unknown_24[2][1][1]);
     }
-    battle_camera_advance_effect_tracks(timeline->frame);
+    camera_advance_effect_tracks(timeline->frame);
     timeline->frame++;
     record->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

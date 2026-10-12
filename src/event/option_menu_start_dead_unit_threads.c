@@ -139,7 +139,7 @@ void option_menu_start_dead_unit_threads(void) {
                 if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
                     break;
                 }
-                g_option_dead_unit_controller_input = battle_script_get_controller_input_pointer(0);
+                g_option_dead_unit_controller_input = script_get_controller_input_pointer(0);
                 if ((*g_option_dead_unit_controller_input & PSX_PAD_SELECT) != 0) {
                     battle_menu_start_building_thread();
                 }

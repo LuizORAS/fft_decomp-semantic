@@ -1,6 +1,6 @@
 #include "fft/world.h"
 
-/* WORLD twin of battle_script_load_event: read one event block from the archive on
+/* WORLD twin of script_load_event: read one event block from the archive on
  * the main thread, wait for the load, then patch the text-section pointer. */
 void world_script_load_event(s32 id) {
     event_file_block_t* block;

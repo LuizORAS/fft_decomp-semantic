@@ -45,7 +45,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
     case AI_COMMAND_ACT:
         switch (unit->command_state.ai.data.action.skillset_id) {
         case SKILLSET_ID_DEFEND:
-            battle_status_inflict_defending_to_battle_id(unit->battle_data->misc_unit_id);
+            status_inflict_defending_to_battle_id(unit->battle_data->misc_unit_id);
             unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
             battle_unit_update_display_by_misc_id(unit->unit_id);
             action_set_only_action_taken(unit->battle_data->misc_unit_id);
@@ -53,7 +53,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
             return;
         case SKILLSET_ID_EQUIP_CHANGE:
             unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
-            battle_status_enable_disable_acting(unit->battle_data);
+            status_enable_disable_acting(unit->battle_data);
             ai_init_unit_abilities(unit->battle_data->misc_unit_id);
             battle_unit_update_display_by_misc_id(unit->unit_id);
             action_set_only_action_taken(unit->battle_data->misc_unit_id);

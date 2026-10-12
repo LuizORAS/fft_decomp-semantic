@@ -21,8 +21,7 @@ s32 action_calculate_projected_effect(battle_stats_t* attacker, battle_stats_t* 
     g_action_state = ACTION_STATE_PREVIEW;
     if (!(g_battle_loaded_ability_flags_1 & ABILITY_SECONDARY_FLAG_1_AUTO)) {
         result = target_calculate_map_for_action(command, &flags_3);
-        if (result != -1
-            && !g_battle_map_tile_data[battle_map_calculate_location(target)].ceiling_depth_and_marks.targeted) {
+        if (result != -1 && !g_map_tile_data[map_calculate_location(target)].ceiling_depth_and_marks.targeted) {
             result = -1;
         }
         if (result == -1) {

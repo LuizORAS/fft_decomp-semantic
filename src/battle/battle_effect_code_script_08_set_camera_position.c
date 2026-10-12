@@ -10,7 +10,7 @@ effect_script_result_e battle_effect_code_script_08_set_camera_position(effect_r
     setVector(&coords, battle_effect_get_current_script_instruction(record)->vector.x << 12,
         battle_effect_get_current_script_instruction(record)->vector.y << 12,
         battle_effect_get_current_script_instruction(record)->vector.z << 12);
-    battle_camera_set_current_real_coords(&coords);
+    camera_set_current_real_coords(&coords);
     record->pc += 8;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

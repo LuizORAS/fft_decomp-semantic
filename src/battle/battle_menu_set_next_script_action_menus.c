@@ -19,6 +19,6 @@ void battle_menu_set_next_script_action_menus(void) {
     if (battle_state_try_enter_scenario_event(unit) == 0) {
         g_battle_game_state = BATTLE_GAME_STATE_OPEN_ACTION_MENUS;
         g_action_post_action = 0;
-        battle_camera_rotate_when_unit_tile_not_visible(casting_unit);
+        camera_rotate_when_unit_tile_not_visible(casting_unit);
     }
 }

@@ -28,7 +28,7 @@ void move_set_reachable_tile_flags(void) {
     self = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
     move_clear_enterable_flags_under_dead_or_jumping_units();
     for (i = 0; i < MAP_TILE_COUNT; i++) {
-        tile = &g_battle_map_tile_data[i];
+        tile = &g_map_tile_data[i];
         tile->ceiling_depth_and_marks.move_destination = 0;
         panel = &g_target_panels[i];
         if (i == self) {

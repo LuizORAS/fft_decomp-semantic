@@ -86,8 +86,8 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
     block->header.color.b = blue;
     switch (node->kind & EFFECT_LIST_NODE_PLACEMENT_MASK) {
     case EFFECT_LIST_NODE_WORLD:
-        SetRotMatrix(&g_battle_camera_matrix);
-        SetTransMatrix(&g_battle_camera_matrix);
+        SetRotMatrix(&g_camera_matrix);
+        SetTransMatrix(&g_camera_matrix);
         setVector(&input, node->x + node->sprite_offset_x, node->y + node->sprite_offset_y, node->z);
         RotTrans(&input, &output, &output.pad);
         depth = output.vz >> 2;
@@ -116,12 +116,12 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         }
         position.vx = output.vx;
         position.vy = output.vy;
-        battle_effect_submit_sprite_to_ordering_table(node->sprite_block, &position, node->screen_rotation_angle,
-            &g_battle_camera_zoom, g_battle_effect_otag + depth);
+        battle_effect_submit_sprite_to_ordering_table(
+            node->sprite_block, &position, node->screen_rotation_angle, &g_camera_zoom, g_battle_effect_otag + depth);
         break;
     case EFFECT_LIST_NODE_SCREEN_OFFSET:
-        position.vx = node->x + node->sprite_offset_x + g_battle_camera_matrix.t[0];
-        position.vy = node->y + node->sprite_offset_y + g_battle_camera_matrix.t[1];
+        position.vx = node->x + node->sprite_offset_x + g_camera_matrix.t[0];
+        position.vy = node->y + node->sprite_offset_y + g_camera_matrix.t[1];
         depth = node->z;
         if (depth < 0) {
             depth = 0;
@@ -129,12 +129,12 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         if (depth > EFFECT_SPRITE_OT_DEPTH_MAX) {
             depth = EFFECT_SPRITE_OT_DEPTH_MAX;
         }
-        battle_effect_submit_sprite_to_ordering_table(node->sprite_block, &position, node->screen_rotation_angle,
-            &g_battle_camera_zoom, g_battle_effect_otag + depth);
+        battle_effect_submit_sprite_to_ordering_table(
+            node->sprite_block, &position, node->screen_rotation_angle, &g_camera_zoom, g_battle_effect_otag + depth);
         break;
     case EFFECT_LIST_NODE_WORLD_UNSCALED:
-        SetRotMatrix(&g_battle_camera_matrix);
-        SetTransMatrix(&g_battle_camera_matrix);
+        SetRotMatrix(&g_camera_matrix);
+        SetTransMatrix(&g_camera_matrix);
         setVector(&input, node->x + node->sprite_offset_x, node->y + node->sprite_offset_y, node->z);
         RotTrans(&input, &output, &output.pad);
         depth = output.vz >> 2;

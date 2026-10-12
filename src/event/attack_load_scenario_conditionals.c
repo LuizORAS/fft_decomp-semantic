@@ -52,18 +52,18 @@ s32 attack_load_scenario_conditionals(void) {
     s32 first;
     s32 count;
 
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
-        if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 8) {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 9);
-            battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
-            g_battle_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;
+    if (script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
+        if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == 8) {
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 9);
+            script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
+            g_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;
             g_main_system_go_straight_to_battle = 0;
         }
     }
-    if (g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+    if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
         g_main_special_portrait_wldface_id = 0;
         g_main_special_portrait_unit_id = 0;
-        value = g_main_scenario_event_finish_operations[battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT)];
+        value = g_main_scenario_event_finish_operations[script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT)];
         if (value == 0) {
             return;
         }
@@ -85,31 +85,31 @@ s32 attack_load_scenario_conditionals(void) {
     }
     g_battle_scenario_event_active = 0;
     for (i = EVENT_SCRIPT_VAR_SCENARIO_LOCAL_FIRST; i < EVENT_SCRIPT_VAR_SCENARIO_LOCAL_END; i++) {
-        battle_script_set_variable(i, 0);
+        script_set_variable(i, 0);
     }
-    battle_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 1);
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_OLAN_SAW_RAMZA_FUNERAL) != 0
-        && battle_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0
-        && battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_MALAK_REVIVED) {
-        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x12b);
-    } else if (battle_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
-        id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+    script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 1);
+    if (script_get_variable(EVENT_SCRIPT_VAR_OLAN_SAW_RAMZA_FUNERAL) != 0
+        && script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0
+        && script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_MALAK_REVIVED) {
+        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x12b);
+    } else if (script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
+        id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if (id == 0x5a) {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x74);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x74);
         } else if (id == EVENT_ID_MALAK_REVIVED) {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x148);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0x148);
         } else {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, id + 1);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, id + 1);
         }
     } else if (g_main_system_go_straight_to_battle != 0) {
-        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 1);
+        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 1);
         for (i = 1; i < 20; i++) {
             main_party_remove_unit(i);
         }
     }
     g_main_system_go_straight_to_battle = 0;
-    battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
-    event = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+    script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
+    event = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
     scenario = (attack_scenario_t*)g_attack_scenario_table;
     for (i = 0; i < 500; i++) {
         id = scenario->id[0] + (scenario->id[1] << 8);
@@ -123,7 +123,7 @@ s32 attack_load_scenario_conditionals(void) {
     g_main_scenario_event_finish_operations[EVENT_ID_BATTLE_WON] = 0x8000;
     g_main_scenario_event_finish_operations[EVENT_ID_BATTLE_START] = 0;
     g_main_scenario_event_finish_operations[EVENT_ID_DEBUG_BATTLE_START] = 0;
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
         g_main_scenario_event_finish_operations[EVENT_ID_GAME_OVER] = 0x8000;
         g_main_scenario_event_finish_operations[EVENT_ID_GAME_OVER_RAMZA] = 0x8000;
     } else {
@@ -139,8 +139,8 @@ s32 attack_load_scenario_conditionals(void) {
         scenario++;
     }
     if (id == 0) {
-        battle_script_set_variable(EVENT_SCRIPT_VAR_MAP_ARRANGEMENT, 0);
-        battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
+        script_set_variable(EVENT_SCRIPT_VAR_MAP_ARRANGEMENT, 0);
+        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
         return 0;
     }
     g_battle_scenario_event_active++;
@@ -180,29 +180,29 @@ s32 attack_load_scenario_conditionals(void) {
             count++;
         }
     }
-    battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, map_id);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_MAP_ARRANGEMENT, weather >> 4);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_WEATHER, weather & 0xf);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, daytime);
+    script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, map_id);
+    script_set_variable(EVENT_SCRIPT_VAR_MAP_ARRANGEMENT, weather >> 4);
+    script_set_variable(EVENT_SCRIPT_VAR_WEATHER, weather & 0xf);
+    script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, daytime);
     if (entd != 0) {
-        if (battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, squads[3]);
+        if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, squads[3]);
         } else {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, entd);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, entd);
         }
-    } else if (battle_script_get_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT) >= 5) {
-        battle_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT, 0);
+    } else if (script_get_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT) >= 5) {
+        script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT, 0);
     }
     g_battle_entd_selection_mode = BATTLE_ENTD_SELECTION_SCRIPT_VARIABLE;
-    battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, count);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, count);
+    script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT, 0);
     if (squads[0] == 0) {
         return 1;
     }
-    battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, squads[0]);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SECONDARY_SQUAD_ID, squads[1]);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_THIRD_SQUAD_ID, 0);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_FOURTH_SQUAD_ID, 0);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD, ramza);
+    script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, squads[0]);
+    script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SECONDARY_SQUAD_ID, squads[1]);
+    script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_THIRD_SQUAD_ID, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_FOURTH_SQUAD_ID, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD, ramza);
     return 0;
 }

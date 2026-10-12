@@ -61,8 +61,7 @@ s32 target_validate_weapon_target(const action_command_t* source) {
         if (hand != ITEM_ID_NONE) {
             weapon = hand;
         }
-        if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
+        if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG))
             || (unit->unit_flags & UNIT_FLAG_MONSTER) || weapon == ITEM_ID_NONE) {
             weapon = 0;
         }
@@ -117,7 +116,7 @@ s32 target_validate_weapon_target(const action_command_t* source) {
     target_disable_green_panel_flags();
     if (result >= 0 && result < BATTLE_UNIT_SLOT_COUNT) {
         target = &g_battle_unit_stats[result];
-        tile = &g_battle_map_tile_data[battle_map_calculate_location(target)];
+        tile = &g_map_tile_data[map_calculate_location(target)];
         tile->ceiling_depth_and_marks.targeted = 1;
     }
     return 0;

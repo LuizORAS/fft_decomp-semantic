@@ -23,7 +23,7 @@ void target_set_state_for_all_unit_panels(battle_stats_t* unit, s32 flags) {
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
             team_diff = team ^ unit->initial_team_flags;
             team_diff_copy = team_diff;
-            panel = &g_target_panel_data[battle_map_calculate_location(unit)];
+            panel = &g_target_panel_data[map_calculate_location(unit)];
             if (mark_allies != 0 && (team_diff & BATTLE_TEAM_MASK) == 0) {
                 panel->mark = 1;
             }

@@ -15,7 +15,7 @@ u8 battle_unit_get_effective_height(battle_stats_t* unit) {
     u8 flags;
 
     ignores_water = 0;
-    tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
+    tile = &g_map_tile_data[map_calculate_location(unit)];
     terrain_depth = tile->depth_half_height;
     flags = unit->mount_info;
     height = tile->height * 2 + (terrain_depth.half_height);
@@ -28,8 +28,7 @@ u8 battle_unit_get_effective_height(battle_stats_t* unit) {
     }
     flags = unit->movement_abilities[2];
     if ((flags & BATTLE_MOVEMENT_SET_3_FLOAT)
-        || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT))) {
+        || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FLOAT)] & STATUS_BYTE_MASK(STATUS_ID_FLOAT))) {
         effective_height += 2;
         ignores_water = 1;
     }

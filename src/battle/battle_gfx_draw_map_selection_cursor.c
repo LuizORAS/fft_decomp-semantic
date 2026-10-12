@@ -50,7 +50,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     }
     unit = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (unit != 0) {
-        scaled = g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height * g_battle_camera_zoom.vy;
+        scaled = g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height * g_camera_zoom.vy;
         if (scaled < 0) {
             scaled += 0xfff;
         }
@@ -61,48 +61,48 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     base->vy -= height - bob[g_battle_gfx_selection_cursor_bob_frame];
     RotTrans(base, &transformed, &flag);
 
-    half_width = g_battle_camera_zoom.vx;
+    half_width = g_camera_zoom.vx;
     if (half_width < 0) {
         half_width += 0x1ff;
     }
     prim->x0 = transformed.vx - (half_width >> 9);
     {
-        s32 zoom_height = g_battle_camera_zoom.vy * 12;
+        s32 zoom_height = g_camera_zoom.vy * 12;
         if (zoom_height < 0) {
             zoom_height += 0xfff;
         }
         prim->y0 = transformed.vy - (zoom_height >> 12);
     }
-    half_width = g_battle_camera_zoom.vx;
+    half_width = g_camera_zoom.vx;
     if (half_width < 0) {
         half_width += 0x1ff;
     }
     prim->x1 = transformed.vx + (half_width >> 9);
     {
-        s32 zoom_height = g_battle_camera_zoom.vy * 12;
+        s32 zoom_height = g_camera_zoom.vy * 12;
         if (zoom_height < 0) {
             zoom_height += 0xfff;
         }
         prim->y1 = transformed.vy - (zoom_height >> 12);
     }
-    half_width = g_battle_camera_zoom.vx;
+    half_width = g_camera_zoom.vx;
     if (half_width < 0) {
         half_width += 0x1ff;
     }
     prim->x2 = transformed.vx - (half_width >> 9);
     {
-        s32 zoom_height = g_battle_camera_zoom.vy * 12;
+        s32 zoom_height = g_camera_zoom.vy * 12;
         if (zoom_height < 0) {
             zoom_height += 0xfff;
         }
         prim->y2 = transformed.vy + (zoom_height >> 12);
     }
-    half_width = g_battle_camera_zoom.vx;
+    half_width = g_camera_zoom.vx;
     if (half_width < 0) {
         half_width += 0x1ff;
     }
     prim->x3 = transformed.vx + (half_width >> 9);
-    half_height = g_battle_camera_zoom.vy * 12;
+    half_height = g_camera_zoom.vy * 12;
     if (half_height < 0) {
         half_height += 0xfff;
     }
@@ -123,7 +123,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->v0 = color;
     prim->v3 = 0x98;
     prim->v2 = 0x98;
-    battle_camera_convert_screen_coords_modify_by_1(base, &screen);
+    camera_convert_screen_coords_modify_by_1(base, &screen);
     RotTrans(&screen, &transformed, &flag);
     AddPrim(ot + (transformed.vz / 4), prim);
 }

@@ -29,7 +29,7 @@ void target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 single_lay
     max_delta = tolerance * 2;
     ref = ref_height;
     for (i = 0; i < 0x100; i++) {
-        tile = &g_battle_map_tile_data[i];
+        tile = &g_map_tile_data[i];
         lower_panel = &g_target_panel_data[i];
         if (!tile->flags.blocked) {
             map_tile_depth_t depth = tile->depth_half_height;
@@ -40,7 +40,7 @@ void target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 single_lay
             lower_panel->mark = 0;
         }
         j = i + 0x100;
-        tile = &g_battle_map_tile_data[j];
+        tile = &g_map_tile_data[j];
         upper_panel = &g_target_panel_data[j];
         if (!tile->flags.blocked) {
             map_tile_depth_t depth = tile->depth_half_height;

@@ -24,7 +24,7 @@ void bunit_menu_text_entry_wait_thread(void) {
 
         binding->prepare();
     }
-    ctl = battle_script_get_controller_input_pointer(0);
+    ctl = script_get_controller_input_pointer(0);
     text_id = obj->text_id;
     task = obj->context;
     header_id = obj->header_id;

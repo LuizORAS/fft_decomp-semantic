@@ -147,7 +147,7 @@ s32 battle_menu_display_projected_action_effect(
                 extra = 0x1e;
             }
             image &= MAIN_ACTION_STATUS_RESULT_INDEX_MASK;
-            image = g_battle_status_display_image_ids[image - 1];
+            image = g_status_display_image_ids[image - 1];
             /* Duplicated store: it keeps the state write in its own block
              * ahead of the label arithmetic, as in the target. */
             if (image == 0) {
@@ -261,7 +261,7 @@ s32 battle_menu_display_projected_action_effect(
                 setRGB0(prim, 0xbe, 0x28, 0xa);
             }
             image &= MAIN_ACTION_STATUS_RESULT_INDEX_MASK;
-            image = g_battle_status_display_image_ids[image - 1];
+            image = g_status_display_image_ids[image - 1];
             if (image != ACTION_DISPLAY_IMAGE_NONE && image != ACTION_DISPLAY_IMAGE_INVITE) {
                 rect = &g_action_display_image_rects[image];
                 params->x_load = rect->u;

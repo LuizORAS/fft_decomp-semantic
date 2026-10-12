@@ -74,7 +74,7 @@ void battle_text_character_handling_thread(void) {
     s32 resume_task;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     thread = &g_battle_threads[g_battle_current_thread_id];
@@ -137,7 +137,7 @@ void battle_text_character_handling_thread(void) {
     }
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != DIALOG_OPTIONS_NO_TAIL) {
         center = rec.width >> 1;
-        value = battle_script_get_misc_id(battle_thread_get_current_parameter_3());
+        value = script_get_misc_id(battle_thread_get_current_parameter_3());
         battle_unit_project_misc_to_screen(value, &g_battle_scratch_coords);
         cursor_x = center;
         rec.tail_offset = 0;
@@ -148,8 +148,8 @@ void battle_text_character_handling_thread(void) {
             } else if (battle_thread_get_current_parameter_3() == g_battle_text_speaker_swap_unit_b) {
                 value = g_battle_text_speaker_swap_unit_a;
             }
-            battle_unit_project_misc_to_screen(battle_script_get_misc_id(value), &g_battle_camera_script_rotation);
-            if (g_battle_scratch_coords.vy < 0 || g_battle_camera_script_rotation.vy < g_battle_scratch_coords.vy) {
+            battle_unit_project_misc_to_screen(script_get_misc_id(value), &g_camera_script_rotation);
+            if (g_battle_scratch_coords.vy < 0 || g_camera_script_rotation.vy < g_battle_scratch_coords.vy) {
                 rec.position = 2;
             } else {
                 rec.position = 1;
@@ -232,8 +232,7 @@ void battle_text_character_handling_thread(void) {
         } else {
             win->portrait_code = rec.portrait;
         }
-        value = battle_unit_get_battle_index_by_misc_id(
-            battle_script_get_misc_id(battle_thread_get_current_parameter_3()));
+        value = battle_unit_get_battle_index_by_misc_id(script_get_misc_id(battle_thread_get_current_parameter_3()));
         battle_menu_build_and_upload_window_image(rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
         win->portrait_battle_id = value;
     } else if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
@@ -341,7 +340,7 @@ void battle_text_character_handling_thread(void) {
     rec.line = 0;
     g_battle_text_current_line = 0;
     if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
-        event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+        event_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if ((event_id == EVENT_ID_WIEGRAF_PACT_WITH_VELIUS || event_id == EVENT_ID_MALAK_REVIVED)
             && g_battle_etc_graphics_enabled == 0) {
             cursor_x = rec.x;
@@ -409,7 +408,7 @@ void battle_text_character_handling_thread(void) {
                             break;
                         }
                         battle_thread_yield();
-                        if (g_battle_script_event_input & (PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT)) {
+                        if (g_script_event_input & (PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT)) {
                             break;
                         }
                         CHECK_ABORT();
@@ -436,7 +435,7 @@ void battle_text_character_handling_thread(void) {
                                 arrow_window->sprites[2].x0 = rec.arrow_x;
                                 arrow_window->sprites[2].y0 = rec.arrow_y;
                             }
-                            if (g_battle_script_event_current_input & PSX_PAD_SQUARE) {
+                            if (g_script_event_current_input & PSX_PAD_SQUARE) {
                                 while (1) {
                                     if (rec.line != rec.lines) {
                                         scroll_window = WINDOW_AT(g_battle_menu_packet_buffer_index);
@@ -452,22 +451,22 @@ void battle_text_character_handling_thread(void) {
                                                 |= MENU_WINDOW_ICON_SCROLL_DOWN;
                                         }
                                     }
-                                    if ((g_battle_script_event_input & PSX_PAD_UP) && rec.first_line != 0) {
-                                        g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                                    if ((g_script_event_input & PSX_PAD_UP) && rec.first_line != 0) {
+                                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                                         WINDOW_AT(g_battle_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line += no_value;
                                         rec.last_line = rec.first_line + rec.lines;
                                         battle_menu_render_text_image_at_record_origin(&rec);
                                     }
-                                    if ((g_battle_script_event_input & PSX_PAD_DOWN)
+                                    if ((g_script_event_input & PSX_PAD_DOWN)
                                         && rec.first_line != rec.line - rec.lines) {
-                                        g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                                         WINDOW_AT(g_battle_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line++;
                                         rec.last_line = rec.first_line + rec.lines;
                                         battle_menu_render_text_image_at_record_origin(&rec);
                                     }
-                                    if (!(g_battle_script_event_current_input & PSX_PAD_SQUARE)) {
+                                    if (!(g_script_event_current_input & PSX_PAD_SQUARE)) {
                                         break;
                                     }
                                     CHECK_ABORT();
@@ -555,7 +554,7 @@ void battle_text_character_handling_thread(void) {
                         win[k].color.b = 0x80;
                     }
                 } else {
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_TEXT_PAGE;
+                    g_sound_pending_sfx_id = MAIN_SFX_TEXT_PAGE;
                     rec.first_line = rec.line;
                     rec.last_line = rec.line + rec.lines;
                     battle_menu_render_text_image_at_record_origin(&rec);
@@ -564,7 +563,7 @@ void battle_text_character_handling_thread(void) {
                 battle_thread_yield();
             }
             if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
-                event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+                event_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
                 if ((event_id == EVENT_ID_WIEGRAF_PACT_WITH_VELIUS || event_id == EVENT_ID_MALAK_REVIVED)
                     && g_battle_etc_graphics_enabled == 0) {
                     cursor_x = rec.x;
@@ -608,16 +607,16 @@ void battle_text_character_handling_thread(void) {
                     if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_WAIT_FOR_RESUME) {
                         continue;
                     }
-                    if ((g_battle_script_event_input & PSX_PAD_UP) && selection != rec.mark) {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    if ((g_script_event_input & PSX_PAD_UP) && selection != rec.mark) {
+                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                         selection += no_value;
                     }
-                    if ((g_battle_script_event_input & PSX_PAD_DOWN) && selection != column) {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    if ((g_script_event_input & PSX_PAD_DOWN) && selection != column) {
+                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                         selection++;
                     }
-                    if (g_battle_script_event_input & PSX_PAD_CIRCLE) {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
+                    if (g_script_event_input & PSX_PAD_CIRCLE) {
+                        g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                         break;
                     }
                 }
@@ -628,7 +627,7 @@ void battle_text_character_handling_thread(void) {
                 select_hidden_window_next = WINDOW_AT(g_battle_menu_packet_buffer_index);
                 select_hidden_window_next->sprites[0].x0 = 0x200;
                 select_hidden_window_next->sprites[1].x0 = 0x200;
-                g_battle_script_variables[EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION] = selection - rec.mark;
+                g_script_variables[EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION] = selection - rec.mark;
             }
             NEXT();
             g_battle_text_awaiting_input = 0;
@@ -682,7 +681,7 @@ void battle_text_character_handling_thread(void) {
             NEXT();
             win[0].portrait_code = *text;
             win[1].portrait_code = *text;
-            battle_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *text);
+            script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *text);
             NEXT();
         } else if (character == TEXT_SET_VARIABLE_BASE) {
             NEXT();
@@ -690,12 +689,12 @@ void battle_text_character_handling_thread(void) {
             NEXT();
         } else if (character == TEXT_STORE_VARIABLE) {
             NEXT();
-            i = battle_script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
+            i = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
             if (i != 0) {
-                battle_script_set_variable(variable_base + i * 10, *text);
-                battle_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
+                script_set_variable(variable_base + i * 10, *text);
+                script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
             } else {
-                battle_script_set_variable(variable_base, *text);
+                script_set_variable(variable_base, *text);
             }
             NEXT();
         } else if (character == TEXT_SET_GLYPH_DELAY) {

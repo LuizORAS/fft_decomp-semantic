@@ -18,14 +18,14 @@ void action_choose_wait(void) {
     if (battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->misc_unit_id, 0, 1)
             == 2
-        && battle_script_get_event_finish_operation() != 0) {
+        && script_get_event_finish_operation() != 0) {
         g_battle_previous_game_state = g_battle_game_state;
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 0, unit->battle_data->misc_unit_id, 0, 1);
         action_set_casting_unit_id_ff();
         return;
     }
-    if (battle_status_check_unit(unit->battle_data) & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) {
+    if (status_check_unit(unit->battle_data) & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) {
         action_check_between_turn_events();
     } else {
         g_battle_game_state = BATTLE_GAME_STATE_WAIT_MENU;

@@ -21,11 +21,11 @@ s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
 
     unit_filters = filters;
 
-    if (x < 0 || x >= g_battle_map_max_x || y < 0 || y >= g_battle_map_max_y || level >= 2) {
+    if (x < 0 || x >= g_map_max_x || y < 0 || y >= g_map_max_y || level >= 2) {
         return -2;
     }
 
-    tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
+    tile = &g_map_tile_data[(level << 8) + y * g_map_max_x + x];
     if (((*(u8*)&tile->flags) & MAP_TILE_COLLISION_MASK)) {
         return -2;
     }
@@ -45,14 +45,14 @@ s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
         }
         if ((unit_filters & BATTLE_UNIT_TILE_STATUS_FILTERS)
             && !((unit_filters & BATTLE_UNIT_TILE_FILTER_CRYSTAL)
-                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL)))
+                && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
+                    & STATUS_BYTE_MASK(STATUS_ID_CRYSTAL)))
             && !((unit_filters & BATTLE_UNIT_TILE_FILTER_TREASURE)
-                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)))
+                && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)]
+                    & STATUS_BYTE_MASK(STATUS_ID_TREASURE)))
             && !((unit_filters & BATTLE_UNIT_TILE_FILTER_TRANSPARENT)
-                && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT)))) {
+                && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)]
+                    & STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT)))) {
             continue;
         }
         if ((unit_filters & BATTLE_UNIT_TILE_FILTER_MOUNTABLE_CHOCOBO)

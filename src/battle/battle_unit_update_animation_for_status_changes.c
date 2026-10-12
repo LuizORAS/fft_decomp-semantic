@@ -39,11 +39,11 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
             stats = unit->battle_data;
             if (stats != 0) {
                 if (stats->unit_flags & UNIT_FLAG_MALE) {
-                    battle_sound_play_movement_sfx(unit, MAIN_SFX_DEATH_MALE);
+                    sound_play_movement_sfx(unit, MAIN_SFX_DEATH_MALE);
                 } else if (stats->unit_flags & UNIT_FLAG_FEMALE) {
-                    battle_sound_play_movement_sfx(unit, MAIN_SFX_DEATH_FEMALE);
+                    sound_play_movement_sfx(unit, MAIN_SFX_DEATH_FEMALE);
                 } else if (stats->unit_flags & UNIT_FLAG_MONSTER) {
-                    battle_sound_play_movement_sfx(unit, MAIN_SFX_DEATH_MONSTER);
+                    sound_play_movement_sfx(unit, MAIN_SFX_DEATH_MONSTER);
                 }
             }
         }

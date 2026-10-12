@@ -21,7 +21,7 @@ void move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32 allow_
         velocity.vz = (unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) - unit->screen.vz) << 12;
         tile_center.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         tile_center.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        velocity.vy = (battle_map_calculate_slope_height(&tile_center, unit->map_z) - unit->screen.vy) << 12;
+        velocity.vy = (map_calculate_slope_height(&tile_center, unit->map_z) - unit->screen.vy) << 12;
         velocity.vx /= timer;
         velocity.vy /= timer;
         velocity.vz /= timer;

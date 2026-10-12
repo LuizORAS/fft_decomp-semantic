@@ -18,7 +18,7 @@ s32 move_init_destination_geometry(s32 candidate) {
         state->work_level = config->high_elevation;
     state->destination_index
         = state->work_level * MAP_TILES_PER_LAYER + state->work_y * config->map_max_x + state->work_x;
-    state->destination_tile = &g_battle_map_tile_data[state->destination_index];
+    state->destination_tile = &g_map_tile_data[state->destination_index];
     state->destination_panel = &g_target_panels[state->destination_index];
     state->destination_base_height_times_two = state->destination_tile->height * 2;
     state->destination_half_height = state->destination_tile->depth_half_height.half_height;

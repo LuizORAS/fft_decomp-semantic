@@ -47,8 +47,8 @@ void option_build_options_menu(void) {
     row_offset = 0;
     ring = 0;
     cursor = 0;
-    input0 = battle_script_get_controller_input_pointer(0);
-    input1 = battle_script_get_controller_input_pointer(1);
+    input0 = script_get_controller_input_pointer(0);
+    input1 = script_get_controller_input_pointer(1);
     do {
         thread = &g_battle_threads[g_battle_current_thread_id];
         entry = (menu_entry_t*)thread->function_parameter_1;
@@ -170,25 +170,25 @@ void option_build_options_menu(void) {
                 && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != 0) {
                     delta = -1;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (layout->hidden_rows == 0) {
                     cursor = layout->row_count - 1;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             } else if ((*input0 & PSX_PAD_DOWN)
                 && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != layout->hidden_rows) {
                     delta++;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset == 0) {
                     cursor = 0;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             } else {
                 timer = 0;
@@ -220,7 +220,7 @@ void option_build_options_menu(void) {
                 LoadImage(&image_rect, (u32*)image);
             }
             if (*input0 & PSX_PAD_CIRCLE) {
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
+                g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                 if (battle_menu_can_accept_input() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
@@ -254,7 +254,7 @@ void option_build_options_menu(void) {
         page->icons.base.sprites[1].y0 += 2;
         page->icons.base.sprites[2].y0 += 2;
         entry->selected_index = row_offset + cursor;
-        if ((g_battle_event_speed == 1 && !(battle_script_get_event_initial_repeat_counter() & 1))
+        if ((g_battle_event_speed == 1 && !(script_get_event_initial_repeat_counter() & 1))
             || g_battle_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step * 2;
@@ -268,7 +268,7 @@ void option_build_options_menu(void) {
         if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
-            repeat = battle_script_get_event_initial_repeat_counter();
+            repeat = script_get_event_initial_repeat_counter();
             delta = 0;
             accum = 0;
             if (repeat >= g_main_input_repeat_initial_delay / g_battle_event_speed) {

@@ -31,7 +31,7 @@ s32 move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     s32 index;
     s32 upper_index;
 
-    if (x < 0 || y < 0 || x >= g_battle_map_max_x || y >= g_battle_map_max_y) {
+    if (x < 0 || y < 0 || x >= g_map_max_x || y >= g_map_max_y) {
         return -1;
     }
     switch (direction) {
@@ -52,12 +52,12 @@ s32 move_check_knockback_destination(s32 direction, s32 x, s32 y) {
         destination_shift = 6;
         break;
     }
-    tile = &g_battle_map_tile_data[battle_map_calculate_location(g_action_target)];
+    tile = &g_map_tile_data[map_calculate_location(g_action_target)];
     height = TILE_EDGE_HEIGHT(tile, source_shift);
-    index = y * g_battle_map_max_x + x;
+    index = y * g_map_max_x + x;
     upper_index = index + MAP_TILES_PER_LAYER;
-    lower = &g_battle_map_tile_data[index];
-    upper = &g_battle_map_tile_data[upper_index];
+    lower = &g_map_tile_data[index];
+    upper = &g_map_tile_data[upper_index];
     if (lower->flags.blocked) {
         lower_height = 0xff;
     } else {

@@ -32,7 +32,7 @@ void card_save_update_slot_write(s32 slot) {
         D_801ca964 = 0;
         card_save_build_buffer(slot);
         card_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_in_progress_thread_descriptor);
-        g_battle_sound_suppressed = 1;
+        g_sound_suppressed = 1;
         return;
     } else {
         if (g_card_save_write_phase < 2) {
@@ -41,7 +41,7 @@ void card_save_update_slot_write(s32 slot) {
         }
     }
 
-    g_battle_sound_suppressed = 0;
+    g_sound_suppressed = 0;
     if (g_card_save_write_failed != 0) {
         card_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_failure_thread_descriptor);
         if ((g_card_input_primary_repeat & PSX_PAD_CIRCLE) != 0 || (g_card_input_primary_repeat & PSX_PAD_CROSS) != 0) {

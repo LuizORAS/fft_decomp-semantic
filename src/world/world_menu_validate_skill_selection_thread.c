@@ -36,8 +36,7 @@ void world_menu_validate_skill_selection_thread(void) {
     g_world_ability_selected_skill_ct = ct;
     if ((g_world_active_menu == ACTION_MENU_TYPE_MONSTER || g_world_active_menu == ACTION_MENU_TYPE_DEFAULT)
         && blocked != 0
-        && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
+        && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_SILENCE)] & STATUS_BYTE_MASK(STATUS_ID_SILENCE))) {
         message = 0x8013;
         if (ct == 0) {
             message = 0x1009;

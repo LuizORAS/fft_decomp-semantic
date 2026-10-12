@@ -26,7 +26,7 @@ void world_unit_inflict_status_by_entd_unit_id(
             unit->action.status_changes.infliction[clear_index] = 0;
             unit->action.status_changes.removal[clear_index] = 0;
             clear_index++;
-        } while (clear_index < BATTLE_STATUS_BYTE_COUNT);
+        } while (clear_index < STATUS_BYTE_COUNT);
 
         /* Action infliction/removal bytes use the event VM's LSB-first order,
          * unlike the stored status-set masks. */

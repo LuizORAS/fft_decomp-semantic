@@ -96,8 +96,8 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         in.vx = screen->vx;
         in.vz = screen->vz;
         in.vy = screen->vy - i;
-        SetRotMatrix(&g_battle_camera_matrix);
-        SetTransMatrix(&g_battle_camera_matrix);
+        SetRotMatrix(&g_camera_matrix);
+        SetTransMatrix(&g_camera_matrix);
         RotTrans(&in, &out, &out.pad);
         state->angle = 0;
         state->done = 0;

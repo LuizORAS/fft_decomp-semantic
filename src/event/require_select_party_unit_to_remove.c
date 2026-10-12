@@ -140,7 +140,7 @@ s32 require_select_party_unit_to_remove(void) {
             s32 helpmenu_thread;
 
             battle_thread_yield();
-            g_require_input_controller = battle_script_get_controller_input_pointer(0);
+            g_require_input_controller = script_get_controller_input_pointer(0);
             if (*g_require_input_controller & PSX_PAD_SELECT) {
                 helpmenu_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
                 battle_thread_start(helpmenu_thread, require_overlay_run_helpmenu);
@@ -154,7 +154,7 @@ s32 require_select_party_unit_to_remove(void) {
                     if (selected_party_index == 0x14)
                         selected_party_index = 0;
                     if (g_require_party_removable_flags[selected_party_index] != 0) {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
+                        g_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
                         g_require_status_display_redraw_request = should_restore;
                         g_require_numeric_editor_redraw_request = should_restore;
                         g_require_character_status_redraw_request = should_restore;
@@ -173,7 +173,7 @@ s32 require_select_party_unit_to_remove(void) {
                     if (selected_party_index == -1)
                         selected_party_index = 0x13;
                 } while (g_require_party_removable_flags[selected_party_index] == 0);
-                g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
+                g_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
                 g_require_status_display_redraw_request = 2;
                 g_require_numeric_editor_redraw_request = should_restore;
                 g_require_character_status_redraw_request = should_restore;
@@ -201,7 +201,7 @@ s32 require_select_party_unit_to_remove(void) {
         formation_index = 0;
         if (party_unit->sprite_set & CHARACTER_IDENTITY_HIGH_BIT_MASK) {
             message_id = ((party_unit->sprite_set - CHARACTER_IDENTITY_SELECTOR_FIRST) * 8)
-                + (battle_script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 7) + 0x1800;
+                + (script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 7) + 0x1800;
         } else {
             s32 sprite_column;
             u8* sprite_group;

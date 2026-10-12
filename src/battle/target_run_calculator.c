@@ -53,12 +53,11 @@ s32 target_run_calculator(const action_command_t* source) {
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             continue;
         }
-        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP))) {
+        if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
+            & (STATUS_BYTE_MASK(STATUS_ID_CRYSTAL) | STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
             continue;
         }
-        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
+        if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)] & STATUS_BYTE_MASK(STATUS_ID_TREASURE)) {
             continue;
         }
         if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
@@ -100,7 +99,7 @@ s32 target_run_calculator(const action_command_t* source) {
             hit = 1;
         }
         if (hit != 0) {
-            tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
+            tile = &g_map_tile_data[map_calculate_location(unit)];
             count++;
             tile->ceiling_depth_and_marks.targeted = 1;
         }

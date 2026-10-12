@@ -21,7 +21,7 @@ s32 target_apply_reflect(battle_stats_t* unit) {
     if (dx == 0 && dy == 0) {
         return -1;
     }
-    if (battle_map_resolve_rotated_offset_layer(unit, dx, dy, 0, &x, &y, &z) != 0) {
+    if (map_resolve_rotated_offset_layer(unit, dx, dy, 0, &x, &y, &z) != 0) {
         return -1;
     }
     act->skillset_id = SKILLSET_ID_BLACK_MAGIC;

@@ -28,7 +28,7 @@ void require_overlay_open_jobstts(void) {
     battle_thread_wait_frames(2);
     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_JOBSTTS;
     do {
-        g_require_input_controller = battle_script_get_controller_input_pointer(0);
+        g_require_input_controller = script_get_controller_input_pointer(0);
         *g_require_input_controller = 0;
         battle_thread_yield();
     } while (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);

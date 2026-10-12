@@ -114,7 +114,7 @@ loop_outer:
         __asm__("" : "=r"(mark) : "0"(mark));
         battle_thread_yield();
         debugchr_gfx_build_status_group_primitives(g_debugchr_gfx_render_buffers[i & 1]);
-        input = battle_script_get_controller_input_pointer(0);
+        input = script_get_controller_input_pointer(0);
         g_debugchr_input_controller = input;
         buttons = *input;
         if (buttons & PSX_PAD_CIRCLE) {

@@ -30,9 +30,9 @@ void battle_state_handle_wait_direction_state(void) {
     battle_gfx_update_status_bubbles_and_graphics();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
-        battle_camera_handle_rotation_input();
-        battle_camera_call_zoom_map();
-        battle_camera_call_toggle_tilt();
+        camera_handle_rotation_input();
+        camera_call_zoom_map();
+        camera_call_toggle_tilt();
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             if (unit->battle_data != 0) {
                 action_end_turn(unit->battle_data->misc_unit_id);
@@ -44,7 +44,7 @@ void battle_state_handle_wait_direction_state(void) {
             battle_state_enter_after_command();
         }
         /* The target passes only the mode; the definition's second parameter is a matching device. */
-        facing = battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_PRESSED);
+        facing = camera_get_input_direction(CAMERA_INPUT_PRESSED);
         if (facing != -1 && facing != g_battle_state_wait_direction_facing) {
             main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
             g_battle_state_wait_direction_facing = facing;

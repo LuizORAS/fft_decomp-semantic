@@ -11,7 +11,7 @@ void battle_menu_step_wrapping_cursor_on_scroll_buttons(menu_entry_t* ctx, s32* 
     s32 cur;
 
     if (battle_menu_can_accept_input() != 0) {
-        if (g_battle_script_event_input & PSX_PAD_UP) {
+        if (g_script_event_input & PSX_PAD_UP) {
             selection = *sel;
             if (selection == 0) {
                 selection = ctx->max_row_index;
@@ -19,9 +19,9 @@ void battle_menu_step_wrapping_cursor_on_scroll_buttons(menu_entry_t* ctx, s32* 
                 selection = selection - 1;
             }
             *sel = selection;
-            battle_sound_set_effect_to_cursor_move();
+            sound_set_effect_to_cursor_move();
         }
-        if (g_battle_script_event_input & PSX_PAD_DOWN) {
+        if (g_script_event_input & PSX_PAD_DOWN) {
             max = ctx->max_row_index;
             cur = *sel;
             if (cur == max) {
@@ -29,7 +29,7 @@ void battle_menu_step_wrapping_cursor_on_scroll_buttons(menu_entry_t* ctx, s32* 
             } else {
                 *sel = cur + 1;
             }
-            battle_sound_set_effect_to_cursor_move();
+            sound_set_effect_to_cursor_move();
         }
     }
 }

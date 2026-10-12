@@ -191,9 +191,10 @@ none), and prefer the profile of its neighbours.
   only when the clean spelling provably changes the bytes, with a one-line
   comment saying so.
 - Names carry the module prefix (`battle_`, `world_`, `wldcore_`, `open_`,
-  `main_`, `<overlay>_`; globals `g_battle_`, …). BATTLE's AI, movement,
-  targeting and action subsystems use `ai_`, `move_`, `target_` and `action_`
-  (globals `g_ai_`, …), while retaining their BATTLE source and header ownership.
+  `main_`, `<overlay>_`; globals `g_battle_`, …). BATTLE subsystems use `ai_`,
+  `move_`, `target_`, `action_`, `camera_`, `map_`, `sound_`, `status_`,
+  `script_` and `formula_` (globals `g_ai_`, …), while retaining their BATTLE
+  source and header ownership. Event orchestration keeps `battle_event_`.
   Proven shared overlay helpers use their subsystem prefix and an explicit
   `source:` binding in each original module; each compiled copy keeps its address.
   Unknowns stay

@@ -9,7 +9,7 @@ void world_script_map_darkness(void) {
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_DARKNESS);
     parameter = world_thread_get_current_parameter_1();
-    battle_map_start_ambient_light_blend(
+    map_start_ambient_light_blend(
         parameter->mode, parameter->duration, parameter->rgb.r, parameter->rgb.g, parameter->rgb.b);
     world_thread_wait_frames(g_world_map_darkness_wait_frames[parameter->duration]);
     world_thread_exit_current();

@@ -56,7 +56,7 @@ void battle_menu_select_unit_action_slots_thread(void) {
         }
         g_battle_thread_call_target = battle_menu_build_ability_list;
         battle_thread_call_on_main_stack(i);
-        battle_script_pulse_tutorial_wait_value(0xFB);
+        script_pulse_tutorial_wait_value(0xFB);
         battle_menu_run_scrolling_ability_list_thread();
         slot->selected_index = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;
         slot->scroll_offset = g_battle_menu_ability_scroll_offset;

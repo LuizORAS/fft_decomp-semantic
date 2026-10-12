@@ -26,7 +26,7 @@ s32 target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECTOR* qua
     u8 slope;
 
     split = 0;
-    tile = battle_map_get_tile_data_pointer((coords->vx / MAP_TILE_SIZE), (coords->vz / MAP_TILE_SIZE), layer);
+    tile = map_get_tile_data_pointer((coords->vx / MAP_TILE_SIZE), (coords->vz / MAP_TILE_SIZE), layer);
     height = tile->height;
     depth = (*(u8*)&tile->depth_half_height);
     slope = tile->slope_type;

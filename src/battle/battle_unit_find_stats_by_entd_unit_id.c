@@ -16,10 +16,9 @@ battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_bat
     for (i = 0; i < 0x15; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->unit_id == (unit_id & 0xff)) {
-            if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL))
-                || (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE))) {
+            if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)] & STATUS_BYTE_MASK(STATUS_ID_CRYSTAL))
+                || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)]
+                    & STATUS_BYTE_MASK(STATUS_ID_TREASURE))) {
                 *out_battle_id = -3;
                 return unit;
             }

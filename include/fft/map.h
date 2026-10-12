@@ -1,7 +1,8 @@
 #ifndef MAP_H
 #define MAP_H
 
-/* Map tile and surface records shared by BATTLE and WORLD. */
+/* Tactical-level data shared by BATTLE and WORLD: map IDs, terrain tiles and
+ * surface records. The map engine is declared in battle_map.h. */
 
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -28,7 +29,7 @@ typedef struct map_tile_coordinates {
 typedef char map_tile_coordinates_size_must_be_6[sizeof(map_tile_coordinates_t) == 6 ? 1 : -1];
 
 /* Battle map ids: EVENT_SCRIPT_VAR_CURRENT_MAP and the index of
- * g_battle_map_gns_lba. Each is named as its map name text spells it
+ * g_map_gns_lba. Each is named as its map name text spells it
  * (TEXT_ID_MAP_NAME_BASE + id - 1); a map whose name repeats an earlier one
  * ends in its id. The ten floors of the Deep Dungeon
  * (g_wldcore_deep_dungeon_battles) have one-word names and take that prefix.
@@ -207,7 +208,7 @@ typedef enum map_surface_type {
 
 enum { MAP_SURFACE_MASK = 0x3f };
 
-/* Selectors accepted by battle_map_get_tile_data_value and its setter twin.
+/* Selectors accepted by map_get_tile_data_value and its setter twin.
  * Selector 14 is unsupported; setter selector 15 performs a separate operation
  * whose relationship to tile data is not established. No caller passes
  * selector 1 or 10. */
@@ -339,7 +340,7 @@ enum {
     MAP_TILE_CAMERA_BLOCK_STEEP_MASK = 0xf0,
 };
 
-/* Eight-byte terrain record: battle_map_get_tile_data_pointer (0x80183fb4)
+/* Eight-byte terrain record: map_get_tile_data_pointer (0x80183fb4)
  * indexes (layer * 256 + y * width + x) * 8. Scenario opcode 0x40 at
  * BATTLE 0x801451c8 / WORLD 0x800f84f0 modifies bytes 0, 2 and 6.
  * Opcode 0x40 replaces the untargetable bit and clears the blocked bit. Its
@@ -360,7 +361,7 @@ typedef struct map_tile {
 typedef char map_tile_size_must_be_8[(sizeof(map_tile_t) == 8) ? 1 : -1];
 
 /* Provisional 0xa-byte selected-tile record: BATTLE's at 0x8014d02c, filled by
- * battle_map_store_selected_tile_data, and WORLD's at 0x8013a310, filled by
+ * map_store_selected_tile_data, and WORLD's at 0x8013a310, filled by
  * world_map_store_selected_tile_data and saved whole by
  * world_menu_copy_billboard_data_out.
  * _unknown_02/_unknown_04 are the two bytes of the per-surface-type main table

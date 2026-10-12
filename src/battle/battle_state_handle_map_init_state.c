@@ -5,7 +5,7 @@
 void battle_state_handle_map_init_state(void) {
     char unused[24]; /* unreferenced; sizes the target's 0x30-byte frame */
 
-    g_battle_state_map_init_step = battle_map_step_init_sequence(g_battle_map_id, g_battle_state_map_init_step);
+    g_battle_state_map_init_step = map_step_init_sequence(g_map_id, g_battle_state_map_init_step);
     g_battle_screen_fade_polygons[g_main_gfx_screen_polarity].r0 = 0xff;
     g_battle_screen_fade_polygons[g_main_gfx_screen_polarity].g0 = 0xff;
     g_battle_screen_fade_polygons[g_main_gfx_screen_polarity].b0 = 0xff;

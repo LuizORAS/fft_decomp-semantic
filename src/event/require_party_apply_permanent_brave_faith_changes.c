@@ -14,7 +14,7 @@ void require_party_apply_permanent_brave_faith_changes(void) {
     s32 i;
     s32 main_thread;
 
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0)
+    if (script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0)
         battle_thread_exit_current();
     if (require_apply_permanent_brave_faith_changes_and_collect_warnings() == 0)
         battle_thread_exit_current();

@@ -44,7 +44,7 @@ void option_entrypoint(s32 menu_type) {
     if (menu_type == OPTION_MENU_GAME_OPTIONS) {
         s32 child_thread;
 
-        battle_script_pulse_tutorial_wait_value(0xfd);
+        script_pulse_tutorial_wait_value(0xfd);
         battle_thread_start(g_battle_current_thread_id - 1, option_build_options_menu);
         child_thread = g_battle_current_thread_id;
         menu->select_text_table = 1;
@@ -54,7 +54,7 @@ void option_entrypoint(s32 menu_type) {
         battle_thread_exit_current();
     }
     if (menu_type == OPTION_MENU_AT_LIST) {
-        battle_script_pulse_tutorial_wait_value(0xf9);
+        script_pulse_tutorial_wait_value(0xf9);
         option_menu_start_at_list_thread();
     }
     if (menu_type == OPTION_MENU_DEAD_UNIT) {

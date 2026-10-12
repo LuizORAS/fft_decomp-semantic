@@ -48,7 +48,7 @@ void battle_menu_run_icon_selection_loop(void) {
             records[0]._unknown_78 = 0;
             records[1]._unknown_78 = 0;
         }
-        if (battle_menu_should_close_thread(&g_battle_script_event_input) != 0) {
+        if (battle_menu_should_close_thread(&g_script_event_input) != 0) {
             break;
         }
         battle_menu_handle_action(param, cursor);

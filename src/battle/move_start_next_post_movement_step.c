@@ -86,7 +86,7 @@ s32 move_start_next_post_movement_step(void) {
         return 1;
     }
     if (g_move_find_result & MOVE_POST_EVENT_ITEM_FOUND) {
-        g_move_find_display_item = *battle_map_determine_rare_common_item(casting->battle_data);
+        g_move_find_display_item = *map_determine_rare_common_item(casting->battle_data);
         battle_gfx_store_item_display_data(source, g_move_find_display_item.item_id);
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_FOUND_ITEM, source->facing, source);
         if (!(source->team_flags & BATTLE_TEAM_MASK)) {
@@ -116,7 +116,7 @@ s32 move_start_next_post_movement_step(void) {
         return 1;
     }
     if (g_move_find_result & MOVE_POST_EVENT_CHARGING_CANCEL) {
-        battle_status_remove_charging_ability_ct(casting->battle_data, 1);
+        status_remove_charging_ability_ct(casting->battle_data, 1);
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, 0, source->battle_data->misc_unit_id, 0, 0);
         return 1;
@@ -142,7 +142,7 @@ s32 move_start_next_post_movement_step(void) {
     }
     battle_unit_update_display_by_misc_id(source->unit_id);
     battle_unit_update_display_by_misc_id(casting->unit_id);
-    if (battle_map_refresh_deep_dungeon() == 0) {
+    if (map_refresh_deep_dungeon() == 0) {
         battle_state_enter_after_command();
     }
     return 0;

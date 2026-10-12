@@ -23,8 +23,8 @@ void battle_state_run_game_loop(void) {
         init_offset -= 0x32d6;
     } while (init_offset >= 0);
 
-    camera_integer = &g_battle_camera_integer_coords;
-    camera_fixed = &g_battle_camera_current_real_coords;
+    camera_integer = &g_camera_integer_coords;
+    camera_fixed = &g_camera_current_real_coords;
 
     do {
         battle_state_run_deployment();
@@ -36,7 +36,7 @@ void battle_state_run_game_loop(void) {
             battle_gfx_init_render_frame();
             SetGeomScreen(0x200);
             main_gfx_swap_and_clear_otag();
-            battle_camera_update_vector_from_game_state();
+            camera_update_vector_from_game_state();
 
             camera_component = -camera_fixed->vx;
             if (camera_component < 0) {
@@ -50,9 +50,9 @@ void battle_state_run_game_loop(void) {
             camera_integer->vy = camera_component >> 12;
             camera_integer->vz = -camera_fixed->vz / ONE;
 
-            battle_camera_update_matrices(&g_battle_camera_matrix, &g_battle_camera_render_state,
-                &g_battle_offset_screen_coords, &g_battle_camera_zoom);
-            battle_map_draw_mesh_and_weather(&g_battle_camera_matrix);
+            camera_update_matrices(
+                &g_camera_matrix, &g_camera_render_state, &g_battle_offset_screen_coords, &g_camera_zoom);
+            map_draw_mesh_and_weather(&g_camera_matrix);
             if (battle_effect_update_cycle() != 0) {
                 g_battle_state_animation_continue_check = 2;
             } else {
@@ -240,11 +240,11 @@ void battle_state_run_game_loop(void) {
                 break;
             }
 
-            battle_camera_update_map_pan();
-            battle_camera_update_rotation();
-            battle_camera_update_zoom();
-            battle_camera_update_tilt();
-            battle_map_update_animations();
+            camera_update_map_pan();
+            camera_update_rotation();
+            camera_update_zoom();
+            camera_update_tilt();
+            map_update_animations();
             main_sound_update_tunes();
 
             if (g_battle_game_state == BATTLE_GAME_STATE_CLOSE_BATTLE) {
@@ -253,7 +253,7 @@ void battle_state_run_game_loop(void) {
             main_file_poll_load(&g_main_file_cd_state);
             g_main_gfx_screen_polarity = !g_main_gfx_screen_polarity;
             g_battle_frame_counter++;
-            battle_map_upload_clut_rows();
+            map_upload_clut_rows();
             frame_measurement = battle_state_sync_frame(main_gfx_get_otag() + 0x17f);
             g_main_system_battle_frame_hsync_count = frame_measurement;
             i = 0;

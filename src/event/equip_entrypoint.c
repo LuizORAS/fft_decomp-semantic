@@ -41,7 +41,7 @@ s32 equip_entrypoint(s32 unit, u32* otag) {
         g_equip_sound_queued_effect_id = MAIN_SFX_NONE;
     }
     if (g_equip_sound_queued_effect_id != MAIN_SFX_NONE) {
-        g_battle_sound_pending_sfx_id = g_equip_sound_queued_effect_id;
+        g_sound_pending_sfx_id = g_equip_sound_queued_effect_id;
     }
     g_equip_sound_queued_effect_id = MAIN_SFX_NONE;
     if (g_equip_menu_screen_state != EQUIP_SCREEN_STATE_CLOSED) {

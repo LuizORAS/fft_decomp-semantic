@@ -27,10 +27,10 @@ void battle_gfx_init_render_buffers(void) {
         }
     }
     SetPolyF3(&prototype);
-    g_battle_map_current_darkness_color.r = 0;
-    g_battle_map_current_darkness_color.g = 0;
-    g_battle_map_current_darkness_color.b = 1;
-    g_battle_map_current_darkness_color.cd = prototype.code;
+    g_map_current_darkness_color.r = 0;
+    g_map_current_darkness_color.g = 0;
+    g_map_current_darkness_color.b = 1;
+    g_map_current_darkness_color.cd = prototype.code;
     SetPolyG4(&g_battle_render_buffers[0].overlay);
     SetPolyG4(&g_battle_render_buffers[1].overlay);
     setXY4(&g_battle_render_buffers[0].overlay, 0, 0, 0x180, 0, 0, 0xF0, 0x180, 0xF0);
@@ -67,7 +67,7 @@ void battle_gfx_init_render_buffers(void) {
             }
         }
     }
-    g_battle_sound_primary_weather_sfx_id = 0;
-    g_battle_sound_weather_sfx_enabled = 0;
+    g_sound_primary_weather_sfx_id = 0;
+    g_sound_weather_sfx_enabled = 0;
     g_battle_effect_map_vertices = 0;
 }

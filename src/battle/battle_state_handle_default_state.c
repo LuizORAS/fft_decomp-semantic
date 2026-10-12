@@ -8,9 +8,9 @@ void battle_state_handle_default_state(void) {
     s32 input;
     RECT rect; /* never used; retail reserves its 8 bytes */
 
-    battle_camera_handle_rotation_input();
-    battle_camera_call_zoom_map();
-    battle_camera_call_toggle_tilt();
+    camera_handle_rotation_input();
+    camera_call_zoom_map();
+    camera_call_toggle_tilt();
     target_move_cursor_by_input();
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);

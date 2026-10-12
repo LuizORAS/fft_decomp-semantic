@@ -11,7 +11,7 @@
  * BATTLE twin of world_gfx_submit_screen_fade_overlay. The draw mode is submitted
  * before the tile while an ETC full-screen graphic draws primitives immediately,
  * and after it when both are linked into the ordering table. A non-zero level
- * also clears g_battle_script_event_input, so menus see no button while the
+ * also clears g_script_event_input, so menus see no button while the
  * screen is faded. */
 void battle_gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level) {
     s32 blend;
@@ -38,6 +38,6 @@ void battle_gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level) {
             battle_gfx_draw_or_append_gpu_primitive(&overlay->tile);
             battle_gfx_draw_or_append_gpu_primitive(&overlay->mode);
         }
-        g_battle_script_event_input = 0;
+        g_script_event_input = 0;
     }
 }

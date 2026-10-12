@@ -28,8 +28,8 @@ void attack_gfx_prepare_party_portrait_textures(void) {
     RECT unused[2];
 
     file = main_heap_alloc(MENU_WLDFACE_FILE_SIZE);
-    if (g_battle_script_attack_entry_mode != 0) {
-        if (g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+    if (g_script_attack_entry_mode != 0) {
+        if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
             attack_file_load_sync(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
         } else {
             g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
@@ -136,7 +136,7 @@ void attack_gfx_prepare_party_portrait_textures(void) {
         } else {
             LoadImage(&g_attack_portrait_palette_upload_rect, (u32*)((u8*)&file[sheet] + pal_offset));
         }
-        if (g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+        if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
             battle_thread_yield();
         } else {
             DrawSync(0);

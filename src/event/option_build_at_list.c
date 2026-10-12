@@ -42,8 +42,8 @@ void option_build_at_list(void) {
 
     page = g_option_at_list_pages;
     timer = 0;
-    input = battle_script_get_controller_input_pointer(0);
-    input2 = battle_script_get_controller_input_pointer(1);
+    input = script_get_controller_input_pointer(0);
+    input2 = script_get_controller_input_pointer(1);
     row_offset = 0;
     cursor = 0;
     entry = (menu_entry_t*)battle_thread_get_current_parameter_1();
@@ -144,27 +144,27 @@ void option_build_at_list(void) {
             if ((*input & PSX_PAD_UP) && !(*input2 & PSX_PAD_SQUARE)) {
                 if (cursor != 0) {
                     cursor--;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != 0) {
                     delta = -1;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (layout->hidden_rows == 0) {
                     cursor = layout->row_count - 1;
                     if (layout->row_count != 1) {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                     }
                 }
             } else if ((*input & PSX_PAD_DOWN) && !(*input2 & PSX_PAD_SQUARE)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != layout->hidden_rows) {
                     delta++;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset == 0) {
                     cursor = 0;
                     if (layout->row_count != 1) {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                     }
                 }
             } else {
@@ -228,7 +228,7 @@ void option_build_at_list(void) {
             battle_menu_handle_action(entry, cursor);
         }
         battle_handle_menu_cancel_input(entry);
-        if ((g_battle_event_speed == 1 && !(battle_script_get_event_initial_repeat_counter() & 1))
+        if ((g_battle_event_speed == 1 && !(script_get_event_initial_repeat_counter() & 1))
             || g_battle_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step << 1;
@@ -241,7 +241,7 @@ void option_build_at_list(void) {
         if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
-            repeat = battle_script_get_event_initial_repeat_counter();
+            repeat = script_get_event_initial_repeat_counter();
             delta = 0;
             accum = 0;
             if (repeat >= g_main_input_repeat_initial_delay / g_battle_event_speed) {

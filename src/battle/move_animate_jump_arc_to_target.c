@@ -37,8 +37,7 @@ void move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
             } else {
                 target.vx = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 target.vz = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                target.vy
-                    = battle_map_calculate_slope_height(&target, unit->battle_data->action_command.target_position.vy);
+                target.vy = map_calculate_slope_height(&target, unit->battle_data->action_command.target_position.vy);
             }
             timer = move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
             unit->distortion_phase++;

@@ -10,7 +10,7 @@ void require_overlay_run_helpmenu(void) {
     s32 thread_id;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_HELP_MENU);
-    g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
+    g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
     g_require_panel_status_animation[0] = 1;
     g_require_panel_status_animation[1] = 1;
     while (

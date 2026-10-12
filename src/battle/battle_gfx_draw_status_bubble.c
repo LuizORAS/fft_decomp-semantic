@@ -14,7 +14,7 @@
  */
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords) {
     SVECTOR position;
-    SVECTOR zoom = g_battle_status_bubble_zoom;
+    SVECTOR zoom = g_status_bubble_zoom;
     VECTOR transformed;
     SVECTOR base;
     SVECTOR raised;
@@ -46,30 +46,30 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR*
     } else if (bubble_id == 0) {
         table_index = unit->battle_data->death_counter;
         if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_RERAISE) {
-            display->parts[0].u = g_battle_status_bubble_u[10];
-            flag_row = g_battle_status_bubble_v[10];
+            display->parts[0].u = g_status_bubble_u[10];
+            flag_row = g_status_bubble_v[10];
             display->parts[0].v = flag_row;
             if (unit->status_bubble_alternate_row != 0) {
                 display->parts[0].v = flag_row + 12;
             }
         } else if (table_index != 0xFF) {
-            display->parts[0].u = g_battle_status_bubble_digit_u[table_index];
-            display->parts[0].v = g_battle_status_bubble_digit_v[table_index];
+            display->parts[0].u = g_status_bubble_digit_u[table_index];
+            display->parts[0].v = g_status_bubble_digit_v[table_index];
         } else {
-            display->parts[0].u = g_battle_status_bubble_u[0];
-            default_row = g_battle_status_bubble_v[0];
+            display->parts[0].u = g_status_bubble_u[0];
+            default_row = g_status_bubble_v[0];
             display->parts[0].v = default_row;
             if (unit->status_bubble_alternate_row != 0) {
                 display->parts[0].v = default_row + 12;
             }
         }
     } else if (bubble_id == 20) {
-        table_index = unit->battle_data->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)] & 3;
-        display->parts[0].u = g_battle_status_bubble_digit_u[table_index];
-        display->parts[0].v = g_battle_status_bubble_digit_v[table_index];
+        table_index = unit->battle_data->status_ct[STATUS_CT_INDEX(STATUS_ID_DEATH_SENTENCE)] & 3;
+        display->parts[0].u = g_status_bubble_digit_u[table_index];
+        display->parts[0].v = g_status_bubble_digit_v[table_index];
     } else {
-        display->parts[0].u = g_battle_status_bubble_u[bubble_id];
-        row = g_battle_status_bubble_v[bubble_id];
+        display->parts[0].u = g_status_bubble_u[bubble_id];
+        row = g_status_bubble_v[bubble_id];
         display->parts[0].v = row;
         if (bubble_id == 9 || bubble_id == 10) {
             if (unit->status_bubble_alternate_row != 0) {
@@ -78,8 +78,8 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR*
         }
     }
 
-    SetRotMatrix(&g_battle_camera_matrix);
-    SetTransMatrix(&g_battle_camera_matrix);
+    SetRotMatrix(&g_camera_matrix);
+    SetTransMatrix(&g_camera_matrix);
     main_util_set_svector(&base, unit->screen.vx + unit->event_offset.vx,
         unit->screen.vy + unit->event_offset.vy + unit->status_bubble_y, unit->screen.vz + unit->event_offset.vz);
     RotTrans(&base, &transformed, &unit->gte_flag);
@@ -89,7 +89,7 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR*
     if (unit->status_bubble_timer & 0x10) {
         position.vy = y - 1;
     }
-    battle_camera_convert_screen_coords_modify_by_1(&base, &raised);
+    camera_convert_screen_coords_modify_by_1(&base, &raised);
     raised.vy += 12;
     RotTrans(&raised, &transformed, &flag);
     display = unit->status_bubble_display;

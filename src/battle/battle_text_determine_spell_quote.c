@@ -38,10 +38,10 @@ void battle_text_determine_spell_quote(action_command_t* action, s32 unit_id, s3
         && unit->job_id != JOB_ID_CALCULATOR && unit->job_id != JOB_ID_MIME
         && action->ability_id < ABILITY_ID_ITEM_FIRST
         && (secondary.range->flags_3 & ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE)
-        && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
-            & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)))
+        && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TRANSPARENT)]
+            & (STATUS_BYTE_MASK(STATUS_ID_TRANSPARENT) | STATUS_BYTE_MASK(STATUS_ID_FROG)))
         && g_main_game_options.fields.ability_names == GAME_OPTION_ON
-        && (battle_script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 0xF) < 4) {
+        && (script_get_variable(EVENT_SCRIPT_VAR_RANDOM_VALUE) & 0xF) < 4) {
         g_battle_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;
         battle_menu_dispatch_system_function(BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE, 0, unit_id, 0, enabled, action);
         return;

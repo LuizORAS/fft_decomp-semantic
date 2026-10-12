@@ -40,9 +40,9 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
                     = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 tile_center.vz
                     = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                velocity.vy = (battle_map_calculate_slope_height(
-                                   &tile_center, unit->battle_data->action_command.target_position.vy)
-                                  - unit->screen.vy)
+                velocity.vy
+                    = (map_calculate_slope_height(&tile_center, unit->battle_data->action_command.target_position.vy)
+                          - unit->screen.vy)
                     << 12;
             }
             velocity.vx /= timer;

@@ -12,7 +12,7 @@ void target_check_moldball_virus_depth(s16 ability_id) {
         return;
     i = 0;
     panel = g_target_panel_data;
-    tile = g_battle_map_tile_data;
+    tile = g_map_tile_data;
     do {
         if (tile->depth_half_height.depth) {
             panel->remaining_range = 0;

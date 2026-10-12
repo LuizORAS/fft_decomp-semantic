@@ -68,7 +68,7 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
             for (i = 1; i < 16; i++) {
                 targets[i] = 0xff;
             }
-            tile = &g_battle_map_tile_data[battle_map_calculate_location(
+            tile = &g_map_tile_data[map_calculate_location(
                 &g_battle_unit_stats[g_action_current_ability.post_action_target_id])];
             tile->ceiling_depth_and_marks.targeted = 1;
         }
@@ -84,7 +84,7 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
             action_run_pre_formula_setup(&attacker->action_command, target_id);
         }
     }
-    battle_status_remove_transparent_if_jump_used(attacker);
+    status_remove_transparent_if_jump_used(attacker);
     count = target_count_hit_by_ability(work->target_list);
     work->target_count = count;
     g_action_current_ability.target_count = count;

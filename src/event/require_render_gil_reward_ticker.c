@@ -35,14 +35,13 @@ void require_render_gil_reward_ticker(void) {
 
     g_require_reward_war_trophy_entry_count = 0;
     battle_unit_find_war_trophies_and_bonus_money(&g_require_reward_war_trophy_search_result);
-    battle_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS,
-        battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS)
-            + g_require_reward_war_trophy_search_result.level_sum_money);
+    script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS,
+        script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + g_require_reward_war_trophy_search_result.level_sum_money);
     money = g_require_reward_war_trophy_search_result.level_sum_money;
     thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(thread_id, require_render_display_condition_special_cases_thread);
     battle_thread_set_parameters(thread_id, 2, 0, 0);
-    g_require_input_controller = battle_script_get_controller_input_pointer(0);
+    g_require_input_controller = script_get_controller_input_pointer(0);
     /* `i = 0` here (not before the script calls) lets sched1 keep
      * `li a0,0x2c` above the money load. */
     for (i = 0; i < 6; i++) {
@@ -61,7 +60,7 @@ void require_render_gil_reward_ticker(void) {
         j /= 10;
         g_require_reward_money_digit_positions[i] = g_require_reward_money_digit_targets[i] << 13;
     }
-    g_battle_sound_pending_sfx_id = MAIN_SFX_GIL_TICKER;
+    g_sound_pending_sfx_id = MAIN_SFX_GIL_TICKER;
     for (buffer = 0; buffer < 2; buffer++) {
         for (j = 0; j < digits; j++) {
             POLY_FT4* pd;
@@ -208,7 +207,7 @@ finished:
     }
     battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_sign_polys[buffer]);
 skipped:
-    g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+    g_sound_pending_sfx_id = MAIN_SFX_NONE;
     i++;
     tick = 0;
     for (;;) {

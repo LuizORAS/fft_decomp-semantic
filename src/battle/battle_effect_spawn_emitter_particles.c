@@ -116,8 +116,8 @@ s32 battle_effect_spawn_emitter_particles(
         unit_coords = battle_unit_get_event_offset_ptr_by_misc_id(
             g_battle_effect_context.targets[target_index].data.unit.misc_id);
     }
-    tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
-        g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
+    tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx, g_battle_effect_target_tile.data.tile.vz,
+        g_battle_effect_target_tile.data.tile.vy);
 
     curve = entry->emitter.motion_curve_selectors >> EFFECT_EMITTER_CURVE_PARTICLE_COUNT_SHIFT & 0xf;
     curve--;
@@ -172,7 +172,7 @@ s32 battle_effect_spawn_emitter_particles(
         }
         break;
     case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
-        battle_map_store_max_coordinates(&map_max);
+        map_store_max_coordinates(&map_max);
         spawn.vx += map_max.vx * (MAP_TILE_SIZE / 2);
         spawn.vz += map_max.vz * (MAP_TILE_SIZE / 2);
         break;
@@ -462,7 +462,7 @@ s32 battle_effect_spawn_emitter_particles(
         }
         break;
     case EFFECT_EMITTER_HOMING_MAP_CENTRE:
-        battle_map_store_max_coordinates(&map_max);
+        map_store_max_coordinates(&map_max);
         for (i = 0; i < count; i++) {
             particle->target.x = map_max.vx * (MAP_TILE_SIZE / 2) + target_offset.vx;
             particle->target.z = map_max.vz * (MAP_TILE_SIZE / 2) + target_offset.vz;

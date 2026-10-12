@@ -16,8 +16,8 @@ void battle_menu_open_debugchr(void) {
     battle_thread_yield();
     debugchr_run_character_debug_session();
     g_battle_menu_suspend_state = 0;
-    g_battle_sound_suppressed = 0;
-    g_battle_script_event_input = 0;
+    g_sound_suppressed = 0;
+    g_script_event_input = 0;
     battle_menu_clear_option_menu_open();
     battle_thread_exit_current();
 }

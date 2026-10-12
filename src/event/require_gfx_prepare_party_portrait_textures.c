@@ -27,7 +27,7 @@ void require_gfx_prepare_party_portrait_textures(void) {
     RECT unused[2];
 
     file = main_heap_alloc(MENU_WLDFACE_FILE_SIZE);
-    if (g_battle_script_attack_entry_mode != 0) {
+    if (g_script_attack_entry_mode != 0) {
         g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
         battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
     } else {

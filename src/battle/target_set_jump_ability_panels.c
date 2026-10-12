@@ -57,8 +57,8 @@ s32 target_set_jump_ability_panels(const action_command_t* source) {
         range = 8;
         vertical = 0x10;
     }
-    location = battle_map_calculate_location(unit);
-    tile = &g_battle_map_tile_data[location];
+    location = map_calculate_location(unit);
+    tile = &g_map_tile_data[location];
     tile_height = tile->height;
     height = tile->depth_half_height.half_height + tile_height * 2;
     count = battle_menu_get_unit_skillset_ability_data(
@@ -98,7 +98,7 @@ s32 target_set_jump_ability_panels(const action_command_t* source) {
         other_panel->mark = 1;
     }
     target_spread_panels(range, 0);
-    tile = &g_battle_map_tile_data[other_location];
+    tile = &g_map_tile_data[other_location];
     panel->remaining_range = 0;
     other_panel->remaining_range = 0;
     other_height = tile->depth_half_height.half_height + tile->height * 2;
@@ -111,8 +111,8 @@ s32 target_set_jump_ability_panels(const action_command_t* source) {
     for (i = 0; i < 0x100; i++) {
         other_panel = &upper_panels[i];
         panel = &panels[i];
-        lower = &g_battle_map_tile_data[i];
-        upper = &g_battle_map_tile_data[i + 0x100];
+        lower = &g_map_tile_data[i];
+        upper = &g_map_tile_data[i + 0x100];
         if (panel->remaining_range == 0 || (lower->flags.blocked)) {
             lower_height = -1;
         } else {

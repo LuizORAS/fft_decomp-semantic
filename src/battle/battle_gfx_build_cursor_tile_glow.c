@@ -27,8 +27,8 @@ void battle_gfx_build_cursor_tile_glow(
     POLY_FT3* tri_a_glow;
     POLY_FT3* tri_b_glow;
 
-    SetRotMatrix(&g_battle_camera_matrix);
-    SetTransMatrix(&g_battle_camera_matrix);
+    SetRotMatrix(&g_camera_matrix);
+    SetTransMatrix(&g_camera_matrix);
     switch (shape) {
     case 0:
         quad = g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();

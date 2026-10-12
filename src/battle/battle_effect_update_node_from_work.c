@@ -18,7 +18,7 @@ void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t*
     work->data->y = work->motion.position.y >> 12;
     work->data->z = work->motion.position.z >> 12;
     if (work->kind_flags & EFFECT_EMITTER_ORIENT_TO_VELOCITY) {
-        SetRotMatrix(&g_battle_camera_matrix);
+        SetRotMatrix(&g_camera_matrix);
         SetTransMatrix(&g_battle_effect_particle_heading_matrix);
         setVector(&direction, work->motion.velocity.x >> 3, work->motion.velocity.y >> 3, work->motion.velocity.z >> 3);
         /* The 32-bit flag value lands in the output vector's 32-bit pad field; the target frame

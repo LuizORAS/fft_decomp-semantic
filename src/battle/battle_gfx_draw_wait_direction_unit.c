@@ -15,12 +15,12 @@ void battle_gfx_draw_wait_direction_unit(void) {
     s32 depth;
     u32* ot;
 
-    SetRotMatrix(&g_battle_camera_matrix);
-    SetTransMatrix(&g_battle_camera_matrix);
+    SetRotMatrix(&g_camera_matrix);
+    SetTransMatrix(&g_camera_matrix);
     unit = battle_unit_get_source_misc_data();
     main_util_set_svector(&base, unit->screen.vx, unit->screen.vy, unit->screen.vz);
     RotTrans(&base, &transformed, &flag);
-    battle_camera_convert_screen_coords_modify_by_1(&unit->screen, &raised);
+    camera_convert_screen_coords_modify_by_1(&unit->screen, &raised);
     raised.vy -= 48;
     RotTrans(&raised, &transformed, &flag);
     depth = transformed.vz / 4;

@@ -11,9 +11,9 @@ void battle_state_handle_display_move_area_state(void) {
         main_sound_play_sfx(MAIN_SFX_CANCEL);
         battle_state_set_free_cursor();
     }
-    battle_camera_handle_rotation_input();
-    battle_camera_call_zoom_map();
-    battle_camera_call_toggle_tilt();
+    camera_handle_rotation_input();
+    camera_call_zoom_map();
+    camera_call_toggle_tilt();
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
 }

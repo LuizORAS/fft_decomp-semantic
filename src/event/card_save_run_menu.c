@@ -92,19 +92,18 @@ void card_save_run_menu(s32 unused) {
         }
         card_input_update_event_state(g_card_gfx_context->otag + 0x3c, input, g_card_gfx_drawenv_y == 0 ? 0xf0 : 0);
 
-        if (g_battle_sound_pending_sfx_id == MAIN_SFX_CURSOR_MOVE || g_battle_sound_pending_sfx_id == MAIN_SFX_CANCEL) {
-            g_card_sound_queued_effect_id = g_battle_sound_pending_sfx_id;
+        if (g_sound_pending_sfx_id == MAIN_SFX_CURSOR_MOVE || g_sound_pending_sfx_id == MAIN_SFX_CANCEL) {
+            g_card_sound_queued_effect_id = g_sound_pending_sfx_id;
         }
-        if (g_battle_sound_pending_sfx_id < 0 || g_battle_sound_suppressed != 0) {
-            g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+        if (g_sound_pending_sfx_id < 0 || g_sound_suppressed != 0) {
+            g_sound_pending_sfx_id = MAIN_SFX_NONE;
         }
-        input = g_battle_sound_pending_sfx_id != MAIN_SFX_NONE ? g_battle_sound_pending_sfx_id
-                                                               : g_card_sound_queued_effect_id;
+        input = g_sound_pending_sfx_id != MAIN_SFX_NONE ? g_sound_pending_sfx_id : g_card_sound_queued_effect_id;
         if (input != MAIN_SFX_NONE) {
             main_sound_play_sfx(input);
         }
         g_card_sound_queued_effect_id = MAIN_SFX_NONE;
-        g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+        g_sound_pending_sfx_id = MAIN_SFX_NONE;
     }
 
     battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, -1, 0);

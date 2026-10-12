@@ -44,8 +44,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
     g_main_crystal_pickup_result.result = 0;
     g_main_crystal_pickup_result.unit_index = crystal_index;
     crystal = &g_battle_unit_stats[crystal_index];
-    if (crystal->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE)) {
+    if (crystal->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)] & STATUS_BYTE_MASK(STATUS_ID_TREASURE)) {
         g_main_crystal_pickup_result.result = 4;
         g_main_crystal_pickup_result.treasure_item = battle_unit_generate_treasure(crystal);
     } else {

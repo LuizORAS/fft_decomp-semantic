@@ -20,7 +20,7 @@ void battle_effect_resolve_target_render_coords(
                 coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id);
             if (add_depth != 0) {
                 s32 height;
-                tile = battle_map_get_tile_data_ptr_from_misc_id(
+                tile = map_get_tile_data_ptr_from_misc_id(
                     coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id);
                 height = -((tile->height + tile->depth_half_height.depth) * 12);
                 if (height < out->vy) {
@@ -28,7 +28,7 @@ void battle_effect_resolve_target_render_coords(
                 }
             }
         } else {
-            tile = battle_map_get_tile_data_pointer(coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vx,
+            tile = map_get_tile_data_pointer(coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vx,
                 coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vz,
                 coord_data->targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile.vy);
             out->vx
@@ -46,14 +46,14 @@ void battle_effect_resolve_target_render_coords(
             *out = *battle_unit_get_screen_data_ptr_by_misc_id(coord_data->targets[target_index].data.unit.misc_id);
             if (add_depth != 0) {
                 s32 height;
-                tile = battle_map_get_tile_data_ptr_from_misc_id(coord_data->targets[target_index].data.unit.misc_id);
+                tile = map_get_tile_data_ptr_from_misc_id(coord_data->targets[target_index].data.unit.misc_id);
                 height = -((tile->height + tile->depth_half_height.depth) * 12);
                 if (height < out->vy) {
                     out->vy = height;
                 }
             }
         } else {
-            tile = battle_map_get_tile_data_pointer(coord_data->targets[target_index].data.tile.vx,
+            tile = map_get_tile_data_pointer(coord_data->targets[target_index].data.tile.vx,
                 coord_data->targets[target_index].data.tile.vz, coord_data->targets[target_index].data.tile.vy);
             out->vx = coord_data->targets[target_index].data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             out->vz = coord_data->targets[target_index].data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);

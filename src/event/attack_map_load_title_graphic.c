@@ -17,7 +17,7 @@ void attack_map_load_title_graphic(void) {
     s32 group_input;
 
     image = battle_menu_alloc_memory(0x2800);
-    title = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
+    title = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
     adjusted = title - 1;
     group_input = adjusted;
     if (adjusted < 0) {

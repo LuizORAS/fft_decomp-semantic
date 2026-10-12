@@ -20,7 +20,7 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
 
     if (g_battle_unit_status_staging_data->state[unit_id] == UNIT_STATUS_STAGING_NONE) {
         stats = battle_unit_get_stats_from_battle_id(unit_id);
-        for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+        for (i = 0; i < STATUS_BYTE_COUNT; i++) {
             g_battle_unit_status_staging_data->innate[unit_id][i] = stats->status_sets.innate[i];
             g_battle_unit_status_staging_data->inflicted[unit_id][i] = stats->inflicted_status[i];
             g_battle_unit_status_staging_data->current[unit_id][i] = stats->status_sets.current[i];
@@ -32,8 +32,8 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
         g_battle_unit_status_staging_data->death_counter[unit_id] = stats->death_counter;
         g_battle_unit_status_staging_data->hp[unit_id] = stats->hp;
         g_battle_unit_status_staging_data->team_flags[unit_id] = stats->team_flags;
-        for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            if (battle_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
+        for (i = 0; i < STATUS_BYTE_COUNT; i++) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
                 if ((stats->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && stats->primary_skillset < SKILLSET_ID_END)
                     || stats->character_identity == CHARACTER_IDENTITY_ALTIMA_FIRST_FORM
                     || stats->character_identity == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM
@@ -63,19 +63,19 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
                 st->removed[unit_id][i] = value;
             }
         }
-        if (g_battle_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
+        if (g_battle_unit_status_staging_data->removed[unit_id][STATUS_BYTE_INDEX(STATUS_ID_JUMP)]
+            & STATUS_BYTE_MASK(STATUS_ID_JUMP)) {
             g_battle_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_JUMP_REMOVED;
         }
-        if (g_battle_unit_status_staging_data->removed[unit_id][BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
+        if (g_battle_unit_status_staging_data->removed[unit_id][STATUS_BYTE_INDEX(STATUS_ID_FLOAT)]
+            & STATUS_BYTE_MASK(STATUS_ID_FLOAT)) {
             g_battle_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_FLOAT_REMOVED;
         }
-        if (stats->action.status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)) {
+        if (stats->action.status_changes.removal[STATUS_BYTE_INDEX(STATUS_ID_CHARM)]
+            & STATUS_BYTE_MASK(STATUS_ID_CHARM)) {
             stats->team_flags = stats->initial_team_flags;
         }
-        g_battle_thread_call_target = (void (*)(void))battle_status_apply_unit_action_removal;
+        g_battle_thread_call_target = (void (*)(void))status_apply_unit_action_removal;
         battle_thread_call_on_main_stack(stats);
         g_battle_unit_status_staging_data->state[unit_id] = UNIT_STATUS_STAGING_SAVED;
         return 1;

@@ -26,9 +26,9 @@ void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width) {
                 - 1));
         max_width = width;
         next = offset + 1;
-        size = g_battle_script_event_instruction_sizes[EVENT_OPCODE_DISPLAY_MESSAGE];
+        size = g_script_event_instruction_sizes[EVENT_OPCODE_DISPLAY_MESSAGE];
         offset = next + size;
-        while ((offset = battle_script_find_instruction_byte_offset(offset, EVENT_OPCODE_CHANGE_DIALOG)) != 0) {
+        while ((offset = script_find_instruction_byte_offset(offset, EVENT_OPCODE_CHANGE_DIALOG)) != 0) {
             if (event_change_dialog_at((u8*)g_battle_event_block, offset)->opcode == EVENT_OPCODE_CHANGE_DIALOG) {
                 if (event_change_dialog_at((u8*)g_battle_event_block, offset)->text_id_le[0] == 0xFF
                     && event_change_dialog_at((u8*)g_battle_event_block, offset)->text_id_le[1] == 0xFF
@@ -47,7 +47,7 @@ void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width) {
                 }
             }
             next = offset + 1;
-            size = g_battle_script_event_instruction_sizes[EVENT_OPCODE_CHANGE_DIALOG];
+            size = g_script_event_instruction_sizes[EVENT_OPCODE_CHANGE_DIALOG];
             offset = next + size;
         }
         *out_width = max_width;

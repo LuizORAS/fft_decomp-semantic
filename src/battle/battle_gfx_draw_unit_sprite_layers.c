@@ -46,7 +46,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
         && unit->spritesheet_id != BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM) {
         return;
     }
-    copyVector(&zoom, &g_battle_camera_zoom);
+    copyVector(&zoom, &g_camera_zoom);
     flags = unit->horizontal_flip_flag ^ unit->sprite_display_flags;
     row = unit->layer_priority;
     if (unit->animation.trigger == 0) {

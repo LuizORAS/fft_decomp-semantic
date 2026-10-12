@@ -1,0 +1,16 @@
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+
+/* Aims the camera step vector from the camera position at the acting unit: the
+ * unit-length direction (ONE) with its height component multiplied by four. */
+void camera_calculate_acting_unit_vector_normal(void) {
+    VECTOR delta;
+    battle_unit_misc_data_t* unit;
+
+    unit = battle_unit_get_source_misc_data();
+    setVector(&delta, unit->screen.vx - g_camera_current_real_coords.vx / ONE,
+        unit->screen.vy - g_camera_current_real_coords.vy / ONE,
+        unit->screen.vz - g_camera_current_real_coords.vz / ONE);
+    VectorNormal(&delta, &g_battle_current_vector);
+    g_battle_current_vector.vy = g_battle_current_vector.vy << 2;
+}

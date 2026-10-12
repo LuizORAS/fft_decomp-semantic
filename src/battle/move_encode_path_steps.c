@@ -28,7 +28,7 @@ void move_encode_path_steps(void) {
     state->source_unit_record_index = 0;
     for (step = 0; step < state->path_length - 1; step++) {
         state->tile_index = state->tile_level * MAP_TILES_PER_LAYER + state->tile_y * config->map_max_x + state->tile_x;
-        state->current_tile = &g_battle_map_tile_data[state->tile_index];
+        state->current_tile = &g_map_tile_data[state->tile_index];
         state->current_panel = &g_target_panels[state->tile_index];
         path_index = step + 1;
         target = state->path_length - path_index;
@@ -83,7 +83,7 @@ void move_encode_path_steps(void) {
             }
             state->destination_climb = 0;
             if (!state->destination_unit_record_index && !hit) {
-                tile = &g_battle_map_tile_data[i];
+                tile = &g_map_tile_data[i];
                 state->destination_entry_height
                     = tile->depth_half_height.half_height * ((tile->slope_type >> state->source_side_shift) & 3);
                 state->destination_opposite_height

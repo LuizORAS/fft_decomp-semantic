@@ -18,7 +18,7 @@ void battle_menu_request_open_companion_data_file(s32 request_index) {
             battle_thread_yield();
         } while (g_battle_menu_companion_data_file_request_index != 0);
     }
-    if (g_battle_script_frame_result_override == 1) {
+    if (g_script_frame_result_override == 1) {
         battle_thread_exit_current();
     }
 }

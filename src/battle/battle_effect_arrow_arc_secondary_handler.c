@@ -90,8 +90,8 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         RotTrans(&rotation, &delta, &delta.pad);
         setVector(&position, g_battle_effect_trajectory_origin.vx + delta.vx,
             g_battle_effect_trajectory_origin.vy + delta.vy, g_battle_effect_trajectory_origin.vz + delta.vz);
-        SetRotMatrix(&g_battle_camera_matrix);
-        SetTransMatrix(&g_battle_camera_matrix);
+        SetRotMatrix(&g_camera_matrix);
+        SetTransMatrix(&g_camera_matrix);
         setVector(&rotation, g_battle_effect_trajectory_origin.vx + delta.vx,
             g_battle_effect_trajectory_origin.vy + delta.vy, g_battle_effect_trajectory_origin.vz + delta.vz);
         RotTrans(&rotation, &delta, &delta.pad);

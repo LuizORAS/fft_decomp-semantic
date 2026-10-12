@@ -23,7 +23,7 @@ void attack_deploy_update_screen_graphics(void) {
     while (1) {
         squad = g_attack_deploy_current_squad;
         parity ^= 1;
-        if (g_attack_deploy_current_squad >= battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT)) {
+        if (g_attack_deploy_current_squad >= script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT)) {
             squad--;
         }
         if (squad == 0) {

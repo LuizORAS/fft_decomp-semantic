@@ -169,8 +169,8 @@ enum {
 
 /* The pending infliction/removal masks are copied and cleared together. */
 typedef struct unit_action_status_changes {
-    u8 infliction[BATTLE_STATUS_BYTE_COUNT];
-    u8 removal[BATTLE_STATUS_BYTE_COUNT];
+    u8 infliction[STATUS_BYTE_COUNT];
+    u8 removal[STATUS_BYTE_COUNT];
 } unit_action_status_changes_t;
 typedef char unit_action_status_changes_size_must_be_10[(sizeof(unit_action_status_changes_t) == 10) ? 1 : -1];
 
@@ -206,8 +206,8 @@ typedef struct action_data {
     u16 last_received_attack;                    /* 0x26; reaction data, varies by ability */
     u8 exp_change;                               /* 0x28; Steal EXP */
     u8 jp_change;                                /* 0x29; Move-JP Up / JP stolen */
-    /* Written as a 16-bit value everywhere (battle_formula_apply_status lhu/sh,
-     * arrow_guard_usability, battle_formula_apply_catch, force_attack_miss). */
+    /* Written as a 16-bit value everywhere (formula_apply_status lhu/sh,
+     * arrow_guard_usability, formula_apply_catch, force_attack_miss). */
     s16 attack_accuracy; /* 0x2a */
 } action_data_t;
 typedef char action_data_size_must_be_44[(sizeof(action_data_t) == 44) ? 1 : -1];
@@ -546,62 +546,62 @@ enum {
 /* SCUS 0x8005b5dc copies these three consecutive sets as one 15-byte block.
  * Keep a named aggregate so whole-block byte copies do not walk beyond the
  * first five-byte array. Individual status readers still use named sets. */
-typedef struct battle_status_sets {
+typedef struct status_sets {
     u8 innate[5];
     u8 immunity[5];
     u8 current[5];
-} battle_status_sets_t;
-typedef char battle_status_sets_size_must_be_15[(sizeof(battle_status_sets_t) == 15) ? 1 : -1];
+} status_sets_t;
+typedef char status_sets_size_must_be_15[(sizeof(status_sets_t) == 15) ? 1 : -1];
 
 /* Canonical status IDs. The owning byte is id >> 3 and its MSB-first mask is
  * 0x80 >> (id & 7); IDs are not byte masks. Entry 0 has no display name but
  * remains addressable in the target's status tables. */
-typedef enum battle_status_id {
-    BATTLE_STATUS_ID_UNNAMED_00 = 0,
-    BATTLE_STATUS_ID_CRYSTAL = 1,
-    BATTLE_STATUS_ID_DEAD = 2,
-    BATTLE_STATUS_ID_UNDEAD = 3,
-    BATTLE_STATUS_ID_CHARGING = 4,
-    BATTLE_STATUS_ID_JUMP = 5, /* "Jumping" in the name text */
-    BATTLE_STATUS_ID_DEFENDING = 6,
-    BATTLE_STATUS_ID_PERFORMING = 7,
-    BATTLE_STATUS_ID_PETRIFY = 8,
-    BATTLE_STATUS_ID_INVITE = 9, /* "Invitation" in the name text */
-    BATTLE_STATUS_ID_DARKNESS = 10,
-    BATTLE_STATUS_ID_CONFUSION = 11,
-    BATTLE_STATUS_ID_SILENCE = 12,
-    BATTLE_STATUS_ID_BLOOD_SUCK = 13,
-    BATTLE_STATUS_ID_UNNAMED_0E = 14, /* no name text and no data inflicts it; it darkens the unit */
-    BATTLE_STATUS_ID_TREASURE = 15,
-    BATTLE_STATUS_ID_OIL = 16,
-    BATTLE_STATUS_ID_FLOAT = 17,
-    BATTLE_STATUS_ID_RERAISE = 18,
-    BATTLE_STATUS_ID_TRANSPARENT = 19,
-    BATTLE_STATUS_ID_BERSERK = 20,
-    BATTLE_STATUS_ID_CHICKEN = 21,
-    BATTLE_STATUS_ID_FROG = 22,
-    BATTLE_STATUS_ID_CRITICAL = 23,
-    BATTLE_STATUS_ID_POISON = 24,
-    BATTLE_STATUS_ID_REGEN = 25,
-    BATTLE_STATUS_ID_PROTECT = 26,
-    BATTLE_STATUS_ID_SHELL = 27,
-    BATTLE_STATUS_ID_HASTE = 28,
-    BATTLE_STATUS_ID_SLOW = 29,
-    BATTLE_STATUS_ID_STOP = 30,
-    BATTLE_STATUS_ID_WALL = 31,
-    BATTLE_STATUS_ID_FAITH = 32,
-    BATTLE_STATUS_ID_INNOCENT = 33,
-    BATTLE_STATUS_ID_CHARM = 34,
-    BATTLE_STATUS_ID_SLEEP = 35,
-    BATTLE_STATUS_ID_DONT_MOVE = 36,
-    BATTLE_STATUS_ID_DONT_ACT = 37,
-    BATTLE_STATUS_ID_REFLECT = 38,
-    BATTLE_STATUS_ID_DEATH_SENTENCE = 39,
-} battle_status_id_e;
+typedef enum status_id {
+    STATUS_ID_UNNAMED_00 = 0,
+    STATUS_ID_CRYSTAL = 1,
+    STATUS_ID_DEAD = 2,
+    STATUS_ID_UNDEAD = 3,
+    STATUS_ID_CHARGING = 4,
+    STATUS_ID_JUMP = 5, /* "Jumping" in the name text */
+    STATUS_ID_DEFENDING = 6,
+    STATUS_ID_PERFORMING = 7,
+    STATUS_ID_PETRIFY = 8,
+    STATUS_ID_INVITE = 9, /* "Invitation" in the name text */
+    STATUS_ID_DARKNESS = 10,
+    STATUS_ID_CONFUSION = 11,
+    STATUS_ID_SILENCE = 12,
+    STATUS_ID_BLOOD_SUCK = 13,
+    STATUS_ID_UNNAMED_0E = 14, /* no name text and no data inflicts it; it darkens the unit */
+    STATUS_ID_TREASURE = 15,
+    STATUS_ID_OIL = 16,
+    STATUS_ID_FLOAT = 17,
+    STATUS_ID_RERAISE = 18,
+    STATUS_ID_TRANSPARENT = 19,
+    STATUS_ID_BERSERK = 20,
+    STATUS_ID_CHICKEN = 21,
+    STATUS_ID_FROG = 22,
+    STATUS_ID_CRITICAL = 23,
+    STATUS_ID_POISON = 24,
+    STATUS_ID_REGEN = 25,
+    STATUS_ID_PROTECT = 26,
+    STATUS_ID_SHELL = 27,
+    STATUS_ID_HASTE = 28,
+    STATUS_ID_SLOW = 29,
+    STATUS_ID_STOP = 30,
+    STATUS_ID_WALL = 31,
+    STATUS_ID_FAITH = 32,
+    STATUS_ID_INNOCENT = 33,
+    STATUS_ID_CHARM = 34,
+    STATUS_ID_SLEEP = 35,
+    STATUS_ID_DONT_MOVE = 36,
+    STATUS_ID_DONT_ACT = 37,
+    STATUS_ID_REFLECT = 38,
+    STATUS_ID_DEATH_SENTENCE = 39,
+} status_id_e;
 
-#define BATTLE_STATUS_BYTE_INDEX(id) ((id) >> 3)
+#define STATUS_BYTE_INDEX(id) ((id) >> 3)
 
-#define BATTLE_STATUS_BYTE_MASK(id) ((u8)(0x80U >> ((id) & 7)))
+#define STATUS_BYTE_MASK(id) ((u8)(0x80U >> ((id) & 7)))
 
 /* Rows of g_main_status_check_sets. main_status_init_check_data builds rows 0
  * to 9 from the flag bytes of g_main_status_effect_data and writes row 10
@@ -652,11 +652,11 @@ enum {
  * the saved fields; WORLD 0x800fbd14 and BATTLE 0x801488a8 restore them and
  * apply intervening status differences through BATTLE callbacks. */
 typedef struct unit_status_staging {
-    u8 innate[BATTLE_UNIT_SLOT_COUNT][BATTLE_STATUS_BYTE_COUNT];
-    u8 current[BATTLE_UNIT_SLOT_COUNT][BATTLE_STATUS_BYTE_COUNT];    /* 0x069 */
-    u8 inflicted[BATTLE_UNIT_SLOT_COUNT][BATTLE_STATUS_BYTE_COUNT];  /* 0x0d2 */
-    u8 removed[BATTLE_UNIT_SLOT_COUNT][BATTLE_STATUS_BYTE_COUNT];    /* 0x13b */
-    u8 added[BATTLE_UNIT_SLOT_COUNT][BATTLE_STATUS_BYTE_COUNT];      /* 0x1a4 */
+    u8 innate[BATTLE_UNIT_SLOT_COUNT][STATUS_BYTE_COUNT];
+    u8 current[BATTLE_UNIT_SLOT_COUNT][STATUS_BYTE_COUNT];           /* 0x069 */
+    u8 inflicted[BATTLE_UNIT_SLOT_COUNT][STATUS_BYTE_COUNT];         /* 0x0d2 */
+    u8 removed[BATTLE_UNIT_SLOT_COUNT][STATUS_BYTE_COUNT];           /* 0x13b */
+    u8 added[BATTLE_UNIT_SLOT_COUNT][STATUS_BYTE_COUNT];             /* 0x1a4 */
     u8 status_ct[BATTLE_UNIT_SLOT_COUNT][BATTLE_TIMED_STATUS_COUNT]; /* 0x20d */
     u8 charged_ability_ct[BATTLE_UNIT_SLOT_COUNT];                   /* 0x35d */
     u8 death_counter[BATTLE_UNIT_SLOT_COUNT];                        /* 0x372 */
@@ -861,7 +861,7 @@ typedef struct battle_stats {
     u8 x;                                                /* 0x047 */
     battle_unit_position_t position;                     /* 0x048 */
     u8 equipment_categories[4];                          /* 0x04a */
-    battle_status_sets_t status_sets;                    /* 0x04e; innate / immunity / current */
+    status_sets_t status_sets;                           /* 0x04e; innate / immunity / current */
     u8 status_ct[16];                                    /* 0x05d */
     u8 elemental_affinity[5];                            /* 0x06d; elemental_affinity_index_e */
     unit_raw_stats_t raw_stats;                          /* 0x072 */

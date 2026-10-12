@@ -36,7 +36,7 @@ battle_walk_path_t* move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 eleva
     state->tile_level = config->target_level = elevation;
     move_store_unit_movement_to_scratchpad(unit_id);
     index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-    if (!g_battle_map_tile_data[index].ceiling_depth_and_marks.move_destination) {
+    if (!g_map_tile_data[index].ceiling_depth_and_marks.move_destination) {
         return 0;
     }
     if (g_move_reachable_tiles_valid == 0) {
@@ -107,7 +107,7 @@ battle_walk_path_t* move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 eleva
         state->previous_source_side_shift = state->selected_source_side_shift;
         pass = state->path_length + 1;
         state->tile_index = state->tile_level * MAP_TILES_PER_LAYER + state->tile_y * config->map_max_x + state->tile_x;
-        state->current_tile = &g_battle_map_tile_data[state->tile_index];
+        state->current_tile = &g_map_tile_data[state->tile_index];
         state->current_panel = &g_target_panels[state->tile_index];
         state->path_length = pass;
         if (state->outer_count >= 5) {

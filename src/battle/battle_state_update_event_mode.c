@@ -16,15 +16,15 @@ void battle_state_update_event_mode(void) {
     if (g_battle_menu_status_screen_selected != 1) {
         battle_unit_update_and_animate_units();
         battle_gfx_update_screen_color_modulation_fade();
-        battle_camera_update_real_coord_animation();
-        battle_camera_update_offset_screen_coord_animation();
-        battle_camera_update_zoom_animation();
-        battle_camera_update_rotation_animation();
+        camera_update_real_coord_animation();
+        camera_update_offset_screen_coord_animation();
+        camera_update_zoom_animation();
+        camera_update_rotation_animation();
         move_update_unit_by_misc_id();
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
-    switch (battle_script_run_event_frame(main_gfx_get_otag(), g_main_input_current_buttons)) {
+    switch (script_run_event_frame(main_gfx_get_otag(), g_main_input_current_buttons)) {
     case 0:
         battle_gfx_init_evtchr_vram_slots();
         g_battle_menu_status_enabled = 1;

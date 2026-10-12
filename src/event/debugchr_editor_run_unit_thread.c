@@ -108,7 +108,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
 
     for (;; frame++) {
         battle_thread_yield();
-        g_debugchr_input_controller = battle_script_get_controller_input_pointer(0);
+        g_debugchr_input_controller = script_get_controller_input_pointer(0);
         {
             s32 render_offset;
             render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);
@@ -118,7 +118,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
 
         if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
             if (sound_latched == 0) {
-                g_battle_sound_pending_sfx_id = one;
+                g_sound_pending_sfx_id = one;
                 sound_latched = 1;
             }
             if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_RESUME) != 0) {
@@ -148,7 +148,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
                 battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
                 battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
+                g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
             if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
@@ -190,7 +190,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             u8* chosen_unit;
 
             slot = g_debugchr_editor_selected_unit_slot;
-            g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
+            g_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
             g_debugchr_panel_status_animation[1] = 7;
             slot ^= 1;
             g_debugchr_editor_selected_unit_slot = slot;
@@ -213,7 +213,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             u8* chosen_unit;
 
             slot = g_debugchr_editor_selected_unit_slot;
-            g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
+            g_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
             g_debugchr_panel_status_animation[0] = 7;
             slot ^= 1;
             g_debugchr_editor_selected_unit_slot = slot;

@@ -12,11 +12,11 @@ s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y
     s32 unit_team_flags;
 
     unit_team_flags = team_flags;
-    if (x < 0 || x >= g_battle_map_max_x) {
+    if (x < 0 || x >= g_map_max_x) {
         return 0;
     }
     if (y >= 0) {
-        if (y >= g_battle_map_max_y) {
+        if (y >= g_map_max_y) {
             return 0;
         }
 

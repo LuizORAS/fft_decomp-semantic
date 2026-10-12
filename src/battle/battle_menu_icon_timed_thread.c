@@ -45,10 +45,10 @@ void battle_menu_icon_timed_thread(void) {
         }
         if (g_battle_text_message_duration_frames < i * g_battle_event_speed) {
             hold = 0;
-            g_battle_script_event_input = PSX_PAD_CIRCLE;
-            g_battle_sound_suppressed = 1;
+            g_script_event_input = PSX_PAD_CIRCLE;
+            g_sound_suppressed = 1;
         }
-        if (battle_menu_should_close_thread(&g_battle_script_event_input) != 0) {
+        if (battle_menu_should_close_thread(&g_script_event_input) != 0) {
             break;
         }
         if (unset >= 0) {
@@ -67,7 +67,7 @@ void battle_menu_icon_timed_thread(void) {
         battle_menu_submit_icon_primitives(record);
     }
     g_battle_menu_panel_fade_intensity = 0;
-    g_battle_sound_suppressed = 0;
+    g_sound_suppressed = 0;
     battle_thread_yield();
     if (battle_thread_get_current_parameter_2() == 0) {
         battle_thread_exit_current();

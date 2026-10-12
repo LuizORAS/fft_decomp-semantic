@@ -44,8 +44,7 @@ s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
         move_apply_knockback();
         return 0;
     }
-    g_action_current_ability_view.terrain
-        = g_battle_map_tile_data[battle_map_calculate_location(g_action_target)].surface.type;
+    g_action_current_ability_view.terrain = g_map_tile_data[map_calculate_location(g_action_target)].surface.type;
     if (g_action_current_ability.strike_counter == 0) {
         id = g_action_current_ability.primary_weapon_id;
     } else {
@@ -104,8 +103,8 @@ s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         formula = ABILITY_FORMULA_WEAPON_DAMAGE;
         if (action.ability_id <= ABILITY_ID_ITEM_FIRST) {
-            if ((g_action_attacker->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
+            if ((g_action_attacker->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)]
+                    & STATUS_BYTE_MASK(STATUS_ID_FROG))
                 && g_action_current_ability_view.weapon_proc_pending == 0) {
                 g_action_current_ability_view.weapon_id = ITEM_ID_NOTHING;
                 main_util_copy_byte_data(
@@ -179,15 +178,15 @@ s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
     }
     main_util_copy_byte_data(&g_main_status_infliction_data[id], &g_action_current_ability_view.status_infliction,
         sizeof(status_infliction_data_t));
-    battle_status_remove();
+    status_remove();
     g_action_current_ability.formula = formula;
     action_check_reflect_blade_grasp_and_arrow_guard();
     if (g_action_target_data->hit == 0) {
         return 1;
     }
-    g_battle_formula_handlers[formula - 1]();
+    g_formula_handlers[formula - 1]();
     if (formula < 7) {
-        battle_formula_apply_poach_and_train();
+        formula_apply_poach_and_train();
     }
     if (formula == ABILITY_FORMULA_DAMAGE_PA_TIMES_WP) {
         g_action_current_ability_view.weapon_id = ITEM_ID_NOTHING;

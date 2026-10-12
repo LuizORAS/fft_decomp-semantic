@@ -26,8 +26,7 @@ s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* o
     if (unit == 0) {
         return 0;
     }
-    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+    if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG)) {
         berserk = 1;
     }
     if (g_main_action_menu_types_by_skillset[skillset] != ACTION_MENU_TYPE_MONSTER) {

@@ -157,7 +157,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 break;
             case BATTLE_SEQ_OP_PLAY_SOUND:
                 value = seq->sequences[index][pos++];
-                battle_sound_play_movement_sfx(unit, value);
+                sound_play_movement_sfx(unit, value);
                 break;
             case BATTLE_SEQ_OP_MOVE_UNIT_RL:
                 battle_unit_shift_right_or_left(unit, seq->sequences[index][pos++]);
@@ -275,7 +275,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 }
                 break;
             case BATTLE_SEQ_OP_PLAY_WEAPON_SOUND:
-                battle_sound_select_weapon_hit(unit, seq->sequences[index][pos++]);
+                sound_select_weapon_hit(unit, seq->sequences[index][pos++]);
                 break;
             case BATTLE_SEQ_OP_WAIT_FOR_EFFECT_LOAD:
                 if (g_battle_state_animation_continue_check == 1) {

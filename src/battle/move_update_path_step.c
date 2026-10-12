@@ -31,7 +31,7 @@ void move_update_path_step(battle_unit_misc_data_t* unit) {
         if (unit->animation.wait == 0) {
             unit->step_phase++;
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
-            battle_sound_play_movement_sfx(unit, MAIN_SFX_JUMP);
+            sound_play_movement_sfx(unit, MAIN_SFX_JUMP);
             battle_unit_dismount_rider(unit);
         }
         break;

@@ -18,12 +18,11 @@ s32 ai_check_facing_tile(ai_coords_t* source, ai_coords_t* target) {
         return 1;
     }
     y = target->bytes.y;
-    if (y >= g_ai_data_base.map_max_y || (tile = &g_battle_map_tile_data[y * width + x])->flags.blocked) {
+    if (y >= g_ai_data_base.map_max_y || (tile = &g_map_tile_data[y * width + x])->flags.blocked) {
         return 1;
     }
     return tile->height
-        - g_battle_map_tile_data[(source->bytes.elevation * MAP_TILES_PER_LAYER) + source->bytes.y * width
-            + source->bytes.x]
+        - g_map_tile_data[(source->bytes.elevation * MAP_TILES_PER_LAYER) + source->bytes.y * width + source->bytes.x]
               .height
         >= 3;
 }

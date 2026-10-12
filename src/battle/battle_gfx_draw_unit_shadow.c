@@ -35,8 +35,8 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
         battle_gfx_calculate_sprite_shadow_from_tile_slope(unit);
         unit->shadow_dirty ^= 1;
     }
-    SetRotMatrix(&g_battle_camera_matrix);
-    SetTransMatrix(&g_battle_camera_matrix);
+    SetRotMatrix(&g_camera_matrix);
+    SetTransMatrix(&g_camera_matrix);
     prim = g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
     corners = unit->shadow_quad;
     ((P_TAG*)prim)->len = 9;
@@ -54,8 +54,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     prim->x3 = transformed.vx;
     prim->y3 = transformed.vy;
     prim->code |= 2;
-    tile = battle_map_get_tile_data_pointer(
-        (unit->screen.vx / MAP_TILE_SIZE), (unit->screen.vz / MAP_TILE_SIZE), unit->map_z);
+    tile = map_get_tile_data_pointer((unit->screen.vx / MAP_TILE_SIZE), (unit->screen.vz / MAP_TILE_SIZE), unit->map_z);
     if (tile->depth_half_height.depth && -(tile->height + tile->depth_half_height.depth) * 12 < unit->screen.vy) {
         unit->shadow_counter += g_main_system_animation_speed;
         frame = unit->shadow_counter;
@@ -99,26 +98,25 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     }
     main_util_set_svector(&position, unit->screen.vx + unit->event_offset.vx + unit->seq_offset.vx, 0,
         unit->screen.vz + unit->event_offset.vz + unit->seq_offset.vz);
-    position.vy = battle_map_calculate_slope_height(&position, unit->map_z);
+    position.vy = map_calculate_slope_height(&position, unit->map_z);
     if (unit->screen.vy >= position.vy) {
         packet = ot;
     } else {
-        tile = battle_map_get_tile_data_pointer(
-            (position.vx / MAP_TILE_SIZE), (position.vz / MAP_TILE_SIZE), unit->map_z);
+        tile = map_get_tile_data_pointer((position.vx / MAP_TILE_SIZE), (position.vz / MAP_TILE_SIZE), unit->map_z);
         position.vy -= tile->depth_half_height.depth * 12;
         if (unit->step_phase != MOVE_STEP_PHASE_NONE) {
             if (tile->surface.depth_bias) {
-                battle_camera_calculate_relative_offset_by_5(&position, &offset);
+                camera_calculate_relative_offset_by_5(&position, &offset);
             } else {
-                battle_camera_calculate_relative_offset_by_1(&position, &offset);
+                camera_calculate_relative_offset_by_1(&position, &offset);
             }
         } else if (tile->surface.depth_bias) {
-            battle_camera_convert_screen_coords_modify_by_5(&position, &offset);
+            camera_convert_screen_coords_modify_by_5(&position, &offset);
         } else {
-            battle_camera_convert_screen_coords_modify_by_1(&position, &offset);
+            camera_convert_screen_coords_modify_by_1(&position, &offset);
         }
-        SetRotMatrix(&g_battle_camera_matrix);
-        SetTransMatrix(&g_battle_camera_matrix);
+        SetRotMatrix(&g_camera_matrix);
+        SetTransMatrix(&g_camera_matrix);
         RotTrans(&offset, &transformed, &flag);
         depth = transformed.vz / 4;
         packet = main_gfx_get_otag() + depth;

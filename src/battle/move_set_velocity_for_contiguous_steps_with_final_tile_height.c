@@ -34,7 +34,7 @@ void move_set_velocity_for_contiguous_steps_with_final_tile_height(
     map_tile_depth_t depth;
     s16 code;
 
-    battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
+    map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
     x = unit->map_x;
     y = unit->map_y;
     index = unit->movement_path_offset - 1;
@@ -72,7 +72,7 @@ void move_set_velocity_for_contiguous_steps_with_final_tile_height(
         }
         layer = current->higher;
         if (unit->movement_path_offset == path->count) {
-            tile = battle_map_get_tile_data_pointer(x, y, layer);
+            tile = map_get_tile_data_pointer(x, y, layer);
             depth = tile->depth_half_height;
             end_z = -(((tile->height + depth.depth) * 2) + depth.half_height) * MOVE_STEP_HEIGHT_SCALE;
         } else {

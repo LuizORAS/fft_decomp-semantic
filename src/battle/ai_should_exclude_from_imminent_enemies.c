@@ -16,10 +16,10 @@ s32 ai_should_exclude_from_imminent_enemies(s32 unit_id) {
     unit = &g_battle_unit_stats[unit_id];
     limit = ai->acting_unit_remaining_clockticks;
     if (limit < ai_calculate_clockticks_until_unit_acts(unit)
-        || ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, BATTLE_STATUS_ID_STOP)
-        || ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, BATTLE_STATUS_ID_DONT_ACT)
-        || ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, BATTLE_STATUS_ID_SLEEP)
-        || ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, BATTLE_STATUS_ID_CHICKEN))
+        || ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, STATUS_ID_STOP)
+        || ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, STATUS_ID_DONT_ACT)
+        || ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, STATUS_ID_SLEEP)
+        || ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, STATUS_ID_CHICKEN))
         return 1;
-    return ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, BATTLE_STATUS_ID_CHARM) != 0;
+    return ai_is_status_active_through_delay(ai->acting_unit_remaining_clockticks, unit, STATUS_ID_CHARM) != 0;
 }

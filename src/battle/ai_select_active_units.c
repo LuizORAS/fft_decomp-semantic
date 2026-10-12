@@ -22,8 +22,8 @@ s32 ai_select_active_units(ai_unit_filter_e mode, s32 target_id) {
         ai->targetability.live.unit_active[i] = 0;
         if (decision->targeting_flags_2 & AI_TARGET_UNTARGETABLE)
             continue;
-        if (!(g_battle_unit_stats[i].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
+        if (!(g_battle_unit_stats[i].status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CONFUSION)]
+                & STATUS_BYTE_MASK(STATUS_ID_CONFUSION))
             && !(decision->flags & AI_DECISION_CONSIDERED))
             continue;
         if (i == ai->acting_unit_id && target_id == 0xff)
@@ -46,11 +46,10 @@ s32 ai_select_active_units(ai_unit_filter_e mode, s32 target_id) {
             unit = &g_battle_unit_stats[i];
             /* Target lw at 0x80197e10 reads the aligned first four status bytes. */
             if (!(*(u32*)&unit->status_sets.current[0]
-                    & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_DEAD)
-                        | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY)
-                        | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRITICAL)))
-                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
-                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
+                    & (STATUS_PACKED_MASK(STATUS_ID_DEAD) | STATUS_PACKED_MASK(STATUS_ID_PETRIFY)
+                        | STATUS_PACKED_MASK(STATUS_ID_CRITICAL)))
+                && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEATH_SENTENCE)]
+                    & STATUS_BYTE_MASK(STATUS_ID_DEATH_SENTENCE)))
                 continue;
             break;
         }

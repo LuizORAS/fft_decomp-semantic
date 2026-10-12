@@ -26,7 +26,7 @@ enum {
     /* Five ordinary deployed-unit IDs; the end value is exclusive. */
     EVENT_UNIT_ID_DEPLOYED_FIRST = 0x78,
     EVENT_UNIT_ID_DEPLOYED_END = 0x7d,
-    /* battle_script_get_misc_id / world_script_get_misc_id result for an absent unit. */
+    /* script_get_misc_id / world_script_get_misc_id result for an absent unit. */
     EVENT_MISC_ID_NONE = 2000,
     /* g_*_event_unit_slots[] entry with no ghost unit assigned. */
     EVENT_UNIT_SLOT_EMPTY = 1000,
@@ -36,7 +36,7 @@ enum {
 
 /* Retail scenario bytecode, reviewed against BATTLE 0x80143bd8..0x80145f78 and
  * the shared BATTLE/WORLD operand-length tables
- * (g_battle_script_event_instruction_sizes, g_world_event_instruction_sizes).
+ * (g_script_event_instruction_sizes, g_world_event_instruction_sizes).
  *
  * Encoding: one opcode byte, then the operand bytes the length table counts
  * for that opcode. 16-bit operands are little-endian and unaligned. After a
@@ -389,7 +389,7 @@ typedef enum event_inflict_status {
 } event_inflict_status_e;
 
 /* EVENT/TEST.EVT record. The first 32-bit value is relative to the block base, not
- * data[]. battle_script_load_event converts it to a text pointer, then overwrites
+ * data[]. script_load_event converts it to a text pointer, then overwrites
  * it with EVENT_TEXT_OFFSET_PROCESSED. This is not a decoded instruction
  * array or a native scheduler context. The interpreter starts at byte zero:
  * the processed header is four one-byte 0xf2 NOPs before data[]. */

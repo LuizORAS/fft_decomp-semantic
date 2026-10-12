@@ -28,7 +28,7 @@ s32 battle_unit_place_in_new_location(u32 misc_id, map_tile_coordinates_t* tile,
         unit->facing = facing << 10;
         unit->screen.vx = tile->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         unit->screen.vz = tile->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        unit->screen.vy = battle_map_calculate_slope_height(&unit->screen, unit->map_z);
+        unit->screen.vy = map_calculate_slope_height(&unit->screen, unit->map_z);
         unit->real.vx = unit->screen.vx << 12;
         unit->real.vz = unit->screen.vz << 12;
         unit->real.vy = unit->screen.vy << 12;

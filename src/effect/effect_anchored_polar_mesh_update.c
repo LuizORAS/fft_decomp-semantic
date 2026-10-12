@@ -84,8 +84,8 @@ s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 e
         scratch->position.vx += scratch->unit_coords->vx;
         scratch->position.vy += scratch->unit_coords->vy;
         scratch->position.vz += scratch->unit_coords->vz;
-        SetRotMatrix(&g_battle_camera_matrix);
-        SetTransMatrix(&g_battle_camera_matrix);
+        SetRotMatrix(&g_camera_matrix);
+        SetTransMatrix(&g_camera_matrix);
         RotTrans(&scratch->position, &scratch->screen, &scratch->screen.pad);
 
         selector = entry->polar_mesh.curve_bindings.radius;

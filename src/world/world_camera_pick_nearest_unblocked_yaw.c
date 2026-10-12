@@ -31,14 +31,13 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     world_unit_get_map_coords_from_misc_id(misc_id_a, &g_world_text_speaker_screen_coords);
     /* The raw result is assigned before it is masked: combine then knows
      * nothing about the mask's high bits and the loop test keeps its sll 16. */
-    mask = battle_map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_world_text_speaker_screen_coords.vx,
+    mask = map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_world_text_speaker_screen_coords.vx,
         g_world_text_speaker_screen_coords.vz, g_world_text_speaker_screen_coords.vy);
     mask &= 0xFF;
     world_unit_get_map_coords_from_misc_id(misc_id_b, &g_world_text_speaker_screen_coords);
     mask = (mask
-               | battle_map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK,
-                   g_world_text_speaker_screen_coords.vx, g_world_text_speaker_screen_coords.vz,
-                   g_world_text_speaker_screen_coords.vy))
+               | map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_world_text_speaker_screen_coords.vx,
+                   g_world_text_speaker_screen_coords.vz, g_world_text_speaker_screen_coords.vy))
         & 0xF;
     bit = 1;
     best = 0x8000;

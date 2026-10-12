@@ -2,7 +2,7 @@
  * script's CAMERA instructions up to CAMERA_FUSION_END, then steps every track
  * each frame until the tilt track finishes.
  *
- * Instruction-for-instruction twin of battle_camera_fusion_thread
+ * Instruction-for-instruction twin of camera_fusion_thread
  * (0x8013db9c); only the callee and global bindings differ. The seed loop
  * reads each track through a `track` pointer taken first in the body: that
  * makes loop.c discover the track giv before the script-variable and values

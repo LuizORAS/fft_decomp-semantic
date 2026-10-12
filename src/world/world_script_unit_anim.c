@@ -4,7 +4,7 @@
 
 /* UnitAnim event instruction: request the animation for every misc record
  * that resolves from the unit id, and wait for the effect after a bow shot.
- * WORLD twin of battle_script_unit_anim. */
+ * WORLD twin of script_unit_anim. */
 void world_script_unit_anim(const event_unit_anim_parameters_t* parameters) {
     u16 unit_id;
     s32 misc_index;

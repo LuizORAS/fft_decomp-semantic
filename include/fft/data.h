@@ -638,7 +638,7 @@ typedef enum ability_secondary_flags_4 {
 } ability_secondary_flags_4_e;
 
 /* One-based formula IDs of abilities, weapons and items: BATTLE resolves an
- * action through g_battle_formula_handlers[id - 1]. Only IDs tested by the
+ * action through g_formula_handlers[id - 1]. Only IDs tested by the
  * code are named, after their handlers. */
 typedef enum ability_formula {
     ABILITY_FORMULA_WEAPON_DAMAGE = 1, /* also stands in for 0 and for ids past the table */
@@ -702,20 +702,20 @@ typedef char battle_ability_primary_record_size_must_be_8[(sizeof(ability_data_t
 
 /* Bit flags in status_infliction_data_t.type and the active-ability copy. The
  * target status applicator checks these in descending-bit precedence. */
-typedef enum battle_status_infliction_type {
-    BATTLE_STATUS_INFLICTION_TYPE_CANCEL = 0x10,
-    BATTLE_STATUS_INFLICTION_TYPE_SEPARATE = 0x20,
-    BATTLE_STATUS_INFLICTION_TYPE_RANDOM_ONE = 0x40,
-    BATTLE_STATUS_INFLICTION_TYPE_ALL_OR_NOTHING = 0x80,
-} battle_status_infliction_type_e;
+typedef enum status_infliction_type {
+    STATUS_INFLICTION_TYPE_CANCEL = 0x10,
+    STATUS_INFLICTION_TYPE_SEPARATE = 0x20,
+    STATUS_INFLICTION_TYPE_RANDOM_ONE = 0x40,
+    STATUS_INFLICTION_TYPE_ALL_OR_NOTHING = 0x80,
+} status_infliction_type_e;
 
 /* Six-byte status-infliction records at 0x80063fc4; byte 0 selects how the
  * five-byte status set is applied. */
 typedef struct status_infliction_data {
-    u8 type; /* battle_status_infliction_type_e bit flags */
+    u8 type; /* status_infliction_type_e bit flags */
     u8 statuses[5];
 } status_infliction_data_t;
-typedef char battle_status_infliction_record_size_must_be_6[(sizeof(status_infliction_data_t) == 6) ? 1 : -1];
+typedef char status_infliction_record_size_must_be_6[(sizeof(status_infliction_data_t) == 6) ? 1 : -1];
 
 /* element */
 /* Element bits shared by abilities, equipment, jobs and unit affinity sets. */
@@ -1219,7 +1219,7 @@ typedef struct armor_data {
 } armor_data_t;
 
 /* Static innate, immunity and starting-status masks embedded in item and job
- * records. This differs from battle_status_sets_t, whose third set is the
+ * records. This differs from status_sets_t, whose third set is the
  * mutable current-status mask. */
 typedef struct initial_status_sets {
     u8 innate[5];
@@ -1674,8 +1674,8 @@ typedef enum skillset_ability_filter {
 
 /* status */
 enum {
-    BATTLE_STATUS_COUNT = 40,
-    BATTLE_STATUS_BYTE_COUNT = 5,
+    STATUS_COUNT = 40,
+    STATUS_BYTE_COUNT = 5,
     BATTLE_TIMED_STATUS_COUNT = 16,
 };
 
@@ -1685,8 +1685,8 @@ typedef struct status_effect_data {
     u8 ct;
     u8 flags_1;
     u8 flags_2;
-    u8 cancels[BATTLE_STATUS_BYTE_COUNT];    /* 0x06; statuses removed when this one is inflicted */
-    u8 cant_stack[BATTLE_STATUS_BYTE_COUNT]; /* 0x0b; current statuses that block this one */
+    u8 cancels[STATUS_BYTE_COUNT];    /* 0x06; statuses removed when this one is inflicted */
+    u8 cant_stack[STATUS_BYTE_COUNT]; /* 0x0b; current statuses that block this one */
 } status_effect_data_t;
 typedef char status_effect_data_size_must_be_16[(sizeof(status_effect_data_t) == 16) ? 1 : -1];
 

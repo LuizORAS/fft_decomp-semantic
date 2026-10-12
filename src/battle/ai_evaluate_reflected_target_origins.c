@@ -29,7 +29,7 @@ s32 ai_evaluate_reflected_target_origins(void) {
             continue;
         if (ai->reflector_unit_index == ai->acting_unit_id)
             continue;
-        if (!ai_is_status_active_through_delay(ai->considered_ability.ct, reflector, BATTLE_STATUS_ID_REFLECT))
+        if (!ai_is_status_active_through_delay(ai->considered_ability.ct, reflector, STATUS_ID_REFLECT))
             continue;
         if (ai_check_ability_use_based_on_ct(ai->reflector_unit_index))
             continue;

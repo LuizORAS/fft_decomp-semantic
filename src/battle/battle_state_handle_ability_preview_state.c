@@ -15,9 +15,9 @@ void battle_state_handle_ability_preview_state(void) {
 
     unit = battle_unit_get_source_misc_data();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
-        battle_camera_handle_rotation_input();
-        battle_camera_call_zoom_map();
-        battle_camera_call_toggle_tilt();
+        camera_handle_rotation_input();
+        camera_call_zoom_map();
+        camera_call_toggle_tilt();
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             g_battle_cursor_input_mode = g_battle_cursor_input_mode_saved;
             battle_gfx_update_unit_palettes();

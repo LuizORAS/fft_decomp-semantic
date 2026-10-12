@@ -45,14 +45,14 @@ s32 target_set_ability_panels(const action_command_t* source) {
     flags_4 = ability->flags_4;
     x = unit->x;
     y = unit->position.y;
-    location = battle_map_calculate_location(unit);
-    tile = &g_battle_map_tile_data[location];
+    location = map_calculate_location(unit);
+    tile = &g_map_tile_data[location];
     terrain_depth = tile->depth_half_height;
     elevation = tile->height * 2 + (terrain_depth.half_height) + tile->depth_half_height.depth * 2;
     panels = g_target_panels;
     origin_offset = location * sizeof(target_panel_t);
     origin = (target_panel_t*)((s32)panels + origin_offset);
-    index = y * g_battle_map_max_x + x;
+    index = y * g_map_max_x + x;
     if (range == 0xff) {
         for (i = 0; i < 0x200; i++) {
             panels[i].remaining_range = 1;

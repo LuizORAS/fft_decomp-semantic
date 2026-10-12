@@ -34,7 +34,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     g_battle_enemy_level_sum = 0;
     g_battle_highest_enemy_level = 0;
     main_party_calculate_highest_level();
-    free_spritesheets = battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT);
+    free_spritesheets = script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT);
     free_spritesheets = (free_spritesheets < 10) ? 9 - free_spritesheets : 0;
     enemy_limit = free_spritesheets + 7;
     enemy_count = 0;

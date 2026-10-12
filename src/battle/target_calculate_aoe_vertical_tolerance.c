@@ -14,14 +14,14 @@ void target_calculate_aoe_vertical_tolerance(s32 x, s32 y, s32 lo, s32 hi) {
     target_panel_t* panel;
     map_tile_depth_t flags;
 
-    if ((x >= 0) && (x < g_battle_map_max_x) && (y >= 0) && (y < g_battle_map_max_y)) {
+    if ((x >= 0) && (x < g_map_max_x) && (y >= 0) && (y < g_map_max_y)) {
         level = 0;
         if (lo < 0) {
             lo = 0;
         }
         do {
-            idx = (level << 8) + (y * g_battle_map_max_x) + x;
-            tile = &g_battle_map_tile_data[idx];
+            idx = (level << 8) + (y * g_map_max_x) + x;
+            tile = &g_map_tile_data[idx];
             panel = &g_target_panel_data[idx];
             flags = tile->depth_half_height;
             height = (tile->height * 2) + (flags.half_height) + ((flags.depth) * 2);

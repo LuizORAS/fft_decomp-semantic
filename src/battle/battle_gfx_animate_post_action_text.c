@@ -13,9 +13,9 @@
  * table's alignment relative to the original rodata. */
 void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const SVECTOR* screen_coords) {
     SVECTOR position;
-    SVECTOR zoom_0 = g_battle_status_bubble_zoom;
-    SVECTOR zoom_1 = g_battle_status_bubble_zoom;
-    SVECTOR zoom_2 = g_battle_status_bubble_zoom;
+    SVECTOR zoom_0 = g_status_bubble_zoom;
+    SVECTOR zoom_1 = g_status_bubble_zoom;
+    SVECTOR zoom_2 = g_status_bubble_zoom;
     s16 scale_0[21];
     s16 scale_1[21];
     s16 scale_2[21];
@@ -73,7 +73,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const SV
         }
         unit->numeric_display.displays[0]->tpage = unit->numeric_display.displays[1]->tpage
             = unit->numeric_display.displays[2]->tpage = 0x3f;
-        battle_map_modify_palette(MAP_COLOR_MODE_BASE, 2, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0, -31, -31, -31);
+        map_modify_palette(MAP_COLOR_MODE_BASE, 2, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0, -31, -31, -31);
         battle_gfx_set_sprite_part_semi_transparent(display_0, 0, 1);
         battle_gfx_set_sprite_part_semi_transparent(display_1, 0, 1);
         battle_gfx_set_sprite_part_semi_transparent(display_2, 0, 1);

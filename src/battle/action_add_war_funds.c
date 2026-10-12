@@ -18,12 +18,12 @@ s32 action_add_war_funds(battle_stats_t* unit, s32 total, u8 item_id) {
     if (item_id != ITEM_ID_NOTHING) {
         total += g_main_item_primary_data[item_id].price >> 2;
     }
-    value = battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + total;
+    value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + total;
     if (value > 99999999) {
         value = 99999999;
     } else if (value < 0) {
         value = 0;
     }
-    battle_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, value);
+    script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, value);
     return total;
 }

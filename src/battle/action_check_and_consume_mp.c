@@ -21,13 +21,11 @@ s32 action_check_and_consume_mp(battle_stats_t* unit) {
     if (g_action_context == ACTION_CONTEXT_PRIMARY)
         main_status_set_action_state(unit, MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING);
     result = battle_unit_get_action_restriction(unit);
-    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
+    if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_ACT)] & STATUS_BYTE_MASK(STATUS_ID_DONT_ACT))
         result = BATTLE_UNIT_ACTION_RESTRICTION_CANNOT_ACT;
     if (result)
         return result + 6;
-    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+    if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG)) {
         if (ability_id != 0 && ability_id != ABILITY_ID_FROG_ATTACK && ability_id != ABILITY_ID_BLACK_MAGIC_FROG)
             return 5;
         if (menu == ACTION_MENU_TYPE_CHARGE)
@@ -37,8 +35,7 @@ s32 action_check_and_consume_mp(battle_stats_t* unit) {
         ability = &g_main_ability_range_data[ability_id];
         if ((menu == ACTION_MENU_TYPE_DEFAULT || menu == ACTION_MENU_TYPE_MONSTER)
             && (ability->flags_3 & ABILITY_SECONDARY_FLAG_3_AFFECTED_BY_SILENCE)
-            && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE)))
+            && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_SILENCE)] & STATUS_BYTE_MASK(STATUS_ID_SILENCE)))
             return 2;
         if (menu == ACTION_MENU_TYPE_DEFAULT && unit->job_id != JOB_ID_MIME) {
             cost = ability->mp_cost;

@@ -58,8 +58,8 @@ void main_system_run_game_loop(void) {
         if (g_main_system_game_flow_state == MAIN_GAME_FLOW_ENDING) {
             main_sound_stop_weather_sfx_music();
             main_sound_unload_scenario_music_and_tunes();
-            battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_MALAK_REVIVED);
+            script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_MALAK_REVIVED);
             main_overlay_exec_open_bin_ending();
             main_overlay_exec_battle_bin();
             main_gfx_load_zodiac_frame();

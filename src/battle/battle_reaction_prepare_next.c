@@ -82,8 +82,8 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         break;
                     case ABILITY_ID_REACTION_COUNTER_FLOOD:
                         outcome = (action_store_counter_ability(unit, SKILLSET_ID_ELEMENTAL,
-                                       g_main_terrain_geomancy_abilities
-                                           [g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.type],
+                                       g_main_terrain_geomancy_abilities[g_map_tile_data[map_calculate_location(unit)]
+                                               .surface.type],
                                        0)
                                       == 0)
                             * 2;

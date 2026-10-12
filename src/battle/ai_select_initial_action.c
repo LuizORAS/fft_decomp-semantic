@@ -38,11 +38,11 @@ status_action:
     }
     if (result != 0)
         return 0;
-    if (((ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL)))
+    if (((ai->acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)]
+             & (STATUS_BYTE_MASK(STATUS_ID_FROG) | STATUS_BYTE_MASK(STATUS_ID_CRITICAL)))
             && (ai->targetability.live.target_setting_flags & AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE))
-        || ((ai->acting_unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
-                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
+        || ((ai->acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_ACT)]
+                & STATUS_BYTE_MASK(STATUS_ID_DONT_ACT))
             && (ai->acting_unit_decision->flags & AI_DECISION_FOCUS_TARGET))) {
         ai_transfer_halfword_values(
             &ai->saved_acting_unit_decision, ai->acting_unit_decision, sizeof(ai_unit_decision_t));

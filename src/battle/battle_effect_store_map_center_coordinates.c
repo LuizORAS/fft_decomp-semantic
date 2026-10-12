@@ -9,7 +9,7 @@ void battle_effect_store_map_center_coordinates(VECTOR* destination) {
     SVECTOR map_max;
     s32 max_y;
 
-    battle_map_store_max_coordinates(&map_max);
+    map_store_max_coordinates(&map_max);
     destination->vx = map_max.vx * (MAP_TILE_SIZE / 2);
     max_y = map_max.vz;
     destination->vy = 0;

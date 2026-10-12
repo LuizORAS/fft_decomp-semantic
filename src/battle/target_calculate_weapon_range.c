@@ -24,9 +24,8 @@ void target_calculate_weapon_range(battle_stats_t* unit) {
     y = unit->position.y;
     weapon = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     x = unit->x;
-    index = x + y * g_battle_map_max_x;
-    if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
-        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
+    index = x + y * g_map_max_x;
+    if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FROG)] & STATUS_BYTE_MASK(STATUS_ID_FROG)) {
         weapon = ITEM_ID_NOTHING;
     }
     if (weapon == ITEM_ID_NONE) {

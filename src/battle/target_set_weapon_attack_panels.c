@@ -11,7 +11,7 @@ s32 target_set_weapon_attack_panels(action_command_t* source) {
 
     main_util_copy_action_data(source, &action);
     unit = &g_battle_unit_stats[action.actor_id];
-    idx = unit->position.y * g_battle_map_max_x + unit->x;
+    idx = unit->position.y * g_map_max_x + unit->x;
     target_clear_panel_data();
     target_calculate_weapon_range(unit);
     {

@@ -562,7 +562,7 @@ extern u32 g_battle_gfx_wait_arrow_blink_timer;
 /* Separate triggers, command arguments, and completion status. Argument
  * domains remain provisional: map commands 0x80/0x83, polls 0x81/0x84.
  * The u16 requests and arguments are read with lhu by the consumer
- * battle_script_process_pending_requests; every other access is a store. */
+ * script_process_pending_requests; every other access is a store. */
 extern u16 g_battle_3d_object_use_request; /* 0x80165fe2 */
 extern u16 g_battle_3d_object_wait_status; /* 0x8016606e */
 extern battle_render_buffer_t g_battle_buffer_a[2];

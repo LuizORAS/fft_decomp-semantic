@@ -107,7 +107,7 @@ s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emit
         case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
             break;
         case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-            tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+            tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                 g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
             origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             origin.vy -= tile->height * MAP_HEIGHT_STEP;
@@ -130,7 +130,7 @@ s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emit
             origin.vz += vertex.vz;
             break;
         case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
-            battle_map_store_max_coordinates(&map_max);
+            map_store_max_coordinates(&map_max);
             origin.vx += map_max.vx * (MAP_TILE_SIZE / 2);
             origin.vz += map_max.vz * (MAP_TILE_SIZE / 2);
             break;
@@ -194,8 +194,8 @@ s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emit
         work->radius_speed += growth_step.vx;
         work->radius_offset += growth.vx + work->radius_speed;
 
-        SetRotMatrix(&g_battle_camera_matrix);
-        SetTransMatrix(&g_battle_camera_matrix);
+        SetRotMatrix(&g_camera_matrix);
+        SetTransMatrix(&g_camera_matrix);
         buffer = work->buffer;
         origin_x = origin.vx;
         origin_y = origin.vy;

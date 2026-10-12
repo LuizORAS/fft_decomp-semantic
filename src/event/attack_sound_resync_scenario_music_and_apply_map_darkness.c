@@ -15,7 +15,7 @@ void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
     s32 playing;
     u16 replacement;
 
-    scenario = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+    scenario = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
     if (g_battle_scenario_event_active != 0 && (scenario < 410 || scenario > 425)) {
         if (g_battle_music_track_1_id == 0 && g_battle_music_track_2_id == 0) {
             g_battle_current_music_track_index = 0;
@@ -45,6 +45,6 @@ void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
         g_battle_music_track_2_id = g_battle_scenario_music_2_id;
     }
 
-    battle_map_light_state_command(MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR, &darkness);
+    map_light_state_command(MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR, &darkness);
     battle_text_build_unit_name_list();
 }

@@ -183,7 +183,7 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
             case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
                 break;
             case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+                tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
                 origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
@@ -200,7 +200,7 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 origin.vz += target.vz;
                 break;
             case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
-                battle_map_store_max_coordinates(&map_max);
+                map_store_max_coordinates(&map_max);
                 origin.vx += map_max.vx * (MAP_TILE_SIZE / 2);
                 origin.vz += map_max.vz * (MAP_TILE_SIZE / 2);
                 break;
@@ -254,7 +254,7 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
             case EFFECT_EMITTER_HOMING_OFFSET_ALT:
                 break;
             case EFFECT_EMITTER_HOMING_MAP_CENTRE:
-                battle_map_store_max_coordinates(&tip_map_max);
+                map_store_max_coordinates(&tip_map_max);
                 tip.vx += tip_map_max.vx * (MAP_TILE_SIZE / 2);
                 tip.vz += tip_map_max.vz * (MAP_TILE_SIZE / 2);
                 break;
@@ -269,7 +269,7 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 tip.vz += target.vz;
                 break;
             case EFFECT_EMITTER_HOMING_CURSOR_TILE:
-                tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
+                tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
                 tip.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 tip.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
@@ -489,8 +489,8 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
             v = entry->tentacle_mesh.texture_v + seg->frame * height;
             quad = &seg->quads[work->buffer][0];
             offset_quad = &seg->quads[work->buffer + 2][0];
-            SetRotMatrix(&g_battle_camera_matrix);
-            SetTransMatrix(&g_battle_camera_matrix);
+            SetRotMatrix(&g_camera_matrix);
+            SetTransMatrix(&g_camera_matrix);
             rotation.vx = seg->points[point_index].x;
             rotation.vy = seg->points[point_index].y;
             rotation.vz = seg->points[point_index].z;

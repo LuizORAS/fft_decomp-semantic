@@ -28,14 +28,14 @@ void equip_menu_draw_item_status_list(s16 item_id) {
     count = 0;
     attribute = g_main_item_primary_data[item_id].attributes;
     equip_bits_init_primary_reader(ITEM_ATTRIBUTES_FLAT[attribute].immunity);
-    for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
+    for (i = 0; i < STATUS_COUNT; i++) {
         if (equip_bits_read_primary(1) != 0) {
             count++;
         }
     }
     equip_bits_init_primary_reader(ITEM_ATTRIBUTES_FLAT[attribute].innate);
     equip_bits_init_secondary_reader(ITEM_ATTRIBUTES_FLAT[attribute].starting);
-    for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
+    for (i = 0; i < STATUS_COUNT; i++) {
         bit = equip_bits_read_primary(1);
         bit |= equip_bits_read_secondary(1);
         if (bit != 0) {
@@ -55,7 +55,7 @@ void equip_menu_draw_item_status_list(s16 item_id) {
     drawn = 0;
     icon_tpage = g_equip_menu_cursor_texture_page;
     equip_bits_init_primary_reader(ITEM_ATTRIBUTES_FLAT[attribute].immunity);
-    for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
+    for (i = 0; i < STATUS_COUNT; i++) {
         if (drawn >= count) {
             break;
         }
@@ -77,7 +77,7 @@ void equip_menu_draw_item_status_list(s16 item_id) {
     }
     equip_bits_init_primary_reader(ITEM_ATTRIBUTES_FLAT[attribute].innate);
     equip_bits_init_secondary_reader(ITEM_ATTRIBUTES_FLAT[attribute].starting);
-    for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
+    for (i = 0; i < STATUS_COUNT; i++) {
         if (drawn >= count) {
             break;
         }

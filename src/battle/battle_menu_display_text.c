@@ -70,19 +70,19 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
                 } else if (state->command == TEXT_SET_PORTRAIT) {
                     cursor = TEXT_NEXT(state, cursor);
                     operand = *cursor;
-                    battle_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, operand);
+                    script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, operand);
                 } else if (state->command == TEXT_SET_VARIABLE_BASE) {
                     cursor = TEXT_NEXT(state, cursor);
                     operand = *cursor;
                     variable_base = operand;
                 } else if (state->command == TEXT_STORE_VARIABLE) {
                     cursor = TEXT_NEXT(state, cursor);
-                    digit = battle_script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
+                    digit = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
                     if (digit != 0) {
-                        battle_script_set_variable(variable_base + digit * 10, *cursor);
-                        battle_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
+                        script_set_variable(variable_base + digit * 10, *cursor);
+                        script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
                     } else {
-                        battle_script_set_variable(variable_base, *cursor);
+                        script_set_variable(variable_base, *cursor);
                     }
                 } else if (state->command == TEXT_SET_PALETTE) {
                     cursor = TEXT_NEXT(state, cursor);

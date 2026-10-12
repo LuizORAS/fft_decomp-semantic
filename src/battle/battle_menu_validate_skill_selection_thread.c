@@ -35,8 +35,7 @@ void battle_menu_validate_skill_selection_thread(void) {
     g_battle_menu_selected_skill_ct = ct;
     if ((g_battle_active_menu == ACTION_MENU_TYPE_MONSTER || g_battle_active_menu == ACTION_MENU_TYPE_DEFAULT)
         && blocked != 0
-        && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
-            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_SILENCE))) {
+        && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_SILENCE)] & STATUS_BYTE_MASK(STATUS_ID_SILENCE))) {
         message = 0x8013;
         if (ct == 0) {
             message = 0x1009;
@@ -58,7 +57,7 @@ void battle_menu_validate_skill_selection_thread(void) {
     g_battle_menu_result = -4;
     if (message != 0) {
         if (g_main_game_options.fields.navigation_messages == GAME_OPTION_OFF) {
-            battle_sound_set_effect_to_confirm_checked();
+            sound_set_effect_to_confirm_checked();
         } else {
             g_option_menu_open = 1;
             g_battle_menu_selected_option = 0;
@@ -66,7 +65,7 @@ void battle_menu_validate_skill_selection_thread(void) {
             battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(g_battle_current_thread_id - 1,
                 (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
-            battle_sound_set_effect_to_invalid();
+            sound_set_effect_to_invalid();
             battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
             g_option_menu_open = 0;
         }
@@ -74,7 +73,7 @@ void battle_menu_validate_skill_selection_thread(void) {
             g_battle_menu_result = -1;
         }
     } else {
-        battle_sound_set_effect_to_confirm_checked();
+        sound_set_effect_to_confirm_checked();
     }
     battle_menu_confirm_action_silently(parameter);
     battle_thread_exit_current();
