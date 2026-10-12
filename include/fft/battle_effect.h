@@ -577,28 +577,20 @@ typedef char assert_battle_effect_obstacle_positions_offset
 typedef char assert_battle_effect_obstacle_heights_offset
     [((unsigned long)&((battle_effect_obstacle_unit_list_t*)0)->sprite_heights == 0xc4) ? 1 : -1];
 
-/* Header of one packed projectile model command. */
-typedef struct battle_effect_model_command_header {
-    u8 _unused_00;
-    u8 word_count;
-    u8 _unused_02;
-    u8 opcode;
-} battle_effect_model_command_header_t;
-typedef char
-    battle_effect_model_command_header_size_must_be_4[sizeof(battle_effect_model_command_header_t) == 4 ? 1 : -1];
-
-typedef struct battle_effect_model_texture {
-    u16 tpage;
-    u16 clut;
-    uv8_t uv[3];
-} battle_effect_model_texture_t;
-typedef char battle_effect_model_texture_size_must_be_10[sizeof(battle_effect_model_texture_t) == 10 ? 1 : -1];
-
 /* Shared output of the model-command decoder and input of the projectile renderer. */
 typedef struct battle_effect_decoded_model_command {
-    battle_effect_model_command_header_t header; /* 0x00 */
-    CVECTOR colors[4];                           /* 0x04 */
-    battle_effect_model_texture_t texture;       /* 0x14 */
+    struct {
+        u8 _unused_00;
+        u8 word_count;
+        u8 _unused_02;
+        u8 opcode;
+    } header;          /* 0x00 */
+    CVECTOR colors[4]; /* 0x04 */
+    struct {
+        u16 tpage;
+        u16 clut;
+        uv8_t uv[3];
+    } texture; /* 0x14 */
     u8 _unused_1e[0x4a];
     /* The decoder copies two packed pairs; the renderer reads four indices. */
     union {
@@ -1279,8 +1271,12 @@ typedef struct effect_work_record {
     vec3s16_t target;                /* 0x3c */
     s16 lifetime;                    /* 0x42; frames or EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN */
     u8 _unused_44;
-    u8 homing_curve_selector;      /* 0x45; zero disables, otherwise curve row + 1 */
-    u8 colour_curves[3];           /* 0x46; RGB animation curves */
+    u8 homing_curve_selector; /* 0x45; zero disables, otherwise curve row + 1 */
+    struct {
+        u8 red;
+        u8 green;
+        u8 blue;
+    } colour_curves;               /* 0x46; per-channel animation curve indices */
     u8 _padding_49;                /* aligns homing_strength */
     s16 homing_strength;           /* 0x4a */
     s16 kind_flags;                /* 0x4c; EFFECT_EMITTER_* placement and EFFECT_WORK_KIND_* */
@@ -1429,14 +1425,14 @@ static __inline__ u32 battle_effect_get_cached_curve_binding(s32 packed, s32 shi
 
 /* One-based bindings for the emitter's initial motion. */
 typedef struct effect_emitter_spawn_curve_bindings {
-    u16 position : 4;
-    u16 spread : 4;
-    u16 velocity_angle : 4;
-    u16 velocity_spread : 4;
-    u16 inertia : 4;
-    u16 _unknown_02 : 4;
-    u8 weight : 4;
-    u8 radial_speed : 4;
+    u32 position : 4;
+    u32 spread : 4;
+    u32 velocity_angle : 4;
+    u32 velocity_spread : 4;
+    u32 inertia : 4;
+    u32 _unknown_02 : 4;
+    u32 weight : 4;
+    u32 radial_speed : 4;
 } effect_emitter_spawn_curve_bindings_t;
 typedef char
     effect_emitter_spawn_curve_bindings_size_must_be_4[sizeof(effect_emitter_spawn_curve_bindings_t) == 4 ? 1 : -1];

@@ -5,13 +5,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-static __inline__ u16 battle_effect_sprite_frame_offset(battle_effect_sprite_group_t* group, u8 frame) {
-    u16* frame_offset;
-
-    frame_offset = (u16*)((u8*)group + (frame * 2 + group->frame_table_offset));
-    return *frame_offset;
-}
-
 /* Queues one effect slot's billboard sprite: projects the slot origin for its
  * ordering-table depth, builds the rotated, camera-scaled 2D matrix from the
  * slot angle, transforms the frame's four corners into the slot's
@@ -61,7 +54,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     SetTransMatrix(&g_battle_effect_matrix);
 
     frame_group = g_battle_effect_trap_frame_data.groups;
-    offset = battle_effect_sprite_frame_offset(frame_group, slot->frame);
+    offset = *(u16*)((u8*)frame_group + (slot->frame * 2 + frame_group->frame_table_offset));
     prim = &slot->quads[g_battle_effect_buffer_index];
     /* Copy RGB and the frame byte; the packet header overwrites that last byte. */
     memcpy(&prim->r0, &slot->red, sizeof(CVECTOR));

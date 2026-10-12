@@ -8,7 +8,6 @@
 
 /* Transformed model points live in the scratchpad as VECTORs, with the GTE
  * flag of each transform stored in `pad`. */
-#define SCRATCH ((VECTOR*)0x1f800000)
 /* Byte addressing preserves the original addition operand order. */
 #define PT(k) (*(VECTOR*)((u8*)scratch + (command.vertices.indices[k] << 4)))
 
@@ -57,7 +56,7 @@ void battle_effect_draw_projectile_model(
     SetRotMatrix(&matrix);
     SetTransMatrix(&matrix);
     model = g_battle_effect_model_files[parameter & 0xff];
-    scratch = SCRATCH;
+    scratch = (VECTOR*)0x1f800000;
     vertices = (SVECTOR*)((u8*)model->objects + model->objects[0].vertex_offset);
     count = model->objects[0].vertex_count;
     for (i = 0; i < count; i++) {

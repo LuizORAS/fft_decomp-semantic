@@ -3,8 +3,6 @@
 #include "fft/battle_map.h"
 #include "fft/effect.h"
 
-#define NULL ((void*)0)
-
 /* Banish particle handler: phase 1 allocates the 32-vertex work and
  * enables map data groups 1-6, phase 2 spawns each active emitter's particles
  * at its work vertices, phase 3 frees the work.
@@ -33,7 +31,7 @@ s32 effect_banish_map_vertex_particles_update(
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[callback_slot] != NULL) {
+        if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
         vertex_work = battle_heap_alloc_block(EFFECT_MAP_VERTEX_WORK_BYTES, state_index);
@@ -97,10 +95,10 @@ s32 effect_banish_map_vertex_particles_update(
         }
         break;
     case EFFECT_PHASE_DESTROY:
-        if (record->work_slots[callback_slot] != NULL) {
+        if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
-            record->work_slots[callback_slot] = NULL;
-            g_battle_effect_map_vertices = NULL;
+            record->work_slots[callback_slot] = 0;
+            g_battle_effect_map_vertices = 0;
         }
         record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
