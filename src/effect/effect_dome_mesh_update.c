@@ -105,9 +105,9 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         target_index = g_battle_effect_state_records[state_index].timeline.target_index;
         work = record->work_slots[callback_slot];
         BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, j, i, entry->scroll_curves & 0xF, frame);
-        origin.vx = battle_effect_lerp_linear(entry->origin_start[0], entry->origin_end[0], i);
-        origin.vy = battle_effect_lerp_linear(entry->origin_start[1], entry->origin_end[1], i);
-        origin.vz = battle_effect_lerp_linear(entry->origin_start[2], entry->origin_end[2], i);
+        origin.vx = battle_effect_lerp_linear(entry->origin_start.x, entry->origin_end.x, i);
+        origin.vy = battle_effect_lerp_linear(entry->origin_start.y, entry->origin_end.y, i);
+        origin.vz = battle_effect_lerp_linear(entry->origin_start.z, entry->origin_end.z, i);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
         case EFFECT_EMITTER_ORIGIN_WORLD:
         case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:

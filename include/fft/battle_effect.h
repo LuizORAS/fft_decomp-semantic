@@ -1596,8 +1596,8 @@ typedef struct effect_radial_mesh_geometry {
     u32 scroll_curves;                                /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
     u32 wave_curves;                                  /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
     u32 colour_curves;                                /* 0x10: nibbles 0-2 = r/g/b */
-    s16 origin_start[3];                              /* 0x14 */
-    s16 origin_end[3];                                /* 0x1a */
+    vec3s16_t origin_start;                           /* 0x14 */
+    vec3s16_t origin_end;                             /* 0x1a */
     s16 u_span;                                       /* 0x20 */
     s16 v_span;                                       /* 0x22 */
     effect_texture_page_config_t texture_page_config; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
