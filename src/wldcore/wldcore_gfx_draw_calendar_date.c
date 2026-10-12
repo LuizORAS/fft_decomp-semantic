@@ -21,8 +21,8 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot) {
     request.palette = 0;
     request.anim_counter = 0;
     request.frame_index = 0;
-    request.position.x = g_wldcore_date_display_x;
-    request.position.y = g_wldcore_date_display_y;
+    request.position.x = g_wldcore_calendar_display_x;
+    request.position.y = g_wldcore_calendar_display_y;
     wldcore_gfx_copy_color_with_tint(&g_wldcore_hud_color, &color);
     request.color.r = color.r;
     request.color.g = color.g;

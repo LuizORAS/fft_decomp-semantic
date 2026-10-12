@@ -24,7 +24,7 @@
  * at function entry, for the first call's `li a0,0x67` to precede the
  * reciprocal-division `mult`.
  */
-void wldcore_advance_calendar_days(s32 days) {
+void wldcore_calendar_advance_days(s32 days) {
     s32 i;
     s32 years;
     u8(*birthdays)[2];
@@ -40,7 +40,7 @@ void wldcore_advance_calendar_days(s32 days) {
     days %= 365;
     month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
     day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    today = wldcore_month_day_to_day_of_year(month, day);
+    today = wldcore_calendar_calculate_day_of_year(month, day);
     for (i = 0; i < 64; i++) {
         g_main_brave_story_character_ages[i] += years;
         if (i == 0) {
@@ -50,7 +50,7 @@ void wldcore_advance_calendar_days(s32 days) {
             month = birthdays[i][0];
             day = birthdays[i][1];
         }
-        until_birthday = wldcore_month_day_to_day_of_year(month, day) - today;
+        until_birthday = wldcore_calendar_calculate_day_of_year(month, day) - today;
         if (until_birthday > 0 && days >= until_birthday) {
             g_main_brave_story_character_ages[i] += 1;
         }
@@ -63,7 +63,7 @@ void wldcore_advance_calendar_days(s32 days) {
         world_script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1);
         today -= 365;
     }
-    wldcore_day_of_year_to_month_day(today, &month, &day);
+    wldcore_calendar_calculate_month_and_day(today, &month, &day);
     world_script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
     world_script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
     for (i = 0; i < g_main_save_proposition_count; i++) {

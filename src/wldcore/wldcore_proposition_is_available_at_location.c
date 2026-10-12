@@ -24,7 +24,7 @@ s32 wldcore_proposition_is_available_at_location(s32 index, s32 location) {
     if (entry.condition_flags & WLDCORE_PROPOSITION_CONDITION_MONTH) {
         month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
         day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
-        wldcore_convert_date_to_zodiac_date(&month, &day);
+        wldcore_calendar_convert_date_to_zodiac(&month, &day);
         if (month != entry.condition_value) {
             return 0;
         }

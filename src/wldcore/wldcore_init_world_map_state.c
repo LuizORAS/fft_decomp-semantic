@@ -67,8 +67,8 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_hud_color.r = 0x80;
     g_wldcore_hud_color.g = 0x80;
     g_wldcore_hud_color.b = 0x80;
-    g_wldcore_date_display_x = -0x78;
-    g_wldcore_date_display_y = -0x64;
+    g_wldcore_calendar_display_x = -0x78;
+    g_wldcore_calendar_display_y = -0x64;
     g_wldcore_location_marker_shade = 0x80;
     g_wldcore_proposition_selected_entry = 0;
 
@@ -124,8 +124,8 @@ void wldcore_init_world_map_state(void) {
         day = 1;
         world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, 1);
         world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
-        day_of_year = wldcore_month_day_to_day_of_year(month, day);
-        wldcore_convert_date_to_zodiac_date(&month, &day);
+        day_of_year = wldcore_calendar_calculate_day_of_year(month, day);
+        wldcore_calendar_convert_date_to_zodiac(&month, &day);
         party = main_party_get_data_pointer(0);
         party->birthday_day = day_of_year;
         /* The separate s32 temp keeps the `month` reload a full 32-bit value: folding

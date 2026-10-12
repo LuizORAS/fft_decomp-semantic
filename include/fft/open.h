@@ -273,8 +273,8 @@ extern u8 g_open_birthday_zodiac_start_dates[ZODIAC_SIGN_ORDINARY_COUNT * 2];
 void open_birthday_push_date_controller(void);
 void open_birthday_build_confirmation_menu(open_birthday_date_state_t* state);
 void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
-s32 open_birthday_month_day_to_day_of_year(s32 month, s32 day);
-void open_birthday_convert_to_zodiac_position(s32* month, s32* day);
+s32 open_birthday_calculate_day_of_year(s32 month, s32 day);
+void open_birthday_convert_date_to_zodiac(s32* month, s32* day);
 
 void open_birthday_draw_menu_text_entry(s32 record_index, s32 combined_text_index, point32_t position, u8* image);
 

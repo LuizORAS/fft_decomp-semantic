@@ -35,9 +35,9 @@ functions:
   - {addr: 0x80068220, size: 72, name: open_input_init_directional_state, hash: e10b9650f2587d8a}
   - {addr: 0x80068268, size: 284, name: open_input_check_repeating_directional, hash: a82e23c2bd0cb926}
   - {addr: 0x80068384, size: 156, name: open_title_init_new_game_party, hash: 3b01ce90b00a6557}
-  - {addr: 0x80068420, size: 300, name: open_birthday_convert_to_zodiac_position, hash: 9aaa68be5ea32880}
+  - {addr: 0x80068420, size: 300, name: open_birthday_convert_date_to_zodiac, hash: 9aaa68be5ea32880}
   - {addr: 0x8006854c, size: 160, name: open_menu_update_world_formation, hash: b27c035b144dee4f}
-  - {addr: 0x800685ec, size: 76, name: open_birthday_month_day_to_day_of_year, hash: e796a8582427e794}
+  - {addr: 0x800685ec, size: 76, name: open_birthday_calculate_day_of_year, hash: e796a8582427e794}
   - {addr: 0x80068638, size: 76, name: open_sound_set_cd_mix_and_volume, hash: 3fcd975cc8b2da0c}
   - {addr: 0x80068684, size: 88, name: open_movie_init_and_stream_opening, hash: 7f2fe3e68306a213}
   - {addr: 0x800686dc, size: 132, name: open_movie_init_and_play_end, hash: c5005cd2d64378db}

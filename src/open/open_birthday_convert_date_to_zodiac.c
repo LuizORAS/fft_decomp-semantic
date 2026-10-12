@@ -6,7 +6,7 @@
  * `span` first holds the previous sign's start day and then the number of
  * days from it to the end of its month; computing it in two steps keeps GCC
  * from folding the `+ 1` into the sum with `*day`. */
-void open_birthday_convert_to_zodiac_position(s32* month, s32* day) {
+void open_birthday_convert_date_to_zodiac(s32* month, s32* day) {
     s32 index;
     s32 length;
     s32 span;

@@ -32,7 +32,7 @@ void wldcore_map_step_route_travel(void) {
     }
     if (g_wldcore_location_entry_state.segment_frame >= g_wldcore_location_entry_state.segment_frames) {
         if (++g_wldcore_location_entry_state.segment_index >= g_wldcore_location_entry_state.segment_count) {
-            wldcore_advance_calendar_day();
+            wldcore_calendar_advance_day();
             g_wldcore_map_projection_state.marker.position = g_wldcore_location_entry_state.target_position;
             g_wldcore_map_projection_state.flags
                 |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION | WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION;

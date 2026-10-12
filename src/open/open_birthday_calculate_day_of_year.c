@@ -3,7 +3,7 @@
 
 /* Zero-based day of the year of a 1-based month and day (1 January is 0), with
  * February at 28 days. */
-s32 open_birthday_month_day_to_day_of_year(s32 month, s32 day) {
+s32 open_birthday_calculate_day_of_year(s32 month, s32 day) {
     s32 index;
     s32 elapsed_days;
     s32 result;

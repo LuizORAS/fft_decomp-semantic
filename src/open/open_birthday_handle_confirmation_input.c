@@ -34,8 +34,8 @@ void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
             day = g_open_controller_records_next[g_open_current_controller_index - 2].birthday_date.day;
             world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, month);
             world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
-            value = open_birthday_month_day_to_day_of_year(month, day);
-            open_birthday_convert_to_zodiac_position(&month, &day);
+            value = open_birthday_calculate_day_of_year(month, day);
+            open_birthday_convert_date_to_zodiac(&month, &day);
             member = main_party_get_data_pointer(0);
             member->birthday_day = value;
             member->zodiac = ((value & 0x100) >> 8) | ((month - 1) * 0x10);

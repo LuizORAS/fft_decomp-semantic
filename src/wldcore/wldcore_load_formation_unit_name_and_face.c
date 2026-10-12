@@ -11,7 +11,7 @@ void wldcore_load_formation_unit_name_and_face(void) {
     world_text_generate_formation_unit_name_string();
     value = script_get_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE);
     if (value != 0) {
-        wldcore_advance_calendar_days(value);
+        wldcore_calendar_advance_days(value);
         world_script_set_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE, 0);
     }
 }
