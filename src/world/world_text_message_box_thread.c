@@ -71,8 +71,8 @@ void world_text_message_box_thread(void) {
     rec.dialog_type = param;
     rec.position = param & 3;
     rec.options = param & 0xC;
-    text = world_text_find_entry(world_thread_get_current_parameter_2());
-    base_entry = world_text_find_entry(world_thread_get_current_parameter_2() & 0xF800);
+    text = text_find_entry(world_thread_get_current_parameter_2());
+    base_entry = text_find_entry(world_thread_get_current_parameter_2() & 0xF800);
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         rec.mark = 0x12;
         rec.lines = 3;
@@ -175,7 +175,7 @@ void world_text_message_box_thread(void) {
         code = *text;
         if (world_thread_get_current_parameter_2() != message) {
             if ((world_thread_get_current_parameter_2() & no_value) != no_value) {
-                while (base_entry != world_text_find_entry(world_thread_get_current_parameter_2() & 0xF800)) {
+                while (base_entry != text_find_entry(world_thread_get_current_parameter_2() & 0xF800)) {
                     world_thread_yield();
                 }
             }
@@ -184,7 +184,7 @@ void world_text_message_box_thread(void) {
                 g_world_menu_event_state_flag = 0;
                 break;
             }
-            text = world_text_find_entry(message);
+            text = text_find_entry(message);
             if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
                 world_menu_build_and_upload_window_image(
                     rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
@@ -357,12 +357,12 @@ void world_text_message_box_thread(void) {
             rec.color = *text;
             NEXT();
         } else {
-            substitution = &g_world_text_substitution_values[value_index];
+            substitution = &g_text_substitution_values[value_index];
             value = text_resolve_format_string_id(code, *substitution);
             if (value != -1) {
                 saved = text + 1;
                 value_index++;
-                text = world_text_find_entry(value);
+                text = text_find_entry(value);
                 continue;
             }
             if (code == TEXT_SET_NUMBER_WIDTH) {
@@ -375,7 +375,7 @@ void world_text_message_box_thread(void) {
                     value_index++;
                 } else {
                     NEXT();
-                    value = g_world_text_substitution_values[*text];
+                    value = g_text_substitution_values[*text];
                 }
                 digits = text_count_decimal_digits(value);
                 started = 0;
@@ -400,7 +400,7 @@ void world_text_message_box_thread(void) {
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
-                        cursor_x += g_world_text_glyph_widths[code];
+                        cursor_x += g_text_glyph_widths[code];
                     }
                 }
                 NEXT();
@@ -431,7 +431,7 @@ void world_text_message_box_thread(void) {
                 if (code == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {
-                    cursor_x += g_world_text_glyph_widths[code];
+                    cursor_x += g_text_glyph_widths[code];
                 }
                 NEXT();
             }

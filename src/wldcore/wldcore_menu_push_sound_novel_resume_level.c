@@ -58,7 +58,7 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     bounds.y = 0x70;
     bounds.w = 0x7C;
     bounds.h = 0x80;
-    g_world_text_substitution_values[0] = mode + TEXT_ID_TREASURE_NAME_BASE;
+    g_text_substitution_values[0] = mode + TEXT_ID_TREASURE_NAME_BASE;
     wldcore_window_init_render_record_image(
         index, bounds, 1, WLDCORE_TEXT_ID_SUBSTITUTED_TEXT, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;

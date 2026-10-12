@@ -45,26 +45,26 @@ void helpmenu_menu_run_battle_help(void) {
     if (g_option_menu_open != 0) {
         battle_thread_exit_current();
     }
-    battle_copy_bytes(g_helpmenu_text_saved_pointers, g_battle_text_section_pointers, 0x80);
+    battle_copy_bytes(g_helpmenu_text_saved_pointers, g_text_section_pointers, 0x80);
     banner = &g_helpmenu_active_banner;
     unit_data = &g_helpmenu_active_unit_data;
     billboard = &g_helpmenu_billboard;
     cursor_tile = &g_helpmenu_menu_cursor_tile;
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
+    g_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
+    g_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_MENU_COMMANDS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
+    g_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_TERRAIN];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_JOBS]
+    g_text_section_pointers[HELP_TEXT_SECTION_JOBS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_JOBS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
+    g_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_ITEMS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
+    g_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_ABILITIES];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
+    g_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
+    g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self_thread = &g_battle_threads[g_battle_current_thread_id];
     battle_menu_copy_billboard_data_out(banner, unit_data, billboard, cursor_tile);

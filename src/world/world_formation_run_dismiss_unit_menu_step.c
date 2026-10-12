@@ -70,7 +70,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             if (g_world_formation_unit_browse_enabled != 0) {
                 g_world_formation_unit_cycle_mode = 1;
             }
-            g_world_text_substitution_values[0]
+            g_text_substitution_values[0]
                 = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
             unit = g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
             sprite = unit->sprite_set;

@@ -35,7 +35,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
 
     main_party_get_data_pointer(0);
     if (text == 0 || text == (u8*)1) {
-        cursor = battle_text_find_entry(text_id);
+        cursor = text_find_entry(text_id);
     } else {
         cursor = text;
     }
@@ -43,7 +43,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
     powers = g_battle_text_decimal_divisors;
     variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     TEXT_STATE->return_cursor = (u8*)-1;
-    TEXT_STATE->value_cursor = g_battle_text_substitution_values;
+    TEXT_STATE->value_cursor = g_text_substitution_values;
     TEXT_STATE->pending_width = 0xFFFF;
     TEXT_STATE->remaining_bytes = 0;
     TEXT_STATE->column = 0;
@@ -109,7 +109,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
                     } else {
                         cursor = TEXT_NEXT(state, cursor);
                         operand = *cursor;
-                        state->value = g_battle_text_substitution_values[operand];
+                        state->value = g_text_substitution_values[operand];
                     }
                     width = state->pending_width;
                     if (width == 0xFFFF) {
@@ -146,9 +146,9 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
                 if (state->value != -1) {
                     state->return_cursor = cursor + 1;
                     if (state->command == TEXT_FORMAT_RAMZA_NAME) {
-                        cursor = g_battle_player_name;
+                        cursor = g_text_player_name_buffer;
                     } else {
-                        cursor = battle_text_find_entry(state->value);
+                        cursor = text_find_entry(state->value);
                     }
                     state->value_cursor++;
                     continue;

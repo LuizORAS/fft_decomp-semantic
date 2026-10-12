@@ -23,7 +23,7 @@ void world_shop_run_fur_sell_list_step(void) {
             g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER,
             g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
         world_menu_init_scrollable_list_core(
-            g_world_menu_entry_ids, 0, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
+            g_world_menu_entry_ids, 0, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         g_world_menu_script_callbacks[0].value = world_menu_get_entry_item_equipped_count;
         g_world_menu_script_callbacks[1].value = world_menu_get_entry_item_count;
         g_world_menu_script_callbacks[2].icon = world_item_build_type_icon_source;

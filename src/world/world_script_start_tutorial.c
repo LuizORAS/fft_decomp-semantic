@@ -17,7 +17,7 @@ void world_script_start_tutorial(s32 index) {
     if (index != 0) {
         world_script_load_tutorial_files(index, &g_world_tutorial_state);
         g_world_script_tutorial_command_ptr = g_world_tutorial_state.script;
-        g_world_text_section_pointers[WORLD_TEXT_SECTION_TUTORIAL_MESSAGES] = g_world_tutorial_state.messages;
+        g_text_section_pointers[WORLD_TEXT_SECTION_TUTORIAL_MESSAGES] = g_world_tutorial_state.messages;
         world_card_init_menu_state();
         world_card_build_save_image(-1);
         bcopy(g_world_load_work_buffer, &g_world_tutorial_state.saved_game, sizeof(g_world_tutorial_state.saved_game));

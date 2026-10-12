@@ -44,27 +44,27 @@ void world_menu_run_battle_help(void) {
     if (g_world_menu_transition_active != 0) {
         world_thread_exit_current();
     }
-    world_script_copy_bytes(g_world_text_section_pointer_backup, g_world_text_section_pointers,
-        sizeof(g_world_text_section_pointer_backup));
+    world_script_copy_bytes(
+        g_world_text_section_pointer_backup, g_text_section_pointers, sizeof(g_world_text_section_pointer_backup));
     setup_banner = &g_world_help_active_banner;
     setup_unit_data = &g_world_help_active_unit_data;
     setup_billboard = &g_world_help_billboard;
     setup_cursor_tile = &g_world_help_menu_cursor_tile;
-    g_world_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
+    g_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
+    g_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_MENU_COMMANDS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
+    g_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_TERRAIN];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_JOBS]
+    g_text_section_pointers[HELP_TEXT_SECTION_JOBS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_JOBS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
+    g_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_ITEMS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
+    g_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_ABILITIES];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
+    g_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
+    g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self = &g_world_threads[g_world_thread_current_id];
     world_menu_copy_billboard_data_out(setup_banner, setup_unit_data, setup_billboard, setup_cursor_tile);

@@ -7,7 +7,7 @@
  * entries.
  *
  * The file opens with 0x20 section offsets relative to its byte 0x80; they
- * become g_world_text_section_pointers, with the location names taken from
+ * become g_text_section_pointers, with the location names taken from
  * the resident copy. The deployment script variables are reset to one squad.
  */
 void world_menu_load_text_1bd8(void) {
@@ -28,14 +28,14 @@ void world_menu_load_text_1bd8(void) {
     i = 0;
     src = g_world_menu_text_file_buffer;
     base = (u8*)&src[TEXT_SECTION_COUNT];
-    dst = g_world_text_section_pointers;
+    dst = g_text_section_pointers;
     do {
         value = *src++;
         /* Byte-pointer addition reverses the target's final addu operands. */
         *dst++ = (u8*)(value + (s32)base);
         i++;
     } while (i < TEXT_SECTION_COUNT);
-    g_world_text_section_pointers[TEXT_SECTION_LOCATION_NAMES] = g_world_location_names_resident;
+    g_text_section_pointers[TEXT_SECTION_LOCATION_NAMES] = g_world_location_names_resident;
     world_script_set_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD, 0);
     world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
     world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, 0);

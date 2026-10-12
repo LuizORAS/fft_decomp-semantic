@@ -633,7 +633,7 @@ typedef struct menu_entry {
      * inner and window sizes; the load origin and screen offsets are cleared
      * with them. */
     image_load_parameters_t text_image;
-    s16 text_id;                 /* 0x1c: passed to world_text_find_entry */
+    s16 text_id;                 /* 0x1c: passed to text_find_entry */
     s16 max_row_index;           /* 0x1e: row count - 1 (world_menu_build_skillset_entries) */
     s16 thread_count;            /* 0x20: threads world_menu_cancel_thread_group stops, -1 when there is no thread
                                     group; set from the system-function table by world_menu_run_system_function_thread */
@@ -840,9 +840,9 @@ typedef enum battle_at_entry_flags {
 /* Provisional: the AT-list work area the *_menu_build_ability_preview_at_list
  * builders fill, reached through g_main_heap_companion_overlay_load_address. The five
  * parallel 16-bit columns become the layout's text_ids/text_colors tables,
- * `text` is published through g_world_text_section_pointers[TEXT_SECTION_AT_LIST] (BATTLE:
- * g_battle_text_section_pointers[TEXT_SECTION_AT_LIST]). The main-stack preview
- * fills all 40 AT entries; the menu displays entries 1 through 39. */
+ * `text` is published through g_text_section_pointers[TEXT_SECTION_AT_LIST].
+ * The main-stack preview fills all 40 AT entries; the menu displays entries
+ * 1 through 39. */
 typedef struct menu_at_list_work {
     s16 primary_values[40];        /* 0x000: turn-value column */
     s16 secondary_values[40];      /* 0x050: unit-name column */
@@ -1556,8 +1556,7 @@ typedef enum text_id_base {
     TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE = 0xf800, /* by wldcore_proposition_fields_t::name_text less one */
 } text_id_base_e;
 
-/* Index into the 32 text section pointers (g_battle_text_section_pointers,
- * g_world_text_section_pointers): a text id's top five bits. Only the
+/* Index into g_text_section_pointers: a text id's top five bits. Only the
  * sections the code binds or reads by a fixed role are named. A screen
  * rebinds a slot to its own text while it is up: help_text_section_e here,
  * world_text_section_e and require_text_section_e map those bindings. */
@@ -1684,6 +1683,22 @@ typedef struct text_glyph_state {
     s16 palette;      /* 0x0e */
 } text_glyph_state_t;
 typedef char text_glyph_state_size_must_be_16[(sizeof(text_glyph_state_t) == 16) ? 1 : -1];
+
+/* Text runtime buffers bound to the resident BATTLE or WORLD copy. */
+/* Player-name substitution, padded to 20 bytes with TEXT_END_WAIT_FOR_CONFIRM. */
+extern u8 g_text_player_name_buffer[20];
+/* Values $00-$1F; indexed substitutions can read past the named 32 entries. */
+extern s32 g_text_substitution_values[32];
+/* Pixel width of each line from the last text_measure_pixels call. */
+extern s32 g_text_line_widths[];
+/* Glyph pixel widths, TEXT_GLYPHS_PER_PREFIX entries per prefix page. */
+extern const u8 g_text_glyph_widths[];
+/* Text IDs select a section in the upper five bits and an entry in the lower eleven. */
+extern u8* g_text_section_pointers[TEXT_SECTION_COUNT];
+
+void text_measure(s16* columns, s16* rows, const u8* text);
+void text_measure_pixels(s16* width, s16* rows, const u8* text);
+u8* text_find_entry(u32 text_id);
 
 u8* text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
 /* The menu renderer has a separate linked copy of the same cursor helper. */

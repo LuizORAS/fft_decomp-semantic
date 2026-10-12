@@ -11,9 +11,9 @@
 void battle_menu_size_entry_to_text(menu_entry_t* window, s16* width, s16* height, s32* out_pad, s32 pad_short) {
     u8* text;
 
-    text = battle_text_find_entry(window->text_id);
+    text = text_find_entry(window->text_id);
     *out_pad = 0;
-    battle_text_measure_pixels(width, height, text);
+    text_measure_pixels(width, height, text);
     if (pad_short != 0 && *width < 8 && *height == 1) {
         *out_pad = (8 - *width) * 5;
         *width = 8;

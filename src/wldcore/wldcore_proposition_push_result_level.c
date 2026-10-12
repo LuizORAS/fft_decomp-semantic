@@ -26,28 +26,27 @@ void wldcore_proposition_push_result_level(s32 proposition) {
         g_wldcore_proposition_gil_amount += g_wldcore_job_selection.participant_gil[i];
     }
     g_wldcore_proposition_gil_amount += g_wldcore_job_selection.reward_value;
-    g_world_text_substitution_values[1] = g_wldcore_proposition_gil_amount;
+    g_text_substitution_values[1] = g_wldcore_proposition_gil_amount;
     switch (g_wldcore_job_selection.reward_type) {
     case WLDCORE_PROPOSITION_REWARD_TREASURE:
-        g_world_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x782E;
+        g_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x782E;
         break;
     case WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND:
-        g_world_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x781B;
+        g_text_substitution_values[0] = g_wldcore_job_selection.reward_index + 0x781B;
         break;
     case WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS:
-        g_world_text_substitution_values[0]
-            = g_wldcore_job_selection.reward_index + TEXT_ID_PROPOSITION_REWARD_NAME_BASE;
+        g_text_substitution_values[0] = g_wldcore_job_selection.reward_index + TEXT_ID_PROPOSITION_REWARD_NAME_BASE;
         break;
     default:
-        g_world_text_substitution_values[0] = 0x7806;
+        g_text_substitution_values[0] = 0x7806;
         break;
     }
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     panel_text = &g_wldcore_selected_proposition_row[0].name_text;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.render_index = index;
-    world_text_measure_pixels(
-        &text_width, &text_rows, world_text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
+    text_measure_pixels(
+        &text_width, &text_rows, text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
     bounds.x = 0;
     bounds.y = 0x60;
     bounds.w = 0xF4;
@@ -79,7 +78,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
 
         point.x = 0xA0;
         point.y = (text_rows + row) * 0x10 + 8;
-        g_world_text_substitution_values[0] = g_wldcore_job_selection.participant_jp[i];
+        g_text_substitution_values[0] = g_wldcore_job_selection.participant_jp[i];
         wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_FOUR_DIGIT_VALUE, point, g_wldcore_window_image_buffer);
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);
@@ -92,7 +91,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
     party = &g_wldcore_job_selection.excluded_party_index;
-    g_world_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
+    g_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
     message = 0x9C;
     world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_get_party_unit_formation_sprite(*party));
     if (g_wldcore_job_selection.recalled != 0) {

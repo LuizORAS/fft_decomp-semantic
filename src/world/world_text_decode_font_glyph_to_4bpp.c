@@ -61,5 +61,5 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, RECT* target, s32
             *dst = pixel;
         }
     }
-    return g_world_text_glyph_widths[glyph];
+    return g_text_glyph_widths[glyph];
 }

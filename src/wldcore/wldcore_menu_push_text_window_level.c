@@ -46,8 +46,8 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     records = g_wldcore_window_records;
     records[index].frame_index = 0;
 
-    entry = world_text_find_entry(text);
-    world_text_measure_pixels(&dims[0], &dims[1], entry);
+    entry = text_find_entry(text);
+    text_measure_pixels(&dims[0], &dims[1], entry);
     if (dims[1] > 3) {
         dims[1] = 3;
     }

@@ -14,7 +14,7 @@ void attack_text_init_battle_pointers(attack_text_file_t* file) {
     i = 0;
     /* Section data follows the 32-entry offset header. */
     data = file->section_data;
-    table = g_battle_text_section_pointers;
+    table = g_text_section_pointers;
     do {
         if (i != TEXT_SECTION_EVENT_MESSAGES) {
             *table = data + *offsets;

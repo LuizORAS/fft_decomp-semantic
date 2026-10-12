@@ -63,8 +63,7 @@ void open_title_step_new_game_start(open_controller_record_t* record) {
         DrawSync(0);
 
         g_open_file_current_openbk_image_id = -1;
-        name = world_name_run_entry_screen(
-            world_text_find_entry(TEXT_ID_UNIT_NAME_SPECIAL_BASE), g_open_file_destination);
+        name = world_name_run_entry_screen(text_find_entry(TEXT_ID_UNIT_NAME_SPECIAL_BASE), g_open_file_destination);
         party = main_party_get_data_pointer(0);
         memcpy(party->name, name, sizeof(party->name));
         g_open_current_controller_index -= 1;

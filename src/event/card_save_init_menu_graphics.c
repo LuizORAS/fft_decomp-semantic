@@ -15,8 +15,8 @@ void card_save_init_menu_graphics(void) {
     RECT rect;
     palette_t image_data;
 
-    g_battle_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_card_text_data;
-    g_battle_text_section_pointers[TEXT_SECTION_FORMATION_MESSAGES] = g_card_text_command_help;
+    g_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_card_text_data;
+    g_text_section_pointers[TEXT_SECTION_FORMATION_MESSAGES] = g_card_text_command_help;
 
     rect.x = 0x100;
     rect.y = 0;

@@ -16,7 +16,7 @@ void wldcore_bar_push_rumor_detail_level(s32 value) {
     s32 depth;
     u8 unused[8];
 
-    g_world_text_substitution_values[0] = value + TEXT_ID_RUMOR_NAME_BASE;
+    g_text_substitution_values[0] = value + TEXT_ID_RUMOR_NAME_BASE;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_RUMOR_ABOUT, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].rumor_detail.rumor_index = value;
     g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;

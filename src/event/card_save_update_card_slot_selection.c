@@ -26,7 +26,7 @@ void card_save_update_card_slot_selection(void) {
                 g_card_save_menu_state = CARD_SAVE_MENU_INITIAL_PROMPT;
             }
         } else {
-            g_battle_text_substitution_values[0] = g_card_save_slot_index + 1;
+            g_text_substitution_values[0] = g_card_save_slot_index + 1;
             if (g_card_save_selected_slot != g_card_save_slot_index) {
                 g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }

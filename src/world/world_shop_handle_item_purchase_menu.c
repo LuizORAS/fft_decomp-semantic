@@ -20,8 +20,7 @@ void world_shop_handle_item_purchase_menu(void) {
             g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER,
             g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
         world_menu_get_selection_record(g_world_shop_item_category, &x, &y, g_world_menu_entry_ids);
-        world_menu_init_scrollable_list(
-            g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
+        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         g_world_menu_script_callbacks[0].value = world_menu_get_entry_item_equipped_count;
         g_world_menu_script_callbacks[1].value = world_menu_get_entry_item_count;
         g_world_menu_script_callbacks[2].icon = world_item_build_type_icon_source;

@@ -34,7 +34,7 @@ void wldcore_window_init_number_panel_render_thread(s32 thread_id, u32 packed_va
     }
     text_width = 0;
     if (text_id != 0) {
-        world_text_measure_pixels(&text_width, &text_height, world_text_find_entry(text_id));
+        text_measure_pixels(&text_width, &text_height, text_find_entry(text_id));
     }
     label_width = text_width + 0x18;
     width = (width * 6 + label_width) & 0xfffc;

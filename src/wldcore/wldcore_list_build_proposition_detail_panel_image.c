@@ -32,13 +32,13 @@ void wldcore_list_build_proposition_detail_panel_image(
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     level->proposition_detail_panel.render_index = index;
-    world_text_measure_pixels(
-        &text_width, &text_rows, world_text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
+    text_measure_pixels(
+        &text_width, &text_rows, text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
     rows = text_rows + 2;
     level->proposition_detail_panel.panel_rows = rows;
-    g_world_text_substitution_values[0] = g_main_active_propositions[proposition].elapsed_days;
-    g_world_text_substitution_values[1] = g_main_active_propositions[proposition].assigned_days;
-    g_world_text_substitution_values[2] = g_main_active_propositions[proposition].location | TEXT_ID_LOCATION_NAME_BASE;
+    g_text_substitution_values[0] = g_main_active_propositions[proposition].elapsed_days;
+    g_text_substitution_values[1] = g_main_active_propositions[proposition].assigned_days;
+    g_text_substitution_values[2] = g_main_active_propositions[proposition].location | TEXT_ID_LOCATION_NAME_BASE;
     bounds.x = 0;
     bounds.y = 0x60;
     bounds.w = 0xF4;

@@ -55,7 +55,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
     phase = g_world_text_message_box_glyph.x & 3;
     dst = g_world_text_message_box_glyph_images[slot][ring];
     src = g_world_text_message_box_previous_images[slot];
-    if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
+    if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
         || g_world_text_message_box_glyph.glyph == TEXT_SPACE) {
         if (phase == 2) {
             width = 8;
@@ -64,10 +64,10 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
             width = 4;
             g_world_text_message_box_vram_rect.w = 1;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
+    } else if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
         width = 4;
         g_world_text_message_box_vram_rect.w = 1;
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
+    } else if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
         width = 8;
         g_world_text_message_box_vram_rect.w = 2;
     } else {
@@ -86,20 +86,20 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         }
     }
 
-    if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
+    if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
         || g_world_text_message_box_glyph.glyph == TEXT_SPACE) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 2;
         } else {
             g_world_text_message_box_slot_carry_offset[slot] = 1;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
+    } else if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 1;
         } else {
             g_world_text_message_box_slot_carry_offset[slot] = 0;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
+    } else if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 3;
         } else {

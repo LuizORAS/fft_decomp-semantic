@@ -1,22 +1,16 @@
-#include "fft/world.h"
-#include "psx/types.h"
+#include "fft/main.h"
+#include "fft/menu.h"
 
 #define TEXT_STATE ((text_backreference_state_t*)0x1F800000)
 
-/* Player name buffer substituted for text command 0xE0, 0xFE-terminated. */
-/* Pixel width of each line measured by the last call. */
-
-/* Measure a WORLD text entry in pixels: the widest line and the line count.
- *
- * Pixel-width sibling of world_measure_text. Spaces (0xFA) are 4 pixels,
- * substituted digits 6, and other glyphs come from the per-page width table,
- * where a 0xDx prefix byte selects the page for the following glyph. Each
- * line's width is also recorded in g_world_text_line_widths. */
-void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
+/* Measure a text entry in pixels, recording each line's width and returning
+ * the widest line and line count. Spaces are 4 pixels and numeric digits 6;
+ * other glyphs use their prefix page's width table. */
+void text_measure_pixels(s16* width, s16* rows, const u8* text) {
     party_data_t* party;
     u8* cursor;
     s32 i;
-    u8* fill = g_world_text_player_name_buffer;
+    u8* fill = g_text_player_name_buffer;
     u8 terminator;
     text_backreference_state_t* state;
 
@@ -27,10 +21,10 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
         fill[i] = terminator;
     }
     for (i = 0; i < 16; i++) {
-        g_world_text_player_name_buffer[i] = party->name[i];
+        g_text_player_name_buffer[i] = party->name[i];
     }
     TEXT_STATE->return_cursor = (u8*)-1;
-    TEXT_STATE->value_cursor = g_world_text_substitution_values;
+    TEXT_STATE->value_cursor = g_text_substitution_values;
     TEXT_STATE->remaining_bytes = 0;
     TEXT_STATE->column = 0;
     TEXT_STATE->max_column = 0;
@@ -43,7 +37,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
         state->command = *cursor;
         if (state->command == TEXT_NEWLINE || state->command == TEXT_END_WAIT_FOR_CONFIRM
             || state->command == TEXT_END_AUTO_CLOSE) {
-            g_world_text_line_widths[state->row] = state->column;
+            g_text_line_widths[state->row] = state->column;
             if (state->max_column < state->column) {
                 state->max_column = state->column;
             }
@@ -75,7 +69,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             state->value_cursor++;
         } else if (state->command == TEXT_PRINT_INDEXED_VALUE) {
             cursor = text_advance_cursor_with_backreferences(state, cursor);
-            state->value = g_world_text_substitution_values[*cursor];
+            state->value = g_text_substitution_values[*cursor];
             if (state->pending_width == 0xFFFF) {
                 state->column += text_count_decimal_digits(state->value) * 6;
             } else {
@@ -93,9 +87,9 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
         if (state->value != -1) {
             state->return_cursor = cursor + 1;
             if (state->command == TEXT_FORMAT_RAMZA_NAME) {
-                cursor = g_world_text_player_name_buffer;
+                cursor = g_text_player_name_buffer;
             } else {
-                cursor = world_text_find_entry(state->value);
+                cursor = text_find_entry(state->value);
             }
             state->value_cursor++;
             continue;
@@ -117,8 +111,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
                 state->glyph_page = 0;
             }
         } else {
-            state->column
-                += g_world_text_glyph_widths[(state->glyph_page & 0xF) * TEXT_GLYPHS_PER_PREFIX + state->command];
+            state->column += g_text_glyph_widths[(state->glyph_page & 0xF) * TEXT_GLYPHS_PER_PREFIX + state->command];
             state->glyph_page = 0;
         }
         cursor = text_advance_cursor_with_backreferences(state, cursor);

@@ -103,7 +103,7 @@ s32 world_formation_run_set_ability_menu(void) {
             if (g_world_set_ability_slot == 1) {
                 value = TEXT_SECTION_SKILLSET_NAMES;
             }
-            world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_section_pointers[value]);
+            world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_text_section_pointers[value]);
         }
     } else {
         if (g_world_menu_option_count != 0) {

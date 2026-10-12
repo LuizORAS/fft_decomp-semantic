@@ -37,9 +37,6 @@ extern u8 g_battle_text_glyph_bitmaps[];
 extern u16 g_battle_text_speaker_swap_unit_a;
 extern u16 g_battle_text_speaker_swap_unit_b;
 
-/* Player name buffer substituted for text command 0xE0, 0xFE-terminated;
- * 0x801720cf is its last byte. */
-extern u8 g_battle_player_name[20];
 extern glyph_blit_t g_battle_text_large_number_glyph_rect; /* glyph source rectangle in the large number font */
 
 extern menu_text_state_t
@@ -54,13 +51,6 @@ extern u16 g_battle_text_message_duration_frames;
 extern u8* g_battle_text_pointer_backup[32];
 extern s32 g_battle_text_pointer_backup_active;
 
-/* BATTLE text IDs use their upper five bits to select one of these sections
- * (text_section_e). Overlay loaders replace individual entries as their text
- * becomes active. */
-extern u8* g_battle_text_section_pointers[32];
-
-/* Glyph pixel widths, 0xD0 entries per 0xDx prefix page. */
-extern const u8 g_text_glyph_widths[];
 extern s32 g_battle_text_awaiting_input;
 extern s32 g_battle_text_current_line;
 extern u32 g_battle_text_decimal_divisors[];
@@ -69,17 +59,11 @@ extern const char g_battle_text_heap_dp_format[];     /* "DP %x\n" */
 extern const char g_battle_text_heap_remain_format[]; /* "HEAP REMAIN %x MAX %x\n" */
 extern const char g_battle_text_heap_task_format[];   /* "TASK %d %x\n" */
 
-/* Pixel width of each line measured by the last call. */
-extern s32 g_battle_text_line_widths[];
 extern u8* g_battle_text_message_buffer;
 extern const char g_battle_text_min_heap_format[];     /* "MIN HEAP %x " */
 extern char g_battle_text_reading_character_message[]; /* "reading charactor%d \n" */
 extern u8 g_battle_text_slot_row_pitches[];            /* per-slot source row pitch in bytes */
 extern u8 g_battle_text_slot_source_columns[];         /* per-slot source column */
-
-/* Text variables $00-$1F. TEXT_PRINT_INDEXED_VALUE indexes them with a raw
- * text byte, so a larger index reads the globals that follow. */
-extern s32 g_battle_text_substitution_values[32];
 
 /* Text substitutions $7E/$7F (0x801660ec, table index 0x7e from 0x80165ef4)
  * as the four 16-bit values battle_text_set_substitution_values_7e_7f stores. */
@@ -89,11 +73,11 @@ extern u8 g_battle_text_typewriter_column_scratch[14];       /* one-column scrat
 extern u8 g_battle_text_typewriter_glyph_images[3][8][0x54]; /* eight glyph images per slot */
 extern u8 g_battle_text_typewriter_previous_images[3][0x54]; /* previous image per slot */
 void battle_text_run_spell_quote_thread(void);
-void battle_text_measure_pixels(s16* width, s16* rows, const u8* text);
 void battle_text_render_glyph_to_4bpp_image(
     const u8* glyph_bitmap, u8* image, glyph_blit_t* origin, s32 palette_offset);
 void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 void battle_text_build_unit_name_list(void);
+/* MAIN selects the BATTLE address of text_find_entry through this existing alias. */
 u8* battle_text_find_entry(u32 text_id);
 void battle_text_init_menu_section_pointers(void);
 void battle_text_set_message_duration_frames(u16 frames);

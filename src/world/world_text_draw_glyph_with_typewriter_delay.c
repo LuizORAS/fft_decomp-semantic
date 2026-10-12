@@ -69,7 +69,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
         image = g_world_text_typewriter_glyph_images[slot][ring];
         previous = g_world_text_typewriter_previous_images[slot];
         glyph = request->glyph;
-        kind = g_world_text_glyph_widths[glyph];
+        kind = g_text_glyph_widths[glyph];
         if (kind == 4 || glyph == TEXT_SPACE) {
             if (phase == 2) {
                 pitch = 8;
@@ -102,7 +102,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
         }
 
         next_glyph = request->glyph;
-        next_kind = g_world_text_glyph_widths[next_glyph];
+        next_kind = g_text_glyph_widths[next_glyph];
         if (next_kind == 4 || next_glyph == TEXT_SPACE) {
             g_world_text_slot_source_columns[slot] = phase == 2 ? 2 : 1;
         } else if (next_kind == 2) {

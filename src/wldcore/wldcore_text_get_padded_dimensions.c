@@ -7,7 +7,7 @@ void wldcore_text_get_padded_dimensions(s32 value, size32_t* output) {
     s16 line_count;
     s32 height;
 
-    world_text_measure_pixels(&maximum_line_width, &line_count, world_text_find_entry(value));
+    text_measure_pixels(&maximum_line_width, &line_count, text_find_entry(value));
     height = line_count * 16 + 16;
     output->width = (maximum_line_width + 24) & 0xfffc;
     output->height = height;

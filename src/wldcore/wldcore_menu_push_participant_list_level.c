@@ -30,7 +30,7 @@ void wldcore_menu_push_participant_list_level(s32 proposition) {
     g_wldcore_window_records[window].frame_index = 0;
     wldcore_list_build_proposition_detail_panel_image(
         &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth], proposition, 1);
-    g_world_text_substitution_values[0]
+    g_text_substitution_values[0]
         = g_main_active_propositions[proposition].proposition_id | TEXT_ID_PROPOSITION_NAME_BASE;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     depth = g_wldcore_menu_stack_depth;

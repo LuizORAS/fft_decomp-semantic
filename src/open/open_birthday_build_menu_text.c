@@ -24,11 +24,11 @@ void open_birthday_build_menu_text(open_birthday_date_state_t* menu) {
     open_gfx_init_window_frame_record(index, quad, 0, (u16*)g_open_birthday_window_image);
 
     text_id = menu->month + 0xB802;
-    world_text_measure_pixels(&width, &height, world_text_find_entry(text_id));
+    text_measure_pixels(&width, &height, text_find_entry(text_id));
 
     position.x = 0x1C - width / 2;
     position.y = 8;
-    substitution = g_world_text_substitution_values;
+    substitution = g_text_substitution_values;
     *substitution = text_id;
     open_birthday_draw_menu_text_entry(index, 0xB801, position, g_open_birthday_window_image);
 

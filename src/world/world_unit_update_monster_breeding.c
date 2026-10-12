@@ -80,9 +80,9 @@ void world_unit_update_monster_breeding(s32 unused) {
     if (i < 2) {
         i = 2;
     }
-    name_buffer = &g_world_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
+    name_buffer = &g_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     value = (s32)*name_buffer;
-    *name_buffer = g_world_text_section_pointers[TEXT_SECTION_UNIT_NAMES];
+    *name_buffer = g_text_section_pointers[TEXT_SECTION_UNIT_NAMES];
     n = main_party_create_monster_egg(n, i + i * 0x10, rand() % 4);
     *name_buffer = (u8*)value;
     if (n != -1) {

@@ -108,6 +108,6 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
     }
     *destination_word = value;
     if (destination_id == EVENT_SCRIPT_VAR_TEXT_SUBSTITUTION_VALUE) {
-        g_world_text_substitution_values[0] = value;
+        g_text_substitution_values[0] = value;
     }
 }

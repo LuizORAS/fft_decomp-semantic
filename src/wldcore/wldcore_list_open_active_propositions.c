@@ -11,7 +11,7 @@
  * the proposition name at x=8 (text 0xd000 | proposition_id), the participant
  * count at x=0x9c (text 0xb866) and the days remaining at x=0xb6
  * (text 0xb867, assigned_days - elapsed_days); both numeric columns go
- * through g_world_text_substitution_values[0].  Finally the saved cursor row
+ * through g_text_substitution_values[0].  Finally the saved cursor row
  * in g_wldcore_active_propositions_saved_cursor is clamped, the four windows are positioned relative to the
  * render record's origin, and the level is committed at depth + 1.
  *
@@ -123,7 +123,7 @@ void wldcore_list_open_active_propositions(void) {
     point.y = 8;
     i = 0;
     while (i < g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count) {
-        g_world_text_substitution_values[0]
+        g_text_substitution_values[0]
             = g_main_active_propositions[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                                              .proposition_list.entries[i]]
                   .participant_count;
@@ -137,7 +137,7 @@ void wldcore_list_open_active_propositions(void) {
     i = 0;
     while (i < g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count) {
         s32 entry = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entries[i];
-        g_world_text_substitution_values[0]
+        g_text_substitution_values[0]
             = g_main_active_propositions[entry].assigned_days - g_main_active_propositions[entry].elapsed_days;
         wldcore_menu_display_text_entry(index, WLDCORE_TEXT_ID_TWO_DIGIT_VALUE, point, g_wldcore_window_image_buffer);
         point.y += 0x10;

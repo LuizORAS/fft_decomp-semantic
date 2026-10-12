@@ -59,16 +59,15 @@ void wldcore_proposition_push_dispatch_confirm_level(void) {
     /* The summary panel's render record index lands in the 32-bit row field, which is cleared below. */
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].choice_panel.row = index;
     location = &g_wldcore_selected_proposition_row[0].name_text;
-    world_text_measure_pixels(
-        &size[0], &size[1], world_text_find_entry(*location + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
+    text_measure_pixels(&size[0], &size[1], text_find_entry(*location + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));
     bounds.y = 0x60;
     bounds.w = 0xF4;
     bounds.x = 0;
     row = size[1] + 2;
     bounds.h = (g_wldcore_proposition_send_unit_count - -row) * 0x10 + 0x10;
-    g_world_text_substitution_values[1] = g_wldcore_proposition_dispatch_days;
-    g_world_text_substitution_values[0] = g_wldcore_proposition_dispatch_days;
-    g_world_text_substitution_values[2] = g_wldcore_map_projection_state.marker.kind + TEXT_ID_LOCATION_NAME_BASE;
+    g_text_substitution_values[1] = g_wldcore_proposition_dispatch_days;
+    g_text_substitution_values[0] = g_wldcore_proposition_dispatch_days;
+    g_text_substitution_values[2] = g_wldcore_map_projection_state.marker.kind + TEXT_ID_LOCATION_NAME_BASE;
     wldcore_window_build_render_record_image(index, bounds, 0, &g_wldcore_window_image_buffer[0x200]);
     point.x = 8;
     point.y = size[1] * 0x10 + 8;

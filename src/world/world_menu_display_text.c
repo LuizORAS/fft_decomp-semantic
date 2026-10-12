@@ -7,7 +7,7 @@
  *
  * `text` of 0 or 1 selects `text_id` from the text tables; 1 also lets the
  * 0xFB command continue instead of ending the text. Walks the same command
- * stream as world_text_measure, drawing lines from g_world_menu_text_param_22
+ * stream as text_measure, drawing lines from g_world_menu_text_param_22
  * up to g_world_menu_text_param_24 and stopping at the window's right margin.
  * Numbers (0xE4/0xE6) are drawn one digit per 6-pixel column. Indexing the
  * divisor table inside the digit loop, rather than walking a pointer, is
@@ -16,7 +16,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
     party_data_t* party;
     u8* cursor;
     s32 i;
-    u8* fill = g_world_text_player_name_buffer;
+    u8* fill = g_text_player_name_buffer;
     u8 terminator;
     text_backreference_state_t* state;
     s32 variable_id;
@@ -29,17 +29,17 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
         fill[i] = terminator;
     }
     for (i = 0; i < 16; i++) {
-        g_world_text_player_name_buffer[i] = party->name[i];
+        g_text_player_name_buffer[i] = party->name[i];
     }
     if (text == 0 || text == (u8*)1) {
-        cursor = world_text_find_entry(text_id);
+        cursor = text_find_entry(text_id);
     } else {
         cursor = text;
     }
     state = TEXT_STATE;
     variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     TEXT_STATE->return_cursor = (u8*)-1;
-    TEXT_STATE->value_cursor = g_world_text_substitution_values;
+    TEXT_STATE->value_cursor = g_text_substitution_values;
     TEXT_STATE->pending_width = 0xFFFF;
     TEXT_STATE->remaining_bytes = 0;
     TEXT_STATE->column = 0;
@@ -102,7 +102,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                         state->value_cursor++;
                     } else {
                         cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
-                        state->value = g_world_text_substitution_values[*cursor];
+                        state->value = g_text_substitution_values[*cursor];
                     }
                     i = state->pending_width - 1;
                     if (state->pending_width == 0xFFFF) {
@@ -135,9 +135,9 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                 if (state->value != -1) {
                     state->return_cursor = cursor + 1;
                     if (state->command == TEXT_FORMAT_RAMZA_NAME) {
-                        cursor = g_world_text_player_name_buffer;
+                        cursor = g_text_player_name_buffer;
                     } else {
-                        cursor = world_text_find_entry(state->value);
+                        cursor = text_find_entry(state->value);
                     }
                     state->value_cursor++;
                     continue;
@@ -172,7 +172,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
             world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES,
                 pixels, &g_world_text_draw_origin, g_world_menu_text_color);
         }
-        g_world_text_draw_origin.rect.x += g_world_text_glyph_widths[state->command];
+        g_world_text_draw_origin.rect.x += g_text_glyph_widths[state->command];
         if (g_world_text_draw_origin.rect.x >= g_world_text_draw_origin.stride - 8) {
             break;
         }

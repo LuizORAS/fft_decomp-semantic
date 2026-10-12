@@ -1874,15 +1874,11 @@ typedef enum world_text_section {
 extern text_glyph_state_t g_world_text_message_box_glyph;
 extern glyph_blit_t g_world_text_message_box_state;
 extern u8 g_world_numeric_display_palette_indices[12];
-extern u8 g_world_text_glyph_widths[];
-extern s32 g_world_text_line_widths[];
 extern s32 g_world_text_overlay_active;
-extern u8 g_world_text_player_name_buffer[20];
 extern u8* g_world_text_saved_section_pointers[32];
 extern s32 g_world_text_section_offsets[32];
 extern u8* g_world_text_section_pointer_backup[32];
 extern s32 g_world_text_section_pointers_saved;
-extern s32 g_world_text_substitution_values[32];
 extern s16 g_world_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 
 /* Text substitutions $7E/$7F (0x801533d0, table index 0x7e from 0x801531d8)
@@ -1965,9 +1961,6 @@ extern s32 g_world_text_thread_active_text;
 extern u8 g_world_text_row_image_buffer[];
 extern u8* g_world_text_glyph_bitmap_data;
 
-/* Text section base per text-id section (id >> 11 & 0x1f, text_section_e);
- * several elements also carry their own names below. */
-extern u8* g_world_text_section_pointers[TEXT_SECTION_COUNT];
 void world_text_message_box_thread(void);
 void world_text_blit_font_glyph_to_4bpp(const u8* glyph, u8* image, glyph_blit_t* origin, s32 palette);
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, RECT* target, s32 palette);
@@ -1992,7 +1985,8 @@ void world_text_render_signed_decimal_entries(
 
 u8* world_text_advance_entry_by_char_count(u8* text, s32 count);
 void world_text_concatenate_entries(u8* text_table, u8* destination, const s16* text_ids, s32 separate_entries);
-u8* world_text_find_entry(s32 combined_text_index);
+/* MAIN selects the WORLD address of text_find_entry through this existing alias. */
+u8* world_text_find_entry(u32 text_id);
 void world_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled);
 void world_text_build_unit_name_list(void);
 void world_text_generate_formation_unit_name_string(void);
@@ -2001,9 +1995,7 @@ void world_text_relocate_pointer_table(s32* offset_table);
 void world_text_init_section_pointers(void);
 s32 world_text_is_printing(s32 thread_id);
 void world_text_kern_into_command_buffer(u8* text, s16* name, RECT* rect, s32 palette);
-void world_text_measure(s16* columns, s16* rows, const u8* text);
 s32 world_text_measure_entry_pixel_width(u8* entry);
-void world_text_measure_pixels(s16* width, s16* rows, const u8* text);
 void world_text_restore_section_pointers(void);
 void world_menu_close_help_menu(void);
 void world_text_resume_printing(s32 thread_id);

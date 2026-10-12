@@ -83,14 +83,14 @@ void option_menu_start_dead_unit_threads(void) {
     g_battle_dead_unit_result = 0;
     if (context->result == 4) {
         if (main_item_get_total_equipment_quantity(context->treasure_item, 1) == 0x63) {
-            g_battle_text_substitution_values[0] = context->treasure_item;
-            g_battle_text_substitution_values[1] = context->treasure_item;
+            g_text_substitution_values[0] = context->treasure_item;
+            g_text_substitution_values[1] = context->treasure_item;
             message_id = 0x101b;
-            g_battle_text_substitution_values[2] = main_item_get_data_pointer(context->treasure_item)->price >> 2;
+            g_text_substitution_values[2] = main_item_get_data_pointer(context->treasure_item)->price >> 2;
             g_battle_dead_unit_result = context->treasure_item;
         } else {
             message_id = 0x101a;
-            g_battle_text_substitution_values[0] = context->treasure_item;
+            g_text_substitution_values[0] = context->treasure_item;
             g_battle_dead_unit_result = context->treasure_item;
         }
         g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE].text_id = message_id;

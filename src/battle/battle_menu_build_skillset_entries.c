@@ -21,7 +21,7 @@ void battle_menu_build_skillset_entries(void) {
     g_action_menu_skillsets[0] = 0;
     g_battle_menu_action_menu_build_result = battle_menu_build_unit_action_menus(g_battle_active_turn_unit.battle_id,
         g_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_action_menu_row_types);
-    rows = (menu_text_row_t*)battle_text_find_entry(0x5010);
+    rows = (menu_text_row_t*)text_find_entry(0x5010);
     if (battle_unit_get_action_restriction(battle_unit_get_attacker_data_pointer())
         == BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER) {
         for (i = 0; i < 6; i++) {
@@ -52,9 +52,9 @@ void battle_menu_build_skillset_entries(void) {
             g_battle_menu_row_message_ids[i] = 3;
         }
         if (g_battle_menu_action_menu_build_result != 0) {
-            g_battle_text_substitution_values[count] = TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
+            g_text_substitution_values[count] = TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
         } else {
-            g_battle_text_substitution_values[count] = g_action_menu_skillsets[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
+            g_text_substitution_values[count] = g_action_menu_skillsets[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
         }
         count++;
     }
@@ -63,8 +63,7 @@ void battle_menu_build_skillset_entries(void) {
         g_battle_menu_row_message_ids[i] = 0x16;
         g_action_menu_skillsets[i] = ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
         g_action_menu_skillsets[i + 1] = SKILLSET_ID_NONE;
-        g_battle_text_substitution_values[count++]
-            = TEXT_ID_SKILLSET_NAME_SOURCE_BASE + ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
+        g_text_substitution_values[count++] = TEXT_ID_SKILLSET_NAME_SOURCE_BASE + ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
     }
     height = count * 16 + 16;
     rows[count - 1].terminator = 0xff;

@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Converts a text file's table of 32 section offsets into the absolute section
- * pointers of g_battle_text_section_pointers. The offsets count from the end of
+ * pointers of g_text_section_pointers. The offsets count from the end of
  * the table. */
 void battle_text_relocate_pointer_table(const u32* offsets) {
     s32 index;
@@ -11,7 +11,7 @@ void battle_text_relocate_pointer_table(const u32* offsets) {
     index = 0;
     text_data = (const u8*)offsets + sizeof(u32) * 32;
     do {
-        g_battle_text_section_pointers[index] = (u8*)(text_data + offsets[index]);
+        g_text_section_pointers[index] = (u8*)(text_data + offsets[index]);
         index++;
     } while (index < 32);
 }

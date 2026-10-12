@@ -17,6 +17,6 @@ void wldcore_load_sound_novel_files(s32 chapter) {
         g_wldcore_sound_novel_text_sector_offsets[chapter] + DISC_SECTOR_WORLD_SNPLMES_BIN,
         g_wldcore_sound_novel_text_sector_offsets[chapter + 1] - g_wldcore_sound_novel_text_sector_offsets[chapter],
         g_wldcore_message_buffer);
-    g_world_text_section_pointers[TEXT_SECTION_MESSAGES] = g_wldcore_message_buffer;
+    g_text_section_pointers[TEXT_SECTION_MESSAGES] = g_wldcore_message_buffer;
     g_wldcore_loaded_message_block = -1;
 }

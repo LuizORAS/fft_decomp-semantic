@@ -23,7 +23,7 @@ void wldcore_proposition_handle_accept_input(wldcore_window_render_pair_t* owner
         total = g_wldcore_selected_proposition_row[0].fee_a + g_wldcore_selected_proposition_row[0].fee_b;
         g_wldcore_proposition_gil_amount = total;
         if (total != 0) {
-            g_world_text_substitution_values[0] = total;
+            g_text_substitution_values[0] = total;
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_JOB_FEE_PROMPT, 0);
         } else {
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_ACCEPT_JOB_PROMPT, 0);

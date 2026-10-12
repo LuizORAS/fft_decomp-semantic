@@ -32,8 +32,8 @@ void world_name_run_confirmation_menu(void) {
         } else {
             g_world_name_used_original_name = 0;
         }
-        g_world_text_section_pointers[TEXT_SECTION_COMPOSED_TEXT] = g_world_name_entry_text;
-        g_world_text_substitution_values[0] = 0xc800;
+        g_text_section_pointers[TEXT_SECTION_COMPOSED_TEXT] = g_world_name_entry_text;
+        g_text_substitution_values[0] = 0xc800;
         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x21, 0xc01a, 0);
         g_world_name_confirm_initialized = 1;
         g_world_name_confirm_finished = 0;

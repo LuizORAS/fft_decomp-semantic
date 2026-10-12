@@ -23,7 +23,7 @@ void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t
         state->render_record_index, bounds, state->image_coordinate_mode, g_wldcore_window_image_buffer);
     for (i = 0; i < 2; i++) {
         if (state->text_substitutions[i] != -1) {
-            g_world_text_substitution_values[i] = state->text_substitutions[i];
+            g_text_substitution_values[i] = state->text_substitutions[i];
         }
     }
     if (state->extra_render_index != -1) {

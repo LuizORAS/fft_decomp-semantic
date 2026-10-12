@@ -19,7 +19,7 @@ extern menu_active_unit_t g_helpmenu_active_unit_data;
 extern menu_status_panel_slot_storage_t g_helpmenu_billboard;
 extern help_navigation_record_t g_helpmenu_require_navigation[];
 
-/* 0x80 bytes of saved g_battle_text_section_pointers, i.e. 32 pointers. */
+/* 0x80 bytes of saved g_text_section_pointers, i.e. 32 pointers. */
 extern u8* g_helpmenu_text_saved_pointers[32];
 extern s16 g_helpmenu_selected_unit_panel_mode;
 

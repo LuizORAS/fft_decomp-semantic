@@ -44,7 +44,7 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         break;
     case 2:
         world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        g_world_text_substitution_values[0] = g_wldcore_job_selection.speaker_party_index + TEXT_ID_UNIT_NAME_BASE;
+        g_text_substitution_values[0] = g_wldcore_job_selection.speaker_party_index + TEXT_ID_UNIT_NAME_BASE;
         world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT,
             world_get_party_unit_formation_sprite(g_wldcore_job_selection.speaker_party_index));
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,

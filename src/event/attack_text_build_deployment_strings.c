@@ -3,7 +3,7 @@
 /* Appends one 0xfe/0xff-terminated string. Overflowing the arena jumps
  * straight to the cleanup and skips the help-text copy. */
 #define APPEND_TEXT(text_id)                                                                                           \
-    src = battle_text_find_entry(text_id);                                                                             \
+    src = text_find_entry(text_id);                                                                                    \
     *dst++ = *src++;                                                                                                   \
     while ((dst[-1] & 0xfe) != 0xfe) {                                                                                 \
         if (dst >= g_attack_scenario_table + 0x4000) {                                                                 \
@@ -72,7 +72,7 @@ void attack_text_build_deployment_strings(void) {
     }
     g_attack_deploy_unit_text_section = g_attack_scenario_table;
     g_attack_deploy_help_text_section = g_attack_event_condition_blocks;
-    src = battle_text_find_entry(0x5800);
+    src = text_find_entry(0x5800);
     dst = g_attack_event_condition_blocks;
     for (i = 0; i < 0x1400; i++) {
         *dst++ = *src++;

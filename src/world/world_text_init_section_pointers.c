@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Turn the text file's table of section offsets into
- * g_world_text_section_pointers. The offsets are relative to the end of the
+ * g_text_section_pointers. The offsets are relative to the end of the
  * table. */
 void world_text_init_section_pointers(void) {
     s32* offset;
@@ -14,7 +14,7 @@ void world_text_init_section_pointers(void) {
     offset = g_world_text_section_offsets;
     i = 0;
     text = (u8*)(offset + TEXT_SECTION_COUNT);
-    section = g_world_text_section_pointers;
+    section = g_text_section_pointers;
     do {
         value = *offset;
         offset++;

@@ -16,9 +16,9 @@ void world_menu_size_entry_to_text(menu_entry_t* entry, s16* width, s16* height,
     u16 w;
     u16 h;
 
-    text = world_text_find_entry(entry->text_id);
+    text = text_find_entry(entry->text_id);
     *out_pad = 0;
-    world_text_measure_pixels(width, height, text);
+    text_measure_pixels(width, height, text);
     if (pad_short != 0) {
         if (*width < 8 && *height == 1) {
             *out_pad = (8 - *width) * 5;

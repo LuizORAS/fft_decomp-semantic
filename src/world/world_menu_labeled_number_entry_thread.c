@@ -73,7 +73,7 @@ void world_menu_labeled_number_entry_thread(void) {
     buffer = world_menu_build_and_upload_window_frame_image(
         param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_world_menu_text_state.pen.stride = param->inner_width;
-    world_text_measure_pixels(&label_size[0], &label_size[1], world_text_find_entry(param->text_id));
+    text_measure_pixels(&label_size[0], &label_size[1], text_find_entry(param->text_id));
     world_menu_set_text_origin(8, 9);
     world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
     world_menu_set_text_origin((u16)label_size[0] + 8, 9);
@@ -135,7 +135,7 @@ void world_menu_labeled_number_entry_thread(void) {
             buffer = world_menu_build_and_upload_window_frame_image(
                 param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             g_world_menu_text_state.pen.stride = param->inner_width;
-            world_text_measure(&label_size[0], &label_size[1], world_text_find_entry(param->text_id));
+            text_measure(&label_size[0], &label_size[1], text_find_entry(param->text_id));
             world_menu_set_text_origin(8, 9);
             world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
             world_menu_set_text_origin((u16)label_size[0] * 6 + 8, 9);

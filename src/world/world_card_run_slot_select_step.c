@@ -26,7 +26,7 @@ void world_card_run_slot_select_step(void) {
         if (slot == -1) {
             g_world_card_menu_step = WORLD_CARD_MENU_STEP_LEAVE;
         } else {
-            g_world_text_substitution_values[0] = slot + 1;
+            g_text_substitution_values[0] = slot + 1;
             if (g_card_save_selected_slot != slot) {
                 g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }

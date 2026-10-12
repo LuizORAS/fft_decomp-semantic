@@ -35,7 +35,7 @@ void world_text_kern_into_command_buffer(u8* text, s16* name, RECT* rect, s32 pa
                     second = *text++;
                     glyph = second + glyph * TEXT_GLYPHS_PER_PREFIX;
                 }
-                glyph = g_world_text_glyph_widths[glyph];
+                glyph = g_text_glyph_widths[glyph];
                 if (glyph == 2) {
                     pre = 2;
                     post = 2;

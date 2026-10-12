@@ -87,14 +87,14 @@ functions:
   - {addr: 0x800e3b8c, size: 36, name: world_thread_get_current_task_id, hash: 3cea094e5efaa530}
   - {addr: 0x800e3bb0, size: 1612, name: world_text_draw_glyph_with_typewriter_delay, hash: 998b0c534e9802dc}
   - {addr: 0x800e41fc, size: 108, name: text_resolve_format_string_id, hash: ca1c3176797cf8bd, source: src/text/text_resolve_format_string_id.c}
-  - {addr: 0x800e4268, size: 1024, name: world_text_measure, hash: 694a13bd7fb3f97e}
-  - {addr: 0x800e4668, size: 1180, name: world_text_measure_pixels, hash: 899223b71ed0424b}
+  - {addr: 0x800e4268, size: 1024, name: text_measure, hash: 694a13bd7fb3f97e, source: src/text/text_measure.c}
+  - {addr: 0x800e4668, size: 1180, name: text_measure_pixels, hash: 899223b71ed0424b, source: src/text/text_measure_pixels.c}
   - {addr: 0x800e4b04, size: 240, name: world_menu_render_text_image_at_record_origin, hash: 410b378a04558e03}
   - {addr: 0x800e4bf4, size: 188, name: text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/text/text_advance_cursor_with_backreferences.c}
   - {addr: 0x800e4cb0, size: 160, name: text_advance_cursor_with_separate_backreference_state, hash: 267aa40059dcef97, source: src/text/text_advance_cursor_with_separate_backreference_state.c}
   - {addr: 0x800e4d50, size: 76, name: world_text_print_fnt_value_and_next, hash: 9128d74441ddfc53}
   - {addr: 0x800e4d9c, size: 8512, name: world_text_character_handling_thread, hash: c1dab33e925f6e10, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800e6edc, size: 56, name: world_text_find_entry, hash: 1a029dac5097e38c}
+  - {addr: 0x800e6edc, size: 56, name: text_find_entry, hash: 1a029dac5097e38c, source: src/text/text_find_entry.c}
   - {addr: 0x800e6f14, size: 80, name: text_count_decimal_digits, hash: 46d4e97a0aca8ebf, source: src/text/text_count_decimal_digits.c}
   - {addr: 0x800e6f64, size: 104, name: gfx_flip_poly_ft4_uv_if_negative, hash: 1a53cbbc201168a1, source: src/gfx/gfx_flip_poly_ft4_uv_if_negative.c}
   - {addr: 0x800e6fcc, size: 688, name: world_menu_animate_window_quad_crop, hash: 81c3085397b8c764}
@@ -1079,7 +1079,7 @@ data:
   - {addr: 0x801531b0, name: g_world_gfx_texture_window}
   - {addr: 0x801531b8, name: g_world_camera_script_variable_indices}
   - {addr: 0x801531c8, name: g_world_menu_pending_selection}
-  - {addr: 0x801531d8, name: g_world_text_substitution_values}
+  - {addr: 0x801531d8, name: g_text_substitution_values}
   - {addr: 0x80153258, name: g_world_menu_transition_active}
   - {addr: 0x8015325c, name: g_world_dead_unit_action}
   - {addr: 0x80153260, name: g_world_dead_unit_result}
@@ -1159,7 +1159,7 @@ data:
   - {addr: 0x8015338c, name: g_world_text_decimal_divisors}
   - {addr: 0x801533b8, name: g_world_menu_cursor_zoom_percentages}
   - {addr: 0x801533d0, name: g_world_text_substitution_rect}
-  - {addr: 0x801533e0, name: g_world_text_glyph_widths}
+  - {addr: 0x801533e0, name: g_text_glyph_widths}
   - {addr: 0x80153c78, name: g_world_ability_menu_layout}
   - {addr: 0x80153ca4, name: g_world_menu_status_list_layout}
   - {addr: 0x80153cd0, name: g_world_menu_at_list_layout}
@@ -1897,8 +1897,8 @@ data:
   - {addr: 0x8019b3e8, name: g_world_menu_buffer_arena}
   - {addr: 0x8019f3ac, name: g_ai_workspace}
   - {addr: 0x801a23e8, name: g_world_menu_buffer_allocation_map}
-  - {addr: 0x801a2458, name: g_world_text_player_name_buffer}
-  - {addr: 0x801a246c, name: g_world_text_line_widths}
+  - {addr: 0x801a2458, name: g_text_player_name_buffer}
+  - {addr: 0x801a246c, name: g_text_line_widths}
   - {addr: 0x801a256c, name: g_world_misc_unit_screen_coords}
   - {addr: 0x801a2574, name: g_world_text_saved_section_pointers}
   - {addr: 0x801a25f4, name: g_world_menu_preview_target_action}
@@ -2323,7 +2323,7 @@ data:
   - {addr: 0x801cd87c, name: g_world_event_weather_request}
   - {addr: 0x801cd880, name: PSDGPU}
   - {addr: 0x801cd884, name: g_world_map_light_base_matrix}
-  - {addr: 0x801cd8a4, name: g_world_text_section_pointers}
+  - {addr: 0x801cd8a4, name: g_text_section_pointers}
   - {addr: 0x801cd924, name: g_world_event_loaded_evtchr_buffer}
   - {addr: 0x801cd928, name: g_world_map_light_rotation}
   - {addr: 0x801cd930, name: g_world_gfx_sprite_capacity}

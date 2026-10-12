@@ -93,8 +93,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         g_wldcore_job_selection.preferred_unit = count;
         if (count != 0) {
             g_wldcore_job_selection.preferred_unit = count - 1;
-            g_world_text_substitution_values[1]
-                = wldcore_get_party_data_pointer(count - 1)->job_id + TEXT_ID_JOB_NAME_BASE;
+            g_text_substitution_values[1] = wldcore_get_party_data_pointer(count - 1)->job_id + TEXT_ID_JOB_NAME_BASE;
             level->state = 4;
             return;
         }
@@ -168,10 +167,10 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
                            * g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count)
                           >> 15];
             if (participant == g_wldcore_job_selection.excluded_party_index) {
-                g_world_text_substitution_values[1]
+                g_text_substitution_values[1]
                     = wldcore_proposition_adjust_message_index(0xE5, participant) + TEXT_ID_WORLD_MENU_BASE;
             } else {
-                g_world_text_substitution_values[1] = participant + TEXT_ID_UNIT_NAME_BASE;
+                g_text_substitution_values[1] = participant + TEXT_ID_UNIT_NAME_BASE;
             }
         }
         if (wldcore_proposition_step_message(level, 0x78) == 0) {

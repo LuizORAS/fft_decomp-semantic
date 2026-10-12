@@ -72,7 +72,7 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
         .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
         .flags |= WORLD_RENDER_RECORD_HIDDEN;
-    g_world_text_substitution_values[0] = value + TEXT_ID_TREASURE_NAME_BASE;
+    g_text_substitution_values[0] = value + TEXT_ID_TREASURE_NAME_BASE;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.phase = WLDCORE_DETAIL_PHASE_LOAD;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.timer = 0;

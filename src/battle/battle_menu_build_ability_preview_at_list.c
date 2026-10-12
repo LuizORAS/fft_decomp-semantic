@@ -82,7 +82,7 @@ void battle_menu_build_ability_preview_at_list(void) {
         work->secondary_colors[index] = 0;
     }
     published = work->text;
-    g_battle_text_section_pointers[TEXT_SECTION_AT_LIST] = published;
+    g_text_section_pointers[TEXT_SECTION_AT_LIST] = published;
     count = 0;
     bracketed = 0;
     /* The target publishes the buffer from a temporary and copies it into the

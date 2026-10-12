@@ -42,16 +42,14 @@ void require_apply_post_battle_unit_changes(void) {
     battle_copy_bytes(g_require_saved_thread_block, &g_battle_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
-    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
-        = text_data + g_require_text_section_offsets[1];
-    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
+    g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS] = text_data + g_require_text_section_offsets[1];
+    g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
         = text_data + g_require_text_section_offsets[2];
     saved_menu_descriptor = g_battle_menu_thread_menu_data;
     menu_base = g_require_join_menu_descriptor;
     g_battle_menu_thread_menu_data = menu_base;
-    g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES]
-        = text_data + g_require_text_section_offsets[3];
-    g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = text_data + g_require_text_section_offsets[4];
+    g_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES] = text_data + g_require_text_section_offsets[3];
+    g_text_section_pointers[TEXT_SECTION_JOB_NAMES] = text_data + g_require_text_section_offsets[4];
 
     affected_index = 0;
     require_text_build_battle_nicknames();
@@ -164,8 +162,8 @@ void require_apply_post_battle_unit_changes(void) {
                     } while (1);
 
                     require_panel_set_transition_value(1);
-                    g_battle_text_substitution_values[0] = *selected_unit_index_ptr;
-                    battle_text_measure_pixels(&text_width_px, &text_height_px, battle_text_find_entry(0x5006));
+                    g_text_substitution_values[0] = *selected_unit_index_ptr;
+                    text_measure_pixels(&text_width_px, &text_height_px, text_find_entry(0x5006));
                     /* The s16 sum reads the 16-bit value directly (a second copy of the
                      * loaded width) while the modulo uses the widened s32 value; the
                      * narrowing also leaves the other unreferenced frame slot. */

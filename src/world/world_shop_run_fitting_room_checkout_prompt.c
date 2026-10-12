@@ -29,7 +29,7 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
         if (balance >= 0) {
             g_world_menu_sound_muted = 1;
             g_world_shop_checkout_prompt_menu = &g_world_shop_checkout_confirm_menu;
-            g_world_text_substitution_values[0] = cost;
+            g_text_substitution_values[0] = cost;
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf819, 0);
             g_world_shop_checkout_insufficient_gil = 0;
         } else {

@@ -62,8 +62,8 @@ void world_menu_display_hovered_unit_stats(
             text_id = 0;
         }
         if (text_id != 0) {
-            text = world_text_find_entry(text_id + TEXT_ID_ABILITY_NAME_BASE);
-            g_world_thread_call_target = (void (*)(void))world_text_measure_pixels;
+            text = text_find_entry(text_id + TEXT_ID_ABILITY_NAME_BASE);
+            g_world_thread_call_target = (void (*)(void))text_measure_pixels;
             world_thread_call_on_main_stack(&extent_w, &extent_h, text);
             if (extent_w & 3) {
                 extent_w = (extent_w & 0xFFFC) + 4;

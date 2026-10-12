@@ -26,7 +26,7 @@ void world_menu_init_at_list(menu_entry_t* entry) {
         g_world_dead_unit_menu_flags[i] = 0;
         g_world_menu_at_list_flags[i] = 0;
     }
-    g_world_text_section_pointers[TEXT_SECTION_AT_LIST] = g_world_menu_at_list_text;
+    g_text_section_pointers[TEXT_SECTION_AT_LIST] = g_world_menu_at_list_text;
     count = 0;
     bracketed = 0;
     text = g_world_menu_at_list_text;

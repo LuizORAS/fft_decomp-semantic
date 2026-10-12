@@ -91,12 +91,12 @@ void wldcore_menu_push_brave_story_level(void) {
     if (value >= 10000) {
         value = 9999;
     }
-    g_world_text_substitution_values[0] = value;
+    g_text_substitution_values[0] = value;
     value = world_script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES);
     if (value >= 10000) {
         value = 9999;
     }
-    g_world_text_substitution_values[1] = value;
+    g_text_substitution_values[1] = value;
     bounds.x = 0x80;
     bounds.y = 0x40;
     bounds.w = 0x5C;

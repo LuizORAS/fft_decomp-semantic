@@ -46,22 +46,22 @@ void world_menu_run_require_help(void) {
         shadow_poly->clut = 0x7DBC;
     }
     world_script_copy_bytes(
-        g_world_text_section_pointer_backup, g_world_text_section_pointers, WORLD_TEXT_SECTION_TABLE_BYTES);
-    g_world_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
+        g_world_text_section_pointer_backup, g_text_section_pointers, WORLD_TEXT_SECTION_TABLE_BYTES);
+    g_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
+    g_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_MENU_COMMANDS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
+    g_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_TERRAIN];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_JOBS]
+    g_text_section_pointers[HELP_TEXT_SECTION_JOBS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_JOBS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
+    g_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_ITEMS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
+    g_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_ABILITIES];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
+    g_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
-    g_world_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
+    g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self = &g_world_threads[g_world_thread_current_id];
     world_menu_copy_billboard_data_out(&g_world_help_active_banner, &g_world_help_active_unit_data,

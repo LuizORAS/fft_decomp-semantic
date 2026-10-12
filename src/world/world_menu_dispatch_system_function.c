@@ -188,20 +188,19 @@ s32 world_menu_dispatch_system_function(
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
         world_text_set_message_duration_frames(0x3C);
         if (g_main_action_menu_types_by_skillset[unit->action_command.skillset_id] == ACTION_MENU_TYPE_ARITHMETICKS) {
-            g_world_text_substitution_values[1]
-                = unit->action_command.calculator_multiplier + TEXT_ID_ABILITY_NAME_BASE;
-            g_world_text_substitution_values[0] = unit->action_command.calculator_type + TEXT_ID_ABILITY_NAME_BASE;
-            g_world_text_substitution_values[2] = unit->action_command.ability_id + TEXT_ID_ABILITY_NAME_BASE;
+            g_text_substitution_values[1] = unit->action_command.calculator_multiplier + TEXT_ID_ABILITY_NAME_BASE;
+            g_text_substitution_values[0] = unit->action_command.calculator_type + TEXT_ID_ABILITY_NAME_BASE;
+            g_text_substitution_values[2] = unit->action_command.ability_id + TEXT_ID_ABILITY_NAME_BASE;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ARITHMETICKS_ANNOUNCEMENT);
         } else {
             if (action->skillset_id == SKILLSET_ID_ITEM || action->skillset_id == SKILLSET_ID_THROW) {
-                g_world_text_substitution_values[0] = (u8)action->item_or_equipment + TEXT_ID_ITEM_NAME_BASE;
+                g_text_substitution_values[0] = (u8)action->item_or_equipment + TEXT_ID_ITEM_NAME_BASE;
             } else {
                 value = action->ability_id & ABILITY_ID_MASK;
                 if (value >= ABILITY_ID_SUMMON_MAGIC_MOOGLE && value <= ABILITY_ID_DRAW_OUT_CHIRIJIRADEN) {
-                    g_world_text_substitution_values[0] = value + 0xB7C4;
+                    g_text_substitution_values[0] = value + 0xB7C4;
                 } else {
-                    g_world_text_substitution_values[0] = value + TEXT_ID_ABILITY_NAME_BASE;
+                    g_text_substitution_values[0] = value + TEXT_ID_ABILITY_NAME_BASE;
                 }
             }
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ABILITY_ANNOUNCEMENT);
@@ -227,11 +226,11 @@ s32 world_menu_dispatch_system_function(
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         } else {
             g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_EFFECT_MESSAGE].text_id = option;
-            g_world_text_substitution_values[0] = parameter & 0xFF;
+            g_text_substitution_values[0] = parameter & 0xFF;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_EFFECT_MESSAGE);
         }
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_LEARNED) {
-        g_world_text_substitution_values[0] = option + TEXT_ID_ABILITY_NAME_BASE;
+        g_text_substitution_values[0] = option + TEXT_ID_ABILITY_NAME_BASE;
         world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_ABILITY_LEARNED);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE) {
         world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CRYSTAL_OR_TREASURE);
@@ -242,16 +241,16 @@ s32 world_menu_dispatch_system_function(
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_FIND_ITEM) {
         if (main_item_get_total_equipment_quantity(option & 0xFF, 1) == 0x63) {
             main_item_get_data_pointer(option);
-            g_world_text_substitution_values[0] = option;
-            g_world_text_substitution_values[1] = option;
+            g_text_substitution_values[0] = option;
+            g_text_substitution_values[1] = option;
             item = main_item_get_data_pointer(option);
-            g_world_text_substitution_values[2] = item->price >> 2;
+            g_text_substitution_values[2] = item->price >> 2;
             world_script_set_variable(
                 EVENT_SCRIPT_VAR_WAR_FUNDS, (item->price >> 2) + world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS));
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_MOVE_FIND_ITEM_SOLD);
         } else {
             main_item_get_data_pointer(option);
-            g_world_text_substitution_values[0] = option;
+            g_text_substitution_values[0] = option;
             g_main_item_quantities[option]++;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_MOVE_FIND_ITEM);
         }
@@ -261,17 +260,17 @@ s32 world_menu_dispatch_system_function(
         entry = &g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT];
         flags = parameter;
         if (option >= ACTION_DISPLAY_IMAGE_CT && option <= ACTION_DISPLAY_IMAGE_LEVEL) {
-            g_world_text_substitution_values[0] = unit_id;
-            g_world_text_substitution_values[1] = option + 0x506B;
+            g_text_substitution_values[0] = unit_id;
+            g_text_substitution_values[1] = option + 0x506B;
             if (option == ACTION_DISPLAY_IMAGE_LEVEL) {
                 flags = 1;
                 if (parameter & ACTION_STAT_CHANGE_INCREASE) {
                     flags = 1 | ACTION_STAT_CHANGE_INCREASE;
                 }
             }
-            g_world_text_substitution_values[2] = flags;
+            g_text_substitution_values[2] = flags;
             if (flags & ACTION_STAT_CHANGE_INCREASE) {
-                g_world_text_substitution_values[2] = flags & ACTION_STAT_CHANGE_VALUE_MASK;
+                g_text_substitution_values[2] = flags & ACTION_STAT_CHANGE_VALUE_MASK;
                 entry->text_id = 0x508C;
             } else {
                 entry->text_id = 0x508D;
@@ -285,19 +284,19 @@ s32 world_menu_dispatch_system_function(
             }
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
         } else if (option == ACTION_DISPLAY_IMAGE_GIL) {
-            g_world_text_substitution_values[0] = parameter < 0 ? -parameter : parameter;
+            g_text_substitution_values[0] = parameter < 0 ? -parameter : parameter;
             g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x508F;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
         } else if (option == ACTION_DISPLAY_IMAGE_EXP) {
-            g_world_text_substitution_values[0] = parameter & 0x7F;
+            g_text_substitution_values[0] = parameter & 0x7F;
             g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x508E;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
         } else if (option == ACTION_DISPLAY_IMAGE_STOLEN || option == ACTION_DISPLAY_IMAGE_BROKEN) {
             if (parameter & 0x8000) {
-                g_world_text_substitution_values[0] = (parameter & 0xFF) + TEXT_ID_ITEM_NAME_BASE;
+                g_text_substitution_values[0] = (parameter & 0xFF) + TEXT_ID_ITEM_NAME_BASE;
                 g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x509B;
             } else {
-                g_world_text_substitution_values[0] = parameter + TEXT_ID_ITEM_NAME_BASE;
+                g_text_substitution_values[0] = parameter + TEXT_ID_ITEM_NAME_BASE;
                 g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = option + 0x5074;
             }
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);

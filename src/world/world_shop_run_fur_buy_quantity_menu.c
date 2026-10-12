@@ -44,7 +44,7 @@ s32 world_shop_run_fur_buy_quantity_menu(void) {
         = world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, g_world_shop_quantity_menu_data);
     if (world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) != 0
         && g_world_shop_fur_purchase_confirm_shown == 0) {
-        g_world_text_substitution_values[0]
+        g_text_substitution_values[0]
             = g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY] * g_world_shop_fur_purchase_price;
         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF836, 0);
         g_world_shop_fur_purchase_confirm_shown = 1;

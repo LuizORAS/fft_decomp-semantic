@@ -52,7 +52,7 @@ void wldcore_menu_push_script_flag_01a4_detail_level(s32 value) {
         .flags |= WORLD_RENDER_RECORD_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
         .flags |= WORLD_RENDER_RECORD_HIDDEN;
-    g_world_text_substitution_values[0] = value + TEXT_ID_FACT_NAME_BASE;
+    g_text_substitution_values[0] = value + TEXT_ID_FACT_NAME_BASE;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_SCRIPT_FLAG_01A4_DETAIL;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;

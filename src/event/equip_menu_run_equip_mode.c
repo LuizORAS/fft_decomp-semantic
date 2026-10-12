@@ -68,7 +68,7 @@ s32 equip_menu_run_equip_mode(void) {
             equip_menu_restore_list_selection(g_equip_equip_item_slot != 0 ? g_equip_equip_item_slot - 1 : 0, &selected,
                 &scroll, g_equip_item_list_entries);
             equip_menu_init_scrollable_list(
-                g_equip_item_list_entries, selected, scroll, g_battle_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
+                g_equip_item_list_entries, selected, scroll, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
             g_equip_menu_list_row_callbacks[0].value = equip_menu_get_entry_item_equipped_count;
             g_equip_menu_list_row_callbacks[1].value = equip_menu_get_entry_item_count;
             g_equip_menu_list_row_callbacks[2].icon = equip_item_build_type_icon_source;

@@ -100,8 +100,8 @@ void battle_text_character_handling_thread(void) {
     } else {
         rec.portrait = thread->function_parameter_4 - 1;
     }
-    text = battle_text_find_entry(battle_thread_get_current_parameter_2());
-    battle_text_measure_pixels(&rec.mark, &rec.lines, text);
+    text = text_find_entry(battle_thread_get_current_parameter_2());
+    text_measure_pixels(&rec.mark, &rec.lines, text);
     if (thread->task_words[6] != 0) {
         rec.mark = thread->task_words[6];
     }
@@ -346,7 +346,7 @@ void battle_text_character_handling_thread(void) {
             && g_battle_etc_graphics_enabled == 0) {
             cursor_x = rec.x;
         } else {
-            u32 line_width = g_battle_text_line_widths[0] + 0x18;
+            u32 line_width = g_text_line_widths[0] + 0x18;
             cursor_x = rec.x + ((rec.width - line_width) >> 1);
         }
         if (cursor_x & 2) {
@@ -518,7 +518,7 @@ void battle_text_character_handling_thread(void) {
                     if ((rec.text & no_value) == no_value) {
                         break;
                     }
-                    text = battle_text_find_entry(rec.text);
+                    text = text_find_entry(rec.text);
                     no_wait = 0;
                     battle_menu_build_and_upload_window_image(
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
@@ -571,7 +571,7 @@ void battle_text_character_handling_thread(void) {
                 } else {
                     u32 line_width;
                     g_battle_text_current_line++;
-                    line_width = g_battle_text_line_widths[g_battle_text_current_line] + 0x18;
+                    line_width = g_text_line_widths[g_battle_text_current_line] + 0x18;
                     cursor_x = rec.x + ((rec.width - line_width) >> 1);
                 }
                 if (cursor_x & 3) {
@@ -646,7 +646,7 @@ void battle_text_character_handling_thread(void) {
                 if ((rec.text & no_value) == no_value) {
                     break;
                 }
-                text = battle_text_find_entry(rec.text);
+                text = text_find_entry(rec.text);
                 no_wait = 0;
                 battle_menu_build_and_upload_window_image(
                     rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
@@ -707,15 +707,15 @@ void battle_text_character_handling_thread(void) {
             rec.color = *text;
             NEXT();
         } else {
-            substitution = &g_battle_text_substitution_values[value_index];
+            substitution = &g_text_substitution_values[value_index];
             value = text_resolve_format_string_id(character, *substitution);
             if (value != -1) {
                 saved = text + 1;
                 value_index++;
                 if (character == TEXT_FORMAT_RAMZA_NAME) {
-                    text = g_battle_player_name;
+                    text = g_text_player_name_buffer;
                 } else {
-                    text = battle_text_find_entry(value);
+                    text = text_find_entry(value);
                 }
                 continue;
             }
@@ -729,7 +729,7 @@ void battle_text_character_handling_thread(void) {
                 goto print_value;
             } else if (character == TEXT_PRINT_INDEXED_VALUE) {
                 NEXT();
-                value = g_battle_text_substitution_values[*text];
+                value = g_text_substitution_values[*text];
             print_value:
                 digits = text_count_decimal_digits(value);
                 started = 0;
