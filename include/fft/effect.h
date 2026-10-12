@@ -397,11 +397,10 @@ extern s32 g_effect_e317_tube_mesh_ring_scales[5];
 extern s32 g_effect_e383_tube_mesh_ring_scales[5];
 extern s32 g_effect_tube_mesh_ring_scales[5];
 
-/* summon mesh */
-/* Shared records of the 4,744-byte summon dome mesh renderer that 12 EFFECT
- * overlays compile from one source (for example E474 at 0x801c42c4). */
+/* dome mesh */
+/* Work block of the spinning dome renderer shared by twelve EFFECT overlays. */
 /* Work block: two POLY_GT4 buffers of 8 rows x 16 columns. */
-typedef struct effect_summon_mesh_work {
+typedef struct effect_dome_mesh_work {
     s32 buffer;             /* 0x0000: 0 or 1, flipped after each update */
     POLY_GT4 quads[2][128]; /* 0x0004: row * 16 + column */
     s16 spin;               /* 0x3404: lattice rotation, wrapped to 0xfff */
@@ -410,24 +409,13 @@ typedef struct effect_summon_mesh_work {
     s32 radius_speed;       /* 0x340c */
     u8 _unused_3410[0x08];
     s32 destroy_delay; /* 0x3418: the destroy phase waits one call before freeing */
-} effect_summon_mesh_work_t;
-typedef char assert_effect_summon_mesh_work_size[sizeof(effect_summon_mesh_work_t) == 13340 ? 1 : -1];
-
-/* Leading 32-bit flags of the effect section at *g_battle_effect_flags_section. */
-typedef struct effect_summon_mesh_effect_header {
-    u32 flags; /* 0x00: bit 3 is passed as the add_depth argument */
-} effect_summon_mesh_effect_header_t;
+} effect_dome_mesh_work_t;
+typedef char assert_effect_dome_mesh_work_size[sizeof(effect_dome_mesh_work_t) == 13340 ? 1 : -1];
 
 /* Overlay-local vertex brightness rows (12-bit fixed): brightness_row selects
  * the row, the lattice row (0-8) the column. */
-extern u32 g_effect_e071_summon_mesh_brightness_table[][9];
-extern u32 g_effect_e074_summon_mesh_brightness_table[][9];
-extern u32 g_effect_e259_summon_mesh_brightness_table[][9];
-extern u32 g_effect_e338_summon_mesh_brightness_table[][9];
-extern u32 g_effect_e373_summon_mesh_brightness_table[][9];
-extern u32 g_effect_e452_summon_mesh_brightness_table[][9];
-extern u32 g_effect_e474_summon_mesh_brightness_table[][9];
-extern u32 g_effect_summon_mesh_brightness_table[][9];
+extern u32 g_effect_dome_mesh_brightness_table[][9];
+s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* system */
 /* The native handlers of the EFFECT/E###.BIN overlays.

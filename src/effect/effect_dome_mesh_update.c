@@ -1,4 +1,3 @@
-/* E476.BIN is the effect of effect id 0x20c, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/libgpu.h"
 
@@ -9,8 +8,8 @@
  * ring at 0x100 steps. The lattice is written to the scratchpad, offset by the
  * placement origin, projected through the battle camera, and linked into the
  * ordering table by the average depth of each quad. The texture scrolls in v
- * and every lattice row takes its brightness from g_effect_e474_summon_mesh_brightness_table. The quads are
- * double-buffered in the work block.
+ * and each lattice row uses the overlay's brightness table. The work block
+ * keeps two quad buffers.
  *
  * `i`, `j`, `k` and `n` are shared temporaries (`i`: curve factor, v scroll
  * and a loop index; `j`: curve index and a loop index; `k`: ring radius,
@@ -18,7 +17,7 @@
  * and quad depth): the target keeps each group in one register. The handler
  * returns no value, but the s32 return keeps $v0 live at the exit, which
  * leaves the phase dispatch's delay slots empty as in the target. */
-s32 effect_e476_update_summon_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR vertex;
     SVECTOR unused_18[2]; /* frame padding the target reserves but never touches */
@@ -30,7 +29,7 @@ s32 effect_e476_update_summon_mesh_state(s32 record_index, s32 callback_slot, s3
     SVECTOR map_max;
     effect_record_t* record;
     effect_radial_mesh_geometry_t* entry;
-    effect_summon_mesh_work_t* work;
+    effect_dome_mesh_work_t* work;
     POLY_GT4* quad;
     POLY_GT4* other;
     vec3s16_t* lattice_point;
@@ -71,7 +70,7 @@ s32 effect_e476_update_summon_mesh_state(s32 record_index, s32 callback_slot, s3
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = battle_heap_alloc_block(sizeof(effect_summon_mesh_work_t), state_index);
+        work = battle_heap_alloc_block(sizeof(effect_dome_mesh_work_t), state_index);
         record->work_slots[callback_slot] = work;
         texture_page_config = entry->texture_page_config;
         tpage = (texture_page_config.blend_mode << 5) | 0x86;
@@ -299,7 +298,7 @@ s32 effect_e476_update_summon_mesh_state(s32 record_index, s32 callback_slot, s3
             red = green = blue = 0x80;
         }
 
-        k = g_effect_e474_summon_mesh_brightness_table[n][0];
+        k = g_effect_dome_mesh_brightness_table[n][0];
         shade_r = (k * red) >> 12;
         shade_g = (k * green) >> 12;
         shade_b = (k * blue) >> 12;
@@ -308,7 +307,7 @@ s32 effect_e476_update_summon_mesh_state(s32 record_index, s32 callback_slot, s3
             setRGB2(quad, quad->r3 = shade_r, quad->g3 = shade_g, quad->b3 = shade_b);
         }
         for (i = 0; i < 7; i++) {
-            k = g_effect_e474_summon_mesh_brightness_table[n][i + 1];
+            k = g_effect_dome_mesh_brightness_table[n][i + 1];
             shade_r = (k * red) >> 12;
             shade_g = (k * green) >> 12;
             shade_b = (k * blue) >> 12;
@@ -319,7 +318,7 @@ s32 effect_e476_update_summon_mesh_state(s32 record_index, s32 callback_slot, s3
                     quad->b1 = other->b2 = other->b3 = shade_b);
             }
         }
-        k = g_effect_e474_summon_mesh_brightness_table[n][8];
+        k = g_effect_dome_mesh_brightness_table[n][8];
         shade_r = (k * red) >> 12;
         shade_g = (k * green) >> 12;
         shade_b = (k * blue) >> 12;
