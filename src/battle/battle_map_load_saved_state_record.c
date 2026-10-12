@@ -20,12 +20,11 @@ battle_map_state_record_t* battle_map_load_saved_state_record(battle_map_state_r
     count = record->count;
     switch (record->type) {
     case MAP_MESH_ANIMATION_RECORD_KEYFRAMES: {
-        u8* src = record->data;
+        battle_map_mesh_keyframe_t* src = (battle_map_mesh_keyframe_t*)record->data;
 
         count++;
         for (i = 1; i < count; i++) {
-            g_battle_map_mesh_animation_keyframes[i] = *(battle_map_mesh_keyframe_t*)src;
-            src += sizeof(battle_map_mesh_keyframe_t);
+            g_battle_map_mesh_animation_keyframes[i] = *src++;
         }
         next = (battle_map_state_record_t*)src;
         break;
@@ -33,13 +32,12 @@ battle_map_state_record_t* battle_map_load_saved_state_record(battle_map_state_r
     case MAP_MESH_ANIMATION_RECORD_END:
         break;
     case MAP_MESH_ANIMATION_RECORD_INSTRUCTIONS: {
-        u8* src = record->data;
+        battle_map_mesh_instruction_t* src = (battle_map_mesh_instruction_t*)record->data;
 
         for (y = 0; y < 8; y++) {
             for (i = 1; i < 9; i++) {
                 for (c = 1; c < 17; c++) {
-                    g_battle_map_mesh_animation_instructions[i].states[y][c] = *(battle_map_mesh_instruction_t*)src;
-                    src += sizeof(battle_map_mesh_instruction_t);
+                    g_battle_map_mesh_animation_instructions[i].states[y][c] = *src++;
                 }
             }
         }

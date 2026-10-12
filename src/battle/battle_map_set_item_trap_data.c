@@ -14,7 +14,6 @@ battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, u8 y, u8 la
     s32 unit;
     s32 i;
     s32 trap;
-    u8 position;
     u8* result;
 
     trap = BATTLE_TRAP_ID_NONE;
@@ -31,8 +30,7 @@ battle_move_find_result_data_t* battle_map_set_item_trap_data(s32 x, u8 y, u8 la
     }
     for (i = 0; i < 4; i++) {
         tile = &g_battle_current_map_move_find_item_data.entries[i];
-        position = tile->position;
-        if ((position >> 4) == (u8)x && (position & 0xF) == y && (tile->flags >> 7) == layer) {
+        if (tile->x == (u8)x && tile->y == y && tile->elevation == layer) {
             break;
         }
     }

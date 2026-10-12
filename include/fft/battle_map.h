@@ -15,12 +15,13 @@ typedef enum map_move_find_item_entry_flags {
     MAP_MOVE_FIND_ENTRY_TRAP_STEEL_NEEDLE = 0x08,
     MAP_MOVE_FIND_ENTRY_NO_TRAP = 0x10,
     MAP_MOVE_FIND_ENTRY_NO_ITEM = 0x20,
-    MAP_MOVE_FIND_ENTRY_UPPER_LAYER = 0x80,
 } map_move_find_item_entry_flags_e;
 
 typedef struct map_move_find_item_entry {
-    u8 position; /* X in the high nibble, Y in the low nibble. */
-    u8 flags;    /* map_move_find_item_entry_flags_e */
+    u8 y : 4;
+    u8 x : 4;
+    u8 flags : 7; /* map_move_find_item_entry_flags_e */
+    u8 elevation : 1;
     u8 rare_item_id;
     u8 common_item_id;
 } map_move_find_item_entry_t;
@@ -814,8 +815,8 @@ typedef union battle_map_resource {
     u8 bytes[0];          /* Byte offsets in files and variable-length command payloads. */
 } battle_map_resource_t;
 
-extern u8 g_battle_map_background_color[];
-extern u8 g_battle_map_background_color_backup[];
+extern rgb24_t g_battle_map_background_color;
+extern rgb24_t g_battle_map_background_color_backup;
 extern battle_map_resource_t* g_battle_map_data_load_buffer;
 extern s32 g_battle_map_data_load_complete;
 extern s32 g_battle_map_deep_dungeon_load_in_progress;
@@ -1007,6 +1008,11 @@ void battle_map_color_field(s32 first, s32 second, s16 red, s16 green, s16 blue)
 /* Only SET/GET define a result (stored RGB pointer, or null for SET while
  * disabled). Other command paths leave the target return register unspecified. */
 s32* battle_map_control_gte_background_color(s32 command, s32 red, s32 green, s32 blue);
+void battle_map_copy_background_color(void);
+void battle_map_restore_background_color(void);
+rgb24_t* battle_map_get_background_color(void);
+void battle_map_set_background_color(s32 red, s32 green, s32 blue);
+void battle_map_adjust_background_color(s16 red_delta, s16 green_delta, s16 blue_delta);
 void battle_map_polygon_flag_command(s32 command);
 MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration);
 void battle_map_data_load_complete_thread(void);
