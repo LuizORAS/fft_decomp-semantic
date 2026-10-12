@@ -64,7 +64,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             if (tile_flags & MAP_TILE_FLAG_BLOCKED) {
                 *frontier_cell |= FRONTIER_FLAG_BLOCKED;
             } else if (!config->move_type && (tile_flags & MAP_TILE_FLAG_UNTARGETABLE)
-                && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
+                && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
                 *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
             }
         }

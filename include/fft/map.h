@@ -239,18 +239,15 @@ typedef struct map_background_gradient_colors {
 } map_background_gradient_colors_t;
 typedef char map_background_gradient_colors_size_must_be_8[(sizeof(map_background_gradient_colors_t) == 8) ? 1 : -1];
 
-/* Depth-bias flag in map_tile_surface_t.value; the low six bits use MAP_SURFACE_MASK. */
+/* Depth-bias flag in terrain tile byte0; the low six bits use MAP_SURFACE_MASK. */
 enum {
     MAP_TILE_SURFACE_FLAG_DEPTH_BIAS = 0x40,
 };
 
-typedef union map_tile_surface {
-    u8 value;
-    struct {
-        u8 type : 6;       /* map_surface_type_e */
-        u8 depth_bias : 1; /* camera depth offset 5 instead of 1 for the cursor, units and shadows on this tile */
-        u8 _unused_00_bit7 : 1;
-    } bits;
+typedef struct map_tile_surface {
+    u8 type : 6;       /* map_surface_type_e */
+    u8 depth_bias : 1; /* camera depth offset 5 instead of 1 for the cursor, units and shadows on this tile */
+    u8 _unused_00_bit7 : 1;
 } map_tile_surface_t;
 
 /* map_tile_marks_t.value flags. */

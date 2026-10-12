@@ -85,8 +85,8 @@ s32 battle_move_propagate_destination(s32 candidate, s32 extra_span) {
         g_battle_target_panels[state->destination_unit_record_index + MAP_TILE_COUNT].max_height_delta
             = state->height_delta;
     } else {
-        state->candidate_remaining_range = state->source_panel->remaining_range - extra_span
-            - terrain_costs[state->destination_tile->surface.value & MAP_SURFACE_MASK];
+        state->candidate_remaining_range
+            = state->source_panel->remaining_range - extra_span - terrain_costs[state->destination_tile->surface.type];
         if (state->candidate_remaining_range <= 0)
             return 14; /* no range left after the terrain cost */
         if ((u8)state->candidate_remaining_range < state->destination_panel->remaining_range)

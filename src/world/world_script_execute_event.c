@@ -627,8 +627,8 @@ restart_event:
                 MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, parameters[0], parameters[1], parameters[2], parameters[3]);
         } else if (opcode == EVENT_OPCODE_SET_TILE_HEIGHT) {
             tile = battle_map_get_tile_data_pointer(parameters[0], parameters[1], parameters[2]);
-            if ((tile->surface.bits.type - MAP_SURFACE_GRASSLAND) >= 2U) {
-                tile->surface.value = (tile->surface.value & ~MAP_SURFACE_MASK) | MAP_SURFACE_STONE_FLOOR;
+            if ((tile->surface.type - MAP_SURFACE_GRASSLAND) >= 2U) {
+                tile->surface.type = MAP_SURFACE_STONE_FLOOR;
             }
             tile->height = parameters[3];
             tile->flags.bits.untargetable = parameters[4];

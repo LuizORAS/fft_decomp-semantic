@@ -17,7 +17,7 @@ void battle_sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit
         unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
     if (tile == 0)
         return;
-    surface = tile->surface.value & MAP_SURFACE_MASK;
+    surface = tile->surface.type;
     switch (surface) {
     case MAP_SURFACE_GRASSLAND:
     case MAP_SURFACE_THICKET:

@@ -20,7 +20,7 @@ s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value
     tile = &g_battle_map_tile_data[(layer << 8) + y * g_battle_map_max_x + x];
     switch (field) {
     case MAP_TILE_DATA_SURFACE_TYPE:
-        tile->surface.bits.type = value;
+        tile->surface.type = value;
         break;
     case MAP_TILE_DATA_UNKNOWN_01:
         tile->_unknown_01 = value;

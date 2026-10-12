@@ -9,7 +9,7 @@ s32 battle_map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer) {
     tile = &g_battle_map_tile_data[(layer << 8) + y * g_battle_map_max_x + x];
     switch (field) {
     case MAP_TILE_DATA_SURFACE_TYPE:
-        return tile->surface.bits.type;
+        return tile->surface.type;
     case MAP_TILE_DATA_UNKNOWN_01:
         return tile->_unknown_01;
     case MAP_TILE_DATA_HEIGHT:

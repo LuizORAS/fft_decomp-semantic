@@ -40,7 +40,7 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
                 | BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER | BATTLE_MOVEMENT_SET_3_FLOAT))) {
         return -1;
     }
-    if (tile->surface.bits.type == MAP_SURFACE_LAVA || tile->surface.bits.type == MAP_SURFACE_OBSTACLE) {
+    if (tile->surface.type == MAP_SURFACE_LAVA || tile->surface.type == MAP_SURFACE_OBSTACLE) {
         return -1;
     }
     for (i = 0; i < unit_idx; i++) {

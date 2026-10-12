@@ -112,7 +112,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
                             if (g_battle_target_panels[index].unit_record_index != 0) {
                                 continue;
                             }
-                            surface = tile->surface.value & MAP_SURFACE_MASK;
+                            surface = tile->surface.type;
                             if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {
                                 continue;
                             }

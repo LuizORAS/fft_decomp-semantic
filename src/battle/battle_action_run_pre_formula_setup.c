@@ -42,7 +42,7 @@ s32 battle_action_run_pre_formula_setup(const battle_action_command_t* source, u
         return 0;
     }
     g_battle_action_current_ability_view.terrain
-        = g_battle_map_tile_data[battle_map_calculate_location(g_battle_action_target)].surface.bits.type;
+        = g_battle_map_tile_data[battle_map_calculate_location(g_battle_action_target)].surface.type;
     if (g_battle_action_current_ability.strike_counter == 0) {
         id = g_battle_action_current_ability.primary_weapon_id;
     } else {

@@ -29,8 +29,8 @@ s32 battle_move_update_candidate(s32 extra_span) {
         return 7;
 
     if (config->ai_propagation_mode != 0) {
-        state->candidate_remaining_range = state->current_panel->remaining_range - extra_span
-            - terrain_costs[state->current_tile->surface.value & MAP_SURFACE_MASK];
+        state->candidate_remaining_range
+            = state->current_panel->remaining_range - extra_span - terrain_costs[state->current_tile->surface.type];
         if (state->candidate_remaining_range <= 0)
             return 8;
         if ((u8)state->candidate_remaining_range < state->destination_panel->remaining_range)
@@ -54,7 +54,7 @@ s32 battle_move_update_candidate(s32 extra_span) {
     } else {
         if (state->candidate_remaining_range
             == state->effective_destination_panel->remaining_range
-                - g_battle_move_terrain_costs_ptr[state->current_tile->surface.value & MAP_SURFACE_MASK] - extra_span)
+                - g_battle_move_terrain_costs_ptr[state->current_tile->surface.type] - extra_span)
             state->budget_matches = 1;
     }
     return 0;

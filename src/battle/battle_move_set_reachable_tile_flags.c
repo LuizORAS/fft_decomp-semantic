@@ -51,7 +51,7 @@ void battle_move_set_reachable_tile_flags(void) {
             if (tile_flags & MAP_TILE_FLAG_CANNOT_STOP) {
                 continue;
             }
-            surface = tile->surface.value & MAP_SURFACE_MASK;
+            surface = tile->surface.type;
             if (surface == MAP_SURFACE_OBSTACLE) {
                 continue;
             }
