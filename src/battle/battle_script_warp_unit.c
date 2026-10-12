@@ -8,6 +8,7 @@
  * elevation, 0x05 facing.
  */
 void battle_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
+    /* Separate instruction and placement pointers change register allocation. */
     union {
         const event_warp_unit_parameters_t* instruction;
         const event_unit_placement_t* placement;

@@ -10,7 +10,7 @@
  * fp. The unit block pointer is assigned after the call to
  * battle_unit_set_move_and_screen_coords: because it lives across calls,
  * sched1 still hoists it to the join, just after that call's argument copy.
- * The animation and weapon/effect roles share one cursor, keeping both in s3.
+ * Separate animation and sprite-block pointers change register allocation.
  * The contradictory weapon range test (<0x86, <0x3c, >=0x4a, !=0x5d) is
  * literally what the target branches encode (the call is dead code). */
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
