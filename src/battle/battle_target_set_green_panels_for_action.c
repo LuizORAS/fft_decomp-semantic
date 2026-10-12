@@ -10,6 +10,7 @@
  * `(elevation * 256 + y * width) + x` operand order.
  */
 s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
+    /* A byte collision test retains the original single-mask branch. */
     battle_action_command_t action_copy;
     ability_secondary_data_t* ability;
     battle_stats_t* unit;
@@ -71,7 +72,7 @@ s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
     index = location;
     index = elevation * 256 + y * g_battle_map_max_x + location;
     tile = &g_battle_map_tile_data[index];
-    if (tile->flags.value & MAP_TILE_FLAG_BLOCKED) {
+    if (tile->flags.blocked) {
         return -1;
     }
     height = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK)
@@ -125,7 +126,7 @@ s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
     if (!(flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES))) {
         tile = g_battle_map_tile_data;
         for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
-            if (marked->remaining_range != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
+            if (marked->remaining_range != 0 && !(((*(u8*)&tile[i].flags) & MAP_TILE_COLLISION_MASK))) {
                 count++;
                 tile[i].ceiling_depth_and_marks.targeted = 1;
             } else {
@@ -137,7 +138,7 @@ s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
     }
     tile = g_battle_map_tile_data;
     for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
-        if (marked->mark != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
+        if (marked->mark != 0 && !(((*(u8*)&tile[i].flags) & MAP_TILE_COLLISION_MASK))) {
             count++;
             tile[i].ceiling_depth_and_marks.targeted = 1;
         } else {

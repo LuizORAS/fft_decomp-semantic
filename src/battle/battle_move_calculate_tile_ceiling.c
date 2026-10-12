@@ -22,7 +22,7 @@ u8 battle_move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, u8 exi
     ceiling = TILE_CEILING_NONE;
     for (elevation = 0; elevation < MAP_TERRAIN_LAYER_COUNT; elevation++) {
         tile = &g_battle_map_tile_data[elevation * MAP_TILES_PER_LAYER + y * g_battle_move_config_ptr->map_max_x + x];
-        if ((tile->flags.value & MAP_TILE_FLAG_BLOCKED) == 0) {
+        if ((tile->flags.blocked) == 0) {
             depth = tile->depth_half_height;
             tile_ceiling = (tile->height << 1) + (depth.half_height) * ((tile->slope_type >> exit_slope_shift) & 3)
                 - ((tile->ceiling_depth_and_marks.ceiling_depth) << 1);

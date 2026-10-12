@@ -27,7 +27,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
     u8* frontier_cell;
     u8* unit_cell;
     u8 slope;
-    u8 tile_flags;
+    map_tile_flags_t tile_flags;
     u8 flags;
     u8 depth;
     u8 value;
@@ -55,16 +55,16 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
                     *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             }
-            if ((tile->flags.bits.blocked | tile->flags.bits.untargetable) == 0) {
+            if ((tile->flags.blocked | tile->flags.untargetable) == 0) {
                 depth = tile->depth_half_height.depth;
                 if ((depth == 0 || !config->cannot_enter_water) && (depth < 4 || !config->will_sink)) {
                     *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
                 }
             }
-            tile_flags = tile->flags.value;
-            if (tile_flags & MAP_TILE_FLAG_BLOCKED) {
+            tile_flags = tile->flags;
+            if (tile_flags.blocked) {
                 *frontier_cell |= FRONTIER_FLAG_BLOCKED;
-            } else if (!config->move_type && (tile_flags & MAP_TILE_FLAG_UNTARGETABLE)
+            } else if (!config->move_type && (tile_flags.untargetable)
                 && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
                 *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
             }

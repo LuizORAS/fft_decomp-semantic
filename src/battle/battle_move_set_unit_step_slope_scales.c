@@ -5,9 +5,7 @@
  * per-step scales; a rider or a g_battle_move_step_value bit 0x10 step clears them. */
 void battle_move_set_unit_step_slope_scales(battle_unit_misc_data_t* unit) {
     battle_move_get_current_and_destination_tiles(unit, &g_battle_move_current_tile, &g_battle_move_destination_tile);
-    battle_gfx_check_tile_status_palette_mod(unit,
-        (g_battle_move_destination_tile->flags.value >> MAP_TILE_SHADOW_MODE_SHIFT) & MAP_TILE_SHADOW_MODE_VALUE_MASK,
-        1);
+    battle_gfx_check_tile_status_palette_mod(unit, g_battle_move_destination_tile->flags.shading, 1);
     switch (g_battle_move_step_value.bits.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->destination_edge_height = g_battle_move_destination_edge_height

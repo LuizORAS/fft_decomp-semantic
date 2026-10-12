@@ -23,13 +23,13 @@ s32 battle_map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer) {
     case MAP_TILE_DATA_CEILING_DEPTH:
         return tile->ceiling_depth_and_marks.ceiling_depth;
     case MAP_TILE_DATA_BLOCKED:
-        return tile->flags.bits.blocked;
+        return tile->flags.blocked;
     case MAP_TILE_DATA_UNTARGETABLE:
-        return tile->flags.bits.untargetable;
-    case MAP_TILE_DATA_SHADOW_MODE:
-        return tile->flags.bits.shadow_mode;
+        return tile->flags.untargetable;
+    case MAP_TILE_DATA_SHADING:
+        return tile->flags.shading;
     case MAP_TILE_DATA_UNKNOWN_FLAGS_4_6:
-        return tile->flags.bits._unknown_00;
+        return tile->flags._unknown_00;
     case MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK:
         return tile->camera_block_masks & MAP_TILE_CAMERA_BLOCK_DIRECTION_MASK;
     case MAP_TILE_DATA_MOVE_DESTINATION_MARK:

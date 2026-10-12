@@ -666,8 +666,8 @@ restart_script:
                 tile->surface.type = MAP_SURFACE_STONE_FLOOR;
             }
             tile->height = parameters[3];
-            tile->flags.bits.untargetable = parameters[4];
-            tile->flags.bits.blocked = 0;
+            tile->flags.untargetable = parameters[4];
+            tile->flags.blocked = 0;
         }
         /* ---- Event speed, dark screen, conditions, and graphics ---- */
         else if (opcode == EVENT_OPCODE_EVENT_SPEED) {

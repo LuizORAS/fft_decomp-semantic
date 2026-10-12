@@ -28,5 +28,5 @@ void battle_target_calculate_tile_coords_with_cursor_glow(void) {
     tile = battle_map_get_tile_data_pointer(
         secondary.vx / MAP_TILE_SIZE, secondary.vz / MAP_TILE_SIZE, g_battle_cursor_z);
     battle_gfx_build_cursor_tile_glow(
-        tile->flags.bits.untargetable, result, &corner0, &corner1, &corner2, &corner3, main_gfx_get_otag() + depth);
+        tile->flags.untargetable, result, &corner0, &corner1, &corner2, &corner3, main_gfx_get_otag() + depth);
 }

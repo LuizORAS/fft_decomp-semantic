@@ -18,7 +18,7 @@ s32 battle_move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer) {
 
     from = battle_map_get_tile_data_pointer(x, y, layer);
     to = battle_map_get_tile_data_pointer(x, y, layer ^ 1);
-    if ((to->flags.value & MAP_TILE_FLAG_BLOCKED) == 0) {
+    if ((to->flags.blocked) == 0) {
         from_height = from->height + (from->depth_half_height.depth);
         to_height = to->height + (to->depth_half_height.depth);
         if (from_height < to_height) {

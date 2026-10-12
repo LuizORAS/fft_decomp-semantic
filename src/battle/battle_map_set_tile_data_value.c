@@ -44,16 +44,16 @@ s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value
         tile->ceiling_depth_and_marks.ceiling_depth = value;
         break;
     case MAP_TILE_DATA_BLOCKED:
-        tile->flags.bits.blocked = value;
+        tile->flags.blocked = value;
         break;
     case MAP_TILE_DATA_UNTARGETABLE:
-        tile->flags.bits.untargetable = value;
+        tile->flags.untargetable = value;
         break;
-    case MAP_TILE_DATA_SHADOW_MODE:
-        tile->flags.bits.shadow_mode = value;
+    case MAP_TILE_DATA_SHADING:
+        tile->flags.shading = value;
         break;
     case MAP_TILE_DATA_UNKNOWN_FLAGS_4_6:
-        tile->flags.bits._unknown_00 = value;
+        tile->flags._unknown_00 = value;
         break;
     case MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK:
         tile->camera_block_masks = (tile->camera_block_masks & MAP_TILE_CAMERA_BLOCK_STEEP_MASK)

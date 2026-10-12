@@ -43,17 +43,17 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
     green = 0;
     red = 0;
     switch (level) {
-    case 1:
+    case MAP_TILE_SHADING_DARK:
         blue = -4;
         green = -4;
         red = -4;
         break;
-    case 2:
+    case MAP_TILE_SHADING_DARKER:
         blue = -8;
         green = -8;
         red = -8;
         break;
-    case 3:
+    case MAP_TILE_SHADING_DARKEST:
         blue = -0xc;
         green = -0xc;
         red = -0xc;

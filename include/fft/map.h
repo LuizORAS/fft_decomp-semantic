@@ -221,7 +221,7 @@ typedef enum map_tile_data_selector {
     MAP_TILE_DATA_CEILING_DEPTH = 6,
     MAP_TILE_DATA_BLOCKED = 7,
     MAP_TILE_DATA_UNTARGETABLE = 8,
-    MAP_TILE_DATA_SHADOW_MODE = 9,
+    MAP_TILE_DATA_SHADING = 9,
     MAP_TILE_DATA_UNKNOWN_FLAGS_4_6 = 10,
     MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK = 11,
     MAP_TILE_DATA_MOVE_DESTINATION_MARK = 12,
@@ -269,7 +269,7 @@ typedef struct map_tile_marks {
     u8 targeted : 1;
 } map_tile_marks_t;
 
-/* map_tile_flags_t.value flags; COLLISION_MASK combines BLOCKED and UNTARGETABLE. */
+/* Packed collision flags in terrain tile byte 0x06. */
 enum {
     MAP_TILE_FLAG_BLOCKED = 0x01,
     MAP_TILE_FLAG_UNTARGETABLE = 0x02,
@@ -277,25 +277,21 @@ enum {
     MAP_TILE_FLAG_CANNOT_STOP = 0x80,
 };
 
-/* Packed shadow value and flag extraction within tile byte 0x06. */
-enum {
-    MAP_TILE_FLAG_UNTARGETABLE_SHIFT = 1,
-    MAP_TILE_SHADOW_MODE_SHIFT = 2,
-    MAP_TILE_SHADOW_MODE_MASK = 0x0c,
-    MAP_TILE_SHADOW_MODE_VALUE_MASK = 0x03,
-};
+/* Terrain shading darkens the unit palette by 0, 4, 8 or 12 per channel. */
+typedef enum map_tile_shading {
+    MAP_TILE_SHADING_NORMAL = 0,
+    MAP_TILE_SHADING_DARK = 1,
+    MAP_TILE_SHADING_DARKER = 2,
+    MAP_TILE_SHADING_DARKEST = 3,
+} map_tile_shading_e;
 
-typedef union map_tile_flags {
-    u8 value;
-    struct {
-        u8 blocked : 1;
-        u8 untargetable : 1;
-        u8 shadow_mode : 2;
-        /* A value 0-5 in the terrain files. The trajectory obstacle test copies
-         * it to g_battle_effect_trajectory_tile_flags, which nothing reads. */
-        u8 _unknown_00 : 3;
-        u8 cannot_stop : 1; /* set by no terrain file */
-    } bits;
+typedef struct map_tile_flags {
+    u8 blocked : 1;
+    u8 untargetable : 1;
+    u8 shading : 2;
+    /* Values 0-5 in the terrain files; copied to the unread trajectory obstacle result. */
+    u8 _unknown_00 : 3;
+    u8 cannot_stop : 1; /* set by no terrain file */
 } map_tile_flags_t;
 
 enum {

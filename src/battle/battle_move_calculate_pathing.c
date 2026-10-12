@@ -38,13 +38,13 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
         config->map_max_x = g_battle_map_max_x;
         config->map_max_y = g_battle_map_max_y;
         g_battle_move_pathing_tile_index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
-        if (g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags.bits.blocked
-            || g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags.bits.untargetable) {
+        if (g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags.blocked
+            || g_battle_map_tile_data[g_battle_move_pathing_tile_index].flags.untargetable) {
             return 0;
         }
         config->target_index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-        if (g_battle_map_tile_data[config->target_index].flags.bits.blocked
-            || g_battle_map_tile_data[config->target_index].flags.bits.untargetable) {
+        if (g_battle_map_tile_data[config->target_index].flags.blocked
+            || g_battle_map_tile_data[config->target_index].flags.untargetable) {
             return 0;
         }
         config->unit_id = BATTLE_MOVE_GENERIC_UNIT_ID;

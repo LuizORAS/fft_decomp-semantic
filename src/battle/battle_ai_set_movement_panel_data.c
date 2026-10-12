@@ -41,8 +41,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     tile = &g_battle_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
-                    if (!(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
-                        && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
+                    if (!(tile->flags.blocked) && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
                         ai->walkable_tiles[level][y] |= 0x8000 >> x;
                     }
                 }

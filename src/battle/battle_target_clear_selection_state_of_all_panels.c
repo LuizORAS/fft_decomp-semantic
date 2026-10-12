@@ -20,8 +20,7 @@ s32 battle_target_clear_selection_state_of_all_panels(void) {
     for (i = 0; i < 0x200; i++) {
         tile = &g_battle_map_tile_data[i];
         panel = &g_battle_target_panel_data[i];
-        if (panel->mark != 0 && !(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
-            && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
+        if (panel->mark != 0 && !(tile->flags.blocked) && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
             count++;
             tile->ceiling_depth_and_marks.ability_range = 1;
         } else {

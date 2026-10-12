@@ -15,12 +15,10 @@ void battle_move_set_reachable_tile_flags(void) {
     s32 self;
     s32 i;
     map_tile_t* tile;
-    /* Byte access retains the original packed load and field-extraction order. */
     battle_target_panel_t* panel;
-    u32 depth;
     s32 half_height;
     s32 surface;
-    s32 tile_flags;
+    map_tile_flags_t tile_flags;
     map_tile_depth_t water_depth;
     s32 frontier;
 
@@ -38,8 +36,7 @@ void battle_move_set_reachable_tile_flags(void) {
         }
         if (!((config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) && (flags[i] & FRONTIER_FLAG_MOUNTABLE_UNIT))
             && !((panel->ride_remaining_range != 0) && (config->can_ride != 0))) {
-            depth = (*(u8*)&tile->depth_half_height);
-            half_height = depth & MAP_TILE_HALF_HEIGHT_MASK;
+            half_height = tile->depth_half_height.half_height;
             if ((half_height >= 3) && (flags[i] & FRONTIER_FLAG_LOW_CORNER)) {
                 continue;
             }
@@ -49,8 +46,8 @@ void battle_move_set_reachable_tile_flags(void) {
             if (half_height >= 4) {
                 continue;
             }
-            tile_flags = tile->flags.value;
-            if (tile_flags & MAP_TILE_FLAG_CANNOT_STOP) {
+            tile_flags = tile->flags;
+            if (tile_flags.cannot_stop) {
                 continue;
             }
             surface = tile->surface.type;
@@ -70,7 +67,7 @@ void battle_move_set_reachable_tile_flags(void) {
             if ((surface == MAP_SURFACE_LAVA) && (config->can_pass_lava == 0)) {
                 continue;
             }
-            if (tile_flags & MAP_TILE_FLAG_UNTARGETABLE) {
+            if (tile_flags.untargetable) {
                 continue;
             }
             frontier = flags[i];

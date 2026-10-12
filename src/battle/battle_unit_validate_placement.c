@@ -7,6 +7,7 @@
  * steep or deep for the unit's movement abilities, lava or an obstacle, or
  * already occupied by an earlier unit slot at the same elevation; 0 otherwise. */
 s32 battle_unit_validate_placement(s32 unit_idx) {
+    /* A byte collision test retains the original single-mask branch. */
     battle_stats_t* unit = &g_battle_unit_stats[unit_idx];
     battle_stats_t* other;
     map_tile_t* tile;
@@ -25,7 +26,7 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
         return -1;
     }
     tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
-    if (tile->flags.value & MAP_TILE_COLLISION_MASK) {
+    if (((*(u8*)&tile->flags) & MAP_TILE_COLLISION_MASK)) {
         return -1;
     }
     if (tile->depth_half_height.half_height >= 3) {

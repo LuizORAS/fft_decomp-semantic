@@ -14,7 +14,7 @@ s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) 
     u8 rider;
     s32 has_rider;
     u8 mount_info;
-    u8 tile_flags;
+    map_tile_flags_t tile_flags;
 
     has_rider = 0;
     unit = &g_battle_unit_stats[unit_id];
@@ -24,11 +24,11 @@ s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) 
         has_rider = 1;
     }
 
-    tile_flags = g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x].flags.value;
-    if (tile_flags & MAP_TILE_FLAG_BLOCKED) {
+    tile_flags = g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x].flags;
+    if (tile_flags.blocked) {
         return -1;
     }
-    if (tile_flags & MAP_TILE_FLAG_UNTARGETABLE) {
+    if (tile_flags.untargetable) {
         return -1;
     }
 

@@ -54,8 +54,8 @@ s32 battle_map_resolve_rotated_offset_layer(
     upper_index = index + 0x100;
     upper = &g_battle_map_tile_data[upper_index];
     lower = &g_battle_map_tile_data[index];
-    upper_value = upper->flags.value & MAP_TILE_FLAG_BLOCKED;
-    if ((lower->flags.value & MAP_TILE_FLAG_BLOCKED) != 0) {
+    upper_value = upper->flags.blocked;
+    if ((lower->flags.blocked) != 0) {
         if (upper_value != 0) {
             return -1;
         }

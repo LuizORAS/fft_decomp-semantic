@@ -505,7 +505,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_rain_splash_particles[i].y = ground - 8;
                 g_battle_map_rain_splash_particles[i].x = g_battle_map_weather_particles[i].x;
                 g_battle_map_rain_splash_particles[i].z = g_battle_map_weather_particles[i].z;
-                if (!(g_battle_map_tile_data_ptr[tile].flags.value & MAP_TILE_FLAG_UNTARGETABLE)) {
+                if (!(g_battle_map_tile_data_ptr[tile].flags.untargetable)) {
                     g_battle_map_weather_particles[i].fall_speed = 1;
                 } else {
                     g_battle_map_weather_particles[i].fall_speed = 2;

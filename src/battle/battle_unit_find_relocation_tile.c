@@ -37,7 +37,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
     s32 index;
     s32 surface;
     u32 depth;
-    s32 flags;
+    map_tile_flags_t flags;
     s32 found_x;
     s32 found_y;
     s32 total;
@@ -105,11 +105,11 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
                             if (height >= 3) {
                                 continue;
                             }
-                            flags = tile->flags.value;
-                            if (flags & MAP_TILE_FLAG_BLOCKED) {
+                            flags = tile->flags;
+                            if (flags.blocked) {
                                 continue;
                             }
-                            if (flags & MAP_TILE_FLAG_UNTARGETABLE) {
+                            if (flags.untargetable) {
                                 continue;
                             }
                             if (g_battle_target_panels[index].unit_record_index != 0) {
