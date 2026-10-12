@@ -12,28 +12,14 @@ s32 effect_map_freeze(s32 record_index, s32 callback_slot, s32 emitter_index, s3
 s32 effect_e000_noop(s32 unused_record_index, s32 unused_callback_slot, s32 unused_emitter_index, s32 unused_frame);
 
 /* helpers */
-/* Scales a scratch record's colour by a 4.12 brightness and packs it with its
- * primitive code into one 32-bit RGB-code value. */
-#define PACK_RGB(scratch, brightness)                                                                                  \
-    ((((brightness) * (scratch)->red_factor) >> 12) | (scratch)->code                                                  \
-        | ((((brightness) * (scratch)->green_factor) >> 12) << 8)                                                      \
-        | ((((brightness) * (scratch)->blue_factor) >> 12) << 16))
-
-/* The 32-bit RGB-code value of vertex `n` of a primitive. */
-#define POLY_RGB(poly, n) (*(u32*)&(poly)->r##n)
-
-/* A random value in [-|x|, |x|). */
-#define RAND_SPREAD(x) ((x) == -(x) ? (x) : (-(x) < (x) ? rand() % ((x) * 2) - (x) : rand() % (-(x) - (x)) + (x)))
-
-/* A random value between `a` and `b`, in either order. */
-#define RAND_BETWEEN(a, b) ((a) == (b) ? (a) : ((b) < (a) ? (b) + rand() % ((a) - (b)) : (a) + rand() % ((b) - (a))))
+/* Fixed texture-page bits shared by the native effect renderers. */
+enum {
+    EFFECT_RENDER_TEXTURE_PAGE_BASE = 0x86,
+    EFFECT_RENDER_TEXTURE_PAGE_BLEND_SHIFT = 5,
+};
 
 /* particle ribbon */
-/* Shared records of the homing particle-ribbon renderer that 16 EFFECT
- * overlays compile from one source (for example E000 at 0x801c2500). It comes
- * in two sizes: the short variant keeps 8 ribbons with 9-point trails (E000,
- * E242, E317, E336, E355, E371, E402, E409) and the long variant 4 ribbons
- * with 17-point trails (E070, E403, E412, E461, E462, E463, E465, E466). */
+/* The homing ribbon renderer has short 9-point trails and long 17-point trails. */
 enum {
     EFFECT_PARTICLE_RIBBON_SHORT_SLOTS = 8,
     EFFECT_PARTICLE_RIBBON_SHORT_POINTS = 9,
@@ -106,11 +92,19 @@ extern u32 g_effect_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIB
 s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* polar mesh */
-/* Shared records of the 6,012-byte polar quad mesh renderer that 23 EFFECT
- * overlays compile from one source (for example E461 at 0x801c44a0). */
+enum {
+    POLAR_MESH_QUADRANT_COUNT = 4,
+    POLAR_MESH_RING_COUNT = 5,
+    POLAR_MESH_SEGMENTS_PER_QUADRANT = 4,
+    POLAR_MESH_QUADS_PER_QUADRANT = POLAR_MESH_RING_COUNT * POLAR_MESH_SEGMENTS_PER_QUADRANT,
+    POLAR_MESH_QUAD_COUNT = POLAR_MESH_QUADRANT_COUNT * POLAR_MESH_QUADS_PER_QUADRANT,
+    POLAR_MESH_OUTER_RING_OFFSET = (POLAR_MESH_RING_COUNT - 1) * POLAR_MESH_SEGMENTS_PER_QUADRANT,
+    POLAR_MESH_ANGLE_STEP = ONE / (POLAR_MESH_QUADRANT_COUNT * POLAR_MESH_SEGMENTS_PER_QUADRANT),
+};
+
 /* Scratchpad (0x1f800000) layout used while one polar mesh is rebuilt.
- * points[ring][0..3] sweep one quadrant in 0x100 steps; points[ring][4] is
- * points[ring][0] rotated by 0x400, closing the quadrant. The renderer never
+ * Each row sweeps one quadrant in four steps; its last point closes the
+ * quadrant by rotating the first point a quarter turn. The renderer never
  * touches the unknown ranges. */
 typedef struct effect_polar_mesh_scratch {
     s32 red_factor;   /* 0x00: colour curve factors, 128 when curves are off */
@@ -139,18 +133,17 @@ typedef struct effect_polar_mesh_scratch {
     u8 _unused_0ac[0x08];
     point32_t acceleration; /* 0xb4 */
     u8 _unused_0bc[0x1c];
-    s32 radius;             /* 0xd8: 20.12 fixed */
-    s32 radius_step;        /* 0xdc */
-    s32 radius_step_delta;  /* 0xe0 */
-    s32 angle;              /* 0xe4 */
-    s32 angle_step;         /* 0xe8 */
-    s32 angle_step_delta;   /* 0xec */
-    s32 ot_depth;           /* 0xf0: clamped to 4..0x17f */
-    point16_t points[6][5]; /* 0xf4 */
+    s32 radius;                                                                        /* 0xd8: 20.12 fixed */
+    s32 radius_step;                                                                   /* 0xdc */
+    s32 radius_step_delta;                                                             /* 0xe0 */
+    s32 angle;                                                                         /* 0xe4 */
+    s32 angle_step;                                                                    /* 0xe8 */
+    s32 angle_step_delta;                                                              /* 0xec */
+    s32 ot_depth;                                                                      /* 0xf0: clamped to 4..0x17f */
+    point16_t points[POLAR_MESH_RING_COUNT + 1][POLAR_MESH_SEGMENTS_PER_QUADRANT + 1]; /* 0xf4 */
 } effect_polar_mesh_scratch_t;
 
-/* Scratchpad (0x1f800000) layout of the unit-anchored variant (the 6,492-byte
- * renderer in E467, E468, E469, E471 and E472). Its fields shift from
+/* Scratchpad (0x1f800000) layout of the Zodiac Stone glow variant. Its fields shift from
  * effect_polar_mesh_scratch_t, so it is a separate layout, not a view. */
 typedef struct effect_anchored_polar_mesh_scratch {
     s32 red_factor;   /* 0x00: colour curve factors, 128 when curves are off */
@@ -184,23 +177,23 @@ typedef struct effect_anchored_polar_mesh_scratch {
     u8 _unused_0b8[0x18];
     s32 target_index; /* 0xd0 */
     u8 _unused_0d4[0x14];
-    s32 radius;             /* 0xe8 */
-    s32 radius_step;        /* 0xec */
-    s32 radius_step_delta;  /* 0xf0 */
-    s32 angle;              /* 0xf4 */
-    s32 angle_step;         /* 0xf8 */
-    s32 angle_step_delta;   /* 0xfc */
-    s32 ot_depth;           /* 0x100 */
-    SVECTOR position;       /* 0x104 */
-    SVECTOR* unit_coords;   /* 0x10c */
-    VECTOR screen;          /* 0x110; RotTrans stores flags in the unused fourth 32-bit value */
-    point16_t points[6][5]; /* 0x120 */
+    s32 radius;            /* 0xe8 */
+    s32 radius_step;       /* 0xec */
+    s32 radius_step_delta; /* 0xf0 */
+    s32 angle;             /* 0xf4 */
+    s32 angle_step;        /* 0xf8 */
+    s32 angle_step_delta;  /* 0xfc */
+    s32 ot_depth;          /* 0x100 */
+    SVECTOR position;      /* 0x104 */
+    SVECTOR* unit_coords;  /* 0x10c */
+    VECTOR screen;         /* 0x110; RotTrans stores flags in the unused fourth 32-bit value */
+    point16_t points[POLAR_MESH_RING_COUNT + 1][POLAR_MESH_SEGMENTS_PER_QUADRANT + 1]; /* 0x120 */
 } effect_anchored_polar_mesh_scratch_t;
 
 /* Work block: two POLY_GT4 buffers of four quadrants of 5x4 quads. */
 typedef struct effect_polar_mesh_work {
-    s32 buffer;            /* 0x0000: 0 or 1, flipped after each update */
-    POLY_GT4 quads[2][80]; /* 0x0004: quadrant * 20 + ring * 4 + segment */
+    s32 buffer;                               /* 0x0000: 0 or 1, flipped after each update */
+    POLY_GT4 quads[2][POLAR_MESH_QUAD_COUNT]; /* 0x0004: quadrant * 20 + ring * 4 + segment */
     u8 _unused_2084[0x60];
     s32 scroll_u; /* 0x20e4: 20.12 fixed, wrapped to half_width */
     s32 scroll_v; /* 0x20e8: 20.12 fixed, wrapped to half_height */
@@ -223,11 +216,10 @@ extern u32 g_effect_polar_mesh_brightness_table[][6];
 s32 effect_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* quad grid */
-/* Work blocks of the scrolling textured quad grid renderer that EFFECT
- * overlays compile from one source in 2x2, 4x4 and 8x8 builds (for example
- * effect_e047_update_textured_quad_grid_4x4 in E047). Each block is allocated in
- * phase 1 and freed in phase 3. The 2x2 and 4x4 builds leave a 0x48-byte gap
- * after the quads that the 8x8 build does not have. */
+/* Work blocks of the scrolling textured quad grid renderer, compiled in
+ * 2x2, 4x4 and 8x8 builds. Each block is allocated in phase 1 and freed in
+ * phase 3. The 2x2 and 4x4 builds leave a 0x48-byte gap after the quads that
+ * the 8x8 build does not have. */
 typedef struct effect_textured_quad_grid_2x2_work {
     s32 buffer;           /* 0x000: quads[buffer] is drawn this frame */
     POLY_GT4 quads[2][4]; /* 0x004: row-major 2x2 grid, double buffered */
@@ -277,24 +269,29 @@ typedef char
 extern u32 g_effect_textured_quad_grid_2x2_brightness_table[][3];
 s32 effect_textured_quad_grid_2x2_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
+/* Overlay-local vertex brightness rows (12-bit fixed) for the 4x4 grid-mesh
+ * family: brightness_row selects the row, the column is the quad row. */
+extern u32 g_effect_textured_quad_grid_4x4_brightness_table[][5];
+s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+
 /* Overlay-local vertex brightness rows (12-bit fixed) for the 8x8 grid:
  * brightness_row selects the row, the column is the quad row. */
 extern u32 g_effect_textured_quad_grid_8x8_brightness_table[][9];
 s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* ring mesh */
-/* Shared records of the 5,584-byte ring mesh renderer that 32 EFFECT overlays
- * compile from one source (for example E450 at 0x801c2d08). */
 enum {
-    RING_MESH_SEGMENTS = 32,  /* quads around one ring */
-    RING_MESH_ARC_POINTS = 9, /* lattice points of one 90-degree arc */
+    RING_MESH_SEGMENTS = 32, /* quads around one ring */
+    RING_MESH_QUADRANT_COUNT = 4,
+    RING_MESH_SEGMENTS_PER_QUADRANT = RING_MESH_SEGMENTS / RING_MESH_QUADRANT_COUNT,
+    RING_MESH_ARC_POINTS = RING_MESH_SEGMENTS_PER_QUADRANT + 1,
 };
 
 /* Work block: two POLY_GT4 buffers of two rings of 32 quads. */
 typedef struct effect_ring_mesh_work {
     s32 buffer;                                /* 0x0000: 0 or 1, flipped after each update */
     POLY_GT4 quads[2][RING_MESH_SEGMENTS * 2]; /* 0x0004: ring * 32 + segment */
-    s16 spin;                                  /* 0x1a04: ring rotation, wrapped to 0xfff */
+    s16 spin;                                  /* 0x1a04: ring rotation, modulo one turn */
     s16 v_scroll;                              /* 0x1a06: 8.8 fixed, wrapped to v_span */
     s32 radius_offset;                         /* 0x1a08: 24.8 fixed, added to the radius */
     s32 radius_speed;                          /* 0x1a0c */
@@ -314,12 +311,11 @@ typedef struct effect_ring_mesh_scratch {
     s16 depth[3][RING_MESH_SEGMENTS + 1];   /* 0x208 */
 } effect_ring_mesh_scratch_t;
 
-/* Work block of the single-ring variant (4,948-byte renderer in E411, E464
- * and E483): two POLY_GT4 buffers of one ring of 32 quads. */
+/* Work block of the single-ring variant: two POLY_GT4 buffers of 32 quads. */
 typedef struct effect_single_ring_mesh_work {
     s32 buffer;                            /* 0x000: 0 or 1, flipped after each update */
     POLY_GT4 quads[2][RING_MESH_SEGMENTS]; /* 0x004 */
-    s16 spin;                              /* 0xd04: ring rotation, wrapped to 0xfff */
+    s16 spin;                              /* 0xd04: ring rotation, modulo one turn */
     s16 v_scroll;                          /* 0xd06: 8.8 fixed, wrapped to v_span */
     s32 radius_offset;                     /* 0xd08: 24.8 fixed, added to the radius */
     s32 radius_speed;                      /* 0xd0c */
@@ -358,15 +354,23 @@ extern s32 g_effect_tube_mesh_ring_scales[5];
 s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* dome mesh */
-/* Work block of the spinning dome renderer shared by twelve EFFECT overlays. */
+/* Work block of the spinning dome renderer. */
+enum {
+    DOME_MESH_ROWS = 8,
+    DOME_MESH_SEGMENTS = 16,
+    DOME_MESH_LATTICE_COMPONENTS = 3,
+    DOME_MESH_QUAD_COUNT = DOME_MESH_ROWS * DOME_MESH_SEGMENTS,
+    DOME_MESH_LATTICE_POINT_BYTES = sizeof(vec3s16_t),
+    DOME_MESH_LATTICE_ROW_BYTES = (DOME_MESH_SEGMENTS + 1) * DOME_MESH_LATTICE_POINT_BYTES,
+};
 /* Work block: two POLY_GT4 buffers of 8 rows x 16 columns. */
 typedef struct effect_dome_mesh_work {
-    s32 buffer;             /* 0x0000: 0 or 1, flipped after each update */
-    POLY_GT4 quads[2][128]; /* 0x0004: row * 16 + column */
-    s16 spin;               /* 0x3404: lattice rotation, wrapped to 0xfff */
-    s16 v_scroll;           /* 0x3406: 8.8 fixed, wrapped to v_span */
-    s32 radius_offset;      /* 0x3408: 24.8 fixed, added to the radius */
-    s32 radius_speed;       /* 0x340c */
+    s32 buffer;                              /* 0x0000: 0 or 1, flipped after each update */
+    POLY_GT4 quads[2][DOME_MESH_QUAD_COUNT]; /* 0x0004: row * 16 + column */
+    s16 spin;                                /* 0x3404: lattice rotation, modulo one turn */
+    s16 v_scroll;                            /* 0x3406: 8.8 fixed, wrapped to v_span */
+    s32 radius_offset;                       /* 0x3408: 24.8 fixed, added to the radius */
+    s32 radius_speed;                        /* 0x340c */
     u8 _unused_3410[0x08];
     s32 destroy_delay; /* 0x3418: the destroy phase waits one call before freeing */
 } effect_dome_mesh_work_t;
@@ -376,6 +380,7 @@ typedef char assert_effect_dome_mesh_work_size[sizeof(effect_dome_mesh_work_t) =
  * the row, the lattice row (0-8) the column. */
 extern u32 g_effect_dome_mesh_brightness_table[][9];
 s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
+void effect_add_scratchpad_xyz_components(s32 group, s32 point, const VECTOR* offset, SVECTOR* output);
 
 /* system */
 /* The native handlers of the EFFECT/E###.BIN overlays.
@@ -399,12 +404,8 @@ extern effect_particle_vertex_location_t g_effect_e454_particle_vertex_locations
 extern effect_particle_vertex_location_t g_effect_e464_particle_vertex_locations[3];
 
 /* tentacle mesh */
-/* Shared records of two emitter-driven EFFECT renderers compiled from one
- * source family: the 8,668-byte tentacle mesh (E376, E381, E382, E384, E401
- * and E453) that draws up to eight textured strips, and the 5,624-byte particle
- * trail (E077, E161, E451 and E485) that tracks up to four point trails. Both
- * read their effect_geometry_entry_t through
- * effect_tentacle_mesh_geometry_view_t. */
+/* The tentacle renderer draws textured strips; the related particle-trail
+ * renderer tracks points without drawing the strips. Both use the same emitter view. */
 
 typedef struct effect_tentacle_mesh_segment {
     SVECTOR tip;          /* 0x000 */
@@ -461,9 +462,6 @@ extern u32 g_effect_tentacle_mesh_brightness_table[][9];
 s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
 /* wave mesh */
-/* Shared records of the 2,924-byte 8x8 wave-distorted quad mesh renderer that
- * eight EFFECT overlays compile from one source (for example E033 at
- * 0x801c3c7c). */
 /* Work block of the 8x8 wave mesh, allocated in phase 1. The four wave phases
  * are 4096-per-turn angles; the emitter record's spawn spread (x, y) and
  * wave_phase_speed curves advance them once per update. */
@@ -497,13 +495,5 @@ typedef struct effect_wave_mesh_scratch {
  * the row, the quad row (0-8) the column. */
 extern u32 g_effect_wave_mesh_brightness_table[][9];
 s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-
-/* other */
-
-/* Overlay-local vertex brightness rows (12-bit fixed) for the 4x4 grid-mesh
- * family: brightness_row selects the row, the column is the quad row. */
-extern u32 g_effect_textured_quad_grid_4x4_brightness_table[][5];
-s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
-void effect_add_scratchpad_xyz_components(s32 group, s32 point, const VECTOR* offset, SVECTOR* output);
 
 #endif

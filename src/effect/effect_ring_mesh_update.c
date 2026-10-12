@@ -8,22 +8,10 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
-/* Builds and draws a spinning, flaring ring of 2x32 textured quads.
- *
- * Three lattice rows of nine points cover one quadrant; each row grows the
- * radius and height by per-row steps. The lattice is offset by the placement
- * origin, rotated into the other three quadrants by the add helpers, projected
- * through the battle camera and linked into the ordering table by the average
- * depth of each quad. The texture scrolls in v and every lattice row takes its
- * brightness from g_effect_ring_mesh_brightness_table. The quads are double-buffered in the work block.
- *
- * `i`, `j`, `k` and `n` are shared temporaries (`i`: curve index and loop
- * index; `j`: curve factor, v scroll and loop index; `k`: row radius, colour
- * curves and brightness; `n`: row height, brightness row and quad depth): the
- * target keeps each group in one register. record_index arrives as a signed 32-bit argument and
- * is narrowed once, which is what places it in $s0. The handler returns no
- * value, but the s32 return keeps $v0 live at the exit, which leaves the phase
- * dispatch's delay slots empty as in the target. */
+/* Builds a flaring 2x32 ring from one quadrant of lattice points, projects it
+ * through the battle camera and draws alternating quad buffers with scrolling
+ * texture. The narrow record index, shared temporaries and non-void signature
+ * preserve the renderer's register allocation and delay slots. */
 s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     SVECTOR unused_10[3]; /* frame padding the target reserves but never touches */
     VECTOR origin;
@@ -50,6 +38,9 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     effect_texture_page_config_t configuration;
     u8 target_index;
     s32 j;
+    s32 texture_selector;
+    s32 growth_step_selector;
+    u16 radius_binding;
     s32 i;
     s32 k;
     s32 n;
@@ -79,11 +70,10 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         work = battle_heap_alloc_block(sizeof(effect_ring_mesh_work_t), record_index);
         record->work_slots[callback_slot] = work;
         configuration = entry->radial_mesh.texture_page_config;
-        tpage = (configuration.blend_mode << 5) | 0x86;
+        tpage = (configuration.blend_mode << EFFECT_RENDER_TEXTURE_PAGE_BLEND_SHIFT) | EFFECT_RENDER_TEXTURE_PAGE_BASE;
+        translucent = 1;
         if (configuration.clear_abe) {
             translucent = 0;
-        } else {
-            translucent = 1;
         }
         for (j = 0; j < 2; j++) {
             for (i = 0; i < RING_MESH_SEGMENTS * 2; i++) {
@@ -106,8 +96,7 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
         target_index = g_battle_effect_state_records[record_index].timeline.target_index;
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, entry->radial_mesh.scroll_curves & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.motion_curves.origin, frame);
         battle_effect_interpolate_emitter_spawn_position(entry, j, &origin);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
         case EFFECT_EMITTER_ORIGIN_WORLD:
@@ -144,12 +133,12 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             break;
         }
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, (entry->radial_mesh.wave_curves >> 16) & 0xf, frame);
+        radius_binding = entry->radial_mesh.shape_curves.radius;
+        BATTLE_EFFECT_READ_CURVE(i, j, radius_binding, frame);
         radius = battle_effect_lerp_linear(entry->radial_mesh.radius_start, entry->radial_mesh.radius_end, j);
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, (entry->radial_mesh.scroll_curves >> 8) & 0xf, frame);
+        texture_selector = entry->radial_mesh.motion_curves.texture;
+        BATTLE_EFFECT_READ_CURVE(i, j, texture_selector, frame);
         u = battle_effect_lerp_linear(entry->radial_mesh.u_start, entry->radial_mesh.u_end, j);
         v = battle_effect_lerp_linear(entry->radial_mesh.v_start, entry->radial_mesh.v_end, j);
         u_span = entry->radial_mesh.u_span;
@@ -162,15 +151,14 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             work->v_scroll += v_span << 8;
         }
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, entry->radial_mesh.wave_curves & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.shape_curves.growth, frame);
         growth.vx = battle_effect_lerp_linear(entry->radial_mesh.growth_start, entry->radial_mesh.growth_end, j);
         growth.vy = battle_effect_lerp_linear(entry->radial_mesh.height_start, entry->radial_mesh.height_end, j) << 2;
         growth.vz
             = battle_effect_lerp_linear(entry->radial_mesh.row_radius_start, entry->radial_mesh.row_radius_end, j);
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, (entry->radial_mesh.wave_curves >> 4) & 0xf, frame);
+        growth_step_selector = entry->radial_mesh.shape_curves.growth_step;
+        BATTLE_EFFECT_READ_CURVE(i, j, growth_step_selector, frame);
         growth_step.vx
             = battle_effect_lerp_linear(entry->radial_mesh.growth_step_start, entry->radial_mesh.growth_step_end, j);
         growth_step.vy
@@ -179,17 +167,16 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         growth_step.vz = battle_effect_lerp_linear(
             entry->radial_mesh.row_radius_step_start, entry->radial_mesh.row_radius_step_end, j);
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, entry->radial_mesh.scroll_curves >> 28, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.motion_curves.spin, frame);
         work->spin = (work->spin
                          + battle_effect_lerp_linear(
                              entry->radial_mesh.spin_speed_start, entry->radial_mesh.spin_speed_end, j))
-            & 0xfff;
+            & (ONE - 1);
         /* The target makes these four calls and discards their results. */
         rsin(work->spin);
-        rsin(work->spin + 0x200);
+        rsin(work->spin + (ONE / 8));
         rcos(work->spin);
-        rcos(work->spin + 0x200);
+        rcos(work->spin + (ONE / 8));
 
         n = 0;
         k = 0;
@@ -201,7 +188,7 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
                 sine = rsin(angle);
                 scratch->points[i][j].vy = n >> 8;
                 scratch->points[i][j].vz = (sine * ring_radius) >> 12;
-                angle += 0x80;
+                angle += ONE / RING_MESH_SEGMENTS;
             }
             growth.vy += growth_step.vy;
             growth.vz += growth_step.vz;
@@ -241,7 +228,7 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         quad->y1 = scratch->screen[1].vy;
         scratch->depth[1][1] = scratch->screen[1].vz;
 
-        for (i = 2; i < 9; i++) {
+        for (i = 2; i < RING_MESH_ARC_POINTS; i++) {
             quad = &work->quads[buffer][i - 1];
             quad->x0 = scratch->screen[1].vx;
             quad->y0 = scratch->screen[1].vy;
@@ -258,58 +245,58 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             quad->y1 = scratch->screen[1].vy;
             scratch->depth[1][i] = scratch->screen[1].vz;
         }
-        for (i = 9; i < 17; i++) {
+        for (i = RING_MESH_ARC_POINTS; i < 2 * RING_MESH_SEGMENTS_PER_QUADRANT + 1; i++) {
             quad = &work->quads[buffer][i - 1];
             quad->x0 = scratch->screen[1].vx;
             quad->y0 = scratch->screen[1].vy;
             quad->x2 = scratch->screen[3].vx;
             quad->y2 = scratch->screen[3].vy;
             battle_effect_add_vectors_to_svector_rot_y_270(
-                &scratch->origin, &scratch->points[0][i - 8], &scratch->vertex);
+                &scratch->origin, &scratch->points[0][i - RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[3], &scratch->screen[3].pad);
             quad->x3 = scratch->screen[3].vx;
             quad->y3 = scratch->screen[3].vy;
             scratch->depth[0][i] = scratch->screen[3].vz;
             battle_effect_add_vectors_to_svector_rot_y_270(
-                &scratch->origin, &scratch->points[1][i - 8], &scratch->vertex);
+                &scratch->origin, &scratch->points[1][i - RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[1], &scratch->screen[1].pad);
             quad->x1 = scratch->screen[1].vx;
             quad->y1 = scratch->screen[1].vy;
             scratch->depth[1][i] = scratch->screen[1].vz;
         }
-        for (i = 17; i < 25; i++) {
+        for (i = 2 * RING_MESH_SEGMENTS_PER_QUADRANT + 1; i < 3 * RING_MESH_SEGMENTS_PER_QUADRANT + 1; i++) {
             quad = &work->quads[buffer][i - 1];
             quad->x0 = scratch->screen[1].vx;
             quad->y0 = scratch->screen[1].vy;
             quad->x2 = scratch->screen[3].vx;
             quad->y2 = scratch->screen[3].vy;
             battle_effect_add_vectors_to_svector_rot_y_180(
-                &scratch->origin, &scratch->points[0][i - 16], &scratch->vertex);
+                &scratch->origin, &scratch->points[0][i - 2 * RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[3], &scratch->screen[3].pad);
             quad->x3 = scratch->screen[3].vx;
             quad->y3 = scratch->screen[3].vy;
             scratch->depth[0][i] = scratch->screen[3].vz;
             battle_effect_add_vectors_to_svector_rot_y_180(
-                &scratch->origin, &scratch->points[1][i - 16], &scratch->vertex);
+                &scratch->origin, &scratch->points[1][i - 2 * RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[1], &scratch->screen[1].pad);
             quad->x1 = scratch->screen[1].vx;
             quad->y1 = scratch->screen[1].vy;
             scratch->depth[1][i] = scratch->screen[1].vz;
         }
-        for (i = 25; i < 33; i++) {
+        for (i = 3 * RING_MESH_SEGMENTS_PER_QUADRANT + 1; i < RING_MESH_SEGMENTS + 1; i++) {
             quad = &work->quads[buffer][i - 1];
             quad->x0 = scratch->screen[1].vx;
             quad->y0 = scratch->screen[1].vy;
             quad->x2 = scratch->screen[3].vx;
             quad->y2 = scratch->screen[3].vy;
             battle_effect_add_vectors_to_svector_rot_y_90(
-                &scratch->origin, &scratch->points[0][i - 24], &scratch->vertex);
+                &scratch->origin, &scratch->points[0][i - 3 * RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[3], &scratch->screen[3].pad);
             quad->x3 = scratch->screen[3].vx;
             quad->y3 = scratch->screen[3].vy;
             scratch->depth[0][i] = scratch->screen[3].vz;
             battle_effect_add_vectors_to_svector_rot_y_90(
-                &scratch->origin, &scratch->points[1][i - 24], &scratch->vertex);
+                &scratch->origin, &scratch->points[1][i - 3 * RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[1], &scratch->screen[1].pad);
             quad->x1 = scratch->screen[1].vx;
             quad->y1 = scratch->screen[1].vy;
@@ -334,8 +321,8 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         quads[RING_MESH_SEGMENTS].x3 = other->x1;
         quads[RING_MESH_SEGMENTS].y3 = other->y1;
 
-        for (i = 2; i < 9; i++) {
-            quad = &work->quads[buffer][i + 31];
+        for (i = 2; i < RING_MESH_ARC_POINTS; i++) {
+            quad = &work->quads[buffer][i + RING_MESH_SEGMENTS - 1];
             other = &work->quads[buffer][i - 1];
             quad->x0 = scratch->screen[1].vx;
             quad->y0 = scratch->screen[1].vy;
@@ -349,8 +336,8 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             quad->y1 = scratch->screen[1].vy;
             scratch->depth[2][i] = scratch->screen[1].vz;
         }
-        for (i = 9; i < 17; i++) {
-            quad = &work->quads[buffer][i + 31];
+        for (i = RING_MESH_ARC_POINTS; i < 2 * RING_MESH_SEGMENTS_PER_QUADRANT + 1; i++) {
+            quad = &work->quads[buffer][i + RING_MESH_SEGMENTS - 1];
             other = &work->quads[buffer][i - 1];
             quad->x0 = scratch->screen[1].vx;
             quad->y0 = scratch->screen[1].vy;
@@ -359,14 +346,14 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             quad->x3 = other->x1;
             quad->y3 = other->y1;
             battle_effect_add_vectors_to_svector_rot_y_270(
-                &scratch->origin, &scratch->points[2][i - 8], &scratch->vertex);
+                &scratch->origin, &scratch->points[2][i - RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[1], &scratch->screen[1].pad);
             quad->x1 = scratch->screen[1].vx;
             quad->y1 = scratch->screen[1].vy;
             scratch->depth[2][i] = scratch->screen[1].vz;
         }
-        for (i = 17; i < 25; i++) {
-            quad = &work->quads[buffer][i + 31];
+        for (i = 2 * RING_MESH_SEGMENTS_PER_QUADRANT + 1; i < 3 * RING_MESH_SEGMENTS_PER_QUADRANT + 1; i++) {
+            quad = &work->quads[buffer][i + RING_MESH_SEGMENTS - 1];
             other = &work->quads[buffer][i - 1];
             quad->x0 = scratch->screen[1].vx;
             quad->y0 = scratch->screen[1].vy;
@@ -375,14 +362,14 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             quad->x3 = other->x1;
             quad->y3 = other->y1;
             battle_effect_add_vectors_to_svector_rot_y_180(
-                &scratch->origin, &scratch->points[2][i - 16], &scratch->vertex);
+                &scratch->origin, &scratch->points[2][i - 2 * RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[1], &scratch->screen[1].pad);
             quad->x1 = scratch->screen[1].vx;
             quad->y1 = scratch->screen[1].vy;
             scratch->depth[2][i] = scratch->screen[1].vz;
         }
-        for (i = 25; i < 33; i++) {
-            quad = &work->quads[buffer][i + 31];
+        for (i = 3 * RING_MESH_SEGMENTS_PER_QUADRANT + 1; i < RING_MESH_SEGMENTS + 1; i++) {
+            quad = &work->quads[buffer][i + RING_MESH_SEGMENTS - 1];
             other = &work->quads[buffer][i - 1];
             quad->x0 = scratch->screen[1].vx;
             quad->y0 = scratch->screen[1].vy;
@@ -391,7 +378,7 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             quad->x3 = other->x1;
             quad->y3 = other->y1;
             battle_effect_add_vectors_to_svector_rot_y_90(
-                &scratch->origin, &scratch->points[2][i - 24], &scratch->vertex);
+                &scratch->origin, &scratch->points[2][i - 3 * RING_MESH_SEGMENTS_PER_QUADRANT], &scratch->vertex);
             RotTrans(&scratch->vertex, &scratch->screen[1], &scratch->screen[1].pad);
             quad->x1 = scratch->screen[1].vx;
             quad->y1 = scratch->screen[1].vy;
@@ -410,10 +397,13 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         n = entry->radial_mesh.brightness_row;
         blue = EFFECT_COLOR_NEUTRAL;
         if (entry->radial_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            k = entry->radial_mesh.colour_curves & 0xfff;
-            red = g_battle_effect_animation_curve_data->curves[k & 0xf][frame];
-            green = g_battle_effect_animation_curve_data->curves[(k >> 4) & 0xf][frame];
-            blue = g_battle_effect_animation_curve_data->curves[(k >> 8) & 0xf][frame];
+            k = (entry->radial_mesh.colour_curves & 0xfff);
+            red = g_battle_effect_animation_curve_data
+                      ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_RED_SHIFT)][frame];
+            green = g_battle_effect_animation_curve_data
+                        ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_GREEN_SHIFT)][frame];
+            blue = g_battle_effect_animation_curve_data
+                       ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_BLUE_SHIFT)][frame];
         } else {
             green = EFFECT_COLOR_NEUTRAL;
             red = EFFECT_COLOR_NEUTRAL;

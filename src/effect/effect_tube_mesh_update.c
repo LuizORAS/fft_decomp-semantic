@@ -9,19 +9,20 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
-/* Builds and draws a spinning 9x8 lattice of textured quads (a closed tube).
- *
- * Nine lattice rows of eight points are mirrored about row 4: g_effect_tube_mesh_ring_scales
- * scales the radius per row pair and the row height grows by growth.vy per
- * row. The lattice is offset by the placement origin, projected through the
- * battle camera with the inline GTE RotTrans sequence and linked into the
- * ordering table by the average depth of each quad. The texture scrolls in v
- * and every lattice row takes its brightness from g_effect_tube_mesh_brightness_table.
- *
- * `i`, `j`, `k` and `n` are shared temporaries, as in the other ring mesh
- * renderers: the target keeps each group in one register (`k`: the row
- * height step, colour curves and brightness; `n`: the lattice row, brightness
- * row and quad depth). */
+enum {
+    TUBE_MESH_RING_COUNT = 8,
+    TUBE_MESH_SEGMENT_COUNT = 8,
+    TUBE_MESH_LATTICE_ROW_COUNT = TUBE_MESH_RING_COUNT + 1,
+    TUBE_MESH_QUAD_COUNT = TUBE_MESH_RING_COUNT * TUBE_MESH_SEGMENT_COUNT,
+    TUBE_MESH_MIDDLE_ROW = TUBE_MESH_RING_COUNT / 2,
+    TUBE_MESH_RING_SCALE_COUNT = TUBE_MESH_MIDDLE_ROW + 1,
+    TUBE_MESH_LAST_SEGMENT = TUBE_MESH_SEGMENT_COUNT - 1,
+    TUBE_MESH_LAST_RING_OFFSET = (TUBE_MESH_RING_COUNT - 1) * TUBE_MESH_SEGMENT_COUNT,
+};
+
+/* Draws a closed tube from nine lattice rows mirrored about the middle ring.
+ * It scrolls texture and applies brightness by row. Shared temporaries retain
+ * the renderer's matched register allocation. */
 s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR vertex;
@@ -29,12 +30,12 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     VECTOR origin;
     VECTOR growth;      /* vx: radius speed step, vy: row height scale */
     VECTOR growth_step; /* vx: radius acceleration, vy: row height scale step */
-    VECTOR points[9][8];
+    VECTOR points[TUBE_MESH_LATTICE_ROW_COUNT][TUBE_MESH_SEGMENT_COUNT];
     VECTOR screen0;
     VECTOR screen1;
     VECTOR screen2;
     VECTOR screen3;
-    s16 depth[9][8];
+    s16 depth[TUBE_MESH_LATTICE_ROW_COUNT][TUBE_MESH_SEGMENT_COUNT];
     SVECTOR map_max;
     effect_ring_mesh_work_t* work;
     effect_geometry_record_t* entry;
@@ -54,6 +55,9 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     u8 target_index;
     s32 i;
     s32 j;
+    s32 texture_selector;
+    s32 growth_step_selector;
+    u16 radius_binding;
     s32 k;
     s32 n;
     s32 extent;
@@ -61,9 +65,9 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     s32 sin45;
     s32 cos0;
     s32 cos45;
-    s32 ox;
-    s32 oy;
-    s32 oz;
+    s32 origin_x;
+    s32 origin_y;
+    s32 origin_z;
     u32 blue;
     u32 green;
     u32 red;
@@ -88,14 +92,13 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         work = battle_heap_alloc_block(sizeof(effect_ring_mesh_work_t), state_index);
         record->work_slots[callback_slot] = work;
         configuration = entry->radial_mesh.texture_page_config;
-        tpage = (configuration.blend_mode << 5) | 0x86;
+        tpage = (configuration.blend_mode << EFFECT_RENDER_TEXTURE_PAGE_BLEND_SHIFT) | EFFECT_RENDER_TEXTURE_PAGE_BASE;
+        translucent = 1;
         if (configuration.clear_abe) {
             translucent = 0;
-        } else {
-            translucent = 1;
         }
         for (j = 0; j < 2; j++) {
-            for (i = 0; i < 64; i++) {
+            for (i = 0; i < TUBE_MESH_QUAD_COUNT; i++) {
                 quad = &work->quads[j][i];
                 SetPolyGT4(quad);
                 setSemiTrans(quad, translucent);
@@ -115,8 +118,7 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
         target_index = g_battle_effect_state_records[state_index].timeline.target_index;
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, entry->radial_mesh.scroll_curves & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.motion_curves.origin, frame);
         battle_effect_interpolate_emitter_spawn_position(entry, j, &origin);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
         case EFFECT_EMITTER_ORIGIN_WORLD:
@@ -152,12 +154,12 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             break;
         }
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, (entry->radial_mesh.wave_curves >> 16) & 0xf, frame);
+        radius_binding = entry->radial_mesh.shape_curves.radius;
+        BATTLE_EFFECT_READ_CURVE(i, j, radius_binding, frame);
         radius = battle_effect_lerp_linear(entry->radial_mesh.radius_start, entry->radial_mesh.radius_end, j);
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, (entry->radial_mesh.scroll_curves >> 8) & 0xf, frame);
+        texture_selector = entry->radial_mesh.motion_curves.texture;
+        BATTLE_EFFECT_READ_CURVE(i, j, texture_selector, frame);
         u = battle_effect_lerp_linear(entry->radial_mesh.u_start, entry->radial_mesh.u_end, j);
         v = battle_effect_lerp_linear(entry->radial_mesh.v_start, entry->radial_mesh.v_end, j);
         u_span = entry->radial_mesh.u_span;
@@ -170,15 +172,14 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             work->v_scroll += v_span << 8;
         }
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, entry->radial_mesh.wave_curves & 0xf, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.shape_curves.growth, frame);
         growth.vx = battle_effect_lerp_linear(entry->radial_mesh.growth_start, entry->radial_mesh.growth_end, j);
         growth.vy = battle_effect_lerp_linear(entry->radial_mesh.height_start, entry->radial_mesh.height_end, j);
         growth.vz
             = battle_effect_lerp_linear(entry->radial_mesh.row_radius_start, entry->radial_mesh.row_radius_end, j);
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, (entry->radial_mesh.wave_curves >> 4) & 0xf, frame);
+        growth_step_selector = entry->radial_mesh.shape_curves.growth_step;
+        BATTLE_EFFECT_READ_CURVE(i, j, growth_step_selector, frame);
         growth_step.vx
             = battle_effect_lerp_linear(entry->radial_mesh.growth_step_start, entry->radial_mesh.growth_step_end, j);
         growth_step.vy
@@ -186,41 +187,54 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         growth_step.vz = battle_effect_lerp_linear(
             entry->radial_mesh.row_radius_step_start, entry->radial_mesh.row_radius_step_end, j);
 
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, i, j, entry->radial_mesh.scroll_curves >> 28, frame);
+        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.motion_curves.spin, frame);
         work->spin = (work->spin
                          + battle_effect_lerp_linear(
                              entry->radial_mesh.spin_speed_start, entry->radial_mesh.spin_speed_end, j))
-            & 0xfff;
+            & (ONE - 1);
         sin0 = rsin(work->spin);
-        sin45 = rsin(work->spin + 0x200);
+        sin45 = rsin(work->spin + (ONE / TUBE_MESH_SEGMENT_COUNT));
         cos0 = rcos(work->spin);
-        cos45 = rcos(work->spin + 0x200);
+        cos45 = rcos(work->spin + (ONE / TUBE_MESH_SEGMENT_COUNT));
 
         k = (radius + (work->radius_offset >> 8)) / 4;
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < TUBE_MESH_RING_SCALE_COUNT; i++) {
             extent = (((cos0 * g_effect_tube_mesh_ring_scales[i]) >> 12) * (radius + (work->radius_offset >> 8))) >> 12;
-            points[4 + i][0].vx = points[4 + i][2].vz = points[4 - i][0].vx = points[4 - i][2].vz = extent;
+            points[TUBE_MESH_MIDDLE_ROW + i][0].vx = points[TUBE_MESH_MIDDLE_ROW + i][2].vz
+                = points[TUBE_MESH_MIDDLE_ROW - i][0].vx = points[TUBE_MESH_MIDDLE_ROW - i][2].vz = extent;
             extent = -extent;
-            points[4 + i][4].vx = points[4 + i][6].vz = points[4 - i][4].vx = points[4 - i][6].vz = extent;
+            points[TUBE_MESH_MIDDLE_ROW + i][4].vx = points[TUBE_MESH_MIDDLE_ROW + i][6].vz
+                = points[TUBE_MESH_MIDDLE_ROW - i][4].vx = points[TUBE_MESH_MIDDLE_ROW - i][6].vz = extent;
             extent = (((sin0 * g_effect_tube_mesh_ring_scales[i]) >> 12) * (radius + (work->radius_offset >> 8))) >> 12;
-            points[4 + i][0].vz = points[4 + i][6].vx = points[4 - i][0].vz = points[4 - i][6].vx = extent;
+            points[TUBE_MESH_MIDDLE_ROW + i][0].vz = points[TUBE_MESH_MIDDLE_ROW + i][6].vx
+                = points[TUBE_MESH_MIDDLE_ROW - i][0].vz = points[TUBE_MESH_MIDDLE_ROW - i][6].vx = extent;
             extent = -extent;
-            points[4 + i][2].vx = points[4 + i][4].vz = points[4 - i][2].vx = points[4 - i][4].vz = extent;
+            points[TUBE_MESH_MIDDLE_ROW + i][2].vx = points[TUBE_MESH_MIDDLE_ROW + i][4].vz
+                = points[TUBE_MESH_MIDDLE_ROW - i][2].vx = points[TUBE_MESH_MIDDLE_ROW - i][4].vz = extent;
             extent
                 = (((cos45 * g_effect_tube_mesh_ring_scales[i]) >> 12) * (radius + (work->radius_offset >> 8))) >> 12;
-            points[4 + i][1].vx = points[4 + i][3].vz = points[4 - i][1].vx = points[4 - i][3].vz = extent;
+            points[TUBE_MESH_MIDDLE_ROW + i][1].vx = points[TUBE_MESH_MIDDLE_ROW + i][3].vz
+                = points[TUBE_MESH_MIDDLE_ROW - i][1].vx = points[TUBE_MESH_MIDDLE_ROW - i][3].vz = extent;
             extent = -extent;
-            points[4 + i][5].vx = points[4 + i][7].vz = points[4 - i][5].vx = points[4 - i][7].vz = extent;
+            points[TUBE_MESH_MIDDLE_ROW + i][5].vx = points[TUBE_MESH_MIDDLE_ROW + i][7].vz
+                = points[TUBE_MESH_MIDDLE_ROW - i][5].vx = points[TUBE_MESH_MIDDLE_ROW - i][7].vz = extent;
             extent
                 = (((sin45 * g_effect_tube_mesh_ring_scales[i]) >> 12) * (radius + (work->radius_offset >> 8))) >> 12;
-            points[4 + i][1].vz = points[4 + i][7].vx = points[4 - i][1].vz = points[4 - i][7].vx = extent;
+            points[TUBE_MESH_MIDDLE_ROW + i][1].vz = points[TUBE_MESH_MIDDLE_ROW + i][7].vx
+                = points[TUBE_MESH_MIDDLE_ROW - i][1].vz = points[TUBE_MESH_MIDDLE_ROW - i][7].vx = extent;
             extent = -extent;
-            points[4 + i][3].vx = points[4 + i][5].vz = points[4 - i][3].vx = points[4 - i][5].vz = extent;
-            points[4 + i][0].vy = points[4 + i][1].vy = points[4 + i][2].vy = points[4 + i][3].vy = points[4 + i][4].vy
-                = points[4 + i][5].vy = points[4 + i][6].vy = points[4 + i][7].vy = (i * k * growth.vy) >> 8;
-            points[4 - i][0].vy = points[4 - i][1].vy = points[4 - i][2].vy = points[4 - i][3].vy = points[4 - i][4].vy
-                = points[4 - i][5].vy = points[4 - i][6].vy = points[4 - i][7].vy = -((i * k * growth.vy) >> 8);
+            points[TUBE_MESH_MIDDLE_ROW + i][3].vx = points[TUBE_MESH_MIDDLE_ROW + i][5].vz
+                = points[TUBE_MESH_MIDDLE_ROW - i][3].vx = points[TUBE_MESH_MIDDLE_ROW - i][5].vz = extent;
+            points[TUBE_MESH_MIDDLE_ROW + i][0].vy = points[TUBE_MESH_MIDDLE_ROW + i][1].vy
+                = points[TUBE_MESH_MIDDLE_ROW + i][2].vy = points[TUBE_MESH_MIDDLE_ROW + i][3].vy
+                = points[TUBE_MESH_MIDDLE_ROW + i][4].vy = points[TUBE_MESH_MIDDLE_ROW + i][5].vy
+                = points[TUBE_MESH_MIDDLE_ROW + i][6].vy = points[TUBE_MESH_MIDDLE_ROW + i][7].vy
+                = (i * k * growth.vy) >> 8;
+            points[TUBE_MESH_MIDDLE_ROW - i][0].vy = points[TUBE_MESH_MIDDLE_ROW - i][1].vy
+                = points[TUBE_MESH_MIDDLE_ROW - i][2].vy = points[TUBE_MESH_MIDDLE_ROW - i][3].vy
+                = points[TUBE_MESH_MIDDLE_ROW - i][4].vy = points[TUBE_MESH_MIDDLE_ROW - i][5].vy
+                = points[TUBE_MESH_MIDDLE_ROW - i][6].vy = points[TUBE_MESH_MIDDLE_ROW - i][7].vy
+                = -((i * k * growth.vy) >> 8);
             growth.vy += growth_step.vy;
         }
         work->radius_speed += growth_step.vx;
@@ -228,62 +242,63 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
 
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
-        ox = origin.vx;
-        oy = origin.vy;
-        oz = origin.vz;
+        /* Keep origin components as snapshots across projection. */
+        origin_x = origin.vx;
+        origin_y = origin.vy;
+        origin_z = origin.vz;
 
         /* Row 0: quad column i - 1 takes lattice rows 1 (x0/x1) and 0 (x2/x3). */
-        vertex.vx = points[0][0].vx + ox;
-        vertex.vy = points[0][0].vy + oy;
-        vertex.vz = points[0][0].vz + oz;
+        vertex.vx = points[0][0].vx + origin_x;
+        vertex.vy = points[0][0].vy + origin_y;
+        vertex.vz = points[0][0].vz + origin_z;
         gte_RotTrans(&vertex, &screen2, &screen2.pad);
         quad = &work->quads[work->buffer][0];
         quad->x2 = screen2.vx;
         quad->y2 = screen2.vy;
         depth[0][0] = screen2.vz;
-        vertex.vx = points[0][1].vx + ox;
-        vertex.vy = points[0][1].vy + oy;
-        vertex.vz = points[0][1].vz + oz;
+        vertex.vx = points[0][1].vx + origin_x;
+        vertex.vy = points[0][1].vy + origin_y;
+        vertex.vz = points[0][1].vz + origin_z;
         gte_RotTrans(&vertex, &screen3, &screen3.pad);
         quad->x3 = screen3.vx;
         quad->y3 = screen3.vy;
         depth[0][1] = screen3.vz;
-        vertex.vx = points[1][0].vx + ox;
-        vertex.vy = points[1][0].vy + oy;
-        vertex.vz = points[1][0].vz + oz;
+        vertex.vx = points[1][0].vx + origin_x;
+        vertex.vy = points[1][0].vy + origin_y;
+        vertex.vz = points[1][0].vz + origin_z;
         gte_RotTrans(&vertex, &screen0, &screen0.pad);
         quad->x0 = screen0.vx;
         quad->y0 = screen0.vy;
         depth[1][0] = screen0.vz;
-        vertex.vx = points[1][1].vx + ox;
-        vertex.vy = points[1][1].vy + oy;
-        vertex.vz = points[1][1].vz + oz;
+        vertex.vx = points[1][1].vx + origin_x;
+        vertex.vy = points[1][1].vy + origin_y;
+        vertex.vz = points[1][1].vz + origin_z;
         gte_RotTrans(&vertex, &screen1, &screen1.pad);
         quad->x1 = screen1.vx;
         quad->y1 = screen1.vy;
         depth[1][1] = screen1.vz;
-        for (i = 2; i < 8; i++) {
+        for (i = 2; i < TUBE_MESH_SEGMENT_COUNT; i++) {
             quad = &work->quads[work->buffer][i - 1];
             quad->x0 = screen1.vx;
             quad->y0 = screen1.vy;
             quad->x2 = screen3.vx;
             quad->y2 = screen3.vy;
-            vertex.vx = points[0][i].vx + ox;
-            vertex.vy = points[0][i].vy + oy;
-            vertex.vz = points[0][i].vz + oz;
+            vertex.vx = points[0][i].vx + origin_x;
+            vertex.vy = points[0][i].vy + origin_y;
+            vertex.vz = points[0][i].vz + origin_z;
             gte_RotTrans(&vertex, &screen3, &screen3.pad);
             quad->x3 = screen3.vx;
             quad->y3 = screen3.vy;
             depth[0][i] = screen3.vz;
-            vertex.vx = points[1][i].vx + ox;
-            vertex.vy = points[1][i].vy + oy;
-            vertex.vz = points[1][i].vz + oz;
+            vertex.vx = points[1][i].vx + origin_x;
+            vertex.vy = points[1][i].vy + origin_y;
+            vertex.vz = points[1][i].vz + origin_z;
             gte_RotTrans(&vertex, &screen1, &screen1.pad);
             quad->x1 = screen1.vx;
             quad->y1 = screen1.vy;
             depth[1][i] = screen1.vz;
         }
-        quad = &work->quads[work->buffer][7];
+        quad = &work->quads[work->buffer][TUBE_MESH_LAST_SEGMENT];
         quad->x0 = screen1.vx;
         quad->y0 = screen1.vy;
         quad->x2 = screen3.vx;
@@ -298,60 +313,60 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
          * closes the ring on column 0. The quad/other increments are dead
          * (both are recomputed before use) but lengthen the loop past the
          * loop.c threshold at which the target leaves points[n] unreduced. */
-        for (j = 1; j < 8; j++, quad++, other++) {
+        for (j = 1; j < TUBE_MESH_RING_COUNT; j++, quad++, other++) {
             n = j + 1;
-            vertex.vx = points[n][0].vx + ox;
-            vertex.vy = points[n][0].vy + oy;
-            vertex.vz = points[n][0].vz + oz;
+            vertex.vx = points[n][0].vx + origin_x;
+            vertex.vy = points[n][0].vy + origin_y;
+            vertex.vz = points[n][0].vz + origin_z;
             gte_RotTrans(&vertex, &screen0, &screen0.pad);
-            quad = &work->quads[work->buffer][j * 8];
+            quad = &work->quads[work->buffer][j * TUBE_MESH_SEGMENT_COUNT];
             quad->x0 = screen0.vx;
             quad->y0 = screen0.vy;
             depth[n][0] = screen0.vz;
-            vertex.vx = points[n][1].vx + ox;
-            vertex.vy = points[n][1].vy + oy;
-            vertex.vz = points[n][1].vz + oz;
+            vertex.vx = points[n][1].vx + origin_x;
+            vertex.vy = points[n][1].vy + origin_y;
+            vertex.vz = points[n][1].vz + origin_z;
             gte_RotTrans(&vertex, &screen1, &screen1.pad);
             quad->x1 = screen1.vx;
             quad->y1 = screen1.vy;
             depth[n][1] = screen1.vz;
-            other = &work->quads[work->buffer][(j - 1) * 8];
+            other = &work->quads[work->buffer][(j - 1) * TUBE_MESH_SEGMENT_COUNT];
             quad->x2 = other->x0;
             quad->y2 = other->y0;
             quad->x3 = other->x1;
             quad->y3 = other->y1;
-            for (i = 2; i < 8; i++, quad++, other++, quad++) {
-                quad = &work->quads[work->buffer][j * 8 + i - 1];
-                other = &work->quads[work->buffer][(j - 1) * 8 + i - 1];
+            for (i = 2; i < TUBE_MESH_SEGMENT_COUNT; i++, quad++, other++, quad++) {
+                quad = &work->quads[work->buffer][j * TUBE_MESH_SEGMENT_COUNT + i - 1];
+                other = &work->quads[work->buffer][(j - 1) * TUBE_MESH_SEGMENT_COUNT + i - 1];
                 quad->x0 = screen1.vx;
                 quad->y0 = screen1.vy;
                 quad->x2 = other->x0;
                 quad->y2 = other->y0;
                 quad->x3 = other->x1;
                 quad->y3 = other->y1;
-                vertex.vx = points[n][i].vx + ox;
-                vertex.vy = points[n][i].vy + oy;
-                vertex.vz = points[n][i].vz + oz;
+                vertex.vx = points[n][i].vx + origin_x;
+                vertex.vy = points[n][i].vy + origin_y;
+                vertex.vz = points[n][i].vz + origin_z;
                 gte_RotTrans(&vertex, &screen1, &screen1.pad);
                 quad->x1 = screen1.vx;
                 quad->y1 = screen1.vy;
                 depth[n][i] = screen1.vz;
             }
-            quad = &work->quads[work->buffer][j * 8 + 7];
-            other = &work->quads[work->buffer][(j - 1) * 8 + 7];
+            quad = &work->quads[work->buffer][j * TUBE_MESH_SEGMENT_COUNT + TUBE_MESH_LAST_SEGMENT];
+            other = &work->quads[work->buffer][(j - 1) * TUBE_MESH_SEGMENT_COUNT + TUBE_MESH_LAST_SEGMENT];
             quad->x0 = screen1.vx;
             quad->y0 = screen1.vy;
             quad->x2 = other->x0;
             quad->y2 = other->y0;
             quad->x3 = other->x1;
             quad->y3 = other->y1;
-            other = &work->quads[work->buffer][j * 8];
+            other = &work->quads[work->buffer][j * TUBE_MESH_SEGMENT_COUNT];
             quad->x1 = other->x0;
             quad->y1 = other->y0;
         }
 
         j = work->v_scroll >> 8;
-        for (i = 0; i < 64; i++) {
+        for (i = 0; i < TUBE_MESH_QUAD_COUNT; i++) {
             quad = &work->quads[work->buffer][i];
             quad->u0 = quad->u2 = u;
             quad->v0 = quad->v1 = v + j;
@@ -362,10 +377,13 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         n = entry->radial_mesh.brightness_row;
         blue = EFFECT_COLOR_NEUTRAL;
         if (entry->radial_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            k = entry->radial_mesh.colour_curves & 0xfff;
-            red = g_battle_effect_animation_curve_data->curves[entry->radial_mesh.colour_curves & 0xf][frame];
-            green = g_battle_effect_animation_curve_data->curves[(k >> 4) & 0xf][frame];
-            blue = g_battle_effect_animation_curve_data->curves[(k >> 8) & 0xf][frame];
+            k = (entry->radial_mesh.colour_curves & 0xfff);
+            red = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
+                (entry->radial_mesh.colour_curves & 0xfff), EFFECT_COLOR_CURVE_RED_SHIFT)][frame];
+            green = g_battle_effect_animation_curve_data
+                        ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_GREEN_SHIFT)][frame];
+            blue = g_battle_effect_animation_curve_data
+                       ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_BLUE_SHIFT)][frame];
         } else {
             green = EFFECT_COLOR_NEUTRAL;
             red = EFFECT_COLOR_NEUTRAL;
@@ -375,41 +393,43 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         shade_r = (k * red) >> 12;
         shade_g = (k * green) >> 12;
         shade_b = (k * blue) >> 12;
-        for (i = 0; i < 8; i++) {
+        for (i = 0; i < TUBE_MESH_SEGMENT_COUNT; i++) {
             quad = &work->quads[work->buffer][i];
             setRGB2(quad, quad->r3 = shade_r, quad->g3 = shade_g, quad->b3 = shade_b);
         }
-        for (j = 0; j < 7; j++) {
+        for (j = 0; j < TUBE_MESH_RING_COUNT - 1; j++) {
             k = g_effect_tube_mesh_brightness_table[n][j + 1];
             shade_r = (k * red) >> 12;
             shade_g = (k * green) >> 12;
             shade_b = (k * blue) >> 12;
-            for (i = 0; i < 8; i++) {
-                quad = &work->quads[work->buffer][j * 8 + i];
-                other = &work->quads[work->buffer][(j + 1) * 8 + i];
+            for (i = 0; i < TUBE_MESH_SEGMENT_COUNT; i++) {
+                quad = &work->quads[work->buffer][j * TUBE_MESH_SEGMENT_COUNT + i];
+                other = &work->quads[work->buffer][(j + 1) * TUBE_MESH_SEGMENT_COUNT + i];
                 setRGB0(quad, quad->r1 = other->r2 = other->r3 = shade_r, quad->g1 = other->g2 = other->g3 = shade_g,
                     quad->b1 = other->b2 = other->b3 = shade_b);
             }
         }
-        k = g_effect_tube_mesh_brightness_table[n][8];
+        k = g_effect_tube_mesh_brightness_table[n][TUBE_MESH_RING_COUNT];
         shade_r = (k * red) >> 12;
         shade_g = (k * green) >> 12;
         shade_b = (k * blue) >> 12;
-        for (i = 0; i < 8; i++) {
-            quad = &work->quads[work->buffer][56 + i];
+        for (i = 0; i < TUBE_MESH_SEGMENT_COUNT; i++) {
+            quad = &work->quads[work->buffer][TUBE_MESH_LAST_RING_OFFSET + i];
             setRGB0(quad, quad->r1 = shade_r, quad->g1 = shade_g, quad->b1 = shade_b);
         }
 
-        for (j = 0; j < 8; j++) {
-            for (i = 0; i < 7; i++) {
+        for (j = 0; j < TUBE_MESH_RING_COUNT; j++) {
+            for (i = 0; i < TUBE_MESH_LAST_SEGMENT; i++) {
                 n = (depth[j][i] + depth[j][i + 1] + depth[j + 1][i] + depth[j + 1][i + 1]) / 16;
                 if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
-                    addPrim(&ot[n], &work->quads[work->buffer][j * 8 + i]);
+                    addPrim(&ot[n], &work->quads[work->buffer][j * TUBE_MESH_SEGMENT_COUNT + i]);
                 }
             }
-            n = (depth[j][0] + depth[j][7] + depth[j + 1][0] + depth[j + 1][7]) / 16;
+            n = (depth[j][0] + depth[j][TUBE_MESH_LAST_SEGMENT] + depth[j + 1][0]
+                    + depth[j + 1][TUBE_MESH_LAST_SEGMENT])
+                / 16;
             if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
-                addPrim(&ot[n], &work->quads[work->buffer][j * 8 + 7]);
+                addPrim(&ot[n], &work->quads[work->buffer][j * TUBE_MESH_SEGMENT_COUNT + TUBE_MESH_LAST_SEGMENT]);
             }
         }
         work->buffer = 1 - work->buffer;

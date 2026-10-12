@@ -69,8 +69,8 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
     s32 translucent;
     s32 orient;
     s32 target_index;
-    s32 curves0;
-    s32 curves1;
+    s32 spawn_bindings;
+    s32 tip_bindings;
     s32 index;
     s32 factor;
     s16 len;
@@ -110,12 +110,12 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
         work = record->work_slots[callback_slot]
             = battle_heap_alloc_block(sizeof(effect_tentacle_mesh_work_t), state_index);
         texture_page_config = entry->tentacle_mesh.texture_page_config;
+        translucent = 1;
         if (texture_page_config.clear_abe) {
             translucent = 0;
-        } else {
-            translucent = 1;
         }
-        tpage = (texture_page_config.blend_mode << 5) | 0x86;
+        tpage = (texture_page_config.blend_mode << EFFECT_RENDER_TEXTURE_PAGE_BLEND_SHIFT)
+            | EFFECT_RENDER_TEXTURE_PAGE_BASE;
         for (i = 0; i < 8; i++) {
             for (scratch = 0; scratch < 8; scratch++) {
                 quad = &work->segments[i].quads[0][scratch];
@@ -141,11 +141,12 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
     case EFFECT_PHASE_UPDATE:
         i = frame - 1;
         work = record->work_slots[callback_slot];
-        curves1 = entry->tentacle_mesh.curve_selectors[1];
+        tip_bindings = entry->tentacle_mesh.tip_curve_bindings;
         target_index = record->timeline.target_index;
-        curves0 = entry->tentacle_mesh.curve_selectors[0];
+        spawn_bindings = entry->tentacle_mesh.spawn_curve_bindings;
         frame %= EFFECT_ANIMATION_CURVE_FRAMES;
-        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 24) & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(index, factor,
+            battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_SPAWN_INTERVAL_SHIFT), frame);
         if (i
                 % battle_effect_lerp_linear(
                     entry->tentacle_mesh.spawn_interval_start, entry->tentacle_mesh.spawn_interval_end, factor)
@@ -168,10 +169,14 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
                 &g_battle_effect_context, &target);
 
-            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 20) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(index, factor,
+                battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_PARTICLE_COUNT_SHIFT),
+                frame);
             count = battle_effect_lerp_linear(
                 entry->tentacle_mesh.particle_count_start, entry->tentacle_mesh.particle_count_end, factor);
-            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, curves0 & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(index, factor,
+                battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_SPAWN_POSITION_SHIFT),
+                frame);
             battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin);
             switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
             case EFFECT_EMITTER_ORIGIN_WORLD:
@@ -201,7 +206,9 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 break;
             }
 
-            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves0 >> 4) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(index, factor,
+                battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_SPAWN_SPREAD_SHIFT),
+                frame);
             battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
             if (orient) {
                 SetRotMatrix(&facing);
@@ -211,7 +218,7 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 RotTrans(&rotation, &spread, &out.pad);
             }
 
-            index = (curves0 >> 28) & 0xF;
+            index = battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_RADIAL_SPEED_SHIFT);
             index--;
             if (index != -1) {
                 factor = g_battle_effect_animation_curve_data->curves[index][frame];
@@ -224,18 +231,24 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 speed_max = entry->tentacle_mesh.radial_speed_max_start;
             }
 
-            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves0 >> 12) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(index, factor,
+                battle_effect_get_cached_curve_binding(
+                    spawn_bindings, EFFECT_TENTACLE_CURVE_VELOCITY_DIRECTION_SPREAD_SHIFT),
+                frame);
             battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &direction_spread);
-            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves0 >> 8) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(index, factor,
+                battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_VELOCITY_BASE_ANGLE_SHIFT),
+                frame);
             battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &base_angles);
 
-            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 12) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(index, factor,
+                battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TIP_OFFSET_SHIFT), frame);
             tip.vx = battle_effect_lerp_linear(
-                entry->tentacle_mesh.target_offset_start[0], entry->tentacle_mesh.target_offset_end[0], factor);
+                entry->tentacle_mesh.target_offset_start.x, entry->tentacle_mesh.target_offset_end.x, factor);
             tip.vy = battle_effect_lerp_linear(
-                entry->tentacle_mesh.target_offset_start[1], entry->tentacle_mesh.target_offset_end[1], factor);
+                entry->tentacle_mesh.target_offset_start.y, entry->tentacle_mesh.target_offset_end.y, factor);
             tip.vz = battle_effect_lerp_linear(
-                entry->tentacle_mesh.target_offset_start[2], entry->tentacle_mesh.target_offset_end[2], factor);
+                entry->tentacle_mesh.target_offset_start.z, entry->tentacle_mesh.target_offset_end.z, factor);
             switch (placement & EFFECT_EMITTER_HOMING_MASK) {
             case EFFECT_EMITTER_HOMING_OFFSET:
             case EFFECT_EMITTER_HOMING_OFFSET_ALT:
@@ -264,7 +277,8 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 break;
             }
 
-            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 4) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(index, factor,
+                battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TIP_SPREAD_SHIFT), frame);
             tip_spread.vx = battle_effect_lerp_linear(
                 entry->tentacle_mesh.tip_spread_start_x, entry->tentacle_mesh.tip_spread_end_x, factor);
             tip_spread.vy = battle_effect_lerp_linear(
@@ -272,11 +286,13 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
             tip_spread.vz = battle_effect_lerp_linear(
                 entry->tentacle_mesh.tip_spread_start_z, entry->tentacle_mesh.tip_spread_end_z, factor);
 
-            BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 8) & 0xF, frame);
+            BATTLE_EFFECT_READ_CURVE(index, factor,
+                battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TRAVEL_DURATION_SHIFT),
+                frame);
             length_min = battle_effect_lerp_linear(
-                entry->tentacle_mesh.lifetime_start[0], entry->tentacle_mesh.lifetime_end[0], factor);
+                entry->tentacle_mesh.lifetime_start.min, entry->tentacle_mesh.lifetime_end.min, factor);
             length_max = battle_effect_lerp_linear(
-                entry->tentacle_mesh.lifetime_start[1], entry->tentacle_mesh.lifetime_end[1], factor);
+                entry->tentacle_mesh.lifetime_start.max, entry->tentacle_mesh.lifetime_end.max, factor);
 
             for (i = 0; i < count; i++) {
                 if (work->count >= 8) {
@@ -415,10 +431,13 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 seg->frame_timer = entry->tentacle_mesh.frame_delay;
             }
             if (entry->tentacle_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-                red = g_battle_effect_animation_curve_data->curves[entry->tentacle_mesh.colour_curves & 0xF][seg->head];
-                factor = entry->tentacle_mesh.colour_curves & 0xFFF;
-                green = g_battle_effect_animation_curve_data->curves[(factor >> 4) & 0xF][seg->head];
-                blue = g_battle_effect_animation_curve_data->curves[(factor >> 8) & 0xF][seg->head];
+                red = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
+                    (entry->tentacle_mesh.colour_curves & 0xfff), EFFECT_COLOR_CURVE_RED_SHIFT)][seg->head];
+                factor = (entry->tentacle_mesh.colour_curves & 0xfff);
+                green = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
+                    factor, EFFECT_COLOR_CURVE_GREEN_SHIFT)][seg->head];
+                blue = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
+                    factor, EFFECT_COLOR_CURVE_BLUE_SHIFT)][seg->head];
             } else {
                 red = green = blue = EFFECT_COLOR_NEUTRAL;
             }

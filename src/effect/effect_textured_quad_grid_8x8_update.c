@@ -8,11 +8,17 @@
 #include "psx/types.h"
 
 /*
- * Phase handler for the scrolling 8x8 textured quad grid.
+ * Phase handler for a scrolling textured quad grid.
  *
- * The 8x8 build of effect_e047_update_textured_quad_grid_4x4 (E047): 32-pixel
- * cells, nine brightness entries per row and an ordering-table depth of at
- * least 4. The shared row/column scratch variables are explained there.
+ * Phase 1 builds both POLY_GT4 buffers of a 256x256 grid; phase 2 scrolls the
+ * texture window along the emitter record's speed and angle curves, tints each
+ * quad from the colour curves and the overlay-local vertex brightness rows, and
+ * links the current buffer into the ordering table; phase 3 frees the work
+ * block one call after it is first reached.
+ *
+ * row and column are also the update phase's curve scratch values. GCC 2.6.3
+ * gives each C variable one pseudo, and that sharing is what places the curve
+ * index, colour curves and brightness in s2 and the curve factor in s3.
  */
 s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
@@ -26,6 +32,8 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
     effect_textured_quad_geometry_view_t* geometry;
     effect_textured_quad_grid_8x8_work_t* work;
     POLY_GT4* quad;
+    /* Keep unsigned bindings separate from the signed curve-index scratch. */
+    u32 selector;
     s32 row;
     s32 column;
     s32 quad_column;
@@ -54,12 +62,12 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
         work = battle_heap_alloc_block(sizeof(effect_textured_quad_grid_8x8_work_t), state_index);
         record->work_slots[callback_slot] = work;
         configuration = geometry->texture_page_config;
+        translucent = 1;
         if (configuration.clear_abe) {
             translucent = 0;
-        } else {
-            translucent = 1;
         }
-        texture_page = (configuration.blend_mode << 5) | 0x86;
+        texture_page
+            = (configuration.blend_mode << EFFECT_RENDER_TEXTURE_PAGE_BLEND_SHIFT) | EFFECT_RENDER_TEXTURE_PAGE_BASE;
         for (row = 0; row < 8; row++) {
             for (column = 0; column < 8; column++) {
                 quad = &work->quads[0][row * 8 + column];
@@ -67,10 +75,10 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
                 setSemiTrans(quad, translucent);
                 quad->tpage = texture_page;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
-                quad->x0 = quad->x2 = (column << 5) + 128;
-                quad->y0 = quad->y1 = row << 5;
-                quad->x1 = quad->x3 = (column << 5) + 160;
-                quad->y2 = quad->y3 = (row << 5) + 32;
+                quad->x0 = quad->x2 = column * 32 + 128;
+                quad->y0 = quad->y1 = row * 32;
+                quad->x1 = quad->x3 = column * 32 + 128 + 32;
+                quad->y2 = quad->y3 = row * 32 + 32;
                 work->quads[1][row * 8 + column] = *quad;
             }
         }
@@ -87,11 +95,11 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
         work = record->work_slots[callback_slot];
         texture_width = geometry->texture_width / 2;
         texture_height = geometry->texture_height / 2;
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, row, column, geometry->curve_selectors[0] >> 28, work->frame);
+        selector = geometry->scroll_curves.scroll_speed;
+        BATTLE_EFFECT_READ_CURVE(row, column, selector, work->frame);
         speed = battle_effect_lerp_linear(geometry->scroll_speed_start, geometry->scroll_speed_end, column) << 4;
-        BATTLE_EFFECT_READ_CURVE(
-            g_battle_effect_animation_curve_data, row, column, (geometry->curve_selectors[0] >> 8) & 0xf, work->frame);
+        selector = geometry->scroll_curves.scroll_angle;
+        BATTLE_EFFECT_READ_CURVE(row, column, selector, work->frame);
         angle = battle_effect_lerp_linear(geometry->scroll_angle_start, geometry->scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
         while (work->scroll_u >= texture_width << 12) {
@@ -109,16 +117,21 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
         }
         blue = EFFECT_COLOR_NEUTRAL;
         if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            row = geometry->colour_curves & 0xfff;
-            red = g_battle_effect_animation_curve_data->curves[row & 0xf][work->frame];
-            green = g_battle_effect_animation_curve_data->curves[(row >> 4) & 0xf][work->frame];
-            blue = g_battle_effect_animation_curve_data->curves[(row >> 8) & 0xf][work->frame];
+            row = (geometry->colour_curves & 0xfff);
+            red = g_battle_effect_animation_curve_data
+                      ->curves[battle_effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_RED_SHIFT)][work->frame];
+            green = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
+                row, EFFECT_COLOR_CURVE_GREEN_SHIFT)][work->frame];
+            blue
+                = g_battle_effect_animation_curve_data
+                      ->curves[battle_effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_BLUE_SHIFT)][work->frame];
         } else {
             green = EFFECT_COLOR_NEUTRAL;
             red = EFFECT_COLOR_NEUTRAL;
         }
         depth = geometry->ot_depth;
         brightness_row = geometry->brightness_row;
+        /* The 4x4 comparison has a distinct matched branch form. */
         if (depth < EFFECT_OT_DEPTH_MIN) {
             depth = EFFECT_OT_DEPTH_MIN;
         }

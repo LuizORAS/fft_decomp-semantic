@@ -1389,6 +1389,13 @@ typedef struct battle_effect_slot {
 } battle_effect_slot_t;
 typedef char assert_battle_effect_slot_size[sizeof(battle_effect_slot_t) == 204 ? 1 : -1];
 
+/* Minimum and maximum values of one particle parameter. */
+typedef struct effect_s16_min_max {
+    s16 min;
+    s16 max;
+} effect_s16_min_max_t;
+typedef char effect_s16_min_max_size_must_be_4[sizeof(effect_s16_min_max_t) == 4 ? 1 : -1];
+
 /* The spawn block at 0x14-0x4b of an emitter record, as the
  * battle_effect_interpolate_emitter_* helpers read it; the native renderers
  * that spawn like the particle emitter embed it. The spread is the ellipsoid
@@ -1403,27 +1410,65 @@ typedef struct effect_emitter_geometry_view {
     vec3s16_t velocity_base_angle_end;   /* 0x32 */
     vec3s16_t velocity_spread_start;     /* 0x38 */
     vec3s16_t velocity_spread_end;       /* 0x3e */
-    s16 inertia_start[2];                /* 0x44: min, max */
-    s16 inertia_end[2];                  /* 0x48 */
+    effect_s16_min_max_t inertia_start;  /* 0x44 */
+    effect_s16_min_max_t inertia_end;    /* 0x48 */
 } effect_emitter_geometry_view_t;
 typedef char assert_effect_emitter_geometry_view_size[sizeof(effect_emitter_geometry_view_t) == 56 ? 1 : -1];
 
-/* One 0xc4-byte emitter record of the effect file's particle-system section,
- * with the meanings the BATTLE particle emitter
- * (battle_effect_spawn_emitter_particles) gives it. A native EFFECT renderer
- * reuses the record's slots and their curve bindings for its own parameters
- * and reads it through its own view (effect_geometry_table_t.entries).
- *
- * A value given as a start and an end is lerped between them by an animation
- * curve; a min, max pair is the range of the random value each new particle
- * draws. Each curve nibble of curve_selectors selects the curve (0 = none,
- * otherwise the curve index + 1) of one such value:
- *   curve_selectors[0]: 0 spawn position, 1 spawn spread, 2 velocity base angle,
- *     3 velocity spread, 4 inertia, 5 the pair at 0x4c (lerped and discarded),
- *     6 weight, 7 radial speed;
- *   curve_selectors[1]: 0 acceleration, 1 acceleration step, 2 lifetime,
- *     3 target offset, 4 unread, 5 particle count, 6 spawn interval,
- *     bits 28-29 homing strength; bits 30-31 are the particle's homing curve. */
+enum {
+    EFFECT_COLOR_CURVE_RED_SHIFT = 0,
+    EFFECT_COLOR_CURVE_GREEN_SHIFT = 4,
+    EFFECT_COLOR_CURVE_BLUE_SHIFT = 8,
+};
+
+/* Read a binding from the cached 32-bit value. Keeping the value scalar
+ * preserves the shared index temporaries and original word loads. */
+static __inline__ u32 battle_effect_get_cached_curve_binding(s32 packed, s32 shift) {
+    return (packed >> shift) & 0xf;
+}
+
+/* One-based bindings for the emitter's initial motion. */
+typedef struct effect_emitter_spawn_curve_bindings {
+    u16 position : 4;
+    u16 spread : 4;
+    u16 velocity_angle : 4;
+    u16 velocity_spread : 4;
+    u16 inertia : 4;
+    u16 _unknown_02 : 4;
+    u8 weight : 4;
+    u8 radial_speed : 4;
+} effect_emitter_spawn_curve_bindings_t;
+typedef char
+    effect_emitter_spawn_curve_bindings_size_must_be_4[sizeof(effect_emitter_spawn_curve_bindings_t) == 4 ? 1 : -1];
+
+/* Minimum and maximum components of a particle-motion vector. */
+typedef struct effect_xyz_min_max {
+    s16 x_min;
+    s16 x_max;
+    s16 y_min;
+    s16 y_max;
+    s16 z_min;
+    s16 z_max;
+} effect_xyz_min_max_t;
+typedef char effect_xyz_min_max_size_must_be_12[sizeof(effect_xyz_min_max_t) == 12 ? 1 : -1];
+
+/* Bit positions in the emitter's packed 32-bit motion-curve binding word.
+ * Zero disables a curve; other values select its row starting at one. */
+enum {
+    EFFECT_EMITTER_CURVE_ACCELERATION_SHIFT = 0,
+    EFFECT_EMITTER_CURVE_ACCELERATION_STEP_SHIFT = 4,
+    EFFECT_EMITTER_CURVE_LIFETIME_SHIFT = 8,
+    EFFECT_EMITTER_CURVE_TARGET_OFFSET_SHIFT = 12,
+    EFFECT_EMITTER_CURVE_PARTICLE_COUNT_SHIFT = 20,
+    EFFECT_EMITTER_CURVE_SPAWN_INTERVAL_SHIFT = 24,
+    EFFECT_EMITTER_CURVE_HOMING_STRENGTH_SHIFT = 28,
+    EFFECT_EMITTER_CURVE_HOMING_MOTION_SHIFT = 30,
+};
+
+/* One 196-byte record in the effect file's particle-system section.
+ * Native EFFECT renderers reuse its slots for their own parameter groups.
+ * One-based motion bindings select interpolation between each start/end pair;
+ * minimum/maximum pairs bound the random values chosen for each particle. */
 typedef struct effect_geometry_entry {
     u8 _unused_00;
     u8 animation_index;  /* 0x01: the sprite sequence its particles play */
@@ -1431,49 +1476,79 @@ typedef struct effect_geometry_entry {
     u8 animation_frame_group; /* 0x04: frame group of that sequence's frames */
     u8 _padding_05;           /* aligns flags */
     u16 flags;                /* 0x06: EFFECT_EMITTER_FLAG_* and effect_emitter_velocity_e; the particle's flags */
-    u32 curve_selectors[2];   /* 0x08 */
-    u32 colour_curves;        /* 0x10: nibbles 0-2 = r/g/b curve indexes, used raw */
-    effect_emitter_geometry_view_t spawn; /* 0x14: initial position, spread, angles and inertia */
-    s16 _unknown_4c[2];                   /* 0x4c: lerped to _unknown_50 and discarded */
-    s16 _unknown_50[2];                   /* 0x50 */
-    s16 weight_start[2];                  /* 0x54: min, max; scales gravity */
-    s16 weight_end[2];                    /* 0x58 */
-    s16 radial_speed_start[2];            /* 0x5c: min, max */
-    s16 radial_speed_end[2];              /* 0x60 */
-    s16 acceleration_start[6];            /* 0x64: x, y and z min, max pairs */
-    s16 acceleration_end[6];              /* 0x70 */
-    s16 acceleration_step_start[6];       /* 0x7c: x, y and z min, max pairs */
-    s16 acceleration_step_end[6];         /* 0x88 */
-    s16 lifetime_start[2];                /* 0x94: min, max, in frames */
-    s16 lifetime_end[2];                  /* 0x98 */
-    s16 target_offset_start[3];           /* 0x9c: homing target, an offset from what effect_emitter_homing_e names */
-    s16 target_offset_end[3];             /* 0xa2 */
+    effect_emitter_spawn_curve_bindings_t spawn_bindings; /* 0x08 */
+    u32 motion_curve_selectors; /* 0x0c: acceleration, acceleration step, lifetime, target offset, count and interval;
+                                 * bits 28-29 bind homing strength and bits 30-31 bind its curve */
+    u32 colour_curves;          /* 0x10: nibbles 0-2 = r/g/b curve indexes */
+    effect_emitter_geometry_view_t spawn;         /* 0x14: initial position, spread, angles and inertia */
+    s16 _unknown_4c[2];                           /* 0x4c: lerped to _unknown_50 and discarded */
+    s16 _unknown_50[2];                           /* 0x50 */
+    effect_s16_min_max_t weight_start;            /* 0x54: scales gravity */
+    effect_s16_min_max_t weight_end;              /* 0x58 */
+    effect_s16_min_max_t radial_speed_start;      /* 0x5c */
+    effect_s16_min_max_t radial_speed_end;        /* 0x60 */
+    effect_xyz_min_max_t acceleration_start;      /* 0x64 */
+    effect_xyz_min_max_t acceleration_end;        /* 0x70 */
+    effect_xyz_min_max_t acceleration_step_start; /* 0x7c */
+    effect_xyz_min_max_t acceleration_step_end;   /* 0x88 */
+    effect_s16_min_max_t lifetime_start;          /* 0x94: in frames */
+    effect_s16_min_max_t lifetime_end;            /* 0x98 */
+    vec3s16_t target_offset_start; /* 0x9c: homing target, an offset from what effect_emitter_homing_e names */
+    vec3s16_t target_offset_end;   /* 0xa2 */
     u8 _unused_a8[0x08];
-    s16 particle_count_start;     /* 0xb0: particles per spawn */
-    s16 particle_count_end;       /* 0xb2 */
-    s16 spawn_interval_start;     /* 0xb4: frames between spawns */
-    s16 spawn_interval_end;       /* 0xb6 */
-    s16 homing_strength_start[2]; /* 0xb8: min, max */
-    s16 homing_strength_end[2];   /* 0xbc */
-    u8 child_emitter_on_death;    /* 0xc0: see EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK */
-    u8 child_emitter_mid_life;    /* 0xc1: see EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK */
-    u8 _padding_c2[0x02];         /* tail padding to 4-byte alignment */
+    s16 particle_count_start;                   /* 0xb0: particles per spawn */
+    s16 particle_count_end;                     /* 0xb2 */
+    s16 spawn_interval_start;                   /* 0xb4: frames between spawns */
+    s16 spawn_interval_end;                     /* 0xb6 */
+    effect_s16_min_max_t homing_strength_start; /* 0xb8 */
+    effect_s16_min_max_t homing_strength_end;   /* 0xbc */
+    u8 child_emitter_on_death;                  /* 0xc0: see EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK */
+    u8 child_emitter_mid_life;                  /* 0xc1: see EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK */
+    u8 _padding_c2[0x02];                       /* tail padding to 4-byte alignment */
 } effect_geometry_entry_t;
 typedef char assert_effect_geometry_entry_size[sizeof(effect_geometry_entry_t) == 196 ? 1 : -1];
 
-/* The scrolling textured quad grids' (2x2, 4x4 and 8x8) and the wave mesh's
- * view of one emitter record. Curve nibbles: curve_selectors[0] 2 scroll angle
- * and 7 scroll speed; the wave mesh adds curve_selectors[0] 1 and 3, the phase
- * speeds of its vertical and horizontal waves (the vertical pair is the
- * emitter's spawn spread at 0x20, read through the emitter helper), and
- * curve_selectors[1] 0, the waves' shape. */
+/* One-based curve bindings for texture scroll and wave phase rates. */
+typedef struct effect_textured_quad_scroll_curves {
+    u32 _unused_00 : 4;
+    u32 wave_y_phase_speed : 4;
+    u32 scroll_angle : 4;
+    u32 wave_x_phase_speed : 4;
+    u32 _unused_02 : 12;
+    u32 scroll_speed : 4;
+} effect_textured_quad_scroll_curves_t;
+typedef char assert_effect_textured_quad_scroll_curves_size[sizeof(effect_textured_quad_scroll_curves_t) == 4 ? 1 : -1];
+
+/* One curve controls the shape parameters of both waves. */
+typedef struct effect_wave_shape_curves {
+    u32 shape : 4;
+    u32 _unused_00 : 28;
+} effect_wave_shape_curves_t;
+typedef char assert_effect_wave_shape_curves_size[sizeof(effect_wave_shape_curves_t) == 4 ? 1 : -1];
+
+/* The scrolling textured quad grids' (2x2, 4x4 and 8x8) and wave mesh's
+ * view of one emitter record. Both use the scroll angle and speed bindings.
+ * The wave mesh also reads vertical and horizontal phase-speed bindings and
+ * one shape binding for both waves. Its vertical phase-speed pair occupies
+ * the emitter spawn-spread block at 0x20 and is read by that interpolation helper. */
+typedef struct effect_wave_parameters {
+    s16 period;
+    s16 amplitude_period;
+    s16 amplitude;
+    u8 _unused_06[2];
+    s16 phase_step;
+    u8 _unused_0a[2];
+} effect_wave_parameters_t;
+typedef char effect_wave_parameters_size_must_be_12[sizeof(effect_wave_parameters_t) == 12 ? 1 : -1];
+
 typedef struct effect_textured_quad_geometry_view {
     u8 _unused_00[0x06];
-    u16 flags;              /* 0x06: EFFECT_EMITTER_FLAG_COLOUR_CURVES */
-    u32 curve_selectors[2]; /* 0x08 */
-    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
-    u16 texture_u;          /* 0x14 */
-    u16 texture_v;          /* 0x16 */
+    u16 flags;                                          /* 0x06: EFFECT_EMITTER_FLAG_COLOUR_CURVES */
+    effect_textured_quad_scroll_curves_t scroll_curves; /* 0x08 */
+    effect_wave_shape_curves_t wave_curves;             /* 0x0c */
+    u32 colour_curves;                                  /* 0x10: nibbles 0-2 = r/g/b */
+    u16 texture_u;                                      /* 0x14 */
+    u16 texture_v;                                      /* 0x16 */
     u8 _unused_18[0x16];
     s16 scroll_angle_start; /* 0x2e */
     u8 _unused_30[0x04];
@@ -1492,10 +1567,10 @@ typedef struct effect_textured_quad_geometry_view {
     u8 _unused_5e[0x02];
     s16 scroll_speed_end; /* 0x60 */
     u8 _unused_62[0x02];
-    s16 wave_y_start[6]; /* 0x64 */
-    s16 wave_y_end[6];   /* 0x70 */
-    s16 wave_x_start[6]; /* 0x7c */
-    s16 wave_x_end[6];   /* 0x88 */
+    effect_wave_parameters_t wave_y_start; /* 0x64 */
+    effect_wave_parameters_t wave_y_end;   /* 0x70 */
+    effect_wave_parameters_t wave_x_start; /* 0x7c */
+    effect_wave_parameters_t wave_x_end;   /* 0x88 */
     u8 _unused_94[0x14];
     s16 texture_width;  /* 0xa8 */
     s16 texture_height; /* 0xaa */
@@ -1504,13 +1579,30 @@ typedef struct effect_textured_quad_geometry_view {
 typedef char
     assert_effect_textured_quad_geometry_view_size[sizeof(effect_textured_quad_geometry_view_t) == 196 ? 1 : -1];
 
+enum {
+    EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_POSITION_SHIFT = 0,
+    EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_SPREAD_SHIFT = 4,
+    EFFECT_PARTICLE_RIBBON_CURVE_VELOCITY_BASE_ANGLE_SHIFT = 8,
+    EFFECT_PARTICLE_RIBBON_CURVE_VELOCITY_DIRECTION_SPREAD_SHIFT = 12,
+    EFFECT_PARTICLE_RIBBON_CURVE_RADIAL_SPEED_SHIFT = 28,
+};
+
+enum {
+    EFFECT_PARTICLE_RIBBON_CURVE_TARGET_SPREAD_SHIFT = 4,
+    EFFECT_PARTICLE_RIBBON_CURVE_LIFETIME_SHIFT = 8,
+    EFFECT_PARTICLE_RIBBON_CURVE_TARGET_OFFSET_SHIFT = 12,
+    EFFECT_PARTICLE_RIBBON_CURVE_PARTICLE_COUNT_SHIFT = 20,
+    EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_INTERVAL_SHIFT = 24,
+};
+
 /* This renderer's view of one effect_geometry_entry_t. */
 typedef struct effect_particle_ribbon_geometry_view {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02 */
     u8 _unused_04[0x02];
     u16 flags;                              /* 0x06 */
-    u32 curve_selectors[2];                 /* 0x08 */
+    u32 spawn_curve_bindings;               /* 0x08 */
+    u32 target_curve_bindings;              /* 0x0c */
     u32 colour_curves;                      /* 0x10 */
     effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
     effect_texture_page_config_t texture_page_config; /* 0x4c */
@@ -1529,14 +1621,24 @@ typedef struct effect_particle_ribbon_geometry_view {
     s16 frame_count; /* 0x6c */
     s16 frame_delay; /* 0x6e */
     u8 _unused_70[0x0c];
-    s16 target_spread_start[6]; /* 0x7c: x/y/z at even indices */
-    s16 target_spread_end[6];   /* 0x88 */
-    s16 lifetime_start[2];      /* 0x94 */
-    s16 lifetime_end[2];        /* 0x98 */
-    s16 target_offset_start[3]; /* 0x9c */
-    s16 target_offset_end[3];   /* 0xa2 */
-    s16 texture_width;          /* 0xa8 */
-    s16 texture_height;         /* 0xaa */
+    s16 target_spread_start_x; /* 0x7c */
+    u8 _unused_7e[2];
+    s16 target_spread_start_y; /* 0x80 */
+    u8 _unused_82[2];
+    s16 target_spread_start_z; /* 0x84 */
+    u8 _unused_86[2];
+    s16 target_spread_end_x; /* 0x88 */
+    u8 _unused_8a[2];
+    s16 target_spread_end_y; /* 0x8c */
+    u8 _unused_8e[2];
+    s16 target_spread_end_z; /* 0x90 */
+    u8 _unused_92[2];
+    effect_s16_min_max_t lifetime_start; /* 0x94 */
+    effect_s16_min_max_t lifetime_end;   /* 0x98 */
+    vec3s16_t target_offset_start;       /* 0x9c */
+    vec3s16_t target_offset_end;         /* 0xa2 */
+    s16 texture_width;                   /* 0xa8 */
+    s16 texture_height;                  /* 0xaa */
     u8 _unused_ac[0x04];
     s16 particle_count_start; /* 0xb0 */
     s16 particle_count_end;   /* 0xb2 */
@@ -1550,17 +1652,31 @@ typedef struct effect_particle_ribbon_geometry_view {
 typedef char
     assert_effect_particle_ribbon_geometry_view_size[sizeof(effect_particle_ribbon_geometry_view_t) == 196 ? 1 : -1];
 
-/* This renderer's view of one effect_geometry_entry_t. It keeps the particle
- * emitter's slot-to-curve bindings but gives the slots its own meanings; each
- * field notes the emitter slot it occupies, and offsets it never reads stay
- * unknown. Curve nibbles: curve_selectors[0] 0 centre, 1 radius, 2 velocity,
- * 3 acceleration, 4 angle, 7 radius step; curve_selectors[1] 0 radius step
- * delta, 1 scroll, 3 angle step, 6 angle step delta. */
+/* Polar motion bindings use one-based curve selectors; zero keeps the starting value. */
+typedef struct effect_polar_curve_bindings {
+    u16 center : 4;
+    u16 radius : 4;
+    u16 velocity : 4;
+    u16 acceleration : 4;
+    u16 angle : 4;
+    u16 _unused_02 : 8;
+    u16 radius_step : 4;
+    u16 radius_step_delta : 4;
+    u16 scroll : 4;
+    u16 _unused_04 : 4;
+    u16 angle_step : 4;
+    u8 _unused_06;
+    u8 angle_step_delta : 4;
+    u8 _unused_07 : 4;
+} effect_polar_curve_bindings_t;
+typedef char effect_polar_curve_bindings_size_must_be_8[sizeof(effect_polar_curve_bindings_t) == 8 ? 1 : -1];
+
+/* The polar renderer gives the particle emitter's parameter slots its own meanings. */
 typedef struct effect_polar_mesh_geometry_view {
     u8 _unused_00[0x06];
-    u16 flags;              /* 0x06: bit 6 = per-channel colour curves */
-    u32 curve_selectors[2]; /* 0x08 */
-    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
+    u16 flags;                                    /* 0x06: bit 6 = per-channel colour curves */
+    effect_polar_curve_bindings_t curve_bindings; /* 0x08 */
+    u32 colour_curves;                            /* 0x10: nibbles 0-2 = r/g/b */
     vec3s16_t center_start; /* 0x14: spawn position, read by battle_effect_interpolate_emitter_spawn_position */
     vec3s16_t center_end;   /* 0x1a */
     s16 radius_start;       /* 0x20: spawn spread x */
@@ -1620,21 +1736,41 @@ typedef struct effect_polar_mesh_geometry_view {
 } effect_polar_mesh_geometry_view_t;
 typedef char assert_effect_polar_mesh_geometry_view_size[sizeof(effect_polar_mesh_geometry_view_t) == 196 ? 1 : -1];
 
+/* Radial motion bindings use one-based curve selectors; zero keeps the starting value. */
+typedef struct effect_radial_motion_curve_bindings {
+    u32 origin : 4;
+    u32 _unused_00 : 4;
+    u32 texture : 4;
+    u32 _unused_01 : 16;
+    u32 spin : 4;
+} effect_radial_motion_curve_bindings_t;
+typedef struct effect_radial_shape_curve_bindings {
+    u16 growth : 4;
+    u16 growth_step : 4;
+    u16 _unused_01 : 8;
+    u16 radius : 4;
+    u16 _unused_02 : 12;
+} effect_radial_shape_curve_bindings_t;
+typedef char
+    effect_radial_motion_curve_bindings_size_must_be_4[sizeof(effect_radial_motion_curve_bindings_t) == 4 ? 1 : -1];
+typedef char
+    effect_radial_shape_curve_bindings_size_must_be_4[sizeof(effect_radial_shape_curve_bindings_t) == 4 ? 1 : -1];
+
 /* Geometry parameters shared by ring, tube and summon-dome renderers.
  * Dome renderers leave the row-radius terms unread. */
 typedef struct effect_radial_mesh_geometry {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
     u8 _unused_04[0x02];
-    u16 flags;                                        /* 0x06: bit 6 = per-channel colour curves */
-    u32 scroll_curves;                                /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
-    u32 wave_curves;                                  /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
-    u32 colour_curves;                                /* 0x10: nibbles 0-2 = r/g/b */
-    vec3s16_t origin_start;                           /* 0x14 */
-    vec3s16_t origin_end;                             /* 0x1a */
-    s16 u_span;                                       /* 0x20 */
-    s16 v_span;                                       /* 0x22 */
-    effect_texture_page_config_t texture_page_config; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
+    u16 flags;                                           /* 0x06: bit 6 = per-channel colour curves */
+    effect_radial_motion_curve_bindings_t motion_curves; /* 0x08 */
+    effect_radial_shape_curve_bindings_t shape_curves;   /* 0x0c */
+    u32 colour_curves;                                   /* 0x10: nibbles 0-2 = r/g/b */
+    vec3s16_t origin_start;                              /* 0x14 */
+    vec3s16_t origin_end;                                /* 0x1a */
+    s16 u_span;                                          /* 0x20 */
+    s16 v_span;                                          /* 0x22 */
+    effect_texture_page_config_t texture_page_config;    /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
     u8 _unused_26[0x06];
     s16 u_start;        /* 0x2c */
     s16 v_start;        /* 0x2e */
@@ -1679,19 +1815,31 @@ typedef struct effect_radial_mesh_geometry {
 } effect_radial_mesh_geometry_t;
 typedef char assert_effect_radial_mesh_geometry_size[sizeof(effect_radial_mesh_geometry_t) == 196 ? 1 : -1];
 
-/* These renderers' view of one effect_geometry_entry_t. They spawn segments as
- * the BATTLE particle emitter spawns particles, so the fields they share with
- * it keep its names and curve nibbles: curve_selectors[0] nibbles 0 spawn
- * position, 1 spawn spread, 2 velocity base angle, 3 velocity spread and
- * 7 radial speed; curve_selectors[1] nibbles 1 tip spread, 2 lifetime, 3 target
- * offset, 5 particle count and 6 spawn interval. The remaining named fields
- * are renderer-specific. */
+enum {
+    EFFECT_TENTACLE_CURVE_SPAWN_POSITION_SHIFT = 0,
+    EFFECT_TENTACLE_CURVE_SPAWN_SPREAD_SHIFT = 4,
+    EFFECT_TENTACLE_CURVE_VELOCITY_BASE_ANGLE_SHIFT = 8,
+    EFFECT_TENTACLE_CURVE_VELOCITY_DIRECTION_SPREAD_SHIFT = 12,
+    EFFECT_TENTACLE_CURVE_RADIAL_SPEED_SHIFT = 28,
+};
+
+enum {
+    EFFECT_TENTACLE_CURVE_TIP_SPREAD_SHIFT = 4,
+    EFFECT_TENTACLE_CURVE_TRAVEL_DURATION_SHIFT = 8,
+    EFFECT_TENTACLE_CURVE_TIP_OFFSET_SHIFT = 12,
+    EFFECT_TENTACLE_CURVE_PARTICLE_COUNT_SHIFT = 20,
+    EFFECT_TENTACLE_CURVE_SPAWN_INTERVAL_SHIFT = 24,
+};
+
+/* Segment renderers reuse the particle emitter's spawn parameters;
+ * tip spread, travel duration and tip offset describe the moving endpoint. */
 typedef struct effect_tentacle_mesh_geometry_view {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 place the spawn origin, bits 5-7 the tip */
     u8 _unused_04[0x02];
     u16 flags;                              /* 0x06: bits 0-1 and 2-3 enable death and mid-life children */
-    u32 curve_selectors[2];                 /* 0x08 */
+    u32 spawn_curve_bindings;               /* 0x08 */
+    u32 tip_curve_bindings;                 /* 0x0c */
     u32 colour_curves;                      /* 0x10 */
     effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
     effect_texture_page_config_t texture_page_config; /* 0x4c */
@@ -1722,12 +1870,12 @@ typedef struct effect_tentacle_mesh_geometry_view {
     u8 _unused_8e[0x02];
     s16 tip_spread_end_z; /* 0x90 */
     u8 _unused_92[0x02];
-    s16 lifetime_start[2];      /* 0x94: min, max; the segment's length */
-    s16 lifetime_end[2];        /* 0x98 */
-    s16 target_offset_start[3]; /* 0x9c: the tip, added to the anchor chosen by placement_flags bits 5-7 */
-    s16 target_offset_end[3];   /* 0xa2 */
-    s16 texture_width;          /* 0xa8 */
-    s16 texture_height;         /* 0xaa */
+    effect_s16_min_max_t lifetime_start; /* 0x94: the segment's length */
+    effect_s16_min_max_t lifetime_end;   /* 0x98 */
+    vec3s16_t target_offset_start;       /* 0x9c: the tip, added to the anchor chosen by placement_flags bits 5-7 */
+    vec3s16_t target_offset_end;         /* 0xa2 */
+    s16 texture_width;                   /* 0xa8 */
+    s16 texture_height;                  /* 0xaa */
     u8 _unused_ac[0x04];
     s16 particle_count_start; /* 0xb0: segments spawned per interval */
     s16 particle_count_end;   /* 0xb2 */
@@ -1810,14 +1958,14 @@ typedef struct effect_animation_curve_table {
 typedef char effect_animation_curve_table_data_offset_must_be_4
     [(unsigned long)&((effect_animation_curve_table_t*)0)->curves == 4 ? 1 : -1];
 
-/* A zero selector disables a motion curve; other selectors are one-based.
- * The separate decrement preserves the comparison against -1. */
-#define BATTLE_EFFECT_READ_CURVE(table, index, result, selector, frame)                                                \
+/* Motion bindings are one-based; zero disables the curve. The caller's index
+ * also serves as a loop temporary; retaining it preserves register allocation.
+ * A do-while wrapper changes allocation; use this block as a standalone statement. */
+#define BATTLE_EFFECT_READ_CURVE(index, result, binding, frame)                                                        \
     {                                                                                                                  \
-        index = (selector);                                                                                            \
-        index--;                                                                                                       \
-        if (index != -1) {                                                                                             \
-            result = (table)->curves[index][frame];                                                                    \
+        index = (binding);                                                                                             \
+        if (--index != -1) {                                                                                           \
+            result = g_battle_effect_animation_curve_data->curves[index][frame];                                       \
         } else {                                                                                                       \
             result = 0;                                                                                                \
         }                                                                                                              \

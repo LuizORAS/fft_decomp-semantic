@@ -8,22 +8,15 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
-/* Builds and draws a spinning dome of 8x16 textured quads.
- *
- * Nine lattice rows at 0x80 angle steps shrink the ring radius by the cosine
- * and raise the row by the scaled sine; seventeen points per row close the
- * ring at 0x100 steps. The lattice is written to the scratchpad, offset by the
- * placement origin, projected through the battle camera, and linked into the
- * ordering table by the average depth of each quad. The texture scrolls in v
- * and each lattice row uses the overlay's brightness table. The work block
- * keeps two quad buffers.
- *
- * `i`, `j`, `k` and `n` are shared temporaries (`i`: curve factor, v scroll
- * and a loop index; `j`: curve index and a loop index; `k`: ring radius,
- * colour curves and brightness; `n`: row height, lattice row, brightness row
- * and quad depth): the target keeps each group in one register. The handler
- * returns no value, but the s32 return keeps $v0 live at the exit, which
- * leaves the phase dispatch's delay slots empty as in the target. */
+enum {
+    DOME_MESH_LATITUDE_STEP = ONE / (DOME_MESH_ROWS * 4),
+    DOME_MESH_LONGITUDE_STEP = ONE / DOME_MESH_SEGMENTS,
+};
+
+/* Builds a spinning 8x16 dome in scratchpad, projects it through the battle
+ * camera and draws alternating quad buffers with scrolling texture and row
+ * brightness. The shared temporaries and non-void signature preserve the
+ * renderer's register allocation and phase-dispatch delay slots. */
 s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
     SVECTOR vertex;
@@ -32,7 +25,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     VECTOR growth;      /* vx: radius speed step, vy: height scale of the current row */
     VECTOR growth_step; /* vx: radius acceleration, vy: height scale step per row */
     VECTOR screen[4];   /* projected quad corners; RotTrans writes its flag to pad */
-    s16 depth[9][17];
+    s16 depth[DOME_MESH_ROWS + 1][DOME_MESH_SEGMENTS + 1];
     SVECTOR map_max;
     effect_record_t* record;
     effect_radial_mesh_geometry_t* entry;
@@ -46,6 +39,9 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     u8 target_index;
     s32 k;
     s32 j;
+    s32 texture_selector;
+    s32 growth_step_selector;
+    u16 radius_binding;
     u16 tpage;
     effect_texture_page_config_t texture_page_config;
     s32 translucent;
@@ -80,14 +76,14 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         work = battle_heap_alloc_block(sizeof(effect_dome_mesh_work_t), state_index);
         record->work_slots[callback_slot] = work;
         texture_page_config = entry->texture_page_config;
-        tpage = (texture_page_config.blend_mode << 5) | 0x86;
+        tpage = (texture_page_config.blend_mode << EFFECT_RENDER_TEXTURE_PAGE_BLEND_SHIFT)
+            | EFFECT_RENDER_TEXTURE_PAGE_BASE;
+        translucent = 1;
         if (texture_page_config.clear_abe) {
             translucent = 0;
-        } else {
-            translucent = 1;
         }
         for (i = 0; i < 2; i++) {
-            for (j = 0; j < 128; j++) {
+            for (j = 0; j < DOME_MESH_QUAD_COUNT; j++) {
                 quad = &work->quads[i][j];
                 SetPolyGT4(quad);
                 setSemiTrans(quad, translucent);
@@ -107,7 +103,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     case EFFECT_PHASE_UPDATE:
         target_index = g_battle_effect_state_records[state_index].timeline.target_index;
         work = record->work_slots[callback_slot];
-        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, j, i, entry->scroll_curves & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, entry->motion_curves.origin, frame);
         origin.vx = battle_effect_lerp_linear(entry->origin_start.x, entry->origin_end.x, i);
         origin.vy = battle_effect_lerp_linear(entry->origin_start.y, entry->origin_end.y, i);
         origin.vz = battle_effect_lerp_linear(entry->origin_start.z, entry->origin_end.z, i);
@@ -145,10 +141,12 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             break;
         }
 
-        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, j, i, (entry->wave_curves >> 16) & 0xF, frame);
+        radius_binding = entry->shape_curves.radius;
+        BATTLE_EFFECT_READ_CURVE(j, i, radius_binding, frame);
         radius = battle_effect_lerp_linear(entry->radius_start, entry->radius_end, i);
 
-        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, j, i, (entry->scroll_curves >> 8) & 0xF, frame);
+        texture_selector = entry->motion_curves.texture;
+        BATTLE_EFFECT_READ_CURVE(j, i, texture_selector, frame);
         u = battle_effect_lerp_linear(entry->u_start, entry->u_end, i);
         v = battle_effect_lerp_linear(entry->v_start, entry->v_end, i);
         u_span = entry->u_span;
@@ -161,29 +159,31 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             work->v_scroll += v_span << 8;
         }
 
-        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, j, i, entry->wave_curves & 0xF, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, entry->shape_curves.growth, frame);
         growth.vx = battle_effect_lerp_linear(entry->growth_start, entry->growth_end, i);
         growth.vy = battle_effect_lerp_linear(entry->height_start, entry->height_end, i);
 
-        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, j, i, (entry->wave_curves >> 4) & 0xF, frame);
+        growth_step_selector = entry->shape_curves.growth_step;
+        BATTLE_EFFECT_READ_CURVE(j, i, growth_step_selector, frame);
         growth_step.vx = battle_effect_lerp_linear(entry->growth_step_start, entry->growth_step_end, i);
         growth_step.vy = battle_effect_lerp_linear(entry->height_step_start, entry->height_step_end, i);
 
-        BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, j, i, entry->scroll_curves >> 28, frame);
+        BATTLE_EFFECT_READ_CURVE(j, i, entry->motion_curves.spin, frame);
         work->spin
-            = (work->spin + battle_effect_lerp_linear(entry->spin_speed_start, entry->spin_speed_end, i)) & 0xFFF;
+            = (work->spin + battle_effect_lerp_linear(entry->spin_speed_start, entry->spin_speed_end, i)) & (ONE - 1);
 
         /* The base stays in a variable: the target adds it to the row offset
          * after each call instead of folding it into the induction variable. */
         lattice_bytes = (u8*)0x1F800000;
-        for (j = 0; j < 9; j++) {
-            k = ((radius + (work->radius_offset >> 8)) * rcos(j << 7)) >> 12;
-            n = ((((radius + (work->radius_offset >> 8)) * rsin(j << 7)) >> 12) * growth.vy) >> 8;
-            for (i = 0; i < 17; i++) {
+        for (j = 0; j < DOME_MESH_ROWS + 1; j++) {
+            k = ((radius + (work->radius_offset >> 8)) * rcos(j * DOME_MESH_LATITUDE_STEP)) >> 12;
+            n = ((((radius + (work->radius_offset >> 8)) * rsin(j * DOME_MESH_LATITUDE_STEP)) >> 12) * growth.vy) >> 8;
+            for (i = 0; i < DOME_MESH_SEGMENTS + 1; i++) {
                 /* Typed lattice indexing changes the loop induction and register allocation. */
-                lattice_point = (vec3s16_t*)(lattice_bytes + (j * 0x66 + i * 6));
-                lattice_point->x = (rcos(work->spin + (i << 8)) * k) >> 12;
-                lattice_point->z = (rsin(work->spin + (i << 8)) * k) >> 12;
+                lattice_point = (vec3s16_t*)(lattice_bytes
+                    + (j * DOME_MESH_LATTICE_ROW_BYTES + i * DOME_MESH_LATTICE_POINT_BYTES));
+                lattice_point->x = (rcos(work->spin + i * DOME_MESH_LONGITUDE_STEP) * k) >> 12;
+                lattice_point->z = (rsin(work->spin + i * DOME_MESH_LONGITUDE_STEP) * k) >> 12;
                 lattice_point->y = -n;
             }
             growth.vy += growth_step.vy;
@@ -216,7 +216,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         quad->x1 = screen[1].vx;
         quad->y1 = screen[1].vy;
         depth[1][1] = screen[1].vz;
-        for (j = 2; j < 17; j++) {
+        for (j = 2; j < DOME_MESH_SEGMENTS + 1; j++) {
             quad = &work->quads[work->buffer][j - 1];
             quad->x0 = screen[1].vx;
             quad->y0 = screen[1].vy;
@@ -236,11 +236,11 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
 
         /* Rows 1-7 reuse the lower corners of the row above; the last column
          * closes the ring on column 0. */
-        for (i = 1; i < 8; i++) {
+        for (i = 1; i < DOME_MESH_ROWS; i++) {
             n = i + 1;
             effect_add_scratchpad_xyz_components(n, 0, &origin, &vertex);
             RotTrans(&vertex, &screen[0], &screen[0].pad);
-            quad = &work->quads[work->buffer][i * 16];
+            quad = &work->quads[work->buffer][i * DOME_MESH_SEGMENTS];
             quad->x0 = screen[0].vx;
             quad->y0 = screen[0].vy;
             depth[n][0] = screen[0].vz;
@@ -249,14 +249,14 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             quad->x1 = screen[1].vx;
             quad->y1 = screen[1].vy;
             depth[n][1] = screen[1].vz;
-            other = &work->quads[work->buffer][(i - 1) * 16];
+            other = &work->quads[work->buffer][(i - 1) * DOME_MESH_SEGMENTS];
             quad->x2 = other->x0;
             quad->y2 = other->y0;
             quad->x3 = other->x1;
             quad->y3 = other->y1;
-            for (j = 2; j < 16; j++) {
-                quad = &work->quads[work->buffer][i * 16 + j - 1];
-                other = &work->quads[work->buffer][(i - 1) * 16 + j - 1];
+            for (j = 2; j < DOME_MESH_SEGMENTS; j++) {
+                quad = &work->quads[work->buffer][i * DOME_MESH_SEGMENTS + j - 1];
+                other = &work->quads[work->buffer][(i - 1) * DOME_MESH_SEGMENTS + j - 1];
                 quad->x0 = screen[1].vx;
                 quad->y0 = screen[1].vy;
                 quad->x2 = other->x0;
@@ -269,21 +269,21 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
                 quad->y1 = screen[1].vy;
                 depth[n][j] = screen[1].vz;
             }
-            quad = &work->quads[work->buffer][i * 16 + 15];
-            other = &work->quads[work->buffer][(i - 1) * 16 + 15];
+            quad = &work->quads[work->buffer][i * DOME_MESH_SEGMENTS + DOME_MESH_SEGMENTS - 1];
+            other = &work->quads[work->buffer][(i - 1) * DOME_MESH_SEGMENTS + DOME_MESH_SEGMENTS - 1];
             quad->x0 = screen[1].vx;
             quad->y0 = screen[1].vy;
             quad->x2 = other->x0;
             quad->y2 = other->y0;
             quad->x3 = other->x1;
             quad->y3 = other->y1;
-            other = &work->quads[work->buffer][i * 16];
+            other = &work->quads[work->buffer][i * DOME_MESH_SEGMENTS];
             quad->x1 = other->x0;
             quad->y1 = other->y0;
         }
 
         i = work->v_scroll >> 8;
-        for (j = 0; j < 128; j++) {
+        for (j = 0; j < DOME_MESH_QUAD_COUNT; j++) {
             quad = &work->quads[work->buffer][j];
             quad->u0 = quad->u2 = u;
             quad->v0 = quad->v1 = v + i;
@@ -293,10 +293,13 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
 
         n = entry->brightness_row;
         if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            red = g_battle_effect_animation_curve_data->curves[entry->colour_curves & 0xF][frame];
-            k = entry->colour_curves & 0xFFF;
-            green = g_battle_effect_animation_curve_data->curves[(k >> 4) & 0xF][frame];
-            blue = g_battle_effect_animation_curve_data->curves[(k >> 8) & 0xF][frame];
+            red = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
+                (entry->colour_curves & 0xfff), EFFECT_COLOR_CURVE_RED_SHIFT)][frame];
+            k = (entry->colour_curves & 0xfff);
+            green = g_battle_effect_animation_curve_data
+                        ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_GREEN_SHIFT)][frame];
+            blue = g_battle_effect_animation_curve_data
+                       ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_BLUE_SHIFT)][frame];
         } else {
             red = green = blue = EFFECT_COLOR_NEUTRAL;
         }
@@ -305,41 +308,43 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         shade_r = (k * red) >> 12;
         shade_g = (k * green) >> 12;
         shade_b = (k * blue) >> 12;
-        for (j = 0; j < 16; j++) {
+        for (j = 0; j < DOME_MESH_SEGMENTS; j++) {
             quad = &work->quads[work->buffer][j];
             setRGB2(quad, quad->r3 = shade_r, quad->g3 = shade_g, quad->b3 = shade_b);
         }
-        for (i = 0; i < 7; i++) {
+        for (i = 0; i < DOME_MESH_ROWS - 1; i++) {
             k = g_effect_dome_mesh_brightness_table[n][i + 1];
             shade_r = (k * red) >> 12;
             shade_g = (k * green) >> 12;
             shade_b = (k * blue) >> 12;
-            for (j = 0; j < 16; j++) {
-                quad = &work->quads[work->buffer][i * 16 + j];
-                other = &work->quads[work->buffer][(i + 1) * 16 + j];
+            for (j = 0; j < DOME_MESH_SEGMENTS; j++) {
+                quad = &work->quads[work->buffer][i * DOME_MESH_SEGMENTS + j];
+                other = &work->quads[work->buffer][(i + 1) * DOME_MESH_SEGMENTS + j];
                 setRGB0(quad, quad->r1 = other->r2 = other->r3 = shade_r, quad->g1 = other->g2 = other->g3 = shade_g,
                     quad->b1 = other->b2 = other->b3 = shade_b);
             }
         }
-        k = g_effect_dome_mesh_brightness_table[n][8];
+        k = g_effect_dome_mesh_brightness_table[n][DOME_MESH_ROWS];
         shade_r = (k * red) >> 12;
         shade_g = (k * green) >> 12;
         shade_b = (k * blue) >> 12;
-        for (j = 0; j < 16; j++) {
-            quad = &work->quads[work->buffer][112 + j];
+        for (j = 0; j < DOME_MESH_SEGMENTS; j++) {
+            quad = &work->quads[work->buffer][(DOME_MESH_ROWS - 1) * DOME_MESH_SEGMENTS + j];
             setRGB0(quad, quad->r1 = shade_r, quad->g1 = shade_g, quad->b1 = shade_b);
         }
 
-        for (i = 0; i < 8; i++) {
-            for (j = 0; j < 15; j++) {
+        for (i = 0; i < DOME_MESH_ROWS; i++) {
+            for (j = 0; j < DOME_MESH_SEGMENTS - 1; j++) {
                 n = (depth[i][j] + depth[i][j + 1] + depth[i + 1][j] + depth[i + 1][j + 1]) / 16;
                 if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
-                    addPrim(&ot[n], &work->quads[work->buffer][i * 16 + j]);
+                    addPrim(&ot[n], &work->quads[work->buffer][i * DOME_MESH_SEGMENTS + j]);
                 }
             }
-            n = (depth[i][0] + depth[i][15] + depth[i + 1][0] + depth[i + 1][15]) / 16;
+            n = (depth[i][0] + depth[i][DOME_MESH_SEGMENTS - 1] + depth[i + 1][0]
+                    + depth[i + 1][DOME_MESH_SEGMENTS - 1])
+                / 16;
             if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
-                addPrim(&ot[n], &work->quads[work->buffer][i * 16 + 15]);
+                addPrim(&ot[n], &work->quads[work->buffer][i * DOME_MESH_SEGMENTS + DOME_MESH_SEGMENTS - 1]);
             }
         }
         work->buffer = 1 - work->buffer;
