@@ -41,8 +41,8 @@ void world_card_build_save_image(s32 slot) {
 
     script_var_2f = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
     script_var_2e = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    g_world_load_work_buffer->summary.day = script_var_2f;
-    g_world_load_work_buffer->summary.month = script_var_2e;
+    g_world_load_work_buffer->summary.date.day = script_var_2f;
+    g_world_load_work_buffer->summary.date.month = script_var_2e;
     location = world_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
     slot_marker = (slot >= 0) ? 0xff : 0;
     g_world_load_work_buffer->summary.location = location;

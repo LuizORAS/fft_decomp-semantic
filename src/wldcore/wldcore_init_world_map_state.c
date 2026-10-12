@@ -12,7 +12,7 @@ void wldcore_init_world_map_state(void) {
     menu_cursor_state_t* cursor;
     GsBOXF* box;
     party_data_t* party;
-    wldcore_date_t date;
+    calendar_date_t date;
     s32 day_of_year;
     s32 zodiac;
     s32 month;

@@ -17,7 +17,7 @@
  * members: the target keeps that block's address in a register, which GCC
  * only does for an aggregate view, not for the scalar g_wldcore_job_selection.proposition_index names. */
 void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* level) {
-    wldcore_date_t date;
+    calendar_date_t date;
     s32 proposition_flags;
     s32 war_funds;
     s32 day;

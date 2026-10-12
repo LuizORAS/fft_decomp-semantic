@@ -3,7 +3,7 @@
 
 /* Writes one nine-bit record: bits 0-4 from source->day, bits 5-8 from
  * source->month. Records are packed nine bits apart in the bit array. */
-void wldcore_write_nine_bit_record(u32* bits, s32 record, wldcore_date_t* source) {
+void wldcore_write_nine_bit_record(u32* bits, s32 record, calendar_date_t* source) {
     s32 base = record * 9;
     s32 mask;
     s32 i;

@@ -44,14 +44,14 @@ s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
         *slot_graphic++ = g_world_load_work_buffer->summary.level / 10;
         *slot_graphic++ = g_world_load_work_buffer->summary.level % 10;
         *slot_graphic++ = 0xFE;
-        source
-            = world_text_find_entry_by_index(g_world_card_slot_text_table, g_world_load_work_buffer->summary.month, 1);
+        source = world_text_find_entry_by_index(
+            g_world_card_slot_text_table, g_world_load_work_buffer->summary.date.month, 1);
         while (*source != 0xFE) {
             *slot_graphic++ = *source++;
         }
         *slot_graphic++ = 0xFA;
-        *slot_graphic++ = g_world_load_work_buffer->summary.day / 10;
-        *slot_graphic++ = g_world_load_work_buffer->summary.day % 10;
+        *slot_graphic++ = g_world_load_work_buffer->summary.date.day / 10;
+        *slot_graphic++ = g_world_load_work_buffer->summary.date.day % 10;
         *slot_graphic++ = 0xE7;
         *slot_graphic++ = 0x58;
         source = world_text_find_entry_by_index(

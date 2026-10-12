@@ -31,7 +31,7 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
     s32 index;
     s32 coordinate_mode = 1;
     u8 unused[8];
-    wldcore_date_t date;
+    calendar_date_t date;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.value = value;
     wldcore_proposition_load_picture_data_set(g_wldcore_treasure_picture_sets[value]);

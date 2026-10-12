@@ -5,7 +5,7 @@
  * Records are packed nine bits apart in the bit array, matching
  * wldcore_write_nine_bit_record. A field that decodes to zero or beyond its
  * range falls back to 1. */
-void wldcore_read_nine_bit_record(u32* bits, s32 record, wldcore_date_t* dest) {
+void wldcore_read_nine_bit_record(u32* bits, s32 record, calendar_date_t* dest) {
     s32 base = record * 9;
     s32 mask;
     s32 i;

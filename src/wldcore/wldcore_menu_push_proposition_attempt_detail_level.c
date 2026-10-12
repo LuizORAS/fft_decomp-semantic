@@ -21,7 +21,7 @@
 void wldcore_menu_push_proposition_attempt_detail_level(s32 value) {
     s32 coordinate_mode = 1;
     u8 unused[8];
-    wldcore_date_t date;
+    calendar_date_t date;
 
     wldcore_wait_for_file_load();
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = value;

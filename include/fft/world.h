@@ -1321,8 +1321,7 @@ enum { WORLD_MONSTER_BREED_RARITY_COUNT = 3 };
 /* One inclusive date limit and its zodiac ID. The 13-entry WORLD table has
  * Capricorn at both calendar ends and does not contain Serpentarius. */
 typedef struct world_zodiac_date_limit {
-    u8 month;
-    u8 day;
+    calendar_date_t date;
     u8 zodiac;
 } world_zodiac_date_limit_t;
 typedef char world_zodiac_date_limit_size_must_be_3[(sizeof(world_zodiac_date_limit_t) == 3) ? 1 : -1];

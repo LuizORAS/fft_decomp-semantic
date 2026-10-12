@@ -6,13 +6,6 @@
 #include "fft/world.h"
 
 /* calendar */
-/* Unpacked dates stored as five day bits followed by four month bits. */
-typedef struct wldcore_date {
-    u8 month;
-    u8 day;
-} wldcore_date_t;
-typedef char wldcore_date_size_must_be_2[(sizeof(wldcore_date_t) == 2) ? 1 : -1];
-
 extern u8 g_wldcore_days_per_month[12]; /* 0x8009e66c; non-leap-year month lengths */
 
 extern s32 g_wldcore_date_display_x;
@@ -20,7 +13,7 @@ extern s32 g_wldcore_date_display_y;
 
 /* Twelve {month, day} pairs: the calendar date each zodiac sign starts on,
  * Aries (3/21) first. */
-extern wldcore_date_t g_wldcore_zodiac_start_dates[ZODIAC_SIGN_ORDINARY_COUNT];
+extern calendar_date_t g_wldcore_zodiac_start_dates[ZODIAC_SIGN_ORDINARY_COUNT];
 void wldcore_advance_calendar_day(void);
 void wldcore_convert_date_to_zodiac_date(s32* month, s32* day);
 void wldcore_advance_calendar_days(s32 days);
@@ -2151,9 +2144,9 @@ void wldcore_init_subsystems(void);
 void wldcore_process_frame_gate(void);
 void wldcore_day_of_year_to_month_day(s32 day_of_year, s32* output_month, s32* output_day);
 
-void wldcore_write_nine_bit_record(u32* bits, s32 record, wldcore_date_t* source);
+void wldcore_write_nine_bit_record(u32* bits, s32 record, calendar_date_t* source);
 s32 wldcore_get_completion_milestone_rank(void);
-void wldcore_read_nine_bit_record(u32* bits, s32 record, wldcore_date_t* dest);
+void wldcore_read_nine_bit_record(u32* bits, s32 record, calendar_date_t* dest);
 void wldcore_capture_state_and_play_time(void);
 
 #endif

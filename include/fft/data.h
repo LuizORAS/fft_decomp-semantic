@@ -5,6 +5,14 @@
 
 #include "psx/types.h"
 
+/* calendar */
+/* Calendar month and day, stored as separate bytes. */
+typedef struct calendar_date {
+    u8 month;
+    u8 day;
+} calendar_date_t;
+typedef char calendar_date_size_must_be_2[sizeof(calendar_date_t) == 2 ? 1 : -1];
+
 /* ability */
 /*
  * Ability id classes, as main_ability_calculate_pointers_and_type splits
