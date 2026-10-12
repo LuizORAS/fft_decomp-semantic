@@ -23,7 +23,7 @@ s32 battle_action_calculate_projected_effect(
     if (!(g_battle_loaded_ability_flags_1 & ABILITY_SECONDARY_FLAG_1_AUTO)) {
         result = battle_target_calculate_map_for_action(command, &flags_3);
         if (result != -1
-            && !g_battle_map_tile_data[battle_map_calculate_location(target)].ceiling_depth_and_marks.bits.targeted) {
+            && !g_battle_map_tile_data[battle_map_calculate_location(target)].ceiling_depth_and_marks.targeted) {
             result = -1;
         }
         if (result == -1) {

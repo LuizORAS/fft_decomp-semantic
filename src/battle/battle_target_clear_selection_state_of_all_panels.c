@@ -23,9 +23,9 @@ s32 battle_target_clear_selection_state_of_all_panels(void) {
         if (panel->mark != 0 && !(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
             && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
             count++;
-            tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;
+            tile->ceiling_depth_and_marks.ability_range = 1;
         } else {
-            tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_ABILITY_RANGE;
+            tile->ceiling_depth_and_marks.ability_range = 0;
         }
     }
     return count;

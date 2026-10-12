@@ -102,7 +102,7 @@ s32 battle_target_run_calculator(const battle_action_command_t* source) {
         if (hit != 0) {
             tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
             count++;
-            tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+            tile->ceiling_depth_and_marks.targeted = 1;
         }
     }
     return count;

@@ -145,7 +145,7 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
     }
     for (i = 0; i < MAP_TILE_COUNT; i++) {
         tile = &g_battle_map_tile_data[i];
-        tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_MOVE_DESTINATION;
+        tile->ceiling_depth_and_marks.move_destination = 0;
         if (g_battle_target_panels[i].ride_remaining_range != 0
             || ((g_battle_map_tile_data[i].depth_half_height.half_height < 3
                     || !(frontier[i] & FRONTIER_FLAG_LOW_CORNER))
@@ -157,7 +157,7 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
                 && (tile->surface.type != MAP_SURFACE_LAVA || config->move_type != BATTLE_MOVEMENT_CLASS_FLY)
                 && (frontier[i] & FRONTIER_FLAG_ENTERABLE))) {
             state->reachable_count++;
-            tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_MOVE_DESTINATION;
+            tile->ceiling_depth_and_marks.move_destination = 1;
         }
     }
     g_battle_move_reachable_tiles_valid = 1;
@@ -168,9 +168,7 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
     state->selected_source_side_shift = 0;
     g_battle_move_pathing_tile_index
         = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-    if (!((g_battle_map_tile_data[g_battle_move_pathing_tile_index].ceiling_depth_and_marks.value
-              >> MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT)
-            & 1)) {
+    if (!(g_battle_map_tile_data[g_battle_move_pathing_tile_index].ceiling_depth_and_marks.move_destination)) {
         return 0;
     }
     g_battle_move_pathing_frontier = frontier;

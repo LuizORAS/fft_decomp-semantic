@@ -31,7 +31,7 @@ void battle_move_set_reachable_tile_flags(void) {
     battle_move_clear_enterable_flags_under_dead_or_jumping_units();
     for (i = 0; i < MAP_TILE_COUNT; i++) {
         tile = &g_battle_map_tile_data[i];
-        tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_MOVE_DESTINATION;
+        tile->ceiling_depth_and_marks.move_destination = 0;
         panel = &g_battle_target_panels[i];
         if (i == self) {
             continue;
@@ -84,6 +84,6 @@ void battle_move_set_reachable_tile_flags(void) {
             }
         }
         spread->reachable_count++;
-        tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_MOVE_DESTINATION;
+        tile->ceiling_depth_and_marks.move_destination = 1;
     }
 }

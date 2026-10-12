@@ -92,7 +92,7 @@ s32 battle_ai_set_movement_panel_data(s32 movement_taken) {
                         }
                     }
                 }
-                if (tile->ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
+                if (tile->ceiling_depth_and_marks.move_destination) {
                     ai->reachable_tiles[0][level][y] |= 0x8000 >> x;
                 }
             }

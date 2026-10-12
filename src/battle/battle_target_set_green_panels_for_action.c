@@ -127,9 +127,9 @@ s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
         for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
             if (marked->remaining_range != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
                 count++;
-                tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+                tile[i].ceiling_depth_and_marks.targeted = 1;
             } else {
-                tile[i].ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_TARGETED;
+                tile[i].ceiling_depth_and_marks.targeted = 0;
             }
             marked++;
         }
@@ -139,9 +139,9 @@ s32 battle_target_set_green_panels_for_action(battle_action_command_t* action) {
     for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
         if (marked->mark != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
             count++;
-            tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+            tile[i].ceiling_depth_and_marks.targeted = 1;
         } else {
-            tile[i].ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_TARGETED;
+            tile[i].ceiling_depth_and_marks.targeted = 0;
         }
         marked++;
     }

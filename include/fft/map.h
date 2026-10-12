@@ -253,30 +253,20 @@ typedef struct map_tile_surface {
     u8 _unused_00_bit7 : 1;
 } map_tile_surface_t;
 
-/* map_tile_marks_t.value flags. */
+/* Packed mark flags in terrain tile byte 0x05. */
 enum {
     MAP_TILE_FLAG_MOVE_DESTINATION = 0x20,
     MAP_TILE_FLAG_ABILITY_RANGE = 0x40,
     MAP_TILE_FLAG_TARGETED = 0x80,
 };
 
-/* Ceiling depth and flag extraction within tile byte 0x05. */
-enum {
-    MAP_TILE_CEILING_DEPTH_MASK = 0x1f,
-    MAP_TILE_FLAG_MOVE_DESTINATION_SHIFT = 5,
-    MAP_TILE_FLAG_ABILITY_RANGE_SHIFT = 6,
-};
-
 /* Tile byte 0x05. Retail reads the depth as a bitfield: its zero test and
  * its value are separate loads (BATTLE 0x801af948..0x801af970). */
-typedef union map_tile_marks {
-    u8 value;
-    struct {
-        u8 ceiling_depth : 5;
-        u8 move_destination : 1; /* MAP_TILE_FLAG_MOVE_DESTINATION */
-        u8 ability_range : 1;    /* MAP_TILE_FLAG_ABILITY_RANGE */
-        u8 targeted : 1;         /* MAP_TILE_FLAG_TARGETED */
-    } bits;
+typedef struct map_tile_marks {
+    u8 ceiling_depth : 5;
+    u8 move_destination : 1;
+    u8 ability_range : 1;
+    u8 targeted : 1;
 } map_tile_marks_t;
 
 /* map_tile_flags_t.value flags; COLLISION_MASK combines BLOCKED and UNTARGETABLE. */

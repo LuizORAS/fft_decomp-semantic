@@ -41,7 +41,7 @@ s32 battle_map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value
         tile->slope_type = value;
         break;
     case MAP_TILE_DATA_CEILING_DEPTH:
-        tile->ceiling_depth_and_marks.bits.ceiling_depth = value;
+        tile->ceiling_depth_and_marks.ceiling_depth = value;
         break;
     case MAP_TILE_DATA_BLOCKED:
         tile->flags.bits.blocked = value;

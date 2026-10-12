@@ -22,7 +22,7 @@ s32 battle_target_disable_green_panel_on_all_but_target_tile(const battle_action
                 tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
                 if ((tile->flags.value & MAP_TILE_FLAG_BLOCKED) == 0) {
                     battle_target_disable_green_panel_flags();
-                    tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+                    tile->ceiling_depth_and_marks.targeted = 1;
                     return 1;
                 }
             }

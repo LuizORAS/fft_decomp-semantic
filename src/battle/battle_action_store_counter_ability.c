@@ -7,6 +7,7 @@
  * action itself fails, -2 when the acting unit's tile is not targetable and
  * -3 when the preview fails; otherwise the preview result. */
 s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target) {
+    /* A byte flag test retains the original compound-condition scheduling. */
     battle_action_command_t* action;
     battle_stats_t* acting_unit;
     s32 result;
@@ -24,7 +25,7 @@ s32 battle_action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s1
         if (result == -1 || result == 2 || result == 3) {
             return -1;
         }
-        if ((g_battle_map_tile_data[battle_map_calculate_location(acting_unit)].ceiling_depth_and_marks.value
+        if (((*(u8*)&g_battle_map_tile_data[battle_map_calculate_location(acting_unit)].ceiling_depth_and_marks)
                 & MAP_TILE_FLAG_ABILITY_RANGE)
             == 0) {
             return -2;
