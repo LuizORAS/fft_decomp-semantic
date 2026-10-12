@@ -9,11 +9,11 @@ without changing a single byte.
 
 Linked Psy-Q, runtime/startup and Suzuki library reconstructions are normal
 repository source. Keep public SDK entry-point names, use `include/psx/`, and
-put one reconstructed function per file under `src/psyq/<library>/`. Register
+put one reconstructed function per file under `src/lib/psyq/<library>/`. Register
 it in the original module's `target/` configuration with an explicit `source:`
 path. A routine or global with no established SDK name is `psyq_<lib>_…` or
-`g_psyq_<lib>_…`. LIBGS (WORLD) is `src/psyq/libgs/` and LIBPRESS (OPENING)
-`src/psyq/libpress/`. The Suzuki sound driver is in `src/suzuki/`, with
+`g_psyq_<lib>_…`. LIBGS (WORLD) is `src/lib/psyq/libgs/` and LIBPRESS (OPENING)
+`src/lib/psyq/libpress/`. The Suzuki sound driver is in `src/lib/suzuki/`, with
 declarations in `include/psx/suzuki.h`. Driver names use `suzuki_` and
 `g_suzuki_`; it remains linked into MAIN at the original addresses and profiles.
 Game-specific sound adapters, music slots and file loading remain in
@@ -60,11 +60,11 @@ remain excluded. Never modify `meta/`.
 | Path | Contents |
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
-| `src/gfx/` | Shared graphics helpers, compiled separately in each original module through explicit `source:` paths |
-| `src/menu/` | Shared menu helpers, compiled separately at each original module's addresses |
-| `src/text/` | Shared text helpers, retaining each original module's copies and call bindings |
-| `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
-| `src/suzuki/` | Suzuki sound driver, registered with explicit `source:` paths in MAIN |
+| `src/shared/gfx/` | Shared graphics helpers, compiled separately in each original module through explicit `source:` paths |
+| `src/shared/menu/` | Shared menu helpers, compiled separately at each original module's addresses |
+| `src/shared/text/` | Shared text helpers, retaining each original module's copies and call bindings |
+| `src/lib/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
+| `src/lib/suzuki/` | Suzuki sound driver, registered with explicit `source:` paths in MAIN |
 | `include/fft/` | Module headers (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), focused `battle_<subsystem>.h` headers, and shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `menu_script.h`, `script.h`) |
 | `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
