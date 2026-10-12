@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_move.h"
@@ -16,7 +17,7 @@ void battle_menu_open_move_confirm(void) {
     battle_unit_misc_data_t* source;
     battle_unit_misc_data_t* caster;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_MOVE_CONFIRM_MENU;
     source = battle_unit_get_source_misc_data();
     caster = battle_unit_get_casting_misc_data();

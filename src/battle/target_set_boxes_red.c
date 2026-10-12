@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 
 /* Start target selection for the source unit's previewed action and return its
@@ -17,7 +18,7 @@ s32 target_set_boxes_red(void) {
     switch (unit->ability_preview_phase) {
     case TARGET_PANELS_UNIT_OR_TILE:
     case TARGET_PANELS_TILE_ONLY:
-        battle_state_stop_game_flow();
+        camera_disable_map_pan();
         g_battle_game_state = BATTLE_GAME_STATE_TARGETING_RANGE;
         target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_RANGE, 2);
         target_store_cursor_unit_as_preview_target();
@@ -28,7 +29,7 @@ s32 target_set_boxes_red(void) {
         }
         break;
     case TARGET_PANELS_NO_TARGETING:
-        battle_state_stop_game_flow();
+        camera_disable_map_pan();
         target_select_tile();
         target_store_cursor_unit_as_preview_target();
         break;

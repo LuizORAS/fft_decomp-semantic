@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 
 /* Enter the confirm-action state and open the confirmation prompt for the pending
@@ -14,7 +15,7 @@ void action_confirm(void) {
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* target;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_CONFIRM_ACTION;
     unit = battle_unit_get_source_misc_data();
     target

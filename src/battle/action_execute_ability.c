@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 
 /* Starts the acting unit's confirmed ability: marks the action taken, faces the
  * cursor and runs the attack preview. A preview result of 1 or 3 enters the
@@ -21,7 +22,7 @@ void action_execute_ability(void) {
         break;
     case BATTLE_ATTACK_PREPARATION_IMMEDIATE:
     case BATTLE_ATTACK_PREPARATION_JUMP:
-        battle_state_stop_game_flow();
+        camera_disable_map_pan();
         g_battle_game_state = BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE;
         g_action_post_action = 0;
         unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;

@@ -11,7 +11,7 @@ void battle_menu_set_next_script_action_menus(void) {
     battle_unit_misc_data_t* casting_unit;
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     casting_unit = battle_unit_get_casting_misc_data();
     unit = battle_unit_get_source_misc_data();
     action_set_at_list_active();

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /*
  * Copies the caster's action target data (battle_stats_t 0x16e..0x181) into
@@ -8,7 +9,7 @@ void battle_state_enter_commence_attack_phase(void) {
     battle_stats_t* stats;
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE;
     unit = battle_unit_get_source_misc_data();
     stats = unit->battle_data;

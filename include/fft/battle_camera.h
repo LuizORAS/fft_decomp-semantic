@@ -59,6 +59,9 @@ typedef enum battle_cursor_input_mode {
 extern s32 g_battle_cursor_input_mode;
 extern s32 g_battle_cursor_input_mode_saved;
 
+/* Held directions pan the map instead of following the cursor tile. */
+extern s32 g_camera_map_pan_enabled;
+
 extern u16 g_camera_shake_z_offset;
 extern s32 g_battle_previous_camera_yaw;
 extern u16 g_camera_script_variable_indices[EVENT_CAMERA_COMPONENT_COUNT];
@@ -150,6 +153,8 @@ s32 camera_step_track(camera_track_t* track, s32 component);
 void camera_store_state_to_script_variables(void);
 void camera_store_yaw_band(s32 value);
 void camera_toggle_zoom(void);
+void camera_enable_map_pan(void);
+void camera_disable_map_pan(void);
 void camera_update_map_pan(void);
 
 void camera_update_matrices(MATRIX* camera_matrix, SVECTOR* rotation, VECTOR* screen_offset, VECTOR* camera_zoom);

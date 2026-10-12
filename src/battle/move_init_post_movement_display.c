@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_move.h"
 
 /* Stop the game flow after the casting unit's move and start the post-movement
@@ -11,7 +12,7 @@
 void move_init_post_movement_display(void) {
     battle_stats_t* stats;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     stats = battle_unit_get_casting_misc_data()->battle_data;
     if (stats != 0) {
         g_move_find_result = move_set_target_for_mounted_unit_and_find_item(stats);

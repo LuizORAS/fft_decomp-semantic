@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 
@@ -13,7 +14,7 @@
 void action_choose_wait(void) {
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     unit = battle_unit_get_source_misc_data();
     if (battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->misc_unit_id, 0, 1)

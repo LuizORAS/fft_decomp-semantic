@@ -188,7 +188,6 @@ extern u32 g_battle_heap_end_address;
 extern s32 g_battle_heap_min_largest_free; /* Lowest largest-free_node-block size seen, in 8-byte units. */
 extern s32 g_battle_game_state;
 extern s32 g_battle_state_animation_continue_check;
-extern s32 g_battle_state_game_flow_running;
 extern s32 g_battle_state_screen_fade_step;
 extern s32 g_battle_frame_counter;
 extern s32 g_battle_frame_pacing;
@@ -294,8 +293,6 @@ void battle_state_handle_wait_menu_state(void);
 void battle_state_restart_menu_to_targeting(void);
 void battle_state_run_game_loop(void);
 void battle_state_start_close_battle(s32 duration);
-void battle_state_start_game_flow(void);
-void battle_state_stop_game_flow(void);
 s32 battle_state_sync_frame(u32* ordering_table);
 s32 battle_state_update_controller_input(void);
 s32 battle_state_announce_next_charged_action(void);

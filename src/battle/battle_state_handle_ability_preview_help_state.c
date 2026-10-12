@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* AbilityPreviewHelp game-state handler: when the help window has gone
  * (battle_menu_is_still_building returns something other than 2), return to the
@@ -6,7 +7,7 @@
 void battle_state_handle_ability_preview_help_state(void) {
     if (battle_menu_is_still_building() != 2) {
         g_battle_menu_help_opening = 0;
-        battle_state_start_game_flow();
+        camera_enable_map_pan();
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
     }
     battle_state_handle_free_cursor_input();

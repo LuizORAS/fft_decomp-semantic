@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* Enter the active-turn state and show entry at_index of the AT list.
@@ -12,7 +13,7 @@ void action_get_next_acting_unit(s32 at_index) {
     s32 id;
     battle_unit_misc_data_t* unit;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ACTIVE_TURN;
     id = action_calculate_at_list_and_get_specific_unit_id(at_index);
     if (id >= 0) {

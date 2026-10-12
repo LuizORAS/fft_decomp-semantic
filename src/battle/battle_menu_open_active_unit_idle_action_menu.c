@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
 
@@ -9,7 +10,7 @@
 void battle_menu_open_active_unit_idle_action_menu(void) {
     battle_unit_misc_data_t* misc_data;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     misc_data = battle_unit_get_source_misc_data();
     g_battle_casting_unit_id = misc_data->unit_id;
     target_move_cursor_to_unit(misc_data);

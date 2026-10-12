@@ -12,7 +12,7 @@ void target_show_move_range_in_free_cursor(void) {
     battle_stats_t* stats;
     s32 prev;
 
-    battle_state_start_game_flow();
+    camera_enable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_DISPLAY_MOVE_AREA;
     misc = battle_unit_get_casting_misc_data();
     stats = misc->battle_data;

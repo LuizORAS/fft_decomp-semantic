@@ -1,9 +1,10 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Enter the target-display-start state: show the tile info panel and open the
  * targeting prompt for the casting unit. */
 void battle_state_enter_target_display_start(void) {
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_DISPLAY_START;
     battle_unit_start_view_thread(UNIT_VIEW_MODE_TILE_INFO, 0xFF, 0xFF);
     battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGETING_PROMPT, 0,

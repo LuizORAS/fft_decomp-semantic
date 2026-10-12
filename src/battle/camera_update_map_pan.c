@@ -3,7 +3,7 @@
 #include "fft/battle_map.h"
 
 /* Pans the camera with the directional buttons, once per frame of the battle
- * loop, while g_battle_state_game_flow_running is set (the states that put the
+ * loop, while g_camera_map_pan_enabled is set (the states that put the
  * buttons in free-cursor mode: unit highlighting, move-area display and ability
  * preview).
  *
@@ -15,7 +15,7 @@ void camera_update_map_pan(void) {
     s32* coord;
     s32 limit;
 
-    if (g_battle_state_game_flow_running != 0) {
+    if (g_camera_map_pan_enabled != 0) {
         switch (camera_get_input_direction(CAMERA_INPUT_HELD)) {
         case BATTLE_FACING_NORTH:
             coord = &g_camera_current_real_coords.vz;

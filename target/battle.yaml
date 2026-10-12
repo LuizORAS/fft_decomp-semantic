@@ -107,8 +107,8 @@ functions:
   - {addr: 0x8006e634, size: 124, name: target_store_cursor_casting_unit_name_and_data, hash: edf5332fa790b5a9}
   - {addr: 0x8006e6b0, size: 280, name: target_update_free_cursor_selection, hash: 7a8f8eede4e7fb4c}
   - {addr: 0x8006e7c8, size: 1812, name: target_move_cursor_by_input, hash: 5c26cacc8045aa1f}
-  - {addr: 0x8006eedc, size: 20, name: battle_state_start_game_flow, hash: f2080fa71cd521a5}
-  - {addr: 0x8006eef0, size: 16, name: battle_state_stop_game_flow, hash: da30eb65c0b4f396}
+  - {addr: 0x8006eedc, size: 20, name: camera_enable_map_pan, hash: f2080fa71cd521a5}
+  - {addr: 0x8006eef0, size: 16, name: camera_disable_map_pan, hash: da30eb65c0b4f396}
   - {addr: 0x8006ef00, size: 572, name: camera_update_map_pan, hash: fb6a2c043305eaf7}
   - {addr: 0x8006f13c, size: 56, name: camera_rotate_left, hash: 210c9ea7206b9b50}
   - {addr: 0x8006f174, size: 52, name: camera_call_rotate_left, hash: 7b81ae5462478c07}
@@ -1977,7 +1977,7 @@ data:
   - {addr: 0x800960d0, name: g_map_zoom_target}
   - {addr: 0x800960d4, name: g_camera_tilt_action}
   - {addr: 0x800960d8, name: g_map_tilt_target}
-  - {addr: 0x800960dc, name: g_battle_state_game_flow_running}
+  - {addr: 0x800960dc, name: g_camera_map_pan_enabled}
   - {addr: 0x800960e4, name: g_battle_game_state}
   - {addr: 0x800960e8, name: g_battle_previous_game_state}
   - {addr: 0x800960ec, name: g_battle_menu_help_opening}

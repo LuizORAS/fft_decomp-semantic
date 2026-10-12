@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* Enter the unit-moving setup state and open the prompt that precedes the casting
@@ -15,7 +16,7 @@ void battle_state_enter_unit_moving_setup(void) {
     battle_unit_misc_data_t* at_tile;
     u8 path_count;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_UNIT_MOVING_SETUP;
     src = battle_unit_get_source_misc_data();
     cast = battle_unit_get_casting_misc_data();

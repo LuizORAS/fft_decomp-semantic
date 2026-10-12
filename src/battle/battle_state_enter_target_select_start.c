@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Enter the target-select-start state: open the targeting prompt for the casting
  * unit. */
@@ -6,7 +7,7 @@ void battle_state_enter_target_select_start(void) {
     battle_unit_misc_data_t* unit;
     battle_stats_t* stats;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_SELECT_START;
     unit = battle_unit_get_casting_misc_data();
     stats = unit->battle_data;

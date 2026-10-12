@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
 
@@ -6,7 +7,7 @@
  * chosen destination. */
 void battle_menu_open_illegal_move_help(void) {
     battle_unit_misc_data_t* unit;
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ILLEGAL_MOVE_MENU;
     unit = battle_unit_get_source_misc_data();
     battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 2, unit->battle_data->misc_unit_id, 0,

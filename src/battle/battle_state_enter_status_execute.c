@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Enters the status-execute state for the source unit and shows its message:
  * action type 0x500 shows message 0x183a with the kneeling animation; otherwise the
@@ -8,7 +9,7 @@ void battle_state_enter_status_execute(void) {
     battle_unit_misc_data_t* unit;
     u32 statuses;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_STATUS_EXECUTE;
     unit = battle_unit_get_source_misc_data();
     action_clear_at_list_active();

@@ -66,7 +66,7 @@ void camera_update_vector_from_game_state(void) {
         return;
     }
     if (g_camera_zoom_action == CAMERA_STEP_NONE && g_camera_tilt_action == CAMERA_STEP_NONE
-        && g_camera_rotation_action == CAMERA_ROTATION_NONE && g_battle_state_game_flow_running == 0) {
+        && g_camera_rotation_action == CAMERA_ROTATION_NONE && g_camera_map_pan_enabled == 0) {
         unit = battle_unit_get_selectable_misc_data_at_map_coords(
             g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         height = 0;

@@ -23,5 +23,5 @@ void camera_init_defaults(void) {
     g_map_zoom_target = MAP_ZOOM_IN;
     g_camera_tilt_action = CAMERA_STEP_NONE;
     g_map_tilt_target = MAP_TILT_LOW;
-    g_battle_state_game_flow_running = 0;
+    g_camera_map_pan_enabled = 0;
 }

@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 
 /* Enter the wait-direction state for the source unit, starting from its current
  * facing.
@@ -11,7 +12,7 @@ void action_choose_facing_for_wait(void) {
     battle_unit_misc_data_t* unit;
     s32 facing;
 
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     unit = battle_unit_get_source_misc_data();
     facing = unit->facing;
     g_battle_game_state = BATTLE_GAME_STATE_WAIT_DIRECTION;

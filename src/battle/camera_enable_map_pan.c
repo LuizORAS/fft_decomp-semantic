@@ -1,7 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Let the held pad directions pan the camera across the map
  * (camera_update_map_pan); the camera stops following the cursor tile. */
-void battle_state_start_game_flow(void) {
-    g_battle_state_game_flow_running = 1;
+void camera_enable_map_pan(void) {
+    g_camera_map_pan_enabled = 1;
 }

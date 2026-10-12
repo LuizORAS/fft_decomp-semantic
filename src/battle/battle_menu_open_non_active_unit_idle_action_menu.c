@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
 #include "psx/types.h"
@@ -14,7 +15,7 @@ void battle_menu_open_non_active_unit_idle_action_menu(void) {
     if (misc == 0) {
         return;
     }
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     unit = misc->battle_data;
     g_battle_game_state = BATTLE_GAME_STATE_IDLING_ACTION_MENUS;
     battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, unit->misc_unit_id, 0);

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Return to the free-cursor state at animation speed 1: show the panel for the
  * cursor tile and refresh the source unit's control flags from its ENTD flags. */
@@ -6,7 +7,7 @@ void battle_state_set_free_cursor(void) {
     battle_unit_misc_data_t* unit;
 
     g_main_system_animation_speed = 1;
-    battle_state_stop_game_flow();
+    camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_FREE_CURSOR;
     g_battle_menu_help_opening = 0;
     target_store_cursor_unit_name_and_data();

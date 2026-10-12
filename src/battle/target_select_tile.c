@@ -34,7 +34,7 @@ void target_select_tile(void) {
     switch (result) {
     case 0:
     case 1:
-        battle_state_start_game_flow();
+        camera_enable_map_pan();
         prev = g_battle_cursor_input_mode;
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
         g_battle_cursor_input_mode = BATTLE_CURSOR_INPUT_FREE_CURSOR;
@@ -46,7 +46,7 @@ void target_select_tile(void) {
         }
         break;
     case 2:
-        battle_state_stop_game_flow();
+        camera_disable_map_pan();
         battle_state_enter_pre_attack_animation();
         target_store_cursor_casting_unit_name_and_data();
         break;
