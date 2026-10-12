@@ -86,7 +86,7 @@ functions:
   - {addr: 0x800e3b38, size: 84, name: world_menu_release_current_thread_slot, hash: 83ddde4c1bebdfdd}
   - {addr: 0x800e3b8c, size: 36, name: world_thread_get_current_task_id, hash: 3cea094e5efaa530}
   - {addr: 0x800e3bb0, size: 1612, name: world_text_draw_glyph_with_typewriter_delay, hash: 998b0c534e9802dc}
-  - {addr: 0x800e41fc, size: 108, name: world_text_resolve_format_string_id, hash: ca1c3176797cf8bd}
+  - {addr: 0x800e41fc, size: 108, name: text_resolve_format_string_id, hash: ca1c3176797cf8bd, source: src/text/text_resolve_format_string_id.c}
   - {addr: 0x800e4268, size: 1024, name: world_text_measure, hash: 694a13bd7fb3f97e}
   - {addr: 0x800e4668, size: 1180, name: world_text_measure_pixels, hash: 899223b71ed0424b}
   - {addr: 0x800e4b04, size: 240, name: world_menu_render_text_image_at_record_origin, hash: 410b378a04558e03}
@@ -95,7 +95,7 @@ functions:
   - {addr: 0x800e4d50, size: 76, name: world_text_print_fnt_value_and_next, hash: 9128d74441ddfc53}
   - {addr: 0x800e4d9c, size: 8512, name: world_text_character_handling_thread, hash: c1dab33e925f6e10, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e6edc, size: 56, name: world_text_find_entry, hash: 1a029dac5097e38c}
-  - {addr: 0x800e6f14, size: 80, name: world_text_count_decimal_digits, hash: 46d4e97a0aca8ebf}
+  - {addr: 0x800e6f14, size: 80, name: text_count_decimal_digits, hash: 46d4e97a0aca8ebf, source: src/text/text_count_decimal_digits.c}
   - {addr: 0x800e6f64, size: 104, name: gfx_flip_poly_ft4_uv_if_negative, hash: 1a53cbbc201168a1, source: src/gfx/gfx_flip_poly_ft4_uv_if_negative.c}
   - {addr: 0x800e6fcc, size: 688, name: world_menu_animate_window_quad_crop, hash: 81c3085397b8c764}
   - {addr: 0x800e727c, size: 652, name: world_menu_tween_window_quads, hash: 60b84c3c9ba59ec3}

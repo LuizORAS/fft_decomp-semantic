@@ -1,8 +1,8 @@
-#include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Convert a text-format substitution opcode into its string-table ID. */
-s32 battle_text_resolve_format_string_id(s32 format_code, s32 value) {
+s32 text_resolve_format_string_id(s32 format_code, s32 value) {
     if (format_code == TEXT_FORMAT_RAMZA_NAME) {
         return TEXT_ID_UNIT_NAME_BASE;
     }

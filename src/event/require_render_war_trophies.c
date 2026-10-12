@@ -88,7 +88,7 @@ void require_render_war_trophies(void) {
                 } else {
                     battle_menu_set_text_origin(0, 0);
                     battle_draw_menu_number_glyphs(g_require_reward_war_trophy_entry_values[last],
-                        battle_text_count_decimal_digits(g_require_reward_war_trophy_entry_values[last]), image,
+                        text_count_decimal_digits(g_require_reward_war_trophy_entry_values[last]), image,
                         &g_menu_text_state.pen);
                 }
                 if (g_require_reward_war_trophy_entry_count < 5) {
@@ -135,22 +135,22 @@ void require_render_war_trophies(void) {
                     battle_gfx_draw_or_append_gpu_primitive(quad);
                 } else {
                     quad->x0 = require_reward_get_war_trophy_column_x(i, g_require_reward_war_trophy_entry_count)
-                        + battle_text_count_decimal_digits(g_require_reward_war_trophy_entry_values[i]) * 7 + 0x12;
+                        + text_count_decimal_digits(g_require_reward_war_trophy_entry_values[i]) * 7 + 0x12;
                     quad->y0
                         = require_reward_get_war_trophy_entry_offset(i - start, g_require_reward_war_trophy_entry_count)
                         + 4;
                     quad->x1 = require_reward_get_war_trophy_column_x(i, g_require_reward_war_trophy_entry_count)
-                        + battle_text_count_decimal_digits(g_require_reward_war_trophy_entry_values[i]) * 7 + 0x24;
+                        + text_count_decimal_digits(g_require_reward_war_trophy_entry_values[i]) * 7 + 0x24;
                     quad->y1
                         = require_reward_get_war_trophy_entry_offset(i - start, g_require_reward_war_trophy_entry_count)
                         + 4;
                     quad->x2 = require_reward_get_war_trophy_column_x(i, g_require_reward_war_trophy_entry_count)
-                        + battle_text_count_decimal_digits(g_require_reward_war_trophy_entry_values[i]) * 7 + 0x12;
+                        + text_count_decimal_digits(g_require_reward_war_trophy_entry_values[i]) * 7 + 0x12;
                     quad->y2
                         = require_reward_get_war_trophy_entry_offset(i - start, g_require_reward_war_trophy_entry_count)
                         + 0xc;
                     quad->x3 = require_reward_get_war_trophy_column_x(i, g_require_reward_war_trophy_entry_count)
-                        + battle_text_count_decimal_digits(g_require_reward_war_trophy_entry_values[i]) * 7 + 0x24;
+                        + text_count_decimal_digits(g_require_reward_war_trophy_entry_values[i]) * 7 + 0x24;
                     quad->y3
                         = require_reward_get_war_trophy_entry_offset(i - start, g_require_reward_war_trophy_entry_count)
                         + 0xc;

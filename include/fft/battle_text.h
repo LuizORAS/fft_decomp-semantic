@@ -104,12 +104,10 @@ void battle_text_draw_large_number_glyphs(s32 value, s32 digits, u8* pixels, gly
 void battle_text_character_handling_thread(void);
 void battle_text_configure_sprite_vram(
     RECT* rect, s16 width, s16 height, texture_primitive_t* primitive, s32 clut_offset);
-s32 battle_text_count_decimal_digits(s32 value);
 void battle_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void battle_text_print_fnt_value_and_next(s32 value);
 s32 battle_text_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);
-s32 battle_text_resolve_format_string_id(s32 format_code, s32 value);
 
 /* The caller leaves 0x16f in $a1, but the body never reads $a1. */
 void battle_text_fill_field_with_terminators(u8* text);

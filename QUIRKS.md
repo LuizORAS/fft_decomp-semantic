@@ -437,7 +437,7 @@ written that way.
 - `target_set_panels_for_action` reads `$v0` after a void-returning
   panel builder; the value is the callee's leftover register contents.
 - `src/world/world_menu_resize_parent_entry_to_digits.c`: calls
-  `world_text_count_decimal_digits` with no argument; the callee reads a stale
+  `text_count_decimal_digits` with no argument; the callee reads a stale
   `$a0`. Nothing calls the function itself.
 - `src/battle/move_animate_fall_to_target_tile.c` passes a coordinate
   buffer to the one-argument

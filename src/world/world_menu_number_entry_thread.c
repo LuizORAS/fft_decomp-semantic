@@ -40,7 +40,7 @@ void world_menu_number_entry_thread(void) {
     parameter = &thread->function_parameter_1;
     param = (menu_entry_t*)*parameter;
     range = param->context;
-    digits = world_text_count_decimal_digits(range->bounds.max);
+    digits = text_count_decimal_digits(range->bounds.max);
     original = *menu_entry_result(param);
     value = original;
     if (value < range->bounds.min || range->bounds.max < value) {

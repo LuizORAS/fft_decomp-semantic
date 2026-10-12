@@ -708,7 +708,7 @@ void battle_text_character_handling_thread(void) {
             NEXT();
         } else {
             substitution = &g_battle_text_substitution_values[value_index];
-            value = battle_text_resolve_format_string_id(character, *substitution);
+            value = text_resolve_format_string_id(character, *substitution);
             if (value != -1) {
                 saved = text + 1;
                 value_index++;
@@ -731,7 +731,7 @@ void battle_text_character_handling_thread(void) {
                 NEXT();
                 value = g_battle_text_substitution_values[*text];
             print_value:
-                digits = battle_text_count_decimal_digits(value);
+                digits = text_count_decimal_digits(value);
                 started = 0;
                 if (width_override != no_value) {
                     digits = width_override;

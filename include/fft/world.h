@@ -1974,7 +1974,6 @@ void world_text_blit_font_glyph_to_4bpp(const u8* glyph, u8* image, glyph_blit_t
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, RECT* target, s32 palette);
 void world_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 void world_text_blit_glyph(const u8* source, u8* image, glyph_blit_t* source_rect, glyph_blit_t* position);
-s32 world_text_count_decimal_digits(s32 value);
 void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 wait);
 void world_menu_draw_stacked_glyph_pair(u8* buffer, glyph_blit_t* dest);
@@ -1992,7 +1991,6 @@ void world_text_render_encoded_ids_to_image(
 void world_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
-s32 world_text_resolve_format_string_id(s32 event_code, s32 value);
 u8* world_text_advance_entry_by_char_count(u8* text, s32 count);
 void world_text_concatenate_entries(u8* text_table, u8* destination, const s16* text_ids, s32 separate_entries);
 u8* world_text_find_entry(s32 combined_text_index);

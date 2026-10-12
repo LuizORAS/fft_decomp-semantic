@@ -1690,6 +1690,8 @@ u8* text_advance_cursor_with_backreferences(text_backreference_state_t* state, u
 u8* menu_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
 u8* text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 const u8* text_skip_to_entry(const u8* text, s32 entry_index);
+s32 text_count_decimal_digits(s32 value);
+s32 text_resolve_format_string_id(s32 format_code, s32 value);
 
 /* unit */
 /* Provisional 0x2d0-byte double-buffered frame of the unit editor panel

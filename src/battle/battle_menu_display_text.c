@@ -114,7 +114,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
                     width = state->pending_width;
                     if (width == 0xFFFF) {
                         started = 0;
-                        digit = battle_text_count_decimal_digits(state->value) - 1;
+                        digit = text_count_decimal_digits(state->value) - 1;
                     } else {
                         state->pending_width = 0xFFFF;
                         digit = width - 1;
@@ -142,7 +142,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
                         } while (digit >= 0);
                     }
                 }
-                state->value = battle_text_resolve_format_string_id(state->command, *state->value_cursor);
+                state->value = text_resolve_format_string_id(state->command, *state->value_cursor);
                 if (state->value != -1) {
                     state->return_cursor = cursor + 1;
                     if (state->command == TEXT_FORMAT_RAMZA_NAME) {

@@ -49,7 +49,7 @@ void require_render_gil_reward_ticker(void) {
         g_require_reward_money_digit_speeds[i] = g_require_reward_money_digit_initial_speeds[i];
         g_require_reward_money_digit_settling[i] = 0;
     }
-    digits = battle_text_count_decimal_digits(money);
+    digits = text_count_decimal_digits(money);
     if (digits >= 7) {
         main_system_handle_malloc_exception(7, 0);
         money = 0;

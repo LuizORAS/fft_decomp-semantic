@@ -724,7 +724,7 @@ void world_text_character_handling_thread(void) {
             NEXT();
         } else {
             substitution = &g_world_text_substitution_values[value_index];
-            value = world_text_resolve_format_string_id(code, *substitution);
+            value = text_resolve_format_string_id(code, *substitution);
             if (value != -1) {
                 saved = text + 1;
                 value_index++;
@@ -747,7 +747,7 @@ void world_text_character_handling_thread(void) {
                     NEXT();
                     value = g_world_text_substitution_values[*text];
                 }
-                digits = world_text_count_decimal_digits(value);
+                digits = text_count_decimal_digits(value);
                 started = 0;
                 if (width_override != no_value) {
                     digits = width_override;

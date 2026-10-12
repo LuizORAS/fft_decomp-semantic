@@ -67,7 +67,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
         } else if (state->command == TEXT_PRINT_NEXT_VALUE) {
             state->value = *state->value_cursor;
             if (state->pending_width == 0xFFFF) {
-                state->column += world_text_count_decimal_digits(state->value) * 6;
+                state->column += text_count_decimal_digits(state->value) * 6;
             } else {
                 state->column += state->pending_width * 6;
                 state->pending_width = 0xFFFF;
@@ -77,7 +77,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             cursor = text_advance_cursor_with_backreferences(state, cursor);
             state->value = g_world_text_substitution_values[*cursor];
             if (state->pending_width == 0xFFFF) {
-                state->column += world_text_count_decimal_digits(state->value) * 6;
+                state->column += text_count_decimal_digits(state->value) * 6;
             } else {
                 state->column += state->pending_width * 6;
                 state->pending_width = 0xFFFF;
@@ -89,7 +89,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
                 state, text_advance_cursor_with_backreferences(state, cursor));
             continue;
         }
-        state->value = world_text_resolve_format_string_id(state->command, *state->value_cursor);
+        state->value = text_resolve_format_string_id(state->command, *state->value_cursor);
         if (state->value != -1) {
             state->return_cursor = cursor + 1;
             if (state->command == TEXT_FORMAT_RAMZA_NAME) {

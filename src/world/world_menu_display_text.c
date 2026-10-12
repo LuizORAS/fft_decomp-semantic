@@ -107,7 +107,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                     i = state->pending_width - 1;
                     if (state->pending_width == 0xFFFF) {
                         started = 0;
-                        i = world_text_count_decimal_digits(state->value) - 1;
+                        i = text_count_decimal_digits(state->value) - 1;
                     } else {
                         state->pending_width = 0xFFFF;
                         started = 0;
@@ -131,7 +131,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                     }
                 }
 
-                state->value = world_text_resolve_format_string_id(state->command, *state->value_cursor);
+                state->value = text_resolve_format_string_id(state->command, *state->value_cursor);
                 if (state->value != -1) {
                     state->return_cursor = cursor + 1;
                     if (state->command == TEXT_FORMAT_RAMZA_NAME) {
