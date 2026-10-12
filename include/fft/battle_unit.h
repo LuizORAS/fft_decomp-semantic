@@ -530,14 +530,11 @@ typedef char battle_move_step_size_must_be_1[sizeof(battle_move_step_t) == 1 ? 1
 
 /* Packed half-height offsets at 0x8018f86e. A missing presence flag preserves
  * that side's previous value when applying a saved candidate at 0x80177b64. */
-typedef union battle_move_height_offsets {
-    u8 byte;
-    struct {
-        u8 destination_present : 1;
-        u8 destination_height_offset : 3;
-        u8 source_present : 1;
-        u8 source_height_offset : 3;
-    } bits;
+typedef struct battle_move_height_offsets {
+    u8 destination_present : 1;
+    u8 destination_height_offset : 3;
+    u8 source_present : 1;
+    u8 source_height_offset : 3;
 } battle_move_height_offsets_t;
 typedef char battle_movement_height_offsets_size_must_be_1[(sizeof(battle_move_height_offsets_t) == 1) ? 1 : -1];
 

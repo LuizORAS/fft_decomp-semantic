@@ -15,10 +15,10 @@ s32 battle_unit_prepare_rider_dismount(u32 misc_id, s32 direction, s32 jump_leng
         unit->step_speed = 0x2000;
         unit->path.pending_mount = 0;
         unit->movement_path_offset = 0;
-        unit->path.height_offsets.bits.source_height_offset = 0;
-        unit->path.height_offsets.bits.source_present = 0;
-        unit->path.height_offsets.bits.destination_height_offset = 0;
-        unit->path.height_offsets.bits.destination_present = 0;
+        unit->path.height_offsets.source_height_offset = 0;
+        unit->path.height_offsets.source_present = 0;
+        unit->path.height_offsets.destination_height_offset = 0;
+        unit->path.height_offsets.destination_present = 0;
         unit->path.data.steps[0].length = jump_length;
         unit->path.data.steps[0].slow = 0;
         unit->path.data.steps[0].climb = 0;

@@ -339,7 +339,7 @@ extern u8* g_battle_move_frontier_flags_ptr;
 extern u8 g_battle_move_height_offsets[7];
 extern battle_move_record_t* g_battle_move_records_ptr;
 extern battle_move_spread_state_t* g_battle_move_scratch_pad_ptr;
-extern u8 g_battle_move_path_height_offsets;
+extern battle_move_height_offsets_t g_battle_move_path_height_offsets;
 extern u8 g_battle_move_destination_unit_record;
 extern u8 g_battle_move_effective_flags;
 extern u8 g_battle_move_jump_landing_phases[];

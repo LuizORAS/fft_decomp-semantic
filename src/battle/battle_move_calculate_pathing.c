@@ -12,6 +12,7 @@
 battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u32 level, s32 target_x,
     s32 target_y, u32 target_level, s32 initialize, s32* suspended, s32 check_budget) {
     u8 frontier_snapshot[MAP_TILE_COUNT];
+    battle_move_height_offsets_t no_offsets = { 0 };
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     battle_move_record_t* records = g_battle_move_records_ptr;
@@ -173,7 +174,7 @@ battle_walk_path_t* battle_move_calculate_pathing(s32 flags, s32 jump, s32 x, s3
     }
     g_battle_move_pathing_frontier = frontier;
     battle_target_clear_panel_spread_flags();
-    g_battle_move_path_height_offsets = 0;
+    g_battle_move_path_height_offsets = no_offsets;
     g_battle_move_destination_unit_record = 0;
     config->source_tile_occupied = 0;
     config->destination_tile_occupied = 0;

@@ -15,6 +15,7 @@
  * The flag byte at 0x8018f86d is written through a pointer loaded twice: the
  * target materialises its address in a register in both blocks. */
 battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
+    battle_move_height_offsets_t no_offsets = { 0 };
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     battle_move_record_t* records = g_battle_move_records_ptr;
@@ -48,7 +49,7 @@ battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s3
         return 0;
     }
     battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_KEEP_RANGES);
-    g_battle_move_path_height_offsets = 0;
+    g_battle_move_path_height_offsets = no_offsets;
     g_battle_move_destination_unit_record = 0;
     config->source_tile_occupied = 0;
     config->destination_tile_occupied = 0;

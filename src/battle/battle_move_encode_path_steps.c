@@ -113,7 +113,7 @@ void battle_move_encode_path_steps(void) {
             level = state->work_level * 32;
             state->source_unit_record_index = state->destination_unit_record_index;
             flag = state->destination_unit_record_index << 4;
-            if (step == state->path_length - 2 && (g_battle_move_path_height_offsets & 0x10)) {
+            if (step == state->path_length - 2 && g_battle_move_path_height_offsets.source_present) {
                 flag = 0x10;
             }
             source_bit = state->source_climb << 2;

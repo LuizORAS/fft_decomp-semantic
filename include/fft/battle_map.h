@@ -771,7 +771,7 @@ typedef enum map_mesh_animation_record_type {
     MAP_MESH_ANIMATION_RECORD_PART_PROPERTIES = 3,
 } map_mesh_animation_record_type_e;
 
-/* Record header parsed by the map-state loader at 0x800f26bc: a 32-bit type,
+/* Record header parsed by the map-state loader at 0x800f2294: a 32-bit type,
  * an entry count and the packed entries. */
 typedef struct battle_map_state_record {
     u32 type;  /* map_mesh_animation_record_type_e */
