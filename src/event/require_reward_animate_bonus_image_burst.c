@@ -15,6 +15,7 @@
  * target keeps, and the extra insns keep it from hoisting the row offset and
  * the RotMatrix/vector addresses out of the column loop.
  */
+#include "fft/battle_script.h"
 #include "fft/event_require.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"

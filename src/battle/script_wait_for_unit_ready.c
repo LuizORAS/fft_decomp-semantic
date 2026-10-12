@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* WaitUnitReady: yield until the unit reports ready. The test is

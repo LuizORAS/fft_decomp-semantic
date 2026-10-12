@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x03: gun damage (WP * WP); no evade roll, element or status. */

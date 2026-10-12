@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 
 /* Set or clear one indexed flag in a packed 32-bit bitset. */
 void script_assign_bitset_flag(u32* bitset, s32 bit_index, s32 value) {

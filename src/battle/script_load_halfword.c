@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 
 /* Read a little-endian 16-bit value from a script operand, which may be unaligned. */
 s16 script_load_halfword(const void* source) {

@@ -16,6 +16,7 @@
  * order. The palette offset's `/ 2` of an even sum compiles to the target's
  * plain `sra` and its allocation order; it also adds an 8-byte compiler
  * stack slot, so `unused` covers only the remaining 16 bytes. */
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"

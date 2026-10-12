@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5E: damage ((MA + Y) / 2 * MA). */
 void formula_5e_damage_ma_plus_y_half_times_ma(void) {

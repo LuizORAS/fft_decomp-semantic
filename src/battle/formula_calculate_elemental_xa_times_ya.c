@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Store XA * YA as HP damage, then the weather and element steps. Returns 1

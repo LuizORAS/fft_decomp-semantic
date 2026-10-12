@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
-#include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* Menu entry 4's value and the loop counter share $s0 in the target: the

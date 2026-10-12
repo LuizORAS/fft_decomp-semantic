@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Miss decided by the accuracy roll. */
 void formula_cause_action_miss(void) {

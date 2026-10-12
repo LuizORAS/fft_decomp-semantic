@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 
 /* CallFunction 2 and 7: stage a 365-day advance in the date-advance variable. The
  * calendar itself moves when that variable is consumed. */

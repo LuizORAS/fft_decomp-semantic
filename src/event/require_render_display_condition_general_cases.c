@@ -16,6 +16,7 @@
  * `buffer` is read before it is first written (the target's s7 is live out of
  * the prologue), so it is left uninitialised on purpose.
  */
+#include "fft/battle_script.h"
 #include "fft/event_require.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"

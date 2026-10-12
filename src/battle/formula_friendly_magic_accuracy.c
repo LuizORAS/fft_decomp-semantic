@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x0B: status, hit F(MA+X)%; no evade, and none of the target's magic
  * defences. */

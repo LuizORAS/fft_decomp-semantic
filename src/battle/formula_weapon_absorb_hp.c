@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x06: weapon damage (XA * YA), absorbed by the attacker as HP
  * (reversed against undead); physical evade; no element. */

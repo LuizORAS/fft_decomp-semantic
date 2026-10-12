@@ -1,4 +1,5 @@
 /* Run the help menu over the REQUIRE screen. */
+#include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"

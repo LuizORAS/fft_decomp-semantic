@@ -1,8 +1,8 @@
 #include "fft/battle.h"
 #include "fft/battle_camera.h"
-#include "fft/battle_event.h"
 #include "fft/battle_map.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* Runs one step of the battle map initialization sequence and returns the

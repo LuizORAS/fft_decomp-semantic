@@ -1,6 +1,6 @@
 #include "fft/battle_effect.h"
-#include "fft/battle_event.h"
 #include "fft/battle_map.h"
+#include "fft/battle_script.h"
 #include "fft/effect.h"
 
 /* Release GNS dispatch hold and advance the map-destruction handoff. */

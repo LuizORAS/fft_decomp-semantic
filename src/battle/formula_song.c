@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x1C: song, hit X%: heal (MA + Y) MP or HP, +1 Speed, PA or MA,
  * status, or Quick by ability. Never hits a sleeping target. */

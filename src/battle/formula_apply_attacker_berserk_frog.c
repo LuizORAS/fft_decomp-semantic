@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Attacker statuses on XA: Berserk * 3/2; a Frog's XA is 1. */
 void formula_apply_attacker_berserk_frog(void) {

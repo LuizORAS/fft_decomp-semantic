@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x4E: damage (MA * Y). */
 void formula_damage_ma_times_y(void) {

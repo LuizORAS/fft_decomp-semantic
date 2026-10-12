@@ -1,5 +1,5 @@
 #include "fft/battle_action.h"
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 
 /* Evaluate one scenario condition record for

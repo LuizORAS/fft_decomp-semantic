@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Hit chance F(XA+YA)% for magic on allies: Magic Attack Up and zodiac

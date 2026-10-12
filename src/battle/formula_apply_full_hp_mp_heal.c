@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Restore the target to full HP and MP (100% HP/MP healing). */
 void formula_apply_full_hp_mp_heal(void) {

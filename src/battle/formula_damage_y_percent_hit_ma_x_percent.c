@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x53: damage (Y)% of max HP, hit (MA+X)%. */
 void formula_damage_y_percent_hit_ma_x_percent(void) {

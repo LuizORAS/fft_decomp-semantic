@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Store the selected reaction and its target before clearing knockback. */
 void formula_store_reaction_proc_id_and_target(void) {

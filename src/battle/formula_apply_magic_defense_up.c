@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Magic Defense Up on the target: XA * 2/3. */
 void formula_apply_magic_defense_up(void) {

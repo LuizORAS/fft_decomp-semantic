@@ -1,6 +1,6 @@
-#include "fft/battle_event.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_map.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* Reload a unit's palette tinted for tile effects, weather and time of day.

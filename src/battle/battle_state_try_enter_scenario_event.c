@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* Run the scenario check for a unit at a turn boundary; when it starts an event,

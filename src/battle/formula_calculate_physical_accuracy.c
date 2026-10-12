@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Hit chance (XA+YA)% with every physical modifier on XA, Two Hands included.

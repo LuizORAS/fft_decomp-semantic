@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x08: damage F(MA * Y) with element; magic evade; 19% status. */
 void formula_magical_damage(void) {

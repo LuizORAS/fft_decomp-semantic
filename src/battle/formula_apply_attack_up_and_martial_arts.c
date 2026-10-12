@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Attacker supports on XA for ability formulas: Attack Up * 4/3, then Martial
  * Arts * 3/2 when the weapon's item type is unarmed. No Two Hands step. */

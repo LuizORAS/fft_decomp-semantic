@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Return 1 when a random value in [0, limit) is at least threshold, otherwise 0. */

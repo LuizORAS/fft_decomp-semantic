@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x32: damage ((PA + (PA + Y) / 2) * rnd(1..X)); physical evade. */

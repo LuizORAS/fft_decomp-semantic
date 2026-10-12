@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5B: dragons only; the caster loses MaxHP/5 and the target gains
  * twice that (formula 0x3C), then 100% status. Y is not read. */

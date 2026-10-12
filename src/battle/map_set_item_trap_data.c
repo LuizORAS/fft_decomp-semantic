@@ -1,5 +1,5 @@
-#include "fft/battle_event.h"
 #include "fft/battle_map.h"
+#include "fft/battle_script.h"
 
 /*
  * Fill the move-find result record for tile (x, y, layer): flag 4 and the

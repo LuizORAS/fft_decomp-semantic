@@ -84,6 +84,7 @@ extern point16_t g_battle_item_icon_image_location;
 void battle_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
 
 #include "fft/battle_event.h"
+#include "fft/battle_script.h"
 
 #include "fft/battle_status.h"
 
@@ -325,6 +326,7 @@ void battle_state_enter_unit_moving_setup(void);
 #include "fft/battle_gfx.h"
 
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 #include "fft/battle_move.h"
 

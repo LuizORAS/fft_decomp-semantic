@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 
 /* UnlockDate event instruction: store day (5 bits) then month (4 bits) in
  * the 9-bit date slot date_index of bitset. */

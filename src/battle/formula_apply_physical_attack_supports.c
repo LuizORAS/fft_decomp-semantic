@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Attacker supports on XA, in order: Two Hands * 2 (active, on a weapon that
  * allows it and is not two-handed already), Attack Up * 4/3, Martial Arts *

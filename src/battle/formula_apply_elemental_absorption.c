@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Turn absorbed elemental HP damage into HP healing; otherwise mark the action as HP damage. */

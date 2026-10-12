@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "fft/unit.h"
 
 /* Formula 0x1F: damage ((MA + Y) / 2 * MA) with element, scaled by (100 -

@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5A: status, 100%; dragons only (formula_check_dragon). */
 void formula_dragon_hit_100(void) {

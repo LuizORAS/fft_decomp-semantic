@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x1A: -PA, -MA or -Speed (X) by ability, hit F(MA+Y)%; magic evade. */
 void formula_magical_stat_reduction(void) {

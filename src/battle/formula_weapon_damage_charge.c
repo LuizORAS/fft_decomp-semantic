@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x05: weapon damage as 0x01 without the weapon's element and the bow
  * weather penalty; physical evade; 19% status. */

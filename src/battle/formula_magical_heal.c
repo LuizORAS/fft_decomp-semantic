@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x0C: heal F(MA * Y) HP (damage to undead). */
 void formula_magical_heal(void) {

@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "fft/unit.h"
 
 /* Formula 0x15: CT to 0, hit F(MA+X)%; magic evade. */

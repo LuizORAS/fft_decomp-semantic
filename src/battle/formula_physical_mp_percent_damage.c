@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x2C: MP damage (Y)% of max MP, hit (PA+Y)%; physical evade. */
 void formula_physical_mp_percent_damage(void) {

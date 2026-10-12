@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Physical damage: XA * YA after the physical modifiers and the critical roll. */
 void formula_calculate_physical_damage(void) {

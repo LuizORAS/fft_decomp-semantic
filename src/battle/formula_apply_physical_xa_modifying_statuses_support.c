@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Physical modifiers on XA, in order: attacker supports (Two Hands, Attack Up,
  * Martial Arts), Berserk or Frog, Defense Up, the target's statuses, zodiac

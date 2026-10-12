@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
-#include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 
 /* Open the Wait menu for the source unit, or skip it.
  *

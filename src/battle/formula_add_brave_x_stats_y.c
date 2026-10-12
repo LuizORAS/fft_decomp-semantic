@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x3B: +Brave (X), +PA/MA/Speed (Y). */

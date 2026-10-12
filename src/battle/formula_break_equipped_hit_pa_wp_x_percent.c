@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x25: break the equipment the ability names, hit (PA+WP+Y)%;
  * physical evade; Maintenance blocks it. With nothing in that slot the action

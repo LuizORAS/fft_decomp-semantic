@@ -1,6 +1,6 @@
-#include "fft/battle_event.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "fft/battle_thread.h"
 
 /* Reset what the menu layer shares: reseed the event script's random generator,

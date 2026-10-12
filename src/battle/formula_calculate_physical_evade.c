@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Physical evade step: load the target's evades, then Concentrate, a Dark,
  * Confused or Transparent attacker, Abandon, the target's statuses, the bow

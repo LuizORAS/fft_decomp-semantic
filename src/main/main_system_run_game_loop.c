@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_script.h"
 #include "fft/main.h"
 
 /* The top-level loop of the game: opening, then world map and battles until a

@@ -1,5 +1,5 @@
-#include "fft/battle_event.h"
 #include "fft/battle_map.h"
+#include "fft/battle_script.h"
 #include "fft/battle_thread.h"
 #include "fft/thread.h"
 

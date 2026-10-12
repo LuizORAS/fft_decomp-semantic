@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Target statuses on magical XA: Shell * 2/3; Chicken or Frog * 3/2. */
 void formula_apply_target_magical_status_xa_modifiers(void) {

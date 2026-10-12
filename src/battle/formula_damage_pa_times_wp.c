@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x64: damage (PA * WP); with a spear (PA * 3/2 * WP); bare-handed
  * (PA * (PA * Brave / 100)). No evade roll here. */

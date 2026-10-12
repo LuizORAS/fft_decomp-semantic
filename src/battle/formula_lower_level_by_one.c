@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x59: -Level (1), hit (MA+X)%. */
 void formula_lower_level_by_one(void) {

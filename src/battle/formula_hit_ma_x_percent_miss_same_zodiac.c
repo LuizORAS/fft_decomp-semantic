@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x41: hit (MA+X)%; forced miss when caster and target share a zodiac sign. */
 void formula_hit_ma_x_percent_miss_same_zodiac(void) {

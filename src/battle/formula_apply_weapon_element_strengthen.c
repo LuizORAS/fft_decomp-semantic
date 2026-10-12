@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Strengthen step for weapon attacks: XA * 5/4 when the attacker strengthens
  * one of the weapon's elements. */

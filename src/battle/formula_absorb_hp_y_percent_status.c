@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x47: absorb (Y)% of max HP, 100% status. */
 void formula_absorb_hp_y_percent_status(void) {

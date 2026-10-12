@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x42: damage (PA * Y); the caster takes (PA * Y / X). No evade. */

@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x2D: damage (PA * (WP + Y)), 100% status. */
 void formula_damage_pa_times_wp_plus_y_status(void) {

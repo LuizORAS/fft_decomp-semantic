@@ -1,3 +1,4 @@
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
 
 #define ATTACK_NAME_BYTES 16

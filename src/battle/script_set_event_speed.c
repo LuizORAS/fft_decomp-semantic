@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* Set the event speed and the animation speed together. The event speed also

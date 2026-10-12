@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_effect.h"
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 
 /* Plays the current effect through the inner-subroutine caller, then yields
  * to other threads until the animation continue check reports done. */

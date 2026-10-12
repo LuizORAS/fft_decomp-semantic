@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* When executing, a roll of 0..99 below 19 sets the added-effect flag (special
  * effect 0x0200). */

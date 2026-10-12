@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "fft/battle_thread.h"
 
 /* Map a script variable id to the position of its field within its 32-bit storage value:

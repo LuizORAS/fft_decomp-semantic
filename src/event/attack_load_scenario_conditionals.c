@@ -1,3 +1,4 @@
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
 
 /* 0x18-byte scenario record in the ATTACK.OUT data at 0x801cf938.

@@ -1,4 +1,5 @@
 #include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "fft/main.h"
 
 /* Return the current event's 16-bit finish-operation value, or 0 while no scenario event

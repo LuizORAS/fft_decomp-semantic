@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "fft/unit.h"
 
 /* Formula 0x0E: damage (Y)% of max HP, hit F(MA+X)%; magic evade. The

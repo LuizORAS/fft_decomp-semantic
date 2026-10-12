@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x2B: -PA, -MA or -Speed (X) by ability, hit (PA+Y)%; physical
  * evade. */

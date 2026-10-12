@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 /* The `blez` target depends on which reorg pass fills its delay slot, not on
  * how the two `i = 0` insns are spelled (they are identical RTL by then).
  * Zeroing the counter ahead of the guard (see below) puts `move a0,zero`

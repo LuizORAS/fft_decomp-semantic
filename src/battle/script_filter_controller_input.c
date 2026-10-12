@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* Keep the raw 32-bit button value in g_script_unfiltered_controller_input, then

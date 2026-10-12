@@ -4,8 +4,8 @@
  * placement after the event overlay.
  */
 #include "fft/battle.h"
-#include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"

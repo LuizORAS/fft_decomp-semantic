@@ -1,5 +1,5 @@
-#include "fft/battle_event.h"
 #include "fft/battle_gfx.h"
+#include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 
 /* BlueRemoveUnit (event instruction 0x99): tints every non-player unit whose

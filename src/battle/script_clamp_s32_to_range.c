@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 void script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum) {

@@ -10,6 +10,7 @@
  *   `i = 0`, so the slt result pseudo keeps its flow refs, gets no register, and reload gives
  *   it the target's second unreferenced 8-byte slot (frame 0x60; the text loop's entry test
  *   supplies the first). */
+#include "fft/battle_script.h"
 #include "fft/event_option.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"

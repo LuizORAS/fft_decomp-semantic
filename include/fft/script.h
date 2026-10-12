@@ -1,7 +1,8 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
-/* Event-script bytecode and variables shared by the BATTLE and WORLD interpreters. */
+/* Scenario bytecode, operands and variable formats shared by BATTLE and WORLD.
+ * Interpreter APIs are declared in battle_script.h and world.h. */
 
 #include "fft/gfx.h"
 #include "fft/menu.h"

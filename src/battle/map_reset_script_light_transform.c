@@ -1,6 +1,6 @@
 #include "fft/battle.h"
-#include "fft/battle_event.h"
 #include "fft/battle_map.h"
+#include "fft/battle_script.h"
 
 /* Put the map light transform of the event scripts back to the map's own light: no rotation, unit
  * scale, and the current light direction and colour matrices as the base map_light_thread

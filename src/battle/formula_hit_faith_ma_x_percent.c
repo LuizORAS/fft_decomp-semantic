@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x0A: status, hit F(MA+X)%; magic evade. */
 void formula_hit_faith_ma_x_percent(void) {

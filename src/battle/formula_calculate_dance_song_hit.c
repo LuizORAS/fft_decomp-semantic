@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Dance/Song hit check: accuracy scaled by X%, then an X% roll to hit. */

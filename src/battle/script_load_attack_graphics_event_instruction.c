@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
 
 /* Enter ATTACK.OUT when script variable 0x1fc is clear: mark the transition,

@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "fft/event_etc.h"
 
 /* Thread body of ShowGraphic: open the ETC overlay and run its graphic display on

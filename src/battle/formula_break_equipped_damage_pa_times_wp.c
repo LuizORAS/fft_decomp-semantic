@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x2E: break the equipment the ability names and damage (PA * WP)
  * with the weapon's element; physical evade. Fails with nothing in that slot

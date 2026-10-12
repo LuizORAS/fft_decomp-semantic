@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_camera.h"
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 #define ABS(x) (x < 0 ? -(x) : x)

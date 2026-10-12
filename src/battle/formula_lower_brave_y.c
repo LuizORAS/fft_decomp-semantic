@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x61: -Brave (Y), hit F(MA+X)%; magic evade. */
 void formula_lower_brave_y(void) {

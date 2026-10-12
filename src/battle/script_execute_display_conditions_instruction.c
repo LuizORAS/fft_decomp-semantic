@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "fft/event_require.h"
 
 /* Thread body of DisplayConditions: draw numeric values again and run REQUIRE's

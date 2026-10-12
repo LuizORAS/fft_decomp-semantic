@@ -1,3 +1,4 @@
+#include "fft/battle_script.h"
 #include "fft/event_small.h"
 
 /* Bind the roster and job name sections to the overlay's name data, alias

@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 
 /* Store a value in a script variable, whichever of the 32-bit variable, flag and nibble
  * ranges it belongs to, by running the ZeroVariable and AddImmediate commands on

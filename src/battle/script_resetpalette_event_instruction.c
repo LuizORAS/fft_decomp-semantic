@@ -1,5 +1,5 @@
-#include "fft/battle_event.h"
 #include "fft/battle_gfx.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* ResetPalette: resolve the unit id operand and reapply the weather, time-of-day

@@ -1,3 +1,4 @@
+#include "fft/battle_script.h"
 #include "fft/event_require.h"
 
 /* Sell each of a battle unit's seven equipped items of which 100 or more are

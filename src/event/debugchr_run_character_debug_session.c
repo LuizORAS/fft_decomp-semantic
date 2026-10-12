@@ -1,4 +1,5 @@
 /* Select a unit and edit its fields with the controller. */
+#include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"

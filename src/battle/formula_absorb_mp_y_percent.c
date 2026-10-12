@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x0F: absorb (Y)% of max MP, hit F(MA+X)%. */
 void formula_absorb_mp_y_percent(void) {

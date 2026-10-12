@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* HP damage equal to the target's current HP - 1 (0 when it has none). */
 void formula_calculate_gravi2_damage(void) {

@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x26: steal equipped item, hit (SP+X)%. */
 void formula_steal_equipment(void) {

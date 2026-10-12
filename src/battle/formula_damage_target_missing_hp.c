@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x45: damage equal to the target's missing HP (MaxHP - CurHP). */
 void formula_damage_target_missing_hp(void) {

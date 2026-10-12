@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Effect of each dance. XA + YA is the weapon's XA plus its power
  * (formula_calculate_base_xa); the stat dances take 1. */

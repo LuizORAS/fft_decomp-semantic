@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x0D: heal (Y)% of max HP, hit F(MA+X)%. */
 void formula_heal_y_percent_faith(void) {

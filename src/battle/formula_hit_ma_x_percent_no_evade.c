@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x51: hit (MA+X)%. */
 void formula_hit_ma_x_percent_no_evade(void) {

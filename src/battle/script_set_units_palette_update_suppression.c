@@ -1,4 +1,4 @@
-#include "fft/battle_event.h"
+#include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 
 /* Event instructions 0x6c (enable 0) and 0x6d (enable 1): clear or set

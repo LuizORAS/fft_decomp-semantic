@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Roll the evades (formula_calculate_final_hit_percent). Returns 1 when

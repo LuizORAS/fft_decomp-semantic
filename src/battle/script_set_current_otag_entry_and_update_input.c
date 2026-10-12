@@ -1,6 +1,6 @@
 #include "fft/battle_action.h"
-#include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* Update the event input state from `input`, make `entry` the active ordering

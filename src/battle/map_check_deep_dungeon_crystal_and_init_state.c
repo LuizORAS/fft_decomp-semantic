@@ -1,5 +1,5 @@
-#include "fft/battle_event.h"
 #include "fft/battle_map.h"
+#include "fft/battle_script.h"
 #include "psx/types.h"
 
 /* Reload the map when the number of crystals on the field has changed.

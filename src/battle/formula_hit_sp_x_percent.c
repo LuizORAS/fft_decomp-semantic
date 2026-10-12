@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x3F: hit (SP+X)%. */
 void formula_hit_sp_x_percent(void) {

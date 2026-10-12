@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x36: +PA (Y). */
 void formula_add_pa_y(void) {

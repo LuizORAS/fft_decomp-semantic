@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x20: Draw Out damage (MA * Y) with element; no evade; 19% status;
  * katana break roll. */

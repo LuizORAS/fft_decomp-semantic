@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Magic Attack Up on the attacker: XA * 4/3. */
 void formula_apply_magic_attack_up(void) {

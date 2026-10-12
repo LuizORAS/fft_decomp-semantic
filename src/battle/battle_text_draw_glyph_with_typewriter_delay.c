@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/script.h"
 #include "psx/libgpu.h"

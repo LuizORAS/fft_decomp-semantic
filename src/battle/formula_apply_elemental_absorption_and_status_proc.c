@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Absorption, then the added-effect roll. Returns the roll's result: 0 when
  * the caller should apply the status. */

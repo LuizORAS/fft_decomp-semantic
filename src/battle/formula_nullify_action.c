@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Cancel the action on this target: no hit, damage, accuracy or special
  * effect, and a pending weapon proc and knockback are dropped. */

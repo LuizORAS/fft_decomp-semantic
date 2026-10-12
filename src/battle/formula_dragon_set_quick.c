@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5D: Quick; dragons only. */
 void formula_dragon_set_quick(void) {

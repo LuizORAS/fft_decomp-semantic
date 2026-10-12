@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 /* Formula 0x10: absorb (Y)% of max HP, hit F(MA+X)%; magic evade. */
 void formula_magic_hp_absorb(void) {
     if (formula_calculate_magical_evade() == 0) {

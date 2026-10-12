@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x50: status, hit (MA+X)%; physical evade. */
 void formula_hit_ma_x_percent_physical_evade(void) {

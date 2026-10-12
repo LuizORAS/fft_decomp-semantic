@@ -1,5 +1,5 @@
-#include "fft/battle_event.h"
 #include "fft/battle_gfx.h"
+#include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 
 /* CallFunction 4: tint blue (red and green modulated by -0x1f) every displayed

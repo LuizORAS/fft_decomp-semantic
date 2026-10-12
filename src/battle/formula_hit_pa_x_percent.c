@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x33: hit (PA+X)%. */
 void formula_hit_pa_x_percent(void) {
