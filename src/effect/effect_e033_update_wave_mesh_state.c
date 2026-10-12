@@ -19,7 +19,8 @@
  * reassociated by fold into a per-point `addiu -0x40`. `column` doubles as the
  * curve factor, as `row` does as the curve index and brightness. The s32
  * return with no value keeps $v0 live at the exit. */
-s32 effect_e033_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e033_update_wave_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     VECTOR spread;
     effect_record_t* record;
     s32 translucent;
@@ -55,7 +56,7 @@ s32 effect_e033_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
     u8 v;
 
     scratch = (effect_wave_mesh_scratch_t*)0x1F800000;
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     geometry = &g_battle_effect_geometry_table->entries[emitter_index];
     ot = main_gfx_get_otag();
 
@@ -67,7 +68,7 @@ s32 effect_e033_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
         work = record->work_slots[callback_slot]
-            = battle_heap_alloc_block(sizeof(effect_wave_mesh_work_t), record_index);
+            = battle_heap_alloc_block(sizeof(effect_wave_mesh_work_t), state_index);
         configuration = geometry->textured_quad.texture_page_config;
         if (configuration.clear_abe) {
             translucent = 0;

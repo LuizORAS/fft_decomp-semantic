@@ -13,7 +13,8 @@
  * register. The handler returns no value, but the s32 return keeps $v0 live at
  * the exit, which leaves the phase dispatch's delay slots empty as in the
  * target. */
-s32 effect_e461_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e461_update_polar_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     effect_polar_mesh_scratch_t* scratch;
     effect_record_t* record;
     effect_geometry_record_t* entry;
@@ -27,7 +28,7 @@ s32 effect_e461_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
     u32 brightness;
 
     scratch = (effect_polar_mesh_scratch_t*)0x1F800000;
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     entry = &g_battle_effect_geometry_table->entries[emitter_index];
     ot = main_gfx_get_otag();
 
@@ -40,7 +41,7 @@ s32 effect_e461_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
         work = record->work_slots[callback_slot]
-            = battle_heap_alloc_block(sizeof(effect_polar_mesh_work_t), record_index);
+            = battle_heap_alloc_block(sizeof(effect_polar_mesh_work_t), state_index);
         if (entry->polar_mesh.texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
             scratch->translucent = 0;
         } else {

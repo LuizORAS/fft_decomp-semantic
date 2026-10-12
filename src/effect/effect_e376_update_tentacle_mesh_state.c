@@ -8,7 +8,8 @@
 /* Run one phase of a tentacle-mesh effect: allocate its segment quads, spawn
  * up to 8 segments on the emitter interval, then advance each segment and
  * draw it as a strip of paired POLY_GT4 quads. */
-s32 effect_e376_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e376_update_tentacle_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     SVECTOR tip;
     SVECTOR tip_spread;
     VECTOR origin;
@@ -85,7 +86,7 @@ s32 effect_e376_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
     s32 pz;
     s32 wrap;
 
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     entry = &g_battle_effect_geometry_table->entries[emitter_index];
     placement = entry->tentacle_mesh.placement_flags;
     flags = entry->tentacle_mesh.flags;
@@ -100,7 +101,7 @@ s32 effect_e376_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
         work = record->work_slots[callback_slot]
-            = battle_heap_alloc_block(sizeof(effect_tentacle_mesh_work_t), record_index);
+            = battle_heap_alloc_block(sizeof(effect_tentacle_mesh_work_t), state_index);
         texture_page_config = entry->tentacle_mesh.texture_page_config;
         if (texture_page_config.clear_abe) {
             translucent = 0;

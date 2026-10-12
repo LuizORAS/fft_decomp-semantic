@@ -18,7 +18,8 @@
  * and quad depth): the target keeps each group in one register. The handler
  * returns no value, but the s32 return keeps $v0 live at the exit, which
  * leaves the phase dispatch's delay slots empty as in the target. */
-s32 effect_e477_update_summon_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e477_update_summon_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     SVECTOR vertex;
     SVECTOR unused_18[2]; /* frame padding the target reserves but never touches */
     VECTOR origin;
@@ -57,7 +58,7 @@ s32 effect_e477_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
     u32 shade_b;
     s32 n;
 
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     entry = &g_battle_effect_geometry_table->entries[emitter_index].radial_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
@@ -70,7 +71,7 @@ s32 effect_e477_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = battle_heap_alloc_block(sizeof(effect_summon_mesh_work_t), record_index);
+        work = battle_heap_alloc_block(sizeof(effect_summon_mesh_work_t), state_index);
         record->work_slots[callback_slot] = work;
         texture_page_config = entry->texture_page_config;
         tpage = (texture_page_config.blend_mode << 5) | 0x86;
@@ -102,7 +103,7 @@ s32 effect_e477_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
         break;
 
     case EFFECT_PHASE_UPDATE:
-        target_index = g_battle_effect_state_records[record_index].timeline.target_index;
+        target_index = g_battle_effect_state_records[state_index].timeline.target_index;
         work = record->work_slots[callback_slot];
         BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, j, i, entry->scroll_curves & 0xF, frame);
         origin.vx = battle_effect_lerp_linear(entry->origin_start[0], entry->origin_end[0], i);

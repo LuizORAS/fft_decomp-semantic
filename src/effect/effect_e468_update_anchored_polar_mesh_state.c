@@ -14,7 +14,8 @@
  * `i` doubles as the curve factor and segment index, and `j` as the curve
  * index, scalar temporary and ring counter: the target keeps each pair in one
  * register. The s32 return with no value keeps $v0 live at the exit. */
-s32 effect_e468_update_anchored_polar_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e468_update_anchored_polar_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     effect_anchored_polar_mesh_scratch_t* scratch;
     effect_record_t* record;
     effect_geometry_record_t* entry;
@@ -28,7 +29,7 @@ s32 effect_e468_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
     u32 brightness;
 
     scratch = (effect_anchored_polar_mesh_scratch_t*)0x1F800000;
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     entry = &g_battle_effect_geometry_table->entries[emitter_index];
     ot = main_gfx_get_otag();
 
@@ -41,7 +42,7 @@ s32 effect_e468_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
         work = record->work_slots[callback_slot]
-            = battle_heap_alloc_block(sizeof(effect_polar_mesh_work_t), record_index);
+            = battle_heap_alloc_block(sizeof(effect_polar_mesh_work_t), state_index);
         if (entry->polar_mesh.texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
             scratch->translucent = 0;
         } else {
@@ -75,7 +76,7 @@ s32 effect_e468_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
         scratch->half_width = entry->polar_mesh.texture_width / 2;
         scratch->half_height = entry->polar_mesh.texture_height / 2;
 
-        scratch->target_index = g_battle_effect_state_records[record_index].timeline.target_index;
+        scratch->target_index = g_battle_effect_state_records[state_index].timeline.target_index;
         battle_effect_resolve_target_render_coords(
             g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, scratch->target_index,
             &g_battle_effect_context, &scratch->position);

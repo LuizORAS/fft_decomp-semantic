@@ -2,10 +2,11 @@
 #include "fft/effect.h"
 
 /* Callback handler: freezes the map when its keyframe starts. */
-s32 effect_e480_map_step_freeze_state(s16 record_index, s32 callback_slot) {
+s32 effect_e480_map_step_freeze_state(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame) {
+    s16 state_index = record_index;
     effect_record_t* record;
 
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:

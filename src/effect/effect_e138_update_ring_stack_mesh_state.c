@@ -18,7 +18,8 @@
  * base address of &screen[2] is CSE'd into the later &screen[0] operand. The
  * colour stores are chained so that loop.c keeps the blue product in the
  * inner loop, as in the target. */
-s32 effect_e138_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e138_update_ring_stack_mesh_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     SVECTOR vertex;
     SVECTOR unused_18[3]; /* frame padding the target reserves but never touches */
     VECTOR growth;
@@ -66,7 +67,7 @@ s32 effect_e138_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
     u32 red;
     map_tile_t* tile;
 
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     entry = &g_battle_effect_geometry_table->entries[emitter_index];
     placement = entry->radial_mesh.placement_flags;
     ot = main_gfx_get_otag();
@@ -79,7 +80,7 @@ s32 effect_e138_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = battle_heap_alloc_block(sizeof(effect_ring_mesh_work_t), record_index);
+        work = battle_heap_alloc_block(sizeof(effect_ring_mesh_work_t), state_index);
         record->work_slots[callback_slot] = work;
         configuration = entry->radial_mesh.texture_page_config;
         tpage = (configuration.blend_mode << 5) | 0x86;
@@ -112,7 +113,7 @@ s32 effect_e138_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
 
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
-        target_index = g_battle_effect_state_records[record_index].timeline.target_index;
+        target_index = g_battle_effect_state_records[state_index].timeline.target_index;
         BATTLE_EFFECT_READ_CURVE(
             g_battle_effect_animation_curve_data, i, j, entry->radial_mesh.scroll_curves & 0xf, frame);
         battle_effect_interpolate_emitter_spawn_position(entry, j, &origin);

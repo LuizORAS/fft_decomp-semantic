@@ -9,7 +9,8 @@
  * from the trail's far end: the mid-life child every frame and the death
  * child when the trail has run out. The tentacle mesh renderer without its
  * mesh. */
-s32 effect_e485_update_particle_trails_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e485_update_particle_trails_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     SVECTOR tip;
     SVECTOR tip_spread;
     VECTOR origin;
@@ -59,7 +60,7 @@ s32 effect_e485_update_particle_trails_state(s16 record_index, s32 callback_slot
     s32 pz;
     s32 wrap;
 
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     entry = &g_battle_effect_geometry_table->entries[emitter_index];
     placement = entry->tentacle_mesh.placement_flags;
     flags = entry->tentacle_mesh.flags;
@@ -72,7 +73,7 @@ s32 effect_e485_update_particle_trails_state(s16 record_index, s32 callback_slot
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = record->work_slots[callback_slot] = battle_heap_alloc_block(sizeof(effect_trail_work_t), record_index);
+        work = record->work_slots[callback_slot] = battle_heap_alloc_block(sizeof(effect_trail_work_t), state_index);
         for (index = 3; index >= 0; index--) {
             work->segments[index].active = 0;
         }

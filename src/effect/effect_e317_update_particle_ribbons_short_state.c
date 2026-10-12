@@ -20,7 +20,8 @@
  * so fold keeps the target's (j - 16) and (index - 16) subexpressions; the
  * head point is re-read through the same `slot->trail[index]` address before
  * `index` steps back to the tail. */
-s32 effect_e317_update_particle_ribbons_short_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e317_update_particle_ribbons_short_state(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     SVECTOR target_base;
     SVECTOR target_spread;
     VECTOR origin;
@@ -90,7 +91,7 @@ s32 effect_e317_update_particle_ribbons_short_state(s16 record_index, s32 callba
     map_tile_t* tile;
     battle_effect_target_t* caster_target;
 
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     entry = &g_battle_effect_geometry_table->entries[emitter_index];
     placement = entry->particle_ribbon.placement_flags;
     flags = entry->particle_ribbon.flags;
@@ -104,7 +105,7 @@ s32 effect_e317_update_particle_ribbons_short_state(s16 record_index, s32 callba
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = battle_heap_alloc_block(sizeof(effect_particle_ribbon_short_work_t), record_index);
+        work = battle_heap_alloc_block(sizeof(effect_particle_ribbon_short_work_t), state_index);
         record->work_slots[callback_slot] = work;
         configuration = entry->particle_ribbon.texture_page_config;
         if (configuration.clear_abe) {

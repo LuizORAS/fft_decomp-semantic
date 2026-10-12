@@ -3,8 +3,10 @@
 
 /* Callback handler: when its keyframe starts, gives map command 0x96 the
  * frames left of the record's child timeline. */
-s32 effect_e458_timeline_set_remaining_duration_state(s16 record_index, s32 callback_slot) {
-    effect_record_t* record = &g_battle_effect_state_records[record_index];
+s32 effect_e458_timeline_set_remaining_duration_state(
+    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame) {
+    s16 state_index = record_index;
+    effect_record_t* record = &g_battle_effect_state_records[state_index];
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:

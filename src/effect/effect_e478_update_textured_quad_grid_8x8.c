@@ -11,7 +11,8 @@
  * cells, nine brightness entries per row and an ordering-table depth of at
  * least 4. The shared row/column scratch variables are explained there.
  */
-s32 effect_e478_update_textured_quad_grid_8x8(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+s32 effect_e478_update_textured_quad_grid_8x8(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
+    s16 state_index = record_index;
     effect_record_t* record;
     s32 translucent;
     u16 texture_page;
@@ -36,7 +37,7 @@ s32 effect_e478_update_textured_quad_grid_8x8(s16 record_index, s32 callback_slo
     u8 u;
     u8 v;
 
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
     geometry = &g_battle_effect_geometry_table->entries[emitter_index].textured_quad;
     ot = main_gfx_get_otag();
 
@@ -47,7 +48,7 @@ s32 effect_e478_update_textured_quad_grid_8x8(s16 record_index, s32 callback_slo
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = battle_heap_alloc_block(sizeof(effect_textured_quad_grid_8x8_work_t), record_index);
+        work = battle_heap_alloc_block(sizeof(effect_textured_quad_grid_8x8_work_t), state_index);
         record->work_slots[callback_slot] = work;
         configuration = geometry->texture_page_config;
         if (configuration.clear_abe) {

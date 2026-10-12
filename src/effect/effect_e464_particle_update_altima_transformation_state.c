@@ -10,7 +10,8 @@
  * vertex work and enables map data groups 1-6, phase 2 spawns each active
  * emitter's particles at its work vertex, phase 3 frees the work. */
 s32 effect_e464_particle_update_altima_transformation_state(
-    s16 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame) {
+    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame) {
+    s16 state_index = record_index;
     effect_record_t* record;
     VECTOR* work;
     effect_work_record_t parent;
@@ -21,7 +22,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
     VECTOR* vertex;
     VECTOR* vertex_work;
 
-    record = &g_battle_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[state_index];
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
@@ -30,7 +31,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
         if (record->work_slots[callback_slot] != NULL) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        vertex_work = battle_heap_alloc_block(0x200, record_index);
+        vertex_work = battle_heap_alloc_block(0x200, state_index);
         record->work_slots[callback_slot] = vertex_work;
         g_battle_effect_map_vertices = vertex_work;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 1, 1, 1);
