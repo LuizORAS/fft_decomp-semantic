@@ -1,19 +1,19 @@
 #include "fft/main.h"
 #include "fft/menu.h"
 
-#define TEXT_STATE ((text_backreference_state_t*)0x1F800000)
+#define TEXT_STATE ((text_reader_state_t*)0x1F800000)
 
 /* Measure a text entry in pixels, recording each line's width and returning
  * the widest line and line count. Spaces are 4 pixels and numeric digits 6;
  * other glyphs use their prefix page's width table. */
 void text_measure_pixels(s16* width, s16* rows, const u8* text) {
-    text_backreference_command_t* backreference;
+    text_backref_t* backref;
     party_data_t* party;
     u8* cursor;
     s32 i;
     u8* fill = g_text_player_name_buffer;
     u8 terminator;
-    text_backreference_state_t* state;
+    text_reader_state_t* state;
 
     cursor = (u8*)text;
     party = main_party_get_data_pointer(0);
@@ -97,12 +97,12 @@ void text_measure_pixels(s16* width, s16* rows, const u8* text) {
         }
         if ((state->command & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (state->command & 0xF) < 4) {
             state->return_cursor = cursor + 3;
-            backreference = (text_backreference_command_t*)cursor;
-            state->scratch = backreference->length_high * 8;
-            state->remaining_bytes = backreference->length_low;
+            backref = (text_backref_t*)cursor;
+            state->scratch = backref->length_high * 8;
+            state->remaining_bytes = backref->length_low;
             state->remaining_bytes = state->remaining_bytes + state->scratch + 4;
-            state->scratch = backreference->offset_high * 0xFE;
-            state->scratch = backreference->offset_low + state->scratch;
+            state->scratch = backref->offset_high * 0xFE;
+            state->scratch = backref->offset_low + state->scratch;
             cursor -= state->scratch;
             continue;
         }

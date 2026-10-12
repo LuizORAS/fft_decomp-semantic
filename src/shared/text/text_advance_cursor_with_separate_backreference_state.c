@@ -9,7 +9,7 @@
  * high bits of the byte count, then the back-offset.
  */
 u8* text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor) {
-    text_backreference_command_t* backreference;
+    text_backref_t* backref;
     s32 remaining;
     s32 scratch;
     u8 command;
@@ -27,11 +27,11 @@ u8* text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, 
     command = cursor[0];
     if (((command & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST) && ((command & 0xF) < 4)) {
         *return_cursor = cursor + 3;
-        backreference = (text_backreference_command_t*)cursor;
-        scratch = backreference->length_high << 3;
-        *remaining_bytes = scratch + backreference->length_low + 4;
-        scratch = backreference->offset_high;
-        scratch = scratch * 0xFE + backreference->offset_low;
+        backref = (text_backref_t*)cursor;
+        scratch = backref->length_high << 3;
+        *remaining_bytes = scratch + backref->length_low + 4;
+        scratch = backref->offset_high;
+        scratch = scratch * 0xFE + backref->offset_low;
         cursor -= scratch;
     }
     return cursor;

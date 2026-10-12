@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define TEXT_STATE ((text_backreference_state_t*)0x1F800200)
+#define TEXT_STATE ((text_reader_state_t*)0x1F800200)
 
 /* Render a WORLD text entry glyph by glyph into a menu window image.
  *
@@ -18,7 +18,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
     s32 i;
     u8* fill = g_text_player_name_buffer;
     u8 terminator;
-    text_backreference_state_t* state;
+    text_reader_state_t* state;
     s32 variable_id;
     s32 line;
     s32 started;

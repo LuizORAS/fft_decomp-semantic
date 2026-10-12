@@ -1611,19 +1611,19 @@ typedef enum text_format_code {
 } text_format_code_e;
 
 /* Three-byte backreference: five length bits and a base-254 backward offset. */
-typedef struct text_backreference_command {
+typedef struct text_backref {
     u8 length_high : 2;
     u8 opcode : 6;
     u8 offset_high : 4;
     u8 _unused_01 : 1;
     u8 length_low : 3;
     u8 offset_low;
-} text_backreference_command_t;
-typedef char text_backreference_command_size_must_be_3[sizeof(text_backreference_command_t) == 3 ? 1 : -1];
+} text_backref_t;
+typedef char text_backref_size_must_be_3[sizeof(text_backref_t) == 3 ? 1 : -1];
 
 /* Text-stream cursor state used by measurement and menu rendering. The
  * measurers use scratchpad 0x1f800000; menu rendering uses 0x1f800200. */
-typedef struct text_backreference_state {
+typedef struct text_reader_state {
     s32 command;         /* 0x00; current text byte */
     s32 column;          /* 0x04; characters on the current line */
     s32 max_column;      /* 0x08; widest line so far */
@@ -1636,7 +1636,7 @@ typedef struct text_backreference_state {
     s32* value_cursor; /* 0x24; next substitution value */
     s32 pending_width; /* 0x28; explicit digit width from 0xE8, 0xFFFF when none */
     s32 glyph_page;    /* 0x2c; pending 0xDx page-prefix byte, 0 otherwise (world_measure_text_pixels) */
-} text_backreference_state_t;
+} text_reader_state_t;
 
 /* Text window record of the dialog and message-box threads, rendered by the
  * BATTLE and WORLD *_menu_render_text_image_at_* functions: they build an
@@ -1706,9 +1706,9 @@ void text_measure(s16* columns, s16* rows, const u8* text);
 void text_measure_pixels(s16* width, s16* rows, const u8* text);
 u8* text_find_entry(u32 text_id);
 
-u8* text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
+u8* text_advance_cursor_with_backreferences(text_reader_state_t* state, u8* cursor);
 /* The menu renderer has a separate linked copy of the same cursor helper. */
-u8* menu_text_advance_cursor_with_backreferences(text_backreference_state_t* state, u8* cursor);
+u8* menu_text_advance_cursor_with_backreferences(text_reader_state_t* state, u8* cursor);
 u8* text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 const u8* text_skip_to_entry(const u8* text, s32 entry_index);
 s32 text_count_decimal_digits(s32 value);
