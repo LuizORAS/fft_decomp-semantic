@@ -5,7 +5,7 @@
 
 #include "fft/main.h"
 
-/* ai */
+/* workspace limits */
 /* Fixed workspace capacities and tile-grid storage, independent of map bounds. */
 enum {
     AI_COMPACT_UNIT_COUNT = 16,
@@ -40,124 +40,7 @@ enum {
     AI_SUPPORT_SHARE_THRESHOLD = 77,
 };
 
-typedef enum ai_command_kind {
-    AI_COMMAND_MOVE = 0,
-    AI_COMMAND_ACT = 1,
-    AI_COMMAND_END_TURN = 2,
-    /* The rest reach the command from battle_menu_resolve_selection, for a player's menu choice.
-     * The auto-battle choices are 12 plus twice the option, plus one once a unit has been
-     * picked for the two that name one (SELECT picks it, DISPLAY shows it); SELECT and the two
-     * others equal their ai_autobattle_mode_e values. */
-    AI_COMMAND_NO_MENU_RECORD = 7, /* the current menu id has no record: back to the turn events */
-    AI_COMMAND_AUTOBATTLE_TARGETED_SELECT = 12,
-    AI_COMMAND_AUTOBATTLE_TARGETED_DISPLAY = 13,
-    AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT = 14,
-    AI_COMMAND_AUTOBATTLE_RECOVERY_DISPLAY = 15,
-    AI_COMMAND_AUTOBATTLE_FADING_LIFE = 16,
-    AI_COMMAND_AUTOBATTLE_RETREAT = 17,
-    AI_COMMAND_REFRESH_CONTROL = 18, /* copy the control flag back from the stats */
-    AI_COMMAND_MOVE_SELF = 25,       /* MOVE that never redirects to the unit's mount */
-    AI_COMMAND_UNRESOLVED_FE = 0xfe,
-    AI_COMMAND_UNRESOLVED_FF = 0xff,
-} ai_command_kind_e;
-
-/* Byte-sized resume labels for initial action selection; the gaps are not dispatched. */
-typedef enum ai_initial_selection_stage {
-    AI_INITIAL_SELECTION_STATUS = 0,
-    AI_INITIAL_SELECTION_RETREAT = 2,
-    AI_INITIAL_SELECTION_AUTOBATTLE = 3,
-    AI_INITIAL_SELECTION_GENERAL = 7,
-} ai_initial_selection_stage_e;
-
-typedef enum ai_ability_evaluation_stage {
-    AI_ABILITY_EVALUATION_REFLECTED_TARGETS = 0,
-    AI_ABILITY_EVALUATION_SELF_TARGET_RANGE = 1,
-    AI_ABILITY_EVALUATION_UNIT_TARGETS = 2,
-    AI_ABILITY_EVALUATION_FIRST_CT_GROUP = 3,
-    AI_ABILITY_EVALUATION_SECOND_CT_GROUP = 4,
-    AI_ABILITY_EVALUATION_TILE_TARGETS = 5,
-    AI_ABILITY_EVALUATION_MATH_TARGETS = 6,
-    AI_ABILITY_EVALUATION_PREPARE = 7,
-    AI_ABILITY_EVALUATION_MAP_TARGETS = 8,
-} ai_ability_evaluation_stage_e;
-
-typedef enum ai_origin_evaluation_stage {
-    AI_ORIGIN_EVALUATION_PREPARE = 0,
-    AI_ORIGIN_EVALUATION_RANKED = 1,
-    AI_ORIGIN_EVALUATION_SCANNED = 2,
-} ai_origin_evaluation_stage_e;
-
-/* These three suspend points use their own byte; other values resume abilities. */
-typedef enum ai_autobattle_stage {
-    AI_AUTOBATTLE_CHARGING = 2,
-    AI_AUTOBATTLE_MOVEMENT = 4,
-    AI_AUTOBATTLE_ABILITIES = 7,
-} ai_autobattle_stage_e;
-
-typedef enum ai_charging_stage {
-    AI_CHARGING_SONG_DANCE = 0,
-    AI_CHARGING_WITH_CHARGE = 1,
-    AI_CHARGING_WITHOUT_CHARGE = 2,
-} ai_charging_stage_e;
-
-typedef enum ai_movement_stage {
-    AI_MOVEMENT_TARGET_DISTANCE = 0,
-    AI_MOVEMENT_SCORE_TILES = 1,
-} ai_movement_stage_e;
-
-typedef enum ai_targeted_selection_stage {
-    AI_TARGETED_SELECTION_SCORE_TILES = 0,
-    AI_TARGETED_SELECTION_MOVEMENT = 1,
-    AI_TARGETED_SELECTION_CHARGING = 2,
-    AI_TARGETED_SELECTION_TARGET_ABILITIES = 3,
-    AI_TARGETED_SELECTION_OTHER_ABILITIES = 4,
-} ai_targeted_selection_stage_e;
-
-/* No pass saves stage 5; it follows the same ally-search fallback as stage 6. */
-typedef enum ai_recovery_selection_stage {
-    AI_RECOVERY_SELECTION_SCORE_TILES = 0,
-    AI_RECOVERY_SELECTION_MOVEMENT = 1,
-    AI_RECOVERY_SELECTION_CHARGING = 2,
-    AI_RECOVERY_SELECTION_TARGET_ABILITIES = 3,
-    AI_RECOVERY_SELECTION_ENEMY_ABILITIES = 4,
-    AI_RECOVERY_SELECTION_ALLY_ABILITIES = 6,
-    AI_RECOVERY_SELECTION_CANCEL_STATUS = 7,
-} ai_recovery_selection_stage_e;
-
-typedef enum ai_status_selection_stage {
-    AI_STATUS_SELECTION_CHICKEN = 0,
-    AI_STATUS_SELECTION_TARGET_DISTANCE = 1,
-} ai_status_selection_stage_e;
-
-typedef enum ai_retreat_stage {
-    AI_RETREAT_MOVEMENT = 0,
-    AI_RETREAT_SELF_ABILITIES = 1,
-    AI_RETREAT_CHARGING = 2,
-    AI_RETREAT_OTHER_ABILITIES = 3,
-} ai_retreat_stage_e;
-
-typedef enum ai_cowardly_movement_stage {
-    AI_COWARDLY_MOVEMENT_SCORE_TILES = 0,
-    AI_COWARDLY_MOVEMENT_TARGET_DISTANCE = 1,
-} ai_cowardly_movement_stage_e;
-
-typedef enum ai_cast_origin_stage {
-    AI_CAST_ORIGIN_ACT_BEFORE_MOVE = 0,
-    AI_CAST_ORIGIN_MOVE_BEFORE_ACT = 1,
-} ai_cast_origin_stage_e;
-
-/* Baseline records include action/equipment data; simulated status uses the compact records. */
-typedef enum ai_snapshot_mode {
-    AI_SNAPSHOT_BASELINE = 0,
-    AI_SNAPSHOT_SIMULATED_STATUS = 1,
-} ai_snapshot_mode_e;
-
-typedef enum ai_simulation_phase {
-    AI_SIMULATION_PREPARE_ACTION = 0,
-    AI_SIMULATION_ADVANCE_TURNS = 1,
-    AI_SIMULATION_SCORE_STATE = 2,
-} ai_simulation_phase_e;
-
+/* ability flags */
 /* The four AI flag bytes of an ability, one enum per byte. */
 enum {
     AI_ABILITY_FLAG_1_TARGET_ALLIES = 0x01,
@@ -222,18 +105,6 @@ enum {
     AI_ABILITY_USABLE_BY_AI = 0x80000000,
 };
 
-/* The setup dispatcher writes this at Misc +0x158 and copies 24 bytes into
- * each history slot. ACT copies the 20-byte payload from AI action +0x08;
- * MOVE writes only x/layer/y, and END_TURN leaves the payload unchanged. */
-typedef struct ai_command {
-    ai_command_kind_e kind;
-    union {
-        map_tile_coordinates_t move;
-        action_command_t action;
-    } data;
-} ai_command_t;
-typedef char ai_command_size_must_be_24[sizeof(ai_command_t) == 24 ? 1 : -1];
-
 /*
  * AI data block, 0x19c8 bytes at 0x8019f3c4 (g_ai_data_base).
  * Unidentified ranges stay explicit padding.  Sites spell fields as members,
@@ -241,7 +112,8 @@ typedef char ai_command_size_must_be_24[sizeof(ai_command_t) == 24 ? 1 : -1];
  * address is related to the other member addresses of its block (one shared
  * base register), a pointer assigned first is not.
  */
-/* X / map elevation / Y / zero, written in that order by transfer_unit_coordinates_to_ai
+/* coordinate and ability records */
+/* X / map elevation / Y / zero, written in that order by ai_transfer_unit_coordinates
  * and read as one 32-bit value for equality tests. */
 typedef union ai_coords {
     u32 word;
@@ -344,6 +216,7 @@ typedef char ai_considered_ability_size_must_be_20[(sizeof(ai_considered_ability
 typedef char ai_status_tail_must_be_at_offset_8
     [((unsigned long)&((ai_considered_ability_t*)0)->parameters.words.status_tail == 8) ? 1 : -1];
 
+/* action records */
 /* ai_action_rank_t.decided of the selected action once it is chosen. */
 enum {
     AI_ACTION_DECIDED = 0xff,
@@ -389,6 +262,20 @@ enum {
     AI_ABILITY_ENTRY_UNIT_SHIFT = 10,
 };
 
+/* Runtime policy byte in ai_ability_entry_t. The low three bits control
+ * how the AI searches and consumes candidate action origins; initialization
+ * recomputes them while preserving the remaining bits. */
+typedef enum ai_ability_entry_flag {
+    AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS = 0x01,
+    AI_ABILITY_ENTRY_FORCE_CONSUME_EVALUATED_ORIGINS = 0x02,
+    AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN = 0x04,
+    AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL = 0x08,
+    AI_ABILITY_ENTRY_ENEMIES_ONLY = 0x20,
+    AI_ABILITY_ENTRY_ALLIES_ONLY = 0x40,
+    AI_ABILITY_ENTRY_USABLE = 0x80,
+    AI_ABILITY_ENTRY_INIT_PRESERVE_MASK = 0xf8,
+} ai_ability_entry_flag_e;
+
 /* Four-byte entries in each compact unit's AI ability list. Whole usage
  * bytes are copied into considered flags4; policy updates address its bits. */
 typedef struct ai_ability_entry {
@@ -410,6 +297,7 @@ typedef struct ai_ability_entry {
 } ai_ability_entry_t;
 typedef char ai_ability_entry_must_be_4[sizeof(ai_ability_entry_t) == 4 ? 1 : -1];
 
+/* unit decision records */
 /* OR-combined categories gathered from both equipped weapon formulas. They
  * are flags, not ability_formula_e IDs; mixed categories bypass the builder
  * switch's single-category cases. */
@@ -454,6 +342,13 @@ typedef enum ai_decision_flags {
     AI_DECISION_CONSIDERED = 0x80,
 } ai_decision_flags_e;
 
+typedef enum ai_targeting_flags_1 {
+    AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY = 0x01, /* a usable ability has a direct or arc trajectory */
+    AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES = 0x02,    /* a usable ability affects HP and targets allies */
+    AI_TARGETING_FLAG_1_MOSTLY_SUPPORT = 0x04,     /* ally-targeting share of the usable abilities >= 77/128 */
+    AI_TARGETING_FLAG_1_REFLECTED_ACTION = 0x08,
+} ai_targeting_flags_1_e;
+
 /* Targeting policy copied from ENTD AI Flags 2 to decision +0x07. The low
  * policy bits survive ai_refresh_unit_decision_flags; the remaining
  * target-state bits are rebuilt there before action simulation. */
@@ -497,6 +392,7 @@ typedef struct ai_unit_decision {
 } ai_unit_decision_t;
 typedef char ai_unit_decision_size_must_be_16[(sizeof(ai_unit_decision_t) == 16) ? 1 : -1];
 
+/* workspace layout */
 /* AI +0x0c78..0x0cb7. The target's 21-byte save at +0xca2 overlaps
  * the low three bytes of target_setting_flags at +0xcb4. Loops at
  * 0x8019b184..0x8019b1b8 and 0x8019b260..0x8019b274 establish the span.
@@ -649,26 +545,139 @@ typedef char ai_saved_targetability_must_be_0xca2
 typedef char ai_target_flags_must_be_0xcb4
     [((unsigned long)&((ai_data_t*)0)->targetability.live.target_setting_flags == 0xcb4) ? 1 : -1];
 
-/* Runtime policy byte in ai_ability_entry_t. The low three bits control
- * how the AI searches and consumes candidate action origins; initialization
- * recomputes them while preserving the remaining bits. */
-typedef enum ai_ability_entry_flag {
-    AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS = 0x01,
-    AI_ABILITY_ENTRY_FORCE_CONSUME_EVALUATED_ORIGINS = 0x02,
-    AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN = 0x04,
-    AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL = 0x08,
-    AI_ABILITY_ENTRY_ENEMIES_ONLY = 0x20,
-    AI_ABILITY_ENTRY_ALLIES_ONLY = 0x40,
-    AI_ABILITY_ENTRY_USABLE = 0x80,
-    AI_ABILITY_ENTRY_INIT_PRESERVE_MASK = 0xf8,
-} ai_ability_entry_flag_e;
+/* workspace */
+/* BATTLE-resident workspace; EVENT, EFFECT and WORLD overlays also use its pointer. */
+extern ai_data_t g_ai_data_base;
+extern ai_data_t* g_ai_workspace;        /* 0x8019f3ac */
+extern event_work_t* g_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
 
-typedef enum ai_rank_order {
-    AI_RANK_BELOW = 0,
-    AI_RANK_EQUAL = 1,
-    AI_RANK_ABOVE = 2,
-} ai_rank_order_e;
+void ai_init_workspace(void);
+void ai_init_acting_unit_data(void);
 
+/* commands */
+typedef enum ai_command_kind {
+    AI_COMMAND_MOVE = 0,
+    AI_COMMAND_ACT = 1,
+    AI_COMMAND_END_TURN = 2,
+    /* The rest reach the command from battle_menu_resolve_selection, for a player's menu choice.
+     * The auto-battle choices are 12 plus twice the option, plus one once a unit has been
+     * picked for the two that name one (SELECT picks it, DISPLAY shows it); SELECT and the two
+     * others equal their ai_autobattle_mode_e values. */
+    AI_COMMAND_NO_MENU_RECORD = 7, /* the current menu id has no record: back to the turn events */
+    AI_COMMAND_AUTOBATTLE_TARGETED_SELECT = 12,
+    AI_COMMAND_AUTOBATTLE_TARGETED_DISPLAY = 13,
+    AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT = 14,
+    AI_COMMAND_AUTOBATTLE_RECOVERY_DISPLAY = 15,
+    AI_COMMAND_AUTOBATTLE_FADING_LIFE = 16,
+    AI_COMMAND_AUTOBATTLE_RETREAT = 17,
+    AI_COMMAND_REFRESH_CONTROL = 18, /* copy the control flag back from the stats */
+    AI_COMMAND_MOVE_SELF = 25,       /* MOVE that never redirects to the unit's mount */
+    AI_COMMAND_UNRESOLVED_FE = 0xfe,
+    AI_COMMAND_UNRESOLVED_FF = 0xff,
+} ai_command_kind_e;
+
+/* The setup dispatcher writes this at Misc +0x158 and copies 24 bytes into
+ * each history slot. ACT copies the 20-byte payload from AI action +0x08;
+ * MOVE writes only x/layer/y, and END_TURN leaves the payload unchanged. */
+typedef struct ai_command {
+    ai_command_kind_e kind;
+    union {
+        map_tile_coordinates_t move;
+        action_command_t action;
+    } data;
+} ai_command_t;
+typedef char ai_command_size_must_be_24[sizeof(ai_command_t) == 24 ? 1 : -1];
+
+typedef enum ai_command_build_stage {
+    AI_COMMAND_BUILD_REFRESH = 0,
+    AI_COMMAND_BUILD_MOVEMENT = 1,
+    AI_COMMAND_BUILD_CHOOSE_ACTION = 2,
+} ai_command_build_stage_e;
+
+extern ai_command_t g_ai_command_history[2]; /* 0x801a0d94, 0x801a0dac */
+
+s32 ai_build_command(s32 unit_id, ai_command_t* command);
+
+/* action selection */
+/* Byte-sized resume labels for initial action selection; the gaps are not dispatched. */
+typedef enum ai_initial_selection_stage {
+    AI_INITIAL_SELECTION_STATUS = 0,
+    AI_INITIAL_SELECTION_RETREAT = 2,
+    AI_INITIAL_SELECTION_AUTOBATTLE = 3,
+    AI_INITIAL_SELECTION_GENERAL = 7,
+} ai_initial_selection_stage_e;
+
+typedef enum ai_status_selection_stage {
+    AI_STATUS_SELECTION_CHICKEN = 0,
+    AI_STATUS_SELECTION_TARGET_DISTANCE = 1,
+} ai_status_selection_stage_e;
+
+/* These three suspend points use their own byte; other values resume abilities. */
+typedef enum ai_autobattle_stage {
+    AI_AUTOBATTLE_CHARGING = 2,
+    AI_AUTOBATTLE_MOVEMENT = 4,
+    AI_AUTOBATTLE_ABILITIES = 7,
+} ai_autobattle_stage_e;
+
+typedef enum ai_targeted_selection_stage {
+    AI_TARGETED_SELECTION_SCORE_TILES = 0,
+    AI_TARGETED_SELECTION_MOVEMENT = 1,
+    AI_TARGETED_SELECTION_CHARGING = 2,
+    AI_TARGETED_SELECTION_TARGET_ABILITIES = 3,
+    AI_TARGETED_SELECTION_OTHER_ABILITIES = 4,
+} ai_targeted_selection_stage_e;
+
+/* No pass saves stage 5; it follows the same ally-search fallback as stage 6. */
+typedef enum ai_recovery_selection_stage {
+    AI_RECOVERY_SELECTION_SCORE_TILES = 0,
+    AI_RECOVERY_SELECTION_MOVEMENT = 1,
+    AI_RECOVERY_SELECTION_CHARGING = 2,
+    AI_RECOVERY_SELECTION_TARGET_ABILITIES = 3,
+    AI_RECOVERY_SELECTION_ENEMY_ABILITIES = 4,
+    AI_RECOVERY_SELECTION_ALLY_ABILITIES = 6,
+    AI_RECOVERY_SELECTION_CANCEL_STATUS = 7,
+} ai_recovery_selection_stage_e;
+
+typedef enum ai_retreat_stage {
+    AI_RETREAT_MOVEMENT = 0,
+    AI_RETREAT_SELF_ABILITIES = 1,
+    AI_RETREAT_CHARGING = 2,
+    AI_RETREAT_OTHER_ABILITIES = 3,
+} ai_retreat_stage_e;
+
+enum {
+    AI_RECOVERY_STATUS_COUNT = 3,
+};
+extern u8 g_ai_recovery_status_ids[AI_RECOVERY_STATUS_COUNT];
+extern s32 g_ai_recovery_status_index; /* 0x8019f380; status-list cursor preserved for resume */
+extern s32 g_ai_recovery_status_retry; /* 0x8019f37c; skip status pass after one failed attempt */
+extern s32 g_ai_retreat_stage;         /* 0x8019f390; ai_retreat_stage_e */
+
+s32 ai_select_action_initial(void);
+s32 ai_select_action_status(void);
+s32 ai_select_action_autobattle(void);
+s32 ai_select_action_general(void);
+s32 ai_select_action_targeted(void);
+s32 ai_select_action_recovery(void);
+s32 ai_select_action_fading_life(void);
+s32 ai_select_action_retreat(void);
+s32 ai_select_action_random(void);
+void ai_select_action_fallback(void);
+void ai_init_target_consideration(void);
+s32 ai_select_peril_target(void);
+void ai_focus_on_target(s32 unit_id);
+
+/* ability lists */
+void ai_build_unit_ability_list(s32 unit_id);
+s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count);
+void ai_init_unit_abilities(s32 unit_id);
+void ai_set_ability_considerations(s32 action_taken);
+void ai_load_ability_entry(ai_ability_entry_t* entry);
+s32 ai_is_ability_known(s32 unit_id, s32 skillset_id, s32 bit);
+void ai_store_weapon_attack_data(ai_weapon_data_t* out, s32 item_id, s32* flags_out);
+void ai_disable_ability_if_only_inflicts_status(ai_ability_entry_t* entry, s32 status_id);
+
+/* target selection */
 typedef enum ai_unit_filter {
     AI_UNIT_FILTER_ANY = 0,
     AI_UNIT_FILTER_ENEMIES = 1,
@@ -686,17 +695,185 @@ typedef enum ai_nearest_target_mode {
     AI_NEAREST_HEALER_OR_CRYSTAL = 5,
 } ai_nearest_target_mode_e;
 
+/* Classification from the acting unit's side, not the sign of HP damage.
+ * A useful effect may include deliberately hitting an ally to affect status. */
+typedef enum ai_ability_effect {
+    AI_ABILITY_EFFECT_NONE = 0,
+    AI_ABILITY_EFFECT_USEFUL = 1,
+    AI_ABILITY_EFFECT_ADVERSE = 2,
+} ai_ability_effect_e;
+
+s32 ai_refresh_unit_decision_flags(void);
+void ai_update_team_targeting_flags(void);
+s32 ai_select_active_units(ai_unit_filter_e mode, s32 target_id);
+s32 ai_filter_useful_targets(void);
+ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect);
+s32 ai_is_unit_untargetable(s32 unit_id);
+s32 ai_check_target_type(s32 unit_id);
+s32 ai_should_exclude_from_imminent_enemies(s32 unit_id);
+s32 ai_find_nearest_target(ai_nearest_target_mode_e mode);
+s32 ai_find_unit_at_coordinates(ai_coords_t* coords);
+s32 ai_find_unit_on_target_panel(void);
+
+/* status and turn timing */
+s32 ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit);
+s32 ai_calculate_clockticks_until_death_counter_expires();
+s32 ai_is_unit_active_after_delay(s32 limit, s32 unit_id);
+s32 ai_can_unit_act_within_charge_time(s32 unit_index);
+s32 ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
+s32 ai_can_status_cancellation_affect_turn(battle_stats_t* unit, s32 status);
+s32 ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit);
+s32 ai_exclude_enemies_acting_before_ct(void);
+
+/* movement */
+typedef enum ai_movement_stage {
+    AI_MOVEMENT_TARGET_DISTANCE = 0,
+    AI_MOVEMENT_SCORE_TILES = 1,
+} ai_movement_stage_e;
+
+typedef enum ai_cowardly_movement_stage {
+    AI_COWARDLY_MOVEMENT_SCORE_TILES = 0,
+    AI_COWARDLY_MOVEMENT_TARGET_DISTANCE = 1,
+} ai_cowardly_movement_stage_e;
+
 typedef enum ai_destination_order {
     AI_DESTINATION_PRIORITY_FIRST = 0,
     AI_DESTINATION_DISTANCE_FIRST = 1,
 } ai_destination_order_e;
 
+extern s32 g_ai_propagation_resume_pass;
+extern ai_cowardly_movement_stage_e g_ai_cowardly_movement_stage;
+
+s32 ai_is_pathfinding_budget_exhausted(void);
+s32 ai_set_movement_panel_data(s32 movement_taken);
+s32 ai_build_movement_scenarios(void);
+s32 ai_build_targeted_movement(void);
+s32 ai_run_cowardly_movement(void);
+s32 ai_get_movement_range(void);
+s32 ai_propagate_target_movement(
+    s32 unit_id, s32 target_x, s32 target_y, s32 target_elevation, s32 initialize, s32* suspended, s32 check_budget);
+s32 ai_score_reachable_tiles(void);
+void ai_fill_foe_proximity_grid(void);
+s32 ai_fill_target_distance_grid(ai_coords_t* target);
+s32 ai_filter_reachable_tiles_by_target_distance(s32 distance_limit);
+s32 ai_select_destination(s32 max_distance, ai_destination_order_e order);
+void ai_select_destination_with_nearest_fallback(s32 range);
+void ai_select_destination_with_range_floor(s32 range);
+void ai_set_candidate_and_actor_reachable_tiles(void);
+void ai_take_next_movement_origin(void);
+void ai_record_triggered_trap_coords(s32 x, s32 y, s32 level);
+
+/* target geometry */
 typedef enum ai_tile_mask_mode {
     AI_TILE_MASK_RANGE = 0,
     AI_TILE_MASK_AOE = 1,
     AI_TILE_MASK_RANGE_PLUS_AOE = 2,
     AI_TILE_MASK_EXPLICIT = 3,
 } ai_tile_mask_mode_e;
+
+extern u16 g_ai_range_row_masks[];
+
+void ai_build_attack_origin_masks(void);
+void ai_build_targetable_tile_mask(ai_tile_mask_mode_e mode, s32 radius);
+void ai_build_monster_skill_tile_mask(void);
+s32 ai_calculate_ability_range(void);
+s32 ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT]);
+s32 ai_take_random_tile(u16 tiles[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT], ai_coords_t* coordinates, s32 count);
+s32 ai_is_ability_origin_allowed(ai_coords_t* coordinates);
+s32 ai_can_use_geomancy(ai_coords_t* coords);
+s32 ai_calculate_distance_between_units(battle_stats_t* a, battle_stats_t* b);
+s32 ai_calculate_height_difference_between_units(ai_coords_t* coords, battle_stats_t* unit);
+void ai_transfer_unit_coordinates(s32 unit_index, ai_coords_t* destination);
+
+/* ability evaluation */
+typedef enum ai_ability_evaluation_stage {
+    AI_ABILITY_EVALUATION_REFLECTED_TARGETS = 0,
+    AI_ABILITY_EVALUATION_SELF_TARGET_RANGE = 1,
+    AI_ABILITY_EVALUATION_UNIT_TARGETS = 2,
+    AI_ABILITY_EVALUATION_FIRST_CT_GROUP = 3,
+    AI_ABILITY_EVALUATION_SECOND_CT_GROUP = 4,
+    AI_ABILITY_EVALUATION_TILE_TARGETS = 5,
+    AI_ABILITY_EVALUATION_MATH_TARGETS = 6,
+    AI_ABILITY_EVALUATION_PREPARE = 7,
+    AI_ABILITY_EVALUATION_MAP_TARGETS = 8,
+} ai_ability_evaluation_stage_e;
+
+typedef enum ai_origin_evaluation_stage {
+    AI_ORIGIN_EVALUATION_PREPARE = 0,
+    AI_ORIGIN_EVALUATION_RANKED = 1,
+    AI_ORIGIN_EVALUATION_SCANNED = 2,
+} ai_origin_evaluation_stage_e;
+
+typedef enum ai_cast_origin_stage {
+    AI_CAST_ORIGIN_ACT_BEFORE_MOVE = 0,
+    AI_CAST_ORIGIN_MOVE_BEFORE_ACT = 1,
+} ai_cast_origin_stage_e;
+
+typedef enum ai_charging_stage {
+    AI_CHARGING_SONG_DANCE = 0,
+    AI_CHARGING_WITH_CHARGE = 1,
+    AI_CHARGING_WITHOUT_CHARGE = 2,
+} ai_charging_stage_e;
+
+extern s32 g_ai_self_target_origin_stage;
+
+s32 ai_evaluate_ability_list(void);
+s32 ai_evaluate_ability_outcome(void);
+s32 ai_evaluate_movement_origins(void);
+s32 ai_evaluate_self_target_origins(void);
+s32 ai_evaluate_reflected_target_origins(void);
+s32 ai_evaluate_cast_origins(void);
+s32 ai_evaluate_target_tiles(void);
+s32 ai_evaluate_charging_movement(void);
+void ai_finalize_action_destination(void);
+s32 ai_evaluate_current_action(void);
+
+/* math skill */
+extern u8 g_ai_math_source_skillsets[AI_MATH_SOURCE_SKILLSET_COUNT];
+extern u8 g_ai_math_extra_known_ability_ids[AI_MATH_EXTRA_KNOWN_ABILITY_COUNT];
+extern u16* g_ai_math_ability_list; /* borrowed from main's temporary skillset list */
+extern s32 g_ai_math_skillset_index;
+extern s32 g_ai_math_skillset_id;
+extern s32 g_ai_math_ability_index;
+
+s32 ai_evaluate_math_targets(void);
+
+/* status cancellation */
+/* Cancellation-search accounting survives suspension. */
+extern s32 g_ai_status_candidate_count;
+extern s32 g_ai_status_insufficient_mp;
+extern s32 g_ai_status_sufficient_mp;
+
+s32 ai_evaluate_status_cancellation(s32 unit_id, s32 status_id);
+
+/* action ranking */
+typedef enum ai_rank_order {
+    AI_RANK_BELOW = 0,
+    AI_RANK_EQUAL = 1,
+    AI_RANK_ABOVE = 2,
+} ai_rank_order_e;
+
+void ai_reset_action_ranking_fields(ai_action_data_t* action);
+void ai_clear_current_action_decision(void);
+void ai_init_selected_action(void);
+ai_rank_order_e ai_compare_target_priority_and_hit_rate(ai_action_rank_t* a, ai_action_rank_t* b);
+s32 ai_is_action_higher_ranked(ai_action_data_t* a, ai_action_data_t* b);
+void ai_insert_ranked_action(void);
+void ai_invert_target_priority(void);
+s32 ai_select_action_ranked(void);
+
+/* simulation */
+/* Baseline records include action/equipment data; simulated status uses the compact records. */
+typedef enum ai_snapshot_mode {
+    AI_SNAPSHOT_BASELINE = 0,
+    AI_SNAPSHOT_SIMULATED_STATUS = 1,
+} ai_snapshot_mode_e;
+
+typedef enum ai_simulation_phase {
+    AI_SIMULATION_PREPARE_ACTION = 0,
+    AI_SIMULATION_ADVANCE_TURNS = 1,
+    AI_SIMULATION_SCORE_STATE = 2,
+} ai_simulation_phase_e;
 
 /* Pickup occupant on the current action tile; treasure takes precedence. */
 typedef enum ai_tile_pickup_kind {
@@ -705,17 +882,28 @@ typedef enum ai_tile_pickup_kind {
     AI_TILE_PICKUP_TREASURE = 2,
 } ai_tile_pickup_kind_e;
 
-typedef enum ai_command_build_stage {
-    AI_COMMAND_BUILD_REFRESH = 0,
-    AI_COMMAND_BUILD_MOVEMENT = 1,
-    AI_COMMAND_BUILD_CHOOSE_ACTION = 2,
-} ai_command_build_stage_e;
+/* Unit snapshots share the scratchpad-save arena used during movement propagation. */
+extern ai_extended_snapshot_t g_ai_unit_snapshot_storage[];
+extern ai_extended_snapshot_t* g_ai_unit_snapshots; /* 0x8019f3c0 */
+/* Signed scoring weights, indexed by status ID. */
+extern s16 g_ai_status_priority_weights[STATUS_COUNT]; /* 0x8019f308..0x8019f357 */
 
+void ai_begin_action_simulation(void);
+void ai_end_action_simulation(void);
+void ai_save_unit_state(ai_snapshot_mode_e mode);
+void ai_restore_unit_state(ai_snapshot_mode_e mode);
+s32 ai_simulate_action_and_score(void);
+s32 ai_simulate_action_hits(action_command_t* action);
+void ai_simulate_strikes(action_command_t* action, s32 reaction_mode);
+void ai_simulate_movement_and_pickup(void);
+void ai_update_tile_pickup(void);
+void ai_move_temp_unit_to_coords(ai_coords_t* coordinates);
+
+/* facing */
 /* Only the four cardinal hints index the tile-delta table. */
 enum {
     AI_CARDINAL_DIRECTION_COUNT = 4,
 };
-
 typedef enum ai_direction {
     AI_DIRECTION_SOUTH = 0,
     AI_DIRECTION_WEST = 1,
@@ -725,179 +913,21 @@ typedef enum ai_direction {
     AI_DIRECTION_CHOOSE_AT_WAIT = 5,
 } ai_direction_e;
 
-typedef enum ai_targeting_flags_1 {
-    AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY = 0x01, /* a usable ability has a direct or arc trajectory */
-    AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES = 0x02,    /* a usable ability affects HP and targets allies */
-    AI_TARGETING_FLAG_1_MOSTLY_SUPPORT = 0x04,     /* ally-targeting share of the usable abilities >= 77/128 */
-    AI_TARGETING_FLAG_1_REFLECTED_ACTION = 0x08,
-} ai_targeting_flags_1_e;
-
-/* Classification from the acting unit's side, not the sign of HP damage.
- * A useful effect may include deliberately hitting an ally to affect status. */
-typedef enum ai_ability_effect {
-    AI_ABILITY_EFFECT_NONE = 0,
-    AI_ABILITY_EFFECT_USEFUL = 1,
-    AI_ABILITY_EFFECT_ADVERSE = 2,
-} ai_ability_effect_e;
-
 /* Cardinal map-tile deltas stored as wrapping unsigned bytes. */
 typedef struct ai_facing_tile_offsets {
     u8 by_direction[AI_CARDINAL_DIRECTION_COUNT][2];
 } ai_facing_tile_offsets_t;
 
-enum {
-    AI_RECOVERY_STATUS_COUNT = 3,
-};
-
-extern s32 g_ai_propagation_resume_pass;
-extern u16 g_ai_range_row_masks[];
-extern s32 g_ai_self_target_origin_stage;
-extern ai_command_t g_ai_command_history[2]; /* 0x801a0d94, 0x801a0dac */
-extern ai_cowardly_movement_stage_e g_ai_cowardly_movement_stage;
-
-/* One shared AI workspace at 0x8019f3c4, not a separate record per candidate.
- * Preserve resume-state writes before returning -1. */
-extern ai_data_t g_ai_data_base;
 extern ai_facing_tile_offsets_t g_ai_facing_tile_offsets; /* 0x8019f358 */
-extern s32 g_ai_math_ability_index;
-extern u8 g_ai_math_source_skillsets[AI_MATH_SOURCE_SKILLSET_COUNT];
-extern u8 g_ai_math_extra_known_ability_ids[AI_MATH_EXTRA_KNOWN_ABILITY_COUNT];
-extern u16* g_ai_math_ability_list; /* borrowed from main's temporary skillset list */
-extern s32 g_ai_math_skillset_id;
-extern s32 g_ai_math_skillset_index;
-extern u8 g_ai_recovery_status_ids[AI_RECOVERY_STATUS_COUNT];
-extern s32 g_ai_recovery_status_index; /* 0x8019f380; status-list cursor preserved for resume */
-extern s32 g_ai_recovery_status_retry; /* 0x8019f37c; skip status pass after one failed attempt */
-extern s32 g_ai_retreat_stage;         /* 0x8019f390; ai_retreat_stage_e */
 
-/* 0x8019f384–0x8019f38c; cancellation-search accounting survives suspension. */
-extern s32 g_ai_status_candidate_count;
-extern s32 g_ai_status_insufficient_mp;
-
-/* Signed weights for status IDs 0..39, read by 0x8019d864–0x8019d988. */
-extern s16 g_ai_status_priority_weights[40]; /* 0x8019f308..0x8019f357 */
-extern s32 g_ai_status_sufficient_mp;
-
-/* Shares the 0x80193924 scratchpad-save arena used during movement propagation. */
-extern ai_extended_snapshot_t g_ai_unit_snapshot_storage[];
-extern ai_extended_snapshot_t* g_ai_unit_snapshots; /* 0x8019f3c0 */
-extern ai_data_t* g_ai_workspace;                   /* 0x8019f3ac */
-
-/* BATTLE-resident state that the EVENT, EFFECT and WORLD overlays also read. */
-extern event_work_t* g_ai_workspace_ptr; /* pointer cell reloaded per subsystem */
-s32 ai_is_unit_active_after_delay(s32 limit, s32 unit_id);
-s32 ai_set_movement_panel_data(s32 movement_taken);
-void ai_set_ability_considerations(s32 action_taken);
-void ai_build_attack_origin_masks(void);
-s32 ai_build_command(s32 unit_id, ai_command_t* command);
-void ai_build_monster_skill_tile_mask(void);
-s32 ai_build_movement_scenarios(void);
-void ai_build_targetable_tile_mask(ai_tile_mask_mode_e mode, s32 radius);
-s32 ai_build_targeted_movement(void);
-void ai_build_unit_ability_list(s32 unit_id);
-s32 ai_calculate_ability_range(void);
-s32 ai_calculate_clockticks_until_death_counter_expires();
-s32 ai_calculate_clockticks_until_unit_acts(battle_stats_t* unit);
-s32 ai_calculate_distance_between_units(battle_stats_t* a, battle_stats_t* b);
-s32 ai_calculate_ratio_times_4(s32 divisor, s32 dividend);
-s32 ai_calculate_height_difference_between_units(ai_coords_t* coords, battle_stats_t* unit);
-s32 ai_simulate_action_hits(action_command_t* action);
-s32 ai_can_use_geomancy(ai_coords_t* coords);
-s32 ai_should_exclude_from_imminent_enemies(s32 unit_id);
-s32 ai_is_unit_untargetable(s32 unit_id);
-s32 ai_is_ability_origin_allowed(ai_coords_t* coordinates);
-s32 ai_can_unit_act_within_charge_time(s32 unit_index);
-s32 ai_is_facing_tile_blocked(ai_coords_t* source, ai_coords_t* target);
-s32 ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit);
-s32 ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id);
-s32 ai_evaluate_cast_origins(void);
-s32 ai_evaluate_current_action(void);
-s32 ai_check_target_type(s32 unit_id);
-void ai_update_tile_pickup(void);
-s32 ai_can_status_cancellation_affect_turn(battle_stats_t* unit, s32 status);
-s32 ai_evaluate_ability_list(void);
-s32 ai_select_action_random(void);
-s32 ai_select_action_status(void);
-s32 ai_choose_wait_facing(void);
-ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect);
-void ai_clear_current_action_decision(void);
-
-ai_rank_order_e ai_compare_target_priority_and_hit_rate(ai_action_rank_t* a, ai_action_rank_t* b);
-
-s32 ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT]);
-void ai_disable_ability_if_only_inflicts_status(ai_ability_entry_t* entry, s32 status_id);
-s32 ai_evaluate_ability_outcome(void);
-s32 ai_evaluate_charging_movement(void);
-s32 ai_evaluate_math_targets(void);
-s32 ai_evaluate_movement_origins(void);
-s32 ai_evaluate_reflected_target_origins(void);
-s32 ai_evaluate_self_target_origins(void);
-s32 ai_evaluate_status_cancellation(s32 unit_id, s32 status_id);
-s32 ai_evaluate_target_tiles(void);
-void ai_fill_foe_proximity_grid(void);
-s32 ai_fill_target_distance_grid(ai_coords_t* target);
-s32 ai_filter_reachable_tiles_by_target_distance(s32 distance_limit);
 ai_direction_e ai_find_direction_of_target(const ai_coords_t* target, const ai_coords_t* origin);
-s32 ai_find_nearest_target(ai_nearest_target_mode_e mode);
-s32 ai_find_unit_at_coordinates(ai_coords_t* coords);
-s32 ai_get_movement_range(void);
-s32 ai_select_action_autobattle(void);
-s32 ai_filter_useful_targets(void);
-s32 ai_find_unit_on_target_panel(void);
-void ai_init_acting_unit_data(void);
-void ai_init_selected_action(void);
-void ai_init_target_consideration(void);
-void ai_init_unit_abilities(s32 unit_id);
-void ai_init_workspace(void);
-void ai_insert_ranked_action(void);
-void ai_invert_target_priority(void);
-s32 ai_is_action_higher_ranked(ai_action_data_t* a, ai_action_data_t* b);
-s32 ai_is_pathfinding_budget_exhausted(void);
-void ai_load_ability_entry(ai_ability_entry_t* entry);
-s32 ai_is_ability_known(s32 unit_id, s32 skillset_id, s32 bit);
+s32 ai_is_facing_tile_blocked(ai_coords_t* source, ai_coords_t* target);
+s32 ai_choose_wait_facing(void);
 
-s32 ai_propagate_target_movement(
-    s32 unit_id, s32 target_x, s32 target_y, s32 target_elevation, s32 initialize, s32* suspended, s32 check_budget);
-
-void ai_record_triggered_trap_coords(s32 x, s32 y, s32 level);
-s32 ai_refresh_unit_decision_flags(void);
-void ai_reset_action_ranking_fields(ai_action_data_t* action);
-void ai_end_action_simulation(void);
-void ai_restore_unit_state(ai_snapshot_mode_e mode);
-s32 ai_run_cowardly_movement(void);
-s32 ai_select_action_general(void);
-void ai_move_temp_unit_to_coords(ai_coords_t* coordinates);
-s32 ai_select_action_fading_life(void);
-void ai_save_unit_state(ai_snapshot_mode_e mode);
-s32 ai_score_reachable_tiles(void);
-s32 ai_select_active_units(ai_unit_filter_e mode, s32 target_id);
-void ai_finalize_action_destination(void);
-s32 ai_select_destination(s32 max_distance, ai_destination_order_e order);
-void ai_select_destination_with_nearest_fallback(s32 range);
-void ai_select_destination_with_range_floor(s32 range);
-s32 ai_select_action_initial(void);
-s32 ai_select_peril_target(void);
-s32 ai_select_action_ranked(void);
-s32 ai_select_action_recovery(void);
-s32 ai_select_action_retreat(void);
-s32 ai_select_action_targeted(void);
-s32 ai_simulate_action_and_score(void);
-void ai_set_candidate_and_actor_reachable_tiles(void);
-s32 ai_exclude_enemies_acting_before_ct(void);
-void ai_simulate_movement_and_pickup(void);
-void ai_simulate_strikes(action_command_t* action, s32 reaction_mode);
-void ai_begin_action_simulation(void);
-void ai_focus_on_target(s32 unit_id);
-void ai_store_weapon_attack_data(ai_weapon_data_t* out, s32 item_id, s32* flags_out);
-void ai_take_next_movement_origin(void);
-s32 ai_take_random_tile(u16 tiles[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT], ai_coords_t* coordinates, s32 count);
-void ai_select_action_fallback(void);
+/* copy and arithmetic */
 void ai_transfer_byte_values(void* destination, const void* source, s32 byte_count);
 void ai_transfer_halfword_values(void* destination, const void* source, s32 byte_count);
-void ai_transfer_unit_coordinates(s32 unit_index, ai_coords_t* destination);
-void ai_update_team_targeting_flags(void);
-s32 battle_unit_add_unique_entd_spritesheet(s32 mode, s16 value, s32 limit);
-s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count);
 void ai_clear_words(void* destination, s32 byte_count);
+s32 ai_calculate_ratio_times_4(s32 divisor, s32 dividend);
 
 #endif

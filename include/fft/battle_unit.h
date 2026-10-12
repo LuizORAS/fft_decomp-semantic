@@ -1203,6 +1203,7 @@ extern u8 g_battle_unit_editor_line_colors[8 * MENU_UNIT_EDITOR_LINE_SIZE];
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id);
 battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id);
 battle_stats_t* battle_unit_get_existing_pointer(u32 unit_id);
+s32 battle_unit_add_unique_entd_spritesheet(s32 mode, s16 value, s32 limit);
 void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode);
 s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters);
 s32 battle_unit_draw_and_activate_by_misc_id(u32 misc_id);

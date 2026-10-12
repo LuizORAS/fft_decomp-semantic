@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Keeps the list of distinct spritesheets the ENTD units need.
