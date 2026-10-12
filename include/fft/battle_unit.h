@@ -311,9 +311,7 @@ typedef char
  * Renderer APIs use this common header and variable part tail; the fixed
  * storage records below describe each slot inside a 0x440-byte misc record. */
 typedef struct battle_gfx_sprite_display_data {
-    u8 red;        /* 0x00 */
-    u8 green;      /* 0x01 */
-    u8 blue;       /* 0x02 */
+    rgb24_t color; /* 0x00 */
     u8 part_count; /* 0x03; parts in use */
     s16 tpage;     /* 0x04; BATTLE_GFX_TPAGE_*, with battle_misc_display_blend_mode_e */
     u16 clut;      /* 0x06 */

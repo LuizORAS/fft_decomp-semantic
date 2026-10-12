@@ -24,9 +24,9 @@ menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void) {
                 buffer->active = 0;
                 buffer->thread_id = g_battle_current_thread_id;
                 buffer->portrait_code = -1;
-                buffer->r = 0x80;
-                buffer->g = 0x80;
-                buffer->b = 0x80;
+                buffer->color.r = 0x80;
+                buffer->color.g = 0x80;
+                buffer->color.b = 0x80;
                 buffer->dialogue_selector = 0;
                 buffer->portrait_flipped = 0;
                 buffer->is_message_box = 0;

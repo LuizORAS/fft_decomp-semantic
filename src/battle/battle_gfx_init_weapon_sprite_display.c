@@ -10,9 +10,9 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit
     weapon_part = 2;
     display = &g_battle_unit_misc_data[unit_index].weapon_sprite_displays[display_type].header;
     part = display->parts;
-    display->blue = 0x80;
-    display->green = 0x80;
-    display->red = 0x80;
+    display->color.b = 0x80;
+    display->color.g = 0x80;
+    display->color.r = 0x80;
     do {
         part[2].flags = 0;
         weapon_part--;

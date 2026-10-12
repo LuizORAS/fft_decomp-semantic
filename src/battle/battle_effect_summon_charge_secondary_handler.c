@@ -102,7 +102,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
                 id = g_battle_effect_current_secondary->slot_ids[i * 10 + j];
                 if (id != 0) {
                     slot = &g_battle_effect_slots[id];
-                    slot->red = slot->green = slot->blue
+                    slot->color.r = slot->color.g = slot->color.b
                         = g_battle_effect_summon_ring_brightness[j] * state->brightness / 128;
                 }
             }

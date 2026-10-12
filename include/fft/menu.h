@@ -75,9 +75,7 @@ typedef struct menu_window_buffer {
     SPRT sprites[4];      /* 0x38 */
     SPRT icon_sprites[3]; /* 0x88 */
     POLY_FT4 quads[2];    /* 0xc4 */
-    u8 r;                 /* 0x114 */
-    u8 g;                 /* 0x115 */
-    u8 b;                 /* 0x116 */
+    rgb24_t color;        /* 0x114; window tint */
     u8 is_message_box;    /* 0x117: set by the message-box thread; alternate frame clut and tint */
 } menu_window_buffer_t;
 typedef char menu_window_buffer_size_must_be_280[(sizeof(menu_window_buffer_t) == 280) ? 1 : -1];

@@ -19,9 +19,9 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(s32 uni
         break;
     }
 
-    display->blue = 0x80;
-    display->green = 0x80;
-    display->red = 0x80;
+    display->color.b = 0x80;
+    display->color.g = 0x80;
+    display->color.r = 0x80;
     for (i = 0; i < 1; i++)
         display->parts[i].flags = 0;
     display->part_count = 0;

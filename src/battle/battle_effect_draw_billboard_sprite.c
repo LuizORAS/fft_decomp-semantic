@@ -57,7 +57,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     offset = *(u16*)((u8*)frame_group + (slot->frame * 2 + frame_group->frame_table_offset));
     prim = &slot->quads[g_battle_effect_buffer_index];
     /* Copy RGB and the frame byte; the packet header overwrites that last byte. */
-    memcpy(&prim->r0, &slot->red, sizeof(CVECTOR));
+    memcpy(&prim->r0, &slot->color.r, sizeof(CVECTOR));
     setPolyFT4(prim);
     frame = (battle_effect_sprite_frameset_t*)((u8*)frame_group + offset);
     setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);

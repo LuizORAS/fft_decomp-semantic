@@ -31,21 +31,21 @@ void battle_map_modify_palette(
     if (all_colors == 1) {
         components = g_battle_map_palette_state.clut_rows[clut_row].components;
         for (i = 0; i < MAP_CLUT_ROW_COLOR_COUNT; i++) {
-            if (components[i].red_5bit + components[i].green_5bit + components[i].blue_5bit != 0) {
+            if (components[i].color.r + components[i].color.g + components[i].color.b != 0) {
                 switch (command) {
                 case MAP_COLOR_MODE_CURRENT:
-                    out_red = components[i].red_5bit + red;
-                    out_green = components[i].green_5bit + green;
-                    out_blue = components[i].blue_5bit + blue;
+                    out_red = components[i].color.r + red;
+                    out_green = components[i].color.g + green;
+                    out_blue = components[i].color.b + blue;
                     break;
                 case MAP_COLOR_MODE_CURRENT_HALF:
-                    out_red = (components[i].red_5bit >> 1) + red;
-                    out_green = (components[i].green_5bit >> 1) + green;
-                    out_blue = (components[i].blue_5bit >> 1) + blue;
+                    out_red = (components[i].color.r >> 1) + red;
+                    out_green = (components[i].color.g >> 1) + green;
+                    out_blue = (components[i].color.b >> 1) + blue;
                     break;
                 case MAP_COLOR_MODE_CURRENT_GREY: {
                     s32 gray;
-                    gray = (components[i].red_5bit * 2 + components[i].green_5bit * 3 + components[i].blue_5bit) / 6;
+                    gray = (components[i].color.r * 2 + components[i].color.g * 3 + components[i].color.b) / 6;
                     out_red = red + gray;
                     out_green = green + gray;
                     out_blue = blue + gray;
@@ -53,7 +53,7 @@ void battle_map_modify_palette(
                 }
                 case MAP_COLOR_MODE_CURRENT_GREY_HALF: {
                     s32 gray;
-                    gray = (components[i].red_5bit * 2 + components[i].green_5bit * 3 + components[i].blue_5bit) / 12;
+                    gray = (components[i].color.r * 2 + components[i].color.g * 3 + components[i].color.b) / 12;
                     out_red = red + gray;
                     out_green = green + gray;
                     out_blue = blue + gray;
@@ -138,18 +138,18 @@ void battle_map_modify_palette(
                     out_blue = 1;
                 }
                 if (amount != 0) {
-                    components[i].red_delta_biased = out_red - components[i].red_5bit + MAP_PALETTE_DELTA_BIAS;
-                    components[i].green_delta_biased = out_green - components[i].green_5bit + MAP_PALETTE_DELTA_BIAS;
-                    components[i].blue_delta_biased = out_blue - components[i].blue_5bit + MAP_PALETTE_DELTA_BIAS;
+                    components[i].delta_biased.r = out_red - components[i].color.r + MAP_PALETTE_DELTA_BIAS;
+                    components[i].delta_biased.g = out_green - components[i].color.g + MAP_PALETTE_DELTA_BIAS;
+                    components[i].delta_biased.b = out_blue - components[i].color.b + MAP_PALETTE_DELTA_BIAS;
                 } else {
-                    components[i].red_5bit = out_red;
-                    components[i].green_5bit = out_green;
-                    components[i].blue_5bit = out_blue;
+                    components[i].color.r = out_red;
+                    components[i].color.g = out_green;
+                    components[i].color.b = out_blue;
                     g_battle_map_palette_modified_colors[clut_row][i]
                         = out_red + (out_green << 5) + (out_blue << 10) + (components[i].semi_transparent << 15);
                 }
             } else {
-                components[i].red_delta_biased = components[i].green_delta_biased = components[i].blue_delta_biased
+                components[i].delta_biased.r = components[i].delta_biased.g = components[i].delta_biased.b
                     = MAP_PALETTE_DELTA_BIAS;
             }
         }
@@ -177,21 +177,21 @@ void battle_map_modify_palette(
         clut = &g_battle_map_palette_state.clut_rows[clut_row].components[clut_index * MAP_CLUT_COLOR_COUNT];
         for (i = 0; i < MAP_CLUT_COLOR_COUNT; i++) {
             component = &clut[i];
-            if (component->red_5bit + component->green_5bit + component->blue_5bit != 0) {
+            if (component->color.r + component->color.g + component->color.b != 0) {
                 switch (command) {
                 case MAP_COLOR_MODE_CURRENT:
-                    out_red = component->red_5bit + red;
-                    out_green = component->green_5bit + green;
-                    out_blue = component->blue_5bit + blue;
+                    out_red = component->color.r + red;
+                    out_green = component->color.g + green;
+                    out_blue = component->color.b + blue;
                     break;
                 case MAP_COLOR_MODE_CURRENT_HALF:
-                    out_red = (component->red_5bit >> 1) + red;
-                    out_green = (component->green_5bit >> 1) + green;
-                    out_blue = (component->blue_5bit >> 1) + blue;
+                    out_red = (component->color.r >> 1) + red;
+                    out_green = (component->color.g >> 1) + green;
+                    out_blue = (component->color.b >> 1) + blue;
                     break;
                 case MAP_COLOR_MODE_CURRENT_GREY: {
                     s32 gray;
-                    gray = (component->red_5bit * 2 + component->green_5bit * 3 + component->blue_5bit) / 6;
+                    gray = (component->color.r * 2 + component->color.g * 3 + component->color.b) / 6;
                     out_red = red + gray;
                     out_green = green + gray;
                     out_blue = blue + gray;
@@ -199,7 +199,7 @@ void battle_map_modify_palette(
                 }
                 case MAP_COLOR_MODE_CURRENT_GREY_HALF: {
                     s32 gray;
-                    gray = (component->red_5bit * 2 + component->green_5bit * 3 + component->blue_5bit) / 12;
+                    gray = (component->color.r * 2 + component->color.g * 3 + component->color.b) / 12;
                     out_red = red + gray;
                     out_green = green + gray;
                     out_blue = blue + gray;
@@ -319,18 +319,18 @@ void battle_map_modify_palette(
                     out_blue = 1;
                 }
                 if (amount != 0) {
-                    component->red_delta_biased = out_red - component->red_5bit + MAP_PALETTE_DELTA_BIAS;
-                    component->green_delta_biased = out_green - component->green_5bit + MAP_PALETTE_DELTA_BIAS;
-                    component->blue_delta_biased = out_blue - component->blue_5bit + MAP_PALETTE_DELTA_BIAS;
+                    component->delta_biased.r = out_red - component->color.r + MAP_PALETTE_DELTA_BIAS;
+                    component->delta_biased.g = out_green - component->color.g + MAP_PALETTE_DELTA_BIAS;
+                    component->delta_biased.b = out_blue - component->color.b + MAP_PALETTE_DELTA_BIAS;
                 } else {
-                    component->red_5bit = out_red;
-                    component->green_5bit = out_green;
-                    component->blue_5bit = out_blue;
+                    component->color.r = out_red;
+                    component->color.g = out_green;
+                    component->color.b = out_blue;
                     g_battle_map_palette_modified_colors[clut_row][clut_index * MAP_CLUT_COLOR_COUNT + i]
                         = out_red + (out_green << 5) + (out_blue << 10) + (component->semi_transparent << 15);
                 }
             } else {
-                component->red_delta_biased = component->green_delta_biased = component->blue_delta_biased
+                component->delta_biased.r = component->delta_biased.g = component->delta_biased.b
                     = MAP_PALETTE_DELTA_BIAS;
             }
         }

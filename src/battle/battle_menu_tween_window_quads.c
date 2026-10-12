@@ -43,9 +43,9 @@ void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, REC
             if (table == 4) {
                 if (*easing != ONE) {
                     buffer_index = g_battle_menu_packet_buffer_index;
-                    buffers[buffer_index].b = fade;
-                    buffers[buffer_index].g = fade;
-                    buffers[buffer_index].r = fade;
+                    buffers[buffer_index].color.b = fade;
+                    buffers[buffer_index].color.g = fade;
+                    buffers[buffer_index].color.r = fade;
                 }
             }
             battle_menu_lerp_rect_to_poly_ft4(&buffers[g_battle_menu_packet_buffer_index].quads[0], &from, to, step);

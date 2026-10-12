@@ -39,14 +39,14 @@ void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_ind
         blue = blue_value;
 
         if (mode != 0) {
-            component->red_delta_biased = red - component->red_5bit + MAP_PALETTE_DELTA_BIAS;
-            blue_delta = blue - component->blue_5bit + MAP_PALETTE_DELTA_BIAS;
-            component->green_delta_biased = green - component->green_5bit + MAP_PALETTE_DELTA_BIAS;
-            component->blue_delta_biased = blue_delta;
+            component->delta_biased.r = red - component->color.r + MAP_PALETTE_DELTA_BIAS;
+            blue_delta = blue - component->color.b + MAP_PALETTE_DELTA_BIAS;
+            component->delta_biased.g = green - component->color.g + MAP_PALETTE_DELTA_BIAS;
+            component->delta_biased.b = blue_delta;
         } else {
-            component->green_5bit = green;
-            component->red_5bit = red;
-            component->blue_5bit = blue;
+            component->color.g = green;
+            component->color.r = red;
+            component->color.b = blue;
             g_battle_map_palette_modified_colors[clut_row][color_index]
                 = red_for_packing + (green_for_packing << 5) + (blue_value << 10) + (component->semi_transparent << 15);
         }

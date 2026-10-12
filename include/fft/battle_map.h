@@ -382,15 +382,12 @@ enum {
     MAP_PALETTE_FAST_BLEND_STEP_COUNT = 8,
 };
 
-/* Expanded palette color and interpolation deltas; each component occupies one byte. */
+/* Expanded five-bit RGB components and channel deltas biased by 31;
+ * each channel occupies one byte, with the transparency bit stored separately. */
 typedef struct map_palette_color_components {
-    u8 red_5bit;
-    u8 green_5bit;
-    u8 blue_5bit;
+    rgb24_t color;
     u8 semi_transparent;
-    u8 red_delta_biased;   /* target - current + MAP_PALETTE_DELTA_BIAS */
-    u8 green_delta_biased; /* target - current + MAP_PALETTE_DELTA_BIAS */
-    u8 blue_delta_biased;  /* target - current + MAP_PALETTE_DELTA_BIAS */
+    rgb24_t delta_biased; /* target - current + MAP_PALETTE_DELTA_BIAS */
 } map_palette_color_components_t;
 typedef char map_palette_color_components_size_must_be_7[(sizeof(map_palette_color_components_t) == 7) ? 1 : -1];
 
@@ -781,11 +778,11 @@ typedef struct battle_map_state_record {
 
 /* Packed lighting: two matrices of nine 16-bit entries followed by three RGB colors. */
 typedef struct battle_map_light_resource {
-    s16 colour[3][3];      /* 0x00 */
-    s16 direction[3][3];   /* 0x12 */
-    u8 ambient[3];         /* 0x24 */
-    u8 gradient_top[3];    /* 0x27 */
-    u8 gradient_bottom[3]; /* 0x2a */
+    s16 colour[3][3];        /* 0x00 */
+    s16 direction[3][3];     /* 0x12 */
+    rgb24_t ambient;         /* 0x24 */
+    rgb24_t gradient_top;    /* 0x27 */
+    rgb24_t gradient_bottom; /* 0x2a */
 } battle_map_light_resource_t;
 
 /* Polygon-render properties: the 0x380-byte prefix is not consumed here. */

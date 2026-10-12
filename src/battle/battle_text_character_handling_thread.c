@@ -401,9 +401,9 @@ void battle_text_character_handling_thread(void) {
                     for (k = 0;; k += g_battle_event_speed) {
                         if (rec.box_type == DIALOG_BOX_TYPE_CENTERED && character != TEXT_PAGE_BREAK) {
                             for (k = 0x80; k > 0x30; k -= 8) {
-                                WINDOW_AT(g_battle_menu_packet_buffer_index)->r = k;
-                                WINDOW_AT(g_battle_menu_packet_buffer_index)->g = k;
-                                WINDOW_AT(g_battle_menu_packet_buffer_index)->b = k;
+                                WINDOW_AT(g_battle_menu_packet_buffer_index)->color.r = k;
+                                WINDOW_AT(g_battle_menu_packet_buffer_index)->color.g = k;
+                                WINDOW_AT(g_battle_menu_packet_buffer_index)->color.b = k;
                                 battle_thread_yield();
                             }
                             break;
@@ -550,9 +550,9 @@ void battle_text_character_handling_thread(void) {
                     ClearImage(&rec.rect, 0, 0, 0);
                     battle_thread_yield();
                     for (k = 0; k < 2; k++) {
-                        win[k].r = 0x80;
-                        win[k].g = 0x80;
-                        win[k].b = 0x80;
+                        win[k].color.r = 0x80;
+                        win[k].color.g = 0x80;
+                        win[k].color.b = 0x80;
                     }
                 } else {
                     g_battle_sound_pending_sfx_id = MAIN_SFX_TEXT_PAGE;

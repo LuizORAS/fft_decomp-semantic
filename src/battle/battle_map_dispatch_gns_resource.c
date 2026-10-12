@@ -266,16 +266,16 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
         /* Retail reads the packed direction bytes as MATRIX translation fields. */
         battle_map_set_light_matrices((MATRIX*)light, &direction);
         battle_map_control_gte_background_color(
-            BATTLE_BACKGROUND_COLOR_SET, light->ambient[0], light->ambient[1], light->ambient[2]);
-        red = light->gradient_top[0];
-        green = light->gradient_top[1];
-        blue = light->gradient_top[2];
+            BATTLE_BACKGROUND_COLOR_SET, light->ambient.r, light->ambient.g, light->ambient.b);
+        red = light->gradient_top.r;
+        green = light->gradient_top.g;
+        blue = light->gradient_top.b;
         g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r = red;
         g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g = green;
         g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b = blue;
-        red = light->gradient_bottom[0];
-        green = light->gradient_bottom[1];
-        blue = light->gradient_bottom[2];
+        red = light->gradient_bottom.r;
+        green = light->gradient_bottom.g;
+        blue = light->gradient_bottom.b;
         g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r = red;
         g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g = green;
         g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b = blue;

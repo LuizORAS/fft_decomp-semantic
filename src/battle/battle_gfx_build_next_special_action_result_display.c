@@ -13,7 +13,7 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
     battle_gfx_sprite_display_data_t* display_2;
-    battle_gfx_sprite_display_data_t* color;
+    rgb24_t* color;
     s32 digits[3];
     u32 flags;
     u32 clear;
@@ -62,9 +62,9 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         }
     }
 
-    display->displays[0]->red = display->displays[1]->red = display->displays[2]->red = 150;
-    display->displays[0]->green = display->displays[1]->green = display->displays[2]->green = 140;
-    display->displays[0]->blue = display->displays[1]->blue = display->displays[2]->blue = 20;
+    display->displays[0]->color.r = display->displays[1]->color.r = display->displays[2]->color.r = 150;
+    display->displays[0]->color.g = display->displays[1]->color.g = display->displays[2]->color.g = 140;
+    display->displays[0]->color.b = display->displays[1]->color.b = display->displays[2]->color.b = 20;
 
     if ((display->value / 1000) & 0xffff) {
         digits[2] = 9;
@@ -105,18 +105,18 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         }
         break;
     case BATTLE_NUMERIC_DISPLAY_NO_TARGET:
-        color = display->displays[0];
-        color->red = color->green = color->blue = 128;
+        color = &display->displays[0]->color;
+        color->r = color->g = color->b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0x1a, 0xdb, 0x25, 10, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_SILENCED:
-        color = display->displays[0];
-        color->red = color->green = color->blue = 128;
+        color = &display->displays[0]->color;
+        color->r = color->g = color->b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0xd8, 0xe9, 0x1e, 8, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_NO_MP:
-        color = display->displays[0];
-        color->red = color->green = color->blue = 128;
+        color = &display->displays[0]->color;
+        color->r = color->g = color->b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0x64, 0x20, 0x1a, 9, 0);
         break;
     }

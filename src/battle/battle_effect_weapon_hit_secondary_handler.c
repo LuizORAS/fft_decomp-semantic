@@ -117,7 +117,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
                         &g_battle_effect_trap_particle_configs[group], &slot->motion);
                     battle_effect_init_trap_animation(
                         BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B, MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 10), slot);
-                    slot->red = slot->green = slot->blue = 0xff;
+                    slot->color.r = slot->color.g = slot->color.b = 0xff;
                     state->count_b++;
                     if (state->count_b == 16) {
                         break;

@@ -7,8 +7,8 @@
 #include "psx/types.h"
 
 /* color */
-/* Packed RGB triples used by Gouraud menu graphics. CVECTOR adds a fourth
- * byte and cannot describe tables whose colors have a three-byte stride. */
+/* Three byte-sized RGB channels, used for colors and per-channel values.
+ * CVECTOR adds a fourth byte; these records have a three-byte stride. */
 typedef struct rgb24 {
     u8 r;
     u8 g;

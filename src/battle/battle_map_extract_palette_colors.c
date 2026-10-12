@@ -34,9 +34,9 @@ void battle_map_extract_palette_colors(const palette_t palette, s32 clut_row, s3
         upload_row[color_index] = color;
         components = &component_row[color_index];
         packed_row[color_index] = color;
-        components->red_5bit = color & 0x1f;
-        components->green_5bit = (color & 0x3e0) >> 5;
-        components->blue_5bit = (color & 0x7c00) >> 10;
+        components->color.r = color & 0x1f;
+        components->color.g = (color & 0x3e0) >> 5;
+        components->color.b = (color & 0x7c00) >> 10;
         components->semi_transparent = color >> 15;
     } while (i < MAP_CLUT_COLOR_COUNT);
 }

@@ -1259,12 +1259,8 @@ typedef struct effect_work_record {
     vec3s16_t target;                /* 0x3c */
     s16 lifetime;                    /* 0x42; frames or EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN */
     u8 _unused_44;
-    u8 homing_curve_selector; /* 0x45; zero disables, otherwise curve row + 1 */
-    struct {
-        u8 red;
-        u8 green;
-        u8 blue;
-    } colour_curves;               /* 0x46; per-channel animation curve indices */
+    u8 homing_curve_selector;      /* 0x45; zero disables, otherwise curve row + 1 */
+    rgb24_t colour_curves;         /* 0x46; zero-based RGB animation curve indices */
     u8 _padding_49;                /* aligns homing_strength */
     s16 homing_strength;           /* 0x4a */
     s16 kind_flags;                /* 0x4c; EFFECT_EMITTER_* placement and EFFECT_WORK_KIND_* */
@@ -1348,8 +1344,8 @@ typedef char
 
 /* 0xcc-byte effect slots at 0x801b9278, chained through the leading next/prev
  * byte pair; slot 0 is the null sentinel. g_battle_effect_active_slot_head heads the active chain
- * and g_battle_effect_slot_free_head the free chain. 0x84..0x87 has the battle_effect_sprite_block_t
- * layout (colour plus the frame byte); battle_effect_init_trap_animation resets
+ * and g_battle_effect_slot_free_head the free chain. RGB and the frame byte
+ * are copied together by the billboard renderer; battle_effect_init_trap_animation resets
  * the colour and writes the 16-bit values at 0x88 and 0x8e. */
 
 typedef struct battle_effect_slot {
@@ -1358,9 +1354,7 @@ typedef struct battle_effect_slot {
     u8 _padding_02[2];                   /* aligns modes */
     DR_MODE modes[2][2];                 /* 0x04; two draw modes per buffer */
     POLY_FT4 quads[2];                   /* 0x34; one quad per buffer */
-    u8 red;                              /* 0x84 */
-    u8 green;                            /* 0x85 */
-    u8 blue;                             /* 0x86 */
+    rgb24_t color;                       /* 0x84 */
     u8 frame;                            /* 0x87 */
     u16 clut;                            /* 0x88 */
     s16 step_index;                      /* 0x8a */
@@ -1405,8 +1399,8 @@ enum {
     EFFECT_COLOR_CURVE_BLUE_SHIFT = 8,
 };
 
-/* Read a binding from the cached 32-bit value. Keeping the value scalar
- * preserves the shared index temporaries and original word loads. */
+/* Native callbacks cache signed packed words. Unsigned field copies change
+ * the arithmetic shifts and shared extraction temporaries. */
 static __inline__ u32 battle_effect_get_cached_curve_binding(s32 packed, s32 shift) {
     return (packed >> shift) & 0xf;
 }
@@ -1463,7 +1457,7 @@ typedef struct effect_geometry_entry {
     effect_emitter_spawn_curve_bindings_t spawn_bindings; /* 0x08 */
     u32 motion_curve_selectors; /* 0x0c: acceleration, acceleration step, lifetime, target offset, count and interval;
                                  * bits 28-29 bind homing strength and bits 30-31 bind its curve */
-    u32 colour_curves;          /* 0x10: nibbles 0-2 = r/g/b curve indexes */
+    u32 colour_curves;          /* 0x10: zero-based RGB curve indices in the low three nibbles */
     effect_emitter_geometry_view_t spawn;         /* 0x14: initial position, spread, angles and inertia */
     s16 _unknown_4c[2];                           /* 0x4c: lerped to _unknown_50 and discarded */
     s16 _unknown_50[2];                           /* 0x50 */

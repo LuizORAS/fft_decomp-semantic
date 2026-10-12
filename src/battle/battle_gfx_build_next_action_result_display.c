@@ -14,12 +14,12 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
     battle_gfx_sprite_display_data_t* display_2;
-    battle_gfx_sprite_display_data_t* color_2;
-    battle_gfx_sprite_display_data_t* color_0;
-    battle_gfx_sprite_display_data_t* color_1;
-    battle_gfx_sprite_display_data_t* blue_0;
-    battle_gfx_sprite_display_data_t* blue_1;
-    battle_gfx_sprite_display_data_t* blue_2;
+    rgb24_t* color_2;
+    rgb24_t* color_0;
+    rgb24_t* color_1;
+    rgb24_t* blue_0;
+    rgb24_t* blue_1;
+    rgb24_t* blue_2;
     const battle_action_display_image_rect_t* image;
     s32 flag;
     s32 index;
@@ -195,24 +195,24 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
         break;
     }
 
-    color_2 = display->displays[2];
-    color_0 = display->displays[0];
-    color_1 = display->displays[1];
-    color_2->red = red;
-    color_1->red = red;
-    color_0->red = red;
-    color_2 = display->displays[2];
-    color_0 = display->displays[0];
-    color_1 = display->displays[1];
-    color_2->green = green;
-    color_1->green = green;
-    color_0->green = green;
-    blue_0 = display->displays[0];
-    blue_1 = display->displays[1];
-    blue_2 = display->displays[2];
-    blue_2->blue = blue;
-    blue_1->blue = blue;
-    blue_0->blue = blue;
+    color_2 = &display->displays[2]->color;
+    color_0 = &display->displays[0]->color;
+    color_1 = &display->displays[1]->color;
+    color_2->r = red;
+    color_1->r = red;
+    color_0->r = red;
+    color_2 = &display->displays[2]->color;
+    color_0 = &display->displays[0]->color;
+    color_1 = &display->displays[1]->color;
+    color_2->g = green;
+    color_1->g = green;
+    color_0->g = green;
+    blue_0 = &display->displays[0]->color;
+    blue_1 = &display->displays[1]->color;
+    blue_2 = &display->displays[2]->color;
+    blue_2->b = blue;
+    blue_1->b = blue;
+    blue_0->b = blue;
 
     if ((display->value / 1000) & 0xffff) {
         digits[2] = 9;

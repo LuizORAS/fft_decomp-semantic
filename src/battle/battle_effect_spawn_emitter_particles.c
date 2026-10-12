@@ -527,9 +527,9 @@ s32 battle_effect_spawn_emitter_particles(
     for (i = 0; i < count; i++) {
         particle->homing_strength = RANDOM_BETWEEN(homing_min, homing_max);
         particle->homing_curve_selector = homing_curve_selector;
-        particle->colour_curves.red = colour_r;
-        particle->colour_curves.green = colour_g;
-        particle->colour_curves.blue = colour_b;
+        particle->colour_curves.r = colour_r;
+        particle->colour_curves.g = colour_g;
+        particle->colour_curves.b = colour_b;
         if (behavior_flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
             particle->child_emitter_on_death = entry->emitter.child_emitter_on_death;
         }

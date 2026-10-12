@@ -30,7 +30,7 @@ void battle_map_init_palette_state(void) {
             animation_index--;
         } while (animation_index >= 0);
 
-        g_battle_map_palette_state.clut_rows[clut_row].components[0].red_delta_biased = 0;
+        g_battle_map_palette_state.clut_rows[clut_row].components[0].delta_biased.r = 0;
         clut_row++;
     } while (clut_row < MAP_CLUT_ROW_COUNT);
 
