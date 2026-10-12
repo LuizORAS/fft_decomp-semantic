@@ -597,12 +597,11 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     g_battle_map_tile_data_ptr = g_battle_map_tile_data;
     if (g_battle_target_tile_mark_modes[0] == BATTLE_TILE_MARK_SHOW_MOVE) {
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
-            if ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
-                g_battle_target_color_tile_x = (u16)g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
+            if (g_battle_map_textured_triangle_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
+                if (g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.move_destination) {
@@ -620,11 +619,11 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             }
         }
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
-            if ((u16)g_battle_map_textured_quad_positions[i].terrain_tile != 0xFFFE) {
-                g_battle_target_color_tile_y = ((u16)g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
-                g_battle_target_color_tile_x = (u16)g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
+            if (g_battle_map_textured_quad_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if ((u16)g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
+                if (g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.move_destination) {
@@ -648,12 +647,11 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     }
     if (g_battle_target_tile_mark_modes[1] == BATTLE_TILE_MARK_SHOW_RANGE) {
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
-            if ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
-                g_battle_target_color_tile_x = (u16)g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
+            if (g_battle_map_textured_triangle_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
+                if (g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.ability_range) {
@@ -671,11 +669,11 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             }
         }
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
-            if ((u16)g_battle_map_textured_quad_positions[i].terrain_tile != 0xFFFE) {
-                g_battle_target_color_tile_y = ((u16)g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
-                g_battle_target_color_tile_x = (u16)g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
+            if (g_battle_map_textured_quad_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if ((u16)g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
+                if (g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.ability_range) {
@@ -699,12 +697,11 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     }
     if (g_battle_target_tile_mark_modes[2] == BATTLE_TILE_MARK_SHOW_TARGETS) {
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
-            if ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
-                g_battle_target_color_tile_x = (u16)g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
+            if (g_battle_map_textured_triangle_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if ((u16)g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
+                if (g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.targeted) {
@@ -722,11 +719,11 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             }
         }
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
-            if ((u16)g_battle_map_textured_quad_positions[i].terrain_tile != 0xFFFE) {
-                g_battle_target_color_tile_y = ((u16)g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
-                g_battle_target_color_tile_x = (u16)g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
+            if (g_battle_map_textured_quad_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if ((u16)g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
+                if (g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
                 if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.targeted) {

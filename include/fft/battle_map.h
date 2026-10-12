@@ -512,9 +512,11 @@ typedef char map_mesh_file_header_size_must_be_196[(sizeof(map_mesh_file_header_
  * Each XYZ vector occupies eight bytes. The first position's spare 16-bit
  * terrain tile has height level in bit 0, Z in bits 1-7 and X in bits 8-15;
  * 0xfffe marks a polygon without a terrain tile. */
+enum { MAP_POLYGON_TILE_NONE = 0xfffe };
+
 typedef struct battle_map_mesh_triangle_positions {
     s16 x0, y0, z0;
-    s16 terrain_tile;
+    u16 terrain_tile;
     s16 x1, y1, z1;
     s16 polygon_flags;
     s16 x2, y2, z2;
@@ -523,7 +525,7 @@ typedef struct battle_map_mesh_triangle_positions {
 
 typedef struct battle_map_mesh_quad_positions {
     s16 x0, y0, z0;
-    s16 terrain_tile;
+    u16 terrain_tile;
     s16 x1, y1, z1;
     s16 polygon_flags;
     s16 x2, y2, z2;

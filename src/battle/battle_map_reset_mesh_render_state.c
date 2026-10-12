@@ -15,6 +15,7 @@ void battle_map_reset_mesh_render_state(void) {
     SVECTOR zero_vector;
     VECTOR unit_scale;
     s32 i;
+    s16 no_tile;
     s32 j;
     s32* weather_flags;
 
@@ -66,11 +67,14 @@ void battle_map_reset_mesh_render_state(void) {
         g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_NONE;
         g_battle_map_texture_animations[i].active = 0;
     }
+    /* A signed sentinel local retains each array's original -2 constant load. */
+    no_tile = MAP_POLYGON_TILE_NONE;
     for (i = 0; i < 360; i++) {
-        g_battle_map_textured_triangle_positions[i].terrain_tile = -2;
+        g_battle_map_textured_triangle_positions[i].terrain_tile = no_tile;
     }
+    no_tile = MAP_POLYGON_TILE_NONE;
     for (i = 0; i < 710; i++) {
-        g_battle_map_textured_quad_positions[i].terrain_tile = -2;
+        g_battle_map_textured_quad_positions[i].terrain_tile = no_tile;
     }
     for (i = 1; i < 9; i++) {
         g_battle_map_mesh_animation_instructions[i].states[0][1].next = 0;
