@@ -5,6 +5,7 @@
 
 /* Measure a text entry in characters, following substitutions and backreferences. */
 void text_measure(s16* columns, s16* rows, const u8* text) {
+    text_backreference_command_t* backreference;
     party_data_t* party;
     u8* cursor;
     s32 i;
@@ -92,11 +93,12 @@ void text_measure(s16* columns, s16* rows, const u8* text) {
         }
         if ((state->command & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (state->command & 0xF) < 4) {
             state->return_cursor = cursor + 3;
-            state->scratch = (cursor[0] & 3) * 8;
-            state->remaining_bytes = cursor[1] >> 5;
+            backreference = (text_backreference_command_t*)cursor;
+            state->scratch = backreference->length_high * 8;
+            state->remaining_bytes = backreference->length_low;
             state->remaining_bytes = state->remaining_bytes + state->scratch + 4;
-            state->scratch = (cursor[1] & 0xF) * 0xFE;
-            state->scratch = cursor[2] + state->scratch;
+            state->scratch = backreference->offset_high * 0xFE;
+            state->scratch = backreference->offset_low + state->scratch;
             cursor -= state->scratch;
             continue;
         }
