@@ -3,7 +3,7 @@
 
 /* Per-frame WORLD sound effect dispatch. A queued text glyph or page sound
  * plays at once on a free channel pair, as does an error message sound in
- * the menu queue. Then the id in g_world_sound_effect_id_to_play (dropped
+ * the menu queue. Then the id in g_world_sound_pending_sfx_id (dropped
  * when negative or while the menu sounds are muted), or failing that the one
  * in g_world_menu_sound_effect_id, plays on the main_sound_play_sfx channels
  * and both queues are cleared. Cancel and Cursor Move are copied to the menu
@@ -14,26 +14,25 @@ void world_sound_dispatch_effect(void) {
     if (g_world_sound_release_held_loop != 0) {
         g_world_menu_sound_effect_id = MAIN_SFX_NONE;
     }
-    if (g_world_sound_effect_id_to_play == MAIN_SFX_TEXT_GLYPH
-        || g_world_sound_effect_id_to_play == MAIN_SFX_TEXT_PAGE) {
-        main_sound_play_sfx_find_channel(g_world_sound_effect_id_to_play);
-        g_world_sound_effect_id_to_play = MAIN_SFX_NONE;
+    if (g_world_sound_pending_sfx_id == MAIN_SFX_TEXT_GLYPH || g_world_sound_pending_sfx_id == MAIN_SFX_TEXT_PAGE) {
+        main_sound_play_sfx_find_channel(g_world_sound_pending_sfx_id);
+        g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
     } else if (g_world_menu_sound_effect_id == MAIN_SFX_ERROR_MESSAGE) {
         main_sound_play_sfx_find_channel(MAIN_SFX_ERROR_MESSAGE);
         g_world_menu_sound_effect_id = MAIN_SFX_NONE;
     }
-    if (g_world_sound_effect_id_to_play == MAIN_SFX_CANCEL || g_world_sound_effect_id_to_play == MAIN_SFX_CURSOR_MOVE) {
-        g_world_menu_sound_effect_id = g_world_sound_effect_id_to_play;
+    if (g_world_sound_pending_sfx_id == MAIN_SFX_CANCEL || g_world_sound_pending_sfx_id == MAIN_SFX_CURSOR_MOVE) {
+        g_world_menu_sound_effect_id = g_world_sound_pending_sfx_id;
     }
-    if (g_world_sound_effect_id_to_play < 0 || g_world_menu_sound_muted != 0) {
-        g_world_sound_effect_id_to_play = MAIN_SFX_NONE;
+    if (g_world_sound_pending_sfx_id < 0 || g_world_sound_suppressed != 0) {
+        g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
     }
-    sound_id = g_world_sound_effect_id_to_play;
+    sound_id = g_world_sound_pending_sfx_id;
     if (sound_id == MAIN_SFX_NONE) {
         sound_id = g_world_menu_sound_effect_id;
     }
     g_world_menu_sound_effect_id = MAIN_SFX_NONE;
-    g_world_sound_effect_id_to_play = MAIN_SFX_NONE;
+    g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
     if (sound_id != MAIN_SFX_NONE) {
         main_sound_play_sfx(sound_id);
     }

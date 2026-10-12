@@ -5,5 +5,5 @@
 /* Set a WORLD draw mode from aligned texture-page coordinates in a rect. */
 void world_gfx_set_draw_mode_from_rect(DR_MODE* mode, const u16* rect) {
     SetDrawMode(mode, 0, 0, GetTPage(0, 0, (s16)(rect[0] & 0xffc0), (s16)(rect[1] & 0xff00)) & 0xffff,
-        &g_world_gfx_texture_window);
+        &g_world_menu_disabled_texture_window);
 }

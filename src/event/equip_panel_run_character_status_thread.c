@@ -84,18 +84,18 @@ void equip_panel_run_character_status_thread(void) {
         }
         if (frame == 0 || thread->redraw_request == 1) {
             battle_clear_menu_render_buffer(g_equip_panel_text_image_a, 0xc80);
-            g_menu_text_state.pen.stride = 0x50;
+            g_battle_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                     battle_menu_display_text_entry(state->equipment[i] + TEXT_ID_ITEM_NAME_BASE,
-                        g_equip_panel_text_image_a, &g_menu_text_state.pen);
+                        g_equip_panel_text_image_a, &g_battle_menu_text_state.pen);
                 }
-                g_menu_text_state.pen.rect.y += 0x10;
+                g_battle_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_equip_panel_text_upload_rect_a, (u32*)g_equip_panel_text_image_a);
             battle_clear_menu_render_buffer(g_equip_panel_text_image_b, 0xc80);
-            g_menu_text_state.pen.stride = 0x50;
+            g_battle_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {
                 mode = state->ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -103,18 +103,18 @@ void equip_panel_run_character_status_thread(void) {
                     mode = state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
                 }
                 if ((u16)state->ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
-                    g_menu_text_state.pen.rect.y += 0x10;
+                    g_battle_menu_text_state.pen.rect.y += 0x10;
                 } else {
-                    battle_menu_display_text_entry(mode, g_equip_panel_text_image_b, &g_menu_text_state.pen);
-                    g_menu_text_state.pen.rect.y += 0x10;
+                    battle_menu_display_text_entry(mode, g_equip_panel_text_image_b, &g_battle_menu_text_state.pen);
+                    g_battle_menu_text_state.pen.rect.y += 0x10;
                 }
             }
             for (; i < 5; i++) {
                 if (state->ability_ids[i] != -1) {
                     battle_menu_display_text_entry(state->ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE,
-                        g_equip_panel_text_image_b, &g_menu_text_state.pen);
+                        g_equip_panel_text_image_b, &g_battle_menu_text_state.pen);
                 }
-                g_menu_text_state.pen.rect.y += 0x10;
+                g_battle_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_equip_panel_text_upload_rect_b, (u32*)g_equip_panel_text_image_b);
             thread->redraw_request = 0;

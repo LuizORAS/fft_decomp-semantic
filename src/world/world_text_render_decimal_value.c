@@ -17,7 +17,7 @@ void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_g
     if (flags & MENU_DECIMAL_SLASH_PREFIX) {
         position->rect.x -= 2;
         g_world_decimal_glyph_source.rect.x = 0xb4;
-        world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_decimal_glyph_source, position);
+        world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_decimal_glyph_source, position);
         position->rect.x += 7;
     }
     if (flags & MENU_DECIMAL_DOTS_PREFIX) {
@@ -25,7 +25,7 @@ void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_g
         g_world_decimal_glyph_source.rect.y = 0x1a;
         g_world_decimal_glyph_source.rect.h = 4;
         position->rect.y += 3;
-        world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_decimal_glyph_source, position);
+        world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_decimal_glyph_source, position);
         position->rect.x += 7;
         position->rect.y -= 3;
         g_world_decimal_glyph_source.rect.y = 0x10;
@@ -41,7 +41,7 @@ void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_g
                 position->rect.x += 5;
             }
         }
-        world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_decimal_glyph_source, position);
+        world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_decimal_glyph_source, position);
         position->rect.x += 5;
         if (value == 0) {
             return;
@@ -50,7 +50,7 @@ void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_g
     plus = flags & MENU_DECIMAL_SIGN_PLUS;
     if (plus) {
         g_world_decimal_glyph_source.rect.x = 0xc8;
-        world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_decimal_glyph_source, position);
+        world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_decimal_glyph_source, position);
         position->rect.x += 5;
     }
     digits = flags & MENU_DECIMAL_FIELD_WIDTH_MASK;
@@ -76,7 +76,7 @@ void world_text_render_decimal_value(s32 value, s32 flags, void* pixels, world_g
     }
     for (i = 0; i < (flags & 0xff); i++) {
         g_world_decimal_glyph_source.rect.x = value % 10 * 6 + 0x78;
-        world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_decimal_glyph_source, position);
+        world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_decimal_glyph_source, position);
         position->rect.x -= 5;
         value /= 10;
         if (!(flags & MENU_DECIMAL_LEADING_ZEROS) && value == 0) {

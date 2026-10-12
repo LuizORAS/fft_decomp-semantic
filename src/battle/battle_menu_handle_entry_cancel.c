@@ -17,12 +17,12 @@
  *
  * When the entry has a thread group (cancel_thread_count is not -1), each of its
  * threads, counted from the current thread, gets thread parameter 3 set to 1,
- * after which battle_menu_can_accept_input refuses it input; thread 8 also clears
+ * after which battle_menu_is_input_allowed refuses it input; thread 8 also clears
  * the four pending selections. Every thread whose task is 1 (a running text
  * thread) is asked to stop (task 3). The entry's result cell receives -1, the
  * event input is consumed, the cancel sound is queued and event input stays
  * suppressed for 5 frames. */
-void battle_handle_menu_cancel_input(void* menu) {
+void battle_menu_handle_entry_cancel(void* menu) {
     world_menu_entry_t* ctx = menu;
     s32 count;
     s32 i;
@@ -33,7 +33,7 @@ void battle_handle_menu_cancel_input(void* menu) {
     s32 thread;
     char unused[8];
 
-    if ((g_battle_script_event_input & PSX_PAD_CROSS) && battle_menu_can_accept_input() != 0) {
+    if ((g_battle_script_event_input & PSX_PAD_CROSS) && battle_menu_is_input_allowed() != 0) {
         count = ctx->cancel_thread_count;
         if (count != -1) {
             /* The counter is zeroed ahead of the guard, not inside the arm.

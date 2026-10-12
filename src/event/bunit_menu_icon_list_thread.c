@@ -34,10 +34,10 @@ void bunit_menu_icon_list_thread(void) {
             buffer = battle_menu_build_and_upload_window_frame_image(
                 state->inner_width, state->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             fresh = 1;
-            g_menu_text_state.pen.stride = state->inner_width;
+            g_battle_menu_text_state.pen.stride = state->inner_width;
             battle_menu_set_text_origin(8, 9);
-            g_battle_menu_text_palette_offset = 0;
-            battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.pen);
+            g_battle_menu_text_color = 0;
+            battle_menu_display_text_entry(state->text_id, buffer, &g_battle_menu_text_state.pen);
             LoadImage(&rect, buffer);
         }
         record = &records[i & 1];
@@ -51,8 +51,8 @@ void bunit_menu_icon_list_thread(void) {
             break;
         }
         battle_menu_step_wrapping_cursor_on_scroll_buttons(state, &cursor);
-        battle_menu_handle_action(state, cursor);
-        battle_handle_menu_cancel_input(state);
+        battle_menu_handle_entry_confirm(state, cursor);
+        battle_menu_handle_entry_cancel(state);
         battle_menu_select_icon_cluts(record);
         battle_menu_update_icon_cursor_sprites(state, &record->base, i, cursor);
         battle_menu_submit_icon_primitives(record);

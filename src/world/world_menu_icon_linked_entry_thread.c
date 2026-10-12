@@ -40,7 +40,7 @@ void world_menu_icon_linked_entry_thread(void) {
         if (i == 0) {
             world_menu_free_memory(buffer);
         }
-        if (world_menu_check_thread_completion(&g_world_menu_new_button_input) != 0) {
+        if (world_menu_should_close_thread(&g_world_menu_new_button_input) != 0) {
             break;
         }
         if (parent >= 0) {
@@ -53,10 +53,10 @@ void world_menu_icon_linked_entry_thread(void) {
         record = &records[i & 1];
         world_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
         world_menu_handle_entry_confirm(param, 0);
-        world_menu_cancel_thread_group(param);
+        world_menu_handle_entry_cancel(param);
         world_menu_submit_icon_primitives(&record->base);
     }
-    g_world_menu_sound_muted = 0;
+    g_world_sound_suppressed = 0;
     world_thread_yield();
     if (world_thread_get_current_parameter_2() == 0) {
         world_thread_exit_current();

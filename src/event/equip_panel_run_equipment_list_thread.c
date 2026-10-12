@@ -90,16 +90,16 @@ void equip_panel_run_equipment_list_thread(void) {
         }
         if (frame == 0 || thread->redraw_request == 1) {
             battle_clear_menu_render_buffer(text, 0xc80);
-            g_menu_text_state.pen.stride = 0x50;
+            g_battle_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
                 if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                     color_bits = state->equipment[i] & 0xc000;
-                    g_battle_menu_text_palette_offset = color_bits >> 12;
-                    battle_menu_display_text_entry(
-                        (state->equipment[i] & ITEM_ID_MASK) | TEXT_ID_ITEM_NAME_BASE, text, &g_menu_text_state.pen);
+                    g_battle_menu_text_color = color_bits >> 12;
+                    battle_menu_display_text_entry((state->equipment[i] & ITEM_ID_MASK) | TEXT_ID_ITEM_NAME_BASE, text,
+                        &g_battle_menu_text_state.pen);
                 }
-                g_menu_text_state.pen.rect.y += 0x10;
+                g_battle_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(upload, (u32*)text);
             thread->redraw_request = 0;

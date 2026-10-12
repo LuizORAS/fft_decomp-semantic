@@ -13,7 +13,7 @@
 /*
  * Build the AT (turn order) list previewing the ability the player is about to
  * confirm: stage the selected ability or item into the shared action record at
- * g_world_menu_preview_action, run battle_turn_preview_at_list for the stored unit on the
+ * g_world_menu_selected_action, run battle_turn_preview_at_list for the stored unit on the
  * main stack to obtain the previewed turn position and the descriptor list,
  * then write the name text and the four halfword columns and size menu entry
  * 52 around them.
@@ -34,7 +34,7 @@
  *     `slot->flags` as the target does.
  *   - `action` is a pointer local for the shared action record. The target
  *     keeps that address in s0, stores through it in the jal delay slot and
- *     passes `move a1,s0`; storing to g_world_menu_preview_action absolutely wastes the delay
+ *     passes `move a1,s0`; storing to g_world_menu_selected_action absolutely wastes the delay
  *     slot on a nop and rematerialises lui a1/addiu a1.
  *   - The turn-value store is written once after the if/else. The target's
  *     0xb012 arm is `j 0xed3f8` with `li v0,0xb012` in the delay slot, landing
@@ -70,23 +70,23 @@ void world_menu_build_ability_preview_at_list(void) {
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].text_binding
         = (struct world_menu_text_binding*)&g_world_menu_at_list_layout;
     text_id = at_table[g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index];
-    g_world_menu_preview_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
+    g_world_menu_selected_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     entry = &g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST];
     if ((text_id & 0xf800) == TEXT_ID_ABILITY_NAME_BASE) {
         staged_item = 0;
-        g_world_menu_preview_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
+        g_world_menu_selected_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
     } else {
         staged_item = 1;
-        g_world_menu_preview_action.item_id = text_id;
+        g_world_menu_selected_action.item_id = text_id;
     }
-    action = &g_world_menu_preview_action;
+    action = &g_world_menu_selected_action;
     action->unit_id = g_world_active_turn_unit.battle_id;
     stats = world_unit_get_active_turn_unit_stats();
     g_world_thread_call_target = (void (*)(void))battle_turn_preview_at_list;
     turn = world_thread_call_on_main_stack(stats, action, &work->request);
     if (staged_item != 0) {
         work->descriptors[0].flags |= WORLD_AT_ACTING_UNIT;
-        work->descriptors[0].turn_value = g_world_menu_preview_action.item_id;
+        work->descriptors[0].turn_value = g_world_menu_selected_action.item_id;
     }
     count = 0;
     if (turn < 0 || turn == 0xff) {

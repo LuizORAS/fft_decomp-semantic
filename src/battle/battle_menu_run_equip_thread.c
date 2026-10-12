@@ -14,7 +14,7 @@ void battle_menu_run_equip_thread(void) {
     s32 i;
     s32 j;
 
-    battle_menu_set_option_menu_open();
+    battle_menu_block_help();
     saved = g_battle_unit_view_mode;
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     g_battle_menu_suspend_state = 1;
@@ -52,6 +52,6 @@ void battle_menu_run_equip_thread(void) {
     battle_unit_start_view_thread(saved, 0xFF, 0xFF);
     g_battle_sound_suppressed = 0;
     g_battle_script_event_input = 0;
-    battle_menu_clear_option_menu_open();
+    battle_menu_unblock_help();
     battle_thread_exit_current();
 }

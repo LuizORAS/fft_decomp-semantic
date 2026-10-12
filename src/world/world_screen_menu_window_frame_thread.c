@@ -28,7 +28,7 @@ void world_screen_menu_window_frame_thread(void) {
     s32 frame;
 
     menu = world_thread_get_current_parameter_1();
-    pixels = world_menu_alloc_ui_buffer(0x400);
+    pixels = world_menu_alloc_memory(0x400);
 
     world_clear_menu_render_buffer(pixels, 0x400);
     texture.w = 0x80;
@@ -39,16 +39,16 @@ void world_screen_menu_window_frame_thread(void) {
 
     world_gfx_set_blit_source_rect(8, 8, 0x20, 0x10);
     world_gfx_set_blit_dest_position(0, 0);
-    world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
+    world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
     world_gfx_set_blit_source_rect(0, 8, 8, 0x10);
     world_gfx_set_blit_dest_position(0x20, 0);
-    world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
+    world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
     world_gfx_set_blit_source_rect(0xd8, 0, 0x28, 0x10);
     world_gfx_set_blit_dest_position(0x28, 0);
-    world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
+    world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
     world_gfx_set_blit_source_rect(0xd8, 0x10, 0x28, 0x10);
     world_gfx_set_blit_dest_position(0x58, 0);
-    world_text_blit_glyph(g_world_menu_glyph_sheet, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
+    world_text_blit_glyph(g_world_menu_glyph_image, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
 
     LoadImage(&texture, (u32*)pixels);
     world_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
@@ -129,7 +129,7 @@ void world_screen_menu_window_frame_thread(void) {
         prim = &g_world_menu_panel_buffer.panel_frames[frame & 1];
         world_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_active_graphics_buffer_index);
         texture_u = 0x7d3c;
-        if (world_thread_get_current_parameter_2() == 0 && g_world_thread_task_active == 0) {
+        if (world_thread_get_current_parameter_2() == 0 && g_world_menu_input_lock_mode == 0) {
             texture_u = 0x7c3c;
         }
         for (index = 8; index >= 0; index--) {

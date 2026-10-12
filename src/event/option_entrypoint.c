@@ -51,7 +51,7 @@ void option_entrypoint(s32 menu_type) {
         battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS);
     }
 
-    g_option_menu_open = 0;
+    g_battle_menu_help_blocked = 0;
     g_option_menu_state = 0;
     if (menu_type == OPTION_MENU_GAME_OPTIONS) {
         s32 child_thread;

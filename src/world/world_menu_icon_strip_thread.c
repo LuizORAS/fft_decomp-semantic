@@ -35,7 +35,7 @@ void world_menu_icon_strip_thread(void) {
             world_menu_free_memory(buffer);
             fresh = 0;
         }
-        if (world_menu_check_thread_completion(&input) != 0) {
+        if (world_menu_should_close_thread(&input) != 0) {
             break;
         }
         record = &records[i & 1];

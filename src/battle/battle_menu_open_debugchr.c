@@ -7,7 +7,7 @@
  * afterwards. */
 void battle_menu_open_debugchr(void) {
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
-    battle_menu_set_option_menu_open();
+    battle_menu_block_help();
     g_battle_menu_suspend_state = 1;
     battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_DEBUGCHR);
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
@@ -19,6 +19,6 @@ void battle_menu_open_debugchr(void) {
     g_battle_menu_suspend_state = 0;
     g_battle_sound_suppressed = 0;
     g_battle_script_event_input = 0;
-    battle_menu_clear_option_menu_open();
+    battle_menu_unblock_help();
     battle_thread_exit_current();
 }

@@ -115,7 +115,7 @@ void option_build_at_list(void) {
     battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&entry->window_x, 0, 0);
     option_menu_draw_text_columns(entry, &row_offset, buffer);
     ring = 0;
-    image_rect.w = g_menu_text_state.pen.stride >> 2;
+    image_rect.w = g_battle_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)buffer);
     clear.h = 2;
     clear.x = image_rect.x;
@@ -139,7 +139,7 @@ void option_build_at_list(void) {
         } else {
             battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&entry->window_x, 0, 0);
         }
-        if (delta == 0 && battle_menu_can_accept_input() != 0 && i != 0) {
+        if (delta == 0 && battle_menu_is_input_allowed() != 0 && i != 0) {
             /* Dead store (column is reinitialised before use); only the reload
              * of layout for this branch survives in the target. */
             if (layout == 0) {
@@ -184,29 +184,29 @@ void option_build_at_list(void) {
                     image_rect.h = 0x10;
                     buffer = g_option_menu_render_buffer;
                     battle_clear_menu_render_buffer(buffer, 0x800);
-                    g_menu_text_state.pen.stride = entry->inner_width;
+                    g_battle_menu_text_state.pen.stride = entry->inner_width;
                     for (column = 0; column < 3; column++) {
                         index = cursor + row_offset + delta;
                         battle_menu_set_text_origin(layout->x[column], 0);
                         if (layout->mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
-                            g_battle_menu_text_palette_offset = layout->text_colors[column][index];
+                            g_battle_menu_text_color = layout->text_colors[column][index];
                         }
-                        if (g_battle_menu_text_palette_offset == 4) {
-                            g_menu_text_state.pen.color = 0x44444444;
+                        if (g_battle_menu_text_color == 4) {
+                            g_battle_menu_text_state.pen.color = 0x44444444;
                         }
                         if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                             battle_menu_display_text_entry(
-                                layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
+                                layout->text_ids[column][index], buffer, &g_battle_menu_text_state.pen);
                         } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                             battle_display_menu_number_entry(
-                                layout->text_ids[column][index], 2, (s32)buffer, &g_menu_text_state.pen);
+                                layout->text_ids[column][index], 2, (s32)buffer, &g_battle_menu_text_state.pen);
                         } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                             battle_draw_menu_number_glyphs(
-                                layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
+                                layout->text_ids[column][index], 2, buffer, &g_battle_menu_text_state.pen);
                         }
                     }
-                    g_menu_text_state.pen.color = 0;
-                    g_battle_menu_text_palette_offset = 0;
+                    g_battle_menu_text_state.pen.color = 0;
+                    g_battle_menu_text_color = 0;
                     LoadImage(&image_rect, (u32*)buffer);
                     clear.h = 2;
                     clear.x = image_rect.x;
@@ -220,7 +220,7 @@ void option_build_at_list(void) {
         if (redraw_pending != 0) {
             redraw_pending = 0;
         }
-        if (delta == 0 && battle_menu_can_accept_input() != 0) {
+        if (delta == 0 && battle_menu_is_input_allowed() != 0) {
             redraw_pending = (s32)option_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
@@ -229,9 +229,9 @@ void option_build_at_list(void) {
             break;
         }
         if (delta == 0) {
-            battle_menu_handle_action(entry, cursor);
+            battle_menu_handle_entry_confirm(entry, cursor);
         }
-        battle_handle_menu_cancel_input(entry);
+        battle_menu_handle_entry_cancel(entry);
         if ((g_battle_event_speed == 1 && !(battle_script_get_event_initial_repeat_counter() & 1))
             || g_battle_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
@@ -258,7 +258,7 @@ void option_build_at_list(void) {
         } else {
             frame->clut = 0x7FFC;
         }
-        if (layout->hidden_rows != 0 && battle_menu_can_accept_input() != 0) {
+        if (layout->hidden_rows != 0 && battle_menu_is_input_allowed() != 0) {
             if (row_offset != 0) {
                 battle_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
                 battle_gfx_draw_or_append_gpu_primitive(&page->arrow_marks[0]);

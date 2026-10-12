@@ -35,7 +35,7 @@ void world_menu_switch_item_category(s32 input) {
             g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         world_menu_set_window_scale_step(10);
     }
-    world_menu_draw_item_category_tabs(1, g_world_shop_item_category, g_world_thread_task_active);
+    world_menu_draw_item_category_tabs(1, g_world_shop_item_category, g_world_menu_input_lock_mode);
     item = g_world_menu_entry_ids[g_world_menu_cursor_position];
     if (item != -1) {
         description = (item & WORLD_ITEM_ID_MASK) + 0x6800;

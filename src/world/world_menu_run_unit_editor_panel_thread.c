@@ -27,18 +27,18 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_menu_open_debugchr_unit_editor();
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
     battle_menu_enter_status_screen_selection();
-    g_world_menu_overlay_state = 1;
+    g_world_menu_suspend_state = 1;
     g_world_menu_panel_fade_mode = MENU_PANEL_FADE_OUT;
     world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
     world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
     world_menu_record_selection_for_selected_unit();
-    world_menu_set_transition_active_flag();
+    world_menu_block_help();
     do {
         world_thread_yield();
     } while (g_world_menu_hovered_stats_frame_count < 2);
-    world_menu_clear_transition_active_flag();
+    world_menu_unblock_help();
 
-    frame_record = g_world_unit_editor_frames;
+    frame_record = g_world_menu_unit_editor_frames;
     records = frame_record;
     world_gfx_init_scaled_draw_area_packets(&frame_record->draw_areas);
     g_world_menu_hovered_unit_stats_display.y = 0x1A;
@@ -76,7 +76,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
 
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
-    if (g_world_unit_editor_fields.state.two_hands != 0) {
+    if (g_world_menu_billboard_data.state.two_hands != 0) {
         world_copy_bytes(&g_world_unit_editor_sprite_image_params_a[2], g_world_unit_editor_row_image_params_b,
             2 * sizeof(world_gfx_image_load_parameters_t));
         world_copy_bytes(&g_world_unit_editor_sprite_image_params_a[14], &g_world_unit_editor_row_image_params_b[2],
@@ -95,14 +95,14 @@ void world_menu_run_unit_editor_panel_thread(void) {
         world_copy_bytes(&g_world_unit_editor_sprite_image_params_b[14], &g_world_unit_editor_row_image_params_a[2],
             2 * sizeof(world_gfx_image_load_parameters_t));
     }
-    if (g_world_unit_editor_fields.state.generic_monster == 0) {
+    if (g_world_menu_billboard_data.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
-            world_gfx_init_image_loading(&frame_record->sprites[i], &g_world_gfx_menu_image_source,
+            world_gfx_init_image_loading(&frame_record->sprites[i], &g_world_menu_texture_location,
                 &g_world_unit_editor_panel_rect, &g_world_unit_editor_sprite_image_params_a[i]);
         }
     } else {
         for (i = 0; i < 19; i++) {
-            world_gfx_init_image_loading(&frame_record->sprites[i], &g_world_gfx_menu_image_source,
+            world_gfx_init_image_loading(&frame_record->sprites[i], &g_world_menu_texture_location,
                 &g_world_unit_editor_panel_rect, &g_world_unit_editor_sprite_image_params_b[i]);
         }
     }
@@ -110,7 +110,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     for (i = 0; i < 5; i++) {
         world_gfx_init_image_loading(&frame_record->sprites[19 + i], &g_world_item_icon_image_location,
             &g_world_unit_editor_panel_rect, &g_world_unit_editor_item_icon_image_params[i]);
-        world_gfx_set_item_icon_sprite(&frame_record->sprites[19 + i], g_world_unit_editor_fields.state.equipment[i]);
+        world_gfx_set_item_icon_sprite(&frame_record->sprites[19 + i], g_world_menu_billboard_data.state.equipment[i]);
     }
 
     buffer = world_menu_alloc_buffer(0xC80);
@@ -118,8 +118,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
     g_world_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 5; i++) {
-        value = g_world_unit_editor_fields.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
-        if ((u16)g_world_unit_editor_fields.state.equipment[i] == 0xFFFF) {
+        value = g_world_menu_billboard_data.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
+        if ((u16)g_world_menu_billboard_data.state.equipment[i] == 0xFFFF) {
             g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
             world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
@@ -132,11 +132,11 @@ void world_menu_run_unit_editor_panel_thread(void) {
     g_world_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 2; i++) {
-        value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
-        if (g_world_unit_editor_fields.state.generic_monster != 0) {
-            value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
+        value = g_world_menu_billboard_data.state.ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
+        if (g_world_menu_billboard_data.state.generic_monster != 0) {
+            value = g_world_menu_billboard_data.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
-        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+        if ((u16)g_world_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
             g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
             world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
@@ -144,17 +144,17 @@ void world_menu_run_unit_editor_panel_thread(void) {
         }
     }
     for (i = 2; i < 5; i++) {
-        value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
-        if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+        value = g_world_menu_billboard_data.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
+        if ((u16)g_world_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
             g_world_menu_text_state.pen.rect.y += 0x10;
         } else {
             world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
             g_world_menu_text_state.pen.rect.y += 0x10;
         }
     }
-    if (g_world_unit_editor_fields.state.generic_monster != 0) {
+    if (g_world_menu_billboard_data.state.generic_monster != 0) {
         for (i = 0; i < 5; i++) {
-            if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
+            if ((u16)g_world_menu_billboard_data.state.ability_ids[i] == BATTLE_MENU_STATUS_PANEL_LABEL_NONE) {
                 frame_record->sprites[7 + i].x0 -= 0x200;
             }
         }
@@ -178,7 +178,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         frame_record = &records[frame & 1];
         world_gfx_build_scaled_draw_area_pair_swapped(
             &frame_record->draw_areas, &g_world_unit_editor_cursor_rect, frame, g_main_gfx_screen_polarity);
-        if (g_world_thread_task_active == 0 && g_world_text_overlay_active == 0
+        if (g_world_menu_input_lock_mode == 0 && g_world_menu_help_open == 0
             && world_thread_get_current_parameter_3() != 0) {
             break;
         }
@@ -212,8 +212,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
             if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE)
                 && world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
                 && (world_unit_has_any_current_status(g_world_active_turn_unit.battle_id) != 0
-                    || (g_world_unit_editor_fields.state.generic_monster == 0
-                        && g_world_unit_selected_status_billboard.team_kind != 1))) {
+                    || (g_world_menu_billboard_data.state.generic_monster == 0
+                        && g_world_menu_active_turn_banner.team_kind != 1))) {
                 world_thread_start(g_world_thread_current_id - 1, world_menu_build_unit_status_list);
                 world_thread_set_parameters(g_world_thread_current_id - 1,
                     (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
@@ -231,7 +231,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[13]);
         world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[1]);
         for (i = 0; i < 5; i++) {
-            if ((u16)g_world_unit_editor_fields.state.equipment[i] != 0xFFFF) {
+            if ((u16)g_world_menu_billboard_data.state.equipment[i] != 0xFFFF) {
                 world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[19 + i]);
             }
         }
@@ -256,7 +256,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_selected_tile_info_display_thread);
     world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
     g_world_thread_contexts[NATIVE_THREAD_SLOT_TILE_INFO_PANEL].task_id = NATIVE_THREAD_TASK_TILE_INFO_PANEL;
-    g_world_menu_overlay_state = 0;
+    g_world_menu_suspend_state = 0;
     battle_menu_leave_status_screen_selection();
     world_menu_build_idle_action_stub(g_world_menu_current_id);
     world_thread_exit_current();

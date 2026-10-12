@@ -44,9 +44,9 @@ void world_menu_icon_timed_thread(void) {
         if (g_world_text_message_duration_frames < i * g_world_event_speed) {
             hold = 0;
             g_world_menu_new_button_input = PSX_PAD_CIRCLE;
-            g_world_menu_sound_muted = 1;
+            g_world_sound_suppressed = 1;
         }
-        if (world_menu_check_thread_completion(&g_world_menu_new_button_input) != 0) {
+        if (world_menu_should_close_thread(&g_world_menu_new_button_input) != 0) {
             break;
         }
         if (unset >= 0) {
@@ -60,12 +60,12 @@ void world_menu_icon_timed_thread(void) {
         world_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
         if (hold == 0) {
             world_menu_handle_entry_confirm(param, 0);
-            world_menu_cancel_thread_group(param);
+            world_menu_handle_entry_cancel(param);
         }
         world_menu_submit_icon_primitives(&record->base);
     }
     g_world_menu_panel_fade_intensity = 0;
-    g_world_menu_sound_muted = 0;
+    g_world_sound_suppressed = 0;
     world_thread_yield();
     if (world_thread_get_current_parameter_2() == 0) {
         world_thread_exit_current();

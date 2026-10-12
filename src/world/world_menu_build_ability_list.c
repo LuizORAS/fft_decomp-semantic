@@ -35,7 +35,7 @@ void world_menu_build_ability_list(s32 mode) {
     type = g_battle_action_menu_row_types[g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
     skillset
         = g_world_action_menu_skillsets[g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
-    g_world_menu_preview_action.skillset = skillset;
+    g_world_menu_selected_action.skillset = skillset;
     for (i = 0; i < 0x50; i++) {
         g_battle_ai_workspace_ptr->ability_list.ids[i] = 0xFFFF;
         g_battle_ai_workspace_ptr->ability_list.mp_costs[i] = 0xFF;
@@ -105,7 +105,7 @@ void world_menu_build_ability_list(s32 mode) {
     g_world_ability_menu_layout.values_x = 0x6A;
     g_world_ability_menu_layout.extras_x = 0x7E;
     g_world_ability_menu_layout.ids_mode = MENU_TEXT_COLUMN_TEXT;
-    if (g_world_menu_row_type_confirm_actions[type][1] == 1) {
+    if (g_world_menu_action_type_modes[type][1] == 1) {
         count = world_menu_copy_ff_terminated_bytes_to_halfwords(
             g_battle_ai_workspace_ptr->ability_list.ids, g_battle_ai_workspace_ptr->ability_list.mp_costs);
         world_menu_copy_bytes_to_halfwords(

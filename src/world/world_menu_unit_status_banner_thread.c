@@ -176,7 +176,7 @@ void world_menu_unit_status_banner_thread(void) {
         }
         dimmed = 0;
         if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_PANEL) != 0) {
-            dimmed = g_world_thread_task_active != 0;
+            dimmed = g_world_menu_input_lock_mode != 0;
         }
         if (display->dimmed != 0) {
             dimmed = 1;
@@ -382,7 +382,7 @@ void world_menu_unit_status_banner_thread(void) {
         status->sprites[6].h = 0x14;
         status->sprites[6].v0 = (cell / 7) * 0x14 + 0x2A;
         if ((frame == 0) || (display->work != 0)) {
-            world_menu_copy_billboard_data_in(&g_world_selected_unit_stat_summary, &g_world_selected_unit_identity,
+            world_menu_set_active_turn_panels(&g_world_selected_unit_stat_summary, &g_world_selected_unit_identity,
                 &g_world_selected_unit_stat_detail);
             if (state->list_index < 0) {
                 entries[6].format = 0xC00;

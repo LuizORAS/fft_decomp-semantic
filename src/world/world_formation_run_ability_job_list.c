@@ -50,6 +50,6 @@ s32 world_formation_run_ability_job_list(void) {
         world_text_show_message_and_play_sound(0xC007, MAIN_SFX_ERROR_MESSAGE);
     }
     world_menu_run_script_with_palette_mode(
-        g_world_learn_job_list_script, g_world_input_primary_repeat, g_world_thread_task_active);
+        g_world_learn_job_list_script, g_world_input_primary_repeat, g_world_menu_input_lock_mode);
     return MENU_JOB_LIST_STEP_JOBS;
 }

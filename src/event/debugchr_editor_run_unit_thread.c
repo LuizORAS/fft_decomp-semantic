@@ -99,7 +99,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     animation_second = animation + 1;
     animation_third = animation + 2;
     selected_unit = &g_debugchr_panel_selected_unit_data.battle_id;
-    g_option_menu_open = 0;
+    g_battle_menu_help_blocked = 0;
 
     for (;; frame++) {
         battle_thread_yield();

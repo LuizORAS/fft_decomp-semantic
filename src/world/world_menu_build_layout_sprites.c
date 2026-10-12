@@ -11,7 +11,7 @@ void world_menu_build_layout_sprites(world_menu_sprite_layout_t* layout, SPRT* s
     s32 x;
     s32 mode;
 
-    world_menu_init_sprite(sprite);
+    world_menu_init_semitransparent_sprt(sprite);
     sprite->clut = 0x7D7C;
     mode = layout->mode;
     if (mode == 1) {
@@ -38,7 +38,7 @@ void world_menu_build_layout_sprites(world_menu_sprite_layout_t* layout, SPRT* s
         }
     }
     sprite++;
-    world_menu_init_sprite(sprite);
+    world_menu_init_semitransparent_sprt(sprite);
     sprite->w = 0x10;
     sprite->h = 0x10;
     sprite->clut = 0x7D7C;

@@ -23,7 +23,7 @@ void world_menu_preview_attack_caster_stats(void) {
     s16* stored_unit;
 
     stored = world_unit_get_active_turn_unit_stats();
-    target = battle_unit_get_stats_from_battle_id(g_world_unit_comparison_battle_id);
+    target = battle_unit_get_stats_from_battle_id(g_world_preview_target_unit_id);
     /* Local pointer keeps the stored-unit address in one base register. */
     stored_unit = &g_world_active_turn_unit.battle_id;
     action = (world_unit_command_action_t*)battle_unit_get_target_id_ptr_by_battle_id(*stored_unit);
@@ -44,5 +44,5 @@ void world_menu_preview_attack_caster_stats(void) {
     world_thread_yield();
     world_menu_load_selected_unit();
     world_menu_display_hovered_unit_stats(&g_world_menu_attack_caster_stats_display, UNIT_STATS_PANEL_ATTACK_CASTER,
-        g_world_menu_attack_caster_stats_setup, &g_world_unit_selected_status_billboard);
+        g_world_menu_attack_caster_stats_setup, &g_world_menu_active_turn_banner);
 }

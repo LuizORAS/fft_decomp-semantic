@@ -9,7 +9,7 @@ void world_menu_start_entry_thread(void) {
     s32 count;
 
     world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
-    if (g_world_menu_overlay_state != 0) {
+    if (g_world_menu_suspend_state != 0) {
         world_thread_exit_current();
     }
     world_camera_wait_until_idle();
@@ -41,7 +41,7 @@ void world_menu_start_entry_thread(void) {
     count = g_world_menu_restore_depth;
     g_world_menu_new_button_input = 0;
     if (g_world_menu_restore_pending != 0 && g_world_menu_restore_unit_id == g_world_active_turn_unit.battle_id) {
-        g_world_text_overlay_active = 1;
+        g_world_menu_help_open = 1;
         world_thread_wait_frames(2);
         if (count > 0) {
             world_thread_start(NATIVE_THREAD_SLOT_MENU_CHILD, world_menu_run_skillset_thread);
@@ -56,7 +56,7 @@ void world_menu_start_entry_thread(void) {
         }
         world_thread_wait_frames(2);
         g_world_menu_restore_pending = 0;
-        g_world_text_overlay_active = 0;
+        g_world_menu_help_open = 0;
     } else {
         g_world_menu_restore_depth = 0;
         g_world_menu_restore_unit_id = g_world_active_turn_unit.battle_id;

@@ -119,7 +119,7 @@ void world_shop_run_screen(s32 shop_type) {
             world_menu_update_grid_cursor(
                 g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->uses_monster_skillset);
         }
-        world_menu_set_palette_mode(g_world_thread_task_active);
+        world_menu_set_palette_mode(g_world_menu_input_lock_mode);
         if (g_world_shop_background_visible != 0) {
             world_gfx_enqueue_textured_quad(&g_world_shop_background_rect, 0, 0, 0, 0, 0x14C, 0, 1);
             world_gfx_enqueue_tile(&g_world_shop_backdrop_tile_rect, g_world_gfx_black_tile_color, 0, 0);
@@ -128,7 +128,7 @@ void world_shop_run_screen(s32 shop_type) {
         if ((g_world_formation_unit_cycle_mode != 0 || g_world_formation_unit_browse_enabled != 0)
             && g_world_shop_menu_step < 0x14) {
             disabled = 0;
-            if (g_world_thread_task_active != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE
+            if (g_world_menu_input_lock_mode != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE
                 || g_world_formation_unit_cycle_mode == 1) {
                 disabled = 1;
             }

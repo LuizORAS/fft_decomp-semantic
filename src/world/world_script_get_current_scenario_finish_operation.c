@@ -4,7 +4,7 @@
 s32 world_script_get_current_scenario_finish_operation(void) {
     u16 result;
 
-    if (g_world_menu_scenario_event_started != 0) {
+    if (g_world_scenario_event_active != 0) {
         result = g_main_scenario_event_finish_operations[world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT)];
     } else {
         result = 0;

@@ -53,7 +53,7 @@ void world_shop_run_fitting_room_step(void) {
             world_menu_clear_selection_records();
         } else {
             world_formation_update_and_draw_unit_grid(1, 1, 0, g_world_input_secondary_repeat,
-                g_world_thread_task_active, world_shop_fitting_room_get_unit_marker, 0);
+                g_world_menu_input_lock_mode, world_shop_fitting_room_get_unit_marker, 0);
         }
     } else {
         g_world_shop_background_visible = 1;

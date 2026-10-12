@@ -49,7 +49,7 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
                 }
             } else {
                 g_world_event_finish_check_pending = 0;
-                g_world_menu_overlay_state = 0;
+                g_world_menu_suspend_state = 0;
                 return 0;
             }
             if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_REUNION_AND_BEYOND) {
@@ -58,7 +58,7 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));
             op = (op & 0xF300) >> 8;
             g_world_event_finish_check_pending = 0;
-            g_world_menu_overlay_state = 0;
+            g_world_menu_suspend_state = 0;
             if (op == 0x80) {
                 return 9;
             }
@@ -127,7 +127,7 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
     world_script_load_event_input_state((world_menu_input_state_t*)&g_world_menu_new_button_input);
     if (world_script_is_tutorial_event_slot() == 0 && g_world_menu_new_button_input != PSX_PAD_SELECT
         && g_world_menu_new_button_input != 0) {
-        g_world_thread_change_cooldown = 5;
+        g_world_event_input_suppression_frames = 5;
     }
     for (i = 1; i < 16; i++) {
         g_world_event_thread_status_snapshot[i] = world_thread_is_running_asm(i);
@@ -135,11 +135,11 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
     world_thread_yield();
     for (i = 1; i < 16; i++) {
         if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_asm(i)) {
-            g_world_thread_change_cooldown = 5;
+            g_world_event_input_suppression_frames = 5;
         }
     }
-    if (g_world_thread_change_cooldown != 0) {
-        g_world_thread_change_cooldown--;
+    if (g_world_event_input_suppression_frames != 0) {
+        g_world_event_input_suppression_frames--;
     }
     world_camera_load_state_from_script_variables();
     g_world_frame_counter++;

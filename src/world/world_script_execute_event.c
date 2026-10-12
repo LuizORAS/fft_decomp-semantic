@@ -655,7 +655,7 @@ restart_event:
         }
         /* ---- Sound and music ---- */
         else if (opcode == EVENT_OPCODE_SOUND_EFFECT) {
-            g_world_sound_effect_id_to_play = first_halfword;
+            g_world_sound_pending_sfx_id = first_halfword;
         } else if (opcode == EVENT_OPCODE_BG_SOUND) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, world_sound_bg_thread);
@@ -899,7 +899,7 @@ restart_event:
                 operand_1 = world_thread_find_running_by_task(NATIVE_THREAD_TASK_SHOW_GRAPHIC);
             } while (operand_1 != 0 && g_world_thread_contexts[operand_1].function_parameter_4 == 0);
         } else if (opcode == EVENT_OPCODE_LOCK_MENU_INPUT) {
-            g_world_thread_task_active = operand_1;
+            g_world_menu_input_lock_mode = operand_1;
         } else if (opcode == EVENT_OPCODE_TUTORIAL_COORDINATE_CONFIRM) {
             while (g_battle_cursor_x != operand_1 || g_battle_cursor_y != operand_2
                 || ((initial_buttons = g_world_input_unfiltered_controller) & PSX_PAD_CIRCLE) == 0

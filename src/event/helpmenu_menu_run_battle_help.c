@@ -48,7 +48,7 @@ void helpmenu_menu_run_battle_help(void) {
     s32 missing_value;
 
     u_mid = 0xB8;
-    if (g_option_menu_open != 0) {
+    if (g_battle_menu_help_blocked != 0) {
         battle_thread_exit_current();
     }
     battle_copy_bytes(g_helpmenu_text_saved_pointers, g_battle_text_section_pointers, 0x80);

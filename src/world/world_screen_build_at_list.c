@@ -5,7 +5,7 @@
 
 /*
  * Scrolling three-column text list thread (an older sibling of
- * world_menu_scrolling_list_thread with a fixed page pair at 0x801bfda4 and helper thread
+ * world_menu_run_scrolling_ability_list_thread with a fixed page pair at 0x801bfda4 and helper thread
  * 15 running world_screen_menu_window_frame_thread). The menu-screen library's variant of
  * world_build_at_list: the formation screens, the world map menus and the title's music test run it.
  *
@@ -82,7 +82,7 @@ void world_screen_build_at_list(void) {
     SetDrawMode(
         &page->text_mode, 1, 0, GetTPage(0, 0, entry->vram_x & 0xFFC0, entry->vram_y & 0xFF00), &texture_window);
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {
-        world_menu_init_sprite(&page->arrows[i]);
+        world_menu_init_semitransparent_sprt(&page->arrows[i]);
         page->arrows[i].clut = 0x7D7C;
         page->arrows[i].w = 8;
         page->arrows[i].h = 0x10;
@@ -93,13 +93,13 @@ void world_screen_build_at_list(void) {
         page->arrows[i].y0 = entry->window_y + arrow_y;
         arrow_u += 8;
     }
-    world_menu_init_sprite(&page->thumb);
+    world_menu_init_semitransparent_sprt(&page->thumb);
     page->thumb.u0 = 0x10;
     page->thumb.v0 = 0x10;
     page->thumb.w = 8;
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
-    world_menu_init_sprite(&page->frame);
+    world_menu_init_semitransparent_sprt(&page->frame);
     world_gfx_init_image_loading(
         &page->frame, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
@@ -115,7 +115,7 @@ void world_screen_build_at_list(void) {
     page->arrow_marks[1].v0 = 0xC;
     page->arrow_marks[1].x0 = page->arrows[1].x0;
     page->arrow_marks[1].y0 = page->arrows[1].y0 + 0xE;
-    buffer = world_menu_alloc_ui_buffer(entry->inner_width * entry->inner_height / 2);
+    buffer = world_menu_alloc_memory(entry->inner_width * entry->inner_height / 2);
     world_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
     world_thread_start(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, world_screen_menu_window_frame_thread);
@@ -146,7 +146,7 @@ void world_screen_build_at_list(void) {
     for (;;) {
         page = &g_world_text_list_pages[i & 1];
         frame = &page->frame;
-        if (world_thread_is_previous_running() != 0 && g_world_thread_task_active == 0) {
+        if (world_thread_is_previous_running() != 0 && g_world_menu_input_lock_mode == 0) {
             world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 1, 0);
         } else {
             world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
@@ -155,27 +155,27 @@ void world_screen_build_at_list(void) {
             if ((*input0 & PSX_PAD_UP) && !(*input1 & PSX_PAD_SQUARE)) {
                 if (cursor != 0) {
                     cursor--;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != 0) {
                     delta = -1;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (layout->hidden_rows == 0) {
                     cursor = layout->row_count - 1;
                     if (layout->row_count != 1) {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                     }
                 }
             } else if ((*input0 & PSX_PAD_DOWN) && !(*input1 & PSX_PAD_SQUARE)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != layout->hidden_rows) {
                     delta++;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset == 0) {
                     cursor = 0;
                     if (layout->row_count != 1) {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                     }
                 }
             } else {
@@ -188,7 +188,7 @@ void world_screen_build_at_list(void) {
                     image_rect.y = (((ring - 1) * 16) & 0xFF) + entry->vram_y;
                 }
                 image_rect.h = 0x10;
-                buffer = world_menu_alloc_ui_buffer(0x800);
+                buffer = world_menu_alloc_memory(0x800);
                 world_clear_menu_render_buffer(buffer, 0x800);
                 g_world_menu_text_state.pen.stride = entry->inner_width;
                 for (column = 0; column < 3; column++) {
@@ -233,13 +233,13 @@ void world_screen_build_at_list(void) {
         }
         entry->selected_index = cursor + row_offset;
         entry->select_text_table = row_offset;
-        if (world_menu_check_thread_completion(input0) != 0) {
+        if (world_menu_should_close_thread(input0) != 0) {
             break;
         }
         if (delta == 0) {
             world_menu_handle_entry_confirm(entry, cursor);
         }
-        world_menu_cancel_thread_group(entry);
+        world_menu_handle_entry_cancel(entry);
         if ((g_world_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_world_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step;
@@ -261,7 +261,7 @@ void world_screen_build_at_list(void) {
             world_menu_free_memory(buffer);
         }
         frame->v0 = ring * 16 + accum - 2;
-        if (world_thread_is_previous_running() != 0 || g_world_thread_task_active == 1) {
+        if (world_thread_is_previous_running() != 0 || g_world_menu_input_lock_mode == 1) {
             frame->clut = 0x7F7D;
         } else {
             frame->clut = 0x7FFC;

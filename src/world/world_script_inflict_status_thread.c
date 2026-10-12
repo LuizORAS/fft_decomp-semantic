@@ -63,7 +63,7 @@ void world_script_inflict_status_thread(void) {
                 unit_id, BATTLE_STATUS_LSB_INDEX(BATTLE_STATUS_ID_CRITICAL), 1, 1);
             g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
             world_thread_call_on_main_stack(misc_id);
-            g_world_sound_effect_id_to_play = MAIN_SFX_EVENT_REVIVE;
+            g_world_sound_pending_sfx_id = MAIN_SFX_EVENT_REVIVE;
         } else if (state == 2) {
             g_world_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_misc_id;
             world_thread_call_on_main_stack(misc_id);

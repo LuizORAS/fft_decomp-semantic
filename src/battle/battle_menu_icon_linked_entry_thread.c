@@ -38,9 +38,9 @@ void battle_menu_icon_linked_entry_thread(void) {
             g_battle_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[parent], 0, 0);
     }
     buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
-    g_menu_text_state.pen.stride = width;
+    g_battle_menu_text_state.pen.stride = width;
     battle_menu_set_text_origin(8, 9);
-    battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
+    battle_menu_display_text_entry(param->text_id, buffer, &g_battle_menu_text_state.pen);
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {
         battle_thread_yield();
@@ -59,8 +59,8 @@ void battle_menu_icon_linked_entry_thread(void) {
         }
         record = &records[i & 1];
         battle_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
-        battle_menu_handle_action(param, 0);
-        battle_handle_menu_cancel_input(param);
+        battle_menu_handle_entry_confirm(param, 0);
+        battle_menu_handle_entry_cancel(param);
         battle_menu_submit_icon_primitives(record);
     }
     g_battle_sound_suppressed = 0;

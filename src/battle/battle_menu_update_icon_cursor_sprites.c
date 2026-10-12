@@ -14,7 +14,7 @@ void battle_menu_update_icon_cursor_sprites(
     s32 y;
 
     if (cursor >= 0) {
-        if (g_battle_formation_display_mode == 1) {
+        if (g_battle_menu_cursor_confirm_hold == 1) {
             thread->task_words[1] = 2;
             thread->task_words[0] = 0;
         }

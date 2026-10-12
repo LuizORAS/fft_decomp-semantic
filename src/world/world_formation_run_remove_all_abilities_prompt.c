@@ -19,7 +19,8 @@ s32 world_formation_run_remove_all_abilities_prompt(void) {
         for (i = 1; i < 5; i++) {
             g_world_clear_abilities_cursor_point.y = i * 0x10 + 0x90;
             value = 0;
-            world_menu_draw_animated_cursor(&g_world_clear_abilities_cursor_point, &value, g_world_thread_task_active);
+            world_menu_draw_animated_cursor(
+                &g_world_clear_abilities_cursor_point, &value, g_world_menu_input_lock_mode);
         }
     }
     if (g_world_input_primary_repeat & PSX_PAD_RIGHT) {

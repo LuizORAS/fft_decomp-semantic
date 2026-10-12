@@ -48,7 +48,7 @@ void world_menu_run_battle_help(void) {
     s32 missing_value;
 
     u_mid = 0xB8;
-    if (g_world_menu_transition_active != 0) {
+    if (g_world_menu_help_blocked != 0) {
         world_thread_exit_current();
     }
     world_copy_bytes(g_world_text_section_pointer_backup, g_world_text_section_pointers, 0x80);
@@ -73,7 +73,7 @@ void world_menu_run_battle_help(void) {
     g_world_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self = &g_world_threads[g_world_thread_current_id];
-    world_menu_copy_billboard_data_out(setup_banner, setup_unit_data, setup_billboard, setup_cursor_tile);
+    world_menu_get_active_turn_panels(setup_banner, setup_unit_data, setup_billboard, setup_cursor_tile);
     if ((g_world_selected_unit_stat_summary.team_kind != 0) || (g_world_unit_join_screen_active != 0)) {
         g_world_help_require_navigation[2].destination[2] = 7;
         g_world_help_require_navigation[7].destination[3] = 2;
@@ -112,7 +112,7 @@ void world_menu_run_battle_help(void) {
                     help_id = *request->value;
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                     *g_world_help_controller_state_ptr = 0;
@@ -126,7 +126,7 @@ void world_menu_run_battle_help(void) {
                         world_menu_close_help_menu();
                     }
                     help_id |= 0x9800;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0) {
@@ -137,7 +137,7 @@ void world_menu_run_battle_help(void) {
                     help_id = request->table->primary_ids[request->selected_index];
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x11) {
@@ -149,7 +149,7 @@ void world_menu_run_battle_help(void) {
                         world_menu_close_help_menu();
                     }
                     help_id |= 0x6800;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x17) {
@@ -162,7 +162,7 @@ void world_menu_run_battle_help(void) {
                     }
                     help_id += ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE;
                     help_id |= 0x7800;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x12) {
@@ -179,7 +179,7 @@ void world_menu_run_battle_help(void) {
                         world_menu_close_help_menu();
                     }
                     help_id |= 0xA000;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x13) {
@@ -202,11 +202,11 @@ void world_menu_run_battle_help(void) {
                     } else {
                         help_id = 0x807;
                     }
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else {
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     g_world_help_topic_text_ids = (u16*)((s32*)g_world_help_text_id_tables_ptr)[request_kind];
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(
@@ -234,7 +234,7 @@ void world_menu_run_battle_help(void) {
     } else {
         view_mode = g_world_unit_view_mode;
         if (view_mode == UNIT_VIEW_MODE_TILE_INFO || view_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
-            g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+            g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
             world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
             world_thread_set_parameters(
                 NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_world_help_menu_cursor_tile.surface_type + 0x5800, 0);
@@ -260,7 +260,7 @@ void world_menu_run_battle_help(void) {
     while (1) {
         if (help_thread->is_running == 0) {
             if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_world_thread_task_active = 0;
+                g_world_menu_input_lock_mode = 0;
             }
             if (self->task_words[1] != 0) {
                 self->task_words[1] = 0;
@@ -277,7 +277,7 @@ void world_menu_run_battle_help(void) {
             }
             input = *g_world_help_controller_state_ptr;
             if (input & PSX_PAD_CROSS) {
-                g_world_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                g_world_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
             if (input & PSX_PAD_CIRCLE) {
@@ -288,7 +288,7 @@ void world_menu_run_battle_help(void) {
                         if ((*node->value & 0x7FF) == 0x7FF || (*node->value & 0x7FF) == 0) {
                             *g_world_help_controller_state_ptr = 0;
                         } else {
-                            g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                            g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                             world_thread_start(help_thread_id, world_text_character_handling_thread);
                             world_thread_set_parameters(help_thread_id, 0x3B, help_id, 0);
                         }
@@ -299,13 +299,13 @@ void world_menu_run_battle_help(void) {
                     } else if (node->help_base == -0x6800 && (u32)((u16)*node->value - 1) >= 0x101) {
                         *g_world_help_controller_state_ptr = 0;
                     } else {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                         world_thread_start(help_thread_id, world_text_character_handling_thread);
                         world_thread_set_parameters(help_thread_id, 0x3B, help_id, 0);
                     }
                 } else {
                     help_id = node->help_base;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(help_thread_id, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id, 0x3B, help_id, 0);
                 }
@@ -322,13 +322,13 @@ void world_menu_run_battle_help(void) {
                     }
                 }
                 if (menu_index != node->destination[help_id]) {
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
                 menu_index = node->destination[help_id];
             }
         } else {
             if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_world_thread_task_active = 1;
+                g_world_menu_input_lock_mode = 1;
             }
             if (self->task_words[1] == 0) {
                 self->task_words[1] = 2;

@@ -5,7 +5,7 @@
  * thread, or close the requested number of menu levels, then store the row as
  * the menu's selection.
  *
- * WORLD analog of battle_menu_handle_action. */
+ * WORLD analog of battle_menu_handle_entry_confirm. */
 void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
     s32 silent;
     s32 target;
@@ -67,7 +67,7 @@ void world_menu_handle_entry_confirm(world_menu_entry_t* entry, s32 row_index) {
         }
         g_world_menu_new_button_input = 0;
         *entry->value = row_index;
-        if (g_world_menu_sound_muted == 0 && silent == 0) {
+        if (g_world_sound_suppressed == 0 && silent == 0) {
             world_sound_set_effect_to_confirm();
         }
     }

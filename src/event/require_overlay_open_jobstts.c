@@ -36,6 +36,6 @@ void require_overlay_open_jobstts(void) {
     *g_require_input_controller = 0;
     main_heap_free(allocation);
     battle_thread_wait_frames(2);
-    g_option_menu_open = 0;
+    g_battle_menu_help_blocked = 0;
     battle_thread_exit_current();
 }

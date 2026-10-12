@@ -23,7 +23,7 @@ void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 
             abr = 1;
             level = -level;
         }
-        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, abr, 0x3C0, 0x100), &g_world_gfx_texture_window);
+        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, abr, 0x3C0, 0x100), &g_world_menu_disabled_texture_window);
         prims->tile.r0 = level;
         prims->tile.g0 = level;
         prims->tile.b0 = level;

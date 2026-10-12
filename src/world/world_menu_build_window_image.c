@@ -30,10 +30,10 @@ void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode,
     partial = words != 0;
     words = (width >> 2) + partial;
     byte_count = (width * (kind == DIALOG_OPTIONS_NO_TAIL ? height : height + 0x10)) >> 1;
-    image = world_menu_alloc_ui_buffer(byte_count);
+    image = world_menu_alloc_memory(byte_count);
     world_clear_menu_render_buffer((u8*)image, byte_count);
     x_offset = 0;
-    sheet = (u16*)g_world_menu_glyph_sheet;
+    sheet = (u16*)g_world_menu_glyph_image;
     if (kind != DIALOG_OPTIONS_NO_TAIL) {
         if ((mode & DIALOG_TYPE_POSITION_MASK) == 2) {
             x_offset = words * 8;
@@ -59,13 +59,13 @@ void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode,
         world_menu_build_window_image_row(sheet, row, words, sheet_offset);
     }
     if (kind != DIALOG_OPTIONS_NO_TAIL) {
-        g_world_menu_window_sprite_source.rect.x = 0x58;
-        g_world_menu_window_sprite_source.rect.y = 0;
+        g_world_menu_window_sprite_glyph.rect.x = 0x58;
+        g_world_menu_window_sprite_glyph.rect.y = 0;
         if ((mode & DIALOG_TYPE_OPTIONS_MASK) == DIALOG_OPTIONS_ALTERNATE_TAIL) {
-            g_world_menu_window_sprite_source.rect.x = 0x68;
+            g_world_menu_window_sprite_glyph.rect.x = 0x68;
         }
         if ((mode & DIALOG_TYPE_POSITION_MASK) == 1) {
-            g_world_menu_window_sprite_source.rect.y = 0x10;
+            g_world_menu_window_sprite_glyph.rect.y = 0x10;
         }
         g_world_menu_window_sprite_position.rect.x = (width >> 1) + tail_offset - 8;
         if ((mode & DIALOG_TYPE_POSITION_MASK) != 2) {
@@ -89,7 +89,7 @@ void* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode,
             g_world_menu_window_sprite_position.rect.x = width - 0x10;
         }
         world_text_blit_glyph(
-            g_world_menu_glyph_sheet, image, &g_world_menu_window_sprite_source, &g_world_menu_window_sprite_position);
+            g_world_menu_glyph_image, image, &g_world_menu_window_sprite_glyph, &g_world_menu_window_sprite_position);
         if (i != 0) {
             world_gfx_mirror_4bpp_rect((u8*)image, &g_world_menu_window_sprite_position);
         }

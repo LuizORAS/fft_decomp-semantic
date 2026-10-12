@@ -18,7 +18,7 @@
  *     through into the next case instead of being cross-jumped to the shared
  *     tail. */
 void world_menu_start_dead_unit_threads(void) {
-    main_crystal_pickup_result_t* context = g_world_thread_inner_subroutine_result;
+    main_crystal_pickup_result_t* context = g_world_dead_unit_context;
     world_menu_entry_t* previous_menu_descriptor = g_world_menu_thread_menu_data;
     dead_unit_menu_t* menu;
     s32 value_count;
@@ -146,7 +146,7 @@ void world_menu_start_dead_unit_threads(void) {
                 }
                 g_world_dead_unit_controller_input = world_input_get_menu_controller(0);
                 if ((*g_world_dead_unit_controller_input & PSX_PAD_SELECT) != 0) {
-                    world_menu_start_building_thread();
+                    world_menu_start_help_menu_thread();
                 }
             }
 

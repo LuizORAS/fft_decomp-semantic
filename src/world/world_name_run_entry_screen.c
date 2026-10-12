@@ -154,13 +154,13 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         if (value != g_world_name_entry_last_state) {
             g_world_name_entry_last_state = value;
         }
-        if (g_world_sound_effect_id_to_play == 2 || g_world_sound_effect_id_to_play == 3) {
-            g_world_menu_sound_effect_id = g_world_sound_effect_id_to_play;
+        if (g_world_sound_pending_sfx_id == 2 || g_world_sound_pending_sfx_id == 3) {
+            g_world_menu_sound_effect_id = g_world_sound_pending_sfx_id;
         }
-        if (g_world_sound_effect_id_to_play < 0 || g_world_menu_sound_muted != 0) {
-            g_world_sound_effect_id_to_play = MAIN_SFX_NONE;
+        if (g_world_sound_pending_sfx_id < 0 || g_world_sound_suppressed != 0) {
+            g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
         }
-        value = g_world_sound_effect_id_to_play;
+        value = g_world_sound_pending_sfx_id;
         if (value == MAIN_SFX_NONE) {
             value = g_world_menu_sound_effect_id;
         }
@@ -170,7 +170,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
             main_sound_play_sfx(value);
         }
         g_world_menu_sound_effect_id = MAIN_SFX_NONE;
-        g_world_sound_effect_id_to_play = MAIN_SFX_NONE;
+        g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
     }
     world_script_set_vsync_mode_and_event_speed(2);
     world_menu_reset_context();

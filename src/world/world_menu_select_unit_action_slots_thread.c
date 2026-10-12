@@ -2,7 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* g_world_menu_unit_selection_rows holds one 17-byte menu row per unit (compare
+/* g_world_menu_unit_selection_records holds one 17-byte menu row per unit (compare
  * WORLD_UNKNOWN_ROW_BYTES in world_menu_record_selection_for_selected_unit). */
 
 /* Menu entry 4's value and the loop counter share $s0 in the target: the
@@ -21,7 +21,7 @@ void world_menu_select_unit_action_slots_thread(void) {
     s32 i = g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
     s32 menu = g_battle_action_menu_row_types[i];
     s32 check_unit = g_battle_menu_skillset_disabled_flags[i];
-    battle_menu_record_t* row = &g_world_menu_unit_selection_rows[g_world_active_turn_unit.battle_id];
+    battle_menu_record_t* row = &g_world_menu_unit_selection_records[g_world_active_turn_unit.battle_id];
     u8* slot;
     u8* pair;
     s32 j;
@@ -54,7 +54,7 @@ void world_menu_select_unit_action_slots_thread(void) {
         g_world_thread_call_target = (void (*)(void))world_menu_build_ability_list;
         world_thread_call_on_main_stack(i);
         world_script_pulse_tutorial_wait_value(0xFB);
-        world_menu_scrolling_list_thread();
+        world_menu_run_scrolling_ability_list_thread();
         slot[0] = g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;
         slot[1] = g_world_ability_menu_layout.row_offset;
         if (menu != ACTION_MENU_TYPE_ARITHMETICKS) {
@@ -71,13 +71,13 @@ void world_menu_select_unit_action_slots_thread(void) {
                        .ids[g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index]
                 - 0x7000;
             if (i == 2) {
-                g_world_menu_preview_action.calculator_type = text;
+                g_world_menu_selected_action.calculator_type = text;
             }
             if (i == 1) {
-                g_world_menu_preview_action.calculator_multiplier = text;
+                g_world_menu_selected_action.calculator_multiplier = text;
             }
             if (i == 0) {
-                g_world_menu_preview_action.ability_id = text;
+                g_world_menu_selected_action.ability_id = text;
             }
         }
     }

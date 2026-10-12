@@ -16,7 +16,7 @@
  * passed to SetSemiTrans by address, as in the target, which keeps it on the
  * stack.
  */
-void world_menu_scrolling_list_thread(void) {
+void world_menu_run_scrolling_ability_list_thread(void) {
     world_menu_text_window_t window;
     RECT image_rect;
     RECT texture_window;
@@ -81,11 +81,11 @@ void world_menu_scrolling_list_thread(void) {
         page[i].icons.icons[2] = &icons2[i];
         world_menu_build_icon_record(&image_rect, entry, &page[i].icons);
     }
-    SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_world_gfx_texture_window);
+    SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_world_menu_disabled_texture_window);
     SetDrawMode(
         &page->text_mode, 1, 0, GetTPage(0, 1, entry->vram_x & 0xFFC0, entry->vram_y & 0xFF00), &texture_window);
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {
-        world_menu_init_sprite(&page->arrows[i]);
+        world_menu_init_semitransparent_sprt(&page->arrows[i]);
         page->arrows[i].clut = 0x7D7C;
         page->arrows[i].w = 8;
         page->arrows[i].h = 0x10;
@@ -96,13 +96,13 @@ void world_menu_scrolling_list_thread(void) {
         page->arrows[i].y0 = entry->window_y + arrow_y;
         arrow_u += 8;
     }
-    world_menu_init_sprite(&page->thumb);
+    world_menu_init_semitransparent_sprt(&page->thumb);
     page->thumb.u0 = 0x10;
     page->thumb.v0 = 0x10;
     page->thumb.w = 8;
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
-    world_menu_init_sprite(&page->frame);
+    world_menu_init_semitransparent_sprt(&page->frame);
     world_gfx_init_image_loading(
         &page->frame, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
@@ -120,7 +120,7 @@ void world_menu_scrolling_list_thread(void) {
     page->arrow_marks[1].y0 = page->arrows[1].y0 + 0xE;
     world_menu_build_and_upload_window_frame_image(
         entry->inner_width, entry->inner_height, &image_rect, MENU_WINDOW_FRAME_ALTERNATE_UPLOAD);
-    buffer = world_menu_alloc_ui_buffer(entry->inner_width * entry->inner_height / 2);
+    buffer = world_menu_alloc_memory(entry->inner_width * entry->inner_height / 2);
     world_clear_menu_render_buffer(buffer, window.rect.w * window.rect.h / 2);
     row_offset = layout->row_offset;
     if (layout->columns.hidden_rows < row_offset) {
@@ -197,7 +197,7 @@ void world_menu_scrolling_list_thread(void) {
                 image_rect.h = 0x10;
                 image_rect.y += 0x80;
                 row_buffer_live = 1;
-                buffer = world_menu_alloc_ui_buffer(window.rect.w * 8);
+                buffer = world_menu_alloc_memory(window.rect.w * 8);
                 world_clear_menu_render_buffer(buffer, window.rect.w * 8);
                 g_world_menu_text_state.pen.stride = window.rect.w;
                 for (column = 0; column < 3; column++) {
@@ -266,14 +266,14 @@ void world_menu_scrolling_list_thread(void) {
         }
         entry->selected_index = cursor + row_offset;
         layout->row_offset = row_offset;
-        if (world_menu_check_thread_completion(&g_world_menu_new_button_input) != 0) {
+        if (world_menu_should_close_thread(&g_world_menu_new_button_input) != 0) {
             break;
         }
         world_menu_select_icon_cluts(&page->icons.base);
         world_menu_select_icon_sprite_clut(page->icons.icons[0]);
         world_menu_select_icon_sprite_clut(page->icons.icons[1]);
         world_menu_select_icon_sprite_clut(page->icons.icons[2]);
-        if (world_thread_is_previous_running() != 0 || g_world_thread_task_active == 1) {
+        if (world_thread_is_previous_running() != 0 || g_world_menu_input_lock_mode == 1) {
             frame->clut = 0x7F7D;
         } else {
             frame->clut = 0x7FFC;
@@ -299,7 +299,7 @@ void world_menu_scrolling_list_thread(void) {
         if (g_world_menu_scrolling_list_depth < 2 && delta == 0) {
             world_menu_handle_entry_confirm(entry, cursor);
         }
-        world_menu_cancel_thread_group(entry);
+        world_menu_handle_entry_cancel(entry);
         if ((g_world_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_world_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step;

@@ -21,7 +21,7 @@ s32 world_formation_run_remove_all_equipment_prompt(void) {
             g_world_remove_all_equipment_cursor_point.y = i * 0x10 + 0x90;
             value = 0;
             world_menu_draw_animated_cursor(
-                &g_world_remove_all_equipment_cursor_point, &value, g_world_thread_task_active);
+                &g_world_remove_all_equipment_cursor_point, &value, g_world_menu_input_lock_mode);
         }
     }
     if (g_world_input_primary_repeat & PSX_PAD_RIGHT) {

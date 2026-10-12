@@ -21,8 +21,8 @@ void world_menu_build_unit_status_list(void) {
     s16* flag_b;
 
     for (i = 0; i < 8; i++) {
-        flag_a = &g_world_unit_editor_fields.state.generic_monster;
-        flag_b = &g_world_unit_selected_status_billboard.team_kind;
+        flag_a = &g_world_menu_billboard_data.state.generic_monster;
+        flag_b = &g_world_menu_active_turn_banner.team_kind;
         if (*flag_a != 0 || *flag_b == 1) {
             g_world_menu_status_list_row_actions[i] = 0x7D0;
         } else {
@@ -65,5 +65,5 @@ void world_menu_build_unit_status_list(void) {
         g_world_menu_status_list_layout.columns.row_count = count;
         g_world_menu_status_list_layout.columns.hidden_rows = 0;
     }
-    world_menu_scrolling_list_thread();
+    world_menu_run_scrolling_ability_list_thread();
 }

@@ -14,7 +14,7 @@ void battle_menu_build_skillset_entries(void) {
     count = 0;
     g_battle_menu_selected_skill_ct = 0;
     g_battle_action_menu_skillsets[0] = 0;
-    g_battle_menu_action_menu_build_result = battle_menu_build_unit_action_menus(g_battle_active_turn_unit.battle_id,
+    g_battle_menu_monster_skillset_flag = battle_menu_build_unit_action_menus(g_battle_active_turn_unit.battle_id,
         g_battle_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_battle_action_menu_row_types);
     rows = (world_menu_text_row_t*)battle_text_find_entry(0x5010);
     if (battle_unit_get_action_block(battle_unit_get_active_turn_unit_stats()) == BATTLE_UNIT_ACTION_BLOCK_SUBMERGED) {
@@ -40,12 +40,12 @@ void battle_menu_build_skillset_entries(void) {
         }
         if (g_battle_menu_skillset_disabled_flags[i] != 0) {
             rows[i].style = 4;
-            g_battle_menu_row_message_ids[i] = 0x1003;
+            g_battle_menu_skillset_row_actions[i] = 0x1003;
         } else {
             rows[i].style = 0;
-            g_battle_menu_row_message_ids[i] = 3;
+            g_battle_menu_skillset_row_actions[i] = 3;
         }
-        if (g_battle_menu_action_menu_build_result != 0) {
+        if (g_battle_menu_monster_skillset_flag != 0) {
             g_battle_text_substitution_values[count] = TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
         } else {
             g_battle_text_substitution_values[count]
@@ -55,7 +55,7 @@ void battle_menu_build_skillset_entries(void) {
     }
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_ANYTHING_ACTION_ENABLED) != 0 && i < 6) {
         rows[i].style = 0;
-        g_battle_menu_row_message_ids[i] = 0x16;
+        g_battle_menu_skillset_row_actions[i] = 0x16;
         g_battle_action_menu_skillsets[i] = ACTION_MENU_PSEUDO_SKILLSET_ANYTHING;
         g_battle_action_menu_skillsets[i + 1] = SKILLSET_ID_NONE;
         g_battle_text_substitution_values[count++]

@@ -29,7 +29,7 @@ s32 world_menu_resolve_selection(void) {
                 if (command != 0xFF) {
                     if (menu == BATTLE_MENU_ID_DEAD_UNIT) {
                         command = g_world_dead_unit_action;
-                        g_world_menu_preview_action.item_id = g_world_dead_unit_result;
+                        g_world_menu_selected_action.item_id = g_world_dead_unit_result;
                         option = MENU_SELECTION_NONE;
                     } else if (menu == 0x19 || menu >= 0x64) {
                         command = *(g_world_menu_command_maps[i].map + option + 1);
@@ -49,7 +49,7 @@ s32 world_menu_resolve_selection(void) {
         if (i < 16) {
             g_world_menu_resolved_command = command;
         } else if (command == 5 || command == 6) {
-            g_world_menu_preview_action.targeting_type = command;
+            g_world_menu_selected_action.targeting_type = command;
         }
         if (command == 1) {
             g_world_menu_restore_pending = 1;
@@ -73,22 +73,22 @@ s32 world_menu_resolve_selection(void) {
             /* Attack/Defend, Equip Change/0x04 and Elemental/Jump take no list entry. */
             if (option == SKILLSET_ID_ATTACK || option == SKILLSET_ID_DEFEND || option == SKILLSET_ID_EQUIP_CHANGE
                 || option == SKILLSET_ID_BLANK_04 || option == SKILLSET_ID_ELEMENTAL || option == SKILLSET_ID_JUMP) {
-                g_world_menu_preview_action.ability_id = 0;
+                g_world_menu_selected_action.ability_id = 0;
                 item = MENU_SELECTION_NONE;
             } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_world_menu_monster_skillset_flag == 0) {
                 item = g_world_menu_anything_ability_id;
             } else {
                 item = g_battle_ai_workspace_ptr->ability_list.ids[item] & 0x1FF;
             }
-            g_world_menu_preview_action.skillset = option;
+            g_world_menu_selected_action.skillset = option;
             g_world_menu_resolved_skillset = option;
             if (item != MENU_SELECTION_NONE) {
                 if (option == SKILLSET_ID_ITEM || option == SKILLSET_ID_DRAW_OUT || option == SKILLSET_ID_THROW) {
-                    g_world_menu_preview_action.item_id = item;
+                    g_world_menu_selected_action.item_id = item;
                 } else {
-                    g_world_menu_preview_action.ability_id = item;
+                    g_world_menu_selected_action.ability_id = item;
                 }
-                g_world_menu_resolved_ability = item;
+                g_world_menu_resolved_item_or_ability = item;
             }
         }
     }

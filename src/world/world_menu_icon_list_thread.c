@@ -48,12 +48,12 @@ void world_menu_icon_list_thread(void) {
             fresh = 0;
         }
         param->selected_index = cursor;
-        if (world_menu_check_thread_completion(g_world_input_frame_controller_input) != 0) {
+        if (world_menu_should_close_thread(g_world_input_frame_controller_input) != 0) {
             break;
         }
         world_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
         world_menu_handle_entry_confirm(param, cursor);
-        world_menu_cancel_thread_group(param);
+        world_menu_handle_entry_cancel(param);
         world_menu_select_icon_cluts(&record->base);
         world_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);
         world_menu_submit_icon_primitives(&record->base);

@@ -16,7 +16,7 @@ void battle_state_handle_idling_action_menus_state(void) {
     battle_unit_misc_data_t* misc;
     s32 result;
 
-    if (battle_menu_is_still_building() == 0) {
+    if (battle_menu_get_thread_activity() == 0) {
         battle_state_enter_free_cursor();
     }
     if (g_main_input_pressed_buttons & PSX_PAD_SELECT) {

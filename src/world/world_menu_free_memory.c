@@ -16,7 +16,7 @@ void world_menu_free_memory(void* buffer_pointer) {
         invalid_buffer = -1;
         grid_base = (buffer - (u32)g_world_menu_buffer_arena) >> 8;
         allocation_grid = g_world_menu_buffer_allocation_map;
-        allocation_size = &g_world_menu_buffer_allocations[0].page_count;
+        allocation_size = &g_world_menu_allocator_slot_records[0].page_count;
         allocation_buffer = allocation_size - 1;
         allocation_end = allocation_size + 32;
         for (;;) {

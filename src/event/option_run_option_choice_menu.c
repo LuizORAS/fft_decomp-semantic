@@ -41,14 +41,14 @@ void option_run_option_choice_menu(void) {
     height = g_option_choice_counts[kind] * 16 + 16;
     buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
     battle_thread_wait_frames(1);
-    g_menu_text_state.pen.stride = width;
+    g_battle_menu_text_state.pen.stride = width;
     for (i = 0; i < g_option_choice_counts[kind]; i++) {
         battle_menu_set_text_origin(8, i * 16 + 8);
         if (i == g_option_current_values[kind]) {
-            g_battle_menu_text_palette_offset = 8;
+            g_battle_menu_text_color = 8;
         }
-        battle_menu_display_text_entry(i + g_option_value_text_id_bases[kind], buffer, &g_menu_text_state.pen);
-        g_battle_menu_text_palette_offset = 0;
+        battle_menu_display_text_entry(i + g_option_value_text_id_bases[kind], buffer, &g_battle_menu_text_state.pen);
+        g_battle_menu_text_color = 0;
     }
     /* Dead store: allocation device, see the file header. */
     if (height <= 0) {
@@ -73,7 +73,7 @@ void option_run_option_choice_menu(void) {
     for (width = 0;; width++) {
         battle_menu_should_close_thread((s32*)input);
         record = &g_option_picker_icon_records[width & 1];
-        if (battle_menu_can_accept_input()) {
+        if (battle_menu_is_input_allowed()) {
             if (*input & PSX_PAD_CROSS) {
                 g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;

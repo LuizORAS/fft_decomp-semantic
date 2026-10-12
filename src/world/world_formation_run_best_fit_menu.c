@@ -28,7 +28,7 @@ s32 world_formation_run_best_fit_menu(void) {
         world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_formation_unit_cycle_mode = 1;
         g_world_item_best_remove_initialized = 1;
-        g_world_menu_sound_muted = 1;
+        g_world_sound_suppressed = 1;
     }
     g_world_item_best_remove_initialized
         = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_best_fit_confirm_menu);
@@ -58,7 +58,7 @@ s32 world_formation_run_best_fit_menu(void) {
             world_formation_stage_selected_unit();
         }
         world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
-        g_world_menu_sound_muted = 0;
+        g_world_sound_suppressed = 0;
         return 0;
     }
     return 1;

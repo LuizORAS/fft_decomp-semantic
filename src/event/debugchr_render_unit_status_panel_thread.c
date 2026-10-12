@@ -401,7 +401,7 @@ void debugchr_render_unit_status_panel_thread(void) {
                 number_entries[6].format = 2;
             }
             battle_clear_menu_render_buffer(number_pixels, 0x700);
-            window_width = &g_menu_text_state.pen.stride;
+            window_width = &g_battle_menu_text_state.pen.stride;
             text_position = (world_glyph_blit_t*)(window_width - 2);
             *window_width = 0x38;
             battle_menu_draw_numeric_display_entries(number_pixels, number_entries, text_position, 6);

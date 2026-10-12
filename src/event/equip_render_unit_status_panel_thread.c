@@ -404,7 +404,7 @@ void equip_render_unit_status_panel_thread(void) {
             {
                 s32* stride;
                 world_glyph_blit_t* position;
-                stride = &g_menu_text_state.pen.stride;
+                stride = &g_battle_menu_text_state.pen.stride;
                 *stride = 0x38;
                 if (g_equip_item_numeric_thread_enabled == 0) {
                     battle_menu_draw_numeric_display_entries(
@@ -419,7 +419,7 @@ void equip_render_unit_status_panel_thread(void) {
                 }
             }
             LoadImage(&rects[0], number_image);
-            window_width = &g_menu_text_state.pen.stride;
+            window_width = &g_battle_menu_text_state.pen.stride;
             text_position = (world_glyph_blit_t*)(window_width - 2);
             number_image_lower = number_image + 0x400;
             *window_width = 0x60;

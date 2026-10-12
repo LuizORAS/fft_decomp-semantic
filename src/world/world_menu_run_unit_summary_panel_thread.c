@@ -42,10 +42,10 @@ void world_menu_run_unit_summary_panel_thread(void) {
     world_text_configure_sprite_vram(&rects[2], 0x10, 0xA, &frames[0].sprites[2], 0);
     world_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &frames[0].sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        world_gfx_init_image_loading(&frames[0].sprites[frame], &g_world_gfx_menu_image_source,
+        world_gfx_init_image_loading(&frames[0].sprites[frame], &g_world_menu_texture_location,
             &g_world_unit_summary_panel_rect, &g_world_unit_summary_sprite_image_params[frame]);
     }
-    world_gfx_init_image_loading(&frames[0].portrait, &g_world_gfx_menu_image_source, &g_world_unit_summary_panel_rect,
+    world_gfx_init_image_loading(&frames[0].portrait, &g_world_menu_texture_location, &g_world_unit_summary_panel_rect,
         &g_world_unit_summary_sprite_image_params[7]);
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         frames[0].portrait.clut = 0x7FFD;
@@ -58,9 +58,9 @@ void world_menu_run_unit_summary_panel_thread(void) {
     world_clear_menu_render_buffer(buffer, 0x580);
     g_world_menu_text_state.pen.stride = 0x58;
     world_menu_set_text_origin(0, 0);
-    world_menu_display_text_string(buffer, &g_world_menu_text_state.pen, g_world_unit_editor_unit_name);
+    world_menu_display_text_string(buffer, &g_world_menu_text_state.pen, g_world_menu_billboard_unit_name);
     world_menu_set_text_origin(0, 0x10);
-    world_menu_display_text_string(buffer, &g_world_menu_text_state.pen, g_world_unit_editor_job_name);
+    world_menu_display_text_string(buffer, &g_world_menu_text_state.pen, g_world_menu_billboard_job_name);
     LoadImage(&rects[0], (u32*)buffer);
     world_clear_menu_render_buffer(digits, 0xF0);
     g_world_menu_text_state.pen.stride = 0x10;

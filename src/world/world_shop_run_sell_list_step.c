@@ -42,6 +42,6 @@ void world_shop_run_sell_list_step(void) {
     }
     world_menu_switch_item_category(g_world_input_secondary_repeat);
     world_menu_run_script_with_palette_mode(
-        g_world_shop_sell_list_menu_script, g_world_input_primary_repeat, g_world_thread_task_active);
+        g_world_shop_sell_list_menu_script, g_world_input_primary_repeat, g_world_menu_input_lock_mode);
     world_shop_run_gil_menu_script();
 }

@@ -40,8 +40,8 @@ void world_menu_init_numeric_display_frame_primitives(RECT* box, world_menu_pale
     }
     SetDrawMode(
         &menu->draw_mode_menu, 1, 0, GetTPage(0, 0, 0x3c0, 0x100), &g_world_menu_numeric_display_texture_window);
-    SetDrawMode(&menu->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
-    world_menu_init_sprite(&menu->sprite);
+    SetDrawMode(&menu->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_menu_disabled_texture_window);
+    world_menu_init_semitransparent_sprt(&menu->sprite);
     menu->sprite.x0 = box->x;
     menu->sprite.y0 = box->y;
     menu->sprite.w = box->w;

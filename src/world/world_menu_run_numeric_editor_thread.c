@@ -52,7 +52,7 @@ void world_menu_run_numeric_editor_thread(void) {
     i = 0;
     descriptor = g_world_editor_numeric_texture;
     for (; i < 18; i++) {
-        world_menu_init_sprite(&buffer->sprites[i]);
+        world_menu_init_semitransparent_sprt(&buffer->sprites[i]);
         world_gfx_init_image_loading(
             &buffer->sprites[i], g_world_editor_numeric_geometry, &g_world_editor_numeric_table[0], descriptor);
         descriptor++;
@@ -109,7 +109,7 @@ void world_menu_run_numeric_editor_thread(void) {
         buffer->draw_offsets[1].x = -0x80;
         buffer->draw_offsets[1].y = g_world_gfx_draw_area_y;
         SetDrawOffset(&buffer->draw_offsets[1], &buffer->draw_offsets[1].x);
-        if (thread->style == 1 || g_world_thread_task_active == 1) {
+        if (thread->style == 1 || g_world_menu_input_lock_mode == 1) {
             for (i = 17; i >= 0; i--) {
                 buffer->sprites[i].clut = 0x7D3C;
             }

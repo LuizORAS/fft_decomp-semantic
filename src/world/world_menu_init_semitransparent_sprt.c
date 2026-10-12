@@ -1,7 +1,7 @@
 #include "psx/libgpu.h"
 
 /* Initialize the fixed sprite used by WORLD menu graphics. */
-void world_menu_init_sprite(SPRT* sprite) {
+void world_menu_init_semitransparent_sprt(SPRT* sprite) {
     SetSprt(sprite);
     SetShadeTex(sprite, 0);
     sprite->r0 = 0x80;

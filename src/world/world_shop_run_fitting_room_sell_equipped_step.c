@@ -60,7 +60,7 @@ void world_shop_run_fitting_room_sell_equipped_step(void) {
             }
         } else {
             g_world_menu_description_text_id = 0;
-            g_world_menu_sound_muted = g_world_shop_sell_equipped_prompt_active
+            g_world_sound_suppressed = g_world_shop_sell_equipped_prompt_active
                 = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_shop_sell_equipped_menu);
             if (g_world_shop_sell_equipped_prompt_active == 0) {
                 if (g_world_menu_selection_results[WORLD_MENU_SELECTION_PROMPT_RESULT] == 0) {

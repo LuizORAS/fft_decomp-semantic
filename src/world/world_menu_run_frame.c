@@ -15,7 +15,7 @@ extern u32 g_world_menu_frame_current_input, g_world_menu_frame_previous_input,
  * timing of the game options, masked by g_world_menu_allowed_buttons and dropped while a screen request
  * runs; steps the formation, Brave Story, card, tutorial, debug list and fixed number panel requests;
  * hands the input to the menu threads and yields to them once, starting a five-frame cooldown
- * (g_world_thread_change_cooldown) when a thread started or stopped. It sets g_world_menu_hosted_frame.
+ * (g_world_event_input_suppression_frames) when a thread started or stopped. It sets g_world_menu_hosted_frame.
  * Sibling of world_input_update_event_state, which WORLD's own screens use. */
 s16 world_menu_run_frame(u32* otag, u32 input) {
     s32 profile;
@@ -111,11 +111,11 @@ s16 world_menu_run_frame(u32* otag, u32 input) {
     world_menu_update_fixed_number_panel_request();
     g_world_menu_pending_selection[0] = -2;
     g_world_gfx_active_otag_entries = otag;
-    g_world_sound_effect_id_to_play = -1;
+    g_world_sound_pending_sfx_id = -1;
     world_menu_draw_active_window_frames();
     world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_menu_frame_new_buttons);
     if (g_world_menu_frame_new_buttons != 0x100 && g_world_menu_frame_new_buttons != 0) {
-        g_world_thread_change_cooldown = 5;
+        g_world_event_input_suppression_frames = 5;
     }
 
     thread_id = 1;
@@ -129,20 +129,20 @@ s16 world_menu_run_frame(u32* otag, u32 input) {
     do {
         status = g_world_menu_thread_status_snapshot[thread_id];
         if (status != world_thread_is_running_asm(thread_id)) {
-            g_world_thread_change_cooldown = 5;
+            g_world_event_input_suppression_frames = 5;
         }
         thread_id++;
     } while (thread_id < 16);
-    if (g_world_thread_change_cooldown != 0) {
-        g_world_thread_change_cooldown--;
+    if (g_world_event_input_suppression_frames != 0) {
+        g_world_event_input_suppression_frames--;
     }
     if (g_world_bin_load_request != 0) {
         g_world_bin_load_request = 0;
     }
     g_world_frame_counter++;
     g_world_menu_packet_buffer_index = (g_world_menu_packet_buffer_index + 1) & 1;
-    if (g_world_sound_effect_id_to_play != -1) {
-        main_sound_play_sfx_find_channel(g_world_sound_effect_id_to_play);
+    if (g_world_sound_pending_sfx_id != -1) {
+        main_sound_play_sfx_find_channel(g_world_sound_pending_sfx_id);
     }
     if (g_world_menu_pending_selection[0] == 0) {
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_world_menu_pending_selection[1]);

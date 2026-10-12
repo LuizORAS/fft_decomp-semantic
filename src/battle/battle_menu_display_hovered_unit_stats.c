@@ -294,7 +294,7 @@ void battle_menu_display_hovered_unit_stats(
         if (frame == 0) {
             buffer = battle_menu_alloc_buffer(0x700);
             battle_clear_menu_render_buffer(buffer, 0x700);
-            inner_width = &g_menu_text_state.pen.stride;
+            inner_width = &g_battle_menu_text_state.pen.stride;
             *inner_width = 0x28;
             battle_menu_draw_numeric_display_entries(buffer, entries, (world_glyph_blit_t*)(inner_width - 2), 6);
             LoadImage(&rects[0], (u32*)buffer);

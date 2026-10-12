@@ -5,7 +5,7 @@
  * sounds suppressed, handle confirm and cancel on the menu each frame until
  * battle_menu_should_close_thread asks it to stop. The thread exits only when its
  * second parameter is 0. */
-void battle_menu_input_thread(void) {
+void battle_menu_input_loop_thread(void) {
     void* menu;
 
     menu = (void*)battle_thread_get_current_parameter_1();
@@ -15,8 +15,8 @@ void battle_menu_input_thread(void) {
         if (battle_menu_should_close_thread(&g_battle_script_event_input) != 0) {
             break;
         }
-        battle_menu_handle_action(menu, 0);
-        battle_handle_menu_cancel_input(menu);
+        battle_menu_handle_entry_confirm(menu, 0);
+        battle_menu_handle_entry_cancel(menu);
     }
     battle_thread_yield();
     g_battle_sound_suppressed = 0;

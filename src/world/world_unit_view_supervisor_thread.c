@@ -38,7 +38,7 @@ void world_unit_view_supervisor_thread(void) {
                     && (task != NATIVE_THREAD_TASK_HOVERED_UNIT_STATS
                         || g_world_unit_view_started_battle_id == g_world_active_turn_unit.battle_id)
                     && (task != NATIVE_THREAD_TASK_RIGHT_UNIT_STATS
-                        || g_world_unit_view_started_comparison_id == g_world_unit_comparison_battle_id)
+                        || g_world_unit_view_started_comparison_id == g_world_preview_target_unit_id)
                     && (task != NATIVE_THREAD_TASK_UNIT_SUMMARY_PANEL
                         || g_world_unit_view_started_battle_id == g_world_active_turn_unit.battle_id)) {
                     continue;
@@ -53,7 +53,7 @@ void world_unit_view_supervisor_thread(void) {
             }
         }
         g_world_unit_view_started_battle_id = g_world_active_turn_unit.battle_id;
-        g_world_unit_view_started_comparison_id = g_world_unit_comparison_battle_id;
+        g_world_unit_view_started_comparison_id = g_world_preview_target_unit_id;
         for (;;) {
             for (i = 0; i < 4; i++) {
                 if (states[set->thread_ids[i]] == WORLD_UNIT_VIEW_SLOT_RESTART

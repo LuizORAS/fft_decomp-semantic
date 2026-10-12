@@ -83,7 +83,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
                 world_menu_update_grid_cursor(
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->uses_monster_skillset);
             }
-            world_menu_set_palette_mode(g_world_thread_task_active);
+            world_menu_set_palette_mode(g_world_menu_input_lock_mode);
             g_world_formation_menu_handlers[g_world_formation_current_menu]();
             if (g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID
                 || g_world_formation_current_menu == WORLD_FORMATION_MENU_DISMISS_UNIT
@@ -101,7 +101,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             }
             i = 0;
             if (g_world_formation_unit_cycle_mode != 0 || g_world_formation_unit_browse_enabled != 0) {
-                if (g_world_thread_task_active != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE
+                if (g_world_menu_input_lock_mode != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE
                     || g_world_formation_unit_cycle_mode == 1 || g_world_formation_triangle_menu_running != 0) {
                     i = 1;
                 }

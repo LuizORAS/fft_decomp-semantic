@@ -64,7 +64,7 @@ void world_menu_run_require_help(void) {
     g_world_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self = &g_world_threads[g_world_thread_current_id];
-    world_menu_copy_billboard_data_out(&g_world_help_active_banner, &g_world_help_active_unit_data,
+    world_menu_get_active_turn_panels(&g_world_help_active_banner, &g_world_help_active_unit_data,
         &g_world_help_billboard, &g_world_help_menu_cursor_tile);
     if (g_world_selected_unit_stat_summary.team_kind != 0 || g_world_unit_join_screen_active != 0) {
         g_world_help_require_navigation[2].destination[2] = 7;
@@ -82,7 +82,7 @@ void world_menu_run_require_help(void) {
     for (frame = 0;; frame++) {
         if (text_thread->is_running == 0) {
             if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_world_thread_task_active = 0;
+                g_world_menu_input_lock_mode = 0;
             }
             if (self->task_words[1] != 0) {
                 self->task_words[1] = 0;
@@ -99,7 +99,7 @@ void world_menu_run_require_help(void) {
             }
             input = *g_world_help_controller_state_ptr;
             if (input & PSX_PAD_CROSS) {
-                g_world_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                g_world_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
             if (input & PSX_PAD_CIRCLE) {
@@ -110,7 +110,7 @@ void world_menu_run_require_help(void) {
                         if ((*entry->value & 0x7FF) == 0x7FF || (*entry->value & 0x7FF) == 0) {
                             *g_world_help_controller_state_ptr = 0;
                         } else {
-                            g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                            g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                             world_thread_start(text_thread_id, world_text_character_handling_thread);
                             world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
@@ -121,13 +121,13 @@ void world_menu_run_require_help(void) {
                     } else if (entry->help_base == -0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_world_help_controller_state_ptr = 0;
                     } else {
-                        g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                        g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                         world_thread_start(text_thread_id, world_text_character_handling_thread);
                         world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                     }
                 } else {
                     help_id = entry->help_base;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     world_thread_start(text_thread_id, world_text_character_handling_thread);
                     world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                 }
@@ -142,7 +142,7 @@ void world_menu_run_require_help(void) {
                     help_id = 3;
                 }
                 if (menu_index != entry->destination[help_id]) {
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
                 menu_index = entry->destination[help_id];
             }
@@ -150,7 +150,7 @@ void world_menu_run_require_help(void) {
             /* The help text is up: entry, x and y keep the values of the last
                idle frame. */
             if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_world_thread_task_active = 1;
+                g_world_menu_input_lock_mode = 1;
             }
             if (self->task_words[1] == 0) {
                 self->task_words[1] = 2;

@@ -389,7 +389,7 @@ void bunit_render_unit_status_panel_thread(void) {
                 env_a[6].format = 2;
             }
             battle_clear_menu_render_buffer(render_a, 0x700);
-            win = &g_menu_text_state.pen.stride;
+            win = &g_battle_menu_text_state.pen.stride;
             origin = (world_glyph_blit_t*)(win - 2);
             *win = 0x38;
             battle_menu_draw_numeric_display_entries(render_a, env_a, origin, 6);

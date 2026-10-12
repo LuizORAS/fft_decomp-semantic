@@ -28,7 +28,7 @@ void require_menu_text_entry_wait_thread(void) {
     id = task->text_thread_id;
     arg = task->speaker_id;
     *ctl = PSX_PAD_CIRCLE;
-    battle_menu_handle_action(obj, 0);
+    battle_menu_handle_entry_confirm(obj, 0);
     battle_thread_start(id, battle_text_character_handling_thread);
     battle_thread_set_four_parameters(id, header_id, text_id, arg, arg);
     battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);

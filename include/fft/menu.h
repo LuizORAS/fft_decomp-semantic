@@ -64,7 +64,7 @@ enum {
  * packets, twelve LINE_F2 packets and one SPRT whose CLUT (+0xe6)
  * *_menu_init_primitive_colors_normal and _dimmed set. */
 typedef struct world_menu_palette_primitives {
-    DR_MODE draw_mode;      /* 0x00: texture window g_world_gfx_texture_window */
+    DR_MODE draw_mode;      /* 0x00: texture window g_world_menu_disabled_texture_window */
     DR_MODE draw_mode_menu; /* 0x0c: texture window g_world_menu_numeric_display_texture_window */
     LINE_F2 lines[12];      /* 0x18 */
     SPRT sprite;            /* 0xd8 */
@@ -636,7 +636,7 @@ typedef struct world_menu_entry {
     world_gfx_image_load_parameters_t text_image;
     s16 text_id;                 /* 0x1c: passed to world_text_find_entry */
     s16 max_row_index;           /* 0x1e: row count - 1 (world_menu_build_skillset_entries) */
-    s16 cancel_thread_count;     /* 0x20: threads world_menu_cancel_thread_group stops, -1 when there is no thread
+    s16 cancel_thread_count;     /* 0x20: threads world_menu_handle_entry_cancel stops, -1 when there is no thread
                              group; set from the system-function table by world_menu_run_system_function_thread */
     u8 _padding_22[0x24 - 0x22]; /* aligns row_actions */
     s16* row_actions;            /* 0x24 */
@@ -745,7 +745,7 @@ typedef struct world_input_timing_profile {
 } world_input_timing_profile_t;
 
 /* A text layout followed by the first visible row, as bound to a scrolling
- * list's world_menu_entry_t::text_binding (world_menu_scrolling_list_thread and the AT list
+ * list's world_menu_entry_t::text_binding (world_menu_run_scrolling_ability_list_thread and the AT list
  * built by world_menu_build_ability_preview_at_list). */
 typedef struct world_menu_scroll_text_layout {
     world_menu_text_layout_t columns; /* 0x00 */
@@ -797,7 +797,7 @@ typedef struct world_menu_icon_record {
 } world_menu_icon_record_t;
 
 /* Provisional: one of the two 0x134-byte packet pages a scrolling text list
- * alternates between frames (world_menu_scrolling_list_thread at 0x801a3d58,
+ * alternates between frames (world_menu_run_scrolling_ability_list_thread at 0x801a3d58,
  * world_build_at_list at 0x801ac6b4, world_screen_build_at_list at 0x801bfda4). */
 typedef struct world_menu_list_page {
     SPRT frame;                                   /* 0x00: text image / cursor frame */
@@ -1040,7 +1040,7 @@ typedef enum battle_menu_system_dispatch_result {
 
 /* g_battle_menu_current_id / g_world_menu_current_id: the open battle menu,
  * and the index of its entry in g_battle_menu_idle_action_entries (WORLD:
- * g_world_menu_system_entries), which is also what a row action from 0 to
+ * g_world_menu_idle_action_entries), which is also what a row action from 0 to
  * 0xff opens. The unit menus are picked by
  * battle_menu_get_id_based_on_mount_moveable_actable. A system function
  * (battle_system_function_t) shows its text in MESSAGE or in one of the
@@ -1229,7 +1229,7 @@ typedef struct battle_menu_record {
 
 typedef char battle_menu_record_size_must_be_0x11[(sizeof(battle_menu_record_t) == 0x11) ? 1 : -1];
 
-/* One row of the 31-entry menu table at g_battle_menu_id_records; its first 12 rows are the
+/* One row of the 31-entry menu table at g_battle_menu_command_maps; its first 12 rows are the
  * menus whose selection is remembered per unit.
  * battle_menu_restore_selection_for_selected_unit and battle_menu_record_selection_for_selected_unit
  * prove the 8-byte stride and read only the leading menu id;
@@ -1329,7 +1329,7 @@ typedef struct menu_number_entry {
 
 typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 12) ? 1 : -1];
 
-/* The menu text state block at BATTLE 0x80165f9c (g_menu_text_state) and
+/* The menu text state block at BATTLE 0x80165f9c (g_battle_menu_text_state) and
  * WORLD 0x80153280 (g_world_menu_text_state): the script-variable pointer,
  * then the pen the glyph renderers receive. */
 typedef struct menu_text_state {

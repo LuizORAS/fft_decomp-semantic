@@ -21,7 +21,7 @@ typedef struct battle_menu_action_entry {
  * 0x4d2 records the option as -1; a negative action -n closes n menu levels
  * by setting the third parameter of the next n threads (thread 8 also saves
  * the open menus' selections). */
-void battle_menu_handle_action(void* menu, s32 selected_option) {
+void battle_menu_handle_entry_confirm(void* menu, s32 selected_option) {
     battle_menu_action_entry_t* entry;
     s16* actions;
     s32 action;
@@ -36,7 +36,7 @@ void battle_menu_handle_action(void* menu, s32 selected_option) {
         return;
     }
     silent = 0;
-    if (!(g_battle_script_event_input & PSX_PAD_CIRCLE) || battle_menu_can_accept_input() == 0) {
+    if (!(g_battle_script_event_input & PSX_PAD_CIRCLE) || battle_menu_is_input_allowed() == 0) {
         return;
     }
     if (g_battle_thread_contexts[g_battle_thread_current_id].task_words[1] == 0) {

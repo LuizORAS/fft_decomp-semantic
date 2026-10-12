@@ -76,7 +76,7 @@ s32 world_ability_run_learn_list(void) {
                     = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_learn_confirm_menu);
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 g_world_learn_confirm_submenu.selected_index = 0;
-                g_world_menu_sound_muted = 1;
+                g_world_sound_suppressed = 1;
             }
         } else if (g_world_input_primary_repeat & PSX_PAD_CROSS) {
             g_world_learn_ability_list_open = 0;
@@ -111,7 +111,7 @@ s32 world_ability_run_learn_list(void) {
             } else if (g_world_menu_selection_results[5] == 1) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             }
-            g_world_menu_sound_muted = 0;
+            g_world_sound_suppressed = 0;
             world_ability_find_unit_abilities(g_world_formation_selected_unit_index, g_world_learn_selected_job,
                 g_world_ability_category, g_world_ability_entries, WORLD_ABILITY_LIST_MODE_LEARN_MENU);
             world_menu_init_scrollable_list_core(g_world_ability_entries, g_world_menu_cursor_position,
@@ -126,7 +126,7 @@ s32 world_ability_run_learn_list(void) {
         input = g_world_input_primary_repeat;
     }
     mode = 0;
-    if (g_world_thread_task_active != 0 || running != 0) {
+    if (g_world_menu_input_lock_mode != 0 || running != 0) {
         mode = 1;
     }
     world_menu_run_script_with_palette_mode(g_world_ability_list_script, input, mode);

@@ -92,13 +92,13 @@ void battle_menu_auto_battle_setting_thread(void) {
                 }
                 previous = cursor;
                 g_battle_menu_thread_menu_data[BATTLE_MENU_ID_AUTO_BATTLE_TARGET].selected_index = 0;
-                battle_menu_handle_action(param, previous);
+                battle_menu_handle_entry_confirm(param, previous);
             }
             for (j = 0; j < 5; j++) {
-                g_battle_menu_text_palette_offset = colour[j];
-                g_menu_text_state.pen.stride = param->inner_width;
+                g_battle_menu_text_color = colour[j];
+                g_battle_menu_text_state.pen.stride = param->inner_width;
                 battle_menu_set_text_origin(8, j * 16 + 9);
-                battle_menu_display_text_entry(j + 0x5009, buffer, &g_menu_text_state.pen);
+                battle_menu_display_text_entry(j + 0x5009, buffer, &g_battle_menu_text_state.pen);
             }
             LoadImage(&rect, buffer);
             fresh = 1;
@@ -113,7 +113,7 @@ void battle_menu_auto_battle_setting_thread(void) {
             break;
         }
         battle_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
-        battle_handle_menu_cancel_input(param);
+        battle_menu_handle_entry_cancel(param);
         battle_menu_select_icon_cluts(record);
         battle_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);
         battle_menu_submit_icon_primitives(record);

@@ -37,7 +37,7 @@ void world_menu_thin_window_frame_thread(void) {
     s32 frame;
 
     menu = world_thread_get_current_parameter_1();
-    pixels = world_menu_alloc_ui_buffer(0x400);
+    pixels = world_menu_alloc_memory(0x400);
 
     world_clear_menu_render_buffer(pixels, 0x400);
     texture.w = 0x80;
@@ -49,19 +49,19 @@ void world_menu_thin_window_frame_thread(void) {
     world_gfx_set_image_blit_source_rect(8, 8, 0x20, 0x10);
     world_gfx_set_image_blit_destination_origin(0, 0);
     world_text_blit_glyph(
-        g_world_menu_glyph_sheet, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
+        g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_gfx_set_image_blit_source_rect(0, 8, 8, 0x10);
     world_gfx_set_image_blit_destination_origin(0x20, 0);
     world_text_blit_glyph(
-        g_world_menu_glyph_sheet, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
+        g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_gfx_set_image_blit_source_rect(0, 0, 0x28, 8);
     world_gfx_set_image_blit_destination_origin(0x28, 0);
     world_text_blit_glyph(
-        g_world_menu_glyph_sheet, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
+        g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_gfx_set_image_blit_source_rect(0, 0x18, 0x28, 8);
     world_gfx_set_image_blit_destination_origin(0x28, 8);
     world_text_blit_glyph(
-        g_world_menu_glyph_sheet, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
+        g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
 
     LoadImage(&texture, (u32*)pixels);
     world_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
@@ -151,7 +151,7 @@ void world_menu_thin_window_frame_thread(void) {
            is dead. A separate local is allocated a different callee-saved
            register and does not reproduce the target. */
         texture_u = 0x7d3c;
-        if (world_thread_get_current_parameter_2() == 0 && g_world_thread_task_active == 0) {
+        if (world_thread_get_current_parameter_2() == 0 && g_world_menu_input_lock_mode == 0) {
             texture_u = 0x7c3c;
         }
         for (index = 8; index >= 0; index--) {

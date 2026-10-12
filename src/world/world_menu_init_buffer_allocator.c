@@ -17,7 +17,7 @@ void world_menu_init_buffer_allocator(void) {
      * without pins. */
     fill = -1;
     for (slot = 15; slot >= 0; slot--) {
-        g_world_menu_buffer_allocations[slot].buffer = (u8*)fill;
+        g_world_menu_allocator_slot_records[slot].buffer = (u8*)fill;
     }
     count = 0x6f;
     byte = &g_world_menu_buffer_allocation_map[0x6f];

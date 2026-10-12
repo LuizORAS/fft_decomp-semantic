@@ -9,7 +9,7 @@ void battle_menu_run_jobstts_thread(void) {
     if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) != 0) {
         battle_thread_exit_current();
     }
-    battle_menu_set_option_menu_open();
+    battle_menu_block_help();
     battle_sound_set_effect_to_confirm();
     battle_menu_reserve_high_overlay(0x20000);
     battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_JOBSTTS);
@@ -22,6 +22,6 @@ void battle_menu_run_jobstts_thread(void) {
     g_battle_script_event_input = 0;
     battle_menu_free_high_overlay();
     battle_thread_wait_frames(2);
-    battle_menu_clear_option_menu_open();
+    battle_menu_unblock_help();
     battle_thread_exit_current();
 }

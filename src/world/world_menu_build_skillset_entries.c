@@ -12,7 +12,7 @@ void world_menu_build_skillset_entries(void) {
     u8 separator;
 
     count = 0;
-    g_world_ability_selected_skill_ct = 0;
+    g_world_menu_selected_skill_ct = 0;
     g_world_action_menu_skillsets[0] = 0;
     g_world_menu_monster_skillset_flag = battle_menu_build_unit_action_menus(g_world_active_turn_unit.battle_id,
         g_world_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_battle_action_menu_row_types);

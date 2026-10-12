@@ -29,7 +29,7 @@ void world_formation_init_menu_display(void) {
     rect.y = 0x100;
     rect.w = 0x40;
     rect.h = 0x30;
-    world_gfx_load_image_and_wait(&rect, g_world_menu_glyph_sheet);
+    world_gfx_load_image_and_wait(&rect, g_world_menu_glyph_image);
     rect.x = 0x240;
     rect.y = 0x1FA;
     rect.w = 0x40;

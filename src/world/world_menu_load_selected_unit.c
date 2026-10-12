@@ -33,16 +33,16 @@ void world_menu_load_selected_unit(void) {
     u8 field_value;
     s16 list_value;
 
-    unit = battle_unit_get_stats_from_battle_id(g_world_unit_comparison_battle_id);
-    editor = g_world_unit_editor_fields.halfwords;
+    unit = battle_unit_get_stats_from_battle_id(g_world_preview_target_unit_id);
+    editor = g_world_menu_billboard_data.halfwords;
     if (unit != 0) {
-        world_menu_copy_unit_data_to_status_billboard(unit, &g_world_unit_comparison_status_billboard);
+        world_menu_copy_unit_data_to_status_billboard(unit, &g_world_menu_status_billboard);
     }
 
     unit = battle_unit_get_stats_from_battle_id(g_world_active_turn_unit.battle_id);
     if (unit == 0)
         return;
-    world_menu_copy_unit_data_to_status_billboard(unit, &g_world_unit_selected_status_billboard);
+    world_menu_copy_unit_data_to_status_billboard(unit, &g_world_menu_active_turn_banner);
 
     g_world_active_turn_unit.job_id = unit->job_id;
     g_world_active_turn_unit.brave = unit->brave;
@@ -123,11 +123,11 @@ void world_menu_load_selected_unit(void) {
         field_value = unit->primary_skillset;
         editor[23] = field_value;
         if (field_value == 0)
-            g_world_unit_editor_primary_skillset_name[0] = 0xfe;
+            g_world_menu_billboard_primary_skillset_name[0] = 0xfe;
         field_value = unit->secondary_skillset;
         editor[24] = field_value;
         if (field_value == 0)
-            g_world_unit_editor_secondary_skillset_name[1] = 0xfe;
+            g_world_menu_billboard_secondary_skillset_name[1] = 0xfe;
         editor[25] = unit->reaction_ability;
         editor[26] = unit->support_ability;
         editor[27] = unit->movement_ability;
@@ -159,14 +159,14 @@ void world_menu_load_selected_unit(void) {
         }
     }
 
-    world_fill_16_bytes_fe(g_world_unit_editor_unit_name);
-    world_fill_16_bytes_fe(g_world_unit_editor_job_name);
-    world_fill_16_bytes_fe(g_world_unit_editor_primary_skillset_name);
-    world_fill_16_bytes_fe(g_world_unit_editor_secondary_skillset_name);
+    world_fill_16_bytes_fe(g_world_menu_billboard_unit_name);
+    world_fill_16_bytes_fe(g_world_menu_billboard_job_name);
+    world_fill_16_bytes_fe(g_world_menu_billboard_primary_skillset_name);
+    world_fill_16_bytes_fe(g_world_menu_billboard_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
-    world_copy_bytes(g_world_unit_editor_unit_name, unit->name, 0x10);
-    world_copy_bytes(g_world_unit_editor_job_name, unit->job_name, 0x10);
-    world_copy_bytes(g_world_unit_editor_primary_skillset_name, unit->primary_skillset_name, 0x10);
-    world_copy_bytes(g_world_unit_editor_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
+    world_copy_bytes(g_world_menu_billboard_unit_name, unit->name, 0x10);
+    world_copy_bytes(g_world_menu_billboard_job_name, unit->job_name, 0x10);
+    world_copy_bytes(g_world_menu_billboard_primary_skillset_name, unit->primary_skillset_name, 0x10);
+    world_copy_bytes(g_world_menu_billboard_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
 }

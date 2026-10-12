@@ -108,7 +108,7 @@ void battle_menu_load_selected_unit(void) {
         field_value = unit->primary_skillset;
         editor[23] = field_value;
         if (field_value == 0)
-            g_battle_menu_billboard_skillset_name[0] = 0xfe;
+            g_battle_menu_billboard_primary_skillset_name[0] = 0xfe;
         field_value = unit->secondary_skillset;
         editor[24] = field_value;
         if (field_value == 0)
@@ -146,12 +146,12 @@ void battle_menu_load_selected_unit(void) {
 
     battle_text_fill_field_with_terminators(g_battle_menu_billboard_unit_name);
     battle_text_fill_field_with_terminators(g_battle_menu_billboard_job_name);
-    battle_text_fill_field_with_terminators(g_battle_menu_billboard_skillset_name);
+    battle_text_fill_field_with_terminators(g_battle_menu_billboard_primary_skillset_name);
     battle_text_fill_field_with_terminators(g_battle_menu_billboard_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
     battle_copy_bytes(g_battle_menu_billboard_unit_name, unit->name, 0x10);
     battle_copy_bytes(g_battle_menu_billboard_job_name, unit->job_name, 0x10);
-    battle_copy_bytes(g_battle_menu_billboard_skillset_name, unit->primary_skillset_name, 0x10);
+    battle_copy_bytes(g_battle_menu_billboard_primary_skillset_name, unit->primary_skillset_name, 0x10);
     battle_copy_bytes(g_battle_menu_billboard_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
 }

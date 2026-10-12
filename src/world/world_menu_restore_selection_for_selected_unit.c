@@ -1,14 +1,14 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* 5-byte remap record, 8 entries at g_world_menu_value_remap_table. */
+/* 5-byte remap record, 8 entries at g_world_menu_selection_remaps. */
 typedef struct world_menu_value_remap {
     u8 menu_index;  /* 0x00 */
     u8 replacement; /* 0x01 */
     u8 matches[3];  /* 0x02 */
 } world_menu_value_remap_t;
 
-extern world_menu_value_remap_t g_world_menu_value_remap_table[8];
+extern world_menu_value_remap_t g_world_menu_selection_remaps[8];
 
 /* Target 0x800f302c. When menu_index is in the 12-entry lookup table, remaps
  * the stored unit's row value through the matching remap record and copies
@@ -28,13 +28,13 @@ void world_menu_restore_selection_for_selected_unit(s32 menu_index) {
     if (i == 12) {
         return;
     }
-    row = g_world_menu_unit_selection_rows[g_world_active_turn_unit.battle_id].bytes;
-    for (k = 0, remap = g_world_menu_value_remap_table; k < 8; remap++, k++) {
-        if (menu_index == g_world_menu_value_remap_table[k].menu_index) {
+    row = g_world_menu_unit_selection_records[g_world_active_turn_unit.battle_id].bytes;
+    for (k = 0, remap = g_world_menu_selection_remaps; k < 8; remap++, k++) {
+        if (menu_index == g_world_menu_selection_remaps[k].menu_index) {
             /* Keep the signed index bound used by the target. */
             for (m = 2; m < 5; m++) {
                 if (*row == remap->matches[m - 2]) {
-                    *row = g_world_menu_value_remap_table[k].replacement;
+                    *row = g_world_menu_selection_remaps[k].replacement;
                     break;
                 }
             }

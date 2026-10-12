@@ -69,26 +69,30 @@ void bunit_menu_run_numeric_editor_thread(void) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
             battle_clear_menu_render_buffer(text_pixels, 0x918);
-            g_menu_text_state.pen.stride = 0x14;
+            g_battle_menu_text_state.pen.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
-                bunit_text_render_signed_decimal_entries(text_pixels, entries, &g_menu_text_state.pen, 3);
+                bunit_text_render_signed_decimal_entries(text_pixels, entries, &g_battle_menu_text_state.pen, 3);
             } else {
-                battle_menu_draw_numeric_display_entries(text_pixels, entries, &g_menu_text_state.pen, 3);
+                battle_menu_draw_numeric_display_entries(text_pixels, entries, &g_battle_menu_text_state.pen, 3);
             }
-            g_menu_text_state.pen.stride = 0x40;
+            g_battle_menu_text_state.pen.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
-                bunit_text_render_signed_decimal_entries(text_pixels + 0x168, entries + 3, &g_menu_text_state.pen, 4);
+                bunit_text_render_signed_decimal_entries(
+                    text_pixels + 0x168, entries + 3, &g_battle_menu_text_state.pen, 4);
             } else {
-                battle_menu_draw_numeric_display_entries(text_pixels + 0x168, entries + 3, &g_menu_text_state.pen, 4);
+                battle_menu_draw_numeric_display_entries(
+                    text_pixels + 0x168, entries + 3, &g_battle_menu_text_state.pen, 4);
             }
-            g_menu_text_state.pen.stride = 0x64;
+            g_battle_menu_text_state.pen.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
-                bunit_text_render_signed_decimal_entries(text_pixels + 0x468, entries + 7, &g_menu_text_state.pen, 8);
+                bunit_text_render_signed_decimal_entries(
+                    text_pixels + 0x468, entries + 7, &g_battle_menu_text_state.pen, 8);
             } else {
-                battle_menu_draw_numeric_display_entries(text_pixels + 0x468, entries + 7, &g_menu_text_state.pen, 8);
+                battle_menu_draw_numeric_display_entries(
+                    text_pixels + 0x468, entries + 7, &g_battle_menu_text_state.pen, 8);
             }
             LoadImage(upload_a, (u32*)text_pixels);
             LoadImage(upload_b, (u32*)(text_pixels + 0x168));

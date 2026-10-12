@@ -27,20 +27,20 @@ s32 battle_menu_resolve_selection(void) {
     if (command != 0x12 && (command & 0xFE) != 0xFE) {
         menu = g_battle_menu_current_id;
         for (i = 0; i < 31; i++) {
-            if (menu == g_battle_menu_id_records[i].menu_id) {
+            if (menu == g_battle_menu_command_maps[i].menu_id) {
                 if (command != 0xFF) {
                     if (menu == BATTLE_MENU_ID_DEAD_UNIT) {
                         command = g_battle_dead_unit_action;
                         g_battle_menu_selected_action.item_id = g_battle_dead_unit_result;
                         option = MENU_SELECTION_NONE;
                     } else if (menu == 0x19 || menu >= 0x64) {
-                        command = *(g_battle_menu_id_records[i].map + option + 1);
+                        command = *(g_battle_menu_command_maps[i].map + option + 1);
                         option = MENU_SELECTION_NONE;
                     } else {
-                        command = *(g_battle_menu_id_records[i].map + command + 1);
+                        command = *(g_battle_menu_command_maps[i].map + command + 1);
                     }
                 } else {
-                    command = g_battle_menu_id_records[i].map[0];
+                    command = g_battle_menu_command_maps[i].map[0];
                 }
                 break;
             }
@@ -77,20 +77,20 @@ s32 battle_menu_resolve_selection(void) {
                 || option == SKILLSET_ID_BLANK_04 || option == SKILLSET_ID_ELEMENTAL || option == SKILLSET_ID_JUMP) {
                 g_battle_menu_selected_action.ability_id = 0;
                 item = MENU_SELECTION_NONE;
-            } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_battle_menu_action_menu_build_result == 0) {
+            } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_battle_menu_monster_skillset_flag == 0) {
                 item = g_battle_menu_anything_ability_id;
             } else {
                 item = g_battle_ai_workspace_ptr->ability_list.ids[item] & 0x1FF;
             }
             g_battle_menu_selected_action.skillset = option;
-            g_battle_menu_used_skillset_id = option;
+            g_battle_menu_resolved_skillset = option;
             if (item != MENU_SELECTION_NONE) {
                 if (option == SKILLSET_ID_ITEM || option == SKILLSET_ID_DRAW_OUT || option == SKILLSET_ID_THROW) {
                     g_battle_menu_selected_action.item_id = item;
                 } else {
                     g_battle_menu_selected_action.ability_id = item;
                 }
-                g_battle_menu_used_item_id = item;
+                g_battle_menu_resolved_item_or_ability = item;
             }
         }
     }

@@ -28,12 +28,12 @@ void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT
     words = width & 3;
     has_partial_word = words != 0;
     words = (width >> 2) + has_partial_word;
-    src = (u16*)g_world_menu_glyph_sheet;
+    src = (u16*)g_world_menu_glyph_image;
     size = (width * height) >> 1;
     if (size > 0x3000 && mode == MENU_WINDOW_FRAME_UPLOAD) {
-        buffer = world_menu_alloc_ui_buffer(0x3000);
+        buffer = world_menu_alloc_memory(0x3000);
     } else {
-        buffer = world_menu_alloc_ui_buffer(size);
+        buffer = world_menu_alloc_memory(size);
     }
     for (i = 0; i < height; i++) {
         if (size >= 0x3000 && mode == MENU_WINDOW_FRAME_UPLOAD && (i & 0x5F) == 0) {

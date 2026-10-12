@@ -67,7 +67,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
         }
         if (g_battle_map_selected_tile_data.depth != 0) {
             battle_clear_menu_render_buffer(buffer, 0x100);
-            stride = &g_menu_text_state.pen.stride;
+            stride = &g_battle_menu_text_state.pen.stride;
             *stride = 0x18;
             battle_menu_set_text_origin(0x10, 0);
             battle_draw_menu_number_glyphs(

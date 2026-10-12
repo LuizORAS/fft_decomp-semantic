@@ -20,7 +20,7 @@ void battle_gfx_build_scaled_draw_area_pair_swapped(
     if (step >= 12) {
         step = 11;
     }
-    percent = g_battle_menu_zoom_percentages[step];
+    percent = g_battle_menu_cursor_zoom_percentages[step];
     battle_copy_bytes(&packets->rects[0], geometry, 8);
     if (packets->rects[0].x < 0x80) {
         packets->rects[0].x += 0x80;

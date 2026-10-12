@@ -20,9 +20,9 @@ void battle_menu_release_window_buffer_pair(s32 buffer) {
     empty = -1;
     offset = 0x118;
     do {
-        if ((s32)g_battle_menu_buffer_slots[slot] == buffer) {
-            g_battle_menu_buffer_slots[slot] = (void*)empty;
-            g_battle_menu_buffer_slots[slot + 1] = (void*)empty;
+        if ((s32)g_battle_menu_window_buffer_pointers[slot] == buffer) {
+            g_battle_menu_window_buffer_pointers[slot] = (void*)empty;
+            g_battle_menu_window_buffer_pointers[slot + 1] = (void*)empty;
             /* Clears active and thread_id of both buffers of the pair; offset
              * is the byte offset of the pair's second buffer, and these
              * field-address + offset forms keep the target's addressing. */

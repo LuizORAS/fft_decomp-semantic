@@ -2,7 +2,7 @@
 
 /* MINI_MENU_HELP: once the help window has closed, reopen the free-cursor mini menu. */
 void battle_state_handle_mini_menu_help_state(void) {
-    if (battle_menu_is_still_building() != 2) {
+    if (battle_menu_get_thread_activity() != 2) {
         g_battle_menu_help_opening = 0;
         battle_menu_open_free_cursor_mini_menu();
     }

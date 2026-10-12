@@ -43,13 +43,13 @@ void world_menu_formation_icon_list_thread(void) {
         param->selected_index = cursor;
         world_menu_select_icon_cluts(record);
         world_menu_update_icon_cursor_sprites(param, record, i, cursor);
-        if (world_menu_check_thread_completion(&g_world_menu_frame_input_state.new_buttons) != 0) {
+        if (world_menu_should_close_thread(&g_world_menu_frame_input_state.new_buttons) != 0) {
             break;
         }
         if (world_thread_is_previous_running() == 0) {
             world_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
             world_menu_handle_entry_confirm(param, cursor);
-            world_menu_cancel_thread_group(param);
+            world_menu_handle_entry_cancel(param);
         }
         record->sprites[0].r0 = g_world_menu_color_red;
         record->sprites[0].g0 = g_world_menu_color_green;

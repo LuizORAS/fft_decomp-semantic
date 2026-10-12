@@ -11,7 +11,7 @@ void world_menu_build_main(void) {
 
     entry = world_thread_get_current_parameter_1();
     unit_id = g_world_active_turn_unit.battle_id;
-    row = &g_world_menu_unit_selection_rows[unit_id];
+    row = &g_world_menu_unit_selection_records[unit_id];
     g_world_thread_contexts[g_world_thread_current_id].function_parameter_2 = 1; /* redraw request */
     world_menu_run_icon_selection_loop();
     row->bytes[0] = entry->selected_index;

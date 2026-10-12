@@ -29,7 +29,7 @@ void equip_menu_text_entry_wait_thread(void) {
     child_id = task->text_thread_id;
     task_arg = task->speaker_id;
     *input = PSX_PAD_CIRCLE;
-    battle_menu_handle_action(thread, 0);
+    battle_menu_handle_entry_confirm(thread, 0);
 
     battle_thread_start(child_id, battle_text_character_handling_thread);
     battle_thread_set_four_parameters(child_id, header_id, text_id, task_arg, task_arg);

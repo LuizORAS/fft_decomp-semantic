@@ -8,7 +8,7 @@ void battle_menu_step_wrapping_cursor_on_scroll_buttons(world_menu_entry_t* ctx,
     s32 max;
     s32 cur;
 
-    if (battle_menu_can_accept_input() != 0) {
+    if (battle_menu_is_input_allowed() != 0) {
         if (g_battle_script_event_input & PSX_PAD_UP) {
             selection = *sel;
             if (selection == 0) {

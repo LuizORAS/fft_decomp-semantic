@@ -127,7 +127,7 @@ void option_build_options_menu(void) {
     battle_clear_menu_render_buffer(image, entry->inner_width * entry->inner_height / 2);
     option_menu_draw_text_columns(entry, &row_offset, image);
     ring = 0;
-    image_rect.w = g_menu_text_state.pen.stride >> 2;
+    image_rect.w = g_battle_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)image);
     battle_thread_wait_frames(1);
     battle_gfx_init_scaled_draw_area_packets(&page->title_area);
@@ -138,9 +138,9 @@ void option_build_options_menu(void) {
         entry->inner_width, 0x2C, &g_option_menu_title_image_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
     base->title.x0 = entry->window_x;
     base->title.y0 = entry->window_y + entry->window_height + 1;
-    g_menu_text_state.pen.stride = entry->inner_width;
+    g_battle_menu_text_state.pen.stride = entry->inner_width;
     battle_menu_set_text_origin(0x18, 0xE);
-    battle_menu_display_text_entry(0x502B, image, &g_menu_text_state.pen);
+    battle_menu_display_text_entry(0x502B, image, &g_battle_menu_text_state.pen);
     LoadImage(&g_option_menu_title_image_rect, (u32*)image);
     battle_thread_wait_frames(1);
     battle_menu_free_memory(image);
@@ -159,14 +159,14 @@ void option_build_options_menu(void) {
     base->value.x0 = entry->window_x + 0x5C;
     base->value.y0 = entry->window_y + entry->window_height + 0xF;
     battle_clear_menu_render_buffer(buffer, 0x1E0);
-    g_menu_text_state.pen.stride = 0x3C;
+    g_battle_menu_text_state.pen.stride = 0x3C;
     battle_menu_set_text_origin(0, 0);
-    battle_menu_display_text_entry(0x5021, buffer, &g_menu_text_state.pen);
+    battle_menu_display_text_entry(0x5021, buffer, &g_battle_menu_text_state.pen);
     LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
     battle_copy_bytes(&base[1], base, sizeof(world_options_menu_page_t));
     for (;;) {
         page = &g_option_menu_pages[i & 1];
-        if (delta == 0 && battle_menu_can_accept_input() != 0) {
+        if (delta == 0 && battle_menu_is_input_allowed() != 0) {
             if ((*input0 & PSX_PAD_UP)
                 && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
@@ -203,18 +203,18 @@ void option_build_options_menu(void) {
                 image = g_option_menu_render_buffer;
                 image_rect.h = 0x10;
                 battle_clear_menu_render_buffer(image, entry->inner_width * 8);
-                g_menu_text_state.pen.stride = entry->inner_width;
+                g_battle_menu_text_state.pen.stride = entry->inner_width;
                 for (column = 0; column < 2; column++) {
                     if (layout->text_ids[column] != (s16*)-1) {
                         index = cursor + row_offset + delta;
                         battle_menu_set_text_origin(layout->x[column], 0);
-                        g_battle_menu_text_palette_offset = layout->text_colors[column][index];
+                        g_battle_menu_text_color = layout->text_colors[column][index];
                         if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                             battle_menu_display_text_entry(
-                                layout->text_ids[column][index], image, &g_menu_text_state.pen);
+                                layout->text_ids[column][index], image, &g_battle_menu_text_state.pen);
                         } else {
                             battle_display_menu_number_entry(
-                                layout->text_ids[column][index], 2, (s32)image, &g_menu_text_state.pen);
+                                layout->text_ids[column][index], 2, (s32)image, &g_battle_menu_text_state.pen);
                         }
                     }
                 }
@@ -222,7 +222,7 @@ void option_build_options_menu(void) {
             }
             if (*input0 & PSX_PAD_CIRCLE) {
                 g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
-                if (battle_menu_can_accept_input() != 0) {
+                if (battle_menu_is_input_allowed() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
                     battle_thread_start(g_battle_thread_current_id - 1, option_run_option_choice_menu);
@@ -230,23 +230,23 @@ void option_build_options_menu(void) {
                 }
             }
             if (*input0 & PSX_PAD_CROSS) {
-                battle_handle_menu_cancel_input(entry);
+                battle_menu_handle_entry_cancel(entry);
             }
         }
         if (g_battle_menu_input_lock_mode == 0) {
             index = cursor + row_offset + delta;
             battle_clear_menu_render_buffer(buffer, 0x1E0);
-            g_menu_text_state.pen.stride = 0x3C;
+            g_battle_menu_text_state.pen.stride = 0x3C;
             battle_menu_set_text_origin(0, 0);
-            battle_menu_display_text_entry(
-                g_option_value_text_id_bases[index] + g_option_current_values[index], buffer, &g_menu_text_state.pen);
+            battle_menu_display_text_entry(g_option_value_text_id_bases[index] + g_option_current_values[index], buffer,
+                &g_battle_menu_text_state.pen);
             LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
         }
         battle_thread_yield();
         if (battle_menu_should_close_thread((s32*)input0) != 0) {
             break;
         }
-        if (delta == 0 && battle_menu_can_accept_input() != 0) {
+        if (delta == 0 && battle_menu_is_input_allowed() != 0) {
             option_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
@@ -284,7 +284,7 @@ void option_build_options_menu(void) {
         battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
         battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
         battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.draw_mode);
-        if (layout->hidden_rows != 0 && battle_menu_can_accept_input() != 0) {
+        if (layout->hidden_rows != 0 && battle_menu_is_input_allowed() != 0) {
             if (row_offset != 0) {
                 battle_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
                 battle_gfx_draw_or_append_gpu_primitive(&page->arrow_marks[0]);

@@ -44,12 +44,12 @@ void world_menu_run_icon_selection_loop(void) {
             records[0]._unknown_78 = 0;
             records[1]._unknown_78 = 0;
         }
-        if (world_menu_check_thread_completion(&g_world_menu_new_button_input) != 0) {
+        if (world_menu_should_close_thread(&g_world_menu_new_button_input) != 0) {
             break;
         }
         world_menu_handle_entry_confirm(param, cursor);
         world_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);
-        world_menu_cancel_thread_group(param);
+        world_menu_handle_entry_cancel(param);
         world_menu_submit_icon_primitives(&record->base);
     }
     world_thread_yield();

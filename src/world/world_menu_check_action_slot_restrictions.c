@@ -6,7 +6,7 @@
  * of the rows walked by world_menu_select_unit_action_slots_thread.
  *
  * Picks a warning message for the stored unit (evade check, then the unit's
- * status bits, then the per-menu default from g_world_menu_action_slot_default_messages), or the menu-3
+ * status bits, then the per-menu default from g_world_menu_restriction_message_ids), or the menu-3
  * "no entry" message 0x8009 - value. When a message applies it is written to
  * menu entry 35 and shown by world_menu_icon_linked_entry_thread; mode 2
  * additionally plays the invalid sound and exits the calling thread, so the
@@ -43,7 +43,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
                 mode = 2;
             } else {
                 mode = 2;
-                message = g_world_menu_action_slot_default_messages[menu] + 0x1000;
+                message = g_world_menu_restriction_message_ids[menu] + 0x1000;
             }
         }
     }
@@ -68,7 +68,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
             world_thread_exit_current();
         }
     } else {
-        mode = g_world_menu_row_type_confirm_actions[g_battle_action_menu_row_types
+        mode = g_world_menu_action_type_modes[g_battle_action_menu_row_types
                 [g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index]][0];
         if (mode < 0) {
             g_world_menu_action_slot_row_actions = mode;

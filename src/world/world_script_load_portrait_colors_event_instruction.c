@@ -12,7 +12,7 @@ void world_script_load_portrait_colors_event_instruction(s32 index) {
     u8* upper_half;
     s32 i;
 
-    buffer = world_menu_alloc_ui_buffer(0x2000);
+    buffer = world_menu_alloc_memory(0x2000);
     do {
         world_thread_yield();
         g_world_thread_call_target = (void (*)(void))main_file_request_read_bytes;

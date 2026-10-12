@@ -53,10 +53,10 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
         record->icons[0]->x0
             = ((const world_gfx_image_load_parameters_t*)param->text_binding)->height + param->window_x + 7;
         record->icons[0]->y0 = param->window_y - 1;
-        world_gfx_init_image_loading(&record->base.sprites[3], &g_world_gfx_menu_image_source, &param->window_x,
+        world_gfx_init_image_loading(&record->base.sprites[3], &g_world_menu_texture_location, &param->window_x,
             &g_world_menu_single_icon_image_params[1]);
     } else if (kind < 5) {
-        world_gfx_init_image_loading(&record->base.sprites[3], &g_world_gfx_menu_image_source, &param->window_x,
+        world_gfx_init_image_loading(&record->base.sprites[3], &g_world_menu_texture_location, &param->window_x,
             &g_world_menu_single_icon_image_params[kind]);
     } else {
         if (index >= 5 && index < 0x10) {
@@ -67,13 +67,13 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
              * `kind * 4 + n`, fold collapses it to one x48 whose 3-op synth is an
              * instruction short; `(kind << 2) + n` selects the target's 4-op form. */
             kind -= 5;
-            world_gfx_init_image_loading(&record->base.sprites[3], &g_world_gfx_menu_image_source, &param->window_x,
+            world_gfx_init_image_loading(&record->base.sprites[3], &g_world_menu_texture_location, &param->window_x,
                 &g_world_menu_icon_strip_image_params[(kind << 2)]);
-            world_gfx_init_image_loading(record->icons[0], &g_world_gfx_menu_image_source, &param->window_x,
+            world_gfx_init_image_loading(record->icons[0], &g_world_menu_texture_location, &param->window_x,
                 &g_world_menu_icon_strip_image_params[(kind << 2) + 1]);
-            world_gfx_init_image_loading(record->icons[1], &g_world_gfx_menu_image_source, &param->window_x,
+            world_gfx_init_image_loading(record->icons[1], &g_world_menu_texture_location, &param->window_x,
                 &g_world_menu_icon_strip_image_params[(kind << 2) + 2]);
-            world_gfx_init_image_loading(record->icons[2], &g_world_gfx_menu_image_source, &param->window_x,
+            world_gfx_init_image_loading(record->icons[2], &g_world_menu_texture_location, &param->window_x,
                 &g_world_menu_icon_strip_image_params[(kind << 2) + 3]);
         } else {
             record->icons[0] = 0;
@@ -83,5 +83,5 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
     }
     /* Taking the draw_mode field adds an instruction; the record starts with that packet. */
     world_gfx_set_draw_mode_from_rect((DR_MODE*)record, (u16*)param);
-    SetDrawMode(&record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
+    SetDrawMode(&record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_menu_disabled_texture_window);
 }

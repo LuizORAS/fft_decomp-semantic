@@ -14,10 +14,10 @@ void* battle_menu_alloc_window_buffer_pair(void) {
     s32 i;
 
     for (index = 0; index < 6; index += 2) {
-        if (g_battle_menu_buffer_slots[index] == (void*)-1) {
-            g_battle_menu_buffer_slots[index] = &g_battle_menu_window_buffers[index];
-            g_battle_menu_buffer_slots[index + 1] = &g_battle_menu_window_buffers[index + 1];
-            buffer = g_battle_menu_buffer_slots[index];
+        if (g_battle_menu_window_buffer_pointers[index] == (void*)-1) {
+            g_battle_menu_window_buffer_pointers[index] = &g_battle_menu_window_buffers[index];
+            g_battle_menu_window_buffer_pointers[index + 1] = &g_battle_menu_window_buffers[index + 1];
+            buffer = g_battle_menu_window_buffer_pointers[index];
             for (i = 0; i < 1; i++) {
                 buffer->active = 0;
                 buffer->thread_id = g_battle_thread_current_id;
@@ -68,7 +68,7 @@ void* battle_menu_alloc_window_buffer_pair(void) {
                 buffer->quads[1].tpage = GetTPage(0, 0, 0x340, 0x100);
                 buffer++;
             }
-            return g_battle_menu_buffer_slots[index];
+            return g_battle_menu_window_buffer_pointers[index];
         }
     }
     battle_thread_exit_current();

@@ -9,7 +9,7 @@ extern world_options_menu_page_t g_world_options_menu_pages[2];
  * Options-menu thread started by world_menu_run_main_mode (mode 0) with
  * entry->text_binding = &g_world_option_menu_entry_table.
  *
- * Scrolls the two-column option list like world_menu_scrolling_list_thread, shows the
+ * Scrolls the two-column option list like world_menu_run_scrolling_ability_list_thread, shows the
  * selected option's value text (g_world_option_menu_first_text_ids[i] + g_world_game_option_values[i]),
  * starts world_run_option_choice_menu on confirm, and each frame packs the option
  * values back into g_main_game_options, applies the sound mode on the main
@@ -74,7 +74,7 @@ void world_build_options_menu(void) {
     window.rect.w = entry->window_width - 0x20;
     window.rect.h = entry->window_height - 0xE;
     world_menu_build_icon_record(&image_rect, entry, &page->icons);
-    buffer = world_menu_alloc_ui_buffer(0x1E0);
+    buffer = world_menu_alloc_memory(0x1E0);
     g_world_options_menu_pages[0].icons.base.sprites[3].y0 -= 2;
     clear.x = entry->vram_x;
     clear.y = 0xFE;
@@ -91,7 +91,7 @@ void world_build_options_menu(void) {
         &page->window_mode, 0, 0, GetTPage(0, 0, entry->vram_x & 0xFFC0, entry->vram_y & 0xFF00), &texture_window);
     arrow = page->arrows;
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {
-        world_menu_init_sprite(&arrow[i]);
+        world_menu_init_semitransparent_sprt(&arrow[i]);
         page->arrows[i].clut = 0x7D7C;
         arrow[i].w = 8;
         arrow[i].h = 0x10;
@@ -104,13 +104,13 @@ void world_build_options_menu(void) {
     }
     base = g_world_options_menu_pages;
     base->arrows[0].y0 += 4;
-    world_menu_init_sprite(&base->thumb);
+    world_menu_init_semitransparent_sprt(&base->thumb);
     base->thumb.u0 = 0x10;
     base->thumb.v0 = 0x10;
     base->thumb.w = 8;
     base->thumb.h = 8;
     base->thumb.clut = 0x7D7C;
-    world_menu_init_sprite(&base->frame);
+    world_menu_init_semitransparent_sprt(&base->frame);
     world_gfx_init_image_loading(
         &base->frame, entry, &entry->window_x, (const world_gfx_image_load_parameters_t*)&window);
     world_menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
@@ -139,7 +139,7 @@ void world_build_options_menu(void) {
     world_thread_wait_frames(1);
     world_gfx_init_scaled_draw_area_packets(&page->title_area);
     world_gfx_init_scaled_draw_area_packets(&page->value_area);
-    world_menu_init_sprite(&base->title);
+    world_menu_init_semitransparent_sprt(&base->title);
     world_text_configure_sprite_vram(&g_world_options_menu_title_rect, entry->inner_width, 0x2C, &base->title, 0);
     image = world_menu_build_and_upload_window_frame_image(
         entry->inner_width, 0x2C, &g_world_options_menu_title_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
@@ -161,7 +161,7 @@ void world_build_options_menu(void) {
     g_world_options_menu_window_rect.y -= 2;
     world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
     world_thread_yield();
-    world_menu_init_sprite(&base->value);
+    world_menu_init_semitransparent_sprt(&base->value);
     world_text_configure_sprite_vram(&g_world_options_menu_value_rect, 0x3C, 0x10, &base->value, 0);
     base->value.x0 = entry->window_x + 0x5C;
     base->value.y0 = entry->window_y + entry->window_height + 0xF;
@@ -178,25 +178,25 @@ void world_build_options_menu(void) {
                 && (!(*input1 & PSX_PAD_SQUARE) || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != 0) {
                     delta = -1;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (layout->hidden_rows == 0) {
                     cursor = layout->row_count - 1;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             } else if ((*input0 & PSX_PAD_DOWN)
                 && (!(*input1 & PSX_PAD_SQUARE) || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != layout->hidden_rows) {
                     delta++;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset == 0) {
                     cursor = 0;
-                    g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             } else {
                 timer = 0;
@@ -228,7 +228,7 @@ void world_build_options_menu(void) {
                 LoadImage(&image_rect, (u32*)image);
             }
             if (*input0 & PSX_PAD_CIRCLE) {
-                g_world_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+                g_world_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                 if (world_menu_is_input_allowed() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
@@ -237,10 +237,10 @@ void world_build_options_menu(void) {
                 }
             }
             if (*input0 & PSX_PAD_CROSS) {
-                world_menu_cancel_thread_group(entry);
+                world_menu_handle_entry_cancel(entry);
             }
         }
-        if (g_world_thread_task_active == 0) {
+        if (g_world_menu_input_lock_mode == 0) {
             index = cursor + row_offset + delta;
             world_clear_menu_render_buffer(buffer, 0x1E0);
             g_world_menu_text_state.pen.stride = 0x3C;
@@ -250,7 +250,7 @@ void world_build_options_menu(void) {
             LoadImage(&g_world_options_menu_value_rect, (u32*)buffer);
         }
         world_thread_yield();
-        if (world_menu_check_thread_completion(input0) != 0) {
+        if (world_menu_should_close_thread(input0) != 0) {
             break;
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0) {

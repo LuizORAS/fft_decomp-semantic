@@ -7,7 +7,7 @@
  * list fade-out), 2 while the menu-building thread runs or while menu input is
  * blocked, 4 when one of threads 4-9 is running, and 0 when all are idle. The `i
  * != 3` test inside the scan of threads 4-9 always passes. */
-s32 battle_menu_is_still_building(void) {
+s32 battle_menu_get_thread_activity(void) {
     s32 i;
     s32 result;
 

@@ -93,11 +93,11 @@ void world_menu_number_entry_thread(void) {
             redraw = 0;
             world_menu_free_memory(buffer);
         }
-        if (world_menu_check_thread_completion(g_world_menu_list_controller_input) != 0) {
+        if (world_menu_should_close_thread(g_world_menu_list_controller_input) != 0) {
             break;
         }
         input = *g_world_menu_list_controller_input;
-        world_menu_cancel_thread_group(param);
+        world_menu_handle_entry_cancel(param);
         world_menu_handle_entry_confirm(param, 0);
         if (input != *g_world_menu_list_controller_input) {
             if (*param->value == -1) {

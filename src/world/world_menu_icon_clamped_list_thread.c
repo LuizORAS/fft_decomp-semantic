@@ -39,7 +39,7 @@ void world_menu_icon_clamped_list_thread(void) {
             world_menu_free_memory(buffer);
         }
         param->selected_index = cursor;
-        if (world_menu_check_thread_completion(g_world_menu_list_controller_input) != 0) {
+        if (world_menu_should_close_thread(g_world_menu_list_controller_input) != 0) {
             break;
         }
         if (world_thread_is_previous_running() == 0) {
@@ -50,7 +50,7 @@ void world_menu_icon_clamped_list_thread(void) {
                 cursor++;
             }
             world_menu_handle_entry_confirm(param, cursor);
-            world_menu_cancel_thread_group(param);
+            world_menu_handle_entry_cancel(param);
         }
         sprites = &record->base;
         world_menu_select_icon_cluts(sprites);

@@ -72,11 +72,11 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
         }
     }
 
-    g_world_sound_effect_id_to_play = -1;
+    g_world_sound_pending_sfx_id = -1;
     world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_input_frame_new);
     world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_input_frame_new);
     if (g_world_input_frame_new != PSX_PAD_SELECT && g_world_input_frame_new != 0) {
-        g_world_thread_change_cooldown = 5;
+        g_world_event_input_suppression_frames = 5;
     }
 
     thread_id = 1;
@@ -90,13 +90,13 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     do {
         status = g_world_thread_status_snapshot[thread_id];
         if (status != world_thread_is_running_asm(thread_id)) {
-            g_world_thread_change_cooldown = 5;
+            g_world_event_input_suppression_frames = 5;
         }
         thread_id++;
     } while (thread_id < 16);
 
-    if (g_world_thread_change_cooldown != 0) {
-        g_world_thread_change_cooldown--;
+    if (g_world_event_input_suppression_frames != 0) {
+        g_world_event_input_suppression_frames--;
     }
     world_menu_draw_thread_status_indicators();
     g_world_frame_counter++;

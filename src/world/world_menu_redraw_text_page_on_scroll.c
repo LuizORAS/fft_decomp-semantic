@@ -34,7 +34,7 @@ u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_of
         if (offset < 0) {
             *row_offset = 0;
         }
-        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
         changed = 1;
     } else if ((*input & PSX_PAD_DOWN) && *row_offset != layout->hidden_rows) {
         offset = layout->row_count + *row_offset;
@@ -42,7 +42,7 @@ u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_of
         if (layout->hidden_rows < offset) {
             *row_offset = layout->hidden_rows;
         }
-        g_world_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
         changed = 1;
     } else if (g_world_threads[g_world_thread_current_id].task_words[4] != 0) {
         changed = 1;

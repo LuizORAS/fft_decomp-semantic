@@ -13,13 +13,13 @@ void world_menu_run_numeric_display_panel_thread(void) {
     s32 i;
     s32 frame;
 
-    record = g_world_numeric_display_panel_records;
+    record = g_world_menu_numeric_display_panel_records;
     records = record;
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL);
     world_gfx_set_draw_mode_for_texture_page(&record->mode0, MENU_TEXTURE_PAGE_FRAME);
     world_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_TEXT_IMAGES);
     world_gfx_init_scaled_draw_area_packets(&record->draw_areas);
-    buffer = world_menu_alloc_ui_buffer(0x918);
+    buffer = world_menu_alloc_memory(0x918);
     world_clear_menu_render_buffer(buffer, 0x918);
     g_world_menu_text_state.pen.stride = 0x14;
     world_menu_set_text_origin(0, 0);
@@ -38,8 +38,8 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_thread_wait_frames(1);
     world_menu_free_memory(buffer);
     for (i = 0; i < 18; i++) {
-        world_menu_init_sprite(&record->sprites[i]);
-        world_gfx_init_image_loading(&record->sprites[i], &g_world_gfx_menu_image_source,
+        world_menu_init_semitransparent_sprt(&record->sprites[i]);
+        world_gfx_init_image_loading(&record->sprites[i], &g_world_menu_texture_location,
             &g_world_numeric_display_frame_rect, &g_world_numeric_display_image_params[i]);
     }
     world_copy_bytes(&record[1], record, 0x1AC);

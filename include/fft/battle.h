@@ -8140,21 +8140,21 @@ extern s32 g_battle_menu_status_requested;
 extern s32 g_battle_menu_status_screen_selected;
 extern u16 g_battle_menu_transition_state;
 extern battle_menu_record_t g_battle_menu_unit_selection_records[BATTLE_UNIT_SLOT_COUNT];
-extern menu_text_state_t g_menu_text_state;
+extern menu_text_state_t g_battle_menu_text_state;
 extern battle_unit_status_record_t g_battle_menu_active_turn_banner;
 
-extern u8 g_battle_menu_billboard_skillset_name[];
+extern u8 g_battle_menu_billboard_primary_skillset_name[];
 extern u8 g_battle_menu_billboard_secondary_skillset_name[];
 extern u8 g_battle_menu_billboard_unit_name[];
 extern u8 g_battle_menu_billboard_job_name[];
 extern u16 g_battle_menu_ability_display_flags[20];
-extern s32 g_battle_menu_used_skillset_id;
-extern s32 g_battle_menu_used_item_id;
+extern s32 g_battle_menu_resolved_skillset;
+extern s32 g_battle_menu_resolved_item_or_ability;
 extern s32 g_battle_menu_system_function_command;
 extern s32 g_battle_menu_system_function_option;
 extern u8 g_battle_menu_restore_depth;
 extern u8 g_battle_menu_restore_unit_id;
-extern battle_menu_id_record_t g_battle_menu_id_records[31];
+extern battle_menu_id_record_t g_battle_menu_command_maps[31];
 extern u8 g_battle_menu_glyph_image_data[];
 extern u8 g_battle_menu_default_palette_colors[];
 extern RECT g_battle_menu_disabled_texture_window;
@@ -8189,10 +8189,10 @@ extern s32 g_battle_menu_companion_data_file_loading;
 extern u8 g_battle_menu_idle_action_entry_labels[];
 extern s32 g_battle_menu_building_thread_started;
 extern u8 g_battle_menu_panel_fade_modes[];
-extern u8 g_battle_menu_idle_action_flag_clear_ids[];
+extern u8 g_battle_menu_cleared_entry_indices[];
 extern s16 g_battle_menu_status_left_text_ids[20];
 extern s16 g_battle_menu_status_right_text_ids[20];
-extern s32 g_battle_menu_action_menu_build_result;
+extern s32 g_battle_menu_monster_skillset_flag;
 extern s16 g_battle_menu_selected_option;
 extern battle_action_data_t* g_battle_menu_preview_target_action;
 extern world_fade_tile_frame_t g_battle_menu_panel_fade_frames[];
@@ -8206,7 +8206,7 @@ extern s32 g_battle_menu_dead_unit_panel_parameter; /* always 0 (never written);
 extern RECT g_battle_menu_ability_list_clut_rect;
 extern s16 g_battle_menu_ability_scroll_offset;
 extern s16 g_battle_menu_action_type_modes[][2];
-extern void* g_battle_menu_buffer_slots[6];
+extern void* g_battle_menu_window_buffer_pointers[6];
 extern u16 g_battle_menu_height_display_suppressed;
 extern s32 g_battle_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
 extern world_gfx_image_load_parameters_t g_battle_menu_icon_strip_image_params[20];
@@ -8216,8 +8216,8 @@ extern s16 g_battle_menu_pending_selection[4]; /* 4 shorts */
 extern u8 g_battle_menu_quad_group_starts[];   /* first piece index per group; [n + 1] ends group n */
 extern s32 g_battle_menu_resolved_command;
 extern u8 g_battle_menu_restriction_message_ids[];
-extern s16 g_battle_menu_result;            /* menu result: -4 pending, -1 cancelled */
-extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
+extern s16 g_battle_menu_result;                 /* menu result: -4 pending, -1 cancelled */
+extern s16 g_battle_menu_skillset_row_actions[]; /* per-row message id */
 
 /* The player's last menu answer, written by battle_menu_resolve_selection: an action-menu
  * command kind, or a window's answer (7 to go on, 8 or 0xff for cancel to go back). With
@@ -8226,20 +8226,20 @@ extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
 extern s32 g_battle_menu_selected_command;
 
 /* Action command staged by the battle menu and passed whole to
- * battle_turn_preview_at_list; the WORLD twin is g_world_menu_preview_action. */
+ * battle_turn_preview_at_list; the WORLD twin is g_world_menu_selected_action. */
 extern battle_ai_command_action_t g_battle_menu_selected_action;
 extern world_gfx_image_load_parameters_t g_battle_menu_single_icon_image_params[5];
 extern u8 g_battle_menu_skillset_disabled_flags[]; /* per-row greyed flag */
 extern battle_unit_status_record_t g_battle_menu_status_billboard;
 
 /* Twelve crop percentages, indexed by step. */
-extern u16 g_battle_menu_zoom_percentages[];
+extern u16 g_battle_menu_cursor_zoom_percentages[];
 extern s32 g_battle_menu_text_param_22; /* 0x80166020: record +0x22 */
 extern s32 g_battle_menu_text_param_24; /* 0x80166024: record +0x24 */
 extern world_image_location_t g_battle_menu_texture_location;
-extern u16 g_option_menu_open;
+extern u16 g_battle_menu_help_blocked;
 extern u16 g_battle_menu_suspend_state;
-extern u16 g_option_menu_transition_finished;
+extern u16 g_battle_menu_at_list_unit_view_ended;
 extern s32 g_battle_menu_status_enabled;
 
 /* Source image used when battle overlays render menu glyphs. */
@@ -8255,7 +8255,7 @@ extern world_unit_editor_frame_t g_battle_menu_unit_editor_frames[2];
 /* Full record bases, not the legacy aliases biased to thread_id. */
 extern menu_window_buffer_t g_battle_menu_window_buffers[6]; /* 0x8016e43c */
 
-extern s32 g_battle_menu_text_palette_offset;
+extern s32 g_battle_menu_text_color;
 
 /* BATTLE's current menu-entry table pointer at 0x80173cb8 (menu threads are
  * started on &table[i]): battle_menu_init_subsystem_pointers points it at
@@ -8267,7 +8267,7 @@ extern world_menu_entry_t* g_battle_menu_thread_menu_data;
 void battle_menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, menu_number_entry_t* entries, battle_unit_status_record_t* status);
 
-void battle_handle_menu_cancel_input(void* menu);
+void battle_menu_handle_entry_cancel(void* menu);
 void* battle_menu_alloc_buffer(s32 bytes);
 void* battle_menu_alloc_memory(s32 size);
 void* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
@@ -8277,7 +8277,7 @@ void battle_menu_build_skillset_entries(void);
 void battle_menu_build_unit_status_list(void);
 void battle_menu_build_window_image_row(const u16* tiles, u16* row, s32 count, s32 index);
 void battle_menu_run_helpmenu_thread(void);
-s32 battle_menu_can_accept_input(void);
+s32 battle_menu_is_input_allowed(void);
 void battle_menu_check_action_restrictions(void);
 void battle_menu_clear_entry_selections(void);
 void battle_menu_close_move_help(void);
@@ -8300,7 +8300,7 @@ s32 battle_menu_get_id_based_on_mount_moveable_actable(s32 misc_id);
 void battle_menu_init_subsystem_pointers(void);
 void battle_menu_init_subsystems(void);
 s32 battle_menu_init_system_function(s32 type, s32 option, s32 unit_id, s32 parameter, s32 enabled);
-s32 battle_menu_is_still_building(void);
+s32 battle_menu_get_thread_activity(void);
 u16 battle_menu_load_elemental_abilities(s32 skillset_slot, u8 unit_id);
 void battle_menu_leave_status_screen_selection(void);
 s32 battle_menu_lerp_fixed12(s32 start, s32 end, s32 factor);
@@ -8320,7 +8320,7 @@ void battle_menu_refresh_hovered_unit_stats_display(void);
 void battle_menu_request_open_small(void);
 void battle_menu_request_open_companion_executable(s32 request_index);
 void battle_menu_request_open_companion_data_file(s32 request_index);
-void battle_menu_reset_buffer_slots(void);
+void battle_menu_clear_window_buffer_pointers(void);
 void battle_menu_reset_unit_record(s32 record_index);
 void battle_menu_reserve_high_overlay(u32 byte_length);
 void battle_menu_reset_subsystems(void);
@@ -8330,8 +8330,8 @@ void battle_menu_run_system_function_thread(void);
 void battle_menu_selected_tile_info_display_thread(void);
 void battle_menu_set_active_turn_panels(const void* banner, const void* unit, const void* billboard);
 void battle_menu_set_next_script_action_menus(void);
-void battle_menu_set_option_transition_finished(void);
-void battle_menu_start_building_thread(void);
+void battle_menu_end_at_list_unit_view(void);
+void battle_menu_start_help_menu_thread(void);
 void battle_menu_start_entry_thread(void);
 void battle_menu_start_mini_menu_display_thread(void);
 void battle_menu_start_system_function_thread(s32 system_function);
@@ -8426,10 +8426,10 @@ void battle_menu_build_window_sprites(RECT* rect, world_menu_entry_t* param, wor
 s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_image_location_t* base_load,
     const RECT* base_screen, world_gfx_image_load_parameters_t* params);
 
-void battle_menu_clear_option_menu_open(void);
+void battle_menu_unblock_help(void);
 void battle_menu_open_bunit(void);
 void battle_menu_run_bunit_transition_thread(void);
-void battle_menu_set_option_menu_open(void);
+void battle_menu_block_help(void);
 void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
 void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin, u8* text);
 
@@ -8440,7 +8440,7 @@ void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, REC
 void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void battle_menu_free_memory(void* buffer);
 void battle_menu_display_text_entry(s32 text_id, void* image, world_glyph_blit_t* origin);
-void battle_menu_handle_action(void* menu, s32 selected_option);
+void battle_menu_handle_entry_confirm(void* menu, s32 selected_option);
 void battle_menu_set_text_origin(s32 x, s32 y);
 s32 battle_menu_should_close_thread(s32* out_flag);
 void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
@@ -8985,7 +8985,7 @@ extern s16 g_battle_scratch_coords[3];
 extern s32 g_battle_sort_targets_nearest_first;
 extern s32 g_battle_post_battle_unit_changes_active;
 extern s16 g_battle_auto_battle_option_colors[5]; /* text colour per option */
-extern s32 g_battle_formation_display_mode;
+extern s32 g_battle_menu_cursor_confirm_hold;
 extern s16 g_battle_preview_target_unit_id;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 

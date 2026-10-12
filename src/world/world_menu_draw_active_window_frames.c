@@ -39,7 +39,7 @@ void world_menu_draw_active_window_frames(void) {
         world_gfx_set_primitive_brightness(&window->quads[0], g_world_menu_color_red);
         world_gfx_set_primitive_brightness(&window->quads[1], g_world_menu_color_red);
         if (window->is_message_box != 0) {
-            if (g_world_thread_task_active != 0) {
+            if (g_world_menu_input_lock_mode != 0) {
                 window->quads[0].clut = 0x7D3C;
                 window->quads[1].r0 = 0x40;
                 window->quads[1].g0 = 0x50;

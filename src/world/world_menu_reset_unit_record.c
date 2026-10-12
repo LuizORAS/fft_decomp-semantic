@@ -20,7 +20,7 @@ void world_menu_reset_unit_record(s32 id) {
     s32 i;
     u8 fill;
 
-    table = (u8*)g_world_menu_unit_selection_rows;
+    table = (u8*)g_world_menu_unit_selection_records;
     stats = battle_unit_get_stats_from_battle_id(id);
     fill = 0xFF;
     row = table;
@@ -29,7 +29,7 @@ void world_menu_reset_unit_record(s32 id) {
     for (i = 0; i < WORLD_UNKNOWN_ROW_BYTES; i++) {
         if (stats->auto_battle_setting == BATTLE_AUTO_BATTLE_MANUAL) {
             row[i] = 0;
-            ((u8*)g_world_menu_unit_selection_rows)[index + 1] = fill;
+            ((u8*)g_world_menu_unit_selection_records)[index + 1] = fill;
         }
     }
 }

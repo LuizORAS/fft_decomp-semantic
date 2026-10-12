@@ -19,8 +19,8 @@ s32 world_menu_is_input_allowed(void) {
     }
     if (world_thread_is_previous_running() == 0) {
         if (world_thread_get_current_parameter_3() == 0) {
-            if (g_world_thread_task_active == 0) {
-                if (g_world_text_overlay_active == 0) {
+            if (g_world_menu_input_lock_mode == 0) {
+                if (g_world_menu_help_open == 0) {
                     if (g_world_menu_input_block_frames == 0) {
                         return 1;
                     }

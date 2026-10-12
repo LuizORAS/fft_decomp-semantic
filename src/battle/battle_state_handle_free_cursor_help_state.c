@@ -2,7 +2,7 @@
 
 /* FREE_CURSOR_HELP: once the help window has closed, return to FREE_CURSOR. */
 void battle_state_handle_free_cursor_help_state(void) {
-    if (battle_menu_is_still_building() != 2) {
+    if (battle_menu_get_thread_activity() != 2) {
         g_battle_menu_help_opening = 0;
         battle_state_enter_free_cursor();
     }

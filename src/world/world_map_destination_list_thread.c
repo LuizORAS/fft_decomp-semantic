@@ -3,7 +3,7 @@
 
 /* Thread of WORLD's location list (menu entries 2 and 6, text 0x9000 + location): list the visible
  * locations, in row colour 4 for the current one, 8 for a red location and 0 for the others, then run
- * it as a scrolling list (world_menu_scrolling_list_thread) of at most seven rows, scrolled to the
+ * it as a scrolling list (world_menu_run_scrolling_ability_list_thread) of at most seven rows, scrolled to the
  * current location. `selected` stays unset when the current location is not listed. */
 void world_map_destination_list_thread(void) {
     s32 i;
@@ -41,5 +41,5 @@ void world_map_destination_list_thread(void) {
     menu = g_world_menu_thread_menu_data;
     menu[6].selected_index = selected;
     menu[6].window_y = (7 - g_world_menu_location_list_layout.columns.row_count) * 8 - 0x48;
-    world_menu_scrolling_list_thread();
+    world_menu_run_scrolling_ability_list_thread();
 }

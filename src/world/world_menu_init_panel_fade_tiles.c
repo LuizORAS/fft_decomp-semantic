@@ -17,7 +17,7 @@ void world_menu_init_panel_fade_tiles(void) {
     /* Materializes the frame base before the register saves and the GetTPage
      * call; without it GCC sets up the base after the call. */
     __asm__("" : "=r"(mode), "=r"(blend), "=r"(x), "=r"(y) : "0"(mode), "1"(blend), "2"(x), "3"(y), "r"(frame));
-    SetDrawMode(&frame->draw_mode, 0, 0, GetTPage(mode, blend, x, y), &g_world_gfx_texture_window);
+    SetDrawMode(&frame->draw_mode, 0, 0, GetTPage(mode, blend, x, y), &g_world_menu_disabled_texture_window);
 
     SetTile(&frame->center);
     frame->center.r0 = 0;
