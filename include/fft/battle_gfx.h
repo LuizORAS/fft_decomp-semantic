@@ -54,8 +54,8 @@ typedef char
 
 /* OTHER.SPR: the palette helper copies only the first 21 of 32 palettes. */
 typedef struct battle_gfx_other_sprite_archive {
-    u8 palettes[32 * 16 * 2]; /* 0x0000; 32 palettes, 16 little-endian colors each */
-    u8 pixels[256 * 128];     /* 0x0400; uncompressed 256x256, 4bpp */
+    palette_t palettes[32]; /* 0x0000 */
+    u8 pixels[256 * 128];   /* 0x0400; uncompressed 256x256, 4bpp */
 } battle_gfx_other_sprite_archive_t;
 typedef char
     battle_gfx_other_sprite_archive_size_must_be_33792[sizeof(battle_gfx_other_sprite_archive_t) == 33792 ? 1 : -1];
@@ -387,9 +387,9 @@ typedef enum battle_seq_type {
     BATTLE_SEQ_KANZEN = 7,
 } battle_seq_type_e;
 
-/* One of the two 0xee28-byte battle render buffers. The primitive pools are
- * pre-initialised once here; the swap helper at 0x8005a0cc reads the ordering
- * table pointer at +0xe5b4. */
+/* One of the two 60968-byte battle render buffers. The primitive pools are
+ * pre-initialised once; main_gfx_swap_and_clear_otag reads the ordering table
+ * pointer at +0xe5b4. */
 typedef struct battle_render_buffer {
     POLY_GT3 gt3[360]; /* 0x00000 */
     POLY_GT4 gt4[710]; /* 0x03840 */

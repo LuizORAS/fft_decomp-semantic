@@ -1,21 +1,6 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* Stack view of oriented_quad_t whose clut/tpage slots receive the
- * sprite query's palette and spritesheet IDs directly; the query's last two
- * 16-bit values extend it to 0x18 bytes. */
-typedef struct {
-    s16 x;
-    s16 y;
-    s16 w;
-    s16 h;
-    s16 u;
-    s16 v;
-    s16 uw;
-    s16 vh;
-    battle_unit_sprite_query_t query; /* 0x10 */
-} bunit_sprite_quad_t;
-
 /* Draw a unit's current SHP frame at (x, y), then its two name-plate quads.
  *
  * The frame's first byte is taken whole as the part count minus one, where
@@ -28,7 +13,18 @@ typedef struct {
  * facing quadrant in `value`), so the source reuses those variables. */
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     rgb24_t rgb;
-    bunit_sprite_quad_t quad;
+    /* The query writes clut/tpage into the quad and two extra 16-bit values after it. */
+    struct {
+        s16 x;
+        s16 y;
+        s16 w;
+        s16 h;
+        s16 u;
+        s16 v;
+        s16 uw;
+        s16 vh;
+        battle_unit_sprite_query_t query; /* 0x10 */
+    } quad;
     battle_gfx_source_frame_t* frame;
     s32 base_y;
     s32 i;

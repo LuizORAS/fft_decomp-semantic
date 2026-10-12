@@ -9,7 +9,7 @@
 battle_gfx_source_frame_t* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprite_query_t* out) {
     battle_unit_misc_data_t* unit;
 
-    unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
+    unit = battle_unit_get_misc_data_by_misc_id(misc_id);
     if (unit == 0) {
         return 0;
     }

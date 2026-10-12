@@ -14,7 +14,7 @@ void battle_gfx_apply_misc_unit_palette_modulation(
     battle_unit_misc_data_t* unit;
     map_tile_t* tile;
 
-    unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
+    unit = battle_unit_get_misc_data_by_misc_id(misc_id);
     if (unit == 0) {
         return;
     }

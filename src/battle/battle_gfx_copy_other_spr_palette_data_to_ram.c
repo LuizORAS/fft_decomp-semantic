@@ -1,12 +1,13 @@
 #include "fft/battle_gfx.h"
 #include "psx/types.h"
 
-/* Copy the first 21 OTHER.SPR CLUTs, setting STP on all but colour zero. */
+/* Copy the first 21 OTHER.SPR palettes, setting STP on all but colour zero. */
 void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite_archive_t* archive) {
     s32 i = 0;
     s32 one = 1; /* held in a local: a literal changes the setup schedule */
     u8* dst = (u8*)&g_battle_gfx_other_palettes;
-    const u8* src = archive->palettes;
+    /* Byte transfers preserve the palette loop and STP store sequence. */
+    const u8* src = (const u8*)archive->palettes;
     do {
         u8 color_byte;
         if ((i & 1) && i % 32 != one) {
@@ -16,5 +17,5 @@ void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite
         }
         *dst++ = color_byte;
         i++;
-    } while (i < 0x2A0);
+    } while (i < (s32)sizeof(g_battle_gfx_other_palettes));
 }

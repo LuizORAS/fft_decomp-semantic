@@ -12,8 +12,8 @@ void battle_gfx_highlight_all_units_blue_or_red(s32 mode) {
     s32 i;
 
     caster = battle_unit_get_casting_misc_data();
-    for (i = 0; i < 0x10; i++) {
-        unit = battle_unit_get_misc_data_by_misc_id(i & 0xFFFF);
+    for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
+        unit = battle_unit_get_misc_data_by_misc_id(i);
         if (unit == 0) {
             continue;
         }

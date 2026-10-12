@@ -12,7 +12,7 @@
 void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue) {
     battle_unit_misc_data_t* unit;
 
-    unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
+    unit = battle_unit_get_misc_data_by_misc_id(misc_id);
     if (unit != 0) {
         battle_unit_move_misc_unit_to_head(misc_id);
         unit->fade_out_phase = BATTLE_MISC_FADE_OUT_FLASH;
