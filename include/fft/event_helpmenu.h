@@ -5,33 +5,41 @@
 
 #include "fft/battle.h"
 
-/* Saved copies of four BATTLE records (battle_menu_copy_billboard_data_out);
- * a second, unused slot follows the banner and the unit record. */
-extern map_selected_tile_t g_helpmenu_menu_cursor_tile;
-extern u16* const g_helpmenu_menu_text_id_tables[23];
-void helpmenu_menu_run_require_help(void);
-void helpmenu_menu_close(void);
-
-extern menu_unit_status_record_t g_helpmenu_active_banner;
-extern menu_active_unit_t g_helpmenu_active_unit_data;
-
-/* 0x40-byte billboard filled by battle_menu_copy_billboard_data_out; +0x0e is the monster-skillset flag. */
-extern menu_status_panel_slot_storage_t g_helpmenu_billboard;
-extern help_navigation_record_t g_helpmenu_require_navigation[];
-
-/* 0x80 bytes of saved g_text_section_pointers, i.e. 32 pointers. */
-extern u8* g_helpmenu_text_saved_pointers[32];
+/* help menus */
 extern s16 g_helpmenu_selected_unit_panel_mode;
 
-/* Section offsets of the help text file, relative to g_helpmenu_text_data (0x80 bytes before it). */
-extern s32 g_helpmenu_text_section_offsets[32];
-extern u8 g_helpmenu_text_data[];
-extern u32* g_helpmenu_controller_state_ptr;
-extern u16* g_helpmenu_current_text_ids;
+void helpmenu_menu_close(void);
+void helpmenu_menu_run_battle_help(void);
+void helpmenu_menu_run_require_help(void);
+
+/* saved panels */
+/* Saved copies of four BATTLE records (battle_menu_copy_billboard_data_out);
+ * a second, unused slot follows the banner and the unit record. */
+extern menu_unit_status_record_t g_helpmenu_active_banner;
+extern menu_active_unit_t g_helpmenu_active_unit_data;
+/* 0x40-byte billboard filled by battle_menu_copy_billboard_data_out; +0x0e is the monster-skillset flag. */
+extern menu_status_panel_slot_storage_t g_helpmenu_billboard;
+extern map_selected_tile_t g_helpmenu_menu_cursor_tile;
+
+/* navigation */
+extern help_navigation_record_t g_helpmenu_require_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_2_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_3_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_4_navigation[];
+
+/* text */
+extern u16* g_helpmenu_current_text_ids;
+extern u16* const g_helpmenu_menu_text_id_tables[23];
+extern u8 g_helpmenu_text_data[];
+/* 0x80 bytes of saved g_text_section_pointers, i.e. 32 pointers. */
+extern u8* g_helpmenu_text_saved_pointers[32];
+/* Section offsets of the help text file, relative to g_helpmenu_text_data (0x80 bytes before it). */
+extern s32 g_helpmenu_text_section_offsets[32];
+
+/* input */
+extern u32* g_helpmenu_controller_state_ptr;
+
+/* threads */
 s32 helpmenu_thread_find_first_running_menu_thread(void);
-void helpmenu_menu_run_battle_help(void);
 
 #endif
