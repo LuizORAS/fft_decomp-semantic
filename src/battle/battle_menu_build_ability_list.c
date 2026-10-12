@@ -2,6 +2,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Builds the ability list for the active skillset menu entry (menu entry 4's
@@ -101,8 +102,7 @@ void battle_menu_build_ability_list(s32 mode) {
     if (g_battle_menu_action_type_modes[type][1] == 1) { /* lists by id */
         count = battle_menu_copy_ff_terminated_bytes_to_halfwords(
             g_ai_workspace_ptr->ability_list.ids, g_ai_workspace_ptr->ability_list.mp_costs);
-        battle_menu_copy_bytes_to_halfwords(
-            g_ai_workspace_ptr->ability_list.extras, g_ai_workspace_ptr->ability_list.turns, count);
+        menu_copy_u8_to_u16(g_ai_workspace_ptr->ability_list.extras, g_ai_workspace_ptr->ability_list.turns, count);
         found = 0;
         for (i = 0; i < count; i++) {
             g_ai_workspace_ptr->ability_list.values[i]
@@ -118,8 +118,7 @@ void battle_menu_build_ability_list(s32 mode) {
             window_x -= 4;
         } else {
             g_battle_ability_menu_layout.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
-            battle_menu_copy_bytes_to_halfwords(
-                g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.turns, count);
+            menu_copy_u8_to_u16(g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.turns, count);
             window_x = 0x94;
             row_mode = 8;
         }
@@ -155,13 +154,13 @@ void battle_menu_build_ability_list(s32 mode) {
                 battle_menu_copy_ff_terminated_bytes_to_halfwords(
                     g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.mp_costs);
                 window_x -= 8;
-                battle_menu_copy_bytes_to_halfwords(
+                menu_copy_u8_to_u16(
                     g_ai_workspace_ptr->ability_list.extras, g_ai_workspace_ptr->ability_list.turns, count);
                 row_mode = 6;
                 g_battle_ability_menu_layout.x[1] -= 8;
                 g_battle_ability_menu_layout.x[2] -= 8;
             } else {
-                battle_menu_copy_bytes_to_halfwords(
+                menu_copy_u8_to_u16(
                     g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.turns, count);
                 window_x = 0x94;
                 row_mode = 5;

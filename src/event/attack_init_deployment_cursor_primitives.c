@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 
 /* Upload the cursor texture and build both deployment cursors' marker and
  * tile-highlight quads; attack_update_deployment_cursor_primitives positions them each frame. */
@@ -9,7 +10,7 @@ void attack_init_deployment_cursor_primitives(void) {
     LoadImage(&attack_D_801CD0A4, g_attack_deploy_cursor_texture_data);
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 2; j++) {
-            battle_gfx_init_default_poly_ft4(&g_attack_deploy_render_buffers[0].cursor[i][j]);
+            menu_init_default_poly_ft4(&g_attack_deploy_render_buffers[0].cursor[i][j]);
         }
     }
     for (i = 0; i < 2; i++) {

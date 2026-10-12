@@ -312,7 +312,6 @@ extern menu_status_thread_t g_require_numeric_editor_thread_params;
 /* The scalar x alias preserves the retail transition-store scheduling. */
 extern s32 g_require_numeric_editor_origin_x;
 extern glyph_blit_t g_require_text_decimal_glyph;
-void require_text_clear_string_buffer(u8* data);
 
 void require_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 

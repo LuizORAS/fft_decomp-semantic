@@ -1,6 +1,7 @@
 /* WORLD copy of the EVENT HELPMENU battle help menu
  * (helpmenu_menu_run_battle_help), identical apart from addresses.
  */
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -76,11 +77,11 @@ void world_menu_run_battle_help(void) {
     g_world_help_controller_state_ptr = world_input_get_menu_controller(0);
     menu_index = 0;
     for (quad_index = 0; quad_index < 2; quad_index++) {
-        world_gfx_init_default_poly_ft4(&cursor_quads[quad_index]);
+        menu_init_default_poly_ft4(&cursor_quads[quad_index]);
         SetSemiTrans(&cursor_quads[quad_index], 0);
         cursor_quads[quad_index].tpage = GetTPage(0, 0, 0x3C0, 0x100);
         cursor_quads[quad_index].clut = 0x7D7C;
-        world_gfx_init_default_poly_ft4(&shadow_quads[quad_index]);
+        menu_init_default_poly_ft4(&shadow_quads[quad_index]);
         SetSemiTrans(&shadow_quads[quad_index], 1);
         shadow_quads[quad_index].tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_quads[quad_index].clut = 0x7DBC;

@@ -4,6 +4,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -96,9 +97,9 @@ void battle_menu_display_hovered_unit_stats(
     battle_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, MENU_TEXTURE_PAGE_FRAME);
     battle_menu_init_sprite_array(page->sprites, 7, 0x7CBC);
     for (frame = 0; frame < 5; frame++) {
-        battle_gfx_init_default_poly_ft4(&page->quads[frame]);
+        menu_init_default_poly_ft4(&page->quads[frame]);
     }
-    battle_gfx_init_default_poly_ft4(&page->portrait);
+    menu_init_default_poly_ft4(&page->portrait);
     battle_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (texture_primitive_t*)&page->quads[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&page->quads[1], 2);
     params = g_battle_unit_status_quad_image_params_by_mode[mode];

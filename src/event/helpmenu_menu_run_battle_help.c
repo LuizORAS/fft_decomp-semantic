@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -76,11 +77,11 @@ void helpmenu_menu_run_battle_help(void) {
     g_helpmenu_controller_state_ptr = script_get_controller_input_pointer(0);
     menu_index = 0;
     for (poly_index = 0; poly_index < 2; poly_index++) {
-        battle_gfx_init_default_poly_ft4(&cursor_polys[poly_index]);
+        menu_init_default_poly_ft4(&cursor_polys[poly_index]);
         SetSemiTrans(&cursor_polys[poly_index], 0);
         cursor_polys[poly_index].tpage = GetTPage(0, 0, 0x3C0, 0x100);
         cursor_polys[poly_index].clut = 0x7D7C;
-        battle_gfx_init_default_poly_ft4(&shadow_polys[poly_index]);
+        menu_init_default_poly_ft4(&shadow_polys[poly_index]);
         SetSemiTrans(&shadow_polys[poly_index], 1);
         shadow_polys[poly_index].tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_polys[poly_index].clut = 0x7DBC;

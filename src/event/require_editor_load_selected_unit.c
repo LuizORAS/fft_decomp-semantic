@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -155,10 +156,10 @@ void require_editor_load_selected_unit(void) {
         }
     }
 
-    require_text_clear_string_buffer(g_require_editor_unit_name);
-    require_text_clear_string_buffer(g_require_editor_job_name);
-    require_text_clear_string_buffer(g_require_editor_primary_skillset_name);
-    require_text_clear_string_buffer(g_require_editor_secondary_skillset_name);
+    text_fill_field_with_terminators(g_require_editor_unit_name);
+    text_fill_field_with_terminators(g_require_editor_job_name);
+    text_fill_field_with_terminators(g_require_editor_primary_skillset_name);
+    text_fill_field_with_terminators(g_require_editor_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
     battle_copy_bytes(g_require_editor_unit_name, unit->name, 0x10);

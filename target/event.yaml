@@ -1128,7 +1128,7 @@ functions:
   - {addr: 0x801c240c, size: 8, name: debugchr_input_update_event_state, hash: 6d64edf91449c1b1}
   - {addr: 0x801c2414, size: 28, name: debugchr_thread_is_running, hash: d10e3403d7fec970}
   - {addr: 0x801c2430, size: 1236, name: debugchr_menu_draw_thread_status_indicators, hash: 42aee85dfc3d3b51}
-  - {addr: 0x801c2904, size: 32, name: debugchr_text_clear_string_buffer, hash: 5eaa92c4790153fd}
+  - {addr: 0x801c2904, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
   - {addr: 0x801c2924, size: 460, name: debugchr_menu_copy_unit_data_to_status_billboard, hash: dc13403e0a243847}
   - {addr: 0x801c2af0, size: 1348, name: debugchr_editor_load_selected_unit, hash: 944be0b3f140f098}
   - {addr: 0x801c3034, size: 580, name: debugchr_gfx_set_scaled_poly_ft4_geometry, hash: f989278e90fdce7c}
@@ -2199,7 +2199,7 @@ functions:
   - {addr: 0x801c22ac, size: 8, name: require_input_update_event_state, hash: 6d64edf91449c1b1}
   - {addr: 0x801c22b4, size: 28, name: require_thread_is_running, hash: d10e3403d7fec970}
   - {addr: 0x801c22d0, size: 1236, name: require_menu_draw_thread_status_indicators, hash: 06809308c5329e70}
-  - {addr: 0x801c27a4, size: 32, name: require_text_clear_string_buffer, hash: 5eaa92c4790153fd}
+  - {addr: 0x801c27a4, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
   - {addr: 0x801c27c4, size: 196, name: require_panel_copy_battle_stats_to_gauges, hash: 10a1714f8625994f}
   - {addr: 0x801c2888, size: 1348, name: require_editor_load_selected_unit, hash: b9c009db7e6c8971}
   - {addr: 0x801c2dcc, size: 580, name: require_gfx_set_scaled_poly_ft4_geometry, hash: f989278e90fdce7c}

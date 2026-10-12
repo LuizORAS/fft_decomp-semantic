@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Render the animated status groups of the character debug panel.
@@ -35,7 +36,7 @@ void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly) {
         }
 
         for (index = 0; index < count; index++) {
-            battle_gfx_init_default_poly_ft4(poly);
+            menu_init_default_poly_ft4(poly);
             status = first + count - index;
             g_debugchr_gfx_draw_area_template.y += g_debugchr_panel_status_y_offsets[group * 2];
             debugchr_gfx_set_scaled_poly_ft4_geometry(poly, &g_debugchr_panel_status_texture,

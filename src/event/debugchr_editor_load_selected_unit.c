@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -155,10 +156,10 @@ void debugchr_editor_load_selected_unit(void) {
         }
     }
 
-    debugchr_text_clear_string_buffer(g_debugchr_editor_unit_name);
-    debugchr_text_clear_string_buffer(g_debugchr_editor_job_name);
-    debugchr_text_clear_string_buffer(g_debugchr_editor_primary_skillset_name);
-    debugchr_text_clear_string_buffer(g_debugchr_editor_secondary_skillset_name);
+    text_fill_field_with_terminators(g_debugchr_editor_unit_name);
+    text_fill_field_with_terminators(g_debugchr_editor_job_name);
+    text_fill_field_with_terminators(g_debugchr_editor_primary_skillset_name);
+    text_fill_field_with_terminators(g_debugchr_editor_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
     battle_copy_bytes(g_debugchr_editor_unit_name, unit->name, 0x10);

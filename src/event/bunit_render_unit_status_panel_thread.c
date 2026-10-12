@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -91,7 +92,7 @@ void bunit_render_unit_status_panel_thread(void) {
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
     battle_menu_init_sprite_array(&editor->value_sprites[0], 4, 0x7CBC);
     for (frame = 0; frame < 4; frame++) {
-        battle_gfx_init_default_poly_ft4(&editor->portrait[frame]);
+        menu_init_default_poly_ft4(&editor->portrait[frame]);
     }
     battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, (texture_primitive_t*)&editor->value_sprites[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&editor->value_sprites[1], 2);
@@ -117,7 +118,7 @@ void bunit_render_unit_status_panel_thread(void) {
     battle_menu_init_numeric_display_frame_primitives(&g_bunit_panel_frame_rect, &panel->numeric_frame);
     cur1 = &panel->sprites[0];
     battle_menu_init_sprite_array(cur1, 7, 0x7C3C);
-    battle_gfx_init_default_poly_ft4(&panel->portrait);
+    menu_init_default_poly_ft4(&panel->portrait);
     battle_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (texture_primitive_t*)cur1, 0);
     battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[1], 0);
     battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[2], 0);

@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -49,7 +50,7 @@ void world_menu_number_entry_thread(void) {
     world_menu_build_icon_record(&rect, param, &records[0]);
     world_script_copy_bytes(&records[1], &records[0], sizeof(records[1]));
     for (j = 0; j < 2; j++) {
-        world_gfx_init_default_poly_ft4(&cursor_quads[j]);
+        menu_init_default_poly_ft4(&cursor_quads[j]);
         SetSemiTrans(&cursor_quads[j], 0);
         cursor_quads[j].tpage = GetTPage(0, 0, 0x3C0, 0x100);
         cursor_quads[j].clut = 0x7D7C;
@@ -61,7 +62,7 @@ void world_menu_number_entry_thread(void) {
         cursor_quads[j].v1 = 0x10;
         cursor_quads[j].v2 = 0;
         cursor_quads[j].v3 = 0x10;
-        world_gfx_init_default_poly_ft4(&shadow_quads[j]);
+        menu_init_default_poly_ft4(&shadow_quads[j]);
         SetSemiTrans(&shadow_quads[j], 1);
         shadow_quads[j].tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_quads[j].clut = 0x7DBC;

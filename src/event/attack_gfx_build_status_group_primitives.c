@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -38,7 +39,7 @@ void attack_gfx_build_status_group_primitives(POLY_FT4* poly) {
             }
         }
         for (cell = 0; cell < count; cell++) {
-            battle_gfx_init_default_poly_ft4(poly);
+            menu_init_default_poly_ft4(poly);
             index = first + count - cell;
             g_attack_gfx_draw_area_template.y += *g_attack_panel_status_y_offsets[entry];
             attack_gfx_set_scaled_poly_ft4_geometry(poly, g_attack_editor_numeric_geometry,

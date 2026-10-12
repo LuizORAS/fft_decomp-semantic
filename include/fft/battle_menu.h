@@ -246,7 +246,6 @@ s32 battle_menu_init_system_function(s32 type, s32 option, s32 unit_id, s32 para
 s32 battle_menu_is_still_building(void);
 u16 battle_menu_load_elemental_abilities(s32 skillset_slot, u8 unit_id);
 void battle_menu_leave_status_screen_selection(void);
-s32 battle_menu_lerp_fixed12(s32 start, s32 end, s32 factor);
 void battle_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 factor);
 void battle_menu_open_active_unit_idle_action_menu(void);
 void battle_menu_open_companion_executable(void);
@@ -352,7 +351,6 @@ void battle_menu_restore_selection_for_selected_unit(s32 menu_id);
 void battle_menu_run_equip_thread(void);
 void battle_menu_store_auto_battle_main_target_id(s32 target_id, s32 battle_id);
 void battle_menu_submit_numeric_display_frame_primitives(menu_palette_primitives_t* display);
-void battle_menu_copy_bytes_to_halfwords(u16* dst, u8* src, s32 count);
 void battle_menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step);
 void battle_menu_select_icon_sprite_clut(SPRT* sprite);
 void battle_menu_open_illegal_move_help(void);

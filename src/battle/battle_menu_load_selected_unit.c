@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Fills the preview-target and selected-unit billboards and the small
@@ -144,10 +145,10 @@ void battle_menu_load_selected_unit(void) {
         }
     }
 
-    battle_text_fill_field_with_terminators(g_battle_menu_billboard_unit_name);
-    battle_text_fill_field_with_terminators(g_battle_menu_billboard_job_name);
-    battle_text_fill_field_with_terminators(g_battle_menu_billboard_skillset_name);
-    battle_text_fill_field_with_terminators(g_battle_menu_billboard_secondary_skillset_name);
+    text_fill_field_with_terminators(g_battle_menu_billboard_unit_name);
+    text_fill_field_with_terminators(g_battle_menu_billboard_job_name);
+    text_fill_field_with_terminators(g_battle_menu_billboard_skillset_name);
+    text_fill_field_with_terminators(g_battle_menu_billboard_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
     battle_copy_bytes(g_battle_menu_billboard_unit_name, unit->name, 0x10);

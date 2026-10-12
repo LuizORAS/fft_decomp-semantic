@@ -1,6 +1,7 @@
 /* Select a unit and edit its fields with the controller. */
 #include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -184,11 +185,11 @@ loop_outer:
     }
 editor:
     for (i = 0; i < 2; i++) {
-        battle_gfx_init_default_poly_ft4(&g_debugchr_editor_cursor_polys[i]);
+        menu_init_default_poly_ft4(&g_debugchr_editor_cursor_polys[i]);
         SetSemiTrans(&g_debugchr_editor_cursor_polys[i], 0);
         g_debugchr_editor_cursor_polys[i].tpage = GetTPage(0, 0, 0x3C0, 0x100);
         g_debugchr_editor_cursor_polys[i].clut = 0x7D7C;
-        battle_gfx_init_default_poly_ft4(&g_debugchr_editor_cursor_shade_polys[i]);
+        menu_init_default_poly_ft4(&g_debugchr_editor_cursor_shade_polys[i]);
         SetSemiTrans(&g_debugchr_editor_cursor_shade_polys[i], 1);
         g_debugchr_editor_cursor_shade_polys[i].tpage = GetTPage(0, 2, 0x3C0, 0x100);
         g_debugchr_editor_cursor_shade_polys[i].clut = 0x7DBC;

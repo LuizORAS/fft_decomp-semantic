@@ -168,7 +168,6 @@ void debugchr_panel_run_character_status_thread(void);
 
 /* text */
 extern glyph_blit_t g_debugchr_text_decimal_glyph;
-void debugchr_text_clear_string_buffer(u8* output);
 
 void debugchr_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 

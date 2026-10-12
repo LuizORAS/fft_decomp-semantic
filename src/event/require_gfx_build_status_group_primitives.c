@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Render the animated status groups used by the post-battle transition.
@@ -35,7 +36,7 @@ void require_gfx_build_status_group_primitives(POLY_FT4* poly) {
         }
 
         for (index = 0; index < count; index++) {
-            battle_gfx_init_default_poly_ft4(poly);
+            menu_init_default_poly_ft4(poly);
             status = first + count - index;
             g_require_gfx_draw_area_template.y += g_require_panel_status_y_offsets[group * 2];
             require_gfx_set_scaled_poly_ft4_geometry(poly, &g_require_panel_status_texture,

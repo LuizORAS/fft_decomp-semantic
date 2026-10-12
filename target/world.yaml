@@ -61,7 +61,7 @@ functions:
   - {addr: 0x800e20fc, size: 48, name: world_script_clamp_s32_to_range, hash: a979e7abbcee5781}
   - {addr: 0x800e212c, size: 612, name: world_input_update_menu_repeat, hash: ec1118bb42efe382, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e2390, size: 8, name: world_menu_init_stub, hash: 6d64edf91449c1b1}
-  - {addr: 0x800e2398, size: 172, name: world_gfx_init_default_poly_ft4, hash: 2ae011af04ed842a}
+  - {addr: 0x800e2398, size: 172, name: menu_init_default_poly_ft4, hash: 2ae011af04ed842a, source: src/shared/menu/menu_init_default_poly_ft4.c}
   - {addr: 0x800e2444, size: 116, name: world_menu_init_sprite, hash: c767e8c38c70470e}
   - {addr: 0x800e24b8, size: 104, name: world_menu_init_sprite_array, hash: 0a887d3090fe4209}
   - {addr: 0x800e2520, size: 40, name: world_menu_clear_window_buffer_pointers, hash: d92c790b951fcfcc}
@@ -99,7 +99,7 @@ functions:
   - {addr: 0x800e6f64, size: 104, name: gfx_flip_poly_ft4_uv_if_negative, hash: 1a53cbbc201168a1, source: src/shared/gfx/gfx_flip_poly_ft4_uv_if_negative.c}
   - {addr: 0x800e6fcc, size: 688, name: world_menu_animate_window_quad_crop, hash: 81c3085397b8c764}
   - {addr: 0x800e727c, size: 652, name: world_menu_tween_window_quads, hash: 60b84c3c9ba59ec3}
-  - {addr: 0x800e7508, size: 36, name: world_menu_lerp_fixed12, hash: c8c076c648585d00}
+  - {addr: 0x800e7508, size: 36, name: menu_lerp_fixed12, hash: c8c076c648585d00, source: src/shared/menu/menu_lerp_fixed12.c}
   - {addr: 0x800e752c, size: 296, name: world_menu_lerp_rect_to_poly_ft4, hash: 18c92e7328405f4d}
   - {addr: 0x800e7654, size: 84, name: world_script_pause_event_instruction, hash: c8f0977405c464dd}
   - {addr: 0x800e76a8, size: 88, name: world_copy_misc_unit_screen_coords, hash: 2a62d55b05ed841c}
@@ -112,7 +112,7 @@ functions:
   - {addr: 0x800e7b4c, size: 8, name: world_return_parameter_1, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800e7b54, size: 8, name: world_return_argument_800e7b54, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800e7b5c, size: 196, name: world_text_build_unit_name_list, hash: 9a9afb823d5db8ad}
-  - {addr: 0x800e7c20, size: 32, name: world_fill_16_bytes_fe, hash: 5eaa92c4790153fd}
+  - {addr: 0x800e7c20, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
   - {addr: 0x800e7c40, size: 396, name: world_menu_copy_unit_data_to_status_billboard, hash: 9b61737b18a8d657}
   - {addr: 0x800e7dcc, size: 1348, name: world_menu_load_selected_unit, hash: f635c99de88e0baf}
   - {addr: 0x800e8310, size: 84, name: world_unit_has_any_current_status, hash: f4242604b8850c34}
@@ -276,7 +276,7 @@ functions:
   - {addr: 0x800f3200, size: 60, name: world_menu_mini_menu_cancel_delay_thread, hash: 1126457f8432f56a}
   - {addr: 0x800f323c, size: 60, name: world_menu_confirm_sound_delay_thread, hash: f840d996f9d12147}
   - {addr: 0x800f3278, size: 56, name: world_menu_copy_ff_terminated_bytes_to_halfwords, hash: 28e77c325ea414b4}
-  - {addr: 0x800f32b0, size: 52, name: world_menu_copy_bytes_to_halfwords, hash: 13d704f494f4f2e9}
+  - {addr: 0x800f32b0, size: 52, name: menu_copy_u8_to_u16, hash: 13d704f494f4f2e9, source: src/shared/menu/menu_copy_u8_to_u16.c}
   - {addr: 0x800f32e4, size: 1980, name: world_menu_build_ability_list, hash: 3c2abc1fea8e3c9c}
   - {addr: 0x800f3aa0, size: 676, name: world_menu_select_unit_action_slots_thread, hash: f8f5c64ec1b3af4c}
   - {addr: 0x800f3d44, size: 608, name: world_menu_build_skillset_entries, hash: 94131cbbb78792ba}

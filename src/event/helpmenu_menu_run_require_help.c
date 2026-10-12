@@ -1,6 +1,7 @@
 /* Run the help menu over the REQUIRE screen. */
 #include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -28,12 +29,12 @@ void helpmenu_menu_run_require_help(void) {
 
     for (frame = 0; frame < 2; frame++) {
         poly = &cursor[frame];
-        battle_gfx_init_default_poly_ft4(poly);
+        menu_init_default_poly_ft4(poly);
         SetSemiTrans(poly, 0);
         poly->tpage = GetTPage(0, 0, 0x3C0, 0x100);
         poly->clut = 0x7D7C;
         shadow_poly = &shadow[frame];
-        battle_gfx_init_default_poly_ft4(shadow_poly);
+        menu_init_default_poly_ft4(shadow_poly);
         SetSemiTrans(shadow_poly, 1);
         shadow_poly->tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_poly->clut = 0x7DBC;

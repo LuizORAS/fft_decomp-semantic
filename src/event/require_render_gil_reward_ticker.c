@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -67,8 +68,8 @@ void require_render_gil_reward_ticker(void) {
             POLY_FT4* pd;
             POLY_FT4* pn;
 
-            battle_gfx_init_default_poly_ft4(&g_require_reward_money_digit_polys[buffer][j]);
-            battle_gfx_init_default_poly_ft4(&g_require_reward_money_next_digit_polys[buffer][j]);
+            menu_init_default_poly_ft4(&g_require_reward_money_digit_polys[buffer][j]);
+            menu_init_default_poly_ft4(&g_require_reward_money_next_digit_polys[buffer][j]);
             g_require_reward_money_digit_polys[buffer][j].tpage = getTPage(0, 0, 384, 0);
             g_require_reward_money_digit_polys[buffer][j].clut
                 = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
@@ -92,7 +93,7 @@ void require_render_gil_reward_ticker(void) {
         POLY_FT4* sign_poly;
 
         comma_poly = &g_require_reward_money_comma_polys[i];
-        battle_gfx_init_default_poly_ft4(comma_poly);
+        menu_init_default_poly_ft4(comma_poly);
         setXY4(comma_poly, g_require_reward_money_digit_polys[0][2].x0 - 10, 0x8f,
             g_require_reward_money_digit_polys[0][2].x0 - 4, 0x8f, g_require_reward_money_digit_polys[0][2].x0 - 10,
             0x99, g_require_reward_money_digit_polys[0][2].x0 - 4, 0x99);
@@ -101,7 +102,7 @@ void require_render_gil_reward_ticker(void) {
         g_require_reward_money_comma_polys[i].clut
             = getClut(g_require_reward_bonus_palette_rect.x, g_require_reward_bonus_palette_rect.y);
         sign_poly = &g_require_reward_money_sign_polys[i];
-        battle_gfx_init_default_poly_ft4(sign_poly);
+        menu_init_default_poly_ft4(sign_poly);
         setXY4(sign_poly, g_require_reward_money_digit_polys[0][0].x0 + 0x11, 0x80,
             g_require_reward_money_digit_polys[0][0].x0 + 0x31, 0x80,
             g_require_reward_money_digit_polys[0][0].x0 + 0x11, 0x97,

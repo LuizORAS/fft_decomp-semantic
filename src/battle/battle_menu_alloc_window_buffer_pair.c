@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Claims the first free menu window buffer pair for the current thread,
@@ -64,8 +65,8 @@ menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void) {
                 buffer->icon_sprites[1].v0 = 0;
                 buffer->icon_sprites[2].u0 = 0x10;
                 buffer->icon_sprites[2].v0 = 0x10;
-                battle_gfx_init_default_poly_ft4(&buffer->quads[0]);
-                battle_gfx_init_default_poly_ft4(&buffer->quads[1]);
+                menu_init_default_poly_ft4(&buffer->quads[0]);
+                menu_init_default_poly_ft4(&buffer->quads[1]);
                 buffer->quads[0].tpage = GetTPage(0, 0, 0x3c0, 0x100);
                 buffer->quads[1].tpage = GetTPage(0, 0, 0x340, 0x100);
                 buffer++;

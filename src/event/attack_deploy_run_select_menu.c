@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -52,11 +53,11 @@ void attack_deploy_run_select_menu(void) {
     g_attack_panel_status_animation[1] = 1;
     g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
     for (i = 0; i < 2; i++) {
-        battle_gfx_init_default_poly_ft4(&left[i]);
+        menu_init_default_poly_ft4(&left[i]);
         SetSemiTrans(&left[i], 0);
         left[i].tpage = GetTPage(0, 0, 0x3c0, 0x100);
         left[i].clut = 0x7d7c;
-        battle_gfx_init_default_poly_ft4(&right[i]);
+        menu_init_default_poly_ft4(&right[i]);
         SetSemiTrans(&right[i], 1);
         right[i].tpage = GetTPage(0, 2, 0x3c0, 0x100);
         right[i].clut = 0x7dbc;

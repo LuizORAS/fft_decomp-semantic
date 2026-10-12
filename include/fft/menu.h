@@ -22,6 +22,12 @@ typedef struct menu_ability_list {
     u8 skill_ct[0x52]; /* 0x334 */
 } menu_ability_list_t;
 
+void menu_copy_u8_to_u16(u16* destination, const u8* source, s32 count);
+
+/* primitives */
+void menu_init_default_poly_ft4(POLY_FT4* poly);
+s32 menu_lerp_fixed12(s32 start, s32 end, s32 factor);
+
 /* palette */
 /* Two sixteen-colour banks: the normal menu colours followed by their dimmed forms. */
 typedef struct menu_palette_pair {
@@ -1706,6 +1712,7 @@ u8* menu_text_advance_cursor_with_backreferences(text_backreference_state_t* sta
 u8* text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 const u8* text_skip_to_entry(const u8* text, s32 entry_index);
 s32 text_count_decimal_digits(s32 value);
+void text_fill_field_with_terminators(u8* text);
 s32 text_resolve_format_string_id(s32 format_code, s32 value);
 
 /* unit */

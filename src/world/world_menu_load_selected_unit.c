@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -154,10 +155,10 @@ void world_menu_load_selected_unit(void) {
         }
     }
 
-    world_fill_16_bytes_fe(g_world_unit_editor_unit_name);
-    world_fill_16_bytes_fe(g_world_unit_editor_job_name);
-    world_fill_16_bytes_fe(g_world_unit_editor_primary_skillset_name);
-    world_fill_16_bytes_fe(g_world_unit_editor_secondary_skillset_name);
+    text_fill_field_with_terminators(g_world_unit_editor_unit_name);
+    text_fill_field_with_terminators(g_world_unit_editor_job_name);
+    text_fill_field_with_terminators(g_world_unit_editor_primary_skillset_name);
+    text_fill_field_with_terminators(g_world_unit_editor_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
     world_script_copy_bytes(g_world_unit_editor_unit_name, unit->name, sizeof(unit->name));

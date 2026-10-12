@@ -13,6 +13,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_ai.h"
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -104,8 +105,7 @@ void world_menu_build_ability_list(s32 mode) {
     if (g_world_menu_row_type_confirm_actions[type][1] == 1) {
         count = world_menu_copy_ff_terminated_bytes_to_halfwords(
             g_ai_workspace_ptr->ability_list.ids, g_ai_workspace_ptr->ability_list.mp_costs);
-        world_menu_copy_bytes_to_halfwords(
-            g_ai_workspace_ptr->ability_list.extras, g_ai_workspace_ptr->ability_list.turns, count);
+        menu_copy_u8_to_u16(g_ai_workspace_ptr->ability_list.extras, g_ai_workspace_ptr->ability_list.turns, count);
         found = 0;
         for (i = 0; i < count; i++) {
             g_ai_workspace_ptr->ability_list.values[i]
@@ -121,8 +121,7 @@ void world_menu_build_ability_list(s32 mode) {
             window_x -= 4;
         } else {
             g_world_ability_menu_layout.extras_mode = MENU_TEXT_COLUMN_HIDDEN;
-            world_menu_copy_bytes_to_halfwords(
-                g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.turns, count);
+            menu_copy_u8_to_u16(g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.turns, count);
             window_x = 0x94;
             row_mode = 8;
         }
@@ -158,13 +157,13 @@ void world_menu_build_ability_list(s32 mode) {
                 world_menu_copy_ff_terminated_bytes_to_halfwords(
                     g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.mp_costs);
                 window_x -= 8;
-                world_menu_copy_bytes_to_halfwords(
+                menu_copy_u8_to_u16(
                     g_ai_workspace_ptr->ability_list.extras, g_ai_workspace_ptr->ability_list.turns, count);
                 row_mode = 6;
                 g_world_ability_menu_layout.values_x -= 8;
                 g_world_ability_menu_layout.extras_x -= 8;
             } else {
-                world_menu_copy_bytes_to_halfwords(
+                menu_copy_u8_to_u16(
                     g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.turns, count);
                 window_x = 0x94;
                 row_mode = 5;

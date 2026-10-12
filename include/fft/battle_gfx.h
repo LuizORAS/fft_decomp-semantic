@@ -669,7 +669,6 @@ battle_gfx_unit_seq_table_t* battle_gfx_get_unit_seq_by_spritesheet_id(u32 sprit
 battle_gfx_unit_shp_frame_tables_t* battle_gfx_get_unit_shp_by_spritesheet_id(u32 spritesheet_id);
 s32 battle_gfx_get_spritesheet_vram_by_battle_id(u32 battle_id);
 void battle_gfx_tint_all_units_by_team(void);
-void battle_gfx_init_default_poly_ft4(POLY_FT4* primitive);
 void battle_gfx_init_earned_exp_jp_display(struct battle_unit_misc_data* unit);
 s32 battle_gfx_init_evtchr_vram_slots(void);
 void battle_gfx_init_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);

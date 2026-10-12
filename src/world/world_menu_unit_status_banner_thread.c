@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
@@ -101,7 +102,7 @@ void world_menu_unit_status_banner_thread(void) {
     world_menu_init_sprite_array(&summary->label_sprites[0], 7, 0x7CBC);
     world_menu_init_sprite_array(&summary->value_sprites[0], 4, 0x7CBC);
     for (frame = 0; frame < 4; frame++) {
-        world_gfx_init_default_poly_ft4(&summary->portrait[frame]);
+        menu_init_default_poly_ft4(&summary->portrait[frame]);
     }
     world_text_configure_sprite_vram(&rects[0], 0x38, 0x28, (texture_primitive_t*)&summary->value_sprites[0], 2);
     world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&summary->value_sprites[1], 2);
@@ -128,7 +129,7 @@ void world_menu_unit_status_banner_thread(void) {
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_status_panel_origin, &status->numeric_frame);
     world_menu_init_sprite_array(status->sprites, 7, 0x7C3C);
-    world_gfx_init_default_poly_ft4(&status->portrait);
+    menu_init_default_poly_ft4(&status->portrait);
     world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (texture_primitive_t*)status->sprites, 0);
     world_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (texture_primitive_t*)&status->sprites[1], 0);
     world_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (texture_primitive_t*)&status->sprites[2], 0);

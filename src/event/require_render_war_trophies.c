@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -47,7 +48,7 @@ void require_render_war_trophies(void) {
         buffer = g_require_reward_war_trophy_primitives;
         battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_mode, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
         for (i = 0; i < 16; i++) {
-            battle_gfx_init_default_poly_ft4(&buffer->quads[i]);
+            menu_init_default_poly_ft4(&buffer->quads[i]);
         }
         battle_menu_init_semitransparent_sprt(&buffer->banner);
         prims->banner.x0 = 0x88;

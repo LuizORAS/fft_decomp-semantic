@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 
 /* Build and submit the deployment menu's animated cursor primitives. */
@@ -12,7 +13,7 @@ void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_depl
     i = 0;
     do {
         ptr = &render_buffer->menu_cursor[i];
-        battle_gfx_init_default_poly_ft4(ptr);
+        menu_init_default_poly_ft4(ptr);
         SetSemiTrans(ptr, 0);
         SetShadeTex(ptr, 1);
         /* The draw area's x/y serve as the screen base point. */

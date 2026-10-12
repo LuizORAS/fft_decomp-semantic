@@ -5,6 +5,7 @@
  * buffer. Retail reaches the shadow pair through the cursor pair in places
  * (`quad[2]`, `quads[buffer + 2]`): the two arrays are adjacent on the stack.
  */
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -35,12 +36,12 @@ void world_menu_run_require_help(void) {
 
     for (frame = 0; frame < 2; frame++) {
         poly = &cursor[frame];
-        world_gfx_init_default_poly_ft4(poly);
+        menu_init_default_poly_ft4(poly);
         SetSemiTrans(poly, 0);
         poly->tpage = GetTPage(0, 0, 0x3C0, 0x100);
         poly->clut = 0x7D7C;
         shadow_poly = &shadow[frame];
-        world_gfx_init_default_poly_ft4(shadow_poly);
+        menu_init_default_poly_ft4(shadow_poly);
         SetSemiTrans(shadow_poly, 1);
         shadow_poly->tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_poly->clut = 0x7DBC;

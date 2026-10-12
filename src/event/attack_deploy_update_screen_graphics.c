@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -52,7 +53,7 @@ void attack_deploy_update_screen_graphics(void) {
                 g_attack_deploy_text_reveal_steps[7] = 1;
                 g_attack_deploy_text_reveal_steps[8] = 1;
             }
-            battle_gfx_init_default_poly_ft4(&g_attack_deploy_text_polys[parity][i]);
+            menu_init_default_poly_ft4(&g_attack_deploy_text_polys[parity][i]);
             ((POLY_FT4*)((u8*)g_attack_deploy_text_polys + off))->tpage = GetTPage(0, 0, 0x100, 0);
             ((POLY_FT4*)((u8*)g_attack_deploy_text_polys + off))->clut = 0x7d7c;
             gfx_init_image_loading((texture_primitive_t*)&g_attack_deploy_text_polys[parity][i],
