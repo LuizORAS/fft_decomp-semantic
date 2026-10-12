@@ -1787,4 +1787,7 @@ typedef struct card_save_icon {
     u8 image[0x80]; /* 0x20 */
 } card_save_icon_t;
 
+/* sprites */
+void menu_copy_sprite_position_uv_and_size(const menu_entry_t* entry, SPRT* sprite, s32 unused_frame);
+
 #endif

@@ -2421,7 +2421,6 @@ void world_menu_run_script_with_callback_suppressed(void);
 void world_menu_open_name_entry_key_list(void);
 void world_clear_menu_render_buffer(void* dst, u32 count);
 void world_menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step);
-void world_gfx_copy_sprite_position_uv_and_size(const menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 void world_draw_menu_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u8* buffer);
 void world_menu_init_panel_fade_tiles(void);
 void world_draw_menu_number_glyphs(s32 value, s32 digits, u8* resource, glyph_blit_t* pos);

@@ -44,6 +44,6 @@ void world_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprite
     if (g_world_event_speed == 2) {
         frame *= 2;
     }
-    world_gfx_copy_sprite_position_uv_and_size(param, &record->sprites[0], frame);
+    menu_copy_sprite_position_uv_and_size(param, &record->sprites[0], frame);
     world_menu_zoom_cursor_frame(param, &record->sprites[0], frame);
 }

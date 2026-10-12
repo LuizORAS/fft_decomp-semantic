@@ -61,6 +61,7 @@ remain excluded. Never modify `meta/`.
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
 | `src/gfx/` | Shared graphics helpers, compiled separately in each original module through explicit `source:` paths |
+| `src/menu/` | Shared menu helpers, compiled separately at each original module's addresses |
 | `src/text/` | Shared text helpers, retaining each original module's copies and call bindings |
 | `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
 | `src/suzuki/` | Suzuki sound driver, registered with explicit `source:` paths in MAIN |

@@ -762,6 +762,5 @@ void battle_gfx_ramp_screen_overlay_intensity_to_zero(void);
 void battle_gfx_build_scaled_draw_area_pair_swapped(
     scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
 void battle_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
-void battle_gfx_copy_sprite_position_uv_and_size(const menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 
 #endif
