@@ -95,6 +95,26 @@ typedef char menu_portrait_image_file_size_must_be_8192[sizeof(menu_portrait_ima
 typedef char menu_portrait_palettes_must_be_at_offset_0x1800
     [((unsigned long)&((menu_portrait_image_file_t*)0)->palettes == 0x1800) ? 1 : -1];
 
+/* EVENT/WLDFACE.BIN is four of these sheets: forty 32x48 portraits at 4 bits
+ * per pixel, eight across and five down, then sixteen rows of four palettes.
+ * Palette n is portrait n's; rows 10-15 hold the other palettes of the monster
+ * portraits, one row per monster with the palette number as the column. */
+typedef struct menu_portrait_sheet {
+    u8 pixels[240][128];       /* 0x0000; 4bpp, 256 pixels per row */
+    palette_t palettes[16][4]; /* 0x7800; four 16-color palettes per row */
+} menu_portrait_sheet_t;
+
+enum {
+    MENU_WLDFACE_SHEET_COUNT = 4,
+    MENU_WLDFACE_SHEET_SIZE = 0x8000,
+    MENU_WLDFACE_FILE_SIZE = MENU_WLDFACE_SHEET_COUNT * MENU_WLDFACE_SHEET_SIZE,
+    MENU_WLDFACE_PORTRAITS_PER_SHEET = 40,
+    MENU_WLDFACE_FIRST_MONSTER_PORTRAIT = 0x3f,
+    MENU_WLDFACE_MONSTER_PALETTE_ROW = 10, /* first row of the monsters' other palettes */
+    MENU_WLDFACE_MONSTER_PALETTE_ROW_COUNT = 6,
+};
+typedef char menu_portrait_sheet_size_must_be_32768[(sizeof(menu_portrait_sheet_t) == 32768) ? 1 : -1];
+
 /* status panels */
 /* Battle menu status and character-editor panel records. The EVENT overlays
  * (ATTACK, BUNIT, DEBUGCHR, EQUIP, REQUIRE) each link their own copy of the

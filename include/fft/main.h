@@ -1144,26 +1144,6 @@ typedef struct main_gfx_frame_bin {
 } main_gfx_frame_bin_t;
 typedef char main_gfx_frame_bin_size_must_be_38912[(sizeof(main_gfx_frame_bin_t) == 38912) ? 1 : -1];
 
-/* EVENT/WLDFACE.BIN is four of these sheets: forty 32x48 portraits at 4 bits
- * per pixel, eight across and five down, then sixteen rows of four palettes.
- * Palette n is portrait n's; rows 10-15 hold the other palettes of the monster
- * portraits, one row per monster with the palette number as the column. */
-typedef struct main_gfx_wldface_sheet {
-    u8 pixels[240][128];       /* 0x0000; 4bpp, 256 pixels per row */
-    palette_t palettes[16][4]; /* 0x7800; four 16-color palettes per row */
-} main_gfx_wldface_sheet_t;
-
-enum {
-    MAIN_GFX_WLDFACE_SHEET_COUNT = 4,
-    MAIN_GFX_WLDFACE_SHEET_SIZE = 0x8000,
-    MAIN_GFX_WLDFACE_FILE_SIZE = MAIN_GFX_WLDFACE_SHEET_COUNT * MAIN_GFX_WLDFACE_SHEET_SIZE,
-    MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET = 40,
-    MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT = 0x3f,
-    MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW = 10, /* first CLUT row of the monsters' other palettes */
-    MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT = 6,
-};
-typedef char main_gfx_wldface_sheet_size_must_be_32768[(sizeof(main_gfx_wldface_sheet_t) == 32768) ? 1 : -1];
-
 extern RECT g_main_gfx_frame_image_rect;
 extern RECT g_main_gfx_frame_palette_rect;
 extern RECT g_main_gfx_frame_palette_tail_rect;
@@ -1171,8 +1151,7 @@ extern palette_t g_main_gfx_now_loading_palette;
 extern u32 g_main_gfx_now_loading_frame_counter;
 extern u32 g_main_gfx_now_loading_otags[2][2];
 
-/* Seven textured quads per screen polarity; main_gfx_add_now_loading_to_otag
- * walks the same table as a [7][sizeof(POLY_FT4)] byte array. */
+/* Seven textured quads for each display buffer. */
 extern POLY_FT4 g_main_gfx_now_loading_primitives[2][7];
 extern u32 g_main_gfx_now_loading_visible;
 extern u32 g_main_gfx_battle_otags[2][0x180];

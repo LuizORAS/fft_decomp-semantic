@@ -10,7 +10,7 @@
  * adds one reference to `j`, raising its global-allocation priority above the
  * source pointer's so the counter gets $a3 as in the target. */
 void attack_gfx_prepare_party_portrait_textures(void) {
-    main_gfx_wldface_sheet_t* file;
+    menu_portrait_sheet_t* file;
     s32 offset;
     s32 pal_offset;
     s32 i;
@@ -27,13 +27,13 @@ void attack_gfx_prepare_party_portrait_textures(void) {
     u8* src;
     RECT unused[2];
 
-    file = main_heap_alloc(MAIN_GFX_WLDFACE_FILE_SIZE);
+    file = main_heap_alloc(MENU_WLDFACE_FILE_SIZE);
     if (g_battle_script_attack_entry_mode != 0) {
         if (g_battle_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-            attack_file_load_sync(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE, file);
+            attack_file_load_sync(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
         } else {
             g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-            battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE, file);
+            battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
         }
     } else {
         StoreImage(&g_attack_portrait_sheet_rect_0, (u32*)file[0].pixels);
@@ -87,8 +87,8 @@ void attack_gfx_prepare_party_portrait_textures(void) {
         }
         cell = value & 0xff;
         palette = (value & 0xc00) >> 10;
-        sheet = cell / MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
-        value = cell - sheet * MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
+        sheet = cell / MENU_WLDFACE_PORTRAITS_PER_SHEET;
+        value = cell - sheet * MENU_WLDFACE_PORTRAITS_PER_SHEET;
         row = value / 8;
         col = value % 8;
         g_attack_portrait_upload_rect.x = (i % 7) * 8 + 0x100;
@@ -102,7 +102,7 @@ void attack_gfx_prepare_party_portrait_textures(void) {
         offset += col * 0x20;
         offset >>= 1;
         /* Ordinary sheet indexing reverses the native ADDU operands. */
-        src = (u8*)(sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + (s32)file + offset);
+        src = (u8*)(sheet * MENU_WLDFACE_SHEET_SIZE + (s32)file + offset);
         for (; j < 0x30; j++) {
             for (col = 0; col < 0x10; col++) {
                 g_attack_portrait_staging[j * 0x10 + col] = src[col];
@@ -118,16 +118,16 @@ void attack_gfx_prepare_party_portrait_textures(void) {
         g_attack_portrait_palette_upload_rect.y = i / 3;
         g_attack_portrait_palette_upload_rect.w = 0x10;
         g_attack_portrait_palette_upload_rect.h = 1;
-        sheet = cell / MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
-        value = cell - sheet * MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
+        sheet = cell / MENU_WLDFACE_PORTRAITS_PER_SHEET;
+        value = cell - sheet * MENU_WLDFACE_PORTRAITS_PER_SHEET;
         row = value / 4;
         col = value % 4;
         value = row;
         if (palette != 0) {
-            sheet = (cell - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) / MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT;
+            sheet = (cell - MENU_WLDFACE_FIRST_MONSTER_PORTRAIT) / MENU_WLDFACE_MONSTER_PALETTE_ROW_COUNT;
             col = palette;
-            row = (cell - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) % MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT;
-            value = row + MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW;
+            row = (cell - MENU_WLDFACE_FIRST_MONSTER_PORTRAIT) % MENU_WLDFACE_MONSTER_PALETTE_ROW_COUNT;
+            value = row + MENU_WLDFACE_MONSTER_PALETTE_ROW;
         }
         pal_offset = value * 0x100 + 0xf000 + col * 0x40 >> 1;
         /* Palette member indexing changes the native offset calculation and allocation. */

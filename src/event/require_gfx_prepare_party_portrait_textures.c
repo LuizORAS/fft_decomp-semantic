@@ -10,7 +10,7 @@
  * (multi-set temps keep the i / 7 mult after the row * 0x3000 terms), and the
  * palette offset has its own variable. */
 void require_gfx_prepare_party_portrait_textures(void) {
-    main_gfx_wldface_sheet_t* file;
+    menu_portrait_sheet_t* file;
     s32 offset;
     s32 pal_offset;
     s32 i;
@@ -26,10 +26,10 @@ void require_gfx_prepare_party_portrait_textures(void) {
     u8* src;
     RECT unused[2];
 
-    file = main_heap_alloc(MAIN_GFX_WLDFACE_FILE_SIZE);
+    file = main_heap_alloc(MENU_WLDFACE_FILE_SIZE);
     if (g_battle_script_attack_entry_mode != 0) {
         g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-        battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE, file);
+        battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
     } else {
         StoreImage(&g_require_portrait_sheet_rect_0, (u32*)file[0].pixels);
         StoreImage(&g_require_portrait_sheet_rect_1, (u32*)file[1].pixels);
@@ -78,8 +78,8 @@ void require_gfx_prepare_party_portrait_textures(void) {
         }
         cell = value & 0xff;
         palette = (value & 0xc00) >> 10;
-        sheet = cell / MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
-        value = cell - sheet * MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
+        sheet = cell / MENU_WLDFACE_PORTRAITS_PER_SHEET;
+        value = cell - sheet * MENU_WLDFACE_PORTRAITS_PER_SHEET;
         row = value / 8;
         col = value % 8;
         g_require_portrait_cell_rect.x = (i % 7) * 8 + 0x100;
@@ -93,7 +93,7 @@ void require_gfx_prepare_party_portrait_textures(void) {
         offset += col * 0x20;
         offset >>= 1;
         /* Ordinary sheet indexing reverses the native ADDU operands. */
-        src = (u8*)(sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + (s32)file + offset);
+        src = (u8*)(sheet * MENU_WLDFACE_SHEET_SIZE + (s32)file + offset);
         for (; value < 0x30; value++) {
             for (col = 0; col < 0x10; col++) {
                 g_require_portrait_cell_pixels[value * 0x10 + col] = src[col];
@@ -106,16 +106,16 @@ void require_gfx_prepare_party_portrait_textures(void) {
         g_require_portrait_palette_rect.y = i / 3;
         g_require_portrait_palette_rect.w = 0x10;
         g_require_portrait_palette_rect.h = 1;
-        sheet = cell / MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
-        value = cell - sheet * MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
+        sheet = cell / MENU_WLDFACE_PORTRAITS_PER_SHEET;
+        value = cell - sheet * MENU_WLDFACE_PORTRAITS_PER_SHEET;
         row = value / 4;
         col = value % 4;
         value = row;
         if (palette != 0) {
-            sheet = (cell - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) / MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT;
+            sheet = (cell - MENU_WLDFACE_FIRST_MONSTER_PORTRAIT) / MENU_WLDFACE_MONSTER_PALETTE_ROW_COUNT;
             col = palette;
-            row = (cell - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) % MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT;
-            value = row + MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW;
+            row = (cell - MENU_WLDFACE_FIRST_MONSTER_PORTRAIT) % MENU_WLDFACE_MONSTER_PALETTE_ROW_COUNT;
+            value = row + MENU_WLDFACE_MONSTER_PALETTE_ROW;
         }
         pal_offset = value * 0x100 + 0xf000 + col * 0x40 >> 1;
         /* Palette member indexing changes the native offset calculation and allocation. */
