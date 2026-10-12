@@ -1378,7 +1378,7 @@ data:
   - {addr: 0x800d0bbc, name: g_main_save_slot_buffer}
   - {addr: 0x800e6edc, name: world_text_find_entry}
   - {addr: 0x800ef25c, name: world_script_set_variable}
-  - {addr: 0x800fc55c, name: g_battle_buffer_a}
+  - {addr: 0x800fc55c, name: g_battle_render_buffers}
   - {addr: 0x8010656c, name: world_menu_load_text_1bd8}
   - {addr: 0x8011a2d4, name: g_battle_gfx_current_render_buffer}
   - {addr: 0x80132824, name: battle_text_find_entry}

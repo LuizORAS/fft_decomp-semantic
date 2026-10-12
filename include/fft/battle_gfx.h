@@ -513,7 +513,6 @@ typedef struct battle_render_buffer {
 typedef char battle_render_buffer_size_must_be_60968[(sizeof(battle_render_buffer_t) == 60968) ? 1 : -1];
 
 /* 0x8016606e */
-extern battle_render_buffer_t g_battle_buffer_a[2];
 /* The 24 orders in which battle_gfx_draw_unit_sprite_layers queues a unit's
  * four layers: 0 is the unit's own sprite, n its sprite block n - 1. */
 extern s32 g_battle_gfx_animation_layer_priorities[][4];
