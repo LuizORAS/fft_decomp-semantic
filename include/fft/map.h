@@ -302,7 +302,6 @@ enum {
     MAP_TILE_HALF_HEIGHT_MASK = 0x1f,
     MAP_TILE_DEPTH_VALUE_MASK = 0x07,
     MAP_TILE_DEPTH_SHIFT = 5,
-    MAP_TILE_DEPTH_MASK = 0xe0,
 };
 
 /* Tile byte 0x03: five-bit slope half-height and three-bit depth. Both

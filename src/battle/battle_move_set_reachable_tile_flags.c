@@ -21,7 +21,7 @@ void battle_move_set_reachable_tile_flags(void) {
     s32 half_height;
     s32 surface;
     s32 tile_flags;
-    s32 depth_bits;
+    map_tile_depth_t water_depth;
     s32 frontier;
 
     config = g_battle_move_config_ptr;
@@ -57,11 +57,11 @@ void battle_move_set_reachable_tile_flags(void) {
             if (surface == MAP_SURFACE_OBSTACLE) {
                 continue;
             }
-            depth_bits = (*(u8*)&tile->depth_half_height) & MAP_TILE_DEPTH_MASK;
-            if ((depth_bits != 0) && (config->cannot_stay_on_water != 0)) {
+            water_depth = tile->depth_half_height;
+            if ((water_depth.depth != 0) && (config->cannot_stay_on_water != 0)) {
                 continue;
             }
-            if ((depth_bits == 0x60) && (config->will_drown != 0)) {
+            if ((water_depth.depth == 3) && (config->will_drown != 0)) {
                 continue;
             }
             if ((tile->depth_half_height.depth >= 4) && (config->will_sink != 0)) {
