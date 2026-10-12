@@ -723,17 +723,17 @@ void wldcore_unit_build_status_panel_data(s32 party_index);
 /* Provisional: the job-report confirmation level. The cursor window at +0x00
  * is moved between the two rows of the render record at +0x04, and +0x08
  * records which of the two rows is selected.
- * wldcore_list_handle_completed_propositions_input pushes this level (type
+ * wldcore_proposition_handle_report_list_input pushes this level (type
  * 0x0f) over the yes/no panel and stores the argument at +0x10. */
 typedef struct wldcore_job_report_confirm_level {
     s32 cursor_window; /* 0x00; window record moved between the two rows */
     s32 render_index;  /* 0x04; render record holding the confirmation text */
     s32 selection;     /* 0x08; 0 = upper row, 1 = lower row */
     s32 _unused_0c;
-    s32 argument; /* 0x10; argument of the level wldcore_menu_push_proposition_report_level pushes */
+    s32 argument; /* 0x10; argument of the level wldcore_proposition_push_report_level pushes */
 } wldcore_job_report_confirm_level_t;
 
-/* Outcome of a proposition (wldcore_job_selection_t.result), from the
+/* Outcome of a proposition (wldcore_proposition_outcome_t.result), from the
  * participants' total score. Only SUCCESS completes the proposition and earns
  * its reward. */
 typedef enum wldcore_proposition_result {
@@ -742,7 +742,7 @@ typedef enum wldcore_proposition_result {
     WLDCORE_PROPOSITION_RESULT_BAD_FAILURE = 2, /* lower score, or recalled: a twentieth of both */
 } wldcore_proposition_result_e;
 
-/* What a successful proposition brought back (wldcore_job_selection_t.reward_type);
+/* What a successful proposition brought back (wldcore_proposition_outcome_t.reward_type);
  * TREASURE and UNEXPLORED_LAND are also the proposition row's discovery_kind. */
 typedef enum wldcore_proposition_reward {
     WLDCORE_PROPOSITION_REWARD_NONE = 0,
@@ -752,11 +752,11 @@ typedef enum wldcore_proposition_reward {
 } wldcore_proposition_reward_e;
 
 /* Provisional: proposition-resolution work record at 0x8009f1ec. One object:
- * wldcore_proposition_find_preferred_job_unit reads excluded_party_index at
+ * wldcore_proposition_find_preferred_job_unit reads reporter_party_index at
  * -0xc from its &proposition_index base, and calculate_base_jp_and_gil and
  * step_result_level reach -0x10..+0x24 from single bases. */
-typedef struct wldcore_job_selection {
-    s32 excluded_party_index; /* 0x00 */
+typedef struct wldcore_proposition_outcome {
+    s32 reporter_party_index; /* 0x00; the unit who reports (wldcore_proposition_select_report_speaker) */
     s32 speaker_party_index;  /* 0x04; chosen and read back by wldcore_proposition_step_participant_message */
     s32 preferred_unit;       /* 0x08; fixed speaker passed to wldcore_proposition_step_participant_message */
     s32 proposition_index;    /* 0x0c; index into g_main_active_propositions */
@@ -764,11 +764,11 @@ typedef struct wldcore_job_selection {
     s32 reward_type;          /* 0x14; wldcore_proposition_reward_e */
     s32 reward_index;         /* 0x18 */
     s32 reward_value;         /* 0x1c */
-    s32 gate;                 /* 0x20; set for a dispatched proposition */
+    s32 gate;                 /* 0x20; set for a called-back proposition: no rewards, the report skipped */
     u8 _unused_24[0x10];
     s32 rows[3][3]; /* 0x34; per-participant score/report rows */
-} wldcore_job_selection_t;
-typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_job_selection_t) == 0x58 ? 1 : -1];
+} wldcore_proposition_outcome_t;
+typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_proposition_outcome_t) == 0x58 ? 1 : -1];
 
 /* Interpreter state of the sound-novel script (wldcore_saved_record_t.state_flags),
  * stepped by wldcore_script_run_until_yield. */
@@ -783,7 +783,7 @@ typedef enum wldcore_opcode_state_flag {
     WLDCORE_OPCODE_STATE_WHITE_OVERLAY = 0x100, /* the white full-screen overlay is up */
 } wldcore_opcode_state_flag_e;
 
-extern wldcore_job_selection_t g_wldcore_job_selection;
+extern wldcore_proposition_outcome_t g_wldcore_proposition_outcome;
 void wldcore_proposition_prepare_report(s32 job_id);
 
 /* story */
@@ -949,11 +949,11 @@ void wldcore_reset_selected_saved_record(s32 unused);
 
 /* proposition */
 /* Provisional: the type-0x10 proposition report level pushed by
- * wldcore_menu_push_proposition_report_level (0x800779d0), which stores its argument at
+ * wldcore_proposition_push_report_level (0x800779d0), which stores its argument at
  * +0x2c and starts WORLD thread 14, and stepped by
  * wldcore_proposition_step_report_level. */
 typedef struct wldcore_proposition_report_level {
-    s32 state; /* 0x00; step index, -1 .. 0x12; pushed as -1, or 0x63 when g_wldcore_job_selection.gate is set */
+    s32 state; /* 0x00; step index, -1 .. 0x12; pushed as -1, or 0x63 when g_wldcore_proposition_outcome.gate is set */
     s32 phase; /* 0x04; wldcore_proposition_step_message phase; cleared at push */
     u8 _unused_08[4];
     s32 load_phase;   /* 0x0c; wldcore_proposition_report_load_e; MESSAGES at push */
@@ -999,6 +999,7 @@ typedef enum wldcore_proposition_data_record {
     WLDCORE_PROPOSITION_DATA_JOB_LIST_JOB_SCORES = 4,
     WLDCORE_PROPOSITION_DATA_BRAVERY_LEVEL_SCORES = 5,
     WLDCORE_PROPOSITION_DATA_FAITH_SCORES = 6,
+    WLDCORE_PROPOSITION_DATA_LEVEL_SCORES = 7, /* fetched by nothing: see QUIRKS.md */
     WLDCORE_PROPOSITION_DATA_JP_AMOUNTS = 8,
     WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS = 9,
     WLDCORE_PROPOSITION_DATA_DISCOVERY_REWARDS = 10,
@@ -1385,7 +1386,7 @@ typedef struct wldcore_menu_window_pair_render_level {
  * signed, and the two writers that only store into it agree on the width. */
 extern s16 g_wldcore_list_row_flags[];
 
-void wldcore_list_completed_propositions_block_all_buttons(s32* unused);
+void wldcore_proposition_report_list_block_all_buttons(s32* unused);
 void wldcore_list_open_script_flags_01a4_01bb(void);
 void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t* panel);
 void wldcore_list_clamp_cursor_state(s32 index, s32 count, s32 visible);
@@ -1403,7 +1404,7 @@ void wldcore_list_script_variables_block_all_buttons(wldcore_menu_panel_level_t*
 void wldcore_list_tutorial_topics_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_formation_tutorials_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_script_flags_block_all_buttons(wldcore_menu_panel_level_t* level);
-void wldcore_list_open_completed_propositions(void);
+void wldcore_proposition_open_report_list(void);
 void wldcore_list_open_tutorial_mask_1_entries(void);
 void wldcore_list_open_formation_tutorials(void);
 void wldcore_list_tutorial_mask_1_block_all_buttons(wldcore_menu_panel_level_t* unused_level);
@@ -1562,23 +1563,24 @@ typedef struct wldcore_menu_window_pair_level {
     s32 second_window; /* 0x04 */
 } wldcore_menu_window_pair_level_t;
 
-/* wldcore_menu_countdown_t.phase. */
-typedef enum wldcore_countdown_phase {
-    WLDCORE_COUNTDOWN_PHASE_MESSAGES = 0,     /* circle shows the next message */
-    WLDCORE_COUNTDOWN_PHASE_LAST_MESSAGE = 1, /* waits for the message box, then starts MAIN_MUSIC_MILESTONE */
-    WLDCORE_COUNTDOWN_PHASE_JINGLE = 2,       /* 180 frames, then back to MAIN_MUSIC_BAR */
-    WLDCORE_COUNTDOWN_PHASE_CLOSE = 3,        /* waits for the audio queue, then pops */
-} wldcore_countdown_phase_e;
+/* wldcore_menu_milestone_level_t.phase. */
+typedef enum wldcore_milestone_phase {
+    WLDCORE_MILESTONE_PHASE_MESSAGES = 0,     /* circle shows the next message */
+    WLDCORE_MILESTONE_PHASE_LAST_MESSAGE = 1, /* waits for the message box, then starts MAIN_MUSIC_MILESTONE */
+    WLDCORE_MILESTONE_PHASE_JINGLE = 2,       /* 180 frames, then back to MAIN_MUSIC_BAR */
+    WLDCORE_MILESTONE_PHASE_CLOSE = 3,        /* waits for the audio queue, then pops */
+} wldcore_milestone_phase_e;
 
-/* Provisional: countdown menu object stepped by wldcore_menu_show_next_sequence_message
- * (0x8007a6b8) and driven by 0x8007a86c. The stepper sets phase 1 and clears
- * the timer when the count expires; 0x8007a86c then advances phases 1-3. */
-typedef struct wldcore_menu_countdown {
+/* The discovery milestone level (WLDCORE_MENU_LEVEL_DISCOVERY_MILESTONE): the next message and how
+ * many remain, the phase and the jingle's timer. wldcore_proposition_show_next_milestone_message moves
+ * to LAST_MESSAGE after the last message; wldcore_proposition_step_milestone_level then plays the
+ * jingle and closes. */
+typedef struct wldcore_menu_milestone_level {
     s32 current;
     s32 remaining;
-    s32 phase; /* 0x08; wldcore_countdown_phase_e */
+    s32 phase; /* 0x08; wldcore_milestone_phase_e */
     s32 timer; /* 0x0c; frames spent in phase 2 */
-} wldcore_menu_countdown_t;
+} wldcore_menu_milestone_level_t;
 
 /* Rumor detail level pushed at 0x80072618. The close handler at 0x80072888
  * reads the saved parent window/render indices at +0x08/+0x0c/+0x10. */
@@ -1884,8 +1886,8 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_VARIABLE_LIST = 0x0b,
     WLDCORE_MENU_LEVEL_PROPOSITION_DAYS = 0x0c,
     WLDCORE_MENU_LEVEL_PROPOSITION_DISPATCH_CONFIRM = 0x0d,
-    WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS = 0x0e,
-    WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS_BROWSE = 0x0f,
+    WLDCORE_MENU_LEVEL_PROPOSITION_REPORTS = 0x0e,
+    WLDCORE_MENU_LEVEL_PROPOSITION_REPORT_CONFIRM = 0x0f,
     WLDCORE_MENU_LEVEL_PROPOSITION_REPORT = 0x10,
     WLDCORE_MENU_LEVEL_PROPOSITION_RESULT = 0x11,
     WLDCORE_MENU_LEVEL_PROPOSITIONS = 0x12,
@@ -1925,7 +1927,7 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_FIXED_NUMBER_PANEL = 0x34,
     WLDCORE_MENU_LEVEL_MAP_PATH = 0x35,
     WLDCORE_MENU_LEVEL_MAP_LOCATION_VISIBILITY = 0x36,
-    WLDCORE_MENU_LEVEL_COUNTDOWN = 0x37,
+    WLDCORE_MENU_LEVEL_DISCOVERY_MILESTONE = 0x37,
     WLDCORE_MENU_LEVEL_LAYOUT_WINDOW = 0x38,
 } wldcore_menu_level_type_e;
 
@@ -1948,7 +1950,7 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_window_render_level_t window_render;
     wldcore_menu_window_pair_level_t window_pair;
     wldcore_menu_window_pair_render_level_t window_pair_render;
-    wldcore_menu_countdown_t countdown; /* pushed by 0x8007a508 */
+    wldcore_menu_milestone_level_t milestone; /* pushed by wldcore_proposition_push_milestone_level */
     wldcore_menu_rumor_detail_level_t rumor_detail;
     wldcore_menu_list_window_level_t list_window;
     wldcore_menu_proposition_list_level_t proposition_list;
@@ -2106,7 +2108,7 @@ void wldcore_menu_push_number_panel_level_with_argument(s32 variable_id, s32 val
 void wldcore_menu_reset_to_root_level(void);
 void wldcore_menu_restore_level_on_world_entry(void);
 void wldcore_menu_run_world_frame(GsOT* context);
-void wldcore_menu_show_next_sequence_message(wldcore_menu_countdown_t* countdown);
+void wldcore_proposition_show_next_milestone_message(wldcore_menu_milestone_level_t* countdown);
 
 /* Both return the appended record's index. */
 s32 wldcore_window_append_record_and_reset_color(s32** queue, s32* count);
@@ -2164,7 +2166,7 @@ void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t*
 void wldcore_menu_push_layout_window_level(void);
 void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant);
 void wldcore_window_begin_tint_transition(wldcore_window_tint_request_t* request);
-void wldcore_menu_push_proposition_report_level(s32 argument);
+void wldcore_proposition_push_report_level(s32 argument);
 void wldcore_menu_build_brave_story_entries(void);
 void wldcore_menu_push_brave_story_level(void);
 void wldcore_window_close_parent_list_all_windows(void);
@@ -2181,7 +2183,7 @@ void wldcore_window_reset_slot_state(s32* param);
 void wldcore_menu_push_text_window_level(s32 text, s32 reload_text);
 void wldcore_menu_push_sound_novel_level(s32 mode);
 void wldcore_menu_push_sound_novel_resume_level(s32 mode);
-void wldcore_menu_push_countdown_level(void);
+void wldcore_proposition_push_milestone_level(void);
 void wldcore_window_update_flag_from_owner_progress(wldcore_window_owner_t* owner);
 
 /* other */
@@ -2201,7 +2203,7 @@ extern s32 g_wldcore_tutorial_event_ids[];
 void wldcore_set_bit_value(u32* bits, s32 index, s32 set);
 s32 wldcore_test_bit(u32* bits, s32 index);
 
-s32 wldcore_get_completion_milestone_rank(void);
+s32 wldcore_proposition_get_milestone_rank(void);
 void wldcore_capture_state_and_play_time(void);
 
 #endif

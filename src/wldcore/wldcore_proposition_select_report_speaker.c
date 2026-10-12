@@ -6,6 +6,13 @@
  * stat after the compare. */
 #include "fft/wldcore.h"
 
+/* Pick the unit who reports a returned proposition: the only one sent, or, by the row's speaker
+ * mode, the one with the highest or lowest Brave (WLDCORE_PROPOSITION_SPEAKER_HIGHEST_BRAVERY,
+ * _LOWEST_BRAVERY) or Faith (_HIGHEST_FAITH, _LOWEST_FAITH). Returns its roster index; another mode
+ * with several units returns an unset value (see QUIRKS.md).
+ *
+ * The goto form for the shared bravery/faith tails matches the target, which
+ * reloads the stat after the compare. */
 s32 wldcore_proposition_select_report_speaker(s32 index) {
     party_data_t* unit;
     s32 best;

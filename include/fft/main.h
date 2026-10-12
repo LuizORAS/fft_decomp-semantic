@@ -1666,7 +1666,7 @@ typedef struct main_sound_music {
 typedef enum main_music {
     MAIN_MUSIC_NONE = 0,         /* the *_sound_play_music_tracks functions and the WLDCORE audio queue skip it */
     MAIN_MUSIC_ALTIMA = 0x13,    /* EVENT_CALL_FUNCTION_PLAY_ALTIMA_MUSIC */
-    MAIN_MUSIC_MILESTONE = 0x14, /* wldcore_map_step_discovery_announcement, in the bar */
+    MAIN_MUSIC_MILESTONE = 0x14, /* wldcore_proposition_step_milestone_level, in the bar */
     MAIN_MUSIC_TUTORIAL = 0x1a,  /* the world menu's tutorial screen */
     MAIN_MUSIC_WORLD_MAP = 0x1b,
     MAIN_MUSIC_SHOP = 0x1c,                         /* world_shop_run_screen: the item shop */
@@ -1808,7 +1808,7 @@ typedef enum main_sfx {
     MAIN_SFX_DEATH_MONSTER = 0x46,
     MAIN_SFX_SHIELD_DEFLECT_BULLET = 0x47, /* gun */
     MAIN_SFX_SHIELD_DEFLECT_ARROW = 0x49,  /* crossbow, bow */
-    /* Proposition result (g_wldcore_job_selection.result): 0 plays the
+    /* Proposition result (g_wldcore_proposition_outcome.result): 0 plays the
      * 0x4d/0x4e pair through main_sound_play_2_sfx, 1 the 0x4f/0x50 pair,
      * 2 plays 0x51. */
     MAIN_SFX_PROPOSITION_SUCCESS_A = 0x4d,

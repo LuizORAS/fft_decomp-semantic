@@ -2,14 +2,14 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* Rolls the reward of a successful proposition.
+/* Roll the extra reward of a successful proposition. A row that finds something
+ * (WLDCORE_PROPOSITION_REWARD_TREASURE or _UNEXPLORED_LAND) picks one not yet found at random, among
+ * the first 31 treasures or the 16 unexplored lands (any of them once all are found), and its
+ * category's pair in record 10 adds JP to every unit and sets the gil value. A row with random_bonus
+ * 1 instead draws one of its category's three pairs in record 11, the first 60 times in 100, the
+ * second 30 and the third 10.
  *
- * Reward kind 1 or 2 (proposition field 10) picks a random script variable
- * still clear in 0x321..0x33f or 0x350..0x35f, falling back to any index;
- * otherwise field 11 == 1 rolls a three-tier random reward (60/30/10%).
- * The chosen pair from proposition data records 10/11 then adds its bonus
- * to every participant's row 0 and sets the reward value. The target places
- * the random-reward branch last, hence the goto. */
+ * The target places the random-reward branch last, hence the goto. */
 void wldcore_proposition_roll_bonus_reward(void) {
     s32 candidates[32];
     u16* bonus_table;
@@ -27,14 +27,14 @@ void wldcore_proposition_roll_bonus_reward(void) {
     value_table = (u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS);
     location_pairs = (u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_DISCOVERY_REWARDS);
     random_pairs = (u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_RANDOM_REWARDS);
-    g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_NONE;
-    g_wldcore_job_selection.reward_value = 0;
-    if (g_wldcore_job_selection.result != WLDCORE_PROPOSITION_RESULT_SUCCESS) {
+    g_wldcore_proposition_outcome.reward_type = WLDCORE_PROPOSITION_REWARD_NONE;
+    g_wldcore_proposition_outcome.reward_value = 0;
+    if (g_wldcore_proposition_outcome.result != WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         return;
     }
     discovery_kind = g_wldcore_selected_proposition_row[0].fields.discovery_kind;
     if (discovery_kind == WLDCORE_PROPOSITION_REWARD_TREASURE) {
-        g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_TREASURE;
+        g_wldcore_proposition_outcome.reward_type = WLDCORE_PROPOSITION_REWARD_TREASURE;
         count = 0;
         for (i = 0; i < 31; i++) {
             if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) == 0) {
@@ -44,7 +44,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
         }
     } else if (discovery_kind == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
         count = 0;
-        g_wldcore_job_selection.reward_type = discovery_kind;
+        g_wldcore_proposition_outcome.reward_type = discovery_kind;
         for (i = 0; i < 16; i++) {
             if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) == 0) {
                 candidates[count] = i;
@@ -56,26 +56,26 @@ void wldcore_proposition_roll_bonus_reward(void) {
     }
     if (count != 0) {
         index = (rand() * count) >> 15;
-        g_wldcore_job_selection.reward_index = candidates[index];
-    } else if (g_wldcore_job_selection.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
-        g_wldcore_job_selection.reward_index = (rand() * 31) >> 15;
+        g_wldcore_proposition_outcome.reward_index = candidates[index];
+    } else if (g_wldcore_proposition_outcome.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
+        g_wldcore_proposition_outcome.reward_index = (rand() * 31) >> 15;
     } else {
-        g_wldcore_job_selection.reward_index = (rand() * 16) >> 15;
+        g_wldcore_proposition_outcome.reward_index = (rand() * 16) >> 15;
     }
-    participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
+    participant_count = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_count;
     index = (g_wldcore_selected_proposition_row[0].fields.category_index - 1) * 2;
     for (i = 0; i < participant_count; i++) {
         bonus = bonus_table[location_pairs[index + 1] - 1];
-        g_wldcore_job_selection.rows[0][i] += bonus;
+        g_wldcore_proposition_outcome.rows[0][i] += bonus;
     }
-    g_wldcore_job_selection.reward_value = value_table[location_pairs[index] - 1];
+    g_wldcore_proposition_outcome.reward_value = value_table[location_pairs[index] - 1];
     return;
 
 random_reward:
     if (g_wldcore_selected_proposition_row[0].fields.random_bonus != 1) {
         return;
     }
-    g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS;
+    g_wldcore_proposition_outcome.reward_type = WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS;
     index = (rand() * 100) >> 15;
     if (index < 40) {
         if (index < 10) {
@@ -87,11 +87,11 @@ random_reward:
         index = 0;
     }
     index += (g_wldcore_selected_proposition_row[0].fields.category_index - 1) * 3;
-    g_wldcore_job_selection.reward_index = index;
-    participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
+    g_wldcore_proposition_outcome.reward_index = index;
+    participant_count = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_count;
     for (i = 0; i < participant_count; i++) {
         bonus = bonus_table[random_pairs[index * 2 + 1] - 1];
-        g_wldcore_job_selection.rows[0][i] += bonus;
+        g_wldcore_proposition_outcome.rows[0][i] += bonus;
     }
-    g_wldcore_job_selection.reward_value = value_table[random_pairs[index * 2] - 1];
+    g_wldcore_proposition_outcome.reward_value = value_table[random_pairs[index * 2] - 1];
 }

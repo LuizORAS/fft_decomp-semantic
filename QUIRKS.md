@@ -736,6 +736,9 @@ translation unit. Share their types and constants through headers.
 - `src/wldcore/wldcore_input_check_repeating_directional.c`: the arms test
   UP, DOWN, RIGHT, LEFT, R1, L1, but the counters sit in UP, DOWN, LEFT, RIGHT,
   R1, L1 address order. The early-out clears only the four direction counters.
+- `src/wldcore/wldcore_proposition_select_report_speaker.c`: with more than one
+  unit sent and a speaker mode other than 1-4, the returned `selected` is never set
+  (every retail row uses mode 4, the lowest Faith).
 - `src/wldcore/wldcore_map_roll_random_encounter.c`: encounter masks count from
   the high bit, so the chosen ENTD is `entd_ids[7 - bit]`.
 - `wldcore_map_step_route_travel` stores the 0-based arrival location in the map

@@ -1,22 +1,17 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens the list of active propositions at the current location as menu
- * level type 0xe.
- *
- * Restores the parent level's hidden window pair first. Starts WORLD thread
- * 14 on 0x8010f250 if needed with text 0xb819, then lists each proposition
- * whose flag 4 is set and whose location is g_wldcore_map_projection_state.marker.kind:
- * display value 0xd000 + proposition_id, clear row flags, source index in
- * entries. With no entries it rebuilds the parent window pair through
- * wldcore_bar_build_menu_rows and resumes the parent handler instead of pushing.
- * Twin of wldcore_proposition_open_active_list.
+/* Open the Bar's list of job reports (WLDCORE_MENU_LEVEL_PROPOSITION_REPORTS): the propositions
+ * that have come back (WLDCORE_PROPOSITION_PROGRESS_RETURNED) to this town, as their names, with the
+ * barkeeper's line (WLDCORE_TEXT_ID_JOBS_RETURNED); each row keeps its g_main_active_propositions
+ * index. The Bar's windows are shown again first; with no report left the Bar's menu is rebuilt
+ * instead. Twin of wldcore_proposition_open_active_list.
  *
  * The location is read through a pointer local: that keeps the load inside
  * the loop (the array stores may alias it) with only its address hoisted,
  * as in the target. The unused point record preserves the 24-byte local
  * area. */
-void wldcore_list_open_completed_propositions(void) {
+void wldcore_proposition_open_report_list(void) {
     wldcore_point32_t origin;
     wldcore_point32_t dimensions;
     wldcore_point32_t unused_point;
@@ -84,6 +79,6 @@ void wldcore_list_open_completed_propositions(void) {
     }
     g_wldcore_menu_ordering_table_offset = 9;
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
-    g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS;
+    g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_REPORTS;
     g_wldcore_menu_stack_depth++;
 }

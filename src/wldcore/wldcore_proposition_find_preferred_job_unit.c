@@ -1,5 +1,5 @@
-/* The target keeps &g_wldcore_job_selection.proposition_index in s5 and
- * reaches excluded_party_index, 12 bytes below, off the same base, which is
+/* The target keeps &g_wldcore_proposition_outcome.proposition_index in s5 and
+ * reaches reporter_party_index, 12 bytes below, off the same base, which is
  * why it saves one more callee-saved register than a per-field access would.
  *
  * `base` stays an explicit local so the job-list offset is computed once in
@@ -11,6 +11,21 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* The unit the report singles out, as a roster index + 1 (0 for none): a unit sent whose job
+ * category is the row's preferred job, preferring one other than the reporting unit; failing that,
+ * one other than the reporting unit whose job is in the row's job list (record 14, nine jobs), the
+ * only one or, of two, the earlier in the list.
+ *
+ * The target keeps &g_wldcore_proposition_outcome.proposition_index in s5 and
+ * reaches reporter_party_index, 12 bytes below, off the same base, which is
+ * why it saves one more callee-saved register than a per-field access would.
+ *
+ * `base` stays an explicit local so the job-list offset is computed once in
+ * the preheader and the inner add uses two registers. The slot test is
+ * written `slots[0] > slots[1]`; the reversed spelling swaps the slots[] load
+ * pair and costs instructions.
+ *
+ * The empty asm statement is explained where it stands. */
 s32 wldcore_proposition_find_preferred_job_unit(void) {
     s32 candidates[4];
     s32 slots[4];
@@ -23,16 +38,17 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
     const wldcore_proposition_data_t* messages;
     party_data_t* unit;
 
-    participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
+    participant_count = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_count;
     messages = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LISTS);
     count = 0;
 
     if (g_wldcore_selected_proposition_row[0].fields.preferred_job != 0) {
         for (i = 0; i < participant_count; i++) {
-            party_index = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i];
+            party_index
+                = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_indices[i];
             unit = wldcore_get_party_data_pointer(party_index);
             if (g_wldcore_selected_proposition_row[0].fields.preferred_job - 1
-                == wldcore_map_job_id_to_category_index(unit->job_id)) {
+                == wldcore_proposition_get_job_category(unit->job_id)) {
                 candidates[count] = party_index;
                 count++;
             }
@@ -41,7 +57,7 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
 
     if (count != 0) {
         for (i = 0; i < count; i++) {
-            if (candidates[i] != g_wldcore_job_selection.excluded_party_index) {
+            if (candidates[i] != g_wldcore_proposition_outcome.reporter_party_index) {
                 return candidates[i] + 1;
             }
         }
@@ -50,8 +66,9 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
 
     base = (g_wldcore_selected_proposition_row[0].fields.job_list_index - 1) * 9;
     for (i = 0; i < participant_count; i++) {
-        party_index = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i];
-        if (party_index != g_wldcore_job_selection.excluded_party_index) {
+        party_index
+            = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_indices[i];
+        if (party_index != g_wldcore_proposition_outcome.reporter_party_index) {
             unit = wldcore_get_party_data_pointer(party_index);
             for (k = 0; k < 9; k++) {
                 if (messages->message_adjustments[base + k] == unit->job_id) {

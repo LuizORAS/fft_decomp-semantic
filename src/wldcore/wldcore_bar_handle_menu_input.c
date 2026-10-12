@@ -5,7 +5,7 @@
  * 0xb807; Select opens the help message for the highlighted row from
  * g_wldcore_bar_row_help_text_ids; confirm dispatches on the row value through a five-entry jump
  * table at 0x80067034 - 0 rumors, 1 the proposition-location list
- * (wldcore_proposition_open_available_list), 2 wldcore_list_open_completed_propositions, 3 the proposition list, 4
+ * (wldcore_proposition_open_available_list), 2 wldcore_proposition_open_report_list, 3 the proposition list, 4
  * leave; and up/down wrap the cursor, moving the cursor window 16 pixels a row; a move re-announces text 0xb806 when
  * content_render is set, and clears it.
  */
@@ -87,7 +87,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
             return;
         case WLDCORE_BAR_MENU_ROW_COMPLETED_PROPOSITIONS:
             wldcore_window_publish_slot_b806(level);
-            wldcore_list_open_completed_propositions();
+            wldcore_proposition_open_report_list();
             return;
         case WLDCORE_BAR_MENU_ROW_PROPOSITIONS:
             wldcore_window_publish_slot_b806(level);

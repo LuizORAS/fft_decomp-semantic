@@ -1,13 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Job-report confirmation idle handler (one of the g_wldcore_menu_idle_handlers
- * entries, dispatched every frame by wldcore_menu_dispatch_idle_handler): the
- * up/down repeats (0x1000/0x4000) toggle the selected row, moving the cursor
- * window to that row of the render record; cancel (0x40) and a lower-row
- * confirm release the level's records and resume the parent, while an
- * upper-row confirm (0x20) also starts WORLD thread 12 and pushes the
- * type-0x10 level for the stored argument.
+/* Step of the hear-the-report question (one of the g_wldcore_menu_idle_handlers entries): up and down
+ * switch the row, moving the cursor window; Cross and "no" release the panel and return to the list,
+ * and "yes" starts the report (wldcore_proposition_push_report_level) for the stored proposition.
  *
  * The `- -(...)` in the cursor-row expression is load bearing, not a typo.
  * The target's final add is `addu v0,v0,v1` (base_y first, result tied to
@@ -61,7 +57,7 @@ void wldcore_proposition_handle_report_confirm_input(wldcore_job_report_confirm_
             g_wldcore_window_render_record_count -= 1;
             g_wldcore_window_render_object_count -= 3;
             g_wldcore_menu_stack_depth -= 2;
-            wldcore_menu_push_proposition_report_level(level->argument);
+            wldcore_proposition_push_report_level(level->argument);
         }
     }
 }

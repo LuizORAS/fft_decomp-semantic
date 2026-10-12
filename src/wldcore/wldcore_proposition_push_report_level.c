@@ -1,12 +1,13 @@
 #include "fft/wldcore.h"
 
-/* Hides the parent level's two windows and render record, then pushes a
- * type-0x10 menu level for argument and sets WORLD thread 14's parameters.
+/* Push a returned proposition's report (WLDCORE_MENU_LEVEL_PROPOSITION_REPORT) over the Bar's
+ * hidden windows, with the report music; for units that were called back it starts at state 99,
+ * which skips the report and goes straight to the result.
  *
  * The subscripted lvalues keep both scalars in-struct for GCC's alias
- * classification, which holds the g_wldcore_job_selection.gate load and the ordering-table store
+ * classification, which holds the g_wldcore_proposition_outcome.gate load and the ordering-table store
  * after the menu-record stores as in the target; plain scalars are hoisted. */
-void wldcore_menu_push_proposition_report_level(s32 argument) {
+void wldcore_proposition_push_report_level(s32 argument) {
     s32 depth;
 
     depth = g_wldcore_menu_stack_depth;
@@ -22,7 +23,7 @@ void wldcore_menu_push_proposition_report_level(s32 argument) {
     g_wldcore_menu_stack_records_next[depth].proposition_report.load_phase = WLDCORE_PROPOSITION_REPORT_LOAD_MESSAGES;
     g_wldcore_menu_stack_records_next[depth].proposition_report.render_index = -1;
     (&g_wldcore_menu_ordering_table_offset)[0] = 9;
-    if (g_wldcore_job_selection.gate != 0) {
+    if (g_wldcore_proposition_outcome.gate != 0) {
         g_wldcore_menu_stack_records_next[depth].proposition_report.state = 0x63;
     } else {
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_PROPOSITION_REPORT));
