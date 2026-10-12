@@ -35,8 +35,8 @@ void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode
             mode, g_battle_gfx_treasure_palettes[palette], clut_row, clut_index, preset, red, green, blue, final_value);
         break;
     default:
-        battle_gfx_modify_vram_palette(mode, g_battle_gfx_spritesheet_slots[slot].palettes[palette], clut_row,
-            clut_index, preset, red, green, blue, final_value);
+        battle_gfx_modify_vram_palette(mode, g_battle_gfx_spritesheet_slots[slot].clut[palette], clut_row, clut_index,
+            preset, red, green, blue, final_value);
         break;
     }
 }

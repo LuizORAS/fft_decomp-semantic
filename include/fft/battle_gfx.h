@@ -72,11 +72,11 @@ typedef char battle_gfx_other_palettes_size_must_be_672[sizeof(battle_gfx_other_
 
 /* WEP.SPR contains three CLUT/image pairs: weapons, trails and particles. */
 typedef struct battle_gfx_weapon_sprite_archive {
-    clut_t weapon_palettes;       /* 0x00000 */
+    clut_t weapon_clut;           /* 0x00000 */
     u8 weapon_pixels[256][128];   /* 0x00200; 4bpp */
-    clut_t trail_palettes;        /* 0x08200 */
+    clut_t trail_clut;            /* 0x08200 */
     u8 trail_pixels[256][128];    /* 0x08400; 4bpp */
-    clut_t particle_palettes;     /* 0x10400 */
+    clut_t particle_clut;         /* 0x10400 */
     u8 particle_pixels[144][128]; /* 0x10600; 4bpp */
 } battle_gfx_weapon_sprite_archive_t;
 
@@ -311,7 +311,7 @@ typedef struct battle_gfx_vram_slot {
     RECT image_rect;             /* 0x000c */
     battle_gfx_unit_seq_t seq;   /* 0x0014 */
     battle_gfx_evtchr_shp_t shp; /* 0x051c */
-    clut_t cluts;                /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_misc_id */
+    clut_t clut;                 /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_misc_id */
     u8 image_data[0x6400];       /* 0x1164 */
 } battle_gfx_vram_slot_t;
 typedef char battle_vram_slot_size_must_be_30052[(sizeof(battle_gfx_vram_slot_t) == 30052) ? 1 : -1];
@@ -349,7 +349,7 @@ typedef struct battle_gfx_spritesheet_slot {
     u8 in_use;                          /* 0x00; cleared when no live unit uses the slot */
     u8 spritesheet_id;                  /* 0x01 */
     u8 compressed_attack_image[0x30d4]; /* 0x02; image data copied from SPR data +0x9200 by 0x80087704 */
-    clut_t palettes;                    /* 0x30d6; 16 CLUTs with the STP bit set (0x80087704) */
+    clut_t clut;                        /* 0x30d6; 16 palettes with the STP bit set (0x80087704) */
 } battle_gfx_spritesheet_slot_t;
 typedef char battle_spritesheet_slot_size_must_be_13014[(sizeof(battle_gfx_spritesheet_slot_t) == 13014) ? 1 : -1];
 

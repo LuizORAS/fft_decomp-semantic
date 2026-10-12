@@ -164,14 +164,14 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
         g_battle_map_palette_pending = 0;
         g_battle_map_vram_load_rect.x = 0;
         g_battle_map_vram_load_rect.h = 1;
-        battle_map_load_palette_data(data->palette_colors, MAP_CLUT_ROW_MAP, 0, 1);
+        battle_map_load_palette_data(data->clut, MAP_CLUT_ROW_MAP, 0, 1);
         break;
     case MAP_MESH_CHUNK_MARKED_TILE_PALETTES:
         g_battle_map_vram_load_rect.y = MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_MARKED_TILES;
         g_battle_map_vram_load_rect.w = 0x100;
         g_battle_map_vram_load_rect.x = 0;
         g_battle_map_vram_load_rect.h = 1;
-        battle_map_load_palette_data(data->palette_colors, MAP_CLUT_ROW_MARKED_TILES, 0, 1);
+        battle_map_load_palette_data(data->clut, MAP_CLUT_ROW_MARKED_TILES, 0, 1);
         break;
     case MAP_MESH_CHUNK_UNSUPPORTED_12:
         main_system_handle_malloc_exception(2, 0x3ca);
@@ -308,7 +308,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, battle_map_resource_t* da
     case MAP_MESH_CHUNK_PALETTE_ANIMATION_FRAMES:
         for (i = 0; i < 0x100; i++) {
             /* Palette-bank indexing changes the native 16-bit copy loop. */
-            ((u16*)g_battle_map_palette_animation_frames)[i] = ((u16*)data->palette_colors)[i];
+            ((u16*)g_battle_map_palette_animation_frames)[i] = ((u16*)data->clut)[i];
         }
         break;
     case MAP_MESH_CHUNK_TERRAIN: {

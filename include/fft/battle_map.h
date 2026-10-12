@@ -812,7 +812,7 @@ typedef union battle_map_resource {
     gns_record_view_t gns_records[150];
     gns_command_record_prefix_t command;
     s16 command_halfwords[10]; /* 16-bit view of the 20-byte command prefix. */
-    clut_t palette_colors;
+    clut_t clut;
     u32 texture_words[0]; /* Variable-length image data consumed by LoadImage. */
     u8 bytes[0];          /* Byte offsets in files and variable-length command payloads. */
 } battle_map_resource_t;

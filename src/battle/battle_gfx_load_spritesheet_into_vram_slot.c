@@ -19,7 +19,7 @@ void battle_gfx_load_spritesheet_into_vram_slot(const battle_gfx_unit_sprite_fil
     /* Byte stores preserve the palette loop and shared image cursor. */
     data = (const u8*)source;
     column = index;
-    clut_bytes = (u8*)g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].palettes[0];
+    clut_bytes = (u8*)g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].clut[0];
     compressed_attack_image = g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].compressed_attack_image;
     if (data != 0) {
         for (byte_index = 0; byte_index < 0x200; byte_index++) {

@@ -54,7 +54,7 @@ s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const evtchr_file_reco
             g_battle_gfx_vram_slots[index].shp.submerged_data[i] = file[pos];
             pos++;
         }
-        dst = (u8*)g_battle_gfx_vram_slots[index].cluts;
+        dst = (u8*)g_battle_gfx_vram_slots[index].clut;
         for (i = 0; i < 0x200; i++) {
             dst[i] = file[pos++];
         }

@@ -21,8 +21,8 @@ void battle_effect_init_palette(s16 index) {
     base = g_battle_effect_data_ptrs[index];
     data = (battle_effect_palette_section_t*)((u8*)base + base->palette_and_texture);
     g_battle_effect_palette_ptr = data;
-    battle_map_load_palette_data(data->primary_palettes, MAP_CLUT_ROW_EFFECT, 0, 1);
-    battle_map_load_palette_data(data->secondary_palettes, MAP_CLUT_ROW_EFFECT_SECOND, 0, 1);
+    battle_map_load_palette_data(data->primary_clut, MAP_CLUT_ROW_EFFECT, 0, 1);
+    battle_map_load_palette_data(data->secondary_clut, MAP_CLUT_ROW_EFFECT_SECOND, 0, 1);
     raw_size = data->image_size[0] + (data->image_size[1] << 8);
     raw_size = (data->image_size[2] << 16) + raw_size;
     height = raw_size;

@@ -721,11 +721,11 @@ typedef char effect_file_header_size_must_be_40[sizeof(effect_file_header_t) == 
 
 /* Two palette rows, then a 24-bit image size, width flag and pixel tail. */
 typedef struct battle_effect_palette_section {
-    clut_t primary_palettes;   /* 0x000 */
-    clut_t secondary_palettes; /* 0x200 */
-    u8 image_size[3];          /* 0x400; little-endian bytes */
-    u8 wide_image;             /* 0x403; 256-byte rows when nonzero, otherwise 128 */
-    u32 pixels[0];             /* 0x404; packed 32-bit GPU image-transfer values */
+    clut_t primary_clut;   /* 0x000 */
+    clut_t secondary_clut; /* 0x200 */
+    u8 image_size[3];      /* 0x400; little-endian bytes */
+    u8 wide_image;         /* 0x403; 256-byte rows when nonzero, otherwise 128 */
+    u32 pixels[0];         /* 0x404; packed 32-bit GPU image-transfer values */
 } battle_effect_palette_section_t;
 typedef char battle_effect_palette_section_size_must_be_1028[sizeof(battle_effect_palette_section_t) == 1028 ? 1 : -1];
 
