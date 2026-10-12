@@ -61,9 +61,9 @@ begin_evaluation:
                 if (row != 0) {
                     for (ai->max_possibilities = 0; ai->max_possibilities < ai->map_max_x; ai->max_possibilities++) {
                         if ((row << ai->max_possibilities) & 0x8000) {
-                            ai->current_action.coords.bytes.x = ai->max_possibilities;
-                            ai->current_action.coords.bytes.y = ai->y_counter;
-                            ai->current_action.coords.bytes.elevation = ai->map_level_counter;
+                            ai->current_action.coords.fields.x = ai->max_possibilities;
+                            ai->current_action.coords.fields.y = ai->y_counter;
+                            ai->current_action.coords.fields.elevation = ai->map_level_counter;
                             ai_finalize_action_destination();
                         evaluate_scanned_origin:
                             if (ai_evaluate_target_tiles() == -1) {

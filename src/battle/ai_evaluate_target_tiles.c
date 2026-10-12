@@ -41,15 +41,15 @@ s32 ai_evaluate_target_tiles(void) {
     else
         origin = &ai->current_action.coords;
     ai_move_temp_unit_to_coords(origin);
-    if (ai->considered_ability.parameters.bytes.range) {
+    if (ai->considered_ability.parameters.fields.range) {
         if (target_set_panels_for_action(&ai->current_action.command) == TARGET_PANELS_NONE)
             return 0;
     } else {
         tile = g_map_tile_data;
         for (i = 0; i < MAP_TILE_COUNT; i++, tile++)
             tile->ceiling_depth_and_marks.ability_range = 0;
-        g_map_tile_data[origin->bytes.y * ai->map_max_x + origin->bytes.x
-            + (origin->bytes.elevation * MAP_TILES_PER_LAYER)]
+        g_map_tile_data[origin->fields.y * ai->map_max_x + origin->fields.x
+            + (origin->fields.elevation * MAP_TILES_PER_LAYER)]
             .ceiling_depth_and_marks.ability_range = 1;
     }
 

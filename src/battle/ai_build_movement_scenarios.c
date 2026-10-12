@@ -51,15 +51,15 @@ s32 ai_build_movement_scenarios(void) {
                     && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
                         & STATUS_BYTE_MASK(STATUS_ID_CRYSTAL))) {
                     ai_transfer_unit_coordinates(g_ai_movement_unit_index, &ai->considered_unit_coords);
-                    ai->tile_target_distance[ai->considered_unit_coords.bytes.elevation]
-                                            [ai->considered_unit_coords.bytes.y][ai->considered_unit_coords.bytes.x]
+                    ai->tile_target_distance[ai->considered_unit_coords.fields.elevation]
+                                            [ai->considered_unit_coords.fields.y][ai->considered_unit_coords.fields.x]
                         = 1;
                 }
             }
         }
     }
-    g_ai_target_distance = ai->tile_target_distance[ai->acting_unit_coords.bytes.elevation]
-                                                   [ai->acting_unit_coords.bytes.y][ai->acting_unit_coords.bytes.x];
+    g_ai_target_distance = ai->tile_target_distance[ai->acting_unit_coords.fields.elevation]
+                                                   [ai->acting_unit_coords.fields.y][ai->acting_unit_coords.fields.x];
     g_ai_closest_ability_range = ai_get_movement_range();
     limit = g_ai_target_distance;
     g_ai_stay_near_destination_fixed = 0;
@@ -68,8 +68,8 @@ s32 ai_build_movement_scenarios(void) {
         if ((decision->flags & AI_DECISION_STAY_NEAR_COORDINATES)
             && ((g_ai_movement_unit_index = ai_find_unit_at_coordinates(&decision->target)) == ai->acting_unit_id
                 || g_ai_movement_unit_index == BATTLE_UNIT_ID_NONE)
-            && (ai->reachable_tiles[0][decision->target.bytes.elevation][decision->target.bytes.y]
-                & (0x8000 >> decision->target.bytes.x))) {
+            && (ai->reachable_tiles[0][decision->target.fields.elevation][decision->target.fields.y]
+                & (0x8000 >> decision->target.fields.x))) {
             ai->candidate_coords[ai->movement_scenario] = decision->target;
             ai_set_candidate_and_actor_reachable_tiles();
             g_ai_stay_near_destination_fixed = 1;
@@ -111,7 +111,7 @@ score_tiles:
     } else {
         ai->candidate_coords[0].word = ai->candidate_coords[1].word;
     }
-    ai->reachable_tiles[1][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
-        |= 0x8000 >> ai->acting_unit_coords.bytes.x;
+    ai->reachable_tiles[1][ai->acting_unit_coords.fields.elevation][ai->acting_unit_coords.fields.y]
+        |= 0x8000 >> ai->acting_unit_coords.fields.x;
     return 0;
 }

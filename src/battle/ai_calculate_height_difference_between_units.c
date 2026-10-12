@@ -15,8 +15,8 @@ s32 ai_calculate_height_difference_between_units(const ai_coords_t* coords, cons
     tile = &g_map_tile_data[unit->position.higher_elevation * MAP_TILES_PER_LAYER
         + unit->position.y * g_ai_data_base.map_max_x + unit->x];
     h1 = tile->height * 2 + tile->depth_half_height.half_height;
-    tile = &g_map_tile_data[(coords->bytes.elevation * MAP_TILES_PER_LAYER) + coords->bytes.y * g_ai_data_base.map_max_x
-        + coords->bytes.x];
+    tile = &g_map_tile_data[(coords->fields.elevation * MAP_TILES_PER_LAYER)
+        + coords->fields.y * g_ai_data_base.map_max_x + coords->fields.x];
     h2 = tile->height * 2 + tile->depth_half_height.half_height;
     return (h1 - h2) / 2;
 }

@@ -15,7 +15,7 @@ void ai_disable_ability_if_only_inflicts_status(ai_ability_entry_t* entry, s32 s
         return;
     }
     /* Only ally targeting and status addition may remain in this flag byte. */
-    if ((ai->considered_ability.ai_flags.bytes.flags_1
+    if ((ai->considered_ability.ai_flags.fields.flags_1
             & (AI_ABILITY_TARGET_ENEMIES | AI_ABILITY_UNEQUIP | AI_ABILITY_AFFECTS_STATS | AI_ABILITY_CANCEL_STATUS
                 | AI_ABILITY_AFFECTS_MP | AI_ABILITY_AFFECTS_HP))
         != 0) {
@@ -34,7 +34,7 @@ void ai_disable_ability_if_only_inflicts_status(ai_ability_entry_t* entry, s32 s
         shift = status_id;
         for (; status_set < STATUS_BYTE_COUNT; status_set++, shift -= 8) {
             if (status_set == status_id / 8) {
-                if ((cursor->considered_ability.parameters.bytes.status_infliction[0] & ((mask >> shift) ^ 0xFF))
+                if ((cursor->considered_ability.parameters.fields.status_infliction[0] & ((mask >> shift) ^ 0xFF))
                     != 0) {
                     return;
                 }
@@ -43,7 +43,7 @@ void ai_disable_ability_if_only_inflicts_status(ai_ability_entry_t* entry, s32 s
                 cursor = (ai_data_t*)((u8*)cursor + 1);
                 continue;
             }
-            if (cursor->considered_ability.parameters.bytes.status_infliction[0] != 0) {
+            if (cursor->considered_ability.parameters.fields.status_infliction[0] != 0) {
                 return;
             }
             cursor = (ai_data_t*)((u8*)cursor + 1);

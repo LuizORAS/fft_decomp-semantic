@@ -13,9 +13,9 @@ s32 ai_score_reachable_tiles(void) {
     u32 row;
 
     if (g_ai_data_base.resume_pending != 0) {
-        x = g_ai_data_base.current_action.coords.bytes.x;
-        y = g_ai_data_base.current_action.coords.bytes.y;
-        level = g_ai_data_base.current_action.coords.bytes.elevation;
+        x = g_ai_data_base.current_action.coords.fields.x;
+        y = g_ai_data_base.current_action.coords.fields.y;
+        level = g_ai_data_base.current_action.coords.fields.elevation;
         {
             u32 scenario_address = g_ai_data_base.movement_scenario * sizeof(ai->reachable_tiles[0]) + (u32)ai;
             u32 level_address;
@@ -45,9 +45,9 @@ s32 ai_score_reachable_tiles(void) {
             if (row != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
-                        ai->current_action.coords.bytes.x = x;
-                        ai->current_action.coords.bytes.y = y;
-                        ai->current_action.coords.bytes.elevation = level;
+                        ai->current_action.coords.fields.x = x;
+                        ai->current_action.coords.fields.y = y;
+                        ai->current_action.coords.fields.elevation = level;
                         ai_update_tile_pickup();
                     evaluate_tile:
                         if (ai_simulate_action_and_score() == -1) {

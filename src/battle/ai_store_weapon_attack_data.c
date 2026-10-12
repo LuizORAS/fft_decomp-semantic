@@ -17,9 +17,9 @@ void ai_store_weapon_attack_data(ai_weapon_data_t* out, s32 item_id, s32* flags_
     weapon = &g_main_item_weapon_data[item_id];
     flags = weapon->flags;
     if (flags & WEAPON_FLAG_ARC) {
-        out->bytes.flags_3 |= AI_ABILITY_FLAG_3_ARC_TRAJECTORY;
+        out->fields.flags_3 |= AI_ABILITY_FLAG_3_ARC_TRAJECTORY;
     } else if (flags & WEAPON_FLAG_DIRECT) {
-        out->bytes.flags_3 |= AI_ABILITY_FLAG_3_DIRECT_TRAJECTORY;
+        out->fields.flags_3 |= AI_ABILITY_FLAG_3_DIRECT_TRAJECTORY;
     }
     formula = weapon->formula;
     switch (formula) {
@@ -33,7 +33,7 @@ void ai_store_weapon_attack_data(ai_weapon_data_t* out, s32 item_id, s32* flags_
         *flags_out |= AI_WEAPON_FORMULA_DAMAGE;
         break;
     }
-    out->bytes.weapon_id = item_id;
-    out->bytes.range = weapon->range;
-    out->bytes.element |= weapon->element;
+    out->fields.weapon_id = item_id;
+    out->fields.range = weapon->range;
+    out->fields.element |= weapon->element;
 }

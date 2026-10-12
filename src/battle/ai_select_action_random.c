@@ -17,7 +17,7 @@ s32 ai_select_action_random(void) {
     g_ai_data_base.current_action.command.skillset_id = ai->considered_ability.skillset;
     g_ai_data_base.current_action.command.ability_id = ai->considered_ability.ability_id;
     /* Item selection updates only the low byte of the 16-bit command field. */
-    *(u8*)&g_ai_data_base.current_action.command.item_or_equipment = ai->considered_ability.parameters.bytes.item_id;
+    *(u8*)&g_ai_data_base.current_action.command.item_or_equipment = ai->considered_ability.parameters.fields.item_id;
     if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset] == ACTION_MENU_TYPE_ARITHMETICKS) {
         do {
             skillset = g_ai_math_source_skillsets[rand() % AI_MATH_SOURCE_SKILLSET_COUNT];
@@ -75,9 +75,9 @@ s32 ai_select_action_random(void) {
                 index_or_count = ai_calculate_ability_range();
                 if (index_or_count) {
                     while (ai_take_random_tile(ai->targetable_tiles, &ai->considered_unit_coords, index_or_count)) {
-                        ai->current_action.command.target_position.vx = ai->considered_unit_coords.bytes.x;
-                        ai->current_action.command.target_position.vz = ai->considered_unit_coords.bytes.y;
-                        ai->current_action.command.target_position.vy = ai->considered_unit_coords.bytes.elevation;
+                        ai->current_action.command.target_position.vx = ai->considered_unit_coords.fields.x;
+                        ai->current_action.command.target_position.vz = ai->considered_unit_coords.fields.y;
+                        ai->current_action.command.target_position.vy = ai->considered_unit_coords.fields.elevation;
                         ai->current_action.wait_facing_hint
                             = ai_find_direction_of_target(&ai->considered_unit_coords, &ai->current_action.coords);
                         if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT

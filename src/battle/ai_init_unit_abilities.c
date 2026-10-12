@@ -58,11 +58,11 @@ void ai_init_unit_abilities(s32 unit_id) {
         if (ai->considered_ability.ai_flags.word & (AI_ABILITY_DIRECT_TRAJECTORY | AI_ABILITY_ARC_TRAJECTORY)) {
             continue;
         }
-        if (ai->considered_ability.ai_flags.bytes.flags_3 & AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK) {
+        if (ai->considered_ability.ai_flags.fields.flags_3 & AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK) {
             entry->usage.policy.exhaustive_origin_scan = 1;
         } else {
             if (ai->considered_ability.ability_id < ABILITY_ID_ITEM_FIRST) {
-                if (ai->considered_ability.parameters.bytes.range + ai->considered_ability.parameters.bytes.aoe < 3
+                if (ai->considered_ability.parameters.fields.range + ai->considered_ability.parameters.fields.aoe < 3
                     && (g_main_ability_range_data[ai->considered_ability.ability_id].flags_4
                         & ABILITY_SECONDARY_FLAG_4_EVADEABLE)) {
                     entry->usage.policy.exhaustive_origin_scan = 1;
@@ -74,7 +74,7 @@ void ai_init_unit_abilities(s32 unit_id) {
                     continue;
                 }
             }
-            if (ai->considered_ability.parameters.bytes.aoe == 0) {
+            if (ai->considered_ability.parameters.fields.aoe == 0) {
                 entry->usage.policy.force_consume_evaluated_origins = 1;
             }
         }
@@ -83,10 +83,10 @@ void ai_init_unit_abilities(s32 unit_id) {
     decision->mp_ability_mod = ai_calculate_ratio_times_4(ability_count, mp_count);
     decision->evade_mod = ai_calculate_ratio_times_4(ability_count, evade_count);
     ai_transfer_byte_values(&decision->flags, &unit->ai_flags, 5);
-    decision->target.bytes.x = unit->ai_target_x;
-    decision->target.bytes.y = unit->ai_target_y;
-    decision->target.bytes.elevation = unit->ai_flags >> 7;
-    decision->target.bytes.zero = 0;
+    decision->target.fields.x = unit->ai_target_x;
+    decision->target.fields.y = unit->ai_target_y;
+    decision->target.fields.elevation = unit->ai_flags >> 7;
+    decision->target.fields.zero = 0;
     if (!(decision->flags & AI_DECISION_SPECIAL_BEHAVIOR)) {
         return;
     }

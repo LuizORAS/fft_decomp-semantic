@@ -122,18 +122,18 @@ typedef union ai_coords {
         u8 elevation;
         u8 y;
         u8 zero;
-    } bytes;
+    } fields;
 } ai_coords_t;
 
 /* Ability AI behaviour flags 1..4. Consumers read the 32-bit value, two 16-bit values,
  * or individual bytes; use the corresponding masks above for each view. */
 typedef union ai_ability_flags {
     u32 word;
-    ability_ai_flags_t bytes;
+    ability_ai_flags_t fields;
     struct {
         u16 target_effect_flags;    /* bytes 1..2 */
         u16 trajectory_usage_flags; /* bytes 3..4 */
-    } halfwords;
+    } groups;
 } ai_ability_flags_t;
 
 /* Shared prefix of the baseline and suspended AI unit snapshots.
@@ -190,11 +190,11 @@ typedef union ai_ability_parameters {
         u8 aoe;
         u8 item_id;
         u8 status_infliction[STATUS_BYTE_COUNT];
-    } bytes;
+    } fields;
     struct {
         u32 _first;
         u32 status_tail;
-    } words;
+    } packed;
 } ai_ability_parameters_t;
 
 /* Pack canonical status IDs 8..39 into the aligned 32-bit value covering status
@@ -214,7 +214,7 @@ typedef struct ai_considered_ability {
 } ai_considered_ability_t;
 typedef char ai_considered_ability_size_must_be_20[(sizeof(ai_considered_ability_t) == 20) ? 1 : -1];
 typedef char ai_status_tail_must_be_at_offset_8
-    [((unsigned long)&((ai_considered_ability_t*)0)->parameters.words.status_tail == 8) ? 1 : -1];
+    [((unsigned long)&((ai_considered_ability_t*)0)->parameters.packed.status_tail == 8) ? 1 : -1];
 
 /* action records */
 /* ai_action_rank_t.decided of the selected action once it is chosen. */
@@ -309,7 +309,7 @@ typedef enum ai_weapon_formula_flags {
 } ai_weapon_formula_flags_e;
 
 /* Per-compact-unit weapon summary. The builder at 0x8019a2f0 clears two
- * 32-bit values, then merges weapon properties through the byte view. */
+ * 32-bit values, then merges weapon properties through named fields. */
 typedef union ai_weapon_data {
     u32 words[2];
     struct {
@@ -320,7 +320,7 @@ typedef union ai_weapon_data {
         u8 weapon_id;
         u8 element;
         u8 _unused_06[2];
-    } bytes;
+    } fields;
 } ai_weapon_data_t;
 typedef char ai_weapon_data_must_be_8[sizeof(ai_weapon_data_t) == 8 ? 1 : -1];
 
@@ -488,15 +488,15 @@ typedef struct ai_data {
     u8 saved_current_status;                                         /* 0x0ed1 */
     u8 saved_inflicted_status;                                       /* 0x0ed2 */
     u8 _unused_0ed3;
-    u8 main_ai_state;             /* 0x0ed4; ai_command_build_stage_e */
-    u8 autobattle_state;          /* 0x0ed5; ai_autobattle_stage_e */
-    u8 charging_state;            /* 0x0ed6; ai_charging_stage_e */
-    u8 find_highest_target_state; /* 0x0ed7; ai_cast_origin_stage_e */
-    u8 reflected_origin_phase;    /* 0x0ed8; cleared at 0x8019ba40, set at 0x8019ba78 */
-    u8 highest_priority_state;    /* 0x0ed9; ai_origin_evaluation_stage_e */
-    u8 max_possibilities;         /* 0x0eda; byte-truncated combination count, then scan x at 0x8019bf2c */
-    u8 y_counter;                 /* 0x0edb */
-    u8 map_level_counter;         /* 0x0edc */
+    u8 main_ai_state;          /* 0x0ed4; ai_command_build_stage_e */
+    u8 autobattle_state;       /* 0x0ed5; ai_autobattle_stage_e */
+    u8 charging_state;         /* 0x0ed6; ai_charging_stage_e */
+    u8 cast_origin_stage;      /* 0x0ed7; ai_cast_origin_stage_e */
+    u8 reflected_origin_phase; /* 0x0ed8; cleared at 0x8019ba40, set at 0x8019ba78 */
+    u8 highest_priority_state; /* 0x0ed9; ai_origin_evaluation_stage_e */
+    u8 max_possibilities;      /* 0x0eda; byte-truncated combination count, then scan x at 0x8019bf2c */
+    u8 y_counter;              /* 0x0edb */
+    u8 map_level_counter;      /* 0x0edc */
     /* Calculator search counters survive suspension at 0x8019bbbc–0x8019bf2c. */
     u8 math_ability_id;       /* 0x0edd; low byte of the selected ability entry */
     u8 math_type_index;       /* 0x0ede; 0..3 */

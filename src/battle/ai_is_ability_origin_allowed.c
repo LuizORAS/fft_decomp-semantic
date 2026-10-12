@@ -17,8 +17,8 @@ s32 ai_is_ability_origin_allowed(const ai_coords_t* coords) {
     battle_stats_t* unit;
 
     if (g_ai_data_base.water_penalty) {
-        s32 depth = g_map_tile_data[coords->bytes.y * g_ai_data_base.map_max_x + coords->bytes.x
-            + (coords->bytes.elevation * MAP_TILES_PER_LAYER)]
+        s32 depth = g_map_tile_data[coords->fields.y * g_ai_data_base.map_max_x + coords->fields.x
+            + (coords->fields.elevation * MAP_TILES_PER_LAYER)]
                         .depth_half_height.depth;
         if (depth >= 2)
             return 0;
@@ -36,10 +36,10 @@ s32 ai_is_ability_origin_allowed(const ai_coords_t* coords) {
                 continue;
             if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION))
                 continue;
-            dx = unit->x - coords->bytes.x;
+            dx = unit->x - coords->fields.x;
             if (dx < 0)
                 dx = -dx;
-            dy = unit->position.y - coords->bytes.y;
+            dy = unit->position.y - coords->fields.y;
             if (dy < 0)
                 dy = -dy;
             if (dx + dy < 2) {

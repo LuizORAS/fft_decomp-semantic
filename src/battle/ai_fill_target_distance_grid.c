@@ -28,13 +28,13 @@ s32 ai_fill_target_distance_grid(ai_coords_t* target) {
             & (BATTLE_MOVEMENT_SET_2_TELEPORT | BATTLE_MOVEMENT_SET_2_TELEPORT_2))) {
         use_manhattan = 1;
     } else {
-        ai_propagate_target_movement(ai->acting_unit_id, target->bytes.x, target->bytes.y, target->bytes.elevation,
+        ai_propagate_target_movement(ai->acting_unit_id, target->fields.x, target->fields.y, target->fields.elevation,
             ai->search_resume_flag, &suspended, 1);
         if (suspended != 0)
             return -1;
         ai->resume_pending = 0;
-        target_remaining_range = g_target_panels[(target->bytes.elevation * MAP_TILES_PER_LAYER)
-            + target->bytes.y * ai->map_max_x + target->bytes.x]
+        target_remaining_range = g_target_panels[(target->fields.elevation * MAP_TILES_PER_LAYER)
+            + target->fields.y * ai->map_max_x + target->fields.x]
                                      .remaining_range;
     }
     for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
@@ -42,10 +42,10 @@ s32 ai_fill_target_distance_grid(ai_coords_t* target) {
             if (ai->reachable_tiles[0][level][y] != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if (use_manhattan) {
-                        distance = target->bytes.x - x;
+                        distance = target->fields.x - x;
                         if (distance < 0)
                             distance = -distance;
-                        y_distance = target->bytes.y - y;
+                        y_distance = target->fields.y - y;
                         if (y_distance < 0)
                             y_distance = -y_distance;
                         distance += y_distance;

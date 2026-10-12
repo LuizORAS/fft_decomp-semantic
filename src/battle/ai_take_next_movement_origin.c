@@ -25,16 +25,16 @@ void ai_take_next_movement_origin(void) {
                         key += ai->tile_foe_proximity[level][y][x];
                         if (best_key >= key) {
                             best_key = key;
-                            ai->current_action.coords.bytes.x = x;
-                            ai->current_action.coords.bytes.y = y;
-                            ai->current_action.coords.bytes.elevation = level;
+                            ai->current_action.coords.fields.x = x;
+                            ai->current_action.coords.fields.y = y;
+                            ai->current_action.coords.fields.elevation = level;
                         }
                     }
                 }
             }
         }
     }
-    ai->movable_tiles[ai->current_action.coords.bytes.elevation][ai->current_action.coords.bytes.y]
-        ^= 0x8000 >> ai->current_action.coords.bytes.x;
+    ai->movable_tiles[ai->current_action.coords.fields.elevation][ai->current_action.coords.fields.y]
+        ^= 0x8000 >> ai->current_action.coords.fields.x;
     ai->movable_tile_count--;
 }

@@ -41,11 +41,11 @@ s32 ai_evaluate_math_targets(void) {
             }
             ai_transfer_halfword_values(
                 &ai->considered_ability.ai_flags, &g_main_ability_data[ai->math_ability_id].ai_flags, 4);
-            ai_transfer_byte_values(ai->considered_ability.parameters.bytes.status_infliction,
+            ai_transfer_byte_values(ai->considered_ability.parameters.fields.status_infliction,
                 g_main_status_infliction_data[g_main_ability_range_data[ai->math_ability_id].status_infliction_id]
                     .statuses,
                 5);
-            ai->considered_ability.ai_flags.bytes.flags_4 = AI_ABILITY_FLAG_4_USABLE_BY_AI;
+            ai->considered_ability.ai_flags.fields.flags_4 = AI_ABILITY_FLAG_4_USABLE_BY_AI;
             ai->current_action.command.ability_id = ai->math_ability_id;
             ai->considered_ability.element = g_main_ability_range_data[ai->math_ability_id].element;
             for (unit = 0; unit < BATTLE_UNIT_SLOT_COUNT; unit++)

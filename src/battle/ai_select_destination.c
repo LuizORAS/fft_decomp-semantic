@@ -63,10 +63,10 @@ s32 ai_select_destination(s32 max_distance, ai_destination_order_e order) {
                         }
                         best_score = score;
                         best_distance = distance;
-                        destination->bytes.x = x;
-                        destination->bytes.y = y;
-                        destination->bytes.elevation = level;
-                        destination->bytes.zero = 0;
+                        destination->fields.x = x;
+                        destination->fields.y = y;
+                        destination->fields.elevation = level;
+                        destination->fields.zero = 0;
                     }
                 }
             }

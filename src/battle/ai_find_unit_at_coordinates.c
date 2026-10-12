@@ -8,8 +8,8 @@ s32 ai_find_unit_at_coordinates(const ai_coords_t* coords) {
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
-        if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->x == coords->bytes.x
-            && unit->position.y == coords->bytes.y && (unit->position.higher_elevation) == coords->bytes.elevation) {
+        if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->x == coords->fields.x
+            && unit->position.y == coords->fields.y && (unit->position.higher_elevation) == coords->fields.elevation) {
             break;
         }
     }

@@ -40,7 +40,7 @@ ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
     /* Death/revival timing determines which effects can still matter. */
     i = 0;
     if ((ai->considered_ability.ai_flags.word & AI_ABILITY_CANCEL_STATUS)
-        && (ai->considered_ability.parameters.bytes.status_infliction[STATUS_BYTE_INDEX(STATUS_ID_DEAD)]
+        && (ai->considered_ability.parameters.fields.status_infliction[STATUS_BYTE_INDEX(STATUS_ID_DEAD)]
             & STATUS_BYTE_MASK(STATUS_ID_DEAD)))
         i = 1;
     if (decision->targeting_flags_2 & AI_TARGET_DEAD_WITH_RERAISE) {
@@ -59,12 +59,12 @@ ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
     }
     if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)] & STATUS_BYTE_MASK(STATUS_ID_PETRIFY))
         && (!(ai->considered_ability.ai_flags.word & AI_ABILITY_CANCEL_STATUS)
-            || !(ai->considered_ability.parameters.bytes.status_infliction[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)]
+            || !(ai->considered_ability.parameters.fields.status_infliction[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)]
                 & STATUS_BYTE_MASK(STATUS_ID_PETRIFY))))
         return AI_ABILITY_EFFECT_NONE;
     if (ai_is_status_active_through_delay(ct, unit, STATUS_ID_WALL)
         && (!(ai->considered_ability.ai_flags.word & AI_ABILITY_CANCEL_STATUS)
-            || !(ai->considered_ability.parameters.bytes.status_infliction[STATUS_BYTE_INDEX(STATUS_ID_WALL)]
+            || !(ai->considered_ability.parameters.fields.status_infliction[STATUS_BYTE_INDEX(STATUS_ID_WALL)]
                 & STATUS_BYTE_MASK(STATUS_ID_WALL))))
         return AI_ABILITY_EFFECT_NONE;
 
@@ -116,7 +116,7 @@ ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
                     /* Early acceptance of a disabling effect bypasses the generic
                      * already-present/immunity filters below. Status bytes 1..4
                      * are loaded together as an aligned 32-bit value by the target. */
-                    s32 status_mask = ai->considered_ability.parameters.words.status_tail
+                    s32 status_mask = ai->considered_ability.parameters.packed.status_tail
                         & (AI_STATUS_TAIL_PACKED_MASK(STATUS_ID_SLOW) | AI_STATUS_TAIL_PACKED_MASK(STATUS_ID_STOP)
                             | AI_STATUS_TAIL_PACKED_MASK(STATUS_ID_SLEEP)
                             | AI_STATUS_TAIL_PACKED_MASK(STATUS_ID_DONT_MOVE)
@@ -151,7 +151,7 @@ ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
         if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEATH_SENTENCE)]
             & STATUS_BYTE_MASK(STATUS_ID_DEATH_SENTENCE)) {
             if ((ai->considered_ability.ai_flags.word & AI_ABILITY_ADD_STATUS)
-                && (ai->considered_ability.parameters.bytes.status_infliction[STATUS_BYTE_INDEX(STATUS_ID_RERAISE)]
+                && (ai->considered_ability.parameters.fields.status_infliction[STATUS_BYTE_INDEX(STATUS_ID_RERAISE)]
                     & STATUS_BYTE_MASK(STATUS_ID_RERAISE)))
                 return AI_ABILITY_EFFECT_USEFUL;
             return AI_ABILITY_EFFECT_NONE;
@@ -172,7 +172,7 @@ ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
     }
     if (ai->considered_ability.ai_flags.word & AI_ABILITY_ADD_STATUS) {
         for (i = 0; i < STATUS_BYTE_COUNT; i++) {
-            mask = ai->considered_ability.parameters.bytes.status_infliction[i];
+            mask = ai->considered_ability.parameters.fields.status_infliction[i];
             mask ^= mask & unit->status_sets.current[i];
             if (mask) {
                 mask ^= mask & unit->status_sets.immunity[i];
@@ -220,7 +220,7 @@ ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
     }
     if (ai->considered_ability.ai_flags.word & AI_ABILITY_CANCEL_STATUS) {
         for (i = 0; i < STATUS_BYTE_COUNT; i++) {
-            mask = ai->considered_ability.parameters.bytes.status_infliction[i];
+            mask = ai->considered_ability.parameters.fields.status_infliction[i];
             mask &= unit->status_sets.current[i];
             if (mask) {
                 mask ^= mask & unit->status_sets.innate[i];

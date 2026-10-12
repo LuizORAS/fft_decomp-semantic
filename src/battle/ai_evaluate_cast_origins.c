@@ -10,7 +10,7 @@ s32 ai_evaluate_cast_origins(void) {
     ai = &g_ai_data_base;
     if (g_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
-        if (g_ai_data_base.find_highest_target_state != AI_CAST_ORIGIN_ACT_BEFORE_MOVE) {
+        if (g_ai_data_base.cast_origin_stage != AI_CAST_ORIGIN_ACT_BEFORE_MOVE) {
             goto score_move_before_act;
         }
         goto score_act_before_move;
@@ -19,7 +19,7 @@ s32 ai_evaluate_cast_origins(void) {
         g_ai_data_base.current_action.act_before_move = 1;
     score_act_before_move:
         if (ai_evaluate_current_action() == -1) {
-            ai->find_highest_target_state = AI_CAST_ORIGIN_ACT_BEFORE_MOVE;
+            ai->cast_origin_stage = AI_CAST_ORIGIN_ACT_BEFORE_MOVE;
             return -1;
         }
     }
@@ -34,6 +34,6 @@ score_move_before_act:
     if (ai_evaluate_current_action() != -1) {
         return 0;
     }
-    ai->find_highest_target_state = AI_CAST_ORIGIN_MOVE_BEFORE_ACT;
+    ai->cast_origin_stage = AI_CAST_ORIGIN_MOVE_BEFORE_ACT;
     return -1;
 }

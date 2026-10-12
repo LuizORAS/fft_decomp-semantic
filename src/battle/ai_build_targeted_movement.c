@@ -28,10 +28,10 @@ s32 ai_build_targeted_movement(void) {
     /* Direct typed level indexing reverses the two address-building instructions
      * at +0xbc/+0xc0. Stage only the level base; retain the real member offset
      * and typed row/column indexing for the byte-exact match. */
-    distance_level_base = ai->acting_unit_coords.bytes.elevation * sizeof(ai->tile_target_distance[0]) + (u32)ai;
+    distance_level_base = ai->acting_unit_coords.fields.elevation * sizeof(ai->tile_target_distance[0]) + (u32)ai;
     distance_rows = (u8(*)[AI_GRID_COLUMN_COUNT])(distance_level_base + (u32) & ((ai_data_t*)0)->tile_target_distance);
     limit = range;
-    distance = distance_rows[ai->acting_unit_coords.bytes.y][ai->acting_unit_coords.bytes.x];
+    distance = distance_rows[ai->acting_unit_coords.fields.y][ai->acting_unit_coords.fields.x];
     within_two_tiles = distance < 3;
     ai->movement_scenario = 0;
     if (ai->autobattle_setting == AI_AUTOBATTLE_RECOVERY && !within_two_tiles) {
@@ -58,7 +58,7 @@ s32 ai_build_targeted_movement(void) {
     } else {
         ai->candidate_coords[2] = ai->candidate_coords[1];
     }
-    ai->reachable_tiles[1][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
-        |= 0x8000 >> ai->acting_unit_coords.bytes.x;
+    ai->reachable_tiles[1][ai->acting_unit_coords.fields.elevation][ai->acting_unit_coords.fields.y]
+        |= 0x8000 >> ai->acting_unit_coords.fields.x;
     return 0;
 }

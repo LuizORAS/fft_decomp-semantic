@@ -18,10 +18,10 @@ s32 ai_is_action_higher_ranked(const ai_action_data_t* first, const ai_action_da
     if (comparison == AI_RANK_ABOVE)
         return value;
     if (comparison == AI_RANK_EQUAL) {
-        value = first->coords.bytes.elevation;
-        proximity_a = ai->tile_foe_proximity[value][first->coords.bytes.y][first->coords.bytes.x];
+        value = first->coords.fields.elevation;
+        proximity_a = ai->tile_foe_proximity[value][first->coords.fields.y][first->coords.fields.x];
         proximity_b
-            = ai->tile_foe_proximity[second->coords.bytes.elevation][second->coords.bytes.y][second->coords.bytes.x];
+            = ai->tile_foe_proximity[second->coords.fields.elevation][second->coords.fields.y][second->coords.fields.x];
         return proximity_a < proximity_b;
     }
     return 0;

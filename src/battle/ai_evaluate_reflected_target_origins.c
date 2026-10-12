@@ -57,20 +57,20 @@ s32 ai_evaluate_reflected_target_origins(void) {
                 continue;
             if (ai_classify_ability_effect(ai->reflected_target_unit_index, 0) != AI_ABILITY_EFFECT_USEFUL)
                 continue;
-            ai->current_action.coords.bytes.x
+            ai->current_action.coords.fields.x
                 = reflector->x * 2 - g_battle_unit_stats[ai->reflected_target_unit_index].x;
-            ai->current_action.coords.bytes.y
+            ai->current_action.coords.fields.y
                 = reflector->position.y * 2 - g_battle_unit_stats[ai->reflected_target_unit_index].position.y;
-            if (ai->current_action.coords.bytes.x >= ai->map_max_x)
+            if (ai->current_action.coords.fields.x >= ai->map_max_x)
                 continue;
-            if (ai->current_action.coords.bytes.y >= ai->map_max_y)
+            if (ai->current_action.coords.fields.y >= ai->map_max_y)
                 continue;
             for (ai->reflected_candidate_level = 0; ai->reflected_candidate_level < MAP_TERRAIN_LAYER_COUNT;
                 ai->reflected_candidate_level++) {
-                ai->current_action.coords.bytes.elevation = ai->reflected_candidate_level;
+                ai->current_action.coords.fields.elevation = ai->reflected_candidate_level;
                 if ((ai->reachable_tiles[ai->movement_scenario][ai->reflected_candidate_level]
-                                        [ai->current_action.coords.bytes.y]
-                        << ai->current_action.coords.bytes.x)
+                                        [ai->current_action.coords.fields.y]
+                        << ai->current_action.coords.fields.x)
                     & 0x8000) {
                     ai_update_tile_pickup();
                     ai->current_action.act_before_move = 1;

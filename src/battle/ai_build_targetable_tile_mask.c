@@ -18,14 +18,14 @@ void ai_build_targetable_tile_mask(ai_tile_mask_mode_e mode, s32 radius) {
     /* Preserve the target's signed mode dispatch. */
     switch ((s32)mode) {
     case AI_TILE_MASK_RANGE:
-        radius = g_ai_data_base.considered_ability.parameters.bytes.range;
+        radius = g_ai_data_base.considered_ability.parameters.fields.range;
         break;
     case AI_TILE_MASK_AOE:
-        radius = g_ai_data_base.considered_ability.parameters.bytes.aoe;
+        radius = g_ai_data_base.considered_ability.parameters.fields.aoe;
         break;
     case AI_TILE_MASK_RANGE_PLUS_AOE:
-        radius = g_ai_data_base.considered_ability.parameters.bytes.range
-            + g_ai_data_base.considered_ability.parameters.bytes.aoe;
+        radius = g_ai_data_base.considered_ability.parameters.fields.range
+            + g_ai_data_base.considered_ability.parameters.fields.aoe;
         break;
     }
     if (radius >= 16) {
@@ -37,8 +37,8 @@ void ai_build_targetable_tile_mask(ai_tile_mask_mode_e mode, s32 radius) {
     }
     for (i = AI_GRID_ROW_COUNT - 1; i >= 0; i--)
         ai->targetable_tiles[0][i] = 0;
-    y = ai->considered_unit_coords.bytes.y;
-    x = ai->considered_unit_coords.bytes.x;
+    y = ai->considered_unit_coords.fields.y;
+    x = ai->considered_unit_coords.fields.x;
     for (i = 0; i <= radius; i++) {
         if (y - i < 0)
             break;
@@ -61,7 +61,7 @@ void ai_build_targetable_tile_mask(ai_tile_mask_mode_e mode, s32 radius) {
             if (i != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((i << x) & 0x8000) {
-                        if (x != ai->considered_unit_coords.bytes.x && y != ai->considered_unit_coords.bytes.y)
+                        if (x != ai->considered_unit_coords.fields.x && y != ai->considered_unit_coords.fields.y)
                             ai->targetable_tiles[0][y] ^= 0x8000 >> x;
                     }
                 }

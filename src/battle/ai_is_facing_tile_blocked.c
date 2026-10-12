@@ -9,7 +9,7 @@
  * but descents are unrestricted. Slope and depth do not affect this test.
  */
 s32 ai_is_facing_tile_blocked(const ai_coords_t* source, const ai_coords_t* target) {
-    u8 x = target->bytes.x;
+    u8 x = target->fields.x;
     u8 width = g_ai_data_base.map_max_x;
     u8 y;
     map_tile_t* tile;
@@ -17,12 +17,13 @@ s32 ai_is_facing_tile_blocked(const ai_coords_t* source, const ai_coords_t* targ
     if (x >= width) {
         return 1;
     }
-    y = target->bytes.y;
+    y = target->fields.y;
     if (y >= g_ai_data_base.map_max_y || (tile = &g_map_tile_data[y * width + x])->flags.blocked) {
         return 1;
     }
     return tile->height
-        - g_map_tile_data[(source->bytes.elevation * MAP_TILES_PER_LAYER) + source->bytes.y * width + source->bytes.x]
+        - g_map_tile_data[(source->fields.elevation * MAP_TILES_PER_LAYER) + source->fields.y * width
+            + source->fields.x]
               .height
         >= 3;
 }

@@ -52,7 +52,7 @@ s32 ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
                 continue;
 
             status_byte = status_id / 8;
-            if (!(ai->considered_ability.parameters.bytes.status_infliction[status_byte] & (0x80 >> (status_id % 8))))
+            if (!(ai->considered_ability.parameters.fields.status_infliction[status_byte] & (0x80 >> (status_id % 8))))
                 continue;
             if ((flags & AI_ABILITY_AFFECTED_BY_FAITH)
                 && (unit->status_sets.innate[STATUS_BYTE_INDEX(STATUS_ID_INNOCENT)]

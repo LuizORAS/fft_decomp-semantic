@@ -21,7 +21,7 @@ s32 ai_calculate_ability_range(void) {
 
     ai_move_temp_unit_to_coords(&ai->current_action.coords);
     count = 0;
-    if (ai->considered_ability.parameters.bytes.range != 0) {
+    if (ai->considered_ability.parameters.fields.range != 0) {
         if (target_set_panels_for_action(&ai->current_action.command) == TARGET_PANELS_NONE) {
             ai_move_temp_unit_to_coords(&ai->acting_unit_coords);
             return 0;
@@ -34,8 +34,8 @@ s32 ai_calculate_ability_range(void) {
             tile->ceiling_depth_and_marks.ability_range = 0;
             tile++;
         } while (x < MAP_TILE_COUNT);
-        g_map_tile_data[ai->current_action.coords.bytes.y * ai->map_max_x + ai->current_action.coords.bytes.x
-            + (ai->current_action.coords.bytes.elevation * MAP_TILES_PER_LAYER)]
+        g_map_tile_data[ai->current_action.coords.fields.y * ai->map_max_x + ai->current_action.coords.fields.x
+            + (ai->current_action.coords.fields.elevation * MAP_TILES_PER_LAYER)]
             .ceiling_depth_and_marks.ability_range = 1;
     }
 

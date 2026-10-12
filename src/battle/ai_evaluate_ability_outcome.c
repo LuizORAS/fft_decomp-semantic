@@ -50,7 +50,7 @@ s32 ai_evaluate_ability_outcome(void) {
     ai->current_action.command.skillset_id = ai->considered_ability.skillset;
     ai->current_action.command.ability_id = ai->considered_ability.ability_id;
     /* Item selection updates only the low byte of the 16-bit command field. */
-    *(u8*)&ai->current_action.command.item_or_equipment = ai->considered_ability.parameters.bytes.item_id;
+    *(u8*)&ai->current_action.command.item_or_equipment = ai->considered_ability.parameters.fields.item_id;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++)
         ai->targetability.live.unit_targetable[i] = ai->targetability.live.unit_active[i];
     if (ai->considered_ability.ai_flags.word & AI_ABILITY_TARGET_MAP_TILES) {
@@ -133,7 +133,7 @@ s32 ai_evaluate_ability_outcome(void) {
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++)
                 ai->targetability.live.unit_targetable[i] = ai->targetability.snapshot.unit_targetable_saved[i];
         }
-        if (!ai->considered_ability.parameters.bytes.aoe) {
+        if (!ai->considered_ability.parameters.fields.aoe) {
             ai_insert_ranked_action();
             return 0;
         }

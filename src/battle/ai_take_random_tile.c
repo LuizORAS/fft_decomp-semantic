@@ -23,10 +23,10 @@ s32 ai_take_random_tile(u16 tiles[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT], a
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
                         if (selected == 0) {
-                            coordinates->bytes.x = x;
-                            coordinates->bytes.y = y;
-                            coordinates->bytes.elevation = level;
-                            coordinates->bytes.zero = 0;
+                            coordinates->fields.x = x;
+                            coordinates->fields.y = y;
+                            coordinates->fields.elevation = level;
+                            coordinates->fields.zero = 0;
                             tiles[level][y] ^= 0x8000 >> x;
                             return 1;
                         }

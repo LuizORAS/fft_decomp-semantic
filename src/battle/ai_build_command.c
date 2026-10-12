@@ -83,12 +83,12 @@ s32 ai_build_command(s32 unit_id, ai_command_t* command) {
         ai_end_action_simulation();
     }
     if (!ai->acting_unit->movement_taken && (ai->acting_unit->action_taken || !ai->selected_action.act_before_move)) {
-        ai->selected_action.coords.bytes.zero = 0;
+        ai->selected_action.coords.fields.zero = 0;
         if (ai->selected_action.coords.word != ai->acting_unit_coords.word) {
             command->kind = AI_COMMAND_MOVE;
-            command->data.move.x = ai->selected_action.coords.bytes.x;
-            command->data.move.y = ai->selected_action.coords.bytes.y;
-            command->data.move.layer = ai->selected_action.coords.bytes.elevation;
+            command->data.move.x = ai->selected_action.coords.fields.x;
+            command->data.move.y = ai->selected_action.coords.fields.y;
+            command->data.move.layer = ai->selected_action.coords.fields.elevation;
             goto preserve;
         }
     }

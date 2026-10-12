@@ -39,11 +39,11 @@ s32 ai_choose_wait_facing(void) {
 
     ai_transfer_unit_coordinates(ai->acting_unit_id, &ai->acting_unit_coords);
     for (direction = 0; direction < AI_CARDINAL_DIRECTION_COUNT; direction++) {
-        work.target_coords.bytes.x
-            = ai->acting_unit_coords.bytes.x + g_ai_facing_tile_offsets.by_direction[direction][0];
-        work.target_coords.bytes.y
-            = ai->acting_unit_coords.bytes.y + g_ai_facing_tile_offsets.by_direction[direction][1];
-        work.target_coords.bytes.elevation = 0;
+        work.target_coords.fields.x
+            = ai->acting_unit_coords.fields.x + g_ai_facing_tile_offsets.by_direction[direction][0];
+        work.target_coords.fields.y
+            = ai->acting_unit_coords.fields.y + g_ai_facing_tile_offsets.by_direction[direction][1];
+        work.target_coords.fields.elevation = 0;
         if (ai_is_facing_tile_blocked(&ai->acting_unit_coords, &work.target_coords) != 0) {
             work.viability.by_direction[direction] = 0;
         } else {

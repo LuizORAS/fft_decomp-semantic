@@ -56,9 +56,9 @@ void ai_build_attack_origin_masks(void) {
                             ai->movable_tiles[i][j] ^= 0x8000 >> x;
                         } else if (g_main_action_menu_types_by_skillset[ai->considered_ability.skillset]
                             == ACTION_MENU_TYPE_ELEMENTS) {
-                            ai->considered_unit_coords.bytes.x = x;
-                            ai->considered_unit_coords.bytes.y = j;
-                            ai->considered_unit_coords.bytes.elevation = i;
+                            ai->considered_unit_coords.fields.x = x;
+                            ai->considered_unit_coords.fields.y = j;
+                            ai->considered_unit_coords.fields.elevation = i;
                             if (!ai_can_use_geomancy(&ai->considered_unit_coords))
                                 ai->movable_tiles[i][j] ^= 0x8000 >> x;
                         }

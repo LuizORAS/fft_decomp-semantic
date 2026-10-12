@@ -55,8 +55,8 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
         if (movement_taken != 0
             || (ai->acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_MOVE)]
                 & STATUS_BYTE_MASK(STATUS_ID_DONT_MOVE))) {
-            ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
-                = 0x8000 >> ai->acting_unit_coords.bytes.x;
+            ai->reachable_tiles[0][ai->acting_unit_coords.fields.elevation][ai->acting_unit_coords.fields.y]
+                = 0x8000 >> ai->acting_unit_coords.fields.x;
             return 0;
         }
         mount_info = ai->acting_unit->mount_info;
@@ -65,8 +65,8 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
         } else {
             i = ai->acting_unit_id;
         }
-        move_set_reachable_tiles(
-            i, ai->acting_unit_coords.bytes.x, ai->acting_unit_coords.bytes.y, ai->acting_unit_coords.bytes.elevation);
+        move_set_reachable_tiles(i, ai->acting_unit_coords.fields.x, ai->acting_unit_coords.fields.y,
+            ai->acting_unit_coords.fields.elevation);
     }
     if (VSync(1) >= AI_DECISION_SCANLINE_LIMIT) {
         return -1;
@@ -78,11 +78,11 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
                 tile = &g_map_tile_data[level * MAP_TILES_PER_LAYER + y * ai->map_max_x + x];
                 if (ai->acting_unit->ability_flags.movement[1] & BATTLE_MOVEMENT_SET_2_TELEPORT) {
                     if (!(ai->acting_unit->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER)) {
-                        i = ai->acting_unit_coords.bytes.x - x;
+                        i = ai->acting_unit_coords.fields.x - x;
                         if (i < 0) {
                             i = -i;
                         }
-                        j = ai->acting_unit_coords.bytes.y - y;
+                        j = ai->acting_unit_coords.fields.y - y;
                         if (j < 0) {
                             j = -j;
                         }
@@ -106,20 +106,20 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
             ai->reachable_tiles[0][unit->position.higher_elevation][unit->position.y] &= ~(0x8000 >> unit->x);
         }
     }
-    ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
-        |= 0x8000 >> ai->acting_unit_coords.bytes.x;
+    ai->reachable_tiles[0][ai->acting_unit_coords.fields.elevation][ai->acting_unit_coords.fields.y]
+        |= 0x8000 >> ai->acting_unit_coords.fields.x;
     if (*(u32*)&ai->acting_unit->status_sets.current[0]
         & (STATUS_PACKED_MASK(STATUS_ID_CONFUSION) | STATUS_PACKED_MASK(STATUS_ID_BERSERK))) {
         return 0;
     }
     for (i = 0; i < AI_KNOWN_TRAP_COUNT; i++) {
         coords = &ai->known_trap_coords[i];
-        if (coords->bytes.x == 0xff) {
+        if (coords->fields.x == 0xff) {
             break;
         }
-        ai->reachable_tiles[0][coords->bytes.elevation][coords->bytes.y] &= ~(0x8000 >> coords->bytes.x);
+        ai->reachable_tiles[0][coords->fields.elevation][coords->fields.y] &= ~(0x8000 >> coords->fields.x);
     }
-    ai->reachable_tiles[0][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
-        |= 0x8000 >> ai->acting_unit_coords.bytes.x;
+    ai->reachable_tiles[0][ai->acting_unit_coords.fields.elevation][ai->acting_unit_coords.fields.y]
+        |= 0x8000 >> ai->acting_unit_coords.fields.x;
     return 0;
 }

@@ -10,13 +10,13 @@ void ai_record_triggered_trap_coords(s32 x, s32 y, s32 level) {
     ai_data_t* ai = &g_ai_data_base;
     s32 i;
 
-    g_ai_data_base.considered_unit_coords.bytes.x = x;
-    g_ai_data_base.considered_unit_coords.bytes.y = y;
-    g_ai_data_base.considered_unit_coords.bytes.elevation = level;
-    g_ai_data_base.considered_unit_coords.bytes.zero = 0;
+    g_ai_data_base.considered_unit_coords.fields.x = x;
+    g_ai_data_base.considered_unit_coords.fields.y = y;
+    g_ai_data_base.considered_unit_coords.fields.elevation = level;
+    g_ai_data_base.considered_unit_coords.fields.zero = 0;
     ai_init_selected_action();
     for (i = 0; i < AI_KNOWN_TRAP_COUNT; i++) {
-        if (ai->known_trap_coords[i].bytes.x == 0xff) {
+        if (ai->known_trap_coords[i].fields.x == 0xff) {
             ai->known_trap_coords[i] = ai->considered_unit_coords;
             break;
         }

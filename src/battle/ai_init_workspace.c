@@ -17,7 +17,7 @@ void ai_init_workspace(void) {
     g_ai_unit_snapshots = g_ai_unit_snapshot_storage;
     ai->resume_pending = 0;
     ai->selected_action.rank.decided = 0;
-    ai->selected_action.coords.bytes.zero = 0;
+    ai->selected_action.coords.fields.zero = 0;
     ai->hardcoded_status_abilities[0].skillset = SKILLSET_ID_BLOOD_SUCK_STATUS;
     ai->hardcoded_status_abilities[0].packed_id = ABILITY_ID_BLOOD_SUCK;
     ai->hardcoded_status_abilities[0].usage.flags = AI_ABILITY_ENTRY_USABLE | AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
@@ -47,7 +47,7 @@ void ai_init_workspace(void) {
     {
         s32 empty = 0xff;
         for (i = AI_KNOWN_TRAP_COUNT - 1; i >= 0; i--) {
-            ai->known_trap_coords[i].bytes.x = empty;
+            ai->known_trap_coords[i].fields.x = empty;
         }
     }
     ai->throw_ability_id = ABILITY_ID_THROW_KNIFE;

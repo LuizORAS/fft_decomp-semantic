@@ -29,7 +29,7 @@ void ai_invert_target_priority(void) {
     g_ai_data_base.inverted_priority_action.rank.decided = 0;
     g_ai_data_base.inverted_priority_action.rank.base_hit_percent = AI_BASE_HIT_PERCENT;
     coords = &ai->candidate_coords[scenario];
-    level_row = (u8*)ai + coords->bytes.elevation * AI_TILE_LEVEL_BYTE_STRIDE + AI_TILE_PRIORITY_OFFSET;
-    row = coords->bytes.y * AI_TILE_ROW_BYTE_STRIDE + (u32)level_row;
-    g_ai_data_base.inverted_priority_action.rank.priority = -*(u16*)(coords->bytes.x * 2 + row);
+    level_row = (u8*)ai + coords->fields.elevation * AI_TILE_LEVEL_BYTE_STRIDE + AI_TILE_PRIORITY_OFFSET;
+    row = coords->fields.y * AI_TILE_ROW_BYTE_STRIDE + (u32)level_row;
+    g_ai_data_base.inverted_priority_action.rank.priority = -*(u16*)(coords->fields.x * 2 + row);
 }

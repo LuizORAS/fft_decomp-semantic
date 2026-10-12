@@ -5,10 +5,10 @@
  * south-west), west (north-west), north (north-east) or east (south-east).
  * OVERLAP for the same tile. */
 ai_direction_e ai_find_direction_of_target(const ai_coords_t* target, const ai_coords_t* origin) {
-    s8 target_y = target->bytes.y;
-    s8 target_x = target->bytes.x;
-    s8 origin_x = origin->bytes.x;
-    s8 origin_y = origin->bytes.y;
+    s8 target_y = target->fields.y;
+    s8 target_x = target->fields.x;
+    s8 origin_x = origin->fields.x;
+    s8 origin_y = origin->fields.y;
     s32 diagonal_y_minus_x = ((target_y - target_x) + origin_x) - origin_y;
     s32 diagonal_y_plus_x = ((target_y + target_x) - origin_x) - origin_y;
 

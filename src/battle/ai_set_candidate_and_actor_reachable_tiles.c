@@ -26,21 +26,21 @@ void ai_set_candidate_and_actor_reachable_tiles(void) {
         u32 level_address;
         u32 row_address;
         scenario_address += (u32)&ai->reachable_tiles - (u32)ai;
-        level_address = *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].bytes.elevation - (u32)ai))
+        level_address = *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].fields.elevation - (u32)ai))
                 * sizeof(ai->reachable_tiles[0][0])
             + scenario_address;
-        row_address = *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].bytes.y - (u32)ai))
+        row_address = *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].fields.y - (u32)ai))
                 * sizeof(ai->reachable_tiles[0][0][0])
             + level_address;
-        *(u16*)row_address = 0x8000 >> *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].bytes.x - (u32)ai));
+        *(u16*)row_address = 0x8000 >> *(u8*)(coords_address + ((u32)&ai->candidate_coords[0].fields.x - (u32)ai));
     }
     {
         u32 scenario_address = ai->movement_scenario * sizeof(ai->reachable_tiles[0]) + (u32)ai;
         u32 level_address;
         u32 row_address;
         scenario_address += (u32)&ai->reachable_tiles - (u32)ai;
-        level_address = ai->acting_unit_coords.bytes.elevation * sizeof(ai->reachable_tiles[0][0]) + scenario_address;
-        row_address = ai->acting_unit_coords.bytes.y * sizeof(ai->reachable_tiles[0][0][0]) + level_address;
-        *(u16*)row_address |= 0x8000 >> ai->acting_unit_coords.bytes.x;
+        level_address = ai->acting_unit_coords.fields.elevation * sizeof(ai->reachable_tiles[0][0]) + scenario_address;
+        row_address = ai->acting_unit_coords.fields.y * sizeof(ai->reachable_tiles[0][0][0]) + level_address;
+        *(u16*)row_address |= 0x8000 >> ai->acting_unit_coords.fields.x;
     }
 }
