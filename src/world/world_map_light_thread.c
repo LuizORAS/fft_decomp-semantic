@@ -32,12 +32,12 @@ void world_map_light_thread(void) {
     }
     /* The six-target scan leaves the cursor at duration_le. */
     frames = world_script_load_halfword(params);
-    start.vectors.rotation[0] = g_world_map_light_rotation[0];
-    start.vectors.rotation[1] = g_world_map_light_rotation[1];
-    start.vectors.rotation[2] = g_world_map_light_rotation[2];
-    start.vectors.scale[0] = g_world_map_light_scale[0];
-    start.vectors.scale[1] = g_world_map_light_scale[1];
-    start.vectors.scale[2] = g_world_map_light_scale[2];
+    start.vectors.rotation[0] = g_world_map_light_rotation.vx;
+    start.vectors.rotation[1] = g_world_map_light_rotation.vy;
+    start.vectors.rotation[2] = g_world_map_light_rotation.vz;
+    start.vectors.scale[0] = g_world_map_light_scale.vx;
+    start.vectors.scale[1] = g_world_map_light_scale.vy;
+    start.vectors.scale[2] = g_world_map_light_scale.vz;
     for (i = 0; i <= frames; i++) {
         rotation.vx = (target.vectors.rotation[0] - start.vectors.rotation[0]) * i / frames + start.vectors.rotation[0];
         rotation.vy = (target.vectors.rotation[1] - start.vectors.rotation[1]) * i / frames + start.vectors.rotation[1];
@@ -52,7 +52,7 @@ void world_map_light_thread(void) {
         battle_map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
         world_thread_wait_frames(1);
     }
-    world_script_copy_bytes(g_world_map_light_rotation, &rotation, 8);
-    world_script_copy_bytes(g_world_map_light_scale, &scale, 16);
+    world_script_copy_bytes(&g_world_map_light_rotation, &rotation, 8);
+    world_script_copy_bytes(&g_world_map_light_scale, &scale, 16);
     world_thread_exit_current();
 }

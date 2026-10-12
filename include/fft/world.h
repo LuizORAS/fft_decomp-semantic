@@ -88,9 +88,9 @@ typedef enum world_screen_request_state {
     WORLD_SCREEN_REQUEST_WAIT_FADE_IN = 9,
 } world_screen_request_state_e;
 extern s16 g_world_map_root_request_state; /* world_screen_request_state_e */
-extern s32 g_world_map_light_scale[4];     /* current light scale (VECTOR) */
+extern VECTOR g_world_map_light_scale;     /* current light scale */
 extern MATRIX g_world_map_light_base_matrix;
-extern s16 g_world_map_light_rotation[4]; /* current light rotation (SVECTOR) */
+extern SVECTOR g_world_map_light_rotation; /* current light rotation */
 extern MATRIX g_world_map_light_color_matrix;
 void world_map_data_load_complete_thread(void);
 void world_menu_selected_tile_info_display_thread(void);
