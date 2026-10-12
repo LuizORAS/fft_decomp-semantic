@@ -19,7 +19,8 @@ void battle_move_get_current_and_destination_tiles(
     x = unit->map_x;
     y = unit->map_y;
     layer = unit->map_z;
-    movement = unit->current_path_step.value;
+    /* The scalar snapshot preserves the direction switch and layer extraction registers. */
+    movement = *(u8*)&unit->current_path_step;
     *out_current = battle_map_get_tile_data_pointer(x, y, layer);
     flags = movement;
     dir = flags >> 6;

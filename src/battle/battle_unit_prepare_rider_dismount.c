@@ -19,12 +19,12 @@ s32 battle_unit_prepare_rider_dismount(u32 misc_id, s32 direction, s32 jump_leng
         unit->path.height_offsets.bits.source_present = 0;
         unit->path.height_offsets.bits.destination_height_offset = 0;
         unit->path.height_offsets.bits.destination_present = 0;
-        unit->path.data.steps[0].bits.length = jump_length;
-        unit->path.data.steps[0].bits.slow = 0;
-        unit->path.data.steps[0].bits.climb = 0;
-        unit->path.data.steps[0].bits.mount = 0;
-        unit->path.data.steps[0].bits.higher = unit->map_z;
-        unit->path.data.steps[0].bits.direction = direction;
+        unit->path.data.steps[0].length = jump_length;
+        unit->path.data.steps[0].slow = 0;
+        unit->path.data.steps[0].climb = 0;
+        unit->path.data.steps[0].mount = 0;
+        unit->path.data.steps[0].higher = unit->map_z;
+        unit->path.data.steps[0].direction = direction;
         unit->path.flags = 0;
         battle_unit_dismount_rider_and_update_display(unit);
     } else {

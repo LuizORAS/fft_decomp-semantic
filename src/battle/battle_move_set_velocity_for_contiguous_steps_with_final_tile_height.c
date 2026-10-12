@@ -44,10 +44,10 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
 
     while (index < path->count) {
         current = &path->data.steps[index];
-        if ((current->value & 0xc0) != (step->value & 0xc0)) {
+        if (current->direction != step->direction) {
             break;
         }
-        code = current->value;
+        code = *(u8*)current;
         switch (code >> 6) {
         case BATTLE_MOVE_STEP_DIRECTION_EAST:
             x += (code & 3) + 1;
@@ -70,7 +70,7 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
             end_y = (y * MAP_TILE_SIZE) + MAP_TILE_SIZE;
             break;
         }
-        layer = current->bits.higher;
+        layer = current->higher;
         if (unit->movement_path_offset == path->count) {
             tile = battle_map_get_tile_data_pointer(x, y, layer);
             depth = tile->depth_half_height;

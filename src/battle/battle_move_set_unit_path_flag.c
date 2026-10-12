@@ -6,5 +6,5 @@ void battle_move_set_unit_path_flag(battle_unit_misc_data_t* unit) {
     if (unit->path.pending_mount == 0) {
         return;
     }
-    unit->path.data.steps[unit->movement_path_offset].bits.mount = 1;
+    unit->path.data.steps[unit->movement_path_offset].mount = 1;
 }

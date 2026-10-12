@@ -12,7 +12,7 @@ void battle_move_set_float_step_delta_center_to_edge(
     VECTOR direction;
 
     direction.vy = -((edge_height - 1) * tile->depth_half_height.half_height * BATTLE_MOVE_STEP_HEIGHT_SCALE);
-    switch (step->bits.direction) {
+    switch (step->direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         direction.vx = MAP_TILE_SIZE;
         direction.vz = 0;

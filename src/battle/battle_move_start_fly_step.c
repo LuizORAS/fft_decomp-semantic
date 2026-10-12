@@ -21,30 +21,30 @@ void battle_move_start_fly_step(
     step = &unit->current_path_step;
     /* The byte copy prevents a wider direction load. */
     current_step = unit->current_path_step;
-    switch (current_step.bits.direction) {
+    switch (current_step.direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         facing = BATTLE_FACING_EAST;
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_EAST;
         next = unit->map_x + 1;
-        unit->movement.destination_x = next + unit->current_path_step.bits.length;
+        unit->movement.destination_x = next + unit->current_path_step.length;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         facing = BATTLE_FACING_WEST;
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_WEST;
         next = unit->map_x - 1;
-        unit->movement.destination_x = next - unit->current_path_step.bits.length;
+        unit->movement.destination_x = next - unit->current_path_step.length;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         facing = BATTLE_FACING_SOUTH;
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_SOUTH;
         next = unit->map_y - 1;
-        unit->movement.destination_y = next - unit->current_path_step.bits.length;
+        unit->movement.destination_y = next - unit->current_path_step.length;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         facing = BATTLE_FACING_NORTH;
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH;
         next = unit->map_y + 1;
-        unit->movement.destination_y = next + unit->current_path_step.bits.length;
+        unit->movement.destination_y = next + unit->current_path_step.length;
         break;
     }
 
@@ -57,5 +57,5 @@ void battle_move_start_fly_step(
     }
     battle_move_set_velocity_for_contiguous_clamped_steps(unit, &unit->path, step);
     battle_move_interpolate_partial(unit, unit->walk_speed);
-    unit->movement.destination_z = step->bits.higher;
+    unit->movement.destination_z = step->higher;
 }

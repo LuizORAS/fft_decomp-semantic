@@ -23,15 +23,15 @@ void battle_move_start_unit_jump_step(
     /* Copy the byte to retain narrow loads of the packed step fields. */
     current_step = unit->current_path_step;
     unit->velocity.vy = -g_battle_move_jump_gravity
-        * (((current_step.bits.length * (MAP_TILE_SIZE * ONE)) + (MAP_TILE_SIZE * ONE / 2)) / (6 * ONE));
+        * (((current_step.length * (MAP_TILE_SIZE * ONE)) + (MAP_TILE_SIZE * ONE / 2)) / (6 * ONE));
     step = &unit->current_path_step;
     current_step = unit->current_path_step;
-    if (current_step.bits.length >= 2) {
-        unit->step_phase = jump_phases[current_step.bits.direction];
+    if (current_step.length >= 2) {
+        unit->step_phase = jump_phases[current_step.direction];
         current_step = unit->current_path_step;
-        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, facings[current_step.bits.direction], unit);
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, facings[current_step.direction], unit);
     } else {
-        unit->step_phase = hop_phases[current_step.bits.direction];
+        unit->step_phase = hop_phases[current_step.direction];
         battle_unit_dismount_rider(unit);
         animation = BATTLE_UNIT_ANIMATION_HOP;
         if (unit->movement.alternate_short_hop) {
@@ -40,31 +40,31 @@ void battle_move_start_unit_jump_step(
         battle_unit_store_animation_facing(animation, unit->facing, unit);
         unit->movement.alternate_short_hop ^= 1;
     }
-    switch (step->bits.direction) {
+    switch (step->direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         next = unit->map_x + 1;
-        unit->movement.destination_x = next + step->bits.length;
+        unit->movement.destination_x = next + step->length;
         unit->velocity.vx = 3 * ONE;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_WEST:
         next = unit->map_x - 1;
-        unit->movement.destination_x = next - step->bits.length;
+        unit->movement.destination_x = next - step->length;
         unit->velocity.vx = -3 * ONE;
         unit->velocity.vz = 0;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         next = unit->map_y - 1;
-        unit->movement.destination_y = next - step->bits.length;
+        unit->movement.destination_y = next - step->length;
         unit->velocity.vx = 0;
         unit->velocity.vz = -3 * ONE;
         break;
     case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         next = unit->map_y + 1;
-        unit->movement.destination_y = next + step->bits.length;
+        unit->movement.destination_y = next + step->length;
         unit->velocity.vx = 0;
         unit->velocity.vz = 3 * ONE;
         break;
     }
-    unit->movement.destination_z = step->bits.higher;
+    unit->movement.destination_z = step->higher;
 }

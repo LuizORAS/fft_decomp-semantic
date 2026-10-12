@@ -26,7 +26,7 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     if (unit->movement_path_offset == 0) {
         return;
     }
-    if (unit->path.data.steps[unit->movement_path_offset - 1].bits.mount) {
+    if (unit->path.data.steps[unit->movement_path_offset - 1].mount) {
         return;
     }
     if (other == 0) {
@@ -57,7 +57,7 @@ void battle_move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit
     }
     dist -= 7;
     dist = -dist * 3 / 2;
-    switch ((unit->movement_path_offset + unit->path.data.steps)->value >> 6) {
+    switch ((unit->movement_path_offset + unit->path.data.steps)->direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         next = BATTLE_MOVE_DIRECTION_EAST;
         break;

@@ -518,17 +518,15 @@ typedef char
 
 /* One movement step: a path element, the unit's current step and the step
  * the movement code is working on. */
-typedef union battle_move_step {
-    u8 value;
-    struct {
-        u8 length : 2;    /* extra tiles covered: the jump length */
-        u8 slow : 1;      /* start the step at climb speed (battle_move_update_path_step) */
-        u8 climb : 1;     /* continue with a climb-speed step */
-        u8 mount : 1;     /* 0x10: the step ends on another unit */
-        u8 higher : 1;    /* 0x20: destination on the higher elevation */
-        u8 direction : 2; /* battle_move_step_direction_e */
-    } bits;
+typedef struct battle_move_step {
+    u8 length : 2;    /* extra tiles covered: the jump length */
+    u8 slow : 1;      /* start the step at climb speed (battle_move_update_path_step) */
+    u8 climb : 1;     /* continue with a climb-speed step */
+    u8 mount : 1;     /* the step ends on another unit */
+    u8 higher : 1;    /* destination on the higher elevation */
+    u8 direction : 2; /* battle_move_step_direction_e */
 } battle_move_step_t;
+typedef char battle_move_step_size_must_be_1[sizeof(battle_move_step_t) == 1 ? 1 : -1];
 
 /* Packed half-height offsets at 0x8018f86e. A missing presence flag preserves
  * that side's previous value when applying a saved candidate at 0x80177b64. */
@@ -584,7 +582,7 @@ typedef enum battle_move_direction {
     BATTLE_MOVE_DIRECTION_WEST = 3,  /* -x */
 } battle_move_direction_e;
 
-/* battle_move_step_t.bits.direction (value >> 6). */
+/* battle_move_step_t.direction. */
 typedef enum battle_move_step_direction {
     BATTLE_MOVE_STEP_DIRECTION_EAST = 0,  /* +x */
     BATTLE_MOVE_STEP_DIRECTION_WEST = 1,  /* -x */

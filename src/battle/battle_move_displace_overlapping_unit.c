@@ -18,7 +18,7 @@ void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 di
     if (unit->movement_path_offset < 2) {
         return;
     }
-    if (unit->path.data.steps[unit->movement_path_offset - 2].bits.mount) {
+    if (unit->path.data.steps[unit->movement_path_offset - 2].mount) {
         return;
     }
     if (other == 0) {

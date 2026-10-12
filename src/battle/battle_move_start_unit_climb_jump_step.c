@@ -31,17 +31,17 @@ void battle_move_start_unit_climb_jump_step(
     }
     /* Grouping each constant with the gravity term keeps the target's order
      * (scale, then multiply by gravity); the flat spelling scales gravity first. */
-    speed = SquareRoot12(
-        (height - -unit->screen.vy / 6 + (step->bits.length + 1) * 2) * (6 * g_battle_move_jump_gravity) * 2);
+    speed
+        = SquareRoot12((height - -unit->screen.vy / 6 + (step->length + 1) * 2) * (6 * g_battle_move_jump_gravity) * 2);
     time = speed / g_battle_move_jump_gravity;
     unit->velocity.vy = -speed;
-    time += SquareRoot12((step->bits.length + 1) * (12 * g_battle_move_jump_gravity) * 2) / g_battle_move_jump_gravity;
-    switch (step->bits.direction) {
+    time += SquareRoot12((step->length + 1) * (12 * g_battle_move_jump_gravity) * 2) / g_battle_move_jump_gravity;
+    switch (step->direction) {
     case BATTLE_MOVE_STEP_DIRECTION_EAST:
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_EAST, unit);
         next = unit->map_x + 1;
-        unit->movement.destination_x = next + step->bits.length;
+        unit->movement.destination_x = next + step->length;
         unit->velocity.vx = (MAP_TILE_SIZE * ONE / 2) / time;
         unit->velocity.vz = 0;
         break;
@@ -49,7 +49,7 @@ void battle_move_start_unit_climb_jump_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_WEST, unit);
         next = unit->map_x - 1;
-        unit->movement.destination_x = next - step->bits.length;
+        unit->movement.destination_x = next - step->length;
         unit->velocity.vx = -(MAP_TILE_SIZE * ONE / 2) / time;
         unit->velocity.vz = 0;
         break;
@@ -57,7 +57,7 @@ void battle_move_start_unit_climb_jump_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_SOUTH, unit);
         next = unit->map_y - 1;
-        unit->movement.destination_y = next - step->bits.length;
+        unit->movement.destination_y = next - step->length;
         unit->velocity.vz = -(MAP_TILE_SIZE * ONE / 2) / time;
         unit->velocity.vx = 0;
         break;
@@ -65,10 +65,10 @@ void battle_move_start_unit_climb_jump_step(
         unit->step_phase = BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH;
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_JUMP, BATTLE_FACING_NORTH, unit);
         next = unit->map_y + 1;
-        unit->movement.destination_y = next + step->bits.length;
+        unit->movement.destination_y = next + step->length;
         unit->velocity.vz = (MAP_TILE_SIZE * ONE / 2) / time;
         unit->velocity.vx = 0;
         break;
     }
-    unit->movement.destination_z = step->bits.higher;
+    unit->movement.destination_z = step->higher;
 }

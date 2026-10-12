@@ -44,10 +44,10 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
 
     while (index < path->count) {
         current = &path->data.steps[index];
-        if ((current->value & 0xc0) != (step->value & 0xc0)) {
+        if (current->direction != step->direction) {
             break;
         }
-        code = current->value;
+        code = *(u8*)current;
         switch (code >> 6) {
         case BATTLE_MOVE_STEP_DIRECTION_EAST:
             x += (code & 3) + 1;
@@ -70,7 +70,7 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
             end_y = (y * MAP_TILE_SIZE) + BATTLE_MOVE_STEP_NEAR_EDGE;
             break;
         }
-        end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, current->bits.higher);
+        end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, current->higher);
         if (end_z != start_z) {
             break;
         }

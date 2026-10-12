@@ -33,7 +33,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     if (((unit->animation.sequence_id >> 1) - BATTLE_UNIT_ANIMATION_HOP) < 2U) {
         if (unit->velocity.vy < 0x6000) {
             unit->velocity.vy = 0;
-            switch (g_battle_move_step_value.bits.climb) {
+            switch (g_battle_move_step_value.climb) {
             case 0:
                 battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
                 unit->step_phase = g_battle_move_walk_to_centre_phases[direction];
@@ -62,7 +62,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
         }
-        if (g_battle_move_step_value.bits.mount) {
+        if (g_battle_move_step_value.mount) {
             battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
             return;
         }
@@ -76,7 +76,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     if (g_battle_game_state != BATTLE_GAME_STATE_ACTION_EXECUTE) {
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LAND, unit->facing, unit);
     }
-    if (g_battle_move_step_value.bits.mount) {
+    if (g_battle_move_step_value.mount) {
         battle_sound_play_movement_sfx(unit, MAIN_SFX_LAND_SOFT);
         return;
     }

@@ -118,7 +118,8 @@ void battle_move_encode_path_steps(void) {
             }
             source_bit = state->source_climb << 2;
             destination_bit = state->destination_climb << 3;
-            g_battle_move_path.data.steps[step].value
+            /* Pack the complete path byte; individual field stores add truncation and change scheduling. */
+            *(u8*)&g_battle_move_path.data.steps[step]
                 = (state->step_distance - 1) | (source_bit | (destination_bit | (flag | (dir | level))));
             state->tile_x = state->work_x;
             state->tile_y = state->work_y;
