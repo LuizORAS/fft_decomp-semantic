@@ -67,7 +67,7 @@ void wldcore_proposition_handle_accept_confirm_input(wldcore_menu_choice_panel_l
         goto dismiss;
     }
     available = 0;
-    for (i = 0; i < PARTY_GUEST_SLOT_FIRST; i++) {
+    for (i = 0; i < PARTY_MEMBER_SLOT_COUNT; i++) {
         unit = wldcore_get_party_data_pointer(i);
         if (unit->proposition_status == 0 && unit->party_id != PARTY_ID_NONE
             && !(unit->gender_flags & UNIT_FLAG_MONSTER) && unit->sprite_set >= CHARACTER_IDENTITY_BOY) {

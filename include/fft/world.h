@@ -1359,7 +1359,7 @@ typedef char world_formation_abilities_size_must_be_10[(sizeof(world_formation_a
 /*
  * WORLD menu unit record, compacted after roster and menu-specific filtering.
  * Records at 0x801c8638 have stride 0x128; roster_slot preserves their roster
- * identity. The builder at 0x801210e8 and sorter at 0x80121c60 produce the
+ * identity. The builder and sorter produce the
  * ordered g_world_formation_unit_pointers list, not a roster-indexed array.
  * The byte fields from 0x70 on mirror the party_data_t layout above. Magical
  * shield/accessory evade are provisionally placed at 0x50/0x52, after the

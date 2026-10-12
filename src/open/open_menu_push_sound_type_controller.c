@@ -19,7 +19,7 @@ void open_menu_push_sound_type_controller(void) {
     point32_t* position;
     open_sound_menu_state_t* menu;
 
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < OPEN_SOUND_MENU_ENTRY_COUNT; i++) {
         record = open_gfx_append_animated_render_record(
             g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
         g_open_controller_records_next[g_open_current_controller_index].sound_menu.render_records[i] = record;

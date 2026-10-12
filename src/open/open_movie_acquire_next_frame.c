@@ -12,7 +12,7 @@ u32* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state) {
     s32 attempts;
 
     attempts = 0;
-    /* The SDK slot for a pointer to 32-bit data preserves native header reloads; a converted local folds them. */
+    /* Passing header through StGetNext's 32-bit data-pointer slot preserves native header reloads. */
     while (StGetNext(&frame_data, (u32**)&header) != 0) {
         VSync(0);
         if (attempts == OPEN_MOVIE_ACQUIRE_MAX_ATTEMPTS) {

@@ -11,10 +11,9 @@ void wldcore_window_draw_centered_text(s32 window_index, s32 text_id) {
     s32 i;
 
     world_text_measure_pixels(&text_width, &text_height, world_text_find_entry(text_id));
-    i = 0;
     point.x = (((g_wldcore_window_render_records[window_index].bounds.w - text_width) / 2) & 0xfffe) + 8;
     point.y = 10;
-    for (; i < g_wldcore_window_render_records[window_index].bounds.w
+    for (i = 0; i < g_wldcore_window_render_records[window_index].bounds.w
             * g_wldcore_window_render_records[window_index].bounds.h / 8;
         i++) {
         g_wldcore_window_image_buffer[i] = 0;

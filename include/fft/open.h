@@ -301,11 +301,15 @@ void open_menu_init_render_record_fields(
 
 /* sound */
 /* Sound-type menu controller state (handler 3). */
+enum { OPEN_SOUND_MENU_ENTRY_COUNT = 3 };
+
 typedef struct open_sound_menu_state {
-    /* 0x00 */ s32 render_records[7];
+    /* 0x00 */ s32 render_records[OPEN_SOUND_MENU_ENTRY_COUNT];
+    u8 _unused_0c[16];
     /* 0x1c */ s32 sound_mode_selection; /* Signed so decrement can wrap below Mono. */
     /* 0x20 */ s32 step;
 } open_sound_menu_state_t;
+typedef char open_sound_menu_state_size_must_be_36[sizeof(open_sound_menu_state_t) == 36 ? 1 : -1];
 
 /* Movie controller state (handlers 0 and 11): the stream the FFTST and title demo movies play. */
 typedef struct open_movie_stream_controller_state {
@@ -736,6 +740,8 @@ extern open_gfx_transition_entry_t** g_open_new_game_transition_entries;
 void open_restore_birthday_date_menu(open_birthday_date_state_t* menu);
 void open_gfx_transition_finished_stub(void);
 void open_system_init_runtime_state(void);
+s32 open_system_run_main_loop(s32 skip_movie);
+void open_system_run_ending_cutscene(void);
 
 /* other */
 extern s32 g_open_current_controller_index;

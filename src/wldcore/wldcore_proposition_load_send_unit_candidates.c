@@ -12,7 +12,7 @@ s32 wldcore_proposition_load_send_unit_candidates(wldcore_menu_send_unit_level_t
 
     i = 0;
     level->unit_count = 0;
-    for (; i < PARTY_GUEST_SLOT_FIRST; i++) {
+    for (; i < PARTY_MEMBER_SLOT_COUNT; i++) {
         unit = wldcore_get_party_data_pointer(i);
         if (unit->proposition_status != 0) {
             continue;

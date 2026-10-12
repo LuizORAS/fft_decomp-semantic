@@ -14,8 +14,8 @@ void open_menu_handle_sound_type_input(open_controller_record_t* record) {
     s32 render_record;
 
     if (menu->step == 2) {
-        g_open_gfx_next_render_record_36 -= 3;
-        g_open_gfx_render_record_pointer_count -= 3;
+        g_open_gfx_next_render_record_36 -= OPEN_SOUND_MENU_ENTRY_COUNT;
+        g_open_gfx_render_record_pointer_count -= OPEN_SOUND_MENU_ENTRY_COUNT;
         g_open_current_controller_index -= 1;
         open_gfx_show_four_render_records(&g_open_controller_records[g_open_current_controller_index].title);
         /* The title menu underneath, addressed from the pushed-record base. */

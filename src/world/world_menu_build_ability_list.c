@@ -10,7 +10,9 @@
  * separate local from the unit index, and its updates follow the loader
  * calls in each arm. The ff-terminated copy takes an ignored third argument
  * (0 or the row count), as the target's call sites load $a2. */
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
