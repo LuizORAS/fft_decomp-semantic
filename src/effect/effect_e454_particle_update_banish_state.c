@@ -46,8 +46,7 @@ s32 effect_e454_particle_update_banish_state(s32 record_index, s32 callback_slot
         break;
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
-        emitter_index = 0;
-        do {
+        for (emitter_index = 0; emitter_index < 16; emitter_index++) {
             emitter = &g_battle_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             group = emitter->vertex_group;
             if (group >= 1 && group <= 12) {
@@ -89,8 +88,7 @@ s32 effect_e454_particle_update_banish_state(s32 record_index, s32 callback_slot
                     }
                 }
             }
-            emitter_index++;
-        } while (emitter_index < 16);
+        }
         break;
     case EFFECT_PHASE_DESTROY:
         if (record->work_slots[callback_slot] != NULL) {

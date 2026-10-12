@@ -44,8 +44,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
         break;
     case EFFECT_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
-        emitter_index = 0;
-        do {
+        for (emitter_index = 0; emitter_index < 16; emitter_index++) {
             emitter = &g_battle_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             i = emitter->vertex_group - 1;
             if (i >= 0 && i < 12 && frame >= emitter->start_frame && frame < emitter->end_frame) {
@@ -58,8 +57,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
                 battle_effect_spawn_emitter_particles(
                     record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
             }
-            emitter_index++;
-        } while (emitter_index < 16);
+        }
         break;
     case EFFECT_PHASE_DESTROY:
         if (record->work_slots[callback_slot] != NULL) {
