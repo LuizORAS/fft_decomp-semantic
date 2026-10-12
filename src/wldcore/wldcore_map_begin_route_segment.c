@@ -20,13 +20,12 @@ typedef struct wldcore_route_point {
     s32 distance;                  /* 0x08 */
 } wldcore_route_point_t;
 
-/* Stages one world-map route segment in the location-entry state.
- *
- * The low byte of `route` is the route id; its bit 8 becomes flags bit 1 and
- * selects the direction, and `step` is the point to start from: the
- * descending arm counts back from the end of the record and takes the heading
- * (turned by 0x800) and distance from the preceding point; the ascending arm
- * takes them from the point itself. Returns the point count minus one.
+/* Stage one segment of a route leg in the travel state. The low byte of `route` is the route id and
+ * bit 8 (WLDCORE_ROUTE_TRAVEL_REVERSED) runs it end to start; `step` is the segment. Its start and end
+ * points, the marker's heading and its frame count (twice the point's distance) come from the
+ * route's points, counted back from the end, with the heading turned by 0x800, when reversed. Also
+ * sets the leg's start and end locations. Returns the route's point count minus one, its number of
+ * segments.
  *
  * The table pointer and the record share one variable: that is what makes the
  * target load the table first and keep both in $t0. The unused 32-byte local
@@ -36,7 +35,7 @@ typedef struct wldcore_route_point {
  * word through `word` keeps the target's whole-word lw (a direct narrowing
  * store is expanded as lhu), and the `flags` local gives its `or` operand
  * order. */
-s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, u32 route, s32 step) {
+s32 wldcore_map_begin_route_segment(wldcore_map_travel_t* state, u32 route, s32 step) {
     s32 unused[8];
     wldcore_route_record_t* record;
     s32 index;

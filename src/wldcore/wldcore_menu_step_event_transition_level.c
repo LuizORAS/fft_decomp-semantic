@@ -8,15 +8,13 @@
  * register. */
 extern CVECTOR g_wldcore_screen_fade_box_0_color;
 
-/* Per-frame step of the event-transition menu level (type 0x23) pushed by
- * wldcore_menu_push_event_transition_level.
- *
- * Mode 2 only toggles the display flag. Otherwise the indicator sprite spins
- * and scales in on phase 0 and back out on phase 1, one update every third
- * frame; anim_step is the animation step. The fade overlay at g_wldcore_screen_fade_box_0_color ramps
- * in 0x10 increments (phase 1) and 8 increments (phase 2), and once it
- * saturates the captured screen is moved back from (0x200,0x100) to
- * (0x100,0). */
+/* Step of the event transition level. The fade mode ends the visit (clears
+ * MAIN_SYSTEM_FLAG_RUNNING) once the fade is done. The spinning modes copy the screen into the
+ * sprite's texture on their second frame and hide the map windows; then every third frame the screen
+ * sprite shrinks, turns and darkens while it drifts a pixel a frame, with a sound at step 4. A random
+ * battle (WLDCORE_EVENT_TRANSITION_MODE_SPIN) then spins it back out and flashes; a story event whites
+ * out sooner. The white-out ramps the fill box to white, ends the visit and puts back the VRAM area
+ * the push saved. */
 void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_level_t* level) {
     RECT rect;
     s32 step;
@@ -73,40 +71,40 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
     switch (level->phase) {
     case WLDCORE_EVENT_TRANSITION_PHASE_SPIN_IN:
         if (level->drift_direction & WLDCORE_EVENT_TRANSITION_DRIFT_RIGHT) {
-            g_wldcore_menu_indicator_sprite.x = g_wldcore_menu_indicator_sprite.x + 1;
+            g_wldcore_transition_screen_sprite.x = g_wldcore_transition_screen_sprite.x + 1;
         } else {
-            g_wldcore_menu_indicator_sprite.x = g_wldcore_menu_indicator_sprite.x - 1;
+            g_wldcore_transition_screen_sprite.x = g_wldcore_transition_screen_sprite.x - 1;
         }
         if (level->drift_direction & WLDCORE_EVENT_TRANSITION_DRIFT_DOWN) {
-            g_wldcore_menu_indicator_sprite.y = g_wldcore_menu_indicator_sprite.y + 1;
+            g_wldcore_transition_screen_sprite.y = g_wldcore_transition_screen_sprite.y + 1;
         } else {
-            g_wldcore_menu_indicator_sprite.y = g_wldcore_menu_indicator_sprite.y - 1;
+            g_wldcore_transition_screen_sprite.y = g_wldcore_transition_screen_sprite.y - 1;
         }
         if (level->frame == ((level->frame / 3) * 3)) {
             step = level->anim_step + 2;
             level->anim_step = step;
-            g_wldcore_menu_indicator_sprite.scalex = 0x1100 - (step << 7);
-            g_wldcore_menu_indicator_sprite.scaley = 0x1100 - (level->anim_step << 7);
+            g_wldcore_transition_screen_sprite.scalex = 0x1100 - (step << 7);
+            g_wldcore_transition_screen_sprite.scaley = 0x1100 - (level->anim_step << 7);
             if (level->spin_direction != 0) {
-                angle = g_wldcore_menu_indicator_sprite.rotate + 0x2000;
+                angle = g_wldcore_transition_screen_sprite.rotate + 0x2000;
             } else {
-                angle = g_wldcore_menu_indicator_sprite.rotate - 0x2000;
+                angle = g_wldcore_transition_screen_sprite.rotate - 0x2000;
             }
-            g_wldcore_menu_indicator_sprite.rotate = angle;
+            g_wldcore_transition_screen_sprite.rotate = angle;
             shade = -0x80 - (level->anim_step * 4);
-            g_wldcore_menu_indicator_sprite.b = shade;
-            g_wldcore_menu_indicator_sprite.g = shade;
-            g_wldcore_menu_indicator_sprite.r = shade;
+            g_wldcore_transition_screen_sprite.b = shade;
+            g_wldcore_transition_screen_sprite.g = shade;
+            g_wldcore_transition_screen_sprite.r = shade;
             if (level->mode == WLDCORE_EVENT_TRANSITION_MODE_SPIN) {
                 if (level->anim_step == 4) {
                     wldcore_sound_play_effect(MAIN_SFX_EVENT_TRANSITION_MODE_0);
                 }
                 if (level->anim_step >= 0x20) {
                     level->phase = WLDCORE_EVENT_TRANSITION_PHASE_SPIN_OUT;
-                    g_wldcore_menu_indicator_sprite.attribute = 0x52000000;
-                    g_wldcore_menu_indicator_sprite.tpage = GetTPage(2, 1, 0x100, 0);
-                    g_wldcore_menu_indicator_sprite.scaley = ONE;
-                    g_wldcore_menu_indicator_sprite.scalex = ONE;
+                    g_wldcore_transition_screen_sprite.attribute = 0x52000000;
+                    g_wldcore_transition_screen_sprite.tpage = GetTPage(2, 1, 0x100, 0);
+                    g_wldcore_transition_screen_sprite.scaley = ONE;
+                    g_wldcore_transition_screen_sprite.scalex = ONE;
                 }
             } else {
                 if (level->anim_step == 4) {
@@ -127,27 +125,27 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
         break;
     case WLDCORE_EVENT_TRANSITION_PHASE_SPIN_OUT:
         if (level->drift_direction & WLDCORE_EVENT_TRANSITION_DRIFT_RIGHT) {
-            g_wldcore_menu_indicator_sprite.x = g_wldcore_menu_indicator_sprite.x - 1;
+            g_wldcore_transition_screen_sprite.x = g_wldcore_transition_screen_sprite.x - 1;
         } else {
-            g_wldcore_menu_indicator_sprite.x = g_wldcore_menu_indicator_sprite.x + 1;
+            g_wldcore_transition_screen_sprite.x = g_wldcore_transition_screen_sprite.x + 1;
         }
         if (level->drift_direction & WLDCORE_EVENT_TRANSITION_DRIFT_DOWN) {
-            g_wldcore_menu_indicator_sprite.y = g_wldcore_menu_indicator_sprite.y - 1;
+            g_wldcore_transition_screen_sprite.y = g_wldcore_transition_screen_sprite.y - 1;
         } else {
-            g_wldcore_menu_indicator_sprite.y = g_wldcore_menu_indicator_sprite.y + 1;
+            g_wldcore_transition_screen_sprite.y = g_wldcore_transition_screen_sprite.y + 1;
         }
         if (level->frame == ((level->frame / 3) * 3)) {
             step = level->anim_step + 4;
             level->anim_step = step;
-            g_wldcore_menu_indicator_sprite.scalex = 0x1100 - ((0x40 - step) << 7);
-            g_wldcore_menu_indicator_sprite.scaley = 0x1100 - ((0x40 - level->anim_step) << 7);
-            g_wldcore_menu_indicator_sprite.b = (level->anim_step - 0x20) * 4;
+            g_wldcore_transition_screen_sprite.scalex = 0x1100 - ((0x40 - step) << 7);
+            g_wldcore_transition_screen_sprite.scaley = 0x1100 - ((0x40 - level->anim_step) << 7);
+            g_wldcore_transition_screen_sprite.b = (level->anim_step - 0x20) * 4;
             if (level->spin_direction != 0) {
-                angle = g_wldcore_menu_indicator_sprite.rotate - 0x2000;
+                angle = g_wldcore_transition_screen_sprite.rotate - 0x2000;
             } else {
-                angle = g_wldcore_menu_indicator_sprite.rotate + 0x2000;
+                angle = g_wldcore_transition_screen_sprite.rotate + 0x2000;
             }
-            g_wldcore_menu_indicator_sprite.rotate = angle;
+            g_wldcore_transition_screen_sprite.rotate = angle;
             if (level->anim_step >= 0x38) {
                 g_wldcore_screen_fade_box_0_color.r = 0;
                 g_wldcore_screen_fade_box_0_color.g = 0;
@@ -156,9 +154,9 @@ void wldcore_menu_step_event_transition_level(wldcore_menu_event_transition_leve
                 level->fade_phase = WLDCORE_EVENT_TRANSITION_FADE_FLASH;
             }
             if (level->anim_step >= 0x50) {
-                g_wldcore_menu_indicator_sprite.r = 0;
-                g_wldcore_menu_indicator_sprite.g = 0;
-                g_wldcore_menu_indicator_sprite.b = 0;
+                g_wldcore_transition_screen_sprite.r = 0;
+                g_wldcore_transition_screen_sprite.g = 0;
+                g_wldcore_transition_screen_sprite.b = 0;
                 level->phase = WLDCORE_EVENT_TRANSITION_PHASE_DONE;
             }
         }

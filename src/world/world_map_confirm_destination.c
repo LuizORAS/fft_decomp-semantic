@@ -1,7 +1,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Slot 0 is stored through a plain pointer on purpose: `pending[0]` is a
+/* The location list's confirm callback: a location other than the current one (row colour 4) is
+ * stored in EVENT_SCRIPT_VAR_CURRENT_MAP and MAIN_SYSTEM_FLAG_REQUEST_DESTINATION raised, so the map
+ * travels there once WORLD's menu closes, and the list's two helper threads are told to stop; the
+ * current location only plays the invalid sound. Ends its own thread.
+ *
+ * Slot 0 is stored through a plain pointer on purpose: `pending[0]` is a
  * scalar reference there, so the scheduler may sink it below the text-id
  * load as in the target. Writing g_world_menu_pending_selection[0] marks the
  * store as an array element and keeps it above that load. */

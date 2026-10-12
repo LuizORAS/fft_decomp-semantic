@@ -18,7 +18,7 @@ void wldcore_init_subsystems(void) {
     wldcore_map_color_and_draw_dots();
     wldcore_init_stub();
     wldcore_map_init_location_marker_and_camera();
-    wldcore_menu_reset_window_list_and_store_origin();
+    wldcore_menu_reset_to_root_level();
     wldcore_init_screen();
     wldcore_menu_restore_level_on_world_entry();
 }

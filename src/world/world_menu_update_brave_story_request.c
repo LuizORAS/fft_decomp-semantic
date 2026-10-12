@@ -4,7 +4,7 @@
 
 /* Step the Brave Story request (g_world_brave_story_request_state): fade the world map out, then
  * reset the menu context and raise MAIN_SYSTEM_FLAG_REQUEST_BRAVE_STORY, which WLDCORE's return level
- * (wldcore_menu_step_return_level) turns into the Brave Story screen. */
+ * (wldcore_menu_step_world_menu_level) turns into the Brave Story screen. */
 void world_menu_update_brave_story_request(void) {
     s16 state = g_world_brave_story_request_state;
 

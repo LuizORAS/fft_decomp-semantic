@@ -6,13 +6,12 @@
  * its accumulated cost. */
 extern wldcore_route_path_t g_wldcore_route_search_path;
 
-/* Depth-first search for the cheapest route path between two locations.
- *
- * Tries every unlocked route (script variable 0x22c + route) not already on
- * the path; a route joining from and to completes the path, which is kept
- * when it is shorter, or as long but no more expensive, than the best one.
- * Other routes leaving from recurse from their far end. The frame is kept
- * responsive while searching: past 200 vsyncs the world frame is redrawn.
+/* Depth-first search for the best path between two locations over the visible routes
+ * (EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST + route), at most 16 legs and never one route twice: a route
+ * joining from and to completes a path, which is kept when it has fewer legs than the best so far, or
+ * as many and no higher total cost (the routes' cost bytes); other routes leaving `from` recurse
+ * from their far end. A long search keeps the world frame drawing: once more than 200 horizontal
+ * blanks have passed since the last VSync (VSync(1)), a frame is drawn.
  *
  * `unused` keeps 16 frame bytes the target reserves and never touches. */
 void wldcore_map_find_best_route_path(s32 from, s32 to) {
@@ -55,11 +54,11 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
             start = record->start_location;
             end = record->end_location;
             cost = record->cost;
-            if (g_wldcore_location_entry_state.best_length_bound < length) {
+            if (g_wldcore_map_travel.best_length_bound < length) {
                 continue;
             }
-            if (length == g_wldcore_location_entry_state.best_length_bound
-                && g_wldcore_location_entry_state.best_cost < cost + g_wldcore_route_search_cost) {
+            if (length == g_wldcore_map_travel.best_length_bound
+                && g_wldcore_map_travel.best_cost < cost + g_wldcore_route_search_cost) {
                 continue;
             }
             if (from == start && to == end) {
@@ -71,11 +70,11 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
             if (to == start && from == end) {
                 g_wldcore_route_search_path.routes[g_wldcore_route_search_depth] = route | 0x100;
             found:
-                g_wldcore_location_entry_state.route_path = g_wldcore_route_search_path;
-                g_wldcore_location_entry_state.best_cost = g_wldcore_route_search_cost + cost;
-                g_wldcore_location_entry_state.best_length_bound = g_wldcore_location_entry_state.best_path_length
+                g_wldcore_map_travel.route_path = g_wldcore_route_search_path;
+                g_wldcore_map_travel.best_cost = g_wldcore_route_search_cost + cost;
+                g_wldcore_map_travel.best_length_bound = g_wldcore_map_travel.best_path_length
                     = g_wldcore_route_search_depth + 1;
-                g_wldcore_location_entry_state.flags |= WLDCORE_ROUTE_TRAVEL_ACTIVE;
+                g_wldcore_map_travel.flags |= WLDCORE_ROUTE_TRAVEL_ACTIVE;
                 continue;
             }
             if (from == start) {

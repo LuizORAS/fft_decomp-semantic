@@ -97,7 +97,7 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_audio_queue.music.tracks[1] = 0;
     g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
     g_wldcore_sound_novel_countdown_frames = 0;
-    g_wldcore_location_entry_state.flags = 0;
+    g_wldcore_map_travel.flags = 0;
 
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNLOCK_ALL) {
         for (i = 0; i < EVENT_SCRIPT_VAR_PERSON_PROFILE_COUNT; i++)

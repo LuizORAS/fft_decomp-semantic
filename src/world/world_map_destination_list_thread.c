@@ -1,11 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Build the list of visible world locations (script variables 0x200..0x22a,
- * rows of location-name text 0x9000 + location) and position the menu around
- * the current one. `selected` stays unset when the current location is not
- * listed. */
-void world_menu_build_available_item_list(void) {
+/* Thread of WORLD's location list (menu entries 2 and 6, text 0x9000 + location): list the visible
+ * locations, in row colour 4 for the current one, 8 for a red location and 0 for the others, then run
+ * it as a scrolling list (world_menu_scrolling_list_thread) of at most seven rows, scrolled to the
+ * current location. `selected` stays unset when the current location is not listed. */
+void world_map_destination_list_thread(void) {
     s32 i;
     s32 count;
     s32 selected;

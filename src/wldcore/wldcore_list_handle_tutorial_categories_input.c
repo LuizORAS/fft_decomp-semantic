@@ -9,7 +9,7 @@
  * waits for confirm/cancel and starts the fade out, mode 2 clears VRAM once
  * the fade flag has cleared and mode 3 pops the level: with system flag 0x80000 it
  * hands back to the caller through 0x10000000, otherwise it fades in and calls
- * wldcore_menu_push_entry_window_level. */
+ * wldcore_menu_push_world_menu_level. */
 void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_level_t* level) {
     u32 buttons;
     s32* selected_entry;
@@ -39,7 +39,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
                     return;
                 }
                 wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
-                wldcore_menu_push_entry_window_level();
+                wldcore_menu_push_world_menu_level();
             }
         }
         return;

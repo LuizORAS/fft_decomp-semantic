@@ -343,6 +343,9 @@ void wldcore_advance_calendar_days(s32 days);
 s32 wldcore_month_day_to_day_of_year(s32 month, s32 day);
 
 /* route */
+/* The 48 routes between locations: their records, the best path between two locations and the
+ * travel along it, a leg and a segment at a time. */
+
 /* Provisional: a 16-entry world-map route path, each entry a route id with
  * bit 8 set when the route is travelled end-to-start. */
 typedef struct wldcore_route_path {
@@ -368,6 +371,9 @@ extern s32 g_wldcore_route_search_depth;
 extern s32 g_wldcore_route_search_cost;
 
 /* location */
+/* A location's menu (town services, Deep Dungeon floors, a red location's event choices), its
+ * records, and the travel state the marker moves with. */
+
 /* Provisional: the type-4 location list level as wldcore_menu_push_location_menu_level
  * fills it. */
 typedef struct wldcore_location_list_level {
@@ -384,22 +390,22 @@ typedef struct wldcore_location_list_level {
     s32 entries[10]; /* 0x34 */
 } wldcore_location_list_level_t;
 
-/* wldcore_location_entry_state_t.flags. */
+/* wldcore_map_travel_t.flags. */
 typedef enum wldcore_route_travel_flag {
     WLDCORE_ROUTE_TRAVEL_ACTIVE = 0x01,   /* a path was found and is being travelled */
     WLDCORE_ROUTE_TRAVEL_REVERSED = 0x02, /* the current leg runs its route end to start */
 } wldcore_route_travel_flag_e;
 
-/* Provisional: location-entry state at 0x800d0b24, filled by the route search
- * wldcore_map_find_best_route_path, staged per route leg by wldcore_location_begin_route_segment and stepped by
- * wldcore_map_step_route_travel. The vertices are SVECTORs: their 2-byte alignment is what
+/* Provisional: the travel state at 0x800d0b24: the best path wldcore_map_find_best_route_path
+ * found, the route leg wldcore_map_begin_route_segment staged and the step
+ * wldcore_map_step_route_travel is on. The vertices are SVECTORs: their 2-byte alignment is what
  * makes `previous_position = position` take GCC's unaligned block-move path
  * (lwl/lwr, swl/swr) that the target emits. */
-typedef struct wldcore_location_entry_state {
+typedef struct wldcore_map_travel {
     s32 flags;                       /* 0x00; wldcore_route_travel_flag_e */
     s32 route_id;                    /* 0x04; route & 0xff, index into g_wldcore_map_route_tables */
     s32 segment_index;               /* 0x08; current segment of the leg, the step for begin_route_segment */
-    s32 segment_count;               /* 0x0c; wldcore_location_begin_route_segment result (record count - 1) */
+    s32 segment_count;               /* 0x0c; wldcore_map_begin_route_segment result (record count - 1) */
     s32 segment_frame;               /* 0x10; frames into the segment, interpolation numerator */
     s32 segment_frames;              /* 0x14; point distance * 2, interpolation denominator */
     wldcore_route_path_t route_path; /* 0x18; best path found */
@@ -415,8 +421,8 @@ typedef struct wldcore_location_entry_state {
     SVECTOR position;                /* 0x80 */
     SVECTOR target_position;         /* 0x88 */
     s32 arrival_location;            /* 0x90; arrival location id + 1 */
-} wldcore_location_entry_state_t;
-typedef char wldcore_location_entry_state_size_must_be_0x94[sizeof(wldcore_location_entry_state_t) == 0x94 ? 1 : -1];
+} wldcore_map_travel_t;
+typedef char wldcore_map_travel_size_must_be_0x94[sizeof(wldcore_map_travel_t) == 0x94 ? 1 : -1];
 
 /* Provisional: view of g_wldcore_map_projection_state at 0x8009f24c used by
  * the location-entry routines. Like wldcore_map_dot_t it holds the marker's
@@ -434,13 +440,13 @@ typedef struct wldcore_location_view {
 } wldcore_location_view_t;
 typedef char wldcore_location_view_size_must_be_0x38[sizeof(wldcore_location_view_t) == 0x38 ? 1 : -1];
 
-extern wldcore_location_entry_state_t g_wldcore_location_entry_state;
+extern wldcore_map_travel_t g_wldcore_map_travel;
 extern wldcore_state_record_t* g_wldcore_location_records;
 extern wldcore_location_view_t g_wldcore_location_view;
 extern u32* g_wldcore_location_frame_tim;
-s32 wldcore_location_begin_route_segment(wldcore_location_entry_state_t* state, u32 value, s32 step);
+s32 wldcore_map_begin_route_segment(wldcore_map_travel_t* state, u32 value, s32 step);
 s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out);
-s32 wldcore_location_process_entry(s32 from_location, s32 to_location);
+s32 wldcore_map_start_travel(s32 from_location, s32 to_location);
 
 /* text */
 /* Provisional: owner of a text-list render record, as
@@ -885,13 +891,13 @@ extern s32* g_wldcore_map_tile_descriptors;
  * the animation, bit 1 selects the zoomed-out direction. */
 extern wldcore_projection_motion_t g_wldcore_map_zoom_motion;
 
-/* Indexed so the store in wldcore_location_process_entry stays behind the
+/* Indexed so the store in wldcore_map_start_travel stays behind the
  * window-flag store (MEM_IN_STRUCT_P). */
 extern s32 g_wldcore_next_map_id[];
 void wldcore_map_init_tile_atlas(void);
 void wldcore_map_load_texture(void);
 void wldcore_map_color_and_draw_dots(void);
-s32 wldcore_map_build_location_menu_entries(s32 proposition_id, s32* out);
+s32 wldcore_map_build_location_menu_entries(s32 location_id, s32* out);
 void wldcore_map_draw_visible_routes(GsOT* ot);
 void wldcore_map_draw_path_animation(GsOT* ot);
 void wldcore_map_find_best_route_path(s32 from, s32 to);
@@ -1522,14 +1528,14 @@ typedef struct wldcore_menu_message_level {
     s32 _unknown_0c;           /* 0x0c; set to 8 at push; no level handler reads it */
 } wldcore_menu_message_level_t;
 
-/* Provisional: the type-1 world-map close/return level pushed by
- * wldcore_menu_push_entry_window_level. wldcore_menu_step_return_level
- * (0x8006e208) is the only reader: delay counts down the frames the fade
- * needs and pending latches while system flag 0x04000000 is up. */
-typedef struct wldcore_menu_return_level {
+/* The WORLD menu level (WLDCORE_MENU_LEVEL_WORLD_MENU) pushed by
+ * wldcore_menu_push_world_menu_level and stepped by wldcore_menu_step_world_menu_level: delay counts
+ * down the frames before the map is captured behind WORLD's menu, and pending latches while
+ * MAIN_SYSTEM_FLAG_SCREEN_CLEARED is up. */
+typedef struct wldcore_menu_world_menu_level {
     s32 delay;
     s32 pending; /* 0x04 */
-} wldcore_menu_return_level_t;
+} wldcore_menu_world_menu_level_t;
 
 /* Menu level owning a window record and a render record; 0x80088180 clears
  * both records' flag 0x10 and sets render flag 0x100 when it pops back to it. */
@@ -1670,11 +1676,11 @@ typedef enum wldcore_event_transition_drift {
     WLDCORE_EVENT_TRANSITION_DRIFT_DOWN = 0x02,  /* clear: up */
 } wldcore_event_transition_drift_e;
 
-/* Provisional: the type-0x23 event-transition level pushed by
- * wldcore_menu_push_event_transition_level (0x8008047c), which stores its
- * argument at +0x20, and stepped by wldcore_menu_step_event_transition_level;
- * wldcore_draw_close_indicator_if_pending draws the indicator sprite at
- * 0x8009f288 while the parent level's mode is not 2. */
+/* Provisional: the event transition level (WLDCORE_MENU_LEVEL_EVENT_TRANSITION) pushed by
+ * wldcore_menu_push_event_transition_level, which stores its mode at +0x20, and stepped by
+ * wldcore_menu_step_event_transition_level; wldcore_gfx_draw_transition_screen draws the screen
+ * sprite (g_wldcore_transition_screen_sprite) while the mode is not
+ * WLDCORE_EVENT_TRANSITION_MODE_FADE. */
 typedef struct wldcore_menu_event_transition_level {
     s32 frame;           /* 0x00; counts step frames; the sprite updates every third, 1 restores the captured screen */
     s32 drift_direction; /* 0x04; wldcore_event_transition_drift_e; rand() * 4 >> 15 at push */
@@ -1805,11 +1811,11 @@ typedef struct wldcore_menu_slot_set {
 /* Provisional: the world-map cursor level stepped by
  * wldcore_menu_step_map_cursor_level. */
 typedef struct wldcore_menu_map_cursor_level {
-    s32 window_index;     /* 0x00; the map cursor window */
-    s32 alt_window_index; /* 0x04; the wide-view window swapped in by 0x80 */
-    s32 wide_view;        /* 0x08; non-zero while the wide view is shown */
-    s32 snap_hit;         /* 0x0c; dot index returned by the snap probe */
-    s32 pending_mode;     /* 0x10 */
+    s32 window_index;        /* 0x00; the map cursor window */
+    s32 arrows_window_index; /* 0x04; the edge arrows shown instead of the cursor while Square is held */
+    s32 free_scroll;         /* 0x08; Square held: the D-pad scrolls the map instead of moving the cursor */
+    s32 hovered_location;    /* 0x0c; one-based location under the cursor (the snap probe's dot), 0 for none */
+    s32 pending_mode;        /* 0x10; only the push writes it, with 0 */
 } wldcore_menu_map_cursor_level_t;
 
 /* Provisional: the location menu level as its step handler
@@ -1848,11 +1854,12 @@ typedef struct wldcore_menu_sound_novel_level {
 
 /* Menu-stack level types: the g_wldcore_menu_stack_types value that selects a
  * level's idle, publish and resume handlers. Each value is stored by exactly
- * one push routine, which supplies its name. 0x01, the return level, is stored
- * by wldcore_menu_push_entry_window_level from a local it shares with the
- * value display mode. */
+ * one push routine, which supplies its name. WLDCORE_MENU_LEVEL_WORLD_MENU is
+ * stored by wldcore_menu_push_world_menu_level through a local it shares with
+ * the value display mode. */
 typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_ROOT = 0x00,
+    WLDCORE_MENU_LEVEL_WORLD_MENU = 0x01,
     WLDCORE_MENU_LEVEL_TEXT_WINDOW = 0x02,
     WLDCORE_MENU_LEVEL_MESSAGE = 0x03,
     WLDCORE_MENU_LEVEL_LOCATION_MENU = 0x04,
@@ -1924,7 +1931,7 @@ typedef union wldcore_menu_stack_record {
     s32 window_index;
     wldcore_window_layout_request_t layout_window;
     wldcore_menu_message_level_t message;
-    wldcore_menu_return_level_t return_level;
+    wldcore_menu_world_menu_level_t world_menu;
     wldcore_menu_panel_level_t panel;
     wldcore_menu_window_render_level_t window_render;
     wldcore_menu_window_pair_level_t window_pair;
@@ -2027,9 +2034,9 @@ typedef struct wldcore_window_tint_request {
 
 extern wldcore_menu_cursor_state_t g_wldcore_menu_cursor_states[];
 
-/* libgs sprite sorted by wldcore_draw_close_indicator_if_pending through
- * GsSortSprite (0x800e0480). */
-extern GsSPRITE g_wldcore_menu_indicator_sprite;
+/* The captured screen as one libgs sprite: the event transition spins, scales and darkens it, and
+ * wldcore_gfx_draw_transition_screen sorts it. */
+extern GsSPRITE g_wldcore_transition_screen_sprite;
 /* Pad buttons withheld from the WORLD menu frame (wldcore_menu_run_world_frame passes its
  * complement to world_menu_set_allowed_buttons); -1 blocks all. */
 extern s32 g_wldcore_menu_blocked_buttons;
@@ -2076,7 +2083,7 @@ void wldcore_window_build_yes_no_panel(wldcore_point32_t origin);
 void wldcore_menu_push_location_menu_level(s32 menu);
 void wldcore_menu_pop_level_and_rebuild_screen(wldcore_menu_list_window_level_t* unused_level);
 void wldcore_menu_push_event_transition_level(s32 mode);
-void wldcore_draw_close_indicator_if_pending(GsOT* ot);
+void wldcore_gfx_draw_transition_screen(GsOT* ot);
 void wldcore_menu_close_level_and_release_records(wldcore_menu_slot_set_t* slots, s32 restore);
 void wldcore_menu_dispatch_idle_handler(void);
 void wldcore_menu_dispatch_pending_script_requests(void);
@@ -2085,7 +2092,7 @@ void wldcore_menu_dispatch_resume_handler(void);
 void wldcore_menu_display_text_entry(s32 index, s32 text_id, wldcore_point32_t point, void* buffer);
 void wldcore_menu_push_message_level(s32 text, s32 reload_text);
 void wldcore_menu_push_number_panel_level_with_argument(s32 variable_id, s32 value);
-void wldcore_menu_reset_window_list_and_store_origin(void);
+void wldcore_menu_reset_to_root_level(void);
 void wldcore_menu_restore_level_on_world_entry(void);
 void wldcore_menu_run_world_frame(GsOT* context);
 void wldcore_menu_show_next_sequence_message(wldcore_menu_countdown_t* countdown);
@@ -2135,7 +2142,7 @@ void wldcore_menu_push_script_flag_01a4_detail_level(s32 value);
 void wldcore_menu_push_variable_detail_level(s32 value);
 void wldcore_menu_push_story_event_text_level(s32 value);
 void wldcore_menu_push_treasure_detail_level(s32 value);
-void wldcore_menu_push_entry_window_level(void);
+void wldcore_menu_push_world_menu_level(void);
 void wldcore_menu_push_tutorial_topic_text_level(s32 value);
 void wldcore_menu_push_unexplored_land_detail_level(s32 value);
 void wldcore_menu_push_focus_location_level(s32 id);

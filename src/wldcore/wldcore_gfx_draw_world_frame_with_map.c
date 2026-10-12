@@ -9,7 +9,7 @@
 void wldcore_gfx_draw_world_frame_with_map(void) {
     GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     GsClearOt(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
-    wldcore_draw_close_indicator_if_pending(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
+    wldcore_gfx_draw_transition_screen(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_switch_to_stack((void*)0x1F8003FC);
     wldcore_map_project_and_cull_tiles();
     wldcore_gfx_draw_projected_map_tiles(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);

@@ -65,7 +65,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             return;
         }
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
-        wldcore_menu_push_entry_window_level();
+        wldcore_menu_push_world_menu_level();
         return;
     }
 

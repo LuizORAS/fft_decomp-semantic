@@ -1,18 +1,19 @@
 #include "fft/wldcore.h"
 
-/* Location-entry step: when the current location's conditional set yields
- * LoadEvent, stores script variable 0x27 and pushes menu level type 0x23;
- * otherwise it applies a pending SetVar2, rescans the location entries
- * through 0x8008df98 and, for a found entry, records it, hides the parent
- * window, starts the projection motion and loads the proposition picture.
- * Returns 0 after the type-0x23 push, else 1.
+/* Start travelling from the current location to another: the map cursor's Circle, or a destination
+ * chosen in WORLD's location list. When the current location's script starts an event now (its
+ * WLDCORE_SCRIPT_ACTION_LOAD_EVENT condition) that event plays instead, through the event transition,
+ * and 0 is returned. Otherwise its pending SetVar2 is applied and the best path is searched
+ * (wldcore_map_find_best_route_path); with one, its first leg is staged, the camera pans to the
+ * marker if needed, the destination's picture loads, and the cursor window and the location label
+ * hide while wldcore_map_step_route_travel moves the marker. Returns 1.
  *
- * g_wldcore_route_search_depth is a separate scalar: as a field of the entry state it becomes
- * the address anchor that the later &g_wldcore_location_entry_state argument is formed from, and
- * the chained 99999 store makes best_cost that anchor as in the target. The
- * location load and the two argument addresses share one base register in the
- * target, which needs them to be members of the one g_wldcore_location_view view. */
-s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
+ * g_wldcore_route_search_depth is a separate scalar: as a field of the travel state it becomes the
+ * address anchor that the later &g_wldcore_map_travel argument is formed from, and the chained 99999
+ * store makes best_cost that anchor as in the target. The location load and the two argument
+ * addresses share one base register in the target, which needs them to be members of the one
+ * g_wldcore_location_view view. */
+s32 wldcore_map_start_travel(s32 from_location, s32 to_location) {
     s32 depth;
 
     if (wldcore_script_process_conditional_set(g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_LOAD_EVENT)
@@ -31,22 +32,22 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
         }
         g_wldcore_route_search_cost = 0;
         g_wldcore_route_search_depth = 0;
-        g_wldcore_location_entry_state.best_cost = g_wldcore_location_entry_state.best_length_bound = 99999;
-        g_wldcore_location_entry_state.flags = 0;
+        g_wldcore_map_travel.best_cost = g_wldcore_map_travel.best_length_bound = 99999;
+        g_wldcore_map_travel.flags = 0;
         wldcore_map_find_best_route_path(from_location, to_location);
-        if (!(g_wldcore_location_entry_state.flags & WLDCORE_ROUTE_TRAVEL_ACTIVE)) {
+        if (!(g_wldcore_map_travel.flags & WLDCORE_ROUTE_TRAVEL_ACTIVE)) {
             return 1;
         }
-        g_wldcore_location_entry_state.route_index = 0;
-        if (g_wldcore_location_entry_state.best_path_length == 0) {
+        g_wldcore_map_travel.route_index = 0;
+        if (g_wldcore_map_travel.best_path_length == 0) {
             return 1;
         }
-        g_wldcore_location_entry_state.segment_count = wldcore_location_begin_route_segment(
-            &g_wldcore_location_entry_state, g_wldcore_location_entry_state.route_path.routes[0], 0);
-        g_wldcore_location_entry_state.segment_index = 0;
-        g_wldcore_location_view.angle = g_wldcore_location_entry_state.heading;
+        g_wldcore_map_travel.segment_count
+            = wldcore_map_begin_route_segment(&g_wldcore_map_travel, g_wldcore_map_travel.route_path.routes[0], 0);
+        g_wldcore_map_travel.segment_index = 0;
+        g_wldcore_location_view.angle = g_wldcore_map_travel.heading;
         depth = g_wldcore_menu_stack_depth - 1;
-        g_wldcore_location_entry_state.menu_level = depth;
+        g_wldcore_map_travel.menu_level = depth;
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_index].flags
             |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         if (wldcore_map_start_projection_motion_if_outside_bounds(

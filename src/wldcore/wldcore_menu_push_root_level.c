@@ -1,9 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Pushes a two-window menu level: appends two window records, points the new
- * menu-stack record at both, resets both scroll states and records the
- * current location (+1) for the level.
+/* Push the world map's root level (WLDCORE_MENU_LEVEL_ROOT), the map cursor: its cursor window,
+ * the edge arrows shown instead while Square scrolls the map, the cursor's two scroll axes (limit
+ * 0x400, step and decay 0x80), the war funds in the HUD value, and the current location as the one
+ * under the cursor.
  *
  * The level record is re-read into its own local after the script call; reusing
  * the window-level depth local changes the register allocation. */
@@ -57,8 +58,9 @@ void wldcore_menu_push_root_level(void) {
 
     g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     level = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_stack_records_next[level].map_cursor.wide_view = 0;
-    g_wldcore_menu_stack_records_next[level].map_cursor.snap_hit = g_wldcore_map_projection_state.marker.kind + 1;
+    g_wldcore_menu_stack_records_next[level].map_cursor.free_scroll = 0;
+    g_wldcore_menu_stack_records_next[level].map_cursor.hovered_location
+        = g_wldcore_map_projection_state.marker.kind + 1;
     g_wldcore_menu_stack_records_next[level].map_cursor.pending_mode = 0;
     g_wldcore_menu_stack_depth = level + 1;
     g_wldcore_menu_stack_types[level + 1] = WLDCORE_MENU_LEVEL_ROOT;

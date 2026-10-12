@@ -1,10 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* At full brightness, run the shop / soldier-office loop (0x80133478),
- * then reload the war-funds script variable, reset the parent level's window,
- * rebuild the panel list for the current location, fade in, clear the scratch
- * buffer and restart the world-map music (0x11b).
+/* Run a shop screen from a town's menu at full brightness (world_shop_run_screen: 0 for the Shop,
+ * WORLD_SHOP_ID_SOLDIER_OFFICE, WORLD_SHOP_ID_FUR_SHOP), then come back: reload the war funds for the
+ * HUD value, reset the parent level's window, push the town's menu again, fade in with the map
+ * redrawing, clear the screen and the backdrop, and start the world map music again.
  *
  * The local alias for the current location id reproduces the target's
  * saved-register base for its two loads. */

@@ -1,10 +1,12 @@
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 
-/* Pushes menu level type 0x23 with the given mode. Mode 2 only starts a
- * screen fade; any other mode copies VRAM (0x100, 0) 0x80x0x100 to
- * (0x200, 0x100), clears (0x100, 0) 0x100x0xf0, sets up the indicator sprite
- * and picks two random values for the level. */
+/* Push the event transition level (WLDCORE_MENU_LEVEL_EVENT_TRANSITION) that leaves the world map for
+ * a battle or a story event, after starting the seek to BATTLE.BIN. WLDCORE_EVENT_TRANSITION_MODE_FADE
+ * only fades the screen out with the animation frozen. The spinning modes hide the dots, routes, HUD
+ * value, date and label, save the VRAM area at (0x100, 0) that the screen copy will cover and clear
+ * it, set up g_wldcore_transition_screen_sprite (the screen as one sprite), fade the music out and
+ * pick random drift and spin directions. */
 void wldcore_menu_push_event_transition_level(s32 mode) {
     RECT rect;
     s32 depth;
@@ -30,24 +32,24 @@ void wldcore_menu_push_event_transition_level(s32 mode) {
         rect.w = 0x100;
         rect.h = 0xF0;
         ClearImage(&rect, 0, 0, 0);
-        g_wldcore_menu_indicator_sprite.attribute = 0x42000000;
-        g_wldcore_menu_indicator_sprite.x = 0x20;
-        g_wldcore_menu_indicator_sprite.y = 0x20;
-        g_wldcore_menu_indicator_sprite.tpage = GetTPage(2, 0, 0x100, 0);
-        g_wldcore_menu_indicator_sprite.w = 0xFF;
-        g_wldcore_menu_indicator_sprite.mx = 0xA0;
-        g_wldcore_menu_indicator_sprite.my = 0x98;
-        g_wldcore_menu_indicator_sprite.scaley = ONE;
-        g_wldcore_menu_indicator_sprite.scalex = ONE;
-        g_wldcore_menu_indicator_sprite.cy = 0;
-        g_wldcore_menu_indicator_sprite.cx = 0;
-        g_wldcore_menu_indicator_sprite.v = 0;
-        g_wldcore_menu_indicator_sprite.u = 0;
-        g_wldcore_menu_indicator_sprite.h = 0xF0;
-        g_wldcore_menu_indicator_sprite.rotate = 0;
-        g_wldcore_menu_indicator_sprite.r = 0x80;
-        g_wldcore_menu_indicator_sprite.g = 0x80;
-        g_wldcore_menu_indicator_sprite.b = 0x80;
+        g_wldcore_transition_screen_sprite.attribute = 0x42000000;
+        g_wldcore_transition_screen_sprite.x = 0x20;
+        g_wldcore_transition_screen_sprite.y = 0x20;
+        g_wldcore_transition_screen_sprite.tpage = GetTPage(2, 0, 0x100, 0);
+        g_wldcore_transition_screen_sprite.w = 0xFF;
+        g_wldcore_transition_screen_sprite.mx = 0xA0;
+        g_wldcore_transition_screen_sprite.my = 0x98;
+        g_wldcore_transition_screen_sprite.scaley = ONE;
+        g_wldcore_transition_screen_sprite.scalex = ONE;
+        g_wldcore_transition_screen_sprite.cy = 0;
+        g_wldcore_transition_screen_sprite.cx = 0;
+        g_wldcore_transition_screen_sprite.v = 0;
+        g_wldcore_transition_screen_sprite.u = 0;
+        g_wldcore_transition_screen_sprite.h = 0xF0;
+        g_wldcore_transition_screen_sprite.rotate = 0;
+        g_wldcore_transition_screen_sprite.r = 0x80;
+        g_wldcore_transition_screen_sprite.g = 0x80;
+        g_wldcore_transition_screen_sprite.b = 0x80;
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.frame = 0;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].event_transition.anim_step = 0;

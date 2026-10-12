@@ -11,11 +11,16 @@ extern wldcore_deep_dungeon_battle_t* g_wldcore_deep_dungeon_battles;
 
 s32 rand(void);
 
-/* Per-frame step of the location menu level: fades its two windows in, starts
- * the menu thread after the delay and handles input. A confirmed entry opens
- * the bar, a shop, a deep-dungeon battle chosen by the location's conditional
- * set or the selected destination map; the help button shows the entry's
- * message and cancel closes the level. */
+/* Step of a location's menu level: fade its windows in, start the list panel thread after 8 frames,
+ * then handle the input. Circle on an entry fades the screen and the music out and closes the panel,
+ * then:
+ *  - the Bar opens with its music (wldcore_bar_push_menu_level);
+ *  - the Shop, Soldier Office and Fur Shop run that screen (wldcore_menu_run_shop_and_rebuild_screen);
+ *  - a Deep Dungeon floor runs the location's WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY condition:
+ *    when it holds its battle starts (the record's map and deployment squad, one of its eight ENTDs
+ *    at random, the event, a random exit), otherwise the map fades back in;
+ *  - an event choice starts its event on its map.
+ * X closes the menu, and Select shows the entry's help text. */
 void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* level) {
     s16* selected;
     u8 unused[0x28];

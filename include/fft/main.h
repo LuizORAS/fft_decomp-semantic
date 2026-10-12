@@ -811,7 +811,7 @@ typedef enum main_system_flags {
     MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE = 0x00001000,
     /* wldcore_map_draw_location_label draws no location label; set while a level moves or covers the map. */
     MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL = 0x00002000,
-    /* WORLD's menu chose a map (script variable CURRENT_MAP): the return level restarts the core and travels there. */
+    /* WORLD's location list chose a map (script variable CURRENT_MAP): the WORLD menu level travels there. */
     MAIN_SYSTEM_FLAG_REQUEST_DESTINATION = 0x00004000,
     /* wldcore_map_step_route_travel rolled an encounter: wldcore_entrypoint returns 1. */
     MAIN_SYSTEM_FLAG_RANDOM_BATTLE = 0x00008000,

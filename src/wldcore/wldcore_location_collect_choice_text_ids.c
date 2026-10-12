@@ -1,12 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Collects the text ids of the location's selectable choices into out.
- *
- * Location WORLD_LOCATION_MUROND_DEATH_CITY returns -1, and locations whose script variable 0x267 + id is
- * set have no choices; otherwise the up-to-four entries of
- * g_wldcore_script_state.choice_vars are filtered by script variable
- * 0x292 + their menu byte, and at most five survive. */
+/* The story event choices a red location offers when the marker arrives: the map-name text of each
+ * choice of its WLDCORE_SCRIPT_ACTION_CHOICE condition (up to four), skipping those whose hidden
+ * flag (EVENT_SCRIPT_VAR_LOCATION_CHOICE_HIDDEN_FIRST + the choice's offset) is set; a single choice
+ * is never skipped. Returns how many, 0 for a blue or green location or no choice, and -1 for Murond
+ * Death City. */
 s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
     s32 available;
     s32 i;

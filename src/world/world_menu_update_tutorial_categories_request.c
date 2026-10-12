@@ -4,7 +4,7 @@
 
 /* Step a pending request to open the tutorial categories from the world map: start the screen
  * fade-out, wait for it, then reset the menu context and raise MAIN_SYSTEM_FLAG_REQUEST_TUTORIAL, which
- * WLDCORE's return level (wldcore_menu_step_return_level) turns into the tutorial menu. */
+ * WLDCORE's return level (wldcore_menu_step_world_menu_level) turns into the tutorial menu. */
 void world_menu_update_tutorial_categories_request(void) {
     s16 state = g_world_tutorial_categories_request_state;
 

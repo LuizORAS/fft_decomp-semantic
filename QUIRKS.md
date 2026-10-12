@@ -172,7 +172,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   destination tile its callers pass) unset for a direction outside 0-3;
   `battle_map_load_saved_state_record` returns `next` (`$a1`) for record type
   0; `world_formation_run_set_ability_menu` indexes the entry ids with
-  `cursor` when the list is empty; `world_menu_build_available_item_list`
+  `cursor` when the list is empty; `world_map_destination_list_thread`
   uses `selected` when no entry matches the current item;
   `helpmenu_menu_run_battle_help` and `world_menu_run_battle_help` read
   `node`, `x` and `y` in the cursor loop when the text thread is already
@@ -733,6 +733,10 @@ translation unit. Share their types and constants through headers.
   R1, L1 address order. The early-out clears only the four direction counters.
 - `src/wldcore/wldcore_map_roll_random_encounter.c`: encounter masks count from
   the high bit, so the chosen ENTD is `entd_ids[7 - bit]`.
+- `wldcore_map_step_route_travel` stores the 0-based arrival location in the map
+  cursor level's one-based `hovered_location` (`location_transition.location_id`,
+  +0x0c); the cursor's next snap probe overwrites it before the label reads it. That
+  level's `pending_mode` is only ever 0, so its unblock-and-leave branch never runs.
 - `src/battle/battle_action_finalize_draw_out_katana_result.c`: when the
   katana breaks, the strike work's `can_earn_experience` is copied onto itself.
 - `src/battle/battle_menu_run_icon_selection_loop.c` and its WORLD twin: the

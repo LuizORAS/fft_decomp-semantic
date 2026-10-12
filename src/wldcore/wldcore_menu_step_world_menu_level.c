@@ -1,9 +1,18 @@
 #include "fft/wldcore.h"
 
-/* Per-frame handler of the world-map return level: waits out its own delay,
- * then pops the level and dispatches whichever pending system-flag request
- * asked for the return. */
-void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
+/* Step of the WORLD menu level while WORLD's menu is open. After any fade and a 3-frame delay it
+ * captures the map behind the menu (wldcore_gfx_toggle_captured_world_frame) and unblocks the
+ * buttons; a screen clear in between (MAIN_SYSTEM_FLAG_SCREEN_CLEARED) shows the map again and
+ * restarts the delay. When WORLD's menu threads have ended it shows the map, pops the level and acts
+ * on what the menu asked:
+ *  - Brave Story, the tutorials, the debug variable list or the fixed number panel open that screen;
+ *  - a destination (MAIN_SYSTEM_FLAG_REQUEST_DESTINATION, from the location list) captures the map
+ *    again, resumes the root level and travels to EVENT_SCRIPT_VAR_CURRENT_MAP;
+ *  - a loaded game (MAIN_SYSTEM_FLAG_RESTART, set by the card menu) ends the visit: a new visit
+ *    starts when the loaded game has an event waiting for the formation or no next scenario,
+ *    otherwise wldcore_entrypoint returns to start the scenario;
+ *  - otherwise the root level resumes. */
+void wldcore_menu_step_world_menu_level(wldcore_menu_world_menu_level_t* level) {
     s32 flags;
     s32 cleared;
     s32 location;
@@ -48,7 +57,7 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
         wldcore_gfx_capture_map_backdrop();
         wldcore_menu_dispatch_resume_handler();
         if (g_wldcore_map_projection_state.marker.kind != location) {
-            wldcore_location_process_entry(g_wldcore_map_projection_state.marker.kind, location);
+            wldcore_map_start_travel(g_wldcore_map_projection_state.marker.kind, location);
         }
         return;
     }
