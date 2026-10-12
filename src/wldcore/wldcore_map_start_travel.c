@@ -16,7 +16,7 @@
 s32 wldcore_map_start_travel(s32 from_location, s32 to_location) {
     s32 depth;
 
-    if (wldcore_script_process_conditional_set(g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_LOAD_EVENT)
+    if (wldcore_script_find_location_request(g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_LOAD_EVENT)
         != 0) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_index].flags
             |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -26,7 +26,7 @@ s32 wldcore_map_start_travel(s32 from_location, s32 to_location) {
         g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
         return 0;
     } else {
-        if (wldcore_script_process_conditional_set(g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_SET_VAR_2)
+        if (wldcore_script_find_location_request(g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_SET_VAR_2)
             != 0) {
             world_script_set_variable(g_wldcore_script_state.args[0], g_wldcore_script_state.args[1]);
         }

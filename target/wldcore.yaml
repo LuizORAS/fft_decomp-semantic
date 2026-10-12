@@ -397,42 +397,42 @@ functions:
   - {addr: 0x80090e20, size: 852, name: wldcore_sound_process_audio_queue, hash: 419da1927cab9858, rodata: [{addr: 0x800672ac, size: 76, hash: 2d0472f03d8de22e}]}
   - {addr: 0x80091174, size: 88, name: wldcore_sound_enqueue_music_start, hash: 3c92ed5553c06ccd}
   - {addr: 0x800911cc, size: 108, name: wldcore_sound_wait_for_queue_drain, hash: 8b6a1a20afb1383a}
-  - {addr: 0x80091238, size: 328, name: wldcore_script_process_conditional_set, hash: 3595ca7b3a29bb9a}
-  - {addr: 0x80091380, size: 8, name: wldcore_opcode_map_nop, hash: 6d64edf91449c1b1}
-  - {addr: 0x80091388, size: 28, name: wldcore_opcode_map_skip_1_operand, hash: 768b510ec89c7449}
-  - {addr: 0x800913a4, size: 28, name: wldcore_opcode_map_skip_2_operands, hash: d79d32bc6590d2a0}
-  - {addr: 0x800913c0, size: 28, name: wldcore_opcode_map_skip_3_operands, hash: 0aa2cc8b3e6218ff}
-  - {addr: 0x800913dc, size: 28, name: wldcore_opcode_map_skip_4_operands, hash: b44058107bcffe3d}
-  - {addr: 0x800913f8, size: 88, name: wldcore_opcode_map_check_var_equal, hash: c1ab99411b48c93e}
+  - {addr: 0x80091238, size: 328, name: wldcore_script_find_location_request, hash: 3595ca7b3a29bb9a}
+  - {addr: 0x80091380, size: 8, name: wldcore_script_nop, hash: 6d64edf91449c1b1}
+  - {addr: 0x80091388, size: 28, name: wldcore_script_skip_1_operand, hash: 768b510ec89c7449}
+  - {addr: 0x800913a4, size: 28, name: wldcore_script_skip_2_operands, hash: d79d32bc6590d2a0}
+  - {addr: 0x800913c0, size: 28, name: wldcore_script_skip_3_operands, hash: 0aa2cc8b3e6218ff}
+  - {addr: 0x800913dc, size: 28, name: wldcore_script_skip_4_operands, hash: b44058107bcffe3d}
+  - {addr: 0x800913f8, size: 88, name: wldcore_script_check_var_equal, hash: c1ab99411b48c93e}
   - {addr: 0x80091450, size: 108, name: wldcore_script_read_operand_pair, hash: 978db3ae06647cd2}
-  - {addr: 0x800914bc, size: 92, name: wldcore_opcode_map_check_var_at_least, hash: 0a07d0db212801e0}
-  - {addr: 0x80091518, size: 92, name: wldcore_opcode_map_check_var_at_most, hash: 1d33640e4361bc9b}
-  - {addr: 0x80091574, size: 188, name: wldcore_opcode_map_check_roster_has_sprite_set, hash: ef88873683c9c523}
-  - {addr: 0x80091630, size: 28, name: wldcore_opcode_map_skip_1_operand_0x0c, hash: 768b510ec89c7449}
-  - {addr: 0x8009164c, size: 28, name: wldcore_opcode_map_skip_1_operand_0x0d, hash: 768b510ec89c7449}
-  - {addr: 0x80091668, size: 116, name: wldcore_opcode_map_check_war_funds_at_least, hash: 979855247339c056}
-  - {addr: 0x800916dc, size: 116, name: wldcore_opcode_map_check_war_funds_at_most, hash: 253ae0e61fe55917}
-  - {addr: 0x80091750, size: 124, name: wldcore_opcode_map_check_date_on_or_after, hash: e40e7b07422349e1}
+  - {addr: 0x800914bc, size: 92, name: wldcore_script_check_var_at_least, hash: 0a07d0db212801e0}
+  - {addr: 0x80091518, size: 92, name: wldcore_script_check_var_at_most, hash: 1d33640e4361bc9b}
+  - {addr: 0x80091574, size: 188, name: wldcore_script_check_roster_has_sprite_set, hash: ef88873683c9c523}
+  - {addr: 0x80091630, size: 28, name: wldcore_script_skip_1_operand_2, hash: 768b510ec89c7449}
+  - {addr: 0x8009164c, size: 28, name: wldcore_script_skip_1_operand_3, hash: 768b510ec89c7449}
+  - {addr: 0x80091668, size: 116, name: wldcore_script_check_war_funds_at_least, hash: 979855247339c056}
+  - {addr: 0x800916dc, size: 116, name: wldcore_script_check_war_funds_at_most, hash: 253ae0e61fe55917}
+  - {addr: 0x80091750, size: 124, name: wldcore_script_check_date_on_or_after, hash: e40e7b07422349e1}
   - {addr: 0x800917cc, size: 168, name: wldcore_script_read_operand_pair_and_date, hash: 3c7734d04ea829e7}
-  - {addr: 0x80091874, size: 124, name: wldcore_opcode_map_check_date_on_or_before, hash: 2e78e71ab1fe56af}
-  - {addr: 0x800918f0, size: 116, name: wldcore_opcode_map_check_casualties_at_least, hash: 43af3896782afcde}
-  - {addr: 0x80091964, size: 116, name: wldcore_opcode_map_check_casualties_at_most, hash: 8887097babf4143a}
-  - {addr: 0x800919d8, size: 112, name: wldcore_opcode_map_request_load_event, hash: aef5f1c4bd26cd57}
-  - {addr: 0x80091a48, size: 156, name: wldcore_opcode_map_request_choice, hash: b7384b1765a5d616}
-  - {addr: 0x80091ae4, size: 52, name: wldcore_opcode_map_set_var, hash: d6292e0e6206ed76}
-  - {addr: 0x80091b18, size: 76, name: wldcore_opcode_map_request_text, hash: f1a91ad57c9cf27b}
-  - {addr: 0x80091b64, size: 148, name: wldcore_opcode_map_request_deep_dungeon_entry, hash: 51bc2035ae2bcf89}
-  - {addr: 0x80091bf8, size: 112, name: wldcore_opcode_map_request_set_var_2, hash: 78a0b8c195f92687}
-  - {addr: 0x80091c68, size: 112, name: wldcore_opcode_map_request_draw_path, hash: b59c744c0b443576}
-  - {addr: 0x80091cd8, size: 112, name: wldcore_opcode_map_request_erase_path, hash: e10263e10dd19c4f}
-  - {addr: 0x80091d48, size: 64, name: wldcore_opcode_map_request_draw_location, hash: 7f979a6125387956}
-  - {addr: 0x80091d88, size: 64, name: wldcore_opcode_map_request_erase_location, hash: 003d85a846e70105}
-  - {addr: 0x80091dc8, size: 188, name: wldcore_opcode_map_focus_location, hash: 03b8c19a769d4b5c}
-  - {addr: 0x80091e84, size: 124, name: wldcore_opcode_map_check_ramza_brave_at_least, hash: 3a15a176c8fcb641}
+  - {addr: 0x80091874, size: 124, name: wldcore_script_check_date_on_or_before, hash: 2e78e71ab1fe56af}
+  - {addr: 0x800918f0, size: 116, name: wldcore_script_check_casualties_at_least, hash: 43af3896782afcde}
+  - {addr: 0x80091964, size: 116, name: wldcore_script_check_casualties_at_most, hash: 8887097babf4143a}
+  - {addr: 0x800919d8, size: 112, name: wldcore_script_request_load_event, hash: aef5f1c4bd26cd57}
+  - {addr: 0x80091a48, size: 156, name: wldcore_script_request_choice, hash: b7384b1765a5d616}
+  - {addr: 0x80091ae4, size: 52, name: wldcore_script_set_var, hash: d6292e0e6206ed76}
+  - {addr: 0x80091b18, size: 76, name: wldcore_script_request_text, hash: f1a91ad57c9cf27b}
+  - {addr: 0x80091b64, size: 148, name: wldcore_script_request_deep_dungeon_entry, hash: 51bc2035ae2bcf89}
+  - {addr: 0x80091bf8, size: 112, name: wldcore_script_request_set_var_2, hash: 78a0b8c195f92687}
+  - {addr: 0x80091c68, size: 112, name: wldcore_script_request_draw_path, hash: b59c744c0b443576}
+  - {addr: 0x80091cd8, size: 112, name: wldcore_script_request_erase_path, hash: e10263e10dd19c4f}
+  - {addr: 0x80091d48, size: 64, name: wldcore_script_request_draw_location, hash: 7f979a6125387956}
+  - {addr: 0x80091d88, size: 64, name: wldcore_script_request_erase_location, hash: 003d85a846e70105}
+  - {addr: 0x80091dc8, size: 188, name: wldcore_script_focus_location, hash: 03b8c19a769d4b5c}
+  - {addr: 0x80091e84, size: 124, name: wldcore_script_check_ramza_brave_at_least, hash: 3a15a176c8fcb641}
   - {addr: 0x80091f00, size: 116, name: wldcore_get_ramza_roster_index, hash: abf9c33b8d49cfd2}
-  - {addr: 0x80091f74, size: 124, name: wldcore_opcode_map_check_ramza_brave_at_most, hash: 8ad6ea6f5047346d}
-  - {addr: 0x80091ff0, size: 124, name: wldcore_opcode_map_check_ramza_faith_at_least, hash: 4b093efef959c7f5}
-  - {addr: 0x8009206c, size: 124, name: wldcore_opcode_map_check_ramza_faith_at_most, hash: ad3113bd42ed67db}
+  - {addr: 0x80091f74, size: 124, name: wldcore_script_check_ramza_brave_at_most, hash: 8ad6ea6f5047346d}
+  - {addr: 0x80091ff0, size: 124, name: wldcore_script_check_ramza_faith_at_least, hash: 4b093efef959c7f5}
+  - {addr: 0x8009206c, size: 124, name: wldcore_script_check_ramza_faith_at_most, hash: ad3113bd42ed67db}
   - {addr: 0x800920e8, size: 96, name: wldcore_set_bit_value, hash: 56450a38fe0bff9f}
   - {addr: 0x80092148, size: 56, name: wldcore_test_bit, hash: 822830daaa9c0843}
   - {addr: 0x80092180, size: 136, name: wldcore_script_calculate_save_data_completion_percent, hash: 0ecc0e3f3f1d9117}

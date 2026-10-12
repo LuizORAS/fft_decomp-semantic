@@ -12,7 +12,7 @@ void wldcore_menu_dispatch_pending_script_requests(void) {
     s32* flags;
     s32 id;
 
-    if (wldcore_script_process_conditional_set(*location, WLDCORE_SCRIPT_ACTION_MAP_MENU_MASK) == 0) {
+    if (wldcore_script_find_location_request(*location, WLDCORE_SCRIPT_ACTION_MAP_MENU_MASK) == 0) {
         return;
     }
     flags = &g_wldcore_script_state.flags;

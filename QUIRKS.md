@@ -848,7 +848,7 @@ translation unit. Share their types and constants through headers.
   (Germonik Scriptures, novel 5), so `wldcore_menu_step_treasure_detail_level`
   opens no reader for the four book treasures 17-20.
 - World-map script opcodes 0x10 and 0x11 pass on a date on or after and on or
-  before their operand (`wldcore_opcode_map_check_date_on_or_after`,
+  before their operand (`wldcore_script_check_date_on_or_after`,
   `_on_or_before`); scenario condition types 16 and 17 are the reverse
   (`EVENT_SCENARIO_CONDITION_DATE_ON_OR_BEFORE`, `_ON_OR_AFTER`), although the
   war-funds and casualty tests beside them share their numbers.

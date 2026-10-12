@@ -96,7 +96,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                     world_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION,
                         value - (WLDCORE_TEXT_ID_DEEP_DUNGEON_FLOOR_FIRST & TEXT_ID_ENTRY_MASK));
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
-                    if (wldcore_script_process_conditional_set(
+                    if (wldcore_script_find_location_request(
                             g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY)
                         != 0) {
                         offset = g_wldcore_script_state.args[0] * 10;

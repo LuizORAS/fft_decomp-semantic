@@ -18,7 +18,7 @@ s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
     if (world_script_get_variable(location_id + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
         return 0;
     }
-    if (wldcore_script_process_conditional_set(g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_CHOICE)
+    if (wldcore_script_find_location_request(g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_CHOICE)
         == 0) {
         return 0;
     }

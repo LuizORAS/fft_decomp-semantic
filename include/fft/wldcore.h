@@ -1189,17 +1189,16 @@ void wldcore_opcode_branch_if_saved_bit(s32 expected);
 void wldcore_opcode_branch_if_local_flag(s32 expected);
 void wldcore_opcode_branch_if_savedata_bit(s32 expected);
 void wldcore_opcode_branch_if_dialog_option(s32 expected);
-void wldcore_opcode_map_request_deep_dungeon_entry(void);
-void wldcore_opcode_map_request_draw_path(void);
-void wldcore_opcode_map_request_erase_path(void);
-void wldcore_opcode_map_request_load_event(void);
-void wldcore_opcode_map_request_set_var_2(void);
-void wldcore_opcode_map_request_text(void);
 void wldcore_opcode_start_pending_value_transition(void);
 void wldcore_opcode_load_picture(void);
 void wldcore_opcode_load_background_set(void);
 
 /* script */
+/* The world map's location scripts (wldcore_script_*): for each location a list of scripts, each a
+ * run of conditions (script variables, the date, war funds, casualties, the roster, Ramza's Brave and
+ * Faith) ended by an action the map carries out: a story event, a text, the menu's choices, a
+ * variable, a route or a dot drawn or erased, a camera focus, a Deep Dungeon entry. */
+
 /* The world-conditional interpreter clears this result word before each
  * block. Comparisons set CONDITION_FAILED when their predicate rejects the
  * block. Action opcodes set ACTION_REACHED to end the block and set an action
@@ -1243,7 +1242,7 @@ typedef enum wldcore_script_request_flags {
 
 /* WLDCORE script interpreter state; the opcode handlers read ip/data here.
  * One object through the choice/argument words:
- * wldcore_opcode_map_request_choice reaches ip at -4 and the choice
+ * wldcore_script_request_choice reaches ip at -4 and the choice
  * values at +0x10 from its &choice_vars base. */
 typedef struct wldcore_script_state {
     s32 flags;          /* 0x00; wldcore_script_result_flags_e | wldcore_script_action_flags_e */
@@ -1266,8 +1265,14 @@ extern wldcore_script_state_t g_wldcore_script_state;
  * with the args/data accesses instead of the target's absolute addresses.
  * The load_* opcode handlers declare volatile views of flags/data/ip locally. */
 extern s32 g_wldcore_script_flags;
-s32 wldcore_script_process_conditional_set(s32 location, s32 action_mask);
+s32 wldcore_script_find_location_request(s32 location, s32 action_mask);
 void wldcore_script_read_operand_pair(s32* out_id, s32* out_value);
+void wldcore_script_request_deep_dungeon_entry(void);
+void wldcore_script_request_draw_path(void);
+void wldcore_script_request_erase_path(void);
+void wldcore_script_request_load_event(void);
+void wldcore_script_request_set_var_2(void);
+void wldcore_script_request_text(void);
 void wldcore_script_read_operand_pair_and_date(s32* out_a, s32* out_b, s32* out_c, s32* out_d);
 s32 wldcore_script_run_until_yield(void);
 

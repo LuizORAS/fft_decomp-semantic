@@ -46,7 +46,7 @@ void wldcore_map_step_route_travel(void) {
             g_wldcore_location_view.location_id = g_wldcore_map_travel.leg_end_location;
             world_script_set_variable(EVENT_SCRIPT_VAR_LOCATION, g_wldcore_map_travel.leg_end_location);
             g_wldcore_map_travel.route_index++;
-            if (wldcore_script_process_conditional_set(
+            if (wldcore_script_find_location_request(
                     g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_LOAD_EVENT)
                 != 0) {
                 g_wldcore_next_map_id[0] = 0;
@@ -59,7 +59,7 @@ void wldcore_map_step_route_travel(void) {
                     = g_wldcore_location_view.location_id;
                 return;
             }
-            if (wldcore_script_process_conditional_set(
+            if (wldcore_script_find_location_request(
                     g_wldcore_location_view.location_id, WLDCORE_SCRIPT_ACTION_SET_VAR_2)
                 != 0) {
                 world_script_set_variable(g_wldcore_script_state.args[0], g_wldcore_script_state.args[1]);
