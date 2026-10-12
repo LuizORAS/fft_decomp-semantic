@@ -23,7 +23,7 @@ u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
         return 0;
     }
     if (g_world_name_entry_state != 0xFF) {
-        busy = world_map_is_busy();
+        busy = world_menu_is_screen_busy();
         if (busy == 0) {
             if (g_world_input_primary_repeat & PSX_PAD_L1) {
                 world_name_apply_entry_key(WORLD_NAME_ENTRY_KEY_CURSOR_LEFT);

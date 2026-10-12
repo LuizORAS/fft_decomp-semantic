@@ -122,7 +122,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         DrawOTag(otag);
         ClearOTag(g_world_gfx_active_packet_buffer->otag, g_world_ot_length);
         world_input_update_with_message_state();
-        busy = world_map_is_busy();
+        busy = world_menu_is_screen_busy();
         if (busy == 0) {
             if (g_world_input_primary_repeat & PSX_PAD_L1) {
                 world_name_apply_entry_key(WORLD_NAME_ENTRY_KEY_CURSOR_LEFT);

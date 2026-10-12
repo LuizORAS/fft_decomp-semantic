@@ -1,5 +1,7 @@
 #include "fft/world.h"
 
+/* Same as world_formation_init_selection_cursor, then reset the cards' readout to HP, latch the
+ * banner side (status banner y 0x90 at the bottom, 0 at the top) and turn the unit banner on. */
 void world_formation_init_cursor_and_scroll_state(s32 formation_index) {
     world_formation_init_selection_cursor(formation_index);
     g_world_formation_stat_display_mode = MENU_UNIT_READOUT_HP;

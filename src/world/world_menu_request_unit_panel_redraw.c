@@ -1,8 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Request a redraw from all eight formation panel threads. */
-void world_menu_enable_all_order_entries(void) {
+/* Ask all eight unit panels of the formation and shop screens to redraw (redraw_request 1): the
+ * status and comparison banners, the equipment-and-ability, stats, preview stats, equipment, stat
+ * preview and ability panels. */
+void world_menu_request_unit_panel_redraw(void) {
     g_world_status_display_thread_params.redraw_request = 1;
     g_world_comparison_display_thread_params.redraw_request = 1;
     g_world_equipment_ability_panel_thread_params.redraw_request = 1;

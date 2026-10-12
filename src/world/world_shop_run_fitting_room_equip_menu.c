@@ -123,7 +123,7 @@ void world_shop_run_fitting_room_equip_menu(void) {
             g_world_status_display_thread_params.redraw_request = 1;
         }
         world_menu_run_script_with_palette_mode(
-            g_world_shop_fitting_item_list_menu_script, g_world_input_primary_repeat, world_map_is_busy());
+            g_world_shop_fitting_item_list_menu_script, g_world_input_primary_repeat, world_menu_is_screen_busy());
         g_world_menu_description_text_id = g_world_menu_option_count != 0
             ? (g_world_menu_entry_ids[g_world_menu_cursor_position] & WORLD_ITEM_ID_MASK) + 0x6800
             : -1;

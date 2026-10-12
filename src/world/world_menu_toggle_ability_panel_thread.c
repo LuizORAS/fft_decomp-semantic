@@ -1,8 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Starts thread 10 on world_menu_ability_panel_thread (parameter g_world_ability_panel_thread_params) when `enable` is
- * set and neither thread 9 nor 10 is running; stops threads 10 and 12 otherwise. */
+/* Starts thread 10 on world_menu_ability_panel_thread (parameter g_world_ability_panel_thread_params)
+ * when `enable` is set and neither thread 9 nor 10 is running; stops threads 10 and 12 otherwise.
+ * Enabling also turns the unit banner on and starts the stats panel (thread 12). */
 void world_menu_toggle_ability_panel_thread(s32 enable) {
     s32 state = enable;
 

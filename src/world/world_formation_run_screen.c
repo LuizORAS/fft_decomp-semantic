@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-typedef void (*world_formation_menu_handler_t)(void);
-
 /* Stack-resident primitive pools for both WORLD packet buffers; each pool
  * holds two frames of the per-type counts this routine publishes. */
 typedef struct world_formation_screen_packets {
@@ -22,21 +20,21 @@ typedef struct world_formation_screen_packets {
     u8 _unused_f658[0x18];
 } world_formation_screen_packets_t;
 
-extern world_formation_menu_handler_t g_world_formation_menu_handlers[];
-
-/*
- * Run the WORLD formation screen until g_world_formation_screen_running clears or the tutorial ends.
+/* Run the formation screen until g_world_formation_screen_running clears or the tutorial script
+ * ends.
  *
- * Binds both packet buffers onto a stack-resident pool block, starts the
- * formation music unless a tutorial (1-10) is running, then steps the current
- * formation menu handler once per frame. On exit it waits for menu threads 1-16
- * to finish and saves the edited records back to party data.
+ * Binds both packet buffers onto a stack-resident pool block, resets the screen
+ * (world_formation_init_menu_state) and starts tutorial `tutorial` (a value above 10 runs none),
+ * playing the formation music when no tutorial runs. Each frame it runs the help and banner updates,
+ * the handler of the current menu (g_world_formation_menu_handlers), the unit grid or its background,
+ * the L1/R1 unit buttons, the selected unit's panels and the menu sounds. On exit it waits for threads
+ * 1-16 to stop, saves the records to the roster (world_formation_save_records_to_party_data), stops
+ * the panel threads and resets the menu context.
  *
  * Compiled with the -O1 profile: the target leaves the packet-pool argument
  * stores unscheduled and reloads g_world_formation_unit_cycle_mode where -O2's cse-follow-jumps would
  * reuse it. i is one local reused for the button disabled flag, the otag
- * index and the thread loop counter, which keeps the (s16) extension.
- */
+ * index and the thread loop counter, which keeps the (s16) extension. */
 void world_formation_run_screen(s32 tutorial, s32 unused) {
     world_formation_screen_packets_t packets;
     s32 buttons;
@@ -76,7 +74,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
                 world_menu_run_unit_status_banner_countdown(0, 0);
                 world_input_clear_state();
             }
-            world_menu_update_thread_7_idle_countdown();
+            world_input_update_lockout_timer();
             world_gfx_update_fade_in_tile();
             if (g_world_input_primary_repeat & PSX_PAD_SELECT) {
                 world_menu_start_description_text_thread((world_menu_description_record_t*)3);
@@ -87,15 +85,16 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             }
             world_menu_set_palette_mode(g_world_thread_task_active);
             g_world_formation_menu_handlers[g_world_formation_current_menu]();
-            if (g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID || g_world_formation_current_menu == 4
-                || g_world_formation_current_menu == 5) {
+            if (g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID
+                || g_world_formation_current_menu == WORLD_FORMATION_MENU_DISMISS_UNIT
+                || g_world_formation_current_menu == WORLD_FORMATION_MENU_ORDER_UNIT) {
                 world_formation_update_and_draw_unit_grid(1,
                     g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID,
                     g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID,
                     g_world_formation_triangle_menu_open + g_world_grid_menu_id != 0
                         ? 0
                         : g_world_input_secondary_repeat_latched,
-                    world_map_is_busy(), 0, 0);
+                    world_menu_is_screen_busy(), 0, 0);
             } else {
                 world_formation_draw_background_tiles(
                     g_world_formation_scroll_position + g_world_formation_scroll_velocity, 0);

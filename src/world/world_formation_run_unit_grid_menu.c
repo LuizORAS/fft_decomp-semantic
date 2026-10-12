@@ -1,10 +1,16 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/*
- * Run one frame of the formation screen.
- */
-void world_formation_process_frame(void) {
+/* Handler of formation menus UNIT_GRID, DISMISS_UNIT and ORDER_UNIT (g_world_formation_menu_handlers).
+ * Entering the grid rebuilds the roster records, clamps and stages the selection (an egg turns
+ * browsing and its panels off). With no input lockout and no scroll due, Triangle or Start opens the
+ * unit menu "Item / Ability / Change Job / Remove Unit / Order Unit" on the side away from the unit and
+ * the banner; a pick moves to that menu (Item, Ability and Change Job through their ENTER states). For
+ * an egg the menu asks "Destroy the monster egg?" and Yes dismisses it. Circle while browsing a unit
+ * opens View Abilities (refused for a monster skillset); X outside browsing and tutorials fades the
+ * screen and the music out, and the finished fade ends the screen. Remove Unit and Order Unit run
+ * world_formation_run_dismiss_unit_menu_step and world_menu_run_order_unit. */
+void world_formation_run_unit_grid_menu(void) {
     u32 input;
 
     input = g_world_input_primary_repeat;

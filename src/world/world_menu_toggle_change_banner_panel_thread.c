@@ -1,10 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Starts thread 10 on world_menu_equipment_panel_thread (parameter g_world_change_banner_panel_thread_params) when
- * `enable` is set and neither of the g_world_status_display_thread_params.flags 0x60 bits is set; stops threads 10 and
- * 12 otherwise.
- */
+/* Start the equipment panel (world_menu_equipment_panel_thread in slot 10 with
+ * g_world_change_banner_panel_thread_params) and the stats panel (thread 12) when `enable` is set and
+ * the status banner is not sliding; stop both otherwise. */
 void world_menu_toggle_change_banner_panel_thread(s32 enable) {
     s32 state = enable;
 

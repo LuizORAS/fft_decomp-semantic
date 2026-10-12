@@ -1,10 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Rebuild the formation unit list for the screen in use: every unit on the
- * formation screen, the monsters at the soldier office and the available
- * humans in the other shops. Also reconciles the five item category lists
- * and resets the cursor and scroll. */
+/* Build the formation records of the screen in use (world_formation_build_record_list): every
+ * roster unit on the formation screen, the monsters at the soldier office and the available humans in
+ * the other shops. Then reconcile the five item category lists, put the cursor and the grid at rest on
+ * the first unit (world_formation_init_cursor_and_scroll_state) and mark the screen running. */
 void world_formation_rebuild_unit_list(void) {
     s32 mode;
 

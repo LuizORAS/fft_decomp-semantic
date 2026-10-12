@@ -2,16 +2,16 @@
 #include "psx/libc.h"
 #include "psx/pad.h"
 
-/*
- * Refresh formation-screen state after the selected unit may have changed.
- *
- * On a new selection this snapshots the unit's display data, starts the
- * status-banner slide (g_world_formation_banner_slide_step), and records the scroll direction in
- * g_world_status_display_thread_params.redraw_request; it then toggles the per-menu windows and advances the slide.
- * The caller in world_menu_run_remove_item passes two arguments that this body
- * never reads. Compiled at O1 like its world_formation_stage_selected_unit
- * neighbour.
- */
+/* Follow the selected unit each frame. A new unit is staged (world_formation_stage_selected_unit)
+ * and gives the banner its slide direction: 1 for Right, R1 or a later unit, 2 for Left, L1 or an
+ * earlier one. When the banner also changes side, the previous unit goes to the comparison banner
+ * (thread 7) and the two slide past each other in 16 steps of 8 pixels
+ * (g_world_formation_banner_slide_step). With no new unit, a side change slides the status banner
+ * itself (MENU_STATUS_PANEL_SLIDE_DOWN/_UP). Then it keeps
+ * the current menu's panels running: the equipment-and-ability panel outside the LEAVE states, the
+ * equipment panel in the item menus, the ability panel in the ability menu, and the status banner
+ * while the banner or browsing is on. Compiled at O1 like its world_formation_stage_selected_unit
+ * neighbour. */
 void world_formation_update_unit_selection(void) {
     s32 saved;
     s32 previous;

@@ -1,9 +1,13 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Built at -O1, like its neighbours world_menu_toggle_stat_preview_panel_thread /
+/* Start the preview stats window, a second stats panel (world_menu_run_numeric_editor_thread in
+ * slot 11 with g_world_preview_stats_thread_params), when `flag` is set, the status banner is not
+ * sliding and slot 11 is idle; stop it otherwise. The state goes to g_world_preview_stats_window_active
+ * and the style of the stats panel.
+ *
+ * Built at -O1, like its neighbours world_menu_toggle_stat_preview_panel_thread /
  * world_menu_toggle_ability_panel_thread. */
-
 void world_menu_toggle_preview_stats_window(s32 flag) {
     s32 stored;
 

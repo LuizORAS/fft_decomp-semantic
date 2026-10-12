@@ -82,7 +82,7 @@ s32 world_formation_run_item_submenu_step(void) {
         g_world_menu_prompt_active = 1;
     }
     disabled = 0;
-    if (world_map_is_busy() != 0 || g_world_item_menu_mode != MENU_ITEM_LIST_STATE_BROWSE
+    if (world_menu_is_screen_busy() != 0 || g_world_item_menu_mode != MENU_ITEM_LIST_STATE_BROWSE
         || world_count_item_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) == 0) {
         disabled = 1;
     }

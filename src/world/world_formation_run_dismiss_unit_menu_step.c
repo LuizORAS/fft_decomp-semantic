@@ -33,7 +33,7 @@ extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scr
 
 /*
  * Per-frame step of the "dismiss unit" menu
- * (WORLD_FORMATION_MENU_DISMISS_UNIT), called by world_formation_process_frame.
+ * (WORLD_FORMATION_MENU_DISMISS_UNIT), called by world_formation_run_unit_grid_menu.
  * Three phases: first entry, which picks the prompt text and menu record;
  * the per-frame poll of the prompt or menu thread; and the dismissal timer.
  *

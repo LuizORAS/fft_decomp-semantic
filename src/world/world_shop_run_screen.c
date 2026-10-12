@@ -110,7 +110,7 @@ void world_shop_run_screen(s32 shop_type) {
     while (g_world_shop_menu_step != WORLD_SHOP_STEP_EXIT) {
         world_gfx_present_frame_and_swap_packet_buffer(0, 0);
         world_input_update_with_message_state();
-        world_menu_update_thread_7_idle_countdown();
+        world_input_update_lockout_timer();
         world_gfx_update_fade_in_tile();
         if (g_world_input_primary_repeat & PSX_PAD_SELECT) {
             world_menu_start_description_text_thread((world_menu_description_record_t*)3);

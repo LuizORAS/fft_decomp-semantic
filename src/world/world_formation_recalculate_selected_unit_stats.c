@@ -1,14 +1,14 @@
 #include "fft/world.h"
 #include "psx/libc.h"
 
-/*
- * Rebuild the selected formation unit's derived stats from its job and
- * equipment, then refresh the three display snapshots.
+/* Recompute the selected unit's stats in a shop's fitting room: rebuild its battle stats from its
+ * roster record (main_unit_init_from_party_slot) with the equipment its formation record holds now,
+ * tried-on items included (a shield in either hand goes to that hand's shield slot), rebuild the
+ * formation record from them and refresh the three display records, the preview record and the
+ * panels. Only the shop screens call it.
  *
- * Shields in either hand go to the battle record's shield slots. Like
- * world_formation_stage_selected_unit, this needs O1 for the
- * target's store order and unreduced loop addressing.
- */
+ * Like world_formation_stage_selected_unit, this needs O1 for the
+ * target's store order and unreduced loop addressing. */
 void world_formation_recalculate_selected_unit_stats(void) {
     /* Preserve the target's unused 128-byte stack area. */
     u8 unused[128];
@@ -63,5 +63,5 @@ void world_formation_recalculate_selected_unit_stats(void) {
     world_item_sum_equipment_stat_details(&g_world_selected_unit_stat_detail,
         g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment);
     world_formation_copy_unit_to_temp(g_world_formation_selected_unit_index, WORLD_FORMATION_PREVIEW_RECORD);
-    world_menu_enable_all_order_entries();
+    world_menu_request_unit_panel_redraw();
 }

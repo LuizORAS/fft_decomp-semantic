@@ -4,7 +4,7 @@
 
 /*
  * Per-frame handler of the formation screen's job wheel, called by
- * world_formation_process_frame for the job-wheel menu values.
+ * world_formation_run_unit_grid_menu for the job-wheel menu values.
  *
  * The first call binds the job descriptions, stops the two detail panels and
  * installs the wheel's menu-script callbacks. Menu value

@@ -154,7 +154,7 @@ extern u32 g_world_input_frame_previous;
 extern u32 g_world_input_frame_repeat_counter;
 extern u32 g_world_input_frame_secondary_repeat_counter;
 
-/* Countdown maintained by world_menu_update_thread_7_idle_countdown. Volatile:
+/* Countdown maintained by world_input_update_lockout_timer. Volatile:
  * that routine reloads it after the zero test and again before the running
  * check instead of reusing the first load. */
 extern volatile u8 g_world_input_lockout_timer;
@@ -172,6 +172,7 @@ extern s32 g_world_input_secondary_repeat_latched;
 void world_input_clear_state(void);
 s32 world_input_filter_menu(void);
 s32 world_input_get_lockout_timer(void);
+void world_input_update_lockout_timer(void);
 u32* world_input_get_menu_controller(s32 player);
 s32 world_input_get_menu_repeat_counter(void);
 s32 world_input_get_tutorial_buttons(void);
@@ -304,7 +305,6 @@ extern s16 g_world_map_light_rotation[4]; /* current light rotation (SVECTOR) */
 extern MATRIX g_world_map_light_color_matrix;
 void world_map_data_load_complete_thread(void);
 void world_menu_selected_tile_info_display_thread(void);
-s32 world_map_is_busy(void);
 void world_map_store_selected_tile_data(void);
 void world_map_wait_for_refresh(void);
 void world_map_light_thread(void);
@@ -1167,6 +1167,9 @@ typedef enum world_formation_menu {
     WORLD_FORMATION_MENU_JOB_CHANGE = 24,                   /* job change flash on the wheel */
 } world_formation_menu_e;
 
+/* A formation menu handler (g_world_formation_menu_handlers). */
+typedef void (*world_formation_menu_handler_t)(void);
+
 /* The mode argument of world_formation_build_record_list: which roster units
  * it lists. */
 typedef enum world_formation_record_list_mode {
@@ -1187,7 +1190,8 @@ typedef enum world_formation_unit_lock {
 
 extern world_oriented_quad_t g_world_formation_cursor_shadow_sprite;
 extern world_oriented_quad_t g_world_formation_cursor_sprite;
-extern s32 g_world_formation_current_menu; /* world_formation_menu_e */
+extern s32 g_world_formation_current_menu;                               /* world_formation_menu_e */
+extern world_formation_menu_handler_t g_world_formation_menu_handlers[]; /* one per world_formation_menu_e */
 extern point16_t g_world_formation_cursor_position;
 extern u8 g_world_formation_generic_human_graphic_index_table[];
 extern world_formation_graphic_entry_t g_world_formation_graphic_entries[];
@@ -1195,9 +1199,7 @@ extern world_formation_graphic_entry_t g_world_formation_graphic_entries[];
 /* Set while the selected unit is in the upper rows of the grid: the unit banner
  * then sits at the bottom of the screen and the stat bar at the top (BUNIT's
  * g_bunit_status_banner_at_bottom). The latch is the value the banner was last
- * placed for. Majority spelling: five readers sign-extend as u8. Two files
- * (world_formation_init_selection_cursor, world_formation_step_grid_transition)
- * need s8 to match and keep their own local extern. */
+ * placed for. */
 extern u8 g_world_formation_unit_banner_at_bottom;
 extern u8 g_world_formation_unit_banner_at_bottom_latch;
 extern s32 g_world_menu_resolved_command;
@@ -1233,7 +1235,7 @@ extern u32 g_world_formation_status_label_image[];
 extern RECT g_world_formation_status_label_image_rect;
 extern world_menu_entry_t g_world_formation_egg_triangle_menu;
 
-/* Chained after the egg triangle menu; world_formation_process_frame only resets it. */
+/* Chained after the egg triangle menu; world_formation_run_unit_grid_menu only resets it. */
 extern world_menu_entry_t g_world_formation_egg_submenu;
 extern u8 g_world_formation_unit_slide_pending;
 extern s8 g_world_formation_scroll_position;
@@ -1396,7 +1398,7 @@ void world_formation_update_job_wheel_state(void);
 void world_formation_update_open_request(void);
 void world_formation_update_unit_selection(void);
 void world_formation_sort_roster(s32 index);
-s32 world_get_formation_unit_stat_by_mode(s32 unit_index);
+s32 world_formation_get_unit_stat_by_mode(s32 unit_index);
 
 /* unit */
 /* WORLD's unit helpers: the event-script unit operations it shares with BATTLE (status snapshots,
@@ -2161,6 +2163,10 @@ extern s32 g_world_menu_indicator_brightness[2];
 extern s32 g_world_menu_indicator_fade_work[2];
 extern s32 g_world_menu_indicator_state[2];
 
+/* The sprite pieces of the on-screen buttons (world_menu_draw_pressable_button): button i draws
+ * pieces g_world_menu_button_piece_starts[i] to g_world_menu_button_piece_starts[i + 1] - 1. */
+extern world_menu_button_piece_t g_world_menu_button_pieces[];
+
 /* Per-piece 4.12 fixed-point x/y scale; a negative factor flips that axis. */
 extern point16_t g_world_menu_button_piece_scales[];
 extern u8 g_world_menu_button_piece_starts[];
@@ -2313,6 +2319,7 @@ s32 world_menu_get_selected_unit_hp_bonus(s32 unused_row);
 s32 world_menu_get_selected_unit_mp_bonus(s32 unused_row);
 void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, void* prim, s32 clut_offset);
 s32 world_menu_is_busy(s32 unused);
+s32 world_menu_is_screen_busy(void);
 void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y);
 u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
 u8* world_screen_menu_redraw_text_page_on_scroll(
@@ -2369,7 +2376,7 @@ void world_menu_draw_animated_vertical_cursor(point16_t* position, u16* state, s
 void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode);
 void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 void world_menu_draw_thread_status_indicators(void);
-void world_menu_enable_all_order_entries(void);
+void world_menu_request_unit_panel_redraw(void);
 void world_menu_fade_out_thread(void);
 void world_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset);
 void world_screen_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset);
@@ -2494,7 +2501,6 @@ void world_menu_update_icon_cursor_sprites(
     world_menu_entry_t* param, world_menu_icon_sprites_t* record, s32 frame, s32 cursor);
 
 void world_menu_update_panel_fade(void);
-void world_menu_update_thread_7_idle_countdown(void);
 void world_menu_load_sort_key_list(s32 index, s16* out);
 s32 world_menu_copy_ff_terminated_bytes_to_halfwords(u16* destination, const u8* source);
 void world_menu_window_frame_thread(void);

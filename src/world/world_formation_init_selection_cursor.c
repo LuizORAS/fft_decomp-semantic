@@ -1,19 +1,18 @@
 #include "fft/world.h"
 
-/*
- * Initialize the selected formation unit's stat callbacks and cursor position.
- *
- * The scroll update must report 10 stationary iterations before the cursor
- * coordinates are finalized. The four-column layout uses signed coordinates.
- */
+/* Select formation unit `formation_index` and put the grid at rest on it: install the unit cards'
+ * menu script callbacks (the HP/MP readout, the egg's days, level, EXP, Brave and Faith), stage the
+ * unit, step the grid scroll until it has rested for 10 calls, put the banner at the bottom when the
+ * unit is in the upper rows, and place the selection cursor on the unit's card (columns 62 pixels
+ * apart, rows 60). The four-column layout uses signed coordinates. */
 void world_formation_init_selection_cursor(s16 formation_index) {
     point16_t* cursor;
     s32 count;
     s16 x;
 
     world_menu_init_scrollable_list_core(0, 0, 0);
-    g_world_menu_script_callbacks[0] = world_get_formation_unit_stat_by_mode;
-    g_world_menu_script_callbacks[1] = world_get_formation_unit_stat_by_mode;
+    g_world_menu_script_callbacks[0] = world_formation_get_unit_stat_by_mode;
+    g_world_menu_script_callbacks[1] = world_formation_get_unit_stat_by_mode;
     g_world_menu_script_callbacks[2] = world_formation_get_unit_egg_hatch_progress;
     g_world_menu_script_callbacks[3] = world_formation_get_unit_egg_hatch_total;
     g_world_menu_script_callbacks[4] = world_formation_get_unit_level;

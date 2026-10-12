@@ -161,7 +161,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `result` (`$a1`) unset when the phase is not 1-3, as does
   `battle_effect_linear_projectile_secondary_handler`;
   `bunit_unit_get_current_stat`, `bunit_unit_get_max_stat` and
-  `world_get_formation_unit_stat_by_mode` return `value` (`$a1`) for a stat
+  `world_formation_get_unit_stat_by_mode` return `value` (`$a1`) for a stat
   mode outside 0-2; `battle_move_start_unit_step` leaves `facing` (`$a2`, the
   destination tile its callers pass) unset for a direction outside 0-3;
   `battle_map_load_saved_state_record` returns `next` (`$a1`) for record type
