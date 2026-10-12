@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-/* Persist event units marked to join without opening the formation screen. */
+/* CallFunction JOIN_UNITS_SILENTLY: save to the party every unit flagged UNIT_FLAG_JOIN_AFTER_EVENT
+ * that has no formation slot yet or is Ramza, with its save-formation flag, without opening the
+ * formation screen. */
 void battle_script_join_units_silently(void) {
     s32 out_idx;
     s32 i;

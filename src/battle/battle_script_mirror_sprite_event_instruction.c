@@ -1,9 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* MirrorSprite (event instruction 0x68): mirrors the unit's sprite when the
- * operand byte is 1 and restores it otherwise. */
-void battle_script_mirrorsprite_event_instruction(u8* parameters) {
+/* MirrorSprite (EVENT_OPCODE_MIRROR_SPRITE): mirror the unit's sprite when the operand byte is 1 and
+ * restore it otherwise. */
+void battle_script_mirror_sprite_event_instruction(u8* parameters) {
     s16 unit_id;
     s32 mirror;
     s32 misc_id;

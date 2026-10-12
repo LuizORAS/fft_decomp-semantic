@@ -438,9 +438,9 @@ restart_script:
         }
         /* ---- Unit sprites and animation ---- */
         else if (opcode == EVENT_OPCODE_MIRROR_SPRITE) {
-            battle_script_mirrorsprite_event_instruction(parameters);
+            battle_script_mirror_sprite_event_instruction(parameters);
         } else if (opcode == EVENT_OPCODE_RESET_PALETTE) {
-            battle_script_resetpalette_event_instruction(parameters);
+            battle_script_reset_palette_event_instruction(parameters);
         } else if (opcode == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
             operand_1 = battle_script_get_misc_id(first_halfword);
             if (operand_1 != EVENT_MISC_ID_NONE) {
@@ -549,12 +549,12 @@ restart_script:
         }
         /* ---- Unit movement and facing ---- */
         else if (opcode == EVENT_OPCODE_WALK_TO) {
-            g_battle_thread_call_target = (void (*)(void))battle_script_walkto_event_instruction;
+            g_battle_thread_call_target = (void (*)(void))battle_script_walk_to_event_instruction;
             battle_thread_call_on_main_stack(parameters);
         } else if (opcode == EVENT_OPCODE_JUMP) {
             battle_script_jump_event_instruction((battle_script_jump_instruction_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
-            battle_script_waitwalk_event_instruction(first_halfword);
+            battle_script_wait_walk_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {
             operand_1 = battle_script_get_misc_id(first_halfword);
             if (operand_1 != EVENT_MISC_ID_NONE) {
@@ -579,9 +579,9 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_FACE_TILE) {
             battle_script_face_tile(parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
-            battle_script_waitrotateunit_and_waitrotateall_event_instruction(first_halfword);
+            battle_script_wait_rotate_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_WAIT_ROTATE_ALL) {
-            battle_script_waitrotateunit_and_waitrotateall_event_instruction(-1);
+            battle_script_wait_rotate_event_instruction(-1);
         }
         /* ---- Blocks, earthquakes, darkness, and screen color ---- */
         else if (opcode == EVENT_OPCODE_BLOCK_START) {
@@ -966,9 +966,9 @@ restart_script:
                 battle_script_set_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE, first_halfword);
             }
         } else if (opcode == EVENT_OPCODE_TELEPORT_OUT) {
-            battle_script_teleportout_event_instruction(first_halfword, 1);
+            battle_script_teleport_out_event_instruction(first_halfword, 1);
         } else if (opcode == EVENT_OPCODE_TELEPORT_IN) {
-            battle_script_teleportin_event_instruction(first_halfword, 1);
+            battle_script_teleport_in_event_instruction(first_halfword, 1);
         } else if (opcode == EVENT_OPCODE_INFLICT_STATUS) {
             operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_script_inflict_status_thread);

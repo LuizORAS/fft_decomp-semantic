@@ -2,7 +2,7 @@
 #include "fft/world.h"
 
 /* The interpreter also supplies a1=1; this entry does not consume it. */
-void world_script_teleportin_event_instruction(s32 unit_id, s32 unused) {
+void world_script_teleport_in_event_instruction(s32 unit_id, s32 unused) {
     s32 misc_id;
 
     misc_id = world_script_get_misc_id(unit_id);

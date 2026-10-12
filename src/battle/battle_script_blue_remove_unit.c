@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 
-/* BlueRemoveUnit (event instruction 0x99): tints every non-player unit whose
- * ENTD unit id is unit_id blue (red and green modulated by -0x1f).
+/* BlueRemoveUnit (EVENT_OPCODE_BLUE_REMOVE_UNIT): tint blue every non-player unit whose ENTD unit id
+ * is unit_id (red and green modulated by -0x1f).
  *
- * The team test reads the current team byte (0x05), not the initial one at
- * 0x1ba. */
+ * The team test reads the current team byte (0x05), not the initial one at 0x1ba. */
 void battle_script_blue_remove_unit(s32 unit_id) {
     s32 misc_id;
     s32 battle_index;

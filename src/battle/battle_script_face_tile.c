@@ -1,15 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Event instruction 0x69 (FaceTile): turn the addressed unit(s) to face a tile.
+/* FaceTile (EVENT_OPCODE_FACE_TILE): turn the unit, or each unit of a group, to face a tile.
  *
- * Parameters: 0x00 unit id (halfword), 0x02 tile x, 0x03 tile y, 0x04 unused,
- * 0x05 clockwise flag, 0x06 rotation speed (index into g_battle_rotation_speed_frames), 0x07
- * rotation time. Each matching unit's screen position is compared with the
- * tile centre to pick one of 16 facings; the n-th matching unit gets
- * rotation time * n / 4.
- */
+ * Parameters: 0x00 unit id (halfword), 0x02 tile x, 0x03 tile y, 0x04 unused, 0x05 clockwise flag,
+ * 0x06 rotation speed (index into g_battle_rotation_speed_frames), 0x07 rotation time. Each matching
+ * unit's screen position is compared with the tile centre to pick one of 16 facings; the n-th matching
+ * unit gets rotation time * n / 4. */
 void battle_script_face_tile(u8* parameters) {
     s16 screen[3];
     s16 tile[3];

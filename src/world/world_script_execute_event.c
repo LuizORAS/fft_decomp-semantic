@@ -402,9 +402,9 @@ restart_event:
         }
         /* ---- unit_t sprites and animation ---- */
         else if (opcode == EVENT_OPCODE_MIRROR_SPRITE) {
-            world_script_mirrorsprite_event_instruction(parameters);
+            world_script_mirror_sprite_event_instruction(parameters);
         } else if (opcode == EVENT_OPCODE_RESET_PALETTE) {
-            world_script_resetpalette_event_instruction(parameters);
+            world_script_reset_palette_event_instruction(parameters);
         } else if (opcode == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
             operand_1 = world_script_get_misc_id(first_halfword);
             if (operand_1 != EVENT_MISC_ID_NONE) {
@@ -515,7 +515,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_JUMP) {
             world_script_jump_event_instruction(parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
-            world_script_waitwalk_event_instruction(first_halfword);
+            world_script_wait_walk_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {
             operand_1 = world_script_get_misc_id(first_halfword);
             if (operand_1 != EVENT_MISC_ID_NONE) {
@@ -541,9 +541,9 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_FACE_TILE) {
             world_script_face_tile(parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
-            world_script_waitrotateunit_and_waitrotateall_event_instruction(first_halfword);
+            world_script_wait_rotate_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_WAIT_ROTATE_ALL) {
-            world_script_waitrotateunit_and_waitrotateall_event_instruction(-1);
+            world_script_wait_rotate_event_instruction(-1);
         }
         /* ---- Blocks, earthquakes, darkness, and screen color ---- */
         else if (opcode == EVENT_OPCODE_BLOCK_START) {
@@ -922,9 +922,9 @@ restart_event:
                 world_script_set_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE, first_halfword);
             }
         } else if (opcode == EVENT_OPCODE_TELEPORT_OUT) {
-            world_script_teleportout_event_instruction(first_halfword, 1);
+            world_script_teleport_out_event_instruction(first_halfword, 1);
         } else if (opcode == EVENT_OPCODE_TELEPORT_IN) {
-            world_script_teleportin_event_instruction(first_halfword, 1);
+            world_script_teleport_in_event_instruction(first_halfword, 1);
         } else if (opcode == EVENT_OPCODE_INFLICT_STATUS) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, world_script_inflict_status_thread);

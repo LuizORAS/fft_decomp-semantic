@@ -6,7 +6,7 @@
  *
  * Ported from the byte-identical BATTLE twin at 0x8013e65c. */
 
-void world_script_mirrorsprite_event_instruction(const u8* parameters) {
+void world_script_mirror_sprite_event_instruction(const u8* parameters) {
     s16 unit_id;
     s32 mode;
     s32 misc_id;

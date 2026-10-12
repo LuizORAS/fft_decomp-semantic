@@ -3,7 +3,7 @@
 
 /* WaitRotateUnit / WaitRotateAll: yield until the named unit, or every unit
  * when the id is -1, has finished rotating. */
-void world_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id) {
+void world_script_wait_rotate_event_instruction(s32 unit_id) {
     s32 i;
     s32 misc_id;
 

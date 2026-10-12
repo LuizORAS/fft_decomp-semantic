@@ -6,13 +6,12 @@
  * stages the same triple in g_world_script_warp_unit_coords. */
 extern world_unit_coordinates_t g_battle_script_warp_coords;
 
-/* CallFunction 0x0f and 0x10: place the misc unit of battle id 3 on the tile and
- * facing of battle id 1, or that of battle id 4 on battle id 2, and cancel any
- * rotation in progress. Nothing happens when the warped battle id has no misc
- * unit.
+/* CallFunction WARP_UNIT_4_DISPLAY_TO_UNIT_2_POSITION_AND_FACING and its unit 5 / unit 3 sibling:
+ * place the misc unit of battle id 3 on the tile and facing of battle id 1, or that of battle id 4 on
+ * battle id 2, and cancel any rotation in progress. Nothing happens when the warped battle id has no
+ * misc unit.
  *
- * The parameter arrives as the CallFunction selector and is reused for the misc
- * id. */
+ * The parameter arrives as the CallFunction selector and is reused for the misc id. */
 void battle_script_warp_unit_display_to_paired_unit(s32 misc_id) {
     battle_stats_t* unit;
     world_unit_animation_state_t* state;

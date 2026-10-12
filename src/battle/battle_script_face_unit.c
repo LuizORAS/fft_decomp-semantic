@@ -2,15 +2,14 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Battle twin of world_script_face_unit. FACE_UNIT and FACE_EACH_OTHER event instructions:
- * turn two units toward each other.
+/* FaceUnit and FaceEachOther (EVENT_OPCODE_FACE_UNIT, EVENT_OPCODE_FACE_EACH_OTHER): turn units
+ * toward each other.
  *
- * Parameters: first unit id halfword, second unit id halfword, rotate mode, speed index
- * into g_battle_rotation_speed_frames, and a delay multiplier. Every misc record of the second unit turns
- * toward the first; unless second_only is set (FaceUnit), the first unit also turns
- * toward the second. Successive second-unit records are staggered like FaceTile.
- * The angle is built in place (negate, then add) so combine cannot fold the two
- * constant additions into one. */
+ * Parameters: first unit id halfword, second unit id halfword, rotate mode, speed index into
+ * g_battle_rotation_speed_frames, and a delay multiplier. Every misc record of the second unit turns
+ * toward the first; unless second_only is set (FaceUnit), the first unit also turns toward the second.
+ * Successive second-unit records are staggered like FaceTile. The angle is built in place (negate,
+ * then add) so combine cannot fold the two constant additions into one. */
 void battle_script_face_unit(const u8* parameters, s32 second_only) {
     s16 position[4];
     s16 target[4];

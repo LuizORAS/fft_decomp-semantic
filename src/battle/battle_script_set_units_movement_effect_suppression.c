@@ -1,12 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Event instruction: set or clear movement-effect suppression on the addressed unit(s).
- * Parameters: 0x00 unit id (halfword), 0x02 nonzero to set, zero to clear.
- * A unit id above 0xff selects a group, so the misc-state loop runs over all
- * 21 unit indices.  WORLD twin: world_script_set_units_movement_effect_suppression.
- */
+/* EVENT_OPCODE_SET_UNIT_MOVEMENT_EFFECT_SUPPRESSION: set (nonzero operand) or clear the
+ * movement-effect suppression of the unit, or of each unit of a group.
+ *
+ * A unit id above 0xff selects a group, so the misc-state loop runs over all 21 unit indices. */
 void battle_script_set_units_movement_effect_suppression(const u8* parameters) {
     u16 unit_id;
     s32 state;

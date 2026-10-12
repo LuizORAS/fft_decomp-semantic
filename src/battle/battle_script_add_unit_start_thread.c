@@ -1,10 +1,7 @@
 #include "fft/battle.h"
 
-/*
- * Battle twin of world_script_add_unit_start_thread. Event thread started by
- * AddUnitStart: scans through AddUnitEnd, loading each AddUnit's graphics and
- * processing LoadAttackGraphics before waiting for pending loads.
- */
+/* Thread body of AddUnitStart (EVENT_OPCODE_ADD_UNIT_START): scan the instructions up to AddUnitEnd,
+ * loading each AddUnit's graphics and running LoadAttackGraphics, then wait for the pending loads. */
 void battle_script_add_unit_start_thread(void) {
     s32 index;
     s32 slot;

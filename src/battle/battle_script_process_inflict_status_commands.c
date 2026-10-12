@@ -1,9 +1,10 @@
 #include "fft/battle.h"
 
-/* At the start of an event that stages no statuses (script variable 0x1fd clear), run each
- * Inflict Status command (EVENT_OPCODE_INFLICT_STATUS) in the event block whose unit has Float or
- * Jump, each in its own thread (battle_script_inflict_status_thread), waiting for it to end. The WORLD
- * twin is world_script_process_inflict_status_commands; the instruction scan and status-byte layout match. */
+/* At the start of an event once the battle has begun (EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED clear), run
+ * each Inflict Status command (EVENT_OPCODE_INFLICT_STATUS) in the event block whose unit has Float or
+ * Jump, each in its own thread (battle_script_inflict_status_thread), waiting for it to end. The
+ * WORLD twin is world_script_process_inflict_status_commands; the instruction scan and status-byte
+ * layout match. */
 void battle_script_process_inflict_status_commands(void) {
     s32 instruction_offset;
     s32 misc_id;

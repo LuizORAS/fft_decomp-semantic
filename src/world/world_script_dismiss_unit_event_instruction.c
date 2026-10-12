@@ -22,7 +22,7 @@ void world_script_dismiss_unit_event_instruction(s32 sprite_set) {
     if (party_index != PARTY_ROSTER_SLOT_COUNT) {
         slot = 0;
         empty_item = ITEM_ID_NONE;
-        for (; slot < 7; slot++) {
+        for (; slot < UNIT_EQUIPMENT_SLOT_COUNT; slot++) {
             item = party_data->equipment[slot];
             if (item != ITEM_ID_NOTHING && item != empty_item) {
                 g_main_item_quantities[item]++;

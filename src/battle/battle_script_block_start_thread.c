@@ -34,7 +34,7 @@ void battle_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_DEBUG_PAUSE) {
             battle_script_print_debug_message();
         } else if (script[0] == EVENT_OPCODE_WALK_TO) {
-            g_battle_thread_call_target = battle_script_walkto_event_instruction;
+            g_battle_thread_call_target = battle_script_walk_to_event_instruction;
             battle_thread_call_on_main_stack(parameters);
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             misc_id = battle_script_get_misc_id(first_halfword);
@@ -45,13 +45,13 @@ void battle_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_JUMP) {
             battle_script_jump_event_instruction((battle_script_jump_instruction_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_WALK) {
-            battle_script_waitwalk_event_instruction(first_halfword);
+            battle_script_wait_walk_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_UNIT_ANIM) {
             battle_script_unit_anim(parameters);
         } else if (script[0] == EVENT_OPCODE_MIRROR_SPRITE) {
-            battle_script_mirrorsprite_event_instruction(script + 1);
+            battle_script_mirror_sprite_event_instruction(script + 1);
         } else if (script[0] == EVENT_OPCODE_RESET_PALETTE) {
-            battle_script_resetpalette_event_instruction(script + 1);
+            battle_script_reset_palette_event_instruction(script + 1);
         } else if (script[0] == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
             misc_id = battle_script_get_misc_id(first_halfword);
             if (misc_id != EVENT_MISC_ID_NONE) {
@@ -91,9 +91,9 @@ void battle_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             battle_script_waitspritemove_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
-            battle_script_waitrotateunit_and_waitrotateall_event_instruction(script[1]);
+            battle_script_wait_rotate_event_instruction(script[1]);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_ALL) {
-            battle_script_waitrotateunit_and_waitrotateall_event_instruction(-1);
+            battle_script_wait_rotate_event_instruction(-1);
         } else if (script[0] == EVENT_OPCODE_UNIT_ANIM_ROTATE) {
             battle_script_unit_animation_rotate_event_instruction(script + 1);
         } else if (script[0] == EVENT_OPCODE_COLOR_UNIT) {

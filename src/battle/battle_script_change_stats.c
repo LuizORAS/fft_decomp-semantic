@@ -1,11 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Battle twin of world_script_change_stats. ChangeStats event instruction: add a signed delta to one stat of each
- * resolved unit.
+/* ChangeStats (EVENT_OPCODE_CHANGE_STATS): add a signed delta to one stat of the unit, or of each
+ * unit of a group.
  *
- * Parameters: unit id halfword, stat selector (event_change_stats_e), then a
- * halfword delta. HP clamps to max HP and the other stats to 0-100. */
+ * Parameters: unit id halfword, stat selector (event_change_stats_e), then a halfword delta. HP clamps
+ * to max HP and the other stats to 0-100. */
 void battle_script_change_stats(const u8* parameters) {
     u16 unit_id;
     s32 misc_index;

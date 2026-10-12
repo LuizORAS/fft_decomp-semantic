@@ -6,7 +6,7 @@
  * it by -0x1f and wait 60 frames more. Then, when `remove` is set, mark its
  * battle unit as not existing. A unit id that does not resolve does nothing. The
  * interpreter always passes remove = 1. */
-void battle_script_teleportout_event_instruction(s32 unit_id, s32 remove) {
+void battle_script_teleport_out_event_instruction(s32 unit_id, s32 remove) {
     s32 misc;
     s32 idx;
 

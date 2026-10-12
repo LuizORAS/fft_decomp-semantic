@@ -37,7 +37,7 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_DEBUG_PAUSE) {
             world_script_print_debug_message();
         } else if (script[0] == EVENT_OPCODE_WALK_TO) {
-            g_world_thread_call_target = (void (*)(void))world_script_walkto_event_instruction;
+            g_world_thread_call_target = (void (*)(void))world_script_walk_to_event_instruction;
             world_thread_call_on_main_stack(parameters);
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             misc_id = world_script_get_misc_id(first_halfword);
@@ -48,13 +48,13 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_JUMP) {
             world_script_jump_event_instruction((battle_script_jump_instruction_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_WALK) {
-            world_script_waitwalk_event_instruction(first_halfword);
+            world_script_wait_walk_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_UNIT_ANIM) {
             world_script_unit_anim(parameters);
         } else if (script[0] == EVENT_OPCODE_MIRROR_SPRITE) {
-            world_script_mirrorsprite_event_instruction(script + 1);
+            world_script_mirror_sprite_event_instruction(script + 1);
         } else if (script[0] == EVENT_OPCODE_RESET_PALETTE) {
-            world_script_resetpalette_event_instruction(script + 1);
+            world_script_reset_palette_event_instruction(script + 1);
         } else if (script[0] == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
             misc_id = world_script_get_misc_id(first_halfword);
             if (misc_id != EVENT_MISC_ID_NONE) {
@@ -94,9 +94,9 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             world_script_waitspritemove_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
-            world_script_waitrotateunit_and_waitrotateall_event_instruction(script[1]);
+            world_script_wait_rotate_event_instruction(script[1]);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_ALL) {
-            world_script_waitrotateunit_and_waitrotateall_event_instruction(-1);
+            world_script_wait_rotate_event_instruction(-1);
         } else if (script[0] == EVENT_OPCODE_UNIT_ANIM_ROTATE) {
             world_script_unit_animation_rotate_event_instruction(script + 1);
         } else if (script[0] == EVENT_OPCODE_COLOR_UNIT) {

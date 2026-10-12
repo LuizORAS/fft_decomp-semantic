@@ -1,10 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Parameters: 0x00 unit id (halfword), 0x02 rotation, 0x03 animation id
- * (halfword), 0x04 move-flag mode (0 unset, else flip).
- */
+/* UnitAnimRotate (EVENT_OPCODE_UNIT_ANIM_ROTATE): set or clear the unit's facing-update suppression
+ * by the byte at +4 (0 clears it), which is the animation id's high byte rather than an operand of its
+ * own; turn the unit at once to the facing operand and start the animation. The unit id is not
+ * checked, so an absent unit indexes the rotation table with EVENT_MISC_ID_NONE. */
 void battle_script_unit_animation_rotate_event_instruction(const u8* parameters) {
     const u8* data = parameters;
     u8 rotation;

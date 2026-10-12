@@ -86,7 +86,7 @@ extern u16 g_world_thread_change_cooldown;
  * callback bridge used by BATTLE. */
 extern void (*g_world_thread_call_target)(void);
 /* Inner-subroutine continuation invoked by the WORLD thread scheduler. Five call
- * sites agree on this shape; world_script_teleportin_event_instruction reuses the slot with an
+ * sites agree on this shape; world_script_teleport_in_event_instruction reuses the slot with an
  * argument and keeps a local extern for that. */
 extern u8 g_world_thread_status_snapshot[16];
 
@@ -692,7 +692,7 @@ s32 world_gfx_update_fade_out_tile(void);
 
 void world_script_assign_bitset_flag(u32* bits, s32 index, s32 set);
 void world_gfx_load_evtchr_thread(void);
-void world_script_resetpalette_event_instruction(const u8* parameters);
+void world_script_reset_palette_event_instruction(const u8* parameters);
 
 /* status panel */
 extern s16 g_world_auto_battle_option_colors[5]; /* text colour per option */
@@ -3204,12 +3204,12 @@ void world_script_start_tutorial(s32 index);
 void world_script_store_halfword(u8* destination, s16 value);
 void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg);
 void world_gfx_ramp_screen_overlay_intensity_to_zero(void);
-void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit);
+void world_script_teleport_out_event_instruction(s32 unit_id, s32 remove_unit);
 void world_script_unit_anim(const u8* parameters);
 void world_script_update_tutorial_controller_input(void);
 void world_script_wait_for_unit_ready(s32 misc_id);
 void world_script_wait_value_event_instruction(const u8* parameters);
-void world_script_walkto_event_instruction(const struct event_walk_to_parameters* parameters);
+void world_script_walk_to_event_instruction(const struct event_walk_to_parameters* parameters);
 s32 world_script_warp_unit(void* instruction);
 s32 world_script_warp_unit_display_to_paired_unit(s32);
 void world_script_set_units_movement_effect_suppression(const u8* parameters);
@@ -3228,16 +3228,16 @@ s32* world_script_get_variable_word_pointer_from_id(s32 variable_id);
 void world_script_inflict_status_thread(void);
 s16 world_script_load_halfword(const u8* source);
 void world_script_load_portrait_colors_event_instruction(s32);
-void world_script_mirrorsprite_event_instruction(const u8* parameters);
+void world_script_mirror_sprite_event_instruction(const u8* parameters);
 void world_script_pause_event_instruction(void);
 void world_script_play_effect_thread(void);
 void world_script_run_condition(event_opcode_e opcode);
 void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
-void world_script_teleportin_event_instruction(s32 unit_id, s32 unused);
+void world_script_teleport_in_event_instruction(s32 unit_id, s32 unused);
 void world_script_unlockdate_event_instruction(u32* date_bits, s32 index, s32 month, s32 day);
-void world_script_waitrotateunit_and_waitrotateall_event_instruction(s32);
+void world_script_wait_rotate_event_instruction(s32);
 void world_script_waitspritemove_event_instruction(s32);
-void world_script_waitwalk_event_instruction(s32 unit_id);
+void world_script_wait_walk_event_instruction(s32 unit_id);
 
 /* event */
 /* Operand pairs that one world_script_execute_event opcode stores together;

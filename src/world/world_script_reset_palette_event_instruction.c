@@ -3,7 +3,7 @@
 
 /* Resolve the script's signed unit ID and refresh its environment palette
  * unless resolution returns the missing-unit sentinel. */
-void world_script_resetpalette_event_instruction(const u8* parameters) {
+void world_script_reset_palette_event_instruction(const u8* parameters) {
     s32 misc_id = world_script_get_misc_id(world_script_load_halfword(parameters));
 
     if (misc_id != EVENT_MISC_ID_NONE) {

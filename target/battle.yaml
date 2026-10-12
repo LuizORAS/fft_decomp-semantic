@@ -897,11 +897,11 @@ functions:
   - {addr: 0x8013dfb0, size: 1432, name: battle_camera_step_track, hash: 7f8a4482ec4d7bae}
   - {addr: 0x8013e548, size: 60, name: battle_script_interpolate_range_fixed12, hash: 61b036d90720a723}
   - {addr: 0x8013e584, size: 60, name: battle_script_print_debug_message, hash: e022a9f8bc32fb50}
-  - {addr: 0x8013e5c0, size: 156, name: battle_script_walkto_event_instruction, hash: e8a19e31d556b80a}
-  - {addr: 0x8013e65c, size: 104, name: battle_script_mirrorsprite_event_instruction, hash: f6beec0bbeb1fc93}
-  - {addr: 0x8013e6c4, size: 68, name: battle_script_resetpalette_event_instruction, hash: 79fd4c27f8d0beb6}
+  - {addr: 0x8013e5c0, size: 156, name: battle_script_walk_to_event_instruction, hash: e8a19e31d556b80a}
+  - {addr: 0x8013e65c, size: 104, name: battle_script_mirror_sprite_event_instruction, hash: f6beec0bbeb1fc93}
+  - {addr: 0x8013e6c4, size: 68, name: battle_script_reset_palette_event_instruction, hash: 79fd4c27f8d0beb6}
   - {addr: 0x8013e708, size: 200, name: battle_script_jump_event_instruction, hash: 734a1cdf6727e56b}
-  - {addr: 0x8013e7d0, size: 76, name: battle_script_waitwalk_event_instruction, hash: 24021c0deeb954e0}
+  - {addr: 0x8013e7d0, size: 76, name: battle_script_wait_walk_event_instruction, hash: 24021c0deeb954e0}
   - {addr: 0x8013e81c, size: 88, name: battle_script_load_attack_graphics_event_instruction, hash: 03c63298566511f4}
   - {addr: 0x8013e874, size: 96, name: battle_script_play_effect_and_wait, hash: fdc04e1986faf430}
   - {addr: 0x8013e8d4, size: 48, name: battle_script_play_effect_thread, hash: 014b4d70b5118cb2}
@@ -997,8 +997,8 @@ functions:
   - {addr: 0x80147918, size: 16, name: battle_noop_80147918, hash: 70cab538e87be7b6}
   - {addr: 0x80147928, size: 132, name: battle_unit_try_get_misc_data_by_unit_id, hash: 95c00a3b4735d757}
   - {addr: 0x801479ac, size: 548, name: battle_script_filter_unit_id_by_mode, hash: af495e872ad53a94}
-  - {addr: 0x80147bd0, size: 216, name: battle_script_teleportout_event_instruction, hash: ca4b779f8a27569e}
-  - {addr: 0x80147ca8, size: 72, name: battle_script_teleportin_event_instruction, hash: 117e30d62a327134}
+  - {addr: 0x80147bd0, size: 216, name: battle_script_teleport_out_event_instruction, hash: ca4b779f8a27569e}
+  - {addr: 0x80147ca8, size: 72, name: battle_script_teleport_in_event_instruction, hash: 117e30d62a327134}
   - {addr: 0x80147cf0, size: 168, name: battle_script_blue_remove_all_enemy_units, hash: 2274921be941b9ac}
   - {addr: 0x80147d98, size: 200, name: battle_script_blue_remove_unit, hash: acf2f50c451c3612}
   - {addr: 0x80147e60, size: 332, name: battle_script_warp_unit, hash: a4238fc24406e01c}
@@ -1020,7 +1020,7 @@ functions:
   - {addr: 0x8014968c, size: 168, name: battle_script_set_units_palette_update_suppression, hash: 406b68bd9d969db0}
   - {addr: 0x80149734, size: 88, name: battle_unit_check_facing_relative_to_camera, hash: f7c874232339e58e}
   - {addr: 0x8014978c, size: 368, name: battle_script_face_tile, hash: 349c3977cc8bc891}
-  - {addr: 0x801498fc, size: 176, name: battle_script_waitrotateunit_and_waitrotateall_event_instruction, hash: 3ddb2ca1554cefe8}
+  - {addr: 0x801498fc, size: 176, name: battle_script_wait_rotate_event_instruction, hash: 3ddb2ca1554cefe8}
   - {addr: 0x801499ac, size: 168, name: battle_sound_bg_thread, hash: 5840248306ebcf8a}
   - {addr: 0x80149a54, size: 228, name: battle_sound_edit_bg_thread, hash: d2b85b17ab3025e0}
   - {addr: 0x80149b38, size: 172, name: battle_script_toggle_message_portrait_flip, hash: 6ddcfa9027a7d71d}

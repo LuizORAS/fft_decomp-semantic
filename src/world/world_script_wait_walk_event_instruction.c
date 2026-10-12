@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Event instruction 0x29 WaitWalk: yield until the unit stops moving. */
-void world_script_waitwalk_event_instruction(s32 unit_id) {
+void world_script_wait_walk_event_instruction(s32 unit_id) {
     s32 misc_id;
 
     misc_id = world_script_get_misc_id(unit_id);
