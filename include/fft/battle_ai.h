@@ -893,7 +893,7 @@ void ai_take_next_movement_origin(void);
 s32 ai_take_random_tile(u16 tiles[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT], ai_coords_t* coordinates, s32 count);
 void ai_transfer_ability_data_and_set_defend_flag(void);
 void ai_transfer_byte_values(void* destination, const void* source, s32 byte_count);
-void ai_transfer_halfword_values(void* destination, void* source, s32 byte_count);
+void ai_transfer_halfword_values(void* destination, const void* source, s32 byte_count);
 void ai_transfer_unit_coordinates(s32 unit_index, ai_coords_t* destination);
 void ai_update_team_targeting_flags(void);
 s32 battle_unit_add_unique_entd_spritesheet(s32 mode, s16 value, s32 limit);

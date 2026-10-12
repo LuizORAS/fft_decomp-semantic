@@ -8,11 +8,9 @@ void main_unit_enable_rsm_flags(battle_stats_t* unit) {
     s32 i;
 
     main_util_clear_byte_data(unit->reaction_abilities, 0xB);
-    i = 0;
-    do {
+    for (i = 0; i < 4; i++) {
         main_unit_set_rsm_flag(unit, unit->innate_abilities[i]);
-        i += 1;
-    } while (i < 4);
+    }
     main_unit_set_rsm_flag(unit, unit->abilities.reaction);
     main_unit_set_rsm_flag(unit, unit->abilities.support);
     main_unit_set_rsm_flag(unit, unit->abilities.movement);

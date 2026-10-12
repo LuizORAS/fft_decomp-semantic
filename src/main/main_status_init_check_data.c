@@ -15,7 +15,7 @@ void main_status_init_check_data(void) {
     u8 mask;
 
     main_util_clear_byte_data(g_main_item_location_flags, sizeof(g_main_item_location_flags));
-    main_util_clear_byte_data(&g_main_status_check_sets[0][0], MAIN_STATUS_CHECK_SET_COUNT * STATUS_BYTE_COUNT);
+    main_util_clear_byte_data(g_main_status_check_sets, sizeof(g_main_status_check_sets));
     status = 0;
     do {
         flags4 = g_main_status_effect_data[status].flags_1;

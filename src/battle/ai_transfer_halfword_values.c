@@ -2,9 +2,9 @@
 #include "psx/types.h"
 
 /* Copy byte_count / 2 16-bit values; an odd last byte is left alone. */
-void ai_transfer_halfword_values(void* destination, void* source, s32 byte_count) {
+void ai_transfer_halfword_values(void* destination, const void* source, s32 byte_count) {
     u16* dst = destination;
-    u16* src = source;
+    const u16* src = source;
     s32 count = byte_count / 2;
     s32 i;
     for (i = 0; i < count; i++) {
