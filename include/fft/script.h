@@ -479,11 +479,10 @@ typedef struct event_color_screen_parameters {
 } event_color_screen_parameters_t;
 typedef char event_color_screen_parameters_size_must_be_9[sizeof(event_color_screen_parameters_t) == 9 ? 1 : -1];
 
+/* Six byte-aligned 16-bit lighting targets, followed by the frame duration. */
 typedef struct event_map_light_parameters {
-    struct {
-        u8 rotation_le[3][2];
-        u8 scale_le[3][2];
-    } targets;
+    u8 target_rotation_le[3][2];
+    u8 target_scale_le[3][2];
     u8 duration_le[2];
 } event_map_light_parameters_t;
 typedef char event_map_light_parameters_size_must_be_14[sizeof(event_map_light_parameters_t) == 14 ? 1 : -1];
