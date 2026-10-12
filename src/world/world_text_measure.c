@@ -14,7 +14,7 @@ void world_text_measure(s16* columns, s16* rows, const u8* text) {
     party_data_t* party;
     u8* cursor;
     s32 i;
-    u8* fill = g_world_text_player_name_buffer;
+    u8* fill = g_world_text_player_name;
     u8 terminator;
     world_text_backreference_state_t* state;
 
@@ -25,7 +25,7 @@ void world_text_measure(s16* columns, s16* rows, const u8* text) {
         fill[i] = terminator;
     }
     for (i = 0; i < 16; i++) {
-        g_world_text_player_name_buffer[i] = party->name[i];
+        g_world_text_player_name[i] = party->name[i];
     }
     TEXT_STATE->return_cursor = (u8*)-1;
     TEXT_STATE->value_cursor = g_world_text_substitution_values;
@@ -89,7 +89,7 @@ void world_text_measure(s16* columns, s16* rows, const u8* text) {
         if (state->value != -1) {
             state->return_cursor = cursor + 1;
             if (state->command == TEXT_FORMAT_RAMZA_NAME) {
-                cursor = g_world_text_player_name_buffer;
+                cursor = g_world_text_player_name;
             } else {
                 cursor = world_text_find_entry(state->value);
             }

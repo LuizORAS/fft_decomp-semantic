@@ -225,8 +225,8 @@ restart_script:
             }
             if (operand_1 == EVENT_CALL_FUNCTION_PLAY_ALTIMA_MUSIC) {
                 g_battle_current_music_track_index = 0;
-                g_battle_music_track_1_id = MAIN_MUSIC_ALTIMA;
-                g_battle_music_track_2_id = 0;
+                g_battle_sound_music_track_1_id = MAIN_MUSIC_ALTIMA;
+                g_battle_sound_music_track_2_id = 0;
                 battle_sound_play_music_tracks(MAIN_MUSIC_ALTIMA, MAIN_MUSIC_NONE);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_COPY_UNIT_8_POSITION_TO_UNIT_9_AND_RELOAD_GRAPHICS) {

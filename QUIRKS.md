@@ -917,7 +917,7 @@ translation unit. Share their types and constants through headers.
   walks the circular free list forever.
 - WORLD runs threads in slots 1-16: `world_thread_yield` wraps at 17, and `world_thread_resolve_id`
   and `world_thread_find_running_by_task` scan to 16 (BATTLE stops at 15). The array has room for
-  the 17th slot (`g_world_gfx_texture_allocation_grid` starts right after it), but
+  the 17th slot (`g_world_gfx_tpage7_vram_allocation_grid` starts right after it), but
   `world_thread_reset_scheduler` clears only slots 0-15, so slot 16 keeps its state across a reset.
 - `battle_state_handle_change_map_jumping_in_state` turns event results 9 and 0xA into game flow
   0 and 1, the reverse of `battle_state_handle_event_state`, and ignores 0xB and 0x13, so a

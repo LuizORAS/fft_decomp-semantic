@@ -124,7 +124,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             if (g_world_formation_unit_slide_pending != 0) {
                 world_formation_step_unit_selection_slide();
             }
-            g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 63;
+            g_world_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 63;
             world_menu_draw_active_window_frames();
             if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ITEM_LIST || g_world_formation_current_menu >= 14
                 || g_world_formation_current_menu == WORLD_FORMATION_MENU_JOB_WHEEL) {

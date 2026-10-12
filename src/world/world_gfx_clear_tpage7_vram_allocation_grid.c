@@ -8,7 +8,7 @@ void world_gfx_clear_tpage7_vram_allocation_grid(void) {
 
     for (row = 0; row < 15; row++) {
         for (column = 15; column >= 0; column--) {
-            g_world_gfx_texture_allocation_grid[row][column] = 0;
+            g_world_gfx_tpage7_vram_allocation_grid[row][column] = 0;
         }
     }
 }

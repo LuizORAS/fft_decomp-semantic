@@ -352,7 +352,7 @@ void battle_text_character_handling_thread(void) {
     if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
         event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if ((event_id == EVENT_ID_MEET_VELIUS || event_id == EVENT_ID_SEARCHING_FOR_ALMA)
-            && g_battle_etc_graphics_enabled == 0) {
+            && g_battle_gfx_draw_primitives_immediately == 0) {
             cursor_x = rec.x;
         } else {
             u32 line_width = g_battle_text_line_widths[0] + 0x18;
@@ -575,7 +575,7 @@ void battle_text_character_handling_thread(void) {
             if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
                 event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
                 if ((event_id == EVENT_ID_MEET_VELIUS || event_id == EVENT_ID_SEARCHING_FOR_ALMA)
-                    && g_battle_etc_graphics_enabled == 0) {
+                    && g_battle_gfx_draw_primitives_immediately == 0) {
                     cursor_x = rec.x;
                 } else {
                     u32 line_width;
@@ -722,7 +722,7 @@ void battle_text_character_handling_thread(void) {
                 saved = text + 1;
                 value_index++;
                 if (character == TEXT_FORMAT_RAMZA_NAME) {
-                    text = g_battle_player_name;
+                    text = g_battle_text_player_name;
                 } else {
                     text = battle_text_find_entry(value);
                 }
@@ -767,7 +767,7 @@ void battle_text_character_handling_thread(void) {
                     if (character == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
-                        cursor_x += g_text_glyph_widths[character];
+                        cursor_x += g_battle_text_glyph_widths[character];
                     }
                 }
                 NEXT();
@@ -809,7 +809,7 @@ void battle_text_character_handling_thread(void) {
                 if (character == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {
-                    cursor_x += g_text_glyph_widths[character];
+                    cursor_x += g_battle_text_glyph_widths[character];
                 }
                 NEXT();
             }

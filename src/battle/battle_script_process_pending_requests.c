@@ -170,9 +170,9 @@ void battle_script_process_pending_requests(void) {
             main_sound_stop_current_music();
             g_battle_current_music_track_index = g_battle_current_music_track_index ^ 1;
             if (g_battle_current_music_track_index == 0) {
-                music_track_id = g_battle_music_track_1_id;
+                music_track_id = g_battle_sound_music_track_1_id;
             } else {
-                music_track_id = g_battle_music_track_2_id;
+                music_track_id = g_battle_sound_music_track_2_id;
             }
             if (music_track_id != 0) {
                 main_sound_switch_music_track(g_battle_current_music_track_index + 1,

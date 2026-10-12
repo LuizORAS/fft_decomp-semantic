@@ -27,7 +27,7 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
         rect.y = (g_main_gfx_screen_polarity & 1) * 0xF0;
         LoadImage(&rect, (u32*)g_main_heap_high_overlay_load_address);
     }
-    g_world_gfx_active_otag_entries = ot;
+    g_world_gfx_current_otag_entry = ot;
     world_gfx_submit_screen_fade_overlay(
         &g_world_screen_tint_tiles[g_world_menu_packet_buffer_index], g_world_screen_fade);
     world_camera_store_state_to_script_variables();
@@ -106,19 +106,19 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
     g_world_field_object_use_request = 0;
 
     if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS) {
-        g_world_companion_overlay_prims = jobstts_entrypoint(g_world_active_turn_unit.battle_id, 0);
-        if (g_world_companion_overlay_prims != 0) {
-            AddPrims(g_world_gfx_active_otag_entries, (void*)g_world_companion_overlay_prims,
-                (void*)(g_world_companion_overlay_prims + 0xFC));
+        g_world_companion_overlay_primitives = jobstts_entrypoint(g_world_active_turn_unit.battle_id, 0);
+        if (g_world_companion_overlay_primitives != 0) {
+            AddPrims(g_world_gfx_current_otag_entry, (void*)g_world_companion_overlay_primitives,
+                (void*)(g_world_companion_overlay_primitives + 0xFC));
         } else {
             g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
         }
     }
     if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_EQUIP) {
-        prims = equip_entrypoint(g_world_active_turn_unit.battle_id, g_world_gfx_active_otag_entries + 1);
-        g_world_companion_overlay_prims = prims;
+        prims = equip_entrypoint(g_world_active_turn_unit.battle_id, g_world_gfx_current_otag_entry + 1);
+        g_world_companion_overlay_primitives = prims;
         if (prims >= 2) {
-            AddPrims(g_world_gfx_active_otag_entries, (void*)prims, (void*)(prims + 0xFC));
+            AddPrims(g_world_gfx_current_otag_entry, (void*)prims, (void*)(prims + 0xFC));
         } else {
             g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
         }

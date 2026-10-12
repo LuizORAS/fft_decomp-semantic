@@ -7,5 +7,5 @@ void world_gfx_draw_or_append_gpu_primitive(void* primitive) {
         DrawPrim(primitive);
         return;
     }
-    addPrim(g_world_gfx_active_otag_entries, primitive);
+    addPrim(g_world_gfx_current_otag_entry, primitive);
 }

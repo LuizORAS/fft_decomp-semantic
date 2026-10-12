@@ -8,7 +8,7 @@
  * the primitive into the current ordering-table entry.
  */
 void battle_gfx_draw_or_append_gpu_primitive(void* primitive) {
-    if (g_battle_etc_graphics_enabled != 0) {
+    if (g_battle_gfx_draw_primitives_immediately != 0) {
         DrawPrim(primitive);
         return;
     }

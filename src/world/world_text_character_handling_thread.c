@@ -743,7 +743,7 @@ void world_text_character_handling_thread(void) {
                 saved = text + 1;
                 value_index++;
                 if (code == TEXT_FORMAT_RAMZA_NAME) {
-                    text = g_world_text_player_name_buffer;
+                    text = g_world_text_player_name;
                 } else {
                     text = world_text_find_entry(value);
                 }

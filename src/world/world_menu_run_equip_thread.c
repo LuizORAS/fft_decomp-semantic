@@ -31,7 +31,7 @@ void world_menu_run_equip_thread(void) {
     g_world_menu_action_slot_row_actions = -3;
     g_world_sound_suppressed = 1;
     g_world_menu_new_button_input |= PSX_PAD_CIRCLE;
-    if (g_world_companion_overlay_prims == 0) {
+    if (g_world_companion_overlay_primitives == 0) {
         world_thread_resume(NATIVE_THREAD_SLOT_MENU);
         world_thread_resume(NATIVE_THREAD_SLOT_MENU_CHILD);
     }
@@ -39,7 +39,7 @@ void world_menu_run_equip_thread(void) {
         world_thread_set_parameters(i, 0, 0, 1);
     }
     world_thread_wait_frames(4);
-    if (g_world_companion_overlay_prims != 0) {
+    if (g_world_companion_overlay_primitives != 0) {
         for (j = 0; j < 2; j++) {
             g_world_menu_pending_selection[j]
                 = ((world_menu_entry_t*)g_world_thread_contexts[8 - j].function_parameter_1)->selected_index;

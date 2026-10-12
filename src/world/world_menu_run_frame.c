@@ -110,7 +110,7 @@ s16 world_menu_run_frame(u32* otag, u32 input) {
     world_menu_update_debug_variable_list_request();
     world_menu_update_fixed_number_panel_request();
     g_world_menu_pending_selection[0] = -2;
-    g_world_gfx_active_otag_entries = otag;
+    g_world_gfx_current_otag_entry = otag;
     g_world_sound_pending_sfx_id = -1;
     world_menu_draw_active_window_frames();
     world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_menu_frame_new_buttons);
@@ -136,8 +136,8 @@ s16 world_menu_run_frame(u32* otag, u32 input) {
     if (g_world_event_input_suppression_frames != 0) {
         g_world_event_input_suppression_frames--;
     }
-    if (g_world_bin_load_request != 0) {
-        g_world_bin_load_request = 0;
+    if (g_world_menu_companion_executable_request_index != 0) {
+        g_world_menu_companion_executable_request_index = 0;
     }
     g_world_frame_counter++;
     g_world_menu_packet_buffer_index = (g_world_menu_packet_buffer_index + 1) & 1;

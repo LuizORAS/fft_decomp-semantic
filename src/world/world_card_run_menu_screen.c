@@ -114,7 +114,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
             g_world_card_menu_step = WORLD_CARD_MENU_STEP_LEFT;
         }
         world_menu_set_zodiac_backdrop_otag(g_world_gfx_active_packet_buffer->otag + 1);
-        g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 60;
+        g_world_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 60;
         world_menu_draw_active_window_frames();
         buttons = PadRead(0) & PSX_PAD_DPAD_MASK;
         buttons |= g_world_input_newly_pressed & 0xfff;

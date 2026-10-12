@@ -37,7 +37,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     s32 polarity;
 
     g_battle_ai_workspace_ptr = (world_event_work_t*)g_battle_ai_workspace;
-    if (g_battle_etc_graphics_enabled != 0) {
+    if (g_battle_gfx_draw_primitives_immediately != 0) {
         DrawSync(0);
         rect.w = 0x100;
         rect.x = 0;

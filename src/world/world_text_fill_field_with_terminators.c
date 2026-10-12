@@ -1,6 +1,6 @@
 #include "psx/types.h"
 
-void world_fill_16_bytes_fe(u8* buf) {
+void world_text_fill_field_with_terminators(u8* buf) {
     s32 value = 0xFE;
     s32 i = 0xF;
 

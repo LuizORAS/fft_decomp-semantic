@@ -32,7 +32,7 @@ void battle_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* overlay, s
         overlay->tile.r0 = level;
         overlay->tile.g0 = level;
         overlay->tile.b0 = level;
-        if (g_battle_etc_graphics_enabled != 0) {
+        if (g_battle_gfx_draw_primitives_immediately != 0) {
             battle_gfx_draw_or_append_gpu_primitive(&overlay->mode);
             battle_gfx_draw_or_append_gpu_primitive(&overlay->tile);
         } else {

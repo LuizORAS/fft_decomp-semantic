@@ -8508,20 +8508,20 @@ extern u8 g_battle_player_unit_fallen;
 
 /* Player name buffer substituted for text command 0xE0, 0xFE-terminated;
  * 0x801720cf is its last byte. */
-extern u8 g_battle_player_name[20];
+extern u8 g_battle_text_player_name[20];
 extern RECT g_battle_text_large_number_glyph_rect; /* glyph source rectangle in the large number font */
 
 extern menu_text_state_t
     g_battle_text_typewriter_state; /* origin/stride passed to battle_text_render_glyph_to_4bpp_image */
 
 extern RECT g_battle_text_typewriter_vram_rect; /* VRAM destination of the finished glyph */
-extern const u8* g_text_glyph_bitmap_data;
+extern const u8* g_battle_text_glyph_bitmap_data;
 
 extern battle_text_glyph_state_t g_battle_text_typewriter_glyph;
 extern const char g_battle_text_decimal_format[];
 extern u16 g_battle_text_message_duration_frames;
-extern u8* g_battle_text_pointer_backup[32];
-extern s32 g_battle_text_pointer_backup_active;
+extern u8* g_battle_text_saved_section_pointers[32];
+extern s32 g_battle_text_section_pointers_saved;
 
 /* BATTLE text IDs use their upper five bits to select one of these sections
  * (text_section_e). Overlay loaders replace individual entries as their text
@@ -8529,7 +8529,7 @@ extern s32 g_battle_text_pointer_backup_active;
 extern u8* g_battle_text_section_pointers[32];
 
 /* Glyph pixel widths, 0xD0 entries per 0xDx prefix page. */
-extern const u8 g_text_glyph_widths[];
+extern const u8 g_battle_text_glyph_widths[];
 extern s32 g_battle_text_awaiting_input;
 extern s32 g_battle_text_current_line;
 extern u32 g_battle_text_decimal_divisors[];
@@ -8917,8 +8917,8 @@ extern s16 g_battle_music_switch_request; /* 0x80165fc8 */
  * attack_sound_resync_scenario_music_and_apply_map_darkness, which the target
  * reaches with lhu (that file's own comment records the andi a u16 merge would
  * add). Every other use is a store, which is sign-agnostic. */
-extern u16 g_battle_music_track_1_id;          /* 0x80165fd4 */
-extern u16 g_battle_music_track_2_id;          /* 0x80165fd6 */
+extern u16 g_battle_sound_music_track_1_id;    /* 0x80165fd4 */
+extern u16 g_battle_sound_music_track_2_id;    /* 0x80165fd6 */
 extern s16 g_battle_music_unload_slot_request; /* 0x80165fca */
 
 /* 0x80165fc0: -1 absent; volume = low 16 bits,
@@ -8999,7 +8999,7 @@ extern void* g_battle_formation_screen_active;
 /* BATTLE flag at 0x80165ff2, set by etc_graphic_open while a full-screen ETC
  * graphic is shown; BATTLE then draws primitives immediately instead of
  * linking them into the ordering table. */
-extern u16 g_battle_etc_graphics_enabled;
+extern u16 g_battle_gfx_draw_primitives_immediately;
 extern u16 g_battle_field_object_use_request; /* 0x80165fe4 */
 extern u16 g_battle_field_object_wait_status; /* 0x80166070 */
 extern u8 g_main_terrain_geomancy_abilities[];

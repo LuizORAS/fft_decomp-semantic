@@ -17,7 +17,7 @@ s32 equip_text_render_glyph_to_4bpp_image(
     u8 pixel;
     u8 byte;
 
-    glyph_bitmap = g_text_glyph_bitmap_data;
+    glyph_bitmap = g_battle_text_glyph_bitmap_data;
     equip_bits_init_primary_reader(glyph_bitmap + glyph_id * TEXT_GLYPH_BYTES);
     for (row = 0; row < 14; row++) {
         stride = position->row_stride * 2;
@@ -36,5 +36,5 @@ s32 equip_text_render_glyph_to_4bpp_image(
             *dst++ = byte;
         }
     }
-    return g_text_glyph_widths[glyph_id];
+    return g_battle_text_glyph_widths[glyph_id];
 }

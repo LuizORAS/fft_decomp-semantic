@@ -130,7 +130,7 @@ void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin
                                 }
                                 if (count >= g_battle_menu_text_param_22) {
                                     battle_text_render_glyph_to_4bpp_image(
-                                        g_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, image,
+                                        g_battle_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, image,
                                         &g_battle_menu_text_pen, g_battle_menu_text_color);
                                 }
                             }
@@ -144,7 +144,7 @@ void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin
                 if (state->value != -1) {
                     state->return_cursor = cursor + 1;
                     if (state->command == TEXT_FORMAT_RAMZA_NAME) {
-                        cursor = g_battle_player_name;
+                        cursor = g_battle_text_player_name;
                     } else {
                         cursor = battle_text_find_entry(state->value);
                     }
@@ -178,10 +178,10 @@ void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin
             break;
         }
         if (count >= g_battle_menu_text_param_22) {
-            battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, image,
-                &g_battle_menu_text_pen, g_battle_menu_text_color);
+            battle_text_render_glyph_to_4bpp_image(g_battle_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES,
+                image, &g_battle_menu_text_pen, g_battle_menu_text_color);
         }
-        pen->rect.x += g_text_glyph_widths[state->command];
+        pen->rect.x += g_battle_text_glyph_widths[state->command];
         if (pen->rect.x >= pen->stride - 8) {
             break;
         }

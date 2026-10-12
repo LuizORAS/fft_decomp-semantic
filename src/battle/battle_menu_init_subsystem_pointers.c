@@ -5,7 +5,7 @@
  * per-session counters. Called first by battle_menu_init_subsystems. */
 void battle_menu_init_subsystem_pointers(void) {
     g_battle_threads = g_battle_thread_contexts;
-    g_text_glyph_bitmap_data = g_battle_text_glyph_bitmaps;
+    g_battle_text_glyph_bitmap_data = g_battle_text_glyph_bitmaps;
     g_battle_menu_glyph_image = g_battle_menu_glyph_image_data;
     g_battle_event_block = g_main_script_event_block;
     g_battle_script_variables = g_main_script_variables;

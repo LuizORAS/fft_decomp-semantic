@@ -31,12 +31,12 @@ void world_gfx_alloc_tpage7_vram(RECT* rect, world_texture_prim_t* prim, u32* im
     }
     for (row = 0; row < 16 - height_cells; row++) {
         for (column = 0; column <= 16 - width_cells; column++) {
-            if (g_world_gfx_texture_allocation_grid[row][column] != 0) {
+            if (g_world_gfx_tpage7_vram_allocation_grid[row][column] != 0) {
                 continue;
             }
             for (y = row; y < row + height_cells; y++) {
                 for (x = column; x < column + width_cells; x++) {
-                    if (g_world_gfx_texture_allocation_grid[y][x] == 0xFF) {
+                    if (g_world_gfx_tpage7_vram_allocation_grid[y][x] == 0xFF) {
                         /* Continues the column loop from the nested scan. */
                         goto next;
                     }
@@ -44,7 +44,7 @@ void world_gfx_alloc_tpage7_vram(RECT* rect, world_texture_prim_t* prim, u32* im
             }
             for (y = row; y < row + height_cells; y++) {
                 for (x = column; x < column + width_cells; x++) {
-                    g_world_gfx_texture_allocation_grid[y][x] = 0xFF;
+                    g_world_gfx_tpage7_vram_allocation_grid[y][x] = 0xFF;
                 }
             }
             x = column * 16;

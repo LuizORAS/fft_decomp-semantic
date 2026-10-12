@@ -5,6 +5,6 @@
  * window frames. */
 void world_script_set_current_otag_entry_and_update_input(u32* ot, s32 buttons) {
     world_input_update_menu_repeat(buttons);
-    g_world_gfx_active_otag_entries = ot;
+    g_world_gfx_current_otag_entry = ot;
     world_menu_draw_active_window_frames();
 }

@@ -50,7 +50,7 @@ functions:
   - {addr: 0x800e1ea0, size: 16, name: world_menu_unblock_help, hash: d7f503c035758c32}
   - {addr: 0x800e1eb0, size: 20, name: world_sound_set_effect_to_confirm, hash: dcec320743e88359}
   - {addr: 0x800e1ec4, size: 20, name: world_sound_set_effect_to_cancel, hash: 2e72a265e93b98c6}
-  - {addr: 0x800e1ed8, size: 20, name: world_sound_set_scroll_effect, hash: 7684f65afee83ab4}
+  - {addr: 0x800e1ed8, size: 20, name: world_sound_set_effect_to_cursor_move, hash: 7684f65afee83ab4}
   - {addr: 0x800e1eec, size: 20, name: world_sound_set_effect_to_invalid, hash: 2cded14f2af8d448}
   - {addr: 0x800e1f00, size: 40, name: world_menu_stop_thread_with_invalid_sound, hash: 673200a96478bd69}
   - {addr: 0x800e1f28, size: 48, name: world_camera_wait_until_idle, hash: fecdc06e231e4865}
@@ -112,7 +112,7 @@ functions:
   - {addr: 0x800e7b4c, size: 8, name: world_return_parameter_1, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800e7b54, size: 8, name: world_return_argument_800e7b54, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800e7b5c, size: 196, name: world_text_build_unit_name_list, hash: 9a9afb823d5db8ad}
-  - {addr: 0x800e7c20, size: 32, name: world_fill_16_bytes_fe, hash: 5eaa92c4790153fd}
+  - {addr: 0x800e7c20, size: 32, name: world_text_fill_field_with_terminators, hash: 5eaa92c4790153fd}
   - {addr: 0x800e7c40, size: 396, name: world_menu_copy_unit_data_to_status_billboard, hash: 9b61737b18a8d657}
   - {addr: 0x800e7dcc, size: 1348, name: world_menu_load_selected_unit, hash: f635c99de88e0baf}
   - {addr: 0x800e8310, size: 84, name: world_unit_has_any_current_status, hash: f4242604b8850c34}
@@ -1117,8 +1117,8 @@ data:
   - {addr: 0x801532e0, name: g_world_event_effect_target_x}
   - {addr: 0x801532e2, name: g_world_event_effect_target_y}
   - {addr: 0x801532e4, name: g_world_event_effect_target_mode}
-  - {addr: 0x801532e8, name: g_world_bin_load_request}
-  - {addr: 0x801532ec, name: g_world_pending_bin_load_index}
+  - {addr: 0x801532e8, name: g_world_menu_companion_executable_request_index}
+  - {addr: 0x801532ec, name: g_world_menu_companion_data_file_request_index}
   - {addr: 0x801532f0, name: g_world_companion_overlay_state}
   - {addr: 0x801532f4, name: g_world_frame_counter}
   - {addr: 0x801532f8, name: g_world_menu_packet_buffer_index}
@@ -1234,13 +1234,13 @@ data:
   - {addr: 0x80156350, name: g_world_cursor_bob_thresholds}
   - {addr: 0x80156360, name: g_world_cursor_bob_active_thresholds}
   - {addr: 0x80156384, name: g_world_text_message_duration_frames}
-  - {addr: 0x80156388, name: g_world_bin_load_sectors}
-  - {addr: 0x801563c8, name: g_world_bin_load_sizes}
-  - {addr: 0x80156408, name: g_world_bin_load_address_offsets}
-  - {addr: 0x80156448, name: g_world_pending_bin_load_sectors}
-  - {addr: 0x80156488, name: g_world_pending_bin_load_sizes}
-  - {addr: 0x801564c8, name: g_world_pending_bin_load_in_progress}
-  - {addr: 0x801564cc, name: g_world_bin_load_in_progress}
+  - {addr: 0x80156388, name: g_world_menu_companion_executable_lbas}
+  - {addr: 0x801563c8, name: g_world_menu_companion_executable_sizes}
+  - {addr: 0x80156408, name: g_world_menu_companion_executable_offsets}
+  - {addr: 0x80156448, name: g_world_menu_companion_data_file_lbas}
+  - {addr: 0x80156488, name: g_world_menu_companion_data_file_sizes}
+  - {addr: 0x801564c8, name: g_world_menu_companion_data_file_loading}
+  - {addr: 0x801564cc, name: g_world_menu_companion_executable_loading}
   - {addr: 0x801564d0, name: g_world_unit_view_thread_sets}
   - {addr: 0x80156690, name: g_world_menu_building_thread_started}
   - {addr: 0x801566b0, name: g_world_menu_panel_fade_modes}
@@ -1860,7 +1860,7 @@ data:
   - {addr: 0x80195ed0, name: g_world_numeric_display_palettes}
   - {addr: 0x801995d0, name: g_world_unit_editor_palette}
   - {addr: 0x801996d0, name: g_world_unit_summary_palettes}
-  - {addr: 0x8019a0d0, name: g_world_gfx_texture_allocation_grid}
+  - {addr: 0x8019a0d0, name: g_world_gfx_tpage7_vram_allocation_grid}
   - {addr: 0x8019a1c0, name: g_world_menu_palette_colors}
   - {addr: 0x8019a200, name: g_world_saved_game_options}
   - {addr: 0x8019a204, name: g_world_menu_current_button_input}
@@ -1872,7 +1872,7 @@ data:
   - {addr: 0x8019a21c, name: g_world_script_saved_event_input}
   - {addr: 0x8019a220, name: g_world_event_map_jump_in_request}
   - {addr: 0x8019a224, name: g_world_event_finish_check_pending}
-  - {addr: 0x8019a228, name: g_world_companion_overlay_prims}
+  - {addr: 0x8019a228, name: g_world_companion_overlay_primitives}
   - {addr: 0x8019a22c, name: g_world_text_draw_origin}
   - {addr: 0x8019a23c, name: g_world_unit_animation_states}
   - {addr: 0x8019a2d0, name: g_world_unit_pending_animations}
@@ -1893,13 +1893,13 @@ data:
   - {addr: 0x8019ac94, name: g_world_menu_action_slot_selected_option}
   - {addr: 0x8019aca0, name: g_world_menu_window_buffers}
   - {addr: 0x8019b330, name: g_world_menu_window_buffer_pointers}
-  - {addr: 0x8019b348, name: g_world_gfx_free_rect_texels}
-  - {addr: 0x8019b358, name: g_world_gfx_free_rect_grid_cells}
+  - {addr: 0x8019b348, name: g_world_gfx_tpage7_free_rect_pixels}
+  - {addr: 0x8019b358, name: g_world_gfx_tpage7_free_rect_cells}
   - {addr: 0x8019b368, name: g_world_menu_allocator_slot_records}
   - {addr: 0x8019b3e8, name: g_world_menu_buffer_arena}
   - {addr: 0x8019f3ac, name: g_battle_ai_workspace}
   - {addr: 0x801a23e8, name: g_world_menu_buffer_allocation_map}
-  - {addr: 0x801a2458, name: g_world_text_player_name_buffer}
+  - {addr: 0x801a2458, name: g_world_text_player_name}
   - {addr: 0x801a246c, name: g_world_text_line_widths}
   - {addr: 0x801a256c, name: g_world_misc_unit_screen_coords}
   - {addr: 0x801a2574, name: g_world_text_saved_section_pointers}
@@ -2297,7 +2297,7 @@ data:
   - {addr: 0x801cd804, name: CLIP2}
   - {addr: 0x801cd80c, name: g_world_formation_unit_banner_at_bottom}
   - {addr: 0x801cd810, name: g_world_tutorial_pressed_button}
-  - {addr: 0x801cd814, name: g_world_gfx_active_otag_entries}
+  - {addr: 0x801cd814, name: g_world_gfx_current_otag_entry}
   - {addr: 0x801cd818, name: g_world_event_pending_reserved_vram_release_slot}
   - {addr: 0x801cd81c, name: g_world_event_pending_evtchr_save_slot}
   - {addr: 0x801cd820, name: g_world_event_pending_saved_evtchr_clear_slot}

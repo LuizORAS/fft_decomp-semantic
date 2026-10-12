@@ -31,21 +31,21 @@ enum {
 /* System-function table. Declared as an array: as a scalar, GCC hoists
  * world_menu_run_system_function_thread's menu-index reload above its store. */
 extern battle_system_function_t g_world_system_function_table[];
-extern s32 g_world_bin_load_request;
+extern s32 g_world_menu_companion_executable_request_index;
 extern s32 g_world_primary_bit_read_index;
 extern s32 g_world_primary_bit_write_index;
 extern u8 g_world_primary_bit_cursor_reset;
 extern u8* g_world_primary_bit_cursor;
-extern s32 g_world_pending_bin_load_index;
+extern s32 g_world_menu_companion_data_file_request_index;
 extern s32 g_world_pending_bin_load_destination;
 extern s32 g_world_system_function_thread_busy;
-extern s32 g_world_bin_load_sectors[];         /* 0x80156388, indexed by request */
-extern s32 g_world_bin_load_sizes[];           /* 0x801563c8 */
-extern s32 g_world_bin_load_address_offsets[]; /* 0x80156408, relative to the overlay load address */
-extern s32 g_world_pending_bin_load_sectors[];
-extern s32 g_world_pending_bin_load_sizes[];
-extern s32 g_world_pending_bin_load_in_progress;
-extern s32 g_world_bin_load_in_progress; /* 0x801564cc */
+extern s32 g_world_menu_companion_executable_lbas[];    /* 0x80156388, indexed by request */
+extern s32 g_world_menu_companion_executable_sizes[];   /* 0x801563c8 */
+extern s32 g_world_menu_companion_executable_offsets[]; /* 0x80156408, relative to the overlay load address */
+extern s32 g_world_menu_companion_data_file_lbas[];
+extern s32 g_world_menu_companion_data_file_sizes[];
+extern s32 g_world_menu_companion_data_file_loading;
+extern s32 g_world_menu_companion_executable_loading; /* 0x801564cc */
 extern s32 g_world_game_option_original_values[14];
 extern s32 g_world_game_option_values[14];
 void world_menu_request_open_companion_executable(s32 request);
@@ -100,7 +100,7 @@ extern s32 g_world_thread_task_ids[][256];
 extern battle_menu_status_panel_indicator_prims_t g_world_thread_indicator_packets[2][2];
 extern main_crystal_pickup_result_t* g_world_dead_unit_context; /* the crystal pickup */
 
-extern native_thread_t g_world_thread_contexts[]; /* 17 equipment: g_world_gfx_texture_allocation_grid follows */
+extern native_thread_t g_world_thread_contexts[]; /* 17 equipment: g_world_gfx_tpage7_vram_allocation_grid follows */
 extern s32 g_world_thread_current_id;
 
 /* WORLD's pointer slot and fixed-array binding refer to the same scheduler
@@ -225,7 +225,7 @@ void world_sound_set_effect_to_cancel(void);
 void world_sound_set_effect_to_confirm(void);
 void world_sound_set_effect_to_confirm_checked(void);
 void world_sound_set_effect_to_invalid(void);
-void world_sound_set_scroll_effect(void);
+void world_sound_set_effect_to_cursor_move(void);
 void world_sound_wait_for_music_stub(void);
 void world_sound_bg_thread(void);
 void world_sound_edit_bg_thread(void);
@@ -470,7 +470,7 @@ extern battle_menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
  * unverified names stay provisional. */
 extern s16 g_world_3d_object_use_request;
 extern u16 g_world_3d_object_wait_status;
-extern u32* g_world_gfx_active_otag_entries;
+extern u32* g_world_gfx_current_otag_entry;
 extern world_gfx_packet_buffer_t* g_world_gfx_active_packet_buffer;
 extern u16 g_world_gfx_draw_primitives_immediately;
 extern u16 g_world_menu_height_display_suppressed;
@@ -482,7 +482,7 @@ extern world_glyph_blit_t g_world_gfx_image_blit_destination;
 extern world_glyph_blit_t g_world_gfx_image_blit_source;
 extern world_menu_selection_record_t g_world_menu_selection_records[];
 extern RECT g_world_gfx_temporary_draw_area;
-extern u8 g_world_gfx_texture_allocation_grid[15][16];
+extern u8 g_world_gfx_tpage7_vram_allocation_grid[15][16];
 extern s8 g_world_gfx_vsync_mode;
 extern u16 g_world_gfx_textured_quad_count;
 
@@ -519,8 +519,8 @@ extern main_zodiac_sprite_frame_t g_world_gfx_zodiac_sprite_frames[];
 extern point16_t g_world_gfx_zodiac_sprite_offsets[];
 extern u8 g_world_gfx_zodiac_sprite_count;
 
-extern s32 g_world_gfx_free_rect_texels[4];
-extern s32 g_world_gfx_free_rect_grid_cells[4];
+extern s32 g_world_gfx_tpage7_free_rect_pixels[4];
+extern s32 g_world_gfx_tpage7_free_rect_cells[4];
 extern RECT g_world_gfx_draw_area_template;
 extern u16 g_world_gfx_draw_area_y;
 extern u8 g_world_change_banner_text_image[];
@@ -1552,7 +1552,7 @@ extern s8 g_world_unit_status_banner_state; /* banner state: 0 idle, 1 finishing
 extern u8 g_world_unit_summary_digit_images[];
 extern world_menu_palette_primitives_t g_world_unit_editor_palette;
 extern world_menu_palette_slot_t g_world_unit_summary_palettes[];
-extern s32 g_world_companion_overlay_prims;
+extern s32 g_world_companion_overlay_primitives;
 /* WalkToAnim: the animation each unit takes once it has moved and stopped, and
  * whether it has been seen moving since. Twins of g_battle_unit_pending_animation_ids
  * and g_battle_unit_was_moving_latch. */
@@ -1734,7 +1734,7 @@ extern u8 g_world_menu_numeric_display_palette_indices[12];
 extern u8 g_world_text_glyph_widths[];
 extern s32 g_world_text_line_widths[];
 extern s32 g_world_menu_help_open;
-extern u8 g_world_text_player_name_buffer[20];
+extern u8 g_world_text_player_name[20];
 extern u8* g_world_text_saved_section_pointers[32];
 extern s32 g_world_text_section_offsets[32];
 extern u8* g_world_text_section_pointer_backup[32];
@@ -3334,7 +3334,7 @@ extern s32 g_world_fixed_math_overflow; /* set by world_cross_product_q12 on Q12
 s32 world_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 get_current_facing_byte_from_misc_id(s32 misc_id);
 s32 world_coords_fit_in_byte(s32 x, s32 y);
-void world_fill_16_bytes_fe(u8* buf);
+void world_text_fill_field_with_terminators(u8* buf);
 void world_free_work_buffer(void);
 
 s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets);
