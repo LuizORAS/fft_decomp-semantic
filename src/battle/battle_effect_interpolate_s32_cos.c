@@ -10,5 +10,5 @@ s32 battle_effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 curr
 
     difference = end - start;
     scaled_difference = difference * (ONE - rcos((current << 11) / duration));
-    return start + scaled_difference / 0x2000;
+    return start + scaled_difference / (2 * ONE);
 }
