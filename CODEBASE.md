@@ -158,7 +158,8 @@ Story scenes are bytecode, run by two copies of one interpreter:
 
 WLDCORE runs two smaller script languages of its own: each location's
 scripts on the world map (`wldcore_script_*`) and the sound novels
-(`wldcore_sound_novel_*`).
+(`wldcore_sound_novel_*`). The [Event Scripts](docs/mechanics/Event%20Scripts.md)
+page covers them all, with OPEN's credits script and the Formation tutorials.
 
 [`include/fft/script.h`](include/fft/script.h) declares the bytecode and the
 script variables that both interpreters share. The game loop itself writes
@@ -217,7 +218,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [Items and Shops](docs/mechanics/Items%20and%20Shops.md),
   [Roster and Formation](docs/mechanics/Roster%20and%20Formation.md),
   [World Map and Travel](docs/mechanics/World%20Map%20and%20Travel.md),
-  [Propositions and the Bar](docs/mechanics/Propositions%20and%20the%20Bar.md) and
+  [Propositions and the Bar](docs/mechanics/Propositions%20and%20the%20Bar.md),
+  [Event Scripts](docs/mechanics/Event%20Scripts.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),
@@ -228,8 +230,9 @@ All of these libraries are reconstructed C, matched like the game code.
   [Changing jobs and growth](docs/guides/Changing%20jobs%20and%20growth.md),
   [Changing items and shops](docs/guides/Changing%20items%20and%20shops.md),
   [Changing the formation and roster](docs/guides/Changing%20the%20formation%20and%20roster.md),
-  [Changing travel and random encounters](docs/guides/Changing%20travel%20and%20random%20encounters.md) and
-  [Changing propositions](docs/guides/Changing%20propositions.md).
+  [Changing travel and random encounters](docs/guides/Changing%20travel%20and%20random%20encounters.md),
+  [Changing propositions](docs/guides/Changing%20propositions.md) and
+  [Changing an event](docs/guides/Changing%20an%20event.md).
 - **Calls through tables:** they do not appear in C, so about 1300 functions
   have no C caller. Their pages say so.
 - **Debugging:** `make map` also writes PCSX-Redux symbol maps to
