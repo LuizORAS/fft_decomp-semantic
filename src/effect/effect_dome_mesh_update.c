@@ -5,6 +5,7 @@
 #include "fft/effect.h"
 #include "fft/main.h"
 #include "fft/map.h"
+#include "psx/libetc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
@@ -171,7 +172,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
 
         /* The base stays in a variable: the target adds it to the row offset
          * after each call instead of folding it into the induction variable. */
-        lattice_bytes = (u8*)0x1F800000;
+        lattice_bytes = (u8*)getScratchAddr(0);
         for (j = 0; j < DOME_MESH_ROWS + 1; j++) {
             k = ((radius + (work->radius_offset >> 8)) * rcos(j * DOME_MESH_LATITUDE_STEP)) >> 12;
             n = ((((radius + (work->radius_offset >> 8)) * rsin(j * DOME_MESH_LATITUDE_STEP)) >> 12) * growth.vy) >> 8;

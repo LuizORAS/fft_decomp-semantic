@@ -9,6 +9,11 @@
 #define MODE_NTSC 0
 #define MODE_PAL  1
 
+/* Scratchpad offsets count 32-bit elements. */
+#define getScratchAddr(word_index) ((u32*)0x1f800000 + (word_index))
+
+enum { PSX_SCRATCHPAD_BYTE_COUNT = 1024 };
+
 typedef void (*psyq_interrupt_callback_t)(void);
 
 extern int VSync(int);

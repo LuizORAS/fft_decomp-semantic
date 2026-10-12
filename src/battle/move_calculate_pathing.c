@@ -2,6 +2,7 @@
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
 #include "fft/battle_target.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Pathfinding pass for a generic unit (id 0x7f) from (x, y, level) to the target
@@ -97,13 +98,13 @@ battle_walk_path_t* move_calculate_pathing(s32 flags, s32 jump, s32 x, s32 y, u3
         state->frontier_max_remaining_range = config->move + 1;
         g_move_pathing_resume_pass = 0;
     } else {
-        main_util_copy_byte_data(g_ai_unit_snapshot_storage, (void*)0x1f800000, 1024);
+        main_util_copy_byte_data(g_ai_unit_snapshot_storage, getScratchAddr(0), PSX_SCRATCHPAD_BYTE_COUNT);
     }
     for (i = g_move_pathing_resume_pass; i < config->move; i++) {
         if (check_budget && ai_is_vsync_hblank_past_threshold() && completed_pass) {
             g_move_pathing_resume_pass = i;
             *suspended = 1;
-            main_util_copy_byte_data((void*)0x1f800000, g_ai_unit_snapshot_storage, 1024);
+            main_util_copy_byte_data(getScratchAddr(0), g_ai_unit_snapshot_storage, PSX_SCRATCHPAD_BYTE_COUNT);
             return &g_move_path;
         }
         if (!state->frontier_max_remaining_range) {

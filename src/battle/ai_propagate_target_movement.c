@@ -3,6 +3,7 @@
 #include "fft/battle_move.h"
 #include "fft/battle_target.h"
 #include "fft/battle_unit.h"
+#include "psx/libetc.h"
 
 /* Propagate the acting unit's movement budget outward from a target tile.
  *
@@ -50,7 +51,7 @@ s32 ai_propagate_target_movement(
         config->ai_propagation_mode = 1;
     } else {
         /* A direct scratchpad address avoids an extra linker-address addiu. */
-        main_util_copy_byte_data(g_ai_unit_snapshot_storage, (void*)0x1f800000, 1024);
+        main_util_copy_byte_data(g_ai_unit_snapshot_storage, getScratchAddr(0), PSX_SCRATCHPAD_BYTE_COUNT);
     }
     if (config->move_type == MOVE_CLASS_TELEPORT) {
         /* Teleport and Teleport 2 bypass propagation, not destination filtering. */
@@ -63,7 +64,7 @@ s32 ai_propagate_target_movement(
             if (check_budget && ai_is_vsync_hblank_past_threshold() && completed_pass) {
                 g_ai_propagation_resume_pass = pass;
                 *suspended = 1;
-                main_util_copy_byte_data((void*)0x1f800000, g_ai_unit_snapshot_storage, 1024);
+                main_util_copy_byte_data(getScratchAddr(0), g_ai_unit_snapshot_storage, PSX_SCRATCHPAD_BYTE_COUNT);
                 return 0;
             }
             if (!state->frontier_max_remaining_range)

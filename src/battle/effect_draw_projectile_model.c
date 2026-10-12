@@ -2,6 +2,7 @@
 #include "fft/battle_effect.h"
 #include "psx/gte_inline.h"
 #include "psx/libc.h"
+#include "psx/libetc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -55,7 +56,7 @@ void effect_draw_projectile_model(SVECTOR* spin, VECTOR* position, SVECTOR* angl
     SetRotMatrix(&matrix);
     SetTransMatrix(&matrix);
     model = g_effect_model_files[parameter & 0xff];
-    scratch = (VECTOR*)0x1f800000;
+    scratch = (VECTOR*)getScratchAddr(0);
     vertices = (SVECTOR*)((u8*)model->objects + model->objects[0].vertex_offset);
     count = model->objects[0].vertex_count;
     for (i = 0; i < count; i++) {

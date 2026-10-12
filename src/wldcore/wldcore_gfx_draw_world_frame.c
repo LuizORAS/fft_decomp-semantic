@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/libetc.h"
 
 /* Per-frame WLDCORE render pass: clears the current ordering table, runs the
  * menu frame and marker/display-object passes, draws screen fades, waits for
@@ -11,7 +12,7 @@ void wldcore_gfx_draw_world_frame(void) {
     DrawSync(0);
     wldcore_draw_close_indicator_if_pending(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_menu_run_world_frame(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
-    wldcore_switch_to_stack((void*)0x1F8003FC);
+    wldcore_switch_to_stack(getScratchAddr(255));
     wldcore_gfx_draw_context_value_display(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_gfx_draw_calendar_date(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_proposition_submit_marker_request(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);

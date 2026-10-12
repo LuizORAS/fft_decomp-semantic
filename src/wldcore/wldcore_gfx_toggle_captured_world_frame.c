@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/libetc.h"
 
 /* World render/present pass with the 3D map, plus the menu-window handoff.
  *
@@ -30,7 +31,7 @@ void wldcore_gfx_toggle_captured_world_frame(s32 capture) {
     GsSetWorkBase(g_wldcore_gfx_world_primitive_buffers + buffer_index * 0xE000);
     GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     GsClearOt(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
-    wldcore_switch_to_stack((void*)0x1F8003FC);
+    wldcore_switch_to_stack(getScratchAddr(255));
     wldcore_map_project_and_cull_tiles();
     wldcore_gfx_draw_projected_map_tiles(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_map_draw_visible_routes(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);

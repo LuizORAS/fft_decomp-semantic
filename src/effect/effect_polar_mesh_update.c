@@ -3,6 +3,7 @@
 #include "fft/battle_map.h"
 #include "fft/effect.h"
 #include "fft/main.h"
+#include "psx/libetc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
@@ -35,7 +36,7 @@ s32 effect_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_in
     u8 delta_binding;
     u32 brightness;
 
-    scratch = (effect_polar_mesh_scratch_t*)0x1F800000;
+    scratch = (effect_polar_mesh_scratch_t*)getScratchAddr(0);
     record = &g_effect_state_records[state_index];
     entry = &g_effect_geometry_table->entries[emitter_index];
     ot = main_gfx_get_otag();

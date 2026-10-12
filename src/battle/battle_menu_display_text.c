@@ -2,11 +2,12 @@
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/script.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Text-stream state in the scratchpad, 0x200 past the one used by the
  * BATTLE text measurers. */
-#define TEXT_STATE ((text_reader_state_t*)0x1F800200)
+#define TEXT_STATE ((text_reader_state_t*)getScratchAddr(128))
 
 #define TEXT_NEXT(state, cursor) menu_text_advance_cursor_with_backreferences(state, cursor)
 

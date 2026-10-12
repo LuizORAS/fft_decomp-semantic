@@ -5,6 +5,7 @@
 #include "fft/effect.h"
 #include "fft/main.h"
 #include "fft/map.h"
+#include "psx/libetc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
@@ -57,7 +58,7 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     entry = &g_effect_geometry_table->entries[emitter_index];
     placement = entry->radial_mesh.placement_flags;
     ot = main_gfx_get_otag();
-    scratch = (effect_ring_mesh_scratch_t*)0x1f800000;
+    scratch = (effect_ring_mesh_scratch_t*)getScratchAddr(0);
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_CALLBACK_PHASE_IDLE:

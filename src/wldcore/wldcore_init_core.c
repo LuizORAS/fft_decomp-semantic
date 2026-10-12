@@ -1,4 +1,5 @@
 #include "fft/wldcore.h"
+#include "psx/libetc.h"
 
 /* Initialize the WLDCORE world buffers, menu state, and runtime tables. */
 void wldcore_init_core(void) {
@@ -13,7 +14,7 @@ void wldcore_init_core(void) {
     GsSetWorkBase(g_wldcore_gfx_world_primitive_buffers + count * 0xE000);
     GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_draw_close_indicator_if_pending(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
-    wldcore_switch_to_stack((void*)0x1F8003FC);
+    wldcore_switch_to_stack(getScratchAddr(255));
     wldcore_gfx_draw_projected_map_tiles(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_map_draw_visible_routes(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_map_project_and_cull_dots();

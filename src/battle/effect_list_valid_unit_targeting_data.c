@@ -2,6 +2,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_unit.h"
 #include "fft/unit.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
 /*
@@ -15,7 +16,7 @@ void effect_list_valid_unit_targeting_data(s32 first, s32 second, effect_obstacl
     s32 i;
     s32 slot;
 
-    *out = (effect_obstacle_unit_list_t*)0x1F800000;
+    *out = (effect_obstacle_unit_list_t*)getScratchAddr(0);
     (*out)->count = 0;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = battle_unit_get_stats_from_battle_id(i);

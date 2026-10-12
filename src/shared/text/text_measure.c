@@ -1,7 +1,8 @@
 #include "fft/main.h"
 #include "fft/menu.h"
+#include "psx/libetc.h"
 
-#define TEXT_STATE ((text_reader_state_t*)0x1F800000)
+#define TEXT_STATE ((text_reader_state_t*)getScratchAddr(0))
 
 /* Measure a text entry in characters, following substitutions and backreferences. */
 void text_measure(s16* columns, s16* rows, const u8* text) {

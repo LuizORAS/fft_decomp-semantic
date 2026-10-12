@@ -1,8 +1,9 @@
 #include "fft/script.h"
 #include "fft/world.h"
+#include "psx/libetc.h"
 #include "psx/types.h"
 
-#define TEXT_STATE ((text_reader_state_t*)0x1F800200)
+#define TEXT_STATE ((text_reader_state_t*)getScratchAddr(128))
 
 /* Render a WORLD text entry glyph by glyph into a menu window image.
  *

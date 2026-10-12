@@ -1,7 +1,8 @@
 #include "fft/main.h"
 #include "fft/menu.h"
+#include "psx/libetc.h"
 
-#define TEXT_STATE ((text_reader_state_t*)0x1F800000)
+#define TEXT_STATE ((text_reader_state_t*)getScratchAddr(0))
 
 /* Measure a text entry in pixels, recording each line's width and returning
  * the widest line and line count. Spaces are 4 pixels and numeric digits 6;
