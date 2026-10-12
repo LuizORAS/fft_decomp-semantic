@@ -780,7 +780,7 @@ typedef struct battle_unit_birthday {
     u16 _unused_01 : 3; /* reserved bits 9..11 */
     u16 zodiac : 4;
 } battle_unit_birthday_t;
-typedef char battle_birthday_size_must_be_2[(sizeof(battle_unit_birthday_t) == 2) ? 1 : -1];
+typedef char battle_unit_birthday_size_must_be_2[(sizeof(battle_unit_birthday_t) == 2) ? 1 : -1];
 
 /* Suppress random spell quotes for the matching primary or secondary skillset. */
 typedef enum unit_spell_quote_flags {

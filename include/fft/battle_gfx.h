@@ -278,11 +278,11 @@ typedef enum battle_spritesheet_id {
 enum {
     BATTLE_SPRITESHEET_ID_RAMZA_END = 4,
     BATTLE_SPRITESHEET_ID_JOB_FIRST = 96, /* the generic job sheets start here; the monsters' follow */
-    BATTLE_SPRITESHEET_ID_COUNT = 0x9f,
+    BATTLE_SPRITESHEET_ID_COUNT = 159,
 };
 
 enum {
-    BATTLE_SHP_FRAME_EVTCHR_FIRST = 0xd2, /* frame 0 of an EVTCHR slot */
+    BATTLE_SHP_FRAME_EVTCHR_FIRST = 210, /* frame 0 of an EVTCHR slot */
 };
 
 /* The SHP frames of an EVTCHR slot, laid out as battle_gfx_unit_shp_frame_tables_t
@@ -314,7 +314,7 @@ typedef struct battle_gfx_vram_slot {
     clut_t clut;                 /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_misc_id */
     u8 image_data[0x6400];       /* 0x1164 */
 } battle_gfx_vram_slot_t;
-typedef char battle_vram_slot_size_must_be_30052[(sizeof(battle_gfx_vram_slot_t) == 30052) ? 1 : -1];
+typedef char battle_gfx_vram_slot_size_must_be_30052[(sizeof(battle_gfx_vram_slot_t) == 30052) ? 1 : -1];
 
 /* Per-slot summary written by battle_gfx_get_vram_slot_summary. */
 typedef struct battle_gfx_vram_slot_summary {
@@ -351,7 +351,7 @@ typedef struct battle_gfx_spritesheet_slot {
     u8 compressed_attack_image[0x30d4]; /* 0x02; image data copied from SPR data +0x9200 by 0x80087704 */
     clut_t clut;                        /* 0x30d6; 16 palettes with the STP bit set (0x80087704) */
 } battle_gfx_spritesheet_slot_t;
-typedef char battle_spritesheet_slot_size_must_be_13014[(sizeof(battle_gfx_spritesheet_slot_t) == 13014) ? 1 : -1];
+typedef char battle_gfx_spritesheet_slot_size_must_be_13014[(sizeof(battle_gfx_spritesheet_slot_t) == 13014) ? 1 : -1];
 
 /* Four-byte lookup record for the 0x9f ordinary unit spritesheets. */
 typedef struct battle_gfx_spritesheet_data {

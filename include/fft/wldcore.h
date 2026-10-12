@@ -766,7 +766,7 @@ typedef struct wldcore_text_scrollable_window {
     s32 extra_render_index;    /* 0x64; optional render record scrolled with the text, -1 if none */
     s32 text_substitutions[2]; /* 0x68; copied to the text substitution values unless -1 */
 } wldcore_text_scrollable_window_t;
-typedef char wldcore_scrollable_text_window_size_must_be_112[sizeof(wldcore_text_scrollable_window_t) == 112 ? 1 : -1];
+typedef char wldcore_text_scrollable_window_size_must_be_112[sizeof(wldcore_text_scrollable_window_t) == 112 ? 1 : -1];
 
 extern s32 g_wldcore_message_block_sector_offsets[];
 extern wldcore_text_scrollable_window_t g_wldcore_scrollable_text_window;
@@ -1936,7 +1936,7 @@ typedef struct wldcore_window_render_record {
     RECT bounds;
     CVECTOR color; /* 0x30 */
 } wldcore_window_render_record_t;
-typedef char wldcore_render_record_size_must_be_52[sizeof(wldcore_window_render_record_t) == 52 ? 1 : -1];
+typedef char wldcore_window_render_record_size_must_be_52[sizeof(wldcore_window_render_record_t) == 52 ? 1 : -1];
 
 /* Text width is in pixels; the second value counts visible list rows. */
 typedef struct wldcore_window_panel_layout {

@@ -316,7 +316,7 @@ typedef struct main_file_load_descriptor {
     CdlLOC position;
     u8* destination;
 } main_file_load_descriptor_t;
-typedef char main_file_load_state_size_must_be_36[sizeof(main_file_load_descriptor_t) == 36 ? 1 : -1];
+typedef char main_file_load_descriptor_size_must_be_36[sizeof(main_file_load_descriptor_t) == 36 ? 1 : -1];
 
 extern main_file_load_descriptor_t g_main_file_cd_state;
 extern u32 g_main_file_still_loading;

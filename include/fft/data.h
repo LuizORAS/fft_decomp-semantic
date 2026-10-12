@@ -698,7 +698,7 @@ typedef struct ability_data {
     u8 type_flags;               /* 0x03; ability_type_flag_e high bits; serialized class in the low nibble */
     ability_ai_flags_t ai_flags; /* 0x04 */
 } ability_data_t;
-typedef char battle_ability_primary_record_size_must_be_8[(sizeof(ability_data_t) == 8) ? 1 : -1];
+typedef char ability_data_size_must_be_8[(sizeof(ability_data_t) == 8) ? 1 : -1];
 
 /* Bit flags in status_infliction_data_t.type and the active-ability copy. The
  * target status applicator checks these in descending-bit precedence. */
@@ -715,7 +715,7 @@ typedef struct status_infliction_data {
     u8 type; /* status_infliction_type_e bit flags */
     u8 statuses[5];
 } status_infliction_data_t;
-typedef char status_infliction_record_size_must_be_6[(sizeof(status_infliction_data_t) == 6) ? 1 : -1];
+typedef char status_infliction_data_size_must_be_6[(sizeof(status_infliction_data_t) == 6) ? 1 : -1];
 
 /* element */
 /* Element bits shared by abilities, equipment, jobs and unit affinity sets. */

@@ -151,7 +151,7 @@ typedef struct attack_deployment_squad_data {
     u8 map_id;             /* 0x09 */
     u16 placement_id;      /* 0x0a */
 } attack_deployment_squad_data_t;
-typedef char attack_squad_data_size_must_be_12[(sizeof(attack_deployment_squad_data_t) == 12) ? 1 : -1];
+typedef char attack_deployment_squad_data_size_must_be_12[(sizeof(attack_deployment_squad_data_t) == 12) ? 1 : -1];
 
 /* Textured deployment banner followed by its two triangle packets. */
 typedef struct attack_deploy_arrow_gfx {

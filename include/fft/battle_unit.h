@@ -305,7 +305,7 @@ typedef struct battle_gfx_sprite_part_display_data {
     u8 flags; /* battle_misc_display_flags_e and battle_misc_display_blend_mode_e */
 } battle_gfx_sprite_part_display_data_t;
 typedef char
-    battle_sprite_part_display_data_size_must_be_7[(sizeof(battle_gfx_sprite_part_display_data_t) == 7) ? 1 : -1];
+    battle_gfx_sprite_part_display_data_size_must_be_7[(sizeof(battle_gfx_sprite_part_display_data_t) == 7) ? 1 : -1];
 
 /* A sprite display: texture page, CLUT, colour and the parts cut from it.
  * Renderer APIs use this common header and variable part tail; the fixed
@@ -388,7 +388,7 @@ typedef union battle_unit_command_state {
         SVECTOR target_panel; /* vx = panel x, vy = map level, vz = panel y */
     } cursor;
 } battle_unit_command_state_t;
-typedef char battle_misc_command_state_size_must_be_24[sizeof(battle_unit_command_state_t) == 24 ? 1 : -1];
+typedef char battle_unit_command_state_size_must_be_24[sizeof(battle_unit_command_state_t) == 24 ? 1 : -1];
 
 /* g_battle_entd_selection_mode: which ENTD battle_unit_select_and_open_entd opens. */
 typedef enum battle_entd_selection {
@@ -878,7 +878,7 @@ typedef struct battle_unit_misc_data {
     battle_gfx_single_part_sprite_display_t item_sprite_display;          /* 0x426 */
     u8 _unused_43c[4]; /* 0x43c; the next slot's in-use 32-bit value (g_battle_unit_misc_slot_flags) */
 } battle_unit_misc_data_t;
-typedef char battle_misc_data_size_must_be_1088[(sizeof(battle_unit_misc_data_t) == 1088) ? 1 : -1];
+typedef char battle_unit_misc_data_size_must_be_1088[(sizeof(battle_unit_misc_data_t) == 1088) ? 1 : -1];
 typedef char
     battle_misc_step_speed_must_be_0x03c[((unsigned long)&((battle_unit_misc_data_t*)0)->step_speed == 0x03c) ? 1 : -1];
 typedef char battle_misc_distortion_target_must_be_0x090
@@ -1086,7 +1086,7 @@ typedef struct battle_unit_misc_slot_flag {
     s32 in_use;
     u8 _unused_004[0x43c];
 } battle_unit_misc_slot_flag_t;
-typedef char battle_misc_slot_flag_size_must_be_1088[(sizeof(battle_unit_misc_slot_flag_t) == 1088) ? 1 : -1];
+typedef char battle_unit_misc_slot_flag_size_must_be_1088[(sizeof(battle_unit_misc_slot_flag_t) == 1088) ? 1 : -1];
 
 /* Provisional: war-trophy search result filled by
  * battle_unit_find_war_trophies_and_bonus_money. REQUIRE links the same routine

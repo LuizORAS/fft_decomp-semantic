@@ -225,9 +225,9 @@ typedef enum card_save_menu_state {
 /* The 0x1e00-byte serialized save is parity-covered in 0x80-byte blocks;
  * each block contributes 0x400 one-bit reads to the primary parity stream. */
 enum {
-    CARD_SAVE_PARITY_BLOCK_COUNT = 0x3c,
-    CARD_SAVE_PARITY_BITS_PER_BLOCK = 0x400,
-    CARD_SAVE_PARITY_BLOCK_BYTES = 0x80,
+    CARD_SAVE_PARITY_BLOCK_COUNT = 60,
+    CARD_SAVE_PARITY_BITS_PER_BLOCK = 1024,
+    CARD_SAVE_PARITY_BLOCK_BYTES = 128,
 };
 
 /* Ten-byte number command in a 12-byte save-menu slot. */

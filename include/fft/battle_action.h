@@ -314,7 +314,7 @@ typedef struct target_panel {
      * sets the target to 0 and old actor tile to 0xff. */
     u8 max_height_delta;
 } target_panel_t;
-typedef char battle_targeting_panel_size_must_be_5[(sizeof(target_panel_t) == 5) ? 1 : -1];
+typedef char target_panel_size_must_be_5[(sizeof(target_panel_t) == 5) ? 1 : -1];
 
 /* Current ability data at 0x801938c0: the attacker/target pair, weapons, formula
  * inputs and results of the strike being resolved, with copies of the ability's

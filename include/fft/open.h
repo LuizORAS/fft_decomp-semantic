@@ -97,7 +97,7 @@ typedef struct open_movie_mdec_stream_state {
     RECT output_rect;        /* 0x2c */
     s32 output_ready;        /* 0x34 */
 } open_movie_mdec_stream_state_t;
-typedef char open_mdec_stream_state_size_must_be_56[(sizeof(open_movie_mdec_stream_state_t) == 56) ? 1 : -1];
+typedef char open_movie_mdec_stream_state_size_must_be_56[(sizeof(open_movie_mdec_stream_state_t) == 56) ? 1 : -1];
 
 extern s32 g_open_movie_aligned_height;
 extern u32 g_open_movie_cd_stream_ring_buffer[];
