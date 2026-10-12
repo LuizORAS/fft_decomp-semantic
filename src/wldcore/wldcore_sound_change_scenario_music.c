@@ -23,6 +23,6 @@ void wldcore_sound_change_scenario_music(s32 music_id) {
     while (main_sound_is_music_loading_stub() != 0) {
         VSync(0);
     }
-    g_wldcore_audio_queue.music.tracks[slot] = music_id;
+    g_wldcore_audio_queue.music.tracks[slot - 1] = music_id;
     g_wldcore_audio_queue.current_slot = slot;
 }

@@ -82,8 +82,8 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_hud_ot_priority = 4;
     g_wldcore_audio_queue.count = 0;
     g_wldcore_audio_queue.music.flags = 0;
-    g_wldcore_audio_queue.music.tracks[2] = 0;
     g_wldcore_audio_queue.music.tracks[1] = 0;
+    g_wldcore_audio_queue.music.tracks[0] = 0;
     g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
     g_wldcore_sound_novel_countdown_frames = 0;
     g_wldcore_location_entry_state.flags = 0;

@@ -39,7 +39,7 @@ next:
         }
         slot = (g_wldcore_audio_queue.current_value & 0xF00) >> 8;
         track = g_wldcore_audio_queue.current_value & 0xFF;
-        slot_track = &g_wldcore_audio_queue.music.tracks[slot];
+        slot_track = &g_wldcore_audio_queue.music.tracks[slot - 1];
         if (*slot_track == track) {
             g_wldcore_audio_queue.current_slot = slot;
             g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;
@@ -80,7 +80,7 @@ next:
         if (slot == g_wldcore_audio_queue.current_slot) {
             g_wldcore_audio_queue.music.flags &= ~WLDCORE_AUDIO_MUSIC_PLAYING;
         }
-        g_wldcore_audio_queue.music.tracks[slot] = 0;
+        g_wldcore_audio_queue.music.tracks[slot - 1] = 0;
     default:
     clear_command:
         g_wldcore_audio_queue.current_command = WLDCORE_AUDIO_COMMAND_NONE;

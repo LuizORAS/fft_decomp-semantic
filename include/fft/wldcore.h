@@ -217,12 +217,10 @@ typedef enum wldcore_audio_music_flag {
 } wldcore_audio_music_flag_e;
 
 /* sound */
-/* The 32-bit music fields at +0x8c: the first is both the music flags and slot 0 of
- * the per-slot loaded-track table, since the target indexes the table from
- * that address. */
-typedef union wldcore_audio_music_slots {
+/* Playback flags followed by the loaded music IDs for slots 1 and 2. */
+typedef struct wldcore_audio_music_slots {
     s32 flags; /* wldcore_audio_music_flag_e */
-    s32 tracks[3];
+    s32 tracks[2];
 } wldcore_audio_music_slots_t;
 
 /* Value of WLDCORE_AUDIO_COMMAND_PLAY_MUSIC and of
