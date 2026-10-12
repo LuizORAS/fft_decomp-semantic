@@ -1,11 +1,10 @@
 #include "fft/world.h"
 
-/*
- * Run the "best fit" equipment menu: build the suggested set once, then run
- * the confirmation thread. On confirm, return the current equipment to the
- * inventory and equip the suggested set.
- */
-s32 world_menu_run_best_fit_equipment(void) {
+/* The formation's Best menu: build the best fit for the selected unit
+ * (world_unit_build_best_fit_equipment) once and preview its stats, then ask "O K / N O". On OK the
+ * unit's own items go back to the inventory, the best fit is equipped from it and the roster is
+ * saved. Returns 0 when the prompt closes. */
+s32 world_formation_run_best_fit_menu(void) {
     /* The target reserves 64 local bytes whose contents are not accessed. */
     s32 unused[16];
     s32 i;

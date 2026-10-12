@@ -9,7 +9,7 @@
  * an egg the menu asks "Destroy the monster egg?" and Yes dismisses it. Circle while browsing a unit
  * opens View Abilities (refused for a monster skillset); X outside browsing and tutorials fades the
  * screen and the music out, and the finished fade ends the screen. Remove Unit and Order Unit run
- * world_formation_run_dismiss_unit_menu_step and world_menu_run_order_unit. */
+ * world_formation_run_dismiss_unit_menu and world_formation_run_order_unit_menu. */
 void world_formation_run_unit_grid_menu(void) {
     u32 input;
 
@@ -66,10 +66,10 @@ void world_formation_run_unit_grid_menu(void) {
                     == 0) {
                     if (g_world_menu_selection_results[0] == 0) {
                         g_world_formation_current_menu = WORLD_FORMATION_MENU_ITEM_ENTER;
-                        world_formation_item_menu();
+                        world_formation_run_item_menu();
                     } else if (g_world_menu_selection_results[0] == 1) {
                         g_world_formation_current_menu = WORLD_FORMATION_MENU_ABILITY_ENTER;
-                        world_menu_run_ability();
+                        world_formation_run_ability_menu();
                     } else if (g_world_menu_selection_results[0] == 2) {
                         g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL_ENTER;
                         world_formation_run_job_wheel_menu();
@@ -149,8 +149,8 @@ void world_formation_run_unit_grid_menu(void) {
             }
         }
     } else if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ORDER_UNIT) {
-        world_menu_run_order_unit();
+        world_formation_run_order_unit_menu();
     } else if (g_world_formation_current_menu == WORLD_FORMATION_MENU_DISMISS_UNIT) {
-        world_formation_run_dismiss_unit_menu_step();
+        world_formation_run_dismiss_unit_menu();
     }
 }

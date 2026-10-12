@@ -1,13 +1,14 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/* Runs the learn menu's job list for the selected formation unit.
+/* Runs the job list of the formation's Learn and View Abilities menus for the selected unit.
  *
  * The first call builds the unlocked-job list and installs the job
- * level/JP menu-script callbacks. Returns -1 when cancelled, 1 when a job
- * with learnable abilities is confirmed (caching its id and generic job
- * index), and 0 while the list is still open. */
-s32 world_menu_run_learn_job_list(void) {
+ * level/JP menu-script callbacks. Returns MENU_JOB_LIST_STEP_CLOSE when cancelled,
+ * MENU_JOB_LIST_STEP_ABILITIES when a job is confirmed (caching its id and generic job index) and
+ * MENU_JOB_LIST_STEP_JOBS while the list is still open. Learn refuses a job whose abilities are all
+ * learned ("Learned all abilities of this Job"). */
+s32 world_formation_run_ability_job_list(void) {
     s16 x;
     s16 y;
 

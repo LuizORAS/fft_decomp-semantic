@@ -2,9 +2,12 @@
 #include "psx/libc.h"
 #include "psx/pad.h"
 
-/* Handle single-slot removal and the remove-all confirmation.
- */
-s32 world_menu_run_remove_item(void) {
+/* The formation's Remove menu: the cursor picks one of the five slots, previewing the stats without
+ * its item, and Circle removes it to the inventory. Left opens the remove-all prompt
+ * (world_formation_run_remove_all_equipment_prompt). X closes the menu (return 0); a unit that cannot
+ * change equipment is refused. As world_formation_run_screen skips the unit selection in this menu,
+ * it follows an L1/R1 unit change itself, with the input of the previous frame. */
+s32 world_formation_run_remove_item_menu(void) {
     /* The target reserves 72 local bytes whose contents are not accessed. */
     s32 unused[18];
     u8 locked;
@@ -58,7 +61,7 @@ s32 world_menu_run_remove_item(void) {
         return 1;
     }
     if (g_world_remove_all_equipment_prompt_active != 0) {
-        g_world_remove_all_equipment_prompt_active = world_menu_handle_remove_all_equipment();
+        g_world_remove_all_equipment_prompt_active = world_formation_run_remove_all_equipment_prompt();
         if (g_world_remove_all_equipment_prompt_active == 0) {
             g_world_remove_item_previewed_slot = -2;
             bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,

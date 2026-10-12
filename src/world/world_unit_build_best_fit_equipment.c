@@ -2,7 +2,7 @@
 
 /* Best Fit: fills equipment[5] (right hand, left hand,
  * head, body, accessory) with the best-ranked held items for formation unit
- * `unit_index`; called by world_menu_run_best_fit_equipment. Each slot's list
+ * `unit_index`; called by world_formation_run_best_fit_menu. Each slot's list
  * comes from world_item_build_category_list plus the unit's current weapons,
  * sorted by world_item_sort_id_list (sort mode 7). Two-hands users prefer a compatible
  * weapon; two-swords users pick a second compatible weapon for the left

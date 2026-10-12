@@ -1,14 +1,12 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/*
- * Handle the remove-all-equipment prompt for the selected formation unit.
+/* The Remove menu's remove-all prompt for the selected formation unit.
  *
- * Redraw the five slot markers on alternate updates. Confirm removes occupied
- * slots; Right exits the prompt. Both paths request the corresponding sound.
- * Return 1 while awaiting input and 0 when the prompt has finished.
- */
-s32 world_menu_handle_remove_all_equipment(void) {
+ * The five slot cursors blink on alternate frames. Circle removes every item to the inventory (the
+ * error sound when there was none), Right leaves the prompt. Returns 1 while awaiting input and 0
+ * when the prompt has finished. */
+s32 world_formation_run_remove_all_equipment_prompt(void) {
     u16 value;
     /* The target reserves 64 additional local bytes; their purpose is unknown. */
     s32 unused[16];

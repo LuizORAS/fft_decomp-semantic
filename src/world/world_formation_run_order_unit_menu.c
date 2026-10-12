@@ -1,15 +1,11 @@
 #include "fft/world.h"
 
-/*
- * Per-frame handler of the formation screen's "order" (sort) menu.
- *
- * The menu lists the seven sort keys in their current priority order.
- * Choosing a row moves that key to the front, shifting the rows above it
- * down one, stores the order back and re-sorts the roster. While the menu is
- * open the unit banner, unit browsing and the two detail panels are off; the
- * handler returns to the unit grid when the menu thread ends.
- */
-void world_menu_run_order_unit(void) {
+/* The formation's Order Unit menu: it lists the seven sort keys in their current priority order.
+ * Choosing a row moves that key to the front, shifting the rows above it down one, stores the order
+ * back and re-sorts the roster (world_formation_sort_roster). While the menu is open the unit
+ * banner, unit browsing and the two detail panels are off; it returns to the unit grid when the menu
+ * thread ends. */
+void world_formation_run_order_unit_menu(void) {
     s16 option_ids[12]; /* seven entries plus terminator; sized for the retail frame */
     s32 index;
     s32 selected_entry;

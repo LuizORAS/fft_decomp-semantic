@@ -2,9 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* volatile: the target re-reads the counter right after incrementing it */
-
-s32 world_menu_update_clear_all_abilities_prompt(void) {
+/* The ability Remove menu's remove-all prompt: the four slot cursors blink on alternate frames,
+ * Circle empties every slot (the error sound when all were empty) and Right leaves. Returns 1 while
+ * awaiting input and 0 when the prompt has finished. */
+s32 world_formation_run_remove_all_abilities_prompt(void) {
     world_formation_unit_ability_slots_t* unit;
     u16 value;
     s32 unused[16];

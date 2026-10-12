@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
 /* Fill stat_diff with the Move and Jump change of replacing movement ability old_ability with
- * new_ability, every other stat cleared; the ability-removal menu (world_menu_run_remove_ability)
+ * new_ability, every other stat cleared; the ability-removal menu (world_formation_run_remove_ability_menu)
  * previews clearing the Move+ or Jump+ slot with it. */
 void world_ability_find_stat_changes_due_to_equipped(
     world_item_stat_detail_t* stat_diff, s32 old_ability, s32 new_ability) {

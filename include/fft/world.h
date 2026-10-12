@@ -766,9 +766,9 @@ extern u8 g_world_ability_menu_saved_browse_enabled;
 extern s8 g_world_remove_ability_cursor;
 extern s8 g_world_clear_abilities_prompt_active;
 extern s16 g_world_remove_ability_slots[5];
-extern volatile u16 g_world_clear_abilities_blink_counter;
-extern s8 g_world_set_ability_list_open;   /* ability list open */
-extern s8 g_world_set_ability_entry_count; /* ability list entry count */
+extern volatile u16 g_world_clear_abilities_blink_counter; /* volatile: re-read right after the increment */
+extern s8 g_world_set_ability_list_open;                   /* ability list open */
+extern s8 g_world_set_ability_entry_count;                 /* ability list entry count */
 extern u8 g_world_set_ability_unit_index;
 extern u8 g_world_set_ability_cursor;
 
@@ -1177,6 +1177,17 @@ typedef struct world_formation_background_tile {
     u16 u;
 } world_formation_background_tile_t;
 
+/*
+ * The sprite-set -> script-variable table walked by the
+ * dismissal tail, terminated by sprite_set == -1. The four-byte stride is
+ * proved by the target advancing both its record pointer and its byte-offset
+ * index by 4 per iteration.
+ */
+typedef struct world_formation_dismiss_entry {
+    s16 sprite_set;  /* 0x00 */
+    s16 variable_id; /* 0x02 */
+} world_formation_dismiss_entry_t;
+
 /* The mode argument of world_formation_build_record_list: which roster units
  * it lists. */
 typedef enum world_formation_record_list_mode {
@@ -1200,6 +1211,7 @@ extern world_oriented_quad_t g_world_formation_cursor_sprite;
 extern s32 g_world_formation_current_menu;                               /* world_formation_menu_e */
 extern world_formation_menu_handler_t g_world_formation_menu_handlers[]; /* one per world_formation_menu_e */
 extern world_formation_background_tile_t g_world_formation_background_tiles[2][4];
+extern world_formation_dismiss_entry_t g_world_formation_dismiss_entries[];
 extern point16_t g_world_formation_cursor_position;
 extern u8 g_world_formation_generic_human_graphic_index_table[];
 extern world_formation_graphic_entry_t g_world_formation_graphic_entries[];
@@ -1321,7 +1333,7 @@ void world_formation_draw_unit_readout(
     s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s32), s32 enabled, s32 priority);
 
 s32 world_formation_run_equip_item_menu(void);
-s32 world_formation_run_item_submenu_step(void);
+s32 world_formation_run_item_list_menu(void);
 s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
@@ -1374,7 +1386,7 @@ void world_formation_init_menu_display(void);
 void world_formation_init_menu_state(void);
 void world_formation_init_selection_cursor(s16 formation_index);
 s32 world_formation_is_job_wheel_selection_available(s32 unused_row);
-void world_formation_item_menu(void);
+void world_formation_run_item_menu(void);
 void world_formation_layout_job_wheel_portrait(void);
 s32 world_formation_get_unit_lock(s32 unit_id);
 void world_formation_place_unit_portrait_at_rest(s16 unit_index);
@@ -1384,7 +1396,7 @@ void world_formation_recalculate_selected_unit_stats(void);
 void world_formation_remove_invalid_unit_loadout(s16 unit_id);
 void world_formation_reset_cursor_trail(void);
 void world_formation_run_before_event(void);
-void world_formation_run_dismiss_unit_menu_step(void);
+void world_formation_run_dismiss_unit_menu(void);
 void world_formation_run_job_wheel_menu(void);
 void world_formation_run_tutorial_screen(s32 menu_index);
 void world_formation_save_records_to_party_data(void);
@@ -1408,6 +1420,15 @@ void world_formation_update_open_request(void);
 void world_formation_update_unit_selection(void);
 void world_formation_sort_roster(s32 index);
 s32 world_formation_get_unit_stat_by_mode(s32 unit_index);
+s32 world_formation_run_ability_job_list(void);
+void world_formation_run_ability_menu(void);
+s32 world_formation_run_best_fit_menu(void);
+s32 world_formation_run_learn_menu(void);
+void world_formation_run_order_unit_menu(void);
+s32 world_formation_run_remove_ability_menu(void);
+s32 world_formation_run_remove_all_abilities_prompt(void);
+s32 world_formation_run_remove_all_equipment_prompt(void);
+s32 world_formation_run_remove_item_menu(void);
 
 /* unit */
 /* WORLD's unit helpers: the event-script unit operations it shares with BATTLE (status snapshots,
@@ -2342,7 +2363,6 @@ void world_menu_render_text_image_at_fixed_origin(world_text_dialog_record_t* re
 void world_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record);
 void world_menu_run_equip_thread(void);
 void world_screen_menu_window_frame_thread(void);
-void world_menu_run_order_unit(void);
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames);
 u8* world_menu_script_draw_sprite(u8* cmd);
 world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_number_command_t* command);
@@ -2382,7 +2402,7 @@ void world_menu_display_text(s32 text_id, void* pixels, world_glyph_blit_t* orig
 void world_menu_display_triangle_selection(void);
 void world_menu_draw_animated_cursor(point16_t* position, u16* state, s32 mode);
 void world_menu_draw_animated_vertical_cursor(point16_t* position, u16* state, s32 mode);
-void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode);
+void world_menu_draw_item_category_tabs(s32 wide, s32 row, s32 mode);
 void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 void world_menu_draw_thread_status_indicators(void);
 void world_menu_request_unit_panel_redraw(void);
@@ -2404,7 +2424,6 @@ void world_menu_init_quad_from_record(u16* source, s16* record, POLY_FT4* poly);
 void world_menu_reserve_high_overlay(u32 size);
 void world_menu_run_display_script(u8* script, s32 value);
 u8* world_menu_get_sprite_color(void);
-s32 world_menu_handle_remove_all_equipment(void);
 void world_menu_handle_window_command_with_scaled_clip(world_menu_window_command_t* command);
 s32 world_menu_has_items(s32 mode);
 void world_menu_icon_linked_entry_thread(void);
@@ -2437,19 +2456,13 @@ void world_menu_reset_subsystems(void);
 void world_menu_reset_selection_results(void);
 void world_menu_init_buffer_allocator(void);
 void world_menu_reset_unit_records(void);
-void world_menu_run_ability(void);
-s32 world_menu_run_best_fit_equipment(void);
 void world_menu_run_bunit_transition_thread(void);
 void world_menu_run_jobstts_thread(void);
 void world_menu_run_icon_selection_loop(void);
-s32 world_menu_run_learn(void);
-s32 world_menu_run_learn_job_list(void);
 void world_menu_run_main_mode(s32 mode);
 void world_menu_run_main_mode_0_thread(void);
 void world_menu_run_numeric_display_panel_thread(void);
 void world_menu_run_numeric_editor_thread(void);
-s32 world_menu_run_remove_ability(void);
-s32 world_menu_run_remove_item(void);
 void world_menu_run_script_with_palette_mode(void* output, s32 input, s32 mode);
 void world_menu_run_skillset_thread(void);
 void world_menu_run_system_function_thread(void);
@@ -2498,7 +2511,6 @@ void world_menu_toggle_stat_preview_panel_thread(s32 enable);
 void world_menu_start_equipment_and_ability_panel_thread(s32 enabled);
 void world_menu_toggle_unit_status_thread(s32 enable);
 void world_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT* to2, s32 table);
-s32 world_menu_update_clear_all_abilities_prompt(void);
 
 void world_menu_update_entry_cursor_quads(
     world_menu_entry_t* entry, POLY_FT4* quad, POLY_FT4* shadow, s32 unused, s32 cursor);

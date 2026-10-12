@@ -1,16 +1,14 @@
 #include "fft/world.h"
 
-/*
- * Dispatch formation item-menu transitions and its submenus (6:
- * world_formation_run_equip_item_menu, 7: best-fit equipment, 8: remove item, 9:
- * world_formation_run_item_submenu_step).
- *
- * States 0x10/0x17 slide the grid in, 0x11 slides it back out; state 1 runs
- * the icon list menu (g_world_item_icon_menu) and enters submenu 6..9 from the selected
- * row, refreshing the ordered unit list by roster slot when the list closes.
- * Units world_formation_get_unit_lock reports as locked get text 0xD802.
- */
-void world_formation_item_menu(void) {
+/* Handler of the formation's Item menus (ITEM, its ENTER and LEAVE states and the rows EQUIP,
+ * BEST_FIT, REMOVE and LIST in g_world_formation_menu_handlers). ITEM_ENTER slides the grid out,
+ * ITEM_LEAVE brings it back. ITEM runs the row menu "Equip / Best / Remove / List" in thread 15; a
+ * unit that cannot change equipment (world_formation_get_unit_lock) sees the first three greyed and
+ * is refused them. A pick opens world_formation_run_equip_item_menu,
+ * world_formation_run_best_fit_menu, world_formation_run_remove_item_menu or
+ * world_formation_run_item_list_menu until it returns 0; closing the row menu rebuilds the roster
+ * list, keeps the selected unit by roster slot and leaves. */
+void world_formation_run_item_menu(void) {
     s32 state;
     s8 running;
     u8 saved;
@@ -109,13 +107,13 @@ void world_formation_item_menu(void) {
         done = world_formation_run_equip_item_menu();
         break;
     case WORLD_FORMATION_MENU_ITEM_BEST_FIT:
-        done = world_menu_run_best_fit_equipment();
+        done = world_formation_run_best_fit_menu();
         break;
     case WORLD_FORMATION_MENU_ITEM_REMOVE:
-        done = world_menu_run_remove_item();
+        done = world_formation_run_remove_item_menu();
         break;
     case WORLD_FORMATION_MENU_ITEM_LIST:
-        done = world_formation_run_item_submenu_step();
+        done = world_formation_run_item_list_menu();
         break;
     }
     if (done == 0) {

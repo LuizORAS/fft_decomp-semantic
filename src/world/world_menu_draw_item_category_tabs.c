@@ -1,7 +1,10 @@
 #include "fft/world.h"
 
-/* The incoming mode stays in a2 until the first drawing-helper call. */
-void world_menu_draw_row_window_and_cursor(s32 wide, s32 row, s32 mode) {
+/* Draw the item category tabs of the formation's List menu and the shops' lists: the tab window
+ * (wide or not), the selected tab `row` and its cursor; `mode` is the window's palette mode.
+ *
+ * The incoming mode stays in a2 until the first drawing-helper call. */
+void world_menu_draw_item_category_tabs(s32 wide, s32 row, s32 mode) {
     s16 x;
     s16 width;
     s16* rect;

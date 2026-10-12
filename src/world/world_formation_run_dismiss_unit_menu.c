@@ -3,17 +3,6 @@
 #include "psx/types.h"
 
 /*
- * The sprite-set -> script-variable table walked by the
- * dismissal tail, terminated by sprite_set == -1. The four-byte stride is
- * proved by the target advancing both its record pointer and its byte-offset
- * index by 4 per iteration.
- */
-typedef struct world_formation_dismiss_entry {
-    s16 sprite_set;  /* 0x00 */
-    s16 variable_id; /* 0x02 */
-} world_formation_dismiss_entry_t;
-
-/*
  * The menu record handed to world_menu_run_thread for the
  * dismissal prompt. Offset 0x74 is world_menu_thread_data_t.selection; the
  * other two fields are written only here.
@@ -27,18 +16,16 @@ typedef struct world_formation_dismiss_menu {
     s16 entry3_selected_index; /* 0xec: selected_index of the fourth 0x3c menu entry */
 } world_formation_dismiss_menu_t;
 
-extern world_formation_dismiss_entry_t g_world_formation_dismiss_entries[];
 extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu;
 extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scrolled;
 
-/*
- * Per-frame step of the "dismiss unit" menu
+/* Per-frame step of the "Remove Unit" menu
  * (WORLD_FORMATION_MENU_DISMISS_UNIT), called by world_formation_run_unit_grid_menu.
  * Three phases: first entry, which picks the prompt text and menu record;
  * the per-frame poll of the prompt or menu thread; and the dismissal timer.
  *
- * On entry a unit that is away on a proposition only gets message 0xC012.
- * Otherwise g_world_formation_dismiss_step takes
+ * On entry a unit that is away on a proposition only gets message 0xC012 ("This unit is on
+ * assignment. Cannot be removed."). Otherwise g_world_formation_dismiss_step takes
  * world_formation_can_dismiss_unit's answer: 0 shows the unit's refusal line
  * and returns to the grid, nonzero runs the yes/no confirmation. The line
  * comes from the dismiss-reply text (0xE800 + n): a generic unit (sprite set
@@ -49,9 +36,8 @@ extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scr
  * Confirming plays the dismiss sound and starts a 16-frame timer (the unit
  * index is carried in its high byte); when it runs out every
  * g_world_formation_dismiss_entries row matching the unit's sprite set has
- * its script variable set to 0xC and the unit is removed.
- */
-void world_formation_run_dismiss_unit_menu_step(void) {
+ * its script variable set to 0xC and the unit is removed. */
+void world_formation_run_dismiss_unit_menu(void) {
     world_formation_unit_t* unit;
     world_formation_dismiss_menu_t* menu;
     s32 i;

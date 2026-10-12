@@ -1,12 +1,13 @@
 #include "fft/world.h"
 
-/*
- * Dispatch formation ability-menu transitions and its set/remove/learn menus.
- *
- * Refresh the ordered unit list when a submenu closes, preserving selection
- * by roster slot. Mimes may enter the learn submenu but cannot set abilities.
- */
-void world_menu_run_ability(void) {
+/* Handler of the formation's Ability menus (ABILITY, its ENTER and LEAVE states and the rows SET,
+ * REMOVE and LEARN in g_world_formation_menu_handlers). ABILITY_ENTER slides the grid out,
+ * ABILITY_LEAVE brings it back. ABILITY runs the row menu "Set / Remove / Learn" in thread 15: a Mime
+ * may only Learn, and a unit that cannot change abilities (egg, monster, away) gets all three greyed.
+ * A pick runs world_formation_run_set_ability_menu, world_formation_run_remove_ability_menu or
+ * world_formation_run_learn_menu until it returns 0, then rebuilds the roster list keeping the unit
+ * by roster slot. */
+void world_formation_run_ability_menu(void) {
     s32 state;
     s8 running;
     u8 saved;
@@ -116,10 +117,10 @@ void world_menu_run_ability(void) {
             g_world_ability_submenu_running = world_formation_run_set_ability_menu();
         }
         if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ABILITY_REMOVE) {
-            g_world_ability_submenu_running = world_menu_run_remove_ability();
+            g_world_ability_submenu_running = world_formation_run_remove_ability_menu();
         }
         if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ABILITY_LEARN) {
-            g_world_ability_submenu_running = world_menu_run_learn();
+            g_world_ability_submenu_running = world_formation_run_learn_menu();
         }
     }
 }

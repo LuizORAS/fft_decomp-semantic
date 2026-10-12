@@ -212,7 +212,7 @@ typedef struct world_item_stat_detail {
     s16 magical_class_evade;     /* 0x1e */
     s16 magical_shield_evade;    /* 0x20 */
     s16 magical_accessory_evade; /* 0x22 */
-    s16 equipment[5];            /* 0x24; world_menu_run_best_fit_equipment (0x8011b554) keeps its suggested set here */
+    s16 equipment[5];            /* 0x24; world_formation_run_best_fit_menu (0x8011b554) keeps its suggested set here */
     s16 ability_ids[5];          /* 0x2e; status panel ability rows, -1 for an empty row */
     u8 _unused_38[0x40 - 0x38];
 } world_item_stat_detail_t;

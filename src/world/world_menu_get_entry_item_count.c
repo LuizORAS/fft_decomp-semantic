@@ -1,7 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Get the total count (inventory plus equipped) of the item in a menu row.
+/* Get the total count (inventory plus equipped) of the item in a menu row: menu script callback 1
+ * of the Equip item list.
  *
  * MENU_NUMBER_VALUE_DISABLED is set when the unit cannot equip the item. */
 s32 world_menu_get_entry_item_count(s32 entry_index) {

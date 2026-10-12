@@ -1,9 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Menu processing sibling of world_menu_run_learn: opens on first entry, runs
- * sub-state 0 (world_menu_run_learn_job_list) or 1 (world_ability_run_view_list), tears down on -1. */
-void world_menu_run_view_abilities(void) {
+/* Handler of the formation's View Abilities (VIEW_ABILITIES in g_world_formation_menu_handlers,
+ * Circle on an open unit): the job list (world_formation_run_ability_job_list), then the chosen job's
+ * abilities (world_ability_run_view_list), then back to the unit grid. */
+void world_formation_run_view_abilities_menu(void) {
     if (g_world_view_abilities_initialized == 0) {
         g_world_view_abilities_initialized = 1;
         g_world_formation_unit_cycle_mode = 1;
@@ -16,7 +17,7 @@ void world_menu_run_view_abilities(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
     }
     if (g_world_view_abilities_step == MENU_JOB_LIST_STEP_JOBS) {
-        g_world_view_abilities_step = world_menu_run_learn_job_list();
+        g_world_view_abilities_step = world_formation_run_ability_job_list();
     } else if (g_world_view_abilities_step == MENU_JOB_LIST_STEP_ABILITIES) {
         g_world_view_abilities_step = world_ability_run_view_list();
     }

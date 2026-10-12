@@ -2,10 +2,11 @@
 #include "psx/libc.h"
 #include "psx/pad.h"
 
-/* Run the formation "Equip" item menu: step the slot cursor, open the item
- * list for the selected slot, equip the highlighted item and keep the stat
- * preview in sync. Returns 0 when the menu is cancelled, 1 otherwise.
- */
+/* The formation's Equip menu. The cursor picks one of the five slots; Circle opens the inventory
+ * items for that slot (those the unit cannot equip marked), and Circle there equips the item, which
+ * must have a copy left in the inventory ("There are no items in stock which are not equipped").
+ * Moving over the list previews the stat change through the preview record. X closes the list, then
+ * the menu (return 0). A unit that cannot change equipment is refused. Returns 1 while open. */
 s32 world_formation_run_equip_item_menu(void) {
     s16 x;
     s16 y;

@@ -2,9 +2,11 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Formation item-menu supervisor: menu 9 of world_formation_item_menu's
- * switch, which calls this as `done = world_formation_run_item_submenu_step()`. Dispatches to the
- * category / rearrange / equip-preview sub-menus and redraws the row window.
+/* The formation's List menu: the inventory by category (world_item_run_category_menu), with its
+ * rearrange, action, sort order and "equipped by" modes, until the category menu closes (return 0).
+ * Each frame it draws the Triangle button (enabled for an item the party has equipped), the list
+ * window, the category tabs and, for the item under the cursor, its hand icons, HP/MP bonus window
+ * and status icons.
  *
  * `busy = 0;` is written after the pressable-button call. The target
  * interleaves `move s0,zero` into that call's argument setup (after
@@ -12,22 +14,8 @@
  * emitted first, and reorg then steals it into the preceding `bnez` delay slot
  * and retargets the branch past its own slot instruction. `busy` is not an
  * argument to that call -- it is only read by the script call below -- so the
- * later position is the natural one.
- *
- * fft/world.h owns g_world_formation_unit_cycle_mode,
- * g_world_formation_cursor_ot_override, g_world_preview_stats_thread_params, g_world_preview_stats_thread_params.y,
- * g_world_item_submenu_initialized, g_world_menu_* and g_world_formation_unit_banner_enabled, so those are not
- * redeclared here.
- *
- * g_world_item_submenu_initialized is `u8` in the header while the target reads it with `lb`, so it is reached
- * through an lvalue reinterpretation, as the twin src/world/world_item_run_category_menu.c does for the
- * sibling byte g_world_item_category_menu_initialized (`*(s8*)&g_world_item_category_menu_initialized`).
- *
- * 0x801c8518 carries two catalogued names and the store and the reload use
- * different ones, matching that same twin: one symbol for both lets cse
- * forward the stored value. */
-
-s32 world_formation_run_item_submenu_step(void) {
+ * later position is the natural one. */
+s32 world_formation_run_item_list_menu(void) {
     s32 input;
     s32 disabled;
     s32 busy;
@@ -93,7 +81,7 @@ s32 world_formation_run_item_submenu_step(void) {
         busy = 1;
     }
     world_menu_run_script_with_palette_mode(g_world_item_list_window_script, input, busy);
-    world_menu_draw_row_window_and_cursor(0, g_world_item_menu_category, busy);
+    world_menu_draw_item_category_tabs(0, g_world_item_menu_category, busy);
     if (g_world_menu_option_count != 0) {
         if (g_world_menu_entry_ids[g_world_menu_cursor_position] < ITEM_ID_THROWABLE_FIRST) {
             world_item_draw_weapon_hand_icons(g_world_menu_entry_ids[g_world_menu_cursor_position]);

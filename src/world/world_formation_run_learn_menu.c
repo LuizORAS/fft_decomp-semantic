@@ -1,10 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Learn menu processing: opens the menu on first entry, then runs either
- * the skillset list (state 0) or the ability list (state 1). Returns 0
- * once the menu has been closed. */
-s32 world_menu_run_learn(void) {
+/* The formation's Learn menu: the unit's job list (world_formation_run_ability_job_list), then the
+ * chosen job's ability list (world_ability_run_learn_list). Closing the job list saves the roster
+ * and returns 0. */
+s32 world_formation_run_learn_menu(void) {
     s32 result;
 
     if (g_world_learn_menu_initialized == 0) {
@@ -18,7 +18,7 @@ s32 world_menu_run_learn(void) {
         g_world_learn_menu_initialized = 1;
     }
     if (g_world_learn_menu_step == MENU_JOB_LIST_STEP_JOBS) {
-        result = world_menu_run_learn_job_list();
+        result = world_formation_run_ability_job_list();
         if (result == MENU_JOB_LIST_STEP_ABILITIES) {
             world_menu_init_scrollable_list_core(0, 0, 0);
             g_world_learn_menu_step = MENU_JOB_LIST_STEP_ABILITIES;

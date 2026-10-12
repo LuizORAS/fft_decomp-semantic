@@ -2,13 +2,12 @@
 #include "psx/libc.h"
 #include "psx/pad.h"
 
-/*
- * Run the ability-removal menu for the selected formation unit.
- *
- * Return 0 when canceled and 1 while active. The remove-all command opens its
- * confirmation; individual changes refresh the ability and stat previews.
- */
-s32 world_menu_run_remove_ability(void) {
+/* The formation's ability Remove menu: the cursor picks one of the four slots (secondary skillset,
+ * reaction, support, movement) and Circle empties it, telling world_formation_set_unit_ability_slot
+ * whether an Equip support goes. A Move+ or Jump+ ability previews the stats it gives. Left opens the remove-all prompt
+ * (world_formation_run_remove_all_abilities_prompt). X closes the menu (return 0); a unit that cannot
+ * change abilities is refused. Returns 1 while open. */
+s32 world_formation_run_remove_ability_menu(void) {
     s16 unit_index;
     u8 lock_state;
     u8 slot;
@@ -55,7 +54,7 @@ s32 world_menu_run_remove_ability(void) {
         return 1;
     }
     if (g_world_clear_abilities_prompt_active != 0) {
-        g_world_clear_abilities_prompt_active = world_menu_update_clear_all_abilities_prompt();
+        g_world_clear_abilities_prompt_active = world_formation_run_remove_all_abilities_prompt();
         if (g_world_clear_abilities_prompt_active == 0) {
             g_world_remove_ability_cursor = -1;
             bcopy(((world_formation_unit_ability_slots_t*)

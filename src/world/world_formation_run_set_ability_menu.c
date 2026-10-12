@@ -1,20 +1,19 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/*
- * Run the formation Set Ability menu for the selected unit.
+/* Run the formation Set Ability menu for the selected unit.
  *
  * Return 0 when canceled and 1 while active. With the list closed the cursor
  * picks an ability slot and opens its candidate list (world_ability_find_unit_abilities for the
  * secondary skillset, world_ability_build_equippable_rsm_list otherwise);
  * with it open, the chosen ability is written to the slot and the Move+N
- * stat preview is refreshed.
+ * stat preview is refreshed. A disabled entry is refused with "Job specialty already set"; an empty
+ * reaction, support or movement list says "No Ability is learned".
  *
  * `cursor` is only assigned while the list has entries, as in the target,
  * which compares its stale register value when the list is empty. The inner
  * `(u16)` casts keep the Move+N range checks in unsigned-short arithmetic
- * (`li 0xfe1a` / `addu` / `andi 0xffff`).
- */
+ * (`li 0xfe1a` / `addu` / `andi 0xffff`). */
 s32 world_formation_run_set_ability_menu(void) {
     s32 unused[2]; /* never referenced; reproduces the 0x40 frame */
     s16 x;
