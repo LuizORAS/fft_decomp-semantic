@@ -3,9 +3,10 @@
 
 enum { WORLD_UNKNOWN_ROW_BYTES = 17 };
 
-/* The completion value written to the thread's
- * second parameter is materialised before the branch, which puts `li v1,1`
- * in the beqz delay slot ahead of the 0xFC argument. */
+/* WORLD twin of battle_menu_run_skillset_thread.
+ *
+ * The completion value written to the thread's second parameter is materialised before the branch,
+ * which puts `li v1,1` in the beqz delay slot ahead of the 0xFC argument. */
 void world_menu_run_skillset_thread(void) {
     s32 param_value;
     u8* row;

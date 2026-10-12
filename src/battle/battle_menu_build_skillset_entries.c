@@ -1,9 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Battle twin of world_menu_build_skillset_entries: builds the skillset
- * selection rows of text entry 0x5010 for the selected unit and sizes menu
- * entry 4 to the number of rows. */
+/* Build the skillset list (text entry 0x5010) for the active unit and size menu entry 4 (SKILLSET_LIST)
+ * to its rows. */
 void battle_menu_build_skillset_entries(void) {
     world_menu_text_row_t* rows;
     s32 count;

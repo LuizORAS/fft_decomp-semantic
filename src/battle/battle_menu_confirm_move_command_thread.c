@@ -1,12 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Thread entry of menu entry 0x22, which confirms the Move command.
+/* Thread of the Move row (BATTLE_MENU_ID_MOVE).
  *
- * A unit with Don't Move gets the invalid sound and the linked-entry icon thread
- * (stored row action -1). In a menu whose move is already used (ids 0x0e, 0x14,
- * 0x21, 0x2f, 0x31 and 0x33) only the invalid sound plays. Otherwise the command
- * is confirmed at once, as a silent Circle press. */
+ * A unit with Don't Move gets the invalid sound and the linked-entry icon thread (stored row action -1).
+ * In a menu whose move is already used (ids 0x0e, 0x14, 0x21, 0x2f, 0x31 and 0x33) only the invalid
+ * sound plays. Otherwise the command is confirmed at once, as a silent Circle press. */
 void battle_menu_confirm_move_command_thread(void) {
     s16* stored_actions;
     s32 id;

@@ -26,7 +26,7 @@ void battle_state_handle_move_confirm_menu_state(void) {
         }
         battle_move_undo_unit_move(casting_misc_data);
         battle_gfx_update_unit_palettes();
-        battle_menu_close_move_help();
+        battle_state_enter_select_move_tile();
         return;
     }
 }

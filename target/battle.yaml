@@ -139,9 +139,9 @@ functions:
   - {addr: 0x800709fc, size: 60, name: battle_state_enter_event_at_battle_start, hash: b99900388d26af6f}
   - {addr: 0x80070a38, size: 324, name: battle_state_try_enter_scenario_event, hash: 6bfb97cc47573f38}
   - {addr: 0x80070b7c, size: 136, name: battle_unit_store_entd_flags_without_control_flag, hash: f59b8cfa542e0369}
-  - {addr: 0x80070c04, size: 116, name: battle_menu_set_next_script_action_menus, hash: 588d383c591ec7eb}
+  - {addr: 0x80070c04, size: 116, name: battle_state_enter_open_action_menus, hash: 588d383c591ec7eb}
   - {addr: 0x80070c78, size: 100, name: battle_state_enter_free_cursor, hash: a583245b40b3643c}
-  - {addr: 0x80070cdc, size: 60, name: battle_menu_open_free_cursor_help, hash: e66b5b56138f3b65}
+  - {addr: 0x80070cdc, size: 60, name: battle_state_enter_free_cursor_help, hash: e66b5b56138f3b65}
   - {addr: 0x80070d18, size: 196, name: battle_map_check_deep_dungeon_crystal_and_init_state, hash: 8e1ce48bb62c9abe}
   - {addr: 0x80070ddc, size: 72, name: battle_map_try_start_deep_dungeon_mesh_load, hash: b240c9072d36ecb9}
   - {addr: 0x80070e24, size: 72, name: battle_map_refresh_deep_dungeon, hash: 57ae8102eb1f678d}
@@ -153,20 +153,20 @@ functions:
   - {addr: 0x800713a0, size: 148, name: battle_menu_open_active_unit_idle_action_menu, hash: 6173df4fd8bf1552}
   - {addr: 0x80071434, size: 192, name: battle_menu_open_non_active_unit_idle_action_menu, hash: dc2e012483604426}
   - {addr: 0x800714f4, size: 180, name: battle_menu_dispatch_idle_action_menu, hash: bb6b89767690ace1}
-  - {addr: 0x800715a8, size: 64, name: battle_menu_open_help, hash: d25560f750b40f09}
+  - {addr: 0x800715a8, size: 64, name: battle_state_enter_action_help_menu, hash: d25560f750b40f09}
   - {addr: 0x800715e8, size: 128, name: battle_target_show_move_range_in_free_cursor, hash: 6ce84ccadedd3cc6}
-  - {addr: 0x80071668, size: 52, name: battle_menu_open_free_cursor_mini_menu, hash: d70319e086ad0e59}
-  - {addr: 0x8007169c, size: 64, name: battle_menu_open_mini_menu, hash: b0143cd617fa71e6}
-  - {addr: 0x800716dc, size: 64, name: battle_menu_open_mini_menu_help, hash: 9c82225f1d80c971}
+  - {addr: 0x80071668, size: 52, name: battle_state_enter_mini_menu, hash: d70319e086ad0e59}
+  - {addr: 0x8007169c, size: 64, name: battle_state_return_to_mini_menu, hash: b0143cd617fa71e6}
+  - {addr: 0x800716dc, size: 64, name: battle_state_enter_mini_menu_help, hash: 9c82225f1d80c971}
   - {addr: 0x8007171c, size: 176, name: battle_turn_show_at_entry, hash: ea0edf9338d52010}
   - {addr: 0x800717cc, size: 88, name: battle_state_enter_unit_move, hash: 75fa101b32abf407}
   - {addr: 0x80071824, size: 88, name: battle_state_enter_move_range_exception, hash: 256be8fd8b4c3be9}
-  - {addr: 0x8007187c, size: 176, name: battle_menu_close_move_help, hash: a9c6ab5110b48198}
-  - {addr: 0x8007192c, size: 88, name: battle_menu_open_illegal_move_help, hash: 71f03d60b8493fc8}
+  - {addr: 0x8007187c, size: 176, name: battle_state_enter_select_move_tile, hash: a9c6ab5110b48198}
+  - {addr: 0x8007192c, size: 88, name: battle_state_enter_illegal_move_menu, hash: 71f03d60b8493fc8}
   - {addr: 0x80071984, size: 248, name: battle_state_enter_unit_moving_setup, hash: ad439a537301b870}
   - {addr: 0x80071a7c, size: 60, name: battle_unit_save_previous_state, hash: dbdd74dfa177ea3f}
   - {addr: 0x80071ab8, size: 148, name: battle_state_enter_unit_moving, hash: 23200b2480c2aca7}
-  - {addr: 0x80071b4c, size: 320, name: battle_menu_open_move_confirm, hash: 0314d21603499408}
+  - {addr: 0x80071b4c, size: 320, name: battle_state_enter_move_confirm_menu, hash: 0314d21603499408}
   - {addr: 0x80071c8c, size: 96, name: battle_state_enter_after_command, hash: 4162120f72a9cab8}
   - {addr: 0x80071cec, size: 252, name: battle_unit_decide_facing_direction, hash: fbd9d6f280ca9cfd}
   - {addr: 0x80071de8, size: 128, name: battle_action_report_level_up, hash: da5762b51b918624}
@@ -202,7 +202,7 @@ functions:
   - {addr: 0x80074068, size: 108, name: battle_state_enter_action_cast, hash: 1b5fa24951f6698a}
   - {addr: 0x800740d4, size: 304, name: battle_action_execute_ability, hash: 542c5c18d833d487}
   - {addr: 0x80074204, size: 196, name: battle_state_enter_commence_attack_phase, hash: 0dbec42f259df8e9}
-  - {addr: 0x800742c8, size: 64, name: battle_menu_start_help_thread, hash: 134f635e218e1369}
+  - {addr: 0x800742c8, size: 64, name: battle_state_enter_ability_preview_help, hash: 134f635e218e1369}
   - {addr: 0x80074308, size: 360, name: battle_target_select_tile, hash: 27945184eb7d8306}
   - {addr: 0x80074470, size: 88, name: battle_state_enter_illegal_range, hash: c2bbd66b2d92eb3d}
   - {addr: 0x800744c8, size: 228, name: battle_target_begin_tile_selection, hash: cbd25a950ec48844, rodata: [{addr: 0x80067578, size: 20, hash: 78916b1d116d9124}]}

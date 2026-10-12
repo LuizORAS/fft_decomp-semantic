@@ -1,14 +1,7 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/*
- * Check action-menu restrictions and show the applicable warning.
- *
- * Menu groups 0x13/0x14 and 0x30/0x31 use the battle eligibility check.
- * Other menus inspect the unit's current status and last action. The packed
- * options can suppress status warnings, but messages 0x1002/0x1003 always
- * stop the current thread after any warning thread finishes.
- */
+/* WORLD twin of battle_menu_check_action_restrictions. */
 void world_menu_check_action_restrictions(void) {
     s32 message = 0;
     battle_stats_t* unit;

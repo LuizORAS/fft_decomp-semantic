@@ -1,15 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Battle twin of world_menu_check_action_restrictions: check action-menu restrictions and show the applicable warning.
+/* Check that the active unit may act from the current menu and show why not.
  *
- * Menu groups 0x13/0x14 and 0x30/0x31 use the battle eligibility check.
- * Other menus inspect the unit's current status and last action. The packed
- * options can suppress status warnings, but messages 0x1002/0x1003 always
- * stop the current thread after any warning thread finishes.
- * WORLD twin: world_menu_check_action_restrictions.
- */
+ * In the menus after acting (TURN_ACTED, TURN_MOVED_ACTED and the rider ones) battle_unit_get_action_block
+ * decides: no block plays the invalid sound and ends the thread, a disabled unit gets message 0x1002 and
+ * a submerged one 0x1003. Elsewhere a Charging unit gets 0x8001 (the skillset or ability it charges) and
+ * a Performing unit 0x8002. The message shows in the restriction entry under the current thread, unless
+ * a menu restore is pending; with navigation messages off, 0x8001 and 0x8002 are only the confirm sound
+ * (the test compares the message's high byte with the option bits, both 0x8000). 0x1002 and 0x1003 then
+ * end the thread. */
 void battle_menu_check_action_restrictions(void) {
     s32 message = 0;
     battle_stats_t* unit;

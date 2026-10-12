@@ -1,9 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Menu thread of the main command menu: requests a redraw, runs the icon
- * selection loop and stores the chosen row in byte 0 of the active unit's
- * menu record. */
+/* WORLD twin of battle_menu_build_main. */
 void world_menu_build_main(void) {
     world_menu_entry_t* entry;
     battle_menu_record_t* row;

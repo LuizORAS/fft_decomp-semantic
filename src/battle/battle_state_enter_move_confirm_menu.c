@@ -1,14 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Enter the move-confirm state once the unit has stopped moving and show the
- * matching prompt, with a one-second message time.
+/* Enter MOVE_CONFIRM_MENU once the unit has stopped moving and show the matching prompt, with a
+ * one-second message time.
  *
- * A failed Teleport shows effect message 0x183b; a successful one the move
- * confirmation. Other movement tints the unit by team and asks for confirmation,
- * silently when navigation messages are off. The AT-list-active flag follows
- * whether the player controls the unit. */
-void battle_menu_open_move_confirm(void) {
+ * A failed Teleport shows effect message 0x183b; a successful one the move confirmation. Other movement
+ * tints the unit by team and asks for confirmation, silently when navigation messages are off. The map
+ * cursor shows for a player-controlled unit and hides otherwise. */
+void battle_state_enter_move_confirm_menu(void) {
     battle_unit_misc_data_t* source;
     battle_unit_misc_data_t* caster;
 

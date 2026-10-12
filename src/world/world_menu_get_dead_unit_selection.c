@@ -3,8 +3,7 @@
 
 extern main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
 
-/* Run battle_unit_generate_crystal_or_treasure for the unit on the main thread
- * and return the treasure item when the result is 4, else -1. */
+/* WORLD twin of battle_menu_get_dead_unit_selection. */
 s32 world_menu_get_dead_unit_selection(s32 battle_unit_index) {
     battle_stats_t* unit = battle_unit_get_stats_from_battle_id(battle_unit_index);
 

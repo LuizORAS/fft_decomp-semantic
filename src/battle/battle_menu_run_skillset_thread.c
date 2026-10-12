@@ -1,14 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* BATTLE twin of world_menu_run_skillset_thread: builds the skillset menu on the main stack,
- * then either waits on the child menu thread or runs the icon selection loop
- * for the selected unit and stores its result byte.
+/* Thread of the Act row (SKILLSET_LIST): check that the unit may act, build its skillset list on the
+ * main stack and run it as an icon list from the row the unit last chose, saving the row. A monster's
+ * single skillset skips the list: its ability list opens at once (on a menu restore the thread only
+ * waits for it).
  *
- * As in the WORLD twin, the completion value is materialised before the
- * branch (`li v1,1` in the beqz delay slot) and stored through a pointer to
- * the thread context, which keeps the record loads after that store.
- */
+ * The completion value is materialised before the branch (`li v1,1` in the beqz delay slot) and stored
+ * through a pointer to the thread context, which keeps the record loads after that store. */
 void battle_menu_run_skillset_thread(void) {
     s32 param_value;
     battle_menu_record_t* record;

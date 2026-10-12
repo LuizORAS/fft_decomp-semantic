@@ -18,7 +18,7 @@ void battle_state_handle_target_select_confirm_state(void) {
         battle_menu_store_auto_battle_main_target_id(
             target->battle_data->misc_unit_id, caster->battle_data->misc_unit_id);
         battle_target_move_cursor_to_unit(caster);
-        battle_menu_set_next_script_action_menus();
+        battle_state_enter_open_action_menus();
         break;
     case 8:
     case 0xFF:

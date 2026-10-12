@@ -30,7 +30,7 @@ void battle_turn_advance(void) {
             main_sound_play_sfx(MAIN_SFX_STATUS_MENU_REQUEST);
             battle_turn_start_at_list_browse();
             battle_turn_show_next_at_entry();
-            battle_menu_set_next_script_action_menus();
+            battle_state_enter_open_action_menus();
             return;
         }
         g_battle_action_post_action = 0;

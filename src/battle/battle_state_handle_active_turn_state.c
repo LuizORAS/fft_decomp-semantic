@@ -7,7 +7,7 @@ void battle_state_handle_active_turn_state(void) {
 
     controller_input = g_main_input_pressed_buttons;
     if ((controller_input & PSX_PAD_CIRCLE) || (controller_input & PSX_PAD_CROSS)) {
-        battle_menu_open_mini_menu();
+        battle_state_return_to_mini_menu();
     }
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);

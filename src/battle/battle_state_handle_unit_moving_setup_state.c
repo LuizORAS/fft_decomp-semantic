@@ -20,7 +20,7 @@ void battle_state_handle_unit_moving_setup_state(void) {
     case 8:
     case 0xff:
         casting_misc_data->movement_path_count = 0;
-        battle_menu_close_move_help();
+        battle_state_enter_select_move_tile();
         return;
     }
 }

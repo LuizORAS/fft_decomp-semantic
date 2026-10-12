@@ -1,9 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Enter the ability-preview-help state and start the help menu. Nothing in the
- * game calls it. */
-void battle_menu_start_help_thread(void) {
+/* Enter ABILITY_PREVIEW_HELP and start the help menu. Nothing in the game calls it. */
+void battle_state_enter_ability_preview_help(void) {
     battle_state_disable_camera_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HELP;
     g_battle_menu_help_opening = 1;

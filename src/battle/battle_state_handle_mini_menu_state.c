@@ -8,7 +8,7 @@ void battle_state_handle_mini_menu_state(void) {
 
     menu_result = battle_menu_get_thread_activity();
     if (g_main_input_pressed_buttons & PSX_PAD_SELECT) {
-        battle_menu_open_mini_menu_help();
+        battle_state_enter_mini_menu_help();
     } else if (menu_result == 0) {
         g_battle_cursor_input_mode = g_main_game_options.fields.cursor_movement;
         battle_state_enter_free_cursor();

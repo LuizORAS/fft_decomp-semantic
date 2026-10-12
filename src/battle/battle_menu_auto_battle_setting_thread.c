@@ -1,20 +1,15 @@
-/*
- * WORLD twin:
- * world_menu_auto_battle_setting_thread (same code, globals and callees
- * rebound).
- */
 #include "fft/battle.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Auto-battle setting menu thread.
+/* Thread of the Auto-battle row (BATTLE_MENU_ID_AUTO_BATTLE): the five settings as an icon list.
  *
- * The cursor starts at the attacker's auto_battle_setting: Manual, Fight for
- * life, Protect allies, Save fading life or Run like a rabbit (options 0-4).
- * Whenever circle is pressed the five option texts (0x5009-0x500D) are redrawn
- * with the selected one highlighted; choosing option 0 (Manual) clears the
- * setting and restarts the idle action menu if the unit's menu id changes. */
+ * The cursor starts at the unit's auto_battle_setting: Manual, Fight for life, Protect allies, Save
+ * fading life or Run like a rabbit (options 0-4). Whenever Circle is pressed the five option texts
+ * (0x5009-0x500D) are redrawn with the selected one highlighted; choosing option 0 (Manual) clears the
+ * setting and restarts the idle action menu if the unit's menu id changes. A setting chosen again goes
+ * on to AUTO_BATTLE_TARGET, a new one to AUTO_BATTLE_CONFIRM. */
 void battle_menu_auto_battle_setting_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];

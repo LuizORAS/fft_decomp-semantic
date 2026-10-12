@@ -1,27 +1,21 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Per-slot restriction check for the unit action menu, the BATTLE twin of
- * world_menu_check_action_slot_restrictions (0x800f454c); the two are masked-identical.
+/* Check one list of the ability selection (battle_menu_select_unit_action_slots_thread) and show why
+ * it cannot open.
  *
- * Picks a warning message for the attacking unit (evade check, then the unit's
- * status bits, then the per-menu default from g_battle_menu_restriction_message_ids), or the menu-3
- * "no entry" message 0x8009 - value. When a message applies it is written to
- * menu entry 35 and shown by battle_menu_icon_linked_entry_thread; mode 2
- * additionally plays the invalid sound and exits the calling thread, so the
- * slot is rejected. With no message the slot is confirmed silently.
- * WORLD twin: world_menu_check_action_slot_restrictions.
+ * For a skillset row marked disabled, the warning is 0x1003 for a submerged unit, 0x1007 for a Frog and
+ * the menu type's default (g_battle_menu_restriction_message_ids) otherwise; it plays the invalid sound
+ * and ends the calling thread. Math Skill shows the prompt 0x8009 - value for each of its three lists.
+ * With no message, a menu type whose mode is negative confirms that row action at once. The message
+ * shows in the restriction entry (battle_menu_icon_linked_entry_thread) unless navigation messages are
+ * off and it is one of the 0x80xx prompts.
  *
- * `message = 0x1007` sits inside the status-bit arm rather than ahead of the
- * inner `if`. Both spellings are equivalent (the other arm overwrites it and
- * GCC drops the dead store either way), but hoisting it makes $17 look live
- * across the evade branch, and reorg then refuses to lift `message = 0x1003`
- * into the bne delay slot, swapping the two delay-slot words at +0x64/+0x6c.
- * Written this way, reorg fills the bne slot with `message` and the jump slot
- * with `mode`, which is the target's order.
- */
-
+ * `message = 0x1007` sits inside the status-bit arm rather than ahead of the inner `if`. Both spellings
+ * are equivalent (the other arm overwrites it and GCC drops the dead store either way), but hoisting it
+ * makes $17 look live across the evade branch, and reorg then refuses to lift `message = 0x1003` into
+ * the bne delay slot, swapping the two delay-slot words at +0x64/+0x6c. Written this way, reorg fills
+ * the bne slot with `message` and the jump slot with `mode`, which is the target's order. */
 void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_unit) {
     s32 mode;
     s32 message;

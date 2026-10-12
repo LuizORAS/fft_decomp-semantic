@@ -2,8 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Builds the skillset selection rows of text entry 0x5010 for the stored
- * unit and sizes menu entry 4 to the number of rows. */
+/* WORLD twin of battle_menu_build_skillset_entries. */
 void world_menu_build_skillset_entries(void) {
     world_menu_text_row_t* rows;
     s32 count;

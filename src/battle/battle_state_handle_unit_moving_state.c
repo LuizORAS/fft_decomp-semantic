@@ -14,7 +14,7 @@ void battle_state_handle_unit_moving_state(void) {
         && casting_misc_data->movement_path_offset >= casting_misc_data->movement_path_count
         && g_battle_state_animation_continue_check == 0) {
         battle_unit_update_display_by_misc_id(casting_misc_data->unit_id);
-        battle_menu_open_move_confirm();
+        battle_state_enter_move_confirm_menu();
     }
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);

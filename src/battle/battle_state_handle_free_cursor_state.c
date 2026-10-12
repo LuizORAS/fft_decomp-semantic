@@ -17,7 +17,7 @@ void battle_state_handle_free_cursor_state(void) {
     input = g_main_input_pressed_buttons;
     if (input & PSX_PAD_SELECT) {
         battle_turn_clear_at_list_index();
-        battle_menu_open_free_cursor_help();
+        battle_state_enter_free_cursor_help();
     } else if (input & PSX_PAD_SQUARE) {
         battle_turn_clear_at_list_index();
         battle_state_enter_highlight_units_by_team();
@@ -31,7 +31,7 @@ void battle_state_handle_free_cursor_state(void) {
             unit = battle_unit_get_source_misc_data();
             if (unit != 0) {
                 battle_target_move_cursor_to_unit(unit);
-                battle_menu_set_next_script_action_menus();
+                battle_state_enter_open_action_menus();
             }
         }
     } else if (input & PSX_PAD_CROSS) {
@@ -51,6 +51,6 @@ void battle_state_handle_free_cursor_state(void) {
     } else if (input & PSX_PAD_TRIANGLE) {
         battle_turn_clear_at_list_index();
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
-        battle_menu_open_free_cursor_mini_menu();
+        battle_state_enter_mini_menu();
     }
 }

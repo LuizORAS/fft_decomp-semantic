@@ -38,7 +38,7 @@ void battle_state_handle_select_move_tile_state(void) {
                 battle_state_enter_unit_moving_setup();
                 return;
             }
-            battle_menu_open_illegal_move_help();
+            battle_state_enter_illegal_move_menu();
             return;
         }
         if (buttons & PSX_PAD_CROSS) {
@@ -73,5 +73,5 @@ void battle_state_handle_select_move_tile_state(void) {
         battle_state_enter_unit_moving_setup();
         return;
     }
-    battle_menu_set_next_script_action_menus();
+    battle_state_enter_open_action_menus();
 }

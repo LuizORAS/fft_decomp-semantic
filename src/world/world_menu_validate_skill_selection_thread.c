@@ -1,9 +1,7 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/* Thread body: validates the skill chosen in menu entry 3 for the current
- * menu (MP cost, blocking status, per-menu restrictions) and, when it is
- * not usable, shows the matching message before ending the thread. */
+/* WORLD twin of battle_menu_validate_skill_selection_thread. */
 void world_menu_validate_skill_selection_thread(void) {
     s32 skill;
     world_menu_entry_t* parameter;

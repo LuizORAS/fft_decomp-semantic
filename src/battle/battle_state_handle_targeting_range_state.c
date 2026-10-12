@@ -55,7 +55,7 @@ void battle_state_handle_targeting_range_state(void) {
                     battle_target_select_tile();
                 }
             } else {
-                battle_menu_set_next_script_action_menus();
+                battle_state_enter_open_action_menus();
             }
             break;
         }

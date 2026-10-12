@@ -4,13 +4,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Formation-screen auto-battle setting menu thread.
- *
- * The cursor starts at the stored unit's auto_battle_setting: Manual, Fight
- * for life, Protect allies, Save fading life or Run like a rabbit (options
- * 0-4). Whenever circle is pressed the five option texts (0x5009-0x500D) are
- * redrawn with the selected one highlighted; choosing option 0 (Manual) clears
- * the setting and restarts the idle action menu if the unit's menu id changes. */
+/* WORLD twin of battle_menu_auto_battle_setting_thread. */
 void world_menu_auto_battle_setting_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];

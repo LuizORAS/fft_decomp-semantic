@@ -1,8 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Starts menu thread 8 on world_menu_display_triangle_selection with the g_world_menu_idle_action_entries menu
- * data when threads 7 and 8 are idle and g_world_menu_suspend_state is clear. */
+/* WORLD twin of battle_menu_start_mini_menu_display_thread. */
 void world_menu_start_mini_menu_display_thread(void) {
     if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU) != 0) {
         return;

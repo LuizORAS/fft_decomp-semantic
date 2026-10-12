@@ -1,18 +1,19 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Menu entry 4's value and the loop counter share $s0 in the target: the
- * index dies after the two table loads and the register is reused by the
- * `sll s0,v0,0x1` that forms the counter, so they are one variable here.
- * &g_battle_menu_action_slot_row_actions is written as an in-loop expression rather than a pre-loop
- * pointer local so that loop.c hoists it into the preheader after the bltz,
- * which is where the target's `lui/addiu s8` pair sits. */
-
-/*
- * Battle twin of world_menu_select_unit_action_slots_thread. Thread body: walks the stored unit's
- * menu record slots from the top value down to zero, presenting each through
- * the inner subroutine and writing the chosen entry back into the record.
- */
+/* Ability list thread under the skillset list: run the chosen skillset's ability list and store the
+ * choice in the selected action.
+ *
+ * Math Skill walks three lists, the calculator type (2), the multiplier (1) and the ability (0), and
+ * Cancel steps back a list; any other skillset has one list (Equip Change runs EQUIP first). Each list
+ * starts at the row and scroll the unit last had there (its menu record) and saves them back. On a
+ * menu restore only the last list reopens.
+ *
+ * Menu entry 4's value and the loop counter share $s0 in the target: the index dies after the two table
+ * loads and the register is reused by the `sll s0,v0,0x1` that forms the counter, so they are one
+ * variable here. &g_battle_menu_action_slot_row_actions is written as an in-loop expression rather than
+ * a pre-loop pointer local so that loop.c hoists it into the preheader after the bltz, which is where
+ * the target's `lui/addiu s8` pair sits. */
 void battle_menu_select_unit_action_slots_thread(void) {
     s32 i = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
     s32 menu = g_battle_action_menu_row_types[i];
