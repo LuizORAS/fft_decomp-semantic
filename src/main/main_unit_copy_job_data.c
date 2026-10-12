@@ -40,17 +40,14 @@ void main_unit_copy_job_data(battle_stats_t* unit) {
     flag_a = unit->team_flags & BATTLE_TEAM_FLAG_IMMORTAL;
     flag_b = unit->unit_flags & (UNIT_FLAG_SAVE_FORMATION | UNIT_FLAG_LOAD_FORMATION);
     if (flag_a != 0 && flag_b != 0) {
-        u8* statuses;
-        i = 0;
-        statuses = unit->status_sets.immunity;
-        for (; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+        u8* statuses = unit->status_sets.immunity;
+        for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (flag_a != 0) {
-                *statuses |= g_main_status_check_sets[MAIN_STATUS_CHECK_SET_IMMORTAL_IMMUNITY][i];
+                statuses[i] |= g_main_status_check_sets[MAIN_STATUS_CHECK_SET_IMMORTAL_IMMUNITY][i];
             }
             if (flag_b != 0) {
-                *statuses |= g_main_status_check_sets[MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY][i];
+                statuses[i] |= g_main_status_check_sets[MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY][i];
             }
-            statuses++;
         }
     }
 
