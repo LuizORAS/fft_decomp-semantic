@@ -24,10 +24,9 @@ s32 battle_ai_evaluate_charging_movement(void) {
     if (unit->charged_ability_ct == 0xff)
         return 0;
     if (g_main_action_menu_types_by_skillset[unit->action_command.skillset_id] == ACTION_MENU_TYPE_CHARGE) {
-        g_battle_ai_data_base.current_action.coords.word = g_battle_ai_data_base.acting_unit_coords.word;
+        g_battle_ai_data_base.current_action.coords = g_battle_ai_data_base.acting_unit_coords;
     } else {
-        g_battle_ai_data_base.current_action.coords.word
-            = ai->candidate_coords[g_battle_ai_data_base.movement_scenario].word;
+        g_battle_ai_data_base.current_action.coords = ai->candidate_coords[g_battle_ai_data_base.movement_scenario];
         battle_ai_check_unit_for_crystal_or_treasure_status();
     }
     ai->current_action.act_before_move = 0;

@@ -18,8 +18,7 @@ s32 battle_ai_evaluate_self_target_origins(void) {
     }
     g_battle_ai_data_base.targetability.live.target_setting_flags
         &= ~BATTLE_AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS;
-    g_battle_ai_data_base.current_action.coords.word
-        = ai->candidate_coords[g_battle_ai_data_base.movement_scenario].word;
+    g_battle_ai_data_base.current_action.coords = ai->candidate_coords[g_battle_ai_data_base.movement_scenario];
     battle_ai_check_unit_for_crystal_or_treasure_status();
     if ((g_battle_ai_data_base.considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FOLLOW_TARGET)
         && !(g_main_ability_range_data[g_battle_ai_data_base.considered_ability.ability_id].flags_1
@@ -55,7 +54,7 @@ prepare_origin:
     }
     if (g_battle_ai_self_target_origin_stage == 0) {
         ai->current_action.act_before_move = 0;
-        ai->considered_unit_coords.word = ai->current_action.coords.word;
+        ai->considered_unit_coords = ai->current_action.coords;
         g_battle_ai_self_target_origin_stage++;
         /* A goto retry, not a loop: GCC's loop pass would move the suspend
          * exit out of line. */
