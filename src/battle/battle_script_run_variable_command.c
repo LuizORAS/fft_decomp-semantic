@@ -1,9 +1,19 @@
 #include "fft/battle.h"
 
-/* EVENT_SCRIPT_VAR_RANDOM_VALUE is read through the event
- * RNG, not its ordinary storage. ZERO never reads the uninitialized operand.
- * Keep the target's arithmetic edge behavior: only division explicitly stops
- * on zero; modulo has no such check, and signed overflow is not normalized. */
+/* Run one variable instruction (EVENT_OPCODE_ADD_IMMEDIATE to EVENT_OPCODE_ZERO_VARIABLE) on a
+ * script variable of any range: a word, a one-bit flag or a nibble. An odd opcode reads its operand
+ * from the variable `source` (EVENT_SCRIPT_VAR_RANDOM_VALUE draws from the event random generator
+ * instead of its storage), an even one uses `source` itself, and ZERO never reads it.
+ *
+ * The write is dropped for a Brave Story person profile already at 12 or more and, while
+ * EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS is set, for every variable outside the scenario locals and
+ * the interpreter's working words: the ids below EVENT_SCRIPT_VAR_WAR_FUNDS, the map, ENTD and
+ * deployment words, the text, dialog and tutorial words, and EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS to
+ * EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD. A whole-word write to
+ * EVENT_SCRIPT_VAR_TEXT_SUBSTITUTION_VALUE also sets text substitution value 0.
+ *
+ * Keep the target's arithmetic edge behavior: only division explicitly stops on zero (it ends the
+ * calling thread); modulo has no such check, and signed overflow is not normalized. */
 void battle_script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused) {
     s32* source_word;
     s32* destination_word;

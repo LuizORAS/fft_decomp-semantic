@@ -1,11 +1,15 @@
 #include "fft/battle.h"
 
-/* Resolve an event-script unit identifier to its active Misc Unit ID.
- *
- * Character identities, Ramza/allied-turn aliases, and the four event-unit
- * slots require separate lookup paths. Crystal/treasure records and missing
- * units return EVENT_MISC_ID_NONE.
- */
+/* Resolve a script unit id to the misc id of that unit's sprite on the map, or to EVENT_MISC_ID_NONE
+ * (after battle_script_report_missing_unit_stub) when there is none:
+ * - a story character identity that is deployed answers to its deployment unit id
+ *   (EVENT_UNIT_ID_DEPLOYED_FIRST and on);
+ * - EVENT_UNIT_SELECTOR_IMPORTANT_UNIT names the first unit with a team importance;
+ * - EVENT_UNIT_SELECTOR_ACTIVE_TURN names the unit holding the turn, or else ENTD unit 1 or 2
+ *   (see QUIRKS.md);
+ * - during EVENT_ID_GAME_OVER_RAMZA every id names Ramza (-1 without him);
+ * - EVENT_UNIT_SELECTOR_SLOT_FIRST and the three after it name the event unit slots, the ghost units;
+ * - any other id is an ENTD unit id. A unit turned to treasure has no sprite to name. */
 s32 battle_script_get_misc_id(s32 unit_id) {
     s32 battle_id;
     s32 unit_state;
@@ -23,7 +27,7 @@ s32 battle_script_get_misc_id(s32 unit_id) {
     }
     original_unit_id = unit_id;
 
-    if (unit_id == 0x68) {
+    if (unit_id == EVENT_UNIT_SELECTOR_IMPORTANT_UNIT) {
         for (battle_id = 0; battle_id < 16; battle_id++) {
             unit = battle_unit_get_stats_from_battle_id(battle_id);
             if (unit->team_flags & BATTLE_TEAM_IMPORTANCE_MASK)

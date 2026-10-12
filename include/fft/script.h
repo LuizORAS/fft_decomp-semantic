@@ -20,6 +20,8 @@ enum {
     /* External unit-id selectors used by scenario commands. */
     EVENT_UNIT_SELECTOR_SLOT_FIRST = 0x64,
     EVENT_UNIT_SELECTOR_SLOT_COUNT = 4,
+    /* The first unit (battle id 0-15) with a team importance (BATTLE_TEAM_IMPORTANCE_MASK). */
+    EVENT_UNIT_SELECTOR_IMPORTANT_UNIT = 0x68,
     EVENT_UNIT_SELECTOR_ACTIVE_TURN = 0x69,
     /* First unit-group selector. The instructions that take a unit group pass
      * selector - 0xfe to *_script_filter_unit_id_by_mode as its mode (2 up);

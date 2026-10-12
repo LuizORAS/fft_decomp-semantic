@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Route controller input to the running battle event thread. */
+/* Pick the input a thread sees; battle_thread_yield calls it before it resumes each thread. Under
+ * tutorial input (MENU_INPUT_TUTORIAL) a thread running as NATIVE_THREAD_TASK_RESUME (a dialog text
+ * thread) gets the real pad input and every other thread the input the tutorial script forced; the
+ * main loop's slot is left alone. */
 void battle_script_route_event_input(void) {
     s32 thread;
 

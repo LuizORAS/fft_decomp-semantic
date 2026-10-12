@@ -1,16 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Return the offset just past a jump-target marker whose id is target_id.
+/* Return the offset just past a jump-target marker whose id is target_id.
  *
- * A BackTarget search scans forward from the start of the block to
- * limit_offset and keeps the last match; an intervening 0xd9 instruction or a
- * ForwardTarget with the same id invalidates earlier matches. Other searches
- * scan forward from limit_offset for target_opcode or alternate_opcode (-1
- * disables it) until the End instruction. A missing target exits the current
- * thread.
- */
+ * A BackTarget search scans forward from the start of the block to limit_offset and keeps the last
+ * match; an intervening EVENT_OPCODE_BACK_TARGET_BARRIER or a ForwardTarget with the same id
+ * invalidates earlier matches. Other searches scan forward from limit_offset for target_opcode or
+ * alternate_opcode (-1 disables it) until the End instruction. A missing target exits the current
+ * thread. */
 s32 battle_script_find_jump_target(
     s32 limit_offset, event_opcode_e target_opcode, s32 alternate_opcode, s32 target_id) {
     u8* base;
