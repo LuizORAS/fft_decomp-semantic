@@ -7,9 +7,9 @@
  * enables map data groups 1-6, phase 2 spawns each active emitter's particles
  * at its work vertices, phase 3 frees the work.
  *
- * The work holds four 16-byte vertex slots per 64-byte row; the overlay table
- * at 0x801c48dc lists (slot, row) byte pairs for emitter groups 1-12, and
- * groups 13 and 14 walk pairs 0-3 and 4-11. */
+ * The work caches four vertices per map mesh part. The overlay table maps
+ * emitter groups 1-12 to vertex and mesh-part indices; groups 13 and 14
+ * visit groups 1-4 and 5-12. */
 s32 effect_e454_particle_update_banish_state(s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 frame) {
     s16 state_index = record_index;
     effect_record_t* record;
@@ -52,8 +52,8 @@ s32 effect_e454_particle_update_banish_state(s32 record_index, s32 callback_slot
             if (group >= 1 && group <= 12) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
                     i = group - 1;
-                    offset = g_effect_e454_particle_vertex_locations[i].slot << 4;
-                    offset += g_effect_e454_particle_vertex_locations[i].row << 6;
+                    offset = g_effect_e454_particle_vertex_locations[i].vertex_index * sizeof(VECTOR);
+                    offset += g_effect_e454_particle_vertex_locations[i].mesh_part_index * (4 * sizeof(VECTOR));
                     vertex = (VECTOR*)(work + offset);
                     parent.motion.position.x = vertex->vx << 12;
                     parent.motion.position.y = vertex->vy << 12;
@@ -64,8 +64,8 @@ s32 effect_e454_particle_update_banish_state(s32 record_index, s32 callback_slot
             } else if (group == 13) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
                     for (i = 0; i < 4; i++) {
-                        offset = g_effect_e454_particle_vertex_locations[i].slot << 4;
-                        offset += g_effect_e454_particle_vertex_locations[i].row << 6;
+                        offset = g_effect_e454_particle_vertex_locations[i].vertex_index * sizeof(VECTOR);
+                        offset += g_effect_e454_particle_vertex_locations[i].mesh_part_index * (4 * sizeof(VECTOR));
                         vertex = (VECTOR*)(work + offset);
                         parent.motion.position.x = vertex->vx << 12;
                         parent.motion.position.y = vertex->vy << 12;
@@ -77,8 +77,8 @@ s32 effect_e454_particle_update_banish_state(s32 record_index, s32 callback_slot
             } else if (group == 14) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
                     for (i = 4; i < 12; i++) {
-                        offset = g_effect_e454_particle_vertex_locations[i].slot << 4;
-                        offset += g_effect_e454_particle_vertex_locations[i].row << 6;
+                        offset = g_effect_e454_particle_vertex_locations[i].vertex_index * sizeof(VECTOR);
+                        offset += g_effect_e454_particle_vertex_locations[i].mesh_part_index * (4 * sizeof(VECTOR));
                         vertex = (VECTOR*)(work + offset);
                         parent.motion.position.x = vertex->vx << 12;
                         parent.motion.position.y = vertex->vy << 12;

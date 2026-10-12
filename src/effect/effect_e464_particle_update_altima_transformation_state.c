@@ -48,8 +48,8 @@ s32 effect_e464_particle_update_altima_transformation_state(
             emitter = &g_battle_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             i = emitter->vertex_group - 1;
             if (i >= 0 && i < 12 && frame >= emitter->start_frame && frame < emitter->end_frame) {
-                offset = g_effect_e464_particle_vertex_locations[i].slot << 4;
-                offset += g_effect_e464_particle_vertex_locations[i].row << 6;
+                offset = g_effect_e464_particle_vertex_locations[i].vertex_index * sizeof(VECTOR);
+                offset += g_effect_e464_particle_vertex_locations[i].mesh_part_index * (4 * sizeof(VECTOR));
                 vertex = &work[offset >> 4];
                 parent.motion.position.x = vertex->vx << 12;
                 parent.motion.position.y = vertex->vy << 12;

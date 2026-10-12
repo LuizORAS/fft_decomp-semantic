@@ -392,8 +392,8 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
  * until the channel sets DESTROY two frames before the keyframe ends. */
 
 typedef struct effect_particle_vertex_location {
-    u8 slot;
-    u8 row;
+    u8 vertex_index;    /* one of the mesh part's four cached vertices */
+    u8 mesh_part_index; /* zero-based among map mesh parts 1-8 */
 } effect_particle_vertex_location_t;
 extern effect_particle_vertex_location_t g_effect_e454_particle_vertex_locations[12];
 extern effect_particle_vertex_location_t g_effect_e464_particle_vertex_locations[3];
