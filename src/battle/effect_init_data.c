@@ -23,7 +23,7 @@ s32 effect_init_data(void) {
     if (g_battle_ability_effect_id >= 0) {
         switch (g_effect_load_state) {
         case EFFECT_LOAD_START:
-            if (g_effect_target_id != 0) {
+            if (g_effect_charge_secondary_id != 0) {
                 g_effect_load_countdown = 60;
             } else {
                 g_effect_load_countdown = 0;
@@ -51,8 +51,8 @@ s32 effect_init_data(void) {
                 result = 1;
                 break;
             }
-            if (g_effect_target_id != 0) {
-                effect_finalize_secondary(g_effect_target_id);
+            if (g_effect_charge_secondary_id != 0) {
+                effect_finalize_secondary(g_effect_charge_secondary_id);
             }
             g_effect_load_state = EFFECT_LOAD_ENDING_SECONDARY;
             effect_init_flags_section_pointer(g_battle_ability_effect_id);
@@ -63,7 +63,7 @@ s32 effect_init_data(void) {
             result = 1;
             break;
         case EFFECT_LOAD_ENDING_SECONDARY:
-            result = effect_get_secondary_phase(g_effect_target_id) != EFFECT_SECONDARY_PHASE_ENDED;
+            result = effect_get_secondary_phase(g_effect_charge_secondary_id) != EFFECT_SECONDARY_PHASE_ENDED;
             break;
         }
         if (g_effect_load_countdown > 0) {

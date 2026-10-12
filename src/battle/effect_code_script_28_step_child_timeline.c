@@ -228,7 +228,7 @@ effect_script_result_e effect_code_script_28_step_child_timeline(effect_record_t
                     timeline->state.child.remaining.tracks.sound[i] = sound->duration[index];
                     kind = sound->channel[index];
                     if (kind >= 2) {
-                        sound_index = effect_select_effect_sound_id(kind - 2);
+                        sound_index = effect_select_sound_id(kind - 2);
                         if (sound_index != 0) {
                             suzuki_sound_play_sfx(sound_index + g_effect_sound_data_base);
                         }

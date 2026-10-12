@@ -1736,7 +1736,7 @@ functions:
   - {addr: 0x801a30ec, size: 92, name: effect_code_script_26_spawn_emitter_particles, hash: 2f2c51d9a3b92dc4}
   - {addr: 0x801a3148, size: 96, name: effect_code_script_27_init_particle_physics, hash: 78df44b5c79e1f5f}
   - {addr: 0x801a31a8, size: 320, name: effect_run_keyframe_actions, hash: b7e020980624ef07}
-  - {addr: 0x801a32e8, size: 288, name: effect_select_effect_sound_id, hash: 1820d00c0dfe6418, rodata: [{addr: 0x801a0de4, size: 20, hash: 76ff2c565a251630}]}
+  - {addr: 0x801a32e8, size: 288, name: effect_select_sound_id, hash: 1820d00c0dfe6418, rodata: [{addr: 0x801a0de4, size: 20, hash: 76ff2c565a251630}]}
   - {addr: 0x801a3408, size: 2344, name: effect_code_script_28_step_child_timeline, hash: cdb99c322deefad1}
   - {addr: 0x801a3d30, size: 720, name: effect_run_keyframe_actions_all_targets, hash: a57d117d58db42cb}
   - {addr: 0x801a4000, size: 416, name: effect_step_emitter_timeline, hash: ee6a260b3ab1bd63}
@@ -1861,7 +1861,7 @@ functions:
   - {addr: 0x801adc24, size: 304, name: effect_free_slot, hash: b709356745211b36}
   - {addr: 0x801add54, size: 296, name: effect_init_secondary, hash: 99aceb6b5ad1acf3}
   - {addr: 0x801ade7c, size: 304, name: effect_init_projectile_secondary, hash: c08f81f2d5cae35d}
-  - {addr: 0x801adfac, size: 64, name: effect_get_ninja_ball, hash: 155aa8fa483b6b96}
+  - {addr: 0x801adfac, size: 64, name: effect_get_element_index, hash: 155aa8fa483b6b96}
   - {addr: 0x801adfec, size: 444, name: effect_init_weapon_hit_secondary, hash: cc6580faec91e3af, rodata: [{addr: 0x801a0e60, size: 32, hash: 9c3b3543911ab26c}]}
   - {addr: 0x801ae1a8, size: 288, name: effect_init_fall_dust_secondary, hash: 114a15e567004ef5}
   - {addr: 0x801ae2c8, size: 120, name: effect_end_secondary_on_current_unit, hash: 0dedbedd0bc4e8f6}
@@ -1938,7 +1938,7 @@ data:
   - {addr: 0x80093de8, name: g_battle_ability_charge_animation_sets}
   - {addr: 0x80093e10, name: g_battle_ability_animation_data}
   - {addr: 0x80094364, name: g_battle_weapon_attack_animations}
-  - {addr: 0x800943c4, name: g_effect_weapon_type_extra_flags}
+  - {addr: 0x800943c4, name: g_effect_weapon_projectile_animations}
   - {addr: 0x800943e4, name: g_battle_gfx_item_graphic_data}
   - {addr: 0x80094508, name: g_battle_gfx_sprite_y_rotations}
   - {addr: 0x80094548, name: g_battle_gfx_animation_layer_priorities}
@@ -2078,8 +2078,8 @@ data:
   - {addr: 0x800a77c4, name: g_battle_gfx_vram_slots}
   - {addr: 0x800b628c, name: D_800b628c}
   - {addr: 0x800b6290, name: D_800b6290}
-  - {addr: 0x800b6294, name: g_battle_gfx_item_palettes}
-  - {addr: 0x800b6494, name: g_battle_gfx_eff_palettes}
+  - {addr: 0x800b6294, name: g_battle_gfx_weapon_clut}
+  - {addr: 0x800b6494, name: g_battle_gfx_trail_clut}
   - {addr: 0x800b6694, name: g_battle_previous_camera_yaw}
   - {addr: 0x800b6698, name: g_map_weather_flags}
   - {addr: 0x800b669c, name: g_battle_gfx_effect_graphics}
@@ -2760,7 +2760,7 @@ data:
   - {addr: 0x801b84dc, name: g_effect_secondary_animations}
   - {addr: 0x801b8530, name: g_effect_ending_secondary_function_id}
   - {addr: 0x801b8534, name: g_effect_model_files}
-  - {addr: 0x801b8544, name: g_effect_ninja_ball_masks}
+  - {addr: 0x801b8544, name: g_effect_element_masks}
   - {addr: 0x801b8550, name: g_effect_reflect_palette_colors}
   - {addr: 0x801b8564, name: g_effect_trap_particle_configs}
   - {addr: 0x801b8874, name: g_effect_gravity_scale}
@@ -2829,8 +2829,8 @@ data:
   - {addr: 0x801b8b94, name: g_effect_trajectory_tile_flags}
   - {addr: 0x801b8b98, name: D_801B8B98}
   - {addr: 0x801b8b9c, name: g_effect_secondary_data}
-  - {addr: 0x801b9130, name: g_effect_active_slot_tail}
-  - {addr: 0x801b9134, name: g_effect_free_slot_head}
+  - {addr: 0x801b9130, name: g_effect_secondary_active_tail}
+  - {addr: 0x801b9134, name: g_effect_secondary_free_head}
   - {addr: 0x801b9138, name: g_effect_current_slot_id}
   - {addr: 0x801b913c, name: g_effect_trap_frame_data_ptr}
   - {addr: 0x801b9140, name: g_effect_work_record_peak}
@@ -2861,7 +2861,7 @@ data:
   - {addr: 0x801bbf48, name: g_effect_corner_top_right}
   - {addr: 0x801bbf50, name: g_effect_corner_bottom_left}
   - {addr: 0x801bbf58, name: g_effect_corner_bottom_right}
-  - {addr: 0x801bbf64, name: g_effect_target_id}
+  - {addr: 0x801bbf64, name: g_effect_charge_secondary_id}
   - {addr: 0x801bbf68, name: g_effect_work_record_count}
   - {addr: 0x801bbf70, name: g_effect_work_records}
   - {addr: 0x801bbf74, name: g_effect_sound_section_ptr}

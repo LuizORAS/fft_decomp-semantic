@@ -23,7 +23,7 @@ void effect_advance_parent_sound_track(
             effect_kind = schedule->channels[index];
 
             if (effect_kind >= 2) {
-                sound_index = effect_select_effect_sound_id(effect_kind - 2);
+                sound_index = effect_select_sound_id(effect_kind - 2);
 
                 if (sound_index != 0) {
                     suzuki_sound_play_sfx(g_effect_sound_data_base + sound_index);

@@ -385,8 +385,8 @@ enum {
     EFFECT_FILE_ICE = 24,
 };
 
-/* What effect_get_ninja_ball makes of an element mask: the position of its first element in
- * g_effect_ninja_ball_masks, 0 for no element. It picks the CLUT of the weapon hit and
+/* What effect_get_element_index makes of an element mask: the position of its first element in
+ * g_effect_element_masks, 0 for no element. It picks the CLUT of the weapon hit and
  * spell charge particles and the effect of a thrown ball. */
 typedef enum effect_element_index {
     EFFECT_ELEMENT_INDEX_NONE = 0,
@@ -453,7 +453,7 @@ typedef enum effect_particle_group {
 
 /* Index into g_effect_secondary_animations: the secondary effects resident in BATTLE.BIN. Those
  * the code does not start by number come from two tables: the weapon type's projectile
- * (g_effect_weapon_type_extra_flags) and the ability's charge animation set
+ * (g_effect_weapon_projectile_animations) and the ability's charge animation set
  * (g_effect_secondary_by_charge_animation). */
 typedef enum effect_secondary_animation_id {
     EFFECT_SECONDARY_ANIMATION_NONE = 0,
@@ -1960,7 +1960,7 @@ s32 effect_update_cycle(void);
 s32 effect_update_stage(void);
 
 /* secondary effects */
-extern u16 g_effect_active_slot_tail;
+extern u16 g_effect_secondary_active_tail;
 extern s32 g_effect_buffer_index;
 /* angle track counter; reset by camera_execute_angle_command */
 
@@ -1971,7 +1971,7 @@ extern struct effect_secondary_data* g_effect_current_secondary;
 extern u32 g_effect_current_slot_id;
 extern effect_death_poof_state_t g_effect_death_poof_states[];
 extern u8 g_effect_ending_secondary_function_id;
-extern u16 g_effect_free_slot_head;
+extern u16 g_effect_secondary_free_head;
 extern u32* g_effect_polygon_depth_data;
 extern effect_secondary_animation_t g_effect_secondary_animations[];
 /* Secondary-animation id per charge animation set, indexed by the low 16 bits of the
@@ -1984,7 +1984,7 @@ extern effect_secondary_state_t g_effect_secondary_state;
 
 /* Brightness (out of 128) of each of a summon-charge ring's ten slots, newest point first. */
 extern u8 g_effect_summon_ring_brightness[];
-extern u8 g_effect_target_id;
+extern u8 g_effect_charge_secondary_id;
 /* Per-group trap emitter records (0x801b8564, stride 0x2e). The secondary-effect
  * handlers spawn while spawn_start_frame <= timer < spawn_end_frame and finish
  * once timer passes spawn_start_frame with no live slots;
@@ -1994,7 +1994,7 @@ extern effect_emitter_values_t g_effect_trap_particle_configs[17];
 /* effect_load_state_e */
 /* Projectile secondary animation of each weapon item type: BOW_ARROW for bows, CROSSBOW_BOLT for
  * crossbows, NONE for the rest. */
-extern u8 g_effect_weapon_type_extra_flags[];
+extern u8 g_effect_weapon_projectile_animations[];
 /* CLUT of the zodiac poof's particles, an index in the weapons row, for each
  * sprite palette (the secondary effect's parameter). */
 extern u8 g_effect_zodiac_poof_animations[];
@@ -2072,9 +2072,9 @@ void effect_store_map_center_coordinates(VECTOR* destination);
 void effect_store_targets_and_display_types(s32 ability_id, battle_unit_misc_data_t* unit);
 
 /* elements */
-extern u8 g_effect_ninja_ball_masks[];
+extern u8 g_effect_element_masks[];
 
-s32 effect_get_ninja_ball(s32 elements);
+s32 effect_get_element_index(s32 elements);
 
 /* projectiles */
 extern s32 g_effect_arc_trajectory_height;
@@ -2348,7 +2348,7 @@ extern struct suzuki_sound_resource* g_effect_sound_section_ptr;
 void effect_advance_parent_sound_track(
     effect_sound_track_t* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state);
 void effect_load_sound_section(s16 index);
-s32 effect_select_effect_sound_id(s32 channel);
+s32 effect_select_sound_id(s32 channel);
 
 /* math */
 s32 battle_lerp_fixed8(s32 start, s32 end, s32 factor);

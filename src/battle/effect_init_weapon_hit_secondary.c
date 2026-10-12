@@ -12,7 +12,7 @@ s32 effect_init_weapon_hit_secondary(s32 elements, effect_secondary_init_t* sour
     u8 secondary_id;
 
     if (source->target_count != 0) {
-        elements = effect_get_ninja_ball(elements);
+        elements = effect_get_element_index(elements);
         secondary_id = effect_allocate_secondary_slot();
         switch (source->targets[0].data.unit.result_animation) {
         case EFFECT_HIT_NORMAL:

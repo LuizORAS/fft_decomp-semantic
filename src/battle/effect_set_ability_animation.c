@@ -18,7 +18,7 @@ void effect_set_ability_animation(u32 packed, s32 ability, effect_secondary_init
     g_effect_load_state = EFFECT_LOAD_START;
     if (ability < ABILITY_ID_COUNT) {
         if (ability == ABILITY_ID_THROW_BALL) {
-            s32 ball = effect_get_ninja_ball(packed >> 16);
+            s32 ball = effect_get_element_index(packed >> 16);
             if (ball == EFFECT_ELEMENT_INDEX_FIRE)
                 g_battle_ability_effect_id = EFFECT_FILE_FIRE;
             else if (ball == EFFECT_ELEMENT_INDEX_WATER)
@@ -37,10 +37,10 @@ void effect_set_ability_animation(u32 packed, s32 ability, effect_secondary_init
         g_battle_ability_effect_id &= EFFECT_ABILITY_FILE_MASK;
         g_effect_playback_phase = EFFECT_PLAYBACK_PHASE_REQUESTED;
         if (g_effect_secondary_by_charge_animation[packed & 0xffff] != 0) {
-            g_effect_target_id
+            g_effect_charge_secondary_id
                 = effect_init_secondary(g_effect_secondary_by_charge_animation[packed & 0xffff], packed >> 16, source);
         } else {
-            g_effect_target_id = 0;
+            g_effect_charge_secondary_id = 0;
         }
         g_effect_sound_call_counts[3] = 0;
         g_effect_sound_call_counts[2] = 0;

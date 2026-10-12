@@ -55,7 +55,7 @@ s32 effect_spell_charge_secondary_handler(void) {
     switch (effect->phase) {
     case EFFECT_SECONDARY_PHASE_INITIALIZING:
         index = g_effect_secondary_animations[effect->animation_id].parameter;
-        g_effect_current_secondary->parameter = effect_get_ninja_ball(effect->parameter);
+        g_effect_current_secondary->parameter = effect_get_element_index(effect->parameter);
         g_effect_secondary_state.charge.speed = g_effect_charge_line_params[index].speed;
         g_effect_secondary_state.charge.spread_range = g_effect_charge_line_params[index].spread_range;
         g_effect_secondary_state.charge.spread_offset = g_effect_charge_line_params[index].spread_offset;

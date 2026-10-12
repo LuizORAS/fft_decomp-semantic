@@ -19,7 +19,7 @@ void effect_start_action_projectile_secondary(battle_unit_misc_data_t* unit) {
         if ((ability_id != ABILITY_ID_THROW_SHURIKEN)
             && ((u32)(unit->used_ability_id - ABILITY_ID_ITEM_FIRST)
                 >= (ABILITY_ID_JUMP_FIRST - ABILITY_ID_ITEM_FIRST))) {
-            animation_id = g_effect_weapon_type_extra_flags[unit->equipped_weapon_type];
+            animation_id = g_effect_weapon_projectile_animations[unit->equipped_weapon_type];
         }
     }
     effect_init_projectile_secondary(animation_id, &secondary_init);

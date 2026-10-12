@@ -10,11 +10,11 @@ void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive) {
 
     cursor = (u8*)archive->weapon_clut;
     for (i = 0; i < (s32)sizeof(archive->weapon_clut); i++) {
-        ((u8*)g_battle_gfx_item_palettes)[i] = *cursor++;
+        ((u8*)g_battle_gfx_weapon_clut)[i] = *cursor++;
     }
     LoadTPage((u32*)archive->weapon_pixels, 0, 0, 0x240, 0, 0x100, 0x100);
     for (i = 0, cursor = (u8*)archive->trail_clut; i < (s32)sizeof(archive->trail_clut); i++) {
-        ((u8*)g_battle_gfx_eff_palettes)[i] = *cursor++;
+        ((u8*)g_battle_gfx_trail_clut)[i] = *cursor++;
     }
     LoadTPage((u32*)archive->trail_pixels, 0, 0, 0x200, 0, 0x100, 0x100);
     map_load_palette_data(archive->particle_clut, MAP_CLUT_ROW_WEAPONS, 0, 1);

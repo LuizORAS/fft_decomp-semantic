@@ -29,7 +29,7 @@ void effect_init_system(void) {
     g_effect_secondary_data[0].previous_slot_id = 0;
     g_effect_secondary_data[EFFECT_SECONDARY_SLOT_COUNT].next_slot_id = EFFECT_SECONDARY_SLOT_COUNT - 1;
     g_effect_secondary_data[EFFECT_SECONDARY_SLOT_COUNT].own_slot_id = EFFECT_SECONDARY_SLOT_COUNT;
-    g_effect_free_slot_head = 1;
+    g_effect_secondary_free_head = 1;
     g_effect_secondary_data[0].next_slot_id = 0;
     g_effect_secondary_data[0].own_slot_id = 0;
     g_effect_secondary_data[0].function_id = 0;
@@ -37,7 +37,7 @@ void effect_init_system(void) {
     g_effect_secondary_data[EFFECT_SECONDARY_SLOT_COUNT].previous_slot_id = 0;
     g_effect_secondary_data[EFFECT_SECONDARY_SLOT_COUNT].function_id = 0;
     g_effect_secondary_data[EFFECT_SECONDARY_SLOT_COUNT].allocation = 0;
-    g_effect_active_slot_tail = 0;
+    g_effect_secondary_active_tail = 0;
     g_effect_trap_frame_data_ptr = &g_effect_trap_frame_data;
     for (i = 0; i < EFFECT_SECONDARY_RECORD_COUNT; i++) {
         g_effect_secondary_data[i].active_count = 0;

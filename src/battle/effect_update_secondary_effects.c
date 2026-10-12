@@ -12,8 +12,8 @@ s32 effect_update_secondary_effects(void) {
 
     g_effect_polygon_depth_data = main_gfx_get_otag();
     g_effect_buffer_index = 1 - g_effect_buffer_index;
-    g_effect_current_slot_id = g_effect_active_slot_tail;
-    if (g_effect_active_slot_tail == 0) {
+    g_effect_current_slot_id = g_effect_secondary_active_tail;
+    if (g_effect_secondary_active_tail == 0) {
         return 0;
     }
 

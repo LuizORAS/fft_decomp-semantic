@@ -4,7 +4,7 @@
  * three ids by its mode and the number of sounds it has played; 0 is no sound.
  *
  * Modes above 4 fall through with an unassigned result, as in the target. */
-s32 effect_select_effect_sound_id(s32 channel) {
+s32 effect_select_sound_id(s32 channel) {
     s32 count;
     s32 sound;
 

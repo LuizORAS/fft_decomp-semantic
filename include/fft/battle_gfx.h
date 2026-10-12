@@ -299,7 +299,7 @@ typedef enum battle_seq_type {
 } battle_seq_type_e;
 /* Where a weapon or item graphic sits in WEP.SPR, per item graphic id. */
 typedef struct battle_gfx_item_graphic {
-    u8 palettes;    /* 0x00; g_battle_gfx_item_palettes rows: high nibble for MAP_CLUT_ROW_ITEM_A, low for _B */
+    u8 palettes;    /* 0x00; g_battle_gfx_weapon_clut rows: high nibble for MAP_CLUT_ROW_ITEM_A, low for _B */
     u8 texture_row; /* 0x01; top of the graphic on its texture page, in steps of 8 pixels */
 } battle_gfx_item_graphic_t;
 
@@ -600,9 +600,9 @@ typedef char battle_gfx_other_palettes_size_must_be_672[sizeof(battle_gfx_other_
 extern palette_t g_battle_gfx_crystal_palettes[6];
 extern palette_t g_battle_gfx_cycled_deployed_palettes[2];
 /* the first 0x200 bytes of WEP.SPR */
-extern clut_t g_battle_gfx_eff_palettes;
+extern clut_t g_battle_gfx_trail_clut;
 extern palette_t g_battle_gfx_frog_palettes[5];
-extern clut_t g_battle_gfx_item_palettes;
+extern clut_t g_battle_gfx_weapon_clut;
 extern battle_gfx_other_palettes_t g_battle_gfx_other_palettes;
 extern palette_t g_battle_gfx_shadow_palette;
 extern palette_t g_battle_gfx_treasure_palettes[5];
