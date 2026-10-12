@@ -24,8 +24,8 @@ as original bytes.
 |---|---|---|---|
 | `main` | `SCUS_942.21` | `0x80010000`, resident | Boot, the top-level game loop, disc reads, memory, sound, pads, memory card, the shared data tables and the linked Sony libraries |
 | `opening` | `OPEN/OPEN.BIN` | `0x80067000` | Opening movie, title screen and the ending |
-| `wldcore` | `WORLD/WLDCORE.BIN` | `0x80067000` | World side: the menu stack, propositions and event-script opcodes |
-| `world` | `WORLD/WORLD.BIN` | `0x800e0000` | World map, travel, formation, shops, and the world event-script interpreter |
+| `wldcore` | `WORLD/WLDCORE.BIN` | `0x80067000` | The world map (its loop, drawing, travel, random battles and calendar), the menu stack, propositions and the location scripts' opcodes |
+| `world` | `WORLD/WORLD.BIN` | `0x800e0000` | The menus over the world map (formation, shops, the location list, the memory card) and the world event-script interpreter |
 | `battle` | `BATTLE.BIN` | `0x80067000` | Battles and the story scenes played on battle maps |
 | `event-*` | `EVENT/*.OUT` | `0x801bf000` | Screens and loaders that BATTLE runs on demand: unit, equipment and job menus (`BUNIT`, `EQUIP`, `JOBSTTS`), the scenario loader (`ATTACK`) and others |
 | `effect-*` | `EFFECT/E*.BIN` | `0x801c2500` | 110 ability effects, run with BATTLE |
@@ -79,7 +79,8 @@ Three globals steer the loop:
 Each overlay then runs its own loop. BATTLE runs a state machine
 (`battle_state_*`, about 100 functions) and a turn clock (`battle_turn_*`); the
 [Battle flow](docs/mechanics/Battle%20flow.md) page walks through both. WLDCORE
-starts at `wldcore_entrypoint` and returns the world result to MAIN.
+starts at `wldcore_entrypoint` and returns the world result to MAIN; the
+[World Map and Travel](docs/mechanics/World%20Map%20and%20Travel.md) page walks through it.
 
 ## Engine services
 
@@ -211,7 +212,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [AI](docs/mechanics/AI.md),
   [Units and Jobs](docs/mechanics/Units%20and%20Jobs.md),
   [Items and Shops](docs/mechanics/Items%20and%20Shops.md),
-  [Roster and Formation](docs/mechanics/Roster%20and%20Formation.md) and
+  [Roster and Formation](docs/mechanics/Roster%20and%20Formation.md),
+  [World Map and Travel](docs/mechanics/World%20Map%20and%20Travel.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),
@@ -220,8 +222,9 @@ All of these libraries are reconstructed C, matched like the game code.
   [Changing an ability](docs/guides/Changing%20an%20ability.md),
   [Changing the AI's decisions](docs/guides/Changing%20the%20AI's%20decisions.md),
   [Changing jobs and growth](docs/guides/Changing%20jobs%20and%20growth.md),
-  [Changing items and shops](docs/guides/Changing%20items%20and%20shops.md) and
-  [Changing the formation and roster](docs/guides/Changing%20the%20formation%20and%20roster.md).
+  [Changing items and shops](docs/guides/Changing%20items%20and%20shops.md),
+  [Changing the formation and roster](docs/guides/Changing%20the%20formation%20and%20roster.md) and
+  [Changing travel and random encounters](docs/guides/Changing%20travel%20and%20random%20encounters.md).
 - **Calls through tables:** they do not appear in C, so about 1300 functions
   have no C caller. Their pages say so.
 - **Debugging:** `make map` also writes PCSX-Redux symbol maps to
