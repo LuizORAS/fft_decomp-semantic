@@ -2,8 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-#define G g_open_script_state.records[index].glyphs[drawn]
-
 /* Lays out one OPEN script text line as textured glyph quads.
  *
  * Claims the first free script record, then walks the text until '@' or 42
@@ -100,18 +98,24 @@ s32 open_script_build_text_record(u8* text) {
                 i--;
                 pen += mt->width;
             } else {
-                G.x = pen - mt->bearing;
-                G.y = -mt->descender;
+                g_open_script_state.records[index].glyphs[drawn].x = pen - mt->bearing;
+                g_open_script_state.records[index].glyphs[drawn].y = -mt->descender;
                 width = mt->bearing + mt->width;
                 height = mt->height + mt->descender - 1;
-                G.w = width;
-                G.h = height;
+                g_open_script_state.records[index].glyphs[drawn].w = width;
+                g_open_script_state.records[index].glyphs[drawn].h = height;
                 if (g_open_script_state.dispatch.wide_glyphs == 0) {
-                    G.x = G.x * 2;
-                    G.w = G.w * 2;
+                    g_open_script_state.records[index].glyphs[drawn].x
+                        = g_open_script_state.records[index].glyphs[drawn].x * 2;
+                    g_open_script_state.records[index].glyphs[drawn].w
+                        = g_open_script_state.records[index].glyphs[drawn].w * 2;
                 } else {
-                    G.x = G.x + G.x / 2;
-                    G.w = G.w + G.w / 2;
+                    g_open_script_state.records[index].glyphs[drawn].x
+                        = g_open_script_state.records[index].glyphs[drawn].x
+                        + g_open_script_state.records[index].glyphs[drawn].x / 2;
+                    g_open_script_state.records[index].glyphs[drawn].w
+                        = g_open_script_state.records[index].glyphs[drawn].w
+                        + g_open_script_state.records[index].glyphs[drawn].w / 2;
                 }
                 front = &g_open_script_glyph_primitives[0][slot];
                 g_open_script_state.records[index].skew = g_open_script_state.dispatch.skew;
