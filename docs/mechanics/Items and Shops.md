@@ -14,6 +14,7 @@ scope:
   - require_party_store_equipment_or_sell_overflow()
   - require_party_sell_equipment_over_limit()
   - require_party_restore_item_counts()
+  - world_menu_has_items()
 ---
 
 # Items and Shops

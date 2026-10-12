@@ -210,7 +210,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [Abilities](docs/mechanics/Abilities.md),
   [AI](docs/mechanics/AI.md),
   [Units and Jobs](docs/mechanics/Units%20and%20Jobs.md),
-  [Items and Shops](docs/mechanics/Items%20and%20Shops.md) and
+  [Items and Shops](docs/mechanics/Items%20and%20Shops.md),
+  [Roster and Formation](docs/mechanics/Roster%20and%20Formation.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),
@@ -218,8 +219,9 @@ All of these libraries are reconstructed C, matched like the game code.
   [Changing a status](docs/guides/Changing%20a%20status.md),
   [Changing an ability](docs/guides/Changing%20an%20ability.md),
   [Changing the AI's decisions](docs/guides/Changing%20the%20AI's%20decisions.md),
-  [Changing jobs and growth](docs/guides/Changing%20jobs%20and%20growth.md) and
-  [Changing items and shops](docs/guides/Changing%20items%20and%20shops.md).
+  [Changing jobs and growth](docs/guides/Changing%20jobs%20and%20growth.md),
+  [Changing items and shops](docs/guides/Changing%20items%20and%20shops.md) and
+  [Changing the formation and roster](docs/guides/Changing%20the%20formation%20and%20roster.md).
 - **Calls through tables:** they do not appear in C, so about 1300 functions
   have no C caller. Their pages say so.
 - **Debugging:** `make map` also writes PCSX-Redux symbol maps to

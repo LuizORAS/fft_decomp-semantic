@@ -994,6 +994,10 @@ extern u8 g_world_comparison_unit_number_text_image[];
 extern u8 g_world_comparison_unit_portrait_image[];
 
 /* formation */
+/* The Formation screen (from the world map, its tutorials and the events that ask for it) and the
+ * unit records, grid, panels and equipment rules the shops share: world_formation_run_screen and
+ * the handlers of g_world_formation_menu_handlers. */
+
 /* The extra formation record after the roster records. The fitting room and
  * the equip/remove menus copy the selected unit into it
  * (world_formation_copy_unit_to_temp) to preview equipment, so changes to it
