@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Enter the pre-attack animation state: clear the tile marks and start the used

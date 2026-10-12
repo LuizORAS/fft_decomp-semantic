@@ -1,5 +1,7 @@
+#include "fft/battle_action.h"
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Half-unit height of a tile edge: base height plus the slope height scaled by

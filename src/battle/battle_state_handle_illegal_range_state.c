@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 
 /* IllegalRange game-state handler: when the message closes (command 7, 8 or
  * 0xff), return to the range display. */

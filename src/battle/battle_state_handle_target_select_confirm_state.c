@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* TargetSelectConfirm game-state handler: command 7 stores the unit under the

@@ -1,5 +1,6 @@
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Build the acting unit's movement path to a target tile.

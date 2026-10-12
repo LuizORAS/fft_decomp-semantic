@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /* Narrow an ability's panels to the straight lines that leave the acting unit
  * toward its target: mode 1 for a linear attack, mode 3 for a three-direction

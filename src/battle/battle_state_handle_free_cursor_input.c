@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 
 /* Per-frame unit update shared by most game-state handlers; it reads no input.
  *

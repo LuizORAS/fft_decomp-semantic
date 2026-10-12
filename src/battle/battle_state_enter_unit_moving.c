@@ -1,5 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "fft/battle_camera.h"
+#include "fft/battle_target.h"
 
 /* Enter the unit-moving state: save the casting unit's tile, facing and mount
  * state for an undo (and its partner's when it is a mount) and start its path

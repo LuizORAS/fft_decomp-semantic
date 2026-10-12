@@ -1,6 +1,6 @@
-#include "fft/battle_action.h"
 #include "fft/battle_ai.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 
 /* Intersect attack-origin tiles with the current ability's range.
  *

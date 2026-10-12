@@ -1,7 +1,7 @@
 #ifndef BATTLE_ACTION_H
 #define BATTLE_ACTION_H
 
-/* Battle action preparation, targeting and result processing. */
+/* Battle action preparation, execution and result processing. */
 
 #include "fft/battle_effect.h"
 #include "fft/battle_gfx.h"
@@ -296,26 +296,6 @@ typedef enum action_equipment_slot_mask {
     ACTION_EQUIPMENT_SLOT_ALL = 0xfe,
 } action_equipment_slot_mask_e;
 
-/* Five-byte range/targeting work entry at 0x80192dd8, 256 entries per level.
- * Movement-cost propagation uses remaining_range as the residual budget;
- * the AI reads it at 0x801995f4 and 0x801996ac. */
-typedef struct target_panel {
-    u8 remaining_range;
-    /* Targeting frontier/targeted mark; pathing stores the step number here. */
-    u8 mark;
-    /* Index 0..15 of the compact movement record on the tile (0x80174e84),
-     * not a battle id. */
-    u8 unit_record_index;
-    /* Remaining range after landing on a rideable unit (0x80175fa4); cleared on
-     * the acting tile by 0x80178dac; pathing reuses it on 512+ panels as the step number. */
-    u8 ride_remaining_range;
-    /* Largest single height step along the path, the equal-budget tie-breaker
-     * (0x80175958, 0x80177794); 0xff initial value in mode 1. AI propagation
-     * sets the target to 0 and old actor tile to 0xff. */
-    u8 max_height_delta;
-} target_panel_t;
-typedef char target_panel_size_must_be_5[(sizeof(target_panel_t) == 5) ? 1 : -1];
-
 /* Current ability data at 0x801938c0: the attacker/target pair, weapons, formula
  * inputs and results of the strike being resolved, with copies of the ability's
  * secondary data, the weapon's data and the status-infliction record that
@@ -469,14 +449,6 @@ typedef enum battle_character_slot {
     BATTLE_CHARACTER_SLOT_ABSENT = -5,
 } battle_character_slot_e;
 
-/* Directions of target_calculate_linear_attack_tiles. */
-typedef enum target_line_direction {
-    TARGET_LINE_EAST = 0,  /* +x */
-    TARGET_LINE_WEST = 2,  /* -x */
-    TARGET_LINE_SOUTH = 4, /* -y */
-    TARGET_LINE_NORTH = 6, /* +y */
-} target_line_direction_e;
-
 /* Result of action_prepare_attack, kept in battle_unit_misc_data_t.attack_phase_state. */
 typedef enum battle_attack_preparation {
     BATTLE_ATTACK_PREPARATION_INVALID = -1,
@@ -485,33 +457,6 @@ typedef enum battle_attack_preparation {
     BATTLE_ATTACK_PREPARATION_CHANGE_EQUIPMENT = 2,
     BATTLE_ATTACK_PREPARATION_JUMP = 3,
 } battle_attack_preparation_e;
-
-/* Result of target_set_panels_for_action, kept in
- * battle_unit_misc_data_t.ability_preview_phase: how the action's target is chosen. */
-typedef enum target_panels {
-    TARGET_PANELS_INVALID = -1,
-    TARGET_PANELS_UNIT_OR_TILE = 0, /* the ability can follow a unit */
-    TARGET_PANELS_TILE_ONLY = 1,    /* ABILITY_SECONDARY_FLAG_2_NO_FOLLOW_TARGET */
-    TARGET_PANELS_NO_TARGETING = 2, /* nothing to choose: the action is centred on the acting unit */
-    TARGET_PANELS_NONE = 3,         /* the panel routine marked no tile */
-} target_panels_e;
-
-/* target_set_tile_background_color modes and the g_target_tile_mark_modes states:
- * one layer per map tile mark (move destination, ability range, targeted). A SHOW or HIDE
- * request recolours the current render buffer; map_draw_mesh_and_weather then does the
- * other buffer and leaves the layer SHOWN or NONE. */
-typedef enum battle_tile_mark_mode {
-    BATTLE_TILE_MARK_NONE = 0, /* as a mode: restore every polygon and request the three HIDEs */
-    BATTLE_TILE_MARK_SHOW_MOVE = 1,
-    BATTLE_TILE_MARK_SHOW_RANGE = 2,
-    BATTLE_TILE_MARK_HIDE_RANGE = 3,
-    BATTLE_TILE_MARK_HIDE_MOVE = 5,
-    BATTLE_TILE_MARK_SHOW_TARGETS = 7,
-    BATTLE_TILE_MARK_HIDE_TARGETS = 8,
-    BATTLE_TILE_MARK_MOVE_SHOWN = 10,
-    BATTLE_TILE_MARK_RANGE_SHOWN = 11,
-    BATTLE_TILE_MARK_TARGETS_SHOWN = 12,
-} battle_tile_mark_mode_e;
 
 /* g_action_post_action_display_phase: the reports shown one after another once an action
  * has resolved. The post-movement reports use the first two. */
@@ -550,8 +495,6 @@ extern s16 g_battle_current_reaction_ability_id;
 extern s32 g_battle_distribute_target_count;
 extern s32 g_battle_unit_source_misc_id;
 extern s32 g_battle_casting_unit_id;
-extern u8 g_target_ability_targets_list[BATTLE_UNIT_MISC_SLOT_COUNT];
-extern target_panel_t g_target_panel_data[MAP_TILE_COUNT];
 extern battle_current_ability_t g_action_current_ability;
 extern s32 g_action_hamedo_flag;
 extern s32 g_battle_state_wait_direction_facing;
@@ -568,18 +511,11 @@ extern action_data_t g_action_attacker_action_data;
 extern battle_stats_t* g_action_attacker;
 extern u8 g_action_menu_row_types[]; /* per-row skillset kind; 13 keeps the row active */
 extern s32 g_action_learn_on_hit_unit_id;
-extern u16 g_target_color_tile_x;
-extern s16 g_target_color_tile_y;
-extern s16 g_target_tile_mark_modes[3]; /* battle_tile_mark_mode_e, one per tile mark */
 extern u8 g_action_canceled_statuses[];
 
-/* Second name of g_target_panel_data, unsized: 512 map panels followed
- * by 16 auxiliary panels, all initialized at 0x80174e84. */
-extern target_panel_t g_target_panels[];
 extern SVECTOR g_battle_current_misc_screen_coords;
 extern VECTOR g_battle_current_vector;
 extern u32* g_battle_gfx_current_otag_entry;
-extern battle_render_buffer_t* g_target_tile_color_buffer;
 extern u16 g_battle_current_music_track_index; /* 0x80165fd8 */
 s32 action_add_poached_item_to_fur_shop_inventory(void);
 s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode);
@@ -651,53 +587,15 @@ void action_switch_ability_to_default_attack(void);
 
 s32 battle_unit_get_action_restriction(battle_stats_t* unit);
 
-s32 target_set_panels_for_action(const action_command_t* action);
 s32 action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids);
-void target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff);
-void target_calculate_aoe_vertical_tolerance(s32 x, s32 y, s32 lo, s32 hi);
-void target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags);
-void target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y);
-s32 target_calculate_map_for_action(action_command_t* action, u8* flags_3);
-void target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags);
-void target_calculate_tile_coords_and_glow_from_at_list(void);
-void target_calculate_tile_coords_with_cursor_glow(void);
-void target_calculate_weapon_range(battle_stats_t* unit);
-void target_can_select_tile(void);
-void target_clear_panels_on_untargetable_tiles(void);
-s32 target_clear_selection_state_of_all_panels(void);
-void target_clear_panel_data(void);
-void target_clear_panel_spread_flags(void);
-void target_disable_green_panel_flags(void);
-s32 target_disable_green_panel_on_all_but_target_tile(const action_command_t* source);
-void target_gather_x_y_data_for_attacks(battle_unit_misc_data_t* unit);
-s32 target_get_unit_id_if_tile_targetable(s32 a0, s32 a1, s32 a2);
-void target_move_cursor_to_unit(battle_unit_misc_data_t* unit);
-void target_remove_close_range(s32 x, s32 y, s32 range);
-void target_select_random_tile_for_random_fire_abilities(void);
-void target_select_tile(void);
-void target_show_move_range_in_free_cursor(void);
-void target_sort_list(s32 target_battle_id);
-void target_spread_panels(u8 passes, s32 unused);
-void target_store_cursor_casting_unit_name_and_data(void);
-void target_store_cursor_unit_name_and_data(void);
-s32 target_set_boxes_red(void);
-void target_store_cursor_unit_as_preview_target(void);
-void target_update_free_cursor_selection(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* selected_unit);
-
-s32 target_validate_height_overlap(s32 attacker_id, s32 target_x, s32 target_y, s32 target_elevation, s32 target_id);
 
 void action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* unit);
-s32 target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECTOR* quad);
-s32 target_set_green_panels_for_action(action_command_t* action);
-s32 target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_index);
 s32 action_prepare_attack(action_command_t* action, action_command_t* target, s32 flag);
 s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
 void action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 battle_reaction_prepare_next(s16* reaction_id);
 s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id);
 s32 action_finalize_attack_and_flag_reactions(s32 misc_id);
-s32 target_move_cursor_by_input(void);
-void target_set_tile_background_color(s32 mode, s32 unused);
 void action_set_target_coords_and_attacker_anim(void);
 void battle_menu_copy_billboard_data_out(menu_unit_status_record_t* banner, menu_active_unit_t* unit,
     menu_status_panel_slot_storage_t* billboard, map_selected_tile_t* cursor_tile);
@@ -730,26 +628,6 @@ s32 action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_entry_t* 
 void action_store_target_ids(u8* src);
 s32 action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target);
 s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability);
-s32 target_apply_reflect(battle_stats_t* unit);
-void target_apply_vertical_fixed(s32 x, s32 y);
-void target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 single_layer);
-s32 target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 range);
-s32 target_calculate_for_menu_types(const action_command_t* source);
-s32 target_count_hit_by_ability(u8* out);
-s32 target_list_units_on_panels(u8* list, battle_stats_t* origin);
-s32 target_move_cursor_to_battle_id(u32 battle_id);
-void target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* position, SVECTOR* raised);
-s32 target_run_calculator(const action_command_t* source);
-s32 target_set_ability_panels(const action_command_t* source);
-void target_set_state_for_all_unit_panels(battle_stats_t* unit, s32 flags);
-s32 target_set_all_panels_targeted_if_targetable(void);
-void target_set_coordinates_for_ability(battle_stats_t* acting, battle_strike_work_t* out);
-s32 target_set_weapon_attack_panels(action_command_t* source);
-s32 target_set_jump_ability_panels(const action_command_t* source);
-s32 target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevation, s32 target_id);
-s32 target_validate_weapon_target(const action_command_t* source);
-void target_build_directional_attack_panels(const action_command_t* source, u8 mode);
-void target_check_moldball_virus_depth(s16 ability_id);
 s32 action_init_current_data(s32 unit_id);
 void action_store_acting_unit_data(battle_stats_t* unit);
 s32 action_store_target_stats_pointer_data(s32 unit_id);

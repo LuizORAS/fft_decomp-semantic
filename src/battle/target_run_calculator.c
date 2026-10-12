@@ -1,5 +1,5 @@
-#include "fft/battle_action.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Marks the tiles of every unit selected by a Calculator (Arithmeticks) action.

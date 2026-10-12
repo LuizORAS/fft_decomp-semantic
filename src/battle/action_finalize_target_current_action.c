@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
 #include "fft/battle_formula.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Validate and clamp the target's current action result before it applies.

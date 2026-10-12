@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Builds and previews a reaction using the current attacker's action and weapons.

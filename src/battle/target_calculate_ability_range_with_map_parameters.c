@@ -1,5 +1,5 @@
-#include "fft/battle_action.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Spread an ability range from the unit's tile and mark the reachable panels.

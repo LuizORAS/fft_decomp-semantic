@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 
 /* Free-cursor movement step. With the acting unit under player control the

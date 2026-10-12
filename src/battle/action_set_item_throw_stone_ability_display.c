@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Enter the action-execute state for the casting unit, point the cursor at its

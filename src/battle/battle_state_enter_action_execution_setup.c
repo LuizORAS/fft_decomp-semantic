@@ -1,5 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "fft/battle_camera.h"
+#include "fft/battle_target.h"
 
 /*
  * Enter action-execution setup after panel preparation.

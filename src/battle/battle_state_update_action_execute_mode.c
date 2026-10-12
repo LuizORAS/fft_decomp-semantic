@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 
 /* ActionExecute game-state handler: animate the strike, run the knockback step of
  * every target and, when everything has settled, refresh the targets and show the

@@ -1,5 +1,6 @@
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
+#include "fft/battle_target.h"
 
 /*
  * Check a destination path and propagate an improved movement budget.

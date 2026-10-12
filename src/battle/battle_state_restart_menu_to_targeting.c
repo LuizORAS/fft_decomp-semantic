@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_camera.h"
+#include "fft/battle_target.h"
 
 /* Enter the menu-to-targeting state and restart the source unit's command. */
 void battle_state_restart_menu_to_targeting(void) {

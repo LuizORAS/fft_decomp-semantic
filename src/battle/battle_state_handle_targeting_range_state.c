@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 
 /* TargetingRange game-state handler: the ability's range is shown and the target

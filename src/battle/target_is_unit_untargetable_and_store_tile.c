@@ -1,5 +1,5 @@
-#include "fft/battle_action.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 
 /* Store a unit's tile and report whether targeting must reject the unit. */
 s32 target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_index) {

@@ -3,7 +3,7 @@
 
 /* Battle pathfinding, movement steps and terrain propagation. */
 
-#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
 

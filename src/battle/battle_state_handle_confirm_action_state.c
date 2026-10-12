@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 
 /* ConfirmAction game-state handler: act on the answer to the prompt
  * action_confirm opened.

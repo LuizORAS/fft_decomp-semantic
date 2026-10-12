@@ -1,5 +1,5 @@
-#include "fft/battle_action.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Mark the panels along a straight line from (x, y) in one compass direction

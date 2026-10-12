@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Spread one targeting panel's remaining range to its four orthogonal

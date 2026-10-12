@@ -1,5 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "fft/battle_camera.h"
+#include "fft/battle_target.h"
 
 /* Return to the free-cursor state at animation speed 1: show the panel for the
  * cursor tile and refresh the source unit's control flags from its ENTD flags. */

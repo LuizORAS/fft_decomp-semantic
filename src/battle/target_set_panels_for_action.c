@@ -2,8 +2,8 @@
  * The .ld places .rodata at 0x80174068 so the switch's jump table lands on the
  * target's table.
  */
-#include "fft/battle_action.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Build the targeting panels for an action and report how its target is chosen.

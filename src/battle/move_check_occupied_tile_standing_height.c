@@ -1,4 +1,5 @@
 #include "fft/battle_move.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Raises the destination panel's ride_remaining_range to the remaining movement budget

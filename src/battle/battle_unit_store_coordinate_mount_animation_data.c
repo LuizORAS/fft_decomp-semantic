@@ -1,5 +1,5 @@
-#include "fft/battle_action.h"
 #include "fft/battle_gfx.h"
+#include "fft/battle_target.h"
 #include "fft/battle_unit.h"
 
 /* Settles a unit on its map tile when its knockback or path move ends, or once it

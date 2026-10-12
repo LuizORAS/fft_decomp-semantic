@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /*
  * Advance menu-to-targeting state and consume the unit's renderer command.

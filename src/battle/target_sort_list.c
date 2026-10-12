@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Remove target_battle_id from the pending-target ring (g_target_ability_targets_list), shift

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 
 /* DisplayMoveArea game-state handler, a unit's move range shown from the free

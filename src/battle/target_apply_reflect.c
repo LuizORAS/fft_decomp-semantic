@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Aim a reflected spell: the unit casts the ability it received, under the

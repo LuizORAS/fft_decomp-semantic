@@ -1,4 +1,4 @@
-#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /* Return the target only when its vertical span overlaps the attacker's.
  *

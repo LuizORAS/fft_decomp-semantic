@@ -2,6 +2,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_target.h"
 #include "fft/battle_unit.h"
 
 /* Open the source unit's own action menu: the unit becomes the casting unit, the

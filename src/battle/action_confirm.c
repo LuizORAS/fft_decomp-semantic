@@ -2,6 +2,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_target.h"
 
 /* Enter the confirm-action state and open the confirmation prompt for the pending
  * action.

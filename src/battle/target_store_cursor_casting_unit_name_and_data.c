@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /* Start the unit panels for a selected target tile: the attack preview for the
  * source unit against the unit on the cursor tile, or the source unit's own stats

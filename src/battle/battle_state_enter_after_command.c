@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /* Enter the after-command state at animation speed 1: put the cursor on the
  * source unit and close the open system window. */

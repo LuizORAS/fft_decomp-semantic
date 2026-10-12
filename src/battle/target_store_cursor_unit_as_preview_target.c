@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /* Start the right-side stats panel for the unit on the cursor tile, or the tile
  * info panel when the tile is empty. */

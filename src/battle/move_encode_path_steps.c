@@ -1,5 +1,6 @@
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
+#include "fft/battle_target.h"
 
 /* Encode the traced path as move_step_t bytes in g_move_path,
  * count holding the number of encoded steps. Starting from the unit's tile, step n goes to

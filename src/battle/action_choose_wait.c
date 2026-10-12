@@ -3,6 +3,7 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/battle_target.h"
 
 /* Open the Wait menu for the source unit, or skip it.
  *

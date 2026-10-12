@@ -1,7 +1,7 @@
-#include "fft/battle_action.h"
 #include "fft/battle_ai.h"
 #include "fft/battle_effect.h"
 #include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "fft/battle_unit.h"
 
 /*

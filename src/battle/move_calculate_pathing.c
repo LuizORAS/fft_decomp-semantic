@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Pathfinding pass for a generic unit (id 0x7f) from (x, y, level) to the target

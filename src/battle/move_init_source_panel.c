@@ -1,4 +1,5 @@
 #include "fft/battle_move.h"
+#include "fft/battle_target.h"
 
 /*
  * Select a source movement panel and prepare its exit height.

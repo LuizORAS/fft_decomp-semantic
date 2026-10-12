@@ -3,6 +3,7 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_move.h"
+#include "fft/battle_target.h"
 #include "fft/battle_unit.h"
 
 /* Return to choosing a move destination: recompute the source unit's reachable

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 
 /* ActionExecuteSetup game-state handler: command 7 goes on to the range display
  * (target_set_boxes_red); 8 or 0xff returns to the idle action menu. */

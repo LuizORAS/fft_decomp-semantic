@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /* Per-frame cursor update: project the cursor tile to the screen, and while
  * g_action_at_list_active is set also draw the selection cursor and the

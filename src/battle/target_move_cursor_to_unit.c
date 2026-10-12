@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 void target_move_cursor_to_unit(battle_unit_misc_data_t* unit) {
     if (unit != 0) {

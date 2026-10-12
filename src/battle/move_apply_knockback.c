@@ -1,3 +1,4 @@
+#include "fft/battle_action.h"
 #include "fft/battle_move.h"
 #include "psx/types.h"
 

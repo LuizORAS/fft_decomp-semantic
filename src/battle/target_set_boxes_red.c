@@ -2,6 +2,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_target.h"
 
 /* Start target selection for the source unit's previewed action and return its
  * ability_preview_phase (target_panels_e).

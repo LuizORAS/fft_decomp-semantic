@@ -1,5 +1,5 @@
 #include "fft/battle.h"
-#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "fft/battle_unit.h"
 
 /* Ends a unit's command: the cursor returns to the unit, its display is updated
