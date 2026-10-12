@@ -656,6 +656,8 @@ typedef enum suzuki_sound_sfx_priority {
 #define SUZUKI_SOUND_SFX_CHANNEL_ID(priority, channel) ((s16)(((priority) << 8) | (channel)))
 
 /* heap */
+enum { SUZUKI_SOUND_HEAP_BYTE_COUNT = 32768 };
+
 /* Suzuki CPU arena allocator; shared with the sound driver. */
 /* Suzuki heap block header (0x10 bytes; payload follows). The $gp-relative
  * allocator (0x8001423c-0x8001442c) rounds requests to 16 bytes and chains
@@ -674,11 +676,11 @@ typedef enum suzuki_heap_block_flag {
     SUZUKI_HEAP_BLOCK_HEAD = 0x8000, /* the list head suzuki_sound_init_heap places at the arena start */
 } suzuki_heap_block_flag_e;
 
-extern suzuki_heap_block_t* g_suzuki_sound_heap_arena;  /* 0x800329f8 */
-extern suzuki_heap_block_t* g_suzuki_sound_heap_blocks; /* 0x800329fc */
-extern u32 g_suzuki_sound_heap_size;                    /* 0x80032a38 */
-extern u8* g_suzuki_sound_heap_end;                     /* 0x80032a64 */
-extern u8 g_suzuki_sound_heap_memory[];                 /* 0x800370bc; the Suzuki heap arena */
+extern suzuki_heap_block_t* g_suzuki_sound_heap_arena;              /* 0x800329f8 */
+extern suzuki_heap_block_t* g_suzuki_sound_heap_blocks;             /* 0x800329fc */
+extern u32 g_suzuki_sound_heap_size;                                /* 0x80032a38 */
+extern u8* g_suzuki_sound_heap_end;                                 /* 0x80032a64 */
+extern u8 g_suzuki_sound_heap_memory[SUZUKI_SOUND_HEAP_BYTE_COUNT]; /* the CPU heap arena */
 
 void suzuki_sound_init_heap(void* arena, u32 size);
 void* suzuki_sound_alloc(u32 size);
@@ -687,6 +689,11 @@ s32 suzuki_sound_get_largest_free_block(void);
 void suzuki_sound_clear_memory(void* destination, s32 size);
 
 /* driver */
+enum {
+    SUZUKI_SOUND_SPU_ALLOC_BLOCK_CAPACITY = 6,
+    SUZUKI_SOUND_SPU_ALLOC_RECORD_COUNT = SUZUKI_SOUND_SPU_ALLOC_BLOCK_CAPACITY + 1,
+};
+
 /* Driver tables (read-only data 0x80028b0c-0x8002a8d8). */
 extern suzuki_smd_handler_t g_suzuki_smd_opcode_handlers[0x80]; /* 0x80028b0c; opcodes 0x80-0xff */
 extern u8 g_suzuki_smd_opcode_lengths[0x80];                    /* 0x80028d0c; opcode plus parameters */
@@ -730,13 +737,15 @@ extern suzuki_music_t* g_suzuki_sound_active_music_list; /* 0x80032a50 */
 extern s16 g_suzuki_sound_driver_flags;
 extern s32
     g_suzuki_sound_root_counter_2_event; /* 0x80032a5c; OpenEvent handle of suzuki_sound_root_counter_2_handler */
-extern suzuki_music_t* g_suzuki_sound_sfx_music;                 /* 0x80032a60; eight channels on SPU voices 16-23 */
-extern SpuReverbAttr g_suzuki_sound_reverb_attr;                 /* 0x80037008 */
-extern suzuki_spu_state_t g_suzuki_sound_spu_state;              /* 0x80037020 */
-extern psyq_spu_heap_record_t g_suzuki_sound_spu_malloc_table[]; /* 0x800408e0; SpuInitMalloc(6, ...) records */
-extern u16 D_80032A28;                                           /* only ever stored */
-extern u32 D_80032A34;                                           /* only ever stored */
-extern s16 D_80032A58;                                           /* only ever stored */
+extern suzuki_music_t* g_suzuki_sound_sfx_music;    /* 0x80032a60; eight channels on SPU voices 16-23 */
+extern SpuReverbAttr g_suzuki_sound_reverb_attr;    /* 0x80037008 */
+extern suzuki_spu_state_t g_suzuki_sound_spu_state; /* 0x80037020 */
+/* Allocation records and one trailing free-range record. */
+extern psyq_spu_heap_record_t g_suzuki_sound_spu_malloc_table[SUZUKI_SOUND_SPU_ALLOC_RECORD_COUNT];
+typedef char suzuki_spu_allocator_storage_size_must_be_56[sizeof(g_suzuki_sound_spu_malloc_table) == 56 ? 1 : -1];
+extern u16 D_80032A28; /* only ever stored */
+extern u32 D_80032A34; /* only ever stored */
+extern s16 D_80032A58; /* only ever stored */
 
 /* Suzuki driver entry points. The music handle passed by the game wrappers
  * is the suzuki_music_t* that suzuki_smd_create_music returns. */

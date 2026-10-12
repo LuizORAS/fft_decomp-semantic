@@ -16,8 +16,8 @@ void suzuki_sound_init(s32 flags) {
         return;
     }
     g_suzuki_sound_driver_flags = flags | SUZUKI_SOUND_DRIVER_INITIALISED;
-    SpuInitMalloc(6, (char*)g_suzuki_sound_spu_malloc_table);
-    suzuki_sound_init_heap(g_suzuki_sound_heap_memory, 0x8000);
+    SpuInitMalloc(SUZUKI_SOUND_SPU_ALLOC_BLOCK_CAPACITY, (char*)g_suzuki_sound_spu_malloc_table);
+    suzuki_sound_init_heap(g_suzuki_sound_heap_memory, sizeof(g_suzuki_sound_heap_memory));
     suzuki_sound_init_stub();
     g_suzuki_smd_random_state = 0x12345678;
     g_suzuki_sound_active_music_list = 0;
