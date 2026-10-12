@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
-/* Formation menu display setup: clears the display area unless g_world_shop_id is
+/* Formation menu display setup: clears the display area unless g_world_menu_context_id is
  * -2, uploads the window-frame texture and CLUTs, derives two 16-entry palettes
  * from VRAM rows 0x1f0/0x1f4 with entries 4, 8 and 12 made transparent, then
  * resets the menu, fade, cursor and graphics-pointer state.
@@ -13,7 +13,7 @@ void world_formation_init_menu_display(void) {
 
     world_formation_reset_menu_context();
     world_script_set_vsync_mode_and_event_speed(0);
-    if (g_world_shop_id != WORLD_SHOP_ID_NAME_ENTRY) {
+    if (g_world_menu_context_id != WORLD_MENU_CONTEXT_NAME_ENTRY) {
         rect.x = 0;
         rect.y = 0;
         rect.w = 0x100;

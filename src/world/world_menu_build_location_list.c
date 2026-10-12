@@ -6,7 +6,7 @@
  * rows of location-name text 0x9000 + location) and position the menu around
  * the current one. `selected` stays unset when the current location is not
  * listed. */
-void world_menu_build_available_item_list(void) {
+void world_menu_build_location_list(void) {
     s32 i;
     s32 count;
     s32 selected;

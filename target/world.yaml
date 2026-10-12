@@ -455,7 +455,7 @@ functions:
   - {addr: 0x8010487c, size: 3460, name: world_menu_run_battle_help, hash: 19f312de2ac42e56}
   - {addr: 0x80105600, size: 60, name: world_thread_find_first_running_menu_thread, hash: 93208e88bcfad087}
   - {addr: 0x8010563c, size: 1992, name: world_menu_run_require_help, hash: c7cbab664bb5a1d5}
-  - {addr: 0x80105e04, size: 376, name: world_menu_build_available_item_list, hash: 349237fd5e967325}
+  - {addr: 0x80105e04, size: 376, name: world_menu_build_location_list, hash: 349237fd5e967325}
   - {addr: 0x80105f7c, size: 240, name: world_map_confirm_destination, hash: 29b51b8a6bcdd2f0}
   - {addr: 0x8010606c, size: 188, name: world_menu_build_submenu_text_id_page, hash: c3dd8076c43c73d6}
   - {addr: 0x80106128, size: 16, name: world_menu_set_slot_4_cursor_index, hash: a87cff00f1d1a1dc}
@@ -2223,7 +2223,7 @@ data:
   - {addr: 0x801cd204, name: g_world_action_menu_skillsets}
   - {addr: 0x801cd20c, name: g_world_menu_cursor_position}
   - {addr: 0x801cd210, name: g_world_gfx_sprite_16_capacity}
-  - {addr: 0x801cd218, name: g_world_shop_id}
+  - {addr: 0x801cd218, name: g_world_menu_context_id}
   - {addr: 0x801cd21c, name: PSDBASEX}
   - {addr: 0x801cd220, name: PSDBASEY}
   - {addr: 0x801cd224, name: g_world_ot_length}

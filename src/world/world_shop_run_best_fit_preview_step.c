@@ -87,8 +87,8 @@ void world_shop_run_best_fit_preview_step(void) {
                 (*unit_slot)->equipment[i] = *reserved;
             }
         }
-        world_shop_build_fitting_room_best_fit_equipment(
-            g_world_formation_selected_unit_index, g_world_shop_id, g_world_item_preview_stat_detail.state.equipment);
+        world_shop_build_fitting_room_best_fit_equipment(g_world_formation_selected_unit_index, g_world_menu_context_id,
+            g_world_item_preview_stat_detail.state.equipment);
         g_world_item_preview_stat_detail.state.equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY]
             = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
                   ->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY];

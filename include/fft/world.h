@@ -99,6 +99,73 @@ void world_map_store_selected_tile_data(void);
 void world_map_wait_for_refresh(void);
 void world_map_light_thread(void);
 
+/* locations */
+/* World-map location ids (EVENT_SCRIPT_VAR_LOCATION), named as the location
+ * name text (TEXT_ID_LOCATION_NAME_BASE + id) spells them. The first fifteen
+ * are the towns; a town's id is also its outfitter's shop id and its bit,
+ * counted from the top, in g_world_shop_item_availability. */
+typedef enum world_location_id {
+    WORLD_LOCATION_LESALIA = 0,
+    WORLD_LOCATION_RIOVANES = 1,
+    WORLD_LOCATION_IGROS = 2,
+    WORLD_LOCATION_LIONEL = 3,
+    WORLD_LOCATION_LIMBERRY = 4,
+    WORLD_LOCATION_ZELTENNIA = 5,
+    WORLD_LOCATION_GARILAND = 6,
+    WORLD_LOCATION_YARDOW = 7,
+    WORLD_LOCATION_GOLAND = 8,
+    WORLD_LOCATION_DORTER = 9,
+    WORLD_LOCATION_ZALAND = 10,
+    WORLD_LOCATION_GOUG = 11,
+    WORLD_LOCATION_WARJILIS = 12,
+    WORLD_LOCATION_BERVENIA = 13,
+    WORLD_LOCATION_ZARGHIDAS = 14,
+    WORLD_LOCATION_FORT_ZEAKDEN = 15,
+    WORLD_LOCATION_MUROND_HOLY_PLACE = 16,
+    WORLD_LOCATION_THIEVES_FORT = 17,
+    WORLD_LOCATION_ORBONNE_MONASTERY = 18,
+    WORLD_LOCATION_GOLGORAND_EXECUTION_SITE = 19,
+    WORLD_LOCATION_MUROND_DEATH_CITY = 20,
+    WORLD_LOCATION_BETHLA_GARRISON = 21,
+    WORLD_LOCATION_DEEP_DUNGEON = 22,
+    WORLD_LOCATION_NELVESKA_TEMPLE = 23,
+    WORLD_LOCATION_MANDALIA_PLAINS = 24,
+    WORLD_LOCATION_FOVOHAM_PLAINS = 25,
+    WORLD_LOCATION_SWEEGY_WOODS = 26,
+    WORLD_LOCATION_BERVENIA_VOLCANO = 27,
+    WORLD_LOCATION_ZEKLAUS_DESERT = 28,
+    WORLD_LOCATION_LENALIA_PLATEAU = 29,
+    WORLD_LOCATION_ZIGOLIS_SWAMP = 30,
+    WORLD_LOCATION_YUGUO_WOODS = 31,
+    WORLD_LOCATION_ARAGUAY_WOODS = 32,
+    WORLD_LOCATION_GROG_HILL = 33,
+    WORLD_LOCATION_BED_DESERT = 34,
+    WORLD_LOCATION_ZIREKILE_FALLS = 35,
+    WORLD_LOCATION_DOLBODAR_SWAMP = 36,
+    WORLD_LOCATION_BARIAUS_HILL = 37,
+    WORLD_LOCATION_DOGUOLA_PASS = 38,
+    WORLD_LOCATION_BARIAUS_VALLEY = 39,
+    WORLD_LOCATION_FINATH_RIVER = 40,
+    WORLD_LOCATION_POESKAS_LAKE = 41,
+    WORLD_LOCATION_GERMINAS_PEAK = 42,
+} world_location_id_e;
+
+/* Counts and the random-battle location range. */
+enum {
+    WORLD_LOCATION_TOWN_COUNT = 15,
+    WORLD_LOCATION_FIELD_FIRST = WORLD_LOCATION_MANDALIA_PLAINS,
+    WORLD_LOCATION_FIELD_COUNT = 19,
+    WORLD_LOCATION_COUNT = 43,
+};
+
+extern u16 g_world_menu_location_list_text_ids[];
+extern s16 g_world_menu_location_list_row_colors[];
+extern menu_scroll_text_layout_t g_world_menu_location_list_layout;
+extern u8 g_world_location_names_resident[];
+
+void world_menu_build_location_list(void);
+void world_map_confirm_destination(void);
+
 /* name */
 extern u8 g_world_name_entry_character_rows[];
 extern menu_instruction_t g_world_name_entry_display_script;
@@ -1994,6 +2061,18 @@ void world_text_start_character_thread_if_idle(s32 thread_id, s32 first, s32 sec
 void world_menu_start_building_thread(void);
 void world_text_character_handling_thread(void);
 
+/* menu context */
+/* Ordinary outfitter screens use a town's world_location_id_e. These values
+ * identify the other screens that reuse the formation menu framework. */
+typedef enum world_menu_context {
+    WORLD_MENU_CONTEXT_NAME_ENTRY = -2,
+    WORLD_MENU_CONTEXT_FORMATION = -1,
+    WORLD_MENU_CONTEXT_FUR_SHOP = 100,
+    WORLD_MENU_CONTEXT_SOLDIER_OFFICE = 101,
+} world_menu_context_e;
+
+extern s16 g_world_menu_context_id; /* town location ID or world_menu_context_e */
+
 /* menu */
 
 /* One cell of a directional grid menu: a description text id (base plus
@@ -2225,9 +2304,6 @@ extern s32 g_world_menu_location_window_y;
 extern u32 g_world_menu_default_entry_0_text_values[2]; /* text index + 0xa000, value */
 extern s32 g_world_menu_default_entry_1_text_values[2]; /* value, 0 */
 extern s32 g_world_menu_location_text_id;
-extern u16 g_world_menu_location_list_text_ids[];
-extern s16 g_world_menu_location_list_row_colors[];
-extern menu_scroll_text_layout_t g_world_menu_location_list_layout;
 extern u8 g_world_menu_submenu_page_counts[];
 extern u8* g_world_menu_submenu_page_text_ids[];
 extern menu_scroll_text_layout_t g_world_menu_submenu_page_layout;
@@ -2871,70 +2947,6 @@ void world_item_sort_id_list(s32 mode, s16* list);
 void world_item_sum_equipment_stat_details(struct menu_status_panel_slot_storage* total, u16* equipment);
 
 /* shop */
-/* World-map location ids (EVENT_SCRIPT_VAR_LOCATION), named as the location
- * name text (TEXT_ID_LOCATION_NAME_BASE + id) spells them. The first fifteen
- * are the towns; a town's id is also its outfitter's shop id and its bit,
- * counted from the top, in g_world_shop_item_availability. */
-typedef enum world_location_id {
-    WORLD_LOCATION_LESALIA = 0,
-    WORLD_LOCATION_RIOVANES = 1,
-    WORLD_LOCATION_IGROS = 2,
-    WORLD_LOCATION_LIONEL = 3,
-    WORLD_LOCATION_LIMBERRY = 4,
-    WORLD_LOCATION_ZELTENNIA = 5,
-    WORLD_LOCATION_GARILAND = 6,
-    WORLD_LOCATION_YARDOW = 7,
-    WORLD_LOCATION_GOLAND = 8,
-    WORLD_LOCATION_DORTER = 9,
-    WORLD_LOCATION_ZALAND = 10,
-    WORLD_LOCATION_GOUG = 11,
-    WORLD_LOCATION_WARJILIS = 12,
-    WORLD_LOCATION_BERVENIA = 13,
-    WORLD_LOCATION_ZARGHIDAS = 14,
-    WORLD_LOCATION_TOWN_COUNT = 15,
-    WORLD_LOCATION_FORT_ZEAKDEN = 15,
-    WORLD_LOCATION_MUROND_HOLY_PLACE = 16,
-    WORLD_LOCATION_THIEVES_FORT = 17,
-    WORLD_LOCATION_ORBONNE_MONASTERY = 18,
-    WORLD_LOCATION_GOLGORAND_EXECUTION_SITE = 19,
-    WORLD_LOCATION_MUROND_DEATH_CITY = 20,
-    WORLD_LOCATION_BETHLA_GARRISON = 21,
-    WORLD_LOCATION_DEEP_DUNGEON = 22,
-    WORLD_LOCATION_NELVESKA_TEMPLE = 23,
-    WORLD_LOCATION_MANDALIA_PLAINS = 24,
-    WORLD_LOCATION_FOVOHAM_PLAINS = 25,
-    WORLD_LOCATION_SWEEGY_WOODS = 26,
-    WORLD_LOCATION_BERVENIA_VOLCANO = 27,
-    WORLD_LOCATION_ZEKLAUS_DESERT = 28,
-    WORLD_LOCATION_LENALIA_PLATEAU = 29,
-    WORLD_LOCATION_ZIGOLIS_SWAMP = 30,
-    WORLD_LOCATION_YUGUO_WOODS = 31,
-    WORLD_LOCATION_ARAGUAY_WOODS = 32,
-    WORLD_LOCATION_GROG_HILL = 33,
-    WORLD_LOCATION_BED_DESERT = 34,
-    WORLD_LOCATION_ZIREKILE_FALLS = 35,
-    WORLD_LOCATION_DOLBODAR_SWAMP = 36,
-    WORLD_LOCATION_BARIAUS_HILL = 37,
-    WORLD_LOCATION_DOGUOLA_PASS = 38,
-    WORLD_LOCATION_BARIAUS_VALLEY = 39,
-    WORLD_LOCATION_FINATH_RIVER = 40,
-    WORLD_LOCATION_POESKAS_LAKE = 41,
-    WORLD_LOCATION_GERMINAS_PEAK = 42,
-    /* The fields, where random battles happen: Mandalia Plains to Germinas Peak. */
-    WORLD_LOCATION_FIELD_FIRST = WORLD_LOCATION_MANDALIA_PLAINS,
-    WORLD_LOCATION_FIELD_COUNT = 19,
-    WORLD_LOCATION_COUNT = 43,
-} world_location_id_e;
-
-/* g_world_shop_id: a town's location id while its outfitter is open, or one of
- * these. */
-enum {
-    WORLD_SHOP_ID_NAME_ENTRY = -2,
-    WORLD_SHOP_ID_FORMATION = -1,
-    WORLD_SHOP_ID_FUR_SHOP = 100,
-    WORLD_SHOP_ID_SOLDIER_OFFICE = 101,
-};
-
 /* Two-byte shop availability mask, stored most significant byte first: bit
  * 0x8000 >> location id is set when that town's outfitter sells the item. */
 typedef struct world_shop_item_availability {
@@ -3108,7 +3120,6 @@ extern u8 g_world_shop_rename_error_shown;
 extern u8 g_world_shop_party_unit_count;
 extern const u8* g_world_shop_entered_unit_name;
 extern u32 g_world_shop_service_fee;
-extern s16 g_world_shop_id;
 extern u8 g_world_shop_cost_window_visible;
 void world_shop_run_item_sell_list_step(void);
 void world_shop_run_item_sell_confirm_step(void);
@@ -3162,7 +3173,6 @@ extern menu_cursor_bob_entry_t g_world_cursor_bob_active_thresholds[]; /* (thres
 extern u16 g_world_saved_animation_speed;                              /* saved animation speed */
 extern u16 g_world_animation_speed_forced;                             /* animation speed override active */
 extern u8 g_world_rotation_speed_frames[];
-extern u8 g_world_location_names_resident[];
 extern s16 g_world_debug_variable_list_request_state;
 extern s32 g_world_preview_stats_window_active;
 extern s8 g_world_dismiss_unit_prompt_running;

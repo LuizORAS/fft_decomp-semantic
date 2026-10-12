@@ -62,7 +62,7 @@ void world_shop_run_fitting_room_equip_menu(void) {
             g_world_shop_fitting_room_previewed_cursor = -1;
             g_world_shop_cost_window_visible = 0;
             g_world_change_banner_panel_thread_params.style = 1;
-            world_shop_build_item_list(g_world_formation_selected_unit_index, g_world_shop_id,
+            world_shop_build_item_list(g_world_formation_selected_unit_index, g_world_menu_context_id,
                 g_world_shop_fitting_equip_slot, g_world_menu_entry_ids, ITEM_LIST_MODE_MARK_UNEQUIPPABLE);
             slot = 0;
             if (g_world_shop_fitting_equip_slot != 0) {

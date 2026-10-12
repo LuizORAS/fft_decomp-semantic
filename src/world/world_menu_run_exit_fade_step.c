@@ -21,7 +21,7 @@ void world_menu_run_exit_fade_step(void) {
         g_world_shop_exit_fade_started = 1;
     }
     world_shop_run_obtain_gil_menu();
-    if (g_world_shop_id == WORLD_SHOP_ID_SOLDIER_OFFICE) {
+    if (g_world_menu_context_id == WORLD_MENU_CONTEXT_SOLDIER_OFFICE) {
         world_shop_run_soldier_office_fee_menu_script();
         world_menu_run_script_with_callback_suppressed();
     }

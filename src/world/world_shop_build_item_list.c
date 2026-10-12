@@ -66,7 +66,7 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
         }
     }
 
-    if (shop_id < WORLD_SHOP_ID_FUR_SHOP) {
+    if (shop_id < WORLD_MENU_CONTEXT_FUR_SHOP) {
         s32 progression;
         s32 shop_mask;
 

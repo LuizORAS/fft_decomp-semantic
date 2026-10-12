@@ -65,20 +65,20 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_gfx_draw_move_capacity = 0x1E;
     g_world_gfx_draw_area_capacity = 0xA;
     g_world_gfx_draw_mode_capacity = 0x1E;
-    g_world_shop_id = shop_type;
+    g_world_menu_context_id = shop_type;
     buttons = script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
-    if (shop_type == WORLD_SHOP_ID_FUR_SHOP) {
+    if (shop_type == WORLD_MENU_CONTEXT_FUR_SHOP) {
         ot_index = MAIN_MUSIC_FUR_SHOP;
         g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_MENU;
         disabled = 0xF82F;
         tim_index = 3;
-    } else if (shop_type == WORLD_SHOP_ID_SOLDIER_OFFICE) {
+    } else if (shop_type == WORLD_MENU_CONTEXT_SOLDIER_OFFICE) {
         ot_index = MAIN_MUSIC_SOLDIER_OFFICE;
         g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_MENU;
         disabled = 0xF820;
         tim_index = 6;
     } else {
-        g_world_shop_id = script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
+        g_world_menu_context_id = script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
         ot_index = MAIN_MUSIC_SHOP;
         disabled = 0xF801;
         tim_index = 0;
@@ -168,7 +168,7 @@ void world_shop_run_screen(s32 shop_type) {
             || g_world_shop_menu_step == WORLD_SHOP_STEP_FITTING_ROOM_SELL
             || g_world_shop_menu_step == WORLD_SHOP_STEP_BUY_CONFIRM
             || g_world_shop_menu_step == WORLD_SHOP_STEP_SELL_CONFIRM || g_world_shop_cost_window_visible != 0
-            || shop_type == WORLD_SHOP_ID_SOLDIER_OFFICE) {
+            || shop_type == WORLD_MENU_CONTEXT_SOLDIER_OFFICE) {
             ot_index = 0x3C;
         } else {
             ot_index = 9;

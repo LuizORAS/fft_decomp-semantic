@@ -57,7 +57,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     g_world_gfx_draw_area_capacity = 10;
     world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, 0, 0, flat_lines, 0, 0, 0, 0, 0,
         tiles, 0, 0, 0, 0, 0, 0, draw_moves, draw_areas, draw_modes);
-    g_world_shop_id = WORLD_SHOP_ID_NAME_ENTRY;
+    g_world_menu_context_id = WORLD_MENU_CONTEXT_NAME_ENTRY;
     world_formation_init_menu_display();
     world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x21, 0xC015, 0);

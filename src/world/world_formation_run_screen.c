@@ -46,7 +46,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, gradient_quads,
         textured_gradient_quads, flat_lines, 0, 0, gradient_lines, 0, 0, tiles, 0, 0, 0, 0, 0, 0, draw_moves,
         draw_areas, draw_modes);
-    g_world_shop_id = WORLD_SHOP_ID_FORMATION;
+    g_world_menu_context_id = WORLD_MENU_CONTEXT_FORMATION;
     world_formation_init_menu_state();
     tutorial = -(tutorial < 11) & tutorial;
     world_script_start_tutorial(tutorial);

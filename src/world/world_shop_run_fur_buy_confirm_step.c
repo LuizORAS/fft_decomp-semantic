@@ -26,7 +26,7 @@ void world_shop_run_fur_buy_confirm_step(void) {
             world_shop_adjust_poached_item_quantity(g_world_menu_entry_ids[g_world_menu_cursor_position],
                 -g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY]);
             world_item_reconcile_sorted_list(g_world_shop_item_category);
-            world_shop_build_item_list(-1, g_world_shop_id,
+            world_shop_build_item_list(-1, g_world_menu_context_id,
                 g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER,
                 g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
             world_menu_init_and_load_scrollable_list(g_world_menu_entry_ids, g_world_menu_cursor_position,
