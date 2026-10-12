@@ -11,6 +11,9 @@
  * Individual handlers narrow the record index or ignore unused arguments. */
 typedef s32 (*battle_effect_callback_t)(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);
 
+/* Resident catalog entries used by effect script opcodes 06 and 07. */
+enum { BATTLE_EFFECT_NATIVE_CALLBACK_COUNT = 198 };
+
 typedef enum battle_effect_secondary_phase {
     BATTLE_SECONDARY_EFFECT_ENDED = 0, /* the slot is free */
     BATTLE_SECONDARY_EFFECT_INITIALIZING = 1,
@@ -357,10 +360,11 @@ typedef union battle_effect_start_target_data {
 } battle_effect_start_target_data_t;
 typedef char battle_effect_start_target_data_size_must_be_4[sizeof(battle_effect_start_target_data_t) == 4 ? 1 : -1];
 
-/* An entry of g_battle_effect_ability_ids: the effect file of an ability, negative for none. */
+/* An ability-to-file entry: file ID bits and the Item flag, negative for none.
+ * Event effects follow the action/reaction rows and use the script ID remapping. */
 enum {
     BATTLE_EFFECT_ABILITY_FILE_MASK = 0x1ff, /* the number in the file's name, EFFECT/E###.BIN */
-    BATTLE_EFFECT_ABILITY_FLAG_ITEM = 0x800, /* set on the Item abilities: battle_effect_is_item_ability */
+    BATTLE_EFFECT_ABILITY_FLAG_ITEM = 0x800, /* Item abilities and Throw Ball: battle_effect_is_item_ability */
 };
 
 /* One resident header and disc-table slot for each 9-bit effect file ID. */
@@ -1256,7 +1260,7 @@ typedef struct effect_record {
     effect_work_record_t* work_head;                      /* 0xd0: its particles */
     battle_effect_callback_t callbacks[EFFECT_RECORD_CALLBACK_SLOT_COUNT]; /* 0xd4: native callback handlers */
     void* work_slots[EFFECT_RECORD_CALLBACK_SLOT_COUNT]; /* 0xe4: each callback handler's allocated work */
-    battle_effect_callback_t file_function;              /* 0xf4: the native function script opcode 07 last called */
+    battle_effect_callback_t last_native_callback;       /* 0xf4: callback last called directly by script opcode 07 */
 } effect_record_t;
 
 /* pc is a signed byte offset into the shared, 16-bit-aligned script stream. */
@@ -1806,7 +1810,8 @@ extern battle_effect_secondary_state_t g_battle_effect_secondary_state;
  * CURSOR_TILE. */
 extern battle_effect_target_t g_battle_effect_target_tile;
 extern map_tile_coordinates_t g_battle_effect_trajectory_tile;
-extern s16 g_battle_effect_ability_ids[];
+/* Action/reaction ability IDs index directly; event IDs map after those rows. */
+extern s16 g_battle_effect_ability_files[];
 extern effect_animation_curve_table_t* g_battle_effect_animation_curve_data;
 extern s16 g_battle_effect_arctan_angle_mod;
 extern s32 g_battle_effect_buffer_index;
@@ -1815,7 +1820,7 @@ extern u16 g_battle_effect_free_slot_head;
 extern struct battle_effect_secondary_data* g_battle_effect_current_secondary;
 extern u32 g_battle_effect_current_slot_id;
 extern effect_file_header_t* g_battle_effect_data_ptrs[BATTLE_EFFECT_FILE_ID_COUNT];
-extern battle_effect_callback_t g_battle_effect_file_functions[];
+extern battle_effect_callback_t g_battle_effect_native_callbacks[BATTLE_EFFECT_NATIVE_CALLBACK_COUNT];
 extern u8* g_battle_effect_frame_data;
 extern u8* g_battle_effect_frame_data_start;
 extern s32 g_battle_effect_gravity_modifier;
@@ -2175,7 +2180,7 @@ void battle_effect_free_list_node(effect_list_node_t* node);
 void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work);
 void battle_effect_free_slot(u8 id);
 void battle_effect_free_sprite_block(battle_effect_sprite_block_t* block);
-battle_effect_callback_t battle_effect_get_file_function(s16 function_id);
+battle_effect_callback_t battle_effect_get_native_callback(s16 callback_id);
 effect_work_record_t* battle_effect_get_list_node(s16 record_index, s16 requested_index);
 s32 battle_effect_get_phase(void);
 s32 battle_effect_get_prim_buffer_offset(void);

@@ -13,7 +13,7 @@ u32 battle_effect_load_ability(s32 ability_id) {
     if (ability_id == ABILITY_ID_BASIC_SKILL_ACCUMULATE) {
         result = 0;
     } else {
-        result = g_battle_effect_ability_ids[ability_id] < 0;
+        result = g_battle_effect_ability_files[ability_id] < 0;
     }
     return result;
 }

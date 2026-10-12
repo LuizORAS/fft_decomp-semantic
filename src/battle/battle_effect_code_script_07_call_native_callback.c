@@ -1,14 +1,14 @@
 #include "fft/battle.h"
 
-/* Opcode 07: call the native function whose id is the second 16-bit value with
+/* Opcode 07: call the native callback whose catalog id is the second 16-bit value with
  * the record index and the top six bits of the instruction's second byte as
  * its callback slot, and remember it in the record. */
-effect_script_result_e battle_effect_code_script_07_call_file_function(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_07_call_native_callback(effect_record_t* record) {
     battle_effect_script_instruction_t* command = battle_effect_get_current_script_instruction(record);
     battle_effect_script_parameters_t parameters = command->header.parameters;
     u32 slot = parameters.callback.slot;
-    battle_effect_callback_t handler = battle_effect_get_file_function(command->immediate.value);
-    record->file_function = handler;
+    battle_effect_callback_t handler = battle_effect_get_native_callback(command->immediate.value);
+    record->last_native_callback = handler;
     handler(record->record_index, slot, 0, 0);
     record->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

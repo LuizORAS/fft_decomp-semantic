@@ -25,11 +25,12 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
             else if (ball == BATTLE_EFFECT_ELEMENT_INDEX_LIGHTNING)
                 g_battle_ability_effect_id = BATTLE_EFFECT_FILE_BOLT;
         } else {
-            g_battle_ability_effect_id = g_battle_effect_ability_ids[ability];
+            g_battle_ability_effect_id = g_battle_effect_ability_files[ability];
         }
     } else {
-        /* Ids from 0x200 up continue the table after the action abilities. */
-        g_battle_ability_effect_id = g_battle_effect_ability_ids[ability - ABILITY_ID_COUNT + ABILITY_ID_SUPPORT_FIRST];
+        /* Event IDs continue after the action/reaction ability rows. */
+        g_battle_ability_effect_id
+            = g_battle_effect_ability_files[ability - ABILITY_ID_COUNT + ABILITY_ID_SUPPORT_FIRST];
     }
 
     if (g_battle_ability_effect_id >= 0) {
