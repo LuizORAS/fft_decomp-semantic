@@ -1,8 +1,8 @@
-#include "fft/battle_gfx.h"
+#include "fft/gfx.h"
 #include "psx/libgpu.h"
 
-/* Place a SPRT or POLY_FT4 from texture and screen parameters; WORLD twin. */
-void battle_gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
+/* Place a SPRT or POLY_FT4 from texture and screen parameters. */
+void gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
     const image_load_parameters_t* parameters) {
     int texture_column;
 

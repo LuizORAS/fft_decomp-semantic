@@ -53,7 +53,7 @@ void world_menu_run_numeric_editor_thread(void) {
     descriptor = g_world_editor_numeric_texture;
     for (; i < 18; i++) {
         world_menu_init_sprite(&buffer->sprites[i]);
-        world_gfx_init_image_loading((texture_primitive_t*)&buffer->sprites[i], g_world_editor_numeric_geometry,
+        gfx_init_image_loading((texture_primitive_t*)&buffer->sprites[i], g_world_editor_numeric_geometry,
             &g_world_editor_numeric_table[0], descriptor);
         descriptor++;
     }

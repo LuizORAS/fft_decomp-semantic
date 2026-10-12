@@ -45,10 +45,10 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[2], 0x10, 0xA, (texture_primitive_t*)&frames[0].sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (texture_primitive_t*)&frames[0].sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        battle_gfx_init_image_loading((texture_primitive_t*)&frames[0].sprites[frame], &g_battle_menu_texture_location,
+        gfx_init_image_loading((texture_primitive_t*)&frames[0].sprites[frame], &g_battle_menu_texture_location,
             &g_battle_unit_summary_panel_rect, &g_battle_unit_summary_sprite_image_params[frame]);
     }
-    battle_gfx_init_image_loading((texture_primitive_t*)&frames[0].portrait, &g_battle_menu_texture_location,
+    gfx_init_image_loading((texture_primitive_t*)&frames[0].portrait, &g_battle_menu_texture_location,
         &g_battle_unit_summary_panel_rect, &g_battle_unit_summary_portrait_image_params);
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         frames[0].portrait.clut = 0x7FFD;

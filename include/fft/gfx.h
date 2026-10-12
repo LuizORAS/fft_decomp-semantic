@@ -179,8 +179,8 @@ typedef struct evtchr_file_record {
 typedef char evtchr_file_record_size_must_be_30720[sizeof(evtchr_file_record_t) == 30720 ? 1 : -1];
 
 /* image loading */
-/* Image load parameters consumed by both *_gfx_init_image_loading routines
- * (0xc bytes; BATTLE's table at 0x80155838 holds one per menu sprite). */
+/* Texture and screen placement for gfx_init_image_loading (12 bytes).
+ * BATTLE's table at 0x80155838 holds one per menu sprite. */
 typedef struct image_load_parameters {
     s16 x_load;
     s16 y_load;
@@ -315,5 +315,13 @@ typedef struct camera_track {
     s32 finished;         /* 0xa0 */
 } camera_track_t;
 typedef char camera_track_size_must_be_164[sizeof(camera_track_t) == 164 ? 1 : -1];
+
+/* primitives */
+void gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
+void gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
+
+/* image loading */
+void gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
+    const image_load_parameters_t* parameters);
 
 #endif

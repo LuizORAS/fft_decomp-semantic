@@ -722,7 +722,7 @@ functions:
   - {addr: 0x8012e348, size: 596, name: battle_menu_alloc_window_buffer_pair, hash: 6d0ebed3a5141a9c}
   - {addr: 0x8012e59c, size: 8, name: battle_menu_clear_window_buffer_pair_by_thread, hash: 6d64edf91449c1b1}
   - {addr: 0x8012e5a4, size: 168, name: battle_menu_release_window_buffer_pair, hash: 1de9742bbda0b16a}
-  - {addr: 0x8012e64c, size: 16, name: battle_gfx_set_primitive_brightness, hash: d98b50e73c8678b4}
+  - {addr: 0x8012e64c, size: 16, name: gfx_set_primitive_brightness, hash: d98b50e73c8678b4, source: src/gfx/gfx_set_primitive_brightness.c}
   - {addr: 0x8012e65c, size: 868, name: battle_menu_draw_active_window_frames, hash: 5d8d85cafd1b353c}
   - {addr: 0x8012e9c0, size: 60, name: battle_gfx_clear_tpage7_vram_allocation_grid, hash: 87e3ef6c7408d4d1}
   - {addr: 0x8012e9fc, size: 660, name: battle_gfx_alloc_tpage7_vram, hash: 172942b718e358b1}
@@ -749,7 +749,7 @@ functions:
   - {addr: 0x801308c0, size: 8036, name: battle_text_character_handling_thread, hash: c934521a2b7c294a}
   - {addr: 0x80132824, size: 56, name: battle_text_find_entry, hash: cec167648bea266e}
   - {addr: 0x8013285c, size: 80, name: battle_text_count_decimal_digits, hash: 46d4e97a0aca8ebf}
-  - {addr: 0x801328ac, size: 104, name: battle_gfx_flip_poly_ft4_uv_if_negative, hash: 7fda2865d42a6dd6}
+  - {addr: 0x801328ac, size: 104, name: gfx_flip_poly_ft4_uv_if_negative, hash: 7fda2865d42a6dd6, source: src/gfx/gfx_flip_poly_ft4_uv_if_negative.c}
   - {addr: 0x80132914, size: 688, name: battle_menu_animate_window_quad_crop, hash: 4493016da3417713}
   - {addr: 0x80132bc4, size: 652, name: battle_menu_tween_window_quads, hash: 51a61972e26b9d06}
   - {addr: 0x80132e50, size: 36, name: battle_menu_lerp_fixed12, hash: c8c076c648585d00}
@@ -1051,7 +1051,7 @@ functions:
   - {addr: 0x8014a81c, size: 8, name: battle_return_zero, hash: 207819bf4ebe3078}
   - {addr: 0x8014a824, size: 8, name: battle_noop_8014a824, hash: 6d64edf91449c1b1}
   - {addr: 0x8014a82c, size: 8, name: battle_script_frame_after_requests_stub, hash: 6d64edf91449c1b1}
-  - {addr: 0x8014a834, size: 584, name: battle_gfx_init_image_loading, hash: 6b065a2d67c808c2}
+  - {addr: 0x8014a834, size: 584, name: gfx_init_image_loading, hash: 6b065a2d67c808c2, source: src/gfx/gfx_init_image_loading.c}
   - {addr: 0x8014aa7c, size: 220, name: battle_menu_draw_numeric_display_entries, hash: c2ce3ac37a505f2f}
   - {addr: 0x8014ab58, size: 216, name: battle_display_menu_number_entry, hash: ee3a5bfa118b7022}
   - {addr: 0x8014ac30, size: 656, name: battle_draw_menu_number_glyphs, hash: 97ee6a6ad4dcbfc5}

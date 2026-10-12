@@ -9,6 +9,5 @@ void world_menu_init_quad_from_record(RECT* out, const menu_entry_t* record, SPR
     out->h = record->inner_height;
     world_menu_init_sprite(primitive);
     primitive->clut = 0x7C3C;
-    world_gfx_init_image_loading(
-        (texture_primitive_t*)primitive, &record->vram_origin, &record->window, &record->text_image);
+    gfx_init_image_loading((texture_primitive_t*)primitive, &record->vram_origin, &record->window, &record->text_image);
 }

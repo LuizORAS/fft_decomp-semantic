@@ -65,12 +65,12 @@ void world_menu_ability_panel_thread(void) {
         screen = &base[frame & 1];
         if (state->generic_monster == 0) {
             for (i = 0; i < 19; i++) {
-                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
                     &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_0[i]);
             }
         } else {
             for (i = 0; i < 19; i++) {
-                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
                     &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_1[i]);
             }
         }

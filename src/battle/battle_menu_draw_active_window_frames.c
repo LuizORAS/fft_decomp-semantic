@@ -31,12 +31,12 @@ void battle_menu_draw_active_window_frames(void) {
             continue;
         }
         window = buffer;
-        battle_gfx_set_primitive_brightness((P_TAG*)&window->sprites[0], window->color.r);
-        battle_gfx_set_primitive_brightness((P_TAG*)&window->sprites[1], window->color.r);
-        battle_gfx_set_primitive_brightness((P_TAG*)&window->sprites[2], window->color.r);
-        battle_gfx_set_primitive_brightness((P_TAG*)&window->sprites[3], window->color.r);
-        battle_gfx_set_primitive_brightness((P_TAG*)&window->quads[0], window->color.r);
-        battle_gfx_set_primitive_brightness((P_TAG*)&window->quads[1], window->color.r);
+        gfx_set_primitive_brightness((P_TAG*)&window->sprites[0], window->color.r);
+        gfx_set_primitive_brightness((P_TAG*)&window->sprites[1], window->color.r);
+        gfx_set_primitive_brightness((P_TAG*)&window->sprites[2], window->color.r);
+        gfx_set_primitive_brightness((P_TAG*)&window->sprites[3], window->color.r);
+        gfx_set_primitive_brightness((P_TAG*)&window->quads[0], window->color.r);
+        gfx_set_primitive_brightness((P_TAG*)&window->quads[1], window->color.r);
         offset = window->quads[0].x1 - window->quads[0].x0;
         if (offset / 8 * 8 == offset - 4) {
             offset -= 15;
@@ -87,7 +87,7 @@ void battle_menu_draw_active_window_frames(void) {
         } else {
             battle_menu_build_unit_portrait_poly(&window->quads[1], window->portrait_battle_id);
         }
-        battle_gfx_flip_poly_ft4_uv_if_negative(&window->quads[1], -window->portrait_flipped);
+        gfx_flip_poly_ft4_uv_if_negative(&window->quads[1], -window->portrait_flipped);
         battle_gfx_draw_or_append_gpu_primitive(&window->quads[1]);
         battle_gfx_draw_or_append_gpu_primitive(&window->quads[0]);
     }

@@ -90,8 +90,7 @@ void option_build_at_list(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&page->frame);
-    battle_gfx_init_image_loading(
-        (texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window, &image_parameters);
+    gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window, &image_parameters);
     battle_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;

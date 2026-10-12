@@ -56,19 +56,19 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
                     &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_0[i]);
             }
             if (mode == 1) {
-                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
                     &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_1[i]);
             }
             if (mode == 2) {
-                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
                     &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_2[i]);
             }
             if (mode == 3) {
-                world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
                     &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_3[i]);
             }
         }
@@ -121,9 +121,8 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         /* A SPRT cursor adds the sprite offset; retail retains the panel base. */
         cursor = (u8*)screen;
         for (; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
-            world_gfx_init_image_loading((texture_primitive_t*)&screen->sprites[19 + i],
-                g_world_panel_item_icon_texture, &g_world_equipment_ability_panel_origin,
-                &g_world_equipment_panel_icon_params[i]);
+            gfx_init_image_loading((texture_primitive_t*)&screen->sprites[19 + i], g_world_panel_item_icon_texture,
+                &g_world_equipment_ability_panel_origin, &g_world_equipment_panel_icon_params[i]);
             if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                 world_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);
             } else {

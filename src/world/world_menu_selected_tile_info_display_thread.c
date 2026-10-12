@@ -30,7 +30,7 @@ void world_menu_selected_tile_info_display_thread(void) {
     world_menu_init_sprite_array(page->sprites, 2, 0x7CBC);
     page->sprites[1].clut = 0x7D7C;
     for (i = 0; i < 2; i++) {
-        world_gfx_init_image_loading((texture_primitive_t*)&page->sprites[i], &g_world_gfx_menu_image_source,
+        gfx_init_image_loading((texture_primitive_t*)&page->sprites[i], &g_world_gfx_menu_image_source,
             &g_world_tile_info_image_location, &g_world_tile_info_image_params[i]);
     }
     world_text_configure_sprite_vram(&rect, 0x18, 0x10, (texture_primitive_t*)&page->sprites[0], 0);

@@ -702,7 +702,6 @@ s32 battle_gfx_clear_loaded_evtchr_slot(s32 slot_index);
 s32 battle_gfx_clear_saved_evtchr_slot(s32 slot_index);
 void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
 void battle_gfx_extract_deployed_unit_palettes(void);
-void battle_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
 void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, const battle_gfx_packed_weapon_shp_record_t* src);
 void battle_gfx_resolve_packed_offset_table(u8** entries, const battle_gfx_packed_offset_table_t* record);
 u8** battle_gfx_get_effect_seq_data(u32 unused_spritesheet_id);
@@ -728,7 +727,6 @@ void battle_gfx_reset_unit_graphics_load_state(void);
 s32 battle_gfx_save_evtchr_slot(s32 slot_index);
 void battle_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 page);
 void battle_gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin);
-void battle_gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
 void battle_gfx_start_screen_color_modulation_fade(u16 blend_mode, u16 red, u16 green, u16 blue, u16 duration);
 s32 battle_gfx_step_load_unit_shp_seq_data(void);
 
@@ -738,9 +736,6 @@ void battle_gfx_store_sprite_display_data(battle_gfx_sprite_display_data_t* disp
     s16 y_shift, s16 u, s16 v, s16 width, s16 height, s16 flags);
 
 s32 battle_gfx_unpack_evtchr_file_to_vram_slot(s32 index, const evtchr_file_record_t* file);
-
-void battle_gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
-    const image_load_parameters_t* parameters);
 
 void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite_archive_t* archive);
 void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive);

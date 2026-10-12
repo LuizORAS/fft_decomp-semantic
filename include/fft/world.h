@@ -1006,7 +1006,6 @@ void world_gfx_draw_signed_number(s32 value, s32 digits, u8* image, glyph_blit_t
 void world_gfx_enqueue_oriented_textured_quad(
     const oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
 
-void world_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
 void world_gfx_flip_poly_ft4_u_if_negative(POLY_FT4* poly, s32 direction);
 
 void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u32* otags, void* unused_2,
@@ -1014,9 +1013,6 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
     POLY_GT4* textured_gradient_quads, LINE_F2* flat_lines, void* unused_11, void* unused_12, LINE_G2* gradient_lines,
     void* unused_14, void* unused_15, TILE* tiles, void* unused_17, void* unused_18, void* unused_19, void* unused_20,
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
-
-void world_gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
-    const image_load_parameters_t* parameters);
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
@@ -1030,7 +1026,6 @@ void world_gfx_set_blit_dest_position(s32 x, s32 y);
 void world_gfx_set_fade_disabled(u8 disabled);
 void world_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 image_type);
 void world_gfx_set_portrait_poly_texture(POLY_FT4* poly, s32 code);
-void world_gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
 void world_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
 void world_menu_submit_numeric_display_frame_primitives(menu_palette_primitives_t* frame);
 

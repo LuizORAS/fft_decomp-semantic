@@ -60,6 +60,7 @@ remain excluded. Never modify `meta/`.
 | Path | Contents |
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
+| `src/gfx/` | Shared graphics helpers, compiled separately in each original module through explicit `source:` paths |
 | `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
 | `src/suzuki/` | Suzuki sound driver, registered with explicit `source:` paths in MAIN |
 | `include/fft/` | Module headers (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), focused `battle_<subsystem>.h` headers, and shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `menu_script.h`, `script.h`) |
@@ -193,6 +194,8 @@ none), and prefer the profile of its neighbours.
   `main_`, `<overlay>_`; globals `g_battle_`, …). BATTLE's AI, movement,
   targeting and action subsystems use `ai_`, `move_`, `target_` and `action_`
   (globals `g_ai_`, …), while retaining their BATTLE source and header ownership.
+  Proven shared overlay helpers use their subsystem prefix and an explicit
+  `source:` binding in each original module; each compiled copy keeps its address.
   Unknowns stay
   `func_ADDRESS` or `D_ADDRESS` until the code supports a name. Unnamed
   struct members are `_unknown_XX` (code accesses it, meaning unknown),

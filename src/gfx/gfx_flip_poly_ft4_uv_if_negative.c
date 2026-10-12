@@ -1,11 +1,9 @@
-#include "fft/world.h"
+#include "fft/gfx.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Mirrors a quad's texture when direction is negative: corners 0 and 1 and
- * corners 2 and 3 swap their u when corners 0 and 1 differ in u, otherwise they
- * swap their v. */
-void world_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction) {
+/* Mirrors a quad's texture when direction is negative. */
+void gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction) {
     u8 temp;
 
     if (direction < 0) {

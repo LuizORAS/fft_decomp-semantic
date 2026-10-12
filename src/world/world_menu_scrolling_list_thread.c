@@ -103,7 +103,7 @@ void world_menu_scrolling_list_thread(void) {
     page->thumb.h = 8;
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
-    world_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
+    gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
         (const image_load_parameters_t*)&window);
     world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
@@ -323,7 +323,7 @@ void world_menu_scrolling_list_thread(void) {
         }
         frame->v0 = (ring * 16 + accum - 2) & 0x7F;
         if (i * g_world_event_speed < 12) {
-            world_gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
+            gfx_init_image_loading((texture_primitive_t*)&page->frame, &entry->vram_origin, &entry->window,
                 (const image_load_parameters_t*)&window);
             world_menu_zoom_cursor_frame(entry, frame, i * g_world_event_speed);
         }

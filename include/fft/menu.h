@@ -154,7 +154,7 @@ typedef char menu_palette_footer_offset_must_be_0xe6
 /* Numeric editor panel buffer (0x2c0 bytes), double buffered by the
  * *_editor_run_numeric_thread routines (EQUIP equip_editor_run_numeric_thread copies it with
  * sizeof). The draw modes are set up with battle_gfx_set_draw_mode_for_texture_page /
- * SetDrawMode, the 18 SPRTs by the battle_gfx_init_image_loading walk,
+ * SetDrawMode, the 18 SPRTs by the gfx_init_image_loading walk,
  * +0x18c and +0x298 are the arguments of
  * battle_menu_init_numeric_display_frame_primitives and
  * *_gfx_init_scaled_draw_area_packets, and the draw offsets follow from the
@@ -801,7 +801,7 @@ typedef struct menu_list_page {
 typedef char menu_list_page_size_must_be_308[sizeof(menu_list_page_t) == 308 ? 1 : -1];
 
 /* Text image placement: the upload rectangle plus the screen offsets
- * world_gfx_init_image_loading reads. */
+ * gfx_init_image_loading reads. */
 typedef struct menu_text_window {
     RECT rect;
     s16 x_screen_offset;

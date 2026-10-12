@@ -95,22 +95,19 @@ void world_menu_run_unit_editor_panel_thread(void) {
     }
     if (g_world_unit_editor_fields.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
-            world_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i],
-                &g_world_gfx_menu_image_source, &g_world_unit_editor_panel_rect,
-                &g_world_unit_editor_sprite_image_params_a[i]);
+            gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i], &g_world_gfx_menu_image_source,
+                &g_world_unit_editor_panel_rect, &g_world_unit_editor_sprite_image_params_a[i]);
         }
     } else {
         for (i = 0; i < 19; i++) {
-            world_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i],
-                &g_world_gfx_menu_image_source, &g_world_unit_editor_panel_rect,
-                &g_world_unit_editor_sprite_image_params_b[i]);
+            gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i], &g_world_gfx_menu_image_source,
+                &g_world_unit_editor_panel_rect, &g_world_unit_editor_sprite_image_params_b[i]);
         }
     }
     world_menu_init_sprite_array(&frame_record->sprites[19], WORLD_EQUIPMENT_SLOT_COUNT, 0x7CFC);
     for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
-        world_gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[19 + i],
-            &g_world_item_icon_image_location, &g_world_unit_editor_panel_rect,
-            &g_world_unit_editor_item_icon_image_params[i]);
+        gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[19 + i], &g_world_item_icon_image_location,
+            &g_world_unit_editor_panel_rect, &g_world_unit_editor_item_icon_image_params[i]);
         world_gfx_set_item_icon_sprite(&frame_record->sprites[19 + i], g_world_unit_editor_fields.state.equipment[i]);
     }
 
