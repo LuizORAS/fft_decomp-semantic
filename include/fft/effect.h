@@ -1,7 +1,8 @@
 #ifndef EFFECT_H
 #define EFFECT_H
 
-/* EFFECT/E*.BIN: ability effect overlays that run with BATTLE. */
+/* Native ability-effect callbacks and their work records in EFFECT/E*.BIN.
+ * The resident runtime and shared effect layouts are declared in battle_effect.h. */
 
 #include "fft/battle_effect.h"
 
@@ -13,7 +14,7 @@
  * once a frame in place of the particle emitter: emitter_index is the
  * keyframe's emitter record, which the handler reads through its own view,
  * and frame counts from the start of the keyframe. The slot's phase
- * (effect_record_t.callback_phase, effect_phase_e) starts at INIT, where the
+ * (effect_record_t.callback_phase, effect_callback_phase_e) starts at INIT, where the
  * handler allocates its work block into work_slots; it then stays at UPDATE
  * until the channel sets DESTROY two frames before the keyframe ends. */
 s32 effect_map_split_mesh_and_set_3d_objects_state_3(

@@ -5,7 +5,7 @@
 /* Plays the current effect through the inner-subroutine caller, then yields
  * to other threads until the animation continue check reports done. */
 void script_play_effect_and_wait(void) {
-    g_battle_thread_call_target = battle_effect_call_play;
+    g_battle_thread_call_target = effect_call_play;
     battle_thread_call_on_main_stack();
 
     do {

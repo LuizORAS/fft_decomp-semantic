@@ -7,19 +7,19 @@ s32 effect_map_freeze(s32 record_index, s32 callback_slot, s32 unused_emitter_in
     s16 state_index = record_index;
     effect_record_t* record;
 
-    record = &g_battle_effect_state_records[state_index];
+    record = &g_effect_state_records[state_index];
 
     switch (record->callback_phase[callback_slot]) {
-    case EFFECT_PHASE_IDLE:
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         map_freeze();
-        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
-    case EFFECT_PHASE_UPDATE:
+    case EFFECT_CALLBACK_PHASE_UPDATE:
         break;
-    case EFFECT_PHASE_DESTROY:
-        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
+    case EFFECT_CALLBACK_PHASE_DESTROY:
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         break;
     }
 }

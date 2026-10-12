@@ -174,7 +174,7 @@ typedef enum battle_unit_animation {
     BATTLE_UNIT_ANIMATION_GUN_HIGH = 80,
     BATTLE_UNIT_ANIMATION_GUN_LEVEL = 81,
     BATTLE_UNIT_ANIMATION_GUN_LOW = 82,
-    BATTLE_UNIT_ANIMATION_BOW_HIGH = 83, /* a bow shot takes its row from battle_effect_get_bow_shot_angle */
+    BATTLE_UNIT_ANIMATION_BOW_HIGH = 83, /* a bow shot takes its row from effect_get_bow_shot_angle */
     BATTLE_UNIT_ANIMATION_BOW_LEVEL = 84,
     BATTLE_UNIT_ANIMATION_BOW_LOW = 85,
     BATTLE_UNIT_ANIMATION_BOOK = 86,

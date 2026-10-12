@@ -27,26 +27,26 @@ void action_set_item_throw_stone_ability_display(void) {
         action_clear_at_list_active();
         return;
     }
-    if (battle_effect_load_ability(ability) != 0) {
+    if (effect_load_ability(ability) != 0) {
         g_main_system_animation_speed = 1;
         action_clear_at_list_active();
         return;
     }
     if ((ability == ABILITY_ID_BASIC_SKILL_ACCUMULATE)
         || (ability >= ABILITY_ID_CHARGE_FIRST && ability < ABILITY_ID_MATH_FIRST)) {
-        if (battle_effect_is_item_ability(ability) != 0) {
+        if (effect_is_item_ability(ability) != 0) {
             g_main_system_animation_speed = 1;
             action_clear_at_list_active();
             return;
         }
-        battle_effect_play();
+        effect_play();
         g_main_system_animation_speed = 1;
         action_clear_at_list_active();
         return;
     }
-    if ((battle_effect_is_item_ability(ability) == 0)
+    if ((effect_is_item_ability(ability) == 0)
         || ((unit->animation.sequence_id >> 1) == BATTLE_UNIT_ANIMATION_HOLD_ITEM)) {
-        battle_effect_play();
+        effect_play();
     }
     main_sound_stop_current_weather_sfx();
     g_main_system_animation_speed = 2;

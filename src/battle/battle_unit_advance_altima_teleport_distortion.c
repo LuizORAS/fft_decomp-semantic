@@ -14,15 +14,15 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
     unit->distortion_timer++;
     switch (unit->distortion_phase) {
     case 0:
-        if (battle_effect_start_altima_teleport_departure(unit) == 0) {
-            battle_effect_start_altima_teleport_white_flash(unit);
+        if (effect_start_altima_teleport_departure(unit) == 0) {
+            effect_start_altima_teleport_white_flash(unit);
         }
         unit->distortion_phase++;
         break;
     case 1:
         /* The target passes no argument here. */
-        if (battle_effect_init_data() == 0 && camera_is_active() == 0) {
-            battle_effect_start_altima_teleport_white_flash(unit);
+        if (effect_init_data() == 0 && camera_is_active() == 0) {
+            effect_start_altima_teleport_white_flash(unit);
         }
         break;
     case 2:
@@ -39,15 +39,15 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
             unit->map_z = unit->movement.destination_z;
             battle_unit_set_real_coords_from_map_coords(unit);
             battle_unit_set_screen_coords_from_real_coords(unit);
-            if (battle_effect_start_altima_teleport_arrival(unit) == 0) {
-                battle_effect_start_altima_teleport_fade_out(unit);
+            if (effect_start_altima_teleport_arrival(unit) == 0) {
+                effect_start_altima_teleport_fade_out(unit);
             }
             unit->distortion_phase++;
         }
         break;
     case 4:
-        if (battle_effect_init_data() == 0 && camera_is_active() == 0) {
-            battle_effect_start_altima_teleport_fade_out(unit);
+        if (effect_init_data() == 0 && camera_is_active() == 0) {
+            effect_start_altima_teleport_fade_out(unit);
         }
         break;
     case 5:

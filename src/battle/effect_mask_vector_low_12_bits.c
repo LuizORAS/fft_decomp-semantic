@@ -1,0 +1,8 @@
+#include "fft/battle_effect.h"
+
+/* Wrap three angles into one turn (0 to 0xfff). */
+void effect_mask_vector_low_12_bits(const SVECTOR* src, SVECTOR* dst) {
+    dst->vx = src->vx & 0xFFF;
+    dst->vy = src->vy & 0xFFF;
+    dst->vz = src->vz & 0xFFF;
+}

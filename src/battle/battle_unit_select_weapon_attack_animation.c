@@ -9,7 +9,7 @@
  *
  * g_battle_weapon_attack_animations has three animations for each item type:
  * at a higher target, a level one and a lower one. A bow indexes its row by
- * battle_effect_get_bow_shot_angle. Other weapons compare the vertical
+ * effect_get_bow_shot_angle. Other weapons compare the vertical
  * centres of the two sprites: a target 12 or more above the attacker takes
  * the first animation and one 12 or more below the third. A Golem or Blade
  * Grasp guard always takes the first, and the sheets from the crystal up
@@ -31,7 +31,7 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
         }
         if (attacker->equipped_weapon_type == ITEM_TYPE_BOW) {
             battle_unit_store_animation_facing_movement_data(
-                g_battle_weapon_attack_animations[ITEM_TYPE_BOW][battle_effect_get_bow_shot_angle()], attacker->facing,
+                g_battle_weapon_attack_animations[ITEM_TYPE_BOW][effect_get_bow_shot_angle()], attacker->facing,
                 attacker);
             return;
         }

@@ -7,7 +7,7 @@
 void script_teleportin_event_instruction(s32 unit_id, s32 unused) {
     s32 misc_id = script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
-        g_battle_thread_call_target = (void (*)(void))battle_effect_set_secondary_teleport_by_misc_id;
+        g_battle_thread_call_target = (void (*)(void))effect_set_secondary_teleport_by_misc_id;
         battle_thread_call_on_main_stack(misc_id);
     }
 }

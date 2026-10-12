@@ -8,10 +8,10 @@ s32 battle_state_enter_effect_playback(void) {
     s32 previous_animation_speed;
 
     /* The target loads no argument; the parameter is the $a0 value unhandled states return. */
-    if (battle_effect_init_data() != 0) {
+    if (effect_init_data() != 0) {
         return 1;
     }
-    battle_effect_play();
+    effect_play();
     previous_state = g_battle_game_state;
     previous_animation_speed = g_main_system_animation_speed;
     g_battle_game_state = BATTLE_GAME_STATE_EFFECT;

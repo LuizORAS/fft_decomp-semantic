@@ -95,7 +95,7 @@ s32 ai_evaluate_target_tiles(void) {
                                 goto remove_useful_origin;
                         }
                         if (ai->considered_ability.ai_flags.word & AI_ABILITY_ARC_TRAJECTORY) {
-                            if (battle_effect_check_arc_trajectory_between_units(
+                            if (effect_check_arc_trajectory_between_units(
                                     ai->acting_unit_id, ai->current_action.command.target_id)
                                 == 0)
                                 continue;
@@ -105,7 +105,7 @@ s32 ai_evaluate_target_tiles(void) {
                                     || ai_calculate_distance_between_units(
                                            ai->acting_unit, &g_battle_unit_stats[ai->current_action.command.target_id])
                                         >= 2)
-                                && battle_effect_check_direct_trajectory_between_units(
+                                && effect_check_direct_trajectory_between_units(
                                        ai->acting_unit_id, ai->current_action.command.target_id)
                                     == 0)
                                 continue;

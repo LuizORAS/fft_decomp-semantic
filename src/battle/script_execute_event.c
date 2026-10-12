@@ -517,7 +517,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_EFFECT_START) {
             do {
                 battle_thread_yield();
-                g_battle_thread_call_target = (void (*)(void))battle_effect_try_init_data;
+                g_battle_thread_call_target = (void (*)(void))effect_try_init_data;
             } while (battle_thread_call_on_main_stack() != 0);
         } else if (opcode == EVENT_OPCODE_EFFECT_END) {
             battle_thread_start(battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE), &script_play_effect_thread);
@@ -930,7 +930,7 @@ restart_script:
                     = script_get_misc_id(script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 3));
                 if (arrow_shooter_misc_id != EVENT_MISC_ID_NONE) {
                     arrow_shooter_battle_id = battle_unit_get_battle_index_by_misc_id(arrow_shooter_misc_id);
-                    g_battle_thread_call_target = (void (*)(void))battle_effect_set_arrow_trajectory;
+                    g_battle_thread_call_target = (void (*)(void))effect_set_arrow_trajectory;
                     battle_thread_call_on_main_stack(arrow_shooter_battle_id, &g_battle_scratch_coords, operand_1);
                 }
             }

@@ -22,22 +22,22 @@ s32 camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_fr
     s32 elapsed;
     s32 start;
 
-    phase1 = g_battle_effect_timeline->phase1_duration;
-    spawn_delay = g_battle_effect_context.target_count != 0 ? g_battle_effect_timeline->spawn_delay : 0;
-    child_duration = g_battle_effect_context.target_count != 0 ? g_battle_effect_timeline->child.duration : 0;
+    phase1 = g_effect_timeline->phase1_duration;
+    spawn_delay = g_effect_context.target_count != 0 ? g_effect_timeline->spawn_delay : 0;
+    child_duration = g_effect_context.target_count != 0 ? g_effect_timeline->child.duration : 0;
 
     if (frame < phase1) {
-        for (i = 0; i <= g_battle_effect_timeline->phase1_camera.last_keyframe_index; i++) {
-            if (frame < g_battle_effect_timeline->phase1_camera.end_frame[i]
-                && (mask & g_battle_effect_timeline->phase1_camera.command[i]) != 0) {
+        for (i = 0; i <= g_effect_timeline->phase1_camera.last_keyframe_index; i++) {
+            if (frame < g_effect_timeline->phase1_camera.end_frame[i]
+                && (mask & g_effect_timeline->phase1_camera.command[i]) != 0) {
                 *out_index = i;
-                *out_frame = g_battle_effect_timeline->phase1_camera.end_frame[i];
+                *out_frame = g_effect_timeline->phase1_camera.end_frame[i];
                 return 1;
             }
         }
     }
 
-    if (spawn_delay != 0 && frame < phase1 + (g_battle_effect_context.target_count - 1) * spawn_delay) {
+    if (spawn_delay != 0 && frame < phase1 + (g_effect_context.target_count - 1) * spawn_delay) {
         target_index = 0;
         if (frame >= phase1) {
             elapsed = frame - phase1;
@@ -46,67 +46,64 @@ s32 camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_fr
         } else {
             local_frame = -1;
         }
-        for (i = 0; i <= g_battle_effect_timeline->last_keyframe_index; i++) {
-            if (g_battle_effect_timeline->end_frame[i] >= spawn_delay) {
+        for (i = 0; i <= g_effect_timeline->last_keyframe_index; i++) {
+            if (g_effect_timeline->end_frame[i] >= spawn_delay) {
                 break;
             }
-            if (local_frame < g_battle_effect_timeline->end_frame[i]
-                && (mask & g_battle_effect_timeline->command[i]) != 0) {
-                *out_index = i + (BATTLE_EFFECT_CAMERA_TABLE_CHILD << 16);
-                *out_frame = (target_index << 16)
-                    + (g_battle_effect_timeline->end_frame[i] + target_index * spawn_delay + phase1);
+            if (local_frame < g_effect_timeline->end_frame[i] && (mask & g_effect_timeline->command[i]) != 0) {
+                *out_index = i + (EFFECT_CAMERA_TABLE_CHILD << 16);
+                *out_frame
+                    = (target_index << 16) + (g_effect_timeline->end_frame[i] + target_index * spawn_delay + phase1);
                 return 1;
             }
         }
         target_index++;
         local_frame = -1;
-        if (target_index < g_battle_effect_context.target_count) {
-            for (i = 0; i <= g_battle_effect_timeline->last_keyframe_index; i++) {
-                if (g_battle_effect_timeline->end_frame[i] >= spawn_delay) {
+        if (target_index < g_effect_context.target_count) {
+            for (i = 0; i <= g_effect_timeline->last_keyframe_index; i++) {
+                if (g_effect_timeline->end_frame[i] >= spawn_delay) {
                     break;
                 }
-                if (local_frame < g_battle_effect_timeline->end_frame[i]
-                    && (mask & g_battle_effect_timeline->command[i]) != 0) {
-                    *out_index = i + (BATTLE_EFFECT_CAMERA_TABLE_CHILD << 16);
+                if (local_frame < g_effect_timeline->end_frame[i] && (mask & g_effect_timeline->command[i]) != 0) {
+                    *out_index = i + (EFFECT_CAMERA_TABLE_CHILD << 16);
                     *out_frame = (target_index << 16)
-                        + (g_battle_effect_timeline->end_frame[i] + target_index * spawn_delay + phase1);
+                        + (g_effect_timeline->end_frame[i] + target_index * spawn_delay + phase1);
                     return 1;
                 }
             }
         }
     }
 
-    if (g_battle_effect_context.target_count != 0) {
-        target_index = g_battle_effect_context.target_count - 1;
+    if (g_effect_context.target_count != 0) {
+        target_index = g_effect_context.target_count - 1;
         start = phase1 + target_index * spawn_delay;
         if (frame < start + child_duration) {
             local_frame = -1;
             if (frame >= start) {
                 local_frame = frame - phase1 - target_index * spawn_delay;
             }
-            for (i = 0; i <= g_battle_effect_timeline->last_keyframe_index; i++) {
-                if (local_frame < g_battle_effect_timeline->end_frame[i]
-                    && (mask & g_battle_effect_timeline->command[i]) != 0) {
-                    *out_index = i + (BATTLE_EFFECT_CAMERA_TABLE_CHILD << 16);
+            for (i = 0; i <= g_effect_timeline->last_keyframe_index; i++) {
+                if (local_frame < g_effect_timeline->end_frame[i] && (mask & g_effect_timeline->command[i]) != 0) {
+                    *out_index = i + (EFFECT_CAMERA_TABLE_CHILD << 16);
                     *out_frame = (target_index << 16)
-                        + (g_battle_effect_timeline->end_frame[i] + target_index * spawn_delay + phase1);
+                        + (g_effect_timeline->end_frame[i] + target_index * spawn_delay + phase1);
                     return 1;
                 }
             }
         }
     }
 
-    if (frame >= phase1 + (g_battle_effect_context.target_count - 1) * spawn_delay + child_duration) {
-        local_frame = frame - phase1 - (g_battle_effect_context.target_count - 1) * spawn_delay - child_duration;
+    if (frame >= phase1 + (g_effect_context.target_count - 1) * spawn_delay + child_duration) {
+        local_frame = frame - phase1 - (g_effect_context.target_count - 1) * spawn_delay - child_duration;
     } else {
         local_frame = -1;
     }
-    for (i = 0; i <= g_battle_effect_timeline->phase2_camera.last_keyframe_index; i++) {
-        if (local_frame < g_battle_effect_timeline->phase2_camera.end_frame[i]
-            && (mask & g_battle_effect_timeline->phase2_camera.command[i]) != 0) {
-            *out_index = i + (BATTLE_EFFECT_CAMERA_TABLE_PHASE2 << 16);
-            *out_frame = g_battle_effect_timeline->phase2_camera.end_frame[i] + phase1
-                + (g_battle_effect_context.target_count - 1) * spawn_delay + child_duration;
+    for (i = 0; i <= g_effect_timeline->phase2_camera.last_keyframe_index; i++) {
+        if (local_frame < g_effect_timeline->phase2_camera.end_frame[i]
+            && (mask & g_effect_timeline->phase2_camera.command[i]) != 0) {
+            *out_index = i + (EFFECT_CAMERA_TABLE_PHASE2 << 16);
+            *out_frame = g_effect_timeline->phase2_camera.end_frame[i] + phase1
+                + (g_effect_context.target_count - 1) * spawn_delay + child_duration;
             return 1;
         }
     }

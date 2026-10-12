@@ -25,30 +25,30 @@ s32 effect_banish_map_vertex_particles_update(
     VECTOR* vertex;
     VECTOR* vertex_work;
 
-    record = &g_battle_effect_state_records[state_index];
+    record = &g_effect_state_records[state_index];
 
     switch (record->callback_phase[callback_slot]) {
-    case EFFECT_PHASE_IDLE:
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
         vertex_work = battle_heap_alloc_block(EFFECT_MAP_VERTEX_WORK_BYTES, state_index);
         record->work_slots[callback_slot] = vertex_work;
-        g_battle_effect_map_vertices = vertex_work;
+        g_effect_map_vertices = vertex_work;
         map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 1, 1, 1);
         map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 2, 1, 1);
         map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 3, 1, 1);
         map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 4, 1, 1);
         map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 5, 1, 1);
         map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 6, 1, 1);
-        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
-    case EFFECT_PHASE_UPDATE:
+    case EFFECT_CALLBACK_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
         for (emitter_index = 0; emitter_index < EFFECT_PARTICLE_VERTEX_EMITTER_COUNT; emitter_index++) {
-            emitter = &g_battle_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
+            emitter = &g_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             group = emitter->vertex_group;
             if (group >= 1 && group <= 12) {
                 if (frame >= emitter->start_frame && frame < emitter->end_frame) {
@@ -60,7 +60,7 @@ s32 effect_banish_map_vertex_particles_update(
                     parent.motion.position.x = vertex->vx << 12;
                     parent.motion.position.y = vertex->vy << 12;
                     parent.motion.position.z = vertex->vz << 12;
-                    battle_effect_spawn_emitter_particles(
+                    effect_spawn_emitter_particles(
                         record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                 }
             } else if (group == 13) {
@@ -73,7 +73,7 @@ s32 effect_banish_map_vertex_particles_update(
                         parent.motion.position.x = vertex->vx << 12;
                         parent.motion.position.y = vertex->vy << 12;
                         parent.motion.position.z = vertex->vz << 12;
-                        battle_effect_spawn_emitter_particles(
+                        effect_spawn_emitter_particles(
                             record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
                 }
@@ -87,20 +87,20 @@ s32 effect_banish_map_vertex_particles_update(
                         parent.motion.position.x = vertex->vx << 12;
                         parent.motion.position.y = vertex->vy << 12;
                         parent.motion.position.z = vertex->vz << 12;
-                        battle_effect_spawn_emitter_particles(
+                        effect_spawn_emitter_particles(
                             record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
                 }
             }
         }
         break;
-    case EFFECT_PHASE_DESTROY:
+    case EFFECT_CALLBACK_PHASE_DESTROY:
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
             record->work_slots[callback_slot] = 0;
-            g_battle_effect_map_vertices = 0;
+            g_effect_map_vertices = 0;
         }
-        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         break;
     }
 }

@@ -100,19 +100,19 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
     POLY_GT4* quad;
     POLY_GT4* prev;
     map_tile_t* tile;
-    battle_effect_target_t* caster_target;
+    effect_target_t* caster_target;
 
-    record = &g_battle_effect_state_records[state_index];
-    entry = &g_battle_effect_geometry_table->entries[emitter_index];
+    record = &g_effect_state_records[state_index];
+    entry = &g_effect_geometry_table->entries[emitter_index];
     placement = entry->particle_ribbon.placement_flags;
     flags = entry->particle_ribbon.flags;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
-    case EFFECT_PHASE_IDLE:
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
 
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
@@ -145,62 +145,57 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
         work->matrix.t[2] = 0;
         work->matrix.t[1] = 0;
         work->matrix.t[0] = 0;
-        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
 
-    case EFFECT_PHASE_UPDATE:
+    case EFFECT_CALLBACK_PHASE_UPDATE:
         i = frame - 1;
         frame %= EFFECT_ANIMATION_CURVE_FRAMES;
         work = record->work_slots[callback_slot];
         target_bindings = entry->particle_ribbon.target_curve_bindings;
         target_index = record->timeline.target_index;
         spawn_bindings = entry->particle_ribbon.spawn_curve_bindings;
-        BATTLE_EFFECT_READ_CURVE(j, factor,
-            battle_effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_INTERVAL_SHIFT),
-            frame);
+        EFFECT_READ_CURVE(j, factor,
+            effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_INTERVAL_SHIFT), frame);
         if (i
                 % battle_lerp_fixed8(
                     entry->particle_ribbon.spawn_interval_start, entry->particle_ribbon.spawn_interval_end, factor)
             == 0) {
             SetTransMatrix(&work->matrix);
             rotate = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
-            caster_target = &g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY];
-            if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            caster_target = &g_effect_context.targets[EFFECT_CASTER_ENTRY];
+            if (caster_target->target_type == EFFECT_TARGET_TYPE_UNIT) {
                 quadrant = battle_unit_get_facing_quadrant_by_misc_id(
-                    g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id);
+                    g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id);
                 quadrant = ((quadrant + 1) & 3) << 10;
                 vector.vz = 0;
                 vector.vx = 0;
                 vector.vy = quadrant;
                 RotMatrix(&vector, &facing);
             }
-            battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
-                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &caster);
-            battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
-                &g_battle_effect_context, &target);
+            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &caster);
+            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                target_index, &g_effect_context, &target);
 
-            BATTLE_EFFECT_READ_CURVE(j, factor,
-                battle_effect_get_cached_curve_binding(
-                    target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_PARTICLE_COUNT_SHIFT),
+            EFFECT_READ_CURVE(j, factor,
+                effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_PARTICLE_COUNT_SHIFT),
                 frame);
             count = battle_lerp_fixed8(
                 entry->particle_ribbon.particle_count_start, entry->particle_ribbon.particle_count_end, factor);
 
-            BATTLE_EFFECT_READ_CURVE(j, factor,
-                battle_effect_get_cached_curve_binding(
-                    spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_POSITION_SHIFT),
+            EFFECT_READ_CURVE(j, factor,
+                effect_get_cached_curve_binding(spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_POSITION_SHIFT),
                 frame);
-            battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin);
+            effect_interpolate_emitter_spawn_position(entry, factor, &origin);
             switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
             case EFFECT_EMITTER_ORIGIN_WORLD:
                 break;
             case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-                tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
-                    g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-                origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                tile = map_get_tile_data_pointer(g_effect_target_tile.data.tile.vx, g_effect_target_tile.data.tile.vz,
+                    g_effect_target_tile.data.tile.vy);
+                origin.vx += g_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                origin.vz += g_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 origin.vy -= tile->height * MAP_HEIGHT_STEP;
                 break;
             case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -222,10 +217,10 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                 break;
             }
 
-            BATTLE_EFFECT_READ_CURVE(j, factor,
-                battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_SPREAD_SHIFT),
+            EFFECT_READ_CURVE(j, factor,
+                effect_get_cached_curve_binding(spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_SPREAD_SHIFT),
                 frame);
-            battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
+            effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
             if (rotate) {
                 SetRotMatrix(&facing);
                 vector.vx = spread.vx;
@@ -234,10 +229,10 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                 RotTrans(&vector, &spread, &result.pad);
             }
 
-            j = battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_RADIAL_SPEED_SHIFT);
+            j = effect_get_cached_curve_binding(spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_RADIAL_SPEED_SHIFT);
             j--;
             if (j != -1) {
-                factor = g_battle_effect_animation_curve_data->curves[j][frame];
+                factor = g_effect_animation_curve_data->curves[j][frame];
                 speed_min = battle_lerp_fixed8(
                     entry->particle_ribbon.radial_speed_start.min, entry->particle_ribbon.radial_speed_end.min, factor);
                 speed_max = battle_lerp_fixed8(
@@ -247,20 +242,18 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                 speed_max = entry->particle_ribbon.radial_speed_start.max;
             }
 
-            BATTLE_EFFECT_READ_CURVE(j, factor,
-                battle_effect_get_cached_curve_binding(
+            EFFECT_READ_CURVE(j, factor,
+                effect_get_cached_curve_binding(
                     spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_VELOCITY_DIRECTION_SPREAD_SHIFT),
                 frame);
-            battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &angle_spread);
-            BATTLE_EFFECT_READ_CURVE(j, factor,
-                battle_effect_get_cached_curve_binding(
-                    spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_VELOCITY_BASE_ANGLE_SHIFT),
+            effect_interpolate_emitter_velocity_direction_spread(entry, factor, &angle_spread);
+            EFFECT_READ_CURVE(j, factor,
+                effect_get_cached_curve_binding(spawn_bindings, EFFECT_PARTICLE_RIBBON_CURVE_VELOCITY_BASE_ANGLE_SHIFT),
                 frame);
-            battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle_base);
+            effect_interpolate_emitter_velocity_base_angles(entry, factor, &angle_base);
 
-            BATTLE_EFFECT_READ_CURVE(j, factor,
-                battle_effect_get_cached_curve_binding(
-                    target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_TARGET_OFFSET_SHIFT),
+            EFFECT_READ_CURVE(j, factor,
+                effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_TARGET_OFFSET_SHIFT),
                 frame);
             target_base.vx = battle_lerp_fixed8(
                 entry->particle_ribbon.target_offset_start.x, entry->particle_ribbon.target_offset_end.x, factor);
@@ -289,17 +282,16 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                 target_base.vz += target.vz;
                 break;
             case EFFECT_EMITTER_HOMING_CURSOR_TILE:
-                tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
-                    g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-                target_base.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                target_base.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                tile = map_get_tile_data_pointer(g_effect_target_tile.data.tile.vx, g_effect_target_tile.data.tile.vz,
+                    g_effect_target_tile.data.tile.vy);
+                target_base.vx += g_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                target_base.vz += g_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 target_base.vy -= tile->height * MAP_HEIGHT_STEP;
                 break;
             }
 
-            BATTLE_EFFECT_READ_CURVE(j, factor,
-                battle_effect_get_cached_curve_binding(
-                    target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_TARGET_SPREAD_SHIFT),
+            EFFECT_READ_CURVE(j, factor,
+                effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_TARGET_SPREAD_SHIFT),
                 frame);
             target_spread.vx = battle_lerp_fixed8(
                 entry->particle_ribbon.target_spread_start_x, entry->particle_ribbon.target_spread_end_x, factor);
@@ -308,9 +300,8 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
             target_spread.vz = battle_lerp_fixed8(
                 entry->particle_ribbon.target_spread_start_z, entry->particle_ribbon.target_spread_end_z, factor);
 
-            BATTLE_EFFECT_READ_CURVE(j, factor,
-                battle_effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_LIFETIME_SHIFT),
-                frame);
+            EFFECT_READ_CURVE(j, factor,
+                effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_LIFETIME_SHIFT), frame);
             lifetime_min = battle_lerp_fixed8(
                 entry->particle_ribbon.lifetime_start.min, entry->particle_ribbon.lifetime_end.min, factor);
             lifetime_max = battle_lerp_fixed8(
@@ -328,7 +319,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                     }
                 }
 
-                largest = battle_effect_select_largest_magnitude_s16(spread.vx, spread.vy, spread.vz);
+                largest = effect_select_largest_magnitude_s16(spread.vx, spread.vy, spread.vz);
                 if (largest != 0) {
                     vector.vx = rand();
                     vector.vy = rand();
@@ -351,8 +342,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                     slot->position.vz = origin.vz << 12;
                 }
 
-                largest
-                    = battle_effect_select_largest_magnitude_s16(target_spread.vx, target_spread.vy, target_spread.vz);
+                largest = effect_select_largest_magnitude_s16(target_spread.vx, target_spread.vy, target_spread.vz);
                 if (largest != 0) {
                     vector.vx = rand();
                     vector.vy = rand();
@@ -461,12 +451,13 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
             }
             if (entry->particle_ribbon.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
                 factor = (entry->particle_ribbon.colour_curves & 0xfff);
-                red = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
+                red = g_effect_animation_curve_data->curves[effect_get_cached_curve_binding(
                     (entry->particle_ribbon.colour_curves & 0xfff), EFFECT_COLOR_CURVE_RED_SHIFT)][slot->age];
-                green = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
-                    factor, EFFECT_COLOR_CURVE_GREEN_SHIFT)][slot->age];
-                blue = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
-                    factor, EFFECT_COLOR_CURVE_BLUE_SHIFT)][slot->age];
+                green
+                    = g_effect_animation_curve_data
+                          ->curves[effect_get_cached_curve_binding(factor, EFFECT_COLOR_CURVE_GREEN_SHIFT)][slot->age];
+                blue = g_effect_animation_curve_data
+                           ->curves[effect_get_cached_curve_binding(factor, EFFECT_COLOR_CURVE_BLUE_SHIFT)][slot->age];
             } else {
                 blue = EFFECT_COLOR_NEUTRAL;
                 green = EFFECT_COLOR_NEUTRAL;
@@ -478,9 +469,9 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
             j = ++slot->age;
             index = j % EFFECT_PARTICLE_RIBBON_SHORT_POINTS;
             if (j <= slot->lifetime) {
-                slot->trail[index].x = battle_effect_interpolate_s32_cos(x, slot->target.vx, slot->lifetime, j);
-                slot->trail[index].y = battle_effect_interpolate_s32_cos(y, slot->target.vy, slot->lifetime, j);
-                slot->trail[index].z = battle_effect_interpolate_s32_cos(z, slot->target.vz, slot->lifetime, j);
+                slot->trail[index].x = effect_interpolate_s32_cos(x, slot->target.vx, slot->lifetime, j);
+                slot->trail[index].y = effect_interpolate_s32_cos(y, slot->target.vy, slot->lifetime, j);
+                slot->trail[index].z = effect_interpolate_s32_cos(z, slot->target.vz, slot->lifetime, j);
                 point = (EFFECT_PARTICLE_RIBBON_SHORT_POINTS - 1);
                 segments = (EFFECT_PARTICLE_RIBBON_SHORT_POINTS - 1);
                 if (j < (EFFECT_PARTICLE_RIBBON_SHORT_POINTS - 1)) {
@@ -508,7 +499,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
             parent.motion.position.y = slot->trail[index].y << 12;
             parent.motion.position.z = slot->trail[index].z << 12;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
-                battle_effect_spawn_emitter_particles(
+                effect_spawn_emitter_particles(
                     record->record_index, slot->age, entry->particle_ribbon.child_emitter_mid_life, &parent);
             }
             v = entry->particle_ribbon.texture_v + slot->frame * height;
@@ -605,7 +596,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
             AddPrim(ot + depth, quad);
             if (slot->lifetime + (EFFECT_PARTICLE_RIBBON_SHORT_POINTS - 1) == slot->age) {
                 if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
-                    battle_effect_spawn_emitter_particles(
+                    effect_spawn_emitter_particles(
                         record->record_index, slot->age, entry->particle_ribbon.child_emitter_on_death, &parent);
                 }
                 slot->active = 0;
@@ -615,7 +606,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
         work->buffer = 1 - work->buffer;
         break;
 
-    case EFFECT_PHASE_DESTROY:
+    case EFFECT_CALLBACK_PHASE_DESTROY:
         work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
@@ -625,7 +616,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
             battle_heap_free_block(work);
             record->work_slots[callback_slot] = 0;
         }
-        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         break;
     }
 }

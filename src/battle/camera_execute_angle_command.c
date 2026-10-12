@@ -9,8 +9,8 @@
  * angles with the yaw wrapped to the nearest turn (0x40), the current
  * rotation (0xc0), the current rotation plus the given offsets (0x20), the
  * saved pitch with the current yaw/roll (0x60) or the saved angles with the yaw
- * wrapped against g_battle_effect_camera_rotation_current (0x100). Most modes then add `angles` when
- * present. Bits 0x1e00 are kept in g_battle_effect_camera_rotation_mode; other modes return untouched.
+ * wrapped against g_effect_camera_rotation_current (0x100). Most modes then add `angles` when
+ * present. Bits 0x1e00 are kept in g_effect_camera_rotation_mode; other modes return untouched.
  *
  * Mode 0x40 keeps its own `current` pointer: sharing `rotation` with the other
  * modes changes that case's register allocation. */
@@ -20,20 +20,19 @@ void camera_execute_angle_command(s32 command, s32 target, s32 duration, SVECTOR
     SVECTOR* current;
     s16 delta;
 
-    switch (command & BATTLE_EFFECT_CAMERA_SOURCE_MASK) {
-    case BATTLE_EFFECT_CAMERA_SOURCE_TARGET:
-        if (g_battle_effect_context.targets[target].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-            battle_unit_get_map_coords_from_misc_id(g_battle_effect_context.targets[target].data.unit.misc_id, &coords);
+    switch (command & EFFECT_CAMERA_SOURCE_MASK) {
+    case EFFECT_CAMERA_SOURCE_TARGET:
+        if (g_effect_context.targets[target].target_type == EFFECT_TARGET_TYPE_UNIT) {
+            battle_unit_get_map_coords_from_misc_id(g_effect_context.targets[target].data.unit.misc_id, &coords);
         } else {
-            coords = g_battle_effect_context.targets[target].data.tile;
+            coords = g_effect_context.targets[target].data.tile;
         }
-        camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
+        camera_choose_unblocked_rotation_for_tile(&coords, &g_effect_camera_rotation_target);
         if (angles) {
-            battle_effect_add_svectors(
-                angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
+            effect_add_svectors(angles, &g_effect_camera_rotation_target, &g_effect_camera_rotation_target);
         }
         break;
-    case BATTLE_EFFECT_CAMERA_SOURCE_GIVEN:
+    case EFFECT_CAMERA_SOURCE_GIVEN:
         current = camera_get_rotation();
         delta = angles->vy - current->vy;
         if (delta < -0x800) {
@@ -41,74 +40,68 @@ void camera_execute_angle_command(s32 command, s32 target, s32 duration, SVECTOR
         } else if (delta > 0x800) {
             delta -= ONE;
         }
-        setVector(&g_battle_effect_camera_rotation_target, angles->vx, delta + current->vy, angles->vz);
-        g_battle_effect_camera_rotation_mode = command & BATTLE_EFFECT_CAMERA_MODE_MASK;
-        g_battle_effect_camera_rotation_duration = duration;
-        g_battle_effect_camera_rotation_frame = 0;
+        setVector(&g_effect_camera_rotation_target, angles->vx, delta + current->vy, angles->vz);
+        g_effect_camera_rotation_mode = command & EFFECT_CAMERA_MODE_MASK;
+        g_effect_camera_rotation_duration = duration;
+        g_effect_camera_rotation_frame = 0;
         return;
-    case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT:
+    case EFFECT_CAMERA_SOURCE_CURRENT:
         rotation = camera_get_rotation();
-        copyVector(&g_battle_effect_camera_rotation_target, rotation);
+        copyVector(&g_effect_camera_rotation_target, rotation);
         if (angles) {
-            battle_effect_add_svectors(
-                angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
+            effect_add_svectors(angles, &g_effect_camera_rotation_target, &g_effect_camera_rotation_target);
         }
         break;
-    case BATTLE_EFFECT_CAMERA_SOURCE_SAVED:
-        g_battle_effect_camera_rotation_target = g_battle_effect_camera_rotation_saved;
+    case EFFECT_CAMERA_SOURCE_SAVED:
+        g_effect_camera_rotation_target = g_effect_camera_rotation_saved;
         if (angles) {
-            battle_effect_add_svectors(
-                angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
+            effect_add_svectors(angles, &g_effect_camera_rotation_target, &g_effect_camera_rotation_target);
         }
-        delta = g_battle_effect_camera_rotation_target.vy - g_battle_effect_camera_rotation_current.vy;
+        delta = g_effect_camera_rotation_target.vy - g_effect_camera_rotation_current.vy;
         if (delta > 0x800) {
-            g_battle_effect_camera_rotation_target.vy -= ONE;
+            g_effect_camera_rotation_target.vy -= ONE;
         }
         if (delta < -0x800) {
-            g_battle_effect_camera_rotation_target.vy += ONE;
+            g_effect_camera_rotation_target.vy += ONE;
         }
         break;
-    case BATTLE_EFFECT_CAMERA_SOURCE_CASTER:
-        if (g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+    case EFFECT_CAMERA_SOURCE_CASTER:
+        if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
             battle_unit_get_map_coords_from_misc_id(
-                g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.misc_id, &coords);
+                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id, &coords);
         } else {
-            coords = g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY].data.tile;
+            coords = g_effect_context.targets[EFFECT_CASTER_ENTRY].data.tile;
         }
-        camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
+        camera_choose_unblocked_rotation_for_tile(&coords, &g_effect_camera_rotation_target);
         if (angles) {
-            battle_effect_add_svectors(
-                angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
+            effect_add_svectors(angles, &g_effect_camera_rotation_target, &g_effect_camera_rotation_target);
         }
         break;
-    case BATTLE_EFFECT_CAMERA_SOURCE_CURSOR_TILE:
-        coords = g_battle_effect_target_tile.data.tile;
-        camera_choose_unblocked_rotation_for_tile(&coords, &g_battle_effect_camera_rotation_target);
+    case EFFECT_CAMERA_SOURCE_CURSOR_TILE:
+        coords = g_effect_target_tile.data.tile;
+        camera_choose_unblocked_rotation_for_tile(&coords, &g_effect_camera_rotation_target);
         if (angles) {
-            battle_effect_add_svectors(
-                angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
+            effect_add_svectors(angles, &g_effect_camera_rotation_target, &g_effect_camera_rotation_target);
         }
         break;
-    case BATTLE_EFFECT_CAMERA_SOURCE_CURRENT_YAW_ROLL:
+    case EFFECT_CAMERA_SOURCE_CURRENT_YAW_ROLL:
         rotation = camera_get_rotation();
         if (angles) {
-            setVector(&g_battle_effect_camera_rotation_target, angles->vx, rotation->vy + angles->vy,
-                rotation->vz + angles->vz);
+            setVector(
+                &g_effect_camera_rotation_target, angles->vx, rotation->vy + angles->vy, rotation->vz + angles->vz);
         }
         break;
-    case BATTLE_EFFECT_CAMERA_SOURCE_SAVED_PITCH:
+    case EFFECT_CAMERA_SOURCE_SAVED_PITCH:
         rotation = camera_get_rotation();
-        setVector(&g_battle_effect_camera_rotation_target, g_battle_effect_camera_rotation_saved.vx, rotation->vy,
-            rotation->vz);
+        setVector(&g_effect_camera_rotation_target, g_effect_camera_rotation_saved.vx, rotation->vy, rotation->vz);
         if (angles) {
-            battle_effect_add_svectors(
-                angles, &g_battle_effect_camera_rotation_target, &g_battle_effect_camera_rotation_target);
+            effect_add_svectors(angles, &g_effect_camera_rotation_target, &g_effect_camera_rotation_target);
         }
         break;
     default:
         return;
     }
-    g_battle_effect_camera_rotation_mode = command & BATTLE_EFFECT_CAMERA_MODE_MASK;
-    g_battle_effect_camera_rotation_duration = duration;
-    g_battle_effect_camera_rotation_frame = 0;
+    g_effect_camera_rotation_mode = command & EFFECT_CAMERA_MODE_MASK;
+    g_effect_camera_rotation_duration = duration;
+    g_effect_camera_rotation_frame = 0;
 }

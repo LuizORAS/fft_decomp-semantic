@@ -54,7 +54,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
     s16 len;
     s32 speed;
     s32 point;
-    battle_effect_target_t* caster_target;
+    effect_target_t* caster_target;
     s32 px;
     s32 tail_step;
     s32 x;
@@ -65,16 +65,16 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
     s32 pz;
     s32 wrap;
 
-    record = &g_battle_effect_state_records[state_index];
-    entry = &g_battle_effect_geometry_table->entries[emitter_index];
+    record = &g_effect_state_records[state_index];
+    entry = &g_effect_geometry_table->entries[emitter_index];
     placement = entry->tentacle_mesh.placement_flags;
     flags = entry->tentacle_mesh.flags;
 
     switch (record->callback_phase[callback_slot]) {
-    case EFFECT_PHASE_IDLE:
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
 
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
@@ -88,26 +88,26 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
         work->matrix.t[2] = 0;
         work->matrix.t[1] = 0;
         work->matrix.t[0] = 0;
-        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
 
-    case EFFECT_PHASE_UPDATE:
+    case EFFECT_CALLBACK_PHASE_UPDATE:
         i = frame - 1;
         work = record->work_slots[callback_slot];
         tip_bindings = entry->tentacle_mesh.tip_curve_bindings;
         target_index = record->timeline.target_index;
         spawn_bindings = entry->tentacle_mesh.spawn_curve_bindings;
         frame %= EFFECT_ANIMATION_CURVE_FRAMES;
-        BATTLE_EFFECT_READ_CURVE(index, factor,
-            battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_SPAWN_INTERVAL_SHIFT), frame);
+        EFFECT_READ_CURVE(index, factor,
+            effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_SPAWN_INTERVAL_SHIFT), frame);
         if (i
                 % battle_lerp_fixed8(
                     entry->tentacle_mesh.spawn_interval_start, entry->tentacle_mesh.spawn_interval_end, factor)
             == 0) {
             SetTransMatrix(&work->matrix);
             orient = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
-            caster_target = &g_battle_effect_context.targets[BATTLE_EFFECT_CASTER_ENTRY];
-            if (caster_target->target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+            caster_target = &g_effect_context.targets[EFFECT_CASTER_ENTRY];
+            if (caster_target->target_type == EFFECT_TARGET_TYPE_UNIT) {
                 facing_yaw = ((battle_unit_get_facing_quadrant_by_misc_id(caster_target->data.unit.misc_id) + 1) & 3)
                     << 10;
                 rotation.vz = 0;
@@ -115,31 +115,27 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                 rotation.vy = facing_yaw;
                 RotMatrix(&rotation, &facing);
             }
-            battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
-                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &caster);
-            battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
-                &g_battle_effect_context, &target);
+            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &caster);
+            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                target_index, &g_effect_context, &target);
 
-            BATTLE_EFFECT_READ_CURVE(index, factor,
-                battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_PARTICLE_COUNT_SHIFT),
-                frame);
+            EFFECT_READ_CURVE(index, factor,
+                effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_PARTICLE_COUNT_SHIFT), frame);
             count = battle_lerp_fixed8(
                 entry->tentacle_mesh.particle_count_start, entry->tentacle_mesh.particle_count_end, factor);
-            BATTLE_EFFECT_READ_CURVE(index, factor,
-                battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_SPAWN_POSITION_SHIFT),
-                frame);
-            battle_effect_interpolate_emitter_spawn_position(entry, factor, &origin);
+            EFFECT_READ_CURVE(index, factor,
+                effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_SPAWN_POSITION_SHIFT), frame);
+            effect_interpolate_emitter_spawn_position(entry, factor, &origin);
             switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
             case EFFECT_EMITTER_ORIGIN_WORLD:
             case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
                 break;
             case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-                tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
-                    g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-                origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                tile = map_get_tile_data_pointer(g_effect_target_tile.data.tile.vx, g_effect_target_tile.data.tile.vz,
+                    g_effect_target_tile.data.tile.vy);
+                origin.vx += g_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                origin.vz += g_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 origin.vy -= tile->height * MAP_HEIGHT_STEP;
                 break;
             case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -159,10 +155,9 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                 break;
             }
 
-            BATTLE_EFFECT_READ_CURVE(index, factor,
-                battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_SPAWN_SPREAD_SHIFT),
-                frame);
-            battle_effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
+            EFFECT_READ_CURVE(index, factor,
+                effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_SPAWN_SPREAD_SHIFT), frame);
+            effect_interpolate_emitter_spawn_spread(entry, factor, &spread);
             if (orient) {
                 SetRotMatrix(&facing);
                 rotation.vx = spread.vx;
@@ -171,10 +166,10 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                 RotTrans(&rotation, &spread, &out.pad);
             }
 
-            index = battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_RADIAL_SPEED_SHIFT);
+            index = effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_RADIAL_SPEED_SHIFT);
             index--;
             if (index != -1) {
-                factor = g_battle_effect_animation_curve_data->curves[index][frame];
+                factor = g_effect_animation_curve_data->curves[index][frame];
                 speed_min = battle_lerp_fixed8(
                     entry->tentacle_mesh.radial_speed_start.min, entry->tentacle_mesh.radial_speed_end.min, factor);
                 speed_max = battle_lerp_fixed8(
@@ -184,18 +179,17 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                 speed_max = entry->tentacle_mesh.radial_speed_start.max;
             }
 
-            BATTLE_EFFECT_READ_CURVE(index, factor,
-                battle_effect_get_cached_curve_binding(
-                    spawn_bindings, EFFECT_TENTACLE_CURVE_VELOCITY_DIRECTION_SPREAD_SHIFT),
+            EFFECT_READ_CURVE(index, factor,
+                effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_VELOCITY_DIRECTION_SPREAD_SHIFT),
                 frame);
-            battle_effect_interpolate_emitter_velocity_direction_spread(entry, factor, &direction_spread);
-            BATTLE_EFFECT_READ_CURVE(index, factor,
-                battle_effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_VELOCITY_BASE_ANGLE_SHIFT),
+            effect_interpolate_emitter_velocity_direction_spread(entry, factor, &direction_spread);
+            EFFECT_READ_CURVE(index, factor,
+                effect_get_cached_curve_binding(spawn_bindings, EFFECT_TENTACLE_CURVE_VELOCITY_BASE_ANGLE_SHIFT),
                 frame);
-            battle_effect_interpolate_emitter_velocity_base_angles(entry, factor, &base_angles);
+            effect_interpolate_emitter_velocity_base_angles(entry, factor, &base_angles);
 
-            BATTLE_EFFECT_READ_CURVE(index, factor,
-                battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TIP_OFFSET_SHIFT), frame);
+            EFFECT_READ_CURVE(index, factor,
+                effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TIP_OFFSET_SHIFT), frame);
             tip.vx = battle_lerp_fixed8(
                 entry->tentacle_mesh.target_offset_start.x, entry->tentacle_mesh.target_offset_end.x, factor);
             tip.vy = battle_lerp_fixed8(
@@ -222,16 +216,16 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                 tip.vz += target.vz;
                 break;
             case EFFECT_EMITTER_HOMING_CURSOR_TILE:
-                tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
-                    g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-                tip.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                tip.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                tile = map_get_tile_data_pointer(g_effect_target_tile.data.tile.vx, g_effect_target_tile.data.tile.vz,
+                    g_effect_target_tile.data.tile.vy);
+                tip.vx += g_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                tip.vz += g_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 tip.vy -= tile->height * MAP_HEIGHT_STEP;
                 break;
             }
 
-            BATTLE_EFFECT_READ_CURVE(index, factor,
-                battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TIP_SPREAD_SHIFT), frame);
+            EFFECT_READ_CURVE(index, factor,
+                effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TIP_SPREAD_SHIFT), frame);
             tip_spread.vx = battle_lerp_fixed8(
                 entry->tentacle_mesh.tip_spread_start_x, entry->tentacle_mesh.tip_spread_end_x, factor);
             tip_spread.vy = battle_lerp_fixed8(
@@ -239,9 +233,8 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
             tip_spread.vz = battle_lerp_fixed8(
                 entry->tentacle_mesh.tip_spread_start_z, entry->tentacle_mesh.tip_spread_end_z, factor);
 
-            BATTLE_EFFECT_READ_CURVE(index, factor,
-                battle_effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TRAVEL_DURATION_SHIFT),
-                frame);
+            EFFECT_READ_CURVE(index, factor,
+                effect_get_cached_curve_binding(tip_bindings, EFFECT_TENTACLE_CURVE_TRAVEL_DURATION_SHIFT), frame);
             length_min = battle_lerp_fixed8(
                 entry->tentacle_mesh.lifetime_start.min, entry->tentacle_mesh.lifetime_end.min, factor);
             length_max = battle_lerp_fixed8(
@@ -259,7 +252,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                     }
                 }
 
-                len = battle_effect_select_largest_magnitude_s16(spread.vx, spread.vy, spread.vz);
+                len = effect_select_largest_magnitude_s16(spread.vx, spread.vy, spread.vz);
                 if (len != 0) {
                     rotation.vx = rand();
                     rotation.vy = rand();
@@ -282,7 +275,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                     seg->position.vz = origin.vz << 12;
                 }
 
-                len = battle_effect_select_largest_magnitude_s16(tip_spread.vx, tip_spread.vy, tip_spread.vz);
+                len = effect_select_largest_magnitude_s16(tip_spread.vx, tip_spread.vy, tip_spread.vz);
                 if (len != 0) {
                     rotation.vx = rand();
                     rotation.vy = rand();
@@ -380,9 +373,9 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
             py = y >> 12;
             pz = z >> 12;
             if (index <= seg->length) {
-                seg->points[point].x = battle_effect_interpolate_s32_cos(px, seg->tip.vx, seg->length, index);
-                seg->points[point].y = battle_effect_interpolate_s32_cos(py, seg->tip.vy, seg->length, index);
-                seg->points[point].z = battle_effect_interpolate_s32_cos(pz, seg->tip.vz, seg->length, index);
+                seg->points[point].x = effect_interpolate_s32_cos(px, seg->tip.vx, seg->length, index);
+                seg->points[point].y = effect_interpolate_s32_cos(py, seg->tip.vy, seg->length, index);
+                seg->points[point].z = effect_interpolate_s32_cos(pz, seg->tip.vz, seg->length, index);
             } else {
                 seg->points[point].x = seg->tip.vx;
                 seg->points[point].y = seg->tip.vy;
@@ -402,12 +395,12 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
             emitter.motion.position.y = seg->points[point].y << 12;
             emitter.motion.position.z = seg->points[point].z << 12;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
-                battle_effect_spawn_emitter_particles(
+                effect_spawn_emitter_particles(
                     record->record_index, seg->head, entry->tentacle_mesh.child_emitter_mid_life, &emitter);
             }
             if (seg->length + 16 == seg->head) {
                 if (flags & EFFECT_EMITTER_FLAG_CHILD_ON_DEATH_MASK) {
-                    battle_effect_spawn_emitter_particles(
+                    effect_spawn_emitter_particles(
                         record->record_index, seg->head, entry->tentacle_mesh.child_emitter_on_death, &emitter);
                 }
                 seg->active = 0;
@@ -417,7 +410,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
         work->buffer = 1 - work->buffer;
         break;
 
-    case EFFECT_PHASE_DESTROY:
+    case EFFECT_CALLBACK_PHASE_DESTROY:
         work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
@@ -427,7 +420,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
             battle_heap_free_block(work);
             record->work_slots[callback_slot] = 0;
         }
-        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         break;
     }
 }

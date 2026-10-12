@@ -206,7 +206,7 @@ void map_draw_mesh_and_weather(MATRIX* camera) {
             map_queue_untextured_quads(g_battle_gfx_current_render_buffer->otag,
                 &g_battle_gfx_current_render_buffer->f4[g_map_mesh_parts[part].untextured_quad_start],
                 g_map_camera_rotation.vy, &i);
-            if (g_map_untextured_otz_mask != 0 && g_battle_effect_map_vertices != 0
+            if (g_map_untextured_otz_mask != 0 && g_effect_map_vertices != 0
                 && (g_map_loaded_id == MAP_ID_ENTRANCE_TO_DEATH_CITY || g_map_loaded_id == MAP_ID_GRAVEYARD_OF_AIRSHIPS
                     || g_map_loaded_id == MAP_ID_ZIREKILE_FALLS)) {
                 RotMatrix(&g_map_mesh_parts[part].rotation, &effect_matrix);
@@ -220,7 +220,7 @@ void map_draw_mesh_and_weather(MATRIX* camera) {
                 for (j = 0; j < 4; j++) {
                     effect_base = (part - 1) * 4 + 0x61;
                     RotTrans(&g_map_mesh_animation_keyframes[j + effect_base].translation,
-                        g_battle_effect_map_vertices + j + (part - 1) * 4, &effect_flag);
+                        g_effect_map_vertices + j + (part - 1) * 4, &effect_flag);
                 }
             }
         }

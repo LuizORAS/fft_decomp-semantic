@@ -73,16 +73,16 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
     u32 red;
     map_tile_t* tile;
 
-    record = &g_battle_effect_state_records[state_index];
-    entry = &g_battle_effect_geometry_table->entries[emitter_index];
+    record = &g_effect_state_records[state_index];
+    entry = &g_effect_geometry_table->entries[emitter_index];
     placement = entry->radial_mesh.placement_flags;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
-    case EFFECT_PHASE_IDLE:
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
 
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
@@ -109,36 +109,34 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
         work->radius_offset = 0;
         work->radius_speed = 0;
         work->destroy_delay = 0;
-        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
 
-    case EFFECT_PHASE_UPDATE:
+    case EFFECT_CALLBACK_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
-        target_index = g_battle_effect_state_records[state_index].timeline.target_index;
-        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.motion_curves.origin, frame);
-        battle_effect_interpolate_emitter_spawn_position(entry, j, &origin);
+        target_index = g_effect_state_records[state_index].timeline.target_index;
+        EFFECT_READ_CURVE(i, j, entry->radial_mesh.motion_curves.origin, frame);
+        effect_interpolate_emitter_spawn_position(entry, j, &origin);
         switch (placement & EFFECT_EMITTER_ORIGIN_MASK) {
         case EFFECT_EMITTER_ORIGIN_WORLD:
             break;
         case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-            tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
-                g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-            origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+            tile = map_get_tile_data_pointer(g_effect_target_tile.data.tile.vx, g_effect_target_tile.data.tile.vz,
+                g_effect_target_tile.data.tile.vy);
+            origin.vx += g_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             origin.vy -= tile->height * MAP_HEIGHT_STEP;
-            origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+            origin.vz += g_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             break;
         case EFFECT_EMITTER_ORIGIN_CASTER:
-            battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
-                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &vertex);
+            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &vertex);
             origin.vx += vertex.vx;
             origin.vy += vertex.vy;
             origin.vz += vertex.vz;
             break;
         case EFFECT_EMITTER_ORIGIN_TARGET:
-            battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
-                &g_battle_effect_context, &vertex);
+            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                target_index, &g_effect_context, &vertex);
             origin.vx += vertex.vx;
             origin.vy += vertex.vy;
             origin.vz += vertex.vz;
@@ -153,11 +151,11 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
         }
 
         radius_binding = entry->radial_mesh.shape_curves.radius;
-        BATTLE_EFFECT_READ_CURVE(i, j, radius_binding, frame);
+        EFFECT_READ_CURVE(i, j, radius_binding, frame);
         radius = battle_lerp_fixed8(entry->radial_mesh.radius_start, entry->radial_mesh.radius_end, j);
 
         texture_selector = entry->radial_mesh.motion_curves.texture;
-        BATTLE_EFFECT_READ_CURVE(i, j, texture_selector, frame);
+        EFFECT_READ_CURVE(i, j, texture_selector, frame);
         u = battle_lerp_fixed8(entry->radial_mesh.u_start, entry->radial_mesh.u_end, j);
         v = battle_lerp_fixed8(entry->radial_mesh.v_start, entry->radial_mesh.v_end, j);
         u_span = entry->radial_mesh.u_span;
@@ -170,13 +168,13 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
             work->v_scroll += v_span << 8;
         }
 
-        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.shape_curves.growth, frame);
+        EFFECT_READ_CURVE(i, j, entry->radial_mesh.shape_curves.growth, frame);
         growth.vx = battle_lerp_fixed8(entry->radial_mesh.growth_start, entry->radial_mesh.growth_end, j);
         growth.vy = battle_lerp_fixed8(entry->radial_mesh.height_start, entry->radial_mesh.height_end, j);
         growth.vz = battle_lerp_fixed8(entry->radial_mesh.row_radius_start, entry->radial_mesh.row_radius_end, j);
 
         growth_step_selector = entry->radial_mesh.shape_curves.growth_step;
-        BATTLE_EFFECT_READ_CURVE(i, j, growth_step_selector, frame);
+        EFFECT_READ_CURVE(i, j, growth_step_selector, frame);
         growth_step.vx
             = battle_lerp_fixed8(entry->radial_mesh.growth_step_start, entry->radial_mesh.growth_step_end, j);
         growth_step.vy
@@ -184,7 +182,7 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
         growth_step.vz
             = battle_lerp_fixed8(entry->radial_mesh.row_radius_step_start, entry->radial_mesh.row_radius_step_end, j);
 
-        BATTLE_EFFECT_READ_CURVE(i, j, entry->radial_mesh.motion_curves.spin, frame);
+        EFFECT_READ_CURVE(i, j, entry->radial_mesh.motion_curves.spin, frame);
         work->spin
             = (work->spin
                   + battle_lerp_fixed8(entry->radial_mesh.spin_speed_start, entry->radial_mesh.spin_speed_end, j))
@@ -355,12 +353,12 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
         blue = EFFECT_COLOR_NEUTRAL;
         if (entry->radial_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             k = (entry->radial_mesh.colour_curves & 0xfff);
-            red = g_battle_effect_animation_curve_data
-                      ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_RED_SHIFT)][frame];
-            green = g_battle_effect_animation_curve_data
-                        ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_GREEN_SHIFT)][frame];
-            blue = g_battle_effect_animation_curve_data
-                       ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_BLUE_SHIFT)][frame];
+            red = g_effect_animation_curve_data
+                      ->curves[effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_RED_SHIFT)][frame];
+            green = g_effect_animation_curve_data
+                        ->curves[effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_GREEN_SHIFT)][frame];
+            blue = g_effect_animation_curve_data
+                       ->curves[effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_BLUE_SHIFT)][frame];
         } else {
             green = EFFECT_COLOR_NEUTRAL;
             red = EFFECT_COLOR_NEUTRAL;
@@ -413,7 +411,7 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
         work->buffer = 1 - work->buffer;
         break;
 
-    case EFFECT_PHASE_DESTROY:
+    case EFFECT_CALLBACK_PHASE_DESTROY:
         work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
@@ -423,7 +421,7 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
             battle_heap_free_block(work);
             record->work_slots[callback_slot] = 0;
         }
-        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         break;
     }
 }

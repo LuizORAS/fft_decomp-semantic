@@ -15,7 +15,7 @@ void battle_state_run_game_loop(void) {
 
     battle_gfx_init_render_buffers();
     battle_gfx_init_render_state();
-    battle_effect_init_system();
+    effect_init_system();
 
     init_offset = 0x196b0;
     do {
@@ -53,7 +53,7 @@ void battle_state_run_game_loop(void) {
             camera_update_matrices(
                 &g_camera_matrix, &g_camera_render_state, &g_battle_offset_screen_coords, &g_camera_zoom);
             map_draw_mesh_and_weather(&g_camera_matrix);
-            if (battle_effect_update_cycle() != 0) {
+            if (effect_update_cycle() != 0) {
                 g_battle_state_animation_continue_check = 2;
             } else {
                 g_battle_state_animation_continue_check = 0;

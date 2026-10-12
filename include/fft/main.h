@@ -577,7 +577,7 @@ enum {
 /* Sound resources. A sound id is SUZUKI_SOUND_ID(resource, sound): the id of a
  * loaded suzuki_sound_resource_t in the high 16 bits and the index of a
  * sound in it in the low. Each battle effect file brings a resource of its
- * own (battle_effect_load_sound_section). */
+ * own (effect_load_sound_section). */
 typedef enum main_sound_resource_id {
     MAIN_SOUND_RESOURCE_SYSTEM = 0,        /* SOUND/SYSTEM.SED: main_sfx_e */
     MAIN_SOUND_RESOURCE_ENV = 1,           /* SOUND/ENV.SED: main_env_sfx_e */
@@ -604,7 +604,7 @@ typedef enum main_sfx {
     MAIN_SFX_INVALID = 5,
     MAIN_SFX_PAGE_SWITCH = 6, /* L1/R1 unit and page switches */
     MAIN_SFX_UNEQUIP = 7,     /* remove equipment/abilities */
-    MAIN_SFX_RED_ORBS = 8,    /* battle_effect_red_orbs_secondary_handler starts */
+    MAIN_SFX_RED_ORBS = 8,    /* effect_red_orbs_secondary_handler starts */
     MAIN_SFX_DISMISS = 9,     /* dismiss unit */
     MAIN_SFX_EQUIP = 10,      /* equip, set ability, best fit */
     MAIN_SFX_CAMERA_ROTATE_LEFT = 11,
@@ -636,7 +636,7 @@ typedef enum main_sfx {
      * stop them with suzuki_sound_stop_sfx_channels when they finish. */
     MAIN_SFX_SPELL_CHARGE = 31,
     MAIN_SFX_SUMMON_CHARGE = 33,
-    MAIN_SFX_VENOM_TRAP = 34, /* battle_effect_venom_trap_secondary_handler starts */
+    MAIN_SFX_VENOM_TRAP = 34, /* effect_venom_trap_secondary_handler starts */
     /* sound_play_landing_sfx_by_surface_type: water surfaces play
      * 0x23, grassland, thicket and rug 0x28, wooden floor, tree and box 0x3a,
      * every other surface 0x29. A step that ends on another unit also plays

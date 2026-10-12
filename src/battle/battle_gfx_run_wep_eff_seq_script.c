@@ -83,7 +83,7 @@ void battle_gfx_run_wep_eff_seq_script(
                 sprite->display->rotation = 0;
                 break;
             case BATTLE_SEQ_OP_LAUNCH_PROJECTILE:
-                battle_effect_start_action_projectile_secondary(unit);
+                effect_start_action_projectile_secondary(unit);
             case BATTLE_SEQ_OP_UNKNOWN_E6:
             case BATTLE_SEQ_OP_UNKNOWN_E7:
             case BATTLE_SEQ_OP_UNKNOWN_E8:

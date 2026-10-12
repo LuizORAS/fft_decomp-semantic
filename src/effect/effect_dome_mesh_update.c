@@ -60,16 +60,16 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     u32 shade_b;
     s32 n;
 
-    record = &g_battle_effect_state_records[state_index];
-    entry = &g_battle_effect_geometry_table->entries[emitter_index].radial_mesh;
+    record = &g_effect_state_records[state_index];
+    entry = &g_effect_geometry_table->entries[emitter_index].radial_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
-    case EFFECT_PHASE_IDLE:
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
 
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
@@ -97,13 +97,13 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         work->radius_offset = 0;
         work->radius_speed = 0;
         work->destroy_delay = 0;
-        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
 
-    case EFFECT_PHASE_UPDATE:
-        target_index = g_battle_effect_state_records[state_index].timeline.target_index;
+    case EFFECT_CALLBACK_PHASE_UPDATE:
+        target_index = g_effect_state_records[state_index].timeline.target_index;
         work = record->work_slots[callback_slot];
-        BATTLE_EFFECT_READ_CURVE(j, i, entry->motion_curves.origin, frame);
+        EFFECT_READ_CURVE(j, i, entry->motion_curves.origin, frame);
         origin.vx = battle_lerp_fixed8(entry->origin_start.x, entry->origin_end.x, i);
         origin.vy = battle_lerp_fixed8(entry->origin_start.y, entry->origin_end.y, i);
         origin.vz = battle_lerp_fixed8(entry->origin_start.z, entry->origin_end.z, i);
@@ -112,24 +112,22 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         case EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE:
             break;
         case EFFECT_EMITTER_ORIGIN_CURSOR_TILE:
-            tile = map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
-                g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
-            origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+            tile = map_get_tile_data_pointer(g_effect_target_tile.data.tile.vx, g_effect_target_tile.data.tile.vz,
+                g_effect_target_tile.data.tile.vy);
+            origin.vx += g_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             origin.vy -= tile->height * MAP_HEIGHT_STEP;
-            origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+            origin.vz += g_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             break;
         case EFFECT_EMITTER_ORIGIN_CASTER:
-            battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
-                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &vertex);
+            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &vertex);
             origin.vx += vertex.vx;
             origin.vy += vertex.vy;
             origin.vz += vertex.vz;
             break;
         case EFFECT_EMITTER_ORIGIN_TARGET:
-            battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index,
-                &g_battle_effect_context, &vertex);
+            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                target_index, &g_effect_context, &vertex);
             origin.vx += vertex.vx;
             origin.vy += vertex.vy;
             origin.vz += vertex.vz;
@@ -142,11 +140,11 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         }
 
         radius_binding = entry->shape_curves.radius;
-        BATTLE_EFFECT_READ_CURVE(j, i, radius_binding, frame);
+        EFFECT_READ_CURVE(j, i, radius_binding, frame);
         radius = battle_lerp_fixed8(entry->radius_start, entry->radius_end, i);
 
         texture_selector = entry->motion_curves.texture;
-        BATTLE_EFFECT_READ_CURVE(j, i, texture_selector, frame);
+        EFFECT_READ_CURVE(j, i, texture_selector, frame);
         u = battle_lerp_fixed8(entry->u_start, entry->u_end, i);
         v = battle_lerp_fixed8(entry->v_start, entry->v_end, i);
         u_span = entry->u_span;
@@ -159,16 +157,16 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             work->v_scroll += v_span << 8;
         }
 
-        BATTLE_EFFECT_READ_CURVE(j, i, entry->shape_curves.growth, frame);
+        EFFECT_READ_CURVE(j, i, entry->shape_curves.growth, frame);
         growth.vx = battle_lerp_fixed8(entry->growth_start, entry->growth_end, i);
         growth.vy = battle_lerp_fixed8(entry->height_start, entry->height_end, i);
 
         growth_step_selector = entry->shape_curves.growth_step;
-        BATTLE_EFFECT_READ_CURVE(j, i, growth_step_selector, frame);
+        EFFECT_READ_CURVE(j, i, growth_step_selector, frame);
         growth_step.vx = battle_lerp_fixed8(entry->growth_step_start, entry->growth_step_end, i);
         growth_step.vy = battle_lerp_fixed8(entry->height_step_start, entry->height_step_end, i);
 
-        BATTLE_EFFECT_READ_CURVE(j, i, entry->motion_curves.spin, frame);
+        EFFECT_READ_CURVE(j, i, entry->motion_curves.spin, frame);
         work->spin = (work->spin + battle_lerp_fixed8(entry->spin_speed_start, entry->spin_speed_end, i)) & (ONE - 1);
 
         /* The base stays in a variable: the target adds it to the row offset
@@ -292,13 +290,13 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
 
         n = entry->brightness_row;
         if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            red = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
+            red = g_effect_animation_curve_data->curves[effect_get_cached_curve_binding(
                 (entry->colour_curves & 0xfff), EFFECT_COLOR_CURVE_RED_SHIFT)][frame];
             k = (entry->colour_curves & 0xfff);
-            green = g_battle_effect_animation_curve_data
-                        ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_GREEN_SHIFT)][frame];
-            blue = g_battle_effect_animation_curve_data
-                       ->curves[battle_effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_BLUE_SHIFT)][frame];
+            green = g_effect_animation_curve_data
+                        ->curves[effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_GREEN_SHIFT)][frame];
+            blue = g_effect_animation_curve_data
+                       ->curves[effect_get_cached_curve_binding(k, EFFECT_COLOR_CURVE_BLUE_SHIFT)][frame];
         } else {
             red = green = blue = EFFECT_COLOR_NEUTRAL;
         }
@@ -349,7 +347,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         work->buffer = 1 - work->buffer;
         break;
 
-    case EFFECT_PHASE_DESTROY:
+    case EFFECT_CALLBACK_PHASE_DESTROY:
         work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
@@ -359,7 +357,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             battle_heap_free_block(work);
             record->work_slots[callback_slot] = 0;
         }
-        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         break;
     }
 }

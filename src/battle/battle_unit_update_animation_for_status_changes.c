@@ -33,7 +33,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
     if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
         if (g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id == BATTLE_SEQ_CYOKO
             || g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id == BATTLE_SEQ_MON) {
-            battle_effect_set_secondary_death_smoke(unit);
+            effect_set_secondary_death_smoke(unit);
         }
         if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {
             stats = unit->battle_data;
@@ -49,7 +49,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
         }
     }
     if (unit->statuses_to_add_5_6 & (BATTLE_MISC_STATUS_CRYSTAL | BATTLE_MISC_STATUS_TREASURE)) {
-        battle_effect_set_secondary_zodiac_poof(unit);
+        effect_set_secondary_zodiac_poof(unit);
     }
     if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
         if (unit->statuses_to_add_5_6 & BATTLE_MISC_STATUS_JUMP) {

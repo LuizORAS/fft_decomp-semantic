@@ -69,5 +69,5 @@ void battle_gfx_init_render_buffers(void) {
     }
     g_sound_primary_weather_sfx_id = 0;
     g_sound_weather_sfx_enabled = 0;
-    g_battle_effect_map_vertices = 0;
+    g_effect_map_vertices = 0;
 }

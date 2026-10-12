@@ -485,7 +485,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_EFFECT_START) {
             do {
                 world_thread_yield();
-                g_world_thread_call_target = (void (*)(void))battle_effect_try_init_data;
+                g_world_thread_call_target = (void (*)(void))effect_try_init_data;
             } while (world_thread_call_on_main_stack() != 0);
         } else if (opcode == EVENT_OPCODE_EFFECT_END) {
             world_thread_start(

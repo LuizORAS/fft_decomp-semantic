@@ -52,7 +52,7 @@ void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
                 return;
             }
             sound_play_landing_sfx_by_surface_type(unit);
-            battle_effect_set_landing_secondary_by_surface_type(unit);
+            effect_set_landing_secondary_by_surface_type(unit);
             return;
         }
         unit->velocity.vy = 0;
@@ -66,7 +66,7 @@ void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             return;
         }
         sound_play_landing_sfx_by_surface_type(unit);
-        battle_effect_set_landing_secondary_by_surface_type(unit);
+        effect_set_landing_secondary_by_surface_type(unit);
         return;
     }
     unit->velocity.vy = 0;
@@ -80,5 +80,5 @@ void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         return;
     }
     sound_play_landing_sfx_by_surface_type(unit);
-    battle_effect_set_landing_secondary_by_surface_type(unit);
+    effect_set_landing_secondary_by_surface_type(unit);
 }

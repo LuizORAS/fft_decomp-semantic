@@ -48,14 +48,14 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
     u8 u;
     u8 v;
 
-    record = &g_battle_effect_state_records[state_index];
-    geometry = &g_battle_effect_geometry_table->entries[emitter_index].textured_quad;
+    record = &g_effect_state_records[state_index];
+    geometry = &g_effect_geometry_table->entries[emitter_index].textured_quad;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
-    case EFFECT_PHASE_IDLE:
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
@@ -89,17 +89,17 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
         work->destroy_latched = 0;
         work->texture_u = geometry->texture_u;
         work->texture_v = geometry->texture_v;
-        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
-    case EFFECT_PHASE_UPDATE:
+    case EFFECT_CALLBACK_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
         texture_width = geometry->texture_width / 2;
         texture_height = geometry->texture_height / 2;
         selector = geometry->scroll_curves.scroll_speed;
-        BATTLE_EFFECT_READ_CURVE(row, column, selector, work->frame);
+        EFFECT_READ_CURVE(row, column, selector, work->frame);
         speed = battle_lerp_fixed8(geometry->scroll_speed_start, geometry->scroll_speed_end, column) << 4;
         selector = geometry->scroll_curves.scroll_angle;
-        BATTLE_EFFECT_READ_CURVE(row, column, selector, work->frame);
+        EFFECT_READ_CURVE(row, column, selector, work->frame);
         angle = battle_lerp_fixed8(geometry->scroll_angle_start, geometry->scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
         while (work->scroll_u >= texture_width << 12) {
@@ -118,13 +118,12 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
         blue = EFFECT_COLOR_NEUTRAL;
         if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = (geometry->colour_curves & 0xfff);
-            red = g_battle_effect_animation_curve_data
-                      ->curves[battle_effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_RED_SHIFT)][work->frame];
-            green = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
-                row, EFFECT_COLOR_CURVE_GREEN_SHIFT)][work->frame];
-            blue
-                = g_battle_effect_animation_curve_data
-                      ->curves[battle_effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_BLUE_SHIFT)][work->frame];
+            red = g_effect_animation_curve_data
+                      ->curves[effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_RED_SHIFT)][work->frame];
+            green = g_effect_animation_curve_data
+                        ->curves[effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_GREEN_SHIFT)][work->frame];
+            blue = g_effect_animation_curve_data
+                       ->curves[effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_BLUE_SHIFT)][work->frame];
         } else {
             green = EFFECT_COLOR_NEUTRAL;
             red = EFFECT_COLOR_NEUTRAL;
@@ -159,7 +158,7 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
         work->frame++;
         work->buffer = 1 - work->buffer;
         break;
-    case EFFECT_PHASE_DESTROY:
+    case EFFECT_CALLBACK_PHASE_DESTROY:
         work = record->work_slots[callback_slot];
         if (work->destroy_latched == 0) {
             work->destroy_latched = 1;
@@ -168,7 +167,7 @@ s32 effect_textured_quad_grid_8x8_update(s32 record_index, s32 callback_slot, s3
                 battle_heap_free_block(work);
                 record->work_slots[callback_slot] = 0;
             }
-            record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
+            record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         }
         break;
     }

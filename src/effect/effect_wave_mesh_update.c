@@ -51,14 +51,14 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     u8 v;
 
     scratch = (effect_wave_mesh_scratch_t*)0x1F800000;
-    record = &g_battle_effect_state_records[state_index];
-    geometry = &g_battle_effect_geometry_table->entries[emitter_index];
+    record = &g_effect_state_records[state_index];
+    geometry = &g_effect_geometry_table->entries[emitter_index];
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
-    case EFFECT_PHASE_IDLE:
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         if (record->work_slots[callback_slot] != 0) {
             battle_heap_free_block(record->work_slots[callback_slot]);
         }
@@ -92,19 +92,19 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         work->wave_x_phase = 0;
         work->wave_y_amplitude_phase = 0;
         work->wave_y_phase = 0;
-        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
-    case EFFECT_PHASE_UPDATE:
+    case EFFECT_CALLBACK_PHASE_UPDATE:
         work = record->work_slots[callback_slot];
         texture_width = geometry->textured_quad.texture_width / 2;
         texture_height = geometry->textured_quad.texture_height / 2;
         selector = geometry->textured_quad.scroll_curves.scroll_speed;
-        BATTLE_EFFECT_READ_CURVE(row, column, selector, work->frame);
+        EFFECT_READ_CURVE(row, column, selector, work->frame);
         speed = battle_lerp_fixed8(
                     geometry->textured_quad.scroll_speed_start, geometry->textured_quad.scroll_speed_end, column)
             << 4;
         selector = geometry->textured_quad.scroll_curves.scroll_angle;
-        BATTLE_EFFECT_READ_CURVE(row, column, selector, work->frame);
+        EFFECT_READ_CURVE(row, column, selector, work->frame);
         angle = battle_lerp_fixed8(
             geometry->textured_quad.scroll_angle_start, geometry->textured_quad.scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
@@ -123,13 +123,12 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         }
         if (geometry->textured_quad.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = (geometry->textured_quad.colour_curves & 0xfff);
-            red = g_battle_effect_animation_curve_data
-                      ->curves[battle_effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_RED_SHIFT)][work->frame];
-            green = g_battle_effect_animation_curve_data->curves[battle_effect_get_cached_curve_binding(
-                row, EFFECT_COLOR_CURVE_GREEN_SHIFT)][work->frame];
-            blue
-                = g_battle_effect_animation_curve_data
-                      ->curves[battle_effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_BLUE_SHIFT)][work->frame];
+            red = g_effect_animation_curve_data
+                      ->curves[effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_RED_SHIFT)][work->frame];
+            green = g_effect_animation_curve_data
+                        ->curves[effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_GREEN_SHIFT)][work->frame];
+            blue = g_effect_animation_curve_data
+                       ->curves[effect_get_cached_curve_binding(row, EFFECT_COLOR_CURVE_BLUE_SHIFT)][work->frame];
         } else {
             blue = EFFECT_COLOR_NEUTRAL;
             green = EFFECT_COLOR_NEUTRAL;
@@ -139,7 +138,7 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         phase = work->wave_y_phase;
         amplitude_phase = work->wave_y_amplitude_phase;
         selector = geometry->textured_quad.wave_curves.shape;
-        BATTLE_EFFECT_READ_CURVE(row, column, selector, frame);
+        EFFECT_READ_CURVE(row, column, selector, frame);
         step = 0x20000
             / battle_lerp_fixed8(
                 geometry->textured_quad.wave_y_start.period, geometry->textured_quad.wave_y_end.period, column);
@@ -185,12 +184,12 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         }
 
         phase_selector = geometry->textured_quad.scroll_curves.wave_y_phase_speed;
-        BATTLE_EFFECT_READ_CURVE(row, column, phase_selector, frame);
-        battle_effect_interpolate_emitter_spawn_spread(geometry, column, &spread);
+        EFFECT_READ_CURVE(row, column, phase_selector, frame);
+        effect_interpolate_emitter_spawn_spread(geometry, column, &spread);
         work->wave_y_phase += spread.vx;
         work->wave_y_amplitude_phase += spread.vy;
         phase_selector = geometry->textured_quad.scroll_curves.wave_x_phase_speed;
-        BATTLE_EFFECT_READ_CURVE(row, column, phase_selector, frame);
+        EFFECT_READ_CURVE(row, column, phase_selector, frame);
         work->wave_x_phase += battle_lerp_fixed8(
             geometry->textured_quad.wave_phase_speed_start[0], geometry->textured_quad.wave_phase_speed_end[0], column);
         work->wave_x_amplitude_phase += battle_lerp_fixed8(
@@ -229,7 +228,7 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         work->frame++;
         work->buffer = 1 - work->buffer;
         break;
-    case EFFECT_PHASE_DESTROY:
+    case EFFECT_CALLBACK_PHASE_DESTROY:
         work = record->work_slots[callback_slot];
         if (work->destroy_latched == 0) {
             work->destroy_latched = 1;
@@ -238,7 +237,7 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
                 battle_heap_free_block(work);
                 record->work_slots[callback_slot] = 0;
             }
-            record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
+            record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         }
         break;
     }

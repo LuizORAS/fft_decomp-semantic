@@ -4,7 +4,7 @@
 /* Runs the effect playback helper on the main stack, then yields once per
  * frame until the animation continue check reports completion. */
 void world_script_play_effect_and_wait(void) {
-    g_world_thread_call_target = battle_effect_call_play;
+    g_world_thread_call_target = effect_call_play;
     world_thread_call_on_main_stack();
     do {
         world_thread_yield();

@@ -24,10 +24,10 @@ void action_set_damage_display_type_based_on_ability(void) {
     misc->used_ability_id = raw;
     battle_gfx_set_thrown_item_graphic_palette(misc->strike.used_weapon_id, misc);
     if (((target != 0) && (ability != target)) || (ability == ABILITY_ID_KNOCKBACK) || (ability == 0)
-        || (battle_effect_load_ability(ability) != 0)) {
+        || (effect_load_ability(ability) != 0)) {
         action_set_target_coords_and_attacker_anim();
         return;
     }
     g_battle_game_state = BATTLE_GAME_STATE_START_EFFECT_FILE_OPEN;
-    battle_effect_store_targets_and_display_types(ability, misc);
+    effect_store_targets_and_display_types(ability, misc);
 }

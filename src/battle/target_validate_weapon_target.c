@@ -90,8 +90,7 @@ s32 target_validate_weapon_target(const action_command_t* source) {
         target_id = -1;
     }
     if (flags & WEAPON_FLAG_ARC) {
-        result
-            = battle_effect_set_and_validate_arc_trajectory(unit_id, &unit->action_command.target_position, target_id);
+        result = effect_set_and_validate_arc_trajectory(unit_id, &unit->action_command.target_position, target_id);
     } else if (flags & WEAPON_FLAG_DIRECT) {
         distance_x = x - unit->x;
         if (distance_x < 0) {
@@ -105,8 +104,8 @@ s32 target_validate_weapon_target(const action_command_t* source) {
         if (menu_type == ACTION_MENU_TYPE_ITEM_INVENTORY && distance < 2) {
             result = target_id;
         } else {
-            result = battle_effect_check_direct_trajectory_to_target(
-                unit_id, &unit->action_command.target_position, target_id);
+            result
+                = effect_check_direct_trajectory_to_target(unit_id, &unit->action_command.target_position, target_id);
         }
     } else if (flags & WEAPON_FLAG_LUNGING) {
         result = target_validate_lunging_target(unit_id, x, y, elevation, target_id);
