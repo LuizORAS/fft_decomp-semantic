@@ -854,7 +854,7 @@ functions:
   - {addr: 0x8012b1ec, size: 172, name: world_bits_read_primary, hash: aa7a04f7053f31c6}
   - {addr: 0x8012b298, size: 188, name: world_bits_write_primary, hash: 46f2bee6e5c99547}
   - {addr: 0x8012b354, size: 172, name: world_bits_read_secondary, hash: 96a5a9defe62f763}
-  - {addr: 0x8012b400, size: 992, name: world_script_update_tutorial_controller_input, hash: 36114f630c967b10}
+  - {addr: 0x8012b400, size: 992, name: world_tutorial_update_controller_input, hash: 36114f630c967b10}
   - {addr: 0x8012b7e0, size: 300, name: world_input_update_with_message_state, hash: f8908535d9022aea}
   - {addr: 0x8012b90c, size: 36, name: world_menu_clear_cursor_positions, hash: 89bec4665c8b1d67}
   - {addr: 0x8012b930, size: 32, name: world_menu_set_cursor_position, hash: 416b862ed2b0acb7}
@@ -892,21 +892,21 @@ functions:
   - {addr: 0x8012d778, size: 60, name: world_shop_load_background_tim, hash: 2c98e2ae629f4d9d}
   - {addr: 0x8012d7b4, size: 228, name: world_text_bind_section_data, hash: bac08e2afcfd4691, rodata: [{addr: 0x800e0098, size: 36, hash: a977859d014238a6}]}
   - {addr: 0x8012d898, size: 24, name: world_menu_get_script, hash: b8566ba587064bee}
-  - {addr: 0x8012d8b0, size: 124, name: world_script_load_tutorial_files, hash: 1f5e443f076a0f99}
+  - {addr: 0x8012d8b0, size: 124, name: world_tutorial_load_files, hash: 1f5e443f076a0f99}
   - {addr: 0x8012d92c, size: 56, name: world_input_get_tutorial_buttons, hash: 4e036e1b8eec629f, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012d964, size: 380, name: world_script_start_tutorial, hash: da06ff25c5a65781, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012dae0, size: 500, name: world_script_handle_tutorial_command, hash: 11fe2397ee7d1a2e, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012dcd4, size: 244, name: world_script_handle_tutorial_command_end, hash: 85f71d536a432fc4, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012ddc8, size: 208, name: world_script_handle_tutorial_command_shift, hash: b473377ad5c727ac, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012de98, size: 232, name: world_script_handle_tutorial_command_display_message, hash: a718aba642507e87, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012df80, size: 100, name: world_script_handle_tutorial_command_wait_for_message, hash: aef8d1cba103508d, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012dfe4, size: 212, name: world_script_handle_tutorial_command_change_dialog, hash: d5f6d9e038415e84, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012e0b8, size: 1468, name: world_script_handle_tutorial_command_highlight_ring, hash: bc6845624b0f744d, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012e674, size: 172, name: world_script_advance_tutorial_highlight_brightness, hash: cb9190aefd64a045, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012e720, size: 128, name: world_script_handle_tutorial_command_wait, hash: 7e0b7a8fd1741a85, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012e7a0, size: 676, name: world_script_draw_tutorial_highlight_quads, hash: 9db346e714a86bd0, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012ea44, size: 196, name: world_script_handle_tutorial_command_wait_time, hash: 87875b5b22d4e6b0, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x8012eb08, size: 200, name: world_script_handle_tutorial_command_wait_for_button, hash: c710620d03afae09, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012d964, size: 380, name: world_tutorial_start, hash: da06ff25c5a65781, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012dae0, size: 500, name: world_tutorial_step, hash: 11fe2397ee7d1a2e, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012dcd4, size: 244, name: world_tutorial_command_end, hash: 85f71d536a432fc4, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012ddc8, size: 208, name: world_tutorial_command_press_button, hash: b473377ad5c727ac, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012de98, size: 232, name: world_tutorial_command_display_message, hash: a718aba642507e87, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012df80, size: 100, name: world_tutorial_command_wait_for_message, hash: aef8d1cba103508d, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012dfe4, size: 212, name: world_tutorial_command_change_dialog, hash: d5f6d9e038415e84, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012e0b8, size: 1468, name: world_tutorial_command_highlight_ring, hash: bc6845624b0f744d, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012e674, size: 172, name: world_tutorial_advance_highlight, hash: cb9190aefd64a045, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012e720, size: 128, name: world_tutorial_command_hide_highlight, hash: 7e0b7a8fd1741a85, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012e7a0, size: 676, name: world_tutorial_draw_highlight_quads, hash: 9db346e714a86bd0, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012ea44, size: 196, name: world_tutorial_command_wait_time, hash: 87875b5b22d4e6b0, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012eb08, size: 200, name: world_tutorial_command_wait_for_button, hash: c710620d03afae09, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x8012ebd0, size: 32, name: world_input_read_controller, hash: 2c44fbf3e86088cc}
   - {addr: 0x8012ebf0, size: 988, name: world_input_update_controller, hash: de654ecdd5bef8e2}
   - {addr: 0x8012efcc, size: 300, name: world_card_input_update_with_message_state, hash: 66d622b7683b21c8}
@@ -1681,10 +1681,10 @@ data:
   - {addr: 0x8018e480, name: g_world_primary_bit_read_index}
   - {addr: 0x8018e484, name: g_world_primary_bit_write_index}
   - {addr: 0x8018e488, name: g_world_secondary_bit_read_index}
-  - {addr: 0x8018e48c, name: g_world_script_tutorial_id}
+  - {addr: 0x8018e48c, name: g_world_tutorial_id}
   - {addr: 0x8018e48d, name: g_world_item_category_input_lock}
-  - {addr: 0x8018e48e, name: g_world_script_tutorial_latched_button}
-  - {addr: 0x8018e490, name: g_world_script_tutorial_activation_timer}
+  - {addr: 0x8018e48e, name: g_world_tutorial_latched_button}
+  - {addr: 0x8018e490, name: g_world_tutorial_activation_timer}
   - {addr: 0x8018e491, name: g_world_input_triangle_latched}
   - {addr: 0x8018e492, name: g_world_text_task_phase}
   - {addr: 0x8018e494, name: g_world_gfx_fade_decreasing}
@@ -1701,10 +1701,10 @@ data:
   - {addr: 0x80192f90, name: g_world_text_name_entry_keyboard_data}
   - {addr: 0x801930a4, name: g_world_text_shop_dialogue_data}
   - {addr: 0x80193c1c, name: g_world_menu_scripts}
-  - {addr: 0x80193c40, name: g_world_script_tutorial_message_files}
-  - {addr: 0x80193c78, name: g_world_script_tutorial_script_files}
-  - {addr: 0x80193cb0, name: g_world_script_tutorial_wait_timer}
-  - {addr: 0x80193cb2, name: g_world_script_tutorial_buttons}
+  - {addr: 0x80193c40, name: g_world_tutorial_message_files}
+  - {addr: 0x80193c78, name: g_world_tutorial_script_files}
+  - {addr: 0x80193cb0, name: g_world_tutorial_highlight_brightness}
+  - {addr: 0x80193cb2, name: g_world_tutorial_buttons}
   - {addr: 0x80193cb4, name: g_world_card_save_file_names}
   - {addr: 0x80193cf0, name: g_world_card_slot_text_table}
   - {addr: 0x80193de8, name: g_world_input_latched_button}
@@ -2095,17 +2095,17 @@ data:
   - {addr: 0x801ca6ec, name: g_world_grid_menu_selected_cell}
   - {addr: 0x801ca6f0, name: g_world_primary_bit_cursor}
   - {addr: 0x801ca6f4, name: g_world_secondary_bit_cursor}
-  - {addr: 0x801ca6f8, name: g_world_script_tutorial_repeat_counters}
-  - {addr: 0x801ca738, name: g_world_script_tutorial_previous_input}
+  - {addr: 0x801ca6f8, name: g_world_tutorial_repeat_counters}
+  - {addr: 0x801ca738, name: g_world_tutorial_previous_input}
   - {addr: 0x801ca73c, name: g_world_menu_cursor_positions}
   - {addr: 0x801ca75c, name: g_world_fade_tile_color}
   - {addr: 0x801ca760, name: g_world_gfx_fade_intensity}
-  - {addr: 0x801ca764, name: g_world_script_tutorial_wait_time_remaining}
+  - {addr: 0x801ca764, name: g_world_tutorial_wait_time_remaining}
   - {addr: 0x801ca768, name: g_world_tutorial_saved_game_image}
   - {addr: 0x801cc074, name: g_world_menu_panel_buffer}
-  - {addr: 0x801cc570, name: g_world_script_tutorial_command_ptr}
-  - {addr: 0x801cc574, name: g_world_script_tutorial_command_active}
-  - {addr: 0x801cc578, name: g_world_script_tutorial_button_input}
+  - {addr: 0x801cc570, name: g_world_tutorial_command_ptr}
+  - {addr: 0x801cc574, name: g_world_tutorial_command_active}
+  - {addr: 0x801cc578, name: g_world_tutorial_button_input}
   - {addr: 0x801cc57c, name: g_world_tutorial_highlight_corners_a}
   - {addr: 0x801cc674, name: g_world_tutorial_highlight_corners_b}
   - {addr: 0x801cc76c, name: g_world_tutorial_highlight_colors_a}
@@ -2296,7 +2296,7 @@ data:
   - {addr: 0x801cd7e4, name: GsIDMATRIX2}
   - {addr: 0x801cd804, name: CLIP2}
   - {addr: 0x801cd80c, name: g_world_formation_unit_banner_at_bottom}
-  - {addr: 0x801cd810, name: g_world_script_tutorial_shift_command_bit}
+  - {addr: 0x801cd810, name: g_world_tutorial_pressed_button}
   - {addr: 0x801cd814, name: g_world_gfx_active_otag_entries}
   - {addr: 0x801cd818, name: g_world_event_pending_reserved_vram_release_slot}
   - {addr: 0x801cd81c, name: g_world_event_pending_evtchr_save_slot}

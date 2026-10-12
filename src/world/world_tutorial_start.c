@@ -2,21 +2,16 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/*
- * Start tutorial `index` (0 only clears the tutorial id).
- *
- * Loads the tutorial's files and binds its command stream and messages, then
- * swaps the game state for the tutorial's: the current game is serialised
- * into g_world_tutorial_saved_game_image, the 0x2000-byte tutorial save image
- * at sector 0x11A7F is loaded in its place (keeping the player's job-change
- * equip and sound options, with unequippable items shown) and unpacked into
- * the globals.
- */
-void world_script_start_tutorial(s32 index) {
-    g_world_script_tutorial_id = index;
+/* Start Formation tutorial `index` (0 only clears the tutorial id): load its message and script files
+ * (world_tutorial_load_files) and bind them, then swap the game for the tutorial's. The current game is
+ * serialised into g_world_tutorial_saved_game_image, and the tutorial save (FFTSAVE.DAT, 0x2000 bytes)
+ * is loaded and unpacked into the globals, keeping the player's Max Equip at job change and sound
+ * options, with unequippable items shown. world_tutorial_command_end swaps the game back. */
+void world_tutorial_start(s32 index) {
+    g_world_tutorial_id = index;
     if (index != 0) {
-        world_script_load_tutorial_files(index, &g_world_tutorial_saved_game_image);
-        g_world_script_tutorial_command_ptr = g_world_tutorial_saved_game_image.tim_pointers[1];
+        world_tutorial_load_files(index, &g_world_tutorial_saved_game_image);
+        g_world_tutorial_command_ptr = g_world_tutorial_saved_game_image.tim_pointers[1];
         g_world_text_section_pointers[WORLD_TEXT_SECTION_TUTORIAL_MESSAGES]
             = g_world_tutorial_saved_game_image.tim_pointers[0];
         world_card_init_menu_state();
@@ -27,7 +22,7 @@ void world_script_start_tutorial(s32 index) {
         g_world_load_work_buffer->options.max_equip_at_job_change = g_main_game_options.fields.max_equip_at_job_change;
         g_world_load_work_buffer->options.sound_mode = g_main_game_options.fields.sound_mode;
         world_card_load_globals_from_save_image(1);
-        g_world_script_tutorial_command_active = 0;
+        g_world_tutorial_command_active = 0;
         world_text_generate_formation_unit_name_string();
     }
 }

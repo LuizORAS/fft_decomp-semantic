@@ -12,7 +12,7 @@ void world_input_update_with_message_state(void) {
     s32 step;
     u8 value;
 
-    world_script_update_tutorial_controller_input();
+    world_tutorial_update_controller_input();
     step = world_menu_get_window_scale_step();
     if (step >= 1 && step <= 3) {
         world_input_clear_state();

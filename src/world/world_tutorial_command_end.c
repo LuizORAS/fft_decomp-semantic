@@ -2,12 +2,14 @@
 #include "psx/libc.h"
 #include "psx/types.h"
 
-/* Tutorial "end" command: fade the tutorial overlay out, then release the
- * saved screen state and restore the pre-tutorial world buffers. */
-s32 world_script_handle_tutorial_command_end(void) {
-    if (g_world_script_tutorial_command_active != 0) {
+/* Tutorial command END: the first call starts the fade out; once it has finished, free the
+ * tutorial's files, unpack the player's game back from g_world_tutorial_saved_game_image, rebuild the
+ * formation's unit names and records, clear the tutorial id and return 0. While the fade runs it falls
+ * off its end (see QUIRKS.md). */
+s32 world_tutorial_command_end(void) {
+    if (g_world_tutorial_command_active != 0) {
         if (world_gfx_update_fade_out_tile() == 0) {
-            g_world_script_tutorial_id = 0;
+            g_world_tutorial_id = 0;
             main_heap_call_free(g_world_tutorial_saved_game_image.tim_pointers[0]);
             main_heap_call_free(g_world_tutorial_saved_game_image.tim_pointers[1]);
             bcopy(&g_world_tutorial_saved_game_image, g_world_load_work_buffer, 0x1E00);
@@ -20,6 +22,6 @@ s32 world_script_handle_tutorial_command_end(void) {
         }
     } else {
         world_gfx_start_increasing_fade();
-        g_world_script_tutorial_command_active = 1;
+        g_world_tutorial_command_active = 1;
     }
 }

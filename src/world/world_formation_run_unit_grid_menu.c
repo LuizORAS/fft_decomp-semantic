@@ -37,7 +37,7 @@ void world_formation_run_unit_grid_menu(void) {
             }
             g_world_formation_main_menu_initialized = 1;
         }
-        if (g_world_script_tutorial_id == 0 && world_gfx_update_fade_out_tile() == 0) {
+        if (g_world_tutorial_id == 0 && world_gfx_update_fade_out_tile() == 0) {
             g_world_formation_main_menu_initialized = 0;
             world_thread_suspend(NATIVE_SCREEN_THREAD_SLOT_MENU);
             g_world_formation_screen_running = 0;
@@ -140,8 +140,7 @@ void world_formation_run_unit_grid_menu(void) {
                         }
                     }
                 }
-                if (g_world_formation_unit_browse_enabled == 0 && (input & PSX_PAD_CROSS)
-                    && g_world_script_tutorial_id == 0) {
+                if (g_world_formation_unit_browse_enabled == 0 && (input & PSX_PAD_CROSS) && g_world_tutorial_id == 0) {
                     world_gfx_start_increasing_fade();
                     main_sound_set_current_music_target(0, 0xF0);
                     g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;

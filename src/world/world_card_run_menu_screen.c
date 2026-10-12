@@ -82,7 +82,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     world_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, world_menu_zodiac_backdrop_thread);
     world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, 0, 0);
     while (world_gfx_update_fade_out_tile() != 0) {
-        g_world_script_tutorial_id = 0;
+        g_world_tutorial_id = 0;
         world_gfx_present_frame_and_swap_packet_buffer(0, 0);
         world_card_input_update_with_message_state();
         world_gfx_update_fade_in_tile();

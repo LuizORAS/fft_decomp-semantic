@@ -8,7 +8,7 @@
  * way round, with brightness scaled by ten. Built with -O0 like the other
  * tutorial handlers.
  */
-void world_script_draw_tutorial_highlight_quads(s32 brightness) {
+void world_tutorial_draw_highlight_quads(s32 brightness) {
     s32 i;
 
     brightness = brightness * 10;

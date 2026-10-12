@@ -8,14 +8,14 @@
  * pointer arithmetic on purpose: written as plain integer addition, GCC
  * 2.6.3's fold re-associates `hi + (lo + 0xB800)` into `(hi + 0xB800) + lo`,
  * and the target adds the bias to the low byte first. */
-void world_script_handle_tutorial_command_display_message(void) {
+void world_tutorial_command_display_message(void) {
     world_thread_start(WORLD_THREAD_SLOT_TUTORIAL_TEXT, world_text_character_handling_thread);
     world_thread_set_parameters(WORLD_THREAD_SLOT_TUTORIAL_TEXT, 0x99,
-        (s32)((u8*)(g_world_script_tutorial_command_ptr[2] * 0x100)
-            + (g_world_script_tutorial_command_ptr[1] + TEXT_ID_WORLD_MENU_BASE)),
+        (s32)((u8*)(g_world_tutorial_command_ptr[2] * 0x100)
+            + (g_world_tutorial_command_ptr[1] + TEXT_ID_WORLD_MENU_BASE)),
         0);
     /* The raw byte displacement preserves the target's single +0x405c address
      * calculation; the equivalent typed member access splits it at -O0. */
-    *(s32*)((u8*)g_world_threads + 0x405C) = g_world_script_tutorial_command_ptr[3];
-    g_world_script_tutorial_command_ptr += 4;
+    *(s32*)((u8*)g_world_threads + 0x405C) = g_world_tutorial_command_ptr[3];
+    g_world_tutorial_command_ptr += 4;
 }

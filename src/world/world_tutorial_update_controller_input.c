@@ -1,15 +1,12 @@
 #include "fft/world.h"
 #include "psx/pad.h"
 
-/*
- * Publish newly pressed buttons and two repeat rates, reading tutorial input.
+/* Publish newly pressed buttons and two repeat rates, reading the tutorial's input.
  *
- * Twin of world_input_update_controller (0x8012ebf0) with its own edge latch,
- * single-button latch, activation timer, previous-state and counter arrays;
- * the secondary repeat period is two frames longer. Counter slots 4..11 are
- * skipped; those buttons use only the newly pressed mask.
- */
-void world_script_update_tutorial_controller_input(void) {
+ * Twin of world_input_update_controller with its own edge latch, single-button latch, activation
+ * timer, previous-state and counter arrays; the secondary repeat period is two frames longer. Counter
+ * slots 4..11 are skipped; those buttons use only the newly pressed mask. */
+void world_tutorial_update_controller_input(void) {
     s16 bit;
     s32 index;
     /* Pinned: unpinned, GCC gives filtered_input and the hoisted 1 << index
@@ -36,24 +33,24 @@ void world_script_update_tutorial_controller_input(void) {
     } else {
         g_world_input_triangle_latched = 0;
         {
-            u16 previous_latch = g_world_script_tutorial_latched_button;
+            u16 previous_latch = g_world_tutorial_latched_button;
             u32 latched_input = current_input & previous_latch;
             if (latched_input != 0) {
                 current_input = latched_input;
             } else if (current_input == 0) {
-                g_world_script_tutorial_latched_button = 0;
-                g_world_script_tutorial_activation_timer += speed;
+                g_world_tutorial_latched_button = 0;
+                g_world_tutorial_activation_timer += speed;
             } else {
-                if (g_world_script_tutorial_activation_timer < 4) {
+                if (g_world_tutorial_activation_timer < 4) {
                     u32 priority_input = current_input & PSX_PAD_DPAD_MASK;
 
                     if (priority_input != 0) {
                         current_input = priority_input;
-                        g_world_script_tutorial_activation_timer = 10;
+                        g_world_tutorial_activation_timer = 10;
                     }
                 }
-                if (g_world_script_tutorial_activation_timer >= 4) {
-                    g_world_script_tutorial_activation_timer = 0;
+                if (g_world_tutorial_activation_timer >= 4) {
+                    g_world_tutorial_activation_timer = 0;
                     index = 0;
                     {
                         s32 bit_base = 1;
@@ -64,35 +61,35 @@ void world_script_update_tutorial_controller_input(void) {
                             index++;
                             if (matched_input != 0) {
                                 current_input = matched_input;
-                                g_world_script_tutorial_latched_button = bit;
+                                g_world_tutorial_latched_button = bit;
                             }
                         } while (index < 16);
                     }
                 } else {
                     current_input = 0;
-                    g_world_script_tutorial_latched_button = 0;
+                    g_world_tutorial_latched_button = 0;
                 }
             }
         }
         filtered_input = current_input;
-        if (g_world_script_tutorial_activation_timer >= 10) {
-            g_world_script_tutorial_activation_timer = 10;
+        if (g_world_tutorial_activation_timer >= 10) {
+            g_world_tutorial_activation_timer = 10;
         }
         g_world_input_newly_pressed = filtered_input;
         for (index = 0; index < 16; index++) {
             s32 mask = 1 << index;
 
             if (mask & g_world_input_newly_pressed) {
-                if (mask & g_world_script_tutorial_previous_input) {
+                if (mask & g_world_tutorial_previous_input) {
                     g_world_input_newly_pressed &= ~mask;
                 } else {
-                    g_world_script_tutorial_previous_input |= mask;
+                    g_world_tutorial_previous_input |= mask;
                 }
             } else {
-                g_world_script_tutorial_previous_input &= ~mask;
+                g_world_tutorial_previous_input &= ~mask;
             }
         }
-        counter_base = g_world_script_tutorial_repeat_counters;
+        counter_base = g_world_tutorial_repeat_counters;
         index = 0;
         counter = counter_base;
         do {

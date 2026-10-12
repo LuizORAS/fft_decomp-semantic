@@ -336,7 +336,7 @@ typedef enum world_fade_state {
 } world_fade_state_e;
 
 /* Provisional: record whose two TIM pointers at +0x1e00/+0x1e04 are filled
- * by world_script_load_tutorial_files from the 8-byte LBA/size tables at
+ * by world_tutorial_load_files from the 8-byte LBA/size tables at
  * 0x80193c40 and 0x80193c78. Only these fields are known. */
 typedef struct world_gfx_tim_pair_record {
     u8 _unused_0000[0x1e00];
@@ -511,10 +511,6 @@ extern u8 g_world_gfx_black_tile_color[];
 extern world_status_thread_t g_world_change_banner_panel_thread_params;
 extern world_gfx_textured_quad_source_t g_world_vertical_cursor_quad;
 extern RECT g_world_gfx_fade_tile_rect;
-/* Sector and size pairs, read as flat words ([i * 2], [i * 2 + 1]): a record
- * member access changes how the target addresses them. */
-extern s32 g_world_script_tutorial_message_files[7 * 2];
-extern s32 g_world_script_tutorial_script_files[7 * 2];
 
 /* The sprites world_gfx_build_zodiac_primitives draws: texture page, frames, 12-bit fixed
  * offsets and count. */
@@ -674,7 +670,6 @@ void world_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll
 s32 world_gfx_get_vsync_mode_or_one(void);
 void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 void world_gfx_load_image_and_wait(RECT* rect, void* data);
-void world_script_load_tutorial_files(s32 index, world_gfx_tim_pair_record_t* record);
 void world_gfx_load_wldface_to_frame_buffer(void);
 void world_gfx_store_image_and_wait(RECT* rect, void* dest);
 void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_otag);
@@ -1614,21 +1609,23 @@ void world_unit_update_staged_status_data(u16 unit_id, u16 restore);
 void world_unit_view_supervisor_thread(void);
 
 /* tutorial */
-/*
- * WORLD.BIN tutorial command stream. Commands below 0x10 are one-byte shifts;
- * the rest are ID (1) followed by the listed parameters: 0x10 message id (2) +
- * y (1), 0x11 message id (2), 0x13 x, y, size, width mod, height mod (1 each),
- * 0x15 time (1).
- */
+/* The Formation screen's tutorials (world_tutorial_*): a command stream that presses buttons, shows
+ * messages and draws a highlight ring over the screen, played with the tutorial's own save in place
+ * of the player's. The battle tutorials are events. */
+
+/* A tutorial's command stream (its script file). A byte below PRESS_BUTTON_LIMIT presses pad bit n
+ * for one frame; the others are the id followed by its operands: DISPLAY_MESSAGE a message id (2)
+ * and one byte for the text thread, CHANGE_DIALOG a message id (2), HIGHLIGHT_RING x, y, radius and
+ * the x and y scales (1 each), WAIT_TIME frames (1). */
 enum {
-    WORLD_TUTORIAL_CMD_SHIFT_LIMIT = 0x10,
+    WORLD_TUTORIAL_CMD_PRESS_BUTTON_LIMIT = 0x10,
     WORLD_TUTORIAL_CMD_DISPLAY_MESSAGE = 0x10,
     WORLD_TUTORIAL_CMD_CHANGE_DIALOG = 0x11,
     WORLD_TUTORIAL_CMD_WAIT_FOR_MESSAGE = 0x12,
-    WORLD_TUTORIAL_CMD_DRAW_CIRCLE = 0x13,
-    WORLD_TUTORIAL_CMD_WAIT = 0x14,
+    WORLD_TUTORIAL_CMD_HIGHLIGHT_RING = 0x13,
+    WORLD_TUTORIAL_CMD_HIDE_HIGHLIGHT = 0x14,
     WORLD_TUTORIAL_CMD_WAIT_TIME = 0x15,
-    WORLD_TUTORIAL_CMD_WAIT_FOR_MESSAGE_2 = 0x16,
+    WORLD_TUTORIAL_CMD_WAIT_FOR_BUTTON = 0x16,
     WORLD_TUTORIAL_CMD_END = 0x17,
 };
 
@@ -1640,6 +1637,37 @@ extern s16 g_world_tutorial_highlight_corners_b[][4]; /* second tutorial highlig
 extern u8 g_world_tutorial_highlight_colors_a[4][3];  /* first quad corner colours */
 extern u8 g_world_tutorial_highlight_colors_b[4][3];  /* second quad corner colours */
 extern u8 g_world_tutorial_highlight_quad_count;
+/* Sector and size pairs, read as flat words ([i * 2], [i * 2 + 1]): a record
+ * member access changes how the target addresses them. */
+extern s32 g_world_tutorial_message_files[7 * 2];
+extern s32 g_world_tutorial_script_files[7 * 2];
+extern u8 g_world_tutorial_id;
+extern u8* g_world_tutorial_command_ptr;
+extern s32 g_world_tutorial_command_active;
+extern s16 g_world_tutorial_wait_time_remaining;
+extern s16 g_world_tutorial_highlight_brightness;
+extern u16 g_world_tutorial_pressed_button;
+extern u32 g_world_tutorial_button_input;
+extern s16 g_world_tutorial_buttons;
+extern u16 g_world_tutorial_latched_button;
+extern u8 g_world_tutorial_activation_timer;
+extern u32 g_world_tutorial_repeat_counters[16];
+extern u16 g_world_tutorial_previous_input;
+void world_tutorial_advance_highlight(void);
+void world_tutorial_command_change_dialog(void);
+void world_tutorial_command_display_message(void);
+s32 world_tutorial_command_end(void);
+void world_tutorial_command_highlight_ring(void);
+void world_tutorial_command_hide_highlight(void);
+void world_tutorial_command_press_button(void);
+void world_tutorial_command_wait_for_button(void);
+void world_tutorial_command_wait_for_message(void);
+void world_tutorial_command_wait_time(void);
+void world_tutorial_draw_highlight_quads(s32 brightness);
+void world_tutorial_load_files(s32 index, world_gfx_tim_pair_record_t* record);
+void world_tutorial_start(s32 index);
+s32 world_tutorial_step(void);
+void world_tutorial_update_controller_input(void);
 
 /* help */
 extern u16 g_world_help_portrait_clut_by_sheet_id[];
@@ -3117,17 +3145,11 @@ s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 
 /* script */
 /* WORLD's copy of the event-script interpreter (world_script_*, twins of battle_script_*): loading
  * and running an event, its frame, the script variables and the scenario conditions, and the event
- * input; also the tutorials' command player. */
+ * input. */
 
 extern s32 g_world_script_acting_unit_id;
 extern s32 g_world_script_loaded_event_id;
-extern u32 g_world_script_tutorial_button_input;
-extern s32 g_world_script_tutorial_command_active;
-extern u8 g_world_script_tutorial_id;
-extern u16 g_world_script_tutorial_shift_command_bit;
 
-extern s16 g_world_script_tutorial_wait_time_remaining;
-extern s16 g_world_script_tutorial_wait_timer;
 /* g_main_script_variables: a variable id below EVENT_SCRIPT_VAR_PACKED_BIT_FIRST
  * (event_script_variable_id_e) is its word index. */
 extern s32* g_world_script_variables;
@@ -3137,19 +3159,11 @@ extern u16 g_world_script_attack_entry_mode; /* script_attack_entry_mode_e */
 extern s16 g_world_script_debug_paused;
 
 extern u8 g_world_scenario_condition_arg_counts[]; /* instruction length by opcode */
-extern u16 g_world_script_tutorial_latched_button;
-extern u8 g_world_script_tutorial_activation_timer;
-extern s16 g_world_script_tutorial_buttons;
 extern s32 g_world_script_saved_event_input;
 
 extern world_unit_coordinates_t g_world_script_warp_unit_coords;
 
-extern u32 g_world_script_tutorial_repeat_counters[16];
-extern u16 g_world_script_tutorial_previous_input;
-extern u8* g_world_script_tutorial_command_ptr;
-
 s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
-void world_script_handle_tutorial_command_highlight_ring(void);
 s32 world_script_run_scenario_conditions(void);
 void world_script_run_sprite_move(u8*, s32);
 void world_script_set_specialized_map_destroyed(void);
@@ -3157,7 +3171,6 @@ void world_menu_init_subsystem_pointers(void);
 s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode);
 u8* world_text_advance_cursor_with_separate_backreference_state(s32* count, u8* cursor, u8** saved);
 void world_script_advance_date_by_one_year(void);
-void world_script_advance_tutorial_highlight_brightness(void);
 void world_script_blue_remove_all_enemy_units(void);
 void world_script_blue_remove_unit(s32 unit_id);
 void world_script_change_stats(const u8* parameters);
@@ -3175,15 +3188,6 @@ s32 world_script_get_current_scenario_finish_operation(void);
 
 /* Event variable read via the 0xb1 instruction; 0x22 is rebuilt from 0x23/0x24. */
 s32 world_script_get_variable(s32 variable_id);
-s32 world_script_handle_tutorial_command(void);
-void world_script_handle_tutorial_command_change_dialog(void);
-void world_script_handle_tutorial_command_display_message(void);
-s32 world_script_handle_tutorial_command_end(void);
-void world_script_handle_tutorial_command_shift(void);
-void world_script_handle_tutorial_command_wait(void);
-void world_script_handle_tutorial_command_wait_for_button(void);
-void world_script_handle_tutorial_command_wait_for_message(void);
-void world_script_handle_tutorial_command_wait_time(void);
 s32 world_script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
 void world_script_load_attack_graphics_event_instruction(void);
 void world_script_load_event(s32 id);
@@ -3204,13 +3208,11 @@ void world_script_show_graphic_thread(void);
 void world_script_sprite_move_thread(void);
 void world_script_sprite_move_beta_thread(void);
 void world_script_start_current_event_thread(void);
-void world_script_start_tutorial(s32 index);
 void world_script_store_halfword(u8* destination, s16 value);
 void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg);
 void world_gfx_ramp_screen_overlay_intensity_to_zero(void);
 void world_script_teleport_out_event_instruction(s32 unit_id, s32 remove_unit);
 void world_script_unit_anim(const u8* parameters);
-void world_script_update_tutorial_controller_input(void);
 void world_script_wait_for_unit_ready(s32 misc_id);
 void world_script_wait_value_event_instruction(const u8* parameters);
 void world_script_walk_to_event_instruction(const struct event_walk_to_parameters* parameters);
